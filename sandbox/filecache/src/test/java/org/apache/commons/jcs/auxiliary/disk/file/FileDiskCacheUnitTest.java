@@ -19,14 +19,13 @@ package org.apache.commons.jcs.auxiliary.disk.file;
  * under the License.
  */
 
-import java.io.File;
-
 import junit.framework.TestCase;
-
 import org.apache.commons.jcs.engine.CacheElement;
 import org.apache.commons.jcs.engine.CacheStatus;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.utils.timing.SleepUtil;
+
+import java.io.File;
 
 /** Unit tests for the disk file cache. */
 public class FileDiskCacheUnitTest

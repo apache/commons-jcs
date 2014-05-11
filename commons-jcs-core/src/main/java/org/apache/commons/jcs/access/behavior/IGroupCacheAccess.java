@@ -19,11 +19,10 @@ package org.apache.commons.jcs.access.behavior;
  * under the License.
  */
 
-import java.io.Serializable;
-import java.util.Set;
-
 import org.apache.commons.jcs.access.exception.CacheException;
 import org.apache.commons.jcs.engine.behavior.IElementAttributes;
+
+import java.util.Set;
 
 /**
  * IGroupCacheAccess defines group specific behavior for the client access

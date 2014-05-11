@@ -20,7 +20,6 @@ package org.apache.commons.jcs.auxiliary.remote.http.client;
  */
 
 import junit.framework.TestCase;
-
 import org.apache.commons.jcs.JCS;
 import org.apache.commons.jcs.access.CacheAccess;
 

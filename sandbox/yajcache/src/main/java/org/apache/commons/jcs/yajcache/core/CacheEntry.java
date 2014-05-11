@@ -19,10 +19,11 @@ package org.apache.commons.jcs.yajcache.core;
  * under the License.
  */
 
-import java.util.Map;
+import org.apache.commons.jcs.yajcache.lang.annotation.*;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.jcs.yajcache.lang.annotation.*;
+
+import java.util.Map;
 
 /**
  *

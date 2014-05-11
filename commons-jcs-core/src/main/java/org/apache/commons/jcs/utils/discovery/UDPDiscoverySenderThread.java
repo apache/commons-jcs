@@ -19,10 +19,10 @@ package org.apache.commons.jcs.utils.discovery;
  * under the License.
  */
 
-import java.util.ArrayList;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.util.ArrayList;
 
 /**
  * Used to periodically broadcast our location to other caches that might be listening.

@@ -19,14 +19,13 @@ package org.apache.commons.jcs.auxiliary.disk.indexed;
  * under the License.
  */
 
+import junit.framework.TestCase;
+import org.apache.commons.jcs.JCS;
+import org.apache.commons.jcs.access.CacheAccess;
+
 import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.Random;
-
-import junit.framework.TestCase;
-
-import org.apache.commons.jcs.JCS;
-import org.apache.commons.jcs.access.CacheAccess;
 
 /**
  * This is for manually testing the defrag process.

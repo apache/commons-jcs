@@ -19,23 +19,22 @@ package org.apache.commons.jcs.auxiliary.disk.indexed;
  * under the License.
  */
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
 import junit.extensions.ActiveTestSuite;
 import junit.framework.Test;
 import junit.framework.TestCase;
-
 import org.apache.commons.jcs.JCS;
 import org.apache.commons.jcs.access.CacheAccess;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
+
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Test which exercises the indexed disk cache. This one uses three different
  * regions for thre threads.
  *
- * @version $Id: TestDiskCache.java 224346 2005-06-04 02:01:59Z asmuts $
+ * @version $Id$
  */
 public class IndexedDiskCacheConcurrentUnitTest
     extends TestCase

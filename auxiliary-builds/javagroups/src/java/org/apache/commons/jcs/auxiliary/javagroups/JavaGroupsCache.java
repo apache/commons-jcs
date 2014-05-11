@@ -19,23 +19,23 @@ package org.apache.commons.jcs.auxiliary.javagroups;
  * under the License.
  */
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.commons.jcs.auxiliary.AuxiliaryCache;
 import org.apache.commons.jcs.engine.CacheConstants;
 import org.apache.commons.jcs.engine.CacheElement;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.engine.behavior.ICacheType;
 import org.apache.commons.jcs.engine.control.CompositeCache;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.javagroups.Address;
 import org.javagroups.Channel;
+import org.javagroups.MembershipListener;
 import org.javagroups.Message;
 import org.javagroups.View;
-import org.javagroups.Address;
-import org.javagroups.MembershipListener;
-import org.javagroups.util.RspList;
-import org.javagroups.blocks.RequestHandler;
 import org.javagroups.blocks.GroupRequest;
 import org.javagroups.blocks.MessageDispatcher;
+import org.javagroups.blocks.RequestHandler;
+import org.javagroups.util.RspList;
 
 import java.io.IOException;
 import java.io.Serializable;

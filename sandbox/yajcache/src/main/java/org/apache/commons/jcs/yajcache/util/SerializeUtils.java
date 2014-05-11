@@ -19,10 +19,11 @@ package org.apache.commons.jcs.yajcache.util;
  * under the License.
  */
 
+import org.apache.commons.jcs.yajcache.lang.annotation.*;
+import org.apache.commons.lang3.SerializationUtils;
+
 import java.io.Serializable;
 import java.lang.reflect.Array;
-import org.apache.commons.lang3.SerializationUtils;
-import org.apache.commons.jcs.yajcache.lang.annotation.*;
 
 /**
  * @author Hanson Char

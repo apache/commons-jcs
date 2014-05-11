@@ -19,12 +19,6 @@ package org.apache.commons.jcs.auxiliary.lateral.javagroups;
  * under the License.
  */
 
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.HashMap;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.commons.jcs.auxiliary.lateral.LateralCacheInfo;
 import org.apache.commons.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
 import org.apache.commons.jcs.auxiliary.lateral.behavior.ILateralCacheListener;
@@ -34,6 +28,12 @@ import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs.engine.control.CompositeCache;
 import org.apache.commons.jcs.engine.control.CompositeCacheManager;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.HashMap;
 
 /**
  * JavaGroups listener. Good for distributing cache data accross multiple vms on

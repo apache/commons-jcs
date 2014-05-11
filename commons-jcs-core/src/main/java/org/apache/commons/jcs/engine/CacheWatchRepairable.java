@@ -19,17 +19,16 @@ package org.apache.commons.jcs.engine;
  * under the License.
  */
 
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
 import org.apache.commons.jcs.engine.behavior.ICacheListener;
 import org.apache.commons.jcs.engine.behavior.ICacheObserver;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Intercepts the requests to the underlying ICacheObserver object so that the listeners can be

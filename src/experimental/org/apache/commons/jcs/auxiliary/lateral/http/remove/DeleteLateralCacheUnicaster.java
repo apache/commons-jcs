@@ -19,16 +19,14 @@ package org.apache.commons.jcs.auxiliary.lateral.http.remove;
  * under the License.
  */
 
-import java.io.InputStream;
-import java.io.OutputStream;
-
-import java.net.URL;
-import java.net.URLConnection;
-
+import org.apache.commons.jcs.utils.threads.IThreadPoolRunnable;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import org.apache.commons.jcs.utils.threads.IThreadPoolRunnable;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
+import java.net.URLConnection;
 
 /**
  * Used to uni-cast a ICacheItem to the named cache on the target server.

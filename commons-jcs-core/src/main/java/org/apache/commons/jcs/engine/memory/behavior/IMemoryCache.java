@@ -19,15 +19,14 @@ package org.apache.commons.jcs.engine.memory.behavior;
  * under the License.
  */
 
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.Map;
-import java.util.Set;
-
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.commons.jcs.engine.control.CompositeCache;
 import org.apache.commons.jcs.engine.stats.behavior.IStats;
+
+import java.io.IOException;
+import java.util.Map;
+import java.util.Set;
 
 /** For the framework. Insures methods a MemoryCache needs to access. */
 public interface IMemoryCache<K, V>

@@ -19,9 +19,9 @@ package org.apache.commons.jcs.auxiliary.disk.behavior;
  * under the License.
  */
 
-import java.io.File;
-
 import org.apache.commons.jcs.auxiliary.AuxiliaryCacheAttributes;
+
+import java.io.File;
 
 /**
  * Common disk cache attributes.

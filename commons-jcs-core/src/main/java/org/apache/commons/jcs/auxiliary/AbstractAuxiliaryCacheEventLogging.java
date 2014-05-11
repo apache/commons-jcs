@@ -19,14 +19,14 @@ package org.apache.commons.jcs.auxiliary;
  * under the License.
  */
 
+import org.apache.commons.jcs.engine.behavior.ICacheElement;
+import org.apache.commons.jcs.engine.logging.behavior.ICacheEvent;
+import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Map;
 import java.util.Set;
-
-import org.apache.commons.jcs.engine.behavior.ICacheElement;
-import org.apache.commons.jcs.engine.logging.behavior.ICacheEvent;
-import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;
 
 /**
  * All ICacheEvents are defined as final. Children must implement process events. These are wrapped

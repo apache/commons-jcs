@@ -19,9 +19,8 @@ package org.apache.commons.jcs.admin;
  * under the License.
  */
 
-import java.io.IOException;
-
 import javax.management.MXBean;
+import java.io.IOException;
 
 /**
  * A MXBean to expose the JCS statistics to JMX

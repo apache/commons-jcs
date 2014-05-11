@@ -19,6 +19,14 @@ package org.apache.commons.jcs.utils.struct;
  * under the License.
  */
 
+import org.apache.commons.jcs.engine.control.group.GroupAttrName;
+import org.apache.commons.jcs.engine.stats.StatElement;
+import org.apache.commons.jcs.engine.stats.Stats;
+import org.apache.commons.jcs.engine.stats.behavior.IStatElement;
+import org.apache.commons.jcs.engine.stats.behavior.IStats;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -29,14 +37,6 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-
-import org.apache.commons.jcs.engine.control.group.GroupAttrName;
-import org.apache.commons.jcs.engine.stats.StatElement;
-import org.apache.commons.jcs.engine.stats.Stats;
-import org.apache.commons.jcs.engine.stats.behavior.IStatElement;
-import org.apache.commons.jcs.engine.stats.behavior.IStats;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * This is a simple LRUMap. It implements most of the map methods. It is not recommended that you

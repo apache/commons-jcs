@@ -19,8 +19,6 @@ package org.apache.commons.jcs.yajcache.config;
  * under the License.
  */
 
-import java.io.File;
-
 import org.apache.commons.jcs.yajcache.lang.annotation.*;
 
 /**

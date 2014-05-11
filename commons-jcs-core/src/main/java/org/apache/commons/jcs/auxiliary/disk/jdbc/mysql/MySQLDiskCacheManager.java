@@ -19,11 +19,6 @@ package org.apache.commons.jcs.auxiliary.disk.jdbc.mysql;
  * under the License.
  */
 
-import java.io.Serializable;
-import java.util.Date;
-import java.util.Timer;
-import java.util.TimerTask;
-
 import org.apache.commons.jcs.auxiliary.disk.jdbc.JDBCDiskCacheAttributes;
 import org.apache.commons.jcs.auxiliary.disk.jdbc.JDBCDiskCacheManagerAbstractTemplate;
 import org.apache.commons.jcs.auxiliary.disk.jdbc.JDBCDiskCachePoolAccess;
@@ -35,6 +30,10 @@ import org.apache.commons.jcs.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * This manages instances of the MySQL jdbc disk cache. It maintains one for each region. One for

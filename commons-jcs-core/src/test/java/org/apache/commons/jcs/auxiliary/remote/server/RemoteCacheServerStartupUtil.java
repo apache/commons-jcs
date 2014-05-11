@@ -19,15 +19,15 @@ package org.apache.commons.jcs.auxiliary.remote.server;
  * under the License.
  */
 
-import java.io.IOException;
-import java.io.Serializable;
-import java.net.UnknownHostException;
-import java.util.Properties;
-
 import org.apache.commons.jcs.utils.net.HostNameUtil;
 import org.apache.commons.jcs.utils.props.PropertyLoader;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.io.IOException;
+import java.io.Serializable;
+import java.net.UnknownHostException;
+import java.util.Properties;
 
 /**
  *Starts the registry and runs the server via the factory.

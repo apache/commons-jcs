@@ -19,13 +19,14 @@ package org.apache.commons.jcs.yajcache.util;
  * under the License.
  */
 
+import org.apache.commons.jcs.yajcache.lang.annotation.*;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.commons.jcs.yajcache.lang.annotation.*;
 
 /**
  *

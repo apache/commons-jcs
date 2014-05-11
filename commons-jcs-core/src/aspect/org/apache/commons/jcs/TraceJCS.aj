@@ -19,7 +19,6 @@ package org.apache.commons.jcs;
  * under the License.
  */
 
-import java.io.PrintStream;
 import org.apache.log4j.Category;
 
 /**

@@ -19,15 +19,15 @@ package org.apache.commons.jcs.auxiliary.disk.jdbc.mysql;
  * under the License.
  */
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-
 import org.apache.commons.jcs.auxiliary.disk.jdbc.JDBCDiskCachePoolAccess;
 import org.apache.commons.jcs.auxiliary.disk.jdbc.TableState;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 /**
  * The MySQL Table Optimizer can optimize MySQL tables. It knows how to optimize for MySQL datbases

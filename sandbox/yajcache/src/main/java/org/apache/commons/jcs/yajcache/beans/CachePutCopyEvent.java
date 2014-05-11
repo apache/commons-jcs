@@ -19,8 +19,8 @@ package org.apache.commons.jcs.yajcache.beans;
  * under the License.
  */
 
-import org.apache.commons.jcs.yajcache.lang.annotation.*;
 import org.apache.commons.jcs.yajcache.core.ICache;
+import org.apache.commons.jcs.yajcache.lang.annotation.*;
 /**
  *
  * @author Hanson Char

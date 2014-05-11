@@ -20,7 +20,6 @@ package org.apache.commons.jcs.engine.behavior;
  */
 
 import java.io.IOException;
-import java.io.Serializable;
 
 /**
  * Defines the behavior for cache element serializers. This layer of abstraction allows us to plug

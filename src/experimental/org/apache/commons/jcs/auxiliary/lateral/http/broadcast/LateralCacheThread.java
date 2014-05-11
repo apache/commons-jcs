@@ -19,23 +19,18 @@ package org.apache.commons.jcs.auxiliary.lateral.http.broadcast;
  * under the License.
  */
 
-import java.io.InputStream;
+import org.apache.commons.jcs.engine.CacheElement;
+import org.apache.commons.jcs.engine.behavior.ICacheElement;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.io.Serializable;
-
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-
-import org.apache.commons.jcs.engine.CacheElement;
-
-import org.apache.commons.jcs.engine.behavior.ICacheElement;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 public class LateralCacheThread extends Thread
 {

@@ -20,7 +20,6 @@ package org.apache.commons.jcs.engine.behavior;
  */
 
 import java.io.IOException;
-import java.io.Serializable;
 
 /**
  * Used to register interest in receiving cache changes. <br>

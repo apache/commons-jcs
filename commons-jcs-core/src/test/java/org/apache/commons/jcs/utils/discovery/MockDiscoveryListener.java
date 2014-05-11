@@ -19,10 +19,10 @@ package org.apache.commons.jcs.utils.discovery;
  * under the License.
  */
 
+import org.apache.commons.jcs.utils.discovery.behavior.IDiscoveryListener;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.commons.jcs.utils.discovery.behavior.IDiscoveryListener;
 
 /** Mock listener, for testing. */
 public class MockDiscoveryListener

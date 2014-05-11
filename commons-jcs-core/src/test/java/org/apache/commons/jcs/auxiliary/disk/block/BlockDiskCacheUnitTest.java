@@ -19,15 +19,14 @@ package org.apache.commons.jcs.auxiliary.disk.block;
  * under the License.
  */
 
-import java.io.File;
-import java.io.Serializable;
-import java.util.Map;
-
 import junit.framework.TestCase;
-
 import org.apache.commons.jcs.engine.CacheElement;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.utils.serialization.StandardSerializer;
+
+import java.io.File;
+import java.io.Serializable;
+import java.util.Map;
 
 /** Unit tests for the Block Disk Cache */
 public class BlockDiskCacheUnitTest

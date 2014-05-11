@@ -19,9 +19,9 @@ package org.apache.commons.jcs.auxiliary.lateral.behavior;
  * under the License.
  */
 
-import java.io.Serializable;
-
 import org.apache.commons.jcs.auxiliary.AuxiliaryCacheAttributes;
+
+import java.io.Serializable;
 
 /**
  * This interface defines configuration options common to lateral cache plugins.

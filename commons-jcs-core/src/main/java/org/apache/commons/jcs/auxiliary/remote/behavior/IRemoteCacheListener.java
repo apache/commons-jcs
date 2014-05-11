@@ -19,12 +19,11 @@ package org.apache.commons.jcs.auxiliary.remote.behavior;
  * under the License.
  */
 
-import java.io.IOException;
-import java.io.Serializable;
-import java.rmi.Remote;
-
 import org.apache.commons.jcs.auxiliary.remote.server.behavior.RemoteType;
 import org.apache.commons.jcs.engine.behavior.ICacheListener;
+
+import java.io.IOException;
+import java.rmi.Remote;
 
 /**
  * Listens for remote cache event notification ( rmi callback ).

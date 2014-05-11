@@ -19,12 +19,12 @@ package org.apache.commons.jcs;
  * under the License.
  */
 
-import java.io.StringWriter;
-
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 import org.apache.log4j.WriterAppender;
+
+import java.io.StringWriter;
 
 /** Utility for testing log messages. */
 public class TestLogConfigurationUtil

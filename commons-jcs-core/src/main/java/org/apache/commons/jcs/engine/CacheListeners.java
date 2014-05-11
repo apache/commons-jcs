@@ -19,13 +19,12 @@ package org.apache.commons.jcs.engine;
  * under the License.
  */
 
-import java.io.Serializable;
+import org.apache.commons.jcs.engine.behavior.ICache;
+import org.apache.commons.jcs.engine.behavior.ICacheEventQueue;
+
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
-import org.apache.commons.jcs.engine.behavior.ICache;
-import org.apache.commons.jcs.engine.behavior.ICacheEventQueue;
 
 /**
  * Used to associates a set of [cache listener to cache event queue] for a

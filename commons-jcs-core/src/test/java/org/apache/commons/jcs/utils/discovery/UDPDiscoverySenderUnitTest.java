@@ -19,11 +19,10 @@ package org.apache.commons.jcs.utils.discovery;
  * under the License.
  */
 
-import java.util.ArrayList;
-
 import junit.framework.TestCase;
-
 import org.apache.commons.jcs.utils.discovery.UDPDiscoveryMessage.BroadcastType;
+
+import java.util.ArrayList;
 
 /**
  * Tests for the sender.

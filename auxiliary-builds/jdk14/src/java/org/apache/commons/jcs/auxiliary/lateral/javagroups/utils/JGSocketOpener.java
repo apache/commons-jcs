@@ -19,9 +19,9 @@ package org.apache.commons.jcs.auxiliary.lateral.javagroups.utils;
  * under the License.
  */
 
+import org.apache.commons.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.commons.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
 import org.jgroups.Channel;
 import org.jgroups.ChannelFactory;
 import org.jgroups.JChannelFactory;

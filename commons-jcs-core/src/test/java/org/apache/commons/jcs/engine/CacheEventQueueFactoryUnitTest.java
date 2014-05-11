@@ -20,7 +20,6 @@ package org.apache.commons.jcs.engine;
  */
 
 import junit.framework.TestCase;
-
 import org.apache.commons.jcs.auxiliary.remote.MockRemoteCacheListener;
 import org.apache.commons.jcs.engine.behavior.ICacheEventQueue;
 import org.apache.commons.jcs.engine.behavior.ICacheEventQueue.QueueType;

@@ -19,15 +19,13 @@ package org.apache.commons.jcs.auxiliary.lateral.http.remove;
  * under the License.
  */
 
-import java.util.ArrayList;
-import java.util.Iterator;
-
 import org.apache.commons.jcs.auxiliary.lateral.http.remove.DeleteLateralCacheUnicaster;
-
+import org.apache.commons.jcs.utils.threads.ThreadPoolManager;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import org.apache.commons.jcs.utils.threads.ThreadPoolManager;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /*
  * Used to multi-cast a key/val pair to the named cache on multiple servers.

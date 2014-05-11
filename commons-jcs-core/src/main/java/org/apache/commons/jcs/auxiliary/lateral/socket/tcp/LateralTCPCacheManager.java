@@ -19,11 +19,6 @@ package org.apache.commons.jcs.auxiliary.lateral.socket.tcp;
  * under the License.
  */
 
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 import org.apache.commons.jcs.auxiliary.lateral.LateralCache;
 import org.apache.commons.jcs.auxiliary.lateral.LateralCacheAbstractManager;
 import org.apache.commons.jcs.auxiliary.lateral.LateralCacheAttributes;
@@ -41,6 +36,11 @@ import org.apache.commons.jcs.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Creates lateral caches. Lateral caches are primarily used for removing non laterally configured

@@ -19,32 +19,23 @@ package org.apache.commons.jcs.auxiliary.lateral.socket.udp;
  * under the License.
  */
 
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
-import java.io.Reader;
-import java.io.Serializable;
-
-import java.net.DatagramPacket;
-import java.net.InetAddress;
-import java.net.MulticastSocket;
-
 import org.apache.commons.jcs.auxiliary.lateral.LateralCacheAttributes;
 import org.apache.commons.jcs.auxiliary.lateral.LateralCacheInfo;
 import org.apache.commons.jcs.auxiliary.lateral.LateralElementDescriptor;
-
 import org.apache.commons.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
-
 import org.apache.commons.jcs.engine.CacheElement;
-
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.ObjectOutputStream;
+import java.net.DatagramPacket;
+import java.net.InetAddress;
+import java.net.MulticastSocket;
 
 public class LateralUDPSender
 {

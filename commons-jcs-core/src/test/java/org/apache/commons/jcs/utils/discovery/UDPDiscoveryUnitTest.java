@@ -19,11 +19,10 @@ package org.apache.commons.jcs.utils.discovery;
  * under the License.
  */
 
-import java.util.ArrayList;
-
 import junit.framework.TestCase;
-
 import org.apache.commons.jcs.utils.timing.SleepUtil;
+
+import java.util.ArrayList;
 
 /**
  * Unit tests for discovery

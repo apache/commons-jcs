@@ -19,12 +19,7 @@ package org.apache.commons.jcs.engine.memory.mru;
  * under the License.
  */
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
 import junit.framework.TestCase;
-
 import org.apache.commons.jcs.JCS;
 import org.apache.commons.jcs.access.CacheAccess;
 import org.apache.commons.jcs.access.exception.CacheException;
@@ -32,6 +27,10 @@ import org.apache.commons.jcs.engine.CacheElement;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.engine.control.CompositeCache;
 import org.apache.commons.jcs.engine.control.CompositeCacheManager;
+
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Tests for the test MRU implementation.

@@ -19,22 +19,21 @@ package org.apache.commons.jcs.auxiliary.remote.server;
  * under the License.
  */
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.UnknownHostException;
-import java.util.Properties;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.jcs.access.exception.CacheException;
 import org.apache.commons.jcs.engine.control.CompositeCacheManager;
 import org.apache.commons.jcs.utils.net.HostNameUtil;
 import org.apache.commons.jcs.utils.props.PropertyLoader;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.UnknownHostException;
+import java.util.Properties;
 
 /**
  * This servlet can be used to startup the JCS remote cache. It is easy to deploy the remote server

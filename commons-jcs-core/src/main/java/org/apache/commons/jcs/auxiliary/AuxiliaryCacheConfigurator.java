@@ -19,8 +19,6 @@ package org.apache.commons.jcs.auxiliary;
  * under the License.
  */
 
-import java.util.Properties;
-
 import org.apache.commons.jcs.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;
 import org.apache.commons.jcs.utils.config.OptionConverter;
@@ -28,6 +26,8 @@ import org.apache.commons.jcs.utils.config.PropertySetter;
 import org.apache.commons.jcs.utils.serialization.StandardSerializer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.util.Properties;
 
 /**
  * Configuration util for auxiliary caches. I plan to move the auxiliary configuration from the

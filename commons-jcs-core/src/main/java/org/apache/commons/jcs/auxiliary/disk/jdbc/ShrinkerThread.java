@@ -19,13 +19,12 @@ package org.apache.commons.jcs.auxiliary.disk.jdbc;
  * under the License.
  */
 
-import java.io.Serializable;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * Calls delete expired on the disk caches. The shrinker is run by a clock daemon. The shrinker

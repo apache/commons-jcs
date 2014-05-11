@@ -19,8 +19,6 @@ package org.apache.commons.jcs.auxiliary.remote;
  * under the License.
  */
 
-import java.io.Serializable;
-
 import org.apache.commons.jcs.auxiliary.remote.server.behavior.RemoteType;
 import org.apache.commons.jcs.engine.CacheStatus;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;

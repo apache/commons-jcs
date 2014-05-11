@@ -19,22 +19,20 @@ package org.apache.commons.jcs.engine.memory.lru;
  * under the License.
  */
 
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.Iterator;
-import java.util.Map;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.commons.jcs.engine.CacheConstants;
 import org.apache.commons.jcs.engine.CacheElement;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.engine.control.CompositeCache;
-import org.apache.commons.jcs.engine.memory.AbstractMemoryCache;
-import org.apache.commons.jcs.engine.control.group.GroupId;
 import org.apache.commons.jcs.engine.control.group.GroupAttrName;
-
+import org.apache.commons.jcs.engine.control.group.GroupId;
+import org.apache.commons.jcs.engine.memory.AbstractMemoryCache;
 import org.apache.commons.jcs.engine.memory.util.MemoryElementDescriptor;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  *  This is a test memory manager using the jdk1.4 LinkedHashMap.

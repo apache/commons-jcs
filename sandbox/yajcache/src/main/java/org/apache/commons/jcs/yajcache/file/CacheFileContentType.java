@@ -19,9 +19,10 @@ package org.apache.commons.jcs.yajcache.file;
  * under the License.
  */
 
-import java.io.Serializable;
-import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.jcs.yajcache.lang.annotation.*;
+import org.apache.commons.lang3.SerializationUtils;
+
+import java.io.Serializable;
 
 /**
  * Cache File Content Type.  A cache file represents the file persistence

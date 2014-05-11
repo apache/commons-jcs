@@ -19,12 +19,7 @@ package org.apache.commons.jcs.access;
  * under the License.
  */
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
 import junit.framework.TestCase;
-
 import org.apache.commons.jcs.JCS;
 import org.apache.commons.jcs.access.exception.CacheException;
 import org.apache.commons.jcs.access.exception.ObjectExistsException;
@@ -33,6 +28,10 @@ import org.apache.commons.jcs.engine.ElementAttributes;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.commons.jcs.engine.behavior.IElementAttributes;
+
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Tests the methods of the cache access class from which the class JCS extends.

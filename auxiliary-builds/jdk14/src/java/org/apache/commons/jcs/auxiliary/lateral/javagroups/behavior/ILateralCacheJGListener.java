@@ -19,10 +19,10 @@ package org.apache.commons.jcs.auxiliary.lateral.javagroups.behavior;
  * under the License.
  */
 
-import java.io.Serializable;
-import java.io.IOException;
-
 import org.apache.commons.jcs.auxiliary.lateral.behavior.ILateralCacheListener;
+
+import java.io.IOException;
+import java.io.Serializable;
 
 /**
  * Listens for lateral cache event notification.

@@ -20,7 +20,6 @@ package org.apache.commons.jcs.engine.behavior;
  */
 
 import java.io.IOException;
-import java.io.Serializable;
 
 /**
  * Used to receive a cache event notification.

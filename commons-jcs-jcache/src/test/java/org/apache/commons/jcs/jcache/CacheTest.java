@@ -19,20 +19,13 @@ package org.apache.commons.jcs.jcache;
  * under the License.
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import org.junit.Test;
 
 import javax.cache.Cache;
 import javax.cache.CacheManager;
 import javax.cache.Caching;
 import javax.cache.configuration.CacheEntryListenerConfiguration;
 import javax.cache.configuration.CompleteConfiguration;
-import javax.cache.configuration.Configuration;
 import javax.cache.configuration.Factory;
 import javax.cache.configuration.MutableConfiguration;
 import javax.cache.event.CacheEntryCreatedListener;
@@ -47,8 +40,13 @@ import javax.cache.integration.CacheLoader;
 import javax.cache.integration.CacheLoaderException;
 import javax.cache.integration.CacheWriter;
 import javax.cache.spi.CachingProvider;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class CacheTest
 {

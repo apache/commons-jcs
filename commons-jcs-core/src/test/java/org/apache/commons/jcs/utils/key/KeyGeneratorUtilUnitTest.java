@@ -19,14 +19,13 @@ package org.apache.commons.jcs.utils.key;
  * under the License.
  */
 
+import junit.framework.TestCase;
+import org.apache.commons.jcs.utils.timing.SleepUtil;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-
-import junit.framework.TestCase;
-
-import org.apache.commons.jcs.utils.timing.SleepUtil;
 
 /**
  * Tests for the Key Generator Util.

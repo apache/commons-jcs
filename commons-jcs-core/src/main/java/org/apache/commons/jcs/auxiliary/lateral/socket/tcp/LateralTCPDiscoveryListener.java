@@ -19,14 +19,6 @@ package org.apache.commons.jcs.auxiliary.lateral.socket.tcp;
  * under the License.
  */
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
 import org.apache.commons.jcs.auxiliary.lateral.LateralCacheAttributes;
 import org.apache.commons.jcs.auxiliary.lateral.LateralCacheNoWait;
 import org.apache.commons.jcs.auxiliary.lateral.LateralCacheNoWaitFacade;
@@ -39,6 +31,13 @@ import org.apache.commons.jcs.utils.discovery.DiscoveredService;
 import org.apache.commons.jcs.utils.discovery.behavior.IDiscoveryListener;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * This knows how to add and remove discovered services. It observes UDP discovery events.

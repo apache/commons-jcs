@@ -20,7 +20,6 @@ package org.apache.commons.jcs.auxiliary.lateral;
  */
 
 import junit.framework.TestCase;
-
 import org.apache.commons.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
 
 /**

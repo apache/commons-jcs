@@ -19,10 +19,10 @@ package org.apache.commons.jcs.utils.config;
  * under the License.
  */
 
-import java.util.Properties;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.util.Properties;
 
 /**
  * This class is based on the log4j class org.apache.log4j.helpers.OptionConverter that was made by

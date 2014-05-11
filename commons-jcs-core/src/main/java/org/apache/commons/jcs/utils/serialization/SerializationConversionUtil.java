@@ -19,9 +19,6 @@ package org.apache.commons.jcs.utils.serialization;
  * under the License.
  */
 
-import java.io.IOException;
-import java.io.Serializable;
-
 import org.apache.commons.jcs.engine.CacheElement;
 import org.apache.commons.jcs.engine.CacheElementSerialized;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
@@ -29,6 +26,8 @@ import org.apache.commons.jcs.engine.behavior.ICacheElementSerialized;
 import org.apache.commons.jcs.engine.behavior.IElementSerializer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.io.IOException;
 
 /**
  * This uses a supplied Serializer to convert to and from cache elements.

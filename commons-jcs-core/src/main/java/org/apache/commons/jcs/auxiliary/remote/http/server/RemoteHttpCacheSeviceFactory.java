@@ -19,9 +19,6 @@ package org.apache.commons.jcs.auxiliary.remote.http.server;
  * under the License.
  */
 
-import java.io.Serializable;
-import java.util.Properties;
-
 import org.apache.commons.jcs.auxiliary.AuxiliaryCacheConfigurator;
 import org.apache.commons.jcs.auxiliary.remote.http.behavior.IRemoteHttpCacheConstants;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
@@ -29,6 +26,9 @@ import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;
 import org.apache.commons.jcs.utils.config.PropertySetter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.io.Serializable;
+import java.util.Properties;
 
 /** Creates the server. */
 public class RemoteHttpCacheSeviceFactory

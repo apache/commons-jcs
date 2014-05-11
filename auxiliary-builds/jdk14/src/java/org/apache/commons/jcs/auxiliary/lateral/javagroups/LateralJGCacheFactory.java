@@ -19,10 +19,6 @@ package org.apache.commons.jcs.auxiliary.lateral.javagroups;
  * under the License.
  */
 
-import java.util.ArrayList;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.commons.jcs.auxiliary.AuxiliaryCache;
 import org.apache.commons.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.commons.jcs.auxiliary.lateral.LateralCacheAbstractFactory;
@@ -31,6 +27,10 @@ import org.apache.commons.jcs.auxiliary.lateral.LateralCacheNoWait;
 import org.apache.commons.jcs.auxiliary.lateral.LateralCacheNoWaitFacade;
 import org.apache.commons.jcs.engine.behavior.ICache;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import java.util.ArrayList;
 
 /**
  * Constructs a LateralCacheNoWaitFacade for the given configuration. Each

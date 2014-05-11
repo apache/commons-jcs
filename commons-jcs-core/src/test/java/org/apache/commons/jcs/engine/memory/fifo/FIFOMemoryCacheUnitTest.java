@@ -19,15 +19,14 @@ package org.apache.commons.jcs.engine.memory.fifo;
  * under the License.
  */
 
-import java.io.IOException;
-
 import junit.framework.TestCase;
-
 import org.apache.commons.jcs.engine.CacheElement;
 import org.apache.commons.jcs.engine.CompositeCacheAttributes;
 import org.apache.commons.jcs.engine.ElementAttributes;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.commons.jcs.engine.control.CompositeCache;
+
+import java.io.IOException;
 
 /** Unit tests for the fifo implementation. */
 public class FIFOMemoryCacheUnitTest

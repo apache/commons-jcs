@@ -19,11 +19,6 @@ package org.apache.commons.jcs.access;
  * under the License.
  */
 
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
-
 import org.apache.commons.jcs.access.behavior.IGroupCacheAccess;
 import org.apache.commons.jcs.access.exception.CacheException;
 import org.apache.commons.jcs.access.exception.InvalidArgumentException;
@@ -33,6 +28,10 @@ import org.apache.commons.jcs.engine.behavior.IElementAttributes;
 import org.apache.commons.jcs.engine.control.CompositeCache;
 import org.apache.commons.jcs.engine.control.group.GroupAttrName;
 import org.apache.commons.jcs.engine.control.group.GroupId;
+
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Access for groups.

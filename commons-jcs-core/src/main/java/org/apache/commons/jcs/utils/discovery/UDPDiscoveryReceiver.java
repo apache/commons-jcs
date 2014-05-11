@@ -19,6 +19,14 @@ package org.apache.commons.jcs.utils.discovery;
  * under the License.
  */
 
+import org.apache.commons.jcs.engine.CacheInfo;
+import org.apache.commons.jcs.engine.behavior.IShutdownObserver;
+import org.apache.commons.jcs.io.ObjectInputStreamClassLoaderAware;
+import org.apache.commons.jcs.utils.discovery.UDPDiscoveryMessage.BroadcastType;
+import org.apache.commons.jcs.utils.threadpool.DaemonThreadFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -27,14 +35,6 @@ import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
-
-import org.apache.commons.jcs.engine.CacheInfo;
-import org.apache.commons.jcs.engine.behavior.IShutdownObserver;
-import org.apache.commons.jcs.io.ObjectInputStreamClassLoaderAware;
-import org.apache.commons.jcs.utils.discovery.UDPDiscoveryMessage.BroadcastType;
-import org.apache.commons.jcs.utils.threadpool.DaemonThreadFactory;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /** Receives UDP Discovery messages. */
 public class UDPDiscoveryReceiver

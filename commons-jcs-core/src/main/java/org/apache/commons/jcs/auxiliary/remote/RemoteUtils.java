@@ -19,6 +19,9 @@ package org.apache.commons.jcs.auxiliary.remote;
  * under the License.
  */
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetSocketAddress;
@@ -30,9 +33,6 @@ import java.rmi.registry.Registry;
 import java.rmi.server.RMISocketFactory;
 import java.util.Enumeration;
 import java.util.Properties;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * This class provides some basic utilities for doing things such as starting the registry properly.

@@ -19,15 +19,14 @@ package org.apache.commons.jcs.admin.servlet;
  * under the License.
  */
 
-import java.io.IOException;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.jcs.admin.JCSAdminBean;
 import org.apache.velocity.Template;
 import org.apache.velocity.context.Context;
 import org.apache.velocity.tools.view.VelocityViewServlet;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * A servlet which provides HTTP access to JCS. Allows a summary of regions to

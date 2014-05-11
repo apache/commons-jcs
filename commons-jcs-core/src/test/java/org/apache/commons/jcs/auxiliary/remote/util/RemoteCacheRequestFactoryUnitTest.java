@@ -19,15 +19,14 @@ package org.apache.commons.jcs.auxiliary.remote.util;
  * under the License.
  */
 
-import java.io.Serializable;
-import java.util.Collections;
-import java.util.Set;
-
 import junit.framework.TestCase;
-
 import org.apache.commons.jcs.auxiliary.remote.value.RemoteCacheRequest;
 import org.apache.commons.jcs.auxiliary.remote.value.RemoteRequestType;
 import org.apache.commons.jcs.engine.CacheElement;
+
+import java.io.Serializable;
+import java.util.Collections;
+import java.util.Set;
 
 /** Unit tests for the request creator. */
 public class RemoteCacheRequestFactoryUnitTest

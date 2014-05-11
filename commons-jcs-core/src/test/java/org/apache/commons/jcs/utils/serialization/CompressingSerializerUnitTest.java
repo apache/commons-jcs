@@ -19,9 +19,9 @@ package org.apache.commons.jcs.utils.serialization;
  * under the License.
  */
 
-import java.io.IOException;
-
 import junit.framework.TestCase;
+
+import java.io.IOException;
 
 /**
  * Tests the compressing serializer.

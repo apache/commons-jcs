@@ -19,14 +19,6 @@ package org.apache.commons.jcs.auxiliary.remote;
  * under the License.
  */
 
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
 import org.apache.commons.jcs.auxiliary.AbstractAuxiliaryCache;
 import org.apache.commons.jcs.auxiliary.AuxiliaryCache;
 import org.apache.commons.jcs.auxiliary.AuxiliaryCacheAttributes;
@@ -42,6 +34,13 @@ import org.apache.commons.jcs.engine.stats.behavior.IStatElement;
 import org.apache.commons.jcs.engine.stats.behavior.IStats;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /** An abstract base for the No Wait Facade.  Different implementations will failover differently. */
 public abstract class AbstractRemoteCacheNoWaitFacade<K, V>

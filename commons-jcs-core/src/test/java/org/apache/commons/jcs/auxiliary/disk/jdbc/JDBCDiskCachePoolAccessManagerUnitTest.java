@@ -19,11 +19,11 @@ package org.apache.commons.jcs.auxiliary.disk.jdbc;
  * under the License.
  */
 
+import junit.framework.TestCase;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.Properties;
-
-import junit.framework.TestCase;
 
 /** Unit tests for the pool manager */
 public class JDBCDiskCachePoolAccessManagerUnitTest

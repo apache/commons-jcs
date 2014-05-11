@@ -19,13 +19,12 @@ package org.apache.commons.jcs.utils.threadpool;
  * under the License.
  */
 
-import java.util.ArrayList;
-import java.util.concurrent.ThreadPoolExecutor;
-
 import junit.framework.TestCase;
-
 import org.apache.commons.jcs.utils.props.PropertyLoader;
 import org.apache.commons.jcs.utils.threadpool.PoolConfiguration.WhenBlockedPolicy;
+
+import java.util.ArrayList;
+import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * Verify that the manager can create pools as intended by the default and

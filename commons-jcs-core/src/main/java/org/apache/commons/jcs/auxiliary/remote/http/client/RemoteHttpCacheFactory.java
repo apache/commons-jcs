@@ -19,10 +19,6 @@ package org.apache.commons.jcs.auxiliary.remote.http.client;
  * under the License.
  */
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import org.apache.commons.jcs.auxiliary.AuxiliaryCache;
 import org.apache.commons.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.commons.jcs.auxiliary.AuxiliaryCacheFactory;
@@ -33,6 +29,9 @@ import org.apache.commons.jcs.engine.behavior.ICache;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * The RemoteCacheFactory creates remote caches for the cache hub. It returns a no wait facade which

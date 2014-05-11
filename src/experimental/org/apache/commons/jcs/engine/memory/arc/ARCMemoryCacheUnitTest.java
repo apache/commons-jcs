@@ -20,7 +20,6 @@ package org.apache.commons.jcs.engine.memory.arc;
  */
 
 import junit.framework.TestCase;
-
 import org.apache.commons.jcs.JCS;
 import org.apache.commons.jcs.access.exception.CacheException;
 import org.apache.commons.jcs.engine.CacheElement;

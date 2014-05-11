@@ -19,14 +19,12 @@ package org.apache.commons.jcs.yajcache.soft;
  * under the License.
  */
 
-import junit.framework.*;
-import org.apache.commons.jcs.yajcache.core.ICacheSafe;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.commons.jcs.yajcache.core.CacheManager;
 import org.apache.commons.jcs.yajcache.core.CacheType;
+import org.apache.commons.jcs.yajcache.core.ICacheSafe;
 import org.apache.commons.jcs.yajcache.lang.annotation.*;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  *

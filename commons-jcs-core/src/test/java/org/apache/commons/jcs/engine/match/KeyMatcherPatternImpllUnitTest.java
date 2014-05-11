@@ -19,10 +19,10 @@ package org.apache.commons.jcs.engine.match;
  * under the License.
  */
 
+import junit.framework.TestCase;
+
 import java.util.HashSet;
 import java.util.Set;
-
-import junit.framework.TestCase;
 
 /** Unit tests for the key matcher. */
 public class KeyMatcherPatternImpllUnitTest

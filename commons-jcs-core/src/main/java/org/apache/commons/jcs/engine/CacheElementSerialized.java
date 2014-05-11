@@ -19,11 +19,10 @@ package org.apache.commons.jcs.engine;
  * under the License.
  */
 
-import java.io.Serializable;
-import java.util.Arrays;
-
 import org.apache.commons.jcs.engine.behavior.ICacheElementSerialized;
 import org.apache.commons.jcs.engine.behavior.IElementAttributes;
+
+import java.util.Arrays;
 
 /** Either serialized value or the value should be null; */
 public class CacheElementSerialized<K, V>

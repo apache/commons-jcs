@@ -19,18 +19,18 @@ package org.apache.commons.jcs.utils.discovery;
  * under the License.
  */
 
+import org.apache.commons.jcs.engine.CacheInfo;
+import org.apache.commons.jcs.utils.discovery.UDPDiscoveryMessage.BroadcastType;
+import org.apache.commons.jcs.utils.serialization.StandardSerializer;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.util.ArrayList;
-
-import org.apache.commons.jcs.engine.CacheInfo;
-import org.apache.commons.jcs.utils.discovery.UDPDiscoveryMessage.BroadcastType;
-import org.apache.commons.jcs.utils.serialization.StandardSerializer;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * This is a generic sender for the UDPDiscovery process.

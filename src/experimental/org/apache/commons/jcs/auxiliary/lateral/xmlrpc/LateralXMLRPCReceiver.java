@@ -19,18 +19,11 @@ package org.apache.commons.jcs.auxiliary.lateral.xmlrpc;
  * under the License.
  */
 
-import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.io.IOException;
-
 import org.apache.commons.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
 import org.apache.commons.jcs.auxiliary.lateral.xmlrpc.behavior.ILateralCacheXMLRPCListener;
 import org.apache.commons.jcs.auxiliary.lateral.xmlrpc.behavior.IXMLRPCConstants;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.apache.xmlrpc.WebServer;
 
 /**

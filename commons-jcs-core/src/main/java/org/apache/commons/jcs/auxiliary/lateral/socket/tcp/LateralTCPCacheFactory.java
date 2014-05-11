@@ -19,10 +19,6 @@ package org.apache.commons.jcs.auxiliary.lateral.socket.tcp;
  * under the License.
  */
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.StringTokenizer;
-
 import org.apache.commons.jcs.auxiliary.AuxiliaryCache;
 import org.apache.commons.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.commons.jcs.auxiliary.lateral.LateralCacheAbstractFactory;
@@ -40,6 +36,9 @@ import org.apache.commons.jcs.utils.discovery.UDPDiscoveryManager;
 import org.apache.commons.jcs.utils.discovery.UDPDiscoveryService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 /**
  * Constructs a LateralCacheNoWaitFacade for the given configuration. Each lateral service / local

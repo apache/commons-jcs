@@ -19,10 +19,10 @@ package org.apache.commons.jcs.utils.net;
  * under the License.
  */
 
-import java.net.UnknownHostException;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.net.UnknownHostException;
 
 /** Utility for getting info on the local ip address. */
 public final class AddressUtil

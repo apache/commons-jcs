@@ -19,8 +19,6 @@ package org.apache.commons.jcs.auxiliary.disk.file;
  * under the License.
  */
 
-import java.io.Serializable;
-
 import org.apache.commons.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.commons.jcs.auxiliary.AuxiliaryCacheFactory;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
@@ -28,6 +26,8 @@ import org.apache.commons.jcs.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.io.Serializable;
 
 /** Create Disk File Caches */
 public class FileDiskCacheFactory

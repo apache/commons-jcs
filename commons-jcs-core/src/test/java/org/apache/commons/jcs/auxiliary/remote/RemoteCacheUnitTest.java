@@ -19,11 +19,7 @@ package org.apache.commons.jcs.auxiliary.remote;
  * under the License.
  */
 
-import java.util.HashSet;
-import java.util.Map;
-
 import junit.framework.TestCase;
-
 import org.apache.commons.jcs.auxiliary.MockCacheEventLogger;
 import org.apache.commons.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes;
 import org.apache.commons.jcs.engine.CacheElement;
@@ -31,6 +27,9 @@ import org.apache.commons.jcs.engine.ZombieCacheServiceNonLocal;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.engine.behavior.ICacheElementSerialized;
 import org.apache.commons.jcs.utils.serialization.SerializationConversionUtil;
+
+import java.util.HashSet;
+import java.util.Map;
 
 /**
  * Unit Tests for the Remote Cache.

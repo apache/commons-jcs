@@ -19,13 +19,6 @@ package org.apache.commons.jcs.auxiliary.remote;
  * under the License.
  */
 
-import java.io.IOException;
-import java.io.Serializable;
-import java.rmi.Naming;
-import java.rmi.registry.Registry;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.commons.jcs.auxiliary.AuxiliaryCacheManager;
 import org.apache.commons.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes;
 import org.apache.commons.jcs.auxiliary.remote.behavior.IRemoteCacheClient;
@@ -40,6 +33,12 @@ import org.apache.commons.jcs.engine.behavior.IShutdownObserver;
 import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.io.IOException;
+import java.rmi.Naming;
+import java.rmi.registry.Registry;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * An instance of RemoteCacheManager corresponds to one remote connection of a specific host and

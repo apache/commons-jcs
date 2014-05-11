@@ -19,11 +19,7 @@ package org.apache.commons.jcs.auxiliary.lateral.socket.tcp;
  * under the License.
  */
 
-import java.util.Map;
-import java.util.Set;
-
 import junit.framework.TestCase;
-
 import org.apache.commons.jcs.JCS;
 import org.apache.commons.jcs.auxiliary.lateral.LateralCacheAttributes;
 import org.apache.commons.jcs.auxiliary.lateral.LateralCommand;
@@ -37,6 +33,9 @@ import org.apache.commons.jcs.engine.control.MockCompositeCacheManager;
 import org.apache.commons.jcs.engine.control.group.GroupAttrName;
 import org.apache.commons.jcs.engine.control.group.GroupId;
 import org.apache.commons.jcs.utils.timing.SleepUtil;
+
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Basic unit tests for the sending and receiving portions of the lateral cache.

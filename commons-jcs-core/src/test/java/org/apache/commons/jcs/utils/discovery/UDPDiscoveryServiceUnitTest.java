@@ -19,9 +19,9 @@ package org.apache.commons.jcs.utils.discovery;
  * under the License.
  */
 
-import java.util.ArrayList;
-
 import junit.framework.TestCase;
+
+import java.util.ArrayList;
 
 /** Unit tests for the service. */
 public class UDPDiscoveryServiceUnitTest

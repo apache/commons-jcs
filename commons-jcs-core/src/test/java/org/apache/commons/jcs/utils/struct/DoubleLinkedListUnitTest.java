@@ -19,11 +19,10 @@ package org.apache.commons.jcs.utils.struct;
  * under the License.
  */
 
-import java.io.StringWriter;
-
 import junit.framework.TestCase;
-
 import org.apache.commons.jcs.TestLogConfigurationUtil;
+
+import java.io.StringWriter;
 
 /** Unit tests for the double linked list. */
 public class DoubleLinkedListUnitTest

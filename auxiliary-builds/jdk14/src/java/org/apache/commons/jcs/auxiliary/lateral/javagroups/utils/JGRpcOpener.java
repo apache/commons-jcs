@@ -19,10 +19,10 @@ package org.apache.commons.jcs.auxiliary.lateral.javagroups.utils;
  * under the License.
  */
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.commons.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
 import org.apache.commons.jcs.auxiliary.lateral.javagroups.behavior.ILateralCacheJGListener;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.jgroups.Channel;
 import org.jgroups.JChannel;
 import org.jgroups.blocks.RpcDispatcher;

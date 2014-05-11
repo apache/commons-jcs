@@ -19,19 +19,6 @@ package org.apache.commons.jcs.auxiliary.disk.jdbc;
  * under the License.
  */
 
-import java.io.IOException;
-import java.io.Serializable;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Timestamp;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.apache.commons.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.commons.jcs.auxiliary.disk.AbstractDiskCache;
 import org.apache.commons.jcs.engine.CacheConstants;
@@ -46,6 +33,18 @@ import org.apache.commons.jcs.engine.stats.behavior.IStats;
 import org.apache.commons.jcs.utils.serialization.StandardSerializer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * This is the jdbc disk cache plugin.

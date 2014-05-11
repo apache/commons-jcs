@@ -19,8 +19,6 @@ package org.apache.commons.jcs.auxiliary.remote.http.client;
  * under the License.
  */
 
-import java.io.Serializable;
-
 import org.apache.commons.jcs.auxiliary.remote.AbstractRemoteCacheListener;
 import org.apache.commons.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;

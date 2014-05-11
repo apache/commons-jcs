@@ -19,16 +19,15 @@ package org.apache.commons.jcs.auxiliary.remote.http.server;
  * under the License.
  */
 
-import java.util.Collections;
-import java.util.Set;
-
 import junit.framework.TestCase;
-
 import org.apache.commons.jcs.auxiliary.remote.MockRemoteCacheService;
 import org.apache.commons.jcs.auxiliary.remote.util.RemoteCacheRequestFactory;
 import org.apache.commons.jcs.auxiliary.remote.value.RemoteCacheRequest;
 import org.apache.commons.jcs.auxiliary.remote.value.RemoteCacheResponse;
 import org.apache.commons.jcs.engine.CacheElement;
+
+import java.util.Collections;
+import java.util.Set;
 
 /** Unit tests for the adaptor. */
 public class RemoteCacheServiceAdaptorUnitTest

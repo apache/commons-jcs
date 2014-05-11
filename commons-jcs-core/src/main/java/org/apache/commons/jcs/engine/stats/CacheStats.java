@@ -19,10 +19,10 @@ package org.apache.commons.jcs.engine.stats;
  * under the License.
  */
 
-import java.util.List;
-
 import org.apache.commons.jcs.engine.stats.behavior.ICacheStats;
 import org.apache.commons.jcs.engine.stats.behavior.IStats;
+
+import java.util.List;
 
 /**
  * This class stores cache historical and statistics data for a region.

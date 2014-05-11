@@ -19,15 +19,15 @@ package org.apache.commons.jcs.auxiliary.remote;
  * under the License.
  */
 
-import java.io.IOException;
-import java.rmi.Naming;
-import java.rmi.NotBoundException;
-
 import org.apache.commons.jcs.auxiliary.remote.behavior.IRemoteCacheObserver;
 import org.apache.commons.jcs.engine.behavior.ICacheRestore;
 import org.apache.commons.jcs.engine.behavior.ICacheServiceNonLocal;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.io.IOException;
+import java.rmi.Naming;
+import java.rmi.NotBoundException;
 
 /**
  * Used to repair the remote caches managed by the associated instance of RemoteCacheManager.

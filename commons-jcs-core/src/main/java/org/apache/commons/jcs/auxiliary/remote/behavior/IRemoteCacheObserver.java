@@ -19,9 +19,9 @@ package org.apache.commons.jcs.auxiliary.remote.behavior;
  * under the License.
  */
 
-import java.rmi.Remote;
-
 import org.apache.commons.jcs.engine.behavior.ICacheObserver;
+
+import java.rmi.Remote;
 
 /**
  * Used to register interest in receiving remote cache changes.

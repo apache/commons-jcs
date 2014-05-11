@@ -19,14 +19,14 @@ package org.apache.commons.jcs.auxiliary.lateral.javagroups;
  * under the License.
  */
 
-import java.io.Serializable;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.commons.jcs.auxiliary.lateral.LateralCacheInfo;
 import org.apache.commons.jcs.auxiliary.lateral.LateralElementDescriptor;
 import org.apache.commons.jcs.auxiliary.lateral.javagroups.behavior.ILateralCacheJGListener;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.jgroups.Message;
+
+import java.io.Serializable;
 
 /**
  * Separate thread run when a command comes into the LateralJGReceiver.

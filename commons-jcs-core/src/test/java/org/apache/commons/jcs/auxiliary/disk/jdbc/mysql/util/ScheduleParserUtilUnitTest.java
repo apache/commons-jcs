@@ -19,9 +19,9 @@ package org.apache.commons.jcs.auxiliary.disk.jdbc.mysql.util;
  * under the License.
  */
 
-import java.util.Date;
-
 import junit.framework.TestCase;
+
+import java.util.Date;
 
 /**
  * Unit tests for the schedule parser.

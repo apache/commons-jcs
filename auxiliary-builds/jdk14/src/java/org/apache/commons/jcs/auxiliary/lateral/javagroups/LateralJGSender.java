@@ -19,25 +19,24 @@ package org.apache.commons.jcs.auxiliary.lateral.javagroups;
  * under the License.
  */
 
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.Iterator;
-import java.util.Vector;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.commons.jcs.auxiliary.lateral.LateralCacheInfo;
 import org.apache.commons.jcs.auxiliary.lateral.LateralElementDescriptor;
 import org.apache.commons.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
 import org.apache.commons.jcs.auxiliary.lateral.javagroups.behavior.IJGConstants;
 import org.apache.commons.jcs.engine.CacheElement;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.jgroups.Channel;
 import org.jgroups.Message;
 import org.jgroups.blocks.GroupRequest;
 import org.jgroups.blocks.MethodCall;
 import org.jgroups.blocks.RpcDispatcher;
 import org.jgroups.util.RspList;
+
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.Vector;
 
 /**
  * This class is based on the log4j SocketAppender class. I'm using a differnet

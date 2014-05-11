@@ -19,17 +19,17 @@ package org.apache.commons.jcs.auxiliary.lateral;
  * under the License.
  */
 
-import java.util.ArrayList;
-import java.util.StringTokenizer;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.commons.jcs.auxiliary.AuxiliaryCache;
 import org.apache.commons.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.commons.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
 import org.apache.commons.jcs.auxiliary.lateral.javagroups.LateralCacheJGListener;
 import org.apache.commons.jcs.engine.behavior.ICache;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 /**
  * Constructs a LateralCacheNoWaitFacade for the given configuration. Each

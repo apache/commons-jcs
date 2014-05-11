@@ -19,10 +19,10 @@ package org.apache.commons.jcs.engine.behavior;
  * under the License.
  */
 
+import org.apache.commons.jcs.engine.control.event.behavior.IElementEventHandler;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.commons.jcs.engine.control.event.behavior.IElementEventHandler;
 
 /**
  * Interface for cache element attributes classes. Every item is the cache is associated with an

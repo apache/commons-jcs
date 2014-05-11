@@ -19,12 +19,11 @@ package org.apache.commons.jcs.auxiliary.disk.block;
  * under the License.
  */
 
+import junit.framework.TestCase;
+import org.apache.commons.jcs.utils.serialization.StandardSerializer;
+
 import java.io.File;
 import java.util.Random;
-
-import junit.framework.TestCase;
-
-import org.apache.commons.jcs.utils.serialization.StandardSerializer;
 
 /**
  * Test for the disk access layer of the Block Disk Cache.

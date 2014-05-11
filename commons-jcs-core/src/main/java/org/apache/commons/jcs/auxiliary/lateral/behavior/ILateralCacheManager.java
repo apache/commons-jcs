@@ -19,13 +19,13 @@ package org.apache.commons.jcs.auxiliary.lateral.behavior;
  * under the License.
  */
 
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.Map;
-
 import org.apache.commons.jcs.auxiliary.AuxiliaryCacheManager;
 import org.apache.commons.jcs.auxiliary.lateral.LateralCacheNoWait;
 import org.apache.commons.jcs.engine.behavior.ICacheServiceNonLocal;
+
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.Map;
 
 /**
  * This helps ensure some common behavior among LateraLCacheManagers for things

@@ -19,9 +19,9 @@ package org.apache.commons.jcs.utils.props;
  * under the License.
  */
 
-import java.util.Properties;
-
 import org.apache.commons.jcs.access.exception.ConfigurationException;
+
+import java.util.Properties;
 
 /**
  * Provides a mechanism to load properties into objects.

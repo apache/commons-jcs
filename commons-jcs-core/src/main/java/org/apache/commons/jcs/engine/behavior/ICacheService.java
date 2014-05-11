@@ -19,13 +19,12 @@ package org.apache.commons.jcs.engine.behavior;
  * under the License.
  */
 
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.Map;
-import java.util.Set;
-
 import org.apache.commons.jcs.access.exception.ObjectExistsException;
 import org.apache.commons.jcs.access.exception.ObjectNotFoundException;
+
+import java.io.IOException;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Used to retrieve and update the cache.

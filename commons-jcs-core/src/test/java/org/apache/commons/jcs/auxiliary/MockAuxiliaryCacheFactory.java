@@ -19,8 +19,6 @@ package org.apache.commons.jcs.auxiliary;
  * under the License.
  */
 
-import java.io.Serializable;
-
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;

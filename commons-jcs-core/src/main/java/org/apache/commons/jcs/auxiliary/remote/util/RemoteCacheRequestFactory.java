@@ -19,14 +19,13 @@ package org.apache.commons.jcs.auxiliary.remote.util;
  * under the License.
  */
 
-import java.io.Serializable;
-import java.util.Set;
-
 import org.apache.commons.jcs.auxiliary.remote.value.RemoteCacheRequest;
 import org.apache.commons.jcs.auxiliary.remote.value.RemoteRequestType;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.util.Set;
 
 /**
  * This creates request objects. You could write your own client and use the objects from this

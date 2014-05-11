@@ -23,7 +23,6 @@ import junit.extensions.ActiveTestSuite;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.textui.TestRunner;
-
 import org.apache.commons.jcs.JCS;
 import org.apache.commons.jcs.engine.control.CompositeCacheManager;
 

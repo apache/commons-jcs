@@ -19,24 +19,6 @@ package org.apache.commons.jcs.engine.control;
  * under the License.
  */
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Serializable;
-import java.lang.management.ManagementFactory;
-import java.security.AccessControlException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-
-import javax.management.MBeanServer;
-import javax.management.ObjectName;
-
 import org.apache.commons.jcs.access.exception.CacheException;
 import org.apache.commons.jcs.admin.JCSAdminBean;
 import org.apache.commons.jcs.auxiliary.AuxiliaryCacheAttributes;
@@ -60,6 +42,22 @@ import org.apache.commons.jcs.utils.threadpool.DaemonThreadFactory;
 import org.apache.commons.jcs.utils.threadpool.ThreadPoolManager;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import javax.management.MBeanServer;
+import javax.management.ObjectName;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.management.ManagementFactory;
+import java.security.AccessControlException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * Manages a composite cache. This provides access to caches and is the primary way to shutdown the

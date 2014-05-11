@@ -22,9 +22,7 @@ package org.apache.commons.jcs.auxiliary.lateral.xmlrpc;
 import org.apache.commons.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
 import org.apache.commons.jcs.auxiliary.lateral.behavior.ILateralCacheListener;
 import org.apache.commons.jcs.auxiliary.lateral.xmlrpc.behavior.ILateralCacheXMLRPCListener;
-
 import org.apache.commons.jcs.engine.control.CompositeCacheManager;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

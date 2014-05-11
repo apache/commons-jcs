@@ -19,6 +19,9 @@ package org.apache.commons.jcs.engine;
  * under the License.
  */
 
+import org.apache.commons.jcs.engine.behavior.ICacheElement;
+import org.apache.commons.jcs.engine.behavior.ICacheServiceNonLocal;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -27,9 +30,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import org.apache.commons.jcs.engine.behavior.ICacheElement;
-import org.apache.commons.jcs.engine.behavior.ICacheServiceNonLocal;
 
 /**
  * This is a mock impl of the non local cache service.

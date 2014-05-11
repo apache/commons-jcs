@@ -19,9 +19,9 @@ package org.apache.commons.jcs.auxiliary.remote;
  * under the License.
  */
 
-import java.rmi.RemoteException;
-
 import junit.framework.TestCase;
+
+import java.rmi.RemoteException;
 
 /**
  * Simple tests for remote utils. It is difficult to verify most of the things is does.

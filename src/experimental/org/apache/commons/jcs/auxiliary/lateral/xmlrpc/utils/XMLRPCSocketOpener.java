@@ -19,13 +19,11 @@ package org.apache.commons.jcs.auxiliary.lateral.xmlrpc.utils;
  * under the License.
  */
 
-import java.io.IOException;
-import java.io.InterruptedIOException;
-import org.apache.xmlrpc.XmlRpcClientLite;
-import org.apache.xmlrpc.XmlRpcClient;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.xmlrpc.XmlRpcClientLite;
+
+import java.io.IOException;
 
 
 /**

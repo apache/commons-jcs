@@ -19,10 +19,10 @@ package org.apache.commons.jcs.auxiliary.remote.value;
  * under the License.
  */
 
+import org.apache.commons.jcs.engine.behavior.ICacheElement;
+
 import java.io.Serializable;
 import java.util.Set;
-
-import org.apache.commons.jcs.engine.behavior.ICacheElement;
 
 /**
  * The basic request wrapper. The different types of requests are differentiated by their types.

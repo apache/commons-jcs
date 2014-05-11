@@ -19,8 +19,6 @@ package org.apache.commons.jcs.auxiliary.remote.http.client;
  * under the License.
  */
 
-import java.io.IOException;
-
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.HttpState;
@@ -29,6 +27,8 @@ import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.apache.commons.httpclient.cookie.CookiePolicy;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.io.IOException;
 
 /**
  * This class simply configures the http multithreaded connection manager.

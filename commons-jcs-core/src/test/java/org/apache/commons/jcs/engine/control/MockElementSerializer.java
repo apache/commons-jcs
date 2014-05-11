@@ -19,11 +19,10 @@ package org.apache.commons.jcs.engine.control;
  * under the License.
  */
 
-import java.io.IOException;
-import java.io.Serializable;
-
 import org.apache.commons.jcs.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs.utils.serialization.StandardSerializer;
+
+import java.io.IOException;
 
 /** For mocking. */
 public class MockElementSerializer

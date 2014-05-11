@@ -19,16 +19,15 @@ package org.apache.commons.jcs.engine.control;
  * under the License.
  */
 
-import java.util.Properties;
-
 import junit.framework.TestCase;
-
 import org.apache.commons.jcs.auxiliary.AuxiliaryCache;
 import org.apache.commons.jcs.auxiliary.AuxiliaryCacheConfigurator;
 import org.apache.commons.jcs.auxiliary.MockAuxiliaryCache;
 import org.apache.commons.jcs.auxiliary.MockAuxiliaryCacheAttributes;
 import org.apache.commons.jcs.auxiliary.MockAuxiliaryCacheFactory;
 import org.apache.commons.jcs.engine.logging.MockCacheEventLogger;
+
+import java.util.Properties;
 
 /** Unit tests for the configurator. */
 public class CompositeCacheConfiguratorUnitTest

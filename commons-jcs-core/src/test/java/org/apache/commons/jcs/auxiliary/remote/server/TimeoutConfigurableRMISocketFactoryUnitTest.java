@@ -19,11 +19,11 @@ package org.apache.commons.jcs.auxiliary.remote.server;
  * under the License.
  */
 
+import junit.framework.TestCase;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-
-import junit.framework.TestCase;
 
 /** Unit tests for the custom factory */
 public class TimeoutConfigurableRMISocketFactoryUnitTest

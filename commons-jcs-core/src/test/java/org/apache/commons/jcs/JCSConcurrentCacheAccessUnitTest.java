@@ -19,13 +19,12 @@ package org.apache.commons.jcs;
  * under the License.
  */
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 import junit.framework.Assert;
 import junit.framework.TestCase;
-
 import org.apache.commons.jcs.access.GroupCacheAccess;
 import org.apache.commons.jcs.access.exception.CacheException;
+
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Test Case for JCS-73, modeled after the Groovy code by Alexander Kleymenov

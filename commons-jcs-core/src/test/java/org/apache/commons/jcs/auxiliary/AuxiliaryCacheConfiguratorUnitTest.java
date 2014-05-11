@@ -19,14 +19,13 @@ package org.apache.commons.jcs.auxiliary;
  * under the License.
  */
 
-import java.util.Properties;
-
 import junit.framework.TestCase;
-
 import org.apache.commons.jcs.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs.engine.control.MockElementSerializer;
 import org.apache.commons.jcs.engine.logging.MockCacheEventLogger;
 import org.apache.commons.jcs.utils.serialization.StandardSerializer;
+
+import java.util.Properties;
 
 /** Unit tests for the auxiliary cache configurator. */
 public class AuxiliaryCacheConfiguratorUnitTest

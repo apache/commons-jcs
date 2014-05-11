@@ -19,8 +19,6 @@ package org.apache.commons.jcs.auxiliary.disk.indexed;
  * under the License.
  */
 
-import java.io.Serializable;
-
 import org.apache.commons.jcs.auxiliary.AuxiliaryCache;
 import org.apache.commons.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.commons.jcs.auxiliary.AuxiliaryCacheFactory;

@@ -19,40 +19,26 @@ package org.apache.commons.jcs.auxiliary.lateral.xmlrpc;
  * under the License.
  */
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.OutputStream;
-import java.io.Reader;
-import java.io.Serializable;
-
-import java.util.Vector;
-
-import java.net.InetAddress;
-import java.net.Socket;
-
+import org.apache.commons.jcs.auxiliary.lateral.LateralCacheAttributes;
 import org.apache.commons.jcs.auxiliary.lateral.LateralCacheInfo;
 import org.apache.commons.jcs.auxiliary.lateral.LateralElementDescriptor;
-
 import org.apache.commons.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
-import org.apache.commons.jcs.auxiliary.lateral.LateralCacheAttributes;
-
-import org.apache.commons.jcs.auxiliary.lateral.xmlrpc.utils.XMLRPCSocketOpener;
 import org.apache.commons.jcs.auxiliary.lateral.xmlrpc.behavior.IXMLRPCConstants;
-
-import org.apache.xmlrpc.XmlRpcClientLite;
-import org.apache.xmlrpc.XmlRpcClient;
-
+import org.apache.commons.jcs.auxiliary.lateral.xmlrpc.utils.XMLRPCSocketOpener;
 import org.apache.commons.jcs.engine.CacheElement;
-
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.xmlrpc.XmlRpcClientLite;
+
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.net.InetAddress;
+import java.util.Vector;
 
 /**
  * This class is based on the log4j SocketAppender class. I'm using a differnet

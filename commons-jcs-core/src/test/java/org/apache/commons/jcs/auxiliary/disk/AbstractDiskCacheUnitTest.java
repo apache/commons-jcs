@@ -19,17 +19,7 @@ package org.apache.commons.jcs.auxiliary.disk;
  * under the License.
  */
 
-import java.io.IOException;
-import java.io.Serializable;
-import java.io.StringWriter;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
 import junit.framework.TestCase;
-
 import org.apache.commons.jcs.TestLogConfigurationUtil;
 import org.apache.commons.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.commons.jcs.auxiliary.disk.behavior.IDiskCacheAttributes;
@@ -39,6 +29,15 @@ import org.apache.commons.jcs.engine.CacheStatus;
 import org.apache.commons.jcs.engine.ElementAttributes;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.engine.behavior.IElementAttributes;
+
+import java.io.IOException;
+import java.io.Serializable;
+import java.io.StringWriter;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /** Tests for the abstract disk cache. It's largely tested by actual instances. */
 public class AbstractDiskCacheUnitTest

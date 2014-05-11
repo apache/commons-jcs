@@ -19,25 +19,19 @@ package org.apache.commons.jcs.auxiliary.lateral.xmlrpc;
  * under the License.
  */
 
-import java.io.IOException;
-import java.io.Serializable;
-
-import java.util.HashMap;
-
 import org.apache.commons.jcs.auxiliary.lateral.LateralCacheInfo;
-
 import org.apache.commons.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
 import org.apache.commons.jcs.auxiliary.lateral.behavior.ILateralCacheListener;
 import org.apache.commons.jcs.auxiliary.lateral.xmlrpc.behavior.ILateralCacheXMLRPCListener;
-
 import org.apache.commons.jcs.engine.behavior.ICache;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
-import org.apache.commons.jcs.engine.behavior.ICache;
 import org.apache.commons.jcs.engine.control.CompositeCacheManager;
-import org.apache.commons.jcs.engine.CacheConstants;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.HashMap;
 
 /**
  * Description of the Class

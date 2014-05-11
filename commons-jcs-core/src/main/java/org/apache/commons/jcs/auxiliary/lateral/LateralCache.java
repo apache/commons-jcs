@@ -19,13 +19,6 @@ package org.apache.commons.jcs.auxiliary.lateral;
  * under the License.
  */
 
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
 import org.apache.commons.jcs.auxiliary.AbstractAuxiliaryCacheEventLogging;
 import org.apache.commons.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.commons.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
@@ -39,6 +32,12 @@ import org.apache.commons.jcs.engine.stats.Stats;
 import org.apache.commons.jcs.engine.stats.behavior.IStats;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.io.IOException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Lateral distributor. Returns null on get by default. Net search not implemented.

@@ -19,14 +19,13 @@ package org.apache.commons.jcs.engine;
  * under the License.
  */
 
-import java.util.Properties;
-
 import junit.framework.TestCase;
-
 import org.apache.commons.jcs.JCS;
 import org.apache.commons.jcs.access.CacheAccess;
 import org.apache.commons.jcs.engine.control.CompositeCacheManager;
 import org.apache.commons.jcs.utils.props.PropertyLoader;
+
+import java.util.Properties;
 
 /**
  * Verify that system properties can override.

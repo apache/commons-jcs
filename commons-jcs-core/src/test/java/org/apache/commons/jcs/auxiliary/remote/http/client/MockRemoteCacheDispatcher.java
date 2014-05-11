@@ -19,12 +19,11 @@ package org.apache.commons.jcs.auxiliary.remote.http.client;
  * under the License.
  */
 
-import java.io.IOException;
-import java.io.Serializable;
-
 import org.apache.commons.jcs.auxiliary.remote.behavior.IRemoteCacheDispatcher;
 import org.apache.commons.jcs.auxiliary.remote.value.RemoteCacheRequest;
 import org.apache.commons.jcs.auxiliary.remote.value.RemoteCacheResponse;
+
+import java.io.IOException;
 
 /** For testing the service. */
 public class MockRemoteCacheDispatcher

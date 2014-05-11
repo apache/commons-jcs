@@ -19,8 +19,6 @@ package org.apache.commons.jcs.engine.logging.behavior;
  * under the License.
  */
 
-import java.io.Serializable;
-
 /**
  * This defines the behavior for event logging. Auxiliaries will send events to injected event
  * loggers.

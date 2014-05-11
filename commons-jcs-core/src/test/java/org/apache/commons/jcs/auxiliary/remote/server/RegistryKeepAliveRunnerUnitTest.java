@@ -20,7 +20,6 @@ package org.apache.commons.jcs.auxiliary.remote.server;
  */
 
 import junit.framework.TestCase;
-
 import org.apache.commons.jcs.auxiliary.MockCacheEventLogger;
 
 /** Unit tests for the registry keep alive runner. */

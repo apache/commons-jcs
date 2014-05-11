@@ -16,12 +16,12 @@
  specific language governing permissions and limitations
  under the License.
 --%>
-<%@page import="java.io.Serializable"%>
+<%@page import="org.apache.commons.jcs.JCS"%>
+<%@page import="org.apache.commons.jcs.access.CacheAccess" %>
+<%@page import="org.apache.commons.jcs.admin.CacheElementInfo" %>
+<%@page import="org.apache.commons.jcs.admin.CacheRegionInfo" %>
+<%@page import="java.io.Serializable" %>
 <%@page import="java.util.HashMap" %>
-<%@page import="java.util.List" %>
-<%@page import="org.apache.commons.jcs.admin.*" %>
-<%@page import="org.apache.commons.jcs.access.*" %>
-<%@page import="org.apache.commons.jcs.*" %>
 
 <jsp:useBean id="jcsBean" scope="request" class="org.apache.commons.jcs.admin.JCSAdminBean" />
 

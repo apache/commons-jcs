@@ -19,18 +19,17 @@ package org.apache.commons.jcs.engine.memory.lru;
  * under the License.
  */
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
 import junit.extensions.ActiveTestSuite;
 import junit.framework.Test;
 import junit.framework.TestCase;
-
 import org.apache.commons.jcs.engine.CacheElement;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.engine.control.CompositeCache;
 import org.apache.commons.jcs.engine.control.CompositeCacheManager;
+
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Test which exercises the LRUMemory cache. This one uses three different

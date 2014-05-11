@@ -20,7 +20,6 @@ package org.apache.commons.jcs.auxiliary.remote;
  */
 
 import junit.framework.TestCase;
-
 import org.apache.commons.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes;
 import org.apache.commons.jcs.engine.CacheElementSerialized;
 import org.apache.commons.jcs.engine.ElementAttributes;

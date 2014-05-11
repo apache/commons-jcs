@@ -19,9 +19,9 @@ package org.apache.commons.jcs.utils.threadpool;
  * under the License.
  */
 
-import java.util.concurrent.ThreadPoolExecutor;
-
 import junit.framework.TestCase;
+
+import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * This test is experimental. I'm trying to find out if the max size setting will result in the

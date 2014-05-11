@@ -19,13 +19,12 @@ package org.apache.commons.jcs.auxiliary;
  * under the License.
  */
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.commons.jcs.engine.logging.CacheEvent;
 import org.apache.commons.jcs.engine.logging.behavior.ICacheEvent;
 import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * For testing auxiliary event logging. Improve later so we can test the details. This is very

@@ -19,15 +19,6 @@ package org.apache.commons.jcs.auxiliary.remote;
  * under the License.
  */
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.rmi.Naming;
-import java.rmi.NotBoundException;
-import java.rmi.Remote;
-import java.rmi.registry.Registry;
-import java.rmi.server.ExportException;
-import java.rmi.server.UnicastRemoteObject;
-
 import org.apache.commons.jcs.access.exception.CacheException;
 import org.apache.commons.jcs.access.exception.ObjectExistsException;
 import org.apache.commons.jcs.auxiliary.remote.behavior.IRemoteCacheConstants;
@@ -37,6 +28,15 @@ import org.apache.commons.jcs.engine.CacheElement;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.engine.behavior.ICacheObserver;
 import org.apache.commons.jcs.engine.behavior.ICacheService;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.rmi.Naming;
+import java.rmi.NotBoundException;
+import java.rmi.Remote;
+import java.rmi.registry.Registry;
+import java.rmi.server.ExportException;
+import java.rmi.server.UnicastRemoteObject;
 
 /**
  * Manual tester.

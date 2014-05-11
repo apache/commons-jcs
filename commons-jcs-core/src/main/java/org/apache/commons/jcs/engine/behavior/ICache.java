@@ -19,13 +19,12 @@ package org.apache.commons.jcs.engine.behavior;
  * under the License.
  */
 
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.Map;
-import java.util.Set;
-
 import org.apache.commons.jcs.engine.CacheStatus;
 import org.apache.commons.jcs.engine.match.behavior.IKeyMatcher;
+
+import java.io.IOException;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * This is the top level interface for all cache like structures. It defines the methods used

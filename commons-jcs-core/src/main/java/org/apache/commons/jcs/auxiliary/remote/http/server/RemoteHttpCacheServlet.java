@@ -19,18 +19,6 @@ package org.apache.commons.jcs.auxiliary.remote.http.server;
  * under the License.
  */
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.OutputStream;
-import java.io.Serializable;
-
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.jcs.access.exception.CacheException;
 import org.apache.commons.jcs.auxiliary.remote.value.RemoteCacheRequest;
 import org.apache.commons.jcs.auxiliary.remote.value.RemoteCacheResponse;
@@ -39,6 +27,17 @@ import org.apache.commons.jcs.io.ObjectInputStreamClassLoaderAware;
 import org.apache.commons.jcs.utils.serialization.StandardSerializer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.OutputStream;
+import java.io.Serializable;
 
 /**
  * This servlet simply reads and writes objects. The requests are packaged in a general wrapper. The

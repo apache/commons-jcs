@@ -19,8 +19,6 @@ package org.apache.commons.jcs.auxiliary.lateral.behavior;
  * under the License.
  */
 
-import java.io.Serializable;
-
 import org.apache.commons.jcs.engine.behavior.ICacheListener;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
 

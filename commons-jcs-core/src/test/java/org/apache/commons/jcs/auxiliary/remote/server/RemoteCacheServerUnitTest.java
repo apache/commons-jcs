@@ -19,12 +19,7 @@ package org.apache.commons.jcs.auxiliary.remote.server;
  * under the License.
  */
 
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-
 import junit.framework.TestCase;
-
 import org.apache.commons.jcs.auxiliary.MockCacheEventLogger;
 import org.apache.commons.jcs.auxiliary.remote.MockRemoteCacheListener;
 import org.apache.commons.jcs.auxiliary.remote.server.behavior.IRemoteCacheServerAttributes;
@@ -32,6 +27,10 @@ import org.apache.commons.jcs.auxiliary.remote.server.behavior.RemoteType;
 import org.apache.commons.jcs.engine.CacheElement;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.utils.timing.SleepUtil;
+
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Since the server does not know that it is a server, it is easy to unit test. The factory does all

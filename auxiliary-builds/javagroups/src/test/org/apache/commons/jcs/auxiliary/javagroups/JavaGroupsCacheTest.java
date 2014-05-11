@@ -19,15 +19,12 @@ package org.apache.commons.jcs.auxiliary.javagroups;
  * under the License.
  */
 
-import org.apache.commons.jcs.engine.control.CompositeCacheManager;
-import org.apache.commons.jcs.access.CacheAccess;
-import org.javagroups.log.Tracer;
-import org.javagroups.log.Trace;
-
-import java.util.Properties;
-import java.io.IOException;
-
 import junit.framework.TestCase;
+import org.apache.commons.jcs.access.CacheAccess;
+import org.apache.commons.jcs.engine.control.CompositeCacheManager;
+
+import java.io.IOException;
+import java.util.Properties;
 
 public class JavaGroupsCacheTest extends TestCase
 {

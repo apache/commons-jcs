@@ -19,11 +19,11 @@ package org.apache.commons.jcs.utils.struct;
  * under the License.
  */
 
-import java.util.Iterator;
-
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+
+import java.util.Iterator;
 
 /**
  * Tests the LRUMap

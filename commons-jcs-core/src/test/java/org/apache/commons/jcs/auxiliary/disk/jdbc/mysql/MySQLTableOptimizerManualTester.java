@@ -20,7 +20,6 @@ package org.apache.commons.jcs.auxiliary.disk.jdbc.mysql;
  */
 
 import junit.framework.TestCase;
-
 import org.apache.commons.jcs.auxiliary.disk.jdbc.JDBCDiskCachePoolAccessFactory;
 import org.apache.commons.jcs.auxiliary.disk.jdbc.TableState;
 

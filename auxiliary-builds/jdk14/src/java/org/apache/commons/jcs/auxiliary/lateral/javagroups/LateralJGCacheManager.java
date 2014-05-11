@@ -19,12 +19,6 @@ package org.apache.commons.jcs.auxiliary.lateral.javagroups;
  * under the License.
  */
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.commons.jcs.auxiliary.AuxiliaryCache;
 import org.apache.commons.jcs.auxiliary.lateral.LateralCache;
 import org.apache.commons.jcs.auxiliary.lateral.LateralCacheAbstractManager;
@@ -34,11 +28,17 @@ import org.apache.commons.jcs.auxiliary.lateral.LateralCacheNoWait;
 import org.apache.commons.jcs.auxiliary.lateral.LateralCacheWatchRepairable;
 import org.apache.commons.jcs.auxiliary.lateral.ZombieLateralCacheService;
 import org.apache.commons.jcs.auxiliary.lateral.ZombieLateralCacheWatch;
+import org.apache.commons.jcs.auxiliary.lateral.behavior.ICacheServiceNonLocal;
 import org.apache.commons.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
 import org.apache.commons.jcs.auxiliary.lateral.behavior.ILateralCacheListener;
 import org.apache.commons.jcs.auxiliary.lateral.behavior.ILateralCacheManager;
-import org.apache.commons.jcs.auxiliary.lateral.behavior.ICacheServiceNonLocal;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Creates lateral caches. Lateral caches are primarily used for removing non

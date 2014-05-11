@@ -20,7 +20,6 @@ package org.apache.commons.jcs.auxiliary.disk.file;
  */
 
 import junit.framework.TestCase;
-
 import org.apache.commons.jcs.auxiliary.MockCacheEventLogger;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs.engine.behavior.IElementSerializer;

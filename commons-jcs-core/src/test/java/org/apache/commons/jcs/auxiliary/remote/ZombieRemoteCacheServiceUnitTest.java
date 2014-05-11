@@ -20,7 +20,6 @@ package org.apache.commons.jcs.auxiliary.remote;
  */
 
 import junit.framework.TestCase;
-
 import org.apache.commons.jcs.engine.CacheElement;
 import org.apache.commons.jcs.engine.ZombieCacheServiceNonLocal;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;

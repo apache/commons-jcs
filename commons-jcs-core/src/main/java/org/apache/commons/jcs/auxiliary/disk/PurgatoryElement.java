@@ -19,8 +19,6 @@ package org.apache.commons.jcs.auxiliary.disk;
  * under the License.
  */
 
-import java.io.Serializable;
-
 import org.apache.commons.jcs.engine.CacheElement;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.engine.behavior.IElementAttributes;

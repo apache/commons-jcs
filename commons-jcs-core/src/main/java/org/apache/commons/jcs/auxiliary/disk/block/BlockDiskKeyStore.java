@@ -19,6 +19,12 @@ package org.apache.commons.jcs.auxiliary.disk.block;
  * under the License.
  */
 
+import org.apache.commons.jcs.auxiliary.disk.LRUMapJCS;
+import org.apache.commons.jcs.io.ObjectInputStreamClassLoaderAware;
+import org.apache.commons.jcs.utils.timing.ElapsedTimer;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.EOFException;
@@ -28,16 +34,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-
-import org.apache.commons.jcs.auxiliary.disk.LRUMapJCS;
-import org.apache.commons.jcs.io.ObjectInputStreamClassLoaderAware;
-import org.apache.commons.jcs.utils.timing.ElapsedTimer;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * This is responsible for storing the keys.

@@ -19,11 +19,6 @@ package org.apache.commons.jcs.auxiliary.remote.http.server;
  * under the License.
  */
 
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.Map;
-import java.util.Set;
-
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.engine.behavior.ICacheServiceNonLocal;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
@@ -33,6 +28,11 @@ import org.apache.commons.jcs.engine.logging.behavior.ICacheEvent;
 import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * This class contains common methods for remote cache services. Eventually I hope to extract out

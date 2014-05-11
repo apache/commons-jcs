@@ -19,20 +19,6 @@ package org.apache.commons.jcs.auxiliary.lateral.socket.tcp;
  * under the License.
  */
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
-import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.net.SocketTimeoutException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 import org.apache.commons.jcs.access.exception.CacheException;
 import org.apache.commons.jcs.auxiliary.lateral.LateralElementDescriptor;
 import org.apache.commons.jcs.auxiliary.lateral.behavior.ILateralCacheListener;
@@ -47,6 +33,20 @@ import org.apache.commons.jcs.io.ObjectInputStreamClassLoaderAware;
 import org.apache.commons.jcs.utils.threadpool.DaemonThreadFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.SocketTimeoutException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Listens for connections from other TCP lateral caches and handles them. The initialization method

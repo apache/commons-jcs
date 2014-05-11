@@ -19,16 +19,15 @@ package org.apache.commons.jcs.auxiliary.disk.indexed;
  * under the License.
  */
 
-import java.io.IOException;
-
 import junit.framework.TestCase;
-
 import org.apache.commons.jcs.auxiliary.MockCacheEventLogger;
 import org.apache.commons.jcs.engine.CacheElement;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.engine.control.MockElementSerializer;
 import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;
 import org.apache.commons.jcs.utils.timing.SleepUtil;
+
+import java.io.IOException;
 
 /** Unit tests for the manager */
 public class IndexedDiskCacheManagerUnitTest

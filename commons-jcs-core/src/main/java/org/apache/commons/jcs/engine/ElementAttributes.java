@@ -19,12 +19,12 @@ package org.apache.commons.jcs.engine;
  * under the License.
  */
 
+import org.apache.commons.jcs.engine.behavior.IElementAttributes;
+import org.apache.commons.jcs.engine.control.event.behavior.IElementEventHandler;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.commons.jcs.engine.behavior.IElementAttributes;
-import org.apache.commons.jcs.engine.control.event.behavior.IElementEventHandler;
 
 /**
  * This it the element attribute descriptor class. Each element in the cache has an ElementAttribute

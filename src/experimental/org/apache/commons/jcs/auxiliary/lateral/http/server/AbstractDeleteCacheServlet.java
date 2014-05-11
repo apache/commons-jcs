@@ -19,34 +19,24 @@ package org.apache.commons.jcs.auxiliary.lateral.http.server;
  * under the License.
  */
 
+import org.apache.commons.jcs.engine.behavior.ICache;
+import org.apache.commons.jcs.engine.control.CompositeCacheManager;
+import org.apache.commons.jcs.utils.servlet.BasicHttpAuthenticator;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+import javax.servlet.SingleThreadModel;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.StringTokenizer;
-
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.SingleThreadModel;
-
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.jcs.engine.behavior.ICache;
-
-import org.apache.commons.jcs.engine.control.CompositeCache;
-import org.apache.commons.jcs.engine.control.CompositeCacheManager;
-import org.apache.commons.jcs.engine.CacheConstants;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import org.apache.commons.jcs.utils.servlet.BasicHttpAuthenticator;
 
 public abstract class AbstractDeleteCacheServlet
      extends HttpServlet implements SingleThreadModel

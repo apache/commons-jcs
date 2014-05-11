@@ -19,6 +19,10 @@ package org.apache.commons.jcs.auxiliary.disk.indexed;
  * under the License.
  */
 
+import org.apache.commons.jcs.engine.behavior.IElementSerializer;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -26,10 +30,6 @@ import java.io.RandomAccessFile;
 import java.io.Serializable;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
-
-import org.apache.commons.jcs.engine.behavior.IElementSerializer;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /** Provides thread safe access to the underlying random access file. */
 class IndexedDisk

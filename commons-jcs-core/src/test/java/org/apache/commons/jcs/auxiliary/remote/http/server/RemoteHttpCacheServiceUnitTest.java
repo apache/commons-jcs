@@ -19,13 +19,12 @@ package org.apache.commons.jcs.auxiliary.remote.http.server;
  * under the License.
  */
 
-import java.util.HashSet;
-
 import junit.framework.TestCase;
-
 import org.apache.commons.jcs.auxiliary.MockCacheEventLogger;
 import org.apache.commons.jcs.engine.CacheElement;
 import org.apache.commons.jcs.engine.control.MockCompositeCacheManager;
+
+import java.util.HashSet;
 
 /** Unit tests for the service. */
 public class RemoteHttpCacheServiceUnitTest

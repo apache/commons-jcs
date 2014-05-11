@@ -20,7 +20,6 @@ package org.apache.commons.jcs.admin;
  */
 
 import junit.framework.TestCase;
-
 import org.apache.commons.jcs.JCS;
 import org.apache.commons.jcs.access.CacheAccess;
 

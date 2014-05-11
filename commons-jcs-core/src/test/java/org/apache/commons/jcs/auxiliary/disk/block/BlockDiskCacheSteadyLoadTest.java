@@ -19,15 +19,14 @@ package org.apache.commons.jcs.auxiliary.disk.block;
  * under the License.
  */
 
-import java.text.DecimalFormat;
-import java.util.Random;
-
 import junit.framework.TestCase;
-
 import org.apache.commons.jcs.JCS;
 import org.apache.commons.jcs.access.CacheAccess;
 import org.apache.commons.jcs.auxiliary.disk.DiskTestObject;
 import org.apache.commons.jcs.utils.timing.ElapsedTimer;
+
+import java.text.DecimalFormat;
+import java.util.Random;
 
 /**
  * This allows you to put thousands of large objects into the disk cache and to force removes to

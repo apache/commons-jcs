@@ -19,10 +19,9 @@ package org.apache.commons.jcs.yajcache.core;
  * under the License.
  */
 
+import org.apache.commons.jcs.yajcache.lang.annotation.*;
 import org.apache.commons.jcs.yajcache.soft.SoftRefCache;
 import org.apache.commons.jcs.yajcache.soft.SoftRefFileCache;
-
-import org.apache.commons.jcs.yajcache.lang.annotation.*;
 
 /**
  * Cache Type.

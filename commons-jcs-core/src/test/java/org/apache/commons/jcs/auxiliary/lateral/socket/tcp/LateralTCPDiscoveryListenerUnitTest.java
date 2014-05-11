@@ -19,10 +19,7 @@ package org.apache.commons.jcs.auxiliary.lateral.socket.tcp;
  * under the License.
  */
 
-import java.util.ArrayList;
-
 import junit.framework.TestCase;
-
 import org.apache.commons.jcs.auxiliary.lateral.LateralCache;
 import org.apache.commons.jcs.auxiliary.lateral.LateralCacheAttributes;
 import org.apache.commons.jcs.auxiliary.lateral.LateralCacheNoWait;
@@ -35,6 +32,8 @@ import org.apache.commons.jcs.engine.control.CompositeCacheManager;
 import org.apache.commons.jcs.engine.logging.MockCacheEventLogger;
 import org.apache.commons.jcs.utils.discovery.DiscoveredService;
 import org.apache.commons.jcs.utils.serialization.StandardSerializer;
+
+import java.util.ArrayList;
 
 /** Test for the listener that observers UDP discovery events. */
 public class LateralTCPDiscoveryListenerUnitTest

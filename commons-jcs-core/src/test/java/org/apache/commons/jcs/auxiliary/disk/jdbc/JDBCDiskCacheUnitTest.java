@@ -19,19 +19,18 @@ package org.apache.commons.jcs.auxiliary.disk.jdbc;
  * under the License.
  */
 
+import junit.framework.TestCase;
+import org.apache.commons.jcs.JCS;
+import org.apache.commons.jcs.access.CacheAccess;
+import org.apache.commons.jcs.engine.behavior.ICacheElement;
+import org.apache.commons.jcs.engine.control.MockCompositeCacheManager;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-
-import junit.framework.TestCase;
-
-import org.apache.commons.jcs.JCS;
-import org.apache.commons.jcs.access.CacheAccess;
-import org.apache.commons.jcs.engine.behavior.ICacheElement;
-import org.apache.commons.jcs.engine.control.MockCompositeCacheManager;
 
 /**
  * Runs basic tests for the JDBC disk cache.

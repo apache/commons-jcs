@@ -19,14 +19,14 @@ package org.apache.commons.jcs.auxiliary.remote.http.client;
  * under the License.
  */
 
-import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
-
 import org.apache.commons.jcs.auxiliary.remote.http.client.behavior.IRemoteHttpCacheClient;
 import org.apache.commons.jcs.engine.CacheStatus;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Upon the notification of a connection error, the monitor changes to operate in a time driven

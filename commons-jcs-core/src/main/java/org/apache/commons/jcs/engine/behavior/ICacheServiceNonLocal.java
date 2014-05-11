@@ -20,7 +20,6 @@ package org.apache.commons.jcs.engine.behavior;
  */
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.rmi.Remote;
 import java.util.Map;
 import java.util.Set;

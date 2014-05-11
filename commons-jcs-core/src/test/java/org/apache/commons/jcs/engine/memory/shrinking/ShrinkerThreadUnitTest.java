@@ -19,10 +19,7 @@ package org.apache.commons.jcs.engine.memory.shrinking;
  * under the License.
  */
 
-import java.io.IOException;
-
 import junit.framework.TestCase;
-
 import org.apache.commons.jcs.engine.CacheElement;
 import org.apache.commons.jcs.engine.CompositeCacheAttributes;
 import org.apache.commons.jcs.engine.ElementAttributes;
@@ -32,6 +29,8 @@ import org.apache.commons.jcs.engine.control.CompositeCache;
 import org.apache.commons.jcs.engine.control.event.ElementEventHandlerMockImpl;
 import org.apache.commons.jcs.engine.control.event.behavior.ElementEventType;
 import org.apache.commons.jcs.engine.memory.MockMemoryCache;
+
+import java.io.IOException;
 
 /**
  * This tests the functionality of the shrinker thread.

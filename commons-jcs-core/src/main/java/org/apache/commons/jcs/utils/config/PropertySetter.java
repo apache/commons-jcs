@@ -19,6 +19,9 @@ package org.apache.commons.jcs.utils.config;
  * under the License.
  */
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
@@ -27,9 +30,6 @@ import java.io.File;
 import java.lang.reflect.Method;
 import java.util.Enumeration;
 import java.util.Properties;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * This class is based on the log4j class org.apache.log4j.config.PropertySetter that was made by

@@ -19,6 +19,11 @@ package org.apache.commons.jcs.yajcache.util.concurrent.locks;
  * under the License.
  */
 
+import org.apache.commons.jcs.yajcache.lang.annotation.*;
+import org.apache.commons.jcs.yajcache.lang.ref.KeyedRefCollector;
+import org.apache.commons.jcs.yajcache.lang.ref.KeyedWeakReference;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import java.lang.ref.ReferenceQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -26,11 +31,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.jcs.yajcache.lang.ref.KeyedRefCollector;
-import org.apache.commons.jcs.yajcache.lang.ref.KeyedWeakReference;
-
-import org.apache.commons.jcs.yajcache.lang.annotation.*;
 
 
 /**

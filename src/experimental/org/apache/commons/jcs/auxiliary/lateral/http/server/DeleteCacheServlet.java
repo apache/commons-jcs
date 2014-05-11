@@ -19,10 +19,10 @@ package org.apache.commons.jcs.auxiliary.lateral.http.server;
  * under the License.
  */
 
+import org.apache.commons.jcs.engine.control.CompositeCacheManager;
+
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
-
-import org.apache.commons.jcs.engine.control.CompositeCacheManager;
 
 /**
  * Description of the Class

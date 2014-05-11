@@ -22,9 +22,7 @@ package org.apache.commons.jcs.auxiliary.lateral.javagroups;
 import org.apache.commons.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
 import org.apache.commons.jcs.auxiliary.lateral.behavior.ILateralCacheListener;
 import org.apache.commons.jcs.auxiliary.lateral.javagroups.behavior.ILateralCacheJGListener;
-
 import org.apache.commons.jcs.engine.control.CompositeCacheManager;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

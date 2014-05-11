@@ -19,9 +19,9 @@ package org.apache.commons.jcs.auxiliary.lateral;
  * under the License.
  */
 
-import java.io.Serializable;
-
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
+
+import java.io.Serializable;
 
 /**
  * This class wraps command to other laterals. It is essentially a

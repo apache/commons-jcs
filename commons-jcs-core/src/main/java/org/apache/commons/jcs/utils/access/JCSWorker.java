@@ -19,16 +19,16 @@ package org.apache.commons.jcs.utils.access;
  * under the License.
  */
 
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.commons.jcs.JCS;
 import org.apache.commons.jcs.access.CacheAccess;
 import org.apache.commons.jcs.access.GroupCacheAccess;
 import org.apache.commons.jcs.access.exception.CacheException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Utility class to encapsulate doing a piece of work, and caching the results

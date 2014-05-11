@@ -19,9 +19,9 @@ package org.apache.commons.jcs.yajcache.util.concurrent.locks;
  * under the License.
  */
 
-import java.util.concurrent.locks.Lock;
-
 import org.apache.commons.jcs.yajcache.lang.annotation.*;
+
+import java.util.concurrent.locks.Lock;
 /**
  * Factory Interface for key specific ReadWriteLock.
  *

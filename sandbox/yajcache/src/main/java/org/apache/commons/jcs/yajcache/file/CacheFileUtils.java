@@ -19,13 +19,10 @@ package org.apache.commons.jcs.yajcache.file;
  * under the License.
  */
 
-import java.io.File;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 import org.apache.commons.jcs.yajcache.config.YajCacheConfig;
 import org.apache.commons.jcs.yajcache.lang.annotation.*;
+
+import java.io.File;
 
 /**
  * Cache File Utilities.

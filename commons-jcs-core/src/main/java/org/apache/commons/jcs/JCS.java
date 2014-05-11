@@ -28,7 +28,6 @@ import org.apache.commons.jcs.engine.control.CompositeCache;
 import org.apache.commons.jcs.engine.control.CompositeCacheManager;
 import org.apache.commons.jcs.engine.control.group.GroupAttrName;
 
-import java.io.Serializable;
 import java.util.Properties;
 
 /**

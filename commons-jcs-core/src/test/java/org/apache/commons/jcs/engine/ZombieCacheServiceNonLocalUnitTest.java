@@ -20,7 +20,6 @@ package org.apache.commons.jcs.engine;
  */
 
 import junit.framework.TestCase;
-
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 
 /**

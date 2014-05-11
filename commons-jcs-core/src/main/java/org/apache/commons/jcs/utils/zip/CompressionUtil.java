@@ -19,6 +19,9 @@ package org.apache.commons.jcs.utils.zip;
  * under the License.
  */
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -26,9 +29,6 @@ import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.Inflater;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /** Compress / Decompress. */
 public final class CompressionUtil

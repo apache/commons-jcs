@@ -19,8 +19,6 @@ package org.apache.commons.jcs.engine.logging;
  * under the License.
  */
 
-import java.io.Serializable;
-
 import org.apache.commons.jcs.engine.logging.behavior.ICacheEvent;
 import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;
 

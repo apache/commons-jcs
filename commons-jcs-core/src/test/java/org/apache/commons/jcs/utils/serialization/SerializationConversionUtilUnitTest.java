@@ -19,16 +19,15 @@ package org.apache.commons.jcs.utils.serialization;
  * under the License.
  */
 
-import java.io.IOException;
-
 import junit.framework.TestCase;
-
 import org.apache.commons.jcs.engine.CacheElement;
 import org.apache.commons.jcs.engine.ElementAttributes;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.engine.behavior.ICacheElementSerialized;
 import org.apache.commons.jcs.engine.behavior.IElementAttributes;
 import org.apache.commons.jcs.engine.behavior.IElementSerializer;
+
+import java.io.IOException;
 
 /**
  * Tests the serialization conversion util.

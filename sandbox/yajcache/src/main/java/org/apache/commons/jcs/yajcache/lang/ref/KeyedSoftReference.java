@@ -19,10 +19,10 @@ package org.apache.commons.jcs.yajcache.lang.ref;
  * under the License.
  */
 
+import org.apache.commons.jcs.yajcache.lang.annotation.*;
+
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.SoftReference;
-
-import org.apache.commons.jcs.yajcache.lang.annotation.*;
 
 /**
  * {@link SoftReference} with an embedded key.

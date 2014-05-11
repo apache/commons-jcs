@@ -19,6 +19,11 @@ package org.apache.commons.jcs.utils.threadpool;
  * under the License.
  */
 
+import org.apache.commons.jcs.utils.props.PropertyLoader;
+import org.apache.commons.jcs.utils.threadpool.PoolConfiguration.WhenBlockedPolicy;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Properties;
@@ -26,11 +31,6 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-
-import org.apache.commons.jcs.utils.props.PropertyLoader;
-import org.apache.commons.jcs.utils.threadpool.PoolConfiguration.WhenBlockedPolicy;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * This manages threadpools for an application using Doug Lea's Util Concurrent package.

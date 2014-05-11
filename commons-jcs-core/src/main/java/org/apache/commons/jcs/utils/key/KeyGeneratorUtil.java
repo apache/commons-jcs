@@ -19,14 +19,14 @@ package org.apache.commons.jcs.utils.key;
  * under the License.
  */
 
+import org.apache.commons.jcs.utils.net.AddressUtil;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-
-import org.apache.commons.jcs.utils.net.AddressUtil;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * This can create and parse request ids.  You can use it to generate keys that contain a create time stamp.

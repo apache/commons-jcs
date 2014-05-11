@@ -19,13 +19,12 @@ package org.apache.commons.jcs.utils.struct;
  * under the License.
  */
 
-import java.util.Map;
-
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-
 import org.apache.commons.jcs.JCSvsHashtablePerformanceTest;
+
+import java.util.Map;
 
 /**
  * This ensures that the jcs version of the LRU map is as fast as the commons

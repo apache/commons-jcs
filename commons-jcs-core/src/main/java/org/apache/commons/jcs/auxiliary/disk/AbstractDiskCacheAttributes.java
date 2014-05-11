@@ -19,13 +19,13 @@ package org.apache.commons.jcs.auxiliary.disk;
  * under the License.
  */
 
-import java.io.File;
-
 import org.apache.commons.jcs.auxiliary.AbstractAuxiliaryCacheAttributes;
 import org.apache.commons.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.commons.jcs.auxiliary.disk.behavior.IDiskCacheAttributes;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.io.File;
 
 /**
  * This has common attributes that any conceivable disk cache would need.

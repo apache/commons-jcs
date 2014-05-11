@@ -19,14 +19,6 @@ package org.apache.commons.jcs.auxiliary.javagroups;
  * under the License.
  */
 
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Set;
-import java.util.Vector;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.commons.jcs.auxiliary.AuxiliaryCache;
 import org.apache.commons.jcs.engine.CacheConstants;
 import org.apache.commons.jcs.engine.CacheElement;
@@ -38,6 +30,8 @@ import org.apache.commons.jcs.engine.stats.StatElement;
 import org.apache.commons.jcs.engine.stats.Stats;
 import org.apache.commons.jcs.engine.stats.behavior.IStatElement;
 import org.apache.commons.jcs.engine.stats.behavior.IStats;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.jgroups.Address;
 import org.jgroups.Channel;
 import org.jgroups.MembershipListener;
@@ -47,6 +41,12 @@ import org.jgroups.blocks.GroupRequest;
 import org.jgroups.blocks.MessageDispatcher;
 import org.jgroups.blocks.RequestHandler;
 import org.jgroups.util.RspList;
+
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Set;
+import java.util.Vector;
 
 /**
  * Auxiliary cache using javagroups. Expects to be created with a Channel, the

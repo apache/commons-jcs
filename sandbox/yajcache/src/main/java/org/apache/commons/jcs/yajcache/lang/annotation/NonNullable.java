@@ -19,7 +19,12 @@ package org.apache.commons.jcs.yajcache.lang.annotation;
  * under the License.
  */
 
-import java.lang.annotation.*;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * Element so annotated is never expected to be null.

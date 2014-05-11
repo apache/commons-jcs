@@ -19,11 +19,11 @@ package org.apache.commons.jcs.auxiliary.lateral;
  * under the License.
  */
 
-import java.io.Serializable;
-
 import org.apache.commons.jcs.auxiliary.AbstractAuxiliaryCacheAttributes;
 import org.apache.commons.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.commons.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
+
+import java.io.Serializable;
 
 /**
  * This class stores attributes for all of the available lateral cache auxiliaries.

@@ -19,14 +19,14 @@ package org.apache.commons.jcs.auxiliary.lateral;
  * under the License.
  */
 
-import java.io.Serializable;
-
 import org.apache.commons.jcs.auxiliary.lateral.behavior.ILateralCacheManager;
 import org.apache.commons.jcs.auxiliary.lateral.behavior.ILateralCacheObserver;
 import org.apache.commons.jcs.engine.behavior.ICacheRestore;
 import org.apache.commons.jcs.engine.behavior.ICacheServiceNonLocal;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.io.Serializable;
 
 /**
  * Used to repair the lateral caches managed by the associated instance of LateralCacheManager.

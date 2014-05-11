@@ -19,10 +19,10 @@ package org.apache.commons.jcs.engine.control.event;
  * under the License.
  */
 
-import java.util.EventObject;
-
 import org.apache.commons.jcs.engine.control.event.behavior.ElementEventType;
 import org.apache.commons.jcs.engine.control.event.behavior.IElementEvent;
+
+import java.util.EventObject;
 
 /**
  * Element events will trigger the creation of Element Event objects. This is a wrapper around the

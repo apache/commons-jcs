@@ -19,11 +19,10 @@ package org.apache.commons.jcs.auxiliary.remote.behavior;
  * under the License.
  */
 
-import java.io.IOException;
-import java.io.Serializable;
-
 import org.apache.commons.jcs.auxiliary.remote.value.RemoteCacheRequest;
 import org.apache.commons.jcs.auxiliary.remote.value.RemoteCacheResponse;
+
+import java.io.IOException;
 
 /**
  * In the future, this can be used as a generic dispatcher abstraction.

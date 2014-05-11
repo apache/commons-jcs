@@ -19,9 +19,6 @@ package org.apache.commons.jcs.auxiliary.remote.server;
  * under the License.
  */
 
-import java.io.IOException;
-import java.net.InetAddress;
-
 import org.apache.commons.jcs.auxiliary.AuxiliaryCache;
 import org.apache.commons.jcs.auxiliary.MockCacheEventLogger;
 import org.apache.commons.jcs.auxiliary.remote.MockRemoteCacheListener;
@@ -40,6 +37,9 @@ import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
+
+import java.io.IOException;
+import java.net.InetAddress;
 
 /**
  * These tests startup the remote server and make requests to it.

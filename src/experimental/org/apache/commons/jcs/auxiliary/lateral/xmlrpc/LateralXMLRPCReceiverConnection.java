@@ -19,26 +19,19 @@ package org.apache.commons.jcs.auxiliary.lateral.xmlrpc;
  * under the License.
  */
 
-import java.io.InputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.ByteArrayInputStream;
-import java.io.BufferedInputStream;
-import java.io.Serializable;
-import java.net.Socket;
-import java.util.Vector;
-
 import org.apache.commons.jcs.auxiliary.lateral.LateralCacheInfo;
 import org.apache.commons.jcs.auxiliary.lateral.LateralElementDescriptor;
-
 import org.apache.commons.jcs.auxiliary.lateral.xmlrpc.behavior.ILateralCacheXMLRPCListener;
 import org.apache.commons.jcs.auxiliary.lateral.xmlrpc.behavior.IXMLRPCConstants;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.apache.xmlrpc.XmlRpcHandler;
+
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
+import java.util.Vector;
 
 /**
  * Separate thread run when a command comes into the LateralXMLRPCReceiver.

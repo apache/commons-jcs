@@ -19,11 +19,6 @@ package org.apache.commons.jcs.engine;
  * under the License.
  */
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-
 import org.apache.commons.jcs.engine.behavior.ICacheListener;
 import org.apache.commons.jcs.engine.stats.StatElement;
 import org.apache.commons.jcs.engine.stats.Stats;
@@ -32,6 +27,10 @@ import org.apache.commons.jcs.engine.stats.behavior.IStats;
 import org.apache.commons.jcs.utils.threadpool.ThreadPoolManager;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.util.ArrayList;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * An event queue is used to propagate ordered cache events to one and only one target listener.

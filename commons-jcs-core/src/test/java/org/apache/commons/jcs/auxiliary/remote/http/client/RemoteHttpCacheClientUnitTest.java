@@ -19,18 +19,17 @@ package org.apache.commons.jcs.auxiliary.remote.http.client;
  * under the License.
  */
 
+import junit.framework.TestCase;
+import org.apache.commons.jcs.auxiliary.remote.value.RemoteCacheResponse;
+import org.apache.commons.jcs.auxiliary.remote.value.RemoteRequestType;
+import org.apache.commons.jcs.engine.CacheElement;
+import org.apache.commons.jcs.engine.behavior.ICacheElement;
+
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-
-import junit.framework.TestCase;
-
-import org.apache.commons.jcs.auxiliary.remote.value.RemoteCacheResponse;
-import org.apache.commons.jcs.auxiliary.remote.value.RemoteRequestType;
-import org.apache.commons.jcs.engine.CacheElement;
-import org.apache.commons.jcs.engine.behavior.ICacheElement;
 
 /** Unit tests for the client. */
 public class RemoteHttpCacheClientUnitTest

@@ -19,13 +19,12 @@ package org.apache.commons.jcs.access.behavior;
  * under the License.
  */
 
-import java.io.Serializable;
-import java.util.Map;
-import java.util.Set;
-
 import org.apache.commons.jcs.access.exception.CacheException;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.engine.behavior.IElementAttributes;
+
+import java.util.Map;
+import java.util.Set;
 
 /**
  * ICacheAccess defines the behavior for client access.

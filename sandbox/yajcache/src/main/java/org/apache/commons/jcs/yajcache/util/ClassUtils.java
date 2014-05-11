@@ -19,10 +19,10 @@ package org.apache.commons.jcs.yajcache.util;
  * under the License.
  */
 
+import org.apache.commons.jcs.yajcache.lang.annotation.*;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
-
-import org.apache.commons.jcs.yajcache.lang.annotation.*;
 /**
  *
  * @author Hanson Char

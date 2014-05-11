@@ -20,7 +20,6 @@ package org.apache.commons.jcs.auxiliary.disk.indexed;
  */
 
 import junit.framework.TestCase;
-
 import org.apache.commons.jcs.engine.CacheElement;
 import org.apache.commons.jcs.engine.ElementAttributes;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;

@@ -19,8 +19,6 @@ package org.apache.commons.jcs.engine;
  * under the License.
  */
 
-import java.io.Serializable;
-
 import org.apache.commons.jcs.engine.behavior.ICacheEventQueue;
 import org.apache.commons.jcs.engine.behavior.ICacheListener;
 import org.apache.commons.logging.Log;

@@ -20,7 +20,6 @@ package org.apache.commons.jcs.auxiliary.disk.indexed;
  */
 
 import junit.framework.TestCase;
-
 import org.apache.commons.jcs.auxiliary.disk.DiskTestObject;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.utils.timing.SleepUtil;

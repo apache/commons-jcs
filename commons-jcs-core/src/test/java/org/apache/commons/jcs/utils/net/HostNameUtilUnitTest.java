@@ -19,9 +19,9 @@ package org.apache.commons.jcs.utils.net;
  * under the License.
  */
 
-import java.net.UnknownHostException;
-
 import junit.framework.TestCase;
+
+import java.net.UnknownHostException;
 
 /** Tests for the host name util. */
 public class HostNameUtilUnitTest

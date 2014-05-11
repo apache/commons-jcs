@@ -19,14 +19,13 @@ package org.apache.commons.jcs.auxiliary.remote.http.server;
  * under the License.
  */
 
-import java.util.Properties;
-
 import junit.framework.TestCase;
-
 import org.apache.commons.jcs.auxiliary.AuxiliaryCacheConfigurator;
 import org.apache.commons.jcs.auxiliary.remote.http.behavior.IRemoteHttpCacheConstants;
 import org.apache.commons.jcs.engine.control.MockCompositeCacheManager;
 import org.apache.commons.jcs.engine.logging.MockCacheEventLogger;
+
+import java.util.Properties;
 
 /** Unit tests for the factory */
 public class RemoteHttpCacheSeviceFactoryUnitTest

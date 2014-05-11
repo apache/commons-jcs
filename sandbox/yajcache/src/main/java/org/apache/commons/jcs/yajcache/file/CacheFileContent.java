@@ -19,11 +19,11 @@ package org.apache.commons.jcs.yajcache.file;
  * under the License.
  */
 
+import org.apache.commons.jcs.yajcache.lang.annotation.*;
+
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.Arrays;
-
-import org.apache.commons.jcs.yajcache.lang.annotation.*;
 
 /**
  * Cache File Content which represents the file persistence format

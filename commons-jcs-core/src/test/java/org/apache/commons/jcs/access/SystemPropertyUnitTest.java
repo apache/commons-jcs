@@ -20,7 +20,6 @@ package org.apache.commons.jcs.access;
  */
 
 import junit.framework.TestCase;
-
 import org.apache.commons.jcs.JCS;
 import org.apache.commons.jcs.engine.control.CompositeCacheManager;
 import org.junit.FixMethodOrder;

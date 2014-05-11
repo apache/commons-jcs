@@ -19,11 +19,11 @@ package org.apache.commons.jcs.utils.discovery;
  * under the License.
  */
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * This class periodically check the lastHeardFrom time on the services.

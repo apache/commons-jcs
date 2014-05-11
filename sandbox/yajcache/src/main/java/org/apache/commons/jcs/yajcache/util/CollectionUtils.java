@@ -19,9 +19,9 @@ package org.apache.commons.jcs.yajcache.util;
  * under the License.
  */
 
-import java.util.concurrent.ConcurrentHashMap;
-
 import org.apache.commons.jcs.yajcache.lang.annotation.*;
+
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Collection related Utilities.

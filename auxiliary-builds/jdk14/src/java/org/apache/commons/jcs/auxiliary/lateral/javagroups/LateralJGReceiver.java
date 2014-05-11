@@ -19,17 +19,17 @@ package org.apache.commons.jcs.auxiliary.lateral.javagroups;
  * under the License.
  */
 
-import java.io.IOException;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.commons.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
 import org.apache.commons.jcs.auxiliary.lateral.javagroups.behavior.IJGConstants;
 import org.apache.commons.jcs.auxiliary.lateral.javagroups.behavior.ILateralCacheJGListener;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.jgroups.Channel;
 import org.jgroups.ChannelNotConnectedException;
 import org.jgroups.Message;
 import org.jgroups.blocks.RpcDispatcher;
+
+import java.io.IOException;
 
 /**
  * Processes commands from the server socket.

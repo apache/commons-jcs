@@ -19,14 +19,13 @@ package org.apache.commons.jcs.auxiliary;
  * under the License.
  */
 
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.Set;
-
 import org.apache.commons.jcs.engine.behavior.ICache;
 import org.apache.commons.jcs.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;
 import org.apache.commons.jcs.engine.stats.behavior.IStats;
+
+import java.io.IOException;
+import java.util.Set;
 
 /**
  * Tag interface for auxiliary caches. Currently this provides no additional methods over what is in

@@ -19,6 +19,29 @@ package org.apache.commons.jcs.yajcache.soft;
  * under the License.
  */
 
+import org.apache.commons.jcs.yajcache.beans.CacheChangeSupport;
+import org.apache.commons.jcs.yajcache.beans.ICacheChangeListener;
+import org.apache.commons.jcs.yajcache.config.PerCacheConfig;
+import org.apache.commons.jcs.yajcache.core.CacheEntry;
+import org.apache.commons.jcs.yajcache.core.CacheManager;
+import org.apache.commons.jcs.yajcache.core.CacheType;
+import org.apache.commons.jcs.yajcache.core.ICache;
+import org.apache.commons.jcs.yajcache.file.CacheFileContent;
+import org.apache.commons.jcs.yajcache.file.CacheFileContentType;
+import org.apache.commons.jcs.yajcache.file.CacheFileDAO;
+import org.apache.commons.jcs.yajcache.file.CacheFileUtils;
+import org.apache.commons.jcs.yajcache.lang.annotation.*;
+import org.apache.commons.jcs.yajcache.lang.ref.KeyedRefCollector;
+import org.apache.commons.jcs.yajcache.lang.ref.KeyedSoftReference;
+import org.apache.commons.jcs.yajcache.util.CollectionUtils;
+import org.apache.commons.jcs.yajcache.util.EqualsUtils;
+import org.apache.commons.jcs.yajcache.util.concurrent.locks.IKeyedReadWriteLock;
+import org.apache.commons.jcs.yajcache.util.concurrent.locks.KeyedReadWriteLock;
+import org.apache.commons.lang3.SerializationUtils;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.io.Serializable;
 import java.lang.ref.ReferenceQueue;
 import java.util.ArrayList;
@@ -28,36 +51,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
-
-import org.apache.commons.lang3.SerializationUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
-import org.apache.commons.jcs.yajcache.beans.CacheChangeSupport;
-import org.apache.commons.jcs.yajcache.beans.ICacheChangeListener;
-import org.apache.commons.jcs.yajcache.lang.annotation.*;
-import org.apache.commons.jcs.yajcache.config.PerCacheConfig;
-import org.apache.commons.jcs.yajcache.beans.ICacheChangeListener;
-import org.apache.commons.jcs.yajcache.beans.CacheChangeSupport;
-import org.apache.commons.jcs.yajcache.core.CacheEntry;
-import org.apache.commons.jcs.yajcache.core.CacheManager;
-import org.apache.commons.jcs.yajcache.core.CacheType;
-import org.apache.commons.jcs.yajcache.core.ICache;
-import org.apache.commons.jcs.yajcache.file.CacheFileContent;
-import org.apache.commons.jcs.yajcache.file.CacheFileContentType;
-import org.apache.commons.jcs.yajcache.file.CacheFileDAO;
-import org.apache.commons.jcs.yajcache.file.CacheFileUtils;
-import org.apache.commons.jcs.yajcache.lang.ref.KeyedRefCollector;
-import org.apache.commons.jcs.yajcache.lang.ref.KeyedSoftReference;
-import org.apache.commons.jcs.yajcache.util.CollectionUtils;
-import org.apache.commons.jcs.yajcache.util.EqualsUtils;
-import org.apache.commons.jcs.yajcache.util.concurrent.locks.IKeyedReadWriteLock;
-import org.apache.commons.jcs.yajcache.util.concurrent.locks.KeyedReadWriteLock;
 
 
 /**

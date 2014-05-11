@@ -19,10 +19,9 @@ package org.apache.commons.jcs.engine.behavior;
  * under the License.
  */
 
-import java.io.IOException;
-import java.io.Serializable;
-
 import org.apache.commons.jcs.engine.stats.behavior.IStats;
+
+import java.io.IOException;
 
 /**
  * Interface for a cache event queue. An event queue is used to propagate

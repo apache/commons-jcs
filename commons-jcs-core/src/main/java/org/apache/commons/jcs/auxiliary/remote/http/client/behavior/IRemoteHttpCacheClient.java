@@ -19,11 +19,10 @@ package org.apache.commons.jcs.auxiliary.remote.http.client.behavior;
  * under the License.
  */
 
-import java.io.IOException;
-import java.io.Serializable;
-
 import org.apache.commons.jcs.auxiliary.remote.http.client.RemoteHttpCacheAttributes;
 import org.apache.commons.jcs.engine.behavior.ICacheServiceNonLocal;
+
+import java.io.IOException;
 
 
 /**

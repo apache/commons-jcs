@@ -19,8 +19,6 @@ package org.apache.commons.jcs.engine.behavior;
  * under the License.
  */
 
-import java.io.Serializable;
-
 /**
  * This interface defines the behavior of the serialized element wrapper.
  * <p>

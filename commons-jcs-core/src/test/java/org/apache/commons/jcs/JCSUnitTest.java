@@ -19,15 +19,14 @@ package org.apache.commons.jcs;
  * under the License.
  */
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Random;
-
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-
 import org.apache.commons.jcs.access.CacheAccess;
+
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Random;
 
 /**
  * Simple test for the JCS class.

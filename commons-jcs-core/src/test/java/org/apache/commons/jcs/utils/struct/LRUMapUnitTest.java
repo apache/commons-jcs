@@ -19,11 +19,11 @@ package org.apache.commons.jcs.utils.struct;
  * under the License.
  */
 
+import junit.framework.TestCase;
+
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-
-import junit.framework.TestCase;
 
 /**
  * Basic unit tests for the LRUMap

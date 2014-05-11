@@ -19,6 +19,13 @@ package org.apache.commons.jcs.utils.discovery;
  * under the License.
  */
 
+import org.apache.commons.jcs.engine.behavior.IRequireScheduler;
+import org.apache.commons.jcs.engine.behavior.IShutdownObserver;
+import org.apache.commons.jcs.utils.discovery.behavior.IDiscoveryListener;
+import org.apache.commons.jcs.utils.net.HostNameUtil;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -26,13 +33,6 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-
-import org.apache.commons.jcs.engine.behavior.IRequireScheduler;
-import org.apache.commons.jcs.engine.behavior.IShutdownObserver;
-import org.apache.commons.jcs.utils.discovery.behavior.IDiscoveryListener;
-import org.apache.commons.jcs.utils.net.HostNameUtil;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * This service creates a listener that can create lateral caches and add them to the no wait list.

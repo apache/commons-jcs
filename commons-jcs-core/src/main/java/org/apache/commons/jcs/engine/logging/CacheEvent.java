@@ -19,10 +19,9 @@ package org.apache.commons.jcs.engine.logging;
  * under the License.
  */
 
-import java.io.Serializable;
-import java.util.Date;
-
 import org.apache.commons.jcs.engine.logging.behavior.ICacheEvent;
+
+import java.util.Date;
 
 /** It's returned from create and passed into log. */
 public class CacheEvent<K>

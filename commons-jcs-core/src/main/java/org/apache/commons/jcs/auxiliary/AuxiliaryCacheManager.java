@@ -19,8 +19,6 @@ package org.apache.commons.jcs.auxiliary;
  * under the License.
  */
 
-import java.io.Serializable;
-
 /**
  * AuxiliaryCacheManager
  */

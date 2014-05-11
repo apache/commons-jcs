@@ -19,11 +19,7 @@ package org.apache.commons.jcs.engine.control;
  * under the License.
  */
 
-import java.io.IOException;
-import java.util.Map;
-
 import junit.framework.TestCase;
-
 import org.apache.commons.jcs.auxiliary.AuxiliaryCache;
 import org.apache.commons.jcs.auxiliary.MockAuxiliaryCache;
 import org.apache.commons.jcs.engine.CacheElement;
@@ -34,6 +30,9 @@ import org.apache.commons.jcs.engine.behavior.ICacheType.CacheType;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.commons.jcs.engine.behavior.IElementAttributes;
 import org.apache.commons.jcs.engine.memory.MockMemoryCache;
+
+import java.io.IOException;
+import java.util.Map;
 
 /**
  * Tests that directly engage the composite cache.

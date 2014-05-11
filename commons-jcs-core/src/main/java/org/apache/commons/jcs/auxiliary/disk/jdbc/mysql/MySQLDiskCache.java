@@ -19,15 +19,14 @@ package org.apache.commons.jcs.auxiliary.disk.jdbc.mysql;
  * under the License.
  */
 
-import java.io.Serializable;
-import java.util.Map;
-
 import org.apache.commons.jcs.auxiliary.disk.jdbc.JDBCDiskCache;
 import org.apache.commons.jcs.auxiliary.disk.jdbc.TableState;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.util.Map;
 
 /**
  * The MySQLDiskCache extends the core JDBCDiskCache.

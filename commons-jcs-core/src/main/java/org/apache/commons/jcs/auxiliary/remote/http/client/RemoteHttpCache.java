@@ -19,15 +19,14 @@ package org.apache.commons.jcs.auxiliary.remote.http.client;
  * under the License.
  */
 
-import java.io.IOException;
-import java.io.Serializable;
-
 import org.apache.commons.jcs.auxiliary.remote.AbstractRemoteAuxiliaryCache;
 import org.apache.commons.jcs.auxiliary.remote.behavior.IRemoteCacheListener;
 import org.apache.commons.jcs.engine.ZombieCacheServiceNonLocal;
 import org.apache.commons.jcs.engine.behavior.ICacheServiceNonLocal;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.io.IOException;
 
 /**
  * This uses an http client as the service.

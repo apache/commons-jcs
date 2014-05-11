@@ -19,12 +19,6 @@ package org.apache.commons.jcs.auxiliary.remote.http.client;
  * under the License.
  */
 
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Set;
-
 import org.apache.commons.jcs.auxiliary.remote.behavior.IRemoteCacheDispatcher;
 import org.apache.commons.jcs.auxiliary.remote.http.client.behavior.IRemoteHttpCacheClient;
 import org.apache.commons.jcs.auxiliary.remote.util.RemoteCacheRequestFactory;
@@ -33,6 +27,12 @@ import org.apache.commons.jcs.auxiliary.remote.value.RemoteCacheResponse;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Set;
 
 /** This is the service used by the remote http auxiliary cache. */
 public class RemoteHttpCacheClient<K, V>

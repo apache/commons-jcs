@@ -19,20 +19,19 @@ package org.apache.commons.jcs.auxiliary.lateral.socket.udp;
  * under the License.
  */
 
+import org.apache.commons.jcs.auxiliary.lateral.LateralCacheInfo;
+import org.apache.commons.jcs.auxiliary.lateral.LateralElementDescriptor;
+import org.apache.commons.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
+import org.apache.commons.jcs.auxiliary.lateral.behavior.ILateralCacheListener;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import org.apache.commons.jcs.auxiliary.lateral.LateralCacheInfo;
-import org.apache.commons.jcs.auxiliary.lateral.LateralElementDescriptor;
-import org.apache.commons.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
-import org.apache.commons.jcs.auxiliary.lateral.behavior.ILateralCacheListener;
 
 /**
  * A highly unreliable UDP receiver. It is easy to outrun. Uncaught message will

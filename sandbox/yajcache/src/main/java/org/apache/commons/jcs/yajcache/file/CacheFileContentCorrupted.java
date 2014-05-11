@@ -19,10 +19,10 @@ package org.apache.commons.jcs.yajcache.file;
  * under the License.
  */
 
+import org.apache.commons.jcs.yajcache.lang.annotation.*;
+
 import java.io.IOException;
 import java.io.RandomAccessFile;
-
-import org.apache.commons.jcs.yajcache.lang.annotation.*;
 
 /**
  * Corrupted Cache File Content.
