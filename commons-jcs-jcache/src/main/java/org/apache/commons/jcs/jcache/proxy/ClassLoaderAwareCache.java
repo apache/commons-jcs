@@ -37,9 +37,9 @@ import java.util.Set;
 public class ClassLoaderAwareCache<K extends Serializable, V extends Serializable> implements Cache<K, V>
 {
     private final ClassLoader loader;
-    private final JCSCache<K, V, ?> delegate;
+    private final JCSCache<K, V> delegate;
 
-    public ClassLoaderAwareCache(final ClassLoader loader, final JCSCache<K, V, ?> delegate)
+    public ClassLoaderAwareCache(final ClassLoader loader, final JCSCache<K, V> delegate)
     {
         this.loader = loader;
         this.delegate = delegate;
@@ -468,7 +468,7 @@ public class ClassLoaderAwareCache<K extends Serializable, V extends Serializabl
         return delegate.hashCode();
     }
 
-    public static <K extends Serializable, V extends Serializable> Cache<K, V> wrap(final ClassLoader loader, final JCSCache<K, V, ?> delegate)
+    public static <K extends Serializable, V extends Serializable> Cache<K, V> wrap(final ClassLoader loader, final JCSCache<K, V> delegate)
     {
         ClassLoader dontWrapLoader = ClassLoaderAwareCache.class.getClassLoader();
         while (dontWrapLoader != null)
@@ -478,15 +478,15 @@ public class ClassLoaderAwareCache<K extends Serializable, V extends Serializabl
                 return delegate;
             }
             dontWrapLoader = dontWrapLoader.getParent();
-        }// TODO: maybe use normal wrapping since reflection takes too much time for a cache
+        }
         return new ClassLoaderAwareCache<K, V>(loader, delegate);
     }
 
-    public static <K extends Serializable, V extends Serializable> JCSCache<K, V, ?> getDelegate(final Cache<?, ?> cache)
+    public static <K extends Serializable, V extends Serializable> JCSCache<K, V> getDelegate(final Cache<?, ?> cache)
     {
         if (JCSCache.class.isInstance(cache))
         {
-            return (JCSCache<K, V, ?>) cache;
+            return (JCSCache<K, V>) cache;
         }
         return ((ClassLoaderAwareCache<K, V>) cache).delegate;
     }

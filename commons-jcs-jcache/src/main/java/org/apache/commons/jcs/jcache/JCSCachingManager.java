@@ -18,6 +18,7 @@
  */
 package org.apache.commons.jcs.jcache;
 
+import org.apache.commons.jcs.engine.control.CompositeCacheManager;
 import org.apache.commons.jcs.jcache.proxy.ClassLoaderAwareCache;
 
 import javax.cache.Cache;
@@ -42,6 +43,7 @@ public class JCSCachingManager implements CacheManager
     private final ConcurrentMap<String, Cache<?, ?>> caches = new ConcurrentHashMap<String, Cache<?, ?>>();
     private final Properties configProperties;
     private volatile boolean closed = false;
+    private CompositeCacheManager delegate = CompositeCacheManager.getUnconfiguredInstance();;
 
     public JCSCachingManager(final CachingProvider provider, final URI uri, final ClassLoader loader, final Properties properties)
     {
@@ -50,6 +52,8 @@ public class JCSCachingManager implements CacheManager
         this.loader = loader;
         this.properties = readConfig(uri, loader, properties);
         this.configProperties = properties;
+
+        delegate.configure(properties);
     }
 
     private Properties readConfig(final URI uri, final ClassLoader loader, final Properties properties) {
@@ -112,7 +116,10 @@ public class JCSCachingManager implements CacheManager
         final Class<?> valueType = configuration == null ? Object.class : configuration.getValueType();
         if (!caches.containsKey(cacheName))
         {
-            final Cache<K, V> cache = ClassLoaderAwareCache.wrap(loader, new JCSCache(loader, this, cacheName, new JCSConfiguration(configuration, keyType, valueType), properties));
+            final Cache<K, V> cache = ClassLoaderAwareCache.wrap(loader,
+                    new JCSCache(loader, this, cacheName,
+                            new JCSConfiguration(configuration, keyType, valueType), properties,
+                            delegate.getCache(cacheName)));
             caches.putIfAbsent(cacheName, cache);
         }
         else
@@ -140,7 +147,7 @@ public class JCSCachingManager implements CacheManager
     {
         assertNotClosed();
         assertNotNull(cacheName, "cacheName");
-        final JCSCache<?, ?, ?> cache = getJCSCache(cacheName);
+        final JCSCache<?, ?> cache = getJCSCache(cacheName);
         if (cache != null)
         {
             if (enabled)
@@ -154,7 +161,7 @@ public class JCSCachingManager implements CacheManager
         }
     }
 
-    private JCSCache<?, ?, ?> getJCSCache(final String cacheName)
+    private JCSCache<?, ?> getJCSCache(final String cacheName)
     {
         final Cache<?, ?> cache = caches.get(cacheName);
         return JCSCache.class.cast(ClassLoaderAwareCache.getDelegate(cache));
@@ -165,7 +172,7 @@ public class JCSCachingManager implements CacheManager
     {
         assertNotClosed();
         assertNotNull(cacheName, "cacheName");
-        final JCSCache<?, ?, ?> cache = getJCSCache(cacheName);
+        final JCSCache<?, ?> cache = getJCSCache(cacheName);
         if (cache != null)
         {
             if (enabled)
@@ -198,6 +205,7 @@ public class JCSCachingManager implements CacheManager
         {
             JCSCachingProvider.class.cast(provider).remove(this);
         }
+        delegate.shutDown();
     }
 
     @Override

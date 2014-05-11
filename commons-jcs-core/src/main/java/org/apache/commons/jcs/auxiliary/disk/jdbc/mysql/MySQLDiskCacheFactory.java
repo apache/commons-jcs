@@ -49,7 +49,7 @@ public class MySQLDiskCacheFactory
      * @return AuxiliaryCache
      */
     @Override
-    public <K extends Serializable, V extends Serializable> AuxiliaryCache<K, V> createCache( AuxiliaryCacheAttributes rawAttr, ICompositeCacheManager cacheManager,
+    public <K, V> AuxiliaryCache<K, V> createCache( AuxiliaryCacheAttributes rawAttr, ICompositeCacheManager cacheManager,
                                        ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer )
     {
         MySQLDiskCacheManager mgr = MySQLDiskCacheManager.getInstance( (MySQLDiskCacheAttributes) rawAttr, cacheManager, cacheEventLogger, elementSerializer );

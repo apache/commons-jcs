@@ -32,7 +32,7 @@ import org.apache.commons.logging.LogFactory;
  * <p>
  * @author aaronsm
  */
-public class CacheEventQueueFactory<K extends Serializable, V extends Serializable>
+public class CacheEventQueueFactory<K, V>
 {
     /** The logger. */
     private static final Log log = LogFactory.getLog( CacheEventQueueFactory.class );

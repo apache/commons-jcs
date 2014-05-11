@@ -75,7 +75,7 @@ public class RemoteHttpCacheDispatcher
      * @throws IOException
      */
     @Override
-    public <K extends Serializable, V extends Serializable, T>
+    public <K, V, T>
         RemoteCacheResponse<T> dispatchRequest( RemoteCacheRequest<K, V> remoteCacheRequest )
         throws IOException
     {
@@ -128,7 +128,7 @@ public class RemoteHttpCacheDispatcher
      * @param baseUrl
      * @return String
      */
-    protected <K extends Serializable, V extends Serializable> String addParameters( RemoteCacheRequest<K, V> remoteCacheRequest, String baseUrl )
+    protected <K, V> String addParameters( RemoteCacheRequest<K, V> remoteCacheRequest, String baseUrl )
     {
         StringBuilder url = new StringBuilder( baseUrl );
 

@@ -50,7 +50,7 @@ public interface ILateralCacheManager
      * <p>
      * @return Map
      */
-    Map<String, LateralCacheNoWait<? extends Serializable, ? extends Serializable>> getCaches();
+    Map<String, LateralCacheNoWait<?, ?>> getCaches();
 
     /**
      * The restore calls this on the manger if a cache if found to be in error.

@@ -41,7 +41,7 @@ public interface IRemoteCacheDispatcher
      * @return RemoteCacheResponse
      * @throws IOException
      */
-    <K extends Serializable, V extends Serializable, T>
+    <K, V, T>
         RemoteCacheResponse<T> dispatchRequest( RemoteCacheRequest<K, V> remoteCacheRequest )
             throws IOException;
 }

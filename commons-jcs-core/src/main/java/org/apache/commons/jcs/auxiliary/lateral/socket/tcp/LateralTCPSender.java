@@ -179,7 +179,7 @@ public class LateralTCPSender
      * @param led
      * @throws IOException
      */
-    public <K extends Serializable, V extends Serializable> void send( LateralElementDescriptor<K, V> led )
+    public <K, V> void send( LateralElementDescriptor<K, V> led )
         throws IOException
     {
         sendCnt++;
@@ -235,7 +235,7 @@ public class LateralTCPSender
      * @return ICacheElement
      * @throws IOException
      */
-    public <K extends Serializable, V extends Serializable> Object sendAndReceive( LateralElementDescriptor<K, V> led )
+    public <K, V> Object sendAndReceive( LateralElementDescriptor<K, V> led )
         throws IOException
     {
         if ( led == null )

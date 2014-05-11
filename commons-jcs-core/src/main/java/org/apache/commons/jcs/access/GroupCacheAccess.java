@@ -37,7 +37,7 @@ import org.apache.commons.jcs.engine.control.group.GroupId;
 /**
  * Access for groups.
  */
-public class GroupCacheAccess<K extends Serializable, V extends Serializable>
+public class GroupCacheAccess<K, V>
     extends AbstractCacheAccess<GroupAttrName<K>, V>
     implements IGroupCacheAccess<K, V>
 {

@@ -31,7 +31,7 @@ import org.apache.commons.logging.LogFactory;
 /**
  * An abstract base class to the different implementations
  */
-public abstract class AbstractCacheEventQueue<K extends Serializable, V extends Serializable>
+public abstract class AbstractCacheEventQueue<K, V>
     implements ICacheEventQueue<K, V>
 {
     /** The logger. */

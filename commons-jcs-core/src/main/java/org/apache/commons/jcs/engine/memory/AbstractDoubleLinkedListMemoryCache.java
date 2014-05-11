@@ -50,7 +50,7 @@ import org.apache.commons.logging.LogFactory;
  * the list will be the one removed when the list fills. For instance LRU should more items to the
  * front as they are used. FIFO should simply add new items to the front of the list.
  */
-public abstract class AbstractDoubleLinkedListMemoryCache<K extends Serializable, V extends Serializable>
+public abstract class AbstractDoubleLinkedListMemoryCache<K, V>
     extends AbstractMemoryCache<K, V>
 {
     /** Don't change. */
@@ -511,7 +511,7 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K extends Serializable
         }
 
         log.debug( "verifycache: checking via keysets!" );
-        for (Serializable val : map.keySet())
+        for (Object val : map.keySet())
         {
             found = false;
 

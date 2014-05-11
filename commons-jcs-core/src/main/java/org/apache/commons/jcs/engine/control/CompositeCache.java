@@ -66,7 +66,7 @@ import org.apache.commons.logging.LogFactory;
  * <p>
  * This is the core of a JCS region. Hence, this simple class is the core of JCS.
  */
-public class CompositeCache<K extends Serializable, V extends Serializable>
+public class CompositeCache<K, V>
     implements ICache<K, V>, IRequireScheduler
 {
     /** log instance */
@@ -448,7 +448,7 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
      * <p>
      * @param key
      * @return element from the cache, or null if not present
-     * @see org.apache.commons.jcs.engine.behavior.ICache#get(java.io.Serializable)
+     * @see org.apache.commons.jcs.engine.behavior.ICache#get(Object)
      */
     @Override
     public ICacheElement<K, V> get( K key )
@@ -1104,7 +1104,7 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
      * <p>
      * @param key
      * @return true is it was removed
-     * @see org.apache.commons.jcs.engine.behavior.ICache#remove(java.io.Serializable)
+     * @see org.apache.commons.jcs.engine.behavior.ICache#remove(Object)
      */
     @Override
     public boolean remove( K key )

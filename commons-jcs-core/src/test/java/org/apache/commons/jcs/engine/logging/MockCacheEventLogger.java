@@ -64,7 +64,7 @@ public class MockCacheEventLogger
      * @return ICacheEvent
      */
     @Override
-    public <T extends Serializable> ICacheEvent<T> createICacheEvent( String source, String region, String eventName, String optionalDetails,
+    public <T> ICacheEvent<T> createICacheEvent( String source, String region, String eventName, String optionalDetails,
                                           T key )
     {
         return new CacheEvent<T>();
@@ -74,7 +74,7 @@ public class MockCacheEventLogger
      * @param event
      */
     @Override
-    public <T extends Serializable> void logICacheEvent( ICacheEvent<T> event )
+    public <T> void logICacheEvent( ICacheEvent<T> event )
     {
         // TODO Auto-generated method stub
     }

@@ -60,7 +60,7 @@ public abstract class JCS
      * @return CacheAccess instance for the new region
      * @throws CacheException
      */
-    public static <K extends Serializable, V extends Serializable> CacheAccess<K, V> defineRegion( String name )
+    public static <K, V> CacheAccess<K, V> defineRegion( String name )
         throws CacheException
     {
         CompositeCache<K, V> cache = getCacheManager().getCache( name );
@@ -75,7 +75,7 @@ public abstract class JCS
      * @return CacheAccess instance for the new region
      * @throws CacheException
      */
-    public static <K extends Serializable, V extends Serializable> CacheAccess<K, V> defineRegion( String name, ICompositeCacheAttributes cattr )
+    public static <K, V> CacheAccess<K, V> defineRegion( String name, ICompositeCacheAttributes cattr )
         throws CacheException
     {
         CompositeCache<K, V> cache = getCacheManager().getCache( name, cattr );
@@ -92,7 +92,7 @@ public abstract class JCS
      * @return CacheAccess instance for the new region
      * @throws CacheException
      */
-    public static <K extends Serializable, V extends Serializable> CacheAccess<K, V> defineRegion( String name, ICompositeCacheAttributes cattr, IElementAttributes attr )
+    public static <K, V> CacheAccess<K, V> defineRegion( String name, ICompositeCacheAttributes cattr, IElementAttributes attr )
         throws CacheException
     {
         CompositeCache<K, V> cache = getCacheManager().getCache( name, cattr, attr );
@@ -160,7 +160,7 @@ public abstract class JCS
      * @return A CacheAccess which provides access to a given region.
      * @throws CacheException
      */
-    public static <K extends Serializable, V extends Serializable> CacheAccess<K, V> getInstance( String region )
+    public static <K, V> CacheAccess<K, V> getInstance( String region )
         throws CacheException
     {
         CompositeCache<K, V> cache = getCacheManager().getCache( region );
@@ -175,7 +175,7 @@ public abstract class JCS
      * @return A CacheAccess which provides access to a given region.
      * @throws CacheException
      */
-    public static <K extends Serializable, V extends Serializable> CacheAccess<K, V> getInstance( String region, ICompositeCacheAttributes icca )
+    public static <K, V> CacheAccess<K, V> getInstance( String region, ICompositeCacheAttributes icca )
         throws CacheException
     {
         CompositeCache<K, V> cache = getCacheManager().getCache( region, icca );
@@ -189,7 +189,7 @@ public abstract class JCS
      * @return A GroupCacheAccess which provides access to a given region.
      * @throws CacheException
      */
-    public static <K extends Serializable, V extends Serializable> GroupCacheAccess<K, V> getGroupCacheInstance( String region )
+    public static <K, V> GroupCacheAccess<K, V> getGroupCacheInstance( String region )
         throws CacheException
     {
         CompositeCache<GroupAttrName<K>, V> cache = getCacheManager().getCache( region );
@@ -204,7 +204,7 @@ public abstract class JCS
      * @return A GroupCacheAccess which provides access to a given region.
      * @throws CacheException
      */
-    public static <K extends Serializable, V extends Serializable> GroupCacheAccess<K, V> getGroupCacheInstance( String region, ICompositeCacheAttributes icca )
+    public static <K, V> GroupCacheAccess<K, V> getGroupCacheInstance( String region, ICompositeCacheAttributes icca )
         throws CacheException
     {
         CompositeCache<GroupAttrName<K>, V> cache = getCacheManager().getCache( region, icca );

@@ -19,15 +19,13 @@ package org.apache.commons.jcs.engine;
  * under the License.
  */
 
-import java.io.Serializable;
-
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.engine.behavior.IElementAttributes;
 
 /**
  * Generic element wrapper. Often stuffed inside another.
  */
-public class CacheElement<K extends Serializable, V extends Serializable>
+public class CacheElement<K, V>
     implements ICacheElement<K, V>
 {
     /** Don't change */

@@ -43,7 +43,7 @@ import org.apache.commons.logging.LogFactory;
 /**
  * A lateral cache service implementation. Does not implement getGroupKey
  */
-public class LateralTCPService<K extends Serializable, V extends Serializable>
+public class LateralTCPService<K, V>
     implements ICacheServiceNonLocal<K, V>, ILateralCacheObserver
 {
     /** The logger. */
@@ -471,7 +471,7 @@ public class LateralTCPService<K extends Serializable, V extends Serializable>
      * @throws IOException
      */
     @Override
-    public <KK extends Serializable, VV extends Serializable> void addCacheListener( String cacheName, ICacheListener<KK, VV> obj )
+    public <KK, VV> void addCacheListener( String cacheName, ICacheListener<KK, VV> obj )
         throws IOException
     {
         // Empty
@@ -482,7 +482,7 @@ public class LateralTCPService<K extends Serializable, V extends Serializable>
      * @throws IOException
      */
     @Override
-    public <KK extends Serializable, VV extends Serializable> void addCacheListener( ICacheListener<KK, VV> obj )
+    public <KK, VV> void addCacheListener( ICacheListener<KK, VV> obj )
         throws IOException
     {
         // Empty
@@ -494,7 +494,7 @@ public class LateralTCPService<K extends Serializable, V extends Serializable>
      * @throws IOException
      */
     @Override
-    public <KK extends Serializable, VV extends Serializable> void removeCacheListener( String cacheName, ICacheListener<KK, VV> obj )
+    public <KK, VV> void removeCacheListener( String cacheName, ICacheListener<KK, VV> obj )
         throws IOException
     {
         // Empty
@@ -505,7 +505,7 @@ public class LateralTCPService<K extends Serializable, V extends Serializable>
      * @throws IOException
      */
     @Override
-    public <KK extends Serializable, VV extends Serializable> void removeCacheListener( ICacheListener<KK, VV> obj )
+    public <KK, VV> void removeCacheListener( ICacheListener<KK, VV> obj )
         throws IOException
     {
         // Empty

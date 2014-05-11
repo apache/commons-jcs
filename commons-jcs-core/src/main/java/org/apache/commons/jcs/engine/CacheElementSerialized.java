@@ -26,7 +26,7 @@ import org.apache.commons.jcs.engine.behavior.ICacheElementSerialized;
 import org.apache.commons.jcs.engine.behavior.IElementAttributes;
 
 /** Either serialized value or the value should be null; */
-public class CacheElementSerialized<K extends Serializable, V extends Serializable>
+public class CacheElementSerialized<K, V>
     extends CacheElement<K, V>
     implements ICacheElementSerialized<K, V>
 {

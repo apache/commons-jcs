@@ -41,7 +41,7 @@ public interface ICacheObserver
      *            object to notify for cache changes.
      * @throws IOException
      */
-    <K extends Serializable, V extends Serializable> void addCacheListener( String cacheName, ICacheListener<K, V> obj )
+    <K, V> void addCacheListener( String cacheName, ICacheListener<K, V> obj )
         throws IOException;
 
     //, CacheNotFoundException;
@@ -53,7 +53,7 @@ public interface ICacheObserver
      *            object to notify for all cache changes.
      * @throws IOException
      */
-    <K extends Serializable, V extends Serializable> void addCacheListener( ICacheListener<K, V> obj )
+    <K, V> void addCacheListener( ICacheListener<K, V> obj )
         throws IOException;
 
     /**
@@ -64,7 +64,7 @@ public interface ICacheObserver
      *            existing subscriber.
      * @throws IOException
      */
-    <K extends Serializable, V extends Serializable> void removeCacheListener( String cacheName, ICacheListener<K, V> obj )
+    <K, V> void removeCacheListener( String cacheName, ICacheListener<K, V> obj )
         throws IOException;
 
     /**
@@ -74,6 +74,6 @@ public interface ICacheObserver
      *            existing subscriber.
      * @throws IOException
      */
-    <K extends Serializable, V extends Serializable> void removeCacheListener( ICacheListener<K, V> obj )
+    <K, V> void removeCacheListener( ICacheListener<K, V> obj )
         throws IOException;
 }

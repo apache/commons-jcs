@@ -32,7 +32,7 @@ import java.io.Serializable;
  * <p>
  * @author Aaron Smuts
  */
-public class BlockDiskElementDescriptor<K extends Serializable>
+public class BlockDiskElementDescriptor<K>
     implements Serializable, Externalizable
 {
     /** Don't change */

@@ -30,7 +30,7 @@ import org.apache.commons.jcs.engine.behavior.ICacheElement;
  * Rather than creating sub object types, I created on object that has values for all types of
  * requests.
  */
-public class RemoteCacheRequest<K extends Serializable, V extends Serializable>
+public class RemoteCacheRequest<K, V>
     implements Serializable
 {
     /** Don't change. */

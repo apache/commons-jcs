@@ -48,7 +48,7 @@ import org.apache.commons.logging.LogFactory;
  * <p>
  * The JCS class is the preferred way to access these methods.
  */
-public class CacheAccess<K extends Serializable, V extends Serializable>
+public class CacheAccess<K, V>
     extends AbstractCacheAccess<K, V>
     implements ICacheAccess<K, V>
 {
@@ -184,7 +184,6 @@ public class CacheAccess<K extends Serializable, V extends Serializable>
      */
     @Override
     public void putSafe( K key, V value )
-        throws CacheException
     {
         if ( this.getCacheControl().get( key ) != null )
         {
@@ -200,11 +199,9 @@ public class CacheAccess<K extends Serializable, V extends Serializable>
      * be unique within the region they are placed.
      * @param name Key object will be stored with
      * @param obj Object to store
-     * @throws CacheException
      */
     @Override
     public void put( K name, V obj )
-        throws CacheException
     {
         // Call put with a copy of the contained caches default attributes.
         // the attributes are copied by the cacheControl
@@ -221,7 +218,6 @@ public class CacheAccess<K extends Serializable, V extends Serializable>
      */
     @Override
     public void put( K key, V val, IElementAttributes attr )
-        throws CacheException
     {
         if ( key == null )
         {
@@ -254,11 +250,9 @@ public class CacheAccess<K extends Serializable, V extends Serializable>
      * Removes a single item by name.
      * <p>
      * @param name the name of the item to remove.
-     * @throws CacheException
      */
     @Override
     public void remove( K name )
-        throws CacheException
     {
         this.getCacheControl().remove( name );
     }
@@ -269,12 +263,10 @@ public class CacheAccess<K extends Serializable, V extends Serializable>
      * <p>
      * @param name Key of object to reset attributes for
      * @param attr New attributes for the object
-     * @throws CacheException
      * @throws InvalidHandleException if the item does not exist.
      */
     @Override
     public void resetElementAttributes( K name, IElementAttributes attr )
-        throws CacheException, InvalidHandleException
     {
         ICacheElement<K, V> element = this.getCacheControl().get( name );
 
@@ -298,11 +290,9 @@ public class CacheAccess<K extends Serializable, V extends Serializable>
      * <p>
      * @param name Key of object to get attributes for
      * @return Attributes for the object, null if object not in cache
-     * @throws CacheException
      */
     @Override
     public IElementAttributes getElementAttributes( K name )
-        throws CacheException
     {
         IElementAttributes attr = null;
 

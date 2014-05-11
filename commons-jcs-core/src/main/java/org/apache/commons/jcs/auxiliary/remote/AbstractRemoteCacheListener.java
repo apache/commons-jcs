@@ -40,7 +40,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /** Shared listener base. */
-public abstract class AbstractRemoteCacheListener<K extends Serializable, V extends Serializable>
+public abstract class AbstractRemoteCacheListener<K, V>
     implements IRemoteCacheListener<K, V>, Serializable
 {
     /** Don't change */

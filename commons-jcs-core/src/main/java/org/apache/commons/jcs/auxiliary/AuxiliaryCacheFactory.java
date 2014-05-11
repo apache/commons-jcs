@@ -19,8 +19,6 @@ package org.apache.commons.jcs.auxiliary;
  * under the License.
  */
 
-import java.io.Serializable;
-
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;
@@ -41,7 +39,7 @@ public interface AuxiliaryCacheFactory
      * @param elementSerializer
      * @return AuxiliaryCache
      */
-    <K extends Serializable, V extends Serializable> AuxiliaryCache<K, V> createCache(
+    <K, V> AuxiliaryCache<K, V> createCache(
             AuxiliaryCacheAttributes attr, ICompositeCacheManager cacheMgr,
             ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer );
 

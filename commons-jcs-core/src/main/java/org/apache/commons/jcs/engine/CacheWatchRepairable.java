@@ -46,8 +46,8 @@ public class CacheWatchRepairable
     private ICacheObserver cacheWatch;
 
     /** Map of cache regions. */
-    private final Map<String, Set<ICacheListener<? extends Serializable, ? extends Serializable>>> cacheMap =
-        new HashMap<String, Set<ICacheListener<? extends Serializable, ? extends Serializable>>>();
+    private final Map<String, Set<ICacheListener<?, ?>>> cacheMap =
+        new HashMap<String, Set<ICacheListener<?, ?>>>();
 
     /**
      * Replaces the underlying cache watch service and reattached all existing listeners to the new
@@ -60,10 +60,10 @@ public class CacheWatchRepairable
         this.cacheWatch = cacheWatch;
         synchronized ( cacheMap )
         {
-            for (Map.Entry<String, Set<ICacheListener<? extends Serializable, ? extends Serializable>>> entry : cacheMap.entrySet())
+            for (Map.Entry<String, Set<ICacheListener<?, ?>>> entry : cacheMap.entrySet())
             {
                 String cacheName = entry.getKey();
-                for (ICacheListener<? extends Serializable, ? extends Serializable> listener : entry.getValue())
+                for (ICacheListener<?, ?> listener : entry.getValue())
                 {
                     try
                     {
@@ -92,17 +92,17 @@ public class CacheWatchRepairable
      * @throws IOException
      */
     @Override
-    public <K extends Serializable, V extends Serializable> void addCacheListener( String cacheName, ICacheListener<K, V> obj )
+    public <K, V> void addCacheListener( String cacheName, ICacheListener<K, V> obj )
         throws IOException
     {
         // Record the added cache listener locally, regardless of whether the
         // remote add-listener operation succeeds or fails.
         synchronized ( cacheMap )
         {
-            Set<ICacheListener<? extends Serializable, ? extends Serializable>> listenerSet = cacheMap.get( cacheName );
+            Set<ICacheListener<?, ?>> listenerSet = cacheMap.get( cacheName );
             if ( listenerSet == null )
             {
-                listenerSet = new HashSet<ICacheListener<? extends Serializable, ? extends Serializable>>();
+                listenerSet = new HashSet<ICacheListener<?, ?>>();
                 cacheMap.put( cacheName, listenerSet );
             }
             listenerSet.add( obj );
@@ -122,14 +122,14 @@ public class CacheWatchRepairable
      * @throws IOException
      */
     @Override
-    public <K extends Serializable, V extends Serializable> void addCacheListener( ICacheListener<K, V> obj )
+    public <K, V> void addCacheListener( ICacheListener<K, V> obj )
         throws IOException
     {
         // Record the added cache listener locally, regardless of whether the
         // remote add-listener operation succeeds or fails.
         synchronized ( cacheMap )
         {
-            for (Set<ICacheListener<? extends Serializable, ? extends Serializable>> listenerSet : cacheMap.values())
+            for (Set<ICacheListener<?, ?>> listenerSet : cacheMap.values())
             {
                 listenerSet.add( obj );
             }
@@ -150,7 +150,7 @@ public class CacheWatchRepairable
      * @throws IOException
      */
     @Override
-    public <K extends Serializable, V extends Serializable> void removeCacheListener( String cacheName, ICacheListener<K, V> obj )
+    public <K, V> void removeCacheListener( String cacheName, ICacheListener<K, V> obj )
         throws IOException
     {
         if ( log.isInfoEnabled() )
@@ -161,7 +161,7 @@ public class CacheWatchRepairable
         // remove-listener operation succeeds or fails.
         synchronized ( cacheMap )
         {
-            Set<ICacheListener<? extends Serializable, ? extends Serializable>> listenerSet = cacheMap.get( cacheName );
+            Set<ICacheListener<?, ?>> listenerSet = cacheMap.get( cacheName );
             if ( listenerSet != null )
             {
                 listenerSet.remove( obj );
@@ -175,7 +175,7 @@ public class CacheWatchRepairable
      * @throws IOException
      */
     @Override
-    public <K extends Serializable, V extends Serializable> void removeCacheListener( ICacheListener<K, V> obj )
+    public <K, V> void removeCacheListener( ICacheListener<K, V> obj )
         throws IOException
     {
         if ( log.isInfoEnabled() )
@@ -187,7 +187,7 @@ public class CacheWatchRepairable
         // remove-listener operation succeeds or fails.
         synchronized ( cacheMap )
         {
-            for (Set<ICacheListener<? extends Serializable, ? extends Serializable>> listenerSet : cacheMap.values())
+            for (Set<ICacheListener<?, ?>> listenerSet : cacheMap.values())
             {
                 if ( log.isDebugEnabled() )
                 {

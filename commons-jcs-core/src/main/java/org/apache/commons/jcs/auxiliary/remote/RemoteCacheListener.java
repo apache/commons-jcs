@@ -38,7 +38,7 @@ import org.apache.commons.logging.LogFactory;
  * One listener is used per remote cache server. The same listener is used for all the regions that
  * talk to a particular server.
  */
-public class RemoteCacheListener<K extends Serializable, V extends Serializable>
+public class RemoteCacheListener<K, V>
     extends AbstractRemoteCacheListener<K, V>
     implements IRemoteCacheConstants, Serializable, IRemoteCacheListener<K, V>
 {

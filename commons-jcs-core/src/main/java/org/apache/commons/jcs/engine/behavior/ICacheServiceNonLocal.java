@@ -32,7 +32,7 @@ import java.util.Set;
  * <p>
  * TODO consider not extending ICacheService
  */
-public interface ICacheServiceNonLocal<K extends Serializable, V extends Serializable>
+public interface ICacheServiceNonLocal<K, V>
     extends Remote, ICacheService<K, V>
 {
     /**

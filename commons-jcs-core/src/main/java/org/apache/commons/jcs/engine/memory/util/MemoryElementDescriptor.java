@@ -19,15 +19,13 @@ package org.apache.commons.jcs.engine.memory.util;
  * under the License.
  */
 
-import java.io.Serializable;
-
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.utils.struct.DoubleLinkedListNode;
 
 /**
  * This wrapper is needed for double linked lists.
  */
-public class MemoryElementDescriptor<K extends Serializable, V extends Serializable>
+public class MemoryElementDescriptor<K, V>
     extends DoubleLinkedListNode<ICacheElement<K, V>>
 {
     /** Don't change */

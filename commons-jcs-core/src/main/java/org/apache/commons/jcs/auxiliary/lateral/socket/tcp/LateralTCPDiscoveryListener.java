@@ -55,8 +55,8 @@ public class LateralTCPDiscoveryListener
      * Map of no wait facades. these are used to determine which regions are locally configured to
      * use laterals.
      */
-    private final Map<String, LateralCacheNoWaitFacade<? extends Serializable, ? extends Serializable>> facades =
-        Collections.synchronizedMap( new HashMap<String, LateralCacheNoWaitFacade<? extends Serializable, ? extends Serializable>>() );
+    private final Map<String, LateralCacheNoWaitFacade<?, ?>> facades =
+        Collections.synchronizedMap( new HashMap<String, LateralCacheNoWaitFacade<?, ?>>() );
 
     /**
      * List of regions that are configured differently here than on another server. We keep track of
@@ -99,7 +99,7 @@ public class LateralTCPDiscoveryListener
      * @param facade - facade (for region) => multiple lateral clients.
      * @return true if the facade was not already registered.
      */
-    public synchronized boolean addNoWaitFacade( String cacheName, LateralCacheNoWaitFacade<? extends Serializable, ? extends Serializable> facade )
+    public synchronized boolean addNoWaitFacade( String cacheName, LateralCacheNoWaitFacade<?, ?> facade )
     {
         boolean isNew = !containsNoWaitFacade( cacheName );
 
@@ -128,7 +128,7 @@ public class LateralTCPDiscoveryListener
      * @param noWait - is this no wait in the facade
      * @return do we contain the no wait. true if so
      */
-    public <K extends Serializable, V extends Serializable> boolean containsNoWait( String cacheName, LateralCacheNoWait<K, V> noWait )
+    public <K, V> boolean containsNoWait( String cacheName, LateralCacheNoWait<K, V> noWait )
     {
         @SuppressWarnings("unchecked") // Need to cast because of common map for all facades
         LateralCacheNoWaitFacade<K, V> facade = (LateralCacheNoWaitFacade<K, V>)facades.get( noWait.getCacheName() );
@@ -152,7 +152,7 @@ public class LateralTCPDiscoveryListener
      * @return true if we found the no wait and added it. False if the no wait was not present or it
      *         we already had it.
      */
-    protected <K extends Serializable, V extends Serializable> boolean addNoWait( LateralCacheNoWait<K, V> noWait )
+    protected <K, V> boolean addNoWait( LateralCacheNoWait<K, V> noWait )
     {
         @SuppressWarnings("unchecked") // Need to cast because of common map for all facades
         LateralCacheNoWaitFacade<K, V> facade = (LateralCacheNoWaitFacade<K, V>)facades.get( noWait.getCacheName() );
@@ -192,7 +192,7 @@ public class LateralTCPDiscoveryListener
      * @param noWait
      * @return true if we found the no wait and removed it. False if the no wait was not present.
      */
-    protected <K extends Serializable, V extends Serializable> boolean removeNoWait( LateralCacheNoWait<K, V> noWait )
+    protected <K, V> boolean removeNoWait( LateralCacheNoWait<K, V> noWait )
     {
         @SuppressWarnings("unchecked") // Need to cast because of common map for all facades
         LateralCacheNoWaitFacade<K, V> facade = (LateralCacheNoWaitFacade<K, V>)facades.get( noWait.getCacheName() );
@@ -257,7 +257,7 @@ public class LateralTCPDiscoveryListener
             {
                 try
                 {
-                    ICache<? extends Serializable, ? extends Serializable> ic = lcm.getCache( cacheName );
+                    ICache<?, ?> ic = lcm.getCache( cacheName );
 
                     if ( log.isDebugEnabled() )
                     {
@@ -267,7 +267,7 @@ public class LateralTCPDiscoveryListener
                     // add this to the nowaits for this cachename
                     if ( ic != null )
                     {
-                        addNoWait( (LateralCacheNoWait<? extends Serializable, ? extends Serializable>) ic );
+                        addNoWait( (LateralCacheNoWait<?, ?>) ic );
                         if ( log.isDebugEnabled() )
                         {
                             log.debug( "Called addNoWait for cacheName [" + cacheName + "]" );
@@ -310,7 +310,7 @@ public class LateralTCPDiscoveryListener
             {
                 try
                 {
-                    ICache<? extends Serializable, ? extends Serializable> ic = lcm.getCache( cacheName );
+                    ICache<?, ?> ic = lcm.getCache( cacheName );
 
                     if ( log.isDebugEnabled() )
                     {
@@ -320,7 +320,7 @@ public class LateralTCPDiscoveryListener
                     // remove this to the nowaits for this cachename
                     if ( ic != null )
                     {
-                        removeNoWait( (LateralCacheNoWait<? extends Serializable, ? extends Serializable>) ic );
+                        removeNoWait( (LateralCacheNoWait<?, ?>) ic );
                         if ( log.isDebugEnabled() )
                         {
                             log.debug( "Called removeNoWait for cacheName [" + cacheName + "]" );

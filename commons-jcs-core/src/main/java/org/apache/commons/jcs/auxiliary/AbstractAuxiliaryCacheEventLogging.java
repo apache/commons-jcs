@@ -34,7 +34,7 @@ import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;
  * <p>
  * You can override the public method, but if you don't, the default will call getWithTiming.
  */
-public abstract class AbstractAuxiliaryCacheEventLogging<K extends Serializable, V extends Serializable>
+public abstract class AbstractAuxiliaryCacheEventLogging<K, V>
     extends AbstractAuxiliaryCache<K, V>
 {
     /**

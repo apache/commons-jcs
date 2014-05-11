@@ -28,7 +28,7 @@ import java.io.Serializable;
  * Note: objects which implement this interface are local listeners to cache changes, whereas
  * objects which implement IRmiCacheListener are remote listeners to cache changes.
  */
-public interface ICacheListener<K extends Serializable, V extends Serializable>
+public interface ICacheListener<K, V>
 {
     /**
      * Notifies the subscribers for a cache entry update.

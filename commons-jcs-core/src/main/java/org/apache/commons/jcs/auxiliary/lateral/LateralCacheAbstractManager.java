@@ -57,8 +57,8 @@ public abstract class LateralCacheAbstractManager
     private static final Log log = LogFactory.getLog( LateralCacheAbstractManager.class );
 
     /** Each manager instance has caches.   */
-    protected final Map<String, LateralCacheNoWait<? extends Serializable, ? extends Serializable>> caches =
-        new HashMap<String, LateralCacheNoWait<? extends Serializable, ? extends Serializable>>();
+    protected final Map<String, LateralCacheNoWait<?, ?>> caches =
+        new HashMap<String, LateralCacheNoWait<?, ?>>();
 
     /** Configuration */
     protected ILateralCacheAttributes lca;
@@ -78,7 +78,7 @@ public abstract class LateralCacheAbstractManager
      *            The feature to be added to the LateralCacheListener attribute
      * @throws IOException
      */
-    public <K extends Serializable, V extends Serializable> void addLateralCacheListener( String cacheName, ILateralCacheListener<K, V> listener )
+    public <K, V> void addLateralCacheListener( String cacheName, ILateralCacheListener<K, V> listener )
         throws IOException
     {
         synchronized ( this.caches )
@@ -102,7 +102,7 @@ public abstract class LateralCacheAbstractManager
      * @param cacheName
      */
     @Override
-    public abstract <K extends Serializable, V extends Serializable> AuxiliaryCache<K, V> getCache( String cacheName );
+    public abstract <K, V> AuxiliaryCache<K, V> getCache( String cacheName );
 
     /**
      * Gets the stats attribute of the LateralCacheManager object
@@ -132,7 +132,7 @@ public abstract class LateralCacheAbstractManager
             // need to implement an observer for some types of laterals( http and
             // tcp)
             //this.lateralWatch.setCacheWatch(lateralWatch);
-            for (LateralCacheNoWait<? extends Serializable, ? extends Serializable> cache : this.caches.values())
+            for (LateralCacheNoWait<?, ?> cache : this.caches.values())
             {
                 ((LateralCacheNoWait<Serializable, Serializable>)cache).fixCache( lateralService );
             }
@@ -144,7 +144,7 @@ public abstract class LateralCacheAbstractManager
      *
      */
     @Override
-    public Map<String, LateralCacheNoWait<? extends Serializable, ? extends Serializable>> getCaches()
+    public Map<String, LateralCacheNoWait<?, ?>> getCaches()
     {
         return caches;
     }

@@ -40,7 +40,7 @@ import org.apache.commons.jcs.engine.stats.behavior.ICacheStats;
  * <p>
  * The JCS class is the preferred way to access these methods.
  */
-public abstract class AbstractCacheAccess<K extends Serializable, V extends Serializable>
+public abstract class AbstractCacheAccess<K, V>
     implements ICacheAccessManagement
 {
     /**

@@ -31,7 +31,7 @@ import org.apache.commons.jcs.engine.behavior.ICacheEventQueue;
  * Used to associates a set of [cache listener to cache event queue] for a
  * cache.
  */
-public class CacheListeners<K extends Serializable, V extends Serializable>
+public class CacheListeners<K, V>
 {
     /** The cache using the queue. */
     public final ICache<K, V> cache;

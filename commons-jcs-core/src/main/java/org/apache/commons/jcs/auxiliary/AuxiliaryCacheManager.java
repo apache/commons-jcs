@@ -32,7 +32,7 @@ public interface AuxiliaryCacheManager
      * @param cacheName
      * @return AuxiliaryCache
      */
-    <K extends Serializable, V extends Serializable> AuxiliaryCache<K, V> getCache( String cacheName );
+    <K, V> AuxiliaryCache<K, V> getCache( String cacheName );
 
     /**
      * This allows the cache manager to be plugged into the auxiliary caches,

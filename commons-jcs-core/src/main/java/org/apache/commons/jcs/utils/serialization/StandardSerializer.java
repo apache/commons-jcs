@@ -46,7 +46,7 @@ public class StandardSerializer
      * @throws IOException
      */
     @Override
-    public <T extends Serializable> byte[] serialize( T obj )
+    public <T> byte[] serialize( T obj )
         throws IOException
     {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -72,7 +72,7 @@ public class StandardSerializer
      * @throws ClassNotFoundException
      */
     @Override
-    public <T extends Serializable> T deSerialize( byte[] data )
+    public <T> T deSerialize( byte[] data )
         throws IOException, ClassNotFoundException
     {
         ByteArrayInputStream bais = new ByteArrayInputStream( data );

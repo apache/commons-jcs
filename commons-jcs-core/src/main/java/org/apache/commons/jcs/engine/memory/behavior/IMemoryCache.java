@@ -30,7 +30,7 @@ import org.apache.commons.jcs.engine.control.CompositeCache;
 import org.apache.commons.jcs.engine.stats.behavior.IStats;
 
 /** For the framework. Insures methods a MemoryCache needs to access. */
-public interface IMemoryCache<K extends Serializable, V extends Serializable>
+public interface IMemoryCache<K, V>
 {
     /**
      * Initialize the memory cache

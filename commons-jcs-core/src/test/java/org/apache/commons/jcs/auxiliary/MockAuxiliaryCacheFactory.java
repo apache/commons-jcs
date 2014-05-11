@@ -42,7 +42,7 @@ public class MockAuxiliaryCacheFactory
      * @return AuxiliaryCache
      */
     @Override
-    public <K extends Serializable, V extends Serializable> AuxiliaryCache<K, V>
+    public <K, V> AuxiliaryCache<K, V>
         createCache( AuxiliaryCacheAttributes attr, ICompositeCacheManager cacheMgr,
            ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer )
     {

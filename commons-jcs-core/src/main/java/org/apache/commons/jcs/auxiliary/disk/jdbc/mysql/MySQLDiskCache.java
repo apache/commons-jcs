@@ -37,7 +37,7 @@ import org.apache.commons.logging.LogFactory;
  * <p>
  * @author Aaron Smuts
  */
-public class MySQLDiskCache<K extends Serializable, V extends Serializable>
+public class MySQLDiskCache<K, V>
     extends JDBCDiskCache<K, V>
 {
     /** don't change */

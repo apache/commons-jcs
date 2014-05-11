@@ -32,7 +32,7 @@ public class MockCompositeCacheManager
     implements ICompositeCacheManager
 {
     /** The cache that was returned. */
-    private CompositeCache<? extends Serializable, ? extends Serializable> cache;
+    private CompositeCache<?, ?> cache;
 
     /** Properties with which this manager was configured. This is exposed for other managers. */
     private Properties configurationProperties;
@@ -43,7 +43,7 @@ public class MockCompositeCacheManager
      */
     @Override
     @SuppressWarnings("unchecked")
-    public <K extends Serializable, V extends Serializable> CompositeCache<K, V> getCache( String cacheName )
+    public <K, V> CompositeCache<K, V> getCache( String cacheName )
     {
         if ( cache == null )
         {
@@ -59,7 +59,7 @@ public class MockCompositeCacheManager
     /**
      * @param cache The cache to set.
      */
-    public void setCache( CompositeCache<? extends Serializable, ? extends Serializable> cache )
+    public void setCache( CompositeCache<?, ?> cache )
     {
         this.cache = cache;
     }
@@ -67,7 +67,7 @@ public class MockCompositeCacheManager
     /**
      * @return Returns the cache.
      */
-    public CompositeCache<? extends Serializable, ? extends Serializable> getCache()
+    public CompositeCache<?, ?> getCache()
     {
         return cache;
     }

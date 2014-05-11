@@ -47,7 +47,7 @@ import org.apache.commons.logging.LogFactory;
  * from the varies manager to lateral services. Perhaps the lateralcache factory should be able to
  * do this.
  */
-public class LateralCacheNoWaitFacade<K extends Serializable, V extends Serializable>
+public class LateralCacheNoWaitFacade<K, V>
     extends AbstractAuxiliaryCache<K, V>
 {
     /** Don't change */

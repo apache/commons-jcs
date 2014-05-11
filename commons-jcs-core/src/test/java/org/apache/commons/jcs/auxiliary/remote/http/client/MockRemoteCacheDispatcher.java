@@ -44,7 +44,7 @@ public class MockRemoteCacheDispatcher
      */
     @Override
     @SuppressWarnings("unchecked")
-    public <K extends Serializable, V extends Serializable, T>
+    public <K, V, T>
         RemoteCacheResponse<T> dispatchRequest( RemoteCacheRequest<K, V> remoteCacheRequest )
         throws IOException
     {

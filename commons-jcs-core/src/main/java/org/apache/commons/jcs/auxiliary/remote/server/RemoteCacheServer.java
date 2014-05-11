@@ -68,7 +68,7 @@ import org.apache.commons.logging.LogFactory;
  * between the two servers. Since caches are usually high get and low put, this should allow you to
  * scale.
  */
-public class RemoteCacheServer<K extends Serializable, V extends Serializable>
+public class RemoteCacheServer<K, V>
     extends UnicastRemoteObject
     implements ICacheServiceNonLocal<K, V>, IRemoteCacheObserver, ICacheServiceAdmin, Remote, Unreferenced
 {
@@ -1273,7 +1273,7 @@ public class RemoteCacheServer<K extends Serializable, V extends Serializable>
      * <p>
      * @param eventQMap
      */
-    private static <KK extends Serializable, VV extends Serializable> void cleanupEventQMap( Map<Long, ICacheEventQueue<KK, VV>> eventQMap )
+    private static <KK, VV> void cleanupEventQMap( Map<Long, ICacheEventQueue<KK, VV>> eventQMap )
     {
         synchronized ( eventQMap )
         {
@@ -1308,7 +1308,7 @@ public class RemoteCacheServer<K extends Serializable, V extends Serializable>
      */
     @Override
     @SuppressWarnings("unchecked") // Need to cast to specific return type from getClusterListeners()
-    public <KK extends Serializable, VV extends Serializable> void addCacheListener( String cacheName, ICacheListener<KK, VV> listener )
+    public <KK, VV> void addCacheListener( String cacheName, ICacheListener<KK, VV> listener )
         throws IOException
     {
         if ( cacheName == null || listener == null )
@@ -1416,7 +1416,7 @@ public class RemoteCacheServer<K extends Serializable, V extends Serializable>
      * @throws IOException
      */
     @Override
-    public <KK extends Serializable, VV extends Serializable> void addCacheListener( ICacheListener<KK, VV> listener )
+    public <KK, VV> void addCacheListener( ICacheListener<KK, VV> listener )
         throws IOException
     {
         for (String cacheName : cacheListenersMap.keySet())
@@ -1439,7 +1439,7 @@ public class RemoteCacheServer<K extends Serializable, V extends Serializable>
      * @throws IOException
      */
     @Override
-    public <KK extends Serializable, VV extends Serializable> void removeCacheListener( String cacheName, ICacheListener<KK, VV> listener )
+    public <KK, VV> void removeCacheListener( String cacheName, ICacheListener<KK, VV> listener )
         throws IOException
     {
         removeCacheListener( cacheName, listener.getListenerId() );
@@ -1513,7 +1513,7 @@ public class RemoteCacheServer<K extends Serializable, V extends Serializable>
      * @throws IOException
      */
     @Override
-    public <KK extends Serializable, VV extends Serializable> void removeCacheListener( ICacheListener<KK, VV> listener )
+    public <KK, VV> void removeCacheListener( ICacheListener<KK, VV> listener )
         throws IOException
     {
         for (String cacheName : cacheListenersMap.keySet())
@@ -1646,7 +1646,7 @@ public class RemoteCacheServer<K extends Serializable, V extends Serializable>
      * @param eventName
      * @return ICacheEvent
      */
-    private <T extends Serializable> ICacheEvent<T> createICacheEvent( String cacheName, T key, long requesterId, String eventName )
+    private <T> ICacheEvent<T> createICacheEvent( String cacheName, T key, long requesterId, String eventName )
     {
         if ( cacheEventLogger == null )
         {
@@ -1676,7 +1676,7 @@ public class RemoteCacheServer<K extends Serializable, V extends Serializable>
      * <p>
      * @param cacheEvent
      */
-    protected <T extends Serializable> void logICacheEvent( ICacheEvent<T> cacheEvent )
+    protected <T> void logICacheEvent( ICacheEvent<T> cacheEvent )
     {
         if ( cacheEventLogger != null )
         {

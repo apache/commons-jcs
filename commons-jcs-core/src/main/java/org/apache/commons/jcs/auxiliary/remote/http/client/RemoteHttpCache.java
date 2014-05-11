@@ -32,7 +32,7 @@ import org.apache.commons.logging.LogFactory;
 /**
  * This uses an http client as the service.
  */
-public class RemoteHttpCache<K extends Serializable, V extends Serializable>
+public class RemoteHttpCache<K, V>
     extends AbstractRemoteAuxiliaryCache<K, V>
 {
     /** Don't change. */

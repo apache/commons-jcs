@@ -55,7 +55,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /** Abstract base for remote caches. I'm trying to break out and reuse common functionality. */
-public abstract class AbstractRemoteAuxiliaryCache<K extends Serializable, V extends Serializable>
+public abstract class AbstractRemoteAuxiliaryCache<K, V>
     extends AbstractAuxiliaryCacheEventLogging<K, V>
     implements IRemoteCacheClient<K, V>
 {

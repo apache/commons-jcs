@@ -45,7 +45,7 @@ public class CompressingSerializer
      * @throws IOException on i/o problem
      */
     @Override
-    public <T extends Serializable> byte[] serialize( T obj )
+    public <T> byte[] serialize( T obj )
         throws IOException
     {
         byte[] uncompressed = serializeObject( obj );
@@ -60,7 +60,7 @@ public class CompressingSerializer
      * @return byte[]
      * @throws IOException on i/o problem
      */
-    protected <T extends Serializable> byte[] serializeObject( T obj )
+    protected <T> byte[] serializeObject( T obj )
         throws IOException
     {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -87,7 +87,7 @@ public class CompressingSerializer
      * @throws ClassNotFoundException if class is not found during deserialization
      */
     @Override
-    public <T extends Serializable> T deSerialize( byte[] data )
+    public <T> T deSerialize( byte[] data )
         throws IOException, ClassNotFoundException
     {
         if ( data == null )
@@ -106,7 +106,7 @@ public class CompressingSerializer
      * @throws IOException on i/o error
      * @throws ClassNotFoundException if class is not found during deserialization
      */
-    protected <T extends Serializable> T deserializeObject( byte[] decompressedByteArray )
+    protected <T> T deserializeObject( byte[] decompressedByteArray )
         throws IOException, ClassNotFoundException
     {
         ByteArrayInputStream bais = new ByteArrayInputStream( decompressedByteArray );

@@ -30,7 +30,7 @@ import org.apache.commons.jcs.engine.behavior.ICacheServiceNonLocal;
  * It's not entirely clear that this interface is needed. I simply wanted the initialization method.
  * This could be added to the ICacheSerice method.
  */
-public interface IRemoteHttpCacheClient<K extends Serializable, V extends Serializable>
+public interface IRemoteHttpCacheClient<K, V>
     extends ICacheServiceNonLocal<K, V>
 {
     /**

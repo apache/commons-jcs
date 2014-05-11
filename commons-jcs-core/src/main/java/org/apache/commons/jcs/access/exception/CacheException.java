@@ -23,7 +23,7 @@ package org.apache.commons.jcs.access.exception;
  * This is the most general exception the cache throws.
  */
 public class CacheException
-    extends Exception
+    extends RuntimeException
 {
     /** Don't change. */
     private static final long serialVersionUID = 8725795372935590265L;

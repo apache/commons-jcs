@@ -53,7 +53,7 @@ import org.apache.commons.logging.LogFactory;
  * starts a listening thread, which creates a socket server. When messages are received they are
  * passed to a pooled executor which then calls the appropriate handle method.
  */
-public class LateralTCPListener<K extends Serializable, V extends Serializable>
+public class LateralTCPListener<K, V>
     implements ILateralCacheListener<K, V>, IShutdownObserver
 {
     /** The logger */
@@ -109,7 +109,7 @@ public class LateralTCPListener<K extends Serializable, V extends Serializable>
      * @param cacheMgr
      * @return The instance value
      */
-    public synchronized static <K extends Serializable, V extends Serializable> LateralTCPListener<K, V>
+    public synchronized static <K, V> LateralTCPListener<K, V>
         getInstance( ITCPLateralCacheAttributes ilca, ICompositeCacheManager cacheMgr )
     {
         @SuppressWarnings("unchecked") // Need to cast because of common map for all instances
@@ -246,7 +246,7 @@ public class LateralTCPListener<K extends Serializable, V extends Serializable>
      * remove on the cache.
      * <p>
      * @see org.apache.commons.jcs.engine.behavior.ICacheListener#handleRemove(java.lang.String,
-     *      java.io.Serializable)
+     *      Object)
      */
     @Override
     public void handleRemove( String cacheName, K key )

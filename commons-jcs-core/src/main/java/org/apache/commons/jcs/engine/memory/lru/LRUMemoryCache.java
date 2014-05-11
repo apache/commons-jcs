@@ -37,7 +37,7 @@ import org.apache.commons.jcs.engine.memory.util.MemoryElementDescriptor;
  * The LRUMemoryCache is most efficient when the first element is selected. The smaller the region,
  * the better the chance that this will be the case. < .04 ms per put, p3 866, 1/10 of that per get
  */
-public class LRUMemoryCache<K extends Serializable, V extends Serializable>
+public class LRUMemoryCache<K, V>
     extends AbstractDoubleLinkedListMemoryCache<K, V>
 {
     /** Don't change */

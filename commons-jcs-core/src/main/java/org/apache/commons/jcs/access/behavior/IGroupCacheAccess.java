@@ -29,7 +29,7 @@ import org.apache.commons.jcs.engine.behavior.IElementAttributes;
  * IGroupCacheAccess defines group specific behavior for the client access
  * classes.
  */
-public interface IGroupCacheAccess<K extends Serializable, V extends Serializable>
+public interface IGroupCacheAccess<K, V>
     extends ICacheAccessManagement
 {
     /**

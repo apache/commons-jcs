@@ -31,7 +31,7 @@ import org.apache.commons.jcs.engine.behavior.IElementAttributes;
  * Elements are stored in purgatory when they are spooled to the auxiliary cache, but have not yet
  * been written to disk.
  */
-public class PurgatoryElement<K extends Serializable, V extends Serializable>
+public class PurgatoryElement<K, V>
     extends CacheElement<K, V>
     implements ICacheElement<K, V>
 {

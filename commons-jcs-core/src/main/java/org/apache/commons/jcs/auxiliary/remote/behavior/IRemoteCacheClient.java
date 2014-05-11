@@ -32,7 +32,7 @@ import org.apache.commons.jcs.engine.behavior.ICacheServiceNonLocal;
  * <p>
  * @author Aaron Smuts
  */
-public interface IRemoteCacheClient<K extends Serializable, V extends Serializable>
+public interface IRemoteCacheClient<K, V>
     extends AuxiliaryCache<K, V>
 {
     /**

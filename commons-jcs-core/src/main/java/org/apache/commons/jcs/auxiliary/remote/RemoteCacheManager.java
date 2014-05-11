@@ -65,8 +65,8 @@ public class RemoteCacheManager
     private int clients;
 
     /** Contains instances of RemoteCacheNoWait managed by a RemoteCacheManager instance. */
-    final Map<String, RemoteCacheNoWait<? extends Serializable, ? extends Serializable>> caches =
-        new HashMap<String, RemoteCacheNoWait<? extends Serializable, ? extends Serializable>>();
+    final Map<String, RemoteCacheNoWait<?, ?>> caches =
+        new HashMap<String, RemoteCacheNoWait<?, ?>>();
 
     /** The remote host */
     final String host;
@@ -87,7 +87,7 @@ public class RemoteCacheManager
     private final IElementSerializer elementSerializer;
 
     /** Handle to the remote cache service; or a zombie handle if failed to connect. */
-    private ICacheServiceNonLocal<? extends Serializable, ? extends Serializable> remoteService;
+    private ICacheServiceNonLocal<?, ?> remoteService;
 
     /**
      * Wrapper of the remote cache watch service; or wrapper of a zombie service if failed to
@@ -182,7 +182,7 @@ public class RemoteCacheManager
      * @param listener The feature to be added to the RemoteCacheListener attribute
      * @throws IOException
      */
-    public <K extends Serializable, V extends Serializable> void addRemoteCacheListener( IRemoteCacheAttributes cattr, IRemoteCacheListener<K, V> listener )
+    public <K, V> void addRemoteCacheListener( IRemoteCacheAttributes cattr, IRemoteCacheListener<K, V> listener )
         throws IOException
     {
         if ( cattr.isReceive() )
@@ -219,7 +219,7 @@ public class RemoteCacheManager
      * @param listener
      * @throws IOException
      */
-    public <K extends Serializable, V extends Serializable> void removeRemoteCacheListener( IRemoteCacheAttributes cattr, IRemoteCacheListener<K, V> listener )
+    public <K, V> void removeRemoteCacheListener( IRemoteCacheAttributes cattr, IRemoteCacheListener<K, V> listener )
         throws IOException
     {
         synchronized ( caches )
@@ -365,7 +365,7 @@ public class RemoteCacheManager
      * @return The cache value
      */
     @Override
-    public <K extends Serializable, V extends Serializable> RemoteCacheNoWait<K, V> getCache( String cacheName )
+    public <K, V> RemoteCacheNoWait<K, V> getCache( String cacheName )
     {
         IRemoteCacheAttributes ca = (IRemoteCacheAttributes) remoteCacheAttributes.copy();
         ca.setCacheName( cacheName );
@@ -382,7 +382,7 @@ public class RemoteCacheManager
      * @param cattr
      * @return The cache value
      */
-    public <K extends Serializable, V extends Serializable> RemoteCacheNoWait<K, V> getCache( IRemoteCacheAttributes cattr )
+    public <K, V> RemoteCacheNoWait<K, V> getCache( IRemoteCacheAttributes cattr )
     {
         RemoteCacheNoWait<K, V> remoteCacheNoWait = null;
 
@@ -507,7 +507,7 @@ public class RemoteCacheManager
      * @param remoteService
      * @param remoteWatch
      */
-    public void fixCaches( ICacheServiceNonLocal<? extends Serializable, ? extends Serializable> remoteService, IRemoteCacheObserver remoteWatch )
+    public void fixCaches( ICacheServiceNonLocal<?, ?> remoteService, IRemoteCacheObserver remoteWatch )
     {
         if ( log.isInfoEnabled() )
         {
@@ -517,7 +517,7 @@ public class RemoteCacheManager
         {
             this.remoteService = remoteService;
             this.remoteWatch.setCacheWatch( remoteWatch );
-            for (RemoteCacheNoWait<? extends Serializable, ? extends Serializable> c : caches.values())
+            for (RemoteCacheNoWait<?, ?> c : caches.values())
             {
                 c.fixCache( remoteService );
             }

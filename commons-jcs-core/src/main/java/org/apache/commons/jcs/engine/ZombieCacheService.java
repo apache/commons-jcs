@@ -33,7 +33,7 @@ import org.apache.commons.logging.LogFactory;
 /**
  * Zombie adapter for any cache service. Balks at every call.
  */
-public class ZombieCacheService<K extends Serializable, V extends Serializable>
+public class ZombieCacheService<K, V>
     implements ICacheService<K, V>, IZombie
 {
     /** The logger. */

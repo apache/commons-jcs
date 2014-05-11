@@ -49,7 +49,7 @@ public class JDBCDiskCacheFactory
      * @return AuxiliaryCache
      */
     @Override
-    public <K extends Serializable, V extends Serializable> AuxiliaryCache<K, V> createCache( AuxiliaryCacheAttributes rawAttr, ICompositeCacheManager compositeCacheManager,
+    public <K, V> AuxiliaryCache<K, V> createCache( AuxiliaryCacheAttributes rawAttr, ICompositeCacheManager compositeCacheManager,
                                        ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer )
     {
         JDBCDiskCacheManager diskCacheManager = JDBCDiskCacheManager.getInstance( (JDBCDiskCacheAttributes) rawAttr,

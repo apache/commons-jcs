@@ -32,7 +32,7 @@ import org.apache.commons.logging.LogFactory;
  * Used for Cache-to-Cache messaging purposes. These are used in the balking
  * facades in the lateral and remote caches.
  */
-public class CacheAdaptor<K extends Serializable, V extends Serializable>
+public class CacheAdaptor<K, V>
     implements ICacheListener<K, V>
 {
     /** The logger */

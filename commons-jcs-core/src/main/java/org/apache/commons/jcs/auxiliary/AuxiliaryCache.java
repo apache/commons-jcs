@@ -34,7 +34,7 @@ import org.apache.commons.jcs.engine.stats.behavior.IStats;
  * the type (disk/lateral/remote) of the auxiliary here -- and the existing getCacheType will be
  * removed from ICache.
  */
-public interface AuxiliaryCache<K extends Serializable, V extends Serializable>
+public interface AuxiliaryCache<K, V>
     extends ICache<K, V>
 {
     /**

@@ -48,7 +48,7 @@ import org.apache.commons.logging.LogFactory;
  * Used to queue up update requests to the underlying cache. These requests will be processed in
  * their order of arrival via the cache event queue processor.
  */
-public class LateralCacheNoWait<K extends Serializable, V extends Serializable>
+public class LateralCacheNoWait<K, V>
     extends AbstractAuxiliaryCache<K, V>
 {
     /** Don't change */

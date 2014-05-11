@@ -46,8 +46,8 @@ public class RemoteCacheFactory
     private String name;
 
     /** store reference of facades to initiate failover */
-    private static final HashMap<String, RemoteCacheNoWaitFacade<? extends Serializable, ? extends Serializable>> facades =
-        new HashMap<String, RemoteCacheNoWaitFacade<? extends Serializable, ? extends Serializable>>();
+    private static final HashMap<String, RemoteCacheNoWaitFacade<?, ?>> facades =
+        new HashMap<String, RemoteCacheNoWaitFacade<?, ?>>();
 
     /**
      * For LOCAL clients we get a handle to all the failovers, but we do not register a listener
@@ -63,7 +63,7 @@ public class RemoteCacheFactory
      * @return AuxiliaryCache
      */
     @Override
-    public <K extends Serializable, V extends Serializable> AuxiliaryCache<K, V> createCache(
+    public <K, V> AuxiliaryCache<K, V> createCache(
             AuxiliaryCacheAttributes iaca, ICompositeCacheManager cacheMgr,
            ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer )
     {
@@ -183,7 +183,7 @@ public class RemoteCacheFactory
      * The facades are what the cache hub talks to.
      * @return Returns the facades.
      */
-    public static HashMap<String, RemoteCacheNoWaitFacade<? extends Serializable, ? extends Serializable>> getFacades()
+    public static HashMap<String, RemoteCacheNoWaitFacade<?, ?>> getFacades()
     {
         return facades;
     }

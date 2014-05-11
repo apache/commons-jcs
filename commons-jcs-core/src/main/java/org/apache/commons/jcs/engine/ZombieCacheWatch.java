@@ -38,7 +38,7 @@ public class ZombieCacheWatch
      * @param obj The feature to be added to the CacheListener attribute
      */
     @Override
-    public <K extends Serializable, V extends Serializable> void addCacheListener( String cacheName, ICacheListener<K, V> obj )
+    public <K, V> void addCacheListener( String cacheName, ICacheListener<K, V> obj )
     {
         // empty
     }
@@ -49,7 +49,7 @@ public class ZombieCacheWatch
      * @param obj The feature to be added to the CacheListener attribute
      */
     @Override
-    public <K extends Serializable, V extends Serializable> void addCacheListener( ICacheListener<K, V> obj )
+    public <K, V> void addCacheListener( ICacheListener<K, V> obj )
     {
         // empty
     }
@@ -59,7 +59,7 @@ public class ZombieCacheWatch
      * @param obj
      */
     @Override
-    public <K extends Serializable, V extends Serializable> void removeCacheListener( String cacheName, ICacheListener<K, V> obj )
+    public <K, V> void removeCacheListener( String cacheName, ICacheListener<K, V> obj )
     {
         // empty
     }
@@ -68,7 +68,7 @@ public class ZombieCacheWatch
      * @param obj
      */
     @Override
-    public <K extends Serializable, V extends Serializable> void removeCacheListener( ICacheListener<K, V> obj )
+    public <K, V> void removeCacheListener( ICacheListener<K, V> obj )
     {
         // empty
     }

@@ -42,7 +42,7 @@ import org.apache.commons.logging.LogFactory;
  * <p>
  * This originated in the remote cache.
  */
-public class ZombieCacheServiceNonLocal<K extends Serializable, V extends Serializable>
+public class ZombieCacheServiceNonLocal<K, V>
     extends ZombieCacheService<K, V>
     implements ICacheServiceNonLocal<K, V>
 {
@@ -254,7 +254,7 @@ public class ZombieCacheServiceNonLocal<K extends Serializable, V extends Serial
     /**
      * A basic put event.
      */
-    private static class PutEvent<K extends Serializable, V extends Serializable>
+    private static class PutEvent<K, V>
         extends ZombieEvent
     {
         /** The element to put */
@@ -275,7 +275,7 @@ public class ZombieCacheServiceNonLocal<K extends Serializable, V extends Serial
     /**
      * A basic Remove event.
      */
-    private static class RemoveEvent<K extends Serializable>
+    private static class RemoveEvent<K>
         extends ZombieEvent
     {
         /** The key to remove */

@@ -194,7 +194,7 @@ public class JCSAdminBean implements JCSJMXBean
      *
      * @return int The size of the region in bytes.
      */
-    public <K extends Serializable, V extends Serializable> int getByteCount(CompositeCache<K, V> cache)
+    public <K, V> int getByteCount(CompositeCache<K, V> cache)
     {
         if (cache == null)
         {
@@ -220,13 +220,14 @@ public class JCSAdminBean implements JCSJMXBean
 			{
 				continue;
 			}
-			else if (ice instanceof CacheElementSerialized)
+
+			if (ice instanceof CacheElementSerialized)
             {
                 size = size + ((CacheElementSerialized<K, V>) ice).getSerializedValue().length;
             }
             else
             {
-                Serializable element = ice.getVal();
+                Object element = ice.getVal();
 
                 //CountingOnlyOutputStream: Keeps track of the number of bytes written to it, but doesn't write them anywhere.
                 CountingOnlyOutputStream counter = new CountingOnlyOutputStream();
@@ -393,15 +394,15 @@ public class JCSAdminBean implements JCSJMXBean
             // Remove objects via the RemoteCacheServer API, so that removes will be broadcast to client machines...
             try
             {
-                Serializable keyToRemove = null;
-                CompositeCache<? extends Serializable, ? extends Serializable> cache = CompositeCacheManager.getInstance().getCache(cacheName);
+                Object keyToRemove = null;
+                CompositeCache<?, ?> cache = CompositeCacheManager.getInstance().getCache(cacheName);
 
                 // A String key was supplied, but to remove elements via the RemoteCacheServer API, we need the
                 // actual key object as stored in the cache (i.e. a Serializable object). To find the key in this form,
                 // we iterate through all keys stored in the memory cache until we find one whose toString matches
                 // the string supplied...
-                Set<? extends Serializable> allKeysInCache = cache.getMemoryCache().getKeySet();
-                for (Serializable keyInCache : allKeysInCache)
+                Set<?> allKeysInCache = cache.getMemoryCache().getKeySet();
+                for (Object keyInCache : allKeysInCache)
                 {
                     if (keyInCache.toString().equals(key))
                     {

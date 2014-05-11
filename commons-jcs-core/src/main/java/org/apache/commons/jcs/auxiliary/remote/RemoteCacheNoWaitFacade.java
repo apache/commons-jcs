@@ -37,7 +37,7 @@ import org.apache.commons.logging.LogFactory;
  * Typically, we only connect to one remote server per facade. We use a list of one
  * RemoteCacheNoWait.
  */
-public class RemoteCacheNoWaitFacade<K extends Serializable, V extends Serializable>
+public class RemoteCacheNoWaitFacade<K, V>
     extends AbstractRemoteCacheNoWaitFacade<K, V>
 {
     /** For serialization. Don't change. */

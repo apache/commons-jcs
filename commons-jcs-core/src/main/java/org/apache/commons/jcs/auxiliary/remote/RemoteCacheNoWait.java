@@ -64,7 +64,7 @@ import org.apache.commons.logging.LogFactory;
  * again. This is a better long term solution, but it requires some significant changes to the
  * complicated worker queues.
  */
-public class RemoteCacheNoWait<K extends Serializable, V extends Serializable>
+public class RemoteCacheNoWait<K, V>
     extends AbstractAuxiliaryCache<K, V>
 {
     /** log instance */

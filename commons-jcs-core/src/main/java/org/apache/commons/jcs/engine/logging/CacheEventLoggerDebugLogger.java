@@ -48,7 +48,7 @@ public class CacheEventLoggerDebugLogger
      * @return ICacheEvent
      */
     @Override
-    public <T extends Serializable> ICacheEvent<T> createICacheEvent( String source, String region, String eventName,
+    public <T> ICacheEvent<T> createICacheEvent( String source, String region, String eventName,
             String optionalDetails, T key )
     {
         ICacheEvent<T> event = new CacheEvent<T>();
@@ -93,7 +93,7 @@ public class CacheEventLoggerDebugLogger
      * @param event
      */
     @Override
-    public <T extends Serializable> void logICacheEvent( ICacheEvent<T> event )
+    public <T> void logICacheEvent( ICacheEvent<T> event )
     {
         if ( log.isDebugEnabled() )
         {

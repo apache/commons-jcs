@@ -110,7 +110,7 @@ public class JDBCDiskCacheManager
      * @return The cache value
      */
     @Override
-    public <K extends Serializable, V extends Serializable> JDBCDiskCache<K, V> getCache( String cacheName )
+    public <K, V> JDBCDiskCache<K, V> getCache( String cacheName )
     {
         JDBCDiskCacheAttributes cattr = (JDBCDiskCacheAttributes) defaultJDBCDiskCacheAttributes.copy();
         cattr.setCacheName( cacheName );
@@ -125,7 +125,7 @@ public class JDBCDiskCacheManager
      * @return AuxiliaryCache
      */
     @Override
-    protected <K extends Serializable, V extends Serializable> JDBCDiskCache<K, V> createJDBCDiskCache( JDBCDiskCacheAttributes cattr, TableState tableState )
+    protected <K, V> JDBCDiskCache<K, V> createJDBCDiskCache( JDBCDiskCacheAttributes cattr, TableState tableState )
     {
         JDBCDiskCache<K, V> raf;
         raf = new JDBCDiskCache<K, V>( cattr, tableState, getCompositeCacheManager() );

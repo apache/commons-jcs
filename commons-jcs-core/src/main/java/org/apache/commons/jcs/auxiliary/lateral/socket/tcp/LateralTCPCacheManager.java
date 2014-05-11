@@ -75,7 +75,7 @@ public class LateralTCPCacheManager
     /**
      * Handle to the lateral cache service; or a zombie handle if failed to connect.
      */
-    private ICacheServiceNonLocal<? extends Serializable, ? extends Serializable> lateralService;
+    private ICacheServiceNonLocal<?, ?> lateralService;
 
     /**
      * Wrapper of the lateral cache watch service; or wrapper of a zombie service if failed to
@@ -203,7 +203,7 @@ public class LateralTCPCacheManager
      * @throws IOException
      */
     @Override
-    public <K extends Serializable, V extends Serializable> void addLateralCacheListener( String cacheName, ILateralCacheListener<K, V> listener )
+    public <K, V> void addLateralCacheListener( String cacheName, ILateralCacheListener<K, V> listener )
         throws IOException
     {
         synchronized ( this.caches )
@@ -226,7 +226,7 @@ public class LateralTCPCacheManager
      */
     @SuppressWarnings("unchecked")
     @Override
-    public <K extends Serializable, V extends Serializable> LateralCacheNoWait<K, V> getCache( String cacheName )
+    public <K, V> LateralCacheNoWait<K, V> getCache( String cacheName )
     {
         LateralCacheNoWait<K, V> lateralNoWait = null;
         synchronized ( caches )

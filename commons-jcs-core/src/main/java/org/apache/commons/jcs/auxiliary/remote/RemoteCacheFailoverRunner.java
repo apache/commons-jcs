@@ -49,7 +49,7 @@ import org.apache.commons.logging.LogFactory;
  * will try to connect to a failover until the primary is restored.
  *
  */
-public class RemoteCacheFailoverRunner<K extends Serializable, V extends Serializable>
+public class RemoteCacheFailoverRunner<K, V>
     implements Runnable
 {
     /** The logger */

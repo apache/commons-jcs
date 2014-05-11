@@ -45,8 +45,8 @@ public class BlockDiskCacheManager
     private static BlockDiskCacheManager instance;
 
     /** block disks for a region. */
-    private final Map<String, BlockDiskCache<? extends Serializable, ? extends Serializable>> caches =
-        new ConcurrentHashMap<String, BlockDiskCache<? extends Serializable, ? extends Serializable>>();
+    private final Map<String, BlockDiskCache<?, ?>> caches =
+        new ConcurrentHashMap<String, BlockDiskCache<?, ?>>();
 
     /** Attributes. */
     private final BlockDiskCacheAttributes defaultCacheAttributes;
@@ -96,7 +96,7 @@ public class BlockDiskCacheManager
      * @return A cache.
      */
     @Override
-    public <K extends Serializable, V extends Serializable> BlockDiskCache<K, V> getCache( String cacheName )
+    public <K, V> BlockDiskCache<K, V> getCache( String cacheName )
     {
         BlockDiskCacheAttributes cacheAttributes = (BlockDiskCacheAttributes) defaultCacheAttributes.copy();
 
@@ -112,7 +112,7 @@ public class BlockDiskCacheManager
      * @param cacheAttributes Attributes the cache should have.
      * @return A cache, either from the existing set or newly created.
      */
-    public <K extends Serializable, V extends Serializable> BlockDiskCache<K, V> getCache( BlockDiskCacheAttributes cacheAttributes )
+    public <K, V> BlockDiskCache<K, V> getCache( BlockDiskCacheAttributes cacheAttributes )
     {
         BlockDiskCache<K, V> cache = null;
 

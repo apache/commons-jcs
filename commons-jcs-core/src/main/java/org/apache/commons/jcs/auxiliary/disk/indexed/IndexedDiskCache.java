@@ -61,7 +61,7 @@ import org.apache.commons.logging.LogFactory;
  * stored in memory is configurable. The disk cache tries to recycle spots on disk to limit file
  * expansion.
  */
-public class IndexedDiskCache<K extends Serializable, V extends Serializable>
+public class IndexedDiskCache<K, V>
     extends AbstractDiskCache<K, V>
 {
     /** The logger */

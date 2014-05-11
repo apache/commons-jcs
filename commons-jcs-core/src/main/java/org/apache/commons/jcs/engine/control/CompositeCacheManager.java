@@ -79,8 +79,8 @@ public class CompositeCacheManager
     private static final String JMX_OBJECT_NAME = "org.apache.commons.jcs:type=JCSAdminBean";
 
     /** Caches managed by this cache manager */
-    private final Map<String, ICache<? extends Serializable, ? extends Serializable>> caches =
-        new ConcurrentHashMap<String, ICache<? extends Serializable, ? extends Serializable>>();
+    private final Map<String, ICache<?, ?>> caches =
+        new ConcurrentHashMap<String, ICache<?, ?>>();
 
     /** Number of clients accessing this cache manager */
     private int clients;
@@ -531,7 +531,7 @@ public class CompositeCacheManager
      * @return CompositeCache -- the cache region controller
      */
     @Override
-    public <K extends Serializable, V extends Serializable> CompositeCache<K, V>  getCache( String cacheName )
+    public <K, V> CompositeCache<K, V>  getCache( String cacheName )
     {
         return getCache( cacheName, this.defaultCacheAttr.copy() );
     }
@@ -543,7 +543,7 @@ public class CompositeCacheManager
      * @param cattr
      * @return CompositeCache
      */
-    public <K extends Serializable, V extends Serializable> CompositeCache<K, V> getCache( String cacheName, ICompositeCacheAttributes cattr )
+    public <K, V> CompositeCache<K, V> getCache( String cacheName, ICompositeCacheAttributes cattr )
     {
         cattr.setCacheName( cacheName );
         return getCache( cattr, this.defaultElementAttr );
@@ -557,7 +557,7 @@ public class CompositeCacheManager
      * @param attr
      * @return CompositeCache
      */
-    public <K extends Serializable, V extends Serializable> CompositeCache<K, V>  getCache( String cacheName, ICompositeCacheAttributes cattr, IElementAttributes attr )
+    public <K, V> CompositeCache<K, V>  getCache( String cacheName, ICompositeCacheAttributes cattr, IElementAttributes attr )
     {
         cattr.setCacheName( cacheName );
         return getCache( cattr, attr );
@@ -569,7 +569,7 @@ public class CompositeCacheManager
      * @param cattr
      * @return CompositeCache
      */
-    public <K extends Serializable, V extends Serializable> CompositeCache<K, V>  getCache( ICompositeCacheAttributes cattr )
+    public <K, V> CompositeCache<K, V>  getCache( ICompositeCacheAttributes cattr )
     {
         return getCache( cattr, this.defaultElementAttr );
     }
@@ -588,7 +588,7 @@ public class CompositeCacheManager
      * @return CompositeCache
      */
     @SuppressWarnings("unchecked") // Need to cast because of common map for all caches
-    public <K extends Serializable, V extends Serializable> CompositeCache<K, V>  getCache( ICompositeCacheAttributes cattr, IElementAttributes attr )
+    public <K, V> CompositeCache<K, V>  getCache( ICompositeCacheAttributes cattr, IElementAttributes attr )
     {
         CompositeCache<K, V> cache;
 

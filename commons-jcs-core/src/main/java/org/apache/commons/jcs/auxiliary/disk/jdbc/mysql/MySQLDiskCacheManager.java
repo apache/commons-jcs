@@ -130,7 +130,7 @@ public class MySQLDiskCacheManager
      */
     @Override
     @SuppressWarnings("unchecked")
-    public <K extends Serializable, V extends Serializable> MySQLDiskCache<K, V> getCache( String cacheName )
+    public <K, V> MySQLDiskCache<K, V> getCache( String cacheName )
     {
         MySQLDiskCacheAttributes cattr = (MySQLDiskCacheAttributes) defaultJDBCDiskCacheAttributes.copy();
         cattr.setCacheName( cacheName );
@@ -145,7 +145,7 @@ public class MySQLDiskCacheManager
      * @return AuxiliaryCache
      */
     @Override
-    protected <K extends Serializable, V extends Serializable> MySQLDiskCache<K, V> createJDBCDiskCache( JDBCDiskCacheAttributes cattr, TableState tableState )
+    protected <K, V> MySQLDiskCache<K, V> createJDBCDiskCache( JDBCDiskCacheAttributes cattr, TableState tableState )
     {
         MySQLDiskCache<K, V> diskCache = new MySQLDiskCache<K, V>( (MySQLDiskCacheAttributes) cattr, tableState, getCompositeCacheManager() );
 

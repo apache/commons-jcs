@@ -26,7 +26,7 @@ import org.apache.commons.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
 
 /** Does nothing */
-public class RemoteHttpClientListener<K extends Serializable, V extends Serializable>
+public class RemoteHttpClientListener<K, V>
     extends AbstractRemoteCacheListener<K, V>
 {
     /** Serial version */

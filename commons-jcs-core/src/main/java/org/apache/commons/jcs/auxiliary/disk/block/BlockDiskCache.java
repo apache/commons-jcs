@@ -52,7 +52,7 @@ import org.apache.commons.logging.LogFactory;
  * <p>
  * @author Aaron Smuts
  */
-public class BlockDiskCache<K extends Serializable, V extends Serializable>
+public class BlockDiskCache<K, V>
     extends AbstractDiskCache<K, V>
     implements IRequireScheduler
 {

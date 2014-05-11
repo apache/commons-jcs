@@ -77,7 +77,7 @@ import org.apache.commons.logging.LogFactory;
  * <p>
  * @author Aaron Smuts
  */
-public class JDBCDiskCache<K extends Serializable, V extends Serializable>
+public class JDBCDiskCache<K, V>
     extends AbstractDiskCache<K, V>
 {
     /** The local logger. */

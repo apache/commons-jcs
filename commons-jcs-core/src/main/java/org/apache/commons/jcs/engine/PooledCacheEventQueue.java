@@ -43,7 +43,7 @@ import org.apache.commons.logging.LogFactory;
  * more than a few threads at them will serve no purpose other than to saturate the IO interface. In
  * light of this, having one thread per region seems unnecessary. This may prove to be false.
  */
-public class PooledCacheEventQueue<K extends Serializable, V extends Serializable>
+public class PooledCacheEventQueue<K, V>
     extends AbstractCacheEventQueue<K, V>
 {
     /** The logger. */

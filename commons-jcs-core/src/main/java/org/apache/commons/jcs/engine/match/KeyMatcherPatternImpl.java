@@ -19,16 +19,15 @@ package org.apache.commons.jcs.engine.match;
  * under the License.
  */
 
-import java.io.Serializable;
+import org.apache.commons.jcs.engine.match.behavior.IKeyMatcher;
+
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.jcs.engine.match.behavior.IKeyMatcher;
-
 /** This implementation of the KeyMatcher uses standard Java Pattern matching. */
-public class KeyMatcherPatternImpl<K extends Serializable>
+public class KeyMatcherPatternImpl<K>
     implements IKeyMatcher<K>
 {
     /** Serial version */

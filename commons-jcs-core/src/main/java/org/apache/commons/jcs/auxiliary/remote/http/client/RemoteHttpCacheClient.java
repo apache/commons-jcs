@@ -35,7 +35,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /** This is the service used by the remote http auxiliary cache. */
-public class RemoteHttpCacheClient<K extends Serializable, V extends Serializable>
+public class RemoteHttpCacheClient<K, V>
     implements IRemoteHttpCacheClient<K, V>
 {
     /** The Logger. */

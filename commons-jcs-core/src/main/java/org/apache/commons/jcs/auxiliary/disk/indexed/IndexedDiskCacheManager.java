@@ -45,8 +45,8 @@ public class IndexedDiskCacheManager
     private static IndexedDiskCacheManager instance;
 
     /** Each region has an entry here. */
-    private final Map<String, IndexedDiskCache<? extends Serializable, ? extends Serializable>> caches =
-        new ConcurrentHashMap<String, IndexedDiskCache<? extends Serializable, ? extends Serializable>>();
+    private final Map<String, IndexedDiskCache<?, ?>> caches =
+        new ConcurrentHashMap<String, IndexedDiskCache<?, ?>>();
 
     /** User configurable attributes */
     private final IndexedDiskCacheAttributes defaultCacheAttributes;
@@ -96,7 +96,7 @@ public class IndexedDiskCacheManager
      * @return A cache.
      */
     @Override
-    public <K extends Serializable, V extends Serializable> IndexedDiskCache<K, V> getCache( String cacheName )
+    public <K, V> IndexedDiskCache<K, V> getCache( String cacheName )
     {
         IndexedDiskCacheAttributes cacheAttributes = (IndexedDiskCacheAttributes) defaultCacheAttributes.copy();
 
@@ -112,7 +112,7 @@ public class IndexedDiskCacheManager
      * @param cacheAttributes Attributes the cache should have.
      * @return A cache, either from the existing set or newly created.
      */
-    public <K extends Serializable, V extends Serializable> IndexedDiskCache<K, V> getCache( IndexedDiskCacheAttributes cacheAttributes )
+    public <K, V> IndexedDiskCache<K, V> getCache( IndexedDiskCacheAttributes cacheAttributes )
     {
         IndexedDiskCache<K, V> cache = null;
 

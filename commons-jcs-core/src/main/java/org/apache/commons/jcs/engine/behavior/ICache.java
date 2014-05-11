@@ -34,7 +34,7 @@ import org.apache.commons.jcs.engine.match.behavior.IKeyMatcher;
  * This allows for a suite of reusable components for accessing such structures, for example
  * asynchronous access via an event queue.
  */
-public interface ICache<K extends Serializable, V extends Serializable>
+public interface ICache<K, V>
     extends ICacheType
 {
     /**

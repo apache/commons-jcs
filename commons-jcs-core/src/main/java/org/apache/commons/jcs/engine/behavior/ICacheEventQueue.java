@@ -28,7 +28,7 @@ import org.apache.commons.jcs.engine.stats.behavior.IStats;
  * Interface for a cache event queue. An event queue is used to propagate
  * ordered cache events to one and only one target listener.
  */
-public interface ICacheEventQueue<K extends Serializable, V extends Serializable>
+public interface ICacheEventQueue<K, V>
 {
     enum QueueType
     {

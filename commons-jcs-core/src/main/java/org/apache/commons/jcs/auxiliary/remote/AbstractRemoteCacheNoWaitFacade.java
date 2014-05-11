@@ -44,7 +44,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /** An abstract base for the No Wait Facade.  Different implementations will failover differently. */
-public abstract class AbstractRemoteCacheNoWaitFacade<K extends Serializable, V extends Serializable>
+public abstract class AbstractRemoteCacheNoWaitFacade<K, V>
     extends AbstractAuxiliaryCache<K, V>
 {
     /** For serialization. Don't change. */

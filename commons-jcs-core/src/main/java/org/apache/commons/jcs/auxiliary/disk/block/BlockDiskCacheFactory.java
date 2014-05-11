@@ -59,7 +59,7 @@ public class BlockDiskCacheFactory
      * @return AuxiliaryCache
      */
     @Override
-    public <K extends Serializable, V extends Serializable> AuxiliaryCache<K, V> createCache( AuxiliaryCacheAttributes iaca, ICompositeCacheManager cacheMgr,
+    public <K, V> AuxiliaryCache<K, V> createCache( AuxiliaryCacheAttributes iaca, ICompositeCacheManager cacheMgr,
                                        ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer )
     {
         BlockDiskCacheAttributes idca = (BlockDiskCacheAttributes) iaca;

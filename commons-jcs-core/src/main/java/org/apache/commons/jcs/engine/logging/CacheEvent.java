@@ -25,7 +25,7 @@ import java.util.Date;
 import org.apache.commons.jcs.engine.logging.behavior.ICacheEvent;
 
 /** It's returned from create and passed into log. */
-public class CacheEvent<K extends Serializable>
+public class CacheEvent<K>
     implements ICacheEvent<K>
 {
     /** Don't change. */

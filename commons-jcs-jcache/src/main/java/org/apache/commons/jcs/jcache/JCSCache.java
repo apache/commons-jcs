@@ -18,18 +18,18 @@
  */
 package org.apache.commons.jcs.jcache;
 
+import org.apache.commons.jcs.access.CacheAccess;
+import org.apache.commons.jcs.engine.control.CompositeCache;
 import org.apache.commons.jcs.jcache.jmx.JCSCacheMXBean;
 import org.apache.commons.jcs.jcache.jmx.JCSCacheStatisticsMXBean;
 import org.apache.commons.jcs.jcache.jmx.JMXs;
 import org.apache.commons.jcs.jcache.lang.Subsitutor;
 import org.apache.commons.jcs.jcache.proxy.ExceptionWrapperHandler;
-import org.apache.commons.jcs.jcache.spi.CacheEvictor;
 import org.apache.commons.jcs.jcache.thread.DaemonThreadFactory;
 
 import javax.cache.Cache;
 import javax.cache.CacheManager;
 import javax.cache.configuration.CacheEntryListenerConfiguration;
-import javax.cache.configuration.CompleteConfiguration;
 import javax.cache.configuration.Configuration;
 import javax.cache.configuration.Factory;
 import javax.cache.event.CacheEntryEvent;
@@ -49,14 +49,12 @@ import javax.management.ObjectName;
 import java.io.Closeable;
 import java.io.Serializable;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutorService;
@@ -65,11 +63,12 @@ import java.util.concurrent.Executors;
 import static org.apache.commons.jcs.jcache.Asserts.assertNotNull;
 import static org.apache.commons.jcs.jcache.serialization.Serializations.copy;
 
-public class JCSCache<K, V, C extends CompleteConfiguration<K, V>> implements Cache<K, V>
+// TODO: configure serializer
+public class JCSCache<K, V> implements Cache<K, V>
 {
     private static final Subsitutor SUBSTITUTOR = Subsitutor.Helper.INSTANCE;
 
-    private final ConcurrentMap<JCSKey<K>, JCSElement<V>> delegate;
+    private final CacheAccess<JCSKey<K>, JCSElement<V>> delegate;
     private final JCSCachingManager manager;
     private final JCSConfiguration<K, V> config;
     private final CacheLoader<K, V> loader;
@@ -78,9 +77,6 @@ public class JCSCache<K, V, C extends CompleteConfiguration<K, V>> implements Ca
     private final ObjectName cacheConfigObjectName;
     private final ObjectName cacheStatsObjectName;
     private final String name;
-    private final long maxSize;
-    private final long maxDelete;
-    private final CacheEvictor<K, V> evictor;
     private volatile boolean closed = false;
     private final Map<CacheEntryListenerConfiguration<K, V>, JCSListener<K, V>> listeners = new ConcurrentHashMap<CacheEntryListenerConfiguration<K, V>, JCSListener<K, V>>();
     private final Statistics statistics = new Statistics();
@@ -88,48 +84,20 @@ public class JCSCache<K, V, C extends CompleteConfiguration<K, V>> implements Ca
 
 
     public JCSCache(final ClassLoader classLoader, final JCSCachingManager mgr,
-                    final String cacheName,
-                    final JCSConfiguration<K, V> configuration,
-                    final Properties properties)
+                    final String cacheName, final JCSConfiguration<K, V> configuration,
+                    final Properties properties, final CompositeCache<JCSKey<K>, JCSElement<V>> cache)
     {
         manager = mgr;
 
         name = cacheName;
 
-        final int capacity = Integer.parseInt(property(properties, cacheName, "capacity", "1000"));
-        final float loadFactor = Float.parseFloat(property(properties, cacheName, "loadFactor", "0.75"));
-        final int concurrencyLevel = Integer.parseInt(property(properties, cacheName, "concurrencyLevel", "16"));
-        delegate = new ConcurrentHashMap<JCSKey<K>, JCSElement<V>>(capacity, loadFactor, concurrencyLevel);
+        delegate = new CacheAccess<JCSKey<K>, JCSElement<V>>(cache);
 
         config = configuration;
 
         final int poolSize = Integer.parseInt(property(properties, cacheName, "pool.size", "3"));
         final DaemonThreadFactory threadFactory = new DaemonThreadFactory("JCS-JCache-");
         pool = poolSize > 0 ? Executors.newFixedThreadPool(poolSize, threadFactory) : Executors.newCachedThreadPool(threadFactory);
-
-        maxSize = Long.parseLong(property(properties, cacheName, "maxSize", "1000"));
-        maxDelete = Long.parseLong(property(properties, cacheName, "maxDeleteByEvictionRun", "100"));
-        final long evictionPause = Long.parseLong(properties.getProperty(cacheName + ".evictionPause", properties.getProperty("evictionPause", "30000")));
-        final String evictorClass = property(properties, cacheName, "evictor", null);
-        if (evictorClass != null)
-        {
-            try
-            {
-                evictor = CacheEvictor.class.cast(classLoader.loadClass(evictorClass).newInstance());
-            }
-            catch (final Exception e)
-            {
-                throw new IllegalStateException(e);
-            }
-        }
-        else
-        {
-            evictor = null;
-        }
-        if (evictionPause > 0)
-        {
-            pool.submit(new EvictionThread<K, V>(this, evictionPause));
-        }
 
         final Factory<CacheLoader<K, V>> cacheLoaderFactory = configuration.getCacheLoaderFactory();
         if (cacheLoaderFactory == null)
@@ -240,7 +208,6 @@ public class JCSCache<K, V, C extends CompleteConfiguration<K, V>> implements Ca
                 final JCSKey<K> jcsKey = new JCSKey<K>(key);
                 jcsKey.access(Times.now(false));
                 delegate.put(jcsKey, new JCSElement<V>(v, duration));
-                evictIfMaxSize();
             }
         }
         return v;
@@ -356,14 +323,13 @@ public class JCSCache<K, V, C extends CompleteConfiguration<K, V>> implements Ca
                 statistics.increasePuts(1);
                 statistics.addPutTime(System.currentTimeMillis() - start);
             }
-
-            evictIfMaxSize();
         }
     }
 
     private void expires(final JCSKey<K> cacheKey)
     {
-        final JCSElement<V> elt = delegate.remove(cacheKey);
+        final JCSElement<V> elt = delegate.get(cacheKey);
+        delegate.remove(cacheKey);
         for (final JCSListener<K, V> listener : listeners.values())
         {
             listener.onExpired(Arrays.<CacheEntryEvent<? extends K, ? extends V>> asList(new JCSCacheEntryEvent<K, V>(this,
@@ -375,6 +341,8 @@ public class JCSCache<K, V, C extends CompleteConfiguration<K, V>> implements Ca
     public V getAndPut(final K key, final V value)
     {
         assertNotClosed();
+        assertNotNull(key, "key");
+        assertNotNull(value, "value");
         final V v = doGetControllingExpiry(new JCSKey<K>(key), false, false, true, false);
         put(key, value);
         return v;
@@ -414,7 +382,10 @@ public class JCSCache<K, V, C extends CompleteConfiguration<K, V>> implements Ca
 
         writer.delete(key);
         final JCSKey<K> cacheKey = new JCSKey<K>(key);
-        final JCSElement<V> v = delegate.remove(cacheKey);
+
+        final JCSElement<V> v = delegate.get(cacheKey);
+        delegate.remove(cacheKey);
+
         final V value = v != null && v.getElement() != null ? v.getElement() : null;
         boolean remove = v != null;
         if (v != null && v.isExpired())
@@ -459,6 +430,7 @@ public class JCSCache<K, V, C extends CompleteConfiguration<K, V>> implements Ca
     public V getAndRemove(final K key)
     {
         assertNotClosed();
+        assertNotNull(key, "key");
         final V v = doGetControllingExpiry(new JCSKey<K>(key), false, false, true, false);
         remove(key);
         return v;
@@ -623,7 +595,7 @@ public class JCSCache<K, V, C extends CompleteConfiguration<K, V>> implements Ca
     public void removeAll()
     {
         assertNotClosed();
-        for (final JCSKey<K> k : delegate.keySet())
+        for (final JCSKey<K> k : delegate.getCacheControl().getKeySet())
         {
             remove(k.getKey());
         }
@@ -802,7 +774,7 @@ public class JCSCache<K, V, C extends CompleteConfiguration<K, V>> implements Ca
     public Iterator<Entry<K, V>> iterator()
     {
         assertNotClosed();
-        final Iterator<JCSKey<K>> keys = new HashSet<JCSKey<K>>(delegate.keySet()).iterator();
+        final Iterator<JCSKey<K>> keys = new HashSet<JCSKey<K>>(delegate.getCacheControl().getKeySet()).iterator();
         return new Iterator<Entry<K, V>>()
         {
             private K lastKey = null;
@@ -929,126 +901,5 @@ public class JCSCache<K, V, C extends CompleteConfiguration<K, V>> implements Ca
         config.statisticsDisabled();
         statistics.setActive(false);
         JMXs.unregister(cacheStatsObjectName);
-    }
-
-    private static class EvictionThread<K, V> implements Runnable
-    {
-        private final long pause;
-        private final JCSCache<K, V, ?> cache;
-
-        public EvictionThread(final JCSCache<K, V, ?> cache, final long evictionPause)
-        {
-            this.cache = cache;
-            this.pause = evictionPause;
-        }
-
-        @Override
-        public void run()
-        {
-            while (!cache.isClosed())
-            {
-                cache.evict();
-                try
-                {
-                    Thread.sleep(pause);
-                }
-                catch (final InterruptedException e)
-                {
-                    Thread.interrupted();
-                    break;
-                }
-            }
-        }
-    }
-
-    private void evictIfMaxSize()
-    {
-        if (delegate.size() > maxSize)
-        {
-            pool.submit(new Runnable()
-            {
-                @Override
-                public void run()
-                {
-                    evict();
-                }
-            });
-        }
-    }
-
-    private void evict()
-    {
-        if (isClosed())
-        {
-            return;
-        }
-
-        if (evictor != null)
-        {
-            evictor.evict(this);
-        }
-        else
-        {
-            defaultEviction();
-        }
-    }
-
-    private void defaultEviction()
-    {
-        final ConcurrentMap<JCSKey<K>, ? extends JCSElement<?>> map = delegate;
-        try
-        {
-            final TreeSet<JCSKey<K>> treeSet = new TreeSet<JCSKey<K>>(new Comparator<JCSKey<K>>()
-            {
-                @Override
-                public int compare(final JCSKey<K> o1, final JCSKey<K> o2)
-                {
-                    final long l = o2.lastAccess() - o1.lastAccess(); // inverse
-                    if (l == 0)
-                    {
-                        return o1.hashCode() - o2.hashCode();
-                    }
-                    return (int) l;
-                }
-            });
-            treeSet.addAll(map.keySet());
-
-            int delete = 0;
-            for (final JCSKey<K> key : treeSet)
-            {
-                if (delete >= maxDelete) {
-                    break;
-                }
-                final JCSElement<?> elt = map.get(key);
-                if (elt != null) {
-                    if (elt.isExpired())
-                    {
-                        map.remove(key);
-                        statistics.increaseEvictions(1);
-                        delete++;
-                    }
-                }
-            }
-
-            if (delete >= maxDelete && maxSize > 0 && map.size() > maxSize)
-            {
-                for (final JCSKey<K> key : treeSet)
-                {
-                    if (delete >= maxDelete) {
-                        break;
-                    }
-                    final JCSElement<?> elt = map.get(key);
-                    if (elt != null) {
-                        map.remove(key);
-                        statistics.increaseEvictions(1);
-                        delete++;
-                    }
-                }
-            }
-        }
-        catch (final Exception e)
-        {
-            // no-op
-        }
     }
 }

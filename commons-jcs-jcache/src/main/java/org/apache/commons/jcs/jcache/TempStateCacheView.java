@@ -40,13 +40,13 @@ import static org.apache.commons.jcs.jcache.Asserts.assertNotNull;
 // kind of transactional view for a Cache<K, V>, to use with EntryProcessor
 public class TempStateCacheView<K, V> implements Cache<K, V>
 {
-    private final JCSCache<K, V, ?> cache;
+    private final JCSCache<K, V> cache;
     private final Map<K, V> put = new HashMap<K, V>();
     private final Collection<K> remove = new LinkedList<K>();
     private boolean removeAll = false;
     private boolean clear = false;
 
-    public TempStateCacheView(final JCSCache<K, V, ?> entries)
+    public TempStateCacheView(final JCSCache<K, V> entries)
     {
         this.cache = entries;
     }

@@ -67,7 +67,7 @@ public class LateralTCPCacheFactory
      * @return AuxiliaryCache
      */
     @Override
-    public <K extends Serializable, V extends Serializable> AuxiliaryCache<K, V> createCache(
+    public <K, V> AuxiliaryCache<K, V> createCache(
             AuxiliaryCacheAttributes iaca, ICompositeCacheManager cacheMgr,
            ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer )
     {
@@ -130,7 +130,7 @@ public class LateralTCPCacheFactory
      * @return the listener if created, else null
      */
     @Override
-    public <K extends Serializable, V extends Serializable>
+    public <K, V>
         ILateralCacheListener<K, V> createListener( ILateralCacheAttributes lac, ICompositeCacheManager cacheMgr )
     {
         ITCPLateralCacheAttributes attr = (ITCPLateralCacheAttributes) lac;
@@ -178,7 +178,7 @@ public class LateralTCPCacheFactory
      * @param elementSerializer
      * @return null if none is created.
      */
-    private synchronized <K extends Serializable, V extends Serializable> UDPDiscoveryService createDiscoveryService(
+    private synchronized <K, V> UDPDiscoveryService createDiscoveryService(
             ITCPLateralCacheAttributes lac,
             LateralCacheNoWaitFacade<K, V> lcnwf,
             ICompositeCacheManager cacheMgr,

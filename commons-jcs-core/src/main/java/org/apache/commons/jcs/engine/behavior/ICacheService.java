@@ -33,7 +33,7 @@ import org.apache.commons.jcs.access.exception.ObjectNotFoundException;
  * Note: server which implements this interface provides a local cache service, whereas server which
  * implements IRmiCacheService provides a remote cache service.
  */
-public interface ICacheService<K extends Serializable, V extends Serializable>
+public interface ICacheService<K, V>
 {
     /**
      * Puts a cache item to the cache.

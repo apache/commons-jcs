@@ -49,7 +49,7 @@ public class MockElementSerializer
      *
      */
     @Override
-    public <T extends Serializable> T deSerialize( byte[] bytes )
+    public <T> T deSerialize( byte[] bytes )
         throws IOException, ClassNotFoundException
     {
         deSerializeCount++;
@@ -63,7 +63,7 @@ public class MockElementSerializer
      *
      */
     @Override
-    public <T extends Serializable> byte[] serialize( T obj )
+    public <T> byte[] serialize( T obj )
         throws IOException
     {
         serializeCount++;

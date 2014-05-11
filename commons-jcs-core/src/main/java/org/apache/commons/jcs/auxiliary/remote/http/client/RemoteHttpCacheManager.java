@@ -52,8 +52,8 @@ public class RemoteHttpCacheManager
     private static RemoteHttpCacheManager instance;
 
     /** Contains instances of RemoteCacheNoWait managed by a RemoteCacheManager instance. */
-    static final Map<String, RemoteCacheNoWait<? extends Serializable, ? extends Serializable>> caches =
-        new HashMap<String, RemoteCacheNoWait<? extends Serializable, ? extends Serializable>>();
+    static final Map<String, RemoteCacheNoWait<?, ?>> caches =
+        new HashMap<String, RemoteCacheNoWait<?, ?>>();
 
     /** The configuration attributes. */
     private IRemoteCacheAttributes remoteCacheAttributes;
@@ -147,7 +147,7 @@ public class RemoteHttpCacheManager
      * @return The cache value
      */
     @Override
-    public <K extends Serializable, V extends Serializable> RemoteCacheNoWait<K, V> getCache( String cacheName )
+    public <K, V> RemoteCacheNoWait<K, V> getCache( String cacheName )
     {
         // TODO get some defaults!
         // Perhaps we will need a manager per URL????
@@ -166,7 +166,7 @@ public class RemoteHttpCacheManager
      * @param cattr
      * @return The cache value
      */
-    public <K extends Serializable, V extends Serializable> RemoteCacheNoWait<K, V> getCache( RemoteHttpCacheAttributes cattr )
+    public <K, V> RemoteCacheNoWait<K, V> getCache( RemoteHttpCacheAttributes cattr )
     {
         RemoteCacheNoWait<K, V> remoteCacheNoWait = null;
 
@@ -204,7 +204,7 @@ public class RemoteHttpCacheManager
      * @param cattr
      * @return IRemoteHttpCacheClient
      */
-    protected <K extends Serializable, V extends Serializable> IRemoteHttpCacheClient<K, V> createRemoteHttpCacheClientForAttributes( RemoteHttpCacheAttributes cattr )
+    protected <K, V> IRemoteHttpCacheClient<K, V> createRemoteHttpCacheClientForAttributes( RemoteHttpCacheAttributes cattr )
     {
         IRemoteHttpCacheClient<K, V> client = OptionConverter.instantiateByClassName( cattr
             .getRemoteHttpClientClassName(), null );

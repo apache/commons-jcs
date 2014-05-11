@@ -29,7 +29,7 @@ import org.apache.commons.jcs.engine.behavior.ICacheListener;
 /**
  * Listens for remote cache event notification ( rmi callback ).
  */
-public interface IRemoteCacheListener<K extends Serializable, V extends Serializable>
+public interface IRemoteCacheListener<K, V>
     extends ICacheListener<K, V>, Remote
 {
     /**

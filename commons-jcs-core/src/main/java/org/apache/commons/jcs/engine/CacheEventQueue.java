@@ -37,7 +37,7 @@ import org.apache.commons.logging.LogFactory;
  * thread, and kill the thread if the queue goes empty for a specified period, now set to 1 minute.
  * If something comes in after that a new processor thread should be created.
  */
-public class CacheEventQueue<K extends Serializable, V extends Serializable>
+public class CacheEventQueue<K, V>
     extends AbstractCacheEventQueue<K, V>
 {
     /** The logger. */

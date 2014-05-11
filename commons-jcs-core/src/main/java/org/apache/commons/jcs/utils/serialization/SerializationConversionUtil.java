@@ -50,7 +50,7 @@ public class SerializationConversionUtil
      * @return null for null;
      * @throws IOException
      */
-    public static <K extends Serializable, V extends Serializable> ICacheElementSerialized<K, V> getSerializedCacheElement( ICacheElement<K, V> element,
+    public static <K, V> ICacheElementSerialized<K, V> getSerializedCacheElement( ICacheElement<K, V> element,
                                                                     IElementSerializer elementSerializer )
         throws IOException
     {
@@ -104,7 +104,7 @@ public class SerializationConversionUtil
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    public static <K extends Serializable, V extends Serializable> ICacheElement<K, V> getDeSerializedCacheElement( ICacheElementSerialized<K, V> serialized,
+    public static <K, V> ICacheElement<K, V> getDeSerializedCacheElement( ICacheElementSerialized<K, V> serialized,
                                                             IElementSerializer elementSerializer )
         throws IOException, ClassNotFoundException
     {

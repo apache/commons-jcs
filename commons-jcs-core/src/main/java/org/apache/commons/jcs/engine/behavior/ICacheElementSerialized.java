@@ -30,7 +30,7 @@ import java.io.Serializable;
  *<p>
  * @author Aaron Smuts
  */
-public interface ICacheElementSerialized<K extends Serializable, V extends Serializable>
+public interface ICacheElementSerialized<K, V>
     extends ICacheElement<K, V>
 {
     /**

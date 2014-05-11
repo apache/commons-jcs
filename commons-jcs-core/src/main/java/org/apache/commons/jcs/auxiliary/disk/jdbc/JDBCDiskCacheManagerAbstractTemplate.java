@@ -52,8 +52,8 @@ public abstract class JDBCDiskCacheManagerAbstractTemplate
     protected static int clients; // TODO needs to be made private and synchronised and/or turned into AtomicInt
 
     /** A map of JDBCDiskCache objects to region names. */
-    private static Map<String, JDBCDiskCache<? extends Serializable, ? extends Serializable>> caches =
-        new ConcurrentHashMap<String, JDBCDiskCache<? extends Serializable, ? extends Serializable>>();
+    private static Map<String, JDBCDiskCache<?, ?>> caches =
+        new ConcurrentHashMap<String, JDBCDiskCache<?, ?>>();
 
     /**
      * A map of TableState objects to table names. Each cache has a table state object, which is
@@ -77,7 +77,7 @@ public abstract class JDBCDiskCacheManagerAbstractTemplate
      * @param tableState An object used by multiple processes to indicate state.
      * @return AuxiliaryCache -- a JDBCDiskCache
      */
-    protected abstract <K extends Serializable, V extends Serializable> JDBCDiskCache<K, V> createJDBCDiskCache( JDBCDiskCacheAttributes cattr, TableState tableState );
+    protected abstract <K, V> JDBCDiskCache<K, V> createJDBCDiskCache( JDBCDiskCacheAttributes cattr, TableState tableState );
 
     /**
      * Creates a JDBCDiskCache for the region if one doesn't exist, else it returns the pre-created
@@ -86,7 +86,7 @@ public abstract class JDBCDiskCacheManagerAbstractTemplate
      * @param cattr
      * @return The cache value
      */
-    public <K extends Serializable, V extends Serializable> JDBCDiskCache<K, V> getCache( JDBCDiskCacheAttributes cattr )
+    public <K, V> JDBCDiskCache<K, V> getCache( JDBCDiskCacheAttributes cattr )
     {
         JDBCDiskCache<K, V> diskCache = null;
 

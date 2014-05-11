@@ -28,7 +28,7 @@ import org.apache.commons.jcs.engine.behavior.ICacheElement;
  * JCS-TCP-Lateral packet. The headers specify the action the receiver should
  * take.
  */
-public class LateralElementDescriptor<K extends Serializable, V extends Serializable>
+public class LateralElementDescriptor<K, V>
     implements Serializable
 {
     /** Don't change */

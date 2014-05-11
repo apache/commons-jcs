@@ -43,7 +43,7 @@ import org.apache.commons.logging.LogFactory;
 /**
  * Lateral distributor. Returns null on get by default. Net search not implemented.
  */
-public class LateralCache<K extends Serializable, V extends Serializable>
+public class LateralCache<K, V>
     extends AbstractAuxiliaryCacheEventLogging<K, V>
 {
     /** Don't change. */

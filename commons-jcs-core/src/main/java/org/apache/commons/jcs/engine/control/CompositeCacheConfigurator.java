@@ -233,7 +233,7 @@ public class CompositeCacheConfigurator
      *<p>
      * @param props
      */
-    protected <K extends Serializable, V extends Serializable> void parseSystemRegions( Properties props )
+    protected <K, V> void parseSystemRegions( Properties props )
     {
         Enumeration<?> en = props.propertyNames();
         while ( en.hasMoreElements() )
@@ -259,7 +259,7 @@ public class CompositeCacheConfigurator
      *<p>
      * @param props
      */
-    protected <K extends Serializable, V extends Serializable> void parseRegions( Properties props )
+    protected <K, V> void parseRegions( Properties props )
     {
         List<String> regionNames = new ArrayList<String>();
 
@@ -297,7 +297,7 @@ public class CompositeCacheConfigurator
      * @param value
      * @return CompositeCache
      */
-    protected <K extends Serializable, V extends Serializable> CompositeCache<K, V> parseRegion(
+    protected <K, V> CompositeCache<K, V> parseRegion(
             Properties props, String regName, String value )
     {
         return parseRegion( props, regName, value, null, REGION_PREFIX );
@@ -314,7 +314,7 @@ public class CompositeCacheConfigurator
      * @param cca
      * @return CompositeCache
      */
-    protected <K extends Serializable, V extends Serializable> CompositeCache<K, V> parseRegion(
+    protected <K, V> CompositeCache<K, V> parseRegion(
             Properties props, String regName, String value, ICompositeCacheAttributes cca )
     {
         return parseRegion( props, regName, value, cca, REGION_PREFIX );
@@ -330,7 +330,7 @@ public class CompositeCacheConfigurator
      * @param regionPrefix
      * @return CompositeCache
      */
-    protected <K extends Serializable, V extends Serializable> CompositeCache<K, V> parseRegion(
+    protected <K, V> CompositeCache<K, V> parseRegion(
             Properties props, String regName, String value,
             ICompositeCacheAttributes cca, String regionPrefix )
     {
@@ -529,7 +529,7 @@ public class CompositeCacheConfigurator
      * @param regName the name of the region.
      * @return AuxiliaryCache
      */
-    protected <K extends Serializable, V extends Serializable> AuxiliaryCache<K, V> parseAuxiliary( Properties props, String auxName, String regName )
+    protected <K, V> AuxiliaryCache<K, V> parseAuxiliary( Properties props, String auxName, String regName )
     {
         AuxiliaryCache<K, V> auxCache;
 
@@ -619,7 +619,7 @@ public class CompositeCacheConfigurator
      * @param auxPrefix - ex. AUXILIARY_PREFIX + auxName
      * @return IKeyMatcher
      */
-    public static <K extends Serializable> IKeyMatcher<K> parseKeyMatcher( Properties props, String auxPrefix )
+    public static <K> IKeyMatcher<K> parseKeyMatcher( Properties props, String auxPrefix )
     {
 
         // auxFactory was not previously initialized.

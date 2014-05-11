@@ -41,7 +41,7 @@ import org.apache.commons.logging.LogFactory;
  * This handles gets, updates, and removes. It also initiates failover recovery when an error is
  * encountered.
  */
-public class RemoteCache<K extends Serializable, V extends Serializable>
+public class RemoteCache<K, V>
     extends AbstractRemoteAuxiliaryCache<K, V>
 {
     /** Don't change. */

@@ -27,7 +27,7 @@ import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
 /**
  * Listens for lateral cache event notification.
  */
-public interface ILateralCacheListener<K extends Serializable, V extends Serializable>
+public interface ILateralCacheListener<K, V>
     extends ICacheListener<K, V>
 {
     /**

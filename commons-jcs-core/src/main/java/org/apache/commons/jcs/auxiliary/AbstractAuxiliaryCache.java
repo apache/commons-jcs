@@ -31,7 +31,7 @@ import org.apache.commons.jcs.engine.match.behavior.IKeyMatcher;
 import org.apache.commons.jcs.utils.serialization.StandardSerializer;
 
 /** This holds convenience methods used by most auxiliary caches. */
-public abstract class AbstractAuxiliaryCache<K extends Serializable, V extends Serializable>
+public abstract class AbstractAuxiliaryCache<K, V>
     implements AuxiliaryCache<K, V>
 {
     /** An optional event logger */
@@ -76,7 +76,7 @@ public abstract class AbstractAuxiliaryCache<K extends Serializable, V extends S
      * @param eventName
      * @return ICacheEvent
      */
-    protected <T extends Serializable> ICacheEvent<T> createICacheEvent( String regionName, T key, String eventName )
+    protected <T> ICacheEvent<T> createICacheEvent( String regionName, T key, String eventName )
     {
         if ( cacheEventLogger == null )
         {
@@ -93,7 +93,7 @@ public abstract class AbstractAuxiliaryCache<K extends Serializable, V extends S
      * <p>
      * @param cacheEvent
      */
-    protected <T extends Serializable> void logICacheEvent( ICacheEvent<T> cacheEvent )
+    protected <T> void logICacheEvent( ICacheEvent<T> cacheEvent )
     {
         if ( cacheEventLogger != null )
         {

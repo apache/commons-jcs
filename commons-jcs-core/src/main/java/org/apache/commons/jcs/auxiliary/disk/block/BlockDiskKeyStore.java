@@ -44,7 +44,7 @@ import org.apache.commons.logging.LogFactory;
  * <p>
  * @author Aaron Smuts
  */
-public class BlockDiskKeyStore<K extends Serializable>
+public class BlockDiskKeyStore<K>
 {
     /** The logger */
     private static final Log log = LogFactory.getLog( BlockDiskKeyStore.class );

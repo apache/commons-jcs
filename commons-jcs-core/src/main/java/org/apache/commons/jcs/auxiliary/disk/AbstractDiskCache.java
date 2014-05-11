@@ -57,7 +57,7 @@ import org.apache.commons.logging.LogFactory;
  * persistence mechanism, this class destroys the event queue. Should it also destroy purgatory?
  * Should it dispose itself?
  */
-public abstract class AbstractDiskCache<K extends Serializable, V extends Serializable>
+public abstract class AbstractDiskCache<K, V>
     extends AbstractAuxiliaryCacheEventLogging<K, V>
     implements AuxiliaryCache<K, V>
 {

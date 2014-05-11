@@ -19,10 +19,9 @@ package org.apache.commons.jcs.engine.behavior;
  * under the License.
  */
 
-import java.io.Serializable;
-import java.util.Properties;
-
 import org.apache.commons.jcs.engine.control.CompositeCache;
+
+import java.util.Properties;
 
 /**
  * I need the interface so I can plug in mock managers for testing.
@@ -37,7 +36,7 @@ public interface ICompositeCacheManager extends IShutdownObservable
      * @param cacheName
      * @return CompositeCache
      */
-    <K extends Serializable, V extends Serializable> CompositeCache<K, V>  getCache( String cacheName );
+    <K, V> CompositeCache<K, V>  getCache( String cacheName );
 
     /**
      * This is exposed so other manager can get access to the props.

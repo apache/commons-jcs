@@ -24,7 +24,7 @@ import java.io.Serializable;
 /**
  * Description of the Class
  */
-public class GroupAttrName<T extends Serializable>
+public class GroupAttrName<T>
     implements Serializable
 {
     /** Don't change */

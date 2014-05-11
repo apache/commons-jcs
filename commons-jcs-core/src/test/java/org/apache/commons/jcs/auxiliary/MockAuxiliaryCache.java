@@ -34,7 +34,7 @@ import org.apache.commons.jcs.engine.stats.behavior.IStats;
  * <p>
  * @author Aaron Smuts
  */
-public class MockAuxiliaryCache<K extends Serializable, V extends Serializable>
+public class MockAuxiliaryCache<K, V>
     extends AbstractAuxiliaryCache<K, V>
 {
     /** Don't change */

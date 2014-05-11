@@ -30,7 +30,7 @@ import org.apache.commons.jcs.engine.behavior.IElementAttributes;
 /**
  * ICacheAccess defines the behavior for client access.
  */
-public interface ICacheAccess<K extends Serializable, V extends Serializable>
+public interface ICacheAccess<K, V>
     extends ICacheAccessManagement
 {
     /**

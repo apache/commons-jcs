@@ -23,7 +23,7 @@ import java.io.Serializable;
 import java.util.Set;
 
 /** Key matchers need to implement this interface. */
-public interface IKeyMatcher<K extends Serializable> extends Serializable
+public interface IKeyMatcher<K> extends Serializable
 {
     /**
      * Creates a pattern and find matches on the array.

@@ -43,7 +43,7 @@ import org.apache.commons.logging.LogFactory;
  * This keeps a static reference to a memory shrinker clock daemon. If this region is configured to
  * use the shrinker, the clock daemon will be setup to run the shrinker on this region.
  */
-public abstract class AbstractMemoryCache<K extends Serializable, V extends Serializable>
+public abstract class AbstractMemoryCache<K, V>
     implements IMemoryCache<K, V>
 {
     /** Log instance */

@@ -31,7 +31,7 @@ import java.io.Serializable;
  * allowed to be spooled, etc.
  *
  */
-public interface ICacheElement<K extends Serializable, V extends Serializable>
+public interface ICacheElement<K, V>
     extends Serializable
 {
 

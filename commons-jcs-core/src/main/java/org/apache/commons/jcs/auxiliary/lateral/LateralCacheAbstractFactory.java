@@ -60,7 +60,7 @@ public abstract class LateralCacheAbstractFactory
      * @return AuxiliaryCache
      */
     @Override
-    public abstract <K extends Serializable, V extends Serializable> AuxiliaryCache<K, V> createCache(
+    public abstract <K, V> AuxiliaryCache<K, V> createCache(
             AuxiliaryCacheAttributes attr, ICompositeCacheManager cacheMgr,
             ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer );
 
@@ -75,7 +75,7 @@ public abstract class LateralCacheAbstractFactory
      *
      * @return the listener if created, else null
      */
-    public abstract <K extends Serializable, V extends Serializable>
+    public abstract <K, V>
         ILateralCacheListener<K, V> createListener( ILateralCacheAttributes lac, ICompositeCacheManager cacheMgr );
 
     /**
