@@ -80,6 +80,7 @@ public class JCSCache<K, V, C extends CompleteConfiguration<K, V>> implements Ca
     private final String name;
     private final long maxSize;
     private final long maxDelete;
+    private final CacheEvictor<K, V> evictor;
     private volatile boolean closed = false;
     private final Map<CacheEntryListenerConfiguration<K, V>, JCSListener<K, V>> listeners = new ConcurrentHashMap<CacheEntryListenerConfiguration<K, V>, JCSListener<K, V>>();
     private final Statistics statistics = new Statistics();
@@ -109,26 +110,25 @@ public class JCSCache<K, V, C extends CompleteConfiguration<K, V>> implements Ca
         maxSize = Long.parseLong(property(properties, cacheName, "maxSize", "1000"));
         maxDelete = Long.parseLong(property(properties, cacheName, "maxDeleteByEvictionRun", "100"));
         final long evictionPause = Long.parseLong(properties.getProperty(cacheName + ".evictionPause", properties.getProperty("evictionPause", "30000")));
+        final String evictorClass = property(properties, cacheName, "evictor", null);
+        if (evictorClass != null)
+        {
+            try
+            {
+                evictor = CacheEvictor.class.cast(classLoader.loadClass(evictorClass).newInstance());
+            }
+            catch (final Exception e)
+            {
+                throw new IllegalStateException(e);
+            }
+        }
+        else
+        {
+            evictor = null;
+        }
         if (evictionPause > 0)
         {
-            final CacheEvictor<K, V> evictor;
-            final String evictorClass = property(properties, cacheName, "evictor", null);
-            if (evictorClass != null)
-            {
-                try
-                {
-                    evictor = CacheEvictor.class.cast(classLoader.loadClass(evictorClass).newInstance());
-                }
-                catch (final Exception e)
-                {
-                    throw new IllegalStateException(e);
-                }
-            }
-            else
-            {
-                evictor = null;
-            }
-            pool.submit(new EvictionThread<K, V>(this, evictionPause, evictor));
+            pool.submit(new EvictionThread<K, V>(this, evictionPause));
         }
 
         final Factory<CacheLoader<K, V>> cacheLoaderFactory = configuration.getCacheLoaderFactory();
@@ -935,13 +935,11 @@ public class JCSCache<K, V, C extends CompleteConfiguration<K, V>> implements Ca
     {
         private final long pause;
         private final JCSCache<K, V, ?> cache;
-        private final CacheEvictor<K, V> evictor;
 
-        public EvictionThread(final JCSCache<K, V, ?> cache, final long evictionPause, final CacheEvictor<K, V> evictor)
+        public EvictionThread(final JCSCache<K, V, ?> cache, final long evictionPause)
         {
             this.cache = cache;
             this.pause = evictionPause;
-            this.evictor = evictor;
         }
 
         @Override
@@ -949,14 +947,7 @@ public class JCSCache<K, V, C extends CompleteConfiguration<K, V>> implements Ca
         {
             while (!cache.isClosed())
             {
-                if (evictor != null)
-                {
-                    evictor.evict(cache);
-                }
-                else
-                {
-                    cache.evict();
-                }
+                cache.evict();
                 try
                 {
                     Thread.sleep(pause);
@@ -992,6 +983,18 @@ public class JCSCache<K, V, C extends CompleteConfiguration<K, V>> implements Ca
             return;
         }
 
+        if (evictor != null)
+        {
+            evictor.evict(this);
+        }
+        else
+        {
+            defaultEviction();
+        }
+    }
+
+    private void defaultEviction()
+    {
         final ConcurrentMap<JCSKey<K>, ? extends JCSElement<?>> map = delegate;
         try
         {
