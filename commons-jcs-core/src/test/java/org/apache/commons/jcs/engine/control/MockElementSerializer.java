@@ -48,11 +48,11 @@ public class MockElementSerializer
      *
      */
     @Override
-    public <T> T deSerialize( byte[] bytes )
+    public <T> T deSerialize( byte[] bytes, ClassLoader loader )
         throws IOException, ClassNotFoundException
     {
         deSerializeCount++;
-        return serializer.deSerialize( bytes );
+        return serializer.deSerialize( bytes, loader );
     }
 
     /**

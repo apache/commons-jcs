@@ -550,7 +550,7 @@ public class JDBCDiskCache<K, V>
                             try
                             {
                                 // USE THE SERIALIZER
-                                obj = getElementSerializer().deSerialize( data );
+                                obj = getElementSerializer().deSerialize( data, null );
                             }
                             catch ( IOException ioe )
                             {
@@ -654,7 +654,7 @@ public class JDBCDiskCache<K, V>
                                 try
                                 {
                                     // USE THE SERIALIZER
-                                    ICacheElement<K, V> value = getElementSerializer().deSerialize( data );
+                                    ICacheElement<K, V> value = getElementSerializer().deSerialize( data, null );
                                     results.put( (K) key, value );
                                 }
                                 catch ( IOException ioe )

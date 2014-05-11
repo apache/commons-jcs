@@ -45,6 +45,6 @@ public interface IElementSerializer
      * @throws IOException
      * @throws ClassNotFoundException thrown if we don't know the object.
      */
-    <T> T deSerialize( byte[] bytes )
+    <T> T deSerialize( byte[] bytes, ClassLoader loader )
         throws IOException, ClassNotFoundException;
 }

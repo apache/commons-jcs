@@ -71,12 +71,12 @@ public class StandardSerializer
      * @throws ClassNotFoundException
      */
     @Override
-    public <T> T deSerialize( byte[] data )
+    public <T> T deSerialize( byte[] data, ClassLoader loader )
         throws IOException, ClassNotFoundException
     {
         ByteArrayInputStream bais = new ByteArrayInputStream( data );
         BufferedInputStream bis = new BufferedInputStream( bais );
-        ObjectInputStream ois = new ObjectInputStreamClassLoaderAware( bis, null );
+        ObjectInputStream ois = new ObjectInputStreamClassLoaderAware( bis, loader );
         try
         {
             @SuppressWarnings("unchecked") // Need to cast from Object

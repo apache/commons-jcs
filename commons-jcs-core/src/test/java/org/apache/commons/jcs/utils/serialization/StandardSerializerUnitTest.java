@@ -43,7 +43,7 @@ public class StandardSerializerUnitTest
         String before = "adsfdsafdsafdsafdsafdsafdsafdsagfdsafdsafdsfdsafdsafsa333 31231";
 
         // DO WORK
-        String after = (String) serializer.deSerialize( serializer.serialize( before ) );
+        String after = (String) serializer.deSerialize( serializer.serialize( before ), null );
 
         // VERIFY
         assertEquals( "Before and after should be the same.", before, after );
@@ -66,7 +66,7 @@ public class StandardSerializerUnitTest
         byte[] serialized = serializer.serialize( before );
         //System.out.println( "testNullInput " + serialized );
 
-        String after = (String) serializer.deSerialize( serialized );
+        String after = (String) serializer.deSerialize( serialized, null );
         //System.out.println( "testNullInput " + after );
 
         // VERIFY
@@ -94,7 +94,7 @@ public class StandardSerializerUnitTest
         String before = sb.toString();
 
         // DO WORK
-        String after = (String) serializer.deSerialize( serializer.serialize( before ) );
+        String after = (String) serializer.deSerialize( serializer.serialize( before ), null );
 
         // VERIFY
         assertEquals( "Before and after should be the same.", before, after );

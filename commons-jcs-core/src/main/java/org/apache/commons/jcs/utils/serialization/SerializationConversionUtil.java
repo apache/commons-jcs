@@ -120,7 +120,7 @@ public class SerializationConversionUtil
             {
                 try
                 {
-                    deSerializedValue = elementSerializer.deSerialize( serialized.getSerializedValue() );
+                    deSerializedValue = elementSerializer.deSerialize( serialized.getSerializedValue(), null );
                 }
                 catch ( ClassNotFoundException e )
                 {

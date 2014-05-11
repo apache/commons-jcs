@@ -86,7 +86,7 @@ public class CompressingSerializer
      * @throws ClassNotFoundException if class is not found during deserialization
      */
     @Override
-    public <T> T deSerialize( byte[] data )
+    public <T> T deSerialize( byte[] data, ClassLoader loader )
         throws IOException, ClassNotFoundException
     {
         if ( data == null )

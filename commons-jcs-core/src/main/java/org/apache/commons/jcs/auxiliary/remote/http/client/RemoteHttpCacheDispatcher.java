@@ -89,7 +89,7 @@ public class RemoteHttpCacheDispatcher
             RemoteCacheResponse<T> remoteCacheResponse = null;
             try
             {
-                remoteCacheResponse = serializer.deSerialize( responseAsByteArray );
+                remoteCacheResponse = serializer.deSerialize( responseAsByteArray, null );
             }
             catch ( ClassNotFoundException e )
             {

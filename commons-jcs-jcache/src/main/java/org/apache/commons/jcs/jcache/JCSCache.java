@@ -19,6 +19,7 @@
 package org.apache.commons.jcs.jcache;
 
 import org.apache.commons.jcs.access.CacheAccess;
+import org.apache.commons.jcs.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs.engine.control.CompositeCache;
 import org.apache.commons.jcs.jcache.jmx.JCSCacheMXBean;
 import org.apache.commons.jcs.jcache.jmx.JCSCacheStatisticsMXBean;
@@ -26,6 +27,7 @@ import org.apache.commons.jcs.jcache.jmx.JMXs;
 import org.apache.commons.jcs.jcache.lang.Subsitutor;
 import org.apache.commons.jcs.jcache.proxy.ExceptionWrapperHandler;
 import org.apache.commons.jcs.jcache.thread.DaemonThreadFactory;
+import org.apache.commons.jcs.utils.serialization.StandardSerializer;
 
 import javax.cache.Cache;
 import javax.cache.CacheManager;
@@ -47,7 +49,6 @@ import javax.cache.processor.EntryProcessorException;
 import javax.cache.processor.EntryProcessorResult;
 import javax.management.ObjectName;
 import java.io.Closeable;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -81,6 +82,7 @@ public class JCSCache<K, V> implements Cache<K, V>
     private final Map<CacheEntryListenerConfiguration<K, V>, JCSListener<K, V>> listeners = new ConcurrentHashMap<CacheEntryListenerConfiguration<K, V>, JCSListener<K, V>>();
     private final Statistics statistics = new Statistics();
     private final ExecutorService pool;
+    private final IElementSerializer serializer; // using json/xml should work as well -> don't force Serializable
 
 
     public JCSCache(final ClassLoader classLoader, final JCSCachingManager mgr,
@@ -96,8 +98,17 @@ public class JCSCache<K, V> implements Cache<K, V>
         config = configuration;
 
         final int poolSize = Integer.parseInt(property(properties, cacheName, "pool.size", "3"));
-        final DaemonThreadFactory threadFactory = new DaemonThreadFactory("JCS-JCache-");
+        final DaemonThreadFactory threadFactory = new DaemonThreadFactory("JCS-JCache-" + cacheName + "-");
         pool = poolSize > 0 ? Executors.newFixedThreadPool(poolSize, threadFactory) : Executors.newCachedThreadPool(threadFactory);
+
+        try
+        {
+            serializer = IElementSerializer.class.cast(classLoader.loadClass(property(properties, "serializer", cacheName, StandardSerializer.class.getName())).newInstance());
+        }
+        catch (final Exception e)
+        {
+            throw new IllegalArgumentException(e);
+        }
 
         final Factory<CacheLoader<K, V>> cacheLoaderFactory = configuration.getCacheLoaderFactory();
         if (cacheLoaderFactory == null)
@@ -217,8 +228,8 @@ public class JCSCache<K, V> implements Cache<K, V>
     {
         if (config.isStoreByValue())
         {
-            final Serializable copy = copy(manager.getClassLoader(), Serializable.class.cast(key.getKey()));
-            delegate.put(new JCSKey<K>((K) copy), elt);
+            final K copy = copy(serializer, manager.getClassLoader(), key.getKey());
+            delegate.put(new JCSKey<K>(copy), elt);
         }
     }
 
@@ -286,7 +297,7 @@ public class JCSCache<K, V> implements Cache<K, V>
         final V old = oldElt != null ? oldElt.getElement() : null;
 
         final boolean storeByValue = config.isStoreByValue();
-        final V value = storeByValue ? (V) copy(manager.getClassLoader(), Serializable.class.cast(rawValue)) : rawValue;
+        final V value = storeByValue ? copy(serializer, manager.getClassLoader(), rawValue) : rawValue;
 
         final boolean created = old == null;
         final JCSElement<V> element = new JCSElement<V>(value, created ? expiryPolicy.getExpiryForCreation()
@@ -301,7 +312,7 @@ public class JCSCache<K, V> implements Cache<K, V>
         else
         {
             writer.write(new JCSEntry<K, V>(key, value));
-            final JCSKey<K> jcsKey = storeByValue ? new JCSKey<K>((K) copy(manager.getClassLoader(), Serializable.class.cast(key))) : cacheKey;
+            final JCSKey<K> jcsKey = storeByValue ? new JCSKey<K>(copy(serializer, manager.getClassLoader(), key)) : cacheKey;
             jcsKey.access(start);
             delegate.put(jcsKey, element);
             for (final JCSListener<K, V> listener : listeners.values())

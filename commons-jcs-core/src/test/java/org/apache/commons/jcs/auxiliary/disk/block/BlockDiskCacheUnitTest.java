@@ -141,7 +141,7 @@ public class BlockDiskCacheUnitTest
             resultData = newTotal;
         }
 
-        Serializable result = elementSerializer.deSerialize( resultData );
+        Serializable result = elementSerializer.deSerialize( resultData, null );
         // System.out.println( result );
         assertEquals( "wrong string after retrieval", string, result );
     }

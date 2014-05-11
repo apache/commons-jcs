@@ -42,7 +42,7 @@ public class CompressingSerializerUnitTest
         CompressingSerializer serializer = new CompressingSerializer();
 
         // DO WORK
-        Object result = serializer.deSerialize( null );
+        Object result = serializer.deSerialize( null, null );
 
         // VERIFY
         assertNull( "Should have nothing.", result );
@@ -63,7 +63,7 @@ public class CompressingSerializerUnitTest
 
         // DO WORK
         String before = "adsfdsafdsafdsafdsafdsafdsafdsagfdsafdsafdsfdsafdsafsa333 31231";
-        String after = (String) serializer.deSerialize( serializer.serialize( before ) );
+        String after = (String) serializer.deSerialize( serializer.serialize( before ), null );
 
         // VERIFY
         assertEquals( "Before and after should be the same.", before, after );
@@ -84,7 +84,7 @@ public class CompressingSerializerUnitTest
 
         // DO WORK
         byte[] serialized = serializer.serialize( before );
-        String after = (String) serializer.deSerialize( serialized );
+        String after = (String) serializer.deSerialize( serialized, null );
 
         // VERIFY
         assertNull( "Should have nothing. after =" + after, after );
