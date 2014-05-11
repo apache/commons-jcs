@@ -30,7 +30,10 @@ import javax.cache.configuration.MutableConfiguration;
 import javax.cache.expiry.CreatedExpiryPolicy;
 import javax.cache.expiry.Duration;
 import javax.cache.expiry.ExpiryPolicy;
+import javax.cache.integration.CacheLoader;
+import javax.cache.integration.CacheWriter;
 import javax.cache.spi.CachingProvider;
+import java.util.Map;
 import java.util.Properties;
 
 public class OpenJPAJCacheDataCacheManager extends DataCacheManagerImpl
@@ -43,8 +46,20 @@ public class OpenJPAJCacheDataCacheManager extends DataCacheManagerImpl
     {
         super.initialize(conf, dataCache, queryCache);
         provider = Caching.getCachingProvider();
-        cacheManager = provider.getCacheManager(
-                provider.getDefaultURI(), provider.getDefaultClassLoader(), new Properties()); // todo get props
+
+        final Properties properties = new Properties();
+        final Map<String, Object> props = conf.toProperties(false);
+        if (props != null)
+        {
+            for (final Map.Entry<?, ?> entry : props.entrySet())
+            {
+                if (entry.getKey() != null && entry.getValue() != null)
+                {
+                    properties.setProperty(entry.getKey().toString(), entry.getValue().toString());
+                }
+            }
+        }
+        cacheManager = provider.getCacheManager(provider.getDefaultURI(), provider.getDefaultClassLoader(), properties);
     }
 
     @Override
@@ -57,14 +72,37 @@ public class OpenJPAJCacheDataCacheManager extends DataCacheManagerImpl
 
     Cache<Object, Object> getOrCreateCache(final String prefix, final String entity)
     {
-        final String name = entity;
-        final String internalName = prefix + name;
+        final String internalName = prefix + entity;
         Cache<Object, Object> cache = cacheManager.getCache(internalName);
         if (cache == null)
         {
-            cache = cacheManager.createCache(internalName,
-                    new MutableConfiguration<Object, Object>().setStoreByValue(false)
-                            .setExpiryPolicyFactory(new FactoryBuilder.SingletonFactory<ExpiryPolicy>(new CreatedExpiryPolicy(Duration.FIVE_MINUTES))));
+            final Properties properties = cacheManager.getProperties();
+            final MutableConfiguration<Object, Object> configuration = new MutableConfiguration<Object, Object>()
+                    .setStoreByValue("true".equalsIgnoreCase(properties.getProperty("jcache.store-by-value", "false")));
+
+            configuration.setReadThrough("true".equals(properties.getProperty("jcache.read-through", "false")));
+            configuration.setWriteThrough("true".equals(properties.getProperty("jcache.write-through", "false")));
+            if (configuration.isReadThrough())
+            {
+                configuration.setCacheLoaderFactory(new FactoryBuilder.ClassFactory<CacheLoader<Object, Object>>(properties.getProperty("jcache.cache-loader-factory")));
+            }
+            if (configuration.isWriteThrough())
+            {
+                configuration.setCacheWriterFactory(new FactoryBuilder.ClassFactory<CacheWriter<Object, Object>>(properties.getProperty("jcache.cache-writer-factory")));
+            }
+            final String expirtyPolicy = properties.getProperty("jcache.expiry-policy-factory");
+            if (expirtyPolicy != null)
+            {
+                configuration.setExpiryPolicyFactory(new FactoryBuilder.ClassFactory<ExpiryPolicy>(expirtyPolicy));
+            }
+            else
+            {
+                configuration.setExpiryPolicyFactory(new FactoryBuilder.SingletonFactory<ExpiryPolicy>(new CreatedExpiryPolicy(Duration.FIVE_MINUTES)));
+            }
+            configuration.setManagementEnabled("true".equals(properties.getProperty("jcache.management-enabled", "false")));
+            configuration.setStatisticsEnabled("true".equals(properties.getProperty("jcache.statistics-enabled", "false")));
+
+            cache = cacheManager.createCache(internalName, configuration);
         }
         return cache;
     }
