@@ -22,7 +22,6 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -38,7 +37,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 
 public class InMemoryResponse extends HttpServletResponseWrapper implements Serializable
 {
-    private final ByteArrayOutputStream buffer;
+    private final OutputStream buffer;
 
     private final Collection<Cookie> cookies = new CopyOnWriteArraySet<Cookie>();
     private final Map<String, List<Serializable>> headers = new TreeMap<String, List<Serializable>>(String.CASE_INSENSITIVE_ORDER);
@@ -47,7 +46,7 @@ public class InMemoryResponse extends HttpServletResponseWrapper implements Seri
     private PrintWriter writer;
     private int contentLength;
 
-    public InMemoryResponse(final HttpServletResponse response, final ByteArrayOutputStream baos)
+    public InMemoryResponse(final HttpServletResponse response, final OutputStream baos)
     {
         super(response);
         this.buffer = baos;
@@ -254,6 +253,10 @@ public class InMemoryResponse extends HttpServletResponseWrapper implements Seri
         {
             writer.flush();
         }
+        else
+        {
+            buffer.flush();
+        }
         super.flushBuffer();
     }
 
@@ -270,10 +273,5 @@ public class InMemoryResponse extends HttpServletResponseWrapper implements Seri
     public Map<String, List<Serializable>> getHeaders()
     {
         return headers;
-    }
-
-    public byte[] getOut()
-    {
-        return buffer.toByteArray();
     }
 }

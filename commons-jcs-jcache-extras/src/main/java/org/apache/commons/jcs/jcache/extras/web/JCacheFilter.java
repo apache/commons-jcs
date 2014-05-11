@@ -39,19 +39,23 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.Serializable;
 import java.net.URI;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.zip.GZIPOutputStream;
 
 import static java.util.Collections.list;
 import static javax.servlet.http.HttpServletResponse.SC_OK;
 
 public class JCacheFilter implements Filter
 {
-    private Cache<String, Page> cache;
+    private Cache<PageKey, Page> cache;
     private CachingProvider provider;
     private CacheManager manager;
 
@@ -85,17 +89,17 @@ public class JCacheFilter implements Filter
         cache = manager.getCache(cacheName);
         if (cache == null)
         {
-            final MutableConfiguration<String, Page> configuration = new MutableConfiguration<String, Page>()
+            final MutableConfiguration<PageKey, Page> configuration = new MutableConfiguration<PageKey, Page>()
                     .setStoreByValue(false);
             configuration.setReadThrough("true".equals(properties.getProperty("read-through", "false")));
             configuration.setWriteThrough("true".equals(properties.getProperty("write-through", "false")));
             if (configuration.isReadThrough())
             {
-                configuration.setCacheLoaderFactory(new FactoryBuilder.ClassFactory<CacheLoader<String, Page>>(properties.getProperty("cache-loader-factory")));
+                configuration.setCacheLoaderFactory(new FactoryBuilder.ClassFactory<CacheLoader<PageKey, Page>>(properties.getProperty("cache-loader-factory")));
             }
             if (configuration.isWriteThrough())
             {
-                configuration.setCacheWriterFactory(new FactoryBuilder.ClassFactory<CacheWriter<? super String, ? super Page>>(properties.getProperty("cache-writer-factory")));
+                configuration.setCacheWriterFactory(new FactoryBuilder.ClassFactory<CacheWriter<? super PageKey, ? super Page>>(properties.getProperty("cache-writer-factory")));
             }
             final String expirtyPolicy = properties.getProperty("expiry-policy-factory");
             if (expirtyPolicy != null)
@@ -111,15 +115,37 @@ public class JCacheFilter implements Filter
     @Override
     public void doFilter(final ServletRequest servletRequest, final ServletResponse servletResponse, final FilterChain filterChain) throws IOException, ServletException
     {
+        boolean gzip = false;
+        if (HttpServletRequest.class.isInstance(servletRequest))
+        {
+            final Enumeration<String> acceptEncoding = HttpServletRequest.class.cast(servletRequest).getHeaders("Accept-Encoding");
+            while (acceptEncoding != null && acceptEncoding.hasMoreElements())
+            {
+                if ("gzip".equals(acceptEncoding.nextElement()))
+                {
+                    gzip = true;
+                    break;
+                }
+            }
+        }
+
         final HttpServletResponse httpServletResponse = HttpServletResponse.class.cast(servletResponse);
         checkResponse(httpServletResponse);
 
-        final String key = key(servletRequest);
+        final PageKey key = new PageKey(key(servletRequest), gzip);
         Page page = cache.get(key);
         if (page == null)
         {
             final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            final InMemoryResponse response = new InMemoryResponse(httpServletResponse, baos);
+            final InMemoryResponse response;
+            if (gzip)
+            {
+                response = new InMemoryResponse(httpServletResponse, new GZIPOutputStream(baos));
+            }
+            else
+            {
+                response = new InMemoryResponse(httpServletResponse, baos);
+            }
             filterChain.doFilter(servletRequest, response);
             response.flushBuffer();
 
@@ -129,12 +155,17 @@ public class JCacheFilter implements Filter
                     response.getContentLength(),
                     response.getCookies(),
                     response.getHeaders(),
-                    response.getOut());
+                    baos.toByteArray());
             cache.put(key, page);
         }
 
         if (page.status == SC_OK) {
             checkResponse(httpServletResponse);
+
+            if (gzip)
+            {
+                httpServletResponse.setHeader("Content-Encoding", "gzip");
+            }
 
             httpServletResponse.setStatus(page.status);
             if (page.contentType != null)
@@ -212,6 +243,47 @@ public class JCacheFilter implements Filter
         provider.close();
     }
 
+    protected static class PageKey implements Serializable {
+        private final String uri;
+        private boolean gzip;
+
+        public PageKey(final String uri, final boolean gzip)
+        {
+            this.uri = uri;
+            this.gzip = gzip;
+        }
+
+        public void setGzip(final boolean gzip)
+        {
+            this.gzip = gzip;
+        }
+
+        @Override
+        public boolean equals(final Object o)
+        {
+            if (this == o)
+            {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass())
+            {
+                return false;
+            }
+
+            final PageKey pageKey = PageKey.class.cast(o);
+            return gzip == pageKey.gzip && uri.equals(pageKey.uri);
+
+        }
+
+        @Override
+        public int hashCode()
+        {
+            int result = uri.hashCode();
+            result = 31 * result + (gzip ? 1 : 0);
+            return result;
+        }
+    }
+
     protected static class Page implements Serializable {
         private final int status;
         private final String contentType;
@@ -231,6 +303,40 @@ public class JCacheFilter implements Filter
             this.cookies = cookies;
             this.headers = headers;
             this.out = out;
+        }
+
+        @Override
+        public boolean equals(final Object o)
+        {
+            if (this == o)
+            {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass())
+            {
+                return false;
+            }
+
+            final Page page = Page.class.cast(o);
+            return contentLength == page.contentLength
+                    && status == page.status
+                    && !(contentType != null ? !contentType.equals(page.contentType) : page.contentType != null)
+                    && cookies.equals(page.cookies)
+                    && headers.equals(page.headers)
+                    && Arrays.equals(out, page.out);
+
+        }
+
+        @Override
+        public int hashCode()
+        {
+            int result = status;
+            result = 31 * result + (contentType != null ? contentType.hashCode() : 0);
+            result = 31 * result + contentLength;
+            result = 31 * result + cookies.hashCode();
+            result = 31 * result + headers.hashCode();
+            result = 31 * result + Arrays.hashCode(out);
+            return result;
         }
     }
 }
