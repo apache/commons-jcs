@@ -386,8 +386,8 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V>
     public void removeAll()
         throws IOException
     {
-        map.clear();
         list.removeAll();
+        map.clear();
     }
 
     // --------------------------- internal methods (linked list implementation)
