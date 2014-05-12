@@ -26,7 +26,6 @@ import org.apache.commons.jcs.engine.control.CompositeCache;
 import org.apache.commons.jcs.jcache.jmx.JCSCacheMXBean;
 import org.apache.commons.jcs.jcache.jmx.JCSCacheStatisticsMXBean;
 import org.apache.commons.jcs.jcache.jmx.JMXs;
-import org.apache.commons.jcs.jcache.lang.Subsitutor;
 import org.apache.commons.jcs.jcache.proxy.ExceptionWrapperHandler;
 import org.apache.commons.jcs.jcache.thread.DaemonThreadFactory;
 import org.apache.commons.jcs.utils.serialization.StandardSerializer;
@@ -71,8 +70,6 @@ import static org.apache.commons.jcs.jcache.serialization.Serializations.copy;
 // TODO: configure serializer
 public class JCSCache<K, V> implements Cache<K, V>
 {
-    private static final Subsitutor SUBSTITUTOR = Subsitutor.Helper.INSTANCE;
-
     private final CompositeCache<K, V> delegate;
     private final JCSCachingManager manager;
     private final JCSConfiguration<K, V> config;
@@ -177,12 +174,7 @@ public class JCSCache<K, V> implements Cache<K, V>
 
     private static String property(final Properties properties, final String cacheName, final String name, final String defaultValue)
     {
-        final String property = properties.getProperty(cacheName + "." + name, properties.getProperty(name, defaultValue));
-        if (property == null)
-        {
-            return null;
-        }
-        return SUBSTITUTOR.substitute(property);
+        return properties.getProperty(cacheName + "." + name, properties.getProperty(name, defaultValue));
     }
 
     private void assertNotClosed()

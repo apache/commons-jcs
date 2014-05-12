@@ -19,6 +19,7 @@
 package org.apache.commons.jcs.jcache;
 
 import org.apache.commons.jcs.engine.control.CompositeCacheManager;
+import org.apache.commons.jcs.jcache.lang.Subsitutor;
 import org.apache.commons.jcs.jcache.proxy.ClassLoaderAwareCache;
 
 import javax.cache.Cache;
@@ -28,6 +29,7 @@ import javax.cache.spi.CachingProvider;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -36,6 +38,8 @@ import static org.apache.commons.jcs.jcache.Asserts.assertNotNull;
 
 public class JCSCachingManager implements CacheManager
 {
+    private static final Subsitutor SUBSTITUTOR = Subsitutor.Helper.INSTANCE;
+
     private static class InternalManager extends CompositeCacheManager
     {
         protected static InternalManager create()
@@ -111,6 +115,17 @@ public class JCSCachingManager implements CacheManager
         if (properties != null)
         {
             props.putAll(properties);
+        }
+        for (final Map.Entry<Object, Object> entry : props.entrySet()) {
+            if (entry.getValue() == null)
+            {
+                continue;
+            }
+            final String substitute = SUBSTITUTOR.substitute(entry.getValue().toString());
+            if (!substitute.equals(entry.getValue()))
+            {
+                entry.setValue(substitute);
+            }
         }
         return props;
     }
