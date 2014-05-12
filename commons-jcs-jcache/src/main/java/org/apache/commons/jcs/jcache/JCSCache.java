@@ -319,9 +319,6 @@ public class JCSCache<K, V> implements Cache<K, V>
         assertNotNull(key, "key");
         assertNotNull(rawValue, "value");
 
-        final boolean statisticsEnabled = config.isStatisticsEnabled();
-        final long start = Times.now(false); // needed for access (eviction)
-
         final ICacheElement<K, V> oldElt = delegate.get(key);
         final V old = oldElt != null ? oldElt.getVal() : null;
 
@@ -332,6 +329,9 @@ public class JCSCache<K, V> implements Cache<K, V>
         final Duration duration = created ? expiryPolicy.getExpiryForCreation() : expiryPolicy.getExpiryForUpdate();
         if (isNotZero(duration))
         {
+            final boolean statisticsEnabled = config.isStatisticsEnabled();
+            final long start = Times.now(!statisticsEnabled);
+
             final K jcsKey = storeByValue ? copy(serializer, manager.getClassLoader(), key) : key;
             final ICacheElement<K, V> element = createElement(jcsKey, value, duration);
             writer.write(new JCSEntry<K, V>(jcsKey, value));
@@ -497,7 +497,7 @@ public class JCSCache<K, V> implements Cache<K, V>
             final boolean propagateLoadException)
     {
         final boolean statisticsEnabled = config.isStatisticsEnabled();
-        final long getStart = Times.now(false);
+        final long getStart = Times.now(!statisticsEnabled);
         final ICacheElement<K, V> elt = delegate.get(key);
         V v = elt != null ? elt.getVal() : null;
         if (v == null && (config.isReadThrough() || forceDoLoad))
