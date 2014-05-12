@@ -23,20 +23,11 @@ import java.io.Serializable;
 public class JCSKey<K> implements Serializable
 {
     private final K key;
-    private volatile long lastAccess = 0;
+    private volatile int hashCode = 0;
 
     public JCSKey(final K key) {
         this.key = key;
-    }
-
-    public void access(final long time)
-    {
-        lastAccess = time;
-    }
-
-    public long lastAccess()
-    {
-        return lastAccess;
+        this.hashCode = this.key.hashCode();
     }
 
     public K getKey()
@@ -57,6 +48,6 @@ public class JCSKey<K> implements Serializable
     @Override
     public int hashCode()
     {
-        return key.hashCode();
+        return hashCode;
     }
 }

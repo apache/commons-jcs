@@ -217,7 +217,6 @@ public class JCSCache<K, V> implements Cache<K, V>
             if (duration == null || !duration.isZero())
             {
                 final JCSKey<K> jcsKey = new JCSKey<K>(key);
-                jcsKey.access(Times.now(false));
                 delegate.put(jcsKey, new JCSElement<V>(v, duration));
             }
         }
@@ -313,7 +312,6 @@ public class JCSCache<K, V> implements Cache<K, V>
         {
             writer.write(new JCSEntry<K, V>(key, value));
             final JCSKey<K> jcsKey = storeByValue ? new JCSKey<K>(copy(serializer, manager.getClassLoader(), key)) : cacheKey;
-            jcsKey.access(start);
             delegate.put(jcsKey, element);
             for (final JCSListener<K, V> listener : listeners.values())
             {
@@ -475,7 +473,6 @@ public class JCSCache<K, V> implements Cache<K, V>
 
         if (updateAcess && elt != null)
         {
-            key.access(getStart);
             elt.update(expiryPolicy.getExpiryForAccess());
             if (elt.isExpired())
             {
