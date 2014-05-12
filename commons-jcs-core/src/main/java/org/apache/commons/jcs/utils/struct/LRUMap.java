@@ -299,10 +299,11 @@ public class LRUMap<K, V>
             // TODO address double synchronization of addFirst, use write lock
             addFirst( key, value );
             // this must be synchronized
-            old = map.put(list.getFirst().getKey(), list.getFirst());
+            LRUElementDescriptor<K, V> first = list.getFirst();
+            old = map.put(first.getKey(), first);
 
             // If the node was the same as an existing node, remove it.
-            if ( old != null && list.getFirst().getKey().equals(old.getKey()))
+            if ( old != null && first.getKey().equals(old.getKey()))
             {
                 list.remove( old );
             }
@@ -333,37 +334,22 @@ public class LRUMap<K, V>
 
             for ( int i = 0; i < chunkSizeCorrected; i++ )
             {
-                synchronized ( this )
+                LRUElementDescriptor<K, V> last = list.getLast();
+                if ( last != null )
                 {
-                    if ( list.getLast() != null )
+                    processRemovedLRU(last.getKey(), last.getPayload());
+                    if ( map.remove( last.getKey() ) == null )
                     {
-                        if (list.getLast() != null )
-                        {
-                            processRemovedLRU(list.getLast().getKey(), list.getLast().getPayload());
-                            if ( !map.containsKey(list.getLast().getKey()))
-                            {
-                                log.error( "update: map does not contain key: "
-                                    + list.getLast().getKey() );
-                                verifyCache();
-                            }
-                            if ( map.remove( list.getLast().getKey() ) == null )
-                            {
-                                log.warn( "update: remove failed for key: "
-                                    + list.getLast().getKey() );
-                                verifyCache();
-                            }
-                        }
-                        else
-                        {
-                            throw new Error( "update: last.ce is null!" );
-                        }
-                        list.removeLast();
-                    }
-                    else
-                    {
+                        log.warn( "update: remove failed for key: "
+                            + last.getKey() );
                         verifyCache();
-                        throw new Error( "update: last is null!" );
                     }
+                    list.remove(last);
+                }
+                else
+                {
+                    verifyCache();
+                    throw new Error( "update: last is null!" );
                 }
             }
 
@@ -391,7 +377,7 @@ public class LRUMap<K, V>
      * @param key
      * @param val The feature to be added to the First
      */
-    private synchronized void addFirst(K key, V val)
+    private void addFirst(K key, V val)
     {
         LRUElementDescriptor<K, V> me = new LRUElementDescriptor<K, V>(key, val);
         list.addFirst( me );
@@ -627,7 +613,7 @@ public class LRUMap<K, V>
      * @see java.util.Map#entrySet()
      */
     @Override
-    public synchronized Set<Map.Entry<K, V>> entrySet()
+    public Set<Map.Entry<K, V>> entrySet()
     {
         // todo, we should return a defensive copy
         Set<Map.Entry<K, LRUElementDescriptor<K, V>>> entries = map.entrySet();
