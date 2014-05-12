@@ -81,7 +81,7 @@ public class RemoteCacheServerFactory
      * @return Returns the remoteCacheServer.
      */
     @SuppressWarnings("unchecked") // Need cast to specific RemoteCacheServer
-    public static <K extends Serializable, V extends Serializable> RemoteCacheServer<K, V> getRemoteCacheServer()
+    public static <K, V> RemoteCacheServer<K, V> getRemoteCacheServer()
     {
         return (RemoteCacheServer<K, V>)remoteCacheServer;
     }

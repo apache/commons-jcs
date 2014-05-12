@@ -86,8 +86,11 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V>
 
     /**
      * This is called by super initialize.
+     *
+     * NOTE: should return a thread safe map
+     *
      * <p>
-     * @return new Hashtable()
+     * @return new ConcurrentHashMap()
      */
     @Override
     public Map<K, MemoryElementDescriptor<K, V>> createMap()
@@ -109,19 +112,15 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V>
     {
         putCnt++;
 
-        synchronized ( this )
+        MemoryElementDescriptor<K, V> newNode = adjustListForUpdate( ce );
+
+        // this should be synchronized if we were not using a ConcurrentHashMap
+        MemoryElementDescriptor<K, V> oldNode = map.put( newNode.ce.getKey(), newNode );
+
+        // If the node was the same as an existing node, remove it.
+        if ( oldNode != null && newNode.ce.getKey().equals( oldNode.ce.getKey() ) )
         {
-            // ABSTRACT
-            MemoryElementDescriptor<K, V> newNode = adjustListForUpdate( ce );
-
-            // this must be synchronized
-            MemoryElementDescriptor<K, V> oldNode = map.put( newNode.ce.getKey(), newNode );
-
-            // If the node was the same as an existing node, remove it.
-            if ( oldNode != null && newNode.ce.getKey().equals( oldNode.ce.getKey() ) )
-            {
-                list.remove( oldNode );
-            }
+            list.remove( oldNode );
         }
 
         // If we are over the max spool some
@@ -190,12 +189,14 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V>
      * @throws IOException
      */
     @Override
-    public final synchronized ICacheElement<K, V> get( K key )
+    public final ICacheElement<K, V> get( K key )
         throws IOException
     {
         ICacheElement<K, V> ce = null;
 
-        if ( log.isDebugEnabled() )
+        final boolean debugEnabled = log.isDebugEnabled();
+
+        if (debugEnabled)
         {
             log.debug( "getting item from cache " + cacheName + " for key " + key );
         }
@@ -206,7 +207,7 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V>
         {
             ce = me.ce;
             hitCnt++;
-            if ( log.isDebugEnabled() )
+            if (debugEnabled)
             {
                 log.debug( cacheName + ": LRUMemoryCache hit for " + ce.getKey() );
             }
@@ -217,7 +218,7 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V>
         else
         {
             missCnt++;
-            if ( log.isDebugEnabled() )
+            if (debugEnabled)
             {
                 log.debug( cacheName + ": LRUMemoryCache miss for " + key );
             }
@@ -270,46 +271,38 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V>
         throws Error
     {
         ICacheElement<K, V> toSpool = null;
-        synchronized ( this )
+        final MemoryElementDescriptor<K, V> last = list.getLast();
+        if ( last != null )
         {
-            if ( list.getLast() != null )
+            toSpool = last.ce;
+            if ( toSpool != null )
             {
-                toSpool = list.getLast().ce;
-                if ( toSpool != null )
+                cache.spoolToDisk( last.ce );
+                if ( map.remove( last.ce.getKey() ) == null )
                 {
-                    cache.spoolToDisk( list.getLast().ce );
-                    if ( !map.containsKey( list.getLast().ce.getKey() ) )
-                    {
-                        log.error( "update: map does not contain key: "
-                            + list.getLast().ce.getKey() );
-                        verifyCache();
-                    }
-                    if ( map.remove( list.getLast().ce.getKey() ) == null )
-                    {
-                        log.warn( "update: remove failed for key: "
-                            + list.getLast().ce.getKey() );
-                        verifyCache();
-                    }
+                    log.warn( "update: remove failed for key: "
+                        + last.ce.getKey() );
+                    verifyCache();
                 }
-                else
-                {
-                    throw new Error( "update: last.ce is null!" );
-                }
-                list.removeLast();
             }
             else
             {
-                verifyCache();
-                throw new Error( "update: last is null!" );
+                throw new Error( "update: last.ce is null!" );
             }
+            list.remove(last);
+        }
+        else
+        {
+            verifyCache();
+            throw new Error( "update: last is null!" );
+        }
 
-            // If this is out of the sync block it can detect a mismatch
-            // where there is none.
-            if ( map.size() != dumpCacheSize() )
-            {
-                log.warn( "update: After spool, size mismatch: map.size() = " + map.size() + ", linked list size = "
-                    + dumpCacheSize() );
-            }
+        // If this is out of the sync block it can detect a mismatch
+        // where there is none.
+        if ( map.size() != dumpCacheSize() )
+        {
+            log.warn( "update: After spool, size mismatch: map.size() = " + map.size() + ", linked list size = "
+                + dumpCacheSize() );
         }
         return toSpool;
     }
@@ -324,7 +317,7 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V>
      * @throws IOException
      */
     @Override
-    public synchronized boolean remove( K key )
+    public boolean remove( K key )
         throws IOException
     {
         if ( log.isDebugEnabled() )
@@ -338,39 +331,33 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V>
         if ( key instanceof String && ( (String) key ).endsWith( CacheConstants.NAME_COMPONENT_DELIMITER ) )
         {
             // remove all keys of the same name hierarchy.
-            synchronized ( map )
+            for (Iterator<Map.Entry<K, MemoryElementDescriptor<K, V>>> itr = map.entrySet().iterator(); itr.hasNext(); )
             {
-                for (Iterator<Map.Entry<K, MemoryElementDescriptor<K, V>>> itr = map.entrySet().iterator(); itr.hasNext(); )
-                {
-                    Map.Entry<K, MemoryElementDescriptor<K, V>> entry = itr.next();
-                    K k = entry.getKey();
+                Map.Entry<K, MemoryElementDescriptor<K, V>> entry = itr.next();
+                K k = entry.getKey();
 
-                    if ( k instanceof String && ( (String) k ).startsWith( key.toString() ) )
-                    {
-                        list.remove( entry.getValue() );
-                        itr.remove();
-                        removed = true;
-                    }
+                if ( k instanceof String && ( (String) k ).startsWith( key.toString() ) )
+                {
+                    list.remove( entry.getValue() );
+                    itr.remove();
+                    removed = true;
                 }
             }
         }
         else if ( key instanceof GroupAttrName )
         {
             // remove all keys of the same name hierarchy.
-            synchronized ( map )
+            for (Iterator<Map.Entry<K, MemoryElementDescriptor<K, V>>> itr = map.entrySet().iterator(); itr.hasNext(); )
             {
-                for (Iterator<Map.Entry<K, MemoryElementDescriptor<K, V>>> itr = map.entrySet().iterator(); itr.hasNext(); )
-                {
-                    Map.Entry<K, MemoryElementDescriptor<K, V>> entry = itr.next();
-                    K k = entry.getKey();
+                Map.Entry<K, MemoryElementDescriptor<K, V>> entry = itr.next();
+                K k = entry.getKey();
 
-                    if ( k instanceof GroupAttrName &&
-                        ((GroupAttrName<?>)k).groupId.equals(((GroupAttrName<?>)key).groupId))
-                    {
-                        list.remove( entry.getValue() );
-                        itr.remove();
-                        removed = true;
-                    }
+                if ( k instanceof GroupAttrName &&
+                    ((GroupAttrName<?>)k).groupId.equals(((GroupAttrName<?>)key).groupId))
+                {
+                    list.remove( entry.getValue() );
+                    itr.remove();
+                    removed = true;
                 }
             }
         }
@@ -396,7 +383,7 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V>
      * @throws IOException
      */
     @Override
-    public synchronized void removeAll()
+    public void removeAll()
         throws IOException
     {
         map.clear();
@@ -410,7 +397,7 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V>
      * @param ce The feature to be added to the First
      * @return MemoryElementDescriptor
      */
-    protected synchronized MemoryElementDescriptor<K, V> addFirst( ICacheElement<K, V> ce )
+    protected MemoryElementDescriptor<K, V> addFirst( ICacheElement<K, V> ce )
     {
         MemoryElementDescriptor<K, V> me = new MemoryElementDescriptor<K, V>( ce );
         list.addFirst( me );
@@ -424,7 +411,7 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V>
      * @param ce The feature to be added to the First
      * @return MemoryElementDescriptor
      */
-    protected synchronized MemoryElementDescriptor<K, V> addLast( ICacheElement<K, V> ce )
+    protected MemoryElementDescriptor<K, V> addLast( ICacheElement<K, V> ce )
     {
         MemoryElementDescriptor<K, V> me = new MemoryElementDescriptor<K, V>( ce );
         list.addLast( me );

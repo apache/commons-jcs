@@ -32,7 +32,7 @@ public class MemoryElementDescriptor<K, V>
     private static final long serialVersionUID = -1905161209035522460L;
 
     /** The CacheElement wrapped by this descriptor */
-    public ICacheElement<K, V> ce; // TODO privatise
+    public final ICacheElement<K, V> ce; // TODO privatise
 
     /**
      * Constructs a usable MemoryElementDescriptor.
