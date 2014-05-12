@@ -36,7 +36,7 @@ public interface IElementAttributes
      * <p>
      * @param mls The new MaxLifeSeconds value
      */
-    void setMaxLifeSeconds( long mls );
+    void setMaxLife(long mls);
 
     /**
      * Sets the maxLife attribute of the IAttributes object. How many seconds it can live after
@@ -46,7 +46,7 @@ public interface IElementAttributes
      * removed on retrieval, or removed actively if the memory shrinker is turned on.
      * @return The MaxLifeSeconds value
      */
-    long getMaxLifeSeconds();
+    long getMaxLife();
 
     /**
      * Sets the idleTime attribute of the IAttributes object. This is the maximum time the item can
@@ -197,4 +197,7 @@ public interface IElementAttributes
      */
     void addElementEventHandlers( List<IElementEventHandler> eventHandlers );
 
+    long getTimeFactorForMilliseconds();
+
+    void setTimeFactorForMilliseconds(long factor);
 }

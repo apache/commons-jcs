@@ -60,13 +60,13 @@ public class ElementAttributes
     private boolean IS_ETERNAL = true;
 
     /** Max life seconds */
-    private long maxLifeSeconds = -1;
+    private long maxLife = -1;
 
     /**
      * The maximum time an entry can be idle. Setting this to -1 causes the idle time check to be
      * ignored.
      */
-    private long maxIdleTimeSeconds = -1;
+    private long maxIdleTime = -1;
 
     /** The byte size of the field. Must be manually set. */
     private int size = 0;
@@ -85,6 +85,8 @@ public class ElementAttributes
      * cache had a copy with event handlers, that those handlers are used.
      */
     private transient ArrayList<IElementEventHandler> eventHandlers;
+
+    private long timeFactor = 1000;
 
     /**
      * Constructor for the IElementAttributes object
@@ -113,9 +115,9 @@ public class ElementAttributes
         // central rmi store
         IS_REMOTE = attr.IS_REMOTE;
 
-        maxLifeSeconds = attr.maxLifeSeconds;
+        maxLife = attr.maxLife;
         // time-to-live
-        maxIdleTimeSeconds = attr.maxIdleTimeSeconds;
+        maxIdleTime = attr.maxIdleTime;
         size = attr.size;
     }
 
@@ -137,7 +139,7 @@ public class ElementAttributes
             attr.setIsLateral( this.getIsLateral() );
             attr.setIsRemote( this.getIsRemote() );
             attr.setIsSpool( this.getIsSpool() );
-            attr.setMaxLifeSeconds( this.getMaxLifeSeconds() );
+            attr.setMaxLife(this.getMaxLife());
             attr.addElementEventHandlers( this.eventHandlers );
             return attr;
         }
@@ -153,9 +155,9 @@ public class ElementAttributes
      * @param mls The new MaxLifeSeconds value
      */
     @Override
-    public void setMaxLifeSeconds( long mls )
+    public void setMaxLife(long mls)
     {
-        this.maxLifeSeconds = mls;
+        this.maxLife = mls;
     }
 
     /**
@@ -167,9 +169,9 @@ public class ElementAttributes
      * @return The MaxLifeSeconds value
      */
     @Override
-    public long getMaxLifeSeconds()
+    public long getMaxLife()
     {
-        return this.maxLifeSeconds;
+        return this.maxLife;
     }
 
     /**
@@ -183,7 +185,7 @@ public class ElementAttributes
     @Override
     public void setIdleTime( long idle )
     {
-        this.maxIdleTimeSeconds = idle;
+        this.maxIdleTime = idle;
     }
 
     /**
@@ -239,7 +241,7 @@ public class ElementAttributes
     @Override
     public long getIdleTime()
     {
-        return this.maxIdleTimeSeconds;
+        return this.maxIdleTime;
     }
 
     /**
@@ -251,8 +253,9 @@ public class ElementAttributes
     @Override
     public long getTimeToLiveSeconds()
     {
-        long now = System.currentTimeMillis();
-        return ( this.getCreateTime() + this.getMaxLifeSeconds() * 1000 - now ) / 1000;
+        final long now = System.currentTimeMillis();
+        final long timeFactorForMilliseconds = getTimeFactorForMilliseconds();
+        return ( this.getCreateTime() + this.getMaxLife() * timeFactorForMilliseconds - now ) / 1000;
     }
 
     /**
@@ -417,6 +420,18 @@ public class ElementAttributes
         }
     }
 
+    @Override
+    public long getTimeFactorForMilliseconds()
+    {
+        return timeFactor;
+    }
+
+    @Override
+    public void setTimeFactorForMilliseconds(long factor)
+    {
+        this.timeFactor = factor;
+    }
+
     /**
      * Gets the elementEventHandlers. Returns null if none exist. Makes checking easy.
      * <p>
@@ -442,7 +457,7 @@ public class ElementAttributes
         dump.append( ", IS_SPOOL = " ).append( IS_SPOOL );
         dump.append( ", IS_REMOTE = " ).append( IS_REMOTE );
         dump.append( ", IS_ETERNAL = " ).append( IS_ETERNAL );
-        dump.append( ", MaxLifeSeconds = " ).append( this.getMaxLifeSeconds() );
+        dump.append( ", MaxLifeSeconds = " ).append( this.getMaxLife() );
         dump.append( ", IdleTime = " ).append( this.getIdleTime() );
         dump.append( ", CreateTime = " ).append( this.getCreateTime() );
         dump.append( ", LastAccessTime = " ).append( this.getLastAccessTime() );

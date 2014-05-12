@@ -136,8 +136,10 @@ public class JCSCachingManager implements CacheManager
         if (!caches.containsKey(cacheName))
         {
             final Cache<K, V> cache = ClassLoaderAwareCache.wrap(loader,
-                    new JCSCache(loader, this, cacheName,
-                            new JCSConfiguration(configuration, keyType, valueType), properties,
+                    new JCSCache/*<K, V>*/(
+                            loader, this, cacheName,
+                            new JCSConfiguration/*<K, V>*/(configuration, keyType, valueType),
+                            properties,
                             delegate.getCache(cacheName)));
             caches.putIfAbsent(cacheName, cache);
         }

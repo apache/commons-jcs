@@ -60,7 +60,7 @@ public class ShrinkerThreadUnitTest
         ElementAttributes elementAttr = new ElementAttributes();
         elementAttr.setIsEternal( false );
         element.setElementAttributes( elementAttr );
-        element.getElementAttributes().setMaxLifeSeconds( 1 );
+        element.getElementAttributes().setMaxLife(1);
 
         long now = System.currentTimeMillis();
         // add two seconds
@@ -95,7 +95,7 @@ public class ShrinkerThreadUnitTest
         ElementAttributes elementAttr = new ElementAttributes();
         elementAttr.setIsEternal( false );
         element.setElementAttributes( elementAttr );
-        element.getElementAttributes().setMaxLifeSeconds( 1 );
+        element.getElementAttributes().setMaxLife(1);
 
         long now = System.currentTimeMillis();
         // subtract two seconds
@@ -130,7 +130,7 @@ public class ShrinkerThreadUnitTest
         ElementAttributes elementAttr = new ElementAttributes();
         elementAttr.setIsEternal( false );
         element.setElementAttributes( elementAttr );
-        element.getElementAttributes().setMaxLifeSeconds( 100 );
+        element.getElementAttributes().setMaxLife(100);
         element.getElementAttributes().setIdleTime( 1 );
 
         long now = System.currentTimeMillis();
@@ -166,7 +166,7 @@ public class ShrinkerThreadUnitTest
         ElementAttributes elementAttr = new ElementAttributes();
         elementAttr.setIsEternal( false );
         element.setElementAttributes( elementAttr );
-        element.getElementAttributes().setMaxLifeSeconds( 100 );
+        element.getElementAttributes().setMaxLife(100);
         element.getElementAttributes().setIdleTime( 1 );
 
         long now = System.currentTimeMillis();
@@ -209,7 +209,7 @@ public class ShrinkerThreadUnitTest
         ElementAttributes elementAttr = new ElementAttributes();
         elementAttr.setIsEternal( false );
         element.setElementAttributes( elementAttr );
-        element.getElementAttributes().setMaxLifeSeconds( 1 );
+        element.getElementAttributes().setMaxLife(1);
         memory.update( element );
 
         ICacheElement<String, String> returnedElement1 = memory.get( key );
@@ -258,7 +258,7 @@ public class ShrinkerThreadUnitTest
             ElementAttributes elementAttr = new ElementAttributes();
             elementAttr.setIsEternal( false );
             element.setElementAttributes( elementAttr );
-            element.getElementAttributes().setMaxLifeSeconds( 1 );
+            element.getElementAttributes().setMaxLife(1);
             memory.update( element );
 
             ICacheElement<String, String> returnedElement1 = memory.get( key );
@@ -311,7 +311,7 @@ public class ShrinkerThreadUnitTest
             elementAttr.addElementEventHandler( handler );
             elementAttr.setIsEternal( false );
             element.setElementAttributes( elementAttr );
-            element.getElementAttributes().setMaxLifeSeconds( 1 );
+            element.getElementAttributes().setMaxLife(1);
             memory.update( element );
 
             ICacheElement<String, String> returnedElement1 = memory.get( key );

@@ -134,12 +134,12 @@ public class CacheAccessUnitTest
 
         long maxLife = 9876;
         IElementAttributes attr = new ElementAttributes();
-        attr.setMaxLifeSeconds( maxLife );
+        attr.setMaxLife(maxLife);
 
         access.setDefaultElementAttributes( attr );
 
-        assertEquals( "Wrong element attributes.", attr.getMaxLifeSeconds(), access.getDefaultElementAttributes()
-            .getMaxLifeSeconds() );
+        assertEquals( "Wrong element attributes.", attr.getMaxLife(), access.getDefaultElementAttributes()
+            .getMaxLife() );
 
         String key = "mykey";
         String value = "myvalue";
@@ -149,7 +149,7 @@ public class CacheAccessUnitTest
         ICacheElement<String, String> element = access.getCacheElement( key );
 
         assertEquals( "Wrong max life.  Should have the new value.", maxLife, element.getElementAttributes()
-            .getMaxLifeSeconds() );
+            .getMaxLife() );
     }
 
     /**
@@ -236,7 +236,7 @@ public class CacheAccessUnitTest
 
         long maxLife = 9876;
         IElementAttributes attr = new ElementAttributes();
-        attr.setMaxLifeSeconds( maxLife );
+        attr.setMaxLife(maxLife);
 
         CacheAccess<String, String> access = JCS.defineRegion( "testRegionDefinitonWithAttributes", ca, attr );
         assertNotNull( "We should have an access class", access );
@@ -264,7 +264,7 @@ public class CacheAccessUnitTest
 
         long maxLife = 9876;
         IElementAttributes attr = new ElementAttributes();
-        attr.setMaxLifeSeconds( maxLife );
+        attr.setMaxLife(maxLife);
 
         CacheAccess<String, Integer> access = JCS.defineRegion( "testGetMatching_Normal", cattr, attr );
 
@@ -318,7 +318,7 @@ public class CacheAccessUnitTest
 
         long maxLife = 9876;
         IElementAttributes attr = new ElementAttributes();
-        attr.setMaxLifeSeconds( maxLife );
+        attr.setMaxLife(maxLife);
 
         CacheAccess<String, Integer> access = JCS.defineRegion( "testGetMatching_Normal", cattr, attr );
 

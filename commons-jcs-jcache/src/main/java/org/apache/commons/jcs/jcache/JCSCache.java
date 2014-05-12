@@ -18,7 +18,9 @@
  */
 package org.apache.commons.jcs.jcache;
 
-import org.apache.commons.jcs.access.CacheAccess;
+import org.apache.commons.jcs.engine.CacheElement;
+import org.apache.commons.jcs.engine.behavior.ICacheElement;
+import org.apache.commons.jcs.engine.behavior.IElementAttributes;
 import org.apache.commons.jcs.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs.engine.control.CompositeCache;
 import org.apache.commons.jcs.jcache.jmx.JCSCacheMXBean;
@@ -30,6 +32,7 @@ import org.apache.commons.jcs.jcache.thread.DaemonThreadFactory;
 import org.apache.commons.jcs.utils.serialization.StandardSerializer;
 
 import javax.cache.Cache;
+import javax.cache.CacheException;
 import javax.cache.CacheManager;
 import javax.cache.configuration.CacheEntryListenerConfiguration;
 import javax.cache.configuration.Configuration;
@@ -49,6 +52,7 @@ import javax.cache.processor.EntryProcessorException;
 import javax.cache.processor.EntryProcessorResult;
 import javax.management.ObjectName;
 import java.io.Closeable;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -69,7 +73,7 @@ public class JCSCache<K, V> implements Cache<K, V>
 {
     private static final Subsitutor SUBSTITUTOR = Subsitutor.Helper.INSTANCE;
 
-    private final CacheAccess<JCSKey<K>, JCSElement<V>> delegate;
+    private final CompositeCache<K, V> delegate;
     private final JCSCachingManager manager;
     private final JCSConfiguration<K, V> config;
     private final CacheLoader<K, V> loader;
@@ -87,13 +91,13 @@ public class JCSCache<K, V> implements Cache<K, V>
 
     public JCSCache(final ClassLoader classLoader, final JCSCachingManager mgr,
                     final String cacheName, final JCSConfiguration<K, V> configuration,
-                    final Properties properties, final CompositeCache<JCSKey<K>, JCSElement<V>> cache)
+                    final Properties properties, final CompositeCache<K, V> cache)
     {
         manager = mgr;
 
         name = cacheName;
 
-        delegate = new CacheAccess<JCSKey<K>, JCSElement<V>>(cache);
+        delegate = cache;
 
         config = configuration;
 
@@ -194,7 +198,7 @@ public class JCSCache<K, V> implements Cache<K, V>
     {
         assertNotClosed();
         assertNotNull(key, "key");
-        return doGetControllingExpiry(new JCSKey<K>(key), true, false, false, true);
+        return doGetControllingExpiry(key, true, false, false, true);
     }
 
     private V doLoad(final K key, final boolean update, final boolean propagateLoadException)
@@ -214,21 +218,57 @@ public class JCSCache<K, V> implements Cache<K, V>
         if (v != null)
         {
             final Duration duration = update ? expiryPolicy.getExpiryForUpdate() : expiryPolicy.getExpiryForCreation();
-            if (duration == null || !duration.isZero())
+            if (isNotZero(duration))
             {
-                final JCSKey<K> jcsKey = new JCSKey<K>(key);
-                delegate.put(jcsKey, new JCSElement<V>(v, duration));
+                final ICacheElement<K, V> element = createElement(key, v, duration);
+                try
+                {
+                    delegate.update(element);
+                }
+                catch (final IOException e)
+                {
+                    throw new CacheException(e);
+                }
             }
         }
         return v;
     }
 
-    private void touch(final JCSKey<K> key, final JCSElement<V> elt)
+    private ICacheElement<K, V> createElement(final K key, final V v, final Duration duration)
+    {
+        final ICacheElement<K, V> element = new CacheElement<K, V>(name, key, v);
+        final IElementAttributes copy = delegate.getElementAttributes().copy();
+        if (duration != null)
+        {
+            copy.setTimeFactorForMilliseconds(1);
+            final boolean eternal = duration.isEternal();
+            if (eternal)
+            {
+                copy.setIsEternal(true);
+            }
+            else
+            {
+                copy.setIsEternal(false);
+                copy.setMaxLife(duration.getTimeUnit().toMillis(duration.getDurationAmount()));
+            }
+        }
+        element.setElementAttributes(copy);
+        return element;
+    }
+
+    private void touch(final K key, final ICacheElement<K, V> element)
     {
         if (config.isStoreByValue())
         {
-            final K copy = copy(serializer, manager.getClassLoader(), key.getKey());
-            delegate.put(new JCSKey<K>(copy), elt);
+            final K copy = copy(serializer, manager.getClassLoader(), key);
+            try
+            {
+                delegate.update(new CacheElement<K, V>(name, copy, element.getVal(), element.getElementAttributes()));
+            }
+            catch (final IOException e)
+            {
+                throw new CacheException(e);
+            }
         }
     }
 
@@ -245,9 +285,8 @@ public class JCSCache<K, V> implements Cache<K, V>
         for (final K key : keys) {
             assertNotNull(key, "key");
 
-            final JCSKey<K> cacheKey = new JCSKey<K>(key);
-            final JCSElement<V> elt = delegate.get(cacheKey);
-            V val = elt != null ? elt.getElement() : null;
+            final ICacheElement<K, V> elt = delegate.get(key);
+            V val = elt != null ? elt.getVal() : null;
             if (val == null && config.isReadThrough())
             {
                 val = doLoad(key, false, false);
@@ -258,15 +297,15 @@ public class JCSCache<K, V> implements Cache<K, V>
             }
             else if (elt != null)
             {
-                elt.update(expiryPolicy.getExpiryForAccess());
-                if (elt.isExpired())
+                final Duration expiryForAccess = expiryPolicy.getExpiryForAccess();
+                if (isNotZero(expiryForAccess))
                 {
-                    expires(cacheKey);
+                    touch(key, elt);
+                    result.put(key, val);
                 }
                 else
                 {
-                    touch(cacheKey, elt);
-                    result.put(key, val);
+                    expires(key);
                 }
             }
         }
@@ -278,7 +317,7 @@ public class JCSCache<K, V> implements Cache<K, V>
     {
         assertNotClosed();
         assertNotNull(key, "key");
-        return delegate.get(new JCSKey<K>(key)) != null;
+        return delegate.get(key) != null;
     }
 
     @Override
@@ -291,28 +330,27 @@ public class JCSCache<K, V> implements Cache<K, V>
         final boolean statisticsEnabled = config.isStatisticsEnabled();
         final long start = Times.now(false); // needed for access (eviction)
 
-        final JCSKey<K> cacheKey = new JCSKey<K>(key);
-        final JCSElement<V> oldElt = delegate.get(cacheKey);
-        final V old = oldElt != null ? oldElt.getElement() : null;
+        final ICacheElement<K, V> oldElt = delegate.get(key);
+        final V old = oldElt != null ? oldElt.getVal() : null;
 
         final boolean storeByValue = config.isStoreByValue();
         final V value = storeByValue ? copy(serializer, manager.getClassLoader(), rawValue) : rawValue;
 
         final boolean created = old == null;
-        final JCSElement<V> element = new JCSElement<V>(value, created ? expiryPolicy.getExpiryForCreation()
-                : expiryPolicy.getExpiryForUpdate());
-        if (element.isExpired())
+        final Duration duration = created ? expiryPolicy.getExpiryForCreation() : expiryPolicy.getExpiryForUpdate();
+        if (isNotZero(duration))
         {
-            if (!created)
+            final K jcsKey = storeByValue ? copy(serializer, manager.getClassLoader(), key) : key;
+            final ICacheElement<K, V> element = createElement(jcsKey, value, duration);
+            writer.write(new JCSEntry<K, V>(jcsKey, value));
+            try
             {
-                expires(cacheKey);
+                delegate.update(element);
             }
-        }
-        else
-        {
-            writer.write(new JCSEntry<K, V>(key, value));
-            final JCSKey<K> jcsKey = storeByValue ? new JCSKey<K>(copy(serializer, manager.getClassLoader(), key)) : cacheKey;
-            delegate.put(jcsKey, element);
+            catch (final IOException e)
+            {
+                throw new CacheException(e);
+            }
             for (final JCSListener<K, V> listener : listeners.values())
             {
                 if (created)
@@ -333,16 +371,28 @@ public class JCSCache<K, V> implements Cache<K, V>
                 statistics.addPutTime(System.currentTimeMillis() - start);
             }
         }
+        else
+        {
+            if (!created)
+            {
+                expires(key);
+            }
+        }
     }
 
-    private void expires(final JCSKey<K> cacheKey)
+    private static boolean isNotZero(final Duration duration)
     {
-        final JCSElement<V> elt = delegate.get(cacheKey);
+        return duration == null || !duration.isZero();
+    }
+
+    private void expires(final K cacheKey)
+    {
+        final ICacheElement<K, V> elt = delegate.get(cacheKey);
         delegate.remove(cacheKey);
         for (final JCSListener<K, V> listener : listeners.values())
         {
             listener.onExpired(Arrays.<CacheEntryEvent<? extends K, ? extends V>> asList(new JCSCacheEntryEvent<K, V>(this,
-                    EventType.REMOVED, null, cacheKey.getKey(), elt.getElement())));
+                    EventType.REMOVED, null, cacheKey, elt.getVal())));
         }
     }
 
@@ -352,7 +402,7 @@ public class JCSCache<K, V> implements Cache<K, V>
         assertNotClosed();
         assertNotNull(key, "key");
         assertNotNull(value, "value");
-        final V v = doGetControllingExpiry(new JCSKey<K>(key), false, false, true, false);
+        final V v = doGetControllingExpiry(key, false, false, true, false);
         put(key, value);
         return v;
     }
@@ -390,17 +440,13 @@ public class JCSCache<K, V> implements Cache<K, V>
         final long start = Times.now(!statisticsEnabled);
 
         writer.delete(key);
-        final JCSKey<K> cacheKey = new JCSKey<K>(key);
+        final K cacheKey = key;
 
-        final JCSElement<V> v = delegate.get(cacheKey);
+        final ICacheElement<K, V> v = delegate.get(cacheKey);
         delegate.remove(cacheKey);
 
-        final V value = v != null && v.getElement() != null ? v.getElement() : null;
+        final V value = v != null && v.getVal() != null ? v.getVal() : null;
         boolean remove = v != null;
-        if (v != null && v.isExpired())
-        {
-            remove = false;
-        }
         for (final JCSListener<K, V> listener : listeners.values())
         {
             listener.onRemoved(Arrays.<CacheEntryEvent<? extends K, ? extends V>> asList(new JCSCacheEntryEvent<K, V>(this,
@@ -420,8 +466,7 @@ public class JCSCache<K, V> implements Cache<K, V>
         assertNotClosed();
         assertNotNull(key, "key");
         assertNotNull(oldValue, "oldValue");
-        final JCSKey<K> cacheKey = new JCSKey<K>(key);
-        final V v = doGetControllingExpiry(cacheKey, false, false, false, false);
+        final V v = doGetControllingExpiry(key, false, false, false, false);
         final boolean found = v != null;
         if (found)
         {
@@ -430,7 +475,18 @@ public class JCSCache<K, V> implements Cache<K, V>
                 remove(key);
                 return true;
             }
-            delegate.get(new JCSKey<K>(key)).update(expiryPolicy.getExpiryForAccess());
+            final Duration expiryForAccess = expiryPolicy.getExpiryForAccess();
+            if (expiryForAccess != null)
+            {
+                try
+                {
+                    delegate.update(createElement(key, v, expiryForAccess));
+                }
+                catch (final IOException e)
+                {
+                    throw new CacheException(e);
+                }
+            }
         }
         return false;
     }
@@ -440,23 +496,23 @@ public class JCSCache<K, V> implements Cache<K, V>
     {
         assertNotClosed();
         assertNotNull(key, "key");
-        final V v = doGetControllingExpiry(new JCSKey<K>(key), false, false, true, false);
+        final V v = doGetControllingExpiry(key, false, false, true, false);
         remove(key);
         return v;
     }
 
-    private V doGetControllingExpiry(final JCSKey<K> key, final boolean updateAcess, final boolean forceDoLoad, final boolean skipLoad,
+    private V doGetControllingExpiry(final K key, final boolean updateAcess, final boolean forceDoLoad, final boolean skipLoad,
             final boolean propagateLoadException)
     {
         final boolean statisticsEnabled = config.isStatisticsEnabled();
         final long getStart = Times.now(false);
-        final JCSElement<V> elt = delegate.get(key);
-        V v = elt != null ? elt.getElement() : null;
+        final ICacheElement<K, V> elt = delegate.get(key);
+        V v = elt != null ? elt.getVal() : null;
         if (v == null && (config.isReadThrough() || forceDoLoad))
         {
             if (!skipLoad)
             {
-                v = doLoad(key.getKey(), false, propagateLoadException);
+                v = doLoad(key, false, propagateLoadException);
             }
         }
         else if (statisticsEnabled)
@@ -473,19 +529,26 @@ public class JCSCache<K, V> implements Cache<K, V>
 
         if (updateAcess && elt != null)
         {
-            elt.update(expiryPolicy.getExpiryForAccess());
-            if (elt.isExpired())
+            final Duration expiryForAccess = expiryPolicy.getExpiryForAccess();
+            if (!isNotZero(expiryForAccess))
             {
                 expires(key);
             }
-            else
+            else if (expiryForAccess != null && (!elt.getElementAttributes().getIsEternal() || !expiryForAccess.isEternal()))
             {
-                touch(key, elt);
+                try
+                {
+                    delegate.update(createElement(key, elt.getVal(), expiryForAccess));
+                }
+                catch (final IOException e)
+                {
+                    throw new CacheException(e);
+                }
             }
         }
         if (statisticsEnabled && v != null)
         {
-            statistics.addGetTime(Times.now(!statisticsEnabled) - getStart);
+            statistics.addGetTime(Times.now(false) - getStart);
         }
         return v;
     }
@@ -498,15 +561,10 @@ public class JCSCache<K, V> implements Cache<K, V>
         assertNotNull(oldValue, "oldValue");
         assertNotNull(newValue, "newValue");
         final boolean statisticsEnabled = config.isStatisticsEnabled();
-        final JCSKey<K> cacheKey = new JCSKey<K>(key);
-        final JCSElement<V> elt = delegate.get(cacheKey);
+        final ICacheElement<K, V> elt = delegate.get(key);
         if (elt != null)
         {
-            V value = elt.getElement();
-            if (elt.isExpired())
-            {
-                value = null;
-            }
+            V value = elt.getVal();
             if (value != null && statisticsEnabled)
             {
                 statistics.increaseHits(1);
@@ -522,8 +580,18 @@ public class JCSCache<K, V> implements Cache<K, V>
             }
             else if (value != null)
             {
-                elt.update(expiryPolicy.getExpiryForAccess());
-                touch(cacheKey, elt);
+                final Duration expiryForAccess = expiryPolicy.getExpiryForAccess();
+                if (expiryForAccess != null && (!elt.getElementAttributes().getIsEternal() || !expiryForAccess.isEternal()))
+                {
+                    try
+                    {
+                        delegate.update(createElement(key, elt.getVal(), expiryForAccess));
+                    }
+                    catch (final IOException e)
+                    {
+                        throw new CacheException(e);
+                    }
+                }
             }
         }
         else if (statisticsEnabled)
@@ -565,11 +633,10 @@ public class JCSCache<K, V> implements Cache<K, V>
 
         final boolean statisticsEnabled = config.isStatisticsEnabled();
 
-        final JCSKey<K> cacheKey = new JCSKey<K>(key);
-        final JCSElement<V> elt = delegate.get(cacheKey);
+        final ICacheElement<K, V> elt = delegate.get(key);
         if (elt != null)
         {
-            V oldValue = elt.getElement();
+            V oldValue = elt.getVal();
             if (oldValue == null && config.isReadThrough())
             {
                 oldValue = doLoad(key, false, false);
@@ -603,9 +670,9 @@ public class JCSCache<K, V> implements Cache<K, V>
     public void removeAll()
     {
         assertNotClosed();
-        for (final JCSKey<K> k : delegate.getCacheControl().getKeySet())
+        for (final K k : delegate.getKeySet())
         {
-            remove(k.getKey());
+            remove(k);
         }
     }
 
@@ -613,7 +680,14 @@ public class JCSCache<K, V> implements Cache<K, V>
     public void clear()
     {
         assertNotClosed();
-        delegate.clear();
+        try
+        {
+            delegate.removeAll();
+        }
+        catch (final IOException e)
+        {
+            throw new CacheException(e);
+        }
     }
 
     @Override
@@ -657,7 +731,7 @@ public class JCSCache<K, V> implements Cache<K, V>
                 {
                     continue;
                 }
-                doGetControllingExpiry(new JCSKey<K>(k), true, true, false, completionListener != null);
+                doGetControllingExpiry(k, true, true, false, completionListener != null);
             }
         }
         catch (final RuntimeException e)
@@ -782,7 +856,7 @@ public class JCSCache<K, V> implements Cache<K, V>
     public Iterator<Entry<K, V>> iterator()
     {
         assertNotClosed();
-        final Iterator<JCSKey<K>> keys = new HashSet<JCSKey<K>>(delegate.getCacheControl().getKeySet()).iterator();
+        final Iterator<K> keys = new HashSet<K>(delegate.getKeySet()).iterator();
         return new Iterator<Entry<K, V>>()
         {
             private K lastKey = null;
@@ -796,8 +870,7 @@ public class JCSCache<K, V> implements Cache<K, V>
             @Override
             public Entry<K, V> next()
             {
-                final JCSKey<K> next = keys.next();
-                lastKey = next.getKey();
+                lastKey = keys.next();
                 return new JCSEntry<K, V>(lastKey, get(lastKey));
             }
 
@@ -848,7 +921,14 @@ public class JCSCache<K, V> implements Cache<K, V>
         listeners.clear();
         JMXs.unregister(cacheConfigObjectName);
         JMXs.unregister(cacheStatsObjectName);
-        delegate.clear();
+        try
+        {
+            delegate.removeAll();
+        }
+        catch (final IOException e)
+        {
+            throw new CacheException(e);
+        }
     }
 
     private static void close(final Object potentiallyCloseable)

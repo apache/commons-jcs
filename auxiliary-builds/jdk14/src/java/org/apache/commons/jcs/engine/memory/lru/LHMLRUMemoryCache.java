@@ -38,7 +38,7 @@ import java.util.Map;
  *  This is a test memory manager using the jdk1.4 LinkedHashMap.
  *  There may be some thread safety issues.
  *  So far i cannot notice any performance difference between this and the
- *  standard LRU implementation.  It needs more testing.
+ *  standard LRU implementation.  It neeLogds more testing.
  *
  *@version    $Id$
  */

@@ -1614,10 +1614,10 @@ public class CompositeCache<K, V>
             {
                 // Remove if maxLifeSeconds exceeded
 
-                long maxLifeSeconds = attributes.getMaxLifeSeconds();
+                long maxLifeSeconds = attributes.getMaxLife();
                 long createTime = attributes.getCreateTime();
 
-                if ( maxLifeSeconds != -1 && ( timestamp - createTime ) > ( maxLifeSeconds * 1000 ) )
+                if ( maxLifeSeconds != -1 && ( timestamp - createTime ) > ( maxLifeSeconds * attributes.getTimeFactorForMilliseconds() ) )
                 {
                     if ( log.isDebugEnabled() )
                     {

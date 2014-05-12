@@ -93,7 +93,7 @@ public class SerializationConversionUtilUnitTest
         IElementSerializer elementSerializer = new StandardSerializer();
 
         IElementAttributes attr = new ElementAttributes();
-        attr.setMaxLifeSeconds( 34 );
+        attr.setMaxLife(34);
 
         ICacheElement<String, String> before = new CacheElement<String, String>( cacheName, key, value );
         before.setElementAttributes( attr );
@@ -112,8 +112,8 @@ public class SerializationConversionUtilUnitTest
         // VERIFY
         assertNotNull( "Should have a deserialized object.", after );
         assertEquals( "Values should be the same.", before.getVal(), after.getVal() );
-        assertEquals( "Attributes should be the same.", before.getElementAttributes().getMaxLifeSeconds(), after
-            .getElementAttributes().getMaxLifeSeconds() );
+        assertEquals( "Attributes should be the same.", before.getElementAttributes().getMaxLife(), after
+            .getElementAttributes().getMaxLife() );
         assertEquals( "Keys should be the same.", before.getKey(), after.getKey() );
         assertEquals( "Cache name should be the same.", before.getCacheName(), after.getCacheName() );
     }
@@ -134,7 +134,7 @@ public class SerializationConversionUtilUnitTest
         IElementSerializer elementSerializer = new StandardSerializer();
 
         IElementAttributes attr = new ElementAttributes();
-        attr.setMaxLifeSeconds( 34 );
+        attr.setMaxLife(34);
 
         ICacheElement<String, String> before = new CacheElement<String, String>( cacheName, key, value );
         before.setElementAttributes( attr );
@@ -155,8 +155,8 @@ public class SerializationConversionUtilUnitTest
         // VERIFY
         assertNotNull( "Should have a deserialized object.", after );
         assertEquals( "Values should be the same.", before.getVal(), after.getVal() );
-        assertEquals( "Attributes should be the same.", before.getElementAttributes().getMaxLifeSeconds(), after
-            .getElementAttributes().getMaxLifeSeconds() );
+        assertEquals( "Attributes should be the same.", before.getElementAttributes().getMaxLife(), after
+            .getElementAttributes().getMaxLife() );
         assertEquals( "Keys should be the same.", before.getKey(), after.getKey() );
         assertEquals( "Cache name should be the same.", before.getCacheName(), after.getCacheName() );
     }
@@ -174,7 +174,7 @@ public class SerializationConversionUtilUnitTest
         IElementSerializer elementSerializer = null;// new StandardSerializer();
 
         IElementAttributes attr = new ElementAttributes();
-        attr.setMaxLifeSeconds( 34 );
+        attr.setMaxLife(34);
 
         ICacheElement<String, String> before = new CacheElement<String, String>( cacheName, key, value );
         before.setElementAttributes( attr );

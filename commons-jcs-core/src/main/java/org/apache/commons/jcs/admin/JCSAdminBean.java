@@ -122,8 +122,8 @@ public class JCSAdminBean implements JCSJMXBean
             		String.valueOf( key ),
             		attributes.getIsEternal(),
             		format.format(new Date(attributes.getCreateTime())),
-            		attributes.getMaxLifeSeconds(),
-            		(now - attributes.getCreateTime() - attributes.getMaxLifeSeconds() * 1000 ) / -1000);
+            		attributes.getMaxLife(),
+            		(now - attributes.getCreateTime() - attributes.getMaxLife() * 1000 ) / -1000);
 
             records.add( elementInfo );
         }

@@ -55,8 +55,7 @@ public class CacheTest
     {
         final CachingProvider cachingProvider = Caching.getCachingProvider();
         final CacheManager cacheManager = cachingProvider.getCacheManager();
-        cacheManager.createCache("default", new MutableConfiguration<Object, Object>());
-        final Cache<String, String> cache = cacheManager.getCache("default");
+        final Cache<String, String> cache = cacheManager.createCache("default", new MutableConfiguration<String, String>());
         assertFalse(cache.containsKey("foo"));
         cache.put("foo", "bar");
         assertTrue(cache.containsKey("foo"));
