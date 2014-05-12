@@ -74,7 +74,7 @@ public class CompositeCacheManager
     private static final Log log = LogFactory.getLog( CompositeCacheManager.class );
 
     /** JMX object name */
-    private static final String JMX_OBJECT_NAME = "org.apache.commons.jcs:type=JCSAdminBean";
+    public static final String JMX_OBJECT_NAME = "org.apache.commons.jcs:type=JCSAdminBean";
 
     /** Caches managed by this cache manager */
     private final Map<String, ICache<?, ?>> caches =
@@ -135,6 +135,8 @@ public class CompositeCacheManager
 
     /** Indicates whether JMX bean has been registered. */
     private boolean isJMXRegistered = false;
+
+    private String jmxName = JMX_OBJECT_NAME;
 
     /**
      * Gets the CacheHub instance. For backward compatibility, if this creates the instance it will
@@ -222,19 +224,12 @@ public class CompositeCacheManager
         return new CompositeCacheManager();
     }
 
-    protected static CompositeCacheManager createInitializedInstance()
-    {
-        final CompositeCacheManager compositeCacheManager = new CompositeCacheManager();
-        compositeCacheManager.initialize();
-        return compositeCacheManager;
-    }
-
     /**
      * Default constructor
      */
     protected CompositeCacheManager()
     {
-    	// empty
+        // empty
     }
 
     /** Creates a shutdown hook and starts the scheduler service */
@@ -256,20 +251,20 @@ public class CompositeCacheManager
                     new DaemonThreadFactory("JCS-Scheduler-", Thread.MIN_PRIORITY));
 
             // Register JMX bean
-            if (!isJMXRegistered)
+            if (!isJMXRegistered && jmxName != null)
             {
-    	        MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
-    	        JCSAdminBean adminBean = new JCSAdminBean(this);
-    	        try
-    	        {
-    	        	ObjectName jmxObjectName = new ObjectName(JMX_OBJECT_NAME);
-    				mbs.registerMBean(adminBean, jmxObjectName);
-    				isJMXRegistered = true;
-    			}
-    	        catch (Exception e)
-    	        {
-    	            log.warn( "Could not register JMX bean.", e );
-    			}
+                MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
+                JCSAdminBean adminBean = new JCSAdminBean(this);
+                try
+                {
+                    ObjectName jmxObjectName = new ObjectName(jmxName);
+                    mbs.registerMBean(adminBean, jmxObjectName);
+                    isJMXRegistered = true;
+                }
+                catch (Exception e)
+                {
+                    log.warn( "Could not register JMX bean.", e );
+                }
             }
 
             this.elementEventQueue = new ElementEventQueue();
@@ -671,18 +666,18 @@ public class CompositeCacheManager
             // Unregister JMX bean
             if (isJMXRegistered)
             {
-    	        MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
-    	        try
-    	        {
-    	        	ObjectName jmxObjectName = new ObjectName(JMX_OBJECT_NAME);
-    				mbs.unregisterMBean(jmxObjectName);
-    			}
-    	        catch (Exception e)
-    	        {
-    	            log.warn( "Could not unregister JMX bean.", e );
-    			}
+                MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
+                try
+                {
+                    ObjectName jmxObjectName = new ObjectName(jmxName);
+                    mbs.unregisterMBean(jmxObjectName);
+                }
+                catch (Exception e)
+                {
+                    log.warn( "Could not unregister JMX bean.", e );
+                }
 
-    			isJMXRegistered = false;
+                isJMXRegistered = false;
             }
 
             // do the traditional shutdown of the regions.
@@ -693,16 +688,16 @@ public class CompositeCacheManager
 
             if (shutdownHook != null)
             {
-            	try
-            	{
-					Runtime.getRuntime().removeShutdownHook(shutdownHook);
-				}
-            	catch (IllegalStateException e)
-            	{
-					// May fail if the JVM is already shutting down
-				}
+                try
+                {
+                    Runtime.getRuntime().removeShutdownHook(shutdownHook);
+                }
+                catch (IllegalStateException e)
+                {
+                    // May fail if the JVM is already shutting down
+                }
 
-            	this.shutdownHook = null;
+                this.shutdownHook = null;
             }
 
             isConfigured = false;
@@ -762,7 +757,7 @@ public class CompositeCacheManager
      */
     public String[] getCacheNames()
     {
-    	return caches.keySet().toArray(new String[caches.size()]);
+        return caches.keySet().toArray(new String[caches.size()]);
     }
 
     /**
@@ -947,6 +942,14 @@ public class CompositeCacheManager
     public boolean isConfigured()
     {
         return isConfigured;
+    }
+
+    public void setJmxName(final String name) {
+        if (isJMXRegistered)
+        {
+            throw new IllegalStateException("Too late, MBean registration is done");
+        }
+        jmxName = name;
     }
 
     /**

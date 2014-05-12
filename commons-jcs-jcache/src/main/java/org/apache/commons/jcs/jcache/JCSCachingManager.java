@@ -38,9 +38,14 @@ public class JCSCachingManager implements CacheManager
 {
     private static class InternalManager extends CompositeCacheManager
     {
-        protected static CompositeCacheManager create()
+        protected static InternalManager create()
         {
-            return createInitializedInstance();
+            return new InternalManager();
+        }
+
+        @Override // needed to call it from JCSCachingManager
+        protected void initialize() {
+            super.initialize();
         }
     }
 
@@ -51,7 +56,7 @@ public class JCSCachingManager implements CacheManager
     private final ConcurrentMap<String, Cache<?, ?>> caches = new ConcurrentHashMap<String, Cache<?, ?>>();
     private final Properties configProperties;
     private volatile boolean closed = false;
-    private CompositeCacheManager delegate = InternalManager.create();
+    private InternalManager delegate = InternalManager.create();
 
     public JCSCachingManager(final CachingProvider provider, final URI uri, final ClassLoader loader, final Properties properties)
     {
@@ -61,7 +66,13 @@ public class JCSCachingManager implements CacheManager
         this.properties = readConfig(uri, loader, properties);
         this.configProperties = properties;
 
-        delegate.configure(properties);
+        delegate.setJmxName(CompositeCacheManager.JMX_OBJECT_NAME
+                + ",provider=" + provider.hashCode()
+                + ",uri=" + uri.toString().replaceAll(",|:|=|\n", ".")
+                + ",classloader=" + loader.hashCode()
+                + ",properties=" + this.properties.hashCode());
+        delegate.initialize();
+        delegate.configure(this.properties);
     }
 
     private Properties readConfig(final URI uri, final ClassLoader loader, final Properties properties) {
