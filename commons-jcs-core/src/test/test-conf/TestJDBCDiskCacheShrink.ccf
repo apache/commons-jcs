@@ -26,7 +26,7 @@ jcs.default.cacheattributes.MaxMemoryIdleTimeSeconds=3600
 jcs.default.cacheattributes.ShrinkerIntervalSeconds=60
 jcs.default.elementattributes=org.apache.commons.jcs.engine.ElementAttributes
 jcs.default.elementattributes.IsEternal=false
-jcs.default.elementattributes.MaxLifeSeconds=700
+jcs.default.elementattributes.MaxLife=700
 jcs.default.elementattributes.IdleTime=1800
 jcs.default.elementattributes.IsSpool=true
 jcs.default.elementattributes.IsRemote=true
@@ -38,19 +38,19 @@ jcs.region.expire1Second=JDBC
 jcs.region.expire1Second.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
 jcs.region.expire1Second.cacheattributes.MaxObjects=0
 jcs.region.expire1Second.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
-jcs.region.expire1Second.elementattributes.MaxLifeSeconds=1
+jcs.region.expire1Second.elementattributes.MaxLife=1
 
 jcs.region.expire100Second=JDBC
 jcs.region.expire100Second.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
 jcs.region.expire100Second.cacheattributes.MaxObjects=0
 jcs.region.expire100Second.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
-jcs.region.expire100Second.elementattributes.MaxLifeSeconds=100
+jcs.region.expire100Second.elementattributes.MaxLife=100
 
 jcs.region.eternal=JDBC
 jcs.region.eternal.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
 jcs.region.eternal.cacheattributes.MaxObjects=0
 jcs.region.eternal.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
-jcs.region.eternal.elementattributes.MaxLifeSeconds=1
+jcs.region.eternal.elementattributes.MaxLife=1
 jcs.region.eternal.elementattributes.IsEternal=true
 
 # #############################################################

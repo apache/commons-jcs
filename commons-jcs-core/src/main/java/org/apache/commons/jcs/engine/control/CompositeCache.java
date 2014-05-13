@@ -1301,8 +1301,8 @@ public class CompositeCache<K, V>
         // Now, shut down the event queue
         if (elementEventQ != null)
         {
-        	elementEventQ.dispose();
-        	elementEventQ = null;
+            elementEventQ.dispose();
+            elementEventQ = null;
         }
 
         // Dispose of each auxiliary cache, Remote auxiliaries will be
@@ -1405,7 +1405,7 @@ public class CompositeCache<K, V>
 
                             if (ce != null)
                             {
-                            	aux.update( ce );
+                                aux.update( ce );
                             }
                         }
                     }
@@ -1617,7 +1617,9 @@ public class CompositeCache<K, V>
                 long maxLifeSeconds = attributes.getMaxLife();
                 long createTime = attributes.getCreateTime();
 
-                if ( maxLifeSeconds != -1 && ( timestamp - createTime ) > ( maxLifeSeconds * attributes.getTimeFactorForMilliseconds() ) )
+                final long timeFactorForMilliseconds = attributes.getTimeFactorForMilliseconds();
+
+                if ( maxLifeSeconds != -1 && ( timestamp - createTime ) > ( maxLifeSeconds * timeFactorForMilliseconds) )
                 {
                     if ( log.isDebugEnabled() )
                     {
@@ -1636,7 +1638,7 @@ public class CompositeCache<K, V>
                 // not get updated.
                 // you will need to set the idle time to -1.
 
-                if ( ( idleTime != -1 ) && ( timestamp - lastAccessTime ) > idleTime * 1000 )
+                if ( ( idleTime != -1 ) && ( timestamp - lastAccessTime ) > idleTime * timeFactorForMilliseconds )
                 {
                     if ( log.isDebugEnabled() )
                     {

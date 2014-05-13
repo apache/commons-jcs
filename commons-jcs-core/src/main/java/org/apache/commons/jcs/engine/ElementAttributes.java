@@ -281,7 +281,7 @@ public class ElementAttributes
     /**
      * only for use from test code
      */
-    void setLastAccessTime(long time)
+    public void setLastAccessTime(long time)
     {
         this.lastAccessTime = time;
     }

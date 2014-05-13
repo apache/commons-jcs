@@ -47,14 +47,14 @@ jcs.region.Maxlife.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheA
 jcs.region.Maxlife.cacheattributes.MaxObjects=200
 jcs.region.Maxlife.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
 jcs.region.Maxlife.elementattributes.IsEternal=false
-jcs.region.Maxlife.elementattributes.MaxLifeSeconds=2
+jcs.region.Maxlife.elementattributes.MaxLife=2
 
 jcs.region.Idletime=
 jcs.region.Idletime.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
 jcs.region.Idletime.cacheattributes.MaxObjects=200
 jcs.region.Idletime.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
 jcs.region.Idletime.elementattributes.IsEternal=false
-jcs.region.Idletime.elementattributes.MaxLifeSeconds=300
+jcs.region.Idletime.elementattributes.MaxLife=300
 jcs.region.Idletime.elementattributes.IdleTime=1
 
 # #### AUXILIARY CACHES
