@@ -20,6 +20,11 @@
 	</properties>
 	<body>
 		<release version="2.0" date="unreleased" description="JDK 1.6 based major release">
+            <action dev="rmannibucau" type="update">
+                Allow configuration to set its TimeFactorForMilliseconds and
+                use second by default.
+                This has as impact to remove "Seconds" suffix from corresponding configurations.
+            </action>
             <action issue="JCS-115" dev="tv" type="fix" due-to="Sebastian Bazley">
                 JDBCDiskCachePoolAccessManager is thread hostile
             </action>

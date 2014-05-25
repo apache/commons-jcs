@@ -130,7 +130,7 @@
 					</tr>
 
 					<tr>
-						<td>ShrinkerIntervalSeconds</td>
+						<td>ShrinkerInterval</td>
 						<td>How often should the disk shrinker run.</td>
 						<td>N</td>
 						<td>300</td>
@@ -158,7 +158,7 @@ jcs.auxiliary.JDBC.attributes.maxActive=15
 jcs.auxiliary.JDBC.attributes.allowRemoveAll=true
 jcs.auxiliary.JDBC.attributes.MaxPurgatorySize=10000000
 jcs.auxiliary.JDBC.attributes.UseDiskShrinker=true
-jcs.auxiliary.JDBC.attributes.ShrinkerIntervalSeconds=300
+jcs.auxiliary.JDBC.attributes.ShrinkerInterval=300
         ]]>
 				</source>
 			</subsection>
@@ -227,7 +227,7 @@ jcs.auxiliary.JDBC.attributes.maxActive=15
 jcs.auxiliary.JDBC.attributes.allowRemoveAll=true
 jcs.auxiliary.JDBC.attributes.MaxPurgatorySize=10000000
 jcs.auxiliary.JDBC.attributes.UseDiskShrinker=true
-jcs.auxiliary.JDBC.attributes.ShrinkerIntervalSeconds=300
+jcs.auxiliary.JDBC.attributes.ShrinkerInterval=300
 jcs.auxiliary.JDBC.attributes.EventQueueType=POOLED
 jcs.auxiliary.JDBC.attributes.EventQueuePoolName=disk_cache_event_queueue
 

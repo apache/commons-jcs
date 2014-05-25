@@ -54,11 +54,11 @@ jcs.default.cacheattributes.MaxObjects=1000
 jcs.default.cacheattributes.MemoryCacheName=
     org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
 jcs.default.cacheattributes.UseMemoryShrinker=true
-jcs.default.cacheattributes.MaxMemoryIdleTimeSeconds=3600
-jcs.default.cacheattributes.ShrinkerIntervalSeconds=60
+jcs.default.cacheattributes.MaxMemoryIdleTime=3600
+jcs.default.cacheattributes.ShrinkerInterval=60
 jcs.default.elementattributes=org.apache.commons.jcs.engine.ElementAttributes
 jcs.default.elementattributes.IsEternal=false
-jcs.default.elementattributes.MaxLifeSeconds=700
+jcs.default.elementattributes.MaxLife=700
 jcs.default.elementattributes.IdleTime=1800
 jcs.default.elementattributes.IsSpool=true
 jcs.default.elementattributes.IsRemote=true
@@ -88,7 +88,7 @@ jcs.default.elementattributes.IsLateral=true
 				<p>
 					You can define the maximum life of an item by
 					setting the
-					<code>MaxLifeSeconds</code>
+					<code>MaxLife</code>
 					parameter. If an item has been in the cache for
 					longer than the set number of seconds it will not be
 					retrieved on a get request. If you use the memory
@@ -106,7 +106,7 @@ jcs.default.elementattributes.IsLateral=true
 					without being accessed by setting the
 					<code>IdleTime</code>
 					parameter. This is different than the
-					<code>MaxMemoryIdleTimeSeconds</code>
+					<code>MaxMemoryIdleTime</code>
 					parameter, which just specifies how long an object
 					can be in memory before it is subjected to removal
 					or being spooled to a disk cache if it is available.
