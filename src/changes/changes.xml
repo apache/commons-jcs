@@ -20,6 +20,15 @@
 	</properties>
 	<body>
 		<release version="2.0" date="unreleased" description="JDK 1.6 based major release">
+            <action dev="rmannibucau" type="add">
+                jcache-extra module to provide basic classes based on JCache API.
+            </action>
+            <action dev="rmannibucau" type="add">
+                Web CacheFilter to cache http responses.
+            </action>
+            <action dev="rmannibucau" type="add">
+                OpenJPA L2 Cache based on JCache API.
+            </action>
             <action dev="rmannibucau" type="update">
                 Allow configuration to set its TimeFactorForMilliseconds and
                 use second by default.
