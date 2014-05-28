@@ -28,6 +28,7 @@ import org.apache.commons.jcs.engine.memory.behavior.IMemoryCache;
 import org.apache.commons.jcs.engine.memory.util.MemoryElementDescriptor;
 import org.apache.commons.jcs.engine.stats.Stats;
 import org.apache.commons.jcs.engine.stats.behavior.IStats;
+import org.apache.commons.jcs.utils.logger.LogHelper;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -35,6 +36,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * This base includes some common code for memory caches.
@@ -47,6 +50,7 @@ public abstract class AbstractMemoryCache<K, V>
 {
     /** Log instance */
     private static final Log log = LogFactory.getLog( AbstractMemoryCache.class );
+    private static final LogHelper LOG_HELPER = new LogHelper(log);
 
     /** The region name. This defines a namespace of sorts. */
     protected String cacheName; // TODO privatise (mainly seems to be used externally for debugging)
@@ -69,21 +73,31 @@ public abstract class AbstractMemoryCache<K, V>
     /** How many to spool at a time. */
     protected int chunkSize;
 
+    protected final Lock lock = new ReentrantLock();
+
     /**
      * For post reflection creation initialization
      * <p>
      * @param hub
      */
     @Override
-    public synchronized void initialize( CompositeCache<K, V> hub )
+    public void initialize( CompositeCache<K, V> hub )
     {
-        this.cacheName = hub.getCacheName();
-        this.cacheAttributes = hub.getCacheAttributes();
-        this.cache = hub;
-        map = createMap();
+        lock.lock();
+        try
+        {
+            this.cacheName = hub.getCacheName();
+            this.cacheAttributes = hub.getCacheAttributes();
+            this.cache = hub;
+            map = createMap();
 
-        chunkSize = cacheAttributes.getSpoolChunkSize();
-        status = CacheStatus.ALIVE;
+            chunkSize = cacheAttributes.getSpoolChunkSize();
+            status = CacheStatus.ALIVE;
+        }
+        finally
+        {
+            lock.unlock();
+        }
     }
 
     /**
@@ -163,14 +177,14 @@ public abstract class AbstractMemoryCache<K, V>
         MemoryElementDescriptor<K, V> me = map.get( key );
         if ( me != null )
         {
-            if ( log.isDebugEnabled() )
+            if ( LOG_HELPER.isDebugEnabled() )
             {
                 log.debug( cacheName + ": MemoryCache quiet hit for " + key );
             }
 
             ce = me.ce;
         }
-        else if ( log.isDebugEnabled() )
+        else if ( LOG_HELPER.isDebugEnabled() )
         {
             log.debug( cacheName + ": MemoryCache quiet miss for " + key );
         }
@@ -261,7 +275,7 @@ public abstract class AbstractMemoryCache<K, V>
     {
         String attributeCacheName = this.cacheAttributes.getCacheName();
         if(attributeCacheName != null)
-        	return attributeCacheName;
+            return attributeCacheName;
         return cacheName;
     }
 

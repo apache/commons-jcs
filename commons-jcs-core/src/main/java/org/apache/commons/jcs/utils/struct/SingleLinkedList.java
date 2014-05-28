@@ -19,6 +19,7 @@ package org.apache.commons.jcs.utils.struct;
  * under the License.
  */
 
+import org.apache.commons.jcs.utils.logger.LogHelper;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -32,6 +33,7 @@ public class SingleLinkedList<T>
 {
     /** The logger */
     private static final Log log = LogFactory.getLog( SingleLinkedList.class );
+    private static final LogHelper LOG_HELPER = new LogHelper(log);
 
     /** for sync */
     private final Object lock = new Object();
@@ -64,7 +66,7 @@ public class SingleLinkedList<T>
 
             T value = node.payload;
 
-            if ( log.isDebugEnabled() )
+            if ( LOG_HELPER.isDebugEnabled() )
             {
                 log.debug( "head.payload = " + head.payload );
                 log.debug( "node.payload = " + node.payload );

@@ -24,6 +24,7 @@ import org.apache.commons.jcs.engine.stats.StatElement;
 import org.apache.commons.jcs.engine.stats.Stats;
 import org.apache.commons.jcs.engine.stats.behavior.IStatElement;
 import org.apache.commons.jcs.engine.stats.behavior.IStats;
+import org.apache.commons.jcs.utils.logger.LogHelper;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -37,6 +38,8 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * This is a simple LRUMap. It implements most of the map methods. It is not recommended that you
@@ -57,6 +60,7 @@ public class LRUMap<K, V>
 {
     /** The logger */
     private static final Log log = LogFactory.getLog( LRUMap.class );
+    private static final LogHelper LOG_HELPER = new LogHelper(log);
 
     /** double linked list for lru */
     private final DoubleLinkedList<LRUElementDescriptor<K, V>> list;
@@ -78,6 +82,8 @@ public class LRUMap<K, V>
 
     /** make configurable */
     private int chunkSize = 1;
+
+    private final Lock lock = new ReentrantLock();
 
     /**
      * This creates an unbounded version. Setting the max objects will result in spooling on
@@ -123,8 +129,16 @@ public class LRUMap<K, V>
     @Override
     public void clear()
     {
-        map.clear();
-        list.removeAll();
+        lock.lock();
+        try
+        {
+            map.clear();
+            list.removeAll();
+        }
+        finally
+        {
+            lock.unlock();
+        }
     }
 
     /**
@@ -200,7 +214,7 @@ public class LRUMap<K, V>
     {
         V retVal = null;
 
-        if ( log.isDebugEnabled() )
+        if ( LOG_HELPER.isDebugEnabled() )
         {
             log.debug( "getting item  for key " + key );
         }
@@ -244,14 +258,14 @@ public class LRUMap<K, V>
         LRUElementDescriptor<K, V> me = map.get( key );
         if ( me != null )
         {
-            if ( log.isDebugEnabled() )
+            if ( LOG_HELPER.isDebugEnabled() )
             {
                 log.debug( "LRUMap quiet hit for " + key );
             }
 
             ce = me.getPayload();
         }
-        else if ( log.isDebugEnabled() )
+        else if ( LOG_HELPER.isDebugEnabled() )
         {
             log.debug( "LRUMap quiet miss for " + key );
         }
@@ -266,18 +280,26 @@ public class LRUMap<K, V>
     @Override
     public V remove( Object key )
     {
-        if ( log.isDebugEnabled() )
+        if ( LOG_HELPER.isDebugEnabled() )
         {
             log.debug( "removing item for key: " + key );
         }
 
         // remove single item.
-        LRUElementDescriptor<K, V> me = map.remove( key );
-
-        if ( me != null )
+        lock.lock();
+        try
         {
-            list.remove( me );
-            return me.getPayload();
+            LRUElementDescriptor<K, V> me = map.remove(key);
+
+            if (me != null)
+            {
+                list.remove(me);
+                return me.getPayload();
+            }
+        }
+        finally
+        {
+            lock.unlock();
         }
 
         return null;
@@ -294,7 +316,8 @@ public class LRUMap<K, V>
         putCnt++;
 
         LRUElementDescriptor<K, V> old = null;
-        synchronized ( this )
+        lock.lock();
+        try
         {
             // TODO address double synchronization of addFirst, use write lock
             addFirst( key, value );
@@ -308,13 +331,18 @@ public class LRUMap<K, V>
                 list.remove( old );
             }
         }
+        finally
+        {
+            lock.unlock();
+        }
 
         int size = map.size();
         // If the element limit is reached, we need to spool
 
         if ( this.maxObjects >= 0 && size > this.maxObjects )
         {
-            if ( log.isDebugEnabled() )
+            final boolean debugEnabled = LOG_HELPER.isDebugEnabled();
+            if (debugEnabled)
             {
                 log.debug( "In memory limit reached, removing least recently used." );
             }
@@ -322,7 +350,7 @@ public class LRUMap<K, V>
             // Write the last 'chunkSize' items to disk.
             int chunkSizeCorrected = Math.min( size, getChunkSize() );
 
-            if ( log.isDebugEnabled() )
+            if (debugEnabled)
             {
                 log.debug( "About to remove the least recently used. map size: " + size + ", max objects: "
                     + this.maxObjects + ", items to spool: " + chunkSizeCorrected );
@@ -334,33 +362,41 @@ public class LRUMap<K, V>
 
             for ( int i = 0; i < chunkSizeCorrected; i++ )
             {
-                LRUElementDescriptor<K, V> last = list.getLast();
-                if ( last != null )
+                lock.lock();
+                try
                 {
-                    processRemovedLRU(last.getKey(), last.getPayload());
-                    if ( map.remove( last.getKey() ) == null )
+                    LRUElementDescriptor<K, V> last = list.getLast();
+                    if (last != null)
                     {
-                        log.warn( "update: remove failed for key: "
-                            + last.getKey() );
-                        verifyCache();
+                        processRemovedLRU(last.getKey(), last.getPayload());
+                        if (map.remove(last.getKey()) == null)
+                        {
+                            log.warn("update: remove failed for key: "
+                                    + last.getKey());
+                            verifyCache();
+                        }
+                        list.removeLast();
                     }
-                    list.remove(last);
+                    else
+                    {
+                        verifyCache();
+                        throw new Error("update: last is null!");
+                    }
                 }
-                else
+                finally
                 {
-                    verifyCache();
-                    throw new Error( "update: last is null!" );
+                    lock.unlock();
                 }
             }
 
-            if ( log.isDebugEnabled() )
+            if ( LOG_HELPER.isDebugEnabled() )
             {
                 log.debug( "update: After spool map size: " + map.size() );
             }
             if ( map.size() != dumpCacheSize() )
             {
-                log.error( "update: After spool, size mismatch: map.size() = " + map.size() + ", linked list size = "
-                    + dumpCacheSize() );
+                log.error("update: After spool, size mismatch: map.size() = " + map.size() + ", linked list size = "
+                        + dumpCacheSize());
             }
         }
 
@@ -379,8 +415,16 @@ public class LRUMap<K, V>
      */
     private void addFirst(K key, V val)
     {
-        LRUElementDescriptor<K, V> me = new LRUElementDescriptor<K, V>(key, val);
-        list.addFirst( me );
+        lock.lock();
+        try
+        {
+            LRUElementDescriptor<K, V> me = new LRUElementDescriptor<K, V>(key, val);
+            list.addFirst( me );
+        }
+        finally
+        {
+            lock.unlock();
+        }
     }
 
     /**
@@ -402,7 +446,7 @@ public class LRUMap<K, V>
         log.debug( "dumpingCacheEntries" );
         for ( LRUElementDescriptor<K, V> me = list.getFirst(); me != null; me = (LRUElementDescriptor<K, V>) me.next )
         {
-            if ( log.isDebugEnabled() )
+            if ( LOG_HELPER.isDebugEnabled() )
             {
                 log.debug( "dumpCacheEntries> key=" + me.getKey() + ", val=" + me.getPayload() );
             }
@@ -418,7 +462,7 @@ public class LRUMap<K, V>
         for (Map.Entry<K, LRUElementDescriptor<K, V>> e : map.entrySet())
         {
             LRUElementDescriptor<K, V> me = e.getValue();
-            if ( log.isDebugEnabled() )
+            if ( LOG_HELPER.isDebugEnabled() )
             {
                 log.debug( "dumpMap> key=" + e.getKey() + ", val=" + me.getPayload() );
             }
@@ -432,7 +476,7 @@ public class LRUMap<K, V>
     @SuppressWarnings("unchecked") // No generics for public fields
     protected void verifyCache()
     {
-        if ( !log.isDebugEnabled() )
+        if ( !LOG_HELPER.isDebugEnabled() )
         {
             return;
         }
@@ -524,7 +568,7 @@ public class LRUMap<K, V>
     @SuppressWarnings("unchecked") // No generics for public fields
     protected void verifyCache( Object key )
     {
-        if ( !log.isDebugEnabled() )
+        if ( !LOG_HELPER.isDebugEnabled() )
         {
             return;
         }
@@ -556,7 +600,7 @@ public class LRUMap<K, V>
      */
     protected void processRemovedLRU(K key, V value )
     {
-        if ( log.isDebugEnabled() )
+        if ( LOG_HELPER.isDebugEnabled() )
         {
             log.debug( "Removing key: [" + key + "] from LRUMap store, value = [" + value + "]" );
             log.debug( "LRUMap store size: '" + this.size() + "'." );
@@ -615,18 +659,25 @@ public class LRUMap<K, V>
     @Override
     public Set<Map.Entry<K, V>> entrySet()
     {
-        // todo, we should return a defensive copy
-        Set<Map.Entry<K, LRUElementDescriptor<K, V>>> entries = map.entrySet();
-
-        Set<Map.Entry<K, V>> unWrapped = new HashSet<Map.Entry<K, V>>();
-
-        for (Map.Entry<K, LRUElementDescriptor<K, V>> pre : entries )
+        lock.lock();
+        try
         {
-            Map.Entry<K, V> post = new LRUMapEntry<K, V>(pre.getKey(), pre.getValue().getPayload());
-            unWrapped.add(post);
-        }
+            // todo, we should return a defensive copy
+            Set<Map.Entry<K, LRUElementDescriptor<K, V>>> entries = map.entrySet();
 
-        return unWrapped;
+            Set<Map.Entry<K, V>> unWrapped = new HashSet<Map.Entry<K, V>>();
+
+            for (Map.Entry<K, LRUElementDescriptor<K, V>> pre : entries) {
+                Map.Entry<K, V> post = new LRUMapEntry<K, V>(pre.getKey(), pre.getValue().getPayload());
+                unWrapped.add(post);
+            }
+
+            return unWrapped;
+        }
+        finally
+        {
+            lock.unlock();
+        }
     }
 
     /**

@@ -19,6 +19,7 @@ package org.apache.commons.jcs.auxiliary.disk;
  * under the License.
  */
 
+import org.apache.commons.jcs.utils.logger.LogHelper;
 import org.apache.commons.jcs.utils.struct.LRUMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -35,6 +36,7 @@ public class LRUMapJCS<K, V>
 
     /** The logger */
     private static final Log log = LogFactory.getLog( LRUMapJCS.class );
+    private static final LogHelper LOG_HELPER = new LogHelper(log);
 
     /**
      * This creates an unbounded version.
@@ -69,7 +71,7 @@ public class LRUMapJCS<K, V>
     @Override
     protected void processRemovedLRU(K key, V value)
     {
-        if ( log.isDebugEnabled() )
+        if ( LOG_HELPER.isDebugEnabled() )
         {
             log.debug( "Removing key [" + key + "] from key store, value [" + value + "]" );
             log.debug( "Key store size [" + this.size() + "]" );
