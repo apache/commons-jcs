@@ -913,9 +913,12 @@ public class JCSCache<K, V> implements Cache<K, V>
             return;
         }
 
+        for (final Runnable task : pool.shutdownNow()) {
+            task.run();
+        }
+
         manager.release(getName());
         closed = true;
-        pool.shutdownNow();
         close(loader);
         close(writer);
         close(expiryPolicy);
