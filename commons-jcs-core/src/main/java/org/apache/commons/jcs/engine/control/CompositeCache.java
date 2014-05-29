@@ -1290,7 +1290,7 @@ public class CompositeCache<K, V>
     {
         if ( log.isInfoEnabled() )
         {
-            log.info( "In DISPOSE, [" + this.cacheAttr.getCacheName() + "] fromRemote [" + fromRemote + "] \n" + this.getStats() );
+            log.info( "In DISPOSE, [" + this.cacheAttr.getCacheName() + "] fromRemote [" + fromRemote + "]" );
         }
 
         // If already disposed, return immediately
