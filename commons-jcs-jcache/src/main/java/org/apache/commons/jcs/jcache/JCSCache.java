@@ -220,7 +220,7 @@ public class JCSCache<K, V> implements Cache<K, V>
             final Duration duration = update ? expiryPolicy.getExpiryForUpdate() : expiryPolicy.getExpiryForCreation();
             if (isNotZero(duration))
             {
-                final ICacheElement<K, V> element = createElement(key, v, now, duration);
+                final ICacheElement<K, V> element = updateElement(key, v, duration);
                 try
                 {
                     delegate.update(element);
@@ -234,7 +234,7 @@ public class JCSCache<K, V> implements Cache<K, V>
         return v;
     }
 
-    private ICacheElement<K, V> createElement(final K key, final V v, final long now, final Duration duration)
+    private ICacheElement<K, V> updateElement(final K key, final V v, final Duration duration)
     {
         final ICacheElement<K, V> element = new CacheElement<K, V>(name, key, v);
         final IElementAttributes copy = delegate.getElementAttributes().copy();
@@ -242,16 +242,12 @@ public class JCSCache<K, V> implements Cache<K, V>
         {
             copy.setTimeFactorForMilliseconds(1);
             final boolean eternal = duration.isEternal();
-            if (eternal)
+            copy.setIsEternal(eternal);
+            if (!eternal)
             {
-                copy.setIsEternal(true);
+                copy.setIdleTime(duration.getTimeUnit().toMillis(duration.getDurationAmount()));
             }
-            else
-            {
-                copy.setIsEternal(false);
-                final long durationMs = duration.getTimeUnit().toMillis(duration.getDurationAmount());
-                copy.setIdleTime(durationMs);
-            }
+            // MaxLife = -1 to use IdleTime excepted if jcache.ccf asked for something else
         }
         element.setElementAttributes(copy);
         return element;
@@ -343,7 +339,19 @@ public class JCSCache<K, V> implements Cache<K, V>
             final long start = Times.now(false);
 
             final K jcsKey = storeByValue ? copy(serializer, manager.getClassLoader(), key) : key;
-            final ICacheElement<K, V> element = createElement(jcsKey, value, start, duration);
+            final ICacheElement<K, V> element = updateElement(jcsKey, value, created ? null : duration); // reuse it to create basic structure
+            if (created && duration != null) { // set maxLife
+                final IElementAttributes copy = element.getElementAttributes();
+                copy.setTimeFactorForMilliseconds(1);
+                final boolean eternal = duration.isEternal();
+                copy.setIsEternal(eternal);
+                if (!eternal)
+                {
+                    copy.setIsEternal(false);
+                    element.getElementAttributes().setMaxLife(duration.getTimeUnit().toMillis(duration.getDurationAmount()));
+                }
+                element.setElementAttributes(copy);
+            }
             writer.write(new JCSEntry<K, V>(jcsKey, value));
             try
             {
@@ -484,7 +492,7 @@ public class JCSCache<K, V> implements Cache<K, V>
             {
                 try
                 {
-                    delegate.update(createElement(key, v, getStart, expiryForAccess));
+                    delegate.update(updateElement(key, v, expiryForAccess));
                 }
                 catch (final IOException e)
                 {
@@ -542,7 +550,7 @@ public class JCSCache<K, V> implements Cache<K, V>
             {
                 try
                 {
-                    delegate.update(createElement(key, elt.getVal(), getStart, expiryForAccess));
+                    delegate.update(updateElement(key, elt.getVal(), expiryForAccess));
                 }
                 catch (final IOException e)
                 {
@@ -589,7 +597,7 @@ public class JCSCache<K, V> implements Cache<K, V>
                 {
                     try
                     {
-                        delegate.update(createElement(key, elt.getVal(), Times.now(false), expiryForAccess));
+                        delegate.update(updateElement(key, elt.getVal(), expiryForAccess));
                     }
                     catch (final IOException e)
                     {
