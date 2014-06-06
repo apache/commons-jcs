@@ -150,6 +150,11 @@ public class JDBCDiskCachePoolAccessManager
     {
         JDBCDiskCachePoolAccess poolAccess = null;
 
+        if (driverClassName == null)
+        {
+            throw new SQLException("Driver class name is null");
+        }
+
         try
         {
             // com.mysql.jdbc.Driver
@@ -161,9 +166,7 @@ public class JDBCDiskCachePoolAccessManager
         }
 
         poolAccess = new JDBCDiskCachePoolAccess( poolName );
-
         poolAccess.setupDriver( fullURL, userName, password, maxActive );
-
         poolAccess.logDriverStats();
 
         if ( log.isInfoEnabled() )

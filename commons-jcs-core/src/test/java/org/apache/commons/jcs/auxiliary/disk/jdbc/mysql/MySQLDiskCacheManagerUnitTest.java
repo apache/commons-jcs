@@ -36,6 +36,8 @@ public class MySQLDiskCacheManagerUnitTest
         // SETUP
         String cacheName = "testGetCache_normal";
         MySQLDiskCacheAttributes defaultCacheAttributes = new MySQLDiskCacheAttributes();
+        // Just use something that exists
+        defaultCacheAttributes.setDriverClassName( "org.hsqldb.jdbcDriver" );
         defaultCacheAttributes.setDiskPath( "target/JDBCDiskCacheManagerUnitTest" );
 
         ICacheEventLogger cacheEventLogger = new MockCacheEventLogger();

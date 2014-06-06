@@ -36,6 +36,8 @@ public class JDBCDiskCacheManagerUnitTest
         // SETUP
         String cacheName = "testGetCache_normal";
         JDBCDiskCacheAttributes defaultCacheAttributes = new JDBCDiskCacheAttributes();
+        // Just use something that exists
+        defaultCacheAttributes.setDriverClassName( "org.hsqldb.jdbcDriver" );
         defaultCacheAttributes.setDiskPath( "target/JDBCDiskCacheManagerUnitTest" );
 
         ICacheEventLogger cacheEventLogger = new MockCacheEventLogger();

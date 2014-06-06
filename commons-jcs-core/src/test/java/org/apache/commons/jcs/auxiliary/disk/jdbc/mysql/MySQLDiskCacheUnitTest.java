@@ -42,21 +42,22 @@ public class MySQLDiskCacheUnitTest
      * <p>
      * This is a bit tricky since we don't want to have to have a mysql instance
      * running. Right now this doesn't really test much
-     * @throws SQLException 
+     * @throws SQLException
      */
     public void testBalkOnGet() throws SQLException
     {
         // SETUP
         MySQLDiskCacheAttributes attributes = new MySQLDiskCacheAttributes();
         String tableName = "JCS_TEST";
-        attributes.setDriverClassName( "com.mysql.jdbc.Driver" );
+        // Just use something that exists
+        attributes.setDriverClassName( "org.hsqldb.jdbcDriver" );
         attributes.setTableName( tableName );
         attributes.setBalkDuringOptimization( true );
 
         TableState tableState = new TableState( tableName );
         tableState.setState( TableState.OPTIMIZATION_RUNNING );
 
-        MySQLDiskCache<String, String> cache = new MySQLDiskCache<String, String>( attributes, tableState, 
+        MySQLDiskCache<String, String> cache = new MySQLDiskCache<String, String>( attributes, tableState,
         		CompositeCacheManager.getUnconfiguredInstance() );
 
         // DO WORK
