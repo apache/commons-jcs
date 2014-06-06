@@ -19,6 +19,7 @@ package org.apache.commons.jcs.auxiliary.disk.jdbc;
  * under the License.
  */
 
+import java.sql.SQLException;
 import org.apache.commons.jcs.utils.config.PropertySetter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -84,28 +85,23 @@ public class JDBCDiskCachePoolAccessManager
      * @param poolName the name of the pool
      * @param props the configuration properties for the pool
      * @return JDBCDiskCachePoolAccess
+     * @throws SQLException if a database access error occurs
      */
     public synchronized JDBCDiskCachePoolAccess getJDBCDiskCachePoolAccess( String poolName, Properties props )
+        throws SQLException
     {
         JDBCDiskCachePoolAccess poolAccess = pools.get( poolName );
 
         if ( poolAccess == null )
         {
             JDBCDiskCachePoolAccessAttributes poolAttributes = configurePoolAccessAttributes( poolName, props );
-            try
-            {
-                poolAccess = JDBCDiskCachePoolAccessFactory.createPoolAccess( poolAttributes );
+            poolAccess = JDBCDiskCachePoolAccessManager.createPoolAccess( poolAttributes );
 
-                if ( log.isInfoEnabled() )
-                {
-                    log.info( "Created shared pooled access for pool name [" + poolName + "]." );
-                }
-                pools.put( poolName, poolAccess );
-            }
-            catch ( Exception e )
+            if ( log.isInfoEnabled() )
             {
-                log.error( "Problem creating connection pool for pool name [" + poolName + "].", e );
+                log.info( "Created shared pooled access for pool name [" + poolName + "]." );
             }
+            pools.put( poolName, poolAccess );
         }
 
         return poolAccess;
@@ -134,5 +130,79 @@ public class JDBCDiskCachePoolAccessManager
             log.info( "Configured attributes " + poolAttributes );
         }
         return poolAttributes;
+    }
+
+    /**
+     * Creates a pool access object and registers the driver.
+     * <p>
+     * @param driverClassName
+     * @param poolName
+     * @param fullURL = (url + database)
+     * @param userName
+     * @param password
+     * @param maxActive
+     * @return JDBCDiskCachePoolAccess
+     * @throws SQLException if a database access error occurs
+     */
+    public static JDBCDiskCachePoolAccess createPoolAccess( String driverClassName, String poolName, String fullURL,
+                                                            String userName, String password, int maxActive )
+       throws SQLException
+    {
+        JDBCDiskCachePoolAccess poolAccess = null;
+
+        try
+        {
+            // com.mysql.jdbc.Driver
+            Class.forName( driverClassName );
+        }
+        catch ( ClassNotFoundException e )
+        {
+            throw new SQLException("Couldn't find class for driver [" + driverClassName + "]", e );
+        }
+
+        poolAccess = new JDBCDiskCachePoolAccess( poolName );
+
+        poolAccess.setupDriver( fullURL, userName, password, maxActive );
+
+        poolAccess.logDriverStats();
+
+        if ( log.isInfoEnabled() )
+        {
+            log.info( "Created: " + poolAccess );
+        }
+
+        return poolAccess;
+    }
+
+    /**
+     * Creates a JDBCDiskCachePoolAccess object from the JDBCDiskCacheAttributes. Use this when not
+     * using the connection pool manager.
+     * <p>
+     * @param cattr
+     * @return JDBCDiskCachePoolAccess
+     * @throws SQLException if a database access error occurs
+     */
+    public static JDBCDiskCachePoolAccess createPoolAccess( JDBCDiskCacheAttributes cattr )
+        throws SQLException
+    {
+        return JDBCDiskCachePoolAccessManager.createPoolAccess( cattr.getDriverClassName(), cattr.getName(), cattr.getUrl() + cattr.getDatabase(),
+                                 cattr.getUserName(), cattr.getPassword(), cattr.getMaxActive() );
+    }
+
+    /**
+     * Creates a JDBCDiskCachePoolAccess object from the JDBCDiskCachePoolAccessAttributes. This is
+     * used by the connection pool manager.
+     * <p>
+     * @param poolAttributes
+     * @return JDBCDiskCachePoolAccess
+     * @throws SQLException if a database access error occurs
+     */
+    public static JDBCDiskCachePoolAccess createPoolAccess( JDBCDiskCachePoolAccessAttributes poolAttributes )
+        throws SQLException
+    {
+        return JDBCDiskCachePoolAccessManager.createPoolAccess( poolAttributes.getDriverClassName(), poolAttributes.getPoolName(), poolAttributes
+            .getUrl()
+            + poolAttributes.getDatabase(), poolAttributes.getUserName(), poolAttributes.getPassword(), poolAttributes
+            .getMaxActive() );
     }
 }

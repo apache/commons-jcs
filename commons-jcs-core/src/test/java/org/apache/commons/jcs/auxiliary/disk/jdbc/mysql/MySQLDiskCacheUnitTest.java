@@ -19,7 +19,10 @@ package org.apache.commons.jcs.auxiliary.disk.jdbc.mysql;
  * under the License.
  */
 
+import java.sql.SQLException;
+
 import junit.framework.TestCase;
+
 import org.apache.commons.jcs.auxiliary.disk.jdbc.TableState;
 import org.apache.commons.jcs.engine.control.CompositeCacheManager;
 
@@ -39,8 +42,9 @@ public class MySQLDiskCacheUnitTest
      * <p>
      * This is a bit tricky since we don't want to have to have a mysql instance
      * running. Right now this doesn't really test much
+     * @throws SQLException 
      */
-    public void testBalkOnGet()
+    public void testBalkOnGet() throws SQLException
     {
         // SETUP
         MySQLDiskCacheAttributes attributes = new MySQLDiskCacheAttributes();
@@ -52,7 +56,8 @@ public class MySQLDiskCacheUnitTest
         TableState tableState = new TableState( tableName );
         tableState.setState( TableState.OPTIMIZATION_RUNNING );
 
-        MySQLDiskCache<String, String> cache = new MySQLDiskCache<String, String>( attributes, tableState, CompositeCacheManager.getUnconfiguredInstance() );
+        MySQLDiskCache<String, String> cache = new MySQLDiskCache<String, String>( attributes, tableState, 
+        		CompositeCacheManager.getUnconfiguredInstance() );
 
         // DO WORK
         Object result = cache.processGet( "myKey" );

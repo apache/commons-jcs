@@ -20,7 +20,7 @@ package org.apache.commons.jcs.auxiliary.disk.jdbc.mysql;
  */
 
 import junit.framework.TestCase;
-import org.apache.commons.jcs.auxiliary.disk.jdbc.JDBCDiskCachePoolAccessFactory;
+import org.apache.commons.jcs.auxiliary.disk.jdbc.JDBCDiskCachePoolAccessManager;
 import org.apache.commons.jcs.auxiliary.disk.jdbc.TableState;
 
 /**
@@ -49,7 +49,7 @@ public class MySQLTableOptimizerManualTester
         attributes.setTableName( tableName );
         TableState tableState = new TableState( tableName );
 
-        MySQLTableOptimizer optimizer = new MySQLTableOptimizer( attributes, tableState, JDBCDiskCachePoolAccessFactory
+        MySQLTableOptimizer optimizer = new MySQLTableOptimizer( attributes, tableState, JDBCDiskCachePoolAccessManager
             .createPoolAccess( attributes ) );
 
         // DO WORK
@@ -74,7 +74,7 @@ public class MySQLTableOptimizerManualTester
         attributes.setTableName( tableName );
         TableState tableState = new TableState( tableName );
 
-        MySQLTableOptimizer optimizer = new MySQLTableOptimizer( attributes, tableState, JDBCDiskCachePoolAccessFactory
+        MySQLTableOptimizer optimizer = new MySQLTableOptimizer( attributes, tableState, JDBCDiskCachePoolAccessManager
             .createPoolAccess( attributes ) );
 
         // DO WORK

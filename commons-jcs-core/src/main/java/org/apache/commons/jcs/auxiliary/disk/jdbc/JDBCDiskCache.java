@@ -116,14 +116,14 @@ public class JDBCDiskCache<K, V>
      * @param cattr
      * @param tableState
      * @param compositeCacheManager
+     * @throws SQLException if the pool access could not be set up
      */
     public JDBCDiskCache( JDBCDiskCacheAttributes cattr, TableState tableState,
-                          ICompositeCacheManager compositeCacheManager )
+                          ICompositeCacheManager compositeCacheManager ) throws SQLException
     {
         super( cattr );
 
         setTableState( tableState );
-
         setJdbcDiskCacheAttributes( cattr );
 
         if ( log.isInfoEnabled() )
@@ -132,7 +132,7 @@ public class JDBCDiskCache<K, V>
         }
 
         // This initializes the pool access.
-        setPoolAccess( initializePoolAccess( cattr, compositeCacheManager ) );
+        this.poolAccess = initializePoolAccess( cattr, compositeCacheManager );
 
         // Initialization finished successfully, so set alive to true.
         alive = true;
@@ -144,9 +144,10 @@ public class JDBCDiskCache<K, V>
      * @param cattr
      * @param compositeCacheManager
      * @return JDBCDiskCachePoolAccess for testing
+     * @throws SQLException if a database access error occurs
      */
     protected JDBCDiskCachePoolAccess initializePoolAccess( JDBCDiskCacheAttributes cattr,
-                                                            ICompositeCacheManager compositeCacheManager )
+                                                            ICompositeCacheManager compositeCacheManager ) throws SQLException
     {
         JDBCDiskCachePoolAccess poolAccess1 = null;
         if ( cattr.getConnectionPoolName() != null )
@@ -158,16 +159,7 @@ public class JDBCDiskCache<K, V>
         }
         else
         {
-            try
-            {
-                poolAccess1 = JDBCDiskCachePoolAccessFactory.createPoolAccess( cattr );
-            }
-            catch ( Exception e )
-            {
-                logError( getAuxiliaryCacheAttributes().getName(), "initializePoolAccess", e.getMessage() + " URL: "
-                    + getDiskLocation() );
-                log.error( "Problem getting connection.", e );
-            }
+            poolAccess1 = JDBCDiskCachePoolAccessManager.createPoolAccess( cattr );
         }
         return poolAccess1;
     }
@@ -1185,14 +1177,6 @@ public class JDBCDiskCache<K, V>
     protected String getDiskLocation()
     {
         return this.jdbcDiskCacheAttributes.getUrl();
-    }
-
-    /**
-     * @param poolAccess the poolAccess to set
-     */
-    protected void setPoolAccess( JDBCDiskCachePoolAccess poolAccess )
-    {
-        this.poolAccess = poolAccess;
     }
 
     /**

@@ -19,6 +19,8 @@ package org.apache.commons.jcs.auxiliary.disk.jdbc;
  * under the License.
  */
 
+import java.sql.SQLException;
+
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;
@@ -32,9 +34,6 @@ import org.apache.commons.logging.LogFactory;
 public class JDBCDiskCacheManager
     extends JDBCDiskCacheManagerAbstractTemplate
 {
-    /** Don't change */
-    private static final long serialVersionUID = -8258856770927857896L;
-
     /** The logger. */
     private static final Log log = LogFactory.getLog( JDBCDiskCacheManager.class );
 
@@ -121,9 +120,10 @@ public class JDBCDiskCacheManager
      * @param cattr
      * @param tableState
      * @return AuxiliaryCache
+     * @throws SQLException if database operations fail
      */
     @Override
-    protected <K, V> JDBCDiskCache<K, V> createJDBCDiskCache( JDBCDiskCacheAttributes cattr, TableState tableState )
+    protected <K, V> JDBCDiskCache<K, V> createJDBCDiskCache( JDBCDiskCacheAttributes cattr, TableState tableState ) throws SQLException
     {
         JDBCDiskCache<K, V> raf;
         raf = new JDBCDiskCache<K, V>( cattr, tableState, getCompositeCacheManager() );

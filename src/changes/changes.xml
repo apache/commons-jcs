@@ -20,6 +20,9 @@
 	</properties>
 	<body>
 		<release version="2.0" date="unreleased" description="JDK 1.6 based major release">
+            <action issue="JCS-113" dev="tv" type="fix" due-to="Sebastian Bazley">
+                Improve error handling by bubbling up exceptions
+            </action>
             <action dev="rmannibucau" type="add">
                 jcache-extra module to provide basic classes based on JCache API.
             </action>

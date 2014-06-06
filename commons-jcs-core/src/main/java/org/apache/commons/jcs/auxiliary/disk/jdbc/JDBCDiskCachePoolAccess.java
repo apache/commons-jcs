@@ -118,7 +118,7 @@ public class JDBCDiskCachePoolAccess
             }
             numIdle = connectionPool.getNumIdle();
         }
-        catch ( Exception e )
+        catch ( SQLException e )
         {
             log.error( e );
         }
@@ -144,7 +144,7 @@ public class JDBCDiskCachePoolAccess
             }
             numActive = connectionPool.getNumActive();
         }
-        catch ( Exception e )
+        catch ( SQLException e )
         {
             log.error( e );
         }
@@ -155,7 +155,7 @@ public class JDBCDiskCachePoolAccess
      * @throws Exception
      */
     public void shutdownDriver()
-        throws Exception
+        throws SQLException
     {
         PoolingDriver driver = (PoolingDriver) DriverManager.getDriver( DRIVER_NAME );
         driver.closePool( this.getPoolName() );
@@ -190,10 +190,10 @@ public class JDBCDiskCachePoolAccess
      * @param userName
      * @param password
      * @param maxActive max connections
-     * @throws Exception
+     * @throws SQLException if a database access error occurs
      */
     public void setupDriver( String connectURI, String userName, String password, int maxActive )
-        throws Exception
+        throws SQLException
     {
         // First, we'll need a ObjectPool that serves as the
         // actual pool of connections.
@@ -222,7 +222,15 @@ public class JDBCDiskCachePoolAccess
         new PoolableConnectionFactory( connectionFactory, connectionPool, null, null, false, true );
 
         // Finally, we create the PoolingDriver itself...
-        Class.forName( "org.apache.commons.dbcp.PoolingDriver" );
+        try
+        {
+            // com.mysql.jdbc.Driver
+            Class.forName( "org.apache.commons.dbcp.PoolingDriver" );
+        }
+        catch ( ClassNotFoundException e )
+        {
+            throw new SQLException("Couldn't find class for driver [org.apache.commons.dbcp.PoolingDriver]", e );
+        }
         PoolingDriver driver = (PoolingDriver) DriverManager.getDriver( DRIVER_NAME );
 
         // ...and register our pool with it.
@@ -237,7 +245,7 @@ public class JDBCDiskCachePoolAccess
      * @throws Exception
      */
     public void logDriverStats()
-        throws Exception
+        throws SQLException
     {
         PoolingDriver driver = (PoolingDriver) DriverManager.getDriver( DRIVER_NAME );
         ObjectPool connectionPool = driver.getConnectionPool( this.getPoolName() );

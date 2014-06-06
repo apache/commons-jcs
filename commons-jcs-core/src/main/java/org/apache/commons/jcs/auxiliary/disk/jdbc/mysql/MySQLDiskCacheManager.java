@@ -31,6 +31,7 @@ import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -45,9 +46,6 @@ import java.util.TimerTask;
 public class MySQLDiskCacheManager
     extends JDBCDiskCacheManagerAbstractTemplate
 {
-    /** Don't change. */
-    private static final long serialVersionUID = -8258856770927857896L;
-
     /** The logger */
     private static final Log log = LogFactory.getLog( MySQLDiskCacheManager.class );
 
@@ -142,9 +140,11 @@ public class MySQLDiskCacheManager
      * @param cattr
      * @param tableState
      * @return AuxiliaryCache
+     * @throws SQLException if database operations fail
      */
     @Override
-    protected <K, V> MySQLDiskCache<K, V> createJDBCDiskCache( JDBCDiskCacheAttributes cattr, TableState tableState )
+    protected <K, V> MySQLDiskCache<K, V> createJDBCDiskCache( JDBCDiskCacheAttributes cattr, 
+            TableState tableState ) throws SQLException
     {
         MySQLDiskCache<K, V> diskCache = new MySQLDiskCache<K, V>( (MySQLDiskCacheAttributes) cattr, tableState, getCompositeCacheManager() );
 

@@ -19,6 +19,10 @@ package org.apache.commons.jcs.auxiliary.disk.jdbc.mysql;
  * under the License.
  */
 
+import java.io.Serializable;
+import java.sql.SQLException;
+import java.util.Map;
+
 import org.apache.commons.jcs.auxiliary.disk.jdbc.JDBCDiskCache;
 import org.apache.commons.jcs.auxiliary.disk.jdbc.TableState;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
@@ -37,7 +41,7 @@ import java.util.Map;
  * @author Aaron Smuts
  */
 public class MySQLDiskCache<K, V>
-    extends JDBCDiskCache<K, V>
+	extends JDBCDiskCache<K, V>
 {
     /** don't change */
     private static final long serialVersionUID = -7169488308515823491L;
@@ -55,8 +59,9 @@ public class MySQLDiskCache<K, V>
      * @param attributes
      * @param tableState
      * @param compositeCacheManager
+     * @throws SQLException if the pool access could not be set up
      */
-    public MySQLDiskCache( MySQLDiskCacheAttributes attributes, TableState tableState, ICompositeCacheManager compositeCacheManager )
+    public MySQLDiskCache( MySQLDiskCacheAttributes attributes, TableState tableState, ICompositeCacheManager compositeCacheManager ) throws SQLException
     {
         super( attributes, tableState, compositeCacheManager );
 

@@ -26,6 +26,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
@@ -41,14 +42,11 @@ import java.util.concurrent.TimeUnit;
 public abstract class JDBCDiskCacheManagerAbstractTemplate
     extends AbstractDiskCacheManager
 {
-    /** Don't change. */
-    private static final long serialVersionUID = 218557927622128905L;
-
     /** The logger. */
     private static final Log log = LogFactory.getLog( JDBCDiskCacheManagerAbstractTemplate.class );
 
-    /** Incremented on getIntance, decremented on release. */
-    protected static int clients; // TODO needs to be made private and synchronised and/or turned into AtomicInt
+    /** Incremented on getInstance, decremented on release. */
+    protected static int clients; // TODO needs to be made private and synchronized and/or turned into AtomicInt
 
     /** A map of JDBCDiskCache objects to region names. */
     private static Map<String, JDBCDiskCache<?, ?>> caches =
@@ -76,7 +74,8 @@ public abstract class JDBCDiskCacheManagerAbstractTemplate
      * @param tableState An object used by multiple processes to indicate state.
      * @return AuxiliaryCache -- a JDBCDiskCache
      */
-    protected abstract <K, V> JDBCDiskCache<K, V> createJDBCDiskCache( JDBCDiskCacheAttributes cattr, TableState tableState );
+    protected abstract <K, V> JDBCDiskCache<K, V> createJDBCDiskCache( JDBCDiskCacheAttributes cattr, TableState tableState )
+    	throws SQLException;
 
     /**
      * Creates a JDBCDiskCache for the region if one doesn't exist, else it returns the pre-created
@@ -106,10 +105,17 @@ public abstract class JDBCDiskCacheManagerAbstractTemplate
                     tableState = new TableState( cattr.getTableName() );
                 }
 
-                diskCache = createJDBCDiskCache( cattr, tableState );
-                diskCache.setCacheEventLogger( getCacheEventLogger() );
-                diskCache.setElementSerializer( getElementSerializer() );
-                caches.put( cattr.getCacheName(), diskCache );
+                try 
+                {
+					diskCache = createJDBCDiskCache( cattr, tableState );
+					diskCache.setCacheEventLogger( getCacheEventLogger() );
+					diskCache.setElementSerializer( getElementSerializer() );
+					caches.put( cattr.getCacheName(), diskCache );
+				} 
+                catch (SQLException e) 
+                {
+                    log.error( "Failed to create cache " + cattr.getCacheName(), e );
+				}
             }
         }
 
