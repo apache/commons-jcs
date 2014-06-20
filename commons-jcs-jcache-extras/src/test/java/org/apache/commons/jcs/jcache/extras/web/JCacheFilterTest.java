@@ -156,7 +156,7 @@ public class JCacheFilterTest
             @Override
             public Enumeration<String> getInitParameterNames()
             {
-                return Collections.emptyEnumeration();
+                return Collections.<String>enumeration(Collections.<String>emptySet()); // emptyEnumeration() is Java 1.7+
             }
         });
         return filter;
