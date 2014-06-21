@@ -24,7 +24,6 @@ import org.apache.commons.jcs.engine.stats.StatElement;
 import org.apache.commons.jcs.engine.stats.Stats;
 import org.apache.commons.jcs.engine.stats.behavior.IStatElement;
 import org.apache.commons.jcs.engine.stats.behavior.IStats;
-import org.apache.commons.jcs.utils.logger.LogHelper;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -60,7 +59,6 @@ public class LRUMap<K, V>
 {
     /** The logger */
     private static final Log log = LogFactory.getLog( LRUMap.class );
-    private static final LogHelper LOG_HELPER = new LogHelper(log);
 
     /** double linked list for lru */
     private final DoubleLinkedList<LRUElementDescriptor<K, V>> list;
@@ -214,7 +212,7 @@ public class LRUMap<K, V>
     {
         V retVal = null;
 
-        if ( LOG_HELPER.isDebugEnabled() )
+        if ( log.isDebugEnabled() )
         {
             log.debug( "getting item  for key " + key );
         }
@@ -258,14 +256,14 @@ public class LRUMap<K, V>
         LRUElementDescriptor<K, V> me = map.get( key );
         if ( me != null )
         {
-            if ( LOG_HELPER.isDebugEnabled() )
+            if ( log.isDebugEnabled() )
             {
                 log.debug( "LRUMap quiet hit for " + key );
             }
 
             ce = me.getPayload();
         }
-        else if ( LOG_HELPER.isDebugEnabled() )
+        else if ( log.isDebugEnabled() )
         {
             log.debug( "LRUMap quiet miss for " + key );
         }
@@ -280,7 +278,7 @@ public class LRUMap<K, V>
     @Override
     public V remove( Object key )
     {
-        if ( LOG_HELPER.isDebugEnabled() )
+        if ( log.isDebugEnabled() )
         {
             log.debug( "removing item for key: " + key );
         }
@@ -341,7 +339,7 @@ public class LRUMap<K, V>
 
         if ( this.maxObjects >= 0 && size > this.maxObjects )
         {
-            final boolean debugEnabled = LOG_HELPER.isDebugEnabled();
+            final boolean debugEnabled = log.isDebugEnabled();
             if (debugEnabled)
             {
                 log.debug( "In memory limit reached, removing least recently used." );
@@ -389,7 +387,7 @@ public class LRUMap<K, V>
                 }
             }
 
-            if ( LOG_HELPER.isDebugEnabled() )
+            if ( log.isDebugEnabled() )
             {
                 log.debug( "update: After spool map size: " + map.size() );
             }
@@ -446,7 +444,7 @@ public class LRUMap<K, V>
         log.debug( "dumpingCacheEntries" );
         for ( LRUElementDescriptor<K, V> me = list.getFirst(); me != null; me = (LRUElementDescriptor<K, V>) me.next )
         {
-            if ( LOG_HELPER.isDebugEnabled() )
+            if ( log.isDebugEnabled() )
             {
                 log.debug( "dumpCacheEntries> key=" + me.getKey() + ", val=" + me.getPayload() );
             }
@@ -462,7 +460,7 @@ public class LRUMap<K, V>
         for (Map.Entry<K, LRUElementDescriptor<K, V>> e : map.entrySet())
         {
             LRUElementDescriptor<K, V> me = e.getValue();
-            if ( LOG_HELPER.isDebugEnabled() )
+            if ( log.isDebugEnabled() )
             {
                 log.debug( "dumpMap> key=" + e.getKey() + ", val=" + me.getPayload() );
             }
@@ -476,7 +474,7 @@ public class LRUMap<K, V>
     @SuppressWarnings("unchecked") // No generics for public fields
     protected void verifyCache()
     {
-        if ( !LOG_HELPER.isDebugEnabled() )
+        if ( !log.isDebugEnabled() )
         {
             return;
         }
@@ -568,7 +566,7 @@ public class LRUMap<K, V>
     @SuppressWarnings("unchecked") // No generics for public fields
     protected void verifyCache( Object key )
     {
-        if ( !LOG_HELPER.isDebugEnabled() )
+        if ( !log.isDebugEnabled() )
         {
             return;
         }
@@ -600,7 +598,7 @@ public class LRUMap<K, V>
      */
     protected void processRemovedLRU(K key, V value )
     {
-        if ( LOG_HELPER.isDebugEnabled() )
+        if ( log.isDebugEnabled() )
         {
             log.debug( "Removing key: [" + key + "] from LRUMap store, value = [" + value + "]" );
             log.debug( "LRUMap store size: '" + this.size() + "'." );

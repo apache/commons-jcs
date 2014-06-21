@@ -28,7 +28,6 @@ import org.apache.commons.jcs.engine.memory.behavior.IMemoryCache;
 import org.apache.commons.jcs.engine.memory.util.MemoryElementDescriptor;
 import org.apache.commons.jcs.engine.stats.Stats;
 import org.apache.commons.jcs.engine.stats.behavior.IStats;
-import org.apache.commons.jcs.utils.logger.LogHelper;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -50,7 +49,6 @@ public abstract class AbstractMemoryCache<K, V>
 {
     /** Log instance */
     private static final Log log = LogFactory.getLog( AbstractMemoryCache.class );
-    private static final LogHelper LOG_HELPER = new LogHelper(log);
 
     /** The region name. This defines a namespace of sorts. */
     protected String cacheName; // TODO privatise (mainly seems to be used externally for debugging)
@@ -177,14 +175,14 @@ public abstract class AbstractMemoryCache<K, V>
         MemoryElementDescriptor<K, V> me = map.get( key );
         if ( me != null )
         {
-            if ( LOG_HELPER.isDebugEnabled() )
+            if ( log.isDebugEnabled() )
             {
                 log.debug( cacheName + ": MemoryCache quiet hit for " + key );
             }
 
             ce = me.ce;
         }
-        else if ( LOG_HELPER.isDebugEnabled() )
+        else if ( log.isDebugEnabled() )
         {
             log.debug( cacheName + ": MemoryCache quiet miss for " + key );
         }

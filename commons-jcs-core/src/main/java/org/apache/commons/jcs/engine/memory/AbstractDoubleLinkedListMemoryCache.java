@@ -28,7 +28,6 @@ import org.apache.commons.jcs.engine.stats.StatElement;
 import org.apache.commons.jcs.engine.stats.Stats;
 import org.apache.commons.jcs.engine.stats.behavior.IStatElement;
 import org.apache.commons.jcs.engine.stats.behavior.IStats;
-import org.apache.commons.jcs.utils.logger.LogHelper;
 import org.apache.commons.jcs.utils.struct.DoubleLinkedList;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -61,7 +60,6 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V>
 
     /** The logger. */
     private static final Log log = LogFactory.getLog( AbstractDoubleLinkedListMemoryCache.class );
-    private static final LogHelper LOG_HELPER = new LogHelper(log);
 
     /** thread-safe double linked list for lru */
     protected DoubleLinkedList<MemoryElementDescriptor<K, V>> list; // TODO privatise
@@ -172,7 +170,7 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V>
             return;
         }
 
-        if ( LOG_HELPER.isDebugEnabled() )
+        if ( log.isDebugEnabled() )
         {
             log.debug( "In memory limit reached, spooling" );
         }
@@ -180,7 +178,7 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V>
         // Write the last 'chunkSize' items to disk.
         int chunkSizeCorrected = Math.min( size, chunkSize );
 
-        if ( LOG_HELPER.isDebugEnabled() )
+        if ( log.isDebugEnabled() )
         {
             log.debug( "About to spool to disk cache, map size: " + size + ", max objects: "
                 + this.cacheAttributes.getMaxObjects() + ", items to spool: " + chunkSizeCorrected );
@@ -194,7 +192,7 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V>
             spoolLastElement();
         }
 
-        if ( LOG_HELPER.isDebugEnabled() )
+        if ( log.isDebugEnabled() )
         {
             log.debug( "update: After spool map size: " + map.size() + " linked list size = " + dumpCacheSize() );
         }
@@ -213,7 +211,7 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V>
     {
         ICacheElement<K, V> ce = null;
 
-        final boolean debugEnabled = LOG_HELPER.isDebugEnabled();;
+        final boolean debugEnabled = log.isDebugEnabled();
 
         if (debugEnabled)
         {
@@ -363,7 +361,7 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V>
     public boolean remove( K key )
         throws IOException
     {
-        if ( LOG_HELPER.isDebugEnabled() )
+        if ( log.isDebugEnabled() )
         {
             log.debug( "removing item for key: " + key );
         }
@@ -541,7 +539,7 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V>
     @SuppressWarnings("unchecked") // No generics for public fields
     protected void verifyCache()
     {
-        if ( !LOG_HELPER.isDebugEnabled() )
+        if ( !log.isDebugEnabled() )
         {
             return;
         }
@@ -624,7 +622,7 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V>
     @SuppressWarnings("unchecked") // No generics for public fields
     private void verifyCache( K key )
     {
-        if ( !LOG_HELPER.isDebugEnabled() )
+        if ( !log.isDebugEnabled() )
         {
             return;
         }
