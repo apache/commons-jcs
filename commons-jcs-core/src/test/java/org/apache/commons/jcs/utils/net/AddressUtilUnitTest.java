@@ -33,7 +33,7 @@ public class AddressUtilUnitTest
     public void testOctetBasicAddressParsing()
     {
         String tempStr = AddressUtil.obtainFinalThreeDigitsOfAddressAsString();
-        assertNotNull( "some result shoudl come back", tempStr );
-        assertTrue( "shoudl not be default", !tempStr.equals( "000" ) );
+        assertNotNull( "some result should come back", tempStr );
+        assertFalse( "should not be default", tempStr.equals( "000" ) );
     }
 }
