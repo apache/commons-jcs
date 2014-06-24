@@ -352,10 +352,11 @@
       </dependency>
 
       <dependency>
-        <!-- Unfortunately the 1.0 version of this jar was built for Java 1.7+ -->
+        <!-- Unfortunately the 1.0 version of this jar was built for Java 1.7+, see JCS-132 -->
         <groupId>javax.cache</groupId>
         <artifactId>test-domain</artifactId>
         <version>${jsr107.api.version}</version>
+        <!-- should this be scope test? -->
       </dependency>
 
       <dependency>
