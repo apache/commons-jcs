@@ -20,6 +20,9 @@
 	</properties>
 	<body>
 		<release version="2.0" date="unreleased" description="JDK 1.6 based major release">
+            <action issue="JCS-133" dev="seb" type="fix">
+                RemoteUtils.getNamingURL does not handle IPv6 numeric addresses properly
+            </action>
             <action issue="JCS-131" dev="tv" type="remove">
                 Remove KeyGeneratorUtil and AddressUtil as they are not used
             </action>

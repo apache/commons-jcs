@@ -41,4 +41,11 @@ public class RemoteUtilsUnitTest
         Registry registry = RemoteUtils.createRegistry( 1102 );
         assertNotNull("Registry should not be null", registry);
     }
+
+    public void testgetNamingURL()
+    {
+        assertEquals("//host:1/servicename", RemoteUtils.getNamingURL("host",1,"servicename"));
+        assertEquals("//127.0.0.1:2/servicename", RemoteUtils.getNamingURL("127.0.0.1",2,"servicename"));
+        assertEquals("//[0:0:0:0:0:0:0:1%251]:3/servicename", RemoteUtils.getNamingURL("0:0:0:0:0:0:0:1%1",3,"servicename"));
+    }
 }

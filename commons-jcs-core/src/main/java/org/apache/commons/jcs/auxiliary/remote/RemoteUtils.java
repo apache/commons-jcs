@@ -215,6 +215,9 @@ public class RemoteUtils
      */
     public static String getNamingURL(final String registryHost, final int registryPort, final String serviceName)
     {
+        if (registryHost.contains(":")) { // TODO improve this check? See also JCS-133
+            return "//[" + registryHost.replaceFirst("%", "%25") + "]:" + registryPort + "/" + serviceName;
+        }
         final String registryURL = "//" + registryHost + ":" + registryPort + "/" + serviceName;
         return registryURL;
     }
