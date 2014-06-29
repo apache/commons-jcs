@@ -20,6 +20,9 @@
 	</properties>
 	<body>
 		<release version="2.0" date="unreleased" description="JDK 1.6 based major release">
+            <action issue="JCS-131" dev="tv" type="remove" due-to="Sebastian Bazley">
+                Remove KeyGeneratorUtil and AddressUtil as they are not used
+            </action>
             <action issue="JCS-113" dev="tv" type="fix" due-to="Sebastian Bazley">
                 Improve error handling by bubbling up exceptions
             </action>
