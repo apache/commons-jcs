@@ -105,6 +105,11 @@ public class BasicRemoteCacheClientServerUnitTest extends Assert
         if (server != null) { // in case setup failed, no point throwing NPE as well
             server.shutdown("localhost", remotePort);
         }
+        // Debug: unfortunately Surefire restarts JVM so log files get overwritten
+        // There's probably a better way to fix this ...
+        java.io.File jcsLog = new java.io.File("target/jcs.log");
+        java.io.File logSave = new java.io.File("target/BasicRemoteCacheClientServerUnitTest_jcs.log");
+        System.out.println("Renamed log file? "+jcsLog.renameTo(logSave));
     }
 
     /**
