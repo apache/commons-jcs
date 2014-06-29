@@ -40,6 +40,8 @@ import org.junit.runners.MethodSorters;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.util.Enumeration;
 
 /**
  * These tests startup the remote server and make requests to it.
@@ -69,6 +71,25 @@ public class BasicRemoteCacheClientServerUnitTest extends Assert
         String configFile = "TestRemoteCacheClientServer.ccf";
         server = RemoteCacheServerStartupUtil.startServerUsingProperties(configFile);
         remotePort = server.remoteCacheServerAttributes.getRemotePort();
+        // Add some debug to try and find out why test fails on Continuum
+        InetAddress ina=InetAddress.getLocalHost();
+        System.out.println("InetAddress.getLocalHost()="+ina);
+        // Iterate all NICs (network interface cards)...
+        for ( Enumeration<NetworkInterface> ifaces = NetworkInterface.getNetworkInterfaces(); ifaces.hasMoreElements(); )
+        {
+            NetworkInterface iface = ifaces.nextElement();
+            // Iterate all IP addresses assigned to each card...
+            for ( Enumeration<InetAddress> inetAddrs = iface.getInetAddresses(); inetAddrs.hasMoreElements(); )
+            {
+                InetAddress inetAddr = inetAddrs.nextElement();
+                boolean loopbackAddress = inetAddr.isLoopbackAddress();
+                boolean siteLocalAddress = inetAddr.isSiteLocalAddress();
+                System.out.println("Found: "+ inetAddr +
+                        " isLoopback: " + loopbackAddress + 
+                        " isSiteLocal: " + siteLocalAddress +
+                        ((!loopbackAddress && siteLocalAddress) ? " *" : ""));
+            }
+        }
     }
 
     @AfterClass
