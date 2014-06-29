@@ -16,14 +16,14 @@
 <document>
 	<properties>
 		<title>JCS Change Log</title>
-		<author email="asmuts@apache.org">Aaron Smuts</author>
+		<author email="dev@commons.apache.org">Apache Commons Developers</author>
 	</properties>
 	<body>
 		<release version="2.0" date="unreleased" description="JDK 1.6 based major release">
-            <action issue="JCS-131" dev="tv" type="remove" due-to="Sebastian Bazley">
+            <action issue="JCS-131" dev="tv" type="remove">
                 Remove KeyGeneratorUtil and AddressUtil as they are not used
             </action>
-            <action issue="JCS-113" dev="tv" type="fix" due-to="Sebastian Bazley">
+            <action issue="JCS-113" dev="tv" type="fix">
                 Improve error handling by bubbling up exceptions
             </action>
             <action dev="rmannibucau" type="add">
@@ -40,7 +40,7 @@
                 use second by default.
                 This has as impact to remove "Seconds" suffix from corresponding configurations.
             </action>
-            <action issue="JCS-115" dev="tv" type="fix" due-to="Sebastian Bazley">
+            <action issue="JCS-115" dev="tv" type="fix">
                 JDBCDiskCachePoolAccessManager is thread hostile
             </action>
             <action issue="JCS-118" dev="olamy" type="add" due-to="Romain Manni-Bucau">
