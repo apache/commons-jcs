@@ -71,24 +71,28 @@ public class BasicRemoteCacheClientServerUnitTest extends Assert
         String configFile = "TestRemoteCacheClientServer.ccf";
         server = RemoteCacheServerStartupUtil.startServerUsingProperties(configFile);
         remotePort = server.remoteCacheServerAttributes.getRemotePort();
-        // Add some debug to try and find out why test fails on Continuum
-        InetAddress ina=InetAddress.getLocalHost();
-        System.out.println("InetAddress.getLocalHost()="+ina);
-        // Iterate all NICs (network interface cards)...
-        for ( Enumeration<NetworkInterface> ifaces = NetworkInterface.getNetworkInterfaces(); ifaces.hasMoreElements(); )
-        {
-            NetworkInterface iface = ifaces.nextElement();
-            // Iterate all IP addresses assigned to each card...
-            for ( Enumeration<InetAddress> inetAddrs = iface.getInetAddresses(); inetAddrs.hasMoreElements(); )
+        try {
+            // Add some debug to try and find out why test fails on Continuum
+            InetAddress ina=InetAddress.getLocalHost();
+            System.out.println("InetAddress.getLocalHost()="+ina);
+            // Iterate all NICs (network interface cards)...
+            for ( Enumeration<NetworkInterface> ifaces = NetworkInterface.getNetworkInterfaces(); ifaces.hasMoreElements(); )
             {
-                InetAddress inetAddr = inetAddrs.nextElement();
-                boolean loopbackAddress = inetAddr.isLoopbackAddress();
-                boolean siteLocalAddress = inetAddr.isSiteLocalAddress();
-                System.out.println("Found: "+ inetAddr +
-                        " isLoopback: " + loopbackAddress + 
-                        " isSiteLocal: " + siteLocalAddress +
-                        ((!loopbackAddress && siteLocalAddress) ? " *" : ""));
+                NetworkInterface iface = ifaces.nextElement();
+                // Iterate all IP addresses assigned to each card...
+                for ( Enumeration<InetAddress> inetAddrs = iface.getInetAddresses(); inetAddrs.hasMoreElements(); )
+                {
+                    InetAddress inetAddr = inetAddrs.nextElement();
+                    boolean loopbackAddress = inetAddr.isLoopbackAddress();
+                    boolean siteLocalAddress = inetAddr.isSiteLocalAddress();
+                    System.out.println("Found: "+ inetAddr +
+                            " isLoopback: " + loopbackAddress + 
+                            " isSiteLocal: " + siteLocalAddress +
+                            ((!loopbackAddress && siteLocalAddress) ? " *" : ""));
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -114,7 +118,7 @@ public class BasicRemoteCacheClientServerUnitTest extends Assert
     @Test
     public void test1SinglePut()
             throws Exception
-    {
+            {
         // SETUP
         MockCompositeCacheManager compositeCacheManager = new MockCompositeCacheManager();
 
@@ -151,7 +155,7 @@ public class BasicRemoteCacheClientServerUnitTest extends Assert
 
         // VERIFY
         assertEquals("Wrong element.", element.getVal(), result.getVal());
-    }
+            }
 
     /**
      * Verify that we can remove an item via the remote server.
@@ -162,7 +166,7 @@ public class BasicRemoteCacheClientServerUnitTest extends Assert
     @Test
     public void test2PutRemove()
             throws Exception
-    {
+            {
         // SETUP
         MockCompositeCacheManager compositeCacheManager = new MockCompositeCacheManager();
 
@@ -209,7 +213,7 @@ public class BasicRemoteCacheClientServerUnitTest extends Assert
 
         // VERIFY
         assertNull("Element resultAfterRemote should be null.", resultAfterRemote);
-    }
+            }
 
     /**
      * Register a listener with the server. Send an update. Verify that the listener received it.
@@ -219,7 +223,7 @@ public class BasicRemoteCacheClientServerUnitTest extends Assert
     @Test
     public void test3PutAndListen()
             throws Exception
-    {
+            {
         // SETUP
         MockCompositeCacheManager compositeCacheManager = new MockCompositeCacheManager();
 
@@ -259,7 +263,7 @@ public class BasicRemoteCacheClientServerUnitTest extends Assert
             // remove from all regions.
             server.removeCacheListener(listener);
         }
-    }
+            }
 
     /**
      * Register a listener with the server. Send an update. Verify that the listener received it.
@@ -269,7 +273,7 @@ public class BasicRemoteCacheClientServerUnitTest extends Assert
     @Test
     public void test4PutaMultipleAndListen()
             throws Exception
-    {
+            {
         // SETUP
         MockCompositeCacheManager compositeCacheManager = new MockCompositeCacheManager();
 
@@ -308,7 +312,7 @@ public class BasicRemoteCacheClientServerUnitTest extends Assert
             System.out.println(server.getStats());
             throw e;
         }
-    }
+            }
 
     @Test
     public void testLocalHost() throws Exception
