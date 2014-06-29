@@ -100,7 +100,9 @@ public class BasicRemoteCacheClientServerUnitTest extends Assert
     @AfterClass
     public static void stop() throws IOException
     {
-        server.shutdown("localhost", remotePort);
+        if (server != null) { // in case setup failed, no point throwing NPE as well
+            server.shutdown("localhost", remotePort);
+        }
     }
 
     /**
