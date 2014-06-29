@@ -1648,9 +1648,6 @@ public class IndexedDiskCache<K, V>
         extends LRUMapJCS<K, IndexedDiskElementDescriptor>
         // implements Serializable
     {
-        /** Don't change */
-        private static final long serialVersionUID = 4955079991472142198L;
-
         /**
          * <code>tag</code> tells us which map we are working on.
          */

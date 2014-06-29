@@ -82,9 +82,6 @@ public class JDBCDiskCache<K, V>
     /** The local logger. */
     private static final Log log = LogFactory.getLog( JDBCDiskCache.class );
 
-    /** Don't change. */
-    private static final long serialVersionUID = -7169488308515823492L;
-
     /** custom serialization */
     private IElementSerializer elementSerializer = new StandardSerializer();
 

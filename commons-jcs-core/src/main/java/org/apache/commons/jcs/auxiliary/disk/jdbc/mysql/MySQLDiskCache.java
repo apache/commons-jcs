@@ -19,7 +19,6 @@ package org.apache.commons.jcs.auxiliary.disk.jdbc.mysql;
  * under the License.
  */
 
-import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.Map;
 
@@ -29,8 +28,6 @@ import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import java.util.Map;
 
 /**
  * The MySQLDiskCache extends the core JDBCDiskCache.
@@ -43,9 +40,6 @@ import java.util.Map;
 public class MySQLDiskCache<K, V>
 	extends JDBCDiskCache<K, V>
 {
-    /** don't change */
-    private static final long serialVersionUID = -7169488308515823491L;
-
     /** local logger */
     private static final Log log = LogFactory.getLog( MySQLDiskCache.class );
 

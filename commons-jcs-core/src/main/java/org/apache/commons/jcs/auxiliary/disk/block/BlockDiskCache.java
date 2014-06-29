@@ -55,9 +55,6 @@ public class BlockDiskCache<K, V>
     extends AbstractDiskCache<K, V>
     implements IRequireScheduler
 {
-    /** Don't change */
-    private static final long serialVersionUID = 1L;
-
     /** The logger. */
     private static final Log log = LogFactory.getLog( BlockDiskCache.class );
 

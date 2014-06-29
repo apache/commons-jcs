@@ -30,9 +30,6 @@ import org.apache.commons.logging.LogFactory;
 public class LRUMapJCS<K, V>
     extends LRUMap<K, V>
 {
-    /** Don't change */
-    private static final long serialVersionUID = 776964015449842672L;
-
     /** The logger */
     private static final Log log = LogFactory.getLog( LRUMapJCS.class );
 

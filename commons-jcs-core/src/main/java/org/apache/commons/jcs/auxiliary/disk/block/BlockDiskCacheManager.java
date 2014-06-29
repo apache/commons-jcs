@@ -34,9 +34,6 @@ import java.util.concurrent.ConcurrentHashMap;
 public class BlockDiskCacheManager
     extends AbstractDiskCacheManager
 {
-    /** Don't change */
-    private static final long serialVersionUID = -4153287154512274626L;
-
     /** The logger */
     private static final Log log = LogFactory.getLog( BlockDiskCacheManager.class );
 

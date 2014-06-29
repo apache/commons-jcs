@@ -345,9 +345,6 @@ public class BlockDiskKeyStore<K>
     public class LRUMap
         extends LRUMapJCS<K, int[]>
     {
-        /** Don't change */
-        private static final long serialVersionUID = 4955079991472142198L;
-
         /**
          * <code>tag</code> tells us which map we are working on.
          */

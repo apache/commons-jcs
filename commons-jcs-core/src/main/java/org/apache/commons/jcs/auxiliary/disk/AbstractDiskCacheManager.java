@@ -27,9 +27,6 @@ import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;
 public abstract class AbstractDiskCacheManager
     implements AuxiliaryCacheManager
 {
-    /** Don't change.     */
-    private static final long serialVersionUID = 7562753543611662136L;
-
     /** The event logger. */
     private ICacheEventLogger cacheEventLogger;
 
