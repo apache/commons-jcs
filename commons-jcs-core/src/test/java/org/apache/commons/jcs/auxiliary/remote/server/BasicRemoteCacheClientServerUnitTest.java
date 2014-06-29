@@ -68,11 +68,8 @@ public class BasicRemoteCacheClientServerUnitTest extends Assert
     @BeforeClass
     public static void setup()
     {
-        String configFile = "TestRemoteCacheClientServer.ccf";
-        server = RemoteCacheServerStartupUtil.startServerUsingProperties(configFile);
-        remotePort = server.remoteCacheServerAttributes.getRemotePort();
+        // Add some debug to try and find out why test fails on Continuum
         try {
-            // Add some debug to try and find out why test fails on Continuum
             InetAddress ina=InetAddress.getLocalHost();
             System.out.println("InetAddress.getLocalHost()="+ina);
             // Iterate all NICs (network interface cards)...
@@ -94,6 +91,10 @@ public class BasicRemoteCacheClientServerUnitTest extends Assert
         } catch (Exception e) {
             e.printStackTrace();
         }
+        // end of debug
+        String configFile = "TestRemoteCacheClientServer.ccf";
+        server = RemoteCacheServerStartupUtil.startServerUsingProperties(configFile);
+        remotePort = server.remoteCacheServerAttributes.getRemotePort();
     }
 
     @AfterClass
