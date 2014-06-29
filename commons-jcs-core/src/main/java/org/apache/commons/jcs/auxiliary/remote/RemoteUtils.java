@@ -53,10 +53,8 @@ public class RemoteUtils
      * <p>
      * @param port
      * @return the registry
-     * @throws RemoteException
      */
     public static Registry createRegistry( int port )
-        throws RemoteException
     {
     	Registry registry = null;
 
@@ -205,5 +203,19 @@ public class RemoteUtils
                     + RMISocketFactory.getSocketFactory() );
             }
         }
+    }
+
+    /**
+     * Get the naming url used for RMI registration
+     *
+     * @param registryHost
+     * @param registryPort
+     * @param serviceName
+     * @return
+     */
+    public static String getNamingURL(final String registryHost, final int registryPort, final String serviceName)
+    {
+        final String registryURL = "//" + registryHost + ":" + registryPort + "/" + serviceName;
+        return registryURL;
     }
 }

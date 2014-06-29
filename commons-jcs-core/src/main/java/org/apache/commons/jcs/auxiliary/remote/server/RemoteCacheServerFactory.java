@@ -35,6 +35,7 @@ import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
+import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
 import java.rmi.server.RMISocketFactory;
@@ -180,6 +181,7 @@ public class RemoteCacheServerFactory
             {
                 remoteCacheServer = new RemoteCacheServer<Serializable, Serializable>( rcsa );
             }
+
             remoteCacheServer.setCacheEventLogger( cacheEventLogger );
 
             // START THE REGISTRY
@@ -189,7 +191,7 @@ public class RemoteCacheServerFactory
             }
 
             // REGISTER THE SERVER
-            registerServer( host, port, serviceName );
+            registerServer( RemoteUtils.getNamingURL(host, port, serviceName), remoteCacheServer );
 
             // KEEP THE REGISTRY ALIVE
             if ( rcsa.isUseRegistryKeepAlive() )
@@ -261,31 +263,31 @@ public class RemoteCacheServerFactory
      * Registers the server with the registry. I broke this off because we might want to have code
      * that will restart a dead registry. It will need to rebind the server.
      * <p>
-     * @param host
-     * @param port
-     * @param serviceName
+     * @param namingURL
+     * @param server
      * @throws RemoteException
      */
-    protected static void registerServer( String host, int port, String serviceName )
+    protected static void registerServer( String namingURL, Remote server )
         throws RemoteException
     {
-        if ( remoteCacheServer == null )
+        if ( server == null )
         {
-            throw new RemoteException( "Cannot register the server until it is created. Please start the server first." );
+            throw new RemoteException( "Cannot register the server until it is created." );
         }
 
         if ( log.isInfoEnabled() )
         {
-            log.info( "Binding server to " + host + ":" + port + " with the name " + serviceName );
+            log.info( "Binding server to " + namingURL );
         }
+
         try
         {
-            Naming.rebind( "//" + host + ":" + port + "/" + serviceName, remoteCacheServer );
+            Naming.rebind( namingURL, server );
         }
         catch ( MalformedURLException ex )
         {
             // impossible case.
-            throw new IllegalArgumentException( ex.getMessage() + "; host=" + host + ", port=" + port );
+            throw new IllegalArgumentException( ex.getMessage() + "; url=" + namingURL );
         }
     }
 

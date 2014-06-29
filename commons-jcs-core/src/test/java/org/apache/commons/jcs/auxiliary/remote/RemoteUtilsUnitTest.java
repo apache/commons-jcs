@@ -21,7 +21,7 @@ package org.apache.commons.jcs.auxiliary.remote;
 
 import junit.framework.TestCase;
 
-import java.rmi.RemoteException;
+import java.rmi.registry.Registry;
 
 /**
  * Simple tests for remote utils. It is difficult to verify most of the things is does.
@@ -38,13 +38,7 @@ public class RemoteUtilsUnitTest
      */
     public void testCreateRegistry()
     {
-        try
-        {
-            RemoteUtils.createRegistry( 1102 );
-        }
-        catch ( RemoteException e )
-        {
-            fail("RemoteException unexpected " + e);
-        }
+        Registry registry = RemoteUtils.createRegistry( 1102 );
+        assertNotNull("Registry should not be null", registry);
     }
 }

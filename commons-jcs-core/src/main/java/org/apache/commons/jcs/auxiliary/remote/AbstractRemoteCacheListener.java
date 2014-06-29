@@ -52,9 +52,6 @@ public abstract class AbstractRemoteCacheListener<K, V>
     /** The cached name of the local host. The remote server gets this for logging purposes. */
     private static String localHostName = null;
 
-    /** Has this client been shutdown. */
-    boolean disposed = false; // TODO not used in this class; move to RemoteCacheListener?
-
     /**
      * The cache manager used to put items in different regions. This is set lazily and should not
      * be sent to the remote server.
