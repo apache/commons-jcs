@@ -34,9 +34,6 @@ import java.io.IOException;
 public class RemoteHttpCache<K, V>
     extends AbstractRemoteAuxiliaryCache<K, V>
 {
-    /** Don't change. */
-    private static final long serialVersionUID = -5329231850422826461L;
-
     /** The logger. */
     private static final Log log = LogFactory.getLog( RemoteHttpCache.class );
 

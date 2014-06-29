@@ -56,9 +56,6 @@ import java.util.concurrent.ConcurrentHashMap;
 public class LateralTCPCacheManager
     extends LateralCacheAbstractManager
 {
-    /** Don't change. */
-    private static final long serialVersionUID = -9213011856644392480L;
-
     /** The logger. */
     private static final Log log = LogFactory.getLog( LateralTCPCacheManager.class );
 

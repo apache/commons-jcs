@@ -45,9 +45,6 @@ import java.util.Set;
 public class LateralCache<K, V>
     extends AbstractAuxiliaryCacheEventLogging<K, V>
 {
-    /** Don't change. */
-    private static final long serialVersionUID = 6274549256562382782L;
-
     /** The logger. */
     private static final Log log = LogFactory.getLog( LateralCache.class );
 

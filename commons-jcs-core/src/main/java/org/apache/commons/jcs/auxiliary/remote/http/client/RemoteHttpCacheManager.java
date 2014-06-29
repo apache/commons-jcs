@@ -41,9 +41,6 @@ import java.util.Map;
 public class RemoteHttpCacheManager
     implements AuxiliaryCacheManager, IShutdownObserver
 {
-    /** Don't change */
-    private static final long serialVersionUID = 798077557166389498L;
-
     /** The logger */
     private static final Log log = LogFactory.getLog( RemoteHttpCacheManager.class );
 

@@ -50,9 +50,6 @@ import java.util.Set;
 public class LateralCacheNoWait<K, V>
     extends AbstractAuxiliaryCache<K, V>
 {
-    /** Don't change */
-    private static final long serialVersionUID = -7251187566116178475L;
-
     /** The logger. */
     private static final Log log = LogFactory.getLog( LateralCacheNoWait.class );
 

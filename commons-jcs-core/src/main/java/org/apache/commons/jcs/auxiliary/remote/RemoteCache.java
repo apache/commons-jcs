@@ -43,9 +43,6 @@ import java.util.ArrayList;
 public class RemoteCache<K, V>
     extends AbstractRemoteAuxiliaryCache<K, V>
 {
-    /** Don't change. */
-    private static final long serialVersionUID = -5329231850422826460L;
-
     /** The logger. */
     private static final Log log = LogFactory.getLog( RemoteCache.class );
 

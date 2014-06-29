@@ -38,9 +38,6 @@ import org.apache.commons.logging.LogFactory;
 public class RemoteCacheNoWaitFacade<K, V>
     extends AbstractRemoteCacheNoWaitFacade<K, V>
 {
-    /** For serialization. Don't change. */
-    private static final long serialVersionUID = -4529970797620747111L;
-
     /** log instance */
     private static final Log log = LogFactory.getLog( RemoteCacheNoWaitFacade.class );
 

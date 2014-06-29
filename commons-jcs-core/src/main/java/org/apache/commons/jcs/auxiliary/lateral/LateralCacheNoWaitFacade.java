@@ -49,9 +49,6 @@ import java.util.Set;
 public class LateralCacheNoWaitFacade<K, V>
     extends AbstractAuxiliaryCache<K, V>
 {
-    /** Don't change */
-    private static final long serialVersionUID = -9047687810358008955L;
-
     /** The logger */
     private static final Log log = LogFactory.getLog( LateralCacheNoWaitFacade.class );
 

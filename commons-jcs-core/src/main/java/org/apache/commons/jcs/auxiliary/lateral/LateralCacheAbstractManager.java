@@ -50,9 +50,6 @@ import java.util.Map;
 public abstract class LateralCacheAbstractManager
     implements ILateralCacheManager, IShutdownObserver
 {
-    /** Don't change */
-    private static final long serialVersionUID = -515393179178435508L;
-
     /** The logger. */
     private static final Log log = LogFactory.getLog( LateralCacheAbstractManager.class );
 
