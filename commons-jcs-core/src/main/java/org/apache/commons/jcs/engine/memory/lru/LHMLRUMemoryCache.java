@@ -47,9 +47,6 @@ import java.util.Set;
 public class LHMLRUMemoryCache<K extends Serializable, V extends Serializable>
     extends AbstractMemoryCache<K, V>
 {
-    /** Don't change */
-    private static final long serialVersionUID = 6403738094136424101L;
-
     /** The Logger. */
     private static final Log log = LogFactory.getLog( LRUMemoryCache.class );
 

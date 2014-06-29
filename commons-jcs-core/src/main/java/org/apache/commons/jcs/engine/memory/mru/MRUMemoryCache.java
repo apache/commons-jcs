@@ -33,9 +33,6 @@ import java.io.Serializable;
 public class MRUMemoryCache<K extends Serializable, V extends Serializable>
     extends AbstractDoubleLinkedListMemoryCache<K, V>
 {
-    /** Don't change */
-    private static final long serialVersionUID = 5013101678192336129L;
-
     /**
      * Adds the item to the front of the list. A put doesn't count as a usage.
      * <p>

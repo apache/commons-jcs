@@ -32,9 +32,6 @@ import java.io.Serializable;
 public class FIFOMemoryCache<K extends Serializable, V extends Serializable>
     extends AbstractDoubleLinkedListMemoryCache<K, V>
 {
-    /** Don't change */
-    private static final long serialVersionUID = 6403738094136424201L;
-
     /**
      * Puts an item to the cache. Removes any pre-existing entries of the same key from the linked
      * list and adds this one first.
