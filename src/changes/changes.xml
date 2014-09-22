@@ -20,7 +20,10 @@
 	</properties>
 	<body>
 		<release version="2.0" date="unreleased" description="JDK 1.6 based major release">
-            <action issue="JCS-133" dev="seb" type="fix">
+            <action issue="JCS-136" dev="tv" type="fix" due-to="Youngho Cho">
+                OutOfMemoryError when using compressing serializer
+            </action>
+            <action issue="JCS-133" dev="sebb" type="fix">
                 RemoteUtils.getNamingURL does not handle IPv6 numeric addresses properly
             </action>
             <action issue="JCS-131" dev="tv" type="remove">
