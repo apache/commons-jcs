@@ -93,6 +93,8 @@ public final class CompressionUtil
             log.error( "Problem decompressing.", ex );
         }
 
+        decompressor.end();
+
         try
         {
             baos.close();
@@ -150,6 +152,8 @@ public final class CompressionUtil
             bos.write( buf, 0, count );
         }
 
+        // JCS-136 ( Details here : http://www.devguli.com/blog/eng/java-deflater-and-outofmemoryerror/ )
+        compressor.end();
         bos.close();
 
         // Get the compressed data
