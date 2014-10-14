@@ -189,21 +189,22 @@
   </contributors>
 
   <build>
-    <pluginManagement>
-      <plugins>
-        <plugin>
-          <groupId>org.apache.rat</groupId>
-          <artifactId>apache-rat-plugin</artifactId>
-          <configuration>
-           <excludes combine.children="append">
-             <exclude>.java-version</exclude>
-             <exclude>LICENSE.xerox</exclude>
-             <exclude>src/scripts/zipcodes.txt</exclude>
-            </excludes>
-          </configuration>
-        </plugin>
-      </plugins>
-    </pluginManagement>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.rat</groupId>
+        <artifactId>apache-rat-plugin</artifactId>
+        <configuration>
+          <excludes combine.children="append">
+            <exclude>.java-version</exclude>
+            <exclude>**/LICENSE.xerox</exclude>
+            <exclude>**/zipcodes.txt</exclude>
+            <exclude>**/download_jcs.cgi</exclude>
+            <exclude>**/.gitignore</exclude>
+            <exclude>**/META-INF/services/javax.*</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
+    </plugins>
   </build>
 
   <dependencyManagement>
