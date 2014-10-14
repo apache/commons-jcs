@@ -200,6 +200,7 @@
             <exclude>**/zipcodes.txt</exclude>
             <exclude>**/download_jcs.cgi</exclude>
             <exclude>**/.gitignore</exclude>
+            <exclude>**/derby.log</exclude>
             <exclude>**/META-INF/services/javax.*</exclude>
           </excludes>
         </configuration>
