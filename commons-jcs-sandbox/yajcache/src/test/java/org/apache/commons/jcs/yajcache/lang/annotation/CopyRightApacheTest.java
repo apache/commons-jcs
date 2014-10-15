@@ -20,6 +20,7 @@ package org.apache.commons.jcs.yajcache.lang.annotation;
  */
 
 import junit.framework.TestCase;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

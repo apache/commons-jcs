@@ -19,10 +19,11 @@ package org.apache.commons.jcs.yajcache.util;
  * under the License.
  */
 
-import org.apache.commons.jcs.yajcache.lang.annotation.*;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-
 import java.io.Serializable;
+
+import org.apache.commons.jcs.yajcache.lang.annotation.CopyRightApache;
+import org.apache.commons.jcs.yajcache.lang.annotation.TestOnly;
+import org.apache.commons.lang3.builder.EqualsBuilder;
 
 /**
  *

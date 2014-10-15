@@ -19,7 +19,10 @@ package org.apache.commons.jcs.yajcache.file;
  * under the License.
  */
 
-import org.apache.commons.jcs.yajcache.lang.annotation.*;
+import junit.framework.TestCase;
+
+import org.apache.commons.jcs.yajcache.lang.annotation.CopyRightApache;
+import org.apache.commons.jcs.yajcache.lang.annotation.TestOnly;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
