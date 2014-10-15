@@ -441,7 +441,7 @@
     <profile>
       <id>sandbox</id>
       <modules>
-        <module>sandbox</module>
+        <module>commons-jcs-sandbox</module>
       </modules>
     </profile>
   </profiles>
