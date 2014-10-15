@@ -263,9 +263,9 @@
 
       <!--  For comparative performance tests only -->
       <dependency>
-        <groupId>commons-collections</groupId>
-        <artifactId>commons-collections</artifactId>
-        <version>3.2.1</version>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-collections4</artifactId>
+        <version>${collections.version}</version>
         <scope>test</scope>
       </dependency>
 
@@ -470,6 +470,7 @@
     <commons.javadoc.java.link>http://docs.oracle.com/javase/6/docs/api/</commons.javadoc.java.link>
 
     <jsr107.api.version>1.0.0</jsr107.api.version>
+    <collections.version>4.0</collections.version>
 
     <test.type>Unit</test.type>
   </properties>

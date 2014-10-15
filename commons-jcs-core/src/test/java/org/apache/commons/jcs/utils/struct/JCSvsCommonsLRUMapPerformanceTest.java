@@ -22,6 +22,7 @@ package org.apache.commons.jcs.utils.struct;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+
 import org.apache.commons.jcs.JCSvsHashtablePerformanceTest;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -144,7 +145,7 @@ public class JCSvsCommonsLRUMapPerformanceTest
                 cache2Name = "Commons  ";
                 // or LRUMapJCS
                 @SuppressWarnings("unchecked")
-                Map<String, String> cache2 = new org.apache.commons.collections.map.LRUMap( tries );
+                Map<String, String> cache2 = new org.apache.commons.collections4.map.LRUMap<String, String>( tries );
                 // cache2Name = "Hashtable";
                 // Hashtable cache2 = new Hashtable();
                 start = System.currentTimeMillis();
