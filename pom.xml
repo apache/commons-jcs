@@ -16,9 +16,7 @@
    limitations under the License.
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.apache.commons</groupId>
@@ -29,7 +27,7 @@
   <groupId>org.apache.commons</groupId>
   <artifactId>commons-jcs</artifactId>
   <packaging>pom</packaging>
-  <version>2.0-SNAPSHOT</version>
+  <version>2.0-alpha-1</version>
 
   <!--
    * Build with -PjcacheTck to run the JSR-107 TCK
@@ -46,34 +44,34 @@
   </issueManagement>
 
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/commons/proper/jcs/trunk</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/commons/proper/jcs/trunk</developerConnection>
-    <url>http://svn.apache.org/viewvc/commons/proper/jcs/trunk</url>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/commons/proper/jcs/tags/commons-jcs-2.0-alpha-1</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/commons/proper/jcs/tags/commons-jcs-2.0-alpha-1</developerConnection>
+    <url>http://svn.apache.org/viewvc/commons/proper/jcs/tags/commons-jcs-2.0-alpha-1</url>
   </scm>
 
   <mailingLists>
     <mailingList>
       <name>Jakarta JCS User List Archive</name>
-      <subscribe></subscribe>
-      <unsubscribe></unsubscribe>
+      <subscribe />
+      <unsubscribe />
       <archive>http://mail-archives.apache.org/mod_mbox/jakarta-jcs-users/</archive>
     </mailingList>
     <mailingList>
       <name>Jakarta JCS Developer List Archive</name>
-      <subscribe></subscribe>
-      <unsubscribe></unsubscribe>
+      <subscribe />
+      <unsubscribe />
       <archive>http://mail-archives.apache.org/mod_mbox/jakarta-jcs-dev/</archive>
     </mailingList>
     <mailingList>
       <name>OLD User List Archive</name>
-      <subscribe></subscribe>
-      <unsubscribe></unsubscribe>
+      <subscribe />
+      <unsubscribe />
       <archive>http://mail-archives.apache.org/mod_mbox/jakarta-turbine-jcs-user/</archive>
     </mailingList>
     <mailingList>
       <name>OLD Developer List Archive</name>
-      <subscribe></subscribe>
-      <unsubscribe></unsubscribe>
+      <subscribe />
+      <unsubscribe />
       <archive>http://mail-archives.apache.org/mod_mbox/jakarta-turbine-jcs-dev/</archive>
     </mailingList>
     <mailingList>
@@ -150,19 +148,19 @@
       <id>asmuts</id>
       <name>Aaron Smuts</name>
       <email>asmuts@apache.org</email>
-      <organization/>
+      <organization />
     </developer>
     <developer>
       <id>jtaylor</id>
       <name>James Taylor</name>
       <email>james@jamestaylor.org</email>
-      <organization/>
+      <organization />
     </developer>
     <developer>
       <id>hchar</id>
       <name>Hanson Char</name>
       <email>hchar@apache.org</email>
-      <organization/>
+      <organization />
     </developer>
     <developer>
       <id>tsavo</id>
@@ -174,7 +172,7 @@
       <id>tv</id>
       <name>Thomas Vandahl</name>
       <email>tv@apache.org</email>
-      <organization/>
+      <organization />
     </developer>
   </developers>
 
