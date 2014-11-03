@@ -15,28 +15,28 @@
  limitations under the License.
 -->
 <assembly>
-    <id>src</id>
+    <id>bin</id>
     <formats>
         <format>tar.gz</format>
         <format>zip</format>
     </formats>
-    <baseDirectory>${project.artifactId}-${project.version}-src</baseDirectory>
+    <baseDirectory>${project.artifactId}-${project.version}</baseDirectory>
+    <includeSiteDirectory>false</includeSiteDirectory>
+    <dependencySets>
+        <dependencySet>
+            <useProjectArtifact>false</useProjectArtifact>
+            <useTransitiveDependencies>false</useTransitiveDependencies>
+        </dependencySet>
+    </dependencySets>
     <fileSets>
         <fileSet>
+            <directory>${project.basedir}/..</directory>
             <includes>
-                <include>checkstyle.xml</include>
-                <include>default.properties</include>
                 <include>LICENSE.txt</include>
                 <include>LICENSE.xerox</include>
-                <include>LICENSE-header.txt</include>
                 <include>NOTICE.txt</include>
-                <include>pom.xml</include>
-                <include>RELEASE-NOTES*.txt</include>
-                <include>TODO</include>
+                <include>RELEASE-NOTES.txt</include>
             </includes>
-        </fileSet>
-        <fileSet>
-            <directory>src</directory>
         </fileSet>
     </fileSets>
 </assembly>
