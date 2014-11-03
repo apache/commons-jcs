@@ -29,6 +29,7 @@
         <exclude>.*/**</exclude>
         <exclude>**/${project.build.directory}/**</exclude>
         <exclude>**/.*/**</exclude>
+        <exclude>**/KEYS</exclude>
         <exclude>${project.basedir}/../commons-jcs-sandbox/**</exclude>
         <exclude>${project.basedir}/../auxiliary-builds/**</exclude>
         <exclude>${project.basedir}/../src/experimental/**</exclude>
