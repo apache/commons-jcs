@@ -141,7 +141,6 @@
     <module>commons-jcs-tck-tests</module>
     <module>commons-jcs-jcache-extras</module>
     <module>commons-jcs-jcache-openjpa</module>
-    <module>commons-jcs-dist</module>
   </modules>
 
   <developers>
@@ -411,6 +410,9 @@
     </profile>
     <profile>
       <id>release</id>
+      <modules>
+        <module>commons-jcs-dist</module>
+      </modules>
       <build>
         <plugins>
           <plugin>
