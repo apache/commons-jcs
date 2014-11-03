@@ -141,6 +141,7 @@
     <module>commons-jcs-tck-tests</module>
     <module>commons-jcs-jcache-extras</module>
     <module>commons-jcs-jcache-openjpa</module>
+    <module>commons-jcs-dist</module>
   </modules>
 
   <developers>
@@ -403,34 +404,38 @@
 
   <profiles>
     <profile>
-      <!-- Override Commons parent release profile -->
+      <id>sandbox</id>
+      <modules>
+        <module>commons-jcs-sandbox</module>
+      </modules>
+    </profile>
+    <profile>
       <id>release</id>
-      <properties>
-        <!-- activate the JSR-107 TCK for the release-->
-        <jcache.tck>true</jcache.tck>
-      </properties>
-
       <build>
         <plugins>
           <plugin>
-            <!-- build the source and binary distribution packages -->
-            <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-assembly-plugin</artifactId>
+            <inherited>false</inherited>
             <executions>
               <execution>
-                <phase>package</phase>
                 <goals>
                   <goal>single</goal>
                 </goals>
-                <configuration>
-                  <!-- only the parent has assembly descriptors -->
-                  <runOnlyAtExecutionRoot>true</runOnlyAtExecutionRoot>
-                  <descriptors>
-                    <descriptor>src/assembly/bin.xml</descriptor>
-                    <descriptor>src/assembly/src.xml</descriptor>
-                  </descriptors>
-                  <tarLongFileFormat>gnu</tarLongFileFormat>
-                </configuration>
+                <!-- disable assembly:single from commons-parent
+                     release profile; multimodule assembly handled
+                     by dist module -->
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-source-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>create-source-jar</id>
+                <!-- suppress execution specified by parent profile -->
+                <phase />
               </execution>
             </executions>
           </plugin>
@@ -438,10 +443,18 @@
       </build>
     </profile>
     <profile>
-      <id>sandbox</id>
-      <modules>
-        <module>commons-jcs-sandbox</module>
-      </modules>
+      <id>site</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <configuration>
+              <aggregate>true</aggregate>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
     </profile>
   </profiles>
 
