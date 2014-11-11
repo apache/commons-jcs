@@ -416,6 +416,12 @@
       <build>
         <plugins>
           <plugin>
+            <artifactId>maven-release-plugin</artifactId>
+            <configuration>
+              <autoVersionSubmodules>true</autoVersionSubmodules>
+            </configuration>
+          </plugin>
+          <plugin>
             <artifactId>maven-assembly-plugin</artifactId>
             <inherited>false</inherited>
             <executions>
