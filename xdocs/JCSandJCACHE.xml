@@ -26,6 +26,18 @@
   </properties>
 
   <body>
+    <section name="JCACHE (JSR-107)">
+      <p>
+        Since version 2.x, Apache Commons JCS implements
+        JCache specification (and a few more providing some basic utilities
+        in its extras module and a basic integration with apache OpenJPA).
+      </p>
+      <p>
+        Next section is about main differences between JCache design and original JCS one.
+        These are still globally valid and are kept to let you get a bit more food for thoughts
+        on Caching and JCS.
+      </p>
+    </section>
     <section name="JCS and JCACHE (JSR-107)">
       <p>
         The JCS is an attempt to build a system close to JCACHE , <a
