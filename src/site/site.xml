@@ -51,6 +51,7 @@
         <item name="Element Event Handling" href="/ElementEventHandling.html"/>
         <item name="Region Properties" href="/RegionProperties.html"/>
         <item name="Basic Web Example" href="/UsingJCSBasicWeb.html"/>
+        <item name="Project History" href="/ProjectHistory.html"/>
       </item>
       <item name="Auxiliary" href="/JCSPlugins.html" collapse="true">
         <item name="Cache Event Logging" href="/CacheEventLogging.html"/>

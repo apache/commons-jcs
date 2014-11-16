@@ -169,6 +169,8 @@
           <configuration>
             <excludes combine.children="append">
               <exclude>src/aspect/org/apache/commons/Trace.aj</exclude>
+              <exclude>**/LICENSE.xerox</exclude>
+              <exclude>**/zipcodes.txt</exclude>
             </excludes>
           </configuration>
         </plugin>
