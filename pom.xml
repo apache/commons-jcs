@@ -480,7 +480,7 @@
     <maven.compiler.target>1.6</maven.compiler.target>
 
     <commons.componentid>jcs</commons.componentid>
-    <commons.release.version>2.0</commons.release.version>
+    <commons.release.version>2.0-beta-1</commons.release.version>
     <commons.release.desc>(Java 6.0+)</commons.release.desc>
     <!-- The RC version used in the staging repository URL. -->
     <commons.rc.version>RC1</commons.rc.version>
