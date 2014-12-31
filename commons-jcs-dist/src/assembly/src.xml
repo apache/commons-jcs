@@ -25,6 +25,7 @@
     <fileSet>
       <directory>${project.basedir}/..</directory>
       <excludes>
+        <exclude>**/*.log</exclude>
         <exclude>${project.build.directory}/**</exclude>
         <exclude>.*/**</exclude>
         <exclude>**/${project.build.directory}/**</exclude>
