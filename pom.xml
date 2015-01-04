@@ -216,6 +216,191 @@
           </excludes>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>1.7</version>
+        <executions>
+          <execution>
+            <id>copy-notices</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <target xmlns:if="ant:if" xmlns:unless="ant:unless">
+                <presetdef name="truth">
+                  <condition value="true" else="false" />
+                </presetdef>
+
+                <macrodef name="seek">
+                  <attribute name="name" />
+                  <attribute name="addto" />
+                  <sequential>
+                    <union id="@{name}-ws" />
+                    <step dir="${user.dir}" name="@{name}" addto="@{addto}" ws="@{name}-ws" />
+                  </sequential>
+                </macrodef>
+
+                <macrodef name="step">
+                  <attribute name="name" />
+                  <attribute name="dir" />
+                  <attribute name="addto" />
+                  <attribute name="ws" />
+                  <sequential>
+                    <local name="seenDir" />
+                    <truth property="seenDir">
+                      <resourcecount when="gt" count="0">
+                        <intersect id="intersection">
+                          <resources refid="@{ws}" />
+                          <file name="@{dir}" />
+                        </intersect>
+                      </resourcecount>
+                    </truth>
+                    <sequential unless:true="${seenDir}">
+                      <augment id="@{ws}">
+                        <file file="@{dir}" />
+                      </augment>
+                      <local name="exists" />
+                      <truth property="exists">
+                        <available file="@{dir}/@{name}" />
+                      </truth>
+
+                      <sequential if:true="${exists}">
+                        <augment id="@{addto}">
+                          <file file="@{dir}/@{name}" />
+                        </augment>
+                      </sequential>
+                      <sequential unless:true="${exists}">
+                        <local name="parent.dir" />
+                        <dirname property="parent.dir" file="@{dir}" />
+                        <step dir="${parent.dir}" name="@{name}" addto="@{addto}" ws="@{ws}" />
+                      </sequential>
+                    </sequential>
+                  </sequential>
+                </macrodef>
+
+                <truth property="pom-only">
+                  <equals arg1="${project.packaging}" arg2="pom" />
+                </truth>
+                <sequential unless:true="${pom-only}">
+                  <union id="notices" />
+                  <seek name="LICENSE.txt" addto="notices" />
+                  <seek name="NOTICE.txt" addto="notices" />
+
+                  <mkdir dir="${project.build.directory}/generated-resources/notices/META-INF" />
+                  <copy verbose="true" todir="${project.build.directory}/generated-resources/notices/META-INF">
+                    <resources refid="notices" />
+                  </copy>
+
+                  <mkdir dir="${project.build.directory}/generated-test-resources/notices/META-INF" />
+                  <copy verbose="true" todir="${project.build.directory}/generated-test-resources/notices/META-INF">
+                    <resources refid="notices" />
+                  </copy>
+
+                  <mkdir dir="${project.build.directory}/apidocs/META-INF" />
+                  <copy verbose="true" todir="${project.build.directory}/apidocs/META-INF">
+                    <resources refid="notices" />
+                  </copy>
+                </sequential>
+              </target>
+            </configuration>
+          </execution>
+        </executions>
+        <dependencies>
+          <dependency>
+            <groupId>org.apache.ant</groupId>
+            <artifactId>ant</artifactId>
+            <version>1.9.4</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>attach-test-jar</id>
+            <phase>package</phase>
+            <goals>
+              <goal>test-jar</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <skipIfEmpty>true</skipIfEmpty>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>create-javadoc-jar</id>
+            <goals>
+              <goal>javadoc</goal>
+              <goal>jar</goal>
+            </goals>
+            <phase>package</phase>
+          </execution>
+        </executions>
+        <configuration>
+          <source>${maven.compiler.source}</source>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <goals>
+              <goal>jar-no-fork</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>attach-test-sources</id>
+            <goals>
+              <goal>test-jar-no-fork</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <version>1.9.1</version>
+        <executions>
+          <execution>
+            <id>add-source-notices</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>add-resource</goal>
+            </goals>
+            <configuration>
+              <resources>
+                <resource>
+                  <directory>${project.build.directory}/generated-resources/notices</directory>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+          <execution>
+            <id>add-test-notices</id>
+            <phase>generate-test-resources</phase>
+            <goals>
+              <goal>add-test-resource</goal>
+            </goals>
+            <configuration>
+              <resources>
+                <resource>
+                  <directory>${project.build.directory}/generated-test-resources/notices</directory>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
 
