@@ -1,0 +1,148 @@
+<?xml version="1.0"?>
+	<!--
+		Licensed to the Apache Software Foundation (ASF) under one or more
+		contributor license agreements. See the NOTICE file distributed with
+		this work for additional information regarding copyright ownership.
+		The ASF licenses this file to you under the Apache License, Version
+		2.0 (the "License"); you may not use this file except in compliance
+		with the License. You may obtain a copy of the License at
+		http://www.apache.org/licenses/LICENSE-2.0 Unless required by
+		applicable law or agreed to in writing, software distributed under the
+		License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+		CONDITIONS OF ANY KIND, either express or implied. See the License for
+		the specific language governing permissions and limitations under the
+		License.
+	-->
+<document>
+	<properties>
+		<title>Lateral TCP Auxiliary Cache Configuration</title>
+		<author email="ASmuts@apache.org">Aaron Smuts</author>
+	</properties>
+	<body>
+		<section name="Lateral TCP Auxiliary Cache Configuration">
+			<p> The following properties apply to the TCP Lateral Cache plugin.
+			</p>
+			<subsection name="TCP Configuration Properties">
+				<table>
+					<tr>
+						<th>Property</th>
+						<th>Description</th>
+						<th>Required</th>
+						<th>Default Value</th>
+					</tr>
+					<tr>
+						<td>TcpServers</td>
+						<td> This is the list of servers this cache should try to connect
+							to. With UDP discovery this is not necessary.</td>
+						<td>N</td>
+						<td>none</td>
+					</tr>
+					<tr>
+						<td>TcpListenerPort</td>
+						<td> This is the port this cache should listen on.</td>
+						<td>Y</td>
+						<td>n/a</td>
+					</tr>
+					<tr>
+						<td>AllowGet</td>
+						<td> Should this cache be allowed to get from other laterals.
+							False means that it can only put, i.e. send updates and remove
+							requests to other laterals. Lateral gets are not recommended for
+							performance reasons. This used to be controlled by the attribute
+							PutOnlyMode.</td>
+						<td>N</td>
+						<td>true</td>
+					</tr>
+					<tr>
+						<td>Receive</td>
+						<td> Should this cache receive or only send to other laterals. You
+							may want to set receive to false if you just need to broadcast to
+							other caches. If you have a feed data parser, that doesn't need
+							to receive updates, but you do want it to send invalidation
+							messages, then you would set receive to false. If receive is
+							false, the discovery service, if enabled, will only listen.</td>
+						<td>N</td>
+						<td>true</td>
+					</tr>
+					<tr>
+						<td>IssueRemoveOnPut</td>
+						<td> If this is set to true, then the lateral client will send a
+							remove command rather than a put command to any registered
+							listeners.</td>
+						<td>N</td>
+						<td>false</td>
+					</tr>
+					<tr>
+						<td>FilterRemoveByHashCode</td>
+						<td> If this is true, and IssueRemoveOnPut is true, the client
+							will include the hashCode of the element to remove. If it is also
+							true on the receiving end, the receiver will check to see if the
+							element exists. If the element exists, and the hashCodes are the
+							same, the item will not be removed.</td>
+						<td>N</td>
+						<td>false</td>
+					</tr>
+					<tr>
+						<td>SocketTimeOut</td>
+						<td> This allows you to set the socket (read) timeout.</td>
+						<td>N</td>
+						<td>1000</td>
+					</tr>
+					<tr>
+						<td>OpenTimeOut</td>
+						<td> This allows you to set the socket open timeout.</td>
+						<td>N</td>
+						<td>2000</td>
+					</tr>
+					<tr>
+						<td>UdpDiscoveryAddr</td>
+						<td> The address the UDP discovery process should broadcast
+							messages to.</td>
+						<td>N</td>
+						<td>228.5.6.7</td>
+					</tr>
+					<tr>
+						<td>UdpDiscoveryPort</td>
+						<td> The port the UDP discovery process should send messages to.
+						</td>
+						<td>N</td>
+						<td>6789</td>
+					</tr>
+					<tr>
+						<td>UdpDiscoveryEnabled</td>
+						<td> Whether or not the UDP discovery service should be used to
+							locate other lateral caches.</td>
+						<td>N</td>
+						<td>true</td>
+					</tr>
+					<tr>
+						<td>ZombieQueueMaxSize</td>
+						<td> The number of elements the zombie queue will hold. This queue
+							is used to store events if we lose our connection with the
+							server.</td>
+						<td>N</td>
+						<td>1000</td>
+					</tr>
+				</table>
+			</subsection>
+			<subsection name="Example Configuration">
+				<source><![CDATA[
+jcs.auxiliary.LTCP=org.apache.commons.jcs.auxiliary.lateral.socket.tcp.LateralTCPCacheFactory
+jcs.auxiliary.LTCP.attributes=org.apache.commons.jcs.auxiliary.lateral.socket.tcp.TCPLateralCacheAttributes
+#jcs.auxiliary.LTCP.attributes.TcpServers=
+jcs.auxiliary.LTCP.attributes.TcpListenerPort=1118
+jcs.auxiliary.LTCP.attributes.UdpDiscoveryAddr=228.5.6.8
+jcs.auxiliary.LTCP.attributes.UdpDiscoveryPort=6780
+jcs.auxiliary.LTCP.attributes.UdpDiscoveryEnabled=true
+jcs.auxiliary.LTCP.attributes.Receive=true
+jcs.auxiliary.LTCP.attributes.AllowGet=false
+jcs.auxiliary.LTCP.attributes.IssueRemoveOnPut=false
+jcs.auxiliary.LTCP.attributes.FilterRemoveByHashCode=false
+jcs.auxiliary.LTCP.attributes.SocketTimeoOt=1001
+jcs.auxiliary.LTCP.attributes.OpenTimeOut=2002
+jcs.auxiliary.LTCP.attributes.ZombieQueueMaxSize=2000
+        ]]></source>
+			</subsection>
+		</section>
+	</body>
+</document>

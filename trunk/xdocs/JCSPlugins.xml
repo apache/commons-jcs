@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+	<!--
+		Licensed to the Apache Software Foundation (ASF) under one or more
+		contributor license agreements. See the NOTICE file distributed with
+		this work for additional information regarding copyright ownership.
+		The ASF licenses this file to you under the Apache License, Version
+		2.0 (the "License"); you may not use this file except in compliance
+		with the License. You may obtain a copy of the License at
+		http://www.apache.org/licenses/LICENSE-2.0 Unless required by
+		applicable law or agreed to in writing, software distributed under the
+		License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+		CONDITIONS OF ANY KIND, either express or implied. See the License for
+		the specific language governing permissions and limitations under the
+		License.
+	-->
+<document>
+	<properties>
+		<title>JCS Plugin Overview</title>
+		<author email="ASmuts@therealm.com">Aaron Smuts</author>
+	</properties>
+	<body>
+		<section name="JCS Plugin Overview">
+			<p> JCS provides multiple auxiliaries which can be plugged into a
+				cache region, in a manner similar to adding Log4j appenders to a
+				logger. JCS auxiliaries are defined in the cache.ccf file. You can
+				specify which plugins a particular cache region should use.</p>
+			<p> There are four types of auxiliaries: (1) memory, (2) disk, (3)
+				lateral, and (4) remote. Each region is required to have one and
+				only one memory auxiliary. No other auxiliaries are required and any
+				possible combination of disk, lateral, and remote auxiliaries is
+				allowed. If you do not want to store items in memory, then the
+				maximum size for the memory caches can be set to 0 on a per region
+				basis.</p>
+		</section>
+		<section name="Memory Plugins">
+			<p> Currently, JCS provides five memory management options: (1)
+				LRUMemoryCache, (2) LHMLRUMemoryCache, (3) MRUMemoryCache, (5)
+				FIFOMemoryCache, and (5) ARCMemoryCache. All memory caches restrict
+				the number of items that can be stored in memory per region. If a
+				disk cache is configured for the region, the items will be spooled
+				to disk when the memory capacity is reached. JCS enforces
+				configurable parameters such as time to live and maximum idle time.
+				Expired elements can be cleaned up by the ShrinkerThread, otherwise
+				they will be removed at the next retrieval attempt or when the
+				capacity is reached.</p>
+			<p> The LRUMemoryCache is the currently recommended plugin. Upon
+				misconfiguration it is used as the default. The LRUMemoryCache
+				removes the least recently used items when the cache is full.</p>
+			<p> The ARCMemoryCache is currently experimental. It implements an
+				adaptive replacement caching algorithm that combines an LRU and an
+				LFU that adapt to usage patterns.</p>
+		</section>
+		<section name="Disk Plugins">
+			<p> JCS provides several disk swap options: indexed disk, HSQL, JISP,
+				and Berkeley DB JE. The IndexedDiskCache is the recommended disk
+				cache. It maintains the cached data on disk and the keys in memory
+				for the fastest possible lookup times. Writing to disk is done
+				asynchronously. Items are typically put in purgatory and queued for
+				background disk writing. While in purgatory, the items remain
+				available.</p>
+			<p> In addition, JCS provides a disk auxiliary that uses the Berkeley
+				DB Java Edition for disk storage. JCS can effectively function as an
+				expiration manager and distribution mechanism on top of a Berkeley
+				DB JE.</p>
+		</section>
+		<section name="Lateral Plugins">
+			<p> JCS provides two recommended lateral distribution options: TCP
+				socket server distribution and JGroups (or JavaGroups). There are
+				also several other experimental lateral distribution auxiliaries
+				using servlets, UDP, and xmlrpc.</p>
+		</section>
+		<section name="Remote Plugins">
+			<p> JCS provides both an RMI and HTTP remote servers to manage
+				distribution of cached data. These can be paired for failover.</p>
+		</section>
+	</body>
+</document>

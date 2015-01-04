@@ -1,0 +1,65 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+# Cache configuration for the 'TestDiskCache' test. The memory cache has a
+# a maximum of 100 objects, so objects should get pushed into the disk cache
+
+jcs.default=
+jcs.default.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
+jcs.default.cacheattributes.MaxObjects=100
+jcs.default.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
+
+
+# #### CACHE REGIONS FOR TEST
+jcs.region.WithDisk=indexedDiskCache
+jcs.region.WithDisk.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
+jcs.region.WithDisk.cacheattributes.MaxObjects=0
+jcs.region.WithDisk.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
+jcs.region.WithDisk.elementattributes.IsSpool=true
+
+jcs.region.NoDisk=
+jcs.region.NoDisk.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
+jcs.region.NoDisk.cacheattributes.MaxObjects=0
+jcs.region.NoDisk.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
+jcs.region.NoDisk.elementattributes.IsSpool=true
+
+jcs.region.DiskButNotAllowed=indexedDiskCache
+jcs.region.DiskButNotAllowed.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
+jcs.region.DiskButNotAllowed.cacheattributes.MaxObjects=0
+jcs.region.DiskButNotAllowed.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
+jcs.region.DiskButNotAllowed.elementattributes.IsSpool=false
+
+jcs.region.Maxlife=
+jcs.region.Maxlife.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
+jcs.region.Maxlife.cacheattributes.MaxObjects=200
+jcs.region.Maxlife.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
+jcs.region.Maxlife.elementattributes.IsEternal=false
+jcs.region.Maxlife.elementattributes.MaxLife=2
+
+jcs.region.Idletime=
+jcs.region.Idletime.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
+jcs.region.Idletime.cacheattributes.MaxObjects=200
+jcs.region.Idletime.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
+jcs.region.Idletime.elementattributes.IsEternal=false
+jcs.region.Idletime.elementattributes.MaxLife=300
+jcs.region.Idletime.elementattributes.IdleTime=1
+
+# #### AUXILIARY CACHES
+# Indexed Disk Cache
+jcs.auxiliary.indexedDiskCache=org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
+jcs.auxiliary.indexedDiskCache.attributes=org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
+jcs.auxiliary.indexedDiskCache.attributes.DiskPath=target/test-sandbox/indexed-disk-cache
+

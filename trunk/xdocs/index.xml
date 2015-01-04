@@ -1,0 +1,180 @@
+<?xml version="1.0"?>
+	<!--
+		Licensed to the Apache Software Foundation (ASF) under one or more
+		contributor license agreements. See the NOTICE file distributed with
+		this work for additional information regarding copyright ownership.
+		The ASF licenses this file to you under the Apache License, Version
+		2.0 (the "License"); you may not use this file except in compliance
+		with the License. You may obtain a copy of the License at
+		http://www.apache.org/licenses/LICENSE-2.0 Unless required by
+		applicable law or agreed to in writing, software distributed under the
+		License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+		CONDITIONS OF ANY KIND, either express or implied. See the License for
+		the specific language governing permissions and limitations under the
+		License.
+	-->
+<document>
+	<properties>
+		<title>Java Caching System</title>
+		<author email="asmuts@apache.org">Aaron Smuts</author>
+	</properties>
+	<body>
+		<section name="Java Caching System">
+			<p>
+				JCS is a distributed caching system written in Java. It is intended
+				to speed up applications by providing a means to manage cached data
+				of various dynamic natures. Like any caching system, JCS is
+				<a href="UsingJCSBasicWeb.html">most useful</a>
+				for high read, low put applications. Latency times drop sharply and
+				bottlenecks move away from the database in an effectively cached
+				system.
+				<a href="getting_started/intro.html">Learn how to start using JCS.</a>
+			</p>
+			<p> The JCS goes beyond simply caching objects in memory. It provides
+				numerous additional features:</p>
+			<ul>
+				<li>Memory management</li>
+				<li>Disk overflow (and defragmentation)</li>
+				<li>Thread pool controls</li>
+				<li>Element grouping</li>
+				<li>Minimal dependencies</li>
+				<li>Quick nested categorical removal</li>
+				<li>Data expiration (idle time and max life)</li>
+				<li>Extensible framework</li>
+				<li>Fully configurable runtime parameters</li>
+				<li>Region data separation and configuration</li>
+				<li>Fine grained element configuration options</li>
+				<li>Remote synchronization</li>
+				<li>Remote store recovery</li>
+				<li>Non-blocking "zombie" (balking facade) pattern</li>
+				<li>Lateral distribution of elements via HTTP, TCP, or UDP</li>
+				<li>UDP Discovery of other caches</li>
+				<li>Element event handling</li>
+				<li>Remote server chaining (or clustering) and failover</li>
+				<li>Custom event logging hooks</li>
+				<li>Custom event queue injection</li>
+				<li>Custom object serializer injection</li>
+				<li>Key pattern matching retrieval</li>
+				<li>Network efficient multi-key retrieval</li>
+			</ul>
+			<p> JCS 2.0 works on JDK versions 1.6 and up. It only has a
+				dependency on Commons Logging.</p>
+		</section>
+		<section name="JCS is a Composite Cache">
+			<p>
+				The foundation of JCS is the Composite Cache, which is the
+				<a href="JCSPlugins.html">pluggable</a>
+				controller for a cache region. Four types of caches can be plugged
+				into the Composite Cache for any given region: (1) Memory, (2) Disk,
+				(3) Lateral, and (4) Remote. The Composite Cache orchestrates access
+				to the various caches configured for use in a region.
+			</p>
+			<p> The JCS jar provides production ready implementations of each of
+				the four types of caches. In addition to the core four, JCS also
+				provides additional plugins of each type.</p>
+			<subsection name="LRU Memory Cache">
+				<p>
+					The LRU Memory Cache is an extremely fast, highly configurable
+					<a href="RegionProperties.html"> memory cache</a>
+					. It uses a Least Recently Used algorithm to manage the number of
+					items that can be stored in memory. The LRU Memory Cache uses its
+					own LRU Map implementation that is significantly faster than both
+					the commons LRUMap implementation and the LinkedHashMap that is
+					provided with JDK1.4 up. This makes JCS faster than its
+					<a href="JCSvsEHCache.html">competitors</a>
+					.
+				</p>
+			</subsection>
+			<subsection name="Indexed Disk Cache">
+				<p>
+					The
+					<a href="IndexedDiskAuxCache.html">Indexed Disk Cache</a>
+					is a fast, reliable, and
+					<a href="IndexedDiskCacheProperties.html"> highly configurable</a>
+					swap for cached data. The indexed disk cache follows the fastest
+					pattern for disk swapping. Cache elements are written to disk via a
+					continuous queue-based process. The length of the item is stored in
+					the first few bytes of the entry. The offset is stored in memory
+					and can be reference via the key. When items are removed from the
+					disk cache, the location and size are recorded and reused when
+					possible. Every aspect of the disk cache is configurable, and a
+					thread pool can be used to reduce the number of queue worker
+					threads across the system.
+				</p>
+			</subsection>
+			<subsection name="JDBC Disk Cache">
+				<p>
+					The
+					<a href="JDBCDiskCache.html">JDBC Disk Cache</a>
+					is a fast, reliable, and
+					<a href="JDBCDiskCacheProperties.html"> highly configurable</a>
+					disk cache. It stores both the keys and elements in a JDBC
+					compatible database. The JDBC disk cache stores elements in
+					a database as BLOBs. Periodically, the table is swept to remove
+					expired elements. Multiple instances can be configured to use a
+					common connection pool. A thread pool can be used to reduce the
+					number of queue worker threads across the system. The
+					<a href="MySQLDiskCacheProperties.html">MySQL version of the JDBC Disk Cache</a>
+					can optimize and repair tables.
+				</p>
+			</subsection>
+			<subsection name="TCP Lateral Cache">
+				<p>
+					The
+					<a href="LateralTCPAuxCache.html">TCP Lateral Cache</a>
+					provides an easy way to distribute cached data to multiple servers.
+					It comes with a
+					<a href="LateralUDPDiscovery.html">UDP discovery</a>
+					mechanism, so you can add nodes without having to reconfigure the
+					entire farm. The TCP Lateral Cache works by establishing
+					connections with socket server running on other nodes. Each node
+					maintains a connection to every other. Only one server is needed
+					for any number of regions. The client is able to re-establish
+					connections if it looses its connection with another server. The
+					TCP Lateral is
+					<a href="LateralTCPProperties.html"> highly configurable</a>
+					. You can choose to only send data, to not look for data on other
+					servers, to send removes instead of puts, and to filter removes
+					based on hash codes.
+				</p>
+			</subsection>
+			<subsection name="RMI Remote Cache">
+				<p>
+					JCS also provides an RMI based
+					<a href="RemoteAuxCache.html">Remote Cache Server</a>
+					. Rather than having each node connect to every other node, you can
+					use the remote cache server as the connection point. Each node
+					connects to the remove server, which then broadcasts events to the
+					other nodes. To maintain consistency across a cluster without
+					incurring the overhead of serialization, you can decide to send
+					invalidation messages to the other locals rather than send the
+					object over the wire. The remote cache server holds a serialized
+					version of your objects, so it does not need to be deployed with
+					your class libraries. The remote servers can be chained and a list
+					of failover servers can be configured on the client.
+				</p>
+			</subsection>
+		</section>
+		<section name="What JCS is not">
+			<p> JCS is not a tag library or a web specific application. JCS is a
+				general purpose caching system that can be used in web applications,
+				services, and stand alone Java applications.</p>
+			<p> JCS is not a transactional distribution mechanism. Transactional
+				distributed caches are not scalable. JCS is a cache not a database.
+				The distribution mechanisms provided by JCS can scale into the tens
+				of servers. In a well-designed service oriented architecture, JCS
+				can be used in a high demand service with numerous nodes. This would
+				not be possible if the distribution mechanism were transactional.
+			</p>
+			<p> JCS does not use AOP. JCS is a high performance, non-invasive
+				cache. It does not manipulate your objects so it can just send a
+				field or two fewer over the wire.</p>
+			<p> JCS is not a fork, an offshoot, a branch, or any other derivation
+				of JCS. Nor is JCS named after another library. JCS is a mature
+				project that has been under development and in use since 2001. Over
+				the years JCS has incorporated numerous bug fixes and has added
+				dozens of features, making it the best designed and most feature
+				rich caching solution available.</p>
+		</section>
+	</body>
+</document>

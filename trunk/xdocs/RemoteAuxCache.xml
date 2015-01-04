@@ -1,0 +1,356 @@
+<?xml version="1.0"?>
+<!--
+ Licensed to the Apache Software Foundation (ASF) under one
+ or more contributor license agreements.  See the NOTICE file
+ distributed with this work for additional information
+ regarding copyright ownership.  The ASF licenses this file
+ to you under the Apache License, Version 2.0 (the
+ "License"); you may not use this file except in compliance
+ with the License.  You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing,
+ software distributed under the License is distributed on an
+ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ KIND, either express or implied.  See the License for the
+ specific language governing permissions and limitations
+ under the License.
+-->
+
+<document>
+	<properties>
+		<title>Remote Auxiliary Cache Client / Server</title>
+		<author email="pete@kazmier.com">Pete Kazmier</author>
+		<author email="ASmuts@apache.org">Aaron Smuts</author>
+	</properties>
+
+	<body>
+		<section name="Remote Auxiliary Cache Client / Server">
+			<p>
+				The Remote Auxiliary Cache is an optional plug in for
+				JCS. It is intended for use in multi-tiered systems to
+				maintain cache consistency. It uses a highly reliable
+				RMI client server framework that currently allows for
+				any number of clients. Using a listener id allows
+				multiple clients running on the same machine to connect
+				to the remote cache server. All cache regions on one
+				client share a listener per auxiliary, but register
+				separately. This minimizes the number of connections
+				necessary and still avoids unnecessary updates for
+				regions that are not configured to use the remote cache.
+			</p>
+			<p>
+				Local remote cache clients connect to the remote cache
+				on a configurable port and register a listener to
+				receive cache update callbacks at a configurable port.
+			</p>
+			<p>
+				If there is an error connecting to the remote server or
+				if an error occurs in transmission, the client will
+				retry for a configurable number of tries before moving
+				into a failover-recovery mode. If failover servers are
+				configured the remote cache clients will try to register
+				with other failover servers in a sequential order. If a
+				connection is made, the client will broadcast all
+				relevant cache updates to the failover server while
+				trying periodically to reconnect with the primary
+				server. If there are no failovers configured the client
+				will move into a zombie mode while it tries to
+				re-establish the connection. By default, the cache
+				clients run in an optimistic mode and the failure of the
+				communication channel is detected by an attempted update
+				to the server. A pessimistic mode is configurable so
+				that the clients will engage in active status checks.
+			</p>
+			<p>
+				The remote cache server broadcasts updates to listeners
+				other than the originating source. If the remote cache
+				fails to propagate an update to a client, it will retry
+				for a configurable number of tries before de-registering
+				the client.
+			</p>
+			<p>
+				The cache hub communicates with a facade that implements
+				a zombie pattern (balking facade) to prevent blocking.
+				Puts and removals are queued and occur asynchronously in
+				the background. Get requests are synchronous and can
+				potentially block if there is a communication problem.
+			</p>
+			<p>
+				By default client updates are light weight. The client
+				listeners are configured to remove elements form the
+				local cache when there is a put order from the remote.
+				This allows the client memory store to control the
+				memory size algorithm from local usage, rather than
+				having the usage patterns dictated by the usage patterns
+				in the system at large.
+			</p>
+			<p>
+				When using a remote cache the local cache hub will
+				propagate elements in regions configured for the remote
+				cache if the element attributes specify that the item to
+				be cached can be sent remotely. By default there are no
+				remote restrictions on elements and the region will
+				dictate the behavior. The order of auxiliary requests is
+				dictated by the order in the configuration file. The
+				examples are configured to look in memory, then disk,
+				then remote caches. Most elements will only be retrieved
+				from the remote cache once, when they are not in memory
+				or disk and are first requested, or after they have been
+				invalidated.
+			</p>
+			<subsection name="Client Configuration">
+				<p>
+					The configuration is fairly straightforward and is
+					done in the auxiliary cache section of the
+					<code>cache.ccf</code>
+					configuration file. In the example below, I created
+					a Remote Auxiliary Cache Client referenced by
+					<code>RFailover</code>
+					.
+				</p>
+				<p>
+					This auxiliary cache will use
+					<code>localhost:1102</code>
+					as its primary remote cache server and will attempt
+					to failover to
+					<code>localhost:1103</code>
+					if the primary is down.
+				</p>
+				<p>
+					Setting
+					<code>RemoveUponRemotePut</code>
+					to
+					<code>false</code>
+					would cause remote puts to be translated into put
+					requests to the client region. By default it is
+					<code>true</code>
+					, causing remote put requests to be issued as
+					removes at the client level. For groups the put
+					request functions slightly differently: the item
+					will be removed, since it is no longer valid in its
+					current form, but the list of group elements will be
+					updated. This way the client can maintain the
+					complete list of group elements without the burden
+					of storing all of the referenced elements. Session
+					distribution works in this half-lazy replication
+					mode.
+				</p>
+				<p>
+					Setting
+					<code>GetOnly</code>
+					to
+					<code>true</code>
+					would cause the remote cache client to stop
+					propagating updates to the remote server, while
+					continuing to get items from the remote store.
+				</p>
+				<source>
+					<![CDATA[
+# Remote RMI Cache set up to failover
+jcs.auxiliary.RFailover=
+    org.apache.commons.jcs.auxiliary.remote.RemoteCacheFactory
+jcs.auxiliary.RFailover.attributes=
+    org.apache.commons.jcs.auxiliary.remote.RemoteCacheAttributes
+jcs.auxiliary.RFailover.attributes.FailoverServers=
+    localhost:1102,localhost:1103
+jcs.auxiliary.RFailover.attributes.RemoveUponRemotePut=true
+jcs.auxiliary.RFailover.attributes.GetOnly=false
+        ]]>
+				</source>
+				<p>
+					This cache region is setup to use a disk cache and
+					the remote cache configured above:
+				</p>
+				<source>
+					<![CDATA[
+#Regions preconfirgured for caching
+jcs.region.testCache1=DC,RFailover
+jcs.region.testCache1.cacheattributes=
+    org.apache.commons.jcs.engine.CompositeCacheAttributes
+jcs.region.testCache1.cacheattributes.MaxObjects=1000
+jcs.region.testCache1.cacheattributes.MemoryCacheName=
+    org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
+        ]]>
+				</source>
+			</subsection>
+			<subsection name="Server Configuration">
+				<p>
+					The remote cache configuration is growing. For now,
+					the configuration is done at the top of the
+					<code>remote.cache.ccf</code>
+					file. The
+					<code>startRemoteCache</code>
+					script passes the configuration file name to the
+					server when it starts up. The configuration
+					parameters below will create a remote cache server
+					that listens to port
+					<code>1102</code>
+					and performs call backs on the
+					<code>remote.cache.service.port</code>
+					, also specified as port
+					<code>1102</code>
+					.
+				</p>
+				<source>
+					<![CDATA[
+# Registry used to register and provide the
+# IRemoteCacheService service.
+registry.host=localhost
+registry.port=1102
+# call back port to local caches.
+remote.cache.service.port=1102
+# rmi socket factory timeout
+remote.cache.rmiSocketFactoryTimeoutMillis=5000
+# cluster setting
+remote.cluster.LocalClusterConsistency=true
+remote.cluster.AllowClusterGet=true
+        ]]>
+				</source>
+				<p>
+					Remote servers can be chained (or clustered). This
+					allows gets from local caches to be distributed
+					between multiple remote servers. Since gets are the
+					most common operation for caches, remote server
+					chaining can help scale a caching solution.
+				</p>
+				<p>
+					The
+					<code>LocalClusterConsistency</code>
+					setting tells the remote cache server if it should
+					broadcast updates received from other cluster
+					servers to registered local caches.
+				</p>
+				<p>
+					The
+					<code>AllowClusterGet</code>
+					setting tells the remote cache server whether it
+					should allow the cache to look in non-local
+					auxiliaries for items if they are not present.
+					Basically, if the get request is not from a cluster
+					server, the cache will treat it as if it originated
+					locally. If the get request originated from a
+					cluster client, then the get will be restricted to
+					local (i.e. memory and disk) auxiliaries. Hence,
+					cluster gets can only go one server deep. They
+					cannot be chained.  By default this setting is true.
+				</p>
+				<p>
+					To use remote server clustering, the remote cache
+					will have to be told what regions to cluster. The
+					configuration below will cluster all
+					non-preconfigured regions with
+					<code>RCluster1</code>
+					.
+				</p>
+				<source>
+					<![CDATA[
+# sets the default aux value for any non configured caches
+jcs.default=DC,RCluster1
+jcs.default.cacheattributes=
+    org.apache.commons.jcs.engine.CompositeCacheAttributes
+jcs.default.cacheattributes.MaxObjects=1000
+
+jcs.auxiliary.RCluster1=
+    org.apache.commons.jcs.auxiliary.remote.RemoteCacheFactory
+jcs.auxiliary.RCluster1.attributes=
+    org.apache.commons.jcs.auxiliary.remote.RemoteCacheAttributes
+jcs.auxiliary.RCluster1.attributes.RemoteTypeName=CLUSTER
+jcs.auxiliary.RCluster1.attributes.RemoveUponRemotePut=false
+jcs.auxiliary.RCluster1.attributes.ClusterServers=localhost:1103
+jcs.auxiliary.RCluster1.attributes.GetOnly=false
+        ]]>
+				</source>
+				<p>
+					RCluster1 is configured to talk to a remote server
+					at
+					<code>localhost:1103</code>
+					. Additional servers can be added in a comma
+					separated list.
+				</p>
+				<p>
+					If we startup another remote server listening to
+					port 1103, (ServerB) then we can have that server
+					talk to the server we have been configuring,
+					listening at 1102 (ServerA). This would allow us to
+					set some local caches to talk to ServerA and some to
+					talk to ServerB. The two remote servers will
+					broadcast all puts and removes between themselves,
+					and the get requests from local caches could be
+					divided. The local caches do not need to know
+					anything about the server chaining configuration,
+					unless you want to use a standby, or failover
+					server.
+				</p>
+				<p>
+					We could also use ServerB as a hot standby. This can
+					be done in two ways. You could have all local caches
+					point to ServerA as a primary and ServerB as a
+					secondary. Alternatively, you can set ServerA as the
+					primary for some local caches and ServerB for the
+					primary for some others.
+				</p>
+				<p>
+					The local cache configuration below uses ServerA as
+					a primary and ServerB as a backup. More than one
+					backup can be defined, but only one will be used at
+					a time. If the cache is connected to any server
+					except the primary, it will try to restore the
+					primary connection indefinitely, at 20 second
+					intervals.
+				</p>
+				<source>
+					<![CDATA[
+	# Remote RMI Cache set up to failover
+	jcs.auxiliary.RFailover=
+	    org.apache.commons.jcs.auxiliary.remote.RemoteCacheFactory
+	jcs.auxiliary.RFailover.attributes=
+	    org.apache.commons.jcs.auxiliary.remote.RemoteCacheAttributes
+	jcs.auxiliary.RFailover.attributes.FailoverServers=
+	    localhost:1102,localhost:1103
+	jcs.auxiliary.RC.attributes.RemoveUponRemotePut=true
+	jcs.auxiliary.RFailover.attributes.GetOnly=false
+	        ]]>
+				</source>
+			</subsection>
+			<subsection name="Server Startup / Shutdown">
+				<p>
+					It is highly recommended that you embed the Remote
+					Cache Server in a Servlet container such as Tomcat.
+					Running inside Tomcat allows you to use the
+					JCSAdmin.jsp page. It also takes care of the
+					complexity of creating working startup and shutdown
+					scripts.
+				</p>
+				<p>
+					JCS provides a convenient startup servlet for this
+					purpose. It will start the registry and bind the
+					JCS server to the registry. To use the startup
+					servlet, add the following to the web.xml file and
+					make sure you have the cache.ccf file in the
+					WEB-INF/classes directly of your war file.
+				</p>
+				<source>
+					<![CDATA[
+    <servlet>
+        <servlet-name>JCSRemoteCacheStartupServlet</servlet-name>
+        <servlet-class>
+             org.apache.commons.jcs.auxiliary.remote.server.RemoteCacheStartupServlet
+        </servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+
+    <servlet-mapping>
+        <servlet-name>JCSRemoteCacheStartupServlet</servlet-name>
+        <url-pattern>/jcs</url-pattern>
+    </servlet-mapping>
+]]>
+				</source>
+
+			</subsection>
+		</section>
+
+	</body>
+</document>

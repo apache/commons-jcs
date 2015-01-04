@@ -1,0 +1,167 @@
+<?xml version="1.0"?>
+	<!--
+		Licensed to the Apache Software Foundation (ASF) under one or more
+		contributor license agreements. See the NOTICE file distributed with
+		this work for additional information regarding copyright ownership.
+		The ASF licenses this file to you under the Apache License, Version
+		2.0 (the "License"); you may not use this file except in compliance
+		with the License. You may obtain a copy of the License at
+		http://www.apache.org/licenses/LICENSE-2.0 Unless required by
+		applicable law or agreed to in writing, software distributed under the
+		License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+		CONDITIONS OF ANY KIND, either express or implied. See the License for
+		the specific language governing permissions and limitations under the
+		License.
+	-->
+<document>
+	<properties>
+		<title>Indexed Disk Cache Configuration</title>
+		<author email="ASmuts@apache.org">Aaron Smuts</author>
+	</properties>
+	<body>
+		<section name="Indexed Disk Auxiliary Cache Configuration">
+			<p> The following properties apply to the Indexed Disk Cache plugin.
+			</p>
+			<subsection name="Indexed Disk Configuration Properties">
+				<table>
+					<tr>
+						<th>Property</th>
+						<th>Description</th>
+						<th>Required</th>
+						<th>Default Value</th>
+					</tr>
+					<tr>
+						<td>DiskPath</td>
+						<td> The directory where the disk cache should write its files.
+						</td>
+						<td>Y</td>
+						<td>n/a</td>
+					</tr>
+					<tr>
+						<td>MaxPurgatorySize</td>
+						<td> The maximum number of items allowed in the queue of items to
+							be written to disk.</td>
+						<td>N</td>
+						<td>5000</td>
+					</tr>
+					<tr>
+						<td>MaxKeySize</td>
+						<td> The maximum number of keys that the indexed disk cache can
+							have. Since the keys are stored in memory, you may want to limit
+							this number to something reasonable. The default is a bit small.
+						</td>
+						<td>N</td>
+						<td>5000</td>
+					</tr>
+					<tr>
+						<td>OptimizeAtRemoveCount</td>
+						<td> At how many removes should the cache try to defragment the
+							data file. Since we recycle empty spots, defragmentation is
+							usually not needed. To prevent the cache from defragmenting the
+							data file, you can set this to -1. This is the default value.
+						</td>
+						<td>N</td>
+						<td>-1</td>
+					</tr>
+					<tr>
+						<td>OptimizeOnShutdown</td>
+						<td> By default the Indexed Disk Cache will optimize on shutdown
+							if the free data size is greater than 0. If you want to prevent
+							this behavior, you can set this parameter to false.</td>
+						<td>N</td>
+						<td>true</td>
+					</tr>
+					<tr>
+						<td>ClearDiskOnStartup</td>
+						<td> By default the Indexed Disk Cache will use items found on
+							disk on startup. If you set this value to true, the old key and
+							data files will be cleared.</td>
+						<td>N</td>
+						<td>false</td>
+					</tr>
+					<tr>
+						<td>MaxRecycleBinSize</td>
+						<td> The maximum number of empty spots the cache will keep track
+							of. The smallest are removed when the maximum size is reached.
+							Keeping track of empty spots on disk allows us to reuse spots,
+							thereby keeping the file from growing unncessarily.</td>
+						<td>N</td>
+						<td>5000</td>
+					</tr>
+				</table>
+			</subsection>
+			<subsection name="Example Configuration">
+				<source>
+					<![CDATA[
+jcs.auxiliary.DC=org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
+jcs.auxiliary.DC.attributes=org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
+jcs.auxiliary.DC.attributes.DiskPath=target/test-sandbox/indexed-disk-cache
+jcs.auxiliary.DC.attributes.MaxPurgatorySize=10000
+jcs.auxiliary.DC.attributes.MaxKeySize=10000
+jcs.auxiliary.DC.attributes.OptimizeAtRemoveCount=300000
+jcs.auxiliary.DC.attributes.OptimizeOnShutdown=true
+jcs.auxiliary.DC.attributes.ClearDiskOnStartup=false
+jcs.auxiliary.DC.attributes.MaxRecycleBinSize=7500
+        ]]>
+				</source>
+			</subsection>
+			<subsection name="Indexed Disk Event Queue Configuration">
+				<table>
+					<tr>
+						<th>Property</th>
+						<th>Description</th>
+						<th>Required</th>
+						<th>Default Value</th>
+					</tr>
+					<tr>
+						<td>EventQueueType</td>
+						<td> This should be either SINGLE or POOLED. By default the single
+							style pool is used. The single style pool uses a single thread
+							per event queue. That thread is killed whenever the queue is
+							inactive for 30 seconds. Since the disk cache uses an event queue
+							for every region, if you have many regions and they are all
+							active, you will be using many threads. To limit the number of
+							threads, you can configure the disk cache to use the pooled event
+							queue. Using more threads than regions will not add any benefit
+							for the indexed disk cache, since only one thread can read or
+							write at a time for a single region.</td>
+						<td>N</td>
+						<td>SINGLE</td>
+					</tr>
+					<tr>
+						<td>EventQueuePoolName</td>
+						<td> This is the name of the pool to use. It is required if you
+							choose the POOLED event queue type, otherwise it is ignored.</td>
+						<td>Y</td>
+						<td>n/a</td>
+					</tr>
+				</table>
+			</subsection>
+			<subsection name="Example Configuration Using Thread Pool">
+				<source>
+					<![CDATA[
+jcs.auxiliary.DC=org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
+jcs.auxiliary.DC.attributes=org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
+jcs.auxiliary.DC.attributes.DiskPath=target/test-sandbox/indexed-disk-cache
+jcs.auxiliary.DC.attributes.MaxPurgatorySize=10000
+jcs.auxiliary.DC.attributes.MaxKeySize=10000
+jcs.auxiliary.DC.attributes.OptimizeAtRemoveCount=300000
+jcs.auxiliary.DC.attributes.OptimizeOnShutdown=true
+jcs.auxiliary.DC.attributes.MaxRecycleBinSize=7500
+jcs.auxiliary.DC.attributes.EventQueueType=POOLED
+jcs.auxiliary.DC.attributes.EventQueuePoolName=disk_cache_event_queue
+
+# Disk Cache pool
+thread_pool.disk_cache_event_queue.boundarySize=50
+thread_pool.disk_cache_event_queue.useBoundary=true
+thread_pool.disk_cache_event_queue.maximumPoolSize=15
+thread_pool.disk_cache_event_queue.minimumPoolSize=1
+thread_pool.disk_cache_event_queue.keepAliveTime=3500
+thread_pool.disk_cache_event_queue.startUpSize=1
+thread_pool.disk_cache_event_queue.whenBlockedPolicy=RUN
+        ]]>
+				</source>
+			</subsection>
+		</section>
+	</body>
+</document>

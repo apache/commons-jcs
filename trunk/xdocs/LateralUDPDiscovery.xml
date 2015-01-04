@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<!--
+ Licensed to the Apache Software Foundation (ASF) under one
+ or more contributor license agreements.  See the NOTICE file
+ distributed with this work for additional information
+ regarding copyright ownership.  The ASF licenses this file
+ to you under the Apache License, Version 2.0 (the
+ "License"); you may not use this file except in compliance
+ with the License.  You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing,
+ software distributed under the License is distributed on an
+ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ KIND, either express or implied.  See the License for the
+ specific language governing permissions and limitations
+ under the License.
+-->
+
+<document>
+  <properties>
+    <title>Lateral UDP Discovery</title>
+    <author email="asmuts@apache.org">Aaron Smuts</author>
+  </properties>
+
+  <body>
+    <section name="Lateral UDP Discovery">
+      <p>
+		Rather than list all the other lateral servers in the configuration
+		file, you can configure the TCP lateral to use UDP
+		discovery.  In discovery mode, lateral TCP caches will broadcast
+		to a multicast address and port, letting all listeners know where they are.
+  	  </p>
+	  <p>
+		On startup each lateral will issue a special message requesting a
+		broadcast from the other caches.  Normal broadcasts occur every
+		30 seconds. (This is to be made configurable.)  Regions that don't
+		receive, are running in send only mode, don't broadcast anything but requests.
+  	  </p>
+      <p>
+	    When a lateral receives a discovery message it will try to add
+	    the lateral to the nowait facade for the region.  If it already exists
+	    nothing happens.  If a region is not configured to send laterally, nothing
+		happens,  since it doesn't have a no wait.
+  	  </p>
+  	  <p>
+  		This allows you to have the same configuration on every machine.
+      </p>
+      <subsection name="Configuration">
+        <p>
+          The configuration is fairly straightforward and is done in the
+          auxiliary cache section of the <code>cache.ccf</code>
+          configuration file.  In the example below, I created a TCP
+          Lateral Auxiliary Cache referenced by <code>LTCP</code>.  It uses
+          UDP Discovery to locate other servers.  It broadcasts to
+          multicast address <code>228.5.6.8</code> and port <code>6780</code>.
+          It listens to port <code>1110</code>.
+        </p>
+        <source><![CDATA[
+jcs.auxiliary.LTCP=org.apache.commons.jcs.auxiliary.lateral.socket.tcp.LateralTCPCacheFactory
+jcs.auxiliary.LTCP.attributes=org.apache.commons.jcs.auxiliary.lateral.socket.tcp.TCPLateralCacheAttributes
+jcs.auxiliary.LTCP.attributes.TcpListenerPort=1110
+jcs.auxiliary.LTCP.attributes.PutOnlyMode=true
+jcs.auxiliary.LTCP.attributes.UdpDiscoveryAddr=228.5.6.8
+jcs.auxiliary.LTCP.attributes.UdpDiscoveryPort=6780
+jcs.auxiliary.LTCP.attributes.UdpDiscoveryEnabled=true
+        ]]></source>
+      </subsection>
+    </section>
+  </body>
+</document>

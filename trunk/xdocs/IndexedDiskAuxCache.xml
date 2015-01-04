@@ -1,0 +1,307 @@
+<?xml version="1.0"?>
+<!--
+ Licensed to the Apache Software Foundation (ASF) under one
+ or more contributor license agreements.  See the NOTICE file
+ distributed with this work for additional information
+ regarding copyright ownership.  The ASF licenses this file
+ to you under the Apache License, Version 2.0 (the
+ "License"); you may not use this file except in compliance
+ with the License.  You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing,
+ software distributed under the License is distributed on an
+ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ KIND, either express or implied.  See the License for the
+ specific language governing permissions and limitations
+ under the License.
+-->
+
+<document>
+	<properties>
+		<title>Indexed Disk Auxiliary Cache</title>
+		<author email="ASmuts@apache.org">Aaron Smuts</author>
+	</properties>
+
+	<body>
+		<section name="Indexed Disk Auxiliary Cache">
+			<p>
+				The Indexed Disk Auxiliary Cache is an optional plugin
+				for the JCS. It is primarily intended to provide a
+				secondary store to ease the memory burden of the cache.
+				When the memory cache exceeds its maximum size it tells
+				the cache hub that the item to be removed from memory
+				should be spooled to disk. The cache checks to see if
+				any auxiliaries of type "disk" have been configured for
+				the region. If the "Indexed Disk Auxiliary Cache" is
+				used, the item will be spooled to disk.
+			</p>
+
+			<subsection name="Disk Indexing">
+				<p>
+					The Indexed Disk Auxiliary Cache follows the fastest
+					pattern of disk caching. Items are stored at the end
+					of a file dedicated to the cache region. The first
+					byte of each disk entry specifies the length of the
+					entry. The start position in the file is saved in
+					memory, referenced by the item's key. Though this
+					still requires memory, it is insignificant given the
+					performance trade off. Depending on the key size,
+					500,000 disk entries will probably only require
+					about 3 MB of memory. Locating the position of an
+					item is as fast as a map lookup and the retrieval of
+					the item only requires 2 disk accesses.
+				</p>
+				<p>
+					When items are removed from the disk cache, the
+					location of the available block on the storage file
+					is recorded in a sorted preferential array of a size
+					not to exceed the maximum number of keys allowed in
+					memory. This allows the disk cache to reuse empty
+					spots, thereby keeping the file size to a minimum.
+				</p>
+			</subsection>
+
+			<subsection name="Purgatory">
+				<p>
+					Writing to the disk cache is asynchronous and made
+					efficient by using a memory staging area called
+					purgatory. Retrievals check purgatory then disk for
+					an item. When items are sent to purgatory they are
+					simultaneously queued to be put to disk. If an item
+					is retrieved from purgatory it will no longer be
+					written to disk, since the cache hub will move it
+					back to memory. Using purgatory insures that there
+					is no wait for disk writes, unecessary disk writes
+					are avoided for borderline items, and the items are
+					always available.
+				</p>
+			</subsection>
+
+			<subsection name="Persistence">
+				<p>
+					When the disk cache is properly shutdown, the memory
+					index is written to disk and the value file is
+					defragmented. When the cache starts up, the disk
+					cache can be configured to read or delete the index
+					file. This provides an unreliable persistence
+					mechanism.
+				</p>
+			</subsection>
+
+			<subsection name="Configuration">
+				<p>
+					Configuration is simple and is done in the
+					auxiliary cache section of the
+					<code>cache.ccf</code>
+					configuration file. In the example below, I created
+					an Indexed Disk Auxiliary Cache referenced by
+					<code>DC</code>
+					. It uses files located in the "DiskPath" directory.
+				</p>
+				<p>
+					The Disk indexes are equipped with an LRU storage
+					limit. The maximum number of keys is configured by
+					the maxKeySize parameter. If the maximum key size is
+					less than 0, no limit will be placed on the number
+					of keys. By default, the max key size is 5000.
+				</p>
+				<source>
+					<![CDATA[
+jcs.auxiliary.DC=
+    org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
+jcs.auxiliary.DC.attributes=
+    org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
+jcs.auxiliary.DC.attributes.DiskPath=g:\dev\jakarta-turbine-stratum\raf
+jcs.auxiliary.DC.attributes.MaxKeySize=100000
+        ]]>
+				</source>
+			</subsection>
+
+			<subsection name="Additional Configuration Options">
+				<p>
+					The indexed disk cache provides some additional
+					configuration options.
+				</p>
+				<p>
+					The purgatory size of the Disk cache is equipped
+					with an LRU storage limit. The maximum number of
+					elements allowed in purgatory is configured by the
+					MaxPurgatorySize parameter. By default, the max
+					purgatory size is 5000.
+				</p>
+				<p>
+					Initial testing indicates that the disk cache
+					performs better when the key and purgatory sizes are
+					limited.
+				</p>
+				<source>
+					<![CDATA[
+jcs.auxiliary.DC.attributes.MaxPurgatorySize=10000
+        ]]>
+				</source>
+				<p>
+					Slots in the data file become empty when items are
+					removed from the disk cache. The indexed disk cache
+					keeps track of empty slots in the data file, so they
+					can be reused. The slot locations are stored in a
+					sorted preferential array -- the recycle bin. The
+					smallest items are removed from the recycle bin when
+					it reaches the specified limit. The
+					MaxRecycleBinSize cannot be larger than the
+					MaxKeySize. If the MaxKeySize is less than 0, the
+					recycle bin will default to 5000.
+				</p>
+				<p>
+					If all the items put on disk are the same size, then
+					the recycle bin will always return perfect matches.
+					However, if the items are of various sizes, the disk
+					cache will use the free spot closest in size but not
+					smaller than the item being written to disk. Since
+					some recycled spots will be larger than the items
+					written to disk, unusable gaps will result.
+					Optimization is intended to remove these gaps.
+				</p>
+				<source>
+					<![CDATA[
+jcs.auxiliary.DC.attributes.MaxRecycleBinSize=10000
+        ]]>
+				</source>
+				<p>
+					The Disk cache can be configured to defragment the
+					data file at runtime. Since defragmentation is only
+					necessary if items have been removed, the
+					deframentation interval is determined by the number
+					of removes. Currently there is no way to schedule
+					defragmentation to run at a set time. If you set the
+					OptimizeAtRemoveCount to -1, no optimizations of the
+					data file will occur until shutdown. By default the
+					value is -1.
+				</p>
+				<p>
+					In version 1.2.7.9 of JCS, the optimization routine
+					was significantly improved. It now occurs in place,
+					without the aid of a temporary file.
+				</p>
+				<source>
+					<![CDATA[
+jcs.auxiliary.DC.attributes.OptimizeAtRemoveCount=30000
+        ]]>
+				</source>
+			</subsection>
+
+			<subsection name="A Complete Configuration Example">
+				<p>
+					In this sample cache.ccf file, I configured the
+					cache to use a disk cache, called DC, by default.
+					Also, I explicitly set a cache region called
+					myRegion1 to use DC. I specified custom settings for
+					all of the Indexed Disk Cache configuration
+					parameters.
+				</p>
+				<source>
+					<![CDATA[
+##############################################################
+##### Default Region Configuration
+jcs.default=DC
+jcs.default.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
+jcs.default.cacheattributes.MaxObjects=100
+jcs.default.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
+
+##############################################################
+##### CACHE REGIONS
+jcs.region.myRegion1=DC
+jcs.region.myRegion1.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
+jcs.region.myRegion1.cacheattributes.MaxObjects=1000
+jcs.region.myRegion1.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
+
+##############################################################
+##### AUXILIARY CACHES
+# Indexed Disk Cache
+jcs.auxiliary.DC=org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
+jcs.auxiliary.DC.attributes=org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
+jcs.auxiliary.DC.attributes.DiskPath=target/test-sandbox/indexed-disk-cache
+jcs.auxiliary.DC.attributes.MaxPurgatorySize=10000
+jcs.auxiliary.DC.attributes.MaxKeySize=10000
+jcs.auxiliary.DC.attributes.OptimizeAtRemoveCount=300000
+jcs.auxiliary.DC.attributes.OptimizeOnShutdown=true
+jcs.auxiliary.DC.attributes.MaxRecycleBinSize=7500
+        ]]>
+				</source>
+			</subsection>
+
+			<subsection name="Using Thread Pools to Reduce Threads">
+				<p>
+					The Indexed Disk Cache allows you to use fewer
+					threads than active regions. By default the disk
+					cache will use the standard cache event queue which
+					has a dedicated thread. Although the standard queue
+					kills its worker thread after a minute of
+					inactivity, you may want to restrict the total
+					number of threads. You can accomplish this by using
+					a pooled event queue.
+				</p>
+				<p>
+					The configuration file below defines a disk cache
+					called DC2. It uses an event queue of type POOLED.
+					The queue is named disk_cache_event_queue. The
+					disk_cache_event_queue is defined in the bottom of
+					the file.
+				</p>
+				<source>
+					<![CDATA[
+##############################################################
+################## DEFAULT CACHE REGION  #####################
+# sets the default aux value for any non configured caches
+jcs.default=DC2
+jcs.default.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
+jcs.default.cacheattributes.MaxObjects=200001
+jcs.default.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
+jcs.default.cacheattributes.UseMemoryShrinker=false
+jcs.default.cacheattributes.MaxMemoryIdleTime=3600
+jcs.default.cacheattributes.ShrinkerInterval=60
+jcs.default.elementattributes=org.apache.commons.jcs.engine.ElementAttributes
+jcs.default.elementattributes.IsEternal=false
+jcs.default.elementattributes.MaxLife=700
+jcs.default.elementattributes.IdleTime=1800
+jcs.default.elementattributes.IsSpool=true
+jcs.default.elementattributes.IsRemote=true
+jcs.default.elementattributes.IsLateral=true
+
+##############################################################
+################## AUXILIARY CACHES AVAILABLE ################
+
+# Disk Cache Using a Pooled Event Queue -- this allows you
+# to control the maximum number of threads it will use.
+# Each region uses 1 thread by default in the SINGLE model.
+# adding more threads than regions does not help performance.
+# If you want to use a separate pool for each disk cache, either use
+# the single model or define a different auxiliary for each region and use the Pooled type.
+# SINGLE is generally best unless you ahve a huge # of regions.
+jcs.auxiliary.DC2=org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
+jcs.auxiliary.DC2.attributes=org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
+jcs.auxiliary.DC2.attributes.DiskPath=target/test-sandbox/raf
+jcs.auxiliary.DC2.attributes.MaxPurgatorySize=10000
+jcs.auxiliary.DC2.attributes.MaxKeySize=10000
+jcs.auxiliary.DC2.attributes.MaxRecycleBinSize=5000
+jcs.auxiliary.DC2.attributes.OptimizeAtRemoveCount=300000
+jcs.auxiliary.DC.attributes.OptimizeOnShutdown=true
+jcs.auxiliary.DC2.attributes.EventQueueType=POOLED
+jcs.auxiliary.DC2.attributes.EventQueuePoolName=disk_cache_event_queue
+
+##############################################################
+################## OPTIONAL THREAD POOL CONFIGURATION ########
+
+# Disk Cache Event Queue Pool
+thread_pool.disk_cache_event_queue.useBoundary=false
+thread_pool.remote_cache_client.maximumPoolSize=15
+thread_pool.disk_cache_event_queue.minimumPoolSize=1
+thread_pool.disk_cache_event_queue.keepAliveTime=3500
+thread_pool.disk_cache_event_queue.startUpSize=1
+        ]]>
+				</source>
+			</subsection>
+		</section>
+	</body>
+</document>

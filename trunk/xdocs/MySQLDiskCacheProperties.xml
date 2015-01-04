@@ -1,0 +1,195 @@
+<?xml version="1.0"?>
+<!--
+ Licensed to the Apache Software Foundation (ASF) under one
+ or more contributor license agreements.  See the NOTICE file
+ distributed with this work for additional information
+ regarding copyright ownership.  The ASF licenses this file
+ to you under the Apache License, Version 2.0 (the
+ "License"); you may not use this file except in compliance
+ with the License.  You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing,
+ software distributed under the License is distributed on an
+ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ KIND, either express or implied.  See the License for the
+ specific language governing permissions and limitations
+ under the License.
+-->
+
+<document>
+	<properties>
+		<title>MySQL Disk Cache Configuration</title>
+		<author email="asmuts@apache.org">Aaron Smuts</author>
+	</properties>
+
+	<body>
+		<section name="MySQL Disk Auxiliary Cache Configuration">
+
+			<p>
+				The MySQL Disk Cache uses all of the JDBC Disk Cache
+				properties. It adds a few of its own. The following
+				properties only apply to the MySQL Disk Cache plugin.
+			</p>
+
+			<subsection name="MySQL Disk Configuration Properties">
+				<table>
+					<tr>
+						<th>Property</th>
+						<th>Description</th>
+						<th>Required</th>
+						<th>Default Value</th>
+					</tr>
+					<tr>
+						<td>optimizationSchedule</td>
+						<td>
+							For now this is a simple comma delimited
+							list of HH:MM:SS times to optimize the
+							table. If none is supplied, then no
+							optimizations will be performed.
+
+							In the future we can add a cron like
+							scheduling system. This was created to meet
+							a pressing need to optimize fragmented
+							MyISAM tables. When the table becomes
+							fragmented, it starts to take a long time to
+							run the shrinker that deletes expired
+							elements.
+
+							Setting the value to "03:01,15:00" will
+							cause the optimizer to run at 3 am and at 3
+							pm.
+						</td>
+						<td>N</td>
+						<td>null</td>
+					</tr>
+
+					<tr>
+						<td>balkDuringOptimization</td>
+						<td>
+							If this is true, then when JCS is optimizing
+							the table it will return null from get
+							requests and do nothing for put requests.
+
+							If you are using the remote cache and have a
+							failover server configured in a remote cache
+							cluster, and you allow clustered gets, the
+							primary server will act as a proxy to the
+							failover. This way, optimization should have
+							no impact for clients of the remote cache.
+						</td>
+						<td>N</td>
+						<td>true</td>
+					</tr>
+
+				</table>
+			</subsection>
+
+			<subsection name="Example Configuration">
+				<source>
+					<![CDATA[
+##############################################################
+################## AUXILIARY CACHES AVAILABLE ################
+# MYSQL disk cache
+jcs.auxiliary.MYSQL=org.apache.commons.jcs.auxiliary.disk.jdbc.mysql.MySQLDiskCacheFactory
+jcs.auxiliary.MYSQL.attributes=org.apache.commons.jcs.auxiliary.disk.jdbc.mysql.MySQLDiskCacheAttributes
+jcs.auxiliary.MYSQL.attributes.userName=sa
+jcs.auxiliary.MYSQL.attributes.password=
+jcs.auxiliary.MYSQL.attributes.url=jdbc:hsqldb:target/cache_hsql_db
+jcs.auxiliary.MYSQL.attributes.driverClassName=org.hsqldb.jdbcDriver
+jcs.auxiliary.MYSQL.attributes.tableName=JCS_STORE_MYSQL
+jcs.auxiliary.MYSQL.attributes.testBeforeInsert=false
+jcs.auxiliary.MYSQL.attributes.maxActive=15
+jcs.auxiliary.MYSQL.attributes.allowRemoveAll=true
+jcs.auxiliary.MYSQL.attributes.MaxPurgatorySize=10000000
+jcs.auxiliary.MYSQL.attributes.optimizationSchedule=12:34:56,02:34:54
+jcs.auxiliary.MYSQL.attributes.balkDuringOptimization=true
+        ]]>
+				</source>
+			</subsection>
+
+			<subsection name="MySQL Disk Event Queue Configuration">
+
+				<table>
+					<tr>
+						<th>Property</th>
+						<th>Description</th>
+						<th>Required</th>
+						<th>Default Value</th>
+					</tr>
+					<tr>
+						<td>EventQueueType</td>
+						<td>
+							This should be either SINGLE or POOLED. By
+							default the single style pool is used. The
+							single style pool uses a single thread per
+							event queue. That thread is killed whenever
+							the queue is inactive for 30 seconds. Since
+							the disk cache uses an event queue for every
+							region, if you have many regions and they
+							are all active, you will be using many
+							threads. To limit the number of threads, you
+							can configure the disk cache to use the
+							pooled event queue. Using more threads than
+							regions will not add any benefit for the
+							indexed disk cache, since only one thread
+							can read or write at a time for a single
+							region.
+						</td>
+						<td>N</td>
+						<td>SINGLE</td>
+					</tr>
+					<tr>
+						<td>EventQueuePoolName</td>
+						<td>
+							This is the name of the pool to use. It is
+							required if you choose the POOLED event
+							queue type, otherwise it is ignored.
+						</td>
+						<td>Y</td>
+						<td>n/a</td>
+					</tr>
+				</table>
+			</subsection>
+
+			<subsection
+				name="Example Configuration Using Thread Pool">
+				<source>
+					<![CDATA[
+##############################################################
+################## AUXILIARY CACHES AVAILABLE ################
+# MYSQL disk cache
+jcs.auxiliary.MYSQL=org.apache.commons.jcs.auxiliary.disk.jdbc.mysql.MySQLDiskCacheFactory
+jcs.auxiliary.MYSQL.attributes=org.apache.commons.jcs.auxiliary.disk.jdbc.mysql.MySQLDiskCacheAttributes
+jcs.auxiliary.MYSQL.attributes.userName=sa
+jcs.auxiliary.MYSQL.attributes.password=
+jcs.auxiliary.MYSQL.attributes.url=jdbc:hsqldb:target/cache_hsql_db
+jcs.auxiliary.MYSQL.attributes.driverClassName=org.hsqldb.jdbcDriver
+jcs.auxiliary.MYSQL.attributes.tableName=JCS_STORE_MYSQL
+jcs.auxiliary.MYSQL.attributes.testBeforeInsert=false
+jcs.auxiliary.MYSQL.attributes.maxActive=15
+jcs.auxiliary.MYSQL.attributes.allowRemoveAll=true
+jcs.auxiliary.MYSQL.attributes.MaxPurgatorySize=10000000
+jcs.auxiliary.MYSQL.attributes.optimizationSchedule=12:34:56,02:34:54
+jcs.auxiliary.MYSQL.attributes.balkDuringOptimization=true
+jcs.auxiliary.MYSQL.attributes.EventQueueType=POOLED
+jcs.auxiliary.MYSQL.attributes.EventQueuePoolName=disk_cache_event_queue
+
+##############################################################
+################## OPTIONAL THREAD POOL CONFIGURATION #########
+# Disk Cache pool
+thread_pool.disk_cache_event_queue.useBoundary=false
+thread_pool.disk_cache_event_queue.boundarySize=500
+thread_pool.disk_cache_event_queue.maximumPoolSize=15
+thread_pool.disk_cache_event_queue.minimumPoolSize=10
+thread_pool.disk_cache_event_queue.keepAliveTime=3500
+thread_pool.disk_cache_event_queue.whenBlockedPolicy=RUN
+thread_pool.disk_cache_event_queue.startUpSize=10
+        ]]>
+				</source>
+			</subsection>
+
+		</section>
+	</body>
+</document>

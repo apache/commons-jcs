@@ -1,0 +1,199 @@
+<?xml version="1.0"?>
+<!--
+ Licensed to the Apache Software Foundation (ASF) under one
+ or more contributor license agreements.  See the NOTICE file
+ distributed with this work for additional information
+ regarding copyright ownership.  The ASF licenses this file
+ to you under the Apache License, Version 2.0 (the
+ "License"); you may not use this file except in compliance
+ with the License.  You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing,
+ software distributed under the License is distributed on an
+ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ KIND, either express or implied.  See the License for the
+ specific language governing permissions and limitations
+ under the License.
+-->
+
+<document>
+	<properties>
+		<title>Element Event Handling</title>
+		<author email="ASmuts@apache.org">Aaron Smuts</author>
+	</properties>
+
+	<body>
+		<section name="Element Event Handling">
+			<p>
+				JCS allows you to attach event handlers to elements in
+				the local memory cache.
+			</p>
+			<p>
+				There are several events that you can listen for. All of
+				the events are local memory related events. Element
+				event handlers are not transmitted to other caches via
+				lateral or remote auxiliaries, nor are they spooled to
+				disk.
+			</p>
+			<p>
+				You can register multiple handlers for a single item.
+				Although the handlers are associated with particular
+				items, you can also setup default handlers for any
+				region. Each item put into the region, that will take
+				the default element attributes, will be assigned the
+				event default event handlers.
+			</p>
+			<p>
+				The various events that you can handle have all been
+				assigned integer codes. The codes are defined in the
+				org.apache.commons.jcs.engine.control.event.behavior.IElementEventConstants
+				interface. The events are named descriptively and
+				include:
+			</p>
+			<table>
+				<tr>
+					<th>Name</th>
+					<th>Description</th>
+				</tr>
+				<tr>
+					<td>ELEMENT_EVENT_EXCEEDED_MAXLIFE_BACKGROUND</td>
+					<td>
+						The element exceeded its max life. This was
+						detected in a background cleanup.
+					</td>
+				</tr>
+				<tr>
+					<td>ELEMENT_EVENT_EXCEEDED_MAXLIFE_ONREQUEST</td>
+					<td>
+						The element exceeded its max life. This was
+						detected on request.
+					</td>
+				</tr>
+				<tr>
+					<td>ELEMENT_EVENT_EXCEEDED_IDLETIME_BACKGROUND</td>
+					<td>
+						The element exceeded its max idle. This was
+						detected in a background cleanup.
+					</td>
+				</tr>
+				<tr>
+					<td>ELEMENT_EVENT_EXCEEDED_IDLETIME_ONREQUEST</td>
+					<td>
+						The element exceeded its max idle time. This was
+						detected on request.
+					</td>
+				</tr>
+				<tr>
+					<td>ELEMENT_EVENT_SPOOLED_DISK_AVAILABLE</td>
+					<td>
+						The element was pushed out of the memory store,
+						there is a disk store available for the region,
+						and the element is marked as spoolable.
+					</td>
+				</tr>
+				<tr>
+					<td>ELEMENT_EVENT_SPOOLED_DISK_NOT_AVAILABLE</td>
+					<td>
+						The element was pushed out of the memory store,
+						and there is not a disk store available for the
+						region.
+					</td>
+				</tr>
+				<tr>
+					<td>ELEMENT_EVENT_SPOOLED_NOT_ALLOWED</td>
+					<td>
+						The element was pushed out of the memory store,
+						there is a disk store available for the region,
+						but the element is marked as not spoolable.
+					</td>
+				</tr>
+			</table>
+			<p>
+				To create an event handler you must implement the
+				org.apache.commons.jcs.engine.control.event.behavior.IElementEventHandler
+				interface. This interface contains only one method:
+			</p>
+			<source>
+				<![CDATA[
+    public void handleElementEvent( IElementEvent event );
+        		]]>
+			</source>
+			<p>
+				The IElementEvent object contains both the event code
+				and the source. The source is the element for which the
+				event occurred. The code is the type of event. If you
+				have an event handler registered, it will be called
+				whenever any event occurs. It is up to the handler to
+				decide what it would like to do for the particular
+				event. Since there are not that many events, this does
+				not create too much activity. Also, the event handling
+				is done asynchronously. Events are added to an event
+				queue and processed by background threads.
+			</p>
+            <p>
+                Here is how to extract the event and source from the 
+                IElementEvent:
+            </p>
+            <source>
+                <![CDATA[
+    public void handleElementEvent( IElementEvent event )
+    {
+        int eventType = event.getElementEvent();
+        CacheElement element = (CacheElement)((EventObject)event).getSource();
+        . . .
+    }
+                ]]>
+            </source>
+			<p>
+				Once you have an IElementEventHandler implementation,
+				you can attach it to an element via the Element
+				Attributes. You can either add it to the element
+				attributes when you put an item into the cache, add it
+				to the attributes of an item that exist in the cache
+				(which just results in a re-put), or add the event
+				handler to the default element attributes for a region.
+				If you add it to the default attributes, then all
+				elements subsequently added to the region that do not
+				define their own element attributes will be assigned the
+				default event handlers.
+			</p>
+			<source>
+				<![CDATA[
+    CacheAccess<String, String> jcs = JCS.getInstance( "myregion" );
+
+    . . .
+
+    MyEventHandler meh = new MyEventHandler();
+
+    // jcs.getDefaultElementAttributes returns a copy not a reference
+    IElementAttributes attributes = jcs.getDefaultElementAttributes();
+    attributes.addElementEventHandler( meh );
+    jcs.put( "key", "data", attributes );
+        		]]>
+			</source>
+			<p>
+				Here is how to setup an event handler as a default
+				setting for a region:
+			</p>
+			<source>
+				<![CDATA[
+    CacheAccess<String, String> jcs = JCS.getInstance( "myregion" );
+
+    . . .
+
+    MyEventHandler meh = new MyEventHandler();
+
+    // this should add the event handler to all items as
+    //they are created.
+    // jcs.getDefaultElementAttributes returns a copy not a reference
+    IElementAttributes attributes = jcs.getDefaultElementAttributes();
+    attributes.addElementEventHandler( meh );
+    jcs.setDefaultElementAttributes( attributes );
+        		]]>
+			</source>
+
+		</section>
+	</body>
+</document>

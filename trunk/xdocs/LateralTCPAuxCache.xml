@@ -1,0 +1,156 @@
+<?xml version="1.0"?>
+<!--
+ Licensed to the Apache Software Foundation (ASF) under one
+ or more contributor license agreements.  See the NOTICE file
+ distributed with this work for additional information
+ regarding copyright ownership.  The ASF licenses this file
+ to you under the Apache License, Version 2.0 (the
+ "License"); you may not use this file except in compliance
+ with the License.  You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing,
+ software distributed under the License is distributed on an
+ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ KIND, either express or implied.  See the License for the
+ specific language governing permissions and limitations
+ under the License.
+-->
+
+<document>
+  <properties>
+    <title>Lateral TCP Auxiliary Cache</title>
+    <author email="pete@kazmier.com">Pete Kazmier</author>
+    <author email="ASmuts@therealm.com">Aaron Smuts</author>
+  </properties>
+
+  <body>
+    <section name="Lateral TCP Auxiliary Cache">
+      <p>
+        The TCP Lateral Auxiliary Cache is an optional plug in for the
+        JCS.  It is primarily intended to broadcast puts and removals to
+        other local caches, though it can also get cached objects.  It
+        functions by opening up a <code>SocketServer</code> that
+        listens to a configurable port and by creating
+        <code>Socket</code> connections with other local cache
+        <code>SocketServers</code>.  It can be configured to connect to
+        any number of servers.
+      </p>
+      <p>
+        If there is an error connecting to another server or if an error
+        occurs in transmission, it will move into a recovery mode.  In
+        recovery mode the TCP Lateral Auxiliary Cache will continue to
+        communicate with healthy servers while it tries to restore the
+        connection with the server that is in error.
+      </p>
+      <p>
+        The cache hub communicates with a facade that implements a
+        zombie pattern (balking facade) to prevent blocking.  Puts and
+        removals are queued and occur synchronously in the background.
+        Get requests are synchronous and can potentially block for a
+        configurable interval if there is a communication problem.
+      </p>
+      <subsection name="Non-UDP Discovery Configuration">
+        <p>
+          The configuration is fairly straightforward and is done in the
+          auxiliary cache section of the <code>cache.ccf</code>
+          configuration file.  In the example below, I created a TCP
+          Lateral Auxiliary Cache referenced by <code>LTCP</code>.  It
+          connects to two servers defined in a comma separated list in
+          the <code>TcpServers</code> attribute.  It listens to port
+          <code>1110</code> and does <code>AllowGet</code>.
+			Setting <code>AllowGet</code>
+          equal to <code>false</code> would cause the auxiliary cache to
+          return <code>null</code> from any get request.  In most cases this
+          attribute should be set to <code>false</code>, since if the
+          lateral caches were properly configured, the elements in one
+          would be present in all.
+        </p>
+        <source><![CDATA[
+jcs.auxiliary.LTCP=org.apache.commons.jcs.auxiliary.lateral.socket.tcp.LateralTCPCacheFactory
+jcs.auxiliary.LTCP.attributes=org.apache.commons.jcs.auxiliary.lateral.socket.tcp.TCPLateralCacheAttributes
+jcs.auxiliary.LTCP.attributes.TcpServers=localhost:1111,localhost:1112
+jcs.auxiliary.LTCP.attributes.TcpListenerPort=1110
+jcs.auxiliary.LTCP.attributes.AllowGet=true
+        ]]></source>
+        <p>
+		  A mostly configurationless mode is available for the TCP
+		  lateral cache if you use the <a href="LateralUDPDiscovery.html">UDP Discovery</a>
+		   mechanism.
+        </p>
+      </subsection>
+      <subsection name="Send Only Configuration">
+        <p>
+          You can configure the TCP lateral cache to operate
+          in send only mode by setting the <code>Receive</code> attribute
+          to false.  By default the receive attribute is true.
+          When it is set to false, the lateral cache will not
+          establish a socket server.
+        </p>
+        <p>
+           Setting receive to false allows you to broadcast puts
+           and removes, but not receive any.  This is useful for
+           nodes of an application that produce data, but are not
+           involved in data retrieval.
+        </p>
+        <p>
+          The configuration below is the same as above, except the
+          <code>Receive</code> attribute is set to false.  It also uses UDP
+          discovery to find the servers, rather than listing them in the
+          servers attribute.
+        </p>
+        <source><![CDATA[
+jcs.auxiliary.LTCP=org.apache.commons.jcs.auxiliary.lateral.socket.tcp.LateralTCPCacheFactory
+jcs.auxiliary.LTCP.attributes=org.apache.commons.jcs.auxiliary.lateral.socket.tcp.TCPLateralCacheAttributes
+#jcs.auxiliary.LTCP.attributes.TcpServers=
+jcs.auxiliary.LTCP.attributes.TcpListenerPort=1118
+jcs.auxiliary.LTCP.attributes.UdpDiscoveryAddr=228.5.6.8
+jcs.auxiliary.LTCP.attributes.UdpDiscoveryPort=6780
+jcs.auxiliary.LTCP.attributes.UdpDiscoveryEnabled=true
+jcs.auxiliary.LTCP.attributes.Receive=true
+jcs.auxiliary.LTCP.attributes.AllowGet=false
+jcs.auxiliary.LTCP.attributes.IssueRemoveOnPut=false
+jcs.auxiliary.LTCP.attributes.FilterRemoveByHashCode=false
+        ]]></source>
+      </subsection>
+
+      <subsection name="Potential Issues">
+        <p>
+          The TCP Lateral Auxiliary Cache can provide a high level of
+          consistency but it does not guarantee consistency between
+          caches.  A put for the same object could be issued in two
+          different local caches. Since the transmission is queued, a
+          situation could occur where the item put last in one cache is
+          overridden by a put request from another local cache.  The two
+          local caches could potentially have different versions of the
+          same item.  Like most caches, this is intended for high get
+          and low put utilization, and this occurrence would hint at
+          improper usage.  The RMI Remote cache makes this situation a
+          bit less likely to occur, since the default behavior is to
+          remove local copies on put operations.  If either local cache
+          needed the item put in the above situation, it would have to
+          go remote to retrieve it.  Both local copies would have been
+          expired and would end up using the same version, though it is
+          possible that the version stored remotely would not be the
+          last version created.  The OCS4J tries to implement a locking
+          system to prevent this from occurring, but the locking system
+          itself could suffer from similar problems (when granting locks
+          from two roughly simultaneous lock requests) and it would
+          create a significant burden on all the caches involved.  Since
+          this situation would be extremely rare and is nearly
+          impossible to solve practically, for now JCS will not offer
+          any type of locking.
+        </p>
+      </subsection>
+      <subsection name="Recent">
+        <p>
+          I added a <code>IssueRemoveOnPut</code> attribute that
+          causes the lateral cache to remove an element from the
+          cache rather than inserting it when a put.  This allows the local caches to
+          dictate their own memory usage pattern.
+        </p>
+      </subsection>
+    </section>
+  </body>
+</document>

@@ -1,0 +1,167 @@
+<?xml version="1.0"?>
+<!--
+ Licensed to the Apache Software Foundation (ASF) under one
+ or more contributor license agreements.  See the NOTICE file
+ distributed with this work for additional information
+ regarding copyright ownership.  The ASF licenses this file
+ to you under the Apache License, Version 2.0 (the
+ "License"); you may not use this file except in compliance
+ with the License.  You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing,
+ software distributed under the License is distributed on an
+ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ KIND, either express or implied.  See the License for the
+ specific language governing permissions and limitations
+ under the License.
+-->
+
+<document>
+	<properties>
+		<title>Remote Cache Configuration</title>
+		<author email="ASmuts@apache.org">Aaron Smuts</author>
+	</properties>
+
+	<body>
+		<section name="Remote Auxiliary Cache Configuration">
+
+			<p>
+				The following properties apply to the Remote Cache
+				plugin.
+			</p>
+
+			<subsection name="Remote Client Configuration Properties">
+				<table>
+					<tr>
+						<th>Property</th>
+						<th>Description</th>
+						<th>Required</th>
+						<th>Default Value</th>
+					</tr>
+					<tr>
+						<td>FailoverServers</td>
+						<td>
+							This is a comma separated list of remote
+							servers to use. They should be specified in
+							the host:port format. The first server in
+							the list will be used as the primary server.
+							If the connection is lost with the primary,
+							the cache will try to connect to the next
+							server in the list. If a connection is
+							successfully established with a failover
+							server, then the cache will attempt to
+							restore the conenction with the primary
+							server.
+						</td>
+						<td>Y</td>
+						<td>n/a</td>
+					</tr>
+					<tr>
+						<td>LocalPort</td>
+						<td>
+							This is the port on which the client will
+							receive callbacks from the remote server. If
+							it is not specified, then some port in the
+							default range used by RMI will be the
+							callback port.
+						</td>
+						<td>N</td>
+						<td>default RMI port range</td>
+					</tr>
+					<tr>
+						<td>RemoveUponRemotePut</td>
+						<td>
+							If you configure the cache to remove upon a
+							remote put, this means that the client will
+							translate updates into removes. The client
+							will remove any local copy it has of the
+							object rather than storing the new version.
+							If you have sticky load balancing across
+							your client servers, then it would make
+							sense to set RemoveUponRemotePut to true if
+							the data is mostly client specific. If the
+							data is re-usable, the you should most
+							likely set this option to false, which is
+							the default.
+						</td>
+						<td>N</td>
+						<td>true</td>
+					</tr>
+					<tr>
+						<td>RmiSocketFactoryTimeoutMillis</td>
+						<td>
+							If this is greater than 0, then a custom
+							socket factory will be installed in the VM.
+							It will then use this timeout for all RMI
+							communication.
+						</td>
+						<td>N</td>
+						<td>5000</td>
+					</tr>
+					<tr>
+						<td>GetOnly</td>
+						<td>
+							GetOnly is somewhat misnamed. If it is set
+							to true, then the client will not send
+							updates or removes to the remote server. It
+							can still receive updates and removes.
+						</td>
+						<td>N</td>
+						<td>false</td>
+					</tr>
+					<tr>
+						<td>Receive</td>
+						<td>
+							By default Receive is set to true. This
+							means that the remote client will receive
+							updates and removes from the remote server.
+							If you set Receive to false, the remote
+							client will not register a listener with the
+							remote server. This means that the client
+							can send update and remove requests to the
+							server, and it can get from the server, but
+							it will never receive notifications from the
+							server. You might configure Receive to false
+							if you just want to use the remote server as
+							a data store. For instance, you may back the
+							Remote Cache Server with the JDBC disk cache
+							and set Receive=false when you have a high
+							put and low read region.
+						</td>
+						<td>N</td>
+						<td>true</td>
+					</tr>
+					<tr>
+						<td>ZombieQueueMaxSize</td>
+						<td>
+							The number of elements the zombie queue will
+							hold. This queue is used to store events if
+							we lose our connection with the server.
+						</td>
+						<td>N</td>
+						<td>1000</td>
+					</tr>
+				</table>
+			</subsection>
+
+			<subsection name="Example Configuration">
+				<source>
+					<![CDATA[
+# This remote client does not receive
+jcs.auxiliary.RC=org.apache.commons.jcs.auxiliary.remote.RemoteCacheFactory
+jcs.auxiliary.RC.attributes=org.apache.commons.jcs.auxiliary.remote.RemoteCacheAttributes
+jcs.auxiliary.RC.attributes.FailoverServers=localhost:1101,localhost:1102
+jcs.auxiliary.RC.attributes.LocalPort=1201
+jcs.auxiliary.RC.attributes.RemoveUponRemotePut=false
+jcs.auxiliary.RC.attributes.RmiSocketFactoryTimeoutMillis=5000
+jcs.auxiliary.RC.attributes.GetOnly=false
+jcs.auxiliary.RC.attributes.Receive=false
+        ]]>
+				</source>
+			</subsection>
+
+		</section>
+	</body>
+</document>

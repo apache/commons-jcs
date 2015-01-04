@@ -1,0 +1,84 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+<?xml version="1.0"?>
+
+<document>
+  <properties>
+    <title>Berkeley DB Disk Auxiliary Cache</title>
+    <author email="ASmuts@yahoo.com">Aaron Smuts</author>
+  </properties>
+
+  <body>
+    <section name="Berkeley DB Disk Auxiliary Cache">
+      <p>
+        The Berkeley DB Disk Auxiliary Cache is an optional plugin for the
+        JCS.  It is primarily intended to provide a secondary store to
+        ease the memory burden of the cache.  When the memory cache
+  	    exceeds its maximum size it tells the cache hub that the item
+	      to be removed from memory should be spooled to disk.  The cache
+	      checks to see if any auxiliaries of type "disk" have been
+	      configured for the region.  If the "Berkeley DB Disk Auxiliary Cache"
+	      is used, the item will be spooled to disk.
+      </p>
+      <p>
+		The Berkeley DB is far slower than the Indexed Disk Cache, especially for puts.
+		This is partially due to the fact that the BDB store its keys on disk.
+		However, any items stored in the BDB will be available on restart, even if
+		the cache is not shutdown properly.
+      </p>
+      <p>
+		The Berkeley DB requires jdk1.4 and above.  As such, it is distributed
+		in the jdk14-ext jar.
+      </p>
+
+      <subsection name="Configuration">
+        <p>
+          The configuration is simple and is done in the auxiliary
+          cache section of the <code>cache.ccf</code> configuration file.
+          In the example below, I created a Berkeley DB Auxiliary Cache
+          referenced by <code>BDBDC</code>.  It uses files located in the
+          "DiskPath" directory.
+         </p>
+
+            <source><![CDATA[
+# #############################################################
+# #### Default Region Configuration
+jcs.default=BDBDC
+jcs.default.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
+jcs.default.cacheattributes.MaxObjects=100
+jcs.default.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
+
+# #############################################################
+# #### CACHE REGIONS
+jcs.region.myRegion1=BDBDC
+jcs.region.myRegion1.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
+jcs.region.myRegion1.cacheattributes.MaxObjects=1000
+jcs.region.myRegion1.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
+
+# #############################################################
+# #### AUXILIARY CACHES
+# Berkeley DB JE
+jcs.auxiliary.BDBDC=org.apache.commons.jcs.auxiliary.disk.bdbje.BDBJECacheFactory
+jcs.auxiliary.BDBDC.attributes=org.apache.commons.jcs.auxiliary.disk.bdbje.BDBJECacheAttributes
+jcs.auxiliary.BDBDC.attributes.DiskPath=target/
+jcs.auxiliary.BDBDC.attributes.MaxPurgatorySize=100000
+        ]]></source>
+          </subsection>
+
+    </section>
+  </body>
+</document>

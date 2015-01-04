@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Licensed to the Apache Software Foundation (ASF) under one
+ or more contributor license agreements.  See the NOTICE file
+ distributed with this work for additional information
+ regarding copyright ownership.  The ASF licenses this file
+ to you under the Apache License, Version 2.0 (the
+ "License"); you may not use this file except in compliance
+ with the License.  You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing,
+ software distributed under the License is distributed on an
+ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ KIND, either express or implied.  See the License for the
+ specific language governing permissions and limitations
+ under the License.
+-->
+
+<project>
+  <extend>../../project-b4.xml</extend>
+  <id>jcs</id>
+  <name>jdk14-ext</name>
+  <currentVersion>jdk14-ext-1.2.6.6</currentVersion>
+
+
+  <dependencies>
+    <dependency>
+      <id>commons-collections</id>
+      <version>3.0</version>
+    </dependency>
+    <dependency>
+      <id>commons-configuration</id>
+      <version>20030706.202021</version>
+    </dependency>
+    <dependency>
+      <id>commons-logging</id>
+      <version>1.0.3</version>
+    </dependency>
+    <dependency>
+      <id>commons-lang</id>
+      <version>2.0</version>
+    </dependency>
+    <dependency>
+      <id>concurrent</id>
+      <version>1.0</version>
+    </dependency>
+    <dependency>
+      <id>hsqldb</id>
+      <version>1.7.1</version>
+    </dependency>
+    <dependency>
+      <id>log4j</id>
+      <version>1.2.8</version>
+    </dependency>
+    <dependency>
+      <id>servletapi</id>
+      <version>2.2</version>
+    </dependency>
+    <dependency>
+      <groupId>jgroups</groupId>
+      <artifactId>jgroups-all</artifactId>
+      <version>2.2.8</version>
+    </dependency>
+
+    <dependency>
+      <id>tomcat</id>
+      <version>3.2.1</version>
+      <jar>tomcat-util-3.2.1.jar</jar>
+    </dependency>
+    <dependency>
+      <id>velocity</id>
+      <version>1.4</version>
+    </dependency>
+    <dependency>
+      <id>junit</id>
+      <version>3.8.1</version>
+    </dependency>
+    <dependency>
+      <id>xmlrpc</id>
+      <version>1.2-b1</version>
+      <url>http://xml.apache.org/xmlrpc/</url>
+    </dependency>
+    <dependency>
+      <id>xerces:xercesImpl</id>
+      <version>2.6.2</version>
+      <url>http://xml.apache.org/xerces2-j/</url>
+    </dependency>
+    <dependency>
+      <id>xml-apis</id>
+      <version>2.0.2</version>
+      <url>http://xml.apache.org/commons/</url>
+    </dependency>
+    <dependency>
+      <id>struts</id>
+      <version>1.1</version>
+      <jar>struts-1.1.jar</jar>
+    </dependency>
+
+    <dependency>
+	<groupId>jcs</groupId>
+	<artifactId>jcs</artifactId>
+      <version>1.2.6.6</version>
+    </dependency>
+
+  </dependencies>
+
+  <build>
+    <sourceDirectory>src/java</sourceDirectory>
+    <unitTest>
+      <resources>
+      <includes>
+<!--
+        <include>**/TestBDBJEDiskCacheConcurrent.java</include>
+-->
+      </includes>
+        <includes>
+          <include>**/*.properties</include>
+          <include>**/*.ccf</include>
+        </includes>
+      </resources>
+    </unitTest>
+    <jars></jars>
+  </build>
+
+</project>

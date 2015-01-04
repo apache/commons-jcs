@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+	<!--
+		Licensed to the Apache Software Foundation (ASF) under one or more
+		contributor license agreements. See the NOTICE file distributed with
+		this work for additional information regarding copyright ownership.
+		The ASF licenses this file to you under the Apache License, Version
+		2.0 (the "License"); you may not use this file except in compliance
+		with the License. You may obtain a copy of the License at
+		http://www.apache.org/licenses/LICENSE-2.0 Unless required by
+		applicable law or agreed to in writing, software distributed under the
+		License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+		CONDITIONS OF ANY KIND, either express or implied. See the License for
+		the specific language governing permissions and limitations under the
+		License.
+	-->
+<document>
+	<properties>
+		<title>Cache Event Logging</title>
+		<author email="ASmuts@apache.com">Aaron Smuts</author>
+	</properties>
+	<body>
+		<section name="Cache Event Logging">
+			<p> JCS allows you to implement custom event loggers. Most of the
+				auxiliaries will log ICacheEvents (eg. update, get, getMultiple, remove,
+				removeAll, and dispose) to an injected event logger. By default the
+				log calls balk. But if you inject a logger, you can add monitoring
+				to any auxiliary. Most auxiliaries also log key application events
+				and critical errors to the same logger.</p>
+			<p>
+				To inject a custom event logger, you simply need to implement the
+				<code>org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger
+				</code>
+				interface and add a couple of lines to the cache.ccf file.
+			</p>
+			<p> During configuration, JCS will look for event loggers configured
+				for each auxiliary. JCS will set any custom properties. For
+				instance, to add debug event logging to a remote cache client, you
+				could do the following:</p>
+			<source><![CDATA[
+			. . .
+			jcs.auxiliary.RC=org.apache.commons.jcs.auxiliary.remote.RemoteCacheFactory
+jcs.auxiliary.RC.attributes=org.apache.commons.jcs.auxiliary.remote.RemoteCacheAttributes
+jcs.auxiliary.RC.attributes.FailoverServers=localhost:1101,localhost:1102
+jcs.auxiliary.RC.attributes.LocalPort=1201
+jcs.auxiliary.RC.attributes.RemoveUponRemotePut=false
+# jcs.auxiliary.RC.attributes.RemoteServiceName=RemoteCache
+# -1 means no timeout, this is the default
+# if the timeout is -1, no threadpool will be used.
+jcs.auxiliary.RC.attributes.GetTimeoutMillis=500
+jcs.auxiliary.RC.attributes.ThreadPoolName=remote_cache_client
+jcs.auxiliary.RC.attributes.GetOnly=false
+jcs.auxiliary.RC.cacheeventlogger=org.apache.commons.jcs.engine.logging.CacheEventLoggerDebugLogger
+jcs.auxiliary.RC.cacheeventlogger.attributes.logCategoryName=test.RCCEventLogCategory
+			. . .
+        ]]></source>
+			<p> The attribute "logCateoryName" is a property of this
+				implementation. You can configure any properties on your
+				implementation in the same way.</p>
+		</section>
+	</body>
+</document>

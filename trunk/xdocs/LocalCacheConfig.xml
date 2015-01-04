@@ -1,0 +1,170 @@
+<?xml version="1.0"?>
+<!--
+ Licensed to the Apache Software Foundation (ASF) under one
+ or more contributor license agreements.  See the NOTICE file
+ distributed with this work for additional information
+ regarding copyright ownership.  The ASF licenses this file
+ to you under the Apache License, Version 2.0 (the
+ "License"); you may not use this file except in compliance
+ with the License.  You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing,
+ software distributed under the License is distributed on an
+ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ KIND, either express or implied.  See the License for the
+ specific language governing permissions and limitations
+ under the License.
+-->
+
+<document>
+  <properties>
+    <title>Configuring the Local Cache</title>
+    <author email="pete@kazmier.com">Pete Kazmier</author>
+    <author email="ASmuts@therealm.com">Aaron Smuts</author>
+  </properties>
+
+  <body>
+    <section name="Configuring the Local Cache">
+      <p>
+        This document is intended to provide various answers to
+        questions regarding the configuration of a local cache.  The
+        document is presented in a question / answer format.
+      </p>
+      <subsection name="Where is the configuration information?">
+        <p>
+          Configuration of local caches involves editing the cache
+          configuration file, named <code>cache.ccf</code>.  The
+          classpath should include the directory where this file is
+          located or the file should be placed at the root of the
+          classpath, since it is discovered automatically.
+        </p>
+      </subsection>
+      <subsection name="What is in the cache.ccf file?">
+        <p>
+          The <code>cache.ccf</code> file contains default configuration
+          information for cache regions and specific configuration
+          information for regions that you predefine.  Regions not using
+          default behaviors should generally be configured via the
+          <code>cache.ccf</code> file.  If you can put configuration
+          information in a class, you can edit a props file just as
+          easily.  This makes modification of the regional setting more
+          efficient and allows for startup error checking.
+        </p>
+        <p>
+          There are three main sections of the <code>cache.ccf</code>
+          file:
+        </p>
+        <ul>
+          <li> the default and system settings </li>
+          <li> the region specific settings </li>
+          <li> the auxiliary cache definitions </li>
+        </ul>
+      </subsection>
+      <subsection name="How do I set up default values for regions?">
+        <p>
+          You can establish default values that any non-preconfigured
+          region will inherit.  The non-predefined region will be
+          created when you call
+          <code>CacheAccess.getAccess("cacheName")</code>.  The default
+          setting look like this:
+        </p>
+        <source><![CDATA[
+# DEFAULT CACHE REGION
+
+# sets the default aux value for any non configured caches
+jcs.default=DC,RFailover
+jcs.default.cacheattributes=
+    org.apache.commons.jcs.engine.CompositeCacheAttributes
+jcs.default.cacheattributes.MaxObjects=1000
+        ]]></source>
+        <p>
+          The most important line is
+          <code>jcs.default=DC,Rfailover</code>. This tells the cache
+          what auxiliary caches should be used.  Auxiliary caches are
+          configured in the third section of the <code>cache.ccf</code>
+          and are referenced in a comma separated list.  You can add as
+          many auxiliary caches as you want, but the behavior of remote
+          and lateral auxiliaries may conflict.  This allows you to
+          define different configurations for auxiliary caches and to
+          use these different configurations for different regions.
+        </p>
+      </subsection>
+      <subsection name="How do I define a region?">
+        <p>
+          Defining a region involves specifying which auxiliary caches
+          it will use and how many objects it will store in memory.  A
+          typical region definition looks like:
+        </p>
+        <source><![CDATA[
+jcs.region.testCache=DC,RFailover
+jcs.region.testCache.cacheattributes=
+    org.apache.commons.jcs.engine.CompositeCacheAttributes
+jcs.region.testCache.cacheattributes.MaxObjects=1000
+        ]]></source>
+        <p>
+          The region name is <code>testCache</code>.  It will have a
+          1000 item memory limit and will use the DC and RFailover
+          auxiliary caches.  If a typical element for this region was
+          very large, you might want to lower the number of items stored
+          in memory.  The size of the memory storage is dependent on the
+          priority of the cache, the size of its elements, and the
+          amount of RAM on the machine.
+        </p>
+      </subsection>
+      <subsection name="How do I configure an auxiliary cache?">
+        <p>
+          Each auxiliary cache is created through a factory that passes
+          an attribute object to the constructor.  The attributes are
+          set via reflection and should be fairly simple to understand.
+          Each auxiliary cache will be fully documented.  Plugging in
+          your own auxiliary cache become a simple matter given the
+          reflexive manner of initialization.
+        </p>
+        <p>
+          The most important settings for common usage are the disk path
+          and the remote cache location.  It is recommended that only
+          disk and remote auxiliaries be used.  The lateral caches are
+          functional but not as efficient.
+        </p>
+        <p>
+          The default configuration code above specifies that
+          non-preconfigured caches use the auxiliary cache by the name
+          DC.  This cache is defined in the third section of the file:
+        </p>
+        <source><![CDATA[
+jcs.auxiliary.DC=
+    org.apache.commons.jcs.auxiliary.disk.DiskCacheFactory
+jcs.auxiliary.DC.attributes=
+    org.apache.commons.jcs.auxiliary.disk.DiskCacheAttributes
+jcs.auxiliary.DC.attributes.DiskPath=c:/dev/cache/raf
+        ]]></source>
+        <p>
+          The only thing that needs to be set here is the
+          <code>DiskPath</code> value.  Change it to wherever you want
+          the cache to persist unused items.
+        </p>
+        <p>
+          The default region is also set to use an auxiliary called
+          <code>RFailover</code>.  This is a remote cache that is
+          designed to failover to other remote servers in a cluster:
+        </p>
+        <source><![CDATA[
+jcs.auxiliary.RFailover=
+    org.apache.commons.jcs.auxiliary.remote.RemoteCacheFactory
+jcs.auxiliary.RFailover.attributes=
+    org.apache.commons.jcs.auxiliary.remote.RemoteCacheAttributes
+jcs.auxiliary.RFailover.attributes.RemoteTypeName=LOCAL
+jcs.auxiliary.RFailover.attributes.FailoverServers=
+    localhost:1102,localhost:1101
+        ]]></source>
+        <p>
+          If you don't have more than one remote server running, just
+          specify it by itself in the <code>FailoverServers</code>
+          attribute.
+        </p>
+      </subsection>
+    </section>
+  </body>
+</document>

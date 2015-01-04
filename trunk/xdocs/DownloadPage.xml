@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE xdoc [
+    <!ENTITY nbsp "&#160;">
+]>
+	<!--
+		Licensed to the Apache Software Foundation (ASF) under one or more
+		contributor license agreements. See the NOTICE file distributed with
+		this work for additional information regarding copyright ownership.
+		The ASF licenses this file to you under the Apache License, Version
+		2.0 (the "License"); you may not use this file except in compliance
+		with the License. You may obtain a copy of the License at
+		http://www.apache.org/licenses/LICENSE-2.0 Unless required by
+		applicable law or agreed to in writing, software distributed under the
+		License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+		CONDITIONS OF ANY KIND, either express or implied. See the License for
+		the specific language governing permissions and limitations under the
+		License.
+	-->
+<document>
+	<properties>
+		<title>Downloading JCS</title>
+		<author email="asmuts@apache.org">Aaron Smuts</author>
+		<author email="tv@apache.org">Thomas Vandahl</author>
+	</properties>
+	<body>
+		<section name="Releases">
+			<p> The latest release version of JCS is 1.3. Grab it here. The core
+				JCS jar is compiled using JDK 1.3.</p>
+			<subsection name="Binary versions">
+				<p>
+					<ul>
+						<li>
+							<a
+								href="http://www.apache.org/dyn/closer.cgi/commons/jcs/binaries/jcs-1.3.tar.gz"> JCS 1.3 Binary Distribution in TAR format</a>&nbsp;
+							<a
+								href="http://www.apache.org/dist/commons/jcs/binaries/jcs-1.3.tar.gz.asc">Signature</a>&nbsp;
+							<a
+								href="http://www.apache.org/dist/commons/jcs/binaries/jcs-1.3.tar.gz.md5">MD5</a>
+						</li>
+						<li>
+							<a
+								href="http://www.apache.org/dyn/closer.cgi/commons/jcs/binaries/jcs-1.3.zip"> JCS 1.3 Binary Distribution in ZIP format</a>&nbsp;
+							<a
+								href="http://www.apache.org/dist/commons/jcs/binaries/jcs-1.3.zip.asc">Signature</a>&nbsp;
+							<a
+								href="http://www.apache.org/dist/commons/jcs/binaries/jcs-1.3.zip.md5">MD5</a>
+						</li>
+					</ul>
+				</p>
+			</subsection>
+			<subsection name="Source versions">
+				<p>
+					<ul>
+						<li>
+							<a
+								href="http://www.apache.org/dyn/closer.cgi/commons/jcs/source/jcs-1.3-src.tar.gz"> JCS 1.3 Source Distribution in TAR format</a>&nbsp;
+							<a
+								href="http://www.apache.org/dist/commons/jcs/source/jcs-1.3-src.tar.gz.asc">Signature</a>&nbsp;
+							<a
+								href="http://www.apache.org/dist/commons/jcs/source/jcs-1.3-src.tar.gz.md5">MD5</a>
+						</li>
+						<li>
+							<a
+								href="http://www.apache.org/dyn/closer.cgi/commons/jcs/source/jcs-1.3-src.zip"> JCS 1.3 Source Distribution in ZIP format</a>&nbsp;
+							<a
+								href="http://www.apache.org/dist/commons/jcs/source/jcs-1.3-src.zip.asc">Signature</a>&nbsp;
+							<a
+								href="http://www.apache.org/dist/commons/jcs/source/jcs-1.3-src.zip.md5">MD5</a>
+						</li>
+					</ul>
+				</p>
+			</subsection>
+		</section>
+		<section name="Getting The Development Source From SVN">
+			<p>
+				You can check out the latest source from the Commons SVN module.
+				<br />
+				JCS resides in the commons/proper/jcs module.
+				<source><![CDATA[svn checkout http://svn.apache.org/repos/asf/commons/proper/jcs/trunk]]></source>
+				or browse the source code through
+				<a href="http://svn.apache.org/viewvc/commons/proper/jcs">ViewVC</a>
+				.
+			</p>
+		</section>
+	</body>
+</document>
