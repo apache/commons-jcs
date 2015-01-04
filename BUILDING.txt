@@ -6,5 +6,5 @@ Release build is ising (to get distributions - ie src/bin assemblies - and force
 
     mvn clean install -Prelease
 
-Note: this only passes on Java 7 since TCKs have to run onit.
+Note: this only passes on Java 7 since TCKs have to run on it.
 
