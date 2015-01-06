@@ -65,17 +65,10 @@ public class RemoteCacheListener<K, V>
         super( irca, cacheMgr );
 
         // Export this remote object to make it available to receive incoming
-        // calls, using an anonymous port unless the local port is specified.
+        // calls.
         try
         {
-            if ( irca.getLocalPort() > 0 )
-            {
-                UnicastRemoteObject.exportObject( this, irca.getLocalPort() );
-            }
-            else
-            {
-                UnicastRemoteObject.exportObject( this );
-            }
+            UnicastRemoteObject.exportObject( this, irca.getLocalPort() );
         }
         catch ( RemoteException ex )
         {
