@@ -20,6 +20,9 @@
 	</properties>
 	<body>
 		<release version="2.0" date="unreleased" description="JDK 1.6 based major release">
+            <action issue="JCS-139" dev="tv" type="fix" due-to="Youngho Cho">
+                PropertySetter doesn't set Enum properly. Added a test.
+            </action>
             <action issue="JCS-136" dev="tv" type="fix" due-to="Youngho Cho">
                 OutOfMemoryError when using compressing serializer
             </action>
