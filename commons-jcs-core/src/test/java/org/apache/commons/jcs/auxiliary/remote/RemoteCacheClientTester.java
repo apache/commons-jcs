@@ -144,7 +144,7 @@ public class RemoteCacheClientTester
         {
             service = REMOTE_CACHE_SERVICE_VAL;
         }
-        String registry = "//" + host + ":" + port + "/" + service;
+        String registry = RemoteUtils.getNamingURL(host, port, service);
 
         p( "looking up server " + registry );
 
