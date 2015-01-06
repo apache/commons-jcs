@@ -19,29 +19,8 @@ package org.apache.commons.jcs.auxiliary.remote.server;
  * under the License.
  */
 
-import org.apache.commons.jcs.access.exception.CacheException;
-import org.apache.commons.jcs.auxiliary.remote.behavior.IRemoteCacheListener;
-import org.apache.commons.jcs.auxiliary.remote.behavior.IRemoteCacheObserver;
-import org.apache.commons.jcs.auxiliary.remote.server.behavior.IRemoteCacheServerAttributes;
-import org.apache.commons.jcs.auxiliary.remote.server.behavior.RemoteType;
-import org.apache.commons.jcs.engine.CacheEventQueueFactory;
-import org.apache.commons.jcs.engine.CacheListeners;
-import org.apache.commons.jcs.engine.behavior.ICacheElement;
-import org.apache.commons.jcs.engine.behavior.ICacheEventQueue;
-import org.apache.commons.jcs.engine.behavior.ICacheListener;
-import org.apache.commons.jcs.engine.behavior.ICacheServiceAdmin;
-import org.apache.commons.jcs.engine.behavior.ICacheServiceNonLocal;
-import org.apache.commons.jcs.engine.control.CompositeCache;
-import org.apache.commons.jcs.engine.control.CompositeCacheManager;
-import org.apache.commons.jcs.engine.logging.CacheEvent;
-import org.apache.commons.jcs.engine.logging.behavior.ICacheEvent;
-import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import java.io.IOException;
 import java.io.Serializable;
-import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
 import java.rmi.server.RMISocketFactory;
@@ -52,6 +31,24 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+
+import org.apache.commons.jcs.access.exception.CacheException;
+import org.apache.commons.jcs.auxiliary.remote.behavior.IRemoteCacheListener;
+import org.apache.commons.jcs.auxiliary.remote.server.behavior.IRemoteCacheServer;
+import org.apache.commons.jcs.auxiliary.remote.server.behavior.IRemoteCacheServerAttributes;
+import org.apache.commons.jcs.auxiliary.remote.server.behavior.RemoteType;
+import org.apache.commons.jcs.engine.CacheEventQueueFactory;
+import org.apache.commons.jcs.engine.CacheListeners;
+import org.apache.commons.jcs.engine.behavior.ICacheElement;
+import org.apache.commons.jcs.engine.behavior.ICacheEventQueue;
+import org.apache.commons.jcs.engine.behavior.ICacheListener;
+import org.apache.commons.jcs.engine.control.CompositeCache;
+import org.apache.commons.jcs.engine.control.CompositeCacheManager;
+import org.apache.commons.jcs.engine.logging.CacheEvent;
+import org.apache.commons.jcs.engine.logging.behavior.ICacheEvent;
+import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * This class provides remote cache services. The remote cache server propagates events from local
@@ -70,7 +67,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class RemoteCacheServer<K, V>
     extends UnicastRemoteObject
-    implements ICacheServiceNonLocal<K, V>, IRemoteCacheObserver, ICacheServiceAdmin, Remote, Unreferenced
+    implements IRemoteCacheServer<K, V>, Unreferenced
 {
     /** For serialization. Don't change. */
     private static final long serialVersionUID = -8072345435941473116L;
