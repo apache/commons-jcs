@@ -32,7 +32,7 @@ public class JCSWorkerUnitTest
 {
 
     /**
-     * Test basic worker funtionality.  This is a serial not a concurrent test.
+     * Test basic worker functionality.  This is a serial not a concurrent test.
      * <p>
      * Just verify that the worker will go to the cache before asking the helper.
      *
