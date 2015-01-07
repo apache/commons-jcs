@@ -1,7 +1,8 @@
 package org.apache.commons.jcs.auxiliary.remote.server.behavior;
 
 import java.rmi.Remote;
-import org.apache.commons.jcs.engine.behavior.ICacheObserver;
+
+import org.apache.commons.jcs.auxiliary.remote.behavior.IRemoteCacheObserver;
 import org.apache.commons.jcs.engine.behavior.ICacheServiceAdmin;
 import org.apache.commons.jcs.engine.behavior.ICacheServiceNonLocal;
 
@@ -31,7 +32,7 @@ import org.apache.commons.jcs.engine.behavior.ICacheServiceNonLocal;
  *
  */
 public interface IRemoteCacheServer<K, V>
-    extends ICacheServiceNonLocal<K, V>, ICacheObserver, ICacheServiceAdmin, Remote
+    extends ICacheServiceNonLocal<K, V>, IRemoteCacheObserver, ICacheServiceAdmin, Remote
 {
     // empty
 }
