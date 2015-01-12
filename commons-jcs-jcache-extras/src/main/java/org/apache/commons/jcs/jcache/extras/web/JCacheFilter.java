@@ -185,15 +185,15 @@ public class JCacheFilter implements Filter
                 {
                     if (Integer.class.isInstance(value))
                     {
-                        httpServletResponse.addIntHeader(entry.getKey(), Integer.class.cast(entry.getValue()));
+                        httpServletResponse.addIntHeader(entry.getKey(), Integer.class.cast(value));
                     }
                     else if (String.class.isInstance(value))
                     {
-                        httpServletResponse.addHeader(entry.getKey(), String.class.cast(entry.getValue()));
+                        httpServletResponse.addHeader(entry.getKey(), String.class.cast(value));
                     }
                     else if (Long.class.isInstance(value))
                     {
-                        httpServletResponse.addDateHeader(entry.getKey(), Long.class.cast(entry.getValue()));
+                        httpServletResponse.addDateHeader(entry.getKey(), Long.class.cast(value));
                     }
                 }
             }
