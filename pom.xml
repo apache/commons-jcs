@@ -207,7 +207,6 @@
         <configuration>
           <excludes combine.children="append">
             <exclude>.java-version</exclude>
-            <exclude>**/LICENSE.xerox</exclude>
             <exclude>**/zipcodes.txt</exclude>
             <exclude>**/download_jcs.cgi</exclude>
             <exclude>**/.gitignore</exclude>
