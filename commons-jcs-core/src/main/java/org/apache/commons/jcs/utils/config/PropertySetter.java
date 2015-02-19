@@ -263,6 +263,12 @@ public class PropertySetter
                 return Boolean.FALSE;
             }
         }
+        else if( type.isEnum() )
+        {
+            @SuppressWarnings("unchecked") // type check in if()
+            Enum<?> en = Enum.valueOf(type.asSubclass(Enum.class), v );
+            return en;
+        }
         else if ( File.class.isAssignableFrom( type ) )
         {
             return new File( v );

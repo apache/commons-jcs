@@ -68,7 +68,7 @@ public interface ICacheServiceNonLocal<K, V>
     /**
      * Returns a cache bean from the specified cache; or null if the key does not exist.
      * <p>
-     * Adding the requestor id, allows the cache to determine the source of the get.
+     * Adding the requester id, allows the cache to determine the source of the get.
      * <p>
      * @param cacheName
      * @param key

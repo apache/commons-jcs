@@ -389,7 +389,7 @@ public class RemoteCacheServerFactory
             log.info( "Unbinding host=" + host + ", port=" + port + ", serviceName=" + getServiceName() );
             try
             {
-                Naming.unbind( "//" + host + ":" + port + "/" + getServiceName() );
+                Naming.unbind( RemoteUtils.getNamingURL(host, port, getServiceName()) );
             }
             catch ( MalformedURLException ex )
             {
@@ -448,7 +448,7 @@ public class RemoteCacheServerFactory
         if ( args.length > 0 && args[0].toLowerCase().indexOf( "-shutdown" ) != -1 )
         {
             String remoteServiceName = prop.getProperty( REMOTE_CACHE_SERVICE_NAME, REMOTE_CACHE_SERVICE_VAL ).trim();
-            String registry = "//:" + port + "/" + remoteServiceName;
+            String registry = RemoteUtils.getNamingURL("", port, remoteServiceName);
 
             if ( log.isDebugEnabled() )
             {
@@ -481,7 +481,7 @@ public class RemoteCacheServerFactory
             try
             {
                 String sz = prop.getProperty( REMOTE_CACHE_SERVICE_NAME, REMOTE_CACHE_SERVICE_VAL ).trim();
-                String registry = "//:" + port + "/" + sz;
+                String registry = RemoteUtils.getNamingURL("", port, sz);
                 log.debug( "looking up server " + registry );
                 Object obj = Naming.lookup( registry );
                 log.debug( "server found" );
