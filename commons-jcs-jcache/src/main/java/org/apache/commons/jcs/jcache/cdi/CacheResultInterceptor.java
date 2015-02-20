@@ -18,6 +18,8 @@
  */
 package org.apache.commons.jcs.jcache.cdi;
 
+import java.io.Serializable;
+import javax.annotation.Priority;
 import javax.cache.Cache;
 import javax.cache.annotation.CacheDefaults;
 import javax.cache.annotation.CacheKeyInvocationContext;
@@ -32,7 +34,8 @@ import javax.interceptor.InvocationContext;
 
 @CacheResult
 @Interceptor
-public class CacheResultInterceptor
+@Priority(/*LIBRARY_BEFORE*/1000)
+public class CacheResultInterceptor implements Serializable
 {
     @Inject
     private CDIJCacheHelper helper;

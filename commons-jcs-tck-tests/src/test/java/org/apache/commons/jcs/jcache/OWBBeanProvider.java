@@ -22,9 +22,9 @@ import org.apache.webbeans.config.WebBeansContext;
 import org.apache.webbeans.container.BeanManagerImpl;
 import org.apache.webbeans.spi.ContainerLifecycle;
 
+import java.util.Set;
 import javax.cache.annotation.BeanProvider;
 import javax.enterprise.inject.spi.Bean;
-import java.util.Set;
 
 public class OWBBeanProvider implements BeanProvider
 {

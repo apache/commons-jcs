@@ -18,6 +18,12 @@
  */
 package org.apache.commons.jcs.jcache.cdi;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.logging.Logger;
 import javax.cache.annotation.CacheDefaults;
 import javax.cache.annotation.CacheKeyGenerator;
 import javax.cache.annotation.CacheResolverFactory;
@@ -28,12 +34,6 @@ import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 import javax.interceptor.InvocationContext;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-import java.util.logging.Logger;
 
 @ApplicationScoped
 public class CDIJCacheHelper
@@ -163,6 +163,12 @@ public class CDIJCacheHelper
         final Set<Bean<?>> beans = beanManager.getBeans(type);
         if (beans.isEmpty())
         {
+            if (CacheKeyGenerator.class == type) {
+                return (T) defaultCacheKeyGenerator;
+            }
+            if (CacheResolverFactory.class == type) {
+                return (T) defaultCacheResolverFactory;
+            }
             return null;
         }
         final Bean<?> bean = beanManager.resolve(beans);
