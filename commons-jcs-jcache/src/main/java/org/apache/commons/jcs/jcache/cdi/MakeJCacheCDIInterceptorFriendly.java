@@ -23,6 +23,7 @@ import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 import javax.cache.annotation.CachePut;
 import javax.cache.annotation.CacheRemove;
 import javax.cache.annotation.CacheRemoveAll;
@@ -46,17 +47,32 @@ import javax.enterprise.util.AnnotationLiteral;
 
 import static java.util.Arrays.asList;
 
-// TODO: observe annotated type (or maybe sthg else) to cache data and inecjt this extension (used as metadata cache)
+// TODO: observe annotated type (or maybe sthg else) to cache data and inject this extension (used as metadata cache)
 // to get class model and this way allow to add cache annotation on the fly - == avoid java pure reflection to get metadata
 public class MakeJCacheCDIInterceptorFriendly implements Extension
 {
+    private static final AtomicInteger id = new AtomicInteger();
+
     private boolean needHelper = true;
 
     protected void discoverInterceptorBindings(final @Observes BeforeBeanDiscovery beforeBeanDiscoveryEvent,
                                                final BeanManager bm)
     {
         // CDI 1.1 will just pick createAnnotatedType(X) as beans so we'll skip our HelperBean
-        // but CDI 1.0 needs our HelperBean + interceptors in beans.xml
+        // but CDI 1.0 needs our HelperBean + interceptors in beans.xml like:
+        /*
+        <beans xmlns="http://java.sun.com/xml/ns/javaee"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+              http://java.sun.com/xml/ns/javaee/beans_1_0.xsd">
+          <interceptors>
+            <class>org.apache.commons.jcs.jcache.cdi.CacheResultInterceptor</class>
+            <class>org.apache.commons.jcs.jcache.cdi.CacheRemoveAllInterceptor</class>
+            <class>org.apache.commons.jcs.jcache.cdi.CacheRemoveInterceptor</class>
+            <class>org.apache.commons.jcs.jcache.cdi.CachePutInterceptor</class>
+          </interceptors>
+        </beans>
+         */
         bm.createAnnotatedType(CDIJCacheHelper.class);
         for (final Class<?> interceptor : asList(
                 CachePutInterceptor.class, CacheRemoveInterceptor.class,
@@ -101,18 +117,30 @@ public class MakeJCacheCDIInterceptorFriendly implements Extension
     }
 
     private String findIdSuffix(final BeanManager bm) {
+        boolean useId = false;
         try {
-            final Class<?> sc = Thread.currentThread().getContextClassLoader().loadClass("javax.servlet.ServletContext");
-            final Set<Bean<?>> beans = bm.getBeans(sc);
-            if (beans != null && !beans.isEmpty()) {
-                final Bean<?> b = bm.resolve(beans);
-                if (b != null) {
-                    final Object instance = bm.getReference(b, sc, bm.createCreationalContext(null));
-                    return "web#" + sc.getMethod("getContextPath").invoke(instance).toString();
+            final ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
+            try { // CDI > 1.0
+                contextClassLoader.loadClass("javax.enterprise.inject.spi.InjectionTargetFactory");
+            } catch (final Throwable th) {
+                useId = true; // CDI 1.0
+            }
+            if (!useId) {
+                final Class<?> sc = contextClassLoader.loadClass("javax.servlet.ServletContext");
+                final Set<Bean<?>> beans = bm.getBeans(sc);
+                if (beans != null && !beans.isEmpty()) {
+                    final Bean<?> b = bm.resolve(beans);
+                    if (b != null) {
+                        final Object instance = bm.getReference(b, sc, bm.createCreationalContext(null));
+                        return "web#" + sc.getMethod("getContextPath").invoke(instance).toString();
+                    }
                 }
             }
         } catch (final Throwable e) {
-            // no-op
+            useId = true;
+        }
+        if (useId) { // CDI 1.0, no idea how to differentiate with an id ear parts
+            return "lib" + id.incrementAndGet();
         }
         return "lib";
     }
