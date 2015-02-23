@@ -19,21 +19,30 @@
 package org.apache.commons.jcs.jcache.cdi;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 import javax.cache.annotation.CachePut;
 import javax.cache.annotation.CacheRemove;
 import javax.cache.annotation.CacheRemoveAll;
 import javax.cache.annotation.CacheResult;
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.event.Observes;
+import javax.enterprise.inject.Any;
+import javax.enterprise.inject.Default;
 import javax.enterprise.inject.spi.AfterBeanDiscovery;
 import javax.enterprise.inject.spi.AnnotatedType;
 import javax.enterprise.inject.spi.Bean;
-import javax.enterprise.inject.spi.BeanAttributes;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.BeforeBeanDiscovery;
 import javax.enterprise.inject.spi.Extension;
+import javax.enterprise.inject.spi.InjectionPoint;
 import javax.enterprise.inject.spi.InjectionTarget;
-import javax.enterprise.inject.spi.InjectionTargetFactory;
+import javax.enterprise.inject.spi.PassivationCapable;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
+import javax.enterprise.util.AnnotationLiteral;
 
 import static java.util.Arrays.asList;
 
@@ -46,6 +55,9 @@ public class MakeJCacheCDIInterceptorFriendly implements Extension
     protected void discoverInterceptorBindings(final @Observes BeforeBeanDiscovery beforeBeanDiscoveryEvent,
                                                final BeanManager bm)
     {
+        // CDI 1.1 will just pick createAnnotatedType(X) as beans so we'll skip our HelperBean
+        // but CDI 1.0 needs our HelperBean + interceptors in beans.xml
+        bm.createAnnotatedType(CDIJCacheHelper.class);
         for (final Class<?> interceptor : asList(
                 CachePutInterceptor.class, CacheRemoveInterceptor.class,
                 CacheRemoveAllInterceptor.class, CacheResultInterceptor.class)) {
@@ -64,6 +76,7 @@ public class MakeJCacheCDIInterceptorFriendly implements Extension
         if (!needHelper) {
             return;
         }
+        /* CDI >= 1.1 only
         final AnnotatedType<CDIJCacheHelper> annotatedType = bm.createAnnotatedType(CDIJCacheHelper.class);
         final BeanAttributes<CDIJCacheHelper> beanAttributes = bm.createBeanAttributes(annotatedType);
         final InjectionTarget<CDIJCacheHelper> injectionTarget = bm.createInjectionTarget(annotatedType);
@@ -73,6 +86,10 @@ public class MakeJCacheCDIInterceptorFriendly implements Extension
                 return injectionTarget;
             }
         });
+        */
+        final AnnotatedType<CDIJCacheHelper> annotatedType = bm.createAnnotatedType(CDIJCacheHelper.class);
+        final InjectionTarget<CDIJCacheHelper> injectionTarget = bm.createInjectionTarget(annotatedType);
+        final HelperBean bean = new HelperBean(annotatedType, injectionTarget, findIdSuffix(bm));
         afterBeanDiscovery.addBean(bean);
     }
 
@@ -81,5 +98,106 @@ public class MakeJCacheCDIInterceptorFriendly implements Extension
             pat.veto();
         }
         needHelper = false;
+    }
+
+    private String findIdSuffix(final BeanManager bm) {
+        try {
+            final Class<?> sc = Thread.currentThread().getContextClassLoader().loadClass("javax.servlet.ServletContext");
+            final Set<Bean<?>> beans = bm.getBeans(sc);
+            if (beans != null && !beans.isEmpty()) {
+                final Bean<?> b = bm.resolve(beans);
+                if (b != null) {
+                    final Object instance = bm.getReference(b, sc, bm.createCreationalContext(null));
+                    return "web#" + sc.getMethod("getContextPath").invoke(instance).toString();
+                }
+            }
+        } catch (final Throwable e) {
+            // no-op
+        }
+        return "lib";
+    }
+
+    public static class HelperBean implements Bean<CDIJCacheHelper>, PassivationCapable {
+        private final AnnotatedType<CDIJCacheHelper> at;
+        private final InjectionTarget<CDIJCacheHelper> it;
+        private final HashSet<Annotation> qualifiers;
+        private final String id;
+
+        public HelperBean(final AnnotatedType<CDIJCacheHelper> annotatedType,
+                          final InjectionTarget<CDIJCacheHelper> injectionTarget,
+                          final String id) {
+            this.at = annotatedType;
+            this.it = injectionTarget;
+            this.id =  "JCS#CDIHelper#" + id;
+
+            this.qualifiers = new HashSet<Annotation>();
+            this.qualifiers.add(new AnnotationLiteral<Default>() {});
+            this.qualifiers.add(new AnnotationLiteral<Any>() {});
+        }
+
+        @Override
+        public Set<InjectionPoint> getInjectionPoints() {
+            return it.getInjectionPoints();
+        }
+
+        @Override
+        public Class<?> getBeanClass() {
+            return at.getJavaClass();
+        }
+
+        @Override
+        public boolean isNullable() {
+            return false;
+        }
+
+        @Override
+        public Set<Type> getTypes() {
+            return at.getTypeClosure();
+        }
+
+        @Override
+        public Set<Annotation> getQualifiers() {
+            return qualifiers;
+        }
+
+        @Override
+        public Class<? extends Annotation> getScope() {
+            return ApplicationScoped.class;
+        }
+
+        @Override
+        public String getName() {
+            return null;
+        }
+
+        @Override
+        public Set<Class<? extends Annotation>> getStereotypes() {
+            return Collections.emptySet();
+        }
+
+        @Override
+        public boolean isAlternative() {
+            return false;
+        }
+
+        @Override
+        public CDIJCacheHelper create(final CreationalContext<CDIJCacheHelper> context) {
+            final CDIJCacheHelper produce = it.produce(context);
+            it.inject(produce, context);
+            it.postConstruct(produce);
+            return produce;
+        }
+
+        @Override
+        public void destroy(final CDIJCacheHelper instance, final CreationalContext<CDIJCacheHelper> context) {
+            it.preDestroy(instance);
+            it.dispose(instance);
+            context.release();
+        }
+
+        @Override
+        public String getId() {
+            return id;
+        }
     }
 }
