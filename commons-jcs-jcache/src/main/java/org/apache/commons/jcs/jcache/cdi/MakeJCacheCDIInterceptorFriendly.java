@@ -52,6 +52,7 @@ import static java.util.Arrays.asList;
 public class MakeJCacheCDIInterceptorFriendly implements Extension
 {
     private static final AtomicInteger id = new AtomicInteger();
+    private static final boolean USE_ID = !Boolean.getBoolean("org.apache.commons.jcs.cdi.skip-id");
 
     private boolean needHelper = true;
 
@@ -92,7 +93,7 @@ public class MakeJCacheCDIInterceptorFriendly implements Extension
         if (!needHelper) {
             return;
         }
-        /* CDI >= 1.1 only
+        /* CDI >= 1.1 only. Actually we shouldn't go here with CDI 1.1 since we defined the annotated type for the helper
         final AnnotatedType<CDIJCacheHelper> annotatedType = bm.createAnnotatedType(CDIJCacheHelper.class);
         final BeanAttributes<CDIJCacheHelper> beanAttributes = bm.createBeanAttributes(annotatedType);
         final InjectionTarget<CDIJCacheHelper> injectionTarget = bm.createInjectionTarget(annotatedType);
@@ -105,7 +106,7 @@ public class MakeJCacheCDIInterceptorFriendly implements Extension
         */
         final AnnotatedType<CDIJCacheHelper> annotatedType = bm.createAnnotatedType(CDIJCacheHelper.class);
         final InjectionTarget<CDIJCacheHelper> injectionTarget = bm.createInjectionTarget(annotatedType);
-        final HelperBean bean = new HelperBean(annotatedType, injectionTarget, findIdSuffix(bm));
+        final HelperBean bean = new HelperBean(annotatedType, injectionTarget, findIdSuffix());
         afterBeanDiscovery.addBean(bean);
     }
 
@@ -116,33 +117,13 @@ public class MakeJCacheCDIInterceptorFriendly implements Extension
         needHelper = false;
     }
 
-    private String findIdSuffix(final BeanManager bm) {
-        boolean useId = false;
-        try {
-            final ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
-            try { // CDI > 1.0
-                contextClassLoader.loadClass("javax.enterprise.inject.spi.InjectionTargetFactory");
-            } catch (final Throwable th) {
-                useId = true; // CDI 1.0
-            }
-            if (!useId) {
-                final Class<?> sc = contextClassLoader.loadClass("javax.servlet.ServletContext");
-                final Set<Bean<?>> beans = bm.getBeans(sc);
-                if (beans != null && !beans.isEmpty()) {
-                    final Bean<?> b = bm.resolve(beans);
-                    if (b != null) {
-                        final Object instance = bm.getReference(b, sc, bm.createCreationalContext(null));
-                        return "web#" + sc.getMethod("getContextPath").invoke(instance).toString();
-                    }
-                }
-            }
-        } catch (final Throwable e) {
-            useId = true;
-        }
-        if (useId) { // CDI 1.0, no idea how to differentiate with an id ear parts
+    // TODO: make it better for ear+cluster case with CDI 1.0
+    private String findIdSuffix() {
+        // big disadvantage is all deployments of a cluster needs to be in the exact same order but it works with ears
+        if (USE_ID) {
             return "lib" + id.incrementAndGet();
         }
-        return "lib";
+        return "default";
     }
 
     public static class HelperBean implements Bean<CDIJCacheHelper>, PassivationCapable {
