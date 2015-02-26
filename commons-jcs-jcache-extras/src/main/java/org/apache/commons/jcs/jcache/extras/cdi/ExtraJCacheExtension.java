@@ -24,6 +24,7 @@ import javax.cache.spi.CachingProvider;
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.spi.AfterBeanDiscovery;
 import javax.enterprise.inject.spi.Bean;
+import javax.enterprise.inject.spi.BeforeShutdown;
 import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.ProcessBean;
 import java.util.Properties;
@@ -35,6 +36,8 @@ public class ExtraJCacheExtension implements Extension
 
     private boolean cacheManagerFound = false;
     private boolean cacheProviderFound = false;
+    private CacheManager cacheManager;
+    private CachingProvider cachingProvider;
 
     public <A> void processBean(final @Observes ProcessBean<A> processBeanEvent)
     {
@@ -75,10 +78,10 @@ public class ExtraJCacheExtension implements Extension
             return;
         }
 
-        final CachingProvider cachingProvider = Caching.getCachingProvider();
+        cachingProvider = Caching.getCachingProvider();
         if (!cacheManagerFound)
         {
-            final CacheManager cacheManager = cachingProvider.getCacheManager(
+            cacheManager = cachingProvider.getCacheManager(
                     cachingProvider.getDefaultURI(),
                     cachingProvider.getDefaultClassLoader(),
                     new Properties());
@@ -87,6 +90,18 @@ public class ExtraJCacheExtension implements Extension
         if (!cacheProviderFound)
         {
             afterBeanDiscovery.addBean(new CacheProviderBean(cachingProvider));
+        }
+    }
+
+    public void destroyIfCreated(final @Observes BeforeShutdown beforeShutdown)
+    {
+        if (cacheManager != null)
+        {
+            cacheManager.close();
+        }
+        if (cachingProvider != null)
+        {
+            cachingProvider.close();
         }
     }
 }
