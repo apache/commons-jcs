@@ -24,6 +24,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.logging.Logger;
+import javax.annotation.PreDestroy;
 import javax.cache.annotation.CacheDefaults;
 import javax.cache.annotation.CacheKeyGenerator;
 import javax.cache.annotation.CacheResolverFactory;
@@ -39,13 +40,22 @@ import javax.interceptor.InvocationContext;
 public class CDIJCacheHelper
 {
     private static final Logger LOGGER = Logger.getLogger(CDIJCacheHelper.class.getName());
+    private static final boolean CLOSE_CACHE = !Boolean.getBoolean("org.apache.commons.jcs.jcache.cdi.skip-close");
 
-    private final CacheResolverFactory defaultCacheResolverFactory = new CacheResolverFactoryImpl();
+    private volatile CacheResolverFactoryImpl defaultCacheResolverFactory = null; // lazy to not create any cache if not needed
     private final CacheKeyGeneratorImpl defaultCacheKeyGenerator = new CacheKeyGeneratorImpl();
     private final ConcurrentMap<Method, String> generatedNames = new ConcurrentHashMap<Method, String>();
 
     @Inject
     private BeanManager beanManager;
+
+    @PreDestroy
+    private void release() {
+        if (CLOSE_CACHE && defaultCacheResolverFactory != null)
+        {
+            defaultCacheResolverFactory.release();
+        }
+    }
 
     public String defaultName(final Method method, final CacheDefaults defaults, final String cacheName)
     {
@@ -155,7 +165,7 @@ public class CDIJCacheHelper
                 return instance(defaultCacheResolverFactory);
             }
         }
-        return defaultCacheResolverFactory;
+        return defaultCacheResolverFactory();
     }
 
     public <T> T instance(final Class<T> type)
@@ -167,7 +177,7 @@ public class CDIJCacheHelper
                 return (T) defaultCacheKeyGenerator;
             }
             if (CacheResolverFactory.class == type) {
-                return (T) defaultCacheResolverFactory;
+                return (T) defaultCacheResolverFactory();
             }
             return null;
         }
@@ -190,5 +200,19 @@ public class CDIJCacheHelper
                 context.release();
             }
         }
+    }
+
+    private CacheResolverFactoryImpl defaultCacheResolverFactory()
+    {
+        if (defaultCacheResolverFactory != null) {
+            return defaultCacheResolverFactory;
+        }
+        synchronized (this) {
+            if (defaultCacheResolverFactory != null) {
+                return defaultCacheResolverFactory;
+            }
+            defaultCacheResolverFactory = new CacheResolverFactoryImpl();
+        }
+        return defaultCacheResolverFactory;
     }
 }
