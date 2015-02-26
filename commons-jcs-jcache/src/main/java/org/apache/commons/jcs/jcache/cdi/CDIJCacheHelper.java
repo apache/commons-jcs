@@ -20,14 +20,20 @@ package org.apache.commons.jcs.jcache.cdi;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.logging.Logger;
 import javax.annotation.PreDestroy;
 import javax.cache.annotation.CacheDefaults;
+import javax.cache.annotation.CacheInvocationParameter;
+import javax.cache.annotation.CacheKey;
 import javax.cache.annotation.CacheKeyGenerator;
 import javax.cache.annotation.CacheResolverFactory;
+import javax.cache.annotation.CacheValue;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.Dependent;
 import javax.enterprise.context.spi.CreationalContext;
@@ -45,6 +51,7 @@ public class CDIJCacheHelper
     private volatile CacheResolverFactoryImpl defaultCacheResolverFactory = null; // lazy to not create any cache if not needed
     private final CacheKeyGeneratorImpl defaultCacheKeyGenerator = new CacheKeyGeneratorImpl();
     private final ConcurrentMap<Method, String> generatedNames = new ConcurrentHashMap<Method, String>();
+    private final ConcurrentMap<Method, Integer[]> parameterIndexes = new ConcurrentHashMap<Method, Integer[]>();
 
     @Inject
     private BeanManager beanManager;
@@ -214,5 +221,53 @@ public class CDIJCacheHelper
             defaultCacheResolverFactory = new CacheResolverFactoryImpl();
         }
         return defaultCacheResolverFactory;
+    }
+
+    public Integer[] keyParameterIndexes(final Method method)
+    {
+        Integer[] val = parameterIndexes.get(method);
+        if (val == null)
+        {
+            final List<Integer> keys = new LinkedList<Integer>();
+            final Annotation[][] parameterAnnotations = method.getParameterAnnotations();
+            
+            // first check if keys are specified explicitely
+            for (int i = 0; i < method.getParameterTypes().length; i++)
+            {
+                final Annotation[] annotations = parameterAnnotations[i];
+                for (final Annotation a : annotations)
+                {
+                    if (a.annotationType().equals(CacheKey.class))
+                    {
+                        keys.add(i);
+                        break;
+                    }
+                }
+            }
+
+            // if not then use all parameters but value ones
+            if (keys.isEmpty())
+            {
+                for (int i = 0; i < method.getParameterTypes().length; i++)
+                {
+                    final Annotation[] annotations = parameterAnnotations[i];
+                    boolean value = false;
+                    for (final Annotation a : annotations)
+                    {
+                        if (a.annotationType().equals(CacheValue.class))
+                        {
+                            value = true;
+                            break;
+                        }
+                    }
+                    if (!value) {
+                        keys.add(i);
+                    }
+                }
+            }
+            val = keys.toArray(new Integer[keys.size()]);
+            parameterIndexes.putIfAbsent(method, val);
+        }
+        return val;
     }
 }

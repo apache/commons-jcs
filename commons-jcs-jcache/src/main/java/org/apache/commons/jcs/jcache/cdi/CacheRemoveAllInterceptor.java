@@ -19,6 +19,7 @@
 package org.apache.commons.jcs.jcache.cdi;
 
 import java.io.Serializable;
+import java.lang.reflect.Method;
 import javax.annotation.Priority;
 import javax.cache.Cache;
 import javax.cache.annotation.CacheDefaults;
@@ -42,11 +43,13 @@ public class CacheRemoveAllInterceptor implements Serializable
     {
         final CacheDefaults defaults = helper.findDefaults(ic);
 
-        final CacheRemoveAll cacheRemoveAll = ic.getMethod().getAnnotation(CacheRemoveAll.class);
-        final String cacheName = helper.defaultName(ic.getMethod(), defaults, cacheRemoveAll.cacheName());
+        final Method method = ic.getMethod();
+        final CacheRemoveAll cacheRemoveAll = method.getAnnotation(CacheRemoveAll.class);
+        final String cacheName = helper.defaultName(method, defaults, cacheRemoveAll.cacheName());
         final boolean afterInvocation = cacheRemoveAll.afterInvocation();
 
-        final CacheKeyInvocationContext<CacheRemoveAll> context = new CacheKeyInvocationContextImpl<CacheRemoveAll>(ic, cacheRemoveAll, cacheName);
+        final CacheKeyInvocationContext<CacheRemoveAll> context = new CacheKeyInvocationContextImpl<CacheRemoveAll>(
+                ic, cacheRemoveAll, cacheName, helper.keyParameterIndexes(method));
         if (!afterInvocation)
         {
             removeAll(context, defaults, cacheRemoveAll);

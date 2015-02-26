@@ -29,12 +29,15 @@ import java.util.LinkedList;
 
 public class CacheKeyInvocationContextImpl<A extends Annotation> extends CacheInvocationContextImpl<A> implements CacheKeyInvocationContext<A>
 {
+    private final Integer[] keyIndexes;
     private CacheInvocationParameter[] keyParams = null;
     private CacheInvocationParameter valueParam = null;
 
-    public CacheKeyInvocationContextImpl(final InvocationContext delegate, final A annotation, final String name)
+    public CacheKeyInvocationContextImpl(final InvocationContext delegate, final A annotation, final String name,
+                                         final Integer[] keyIndexes)
     {
         super(delegate, annotation, name);
+        this.keyIndexes = keyIndexes;
     }
 
     @Override
@@ -55,7 +58,7 @@ public class CacheKeyInvocationContextImpl<A extends Annotation> extends CacheIn
             }
             if (keys.isEmpty())
             {
-                keyParams = getAllParameters();
+                keyParams = doGetAllParameters(keyIndexes);
             }
             else
             {

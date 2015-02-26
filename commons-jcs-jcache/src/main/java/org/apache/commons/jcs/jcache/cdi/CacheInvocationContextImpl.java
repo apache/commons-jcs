@@ -18,11 +18,11 @@
  */
 package org.apache.commons.jcs.jcache.cdi;
 
+import java.lang.annotation.Annotation;
+import java.util.HashSet;
 import javax.cache.annotation.CacheInvocationContext;
 import javax.cache.annotation.CacheInvocationParameter;
 import javax.interceptor.InvocationContext;
-import java.lang.annotation.Annotation;
-import java.util.HashSet;
 
 import static java.util.Arrays.asList;
 
@@ -46,14 +46,7 @@ public class CacheInvocationContextImpl<A extends Annotation> extends CacheMetho
     {
         if (parameters == null)
         {
-            final Object[] args = delegate.getParameters();
-            final Class<?>[] parameterTypes = getMethod().getParameterTypes();
-            final Annotation[][] parameterAnnotations = getMethod().getParameterAnnotations();
-            parameters = new CacheInvocationParameter[args.length];
-            for (int i = 0; i < args.length; i++)
-            {
-                parameters[i] = new CacheInvocationParameterImpl(parameterTypes[i], args[i], new HashSet<Annotation>(asList(parameterAnnotations[i])), i);
-            }
+            parameters = doGetAllParameters(null);
         }
         return parameters;
     }
@@ -66,5 +59,35 @@ public class CacheInvocationContextImpl<A extends Annotation> extends CacheMetho
             return cls.cast(this);
         }
         throw new IllegalArgumentException(cls.getName());
+    }
+
+    protected CacheInvocationParameter[] doGetAllParameters(final Integer[] indexes)
+    {
+        final Object[] args = delegate.getParameters();
+        final Class<?>[] parameterTypes = getMethod().getParameterTypes();
+        final Annotation[][] parameterAnnotations = getMethod().getParameterAnnotations();
+
+        final CacheInvocationParameter[] parametersAsArray = new CacheInvocationParameter[indexes == null ? args.length : indexes.length];
+        if (indexes == null)
+        {
+            for (int i = 0; i < args.length; i++)
+            {
+                parametersAsArray[i] = newCacheInvocationParameterImpl(parameterTypes[i], args[i], parameterAnnotations[i], i);
+            }
+        }
+        else
+        {
+            for (int idx = 0; idx < indexes.length; idx++)
+            {
+                final int i = indexes[idx];
+                parametersAsArray[i] = newCacheInvocationParameterImpl(parameterTypes[i], args[i], parameterAnnotations[i], i);
+            }
+        }
+        return parametersAsArray;
+    }
+
+    private CacheInvocationParameterImpl newCacheInvocationParameterImpl(final Class<?> type, final Object arg,
+                                                                         final Annotation[] annotations, final int i) {
+        return new CacheInvocationParameterImpl(type, arg, new HashSet<Annotation>(asList(annotations)), i);
     }
 }

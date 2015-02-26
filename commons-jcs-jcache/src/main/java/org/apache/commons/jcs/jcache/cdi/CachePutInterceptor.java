@@ -19,6 +19,7 @@
 package org.apache.commons.jcs.jcache.cdi;
 
 import java.io.Serializable;
+import java.lang.reflect.Method;
 import javax.annotation.Priority;
 import javax.cache.Cache;
 import javax.cache.annotation.CacheDefaults;
@@ -43,11 +44,13 @@ public class CachePutInterceptor implements Serializable
     {
         final CacheDefaults defaults = helper.findDefaults(ic);
 
-        final CachePut cachePut = ic.getMethod().getAnnotation(CachePut.class);
-        final String cacheName = helper.defaultName(ic.getMethod(), defaults, cachePut.cacheName());
+        final Method method = ic.getMethod();
+        final CachePut cachePut = method.getAnnotation(CachePut.class);
+        final String cacheName = helper.defaultName(method, defaults, cachePut.cacheName());
         final boolean afterInvocation = cachePut.afterInvocation();
 
-        final CacheKeyInvocationContext<CachePut> context = new CacheKeyInvocationContextImpl<CachePut>(ic, cachePut, cacheName);
+        final CacheKeyInvocationContext<CachePut> context = new CacheKeyInvocationContextImpl<CachePut>(
+                ic, cachePut, cacheName, helper.keyParameterIndexes(method));
         if (!afterInvocation)
         {
             doCache(context, defaults, cachePut);

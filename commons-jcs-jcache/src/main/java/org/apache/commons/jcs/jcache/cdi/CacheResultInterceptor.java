@@ -19,6 +19,7 @@
 package org.apache.commons.jcs.jcache.cdi;
 
 import java.io.Serializable;
+import java.lang.reflect.Method;
 import javax.annotation.Priority;
 import javax.cache.Cache;
 import javax.cache.annotation.CacheDefaults;
@@ -45,10 +46,12 @@ public class CacheResultInterceptor implements Serializable
     {
         final CacheDefaults defaults = helper.findDefaults(ic);
 
-        final CacheResult cacheResult = ic.getMethod().getAnnotation(CacheResult.class);
-        final String cacheName = helper.defaultName(ic.getMethod(), defaults, cacheResult.cacheName());
+        final Method method = ic.getMethod();
+        final CacheResult cacheResult = method.getAnnotation(CacheResult.class);
+        final String cacheName = helper.defaultName(method, defaults, cacheResult.cacheName());
 
-        final CacheKeyInvocationContext<CacheResult> context = new CacheKeyInvocationContextImpl<CacheResult>(ic, cacheResult, cacheName);
+        final CacheKeyInvocationContext<CacheResult> context = new CacheKeyInvocationContextImpl<CacheResult>(
+                ic, cacheResult, cacheName, helper.keyParameterIndexes(method));
 
         final CacheResolverFactory cacheResolverFactory = helper.cacheResolverFactoryFor(defaults, cacheResult.cacheResolverFactory());
         final CacheResolver cacheResolver = cacheResolverFactory.getCacheResolver(context);
