@@ -327,15 +327,21 @@ public class BlockDiskCache<K, V>
         }
 
         ICacheElement<K, V> object = null;
-        storageLock.readLock().lock();
+
 
         try
         {
-            int[] ded = this.keyStore.get( key );
-            if ( ded != null )
-            {
-                object = this.dataFile.read( ded );
+            storageLock.readLock().lock();
+            try {
+                int[] ded = this.keyStore.get( key );
+                if ( ded != null )
+                {
+                    object = this.dataFile.read( ded );
+                }
+            } finally {
+                storageLock.readLock().unlock();
             }
+
         }
         catch ( IOException ioe )
         {
@@ -346,11 +352,6 @@ public class BlockDiskCache<K, V>
         {
             log.error( logCacheName + "Failure getting from disk, key = " + key, e );
         }
-        finally
-        {
-            storageLock.readLock().unlock();
-        }
-
         return object;
     }
 
