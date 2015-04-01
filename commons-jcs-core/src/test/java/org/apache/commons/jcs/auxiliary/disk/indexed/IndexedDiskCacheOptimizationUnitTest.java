@@ -42,10 +42,10 @@ public class IndexedDiskCacheOptimizationUnitTest
     {
         // SETUP
         int removeCount = 50;
-
+        
         IndexedDiskCacheAttributes cattr = new IndexedDiskCacheAttributes();
         cattr.setCacheName( "testOptimization" );
-        cattr.setMaxKeySize( removeCount * 3 );
+        cattr.setMaxKeySize( removeCount * 2 );
         cattr.setOptimizeAtRemoveCount( removeCount );
         cattr.setMaxRecycleBinSize( removeCount * 3 );
         cattr.setDiskPath( "target/test-sandbox/testOptimization" );
@@ -53,7 +53,7 @@ public class IndexedDiskCacheOptimizationUnitTest
 
         disk.removeAll();
 
-        int numberToInsert = removeCount * 2;
+        int numberToInsert = removeCount * 3;
         ICacheElement<Integer, DiskTestObject>[] elements = DiskTestObjectUtil
             .createCacheElementsWithTestObjectsOfVariableSizes( numberToInsert, cattr.getCacheName() );
 
@@ -61,6 +61,7 @@ public class IndexedDiskCacheOptimizationUnitTest
         {
             disk.processUpdate( elements[i] );
         }
+                
 
         Thread.sleep( 1000 );
         long sizeBeforeRemove = disk.getDataFileSize();
@@ -72,9 +73,10 @@ public class IndexedDiskCacheOptimizationUnitTest
         {
             disk.processRemove( Integer.valueOf( i ) );
         }
-
+        
         SleepUtil.sleepAtLeast( 1000 );
 
+        disk.optimizeFile();
         // VERIFY
         long sizeAfterRemove = disk.getDataFileSize();
         long expectedSizeAfterRemove = DiskTestObjectUtil.totalSize( elements, removeCount, elements.length );

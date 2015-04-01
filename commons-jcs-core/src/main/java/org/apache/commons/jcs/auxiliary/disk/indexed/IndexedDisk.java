@@ -151,6 +151,7 @@ class IndexedDisk
         {
             // chunk it
             int chunkSize = Math.min( remaining, buffer.capacity() );
+            buffer.limit(chunkSize);
             fc.read(buffer, readPos);
             buffer.flip();
             fc.write(buffer, writePos);
