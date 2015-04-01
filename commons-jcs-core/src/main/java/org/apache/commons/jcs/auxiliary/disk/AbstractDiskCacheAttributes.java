@@ -77,8 +77,12 @@ public abstract class AbstractDiskCacheAttributes
     public void setDiskPath( File diskPath )
     {
         this.diskPath = diskPath;
-        boolean result = this.diskPath.mkdirs();
-
+        boolean result = this.diskPath.isDirectory(); 
+        
+        if (!result)
+        {
+        		result = this.diskPath.mkdirs();
+        }
         if (!result)
         {
             log.error("Failed to create directory " + diskPath);
