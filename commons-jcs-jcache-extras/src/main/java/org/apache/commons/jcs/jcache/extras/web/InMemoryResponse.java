@@ -18,10 +18,6 @@
  */
 package org.apache.commons.jcs.jcache.extras.web;
 
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpServletResponseWrapper;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -34,6 +30,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.CopyOnWriteArraySet;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletResponseWrapper;
 
 public class InMemoryResponse extends HttpServletResponseWrapper implements Serializable
 {
@@ -257,7 +257,6 @@ public class InMemoryResponse extends HttpServletResponseWrapper implements Seri
         {
             buffer.flush();
         }
-        super.flushBuffer();
     }
 
     public int getContentLength()

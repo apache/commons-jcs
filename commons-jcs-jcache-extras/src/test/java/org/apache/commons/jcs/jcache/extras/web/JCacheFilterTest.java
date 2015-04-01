@@ -18,173 +18,129 @@
  */
 package org.apache.commons.jcs.jcache.extras.web;
 
-import org.junit.After;
-import org.junit.Before;
+import org.apache.catalina.Context;
+import org.apache.catalina.LifecycleException;
+import org.apache.catalina.LifecycleState;
+import org.apache.catalina.core.StandardContext;
+import org.apache.catalina.startup.Tomcat;
+import org.apache.commons.io.IOUtils;
+import org.apache.tomcat.util.descriptor.web.FilterDef;
+import org.apache.tomcat.util.descriptor.web.FilterMap;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpServletResponseWrapper;
-import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
-import java.util.Collections;
-import java.util.Enumeration;
+import java.net.URL;
 import java.util.concurrent.atomic.AtomicInteger;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import static org.junit.Assert.assertEquals;
 
 public class JCacheFilterTest
 {
-    private final ThreadLocal<ByteArrayOutputStream> outputStreamAsBytes = new ThreadLocal<ByteArrayOutputStream>() {
-        @Override
-        protected ByteArrayOutputStream initialValue()
-        {
-            return new ByteArrayOutputStream();
-        }
-    };
-    private final ThreadLocal<ServletOutputStream> outputStream = new ThreadLocal<ServletOutputStream>() {
-        @Override
-        protected ServletOutputStream initialValue()
-        {
-            return new ServletOutputStream()
-            {
-                @Override
-                public void write(final int b) throws IOException
-                {
-                    outputStreamAsBytes.get().write(b);
-                }
-            };
-        }
+    private static File docBase;
 
-        @Override
-        public void remove()
-        {
-            super.remove();
-            outputStreamAsBytes.remove();
-        }
-    };
-
-    @Before
-    @After
-    public void cleanup() {
-        outputStream.remove();
+    @BeforeClass
+    public static void createEmptyDir() {
+        docBase = new File("target/missing/");
+        docBase.mkdirs();
+        docBase.deleteOnExit();
     }
 
     @Test
-    public void testFilterNoOutput() throws ServletException, IOException
+    public void testFilterNoOutput() throws Exception
     {
-        final Filter filter = initFilter();
-        final AtomicInteger counter = new AtomicInteger(0);
-        final FilterChain chain = new FilterChain()
-        {
-            @Override
-            public void doFilter(ServletRequest request, ServletResponse response) throws IOException, ServletException
-            {
-                counter.incrementAndGet();
-                response.getWriter().write("");
-            }
-        };
-        filter.doFilter(new HttpServletRequestWrapper(newProxy(HttpServletRequest.class)), new HttpServletResponseWrapper(newProxy(HttpServletResponse.class)), chain);
-        assertEquals(1, counter.get());
-        assertEquals("", new String(outputStreamAsBytes.get().toByteArray()));
-        outputStream.remove();
-        filter.doFilter(new HttpServletRequestWrapper(newProxy(HttpServletRequest.class)), new HttpServletResponseWrapper(newProxy(HttpServletResponse.class)), chain);
-        assertEquals(1, counter.get());
-        assertEquals("", new String(outputStreamAsBytes.get().toByteArray()));
-        filter.destroy();
+        Empty.COUNTER.set(0);
+        final Tomcat tomcat = new Tomcat();
+        tomcat.setHostname("localhost");
+        tomcat.setPort(0);
+        try {
+            tomcat.getEngine();
+            tomcat.start();
+            final Context ctx = tomcat.addWebapp("/sample", docBase.getAbsolutePath());
+            Tomcat.addServlet(ctx, "empty", Empty.class.getName());
+            ctx.addServletMapping("/", "empty");
+            addJcsFilter(ctx);
+            StandardContext.class.cast(ctx).filterStart();
+
+            final URL url = new URL("http://localhost:" + tomcat.getConnector().getLocalPort() + "/sample/");
+
+            assertEquals("", IOUtils.toString(url.openStream()));
+            assertEquals(1, Empty.COUNTER.get());
+
+            assertEquals("", IOUtils.toString(url.openStream()));
+            assertEquals(1, Empty.COUNTER.get());
+        } finally {
+            stop(tomcat);
+        }
     }
 
     @Test
-    public void testFilter() throws ServletException, IOException
+    public void testFilter() throws Exception
     {
-        final Filter filter = initFilter();
-        final AtomicInteger counter = new AtomicInteger(0);
-        final FilterChain chain = new FilterChain()
-        {
-            @Override
-            public void doFilter(ServletRequest request, ServletResponse response) throws IOException, ServletException
-            {
-                counter.incrementAndGet();
-                response.getWriter().write("Hello!");
-            }
-        };
-        filter.doFilter(new HttpServletRequestWrapper(newProxy(HttpServletRequest.class)), new HttpServletResponseWrapper(newProxy(HttpServletResponse.class)), chain);
-        assertEquals(1, counter.get());
-        assertEquals("Hello!", new String(outputStreamAsBytes.get().toByteArray()));
-        outputStream.remove();
-        filter.doFilter(new HttpServletRequestWrapper(newProxy(HttpServletRequest.class)), new HttpServletResponseWrapper(newProxy(HttpServletResponse.class)), chain);
-        assertEquals(1, counter.get());
-        assertEquals("Hello!", new String(outputStreamAsBytes.get().toByteArray()));
-        filter.destroy();
+        Hello.COUNTER.set(0);
+        final Tomcat tomcat = new Tomcat();
+        tomcat.setPort(0);
+        try {
+            tomcat.getEngine();
+            tomcat.start();
+            final Context ctx = tomcat.addContext("/sample", docBase.getAbsolutePath());
+            Tomcat.addServlet(ctx, "hello", Hello.class.getName());
+            ctx.addServletMapping("/", "hello");
+            addJcsFilter(ctx);
+            StandardContext.class.cast(ctx).filterStart();
+
+            final URL url = new URL("http://localhost:" + tomcat.getConnector().getLocalPort() + "/sample/");
+            assertEquals("hello", IOUtils.toString(url.openStream()));
+            assertEquals(1, Hello.COUNTER.get());
+
+            assertEquals("hello", IOUtils.toString(url.openStream()));
+            assertEquals(1, Hello.COUNTER.get());
+        } finally {
+            stop(tomcat);
+        }
     }
 
-    private JCacheFilter initFilter() throws ServletException
-    {
-        final JCacheFilter filter = new JCacheFilter();
-        filter.init(new FilterConfig()
-        {
-            @Override
-            public String getFilterName()
-            {
-                return null;
-            }
-
-            @Override
-            public ServletContext getServletContext()
-            {
-                return newProxy(ServletContext.class);
-            }
-
-            @Override
-            public String getInitParameter(String name)
-            {
-                return null;
-            }
-
-            @Override
-            public Enumeration<String> getInitParameterNames()
-            {
-                return Collections.<String>enumeration(Collections.<String>emptySet()); // emptyEnumeration() is Java 1.7+
-            }
-        });
-        return filter;
+    private void stop(final Tomcat tomcat) throws LifecycleException {
+        if (LifecycleState.STARTED.equals(tomcat.getServer().getState())) {
+            tomcat.stop();
+            tomcat.destroy();
+        }
     }
 
-    private <T> T newProxy(final Class<T> clazz)
-    {
-        return clazz.cast(Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class<?>[]{clazz}, new InvocationHandler()
-                        {
-                            @Override
-                            public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable
-                            {
-                                if (method.getReturnType().getName().equals("boolean"))
-                                {
-                                    return false;
-                                }
-                                if ("getCharacterEncoding".equals(method.getName()))
-                                {
-                                    return "UTF-8";
-                                }
-                                if ("getOutputStream".equals(method.getName()))
-                                {
-                                    return outputStream.get();
-                                }
-                                return null;
-                            }
-                        }
-                )
-        );
+    private void addJcsFilter(final Context ctx) {
+        final FilterDef filterDef = new FilterDef();
+        filterDef.setFilterName("jcs");
+        filterDef.setFilterClass(JCacheFilter.class.getName());
+        ctx.addFilterDef(filterDef);
+
+        final FilterMap filterMap = new FilterMap();
+        filterMap.setFilterName(filterDef.getFilterName());
+        filterMap.addURLPattern("/*");
+        ctx.addFilterMap(filterMap);
+    }
+
+    public static class Hello extends HttpServlet {
+        public static final AtomicInteger COUNTER = new AtomicInteger();
+
+        @Override
+        protected void service(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
+            resp.getWriter().write("hello");
+            COUNTER.incrementAndGet();
+        }
+    }
+
+    public static class Empty extends HttpServlet {
+        public static final AtomicInteger COUNTER = new AtomicInteger();
+
+        @Override
+        protected void service(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
+            resp.getWriter().write("");
+            COUNTER.incrementAndGet();
+        }
     }
 }
