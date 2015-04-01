@@ -118,7 +118,7 @@ public class RemoteCacheServerFactory
                 log.info( "ConfigFileName = [" + propFile + "]" );
             }
             Properties props = RemoteUtils.loadProps( propFile );
-            startup(host, port, props);
+            startup(host, port, props, propFile);
         }
     }
 
@@ -133,7 +133,7 @@ public class RemoteCacheServerFactory
      * @param props
      * @throws IOException
      */
-    public static void startup( String host, int port, Properties props )
+    public static void startup( String host, int port, Properties props, String propFile )
         throws IOException
     {
         if ( remoteCacheServer != null )
@@ -153,7 +153,7 @@ public class RemoteCacheServerFactory
             }
 
             RemoteCacheServerAttributes rcsa = configureRemoteCacheServerAttributes(props);
-            //rcsa.setConfigFileName( propFile );
+            rcsa.setConfigFileName( propFile );
 
             // These should come from the file!
             rcsa.setRemotePort( port );
