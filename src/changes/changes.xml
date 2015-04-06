@@ -20,6 +20,9 @@
 	</properties>
 	<body>
         <release version="2.0" date="unreleased" description="JDK 1.6 based major release">
+            <action issue="JCS-140" dev="rmannibucau" type="fix" due-to="liangjiarui">
+                JCacheFilter code logic error, first hit always fails
+            </action>
             <action issue="JCS-147" dev="tv" type="add" due-to="Wiktor Niesiobedzki">
                 Provide file size limitation for Block Disk Cache and Indexed Disk Cache
             </action>
