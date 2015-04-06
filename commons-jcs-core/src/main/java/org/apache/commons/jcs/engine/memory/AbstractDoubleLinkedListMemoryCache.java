@@ -19,6 +19,16 @@ package org.apache.commons.jcs.engine.memory;
  * under the License.
  */
 
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.apache.commons.jcs.engine.CacheConstants;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.engine.control.CompositeCache;
@@ -32,18 +42,6 @@ import org.apache.commons.jcs.utils.struct.DoubleLinkedList;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-
 /**
  * This class contains methods that are common to memory caches using the double linked list, such
  * as the LRU, MRU, FIFO, and LIFO caches.
@@ -55,9 +53,6 @@ import java.util.concurrent.locks.ReentrantLock;
 public abstract class AbstractDoubleLinkedListMemoryCache<K, V>
     extends AbstractMemoryCache<K, V>
 {
-    /** Don't change. */
-    private static final long serialVersionUID = 1422569420563967389L;
-
     /** The logger. */
     private static final Log log = LogFactory.getLog( AbstractDoubleLinkedListMemoryCache.class );
 
