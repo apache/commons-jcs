@@ -1522,7 +1522,6 @@ public class RemoteCacheServer<K, V>
                 log.info( "Removing listener for cache [" + cacheName + "]" );
             }
         }
-        return;
     }
 
     /**
@@ -1534,7 +1533,7 @@ public class RemoteCacheServer<K, V>
     public void shutdown()
         throws IOException
     {
-        RemoteCacheServerFactory.shutdownImpl( "", Registry.REGISTRY_PORT );
+        shutdown("", Registry.REGISTRY_PORT);
     }
 
     /**
@@ -1551,7 +1550,26 @@ public class RemoteCacheServer<K, V>
     {
         if ( log.isInfoEnabled() )
         {
-            log.info( "Received shutdown request.  Shutting down server." );
+            log.info( "Received shutdown request. Shutting down server." );
+        }
+
+        synchronized (listenerId)
+        {
+            for (String cacheName : cacheListenersMap.keySet())
+            {
+                for (int i = 0; i <= listenerId[0]; i++)
+                {
+                    removeCacheListener( cacheName, i );
+                }
+
+                if ( log.isInfoEnabled() )
+                {
+                    log.info( "Removing listener for cache [" + cacheName + "]" );
+                }
+            }
+
+            cacheListenersMap.clear();
+            clusterListenersMap.clear();
         }
         RemoteCacheServerFactory.shutdownImpl( host, port );
         this.cacheManager.shutDown();

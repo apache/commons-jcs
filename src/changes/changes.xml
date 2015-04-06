@@ -20,6 +20,9 @@
 	</properties>
 	<body>
         <release version="2.0" date="unreleased" description="JDK 1.6 based major release">
+            <action issue="JCS-96" dev="tv" type="fix" due-to="Gregory Fernandez">
+                Incomplete shutdown of RemoteCacheServer
+            </action>
             <action issue="JCS-148" dev="tv" type="fix" due-to="Wiktor Niesiobedzki">
                 Unnecessary use of FileChannel.force() in Indexed and Block Disk Caches
             </action>
