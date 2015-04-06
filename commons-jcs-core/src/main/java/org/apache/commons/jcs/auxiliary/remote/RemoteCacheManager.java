@@ -19,13 +19,14 @@ package org.apache.commons.jcs.auxiliary.remote;
  * under the License.
  */
 
-import org.apache.commons.jcs.auxiliary.AuxiliaryCacheManager;
 import org.apache.commons.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes;
 import org.apache.commons.jcs.auxiliary.remote.behavior.IRemoteCacheClient;
 import org.apache.commons.jcs.auxiliary.remote.behavior.IRemoteCacheListener;
-import org.apache.commons.jcs.auxiliary.remote.behavior.IRemoteCacheObserver;
+import org.apache.commons.jcs.engine.CacheWatchRepairable;
 import org.apache.commons.jcs.engine.ZombieCacheServiceNonLocal;
+import org.apache.commons.jcs.engine.ZombieCacheWatch;
 import org.apache.commons.jcs.engine.behavior.ICache;
+import org.apache.commons.jcs.engine.behavior.ICacheObserver;
 import org.apache.commons.jcs.engine.behavior.ICacheServiceNonLocal;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs.engine.behavior.IElementSerializer;
@@ -49,7 +50,7 @@ import java.util.Map;
  * Listeners are not registered with the server until a cache is requested from the manager.
  */
 public class RemoteCacheManager
-    implements AuxiliaryCacheManager, IShutdownObserver
+    implements IShutdownObserver
 {
     /** The logger */
     private static final Log log = LogFactory.getLog( RemoteCacheManager.class );
@@ -92,7 +93,7 @@ public class RemoteCacheManager
      * Wrapper of the remote cache watch service; or wrapper of a zombie service if failed to
      * connect.
      */
-    private RemoteCacheWatchRepairable remoteWatch;
+    private CacheWatchRepairable remoteWatch;
 
     /** The cache manager listeners will need to use to get a cache. */
     private final ICompositeCacheManager cacheMgr;
@@ -125,7 +126,7 @@ public class RemoteCacheManager
         // register shutdown observer
         this.cacheMgr.registerShutdownObserver( this );
 
-        String registry = "//" + host + ":" + port + "/" + service;
+        String registry = RemoteUtils.getNamingURL(host, port, service);
         if ( log.isInfoEnabled() )
         {
             log.info( "Looking up server [" + registry + "]" );
@@ -145,8 +146,9 @@ public class RemoteCacheManager
                 log.debug( "remoteService = " + remoteService );
             }
 
-            remoteWatch = new RemoteCacheWatchRepairable();
-            remoteWatch.setCacheWatch( (IRemoteCacheObserver) obj );
+            ICacheObserver remoteObserver = (ICacheObserver) obj;
+            remoteWatch = new CacheWatchRepairable();
+            remoteWatch.setCacheWatch( remoteObserver );
         }
         catch ( Exception ex )
         {
@@ -155,8 +157,8 @@ public class RemoteCacheManager
             // services.
             log.error( "Problem finding server at [" + registry + "]", ex );
             remoteService = new ZombieCacheServiceNonLocal<String, String>();
-            remoteWatch = new RemoteCacheWatchRepairable();
-            remoteWatch.setCacheWatch( new ZombieRemoteCacheWatch() );
+            remoteWatch = new CacheWatchRepairable();
+            remoteWatch.setCacheWatch( new ZombieCacheWatch() );
 
             // Notify the cache monitor about the error, and kick off the
             // recovery process.
@@ -363,7 +365,6 @@ public class RemoteCacheManager
      * @param cacheName
      * @return The cache value
      */
-    @Override
     public <K, V> RemoteCacheNoWait<K, V> getCache( String cacheName )
     {
         IRemoteCacheAttributes ca = (IRemoteCacheAttributes) remoteCacheAttributes.copy();
@@ -506,7 +507,7 @@ public class RemoteCacheManager
      * @param remoteService
      * @param remoteWatch
      */
-    public void fixCaches( ICacheServiceNonLocal<?, ?> remoteService, IRemoteCacheObserver remoteWatch )
+    public void fixCaches( ICacheServiceNonLocal<?, ?> remoteService, ICacheObserver remoteWatch )
     {
         if ( log.isInfoEnabled() )
         {

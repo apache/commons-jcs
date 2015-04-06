@@ -530,83 +530,99 @@ public class CompositeCacheConfigurator
      */
     protected <K, V> AuxiliaryCache<K, V> parseAuxiliary( Properties props, String auxName, String regName )
     {
-        AuxiliaryCache<K, V> auxCache;
-
         if ( log.isDebugEnabled() )
         {
             log.debug( "parseAuxiliary " + auxName );
         }
 
-        // GET FACTORY
-        AuxiliaryCacheFactory auxFac = compositeCacheManager.registryFacGet( auxName );
-        if ( auxFac == null )
+        // GET CACHE
+        @SuppressWarnings("unchecked") // Common map for all caches
+        AuxiliaryCache<K, V> auxCache = (AuxiliaryCache<K, V>)compositeCacheManager.getAuxiliaryCache(auxName, regName);
+
+        if (auxCache == null)
         {
-            // auxFactory was not previously initialized.
-            String prefix = AUXILIARY_PREFIX + auxName;
-            auxFac = OptionConverter.instantiateByKey( props, prefix, null );
+            // GET FACTORY
+            AuxiliaryCacheFactory auxFac = compositeCacheManager.registryFacGet( auxName );
             if ( auxFac == null )
             {
-                log.error( "Could not instantiate auxFactory named \"" + auxName + "\"." );
-                return null;
+                // auxFactory was not previously initialized.
+                String prefix = AUXILIARY_PREFIX + auxName;
+                auxFac = OptionConverter.instantiateByKey( props, prefix, null );
+                if ( auxFac == null )
+                {
+                    log.error( "Could not instantiate auxFactory named \"" + auxName + "\"." );
+                    return null;
+                }
+
+                auxFac.setName( auxName );
+                auxFac.initialize();
+
+                compositeCacheManager.registryFacPut( auxFac );
             }
 
-            auxFac.setName( auxName );
-
-            compositeCacheManager.registryFacPut( auxFac );
-        }
-
-        // GET ATTRIBUTES
-        AuxiliaryCacheAttributes auxAttr = compositeCacheManager.registryAttrGet( auxName );
-        String attrName = AUXILIARY_PREFIX + auxName + ATTRIBUTE_PREFIX;
-        if ( auxAttr == null )
-        {
-            // auxFactory was not previously initialized.
-            String prefix = AUXILIARY_PREFIX + auxName + ATTRIBUTE_PREFIX;
-            auxAttr = OptionConverter.instantiateByKey( props, prefix, null );
+            // GET ATTRIBUTES
+            AuxiliaryCacheAttributes auxAttr = compositeCacheManager.registryAttrGet( auxName );
+            String attrName = AUXILIARY_PREFIX + auxName + ATTRIBUTE_PREFIX;
             if ( auxAttr == null )
             {
-                log.error( "Could not instantiate auxAttr named '" + attrName + "'" );
+                // auxFactory was not previously initialized.
+                String prefix = AUXILIARY_PREFIX + auxName + ATTRIBUTE_PREFIX;
+                auxAttr = OptionConverter.instantiateByKey( props, prefix, null );
+                if ( auxAttr == null )
+                {
+                    log.error( "Could not instantiate auxAttr named '" + attrName + "'" );
+                    return null;
+                }
+                auxAttr.setName( auxName );
+                compositeCacheManager.registryAttrPut( auxAttr );
+            }
+
+            auxAttr = auxAttr.copy();
+
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( "Parsing options for '" + attrName + "'" );
+            }
+
+            PropertySetter.setProperties( auxAttr, props, attrName + "." );
+            auxAttr.setCacheName( regName );
+
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( "End of parsing for '" + attrName + "'" );
+            }
+
+            // GET CACHE FROM FACTORY WITH ATTRIBUTES
+            auxAttr.setCacheName( regName );
+
+            String auxPrefix = AUXILIARY_PREFIX + auxName;
+
+            // CONFIGURE THE EVENT LOGGER
+            ICacheEventLogger cacheEventLogger = AuxiliaryCacheConfigurator.parseCacheEventLogger( props, auxPrefix );
+
+            // CONFIGURE THE ELEMENT SERIALIZER
+            IElementSerializer elementSerializer = AuxiliaryCacheConfigurator.parseElementSerializer( props, auxPrefix );
+
+            // CONFIGURE THE KEYMATCHER
+            //IKeyMatcher keyMatcher = parseKeyMatcher( props, auxPrefix );
+            // TODO add to factory interface
+
+            // Consider putting the compositeCache back in the factory interface
+            // since the manager may not know about it at this point.
+            // need to make sure the manager already has the cache
+            // before the auxiliary is created.
+            try
+            {
+                auxCache = auxFac.createCache( auxAttr, compositeCacheManager, cacheEventLogger, elementSerializer );
+            }
+            catch (Exception e)
+            {
+                log.error( "Could not instantiate auxiliary cache named \"" + regName + "\"." );
                 return null;
             }
-            auxAttr.setName( auxName );
-            compositeCacheManager.registryAttrPut( auxAttr );
+
+            compositeCacheManager.addAuxiliaryCache(auxName, regName, auxCache);
         }
-
-        auxAttr = auxAttr.copy();
-
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "Parsing options for '" + attrName + "'" );
-        }
-
-        PropertySetter.setProperties( auxAttr, props, attrName + "." );
-        auxAttr.setCacheName( regName );
-
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "End of parsing for '" + attrName + "'" );
-        }
-
-        // GET CACHE FROM FACTORY WITH ATTRIBUTES
-        auxAttr.setCacheName( regName );
-
-        String auxPrefix = AUXILIARY_PREFIX + auxName;
-
-        // CONFIGURE THE EVENT LOGGER
-        ICacheEventLogger cacheEventLogger = AuxiliaryCacheConfigurator.parseCacheEventLogger( props, auxPrefix );
-
-        // CONFIGURE THE ELEMENT SERIALIZER
-        IElementSerializer elementSerializer = AuxiliaryCacheConfigurator.parseElementSerializer( props, auxPrefix );
-
-        // CONFIGURE THE KEYMATCHER
-        //IKeyMatcher keyMatcher = parseKeyMatcher( props, auxPrefix );
-        // TODO add to factory interface
-
-        // Consider putting the compositeCache back in the factory interface
-        // since the manager may not know about it at this point.
-        // need to make sure the manager already has the cache
-        // before the auxiliary is created.
-        auxCache = auxFac.createCache( auxAttr, compositeCacheManager, cacheEventLogger, elementSerializer );
 
         return auxCache;
     }

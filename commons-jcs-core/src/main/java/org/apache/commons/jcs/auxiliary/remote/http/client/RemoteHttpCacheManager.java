@@ -19,7 +19,6 @@ package org.apache.commons.jcs.auxiliary.remote.http.client;
  * under the License.
  */
 
-import org.apache.commons.jcs.auxiliary.AuxiliaryCacheManager;
 import org.apache.commons.jcs.auxiliary.remote.RemoteCacheNoWait;
 import org.apache.commons.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes;
 import org.apache.commons.jcs.auxiliary.remote.behavior.IRemoteCacheClient;
@@ -39,7 +38,7 @@ import java.util.Map;
  * This is a very crude copy of the RMI remote manager. It needs a lot of work!
  */
 public class RemoteHttpCacheManager
-    implements AuxiliaryCacheManager, IShutdownObserver
+    implements IShutdownObserver
 {
     /** The logger */
     private static final Log log = LogFactory.getLog( RemoteHttpCacheManager.class );
@@ -142,7 +141,7 @@ public class RemoteHttpCacheManager
      * @param cacheName
      * @return The cache value
      */
-    @Override
+    // @Override
     public <K, V> RemoteCacheNoWait<K, V> getCache( String cacheName )
     {
         // TODO get some defaults!

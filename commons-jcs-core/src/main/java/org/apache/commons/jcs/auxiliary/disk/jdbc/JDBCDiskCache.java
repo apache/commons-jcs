@@ -19,6 +19,17 @@ package org.apache.commons.jcs.auxiliary.disk.jdbc;
  * under the License.
  */
 
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.apache.commons.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.commons.jcs.auxiliary.disk.AbstractDiskCache;
 import org.apache.commons.jcs.engine.CacheConstants;
@@ -33,18 +44,6 @@ import org.apache.commons.jcs.engine.stats.behavior.IStats;
 import org.apache.commons.jcs.utils.serialization.StandardSerializer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Timestamp;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * This is the jdbc disk cache plugin.
@@ -191,42 +190,6 @@ public class JDBCDiskCache<K, V>
 
         try
         {
-            // TEST
-            Statement sStatement = null;
-            try
-            {
-                sStatement = con.createStatement();
-                alive = true;
-            }
-            catch ( SQLException e )
-            {
-                log.error( "Problem creating statement.", e );
-                alive = false;
-            }
-            finally
-            {
-                try
-                {
-                    if (sStatement != null)
-                    {
-                        sStatement.close();
-                    }
-                }
-                catch ( SQLException e )
-                {
-                    log.error( "Problem closing statement.", e );
-                }
-            }
-
-            if ( !alive )
-            {
-                if ( log.isInfoEnabled() )
-                {
-                    log.info( "Disk is not alive, aborting put." );
-                }
-                return;
-            }
-
             if ( log.isDebugEnabled() )
             {
                 log.debug( "Putting [" + ce.getKey() + "] on disk." );
@@ -345,10 +308,7 @@ public class JDBCDiskCache<K, V>
         }
         catch ( SQLException e )
         {
-            if ( e.toString().indexOf( "Violation of unique index" ) != -1
-                || e.getMessage().indexOf( "Duplicate entry" ) != -1
-                || e.getMessage().indexOf( "duplicate key" ) != -1
-                || e.getMessage().indexOf( "primary key constraint" ) != -1 )
+            if ("23000".equals(e.getSQLState()))
             {
                 exists = true;
             }
@@ -793,7 +753,7 @@ public class JDBCDiskCache<K, V>
     @Override
     protected void processRemoveAll()
     {
-        // it should never get here formt he abstract dis cache.
+        // it should never get here from the abstract disk cache.
         if ( this.jdbcDiskCacheAttributes.isAllowRemoveAll() )
         {
             try

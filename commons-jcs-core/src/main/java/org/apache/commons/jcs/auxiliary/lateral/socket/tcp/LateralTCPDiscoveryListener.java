@@ -19,14 +19,13 @@ package org.apache.commons.jcs.auxiliary.lateral.socket.tcp;
  * under the License.
  */
 
+import org.apache.commons.jcs.auxiliary.AuxiliaryCache;
+import org.apache.commons.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.commons.jcs.auxiliary.lateral.LateralCacheAttributes;
 import org.apache.commons.jcs.auxiliary.lateral.LateralCacheNoWait;
 import org.apache.commons.jcs.auxiliary.lateral.LateralCacheNoWaitFacade;
 import org.apache.commons.jcs.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttributes;
-import org.apache.commons.jcs.engine.behavior.ICache;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
-import org.apache.commons.jcs.engine.behavior.IElementSerializer;
-import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;
 import org.apache.commons.jcs.utils.discovery.DiscoveredService;
 import org.apache.commons.jcs.utils.discovery.behavior.IDiscoveryListener;
 import org.apache.commons.logging.Log;
@@ -64,28 +63,22 @@ public class LateralTCPDiscoveryListener
     private final Set<String> knownDifferentlyConfiguredRegions =
         Collections.synchronizedSet( new HashSet<String>() );
 
-    /** The cache manager. */
-    private final ICompositeCacheManager cacheMgr;
+    /** The name of the cache factory */
+    private String factoryName;
 
-    /** The event logger. */
-    private final ICacheEventLogger cacheEventLogger;
-
-    /** The serializer. */
-    private final IElementSerializer elementSerializer;
+    /** Reference to the cache manager for auxiliary cache access */
+    private ICompositeCacheManager cacheManager;
 
     /**
      * This plugs into the udp discovery system. It will receive add and remove events.
      * <p>
-     * @param cacheMgr
-     * @param cacheEventLogger
-     * @param elementSerializer
+     * @param factoryName the name of the related cache factory
+     * @param cacheManager the global cache manager
      */
-    protected LateralTCPDiscoveryListener( ICompositeCacheManager cacheMgr, ICacheEventLogger cacheEventLogger,
-                                           IElementSerializer elementSerializer )
+    protected LateralTCPDiscoveryListener( String factoryName, ICompositeCacheManager cacheManager )
     {
-        this.cacheMgr = cacheMgr;
-        this.cacheEventLogger = cacheEventLogger;
-        this.elementSerializer = elementSerializer;
+        this.factoryName = factoryName;
+        this.cacheManager = cacheManager;
     }
 
     /**
@@ -246,36 +239,41 @@ public class LateralTCPDiscoveryListener
         // get a cache and add it to the no waits
         // the add method should not add the same.
         // we need the listener port from the original config.
-        LateralTCPCacheManager lcm = findManagerForServiceEndPoint( service );
-
         ArrayList<String> regions = service.getCacheNames();
+        String serverAndPort = service.getServiceAddress() + ":" + service.getServicePort();
+
         if ( regions != null )
         {
             // for each region get the cache
             for (String cacheName : regions)
             {
-                try
+                AuxiliaryCache<?, ?> ic = cacheManager.getAuxiliaryCache(factoryName, cacheName);
+
+                if ( log.isDebugEnabled() )
                 {
-                    ICache<?, ?> ic = lcm.getCache( cacheName );
+                    log.debug( "Got cache, ic = " + ic );
+                }
 
-                    if ( log.isDebugEnabled() )
+                // add this to the nowaits for this cachename
+                if ( ic != null )
+                {
+                    AuxiliaryCacheAttributes aca = ic.getAuxiliaryCacheAttributes();
+                    if (aca instanceof ITCPLateralCacheAttributes)
                     {
-                        log.debug( "Got cache, ic = " + ic );
-                    }
-
-                    // add this to the nowaits for this cachename
-                    if ( ic != null )
-                    {
-                        addNoWait( (LateralCacheNoWait<?, ?>) ic );
-                        if ( log.isDebugEnabled() )
+                        ITCPLateralCacheAttributes lca = (ITCPLateralCacheAttributes)aca;
+                        if (lca.getTransmissionType() != LateralCacheAttributes.Type.TCP
+                            || !serverAndPort.equals(lca.getTcpServer()) )
                         {
-                            log.debug( "Called addNoWait for cacheName [" + cacheName + "]" );
+                            // skip caches not belonging to this service
+                            continue;
                         }
                     }
-                }
-                catch ( Exception e )
-                {
-                    log.error( "Problem creating no wait", e );
+
+                    addNoWait( (LateralCacheNoWait<?, ?>) ic );
+                    if ( log.isDebugEnabled() )
+                    {
+                        log.debug( "Called addNoWait for cacheName [" + cacheName + "]" );
+                    }
                 }
             }
         }
@@ -299,36 +297,41 @@ public class LateralTCPDiscoveryListener
         // get a cache and add it to the no waits
         // the add method should not add the same.
         // we need the listener port from the original config.
-        LateralTCPCacheManager lcm = findManagerForServiceEndPoint( service );
-
         ArrayList<String> regions = service.getCacheNames();
+        String serverAndPort = service.getServiceAddress() + ":" + service.getServicePort();
+
         if ( regions != null )
         {
             // for each region get the cache
             for (String cacheName : regions)
             {
-                try
+                AuxiliaryCache<?, ?> ic = cacheManager.getAuxiliaryCache(factoryName, cacheName);
+
+                if ( log.isDebugEnabled() )
                 {
-                    ICache<?, ?> ic = lcm.getCache( cacheName );
+                    log.debug( "Got cache, ic = " + ic );
+                }
 
-                    if ( log.isDebugEnabled() )
+                // remove this to the nowaits for this cachename
+                if ( ic != null )
+                {
+                    AuxiliaryCacheAttributes aca = ic.getAuxiliaryCacheAttributes();
+                    if (aca instanceof ITCPLateralCacheAttributes)
                     {
-                        log.debug( "Got cache, ic = " + ic );
-                    }
-
-                    // remove this to the nowaits for this cachename
-                    if ( ic != null )
-                    {
-                        removeNoWait( (LateralCacheNoWait<?, ?>) ic );
-                        if ( log.isDebugEnabled() )
+                        ITCPLateralCacheAttributes lca = (ITCPLateralCacheAttributes)aca;
+                        if (lca.getTransmissionType() != LateralCacheAttributes.Type.TCP
+                            || !serverAndPort.equals(lca.getTcpServer()) )
                         {
-                            log.debug( "Called removeNoWait for cacheName [" + cacheName + "]" );
+                            // skip caches not belonging to this service
+                            continue;
                         }
                     }
-                }
-                catch ( Exception e )
-                {
-                    log.error( "Problem removing no wait", e );
+
+                    removeNoWait( (LateralCacheNoWait<?, ?>) ic );
+                    if ( log.isDebugEnabled() )
+                    {
+                        log.debug( "Called removeNoWait for cacheName [" + cacheName + "]" );
+                    }
                 }
             }
         }
@@ -336,21 +339,5 @@ public class LateralTCPDiscoveryListener
         {
             log.warn( "No cache names found in message " + service );
         }
-    }
-
-    /**
-     * Gets the appropriate manager.
-     * <p>
-     * @param service
-     * @return LateralTCPCacheManager configured for that end point.
-     */
-    private LateralTCPCacheManager findManagerForServiceEndPoint( DiscoveredService service )
-    {
-        ITCPLateralCacheAttributes lca = new TCPLateralCacheAttributes();
-        lca.setTransmissionType( LateralCacheAttributes.Type.TCP );
-        lca.setTcpServer( service.getServiceAddress() + ":" + service.getServicePort() );
-        LateralTCPCacheManager lcm = LateralTCPCacheManager.getInstance( lca, cacheMgr, cacheEventLogger,
-                                                                         elementSerializer );
-        return lcm;
     }
 }

@@ -26,7 +26,6 @@ import org.apache.commons.jcs.auxiliary.lateral.LateralCacheNoWait;
 import org.apache.commons.jcs.auxiliary.lateral.LateralCacheNoWaitFacade;
 import org.apache.commons.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
 import org.apache.commons.jcs.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttributes;
-import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs.engine.control.CompositeCacheManager;
 import org.apache.commons.jcs.engine.logging.MockCacheEventLogger;
@@ -42,8 +41,11 @@ public class LateralTCPDiscoveryListenerUnitTest
     /** the listener */
     private LateralTCPDiscoveryListener listener;
 
+    /** the cache factory */
+    private LateralTCPCacheFactory factory;
+
     /** The cache manager. */
-    private ICompositeCacheManager cacheMgr;
+    private CompositeCacheManager cacheMgr;
 
     /** The event logger. */
     protected MockCacheEventLogger cacheEventLogger;
@@ -55,11 +57,14 @@ public class LateralTCPDiscoveryListenerUnitTest
     @Override
     protected void setUp() throws Exception
     {
+        factory = new LateralTCPCacheFactory();
+        factory.initialize();
+
         cacheMgr = CompositeCacheManager.getInstance();
         cacheEventLogger = new MockCacheEventLogger();
         elementSerializer = new StandardSerializer();
 
-        listener = new LateralTCPDiscoveryListener( cacheMgr, cacheEventLogger, elementSerializer );
+        listener = new LateralTCPDiscoveryListener( factory.getName(), cacheMgr );
     }
 
     /**
@@ -224,9 +229,10 @@ public class LateralTCPDiscoveryListenerUnitTest
         ITCPLateralCacheAttributes lca = new TCPLateralCacheAttributes();
         lca.setTransmissionType( LateralCacheAttributes.Type.TCP );
         lca.setTcpServer( service.getServiceAddress() + ":" + service.getServicePort() );
-        LateralTCPCacheManager lcm = LateralTCPCacheManager.getInstance( lca, cacheMgr, cacheEventLogger,
-                                                                         elementSerializer );
-        LateralCacheNoWait<String, String> noWait = lcm.getCache( cacheName );
+        lca.setCacheName(cacheName);
+        LateralCacheNoWait<String, String> noWait = factory.createCacheNoWait(lca, cacheEventLogger, elementSerializer);
+        // this is the normal process, the discovery service expects it there
+        cacheMgr.addAuxiliaryCache(factory.getName(), cacheName, noWait);
 
         @SuppressWarnings("unchecked")
         LateralCacheNoWait<String, String>[] noWaits = new LateralCacheNoWait[0];
@@ -263,9 +269,10 @@ public class LateralTCPDiscoveryListenerUnitTest
         ITCPLateralCacheAttributes lca = new TCPLateralCacheAttributes();
         lca.setTransmissionType( LateralCacheAttributes.Type.TCP );
         lca.setTcpServer( service.getServiceAddress() + ":" + service.getServicePort() );
-        LateralTCPCacheManager lcm = LateralTCPCacheManager.getInstance( lca, cacheMgr, cacheEventLogger,
-                                                                         elementSerializer );
-        LateralCacheNoWait<String, String> noWait = lcm.getCache( cacheName );
+        lca.setCacheName(cacheName);
+        LateralCacheNoWait<String, String> noWait = factory.createCacheNoWait(lca, cacheEventLogger, elementSerializer);
+        // this is the normal process, the discovery service expects it there
+        cacheMgr.addAuxiliaryCache(factory.getName(), cacheName, noWait);
 
         @SuppressWarnings("unchecked")
         LateralCacheNoWait<String, String>[] noWaits = new LateralCacheNoWait[0];

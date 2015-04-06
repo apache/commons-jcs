@@ -19,19 +19,19 @@ package org.apache.commons.jcs.auxiliary.disk.jdbc.mysql;
  * under the License.
  */
 
-import junit.framework.TestCase;
-import org.apache.commons.jcs.JCS;
-import org.apache.commons.jcs.access.CacheAccess;
-import org.apache.commons.jcs.engine.behavior.ICacheElement;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
+
+import junit.framework.TestCase;
+
+import org.apache.commons.jcs.JCS;
+import org.apache.commons.jcs.access.CacheAccess;
+import org.apache.commons.jcs.engine.behavior.ICacheElement;
 
 /**
  * Runs basic tests for the JDBC disk cache.
@@ -52,15 +52,12 @@ public class MySQLDiskCacheHsqlBackedUnitTest
         System.setProperty( "hsqldb.cache_scale", "8" );
 
         String rafroot = "target";
-        Properties p = new Properties();
-        String driver = p.getProperty( "driver", "org.hsqldb.jdbcDriver" );
-        String url = p.getProperty( "url", "jdbc:hsqldb:" );
-        String database = p.getProperty( "database", rafroot + "/MySQLDiskCacheHsqlBackedUnitTest" );
-        String user = p.getProperty( "user", "sa" );
-        String password = p.getProperty( "password", "" );
+        String url = "jdbc:hsqldb:";
+        String database = rafroot + "/MySQLDiskCacheHsqlBackedUnitTest";
+        String user = "sa";
+        String password = "";
 
         new org.hsqldb.jdbcDriver();
-        Class.forName( driver ).newInstance();
         Connection cConn = DriverManager.getConnection( url + database, user, password );
 
         setupTABLE( cConn );
@@ -100,7 +97,7 @@ public class MySQLDiskCacheHsqlBackedUnitTest
         //System.out.println( "BEFORE PUT \n" + jcs.getStats() );
 
         // Add items to cache
-        for ( int i = 0; i <= items; i++ )
+        for ( int i = 0; i < items; i++ )
         {
             jcs.put( i + ":key", region + " data " + i );
         }
@@ -110,7 +107,7 @@ public class MySQLDiskCacheHsqlBackedUnitTest
         //System.out.println( jcs.getStats() );
 
         // Test that all items are in cache
-        for ( int i = 0; i <= items; i++ )
+        for ( int i = 0; i < items; i++ )
         {
             String value = jcs.get( i + ":key" );
 
@@ -119,13 +116,13 @@ public class MySQLDiskCacheHsqlBackedUnitTest
 
         // Test that getElements returns all the expected values
         Set<String> keys = new HashSet<String>();
-        for ( int i = 0; i <= items; i++ )
+        for ( int i = 0; i < items; i++ )
         {
             keys.add( i + ":key" );
         }
 
         Map<String, ICacheElement<String, String>> elements = jcs.getCacheElements( keys );
-        for ( int i = 0; i <= items; i++ )
+        for ( int i = 0; i < items; i++ )
         {
             ICacheElement<String, String> element = elements.get( i + ":key" );
             assertNotNull( "element " + i + ":key is missing", element );
@@ -133,14 +130,14 @@ public class MySQLDiskCacheHsqlBackedUnitTest
         }
 
         // Remove all the items
-        for ( int i = 0; i <= items; i++ )
+        for ( int i = 0; i < items; i++ )
         {
             jcs.remove( i + ":key" );
         }
 
         // Verify removal
 
-        for ( int i = 0; i <= items; i++ )
+        for ( int i = 0; i < items; i++ )
         {
             assertNull( "Removed key should be null: " + i + ":key", jcs.get( i + ":key" ) );
         }
@@ -161,7 +158,7 @@ public class MySQLDiskCacheHsqlBackedUnitTest
 //        System.out.println( "BEFORE PUT \n" + jcs.getStats() );
 
         // DO WORK
-        for ( int i = 0; i <= items; i++ )
+        for ( int i = 0; i < items; i++ )
         {
             jcs.put( i + ":key", region + " data " + i );
         }

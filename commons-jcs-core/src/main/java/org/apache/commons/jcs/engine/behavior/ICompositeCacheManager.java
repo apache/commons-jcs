@@ -19,6 +19,7 @@ package org.apache.commons.jcs.engine.behavior;
  * under the License.
  */
 
+import org.apache.commons.jcs.auxiliary.AuxiliaryCache;
 import org.apache.commons.jcs.engine.control.CompositeCache;
 
 import java.util.Properties;
@@ -37,6 +38,15 @@ public interface ICompositeCacheManager extends IShutdownObservable
      * @return CompositeCache
      */
     <K, V> CompositeCache<K, V>  getCache( String cacheName );
+
+    /**
+     * Gets the auxiliary cache attribute of the CacheHub object
+     *
+     * @param auxName
+     * @param cacheName
+     * @return AuxiliaryCache
+     */
+    <K, V> AuxiliaryCache<K, V>  getAuxiliaryCache( String auxName, String cacheName );
 
     /**
      * This is exposed so other manager can get access to the props.

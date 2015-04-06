@@ -69,7 +69,7 @@ public class LateralCacheNoWait<K, V>
     private int putCount = 0;
 
     /**
-     * Constructs with the given lateral cache, and fires up an event queue for aysnchronous
+     * Constructs with the given lateral cache, and fires up an event queue for asynchronous
      * processing.
      * <p>
      * @param cache

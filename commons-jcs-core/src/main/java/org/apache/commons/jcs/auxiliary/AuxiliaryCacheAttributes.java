@@ -28,7 +28,7 @@ import java.io.Serializable;
  * auxiliary mangers to share a common interface.
  */
 public interface AuxiliaryCacheAttributes
-    extends Serializable
+    extends Serializable, Cloneable
 {
     /**
      * Sets the name of the cache, referenced by the appropriate manager.

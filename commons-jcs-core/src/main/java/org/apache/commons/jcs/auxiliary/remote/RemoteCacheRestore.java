@@ -19,7 +19,7 @@ package org.apache.commons.jcs.auxiliary.remote;
  * under the License.
  */
 
-import org.apache.commons.jcs.auxiliary.remote.behavior.IRemoteCacheObserver;
+import org.apache.commons.jcs.engine.behavior.ICacheObserver;
 import org.apache.commons.jcs.engine.behavior.ICacheRestore;
 import org.apache.commons.jcs.engine.behavior.ICacheServiceNonLocal;
 import org.apache.commons.logging.Log;
@@ -78,7 +78,7 @@ public class RemoteCacheRestore
         {
             return canFix;
         }
-        String registry = "//" + remoteCacheManager.host + ":" + remoteCacheManager.port + "/" + remoteCacheManager.service;
+        String registry = RemoteUtils.getNamingURL(remoteCacheManager.host, remoteCacheManager.port, remoteCacheManager.service);
         if ( log.isInfoEnabled() )
         {
             log.info( "looking up server [" + registry + "]" );
@@ -115,11 +115,13 @@ public class RemoteCacheRestore
         {
             return;
         }
-        remoteCacheManager.fixCaches( (ICacheServiceNonLocal<?, ?>) remoteObj, (IRemoteCacheObserver) remoteObj );
+        remoteCacheManager.fixCaches( (ICacheServiceNonLocal<?, ?>) remoteObj, (ICacheObserver) remoteObj );
 
         if ( log.isInfoEnabled() )
         {
-            String msg = "Remote connection to " + "//" + remoteCacheManager.host + ":" + remoteCacheManager.port + "/" + remoteCacheManager.service + " resumed.";
+            String msg = "Remote connection to "
+                    + RemoteUtils.getNamingURL(remoteCacheManager.host, remoteCacheManager.port, remoteCacheManager.service)
+                    + " resumed.";
             remoteCacheManager.logApplicationEvent( "RemoteCacheRestore", "fix", msg );
             log.info( msg );
         }

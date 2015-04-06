@@ -25,7 +25,7 @@ import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;
 
 /** For testing */
 public class MockAuxiliaryCacheFactory
-    implements AuxiliaryCacheFactory
+    extends AbstractAuxiliaryCacheFactory
 {
     /** the name of the aux */
     public String name = "MockAuxiliaryCacheFactory";

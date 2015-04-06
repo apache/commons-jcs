@@ -19,12 +19,21 @@ package org.apache.commons.jcs.auxiliary.disk.jdbc.mysql;
  * under the License.
  */
 
-import org.apache.commons.jcs.auxiliary.AuxiliaryCache;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
+
 import org.apache.commons.jcs.auxiliary.AuxiliaryCacheAttributes;
-import org.apache.commons.jcs.auxiliary.AuxiliaryCacheFactory;
+import org.apache.commons.jcs.auxiliary.disk.jdbc.JDBCDiskCacheFactory;
+import org.apache.commons.jcs.auxiliary.disk.jdbc.JDBCDiskCachePoolAccess;
+import org.apache.commons.jcs.auxiliary.disk.jdbc.TableState;
+import org.apache.commons.jcs.auxiliary.disk.jdbc.mysql.util.ScheduleParser;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * This factory should create mysql disk caches.
@@ -32,47 +41,153 @@ import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;
  * @author Aaron Smuts
  */
 public class MySQLDiskCacheFactory
-    implements AuxiliaryCacheFactory
+    extends JDBCDiskCacheFactory
 {
-    /** name of the factory */
-    private String name = "MySQLDiskCacheFactory";
+    /** The logger */
+    private static final Log log = LogFactory.getLog( MySQLDiskCacheFactory.class );
 
     /**
      * This factory method should create an instance of the mysqlcache.
      * <p>
      * @param rawAttr
-     * @param cacheManager
+     * @param compositeCacheManager
      * @param cacheEventLogger
      * @param elementSerializer
-     * @return AuxiliaryCache
+     * @return MySQLDiskCache
+     * @throws SQLException if the creation of the cache instance fails
      */
     @Override
-    public <K, V> AuxiliaryCache<K, V> createCache( AuxiliaryCacheAttributes rawAttr, ICompositeCacheManager cacheManager,
-                                       ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer )
+    public <K, V> MySQLDiskCache<K, V> createCache( AuxiliaryCacheAttributes rawAttr,
+            ICompositeCacheManager compositeCacheManager,
+            ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer )
+            throws SQLException
     {
-        MySQLDiskCacheManager mgr = MySQLDiskCacheManager.getInstance( (MySQLDiskCacheAttributes) rawAttr, cacheManager, cacheEventLogger, elementSerializer );
-        return mgr.getCache( (MySQLDiskCacheAttributes) rawAttr );
+        MySQLDiskCacheAttributes cattr = (MySQLDiskCacheAttributes) rawAttr;
+        TableState tableState = getTableState( cattr.getTableName() );
+
+        MySQLDiskCache<K, V> cache = new MySQLDiskCache<K, V>( cattr, tableState, compositeCacheManager );
+        cache.setCacheEventLogger( cacheEventLogger );
+        cache.setElementSerializer( elementSerializer );
+
+        // create a shrinker if we need it.
+        createShrinkerWhenNeeded( cattr, cache );
+        scheduleOptimizations( cattr, tableState, cache.getPoolAccess() );
+
+        return cache;
+
     }
 
     /**
-     * The name of the factory.
+     * For each time in the optimization schedule, this calls schedule Optimization.
      * <p>
-     * @param nameArg
+     * @param attributes configuration properties.
+     * @param tableState for noting optimization in progress, etc.
+     * @param poolAccess access to the pool
      */
-    @Override
-    public void setName( String nameArg )
+    protected void scheduleOptimizations( MySQLDiskCacheAttributes attributes, TableState tableState, JDBCDiskCachePoolAccess poolAccess  )
     {
-        name = nameArg;
+        if ( attributes != null )
+        {
+            if ( attributes.getOptimizationSchedule() != null )
+            {
+                if ( log.isInfoEnabled() )
+                {
+                    log.info( "Will try to configure optimization for table [" + attributes.getTableName()
+                        + "] on schedule [" + attributes.getOptimizationSchedule() + "]" );
+                }
+
+                MySQLTableOptimizer optimizer = new MySQLTableOptimizer( attributes, tableState, poolAccess );
+
+                // loop through the dates.
+                try
+                {
+                    Date[] dates = ScheduleParser.createDatesForSchedule( attributes.getOptimizationSchedule() );
+                    if ( dates != null )
+                    {
+                        for ( int i = 0; i < dates.length; i++ )
+                        {
+                            this.scheduleOptimization( dates[i], optimizer );
+                        }
+                    }
+                }
+                catch ( ParseException e )
+                {
+                    log.warn( "Problem creating optimization schedule for table [" + attributes.getTableName() + "]", e );
+                }
+            }
+            else
+            {
+                if ( log.isInfoEnabled() )
+                {
+                    log.info( "Optimization is not configured for table [" + attributes.getTableName() + "]" );
+                }
+            }
+        }
     }
 
     /**
-     * Returns the display name.
+     * This takes in a single time and schedules the optimizer to be called at that time every day.
      * <p>
-     * @return factory name
+     * @param startTime -- HH:MM:SS format
+     * @param optimizer
      */
-    @Override
-    public String getName()
+    protected void scheduleOptimization( Date startTime, MySQLTableOptimizer optimizer )
     {
-        return name;
+        if ( log.isInfoEnabled() )
+        {
+            log.info( "startTime [" + startTime + "] for optimizer " + optimizer );
+        }
+
+        // get the runnable from the factory
+        OptimizerTask runnable = new OptimizerTask( optimizer );
+        Date now = new Date();
+        long initialDelay = startTime.getTime() - now.getTime();
+
+        // have the daemon execute our runnable
+        getScheduledExecutorService().scheduleAtFixedRate(runnable, initialDelay, 86400000L, TimeUnit.MILLISECONDS );
+    }
+
+    /**
+     * This calls the optimizers' optimize table method. This is used by the timer.
+     * <p>
+     * @author Aaron Smuts
+     */
+    private static class OptimizerTask
+        implements Runnable
+    {
+        /** Handles optimization */
+        private MySQLTableOptimizer optimizer = null;
+
+        /**
+         * Get a handle on the optimizer.
+         * <p>
+         * @param optimizer
+         */
+        public OptimizerTask( MySQLTableOptimizer optimizer )
+        {
+            this.optimizer = optimizer;
+        }
+
+        /**
+         * This calls optimize on the optimizer.
+         * <p>
+         * @see java.lang.Runnable#run()
+         */
+        @Override
+        public void run()
+        {
+            if ( optimizer != null )
+            {
+                boolean success = optimizer.optimizeTable();
+                if ( log.isInfoEnabled() )
+                {
+                    log.info( "Optimization success status [" + success + "]" );
+                }
+            }
+            else
+            {
+                log.warn( "OptimizerRunner: The optimizer is null.  Could not optimize table." );
+            }
+        }
     }
 }

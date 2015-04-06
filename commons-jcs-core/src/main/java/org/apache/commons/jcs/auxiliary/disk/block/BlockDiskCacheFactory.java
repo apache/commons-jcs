@@ -19,9 +19,8 @@ package org.apache.commons.jcs.auxiliary.disk.block;
  * under the License.
  */
 
-import org.apache.commons.jcs.auxiliary.AuxiliaryCache;
+import org.apache.commons.jcs.auxiliary.AbstractAuxiliaryCacheFactory;
 import org.apache.commons.jcs.auxiliary.AuxiliaryCacheAttributes;
-import org.apache.commons.jcs.auxiliary.AuxiliaryCacheFactory;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;
@@ -32,32 +31,24 @@ import org.apache.commons.logging.LogFactory;
  * Creates disk cache instances.
  */
 public class BlockDiskCacheFactory
-    implements AuxiliaryCacheFactory
+    extends AbstractAuxiliaryCacheFactory
 {
     /** The logger */
     private static final Log log = LogFactory.getLog( BlockDiskCacheFactory.class );
 
-    /** The auxiliary name. The composite cache manager keeps this in a map, keyed by name. */
-    private String name;
-
     /**
-     * Get an instance of the BlockDiskCacheManager for the attributes and then get an
-     * IndexedDiskCache from the manager.
+     * Create an instance of the BlockDiskCache.
      * <p>
-     * The manager is a singleton.
-     * <p>
-     * One disk cache is returned per region from the manager.
-     * <p>
-     * @param iaca
+     * @param iaca the cache attributes for this cache
      * @param cacheMgr This allows auxiliaries to reference the manager without assuming that it is
      *            a singleton. This will allow JCS to be a non-singleton. Also, it makes it easier
      *            to test.
      * @param cacheEventLogger
      * @param elementSerializer
-     * @return AuxiliaryCache
+     * @return BlockDiskCache
      */
     @Override
-    public <K, V> AuxiliaryCache<K, V> createCache( AuxiliaryCacheAttributes iaca, ICompositeCacheManager cacheMgr,
+    public <K, V> BlockDiskCache<K, V> createCache( AuxiliaryCacheAttributes iaca, ICompositeCacheManager cacheMgr,
                                        ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer )
     {
         BlockDiskCacheAttributes idca = (BlockDiskCacheAttributes) iaca;
@@ -65,29 +56,11 @@ public class BlockDiskCacheFactory
         {
             log.debug( "Creating DiskCache for attributes = " + idca );
         }
-        BlockDiskCacheManager dcm = BlockDiskCacheManager.getInstance( idca, cacheEventLogger, elementSerializer );
-        return dcm.getCache( idca );
-    }
 
-    /**
-     * Gets the name attribute of the DiskCacheFactory object
-     * <p>
-     * @return The name value
-     */
-    @Override
-    public String getName()
-    {
-        return this.name;
-    }
+        BlockDiskCache<K, V> cache = new BlockDiskCache<K, V>( idca );
+        cache.setCacheEventLogger( cacheEventLogger );
+        cache.setElementSerializer( elementSerializer );
 
-    /**
-     * Sets the name attribute of the DiskCacheFactory object
-     * <p>
-     * @param name The new name value
-     */
-    @Override
-    public void setName( String name )
-    {
-        this.name = name;
+        return cache;
     }
 }

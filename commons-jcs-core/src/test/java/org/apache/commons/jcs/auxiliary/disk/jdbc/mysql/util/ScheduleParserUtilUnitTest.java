@@ -19,9 +19,10 @@ package org.apache.commons.jcs.auxiliary.disk.jdbc.mysql.util;
  * under the License.
  */
 
-import junit.framework.TestCase;
-
+import java.text.ParseException;
 import java.util.Date;
+
+import junit.framework.TestCase;
 
 /**
  * Unit tests for the schedule parser.
@@ -43,7 +44,7 @@ public class ScheduleParserUtilUnitTest
 
             fail( "Should have thrown an exception" );
         }
-        catch ( ScheduleFormatException e )
+        catch ( ParseException e )
         {
             // expected
         }
@@ -60,7 +61,7 @@ public class ScheduleParserUtilUnitTest
 
             fail( "Should have thrown an exception" );
         }
-        catch ( ScheduleFormatException e )
+        catch ( ParseException e )
         {
             // expected
         }
@@ -68,10 +69,10 @@ public class ScheduleParserUtilUnitTest
 
     /**
      * Verify that we get one date for one date.
-     * @throws ScheduleFormatException
+     * @throws ParseException
      */
     public void testGetsDatesSingle()
-        throws ScheduleFormatException
+        throws ParseException
     {
         String schedule = "12:34:56";
         Date[] dates = ScheduleParser.createDatesForSchedule( schedule );
@@ -80,10 +81,10 @@ public class ScheduleParserUtilUnitTest
     }
     /**
      * Verify that we get one date for one date.
-     * @throws ScheduleFormatException
+     * @throws ParseException
      */
     public void testGetsDatesMultiple()
-        throws ScheduleFormatException
+        throws ParseException
     {
         String schedule = "12:34:56,03:51:00,12:34:12";
         Date[] dates = ScheduleParser.createDatesForSchedule( schedule );
@@ -103,7 +104,7 @@ public class ScheduleParserUtilUnitTest
 
             fail( "Should have thrown an exception for a malformed date" );
         }
-        catch ( ScheduleFormatException e )
+        catch ( ParseException e )
         {
             // expected
         }
@@ -120,7 +121,7 @@ public class ScheduleParserUtilUnitTest
 
             fail( "Should have thrown an exception for a malformed date" );
         }
-        catch ( ScheduleFormatException e )
+        catch ( ParseException e )
         {
             // expected
         }

@@ -19,9 +19,9 @@ package org.apache.commons.jcs.auxiliary.remote;
  * under the License.
  */
 
+import org.apache.commons.jcs.auxiliary.AbstractAuxiliaryCacheFactory;
 import org.apache.commons.jcs.auxiliary.AuxiliaryCache;
 import org.apache.commons.jcs.auxiliary.AuxiliaryCacheAttributes;
-import org.apache.commons.jcs.auxiliary.AuxiliaryCacheFactory;
 import org.apache.commons.jcs.auxiliary.remote.server.behavior.RemoteType;
 import org.apache.commons.jcs.engine.behavior.ICache;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
@@ -39,11 +39,8 @@ import java.util.StringTokenizer;
  * clients.
  */
 public class RemoteCacheFactory
-    implements AuxiliaryCacheFactory
+    extends AbstractAuxiliaryCacheFactory
 {
-    /** The name of this auxiliary */
-    private String name;
-
     /** store reference of facades to initiate failover */
     private static final HashMap<String, RemoteCacheNoWaitFacade<?, ?>> facades =
         new HashMap<String, RemoteCacheNoWaitFacade<?, ?>>();
@@ -157,26 +154,6 @@ public class RemoteCacheFactory
     }
 
     // end createCache
-
-    /**
-     * Gets the name attribute of the RemoteCacheFactory object
-     * @return The name value
-     */
-    @Override
-    public String getName()
-    {
-        return this.name;
-    }
-
-    /**
-     * Sets the name attribute of the RemoteCacheFactory object
-     * @param name The new name value
-     */
-    @Override
-    public void setName( String name )
-    {
-        this.name = name;
-    }
 
     /**
      * The facades are what the cache hub talks to.

@@ -19,17 +19,6 @@ package org.apache.commons.jcs.auxiliary.disk.jdbc.hsql;
  * under the License.
  */
 
-import org.apache.commons.jcs.auxiliary.AuxiliaryCache;
-import org.apache.commons.jcs.auxiliary.AuxiliaryCacheAttributes;
-import org.apache.commons.jcs.auxiliary.AuxiliaryCacheFactory;
-import org.apache.commons.jcs.auxiliary.disk.jdbc.JDBCDiskCacheAttributes;
-import org.apache.commons.jcs.auxiliary.disk.jdbc.JDBCDiskCacheManager;
-import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
-import org.apache.commons.jcs.engine.behavior.IElementSerializer;
-import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -38,86 +27,73 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.commons.jcs.auxiliary.AuxiliaryCacheAttributes;
+import org.apache.commons.jcs.auxiliary.disk.jdbc.JDBCDiskCache;
+import org.apache.commons.jcs.auxiliary.disk.jdbc.JDBCDiskCacheAttributes;
+import org.apache.commons.jcs.auxiliary.disk.jdbc.JDBCDiskCacheFactory;
+import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
+import org.apache.commons.jcs.engine.behavior.IElementSerializer;
+import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
- * This factory should create mysql disk caches.
+ * This factory should create hsql disk caches.
  * <p>
  * @author Aaron Smuts
  */
 public class HSQLDiskCacheFactory
-    implements AuxiliaryCacheFactory
+    extends JDBCDiskCacheFactory
 {
     /** The logger */
     private static final Log log = LogFactory.getLog( HSQLDiskCacheFactory.class );
 
-    /** Name for logging, etc. */
-    private String name = "HSQLDiskCacheFactory";
-
     /** The databases. */
-    private final Set<String> databases = Collections.synchronizedSet( new HashSet<String>() );
+    private Set<String> databases;
 
     /**
      * This factory method should create an instance of the hsqlcache.
      * <p>
      * @param rawAttr
-     * @param cacheManager
+     * @param compositeCacheManager
      * @param cacheEventLogger
      * @param elementSerializer
-     * @return AuxiliaryCache
+     * @return JDBCDiskCache
+     * @throws SQLException if the creation of the cache instance fails
      */
     @Override
-    public <K, V> AuxiliaryCache<K, V> createCache( AuxiliaryCacheAttributes rawAttr,
-    									ICompositeCacheManager cacheManager,
-    									ICacheEventLogger cacheEventLogger,
-    									IElementSerializer elementSerializer )
+    public <K, V> JDBCDiskCache<K, V> createCache( AuxiliaryCacheAttributes rawAttr,
+			ICompositeCacheManager compositeCacheManager,
+			ICacheEventLogger cacheEventLogger,
+			IElementSerializer elementSerializer )
+			throws SQLException
     {
-        JDBCDiskCacheManager mgr = JDBCDiskCacheManager.getInstance( (JDBCDiskCacheAttributes) rawAttr, cacheManager,
-                                                                     cacheEventLogger, elementSerializer );
-        try
-        {
-            setupDatabase( (JDBCDiskCacheAttributes) rawAttr );
-        }
-        catch ( Exception e )
-        {
-            // TODO we may not want to try and get the cache at this point.
-            log.error( "Problem setting up database.", e );
-        }
-        return mgr.getCache( (JDBCDiskCacheAttributes) rawAttr );
+        setupDatabase( (JDBCDiskCacheAttributes) rawAttr );
+        return super.createCache(rawAttr, compositeCacheManager, cacheEventLogger, elementSerializer);
     }
 
     /**
-     * The name of the factory.
-     * <p>
-     * @param nameArg
+     * Initialize this factory
      */
     @Override
-    public void setName( String nameArg )
+    public void initialize()
     {
-        name = nameArg;
-    }
-
-    /**
-     * Returns the display name
-     * <p>
-     * @return name
-     */
-    @Override
-    public String getName()
-    {
-        return name;
+        super.initialize();
+        this.databases = Collections.synchronizedSet( new HashSet<String>() );
     }
 
     /**
      * Creates the database if it doesn't exist, registers the driver class, etc.
      * <p>
      * @param attributes
-     * @throws Exception
+     * @throws SQLException
      */
     protected void setupDatabase( JDBCDiskCacheAttributes attributes )
-        throws Exception
+        throws SQLException
     {
         if ( attributes == null )
         {
-            throw new Exception( "The attributes are null." );
+            throw new SQLException( "The attributes are null." );
         }
 
         // url should start with "jdbc:hsqldb:"
@@ -143,25 +119,25 @@ public class HSQLDiskCacheFactory
         String password = attributes.getPassword();
 
         new org.hsqldb.jdbcDriver();
+
         try
         {
             Class.forName( driver ).newInstance();
-
-            Connection cConn = DriverManager.getConnection( database, user, password );
-
-            setupTABLE( cConn, attributes.getTableName() );
-
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "Finished setting up database [" + database + "]" );
-            }
-
-            databases.add( database );
         }
-        catch ( Exception e )
+        catch (Exception e)
         {
-            log.error( "Fatal problem setting up the database.", e );
+            throw new SQLException( "Could not initialize driver " + driver, e );
         }
+
+        Connection cConn = DriverManager.getConnection( database, user, password );
+        setupTABLE( cConn, attributes.getTableName() );
+
+        if ( log.isInfoEnabled() )
+        {
+            log.info( "Finished setting up database [" + database + "]" );
+        }
+
+        databases.add( database );
     }
 
     /**

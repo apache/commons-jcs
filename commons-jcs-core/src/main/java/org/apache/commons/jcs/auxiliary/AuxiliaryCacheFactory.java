@@ -33,15 +33,27 @@ public interface AuxiliaryCacheFactory
      * <p>
      * @param attr
      * @param cacheMgr This allows auxiliaries to reference the manager without assuming that it is
-     *            a singleton. This will allow JCS to be a nonsingleton. Also, it makes it easier to
+     *            a singleton. This will allow JCS to be a non-singleton. Also, it makes it easier to
      *            test.
      * @param cacheEventLogger
      * @param elementSerializer
      * @return AuxiliaryCache
+     * @throws Exception if cache instance could not be created
      */
     <K, V> AuxiliaryCache<K, V> createCache(
             AuxiliaryCacheAttributes attr, ICompositeCacheManager cacheMgr,
-            ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer );
+            ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer )
+            throws Exception;
+
+    /**
+     * Initialize this factory
+     */
+    void initialize();
+
+    /**
+     * Dispose of this factory, clean up shared resources
+     */
+    void dispose();
 
     /**
      * Sets the name attribute of the AuxiliaryCacheFactory object

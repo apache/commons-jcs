@@ -19,8 +19,15 @@ package org.apache.commons.jcs.auxiliary.lateral;
  * under the License.
  */
 
-import org.apache.commons.jcs.auxiliary.lateral.behavior.ILateralCacheManager;
+import java.io.Serializable;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+import org.apache.commons.jcs.auxiliary.lateral.socket.tcp.LateralTCPCacheFactory;
+import org.apache.commons.jcs.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttributes;
 import org.apache.commons.jcs.engine.CacheStatus;
+import org.apache.commons.jcs.engine.ZombieCacheServiceNonLocal;
+import org.apache.commons.jcs.engine.behavior.ICacheServiceNonLocal;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -31,8 +38,7 @@ import org.apache.commons.logging.LogFactory;
  * driven mode. That is, it attempts to recover the connections on a periodic basis. When all failed
  * connections are restored, it changes back to the failure driven mode.
  */
-public class LateralCacheMonitor
-    implements Runnable
+public class LateralCacheMonitor extends Thread
 {
     /** The logger */
     private static final Log log = LogFactory.getLog( LateralCacheMonitor.class );
@@ -43,7 +49,17 @@ public class LateralCacheMonitor
     /**
      * Must make sure LateralCacheMonitor is started before any lateral error can be detected!
      */
-    private boolean alright = true;
+    private boolean allright = true;
+
+    /**
+     * Map of caches to monitor
+     */
+    private ConcurrentHashMap<String, LateralCacheNoWait<?, ?>> caches;
+
+    /**
+     * Reference to the factory
+     */
+    private LateralTCPCacheFactory factory;
 
     /**
      * shutdown flag
@@ -55,9 +71,6 @@ public class LateralCacheMonitor
 
     /** The mode we are running in. Error driven */
     private static int mode = ERROR;
-
-    /** The manager */
-    private final ILateralCacheManager manager;
 
     /**
      * Configures the idle period between repairs.
@@ -86,12 +99,30 @@ public class LateralCacheMonitor
      * Constructor for the LateralCacheMonitor object
      * <p>
      * It's the clients responsibility to decide how many of these there will be.
-     * <p>
-     * @param manager
+     *
+     * @param factory a reference to the factory that manages the service instances
      */
-    public LateralCacheMonitor( ILateralCacheManager manager )
+    public LateralCacheMonitor(LateralTCPCacheFactory factory)
     {
-        this.manager = manager;
+        super("JCS-LateralCacheMonitor");
+        this.factory = factory;
+        this.caches = new ConcurrentHashMap<String, LateralCacheNoWait<?,?>>();
+    }
+
+    /**
+     * Add a cache to be monitored
+     *
+     * @param cache the cache
+     */
+    public void addCache(LateralCacheNoWait<?, ?> cache)
+    {
+        this.caches.put(cache.getCacheName(), cache);
+
+        // if not yet started, go ahead
+        if (this.getState() == Thread.State.NEW)
+        {
+            this.start();
+        }
     }
 
     /**
@@ -130,20 +161,20 @@ public class LateralCacheMonitor
             {
                 if ( log.isDebugEnabled() )
                 {
-                    if ( alright )
+                    if ( allright )
                     {
-                        log.debug( "ERROR DRIVEN MODE: alright = " + alright
+                        log.debug( "ERROR DRIVEN MODE: allright = " + allright
                             + ", connection monitor will wait for an error." );
                     }
                     else
                     {
-                        log.debug( "ERROR DRIVEN MODE: alright = " + alright + " connection monitor running." );
+                        log.debug( "ERROR DRIVEN MODE: allright = " + allright + " connection monitor running." );
                     }
                 }
 
                 synchronized ( this )
                 {
-                    if ( alright )
+                    if ( allright )
                     {
                         // Failure driven mode.
                         try
@@ -172,15 +203,16 @@ public class LateralCacheMonitor
                 if (shutdown)
                 {
                     log.info( "Shutting down cache monitor" );
+                    this.caches.clear();
                     return;
                 }
             }
 
-            // The "alright" flag must be false here.
+            // The "allright" flag must be false here.
             // Simply presume we can fix all the errors until proven otherwise.
             synchronized ( this )
             {
-                alright = true;
+                allright = true;
             }
 
             if ( log.isDebugEnabled() )
@@ -188,70 +220,33 @@ public class LateralCacheMonitor
                 log.debug( "Cache monitor running." );
             }
 
-            // Monitor each LateralCacheManager instance one after the other.
-            // Each LateralCacheManager corresponds to one lateral connection.
-            log.info( "LateralCacheManager.instances.size() = " + manager.getInstances().size() );
+            // Monitor each cache instance one after the other.
+            log.info( "Number of caches to monitor = " + caches.size() );
             //for
-            int cnt = 0;
-            for (ILateralCacheManager mgr : manager.getInstances().values())
+            for (Map.Entry<String, LateralCacheNoWait<?, ?>> entry : caches.entrySet())
             {
-                cnt++;
-                try
-                {
-                    // If any cache is in error, it strongly suggests all caches
-                    // managed by the
-                    // same LateralCacheManager instance are in error. So we fix
-                    // them once and for all.
-                    //for
-                    //log.info( "\n " + cnt + "- mgr.lca.getTcpServer() = " + mgr.lca.getTcpServer() + " mgr = " + mgr );
-                    log.info( "\n " + cnt + "- mgr.getCaches().size() = " + mgr.getCaches().size() );
+                String cacheName = entry.getKey();
 
-                    if ( mgr.getCaches().size() == 0 )
+                @SuppressWarnings("unchecked") // Downcast to match service
+                LateralCacheNoWait<Serializable, Serializable> c =
+                        (LateralCacheNoWait<Serializable, Serializable>) entry.getValue();
+                if ( c.getStatus() == CacheStatus.ERROR )
+                {
+                    log.info( "Found LateralCacheNoWait in error, " + cacheName );
+
+                    ITCPLateralCacheAttributes lca = (ITCPLateralCacheAttributes)c.getAuxiliaryCacheAttributes();
+
+                    // Get service instance
+                    ICacheServiceNonLocal<Serializable, Serializable> cacheService = factory.getCSNLInstance(lca);
+
+                    // If we can't fix them, just skip and re-try in the
+                    // next round.
+                    if (cacheService instanceof ZombieCacheServiceNonLocal)
                     {
-                        // there is probably a problem.
-                        // monitor may be running when we just started up and
-                        // there
-                        // is not a cache yet.
-                        // if this is error driven mode, mark as bad,
-                        // otherwise we will come back around again.
-                        if ( mode == ERROR )
-                        {
-                            bad();
-                        }
+                        continue;
                     }
 
-                    for (LateralCacheNoWait<?, ?> c : mgr.getCaches().values())
-                    {
-                        if ( c.getStatus() == CacheStatus.ERROR )
-                        {
-                            log.info( "found LateralCacheNoWait in error, " + c.toString() );
-
-                            LateralCacheRestore repairer = new LateralCacheRestore( mgr );
-                            // If we can't fix them, just skip and re-try in the
-                            // next round.
-                            if ( repairer.canFix() )
-                            {
-                                repairer.fix();
-                            }
-                            else
-                            {
-                                bad();
-                            }
-                            //break;
-                        }
-                        else
-                        {
-                            log.info( "Lateral Cache No Wait not in error" );
-                        }
-                    }
-                }
-                catch ( Exception ex )
-                {
-                    bad();
-                    // Problem encountered in fixing the caches managed by a
-                    // LateralCacheManager instance.
-                    // Soldier on to the next LateralCacheManager instance.
-                    log.error( "Problem encountered in fixing the caches", ex );
+                    c.fixCache(cacheService);
                 }
             }
 
@@ -275,15 +270,15 @@ public class LateralCacheMonitor
     }
 
     /**
-     * Sets the "alright" flag to false in a critical section.
+     * Sets the "allright" flag to false in a critical section.
      */
     private void bad()
     {
-        if ( alright )
+        if ( allright )
         {
             synchronized ( this )
             {
-                alright = false;
+                allright = false;
             }
         }
     }

@@ -19,6 +19,7 @@ package org.apache.commons.jcs.engine.control;
  * under the License.
  */
 
+import org.apache.commons.jcs.auxiliary.AuxiliaryCache;
 import org.apache.commons.jcs.engine.CompositeCacheAttributes;
 import org.apache.commons.jcs.engine.ElementAttributes;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
@@ -53,6 +54,12 @@ public class MockCompositeCacheManager
         }
 
         return (CompositeCache<K, V>)cache;
+    }
+
+    @Override
+    public <K, V> AuxiliaryCache<K, V> getAuxiliaryCache(String auxName, String cacheName)
+    {
+        return null;
     }
 
     /**

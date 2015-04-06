@@ -21,12 +21,10 @@ package org.apache.commons.jcs.auxiliary.lateral.socket.tcp;
 
 import org.apache.commons.jcs.auxiliary.lateral.LateralCommand;
 import org.apache.commons.jcs.auxiliary.lateral.LateralElementDescriptor;
-import org.apache.commons.jcs.auxiliary.lateral.behavior.ILateralCacheObserver;
 import org.apache.commons.jcs.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttributes;
 import org.apache.commons.jcs.engine.CacheElement;
 import org.apache.commons.jcs.engine.CacheInfo;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
-import org.apache.commons.jcs.engine.behavior.ICacheListener;
 import org.apache.commons.jcs.engine.behavior.ICacheServiceNonLocal;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -34,7 +32,6 @@ import org.apache.commons.logging.LogFactory;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -42,15 +39,18 @@ import java.util.Set;
 
 /**
  * A lateral cache service implementation. Does not implement getGroupKey
+ * TODO: Remove generics
  */
 public class LateralTCPService<K, V>
-    implements ICacheServiceNonLocal<K, V>, ILateralCacheObserver
+    implements ICacheServiceNonLocal<K, V>
 {
     /** The logger. */
     private static final Log log = LogFactory.getLog( LateralTCPService.class );
 
     /** special configuration */
-    private ITCPLateralCacheAttributes tcpLateralCacheAttributes;
+    private boolean allowPut;
+    private boolean allowGet;
+    private boolean issueRemoveOnPut;
 
     /** Sends to another lateral. */
     private LateralTCPSender sender;
@@ -67,11 +67,12 @@ public class LateralTCPService<K, V>
     public LateralTCPService( ITCPLateralCacheAttributes lca )
         throws IOException
     {
-        this.setTcpLateralCacheAttributes( lca );
+        this.allowGet = lca.isAllowGet();
+        this.allowPut = lca.isAllowPut();
+        this.issueRemoveOnPut = lca.isIssueRemoveOnPut();
+
         try
         {
-            log.debug( "creating sender, attributes = " + getTcpLateralCacheAttributes() );
-
             sender = new LateralTCPSender( lca );
 
             if ( log.isInfoEnabled() )
@@ -114,17 +115,15 @@ public class LateralTCPService<K, V>
         throws IOException
     {
         // if we don't allow put, see if we should remove on put
-        if ( !this.getTcpLateralCacheAttributes().isAllowPut() )
-        {
+        if ( !this.allowPut &&
             // if we can't remove on put, and we can't put then return
-            if ( !this.getTcpLateralCacheAttributes().isIssueRemoveOnPut() )
-            {
-                return;
-            }
+            !this.issueRemoveOnPut )
+        {
+            return;
         }
 
         // if we shouldn't remove on put, then put
-        if ( !this.getTcpLateralCacheAttributes().isIssueRemoveOnPut() )
+        if ( !this.issueRemoveOnPut )
         {
             LateralElementDescriptor<K, V> led = new LateralElementDescriptor<K, V>( item );
             led.requesterId = requesterId;
@@ -201,27 +200,7 @@ public class LateralTCPService<K, V>
     public void dispose( String cacheName )
         throws IOException
     {
-        sender.dispose( cacheName );
-    }
-
-    /**
-     * The service does not get via this method, so this return null.
-     * <p>
-     * @param key
-     * @return always null.
-     * @throws IOException
-     */
-    public Serializable get( String key )
-        throws IOException
-    {
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "balking at get for key [" + key + "]" );
-        }
-        // p( "junk get" );
-        // return get( cattr.cacheName, key, true );
-        return null;
-        // nothing needs to be done
+        sender.dispose();
     }
 
     /**
@@ -251,7 +230,7 @@ public class LateralTCPService<K, V>
         throws IOException
     {
         // if get is not allowed return
-        if ( this.getTcpLateralCacheAttributes().isAllowGet() )
+        if ( this.allowGet )
         {
             CacheElement<K, V> ce = new CacheElement<K, V>( cacheName, key, null );
             LateralElementDescriptor<K, V> led = new LateralElementDescriptor<K, V>( ce );
@@ -304,7 +283,7 @@ public class LateralTCPService<K, V>
         throws IOException
     {
         // if get is not allowed return
-        if ( this.getTcpLateralCacheAttributes().isAllowGet() )
+        if ( this.allowGet )
         {
             CacheElement<String, String> ce = new CacheElement<String, String>( cacheName, pattern, null );
             LateralElementDescriptor<String, String> led = new LateralElementDescriptor<String, String>( ce );
@@ -441,7 +420,7 @@ public class LateralTCPService<K, V>
 
             while ( notDone )
             {
-                System.out.println( "enter mesage:" );
+                System.out.println( "enter message:" );
                 message = br.readLine();
 
                 if (message == null)
@@ -461,56 +440,6 @@ public class LateralTCPService<K, V>
         }
     }
 
-    // ILateralCacheObserver methods, do nothing here since
-    // the connection is not registered, the udp service is
-    // is not registered.
-
-    /**
-     * @param cacheName
-     * @param obj
-     * @throws IOException
-     */
-    @Override
-    public <KK, VV> void addCacheListener( String cacheName, ICacheListener<KK, VV> obj )
-        throws IOException
-    {
-        // Empty
-    }
-
-    /**
-     * @param obj
-     * @throws IOException
-     */
-    @Override
-    public <KK, VV> void addCacheListener( ICacheListener<KK, VV> obj )
-        throws IOException
-    {
-        // Empty
-    }
-
-    /**
-     * @param cacheName
-     * @param obj
-     * @throws IOException
-     */
-    @Override
-    public <KK, VV> void removeCacheListener( String cacheName, ICacheListener<KK, VV> obj )
-        throws IOException
-    {
-        // Empty
-    }
-
-    /**
-     * @param obj
-     * @throws IOException
-     */
-    @Override
-    public <KK, VV> void removeCacheListener( ICacheListener<KK, VV> obj )
-        throws IOException
-    {
-        // Empty
-    }
-
     /**
      * @param listernId The listernId to set.
      */
@@ -526,22 +455,4 @@ public class LateralTCPService<K, V>
     {
         return listenerId;
     }
-
-    /**
-     * @param tcpLateralCacheAttributes The tcpLateralCacheAttributes to set.
-     */
-    public void setTcpLateralCacheAttributes( ITCPLateralCacheAttributes tcpLateralCacheAttributes )
-    {
-        this.tcpLateralCacheAttributes = tcpLateralCacheAttributes;
-    }
-
-    /**
-     * @return Returns the tcpLateralCacheAttributes.
-     */
-    public ITCPLateralCacheAttributes getTcpLateralCacheAttributes()
-    {
-        return tcpLateralCacheAttributes;
-    }
-
-
 }

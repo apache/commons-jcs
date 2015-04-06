@@ -21,6 +21,7 @@ package org.apache.commons.jcs.engine.control;
 
 import org.apache.commons.jcs.access.exception.CacheException;
 import org.apache.commons.jcs.admin.JCSAdminBean;
+import org.apache.commons.jcs.auxiliary.AuxiliaryCache;
 import org.apache.commons.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.commons.jcs.auxiliary.AuxiliaryCacheFactory;
 import org.apache.commons.jcs.auxiliary.remote.behavior.IRemoteCacheConstants;
@@ -45,6 +46,7 @@ import org.apache.commons.logging.LogFactory;
 
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.management.ManagementFactory;
@@ -96,6 +98,10 @@ public class CompositeCacheManager
     /** Used to keep track of attributes for auxiliaries. */
     private final Map<String, AuxiliaryCacheAttributes> auxiliaryAttributeRegistry =
         new ConcurrentHashMap<String, AuxiliaryCacheAttributes>( 11 );
+
+    /** Used to keep track of configured auxiliaries */
+    private final Map<String, AuxiliaryCache<?, ?>> auxiliaryCaches =
+        new ConcurrentHashMap<String, AuxiliaryCache<?, ?>>( 11 );
 
     /** Properties with which this manager was configured. This is exposed for other managers. */
     private Properties configurationProperties;
@@ -686,6 +692,15 @@ public class CompositeCacheManager
                 freeCache( name );
             }
 
+            // shut down factories
+            for (AuxiliaryCacheFactory factory : auxiliaryFactoryRegistry.values())
+            {
+                factory.dispose();
+            }
+
+            auxiliaryAttributeRegistry.clear();
+            auxiliaryFactoryRegistry.clear();
+
             if (shutdownHook != null)
             {
                 try
@@ -779,7 +794,7 @@ public class CompositeCacheManager
     /**
      * @param auxFac
      */
-    void registryFacPut( AuxiliaryCacheFactory auxFac )
+    public void registryFacPut( AuxiliaryCacheFactory auxFac )
     {
         auxiliaryFactoryRegistry.put( auxFac.getName(), auxFac );
     }
@@ -788,7 +803,7 @@ public class CompositeCacheManager
      * @param name
      * @return AuxiliaryCacheFactory
      */
-    AuxiliaryCacheFactory registryFacGet( String name )
+    public AuxiliaryCacheFactory registryFacGet( String name )
     {
         return auxiliaryFactoryRegistry.get( name );
     }
@@ -796,7 +811,7 @@ public class CompositeCacheManager
     /**
      * @param auxAttr
      */
-    void registryAttrPut( AuxiliaryCacheAttributes auxAttr )
+    public void registryAttrPut( AuxiliaryCacheAttributes auxAttr )
     {
         auxiliaryAttributeRegistry.put( auxAttr.getName(), auxAttr );
     }
@@ -805,7 +820,7 @@ public class CompositeCacheManager
      * @param name
      * @return AuxiliaryCacheAttributes
      */
-    AuxiliaryCacheAttributes registryAttrGet( String name )
+    public AuxiliaryCacheAttributes registryAttrGet( String name )
     {
         return auxiliaryAttributeRegistry.get( name );
     }
@@ -816,15 +831,44 @@ public class CompositeCacheManager
      * @param cacheName the region name
      * @param cache the cache instance
      */
-    void addCache(String cacheName, ICache<?, ?> cache)
+    public void addCache(String cacheName, ICache<?, ?> cache)
     {
         caches.put(cacheName, cache);
     }
 
     /**
+     * Add a cache to the map of registered auxiliary caches
+     *
+     * @param auxName the auxiliary name
+     * @param cacheName the region name
+     * @param cache the cache instance
+     */
+    public void addAuxiliaryCache(String auxName, String cacheName, AuxiliaryCache<?, ?> cache)
+    {
+        String key = String.format("aux.%s.region.%s", auxName, cacheName);
+        auxiliaryCaches.put(key, cache);
+    }
+
+    /**
+     * Get a cache from the map of registered auxiliary caches
+     *
+     * @param auxName the auxiliary name
+     * @param cacheName the region name
+     *
+     * @return the cache instance
+     */
+    @Override
+    @SuppressWarnings("unchecked") // because of common map for all auxiliary caches
+    public <K, V> AuxiliaryCache<K, V> getAuxiliaryCache(String auxName, String cacheName)
+    {
+        String key = String.format("aux.%s.region.%s", auxName, cacheName);
+        return (AuxiliaryCache<K, V>) auxiliaryCaches.get(key);
+    }
+
+    /**
      * @param defaultAuxValues the defaultAuxValues to set
      */
-    void setDefaultAuxValues(String defaultAuxValues)
+    public void setDefaultAuxValues(String defaultAuxValues)
     {
         this.defaultAuxValues = defaultAuxValues;
     }

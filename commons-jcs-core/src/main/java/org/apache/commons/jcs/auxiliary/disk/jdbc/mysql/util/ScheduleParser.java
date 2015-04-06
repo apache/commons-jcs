@@ -19,6 +19,8 @@ package org.apache.commons.jcs.auxiliary.disk.jdbc.mysql.util;
  * under the License.
  */
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.StringTokenizer;
@@ -36,14 +38,14 @@ public class ScheduleParser
      * <p>
      * @param schedule
      * @return Date[]
-     * @throws ScheduleFormatException
+     * @throws ParseException
      */
     public static Date[] createDatesForSchedule( String schedule )
-        throws ScheduleFormatException
+        throws ParseException
     {
         if ( schedule == null )
         {
-            throw new ScheduleFormatException( "Cannot create schedules for a null String." );
+            throw new ParseException( "Cannot create schedules for a null String.", 0 );
         }
 
         StringTokenizer toker = new StringTokenizer( schedule, "," );
@@ -64,44 +66,27 @@ public class ScheduleParser
      * <p>
      * @param startTime
      * @return Date
-     * @throws ScheduleFormatException
+     * @throws ParseException
      */
     public static Date getDateForSchedule( String startTime )
-        throws ScheduleFormatException
+        throws ParseException
     {
         if ( startTime == null )
         {
-            throw new ScheduleFormatException( "Cannot create date for a null String." );
+            throw new ParseException( "Cannot create date for a null String.", 0 );
         }
 
-        int firstColon = startTime.indexOf( ":" );
-        int lastColon = startTime.lastIndexOf( ":" );
-        int len = startTime.length();
-        if ( firstColon == -1 || lastColon == -1 || firstColon == lastColon || lastColon == len )
-        {
-            String message = "StartTime [" + startTime + "] is deformed.  Unable to schedule optimizaiton.";
-            throw new ScheduleFormatException( message );
-        }
-
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+        Date date = sdf.parse(startTime);
         Calendar cal = Calendar.getInstance();
-        try
-        {
-            int hour = Integer.parseInt( startTime.substring( 0, firstColon ) );
-            cal.set( Calendar.HOUR_OF_DAY, hour );
-            int minute = Integer.parseInt( startTime.substring( firstColon + 1, lastColon ) );
-            cal.set( Calendar.MINUTE, minute );
-            int second = Integer.parseInt( startTime.substring( lastColon + 1, len ) );
-            cal.set( Calendar.SECOND, second );
-        }
-        catch ( NumberFormatException e )
-        {
-            String message = "Problem parsing start time [" + startTime + "].  It should be in HH:MM:SS format.";
-            throw new ScheduleFormatException( message );
-        }
+        // This will result in a date of 1/1/1970
+        cal.setTime(date);
+
+        Calendar now = Calendar.getInstance();
+        cal.set(now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH));
 
         // if the date is less than now, add a day.
-        Date now = new Date();
-        if ( cal.getTime().before( now ) )
+        if ( cal.before( now ) )
         {
             cal.add( Calendar.DAY_OF_MONTH, 1 );
         }

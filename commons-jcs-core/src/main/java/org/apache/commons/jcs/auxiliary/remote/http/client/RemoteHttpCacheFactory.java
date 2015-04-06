@@ -19,9 +19,9 @@ package org.apache.commons.jcs.auxiliary.remote.http.client;
  * under the License.
  */
 
+import org.apache.commons.jcs.auxiliary.AbstractAuxiliaryCacheFactory;
 import org.apache.commons.jcs.auxiliary.AuxiliaryCache;
 import org.apache.commons.jcs.auxiliary.AuxiliaryCacheAttributes;
-import org.apache.commons.jcs.auxiliary.AuxiliaryCacheFactory;
 import org.apache.commons.jcs.auxiliary.remote.RemoteCacheNoWait;
 import org.apache.commons.jcs.auxiliary.remote.RemoteCacheNoWaitFacade;
 import org.apache.commons.jcs.auxiliary.remote.server.behavior.RemoteType;
@@ -40,11 +40,8 @@ import java.util.HashMap;
  * clients.
  */
 public class RemoteHttpCacheFactory
-    implements AuxiliaryCacheFactory
+    extends AbstractAuxiliaryCacheFactory
 {
-    /** The name of this auxiliary */
-    private String name;
-
     /** store reference of facades to initiate failover */
     private static final HashMap<String, RemoteCacheNoWaitFacade<?, ?>> facades =
         new HashMap<String, RemoteCacheNoWaitFacade<?, ?>>();
@@ -84,28 +81,6 @@ public class RemoteHttpCacheFactory
         getFacades().put( rca.getCacheName(), rcnwf );
 
         return rcnwf;
-    }
-
-    /**
-     * Gets the name attribute of the RemoteCacheFactory object
-     * <p>
-     * @return The name value
-     */
-    @Override
-    public String getName()
-    {
-        return this.name;
-    }
-
-    /**
-     * Sets the name attribute of the RemoteCacheFactory object
-     * <p>
-     * @param name The new name value
-     */
-    @Override
-    public void setName( String name )
-    {
-        this.name = name;
     }
 
     /**
