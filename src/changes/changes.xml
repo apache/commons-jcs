@@ -19,7 +19,22 @@
 		<author email="dev@commons.apache.org">Apache Commons Developers</author>
 	</properties>
 	<body>
-		<release version="2.0" date="unreleased" description="JDK 1.6 based major release">
+        <release version="2.0" date="unreleased" description="JDK 1.6 based major release">
+            <action issue="JCS-146" dev="tv" type="fix" due-to="Wiktor Niesiobedzki">
+                IndexedDiskCache: Mismatched memory and disk length (0) for 
+                [DED:  pos = 63802 len = 9658] during optimization
+            </action>
+            <action issue="JCS-145" dev="tv" type="fix" due-to="Wiktor Niesiobedzki">
+                AbstractDiskCacheAttributes logs error, when directory already exists
+            </action>
+            <action issue="JCS-144" dev="tv" type="fix" due-to="Wiktor Niesiobedzki">
+                BlockDiskCache hangs on SEVERE: Region [TMS] Failure getting from disk--IOException
+            </action>
+            <action issue="JCS-141" dev="tv" type="fix" due-to="validruk">
+                RemoteCacheServerFactory ignores configuration
+            </action>
+        </release>
+		<release version="2.0-beta-1" date="2015-02-19" description="JDK 1.6 based major release (beta 1)">
             <action issue="JCS-139" dev="tv" type="fix" due-to="Youngho Cho">
                 PropertySetter doesn't set Enum properly. Added a test.
             </action>
