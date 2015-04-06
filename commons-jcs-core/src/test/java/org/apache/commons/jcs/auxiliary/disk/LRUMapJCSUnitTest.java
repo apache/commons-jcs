@@ -20,7 +20,9 @@ package org.apache.commons.jcs.auxiliary.disk;
  */
 
 import junit.framework.TestCase;
+
 import org.apache.commons.jcs.TestLogConfigurationUtil;
+import org.apache.commons.jcs.auxiliary.disk.LRUMapJCS;
 
 import java.io.StringWriter;
 
@@ -37,7 +39,7 @@ public class LRUMapJCSUnitTest
         LRUMapJCS<String, String> map = new LRUMapJCS<String, String>();
 
         // VERIFY
-        assertEquals( "Should be unlimted", -1, map.getMaxObjects() );
+        assertEquals( "Should be unlimted", -1, map.getMaxCounter() );
     }
 
     /** Verify that we default to unlimited */
@@ -50,7 +52,7 @@ public class LRUMapJCSUnitTest
         LRUMapJCS<String, String> map = new LRUMapJCS<String, String>( expected );
 
         // VERIFY
-        assertEquals( "Should be expected", expected, map.getMaxObjects() );
+        assertEquals( "Should be expected", expected, map.getMaxCounter() );
     }
 
     /** Verify that the log message. */

@@ -29,6 +29,12 @@ import java.io.File;
 public interface IDiskCacheAttributes
     extends AuxiliaryCacheAttributes
 {
+    enum DiskLimitType {
+        /** limit elements by count (default) */
+        COUNT,
+        /** limit elements by their size */
+        SIZE
+    }
     /**
      * This is the default purgatory size limit. Purgatory is the area where
      * items to be spooled are temporarily stored. It basically provides access
@@ -102,4 +108,24 @@ public interface IDiskCacheAttributes
      * @param allowRemoveAll
      */
     void setAllowRemoveAll( boolean allowRemoveAll );
+
+    /**
+     * set the type of the limit of the cache size
+     * @param diskLimitType COUNT - limit by count of the elements, SIZE, limit by sum of element's size
+     */
+    void setDiskLimitType(DiskLimitType diskLimitType);
+
+    /**
+     * Translates and stores String values  of DiskLimitType
+     *
+     * Allowed values: "COUNT" and "SIZE"
+     * @param diskLimitTypeName
+     */
+    void setDiskLimitTypeName(String diskLimitTypeName);
+
+    /**
+     *
+     * @return active DiskLimitType
+     */
+    DiskLimitType getDiskLimitType();
 }

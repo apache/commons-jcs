@@ -52,7 +52,7 @@ public class LRUMapPerformanceTest
     int loops = 20;
 
     /** items to put and get per loop */
-    int tries = 50000;
+    int tries = 100000;
 
     /**
      * @param testName

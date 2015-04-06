@@ -60,6 +60,8 @@ public class IndexedDiskCacheAttributes
     /** Should we clear the disk on startup. If true the congtents of disk are cleared. */
     private boolean clearDiskOnStartup = DEFAULT_CLEAR_DISK_ON_STARTUP;
 
+    private DiskLimitType diskLimitType = DiskLimitType.COUNT;
+
     /**
      * Constructor for the DiskCacheAttributes object
      */

@@ -20,7 +20,11 @@ package org.apache.commons.jcs.auxiliary.disk.block;
  */
 
 import org.apache.commons.jcs.auxiliary.disk.LRUMapJCS;
+import org.apache.commons.jcs.auxiliary.disk.behavior.IDiskCacheAttributes.DiskLimitType;
+import org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskElementDescriptor;
 import org.apache.commons.jcs.io.ObjectInputStreamClassLoaderAware;
+import org.apache.commons.jcs.utils.struct.AbstractLRUMap;
+import org.apache.commons.jcs.utils.struct.LRUMap;
 import org.apache.commons.jcs.utils.timing.ElapsedTimer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -37,6 +41,7 @@ import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * This is responsible for storing the keys.
@@ -69,6 +74,10 @@ public class BlockDiskKeyStore<K>
     /** we need this so we can communicate free blocks to the data store when keys fall off the LRU */
     protected final BlockDiskCache<K, ?> blockDiskCache;
 
+    private DiskLimitType diskLimitType = DiskLimitType.COUNT;
+
+    private int blockSize;
+
     /**
      * Set the configuration options.
      * <p>
@@ -83,6 +92,8 @@ public class BlockDiskKeyStore<K>
         this.fileName = this.blockDiskCacheAttributes.getCacheName();
         this.maxKeySize = cacheAttributes.getMaxKeySize();
         this.blockDiskCache = blockDiskCache;
+        this.diskLimitType  = cacheAttributes.getDiskLimitType();
+        this.blockSize = cacheAttributes.getBlockSizeBytes();
 
         File rootDirectory = cacheAttributes.getDiskPath();
 
@@ -190,7 +201,11 @@ public class BlockDiskKeyStore<K>
         keyHash = null;
         if ( maxKeySize >= 0 )
         {
-            keyHash = new LRUMap( maxKeySize );
+            if (this.diskLimitType.equals(DiskLimitType.SIZE)) {
+                keyHash = new LRUMapSizeLimited(maxKeySize);
+            } else {
+                keyHash = new LRUMapCountLimited( maxKeySize );
+            }
             if ( log.isInfoEnabled() )
             {
                 log.info( logCacheName + "Set maxKeySize to: '" + maxKeySize + "'" );
@@ -338,22 +353,27 @@ public class BlockDiskKeyStore<K>
         return this.keyHash.remove( key );
     }
 
+
     /**
-     * Class for recycling and lru. This implements the LRU overflow callback, so we can mark the
+     * Class for recycling and lru. This implements the LRU size overflow callback, so we can mark the
      * blocks as free.
      */
-    public class LRUMap
-        extends LRUMapJCS<K, int[]>
+
+    public class LRUMapSizeLimited
+    	extends AbstractLRUMap<K, int[]>
+
     {
         /**
          * <code>tag</code> tells us which map we are working on.
          */
-        public String tag = "orig";
-
+        public String tag = "orig-lru-size";
+        // size of the content in kB
+        private AtomicInteger contentSize = new AtomicInteger();
+        private int maxSize = -1;
         /**
          * Default
          */
-        public LRUMap()
+        public LRUMapSizeLimited()
         {
             super();
         }
@@ -361,10 +381,75 @@ public class BlockDiskKeyStore<K>
         /**
          * @param maxKeySize
          */
-        public LRUMap( int maxKeySize )
+        public LRUMapSizeLimited( int maxKeySize )
         {
-            super( maxKeySize );
+            super();
+            this.maxSize = maxKeySize;
         }
+
+        @Override
+        public int[] put(K key, int[] value) {
+            try {
+                return super.put(key, value);
+            } finally {
+                // keep the content size in kB, so 2^31 kB is reasonable value
+                contentSize.addAndGet((int) Math.ceil(value.length * blockSize / 1024.0));
+            }
+        }
+
+        @Override
+        public int[] remove(Object key ) {
+            int[] value = null;
+
+            try {
+                value = super.remove(key);
+                return value;
+            } finally {
+                if (value != null) {
+                    // keep the content size in kB, so 2^31 kB is reasonable value
+                    contentSize.addAndGet((int) ((Math.ceil(value.length * blockSize / 1024.0)) * -1));
+                }
+            }
+        }
+
+        /**
+         * This is called when the may key size is reached. The least recently used item will be
+         * passed here. We will store the position and size of the spot on disk in the recycle bin.
+         * <p>
+         * @param key
+         * @param value
+         */
+        protected void processRemovedLRU( K key, int[] value )
+        {
+            blockDiskCache.freeBlocks( value );
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( logCacheName + "Removing key: [" + key + "] from key store." );
+                log.debug( logCacheName + "Key store size: [" + super.size() + "]." );
+            }
+        }
+        @Override
+        protected boolean shouldRemove() {
+            return maxSize > 0 && contentSize.intValue() > maxSize && this.size() > 1;
+        }
+    }
+    /**
+     * Class for recycling and lru. This implements the LRU overflow callback, so we can mark the
+     * blocks as free.
+     */
+    public class LRUMapCountLimited
+    extends LRUMap<K, int[]>
+    // implements Serializable
+    {
+        /**
+         * <code>tag</code> tells us which map we are working on.
+         */
+        public String tag = "orig-lru-count";
+
+        public LRUMapCountLimited(int maxKeySize) {
+            super(maxKeySize);
+        }
+
 
         /**
          * This is called when the may key size is reached. The least recently used item will be

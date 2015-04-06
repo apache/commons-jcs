@@ -113,7 +113,7 @@ public class IndexedDiskCacheSameRegionConcurrentUnitTest
             public void runTest()
                 throws Exception
             {
-                this.runTestForRegion( "indexedRegion4", 0, 5200 );
+                this.runTestForRegion( "indexedRegion4", 0, 5100 );
             }
         } );
 

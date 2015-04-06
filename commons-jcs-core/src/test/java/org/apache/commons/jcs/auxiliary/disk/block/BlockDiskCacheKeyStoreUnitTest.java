@@ -19,6 +19,8 @@ package org.apache.commons.jcs.auxiliary.disk.block;
  * under the License.
  */
 
+import org.apache.commons.jcs.auxiliary.disk.behavior.IDiskCacheAttributes.DiskLimitType;
+
 import junit.framework.TestCase;
 
 /**
@@ -41,16 +43,31 @@ public class BlockDiskCacheKeyStoreUnitTest
         throws Exception
     {
         // SETUP
-        String regionName = "testPutKeys";
-        int maxKeys = 1000;
-        int bytesPerBlock = 2000;
-
         BlockDiskCacheAttributes attributes = new BlockDiskCacheAttributes();
-        attributes.setCacheName( regionName );
+        attributes.setCacheName( "testPutKeys" );
         attributes.setDiskPath( rootDirName );
-        attributes.setMaxKeySize( maxKeys );
-        attributes.setBlockSizeBytes( bytesPerBlock );
+        attributes.setMaxKeySize( 1000 );
+        attributes.setBlockSizeBytes( 2000 );
 
+        innerTestPutKeys(attributes);
+            }
+
+    public void testPutKeysSize()
+            throws Exception
+            {
+        // SETUP
+        BlockDiskCacheAttributes attributes = new BlockDiskCacheAttributes();
+        attributes.setCacheName( "testPutKeys" );
+        attributes.setDiskPath( rootDirName );
+        attributes.setMaxKeySize( 100000 );
+        attributes.setBlockSizeBytes( 1024 );
+        attributes.setDiskLimitType(DiskLimitType.SIZE);
+
+        innerTestPutKeys(attributes);
+            }
+
+
+    private void innerTestPutKeys(BlockDiskCacheAttributes attributes) {
         BlockDiskCache<String, String> blockDiskCache = new BlockDiskCache<String, String>( attributes );
 
         BlockDiskKeyStore<String> keyStore = new BlockDiskKeyStore<String>( attributes, blockDiskCache );
@@ -82,16 +99,31 @@ public class BlockDiskCacheKeyStoreUnitTest
         throws Exception
     {
         // SETUP
-        String regionName = "testSaveLoadKeys";
-        int maxKeys = 10000;
-        int bytesPerBlock = 2000;
-
         BlockDiskCacheAttributes attributes = new BlockDiskCacheAttributes();
-        attributes.setCacheName( regionName );
+        attributes.setCacheName( "testSaveLoadKeys" );
         attributes.setDiskPath( rootDirName );
-        attributes.setMaxKeySize( maxKeys );
-        attributes.setBlockSizeBytes( bytesPerBlock );
+        attributes.setMaxKeySize( 10000 );
+        attributes.setBlockSizeBytes( 2000 );
 
+        testSaveLoadKeysInner(attributes);
+            }
+
+    public void testSaveLoadKeysSize()
+            throws Exception
+            {
+        // SETUP
+        BlockDiskCacheAttributes attributes = new BlockDiskCacheAttributes();
+        attributes.setCacheName( "testSaveLoadKeys" );
+        attributes.setDiskPath( rootDirName );
+        attributes.setMaxKeySize( 10000 );
+        attributes.setBlockSizeBytes( 2000 );
+
+        testSaveLoadKeysInner(attributes);
+            }
+
+
+
+    private void testSaveLoadKeysInner(BlockDiskCacheAttributes attributes) {
         BlockDiskKeyStore<String> keyStore = new BlockDiskKeyStore<String>( attributes, null );
 
         // DO WORK
@@ -125,5 +157,22 @@ public class BlockDiskCacheKeyStoreUnitTest
             int[] result = keyStore.get( String.valueOf( i ) );
             assertEquals( "Wrong array returned.", i, result.length );
         }
+    }
+
+    public void testObjectLargerThanMaxSize() {
+        BlockDiskCacheAttributes attributes = new BlockDiskCacheAttributes();
+        attributes.setCacheName( "testObjectLargerThanMaxSize" );
+        attributes.setDiskPath( rootDirName );
+        attributes.setMaxKeySize( 1000 );
+        attributes.setBlockSizeBytes( 2000 );
+        attributes.setDiskLimitType(DiskLimitType.SIZE);
+
+        @SuppressWarnings({ "unchecked", "rawtypes" })
+        BlockDiskKeyStore<String> keyStore = new BlockDiskKeyStore<String>( attributes, new BlockDiskCache(attributes));
+
+        keyStore.put("1", new int[1000]);
+        keyStore.put("2", new int[1000]);
+        assertNull(keyStore.get("1"));
+        assertNotNull(keyStore.get("2"));
     }
 }

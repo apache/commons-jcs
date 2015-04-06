@@ -42,6 +42,20 @@
 				be optimized. Once the maximum number of keys is
 				reached, blocks will be reused.
 			</p>
+			
+			<section name="Size limitation">
+				<p>
+					There are two ways to limit the cache size: using element
+					count and element size. When using element count, in disk
+					store there will be at most MaxKeySize elements (not disk 
+					blocks). When using element size, there will be at most
+					KeySize kB of elements stored in the data file. As the Block 
+					Disk Cache doesn't need optimization, the data file 
+					will be not longer than specified. The limit does not
+					cover the key file size. The mode is chosen using DiskLimitType. 
+					Allowed values are: COUNT and SIZE.
+				</p>
+			</section>
 
 			<subsection name="Example cache.ccf">
 				<source>

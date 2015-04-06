@@ -29,7 +29,7 @@ import java.io.Serializable;
 import java.util.Map;
 
 /** Unit tests for the Block Disk Cache */
-public class BlockDiskCacheUnitTest
+public abstract class BlockDiskCacheUnitTest
     extends TestCase
 {
     /**
@@ -37,6 +37,9 @@ public class BlockDiskCacheUnitTest
      * <p>
      * @throws Exception
      */
+	
+	public abstract BlockDiskCacheAttributes getCacheAttributes();
+	
     public void testPutGetMatching_SmallWait()
         throws Exception
     {
@@ -44,7 +47,7 @@ public class BlockDiskCacheUnitTest
         int items = 200;
 
         String cacheName = "testPutGetMatching_SmallWait";
-        BlockDiskCacheAttributes cattr = new BlockDiskCacheAttributes();
+        BlockDiskCacheAttributes cattr = getCacheAttributes();
         cattr.setCacheName( cacheName );
         cattr.setMaxKeySize( 100 );
         cattr.setDiskPath( "target/test-sandbox/BlockDiskCacheUnitTest" );
@@ -77,7 +80,7 @@ public class BlockDiskCacheUnitTest
         int items = 200;
 
         String cacheName = "testPutGetMatching_NoWait";
-        BlockDiskCacheAttributes cattr = new BlockDiskCacheAttributes();
+        BlockDiskCacheAttributes cattr = getCacheAttributes();
         cattr.setCacheName( cacheName );
         cattr.setMaxKeySize( 100 );
         cattr.setDiskPath( "target/test-sandbox/BlockDiskCacheUnitTest" );
@@ -165,7 +168,7 @@ public class BlockDiskCacheUnitTest
 
         String cacheName = "testPutGet_BigString";
 
-        BlockDiskCacheAttributes cattr = new BlockDiskCacheAttributes();
+        BlockDiskCacheAttributes cattr = getCacheAttributes();
         cattr.setCacheName( cacheName );
         cattr.setMaxKeySize( 100 );
         cattr.setBlockSizeBytes( 200 );
@@ -208,7 +211,7 @@ public class BlockDiskCacheUnitTest
 
         String cacheName = "testUTF8String";
 
-        BlockDiskCacheAttributes cattr = new BlockDiskCacheAttributes();
+        BlockDiskCacheAttributes cattr = getCacheAttributes();
         cattr.setCacheName( cacheName );
         cattr.setMaxKeySize( 100 );
         cattr.setBlockSizeBytes( 200 );
@@ -252,7 +255,7 @@ public class BlockDiskCacheUnitTest
 
         String cacheName = "testUTF8ByteArray";
 
-        BlockDiskCacheAttributes cattr = new BlockDiskCacheAttributes();
+        BlockDiskCacheAttributes cattr = getCacheAttributes();
         cattr.setCacheName( cacheName );
         cattr.setMaxKeySize( 100 );
         cattr.setBlockSizeBytes( 200 );
@@ -301,7 +304,7 @@ public class BlockDiskCacheUnitTest
 
         String cacheName = "testUTF8StringAndBytes";
 
-        BlockDiskCacheAttributes cattr = new BlockDiskCacheAttributes();
+        BlockDiskCacheAttributes cattr = getCacheAttributes();
         cattr.setCacheName( cacheName );
         cattr.setMaxKeySize( 100 );
         cattr.setBlockSizeBytes( 500 );

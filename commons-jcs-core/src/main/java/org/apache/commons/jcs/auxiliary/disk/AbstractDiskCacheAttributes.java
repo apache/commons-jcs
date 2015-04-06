@@ -58,6 +58,10 @@ public abstract class AbstractDiskCacheAttributes
      */
     private int shutdownSpoolTimeLimit = DEFAULT_shutdownSpoolTimeLimit;
 
+    private DiskLimitType diskLimitType = DiskLimitType.COUNT;
+
+    private int chunkSize;
+
     /**
      * Sets the diskPath attribute of the DiskCacheAttributes object
      * <p>
@@ -202,5 +206,28 @@ public abstract class AbstractDiskCacheAttributes
         str.append( "\n allowRemoveAll   = " + isAllowRemoveAll() );
         str.append( "\n ShutdownSpoolTimeLimit   = " + getShutdownSpoolTimeLimit() );
         return str.toString();
+    }
+    @Override
+    public void setDiskLimitType(DiskLimitType diskLimitType) {
+        this.diskLimitType = diskLimitType;
+
+    }
+
+    @Override
+    public void setDiskLimitTypeName(String diskLimitTypeName) {
+        if (diskLimitTypeName != null) {
+            String name = diskLimitTypeName.trim();
+            if ("COUNT".equals(name)) {
+                diskLimitType = DiskLimitType.COUNT;
+            } else if ("SIZE".equals(name)) {
+                diskLimitType = DiskLimitType.SIZE;
+            }
+        }
+
+    }
+
+    @Override
+    public DiskLimitType getDiskLimitType() {
+        return diskLimitType;
     }
 }

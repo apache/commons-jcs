@@ -50,7 +50,7 @@ public class JCSvsCommonsLRUMapPerformanceTest
     int loops = 20;
 
     /** number to test with */
-    int tries = 50000;
+    int tries = 100000;
 
     /**
      * @param testName

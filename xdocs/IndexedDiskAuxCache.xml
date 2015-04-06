@@ -73,7 +73,7 @@
 					is retrieved from purgatory it will no longer be
 					written to disk, since the cache hub will move it
 					back to memory. Using purgatory insures that there
-					is no wait for disk writes, unecessary disk writes
+					is no wait for disk writes, unnecessary disk writes
 					are avoided for borderline items, and the items are
 					always available.
 				</p>
@@ -87,6 +87,20 @@
 					cache can be configured to read or delete the index
 					file. This provides an unreliable persistence
 					mechanism.
+				</p>
+			</subsection>
+			
+			<subsection name="Size limitation">
+				<p>
+					There are two ways to limit the cache size: using element
+					count and element size. When using element count, in disk
+					store there will be at most MaxKeySize elements. When using
+					element size, there will be at most KeySize kB of elements
+					stored in the data file. The file can be bigger due to 
+					fragmentation. The limit does not cover the size of key file
+					so the total space occupied by the cache might be a bit bigger.
+					The mode is chosen using DiskLimitType. Allowed values are: 
+					COUNT and SIZE.
 				</p>
 			</subsection>
 
@@ -227,6 +241,7 @@ jcs.auxiliary.DC.attributes.MaxKeySize=10000
 jcs.auxiliary.DC.attributes.OptimizeAtRemoveCount=300000
 jcs.auxiliary.DC.attributes.OptimizeOnShutdown=true
 jcs.auxiliary.DC.attributes.MaxRecycleBinSize=7500
+jcs.auxiliary.DC.attributes.DiskLimitType=COUNT
         ]]>
 				</source>
 			</subsection>

@@ -112,6 +112,7 @@ public class BlockDiskCacheAttributes
         str.append( "\n MaxPurgatorySize [" + this.getMaxPurgatorySize() + "]" );
         str.append( "\n BlockSizeBytes [" + this.getBlockSizeBytes() + "]" );
         str.append( "\n KeyPersistenceIntervalSeconds [" + this.getKeyPersistenceIntervalSeconds() + "]" );
+        str.append( "\n DiskLimitType [" + this.getDiskLimitType() + "]" );
         return str.toString();
     }
 }
