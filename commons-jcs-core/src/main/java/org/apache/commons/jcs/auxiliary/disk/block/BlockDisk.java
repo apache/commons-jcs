@@ -19,12 +19,6 @@ package org.apache.commons.jcs.auxiliary.disk.block;
  * under the License.
  */
 
-import org.apache.commons.jcs.engine.behavior.IElementSerializer;
-import org.apache.commons.jcs.utils.serialization.StandardSerializer;
-import org.apache.commons.jcs.utils.struct.SingleLinkedList;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -35,6 +29,12 @@ import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
+
+import org.apache.commons.jcs.engine.behavior.IElementSerializer;
+import org.apache.commons.jcs.utils.serialization.StandardSerializer;
+import org.apache.commons.jcs.utils.struct.SingleLinkedList;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * This class manages reading an writing data to disk. When asked to write a value, it returns a
@@ -223,7 +223,7 @@ public class BlockDisk
             offset += length;
         }
 
-        fc.force(false);
+        //fc.force(false);
 
         return blocks;
     }

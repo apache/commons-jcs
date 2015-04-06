@@ -20,6 +20,9 @@
 	</properties>
 	<body>
         <release version="2.0" date="unreleased" description="JDK 1.6 based major release">
+            <action issue="JCS-148" dev="tv" type="fix" due-to="Wiktor Niesiobedzki">
+                Unnecessary use of FileChannel.force() in Indexed and Block Disk Caches
+            </action>
             <action issue="JCS-146" dev="tv" type="fix" due-to="Wiktor Niesiobedzki">
                 IndexedDiskCache: Mismatched memory and disk length (0) for 
                 [DED:  pos = 63802 len = 9658] during optimization
