@@ -19,6 +19,8 @@ package org.apache.commons.jcs.auxiliary.remote;
  * under the License.
  */
 
+import java.io.IOException;
+
 import org.apache.commons.jcs.engine.CacheStatus;
 import org.apache.commons.jcs.engine.behavior.ICache;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
@@ -26,8 +28,6 @@ import org.apache.commons.jcs.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import java.io.IOException;
 
 /**
  * The RemoteCacheFailoverRunner tries to establish a connection with a failover
@@ -202,8 +202,7 @@ public class RemoteCacheFailoverRunner<K, V>
                     try
                     {
                         rca = (RemoteCacheAttributes) facade.getRemoteCacheAttributes().copy();
-                        rca.setRemoteHost( server.substring( 0, server.indexOf( ":" ) ) );
-                        rca.setRemotePort( Integer.parseInt( server.substring( server.indexOf( ":" ) + 1 ) ) );
+                        RemoteUtils.parseServerAndPort(server, rca);
                         RemoteCacheManager rcm = RemoteCacheManager.getInstance( rca, cacheMgr, cacheEventLogger, elementSerializer );
 
                         if ( log.isDebugEnabled() )
@@ -347,8 +346,7 @@ public class RemoteCacheFailoverRunner<K, V>
         try
         {
             RemoteCacheAttributes rca = (RemoteCacheAttributes) facade.getRemoteCacheAttributes().copy();
-            rca.setRemoteHost( server.substring( 0, server.indexOf( ":" ) ) );
-            rca.setRemotePort( Integer.parseInt( server.substring( server.indexOf( ":" ) + 1 ) ) );
+            RemoteUtils.parseServerAndPort(server, rca);
             RemoteCacheManager rcm = RemoteCacheManager.getInstance( rca, cacheMgr, cacheEventLogger, elementSerializer );
 
             // add a listener if there are none, need to tell rca what number it
@@ -388,9 +386,7 @@ public class RemoteCacheFailoverRunner<K, V>
                                 // create attributes that reflect the
                                 // previous failed over configuration.
                                 RemoteCacheAttributes rcaOld = (RemoteCacheAttributes) facade.getRemoteCacheAttributes().copy();
-                                rcaOld.setRemoteHost( serverOld.substring( 0, serverOld.indexOf( ":" ) ) );
-                                rcaOld.setRemotePort( Integer.parseInt( serverOld.substring( serverOld
-                                    .indexOf( ":" ) + 1 ) ) );
+                                RemoteUtils.parseServerAndPort(serverOld, rcaOld);
                                 RemoteCacheManager rcmOld = RemoteCacheManager.getInstance( rcaOld, cacheMgr, cacheEventLogger, elementSerializer );
 
                                 if ( rcmOld != null )

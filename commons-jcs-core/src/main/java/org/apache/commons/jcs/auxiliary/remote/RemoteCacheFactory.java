@@ -19,6 +19,10 @@ package org.apache.commons.jcs.auxiliary.remote;
  * under the License.
  */
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.StringTokenizer;
+
 import org.apache.commons.jcs.auxiliary.AbstractAuxiliaryCacheFactory;
 import org.apache.commons.jcs.auxiliary.AuxiliaryCache;
 import org.apache.commons.jcs.auxiliary.AuxiliaryCacheAttributes;
@@ -27,10 +31,6 @@ import org.apache.commons.jcs.engine.behavior.ICache;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.StringTokenizer;
 
 /**
  * The RemoteCacheFactory creates remote caches for the cache hub. It returns a no wait facade which
@@ -76,10 +76,10 @@ public class RemoteCacheFactory
             // not necessary if a failover list is defined
             // REGISTER PRIMARY LISTENER
             // if it is a primary
-            boolean primayDefined = false;
+            boolean primaryDefined = false;
             if ( rca.getRemoteHost() != null )
             {
-                primayDefined = true;
+                primaryDefined = true;
 
                 failovers.add( rca.getRemoteHost() + ":" + rca.getRemotePort() );
 
@@ -95,20 +95,19 @@ public class RemoteCacheFactory
             {
                 StringTokenizer fit = new StringTokenizer( failoverList, "," );
                 int fCnt = 0;
-                while ( fit.hasMoreElements() )
+                while ( fit.hasMoreTokens() )
                 {
                     fCnt++;
 
-                    String server = (String) fit.nextElement();
+                    String server = fit.nextToken();
                     failovers.add( server );
 
-                    rca.setRemoteHost( server.substring( 0, server.indexOf( ":" ) ) );
-                    rca.setRemotePort( Integer.parseInt( server.substring( server.indexOf( ":" ) + 1 ) ) );
+                    RemoteUtils.parseServerAndPort(server, rca);
                     RemoteCacheManager rcm = RemoteCacheManager.getInstance( rca, cacheMgr, cacheEventLogger,
                                                                              elementSerializer );
                     // add a listener if there are none, need to tell rca what
                     // number it is at
-                    if ( ( !primayDefined && fCnt == 1 ) || noWaits.size() <= 0 )
+                    if ( ( !primaryDefined && fCnt == 1 ) || noWaits.size() <= 0 )
                     {
                         ICache<K, V> ic = rcm.getCache( rca );
                         noWaits.add( ic );

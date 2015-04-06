@@ -19,9 +19,9 @@ package org.apache.commons.jcs.auxiliary.remote;
  * under the License.
  */
 
-import junit.framework.TestCase;
-
 import java.rmi.registry.Registry;
+
+import junit.framework.TestCase;
 
 /**
  * Simple tests for remote utils. It is difficult to verify most of the things is does.
@@ -42,10 +42,33 @@ public class RemoteUtilsUnitTest
         assertNotNull("Registry should not be null", registry);
     }
 
-    public void testgetNamingURL()
+    public void testGetNamingURL()
     {
         assertEquals("//host:1/servicename", RemoteUtils.getNamingURL("host",1,"servicename"));
         assertEquals("//127.0.0.1:2/servicename", RemoteUtils.getNamingURL("127.0.0.1",2,"servicename"));
         assertEquals("//[0:0:0:0:0:0:0:1%251]:3/servicename", RemoteUtils.getNamingURL("0:0:0:0:0:0:0:1%1",3,"servicename"));
+    }
+
+    public void testParseServerAndPort()
+    {
+        RemoteCacheAttributes rca = new RemoteCacheAttributes();
+
+        RemoteUtils.parseServerAndPort("server1:1234", rca);
+        assertEquals("server1", rca.getRemoteHost());
+        assertEquals(1234, rca.getRemotePort());
+
+        RemoteUtils.parseServerAndPort("  server2  :  4567  ", rca);
+        assertEquals("server2", rca.getRemoteHost());
+        assertEquals(4567, rca.getRemotePort());
+
+        try
+        {
+            RemoteUtils.parseServerAndPort("server2  :  port", rca);
+            fail("Parsing should not succeed");
+        }
+        catch (Exception e)
+        {
+            // expected
+        }
     }
 }

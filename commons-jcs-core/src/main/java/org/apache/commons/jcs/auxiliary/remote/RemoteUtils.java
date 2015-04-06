@@ -19,9 +19,6 @@ package org.apache.commons.jcs.auxiliary.remote;
  * under the License.
  */
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetSocketAddress;
@@ -33,6 +30,11 @@ import java.rmi.registry.Registry;
 import java.rmi.server.RMISocketFactory;
 import java.util.Enumeration;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * This class provides some basic utilities for doing things such as starting the registry properly.
@@ -220,5 +222,32 @@ public class RemoteUtils
         }
         final String registryURL = "//" + registryHost + ":" + registryPort + "/" + serviceName;
         return registryURL;
+    }
+
+    /** Pattern for parsing server:port */
+    private static final Pattern SERVER_COLON_PORT = Pattern.compile("(\\S+)\\s*:\\s*(\\d+)");
+
+    /**
+     * Parse remote server and port from the string representation server:port and store them in
+     * the RemoteCacheAttributes
+     *
+     * @param registryHost
+     * @param registryPort
+     * @param serviceName
+     * @return
+     */
+    public static void parseServerAndPort(final String server, final RemoteCacheAttributes rca)
+    {
+        Matcher match = SERVER_COLON_PORT.matcher(server);
+
+        if (match.find() && match.groupCount() == 2)
+        {
+            rca.setRemoteHost( match.group(1) );
+            rca.setRemotePort( Integer.parseInt( match.group(2) ) );
+        }
+        else
+        {
+            throw new RuntimeException("Invalid server descriptor: " + server);
+        }
     }
 }
