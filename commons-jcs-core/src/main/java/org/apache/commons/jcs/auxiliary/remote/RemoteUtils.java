@@ -231,10 +231,8 @@ public class RemoteUtils
      * Parse remote server and port from the string representation server:port and store them in
      * the RemoteCacheAttributes
      *
-     * @param registryHost
-     * @param registryPort
-     * @param serviceName
-     * @return
+     * @param server the input string
+     * @param rca the target attribute object
      */
     public static void parseServerAndPort(final String server, final RemoteCacheAttributes rca)
     {
@@ -247,7 +245,7 @@ public class RemoteUtils
         }
         else
         {
-            throw new RuntimeException("Invalid server descriptor: " + server);
+            log.error("Invalid server descriptor: " + server);
         }
     }
 }

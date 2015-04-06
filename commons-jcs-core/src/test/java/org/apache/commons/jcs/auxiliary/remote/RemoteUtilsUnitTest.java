@@ -61,14 +61,11 @@ public class RemoteUtilsUnitTest
         assertEquals("server2", rca.getRemoteHost());
         assertEquals(4567, rca.getRemotePort());
 
-        try
-        {
-            RemoteUtils.parseServerAndPort("server2  :  port", rca);
-            fail("Parsing should not succeed");
-        }
-        catch (Exception e)
-        {
-            // expected
-        }
+        rca.setRemoteHost("");
+        rca.setRemotePort(0);
+        // Should not change anything
+        RemoteUtils.parseServerAndPort("server2  :  port", rca);
+        assertEquals("", rca.getRemoteHost());
+        assertEquals(0, rca.getRemotePort());
     }
 }
