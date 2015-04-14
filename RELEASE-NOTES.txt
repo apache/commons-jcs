@@ -1,0 +1,61 @@
+
+Licensed to the Apache Software Foundation (ASF) under one or more
+contributor license agreements.  See the NOTICE file distributed with
+this work for additional information regarding copyright ownership.
+The ASF licenses this file to You under the Apache License, Version 2.0
+(the "License"); you may not use this file except in compliance with
+the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+
+                        Apache Commons JCS
+                            Version 2.0-SNAPSHOT
+                           Release Notes
+
+
+INTRODUCTION:
+
+This document contains the release notes for the 2.0-SNAPSHOT version of Apache Commons JCS.
+Commons JCS is a distributed caching system written in Java. It is intend to speed up 
+applications by providing a means to manage cached data of various dynamic natures.
+
+JCS 2.0 and onwards now targets Java 6.0, making use of features that arrived with Java 5.0 
+such as generics and concurrency.
+
+For the advice on upgrading from 1.x to 2.x, see the following page: 
+
+    http://commons.apache.org/proper/commons-jcs/UpgradingFrom13.html
+
+Apache Commons JCS is a distributed, versatile caching system.
+
+JDK 1.6 based major release
+
+Changes in this version include:
+
+New features:
+o JCS-147:  Provide file size limitation for Block Disk Cache and Indexed Disk Cache Thanks to Wiktor Niesiobedzki.
+
+Fixed Bugs:
+o JCS-96:   Incomplete shutdown of RemoteCacheServer Thanks to Gregory Fernandez.
+o JCS-148:  Unnecessary use of FileChannel.force() in Indexed and Block Disk Caches Thanks to Wiktor Niesiobedzki.
+o JCS-146:  IndexedDiskCache: Mismatched memory and disk length (0) for 
+            [DED:  pos = 63802 len = 9658] during optimization Thanks to Wiktor Niesiobedzki.
+o JCS-145:  AbstractDiskCacheAttributes logs error, when directory already exists Thanks to Wiktor Niesiobedzki.
+o JCS-144:  BlockDiskCache hangs on SEVERE: Region [TMS] Failure getting from disk--IOException Thanks to Wiktor Niesiobedzki.
+o JCS-141:  RemoteCacheServerFactory ignores configuration Thanks to validruk.
+
+
+
+Historical list of changes: http://commons.apache.org/proper/commons-jcs/changes-report.html
+
+For complete information on Apache Commons JCS, including instructions on how to submit bug reports,
+patches, or suggestions for improvement, see the Apache Apache Commons JCS website:
+
+http://commons.apache.org/proper/commons-jcs/

@@ -37,6 +37,14 @@
   <description>Apache Commons JCS is a distributed, versatile caching system.</description>
   <inceptionYear>2002</inceptionYear>
 
+  <!-- Required for staging to work -->
+  <distributionManagement>
+      <site>
+          <id>commons.jcs.apache.org</id>
+          <url>http://commons.apache.org/proper/commons-jcs/</url>
+      </site>
+  </distributionManagement>
+
   <issueManagement>
     <system>jira</system>
     <url>http://issues.apache.org/jira/browse/JCS</url>
