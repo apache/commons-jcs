@@ -20,6 +20,9 @@
 	</properties>
 	<body>
         <release version="2.0" date="unreleased" description="JDK 1.6 based major release">
+            <action issue="JCS-124" dev="tv" type="update" due-to="Richard Eigenmann">
+                Make the code in Step 5 on the JCS overview page a full working class that can compile
+            </action>
             <action issue="JCS-140" dev="rmannibucau" type="fix" due-to="liangjiarui">
                 JCacheFilter code logic error, first hit always fails
             </action>
