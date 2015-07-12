@@ -20,6 +20,9 @@
 	</properties>
 	<body>
         <release version="2.0" date="unreleased" description="JDK 1.6 based major release">
+            <action dev="tv" type="add">
+                Add orderly shutdown of ThreadPoolManager
+            </action>
             <action issue="JCS-124" dev="tv" type="update" due-to="Richard Eigenmann">
                 Make the code in Step 5 on the JCS overview page a full working class that can compile
             </action>
