@@ -19,21 +19,11 @@ package org.apache.commons.jcs.auxiliary.disk.indexed;
  * under the License.
  */
 
+import java.util.Map;
+
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-
-import org.apache.commons.jcs.JCSvsHashtablePerformanceTest;
-import org.apache.commons.jcs.TestLogConfigurationUtil;
-import org.apache.commons.jcs.auxiliary.disk.AbstractDiskCache;
-import org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskCache;
-import org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes;
-import org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskElementDescriptor;
-import org.apache.log4j.ConsoleAppender;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-
-import java.util.Map;
 
 /**
  * This ensures that the jcs version of the LRU map is as fast as the commons
@@ -109,7 +99,7 @@ public class LRUMapSizeVsCount
         long getTotalCount = 0;
         long putTotalSize = 0;
         long getTotalSize = 0;
-        
+
         long minTimeSizePut = Long.MAX_VALUE;
         long minTimeSizeGet = Long.MAX_VALUE;
         long minTimeCountPut = Long.MAX_VALUE;
@@ -170,7 +160,7 @@ public class LRUMapSizeVsCount
                 time = end - start;
                 putTotalSize += time;
                 minTimeSizePut = Math.min(minTimeSizePut, time);
-                
+
                 tPer = Float.intBitsToFloat( (int) time ) / Float.intBitsToFloat( tries );
                 System.out.println( cache2Name + " put time for " + tries + " = " + time + "; millis per = " + tPer );
 
@@ -183,7 +173,7 @@ public class LRUMapSizeVsCount
                 time = end - start;
                 getTotalSize += time;
                 minTimeSizeGet = Math.min(minTimeSizeGet, time);
-                
+
                 tPer = Float.intBitsToFloat( (int) time ) / Float.intBitsToFloat( tries );
                 System.out.println( cache2Name + " get time for " + tries + " = " + time + "; millis per = " + tPer );
 
@@ -209,7 +199,7 @@ public class LRUMapSizeVsCount
         ratioPut = (putAvSize *1.0) / putAvCount;
         System.out.println( cache2Name.trim() + " puts took " + ratioPut + " times the " + cacheName.trim() + ", the goal is <" + targetPut
             + "x" );
-        
+
         System.out.println( "\n" );
         System.out.println( "Put minimum for " + cacheName +  " = " + minTimeCountPut );
         System.out.println( "Put minimum for " + cache2Name + " = " + minTimeSizePut );
@@ -224,7 +214,7 @@ public class LRUMapSizeVsCount
         ratioGet = (getAvSize * 1.0) / getAvCount;
         System.out.println( cache2Name.trim() + " gets took " + ratioGet + " times the " + cacheName.trim() + ", the goal is <" + targetGet
             + "x" );
-        
+
         System.out.println( "\n" );
         System.out.println( "Get minimum for " + cacheName +  " = " + minTimeCountGet );
         System.out.println( "Get minimum for " + cache2Name + " = " + minTimeSizeGet );
