@@ -25,8 +25,14 @@
 		<faq id="required-jars">
 			<question>What jars are required by JCS?</question>
 			<answer>
+                <p>
+                    As of version 2.0, the core of JCS (the LRU
+                    memory cache, the indexed disk cache, the TCP
+                    lateral, and the RMI remote server) only
+                    requires commons-logging.
+                </p>
 				<p>
-					As of verison 1.2.7.0, the core of JCS (the LRU
+					As of version 1.2.7.0, the core of JCS (the LRU
 					memory cache, the indexed disk cache, the TCP
 					lateral, and the RMI remote server) requires only
 					two other jars.
@@ -130,7 +136,7 @@
 				<p>
 					You can download the admin jsp
 					<a
-						href="http://svn.apache.org/viewcvs.cgi/commons/proper/jcs/trunk/src/java/org/apache/jcs/admin/JCSAdmin.jsp">
+						href="http://svn.apache.org/viewvc/commons/proper/jcs/trunk/commons-jcs-core/src/main/java/org/apache/commons/jcs/admin/JCSAdmin.jsp?view=log">
 						here
 					</a>
 					.
@@ -163,7 +169,7 @@
 					The download is available at
 					http://maven.apache.org/download.html.
 					After installing run
-					"mvn" which compiles and tests the entire package.
+					"mvn test" which compiles and tests the entire package.
 					To build a jar run "mvn install".
 				</p>
 			</answer>
