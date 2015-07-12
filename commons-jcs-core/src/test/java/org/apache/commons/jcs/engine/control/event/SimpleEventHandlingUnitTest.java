@@ -20,6 +20,7 @@ package org.apache.commons.jcs.engine.control.event;
  */
 
 import junit.framework.TestCase;
+
 import org.apache.commons.jcs.JCS;
 import org.apache.commons.jcs.access.CacheAccess;
 import org.apache.commons.jcs.engine.behavior.IElementAttributes;
@@ -279,7 +280,7 @@ public class SimpleEventHandlingUnitTest
          * @param event
          */
         @Override
-        public synchronized void handleElementEvent( IElementEvent event )
+        public synchronized <T> void handleElementEvent( IElementEvent<T> event )
         {
             //System.out.println( "Handling Event of Type " +
             // event.getElementEvent() );
@@ -306,6 +307,12 @@ public class SimpleEventHandlingUnitTest
 
                 case EXCEEDED_IDLETIME_ONREQUEST:
                 exceededIdletimeCount++;
+                break;
+
+                case EXCEEDED_IDLETIME_BACKGROUND:
+                break;
+
+                case EXCEEDED_MAXLIFE_BACKGROUND:
                 break;
             }
         }

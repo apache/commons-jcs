@@ -56,7 +56,7 @@ public class ElementEventHandlerMockImpl
      * @param event
      */
     @Override
-    public synchronized void handleElementEvent( IElementEvent event )
+    public synchronized <T> void handleElementEvent( IElementEvent<T> event )
     {
         setCallCount( getCallCount() + 1 );
 
