@@ -150,7 +150,7 @@ public class CDIJCacheHelper
         if (defaults != null)
         {
             final Class<? extends CacheKeyGenerator> defaultCacheKeyGenerator = defaults.cacheKeyGenerator();
-            if (!CacheResolverFactory.class.equals(defaultCacheKeyGenerator))
+            if (!CacheKeyGenerator.class.equals(defaultCacheKeyGenerator))
             {
                 return instance(defaultCacheKeyGenerator);
             }
