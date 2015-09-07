@@ -26,9 +26,12 @@ import javax.cache.Cache;
 import javax.cache.CacheManager;
 import javax.cache.configuration.Configuration;
 import javax.cache.spi.CachingProvider;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.net.URL;
+import java.util.Enumeration;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
@@ -39,6 +42,21 @@ import static org.apache.commons.jcs.jcache.Asserts.assertNotNull;
 public class JCSCachingManager implements CacheManager
 {
     private static final Subsitutor SUBSTITUTOR = Subsitutor.Helper.INSTANCE;
+    private static final String DEFAULT_CONFIG =
+        "jcs.default=DC\n" +
+        "jcs.default.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes\n" +
+        "jcs.default.cacheattributes.MaxObjects=200001\n" +
+        "jcs.default.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache\n" +
+        "jcs.default.cacheattributes.UseMemoryShrinker=true\n" +
+        "jcs.default.cacheattributes.MaxMemoryIdleTimeSeconds=3600\n" +
+        "jcs.default.cacheattributes.ShrinkerIntervalSeconds=60\n" +
+        "jcs.default.elementattributes=org.apache.commons.jcs.engine.ElementAttributes\n" +
+        "jcs.default.elementattributes.IsEternal=false\n" +
+        "jcs.default.elementattributes.MaxLife=700\n" +
+        "jcs.default.elementattributes.IdleTime=1800\n" +
+        "jcs.default.elementattributes.IsSpool=true\n" +
+        "jcs.default.elementattributes.IsRemote=true\n" +
+        "jcs.default.elementattributes.IsLateral=true\n";
 
     private static class InternalManager extends CompositeCacheManager
     {
@@ -81,18 +99,58 @@ public class JCSCachingManager implements CacheManager
 
     private Properties readConfig(final URI uri, final ClassLoader loader, final Properties properties) {
         final Properties props = new Properties();
-        InputStream inStream = null;
-        try
-        {
+        try {
             if (JCSCachingProvider.DEFAULT_URI.toString().equals(uri.toString()) || uri.toURL().getProtocol().equals("jcs"))
             {
-                inStream = loader.getResourceAsStream(uri.getPath());
+
+                final Enumeration<URL> resources = loader.getResources(uri.getPath());
+                if (!resources.hasMoreElements()) // default
+                {
+                    props.load(new ByteArrayInputStream(DEFAULT_CONFIG.getBytes("UTF-8")));
+                }
+                else
+                {
+                    do
+                    {
+                        addProperties(resources.nextElement(), props);
+                    }
+                    while (resources.hasMoreElements());
+                }
             }
             else
             {
-                inStream = uri.toURL().openStream();
+                props.load(uri.toURL().openStream());
             }
-            props.load(inStream);
+        } catch (final IOException e) {
+            throw new IllegalStateException(e);
+        }
+
+        if (properties != null)
+        {
+            props.putAll(properties);
+        }
+
+        for (final Map.Entry<Object, Object> entry : props.entrySet()) {
+            if (entry.getValue() == null)
+            {
+                continue;
+            }
+            final String substitute = SUBSTITUTOR.substitute(entry.getValue().toString());
+            if (!substitute.equals(entry.getValue()))
+            {
+                entry.setValue(substitute);
+            }
+        }
+        return props;
+    }
+
+    private void addProperties(final URL url, final Properties aggregator)
+    {
+        InputStream inStream = null;
+        try
+        {
+            inStream = url.openStream();
+            aggregator.load(inStream);
         }
         catch (final IOException e)
         {
@@ -112,22 +170,6 @@ public class JCSCachingManager implements CacheManager
                 }
             }
         }
-        if (properties != null)
-        {
-            props.putAll(properties);
-        }
-        for (final Map.Entry<Object, Object> entry : props.entrySet()) {
-            if (entry.getValue() == null)
-            {
-                continue;
-            }
-            final String substitute = SUBSTITUTOR.substitute(entry.getValue().toString());
-            if (!substitute.equals(entry.getValue()))
-            {
-                entry.setValue(substitute);
-            }
-        }
-        return props;
     }
 
     private void assertNotClosed()
