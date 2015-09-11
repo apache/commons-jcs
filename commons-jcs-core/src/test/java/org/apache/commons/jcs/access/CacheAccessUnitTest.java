@@ -19,7 +19,12 @@ package org.apache.commons.jcs.access;
  * under the License.
  */
 
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 import junit.framework.TestCase;
+
 import org.apache.commons.jcs.JCS;
 import org.apache.commons.jcs.access.exception.CacheException;
 import org.apache.commons.jcs.access.exception.ObjectExistsException;
@@ -29,12 +34,8 @@ import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.commons.jcs.engine.behavior.IElementAttributes;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
 /**
- * Tests the methods of the cache access class from which the class JCS extends.
+ * Tests the methods of the cache access class.
  * <p>
  * @author Aaron Smuts
  */
@@ -62,7 +63,7 @@ public class CacheAccessUnitTest
         try
         {
             access.putSafe( key, "someothervalue" );
-            fail( "We should have received an eception since this key is alredy in the cache." );
+            fail( "We should have received an exception since this key is already in the cache." );
         }
         catch ( CacheException e )
         {
@@ -71,7 +72,7 @@ public class CacheAccessUnitTest
         }
 
         String returnedValue2 = access.get( key );
-        assertEquals( "Wrong value returned.  Shoudl still be the original.", value, returnedValue2 );
+        assertEquals( "Wrong value returned.  Should still be the original.", value, returnedValue2 );
     }
 
     /**
@@ -94,7 +95,7 @@ public class CacheAccessUnitTest
         }
         catch ( CacheException e )
         {
-            assertTrue( "Should have the work null in the error message.", e.getMessage().indexOf( "null" ) != -1 );
+            assertTrue( "Should have the word null in the error message.", e.getMessage().indexOf( "null" ) != -1 );
         }
     }
 
@@ -118,7 +119,7 @@ public class CacheAccessUnitTest
         }
         catch ( CacheException e )
         {
-            assertTrue( "Should have the work null in the error message.", e.getMessage().indexOf( "null" ) != -1 );
+            assertTrue( "Should have the word null in the error message.", e.getMessage().indexOf( "null" ) != -1 );
         }
     }
 
@@ -223,7 +224,7 @@ public class CacheAccessUnitTest
 
     /**
      * Verify that we can get a region using the define region method with cache attributes and
-     * elemetn attributes.
+     * element attributes.
      * @throws Exception
      */
     public void testRegionDefinitonWithBothAttributes()
@@ -351,52 +352,5 @@ public class CacheAccessUnitTest
             Object value = entry.getValue();
             assertTrue( "Should be a cache element.", value instanceof ICacheElement );
         }
-    }
-
-    /**
-     * Verify we can use the group cache.
-     * <p>
-     * @throws Exception
-     */
-    public void testGroupCache()
-        throws Exception
-    {
-        GroupCacheAccess<String, Integer> access = JCS.getGroupCacheInstance( "testGroup" );
-        String groupName1 = "testgroup1";
-        String groupName2 = "testgroup2";
-
-        Set<String> keys1 = access.getGroupKeys( groupName1 );
-        assertNotNull(keys1);
-        assertEquals(0, keys1.size());
-
-        Set<String> keys2 = access.getGroupKeys( groupName2 );
-        assertNotNull(keys2);
-        assertEquals(0, keys2.size());
-
-        // DO WORK
-        int numToInsertGroup1 = 10;
-        // insert with prefix1
-        for ( int i = 0; i < numToInsertGroup1; i++ )
-        {
-            access.putInGroup(String.valueOf( i ), groupName1, Integer.valueOf( i ) );
-        }
-
-        int numToInsertGroup2 = 50;
-        // insert with prefix1
-        for ( int i = 0; i < numToInsertGroup2; i++ )
-        {
-            access.putInGroup(String.valueOf( i ), groupName2, Integer.valueOf( i + 1 ) );
-        }
-
-        keys1 = access.getGroupKeys( groupName1 ); // Test for JCS-102
-        assertNotNull(keys1);
-        assertEquals("Wrong number returned 1:", 10, keys1.size());
-
-        keys2 = access.getGroupKeys( groupName2 );
-        assertNotNull(keys2);
-        assertEquals("Wrong number returned 2:", 50, keys2.size());
-
-        assertEquals(Integer.valueOf(5), access.getFromGroup("5", groupName1));
-        assertEquals(Integer.valueOf(6), access.getFromGroup("5", groupName2));
     }
 }

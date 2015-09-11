@@ -20,6 +20,9 @@
 	</properties>
 	<body>
         <release version="2.0" date="unreleased" description="JDK 1.6 based major release">
+            <action dev="tv" type="fix">
+                Fix removal of items from group cache, added several tests
+            </action>
             <action dev="tv" type="add">
                 Add orderly shutdown of ThreadPoolManager
             </action>
