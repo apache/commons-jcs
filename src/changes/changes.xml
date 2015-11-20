@@ -20,6 +20,9 @@
 	</properties>
 	<body>
         <release version="2.0" date="unreleased" description="JDK 1.6 based major release">
+            <action issue="JCS-149" dev="tv" type="fix" due-to="Youngho Cho">
+                When reading keys from disk, a StreamCorruptedException happens when a custom serializer is applied
+            </action>
             <action issue="JCS-48" dev="tv" type="update" due-to="Hanasaki Jiji">
                 Replace PoolAccess with a DataSourceFactory model borrowed from DB-Torque
             </action>
