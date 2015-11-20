@@ -24,6 +24,7 @@ import java.sql.SQLException;
 import junit.framework.TestCase;
 
 import org.apache.commons.jcs.auxiliary.disk.jdbc.TableState;
+import org.apache.commons.jcs.auxiliary.disk.jdbc.dsfactory.SharedPoolDataSourceFactory;
 import org.apache.commons.jcs.engine.control.CompositeCacheManager;
 
 /**
@@ -53,11 +54,13 @@ public class MySQLDiskCacheUnitTest
         attributes.setDriverClassName( "org.hsqldb.jdbcDriver" );
         attributes.setTableName( tableName );
         attributes.setBalkDuringOptimization( true );
+        SharedPoolDataSourceFactory dsFactory = new SharedPoolDataSourceFactory();
+        dsFactory.initialize(attributes);
 
         TableState tableState = new TableState( tableName );
         tableState.setState( TableState.OPTIMIZATION_RUNNING );
 
-        MySQLDiskCache<String, String> cache = new MySQLDiskCache<String, String>( attributes, tableState,
+        MySQLDiskCache<String, String> cache = new MySQLDiskCache<String, String>( attributes, dsFactory, tableState,
         		CompositeCacheManager.getUnconfiguredInstance() );
 
         // DO WORK

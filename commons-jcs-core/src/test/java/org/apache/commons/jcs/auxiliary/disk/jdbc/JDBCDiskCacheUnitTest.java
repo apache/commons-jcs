@@ -19,18 +19,23 @@ package org.apache.commons.jcs.auxiliary.disk.jdbc;
  * under the License.
  */
 
-import junit.framework.TestCase;
-import org.apache.commons.jcs.JCS;
-import org.apache.commons.jcs.access.CacheAccess;
-import org.apache.commons.jcs.engine.behavior.ICacheElement;
-import org.apache.commons.jcs.engine.control.MockCompositeCacheManager;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.concurrent.Executors;
+
+import junit.framework.TestCase;
+
+import org.apache.commons.jcs.JCS;
+import org.apache.commons.jcs.access.CacheAccess;
+import org.apache.commons.jcs.auxiliary.disk.jdbc.dsfactory.DataSourceFactory;
+import org.apache.commons.jcs.engine.behavior.ICacheElement;
+import org.apache.commons.jcs.engine.control.MockCompositeCacheManager;
+import org.apache.commons.jcs.utils.serialization.StandardSerializer;
+import org.apache.commons.jcs.utils.threadpool.DaemonThreadFactory;
 
 /**
  * Runs basic tests for the JDBC disk cache.
@@ -156,8 +161,9 @@ public class JDBCDiskCacheUnitTest
         String driverClassName = "org.hsqldb.jdbcDriver";
 
         Properties props = new Properties();
-        String prefix = JDBCDiskCachePoolAccessManager.POOL_CONFIGURATION_PREFIX + poolName
-            + JDBCDiskCachePoolAccessManager.ATTRIBUTE_PREFIX;
+        String prefix = JDBCDiskCacheFactory.POOL_CONFIGURATION_PREFIX
+    		+ poolName
+            + JDBCDiskCacheFactory.ATTRIBUTE_PREFIX;
         props.put( prefix + ".url", url );
         props.put( prefix + ".userName", userName );
         props.put( prefix + ".password", password );
@@ -166,12 +172,24 @@ public class JDBCDiskCacheUnitTest
 
         JDBCDiskCacheAttributes cattr = new JDBCDiskCacheAttributes();
         cattr.setConnectionPoolName( poolName );
+        cattr.setTableName("JCSTESTTABLE_InitializePoolAccess");
 
-        TableState tableState = new TableState( "JCSTESTTABLE_InitializePoolAccess" );
         MockCompositeCacheManager compositeCacheManager = new MockCompositeCacheManager();
         compositeCacheManager.setConfigurationProperties( props );
+        JDBCDiskCacheFactory dcFactory = new JDBCDiskCacheFactory();
+        dcFactory.initialize();
+        dcFactory.setScheduledExecutorService(Executors.newScheduledThreadPool(2,
+        	new DaemonThreadFactory("JCS-JDBCDiskCacheManager-", Thread.MIN_PRIORITY)));
 
-        JDBCDiskCache<String, String> diskCache = new JDBCDiskCache<String, String>( cattr, tableState, compositeCacheManager );
+        JDBCDiskCache<String, String> diskCache = dcFactory.createCache( cattr, compositeCacheManager, null, new StandardSerializer() );
+        assertNotNull( "Should have a cache instance", diskCache );
+
+        // DO WORK
+        DataSourceFactory result = dcFactory.getDataSourceFactory(cattr, props);
+
+        // VERIFY
+        assertNotNull( "Should have a data source factory class", result );
+        assertEquals( "wrong name", poolName, result.getName() );
 
         System.setProperty( "hsqldb.cache_scale", "8" );
 
@@ -184,11 +202,5 @@ public class JDBCDiskCacheUnitTest
 
         HsqlSetupTableUtil.setupTABLE( cConn, "JCSTESTTABLE_InitializePoolAccess" );
 
-        // DO WORK
-        JDBCDiskCachePoolAccess result = diskCache.initializePoolAccess( cattr, compositeCacheManager );
-
-        // VEIFY
-        assertNotNull( "Should have an access class", result );
-        assertEquals( "wrong name", poolName, result.getPoolName() );
     }
 }
