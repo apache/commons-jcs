@@ -19,7 +19,15 @@ package org.apache.commons.jcs.engine.control;
  * under the License.
  */
 
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
 import junit.framework.TestCase;
+
 import org.apache.commons.jcs.JCS;
 import org.apache.commons.jcs.access.CacheAccess;
 import org.apache.commons.jcs.access.exception.CacheException;
@@ -37,13 +45,6 @@ import org.apache.commons.jcs.engine.behavior.IElementAttributes;
 import org.apache.commons.jcs.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;
 import org.apache.commons.jcs.engine.stats.behavior.IStats;
-
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Tests of the disk usage settings for the CompositeCache.
@@ -316,9 +317,6 @@ public class CompositeCacheDiskUsageUnitTest
     public static class MockAuxCache<K extends Serializable, V extends Serializable>
         extends AbstractAuxiliaryCache<K, V>
     {
-        /** Don't change */
-        private static final long serialVersionUID = 1L;
-
         /** The last item passed to update. */
         public ICacheElement<K, V> lastUpdatedItem;
 
