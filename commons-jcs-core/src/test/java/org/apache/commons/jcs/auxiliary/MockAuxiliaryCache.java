@@ -19,14 +19,14 @@ package org.apache.commons.jcs.auxiliary;
  * under the License.
  */
 
-import org.apache.commons.jcs.engine.CacheStatus;
-import org.apache.commons.jcs.engine.behavior.ICacheElement;
-import org.apache.commons.jcs.engine.stats.behavior.IStats;
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+
+import org.apache.commons.jcs.engine.CacheStatus;
+import org.apache.commons.jcs.engine.behavior.ICacheElement;
+import org.apache.commons.jcs.engine.stats.behavior.IStats;
 
 /**
  * Mock auxiliary for unit tests.
@@ -36,9 +36,6 @@ import java.util.Set;
 public class MockAuxiliaryCache<K, V>
     extends AbstractAuxiliaryCache<K, V>
 {
-    /** Don't change */
-    private static final long serialVersionUID = 1L;
-
     /** Can setup the cache type */
     public CacheType cacheType = CacheType.DISK_CACHE;
 
