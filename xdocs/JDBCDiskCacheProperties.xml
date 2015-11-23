@@ -57,14 +57,14 @@
 							added to this value to create the full
 							database url.
 						</td>
-						<td>Y</td>
+						<td>N</td>
 						<td></td>
 					</tr>
 
 					<tr>
 						<td>database</td>
 						<td>This is appended to the url.</td>
-						<td>Y</td>
+						<td>N</td>
 						<td></td>
 					</tr>
 
@@ -74,9 +74,41 @@
 							The class name of the driver to talk to your
 							database.
 						</td>
-						<td>Y</td>
+						<td>N</td>
 						<td></td>
 					</tr>
+
+                    <tr>
+                        <td>userName</td>
+                        <td>The database user name.</td>
+                        <td>N</td>
+                        <td></td>
+                    </tr>
+
+                    <tr>
+                        <td>password</td>
+                        <td>The database user password.</td>
+                        <td>N</td>
+                        <td></td>
+                    </tr>
+
+                    <tr>
+                        <td>jndiPath</td>
+                        <td>
+                            The JNDI lookup path in the form <code>java:comp/env/jdbc/MyDB</code>. 
+                            This entry is preferred over the set of <code>url</code>, <code>driverClassName</code>,
+                            <code>userName</code> and <code>password</code>. 
+                        </td>
+                        <td>N</td>
+                        <td></td>
+                    </tr>
+
+                    <tr>
+                        <td>jndiTTL</td>
+                        <td>The time between two JNDI lookups in ms.</td>
+                        <td>N</td>
+                        <td>0</td>
+                    </tr>
 
 					<tr>
 						<td>tableName</td>
@@ -131,7 +163,7 @@
 
 					<tr>
 						<td>ShrinkerInterval</td>
-						<td>How often should the disk shrinker run.</td>
+						<td>How often should the disk shrinker run (in seconds).</td>
 						<td>N</td>
 						<td>300</td>
 					</tr>
