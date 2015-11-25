@@ -20,6 +20,9 @@
 	</properties>
 	<body>
         <release version="2.0" date="unreleased" description="JDK 1.6 based major release">
+            <action issue="JCS-153" dev="tv" type="fix" due-to="Wiktor Niesiobedzki">
+                Fix file size limitation for Block Disk Cache and Indexed Disk Cache
+            </action>
             <action issue="JCS-149" dev="tv" type="fix" due-to="Youngho Cho">
                 When reading keys from disk, a StreamCorruptedException happens when a custom serializer is applied
             </action>
