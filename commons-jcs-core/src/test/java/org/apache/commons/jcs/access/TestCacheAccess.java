@@ -19,6 +19,14 @@ package org.apache.commons.jcs.access;
  * under the License.
  */
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Random;
+import java.util.StringTokenizer;
+
 import org.apache.commons.jcs.JCS;
 import org.apache.commons.jcs.access.exception.CacheException;
 import org.apache.commons.jcs.engine.ElementAttributes;
@@ -27,14 +35,6 @@ import org.apache.commons.jcs.engine.control.CompositeCacheManager;
 import org.apache.commons.jcs.engine.control.event.ElementEventHandlerMockImpl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Random;
-import java.util.StringTokenizer;
 
 /**
  * Allows the user to run common cache commands from the command line for a test cache. This also
@@ -271,10 +271,7 @@ public class TestCacheAccess
                 }
                 else if ( message.startsWith( "random" ) )
                 {
-                    if ( message.startsWith( "random" ) )
-                    {
-                        processRandom( message );
-                    }
+                    processRandom( message );
                 }
             }
         }

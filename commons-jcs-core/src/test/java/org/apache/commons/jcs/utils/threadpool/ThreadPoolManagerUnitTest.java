@@ -19,12 +19,13 @@ package org.apache.commons.jcs.utils.threadpool;
  * under the License.
  */
 
-import junit.framework.TestCase;
-import org.apache.commons.jcs.utils.props.PropertyLoader;
-import org.apache.commons.jcs.utils.threadpool.PoolConfiguration.WhenBlockedPolicy;
-
 import java.util.ArrayList;
+import java.util.Properties;
 import java.util.concurrent.ThreadPoolExecutor;
+
+import junit.framework.TestCase;
+
+import org.apache.commons.jcs.utils.props.PropertyLoader;
 
 /**
  * Verify that the manager can create pools as intended by the default and
@@ -41,7 +42,8 @@ public class ThreadPoolManagerUnitTest
      */
     public void testDefaultConfig()
     {
-        ThreadPoolManager.setPropsFileName( "thread_pool.properties" );
+        Properties props = PropertyLoader.loadProperties( "thread_pool.properties" );
+        ThreadPoolManager.setProps( props );
         ThreadPoolManager mgr = ThreadPoolManager.getInstance();
         assertNotNull( mgr );
 
@@ -49,16 +51,14 @@ public class ThreadPoolManagerUnitTest
         assertNotNull( pool );
 
         int poolSize = pool.getPoolSize();
-        int expectedPoolSize = Integer.parseInt( PropertyLoader.loadProperties( "thread_pool.properties" )
-            .getProperty( "thread_pool.test1.startUpSize" ) );
+        int expectedPoolSize = Integer.parseInt( props.getProperty( "thread_pool.test1.startUpSize" ) );
         assertEquals( poolSize, expectedPoolSize );
 
         // int qs = ((BoundedBuffer)pool.getQueue()).size();
 
         int max = pool.getMaximumPoolSize();
 
-        int expected = Integer.parseInt( PropertyLoader.loadProperties( "thread_pool.properties" )
-            .getProperty( "thread_pool.test1.maximumPoolSize" ) );
+        int expected = Integer.parseInt( props.getProperty( "thread_pool.test1.maximumPoolSize" ) );
         assertEquals(expected, max );
     }
 
@@ -67,7 +67,8 @@ public class ThreadPoolManagerUnitTest
      */
     public void testDefaultConfigUndefinedPool()
     {
-        ThreadPoolManager.setPropsFileName( "thread_pool.properties" );
+        Properties props = PropertyLoader.loadProperties( "thread_pool.properties" );
+        ThreadPoolManager.setProps( props );
         ThreadPoolManager mgr = ThreadPoolManager.getInstance();
         assertNotNull( mgr );
 
@@ -76,30 +77,7 @@ public class ThreadPoolManagerUnitTest
 
         int max = pool.getMaximumPoolSize();
 
-        int expected = Integer.parseInt( PropertyLoader.loadProperties( "thread_pool.properties" )
-            .getProperty( "thread_pool.default.maximumPoolSize" ) );
-        assertEquals( expected, max );
-    }
-
-    /**
-     * Makes ure we can get a non existent pool from the non exitent config
-     * file.
-     */
-    public void testNonExistentConfigFile()
-    {
-        ThreadPoolManager.setPropsFileName( "somefilethatdoesntexist" );
-        ThreadPoolManager mgr = ThreadPoolManager.getInstance();
-        assertNotNull( mgr );
-
-        ThreadPoolExecutor pool = mgr.getPool( "doesntexist" );
-        assertNotNull( "Should have gotten back a pool configured like the default", pool );
-
-        int max = pool.getMaximumPoolSize();
-
-        // it will load from the default file
-        int expected = Integer.parseInt( PropertyLoader.loadProperties( "cache.ccf" )
-            .getProperty( "thread_pool.default.maximumPoolSize" ) );
-
+        int expected = Integer.parseInt( props.getProperty( "thread_pool.default.maximumPoolSize" ) );
         assertEquals( expected, max );
     }
 
@@ -124,35 +102,6 @@ public class ThreadPoolManagerUnitTest
     }
 
     /**
-     * Verify that the wait policy gets set correctly.
-     *
-     * Switched off as the POLICY_WAIT is not supported by the javax.concurrent package
-     */
-    public void OFFtestWaitPolicyConfig()
-    {
-        ThreadPoolManager.setPropsFileName( "thread_pool.properties" );
-        ThreadPoolManager mgr = ThreadPoolManager.getInstance();
-        // force config from new props file
-        mgr.configure();
-        assertNotNull( mgr );
-
-        ThreadPoolExecutor pool = mgr.getPool( "waittest" );
-        assertNotNull( "Should have gotten back a pool.", pool );
-
-        int max = pool.getMaximumPoolSize();
-
-        // it will load from the default file
-        int expected = Integer.parseInt( PropertyLoader.loadProperties( "thread_pool.properties" )
-            .getProperty( "thread_pool.waittest.maximumPoolSize" ) );
-
-        assertEquals( "Max is wrong", expected, max );
-
-        PoolConfiguration config = mgr.loadConfig( "thread_pool.waittest" );
-
-        assertEquals( "Policy is wrong.", WhenBlockedPolicy.WAIT, config.getWhenBlockedPolicy() );
-    }
-
-    /**
      * Verify that if we specify not to use a buffer boundary that we get a
      * linked queue.
      *
@@ -161,8 +110,6 @@ public class ThreadPoolManagerUnitTest
 //    {
 //        ThreadPoolManager.setPropsFileName( "thread_pool.properties" );
 //        ThreadPoolManager mgr = ThreadPoolManager.getInstance();
-//        // force config from new props file
-//        mgr.configure();
 //        assertNotNull( mgr );
 //
 //        ThreadPoolExecutor pool = mgr.getPool( "nobound" );
@@ -180,8 +127,6 @@ public class ThreadPoolManagerUnitTest
 //        // SETUP
 //        ThreadPoolManager.setPropsFileName( "thread_pool.properties" );
 //        ThreadPoolManager mgr = ThreadPoolManager.getInstance();
-//        // force config from new props file
-//        mgr.configure();
 //        assertNotNull( mgr );
 //
 //        // DO WORK

@@ -19,12 +19,12 @@ package org.apache.commons.jcs;
  * under the License.
  */
 
-import junit.framework.Assert;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import junit.framework.TestCase;
+
 import org.apache.commons.jcs.access.GroupCacheAccess;
 import org.apache.commons.jcs.access.exception.CacheException;
-
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Test Case for JCS-73, modeled after the Groovy code by Alexander Kleymenov
@@ -32,9 +32,11 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author Thomas Vandahl
  *
  */
-public class JCSConcurrentCacheAccessUnitTest
-    extends TestCase
+public class JCSConcurrentCacheAccessUnitTest extends TestCase
 {
+    private final static int THREADS = 10;
+    private final static int LOOPS = 10000;
+
     /**
      * the cache instance
      */
@@ -78,7 +80,7 @@ public class JCSConcurrentCacheAccessUnitTest
 		{
 			String name = getName();
 
-			for (int idx = 0; idx < 10000; idx++)
+			for (int idx = 0; idx < LOOPS; idx++)
 			{
 				if (idx > 0)
 				{
@@ -116,7 +118,7 @@ public class JCSConcurrentCacheAccessUnitTest
 		                }
 		            }
 
-		            Assert.assertEquals("Values do not match", String.valueOf(idx-1), res);
+		            assertEquals("Values do not match", String.valueOf(idx-1), res);
 				}
 
 				 // put value in the cache
@@ -145,15 +147,15 @@ public class JCSConcurrentCacheAccessUnitTest
     public void testConcurrentAccess()
         throws Exception
     {
-    	Worker[] worker = new Worker[10];
+    	Worker[] worker = new Worker[THREADS];
 
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < THREADS; i++)
         {
         	worker[i] = new Worker();
         	worker[i].start();
         }
 
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < THREADS; i++)
         {
         	worker[i].join();
         }
