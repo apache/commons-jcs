@@ -19,10 +19,11 @@ package org.apache.commons.jcs.utils.discovery;
  * under the License.
  */
 
-import junit.framework.TestCase;
-import org.apache.commons.jcs.utils.timing.SleepUtil;
-
 import java.util.ArrayList;
+
+import junit.framework.TestCase;
+
+import org.apache.commons.jcs.utils.timing.SleepUtil;
 
 /**
  * Unit tests for discovery
@@ -44,6 +45,7 @@ public class UDPDiscoveryUnitTest
 
         // create the service
         UDPDiscoveryService service = new UDPDiscoveryService( attributes );
+        service.startup();
         service.addParticipatingCacheName( "testCache1" );
 
         MockDiscoveryListener discoveryListener = new MockDiscoveryListener();

@@ -45,15 +45,14 @@ public class JCSWorkerUnitTest
         JCSWorker<String, Long> cachingWorker = new JCSWorker<String, Long>( "example region" );
 
         // This is the helper.
-        JCSWorkerHelper helper = new AbstractJCSWorkerHelper()
+        JCSWorkerHelper<Long> helper = new AbstractJCSWorkerHelper<Long>()
         {
             int timesCalled = 0;
 
             @Override
-            public Object doWork()
+            public Long doWork()
             {
-                Object results = Long.valueOf( ++timesCalled );
-                return results;
+                return Long.valueOf( ++timesCalled );
             }
         };
 
@@ -65,7 +64,6 @@ public class JCSWorkerUnitTest
         // should get it from the cache.
         Long result2 = cachingWorker.getResult( key, helper );
         assertEquals( "Called the wrong number of times", Long.valueOf( 1 ), result2 );
-
     }
 
 }

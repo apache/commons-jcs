@@ -19,9 +19,9 @@ package org.apache.commons.jcs.utils.discovery;
  * under the License.
  */
 
-import junit.framework.TestCase;
-
 import java.util.ArrayList;
+
+import junit.framework.TestCase;
 
 /** Unit tests for the service. */
 public class UDPDiscoveryServiceUnitTest
@@ -40,6 +40,7 @@ public class UDPDiscoveryServiceUnitTest
 
         // create the service
         UDPDiscoveryService service = new UDPDiscoveryService( attributes );
+        service.startup();
         service.addParticipatingCacheName( "testCache1" );
 
         MockDiscoveryListener discoveryListener = new MockDiscoveryListener();
@@ -74,6 +75,7 @@ public class UDPDiscoveryServiceUnitTest
 
         // create the service
         UDPDiscoveryService service = new UDPDiscoveryService( attributes );
+        service.startup();
         service.addParticipatingCacheName( "testCache1" );
 
         MockDiscoveryListener discoveryListener = new MockDiscoveryListener();
@@ -136,6 +138,7 @@ public class UDPDiscoveryServiceUnitTest
 
         // create the service
         UDPDiscoveryService service = new UDPDiscoveryService( attributes );
+        service.startup();
         service.addParticipatingCacheName( "testCache1" );
 
         MockDiscoveryListener discoveryListener = new MockDiscoveryListener();
@@ -197,6 +200,7 @@ public class UDPDiscoveryServiceUnitTest
 
         // create the service
         UDPDiscoveryService service = new UDPDiscoveryService( attributes );
+        service.startup();
         service.addParticipatingCacheName( "testCache1" );
 
         MockDiscoveryListener discoveryListener = new MockDiscoveryListener();
