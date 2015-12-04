@@ -198,38 +198,47 @@ public class MySQLDiskCacheHsqlBackedUnitTest
 
         try
         {
-            sStatement.executeQuery( createSql.toString() );
-            sStatement.close();
+            sStatement.execute( createSql.toString() );
         }
         catch ( SQLException e )
         {
-            if ( e.toString().indexOf( "already exists" ) != -1 )
+            if ("23000".equals(e.getSQLState()))
             {
                 newT = false;
             }
             else
             {
-                // TODO figure out if it exists prior to trying to create it.
-                // log.error( "Problem creating table.", e );
                 throw e;
             }
         }
-
-        String setupData[] = { "create index iKEY on JCS_STORE_MYSQL (CACHE_KEY, REGION)" };
+        finally
+        {
+            sStatement.close();
+        }
 
         if ( newT )
         {
-            for ( int i = 1; i < setupData.length; i++ )
+            String setupData[] = { "create index iKEY on JCS_STORE_MYSQL (CACHE_KEY, REGION)" };
+            Statement iStatement = cConn.createStatement();
+
+            try
             {
-                try
+                for ( int i = 0; i < setupData.length; i++ )
                 {
-                    sStatement.executeQuery( setupData[i] );
-                }
-                catch ( SQLException e )
-                {
-                    System.out.println( "Exception: " + e );
+                    try
+                    {
+                        iStatement.execute( setupData[i] );
+                    }
+                    catch ( SQLException e )
+                    {
+                        System.out.println( "Exception: " + e );
+                    }
                 }
             }
-        } // end ifnew
+            finally
+            {
+                iStatement.close();
+            }
+        }
     }
 }

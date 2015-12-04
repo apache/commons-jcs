@@ -19,14 +19,14 @@ package org.apache.commons.jcs.auxiliary.disk.block;
  * under the License.
  */
 
+import java.text.DecimalFormat;
+import java.util.Random;
+
 import junit.framework.TestCase;
+
 import org.apache.commons.jcs.JCS;
 import org.apache.commons.jcs.access.CacheAccess;
 import org.apache.commons.jcs.auxiliary.disk.DiskTestObject;
-import org.apache.commons.jcs.utils.timing.ElapsedTimer;
-
-import java.text.DecimalFormat;
-import java.util.Random;
 
 /**
  * This allows you to put thousands of large objects into the disk cache and to force removes to
@@ -66,7 +66,7 @@ public class BlockDiskCacheSteadyLoadTest
 
         CacheAccess<String, DiskTestObject> jcs = JCS.getInstance( ( numPerRun / 2 ) + "aSecond" );
 
-        ElapsedTimer timer = new ElapsedTimer();
+//        ElapsedTimer timer = new ElapsedTimer();
         int numToGet = numPerRun * ( runs / 10 );
         for ( int i = 0; i < numToGet; i++ )
         {
@@ -82,7 +82,7 @@ public class BlockDiskCacheSteadyLoadTest
 //        System.out.println( LOG_DIVIDER );
 //        System.out.println( "Start putting" );
 
-        long totalSize = 0;
+//        long totalSize = 0;
         int totalPut = 0;
 
         Random random = new Random( 89 );
@@ -94,7 +94,7 @@ public class BlockDiskCacheSteadyLoadTest
                 // 1/2 upper to upperKB-4 KB
                 int kiloBytes = Math.max( upperKB / 2, random.nextInt( upperKB ) );
                 int bytes = ( kiloBytes ) * 1024;
-                totalSize += bytes;
+//                totalSize += bytes;
                 totalPut++;
                 DiskTestObject object = new DiskTestObject( Integer.valueOf( i ), new byte[bytes] );
                 jcs.put( String.valueOf( totalPut ), object );

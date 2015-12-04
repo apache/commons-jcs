@@ -19,14 +19,15 @@ package org.apache.commons.jcs.engine.memory.fifo;
  * under the License.
  */
 
+import java.io.IOException;
+
 import junit.framework.TestCase;
+
 import org.apache.commons.jcs.engine.CacheElement;
 import org.apache.commons.jcs.engine.CompositeCacheAttributes;
 import org.apache.commons.jcs.engine.ElementAttributes;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.commons.jcs.engine.control.CompositeCache;
-
-import java.io.IOException;
 
 /** Unit tests for the fifo implementation. */
 public class FIFOMemoryCacheUnitTest
@@ -65,11 +66,11 @@ public class FIFOMemoryCacheUnitTest
 
         // VERIFY
         assertEquals( "Should have max elements", maxObjects, cache.getSize() );
-        for ( int i = maxObjects; i > maxObjects; i-- )
+        for ( int i = maxObjects; i > 0; i-- )
         {
-            assertNotNull( "Shjould have elemnt " + i, cache.get( "key" + i ) );
+            assertNotNull( "Should have element " + i, cache.get( "key" + i ) );
         }
-        assertNotNull( "Shjould have oneMoreElement", cache.get( "onemore" ) );
+        assertNotNull( "Should have oneMoreElement", cache.get( "onemore" ) );
     }
 
     /**
