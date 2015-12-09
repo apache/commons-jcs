@@ -66,7 +66,8 @@ public class FIFOMemoryCacheUnitTest
 
         // VERIFY
         assertEquals( "Should have max elements", maxObjects, cache.getSize() );
-        for ( int i = maxObjects; i > 0; i-- )
+        System.out.println(cache.getKeySet());
+        for ( int i = maxObjects; i > 1; i-- )
         {
             assertNotNull( "Should have element " + i, cache.get( "key" + i ) );
         }
