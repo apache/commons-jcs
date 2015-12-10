@@ -19,6 +19,10 @@ package org.apache.commons.jcs.auxiliary.disk.jdbc.mysql;
  * under the License.
  */
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -27,28 +31,27 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.jcs.JCS;
 import org.apache.commons.jcs.access.CacheAccess;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 /**
  * Runs basic tests for the JDBC disk cache.
  * @author Aaron Smuts
  */
 public class MySQLDiskCacheHsqlBackedUnitTest
-    extends TestCase
 {
     /**
      * Creates the DB
      * <p>
      * @throws Exception
      */
-    public MySQLDiskCacheHsqlBackedUnitTest()
-        throws Exception
+    @BeforeClass
+    public static void setupDatabase() throws Exception
     {
-        super();
         System.setProperty( "hsqldb.cache_scale", "8" );
 
         String rafroot = "target";
@@ -66,7 +69,7 @@ public class MySQLDiskCacheHsqlBackedUnitTest
     /**
      * Test setup
      */
-    @Override
+    @Before
     public void setUp()
     {
         JCS.setConfigFilename( "/TestMySQLDiskCache.ccf" );
@@ -76,6 +79,7 @@ public class MySQLDiskCacheHsqlBackedUnitTest
      * Test the basic JDBC disk cache functionality with a hsql backing.
      * @throws Exception
      */
+    @Test
     public void testSimpleJDBCPutGetWithHSQL()
         throws Exception
     {
@@ -148,6 +152,7 @@ public class MySQLDiskCacheHsqlBackedUnitTest
      * <p>
      * @throws Exception
      */
+    @Test
     public void testPutGetMatchingWithHSQL()
         throws Exception
     {
@@ -176,7 +181,7 @@ public class MySQLDiskCacheHsqlBackedUnitTest
      * SETUP TABLE FOR CACHE
      * @param cConn
      */
-    void setupTABLE( Connection cConn ) throws SQLException
+    private static void setupTABLE( Connection cConn ) throws SQLException
     {
         boolean newT = true;
 

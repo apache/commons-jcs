@@ -56,11 +56,11 @@ public class HsqlSetupTableUtil
 
         try
         {
-            sStatement.executeQuery( createSql.toString() );
+            sStatement.execute( createSql.toString() );
         }
         catch ( SQLException e )
         {
-            if ( e.toString().indexOf( "already exists" ) != -1 )
+            if ("23000".equals(e.getSQLState()))
             {
                 newT = false;
             }
@@ -78,11 +78,11 @@ public class HsqlSetupTableUtil
 
         if ( newT )
         {
-            for ( int i = 1; i < setupData.length; i++ )
+            for ( int i = 0; i < setupData.length; i++ )
             {
                 try
                 {
-                    sStatement.executeQuery( setupData[i] );
+                    sStatement.execute( setupData[i] );
                 }
                 catch ( SQLException e )
                 {

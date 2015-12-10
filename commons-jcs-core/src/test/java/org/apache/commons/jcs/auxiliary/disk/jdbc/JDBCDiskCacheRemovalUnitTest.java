@@ -19,15 +19,16 @@ package org.apache.commons.jcs.auxiliary.disk.jdbc;
  * under the License.
  */
 
-import junit.framework.TestCase;
-import org.apache.commons.jcs.JCS;
-import org.apache.commons.jcs.access.CacheAccess;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Properties;
+
+import junit.framework.TestCase;
+
+import org.apache.commons.jcs.JCS;
+import org.apache.commons.jcs.access.CacheAccess;
 
 /** Tests for the removal functionality. */
 public class JDBCDiskCacheRemovalUnitTest
@@ -136,12 +137,11 @@ public class JDBCDiskCacheRemovalUnitTest
 
         try
         {
-            sStatement.executeQuery( createSql.toString() );
+            sStatement.execute( createSql.toString() );
         }
         catch ( SQLException e )
         {
-            // FIXME: This is unreliable
-            if ( e.toString().indexOf( "already exists" ) != -1 )
+            if ("23000".equals(e.getSQLState()))
             {
                 newT = false;
             }
@@ -159,11 +159,11 @@ public class JDBCDiskCacheRemovalUnitTest
 
         if ( newT )
         {
-            for ( int i = 1; i < setupData.length; i++ )
+            for ( int i = 0; i < setupData.length; i++ )
             {
                 try
                 {
-                    sStatement.executeQuery( setupData[i] );
+                    sStatement.execute( setupData[i] );
                 }
                 catch ( SQLException e )
                 {

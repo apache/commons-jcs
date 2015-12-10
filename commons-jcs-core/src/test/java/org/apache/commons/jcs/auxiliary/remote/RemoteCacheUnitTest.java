@@ -19,7 +19,11 @@ package org.apache.commons.jcs.auxiliary.remote;
  * under the License.
  */
 
+import java.util.HashSet;
+import java.util.Map;
+
 import junit.framework.TestCase;
+
 import org.apache.commons.jcs.auxiliary.MockCacheEventLogger;
 import org.apache.commons.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes;
 import org.apache.commons.jcs.engine.CacheElement;
@@ -28,17 +32,32 @@ import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.engine.behavior.ICacheElementSerialized;
 import org.apache.commons.jcs.utils.serialization.SerializationConversionUtil;
 
-import java.util.HashSet;
-import java.util.Map;
-
 /**
  * Unit Tests for the Remote Cache.
  */
 public class RemoteCacheUnitTest
     extends TestCase
 {
+    private IRemoteCacheAttributes cattr;
+    private MockRemoteCacheService<String, String> service;
+    private MockRemoteCacheListener<String, String> listener;
+    private RemoteCacheMonitor monitor;
+
     /**
-     * Verify that the remote service update method is called. The remote cache serializes the obect
+     * @see junit.framework.TestCase#setUp()
+     */
+    @Override
+    protected void setUp() throws Exception
+    {
+        super.setUp();
+        cattr = new RemoteCacheAttributes();
+        service = new MockRemoteCacheService<String, String>();
+        listener = new MockRemoteCacheListener<String, String>();
+        monitor = new RemoteCacheMonitor();
+    }
+
+    /**
+     * Verify that the remote service update method is called. The remote cache serializes the object
      * first.
      * <p>
      * @throws Exception
@@ -48,12 +67,9 @@ public class RemoteCacheUnitTest
     {
         // SETUP
         long listenerId = 123;
-        IRemoteCacheAttributes cattr = new RemoteCacheAttributes();
-        MockRemoteCacheService<String, String> service = new MockRemoteCacheService<String, String>();
-        MockRemoteCacheListener<String, String> listener = new MockRemoteCacheListener<String, String>();
         listener.setListenerId( listenerId );
 
-        RemoteCache<String, String> remoteCache = new RemoteCache<String, String>( cattr, service, listener );
+        RemoteCache<String, String> remoteCache = new RemoteCache<String, String>( cattr, service, listener, monitor );
 
         String cacheName = "testUpdate";
 
@@ -80,13 +96,10 @@ public class RemoteCacheUnitTest
         throws Exception
     {
         // SETUP
-        IRemoteCacheAttributes cattr = new RemoteCacheAttributes();
         ZombieCacheServiceNonLocal<String, String> zombie = new ZombieCacheServiceNonLocal<String, String>( 10 );
-        MockRemoteCacheService<String, String> service = new MockRemoteCacheService<String, String>();
-        MockRemoteCacheListener<String, String> listener = new MockRemoteCacheListener<String, String>();
 
         // set the zombie
-        RemoteCache<String, String> remoteCache = new RemoteCache<String, String>( cattr, zombie, listener );
+        RemoteCache<String, String> remoteCache = new RemoteCache<String, String>( cattr, zombie, listener, monitor );
 
         String cacheName = "testUpdate";
 
@@ -113,12 +126,7 @@ public class RemoteCacheUnitTest
     public void testUpdate_simple()
         throws Exception
     {
-        // SETUP
-        IRemoteCacheAttributes cattr = new RemoteCacheAttributes();
-        MockRemoteCacheService<String, String> service = new MockRemoteCacheService<String, String>();
-        MockRemoteCacheListener<String, String> listener = new MockRemoteCacheListener<String, String>();
-
-        RemoteCache<String, String> remoteCache = new RemoteCache<String, String>( cattr, service, listener );
+        RemoteCache<String, String> remoteCache = new RemoteCache<String, String>( cattr, service, listener, monitor );
 
         MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
         remoteCache.setCacheEventLogger( cacheEventLogger );
@@ -141,12 +149,7 @@ public class RemoteCacheUnitTest
     public void testGet_simple()
         throws Exception
     {
-        // SETUP
-        IRemoteCacheAttributes cattr = new RemoteCacheAttributes();
-        MockRemoteCacheService<String, String> service = new MockRemoteCacheService<String, String>();
-        MockRemoteCacheListener<String, String> listener = new MockRemoteCacheListener<String, String>();
-
-        RemoteCache<String, String> remoteCache = new RemoteCache<String, String>( cattr, service, listener );
+        RemoteCache<String, String> remoteCache = new RemoteCache<String, String>( cattr, service, listener, monitor );
 
         MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
         remoteCache.setCacheEventLogger( cacheEventLogger );
@@ -167,12 +170,7 @@ public class RemoteCacheUnitTest
     public void testGetMultiple_simple()
         throws Exception
     {
-        // SETUP
-        IRemoteCacheAttributes cattr = new RemoteCacheAttributes();
-        MockRemoteCacheService<String, String> service = new MockRemoteCacheService<String, String>();
-        MockRemoteCacheListener<String, String> listener = new MockRemoteCacheListener<String, String>();
-
-        RemoteCache<String, String> remoteCache = new RemoteCache<String, String>( cattr, service, listener );
+        RemoteCache<String, String> remoteCache = new RemoteCache<String, String>( cattr, service, listener, monitor );
 
         MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
         remoteCache.setCacheEventLogger( cacheEventLogger );
@@ -193,12 +191,7 @@ public class RemoteCacheUnitTest
     public void testRemove_simple()
         throws Exception
     {
-        // SETUP
-        IRemoteCacheAttributes cattr = new RemoteCacheAttributes();
-        MockRemoteCacheService<String, String> service = new MockRemoteCacheService<String, String>();
-        MockRemoteCacheListener<String, String> listener = new MockRemoteCacheListener<String, String>();
-
-        RemoteCache<String, String> remoteCache = new RemoteCache<String, String>( cattr, service, listener );
+        RemoteCache<String, String> remoteCache = new RemoteCache<String, String>( cattr, service, listener, monitor );
 
         MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
         remoteCache.setCacheEventLogger( cacheEventLogger );
@@ -219,12 +212,7 @@ public class RemoteCacheUnitTest
     public void testRemoveAll_simple()
         throws Exception
     {
-        // SETUP
-        IRemoteCacheAttributes cattr = new RemoteCacheAttributes();
-        MockRemoteCacheService<String, String> service = new MockRemoteCacheService<String, String>();
-        MockRemoteCacheListener<String, String> listener = new MockRemoteCacheListener<String, String>();
-
-        RemoteCache<String, String> remoteCache = new RemoteCache<String, String>( cattr, service, listener );
+        RemoteCache<String, String> remoteCache = new RemoteCache<String, String>( cattr, service, listener, monitor );
 
         MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
         remoteCache.setCacheEventLogger( cacheEventLogger );
@@ -247,11 +235,8 @@ public class RemoteCacheUnitTest
     {
         // SETUP
         String pattern = "adsfasdfasd.?";
-        IRemoteCacheAttributes cattr = new RemoteCacheAttributes();
-        MockRemoteCacheService<String, String> service = new MockRemoteCacheService<String, String>();
-        MockRemoteCacheListener<String, String> listener = new MockRemoteCacheListener<String, String>();
 
-        RemoteCache<String, String> remoteCache = new RemoteCache<String, String>( cattr, service, listener );
+        RemoteCache<String, String> remoteCache = new RemoteCache<String, String>( cattr, service, listener, monitor );
 
         MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
         remoteCache.setCacheEventLogger( cacheEventLogger );
@@ -273,12 +258,7 @@ public class RemoteCacheUnitTest
     public void testDispose_simple()
         throws Exception
     {
-        // SETUP
-        IRemoteCacheAttributes cattr = new RemoteCacheAttributes();
-        MockRemoteCacheService<String, String> service = new MockRemoteCacheService<String, String>();
-        MockRemoteCacheListener<String, String> listener = new MockRemoteCacheListener<String, String>();
-
-        RemoteCache<String, String> remoteCache = new RemoteCache<String, String>( cattr, service, listener );
+        RemoteCache<String, String> remoteCache = new RemoteCache<String, String>( cattr, service, listener, monitor );
 
         MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
         remoteCache.setCacheEventLogger( cacheEventLogger );
@@ -300,11 +280,7 @@ public class RemoteCacheUnitTest
         throws Exception
     {
         // SETUP
-        IRemoteCacheAttributes cattr = new RemoteCacheAttributes();
-        MockRemoteCacheService<String, String> service = new MockRemoteCacheService<String, String>();
-        MockRemoteCacheListener<String, String> listener = null;
-
-        RemoteCache<String, String> remoteCache = new RemoteCache<String, String>( cattr, service, listener );
+        RemoteCache<String, String> remoteCache = new RemoteCache<String, String>( cattr, service, null, monitor );
 
         MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
         remoteCache.setCacheEventLogger( cacheEventLogger );

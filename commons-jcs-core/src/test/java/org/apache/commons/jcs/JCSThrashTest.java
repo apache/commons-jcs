@@ -19,16 +19,17 @@ package org.apache.commons.jcs;
  * under the License.
  */
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
 import junit.framework.TestCase;
+
 import org.apache.commons.jcs.access.CacheAccess;
 import org.apache.commons.jcs.engine.stats.behavior.IStatElement;
 import org.apache.commons.jcs.engine.stats.behavior.IStats;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * This is based on a test that was posted to the user's list:
@@ -321,6 +322,7 @@ public class JCSThrashTest
                     if ( listSize.equals( statElement.getName() ) )
                     {
                         result = statElement.getData().toString();
+                        break;
                     }
                 }
             }

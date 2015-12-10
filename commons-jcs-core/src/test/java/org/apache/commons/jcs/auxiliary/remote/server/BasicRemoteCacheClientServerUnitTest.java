@@ -19,10 +19,16 @@ package org.apache.commons.jcs.auxiliary.remote.server;
  * under the License.
  */
 
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.util.Enumeration;
+
 import org.apache.commons.jcs.auxiliary.AuxiliaryCache;
 import org.apache.commons.jcs.auxiliary.MockCacheEventLogger;
 import org.apache.commons.jcs.auxiliary.remote.MockRemoteCacheListener;
 import org.apache.commons.jcs.auxiliary.remote.RemoteCacheAttributes;
+import org.apache.commons.jcs.auxiliary.remote.RemoteCacheFactory;
 import org.apache.commons.jcs.auxiliary.remote.RemoteCacheManager;
 import org.apache.commons.jcs.engine.CacheElement;
 import org.apache.commons.jcs.engine.CacheStatus;
@@ -38,11 +44,6 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.util.Enumeration;
-
 /**
  * These tests startup the remote server and make requests to it.
  * <p/>
@@ -56,6 +57,11 @@ public class BasicRemoteCacheClientServerUnitTest extends Assert
      * Server instance to use in the tests.
      */
     private static RemoteCacheServer<String, String> server = null;
+
+    /**
+     * Factory instance to use in the tests.
+     */
+    private static RemoteCacheFactory factory = null;
 
     /**
      * the remote server port
@@ -85,7 +91,7 @@ public class BasicRemoteCacheClientServerUnitTest extends Assert
                     boolean loopbackAddress = inetAddr.isLoopbackAddress();
                     boolean siteLocalAddress = inetAddr.isSiteLocalAddress();
                     System.out.println("Found: "+ inetAddr +
-                            " isLoopback: " + loopbackAddress + 
+                            " isLoopback: " + loopbackAddress +
                             " isSiteLocal: " + siteLocalAddress +
                             ((!loopbackAddress && siteLocalAddress) ? " *" : ""));
                 }
@@ -96,7 +102,9 @@ public class BasicRemoteCacheClientServerUnitTest extends Assert
         // end of debug
         String configFile = "TestRemoteCacheClientServer.ccf";
         server = RemoteCacheServerStartupUtil.startServerUsingProperties(configFile);
-        remotePort = server.remoteCacheServerAttributes.getRemotePort();
+        factory = new RemoteCacheFactory();
+        factory.initialize();
+        remotePort = server.remoteCacheServerAttributes.getRemoteLocation().getPort();
     }
 
     @AfterClass
@@ -133,11 +141,10 @@ public class BasicRemoteCacheClientServerUnitTest extends Assert
         MockCompositeCacheManager compositeCacheManager = new MockCompositeCacheManager();
 
         RemoteCacheAttributes attributes = new RemoteCacheAttributes();
-        attributes.setRemoteHost("localhost");
+        attributes.setRemoteLocation("localhost", remotePort);
         attributes.setLocalPort(1202);
-        attributes.setRemotePort(remotePort);
 
-        RemoteCacheManager remoteCacheManager = RemoteCacheManager.getInstance(attributes, compositeCacheManager, new MockCacheEventLogger(), new MockElementSerializer());
+        RemoteCacheManager remoteCacheManager = RemoteCacheFactory.getManager(attributes, compositeCacheManager, new MockCacheEventLogger(), new MockElementSerializer());
         String regionName = "testSinglePut";
         AuxiliaryCache<String, String> cache = remoteCacheManager.getCache(regionName);
 
@@ -181,13 +188,12 @@ public class BasicRemoteCacheClientServerUnitTest extends Assert
         MockCompositeCacheManager compositeCacheManager = new MockCompositeCacheManager();
 
         RemoteCacheAttributes attributes = new RemoteCacheAttributes();
-        attributes.setRemoteHost("localhost");
+        attributes.setRemoteLocation("localhost", remotePort);
         attributes.setLocalPort(1202);
-        attributes.setRemotePort(remotePort);
 
         MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
 
-        RemoteCacheManager remoteCacheManager = RemoteCacheManager.getInstance(attributes, compositeCacheManager, cacheEventLogger, null);
+        RemoteCacheManager remoteCacheManager = RemoteCacheFactory.getManager(attributes, compositeCacheManager, cacheEventLogger, null);
         String regionName = "testPutRemove";
         AuxiliaryCache<String, String> cache = remoteCacheManager.getCache(regionName);
 
@@ -238,11 +244,10 @@ public class BasicRemoteCacheClientServerUnitTest extends Assert
         MockCompositeCacheManager compositeCacheManager = new MockCompositeCacheManager();
 
         RemoteCacheAttributes attributes = new RemoteCacheAttributes();
-        attributes.setRemoteHost("localhost");
+        attributes.setRemoteLocation("localhost", remotePort);
         attributes.setLocalPort(1202);
-        attributes.setRemotePort(remotePort);
 
-        RemoteCacheManager remoteCacheManager = RemoteCacheManager.getInstance(attributes, compositeCacheManager, new MockCacheEventLogger(), new MockElementSerializer());
+        RemoteCacheManager remoteCacheManager = RemoteCacheFactory.getManager(attributes, compositeCacheManager, new MockCacheEventLogger(), new MockElementSerializer());
         String regionName = "testPutAndListen";
         AuxiliaryCache<String, String> cache = remoteCacheManager.getCache(regionName);
 
@@ -288,11 +293,10 @@ public class BasicRemoteCacheClientServerUnitTest extends Assert
         MockCompositeCacheManager compositeCacheManager = new MockCompositeCacheManager();
 
         RemoteCacheAttributes attributes = new RemoteCacheAttributes();
-        attributes.setRemoteHost("localhost");
+        attributes.setRemoteLocation("localhost", remotePort);
         attributes.setLocalPort(1202);
-        attributes.setRemotePort(remotePort);
 
-        RemoteCacheManager remoteCacheManager = RemoteCacheManager.getInstance(attributes, compositeCacheManager, new MockCacheEventLogger(), new MockElementSerializer());
+        RemoteCacheManager remoteCacheManager = RemoteCacheFactory.getManager(attributes, compositeCacheManager, new MockCacheEventLogger(), new MockElementSerializer());
         String regionName = "testPutaMultipleAndListen";
         AuxiliaryCache<String, String> cache = remoteCacheManager.getCache(regionName);
 

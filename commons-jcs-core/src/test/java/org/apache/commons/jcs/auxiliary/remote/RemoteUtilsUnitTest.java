@@ -51,21 +51,15 @@ public class RemoteUtilsUnitTest
 
     public void testParseServerAndPort()
     {
-        RemoteCacheAttributes rca = new RemoteCacheAttributes();
+        RemoteLocation loc = RemoteLocation.parseServerAndPort("server1:1234");
+        assertEquals("server1", loc.getHost());
+        assertEquals(1234, loc.getPort());
 
-        RemoteUtils.parseServerAndPort("server1:1234", rca);
-        assertEquals("server1", rca.getRemoteHost());
-        assertEquals(1234, rca.getRemotePort());
+        loc = RemoteLocation.parseServerAndPort("  server2  :  4567  ");
+        assertEquals("server2", loc.getHost());
+        assertEquals(4567, loc.getPort());
 
-        RemoteUtils.parseServerAndPort("  server2  :  4567  ", rca);
-        assertEquals("server2", rca.getRemoteHost());
-        assertEquals(4567, rca.getRemotePort());
-
-        rca.setRemoteHost("");
-        rca.setRemotePort(0);
-        // Should not change anything
-        RemoteUtils.parseServerAndPort("server2  :  port", rca);
-        assertEquals("", rca.getRemoteHost());
-        assertEquals(0, rca.getRemotePort());
+        loc = RemoteLocation.parseServerAndPort("server2  :  port");
+        assertNull(loc);
     }
 }

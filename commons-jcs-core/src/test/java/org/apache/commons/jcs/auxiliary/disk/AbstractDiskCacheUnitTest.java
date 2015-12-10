@@ -100,7 +100,7 @@ public class AbstractDiskCacheUnitTest
         diskCache.dispose();
 
         // VERIFY
-        assertFalse( "disk cache should not be alive.", diskCache.alive );
+        assertFalse( "disk cache should not be alive.", diskCache.isAlive() );
         assertEquals( "Status should be disposed", CacheStatus.DISPOSED, diskCache.getStatus() );
     }
 
@@ -186,7 +186,7 @@ public class AbstractDiskCacheUnitTest
         {
             super( attr );
             diskCacheAttributes = attr;
-            super.alive = true;
+            setAlive(true);
         }
 
         /**

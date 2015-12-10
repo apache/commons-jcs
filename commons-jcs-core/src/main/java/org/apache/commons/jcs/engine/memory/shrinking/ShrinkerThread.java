@@ -19,6 +19,8 @@ package org.apache.commons.jcs.engine.memory.shrinking;
  * under the License.
  */
 
+import java.util.Set;
+
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.engine.behavior.IElementAttributes;
 import org.apache.commons.jcs.engine.control.CompositeCache;
@@ -26,8 +28,6 @@ import org.apache.commons.jcs.engine.control.event.behavior.ElementEventType;
 import org.apache.commons.jcs.engine.memory.behavior.IMemoryCache;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import java.util.Set;
 
 /**
  * A background memory shrinker. Memory problems and concurrent modification exception caused by
@@ -201,7 +201,6 @@ public class ShrinkerThread<K, V>
                         // stop processing if limit has been reached.
                         if ( spoolLimit && spoolCount >= this.maxSpoolPerRun )
                         {
-                            keys = null;
                             return;
                         }
                     }

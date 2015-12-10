@@ -20,6 +20,7 @@ package org.apache.commons.jcs.auxiliary.remote;
  */
 
 import junit.framework.TestCase;
+
 import org.apache.commons.jcs.JCS;
 import org.apache.commons.jcs.access.CacheAccess;
 import org.apache.commons.jcs.auxiliary.AuxiliaryCache;
@@ -104,10 +105,9 @@ public class TestRemoteCache
         ICompositeCacheManager cacheMgr = new MockCompositeCacheManager();
 
         RemoteCacheAttributes rca = new RemoteCacheAttributes();
-        rca.setRemoteHost( "localhost" );
-        rca.setRemotePort( 1101 );
+        rca.setRemoteLocation( "localhost", 1101 );
 
-        RemoteCacheManager mgr = RemoteCacheManager.getInstance( rca, cacheMgr, new MockCacheEventLogger(), new MockElementSerializer() );
+        RemoteCacheManager mgr = RemoteCacheFactory.getManager( rca, cacheMgr, new MockCacheEventLogger(), new MockElementSerializer() );
         AuxiliaryCache<String, String> cache = mgr.getCache( "testCache" );
 
         int numMes = 100;

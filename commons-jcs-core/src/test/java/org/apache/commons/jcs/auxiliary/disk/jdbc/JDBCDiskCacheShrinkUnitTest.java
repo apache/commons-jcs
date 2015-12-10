@@ -19,11 +19,8 @@ package org.apache.commons.jcs.auxiliary.disk.jdbc;
  * under the License.
  */
 
-import junit.framework.TestCase;
-import org.apache.commons.jcs.JCS;
-import org.apache.commons.jcs.access.CacheAccess;
-import org.apache.commons.jcs.access.exception.CacheException;
-import org.apache.commons.jcs.utils.timing.SleepUtil;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -31,29 +28,29 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Properties;
 
+import org.apache.commons.jcs.JCS;
+import org.apache.commons.jcs.access.CacheAccess;
+import org.apache.commons.jcs.access.exception.CacheException;
+import org.apache.commons.jcs.utils.timing.SleepUtil;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
 /**
  * Runs basic tests for the JDBC disk cache.
  * <p>
  * @author Aaron Smuts
  */
 public class JDBCDiskCacheShrinkUnitTest
-    extends TestCase
 {
-
     /**
-     * Test setup
+     * Creates the DB
      * <p>
-     * @throws ClassNotFoundException
-     * @throws IllegalAccessException
-     * @throws InstantiationException
-     * @throws SQLException
+     * @throws Exception
      */
-    @Override
-    public void setUp()
-        throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException
+    @BeforeClass
+    public static void setupDatabase() throws Exception
     {
-        JCS.setConfigFilename( "/TestJDBCDiskCacheShrink.ccf" );
-
         System.setProperty( "hsqldb.cache_scale", "8" );
 
         String rafroot = "target";
@@ -72,11 +69,21 @@ public class JDBCDiskCacheShrinkUnitTest
     }
 
     /**
+     * Test setup
+     */
+    @Before
+    public void setUp()
+    {
+        JCS.setConfigFilename( "/TestJDBCDiskCacheShrink.ccf" );
+    }
+
+    /**
      * Test the basic JDBC disk cache functionality with a hsql backing. Verify that items
      * configured to expire after 1 second actually expire.
      * <p>
      * @throws Exception
      */
+    @Test
     public void testExpireInBackground()
         throws Exception
     {
@@ -114,6 +121,7 @@ public class JDBCDiskCacheShrinkUnitTest
      * @throws CacheException
      * @throws InterruptedException
      */
+    @Test
     public void testDidNotExpire()
         throws CacheException, InterruptedException
     {
@@ -166,6 +174,7 @@ public class JDBCDiskCacheShrinkUnitTest
      * @throws CacheException
      * @throws InterruptedException
      */
+    @Test
     public void testDidNotExpireEternal()
         throws CacheException, InterruptedException
     {
@@ -219,7 +228,7 @@ public class JDBCDiskCacheShrinkUnitTest
      *
      * @throws SQLException if database problems occur
      */
-    void setupTABLE( Connection cConn ) throws SQLException
+    private static void setupTABLE( Connection cConn ) throws SQLException
     {
         boolean newT = true;
 
@@ -241,11 +250,11 @@ public class JDBCDiskCacheShrinkUnitTest
 
         try
         {
-            sStatement.executeQuery( createSql.toString() );
+            sStatement.execute( createSql.toString() );
         }
         catch ( SQLException e )
         {
-            if ( e.toString().indexOf( "already exists" ) != -1 )
+            if ("23000".equals(e.getSQLState()))
             {
                 newT = false;
             }
@@ -263,11 +272,11 @@ public class JDBCDiskCacheShrinkUnitTest
 
         if ( newT )
         {
-            for ( int i = 1; i < setupData.length; i++ )
+            for ( int i = 0; i < setupData.length; i++ )
             {
                 try
                 {
-                    sStatement.executeQuery( setupData[i] );
+                    sStatement.execute( setupData[i] );
                 }
                 catch ( SQLException e )
                 {
