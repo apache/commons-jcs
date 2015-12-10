@@ -246,7 +246,7 @@ public class TestCacheAccess
                         long n_start = System.currentTimeMillis();
                         for ( int n = 0; n < num; n++ )
                         {
-                            attrp.copy();
+                            attrp.clone();
                         }
                         long n_end = System.currentTimeMillis();
                         p( "---cloned attr " + num + " in " + String.valueOf( n_end - n_start ) + " millis ---" );

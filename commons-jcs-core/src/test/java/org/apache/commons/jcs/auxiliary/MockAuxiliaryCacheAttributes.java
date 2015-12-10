@@ -26,15 +26,4 @@ public class MockAuxiliaryCacheAttributes
     /** Don't change. */
     private static final long serialVersionUID = 1091238902450504108L;
 
-    /**
-     * Doesn't really copy
-     * <p>
-     * @return this
-     */
-    @Override
-    public AuxiliaryCacheAttributes copy()
-    {
-        return this;
-    }
-
 }

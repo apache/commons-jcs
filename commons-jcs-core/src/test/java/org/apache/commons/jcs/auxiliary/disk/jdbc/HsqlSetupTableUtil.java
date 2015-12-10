@@ -39,7 +39,7 @@ public class HsqlSetupTableUtil
         boolean newT = true;
 
         StringBuilder createSql = new StringBuilder();
-        createSql.append( "CREATE CACHED TABLE " + tableName + " " );
+        createSql.append( "CREATE CACHED TABLE ").append( tableName );
         createSql.append( "( " );
         createSql.append( "CACHE_KEY             VARCHAR(250)          NOT NULL, " );
         createSql.append( "REGION                VARCHAR(250)          NOT NULL, " );
