@@ -237,7 +237,7 @@ public class JCSCache<K, V> implements Cache<K, V>
     private ICacheElement<K, V> updateElement(final K key, final V v, final Duration duration)
     {
         final ICacheElement<K, V> element = new CacheElement<K, V>(name, key, v);
-        final IElementAttributes copy = delegate.getElementAttributes().copy();
+        final IElementAttributes copy = delegate.getElementAttributes().clone();
         if (duration != null)
         {
             copy.setTimeFactorForMilliseconds(1);
