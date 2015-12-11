@@ -76,7 +76,7 @@ public class HsqlSetupTableUtil
 
         if ( newT )
         {
-            String setupData[] = { "create index iKEY on JCS_STORE2 (CACHE_KEY, REGION)" };
+            String setupData[] = { "create index iKEY on " + tableName + " (CACHE_KEY, REGION)" };
             Statement iStatement = cConn.createStatement();
 
             try
