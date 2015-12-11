@@ -74,20 +74,28 @@ public class HsqlSetupTableUtil
             sStatement.close();
         }
 
-        String setupData[] = { "create index iKEY on JCS_STORE2 (CACHE_KEY, REGION)" };
-
         if ( newT )
         {
-            for ( int i = 0; i < setupData.length; i++ )
+            String setupData[] = { "create index iKEY on JCS_STORE2 (CACHE_KEY, REGION)" };
+            Statement iStatement = cConn.createStatement();
+
+            try
             {
-                try
+                for ( int i = 0; i < setupData.length; i++ )
                 {
-                    sStatement.execute( setupData[i] );
+                    try
+                    {
+                        iStatement.execute( setupData[i] );
+                    }
+                    catch ( SQLException e )
+                    {
+                        System.out.println( "Exception: " + e );
+                    }
                 }
-                catch ( SQLException e )
-                {
-                    System.out.println( "Exception: " + e );
-                }
+            }
+            finally
+            {
+                iStatement.close();
             }
         }
     }
