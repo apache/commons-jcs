@@ -19,34 +19,39 @@ package org.apache.commons.jcs.auxiliary.disk.file;
  * under the License.
  */
 
-import org.apache.commons.jcs.auxiliary.disk.AbstractDiskCacheManager;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
 import org.apache.commons.jcs.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import java.io.Serializable;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 /**
  * This is a non singleton. It creates caches on a per region basis.
  */
 public class FileDiskCacheManager
-    extends AbstractDiskCacheManager
 {
-    /** Don't change */
-    private static final long serialVersionUID = -4153287154512264626L;
-
     /** The logger */
     private static final Log log = LogFactory.getLog( FileDiskCacheManager.class );
 
     /** Each region has an entry here. */
-    private final Map<String, FileDiskCache<? extends Serializable, ? extends Serializable>> caches =
-        new ConcurrentHashMap<String, FileDiskCache<? extends Serializable, ? extends Serializable>>();
+    private final ConcurrentMap<String, FileDiskCache<?, ?>> caches =
+        new ConcurrentHashMap<String, FileDiskCache<?, ?>>();
+
+    /** Lock cache initialization */
+    private final Lock lock = new ReentrantLock();
 
     /** User configurable attributes */
     private final FileDiskCacheAttributes defaultCacheAttributes;
+
+    /** Event logger */
+    private final ICacheEventLogger eventLogger;
+
+    /** Custom serializer */
+    private final IElementSerializer elementSerializer;
 
     /**
      * Constructor for the DiskFileCacheManager object
@@ -59,8 +64,8 @@ public class FileDiskCacheManager
                                   IElementSerializer elementSerializer )
     {
         this.defaultCacheAttributes = defaultCacheAttributes;
-        setElementSerializer( elementSerializer );
-        setCacheEventLogger( cacheEventLogger );
+        this.elementSerializer = elementSerializer;
+        this.eventLogger = cacheEventLogger;
     }
 
     /**
@@ -69,10 +74,9 @@ public class FileDiskCacheManager
      * @param cacheName Name that will be used when creating attributes.
      * @return A cache.
      */
-    @Override
-    public <K extends Serializable, V extends Serializable> FileDiskCache<K, V> getCache( String cacheName )
+    public <K, V> FileDiskCache<K, V> getCache( String cacheName )
     {
-        FileDiskCacheAttributes cacheAttributes = (FileDiskCacheAttributes) defaultCacheAttributes.copy();
+        FileDiskCacheAttributes cacheAttributes = (FileDiskCacheAttributes) defaultCacheAttributes.clone();
 
         cacheAttributes.setCacheName( cacheName );
 
@@ -86,7 +90,8 @@ public class FileDiskCacheManager
      * @param cacheAttributes Attributes the cache should have.
      * @return A cache, either from the existing set or newly created.
      */
-    public <K extends Serializable, V extends Serializable> FileDiskCache<K, V> getCache( FileDiskCacheAttributes cacheAttributes )
+    @SuppressWarnings("unchecked") // Need to cast because of common map for all caches
+    public <K, V> FileDiskCache<K, V> getCache( FileDiskCacheAttributes cacheAttributes )
     {
         FileDiskCache<K, V> cache = null;
 
@@ -94,23 +99,30 @@ public class FileDiskCacheManager
 
         log.debug( "Getting cache named: " + cacheName );
 
-        synchronized ( caches )
+        // Try to load the cache from the set that have already been
+        // created. This only looks at the name attribute.
+        cache = (FileDiskCache<K, V>) caches.get( cacheName );
+
+        if (cache == null)
         {
-            // Try to load the cache from the set that have already been
-            // created. This only looks at the name attribute.
+            lock.lock();
 
-            @SuppressWarnings("unchecked") // Need to cast because of common map for all caches
-            FileDiskCache<K, V> fileDiskCache = (FileDiskCache<K, V>) caches.get( cacheName );
-            cache = fileDiskCache;
-
-            // If it was not found, create a new one using the supplied
-            // attributes
-
-            if ( cache == null )
+            try
             {
-                cache = new FileDiskCache<K, V>( cacheAttributes, getElementSerializer() );
-                cache.setCacheEventLogger( getCacheEventLogger() );
-                caches.put( cacheName, cache );
+                cache = (FileDiskCache<K, V>) caches.get( cacheName );
+
+                // If it was not found, create a new one using the supplied
+                // attributes
+                if ( cache == null )
+                {
+                    cache = new FileDiskCache<K, V>( cacheAttributes, elementSerializer );
+                    cache.setCacheEventLogger( eventLogger );
+                    caches.put( cacheName, cache );
+                }
+            }
+            finally
+            {
+                lock.unlock();
             }
         }
 

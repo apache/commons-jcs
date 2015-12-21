@@ -19,7 +19,6 @@ package org.apache.commons.jcs.auxiliary.disk.file;
  * under the License.
  */
 
-import org.apache.commons.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.commons.jcs.auxiliary.disk.AbstractDiskCacheAttributes;
 
 /**
@@ -58,25 +57,6 @@ public class FileDiskCacheAttributes
      * removed.
      */
     private boolean touchOnGet = DEFAULT_TOUCH_ON_GET;
-
-    /**
-     * Returns a copy of the attributes.
-     * <p>
-     * @return AuxiliaryCacheAttributes
-     */
-    @Override
-    public AuxiliaryCacheAttributes copy()
-    {
-        try
-        {
-            return (AuxiliaryCacheAttributes) this.clone();
-        }
-        catch ( Exception e )
-        {
-            // swallow
-        }
-        return this;
-    }
 
     /**
      * @param maxNumberOfFiles the maxNumberOfFiles to set

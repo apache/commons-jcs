@@ -27,8 +27,6 @@ import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import java.io.Serializable;
-
 /** Create Disk File Caches */
 public class FileDiskCacheFactory
     implements AuxiliaryCacheFactory
@@ -54,7 +52,7 @@ public class FileDiskCacheFactory
      * @return AuxiliaryCache
      */
     @Override
-    public <K extends Serializable, V extends Serializable> FileDiskCache<K, V> createCache(
+    public <K, V> FileDiskCache<K, V> createCache(
             AuxiliaryCacheAttributes attr, ICompositeCacheManager cacheMgr,
            ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer )
     {
@@ -97,5 +95,25 @@ public class FileDiskCacheFactory
     public void setName( String name )
     {
         this.name = name;
+    }
+
+    /**
+     * @see org.apache.commons.jcs.auxiliary.AuxiliaryCacheFactory#initialize()
+     */
+    @Override
+    public void initialize()
+    {
+        // TODO Auto-generated method stub
+
+    }
+
+    /**
+     * @see org.apache.commons.jcs.auxiliary.AuxiliaryCacheFactory#dispose()
+     */
+    @Override
+    public void dispose()
+    {
+        // TODO Auto-generated method stub
+
     }
 }

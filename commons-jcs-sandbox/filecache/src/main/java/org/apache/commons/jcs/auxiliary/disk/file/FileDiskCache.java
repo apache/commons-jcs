@@ -19,6 +19,16 @@ package org.apache.commons.jcs.auxiliary.disk.file;
  * under the License.
  */
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Map;
+import java.util.Set;
+
 import org.apache.commons.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.commons.jcs.auxiliary.disk.AbstractDiskCache;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
@@ -29,17 +39,6 @@ import org.apache.commons.jcs.utils.timing.SleepUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.Serializable;
-import java.util.Map;
-import java.util.Set;
-
 /**
  * This disk cache writes each item to a separate file. This is for regions with very few items,
  * perhaps big ones.
@@ -47,12 +46,9 @@ import java.util.Set;
  * This is a fairly simple implementation. All the disk writing is handled right here. It's not
  * clear that anything more complicated is needed.
  */
-public class FileDiskCache<K extends Serializable, V extends Serializable>
+public class FileDiskCache<K, V>
     extends AbstractDiskCache<K, V>
 {
-    /** Don't change */
-    private static final long serialVersionUID = 1L;
-
     /** The logger. */
     private static final Log log = LogFactory.getLog( FileDiskCache.class );
 
@@ -88,7 +84,7 @@ public class FileDiskCache<K extends Serializable, V extends Serializable>
         setElementSerializer( elementSerializer );
         this.diskFileCacheAttributes = cattr;
         this.logCacheName = "Region [" + getCacheName() + "] ";
-        alive = initializeFileSystem( cattr );
+        setAlive(initializeFileSystem( cattr ));
     }
 
     /**
@@ -126,7 +122,7 @@ public class FileDiskCache<K extends Serializable, V extends Serializable>
      * @param key
      * @return the file for the key
      */
-    protected <KK extends Serializable> File file( KK key )
+    protected <KK> File file( KK key )
     {
         StringBuilder fileNameBuffer = new StringBuilder();
 
@@ -203,17 +199,17 @@ public class FileDiskCache<K extends Serializable, V extends Serializable>
     protected synchronized void processDispose()
         throws IOException
     {
-        ICacheEvent<String> cacheEvent = createICacheEvent( cacheName, "none", ICacheEventLogger.DISPOSE_EVENT );
+        ICacheEvent<String> cacheEvent = createICacheEvent( getCacheName(), "none", ICacheEventLogger.DISPOSE_EVENT );
         try
         {
-            if ( !alive )
+            if ( !isAlive() )
             {
                 log.error( logCacheName + "Not alive and dispose was called, directgory: " + getDirectory() );
                 return;
             }
 
             // Prevents any interaction with the cache while we're shutting down.
-            alive = false;
+            setAlive(false);
 
             // TODO consider giving up the handle on the directory.
             if ( log.isInfoEnabled() )
@@ -273,7 +269,7 @@ public class FileDiskCache<K extends Serializable, V extends Serializable>
                 throw new IOException( "Could not completely read file " + file.getName() );
             }
 
-            element = getElementSerializer().deSerialize( bytes );
+            element = getElementSerializer().deSerialize( bytes, null );
 
             // test that the retrieved object has equal key
             if ( element != null && !key.equals( element.getKey() ) )
@@ -342,7 +338,7 @@ public class FileDiskCache<K extends Serializable, V extends Serializable>
      * @return true if the item was removed
      * @throws IOException
      */
-    private <T extends Serializable> boolean _processRemove( T key )
+    private <T> boolean _processRemove( T key )
         throws IOException
     {
         File file = file( key );
