@@ -20,6 +20,9 @@
 	</properties>
 	<body>
         <release version="2.0" date="unreleased" description="JDK 1.6 based major release">
+            <action issue="JCS-158" dev="tv" type="fix" due-to="Wiktor Niesiobedzki">
+                Fix NullPointerException in IndexedDiskCache.addToRecycleBin(...)
+            </action>
             <action dev="tv" type="update">
                 Reduce synchronization
             </action>
