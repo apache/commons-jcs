@@ -19,15 +19,16 @@ package org.apache.commons.jcs.engine.control;
  * under the License.
  */
 
+import java.util.Properties;
+
 import junit.framework.TestCase;
+
 import org.apache.commons.jcs.auxiliary.AuxiliaryCache;
 import org.apache.commons.jcs.auxiliary.AuxiliaryCacheConfigurator;
 import org.apache.commons.jcs.auxiliary.MockAuxiliaryCache;
 import org.apache.commons.jcs.auxiliary.MockAuxiliaryCacheAttributes;
 import org.apache.commons.jcs.auxiliary.MockAuxiliaryCacheFactory;
 import org.apache.commons.jcs.engine.logging.MockCacheEventLogger;
-
-import java.util.Properties;
 
 /** Unit tests for the configurator. */
 public class CompositeCacheConfiguratorUnitTest
@@ -42,7 +43,7 @@ public class CompositeCacheConfiguratorUnitTest
         String regionName = "MyRegion";
 
         String auxName = "MockAux";
-        String auxPrefix = "jcs.auxiliary." + auxName;
+        String auxPrefix = CompositeCacheConfigurator.AUXILIARY_PREFIX + auxName;
         String auxiliaryClassName = MockAuxiliaryCacheFactory.class.getName();
         String eventLoggerClassName = MockCacheEventLogger.class.getName();
         String auxiliaryAttributeClassName = MockAuxiliaryCacheAttributes.class.getName();
@@ -55,11 +56,10 @@ public class CompositeCacheConfiguratorUnitTest
 //        System.out.print( props );
 
         CompositeCacheManager manager = CompositeCacheManager.getUnconfiguredInstance();
-
-        CompositeCacheConfigurator configurator = new CompositeCacheConfigurator( manager );
+        CompositeCacheConfigurator configurator = new CompositeCacheConfigurator();
 
         // DO WORK
-        AuxiliaryCache<String, String> aux = configurator.parseAuxiliary( props, auxName, regionName );
+        AuxiliaryCache<String, String> aux = configurator.parseAuxiliary( props, manager, auxName, regionName );
         MockAuxiliaryCache<String, String> result = (MockAuxiliaryCache<String, String>)aux;
 
         // VERIFY
