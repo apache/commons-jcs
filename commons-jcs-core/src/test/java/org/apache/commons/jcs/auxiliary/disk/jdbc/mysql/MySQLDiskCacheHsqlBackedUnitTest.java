@@ -207,7 +207,7 @@ public class MySQLDiskCacheHsqlBackedUnitTest
         }
         catch ( SQLException e )
         {
-            if ("23000".equals(e.getSQLState()))
+            if ("23000".equals(e.getSQLState()) || "S0001".equals(e.getSQLState()))
             {
                 newT = false;
             }
