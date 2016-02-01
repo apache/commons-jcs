@@ -99,10 +99,6 @@ public class MockRemoteCacheService<K extends Serializable, V extends Serializab
 
     /**
      * Set the lastRemoveAllCacheName to the cacheName.
-     * <p>
-     * (non-Javadoc)
-     * @see org.apache.commons.jcs.auxiliary.remote.behavior.ICacheServiceNonLocal#removeAll(java.lang.String,
-     *      long)
      */
     @Override
     public void removeAll( String cacheName, long requesterId )

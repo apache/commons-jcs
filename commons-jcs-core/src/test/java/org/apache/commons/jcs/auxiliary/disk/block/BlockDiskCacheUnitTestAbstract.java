@@ -32,13 +32,6 @@ import org.apache.commons.jcs.utils.serialization.StandardSerializer;
 /** Unit tests for the Block Disk Cache */
 public abstract class BlockDiskCacheUnitTestAbstract extends TestCase
 {
-    /**
-     * Test the basic get matching.
-     * <p>
-     *
-     * @throws Exception
-     */
-
     public abstract BlockDiskCacheAttributes getCacheAttributes();
 
     public void testPutGetMatching_SmallWait() throws Exception

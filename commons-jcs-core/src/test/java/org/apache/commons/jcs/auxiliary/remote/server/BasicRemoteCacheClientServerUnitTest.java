@@ -46,7 +46,7 @@ import org.junit.runners.MethodSorters;
 
 /**
  * These tests startup the remote server and make requests to it.
- * <p/>
+ * <p>
  *
  * @author Aaron Smuts
  */
@@ -124,12 +124,12 @@ public class BasicRemoteCacheClientServerUnitTest extends Assert
      * Verify that we can start the remote cache server. Send an item to the remote. Verify that the
      * remote put count goes up. If we go through JCS, the manager will be shared and we will get
      * into an endless loop. We will use a mock cache manager instead.
-     * <p/>
+     * <p>
      * The remote server uses the real JCS. We can verify that items are added to JCS behind the
      * server by calling get. We cannot access it directly via JCS since it is serialized.
-     * <p/>
+     * <p>
      * This test uses a mock injected client to test a normal server.
-     * <p/>
+     * <p>
      *
      * @throws Exception
      */
@@ -176,7 +176,7 @@ public class BasicRemoteCacheClientServerUnitTest extends Assert
 
     /**
      * Verify that we can remove an item via the remote server.
-     * <p/>
+     * <p>
      *
      * @throws Exception
      */

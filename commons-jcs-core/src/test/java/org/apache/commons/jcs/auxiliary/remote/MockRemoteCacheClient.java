@@ -50,7 +50,7 @@ public class MockRemoteCacheClient<K extends Serializable, V extends Serializabl
     /** log instance */
     private static final Log log = LogFactory.getLog( MockRemoteCacheClient.class );
 
-    /** List of ICacheElement<K, V> objects passed into update. */
+    /** List of ICacheElement&lt;K, V&gt; objects passed into update. */
     public List<ICacheElement<K, V>> updateList = new LinkedList<ICacheElement<K,V>>();
 
     /** List of key objects passed into remove. */
@@ -59,10 +59,10 @@ public class MockRemoteCacheClient<K extends Serializable, V extends Serializabl
     /** status to return. */
     public CacheStatus status = CacheStatus.ALIVE;
 
-    /** Can setup values to return from get. values must be ICacheElement<K, V> */
+    /** Can setup values to return from get. values must be ICacheElement&lt;K, V&gt; */
     public Map<K, ICacheElement<K, V>> getSetupMap = new HashMap<K, ICacheElement<K,V>>();
 
-    /** Can setup values to return from get. values must be Map<K, ICacheElement<K, V>> */
+    /** Can setup values to return from get. values must be Map&lt;K, ICacheElement&lt;K, V&gt;&gt; */
     public Map<Set<K>, Map<K, ICacheElement<K, V>>> getMultipleSetupMap =
         new HashMap<Set<K>, Map<K,ICacheElement<K,V>>>();
 
@@ -74,8 +74,6 @@ public class MockRemoteCacheClient<K extends Serializable, V extends Serializabl
 
     /**
      * Stores the last argument as fixed.
-     * <p>
-     * @see org.apache.commons.jcs.auxiliary.remote.behavior.IRemoteCacheClient#fixCache(org.apache.commons.jcs.engine.behavior.ICacheServiceNonLocal)
      */
     @Override
     @SuppressWarnings("unchecked") // Don't know how to do this properly
@@ -104,9 +102,6 @@ public class MockRemoteCacheClient<K extends Serializable, V extends Serializabl
 
     /**
      * Adds the argument to the updatedList.
-     * <p>
-     * (non-Javadoc)
-     * @see org.apache.commons.jcs.auxiliary.AuxiliaryCache#update(org.apache.commons.jcs.engine.behavior.ICacheElement)
      */
     @Override
     public void update( ICacheElement<K, V> ce )
@@ -116,9 +111,6 @@ public class MockRemoteCacheClient<K extends Serializable, V extends Serializabl
 
     /**
      * Looks in the getSetupMap for a value.
-     * <p>
-     * (non-Javadoc)
-     * @see org.apache.commons.jcs.auxiliary.AuxiliaryCache#get(java.io.Serializable)
      */
     @Override
     public ICacheElement<K, V> get( K key )
@@ -131,7 +123,7 @@ public class MockRemoteCacheClient<K extends Serializable, V extends Serializabl
      * Gets multiple items from the cache based on the given set of keys.
      * <p>
      * @param keys
-     * @return a map of K key to ICacheElement<K, V> element, or an empty map if there is no
+     * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
      *         data in cache for any of these keys
      */
     @Override
@@ -143,9 +135,6 @@ public class MockRemoteCacheClient<K extends Serializable, V extends Serializabl
 
     /**
      * Adds the key to the remove list.
-     * <p>
-     * (non-Javadoc)
-     * @see org.apache.commons.jcs.auxiliary.AuxiliaryCache#remove(java.io.Serializable)
      */
     @Override
     public boolean remove( K key )
@@ -184,8 +173,7 @@ public class MockRemoteCacheClient<K extends Serializable, V extends Serializabl
     }
 
     /**
-     * Returns the status setup variable. (non-Javadoc)
-     * @see org.apache.commons.jcs.auxiliary.AuxiliaryCache#getStatus()
+     * Returns the status setup variable.
      */
     @Override
     public CacheStatus getStatus()
@@ -224,9 +212,6 @@ public class MockRemoteCacheClient<K extends Serializable, V extends Serializabl
 
     /**
      * Returns the setup attributes. By default they are not null.
-     * <p>
-     * (non-Javadoc)
-     * @see org.apache.commons.jcs.auxiliary.AuxiliaryCache#getAuxiliaryCacheAttributes()
      */
     @Override
     public AuxiliaryCacheAttributes getAuxiliaryCacheAttributes()

@@ -20,9 +20,11 @@ package org.apache.commons.jcs.auxiliary.disk.block;
  */
 
 import junit.framework.TestCase;
+
 import org.apache.commons.jcs.JCS;
 import org.apache.commons.jcs.access.CacheAccess;
 import org.apache.commons.jcs.access.TestCacheAccess;
+import org.junit.Test;
 
 /**
  * This is used by other tests to generate a random load on the disk cache.
@@ -38,6 +40,12 @@ public class BlockDiskCacheRandomConcurrentTestUtil
     public BlockDiskCacheRandomConcurrentTestUtil( String testName )
     {
         super( testName );
+    }
+    
+    @Test
+    public void test()
+    {
+       
     }
 
     /**
