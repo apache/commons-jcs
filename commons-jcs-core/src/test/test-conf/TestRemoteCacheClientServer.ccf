@@ -18,10 +18,10 @@
 # ################# REMOTE SERVER CONFIG  #####################
 # Registry used to register and provide the IRmiCacheService service.
 registry.host=localhost
-registry.port=1102
+registry.port=11020
 
 # client callback port.
-remote.cache.service.port=1301
+remote.cache.service.port=13010
 remote.cache.rmiSocketFactoryTimeoutMillis=12345
 
 # cluster setting
