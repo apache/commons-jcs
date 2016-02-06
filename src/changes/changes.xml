@@ -20,6 +20,9 @@
 	</properties>
 	<body>
         <release version="2.0" date="unreleased" description="JDK 1.6 based major release">
+            <action dev="tv" type="add" due-to="Wiktor Niesiobedzki">
+                Add verification of block disk cache key file.
+            </action>
             <action issue="JCS-159" dev="tv" type="fix" due-to="Wiktor Niesiobedzki">
                 Fix: BlockDiskCache overwrites data after loading from disk
             </action>
