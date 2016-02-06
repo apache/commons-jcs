@@ -327,6 +327,32 @@ public abstract class BlockDiskCacheUnitTestAbstract extends TestCase
             oneLoadFromDisk();
         }
     }
+    
+    public void testAppendToDisk() throws Exception 
+    {
+        String cacheName = "testAppendToDisk";
+        BlockDiskCacheAttributes cattr = getCacheAttributes();
+        cattr.setCacheName(cacheName);
+        cattr.setMaxKeySize(100);
+        cattr.setBlockSizeBytes(500);
+        cattr.setDiskPath("target/test-sandbox/BlockDiskCacheUnitTest");
+        BlockDiskCache<String, X> diskCache = new BlockDiskCache<String, X>(cattr);
+        diskCache.removeAll();
+        X value1 = new X();
+        value1.string = "1234567890";
+        X value2 = new X();
+        value2.string = "0987654321";
+        diskCache.update(new CacheElement<String, X>(cacheName, "1", value1));
+        diskCache.dispose();
+        diskCache = new BlockDiskCache<String, X>(cattr);
+        diskCache.update(new CacheElement<String, X>(cacheName, "2", value2));
+        diskCache.dispose();
+        diskCache = new BlockDiskCache<String, X>(cattr);
+        assertTrue(diskCache.verifyDisk());
+        assertEquals(2, diskCache.getKeySet().size());
+        assertEquals(value1.string, diskCache.get("1").getVal().string);
+        assertEquals(value2.string, diskCache.get("2").getVal().string);
+    }
 
     public void oneLoadFromDisk() throws Exception
     {
