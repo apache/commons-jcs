@@ -20,6 +20,9 @@
 	</properties>
 	<body>
         <release version="2.0" date="unreleased" description="JDK 1.6 based major release">
+            <action dev="tv" type="fix" due-to="Mat Jaggard">
+                Fix Javadoc for Java 8
+            </action>
             <action issue="JCS-116" dev="tv" type="fix" due-to="Sebb">
                 Fix: CompositeCacheManager is thread-hostile
             </action>

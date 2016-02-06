@@ -20,6 +20,7 @@ package org.apache.commons.jcs.engine;
  */
 
 import junit.framework.TestCase;
+
 import org.apache.commons.jcs.JCS;
 import org.apache.commons.jcs.access.CacheAccess;
 import org.apache.commons.jcs.engine.control.CompositeCacheManager;
@@ -37,6 +38,15 @@ public class SystemPropertyUsageUnitTest
     private static final int testValue = 6789;
 
     private CompositeCacheManager manager = null;
+    
+    @Override
+    protected void setUp() throws Exception
+    {
+       super.setUp();
+       //First shut down any previously running manager.
+       manager = CompositeCacheManager.getInstance();
+       manager.shutDown();
+    }
 
 	/**
 	 * @see junit.framework.TestCase#tearDown()
@@ -62,14 +72,14 @@ public class SystemPropertyUsageUnitTest
         throws Exception
     {
         System.setProperty( JCS_DEFAULT_CACHEATTRIBUTES_MAX_OBJECTS, String.valueOf(testValue) );
-
+        
         JCS.setConfigFilename( "/TestSystemPropertyUsage.ccf" );
-
+        
         CacheAccess<String, String> jcs = JCS.getInstance( "someCacheNotInFile" );
 
         manager = CompositeCacheManager.getInstance();
 
-        assertEquals( "System property value is not reflected", testValue, jcs.getCacheAttributes().getMaxObjects());
+        assertEquals( "System property value is not reflected.", testValue, jcs.getCacheAttributes().getMaxObjects());
     }
 
     /**

@@ -26,7 +26,7 @@ import org.apache.commons.jcs.utils.timing.ElapsedTimer;
 import org.apache.commons.jcs.utils.timing.SleepUtil;
 
 /**
- * Put a few hundred thousand entries in the block disk cache. <p.
+ * Put a few hundred thousand entries in the block disk cache.
  * @author Aaron Smuts
  */
 public class HugeQuantityBlockDiskCacheLoadTest

@@ -87,7 +87,7 @@ public class MockAuxiliaryCache<K, V>
      * Gets multiple items from the cache based on the given set of keys.
      * <p>
      * @param keys
-     * @return a map of K key to ICacheElement<String, String> element, or an empty map if there is no
+     * @return a map of K key to ICacheElement&lt;String, String&gt; element, or an empty map if there is no
      *         data in cache for any of these keys
      */
     @Override

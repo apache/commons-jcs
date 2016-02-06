@@ -37,8 +37,7 @@ public class ThreadPoolUnitTest
      * <p>
      * We just want to ensure that we can adjust the max size of an active pool.
      * <p>
-     * http://gee.cs.oswego.edu/dl/classes/EDU/oswego/cs/dl/util/concurrent/PooledExecutor.html#
-     * setMaximumPoolSize(int) p>
+     * http://gee.cs.oswego.edu/dl/classes/EDU/oswego/cs/dl/util/concurrent/PooledExecutor.html#setMaximumPoolSize(int)
      * @throws Exception
      */
     public void testMaxReduction()

@@ -51,7 +51,7 @@ public class CompressingSerializerUnitTest
     /**
      * Test simple back and forth with a string.
      * <p>
-     * ))<=>((
+     * ))&lt;=&gt;((
      * <p>
      * @throws Exception on error
      */
