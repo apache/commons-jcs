@@ -20,6 +20,9 @@
 	</properties>
 	<body>
         <release version="2.0" date="unreleased" description="JDK 1.6 based major release">
+            <action issue="JCS-54" dev="tv" type="add" due-to="Tore Halset">
+                Add soft reference memory cache
+            </action>
             <action issue="JCS-78" dev="tv" type="fix" due-to="Marko Stipanov">
                 Fix: RemoteCacheStartupServlet can't start with config outside classpath
             </action>
