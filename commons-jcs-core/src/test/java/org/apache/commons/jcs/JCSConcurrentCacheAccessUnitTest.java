@@ -19,6 +19,9 @@ package org.apache.commons.jcs;
  * under the License.
  */
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import junit.framework.TestCase;
@@ -52,6 +55,11 @@ public class JCSConcurrentCacheAccessUnitTest extends TestCase
      */
     protected AtomicInteger errcount;
 
+    /**
+     * Collect all value mismatches
+     */
+    protected List<String> valueMismatchList;
+
     @Override
 	protected void setUp() throws Exception
 	{
@@ -59,6 +67,7 @@ public class JCSConcurrentCacheAccessUnitTest extends TestCase
         JCS.setConfigFilename( "/TestJCS-73.ccf" );
         cache = JCS.getGroupCacheInstance( "cache" );
         errcount = new AtomicInteger(0);
+        valueMismatchList = Collections.synchronizedList(new ArrayList<String>());
 	}
 
     @Override
@@ -118,7 +127,10 @@ public class JCSConcurrentCacheAccessUnitTest extends TestCase
 		                }
 		            }
 
-		            assertEquals("Values do not match", String.valueOf(idx-1), res);
+		            if (!String.valueOf(idx-1).equals(res))
+		            {
+		                valueMismatchList.add(String.format("Values do not match: %s - %s", String.valueOf(idx-1), res));
+		            }
 				}
 
 				 // put value in the cache
@@ -161,6 +173,11 @@ public class JCSConcurrentCacheAccessUnitTest extends TestCase
         }
 
         assertEquals("Error count should be 0",  0, errcount.intValue());
+        for (String msg : valueMismatchList)
+        {
+            System.out.println(msg);
+        }
+        assertEquals("Value mismatch count should be 0",  0, valueMismatchList.size());
     }
 
 }
