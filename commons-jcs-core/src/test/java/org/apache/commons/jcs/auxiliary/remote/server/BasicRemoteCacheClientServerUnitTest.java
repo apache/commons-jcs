@@ -145,14 +145,14 @@ public class BasicRemoteCacheClientServerUnitTest extends Assert
         RemoteCacheAttributes attributes = new RemoteCacheAttributes();
         attributes.setRemoteLocation("localhost", remotePort);
         attributes.setLocalPort(LOCAL_PORT);
+        attributes.setCacheName("testSinglePut");
 
         RemoteCacheManager remoteCacheManager = RemoteCacheFactory.getManager(attributes, compositeCacheManager, new MockCacheEventLogger(), new MockElementSerializer());
-        String regionName = "testSinglePut";
-        AuxiliaryCache<String, String> cache = remoteCacheManager.getCache(regionName);
+        AuxiliaryCache<String, String> cache = remoteCacheManager.getCache(attributes);
 
         // DO WORK
         int numPutsPrior = server.getPutCount();
-        ICacheElement<String, String> element = new CacheElement<String, String>(regionName, "key", "value");
+        ICacheElement<String, String> element = new CacheElement<String, String>(cache.getCacheName(), "key", "value");
         cache.update(element);
         SleepUtil.sleepAtLeast(200);
 
@@ -192,16 +192,16 @@ public class BasicRemoteCacheClientServerUnitTest extends Assert
         RemoteCacheAttributes attributes = new RemoteCacheAttributes();
         attributes.setRemoteLocation("localhost", remotePort);
         attributes.setLocalPort(LOCAL_PORT);
+        attributes.setCacheName("testPutRemove");
 
         MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
 
         RemoteCacheManager remoteCacheManager = RemoteCacheFactory.getManager(attributes, compositeCacheManager, cacheEventLogger, null);
-        String regionName = "testPutRemove";
-        AuxiliaryCache<String, String> cache = remoteCacheManager.getCache(regionName);
+        AuxiliaryCache<String, String> cache = remoteCacheManager.getCache(attributes);
 
         // DO WORK
         int numPutsPrior = server.getPutCount();
-        ICacheElement<String, String> element = new CacheElement<String, String>(regionName, "key", "value");
+        ICacheElement<String, String> element = new CacheElement<String, String>(cache.getCacheName(), "key", "value");
         cache.update(element);
         SleepUtil.sleepAtLeast(50);
 
@@ -248,17 +248,17 @@ public class BasicRemoteCacheClientServerUnitTest extends Assert
         RemoteCacheAttributes attributes = new RemoteCacheAttributes();
         attributes.setRemoteLocation("localhost", remotePort);
         attributes.setLocalPort(LOCAL_PORT);
+        attributes.setCacheName("testPutAndListen");
 
         RemoteCacheManager remoteCacheManager = RemoteCacheFactory.getManager(attributes, compositeCacheManager, new MockCacheEventLogger(), new MockElementSerializer());
-        String regionName = "testPutAndListen";
-        AuxiliaryCache<String, String> cache = remoteCacheManager.getCache(regionName);
+        AuxiliaryCache<String, String> cache = remoteCacheManager.getCache(attributes);
 
         MockRemoteCacheListener<String, String> listener = new MockRemoteCacheListener<String, String>();
-        server.addCacheListener(regionName, listener);
+        server.addCacheListener(cache.getCacheName(), listener);
 
         // DO WORK
         int numPutsPrior = server.getPutCount();
-        ICacheElement<String, String> element = new CacheElement<String, String>(regionName, "key", "value");
+        ICacheElement<String, String> element = new CacheElement<String, String>(cache.getCacheName(), "key", "value");
         cache.update(element);
         SleepUtil.sleepAtLeast(50);
 
@@ -280,7 +280,7 @@ public class BasicRemoteCacheClientServerUnitTest extends Assert
             // remove from all regions.
             server.removeCacheListener(listener);
         }
-            }
+    }
 
     /**
      * Register a listener with the server. Send an update. Verify that the listener received it.
@@ -290,27 +290,27 @@ public class BasicRemoteCacheClientServerUnitTest extends Assert
     @Test
     public void test4PutaMultipleAndListen()
             throws Exception
-            {
+    {
         // SETUP
         MockCompositeCacheManager compositeCacheManager = new MockCompositeCacheManager();
 
         RemoteCacheAttributes attributes = new RemoteCacheAttributes();
         attributes.setRemoteLocation("localhost", remotePort);
         attributes.setLocalPort(LOCAL_PORT);
+        attributes.setCacheName("testPutaMultipleAndListen");
 
         RemoteCacheManager remoteCacheManager = RemoteCacheFactory.getManager(attributes, compositeCacheManager, new MockCacheEventLogger(), new MockElementSerializer());
-        String regionName = "testPutaMultipleAndListen";
-        AuxiliaryCache<String, String> cache = remoteCacheManager.getCache(regionName);
+        AuxiliaryCache<String, String> cache = remoteCacheManager.getCache(attributes);
 
         MockRemoteCacheListener<String, String> listener = new MockRemoteCacheListener<String, String>();
-        server.addCacheListener(regionName, listener);
+        server.addCacheListener(cache.getCacheName(), listener);
 
         // DO WORK
         int numPutsPrior = server.getPutCount();
         int numToPut = 100;
         for (int i = 0; i < numToPut; i++)
         {
-            ICacheElement<String, String> element = new CacheElement<String, String>(regionName, "key" + 1, "value" + i);
+            ICacheElement<String, String> element = new CacheElement<String, String>(cache.getCacheName(), "key" + 1, "value" + i);
             cache.update(element);
         }
         SleepUtil.sleepAtLeast(500);
@@ -328,7 +328,7 @@ public class BasicRemoteCacheClientServerUnitTest extends Assert
             System.out.println(server.getStats());
             throw e;
         }
-            }
+    }
 
     @Test
     public void testLocalHost() throws Exception

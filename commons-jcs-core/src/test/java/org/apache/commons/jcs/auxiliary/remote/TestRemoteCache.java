@@ -106,9 +106,10 @@ public class TestRemoteCache
 
         RemoteCacheAttributes rca = new RemoteCacheAttributes();
         rca.setRemoteLocation( "localhost", 1101 );
+        rca.setCacheName( "testCache" );
 
         RemoteCacheManager mgr = RemoteCacheFactory.getManager( rca, cacheMgr, new MockCacheEventLogger(), new MockElementSerializer() );
-        AuxiliaryCache<String, String> cache = mgr.getCache( "testCache" );
+        AuxiliaryCache<String, String> cache = mgr.getCache( rca );
 
         int numMes = 100;
         for ( int i = 0; i < numMes; i++ )
