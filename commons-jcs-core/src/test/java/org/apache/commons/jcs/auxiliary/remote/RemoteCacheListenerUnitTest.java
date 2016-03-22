@@ -20,6 +20,7 @@ package org.apache.commons.jcs.auxiliary.remote;
  */
 
 import junit.framework.TestCase;
+
 import org.apache.commons.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes;
 import org.apache.commons.jcs.engine.CacheElementSerialized;
 import org.apache.commons.jcs.engine.ElementAttributes;
@@ -54,7 +55,7 @@ public class RemoteCacheListenerUnitTest
         IRemoteCacheAttributes irca = new RemoteCacheAttributes();
         irca.setRemoveUponRemotePut( false );
         ICompositeCacheManager cacheMgr = new MockCompositeCacheManager();
-        RemoteCacheListener<String, String> listener = new RemoteCacheListener<String, String>( irca, cacheMgr );
+        RemoteCacheListener<String, String> listener = new RemoteCacheListener<String, String>( irca, cacheMgr, new StandardSerializer() );
 
         String cacheName = "testName";
         String key = "key";
@@ -97,7 +98,7 @@ public class RemoteCacheListenerUnitTest
         IRemoteCacheAttributes irca = new RemoteCacheAttributes();
         irca.setRemoveUponRemotePut( true );
         ICompositeCacheManager cacheMgr = new MockCompositeCacheManager();
-        RemoteCacheListener<String, String> listener = new RemoteCacheListener<String, String>( irca, cacheMgr );
+        RemoteCacheListener<String, String> listener = new RemoteCacheListener<String, String>( irca, cacheMgr, new StandardSerializer() );
 
         String cacheName = "testName";
         String key = "key";
