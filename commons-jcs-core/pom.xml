@@ -55,15 +55,9 @@
 
     <!--  JDBC DISK CACHE -->
     <dependency>
-      <groupId>commons-pool</groupId>
-      <artifactId>commons-pool</artifactId>
-      <optional>true</optional>
-    </dependency>
-
-    <dependency>
       <groupId>hsqldb</groupId>
       <artifactId>hsqldb</artifactId>
-      <optional>true</optional>
+      <scope>test</scope>
     </dependency>
 
     <!--  For comparative performance tests only -->
