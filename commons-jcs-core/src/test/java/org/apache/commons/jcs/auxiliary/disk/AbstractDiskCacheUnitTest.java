@@ -20,7 +20,6 @@ package org.apache.commons.jcs.auxiliary.disk;
  */
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.io.StringWriter;
 import java.util.Collections;
 import java.util.HashMap;
@@ -168,7 +167,7 @@ public class AbstractDiskCacheUnitTest
     }
 
     /** Concrete, testable instance. */
-    protected static class AbstractDiskCacheTestInstance<K extends Serializable, V extends Serializable>
+    protected static class AbstractDiskCacheTestInstance<K, V>
         extends AbstractDiskCache<K, V>
     {
         /** Internal map */

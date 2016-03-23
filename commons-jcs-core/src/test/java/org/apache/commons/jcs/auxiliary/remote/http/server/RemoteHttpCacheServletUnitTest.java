@@ -19,33 +19,56 @@ package org.apache.commons.jcs.auxiliary.remote.http.server;
  * under the License.
  */
 
+import java.io.Serializable;
+import java.util.Collections;
+import java.util.Set;
+
 import junit.framework.TestCase;
+
 import org.apache.commons.jcs.auxiliary.remote.MockRemoteCacheService;
 import org.apache.commons.jcs.auxiliary.remote.util.RemoteCacheRequestFactory;
 import org.apache.commons.jcs.auxiliary.remote.value.RemoteCacheRequest;
 import org.apache.commons.jcs.auxiliary.remote.value.RemoteCacheResponse;
 import org.apache.commons.jcs.engine.CacheElement;
 
-import java.util.Collections;
-import java.util.Set;
-
-/** Unit tests for the adaptor. */
-public class RemoteCacheServiceAdaptorUnitTest
+/** Unit tests for the servlet. */
+public class RemoteHttpCacheServletUnitTest
     extends TestCase
 {
+    private RemoteHttpCacheServlet servlet;
+    private MockRemoteCacheService<Serializable, Serializable> remoteHttpCacheService;
+
+    /**
+     * @see junit.framework.TestCase#setUp()
+     */
+    @Override
+    protected void setUp() throws Exception
+    {
+        super.setUp();
+        servlet = new RemoteHttpCacheServlet();
+        servlet.init(null);
+
+        remoteHttpCacheService = new MockRemoteCacheService<Serializable, Serializable>();
+        servlet.setRemoteCacheService( remoteHttpCacheService );
+    }
+
+    /**
+     * @see junit.framework.TestCase#tearDown()
+     */
+    @Override
+    protected void tearDown() throws Exception
+    {
+        servlet.destroy();
+        super.tearDown();
+    }
+
     /** Verify that we balk and return an error. */
     public void testProcessRequest_null()
     {
-        // SETUP
-        RemoteCacheServiceAdaptor<String, String> adaptor = new RemoteCacheServiceAdaptor<String, String>();
-
-        MockRemoteCacheService<String, String> remoteHttpCacheService = new MockRemoteCacheService<String, String>();
-        adaptor.setRemoteCacheService( remoteHttpCacheService );
-
-        RemoteCacheRequest<String, String> request = null;
+        RemoteCacheRequest<Serializable, Serializable> request = null;
 
         // DO WORK
-        RemoteCacheResponse<String> result = adaptor.processRequest( request );
+        RemoteCacheResponse<Object> result = servlet.processRequest( request );
 
         // VERIFY
         assertNotNull( "Should have a result.", result );
@@ -56,19 +79,13 @@ public class RemoteCacheServiceAdaptorUnitTest
     /** Verify that the service is called. */
     public void testProcessRequest_Get()
     {
-        // SETUP
-        RemoteCacheServiceAdaptor<String, String> adaptor = new RemoteCacheServiceAdaptor<String, String>();
-
-        MockRemoteCacheService<String, String> remoteHttpCacheService = new MockRemoteCacheService<String, String>();
-        adaptor.setRemoteCacheService( remoteHttpCacheService );
-
         String cacheName = "test";
-        String key = "key";
+        Serializable key = "key";
         long requesterId = 2;
-        RemoteCacheRequest<String, String> request = RemoteCacheRequestFactory.createGetRequest( cacheName, key, requesterId );
+        RemoteCacheRequest<Serializable, Serializable> request = RemoteCacheRequestFactory.createGetRequest( cacheName, key, requesterId );
 
         // DO WORK
-        RemoteCacheResponse<Object> result = adaptor.processRequest( request );
+        RemoteCacheResponse<Object> result = servlet.processRequest( request );
 
         // VERIFY
         assertNotNull( "Should have a result.", result );
@@ -78,20 +95,14 @@ public class RemoteCacheServiceAdaptorUnitTest
     /** Verify that the service is called. */
     public void testProcessRequest_GetMatching()
     {
-        // SETUP
-        RemoteCacheServiceAdaptor<String, String> adaptor = new RemoteCacheServiceAdaptor<String, String>();
-
-        MockRemoteCacheService<String, String> remoteHttpCacheService = new MockRemoteCacheService<String, String>();
-        adaptor.setRemoteCacheService( remoteHttpCacheService );
-
         String cacheName = "test";
         String pattern = "pattern";
         long requesterId = 2;
-        RemoteCacheRequest<String, String> request = RemoteCacheRequestFactory.createGetMatchingRequest( cacheName, pattern,
+        RemoteCacheRequest<Serializable, Serializable> request = RemoteCacheRequestFactory.createGetMatchingRequest( cacheName, pattern,
                                                                                                   requesterId );
 
         // DO WORK
-        RemoteCacheResponse<Object> result = adaptor.processRequest( request );
+        RemoteCacheResponse<Object> result = servlet.processRequest( request );
 
         // VERIFY
         assertNotNull( "Should have a result.", result );
@@ -101,20 +112,14 @@ public class RemoteCacheServiceAdaptorUnitTest
     /** Verify that the service is called. */
     public void testProcessRequest_GetMultiple()
     {
-        // SETUP
-        RemoteCacheServiceAdaptor<String, String> adaptor = new RemoteCacheServiceAdaptor<String, String>();
-
-        MockRemoteCacheService<String, String> remoteHttpCacheService = new MockRemoteCacheService<String, String>();
-        adaptor.setRemoteCacheService( remoteHttpCacheService );
-
         String cacheName = "test";
-        Set<String> keys = Collections.emptySet();
+        Set<Serializable> keys = Collections.emptySet();
         long requesterId = 2;
-        RemoteCacheRequest<String, String> request = RemoteCacheRequestFactory.createGetMultipleRequest( cacheName, keys,
+        RemoteCacheRequest<Serializable, Serializable> request = RemoteCacheRequestFactory.createGetMultipleRequest( cacheName, keys,
                                                                                                   requesterId );
 
         // DO WORK
-        RemoteCacheResponse<Object> result = adaptor.processRequest( request );
+        RemoteCacheResponse<Object> result = servlet.processRequest( request );
 
         // VERIFY
         assertNotNull( "Should have a result.", result );
@@ -125,20 +130,14 @@ public class RemoteCacheServiceAdaptorUnitTest
     /** Verify that the service is called. */
     public void testProcessRequest_Update()
     {
-        // SETUP
-        RemoteCacheServiceAdaptor<String, String> adaptor = new RemoteCacheServiceAdaptor<String, String>();
-
-        MockRemoteCacheService<String, String> remoteHttpCacheService = new MockRemoteCacheService<String, String>();
-        adaptor.setRemoteCacheService( remoteHttpCacheService );
-
         String cacheName = "test";
         String key = "key";
         long requesterId = 2;
-        CacheElement<String, String> element = new CacheElement<String, String>( cacheName, key, null );
-        RemoteCacheRequest<String, String> request = RemoteCacheRequestFactory.createUpdateRequest( element, requesterId );
+        CacheElement<Serializable, Serializable> element = new CacheElement<Serializable, Serializable>( cacheName, key, null );
+        RemoteCacheRequest<Serializable, Serializable> request = RemoteCacheRequestFactory.createUpdateRequest( element, requesterId );
 
         // DO WORK
-        RemoteCacheResponse<String> result = adaptor.processRequest( request );
+        RemoteCacheResponse<Object> result = servlet.processRequest( request );
 
         // VERIFY
         assertNotNull( "Should have a result.", result );
@@ -148,19 +147,13 @@ public class RemoteCacheServiceAdaptorUnitTest
     /** Verify that the service is called. */
     public void testProcessRequest_Remove()
     {
-        // SETUP
-        RemoteCacheServiceAdaptor<String, String> adaptor = new RemoteCacheServiceAdaptor<String, String>();
-
-        MockRemoteCacheService<String, String> remoteHttpCacheService = new MockRemoteCacheService<String, String>();
-        adaptor.setRemoteCacheService( remoteHttpCacheService );
-
         String cacheName = "test";
-        String key = "key";
+        Serializable key = "key";
         long requesterId = 2;
-        RemoteCacheRequest<String, String> request = RemoteCacheRequestFactory.createRemoveRequest( cacheName, key, requesterId );
+        RemoteCacheRequest<Serializable, Serializable> request = RemoteCacheRequestFactory.createRemoveRequest( cacheName, key, requesterId );
 
         // DO WORK
-        RemoteCacheResponse<String> result = adaptor.processRequest( request );
+        RemoteCacheResponse<Object> result = servlet.processRequest( request );
 
         // VERIFY
         assertNotNull( "Should have a result.", result );
@@ -170,18 +163,12 @@ public class RemoteCacheServiceAdaptorUnitTest
     /** Verify that the service is called. */
     public void testProcessRequest_RemoveAll()
     {
-        // SETUP
-        RemoteCacheServiceAdaptor<String, String> adaptor = new RemoteCacheServiceAdaptor<String, String>();
-
-        MockRemoteCacheService<String, String> remoteHttpCacheService = new MockRemoteCacheService<String, String>();
-        adaptor.setRemoteCacheService( remoteHttpCacheService );
-
         String cacheName = "testRemoveALl";
         long requesterId = 2;
-        RemoteCacheRequest<String, String> request = RemoteCacheRequestFactory.createRemoveAllRequest( cacheName, requesterId );
+        RemoteCacheRequest<Serializable, Serializable> request = RemoteCacheRequestFactory.createRemoveAllRequest( cacheName, requesterId );
 
         // DO WORK
-        RemoteCacheResponse<String> result = adaptor.processRequest( request );
+        RemoteCacheResponse<Object> result = servlet.processRequest( request );
 
         // VERIFY
         assertNotNull( "Should have a result.", result );

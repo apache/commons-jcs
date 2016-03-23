@@ -20,7 +20,6 @@ package org.apache.commons.jcs.auxiliary.lateral.socket.tcp;
  */
 
 import java.io.IOException;
-import java.io.Serializable;
 
 import org.apache.commons.jcs.auxiliary.lateral.LateralCache;
 import org.apache.commons.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
@@ -31,7 +30,7 @@ import org.apache.commons.jcs.engine.behavior.ICacheElement;
 /**
  * For testing things that need a lateral cache
  */
-public class MockLateralCache<K extends Serializable, V extends Serializable>
+public class MockLateralCache<K, V>
     extends LateralCache<K, V>
     implements ICache<K, V>
 {

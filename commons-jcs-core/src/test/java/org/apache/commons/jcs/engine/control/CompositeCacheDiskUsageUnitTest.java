@@ -20,7 +20,6 @@ package org.apache.commons.jcs.engine.control;
  */
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -314,7 +313,7 @@ public class CompositeCacheDiskUsageUnitTest
      * <p>
      * @author Aaron Smuts
      */
-    public static class MockAuxCache<K extends Serializable, V extends Serializable>
+    public static class MockAuxCache<K, V>
         extends AbstractAuxiliaryCache<K, V>
     {
         /** The last item passed to update. */

@@ -19,11 +19,7 @@ package org.apache.commons.jcs.engine;
  * under the License.
  */
 
-import org.apache.commons.jcs.engine.behavior.ICacheElement;
-import org.apache.commons.jcs.engine.behavior.ICacheServiceNonLocal;
-
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -31,14 +27,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.jcs.engine.behavior.ICacheElement;
+import org.apache.commons.jcs.engine.behavior.ICacheServiceNonLocal;
+
 /**
  * This is a mock impl of the non local cache service.
  */
-public class MockCacheServiceNonLocal<K extends Serializable, V extends Serializable>
+public class MockCacheServiceNonLocal<K, V>
     implements ICacheServiceNonLocal<K, V>
 {
     /** The key last passed to get */
-    public Serializable lastGetKey;
+    public K lastGetKey;
 
     /** The pattern last passed to get */
     public String lastGetMatchingPattern;

@@ -19,26 +19,25 @@ package org.apache.commons.jcs.engine.memory;
  * under the License.
  */
 
-import org.apache.commons.jcs.engine.behavior.ICacheElement;
-import org.apache.commons.jcs.engine.behavior.ICompositeCacheAttributes;
-import org.apache.commons.jcs.engine.control.CompositeCache;
-import org.apache.commons.jcs.engine.memory.behavior.IMemoryCache;
-import org.apache.commons.jcs.engine.stats.behavior.IStats;
-
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.jcs.engine.behavior.ICacheElement;
+import org.apache.commons.jcs.engine.behavior.ICompositeCacheAttributes;
+import org.apache.commons.jcs.engine.control.CompositeCache;
+import org.apache.commons.jcs.engine.memory.behavior.IMemoryCache;
+import org.apache.commons.jcs.engine.stats.behavior.IStats;
+
 /**
  * Mock implementation of a memory cache for testing things like the memory shrinker.
  * <p>
  * @author Aaron Smuts
  */
-public class MockMemoryCache<K extends Serializable, V extends Serializable>
+public class MockMemoryCache<K, V>
     implements IMemoryCache<K, V>
 {
     /** Config */

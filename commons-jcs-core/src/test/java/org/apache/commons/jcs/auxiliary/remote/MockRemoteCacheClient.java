@@ -20,7 +20,6 @@ package org.apache.commons.jcs.auxiliary.remote;
  */
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -43,7 +42,7 @@ import org.apache.commons.logging.LogFactory;
  * <p>
  * @author Aaron Smuts
  */
-public class MockRemoteCacheClient<K extends Serializable, V extends Serializable>
+public class MockRemoteCacheClient<K, V>
     extends AbstractAuxiliaryCache<K, V>
     implements IRemoteCacheClient<K, V>
 {

@@ -19,14 +19,14 @@ package org.apache.commons.jcs.engine;
  * under the License.
  */
 
+import java.io.IOException;
+
 import junit.extensions.ActiveTestSuite;
 import junit.framework.Test;
 import junit.framework.TestCase;
+
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.engine.behavior.ICacheListener;
-
-import java.io.IOException;
-import java.io.Serializable;
 
 /**
  * This test case is designed to makes sure there are no deadlocks in the event queue. The time to
@@ -293,7 +293,7 @@ public class EventQueueConcurrentLoadTest
     /**
      * This is a dummy cache listener to use when testing the event queue.
      */
-    protected static class CacheListenerImpl<K extends Serializable, V extends Serializable>
+    protected static class CacheListenerImpl<K, V>
         implements ICacheListener<K, V>
     {
         /**

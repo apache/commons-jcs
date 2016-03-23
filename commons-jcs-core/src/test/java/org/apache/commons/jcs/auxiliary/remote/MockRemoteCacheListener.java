@@ -19,21 +19,20 @@ package org.apache.commons.jcs.auxiliary.remote;
  * under the License.
  */
 
+import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
+
 import org.apache.commons.jcs.auxiliary.remote.behavior.IRemoteCacheListener;
 import org.apache.commons.jcs.auxiliary.remote.server.behavior.RemoteType;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
-
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * For testing.
  * <p>
  * @author Aaron Smuts
  */
-public class MockRemoteCacheListener<K extends Serializable, V extends Serializable>
+public class MockRemoteCacheListener<K, V>
     implements IRemoteCacheListener<K, V>
 {
     /** Setup the listener id that this will return. */

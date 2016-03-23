@@ -19,14 +19,13 @@ package org.apache.commons.jcs.auxiliary.disk.indexed;
  * under the License.
  */
 
+import java.io.IOException;
+import java.util.Random;
+
 import org.apache.commons.jcs.auxiliary.disk.DiskTestObject;
 import org.apache.commons.jcs.engine.CacheElement;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.utils.serialization.StandardSerializer;
-
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.Random;
 
 /**
  * Utility for dealing with test objects.
@@ -64,7 +63,7 @@ public class DiskTestObjectUtil
      * @return size
      * @throws IOException
      */
-    public static <K extends Serializable, V extends Serializable> long totalSize( ICacheElement<K, V>[] elements, int endPosition )
+    public static <K, V> long totalSize( ICacheElement<K, V>[] elements, int endPosition )
         throws IOException
     {
         return totalSize( elements, 0, endPosition );
@@ -79,7 +78,7 @@ public class DiskTestObjectUtil
      * @return size
      * @throws IOException
      */
-    public static <K extends Serializable, V extends Serializable> long totalSize( ICacheElement<K, V>[] elements, int startPosition, int endPosition )
+    public static <K, V> long totalSize( ICacheElement<K, V>[] elements, int startPosition, int endPosition )
         throws IOException
     {
         StandardSerializer serializer = new StandardSerializer();
