@@ -20,6 +20,9 @@
 	</properties>
 	<body>
         <release version="2.0" date="unreleased" description="JDK 1.6 based major release">
+            <action issue="JCS-161" dev="tv" type="fix" due-to="Ryan Fong">
+                Fix: Dynamic regions leak memory upon dispose due to ShrinkerTask
+            </action>
             <action issue="JCS-54" dev="tv" type="add" due-to="Tore Halset">
                 Add soft reference memory cache
             </action>
