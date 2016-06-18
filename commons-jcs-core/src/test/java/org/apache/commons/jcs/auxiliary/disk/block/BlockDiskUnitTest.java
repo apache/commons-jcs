@@ -360,4 +360,17 @@ public class BlockDiskUnitTest
         // VERIFY
         assertEquals( "Wrong item retured.", string, result );
     }
+
+    public void testJCS156() throws Exception {
+        // SETUP
+        String fileName = "testJCS156";
+        File file = new File( rafDir, fileName + ".data" );
+        file.delete();
+        int blockSizeBytes = 4096;
+        BlockDisk disk = new BlockDisk( file, blockSizeBytes, new StandardSerializer() );
+        long offset = disk.calculateByteOffsetForBlockAsLong(Integer.MAX_VALUE);
+        assertTrue("Must not wrap round", offset > 0);
+        assertEquals(Integer.MAX_VALUE*4096L,offset);
+        file.delete();
+    }
 }
