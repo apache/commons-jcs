@@ -20,13 +20,18 @@ package org.apache.commons.jcs.auxiliary.disk.block;
  */
 
 import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Map;
 
 import junit.framework.TestCase;
 
 import org.apache.commons.jcs.engine.CacheElement;
+import org.apache.commons.jcs.engine.ElementAttributes;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
+import org.apache.commons.jcs.engine.behavior.IElementAttributes;
+import org.apache.commons.jcs.engine.control.group.GroupAttrName;
+import org.apache.commons.jcs.engine.control.group.GroupId;
 import org.apache.commons.jcs.utils.serialization.StandardSerializer;
 
 /** Unit tests for the Block Disk Cache */
@@ -327,8 +332,8 @@ public abstract class BlockDiskCacheUnitTestAbstract extends TestCase
             oneLoadFromDisk();
         }
     }
-    
-    public void testAppendToDisk() throws Exception 
+
+    public void testAppendToDisk() throws Exception
     {
         String cacheName = "testAppendToDisk";
         BlockDiskCacheAttributes cattr = getCacheAttributes();
@@ -401,6 +406,155 @@ public abstract class BlockDiskCacheUnitTestAbstract extends TestCase
         }
 
         diskCache.dispose();
+    }
+
+    /**
+     * Add some items to the disk cache and then remove them one by one.
+     *
+     * @throws IOException
+     */
+    public void testRemoveItems() throws IOException
+    {
+        BlockDiskCacheAttributes cattr = getCacheAttributes();
+        cattr.setCacheName("testRemoveItems");
+        cattr.setMaxKeySize(100);
+        cattr.setDiskPath("target/test-sandbox/BlockDiskCacheUnitTest");
+        BlockDiskCache<String, String> disk = new BlockDiskCache<String, String>(cattr);
+
+        disk.processRemoveAll();
+
+        int cnt = 25;
+        for (int i = 0; i < cnt; i++)
+        {
+            IElementAttributes eAttr = new ElementAttributes();
+            eAttr.setIsSpool(true);
+            ICacheElement<String, String> element = new CacheElement<String, String>("testRemoveItems", "key:" + i, "data:" + i);
+            element.setElementAttributes(eAttr);
+            disk.processUpdate(element);
+        }
+
+        // remove each
+        for (int i = 0; i < cnt; i++)
+        {
+            disk.remove("key:" + i);
+            ICacheElement<String, String> element = disk.processGet("key:" + i);
+            assertNull("Should not have received an element.", element);
+        }
+    }
+
+    /**
+     * Add some items to the disk cache and then remove them one by one.
+     * <p>
+     *
+     * @throws IOException
+     */
+    public void testRemove_PartialKey() throws IOException
+    {
+        BlockDiskCacheAttributes cattr = getCacheAttributes();
+        cattr.setCacheName("testRemove_PartialKey");
+        cattr.setMaxKeySize(100);
+        cattr.setDiskPath("target/test-sandbox/BlockDiskCacheUnitTest");
+        BlockDiskCache<String, String> disk = new BlockDiskCache<String, String>(cattr);
+
+        disk.processRemoveAll();
+
+        int cnt = 25;
+        for (int i = 0; i < cnt; i++)
+        {
+            IElementAttributes eAttr = new ElementAttributes();
+            eAttr.setIsSpool(true);
+            ICacheElement<String, String> element = new CacheElement<String, String>("testRemove_PartialKey", i + ":key", "data:"
+                + i);
+            element.setElementAttributes(eAttr);
+            disk.processUpdate(element);
+        }
+
+        // verify each
+        for (int i = 0; i < cnt; i++)
+        {
+            ICacheElement<String, String> element = disk.processGet(i + ":key");
+            assertNotNull("Shoulds have received an element.", element);
+        }
+
+        // remove each
+        for (int i = 0; i < cnt; i++)
+        {
+            disk.remove(i + ":");
+            ICacheElement<String, String> element = disk.processGet(i + ":key");
+            assertNull("Should not have received an element.", element);
+        }
+    }
+
+
+    /**
+     * Verify that group members are removed if we call remove with a group.
+     *
+     * @throws IOException
+     */
+    public void testRemove_Group() throws IOException
+    {
+        // SETUP
+        BlockDiskCacheAttributes cattr = getCacheAttributes();
+        cattr.setCacheName("testRemove_Group");
+        cattr.setMaxKeySize(100);
+        cattr.setDiskPath("target/test-sandbox/BlockDiskCacheUnitTest");
+        BlockDiskCache<GroupAttrName<String>, String> disk = new BlockDiskCache<GroupAttrName<String>, String>(cattr);
+
+        disk.processRemoveAll();
+
+        String cacheName = "testRemove_Group_Region";
+        String groupName = "testRemove_Group";
+
+        int cnt = 25;
+        for (int i = 0; i < cnt; i++)
+        {
+            GroupAttrName<String> groupAttrName = getGroupAttrName(cacheName, groupName, i + ":key");
+            CacheElement<GroupAttrName<String>, String> element = new CacheElement<GroupAttrName<String>, String>(cacheName,
+                groupAttrName, "data:" + i);
+
+            IElementAttributes eAttr = new ElementAttributes();
+            eAttr.setIsSpool(true);
+            element.setElementAttributes(eAttr);
+
+            disk.processUpdate(element);
+        }
+
+        // verify each
+        for (int i = 0; i < cnt; i++)
+        {
+            GroupAttrName<String> groupAttrName = getGroupAttrName(cacheName, groupName, i + ":key");
+            ICacheElement<GroupAttrName<String>, String> element = disk.processGet(groupAttrName);
+            assertNotNull("Should have received an element.", element);
+        }
+
+        // DO WORK
+        // remove the group
+        disk.remove(getGroupAttrName(cacheName, groupName, null));
+
+        for (int i = 0; i < cnt; i++)
+        {
+            GroupAttrName<String> groupAttrName = getGroupAttrName(cacheName, groupName, i + ":key");
+            ICacheElement<GroupAttrName<String>, String> element = disk.processGet(groupAttrName);
+
+            // VERIFY
+            assertNull("Should not have received an element.", element);
+        }
+
+    }
+
+    /**
+     * Internal method used for group functionality.
+     * <p>
+     *
+     * @param cacheName
+     * @param group
+     * @param name
+     * @return GroupAttrName
+     */
+    private GroupAttrName<String> getGroupAttrName(String cacheName, String group, String name)
+    {
+        GroupId gid = new GroupId(cacheName, group);
+        return new GroupAttrName<String>(gid, name);
     }
 
     /** Holder for a string and byte array. */
