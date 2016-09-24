@@ -1,5 +1,17 @@
 package org.apache.commons.jcs.auxiliary.remote;
 
+import org.apache.commons.jcs.JCS;
+import org.apache.commons.jcs.access.CacheAccess;
+import org.apache.commons.jcs.auxiliary.AuxiliaryCache;
+import org.apache.commons.jcs.auxiliary.MockCacheEventLogger;
+import org.apache.commons.jcs.auxiliary.remote.server.RemoteCacheServerFactory;
+import org.apache.commons.jcs.engine.CacheElement;
+import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
+import org.apache.commons.jcs.engine.control.MockCompositeCacheManager;
+import org.apache.commons.jcs.engine.control.MockElementSerializer;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -20,18 +32,6 @@ package org.apache.commons.jcs.auxiliary.remote;
  */
 
 import junit.framework.TestCase;
-
-import org.apache.commons.jcs.JCS;
-import org.apache.commons.jcs.access.CacheAccess;
-import org.apache.commons.jcs.auxiliary.AuxiliaryCache;
-import org.apache.commons.jcs.auxiliary.MockCacheEventLogger;
-import org.apache.commons.jcs.auxiliary.remote.server.RemoteCacheServerFactory;
-import org.apache.commons.jcs.engine.CacheElement;
-import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
-import org.apache.commons.jcs.engine.control.MockCompositeCacheManager;
-import org.apache.commons.jcs.engine.control.MockElementSerializer;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * @author Aaron SMuts
@@ -108,7 +108,9 @@ public class TestRemoteCache
         rca.setRemoteLocation( "localhost", 1101 );
         rca.setCacheName( "testCache" );
 
-        RemoteCacheManager mgr = RemoteCacheFactory.getManager( rca, cacheMgr, new MockCacheEventLogger(), new MockElementSerializer() );
+        RemoteCacheFactory factory = new RemoteCacheFactory();
+        factory.initialize();
+        RemoteCacheManager mgr = factory.getManager( rca, cacheMgr, new MockCacheEventLogger(), new MockElementSerializer() );
         AuxiliaryCache<String, String> cache = mgr.getCache( rca );
 
         int numMes = 100;

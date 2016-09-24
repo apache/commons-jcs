@@ -147,7 +147,7 @@ public class BasicRemoteCacheClientServerUnitTest extends Assert
         attributes.setLocalPort(LOCAL_PORT);
         attributes.setCacheName("testSinglePut");
 
-        RemoteCacheManager remoteCacheManager = RemoteCacheFactory.getManager(attributes, compositeCacheManager, new MockCacheEventLogger(), new MockElementSerializer());
+        RemoteCacheManager remoteCacheManager = factory.getManager(attributes, compositeCacheManager, new MockCacheEventLogger(), new MockElementSerializer());
         AuxiliaryCache<String, String> cache = remoteCacheManager.getCache(attributes);
 
         // DO WORK
@@ -196,7 +196,7 @@ public class BasicRemoteCacheClientServerUnitTest extends Assert
 
         MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
 
-        RemoteCacheManager remoteCacheManager = RemoteCacheFactory.getManager(attributes, compositeCacheManager, cacheEventLogger, null);
+        RemoteCacheManager remoteCacheManager = factory.getManager(attributes, compositeCacheManager, cacheEventLogger, null);
         AuxiliaryCache<String, String> cache = remoteCacheManager.getCache(attributes);
 
         // DO WORK
@@ -250,7 +250,7 @@ public class BasicRemoteCacheClientServerUnitTest extends Assert
         attributes.setLocalPort(LOCAL_PORT);
         attributes.setCacheName("testPutAndListen");
 
-        RemoteCacheManager remoteCacheManager = RemoteCacheFactory.getManager(attributes, compositeCacheManager, new MockCacheEventLogger(), new MockElementSerializer());
+        RemoteCacheManager remoteCacheManager = factory.getManager(attributes, compositeCacheManager, new MockCacheEventLogger(), new MockElementSerializer());
         AuxiliaryCache<String, String> cache = remoteCacheManager.getCache(attributes);
 
         MockRemoteCacheListener<String, String> listener = new MockRemoteCacheListener<String, String>();
@@ -299,7 +299,7 @@ public class BasicRemoteCacheClientServerUnitTest extends Assert
         attributes.setLocalPort(LOCAL_PORT);
         attributes.setCacheName("testPutaMultipleAndListen");
 
-        RemoteCacheManager remoteCacheManager = RemoteCacheFactory.getManager(attributes, compositeCacheManager, new MockCacheEventLogger(), new MockElementSerializer());
+        RemoteCacheManager remoteCacheManager = factory.getManager(attributes, compositeCacheManager, new MockCacheEventLogger(), new MockElementSerializer());
         AuxiliaryCache<String, String> cache = remoteCacheManager.getCache(attributes);
 
         MockRemoteCacheListener<String, String> listener = new MockRemoteCacheListener<String, String>();
