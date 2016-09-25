@@ -1,5 +1,12 @@
 package org.apache.commons.jcs.auxiliary.remote.http.client;
 
+import org.apache.commons.jcs.auxiliary.AuxiliaryCache;
+import org.apache.commons.jcs.auxiliary.remote.http.client.behavior.IRemoteHttpCacheClient;
+import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
+import org.apache.commons.jcs.engine.behavior.IElementSerializer;
+import org.apache.commons.jcs.engine.control.MockCompositeCacheManager;
+import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -20,34 +27,23 @@ package org.apache.commons.jcs.auxiliary.remote.http.client;
  */
 
 import junit.framework.TestCase;
-import org.apache.commons.jcs.auxiliary.AuxiliaryCache;
-import org.apache.commons.jcs.auxiliary.remote.http.client.behavior.IRemoteHttpCacheClient;
-import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
-import org.apache.commons.jcs.engine.behavior.IElementSerializer;
-import org.apache.commons.jcs.engine.control.MockCompositeCacheManager;
-import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;
 
 /** Unit tests for the manager. */
-public class RemoteHttpCacheManagerUnitTest
+public class RemoteHttpCacheFactoryUnitTest
     extends TestCase
 {
     /** Verify that we get the default. */
     public void testCreateRemoteHttpCacheClient_Bad()
     {
         // SETUP
-        ICompositeCacheManager cacheMgr = new MockCompositeCacheManager();
-        ICacheEventLogger cacheEventLogger = null;
-        IElementSerializer elementSerializer = null;
-
         String remoteHttpClientClassName = "junk";
         RemoteHttpCacheAttributes cattr = new RemoteHttpCacheAttributes();
         cattr.setRemoteHttpClientClassName( remoteHttpClientClassName );
 
-        RemoteHttpCacheManager manager = RemoteHttpCacheManager.getInstance( cacheMgr, cacheEventLogger,
-                                                                             elementSerializer );
+        RemoteHttpCacheFactory factory = new RemoteHttpCacheFactory();
 
         // DO WORK
-        IRemoteHttpCacheClient<String, String> result = manager.createRemoteHttpCacheClientForAttributes( cattr );
+        IRemoteHttpCacheClient<String, String> result = factory.createRemoteHttpCacheClientForAttributes( cattr );
 
         // VEIFY
         assertNotNull( "Should have a cache.", result );
@@ -56,20 +52,14 @@ public class RemoteHttpCacheManagerUnitTest
     }
 
     /** Verify that we get the default. */
-    public void testCreateRemoteHttpCacheClient_deafult()
+    public void testCreateRemoteHttpCacheClient_default()
     {
         // SETUP
-        ICompositeCacheManager cacheMgr = new MockCompositeCacheManager();
-        ICacheEventLogger cacheEventLogger = null;
-        IElementSerializer elementSerializer = null;
-
         RemoteHttpCacheAttributes cattr = new RemoteHttpCacheAttributes();
-
-        RemoteHttpCacheManager manager = RemoteHttpCacheManager.getInstance( cacheMgr, cacheEventLogger,
-                                                                             elementSerializer );
+        RemoteHttpCacheFactory factory = new RemoteHttpCacheFactory();
 
         // DO WORK
-        IRemoteHttpCacheClient<String, String> result = manager.createRemoteHttpCacheClientForAttributes( cattr );
+        IRemoteHttpCacheClient<String, String> result = factory.createRemoteHttpCacheClientForAttributes( cattr );
 
         // VEIFY
         assertNotNull( "Should have a cache.", result );
@@ -85,12 +75,10 @@ public class RemoteHttpCacheManagerUnitTest
         IElementSerializer elementSerializer = null;
 
         RemoteHttpCacheAttributes cattr = new RemoteHttpCacheAttributes();
-
-        RemoteHttpCacheManager manager = RemoteHttpCacheManager.getInstance( cacheMgr, cacheEventLogger,
-                                                                             elementSerializer );
+        RemoteHttpCacheFactory factory = new RemoteHttpCacheFactory();
 
         // DO WORK
-        AuxiliaryCache<String, String> result = manager.getCache( cattr );
+        AuxiliaryCache<String, String> result = factory.createCache(cattr, cacheMgr, cacheEventLogger, elementSerializer);
 
         // VEIFY
         assertNotNull( "Should have a cache.", result );
