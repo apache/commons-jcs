@@ -24,7 +24,7 @@ import org.apache.commons.jcs.auxiliary.remote.value.RemoteCacheRequest;
 import org.apache.commons.jcs.auxiliary.remote.value.RemoteRequestType;
 
 /** Unit tests for the dispatcher. */
-public class RemoteHttpCacheDispatcherUniTest
+public class RemoteHttpCacheDispatcherUnitTest
     extends TestCase
 {
     /**
