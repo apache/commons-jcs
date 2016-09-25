@@ -34,7 +34,7 @@
   <properties>
     <maven.compiler.source>1.6</maven.compiler.source>
     <maven.compiler.target>1.6</maven.compiler.target>
-    <commons.osgi.export>org.apache.commons.jcs,org.apache.commons.jcs.access</commons.osgi.export>
+    <commons.osgi.export>org.apache.commons.jcs,org.apache.commons.jcs.access,org.apache.commons.jcs.access.exception</commons.osgi.export>
     <commons.osgi.private>org.apache.commons.jcs.*</commons.osgi.private>
   </properties>
 
@@ -130,7 +130,8 @@
           <version>${commons.surefire.version}</version>
           <configuration>
             <argLine>-Xmx256m -Djava.security.manager -Djava.security.policy=${basedir}/src/test/conf/cache.policy</argLine>
-            <forkMode>pertest</forkMode>
+            <forkCount>1</forkCount>
+            <reuseForks>false</reuseForks>
             <includes>
               <include>**/*UnitTest.java</include>
             </includes>
