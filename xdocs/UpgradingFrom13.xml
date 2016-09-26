@@ -1,0 +1,107 @@
+<?xml version="1.0"?>
+<!--
+ Licensed to the Apache Software Foundation (ASF) under one
+ or more contributor license agreements.  See the NOTICE file
+ distributed with this work for additional information
+ regarding copyright ownership.  The ASF licenses this file
+ to you under the Apache License, Version 2.0 (the
+ "License"); you may not use this file except in compliance
+ with the License.  You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing,
+ software distributed under the License is distributed on an
+ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ KIND, either express or implied.  See the License for the
+ specific language governing permissions and limitations
+ under the License.
+-->
+
+<document>
+  <properties>
+    <title>Upgrading from JCS 1.3 to 2.0</title>
+    <author email="tv@apache.org">Thomas Vandahl</author>
+  </properties>
+
+  <body>
+    <section name="Upgrading from JCS 1.3 to 2.0">
+      <p>
+        This document lists a number of things that changed in Commons JCS 
+        2.0. 
+      </p>
+      <subsection name="Package Names and Maven Coordinates">
+        <p>
+          The main difference is the move to the Apache Commons project
+          which lead to the change of the package names and Maven coordinates.
+          So in all your code replace
+        <source><![CDATA[
+import org.apache.jcs.*;
+]]></source>
+          with
+        <source><![CDATA[
+import org.apache.commons.jcs.*;
+]]></source>
+          The Maven coordinates change from
+        <source><![CDATA[
+<dependency>
+    <groupId>org.apache.jcs</groupId>
+    <artifactId>jcs</artifactId>
+    <version>1.3</version>
+</dependency>
+]]></source>
+          to
+        <source><![CDATA[
+<dependency>
+    <groupId>org.apache.commons</groupId>
+    <artifactId>commons-jcs-core</artifactId>
+    <version>2.0</version>
+</dependency>
+]]></source>
+        </p>
+      </subsection>
+      <subsection name="Change Cache Access Object">
+        <p>
+          JCS now uses different cache access objects depending on 
+          if you want to use cache groups or not. This was necessary
+          because the cache access objects are now generic which saves
+          you all the casts but doesn't allow different objects in the
+          same cache anymore. You now use
+          <source><![CDATA[
+import org.apache.commons.jcs.JCS;
+import org.apache.commons.jcs.access.CacheAccess;
+import org.apache.commons.jcs.access.GroupCacheAccess;
+
+CacheAccess<String, City> cityCache = JCS.getInstance( "city" );
+GroupCacheAccess<String, Country> countryCache = JCS.getGroupCacheInstance( "country" );
+]]></source>
+        </p>
+      </subsection>
+      <subsection name="Adjusting the Configuration">
+        <p>
+          Here again, change all package names in configuration entries
+          from e.g.
+        <source><![CDATA[
+jcs.default.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+]]></source>
+          to
+        <source><![CDATA[
+jcs.default.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
+]]></source>
+          and all <code>MaxLifeSeconds</code> lines to <code>MaxLife</code>
+          like 
+        <source><![CDATA[
+jcs.default.elementattributes.MaxLifeSeconds=7
+]]></source>
+          to
+        <source><![CDATA[
+jcs.default.elementattributes.MaxLife=7
+]]></source>
+        </p>
+      </subsection>
+    </section>
+  </body>
+</document>
+
+
+

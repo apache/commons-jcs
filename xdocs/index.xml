@@ -58,7 +58,8 @@
 				<li>Network efficient multi-key retrieval</li>
 			</ul>
 			<p> JCS 2.0 works on JDK versions 1.6 and up. It only has a
-				dependency on Commons Logging.</p>
+				dependency on Commons Logging. See the document about
+                <a href="UpgradingFrom13.html">upgrading</a>.</p>
 		</section>
 		<section name="JCS is a Composite Cache">
 			<p>
