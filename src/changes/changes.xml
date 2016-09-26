@@ -20,6 +20,9 @@
 	</properties>
 	<body>
         <release version="2.0" date="unreleased" description="JDK 1.6 based major release">
+            <action issue="JCS-130" dev="tv" type="update">
+                Simplify management of auxiliary caches
+            </action>
             <action issue="JCS-165" dev="tv" type="fix" due-to="Wiktor Niesiobedzki">
                 Fix: BlockDiskCache partial remove / group remove doesn't work
             </action>
