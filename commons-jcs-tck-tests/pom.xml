@@ -239,5 +239,6 @@
     </profile>
   </profiles>
 
+  <packaging>pom</packaging>
 </project>
 
