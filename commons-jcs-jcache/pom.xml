@@ -30,6 +30,12 @@
   <artifactId>commons-jcs-jcache</artifactId>
   <name>Apache Commons JCS :: JCache</name>
 
+  <scm>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/commons/proper/jcs/trunk/commons-jcs-jcache</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/commons/proper/jcs/trunk/commons-jcs-jcache</developerConnection>
+    <url>http://svn.apache.org/viewvc/commons/proper/jcs/trunk/commons-jcs-jcache</url>
+  </scm>
+
   <dependencies>
     <dependency>
       <groupId>org.apache.geronimo.specs</groupId>

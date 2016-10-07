@@ -31,6 +31,12 @@
 
   <name>Apache Commons JCS :: Core</name>
 
+  <scm>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/commons/proper/jcs/trunk/commons-jcs-core</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/commons/proper/jcs/trunk/commons-jcs-core</developerConnection>
+    <url>http://svn.apache.org/viewvc/commons/proper/jcs/trunk/commons-jcs-core</url>
+  </scm>
+
   <properties>
     <maven.compiler.source>1.6</maven.compiler.source>
     <maven.compiler.target>1.6</maven.compiler.target>

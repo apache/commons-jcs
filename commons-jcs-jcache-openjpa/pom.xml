@@ -28,6 +28,12 @@
   <artifactId>commons-jcs-jcache-openjpa</artifactId>
   <name>Apache Commons JCS :: JCache OpenJPA</name>
 
+  <scm>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/commons/proper/jcs/trunk/commons-jcs-jcache-openjpa</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/commons/proper/jcs/trunk/commons-jcs-jcache-openjpa</developerConnection>
+    <url>http://svn.apache.org/viewvc/commons/proper/jcs/trunk/commons-jcs-jcache-openjpa</url>
+  </scm>
+
   <dependencies>
     <dependency>
       <groupId>org.apache.geronimo.specs</groupId>

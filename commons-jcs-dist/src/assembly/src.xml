@@ -20,21 +20,51 @@
     <format>tar.gz</format>
     <format>zip</format>
   </formats>
-  <baseDirectory>${project.artifactId}-${project.version}-src</baseDirectory>
+  <moduleSets>
+    <moduleSet>
+      <useAllReactorProjects>true</useAllReactorProjects>
+      <includes>
+        <include>org.apache.commons:commons-jcs-core</include>
+        <include>org.apache.commons:commons-jcs-dist</include>
+        <include>org.apache.commons:commons-jcs-jcache</include>
+        <include>org.apache.commons:commons-jcs-jcache-tck</include>
+        <include>org.apache.commons:commons-jcs-jcache-extras</include>
+        <include>org.apache.commons:commons-jcs-jcache-openjpa</include>
+      </includes>
+      <sources>
+        <outputDirectoryMapping>${module.basedir.name}</outputDirectoryMapping>
+        <excludeSubModuleDirectories>false</excludeSubModuleDirectories>
+        <fileSets>
+          <fileSet>
+            <excludes>
+              <exclude>target/**</exclude>
+              <exclude>.settings/**</exclude>
+              <exclude>.classpath</exclude>
+              <exclude>.project</exclude>
+            </excludes>
+          </fileSet>
+        </fileSets>
+      </sources>
+    </moduleSet>
+  </moduleSets>
   <fileSets>
     <fileSet>
-      <directory>${project.basedir}/..</directory>
-      <excludes>
-        <exclude>**/*.log</exclude>
-        <exclude>${project.build.directory}/**</exclude>
-        <exclude>.*/**</exclude>
-        <exclude>**/${project.build.directory}/**</exclude>
-        <exclude>**/.*/**</exclude>
-        <exclude>**/KEYS</exclude>
-        <exclude>${project.basedir}/../commons-jcs-sandbox/**</exclude>
-        <exclude>${project.basedir}/../auxiliary-builds/**</exclude>
-        <exclude>${project.basedir}/../src/experimental/**</exclude>
-      </excludes>
+      <directory>${project.parent.basedir}</directory>
+      <outputDirectory></outputDirectory>
+      <includes>
+        <include>README*</include>
+        <include>pom.xml</include>
+        <include>src/**</include>
+        <include>xdocs/**</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>${project.build.directory}/maven-shared-archive-resources/META-INF</directory>
+      <outputDirectory></outputDirectory>
+      <includes>
+        <include>LICENSE*</include>
+        <include>NOTICE*</include>
+      </includes>
     </fileSet>
   </fileSets>
 </assembly>
