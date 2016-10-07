@@ -2,7 +2,7 @@ Default build is using:
 
     mvn clean install
 
-Release build is ising (to get distributions - ie src/bin assemblies - and force TCKs to pass):
+Release build is using (to get distributions - ie src/bin assemblies - and force TCKs to pass):
 
     mvn clean install -Prelease
 

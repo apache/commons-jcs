@@ -52,7 +52,9 @@
       <directory>${project.parent.basedir}</directory>
       <outputDirectory></outputDirectory>
       <includes>
-        <include>README*</include>
+        <include>*.md</include>
+        <include>BUILDING.txt</include>
+        <include>RELEASE-NOTES.txt</include>
         <include>pom.xml</include>
         <include>src/**</include>
         <include>xdocs/**</include>
