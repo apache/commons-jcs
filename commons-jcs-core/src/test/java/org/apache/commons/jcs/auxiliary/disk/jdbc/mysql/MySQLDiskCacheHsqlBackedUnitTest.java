@@ -25,14 +25,13 @@ import static org.junit.Assert.assertNull;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.jcs.JCS;
 import org.apache.commons.jcs.access.CacheAccess;
+import org.apache.commons.jcs.auxiliary.disk.jdbc.HsqlSetupTableUtil;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -63,7 +62,7 @@ public class MySQLDiskCacheHsqlBackedUnitTest
         new org.hsqldb.jdbcDriver();
         Connection cConn = DriverManager.getConnection( url + database, user, password );
 
-        setupTABLE( cConn );
+        HsqlSetupTableUtil.setupTABLE( cConn, "JCS_STORE_MYSQL" );
     }
 
     /**
@@ -175,75 +174,5 @@ public class MySQLDiskCacheHsqlBackedUnitTest
         assertEquals( "Wrong number returned", 10, matchingResults.size() );
 //        System.out.println( "matchingResults.keySet() " + matchingResults.keySet() );
 //        System.out.println( "\nAFTER TEST \n" + jcs.getStats() );
-    }
-
-    /**
-     * SETUP TABLE FOR CACHE
-     * @param cConn
-     */
-    private static void setupTABLE( Connection cConn ) throws SQLException
-    {
-        boolean newT = true;
-
-        StringBuilder createSql = new StringBuilder();
-        createSql.append( "CREATE CACHED TABLE JCS_STORE_MYSQL " );
-        createSql.append( "( " );
-        createSql.append( "CACHE_KEY             VARCHAR(250)          NOT NULL, " );
-        createSql.append( "REGION                VARCHAR(250)          NOT NULL, " );
-        createSql.append( "ELEMENT               BINARY, " );
-        createSql.append( "CREATE_TIME           TIMESTAMP, " );
-        createSql.append( "UPDATE_TIME_SECONDS   BIGINT, " );
-        createSql.append( "MAX_LIFE_SECONDS      BIGINT, " );
-        createSql.append( "SYSTEM_EXPIRE_TIME_SECONDS      BIGINT, " );
-        createSql.append( "IS_ETERNAL            CHAR(1), " );
-        createSql.append( "PRIMARY KEY (CACHE_KEY, REGION) " );
-        createSql.append( ");" );
-
-        Statement sStatement = cConn.createStatement();
-
-        try
-        {
-            sStatement.execute( createSql.toString() );
-        }
-        catch ( SQLException e )
-        {
-            if ("23000".equals(e.getSQLState()))
-            {
-                newT = false;
-            }
-            else
-            {
-                throw e;
-            }
-        }
-        finally
-        {
-            sStatement.close();
-        }
-
-        if ( newT )
-        {
-            String setupData[] = { "create index iKEY on JCS_STORE_MYSQL (CACHE_KEY, REGION)" };
-            Statement iStatement = cConn.createStatement();
-
-            try
-            {
-                for ( int i = 0; i < setupData.length; i++ )
-                {
-                    try
-                    {
-                        iStatement.execute( setupData[i] );
-                    }
-                    catch ( SQLException e )
-                    {
-                        System.out.println( "Exception: " + e );
-                    }
-                }
-            }
-            finally
-            {
-                iStatement.close();
-            }
-        }
     }
 }

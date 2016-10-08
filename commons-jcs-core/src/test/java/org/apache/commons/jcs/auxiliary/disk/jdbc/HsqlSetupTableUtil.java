@@ -21,10 +21,11 @@ package org.apache.commons.jcs.auxiliary.disk.jdbc;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.Statement;
+
+import org.apache.commons.jcs.auxiliary.disk.jdbc.hsql.HSQLDiskCacheFactory;
 
 /** Can use this to setup a table. */
-public class HsqlSetupTableUtil
+public class HsqlSetupTableUtil extends HSQLDiskCacheFactory
 {
     /**
      * SETUP a TABLE FOR CACHE testing
@@ -36,67 +37,7 @@ public class HsqlSetupTableUtil
      */
     public static void setupTABLE( Connection cConn, String tableName ) throws SQLException
     {
-        boolean newT = true;
-
-        StringBuilder createSql = new StringBuilder();
-        createSql.append( "CREATE CACHED TABLE ").append( tableName );
-        createSql.append( "( " );
-        createSql.append( "CACHE_KEY             VARCHAR(250)          NOT NULL, " );
-        createSql.append( "REGION                VARCHAR(250)          NOT NULL, " );
-        createSql.append( "ELEMENT               BINARY, " );
-        createSql.append( "CREATE_TIME           TIMESTAMP, " );
-        createSql.append( "UPDATE_TIME_SECONDS   BIGINT, " );
-        createSql.append( "MAX_LIFE_SECONDS      BIGINT, " );
-        createSql.append( "SYSTEM_EXPIRE_TIME_SECONDS      BIGINT, " );
-        createSql.append( "IS_ETERNAL            CHAR(1), " );
-        createSql.append( "PRIMARY KEY (CACHE_KEY, REGION) " );
-        createSql.append( ");" );
-
-        Statement sStatement = cConn.createStatement();
-
-        try
-        {
-            sStatement.execute( createSql.toString() );
-        }
-        catch ( SQLException e )
-        {
-            if ("23000".equals(e.getSQLState()))
-            {
-                newT = false;
-            }
-            else
-            {
-                throw e;
-            }
-        }
-        finally
-        {
-            sStatement.close();
-        }
-
-        if ( newT )
-        {
-            String setupData[] = { "create index iKEY on " + tableName + " (CACHE_KEY, REGION)" };
-            Statement iStatement = cConn.createStatement();
-
-            try
-            {
-                for ( int i = 0; i < setupData.length; i++ )
-                {
-                    try
-                    {
-                        iStatement.execute( setupData[i] );
-                    }
-                    catch ( SQLException e )
-                    {
-                        System.out.println( "Exception: " + e );
-                    }
-                }
-            }
-            finally
-            {
-                iStatement.close();
-            }
-        }
+        HsqlSetupTableUtil util = new HsqlSetupTableUtil();
+        util.setupTable(cConn, tableName);
     }
 }
