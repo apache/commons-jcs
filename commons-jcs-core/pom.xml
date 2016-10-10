@@ -40,8 +40,6 @@
   <properties>
     <maven.compiler.source>1.6</maven.compiler.source>
     <maven.compiler.target>1.6</maven.compiler.target>
-    <commons.osgi.export>org.apache.commons.jcs,org.apache.commons.jcs.access,org.apache.commons.jcs.access.exception</commons.osgi.export>
-    <commons.osgi.private>org.apache.commons.jcs.*</commons.osgi.private>
   </properties>
 
   <dependencies>

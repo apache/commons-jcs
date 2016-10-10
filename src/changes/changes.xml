@@ -20,6 +20,8 @@
 	</properties>
 	<body>
         <release version="2.0" date="unreleased" description="JDK 1.6 based major release">
+        </release>
+        <release version="2.0-beta-2" date="2016-10-10" description="JDK 1.6 based major release (beta-2)">
             <action issue="JCS-130" dev="tv" type="update">
                 Simplify management of auxiliary caches
             </action>

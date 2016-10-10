@@ -33,13 +33,13 @@ limitations under the License.
 
 
                         ${project.name}
-                            Version ${version}
-                           Release Notes
+                        Version ${version}
+                        Release Notes
 
 
 INTRODUCTION:
 
-This document contains the release notes for the ${version} version of Apache Commons JCS.
+This document contains the release notes for the ${version} version of ${project.name}.
 Commons JCS is a distributed caching system written in Java. It is intend to speed up 
 applications by providing a means to manage cached data of various dynamic natures.
 
@@ -135,6 +135,6 @@ Removed:
 Historical list of changes: ${project.url}changes-report.html
 
 For complete information on ${project.name}, including instructions on how to submit bug reports,
-patches, or suggestions for improvement, see the Apache ${project.name} website:
+patches, or suggestions for improvement, see the ${project.name} website:
 
 ${project.url}
