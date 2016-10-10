@@ -516,9 +516,6 @@
     </profile>
     <profile>
       <id>release</id>
-      <modules>
-        <module>commons-jcs-dist</module>
-      </modules>
       <build>
         <plugins>
           <plugin>
