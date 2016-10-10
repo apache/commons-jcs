@@ -528,31 +528,18 @@
             </configuration>
           </plugin>
           <plugin>
-            <artifactId>maven-assembly-plugin</artifactId>
-            <inherited>false</inherited>
-            <executions>
-              <execution>
-                <goals>
-                  <goal>single</goal>
-                </goals>
-                <!-- disable assembly:single from commons-parent
-                     release profile; multimodule assembly handled
-                     by dist module -->
-                <phase />
-              </execution>
-            </executions>
-          </plugin>
-          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-source-plugin</artifactId>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <!-- Disable Apache Parent POM built-in source assembly -->
             <executions>
               <execution>
-                <id>create-source-jar</id>
-                <!-- suppress execution specified by parent profile -->
-                <phase />
+                <id>source-release-assembly</id>
+                <configuration>
+                  <skipAssembly>true</skipAssembly>
+                </configuration>
               </execution>
             </executions>
-          </plugin>
+          </plugin>      
         </plugins>
       </build>
     </profile>
