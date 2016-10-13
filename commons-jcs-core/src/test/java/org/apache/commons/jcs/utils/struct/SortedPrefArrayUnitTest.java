@@ -1,5 +1,7 @@
 package org.apache.commons.jcs.utils.struct;
 
+import java.util.Arrays;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -88,14 +90,14 @@ public class SortedPrefArrayUnitTest
         for ( int i = 0; i < elem.length; i++ )
         {
             array.add( elem[i] );
-            // System.out.println( array.dumpArray() );
+            // System.out.println( Arrays.toString(array.getArray()) );
         }
 
         assertEquals( "Size was not as expected.", maxSize, array.size() );
 
         // this is a fragile test, since it relies on a hardcoded array
         String smallest = array.getSmallest();
-        assertEquals( "smallest should be 08", "08", smallest );
+        assertEquals( "smallest should be 07", "07", smallest );
 
         String largest = array.getLargest();
         assertEquals( "Largest should be 96", "96", largest );
@@ -105,7 +107,7 @@ public class SortedPrefArrayUnitTest
         assertEquals( "Taken should be 96", "96", taken );
         assertEquals( "Size was not as expected.", ( maxSize - 1 ), array.size() );
 
-        // System.out.println( array.dumpArray() );
+        // System.out.println( Arrays.toString(array.getArray()) );
     }
 
     /**
@@ -176,7 +178,7 @@ public class SortedPrefArrayUnitTest
         {
             array.add( elem[i] );
         }
-        // System.out.println( array.dumpArray() );
+        // System.out.println( Arrays.toString(array.getArray()) );
 
         assertEquals( "Size was not as expected.", maxSize, array.size() );
 
@@ -226,7 +228,7 @@ public class SortedPrefArrayUnitTest
         array.setPreferLarge( true );
 
         array.add( "10" );
-        // System.out.println( array.dumpArray() );
+        // System.out.println( Arrays.toString(array.getArray()) );
 
         try
         {
@@ -304,7 +306,7 @@ public class SortedPrefArrayUnitTest
         for ( int i = 0; i < elem.length; i++ )
         {
             array.add( elem[i] );
-            // System.out.println( array.dumpArray() );
+            // System.out.println( Arrays.toString(array.getArray()) );
         }
 
         assertEquals( "Size was not as expected.", maxSize, array.size() );
@@ -321,7 +323,7 @@ public class SortedPrefArrayUnitTest
         assertEquals( "Taken is not as expected", "09", taken );
         assertEquals( "Size was not as expected.", ( maxSize - 1 ), array.size() );
 
-        // System.out.println( "testTakeLastItem" + array.dumpArray() );
+        // System.out.println( "testTakeLastItem" + Arrays.toString(array.getArray()) );
     }
 
     /**
@@ -343,7 +345,7 @@ public class SortedPrefArrayUnitTest
         for ( int i = 0; i < elem.length; i++ )
         {
             array.add( elem[i] );
-            // System.out.println( array.dumpArray() );
+            // System.out.println( Arrays.toString(array.getArray()) );
         }
 
         assertEquals( "Size was not as expected.", maxSize, array.size() );
@@ -358,9 +360,9 @@ public class SortedPrefArrayUnitTest
         // this should take 96;
         String taken = array.takeNearestLargerOrEqual( "09" );
         assertEquals( "Taken is not as expected", "09", taken );
-        assertEquals( "Size was not as expected. " + array.dumpArray(), ( maxSize - 1 ), array.size() );
+        assertEquals( "Size was not as expected. " + Arrays.toString(array.getArray()), ( maxSize - 1 ), array.size() );
 
-        // System.out.println( "testTakeEveryLastItem" + array.dumpArray() );
+        // System.out.println( "testTakeEveryLastItem" + Arrays.toString(array.getArray()) );
 
         // take the rest
         // take more than the max in a reverse order
@@ -368,9 +370,9 @@ public class SortedPrefArrayUnitTest
         {
             array.takeNearestLargerOrEqual( elem[i] );
         }
-        // System.out.println( "testTakeEveryLastItem" + array.dumpArray() );
+        // System.out.println( "testTakeEveryLastItem" + Arrays.toString(array.getArray()) );
 
-        assertEquals( "There should nothing left. " + array.dumpArray(), 0, array.size() );
+        assertEquals( "There should nothing left. " + Arrays.toString(array.getArray()), 0, array.size() );
     }
 
     /**
@@ -389,12 +391,12 @@ public class SortedPrefArrayUnitTest
         for ( int i = 0; i < elem.length; i++ )
         {
             array.add( elem[i] );
-            // System.out.println( array.dumpArray() );
+            // System.out.println( Arrays.toString(array.getArray()) );
         }
 
         // DO WORK
         Comparable<String> taken = array.takeNearestLargerOrEqual( "04" );
-//        System.out.println( "testTakeLargerThanGreatest" + array.dumpArray() );
+//        System.out.println( "testTakeLargerThanGreatest" + Arrays.toString(array.getArray()) );
 
         assertNull( "We should have nothing since the largest element was smaller than what we asked for. "
             + " Instead we got " + taken, taken );
@@ -416,12 +418,12 @@ public class SortedPrefArrayUnitTest
         for ( int i = 0; i < elem.length; i++ )
         {
             array.add( elem[i] );
-            // System.out.println( array.dumpArray() );
+            // System.out.println( Arrays.toString(array.getArray()) );
         }
 
         // DO WORK
         Comparable<String> taken = array.takeNearestLargerOrEqual( "03" );
-        // System.out.println( "testEqualToGreatest_LastTwoSameSize" + array.dumpArray() );
+        // System.out.println( "testEqualToGreatest_LastTwoSameSize" + Arrays.toString(array.getArray()) );
 
         assertNotNull( "We should have something since the largest element was equal to what we asked for.", taken );
     }
@@ -442,12 +444,12 @@ public class SortedPrefArrayUnitTest
         for ( int i = 0; i < elem.length; i++ )
         {
             array.add( elem[i] );
-            // System.out.println( array.dumpArray() );
+            // System.out.println( Arrays.toString(array.getArray()) );
         }
 
         // DO WORK
         Comparable<String> taken = array.takeNearestLargerOrEqual( "03" );
-        // System.out.println( "testEqualToGreatest" + array.dumpArray() );
+        // System.out.println( "testEqualToGreatest" + Arrays.toString(array.getArray()) );
 
         assertNotNull( "We should have something since the largest element was equal to what we asked for.", taken );
     }
