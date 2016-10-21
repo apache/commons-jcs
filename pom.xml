@@ -490,7 +490,6 @@
             <artifactId>maven-release-plugin</artifactId>
             <configuration>
               <releaseProfiles>release,apache-release</releaseProfiles>
-              <autoVersionSubmodules>true</autoVersionSubmodules>
             </configuration>
           </plugin>
         </plugins>
