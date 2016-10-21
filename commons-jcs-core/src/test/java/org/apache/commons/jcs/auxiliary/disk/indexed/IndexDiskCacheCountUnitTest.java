@@ -38,7 +38,6 @@ public class IndexDiskCacheCountUnitTest extends IndexDiskCacheUnitTestAbstract 
 		    {
 		        IndexedDiskCacheAttributes cattr = getCacheAttributes();
 		        cattr.setCacheName( "testRemoveItems" );
-		        cattr.setMaxRecycleBinSize( 2 );
 		        cattr.setOptimizeAtRemoveCount( 7 );
 		        cattr.setMaxKeySize( 5 );
 		        cattr.setMaxPurgatorySize( 0 );

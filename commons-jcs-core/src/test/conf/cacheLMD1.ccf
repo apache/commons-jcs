@@ -35,7 +35,7 @@ jcs.default.elementattributes.IsLateral=true
 
 # #############################################################
 # ################# CACHE REGIONS AVAILABLE ###################
-# Regions preconfirgured for caching
+# Regions preconfigured for caching
 # LEAD_PRICE_CACHE_NAME
 jcs.region.LeadPrice=DC,LJG
 jcs.region.LeadPrice.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
@@ -80,7 +80,6 @@ jcs.auxiliary.DC.attributes=org.apache.commons.jcs.auxiliary.disk.indexed.Indexe
 jcs.auxiliary.DC.attributes.DiskPath=log/raf
 jcs.auxiliary.DC.attributes.MaxPurgatorySize=10000
 jcs.auxiliary.DC.attributes.MaxKeySize=10000
-jcs.auxiliary.DC.attributes.MaxRecycleBinSize=5000
 jcs.auxiliary.DC.attributes.OptimizeAtRemoveCount=300000
 
 # Lateral JavaGroups Distribution

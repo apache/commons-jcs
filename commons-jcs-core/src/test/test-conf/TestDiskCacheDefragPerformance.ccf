@@ -30,5 +30,4 @@ jcs.auxiliary.DC.attributes.DiskPath=target/test-sandbox/defrag
 jcs.auxiliary.DC.attributes.maxKeySize=10000
 jcs.auxiliary.DC.attributes.MaxPurgatorySize=5000
 jcs.auxiliary.DC.attributes.OptimizeAtRemoveCount=5000
-jcs.auxiliary.DC.attributes.MaxRecycleBinSize=5000
 

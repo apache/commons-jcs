@@ -24,8 +24,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.jcs.auxiliary.MockCacheEventLogger;
 import org.apache.commons.jcs.auxiliary.disk.DiskTestObject;
 import org.apache.commons.jcs.engine.CacheElement;
@@ -35,6 +33,8 @@ import org.apache.commons.jcs.engine.behavior.IElementAttributes;
 import org.apache.commons.jcs.engine.control.group.GroupAttrName;
 import org.apache.commons.jcs.engine.control.group.GroupId;
 import org.apache.commons.jcs.utils.timing.SleepUtil;
+
+import junit.framework.TestCase;
 
 /**
  * Tests for common functionality.
@@ -245,7 +245,6 @@ public abstract class IndexDiskCacheUnitTestAbstract extends TestCase
         IndexedDiskCacheAttributes cattr = getCacheAttributes();
         cattr.setCacheName("testRecyleBinSize");
         cattr.setDiskPath("target/test-sandbox/UnitTest");
-        cattr.setMaxRecycleBinSize(numberToInsert);
         cattr.setOptimizeAtRemoveCount(numberToInsert);
         cattr.setMaxKeySize(numberToInsert * 2);
         cattr.setMaxPurgatorySize(numberToInsert);
@@ -291,7 +290,6 @@ public abstract class IndexDiskCacheUnitTestAbstract extends TestCase
         IndexedDiskCacheAttributes cattr = getCacheAttributes();
         cattr.setCacheName("testRecyleBinUsage");
         cattr.setDiskPath("target/test-sandbox/UnitTest");
-        cattr.setMaxRecycleBinSize(numberToInsert);
         cattr.setOptimizeAtRemoveCount(numberToInsert);
         cattr.setMaxKeySize(numberToInsert * 2);
         cattr.setMaxPurgatorySize(numberToInsert);

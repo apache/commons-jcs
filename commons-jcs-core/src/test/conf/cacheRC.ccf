@@ -35,7 +35,7 @@ jcs.default.elementattributes.IsLateral=true
 
 # #############################################################
 # ################# CACHE REGIONS AVAILABLE ###################
-# Regions preconfirgured for caching
+# Regions preconfigured for caching
 jcs.region.testCache1=DC,RC
 jcs.region.testCache1.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
 jcs.region.testCache1.cacheattributes.MaxObjects=1000000
@@ -103,7 +103,6 @@ jcs.auxiliary.DC.attributes=org.apache.commons.jcs.auxiliary.disk.indexed.Indexe
 jcs.auxiliary.DC.attributes.DiskPath=target/test-sandbox/raf
 jcs.auxiliary.DC.attributes.MaxPurgatorySize=10000000
 jcs.auxiliary.DC.attributes.MaxKeySize=1000000
-jcs.auxiliary.DC.attributes.MaxRecycleBinSize=5000
 jcs.auxiliary.DC.attributes.OptimizeAtRemoveCount=300000
 jcs.auxiliary.DC.attributes.ShutdownSpoolTimeLimit=60
 
@@ -113,13 +112,12 @@ jcs.auxiliary.DC.attributes.ShutdownSpoolTimeLimit=60
 # adding more threads does not help.
 # If you want to use a separate pool for each disk cache, either use
 # the single model or define a different auxiliary for each region and use the Pooled.
-# SINGLE is best unless you ahve a huge # of regions.
+# SINGLE is best unless you have a huge # of regions.
 jcs.auxiliary.DC2=org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
 jcs.auxiliary.DC2.attributes=org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
 jcs.auxiliary.DC2.attributes.DiskPath=target/test-sandbox/raf
 jcs.auxiliary.DC2.attributes.MaxPurgatorySize=10000
 jcs.auxiliary.DC2.attributes.MaxKeySize=10000
-jcs.auxiliary.DC2.attributes.MaxRecycleBinSize=5000
 jcs.auxiliary.DC2.attributes.OptimizeAtRemoveCount=300000
 jcs.auxiliary.DC2.attributes.EventQueueType=POOLED
 jcs.auxiliary.DC2.attributes.EventQueuePoolName=disk_cache_event_queue

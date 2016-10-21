@@ -35,7 +35,7 @@ jcs.default.elementattributes.IsLateral=true
 
 # #############################################################
 # ################# CACHE REGIONS AVAILABLE ###################
-# Regions preconfirgured for caching
+# Regions preconfigured for caching
 jcs.region.testCache1=DC,RC
 jcs.region.testCache1.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
 jcs.region.testCache1.cacheattributes.MaxObjects=1000000
@@ -88,7 +88,6 @@ jcs.auxiliary.DC.attributes=org.apache.commons.jcs.auxiliary.disk.indexed.Indexe
 jcs.auxiliary.DC.attributes.DiskPath=target/test-sandbox/raf
 jcs.auxiliary.DC.attributes.MaxPurgatorySize=10000000
 jcs.auxiliary.DC.attributes.MaxKeySize=1000000
-jcs.auxiliary.DC.attributes.MaxRecycleBinSize=5000
 jcs.auxiliary.DC.attributes.OptimizeAtRemoveCount=300000
 jcs.auxiliary.DC.attributes.ShutdownSpoolTimeLimit=60
 

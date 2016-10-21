@@ -35,7 +35,6 @@ jcs.auxiliary.CACHE.attributes=org.apache.commons.jcs.auxiliary.disk.indexed.Ind
 jcs.auxiliary.CACHE.attributes.DiskPath=target/test-sandbox/concurrent_cache
 jcs.auxiliary.CACHE.attributes.MaxPurgatorySize=-1
 jcs.auxiliary.CACHE.attributes.MaxKeySize=-1
-jcs.auxiliary.CACHE.attributes.MaxRecycleBinSize=500
 jcs.auxiliary.CACHE.attributes.ShutdownSpoolTimeLimit=60
 jcs.auxiliary.CACHE.attributes.OptimizeAtRemoveCount=30000
 jcs.auxiliary.CACHE.attributes.OptimizeOnShutdown=true

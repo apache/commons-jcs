@@ -1,5 +1,9 @@
 package org.apache.commons.jcs.auxiliary.disk.indexed;
 
+import org.apache.commons.jcs.auxiliary.disk.DiskTestObject;
+import org.apache.commons.jcs.engine.behavior.ICacheElement;
+import org.apache.commons.jcs.utils.timing.SleepUtil;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -20,9 +24,6 @@ package org.apache.commons.jcs.auxiliary.disk.indexed;
  */
 
 import junit.framework.TestCase;
-import org.apache.commons.jcs.auxiliary.disk.DiskTestObject;
-import org.apache.commons.jcs.engine.behavior.ICacheElement;
-import org.apache.commons.jcs.utils.timing.SleepUtil;
 
 /**
  * Tests for the optimization routine.
@@ -42,12 +43,11 @@ public class IndexedDiskCacheOptimizationUnitTest
     {
         // SETUP
         int removeCount = 50;
-        
+
         IndexedDiskCacheAttributes cattr = new IndexedDiskCacheAttributes();
         cattr.setCacheName( "testOptimization" );
         cattr.setMaxKeySize( removeCount * 2 );
         cattr.setOptimizeAtRemoveCount( removeCount );
-        cattr.setMaxRecycleBinSize( removeCount * 3 );
         cattr.setDiskPath( "target/test-sandbox/testOptimization" );
         IndexedDiskCache<Integer, DiskTestObject> disk = new IndexedDiskCache<Integer, DiskTestObject>( cattr );
 
@@ -61,7 +61,7 @@ public class IndexedDiskCacheOptimizationUnitTest
         {
             disk.processUpdate( elements[i] );
         }
-                
+
 
         Thread.sleep( 1000 );
         long sizeBeforeRemove = disk.getDataFileSize();
@@ -73,7 +73,7 @@ public class IndexedDiskCacheOptimizationUnitTest
         {
             disk.processRemove( Integer.valueOf( i ) );
         }
-        
+
         SleepUtil.sleepAtLeast( 1000 );
 
         disk.optimizeFile();

@@ -55,7 +55,6 @@ jcs.auxiliary.indexedDiskCache.attributes=org.apache.commons.jcs.auxiliary.disk.
 jcs.auxiliary.indexedDiskCache.attributes.DiskPath=target/test-sandbox/indexed-disk-cache-conc
 jcs.auxiliary.indexedDiskCache.attributes.MaxPurgatorySize=10000
 jcs.auxiliary.indexedDiskCache.attributes.MaxKeySize=10000
-jcs.auxiliary.indexedDiskCache.attributes.MaxRecycleBinSize=5000
 jcs.auxiliary.indexedDiskCache.attributes.OptimizeAtRemoveCount=300000
 jcs.auxiliary.indexedDiskCache.attributes.EventQueueType=SINGLE
 jcs.auxiliary.indexedDiskCache.attributes.EventQueuePoolName=disk_cache_event_queue
