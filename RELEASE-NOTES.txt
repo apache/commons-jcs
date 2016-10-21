@@ -73,6 +73,10 @@ o           Reduce synchronization
 o JCS-48:   Replace PoolAccess with a DataSourceFactory model borrowed from DB-Torque Thanks to Hanasaki Jiji.
 o JCS-124:  Make the code in Step 5 on the JCS overview page a full working class that can compile Thanks to Richard Eigenmann.
 
+Removed:
+o           Remove size limitation configuration of indexed cache recycle bin
+o           Replace SortedPreferentialArray with JDK ConcurrentSkipListSet
+o           Replace SingleLinkedList with JDK ConcurrentLinkedQueue
 
 Historical list of changes: http://commons.apache.org/proper/commons-jcs/changes-report.html
 
