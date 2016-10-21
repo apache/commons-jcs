@@ -79,15 +79,6 @@
 						<td>N</td>
 						<td>false</td>
 					</tr>
-					<tr>
-						<td>MaxRecycleBinSize</td>
-						<td> The maximum number of empty spots the cache will keep track
-							of. The smallest are removed when the maximum size is reached.
-							Keeping track of empty spots on disk allows us to reuse spots,
-							thereby keeping the file from growing unncessarily.</td>
-						<td>N</td>
-						<td>5000</td>
-					</tr>
 				</table>
 			</subsection>
 			<subsection name="Example Configuration">
@@ -101,7 +92,6 @@ jcs.auxiliary.DC.attributes.MaxKeySize=10000
 jcs.auxiliary.DC.attributes.OptimizeAtRemoveCount=300000
 jcs.auxiliary.DC.attributes.OptimizeOnShutdown=true
 jcs.auxiliary.DC.attributes.ClearDiskOnStartup=false
-jcs.auxiliary.DC.attributes.MaxRecycleBinSize=7500
         ]]>
 				</source>
 			</subsection>
@@ -147,7 +137,6 @@ jcs.auxiliary.DC.attributes.MaxPurgatorySize=10000
 jcs.auxiliary.DC.attributes.MaxKeySize=10000
 jcs.auxiliary.DC.attributes.OptimizeAtRemoveCount=300000
 jcs.auxiliary.DC.attributes.OptimizeOnShutdown=true
-jcs.auxiliary.DC.attributes.MaxRecycleBinSize=7500
 jcs.auxiliary.DC.attributes.EventQueueType=POOLED
 jcs.auxiliary.DC.attributes.EventQueuePoolName=disk_cache_event_queue
 

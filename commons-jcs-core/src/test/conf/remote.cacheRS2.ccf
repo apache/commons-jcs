@@ -46,7 +46,7 @@ jcs.default.elementattributes.IsLateral=true
 
 # #############################################################
 # ################# CACHE REGIONS AVAILABLE ###################
-# Regions preconfirgured for caching
+# Regions preconfigured for caching
 jcs.region.testCache1=DC,RCluster
 jcs.region.testCache1.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
 jcs.region.testCache1.cacheattributes.MaxObjects=250000
@@ -71,7 +71,6 @@ jcs.auxiliary.DC.attributes=org.apache.commons.jcs.auxiliary.disk.indexed.Indexe
 jcs.auxiliary.DC.attributes.DiskPath=logs/rafRS2
 jcs.auxiliary.DC.attributes.MaxPurgatorySize=100000
 jcs.auxiliary.DC.attributes.MaxKeySize=500000
-jcs.auxiliary.DC.attributes.MaxRecycleBinSize=50000
 jcs.auxiliary.DC.attributes.OptimizeAtRemoveCount=-1
 
 # RS1 SERVER to update for clustering

@@ -21,7 +21,16 @@
 	<body>
         <release version="2.0" date="unreleased" description="JDK 1.6 based major release">
         </release>
-        <release version="2.0-beta-2" date="2016-10-10" description="JDK 1.6 based major release (beta-2)">
+        <release version="2.0-beta-2" date="2016-10-21" description="JDK 1.6 based major release (beta-2)">
+            <action dev="tv" type="remove">
+                Remove size limitation configuration of indexed cache recycle bin
+            </action>
+            <action dev="tv" type="remove">
+                Replace SortedPreferentialArray with JDK ConcurrentSkipListSet
+            </action>
+            <action dev="tv" type="remove">
+                Replace SingleLinkedList with JDK ConcurrentLinkedQueue
+            </action>
             <action issue="JCS-130" dev="tv" type="update">
                 Simplify management of auxiliary caches
             </action>

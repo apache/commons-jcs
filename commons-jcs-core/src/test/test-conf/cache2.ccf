@@ -49,7 +49,7 @@ jcs.system.groupIdCache.elementattributes.IsLateral=true
 
 # #############################################################
 # ################# CACHE REGIONS AVAILABLE ###################
-# Regions preconfirgured for caching
+# Regions preconfigured for caching
 jcs.region.testCache1=DC,RC
 jcs.region.testCache1.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
 jcs.region.testCache1.cacheattributes.MaxObjects=1000

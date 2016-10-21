@@ -39,7 +39,6 @@ public class IndexDiskCacheSizeUnitTest extends IndexDiskCacheUnitTestAbstract {
 		    {
 		        IndexedDiskCacheAttributes cattr = getCacheAttributes();
 		        cattr.setCacheName( "testRemoveItems" );
-		        cattr.setMaxRecycleBinSize( 2 );
 		        cattr.setOptimizeAtRemoveCount( 7 );
 		        cattr.setMaxKeySize( 8); // 1kb DiskTestObject takes 1420 bytes, so 5*1420 = 7100, so to keep 5 ojbects, we need max key size of 8
 		        cattr.setMaxPurgatorySize( 0 );

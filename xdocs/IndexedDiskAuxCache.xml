@@ -56,10 +56,9 @@
 				<p>
 					When items are removed from the disk cache, the
 					location of the available block on the storage file
-					is recorded in a sorted preferential array of a size
-					not to exceed the maximum number of keys allowed in
-					memory. This allows the disk cache to reuse empty
-					spots, thereby keeping the file size to a minimum.
+					is recorded in skip list set. This allows the disk 
+                    cache to reuse empty spots, thereby keeping the file
+                    size to a minimum.
 				</p>
 			</subsection>
 
@@ -159,13 +158,8 @@ jcs.auxiliary.DC.attributes.MaxPurgatorySize=10000
 					Slots in the data file become empty when items are
 					removed from the disk cache. The indexed disk cache
 					keeps track of empty slots in the data file, so they
-					can be reused. The slot locations are stored in a
-					sorted preferential array -- the recycle bin. The
-					smallest items are removed from the recycle bin when
-					it reaches the specified limit. The
-					MaxRecycleBinSize cannot be larger than the
-					MaxKeySize. If the MaxKeySize is less than 0, the
-					recycle bin will default to 5000.
+					can be reused. The slot locations are stored in the 
+                    recycle bin.
 				</p>
 				<p>
 					If all the items put on disk are the same size, then
@@ -177,11 +171,6 @@ jcs.auxiliary.DC.attributes.MaxPurgatorySize=10000
 					written to disk, unusable gaps will result.
 					Optimization is intended to remove these gaps.
 				</p>
-				<source>
-					<![CDATA[
-jcs.auxiliary.DC.attributes.MaxRecycleBinSize=10000
-        ]]>
-				</source>
 				<p>
 					The Disk cache can be configured to defragment the
 					data file at runtime. Since defragmentation is only
@@ -240,7 +229,6 @@ jcs.auxiliary.DC.attributes.MaxPurgatorySize=10000
 jcs.auxiliary.DC.attributes.MaxKeySize=10000
 jcs.auxiliary.DC.attributes.OptimizeAtRemoveCount=300000
 jcs.auxiliary.DC.attributes.OptimizeOnShutdown=true
-jcs.auxiliary.DC.attributes.MaxRecycleBinSize=7500
 jcs.auxiliary.DC.attributes.DiskLimitType=COUNT
         ]]>
 				</source>
@@ -299,7 +287,6 @@ jcs.auxiliary.DC2.attributes=org.apache.commons.jcs.auxiliary.disk.indexed.Index
 jcs.auxiliary.DC2.attributes.DiskPath=target/test-sandbox/raf
 jcs.auxiliary.DC2.attributes.MaxPurgatorySize=10000
 jcs.auxiliary.DC2.attributes.MaxKeySize=10000
-jcs.auxiliary.DC2.attributes.MaxRecycleBinSize=5000
 jcs.auxiliary.DC2.attributes.OptimizeAtRemoveCount=300000
 jcs.auxiliary.DC.attributes.OptimizeOnShutdown=true
 jcs.auxiliary.DC2.attributes.EventQueueType=POOLED

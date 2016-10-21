@@ -183,7 +183,6 @@ jcs.auxiliary.DC.attributes=org.apache.commons.jcs.auxiliary.disk.indexed.Indexe
 jcs.auxiliary.DC.attributes.DiskPath=${user.dir}/jcs_swap
 jcs.auxiliary.DC.attributes.MaxPurgatorySize=10000000
 jcs.auxiliary.DC.attributes.MaxKeySize=1000000
-jcs.auxiliary.DC.attributes.MaxRecycleBinSize=5000
 jcs.auxiliary.DC.attributes.OptimizeAtRemoveCount=300000
 jcs.auxiliary.DC.attributes.ShutdownSpoolTimeLimit=60
 ]]>

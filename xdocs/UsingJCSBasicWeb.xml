@@ -406,7 +406,6 @@ jcs.auxiliary.DC.attributes.DiskPath=/usr/opt/bookstore/raf
 jcs.auxiliary.DC.attributes.MaxPurgatorySize=10000
 jcs.auxiliary.DC.attributes.MaxKeySize=10000
 jcs.auxiliary.DC.attributes.OptimizeAtRemoveCount=300000
-jcs.auxiliary.DC.attributes.MaxRecycleBinSize=7500
 
 # Remote RMI Cache set up to failover
 jcs.auxiliary.RFailover=

@@ -31,4 +31,3 @@ jcs.auxiliary.DC.attributes.DiskPath=target/test-sandbox/steady-load
 jcs.auxiliary.DC.attributes.maxKeySize=1000
 jcs.auxiliary.DC.attributes.MaxPurgatorySize=1000
 jcs.auxiliary.DC.attributes.OptimizeAtRemoveCount=20000
-jcs.auxiliary.DC.attributes.MaxRecycleBinSize=10000
