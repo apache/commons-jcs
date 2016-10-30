@@ -20,6 +20,7 @@
     <format>tar.gz</format>
     <format>zip</format>
   </formats>
+  <baseDirectory>${project.parent.artifactId}-${version}-bin</baseDirectory>
   <moduleSets>
     <moduleSet>
       <useAllReactorProjects>true</useAllReactorProjects>
