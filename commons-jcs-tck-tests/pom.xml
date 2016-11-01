@@ -23,7 +23,7 @@
   <parent>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-jcs</artifactId>
-    <version>2.0-SNAPSHOT</version>
+    <version>2.0-beta-2</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
@@ -34,14 +34,14 @@
   -->
 
   <artifactId>commons-jcs-jcache-tck</artifactId>
-  <version>2.0-SNAPSHOT</version>
+  <version>2.0-beta-2</version>
 
   <name>Apache Commons JCS :: JCache TCK</name>
 
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/commons/proper/jcs/trunk/commons-jcs-tck-tests</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/commons/proper/jcs/trunk/commons-jcs-tck-tests</developerConnection>
-    <url>http://svn.apache.org/viewvc/commons/proper/jcs/trunk/commons-jcs-tck-tests</url>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/commons/proper/jcs/tags/commons-jcs-2.0-beta-2/commons-jcs-tck-tests</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/commons/proper/jcs/tags/commons-jcs-2.0-beta-2/commons-jcs-tck-tests</developerConnection>
+    <url>http://svn.apache.org/viewvc/commons/proper/jcs/tags/commons-jcs-2.0-beta-2/commons-jcs-tck-tests</url>
   </scm>
 
   <properties>
