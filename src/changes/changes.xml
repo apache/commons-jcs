@@ -21,7 +21,7 @@
 	<body>
         <release version="2.0" date="unreleased" description="JDK 1.6 based major release">
         </release>
-        <release version="2.0-beta-2" date="2016-10-21" description="JDK 1.6 based major release (beta-2)">
+        <release version="2.0-beta-2" date="2016-11-01" description="JDK 1.6 based major release (beta-2)">
             <action dev="tv" type="remove">
                 Remove size limitation configuration of indexed cache recycle bin
             </action>
