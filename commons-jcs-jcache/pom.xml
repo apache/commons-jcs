@@ -98,6 +98,7 @@
             <configuration>
               <includes>
                 <include>org/apache/commons/jcs/jcache/cdi/*</include>
+                <include>META-INF/services/javax.enterprise.inject.spi.Extension</include>
               </includes>
               <classifier>cdi</classifier>
             </configuration>
@@ -110,6 +111,7 @@
             <configuration>
               <excludes>
                 <exclude>org/apache/commons/jcs/jcache/cdi/</exclude>
+                <exclude>META-INF/services/javax.enterprise.inject.spi.Extension</exclude>
               </excludes>
               <classifier>nocdi</classifier>
             </configuration>
