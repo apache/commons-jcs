@@ -23,8 +23,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.jcs.JCS;
 import org.apache.commons.jcs.access.exception.CacheException;
 import org.apache.commons.jcs.access.exception.ObjectExistsException;
@@ -33,6 +31,8 @@ import org.apache.commons.jcs.engine.ElementAttributes;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.commons.jcs.engine.behavior.IElementAttributes;
+
+import junit.framework.TestCase;
 
 /**
  * Tests the methods of the cache access class.
@@ -199,7 +199,7 @@ public class CacheAccessUnitTest
     public void testRegionDefiniton()
         throws Exception
     {
-        CacheAccess<String, String> access = JCS.defineRegion( "test" );
+        CacheAccess<String, String> access = JCS.getInstance( "test" );
         assertNotNull( "We should have an access class", access );
     }
 
@@ -215,7 +215,7 @@ public class CacheAccessUnitTest
         long maxIdleTime = 8765;
         ca.setMaxMemoryIdleTimeSeconds( maxIdleTime );
 
-        CacheAccess<String, String> access = JCS.defineRegion( "testRegionDefinitonWithAttributes", ca );
+        CacheAccess<String, String> access = JCS.getInstance( "testRegionDefinitonWithAttributes", ca );
         assertNotNull( "We should have an access class", access );
 
         ICompositeCacheAttributes ca2 = access.getCacheAttributes();
@@ -239,7 +239,7 @@ public class CacheAccessUnitTest
         IElementAttributes attr = new ElementAttributes();
         attr.setMaxLife(maxLife);
 
-        CacheAccess<String, String> access = JCS.defineRegion( "testRegionDefinitonWithAttributes", ca, attr );
+        CacheAccess<String, String> access = JCS.getInstance( "testRegionDefinitonWithAttributes", ca, attr );
         assertNotNull( "We should have an access class", access );
 
         ICompositeCacheAttributes ca2 = access.getCacheAttributes();
@@ -267,7 +267,7 @@ public class CacheAccessUnitTest
         IElementAttributes attr = new ElementAttributes();
         attr.setMaxLife(maxLife);
 
-        CacheAccess<String, Integer> access = JCS.defineRegion( "testGetMatching_Normal", cattr, attr );
+        CacheAccess<String, Integer> access = JCS.getInstance( "testGetMatching_Normal", cattr, attr );
 
         // DO WORK
         int numToInsertPrefix1 = 10;
@@ -321,7 +321,7 @@ public class CacheAccessUnitTest
         IElementAttributes attr = new ElementAttributes();
         attr.setMaxLife(maxLife);
 
-        CacheAccess<String, Integer> access = JCS.defineRegion( "testGetMatching_Normal", cattr, attr );
+        CacheAccess<String, Integer> access = JCS.getInstance( "testGetMatching_Normal", cattr, attr );
 
         // DO WORK
         int numToInsertPrefix1 = 10;
