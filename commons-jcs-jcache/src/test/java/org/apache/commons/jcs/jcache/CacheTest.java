@@ -35,6 +35,8 @@ import javax.cache.event.CacheEntryListener;
 import javax.cache.event.CacheEntryListenerException;
 import javax.cache.event.CacheEntryRemovedListener;
 import javax.cache.event.CacheEntryUpdatedListener;
+import javax.cache.expiry.AccessedExpiryPolicy;
+import javax.cache.expiry.Duration;
 import javax.cache.expiry.ExpiryPolicy;
 import javax.cache.integration.CacheLoader;
 import javax.cache.integration.CacheLoaderException;
@@ -43,6 +45,7 @@ import javax.cache.spi.CachingProvider;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -50,6 +53,41 @@ import static org.junit.Assert.assertTrue;
 
 public class CacheTest
 {
+    @Test
+    public void accessExpiry() throws InterruptedException
+    {
+        final CachingProvider cachingProvider = Caching.getCachingProvider();
+        final CacheManager cacheManager = cachingProvider.getCacheManager(cachingProvider.getDefaultURI(),
+                Thread.currentThread().getContextClassLoader(),
+                cachingProvider.getDefaultProperties());
+        final Cache<Integer, Integer> cache = cacheManager.createCache(
+                "test",
+                new MutableConfiguration<Integer, Integer>()
+                        .setStoreByValue(false)
+                        .setStatisticsEnabled(true)
+                        .setManagementEnabled(true)
+                        .setTypes(Integer.class, Integer.class)
+                        .setExpiryPolicyFactory(AccessedExpiryPolicy.factoryOf(new Duration(TimeUnit.MILLISECONDS, 500))));
+
+        try {
+            cache.put(1, 2);
+            cache.get(1);
+            Thread.sleep(650);
+            assertFalse(cache.containsKey(1));
+            cache.put(1, 2);
+            for (int i = 0; i < 3; i++) { // we update the last access to force the idle time and lastaccess to be synced
+                Thread.sleep(250);
+                assertTrue("iteration: " + Integer.toString(i), cache.containsKey(1));
+            }
+            assertTrue(cache.containsKey(1));
+            Thread.sleep(650);
+            assertFalse(cache.containsKey(1));
+        } finally {
+            cacheManager.close();
+            cachingProvider.close();
+        }
+    }
+
     @Test
     public void getPut()
     {

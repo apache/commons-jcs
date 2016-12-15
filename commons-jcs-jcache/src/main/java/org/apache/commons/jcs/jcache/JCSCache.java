@@ -18,22 +18,18 @@
  */
 package org.apache.commons.jcs.jcache;
 
-import static org.apache.commons.jcs.jcache.Asserts.assertNotNull;
-import static org.apache.commons.jcs.jcache.serialization.Serializations.copy;
-
-import java.io.Closeable;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import org.apache.commons.jcs.engine.CacheElement;
+import org.apache.commons.jcs.engine.ElementAttributes;
+import org.apache.commons.jcs.engine.behavior.ICacheElement;
+import org.apache.commons.jcs.engine.behavior.IElementAttributes;
+import org.apache.commons.jcs.engine.behavior.IElementSerializer;
+import org.apache.commons.jcs.engine.control.CompositeCache;
+import org.apache.commons.jcs.jcache.jmx.JCSCacheMXBean;
+import org.apache.commons.jcs.jcache.jmx.JCSCacheStatisticsMXBean;
+import org.apache.commons.jcs.jcache.jmx.JMXs;
+import org.apache.commons.jcs.jcache.proxy.ExceptionWrapperHandler;
+import org.apache.commons.jcs.jcache.thread.DaemonThreadFactory;
+import org.apache.commons.jcs.utils.serialization.StandardSerializer;
 
 import javax.cache.Cache;
 import javax.cache.CacheException;
@@ -55,19 +51,22 @@ import javax.cache.processor.EntryProcessor;
 import javax.cache.processor.EntryProcessorException;
 import javax.cache.processor.EntryProcessorResult;
 import javax.management.ObjectName;
+import java.io.Closeable;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-import org.apache.commons.jcs.engine.CacheElement;
-import org.apache.commons.jcs.engine.ElementAttributes;
-import org.apache.commons.jcs.engine.behavior.ICacheElement;
-import org.apache.commons.jcs.engine.behavior.IElementAttributes;
-import org.apache.commons.jcs.engine.behavior.IElementSerializer;
-import org.apache.commons.jcs.engine.control.CompositeCache;
-import org.apache.commons.jcs.jcache.jmx.JCSCacheMXBean;
-import org.apache.commons.jcs.jcache.jmx.JCSCacheStatisticsMXBean;
-import org.apache.commons.jcs.jcache.jmx.JMXs;
-import org.apache.commons.jcs.jcache.proxy.ExceptionWrapperHandler;
-import org.apache.commons.jcs.jcache.thread.DaemonThreadFactory;
-import org.apache.commons.jcs.utils.serialization.StandardSerializer;
+import static org.apache.commons.jcs.jcache.Asserts.assertNotNull;
+import static org.apache.commons.jcs.jcache.serialization.Serializations.copy;
 
 // TODO: configure serializer
 public class JCSCache<K, V> implements Cache<K, V>
@@ -220,7 +219,12 @@ public class JCSCache<K, V> implements Cache<K, V>
             final Duration duration = update ? expiryPolicy.getExpiryForUpdate() : expiryPolicy.getExpiryForCreation();
             if (isNotZero(duration))
             {
-                final ICacheElement<K, V> element = updateElement(key, v, duration);
+                final IElementAttributes clone = delegate.getElementAttributes().clone();
+                if (ElementAttributes.class.isInstance(clone))
+                {
+                    ElementAttributes.class.cast(clone).setCreateTime();
+                }
+                final ICacheElement<K, V> element = updateElement(key, v, duration, clone);
                 try
                 {
                     delegate.update(element);
@@ -234,22 +238,21 @@ public class JCSCache<K, V> implements Cache<K, V>
         return v;
     }
 
-    private ICacheElement<K, V> updateElement(final K key, final V v, final Duration duration)
+    private ICacheElement<K, V> updateElement(final K key, final V v, final Duration duration, final IElementAttributes attrs)
     {
         final ICacheElement<K, V> element = new CacheElement<K, V>(name, key, v);
-        final IElementAttributes copy = delegate.getElementAttributes().clone();
         if (duration != null)
         {
-            copy.setTimeFactorForMilliseconds(1);
+            attrs.setTimeFactorForMilliseconds(1);
             final boolean eternal = duration.isEternal();
-            copy.setIsEternal(eternal);
+            attrs.setIsEternal(eternal);
             if (!eternal)
             {
-                copy.setIdleTime(duration.getTimeUnit().toMillis(duration.getDurationAmount()));
+                attrs.setLastAccessTimeNow();
             }
             // MaxLife = -1 to use IdleTime excepted if jcache.ccf asked for something else
         }
-        element.setElementAttributes(copy);
+        element.setElementAttributes(attrs);
         return element;
     }
 
@@ -339,16 +342,28 @@ public class JCSCache<K, V> implements Cache<K, V>
             final long start = Times.now(false);
 
             final K jcsKey = storeByValue ? copy(serializer, manager.getClassLoader(), key) : key;
-            final ICacheElement<K, V> element = updateElement(jcsKey, value, created ? null : duration); // reuse it to create basic structure
+            final ICacheElement<K, V> element = updateElement( // reuse it to create basic structure
+                    jcsKey, value, created ? null : duration,
+                    oldElt != null ? oldElt.getElementAttributes() : delegate.getElementAttributes().clone());
             if (created && duration != null) { // set maxLife
                 final IElementAttributes copy = element.getElementAttributes();
                 copy.setTimeFactorForMilliseconds(1);
                 final boolean eternal = duration.isEternal();
                 copy.setIsEternal(eternal);
+                if (ElementAttributes.class.isInstance(copy)) {
+                    ElementAttributes.class.cast(copy).setCreateTime();
+                }
                 if (!eternal)
                 {
                     copy.setIsEternal(false);
-                    element.getElementAttributes().setMaxLife(duration.getTimeUnit().toMillis(duration.getDurationAmount()));
+                    if (duration == expiryPolicy.getExpiryForAccess())
+                    {
+                        element.getElementAttributes().setIdleTime(duration.getTimeUnit().toMillis(duration.getDurationAmount()));
+                    }
+                    else
+                        {
+                        element.getElementAttributes().setMaxLife(duration.getTimeUnit().toMillis(duration.getDurationAmount()));
+                    }
                 }
                 element.setElementAttributes(copy);
             }
@@ -479,26 +494,15 @@ public class JCSCache<K, V> implements Cache<K, V>
         assertNotNull(oldValue, "oldValue");
         final long getStart = Times.now(false);
         final V v = doGetControllingExpiry(getStart, key, false, false, false, false);
-        final boolean found = v != null;
-        if (found)
+        if (oldValue.equals(v))
         {
-            if (v.equals(oldValue))
-            {
-                remove(key);
-                return true;
-            }
-            final Duration expiryForAccess = expiryPolicy.getExpiryForAccess();
-            if (expiryForAccess != null)
-            {
-                try
-                {
-                    delegate.update(updateElement(key, v, expiryForAccess));
-                }
-                catch (final IOException e)
-                {
-                    throw new CacheException(e);
-                }
-            }
+            remove(key);
+            return true;
+        }
+        else if (v != null)
+        {
+            // weird but just for stats to be right (org.jsr107.tck.expiry.CacheExpiryTest.removeSpecifiedEntryShouldNotCallExpiryPolicyMethods())
+            expiryPolicy.getExpiryForAccess();
         }
         return false;
     }
@@ -550,7 +554,7 @@ public class JCSCache<K, V> implements Cache<K, V>
             {
                 try
                 {
-                    delegate.update(updateElement(key, elt.getVal(), expiryForAccess));
+                    delegate.update(updateElement(key, elt.getVal(), expiryForAccess, elt.getElementAttributes()));
                 }
                 catch (final IOException e)
                 {
@@ -597,7 +601,7 @@ public class JCSCache<K, V> implements Cache<K, V>
                 {
                     try
                     {
-                        delegate.update(updateElement(key, elt.getVal(), expiryForAccess));
+                        delegate.update(updateElement(key, elt.getVal(), expiryForAccess, elt.getElementAttributes()));
                     }
                     catch (final IOException e)
                     {

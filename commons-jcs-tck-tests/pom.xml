@@ -54,8 +54,7 @@
     <CacheImpl>org.apache.commons.jcs.jcache.JCSCache</CacheImpl>
     <CacheEntryImpl>org.apache.commons.jcs.jcache.JCSEntry</CacheEntryImpl>
 
-    <javax.management.builder.initial>org.apache.commons.jcs.jcache.jmx.ConfigurableMBeanServerIdBuilder
-    </javax.management.builder.initial>
+    <javax.management.builder.initial>org.apache.commons.jcs.jcache.jmx.ConfigurableMBeanServerIdBuilder</javax.management.builder.initial>
     <org.jsr107.tck.management.agentId>MBeanServerJCS</org.jsr107.tck.management.agentId>
 
     <domain-lib-dir>${project.build.directory}/domainlib</domain-lib-dir>
