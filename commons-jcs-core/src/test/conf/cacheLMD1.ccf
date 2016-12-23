@@ -1,0 +1,111 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+# #############################################################
+# ################# DEFAULT CACHE REGION  #####################
+# sets the default aux value for any non configured caches
+jcs.default=DC,LJG
+jcs.default.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
+jcs.default.cacheattributes.MaxObjects=1000
+jcs.default.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
+jcs.default.cacheattributes.UseMemoryShrinker=true
+jcs.default.cacheattributes.MaxMemoryIdleTimeSeconds=3600
+jcs.default.cacheattributes.ShrinkerIntervalSeconds=60
+jcs.default.elementattributes=org.apache.commons.jcs.engine.ElementAttributes
+jcs.default.elementattributes.IsEternal=false
+jcs.default.elementattributes.MaxLifeSeconds=600
+jcs.default.elementattributes.IdleTime=1800
+jcs.default.elementattributes.IsSpool=true
+jcs.default.elementattributes.IsRemote=true
+jcs.default.elementattributes.IsLateral=true
+
+
+# #############################################################
+# ################# CACHE REGIONS AVAILABLE ###################
+# Regions preconfigured for caching
+# LEAD_PRICE_CACHE_NAME
+jcs.region.LeadPrice=DC,LJG
+jcs.region.LeadPrice.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
+jcs.region.LeadPrice.cacheattributes.MaxObjects=1000
+# set it to zero, was 1000
+jcs.region.LeadPrice.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
+jcs.region.LeadPrice.cacheattributes.UseMemoryShrinker=true
+jcs.region.LeadPrice.cacheattributes.ShrinkerIntervalSeconds=30
+jcs.region.LeadPrice.cacheattributes.MaxMemoryIdleTimeSeconds=300
+jcs.region.LeadPrice.cacheattributes.MaxSpoolPerRun=100
+jcs.region.LeadPrice.elementattributes=org.apache.commons.jcs.engine.ElementAttributes
+jcs.region.LeadPrice.elementattributes.IsEternal=false
+jcs.region.LeadPrice.elementattributes.MaxLifeSeconds=600
+jcs.region.LeadPrice.elementattributes.IsSpool=true
+jcs.region.LeadPrice.elementattributes.IsLateral=true
+jcs.region.LeadPrice.elementattributes.IsRemote=true
+
+# HOTEL_OPTION_CACHE_NAME
+jcs.region.HotelOption=DC,LJG
+jcs.region.HotelOption.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
+jcs.region.HotelOption.cacheattributes.MaxObjects=1000
+# set it to zero, was 1000
+jcs.region.HotelOption.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
+jcs.region.HotelOption.cacheattributes.UseMemoryShrinker=true
+jcs.region.HotelOption.cacheattributes.ShrinkerIntervalSeconds=30
+jcs.region.HotelOption.cacheattributes.MaxMemoryIdleTimeSeconds=300
+jcs.region.HotelOption.cacheattributes.MaxSpoolPerRun=100
+jcs.region.HotelOption.elementattributes=org.apache.commons.jcs.engine.ElementAttributes
+jcs.region.HotelOption.elementattributes.IsEternal=false
+jcs.region.HotelOption.elementattributes.MaxLifeSeconds=600
+jcs.region.HotelOption.elementattributes.IsSpool=true
+jcs.region.HotelOption.elementattributes.IsLateral=true
+jcs.region.HotelOption.elementattributes.IsRemote=true
+
+
+# #############################################################
+# ################# AUXILIARY CACHES AVAILABLE ################
+
+# Primary Disk Cache-- faster than the rest because of memory key storage
+jcs.auxiliary.DC=org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
+jcs.auxiliary.DC.attributes=org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
+jcs.auxiliary.DC.attributes.DiskPath=log/raf
+jcs.auxiliary.DC.attributes.MaxPurgatorySize=10000
+jcs.auxiliary.DC.attributes.MaxKeySize=10000
+jcs.auxiliary.DC.attributes.OptimizeAtRemoveCount=300000
+
+# Lateral JavaGroups Distribution
+jcs.auxiliary.LJG=org.apache.commons.jcs.auxiliary.lateral.LateralCacheFactory
+jcs.auxiliary.LJG.attributes=org.apache.commons.jcs.auxiliary.lateral.LateralCacheAttributes
+jcs.auxiliary.LJG.attributes.TransmissionTypeName=JAVAGROUPS
+jcs.auxiliary.LJG.attributes.PutOnlyMode=true
+jcs.auxiliary.LJG.attributes.JGChannelProperties=UDP(mcast_addr=224.0.0.100;mcast_port=751):PING(timeout=3000):FD:STABLE:NAKACK:UNICAST:FRAG:FLUSH:GMS:VIEW_ENFORCER:QUEUE
+jcs.auxiliary.LJG.attributes.EventQueueType=POOLED
+jcs.auxiliary.LJG.attributes.EventQueuePolName=lg_event_queue
+
+# #############################################################
+# ################# OPTIONAL THREAD POOL CONFIGURATION ###################
+# Default thread pool config
+thread_pool.default.boundarySize=2000
+thread_pool.default.maximumPoolSize=150
+thread_pool.default.minimumPoolSize=4
+thread_pool.default.keepAliveTime=350000
+# RUN ABORT WAIT BLOCK DISCARDOLDEST
+thread_pool.default.whenBlockedPolicy=RUN
+thread_pool.default.startUpSize=4
+
+# Remote cache client thread pool config
+thread_pool.lg_event_queue.boundarySize=5000
+thread_pool.lg_event_queue.maximumPoolSize=75
+thread_pool.lg_event_queue.minimumPoolSize=10
+thread_pool.lg_event_queue.keepAliveTime=350000
+thread_pool.lg_event_queue.whenBlockedPolicy=DISCARDOLDEST
+thread_pool.lg_event_queue.startUpSize=4

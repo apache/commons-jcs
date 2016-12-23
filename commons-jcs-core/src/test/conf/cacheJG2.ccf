@@ -1,0 +1,80 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+# #############################################################
+# ################# DEFAULT CACHE REGION  #####################
+# sets the default aux value for any non configured caches
+jcs.default=LJG
+jcs.default.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
+jcs.default.cacheattributes.MaxObjects=250000
+jcs.default.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
+jcs.default.cacheattributes.UseMemoryShrinker=false
+jcs.default.cacheattributes.MaxMemoryIdleTimeSeconds=3600
+jcs.default.cacheattributes.ShrinkerIntervalSeconds=60
+jcs.default.elementattributes=org.apache.commons.jcs.engine.ElementAttributes
+jcs.default.elementattributes.IsEternal=false
+jcs.default.elementattributes.MaxLifeSeconds=700
+jcs.default.elementattributes.IdleTime=1800
+jcs.default.elementattributes.IsSpool=true
+jcs.default.elementattributes.IsRemote=true
+jcs.default.elementattributes.IsLateral=true
+
+
+# #############################################################
+# ################# CACHE REGIONS AVAILABLE ###################
+# Regions preconfigured for caching
+jcs.region.testCache1=LJG
+jcs.region.testCache1.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
+jcs.region.testCache1.cacheattributes.MaxObjects=250000
+jcs.region.testCache1.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
+jcs.region.testCache1.cacheattributes.UseMemoryShrinker=false
+jcs.region.testCache1.cacheattributes.ShrinkerIntervalSeconds=30
+jcs.region.testCache1.cacheattributes.MaxMemoryIdleTimeSeconds=300
+jcs.region.testCache1.cacheattributes.MaxSpoolPerRun=100
+jcs.region.testCache1.elementattributes=org.apache.commons.jcs.engine.ElementAttributes
+jcs.region.testCache1.elementattributes.IsEternal=false
+jcs.region.testCache1.elementattributes.MaxLifeSeconds=60000
+jcs.region.testCache1.elementattributes.IsLateral=true
+jcs.region.testCache1.elementattributes.IsRemote=true
+jcs.region.testCache1.elementattributes.IsSpool=true
+
+
+# #############################################################
+# ################# AUXILIARY CACHES AVAILABLE ################
+# Primary Disk Cache-- faster than the rest because of memory key storage
+jcs.auxiliary.DC=org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
+jcs.auxiliary.DC.attributes=org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
+jcs.auxiliary.DC.attributes.DiskPath=logs/rafJG2
+jcs.auxiliary.DC.attributes.MaxPurgatorySize=100000
+jcs.auxiliary.DC.attributes.MaxKeySize=500000
+jcs.auxiliary.DC.attributes.OptimizeAtRemoveCount=-1
+
+# Lateral JavaGroups Distribution
+jcs.auxiliary.LJG=org.apache.commons.jcs.auxiliary.lateral.LateralCacheFactory
+jcs.auxiliary.LJG.attributes=org.apache.commons.jcs.auxiliary.lateral.LateralCacheAttributes
+jcs.auxiliary.LJG.attributes.TransmissionTypeName=JAVAGROUPS
+jcs.auxiliary.LJG.attributes.PutOnlyMode=true
+jcs.auxiliary.LJG.attributes.JGChannelProperties=UDP(mcast_addr=224.0.0.100;mcast_port=7501):PING:FD:STABLE:NAKACK:UNICAST:FRAG:FLUSH:GMS:QUEUE
+# jcs.auxiliary.LJG.attributes.JGChannelProperties=UDP(mcast_addr=228.1.2.3;mcast_port=45566;ip_ttl=32):PING(timeout=3000;num_initial_members=6):FD(timeout=5000):VERIFY_SUSPECT(timeout=1500):pbcast.STABLE(desired_avg_gossip=10000):pbcast.NAKACK(gc_lag=10;retransmit_timeout=3000):UNICAST(timeout=5000;min_wait_time=2000):FRAG:pbcast.GMS(initial_mbrs_timeout=4000;join_timeout=5000;join_retry_timeout=2000;shun=false;print_local_addr=false)
+# UDP(mcast_addr=228.10.9.8;mcast_port=5678):PING:FD:FLUSH:GMS
+# UDP(mcast_addr=224.0.0.100;mcast_port=7501):PING:FD:STABLE:NAKACK:UNICAST:FRAG:FLUSH:GMS:QUEUE
+# UDP(mcast_addr=225.0.0.100;mcast_port=7777):PING(timeout=3000):AUTOCONF:FD:STABLE:NAKACK:UNICAST:FRAG:FLUSH:GMS:STATE_TRANSFER:QUEUE
+# UDP(mcast_addr=225.0.0.100;mcast_port=7777):PING(timeout=3000):pbcast.FD:pbcast.NAKACK:pbcast.STABLE:UNICAST:pbcast.GMS:FRAG
+
+jcs.auxiliary.JG = org.apache.commons.jcs.auxiliary.javagroups.JavaGroupsCacheFactory
+jcs.auxiliary.JG.attributes = org.apache.commons.jcs.auxiliary.javagroups.JavaGroupsCacheAttributes
+jcs.auxiliary.JG.attributes.ChannelFactoryClassName = org.jgroups.JChannelFactory
+jcs.auxiliary.JG.attributes.ChannelProperties = UDP(mcast_addr=224.0.0.100;mcast_port=7501):PING:FD:STABLE:NAKACK:UNICAST:FRAG:FLUSH:GMS:VIEW_ENFORCER:QUEUE

@@ -1,0 +1,165 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+# #############################################################
+# ################# DEFAULT CACHE REGION  #####################
+# sets the default aux value for any non configured caches
+jcs.default=DC,RC
+jcs.default.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
+jcs.default.cacheattributes.MaxObjects=200001
+jcs.default.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
+jcs.default.cacheattributes.UseMemoryShrinker=true
+jcs.default.cacheattributes.MaxMemoryIdleTimeSeconds=3600
+jcs.default.cacheattributes.ShrinkerIntervalSeconds=60
+jcs.default.elementattributes=org.apache.commons.jcs.engine.ElementAttributes
+jcs.default.elementattributes.IsEternal=false
+jcs.default.elementattributes.MaxLife=700
+jcs.default.elementattributes.IdleTime=1800
+jcs.default.elementattributes.IsSpool=true
+jcs.default.elementattributes.IsRemote=true
+jcs.default.elementattributes.IsLateral=true
+
+
+# #############################################################
+# ################# CACHE REGIONS AVAILABLE ###################
+# Regions preconfigured for caching
+jcs.region.testCache1=DC,RC
+jcs.region.testCache1.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
+jcs.region.testCache1.cacheattributes.MaxObjects=1000000
+jcs.region.testCache1.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
+jcs.region.testCache1.cacheattributes.UseMemoryShrinker=true
+jcs.region.testCache1.cacheattributes.ShrinkerIntervalSeconds=30
+jcs.region.testCache1.cacheattributes.MaxMemoryIdleTimeSeconds=300
+jcs.region.testCache1.cacheattributes.MaxSpoolPerRun=100
+jcs.region.testCache1.elementattributes=org.apache.commons.jcs.engine.ElementAttributes
+jcs.region.testCache1.elementattributes.IsEternal=false
+jcs.region.testCache1.elementattributes.MaxLifeSeconds=60000
+jcs.region.testCache1.elementattributes.IsLateral=true
+jcs.region.testCache1.elementattributes.IsRemote=true
+
+jcs.region.testCache2=DC,RC
+jcs.region.testCache2.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
+jcs.region.testCache2.cacheattributes.MaxObjects=100
+jcs.region.testCache2.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
+jcs.region.testCache2.cacheattributes.UseMemoryShrinker=true
+jcs.region.testCache2.cacheattributes.MaxMemoryIdleTimeSeconds=1000
+jcs.region.testCache2.cacheattributes.ShrinkerIntervalSeconds=40
+jcs.region.testCache2.elementattributes=org.apache.commons.jcs.engine.ElementAttributes
+jcs.region.testCache2.elementattributes.IsEternal=false
+jcs.region.testCache2.elementattributes.MaxLifeSeconds=600
+jcs.region.testCache2.elementattributes.IsSpool=true
+jcs.region.testCache2.elementattributes.IsRemote=true
+jcs.region.testCache2.elementattributes.IsLateral=true
+
+jcs.region.testCache3=
+jcs.region.testCache3.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
+jcs.region.testCache3.cacheattributes.MaxObjects=100000
+jcs.region.testCache3.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
+jcs.region.testCache3.cacheattributes.UseMemoryShrinker=false
+jcs.region.testCache3.cacheattributes.MaxMemoryIdleTimeSeconds=10
+jcs.region.testCache3.cacheattributes.ShrinkerIntervalSeconds=60
+jcs.region.testCache3.elementattributes=org.apache.commons.jcs.engine.ElementAttributes
+jcs.region.testCache3.elementattributes.IsEternal=false
+jcs.region.testCache3.elementattributes.MaxLifeSeconds=3600
+jcs.region.testCache3.elementattributes.IsSpool=true
+jcs.region.testCache3.elementattributes.IsRemote=true
+jcs.region.testCache3.elementattributes.IsLateral=true
+
+
+# #############################################################
+# ################# AUXILIARY CACHES AVAILABLE ################
+
+# Primary Disk Cache-- faster than the rest because of memory key storage
+jcs.auxiliary.DC=org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
+jcs.auxiliary.DC.attributes=org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
+jcs.auxiliary.DC.attributes.DiskPath=target/test-sandbox/raf
+jcs.auxiliary.DC.attributes.MaxPurgatorySize=10000000
+jcs.auxiliary.DC.attributes.MaxKeySize=1000000
+jcs.auxiliary.DC.attributes.OptimizeAtRemoveCount=300000
+jcs.auxiliary.DC.attributes.ShutdownSpoolTimeLimit=60
+
+# Disk Cache Using a Pooled Event Queue -- this allows you
+# to control the maximum number of threads it will use.
+# Each region uses 1 thread by default in the SINGLE model.
+# adding more threads does not help.
+# If you want to use a separate pool for each disk cache, either use
+# the single model or define a different auxiliary for each region and use the Pooled.
+# SINGLE is best unless you have a huge # of regions.
+jcs.auxiliary.DC2=org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
+jcs.auxiliary.DC2.attributes=org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
+jcs.auxiliary.DC2.attributes.DiskPath=target/test-sandbox/raf
+jcs.auxiliary.DC2.attributes.MaxPurgatorySize=10000
+jcs.auxiliary.DC2.attributes.MaxKeySize=10000
+jcs.auxiliary.DC2.attributes.OptimizeAtRemoveCount=300000
+jcs.auxiliary.DC2.attributes.EventQueueType=POOLED
+jcs.auxiliary.DC2.attributes.EventQueuePoolName=disk_cache_event_queue
+
+
+# need to make put or invalidate an option
+# just a remove lock to add
+jcs.auxiliary.RC=org.apache.commons.jcs.auxiliary.remote.RemoteCacheFactory
+jcs.auxiliary.RC.attributes=org.apache.commons.jcs.auxiliary.remote.RemoteCacheAttributes
+jcs.auxiliary.RC.attributes.FailoverServers=dev10.hq.site59.com:1101
+jcs.auxiliary.RC.attributes.LocalPort=1201
+jcs.auxiliary.RC.attributes.RemoveUponRemotePut=false
+# -1 means no timeout, this is the default
+# if the timeout is -1, no threadpool will be used.
+# jcs.auxiliary.RC.attributes.GetTimeoutMillis=500
+# jcs.auxiliary.RC.attributes.ThreadPoolName=remote_cache_client
+# jcs.auxiliary.RC.attributes.GetOnly=false
+
+# Remote RMI Cache set up to failover
+jcs.auxiliary.RFailover=org.apache.commons.jcs.auxiliary.remote.RemoteCacheFactory
+jcs.auxiliary.RFailover.attributes=org.apache.commons.jcs.auxiliary.remote.RemoteCacheAttributes
+jcs.auxiliary.RFailover.attributes.FailoverServers=dev10.hq.site59.com:1101
+jcs.auxiliary.RC.attributes.RemoveUponRemotePut=true
+jcs.auxiliary.RFailover.attributes.GetOnly=false
+
+
+# #############################################################
+# ################# OPTIONAL THREAD POOL CONFIGURATION ###################
+# Default thread pool config
+thread_pool.default.boundarySize=2000
+thread_pool.default.maximumPoolSize=150
+thread_pool.default.minimumPoolSize=4
+thread_pool.default.keepAliveTime=350000
+# RUN ABORT WAIT BLOCK DISCARDOLDEST
+thread_pool.default.whenBlockedPolicy=RUN
+thread_pool.default.startUpSize=4
+
+# Default Cache Event Queue thread pool config, used by auxiliaries
+# since it doesn't use a boundary, some of the options are unnecessary
+thread_pool.cache_event_queue.useBoundary=false
+thread_pool.cache_event_queue.minimumPoolSize=5
+thread_pool.cache_event_queue.keepAliveTime=3500
+thread_pool.cache_event_queue.startUpSize=5
+
+# Disk Cache pool
+thread_pool.disk_cache_event_queue.useBoundary=false
+thread_pool.remote_cache_client.maximumPoolSize=15
+thread_pool.disk_cache_event_queue.minimumPoolSize=1
+thread_pool.disk_cache_event_queue.keepAliveTime=3500
+thread_pool.disk_cache_event_queue.startUpSize=1
+
+# Remote cache client thread pool config
+thread_pool.remote_cache_client.boundarySize=75
+thread_pool.remote_cache_client.maximumPoolSize=150
+thread_pool.remote_cache_client.minimumPoolSize=4
+thread_pool.remote_cache_client.keepAliveTime=350000
+thread_pool.remote_cache_client.whenBlockedPolicy=RUN
+thread_pool.remote_cache_client.startUpSize=4
+
+

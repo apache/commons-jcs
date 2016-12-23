@@ -1,0 +1,216 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+# #############################################################
+# ################# DEFAULT CACHE REGION  #####################
+# sets the default aux value for any non configured caches
+jcs.default=RC
+jcs.default.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
+jcs.default.cacheattributes.MaxObjects=200001
+jcs.default.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
+jcs.default.cacheattributes.UseMemoryShrinker=true
+jcs.default.cacheattributes.MaxMemoryIdleTimeSeconds=3600
+jcs.default.cacheattributes.ShrinkerIntervalSeconds=60
+jcs.default.elementattributes=org.apache.commons.jcs.engine.ElementAttributes
+jcs.default.elementattributes.IsEternal=false
+jcs.default.elementattributes.MaxLife=700
+jcs.default.elementattributes.IdleTime=1800
+jcs.default.elementattributes.IsSpool=true
+jcs.default.elementattributes.IsRemote=true
+jcs.default.elementattributes.IsLateral=true
+
+
+# #############################################################
+# ################# CACHE REGIONS AVAILABLE ###################
+# Regions preconfigured for caching
+jcs.region.testCache1=RC
+jcs.region.testCache1.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
+jcs.region.testCache1.cacheattributes.MaxObjects=1000000
+jcs.region.testCache1.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
+jcs.region.testCache1.cacheattributes.UseMemoryShrinker=true
+jcs.region.testCache1.cacheattributes.ShrinkerIntervalSeconds=30
+jcs.region.testCache1.cacheattributes.MaxMemoryIdleTimeSeconds=300
+jcs.region.testCache1.cacheattributes.MaxSpoolPerRun=100
+jcs.region.testCache1.elementattributes=org.apache.commons.jcs.engine.ElementAttributes
+jcs.region.testCache1.elementattributes.IsEternal=false
+jcs.region.testCache1.elementattributes.MaxLifeSeconds=60000
+jcs.region.testCache1.elementattributes.IsLateral=true
+jcs.region.testCache1.elementattributes.IsRemote=true
+
+# #############################################################
+# ################# AUXILIARY CACHES AVAILABLE ################
+
+# Remote RMI cache without failover
+jcs.auxiliary.RGroup=org.apache.commons.jcs.auxiliary.remote.RemoteCacheFactory
+jcs.auxiliary.RGroup.attributes=org.apache.commons.jcs.auxiliary.remote.RemoteCacheAttributes
+jcs.auxiliary.RGroup.attributes.RemoteTypeName=LOCAL
+jcs.auxiliary.RGroup.attributes.RemoteHost=localhost
+jcs.auxiliary.RGroup.attributes.RemotePort=1102
+jcs.auxiliary.RGroup.attributes.GetOnly=true
+
+# Remote RMI Cache set up to failover
+jcs.auxiliary.RFailover=org.apache.commons.jcs.auxiliary.remote.RemoteCacheFactory
+jcs.auxiliary.RFailover.attributes=org.apache.commons.jcs.auxiliary.remote.RemoteCacheAttributes
+jcs.auxiliary.RFailover.attributes.RemoteTypeName=LOCAL
+jcs.auxiliary.RFailover.attributes.FailoverServers=localhost:1102
+jcs.auxiliary.RFailover.attributes.GetOnly=false
+
+# Primary Disk Cache-- faster than the rest because of memory key storage
+jcs.auxiliary.DC=org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
+jcs.auxiliary.DC.attributes=org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
+jcs.auxiliary.DC.attributes.DiskPath=target/test-sandbox/raf
+jcs.auxiliary.DC.attributes.MaxPurgatorySize=10000000
+jcs.auxiliary.DC.attributes.MaxKeySize=1000000
+jcs.auxiliary.DC.attributes.OptimizeAtRemoveCount=300000
+jcs.auxiliary.DC.attributes.ShutdownSpoolTimeLimit=60
+
+# Disk Cache Using a Pooled Event Queue -- this allows you
+# to control the maximum number of threads it will use.
+# Each region uses 1 thread by default in the SINGLE model.
+# adding more threads does not help.
+# If you want to use a separate pool for each disk cache, either use
+# the single model or define a different auxiliary for each region and use the Pooled.
+# SINGLE is best unless you have a huge # of regions.
+jcs.auxiliary.DC2=org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
+jcs.auxiliary.DC2.attributes=org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
+jcs.auxiliary.DC2.attributes.DiskPath=target/test-sandbox/raf
+jcs.auxiliary.DC2.attributes.MaxPurgatorySize=10000
+jcs.auxiliary.DC2.attributes.MaxKeySize=10000
+jcs.auxiliary.DC2.attributes.OptimizeAtRemoveCount=300000
+jcs.auxiliary.DC2.attributes.EventQueueType=POOLED
+jcs.auxiliary.DC2.attributes.EventQueuePoolName=disk_cache_event_queue
+
+# Berkeley DB JE
+jcs.auxiliary.JE=org.apache.commons.jcs.auxiliary.disk.bdbje.BDBJECacheFactory
+jcs.auxiliary.JE.attributes=org.apache.commons.jcs.auxiliary.disk.bdbje.BDBJECacheAttributes
+jcs.auxiliary.JE.attributes.DiskPath=target/test-sandbox/bdbje-disk-cache-conc
+# the minimum cache size is 1024
+jcs.auxiliary.indexedDiskCache.attributes.CacheSize=1024
+# jcs.auxiliary.indexedDiskCache.attributes.CachePercent=0
+
+# HSQL Disk Cache -- too slow as is
+jcs.auxiliary.HDC=org.apache.commons.jcs.auxiliary.disk.hsql.HSQLCacheFactory
+jcs.auxiliary.HDC.attributes=org.apache.commons.jcs.auxiliary.disk.hsql.HSQLCacheAttributes
+jcs.auxiliary.HDC.attributes.DiskPath=@project_home_f@hsql
+
+# JISP Disk Cache -- save memory with disk key storage
+jcs.auxiliary.JDC=org.apache.commons.jcs.auxiliary.disk.jisp.JISPCacheFactory
+jcs.auxiliary.JDC.attributes=org.apache.commons.jcs.auxiliary.disk.jisp.JISPCacheAttributes
+jcs.auxiliary.JDC.attributes.DiskPath=@project_home_f@raf
+jcs.auxiliary.JDC.attributes.ClearOnStart=false
+
+# need to make put or invalidate an option
+# just a remove lock to add
+jcs.auxiliary.RC=org.apache.commons.jcs.auxiliary.remote.RemoteCacheFactory
+jcs.auxiliary.RC.attributes=org.apache.commons.jcs.auxiliary.remote.RemoteCacheAttributes
+jcs.auxiliary.RC.attributes.FailoverServers=localhost:1101
+# ,localhost:1102
+jcs.auxiliary.RC.attributes.LocalPort=1201
+jcs.auxiliary.RC.attributes.RemoveUponRemotePut=false
+# jcs.auxiliary.RC.attributes.RemoteServiceName=RemoteCache
+# -1 means no timeout, this is the default
+# if the timeout is -1, no threadpool will be used.
+jcs.auxiliary.RC.attributes.GetTimeoutMillis=500
+jcs.auxiliary.RC.attributes.ThreadPoolName=remote_cache_client
+jcs.auxiliary.RC.attributes.GetOnly=false
+
+# unreliable
+jcs.auxiliary.LUDP=org.apache.commons.jcs.auxiliary.lateral.LateralCacheFactory
+jcs.auxiliary.LUDP.attributes=org.apache.commons.jcs.auxiliary.lateral.LateralCacheAttributes
+jcs.auxiliary.LUDP.attributes.TransmissionTypeName=UDP
+jcs.auxiliary.LUDP.attributes.UdpMulticastAddr=228.5.6.7
+jcs.auxiliary.LUDP.attributes.UdpMulticastPort=6789
+
+jcs.auxiliary.LJG=org.apache.commons.jcs.auxiliary.lateral.LateralCacheFactory
+jcs.auxiliary.LJG.attributes=org.apache.commons.jcs.auxiliary.lateral.LateralCacheAttributes
+jcs.auxiliary.LJG.attributes.TransmissionTypeName=JAVAGROUPS
+jcs.auxiliary.LJG.attributes.PutOnlyMode=true
+jcs.auxiliary.LJG.attributes.JGChannelProperties = UDP(mcast_addr=224.0.0.100;mcast_port=751):PING(timeout=3000):FD:STABLE:NAKACK:UNICAST:FRAG:FLUSH:GMS:VIEW_ENFORCER:QUEUE
+
+
+jcs.auxiliary.JG = org.apache.commons.jcs.auxiliary.javagroups.JavaGroupsCacheFactory
+jcs.auxiliary.JG.attributes = org.apache.commons.jcs.auxiliary.javagroups.JavaGroupsCacheAttributes
+jcs.auxiliary.JG.attributes.ChannelFactoryClassName = org.javagroups.JChannelFactory
+jcs.auxiliary.JG.attributes.ChannelProperties = UDP(mcast_addr=224.0.0.100;mcast_port=7501):PING:FD:STABLE:NAKACK:UNICAST:FRAG:FLUSH:GMS:VIEW_ENFORCER:QUEUE
+
+
+# almost complete
+jcs.auxiliary.LTCP=org.apache.commons.jcs.auxiliary.lateral.LateralCacheFactory
+jcs.auxiliary.LTCP.attributes=org.apache.commons.jcs.auxiliary.lateral.LateralCacheAttributes
+jcs.auxiliary.LTCP.attributes.TransmissionTypeName=TCP
+jcs.auxiliary.LTCP.attributes.TcpServers=localhost:1112
+jcs.auxiliary.LTCP.attributes.TcpListenerPort=1111
+jcs.auxiliary.LTCP.attributes.PutOnlyMode=true
+
+jcs.auxiliary.LTCP2=org.apache.commons.jcs.auxiliary.lateral.LateralCacheFactory
+jcs.auxiliary.LTCP2.attributes=org.apache.commons.jcs.auxiliary.lateral.LateralCacheAttributes
+jcs.auxiliary.LTCP2.attributes.TransmissionTypeName=TCP
+jcs.auxiliary.LTCP2.attributes.TcpServers=localhost:1112
+jcs.auxiliary.LTCP2.attributes.TcpListenerPort=1111
+jcs.auxiliary.LTCP2.attributes.PutOnlyMode=true
+
+jcs.auxiliary.XMLRPC=org.apache.commons.jcs.auxiliary.lateral.LateralCacheFactory
+jcs.auxiliary.XMLRPC.attributes=org.apache.commons.jcs.auxiliary.lateral.LateralCacheAttributes
+jcs.auxiliary.XMLRPC.attributes.TransmissionTypeName=XMLRPC
+jcs.auxiliary.XMLRPC.attributes.HttpServers=localhost:8182
+jcs.auxiliary.XMLRPC.attributes.HttpListenerPort=8181
+jcs.auxiliary.XMLRPC.attributes.PutOnlyMode=false
+
+
+# example of how to configure the http version of the lateral cache
+# not converteed to new cache
+jcs.auxiliary.LCHTTP=org.apache.commons.jcs.auxiliary.lateral.LateralCacheFactory
+jcs.auxiliary.LCHTTP.attributes=org.apache.commons.jcs.auxiliary.lateral.LateralCacheAttributes
+jcs.auxiliary.LCHTTP.attributes.TransmissionType=HTTP
+jcs.auxiliary.LCHTTP.attributes.httpServers=localhost:8080,localhost:7001,localhost:80
+jcs.auxiliary.LCHTTP.attributes.httpReceiveServlet=/cache/LateralCacheReceiverServlet
+jcs.auxiliary.LCHTTP.attributes.httpDeleteServlet=/cache/DeleteCacheServlet
+
+
+# #############################################################
+# ################# OPTIONAL THREAD POOL CONFIGURATION ###################
+# Default thread pool config
+thread_pool.default.boundarySize=2000
+thread_pool.default.maximumPoolSize=150
+thread_pool.default.minimumPoolSize=4
+thread_pool.default.keepAliveTime=350000
+# RUN ABORT WAIT BLOCK DISCARDOLDEST
+thread_pool.default.whenBlockedPolicy=RUN
+thread_pool.default.startUpSize=4
+
+# Default Cache Event Queue thread pool config, used by auxiliaries
+# since it doesn't use a boundary, some of the options are unnecessary
+thread_pool.cache_event_queue.useBoundary=false
+thread_pool.cache_event_queue.minimumPoolSize=5
+thread_pool.cache_event_queue.keepAliveTime=3500
+thread_pool.cache_event_queue.startUpSize=5
+
+# Disk Cache pool
+thread_pool.disk_cache_event_queue.useBoundary=false
+thread_pool.remote_cache_client.maximumPoolSize=15
+thread_pool.disk_cache_event_queue.minimumPoolSize=1
+thread_pool.disk_cache_event_queue.keepAliveTime=3500
+thread_pool.disk_cache_event_queue.startUpSize=1
+
+# Remote cache client thread pool config
+thread_pool.remote_cache_client.boundarySize=75
+thread_pool.remote_cache_client.maximumPoolSize=150
+thread_pool.remote_cache_client.minimumPoolSize=4
+thread_pool.remote_cache_client.keepAliveTime=350000
+thread_pool.remote_cache_client.whenBlockedPolicy=RUN
+thread_pool.remote_cache_client.startUpSize=4
+
+

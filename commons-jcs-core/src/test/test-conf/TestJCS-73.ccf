@@ -1,0 +1,41 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+# Cache configuration for the 'JCSConcurrentCacheAccessUnitTest' test.
+
+jcs.default=CACHE
+jcs.default.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
+jcs.default.cacheattributes.MaxObjects=-1
+jcs.default.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
+jcs.default.cacheattributes.DiskUsagePatternName=UPDATE
+jcs.default.cacheattributes.UseMemoryShrinker=true
+jcs.default.cacheattributes.MaxMemoryIdleTimeSeconds=10
+jcs.default.cacheattributes.ShrinkerIntervalSeconds=10
+jcs.default.elementattributes=org.apache.commons.jcs.engine.ElementAttributes
+jcs.default.elementattributes.IsRemote=false
+jcs.default.elementattributes.IsLateral=false
+jcs.default.elementattributes.IsSpool=true
+jcs.default.elementattributes.IsEternal=true
+
+jcs.auxiliary.CACHE=org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
+jcs.auxiliary.CACHE.attributes=org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
+jcs.auxiliary.CACHE.attributes.DiskPath=target/test-sandbox/concurrent_cache
+jcs.auxiliary.CACHE.attributes.MaxPurgatorySize=-1
+jcs.auxiliary.CACHE.attributes.MaxKeySize=-1
+jcs.auxiliary.CACHE.attributes.ShutdownSpoolTimeLimit=60
+jcs.auxiliary.CACHE.attributes.OptimizeAtRemoveCount=30000
+jcs.auxiliary.CACHE.attributes.OptimizeOnShutdown=true
+jcs.auxiliary.CACHE.attributes.EventQueueType=SINGLE
