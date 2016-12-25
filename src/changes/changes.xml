@@ -20,6 +20,23 @@
 	</properties>
 	<body>
         <release version="2.0" date="unreleased" description="JDK 1.6 based major release">
+            <action issue="JCS-119" dev="tv" type="update">
+                Improve concurrency in
+                - CompositeCacheManager
+                - CacheEventQueue
+                - CacheWatchRepairable
+                - LHMLRUMemoryCache
+            </action>
+            <action issue="JCS-169" dev="rmannibucau" type="fix">
+                JCache Access Expiry not respected
+            </action>
+            <action issue="JCS-168" dev="rmannibucau" type="fix">
+                cdi/nocdi jcache jar doesnt contain the right 
+                META-INF/services/javax.enterprise.inject.spi.Extension file
+            </action>
+            <action dev="tv" type="update">
+                Deprecate JCS.defineRegion() methods
+            </action>
         </release>
         <release version="2.0-beta-2" date="2016-11-01" description="JDK 1.6 based major release (beta-2)">
             <action dev="tv" type="remove">
