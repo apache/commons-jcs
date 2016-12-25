@@ -19,7 +19,9 @@
 		<author email="dev@commons.apache.org">Apache Commons Developers</author>
 	</properties>
 	<body>
-        <release version="2.0" date="unreleased" description="JDK 1.6 based major release">
+        <release version="2.1" date="unreleased">
+        </release>
+        <release version="2.0" date="2016-12-25" description="JDK 1.6 based major release">
             <action issue="JCS-119" dev="tv" type="update">
                 Improve concurrency in
                 - CompositeCacheManager
