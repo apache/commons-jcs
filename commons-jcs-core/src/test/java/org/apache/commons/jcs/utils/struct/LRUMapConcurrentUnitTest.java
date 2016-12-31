@@ -1,5 +1,7 @@
 package org.apache.commons.jcs.utils.struct;
 
+import java.util.Iterator;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -22,8 +24,6 @@ package org.apache.commons.jcs.utils.struct;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-
-import java.util.Iterator;
 
 /**
  * Tests the LRUMap
@@ -150,7 +150,6 @@ public class LRUMapConcurrentUnitTest
     {
         int total = 10;
         LRUMap<String, String> map = new LRUMap<String, String>( total );
-        map.setChunkSize( 1 );
 
         // put the max in
         for ( int i = 0; i < total; i++ )
@@ -189,7 +188,6 @@ public class LRUMapConcurrentUnitTest
     {
         int total = 10000;
         LRUMap<String, String> map = new LRUMap<String, String>( total );
-        map.setChunkSize( 1 );
 
         // put the max in
         for ( int i = 0; i < total * 2; i++ )
@@ -201,7 +199,6 @@ public class LRUMapConcurrentUnitTest
         for ( int i = total - 1; i >= 0; i-- )
         {
             assertNull( map.get( i + ":key" ) );
-
         }
 
         // get the total to total *2 items out, these should be found.
@@ -212,7 +209,6 @@ public class LRUMapConcurrentUnitTest
         }
 
 //        System.out.println( map.getStatistics() );
-
     }
 
     /**

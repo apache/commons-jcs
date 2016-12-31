@@ -1,5 +1,9 @@
 package org.apache.commons.jcs.utils.struct;
 
+import java.util.Map;
+
+import org.apache.commons.jcs.JCSvsHashtablePerformanceTest;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -22,9 +26,6 @@ package org.apache.commons.jcs.utils.struct;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import org.apache.commons.jcs.JCSvsHashtablePerformanceTest;
-
-import java.util.Map;
 
 /**
  * This ensures that the jcs version of the LRU map is as fast as the commons
@@ -106,7 +107,7 @@ public class LRUMapPerformanceTest
 
         try
         {
-            Map<String, String> cache = new LRUMap<String, String>( tries );
+            LRUMap<String, String> cache = new LRUMap<String, String>( tries );
 
             for ( int j = 0; j < loops; j++ )
             {
@@ -134,9 +135,12 @@ public class LRUMapPerformanceTest
                 System.out.println( name + " get time for " + tries + " = " + time + "; millis per = " + tPer );
 
                 ///////////////////////////////////////////////////////////////
-                cache2Name = "LRUMapJCS (commons)";
+                cache2Name = "LRUMap (commons)";
                 //or LRUMapJCS
                 Map<String, String> cache2 = new org.apache.commons.collections4.map.LRUMap<String, String>( tries );
+//                Map<String, String> cache2 = new ConcurrentLinkedHashMap.Builder<String, String>()
+//                        .maximumWeightedCapacity( tries )
+//                        .build();
                 //cache2Name = "Hashtable";
                 //Hashtable cache2 = new Hashtable();
                 start = System.currentTimeMillis();
