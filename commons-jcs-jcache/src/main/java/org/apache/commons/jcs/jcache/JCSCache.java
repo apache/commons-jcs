@@ -157,12 +157,13 @@ public class JCSCache<K, V> implements Cache<K, V>
         statistics.setActive(config.isStatisticsEnabled());
 
         final String mgrStr = manager.getURI().toString().replaceAll(",|:|=|\n", ".");
+        final String cacheStr = name.replaceAll(",|:|=|\n", ".");
         try
         {
             cacheConfigObjectName = new ObjectName("javax.cache:type=CacheConfiguration,"
-                    + "CacheManager=" + mgrStr + "," + "Cache=" + name);
+                    + "CacheManager=" + mgrStr + "," + "Cache=" + cacheStr);
             cacheStatsObjectName = new ObjectName("javax.cache:type=CacheStatistics,"
-                    + "CacheManager=" + mgrStr + "," + "Cache=" + name);
+                    + "CacheManager=" + mgrStr + "," + "Cache=" + cacheStr);
         }
         catch (final Exception e)
         {
