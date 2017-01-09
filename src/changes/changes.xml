@@ -20,6 +20,9 @@
 	</properties>
 	<body>
         <release version="2.1" date="unreleased">
+            <action issue="JCS-171" dev="tv" type="fix" due-to="Wiktor Niesiobedzki">
+                Multiple CacheEventQueue.QProcessor spawned for the same cache region 
+            </action>
         </release>
         <release version="2.0" date="2016-12-25" description="JDK 1.6 based major release">
             <action issue="JCS-119" dev="tv" type="update">
