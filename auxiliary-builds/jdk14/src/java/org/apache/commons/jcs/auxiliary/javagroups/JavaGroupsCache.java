@@ -355,7 +355,7 @@ public class JavaGroupsCache
     }
 
     /**
-     * TODO speed this up. We don't want to ahve to go through the manager
+     * TODO speed this up. We don't want to have to go through the manager
      * everytime.
      *
      * @return ICompositeCache
