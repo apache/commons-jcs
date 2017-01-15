@@ -1,5 +1,10 @@
 package org.apache.commons.jcs.engine;
 
+import org.apache.commons.jcs.auxiliary.remote.MockRemoteCacheListener;
+import org.apache.commons.jcs.engine.behavior.ICacheEventQueue;
+import org.apache.commons.jcs.engine.behavior.ICacheEventQueue.QueueType;
+import org.apache.commons.jcs.engine.behavior.ICacheListener;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -20,10 +25,6 @@ package org.apache.commons.jcs.engine;
  */
 
 import junit.framework.TestCase;
-import org.apache.commons.jcs.auxiliary.remote.MockRemoteCacheListener;
-import org.apache.commons.jcs.engine.behavior.ICacheEventQueue;
-import org.apache.commons.jcs.engine.behavior.ICacheEventQueue.QueueType;
-import org.apache.commons.jcs.engine.behavior.ICacheListener;
 
 /** Unit tests for the CacheEventQueueFactory */
 public class CacheEventQueueFactoryUnitTest
@@ -44,7 +45,7 @@ public class CacheEventQueueFactoryUnitTest
 
         // VERIFY
         assertNotNull( "Should have a result", result );
-        assertTrue( "Wrong type", result instanceof CacheEventQueue );
+        assertTrue( "Wrong type", result.getQueueType() == QueueType.SINGLE );
     }
 
     /** Test create */
@@ -62,6 +63,6 @@ public class CacheEventQueueFactoryUnitTest
 
         // VERIFY
         assertNotNull( "Should have a result", result );
-        assertTrue( "Wrong type", result instanceof PooledCacheEventQueue );
+        assertTrue( "Wrong type", result.getQueueType() == QueueType.POOLED );
     }
 }
