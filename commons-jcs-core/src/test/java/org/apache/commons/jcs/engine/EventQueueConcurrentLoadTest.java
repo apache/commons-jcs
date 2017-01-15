@@ -21,12 +21,12 @@ package org.apache.commons.jcs.engine;
 
 import java.io.IOException;
 
+import org.apache.commons.jcs.engine.behavior.ICacheElement;
+import org.apache.commons.jcs.engine.behavior.ICacheListener;
+
 import junit.extensions.ActiveTestSuite;
 import junit.framework.Test;
 import junit.framework.TestCase;
-
-import org.apache.commons.jcs.engine.behavior.ICacheElement;
-import org.apache.commons.jcs.engine.behavior.ICacheListener;
 
 /**
  * This test case is designed to makes sure there are no deadlocks in the event queue. The time to
@@ -109,16 +109,6 @@ public class EventQueueConcurrentLoadTest
             }
         } );
 
-        suite.addTest( new EventQueueConcurrentLoadTest( "testStopProcessing1" )
-        {
-            @Override
-            public void runTest()
-                throws Exception
-            {
-                this.runStopProcessingTest();
-            }
-        } );
-
         suite.addTest( new EventQueueConcurrentLoadTest( "testRunPutTest4" )
         {
             @Override
@@ -136,16 +126,6 @@ public class EventQueueConcurrentLoadTest
                 throws Exception
             {
                 this.runRemoveTest( 5200 );
-            }
-        } );
-
-        suite.addTest( new EventQueueConcurrentLoadTest( "testStopProcessing2" )
-        {
-            @Override
-            public void runTest()
-                throws Exception
-            {
-                this.runStopProcessingTest();
             }
         } );
 
@@ -219,16 +199,6 @@ public class EventQueueConcurrentLoadTest
             queue.addRemoveEvent( i + ":key" );
         }
 
-    }
-
-    /**
-     * Add remove events to the event queue.
-     * @throws Exception
-     */
-    public void runStopProcessingTest()
-        throws Exception
-    {
-        queue.stopProcessing();
     }
 
     /**
