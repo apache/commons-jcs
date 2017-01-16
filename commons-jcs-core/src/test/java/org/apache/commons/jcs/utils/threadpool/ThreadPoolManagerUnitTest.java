@@ -21,11 +21,13 @@ package org.apache.commons.jcs.utils.threadpool;
 
 import java.util.ArrayList;
 import java.util.Properties;
+import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ThreadPoolExecutor;
-
-import junit.framework.TestCase;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.jcs.utils.props.PropertyLoader;
+
+import junit.framework.TestCase;
 
 /**
  * Verify that the manager can create pools as intended by the default and
@@ -62,6 +64,39 @@ public class ThreadPoolManagerUnitTest
         assertEquals(expected, max );
     }
 
+    /**
+     * Make sure it can load a certain configuration
+     */
+    public void testSpecialConfig()
+    {
+        Properties props = PropertyLoader.loadProperties( "thread_pool.properties" );
+        ThreadPoolManager.setProps( props );
+        ThreadPoolManager mgr = ThreadPoolManager.getInstance();
+        assertNotNull( mgr );
+
+        ThreadPoolExecutor pool = mgr.getPool( "aborttest" );
+        assertNotNull( pool );
+
+        int poolSize = pool.getCorePoolSize();
+        int expectedPoolSize = Integer.parseInt( props.getProperty( "thread_pool.aborttest.startUpSize" ) );
+        assertEquals( expectedPoolSize, poolSize);
+
+        int minPoolSize = pool.getPoolSize();
+        int expectedMinPoolSize = Integer.parseInt( props.getProperty( "thread_pool.aborttest.minimumPoolSize" ) );
+        assertEquals( expectedMinPoolSize, minPoolSize );
+
+        int maxPoolSize = pool.getMaximumPoolSize();
+        int expectedMaxPoolSize = Integer.parseInt( props.getProperty( "thread_pool.aborttest.maximumPoolSize" ) );
+        assertEquals( expectedMaxPoolSize, maxPoolSize );
+
+        long keepAliveTime = pool.getKeepAliveTime(TimeUnit.MILLISECONDS);
+        long expectedKeepAliveTime = Long.parseLong( props.getProperty( "thread_pool.aborttest.keepAliveTime" ) );
+        assertEquals( expectedKeepAliveTime, keepAliveTime );
+        
+        RejectedExecutionHandler whenBlockedPolicy = pool.getRejectedExecutionHandler();
+        assertTrue( whenBlockedPolicy instanceof ThreadPoolExecutor.AbortPolicy );
+    }
+    
     /**
      * Try to get an undefined pool from an existing default file.
      */
