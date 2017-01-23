@@ -126,10 +126,10 @@ public class ThreadPoolManagerUnitTest
         assertNotNull( mgr );
 
         String poolName1 = "testGetPoolNames1";
-        mgr.getPool( poolName1 );
+        mgr.getExecutorService( poolName1 );
 
         String poolName2 = "testGetPoolNames2";
-        mgr.getPool( poolName2 );
+        mgr.getExecutorService( poolName2 );
 
         ArrayList<String> names = mgr.getPoolNames();
         assertTrue( "Should have name in list.", names.contains( poolName1 ) );
