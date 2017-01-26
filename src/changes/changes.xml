@@ -20,6 +20,14 @@
 	</properties>
 	<body>
         <release version="2.1" date="unreleased">
+            <action dev="tv" type="fix">
+                SoftReference cache did not work because of strong references being 
+                stored in payload of DoubleLinkedListNode
+            </action>
+            <action issue="JCS-172" dev="tv" type="fix" due-to="Tom Schroeder">
+                ElementAttributes.clone() not updating createTime causes cache elements
+                to expire immediately 
+            </action>
             <action issue="JCS-171" dev="tv" type="fix" due-to="Wiktor Niesiobedzki">
                 Multiple CacheEventQueue.QProcessor spawned for the same cache region 
             </action>
