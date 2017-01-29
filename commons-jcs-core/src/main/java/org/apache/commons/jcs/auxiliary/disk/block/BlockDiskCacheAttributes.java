@@ -32,17 +32,20 @@ public class BlockDiskCacheAttributes
     /** Don't change */
     private static final long serialVersionUID = 6568840097657265989L;
 
+    /** Defaults to 4kb */
+    public static final int DEFAULT_BLOCK_SIZE_BYTES = 4 * 1024;
+
     /** The size per block in bytes. */
-    private int blockSizeBytes;
+    private int blockSizeBytes = DEFAULT_BLOCK_SIZE_BYTES;
 
     /** Maximum number of keys to be kept in memory */
-    private static final int DEFAULT_MAX_KEY_SIZE = 5000;
+    public static final int DEFAULT_MAX_KEY_SIZE = 5000;
 
     /** -1 means no limit. */
     private int maxKeySize = DEFAULT_MAX_KEY_SIZE;
 
     /** How often should we persist the keys. */
-    private static final long DEFAULT_KEY_PERSISTENCE_INTERVAL_SECONDS = 5 * 60;
+    public static final long DEFAULT_KEY_PERSISTENCE_INTERVAL_SECONDS = 5 * 60;
 
     /** The keys will be persisted at this interval.  -1 mean never. */
     private long keyPersistenceIntervalSeconds = DEFAULT_KEY_PERSISTENCE_INTERVAL_SECONDS;

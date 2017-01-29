@@ -42,15 +42,15 @@ public class SoftReferenceElementDescriptor<K, V>
      */
     public SoftReferenceElementDescriptor( ICacheElement<K, V> ce )
     {
-        super( ce );
+        super( null );
         this.srce = new SoftReference<ICacheElement<K, V>>(ce);
     }
 
     /**
-     * @return the ce
+     * @see org.apache.commons.jcs.utils.struct.DoubleLinkedListNode#getPayload()
      */
     @Override
-    public ICacheElement<K, V> getCacheElement()
+    public ICacheElement<K, V> getPayload()
     {
         if (srce != null)
         {

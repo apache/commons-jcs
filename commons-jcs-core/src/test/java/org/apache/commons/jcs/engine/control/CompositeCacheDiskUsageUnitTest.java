@@ -20,30 +20,22 @@ package org.apache.commons.jcs.engine.control;
  */
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
-import junit.framework.TestCase;
+import java.util.Arrays;
+import java.util.List;
 
 import org.apache.commons.jcs.JCS;
 import org.apache.commons.jcs.access.CacheAccess;
 import org.apache.commons.jcs.access.exception.CacheException;
-import org.apache.commons.jcs.auxiliary.AbstractAuxiliaryCache;
-import org.apache.commons.jcs.auxiliary.AuxiliaryCache;
-import org.apache.commons.jcs.auxiliary.AuxiliaryCacheAttributes;
+import org.apache.commons.jcs.auxiliary.MockAuxiliaryCache;
 import org.apache.commons.jcs.engine.CacheElement;
-import org.apache.commons.jcs.engine.CacheStatus;
 import org.apache.commons.jcs.engine.CompositeCacheAttributes;
 import org.apache.commons.jcs.engine.ElementAttributes;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.engine.behavior.ICacheType.CacheType;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.commons.jcs.engine.behavior.IElementAttributes;
-import org.apache.commons.jcs.engine.behavior.IElementSerializer;
-import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;
-import org.apache.commons.jcs.engine.stats.behavior.IStats;
+
+import junit.framework.TestCase;
 
 /**
  * Tests of the disk usage settings for the CompositeCache.
@@ -105,12 +97,12 @@ public class CompositeCacheDiskUsageUnitTest
 
         CompositeCache<String, String> cache = new CompositeCache<String, String>( cattr, attr );
 
-        MockAuxCache<String, String> mock = new MockAuxCache<String, String>();
+        MockAuxiliaryCache<String, String> mock = new MockAuxiliaryCache<String, String>();
         mock.cacheType = CacheType.DISK_CACHE;
 
         @SuppressWarnings("unchecked")
-        AuxiliaryCache<String, String>[] auxArray = new AuxiliaryCache[] { mock };
-        cache.setAuxCaches( auxArray );
+        List<MockAuxiliaryCache<String, String>> aux = Arrays.asList( mock );
+        cache.setAuxCaches( aux );
 
         ICacheElement<String, String> inputElement = new CacheElement<String, String>( CACHE_NAME, "key", "value" );
 
@@ -118,7 +110,7 @@ public class CompositeCacheDiskUsageUnitTest
         cache.spoolToDisk( inputElement );
 
         // VERIFY
-        assertEquals( "Wrong number of calls to the disk cache update.", 1, mock.updateCount );
+        assertEquals( "Wrong number of calls to the disk cache update.", 1, mock.updateCallCount );
         assertEquals( "Wrong element updated.", inputElement, mock.lastUpdatedItem );
     }
 
@@ -137,12 +129,12 @@ public class CompositeCacheDiskUsageUnitTest
 
         CompositeCache<String, String> cache = new CompositeCache<String, String>( cattr, attr );
 
-        MockAuxCache<String, String> mock = new MockAuxCache<String, String>();
+        MockAuxiliaryCache<String, String> mock = new MockAuxiliaryCache<String, String>();
         mock.cacheType = CacheType.DISK_CACHE;
 
         @SuppressWarnings("unchecked")
-        AuxiliaryCache<String, String>[] auxArray = new AuxiliaryCache[] { mock };
-        cache.setAuxCaches( auxArray );
+        List<MockAuxiliaryCache<String, String>> aux = Arrays.asList( mock );
+        cache.setAuxCaches( aux );
 
         ICacheElement<String, String> inputElement = new CacheElement<String, String>( CACHE_NAME, "key", "value" );
 
@@ -150,7 +142,7 @@ public class CompositeCacheDiskUsageUnitTest
         cache.spoolToDisk( inputElement );
 
         // VERIFY
-        assertEquals( "Wrong number of calls to the disk cache update.", 0, mock.updateCount );
+        assertEquals( "Wrong number of calls to the disk cache update.", 0, mock.updateCallCount );
     }
 
     /**
@@ -173,12 +165,12 @@ public class CompositeCacheDiskUsageUnitTest
 
         CompositeCache<String, String> cache = new CompositeCache<String, String>( cattr, attr );
 
-        MockAuxCache<String, String> mock = new MockAuxCache<String, String>();
+        MockAuxiliaryCache<String, String> mock = new MockAuxiliaryCache<String, String>();
         mock.cacheType = CacheType.DISK_CACHE;
 
         @SuppressWarnings("unchecked")
-        AuxiliaryCache<String, String>[] auxArray = new AuxiliaryCache[] { mock };
-        cache.setAuxCaches( auxArray );
+        List<MockAuxiliaryCache<String, String>> aux = Arrays.asList( mock );
+        cache.setAuxCaches( aux );
 
         ICacheElement<String, String> inputElement = new CacheElement<String, String>( CACHE_NAME, "key", "value" );
 
@@ -186,7 +178,7 @@ public class CompositeCacheDiskUsageUnitTest
         cache.updateAuxiliaries( inputElement, true );
 
         // VERIFY
-        assertEquals( "Wrong number of calls to the disk cache update.", 1, mock.updateCount );
+        assertEquals( "Wrong number of calls to the disk cache update.", 1, mock.updateCallCount );
         assertEquals( "Wrong element updated.", inputElement, mock.lastUpdatedItem );
     }
 
@@ -211,12 +203,12 @@ public class CompositeCacheDiskUsageUnitTest
 
         CompositeCache<String, String> cache = new CompositeCache<String, String>( cattr, attr );
 
-        MockAuxCache<String, String> mock = new MockAuxCache<String, String>();
+        MockAuxiliaryCache<String, String> mock = new MockAuxiliaryCache<String, String>();
         mock.cacheType = CacheType.DISK_CACHE;
 
         @SuppressWarnings("unchecked")
-        AuxiliaryCache<String, String>[] auxArray = new AuxiliaryCache[] { mock };
-        cache.setAuxCaches( auxArray );
+        List<MockAuxiliaryCache<String, String>> aux = Arrays.asList( mock );
+        cache.setAuxCaches( aux );
 
         ICacheElement<String, String> inputElement = new CacheElement<String, String>( CACHE_NAME, "key", "value" );
 
@@ -224,7 +216,7 @@ public class CompositeCacheDiskUsageUnitTest
         cache.updateAuxiliaries( inputElement, false );
 
         // VERIFY
-        assertEquals( "Wrong number of calls to the disk cache update.", 1, mock.updateCount );
+        assertEquals( "Wrong number of calls to the disk cache update.", 1, mock.updateCallCount );
         assertEquals( "Wrong element updated.", inputElement, mock.lastUpdatedItem );
     }
 
@@ -249,12 +241,12 @@ public class CompositeCacheDiskUsageUnitTest
 
         CompositeCache<String, String> cache = new CompositeCache<String, String>( cattr, attr );
 
-        MockAuxCache<String, String> mock = new MockAuxCache<String, String>();
+        MockAuxiliaryCache<String, String> mock = new MockAuxiliaryCache<String, String>();
         mock.cacheType = CacheType.DISK_CACHE;
 
         @SuppressWarnings("unchecked")
-        AuxiliaryCache<String, String>[] auxArray = new AuxiliaryCache[] { mock };
-        cache.setAuxCaches( auxArray );
+        List<MockAuxiliaryCache<String, String>> aux = Arrays.asList( mock );
+        cache.setAuxCaches( aux );
 
         ICacheElement<String, String> inputElement = new CacheElement<String, String>( CACHE_NAME, "key", "value" );
 
@@ -262,7 +254,7 @@ public class CompositeCacheDiskUsageUnitTest
         cache.updateAuxiliaries( inputElement, true );
 
         // VERIFY
-        assertEquals( "Wrong number of calls to the disk cache update.", 0, mock.updateCount );
+        assertEquals( "Wrong number of calls to the disk cache update.", 0, mock.updateCallCount );
     }
 
     /**
@@ -285,15 +277,15 @@ public class CompositeCacheDiskUsageUnitTest
 
         CompositeCache<String, String> cache = new CompositeCache<String, String>( cattr, attr );
 
-        MockAuxCache<String, String> mock = new MockAuxCache<String, String>();
+        MockAuxiliaryCache<String, String> mock = new MockAuxiliaryCache<String, String>();
         mock.cacheType = CacheType.DISK_CACHE;
 
-        MockAuxCache<String, String> mockLateral = new MockAuxCache<String, String>();
+        MockAuxiliaryCache<String, String> mockLateral = new MockAuxiliaryCache<String, String>();
         mockLateral.cacheType = CacheType.LATERAL_CACHE;
 
         @SuppressWarnings("unchecked")
-        AuxiliaryCache<String, String>[] auxArray = new AuxiliaryCache[] { mock, mockLateral };
-        cache.setAuxCaches( auxArray );
+        List<MockAuxiliaryCache<String, String>> aux = Arrays.asList( mock, mockLateral );
+        cache.setAuxCaches( aux );
 
         ICacheElement<String, String> inputElement = new CacheElement<String, String>( CACHE_NAME, "key", "value" );
 
@@ -301,210 +293,10 @@ public class CompositeCacheDiskUsageUnitTest
         cache.updateAuxiliaries( inputElement, false );
 
         // VERIFY
-        assertEquals( "Wrong number of calls to the disk cache update.", 1, mock.updateCount );
+        assertEquals( "Wrong number of calls to the disk cache update.", 1, mock.updateCallCount );
         assertEquals( "Wrong element updated.", inputElement, mock.lastUpdatedItem );
 
-        assertEquals( "Wrong number of calls to the lateral cache update.", 1, mockLateral.updateCount );
+        assertEquals( "Wrong number of calls to the lateral cache update.", 1, mockLateral.updateCallCount );
         assertEquals( "Wrong element updated with lateral.", inputElement, mockLateral.lastUpdatedItem );
     }
-
-    /**
-     * Used to test the disk cache functionality.
-     * <p>
-     * @author Aaron Smuts
-     */
-    public static class MockAuxCache<K, V>
-        extends AbstractAuxiliaryCache<K, V>
-    {
-        /** The last item passed to update. */
-        public ICacheElement<K, V> lastUpdatedItem;
-
-        /** The number of times update was called. */
-        public int updateCount = 0;
-
-        /** The type that should be returned from getCacheType. */
-        public CacheType cacheType = CacheType.DISK_CACHE;
-
-        /** Resets counters and catchers. */
-        public void reset()
-        {
-            updateCount = 0;
-            lastUpdatedItem = null;
-        }
-
-        /**
-         * @param ce
-         * @throws IOException
-         */
-        @Override
-        public void update( ICacheElement<K, V> ce )
-            throws IOException
-        {
-            lastUpdatedItem = ce;
-            updateCount++;
-        }
-
-        /**
-         * @param key
-         * @return ICacheElement
-         * @throws IOException
-         */
-        @Override
-        public ICacheElement<K, V> get( K key )
-            throws IOException
-        {
-            return null;
-        }
-
-        /**
-         * Gets multiple items from the cache based on the given set of keys.
-         * <p>
-         * @param keys
-         * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is
-         *         no data in cache for any of these keys
-         */
-        @Override
-        public Map<K, ICacheElement<K, V>> getMultiple(Set<K> keys)
-        {
-            return new HashMap<K, ICacheElement<K, V>>();
-        }
-
-        /**
-         * @param key
-         * @return false
-         * @throws IOException
-         */
-        @Override
-        public boolean remove( K key )
-            throws IOException
-        {
-            return false;
-        }
-
-        /** @throws IOException */
-        @Override
-        public void removeAll()
-            throws IOException
-        {
-            // noop
-        }
-
-        /** @throws IOException */
-        @Override
-        public void dispose()
-            throws IOException
-        {
-            // noop
-        }
-
-        /** @return 0 */
-        @Override
-        public int getSize()
-        {
-            return 0;
-        }
-
-        /** @return 0 */
-        @Override
-        public CacheStatus getStatus()
-        {
-            return CacheStatus.ALIVE;
-        }
-
-        /** @return null */
-        @Override
-        public String getCacheName()
-        {
-            return null;
-        }
-
-        /**
-         * @return null
-         * @throws IOException
-         */
-        @Override
-        public Set<K> getKeySet( )
-            throws IOException
-        {
-            return null;
-        }
-
-        /** @return null */
-        @Override
-        public IStats getStatistics()
-        {
-            return null;
-        }
-
-        /** @return null */
-        @Override
-        public String getStats()
-        {
-            return null;
-        }
-
-        /**
-         * Returns the setup cache type. This allows you to use this mock as multiple cache types.
-         * <p>
-         * @see org.apache.commons.jcs.engine.behavior.ICacheType#getCacheType()
-         * @return cacheType
-         */
-        @Override
-        public CacheType getCacheType()
-        {
-            return cacheType;
-        }
-
-        /**
-         * @return Returns the AuxiliaryCacheAttributes.
-         */
-        @Override
-        public AuxiliaryCacheAttributes getAuxiliaryCacheAttributes()
-        {
-            return null;
-        }
-
-        /**
-         * @param cacheEventLogger
-         */
-        @Override
-        public void setCacheEventLogger( ICacheEventLogger cacheEventLogger )
-        {
-            // TODO Auto-generated method stub
-
-        }
-
-        /**
-         * @param elementSerializer
-         */
-        @Override
-        public void setElementSerializer( IElementSerializer elementSerializer )
-        {
-            // TODO Auto-generated method stub
-
-        }
-
-        /** @return null */
-        @Override
-        public String getEventLoggingExtraInfo()
-        {
-            // TODO Auto-generated method stub
-            return null;
-        }
-
-        /**
-         * @param pattern
-         * @return Collections.EMPTY_MAP;
-         * @throws IOException
-         */
-        @Override
-        public Map<K, ICacheElement<K, V>> getMatching(String pattern)
-            throws IOException
-        {
-            return Collections.emptyMap();
-        }
-
-
-    }
-
 }

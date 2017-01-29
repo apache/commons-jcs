@@ -50,9 +50,6 @@ public class BlockDisk
     public static final byte HEADER_SIZE_BYTES = 4;
     // N.B. 4 bytes is the size used for ByteBuffer.putInt(int value) and ByteBuffer.getInt()
 
-    /** defaults to 4kb */
-    private static final int DEFAULT_BLOCK_SIZE_BYTES = 4 * 1024;
-
     /** Size of the blocks */
     private final int blockSizeBytes;
 
@@ -90,7 +87,7 @@ public class BlockDisk
     public BlockDisk( File file, IElementSerializer elementSerializer )
         throws IOException
     {
-        this( file, DEFAULT_BLOCK_SIZE_BYTES, elementSerializer );
+        this( file, BlockDiskCacheAttributes.DEFAULT_BLOCK_SIZE_BYTES, elementSerializer );
     }
 
     /**

@@ -178,17 +178,9 @@ public class SoftReferenceMemoryCache<K, V> extends AbstractMemoryCache<K, V>
 
                 if (k instanceof String && ((String) k).startsWith(key.toString()))
                 {
-                    lock.lock();
-                    try
-                    {
-                        strongReferences.remove(entry.getValue().getCacheElement());
-                        itr.remove();
-                        removed = true;
-                    }
-                    finally
-                    {
-                        lock.unlock();
-                    }
+                    itr.remove();
+                    strongReferences.remove(entry.getValue().getCacheElement());
+                    removed = true;
                 }
             }
         }
@@ -203,36 +195,20 @@ public class SoftReferenceMemoryCache<K, V> extends AbstractMemoryCache<K, V>
 
                 if (k instanceof GroupAttrName && ((GroupAttrName<?>) k).groupId.equals(((GroupAttrName<?>) key).groupId))
                 {
-                    lock.lock();
-                    try
-                    {
-                        strongReferences.remove(entry.getValue().getCacheElement());
-                        itr.remove();
-                        removed = true;
-                    }
-                    finally
-                    {
-                        lock.unlock();
-                    }
+                    itr.remove();
+                    strongReferences.remove(entry.getValue().getCacheElement());
+                    removed = true;
                 }
             }
         }
         else
         {
             // remove single item.
-            lock.lock();
-            try
+            MemoryElementDescriptor<K, V> me = map.remove(key);
+            if (me != null)
             {
-                MemoryElementDescriptor<K, V> me = map.remove(key);
-                if (me != null)
-                {
-                    strongReferences.remove(me.getCacheElement());
-                    removed = true;
-                }
-            }
-            finally
-            {
-                lock.unlock();
+                strongReferences.remove(me.getCacheElement());
+                removed = true;
             }
         }
 
@@ -263,18 +239,9 @@ public class SoftReferenceMemoryCache<K, V> extends AbstractMemoryCache<K, V>
         putCnt.incrementAndGet();
         ce.getElementAttributes().setLastAccessTimeNow();
 
-        lock.lock();
-
-        try
-        {
-            map.put(ce.getKey(), new SoftReferenceElementDescriptor<K, V>(ce));
-            strongReferences.add(ce);
-            trimStrongReferences();
-        }
-        finally
-        {
-            lock.unlock();
-        }
+        map.put(ce.getKey(), new SoftReferenceElementDescriptor<K, V>(ce));
+        strongReferences.add(ce);
+        trimStrongReferences();
     }
 
     /**
@@ -303,24 +270,14 @@ public class SoftReferenceMemoryCache<K, V> extends AbstractMemoryCache<K, V>
     @Override
     public ICacheElement<K, V> get(K key) throws IOException
     {
-        ICacheElement<K, V> val = null;
-        lock.lock();
-
-        try
+        ICacheElement<K, V> val = getQuiet(key);
+        if (val != null)
         {
-            val = getQuiet(key);
-            if (val != null)
-            {
-                val.getElementAttributes().setLastAccessTimeNow();
+            val.getElementAttributes().setLastAccessTimeNow();
 
-                // update the ordering of the strong references
-                strongReferences.add(val);
-                trimStrongReferences();
-            }
-        }
-        finally
-        {
-            lock.unlock();
+            // update the ordering of the strong references
+            strongReferences.add(val);
+            trimStrongReferences();
         }
 
         if (val == null)

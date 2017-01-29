@@ -96,7 +96,7 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
      * <p>
      * @return The last node.
      */
-    public synchronized T getLast()
+    public T getLast()
     {
         if ( log.isDebugEnabled() )
         {
@@ -110,7 +110,7 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
      * <p>
      * @return DoubleLinkedListNode, the first node.
      */
-    public synchronized T getFirst()
+    public T getFirst()
     {
         if ( log.isDebugEnabled() )
         {
@@ -208,50 +208,53 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
      * @param me Description of the Parameter
      * @return true if an element was removed.
      */
-    public synchronized boolean remove(T me)
+    public boolean remove(T me)
     {
         if ( log.isDebugEnabled() )
         {
             log.debug( "removing node" );
         }
 
-        if ( me.next == null )
+        synchronized (this)
         {
-            if ( me.prev == null )
+            if ( me.next == null )
             {
-                // Make sure it really is the only node before setting head and
-                // tail to null. It is possible that we will be passed a node
-                // which has already been removed from the list, in which case
-                // we should ignore it
-
-                if ( me == first && me == last )
+                if ( me.prev == null )
                 {
-                    first = last = null;
+                    // Make sure it really is the only node before setting head and
+                    // tail to null. It is possible that we will be passed a node
+                    // which has already been removed from the list, in which case
+                    // we should ignore it
+
+                    if ( me == first && me == last )
+                    {
+                        first = last = null;
+                    }
                 }
+                else
+                {
+                    // last but not the first.
+                    last = (T) me.prev;
+                    last.next = null;
+                    me.prev = null;
+                }
+            }
+            else if ( me.prev == null )
+            {
+                // first but not the last.
+                first = (T) me.next;
+                first.prev = null;
+                me.next = null;
             }
             else
             {
-                // last but not the first.
-                last = (T) me.prev;
-                last.next = null;
-                me.prev = null;
+                // neither the first nor the last.
+                me.prev.next = me.next;
+                me.next.prev = me.prev;
+                me.prev = me.next = null;
             }
+            size--;
         }
-        else if ( me.prev == null )
-        {
-            // first but not the last.
-            first = (T) me.next;
-            first.prev = null;
-            me.next = null;
-        }
-        else
-        {
-            // neither the first nor the last.
-            me.prev.next = me.next;
-            me.next.prev = me.prev;
-            me.prev = me.next = null;
-        }
-        size--;
 
         return true;
     }
@@ -261,17 +264,22 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
      * <p>
      * @return The last node if there was one to remove.
      */
-    public synchronized T removeLast()
+    public T removeLast()
     {
         if ( log.isDebugEnabled() )
         {
             log.debug( "removing last node" );
         }
         T temp = last;
-        if ( last != null )
+
+        synchronized (this)
         {
-            remove( last );
+            if ( last != null )
+            {
+                remove( last );
+            }
         }
+
         return temp;
     }
 

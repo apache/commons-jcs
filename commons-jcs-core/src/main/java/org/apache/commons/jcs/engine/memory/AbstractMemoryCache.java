@@ -24,9 +24,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.commons.jcs.engine.CacheStatus;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
@@ -65,10 +64,8 @@ public abstract class AbstractMemoryCache<K, V>
     /** How many to spool at a time. */
     protected int chunkSize;
 
-    protected final Lock lock = new ReentrantLock();
-
     /** Map where items are stored by key.  This is created by the concrete child class. */
-    protected Map<K, MemoryElementDescriptor<K, V>> map;// TODO privatise
+    protected ConcurrentMap<K, MemoryElementDescriptor<K, V>> map;// TODO privatise
 
     /** number of hits */
     protected AtomicLong hitCnt;
@@ -106,7 +103,7 @@ public abstract class AbstractMemoryCache<K, V>
      * <p>
      * @return a threadsafe Map
      */
-    public abstract Map<K, MemoryElementDescriptor<K, V>> createMap();
+    public abstract ConcurrentMap<K, MemoryElementDescriptor<K, V>> createMap();
 
     /**
      * Removes an item from the cache

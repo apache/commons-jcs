@@ -21,11 +21,9 @@ package org.apache.commons.jcs.auxiliary.disk.block;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -44,7 +42,6 @@ import org.apache.commons.jcs.engine.behavior.IRequireScheduler;
 import org.apache.commons.jcs.engine.control.group.GroupAttrName;
 import org.apache.commons.jcs.engine.control.group.GroupId;
 import org.apache.commons.jcs.engine.stats.StatElement;
-import org.apache.commons.jcs.engine.stats.Stats;
 import org.apache.commons.jcs.engine.stats.behavior.IStatElement;
 import org.apache.commons.jcs.engine.stats.behavior.IStats;
 import org.apache.commons.logging.Log;
@@ -128,17 +125,9 @@ public class BlockDiskCache<K, V>
 
         try
         {
-            if ( this.blockDiskCacheAttributes.getBlockSizeBytes() > 0 )
-            {
-                this.dataFile = new BlockDisk( new File( rootDirectory, fileName + ".data" ),
-                                               this.blockDiskCacheAttributes.getBlockSizeBytes(),
-                                               getElementSerializer() );
-            }
-            else
-            {
-                this.dataFile = new BlockDisk( new File( rootDirectory, fileName + ".data" ),
-                                               getElementSerializer() );
-            }
+            this.dataFile = new BlockDisk( new File( rootDirectory, fileName + ".data" ),
+                                           this.blockDiskCacheAttributes.getBlockSizeBytes(),
+                                           getElementSerializer() );
 
             keyStore = new BlockDiskKeyStore<K>( this.blockDiskCacheAttributes, this );
 
@@ -206,11 +195,14 @@ public class BlockDiskCache<K, V>
         {
             int maxToTest = 100;
             int count = 0;
-            Iterator<Map.Entry<K, int[]>> it = this.keyStore.entrySet().iterator();
-            while ( it.hasNext() && count < maxToTest )
+            for (Map.Entry<K, int[]> entry : this.keyStore.entrySet())
             {
+                if (count >= maxToTest)
+                {
+                    break;
+                }
+
                 count++;
-                Map.Entry<K, int[]> entry = it.next();
                 Object data = this.dataFile.read( entry.getValue() );
                 if ( data == null )
                 {
@@ -296,7 +288,6 @@ public class BlockDiskCache<K, V>
     /**
      * Returns the number of keys.
      * <p>
-     * (non-Javadoc)
      * @see org.apache.commons.jcs.auxiliary.disk.AbstractDiskCache#getSize()
      */
     @Override
@@ -308,9 +299,11 @@ public class BlockDiskCache<K, V>
     /**
      * Gets the ICacheElement&lt;K, V&gt; for the key if it is in the cache. The program flow is as follows:
      * <ol>
-     * <li>Make sure the disk cache is alive.</li> <li>Get a read lock.</li> <li>See if the key is
-     * in the key store.</li> <li>If we found a key, ask the BlockDisk for the object at the
-     * blocks..</li> <li>Release the lock.</li>
+     * <li>Make sure the disk cache is alive.</li>
+     * <li>Get a read lock.</li>
+     * <li>See if the key is in the key store.</li>
+     * <li>If we found a key, ask the BlockDisk for the object at the blocks..</li>
+     * <li>Release the lock.</li>
      * </ol>
      * @param key
      * @return ICacheElement
@@ -335,17 +328,19 @@ public class BlockDiskCache<K, V>
 
         ICacheElement<K, V> object = null;
 
-
         try
         {
             storageLock.readLock().lock();
-            try {
+            try
+            {
                 int[] ded = this.keyStore.get( key );
                 if ( ded != null )
                 {
                     object = this.dataFile.read( ded );
                 }
-            } finally {
+            }
+            finally
+            {
                 storageLock.readLock().unlock();
             }
 
@@ -365,12 +360,14 @@ public class BlockDiskCache<K, V>
     /**
      * Writes an element to disk. The program flow is as follows:
      * <ol>
-     * <li>Acquire write lock.</li> <li>See id an item exists for this key.</li> <li>If an item
-     * already exists, add its blocks to the remove list.</li> <li>Have the Block disk write the
-     * item.</li> <li>Create a descriptor and add it to the key map.</li> <li>Release the write
-     * lock.</li>
+     * <li>Acquire write lock.</li>
+     * <li>See id an item exists for this key.</li>
+     * <li>If an item already exists, add its blocks to the remove list.</li>
+     * <li>Have the Block disk write the item.</li>
+     * <li>Create a descriptor and add it to the key map.</li>
+     * <li>Release the write lock.</li>
      * </ol>
-     * @param element
+     * @param element the cache element to write
      * @see org.apache.commons.jcs.auxiliary.disk.AbstractDiskCache#update(ICacheElement)
      */
     @Override
@@ -443,7 +440,6 @@ public class BlockDiskCache<K, V>
             return false;
         }
 
-        boolean reset = false;
         boolean removed = false;
 
         storageLock.writeLock().lock();
@@ -463,19 +459,9 @@ public class BlockDiskCache<K, V>
                 removed = performSingleKeyRemoval(key);
             }
         }
-        catch ( Exception e )
-        {
-            log.error( logCacheName + "Problem removing element.", e );
-            reset = true;
-        }
         finally
         {
             storageLock.writeLock().unlock();
-        }
-
-        if ( reset )
-        {
-            reset();
         }
 
         return removed;
@@ -559,7 +545,8 @@ public class BlockDiskCache<K, V>
     }
 
 
-	private boolean performSingleKeyRemoval(K key) {
+	private boolean performSingleKeyRemoval(K key)
+	{
 		boolean removed;
 		// remove single item.
 		int[] ded = this.keyStore.remove( key );
@@ -740,10 +727,11 @@ public class BlockDiskCache<K, V>
     @Override
     public IStats getStatistics()
     {
-        IStats stats = new Stats();
+        // get the stats from the super too
+        IStats stats = super.getStatistics();
         stats.setTypeName( "Block Disk Cache" );
 
-        ArrayList<IStatElement<?>> elems = new ArrayList<IStatElement<?>>();
+        List<IStatElement<?>> elems = stats.getStatElements();
 
         elems.add(new StatElement<Boolean>( "Is Alive", Boolean.valueOf(isAlive()) ) );
         elems.add(new StatElement<Integer>( "Key Map Size", Integer.valueOf(this.keyStore.size()) ) );
@@ -768,10 +756,6 @@ public class BlockDiskCache<K, V>
             elems.add(new StatElement<Integer>( "Empty Blocks",
                     Integer.valueOf(this.dataFile.getEmptyBlocks()) ) );
         }
-
-        // get the stats from the super too
-        IStats sStats = super.getStatistics();
-        elems.addAll(sStats.getStatElements());
 
         stats.setStatElements( elems );
 

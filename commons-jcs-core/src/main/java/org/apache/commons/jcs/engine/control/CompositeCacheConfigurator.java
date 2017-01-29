@@ -270,9 +270,7 @@ public class CompositeCacheConfigurator
             }
 
             // Associate the auxiliaries with the cache
-            @SuppressWarnings("unchecked") // No generic arrays in java
-            AuxiliaryCache<K, V>[] auxArray = auxList.toArray( new AuxiliaryCache[0] );
-            cache.setAuxCaches( auxArray );
+            cache.setAuxCaches( auxList );
         }
 
         // Return the new cache

@@ -34,12 +34,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.jcs.auxiliary.disk.behavior.IDiskCacheAttributes.DiskLimitType;
 import org.apache.commons.jcs.io.ObjectInputStreamClassLoaderAware;
-import org.apache.commons.jcs.utils.struct.AbstractLRUMap;
-import org.apache.commons.jcs.utils.struct.LRUMap;
+import org.apache.commons.jcs.utils.clhm.ConcurrentLinkedHashMap;
+import org.apache.commons.jcs.utils.clhm.EntryWeigher;
+import org.apache.commons.jcs.utils.clhm.EvictionListener;
 import org.apache.commons.jcs.utils.timing.ElapsedTimer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -216,13 +216,50 @@ public class BlockDiskKeyStore<K>
         keyHash = null;
         if (maxKeySize >= 0)
         {
+            EvictionListener<K, int[]> listener = new EvictionListener<K, int[]>()
+            {
+                @Override public void onEviction(K key, int[] value)
+                {
+                    blockDiskCache.freeBlocks(value);
+                    if (log.isDebugEnabled())
+                    {
+                        log.debug(logCacheName + "Removing key: [" + key + "] from key store.");
+                        log.debug(logCacheName + "Key store size: [" + keyHash.size() + "].");
+                    }
+                }
+            };
+
             if (this.diskLimitType == DiskLimitType.SIZE)
             {
-                keyHash = new LRUMapSizeLimited(maxKeySize);
+                EntryWeigher<K, int[]> sizeWeigher = new EntryWeigher<K, int[]>()
+                {
+                    @Override
+                    public int weightOf(K key, int[] value)
+                    {
+                        int size = value != null ? value.length * blockSize : 1;
+
+                        if (size == 0)
+                        {
+                            return 1;
+                        }
+                        else
+                        {
+                            return size;
+                        }
+                    }
+                };
+                keyHash = new ConcurrentLinkedHashMap.Builder<K, int[]>()
+                        .maximumWeightedCapacity(maxKeySize * 1024L) // kB
+                        .weigher(sizeWeigher)
+                        .listener(listener)
+                        .build();
             }
             else
             {
-                keyHash = new LRUMapCountLimited(maxKeySize);
+                keyHash = new ConcurrentLinkedHashMap.Builder<K, int[]>()
+                        .maximumWeightedCapacity(maxKeySize) // count
+                        .listener(listener)
+                        .build();
             }
             if (log.isInfoEnabled())
             {
@@ -233,8 +270,9 @@ public class BlockDiskKeyStore<K>
         {
             // If no max size, use a plain map for memory and processing
             // efficiency.
-            keyHash = new HashMap<K, int[]>();
-            // keyHash = Collections.synchronizedMap( new HashMap() );
+            keyHash = new ConcurrentLinkedHashMap.Builder<K, int[]>()
+                    .maximumWeightedCapacity(Long.MAX_VALUE) // count
+                    .build();
             if (log.isInfoEnabled())
             {
                 log.info(logCacheName + "Set maxKeySize to unlimited'");
@@ -421,164 +459,6 @@ public class BlockDiskKeyStore<K>
         else
         {
             return ok;
-        }
-    }
-
-    /**
-     * Class for recycling and lru. This implements the LRU size overflow
-     * callback, so we can mark the blocks as free.
-     */
-    public class LRUMapSizeLimited extends AbstractLRUMap<K, int[]>
-    {
-        /**
-         * <code>tag</code> tells us which map we are working on.
-         */
-        public final static String TAG = "orig-lru-size";
-
-        // size of the content in kB
-        private AtomicInteger contentSize;
-        private int maxSize;
-
-        /**
-         * Default
-         */
-        public LRUMapSizeLimited()
-        {
-            this(-1);
-        }
-
-        /**
-         * @param maxSize
-         *            maximum cache size in kB
-         */
-        public LRUMapSizeLimited(int maxSize)
-        {
-            super();
-            this.maxSize = maxSize;
-            this.contentSize = new AtomicInteger(0);
-        }
-
-        // keep the content size in kB, so 2^31 kB is reasonable value
-        private void subLengthFromCacheSize(int[] value)
-        {
-            contentSize.addAndGet(value.length * blockSize / -1024 - 1);
-        }
-
-        // keep the content size in kB, so 2^31 kB is reasonable value
-        private void addLengthToCacheSize(int[] value)
-        {
-            contentSize.addAndGet(value.length * blockSize / 1024 + 1);
-        }
-
-        @Override
-        public int[] put(K key, int[] value)
-        {
-            int[] oldValue = null;
-
-            try
-            {
-                oldValue = super.put(key, value);
-            }
-            finally
-            {
-                if (value != null)
-                {
-                    addLengthToCacheSize(value);
-                }
-                if (oldValue != null)
-                {
-                    subLengthFromCacheSize(oldValue);
-                }
-            }
-
-            return oldValue;
-        }
-
-        @Override
-        public int[] remove(Object key)
-        {
-            int[] value = null;
-
-            try
-            {
-                value = super.remove(key);
-                return value;
-            }
-            finally
-            {
-                if (value != null)
-                {
-                    subLengthFromCacheSize(value);
-                }
-            }
-        }
-
-        /**
-         * This is called when the may key size is reached. The least recently
-         * used item will be passed here. We will store the position and size of
-         * the spot on disk in the recycle bin.
-         * <p>
-         *
-         * @param key
-         * @param value
-         */
-        @Override
-        protected void processRemovedLRU(K key, int[] value)
-        {
-            blockDiskCache.freeBlocks(value);
-            if (log.isDebugEnabled())
-            {
-                log.debug(logCacheName + "Removing key: [" + key + "] from key store.");
-                log.debug(logCacheName + "Key store size: [" + super.size() + "].");
-            }
-
-            if (value != null)
-            {
-                subLengthFromCacheSize(value);
-            }
-        }
-
-        @Override
-        protected boolean shouldRemove()
-        {
-            return maxSize > 0 && contentSize.get() > maxSize && this.size() > 1;
-        }
-    }
-
-    /**
-     * Class for recycling and lru. This implements the LRU overflow callback,
-     * so we can mark the blocks as free.
-     */
-    public class LRUMapCountLimited extends LRUMap<K, int[]>
-    {
-        /**
-         * <code>tag</code> tells us which map we are working on.
-         */
-        public final static String TAG = "orig-lru-count";
-
-        public LRUMapCountLimited(int maxKeySize)
-        {
-            super(maxKeySize);
-        }
-
-        /**
-         * This is called when the may key size is reached. The least recently
-         * used item will be passed here. We will store the position and size of
-         * the spot on disk in the recycle bin.
-         * <p>
-         *
-         * @param key
-         * @param value
-         */
-        @Override
-        protected void processRemovedLRU(K key, int[] value)
-        {
-            blockDiskCache.freeBlocks(value);
-            if (log.isDebugEnabled())
-            {
-                log.debug(logCacheName + "Removing key: [" + key + "] from key store.");
-                log.debug(logCacheName + "Key store size: [" + super.size() + "].");
-            }
         }
     }
 }

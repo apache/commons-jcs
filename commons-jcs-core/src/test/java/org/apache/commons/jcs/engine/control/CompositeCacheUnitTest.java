@@ -1,5 +1,20 @@
 package org.apache.commons.jcs.engine.control;
 
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.jcs.auxiliary.MockAuxiliaryCache;
+import org.apache.commons.jcs.engine.CacheElement;
+import org.apache.commons.jcs.engine.CompositeCacheAttributes;
+import org.apache.commons.jcs.engine.ElementAttributes;
+import org.apache.commons.jcs.engine.behavior.ICacheElement;
+import org.apache.commons.jcs.engine.behavior.ICacheType.CacheType;
+import org.apache.commons.jcs.engine.behavior.ICompositeCacheAttributes;
+import org.apache.commons.jcs.engine.behavior.IElementAttributes;
+import org.apache.commons.jcs.engine.memory.MockMemoryCache;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -20,19 +35,6 @@ package org.apache.commons.jcs.engine.control;
  */
 
 import junit.framework.TestCase;
-import org.apache.commons.jcs.auxiliary.AuxiliaryCache;
-import org.apache.commons.jcs.auxiliary.MockAuxiliaryCache;
-import org.apache.commons.jcs.engine.CacheElement;
-import org.apache.commons.jcs.engine.CompositeCacheAttributes;
-import org.apache.commons.jcs.engine.ElementAttributes;
-import org.apache.commons.jcs.engine.behavior.ICacheElement;
-import org.apache.commons.jcs.engine.behavior.ICacheType.CacheType;
-import org.apache.commons.jcs.engine.behavior.ICompositeCacheAttributes;
-import org.apache.commons.jcs.engine.behavior.IElementAttributes;
-import org.apache.commons.jcs.engine.memory.MockMemoryCache;
-
-import java.io.IOException;
-import java.util.Map;
 
 /**
  * Tests that directly engage the composite cache.
@@ -64,7 +66,7 @@ public class CompositeCacheUnitTest
         MockAuxiliaryCache<String, Integer> diskMock = new MockAuxiliaryCache<String, Integer>();
         diskMock.cacheType = CacheType.DISK_CACHE;
         @SuppressWarnings("unchecked")
-        AuxiliaryCache<String, Integer>[] aux = new AuxiliaryCache[] { diskMock };
+        List<MockAuxiliaryCache<String, Integer>> aux = Arrays.asList( diskMock );
         cache.setAuxCaches( aux );
 
         // DO WORK
@@ -104,7 +106,7 @@ public class CompositeCacheUnitTest
         MockAuxiliaryCache<String, Integer> diskMock = new MockAuxiliaryCache<String, Integer>();
         diskMock.cacheType = CacheType.REMOTE_CACHE;
         @SuppressWarnings("unchecked")
-        AuxiliaryCache<String, Integer>[] aux = new AuxiliaryCache[] { diskMock };
+        List<MockAuxiliaryCache<String, Integer>> aux = Arrays.asList( diskMock );
         cache.setAuxCaches( aux );
 
         // DO WORK
@@ -147,7 +149,7 @@ public class CompositeCacheUnitTest
         MockAuxiliaryCache<String, Integer> diskMock = new MockAuxiliaryCache<String, Integer>();
         diskMock.cacheType = CacheType.DISK_CACHE;
         @SuppressWarnings("unchecked")
-        AuxiliaryCache<String, Integer>[] aux = new AuxiliaryCache[] { diskMock };
+        List<MockAuxiliaryCache<String, Integer>> aux = Arrays.asList( diskMock );
         cache.setAuxCaches( aux );
 
         // DO WORK
@@ -199,7 +201,7 @@ public class CompositeCacheUnitTest
         MockAuxiliaryCache<String, Integer> diskMock = new MockAuxiliaryCache<String, Integer>();
         diskMock.cacheType = CacheType.DISK_CACHE;
         @SuppressWarnings("unchecked")
-        AuxiliaryCache<String, Integer>[] aux = new AuxiliaryCache[] { diskMock };
+        List<MockAuxiliaryCache<String, Integer>> aux = Arrays.asList( diskMock );
         cache.setAuxCaches( aux );
 
         // DO WORK
@@ -233,7 +235,7 @@ public class CompositeCacheUnitTest
         MockAuxiliaryCache<String, Integer> diskMock = new MockAuxiliaryCache<String, Integer>();
         diskMock.cacheType = CacheType.REMOTE_CACHE;
         @SuppressWarnings("unchecked")
-        AuxiliaryCache<String, Integer>[] aux = new AuxiliaryCache[] { diskMock };
+        List<MockAuxiliaryCache<String, Integer>> aux = Arrays.asList( diskMock );
         cache.setAuxCaches( aux );
 
         // DO WORK

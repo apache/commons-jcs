@@ -32,7 +32,6 @@ import org.apache.commons.jcs.engine.CacheConstants;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.engine.control.CompositeCache;
 import org.apache.commons.jcs.engine.control.group.GroupAttrName;
-import org.apache.commons.jcs.engine.memory.util.DefaultMemoryElementDescriptor;
 import org.apache.commons.jcs.engine.memory.util.MemoryElementDescriptor;
 import org.apache.commons.jcs.engine.stats.StatElement;
 import org.apache.commons.jcs.engine.stats.behavior.IStatElement;
@@ -101,24 +100,16 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
     {
         putCnt.incrementAndGet();
 
-        lock.lock();
-        try
-        {
-            MemoryElementDescriptor<K, V> newNode = adjustListForUpdate(ce);
+        MemoryElementDescriptor<K, V> newNode = adjustListForUpdate(ce);
 
-            // this should be synchronized if we were not using a ConcurrentHashMap
-            final K key = newNode.getCacheElement().getKey();
-            MemoryElementDescriptor<K, V> oldNode = map.put(key, newNode);
+        // this should be synchronized if we were not using a ConcurrentHashMap
+        final K key = newNode.getCacheElement().getKey();
+        MemoryElementDescriptor<K, V> oldNode = map.put(key, newNode);
 
-            // If the node was the same as an existing node, remove it.
-            if (oldNode != null && key.equals(oldNode.getCacheElement().getKey()))
-            {
-                list.remove(oldNode);
-            }
-        }
-        finally
+        // If the node was the same as an existing node, remove it.
+        if (oldNode != null && key.equals(oldNode.getCacheElement().getKey()))
         {
-            lock.unlock();
+            list.remove(oldNode);
         }
 
         // If we are over the max spool some
@@ -168,34 +159,20 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
         // The spool will put them in a disk event queue, so there is no
         // need to pre-queue the queuing. This would be a bit wasteful
         // and wouldn't save much time in this synchronous call.
-        lock.lock();
-
-        try
+        for (int i = 0; i < chunkSizeCorrected; i++)
         {
-            for (int i = 0; i < chunkSizeCorrected; i++)
+            ICacheElement<K, V> lastElement = spoolLastElement();
+            if (lastElement == null)
             {
-                ICacheElement<K, V> lastElement = spoolLastElement();
-                if (lastElement == null)
-                {
-                    break;
-                }
-            }
-
-            // If this is out of the sync block it can detect a mismatch
-            // where there is none.
-            if (log.isDebugEnabled() && map.size() != list.size())
-            {
-                log.debug("update: After spool, size mismatch: map.size() = " + map.size() + ", linked list size = " + list.size());
+                break;
             }
         }
-        finally
-        {
-            lock.unlock();
-        }
 
-        if (log.isDebugEnabled())
+        // If this is out of the sync block it can detect a mismatch
+        // where there is none.
+        if (log.isDebugEnabled() && map.size() != list.size())
         {
-            log.debug("update: After spool map size: " + map.size() + " linked list size = " + list.size());
+            log.debug("update: After spool, size mismatch: map.size() = " + map.size() + ", linked list size = " + list.size());
         }
     }
 
@@ -211,7 +188,7 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
     @Override
     public final ICacheElement<K, V> get(K key) throws IOException
     {
-        ICacheElement<K, V> ce = null;
+        ICacheElement<K, V> ce;
 
         if (log.isDebugEnabled())
         {
@@ -224,17 +201,9 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
         {
             hitCnt.incrementAndGet();
 
-            lock.lock();
-            try
-            {
-                ce = me.getCacheElement();
-                // ABSTRACT
-                adjustListForGet(me);
-            }
-            finally
-            {
-                lock.unlock();
-            }
+            ce = me.getCacheElement();
+            // ABSTRACT
+            adjustListForGet(me);
 
             if (log.isDebugEnabled())
             {
@@ -244,6 +213,8 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
         else
         {
             missCnt.incrementAndGet();
+
+            ce = null;
 
             if (log.isDebugEnabled())
             {
@@ -281,24 +252,15 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
     @Override
     public int freeElements(int numberToFree) throws IOException
     {
-        int freed = 0;
+        int freed;
 
-        lock.lock();
-
-        try
+        for (freed = 0; freed < numberToFree; freed++)
         {
-            for (; freed < numberToFree; freed++)
+            ICacheElement<K, V> element = spoolLastElement();
+            if (element == null)
             {
-                ICacheElement<K, V> element = spoolLastElement();
-                if (element == null)
-                {
-                    break;
-                }
+                break;
             }
-        }
-        finally
-        {
-            lock.unlock();
         }
 
         return freed;
@@ -315,13 +277,13 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
     {
         ICacheElement<K, V> toSpool = null;
 
-        final MemoryElementDescriptor<K, V> last = list.getLast();
+        final MemoryElementDescriptor<K, V> last = list.removeLast();
         if (last != null)
         {
             toSpool = last.getCacheElement();
             if (toSpool != null)
             {
-                getCompositeCache().spoolToDisk(toSpool);
+                waterfal(toSpool);
                 if (map.remove(toSpool.getKey()) == null)
                 {
                     log.warn("update: remove failed for key: " + toSpool.getKey());
@@ -336,8 +298,6 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
             {
                 throw new Error("update: last.ce is null!");
             }
-
-            list.remove(last);
         }
 
         return toSpool;
@@ -374,17 +334,9 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
 
                 if (k instanceof String && ((String) k).startsWith(key.toString()))
                 {
-                    lock.lock();
-                    try
-                    {
-                        list.remove(entry.getValue());
-                        itr.remove();
-                        removed = true;
-                    }
-                    finally
-                    {
-                        lock.unlock();
-                    }
+                    itr.remove();
+                    list.remove(entry.getValue());
+                    removed = true;
                 }
             }
         }
@@ -398,36 +350,20 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
 
                 if (k instanceof GroupAttrName && ((GroupAttrName<?>) k).groupId.equals(((GroupAttrName<?>) key).groupId))
                 {
-                    lock.lock();
-                    try
-                    {
-                        list.remove(entry.getValue());
-                        itr.remove();
-                        removed = true;
-                    }
-                    finally
-                    {
-                        lock.unlock();
-                    }
+                    itr.remove();
+                    list.remove(entry.getValue());
+                    removed = true;
                 }
             }
         }
         else
         {
             // remove single item.
-            lock.lock();
-            try
+            MemoryElementDescriptor<K, V> me = map.remove(key);
+            if (me != null)
             {
-                MemoryElementDescriptor<K, V> me = map.remove(key);
-                if (me != null)
-                {
-                    list.remove(me);
-                    removed = true;
-                }
-            }
-            finally
-            {
-                lock.unlock();
+                list.remove(me);
+                removed = true;
             }
         }
 
@@ -444,16 +380,8 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
     @Override
     public void removeAll() throws IOException
     {
-        lock.lock();
-        try
-        {
-            list.removeAll();
-            map.clear();
-        }
-        finally
-        {
-            lock.unlock();
-        }
+        super.removeAll();
+        list.removeAll();
     }
 
     // --------------------------- internal methods (linked list implementation)
@@ -467,21 +395,13 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
      */
     protected MemoryElementDescriptor<K, V> addFirst(ICacheElement<K, V> ce)
     {
-        lock.lock();
-        try
+        MemoryElementDescriptor<K, V> me = new MemoryElementDescriptor<K, V>(ce);
+        list.addFirst(me);
+        if ( log.isDebugEnabled() )
         {
-            MemoryElementDescriptor<K, V> me = new DefaultMemoryElementDescriptor<K, V>(ce);
-            list.addFirst(me);
-            if ( log.isDebugEnabled() )
-            {
-                verifyCache(ce.getKey());
-            }
-            return me;
+            verifyCache(ce.getKey());
         }
-        finally
-        {
-            lock.unlock();
-        }
+        return me;
     }
 
     /**
@@ -494,21 +414,13 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
      */
     protected MemoryElementDescriptor<K, V> addLast(ICacheElement<K, V> ce)
     {
-        lock.lock();
-        try
+        MemoryElementDescriptor<K, V> me = new MemoryElementDescriptor<K, V>(ce);
+        list.addLast(me);
+        if ( log.isDebugEnabled() )
         {
-            MemoryElementDescriptor<K, V> me = new DefaultMemoryElementDescriptor<K, V>(ce);
-            list.addLast(me);
-            if ( log.isDebugEnabled() )
-            {
-                verifyCache(ce.getKey());
-            }
-            return me;
+            verifyCache(ce.getKey());
         }
-        finally
-        {
-            lock.unlock();
-        }
+        return me;
     }
 
     // ---------------------------------------------------------- debug methods

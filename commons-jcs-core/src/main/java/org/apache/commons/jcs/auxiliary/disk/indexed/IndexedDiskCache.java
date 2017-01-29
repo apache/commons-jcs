@@ -48,11 +48,11 @@ import org.apache.commons.jcs.engine.control.group.GroupId;
 import org.apache.commons.jcs.engine.logging.behavior.ICacheEvent;
 import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;
 import org.apache.commons.jcs.engine.stats.StatElement;
-import org.apache.commons.jcs.engine.stats.Stats;
 import org.apache.commons.jcs.engine.stats.behavior.IStatElement;
 import org.apache.commons.jcs.engine.stats.behavior.IStats;
-import org.apache.commons.jcs.utils.struct.AbstractLRUMap;
-import org.apache.commons.jcs.utils.struct.LRUMap;
+import org.apache.commons.jcs.utils.clhm.ConcurrentLinkedHashMap;
+import org.apache.commons.jcs.utils.clhm.EntryWeigher;
+import org.apache.commons.jcs.utils.clhm.EvictionListener;
 import org.apache.commons.jcs.utils.timing.ElapsedTimer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -994,13 +994,51 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
         keyHash = null;
         if (maxKeySize >= 0)
         {
-            if (this.diskLimitType == DiskLimitType.COUNT)
+            EvictionListener<K, IndexedDiskElementDescriptor> listener = new EvictionListener<K, IndexedDiskElementDescriptor>()
             {
-                keyHash = new LRUMapCountLimited(maxKeySize);
+                @Override
+                public void onEviction(K key, IndexedDiskElementDescriptor value)
+                {
+                    addToRecycleBin(value);
+                    if (log.isDebugEnabled())
+                    {
+                        log.debug(logCacheName + "Removing key: [" + key + "] from key store.");
+                        log.debug(logCacheName + "Key store size: [" + keyHash.size() + "].");
+                    }
+
+                    doOptimizeRealTime();
+                }
+            };
+
+            if (this.diskLimitType == DiskLimitType.SIZE)
+            {
+                EntryWeigher<K, IndexedDiskElementDescriptor> sizeWeigher = new EntryWeigher<K, IndexedDiskElementDescriptor>()
+                {
+                    @Override
+                    public int weightOf(K key, IndexedDiskElementDescriptor value)
+                    {
+                        if (value != null)
+                        {
+                            return value.len + IndexedDisk.HEADER_SIZE_BYTES;
+                        }
+                        else
+                        {
+                            return 1;
+                        }
+                    }
+                };
+                keyHash = new ConcurrentLinkedHashMap.Builder<K, IndexedDiskElementDescriptor>()
+                        .maximumWeightedCapacity(maxKeySize * 1024L) // kB
+                        .weigher(sizeWeigher)
+                        .listener(listener)
+                        .build();
             }
             else
             {
-                keyHash = new LRUMapSizeLimited(maxKeySize);
+                keyHash = new ConcurrentLinkedHashMap.Builder<K, IndexedDiskElementDescriptor>()
+                        .maximumWeightedCapacity(maxKeySize) // key count
+                        .listener(listener)
+                        .build();
             }
 
             if (log.isInfoEnabled())
@@ -1011,8 +1049,9 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
         else
         {
             // If no max size, use a plain map for memory and processing efficiency.
-            keyHash = new HashMap<K, IndexedDiskElementDescriptor>();
-            // keyHash = Collections.synchronizedMap( new HashMap() );
+            keyHash = new ConcurrentLinkedHashMap.Builder<K, IndexedDiskElementDescriptor>()
+                    .maximumWeightedCapacity(Long.MAX_VALUE) // unlimited key count
+                    .build();
             if (log.isInfoEnabled())
             {
                 log.info(logCacheName + "Set maxKeySize to unlimited'");
@@ -1540,7 +1579,8 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
     @Override
     public synchronized IStats getStatistics()
     {
-        IStats stats = new Stats();
+        // get the stats from the super too
+        IStats stats = super.getStatistics();
         stats.setTypeName("Indexed Disk Cache");
 
         ArrayList<IStatElement<?>> elems = new ArrayList<IStatElement<?>>();
@@ -1549,8 +1589,8 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
         elems.add(new StatElement<Integer>("Key Map Size", Integer.valueOf(this.keyHash != null ? this.keyHash.size() : -1)));
         try
         {
-            elems
-                .add(new StatElement<Long>("Data File Length", Long.valueOf(this.dataFile != null ? this.dataFile.length() : -1L)));
+            elems.add(new StatElement<Long>("Data File Length",
+                Long.valueOf(this.dataFile != null ? this.dataFile.length() : -1L)));
         }
         catch (IOException e)
         {
@@ -1564,10 +1604,6 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
         elems.add(new StatElement<Integer>("Recycle Count", Integer.valueOf(this.recycleCnt)));
         elems.add(new StatElement<Integer>("Recycle Bin Size", Integer.valueOf(this.recycle.size())));
         elems.add(new StatElement<Integer>("Startup Size", Integer.valueOf(this.startupSize)));
-
-        // get the stats from the super too
-        IStats sStats = super.getStatistics();
-        elems.addAll(sStats.getStatElements());
 
         stats.setStatElements(elems);
 
@@ -1627,164 +1663,6 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
             {
                 return 1;
             }
-        }
-    }
-
-    /**
-     * Class for recycling and lru. This implements the LRU overflow callback, so we can add items
-     * to the recycle bin. This class counts the size element to decide, when to throw away an element
-     */
-    public class LRUMapSizeLimited extends AbstractLRUMap<K, IndexedDiskElementDescriptor>
-    {
-        /**
-         * <code>tag</code> tells us which map we are working on.
-         */
-        public static final String TAG = "orig";
-
-        // size of the content in kB
-        private AtomicInteger contentSize;
-        private int maxSize;
-
-        /**
-         * Default
-         */
-        public LRUMapSizeLimited()
-        {
-            this(-1);
-        }
-
-        /**
-         * @param maxKeySize
-         */
-        public LRUMapSizeLimited(int maxKeySize)
-        {
-            super();
-            this.maxSize = maxKeySize;
-            this.contentSize = new AtomicInteger(0);
-        }
-
-        // keep the content size in kB, so 2^31 kB is reasonable value
-        private void subLengthFromCacheSize(IndexedDiskElementDescriptor value)
-        {
-            contentSize.addAndGet((value.len + IndexedDisk.HEADER_SIZE_BYTES) / -1024 - 1);
-        }
-
-        // keep the content size in kB, so 2^31 kB is reasonable value
-        private void addLengthToCacheSize(IndexedDiskElementDescriptor value)
-        {
-            contentSize.addAndGet((value.len + IndexedDisk.HEADER_SIZE_BYTES) / 1024 + 1);
-        }
-
-        @Override
-        public IndexedDiskElementDescriptor put(K key, IndexedDiskElementDescriptor value)
-        {
-            IndexedDiskElementDescriptor oldValue = null;
-
-            try
-            {
-                oldValue = super.put(key, value);
-            }
-            finally
-            {
-                // keep the content size in kB, so 2^31 kB is reasonable value
-                if (value != null)
-                {
-                    addLengthToCacheSize(value);
-                }
-                if (oldValue != null)
-                {
-                    subLengthFromCacheSize(oldValue);
-                }
-            }
-
-            return oldValue;
-        }
-
-        @Override
-        public IndexedDiskElementDescriptor remove(Object key)
-        {
-            IndexedDiskElementDescriptor value = null;
-
-            try
-            {
-                value = super.remove(key);
-                return value;
-            }
-            finally
-            {
-                if (value != null)
-                {
-                    subLengthFromCacheSize(value);
-                }
-            }
-        }
-
-        /**
-         * This is called when the may key size is reached. The least recently used item will be
-         * passed here. We will store the position and size of the spot on disk in the recycle bin.
-         * <p>
-         *
-         * @param key
-         * @param value
-         */
-        @Override
-        protected void processRemovedLRU(K key, IndexedDiskElementDescriptor value)
-        {
-            if (value != null)
-            {
-                subLengthFromCacheSize(value);
-            }
-
-            addToRecycleBin(value);
-
-            if (log.isDebugEnabled())
-            {
-                log.debug(logCacheName + "Removing key: [" + key + "] from key store.");
-                log.debug(logCacheName + "Key store size: [" + this.size() + "].");
-            }
-
-            doOptimizeRealTime();
-        }
-
-        @Override
-        protected boolean shouldRemove()
-        {
-            return maxSize > 0 && contentSize.get() > maxSize && this.size() > 0;
-        }
-    }
-
-    /**
-     * Class for recycling and lru. This implements the LRU overflow callback, so we can add items
-     * to the recycle bin. This class counts the elements to decide, when to throw away an element
-     */
-
-    public class LRUMapCountLimited extends LRUMap<K, IndexedDiskElementDescriptor>
-    // implements Serializable
-    {
-        public LRUMapCountLimited(int maxKeySize)
-        {
-            super(maxKeySize);
-        }
-
-        /**
-         * This is called when the may key size is reached. The least recently used item will be
-         * passed here. We will store the position and size of the spot on disk in the recycle bin.
-         * <p>
-         *
-         * @param key
-         * @param value
-         */
-        @Override
-        protected void processRemovedLRU(K key, IndexedDiskElementDescriptor value)
-        {
-            addToRecycleBin(value);
-            if (log.isDebugEnabled())
-            {
-                log.debug(logCacheName + "Removing key: [" + key + "] from key store.");
-                log.debug(logCacheName + "Key store size: [" + this.size() + "].");
-            }
-
-            doOptimizeRealTime();
         }
     }
 }

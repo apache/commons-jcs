@@ -21,11 +21,10 @@ package org.apache.commons.jcs.auxiliary.disk;
 
 import org.apache.commons.jcs.engine.CacheElement;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
-import org.apache.commons.jcs.engine.behavior.IElementAttributes;
 
 /**
  * Implementation of cache elements in purgatory.
- * 
+ *
  * Elements are stored in purgatory when they are spooled to the auxiliary cache, but have not yet
  * been written to disk.
  */
@@ -38,12 +37,9 @@ public class PurgatoryElement<K, V>
     /** Is the element ready to be spooled? */
     private boolean spoolable = false;
 
-    /** Wrapped cache Element */
-    private ICacheElement<K, V> cacheElement;
-
     /**
      * Constructor for the PurgatoryElement&lt;K, V&gt; object
-     * 
+     *
      * @param cacheElement CacheElement
      */
     public PurgatoryElement( ICacheElement<K, V> cacheElement )
@@ -51,12 +47,11 @@ public class PurgatoryElement<K, V>
         super(cacheElement.getCacheName(),
                 cacheElement.getKey(), cacheElement.getVal(),
                 cacheElement.getElementAttributes());
-        this.cacheElement = cacheElement;
     }
 
     /**
      * Gets the spoolable property.
-     * 
+     *
      * @return The spoolable value
      */
     public boolean isSpoolable()
@@ -66,7 +61,7 @@ public class PurgatoryElement<K, V>
 
     /**
      * Sets the spoolable property.
-     * 
+     *
      * @param spoolable The new spoolable value
      */
     public void setSpoolable( boolean spoolable )
@@ -76,65 +71,15 @@ public class PurgatoryElement<K, V>
 
     /**
      * Get the wrapped cache element.
-     * 
+     *
      * @return ICacheElement
      */
     public ICacheElement<K, V> getCacheElement()
     {
-        return cacheElement;
+        return this;
     }
 
     // ------------------------------------------------ interface ICacheElement
-
-    /**
-     * @return cacheElement.getCacheName();
-     * @see ICacheElement#getCacheName
-     */
-    @Override
-    public String getCacheName()
-    {
-        return cacheElement.getCacheName();
-    }
-
-    /**
-     * @return cacheElement.getKey();
-     * @see ICacheElement#getKey
-     */
-    @Override
-    public K getKey()
-    {
-        return cacheElement.getKey();
-    }
-
-    /**
-     * @return cacheElement.getVal();
-     * @see ICacheElement#getVal
-     */
-    @Override
-    public V getVal()
-    {
-        return cacheElement.getVal();
-    }
-
-    /**
-     * @return cacheElement.getElementAttributes();
-     * @see ICacheElement#getElementAttributes
-     */
-    @Override
-    public IElementAttributes getElementAttributes()
-    {
-        return cacheElement.getElementAttributes();
-    }
-
-    /**
-     * @param attr
-     * @see ICacheElement#setElementAttributes
-     */
-    @Override
-    public void setElementAttributes( IElementAttributes attr )
-    {
-        cacheElement.setElementAttributes( attr );
-    }
 
     /**
      * @return debug string
@@ -145,7 +90,7 @@ public class PurgatoryElement<K, V>
         StringBuilder buf = new StringBuilder();
         buf.append( "[PurgatoryElement: " );
         buf.append( " isSpoolable = " + isSpoolable() );
-        buf.append( " CacheElement = " + getCacheElement() );
+        buf.append( " CacheElement = " + super.toString() );
         buf.append( " CacheName = " + getCacheName() );
         buf.append( " Key = " + getKey() );
         buf.append( " Value = " + getVal() );

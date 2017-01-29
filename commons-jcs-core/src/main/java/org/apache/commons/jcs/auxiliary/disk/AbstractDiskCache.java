@@ -25,6 +25,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import org.apache.commons.jcs.auxiliary.AbstractAuxiliaryCacheEventLogging;
@@ -41,7 +44,7 @@ import org.apache.commons.jcs.engine.stats.StatElement;
 import org.apache.commons.jcs.engine.stats.Stats;
 import org.apache.commons.jcs.engine.stats.behavior.IStatElement;
 import org.apache.commons.jcs.engine.stats.behavior.IStats;
-import org.apache.commons.jcs.utils.struct.LRUMap;
+import org.apache.commons.jcs.utils.clhm.ConcurrentLinkedHashMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -74,7 +77,7 @@ public abstract class AbstractDiskCache<K, V>
      * If the elements are pulled into the memory cache while the are still in purgatory, writing to
      * disk can be canceled.
      */
-    private Map<K, PurgatoryElement<K, V>> purgatory;
+    private ConcurrentMap<K, PurgatoryElement<K, V>> purgatory;
 
     /**
      * The CacheEventQueue where changes will be queued for asynchronous updating of the persistent
@@ -86,13 +89,13 @@ public abstract class AbstractDiskCache<K, V>
      * Indicates whether the cache is 'alive': initialized, but not yet disposed. Child classes must
      * set this to true.
      */
-    private boolean alive = false;
+    private final AtomicBoolean alive = new AtomicBoolean(false);
 
     /** Every cache will have a name, subclasses must set this when they are initialized. */
     private String cacheName;
 
     /** DEBUG: Keeps a count of the number of purgatory hits for debug messages */
-    private int purgHits = 0;
+    private final AtomicLong purgHits = new AtomicLong(0);
 
     /**
      * We lock here, so that we cannot get an update after a remove all. an individual removal locks
@@ -115,7 +118,8 @@ public abstract class AbstractDiskCache<K, V>
 
         // create queue
         CacheEventQueueFactory<K, V> fact = new CacheEventQueueFactory<K, V>();
-        this.cacheEventQueue = fact.createCacheEventQueue( new MyCacheListener(), CacheInfo.listenerId, cacheName,
+        this.cacheEventQueue = fact.createCacheEventQueue( new MyCacheListener(), CacheInfo.listenerId,
+                                                           cacheName,
                                                            diskCacheAttributes.getEventQueuePoolName(),
                                                            diskCacheAttributes.getEventQueueType() );
 
@@ -128,7 +132,7 @@ public abstract class AbstractDiskCache<K, V>
      */
     public boolean isAlive()
     {
-        return alive;
+        return alive.get();
     }
 
     /**
@@ -136,7 +140,7 @@ public abstract class AbstractDiskCache<K, V>
      */
     public void setAlive(boolean alive)
     {
-        this.alive = alive;
+        this.alive.set(alive);
     }
 
     /**
@@ -155,17 +159,16 @@ public abstract class AbstractDiskCache<K, V>
 
         try
         {
-            synchronized (this)
+            long maxPurgatorySize = Long.MAX_VALUE;
+
+            if ( diskCacheAttributes.getMaxPurgatorySize() >= 0 )
             {
-                if ( diskCacheAttributes.getMaxPurgatorySize() >= 0 )
-                {
-                    purgatory = new LRUMap<K, PurgatoryElement<K, V>>( diskCacheAttributes.getMaxPurgatorySize() );
-                }
-                else
-                {
-                    purgatory = new HashMap<K, PurgatoryElement<K, V>>();
-                }
+                maxPurgatorySize = diskCacheAttributes.getMaxPurgatorySize();
             }
+
+            purgatory = new ConcurrentLinkedHashMap.Builder<K, PurgatoryElement<K, V>>()
+                    .maximumWeightedCapacity(maxPurgatorySize) // key count
+                    .build();
         }
         finally
         {
@@ -206,10 +209,7 @@ public abstract class AbstractDiskCache<K, V>
             pe.setSpoolable( true );
 
             // Add the element to purgatory
-            synchronized ( purgatory )
-            {
-                purgatory.put( pe.getKey(), pe );
-            }
+            purgatory.put( pe.getKey(), pe );
 
             // Queue element for serialization
             cacheEventQueue.addPutEvent( pe );
@@ -234,8 +234,7 @@ public abstract class AbstractDiskCache<K, V>
     public final ICacheElement<K, V> get( K key )
     {
         // If not alive, always return null.
-
-        if ( !alive )
+        if ( !isAlive() )
         {
             if ( log.isDebugEnabled() )
             {
@@ -244,20 +243,16 @@ public abstract class AbstractDiskCache<K, V>
             return null;
         }
 
-        PurgatoryElement<K, V> pe = null;
-        synchronized ( purgatory )
-        {
-            pe = purgatory.get( key );
-        }
+        PurgatoryElement<K, V> pe = purgatory.get( key );
 
         // If the element was found in purgatory
         if ( pe != null )
         {
-            purgHits++;
+            purgHits.incrementAndGet();
 
             if ( log.isDebugEnabled() )
             {
-                if ( purgHits % 100 == 0 )
+                if ( purgHits.get() % 100 == 0 )
                 {
                     log.debug( "Purgatory hits = " + purgHits );
                 }
@@ -290,7 +285,7 @@ public abstract class AbstractDiskCache<K, V>
         {
             return doGet( key );
         }
-        catch ( Exception e )
+        catch ( IOException e )
         {
             log.error( e );
 
@@ -319,14 +314,7 @@ public abstract class AbstractDiskCache<K, V>
         throws IOException
     {
         // Get the keys from purgatory
-        Set<K> keyArray = null;
-
-        // this avoids locking purgatory, but it uses more memory
-        synchronized ( purgatory )
-        {
-            keyArray = new HashSet<K>(purgatory.keySet());
-        }
-
+        Set<K> keyArray = new HashSet<K>(purgatory.keySet());
         Set<K> matchingKeys = getKeyMatcher().getMatchingKeysFromArray( pattern, keyArray );
 
         // call getMultiple with the set
@@ -388,23 +376,15 @@ public abstract class AbstractDiskCache<K, V>
     public final boolean remove( K key )
         throws IOException
     {
-        PurgatoryElement<K, V> pe = null;
-
-        synchronized ( purgatory )
-        {
-            // I'm getting the object, so I can lock on the element
-            // Remove element from purgatory if it is there
-            pe = purgatory.get( key );
-        }
+        // I'm getting the object, so I can lock on the element
+        // Remove element from purgatory if it is there
+        PurgatoryElement<K, V> pe = purgatory.get( key );
 
         if ( pe != null )
         {
             synchronized ( pe.getCacheElement() )
             {
-                synchronized ( purgatory )
-                {
-                    purgatory.remove( key );
-                }
+                purgatory.remove( key );
 
                 // no way to remove from queue, just make sure it doesn't get on
                 // disk and then removed right afterwards
@@ -433,8 +413,7 @@ public abstract class AbstractDiskCache<K, V>
     {
         if ( this.diskCacheAttributes.isAllowRemoveAll() )
         {
-            // Replace purgatory with a new empty hashtable
-            initPurgatory();
+            purgatory.clear();
 
             // Remove all from persistent store immediately
             doRemoveAll();
@@ -510,7 +489,7 @@ public abstract class AbstractDiskCache<K, V>
         // need to handle the disposal first.
         doDispose();
 
-        alive = false;
+        alive.set(false);
     }
 
     /**
@@ -547,7 +526,7 @@ public abstract class AbstractDiskCache<K, V>
 
         ArrayList<IStatElement<?>> elems = new ArrayList<IStatElement<?>>();
 
-        elems.add(new StatElement<Integer>( "Purgatory Hits", Integer.valueOf(purgHits) ) );
+        elems.add(new StatElement<AtomicLong>( "Purgatory Hits", purgHits ) );
         elems.add(new StatElement<Integer>( "Purgatory Size", Integer.valueOf(purgatory.size()) ) );
 
         // get the stats from the event queue too
@@ -566,7 +545,7 @@ public abstract class AbstractDiskCache<K, V>
     @Override
     public CacheStatus getStatus()
     {
-        return ( alive ? CacheStatus.ALIVE : CacheStatus.DISPOSED );
+        return ( isAlive() ? CacheStatus.ALIVE : CacheStatus.DISPOSED );
     }
 
     /**
@@ -635,7 +614,7 @@ public abstract class AbstractDiskCache<K, V>
         public void handlePut( ICacheElement<K, V> element )
             throws IOException
         {
-            if ( alive )
+            if ( isAlive() )
             {
                 // If the element is a PurgatoryElement<K, V> we must check to see
                 // if it is still spoolable, and remove it from purgatory.
@@ -654,18 +633,14 @@ public abstract class AbstractDiskCache<K, V>
                         try
                         {
                             // TODO consider changing purgatory sync
-                            // String keyAsString = element.getKey().toString();
-                            synchronized ( purgatory )
+                            // If the element has already been removed from
+                            // purgatory do nothing
+                            if ( !purgatory.containsKey( pe.getKey() ) )
                             {
-                                // If the element has already been removed from
-                                // purgatory do nothing
-                                if ( !purgatory.containsKey( pe.getKey() ) )
-                                {
-                                    return;
-                                }
-
-                                element = pe.getCacheElement();
+                                return;
                             }
+
+                            element = pe.getCacheElement();
 
                             // I took this out of the purgatory sync block.
                             // If the element is still eligible, spool it.
@@ -679,12 +654,9 @@ public abstract class AbstractDiskCache<K, V>
                             removeAllLock.readLock().unlock();
                         }
 
-                        synchronized ( purgatory )
-                        {
-                            // After the update has completed, it is safe to
-                            // remove the element from purgatory.
-                            purgatory.remove( element.getKey() );
-                        }
+                        // After the update has completed, it is safe to
+                        // remove the element from purgatory.
+                        purgatory.remove( element.getKey() );
                     }
                 }
                 else
@@ -701,10 +673,7 @@ public abstract class AbstractDiskCache<K, V>
                  * done before it went in the queue. This block handles the case where the disk
                  * cache fails during normal operations.
                  */
-                synchronized ( purgatory )
-                {
-                    purgatory.remove( element.getKey() );
-                }
+                purgatory.remove( element.getKey() );
             }
         }
 
@@ -718,7 +687,7 @@ public abstract class AbstractDiskCache<K, V>
         public void handleRemove( String cacheName, K key )
             throws IOException
         {
-            if ( alive )
+            if ( isAlive() )
             {
                 if ( doRemove( key ) )
                 {
@@ -736,7 +705,7 @@ public abstract class AbstractDiskCache<K, V>
         public void handleRemoveAll( String cacheName )
             throws IOException
         {
-            if ( alive )
+            if ( isAlive() )
             {
                 doRemoveAll();
             }
@@ -751,7 +720,7 @@ public abstract class AbstractDiskCache<K, V>
         public void handleDispose( String cacheName )
             throws IOException
         {
-            if ( alive )
+            if ( isAlive() )
             {
                 doDispose();
             }

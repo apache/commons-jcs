@@ -20,25 +20,26 @@ package org.apache.commons.jcs.engine.memory.lru;
  */
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentMap;
 
 import org.apache.commons.jcs.engine.CacheConstants;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.engine.control.CompositeCache;
 import org.apache.commons.jcs.engine.control.group.GroupAttrName;
 import org.apache.commons.jcs.engine.memory.AbstractMemoryCache;
-import org.apache.commons.jcs.engine.memory.util.DefaultMemoryElementDescriptor;
 import org.apache.commons.jcs.engine.memory.util.MemoryElementDescriptor;
 import org.apache.commons.jcs.engine.stats.behavior.IStats;
+import org.apache.commons.jcs.utils.clhm.ConcurrentLinkedHashMap;
+import org.apache.commons.jcs.utils.clhm.EvictionListener;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * This is a test memory manager using the jdk1.4 LinkedHashMap.
+ * This is a memory manager using Ben Manes ConcurrentLinkedHashMap.
  */
 public class LHMLRUMemoryCache<K, V>
     extends AbstractMemoryCache<K, V>
@@ -59,14 +60,41 @@ public class LHMLRUMemoryCache<K, V>
     }
 
     /**
-     * Returns a synchronized LHMSpooler
+     * Returns a ConcurrentLinkedHashMap
      * <p>
-     * @return Collections.synchronizedMap( new LHMSpooler() )
+     * @return a ConcurrentLinkedHashMap
      */
     @Override
-    public Map<K, MemoryElementDescriptor<K, V>> createMap()
+    public ConcurrentMap<K, MemoryElementDescriptor<K, V>> createMap()
     {
-        return Collections.synchronizedMap( new LHMSpooler() );
+        EvictionListener<K, MemoryElementDescriptor<K, V>> listener = new EvictionListener<K, MemoryElementDescriptor<K, V>>()
+        {
+            @Override public void onEviction(K key, MemoryElementDescriptor<K, V> value)
+            {
+                ICacheElement<K, V> element = value.getCacheElement();
+
+                if ( log.isDebugEnabled() )
+                {
+                    log.debug( "LHMLRU max size: " + getCacheAttributes().getMaxObjects()
+                        + ".  Spooling element, key: " + key );
+                }
+
+                waterfal( element );
+
+                if ( log.isDebugEnabled() )
+                {
+                    log.debug( "LHMLRU size: " + map.size() );
+                }
+            }
+        };
+
+        ConcurrentMap<K, MemoryElementDescriptor<K, V>> map =
+                new ConcurrentLinkedHashMap.Builder<K, MemoryElementDescriptor<K,V>>()
+                .maximumWeightedCapacity(getCacheAttributes().getMaxObjects())
+                .listener(listener)
+                .build();
+
+        return map;
     }
 
     /**
@@ -80,7 +108,7 @@ public class LHMLRUMemoryCache<K, V>
         throws IOException
     {
         putCnt.incrementAndGet();
-        map.put( ce.getKey(), new DefaultMemoryElementDescriptor<K, V>(ce) );
+        map.put( ce.getKey(), new MemoryElementDescriptor<K, V>(ce) );
     }
 
     /**
@@ -146,37 +174,31 @@ public class LHMLRUMemoryCache<K, V>
         if ( key instanceof String && ( (String) key ).endsWith( CacheConstants.NAME_COMPONENT_DELIMITER ) )
         {
             // remove all keys of the same name hierarchy.
-            synchronized ( map )
+            for (Iterator<Map.Entry<K, MemoryElementDescriptor<K, V>>> itr = map.entrySet().iterator(); itr.hasNext(); )
             {
-                for (Iterator<Map.Entry<K, MemoryElementDescriptor<K, V>>> itr = map.entrySet().iterator(); itr.hasNext(); )
-                {
-                    Map.Entry<K, MemoryElementDescriptor<K, V>> entry = itr.next();
-                    K k = entry.getKey();
+                Map.Entry<K, MemoryElementDescriptor<K, V>> entry = itr.next();
+                K k = entry.getKey();
 
-                    if ( k instanceof String && ( (String) k ).startsWith( key.toString() ) )
-                    {
-                        itr.remove();
-                        removed = true;
-                    }
+                if ( k instanceof String && ( (String) k ).startsWith( key.toString() ) )
+                {
+                    itr.remove();
+                    removed = true;
                 }
             }
         }
         else if ( key instanceof GroupAttrName && ((GroupAttrName<?>)key).attrName == null )
         {
             // remove all keys of the same name hierarchy.
-            synchronized ( map )
+            for (Iterator<Map.Entry<K, MemoryElementDescriptor<K, V>>> itr = map.entrySet().iterator(); itr.hasNext(); )
             {
-                for (Iterator<Map.Entry<K, MemoryElementDescriptor<K, V>>> itr = map.entrySet().iterator(); itr.hasNext(); )
-                {
-                    Map.Entry<K, MemoryElementDescriptor<K, V>> entry = itr.next();
-                    K k = entry.getKey();
+                Map.Entry<K, MemoryElementDescriptor<K, V>> entry = itr.next();
+                K k = entry.getKey();
 
-                    if ( k instanceof GroupAttrName &&
-                        ((GroupAttrName<?>)k).groupId.equals(((GroupAttrName<?>)key).groupId) )
-                    {
-                        itr.remove();
-                        removed = true;
-                    }
+                if ( k instanceof GroupAttrName &&
+                    ((GroupAttrName<?>)k).groupId.equals(((GroupAttrName<?>)key).groupId) )
+                {
+                    itr.remove();
+                    removed = true;
                 }
             }
         }
@@ -242,61 +264,5 @@ public class LHMLRUMemoryCache<K, V>
     {
         // can't be implemented using the LHM
         return 0;
-    }
-
-    // ---------------------------------------------------------- extended map
-
-    /**
-     * Implementation of removeEldestEntry in LinkedHashMap
-     */
-    protected class LHMSpooler
-        extends java.util.LinkedHashMap<K, MemoryElementDescriptor<K, V>>
-    {
-        /** Don't change. */
-        private static final long serialVersionUID = -1255907868906762484L;
-
-        /**
-         * Initialize to a small size--for now, 1/2 of max 3rd variable "true" indicates that it
-         * should be access and not time governed. This could be configurable.
-         */
-        public LHMSpooler()
-        {
-            super( (int) ( getCacheAttributes().getMaxObjects() * .5 ), .75F, true );
-        }
-
-        /**
-         * Remove eldest. Automatically called by LinkedHashMap.
-         * <p>
-         * @param eldest
-         * @return true if removed
-         */
-        @SuppressWarnings("synthetic-access")
-        @Override
-        protected boolean removeEldestEntry( Map.Entry<K, MemoryElementDescriptor<K, V>> eldest )
-        {
-            ICacheElement<K, V> element = eldest.getValue().getCacheElement();
-
-            if ( size() <= getCacheAttributes().getMaxObjects() )
-            {
-                return false;
-            }
-            else
-            {
-
-                if ( log.isDebugEnabled() )
-                {
-                    log.debug( "LHMLRU max size: " + getCacheAttributes().getMaxObjects()
-                        + ".  Spooling element, key: " + element.getKey() );
-                }
-
-                waterfal( element );
-
-                if ( log.isDebugEnabled() )
-                {
-                    log.debug( "LHMLRU size: " + map.size() );
-                }
-            }
-            return true;
-        }
     }
 }

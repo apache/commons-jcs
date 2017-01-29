@@ -42,8 +42,14 @@ public class MockAuxiliaryCache<K, V>
     /** Can setup status */
     public CacheStatus status = CacheStatus.ALIVE;
 
-    /** Times getMatching was Called */
+    /** Times getMatching was called */
     public int getMatchingCallCount = 0;
+
+    /** Times update was called */
+    public int updateCallCount = 0;
+
+    /** Last updated item */
+    public ICacheElement<K, V> lastUpdatedItem = null;
 
     /**
      * @param ce
@@ -53,8 +59,8 @@ public class MockAuxiliaryCache<K, V>
     public void update( ICacheElement<K, V> ce )
         throws IOException
     {
-        // TODO Auto-generated method stub
-
+        updateCallCount++;
+        lastUpdatedItem = ce;
     }
 
     /**

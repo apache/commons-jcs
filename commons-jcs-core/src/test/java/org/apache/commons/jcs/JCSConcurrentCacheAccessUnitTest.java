@@ -24,10 +24,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.jcs.access.GroupCacheAccess;
 import org.apache.commons.jcs.access.exception.CacheException;
+
+import junit.framework.TestCase;
 
 /**
  * Test Case for JCS-73, modeled after the Groovy code by Alexander Kleymenov
@@ -37,7 +37,7 @@ import org.apache.commons.jcs.access.exception.CacheException;
  */
 public class JCSConcurrentCacheAccessUnitTest extends TestCase
 {
-    private final static int THREADS = 10;
+    private final static int THREADS = 30;
     private final static int LOOPS = 10000;
 
     /**
