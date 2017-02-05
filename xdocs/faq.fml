@@ -32,27 +32,6 @@
                     requires commons-logging.
                 </p>
 				<p>
-					As of version 1.2.7.0, the core of JCS (the LRU
-					memory cache, the indexed disk cache, the TCP
-					lateral, and the RMI remote server) requires only
-					two other jars.
-				</p>
-				<p>
-					<a
-						href="http://gee.cs.oswego.edu/dl/classes/EDU/oswego/cs/dl/util/concurrent/intro.html">
-						concurrent
-					</a>
-				</p>
-				<p>commons-logging</p>
-
-				<p>
-					Versions 1.2.6.9 and below also require the
-					following two additional jars:
-				</p>
-
-				<p>commons-collections</p>
-				<p>commons-lang</p>
-				<p>
 					All of the other dependencies listed on the project
 					info page are for optional plugins.
 				</p>
@@ -64,8 +43,7 @@
 			<answer>
 				<p>
 					By default JCS looks for a cache.ccf file in the
-					classpath. You must have a configuration file on the
-					classpath to use JCS. The documentation describes
+					classpath. The documentation describes
 					how to configure the cache.
 				</p>
 			</answer>
@@ -82,15 +60,12 @@
 					classpath; instead you can do the following:
 				</p>
 				<code>
-					CompositeCacheManager ccm =
-					CompositeCacheManager.getUnconfiguredInstance();
-
 					Properties props = new Properties();
 
 					props.load(/* load properties from some location
 					defined by your app */);
 
-					ccm.configure(props);
+					JCS.setConfigProperties(props);
 				</code>
 			</answer>
 		</faq>
@@ -156,7 +131,7 @@
 					or get the source code from subversion with <code>svn co
 					http://svn.apache.org/repos/asf/commons/proper/jcs/trunk</code>.
 					The tagged releases are available with <code>svn co.</code> ex.
-					http://svn.apache.org/repos/asf/commons/proper/jcs/tags/jcs_1_2_7_0
+					https://svn.apache.org/repos/asf/commons/proper/jcs/tags/commons-jcs-2.0
 				</p>
 			</answer>
 		</faq>

@@ -1,5 +1,12 @@
 package org.apache.commons.jcs.engine.control.event;
 
+import org.apache.commons.jcs.JCS;
+import org.apache.commons.jcs.access.CacheAccess;
+import org.apache.commons.jcs.engine.ElementAttributes;
+import org.apache.commons.jcs.engine.behavior.IElementAttributes;
+import org.apache.commons.jcs.engine.control.event.behavior.IElementEvent;
+import org.apache.commons.jcs.engine.control.event.behavior.IElementEventHandler;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -20,12 +27,6 @@ package org.apache.commons.jcs.engine.control.event;
  */
 
 import junit.framework.TestCase;
-
-import org.apache.commons.jcs.JCS;
-import org.apache.commons.jcs.access.CacheAccess;
-import org.apache.commons.jcs.engine.behavior.IElementAttributes;
-import org.apache.commons.jcs.engine.control.event.behavior.IElementEvent;
-import org.apache.commons.jcs.engine.control.event.behavior.IElementEventHandler;
 
 /**
  * This test suite verifies that the basic ElementEvent are called as they should be.
@@ -255,6 +256,24 @@ public class SimpleEventHandlingUnitTest
             + "] does not equal the number expected.", meh.getExceededIdletimeCount() >= 200 );
     }
 
+    /**
+     * Test that cloned ElementAttributes have different creation times.
+     * @throws Exception
+     */
+    public void testElementAttributesCreationTime()
+        throws Exception
+    {
+    	ElementAttributes elem1 = new ElementAttributes();
+    	long ctime1 = elem1.getCreateTime();
+    	
+    	Thread.sleep(10);
+
+    	IElementAttributes elem2 = elem1.clone();
+    	long ctime2 = elem2.getCreateTime();
+    	
+    	assertFalse("Creation times should be different", ctime1 == ctime2);
+    }
+    
     /**
      * Simple event counter used to verify test results.
      */

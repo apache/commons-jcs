@@ -120,16 +120,14 @@
 					less than 0, no limit will be placed on the number
 					of keys. By default, the max key size is 5000.
 				</p>
-				<source>
-					<![CDATA[
+				<source><![CDATA[
 jcs.auxiliary.DC=
     org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
 jcs.auxiliary.DC.attributes=
     org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
 jcs.auxiliary.DC.attributes.DiskPath=g:\dev\jakarta-turbine-stratum\raf
 jcs.auxiliary.DC.attributes.MaxKeySize=100000
-        ]]>
-				</source>
+]]></source>
 			</subsection>
 
 			<subsection name="Additional Configuration Options">
@@ -149,11 +147,9 @@ jcs.auxiliary.DC.attributes.MaxKeySize=100000
 					performs better when the key and purgatory sizes are
 					limited.
 				</p>
-				<source>
-					<![CDATA[
+				<source><![CDATA[
 jcs.auxiliary.DC.attributes.MaxPurgatorySize=10000
-        ]]>
-				</source>
+]]></source>
 				<p>
 					Slots in the data file become empty when items are
 					removed from the disk cache. The indexed disk cache
@@ -187,11 +183,9 @@ jcs.auxiliary.DC.attributes.MaxPurgatorySize=10000
 					was significantly improved. It now occurs in place,
 					without the aid of a temporary file.
 				</p>
-				<source>
-					<![CDATA[
+				<source><![CDATA[
 jcs.auxiliary.DC.attributes.OptimizeAtRemoveCount=30000
-        ]]>
-				</source>
+]]></source>
 			</subsection>
 
 			<subsection name="A Complete Configuration Example">
@@ -203,8 +197,7 @@ jcs.auxiliary.DC.attributes.OptimizeAtRemoveCount=30000
 					all of the Indexed Disk Cache configuration
 					parameters.
 				</p>
-				<source>
-					<![CDATA[
+				<source><![CDATA[
 ##############################################################
 ##### Default Region Configuration
 jcs.default=DC
@@ -230,8 +223,7 @@ jcs.auxiliary.DC.attributes.MaxKeySize=10000
 jcs.auxiliary.DC.attributes.OptimizeAtRemoveCount=300000
 jcs.auxiliary.DC.attributes.OptimizeOnShutdown=true
 jcs.auxiliary.DC.attributes.DiskLimitType=COUNT
-        ]]>
-				</source>
+]]></source>
 			</subsection>
 
 			<subsection name="Using Thread Pools to Reduce Threads">
@@ -252,8 +244,7 @@ jcs.auxiliary.DC.attributes.DiskLimitType=COUNT
 					disk_cache_event_queue is defined in the bottom of
 					the file.
 				</p>
-				<source>
-					<![CDATA[
+				<source><![CDATA[
 ##############################################################
 ################## DEFAULT CACHE REGION  #####################
 # sets the default aux value for any non configured caches
@@ -281,14 +272,14 @@ jcs.default.elementattributes.IsLateral=true
 # adding more threads than regions does not help performance.
 # If you want to use a separate pool for each disk cache, either use
 # the single model or define a different auxiliary for each region and use the Pooled type.
-# SINGLE is generally best unless you ahve a huge # of regions.
+# SINGLE is generally best unless you have a huge # of regions.
 jcs.auxiliary.DC2=org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
 jcs.auxiliary.DC2.attributes=org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
 jcs.auxiliary.DC2.attributes.DiskPath=target/test-sandbox/raf
 jcs.auxiliary.DC2.attributes.MaxPurgatorySize=10000
 jcs.auxiliary.DC2.attributes.MaxKeySize=10000
 jcs.auxiliary.DC2.attributes.OptimizeAtRemoveCount=300000
-jcs.auxiliary.DC.attributes.OptimizeOnShutdown=true
+jcs.auxiliary.DC2.attributes.OptimizeOnShutdown=true
 jcs.auxiliary.DC2.attributes.EventQueueType=POOLED
 jcs.auxiliary.DC2.attributes.EventQueuePoolName=disk_cache_event_queue
 
@@ -297,12 +288,11 @@ jcs.auxiliary.DC2.attributes.EventQueuePoolName=disk_cache_event_queue
 
 # Disk Cache Event Queue Pool
 thread_pool.disk_cache_event_queue.useBoundary=false
-thread_pool.remote_cache_client.maximumPoolSize=15
+thread_pool.disk_cache_event_queue.maximumPoolSize=15
 thread_pool.disk_cache_event_queue.minimumPoolSize=1
 thread_pool.disk_cache_event_queue.keepAliveTime=3500
 thread_pool.disk_cache_event_queue.startUpSize=1
-        ]]>
-				</source>
+]]></source>
 			</subsection>
 		</section>
 	</body>

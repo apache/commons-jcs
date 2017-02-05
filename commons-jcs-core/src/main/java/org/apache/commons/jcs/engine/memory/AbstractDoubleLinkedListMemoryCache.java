@@ -32,7 +32,6 @@ import org.apache.commons.jcs.engine.CacheConstants;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.engine.control.CompositeCache;
 import org.apache.commons.jcs.engine.control.group.GroupAttrName;
-import org.apache.commons.jcs.engine.memory.util.DefaultMemoryElementDescriptor;
 import org.apache.commons.jcs.engine.memory.util.MemoryElementDescriptor;
 import org.apache.commons.jcs.engine.stats.StatElement;
 import org.apache.commons.jcs.engine.stats.behavior.IStatElement;
@@ -470,7 +469,7 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
         lock.lock();
         try
         {
-            MemoryElementDescriptor<K, V> me = new DefaultMemoryElementDescriptor<K, V>(ce);
+            MemoryElementDescriptor<K, V> me = new MemoryElementDescriptor<K, V>(ce);
             list.addFirst(me);
             if ( log.isDebugEnabled() )
             {
@@ -497,7 +496,7 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
         lock.lock();
         try
         {
-            MemoryElementDescriptor<K, V> me = new DefaultMemoryElementDescriptor<K, V>(ce);
+            MemoryElementDescriptor<K, V> me = new MemoryElementDescriptor<K, V>(ce);
             list.addLast(me);
             if ( log.isDebugEnabled() )
             {

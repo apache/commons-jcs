@@ -98,6 +98,10 @@ jcs.default.elementattributes.MaxLifeSeconds=7
 jcs.default.elementattributes.MaxLife=7
 ]]></source>
         </p>
+        <p>
+          The <code>IndexedDiskCache</code> recycle bin is no longer limited in size.
+          So remove all references to <code>MaxRecycleBinSize</code> from the configuration files.
+        </p>
       </subsection>
     </section>
   </body>
