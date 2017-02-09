@@ -16,13 +16,13 @@ limitations under the License.
 
 
                         Apache Commons JCS
-                        Version 2.0
+                        Version 2.1
                         Release Notes
 
 
 INTRODUCTION:
 
-This document contains the release notes for the 2.0 version of Apache Commons JCS.
+This document contains the release notes for the 2.1 version of Apache Commons JCS.
 Commons JCS is a distributed caching system written in Java. It is intend to speed up 
 applications by providing a means to manage cached data of various dynamic natures.
 
@@ -35,23 +35,19 @@ For the advice on upgrading from 1.x to 2.x, see the following page:
 
 Apache Commons JCS is a distributed, versatile caching system.
 
-JDK 1.6 based major release
+This is mainly a bugfix release.
 
 Changes in this version include:
 
 
 Fixed Bugs:
-o JCS-169:  JCache Access Expiry not respected
-o JCS-168:  cdi/nocdi jcache jar doesnt contain the right 
-            META-INF/services/javax.enterprise.inject.spi.Extension file
+o           SoftReference cache did not work because of strong references being 
+            stored in payload of DoubleLinkedListNode
+o JCS-172:  ElementAttributes.clone() not updating createTime causes cache elements
+            to expire immediately Thanks to Tom Schroeder.
+o JCS-171:  Multiple CacheEventQueue.QProcessor spawned for the same cache region Thanks to Wiktor Niesiobedzki.
+o JCS-170:  Replace at least commas for jmx registration
 
-Changes:
-o JCS-119:  Improve concurrency in
-            - CompositeCacheManager
-            - CacheEventQueue
-            - CacheWatchRepairable
-            - LHMLRUMemoryCache
-o           Deprecate JCS.defineRegion() methods
 
 
 Historical list of changes: http://commons.apache.org/proper/commons-jcs/changes-report.html
