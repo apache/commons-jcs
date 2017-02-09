@@ -59,6 +59,14 @@
           <skipDeploy>true</skipDeploy>
         </configuration>
       </plugin>
+      <plugin>
+        <!-- skip deployment of distribution files to maven repository -->
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-deploy-plugin</artifactId>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
+      </plugin>      
     </plugins>
   </build>
 
