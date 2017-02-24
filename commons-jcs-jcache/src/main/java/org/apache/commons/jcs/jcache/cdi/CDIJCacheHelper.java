@@ -18,18 +18,8 @@
  */
 package org.apache.commons.jcs.jcache.cdi;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-import java.util.logging.Logger;
 import javax.annotation.PreDestroy;
 import javax.cache.annotation.CacheDefaults;
-import javax.cache.annotation.CacheInvocationParameter;
 import javax.cache.annotation.CacheKey;
 import javax.cache.annotation.CacheKeyGenerator;
 import javax.cache.annotation.CacheResolverFactory;
@@ -41,6 +31,15 @@ import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 import javax.interceptor.InvocationContext;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.logging.Logger;
 
 @ApplicationScoped
 public class CDIJCacheHelper
@@ -104,8 +103,25 @@ public class CDIJCacheHelper
 
     public CacheDefaults findDefaults(final InvocationContext ic)
     {
-        Class<?> clazz = ic.getTarget().getClass();
+        if (ic.getTarget() != null && Proxy.isProxyClass(ic.getTarget().getClass())) // target doesnt hold annotations
+        {
+            final Class<?> api = ic.getMethod().getDeclaringClass();
+            for (final Class<?> type : ic.getTarget().getClass().getInterfaces())
+            {
+                if (!api.isAssignableFrom(type))
+                {
+                    continue;
+                }
+                return extractDefaults(type);
+            }
+        }
+        return extractDefaults(ic.getTarget().getClass());
+    }
+
+    private CacheDefaults extractDefaults(final Class<?> type)
+    {
         CacheDefaults annotation = null;
+        Class<?> clazz = type;
         while (clazz != null && clazz != Object.class)
         {
             annotation = clazz.getAnnotation(CacheDefaults.class);
