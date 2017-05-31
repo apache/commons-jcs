@@ -519,6 +519,7 @@
     <maven.compiler.target>1.6</maven.compiler.target>
 
     <commons.componentid>jcs</commons.componentid>
+    <commons.module.name>org.apache.commons.jcs</commons.module.name>
     <commons.release.version>2.0</commons.release.version>
     <commons.release.name>commons-jcs-dist-2.0</commons.release.name>
     <commons.release.desc>(Java 6.0+)</commons.release.desc>
