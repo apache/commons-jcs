@@ -26,6 +26,9 @@
             <action dev="tv" type="add">
                 Add a shutdown() method to JCS
             </action>
+            <action issue="JCS-177" dev="tv" type="fix" due-to="Ryan Fong">
+                Fix: CompositeCacheManager leaks memory if CacheAccess.dipose is called
+            </action>
         </release>
         <release version="2.1" date="2017-02-05">
             <action dev="tv" type="fix">
