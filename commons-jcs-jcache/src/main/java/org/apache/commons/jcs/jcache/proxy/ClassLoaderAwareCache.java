@@ -34,7 +34,7 @@ import java.util.Map;
 import java.util.Set;
 
 // don't use a proxy, reflection is too slow here :(
-public class ClassLoaderAwareCache<K extends Serializable, V extends Serializable> implements Cache<K, V>
+public class ClassLoaderAwareCache<K, V> implements Cache<K, V>
 {
     private final ClassLoader loader;
     private final JCSCache<K, V> delegate;

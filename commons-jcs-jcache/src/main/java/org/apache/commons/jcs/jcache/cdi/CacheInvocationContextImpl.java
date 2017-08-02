@@ -18,16 +18,18 @@
  */
 package org.apache.commons.jcs.jcache.cdi;
 
-import java.lang.annotation.Annotation;
-import java.util.HashSet;
 import javax.cache.annotation.CacheInvocationContext;
 import javax.cache.annotation.CacheInvocationParameter;
 import javax.interceptor.InvocationContext;
+import java.lang.annotation.Annotation;
+import java.util.HashSet;
 
 import static java.util.Arrays.asList;
 
 public class CacheInvocationContextImpl<A extends Annotation> extends CacheMethodDetailsImpl<A> implements CacheInvocationContext<A>
 {
+    private static final Object[] EMPTY_ARGS = new Object[0];
+
     private CacheInvocationParameter[] parameters = null;
 
     public CacheInvocationContextImpl(final InvocationContext delegate, final A cacheAnnotation, final String cacheName)
@@ -63,7 +65,8 @@ public class CacheInvocationContextImpl<A extends Annotation> extends CacheMetho
 
     protected CacheInvocationParameter[] doGetAllParameters(final Integer[] indexes)
     {
-        final Object[] args = delegate.getParameters();
+        final Object[] parameters = delegate.getParameters();
+        final Object[] args = parameters == null ? EMPTY_ARGS : parameters;
         final Class<?>[] parameterTypes = getMethod().getParameterTypes();
         final Annotation[][] parameterAnnotations = getMethod().getParameterAnnotations();
 

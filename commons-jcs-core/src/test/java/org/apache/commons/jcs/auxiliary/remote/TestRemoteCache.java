@@ -1,5 +1,7 @@
 package org.apache.commons.jcs.auxiliary.remote;
 
+import java.util.Properties;
+
 import org.apache.commons.jcs.JCS;
 import org.apache.commons.jcs.access.CacheAccess;
 import org.apache.commons.jcs.auxiliary.AuxiliaryCache;
@@ -52,8 +54,9 @@ public class TestRemoteCache
         {
             System.out.println( "main> creating registry on the localhost" );
             RemoteUtils.createRegistry( 1101 );
+            Properties config = RemoteUtils.loadProps("/TestRemoteServer.ccf");
 
-            RemoteCacheServerFactory.startup( "localhost", 1101, "/TestRemoteServer.ccf" );
+            RemoteCacheServerFactory.startup( "localhost", 1101, config);
         }
         catch ( Exception e )
         {

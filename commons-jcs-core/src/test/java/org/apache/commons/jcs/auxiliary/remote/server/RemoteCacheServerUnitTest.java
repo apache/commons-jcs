@@ -22,16 +22,18 @@ package org.apache.commons.jcs.auxiliary.remote.server;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-
-import junit.framework.TestCase;
+import java.util.Properties;
 
 import org.apache.commons.jcs.auxiliary.MockCacheEventLogger;
 import org.apache.commons.jcs.auxiliary.remote.MockRemoteCacheListener;
+import org.apache.commons.jcs.auxiliary.remote.RemoteUtils;
 import org.apache.commons.jcs.auxiliary.remote.server.behavior.IRemoteCacheServerAttributes;
 import org.apache.commons.jcs.auxiliary.remote.server.behavior.RemoteType;
 import org.apache.commons.jcs.engine.CacheElement;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.utils.timing.SleepUtil;
+
+import junit.framework.TestCase;
 
 /**
  * Since the server does not know that it is a server, it is easy to unit test. The factory does all
@@ -54,7 +56,8 @@ public class RemoteCacheServerUnitTest
 
         IRemoteCacheServerAttributes rcsa = new RemoteCacheServerAttributes();
         rcsa.setConfigFileName( "/TestRemoteCacheServer.ccf" );
-        this.server = new RemoteCacheServer<String, String>( rcsa );
+        Properties config = RemoteUtils.loadProps(rcsa.getConfigFileName());
+        this.server = new RemoteCacheServer<String, String>( rcsa, config );
     }
 
     @Override
@@ -223,8 +226,9 @@ public class RemoteCacheServerUnitTest
         IRemoteCacheServerAttributes rcsa = new RemoteCacheServerAttributes();
         rcsa.setConfigFileName( "/TestRemoteCacheServer.ccf" );
 
+        Properties config = RemoteUtils.loadProps(rcsa.getConfigFileName());
         MockRemoteCacheListener<String, Long> mockListener = new MockRemoteCacheListener<String, Long>();
-        RemoteCacheServer<String, Long> server = new RemoteCacheServer<String, Long>( rcsa );
+        RemoteCacheServer<String, Long> server = new RemoteCacheServer<String, Long>( rcsa, config );
 
         String cacheName = "testSimpleRegisterListenerAndPut";
         server.addCacheListener( cacheName, mockListener );
@@ -268,7 +272,8 @@ public class RemoteCacheServerUnitTest
         IRemoteCacheServerAttributes rcsa = new RemoteCacheServerAttributes();
         rcsa.setLocalClusterConsistency( true );
         rcsa.setConfigFileName( "/TestRemoteCacheServer.ccf" );
-        RemoteCacheServer<String, Long> server = new RemoteCacheServer<String, Long>( rcsa );
+        Properties config = RemoteUtils.loadProps(rcsa.getConfigFileName());
+        RemoteCacheServer<String, Long> server = new RemoteCacheServer<String, Long>( rcsa, config );
 
         // this is to get the listener id for inserts.
         MockRemoteCacheListener<String, Long> clusterListener = new MockRemoteCacheListener<String, Long>();

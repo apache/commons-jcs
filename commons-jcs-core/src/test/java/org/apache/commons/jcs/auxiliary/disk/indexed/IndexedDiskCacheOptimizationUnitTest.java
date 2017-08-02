@@ -65,8 +65,8 @@ public class IndexedDiskCacheOptimizationUnitTest
 
         Thread.sleep( 1000 );
         long sizeBeforeRemove = disk.getDataFileSize();
-        System.out.println( "file sizeBeforeRemove " + sizeBeforeRemove );
-        System.out.println( "totalSize inserted " + DiskTestObjectUtil.totalSize( elements, numberToInsert ) );
+        // System.out.println( "file sizeBeforeRemove " + sizeBeforeRemove );
+        // System.out.println( "totalSize inserted " + DiskTestObjectUtil.totalSize( elements, numberToInsert ) );
 
         // DO WORK
         for ( int i = 0; i < removeCount; i++ )

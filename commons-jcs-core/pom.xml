@@ -154,9 +154,6 @@
               <exclude>**/UDPDiscoveryUnitTest.java</exclude>
               <!-- Causes hang in Continuum -->
               <exclude>**/UDPDiscoverySenderUnitTest.java</exclude>
-              <!-- The ones that fail may be different for you. -->
-              <!-- <exclude>**/JDBCDiskCacheRemovalUnitTest.java</exclude> -->
-              <!-- <exclude>**/JDBCDiskCacheUnitTest.java</exclude> -->
             </excludes>
           </configuration>
         </plugin>

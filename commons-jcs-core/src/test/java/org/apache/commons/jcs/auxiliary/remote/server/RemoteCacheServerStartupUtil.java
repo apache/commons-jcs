@@ -23,8 +23,8 @@ import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.Properties;
 
+import org.apache.commons.jcs.auxiliary.remote.RemoteUtils;
 import org.apache.commons.jcs.utils.net.HostNameUtil;
-import org.apache.commons.jcs.utils.props.PropertyLoader;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -53,7 +53,16 @@ public class RemoteCacheServerStartupUtil
         // all three
         int registryPort = DEFAULT_REGISTRY_PORT;
 
-        Properties props = PropertyLoader.loadProperties( propsFileName );
+        Properties props = null;
+        try
+        {
+            props = RemoteUtils.loadProps(propsFileName);
+        }
+        catch (IOException e)
+        {
+            log.error( "Problem loading configuration from " + propsFileName, e);
+        }
+        
         if ( props != null )
         {
             String portS = props.getProperty( "registry.port", String.valueOf( DEFAULT_REGISTRY_PORT ) );
@@ -86,7 +95,7 @@ public class RemoteCacheServerStartupUtil
 
             try
             {
-                RemoteCacheServerFactory.startup( registryHost, registryPort, "/" + propsFileName );
+                RemoteCacheServerFactory.startup( registryHost, registryPort, props );
             }
             catch ( IOException e )
             {
