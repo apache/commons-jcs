@@ -51,9 +51,9 @@
   </issueManagement>
 
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/commons/proper/jcs/branches/commons-jcs-2.1-RC</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/commons/proper/jcs/branches/commons-jcs-2.1-RC</developerConnection>
-    <url>http://svn.apache.org/viewvc/commons/proper/jcs/branches/commons-jcs-2.1-RC</url>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/commons/proper/jcs/branches/commons-jcs-2.2-RC</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/commons/proper/jcs/branches/commons-jcs-2.2-RC</developerConnection>
+    <url>http://svn.apache.org/viewvc/commons/proper/jcs/branches/commons-jcs-2.2-RC</url>
   </scm>
 
   <mailingLists>
@@ -519,8 +519,8 @@
     <maven.compiler.target>1.6</maven.compiler.target>
 
     <commons.componentid>jcs</commons.componentid>
-    <commons.release.version>2.1</commons.release.version>
-    <commons.release.name>commons-jcs-dist-2.1</commons.release.name>
+    <commons.release.version>2.2</commons.release.version>
+    <commons.release.name>commons-jcs-dist-2.2</commons.release.name>
     <commons.module.name>org.apache.commons.jcs</commons.module.name>
     <commons.release.desc>(Java 6.0+)</commons.release.desc>
     <!-- The RC version used in the staging repository URL. -->
