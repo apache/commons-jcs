@@ -20,6 +20,9 @@
 	</properties>
 	<body>
         <release version="2.2" date="unreleased">
+            <action issue="JCS-180" dev="rmannibucau" type="fix">
+                CacheInvocationContextImpl NPE if method doesnt have any argument
+            </action>
             <action issue="JCS-178" dev="tv" type="fix">
                 Clients using RemoteCache are not working. Add a test. 
             </action>
