@@ -81,10 +81,12 @@ public class CacheInvocationContextImpl<A extends Annotation> extends CacheMetho
         }
         else
         {
+            int outIdx = 0;
             for (int idx = 0; idx < indexes.length; idx++)
             {
                 final int i = indexes[idx];
-                parametersAsArray[i] = newCacheInvocationParameterImpl(parameterTypes[i], args[i], parameterAnnotations.get(i), i);
+                parametersAsArray[outIdx] = newCacheInvocationParameterImpl(parameterTypes[i], args[i], parameterAnnotations.get(i), i);
+                outIdx++;
             }
         }
         return parametersAsArray;

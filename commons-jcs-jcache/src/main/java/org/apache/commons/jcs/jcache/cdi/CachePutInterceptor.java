@@ -45,15 +45,15 @@ public class CachePutInterceptor implements Serializable
     {
         final CDIJCacheHelper.MethodMeta methodMeta = helper.findMeta(ic);
 
-        final String cacheName = methodMeta.getCacheResultCacheName();
+        final String cacheName = methodMeta.getCachePutCacheName();
 
-        final CacheResolverFactory cacheResolverFactory = methodMeta.getCacheResultResolverFactory();
+        final CacheResolverFactory cacheResolverFactory = methodMeta.getCachePutResolverFactory();
         final CacheKeyInvocationContext<CachePut> context = new CacheKeyInvocationContextImpl<CachePut>(
                 ic, methodMeta.getCachePut(), cacheName, methodMeta);
         final CacheResolver cacheResolver = cacheResolverFactory.getCacheResolver(context);
         final Cache<Object, Object> cache = cacheResolver.resolveCache(context);
 
-        final GeneratedCacheKey cacheKey = methodMeta.getCacheResultKeyGenerator().generateCacheKey(context);
+        final GeneratedCacheKey cacheKey = methodMeta.getCachePutKeyGenerator().generateCacheKey(context);
         final CachePut cachePut = methodMeta.getCachePut();
         final boolean afterInvocation = methodMeta.isCachePutAfter();
 

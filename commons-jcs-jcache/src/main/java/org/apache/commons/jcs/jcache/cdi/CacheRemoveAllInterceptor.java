@@ -44,9 +44,9 @@ public class CacheRemoveAllInterceptor implements Serializable
     {
         final CDIJCacheHelper.MethodMeta methodMeta = helper.findMeta(ic);
 
-        final String cacheName = methodMeta.getCacheResultCacheName();
+        final String cacheName = methodMeta.getCacheRemoveAllCacheName();
 
-        final CacheResolverFactory cacheResolverFactory = methodMeta.getCacheResultResolverFactory();
+        final CacheResolverFactory cacheResolverFactory = methodMeta.getCacheRemoveAllResolverFactory();
         final CacheKeyInvocationContext<CacheRemoveAll> context = new CacheKeyInvocationContextImpl<CacheRemoveAll>(
                 ic, methodMeta.getCacheRemoveAll(), cacheName, methodMeta);
         final CacheResolver cacheResolver = cacheResolverFactory.getCacheResolver(context);

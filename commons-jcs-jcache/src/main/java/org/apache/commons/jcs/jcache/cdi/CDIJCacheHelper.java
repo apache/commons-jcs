@@ -96,6 +96,7 @@ public class CDIJCacheHelper
                 if (methodMeta == null)
                 {
                     methodMeta = createMeta(ic);
+                    methods.put(key, methodMeta);
                 }
             }
         }
