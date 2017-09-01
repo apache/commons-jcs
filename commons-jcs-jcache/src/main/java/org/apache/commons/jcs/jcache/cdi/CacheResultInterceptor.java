@@ -22,7 +22,6 @@ import java.io.Serializable;
 import java.lang.reflect.Method;
 import javax.annotation.Priority;
 import javax.cache.Cache;
-import javax.cache.annotation.CacheDefaults;
 import javax.cache.annotation.CacheKeyInvocationContext;
 import javax.cache.annotation.CacheResolver;
 import javax.cache.annotation.CacheResolverFactory;
@@ -44,20 +43,19 @@ public class CacheResultInterceptor implements Serializable
     @AroundInvoke
     public Object cache(final InvocationContext ic) throws Throwable
     {
-        final CacheDefaults defaults = helper.findDefaults(ic);
+        final CDIJCacheHelper.MethodMeta methodMeta = helper.findMeta(ic);
 
-        final Method method = ic.getMethod();
-        final CacheResult cacheResult = method.getAnnotation(CacheResult.class);
-        final String cacheName = helper.defaultName(method, defaults, cacheResult.cacheName());
+        final String cacheName = methodMeta.getCacheResultCacheName();
 
+        final CacheResult cacheResult = methodMeta.getCacheResult();
         final CacheKeyInvocationContext<CacheResult> context = new CacheKeyInvocationContextImpl<CacheResult>(
-                ic, cacheResult, cacheName, helper.keyParameterIndexes(method));
+                ic, cacheResult, cacheName, methodMeta);
 
-        final CacheResolverFactory cacheResolverFactory = helper.cacheResolverFactoryFor(defaults, cacheResult.cacheResolverFactory());
+        final CacheResolverFactory cacheResolverFactory = methodMeta.getCacheResultResolverFactory();
         final CacheResolver cacheResolver = cacheResolverFactory.getCacheResolver(context);
         final Cache<Object, Object> cache = cacheResolver.resolveCache(context);
 
-        final GeneratedCacheKey cacheKey = helper.cacheKeyGeneratorFor(defaults, cacheResult.cacheKeyGenerator()).generateCacheKey(context);
+        final GeneratedCacheKey cacheKey = methodMeta.getCacheResultKeyGenerator().generateCacheKey(context);
 
         Cache<Object, Object> exceptionCache = null; // lazily created
 
