@@ -37,8 +37,10 @@ public class CDIJCacheHelperTest
     @Test
     public void proxyCacheDefaults()
     {
-        final MyParent child = MyParent.class.cast(Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(),
-                new Class<?>[]{MyChild.class}, new InvocationHandler()
+        final CDIJCacheHelper helper = new CDIJCacheHelper();
+
+        final MyParent child1 = MyParent.class.cast(Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(),
+                new Class<?>[]{MyChild1.class}, new InvocationHandler()
                 {
                     @Override
                     public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable
@@ -46,12 +48,29 @@ public class CDIJCacheHelperTest
                         return null;
                     }
                 }));
-        final CDIJCacheHelper.MethodMeta meta = new CDIJCacheHelper().findMeta(new InvocationContext()
+        final CDIJCacheHelper.MethodMeta meta1 = helper.findMeta(newContext(child1));
+        assertEquals("child", meta1.getCacheResultCacheName());
+
+        final MyParent child2 = MyParent.class.cast(Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(),
+                new Class<?>[]{MyChild2.class}, new InvocationHandler()
+                {
+                    @Override
+                    public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable
+                    {
+                        return null;
+                    }
+                }));
+        final CDIJCacheHelper.MethodMeta meta2 = helper.findMeta(newContext(child2));
+        assertEquals("child2", meta2.getCacheResultCacheName());
+    }
+
+    private InvocationContext newContext(final MyParent child1) {
+        return new InvocationContext()
         {
             @Override
             public Object getTarget()
             {
-                return child;
+                return child1;
             }
 
             @Override
@@ -100,8 +119,7 @@ public class CDIJCacheHelperTest
             {
                 return null;
             }
-        });
-        assertEquals("child", meta.getCacheResultCacheName());
+        };
     }
 
     public interface MyParent
@@ -111,7 +129,12 @@ public class CDIJCacheHelperTest
     }
 
     @CacheDefaults(cacheName = "child")
-    public interface MyChild extends MyParent
+    public interface MyChild1 extends MyParent
+    {
+    }
+
+    @CacheDefaults(cacheName = "child2")
+    public interface MyChild2 extends MyParent
     {
     }
 }

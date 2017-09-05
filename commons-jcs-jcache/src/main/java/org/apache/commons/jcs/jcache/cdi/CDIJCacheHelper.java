@@ -86,7 +86,8 @@ public class CDIJCacheHelper
     public MethodMeta findMeta(final InvocationContext ic)
     {
         final Method mtd = ic.getMethod();
-        final MethodKey key = new MethodKey(mtd);
+        final Class<?> refType = findKeyType(ic.getTarget());
+        final MethodKey key = new MethodKey(refType, mtd);
         MethodMeta methodMeta = methods.get(key);
         if (methodMeta == null)
         {
@@ -101,6 +102,15 @@ public class CDIJCacheHelper
             }
         }
         return methodMeta;
+    }
+
+    private Class<?> findKeyType(final Object target)
+    {
+        if (null == target)
+        {
+            return null;
+        }
+        return target.getClass();
     }
 
     // it is unlikely we have all annotations but for now we have a single meta model
@@ -432,13 +442,15 @@ public class CDIJCacheHelper
 
     private static final class MethodKey
     {
+        private final Class<?> base;
         private final Method delegate;
         private final int hash;
 
-        private MethodKey(final Method delegate)
+        private MethodKey(final Class<?> base, final Method delegate)
         {
+            this.base = base; // we need a class to ensure inheritance don't fall in the same key
             this.delegate = delegate;
-            this.hash = delegate.hashCode();
+            this.hash = 31 * delegate.hashCode() + (base == null ? 0 : base.hashCode());
         }
 
         @Override
@@ -453,7 +465,7 @@ public class CDIJCacheHelper
                 return false;
             }
             final MethodKey classKey = MethodKey.class.cast(o);
-            return delegate.equals(classKey.delegate);
+            return delegate.equals(classKey.delegate) && ((base == null && classKey.base == null) || (base != null && base.equals(classKey.base)));
         }
 
         @Override
