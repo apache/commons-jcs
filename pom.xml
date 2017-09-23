@@ -26,7 +26,7 @@
 
   <artifactId>commons-jcs</artifactId>
   <packaging>pom</packaging>
-  <version>2.2-SNAPSHOT</version>
+  <version>3.0-SNAPSHOT</version>
 
   <!--
    * Build with -PjcacheTck to run the JSR-107 TCK
@@ -464,7 +464,7 @@
         <artifactId>maven-pmd-plugin</artifactId>
         <version>3.2</version>
         <configuration>
-          <targetJdk>1.6</targetJdk>
+          <targetJdk>1.8</targetJdk>
         </configuration>
       </plugin>
       <plugin>
@@ -515,14 +515,14 @@
 
     <!-- Default configuration for compiler source and target JVM -->
     <maven.compiler.sourceEncoding>UTF-8</maven.compiler.sourceEncoding>
-    <maven.compiler.source>1.6</maven.compiler.source>
-    <maven.compiler.target>1.6</maven.compiler.target>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
 
     <commons.componentid>jcs</commons.componentid>
     <commons.module.name>org.apache.commons.jcs</commons.module.name>
     <commons.release.version>2.0</commons.release.version>
-    <commons.release.name>commons-jcs-dist-2.0</commons.release.name>
-    <commons.release.desc>(Java 6.0+)</commons.release.desc>
+    <commons.release.name>commons-jcs-dist-3.0</commons.release.name>
+    <commons.release.desc>(Java 8+)</commons.release.desc>
     <!-- The RC version used in the staging repository URL. -->
     <commons.rc.version>RC1</commons.rc.version>
     <commons.jira.id>JCS</commons.jira.id>
@@ -534,7 +534,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <commons.encoding>UTF-8</commons.encoding>
-    <commons.javadoc.java.link>http://docs.oracle.com/javase/6/docs/api/</commons.javadoc.java.link>
+    <commons.javadoc.java.link>https://docs.oracle.com/javase/8/docs/api/</commons.javadoc.java.link>
 
     <jsr107.api.version>1.0.0</jsr107.api.version>
     <commons.collections.version>4.1</commons.collections.version>

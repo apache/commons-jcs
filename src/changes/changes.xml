@@ -19,7 +19,12 @@
 		<author email="dev@commons.apache.org">Apache Commons Developers</author>
 	</properties>
 	<body>
-        <release version="2.2" date="unreleased">
+        <release version="3.0" date="unreleased">
+            <action dev="tv" type="update">
+                Finally require Java 8
+            </action>
+        </release>
+        <release version="2.2" date="2017-08-02">
             <action issue="JCS-180" dev="rmannibucau" type="fix">
                 CacheInvocationContextImpl NPE if method doesnt have any argument
             </action>
