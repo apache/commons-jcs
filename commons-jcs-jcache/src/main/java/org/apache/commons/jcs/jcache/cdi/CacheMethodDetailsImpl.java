@@ -33,13 +33,16 @@ public class CacheMethodDetailsImpl<A extends Annotation> implements CacheMethod
     private final Set<Annotation> annotations;
     private final A cacheAnnotation;
     private final String cacheName;
+    protected final CDIJCacheHelper.MethodMeta meta;
 
-    public CacheMethodDetailsImpl(final InvocationContext delegate, final A cacheAnnotation, final String cacheName)
+    public CacheMethodDetailsImpl(final InvocationContext delegate, final A cacheAnnotation, final String cacheName,
+                                  final CDIJCacheHelper.MethodMeta meta)
     {
         this.delegate = delegate;
-        this.annotations = new HashSet<Annotation>(asList(delegate.getMethod().getAnnotations()));
+        this.annotations = meta.getAnnotations();
         this.cacheAnnotation = cacheAnnotation;
         this.cacheName = cacheName;
+        this.meta = meta;
     }
 
     @Override

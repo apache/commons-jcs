@@ -19,12 +19,13 @@
 package org.apache.commons.jcs.jcache.cdi;
 
 import java.io.Serializable;
-import java.lang.reflect.Method;
+
 import javax.annotation.Priority;
 import javax.cache.Cache;
-import javax.cache.annotation.CacheDefaults;
 import javax.cache.annotation.CacheKeyInvocationContext;
 import javax.cache.annotation.CachePut;
+import javax.cache.annotation.CacheResolver;
+import javax.cache.annotation.CacheResolverFactory;
 import javax.cache.annotation.GeneratedCacheKey;
 import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
@@ -42,18 +43,23 @@ public class CachePutInterceptor implements Serializable
     @AroundInvoke
     public Object cache(final InvocationContext ic) throws Throwable
     {
-        final CacheDefaults defaults = helper.findDefaults(ic);
+        final CDIJCacheHelper.MethodMeta methodMeta = helper.findMeta(ic);
 
-        final Method method = ic.getMethod();
-        final CachePut cachePut = method.getAnnotation(CachePut.class);
-        final String cacheName = helper.defaultName(method, defaults, cachePut.cacheName());
-        final boolean afterInvocation = cachePut.afterInvocation();
+        final String cacheName = methodMeta.getCachePutCacheName();
 
+        final CacheResolverFactory cacheResolverFactory = methodMeta.getCachePutResolverFactory();
         final CacheKeyInvocationContext<CachePut> context = new CacheKeyInvocationContextImpl<CachePut>(
-                ic, cachePut, cacheName, helper.keyParameterIndexes(method));
+                ic, methodMeta.getCachePut(), cacheName, methodMeta);
+        final CacheResolver cacheResolver = cacheResolverFactory.getCacheResolver(context);
+        final Cache<Object, Object> cache = cacheResolver.resolveCache(context);
+
+        final GeneratedCacheKey cacheKey = methodMeta.getCachePutKeyGenerator().generateCacheKey(context);
+        final CachePut cachePut = methodMeta.getCachePut();
+        final boolean afterInvocation = methodMeta.isCachePutAfter();
+
         if (!afterInvocation)
         {
-            doCache(context, defaults, cachePut);
+            cache.put(cacheKey, context.getValueParameter());
         }
 
         final Object result;
@@ -67,7 +73,7 @@ public class CachePutInterceptor implements Serializable
             {
                 if (helper.isIncluded(t.getClass(), cachePut.cacheFor(), cachePut.noCacheFor()))
                 {
-                    doCache(context, defaults, cachePut);
+                    cache.put(cacheKey, context.getValueParameter());
                 }
             }
 
@@ -76,16 +82,9 @@ public class CachePutInterceptor implements Serializable
 
         if (afterInvocation)
         {
-            doCache(context, defaults, cachePut);
+            cache.put(cacheKey, context.getValueParameter());
         }
 
         return result;
-    }
-
-    private void doCache(final CacheKeyInvocationContext<CachePut> context, final CacheDefaults defaults, final CachePut cachePut)
-    {
-        final Cache<Object, Object> cache = helper.cacheResolverFactoryFor(defaults, cachePut.cacheResolverFactory()).getCacheResolver(context).resolveCache(context);
-        final GeneratedCacheKey key = helper.cacheKeyGeneratorFor(defaults, cachePut.cacheKeyGenerator()).generateCacheKey(context);
-        cache.put(key, context.getValueParameter().getValue());
     }
 }
