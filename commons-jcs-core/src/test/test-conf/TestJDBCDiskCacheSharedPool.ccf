@@ -69,7 +69,7 @@ jcs.jdbcconnectionpool.MySharedPool.attributes.userName=sa
 jcs.jdbcconnectionpool.MySharedPool.attributes.password=
 jcs.jdbcconnectionpool.MySharedPool.attributes.url=jdbc:hsqldb:target/cache_hsql_db_sharedpool
 jcs.jdbcconnectionpool.MySharedPool.attributes.driverClassName=org.hsqldb.jdbcDriver
-jcs.jdbcconnectionpool.MySharedPool.attributes.maxActive=15
+jcs.jdbcconnectionpool.MySharedPool.attributes.maxTotal=15
 
 # #############################################################
 # ################# OPTIONAL THREAD POOL CONFIGURATION #########

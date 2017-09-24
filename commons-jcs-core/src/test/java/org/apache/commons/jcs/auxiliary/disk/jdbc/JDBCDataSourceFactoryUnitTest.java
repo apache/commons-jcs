@@ -30,13 +30,13 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.naming.spi.InitialContextFactory;
 
-import junit.framework.TestCase;
-
-import org.apache.commons.dbcp.BasicDataSource;
-import org.apache.commons.dbcp.datasources.SharedPoolDataSource;
+import org.apache.commons.dbcp2.BasicDataSource;
+import org.apache.commons.dbcp2.datasources.SharedPoolDataSource;
 import org.apache.commons.jcs.auxiliary.disk.jdbc.dsfactory.DataSourceFactory;
 import org.apache.commons.jcs.auxiliary.disk.jdbc.dsfactory.JndiDataSourceFactory;
 import org.apache.commons.jcs.auxiliary.disk.jdbc.dsfactory.SharedPoolDataSourceFactory;
+
+import junit.framework.TestCase;
 
 /** Unit tests for the data source factories */
 public class JDBCDataSourceFactoryUnitTest
@@ -81,7 +81,7 @@ public class JDBCDataSourceFactoryUnitTest
 
         // VERIFY
         assertEquals( "Wrong pool name", poolName, spds.getDescription() );
-        assertEquals( "Wrong maxActive value", maxActive, spds.getMaxActive() );
+        assertEquals( "Wrong maxActive value", maxActive, spds.getMaxTotal() );
     }
 
     /** Verify that we can configure the object based on the attributes.
@@ -103,7 +103,7 @@ public class JDBCDataSourceFactoryUnitTest
         cattr.setUrl(url);
         cattr.setUserName(userName);
         cattr.setPassword(password);
-        cattr.setMaxActive(maxActive);
+        cattr.setMaxTotal(maxActive);
         cattr.setDriverClassName(driverClassName);
 
         // DO WORK
@@ -114,7 +114,7 @@ public class JDBCDataSourceFactoryUnitTest
         assertNotNull( "Should have a data source class", spds );
 
         // VERIFY
-        assertEquals( "Wrong maxActive value", maxActive, spds.getMaxActive() );
+        assertEquals( "Wrong maxActive value", maxActive, spds.getMaxTotal() );
     }
 
     /** Verify that we can configure the object based on JNDI.
