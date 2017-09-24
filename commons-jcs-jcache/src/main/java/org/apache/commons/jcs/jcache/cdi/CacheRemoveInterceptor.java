@@ -19,12 +19,13 @@
 package org.apache.commons.jcs.jcache.cdi;
 
 import java.io.Serializable;
-import java.lang.reflect.Method;
+
 import javax.annotation.Priority;
 import javax.cache.Cache;
-import javax.cache.annotation.CacheDefaults;
 import javax.cache.annotation.CacheKeyInvocationContext;
 import javax.cache.annotation.CacheRemove;
+import javax.cache.annotation.CacheResolver;
+import javax.cache.annotation.CacheResolverFactory;
 import javax.cache.annotation.GeneratedCacheKey;
 import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
@@ -42,19 +43,23 @@ public class CacheRemoveInterceptor implements Serializable
     @AroundInvoke
     public Object cache(final InvocationContext ic) throws Throwable
     {
-        final CacheDefaults defaults = helper.findDefaults(ic);
+        final CDIJCacheHelper.MethodMeta methodMeta = helper.findMeta(ic);
 
-        final Method method = ic.getMethod();
-        final CacheRemove cacheRemove = method.getAnnotation(CacheRemove.class);
-        final String cacheName = helper.defaultName(method, defaults, cacheRemove.cacheName());
-        final boolean afterInvocation = cacheRemove.afterInvocation();
+        final String cacheName = methodMeta.getCacheRemoveCacheName();
 
-        final CacheKeyInvocationContext<CacheRemove> context =
-                new CacheKeyInvocationContextImpl<CacheRemove>(ic, cacheRemove, cacheName, helper.keyParameterIndexes(method));
+        final CacheResolverFactory cacheResolverFactory = methodMeta.getCacheRemoveResolverFactory();
+        final CacheKeyInvocationContext<CacheRemove> context = new CacheKeyInvocationContextImpl<CacheRemove>(
+                ic, methodMeta.getCacheRemove(), cacheName, methodMeta);
+        final CacheResolver cacheResolver = cacheResolverFactory.getCacheResolver(context);
+        final Cache<Object, Object> cache = cacheResolver.resolveCache(context);
+
+        final GeneratedCacheKey cacheKey = methodMeta.getCacheRemoveKeyGenerator().generateCacheKey(context);
+        final CacheRemove cacheRemove = methodMeta.getCacheRemove();
+        final boolean afterInvocation = methodMeta.isCacheRemoveAfter();
 
         if (!afterInvocation)
         {
-            doRemove(context, defaults, cacheRemove);
+            cache.remove(cacheKey);
         }
 
         final Object result;
@@ -68,7 +73,7 @@ public class CacheRemoveInterceptor implements Serializable
             {
                 if (helper.isIncluded(t.getClass(), cacheRemove.evictFor(), cacheRemove.noEvictFor()))
                 {
-                    doRemove(context, defaults, cacheRemove);
+                    cache.remove(cacheKey);
                 }
             }
 
@@ -77,16 +82,9 @@ public class CacheRemoveInterceptor implements Serializable
 
         if (afterInvocation)
         {
-            doRemove(context, defaults, cacheRemove);
+            cache.remove(cacheKey);
         }
 
         return result;
-    }
-
-    private void doRemove(final CacheKeyInvocationContext<CacheRemove> context, final CacheDefaults defaults, final CacheRemove cacheRemove)
-    {
-        final Cache<Object, Object> cache = helper.cacheResolverFactoryFor(defaults, cacheRemove.cacheResolverFactory()).getCacheResolver(context).resolveCache(context);
-        final GeneratedCacheKey key = helper.cacheKeyGeneratorFor(defaults, cacheRemove.cacheKeyGenerator()).generateCacheKey(context);
-        cache.remove(key);
     }
 }

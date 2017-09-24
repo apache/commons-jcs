@@ -18,26 +18,21 @@
  */
 package org.apache.commons.jcs.jcache.cdi;
 
-import javax.cache.annotation.CacheInvocationParameter;
-import javax.cache.annotation.CacheKey;
-import javax.cache.annotation.CacheKeyInvocationContext;
-import javax.cache.annotation.CacheValue;
-import javax.interceptor.InvocationContext;
 import java.lang.annotation.Annotation;
-import java.util.Collection;
-import java.util.LinkedList;
+
+import javax.cache.annotation.CacheInvocationParameter;
+import javax.cache.annotation.CacheKeyInvocationContext;
+import javax.interceptor.InvocationContext;
 
 public class CacheKeyInvocationContextImpl<A extends Annotation> extends CacheInvocationContextImpl<A> implements CacheKeyInvocationContext<A>
 {
-    private final Integer[] keyIndexes;
     private CacheInvocationParameter[] keyParams = null;
     private CacheInvocationParameter valueParam = null;
 
     public CacheKeyInvocationContextImpl(final InvocationContext delegate, final A annotation, final String name,
-                                         final Integer[] keyIndexes)
+                                         final CDIJCacheHelper.MethodMeta methodMeta)
     {
-        super(delegate, annotation, name);
-        this.keyIndexes = keyIndexes;
+        super(delegate, annotation, name, methodMeta);
     }
 
     @Override
@@ -45,25 +40,7 @@ public class CacheKeyInvocationContextImpl<A extends Annotation> extends CacheIn
     {
         if (keyParams == null)
         {
-            final Collection<CacheInvocationParameter> keys = new LinkedList<CacheInvocationParameter>();
-            for (final CacheInvocationParameter param : getAllParameters())
-            {
-                for (final Annotation a : param.getAnnotations())
-                {
-                    if (a.annotationType().equals(CacheKey.class))
-                    {
-                        keys.add(param);
-                    }
-                }
-            }
-            if (keys.isEmpty())
-            {
-                keyParams = doGetAllParameters(keyIndexes);
-            }
-            else
-            {
-                keyParams = keys.toArray(new CacheInvocationParameter[keys.size()]);
-            }
+            keyParams = doGetAllParameters(meta.getKeysIndices());
         }
         return keyParams;
     }
@@ -73,17 +50,7 @@ public class CacheKeyInvocationContextImpl<A extends Annotation> extends CacheIn
     {
         if (valueParam == null)
         {
-            for (final CacheInvocationParameter param : getAllParameters())
-            {
-                for (final Annotation a : param.getAnnotations())
-                {
-                    if (a.annotationType().equals(CacheValue.class))
-                    {
-                        valueParam = param;
-                        return valueParam;
-                    }
-                }
-            }
+            valueParam = meta.getValueIndex() >= 0 ? doGetAllParameters(new Integer[]{meta.getValueIndex()})[0] : null;
         }
         return valueParam;
     }
