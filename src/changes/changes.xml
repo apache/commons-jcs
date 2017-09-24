@@ -20,6 +20,18 @@
 	</properties>
 	<body>
         <release version="3.0" date="unreleased">
+            <action dev="tv" type="remove">
+                Remove dependency on velocity-tools
+            </action>
+            <action dev="tv" type="remove">
+                Remove deprecated code
+            </action>
+            <action issue="JCS-181" dev="tv" type="update">
+                Update dependency to httpclient 4.5.3
+            </action>
+            <action dev="tv" type="update">
+                Update dependency commons-dbcp2
+            </action>
             <action dev="tv" type="update">
                 Finally require Java 8
             </action>
