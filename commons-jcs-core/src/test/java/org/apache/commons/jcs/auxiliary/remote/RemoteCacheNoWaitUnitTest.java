@@ -8,7 +8,6 @@ import java.util.Set;
 import org.apache.commons.jcs.engine.CacheElement;
 import org.apache.commons.jcs.engine.CacheStatus;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
-import org.apache.commons.jcs.engine.behavior.ICacheEventQueue;
 import org.apache.commons.jcs.utils.timing.SleepUtil;
 
 /*
@@ -205,11 +204,8 @@ public class RemoteCacheNoWaitUnitTest
 
         noWait.update( element );
         SleepUtil.sleepAtLeast( 10 );
-        ICacheEventQueue<String, String> newQueue = noWait.getCacheEventQueue();
 
         // VERIFY
         assertEquals( "Wrong status", service, client.fixed );
-        // assertFalse( "Original queue should not alive", originalQueue.isAlive() );
-        assertTrue( "New queue should be alive." + newQueue, newQueue.isAlive() );
     }
 }

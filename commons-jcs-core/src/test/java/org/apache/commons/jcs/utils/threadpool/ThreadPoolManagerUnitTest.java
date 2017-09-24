@@ -21,9 +21,7 @@ package org.apache.commons.jcs.utils.threadpool;
 
 import java.util.ArrayList;
 import java.util.Properties;
-import java.util.concurrent.RejectedExecutionHandler;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.ExecutorService;
 
 import org.apache.commons.jcs.utils.props.PropertyLoader;
 
@@ -49,19 +47,8 @@ public class ThreadPoolManagerUnitTest
         ThreadPoolManager mgr = ThreadPoolManager.getInstance();
         assertNotNull( mgr );
 
-        ThreadPoolExecutor pool = mgr.getPool( "test1" );
+        ExecutorService pool = mgr.getExecutorService( "test1" );
         assertNotNull( pool );
-
-        int poolSize = pool.getPoolSize();
-        int expectedPoolSize = Integer.parseInt( props.getProperty( "thread_pool.test1.startUpSize" ) );
-        assertEquals( poolSize, expectedPoolSize );
-
-        // int qs = ((BoundedBuffer)pool.getQueue()).size();
-
-        int max = pool.getMaximumPoolSize();
-
-        int expected = Integer.parseInt( props.getProperty( "thread_pool.test1.maximumPoolSize" ) );
-        assertEquals(expected, max );
     }
 
     /**
@@ -74,46 +61,8 @@ public class ThreadPoolManagerUnitTest
         ThreadPoolManager mgr = ThreadPoolManager.getInstance();
         assertNotNull( mgr );
 
-        ThreadPoolExecutor pool = mgr.getPool( "aborttest" );
+        ExecutorService pool = mgr.getExecutorService( "aborttest" );
         assertNotNull( pool );
-
-        int poolSize = pool.getCorePoolSize();
-        int expectedPoolSize = Integer.parseInt( props.getProperty( "thread_pool.aborttest.startUpSize" ) );
-        assertEquals( expectedPoolSize, poolSize);
-
-        int minPoolSize = pool.getPoolSize();
-        int expectedMinPoolSize = Integer.parseInt( props.getProperty( "thread_pool.aborttest.minimumPoolSize" ) );
-        assertEquals( expectedMinPoolSize, minPoolSize );
-
-        int maxPoolSize = pool.getMaximumPoolSize();
-        int expectedMaxPoolSize = Integer.parseInt( props.getProperty( "thread_pool.aborttest.maximumPoolSize" ) );
-        assertEquals( expectedMaxPoolSize, maxPoolSize );
-
-        long keepAliveTime = pool.getKeepAliveTime(TimeUnit.MILLISECONDS);
-        long expectedKeepAliveTime = Long.parseLong( props.getProperty( "thread_pool.aborttest.keepAliveTime" ) );
-        assertEquals( expectedKeepAliveTime, keepAliveTime );
-        
-        RejectedExecutionHandler whenBlockedPolicy = pool.getRejectedExecutionHandler();
-        assertTrue( whenBlockedPolicy instanceof ThreadPoolExecutor.AbortPolicy );
-    }
-    
-    /**
-     * Try to get an undefined pool from an existing default file.
-     */
-    public void testDefaultConfigUndefinedPool()
-    {
-        Properties props = PropertyLoader.loadProperties( "thread_pool.properties" );
-        ThreadPoolManager.setProps( props );
-        ThreadPoolManager mgr = ThreadPoolManager.getInstance();
-        assertNotNull( mgr );
-
-        ThreadPoolExecutor pool = mgr.getPool( "doesnotexist" );
-        assertNotNull( pool );
-
-        int max = pool.getMaximumPoolSize();
-
-        int expected = Integer.parseInt( props.getProperty( "thread_pool.default.maximumPoolSize" ) );
-        assertEquals( expected, max );
     }
 
     /**
@@ -135,40 +84,4 @@ public class ThreadPoolManagerUnitTest
         assertTrue( "Should have name in list.", names.contains( poolName1 ) );
         assertTrue( "Should have name in list.", names.contains( poolName2 ) );
     }
-
-    /**
-     * Verify that if we specify not to use a buffer boundary that we get a
-     * linked queue.
-     *
-     */
-//    public void testNoBoundary()
-//    {
-//        ThreadPoolManager.setPropsFileName( "thread_pool.properties" );
-//        ThreadPoolManager mgr = ThreadPoolManager.getInstance();
-//        assertNotNull( mgr );
-//
-//        ThreadPoolExecutor pool = mgr.getPool( "nobound" );
-//        assertNotNull( "Should have gotten back a pool.", pool );
-//
-//        assertTrue( "Should have a linked queue and not a bounded buffer.", pool.getQueue() instanceof LinkedQueue );
-//    }
-
-    /**
-     * Verify that if we specify useBoundary=true that we get a BoundedBuffer.
-     *
-     */
-//    public void testWithBoundary()
-//    {
-//        // SETUP
-//        ThreadPoolManager.setPropsFileName( "thread_pool.properties" );
-//        ThreadPoolManager mgr = ThreadPoolManager.getInstance();
-//        assertNotNull( mgr );
-//
-//        // DO WORK
-//        ThreadPoolExecutor pool = mgr.getPool( "withbound" );
-//
-//        // VERIFY
-//        assertNotNull( "Should have gotten back a pool.", pool );
-//        assertTrue( "Should have a BoundedBuffer and not a linked queue.", pool.getQueue() instanceof BoundedBuffer );
-//    }
 }
