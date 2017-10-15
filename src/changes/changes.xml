@@ -20,9 +20,6 @@
 	</properties>
 	<body>
         <release version="3.0" date="unreleased">
-            <action dev="kinow" type="fix" due-to="athun">
-                Unexpected dispose() in CompositeCacheManager.release()
-            </action>
             <action dev="tv" type="remove">
                 Remove dependency on velocity-tools
             </action>
