@@ -20,6 +20,9 @@
 	</properties>
 	<body>
         <release version="2.2.1" date="2017-08-02">
+          <action dev="kinow" type="fix" due-to="athun">
+            Unexpected dispose() in CompositeCacheManager.release()
+          </action>
           <action issue="JCS-183" dev="rmannibucau" type="fix">
             JCache CDI Integration is slow
           </action>
