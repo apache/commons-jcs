@@ -35,12 +35,17 @@ For the advice on upgrading from 1.x to 2.x, see the following page:
 
 Apache Commons JCS is a distributed, versatile caching system.
 
-This is mainly a bugfix release.
+$release.description.replaceAll("  ", "
+")
 
 Changes in this version include:
 
+
 Fixed Bugs:
-o JCS-183:  JCache CDI integration is slow
+o           Unexpected dispose() in CompositeCacheManager.release() Thanks to athun.
+o JCS-183:  JCache CDI Integration is slow
+
+
 
 Historical list of changes: http://commons.apache.org/proper/commons-jcs/changes-report.html
 
