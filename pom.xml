@@ -26,7 +26,7 @@
 
   <artifactId>commons-jcs</artifactId>
   <packaging>pom</packaging>
-  <version>2.2.2-SNAPSHOT</version>
+  <version>2.2.1</version>
 
   <!--
    * Build with -PjcacheTck to run the JSR-107 TCK
@@ -532,7 +532,7 @@
     <commons.module.name>org.apache.commons.jcs</commons.module.name>
     <commons.release.desc>(Java 6.0+)</commons.release.desc>
     <!-- The RC version used in the staging repository URL. -->
-    <commons.rc.version>RC1</commons.rc.version>
+    <commons.rc.version>RC3</commons.rc.version>
     <commons.jira.id>JCS</commons.jira.id>
     <commons.site.path>commons-jcs</commons.site.path>
     <commons.scmPubUrl>
