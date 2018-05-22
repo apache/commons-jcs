@@ -526,8 +526,7 @@ public class CompositeCache<K, V>
                             log.debug( cacheAttr.getCacheName() + " - Memory cache hit, but element expired" );
                         }
 
-                        missCountExpired.incrementAndGet();
-                        remove( key );
+                        doExpires(element);
                         element = null;
                     }
                     else
@@ -586,13 +585,11 @@ public class CompositeCache<K, V>
                                         log.debug( cacheAttr.getCacheName() + " - Aux cache[" + aux.getCacheName() + "] hit, but element expired." );
                                     }
 
-                                    missCountExpired.incrementAndGet();
-
                                     // This will tell the remotes to remove the item
                                     // based on the element's expiration policy. The elements attributes
                                     // associated with the item when it created govern its behavior
                                     // everywhere.
-                                    remove( key );
+                                    doExpires(element);
                                     element = null;
                                 }
                                 else
@@ -637,6 +634,11 @@ public class CompositeCache<K, V>
         }
 
         return element;
+    }
+
+    protected void doExpires(ICacheElement<K, V> element) {
+        missCountExpired.incrementAndGet();
+        remove( element.getKey() );
     }
 
     /**
@@ -745,8 +747,7 @@ public class CompositeCache<K, V>
                         log.debug( cacheAttr.getCacheName() + " - Memory cache hit, but element expired" );
                     }
 
-                    missCountExpired.incrementAndGet();
-                    remove( element.getKey() );
+                    doExpires(element);
                     elementsFromMemory.remove( element.getKey() );
                 }
                 else
@@ -1000,13 +1001,11 @@ public class CompositeCache<K, V>
                         log.debug( cacheAttr.getCacheName() + " - Aux cache[" + aux.getCacheName() + "] hit, but element expired." );
                     }
 
-                    missCountExpired.incrementAndGet();
-
                     // This will tell the remote caches to remove the item
                     // based on the element's expiration policy. The elements attributes
                     // associated with the item when it created govern its behavior
                     // everywhere.
-                    remove( element.getKey() );
+                    doExpires(element);
                     elementsFromAuxiliary.remove( element.getKey() );
                 }
                 else

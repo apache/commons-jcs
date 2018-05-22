@@ -23,7 +23,6 @@ import org.apache.commons.jcs.engine.ElementAttributes;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.engine.behavior.IElementAttributes;
 import org.apache.commons.jcs.engine.behavior.IElementSerializer;
-import org.apache.commons.jcs.engine.control.CompositeCache;
 import org.apache.commons.jcs.jcache.jmx.JCSCacheMXBean;
 import org.apache.commons.jcs.jcache.jmx.JCSCacheStatisticsMXBean;
 import org.apache.commons.jcs.jcache.jmx.JMXs;
@@ -71,7 +70,7 @@ import static org.apache.commons.jcs.jcache.serialization.Serializations.copy;
 // TODO: configure serializer
 public class JCSCache<K, V> implements Cache<K, V>
 {
-    private final CompositeCache<K, V> delegate;
+    private final ExpiryAwareCache<K, V> delegate;
     private final JCSCachingManager manager;
     private final JCSConfiguration<K, V> config;
     private final CacheLoader<K, V> loader;
@@ -89,7 +88,7 @@ public class JCSCache<K, V> implements Cache<K, V>
 
     public JCSCache(final ClassLoader classLoader, final JCSCachingManager mgr,
                     final String cacheName, final JCSConfiguration<K, V> configuration,
-                    final Properties properties, final CompositeCache<K, V> cache)
+                    final Properties properties, final ExpiryAwareCache<K, V> cache)
     {
         manager = mgr;
 
@@ -153,6 +152,7 @@ public class JCSCache<K, V> implements Cache<K, V>
         {
             listeners.put(listener, new JCSListener<K, V>(listener));
         }
+        delegate.init(this, listeners);
 
         statistics.setActive(config.isStatisticsEnabled());
 
@@ -307,7 +307,7 @@ public class JCSCache<K, V> implements Cache<K, V>
                 }
                 else
                 {
-                    expires(key);
+                    forceExpires(key);
                 }
             }
         }
@@ -401,7 +401,7 @@ public class JCSCache<K, V> implements Cache<K, V>
         {
             if (!created)
             {
-                expires(key);
+                forceExpires(key);
             }
         }
     }
@@ -411,7 +411,7 @@ public class JCSCache<K, V> implements Cache<K, V>
         return duration == null || !duration.isZero();
     }
 
-    private void expires(final K cacheKey)
+    private void forceExpires(final K cacheKey)
     {
         final ICacheElement<K, V> elt = delegate.get(cacheKey);
         delegate.remove(cacheKey);
@@ -549,7 +549,7 @@ public class JCSCache<K, V> implements Cache<K, V>
             final Duration expiryForAccess = expiryPolicy.getExpiryForAccess();
             if (!isNotZero(expiryForAccess))
             {
-                expires(key);
+                forceExpires(key);
             }
             else if (expiryForAccess != null && (!elt.getElementAttributes().getIsEternal() || !expiryForAccess.isEternal()))
             {

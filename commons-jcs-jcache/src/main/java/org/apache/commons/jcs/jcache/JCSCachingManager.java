@@ -18,6 +18,10 @@
  */
 package org.apache.commons.jcs.jcache;
 
+import org.apache.commons.jcs.engine.behavior.ICompositeCacheAttributes;
+import org.apache.commons.jcs.engine.behavior.IElementAttributes;
+import org.apache.commons.jcs.engine.control.CompositeCache;
+import org.apache.commons.jcs.engine.control.CompositeCacheConfigurator;
 import org.apache.commons.jcs.engine.control.CompositeCacheManager;
 import org.apache.commons.jcs.jcache.lang.Subsitutor;
 import org.apache.commons.jcs.jcache.proxy.ClassLoaderAwareCache;
@@ -63,6 +67,19 @@ public class JCSCachingManager implements CacheManager
         protected static InternalManager create()
         {
             return new InternalManager();
+        }
+
+        protected CompositeCacheConfigurator newConfigurator()
+        {
+            return new CompositeCacheConfigurator()
+            {
+                @Override
+                protected <K, V> CompositeCache<K, V> newCache(
+                        final ICompositeCacheAttributes cca, final IElementAttributes ea)
+                {
+                    return new ExpiryAwareCache<K, V>( cca, ea );
+                }
+            };
         }
 
         @Override // needed to call it from JCSCachingManager
@@ -197,7 +214,7 @@ public class JCSCachingManager implements CacheManager
                             loader, this, cacheName,
                             new JCSConfiguration/*<K, V>*/(configuration, keyType, valueType),
                             properties,
-                            delegate.getCache(cacheName)));
+                            ExpiryAwareCache.class.cast(delegate.getCache(cacheName))));
             caches.putIfAbsent(cacheName, cache);
         }
         else

@@ -460,7 +460,7 @@ public class CompositeCacheManager
         }
 
         // configure the cache
-        CompositeCacheConfigurator configurator = new CompositeCacheConfigurator();
+        CompositeCacheConfigurator configurator = newConfigurator();
 
         long start = System.currentTimeMillis();
 
@@ -604,7 +604,7 @@ public class CompositeCacheManager
 
                 if ( cache == null )
                 {
-                    CompositeCacheConfigurator configurator = new CompositeCacheConfigurator();
+                    CompositeCacheConfigurator configurator = newConfigurator();
 
                     cache = configurator.parseRegion( this.getConfigurationProperties(), this, cattr.getCacheName(),
                                                       this.defaultAuxValues, cattr );
@@ -619,6 +619,10 @@ public class CompositeCacheManager
         }
 
         return cache;
+    }
+
+    protected CompositeCacheConfigurator newConfigurator() {
+        return new CompositeCacheConfigurator();
     }
 
     /**
