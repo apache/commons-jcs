@@ -38,8 +38,6 @@ public class CacheResolverFactoryImpl implements CacheResolverFactory
     {
         this.cacheManager=cacheManager;
         this.configurationResolver=configurationResolver;
-//        provider = Caching.getCachingProvider();
-//        cacheManager = provider.getCacheManager(provider.getDefaultURI(), provider.getDefaultClassLoader());
     }
 
     @Override

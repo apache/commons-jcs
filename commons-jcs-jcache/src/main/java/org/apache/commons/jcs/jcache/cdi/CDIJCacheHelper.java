@@ -371,7 +371,7 @@ public class CDIJCacheHelper
                 return (T) defaultCacheManager();
             }
             if (ConfigurationResolver.class == type) {
-                return (T) defaultConficutationResolver();
+                return (T) defaultConfigurationResolver();
             }
             return null;
         }
@@ -397,7 +397,7 @@ public class CDIJCacheHelper
         }
     }   
     
-    private ConfigurationResolver defaultConficutationResolver()
+    private ConfigurationResolver defaultConfigurationResolver()
     {
         return new ConfigurationResolver()
         {                    
