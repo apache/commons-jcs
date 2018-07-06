@@ -33,6 +33,8 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.logging.Logger;
 
 import javax.annotation.PreDestroy;
+import javax.cache.CacheManager;
+import javax.cache.Caching;
 import javax.cache.annotation.CacheDefaults;
 import javax.cache.annotation.CacheKey;
 import javax.cache.annotation.CacheKeyGenerator;
@@ -42,6 +44,8 @@ import javax.cache.annotation.CacheRemoveAll;
 import javax.cache.annotation.CacheResolverFactory;
 import javax.cache.annotation.CacheResult;
 import javax.cache.annotation.CacheValue;
+import javax.cache.configuration.Configuration;
+import javax.cache.configuration.MutableConfiguration;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.Bean;
@@ -55,6 +59,8 @@ public class CDIJCacheHelper
     private static final Logger LOGGER = Logger.getLogger(CDIJCacheHelper.class.getName());
     private static final boolean CLOSE_CACHE = !Boolean.getBoolean("org.apache.commons.jcs.jcache.cdi.skip-close");
 
+    private volatile ConfigurationResolver defaultConfigurationResolver=null; // lazy to not create any cache if not needed
+    private volatile CacheManager defaultCacheManager = null; // lazy to not create any cache if not needed
     private volatile CacheResolverFactoryImpl defaultCacheResolverFactory = null; // lazy to not create any cache if not needed
     private final CacheKeyGeneratorImpl defaultCacheKeyGenerator = new CacheKeyGeneratorImpl();
 
@@ -349,16 +355,23 @@ public class CDIJCacheHelper
         return defaultCacheResolverFactory();
     }
 
+    @SuppressWarnings("unchecked")
     private <T> T instance(final Class<T> type)
     {
-        final Set<Bean<?>> beans = beanManager.getBeans(type);
-        if (beans.isEmpty())
+        Set<Bean<?>> beans;
+        if (beanManager==null || (beans = beanManager.getBeans(type)).isEmpty())
         {
             if (CacheKeyGenerator.class == type) {
                 return (T) defaultCacheKeyGenerator;
             }
             if (CacheResolverFactory.class == type) {
                 return (T) defaultCacheResolverFactory();
+            }
+            if (CacheManager.class == type) {
+                return (T) defaultCacheManager();
+            }
+            if (ConfigurationResolver.class == type) {
+                return (T) defaultConficutationResolver();
             }
             return null;
         }
@@ -382,6 +395,32 @@ public class CDIJCacheHelper
                 context.release();
             }
         }
+    }   
+    
+    private ConfigurationResolver defaultConficutationResolver()
+    {
+        return new ConfigurationResolver()
+        {                    
+            @Override
+            public Configuration<Object,Object> get( String cacheName )
+            {
+                return new MutableConfiguration<Object, Object>().setStoreByValue(false);
+            }
+        };
+    }
+
+    private CacheManager defaultCacheManager()
+    {
+        if (defaultCacheManager != null) {
+            return defaultCacheManager;
+        }
+        synchronized (this) {
+            if (defaultCacheManager != null) {
+                return defaultCacheManager;
+            }
+            defaultCacheManager = Caching.getCachingProvider().getCacheManager();
+        }
+        return defaultCacheManager;
     }
 
     private CacheResolverFactoryImpl defaultCacheResolverFactory()
@@ -393,7 +432,10 @@ public class CDIJCacheHelper
             if (defaultCacheResolverFactory != null) {
                 return defaultCacheResolverFactory;
             }
-            defaultCacheResolverFactory = new CacheResolverFactoryImpl();
+            defaultCacheManager=instance(CacheManager.class);
+            defaultConfigurationResolver=instance(ConfigurationResolver.class);
+            defaultCacheResolverFactory = 
+                new CacheResolverFactoryImpl(defaultCacheManager,defaultConfigurationResolver);
         }
         return defaultCacheResolverFactory;
     }

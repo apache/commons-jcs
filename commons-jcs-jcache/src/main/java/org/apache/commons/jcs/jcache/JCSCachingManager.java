@@ -18,6 +18,7 @@
  */
 package org.apache.commons.jcs.jcache;
 
+import static org.apache.commons.jcs.jcache.JCSCachingProvider.JCS_URI_PREFFIX;
 import org.apache.commons.jcs.engine.control.CompositeCacheManager;
 import org.apache.commons.jcs.jcache.lang.Subsitutor;
 import org.apache.commons.jcs.jcache.proxy.ClassLoaderAwareCache;
@@ -45,15 +46,15 @@ public class JCSCachingManager implements CacheManager
     private static final String DEFAULT_CONFIG =
         "jcs.default=DC\n" +
         "jcs.default.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes\n" +
-        "jcs.default.cacheattributes.MaxObjects=200001\n" +
+        "jcs.default.cacheattributes.MaxObjects=100\n" +
         "jcs.default.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache\n" +
         "jcs.default.cacheattributes.UseMemoryShrinker=true\n" +
-        "jcs.default.cacheattributes.MaxMemoryIdleTimeSeconds=3600\n" +
-        "jcs.default.cacheattributes.ShrinkerIntervalSeconds=60\n" +
+        "jcs.default.cacheattributes.MaxMemoryIdleTimeSeconds=7200\n" +
+        "jcs.default.cacheattributes.ShrinkerIntervalSeconds=30\n" +
         "jcs.default.elementattributes=org.apache.commons.jcs.engine.ElementAttributes\n" +
-        "jcs.default.elementattributes.IsEternal=false\n" +
-        "jcs.default.elementattributes.MaxLife=700\n" +
-        "jcs.default.elementattributes.IdleTime=1800\n" +
+        "jcs.default.elementattributes.IsEternal=true\n" +
+        "jcs.default.elementattributes.MaxLife=-1\n" +
+        "jcs.default.elementattributes.IdleTime=-1\n" +
         "jcs.default.elementattributes.IsSpool=true\n" +
         "jcs.default.elementattributes.IsRemote=true\n" +
         "jcs.default.elementattributes.IsLateral=true\n";
@@ -100,10 +101,10 @@ public class JCSCachingManager implements CacheManager
     private Properties readConfig(final URI uri, final ClassLoader loader, final Properties properties) {
         final Properties props = new Properties();
         try {
-            if (JCSCachingProvider.DEFAULT_URI.toString().equals(uri.toString()) || uri.toURL().getProtocol().equals("jcs"))
+            if (JCSCachingProvider.DEFAULT_URI.toString().equals(uri.toString()) 
+                || uri.toString().startsWith(JCS_URI_PREFFIX))
             {
-
-                final Enumeration<URL> resources = loader.getResources(uri.getPath());
+                final Enumeration<URL> resources = loader.getResources(uri.toString().substring(JCS_URI_PREFFIX.length()));
                 if (!resources.hasMoreElements()) // default
                 {
                     props.load(new ByteArrayInputStream(DEFAULT_CONFIG.getBytes("UTF-8")));

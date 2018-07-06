@@ -32,12 +32,14 @@ import java.lang.annotation.Annotation;
 public class CacheResolverFactoryImpl implements CacheResolverFactory
 {
     private final CacheManager cacheManager;
-    private final CachingProvider provider;
+    private final ConfigurationResolver configurationResolver;
 
-    public CacheResolverFactoryImpl()
+    public CacheResolverFactoryImpl(CacheManager cacheManager,ConfigurationResolver configurationResolver)
     {
-        provider = Caching.getCachingProvider();
-        cacheManager = provider.getCacheManager(provider.getDefaultURI(), provider.getDefaultClassLoader());
+        this.cacheManager=cacheManager;
+        this.configurationResolver=configurationResolver;
+//        provider = Caching.getCachingProvider();
+//        cacheManager = provider.getCacheManager(provider.getDefaultURI(), provider.getDefaultClassLoader());
     }
 
     @Override
@@ -69,13 +71,13 @@ public class CacheResolverFactoryImpl implements CacheResolverFactory
 
     private Cache<?, ?> createCache(final String exceptionCacheName)
     {
-        cacheManager.createCache(exceptionCacheName, new MutableConfiguration<Object, Object>().setStoreByValue(false));
+        cacheManager.createCache(exceptionCacheName,configurationResolver.get( exceptionCacheName ));
         return cacheManager.getCache(exceptionCacheName);
     }
 
     public void release()
     {
         cacheManager.close();
-        provider.close();
+//        provider.close();
     }
 }
