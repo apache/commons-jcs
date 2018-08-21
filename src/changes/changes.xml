@@ -19,7 +19,9 @@
 		<author email="dev@commons.apache.org">Apache Commons Developers</author>
 	</properties>
 	<body>
-        <release version="2.2.1" date="2017-08-02">
+        <release version="2.2.2" date="in SVN">
+        </release>
+        <release version="2.2.1" date="2018-08-21">
           <action dev="kinow" type="fix" due-to="athun">
             Unexpected dispose() in CompositeCacheManager.release()
           </action>
