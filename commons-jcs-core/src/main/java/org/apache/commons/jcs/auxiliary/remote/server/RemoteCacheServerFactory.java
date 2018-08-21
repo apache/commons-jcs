@@ -94,11 +94,11 @@ public class RemoteCacheServerFactory
      * <p>
      * A remote cache is either a local cache or a cluster cache.
      * <p>
-     * @param host the host name 
+     * @param host the host name
      * @param port the port number
      * @param propFile the remote cache hub configuration file
      * @throws IOException
-     * 
+     *
      * @deprecated Use startup(String, int, Properties) instead
      */
     @Deprecated
@@ -119,12 +119,12 @@ public class RemoteCacheServerFactory
      * <p>
      * A remote cache is either a local cache or a cluster cache.
      * <p>
-     * @param host the host name 
+     * @param host the host name
      * @param port the port number
      * @param props the remote cache hub configuration
      * @param propFile the remote cache hub configuration file
      * @throws IOException
-     * 
+     *
      * @deprecated Use startup(String, int, Properties) instead
      */
     @Deprecated
@@ -199,13 +199,10 @@ public class RemoteCacheServerFactory
             remoteCacheServer.setCacheEventLogger( cacheEventLogger );
 
             // START THE REGISTRY
-            if (rcsa.isStartRegistry())
-            {
-            	registry = RemoteUtils.createRegistry(port);
-            }
+        	registry = RemoteUtils.createRegistry(port);
 
             // REGISTER THE SERVER
-            registerServer( RemoteUtils.getNamingURL(host, port, serviceName), remoteCacheServer );
+            registerServer( registry, serviceName, remoteCacheServer );
 
             // KEEP THE REGISTRY ALIVE
             if ( rcsa.isUseRegistryKeepAlive() )
@@ -277,11 +274,12 @@ public class RemoteCacheServerFactory
      * Registers the server with the registry. I broke this off because we might want to have code
      * that will restart a dead registry. It will need to rebind the server.
      * <p>
-     * @param namingURL
-     * @param server
+     * @param registry the RMI registry
+     * @param serviceName the name of the service
+     * @param server the server object to bind
      * @throws RemoteException
      */
-    protected static void registerServer( String namingURL, Remote server )
+    protected static void registerServer(Registry registry, String serviceName, Remote server )
         throws RemoteException
     {
         if ( server == null )
@@ -291,18 +289,10 @@ public class RemoteCacheServerFactory
 
         if ( log.isInfoEnabled() )
         {
-            log.info( "Binding server to " + namingURL );
+            log.info( "Binding server to " + serviceName );
         }
 
-        try
-        {
-            Naming.rebind( namingURL, server );
-        }
-        catch ( MalformedURLException ex )
-        {
-            // impossible case.
-            throw new IllegalArgumentException( ex.getMessage() + "; url=" + namingURL );
-        }
+        registry.rebind( serviceName, server );
     }
 
     /**
@@ -516,12 +506,12 @@ public class RemoteCacheServerFactory
 
     /**
      * Look up the remote cache service admin instance
-     *  
+     *
      * @param config the configuration properties
      * @param port the local port
      * @return the admin object instance
-     * 
-     * @throws Exception if lookup fails 
+     *
+     * @throws Exception if lookup fails
      */
     private static ICacheServiceAdmin lookupCacheServiceAdmin(Properties config, int port) throws Exception
     {
@@ -537,10 +527,10 @@ public class RemoteCacheServerFactory
         {
             log.debug( "server found" );
         }
-        
+
         return (ICacheServiceAdmin) obj;
     }
-    
+
     /**
      * @param serviceName the serviceName to set
      */

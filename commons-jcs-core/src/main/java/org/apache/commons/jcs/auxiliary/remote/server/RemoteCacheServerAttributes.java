@@ -201,7 +201,6 @@ public class RemoteCacheServerAttributes
         buf.append( "\n allowClusterGet = [" + this.isAllowClusterGet() + "]" );
         buf.append( "\n configFileName = [" + this.getConfigFileName() + "]" );
         buf.append( "\n rmiSocketFactoryTimeoutMillis = [" + this.getRmiSocketFactoryTimeoutMillis() + "]" );
-        buf.append( "\n startRegistry = [" + this.isStartRegistry() + "]" );
         buf.append( "\n useRegistryKeepAlive = [" + this.isUseRegistryKeepAlive() + "]" );
         buf.append( "\n registryKeepAliveDelayMillis = [" + this.getRegistryKeepAliveDelayMillis() + "]" );
         buf.append( "\n eventQueueType = [" + this.getEventQueueType() + "]" );

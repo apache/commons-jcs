@@ -1,5 +1,11 @@
 package org.apache.commons.jcs.auxiliary.remote.server;
 
+import java.rmi.server.RMISocketFactory;
+import java.util.Properties;
+
+import org.apache.commons.jcs.auxiliary.remote.behavior.ICommonRemoteCacheAttributes;
+import org.apache.commons.jcs.auxiliary.remote.behavior.IRemoteCacheConstants;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -20,11 +26,6 @@ package org.apache.commons.jcs.auxiliary.remote.server;
  */
 
 import junit.framework.TestCase;
-import org.apache.commons.jcs.auxiliary.remote.behavior.ICommonRemoteCacheAttributes;
-import org.apache.commons.jcs.auxiliary.remote.behavior.IRemoteCacheConstants;
-
-import java.rmi.server.RMISocketFactory;
-import java.util.Properties;
 
 /** Unit tests for the factory */
 public class RemoteCacheServerFactoryUnitTest
@@ -103,21 +104,6 @@ public class RemoteCacheServerFactoryUnitTest
         assertEquals( "Wrong useRegistryKeepAlive", useRegistryKeepAlive, result.isUseRegistryKeepAlive() );
     }
 
-    /** verify that we get the startRegistry value */
-    public void testConfigureRemoteCacheServerAttributes_startRegistryPresent()
-    {
-        // SETUP
-        boolean startRegistry = false;
-        Properties props = new Properties();
-        props.put( IRemoteCacheConstants.CACHE_SERVER_ATTRIBUTES_PROPERTY_PREFIX + ".startRegistry", String.valueOf( startRegistry ) );
-
-        // DO WORK
-        RemoteCacheServerAttributes result = RemoteCacheServerFactory.configureRemoteCacheServerAttributes( props );
-
-        // VERIFY
-        assertEquals( "Wrong startRegistry", startRegistry, result.isStartRegistry() );
-    }
-
     /** verify that we get the registryKeepAliveDelayMillis value */
     public void testConfigureRemoteCacheServerAttributes_rmiSocketFactoryTimeoutMillisPresent()
     {
@@ -133,7 +119,7 @@ public class RemoteCacheServerFactoryUnitTest
         assertEquals( "Wrong rmiSocketFactoryTimeoutMillis", rmiSocketFactoryTimeoutMillis, result.getRmiSocketFactoryTimeoutMillis() );
     }
 
-    /** verify that we get the startRegistry value */
+    /** verify that we get the allowClusterGet value */
     public void testConfigureRemoteCacheServerAttributes_allowClusterGetPresent()
     {
         // SETUP
@@ -148,7 +134,7 @@ public class RemoteCacheServerFactoryUnitTest
         assertEquals( "Wrong allowClusterGet", allowClusterGet, result.isAllowClusterGet() );
     }
 
-    /** verify that we get the startRegistry value */
+    /** verify that we get the localClusterConsistency value */
     public void testConfigureRemoteCacheServerAttributes_localClusterConsistencyPresent()
     {
         // SETUP
@@ -163,7 +149,7 @@ public class RemoteCacheServerFactoryUnitTest
         assertEquals( "Wrong localClusterConsistency", localClusterConsistency, result.isLocalClusterConsistency() );
     }
 
-    /** verify that we get the timeout value */
+    /** verify that we get the testStringProperty value */
     public void testConfigureObjectSpecificCustomFactory_withProperty()
     {
         // SETUP
