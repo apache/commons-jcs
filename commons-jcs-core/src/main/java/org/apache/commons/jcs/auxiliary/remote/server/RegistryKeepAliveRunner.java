@@ -20,6 +20,7 @@ package org.apache.commons.jcs.auxiliary.remote.server;
  */
 
 import java.rmi.Naming;
+import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
 
@@ -161,7 +162,14 @@ public class RegistryKeepAliveRunner
         try
         {
             // try to rebind anyway
-            this.registry.rebind( serviceName, RemoteCacheServerFactory.getRemoteCacheServer() );
+            Remote server = RemoteCacheServerFactory.getRemoteCacheServer();
+
+            if ( server == null )
+            {
+                throw new RemoteException( "Cannot register the server until it is created." );
+            }
+
+            this.registry.rebind( serviceName, server );
             String message = "Successfully rebound server to registry [" + serviceName + "].";
             if ( cacheEventLogger != null )
             {
