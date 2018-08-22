@@ -1,9 +1,5 @@
 package org.apache.commons.jcs.engine;
 
-import java.util.ArrayList;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -22,6 +18,10 @@ import java.util.concurrent.TimeUnit;
  * specific language governing permissions and limitations
  * under the License.
  */
+
+import java.util.ArrayList;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.jcs.engine.behavior.ICacheListener;
 import org.apache.commons.jcs.engine.stats.StatElement;
@@ -174,7 +174,6 @@ public class CacheEventQueue<K, V>
      * This is the thread that works the queue.
      * <p>
      * @author asmuts
-     * @created January 15, 2002
      */
     protected class QProcessor
         extends Thread
