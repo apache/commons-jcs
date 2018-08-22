@@ -50,6 +50,9 @@ public class RegistryKeepAliveRunner
     /** An optional event logger */
     private ICacheEventLogger cacheEventLogger;
 
+    /** the registry */
+    private Registry registry;
+
     /**
      * @param registryHost - Hostname of the registry
      * @param registryPort - the port on which to start the registry
@@ -119,8 +122,8 @@ public class RegistryKeepAliveRunner
      */
     protected void createAndRegister( String serviceName )
     {
-        Registry reg = createReqistry( serviceName );
-        registerServer(reg, serviceName );
+        createReqistry( serviceName );
+        registerServer( serviceName );
     }
 
     /**
@@ -128,13 +131,14 @@ public class RegistryKeepAliveRunner
      * <p>
      * @param serviceName the service name
      */
-    protected Registry createReqistry( String serviceName )
+    protected void createReqistry( String serviceName )
     {
-        Registry reg = RemoteUtils.createRegistry(registryPort);
+        // TODO: Refactor method signature. This is ugly but required to keep the binary API compatibility
+        this.registry = RemoteUtils.createRegistry(registryPort);
 
         if ( cacheEventLogger != null )
         {
-            if (reg != null)
+            if (this.registry != null)
             {
                 cacheEventLogger.logApplicationEvent( "RegistryKeepAliveRunner", "createRegistry",
                         "Successfully created registry [" + serviceName + "]." );
@@ -145,8 +149,6 @@ public class RegistryKeepAliveRunner
                         "Could not start registry [" + serviceName + "]." );
             }
         }
-
-        return reg;
     }
 
     /**
@@ -154,12 +156,12 @@ public class RegistryKeepAliveRunner
      * <p>
      * @param serviceName the service name
      */
-    protected void registerServer(Registry reg, String serviceName )
+    protected void registerServer( String serviceName )
     {
         try
         {
             // try to rebind anyway
-            RemoteCacheServerFactory.registerServer(reg, serviceName, RemoteCacheServerFactory.getRemoteCacheServer() );
+            this.registry.rebind( serviceName, RemoteCacheServerFactory.getRemoteCacheServer() );
             String message = "Successfully rebound server to registry [" + serviceName + "].";
             if ( cacheEventLogger != null )
             {

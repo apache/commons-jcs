@@ -202,7 +202,7 @@ public class RemoteCacheServerFactory
         	registry = RemoteUtils.createRegistry(port);
 
             // REGISTER THE SERVER
-            registerServer( registry, serviceName, remoteCacheServer );
+            registerServer( serviceName, remoteCacheServer );
 
             // KEEP THE REGISTRY ALIVE
             if ( rcsa.isUseRegistryKeepAlive() )
@@ -274,17 +274,21 @@ public class RemoteCacheServerFactory
      * Registers the server with the registry. I broke this off because we might want to have code
      * that will restart a dead registry. It will need to rebind the server.
      * <p>
-     * @param registry the RMI registry
      * @param serviceName the name of the service
      * @param server the server object to bind
      * @throws RemoteException
      */
-    protected static void registerServer(Registry registry, String serviceName, Remote server )
+    protected static void registerServer(String serviceName, Remote server )
         throws RemoteException
     {
         if ( server == null )
         {
             throw new RemoteException( "Cannot register the server until it is created." );
+        }
+
+        if ( registry == null )
+        {
+            throw new RemoteException( "Cannot register the server: Registry is null." );
         }
 
         if ( log.isInfoEnabled() )

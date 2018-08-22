@@ -143,6 +143,7 @@ public class RemoteCacheServerAttributes
      * Should we start the registry
      * <p>
      * @param startRegistry the startRegistry to set
+     * @deprecated Always true, to be removed
      */
     @Override
     public void setStartRegistry( boolean startRegistry )
@@ -154,6 +155,7 @@ public class RemoteCacheServerAttributes
      * Should we start the registry
      * <p>
      * @return the startRegistry
+     * @deprecated Always true, to be removed
      */
     @Override
     public boolean isStartRegistry()
