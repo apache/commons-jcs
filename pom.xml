@@ -218,13 +218,6 @@
             <skip>false</skip>
           </configuration>
         </plugin>
-        <!-- Disable generation of MD5 and SHA-1 checksum files -->
-        <plugin>
-          <artifactId>maven-install-plugin</artifactId>
-          <configuration>
-            <createChecksum>false</createChecksum>
-          </configuration>
-        </plugin>
       </plugins>
     </pluginManagement>
 
@@ -283,6 +276,13 @@
           <skipIfEmpty>true</skipIfEmpty>
         </configuration>
       </plugin>
+      <!-- Disable generation of MD5 and SHA-1 checksum files -->
+      <plugin>
+        <artifactId>maven-install-plugin</artifactId>
+        <configuration>
+          <createChecksum>false</createChecksum>
+        </configuration>
+      </plugin>
       <plugin>
         <groupId>net.nicoulaj.maven.plugins</groupId>
         <artifactId>checksum-maven-plugin</artifactId>
@@ -297,6 +297,7 @@
           </execution>
         </executions>
         <configuration>
+          <attachChecksums>true</attachChecksums>
           <algorithms>
             <algorithm>SHA-512</algorithm>
           </algorithms>
