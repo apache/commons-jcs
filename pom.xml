@@ -21,7 +21,7 @@
   <parent>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-parent</artifactId>
-    <version>46</version>
+    <version>47</version>
   </parent>
 
   <artifactId>commons-jcs</artifactId>
@@ -274,33 +274,6 @@
         <artifactId>maven-jar-plugin</artifactId>
         <configuration>
           <skipIfEmpty>true</skipIfEmpty>
-        </configuration>
-      </plugin>
-      <!-- Disable generation of MD5 and SHA-1 checksum files -->
-      <plugin>
-        <artifactId>maven-install-plugin</artifactId>
-        <configuration>
-          <createChecksum>false</createChecksum>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>net.nicoulaj.maven.plugins</groupId>
-        <artifactId>checksum-maven-plugin</artifactId>
-        <version>1.7</version>
-        <executions>
-          <execution>
-            <id>generate.checksums</id>
-            <phase>verify</phase>
-            <goals>
-              <goal>artifacts</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <attachChecksums>true</attachChecksums>
-          <algorithms>
-            <algorithm>SHA-512</algorithm>
-          </algorithms>
         </configuration>
       </plugin>
     </plugins>
