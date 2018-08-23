@@ -21,12 +21,12 @@
   <parent>
     <artifactId>commons-jcs</artifactId>
     <groupId>org.apache.commons</groupId>
-    <version>2.2.2-SNAPSHOT</version>
+    <version>2.2.1-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>commons-jcs-dist</artifactId>
-  <version>2.2.2-SNAPSHOT</version>
+  <version>2.2.1-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>Apache Commons JCS :: Distribution</name>
   <description>Creates the Apache Commons JCS multimodule distribution.</description>
@@ -99,6 +99,38 @@
                 </configuration>
               </execution>
             </executions>
+          </plugin>
+          <!-- calculate checksums of release artifacts for Apache dist area -->
+          <plugin>
+            <groupId>net.nicoulaj.maven.plugins</groupId>
+            <artifactId>checksum-maven-plugin</artifactId>
+            <version>1.7</version>
+            <executions>
+              <execution>
+                <id>generate.checksums</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>files</goal>
+                </goals>
+              </execution>
+            </executions>
+            <configuration>
+              <algorithms>
+                <algorithm>SHA-512</algorithm>
+              </algorithms>
+              <csvSummary>false</csvSummary>
+              <fileSets>
+                <fileSet>
+                  <directory>${project.build.directory}</directory>
+                  <includes>
+                    <include>${project.artifactId}-${project.version}-src.zip</include>
+                    <include>${project.artifactId}-${project.version}-src.tar.gz</include>
+                    <include>${project.artifactId}-${project.version}-bin.zip</include>
+                    <include>${project.artifactId}-${project.version}-bin.tar.gz</include>
+                  </includes>
+                </fileSet>
+              </fileSets>
+            </configuration>
           </plugin>
         </plugins>
       </build>
