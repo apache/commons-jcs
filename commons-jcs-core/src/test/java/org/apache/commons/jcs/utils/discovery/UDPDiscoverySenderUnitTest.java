@@ -1,5 +1,9 @@
 package org.apache.commons.jcs.utils.discovery;
 
+import java.util.ArrayList;
+
+import org.apache.commons.jcs.utils.discovery.UDPDiscoveryMessage.BroadcastType;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -20,9 +24,6 @@ package org.apache.commons.jcs.utils.discovery;
  */
 
 import junit.framework.TestCase;
-import org.apache.commons.jcs.utils.discovery.UDPDiscoveryMessage.BroadcastType;
-
-import java.util.ArrayList;
 
 /**
  * Tests for the sender.
@@ -73,7 +74,7 @@ public class UDPDiscoverySenderUnitTest
         throws Exception
     {
         receiver.shutdown();
-        sender.destroy();
+        sender.close();
         super.tearDown();
     }
 
