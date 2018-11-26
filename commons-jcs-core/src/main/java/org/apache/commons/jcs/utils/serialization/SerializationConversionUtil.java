@@ -72,6 +72,9 @@ public class SerializationConversionUtil
                 try
                 {
                     serializedValue = elementSerializer.serialize( element.getVal() );
+
+                    // update size in bytes
+                    element.getElementAttributes().setSize( serializedValue.length );
                 }
                 catch ( IOException e )
                 {
