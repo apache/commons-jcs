@@ -20,6 +20,9 @@
 	</properties>
 	<body>
         <release version="3.0" date="unreleased">
+            <action dev="tv" type="add">
+                Add a get method to CacheAccess that allows a Supplier to be specified
+            </action>
             <action dev="tv" type="remove">
                 Remove dependency on velocity-tools
             </action>

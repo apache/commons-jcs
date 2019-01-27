@@ -214,18 +214,14 @@ public class BookVObjManager
     {
         BookVObj vObj = null;
 
-        // First, if requested, attempt to load from cache
-
+        // If requested, attempt to load from cache
         if (fromCache)
         {
-            vObj = bookCache.get("BookVObj" + id);
+            vObj = bookCache.get("BookVObj" + id, () -> loadvObj(id));
         }
-
-        // Either fromCache was false or the object was not found, so
-        // call loadBookVObj to create it
-
-        if (vObj == null)
+        else
         {
+            // otherwise, load directly
             vObj = loadvObj(id);
         }
 

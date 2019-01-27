@@ -167,9 +167,11 @@ public class CacheAccessUnitTest
         String keyOne = "mykeyone";
         String keyTwo = "mykeytwo";
         String keyThree = "mykeythree";
+        String keyFour = "mykeyfour";
         String valueOne = "myvalueone";
         String valueTwo = "myvaluetwo";
         String valueThree = "myvaluethree";
+        String valueFour = "myvaluefour";
 
         access.put( keyOne, valueOne );
         access.put( keyTwo, valueTwo );
@@ -190,6 +192,14 @@ public class CacheAccessUnitTest
         ICacheElement<String, String> elementTwo = result.get( keyTwo );
         assertEquals( "value two", keyTwo, elementTwo.getKey() );
         assertEquals( "value two", valueTwo, elementTwo.getVal() );
+
+        assertNull(access.get(keyFour));
+        String suppliedValue1 = access.get(keyFour, () -> valueFour);
+        assertNotNull( "value four", suppliedValue1);
+        assertEquals( "value four", valueFour, suppliedValue1);
+        String suppliedValue2 = access.get(keyFour);
+        assertNotNull( "value four", suppliedValue2);
+        assertEquals( "value four", suppliedValue1, suppliedValue2);
     }
 
     /**
