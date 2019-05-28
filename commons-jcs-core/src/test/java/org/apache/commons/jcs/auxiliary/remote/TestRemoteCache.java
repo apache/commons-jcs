@@ -120,7 +120,7 @@ public class TestRemoteCache
         for ( int i = 0; i < numMes; i++ )
         {
             String message = "adsfasasfasfasdasf";
-            CacheElement<String, String> ce = new CacheElement<String, String>( "key" + 1, "data" + i, message );
+            CacheElement<String, String> ce = new CacheElement<>( "key" + 1, "data" + i, message );
             cache.update( ce );
 //            System.out.println( "put " + ce );
         }

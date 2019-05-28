@@ -107,7 +107,7 @@ public class LRUMapPerformanceTest
 
         try
         {
-            LRUMap<String, String> cache = new LRUMap<String, String>( tries );
+            LRUMap<String, String> cache = new LRUMap<>( tries );
 
             for ( int j = 0; j < loops; j++ )
             {

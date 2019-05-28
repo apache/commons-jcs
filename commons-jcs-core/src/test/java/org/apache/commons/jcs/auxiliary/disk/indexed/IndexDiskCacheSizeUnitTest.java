@@ -43,7 +43,7 @@ public class IndexDiskCacheSizeUnitTest extends IndexDiskCacheUnitTestAbstract {
 		        cattr.setMaxKeySize( 8); // 1kb DiskTestObject takes 1420 bytes, so 5*1420 = 7100, so to keep 5 ojbects, we need max key size of 8
 		        cattr.setMaxPurgatorySize( 0 );
 		        cattr.setDiskPath( "target/test-sandbox/BreakIndexTest" );
-		        IndexedDiskCache<String, DiskTestObject> disk = new IndexedDiskCache<String, DiskTestObject>( cattr );
+		        IndexedDiskCache<String, DiskTestObject> disk = new IndexedDiskCache<>( cattr );
 
 		        String[] test = { "a", "bb", "ccc", "dddd", "eeeee", "ffffff", "ggggggg", "hhhhhhhhh", "iiiiiiiiii" };
 		        String[] expect = { null, "bb", "ccc", null, null, "ffffff", null, "hhhhhhhhh", "iiiiiiiiii" };
@@ -52,7 +52,7 @@ public class IndexDiskCacheSizeUnitTest extends IndexDiskCacheUnitTestAbstract {
 
 		        for ( int i = 0; i < 6; i++ )
 		        {
-		            ICacheElement<String, DiskTestObject> element = new CacheElement<String, DiskTestObject>( "testRecycleBin", "key:" + test[i], value);
+		            ICacheElement<String, DiskTestObject> element = new CacheElement<>( "testRecycleBin", "key:" + test[i], value);
 		            //System.out.println( "About to add " + "key:" + test[i] + " i = " + i );
 		            disk.processUpdate( element );
 		        }
@@ -67,7 +67,7 @@ public class IndexDiskCacheSizeUnitTest extends IndexDiskCacheUnitTestAbstract {
 		        // will not fit.
 		        for ( int i = 7; i < 9; i++ )
 		        {
-		            ICacheElement<String, DiskTestObject> element = new CacheElement<String, DiskTestObject>( "testRecycleBin", "key:" + test[i], value);
+		            ICacheElement<String, DiskTestObject> element = new CacheElement<>( "testRecycleBin", "key:" + test[i], value);
 		            //System.out.println( "About to add " + "key:" + test[i] + " i = " + i );
 		            disk.processUpdate( element );
 		        }

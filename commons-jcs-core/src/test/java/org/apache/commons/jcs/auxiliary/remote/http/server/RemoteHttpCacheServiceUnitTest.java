@@ -44,12 +44,12 @@ public class RemoteHttpCacheServiceUnitTest
 
         RemoteHttpCacheServerAttributes rcsa = new RemoteHttpCacheServerAttributes();
         RemoteHttpCacheService<String, String> server =
-            new RemoteHttpCacheService<String, String>( manager, rcsa, cacheEventLogger );
+            new RemoteHttpCacheService<>( manager, rcsa, cacheEventLogger );
 
         String cacheName = "test";
         String key = "key";
         long requesterId = 2;
-        CacheElement<String, String> element = new CacheElement<String, String>( cacheName, key, null );
+        CacheElement<String, String> element = new CacheElement<>( cacheName, key, null );
 
         // DO WORK
         server.update( element, requesterId );
@@ -73,7 +73,7 @@ public class RemoteHttpCacheServiceUnitTest
 
         RemoteHttpCacheServerAttributes rcsa = new RemoteHttpCacheServerAttributes();
         RemoteHttpCacheService<String, String> server =
-            new RemoteHttpCacheService<String, String>( manager, rcsa, cacheEventLogger );
+            new RemoteHttpCacheService<>( manager, rcsa, cacheEventLogger );
 
         // DO WORK
         server.get( "region", "key" );
@@ -97,7 +97,7 @@ public class RemoteHttpCacheServiceUnitTest
 
         RemoteHttpCacheServerAttributes rcsa = new RemoteHttpCacheServerAttributes();
         RemoteHttpCacheService<String, String> server =
-            new RemoteHttpCacheService<String, String>( manager, rcsa, cacheEventLogger );
+            new RemoteHttpCacheService<>( manager, rcsa, cacheEventLogger );
 
         // DO WORK
         server.getMatching( "region", "pattern", 0 );
@@ -121,10 +121,10 @@ public class RemoteHttpCacheServiceUnitTest
 
         RemoteHttpCacheServerAttributes rcsa = new RemoteHttpCacheServerAttributes();
         RemoteHttpCacheService<String, String> server =
-            new RemoteHttpCacheService<String, String>( manager, rcsa, cacheEventLogger );
+            new RemoteHttpCacheService<>( manager, rcsa, cacheEventLogger );
 
         // DO WORK
-        server.getMultiple( "region", new HashSet<String>() );
+        server.getMultiple( "region", new HashSet<>() );
 
         // VERIFY
         assertEquals( "Start should have been called.", 1, cacheEventLogger.startICacheEventCalls );
@@ -145,7 +145,7 @@ public class RemoteHttpCacheServiceUnitTest
 
         RemoteHttpCacheServerAttributes rcsa = new RemoteHttpCacheServerAttributes();
         RemoteHttpCacheService<String, String> server =
-            new RemoteHttpCacheService<String, String>( manager, rcsa, cacheEventLogger );
+            new RemoteHttpCacheService<>( manager, rcsa, cacheEventLogger );
 
         // DO WORK
         server.remove( "region", "key" );
@@ -169,7 +169,7 @@ public class RemoteHttpCacheServiceUnitTest
 
         RemoteHttpCacheServerAttributes rcsa = new RemoteHttpCacheServerAttributes();
         RemoteHttpCacheService<String, String> server =
-            new RemoteHttpCacheService<String, String>( manager, rcsa, cacheEventLogger );
+            new RemoteHttpCacheService<>( manager, rcsa, cacheEventLogger );
 
         // DO WORK
         server.removeAll( "region" );

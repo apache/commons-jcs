@@ -182,7 +182,7 @@ public class IndexedDiskCacheSameRegionConcurrentUnitTest
         }
 
         // Test that getElements returns all the expected values
-        Set<String> keys = new HashSet<String>();
+        Set<String> keys = new HashSet<>();
         for ( int i = start; i <= end; i++ )
         {
             keys.add( i + ":key" );

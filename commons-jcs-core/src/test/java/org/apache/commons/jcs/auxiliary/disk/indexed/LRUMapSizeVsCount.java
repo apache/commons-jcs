@@ -114,7 +114,7 @@ public class LRUMapSizeVsCount
         	cattr.setName("junit");
         	cattr.setCacheName("junit");
         	cattr.setDiskPath(".");
-        	IndexedDiskCache<String, String> idc = new IndexedDiskCache<String, String>(cattr);
+        	IndexedDiskCache<String, String> idc = new IndexedDiskCache<>(cattr);
 
 			Map<String, IndexedDiskElementDescriptor> cacheCount = idc.new LRUMapCountLimited( tries );
 			Map<String, IndexedDiskElementDescriptor> cacheSize = idc.new LRUMapSizeLimited( tries/1024/2 );

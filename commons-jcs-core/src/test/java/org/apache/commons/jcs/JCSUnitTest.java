@@ -82,7 +82,7 @@ public class JCSUnitTest
      */
     private LinkedList<HashMap<String, String>> buildList()
     {
-        LinkedList<HashMap<String, String>> list = new LinkedList<HashMap<String,String>>();
+        LinkedList<HashMap<String, String>> list = new LinkedList<>();
 
         for ( int i = 0; i < 100; i++ )
         {
@@ -97,7 +97,7 @@ public class JCSUnitTest
      */
     private HashMap<String, String> buildMap()
     {
-        HashMap<String, String> map = new HashMap<String, String>();
+        HashMap<String, String> map = new HashMap<>();
 
         byte[] keyBytes = new byte[32];
         byte[] valBytes = new byte[128];

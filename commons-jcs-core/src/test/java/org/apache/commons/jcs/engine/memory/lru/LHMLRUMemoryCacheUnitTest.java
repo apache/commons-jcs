@@ -95,7 +95,7 @@ public class LHMLRUMemoryCacheUnitTest
         }
 
         // Test that getMultiple returns all the items remaining in cache and none of the missing ones
-        Set<String> keys = new HashSet<String>();
+        Set<String> keys = new HashSet<>();
         for ( int i = 0; i < items; i++ )
         {
             keys.add( i + ":key" );
@@ -252,7 +252,7 @@ public class LHMLRUMemoryCacheUnitTest
         cacheMgr.configure( "/TestLHMLRUCache.ccf" );
         CompositeCache<String, String> cache = cacheMgr.getCache( "testGetKeyArray" );
 
-        LHMLRUMemoryCache<String, String> mru = new LHMLRUMemoryCache<String, String>();
+        LHMLRUMemoryCache<String, String> mru = new LHMLRUMemoryCache<>();
         mru.initialize( cache );
 
         int max = cache.getCacheAttributes().getMaxObjects();
@@ -260,7 +260,7 @@ public class LHMLRUMemoryCacheUnitTest
 
         for ( int i = 0; i < items; i++ )
         {
-            ICacheElement<String, String> ice = new CacheElement<String, String>( cache.getCacheName(), i + ":key", cache.getCacheName() + " data " + i );
+            ICacheElement<String, String> ice = new CacheElement<>( cache.getCacheName(), i + ":key", cache.getCacheName() + " data " + i );
             ice.setElementAttributes( cache.getElementAttributes() );
             mru.update( ice );
         }

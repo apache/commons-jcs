@@ -42,7 +42,7 @@ public class IndexDiskCacheCountUnitTest extends IndexDiskCacheUnitTestAbstract 
 		        cattr.setMaxKeySize( 5 );
 		        cattr.setMaxPurgatorySize( 0 );
 		        cattr.setDiskPath( "target/test-sandbox/BreakIndexTest" );
-		        IndexedDiskCache<String, String> disk = new IndexedDiskCache<String, String>( cattr );
+		        IndexedDiskCache<String, String> disk = new IndexedDiskCache<>( cattr );
 
 		        String[] test = { "a", "bb", "ccc", "dddd", "eeeee", "ffffff", "ggggggg", "hhhhhhhhh", "iiiiiiiiii" };
 		        String[] expect = { null, "bb", "ccc", null, null, "ffffff", null, "hhhhhhhhh", "iiiiiiiiii" };
@@ -51,7 +51,7 @@ public class IndexDiskCacheCountUnitTest extends IndexDiskCacheUnitTestAbstract 
 
 		        for ( int i = 0; i < 6; i++ )
 		        {
-		            ICacheElement<String, String> element = new CacheElement<String, String>( "testRecycleBin", "key:" + test[i], test[i] );
+		            ICacheElement<String, String> element = new CacheElement<>( "testRecycleBin", "key:" + test[i], test[i] );
 		            //System.out.println( "About to add " + "key:" + test[i] + " i = " + i );
 		            disk.processUpdate( element );
 		        }
@@ -66,7 +66,7 @@ public class IndexDiskCacheCountUnitTest extends IndexDiskCacheUnitTestAbstract 
 		        // will not fit.
 		        for ( int i = 7; i < 9; i++ )
 		        {
-		            ICacheElement<String, String> element = new CacheElement<String, String>( "testRecycleBin", "key:" + test[i], test[i] );
+		            ICacheElement<String, String> element = new CacheElement<>( "testRecycleBin", "key:" + test[i], test[i] );
 		            //System.out.println( "About to add " + "key:" + test[i] + " i = " + i );
 		            disk.processUpdate( element );
 		        }

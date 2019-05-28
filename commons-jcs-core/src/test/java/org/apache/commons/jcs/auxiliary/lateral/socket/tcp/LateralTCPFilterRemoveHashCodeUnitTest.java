@@ -99,7 +99,7 @@ public class LateralTCPFilterRemoveHashCodeUnitTest
         // this service will put and remove using the lateral to
         // the cache instance above
         // the cache thinks it is different since the listenerid is different
-        LateralTCPService<String, Serializable> service = new LateralTCPService<String, Serializable>( lattr2 );
+        LateralTCPService<String, Serializable> service = new LateralTCPService<>( lattr2 );
         service.setListenerId( 123456 );
 
         String keyToBeRemovedOnPut = "test1";
@@ -122,12 +122,12 @@ public class LateralTCPFilterRemoveHashCodeUnitTest
         // dataToPassHashCodeCompare.hashCode() );
 
         cache.put( keyToBeRemovedOnPut, "this should get removed." );
-        ICacheElement<String, Serializable> element1 = new CacheElement<String, Serializable>( region, keyToBeRemovedOnPut, region
+        ICacheElement<String, Serializable> element1 = new CacheElement<>( region, keyToBeRemovedOnPut, region
             + ":data-this shouldn't get there" );
         service.update( element1 );
 
         cache.put( keyToNotBeRemovedOnPut, dataToPassHashCodeCompare );
-        ICacheElement<String, Serializable> element2 = new CacheElement<String, Serializable>( region, keyToNotBeRemovedOnPut, dataToPassHashCodeCompare );
+        ICacheElement<String, Serializable> element2 = new CacheElement<>( region, keyToNotBeRemovedOnPut, dataToPassHashCodeCompare );
         service.update( element2 );
 
         /*

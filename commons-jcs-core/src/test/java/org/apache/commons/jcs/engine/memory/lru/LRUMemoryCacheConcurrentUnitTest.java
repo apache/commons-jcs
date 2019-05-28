@@ -112,14 +112,14 @@ public class LRUMemoryCacheConcurrentUnitTest
         cacheMgr.configure( "/TestDiskCache.ccf" );
         CompositeCache<String, String> cache = cacheMgr.getCache( region );
 
-        LRUMemoryCache<String, String> lru = new LRUMemoryCache<String, String>();
+        LRUMemoryCache<String, String> lru = new LRUMemoryCache<>();
         lru.initialize( cache );
 
         // Add items to cache
 
         for ( int i = 0; i < items; i++ )
         {
-            ICacheElement<String, String> ice = new CacheElement<String, String>( cache.getCacheName(), i + ":key", region + " data " + i );
+            ICacheElement<String, String> ice = new CacheElement<>( cache.getCacheName(), i + ":key", region + " data " + i );
             ice.setElementAttributes( cache.getElementAttributes() );
             lru.update( ice );
         }
@@ -138,7 +138,7 @@ public class LRUMemoryCacheConcurrentUnitTest
         }
 
         // Test that getMultiple returns all the items remaining in cache and none of the missing ones
-        Set<String> keys = new HashSet<String>();
+        Set<String> keys = new HashSet<>();
         for ( int i = 0; i < items; i++ )
         {
             keys.add( i + ":key" );

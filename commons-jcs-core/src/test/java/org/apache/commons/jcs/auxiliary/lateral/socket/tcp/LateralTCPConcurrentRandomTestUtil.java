@@ -85,7 +85,7 @@ public class LateralTCPConcurrentRandomTestUtil
         // this service will put and remove using the lateral to
         // the cache instance above
         // the cache thinks it is different since the listenerid is different
-        LateralTCPService<String, String> service = new LateralTCPService<String, String>( lattr2 );
+        LateralTCPService<String, String> service = new LateralTCPService<>( lattr2 );
         service.setListenerId( 123456 );
 
         try
@@ -98,7 +98,7 @@ public class LateralTCPConcurrentRandomTestUtil
                 String key = "key" + kn;
                 if ( n == 1 )
                 {
-                    ICacheElement<String, String> element = new CacheElement<String, String>( region, key, region + ":data" + i
+                    ICacheElement<String, String> element = new CacheElement<>( region, key, region + ":data" + i
                         + " junk asdfffffffadfasdfasf " + kn + ":" + n );
                     service.update( element );
                     if ( show )

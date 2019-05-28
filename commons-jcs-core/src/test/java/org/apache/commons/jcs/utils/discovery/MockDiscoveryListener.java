@@ -29,7 +29,7 @@ public class MockDiscoveryListener
     implements IDiscoveryListener
 {
     /** discovered services. */
-    public List<DiscoveredService> discoveredServices = new ArrayList<DiscoveredService>();
+    public List<DiscoveredService> discoveredServices = new ArrayList<>();
 
     /**
      * Adds the entry to a list. I'm not using a set. I want to see if we get dupes.

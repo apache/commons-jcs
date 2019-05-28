@@ -55,7 +55,7 @@ public class RemoteCacheListenerUnitTest
         IRemoteCacheAttributes irca = new RemoteCacheAttributes();
         irca.setRemoveUponRemotePut( false );
         ICompositeCacheManager cacheMgr = new MockCompositeCacheManager();
-        RemoteCacheListener<String, String> listener = new RemoteCacheListener<String, String>( irca, cacheMgr, new StandardSerializer() );
+        RemoteCacheListener<String, String> listener = new RemoteCacheListener<>( irca, cacheMgr, new StandardSerializer() );
 
         String cacheName = "testName";
         String key = "key";
@@ -66,7 +66,7 @@ public class RemoteCacheListenerUnitTest
         IElementSerializer elementSerializer = new StandardSerializer();
 
         ICacheElementSerialized<String, String> element =
-            new CacheElementSerialized<String, String>( cacheName, key, elementSerializer
+            new CacheElementSerialized<>( cacheName, key, elementSerializer
             .serialize( value ), attr );
 
         // DO WORK
@@ -98,7 +98,7 @@ public class RemoteCacheListenerUnitTest
         IRemoteCacheAttributes irca = new RemoteCacheAttributes();
         irca.setRemoveUponRemotePut( true );
         ICompositeCacheManager cacheMgr = new MockCompositeCacheManager();
-        RemoteCacheListener<String, String> listener = new RemoteCacheListener<String, String>( irca, cacheMgr, new StandardSerializer() );
+        RemoteCacheListener<String, String> listener = new RemoteCacheListener<>( irca, cacheMgr, new StandardSerializer() );
 
         String cacheName = "testName";
         String key = "key";
@@ -109,7 +109,7 @@ public class RemoteCacheListenerUnitTest
         IElementSerializer elementSerializer = new StandardSerializer();
 
         ICacheElementSerialized<String, String> element =
-            new CacheElementSerialized<String, String>( cacheName, key, elementSerializer
+            new CacheElementSerialized<>( cacheName, key, elementSerializer
             .serialize( value ), attr );
 
         // DO WORK

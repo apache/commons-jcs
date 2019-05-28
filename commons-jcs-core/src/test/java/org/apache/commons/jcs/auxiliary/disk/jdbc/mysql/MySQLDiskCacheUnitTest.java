@@ -60,7 +60,7 @@ public class MySQLDiskCacheUnitTest
         TableState tableState = new TableState( tableName );
         tableState.setState( TableState.OPTIMIZATION_RUNNING );
 
-        MySQLDiskCache<String, String> cache = new MySQLDiskCache<String, String>( attributes, dsFactory, tableState,
+        MySQLDiskCache<String, String> cache = new MySQLDiskCache<>( attributes, dsFactory, tableState,
         		CompositeCacheManager.getUnconfiguredInstance() );
 
         // DO WORK

@@ -49,12 +49,12 @@ public abstract class BlockDiskCacheUnitTestAbstract extends TestCase
         cattr.setCacheName(cacheName);
         cattr.setMaxKeySize(100);
         cattr.setDiskPath("target/test-sandbox/BlockDiskCacheUnitTest");
-        BlockDiskCache<String, String> diskCache = new BlockDiskCache<String, String>(cattr);
+        BlockDiskCache<String, String> diskCache = new BlockDiskCache<>(cattr);
 
         // DO WORK
         for (int i = 0; i <= items; i++)
         {
-            diskCache.update(new CacheElement<String, String>(cacheName, i + ":key", cacheName + " data " + i));
+            diskCache.update(new CacheElement<>(cacheName, i + ":key", cacheName + " data " + i));
         }
         Thread.sleep(500);
 
@@ -82,12 +82,12 @@ public abstract class BlockDiskCacheUnitTestAbstract extends TestCase
         cattr.setCacheName(cacheName);
         cattr.setMaxKeySize(100);
         cattr.setDiskPath("target/test-sandbox/BlockDiskCacheUnitTest");
-        BlockDiskCache<String, String> diskCache = new BlockDiskCache<String, String>(cattr);
+        BlockDiskCache<String, String> diskCache = new BlockDiskCache<>(cattr);
 
         // DO WORK
         for (int i = 0; i <= items; i++)
         {
-            diskCache.update(new CacheElement<String, String>(cacheName, i + ":key", cacheName + " data " + i));
+            diskCache.update(new CacheElement<>(cacheName, i + ":key", cacheName + " data " + i));
         }
 
         Map<String, ICacheElement<String, String>> matchingResults = diskCache.getMatching("1.8.+");
@@ -171,10 +171,10 @@ public abstract class BlockDiskCacheUnitTestAbstract extends TestCase
         cattr.setMaxKeySize(100);
         cattr.setBlockSizeBytes(200);
         cattr.setDiskPath("target/test-sandbox/BlockDiskCacheUnitTest");
-        BlockDiskCache<String, String> diskCache = new BlockDiskCache<String, String>(cattr);
+        BlockDiskCache<String, String> diskCache = new BlockDiskCache<>(cattr);
 
         // DO WORK
-        diskCache.update(new CacheElement<String, String>(cacheName, "x", string));
+        diskCache.update(new CacheElement<>(cacheName, "x", string));
 
         // VERIFY
         assertNotNull(diskCache.get("x"));
@@ -214,10 +214,10 @@ public abstract class BlockDiskCacheUnitTestAbstract extends TestCase
         cattr.setMaxKeySize(100);
         cattr.setBlockSizeBytes(200);
         cattr.setDiskPath("target/test-sandbox/BlockDiskCacheUnitTest");
-        BlockDiskCache<String, String> diskCache = new BlockDiskCache<String, String>(cattr);
+        BlockDiskCache<String, String> diskCache = new BlockDiskCache<>(cattr);
 
         // DO WORK
-        diskCache.update(new CacheElement<String, String>(cacheName, "x", string));
+        diskCache.update(new CacheElement<>(cacheName, "x", string));
 
         // VERIFY
         assertNotNull(diskCache.get("x"));
@@ -258,10 +258,10 @@ public abstract class BlockDiskCacheUnitTestAbstract extends TestCase
         cattr.setMaxKeySize(100);
         cattr.setBlockSizeBytes(200);
         cattr.setDiskPath("target/test-sandbox/BlockDiskCacheUnitTest");
-        BlockDiskCache<String, byte[]> diskCache = new BlockDiskCache<String, byte[]>(cattr);
+        BlockDiskCache<String, byte[]> diskCache = new BlockDiskCache<>(cattr);
 
         // DO WORK
-        diskCache.update(new CacheElement<String, byte[]>(cacheName, "x", bytes));
+        diskCache.update(new CacheElement<>(cacheName, "x", bytes));
 
         // VERIFY
         assertNotNull(diskCache.get("x"));
@@ -307,10 +307,10 @@ public abstract class BlockDiskCacheUnitTestAbstract extends TestCase
         cattr.setMaxKeySize(100);
         cattr.setBlockSizeBytes(500);
         cattr.setDiskPath("target/test-sandbox/BlockDiskCacheUnitTest");
-        BlockDiskCache<String, X> diskCache = new BlockDiskCache<String, X>(cattr);
+        BlockDiskCache<String, X> diskCache = new BlockDiskCache<>(cattr);
 
         // DO WORK
-        diskCache.update(new CacheElement<String, X>(cacheName, "x", before));
+        diskCache.update(new CacheElement<>(cacheName, "x", before));
 
         // VERIFY
         assertNotNull(diskCache.get("x"));
@@ -341,18 +341,18 @@ public abstract class BlockDiskCacheUnitTestAbstract extends TestCase
         cattr.setMaxKeySize(100);
         cattr.setBlockSizeBytes(500);
         cattr.setDiskPath("target/test-sandbox/BlockDiskCacheUnitTest");
-        BlockDiskCache<String, X> diskCache = new BlockDiskCache<String, X>(cattr);
+        BlockDiskCache<String, X> diskCache = new BlockDiskCache<>(cattr);
         diskCache.removeAll();
         X value1 = new X();
         value1.string = "1234567890";
         X value2 = new X();
         value2.string = "0987654321";
-        diskCache.update(new CacheElement<String, X>(cacheName, "1", value1));
+        diskCache.update(new CacheElement<>(cacheName, "1", value1));
         diskCache.dispose();
-        diskCache = new BlockDiskCache<String, X>(cattr);
-        diskCache.update(new CacheElement<String, X>(cacheName, "2", value2));
+        diskCache = new BlockDiskCache<>(cattr);
+        diskCache.update(new CacheElement<>(cacheName, "2", value2));
         diskCache.dispose();
-        diskCache = new BlockDiskCache<String, X>(cattr);
+        diskCache = new BlockDiskCache<>(cattr);
         assertTrue(diskCache.verifyDisk());
         assertEquals(2, diskCache.getKeySet().size());
         assertEquals(value1.string, diskCache.get("1").getVal().string);
@@ -382,17 +382,17 @@ public abstract class BlockDiskCacheUnitTestAbstract extends TestCase
         cattr.setMaxKeySize(100);
         cattr.setBlockSizeBytes(500);
         cattr.setDiskPath("target/test-sandbox/BlockDiskCacheUnitTest");
-        BlockDiskCache<String, X> diskCache = new BlockDiskCache<String, X>(cattr);
+        BlockDiskCache<String, X> diskCache = new BlockDiskCache<>(cattr);
 
         // DO WORK
         for (int i = 0; i < 50; i++)
         {
-            diskCache.update(new CacheElement<String, X>(cacheName, "x" + i, before));
+            diskCache.update(new CacheElement<>(cacheName, "x" + i, before));
         }
         diskCache.dispose();
 
         // VERIFY
-        diskCache = new BlockDiskCache<String, X>(cattr);
+        diskCache = new BlockDiskCache<>(cattr);
 
         for (int i = 0; i < 50; i++)
         {
@@ -419,7 +419,7 @@ public abstract class BlockDiskCacheUnitTestAbstract extends TestCase
         cattr.setCacheName("testRemoveItems");
         cattr.setMaxKeySize(100);
         cattr.setDiskPath("target/test-sandbox/BlockDiskCacheUnitTest");
-        BlockDiskCache<String, String> disk = new BlockDiskCache<String, String>(cattr);
+        BlockDiskCache<String, String> disk = new BlockDiskCache<>(cattr);
 
         disk.processRemoveAll();
 
@@ -428,7 +428,7 @@ public abstract class BlockDiskCacheUnitTestAbstract extends TestCase
         {
             IElementAttributes eAttr = new ElementAttributes();
             eAttr.setIsSpool(true);
-            ICacheElement<String, String> element = new CacheElement<String, String>("testRemoveItems", "key:" + i, "data:" + i);
+            ICacheElement<String, String> element = new CacheElement<>("testRemoveItems", "key:" + i, "data:" + i);
             element.setElementAttributes(eAttr);
             disk.processUpdate(element);
         }
@@ -454,7 +454,7 @@ public abstract class BlockDiskCacheUnitTestAbstract extends TestCase
         cattr.setCacheName("testRemove_PartialKey");
         cattr.setMaxKeySize(100);
         cattr.setDiskPath("target/test-sandbox/BlockDiskCacheUnitTest");
-        BlockDiskCache<String, String> disk = new BlockDiskCache<String, String>(cattr);
+        BlockDiskCache<String, String> disk = new BlockDiskCache<>(cattr);
 
         disk.processRemoveAll();
 
@@ -463,7 +463,7 @@ public abstract class BlockDiskCacheUnitTestAbstract extends TestCase
         {
             IElementAttributes eAttr = new ElementAttributes();
             eAttr.setIsSpool(true);
-            ICacheElement<String, String> element = new CacheElement<String, String>("testRemove_PartialKey", i + ":key", "data:"
+            ICacheElement<String, String> element = new CacheElement<>("testRemove_PartialKey", i + ":key", "data:"
                 + i);
             element.setElementAttributes(eAttr);
             disk.processUpdate(element);
@@ -498,7 +498,7 @@ public abstract class BlockDiskCacheUnitTestAbstract extends TestCase
         cattr.setCacheName("testRemove_Group");
         cattr.setMaxKeySize(100);
         cattr.setDiskPath("target/test-sandbox/BlockDiskCacheUnitTest");
-        BlockDiskCache<GroupAttrName<String>, String> disk = new BlockDiskCache<GroupAttrName<String>, String>(cattr);
+        BlockDiskCache<GroupAttrName<String>, String> disk = new BlockDiskCache<>(cattr);
 
         disk.processRemoveAll();
 
@@ -509,7 +509,7 @@ public abstract class BlockDiskCacheUnitTestAbstract extends TestCase
         for (int i = 0; i < cnt; i++)
         {
             GroupAttrName<String> groupAttrName = getGroupAttrName(cacheName, groupName, i + ":key");
-            CacheElement<GroupAttrName<String>, String> element = new CacheElement<GroupAttrName<String>, String>(cacheName,
+            CacheElement<GroupAttrName<String>, String> element = new CacheElement<>(cacheName,
                 groupAttrName, "data:" + i);
 
             IElementAttributes eAttr = new ElementAttributes();
@@ -554,7 +554,7 @@ public abstract class BlockDiskCacheUnitTestAbstract extends TestCase
     private GroupAttrName<String> getGroupAttrName(String cacheName, String group, String name)
     {
         GroupId gid = new GroupId(cacheName, group);
-        return new GroupAttrName<String>(gid, name);
+        return new GroupAttrName<>(gid, name);
     }
 
     /** Holder for a string and byte array. */

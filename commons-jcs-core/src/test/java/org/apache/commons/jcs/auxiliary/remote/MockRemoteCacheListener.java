@@ -45,10 +45,10 @@ public class MockRemoteCacheListener<K, V>
     public int putCount;
 
     /** List of ICacheElements passed to handlePut. */
-    public List<ICacheElement<K, V>> putItems = new LinkedList<ICacheElement<K,V>>();
+    public List<ICacheElement<K, V>> putItems = new LinkedList<>();
 
     /** List of Serializable objects passed to handleRemove. */
-    public List<K> removedKeys = new LinkedList<K>();
+    public List<K> removedKeys = new LinkedList<>();
 
     /** Number of times handleRemote was called. */
     public int removeCount;

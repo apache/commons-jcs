@@ -42,7 +42,7 @@ public class JCSWorkerUnitTest
     public void testSimpleGet()
         throws Exception
     {
-        JCSWorker<String, Long> cachingWorker = new JCSWorker<String, Long>( "example region" );
+        JCSWorker<String, Long> cachingWorker = new JCSWorker<>( "example region" );
 
         // This is the helper.
         JCSWorkerHelper<Long> helper = new AbstractJCSWorkerHelper<Long>()

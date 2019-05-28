@@ -113,7 +113,7 @@ public class JCSvsCommonsLRUMapPerformanceTest
         try
         {
 
-            Map<String, String> cache = new LRUMap<String, String>( tries );
+            Map<String, String> cache = new LRUMap<>( tries );
 
             for ( int j = 0; j < loops; j++ )
             {

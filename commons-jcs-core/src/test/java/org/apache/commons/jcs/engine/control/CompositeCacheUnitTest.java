@@ -59,9 +59,9 @@ public class CompositeCacheUnitTest
 
         IElementAttributes attr = new ElementAttributes();
 
-        CompositeCache<String, Integer> cache = new CompositeCache<String, Integer>( cattr, attr );
+        CompositeCache<String, Integer> cache = new CompositeCache<>( cattr, attr );
 
-        MockAuxiliaryCache<String, Integer> diskMock = new MockAuxiliaryCache<String, Integer>();
+        MockAuxiliaryCache<String, Integer> diskMock = new MockAuxiliaryCache<>();
         diskMock.cacheType = CacheType.DISK_CACHE;
         @SuppressWarnings("unchecked")
         AuxiliaryCache<String, Integer>[] aux = new AuxiliaryCache[] { diskMock };
@@ -71,7 +71,7 @@ public class CompositeCacheUnitTest
         int numToInsert = 10;
         for ( int i = 0; i < numToInsert; i++ )
         {
-            ICacheElement<String, Integer> element = new CacheElement<String, Integer>( cacheName, String.valueOf( i ), Integer.valueOf( i ) );
+            ICacheElement<String, Integer> element = new CacheElement<>( cacheName, String.valueOf( i ), Integer.valueOf( i ) );
             cache.update( element, false );
         }
 
@@ -99,9 +99,9 @@ public class CompositeCacheUnitTest
 
         IElementAttributes attr = new ElementAttributes();
 
-        CompositeCache<String, Integer> cache = new CompositeCache<String, Integer>( cattr, attr );
+        CompositeCache<String, Integer> cache = new CompositeCache<>( cattr, attr );
 
-        MockAuxiliaryCache<String, Integer> diskMock = new MockAuxiliaryCache<String, Integer>();
+        MockAuxiliaryCache<String, Integer> diskMock = new MockAuxiliaryCache<>();
         diskMock.cacheType = CacheType.REMOTE_CACHE;
         @SuppressWarnings("unchecked")
         AuxiliaryCache<String, Integer>[] aux = new AuxiliaryCache[] { diskMock };
@@ -111,7 +111,7 @@ public class CompositeCacheUnitTest
         int numToInsert = 10;
         for ( int i = 0; i < numToInsert; i++ )
         {
-            ICacheElement<String, Integer> element = new CacheElement<String, Integer>( cacheName, String.valueOf( i ), Integer.valueOf( i ) );
+            ICacheElement<String, Integer> element = new CacheElement<>( cacheName, String.valueOf( i ), Integer.valueOf( i ) );
             cache.update( element, false );
         }
 
@@ -142,9 +142,9 @@ public class CompositeCacheUnitTest
 
         IElementAttributes attr = new ElementAttributes();
 
-        CompositeCache<String, Integer> cache = new CompositeCache<String, Integer>( cattr, attr );
+        CompositeCache<String, Integer> cache = new CompositeCache<>( cattr, attr );
 
-        MockAuxiliaryCache<String, Integer> diskMock = new MockAuxiliaryCache<String, Integer>();
+        MockAuxiliaryCache<String, Integer> diskMock = new MockAuxiliaryCache<>();
         diskMock.cacheType = CacheType.DISK_CACHE;
         @SuppressWarnings("unchecked")
         AuxiliaryCache<String, Integer>[] aux = new AuxiliaryCache[] { diskMock };
@@ -155,7 +155,7 @@ public class CompositeCacheUnitTest
         // insert with prefix1
         for ( int i = 0; i < numToInsertPrefix1; i++ )
         {
-            ICacheElement<String, Integer> element = new CacheElement<String, Integer>( cacheName, keyprefix1 + String.valueOf( i ), Integer.valueOf( i ) );
+            ICacheElement<String, Integer> element = new CacheElement<>( cacheName, keyprefix1 + String.valueOf( i ), Integer.valueOf( i ) );
             cache.update( element, false );
         }
 
@@ -163,7 +163,7 @@ public class CompositeCacheUnitTest
         // insert with prefix1
         for ( int i = 0; i < numToInsertPrefix2; i++ )
         {
-            ICacheElement<String, Integer> element = new CacheElement<String, Integer>( cacheName, keyprefix2 + String.valueOf( i ), Integer.valueOf( i ) );
+            ICacheElement<String, Integer> element = new CacheElement<>( cacheName, keyprefix2 + String.valueOf( i ), Integer.valueOf( i ) );
             cache.update( element, false );
         }
 
@@ -194,9 +194,9 @@ public class CompositeCacheUnitTest
 
         IElementAttributes attr = new ElementAttributes();
 
-        CompositeCache<String, Integer> cache = new CompositeCache<String, Integer>( cattr, attr );
+        CompositeCache<String, Integer> cache = new CompositeCache<>( cattr, attr );
 
-        MockAuxiliaryCache<String, Integer> diskMock = new MockAuxiliaryCache<String, Integer>();
+        MockAuxiliaryCache<String, Integer> diskMock = new MockAuxiliaryCache<>();
         diskMock.cacheType = CacheType.DISK_CACHE;
         @SuppressWarnings("unchecked")
         AuxiliaryCache<String, Integer>[] aux = new AuxiliaryCache[] { diskMock };
@@ -228,9 +228,9 @@ public class CompositeCacheUnitTest
 
         IElementAttributes attr = new ElementAttributes();
 
-        CompositeCache<String, Integer> cache = new CompositeCache<String, Integer>( cattr, attr );
+        CompositeCache<String, Integer> cache = new CompositeCache<>( cattr, attr );
 
-        MockAuxiliaryCache<String, Integer> diskMock = new MockAuxiliaryCache<String, Integer>();
+        MockAuxiliaryCache<String, Integer> diskMock = new MockAuxiliaryCache<>();
         diskMock.cacheType = CacheType.REMOTE_CACHE;
         @SuppressWarnings("unchecked")
         AuxiliaryCache<String, Integer>[] aux = new AuxiliaryCache[] { diskMock };

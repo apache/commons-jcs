@@ -70,8 +70,8 @@ public class BlockDiskCacheKeyStoreUnitTest
 
     private void innerTestPutKeys(BlockDiskCacheAttributes attributes)
     {
-        BlockDiskCache<String, String> blockDiskCache = new BlockDiskCache<String, String>(attributes);
-        BlockDiskKeyStore<String> keyStore = new BlockDiskKeyStore<String>(attributes, blockDiskCache);
+        BlockDiskCache<String, String> blockDiskCache = new BlockDiskCache<>(attributes);
+        BlockDiskKeyStore<String> keyStore = new BlockDiskKeyStore<>(attributes, blockDiskCache);
 
         // DO WORK
         int numElements = 100;
@@ -125,7 +125,7 @@ public class BlockDiskCacheKeyStoreUnitTest
 
     private void testSaveLoadKeysInner(BlockDiskCacheAttributes attributes)
     {
-        BlockDiskKeyStore<String> keyStore = new BlockDiskKeyStore<String>(attributes, null);
+        BlockDiskKeyStore<String> keyStore = new BlockDiskKeyStore<>(attributes, null);
 
         // DO WORK
         int numElements = 1000;
@@ -180,7 +180,7 @@ public class BlockDiskCacheKeyStoreUnitTest
         attributes.setDiskLimitType(DiskLimitType.SIZE);
 
         @SuppressWarnings({ "unchecked", "rawtypes" })
-        BlockDiskKeyStore<String> keyStore = new BlockDiskKeyStore<String>(attributes, new BlockDiskCache(attributes));
+        BlockDiskKeyStore<String> keyStore = new BlockDiskKeyStore<>(attributes, new BlockDiskCache(attributes));
 
         keyStore.put("1", new int[1000]);
         keyStore.put("2", new int[1000]);

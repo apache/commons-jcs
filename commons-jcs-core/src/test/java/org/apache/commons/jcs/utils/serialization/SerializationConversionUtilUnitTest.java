@@ -95,7 +95,7 @@ public class SerializationConversionUtilUnitTest
         IElementAttributes attr = new ElementAttributes();
         attr.setMaxLife(34);
 
-        ICacheElement<String, String> before = new CacheElement<String, String>( cacheName, key, value );
+        ICacheElement<String, String> before = new CacheElement<>( cacheName, key, value );
         before.setElementAttributes( attr );
 
         // DO WORK
@@ -136,7 +136,7 @@ public class SerializationConversionUtilUnitTest
         IElementAttributes attr = new ElementAttributes();
         attr.setMaxLife(34);
 
-        ICacheElement<String, String> before = new CacheElement<String, String>( cacheName, key, value );
+        ICacheElement<String, String> before = new CacheElement<>( cacheName, key, value );
         before.setElementAttributes( attr );
 
         // DO WORK
@@ -176,7 +176,7 @@ public class SerializationConversionUtilUnitTest
         IElementAttributes attr = new ElementAttributes();
         attr.setMaxLife(34);
 
-        ICacheElement<String, String> before = new CacheElement<String, String>( cacheName, key, value );
+        ICacheElement<String, String> before = new CacheElement<>( cacheName, key, value );
         before.setElementAttributes( attr );
 
         // DO WORK

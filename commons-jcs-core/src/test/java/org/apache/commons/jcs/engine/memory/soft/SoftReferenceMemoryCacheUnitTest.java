@@ -98,7 +98,7 @@ public class SoftReferenceMemoryCacheUnitTest
         }
 
         // Test that getMultiple returns all the items remaining in cache and none of the missing ones
-        Set<String> keys = new HashSet<String>();
+        Set<String> keys = new HashSet<>();
         for ( int i = 0; i < items; i++ )
         {
             keys.add( i + ":key" );
@@ -187,7 +187,7 @@ public class SoftReferenceMemoryCacheUnitTest
         cacheMgr.configure( "/TestSoftReferenceCache.ccf" );
         CompositeCache<String, String> cache = cacheMgr.getCache( "testGetKeyArray" );
 
-        SoftReferenceMemoryCache<String, String> srmc = new SoftReferenceMemoryCache<String, String>();
+        SoftReferenceMemoryCache<String, String> srmc = new SoftReferenceMemoryCache<>();
         srmc.initialize( cache );
 
         int max = cache.getCacheAttributes().getMaxObjects();
@@ -195,7 +195,7 @@ public class SoftReferenceMemoryCacheUnitTest
 
         for ( int i = 0; i < items; i++ )
         {
-            ICacheElement<String, String> ice = new CacheElement<String, String>( cache.getCacheName(), i + ":key", cache.getCacheName() + " data " + i );
+            ICacheElement<String, String> ice = new CacheElement<>( cache.getCacheName(), i + ":key", cache.getCacheName() + " data " + i );
             ice.setElementAttributes( cache.getElementAttributes() );
             srmc.update( ice );
         }

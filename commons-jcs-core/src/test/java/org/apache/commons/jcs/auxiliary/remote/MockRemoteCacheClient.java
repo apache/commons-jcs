@@ -50,20 +50,20 @@ public class MockRemoteCacheClient<K, V>
     private static final Log log = LogFactory.getLog( MockRemoteCacheClient.class );
 
     /** List of ICacheElement&lt;K, V&gt; objects passed into update. */
-    public List<ICacheElement<K, V>> updateList = new LinkedList<ICacheElement<K,V>>();
+    public List<ICacheElement<K, V>> updateList = new LinkedList<>();
 
     /** List of key objects passed into remove. */
-    public List<K> removeList = new LinkedList<K>();
+    public List<K> removeList = new LinkedList<>();
 
     /** status to return. */
     public CacheStatus status = CacheStatus.ALIVE;
 
     /** Can setup values to return from get. values must be ICacheElement&lt;K, V&gt; */
-    public Map<K, ICacheElement<K, V>> getSetupMap = new HashMap<K, ICacheElement<K,V>>();
+    public Map<K, ICacheElement<K, V>> getSetupMap = new HashMap<>();
 
     /** Can setup values to return from get. values must be Map&lt;K, ICacheElement&lt;K, V&gt;&gt; */
     public Map<Set<K>, Map<K, ICacheElement<K, V>>> getMultipleSetupMap =
-        new HashMap<Set<K>, Map<K,ICacheElement<K,V>>>();
+        new HashMap<>();
 
     /** The last service passed to fixCache */
     public ICacheServiceNonLocal<K, V> fixed;
@@ -245,7 +245,7 @@ public class MockRemoteCacheClient<K, V>
     public Map<K, ICacheElement<K, V>> getMatching(String pattern)
         throws IOException
     {
-        return new HashMap<K, ICacheElement<K,V>>();
+        return new HashMap<>();
     }
 
     /**

@@ -57,7 +57,7 @@ public class RemoteCacheServerUnitTest
         IRemoteCacheServerAttributes rcsa = new RemoteCacheServerAttributes();
         rcsa.setConfigFileName( "/TestRemoteCacheServer.ccf" );
         Properties config = RemoteUtils.loadProps(rcsa.getConfigFileName());
-        this.server = new RemoteCacheServer<String, String>( rcsa, config );
+        this.server = new RemoteCacheServer<>( rcsa, config );
     }
 
     @Override
@@ -77,10 +77,10 @@ public class RemoteCacheServerUnitTest
     public void testAddListenerToCache_LOCALtype()
         throws Exception
     {
-        MockRemoteCacheListener<String, String> mockListener1 = new MockRemoteCacheListener<String, String>();
+        MockRemoteCacheListener<String, String> mockListener1 = new MockRemoteCacheListener<>();
         mockListener1.remoteType = RemoteType.LOCAL;
         mockListener1.localAddress = expectedIp1;
-        MockRemoteCacheListener<String, String> mockListener2 = new MockRemoteCacheListener<String, String>();
+        MockRemoteCacheListener<String, String> mockListener2 = new MockRemoteCacheListener<>();
         mockListener1.remoteType = RemoteType.LOCAL;
         mockListener2.localAddress = expectedIp2;
 
@@ -106,10 +106,10 @@ public class RemoteCacheServerUnitTest
     public void testAddListenerToCache_CLUSTERtype()
         throws Exception
     {
-        MockRemoteCacheListener<String, String> mockListener1 = new MockRemoteCacheListener<String, String>();
+        MockRemoteCacheListener<String, String> mockListener1 = new MockRemoteCacheListener<>();
         mockListener1.remoteType = RemoteType.CLUSTER;
         mockListener1.localAddress = expectedIp1;
-        MockRemoteCacheListener<String, String> mockListener2 = new MockRemoteCacheListener<String, String>();
+        MockRemoteCacheListener<String, String> mockListener2 = new MockRemoteCacheListener<>();
         mockListener1.remoteType = RemoteType.CLUSTER;
         mockListener2.localAddress = expectedIp2;
 
@@ -136,9 +136,9 @@ public class RemoteCacheServerUnitTest
 //    public void testAddListener_ToAll()
 //        throws Exception
 //    {
-//        MockRemoteCacheListener<String, String> mockListener1 = new MockRemoteCacheListener<String, String>();
+//        MockRemoteCacheListener<String, String> mockListener1 = new MockRemoteCacheListener<>();
 //        mockListener1.localAddress = expectedIp1;
-//        MockRemoteCacheListener<String, String> mockListener2 = new MockRemoteCacheListener<String, String>();
+//        MockRemoteCacheListener<String, String> mockListener2 = new MockRemoteCacheListener<>();
 //        mockListener2.localAddress = expectedIp2;
 //
 //        // DO WORK
@@ -163,8 +163,8 @@ public class RemoteCacheServerUnitTest
     public void testAddListener_ToAllThenRemove()
         throws Exception
     {
-        MockRemoteCacheListener<String, String> mockListener1 = new MockRemoteCacheListener<String, String>();
-        MockRemoteCacheListener<String, String> mockListener2 = new MockRemoteCacheListener<String, String>();
+        MockRemoteCacheListener<String, String> mockListener1 = new MockRemoteCacheListener<>();
+        MockRemoteCacheListener<String, String> mockListener2 = new MockRemoteCacheListener<>();
 
         String cacheName = "testAddListenerToAllThenRemove";
 
@@ -192,9 +192,9 @@ public class RemoteCacheServerUnitTest
     public void testAddListener_ToAllThenRemove_clusterType()
         throws Exception
     {
-        MockRemoteCacheListener<String, String> mockListener1 = new MockRemoteCacheListener<String, String>();
+        MockRemoteCacheListener<String, String> mockListener1 = new MockRemoteCacheListener<>();
         mockListener1.remoteType = RemoteType.CLUSTER;
-        MockRemoteCacheListener<String, String> mockListener2 = new MockRemoteCacheListener<String, String>();
+        MockRemoteCacheListener<String, String> mockListener2 = new MockRemoteCacheListener<>();
         mockListener2.remoteType = RemoteType.CLUSTER;
 
         String cacheName = "testAddListenerToAllThenRemove";
@@ -227,19 +227,19 @@ public class RemoteCacheServerUnitTest
         rcsa.setConfigFileName( "/TestRemoteCacheServer.ccf" );
 
         Properties config = RemoteUtils.loadProps(rcsa.getConfigFileName());
-        MockRemoteCacheListener<String, Long> mockListener = new MockRemoteCacheListener<String, Long>();
-        RemoteCacheServer<String, Long> server = new RemoteCacheServer<String, Long>( rcsa, config );
+        MockRemoteCacheListener<String, Long> mockListener = new MockRemoteCacheListener<>();
+        RemoteCacheServer<String, Long> server = new RemoteCacheServer<>( rcsa, config );
 
         String cacheName = "testSimpleRegisterListenerAndPut";
         server.addCacheListener( cacheName, mockListener );
 
         // DO WORK
-        List<ICacheElement<String, Long>> inputItems = new LinkedList<ICacheElement<String, Long>>();
+        List<ICacheElement<String, Long>> inputItems = new LinkedList<>();
         int numToPut = 10;
 
         for ( int i = 0; i < numToPut; i++ )
         {
-            ICacheElement<String, Long> element = new CacheElement<String, Long>( cacheName, String.valueOf( i ), Long.valueOf( i ) );
+            ICacheElement<String, Long> element = new CacheElement<>( cacheName, String.valueOf( i ), Long.valueOf( i ) );
             inputItems.add( element );
             server.update( element, 9999 );
         }
@@ -273,14 +273,14 @@ public class RemoteCacheServerUnitTest
         rcsa.setLocalClusterConsistency( true );
         rcsa.setConfigFileName( "/TestRemoteCacheServer.ccf" );
         Properties config = RemoteUtils.loadProps(rcsa.getConfigFileName());
-        RemoteCacheServer<String, Long> server = new RemoteCacheServer<String, Long>( rcsa, config );
+        RemoteCacheServer<String, Long> server = new RemoteCacheServer<>( rcsa, config );
 
         // this is to get the listener id for inserts.
-        MockRemoteCacheListener<String, Long> clusterListener = new MockRemoteCacheListener<String, Long>();
+        MockRemoteCacheListener<String, Long> clusterListener = new MockRemoteCacheListener<>();
         clusterListener.remoteType = RemoteType.CLUSTER;
 
         // this should get the updates
-        MockRemoteCacheListener<String, Long> localListener = new MockRemoteCacheListener<String, Long>();
+        MockRemoteCacheListener<String, Long> localListener = new MockRemoteCacheListener<>();
         localListener.remoteType = RemoteType.LOCAL;
 
         String cacheName = "testSimpleRegisterListenerAndPut_FromClusterWithLCC";
@@ -288,12 +288,12 @@ public class RemoteCacheServerUnitTest
         server.addCacheListener( cacheName, localListener );
 
         // DO WORK
-        List<ICacheElement<String, Long>> inputItems = new LinkedList<ICacheElement<String,Long>>();
+        List<ICacheElement<String, Long>> inputItems = new LinkedList<>();
         int numToPut = 10;
 
         for ( int i = 0; i < numToPut; i++ )
         {
-            ICacheElement<String, Long> element = new CacheElement<String, Long>( cacheName, String.valueOf( i ), Long.valueOf( i ) );
+            ICacheElement<String, Long> element = new CacheElement<>( cacheName, String.valueOf( i ), Long.valueOf( i ) );
             inputItems.add( element );
             // update using the cluster listener id
             server.update( element, clusterListener.getListenerId() );
@@ -321,7 +321,7 @@ public class RemoteCacheServerUnitTest
     public void testSimpleRegisterListenerAndRemove()
         throws Exception
     {
-        MockRemoteCacheListener<String, String> mockListener = new MockRemoteCacheListener<String, String>();
+        MockRemoteCacheListener<String, String> mockListener = new MockRemoteCacheListener<>();
 
         String cacheName = "testSimpleRegisterListenerAndPut";
         server.addCacheListener( cacheName, mockListener );
@@ -358,7 +358,7 @@ public class RemoteCacheServerUnitTest
         MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
         server.setCacheEventLogger( cacheEventLogger );
 
-        ICacheElement<String, String> item = new CacheElement<String, String>( "region", "key", "value" );
+        ICacheElement<String, String> item = new CacheElement<>( "region", "key", "value" );
 
         // DO WORK
         server.update( item );
@@ -418,7 +418,7 @@ public class RemoteCacheServerUnitTest
         server.setCacheEventLogger( cacheEventLogger );
 
         // DO WORK
-        server.getMultiple( "region", new HashSet<String>() );
+        server.getMultiple( "region", new HashSet<>() );
 
         // VERIFY
         assertEquals( "Start should have been called.", 1, cacheEventLogger.startICacheEventCalls );

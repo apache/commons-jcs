@@ -57,7 +57,7 @@ public abstract class IndexDiskCacheUnitTestAbstract extends TestCase
         cattr.setCacheName("testSimplePutAndGet");
         cattr.setMaxKeySize(1000);
         cattr.setDiskPath("target/test-sandbox/IndexDiskCacheUnitTest");
-        IndexedDiskCache<String, String> disk = new IndexedDiskCache<String, String>(cattr);
+        IndexedDiskCache<String, String> disk = new IndexedDiskCache<>(cattr);
 
         disk.processRemoveAll();
 
@@ -66,7 +66,7 @@ public abstract class IndexDiskCacheUnitTestAbstract extends TestCase
         {
             IElementAttributes eAttr = new ElementAttributes();
             eAttr.setIsSpool(true);
-            ICacheElement<String, String> element = new CacheElement<String, String>("testSimplePutAndGet", "key:" + i, "data:" + i);
+            ICacheElement<String, String> element = new CacheElement<>("testSimplePutAndGet", "key:" + i, "data:" + i);
             element.setElementAttributes(eAttr);
             disk.processUpdate(element);
         }
@@ -79,7 +79,7 @@ public abstract class IndexDiskCacheUnitTestAbstract extends TestCase
         }
 
         // Test that getMultiple returns all the expected values
-        Set<String> keys = new HashSet<String>();
+        Set<String> keys = new HashSet<>();
         for (int i = 0; i < cnt; i++)
         {
             keys.add("key:" + i);
@@ -106,7 +106,7 @@ public abstract class IndexDiskCacheUnitTestAbstract extends TestCase
         cattr.setCacheName("testRemoveItems");
         cattr.setMaxKeySize(100);
         cattr.setDiskPath("target/test-sandbox/IndexDiskCacheUnitTest");
-        IndexedDiskCache<String, String> disk = new IndexedDiskCache<String, String>(cattr);
+        IndexedDiskCache<String, String> disk = new IndexedDiskCache<>(cattr);
 
         disk.processRemoveAll();
 
@@ -115,7 +115,7 @@ public abstract class IndexDiskCacheUnitTestAbstract extends TestCase
         {
             IElementAttributes eAttr = new ElementAttributes();
             eAttr.setIsSpool(true);
-            ICacheElement<String, String> element = new CacheElement<String, String>("testRemoveItems", "key:" + i, "data:" + i);
+            ICacheElement<String, String> element = new CacheElement<>("testRemoveItems", "key:" + i, "data:" + i);
             element.setElementAttributes(eAttr);
             disk.processUpdate(element);
         }
@@ -145,7 +145,7 @@ public abstract class IndexDiskCacheUnitTestAbstract extends TestCase
         IndexedDiskCacheAttributes cattr = getCacheAttributes();
         cattr.setCacheName("testCheckForDedOverlaps_noOverlap");
         cattr.setDiskPath("target/test-sandbox/UnitTest");
-        IndexedDiskCache<String, String> disk = new IndexedDiskCache<String, String>(cattr);
+        IndexedDiskCache<String, String> disk = new IndexedDiskCache<>(cattr);
 
         int numDescriptors = 5;
         int pos = 0;
@@ -173,7 +173,7 @@ public abstract class IndexDiskCacheUnitTestAbstract extends TestCase
         IndexedDiskCacheAttributes cattr = getCacheAttributes();
         cattr.setCacheName("testCheckForDedOverlaps_overlaps");
         cattr.setDiskPath("target/test-sandbox/UnitTest");
-        IndexedDiskCache<String, String> disk = new IndexedDiskCache<String, String>(cattr);
+        IndexedDiskCache<String, String> disk = new IndexedDiskCache<>(cattr);
 
         int numDescriptors = 5;
         int pos = 0;
@@ -206,7 +206,7 @@ public abstract class IndexDiskCacheUnitTestAbstract extends TestCase
         IndexedDiskCacheAttributes cattr = getCacheAttributes();
         cattr.setCacheName("testFileSize");
         cattr.setDiskPath("target/test-sandbox/UnitTest");
-        IndexedDiskCache<Integer, DiskTestObject> disk = new IndexedDiskCache<Integer, DiskTestObject>(cattr);
+        IndexedDiskCache<Integer, DiskTestObject> disk = new IndexedDiskCache<>(cattr);
 
         int numberToInsert = 20;
         int bytes = 24;
@@ -248,7 +248,7 @@ public abstract class IndexDiskCacheUnitTestAbstract extends TestCase
         cattr.setOptimizeAtRemoveCount(numberToInsert);
         cattr.setMaxKeySize(numberToInsert * 2);
         cattr.setMaxPurgatorySize(numberToInsert);
-        IndexedDiskCache<Integer, DiskTestObject> disk = new IndexedDiskCache<Integer, DiskTestObject>(cattr);
+        IndexedDiskCache<Integer, DiskTestObject> disk = new IndexedDiskCache<>(cattr);
 
         int bytes = 1;
         ICacheElement<Integer, DiskTestObject>[] elements = DiskTestObjectUtil.createCacheElementsWithTestObjects(numberToInsert,
@@ -293,7 +293,7 @@ public abstract class IndexDiskCacheUnitTestAbstract extends TestCase
         cattr.setOptimizeAtRemoveCount(numberToInsert);
         cattr.setMaxKeySize(numberToInsert * 2);
         cattr.setMaxPurgatorySize(numberToInsert);
-        IndexedDiskCache<Integer, DiskTestObject> disk = new IndexedDiskCache<Integer, DiskTestObject>(cattr);
+        IndexedDiskCache<Integer, DiskTestObject> disk = new IndexedDiskCache<>(cattr);
 
         // we will reuse these
         int bytes = 1;
@@ -345,7 +345,7 @@ public abstract class IndexDiskCacheUnitTestAbstract extends TestCase
         IndexedDiskCacheAttributes cattr = getCacheAttributes();
         cattr.setCacheName("testBytesFreeSize");
         cattr.setDiskPath("target/test-sandbox/UnitTest");
-        IndexedDiskCache<Integer, DiskTestObject> disk = new IndexedDiskCache<Integer, DiskTestObject>(cattr);
+        IndexedDiskCache<Integer, DiskTestObject> disk = new IndexedDiskCache<>(cattr);
 
         int numberToInsert = 20;
         int bytes = 24;
@@ -399,7 +399,7 @@ public abstract class IndexDiskCacheUnitTestAbstract extends TestCase
         cattr.setCacheName("testRemove_PartialKey");
         cattr.setMaxKeySize(100);
         cattr.setDiskPath("target/test-sandbox/IndexDiskCacheUnitTest");
-        IndexedDiskCache<String, String> disk = new IndexedDiskCache<String, String>(cattr);
+        IndexedDiskCache<String, String> disk = new IndexedDiskCache<>(cattr);
 
         disk.processRemoveAll();
 
@@ -408,7 +408,7 @@ public abstract class IndexDiskCacheUnitTestAbstract extends TestCase
         {
             IElementAttributes eAttr = new ElementAttributes();
             eAttr.setIsSpool(true);
-            ICacheElement<String, String> element = new CacheElement<String, String>("testRemove_PartialKey", i + ":key", "data:"
+            ICacheElement<String, String> element = new CacheElement<>("testRemove_PartialKey", i + ":key", "data:"
                 + i);
             element.setElementAttributes(eAttr);
             disk.processUpdate(element);
@@ -444,7 +444,7 @@ public abstract class IndexDiskCacheUnitTestAbstract extends TestCase
         cattr.setCacheName("testRemove_Group");
         cattr.setMaxKeySize(100);
         cattr.setDiskPath("target/test-sandbox/IndexDiskCacheUnitTest");
-        IndexedDiskCache<GroupAttrName<String>, String> disk = new IndexedDiskCache<GroupAttrName<String>, String>(cattr);
+        IndexedDiskCache<GroupAttrName<String>, String> disk = new IndexedDiskCache<>(cattr);
 
         disk.processRemoveAll();
 
@@ -455,7 +455,7 @@ public abstract class IndexDiskCacheUnitTestAbstract extends TestCase
         for (int i = 0; i < cnt; i++)
         {
             GroupAttrName<String> groupAttrName = getGroupAttrName(cacheName, groupName, i + ":key");
-            CacheElement<GroupAttrName<String>, String> element = new CacheElement<GroupAttrName<String>, String>(cacheName,
+            CacheElement<GroupAttrName<String>, String> element = new CacheElement<>(cacheName,
                 groupAttrName, "data:" + i);
 
             IElementAttributes eAttr = new ElementAttributes();
@@ -500,7 +500,7 @@ public abstract class IndexDiskCacheUnitTestAbstract extends TestCase
     private GroupAttrName<String> getGroupAttrName(String cacheName, String group, String name)
     {
         GroupId gid = new GroupId(cacheName, group);
-        return new GroupAttrName<String>(gid, name);
+        return new GroupAttrName<>(gid, name);
     }
 
     /**
@@ -516,13 +516,13 @@ public abstract class IndexDiskCacheUnitTestAbstract extends TestCase
         cattr.setCacheName("testUpdate_EventLogging_simple");
         cattr.setMaxKeySize(100);
         cattr.setDiskPath("target/test-sandbox/IndexDiskCacheUnitTestCEL");
-        IndexedDiskCache<String, String> diskCache = new IndexedDiskCache<String, String>(cattr);
+        IndexedDiskCache<String, String> diskCache = new IndexedDiskCache<>(cattr);
         diskCache.processRemoveAll();
 
         MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
         diskCache.setCacheEventLogger(cacheEventLogger);
 
-        ICacheElement<String, String> item = new CacheElement<String, String>("region", "key", "value");
+        ICacheElement<String, String> item = new CacheElement<>("region", "key", "value");
 
         // DO WORK
         diskCache.update(item);
@@ -547,7 +547,7 @@ public abstract class IndexDiskCacheUnitTestAbstract extends TestCase
         cattr.setCacheName("testGet_EventLogging_simple");
         cattr.setMaxKeySize(100);
         cattr.setDiskPath("target/test-sandbox/IndexDiskCacheUnitTestCEL");
-        IndexedDiskCache<String, String> diskCache = new IndexedDiskCache<String, String>(cattr);
+        IndexedDiskCache<String, String> diskCache = new IndexedDiskCache<>(cattr);
         diskCache.processRemoveAll();
 
         MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
@@ -574,13 +574,13 @@ public abstract class IndexDiskCacheUnitTestAbstract extends TestCase
         cattr.setCacheName("testGetMultiple_EventLogging_simple");
         cattr.setMaxKeySize(100);
         cattr.setDiskPath("target/test-sandbox/IndexDiskCacheUnitTestCEL");
-        IndexedDiskCache<String, String> diskCache = new IndexedDiskCache<String, String>(cattr);
+        IndexedDiskCache<String, String> diskCache = new IndexedDiskCache<>(cattr);
         diskCache.processRemoveAll();
 
         MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
         diskCache.setCacheEventLogger(cacheEventLogger);
 
-        Set<String> keys = new HashSet<String>();
+        Set<String> keys = new HashSet<>();
         keys.add("junk");
 
         // DO WORK
@@ -605,7 +605,7 @@ public abstract class IndexDiskCacheUnitTestAbstract extends TestCase
         cattr.setCacheName("testRemoveAll_EventLogging_simple");
         cattr.setMaxKeySize(100);
         cattr.setDiskPath("target/test-sandbox/IndexDiskCacheUnitTestCEL");
-        IndexedDiskCache<String, String> diskCache = new IndexedDiskCache<String, String>(cattr);
+        IndexedDiskCache<String, String> diskCache = new IndexedDiskCache<>(cattr);
         diskCache.processRemoveAll();
 
         MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
@@ -632,7 +632,7 @@ public abstract class IndexDiskCacheUnitTestAbstract extends TestCase
         cattr.setCacheName("testRemoveAll_EventLogging_simple");
         cattr.setMaxKeySize(100);
         cattr.setDiskPath("target/test-sandbox/IndexDiskCacheUnitTestCEL");
-        IndexedDiskCache<String, String> diskCache = new IndexedDiskCache<String, String>(cattr);
+        IndexedDiskCache<String, String> diskCache = new IndexedDiskCache<>(cattr);
         diskCache.processRemoveAll();
 
         MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
@@ -662,12 +662,12 @@ public abstract class IndexDiskCacheUnitTestAbstract extends TestCase
         cattr.setCacheName(cacheName);
         cattr.setMaxKeySize(100);
         cattr.setDiskPath("target/test-sandbox/IndexDiskCacheUnitTest");
-        IndexedDiskCache<String, String> diskCache = new IndexedDiskCache<String, String>(cattr);
+        IndexedDiskCache<String, String> diskCache = new IndexedDiskCache<>(cattr);
 
         // DO WORK
         for (int i = 0; i <= items; i++)
         {
-            diskCache.update(new CacheElement<String, String>(cacheName, i + ":key", cacheName + " data " + i));
+            diskCache.update(new CacheElement<>(cacheName, i + ":key", cacheName + " data " + i));
         }
         Thread.sleep(500);
 
@@ -695,12 +695,12 @@ public abstract class IndexDiskCacheUnitTestAbstract extends TestCase
         cattr.setCacheName(cacheName);
         cattr.setMaxKeySize(100);
         cattr.setDiskPath("target/test-sandbox/IndexDiskCacheUnitTest");
-        IndexedDiskCache<String, String> diskCache = new IndexedDiskCache<String, String>(cattr);
+        IndexedDiskCache<String, String> diskCache = new IndexedDiskCache<>(cattr);
 
         // DO WORK
         for (int i = 0; i <= items; i++)
         {
-            diskCache.update(new CacheElement<String, String>(cacheName, i + ":key", cacheName + " data " + i));
+            diskCache.update(new CacheElement<>(cacheName, i + ":key", cacheName + " data " + i));
         }
 
         Map<String, ICacheElement<String, String>> matchingResults = diskCache.getMatching("1.8.+");
@@ -736,10 +736,10 @@ public abstract class IndexDiskCacheUnitTestAbstract extends TestCase
         cattr.setCacheName(cacheName);
         cattr.setMaxKeySize(100);
         cattr.setDiskPath("target/test-sandbox/IndexDiskCacheUnitTest");
-        IndexedDiskCache<String, String> diskCache = new IndexedDiskCache<String, String>(cattr);
+        IndexedDiskCache<String, String> diskCache = new IndexedDiskCache<>(cattr);
 
         // DO WORK
-        diskCache.update(new CacheElement<String, String>(cacheName, "x", string));
+        diskCache.update(new CacheElement<>(cacheName, "x", string));
 
         // VERIFY
         assertNotNull(diskCache.get("x"));
@@ -779,10 +779,10 @@ public abstract class IndexDiskCacheUnitTestAbstract extends TestCase
         cattr.setCacheName(cacheName);
         cattr.setMaxKeySize(100);
         cattr.setDiskPath("target/test-sandbox/IndexDiskCacheUnitTest");
-        IndexedDiskCache<String, byte[]> diskCache = new IndexedDiskCache<String, byte[]>(cattr);
+        IndexedDiskCache<String, byte[]> diskCache = new IndexedDiskCache<>(cattr);
 
         // DO WORK
-        diskCache.update(new CacheElement<String, byte[]>(cacheName, "x", bytes));
+        diskCache.update(new CacheElement<>(cacheName, "x", bytes));
 
         // VERIFY
         assertNotNull(diskCache.get("x"));
@@ -810,11 +810,11 @@ public abstract class IndexDiskCacheUnitTestAbstract extends TestCase
         cattr.setCacheName(cacheName);
         cattr.setMaxKeySize(100);
         cattr.setDiskPath("target/test-sandbox/IndexDiskCacheUnitTest");
-        IndexedDiskCache<String, String> diskCache = new IndexedDiskCache<String, String>(cattr);
+        IndexedDiskCache<String, String> diskCache = new IndexedDiskCache<>(cattr);
 
         String key = "myKey";
         String value = "myValue";
-        ICacheElement<String, String> ce = new CacheElement<String, String>(cacheName, key, value);
+        ICacheElement<String, String> ce = new CacheElement<>(cacheName, key, value);
 
         // DO WORK
         diskCache.processUpdate(ce);
@@ -840,18 +840,18 @@ public abstract class IndexDiskCacheUnitTestAbstract extends TestCase
         cattr.setCacheName(cacheName);
         cattr.setMaxKeySize(100);
         cattr.setDiskPath("target/test-sandbox/IndexDiskCacheUnitTest");
-        IndexedDiskCache<String, String> diskCache = new IndexedDiskCache<String, String>(cattr);
+        IndexedDiskCache<String, String> diskCache = new IndexedDiskCache<>(cattr);
 
         String key = "myKey";
         String value = "myValue";
-        ICacheElement<String, String> ce1 = new CacheElement<String, String>(cacheName, key, value);
+        ICacheElement<String, String> ce1 = new CacheElement<>(cacheName, key, value);
 
         // DO WORK
         diskCache.processUpdate(ce1);
         long fileSize1 = diskCache.getDataFileSize();
 
         // DO WORK
-        ICacheElement<String, String> ce2 = new CacheElement<String, String>(cacheName, key, value);
+        ICacheElement<String, String> ce2 = new CacheElement<>(cacheName, key, value);
         diskCache.processUpdate(ce2);
         ICacheElement<String, String> result = diskCache.processGet(key);
 
@@ -877,19 +877,19 @@ public abstract class IndexDiskCacheUnitTestAbstract extends TestCase
         cattr.setCacheName(cacheName);
         cattr.setMaxKeySize(100);
         cattr.setDiskPath("target/test-sandbox/IndexDiskCacheUnitTest");
-        IndexedDiskCache<String, String> diskCache = new IndexedDiskCache<String, String>(cattr);
+        IndexedDiskCache<String, String> diskCache = new IndexedDiskCache<>(cattr);
 
         String key = "myKey";
         String value = "myValue";
         String value2 = "myValu";
-        ICacheElement<String, String> ce1 = new CacheElement<String, String>(cacheName, key, value);
+        ICacheElement<String, String> ce1 = new CacheElement<>(cacheName, key, value);
 
         // DO WORK
         diskCache.processUpdate(ce1);
         long fileSize1 = diskCache.getDataFileSize();
 
         // DO WORK
-        ICacheElement<String, String> ce2 = new CacheElement<String, String>(cacheName, key, value2);
+        ICacheElement<String, String> ce2 = new CacheElement<>(cacheName, key, value2);
         diskCache.processUpdate(ce2);
         ICacheElement<String, String> result = diskCache.processGet(key);
 
@@ -915,19 +915,19 @@ public abstract class IndexDiskCacheUnitTestAbstract extends TestCase
         cattr.setCacheName(cacheName);
         cattr.setMaxKeySize(100);
         cattr.setDiskPath("target/test-sandbox/IndexDiskCacheUnitTest");
-        IndexedDiskCache<String, String> diskCache = new IndexedDiskCache<String, String>(cattr);
+        IndexedDiskCache<String, String> diskCache = new IndexedDiskCache<>(cattr);
 
         String key = "myKey";
         String value = "myValue";
         String value2 = "myValue2";
-        ICacheElement<String, String> ce1 = new CacheElement<String, String>(cacheName, key, value);
+        ICacheElement<String, String> ce1 = new CacheElement<>(cacheName, key, value);
 
         // DO WORK
         diskCache.processUpdate(ce1);
         long fileSize1 = diskCache.getDataFileSize();
 
         // DO WORK
-        ICacheElement<String, String> ce2 = new CacheElement<String, String>(cacheName, key, value2);
+        ICacheElement<String, String> ce2 = new CacheElement<>(cacheName, key, value2);
         diskCache.processUpdate(ce2);
         ICacheElement<String, String> result = diskCache.processGet(key);
 
@@ -965,19 +965,19 @@ public abstract class IndexDiskCacheUnitTestAbstract extends TestCase
         cattr.setCacheName(cacheName);
         cattr.setMaxKeySize(100);
         cattr.setDiskPath("target/test-sandbox/BlockDiskCacheUnitTest");
-        IndexedDiskCache<String, String> diskCache = new IndexedDiskCache<String, String>(cattr);
+        IndexedDiskCache<String, String> diskCache = new IndexedDiskCache<>(cattr);
 
         // DO WORK
         for (int i = 0; i < 50; i++)
         {
-            diskCache.update(new CacheElement<String, String>(cacheName, "x" + i, string));
+            diskCache.update(new CacheElement<>(cacheName, "x" + i, string));
         }
         // Thread.sleep(1000);
         // VERIFY
         diskCache.dispose();
         // Thread.sleep(1000);
 
-        diskCache = new IndexedDiskCache<String, String>(cattr);
+        diskCache = new IndexedDiskCache<>(cattr);
 
         for (int i = 0; i < 50; i++)
         {

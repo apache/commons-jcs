@@ -152,7 +152,7 @@ public class BasicRemoteCacheClientServerUnitTest extends Assert
 
         // DO WORK
         int numPutsPrior = server.getPutCount();
-        ICacheElement<String, String> element = new CacheElement<String, String>(cache.getCacheName(), "key", "value");
+        ICacheElement<String, String> element = new CacheElement<>(cache.getCacheName(), "key", "value");
         cache.update(element);
         SleepUtil.sleepAtLeast(200);
 
@@ -201,7 +201,7 @@ public class BasicRemoteCacheClientServerUnitTest extends Assert
 
         // DO WORK
         int numPutsPrior = server.getPutCount();
-        ICacheElement<String, String> element = new CacheElement<String, String>(cache.getCacheName(), "key", "value");
+        ICacheElement<String, String> element = new CacheElement<>(cache.getCacheName(), "key", "value");
         cache.update(element);
         SleepUtil.sleepAtLeast(50);
 
@@ -253,12 +253,12 @@ public class BasicRemoteCacheClientServerUnitTest extends Assert
         RemoteCacheManager remoteCacheManager = factory.getManager(attributes, compositeCacheManager, new MockCacheEventLogger(), new MockElementSerializer());
         AuxiliaryCache<String, String> cache = remoteCacheManager.getCache(attributes);
 
-        MockRemoteCacheListener<String, String> listener = new MockRemoteCacheListener<String, String>();
+        MockRemoteCacheListener<String, String> listener = new MockRemoteCacheListener<>();
         server.addCacheListener(cache.getCacheName(), listener);
 
         // DO WORK
         int numPutsPrior = server.getPutCount();
-        ICacheElement<String, String> element = new CacheElement<String, String>(cache.getCacheName(), "key", "value");
+        ICacheElement<String, String> element = new CacheElement<>(cache.getCacheName(), "key", "value");
         cache.update(element);
         SleepUtil.sleepAtLeast(50);
 
@@ -302,7 +302,7 @@ public class BasicRemoteCacheClientServerUnitTest extends Assert
         RemoteCacheManager remoteCacheManager = factory.getManager(attributes, compositeCacheManager, new MockCacheEventLogger(), new MockElementSerializer());
         AuxiliaryCache<String, String> cache = remoteCacheManager.getCache(attributes);
 
-        MockRemoteCacheListener<String, String> listener = new MockRemoteCacheListener<String, String>();
+        MockRemoteCacheListener<String, String> listener = new MockRemoteCacheListener<>();
         server.addCacheListener(cache.getCacheName(), listener);
 
         // DO WORK
@@ -310,7 +310,7 @@ public class BasicRemoteCacheClientServerUnitTest extends Assert
         int numToPut = 100;
         for (int i = 0; i < numToPut; i++)
         {
-            ICacheElement<String, String> element = new CacheElement<String, String>(cache.getCacheName(), "key" + 1, "value" + i);
+            ICacheElement<String, String> element = new CacheElement<>(cache.getCacheName(), "key" + 1, "value" + i);
             cache.update(element);
         }
         SleepUtil.sleepAtLeast(500);

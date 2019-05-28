@@ -109,7 +109,7 @@ public class DiskTestObjectUtil
             int size = bytes * 1024;
             DiskTestObject tile = new DiskTestObject( Integer.valueOf( i ), new byte[size] );
 
-            ICacheElement<Integer, DiskTestObject> element = new CacheElement<Integer, DiskTestObject>( cacheName, tile.id, tile );
+            ICacheElement<Integer, DiskTestObject> element = new CacheElement<>( cacheName, tile.id, tile );
             elements[i] = element;
         }
         return elements;
@@ -134,7 +134,7 @@ public class DiskTestObjectUtil
             int size = ( bytes + 4 ) * 1024;
             DiskTestObject tile = new DiskTestObject( Integer.valueOf( i ), new byte[size] );
 
-            ICacheElement<Integer, DiskTestObject> element = new CacheElement<Integer, DiskTestObject>( cacheName, tile.id, tile );
+            ICacheElement<Integer, DiskTestObject> element = new CacheElement<>( cacheName, tile.id, tile );
             elements[i] = element;
         }
         return elements;

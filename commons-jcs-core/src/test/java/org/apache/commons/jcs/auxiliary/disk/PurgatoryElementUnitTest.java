@@ -37,8 +37,8 @@ public class PurgatoryElementUnitTest
         String key = "myKey";
         String value = "myValue";
         IElementAttributes elementAttributes = new ElementAttributes();
-        ICacheElement<String, String> cacheElement = new CacheElement<String, String>( cacheName, key, value, elementAttributes );
-        PurgatoryElement<String, String> purgatoryElement = new PurgatoryElement<String, String>( cacheElement );
+        ICacheElement<String, String> cacheElement = new CacheElement<>( cacheName, key, value, elementAttributes );
+        PurgatoryElement<String, String> purgatoryElement = new PurgatoryElement<>( cacheElement );
         purgatoryElement.setSpoolable( false );
 
         // DO WORK
@@ -57,8 +57,8 @@ public class PurgatoryElementUnitTest
         String value = "myValue";
         IElementAttributes elementAttributes = new ElementAttributes();
 
-        ICacheElement<String, String> cacheElement = new CacheElement<String, String>( cacheName, key, value );
-        PurgatoryElement<String, String> purgatoryElement = new PurgatoryElement<String, String>( cacheElement );
+        ICacheElement<String, String> cacheElement = new CacheElement<>( cacheName, key, value );
+        PurgatoryElement<String, String> purgatoryElement = new PurgatoryElement<>( cacheElement );
         purgatoryElement.setElementAttributes( elementAttributes );
 
         // DO WORK
@@ -76,8 +76,8 @@ public class PurgatoryElementUnitTest
         String key = "myKey";
         String value = "myValue";
         IElementAttributes elementAttributes = new ElementAttributes();
-        ICacheElement<String, String> cacheElement = new CacheElement<String, String>( cacheName, key, value, elementAttributes );
-        PurgatoryElement<String, String> purgatoryElement = new PurgatoryElement<String, String>( cacheElement );
+        ICacheElement<String, String> cacheElement = new CacheElement<>( cacheName, key, value, elementAttributes );
+        PurgatoryElement<String, String> purgatoryElement = new PurgatoryElement<>( cacheElement );
 
         // DO WORK
         String result = purgatoryElement.toString();

@@ -138,7 +138,7 @@ public class BlockDiskCache<K, V>
                                                getElementSerializer() );
             }
 
-            keyStore = new BlockDiskKeyStore<K>( this.blockDiskCacheAttributes, this );
+            keyStore = new BlockDiskKeyStore<>( this.blockDiskCacheAttributes, this );
 
             boolean alright = verifyDisk();
 
@@ -234,7 +234,7 @@ public class BlockDiskCache<K, V>
     @Override
     public Set<K> getKeySet() throws IOException
     {
-        HashSet<K> keys = new HashSet<K>();
+        HashSet<K> keys = new HashSet<>();
 
         storageLock.readLock().lock();
 
@@ -264,7 +264,7 @@ public class BlockDiskCache<K, V>
         storageLock.readLock().lock();
         try
         {
-            keyArray = new HashSet<K>(keyStore.keySet());
+            keyArray = new HashSet<>(keyStore.keySet());
         }
         finally
         {
@@ -695,29 +695,29 @@ public class BlockDiskCache<K, V>
         IStats stats = new Stats();
         stats.setTypeName( "Block Disk Cache" );
 
-        ArrayList<IStatElement<?>> elems = new ArrayList<IStatElement<?>>();
+        ArrayList<IStatElement<?>> elems = new ArrayList<>();
 
-        elems.add(new StatElement<Boolean>( "Is Alive", Boolean.valueOf(isAlive()) ) );
-        elems.add(new StatElement<Integer>( "Key Map Size", Integer.valueOf(this.keyStore.size()) ) );
+        elems.add(new StatElement<>( "Is Alive", Boolean.valueOf(isAlive()) ) );
+        elems.add(new StatElement<>( "Key Map Size", Integer.valueOf(this.keyStore.size()) ) );
 
         if (this.dataFile != null)
         {
             try
             {
-                elems.add(new StatElement<Long>( "Data File Length", Long.valueOf(this.dataFile.length()) ) );
+                elems.add(new StatElement<>( "Data File Length", Long.valueOf(this.dataFile.length()) ) );
             }
             catch ( IOException e )
             {
                 log.error( e );
             }
 
-            elems.add(new StatElement<Integer>( "Block Size Bytes",
+            elems.add(new StatElement<>( "Block Size Bytes",
                     Integer.valueOf(this.dataFile.getBlockSizeBytes()) ) );
-            elems.add(new StatElement<Integer>( "Number Of Blocks",
+            elems.add(new StatElement<>( "Number Of Blocks",
                     Integer.valueOf(this.dataFile.getNumberOfBlocks()) ) );
-            elems.add(new StatElement<Long>( "Average Put Size Bytes",
+            elems.add(new StatElement<>( "Average Put Size Bytes",
                     Long.valueOf(this.dataFile.getAveragePutSizeBytes()) ) );
-            elems.add(new StatElement<Integer>( "Empty Blocks",
+            elems.add(new StatElement<>( "Empty Blocks",
                     Integer.valueOf(this.dataFile.getEmptyBlocks()) ) );
         }
 

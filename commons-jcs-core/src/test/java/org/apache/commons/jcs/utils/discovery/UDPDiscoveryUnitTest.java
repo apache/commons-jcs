@@ -63,7 +63,7 @@ public class UDPDiscoveryUnitTest
 
         // create more names than we have no wait facades for
         // the only one that gets added should be testCache1
-        ArrayList<String> cacheNames = new ArrayList<String>();
+        ArrayList<String> cacheNames = new ArrayList<>();
         int numJunk = 10;
         for ( int i = 0; i < numJunk; i++ )
         {

@@ -35,7 +35,7 @@ public class KeyMatcherPatternImpllUnitTest
     {
         // SETUP
         int numToInsertPrefix1 = 10;
-        Set<String> keyArray = new HashSet<String>();
+        Set<String> keyArray = new HashSet<>();
 
         String keyprefix1 = "MyPrefixC";
 
@@ -45,7 +45,7 @@ public class KeyMatcherPatternImpllUnitTest
             keyArray.add(keyprefix1 + String.valueOf( i ));
         }
 
-        KeyMatcherPatternImpl<String> keyMatcher = new KeyMatcherPatternImpl<String>();
+        KeyMatcherPatternImpl<String> keyMatcher = new KeyMatcherPatternImpl<>();
 
         // DO WORK
         Set<String> result1 = keyMatcher.getMatchingKeysFromArray( keyprefix1 + ".", keyArray );
@@ -61,7 +61,7 @@ public class KeyMatcherPatternImpllUnitTest
     {
         // SETUP
         int numToInsertPrefix1 = 10;
-        Set<String> keyArray = new HashSet<String>();
+        Set<String> keyArray = new HashSet<>();
 
         String keyprefix1 = "MyPrefixC";
 
@@ -71,7 +71,7 @@ public class KeyMatcherPatternImpllUnitTest
             keyArray.add(keyprefix1 + String.valueOf( i ));
         }
 
-        KeyMatcherPatternImpl<String> keyMatcher = new KeyMatcherPatternImpl<String>();
+        KeyMatcherPatternImpl<String> keyMatcher = new KeyMatcherPatternImpl<>();
 
         // DO WORK
         Set<String> result1 = keyMatcher.getMatchingKeysFromArray( keyprefix1 + "\\S+", keyArray );
@@ -88,7 +88,7 @@ public class KeyMatcherPatternImpllUnitTest
         // SETUP
         int numToInsertPrefix1 = 10;
         int numToInsertPrefix2 = 50;
-        Set<String> keyArray = new HashSet<String>();
+        Set<String> keyArray = new HashSet<>();
 
         String keyprefix1 = "MyPrefixA";
         String keyprefix2 = "MyPrefixB";
@@ -105,7 +105,7 @@ public class KeyMatcherPatternImpllUnitTest
             keyArray.add(keyprefix2 + String.valueOf( i ));
         }
 
-        KeyMatcherPatternImpl<String> keyMatcher = new KeyMatcherPatternImpl<String>();
+        KeyMatcherPatternImpl<String> keyMatcher = new KeyMatcherPatternImpl<>();
 
         // DO WORK
         Set<String> result1 = keyMatcher.getMatchingKeysFromArray( keyprefix1 + ".+", keyArray );

@@ -144,7 +144,7 @@ public class JCSvsHashtablePerformanceTest
 
                 // /////////////////////////////////////////////////////////////
                 name = "Hashtable";
-                Hashtable<String, String> cache2 = new Hashtable<String, String>();
+                Hashtable<String, String> cache2 = new Hashtable<>();
                 start = System.currentTimeMillis();
                 for ( int i = 0; i < tries; i++ )
                 {

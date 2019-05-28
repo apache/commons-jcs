@@ -44,7 +44,7 @@ public class MockMemoryCache<K, V>
     private ICompositeCacheAttributes cacheAttr;
 
     /** Internal map */
-    private final HashMap<K, ICacheElement<K, V>> map = new HashMap<K, ICacheElement<K, V>>();
+    private final HashMap<K, ICacheElement<K, V>> map = new HashMap<>();
 
     /** The number of times waterfall was called. */
     public int waterfallCallCount = 0;
@@ -93,7 +93,7 @@ public class MockMemoryCache<K, V>
     @Override
     public Set<K> getKeySet()
     {
-        return new LinkedHashSet<K>(map.keySet());
+        return new LinkedHashSet<>(map.keySet());
     }
 
     /**
@@ -139,7 +139,7 @@ public class MockMemoryCache<K, V>
     public Map<K, ICacheElement<K, V>> getMultiple(Set<K> keys)
         throws IOException
     {
-        Map<K, ICacheElement<K, V>> elements = new HashMap<K, ICacheElement<K, V>>();
+        Map<K, ICacheElement<K, V>> elements = new HashMap<>();
 
         if ( keys != null && !keys.isEmpty() )
         {

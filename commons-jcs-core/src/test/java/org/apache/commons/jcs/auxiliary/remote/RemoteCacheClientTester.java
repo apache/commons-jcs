@@ -158,11 +158,11 @@ public class RemoteCacheClientTester
         p( "subscribing to the server" );
 
         watch.addCacheListener( "testCache", this );
-        ICacheElement<String, String> cb = new CacheElement<String, String>( "testCache", "testKey", "testVal" );
+        ICacheElement<String, String> cb = new CacheElement<>( "testCache", "testKey", "testVal" );
 
         for ( int i = 0; i < count; i++ )
         {
-            cb = new CacheElement<String, String>( "testCache", "" + i, "" + i );
+            cb = new CacheElement<>( "testCache", "" + i, "" + i );
 
             if ( delete )
             {

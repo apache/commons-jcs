@@ -177,7 +177,7 @@ public class CacheAccessUnitTest
         access.put( keyTwo, valueTwo );
         access.put( keyThree, valueThree );
 
-        Set<String> input = new HashSet<String>();
+        Set<String> input = new HashSet<>();
         input.add( keyOne );
         input.add( keyTwo );
 

@@ -37,7 +37,7 @@ import org.apache.commons.jcs.access.exception.CacheException;
  */
 public class JCSConcurrentCacheAccessUnitTest extends TestCase
 {
-    private final static int THREADS = 10;
+    private final static int THREADS = 20;
     private final static int LOOPS = 10000;
 
     /**
@@ -67,7 +67,7 @@ public class JCSConcurrentCacheAccessUnitTest extends TestCase
         JCS.setConfigFilename( "/TestJCS-73.ccf" );
         cache = JCS.getGroupCacheInstance( "cache" );
         errcount = new AtomicInteger(0);
-        valueMismatchList = Collections.synchronizedList(new ArrayList<String>());
+        valueMismatchList = Collections.synchronizedList(new ArrayList<>());
 	}
 
     @Override

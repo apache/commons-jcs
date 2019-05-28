@@ -103,16 +103,16 @@ public class CompositeCacheDiskUsageUnitTest
 
         IElementAttributes attr = new ElementAttributes();
 
-        CompositeCache<String, String> cache = new CompositeCache<String, String>( cattr, attr );
+        CompositeCache<String, String> cache = new CompositeCache<>( cattr, attr );
 
-        MockAuxCache<String, String> mock = new MockAuxCache<String, String>();
+        MockAuxCache<String, String> mock = new MockAuxCache<>();
         mock.cacheType = CacheType.DISK_CACHE;
 
         @SuppressWarnings("unchecked")
         AuxiliaryCache<String, String>[] auxArray = new AuxiliaryCache[] { mock };
         cache.setAuxCaches( auxArray );
 
-        ICacheElement<String, String> inputElement = new CacheElement<String, String>( CACHE_NAME, "key", "value" );
+        ICacheElement<String, String> inputElement = new CacheElement<>( CACHE_NAME, "key", "value" );
 
         // DO WORK
         cache.spoolToDisk( inputElement );
@@ -135,16 +135,16 @@ public class CompositeCacheDiskUsageUnitTest
 
         IElementAttributes attr = new ElementAttributes();
 
-        CompositeCache<String, String> cache = new CompositeCache<String, String>( cattr, attr );
+        CompositeCache<String, String> cache = new CompositeCache<>( cattr, attr );
 
-        MockAuxCache<String, String> mock = new MockAuxCache<String, String>();
+        MockAuxCache<String, String> mock = new MockAuxCache<>();
         mock.cacheType = CacheType.DISK_CACHE;
 
         @SuppressWarnings("unchecked")
         AuxiliaryCache<String, String>[] auxArray = new AuxiliaryCache[] { mock };
         cache.setAuxCaches( auxArray );
 
-        ICacheElement<String, String> inputElement = new CacheElement<String, String>( CACHE_NAME, "key", "value" );
+        ICacheElement<String, String> inputElement = new CacheElement<>( CACHE_NAME, "key", "value" );
 
         // DO WORK
         cache.spoolToDisk( inputElement );
@@ -171,16 +171,16 @@ public class CompositeCacheDiskUsageUnitTest
 
         IElementAttributes attr = new ElementAttributes();
 
-        CompositeCache<String, String> cache = new CompositeCache<String, String>( cattr, attr );
+        CompositeCache<String, String> cache = new CompositeCache<>( cattr, attr );
 
-        MockAuxCache<String, String> mock = new MockAuxCache<String, String>();
+        MockAuxCache<String, String> mock = new MockAuxCache<>();
         mock.cacheType = CacheType.DISK_CACHE;
 
         @SuppressWarnings("unchecked")
         AuxiliaryCache<String, String>[] auxArray = new AuxiliaryCache[] { mock };
         cache.setAuxCaches( auxArray );
 
-        ICacheElement<String, String> inputElement = new CacheElement<String, String>( CACHE_NAME, "key", "value" );
+        ICacheElement<String, String> inputElement = new CacheElement<>( CACHE_NAME, "key", "value" );
 
         // DO WORK
         cache.updateAuxiliaries( inputElement, true );
@@ -209,16 +209,16 @@ public class CompositeCacheDiskUsageUnitTest
 
         IElementAttributes attr = new ElementAttributes();
 
-        CompositeCache<String, String> cache = new CompositeCache<String, String>( cattr, attr );
+        CompositeCache<String, String> cache = new CompositeCache<>( cattr, attr );
 
-        MockAuxCache<String, String> mock = new MockAuxCache<String, String>();
+        MockAuxCache<String, String> mock = new MockAuxCache<>();
         mock.cacheType = CacheType.DISK_CACHE;
 
         @SuppressWarnings("unchecked")
         AuxiliaryCache<String, String>[] auxArray = new AuxiliaryCache[] { mock };
         cache.setAuxCaches( auxArray );
 
-        ICacheElement<String, String> inputElement = new CacheElement<String, String>( CACHE_NAME, "key", "value" );
+        ICacheElement<String, String> inputElement = new CacheElement<>( CACHE_NAME, "key", "value" );
 
         // DO WORK
         cache.updateAuxiliaries( inputElement, false );
@@ -247,16 +247,16 @@ public class CompositeCacheDiskUsageUnitTest
 
         IElementAttributes attr = new ElementAttributes();
 
-        CompositeCache<String, String> cache = new CompositeCache<String, String>( cattr, attr );
+        CompositeCache<String, String> cache = new CompositeCache<>( cattr, attr );
 
-        MockAuxCache<String, String> mock = new MockAuxCache<String, String>();
+        MockAuxCache<String, String> mock = new MockAuxCache<>();
         mock.cacheType = CacheType.DISK_CACHE;
 
         @SuppressWarnings("unchecked")
         AuxiliaryCache<String, String>[] auxArray = new AuxiliaryCache[] { mock };
         cache.setAuxCaches( auxArray );
 
-        ICacheElement<String, String> inputElement = new CacheElement<String, String>( CACHE_NAME, "key", "value" );
+        ICacheElement<String, String> inputElement = new CacheElement<>( CACHE_NAME, "key", "value" );
 
         // DO WORK
         cache.updateAuxiliaries( inputElement, true );
@@ -283,19 +283,19 @@ public class CompositeCacheDiskUsageUnitTest
 
         IElementAttributes attr = new ElementAttributes();
 
-        CompositeCache<String, String> cache = new CompositeCache<String, String>( cattr, attr );
+        CompositeCache<String, String> cache = new CompositeCache<>( cattr, attr );
 
-        MockAuxCache<String, String> mock = new MockAuxCache<String, String>();
+        MockAuxCache<String, String> mock = new MockAuxCache<>();
         mock.cacheType = CacheType.DISK_CACHE;
 
-        MockAuxCache<String, String> mockLateral = new MockAuxCache<String, String>();
+        MockAuxCache<String, String> mockLateral = new MockAuxCache<>();
         mockLateral.cacheType = CacheType.LATERAL_CACHE;
 
         @SuppressWarnings("unchecked")
         AuxiliaryCache<String, String>[] auxArray = new AuxiliaryCache[] { mock, mockLateral };
         cache.setAuxCaches( auxArray );
 
-        ICacheElement<String, String> inputElement = new CacheElement<String, String>( CACHE_NAME, "key", "value" );
+        ICacheElement<String, String> inputElement = new CacheElement<>( CACHE_NAME, "key", "value" );
 
         // DO WORK
         cache.updateAuxiliaries( inputElement, false );
@@ -366,7 +366,7 @@ public class CompositeCacheDiskUsageUnitTest
         @Override
         public Map<K, ICacheElement<K, V>> getMultiple(Set<K> keys)
         {
-            return new HashMap<K, ICacheElement<K, V>>();
+            return new HashMap<>();
         }
 
         /**

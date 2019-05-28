@@ -57,7 +57,7 @@ public class LRUMapConcurrentUnitTest
         TestSuite suite = new TestSuite( LRUMapConcurrentUnitTest.class );
 
         // run concurrent tests
-        final LRUMap<String, String> map = new LRUMap<String, String>( 2000 );
+        final LRUMap<String, String> map = new LRUMap<>( 2000 );
         suite.addTest( new LRUMapConcurrentUnitTest( "conc1" )
         {
             @Override
@@ -88,7 +88,7 @@ public class LRUMapConcurrentUnitTest
 
         // run more concurrent tests
         final int max2 = 20000;
-        final LRUMap<String, String> map2 = new LRUMap<String, String>( max2 );
+        final LRUMap<String, String> map2 = new LRUMap<>( max2 );
         suite.addTest( new LRUMapConcurrentUnitTest( "concB1" )
         {
             @Override
@@ -120,7 +120,7 @@ public class LRUMapConcurrentUnitTest
     public void testSimpleLoad()
         throws Exception
     {
-        LRUMap<String, String> map = new LRUMap<String, String>( items );
+        LRUMap<String, String> map = new LRUMap<>( items );
 
         for ( int i = 0; i < items; i++ )
         {
@@ -149,7 +149,7 @@ public class LRUMapConcurrentUnitTest
         throws Exception
     {
         int total = 10;
-        LRUMap<String, String> map = new LRUMap<String, String>( total );
+        LRUMap<String, String> map = new LRUMap<>( total );
 
         // put the max in
         for ( int i = 0; i < total; i++ )
@@ -187,7 +187,7 @@ public class LRUMapConcurrentUnitTest
         throws Exception
     {
         int total = 10000;
-        LRUMap<String, String> map = new LRUMap<String, String>( total );
+        LRUMap<String, String> map = new LRUMap<>( total );
 
         // put the max in
         for ( int i = 0; i < total * 2; i++ )

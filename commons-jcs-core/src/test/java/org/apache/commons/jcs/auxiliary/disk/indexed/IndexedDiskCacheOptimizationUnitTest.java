@@ -49,7 +49,7 @@ public class IndexedDiskCacheOptimizationUnitTest
         cattr.setMaxKeySize( removeCount * 2 );
         cattr.setOptimizeAtRemoveCount( removeCount );
         cattr.setDiskPath( "target/test-sandbox/testOptimization" );
-        IndexedDiskCache<Integer, DiskTestObject> disk = new IndexedDiskCache<Integer, DiskTestObject>( cattr );
+        IndexedDiskCache<Integer, DiskTestObject> disk = new IndexedDiskCache<>( cattr );
 
         disk.removeAll();
 

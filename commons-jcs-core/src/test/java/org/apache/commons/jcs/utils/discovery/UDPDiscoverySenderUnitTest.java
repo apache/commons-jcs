@@ -87,7 +87,7 @@ public class UDPDiscoverySenderUnitTest
         throws Exception
     {
         // SETUP
-        ArrayList<String> cacheNames = new ArrayList<String>();
+        ArrayList<String> cacheNames = new ArrayList<>();
 
         // DO WORK
         sender.passiveBroadcast( SENDING_HOST, SENDING_PORT, cacheNames, 1L );
@@ -114,7 +114,7 @@ public class UDPDiscoverySenderUnitTest
         throws Exception
     {
         // SETUP
-        ArrayList<String> cacheNames = new ArrayList<String>();
+        ArrayList<String> cacheNames = new ArrayList<>();
 
         // DO WORK
         sender.removeBroadcast( SENDING_HOST, SENDING_PORT, cacheNames, 1L );

@@ -46,7 +46,7 @@ public class MockCacheEventLogger
     public int errorEventCalls = 0;
 
     /** list of messages */
-    public List<String> errorMessages = new ArrayList<String>();
+    public List<String> errorMessages = new ArrayList<>();
 
     /**
      * @param source
@@ -93,6 +93,6 @@ public class MockCacheEventLogger
             String eventName, String optionalDetails, T key )
     {
         startICacheEventCalls++;
-        return new CacheEvent<T>();
+        return new CacheEvent<>();
     }
 }

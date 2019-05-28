@@ -51,12 +51,12 @@ public class ShrinkerThreadUnitTest
         cacheAttr.setMaxMemoryIdleTimeSeconds( 10 );
         cacheAttr.setMaxSpoolPerRun( 10 );
 
-        CompositeCache<String, String> cache = new CompositeCache<String, String>(cacheAttr, new ElementAttributes());
+        CompositeCache<String, String> cache = new CompositeCache<>(cacheAttr, new ElementAttributes());
 
         String key = "key";
         String value = "value";
 
-        ICacheElement<String, String> element = new CacheElement<String, String>( "testRegion", key, value );
+        ICacheElement<String, String> element = new CacheElement<>( "testRegion", key, value );
         ElementAttributes elementAttr = new ElementAttributes();
         elementAttr.setIsEternal( false );
         element.setElementAttributes( elementAttr );
@@ -86,12 +86,12 @@ public class ShrinkerThreadUnitTest
         cacheAttr.setMaxMemoryIdleTimeSeconds( 10 );
         cacheAttr.setMaxSpoolPerRun( 10 );
 
-        CompositeCache<String, String> cache = new CompositeCache<String, String>(cacheAttr, new ElementAttributes());
+        CompositeCache<String, String> cache = new CompositeCache<>(cacheAttr, new ElementAttributes());
 
         String key = "key";
         String value = "value";
 
-        ICacheElement<String, String> element = new CacheElement<String, String>( "testRegion", key, value );
+        ICacheElement<String, String> element = new CacheElement<>( "testRegion", key, value );
         ElementAttributes elementAttr = new ElementAttributes();
         elementAttr.setIsEternal( false );
         element.setElementAttributes( elementAttr );
@@ -121,12 +121,12 @@ public class ShrinkerThreadUnitTest
         cacheAttr.setMaxMemoryIdleTimeSeconds( 10 );
         cacheAttr.setMaxSpoolPerRun( 10 );
 
-        CompositeCache<String, String> cache = new CompositeCache<String, String>(cacheAttr, new ElementAttributes());
+        CompositeCache<String, String> cache = new CompositeCache<>(cacheAttr, new ElementAttributes());
 
         String key = "key";
         String value = "value";
 
-        ICacheElement<String, String> element = new CacheElement<String, String>( "testRegion", key, value );
+        ICacheElement<String, String> element = new CacheElement<>( "testRegion", key, value );
         ElementAttributes elementAttr = new ElementAttributes();
         elementAttr.setIsEternal( false );
         element.setElementAttributes( elementAttr );
@@ -157,12 +157,12 @@ public class ShrinkerThreadUnitTest
         cacheAttr.setMaxMemoryIdleTimeSeconds( 10 );
         cacheAttr.setMaxSpoolPerRun( 10 );
 
-        CompositeCache<String, String> cache = new CompositeCache<String, String>(cacheAttr, new ElementAttributes());
+        CompositeCache<String, String> cache = new CompositeCache<>(cacheAttr, new ElementAttributes());
 
         String key = "key";
         String value = "value";
 
-        ICacheElement<String, String> element = new CacheElement<String, String>( "testRegion", key, value );
+        ICacheElement<String, String> element = new CacheElement<>( "testRegion", key, value );
         ElementAttributes elementAttr = new ElementAttributes();
         elementAttr.setIsEternal( false );
         element.setElementAttributes( elementAttr );
@@ -198,13 +198,13 @@ public class ShrinkerThreadUnitTest
         cacheAttr.setMaxMemoryIdleTimeSeconds( 1 );
         cacheAttr.setMaxSpoolPerRun( 10 );
 
-        CompositeCache<String, String> cache = new CompositeCache<String, String>(cacheAttr, new ElementAttributes());
+        CompositeCache<String, String> cache = new CompositeCache<>(cacheAttr, new ElementAttributes());
         MockMemoryCache<String, String> memory = (MockMemoryCache<String, String>)cache.getMemoryCache();
 
         String key = "key";
         String value = "value";
 
-        ICacheElement<String, String> element = new CacheElement<String, String>( "testRegion", key, value );
+        ICacheElement<String, String> element = new CacheElement<>( "testRegion", key, value );
 
         ElementAttributes elementAttr = new ElementAttributes();
         elementAttr.setIsEternal( false );
@@ -219,7 +219,7 @@ public class ShrinkerThreadUnitTest
         ElementAttributesUtils.setLastAccessTime( elementAttr,  System.currentTimeMillis() - 2000 );
 
         // DO WORK
-        ShrinkerThread<String, String> shrinker = new ShrinkerThread<String, String>( cache );
+        ShrinkerThread<String, String> shrinker = new ShrinkerThread<>( cache );
         shrinker.run();
 
         Thread.sleep( 500 );
@@ -245,7 +245,7 @@ public class ShrinkerThreadUnitTest
         cacheAttr.setMaxMemoryIdleTimeSeconds( 1 );
         cacheAttr.setMaxSpoolPerRun( 3 );
 
-        CompositeCache<String, String> cache = new CompositeCache<String, String>(cacheAttr, new ElementAttributes());
+        CompositeCache<String, String> cache = new CompositeCache<>(cacheAttr, new ElementAttributes());
         MockMemoryCache<String, String> memory = (MockMemoryCache<String, String>)cache.getMemoryCache();
 
         for ( int i = 0; i < 10; i++ )
@@ -253,7 +253,7 @@ public class ShrinkerThreadUnitTest
             String key = "key" + i;
             String value = "value";
 
-            ICacheElement<String, String> element = new CacheElement<String, String>( "testRegion", key, value );
+            ICacheElement<String, String> element = new CacheElement<>( "testRegion", key, value );
 
             ElementAttributes elementAttr = new ElementAttributes();
             elementAttr.setIsEternal( false );
@@ -269,7 +269,7 @@ public class ShrinkerThreadUnitTest
         }
 
         // DO WORK
-        ShrinkerThread<String, String> shrinker = new ShrinkerThread<String, String>( cache );
+        ShrinkerThread<String, String> shrinker = new ShrinkerThread<>( cache );
         shrinker.run();
 
         // VERIFY
@@ -295,7 +295,7 @@ public class ShrinkerThreadUnitTest
         cacheAttr.setMaxMemoryIdleTimeSeconds( 1 );
         cacheAttr.setMaxSpoolPerRun( 3 );
 
-        CompositeCache<String, String> cache = new CompositeCache<String, String>(cacheAttr, new ElementAttributes());
+        CompositeCache<String, String> cache = new CompositeCache<>(cacheAttr, new ElementAttributes());
         MockMemoryCache<String, String> memory = (MockMemoryCache<String, String>)cache.getMemoryCache();
 
         ElementEventHandlerMockImpl handler = new ElementEventHandlerMockImpl();
@@ -305,7 +305,7 @@ public class ShrinkerThreadUnitTest
             String key = "key" + i;
             String value = "value";
 
-            ICacheElement<String, String> element = new CacheElement<String, String>( "testRegion", key, value );
+            ICacheElement<String, String> element = new CacheElement<>( "testRegion", key, value );
 
             ElementAttributes elementAttr = new ElementAttributes();
             elementAttr.addElementEventHandler( handler );
@@ -322,7 +322,7 @@ public class ShrinkerThreadUnitTest
         }
 
         // DO WORK
-        ShrinkerThread<String, String> shrinker = new ShrinkerThread<String, String>( cache );
+        ShrinkerThread<String, String> shrinker = new ShrinkerThread<>( cache );
         shrinker.run();
 
         // VERIFY

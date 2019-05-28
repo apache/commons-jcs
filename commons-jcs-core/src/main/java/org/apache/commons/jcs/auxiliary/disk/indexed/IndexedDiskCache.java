@@ -464,7 +464,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
 
             keyFile.reset();
 
-            HashMap<K, IndexedDiskElementDescriptor> keys = new HashMap<K, IndexedDiskElementDescriptor>();
+            HashMap<K, IndexedDiskElementDescriptor> keys = new HashMap<>();
             keys.putAll(keyHash);
 
             if (keys.size() > 0)
@@ -650,12 +650,12 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
     @Override
     public Map<K, ICacheElement<K, V>> processGetMatching(String pattern)
     {
-        Map<K, ICacheElement<K, V>> elements = new HashMap<K, ICacheElement<K, V>>();
+        Map<K, ICacheElement<K, V>> elements = new HashMap<>();
         Set<K> keyArray = null;
         storageLock.readLock().lock();
         try
         {
-            keyArray = new HashSet<K>(keyHash.keySet());
+            keyArray = new HashSet<>(keyHash.keySet());
         }
         finally
         {
@@ -725,7 +725,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
     @Override
     public Set<K> getKeySet() throws IOException
     {
-        HashSet<K> keys = new HashSet<K>();
+        HashSet<K> keys = new HashSet<>();
 
         storageLock.readLock().lock();
 
@@ -817,7 +817,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
         boolean removed = false;
 
         // remove all keys of the same name hierarchy.
-        List<K> itemsToRemove = new LinkedList<K>();
+        List<K> itemsToRemove = new LinkedList<>();
 
         for (K k : keyHash.keySet())
         {
@@ -855,7 +855,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
         boolean removed = false;
 
         // remove all keys of the same name group.
-        List<K> itemsToRemove = new LinkedList<K>();
+        List<K> itemsToRemove = new LinkedList<>();
 
         // remove all keys of the same name hierarchy.
         for (K k : keyHash.keySet())
@@ -1512,27 +1512,27 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
         IStats stats = new Stats();
         stats.setTypeName("Indexed Disk Cache");
 
-        ArrayList<IStatElement<?>> elems = new ArrayList<IStatElement<?>>();
+        ArrayList<IStatElement<?>> elems = new ArrayList<>();
 
-        elems.add(new StatElement<Boolean>("Is Alive", Boolean.valueOf(isAlive())));
-        elems.add(new StatElement<Integer>("Key Map Size", Integer.valueOf(this.keyHash != null ? this.keyHash.size() : -1)));
+        elems.add(new StatElement<>("Is Alive", Boolean.valueOf(isAlive())));
+        elems.add(new StatElement<>("Key Map Size", Integer.valueOf(this.keyHash != null ? this.keyHash.size() : -1)));
         try
         {
             elems
-                .add(new StatElement<Long>("Data File Length", Long.valueOf(this.dataFile != null ? this.dataFile.length() : -1L)));
+                .add(new StatElement<>("Data File Length", Long.valueOf(this.dataFile != null ? this.dataFile.length() : -1L)));
         }
         catch (IOException e)
         {
             log.error(e);
         }
-        elems.add(new StatElement<Integer>("Max Key Size", this.maxKeySize));
-        elems.add(new StatElement<AtomicInteger>("Hit Count", this.hitCount));
-        elems.add(new StatElement<AtomicLong>("Bytes Free", this.bytesFree));
-        elems.add(new StatElement<Integer>("Optimize Operation Count", Integer.valueOf(this.removeCount)));
-        elems.add(new StatElement<Integer>("Times Optimized", Integer.valueOf(this.timesOptimized)));
-        elems.add(new StatElement<Integer>("Recycle Count", Integer.valueOf(this.recycleCnt)));
-        elems.add(new StatElement<Integer>("Recycle Bin Size", Integer.valueOf(this.recycle.size())));
-        elems.add(new StatElement<Integer>("Startup Size", Integer.valueOf(this.startupSize)));
+        elems.add(new StatElement<>("Max Key Size", this.maxKeySize));
+        elems.add(new StatElement<>("Hit Count", this.hitCount));
+        elems.add(new StatElement<>("Bytes Free", this.bytesFree));
+        elems.add(new StatElement<>("Optimize Operation Count", Integer.valueOf(this.removeCount)));
+        elems.add(new StatElement<>("Times Optimized", Integer.valueOf(this.timesOptimized)));
+        elems.add(new StatElement<>("Recycle Count", Integer.valueOf(this.recycleCnt)));
+        elems.add(new StatElement<>("Recycle Bin Size", Integer.valueOf(this.recycle.size())));
+        elems.add(new StatElement<>("Startup Size", Integer.valueOf(this.startupSize)));
 
         // get the stats from the super too
         IStats sStats = super.getStatistics();

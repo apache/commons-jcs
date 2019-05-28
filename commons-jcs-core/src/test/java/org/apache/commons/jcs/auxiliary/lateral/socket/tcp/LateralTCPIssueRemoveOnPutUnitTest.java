@@ -96,12 +96,12 @@ public class LateralTCPIssueRemoveOnPutUnitTest
         // Using the lateral, this service will put to and remove from
         // the cache instance above.
         // The cache thinks it is different since the listenerid is different
-        LateralTCPService<String, String> service = new LateralTCPService<String, String>( lattr2 );
+        LateralTCPService<String, String> service = new LateralTCPService<>( lattr2 );
         service.setListenerId( 123456 );
 
         String keyToBeRemovedOnPut = "test1_notremoved";
 
-        ICacheElement<String, String> element1 = new CacheElement<String, String>( region, keyToBeRemovedOnPut, region
+        ICacheElement<String, String> element1 = new CacheElement<>( region, keyToBeRemovedOnPut, region
             + ":data-this shouldn't get removed, it should get to the cache." );
         service.update( element1 );
 
@@ -143,13 +143,13 @@ public class LateralTCPIssueRemoveOnPutUnitTest
         // Using the lateral, this service will put to and remove from
         // the cache instance above.
         // The cache thinks it is different since the listenerid is different
-        LateralTCPService<String, String> service = new LateralTCPService<String, String>( lattr2 );
+        LateralTCPService<String, String> service = new LateralTCPService<>( lattr2 );
         service.setListenerId( 123456 );
 
         String keyToBeRemovedOnPut = "test1";
         cache.put( keyToBeRemovedOnPut, "this should get removed." );
 
-        ICacheElement<String, String> element1 = new CacheElement<String, String>( region, keyToBeRemovedOnPut, region
+        ICacheElement<String, String> element1 = new CacheElement<>( region, keyToBeRemovedOnPut, region
             + ":data-this shouldn't get there" );
         service.update( element1 );
 
@@ -162,7 +162,7 @@ public class LateralTCPIssueRemoveOnPutUnitTest
                 int kn = ran.nextInt( range );
                 String key = "key" + kn;
 
-                ICacheElement<String, String> element = new CacheElement<String, String>( region, key, region + ":data" + i
+                ICacheElement<String, String> element = new CacheElement<>( region, key, region + ":data" + i
                     + " junk asdfffffffadfasdfasf " + kn + ":" + n );
                 service.update( element );
                 if ( show )

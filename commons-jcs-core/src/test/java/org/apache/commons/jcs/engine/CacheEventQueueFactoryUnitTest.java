@@ -35,10 +35,10 @@ public class CacheEventQueueFactoryUnitTest
     {
         // SETUP
         QueueType eventQueueType = QueueType.SINGLE;
-        ICacheListener<String, String> listener = new MockRemoteCacheListener<String, String>();
+        ICacheListener<String, String> listener = new MockRemoteCacheListener<>();
         long listenerId = 1;
 
-        CacheEventQueueFactory<String, String> factory = new CacheEventQueueFactory<String, String>();
+        CacheEventQueueFactory<String, String> factory = new CacheEventQueueFactory<>();
 
         // DO WORK
         ICacheEventQueue<String, String> result = factory.createCacheEventQueue( listener, listenerId, "cacheName", "threadPoolName", eventQueueType );
@@ -53,10 +53,10 @@ public class CacheEventQueueFactoryUnitTest
     {
         // SETUP
         QueueType eventQueueType = QueueType.POOLED;
-        ICacheListener<String, String> listener = new MockRemoteCacheListener<String, String>();
+        ICacheListener<String, String> listener = new MockRemoteCacheListener<>();
         long listenerId = 1;
 
-        CacheEventQueueFactory<String, String> factory = new CacheEventQueueFactory<String, String>();
+        CacheEventQueueFactory<String, String> factory = new CacheEventQueueFactory<>();
 
         // DO WORK
         ICacheEventQueue<String, String> result = factory.createCacheEventQueue( listener, listenerId, "cacheName", "threadPoolName", eventQueueType );

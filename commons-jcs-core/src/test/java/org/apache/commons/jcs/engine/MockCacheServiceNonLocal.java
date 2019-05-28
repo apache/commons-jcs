@@ -49,10 +49,10 @@ public class MockCacheServiceNonLocal<K, V>
     public ICacheElement<K, V> lastUpdate;
 
     /** List of updates. */
-    public List<ICacheElement<K, V>> updateRequestList = new ArrayList<ICacheElement<K,V>>();
+    public List<ICacheElement<K, V>> updateRequestList = new ArrayList<>();
 
     /** List of request ids. */
-    public List<Long> updateRequestIdList = new ArrayList<Long>();
+    public List<Long> updateRequestIdList = new ArrayList<>();
 
     /** The key that was last passed to remove. */
     public K lastRemoveKey;
@@ -80,7 +80,7 @@ public class MockCacheServiceNonLocal<K, V>
     @Override
     public Set<K> getKeySet( String cacheName )
     {
-        return new HashSet<K>();
+        return new HashSet<>();
     }
 
     /**
@@ -199,7 +199,7 @@ public class MockCacheServiceNonLocal<K, V>
     public Map<K, ICacheElement<K, V>> getMultiple( String cacheName, Set<K> keys, long requesterId )
     {
         lastGetMultipleKeys = keys;
-        return new HashMap<K, ICacheElement<K, V>>();
+        return new HashMap<>();
     }
 
     /**
@@ -240,6 +240,6 @@ public class MockCacheServiceNonLocal<K, V>
         throws IOException
     {
         lastGetMatchingPattern = pattern;
-        return new HashMap<K, ICacheElement<K, V>>();
+        return new HashMap<>();
     }
 }

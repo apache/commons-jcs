@@ -86,8 +86,8 @@ public class TestTCPLateralUnitTest
         for ( int i = 0; i < numMes; i++ )
         {
             String message = "adsfasasfasfasdasf";
-            CacheElement<String, String> ce = new CacheElement<String, String>( "test", "test", message );
-            LateralElementDescriptor<String, String> led = new LateralElementDescriptor<String, String>( ce );
+            CacheElement<String, String> ce = new CacheElement<>( "test", "test", message );
+            LateralElementDescriptor<String, String> led = new LateralElementDescriptor<>( ce );
             led.command = LateralCommand.UPDATE;
             led.requesterId = 1;
             lur.send( led );
@@ -119,14 +119,14 @@ public class TestTCPLateralUnitTest
         lattr2.setTransmissionTypeName( "TCP" );
         lattr2.setTcpServer( "localhost:1101" );
 
-        LateralTCPService<String, String> service = new LateralTCPService<String, String>( lattr2 );
+        LateralTCPService<String, String> service = new LateralTCPService<>( lattr2 );
         service.setListenerId( 123456 );
 
         // DO WORK
         int cnt = 100;
         for ( int i = 0; i < cnt; i++ )
         {
-            ICacheElement<String, String> element = new CacheElement<String, String>( "test", "key" + i, "value1" );
+            ICacheElement<String, String> element = new CacheElement<>( "test", "key" + i, "value1" );
             service.update( element );
         }
 
@@ -162,16 +162,16 @@ public class TestTCPLateralUnitTest
         lattr2.setTcpListenerPort( 1104 );
         lattr2.setTcpServer( "localhost:1103" );
 
-        LateralTCPService<String, String> service = new LateralTCPService<String, String>( lattr2 );
+        LateralTCPService<String, String> service = new LateralTCPService<>( lattr2 );
         service.setListenerId( 123456 );
 
         // DO WORK
-        ICacheElement<String, String> element = new CacheElement<String, String>( "test", "key", "value1" );
+        ICacheElement<String, String> element = new CacheElement<>( "test", "key", "value1" );
         service.update( element );
 
         SleepUtil.sleepAtLeast( 300 );
 
-        ICacheElement<String, String> element2 = new CacheElement<String, String>( "test", "key", "value2" );
+        ICacheElement<String, String> element2 = new CacheElement<>( "test", "key", "value2" );
         service.update( element2 );
 
         SleepUtil.sleepAtLeast( 1000 );
@@ -206,17 +206,17 @@ public class TestTCPLateralUnitTest
         lattr2.setTransmissionTypeName( "TCP" );
         lattr2.setTcpServer( "localhost:1105" );
 
-        LateralTCPService<String, String> service = new LateralTCPService<String, String>( lattr2 );
+        LateralTCPService<String, String> service = new LateralTCPService<>( lattr2 );
         service.setListenerId( 123456 );
 
         // DO WORK
         String key = "key";
-        ICacheElement<String, String> element = new CacheElement<String, String>( "test", key, "value1" );
+        ICacheElement<String, String> element = new CacheElement<>( "test", key, "value1" );
         service.update( element );
 
         SleepUtil.sleepAtLeast( 300 );
 
-        ICacheElement<String, String> element2 = new CacheElement<String, String>( "test", key, "value2" );
+        ICacheElement<String, String> element2 = new CacheElement<>( "test", key, "value2" );
         service.update( element2 );
 
         SleepUtil.sleepAtLeast( 1000 );
@@ -248,7 +248,7 @@ public class TestTCPLateralUnitTest
         LateralTCPListener.getInstance( lattr, cacheMgr );
 
         // add the item to the listeners cache
-        ICacheElement<String, String> element = new CacheElement<String, String>( "test", "key", "value1" );
+        ICacheElement<String, String> element = new CacheElement<>( "test", "key", "value1" );
         cache.update( element );
 
         // setup a service to talk to the listener started above.
@@ -256,7 +256,7 @@ public class TestTCPLateralUnitTest
         lattr2.setTcpListenerPort( 1108 );
         lattr2.setTcpServer( "localhost:1107" );
 
-        LateralTCPService<String, String> service = new LateralTCPService<String, String>( lattr2 );
+        LateralTCPService<String, String> service = new LateralTCPService<>( lattr2 );
         service.setListenerId( 123456 );
 
         SleepUtil.sleepAtLeast( 300 );
@@ -290,9 +290,9 @@ public class TestTCPLateralUnitTest
         LateralTCPListener.getInstance( lattr, cacheMgr );
 
         // add the item to the listeners cache
-        GroupAttrName<String> groupKey = new GroupAttrName<String>(new GroupId("test", "group"), "key");
+        GroupAttrName<String> groupKey = new GroupAttrName<>(new GroupId("test", "group"), "key");
         ICacheElement<GroupAttrName<String>, String> element =
-            new CacheElement<GroupAttrName<String>, String>( "test", groupKey, "value1" );
+            new CacheElement<>( "test", groupKey, "value1" );
         cache.update( element );
 
         // setup a service to talk to the listener started above.
@@ -301,7 +301,7 @@ public class TestTCPLateralUnitTest
         lattr2.setTcpServer( "localhost:1150" );
 
         LateralTCPService<GroupAttrName<String>, String> service =
-            new LateralTCPService<GroupAttrName<String>, String>( lattr2 );
+            new LateralTCPService<>( lattr2 );
         service.setListenerId( 123459 );
 
         SleepUtil.sleepAtLeast( 500 );
@@ -343,7 +343,7 @@ public class TestTCPLateralUnitTest
         for ( int i = 0; i < numToInsertPrefix1; i++ )
         {
             // add the item to the listeners cache
-            ICacheElement<String, Integer> element = new CacheElement<String, Integer>( "test", keyprefix1 + String.valueOf( i ), Integer.valueOf( i ) );
+            ICacheElement<String, Integer> element = new CacheElement<>( "test", keyprefix1 + String.valueOf( i ), Integer.valueOf( i ) );
             cache.update( element );
         }
 
@@ -352,7 +352,7 @@ public class TestTCPLateralUnitTest
         lattr2.setTcpListenerPort( 1108 );
         lattr2.setTcpServer( "localhost:1108" );
 
-        LateralTCPService<String, Integer> service = new LateralTCPService<String, Integer>( lattr2 );
+        LateralTCPService<String, Integer> service = new LateralTCPService<>( lattr2 );
         service.setListenerId( 123456 );
 
         SleepUtil.sleepAtLeast( 300 );

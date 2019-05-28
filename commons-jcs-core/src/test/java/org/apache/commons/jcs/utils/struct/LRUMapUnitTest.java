@@ -42,7 +42,7 @@ public class LRUMapUnitTest
     public void testPutWithSizeLimit()
     {
         int size = 10;
-        Map<String, String> cache = new LRUMap<String, String>( size );
+        Map<String, String> cache = new LRUMap<>( size );
 
         for ( int i = 0; i < size; i++ )
         {
@@ -63,7 +63,7 @@ public class LRUMapUnitTest
     public void testPutWithNoSizeLimit()
     {
         int size = 10;
-        Map<String, String> cache = new LRUMap<String, String>( );
+        Map<String, String> cache = new LRUMap<>( );
 
         for ( int i = 0; i < size; i++ )
         {
@@ -84,7 +84,7 @@ public class LRUMapUnitTest
     public void testPutAndRemove()
     {
         int size = 10;
-        Map<String, String> cache = new LRUMap<String, String>( size );
+        Map<String, String> cache = new LRUMap<>( size );
 
         cache.put( "key:" + 1, "data:" + 1 );
         String data = cache.remove( "key:" + 1 );
@@ -98,7 +98,7 @@ public class LRUMapUnitTest
     public void testRemoveEmpty()
     {
         int size = 10;
-        Map<String, String> cache = new LRUMap<String, String>( size );
+        Map<String, String> cache = new LRUMap<>( size );
 
         Object returned = cache.remove( "key:" + 1 );
         assertNull( "Shouldn't hvae anything.", returned );
@@ -112,7 +112,7 @@ public class LRUMapUnitTest
     public void testGetEntrySet()
     {
         int size = 10;
-        Map<String, String> cache = new LRUMap<String, String>( size );
+        Map<String, String> cache = new LRUMap<>( size );
 
         for ( int i = 0; i < size; i++ )
         {

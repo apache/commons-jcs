@@ -48,7 +48,7 @@ public class UDPDiscoveryServiceUnitTest
 
         DiscoveredService discoveredService = new DiscoveredService();
         discoveredService.setServiceAddress( host );
-        discoveredService.setCacheNames( new ArrayList<String>() );
+        discoveredService.setCacheNames( new ArrayList<>() );
         discoveredService.setServicePort( 1000 );
         discoveredService.setLastHearFromTime( 100 );
 
@@ -81,7 +81,7 @@ public class UDPDiscoveryServiceUnitTest
         MockDiscoveryListener discoveryListener = new MockDiscoveryListener();
         service.addDiscoveryListener( discoveryListener );
 
-        ArrayList<String> sametCacheNames = new ArrayList<String>();
+        ArrayList<String> sametCacheNames = new ArrayList<>();
         sametCacheNames.add( "name1" );
 
         DiscoveredService discoveredService = new DiscoveredService();
@@ -146,11 +146,11 @@ public class UDPDiscoveryServiceUnitTest
 
         DiscoveredService discoveredService = new DiscoveredService();
         discoveredService.setServiceAddress( host );
-        discoveredService.setCacheNames( new ArrayList<String>() );
+        discoveredService.setCacheNames( new ArrayList<>() );
         discoveredService.setServicePort( 1000 );
         discoveredService.setLastHearFromTime( 100 );
 
-        ArrayList<String> differentCacheNames = new ArrayList<String>();
+        ArrayList<String> differentCacheNames = new ArrayList<>();
         differentCacheNames.add( "name1" );
         DiscoveredService discoveredService2 = new DiscoveredService();
         discoveredService2.setServiceAddress( host );
@@ -208,7 +208,7 @@ public class UDPDiscoveryServiceUnitTest
 
         DiscoveredService discoveredService = new DiscoveredService();
         discoveredService.setServiceAddress( host );
-        discoveredService.setCacheNames( new ArrayList<String>() );
+        discoveredService.setCacheNames( new ArrayList<>() );
         discoveredService.setServicePort( 1000 );
         discoveredService.setLastHearFromTime( 100 );
 

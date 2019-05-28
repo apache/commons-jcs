@@ -50,16 +50,16 @@ public class FIFOMemoryCacheUnitTest
         attributes.setMaxObjects( maxObjects );
         attributes.setSpoolChunkSize( 1 );
 
-        FIFOMemoryCache<String, String> cache = new FIFOMemoryCache<String, String>();
-        cache.initialize( new CompositeCache<String, String>( attributes, new ElementAttributes() ) );
+        FIFOMemoryCache<String, String> cache = new FIFOMemoryCache<>();
+        cache.initialize( new CompositeCache<>( attributes, new ElementAttributes() ) );
 
         for ( int i = 0; i <= maxObjects; i++ )
         {
-            CacheElement<String, String> element = new CacheElement<String, String>( cacheName, "key" + i, "value" + i );
+            CacheElement<String, String> element = new CacheElement<>( cacheName, "key" + i, "value" + i );
             cache.update( element );
         }
 
-        CacheElement<String, String> oneMoreElement = new CacheElement<String, String>( cacheName, "onemore", "onemore" );
+        CacheElement<String, String> oneMoreElement = new CacheElement<>( cacheName, "onemore", "onemore" );
 
         // DO WORK
         cache.update( oneMoreElement );
@@ -91,13 +91,13 @@ public class FIFOMemoryCacheUnitTest
         attributes.setMaxObjects( maxObjects );
         attributes.setSpoolChunkSize( 1 );
 
-        FIFOMemoryCache<String, String> cache = new FIFOMemoryCache<String, String>();
-        cache.initialize( new CompositeCache<String, String>( attributes, new ElementAttributes() ) );
+        FIFOMemoryCache<String, String> cache = new FIFOMemoryCache<>();
+        cache.initialize( new CompositeCache<>( attributes, new ElementAttributes() ) );
 
         // DO WORK
         for ( int i = 0; i <= (maxObjects * 2); i++ )
         {
-            CacheElement<String, String> element = new CacheElement<String, String>( cacheName, "key" + i, "value" + i );
+            CacheElement<String, String> element = new CacheElement<>( cacheName, "key" + i, "value" + i );
             cache.update( element );
         }
 

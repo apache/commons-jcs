@@ -65,7 +65,7 @@ public class MockCacheEventLogger
     public <T> ICacheEvent<T> createICacheEvent( String source, String region, String eventName, String optionalDetails,
                                           T key )
     {
-        return new CacheEvent<T>();
+        return new CacheEvent<>();
     }
 
     /**

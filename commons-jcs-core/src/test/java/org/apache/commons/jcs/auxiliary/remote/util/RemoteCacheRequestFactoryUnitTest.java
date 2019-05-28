@@ -130,7 +130,7 @@ public class RemoteCacheRequestFactoryUnitTest
         long requesterId = 2;
 
         CacheElement<Serializable, Serializable> element =
-            new CacheElement<Serializable, Serializable>( cacheName, key, null );
+            new CacheElement<>( cacheName, key, null );
 
         // DO WORK
         RemoteCacheRequest<Serializable, Serializable> result =

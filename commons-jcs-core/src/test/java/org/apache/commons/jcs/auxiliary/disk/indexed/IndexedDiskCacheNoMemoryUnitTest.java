@@ -146,7 +146,7 @@ public class IndexedDiskCacheNoMemoryUnitTest
         }
 
         // Test that getElements returns all the expected values
-        Set<String> keys = new HashSet<String>();
+        Set<String> keys = new HashSet<>();
         for ( int i = 0; i <= items; i++ )
         {
             keys.add( i + ":key" );

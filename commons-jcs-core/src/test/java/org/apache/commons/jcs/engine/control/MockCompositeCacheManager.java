@@ -49,7 +49,7 @@ public class MockCompositeCacheManager
         {
 //            System.out.println( "Creating mock cache" );
             CompositeCache<K, V> newCache =
-                new CompositeCache<K, V>( new CompositeCacheAttributes(), new ElementAttributes() );
+                new CompositeCache<>( new CompositeCacheAttributes(), new ElementAttributes() );
             this.setCache( newCache );
         }
 

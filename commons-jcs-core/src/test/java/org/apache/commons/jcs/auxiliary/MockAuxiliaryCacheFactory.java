@@ -44,7 +44,7 @@ public class MockAuxiliaryCacheFactory
         createCache( AuxiliaryCacheAttributes attr, ICompositeCacheManager cacheMgr,
            ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer )
     {
-        MockAuxiliaryCache<K, V> auxCache = new MockAuxiliaryCache<K, V>();
+        MockAuxiliaryCache<K, V> auxCache = new MockAuxiliaryCache<>();
         auxCache.setCacheEventLogger( cacheEventLogger );
         auxCache.setElementSerializer( elementSerializer );
         return auxCache;

@@ -169,7 +169,7 @@ public class JCSThrashTest
         jcs.put( key, value );
 
         // Create 15 threads that read the keys;
-        final List<Executable> executables = new ArrayList<Executable>();
+        final List<Executable> executables = new ArrayList<>();
         for ( int i = 0; i < 15; i++ )
         {
             final JCSThrashTest.Executable executable = new JCSThrashTest.Executable()

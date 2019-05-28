@@ -38,15 +38,15 @@ public class RemoteCacheNoWaitFacadeUnitTest
     public void testAddNoWait_InList()
     {
         // SETUP
-        List<RemoteCacheNoWait<String, String>> noWaits = new ArrayList<RemoteCacheNoWait<String,String>>();
+        List<RemoteCacheNoWait<String, String>> noWaits = new ArrayList<>();
         IRemoteCacheAttributes cattr = new RemoteCacheAttributes();
         cattr.setCacheName( "testCache1" );
 
-        RemoteCache<String, String> client = new RemoteCache<String, String>(cattr, null, null, null);
-        RemoteCacheNoWait<String, String> noWait = new RemoteCacheNoWait<String, String>( client );
+        RemoteCache<String, String> client = new RemoteCache<>(cattr, null, null, null);
+        RemoteCacheNoWait<String, String> noWait = new RemoteCacheNoWait<>( client );
         noWaits.add( noWait );
 
-        RemoteCacheNoWaitFacade<String, String> facade = new RemoteCacheNoWaitFacade<String, String>(noWaits, cattr, null, null, null );
+        RemoteCacheNoWaitFacade<String, String> facade = new RemoteCacheNoWaitFacade<>(noWaits, cattr, null, null, null );
         
         // VERIFY
         assertEquals( "Should have one entry.", 1, facade.noWaits.size() );

@@ -49,7 +49,7 @@ public class IndexedDiskCacheKeyStoreUnitTest
         cattr.setCacheName( "testStoreKeys" );
         cattr.setMaxKeySize( 100 );
         cattr.setDiskPath( "target/test-sandbox/KeyStoreUnitTest" );
-        IndexedDiskCache<String, String> disk = new IndexedDiskCache<String, String>( cattr );
+        IndexedDiskCache<String, String> disk = new IndexedDiskCache<>( cattr );
 
         disk.processRemoveAll();
 
@@ -58,7 +58,7 @@ public class IndexedDiskCacheKeyStoreUnitTest
         {
             IElementAttributes eAttr = new ElementAttributes();
             eAttr.setIsSpool( true );
-            ICacheElement<String, String> element = new CacheElement<String, String>( cattr.getCacheName(), "key:" + i, "data:" + i );
+            ICacheElement<String, String> element = new CacheElement<>( cattr.getCacheName(), "key:" + i, "data:" + i );
             element.setElementAttributes( eAttr );
             disk.processUpdate( element );
         }
@@ -103,7 +103,7 @@ public class IndexedDiskCacheKeyStoreUnitTest
         cattr.setCacheName( "testOptimize" );
         cattr.setMaxKeySize( 100 );
         cattr.setDiskPath( "target/test-sandbox/KeyStoreUnitTest" );
-        IndexedDiskCache<String, String> disk = new IndexedDiskCache<String, String>( cattr );
+        IndexedDiskCache<String, String> disk = new IndexedDiskCache<>( cattr );
 
         disk.processRemoveAll();
 
@@ -112,7 +112,7 @@ public class IndexedDiskCacheKeyStoreUnitTest
         {
             IElementAttributes eAttr = new ElementAttributes();
             eAttr.setIsSpool( true );
-            ICacheElement<String, String> element = new CacheElement<String, String>( cattr.getCacheName(), "key:" + i, "data:" + i );
+            ICacheElement<String, String> element = new CacheElement<>( cattr.getCacheName(), "key:" + i, "data:" + i );
             element.setElementAttributes( eAttr );
             disk.processUpdate( element );
         }
@@ -121,7 +121,7 @@ public class IndexedDiskCacheKeyStoreUnitTest
 
         IElementAttributes eAttr = new ElementAttributes();
         eAttr.setIsSpool( true );
-        ICacheElement<String, String> elementSetup = new CacheElement<String, String>( cattr.getCacheName(), "key:" + "A", "data:" + "A" );
+        ICacheElement<String, String> elementSetup = new CacheElement<>( cattr.getCacheName(), "key:" + "A", "data:" + "A" );
         elementSetup.setElementAttributes( eAttr );
         disk.processUpdate( elementSetup );
 

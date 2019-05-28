@@ -48,7 +48,7 @@ public class RemoteHttpCacheServletUnitTest
         servlet = new RemoteHttpCacheServlet();
         servlet.init(null);
 
-        remoteHttpCacheService = new MockRemoteCacheService<Serializable, Serializable>();
+        remoteHttpCacheService = new MockRemoteCacheService<>();
         servlet.setRemoteCacheService( remoteHttpCacheService );
     }
 
@@ -133,7 +133,7 @@ public class RemoteHttpCacheServletUnitTest
         String cacheName = "test";
         String key = "key";
         long requesterId = 2;
-        CacheElement<Serializable, Serializable> element = new CacheElement<Serializable, Serializable>( cacheName, key, null );
+        CacheElement<Serializable, Serializable> element = new CacheElement<>( cacheName, key, null );
         RemoteCacheRequest<Serializable, Serializable> request = RemoteCacheRequestFactory.createUpdateRequest( element, requesterId );
 
         // DO WORK

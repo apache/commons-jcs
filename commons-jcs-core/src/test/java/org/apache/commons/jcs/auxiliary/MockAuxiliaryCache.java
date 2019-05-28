@@ -80,7 +80,7 @@ public class MockAuxiliaryCache<K, V>
         throws IOException
     {
         getMatchingCallCount++;
-        return new HashMap<K, ICacheElement<K, V>>();
+        return new HashMap<>();
     }
 
     /**
@@ -93,7 +93,7 @@ public class MockAuxiliaryCache<K, V>
     @Override
     public Map<K, ICacheElement<K, V>> getMultiple(Set<K> keys)
     {
-        return new HashMap<K, ICacheElement<K, V>>();
+        return new HashMap<>();
     }
 
     /**

@@ -148,8 +148,8 @@ public class EventQueueConcurrentLoadTest
     @Override
     public void setUp()
     {
-        listen = new CacheListenerImpl<String, String>();
-        queue = new CacheEventQueue<String, String>( listen, 1L, "testCache1", maxFailure, waitBeforeRetry );
+        listen = new CacheListenerImpl<>();
+        queue = new CacheEventQueue<>( listen, 1L, "testCache1", maxFailure, waitBeforeRetry );
 
         queue.setWaitToDieMillis( idleTime );
     }
@@ -165,7 +165,7 @@ public class EventQueueConcurrentLoadTest
     {
         for ( int i = 0; i <= end; i++ )
         {
-            CacheElement<String, String> elem = new CacheElement<String, String>( "testCache1", i + ":key", i + "data" );
+            CacheElement<String, String> elem = new CacheElement<>( "testCache1", i + ":key", i + "data" );
             queue.addPutEvent( elem );
         }
 
@@ -221,7 +221,7 @@ public class EventQueueConcurrentLoadTest
         System.out.println( "queue is empty, begin" );
 
         // get it going
-        CacheElement<String, String> elem = new CacheElement<String, String>( "testCache1", "a:key", "adata" );
+        CacheElement<String, String> elem = new CacheElement<>( "testCache1", "a:key", "adata" );
         queue.addPutEvent( elem );
 
         for ( int i = 0; i <= end; i++ )
@@ -237,7 +237,7 @@ public class EventQueueConcurrentLoadTest
                     this.wait( idleTime / 2 );
                 }
             }
-            CacheElement<String, String> elem2 = new CacheElement<String, String>( "testCache1", i + ":key", i + "data" );
+            CacheElement<String, String> elem2 = new CacheElement<>( "testCache1", i + ":key", i + "data" );
             queue.addPutEvent( elem2 );
         }
 
