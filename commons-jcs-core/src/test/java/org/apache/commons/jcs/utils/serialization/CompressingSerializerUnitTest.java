@@ -110,7 +110,7 @@ public class CompressingSerializerUnitTest
 
         // DO WORK
         byte[] compressed = serializer.serialize( before );
-        byte[] nonCompressed = serializer.serializeObject( before );
+        byte[] nonCompressed = new StandardSerializer().serialize( before );
 
         // VERIFY
         assertTrue( "Compressed should be smaller. compressed size = " + compressed.length + "nonCompressed size = "
