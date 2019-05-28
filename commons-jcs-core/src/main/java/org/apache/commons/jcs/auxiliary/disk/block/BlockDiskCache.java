@@ -171,15 +171,7 @@ public class BlockDiskCache<K, V>
         // TODO we might need to stagger this a bit.
         if ( this.blockDiskCacheAttributes.getKeyPersistenceIntervalSeconds() > 0 )
         {
-            future = scheduledExecutor.scheduleAtFixedRate(
-                    new Runnable()
-                    {
-                        @Override
-                        public void run()
-                        {
-                            keyStore.saveKeys();
-                        }
-                    },
+            future = scheduledExecutor.scheduleAtFixedRate(keyStore::saveKeys,
                     this.blockDiskCacheAttributes.getKeyPersistenceIntervalSeconds(),
                     this.blockDiskCacheAttributes.getKeyPersistenceIntervalSeconds(),
                     TimeUnit.SECONDS);
@@ -574,22 +566,7 @@ public class BlockDiskCache<K, V>
     @Override
     public void processDispose()
     {
-        Runnable disR = new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                try
-                {
-                    disposeInternal();
-                }
-                catch ( InterruptedException e )
-                {
-                    log.warn( "Interrupted while diposing." );
-                }
-            }
-        };
-        Thread t = new Thread( disR, "BlockDiskCache-DisposalThread" );
+        Thread t = new Thread(this::disposeInternal, "BlockDiskCache-DisposalThread" );
         t.start();
         // wait up to 60 seconds for dispose and then quit if not done.
         try
@@ -604,10 +581,8 @@ public class BlockDiskCache<K, V>
 
     /**
      * Internal method that handles the disposal.
-     * @throws InterruptedException
      */
     protected void disposeInternal()
-        throws InterruptedException
     {
         if ( !isAlive() )
         {

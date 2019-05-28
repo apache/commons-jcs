@@ -300,8 +300,8 @@ public class UDPDiscoveryService
      */
     public void startup()
     {
-        udpReceiverThread = new Thread( receiver );
-        udpReceiverThread.setDaemon( true );
+        udpReceiverThread = new Thread(receiver);
+        udpReceiverThread.setDaemon(true);
         // udpReceiverThread.setName( t.getName() + "--UDPReceiver" );
         udpReceiverThread.start();
     }

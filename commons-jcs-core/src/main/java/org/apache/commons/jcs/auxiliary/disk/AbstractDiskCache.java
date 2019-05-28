@@ -437,32 +437,27 @@ public abstract class AbstractDiskCache<K, V>
     public final void dispose()
         throws IOException
     {
-        Runnable disR = new Runnable()
+        Thread t = new Thread(() ->
         {
-            @Override
-            public void run()
+            boolean keepGoing = true;
+            // long total = 0;
+            long interval = 100;
+            while ( keepGoing )
             {
-                boolean keepGoing = true;
-                // long total = 0;
-                long interval = 100;
-                while ( keepGoing )
+                keepGoing = !cacheEventQueue.isEmpty();
+                try
                 {
-                    keepGoing = !cacheEventQueue.isEmpty();
-                    try
-                    {
-                        Thread.sleep( interval );
-                        // total += interval;
-                        // log.info( "total = " + total );
-                    }
-                    catch ( InterruptedException e )
-                    {
-                        break;
-                    }
+                    Thread.sleep( interval );
+                    // total += interval;
+                    // log.info( "total = " + total );
                 }
-                log.info( "No longer waiting for event queue to finish: " + cacheEventQueue.getStatistics() );
+                catch ( InterruptedException e )
+                {
+                    break;
+                }
             }
-        };
-        Thread t = new Thread( disR );
+            log.info( "No longer waiting for event queue to finish: " + cacheEventQueue.getStatistics() );
+        });
         t.start();
         // wait up to 60 seconds for dispose and then quit if not done.
         try

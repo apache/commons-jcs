@@ -79,7 +79,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
     private IndexedDisk keyFile;
 
     /** Map containing the keys and disk offsets. */
-    private Map<K, IndexedDiskElementDescriptor> keyHash;
+    private final Map<K, IndexedDiskElementDescriptor> keyHash;
 
     /** The maximum number of keys that we will keep in memory. */
     private final int maxKeySize;
@@ -112,11 +112,10 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
     private boolean queueInput = false;
 
     /** list where puts made during optimization are made */
-    private final ConcurrentSkipListSet<IndexedDiskElementDescriptor> queuedPutList =
-            new ConcurrentSkipListSet<IndexedDiskElementDescriptor>(new PositionComparator());
+    private final ConcurrentSkipListSet<IndexedDiskElementDescriptor> queuedPutList;
 
     /** RECYLCE BIN -- array of empty spots */
-    private ConcurrentSkipListSet<IndexedDiskElementDescriptor> recycle;
+    private final ConcurrentSkipListSet<IndexedDiskElementDescriptor> recycle;
 
     /** User configurable parameters */
     private final IndexedDiskCacheAttributes cattr;
@@ -174,13 +173,14 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
         this.diskLimitType = cattr.getDiskLimitType();
         // Make a clean file name
         this.fileName = getCacheName().replaceAll("[^a-zA-Z0-9-_\\.]", "_");
+        this.keyHash = createInitialKeyMap();
+        this.queuedPutList = new ConcurrentSkipListSet<>(new PositionComparator());
+        this.recycle = new ConcurrentSkipListSet<>();
 
         try
         {
-            initializeRecycleBin();
             initializeFileSystem(cattr);
             initializeKeysAndData(cattr);
-
 
             // Initialization finished successfully, so set alive to true.
             setAlive(true);
@@ -263,7 +263,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
      */
     private void initializeEmptyStore() throws IOException
     {
-        initializeKeyMap();
+        this.keyHash.clear();
 
         if (dataFile.length() > 0)
         {
@@ -321,8 +321,8 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
 
         try
         {
-            // create a key map to use.
-            initializeKeyMap();
+            // clear a key map to use.
+            keyHash.clear();
 
             HashMap<K, IndexedDiskElementDescriptor> keys = keyFile.readObject(
                 new IndexedDiskElementDescriptor(0, (int) keyFile.length() - IndexedDisk.HEADER_SIZE_BYTES));
@@ -961,13 +961,12 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
             dataFile = new IndexedDisk(new File(rafDir, fileName + ".data"), getElementSerializer());
             keyFile = new IndexedDisk(new File(rafDir, fileName + ".key"), getElementSerializer());
 
-            initializeRecycleBin();
-
-            initializeKeyMap();
+            this.recycle.clear();
+            this.keyHash.clear();
         }
         catch (IOException e)
         {
-            log.error(logCacheName + "Failure reseting state", e);
+            log.error(logCacheName + "Failure resetting state", e);
         }
         finally
         {
@@ -976,29 +975,22 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
     }
 
     /**
-     * If the maxKeySize is < 0, use 5000, no way to have an unlimited recycle bin right now, or one
-     * less than the mazKeySize.
-     */
-    private void initializeRecycleBin()
-    {
-        recycle = new ConcurrentSkipListSet<IndexedDiskElementDescriptor>();
-    }
-
-    /**
      * Create the map for keys that contain the index position on disk.
+     * 
+     * @return a new empty Map for keys and IndexedDiskElementDescriptors
      */
-    private void initializeKeyMap()
+    private Map<K, IndexedDiskElementDescriptor> createInitialKeyMap()
     {
-        keyHash = null;
+        Map<K, IndexedDiskElementDescriptor> keyMap = null;
         if (maxKeySize >= 0)
         {
             if (this.diskLimitType == DiskLimitType.COUNT)
             {
-                keyHash = new LRUMapCountLimited(maxKeySize);
+                keyMap = new LRUMapCountLimited(maxKeySize);
             }
             else
             {
-                keyHash = new LRUMapSizeLimited(maxKeySize);
+                keyMap = new LRUMapSizeLimited(maxKeySize);
             }
 
             if (log.isInfoEnabled())
@@ -1009,13 +1001,15 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
         else
         {
             // If no max size, use a plain map for memory and processing efficiency.
-            keyHash = new HashMap<K, IndexedDiskElementDescriptor>();
+            keyMap = new HashMap<>();
             // keyHash = Collections.synchronizedMap( new HashMap() );
             if (log.isInfoEnabled())
             {
                 log.info(logCacheName + "Set maxKeySize to unlimited'");
             }
         }
+        
+        return keyMap;
     }
 
     /**
@@ -1030,15 +1024,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
         ICacheEvent<String> cacheEvent = createICacheEvent(getCacheName(), "none", ICacheEventLogger.DISPOSE_EVENT);
         try
         {
-            Runnable disR = new Runnable()
-            {
-                @Override
-                public void run()
-                {
-                    disposeInternal();
-                }
-            };
-            Thread t = new Thread(disR, "IndexedDiskCache-DisposalThread");
+            Thread t = new Thread(this::disposeInternal, "IndexedDiskCache-DisposalThread");
             t.start();
             // wait up to 60 seconds for dispose and then quit if not done.
             try
@@ -1076,7 +1062,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
             // Join with the current optimization thread.
             if (log.isDebugEnabled())
             {
-                log.debug(logCacheName + "In dispose, optimization already " + "in progress; waiting for completion.");
+                log.debug(logCacheName + "In dispose, optimization already in progress; waiting for completion.");
             }
             try
             {
@@ -1136,14 +1122,14 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
 
             try
             {
-                this.adjustBytesFree(ded, true);
+                adjustBytesFree(ded, true);
 
                 if (doRecycle)
                 {
                     recycle.add(ded);
                     if (log.isDebugEnabled())
                     {
-                        log.debug(logCacheName + "recycled ded" + ded);
+                        log.debug(logCacheName + "recycled ded " + ded);
                     }
 
                 }
@@ -1178,15 +1164,9 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
                 {
                     if (currentOptimizationThread == null)
                     {
-                        currentOptimizationThread = new Thread(new Runnable()
-                        {
-                            @Override
-                            public void run()
-                            {
-                                optimizeFile();
-
-                                currentOptimizationThread = null;
-                            }
+                        currentOptimizationThread = new Thread(() -> {
+                            optimizeFile();
+                            currentOptimizationThread = null;
                         }, "IndexedDiskCache-OptimizationThread");
                     }
                 }
@@ -1279,7 +1259,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
             // RESTORE NORMAL OPERATION
             removeCount = 0;
             resetBytesFree();
-            initializeRecycleBin();
+            this.recycle.clear();
             queuedPutList.clear();
             queueInput = false;
             // turn recycle back on.
