@@ -39,9 +39,9 @@
   <name>Apache Commons JCS :: JCache TCK</name>
 
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/commons/proper/jcs/trunk/commons-jcs-tck-tests</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/commons/proper/jcs/trunk/commons-jcs-tck-tests</developerConnection>
-    <url>http://svn.apache.org/viewvc/commons/proper/jcs/trunk/commons-jcs-tck-tests</url>
+    <connection>scm:git:http://gitbox.apache.org/repos/asf/commons-jcs.git</connection>
+    <developerConnection>scm:git:https://gitbox.apache.org/repos/asf/commons-jcs.git</developerConnection>
+    <url>https://gitbox.apache.org/repos/asf?p=commons-jcs.git</url>
   </scm>
 
   <properties>

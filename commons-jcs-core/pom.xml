@@ -33,9 +33,9 @@
   <name>Apache Commons JCS :: Core</name>
 
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/commons/proper/jcs/trunk/commons-jcs-core</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/commons/proper/jcs/trunk/commons-jcs-core</developerConnection>
-    <url>http://svn.apache.org/viewvc/commons/proper/jcs/trunk/commons-jcs-core</url>
+    <connection>scm:git:http://gitbox.apache.org/repos/asf/commons-jcs.git</connection>
+    <developerConnection>scm:git:https://gitbox.apache.org/repos/asf/commons-jcs.git</developerConnection>
+    <url>https://gitbox.apache.org/repos/asf?p=commons-jcs.git</url>
   </scm>
 
   <dependencies>
