@@ -241,14 +241,25 @@
       <plugin>
         <groupId>org.apache.rat</groupId>
         <artifactId>apache-rat-plugin</artifactId>
+        <!-- Should agree with config in reporting section -->
         <configuration>
-          <excludes combine.children="append">
+          <!--
+            If you wish to override this list in the component (child) pom, ensure you use
+            <excludes combine.children="merge">
+            so that the child pom entries replace the parent entries
+          -->
+          <excludes combine.children="merge">
             <exclude>.java-version</exclude>
             <exclude>**/zipcodes.txt</exclude>
-            <exclude>**/download_jcs.cgi</exclude>
             <exclude>**/.gitignore</exclude>
             <exclude>**/derby.log</exclude>
             <exclude>**/META-INF/services/javax.*</exclude>
+            <!-- Exclude Eclipse local files and folders -->
+            <exclude>**/.settings/**</exclude>
+            <exclude>**/.project</exclude>
+            <exclude>**/.classpath</exclude>
+            <!-- Exclude build directory -->
+            <exclude>**/target/**</exclude>
           </excludes>
         </configuration>
       </plugin>
@@ -457,6 +468,32 @@
         <artifactId>findbugs-maven-plugin</artifactId>
         <version>${commons.findbugs.version}</version>
       </plugin>
+      <plugin>
+        <groupId>org.apache.rat</groupId>
+        <artifactId>apache-rat-plugin</artifactId>
+        <version>${commons.rat.version}</version>
+        <!-- Should agree with config in build section -->
+        <configuration>
+          <!--
+            If you wish to override this list in the component (child) pom, ensure you use
+            <excludes combine.children="merge">
+            so that the child pom entries replace the parent entries
+          -->
+          <excludes combine.children="merge">
+            <exclude>.java-version</exclude>
+            <exclude>**/zipcodes.txt</exclude>
+            <exclude>**/.gitignore</exclude>
+            <exclude>**/derby.log</exclude>
+            <exclude>**/META-INF/services/javax.*</exclude>
+            <!-- Exclude Eclipse local files and folders -->
+            <exclude>**/.settings/**</exclude>
+            <exclude>**/.project</exclude>
+            <exclude>**/.classpath</exclude>
+            <!-- Exclude build directory -->
+            <exclude>**/target/**</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
     </plugins>
   </reporting>
 
@@ -528,6 +565,7 @@
     <commons.clirr.version>2.8</commons.clirr.version>
 
     <test.type>Unit</test.type>
+    <doclint>none</doclint>
   </properties>
 
 </project>
