@@ -20,7 +20,6 @@ package org.apache.commons.jcs.auxiliary.remote.server;
  */
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
