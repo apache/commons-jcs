@@ -48,7 +48,8 @@ public class CompressingSerializer extends StandardSerializer
      * Uses default de-serialization to turn a byte array into an object. Decompresses the value
      * first. All exceptions are converted into IOExceptions.
      * <p>
-     * @param data bytes of data
+     * @param data data bytes
+     * @param loader class loader to use
      * @return Object
      * @throws IOException on i/o problem
      * @throws ClassNotFoundException if class is not found during deserialization

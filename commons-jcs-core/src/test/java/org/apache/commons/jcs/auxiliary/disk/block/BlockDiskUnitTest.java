@@ -23,6 +23,8 @@ import junit.framework.TestCase;
 import org.apache.commons.jcs.utils.serialization.StandardSerializer;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Random;
 
 /**
@@ -35,15 +37,43 @@ public class BlockDiskUnitTest
 {
     /** data file. */
     private File rafDir;
+    private BlockDisk disk;
 
     /**
+     * @see junit.framework.TestCase#setUp()
      * Creates the base directory
      */
-    public BlockDiskUnitTest()
+    @Override
+    protected void setUp() throws Exception
     {
+        super.setUp();
         String rootDirName = "target/test-sandbox/block";
         this.rafDir = new File( rootDirName );
         this.rafDir.mkdirs();
+    }
+
+    private void setUpBlockDisk(String fileName) throws IOException
+    {
+        File file = new File(rafDir, fileName + ".data");
+        Files.delete(file.toPath());
+        this.disk = new BlockDisk(file, new StandardSerializer());
+    }
+    
+    private void setUpBlockDisk(String fileName, int blockSize) throws IOException
+    {
+        File file = new File(rafDir, fileName + ".data");
+        Files.delete(file.toPath());
+        this.disk = new BlockDisk(file, blockSize, new StandardSerializer());
+    }
+    
+    /**
+     * @see junit.framework.TestCase#tearDown()
+     */
+    @Override
+    protected void tearDown() throws Exception
+    {
+        disk.close();
+        super.tearDown();
     }
 
     /**
@@ -55,10 +85,7 @@ public class BlockDiskUnitTest
         throws Exception
     {
         // SETUP
-        String fileName = "testWrite_NullBlockElement";
-        File file = new File( rafDir, fileName + ".data" );
-        file.delete();
-        BlockDisk disk = new BlockDisk( file, new StandardSerializer() );
+        setUpBlockDisk("testWrite_NullBlockElement");
 
         // DO WORK
         int[] blocks = disk.write( null );
@@ -78,10 +105,7 @@ public class BlockDiskUnitTest
         throws Exception
     {
         // SETUP
-        String fileName = "testWrite_SingleBlockElement";
-        File file = new File( rafDir, fileName + ".data" );
-        file.delete();
-        BlockDisk disk = new BlockDisk( file, new StandardSerializer() );
+        setUpBlockDisk("testWrite_SingleBlockElement");
 
         // DO WORK
         int bytes = 1 * 1024;
@@ -102,10 +126,7 @@ public class BlockDiskUnitTest
         throws Exception
     {
         // SETUP
-        String fileName = "testWriteAndRead_SingleBlockElement";
-        File file = new File( rafDir, fileName + ".data" );
-        file.delete();
-        BlockDisk disk = new BlockDisk( file, new StandardSerializer() );
+        setUpBlockDisk("testWriteAndRead_SingleBlockElement");
 
         // DO WORK
         int bytes = 1 * 1024;
@@ -126,10 +147,7 @@ public class BlockDiskUnitTest
         throws Exception
     {
         // SETUP
-        String fileName = "testWrite_TwoSingleBlockElements";
-        File file = new File( rafDir, fileName + ".data" );
-        file.delete();
-        BlockDisk disk = new BlockDisk( file, new StandardSerializer() );
+        setUpBlockDisk("testWrite_TwoSingleBlockElements");
 
         // DO WORK
         int bytes = 1 * 1024;
@@ -153,10 +171,7 @@ public class BlockDiskUnitTest
         throws Exception
     {
         // SETUP
-        String fileName = "testCalculateBlocksNeededDouble";
-        File file = new File( rafDir, fileName + ".data" );
-        file.delete();
-        BlockDisk disk = new BlockDisk( file, new StandardSerializer() );
+        setUpBlockDisk("testCalculateBlocksNeededDouble");
 
         // DO WORK
         int result = disk.calculateTheNumberOfBlocksNeeded( new byte[disk.getBlockSizeBytes() * 2
@@ -175,9 +190,7 @@ public class BlockDiskUnitTest
         throws Exception
     {
         // SETUP
-        String fileName = "testWriteDoubleBlockElement";
-        File file = new File( rafDir, fileName + ".data" );
-        BlockDisk disk = new BlockDisk( file, new StandardSerializer() );
+        setUpBlockDisk("testWriteDoubleBlockElement");
 
         // DO WORK
         // byte arrays encur 27 bytes of serialization overhead.
@@ -201,9 +214,7 @@ public class BlockDiskUnitTest
         // SETUP
         int numBlocks = 128;
 
-        String fileName = "testWrite_128BlockElement";
-        File file = new File( rafDir, fileName + ".data" );
-        BlockDisk disk = new BlockDisk( file, new StandardSerializer() );
+        setUpBlockDisk("testWrite_128BlockElement");
 
         // DO WORK
         // byte arrays encur 27 bytes of serialization overhead.
@@ -225,10 +236,7 @@ public class BlockDiskUnitTest
         throws Exception
     {
         // SETUP
-        String fileName = "testWriteAndReadSingleBlockElement";
-        File file = new File( rafDir, fileName + ".data" );
-        file.delete();
-        BlockDisk disk = new BlockDisk( file, new StandardSerializer() );
+        setUpBlockDisk("testWriteAndReadSingleBlockElement");
 
         // DO WORK
         int numBlocksPerElement = 4;
@@ -255,11 +263,7 @@ public class BlockDiskUnitTest
         throws Exception
     {
         // SETUP
-        String fileName = "testWriteAndReadSingleBlockElement";
-        File file = new File( rafDir, fileName + ".data" );
-        file.delete();
-        int blockSizeBytes = 1024;
-        BlockDisk disk = new BlockDisk( file, blockSizeBytes );
+        setUpBlockDisk("testWriteAndReadSingleBlockElement", 1024);
 
         // DO WORK
         int numBlocksPerElement = 4;
@@ -308,11 +312,7 @@ public class BlockDiskUnitTest
         throws Exception
     {
         // SETUP
-        String fileName = "testWriteAndRead_BigString";
-        File file = new File( rafDir, fileName + ".data" );
-        file.delete();
-        int blockSizeBytes = 4096;//1024;
-        BlockDisk disk = new BlockDisk( file, blockSizeBytes, new StandardSerializer() );
+        setUpBlockDisk("testWriteAndRead_BigString", 4096); //1024
 
         String string = "This is my big string ABCDEFGH";
         StringBuilder sb = new StringBuilder();
@@ -343,11 +343,7 @@ public class BlockDiskUnitTest
         throws Exception
     {
         // SETUP
-        String fileName = "testWriteAndRead_BigString";
-        File file = new File( rafDir, fileName + ".data" );
-        file.delete();
-        int blockSizeBytes = 47;//4096;//1024;
-        BlockDisk disk = new BlockDisk( file, blockSizeBytes, new StandardSerializer() );
+        setUpBlockDisk("testWriteAndRead_BigString", 47); //4096;//1024
 
         String string = "abcdefghijklmnopqrstuvwxyz1234567890";
         string += string;
@@ -361,16 +357,12 @@ public class BlockDiskUnitTest
         assertEquals( "Wrong item retured.", string, result );
     }
 
-    public void testJCS156() throws Exception {
+    public void testJCS156() throws Exception 
+    {
         // SETUP
-        String fileName = "testJCS156";
-        File file = new File( rafDir, fileName + ".data" );
-        file.delete();
-        int blockSizeBytes = 4096;
-        BlockDisk disk = new BlockDisk( file, blockSizeBytes, new StandardSerializer() );
+        setUpBlockDisk("testJCS156", 4096);
         long offset = disk.calculateByteOffsetForBlockAsLong(Integer.MAX_VALUE);
         assertTrue("Must not wrap round", offset > 0);
         assertEquals(Integer.MAX_VALUE*4096L,offset);
-        file.delete();
     }
 }

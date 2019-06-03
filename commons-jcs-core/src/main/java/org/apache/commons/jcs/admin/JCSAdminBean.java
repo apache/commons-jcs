@@ -252,13 +252,8 @@ public class JCSAdminBean implements JCSJMXBean
                 }
 
                 // 4 bytes lost for the serialization header
-                size = size + counter.getCount() - 4;
+                size += counter.getCount() - 4;
             }
-        }
-
-        if (size > Long.MAX_VALUE)
-        {
-            throw new IllegalStateException("The size of cache " + cache.getCacheName() + " (" + size + " bytes) is too large to be represented as an long integer.");
         }
 
         return size;

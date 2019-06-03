@@ -88,5 +88,6 @@ public class UDPDiscoveryUnitTest
         // request braodcasts change things.
         assertTrue( "Receiver count [" + receiver.getCnt() + "] should be the at least the number sent [" + cnt + "].",
                     cnt <= receiver.getCnt() );
+        sender.close();
     }
 }

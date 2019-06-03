@@ -22,6 +22,7 @@ package org.apache.commons.jcs.auxiliary.disk.indexed;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -940,23 +941,16 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
             {
                 dataFile.close();
             }
+            
             File dataFileTemp = new File(rafDir, fileName + ".data");
-            boolean result = dataFileTemp.delete();
-            if (!result && log.isDebugEnabled())
-            {
-                log.debug("Could not delete file " + dataFileTemp);
-            }
+            Files.delete(dataFileTemp.toPath());
 
             if (keyFile != null)
             {
                 keyFile.close();
             }
             File keyFileTemp = new File(rafDir, fileName + ".key");
-            result = keyFileTemp.delete();
-            if (!result && log.isDebugEnabled())
-            {
-                log.debug("Could not delete file " + keyFileTemp);
-            }
+            Files.delete(keyFileTemp.toPath());
 
             dataFile = new IndexedDisk(new File(rafDir, fileName + ".data"), getElementSerializer());
             keyFile = new IndexedDisk(new File(rafDir, fileName + ".key"), getElementSerializer());

@@ -20,19 +20,17 @@ package org.apache.commons.jcs.auxiliary.disk.indexed;
  */
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.RandomAccessFile;
-import java.io.Serializable;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.nio.file.StandardOpenOption;
 
 import org.apache.commons.jcs.engine.behavior.IElementSerializer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /** Provides thread safe access to the underlying random access file. */
-class IndexedDisk
+public class IndexedDisk implements AutoCloseable
 {
     /** The size of the header that indicates the amount of data stored in an occupied block. */
     public static final byte HEADER_SIZE_BYTES = 4;
@@ -41,7 +39,7 @@ class IndexedDisk
     private final IElementSerializer elementSerializer;
 
     /** The logger */
-    private static final Log log = LogFactory.getLog( IndexedDisk.class );
+    private static final Log log = LogFactory.getLog(IndexedDisk.class);
 
     /** The path to the log directory. */
     private final String filepath;
@@ -54,15 +52,17 @@ class IndexedDisk
      * <p>
      * @param file
      * @param elementSerializer
-     * @throws FileNotFoundException
+     * @throws IOException
      */
-    public IndexedDisk( File file, IElementSerializer elementSerializer )
-        throws FileNotFoundException
+    public IndexedDisk(File file, IElementSerializer elementSerializer)
+        throws IOException
     {
         this.filepath = file.getAbsolutePath();
         this.elementSerializer = elementSerializer;
-        RandomAccessFile raf = new RandomAccessFile( filepath, "rw" );
-        this.fc = raf.getChannel();
+        this.fc = FileChannel.open(file.toPath(), 
+                StandardOpenOption.CREATE, 
+                StandardOpenOption.READ, 
+                StandardOpenOption.WRITE);
     }
 
     /**
@@ -76,13 +76,13 @@ class IndexedDisk
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    protected <T extends Serializable> T readObject( IndexedDiskElementDescriptor ded )
+    protected <T> T readObject(IndexedDiskElementDescriptor ded)
         throws IOException, ClassNotFoundException
     {
         String message = null;
         boolean corrupted = false;
         long fileLength = fc.size();
-        if ( ded.pos > fileLength )
+        if (ded.pos > fileLength)
         {
             corrupted = true;
             message = "Record " + ded + " starts past EOF.";
@@ -93,29 +93,29 @@ class IndexedDisk
             fc.read(datalength, ded.pos);
             datalength.flip();
             int datalen = datalength.getInt();
-            if ( ded.len != datalen )
+            if (ded.len != datalen)
             {
                 corrupted = true;
                 message = "Record " + ded + " does not match data length on disk (" + datalen + ")";
             }
-            else if ( ded.pos + ded.len > fileLength )
+            else if (ded.pos + ded.len > fileLength)
             {
                 corrupted = true;
                 message = "Record " + ded + " exceeds file length.";
             }
         }
 
-        if ( corrupted )
+        if (corrupted)
         {
-            log.warn( "\n The file is corrupt: " + "\n " + message );
-            throw new IOException( "The File Is Corrupt, need to reset" );
+            log.warn("\n The file is corrupt: " + "\n " + message);
+            throw new IOException("The File Is Corrupt, need to reset");
         }
 
         ByteBuffer data = ByteBuffer.allocate(ded.len);
         fc.read(data, ded.pos + HEADER_SIZE_BYTES);
         data.flip();
 
-        return elementSerializer.deSerialize( data.array(), null );
+        return elementSerializer.deSerialize(data.array(), null);
     }
 
     /**
@@ -125,7 +125,7 @@ class IndexedDisk
      * @param newPosition
      * @throws IOException
      */
-    protected void move( final IndexedDiskElementDescriptor ded, final long newPosition )
+    protected void move(final IndexedDiskElementDescriptor ded, final long newPosition)
         throws IOException
     {
         ByteBuffer datalength = ByteBuffer.allocate(HEADER_SIZE_BYTES);
@@ -133,9 +133,9 @@ class IndexedDisk
         datalength.flip();
         int length = datalength.getInt();
 
-        if ( length != ded.len )
+        if (length != ded.len)
         {
-            throw new IOException( "Mismatched memory and disk length (" + length + ") for " + ded );
+            throw new IOException("Mismatched memory and disk length (" + length + ") for " + ded);
         }
 
         // TODO: more checks?
@@ -147,10 +147,10 @@ class IndexedDisk
         int remaining = HEADER_SIZE_BYTES + length;
         ByteBuffer buffer = ByteBuffer.allocate(16384);
 
-        while ( remaining > 0 )
+        while (remaining > 0)
         {
             // chunk it
-            int chunkSize = Math.min( remaining, buffer.capacity() );
+            int chunkSize = Math.min(remaining, buffer.capacity());
             buffer.limit(chunkSize);
             fc.read(buffer, readPos);
             buffer.flip();
@@ -173,28 +173,32 @@ class IndexedDisk
      * @return true if we wrote successfully
      * @throws IOException
      */
-    protected boolean write( IndexedDiskElementDescriptor ded, byte[] data )
+    protected boolean write(IndexedDiskElementDescriptor ded, byte[] data)
         throws IOException
     {
         long pos = ded.pos;
-        if ( log.isTraceEnabled() )
+        if (log.isTraceEnabled())
         {
-            log.trace( "write> pos=" + pos );
-            log.trace( fc + " -- data.length = " + data.length );
+            log.trace("write> pos=" + pos);
+            log.trace(fc + " -- data.length = " + data.length);
         }
 
-        if ( data.length != ded.len )
+        if (data.length != ded.len)
         {
-            throw new IOException( "Mismatched descriptor and data lengths" );
+            throw new IOException("Mismatched descriptor and data lengths");
         }
 
-        ByteBuffer buffer = ByteBuffer.allocate(HEADER_SIZE_BYTES + data.length);
-        buffer.putInt(data.length);
-        buffer.put(data);
-        buffer.flip();
-        int written = fc.write(buffer, pos);
-        //fc.force(true);
+        ByteBuffer headerBuffer = ByteBuffer.allocate(HEADER_SIZE_BYTES);
+        headerBuffer.putInt(data.length);
+        // write the header
+        headerBuffer.flip();
+        int written = fc.write(headerBuffer, pos);
+        assert written == HEADER_SIZE_BYTES;
 
+        //write the data
+        ByteBuffer dataBuffer = ByteBuffer.wrap(data);
+        written = fc.write(dataBuffer, pos + HEADER_SIZE_BYTES);
+        
         return written == data.length;
     }
 
@@ -202,17 +206,15 @@ class IndexedDisk
      * Serializes the object and write it out to the given position.
      * <p>
      * TODO: make this take a ded as well.
-     * @return true unless error
      * @param obj
      * @param pos
      * @throws IOException
      */
-    protected boolean writeObject( Serializable obj, long pos )
+    protected <T> void writeObject(T obj, long pos)
         throws IOException
     {
-        byte[] data = elementSerializer.serialize( obj );
-        write( new IndexedDiskElementDescriptor( pos, data.length ), data );
-        return true;
+        byte[] data = elementSerializer.serialize(obj);
+        write(new IndexedDiskElementDescriptor(pos, data.length), data);
     }
 
     /**
@@ -232,7 +234,8 @@ class IndexedDisk
      * <p>
      * @throws IOException
      */
-    protected void close()
+    @Override
+    public void close()
         throws IOException
     {
         fc.close();
@@ -246,9 +249,9 @@ class IndexedDisk
     protected synchronized void reset()
         throws IOException
     {
-        if ( log.isDebugEnabled() )
+        if (log.isDebugEnabled())
         {
-            log.debug( "Resetting Indexed File [" + filepath + "]" );
+            log.debug("Resetting Indexed File [" + filepath + "]");
         }
         fc.truncate(0);
         fc.force(true);
@@ -260,14 +263,14 @@ class IndexedDisk
      * @param length the new length of the file
      * @throws IOException
      */
-    protected void truncate( long length )
+    protected void truncate(long length)
         throws IOException
     {
-        if ( log.isInfoEnabled() )
+        if (log.isInfoEnabled())
         {
-            log.info( "Truncating file [" + filepath + "] to " + length );
+            log.info("Truncating file [" + filepath + "] to " + length);
         }
-        fc.truncate( length );
+        fc.truncate(length);
     }
 
     /**

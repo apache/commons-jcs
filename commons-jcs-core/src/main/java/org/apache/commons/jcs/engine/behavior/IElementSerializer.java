@@ -40,7 +40,8 @@ public interface IElementSerializer
 
     /**
      * Turns a byte array into an object.
-     * @param bytes
+     * @param bytes data bytes
+     * @param loader class loader to use
      * @return Object
      * @throws IOException
      * @throws ClassNotFoundException thrown if we don't know the object.

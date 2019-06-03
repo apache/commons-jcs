@@ -44,14 +44,14 @@ public class StandardSerializer
      * @throws IOException
      */
     @Override
-    public <T> byte[] serialize( T obj )
+    public <T> byte[] serialize(T obj)
         throws IOException
     {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-        try (ObjectOutputStream oos = new ObjectOutputStream( baos ))
+        try (ObjectOutputStream oos = new ObjectOutputStream(baos))
         {
-            oos.writeObject( obj );
+            oos.writeObject(obj);
         }
 
         return baos.toByteArray();
@@ -61,18 +61,18 @@ public class StandardSerializer
      * Uses default de-serialization to turn a byte array into an object. All exceptions are
      * converted into IOExceptions.
      * <p>
-     * @param data
+     * @param data data bytes
+     * @param loader class loader to use
      * @return Object
      * @throws IOException
      * @throws ClassNotFoundException
      */
     @Override
-    public <T> T deSerialize( byte[] data, ClassLoader loader )
+    public <T> T deSerialize(byte[] data, ClassLoader loader)
         throws IOException, ClassNotFoundException
     {
-        ByteArrayInputStream bais = new ByteArrayInputStream( data );
-
-        try (ObjectInputStream ois = new ObjectInputStreamClassLoaderAware( bais, loader ))
+        try (ByteArrayInputStream bais = new ByteArrayInputStream(data);
+             ObjectInputStream ois = new ObjectInputStreamClassLoaderAware(bais, loader))
         {
             @SuppressWarnings("unchecked") // Need to cast from Object
             T readObject = (T) ois.readObject();
