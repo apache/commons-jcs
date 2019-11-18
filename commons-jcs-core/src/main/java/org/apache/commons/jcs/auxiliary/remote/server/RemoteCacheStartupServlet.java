@@ -22,6 +22,7 @@ package org.apache.commons.jcs.auxiliary.remote.server;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.UnknownHostException;
+import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 
 import javax.servlet.ServletConfig;
@@ -180,7 +181,7 @@ public class RemoteCacheStartupServlet
             String characterEncoding = response.getCharacterEncoding();
             if (characterEncoding == null)
             {
-                characterEncoding = "UTF-8";
+                characterEncoding = StandardCharsets.UTF_8.name();
                 response.setCharacterEncoding(characterEncoding);
             }
             OutputStream os = response.getOutputStream();

@@ -20,6 +20,7 @@ package org.apache.commons.jcs.auxiliary.disk.indexed;
  */
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -770,8 +771,7 @@ public abstract class IndexDiskCacheUnitTestAbstract extends TestCase
         }
         string = sb.toString();
         // System.out.println( "The string contains " + string.length() + " characters" );
-        String UTF8 = "UTF-8";
-        byte[] bytes = string.getBytes(UTF8);
+        byte[] bytes = string.getBytes(StandardCharsets.UTF_8);
 
         String cacheName = "testUTF8ByteArray";
 
@@ -793,7 +793,7 @@ public abstract class IndexDiskCacheUnitTestAbstract extends TestCase
         byte[] after = afterElement.getVal();
 
         assertNotNull(after);
-        assertEquals("wrong bytes after retrieval", string, new String(after, UTF8));
+        assertEquals("wrong bytes after retrieval", string, new String(after, StandardCharsets.UTF_8));
     }
 
     /**

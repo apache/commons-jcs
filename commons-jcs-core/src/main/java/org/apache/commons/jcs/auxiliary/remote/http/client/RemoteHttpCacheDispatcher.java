@@ -21,6 +21,7 @@ package org.apache.commons.jcs.auxiliary.remote.http.client;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 import org.apache.commons.jcs.auxiliary.remote.behavior.IRemoteCacheDispatcher;
 import org.apache.commons.jcs.auxiliary.remote.value.RemoteCacheRequest;
@@ -41,7 +42,7 @@ public class RemoteHttpCacheDispatcher
     implements IRemoteCacheDispatcher
 {
     /** Parameter encoding */
-    private static final Charset DEFAULT_ENCODING = Charset.forName("UTF-8");
+    private static final Charset DEFAULT_ENCODING = StandardCharsets.UTF_8;
 
     /** Named of the parameter */
     private static final String PARAMETER_REQUEST_TYPE = "RequestType";

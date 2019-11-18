@@ -22,6 +22,7 @@ package org.apache.commons.jcs.auxiliary.disk.block;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 import junit.framework.TestCase;
@@ -249,8 +250,7 @@ public abstract class BlockDiskCacheUnitTestAbstract extends TestCase
         }
         string = sb.toString();
         // System.out.println( "The string contains " + string.length() + " characters" );
-        String UTF8 = "UTF-8";
-        byte[] bytes = string.getBytes(UTF8);
+        byte[] bytes = string.getBytes(StandardCharsets.UTF_8);
 
         String cacheName = "testUTF8ByteArray";
 
@@ -275,7 +275,7 @@ public abstract class BlockDiskCacheUnitTestAbstract extends TestCase
         assertNotNull(after);
         assertEquals("wrong bytes after retrieval", bytes.length, after.length);
         // assertEquals( "wrong bytes after retrieval", bytes, after );
-        // assertEquals( "wrong bytes after retrieval", string, new String( after, UTF8 ) );
+        // assertEquals( "wrong bytes after retrieval", string, new String( after, StandardCharsets.UTF_8 ) );
 
     }
 
@@ -297,9 +297,8 @@ public abstract class BlockDiskCacheUnitTestAbstract extends TestCase
         }
         string = sb.toString();
         // System.out.println( "The string contains " + string.length() + " characters" );
-        String UTF8 = "UTF-8";
         before.string = string;
-        before.bytes = string.getBytes(UTF8);
+        before.bytes = string.getBytes(StandardCharsets.UTF_8);
 
         String cacheName = "testUTF8StringAndBytes";
 
@@ -322,7 +321,7 @@ public abstract class BlockDiskCacheUnitTestAbstract extends TestCase
 
         assertNotNull(after);
         assertEquals("wrong string after retrieval", string, after.string);
-        assertEquals("wrong bytes after retrieval", string, new String(after.bytes, UTF8));
+        assertEquals("wrong bytes after retrieval", string, new String(after.bytes, StandardCharsets.UTF_8));
 
     }
 
@@ -372,9 +371,8 @@ public abstract class BlockDiskCacheUnitTestAbstract extends TestCase
             sb.append(sb.toString()); // big string
         }
         string = sb.toString();
-        String UTF8 = "UTF-8";
         before.string = string;
-        before.bytes = string.getBytes(UTF8);
+        before.bytes = string.getBytes(StandardCharsets.UTF_8);
 
         // initialize cache
         String cacheName = "testLoadFromDisk";
@@ -403,7 +401,7 @@ public abstract class BlockDiskCacheUnitTestAbstract extends TestCase
 
             assertNotNull(after);
             assertEquals("wrong string after retrieval", string, after.string);
-            assertEquals("wrong bytes after retrieval", string, new String(after.bytes, UTF8));
+            assertEquals("wrong bytes after retrieval", string, new String(after.bytes, StandardCharsets.UTF_8));
         }
 
         diskCache.dispose();

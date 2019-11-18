@@ -22,6 +22,7 @@ package org.apache.commons.jcs.auxiliary.lateral.socket.tcp;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -414,7 +415,7 @@ public class LateralTCPService<K, V>
             boolean notDone = true;
             String message = null;
             // wait to dispose
-            BufferedReader br = new BufferedReader( new InputStreamReader( System.in, "UTF-8" ) );
+            BufferedReader br = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8));
 
             while ( notDone )
             {
