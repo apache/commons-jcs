@@ -123,14 +123,11 @@ public abstract class AbstractRemoteCacheService<K, V>
      */
     private void logUpdateInfo( ICacheElement<K, V> item )
     {
-        if ( log.isInfoEnabled() )
+        // not thread safe, but it doesn't have to be accurate
+        puts++;
+        if ( puts % logInterval == 0 )
         {
-            // not thread safe, but it doesn't have to be accurate
-            puts++;
-            if ( puts % logInterval == 0 )
-            {
-                log.info( "puts = " + puts );
-            }
+            log.info( "puts = " + puts );
         }
 
         if ( log.isDebugEnabled() )

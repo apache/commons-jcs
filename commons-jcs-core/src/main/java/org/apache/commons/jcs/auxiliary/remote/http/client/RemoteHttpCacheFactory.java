@@ -100,10 +100,7 @@ public class RemoteHttpCacheFactory
 
         if ( remoteService == null )
         {
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "Creating the default client for " + cattr.getCacheName());
-            }
+            log.info( "Creating the default client for " + cattr.getCacheName());
             remoteService = new RemoteHttpCacheClient<>( );
         }
 

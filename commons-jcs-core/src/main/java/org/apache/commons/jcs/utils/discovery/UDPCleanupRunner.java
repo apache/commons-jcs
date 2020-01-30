@@ -78,11 +78,8 @@ public class UDPCleanupRunner
         {
             if ( ( now - service.getLastHearFromTime() ) > ( maxIdleTimeSeconds * 1000 ) )
             {
-                if ( log.isInfoEnabled() )
-                {
-                    log.info( "Removing service, since we haven't heard from it in " + maxIdleTimeSeconds
-                        + " seconds.  service = " + service );
-                }
+                log.info( "Removing service, since we haven't heard from it in " + maxIdleTimeSeconds
+                    + " seconds.  service = " + service );
                 toRemove.add( service );
             }
         }

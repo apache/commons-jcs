@@ -327,11 +327,8 @@ public class RemoteCacheServer<K, V>
                 catch ( Exception ce )
                 {
                     // swallow
-                    if ( log.isInfoEnabled() )
-                    {
-                        log.info( "Exception caught updating item. requesterId [" + requesterId + "] "
-                            + ce.getMessage() );
-                    }
+                    log.info( "Exception caught updating item. requesterId [" + requesterId + "] "
+                        + ce.getMessage() );
                 }
 
                 // UPDATE LOCALS IF A REQUEST COMES FROM A CLUSTER
@@ -382,12 +379,9 @@ public class RemoteCacheServer<K, V>
         // not thread safe, but it doesn't have to be 100% accurate
         puts++;
 
-        if ( log.isInfoEnabled() )
+        if ( puts % logInterval == 0 )
         {
-            if ( puts % logInterval == 0 )
-            {
-                log.info( "puts = " + puts );
-            }
+            log.info( "puts = " + puts );
         }
 
         if ( log.isDebugEnabled() )
@@ -1096,10 +1090,7 @@ public class RemoteCacheServer<K, V>
     private void processDispose( String cacheName, long requesterId )
         throws IOException
     {
-        if ( log.isInfoEnabled() )
-        {
-            log.info( "Dispose request received from listener [" + requesterId + "]" );
-        }
+        log.info( "Dispose request received from listener [" + requesterId + "]" );
 
         CacheListeners<K, V> cacheDesc = cacheListenersMap.get( cacheName );
 
@@ -1305,20 +1296,14 @@ public class RemoteCacheServer<K, V>
                     String message = "Adding vm listener under new id = [" + listenerIdB + "], listenerAddress ["
                         + listenerAddress + "]";
                     logApplicationEvent( "RemoteCacheServer", "addCacheListener", message );
-                    if ( log.isInfoEnabled() )
-                    {
-                        log.info( message );
-                    }
+                    log.info( message );
                 }
                 else
                 {
                     String message = "Adding listener under existing id = [" + id + "], listenerAddress ["
                         + listenerAddress + "]";
                     logApplicationEvent( "RemoteCacheServer", "addCacheListener", message );
-                    if ( log.isInfoEnabled() )
-                    {
-                        log.info( message );
-                    }
+                    log.info( message );
                     // should confirm the the host is the same as we have on
                     // record, just in case a client has made a mistake.
                 }
@@ -1348,10 +1333,7 @@ public class RemoteCacheServer<K, V>
 
             eventQMap.put(Long.valueOf(listener.getListenerId()), q);
 
-            if ( log.isInfoEnabled() )
-            {
-                log.info( cacheListeners );
-            }
+            log.info( cacheListeners );
         }
     }
 
@@ -1402,10 +1384,7 @@ public class RemoteCacheServer<K, V>
     {
         String message = "Removing listener for cache region = [" + cacheName + "] and listenerId [" + listenerId + "]";
         logApplicationEvent( "RemoteCacheServer", "removeCacheListener", message );
-        if ( log.isInfoEnabled() )
-        {
-            log.info( message );
-        }
+        log.info( message );
 
         boolean isClusterListener = isRequestFromCluster( listenerId );
 
@@ -1445,11 +1424,8 @@ public class RemoteCacheServer<K, V>
         idTypeMap.remove( Long.valueOf( listenerId ) );
         idIPMap.remove( Long.valueOf( listenerId ) );
 
-        if ( log.isInfoEnabled() )
-        {
-            log.info( "After removing listener [" + listenerId + "] cache region " + cacheName + "'s listener size ["
-                + cacheDesc.eventQMap.size() + "]" );
-        }
+        log.info( "After removing listener [" + listenerId + "] cache region " + cacheName + "'s listener size ["
+            + cacheDesc.eventQMap.size() + "]" );
     }
 
     /**
@@ -1466,10 +1442,7 @@ public class RemoteCacheServer<K, V>
         {
             removeCacheListener( cacheName, listener );
 
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "Removing listener for cache [" + cacheName + "]" );
-            }
+            log.info( "Removing listener for cache [" + cacheName + "]" );
         }
     }
 
@@ -1497,10 +1470,7 @@ public class RemoteCacheServer<K, V>
     public void shutdown( String host, int port )
         throws IOException
     {
-        if ( log.isInfoEnabled() )
-        {
-            log.info( "Received shutdown request. Shutting down server." );
-        }
+        log.info( "Received shutdown request. Shutting down server." );
 
         synchronized (listenerId)
         {
@@ -1511,10 +1481,7 @@ public class RemoteCacheServer<K, V>
                     removeCacheListener( cacheName, i );
                 }
 
-                if ( log.isInfoEnabled() )
-                {
-                    log.info( "Removing listener for cache [" + cacheName + "]" );
-                }
+                log.info( "Removing listener for cache [" + cacheName + "]" );
             }
 
             cacheListenersMap.clear();
@@ -1532,10 +1499,7 @@ public class RemoteCacheServer<K, V>
     @Override
     public void unreferenced()
     {
-        if ( log.isInfoEnabled() )
-        {
-            log.info( "*** Server now unreferenced and subject to GC. ***" );
-        }
+        log.info( "*** Server now unreferenced and subject to GC. ***" );
     }
 
     /**

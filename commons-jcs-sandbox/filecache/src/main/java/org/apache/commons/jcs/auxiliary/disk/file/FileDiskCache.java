@@ -98,11 +98,8 @@ public class FileDiskCache<K, V>
         // TODO, we might need to make this configurable
         this.setDirectory( new File( cattr.getDiskPath(), cattr.getCacheName() ) );
         boolean createdDirectories = getDirectory().mkdirs();
-        if ( log.isInfoEnabled() )
-        {
-            log.info( logCacheName + "Cache file root directory: " + getDirectory() );
-            log.info( logCacheName + "Created root directory: " + createdDirectories );
-        }
+        log.info( logCacheName + "Cache file root directory: " + getDirectory() );
+        log.info( logCacheName + "Created root directory: " + createdDirectories );
 
         // TODO consider throwing.
         boolean exists = getDirectory().exists();
@@ -212,10 +209,7 @@ public class FileDiskCache<K, V>
             setAlive(false);
 
             // TODO consider giving up the handle on the directory.
-            if ( log.isInfoEnabled() )
-            {
-                log.info( logCacheName + "Shutdown complete." );
-            }
+            log.info( logCacheName + "Shutdown complete." );
         }
         finally
         {
@@ -274,11 +268,8 @@ public class FileDiskCache<K, V>
             // test that the retrieved object has equal key
             if ( element != null && !key.equals( element.getKey() ) )
             {
-                if ( log.isInfoEnabled() )
-                {
-                    log.info( logCacheName + "key: [" + key + "] point to cached object with key: [" + element.getKey()
+                log.info( logCacheName + "key: [" + key + "] point to cached object with key: [" + element.getKey()
                         + "]" );
-                }
                 element = null;
             }
         }

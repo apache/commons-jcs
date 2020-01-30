@@ -131,10 +131,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
     protected void processDispose()
         throws IOException
     {
-        if ( log.isInfoEnabled() )
-        {
-            log.info( "Disposing of remote cache." );
-        }
+        log.info( "Disposing of remote cache." );
         try
         {
             if ( getRemoteCacheListener() != null )

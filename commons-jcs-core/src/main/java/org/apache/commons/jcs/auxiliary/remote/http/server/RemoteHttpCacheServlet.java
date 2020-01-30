@@ -305,10 +305,7 @@ public class RemoteHttpCacheServlet
         RemoteHttpCacheServerAttributes attributes = configureRemoteHttpCacheServerAttributes( props );
 
         RemoteHttpCacheService<K, V> service = new RemoteHttpCacheService<>( cacheManager, attributes, cacheEventLogger );
-        if ( log.isInfoEnabled() )
-        {
-            log.info( "Created new RemoteHttpCacheService " + service );
-        }
+        log.info( "Created new RemoteHttpCacheService " + service );
         return service;
     }
 
@@ -360,12 +357,9 @@ public class RemoteHttpCacheServlet
     {
         // not thread safe, but it doesn't have to be accurate
         serviceCalls++;
-        if ( log.isInfoEnabled() )
+        if ( serviceCalls % logInterval == 0 )
         {
-            if ( serviceCalls % logInterval == 0 )
-            {
-                log.info( "serviceCalls = " + serviceCalls );
-            }
+            log.info( "serviceCalls = " + serviceCalls );
         }
     }
 
@@ -373,10 +367,7 @@ public class RemoteHttpCacheServlet
     @Override
     public void destroy()
     {
-        if ( log.isInfoEnabled() )
-        {
-            log.info( "Servlet Destroyed, shutting down JCS." );
-        }
+        log.info( "Servlet Destroyed, shutting down JCS." );
 
         cacheMgr.shutDown();
     }

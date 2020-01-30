@@ -85,17 +85,10 @@ public class LateralJGCacheFactory
         // don't create a listener if we are not receiving.
         if ( lac.isReceive() )
         {
-
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "Creating listener for " + lac );
-            }
-
+            log.info( "Creating listener for " + lac );
             try
             {
-
                 LateralCacheJGListener.getInstance( lac, cacheMgr );
-
             }
             catch ( Exception e )
             {

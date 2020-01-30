@@ -47,10 +47,7 @@ public class UDPDiscoverySenderThread
      */
     protected void setCacheNames( ArrayList<String> cacheNames )
     {
-        if ( log.isInfoEnabled() )
-        {
-            log.info( "Resetting cacheNames = [" + cacheNames + "]" );
-        }
+        log.info( "Resetting cacheNames = [" + cacheNames + "]" );
         this.cacheNames = cacheNames;
     }
 

@@ -128,10 +128,7 @@ public class MySQLTableOptimizer
         try
         {
             tableState.setState( TableState.OPTIMIZATION_RUNNING );
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "Optimizing table [" + this.getTableName() + "]" );
-            }
+            log.info( "Optimizing table [" + this.getTableName() + "]" );
 
             try (Connection con = dataSource.getConnection())
             {
@@ -150,11 +147,8 @@ public class MySQLTableOptimizer
                         String status = rs.getString( "Msg_type" );
                         String message = rs.getString( "Msg_text" );
 
-                        if ( log.isInfoEnabled() )
-                        {
-                            log.info( "Message Type: " + status );
-                            log.info( "Message: " + message );
-                        }
+                        log.info( "Message Type: " + status );
+                        log.info( "Message: " + message );
 
                         if ( "error".equals( status ) )
                         {
@@ -172,10 +166,7 @@ public class MySQLTableOptimizer
 
                     // log the table status
                     String statusString = getTableStatus( sStatement );
-                    if ( log.isInfoEnabled() )
-                    {
-                        log.info( "Table status after optimizing table [" + this.getTableName() + "]\n" + statusString );
-                    }
+                    log.info( "Table status after optimizing table [" + this.getTableName() + "]\n" + statusString );
                 }
                 catch ( SQLException e )
                 {
@@ -193,10 +184,7 @@ public class MySQLTableOptimizer
             tableState.setState( TableState.FREE );
 
             long end = System.currentTimeMillis();
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "Optimization of table [" + this.getTableName() + "] took " + ( end - start ) + " ms." );
-            }
+            log.info( "Optimization of table [" + this.getTableName() + "] took " + ( end - start ) + " ms." );
         }
 
         return success;
@@ -260,10 +248,7 @@ public class MySQLTableOptimizer
                 success = true;
             }
         }
-        if ( log.isInfoEnabled() )
-        {
-            log.info( repairString );
-        }
+        log.info( repairString );
 
         if ( !success )
         {

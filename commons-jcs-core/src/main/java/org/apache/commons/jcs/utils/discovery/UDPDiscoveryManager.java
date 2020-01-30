@@ -80,10 +80,7 @@ public class UDPDiscoveryManager
         UDPDiscoveryService service = services.get( key );
         if ( service == null )
         {
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "Creating service for address:port:servicePort [" + key + "]" );
-            }
+            log.info( "Creating service for address:port:servicePort [" + key + "]" );
 
             UDPDiscoveryAttributes attributes = new UDPDiscoveryAttributes();
             attributes.setUdpDiscoveryAddr( discoveryAddress );

@@ -126,10 +126,7 @@ public class JDBCDiskCache<K, V>
         setTableState( tableState );
         setJdbcDiskCacheAttributes( cattr );
 
-        if ( log.isInfoEnabled() )
-        {
-            log.info( "jdbcDiskCacheAttributes = " + getJdbcDiskCacheAttributes() );
-        }
+        log.info( "jdbcDiskCacheAttributes = " + getJdbcDiskCacheAttributes() );
 
         // This initializes the pool access.
         this.dsFactory = dsFactory;
@@ -181,13 +178,10 @@ public class JDBCDiskCache<K, V>
             log.error( "Problem getting connection.", e );
         }
 
-        if ( log.isInfoEnabled() )
+        if ( updateCount.get() % LOG_INTERVAL == 0 )
         {
-            if ( updateCount.get() % LOG_INTERVAL == 0 )
-            {
-                // TODO make a log stats method
-                log.info( "Update Count [" + updateCount + "]" );
-            }
+            // TODO make a log stats method
+            log.info( "Update Count [" + updateCount + "]" );
         }
     }
 
@@ -432,13 +426,10 @@ public class JDBCDiskCache<K, V>
             log.error( "Caught a SQL exception trying to get the item for key [" + key + "]", sqle );
         }
 
-        if ( log.isInfoEnabled() )
+        if ( getCount.get() % LOG_INTERVAL == 0 )
         {
-            if ( getCount.get() % LOG_INTERVAL == 0 )
-            {
-                // TODO make a log stats method
-                log.info( "Get Count [" + getCount + "]" );
-            }
+            // TODO make a log stats method
+            log.info( "Get Count [" + getCount + "]" );
         }
         return obj;
     }
@@ -513,13 +504,10 @@ public class JDBCDiskCache<K, V>
             log.error( "Caught a SQL exception trying to get items for pattern [" + pattern + "]", sqle );
         }
 
-        if ( log.isInfoEnabled() )
+        if ( getMatchingCount.get() % LOG_INTERVAL == 0 )
         {
-            if ( getMatchingCount.get() % LOG_INTERVAL == 0 )
-            {
-                // TODO make a log stats method
-                log.info( "Get Matching Count [" + getMatchingCount + "]" );
-            }
+            // TODO make a log stats method
+            log.info( "Get Matching Count [" + getMatchingCount + "]" );
         }
         return results;
     }
@@ -630,10 +618,7 @@ public class JDBCDiskCache<K, V>
         }
         else
         {
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "RemoveAll was requested but the request was not fulfilled: allowRemoveAll is set to false." );
-            }
+            log.info( "RemoveAll was requested but the request was not fulfilled: allowRemoveAll is set to false." );
         }
     }
 

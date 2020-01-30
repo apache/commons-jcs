@@ -126,17 +126,11 @@ public class RemoteCacheManager
      */
     protected void lookupRemoteService() throws IOException
     {
-        if ( log.isInfoEnabled() )
-        {
-            log.info( "Looking up server [" + registry + "]" );
-        }
+        log.info( "Looking up server [" + registry + "]" );
         try
         {
             Object obj = Naming.lookup( registry );
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "Server found: " + obj );
-            }
+            log.info( "Server found: " + obj );
 
             // Successful connection to the remote server.
             this.remoteService = (ICacheServiceNonLocal<?, ?>) obj;
@@ -169,22 +163,16 @@ public class RemoteCacheManager
     {
         if ( cattr.isReceive() )
         {
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "The remote cache is configured to receive events from the remote server.  "
-                    + "We will register a listener. remoteWatch = " + remoteWatch + " | IRemoteCacheListener = "
-                    + listener + " | cacheName " + cattr.getCacheName() );
-            }
+            log.info( "The remote cache is configured to receive events from the remote server.  "
+                + "We will register a listener. remoteWatch = " + remoteWatch + " | IRemoteCacheListener = "
+                + listener + " | cacheName " + cattr.getCacheName() );
 
             remoteWatch.addCacheListener( cattr.getCacheName(), listener );
         }
         else
         {
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "The remote cache is configured to NOT receive events from the remote server.  "
-                    + "We will NOT register a listener." );
-            }
+            log.info( "The remote cache is configured to NOT receive events from the remote server.  "
+                + "We will NOT register a listener." );
         }
     }
 
@@ -301,10 +289,7 @@ public class RemoteCacheManager
         {
             try
             {
-                if ( log.isInfoEnabled() )
-                {
-                    log.info( "freeCache [" + c.getCacheName() + "]" );
-                }
+                log.info( "freeCache [" + c.getCacheName() + "]" );
 
                 removeListenerFromCache(c);
                 c.dispose();
@@ -328,10 +313,7 @@ public class RemoteCacheManager
             return;
         }
 
-        if ( log.isInfoEnabled() )
-        {
-            log.info( "Fixing caches. ICacheServiceNonLocal " + remoteService + " | IRemoteCacheObserver " + remoteWatch );
-        }
+        log.info( "Fixing caches. ICacheServiceNonLocal " + remoteService + " | IRemoteCacheObserver " + remoteWatch );
 
         for (RemoteCacheNoWait<?, ?> c : caches.values())
         {
@@ -341,15 +323,12 @@ public class RemoteCacheManager
             }
         }
 
-        if ( log.isInfoEnabled() )
+        String msg = "Remote connection to " + registry + " resumed.";
+        if ( cacheEventLogger != null )
         {
-            String msg = "Remote connection to " + registry + " resumed.";
-            if ( cacheEventLogger != null )
-            {
-                cacheEventLogger.logApplicationEvent( "RemoteCacheManager", "fix", msg );
-            }
-            log.info( msg );
+            cacheEventLogger.logApplicationEvent( "RemoteCacheManager", "fix", msg );
         }
+        log.info( msg );
     }
 
     /**

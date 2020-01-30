@@ -102,10 +102,7 @@ public class JGSocketOpener
 
             javagroups.connect( groupName );
 
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "Is Connected = " + javagroups.isConnected() );
-            }
+            log.info( "Is Connected = " + javagroups.isConnected() );
 
         }
         catch ( Exception e )

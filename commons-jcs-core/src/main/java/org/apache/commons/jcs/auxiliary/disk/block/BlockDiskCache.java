@@ -110,19 +110,13 @@ public class BlockDiskCache<K, V>
         this.blockDiskCacheAttributes = cacheAttributes;
         this.logCacheName = "Region [" + getCacheName() + "] ";
 
-        if ( log.isInfoEnabled() )
-        {
-            log.info( logCacheName + "Constructing BlockDiskCache with attributes " + cacheAttributes );
-        }
+        log.info( logCacheName + "Constructing BlockDiskCache with attributes " + cacheAttributes );
 
         // Make a clean file name
         this.fileName = getCacheName().replaceAll("[^a-zA-Z0-9-_\\.]", "_");
         this.rootDirectory = cacheAttributes.getDiskPath();
 
-        if ( log.isInfoEnabled() )
-        {
-            log.info( logCacheName + "Cache file root directory: [" + rootDirectory + "]");
-        }
+        log.info( logCacheName + "Cache file root directory: [" + rootDirectory + "]");
 
         try
         {
@@ -149,10 +143,7 @@ public class BlockDiskCache<K, V>
 
             // Initialization finished successfully, so set alive to true.
             setAlive(true);
-            if ( log.isInfoEnabled() )
-            {
-                log.info( logCacheName + "Block Disk Cache is alive." );
-            }
+            log.info( logCacheName + "Block Disk Cache is alive." );
         }
         catch ( IOException e )
         {
@@ -624,10 +615,7 @@ public class BlockDiskCache<K, V>
             storageLock.writeLock().unlock();
         }
 
-        if ( log.isInfoEnabled() )
-        {
-            log.info( logCacheName + "Shutdown complete." );
-        }
+        log.info( logCacheName + "Shutdown complete." );
     }
 
     /**

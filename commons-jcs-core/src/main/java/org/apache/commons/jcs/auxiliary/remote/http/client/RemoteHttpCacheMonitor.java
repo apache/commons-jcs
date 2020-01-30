@@ -60,10 +60,7 @@ public class RemoteHttpCacheMonitor extends AbstractAuxiliaryCacheMonitor
      */
     public void notifyError( RemoteHttpCache<?, ?> remoteCache )
     {
-        if ( log.isInfoEnabled() )
-        {
-            log.info( "Notified of an error. " + remoteCache );
-        }
+        log.info( "Notified of an error. " + remoteCache );
 
         remoteHttpCaches.put( remoteCache, remoteCache );
         notifyError();
@@ -106,10 +103,7 @@ public class RemoteHttpCacheMonitor extends AbstractAuxiliaryCacheMonitor
                     IRemoteHttpCacheClient<Serializable, Serializable> remoteService =
                             factory.createRemoteHttpCacheClientForAttributes( attributes );
 
-                    if ( log.isInfoEnabled() )
-                    {
-                        log.info( "Performing Alive check on service " + remoteService );
-                    }
+                    log.info( "Performing Alive check on service " + remoteService );
                     // If we can't fix them, just skip and re-try in
                     // the next round.
                     if ( remoteService.isAlive() )

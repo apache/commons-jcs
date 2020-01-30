@@ -185,10 +185,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
 
             // Initialization finished successfully, so set alive to true.
             setAlive(true);
-            if (log.isInfoEnabled())
-            {
-                log.info(logCacheName + "Indexed Disk Cache is alive.");
-            }
+            log.info(logCacheName + "Indexed Disk Cache is alive.");
 
             // TODO: Should we improve detection of whether or not the file should be optimized.
             if (isRealTimeOptimizationEnabled && keyHash.size() > 0)
@@ -214,10 +211,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
     private void initializeFileSystem(IndexedDiskCacheAttributes cattr)
     {
         this.rafDir = cattr.getDiskPath();
-        if (log.isInfoEnabled())
-        {
-            log.info(logCacheName + "Cache file root directory: " + rafDir);
-        }
+        log.info(logCacheName + "Cache file root directory: " + rafDir);
     }
 
     /**
@@ -236,10 +230,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
 
         if (cattr.isClearDiskOnStartup())
         {
-            if (log.isInfoEnabled())
-            {
-                log.info(logCacheName + "ClearDiskOnStartup is set to true.  Ingnoring any persisted data.");
-            }
+            log.info(logCacheName + "ClearDiskOnStartup is set to true.  Ingnoring any persisted data.");
             initializeEmptyStore();
         }
         else if (keyFile.length() > 0)
@@ -337,11 +328,8 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
 
                 keyHash.putAll(keys);
 
-                if (log.isInfoEnabled())
-                {
-                    log.info(logCacheName + "Loaded keys from [" + fileName + "], key count: " + keyHash.size() + "; up to "
+                log.info(logCacheName + "Loaded keys from [" + fileName + "], key count: " + keyHash.size() + "; up to "
                         + maxKeySize + " will be available.");
-                }
             }
 
             if (log.isDebugEnabled())
@@ -406,10 +394,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
             isOk = false;
         }
 
-        if (log.isInfoEnabled())
-        {
-            log.info(logCacheName + "Finished inital consistency check, isOk = " + isOk + " in " + timer.getElapsedTimeString());
-        }
+        log.info(logCacheName + "Finished inital consistency check, isOk = " + isOk + " in " + timer.getElapsedTimeString());
 
         return isOk;
     }
@@ -458,10 +443,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
     {
         try
         {
-            if (log.isInfoEnabled())
-            {
-                log.info(logCacheName + "Saving keys to: " + fileName + ", key count: " + keyHash.size());
-            }
+            log.info(logCacheName + "Saving keys to: " + fileName + ", key count: " + keyHash.size());
 
             keyFile.reset();
 
@@ -473,10 +455,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
                 keyFile.writeObject(keys, 0);
             }
 
-            if (log.isInfoEnabled())
-            {
-                log.info(logCacheName + "Finished saving keys.");
-            }
+            log.info(logCacheName + "Finished saving keys.");
         }
         catch (IOException e)
         {
@@ -987,20 +966,14 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
                 keyMap = new LRUMapSizeLimited(maxKeySize);
             }
 
-            if (log.isInfoEnabled())
-            {
-                log.info(logCacheName + "Set maxKeySize to: '" + maxKeySize + "'");
-            }
+            log.info(logCacheName + "Set maxKeySize to: '" + maxKeySize + "'");
         }
         else
         {
             // If no max size, use a plain map for memory and processing efficiency.
             keyMap = new HashMap<>();
             // keyHash = Collections.synchronizedMap( new HashMap() );
-            if (log.isInfoEnabled())
-            {
-                log.info(logCacheName + "Set maxKeySize to unlimited'");
-            }
+            log.info(logCacheName + "Set maxKeySize to unlimited'");
         }
         
         return keyMap;
@@ -1090,10 +1063,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
             log.error(logCacheName + "Failure closing files in dispose, filename: " + fileName, e);
         }
 
-        if (log.isInfoEnabled())
-        {
-            log.info(logCacheName + "Shutdown complete.");
-        }
+        log.info(logCacheName + "Shutdown complete.");
     }
 
     /**
@@ -1144,11 +1114,8 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
         {
             isOptimizing = true;
 
-            if (log.isInfoEnabled())
-            {
-                log.info(logCacheName + "Optimizing file. removeCount [" + removeCount + "] OptimizeAtRemoveCount ["
-                    + cattr.getOptimizeAtRemoveCount() + "]");
-            }
+            log.info(logCacheName + "Optimizing file. removeCount [" + removeCount + "] OptimizeAtRemoveCount ["
+                + cattr.getOptimizeAtRemoveCount() + "]");
 
             if (currentOptimizationThread == null)
             {
@@ -1201,10 +1168,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
     {
         ElapsedTimer timer = new ElapsedTimer();
         timesOptimized++;
-        if (log.isInfoEnabled())
-        {
-            log.info(logCacheName + "Beginning Optimization #" + timesOptimized);
-        }
+        log.info(logCacheName + "Beginning Optimization #" + timesOptimized);
 
         // CREATE SNAPSHOT
         IndexedDiskElementDescriptor[] defragList = null;
@@ -1265,10 +1229,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
             storageLock.writeLock().unlock();
         }
 
-        if (log.isInfoEnabled())
-        {
-            log.info(logCacheName + "Finished #" + timesOptimized + " Optimization took " + timer.getElapsedTimeString());
-        }
+        log.info(logCacheName + "Finished #" + timesOptimized + " Optimization took " + timer.getElapsedTimeString());
     }
 
     /**
@@ -1322,11 +1283,8 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
         }
         finally
         {
-            if (log.isInfoEnabled())
-            {
-                log.info(logCacheName + "Defragmentation took " + timer.getElapsedTimeString() + ". File Size (before="
-                    + preFileSize + ") (after=" + postFileSize + ") (truncating to " + expectedNextPos + ")");
-            }
+            log.info(logCacheName + "Defragmentation took " + timer.getElapsedTimeString() + ". File Size (before="
+                + preFileSize + ") (after=" + postFileSize + ") (truncating to " + expectedNextPos + ")");
         }
 
         return 0;

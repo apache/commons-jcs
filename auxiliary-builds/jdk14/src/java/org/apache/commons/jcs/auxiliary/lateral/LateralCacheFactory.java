@@ -145,10 +145,7 @@ public class LateralCacheFactory
         if ( lac.isReceive() )
         {
 
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "Creating listener for " + lac );
-            }
+            log.info( "Creating listener for " + lac );
 
             try
             {

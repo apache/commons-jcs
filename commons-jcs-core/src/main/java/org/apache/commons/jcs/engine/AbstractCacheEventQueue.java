@@ -238,10 +238,7 @@ public abstract class AbstractCacheEventQueue<K, V>
                     destroy();
                     return;
                 }
-                if ( log.isInfoEnabled() )
-                {
-                    log.info( "Error while running event from Queue: " + this + ". Retrying..." );
-                }
+                log.info( "Error while running event from Queue: " + this + ". Retrying..." );
                 try
                 {
                     Thread.sleep( waitBeforeRetry );

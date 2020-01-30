@@ -108,13 +108,10 @@ public class JGConnectionHolder
         {
             //jg = JGSocketOpener.openSocket( ilca, 5000, IJGConstants.DEFAULT_JG_GROUP_NAME );
             jg = JGSocketOpener.openSocket( ilca, 5000, this.ilca.getCacheName() );
-            if ( log.isInfoEnabled() )
+            log.info( "Created channel " + jg + " for region name " + this.ilca.getCacheName() );
+            if ( jg != null )
             {
-                log.info( "Created channel " + jg + " for region name " + this.ilca.getCacheName() );
-                if ( jg != null )
-                {
-                    log.info( "Channel connection status; Connected = " + jg.isConnected() + " Open = " + jg.isOpen() );
-                }
+                log.info( "Channel connection status; Connected = " + jg.isConnected() + " Open = " + jg.isOpen() );
             }
         }
         return jg;

@@ -63,10 +63,7 @@ public class RemoteUtils
     {
         Registry registry = null;
 
-        // if ( log.isInfoEnabled() )
-        // {
         // log.info( "createRegistry> Setting security manager" );
-        // }
         //
         // System.setSecurityManager( new RMISecurityManager() );
 
@@ -196,11 +193,8 @@ public class RemoteUtils
             // Don't set a socket factory if the setting is -1
             if (timeoutMillis > 0)
             {
-                if (log.isInfoEnabled())
-                {
-                    log.info("RmiSocketFactoryTimeoutMillis [" + timeoutMillis + "]. "
-                            + " Configuring a custom socket factory.");
-                }
+                log.info("RmiSocketFactoryTimeoutMillis [" + timeoutMillis + "]. "
+                        + " Configuring a custom socket factory.");
 
                 // use this socket factory to add a timeout.
                 RMISocketFactory.setSocketFactory(new RMISocketFactory()

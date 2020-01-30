@@ -85,10 +85,7 @@ public class RemoteCacheListener<K, V>
     {
         if ( !disposed )
         {
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "Unexporting listener." );
-            }
+            log.info( "Unexporting listener." );
             try
             {
                 UnicastRemoteObject.unexportObject( this, true );

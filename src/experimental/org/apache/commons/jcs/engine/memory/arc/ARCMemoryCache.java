@@ -94,10 +94,7 @@ public class ARCMemoryCache
      */
     public ARCMemoryCache()
     {
-        if ( log.isInfoEnabled() )
-        {
-            log.info( "Loading Arc" );
-        }
+        log.info( "Loading Arc" );
     }
 
     /**
@@ -490,14 +487,11 @@ public class ARCMemoryCache
         if ( cnt % 10000 == 0 )
         // if ( true )
         {
-            if ( log.isInfoEnabled() )
-            {
-                StringBuilder buf = new StringBuilder();
-                buf.append( "\n ce.key() = " ).append( ce.getKey() );
-                buf.append( "\n isGet = " ).append( isGet );
-                buf.append( getStats() );
-                log.info( buf.toString() );
-            }
+            StringBuilder buf = new StringBuilder();
+            buf.append( "\n ce.key() = " ).append( ce.getKey() );
+            buf.append( "\n isGet = " ).append( isGet );
+            buf.append( getStats() );
+            log.info( buf.toString() );
         }
     }
 

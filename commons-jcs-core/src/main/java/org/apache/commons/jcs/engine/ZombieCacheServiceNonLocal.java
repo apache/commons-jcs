@@ -211,10 +211,7 @@ public class ZombieCacheServiceNonLocal<K, V>
         throws Exception
     {
         int cnt = 0;
-        if ( log.isInfoEnabled() )
-        {
-            log.info( "Propagating events to the new ICacheServiceNonLocal." );
-        }
+        log.info( "Propagating events to the new ICacheServiceNonLocal." );
         ElapsedTimer timer = new ElapsedTimer();
         while ( !queue.isEmpty() )
         {
@@ -240,11 +237,8 @@ public class ZombieCacheServiceNonLocal<K, V>
                 service.removeAll( event.cacheName, event.requesterId );
             }
         }
-        if ( log.isInfoEnabled() )
-        {
-            log.info( "Propagated " + cnt + " events to the new ICacheServiceNonLocal in "
-                + timer.getElapsedTimeString() );
-        }
+        log.info( "Propagated " + cnt + " events to the new ICacheServiceNonLocal in "
+            + timer.getElapsedTimeString() );
     }
 
     /**

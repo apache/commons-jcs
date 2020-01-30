@@ -146,10 +146,7 @@ public class CompositeCache<K, V>
 
         createMemoryCache(cattr);
 
-        if (log.isInfoEnabled())
-        {
-            log.info("Constructed cache with name [" + cacheAttr.getCacheName() + "] and cache attributes " + cattr);
-        }
+        log.info("Constructed cache with name [" + cacheAttr.getCacheName() + "] and cache attributes " + cattr);
     }
 
     /**
@@ -1285,10 +1282,7 @@ public class CompositeCache<K, V>
             return;
         }
 
-        if (log.isInfoEnabled())
-        {
-            log.info("In DISPOSE, [" + this.cacheAttr.getCacheName() + "] fromRemote [" + fromRemote + "]");
-        }
+        log.info("In DISPOSE, [" + this.cacheAttr.getCacheName() + "] fromRemote [" + fromRemote + "]");
 
         // Remove us from the cache managers list
         // This will call us back but exit immediately
@@ -1323,18 +1317,12 @@ public class CompositeCache<K, V>
                 if (aux == null || aux.getStatus() != CacheStatus.ALIVE
                     || (fromRemote && aux.getCacheType() == CacheType.REMOTE_CACHE))
                 {
-                    if (log.isInfoEnabled())
-                    {
-                        log.info("In DISPOSE, [" + this.cacheAttr.getCacheName() + "] SKIPPING auxiliary [" + aux.getCacheName() + "] fromRemote ["
-                            + fromRemote + "]");
-                    }
+                    log.info("In DISPOSE, [" + this.cacheAttr.getCacheName() + "] SKIPPING auxiliary [" + aux.getCacheName() + "] fromRemote ["
+                        + fromRemote + "]");
                     continue;
                 }
 
-                if (log.isInfoEnabled())
-                {
-                    log.info("In DISPOSE, [" + this.cacheAttr.getCacheName() + "] auxiliary [" + aux.getCacheName() + "]");
-                }
+                log.info("In DISPOSE, [" + this.cacheAttr.getCacheName() + "] auxiliary [" + aux.getCacheName() + "]");
 
                 // IT USED TO BE THE CASE THAT (If the auxiliary is not a lateral, or the cache
                 // attributes
@@ -1346,11 +1334,7 @@ public class CompositeCache<K, V>
                 {
                     int numToFree = memCache.getSize();
                     memCache.freeElements(numToFree);
-
-                    if (log.isInfoEnabled())
-                    {
-                        log.info("In DISPOSE, [" + this.cacheAttr.getCacheName() + "] put " + numToFree + " into auxiliary " + aux.getCacheName());
-                    }
+                    log.info("In DISPOSE, [" + this.cacheAttr.getCacheName() + "] put " + numToFree + " into auxiliary " + aux.getCacheName());
                 }
 
                 // Dispose of the auxiliary
@@ -1362,10 +1346,7 @@ public class CompositeCache<K, V>
             }
         }
 
-        if (log.isInfoEnabled())
-        {
-            log.info("In DISPOSE, [" + this.cacheAttr.getCacheName() + "] disposing of memory cache.");
-        }
+        log.info("In DISPOSE, [" + this.cacheAttr.getCacheName() + "] disposing of memory cache.");
         try
         {
             memCache.dispose();

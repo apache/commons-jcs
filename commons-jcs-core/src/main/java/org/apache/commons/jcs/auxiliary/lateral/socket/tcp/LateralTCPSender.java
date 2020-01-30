@@ -102,10 +102,7 @@ public class LateralTCPSender
     {
         try
         {
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "Attempting connection to [" + host + "]" );
-            }
+            log.info( "Attempting connection to [" + host + "]" );
 
             // have time out socket open do this for us
             try
@@ -261,10 +258,7 @@ public class LateralTCPSender
     public void dispose()
         throws IOException
     {
-        if ( log.isInfoEnabled() )
-        {
-            log.info( "Dispose called" );
-        }
+        log.info( "Dispose called" );
         // WILL CLOSE CONNECTION USED BY ALL
         oos.close();
         socket.close();

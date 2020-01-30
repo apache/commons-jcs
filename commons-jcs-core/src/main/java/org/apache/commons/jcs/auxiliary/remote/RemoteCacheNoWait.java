@@ -175,10 +175,7 @@ public class RemoteCacheNoWait<K, V>
             }
             catch ( IOException ex )
             {
-                if ( log.isInfoEnabled() )
-                {
-                    log.info( "Failed in retrying the get for the second time. " + ex.getMessage() );
-                }
+                log.info( "Failed in retrying the get for the second time. " + ex.getMessage() );
             }
         }
         catch ( IOException ex )
@@ -220,10 +217,7 @@ public class RemoteCacheNoWait<K, V>
             }
             catch ( IOException ex )
             {
-                if ( log.isInfoEnabled() )
-                {
-                    log.info( "Failed in retrying the getMatching for the second time. " + ex.getMessage() );
-                }
+                log.info( "Failed in retrying the getMatching for the second time. " + ex.getMessage() );
             }
         }
         catch ( IOException ex )
@@ -268,10 +262,7 @@ public class RemoteCacheNoWait<K, V>
             }
             catch ( IOException ex )
             {
-                if ( log.isInfoEnabled() )
-                {
-                    log.info( "Failed in retrying the getMultiple for the second time. " + ex.getMessage() );
-                }
+                log.info( "Failed in retrying the getMultiple for the second time. " + ex.getMessage() );
             }
         }
         catch ( IOException ex )
@@ -430,10 +421,7 @@ public class RemoteCacheNoWait<K, V>
         if ( previousQueue.isWorking() )
         {
             // we don't expect anything, it would have all gone to the zombie
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "resetEventQ, previous queue has [" + previousQueue.size() + "] items queued up." );
-            }
+            log.info( "resetEventQ, previous queue has [" + previousQueue.size() + "] items queued up." );
             previousQueue.destroy();
         }
     }

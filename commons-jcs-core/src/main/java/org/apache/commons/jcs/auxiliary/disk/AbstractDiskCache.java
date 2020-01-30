@@ -413,10 +413,7 @@ public abstract class AbstractDiskCache<K, V>
         }
         else
         {
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "RemoveAll was requested but the request was not fulfilled: allowRemoveAll is set to false." );
-            }
+            log.info( "RemoveAll was requested but the request was not fulfilled: allowRemoveAll is set to false." );
         }
     }
 

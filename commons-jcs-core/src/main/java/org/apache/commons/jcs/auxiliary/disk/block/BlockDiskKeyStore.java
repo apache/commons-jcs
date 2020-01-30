@@ -102,18 +102,10 @@ public class BlockDiskKeyStore<K>
         this.blockSize = cacheAttributes.getBlockSizeBytes();
 
         File rootDirectory = cacheAttributes.getDiskPath();
-
-        if (log.isInfoEnabled())
-        {
-            log.info(logCacheName + "Cache file root directory [" + rootDirectory + "]");
-        }
+        log.info(logCacheName + "Cache file root directory [" + rootDirectory + "]");
 
         this.keyFile = new File(rootDirectory, fileName + ".key");
-
-        if (log.isInfoEnabled())
-        {
-            log.info(logCacheName + "Key File [" + this.keyFile.getAbsolutePath() + "]");
-        }
+        log.info(logCacheName + "Key File [" + this.keyFile.getAbsolutePath() + "]");
 
         if (keyFile.length() > 0)
         {
@@ -141,10 +133,7 @@ public class BlockDiskKeyStore<K>
         {
             ElapsedTimer timer = new ElapsedTimer();
             int numKeys = keyHash.size();
-            if (log.isInfoEnabled())
-            {
-                log.info(logCacheName + "Saving keys to [" + this.keyFile.getAbsolutePath() + "], key count [" + numKeys + "]");
-            }
+            log.info(logCacheName + "Saving keys to [" + this.keyFile.getAbsolutePath() + "], key count [" + numKeys + "]");
 
             synchronized (keyFile)
             {
@@ -170,11 +159,8 @@ public class BlockDiskKeyStore<K>
                 }
             }
 
-            if (log.isInfoEnabled())
-            {
-                log.info(logCacheName + "Finished saving keys. It took " + timer.getElapsedTimeString() + " to store " + numKeys
-                        + " keys.  Key file length [" + keyFile.length() + "]");
-            }
+            log.info(logCacheName + "Finished saving keys. It took " + timer.getElapsedTimeString() + " to store " + numKeys
+                    + " keys.  Key file length [" + keyFile.length() + "]");
         }
         catch (IOException e)
         {
@@ -219,10 +205,7 @@ public class BlockDiskKeyStore<K>
             {
                 keyHash = new LRUMapCountLimited(maxKeySize);
             }
-            if (log.isInfoEnabled())
-            {
-                log.info(logCacheName + "Set maxKeySize to: '" + maxKeySize + "'");
-            }
+            log.info(logCacheName + "Set maxKeySize to: '" + maxKeySize + "'");
         }
         else
         {
@@ -230,10 +213,7 @@ public class BlockDiskKeyStore<K>
             // efficiency.
             keyHash = new HashMap<>();
             // keyHash = Collections.synchronizedMap( new HashMap() );
-            if (log.isInfoEnabled())
-            {
-                log.info(logCacheName + "Set maxKeySize to unlimited'");
-            }
+            log.info(logCacheName + "Set maxKeySize to unlimited'");
         }
     }
 
@@ -243,10 +223,7 @@ public class BlockDiskKeyStore<K>
      */
     protected void loadKeys()
     {
-        if (log.isInfoEnabled())
-        {
-            log.info(logCacheName + "Loading keys for " + keyFile.toString());
-        }
+        log.info(logCacheName + "Loading keys for " + keyFile.toString());
 
         try
         {
@@ -288,11 +265,8 @@ public class BlockDiskKeyStore<K>
                     log.debug(logCacheName + "Found " + keys.size() + " in keys file.");
                 }
 
-                if (log.isInfoEnabled())
-                {
-                    log.info(logCacheName + "Loaded keys from [" + fileName + "], key count: " + keyHash.size() + "; up to "
-                            + maxKeySize + " will be available.");
-                }
+                log.info(logCacheName + "Loaded keys from [" + fileName + "], key count: " + keyHash.size() + "; up to "
+                        + maxKeySize + " will be available.");
             }
         }
         catch (Exception e)

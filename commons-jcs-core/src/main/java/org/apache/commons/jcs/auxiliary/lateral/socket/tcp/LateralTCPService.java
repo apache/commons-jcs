@@ -76,10 +76,7 @@ public class LateralTCPService<K, V>
         {
             sender = new LateralTCPSender( lca );
 
-            if ( log.isInfoEnabled() )
-            {
-                log.debug( "Created sender to [" + lca.getTcpServer() + "]" );
-            }
+            log.debug( "Created sender to [" + lca.getTcpServer() + "]" );
         }
         catch ( IOException e )
         {

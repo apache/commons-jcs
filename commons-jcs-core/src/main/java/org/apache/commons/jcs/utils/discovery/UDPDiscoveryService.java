@@ -182,10 +182,7 @@ public class UDPDiscoveryService
 
         if ( contained )
         {
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "Removing " + service );
-            }
+            log.info( "Removing " + service );
         }
 
         for (IDiscoveryListener listener : getDiscoveryListeners())
@@ -208,10 +205,7 @@ public class UDPDiscoveryService
             // The equals method on the object being added is intentionally restricted.
             if ( !getDiscoveredServices().contains( discoveredService ) )
             {
-                if ( log.isInfoEnabled() )
-                {
-                    log.info( "Set does not contain service. I discovered " + discoveredService );
-                }
+                log.info( "Set does not contain service. I discovered " + discoveredService );
                 if ( log.isDebugEnabled() )
                 {
                     log.debug( "Adding service in the set " + discoveredService );
@@ -244,10 +238,7 @@ public class UDPDiscoveryService
                 {
                     if ( !theOldServiceInformation.getCacheNames().equals( discoveredService.getCacheNames() ) )
                     {
-                        if ( log.isInfoEnabled() )
-                        {
-                            log.info( "List of cache names changed for service: " + discoveredService );
-                        }
+                        log.info( "List of cache names changed for service: " + discoveredService );
                     }
                 }
 
@@ -316,10 +307,7 @@ public class UDPDiscoveryService
         {
             shutdown = true;
 
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "Shutting down UDP discovery service receiver." );
-            }
+            log.info( "Shutting down UDP discovery service receiver." );
 
             try
             {
@@ -332,10 +320,7 @@ public class UDPDiscoveryService
                 log.error( "Problem interrupting UDP receiver thread." );
             }
 
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "Shutting down UDP discovery service sender." );
-            }
+            log.info( "Shutting down UDP discovery service sender." );
 
             // also call the shutdown on the sender thread itself, which
             // will result in a remove command.

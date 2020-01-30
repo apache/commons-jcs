@@ -136,10 +136,7 @@ public class RemoteCacheStartupServlet
             }
 
             RemoteCacheServerFactory.startup(registryHost, registryPort, props);
-            if (log.isInfoEnabled())
-            {
-                log.info("Remote JCS Server started with properties from " + propsFileName);
-            }
+            log.info("Remote JCS Server started with properties from " + propsFileName);
         }
         catch (IOException e)
         {
@@ -171,10 +168,7 @@ public class RemoteCacheStartupServlet
             throw new ServletException(e);
         }
 
-        if (log.isInfoEnabled())
-        {
-            log.info(stats);
-        }
+        log.info(stats);
 
         try
         {

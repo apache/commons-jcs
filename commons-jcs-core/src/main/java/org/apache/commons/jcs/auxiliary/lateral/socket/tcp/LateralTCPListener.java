@@ -127,10 +127,7 @@ public class LateralTCPListener<K, V>
 
             instances.put( String.valueOf( ilca.getTcpListenerPort() ), ins );
 
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "Created new listener " + ilca.getTcpListenerPort() );
-            }
+            log.info( "Created new listener " + ilca.getTcpListenerPort() );
         }
 
         return ins;
@@ -226,13 +223,10 @@ public class LateralTCPListener<K, V>
         throws IOException
     {
         putCnt++;
-        if ( log.isInfoEnabled() )
+        if ( getPutCnt() % 100 == 0 )
         {
-            if ( getPutCnt() % 100 == 0 )
-            {
-                log.info( "Put Count (port " + getTcpLateralCacheAttributes().getTcpListenerPort() + ") = "
-                    + getPutCnt() );
-            }
+            log.info( "Put Count (port " + getTcpLateralCacheAttributes().getTcpListenerPort() + ") = "
+                + getPutCnt() );
         }
 
         if ( log.isDebugEnabled() )
@@ -255,12 +249,9 @@ public class LateralTCPListener<K, V>
         throws IOException
     {
         removeCnt++;
-        if ( log.isInfoEnabled() )
+        if ( getRemoveCnt() % 100 == 0 )
         {
-            if ( getRemoveCnt() % 100 == 0 )
-            {
-                log.info( "Remove Count = " + getRemoveCnt() );
-            }
+            log.info( "Remove Count = " + getRemoveCnt() );
         }
 
         if ( log.isDebugEnabled() )
@@ -300,13 +291,10 @@ public class LateralTCPListener<K, V>
         throws IOException
     {
         getCnt++;
-        if ( log.isInfoEnabled() )
+        if ( getGetCnt() % 100 == 0 )
         {
-            if ( getGetCnt() % 100 == 0 )
-            {
-                log.info( "Get Count (port " + getTcpLateralCacheAttributes().getTcpListenerPort() + ") = "
-                    + getGetCnt() );
-            }
+            log.info( "Get Count (port " + getTcpLateralCacheAttributes().getTcpListenerPort() + ") = "
+                + getGetCnt() );
         }
 
         if ( log.isDebugEnabled() )
@@ -329,13 +317,10 @@ public class LateralTCPListener<K, V>
         throws IOException
     {
         getCnt++;
-        if ( log.isInfoEnabled() )
+        if ( getGetCnt() % 100 == 0 )
         {
-            if ( getGetCnt() % 100 == 0 )
-            {
-                log.info( "GetMatching Count (port " + getTcpLateralCacheAttributes().getTcpListenerPort() + ") = "
-                    + getGetCnt() );
-            }
+            log.info( "GetMatching Count (port " + getTcpLateralCacheAttributes().getTcpListenerPort() + ") = "
+                + getGetCnt() );
         }
 
         if ( log.isDebugEnabled() )
@@ -367,10 +352,7 @@ public class LateralTCPListener<K, V>
     public void handleDispose( String cacheName )
         throws IOException
     {
-        if ( log.isInfoEnabled() )
-        {
-            log.info( "handleDispose > cacheName=" + cacheName + " | Ignoring message.  Do not dispose from remote." );
-        }
+        log.info( "handleDispose > cacheName=" + cacheName + " | Ignoring message.  Do not dispose from remote." );
 
         // TODO handle active deregistration, rather than passive detection
         terminated.set(true);
@@ -738,11 +720,7 @@ public class LateralTCPListener<K, V>
     {
         if ( shutdown.compareAndSet(false, true) )
         {
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "Shutting down TCP Lateral receiver." );
-            }
-
+            log.info( "Shutting down TCP Lateral receiver." );
             receiver.interrupt();
         }
         else

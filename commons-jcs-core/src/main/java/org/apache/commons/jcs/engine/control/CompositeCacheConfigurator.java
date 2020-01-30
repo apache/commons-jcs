@@ -139,10 +139,7 @@ public class CompositeCacheConfigurator
             }
         }
 
-        if ( log.isInfoEnabled() )
-        {
-            log.info( "Parsed regions " + regionNames );
-        }
+        log.info( "Parsed regions " + regionNames );
     }
 
     /**
@@ -326,11 +323,8 @@ public class CompositeCacheConfigurator
 
         if ( ccAttr == null )
         {
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "No special CompositeCacheAttributes class defined for key [" + attrName
-                    + "], using default class." );
-            }
+            log.info( "No special CompositeCacheAttributes class defined for key [" + attrName
+                + "], using default class." );
 
             ccAttr = defaultCCAttr;
         }
@@ -375,10 +369,7 @@ public class CompositeCacheConfigurator
         eAttr = OptionConverter.instantiateByKey( props, attrName, null );
         if ( eAttr == null )
         {
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "No special ElementAttribute class defined for key [" + attrName + "], using default class." );
-            }
+            log.info( "No special ElementAttribute class defined for key [" + attrName + "], using default class." );
 
             eAttr = defaultEAttr;
         }
@@ -530,10 +521,7 @@ public class CompositeCacheConfigurator
         {
             if ( key.startsWith( SYSTEM_PROPERTY_KEY_PREFIX ) )
             {
-                if ( log.isInfoEnabled() )
-                {
-                    log.info( "Using system property [[" + key + "] [" + sysProps.getProperty( key ) + "]]" );
-                }
+                log.info( "Using system property [[" + key + "] [" + sysProps.getProperty( key ) + "]]" );
                 props.setProperty( key, sysProps.getProperty( key ) );
             }
         }
@@ -556,20 +544,14 @@ public class CompositeCacheConfigurator
         {
             String attributePrefix = auxPrefix + KEY_MATCHER_PREFIX + ATTRIBUTE_PREFIX;
             PropertySetter.setProperties( keyMatcher, props, attributePrefix + "." );
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "Using custom key matcher [" + keyMatcher + "] for auxiliary [" + auxPrefix
-                    + "]" );
-            }
+            log.info( "Using custom key matcher [" + keyMatcher + "] for auxiliary [" + auxPrefix
+                + "]" );
         }
         else
         {
             // use the default standard serializer
             keyMatcher = new KeyMatcherPatternImpl<>();
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "Using standard key matcher [" + keyMatcher + "] for auxiliary [" + auxPrefix + "]" );
-            }
+            log.info( "Using standard key matcher [" + keyMatcher + "] for auxiliary [" + auxPrefix + "]" );
         }
         return keyMatcher;
     }

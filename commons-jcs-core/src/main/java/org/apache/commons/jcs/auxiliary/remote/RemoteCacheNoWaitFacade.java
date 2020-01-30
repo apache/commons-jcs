@@ -96,10 +96,7 @@ public class RemoteCacheNoWaitFacade<K, V>
             }
             else
             {
-                if ( log.isInfoEnabled() )
-                {
-                    log.info( "The noWait is not in error" );
-                }
+                log.info( "The noWait is not in error" );
             }
         }
     }

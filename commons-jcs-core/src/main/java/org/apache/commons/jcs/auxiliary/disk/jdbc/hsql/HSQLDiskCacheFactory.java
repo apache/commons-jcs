@@ -101,10 +101,7 @@ public class HSQLDiskCacheFactory
 
         if ( databases.contains( database ) )
         {
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "We already setup database [" + database + "]" );
-            }
+            log.info( "We already setup database [" + database + "]" );
             return;
         }
 
@@ -130,10 +127,7 @@ public class HSQLDiskCacheFactory
         Connection cConn = DriverManager.getConnection( database, user, password );
         setupTable( cConn, attributes.getTableName() );
 
-        if ( log.isInfoEnabled() )
-        {
-            log.info( "Finished setting up database [" + database + "]" );
-        }
+        log.info( "Finished setting up database [" + database + "]" );
 
         databases.add( database );
     }

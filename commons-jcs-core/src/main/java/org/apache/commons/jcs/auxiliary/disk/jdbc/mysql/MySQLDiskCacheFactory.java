@@ -93,11 +93,8 @@ public class MySQLDiskCacheFactory
         {
             if ( attributes.getOptimizationSchedule() != null )
             {
-                if ( log.isInfoEnabled() )
-                {
-                    log.info( "Will try to configure optimization for table [" + attributes.getTableName()
+                log.info( "Will try to configure optimization for table [" + attributes.getTableName()
                         + "] on schedule [" + attributes.getOptimizationSchedule() + "]" );
-                }
 
                 MySQLTableOptimizer optimizer = new MySQLTableOptimizer( attributes, tableState, ds );
 
@@ -120,10 +117,7 @@ public class MySQLDiskCacheFactory
             }
             else
             {
-                if ( log.isInfoEnabled() )
-                {
-                    log.info( "Optimization is not configured for table [" + attributes.getTableName() + "]" );
-                }
+                log.info( "Optimization is not configured for table [" + attributes.getTableName() + "]" );
             }
         }
     }
@@ -136,10 +130,7 @@ public class MySQLDiskCacheFactory
      */
     protected void scheduleOptimization( Date startTime, MySQLTableOptimizer optimizer )
     {
-        if ( log.isInfoEnabled() )
-        {
-            log.info( "startTime [" + startTime + "] for optimizer " + optimizer );
-        }
+        log.info( "startTime [" + startTime + "] for optimizer " + optimizer );
 
         // get the runnable from the factory
         OptimizerTask runnable = new OptimizerTask( optimizer );
@@ -182,10 +173,7 @@ public class MySQLDiskCacheFactory
             if ( optimizer != null )
             {
                 boolean success = optimizer.optimizeTable();
-                if ( log.isInfoEnabled() )
-                {
-                    log.info( "Optimization success status [" + success + "]" );
-                }
+                log.info( "Optimization success status [" + success + "]" );
             }
             else
             {

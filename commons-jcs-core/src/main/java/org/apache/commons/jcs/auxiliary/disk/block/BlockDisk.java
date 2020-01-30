@@ -122,10 +122,7 @@ public class BlockDisk implements AutoCloseable
                 StandardOpenOption.WRITE);
         this.numberOfBlocks.set((int) Math.ceil(1f * this.fc.size() / blockSizeBytes));
 
-        if (log.isInfoEnabled())
-        {
-            log.info("Constructing BlockDisk, blockSizeBytes [" + blockSizeBytes + "]");
-        }
+        log.info("Constructing BlockDisk, blockSizeBytes [" + blockSizeBytes + "]");
 
         this.blockSizeBytes = blockSizeBytes;
         this.elementSerializer = elementSerializer;

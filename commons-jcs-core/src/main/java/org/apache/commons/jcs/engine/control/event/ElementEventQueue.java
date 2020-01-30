@@ -77,10 +77,7 @@ public class ElementEventQueue
             queueProcessor.shutdownNow();
             queueProcessor = null;
 
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "Element event queue destroyed: " + this );
-            }
+            log.info( "Element event queue destroyed: " + this );
         }
     }
 

@@ -78,10 +78,7 @@ public class RemoteHttpCacheClient<K, V>
     {
         setRemoteDispatcher( new RemoteHttpCacheDispatcher( attributes ) );
 
-        if ( log.isInfoEnabled() )
-        {
-            log.info( "Created remote Dispatcher." + getRemoteDispatcher() );
-        }
+        log.info( "Created remote Dispatcher." + getRemoteDispatcher() );
         setInitialized( true );
     }
 

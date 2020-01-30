@@ -97,10 +97,7 @@ public class UDPDiscoveryReceiver
         		new PoolConfiguration(false, 0, maxPoolSize, maxPoolSize, 0, WhenBlockedPolicy.DISCARDOLDEST, maxPoolSize),
         		"JCS-UDPDiscoveryReceiver-", Thread.MIN_PRIORITY);
 
-        if ( log.isInfoEnabled() )
-        {
-            log.info( "Constructing listener, [" + this.multicastAddressString + ":" + this.multicastPort + "]" );
-        }
+        log.info( "Constructing listener, [" + this.multicastAddressString + ":" + this.multicastPort + "]" );
 
         createSocket( this.multicastAddressString, this.multicastPort );
     }
@@ -118,10 +115,7 @@ public class UDPDiscoveryReceiver
         try
         {
             mSocket = new MulticastSocket( multicastPort );
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "Joining Group: [" + InetAddress.getByName( multicastAddressString ) + "]" );
-            }
+            log.info( "Joining Group: [" + InetAddress.getByName( multicastAddressString ) + "]" );
             mSocket.joinGroup( InetAddress.getByName( multicastAddressString ) );
         }
         catch ( IOException e )

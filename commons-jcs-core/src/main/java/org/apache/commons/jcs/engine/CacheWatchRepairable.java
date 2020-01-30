@@ -65,11 +65,8 @@ public class CacheWatchRepairable
             {
                 try
                 {
-                    if ( log.isInfoEnabled() )
-                    {
-                        log.info( "Adding listener to cache watch. ICacheListener = " + listener
-                            + " | ICacheObserver = " + cacheWatch );
-                    }
+                    log.info( "Adding listener to cache watch. ICacheListener = " + listener
+                        + " | ICacheObserver = " + cacheWatch );
                     cacheWatch.addCacheListener( cacheName, listener );
                 }
                 catch ( IOException ex )
@@ -100,11 +97,8 @@ public class CacheWatchRepairable
 
         listenerSet.add( obj );
 
-        if ( log.isInfoEnabled() )
-        {
-            log.info( "Adding listener to cache watch. ICacheListener = " + obj
-                + " | ICacheObserver = " + cacheWatch + " | cacheName = " + cacheName );
-        }
+        log.info( "Adding listener to cache watch. ICacheListener = " + obj
+            + " | ICacheObserver = " + cacheWatch + " | cacheName = " + cacheName );
         cacheWatch.addCacheListener( cacheName, obj );
     }
 
@@ -125,11 +119,8 @@ public class CacheWatchRepairable
             listenerSet.add( obj );
         }
 
-        if ( log.isInfoEnabled() )
-        {
-            log.info( "Adding listener to cache watch. ICacheListener = " + obj
-                + " | ICacheObserver = " + cacheWatch );
-        }
+        log.info( "Adding listener to cache watch. ICacheListener = " + obj
+            + " | ICacheObserver = " + cacheWatch );
         cacheWatch.addCacheListener( obj );
     }
 
@@ -144,10 +135,7 @@ public class CacheWatchRepairable
     public <K, V> void removeCacheListener( String cacheName, ICacheListener<K, V> obj )
         throws IOException
     {
-        if ( log.isInfoEnabled() )
-        {
-            log.info( "removeCacheListener, cacheName [" + cacheName + "]" );
-        }
+        log.info( "removeCacheListener, cacheName [" + cacheName + "]" );
         // Record the removal locally, regardless of whether the remote
         // remove-listener operation succeeds or fails.
         Set<ICacheListener<?, ?>> listenerSet = cacheMap.get( cacheName );
@@ -166,10 +154,7 @@ public class CacheWatchRepairable
     public <K, V> void removeCacheListener( ICacheListener<K, V> obj )
         throws IOException
     {
-        if ( log.isInfoEnabled() )
-        {
-            log.info( "removeCacheListener, ICacheListener [" + obj + "]" );
-        }
+        log.info( "removeCacheListener, ICacheListener [" + obj + "]" );
 
         // Record the removal locally, regardless of whether the remote
         // remove-listener operation succeeds or fails.

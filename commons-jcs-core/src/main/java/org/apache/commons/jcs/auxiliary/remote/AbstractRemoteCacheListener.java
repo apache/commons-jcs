@@ -91,10 +91,7 @@ public abstract class AbstractRemoteCacheListener<K, V>
         throws IOException
     {
         listenerId = id;
-        if ( log.isInfoEnabled() )
-        {
-            log.info( "set listenerId = [" + id + "]" );
-        }
+        log.info( "set listenerId = [" + id + "]" );
     }
 
     /**

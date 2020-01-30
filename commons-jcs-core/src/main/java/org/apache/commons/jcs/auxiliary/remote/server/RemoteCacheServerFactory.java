@@ -121,10 +121,7 @@ public class RemoteCacheServerFactory
 
             // These should come from the file!
             rcsa.setRemoteLocation( host, port );
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "Creating server with these attributes: " + rcsa );
-            }
+            log.info( "Creating server with these attributes: " + rcsa );
 
             setServiceName( rcsa.getRemoteServiceName() );
 
@@ -204,17 +201,11 @@ public class RemoteCacheServerFactory
         {
             PropertySetter.setProperties( customRMISocketFactory, props, CUSTOM_RMI_SOCKET_FACTORY_PROPERTY_PREFIX
                 + "." );
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "Will use server specific custom socket factory. " + customRMISocketFactory );
-            }
+            log.info( "Will use server specific custom socket factory. " + customRMISocketFactory );
         }
         else
         {
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "No server specific custom socket factory defined." );
-            }
+            log.info( "No server specific custom socket factory defined." );
         }
         return customRMISocketFactory;
     }
@@ -240,10 +231,7 @@ public class RemoteCacheServerFactory
             throw new RemoteException( "Cannot register the server: Registry is null." );
         }
 
-        if ( log.isInfoEnabled() )
-        {
-            log.info( "Binding server to " + serviceName );
-        }
+        log.info( "Binding server to " + serviceName );
 
         registry.rebind( serviceName, server );
     }

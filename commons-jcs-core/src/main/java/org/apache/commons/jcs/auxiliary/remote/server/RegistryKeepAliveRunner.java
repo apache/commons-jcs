@@ -175,10 +175,7 @@ public class RegistryKeepAliveRunner
             {
                 cacheEventLogger.logApplicationEvent( "RegistryKeepAliveRunner", "registerServer", message );
             }
-            if ( log.isInfoEnabled() )
-            {
-                log.info( message );
-            }
+            log.info( message );
         }
         catch ( RemoteException e )
         {

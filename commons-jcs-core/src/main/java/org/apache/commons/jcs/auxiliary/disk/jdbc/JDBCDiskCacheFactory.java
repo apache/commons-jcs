@@ -188,11 +188,8 @@ public class JDBCDiskCacheFactory
                 ShrinkerThread newShrinkerThread = new ShrinkerThread();
 
                 long intervalMillis = Math.max( 999, cattr.getShrinkerIntervalSeconds() * 1000 );
-                if ( log.isInfoEnabled() )
-                {
-                    log.info( "Setting the shrinker to run every [" + intervalMillis + "] ms. for table ["
+                log.info( "Setting the shrinker to run every [" + intervalMillis + "] ms. for table ["
                         + key + "]" );
-                }
                 shrinkerService.scheduleAtFixedRate(newShrinkerThread, 0, intervalMillis, TimeUnit.MILLISECONDS);
 
                 return newShrinkerThread;

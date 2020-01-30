@@ -95,10 +95,7 @@ public class ShrinkerThread
      */
     private void deleteExpiredFromAllRegisteredRegions()
     {
-        if ( log.isInfoEnabled() )
-        {
-            log.info( "Running JDBC disk cache shrinker.  Number of regions [" + shrinkSet.size() + "]" );
-        }
+        log.info( "Running JDBC disk cache shrinker.  Number of regions [" + shrinkSet.size() + "]" );
 
         Object[] caches = null;
 
@@ -117,20 +114,14 @@ public class ShrinkerThread
                 int deleted = cache.deleteExpired();
                 long end = System.currentTimeMillis();
 
-                if ( log.isInfoEnabled() )
-                {
-                    log.info( "Deleted [" + deleted + "] expired for region [" + cache.getCacheName() + "] for table ["
+                log.info( "Deleted [" + deleted + "] expired for region [" + cache.getCacheName() + "] for table ["
                         + cache.getTableName() + "] in " + ( end - start ) + " ms." );
-                }
 
                 // don't pause after the last call to delete expired.
                 if ( i < caches.length - 1 )
                 {
-                    if ( log.isInfoEnabled() )
-                    {
-                        log.info( "Pausing for [" + this.getPauseBetweenRegionCallsMillis()
+                    log.info( "Pausing for [" + this.getPauseBetweenRegionCallsMillis()
                             + "] ms. before shrinking the next region." );
-                    }
 
                     try
                     {

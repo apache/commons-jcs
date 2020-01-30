@@ -793,10 +793,7 @@ public class PartitionedCacheAccess<K, V>
         propertyValue = System.getProperty( propertyName );
         if ( propertyValue != null )
         {
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "Found system property override: Name [" + propertyName + "] Value [" + propertyValue + "]" );
-            }
+            log.info( "Found system property override: Name [" + propertyName + "] Value [" + propertyValue + "]" );
         }
         else
         {
@@ -810,10 +807,7 @@ public class PartitionedCacheAccess<K, V>
             }
             else
             {
-                if ( log.isInfoEnabled() )
-                {
-                    log.info( "Name [" + propertyName + "] Value [" + propertyValue + "]" );
-                }
+                log.info( "Name [" + propertyName + "] Value [" + propertyValue + "]" );
             }
         }
         return propertyValue;

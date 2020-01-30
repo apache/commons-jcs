@@ -166,11 +166,8 @@ public class LateralTCPDiscoveryListener
         {
             if ( !knownDifferentlyConfiguredRegions.contains( noWait.getCacheName() ) )
             {
-                if ( log.isInfoEnabled() )
-                {
-                    log.info( "addNoWait > Different nodes are configured differently or region ["
-                        + noWait.getCacheName() + "] is not yet used on this side.  " );
-                }
+                log.info( "addNoWait > Different nodes are configured differently or region ["
+                    + noWait.getCacheName() + "] is not yet used on this side.  " );
                 knownDifferentlyConfiguredRegions.add( noWait.getCacheName() );
             }
             return false;
@@ -206,11 +203,8 @@ public class LateralTCPDiscoveryListener
         {
             if ( !knownDifferentlyConfiguredRegions.contains( noWait.getCacheName() ) )
             {
-                if ( log.isInfoEnabled() )
-                {
-                    log.info( "removeNoWait > Different nodes are configured differently or region ["
-                        + noWait.getCacheName() + "] is not yet used on this side.  " );
-                }
+                log.info( "removeNoWait > Different nodes are configured differently or region ["
+                    + noWait.getCacheName() + "] is not yet used on this side.  " );
                 knownDifferentlyConfiguredRegions.add( noWait.getCacheName() );
             }
             return false;

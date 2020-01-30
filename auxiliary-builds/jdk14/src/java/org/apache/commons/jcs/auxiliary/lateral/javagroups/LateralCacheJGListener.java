@@ -154,10 +154,7 @@ public class LateralCacheJGListener
 
                 ins.init();
             }
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "created new listener " + ilca.getJGChannelProperties() );
-            }
+            log.info( "created new listener " + ilca.getJGChannelProperties() );
             instances.put( ilca.getJGChannelProperties(), ins );
         }
 
@@ -180,12 +177,9 @@ public class LateralCacheJGListener
         }
 
         puts++;
-        if ( log.isInfoEnabled() )
+        if ( puts % 100 == 0 )
         {
-            if ( puts % 100 == 0 )
-            {
-                log.info( "puts = " + puts );
-            }
+            log.info( "puts = " + puts );
         }
 
         getCache( element.getCacheName() ).localUpdate( element );

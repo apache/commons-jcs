@@ -118,10 +118,7 @@ public class PooledCacheEventQueue<K, V>
         {
             setWorking(false);
             pool.shutdownNow();
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "Cache event queue destroyed: " + this );
-            }
+            log.info( "Cache event queue destroyed: " + this );
         }
     }
 

@@ -168,10 +168,7 @@ public class CompositeCacheManager
     {
         if ( instance == null )
         {
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "Instance is null, creating with config [" + propsFilename + "]" );
-            }
+            log.info( "Instance is null, creating with config [" + propsFilename + "]" );
 
             instance = createInstance();
         }
@@ -201,10 +198,7 @@ public class CompositeCacheManager
     {
         if ( instance == null )
         {
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "Instance is null, returning unconfigured instance" );
-            }
+            log.info( "Instance is null, returning unconfigured instance" );
 
             instance = createInstance();
         }
@@ -403,11 +397,8 @@ public class CompositeCacheManager
             }
             else
             {
-                if ( log.isInfoEnabled() )
-                {
-                    log.info( "Configure called after the manager has been configured.  "
-                        + "Force reconfiguration is true.  Reconfiguring as best we can." );
-                }
+                log.info( "Configure called after the manager has been configured.  "
+                    + "Force reconfiguration is true.  Reconfiguring as best we can." );
             }
         }
         if ( useSystemProperties )
@@ -466,10 +457,7 @@ public class CompositeCacheManager
         configurator.parseRegions( properties, this );
 
         long end = System.currentTimeMillis();
-        if ( log.isInfoEnabled() )
-        {
-            log.info( "Finished configuration in " + ( end - start ) + " ms." );
-        }
+        log.info( "Finished configuration in " + ( end - start ) + " ms." );
 
         isConfigured = true;
     }

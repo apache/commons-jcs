@@ -266,10 +266,7 @@ public class IndexedDisk implements AutoCloseable
     protected void truncate(long length)
         throws IOException
     {
-        if (log.isInfoEnabled())
-        {
-            log.info("Truncating file [" + filepath + "] to " + length);
-        }
+        log.info("Truncating file [" + filepath + "] to " + length);
         fc.truncate(length);
     }
 
