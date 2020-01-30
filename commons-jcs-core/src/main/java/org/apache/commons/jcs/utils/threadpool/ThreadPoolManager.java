@@ -321,11 +321,11 @@ public class ThreadPoolManager
 
         if ( props == null )
         {
-            log.warn( "No configuration settings found.  Using hardcoded default values for all pools." );
+            log.info( "No configuration settings found.  Using hardcoded default values for all pools." );
             props = new Properties();
         }
 
-        // set intial default and then override if new
+        // set initial default and then override if new
         // settings are available
         defaultConfig = new PoolConfiguration();
         defaultConfig = loadConfig( DEFAULT_PROP_NAME_ROOT );
