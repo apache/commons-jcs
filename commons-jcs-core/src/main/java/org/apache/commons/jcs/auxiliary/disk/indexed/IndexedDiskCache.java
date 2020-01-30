@@ -928,9 +928,9 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
      */
     private void reset()
     {
-        if (log.isWarnEnabled())
+        if (log.isInfoEnabled())
         {
-            log.warn(logCacheName + "Resetting cache");
+            log.info(logCacheName + "Resetting cache");
         }
 
         try
