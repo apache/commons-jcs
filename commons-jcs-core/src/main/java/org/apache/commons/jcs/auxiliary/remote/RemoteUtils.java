@@ -69,10 +69,7 @@ public class RemoteUtils
 
         if (port < 1024)
         {
-            if (log.isWarnEnabled())
-            {
-                log.warn("createRegistry> Port chosen was less than 1024, will use default [" + Registry.REGISTRY_PORT + "] instead.");
-            }
+            log.warn("createRegistry> Port chosen was less than 1024, will use default [" + Registry.REGISTRY_PORT + "] instead.");
             port = Registry.REGISTRY_PORT;
         }
 

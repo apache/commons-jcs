@@ -224,17 +224,11 @@ public abstract class AbstractCacheEventQueue<K, V>
             }
             catch ( IOException e )
             {
-                if ( log.isWarnEnabled() )
-                {
-                    log.warn( e );
-                }
+                log.warn( e );
                 if ( ++failures >= maxFailure )
                 {
-                    if ( log.isWarnEnabled() )
-                    {
-                        log.warn( "Error while running event from Queue: " + this
+                    log.warn( "Error while running event from Queue: " + this
                             + ". Dropping Event and marking Event Queue as non-functional." );
-                    }
                     destroy();
                     return;
                 }
@@ -246,10 +240,7 @@ public abstract class AbstractCacheEventQueue<K, V>
                 }
                 catch ( InterruptedException ie )
                 {
-                    if ( log.isErrorEnabled() )
-                    {
-                        log.warn( "Interrupted while sleeping for retry on event " + this + "." );
-                    }
+                    log.warn( "Interrupted while sleeping for retry on event " + this + "." );
                     destroy();
                 }
             }
