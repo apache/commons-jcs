@@ -1,5 +1,11 @@
 package org.apache.commons.jcs.auxiliary.disk.block;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Random;
+
+import org.apache.commons.jcs.utils.serialization.StandardSerializer;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -20,12 +26,6 @@ package org.apache.commons.jcs.auxiliary.disk.block;
  */
 
 import junit.framework.TestCase;
-import org.apache.commons.jcs.utils.serialization.StandardSerializer;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.util.Random;
 
 /**
  * Test for the disk access layer of the Block Disk Cache.
@@ -55,17 +55,17 @@ public class BlockDiskUnitTest
     private void setUpBlockDisk(String fileName) throws IOException
     {
         File file = new File(rafDir, fileName + ".data");
-        Files.delete(file.toPath());
+        file.delete();
         this.disk = new BlockDisk(file, new StandardSerializer());
     }
-    
+
     private void setUpBlockDisk(String fileName, int blockSize) throws IOException
     {
         File file = new File(rafDir, fileName + ".data");
-        Files.delete(file.toPath());
+        file.delete();
         this.disk = new BlockDisk(file, blockSize, new StandardSerializer());
     }
-    
+
     /**
      * @see junit.framework.TestCase#tearDown()
      */
@@ -357,7 +357,7 @@ public class BlockDiskUnitTest
         assertEquals( "Wrong item retured.", string, result );
     }
 
-    public void testJCS156() throws Exception 
+    public void testJCS156() throws Exception
     {
         // SETUP
         setUpBlockDisk("testJCS156", 4096);
