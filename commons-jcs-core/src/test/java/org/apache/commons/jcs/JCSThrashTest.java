@@ -23,13 +23,13 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.jcs.access.CacheAccess;
 import org.apache.commons.jcs.engine.stats.behavior.IStatElement;
 import org.apache.commons.jcs.engine.stats.behavior.IStats;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
+
+import junit.framework.TestCase;
 
 /**
  * This is based on a test that was posted to the user's list:
@@ -40,28 +40,12 @@ public class JCSThrashTest
     extends TestCase
 {
     /** The logger. */
-    private static final Log LOG = LogFactory.getLog( JCSThrashTest.class.getName() );
+    private static final Log LOG = LogManager.getLog( JCSThrashTest.class.getName() );
 
     /**
      * the cache instance
      */
     protected CacheAccess<String, Serializable> jcs;
-
-    /**
-     * @param args
-     */
-    public static void main( String[] args )
-    {
-        junit.textui.TestRunner.run( JCSThrashTest.class );
-    }
-
-    /**
-     * @param arg0
-     */
-    public JCSThrashTest( String arg0 )
-    {
-        super( arg0 );
-    }
 
     /**
      * Sets up the test

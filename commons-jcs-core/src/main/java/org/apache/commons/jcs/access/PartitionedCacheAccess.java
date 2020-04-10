@@ -34,9 +34,9 @@ import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.commons.jcs.engine.behavior.IElementAttributes;
 import org.apache.commons.jcs.engine.stats.behavior.ICacheStats;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 import org.apache.commons.jcs.utils.props.AbstractPropertyContainer;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * TODO:  Add new methods that will allow you to provide a partition indicator for all major calls.  Add an interface as well.
@@ -61,7 +61,7 @@ public class PartitionedCacheAccess<K, V>
     implements ICacheAccess<K, V>
 {
     /** the logger. */
-    private static final Log log = LogFactory.getLog( PartitionedCacheAccess.class );
+    private static final Log log = LogManager.getLog( PartitionedCacheAccess.class );
 
     /** The number of partitions. */
     private int numberOfPartitions = 1;
@@ -98,7 +98,7 @@ public class PartitionedCacheAccess<K, V>
     {
         if ( key == null || object == null )
         {
-            log.warn( "Bad input key [" + key + "].  Cannot put null into the cache." );
+            log.warn( "Bad input key [{0}].  Cannot put null into the cache.", key );
             return;
         }
 
@@ -114,7 +114,7 @@ public class PartitionedCacheAccess<K, V>
         }
         catch ( CacheException e )
         {
-            log.error( "Problem putting value for key [" + key + "] in cache [" + partitions[partition] + "]" );
+            log.error( "Problem putting value for key [{0}] in cache [{1}]", key, partitions[partition] );
             throw e;
         }
     }
@@ -132,7 +132,7 @@ public class PartitionedCacheAccess<K, V>
     {
         if ( key == null || object == null )
         {
-            log.warn( "Bad input key [" + key + "].  Cannot putSafe null into the cache." );
+            log.warn("Bad input key [{0}].  Cannot putSafe null into the cache.", key);
         }
 
         if (!ensureInit())
@@ -158,7 +158,7 @@ public class PartitionedCacheAccess<K, V>
     {
         if ( key == null || object == null )
         {
-            log.warn( "Bad input key [" + key + "].  Cannot put null into the cache." );
+            log.warn( "Bad input key [{0}].  Cannot put null into the cache.", key );
             return;
         }
 
@@ -175,7 +175,7 @@ public class PartitionedCacheAccess<K, V>
         }
         catch ( CacheException e )
         {
-            log.error( "Problem putting value for key [" + key + "] in cache [" + partitions[partition] + "]" );
+            log.error( "Problem putting value for key [{0}] in cache [{1}]", key, partitions[partition] );
             throw e;
         }
     }
@@ -385,7 +385,7 @@ public class PartitionedCacheAccess<K, V>
         }
         catch ( CacheException e )
         {
-            log.error( "Problem removing value for key [" + key + "] in cache [" + partitions[partition] + "]" );
+            log.error( "Problem removing value for key [{0}] in cache [{1}]", key, partitions[partition] );
             throw e;
         }
     }
@@ -659,10 +659,7 @@ public class PartitionedCacheAccess<K, V>
 
         int partition = (int) ( keyNum % getNumberOfPartitions() );
 
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "Using partition [" + partition + "] for key [" + key + "]" );
-        }
+        log.debug( "Using partition [{0}] for key [{1}]", partition, key);
 
         return partition;
     }
@@ -685,7 +682,7 @@ public class PartitionedCacheAccess<K, V>
         {
             // THIS IS UGLY, but I can't think of a better failsafe right now.
             keyNum = key.hashCode();
-            log.warn( "Couldn't convert [" + key + "] into a number.  Will use hashcode [" + keyNum + "]" );
+            log.warn( "Couldn't convert [{0}] into a number.  Will use hashcode [{1}]", key, keyNum);
         }
         return keyNum;
     }
@@ -734,7 +731,7 @@ public class PartitionedCacheAccess<K, V>
             }
             catch ( CacheException e )
             {
-                log.error( "Problem getting cache for region [" + regionName + "]" );
+                log.error( "Problem getting cache for region [{0}]", regionName );
             }
         }
 
@@ -793,10 +790,7 @@ public class PartitionedCacheAccess<K, V>
         propertyValue = System.getProperty( propertyName );
         if ( propertyValue != null )
         {
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "Found system property override: Name [" + propertyName + "] Value [" + propertyValue + "]" );
-            }
+            log.info("Found system property override: Name [{0}] Value [{1}]", propertyName, propertyValue);
         }
         else
         {
@@ -810,10 +804,7 @@ public class PartitionedCacheAccess<K, V>
             }
             else
             {
-                if ( log.isInfoEnabled() )
-                {
-                    log.info( "Name [" + propertyName + "] Value [" + propertyValue + "]" );
-                }
+                log.info( "Name [{0}] Value [{1}]", propertyName, propertyValue);
             }
         }
         return propertyValue;

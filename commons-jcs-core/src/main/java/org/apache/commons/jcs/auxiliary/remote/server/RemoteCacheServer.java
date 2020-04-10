@@ -48,8 +48,8 @@ import org.apache.commons.jcs.engine.control.CompositeCacheManager;
 import org.apache.commons.jcs.engine.logging.CacheEvent;
 import org.apache.commons.jcs.engine.logging.behavior.ICacheEvent;
 import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 
 /**
  * This class provides remote cache services. The remote cache server propagates events from local
@@ -76,7 +76,7 @@ public class RemoteCacheServer<K, V>
     private static final long serialVersionUID = -8072345435941473116L;
 
     /** log instance */
-    private static final Log log = LogFactory.getLog( RemoteCacheServer.class );
+    private static final Log log = LogManager.getLog( RemoteCacheServer.class );
 
     /** timing -- if we should record operation times. */
     private static final boolean timing = true;
@@ -279,10 +279,7 @@ public class RemoteCacheServer<K, V>
 
             boolean fromCluster = isRequestFromCluster( requesterId );
 
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "In update, requesterId = [" + requesterId + "] fromCluster = " + fromCluster );
-            }
+            log.debug( "In update, requesterId = [{0}] fromCluster = {1}", requesterId, fromCluster );
 
             // ordered cache item update and notification.
             synchronized ( cacheDesc )
@@ -307,31 +304,22 @@ public class RemoteCacheServer<K, V>
                     // RemoteCache.
                     if ( fromCluster )
                     {
-                        if ( log.isDebugEnabled() )
-                        {
-                            log.debug( "Put FROM cluster, NOT updating other auxiliaries for region. "
-                                + " requesterId [" + requesterId + "]" );
-                        }
+                        log.debug( "Put FROM cluster, NOT updating other auxiliaries for region. "
+                                + " requesterId [{0}]", requesterId );
                         c.localUpdate( item );
                     }
                     else
                     {
-                        if ( log.isDebugEnabled() )
-                        {
-                            log.debug( "Put NOT from cluster, updating other auxiliaries for region. "
-                                + " requesterId [" + requesterId + "]" );
-                        }
+                        log.debug( "Put NOT from cluster, updating other auxiliaries for region. "
+                                + " requesterId [{0}]", requesterId );
                         c.update( item );
                     }
                 }
                 catch ( Exception ce )
                 {
                     // swallow
-                    if ( log.isInfoEnabled() )
-                    {
-                        log.info( "Exception caught updating item. requesterId [" + requesterId + "] "
-                            + ce.getMessage() );
-                    }
+                    log.info( "Exception caught updating item. requesterId [{0}]: {1}",
+                            requesterId, ce.getMessage() );
                 }
 
                 // UPDATE LOCALS IF A REQUEST COMES FROM A CLUSTER
@@ -339,10 +327,7 @@ public class RemoteCacheServer<K, V>
                 if ( !fromCluster || ( fromCluster && remoteCacheServerAttributes.isLocalClusterConsistency() ) )
                 {
                     ICacheEventQueue<K, V>[] qlist = getEventQList( cacheDesc, requesterId );
-                    if ( log.isDebugEnabled() )
-                    {
-                        log.debug( "qlist.length = " + qlist.length );
-                    }
+                    log.debug( "qlist.length = {0}", qlist.length );
                     for ( int i = 0; i < qlist.length; i++ )
                     {
                         qlist[i].addPutEvent( item );
@@ -358,17 +343,14 @@ public class RemoteCacheServer<K, V>
                     + " REGION: " + item.getCacheName() + " ITEM: " + item );
             }
 
-            log.error( "Trouble in Update. requesterId [" + requesterId + "]", e );
+            log.error( "Trouble in Update. requesterId [{0}]", requesterId, e );
         }
 
         // TODO use JAMON for timing
         if ( timing )
         {
             long end = System.currentTimeMillis();
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "put took " + String.valueOf( end - start ) + " ms." );
-            }
+            log.debug( "put took {0} ms.", end - start);
         }
     }
 
@@ -386,14 +368,12 @@ public class RemoteCacheServer<K, V>
         {
             if ( puts % logInterval == 0 )
             {
-                log.info( "puts = " + puts );
+                log.info( "puts = {0}", puts );
             }
         }
 
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "In update, put [" + item.getKey() + "] in [" + item.getCacheName() + "]" );
-        }
+        log.debug( "In update, put [{0}] in [{1}]",
+                () -> item.getKey(), () -> item.getCacheName() );
     }
 
     /**
@@ -456,27 +436,10 @@ public class RemoteCacheServer<K, V>
     {
         boolean fromCluster = isRequestFromCluster( requesterId );
 
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "get [" + key + "] from cache [" + cacheName + "] requesterId = [" + requesterId
-                + "] fromCluster = " + fromCluster );
-        }
+        log.debug( "get [{0}] from cache [{1}] requesterId = [{2}] fromCluster = {3}",
+                key, cacheName, requesterId, fromCluster );
 
-        CacheListeners<K, V> cacheDesc = null;
-        try
-        {
-            cacheDesc = getCacheListeners( cacheName );
-        }
-        catch ( Exception e )
-        {
-            log.error( "Problem getting listeners.", e );
-
-            if ( cacheEventLogger != null )
-            {
-                cacheEventLogger.logError( "RemoteCacheServer", ICacheEventLogger.GET_EVENT, e.getMessage() + cacheName
-                    + " KEY: " + key );
-            }
-        }
+        CacheListeners<K, V> cacheDesc = getCacheListeners( cacheName );
 
         ICacheElement<K, V> element = getFromCacheListeners( key, fromCluster, cacheDesc, null );
         return element;
@@ -516,11 +479,8 @@ public class RemoteCacheServer<K, V>
 
             if ( !fromCluster && this.remoteCacheServerAttributes.isAllowClusterGet() )
             {
-                if ( log.isDebugEnabled() )
-                {
-                    log.debug( "NonLocalGet. fromCluster [" + fromCluster + "] AllowClusterGet ["
-                        + this.remoteCacheServerAttributes.isAllowClusterGet() + "]" );
-                }
+                log.debug( "NonLocalGet. fromCluster [{0}] AllowClusterGet [{1}]",
+                        fromCluster, this.remoteCacheServerAttributes.isAllowClusterGet() );
                 returnElement = c.get( key );
             }
             else
@@ -528,12 +488,8 @@ public class RemoteCacheServer<K, V>
                 // Gets from cluster type remote will end up here.
                 // Gets from all clients will end up here if allow cluster get is
                 // false.
-
-                if ( log.isDebugEnabled() )
-                {
-                    log.debug( "LocalGet.  fromCluster [" + fromCluster + "] AllowClusterGet ["
-                        + this.remoteCacheServerAttributes.isAllowClusterGet() + "]" );
-                }
+                log.debug( "LocalGet. fromCluster [{0}] AllowClusterGet [{1}]",
+                        fromCluster, this.remoteCacheServerAttributes.isAllowClusterGet() );
                 returnElement = c.localGet( key );
             }
         }
@@ -593,11 +549,8 @@ public class RemoteCacheServer<K, V>
     {
         boolean fromCluster = isRequestFromCluster( requesterId );
 
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "getMatching [" + pattern + "] from cache [" + cacheName + "] requesterId = [" + requesterId
-                + "] fromCluster = " + fromCluster );
-        }
+        log.debug( "getMatching [{0}] from cache [{1}] requesterId = [{2}] fromCluster = {3}",
+                pattern, cacheName, requesterId, fromCluster );
 
         CacheListeners<K, V> cacheDesc = null;
         try
@@ -639,11 +592,8 @@ public class RemoteCacheServer<K, V>
 
             if ( !fromCluster && this.remoteCacheServerAttributes.isAllowClusterGet() )
             {
-                if ( log.isDebugEnabled() )
-                {
-                    log.debug( "NonLocalGetMatching. fromCluster [" + fromCluster + "] AllowClusterGet ["
-                        + this.remoteCacheServerAttributes.isAllowClusterGet() + "]" );
-                }
+                log.debug( "NonLocalGetMatching. fromCluster [{0}] AllowClusterGet [{1}]",
+                        fromCluster, this.remoteCacheServerAttributes.isAllowClusterGet() );
                 elements = c.getMatching( pattern );
             }
             else
@@ -652,11 +602,8 @@ public class RemoteCacheServer<K, V>
                 // Gets from all clients will end up here if allow cluster get is
                 // false.
 
-                if ( log.isDebugEnabled() )
-                {
-                    log.debug( "LocalGetMatching.  fromCluster [" + fromCluster + "] AllowClusterGet ["
-                        + this.remoteCacheServerAttributes.isAllowClusterGet() + "]" );
-                }
+                log.debug( "LocalGetMatching. fromCluster [{0}] AllowClusterGet [{1}]",
+                        fromCluster, this.remoteCacheServerAttributes.isAllowClusterGet() );
                 elements = c.localGetMatching( pattern );
             }
         }
@@ -720,11 +667,8 @@ public class RemoteCacheServer<K, V>
     {
         boolean fromCluster = isRequestFromCluster( requesterId );
 
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "getMultiple [" + keys + "] from cache [" + cacheName + "] requesterId = [" + requesterId
-                + "] fromCluster = " + fromCluster );
-        }
+        log.debug( "getMultiple [{0}] from cache [{1}] requesterId = [{2}] fromCluster = {3}",
+                keys, cacheName, requesterId, fromCluster );
 
         CacheListeners<K, V> cacheDesc = getCacheListeners( cacheName );
         Map<K, ICacheElement<K, V>> elements = getMultipleFromCacheListeners( keys, null, fromCluster, cacheDesc );
@@ -778,11 +722,8 @@ public class RemoteCacheServer<K, V>
 
             if ( !fromCluster && this.remoteCacheServerAttributes.isAllowClusterGet() )
             {
-                if ( log.isDebugEnabled() )
-                {
-                    log.debug( "NonLocalGetMultiple. fromCluster [" + fromCluster + "] AllowClusterGet ["
-                        + this.remoteCacheServerAttributes.isAllowClusterGet() + "]" );
-                }
+                log.debug( "NonLocalGetMultiple. fromCluster [{0}] AllowClusterGet [{1}]",
+                        fromCluster, this.remoteCacheServerAttributes.isAllowClusterGet() );
 
                 returnElements = c.getMultiple( keys );
             }
@@ -792,11 +733,8 @@ public class RemoteCacheServer<K, V>
                 // Gets from all clients will end up here if allow cluster get is
                 // false.
 
-                if ( log.isDebugEnabled() )
-                {
-                    log.debug( "LocalGetMultiple.  fromCluster [" + fromCluster + "] AllowClusterGet ["
-                        + this.remoteCacheServerAttributes.isAllowClusterGet() + "]" );
-                }
+                log.debug( "LocalGetMultiple. fromCluster [{0}] AllowClusterGet [{1}]",
+                        fromCluster, this.remoteCacheServerAttributes.isAllowClusterGet() );
 
                 returnElements = c.localGetMultiple( keys );
             }
@@ -825,15 +763,7 @@ public class RemoteCacheServer<K, V>
      */
     protected Set<K> processGetKeySet( String cacheName )
     {
-        CacheListeners<K, V> cacheDesc = null;
-        try
-        {
-            cacheDesc = getCacheListeners( cacheName );
-        }
-        catch ( Exception e )
-        {
-            log.error( "Problem getting listeners.", e );
-        }
+        CacheListeners<K, V> cacheDesc = getCacheListeners( cacheName );
 
         if ( cacheDesc == null )
         {
@@ -894,10 +824,7 @@ public class RemoteCacheServer<K, V>
     private void processRemove( String cacheName, K key, long requesterId )
         throws IOException
     {
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "remove [" + key + "] from cache [" + cacheName + "]" );
-        }
+        log.debug( "remove [{0}] from cache [{1}]", key, cacheName );
 
         CacheListeners<K, V> cacheDesc = cacheListenersMap.get( cacheName );
 
@@ -916,26 +843,17 @@ public class RemoteCacheServer<K, V>
 
                 if ( fromCluster )
                 {
-                    if ( log.isDebugEnabled() )
-                    {
-                        log.debug( "Remove FROM cluster, NOT updating other auxiliaries for region" );
-                    }
+                    log.debug( "Remove FROM cluster, NOT updating other auxiliaries for region" );
                     removeSuccess = c.localRemove( key );
                 }
                 else
                 {
-                    if ( log.isDebugEnabled() )
-                    {
-                        log.debug( "Remove NOT from cluster, updating other auxiliaries for region" );
-                    }
+                    log.debug( "Remove NOT from cluster, updating other auxiliaries for region" );
                     removeSuccess = c.remove( key );
                 }
 
-                if ( log.isDebugEnabled() )
-                {
-                    log.debug( "remove [" + key + "] from cache [" + cacheName + "] success (was it found) = "
-                        + removeSuccess );
-                }
+                log.debug( "remove [{0}] from cache [{1}] success (was it found) = {2}",
+                        key, cacheName, removeSuccess );
 
                 // UPDATE LOCALS IF A REQUEST COMES FROM A CLUSTER
                 // IF LOCAL CLUSTER CONSISTENCY IS CONFIGURED
@@ -1014,18 +932,12 @@ public class RemoteCacheServer<K, V>
 
                 if ( fromCluster )
                 {
-                    if ( log.isDebugEnabled() )
-                    {
-                        log.debug( "RemoveALL FROM cluster, NOT updating other auxiliaries for region" );
-                    }
+                    log.debug( "RemoveALL FROM cluster, NOT updating other auxiliaries for region" );
                     c.localRemoveAll();
                 }
                 else
                 {
-                    if ( log.isDebugEnabled() )
-                    {
-                        log.debug( "RemoveALL NOT from cluster, updating other auxiliaries for region" );
-                    }
+                    log.debug( "RemoveALL NOT from cluster, updating other auxiliaries for region" );
                     c.removeAll();
                 }
 
@@ -1096,10 +1008,7 @@ public class RemoteCacheServer<K, V>
     private void processDispose( String cacheName, long requesterId )
         throws IOException
     {
-        if ( log.isInfoEnabled() )
-        {
-            log.info( "Dispose request received from listener [" + requesterId + "]" );
-        }
+        log.info( "Dispose request received from listener [{0}]", requesterId );
 
         CacheListeners<K, V> cacheDesc = cacheListenersMap.get( cacheName );
 
@@ -1270,12 +1179,12 @@ public class RemoteCacheServer<K, V>
         RemoteType remoteType = ircl.getRemoteType();
         if ( remoteType == RemoteType.CLUSTER )
         {
-            log.debug( "adding cluster listener, listenerAddress [" + listenerAddress + "]" );
+            log.debug( "adding cluster listener, listenerAddress [{0}]", listenerAddress );
             cacheListeners = (CacheListeners<KK, VV>)getClusterListeners( cacheName );
         }
         else
         {
-            log.debug( "adding normal listener, listenerAddress [" + listenerAddress + "]" );
+            log.debug( "adding normal listener, listenerAddress [{0}]", listenerAddress );
             cacheListeners = (CacheListeners<KK, VV>)getCacheListeners( cacheName );
         }
         Map<Long, ICacheEventQueue<KK, VV>> eventQMap = cacheListeners.eventQMap;
@@ -1293,11 +1202,8 @@ public class RemoteCacheServer<K, V>
                 {
                     // must start at one so the next gets recognized
                     long listenerIdB = nextListenerId();
-                    if ( log.isDebugEnabled() )
-                    {
-                        log.debug( "listener id=" + ( listenerIdB & 0xff ) + " addded for cache [" + cacheName
-                            + "], listenerAddress [" + listenerAddress + "]" );
-                    }
+                    log.debug( "listener id={0} addded for cache [{1}], listenerAddress [{2}]",
+                            listenerIdB & 0xff, cacheName, listenerAddress );
                     listener.setListenerId( listenerIdB );
                     id = listenerIdB;
 
@@ -1305,20 +1211,14 @@ public class RemoteCacheServer<K, V>
                     String message = "Adding vm listener under new id = [" + listenerIdB + "], listenerAddress ["
                         + listenerAddress + "]";
                     logApplicationEvent( "RemoteCacheServer", "addCacheListener", message );
-                    if ( log.isInfoEnabled() )
-                    {
-                        log.info( message );
-                    }
+                    log.info( message );
                 }
                 else
                 {
                     String message = "Adding listener under existing id = [" + id + "], listenerAddress ["
                         + listenerAddress + "]";
                     logApplicationEvent( "RemoteCacheServer", "addCacheListener", message );
-                    if ( log.isInfoEnabled() )
-                    {
-                        log.info( message );
-                    }
+                    log.info( message );
                     // should confirm the the host is the same as we have on
                     // record, just in case a client has made a mistake.
                 }
@@ -1348,10 +1248,7 @@ public class RemoteCacheServer<K, V>
 
             eventQMap.put(Long.valueOf(listener.getListenerId()), q);
 
-            if ( log.isInfoEnabled() )
-            {
-                log.info( cacheListeners );
-            }
+            log.info( cacheListeners );
         }
     }
 
@@ -1369,10 +1266,7 @@ public class RemoteCacheServer<K, V>
         {
             addCacheListener( cacheName, listener );
 
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "Adding listener for cache [" + cacheName + "]" );
-            }
+            log.debug( "Adding listener for cache [{0}]", cacheName );
         }
     }
 
@@ -1402,10 +1296,7 @@ public class RemoteCacheServer<K, V>
     {
         String message = "Removing listener for cache region = [" + cacheName + "] and listenerId [" + listenerId + "]";
         logApplicationEvent( "RemoteCacheServer", "removeCacheListener", message );
-        if ( log.isInfoEnabled() )
-        {
-            log.info( message );
-        }
+        log.info( message );
 
         boolean isClusterListener = isRequestFromCluster( listenerId );
 
@@ -1425,31 +1316,23 @@ public class RemoteCacheServer<K, V>
 
         if ( q != null )
         {
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "Found queue for cache region = [" + cacheName + "] and listenerId  [" + listenerId + "]" );
-            }
+            log.debug( "Found queue for cache region = [{0}] and listenerId [{1}]",
+                    cacheName, listenerId );
             q.destroy();
             cleanupEventQMap( eventQMap );
         }
         else
         {
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "Did not find queue for cache region = [" + cacheName + "] and listenerId [" + listenerId
-                    + "]" );
-            }
+            log.debug( "Did not find queue for cache region = [{0}] and listenerId [{1}]",
+                    cacheName, listenerId );
         }
 
         // cleanup
         idTypeMap.remove( Long.valueOf( listenerId ) );
         idIPMap.remove( Long.valueOf( listenerId ) );
 
-        if ( log.isInfoEnabled() )
-        {
-            log.info( "After removing listener [" + listenerId + "] cache region " + cacheName + "'s listener size ["
-                + cacheDesc.eventQMap.size() + "]" );
-        }
+        log.info( "After removing listener [{0}] cache region {1}'s listener size [{2}]",
+                listenerId, cacheName, cacheDesc.eventQMap.size() );
     }
 
     /**
@@ -1466,10 +1349,7 @@ public class RemoteCacheServer<K, V>
         {
             removeCacheListener( cacheName, listener );
 
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "Removing listener for cache [" + cacheName + "]" );
-            }
+            log.info( "Removing listener for cache [{0}]", cacheName );
         }
     }
 
@@ -1497,10 +1377,7 @@ public class RemoteCacheServer<K, V>
     public void shutdown( String host, int port )
         throws IOException
     {
-        if ( log.isInfoEnabled() )
-        {
-            log.info( "Received shutdown request. Shutting down server." );
-        }
+        log.info( "Received shutdown request. Shutting down server." );
 
         synchronized (listenerId)
         {
@@ -1511,10 +1388,7 @@ public class RemoteCacheServer<K, V>
                     removeCacheListener( cacheName, i );
                 }
 
-                if ( log.isInfoEnabled() )
-                {
-                    log.info( "Removing listener for cache [" + cacheName + "]" );
-                }
+                log.info( "Removing listener for cache [{0}]", cacheName );
             }
 
             cacheListenersMap.clear();
@@ -1532,10 +1406,7 @@ public class RemoteCacheServer<K, V>
     @Override
     public void unreferenced()
     {
-        if ( log.isInfoEnabled() )
-        {
-            log.info( "*** Server now unreferenced and subject to GC. ***" );
-        }
+        log.info( "*** Server now unreferenced and subject to GC. ***" );
     }
 
     /**

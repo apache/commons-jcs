@@ -26,8 +26,8 @@ import java.nio.channels.FileChannel;
 import java.nio.file.StandardOpenOption;
 
 import org.apache.commons.jcs.engine.behavior.IElementSerializer;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 
 /** Provides thread safe access to the underlying random access file. */
 public class IndexedDisk implements AutoCloseable
@@ -39,7 +39,7 @@ public class IndexedDisk implements AutoCloseable
     private final IElementSerializer elementSerializer;
 
     /** The logger */
-    private static final Log log = LogFactory.getLog(IndexedDisk.class);
+    private static final Log log = LogManager.getLog(IndexedDisk.class);
 
     /** The path to the log directory. */
     private final String filepath;
@@ -59,9 +59,9 @@ public class IndexedDisk implements AutoCloseable
     {
         this.filepath = file.getAbsolutePath();
         this.elementSerializer = elementSerializer;
-        this.fc = FileChannel.open(file.toPath(), 
-                StandardOpenOption.CREATE, 
-                StandardOpenOption.READ, 
+        this.fc = FileChannel.open(file.toPath(),
+                StandardOpenOption.CREATE,
+                StandardOpenOption.READ,
                 StandardOpenOption.WRITE);
     }
 
@@ -107,7 +107,7 @@ public class IndexedDisk implements AutoCloseable
 
         if (corrupted)
         {
-            log.warn("\n The file is corrupt: " + "\n " + message);
+            log.warn("\n The file is corrupt: \n {0}", message);
             throw new IOException("The File Is Corrupt, need to reset");
         }
 
@@ -179,8 +179,8 @@ public class IndexedDisk implements AutoCloseable
         long pos = ded.pos;
         if (log.isTraceEnabled())
         {
-            log.trace("write> pos=" + pos);
-            log.trace(fc + " -- data.length = " + data.length);
+            log.trace("write> pos={0}", pos);
+            log.trace("{0} -- data.length = {1}", fc, data.length);
         }
 
         if (data.length != ded.len)
@@ -198,7 +198,7 @@ public class IndexedDisk implements AutoCloseable
         //write the data
         ByteBuffer dataBuffer = ByteBuffer.wrap(data);
         written = fc.write(dataBuffer, pos + HEADER_SIZE_BYTES);
-        
+
         return written == data.length;
     }
 
@@ -249,10 +249,7 @@ public class IndexedDisk implements AutoCloseable
     protected synchronized void reset()
         throws IOException
     {
-        if (log.isDebugEnabled())
-        {
-            log.debug("Resetting Indexed File [" + filepath + "]");
-        }
+        log.debug("Resetting Indexed File [{0}]", filepath);
         fc.truncate(0);
         fc.force(true);
     }
@@ -266,10 +263,7 @@ public class IndexedDisk implements AutoCloseable
     protected void truncate(long length)
         throws IOException
     {
-        if (log.isInfoEnabled())
-        {
-            log.info("Truncating file [" + filepath + "] to " + length);
-        }
+        log.info("Truncating file [{0}] to {1}", filepath, length);
         fc.truncate(length);
     }
 

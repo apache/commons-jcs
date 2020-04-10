@@ -41,8 +41,8 @@ import org.apache.commons.jcs.engine.stats.StatElement;
 import org.apache.commons.jcs.engine.stats.Stats;
 import org.apache.commons.jcs.engine.stats.behavior.IStatElement;
 import org.apache.commons.jcs.engine.stats.behavior.IStats;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 
 /**
  * Used to queue up update requests to the underlying cache. These requests will be processed in
@@ -52,7 +52,7 @@ public class LateralCacheNoWait<K, V>
     extends AbstractAuxiliaryCache<K, V>
 {
     /** The logger. */
-    private static final Log log = LogFactory.getLog( LateralCacheNoWait.class );
+    private static final Log log = LogManager.getLog( LateralCacheNoWait.class );
 
     /** The cache */
     private final LateralCache<K, V> cache;
@@ -79,10 +79,7 @@ public class LateralCacheNoWait<K, V>
     {
         this.cache = cache;
 
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "Constructing LateralCacheNoWait, LateralCache = [" + cache + "]" );
-        }
+        log.debug( "Constructing LateralCacheNoWait, LateralCache = [{0}]", cache );
 
         CacheEventQueueFactory<K, V> fact = new CacheEventQueueFactory<>();
         this.eventQueue = fact.createCacheEventQueue( new CacheAdaptor<>( cache ), CacheInfo.listenerId, cache

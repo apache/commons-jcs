@@ -1,5 +1,11 @@
 package org.apache.commons.jcs.auxiliary.remote.http.client;
 
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Set;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -25,21 +31,15 @@ import org.apache.commons.jcs.auxiliary.remote.util.RemoteCacheRequestFactory;
 import org.apache.commons.jcs.auxiliary.remote.value.RemoteCacheRequest;
 import org.apache.commons.jcs.auxiliary.remote.value.RemoteCacheResponse;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Set;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 
 /** This is the service used by the remote http auxiliary cache. */
 public class RemoteHttpCacheClient<K, V>
     implements IRemoteHttpCacheClient<K, V>
 {
     /** The Logger. */
-    private static final Log log = LogFactory.getLog( RemoteHttpCacheClient.class );
+    private static final Log log = LogManager.getLog( RemoteHttpCacheClient.class );
 
     /** The internal client. */
     private IRemoteCacheDispatcher remoteDispatcher;
@@ -78,10 +78,7 @@ public class RemoteHttpCacheClient<K, V>
     {
         setRemoteDispatcher( new RemoteHttpCacheDispatcher( attributes ) );
 
-        if ( log.isInfoEnabled() )
-        {
-            log.info( "Created remote Dispatcher." + getRemoteDispatcher() );
-        }
+        log.info( "Created remote Dispatcher. {0}", () -> getRemoteDispatcher() );
         setInitialized( true );
     }
 
@@ -115,7 +112,7 @@ public class RemoteHttpCacheClient<K, V>
     {
         if ( !isInitialized() )
         {
-            String message = "The Remote Http Client is not initialized.  Cannot process request.";
+            String message = "The Remote Http Client is not initialized. Cannot process request.";
             log.warn( message );
             throw new IOException( message );
         }
@@ -125,10 +122,7 @@ public class RemoteHttpCacheClient<K, V>
         RemoteCacheResponse<ICacheElement<K, V>> remoteHttpCacheResponse =
             getRemoteDispatcher().dispatchRequest( remoteHttpCacheRequest );
 
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "Get [" + key + "] = " + remoteHttpCacheResponse );
-        }
+        log.debug( "Get [{0}] = {1}", key, remoteHttpCacheResponse );
 
         if ( remoteHttpCacheResponse != null)
         {
@@ -170,7 +164,7 @@ public class RemoteHttpCacheClient<K, V>
     {
         if ( !isInitialized() )
         {
-            String message = "The Remote Http Client is not initialized.  Cannot process request.";
+            String message = "The Remote Http Client is not initialized. Cannot process request.";
             log.warn( message );
             throw new IOException( message );
         }
@@ -181,10 +175,7 @@ public class RemoteHttpCacheClient<K, V>
         RemoteCacheResponse<Map<K, ICacheElement<K, V>>> remoteHttpCacheResponse =
             getRemoteDispatcher().dispatchRequest( remoteHttpCacheRequest );
 
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "GetMatching [" + pattern + "] = " + remoteHttpCacheResponse );
-        }
+        log.debug( "GetMatching [{0}] = {1}", pattern, remoteHttpCacheResponse );
 
         return remoteHttpCacheResponse.getPayload();
     }
@@ -232,10 +223,7 @@ public class RemoteHttpCacheClient<K, V>
         RemoteCacheResponse<Map<K, ICacheElement<K, V>>> remoteHttpCacheResponse =
             getRemoteDispatcher().dispatchRequest( remoteHttpCacheRequest );
 
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "GetMultiple [" + keys + "] = " + remoteHttpCacheResponse );
-        }
+        log.debug( "GetMultiple [{0}] = {1}", keys, remoteHttpCacheResponse );
 
         return remoteHttpCacheResponse.getPayload();
     }

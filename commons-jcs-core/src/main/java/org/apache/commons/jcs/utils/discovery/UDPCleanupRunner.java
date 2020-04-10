@@ -1,5 +1,8 @@
 package org.apache.commons.jcs.utils.discovery;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -19,11 +22,8 @@ package org.apache.commons.jcs.utils.discovery;
  * under the License.
  */
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import java.util.HashSet;
-import java.util.Set;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 
 /**
  * This class periodically check the lastHeardFrom time on the services.
@@ -36,7 +36,7 @@ public class UDPCleanupRunner
     implements Runnable
 {
     /** log instance */
-    private static final Log log = LogFactory.getLog( UDPCleanupRunner.class );
+    private static final Log log = LogManager.getLog( UDPCleanupRunner.class );
 
     /** UDP discovery service */
     private final UDPDiscoveryService discoveryService;
@@ -68,8 +68,6 @@ public class UDPCleanupRunner
 
         // iterate through the set
         // it is thread safe
-        // http://gee.cs.oswego.edu/dl/classes/EDU/oswego/cs/dl/util/concurrent/CopyOnWriteArraySet.
-        // html
         // TODO this should get a copy.  you can't simply remove from this.
         // the listeners need to be notified.
         Set<DiscoveredService> toRemove = new HashSet<>();
@@ -78,11 +76,8 @@ public class UDPCleanupRunner
         {
             if ( ( now - service.getLastHearFromTime() ) > ( maxIdleTimeSeconds * 1000 ) )
             {
-                if ( log.isInfoEnabled() )
-                {
-                    log.info( "Removing service, since we haven't heard from it in " + maxIdleTimeSeconds
-                        + " seconds.  service = " + service );
-                }
+                log.info( "Removing service, since we haven't heard from it in "
+                        + "{0} seconds. service = {1}", maxIdleTimeSeconds, service );
                 toRemove.add( service );
             }
         }

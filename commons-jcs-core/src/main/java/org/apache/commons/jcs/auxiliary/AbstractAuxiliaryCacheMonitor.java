@@ -24,8 +24,8 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 
 /**
  * Used to monitor and repair any failed connection for the lateral cache service. By default the
@@ -37,7 +37,7 @@ import org.apache.commons.logging.LogFactory;
 public abstract class AbstractAuxiliaryCacheMonitor extends Thread
 {
     /** The logger */
-    protected final Log log = LogFactory.getLog( this.getClass() );
+    protected final Log log = LogManager.getLog( this.getClass() );
 
     /** How long to wait between runs */
     protected static long idlePeriod = 20 * 1000;
@@ -135,16 +135,13 @@ public abstract class AbstractAuxiliaryCacheMonitor extends Thread
     {
         do
         {
-            if ( log.isDebugEnabled() )
+            if ( allright.get() )
             {
-                if ( allright.get() )
-                {
-                    log.debug( "ERROR DRIVEN MODE: allright = true, cache monitor will wait for an error." );
-                }
-                else
-                {
-                    log.debug( "ERROR DRIVEN MODE: allright = false cache monitor running." );
-                }
+                log.debug( "ERROR DRIVEN MODE: allright = true, cache monitor will wait for an error." );
+            }
+            else
+            {
+                log.debug( "ERROR DRIVEN MODE: allright = false cache monitor running." );
             }
 
             if ( allright.get() )
@@ -178,10 +175,7 @@ public abstract class AbstractAuxiliaryCacheMonitor extends Thread
             // Simply presume we can fix all the errors until proven otherwise.
             allright.set(true);
 
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "Cache monitor running." );
-            }
+            log.debug( "Cache monitor running." );
 
             doWork();
 
@@ -189,10 +183,7 @@ public abstract class AbstractAuxiliaryCacheMonitor extends Thread
             {
                 // don't want to sleep after waking from an error
                 // run immediately and sleep here.
-                if ( log.isDebugEnabled() )
-                {
-                    log.debug( "Cache monitor sleeping for " + idlePeriod + " between runs." );
-                }
+                log.debug( "Cache monitor sleeping for {0} between runs.", idlePeriod );
 
                 Thread.sleep( idlePeriod );
             }

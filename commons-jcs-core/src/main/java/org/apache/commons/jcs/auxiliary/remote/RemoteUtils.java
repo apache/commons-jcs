@@ -31,11 +31,10 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.RMISocketFactory;
-import java.util.Enumeration;
 import java.util.Properties;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 
 /**
  * This class provides some basic utilities for doing things such as starting
@@ -44,7 +43,7 @@ import org.apache.commons.logging.LogFactory;
 public class RemoteUtils
 {
     /** The logger. */
-    private static final Log log = LogFactory.getLog(RemoteUtils.class);
+    private static final Log log = LogManager.getLog(RemoteUtils.class);
 
     /** No instances please. */
     private RemoteUtils()
@@ -72,21 +71,20 @@ public class RemoteUtils
 
         if (port < 1024)
         {
-            if (log.isWarnEnabled())
-            {
-                log.warn("createRegistry> Port chosen was less than 1024, will use default [" + Registry.REGISTRY_PORT + "] instead.");
-            }
+            log.warn("createRegistry> Port chosen was less than 1024, will use default [{0}] instead.",
+                    Registry.REGISTRY_PORT);
             port = Registry.REGISTRY_PORT;
         }
 
         try
         {
             registry = LocateRegistry.createRegistry(port);
-            log.info("createRegistry> Created the registry on port " + port);
+            log.info("createRegistry> Created the registry on port {0}", port);
         }
         catch (RemoteException e)
         {
-            log.warn("createRegistry> Problem creating registry. It may already be started. " + e.getMessage());
+            log.warn("createRegistry> Problem creating registry. It may already be started.",
+                    e);
         }
         catch (Throwable t)
         {
@@ -130,7 +128,7 @@ public class RemoteUtils
                 is = RemoteUtils.class.getResourceAsStream("/" + propFile);
             }
         }
-        
+
         if (null == is) // not found in class path
         {
             if (new File(propFile).exists())
@@ -149,27 +147,21 @@ public class RemoteUtils
         try
         {
             props.load(is);
-            if (log.isDebugEnabled())
-            {
-                log.debug("props.size=" + props.size());
-            }
+            log.debug("props.size={0}", () -> props.size());
 
-            if (log.isDebugEnabled())
+            if (log.isTraceEnabled())
             {
-                Enumeration<Object> en = props.keys();
                 StringBuilder buf = new StringBuilder();
-                while (en.hasMoreElements())
-                {
-                    String key = (String) en.nextElement();
-                    buf.append("\n" + key + " = " + props.getProperty(key));
-                }
-                log.debug(buf.toString());
+                props.forEach((key, value)
+                        -> buf.append('\n').append(key).append(" = ").append(value));
+                log.trace(buf.toString());
             }
 
         }
-        catch (Exception ex)
+        catch (IOException ex)
         {
-            log.error("Error loading remote properties, for file name [" + propFile + "]", ex);
+            log.error("Error loading remote properties, for file name "
+                    + "[{0}]", propFile, ex);
         }
         finally
         {
@@ -196,11 +188,8 @@ public class RemoteUtils
             // Don't set a socket factory if the setting is -1
             if (timeoutMillis > 0)
             {
-                if (log.isInfoEnabled())
-                {
-                    log.info("RmiSocketFactoryTimeoutMillis [" + timeoutMillis + "]. "
-                            + " Configuring a custom socket factory.");
-                }
+                log.info("RmiSocketFactoryTimeoutMillis [{0}]. "
+                    + " Configuring a custom socket factory.", timeoutMillis);
 
                 // use this socket factory to add a timeout.
                 RMISocketFactory.setSocketFactory(new RMISocketFactory()
@@ -232,8 +221,8 @@ public class RemoteUtils
             RMISocketFactory factoryInUse = RMISocketFactory.getSocketFactory();
             if (factoryInUse != null && !factoryInUse.getClass().getName().startsWith("org.apache.commons.jcs"))
             {
-                log.info("Could not create new custom socket factory. " + e.getMessage() + " Factory in use = "
-                        + RMISocketFactory.getSocketFactory());
+                log.info("Could not create new custom socket factory. {0} Factory in use = {1}",
+                        () -> e.getMessage(), () -> RMISocketFactory.getSocketFactory());
             }
         }
     }

@@ -46,10 +46,10 @@ import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs.engine.control.CompositeCacheManager;
 import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;
 import org.apache.commons.jcs.io.ObjectInputStreamClassLoaderAware;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 import org.apache.commons.jcs.utils.config.PropertySetter;
 import org.apache.commons.jcs.utils.serialization.StandardSerializer;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * This servlet simply reads and writes objects. The requests are packaged in a general wrapper. The
@@ -62,7 +62,7 @@ public class RemoteHttpCacheServlet
     private static final long serialVersionUID = 8752849397531933346L;
 
     /** The Logger. */
-    private static final Log log = LogFactory.getLog( RemoteHttpCacheServlet.class );
+    private static final Log log = LogManager.getLog( RemoteHttpCacheServlet.class );
 
     /** The cache manager */
     private static CompositeCacheManager cacheMgr;
@@ -118,10 +118,7 @@ public class RemoteHttpCacheServlet
         throws ServletException, IOException
     {
         incrementServiceCallCount();
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "Servicing a request. " + request );
-        }
+        log.debug( "Servicing a request. {0}", request );
 
         RemoteCacheRequest<Serializable, Serializable> remoteRequest = readRequest( request );
         RemoteCacheResponse<Object> cacheResponse = processRequest( remoteRequest );
@@ -141,10 +138,7 @@ public class RemoteHttpCacheServlet
         try
         {
             InputStream inputStream = request.getInputStream();
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "After getting input stream and before reading it" );
-            }
+            log.debug( "After getting input stream and before reading it" );
 
             remoteRequest = readRequestFromStream( inputStream );
         }
@@ -191,10 +185,8 @@ public class RemoteHttpCacheServlet
             response.setContentLength( responseAsByteAray.length );
 
             OutputStream outputStream = response.getOutputStream();
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "Opened output stream.  Response size: " + responseAsByteAray.length );
-            }
+            log.debug( "Opened output stream.  Response size: {0}",
+                    () -> responseAsByteAray.length );
             // WRITE
             outputStream.write( responseAsByteAray );
             outputStream.flush();
@@ -202,7 +194,7 @@ public class RemoteHttpCacheServlet
         }
         catch ( IOException e )
         {
-            log.error( "Problem writing response. " + cacheResponse, e );
+            log.error( "Problem writing response. {0}", cacheResponse, e );
         }
     }
 
@@ -305,10 +297,7 @@ public class RemoteHttpCacheServlet
         RemoteHttpCacheServerAttributes attributes = configureRemoteHttpCacheServerAttributes( props );
 
         RemoteHttpCacheService<K, V> service = new RemoteHttpCacheService<>( cacheManager, attributes, cacheEventLogger );
-        if ( log.isInfoEnabled() )
-        {
-            log.info( "Created new RemoteHttpCacheService " + service );
-        }
+        log.info( "Created new RemoteHttpCacheService {0}", service );
         return service;
     }
 
@@ -364,7 +353,7 @@ public class RemoteHttpCacheServlet
         {
             if ( serviceCalls % logInterval == 0 )
             {
-                log.info( "serviceCalls = " + serviceCalls );
+                log.info( "serviceCalls = {0}", serviceCalls );
             }
         }
     }
@@ -373,10 +362,7 @@ public class RemoteHttpCacheServlet
     @Override
     public void destroy()
     {
-        if ( log.isInfoEnabled() )
-        {
-            log.info( "Servlet Destroyed, shutting down JCS." );
-        }
+        log.info( "Servlet Destroyed, shutting down JCS." );
 
         cacheMgr.shutDown();
     }

@@ -31,8 +31,8 @@ import org.apache.commons.jcs.engine.stats.StatElement;
 import org.apache.commons.jcs.engine.stats.Stats;
 import org.apache.commons.jcs.engine.stats.behavior.IStatElement;
 import org.apache.commons.jcs.engine.stats.behavior.IStats;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 
 /**
  * Client proxy for an RMI remote cache.
@@ -44,7 +44,7 @@ public class RemoteCache<K, V>
     extends AbstractRemoteAuxiliaryCache<K, V>
 {
     /** The logger. */
-    private static final Log log = LogFactory.getLog( RemoteCache.class );
+    private static final Log log = LogManager.getLog( RemoteCache.class );
 
     /** for error notifications */
     private RemoteCacheMonitor monitor;
@@ -151,17 +151,11 @@ public class RemoteCache<K, V>
         // process.
         monitor.notifyError();
 
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "Initiating failover, rcnwf = " + facade );
-        }
+        log.debug( "Initiating failover, rcnwf = {0}", facade );
 
         if ( facade != null && facade.getAuxiliaryCacheAttributes().getRemoteType() == RemoteType.LOCAL )
         {
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "Found facade, calling failover" );
-            }
+            log.debug( "Found facade, calling failover" );
             // may need to remove the noWait index here. It will be 0 if it is
             // local since there is only 1 possible listener.
             facade.failover( facade.getPrimaryServer() );

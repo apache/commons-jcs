@@ -30,10 +30,10 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.jcs.engine.behavior.IRequireScheduler;
 import org.apache.commons.jcs.engine.behavior.IShutdownObserver;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 import org.apache.commons.jcs.utils.discovery.behavior.IDiscoveryListener;
 import org.apache.commons.jcs.utils.net.HostNameUtil;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * This service creates a listener that can create lateral caches and add them to the no wait list.
@@ -48,7 +48,7 @@ public class UDPDiscoveryService
     implements IShutdownObserver, IRequireScheduler
 {
     /** The logger */
-    private static final Log log = LogFactory.getLog( UDPDiscoveryService.class );
+    private static final Log log = LogManager.getLog( UDPDiscoveryService.class );
 
     /** thread that listens for messages */
     private Thread udpReceiverThread;
@@ -66,7 +66,7 @@ public class UDPDiscoveryService
     private boolean shutdown = false;
 
     /** This is a set of services that have been discovered. */
-    private Set<DiscoveredService> discoveredServices = new CopyOnWriteArraySet<>();
+    private final Set<DiscoveredService> discoveredServices = new CopyOnWriteArraySet<>();
 
     /** This a list of regions that are configured to use discovery. */
     private final Set<String> cacheNames = new CopyOnWriteArraySet<>();
@@ -99,9 +99,10 @@ public class UDPDiscoveryService
         }
         catch ( IOException e )
         {
-            log.error( "Problem creating UDPDiscoveryReceiver, address ["
-                + getUdpDiscoveryAttributes().getUdpDiscoveryAddr() + "] port ["
-                + getUdpDiscoveryAttributes().getUdpDiscoveryPort() + "] we won't be able to find any other caches", e );
+            log.error( "Problem creating UDPDiscoveryReceiver, address [{0}] "
+                    + "port [{1}] we won't be able to find any other caches",
+                    getUdpDiscoveryAttributes().getUdpDiscoveryAddr(),
+                    getUdpDiscoveryAttributes().getUdpDiscoveryPort(), e );
         }
 
         // create a sender thread
@@ -147,16 +148,14 @@ public class UDPDiscoveryService
             // todo we should consider sending a request broadcast every so
             // often.
 
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "Called sender to issue a passive broadcast" );
-            }
+            log.debug( "Called sender to issue a passive broadcast" );
         }
         catch ( IOException e )
         {
-            log.error( "Problem calling the UDP Discovery Sender. address ["
-                + getUdpDiscoveryAttributes().getUdpDiscoveryAddr() + "] port ["
-                + getUdpDiscoveryAttributes().getUdpDiscoveryPort() + "]", e );
+            log.error( "Problem calling the UDP Discovery Sender, address [{0}] "
+                    + "port [{1}]",
+                    getUdpDiscoveryAttributes().getUdpDiscoveryAddr(),
+                    getUdpDiscoveryAttributes().getUdpDiscoveryPort(), e );
         }
     }
 
@@ -182,10 +181,7 @@ public class UDPDiscoveryService
 
         if ( contained )
         {
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "Removing " + service );
-            }
+            log.info( "Removing {0}", service );
         }
 
         for (IDiscoveryListener listener : getDiscoveryListeners())
@@ -201,61 +197,47 @@ public class UDPDiscoveryService
      */
     protected void addOrUpdateService( DiscoveredService discoveredService )
     {
-        synchronized ( getDiscoveredServices() )
+        Set<DiscoveredService> discoveredServices = getDiscoveredServices();
+        // Since this is a set we can add it over an over.
+        // We want to replace the old one, since we may add info that is not part of the equals.
+        // The equals method on the object being added is intentionally restricted.
+        if ( !discoveredServices.contains( discoveredService ) )
         {
-            // Since this is a set we can add it over an over.
-            // We want to replace the old one, since we may add info that is not part of the equals.
-            // The equals method on the object being added is intentionally restricted.
-            if ( !getDiscoveredServices().contains( discoveredService ) )
-            {
-                if ( log.isInfoEnabled() )
-                {
-                    log.info( "Set does not contain service. I discovered " + discoveredService );
-                }
-                if ( log.isDebugEnabled() )
-                {
-                    log.debug( "Adding service in the set " + discoveredService );
-                }
-                getDiscoveredServices().add( discoveredService );
-            }
-            else
-            {
-                if ( log.isDebugEnabled() )
-                {
-                    log.debug( "Set contains service." );
-                }
-                if ( log.isDebugEnabled() )
-                {
-                    log.debug( "Updating service in the set " + discoveredService );
-                }
-
-                // Update the list of cache names if it has changed.
-                DiscoveredService theOldServiceInformation = null;
-                // need to update the time this sucks. add has no effect convert to a map
-                for (DiscoveredService service1 : getDiscoveredServices())
-                {
-                    if ( discoveredService.equals( service1 ) )
-                    {
-                        theOldServiceInformation = service1;
-                        break;
-                    }
-                }
-                if ( theOldServiceInformation != null )
-                {
-                    if ( !theOldServiceInformation.getCacheNames().equals( discoveredService.getCacheNames() ) )
-                    {
-                        if ( log.isInfoEnabled() )
-                        {
-                            log.info( "List of cache names changed for service: " + discoveredService );
-                        }
-                    }
-                }
-
-                // replace it, we want to reset the payload and the last heard from time.
-                getDiscoveredServices().remove( discoveredService );
-                getDiscoveredServices().add( discoveredService );
-            }
+            log.info( "Set does not contain service. I discovered {0}", discoveredService );
+            log.debug( "Adding service in the set {0}", discoveredService );
+            discoveredServices.add( discoveredService );
         }
+        else
+        {
+            log.debug( "Set contains service." );
+            log.debug( "Updating service in the set {0}", discoveredService );
+
+            // Update the list of cache names if it has changed.
+            DiscoveredService theOldServiceInformation = null;
+            // need to update the time this sucks. add has no effect convert to a map
+            for (DiscoveredService service1 : discoveredServices)
+            {
+                if ( discoveredService.equals( service1 ) )
+                {
+                    theOldServiceInformation = service1;
+                    break;
+                }
+            }
+            if ( theOldServiceInformation != null )
+            {
+                if ( !theOldServiceInformation.getCacheNames().equals(
+                        discoveredService.getCacheNames() ) )
+                {
+                    log.info( "List of cache names changed for service: {0}",
+                            discoveredService );
+                }
+            }
+
+            // replace it, we want to reset the payload and the last heard from time.
+            discoveredServices.remove( discoveredService );
+            discoveredServices.add( discoveredService );
+        }
+
         // Always Notify the listeners
         // If we don't do this, then if a region using the default config is initialized after notification,
         // it will never get the service in it's no wait list.
@@ -264,7 +246,6 @@ public class UDPDiscoveryService
         {
             listener.addDiscoveredService( discoveredService );
         }
-
     }
 
     /**
@@ -316,51 +297,32 @@ public class UDPDiscoveryService
         {
             shutdown = true;
 
-            if ( log.isInfoEnabled() )
+            // no good way to do this right now.
+            if (receiver != null)
             {
                 log.info( "Shutting down UDP discovery service receiver." );
-            }
-
-            try
-            {
-                // no good way to do this right now.
                 receiver.shutdown();
                 udpReceiverThread.interrupt();
             }
-            catch ( Exception e )
-            {
-                log.error( "Problem interrupting UDP receiver thread." );
-            }
 
-            if ( log.isInfoEnabled() )
+            if (sender != null)
             {
                 log.info( "Shutting down UDP discovery service sender." );
-            }
-
-            // also call the shutdown on the sender thread itself, which
-            // will result in a remove command.
-            try
-            {
+                // also call the shutdown on the sender thread itself, which
+                // will result in a remove command.
                 sender.shutdown();
-            }
-            catch ( Exception e )
-            {
-                log.error( "Problem issuing remove broadcast via UDP sender." );
             }
         }
         else
         {
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "Shutdown already called." );
-            }
+            log.debug( "Shutdown already called." );
         }
     }
 
     /**
      * @return Returns the discoveredServices.
      */
-    public synchronized Set<DiscoveredService> getDiscoveredServices()
+    public Set<DiscoveredService> getDiscoveredServices()
     {
         return discoveredServices;
     }

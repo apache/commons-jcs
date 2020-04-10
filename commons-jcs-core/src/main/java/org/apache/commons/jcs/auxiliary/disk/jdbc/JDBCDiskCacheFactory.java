@@ -35,9 +35,9 @@ import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs.engine.behavior.IRequireScheduler;
 import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 import org.apache.commons.jcs.utils.config.PropertySetter;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * This factory should create JDBC auxiliary caches.
@@ -49,7 +49,7 @@ public class JDBCDiskCacheFactory
     implements IRequireScheduler
 {
     /** The logger */
-    private static final Log log = LogFactory.getLog( JDBCDiskCacheFactory.class );
+    private static final Log log = LogManager.getLog( JDBCDiskCacheFactory.class );
 
     /**
      * A map of TableState objects to table names. Each cache has a table state object, which is
@@ -133,7 +133,7 @@ public class JDBCDiskCacheFactory
 			}
         	catch (SQLException e)
         	{
-        		log.error("Could not close data source factory " + dsFactory.getName(), e);
+        		log.error("Could not close data source factory {0}", dsFactory.getName(), e);
 			}
         }
 
@@ -188,11 +188,8 @@ public class JDBCDiskCacheFactory
                 ShrinkerThread newShrinkerThread = new ShrinkerThread();
 
                 long intervalMillis = Math.max( 999, cattr.getShrinkerIntervalSeconds() * 1000 );
-                if ( log.isInfoEnabled() )
-                {
-                    log.info( "Setting the shrinker to run every [" + intervalMillis + "] ms. for table ["
-                        + key + "]" );
-                }
+                log.info( "Setting the shrinker to run every [{0}] ms. for table [{1}]",
+                        intervalMillis, key );
                 shrinkerService.scheduleAtFixedRate(newShrinkerThread, 0, intervalMillis, TimeUnit.MILLISECONDS);
 
                 return newShrinkerThread;

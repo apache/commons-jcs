@@ -38,11 +38,11 @@ import org.apache.commons.jcs.auxiliary.remote.RemoteUtils;
 import org.apache.commons.jcs.auxiliary.remote.behavior.IRemoteCacheConstants;
 import org.apache.commons.jcs.engine.behavior.ICacheServiceAdmin;
 import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 import org.apache.commons.jcs.utils.config.OptionConverter;
 import org.apache.commons.jcs.utils.config.PropertySetter;
 import org.apache.commons.jcs.utils.threadpool.DaemonThreadFactory;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * Provides remote cache services. This creates remote cache servers and can proxy command line
@@ -52,7 +52,7 @@ public class RemoteCacheServerFactory
     implements IRemoteCacheConstants
 {
     /** The logger */
-    private static final Log log = LogFactory.getLog( RemoteCacheServerFactory.class );
+    private static final Log log = LogManager.getLog( RemoteCacheServerFactory.class );
 
     /** The single instance of the RemoteCacheServer object. */
     private static RemoteCacheServer<?, ?> remoteCacheServer;
@@ -121,10 +121,7 @@ public class RemoteCacheServerFactory
 
             // These should come from the file!
             rcsa.setRemoteLocation( host, port );
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "Creating server with these attributes: " + rcsa );
-            }
+            log.info( "Creating server with these attributes: {0}", rcsa );
 
             setServiceName( rcsa.getRemoteServiceName() );
 
@@ -204,17 +201,12 @@ public class RemoteCacheServerFactory
         {
             PropertySetter.setProperties( customRMISocketFactory, props, CUSTOM_RMI_SOCKET_FACTORY_PROPERTY_PREFIX
                 + "." );
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "Will use server specific custom socket factory. " + customRMISocketFactory );
-            }
+            log.info( "Will use server specific custom socket factory. {0}",
+                    customRMISocketFactory );
         }
         else
         {
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "No server specific custom socket factory defined." );
-            }
+            log.info( "No server specific custom socket factory defined." );
         }
         return customRMISocketFactory;
     }
@@ -240,10 +232,7 @@ public class RemoteCacheServerFactory
             throw new RemoteException( "Cannot register the server: Registry is null." );
         }
 
-        if ( log.isInfoEnabled() )
-        {
-            log.info( "Binding server to " + serviceName );
-        }
+        log.info( "Binding server to {0}", serviceName );
 
         registry.rebind( serviceName, server );
     }
@@ -284,12 +273,12 @@ public class RemoteCacheServerFactory
             {
                 int servicePort = Integer.parseInt( servicePortStr );
                 rcsa.setServicePort( servicePort );
-                log.debug( "Remote cache service uses port number " + servicePort + "." );
+                log.debug( "Remote cache service uses port number {0}", servicePort );
             }
             catch ( NumberFormatException ignore )
             {
-                log.debug( "Remote cache service port property " + REMOTE_CACHE_SERVICE_PORT
-                    + " not specified.  An anonymous port will be used." );
+                log.debug( "Remote cache service port property {0}" +
+                    " not specified. An anonymous port will be used.", REMOTE_CACHE_SERVICE_PORT );
             }
         }
 
@@ -300,12 +289,12 @@ public class RemoteCacheServerFactory
             {
                 int rmiSocketFactoryTimeoutMillis = Integer.parseInt( socketTimeoutMillisStr );
                 rcsa.setRmiSocketFactoryTimeoutMillis( rmiSocketFactoryTimeoutMillis );
-                log.debug( "Remote cache socket timeout " + rmiSocketFactoryTimeoutMillis + "ms." );
+                log.debug( "Remote cache socket timeout {0} ms.", rmiSocketFactoryTimeoutMillis );
             }
             catch ( NumberFormatException ignore )
             {
-                log.debug( "Remote cache socket timeout property " + SOCKET_TIMEOUT_MILLIS
-                    + " not specified.  The default will be used." );
+                log.debug( "Remote cache socket timeout property {0}" +
+                    " not specified. The default will be used.", SOCKET_TIMEOUT_MILLIS );
             }
         }
 
@@ -324,7 +313,8 @@ public class RemoteCacheServerFactory
         }
 
         // Register the RemoteCacheServer remote object in the registry.
-        rcsa.setRemoteServiceName( prop.getProperty( REMOTE_CACHE_SERVICE_NAME, REMOTE_CACHE_SERVICE_VAL ).trim() );
+        rcsa.setRemoteServiceName(
+                prop.getProperty( REMOTE_CACHE_SERVICE_NAME, REMOTE_CACHE_SERVICE_VAL ).trim() );
     }
 
     /**
@@ -343,7 +333,8 @@ public class RemoteCacheServerFactory
             {
                 return;
             }
-            log.info( "Unbinding host=" + host + ", port=" + port + ", serviceName=" + getServiceName() );
+            log.info( "Unbinding host={0}, port={1}, serviceName={2}",
+                    host, port, getServiceName() );
             try
             {
                 Naming.unbind( RemoteUtils.getNamingURL(host, port, getServiceName()) );
@@ -471,15 +462,9 @@ public class RemoteCacheServerFactory
         String remoteServiceName = config.getProperty( REMOTE_CACHE_SERVICE_NAME, REMOTE_CACHE_SERVICE_VAL ).trim();
         String registry = RemoteUtils.getNamingURL("", port, remoteServiceName);
 
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "looking up server " + registry );
-        }
+        log.debug( "looking up server {0}", registry );
         Object obj = Naming.lookup( registry );
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "server found" );
-        }
+        log.debug( "server found" );
 
         return (ICacheServiceAdmin) obj;
     }

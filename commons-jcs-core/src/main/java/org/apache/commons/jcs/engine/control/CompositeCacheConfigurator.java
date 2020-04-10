@@ -36,10 +36,10 @@ import org.apache.commons.jcs.engine.behavior.IRequireScheduler;
 import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;
 import org.apache.commons.jcs.engine.match.KeyMatcherPatternImpl;
 import org.apache.commons.jcs.engine.match.behavior.IKeyMatcher;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 import org.apache.commons.jcs.utils.config.OptionConverter;
 import org.apache.commons.jcs.utils.config.PropertySetter;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * This class configures JCS based on a properties object.
@@ -51,7 +51,7 @@ import org.apache.commons.logging.LogFactory;
 public class CompositeCacheConfigurator
 {
     /** The logger */
-    private static final Log log = LogFactory.getLog( CompositeCacheConfigurator.class );
+    private static final Log log = LogManager.getLog( CompositeCacheConfigurator.class );
 
     /** The prefix of relevant system properties */
     protected static final String SYSTEM_PROPERTY_KEY_PREFIX = "jcs";
@@ -139,10 +139,7 @@ public class CompositeCacheConfigurator
             }
         }
 
-        if ( log.isInfoEnabled() )
-        {
-            log.info( "Parsed regions " + regionNames );
-        }
+        log.info( "Parsed regions {0}", regionNames );
     }
 
     /**
@@ -227,10 +224,7 @@ public class CompositeCacheConfigurator
             // Next, create the auxiliaries for the new cache
             List<AuxiliaryCache<K, V>> auxList = new ArrayList<>();
 
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "Parsing region name '" + regName + "', value '" + auxiliaries + "'" );
-            }
+            log.debug( "Parsing region name \"{0}\", value \"{1}\"", regName, auxiliaries );
 
             // We must skip over ',' but not white space
             StringTokenizer st = new StringTokenizer( auxiliaries, "," );
@@ -256,7 +250,7 @@ public class CompositeCacheConfigurator
                 {
                     continue;
                 }
-                log.debug( "Parsing auxiliary named \"" + auxName + "\"." );
+                log.debug( "Parsing auxiliary named \"{0}\".", auxName );
 
                 auxCache = parseAuxiliary( props, ccm, auxName, regName );
 
@@ -326,27 +320,18 @@ public class CompositeCacheConfigurator
 
         if ( ccAttr == null )
         {
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "No special CompositeCacheAttributes class defined for key [" + attrName
-                    + "], using default class." );
-            }
+            log.info( "No special CompositeCacheAttributes class defined for "
+                    + "key [{0}], using default class.", attrName );
 
             ccAttr = defaultCCAttr;
         }
 
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "Parsing options for '" + attrName + "'" );
-        }
+        log.debug( "Parsing options for \"{0}\"", attrName );
 
         PropertySetter.setProperties( ccAttr, props, attrName + "." );
         ccAttr.setCacheName( regName );
 
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "End of parsing for \"" + attrName + "\"." );
-        }
+        log.debug( "End of parsing for \"{0}\"", attrName );
 
         // GET CACHE FROM FACTORY WITH ATTRIBUTES
         ccAttr.setCacheName( regName );
@@ -375,26 +360,18 @@ public class CompositeCacheConfigurator
         eAttr = OptionConverter.instantiateByKey( props, attrName, null );
         if ( eAttr == null )
         {
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "No special ElementAttribute class defined for key [" + attrName + "], using default class." );
-            }
+            log.info( "No special ElementAttribute class defined for key [{0}], "
+                    + "using default class.", attrName );
 
             eAttr = defaultEAttr;
         }
 
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "Parsing options for '" + attrName + "'" );
-        }
+        log.debug( "Parsing options for \"{0}\"", attrName );
 
         PropertySetter.setProperties( eAttr, props, attrName + "." );
         // eAttr.setCacheName( regName );
 
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "End of parsing for \"" + attrName + "\"." );
-        }
+        log.debug( "End of parsing for \"{0}\"", attrName );
 
         // GET CACHE FROM FACTORY WITH ATTRIBUTES
         // eAttr.setCacheName( regName );
@@ -413,10 +390,7 @@ public class CompositeCacheConfigurator
     protected <K, V> AuxiliaryCache<K, V> parseAuxiliary( Properties props, CompositeCacheManager ccm,
             String auxName, String regName )
     {
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "parseAuxiliary " + auxName );
-        }
+        log.debug( "parseAuxiliary {0}", auxName );
 
         // GET CACHE
         @SuppressWarnings("unchecked") // Common map for all caches
@@ -433,7 +407,7 @@ public class CompositeCacheConfigurator
                 auxFac = OptionConverter.instantiateByKey( props, prefix, null );
                 if ( auxFac == null )
                 {
-                    log.error( "Could not instantiate auxFactory named \"" + auxName + "\"." );
+                    log.error( "Could not instantiate auxFactory named \"{0}\"", auxName );
                     return null;
                 }
 
@@ -458,7 +432,7 @@ public class CompositeCacheConfigurator
                 auxAttr = OptionConverter.instantiateByKey( props, prefix, null );
                 if ( auxAttr == null )
                 {
-                    log.error( "Could not instantiate auxAttr named '" + attrName + "'" );
+                    log.error( "Could not instantiate auxAttr named \"{0}\"", attrName );
                     return null;
                 }
                 auxAttr.setName( auxName );
@@ -467,18 +441,12 @@ public class CompositeCacheConfigurator
 
             auxAttr = auxAttr.clone();
 
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "Parsing options for '" + attrName + "'" );
-            }
+            log.debug( "Parsing options for \"{0}\"", attrName );
 
             PropertySetter.setProperties( auxAttr, props, attrName + "." );
             auxAttr.setCacheName( regName );
 
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "End of parsing for '" + attrName + "'" );
-            }
+            log.debug( "End of parsing for \"{0}\"", attrName );
 
             // GET CACHE FROM FACTORY WITH ATTRIBUTES
             auxAttr.setCacheName( regName );
@@ -507,7 +475,7 @@ public class CompositeCacheConfigurator
             }
             catch (Exception e)
             {
-                log.error( "Could not instantiate auxiliary cache named \"" + regName + "\"." );
+                log.error( "Could not instantiate auxiliary cache named \"{0}\"", regName );
                 return null;
             }
 
@@ -530,10 +498,8 @@ public class CompositeCacheConfigurator
         {
             if ( key.startsWith( SYSTEM_PROPERTY_KEY_PREFIX ) )
             {
-                if ( log.isInfoEnabled() )
-                {
-                    log.info( "Using system property [[" + key + "] [" + sysProps.getProperty( key ) + "]]" );
-                }
+                log.info( "Using system property [[{0}] [{1}]]", () -> key,
+                        () -> sysProps.getProperty( key ) );
                 props.setProperty( key, sysProps.getProperty( key ) );
             }
         }
@@ -556,20 +522,13 @@ public class CompositeCacheConfigurator
         {
             String attributePrefix = auxPrefix + KEY_MATCHER_PREFIX + ATTRIBUTE_PREFIX;
             PropertySetter.setProperties( keyMatcher, props, attributePrefix + "." );
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "Using custom key matcher [" + keyMatcher + "] for auxiliary [" + auxPrefix
-                    + "]" );
-            }
+            log.info( "Using custom key matcher [{0}] for auxiliary [{1}]", keyMatcher, auxPrefix );
         }
         else
         {
             // use the default standard serializer
             keyMatcher = new KeyMatcherPatternImpl<>();
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "Using standard key matcher [" + keyMatcher + "] for auxiliary [" + auxPrefix + "]" );
-            }
+            log.info( "Using standard key matcher [{0}] for auxiliary [{1}]", keyMatcher, auxPrefix );
         }
         return keyMatcher;
     }

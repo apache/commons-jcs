@@ -33,8 +33,8 @@ import org.apache.commons.jcs.engine.ElementAttributes;
 import org.apache.commons.jcs.engine.behavior.IElementAttributes;
 import org.apache.commons.jcs.engine.control.CompositeCacheManager;
 import org.apache.commons.jcs.engine.control.event.ElementEventHandlerMockImpl;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 
 /**
  * Allows the user to run common cache commands from the command line for a test cache. This also
@@ -43,7 +43,7 @@ import org.apache.commons.logging.LogFactory;
 public class TestCacheAccess
 {
     /** log instance */
-    private static final Log log = LogFactory.getLog( TestCacheAccess.class );
+    private static final Log log = LogManager.getLog( TestCacheAccess.class );
 
     /** cache instance to use in testing */
     private CacheAccess<String, String> cache_control = null;
@@ -275,12 +275,7 @@ public class TestCacheAccess
                 }
             }
         }
-        catch ( CacheException e )
-        {
-            p( e.toString() );
-            e.printStackTrace( System.out );
-        }
-        catch (IOException e)
+        catch ( CacheException | IOException e )
         {
             p( e.toString() );
             e.printStackTrace( System.out );

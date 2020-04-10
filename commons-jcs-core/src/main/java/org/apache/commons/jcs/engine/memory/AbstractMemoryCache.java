@@ -42,8 +42,8 @@ import org.apache.commons.jcs.engine.stats.StatElement;
 import org.apache.commons.jcs.engine.stats.Stats;
 import org.apache.commons.jcs.engine.stats.behavior.IStatElement;
 import org.apache.commons.jcs.engine.stats.behavior.IStats;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 
 /**
  * This base includes some common code for memory caches.
@@ -52,7 +52,7 @@ public abstract class AbstractMemoryCache<K, V>
     implements IMemoryCache<K, V>
 {
     /** Log instance */
-    private static final Log log = LogFactory.getLog( AbstractMemoryCache.class );
+    private static final Log log = LogManager.getLog( AbstractMemoryCache.class );
 
     /** Cache Attributes.  Regions settings. */
     private ICompositeCacheAttributes cacheAttributes;
@@ -155,16 +155,15 @@ public abstract class AbstractMemoryCache<K, V>
         MemoryElementDescriptor<K, V> me = map.get( key );
         if ( me != null )
         {
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( getCacheName() + ": MemoryCache quiet hit for " + key );
-            }
+            log.debug( "{0}: MemoryCache quiet hit for {1}",
+                    () -> getCacheName(), () -> key );
 
             ce = me.getCacheElement();
         }
-        else if ( log.isDebugEnabled() )
+        else
         {
-            log.debug( getCacheName() + ": MemoryCache quiet miss for " + key );
+            log.debug( "{0}: MemoryCache quiet miss for {1}",
+                    () -> getCacheName(), () -> key );
         }
 
         return ce;
@@ -285,11 +284,11 @@ public abstract class AbstractMemoryCache<K, V>
      */
     public void dumpMap()
     {
-        if (log.isDebugEnabled())
+        if (log.isTraceEnabled())
         {
-            log.debug("dumpingMap");
+            log.trace("dumpingMap");
             map.entrySet().forEach(e ->
-                log.debug("dumpMap> key=" + e.getKey() + ", val=" +
+                log.trace("dumpMap> key={0}, val={1}", e.getKey(),
                         e.getValue().getCacheElement().getVal()));
         }
     }
@@ -411,10 +410,7 @@ public abstract class AbstractMemoryCache<K, V>
     @Override
     public boolean remove(K key) throws IOException
     {
-        if (log.isDebugEnabled())
-        {
-            log.debug("removing item for key: " + key);
-        }
+        log.debug("removing item for key: {0}", key);
 
         boolean removed = false;
 
@@ -473,10 +469,8 @@ public abstract class AbstractMemoryCache<K, V>
     {
         ICacheElement<K, V> ce = null;
 
-        if (log.isDebugEnabled())
-        {
-            log.debug(getCacheName() + ": getting item for key " + key);
-        }
+        log.debug("{0}: getting item for key {1}", () -> getCacheName(),
+                () -> key);
 
         MemoryElementDescriptor<K, V> me = map.get(key);
 
@@ -495,19 +489,15 @@ public abstract class AbstractMemoryCache<K, V>
                 lock.unlock();
             }
 
-            if (log.isDebugEnabled())
-            {
-                log.debug(getCacheName() + ": MemoryCache hit for " + key);
-            }
+            log.debug("{0}: MemoryCache hit for {1}", () -> getCacheName(),
+                    () -> key);
         }
         else
         {
             missCnt.incrementAndGet();
 
-            if (log.isDebugEnabled())
-            {
-                log.debug(getCacheName() + ": MemoryCache miss for " + key);
-            }
+            log.debug("{0}: MemoryCache miss for {1}", () -> getCacheName(),
+                    () -> key);
         }
 
         return ce;

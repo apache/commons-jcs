@@ -1,5 +1,9 @@
 package org.apache.commons.jcs.auxiliary.disk.jdbc;
 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -19,12 +23,8 @@ package org.apache.commons.jcs.auxiliary.disk.jdbc;
  * under the License.
  */
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 
 /**
  * Calls delete expired on the disk caches. The shrinker is run by a clock daemon. The shrinker
@@ -36,7 +36,7 @@ public class ShrinkerThread
     implements Runnable
 {
     /** The logger. */
-    private static final Log log = LogFactory.getLog( ShrinkerThread.class );
+    private static final Log log = LogManager.getLog( ShrinkerThread.class );
 
     /** A set of JDBCDiskCache objects to call deleteExpired on. */
     private final Set<JDBCDiskCache<?, ?>> shrinkSet =
@@ -86,7 +86,7 @@ public class ShrinkerThread
         }
         catch ( Throwable e )
         {
-            log.error( "Caught an expcetion while trying to delete expired items.", e );
+            log.error( "Caught an exception while trying to delete expired items.", e );
         }
     }
 
@@ -95,10 +95,8 @@ public class ShrinkerThread
      */
     private void deleteExpiredFromAllRegisteredRegions()
     {
-        if ( log.isInfoEnabled() )
-        {
-            log.info( "Running JDBC disk cache shrinker.  Number of regions [" + shrinkSet.size() + "]" );
-        }
+        log.info( "Running JDBC disk cache shrinker. Number of regions [{0}]",
+                () -> shrinkSet.size() );
 
         Object[] caches = null;
 
@@ -117,20 +115,14 @@ public class ShrinkerThread
                 int deleted = cache.deleteExpired();
                 long end = System.currentTimeMillis();
 
-                if ( log.isInfoEnabled() )
-                {
-                    log.info( "Deleted [" + deleted + "] expired for region [" + cache.getCacheName() + "] for table ["
-                        + cache.getTableName() + "] in " + ( end - start ) + " ms." );
-                }
+                log.info( "Deleted [{0}] expired for region [{1}] for table [{2}] in {3} ms.",
+                        deleted, cache.getCacheName(), cache.getTableName(), end - start );
 
                 // don't pause after the last call to delete expired.
                 if ( i < caches.length - 1 )
                 {
-                    if ( log.isInfoEnabled() )
-                    {
-                        log.info( "Pausing for [" + this.getPauseBetweenRegionCallsMillis()
-                            + "] ms. before shrinking the next region." );
-                    }
+                    log.info( "Pausing for [{0}] ms before shrinking the next region.",
+                            this.getPauseBetweenRegionCallsMillis() );
 
                     try
                     {

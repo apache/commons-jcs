@@ -29,8 +29,8 @@ import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 import org.apache.commons.jcs.auxiliary.disk.jdbc.JDBCDiskCacheAttributes;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 
 /**
  * A factory that looks up the DataSource from JNDI.  It is also able
@@ -48,7 +48,7 @@ import org.apache.commons.logging.LogFactory;
 public class JndiDataSourceFactory implements DataSourceFactory
 {
     /** The log. */
-    private static Log log = LogFactory.getLog(JndiDataSourceFactory.class);
+    private static Log log = LogManager.getLog(JndiDataSourceFactory.class);
 
     /** The name of the factory. */
     private String name;
@@ -127,23 +127,17 @@ public class JndiDataSourceFactory implements DataSourceFactory
         try
         {
             this.path = config.getJndiPath();
-            if (log.isDebugEnabled())
-            {
-                log.debug("JNDI path: " + path);
-            }
+            log.debug("JNDI path: {0}", path);
 
             this.ttl = config.getJndiTTL();
-            if (log.isDebugEnabled())
-            {
-                log.debug("Time between context lookups: " + ttl);
-            }
+            log.debug("Time between context lookups: {0}", ttl);
 
     		Hashtable<String, Object> env = new Hashtable<>();
             ctx = new InitialContext(env);
 
-            if (log.isDebugEnabled())
+            if (log.isTraceEnabled())
             {
-            	log.debug("Created new InitialContext");
+            	log.trace("Created new InitialContext");
             	debugCtx(ctx);
             }
         }
@@ -170,10 +164,10 @@ public class JndiDataSourceFactory implements DataSourceFactory
      */
     private void debugCtx(Context ctx) throws NamingException
     {
-        log.debug("InitialContext -------------------------------");
+        log.trace("InitialContext -------------------------------");
         Map<?, ?> env = ctx.getEnvironment();
-        log.debug("Environment properties:" + env.size());
-        env.forEach((key, value) -> log.debug("    " + key + ": " + value));
-        log.debug("----------------------------------------------");
+        log.trace("Environment properties: {0}", env.size());
+        env.forEach((key, value) -> log.trace("    {0}: {1}", key, value));
+        log.trace("----------------------------------------------");
     }
 }

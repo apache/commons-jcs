@@ -1,5 +1,7 @@
 package org.apache.commons.jcs.utils.serialization;
 
+import java.io.IOException;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -24,10 +26,8 @@ import org.apache.commons.jcs.engine.CacheElementSerialized;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.engine.behavior.ICacheElementSerialized;
 import org.apache.commons.jcs.engine.behavior.IElementSerializer;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import java.io.IOException;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 
 /**
  * This uses a supplied Serializer to convert to and from cache elements.
@@ -37,7 +37,7 @@ import java.io.IOException;
 public class SerializationConversionUtil
 {
     /** The logger */
-    private static final Log log = LogFactory.getLog( SerializationConversionUtil.class );
+    private static final Log log = LogManager.getLog( SerializationConversionUtil.class );
 
     /**
      * This returns a wrapper that has a serialized version of the value instead
@@ -85,8 +85,7 @@ public class SerializationConversionUtil
             else
             {
                 // we could just use the default.
-                log.warn( "ElementSerializer is null.  Could not serialize object." );
-                throw new IOException( "Could not serialize object.  The ElementSerializer is null." );
+                throw new IOException( "Could not serialize object. The ElementSerializer is null." );
             }
         }
         ICacheElementSerialized<K, V> serialized = new CacheElementSerialized<>(
@@ -140,8 +139,8 @@ public class SerializationConversionUtil
         else
         {
             // we could just use the default.
-            log.warn( "ElementSerializer is null.  Could not serialize object." );
-        }
+            throw new IOException( "Could not de-serialize object. The ElementSerializer is null." );
+       }
         ICacheElement<K, V> deSerialized = new CacheElement<>( serialized.getCacheName(), serialized.getKey(), deSerializedValue );
         deSerialized.setElementAttributes( serialized.getElementAttributes() );
 

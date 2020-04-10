@@ -48,10 +48,10 @@ import org.apache.commons.jcs.engine.stats.StatElement;
 import org.apache.commons.jcs.engine.stats.Stats;
 import org.apache.commons.jcs.engine.stats.behavior.IStatElement;
 import org.apache.commons.jcs.engine.stats.behavior.IStats;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 import org.apache.commons.jcs.utils.serialization.SerializationConversionUtil;
 import org.apache.commons.jcs.utils.threadpool.ThreadPoolManager;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /** Abstract base for remote caches. I'm trying to break out and reuse common functionality. */
 public abstract class AbstractRemoteAuxiliaryCache<K, V>
@@ -59,7 +59,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
     implements IRemoteCacheClient<K, V>
 {
     /** The logger. */
-    private static final Log log = LogFactory.getLog( AbstractRemoteAuxiliaryCache.class );
+    private static final Log log = LogManager.getLog( AbstractRemoteAuxiliaryCache.class );
 
     /**
      * This does the work. In an RMI instances, it will be a remote reference. In an http remote
@@ -99,25 +99,20 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
 
         if ( log.isDebugEnabled() )
         {
-            log.debug( "Construct> cacheName=" + cattr.getCacheName() );
-            log.debug( "irca = " + getRemoteCacheAttributes() );
-            log.debug( "remote = " + remote );
-            log.debug( "listener = " + listener );
+            log.debug( "Construct> cacheName={0}", () -> cattr.getCacheName() );
+            log.debug( "irca = {0}", () -> getRemoteCacheAttributes() );
+            log.debug( "remote = {0}", remote );
+            log.debug( "listener = {0}", listener );
         }
 
         // use a pool if it is greater than 0
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "GetTimeoutMillis() = " + getRemoteCacheAttributes().getGetTimeoutMillis() );
-        }
+        log.debug( "GetTimeoutMillis() = {0}",
+                () -> getRemoteCacheAttributes().getGetTimeoutMillis() );
 
         if ( getRemoteCacheAttributes().getGetTimeoutMillis() > 0 )
         {
             pool = ThreadPoolManager.getInstance().getExecutorService( getRemoteCacheAttributes().getThreadPoolName() );
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "Thread Pool = " + pool );
-            }
+            log.debug( "Thread Pool = {0}", pool );
             usePoolForGet = true;
         }
     }
@@ -131,10 +126,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
     protected void processDispose()
         throws IOException
     {
-        if ( log.isInfoEnabled() )
-        {
-            log.info( "Disposing of remote cache." );
-        }
+        log.info( "Disposing of remote cache." );
         try
         {
             if ( getRemoteCacheListener() != null )
@@ -228,27 +220,24 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
             // used timed get in order to timeout
             ICacheElement<K, V> ice = future.get(timeout, TimeUnit.MILLISECONDS);
 
-            if ( log.isDebugEnabled() )
+            if ( ice == null )
             {
-                if ( ice == null )
-                {
-                    log.debug( "nothing found in remote cache" );
-                }
-                else
-                {
-                    log.debug( "found item in remote cache" );
-                }
+                log.debug( "nothing found in remote cache" );
+            }
+            else
+            {
+                log.debug( "found item in remote cache" );
             }
             return ice;
         }
         catch ( TimeoutException te )
         {
-            log.warn( "TimeoutException, Get Request timed out after " + timeout );
+            log.warn( "TimeoutException, Get Request timed out after {0}", timeout );
             throw new IOException( "Get Request timed out after " + timeout );
         }
         catch ( InterruptedException ex )
         {
-            log.warn( "InterruptedException, Get Request timed out after " + timeout );
+            log.warn( "InterruptedException, Get Request timed out after {0}", timeout );
             throw new IOException( "Get Request timed out after " + timeout );
         }
         catch (ExecutionException ex)
@@ -323,10 +312,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
     {
         if ( !this.getRemoteCacheAttributes().getGetOnly() )
         {
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "remove> key=" + key );
-            }
+            log.debug( "remove> key={0}", key );
             try
             {
                 getRemoteCacheService().remove( cacheName, key, getListenerId() );
@@ -380,10 +366,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
             ICacheElementSerialized<K, V> serialized = null;
             try
             {
-                if ( log.isDebugEnabled() )
-                {
-                    log.debug( "sending item to remote server" );
-                }
+                log.debug( "sending item to remote server" );
 
                 // convert so we don't have to know about the object on the
                 // other end.
@@ -393,7 +376,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
             }
             catch ( NullPointerException npe )
             {
-                log.error( "npe for ce = " + ce + "ce.attr = " + ce.getElementAttributes(), npe );
+                log.error( "npe for ce = {0} ce.attr = {1}", ce, ce.getElementAttributes(), npe );
             }
             catch ( Exception ex )
             {
@@ -404,10 +387,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
         }
         else
         {
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "get only mode, not sending to remote server" );
-            }
+            log.debug( "get only mode, not sending to remote server" );
         }
     }
 
@@ -450,10 +430,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
             {
                 getRemoteCacheListener().setListenerId( id );
 
-                if ( log.isDebugEnabled() )
-                {
-                    log.debug( "set listenerId = " + id );
-                }
+                log.debug( "set listenerId = {0}", id );
             }
             catch ( Exception e )
             {
@@ -474,13 +451,10 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
         {
             try
             {
-                if ( log.isDebugEnabled() )
-                {
-                    log.debug( "get listenerId = " + getRemoteCacheListener().getListenerId() );
-                }
+                log.debug( "get listenerId = {0}", getRemoteCacheListener().getListenerId() );
                 return getRemoteCacheListener().getListenerId();
             }
-            catch ( Exception e )
+            catch ( IOException e )
             {
                 log.error( "Problem getting listenerId", e );
             }

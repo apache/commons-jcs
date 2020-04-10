@@ -23,8 +23,8 @@ import junit.framework.TestCase;
 import org.apache.commons.jcs.JCS;
 import org.apache.commons.jcs.access.CacheAccess;
 import org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 
 /**
  * Tests the performance difference between the LRU and the MRU. There should be very little.
@@ -54,13 +54,13 @@ public class LRUvsMRUPerformanceTest
     public void testSimpleLoad()
         throws Exception
     {
-        Log log1 = LogFactory.getLog( LRUMemoryCache.class );
+        Log log1 = LogManager.getLog( LRUMemoryCache.class );
         if ( log1.isDebugEnabled() )
         {
             System.out.println( "The log level must be at info or above for the a performance test." );
             return;
         }
-        Log log2 = LogFactory.getLog( MRUMemoryCache.class );
+        Log log2 = LogManager.getLog( MRUMemoryCache.class );
         if ( log2.isDebugEnabled() )
         {
             System.out.println( "The log level must be at info or above for the a performance test." );

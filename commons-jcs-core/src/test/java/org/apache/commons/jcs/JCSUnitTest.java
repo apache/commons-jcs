@@ -19,14 +19,13 @@ package org.apache.commons.jcs;
  * under the License.
  */
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import org.apache.commons.jcs.access.CacheAccess;
-
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Random;
+
+import org.apache.commons.jcs.access.CacheAccess;
+
+import junit.framework.TestCase;
 
 /**
  * Simple test for the JCS class.
@@ -36,31 +35,6 @@ public class JCSUnitTest
 {
     /** A random for key generation. */
     Random random = new Random();
-
-    /**
-     * @param testName
-     */
-    public JCSUnitTest( String testName )
-    {
-        super( testName );
-    }
-
-    /**
-     * @return Test
-     */
-    public static Test suite()
-    {
-        return new TestSuite( JCSUnitTest.class );
-    }
-
-    /**
-     * @param args
-     */
-    public static void main( String args[] )
-    {
-        String[] testCaseName = { JCSUnitTest.class.getName() };
-        junit.textui.TestRunner.main( testCaseName );
-    }
 
     /**
      * @throws Exception

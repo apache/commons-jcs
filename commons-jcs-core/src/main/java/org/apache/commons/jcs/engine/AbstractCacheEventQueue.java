@@ -25,8 +25,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.engine.behavior.ICacheEventQueue;
 import org.apache.commons.jcs.engine.behavior.ICacheListener;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 
 /**
  * An abstract base class to the different implementations
@@ -35,7 +35,7 @@ public abstract class AbstractCacheEventQueue<K, V>
     implements ICacheEventQueue<K, V>
 {
     /** The logger. */
-    private static final Log log = LogFactory.getLog( AbstractCacheEventQueue.class );
+    private static final Log log = LogManager.getLog( AbstractCacheEventQueue.class );
 
     /** default */
     protected static final int DEFAULT_WAIT_TO_DIE_MILLIS = 10000;
@@ -141,10 +141,7 @@ public abstract class AbstractCacheEventQueue<K, V>
         this.maxFailure = maxFailure <= 0 ? 3 : maxFailure;
         this.waitBeforeRetry = waitBeforeRetry <= 0 ? 500 : waitBeforeRetry;
 
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "Constructed: " + this );
-        }
+        log.debug( "Constructed: {0}", this );
     }
 
     /**
@@ -224,24 +221,17 @@ public abstract class AbstractCacheEventQueue<K, V>
             }
             catch ( IOException e )
             {
-                if ( log.isWarnEnabled() )
-                {
-                    log.warn( e );
-                }
+                log.warn( e );
                 if ( ++failures >= maxFailure )
                 {
-                    if ( log.isWarnEnabled() )
-                    {
-                        log.warn( "Error while running event from Queue: " + this
-                            + ". Dropping Event and marking Event Queue as non-functional." );
-                    }
+                    log.warn( "Error while running event from Queue: {0}. "
+                            + "Dropping Event and marking Event Queue as "
+                            + "non-functional.", this );
                     destroy();
                     return;
                 }
-                if ( log.isInfoEnabled() )
-                {
-                    log.info( "Error while running event from Queue: " + this + ". Retrying..." );
-                }
+                log.info( "Error while running event from Queue: {0}. "
+                        + "Retrying...", this );
                 try
                 {
                     Thread.sleep( waitBeforeRetry );
@@ -249,10 +239,8 @@ public abstract class AbstractCacheEventQueue<K, V>
                 }
                 catch ( InterruptedException ie )
                 {
-                    if ( log.isErrorEnabled() )
-                    {
-                        log.warn( "Interrupted while sleeping for retry on event " + this + "." );
-                    }
+                    log.warn( "Interrupted while sleeping for retry on event "
+                            + "{0}.", this );
                     destroy();
                 }
             }
@@ -306,8 +294,11 @@ public abstract class AbstractCacheEventQueue<K, V>
         @Override
         public String toString()
         {
-            return new StringBuilder( "PutEvent for key: " ).append( ice.getKey() ).append( " value: " )
-                .append( ice.getVal() ).toString();
+            return new StringBuilder( "PutEvent for key: " )
+                    .append( ice.getKey() )
+                    .append( " value: " )
+                    .append( ice.getVal() )
+                    .toString();
         }
 
     }
@@ -353,7 +344,9 @@ public abstract class AbstractCacheEventQueue<K, V>
         @Override
         public String toString()
         {
-            return new StringBuilder( "RemoveEvent for " ).append( key ).toString();
+            return new StringBuilder( "RemoveEvent for " )
+                    .append( key )
+                    .toString();
         }
 
     }

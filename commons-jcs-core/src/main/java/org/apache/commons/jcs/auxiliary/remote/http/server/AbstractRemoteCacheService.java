@@ -31,8 +31,8 @@ import org.apache.commons.jcs.engine.control.CompositeCache;
 import org.apache.commons.jcs.engine.logging.CacheEvent;
 import org.apache.commons.jcs.engine.logging.behavior.ICacheEvent;
 import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 
 /**
  * This class contains common methods for remote cache services. Eventually I hope to extract out
@@ -57,7 +57,7 @@ public abstract class AbstractRemoteCacheService<K, V>
     private final int logInterval = 100;
 
     /** log instance */
-    private static final Log log = LogFactory.getLog( AbstractRemoteCacheService.class );
+    private static final Log log = LogManager.getLog( AbstractRemoteCacheService.class );
 
     /**
      * Creates the super with the needed items.
@@ -129,14 +129,12 @@ public abstract class AbstractRemoteCacheService<K, V>
             puts++;
             if ( puts % logInterval == 0 )
             {
-                log.info( "puts = " + puts );
+                log.info( "puts = {0}", puts );
             }
         }
 
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "In update, put [" + item.getKey() + "] in [" + item.getCacheName() + "]" );
-        }
+        log.debug( "In update, put [{0}] in [{1}]", () -> item.getKey(),
+                () -> item.getCacheName() );
     }
 
     /**

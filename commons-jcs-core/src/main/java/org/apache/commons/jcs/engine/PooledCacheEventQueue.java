@@ -29,9 +29,9 @@ import org.apache.commons.jcs.engine.stats.StatElement;
 import org.apache.commons.jcs.engine.stats.Stats;
 import org.apache.commons.jcs.engine.stats.behavior.IStatElement;
 import org.apache.commons.jcs.engine.stats.behavior.IStats;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 import org.apache.commons.jcs.utils.threadpool.ThreadPoolManager;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * An event queue is used to propagate ordered cache events to one and only one target listener.
@@ -47,7 +47,7 @@ public class PooledCacheEventQueue<K, V>
     extends AbstractCacheEventQueue<K, V>
 {
     /** The logger. */
-    private static final Log log = LogFactory.getLog( PooledCacheEventQueue.class );
+    private static final Log log = LogManager.getLog( PooledCacheEventQueue.class );
 
     /** The type of event queue */
     private static final QueueType queueType = QueueType.POOLED;
@@ -92,7 +92,7 @@ public class PooledCacheEventQueue<K, V>
         // this will share the same pool with other event queues by default.
         pool = ThreadPoolManager.getInstance().getExecutorService(
                 (threadPoolName == null) ? "cache_event_queue" : threadPoolName );
-        
+
         if (pool instanceof ThreadPoolExecutor)
         {
         	queue = ((ThreadPoolExecutor) pool).getQueue();
@@ -118,10 +118,7 @@ public class PooledCacheEventQueue<K, V>
         {
             setWorking(false);
             pool.shutdownNow();
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "Cache event queue destroyed: " + this );
-            }
+            log.info( "Cache event queue destroyed: {0}", this );
         }
     }
 

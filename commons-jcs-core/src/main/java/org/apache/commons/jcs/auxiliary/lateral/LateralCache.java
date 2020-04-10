@@ -35,8 +35,8 @@ import org.apache.commons.jcs.engine.behavior.ICacheServiceNonLocal;
 import org.apache.commons.jcs.engine.behavior.IZombie;
 import org.apache.commons.jcs.engine.stats.Stats;
 import org.apache.commons.jcs.engine.stats.behavior.IStats;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 
 /**
  * Lateral distributor. Returns null on get by default. Net search not implemented.
@@ -45,7 +45,7 @@ public class LateralCache<K, V>
     extends AbstractAuxiliaryCacheEventLogging<K, V>
 {
     /** The logger. */
-    private static final Log log = LogFactory.getLog( LateralCache.class );
+    private static final Log log = LogManager.getLog( LateralCache.class );
 
     /** generalize this, use another interface */
     private final ILateralCacheAttributes lateralCacheAttributes;
@@ -99,11 +99,8 @@ public class LateralCache<K, V>
         {
             if (ce != null)
             {
-                if ( log.isDebugEnabled() )
-                {
-                    log.debug( "update: lateral = [" + lateralCacheService + "], " + "CacheInfo.listenerId = "
-                        + CacheInfo.listenerId );
-                }
+                log.debug( "update: lateral = [{0}], CacheInfo.listenerId = {1}",
+                        lateralCacheService, CacheInfo.listenerId );
                 lateralCacheService.update( ce, CacheInfo.listenerId );
             }
         }
@@ -200,10 +197,7 @@ public class LateralCache<K, V>
     protected boolean processRemove( K key )
         throws IOException
     {
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "removing key:" + key );
-        }
+        log.debug( "removing key: {0}", key );
 
         try
         {
@@ -317,7 +311,7 @@ public class LateralCache<K, V>
     private void handleException( Exception ex, String msg )
         throws IOException
     {
-        log.error( "Disabling lateral cache due to error " + msg, ex );
+        log.error( "Disabling lateral cache due to error {0}", msg, ex );
 
         lateralCacheService = new ZombieCacheServiceNonLocal<>( lateralCacheAttributes.getZombieQueueMaxSize() );
         // may want to flush if region specifies

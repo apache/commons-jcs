@@ -1,5 +1,10 @@
 package org.apache.commons.jcs.utils.net;
 
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.UnknownHostException;
+import java.util.Enumeration;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -19,13 +24,8 @@ package org.apache.commons.jcs.utils.net;
  * under the License.
  */
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.UnknownHostException;
-import java.util.Enumeration;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 
 /**
  * Simple utility for getting the local host name.
@@ -35,7 +35,7 @@ import java.util.Enumeration;
 public class HostNameUtil
 {
     /** The logger. */
-    private static final Log log = LogFactory.getLog( HostNameUtil.class );
+    private static final Log log = LogManager.getLog( HostNameUtil.class );
 
     /**
      * Gets the address for the local machine.
@@ -48,10 +48,7 @@ public class HostNameUtil
         try
         {
             String hostAddress = getLocalHostLANAddress().getHostAddress();
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "hostAddress = [" + hostAddress + "]" );
-            }
+            log.debug( "hostAddress = [{0}]", hostAddress );
             return hostAddress;
         }
         catch ( UnknownHostException e1 )

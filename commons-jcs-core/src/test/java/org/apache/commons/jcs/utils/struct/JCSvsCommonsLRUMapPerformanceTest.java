@@ -19,15 +19,12 @@ package org.apache.commons.jcs.utils.struct;
  * under the License.
  */
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-
-import org.apache.commons.jcs.JCSvsHashtablePerformanceTest;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import java.util.Map;
+
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
+
+import junit.framework.TestCase;
 
 /**
  * This ensures that the jcs version of the LRU map is as fast as the commons
@@ -53,24 +50,6 @@ public class JCSvsCommonsLRUMapPerformanceTest
     int tries = 100000;
 
     /**
-     * @param testName
-     */
-    public JCSvsCommonsLRUMapPerformanceTest( String testName )
-    {
-        super( testName );
-    }
-
-    /**
-     * A unit test suite for JUnit
-     *
-     * @return The test suite
-     */
-    public static Test suite()
-    {
-        return new TestSuite( JCSvsCommonsLRUMapPerformanceTest.class );
-    }
-
-    /**
      * A unit test for JUnit
      *
      * @throws Exception
@@ -79,7 +58,7 @@ public class JCSvsCommonsLRUMapPerformanceTest
     public void testSimpleLoad()
         throws Exception
     {
-        Log log = LogFactory.getLog( LRUMap.class );
+        Log log = LogManager.getLog( LRUMap.class );
         if ( log.isDebugEnabled() )
         {
             System.out.println( "The log level must be at info or above for the a performance test." );
@@ -96,7 +75,6 @@ public class JCSvsCommonsLRUMapPerformanceTest
      */
     public void doWork()
     {
-
         long start = 0;
         long end = 0;
         long time = 0;
@@ -112,12 +90,10 @@ public class JCSvsCommonsLRUMapPerformanceTest
 
         try
         {
-
             Map<String, String> cache = new LRUMap<>( tries );
 
             for ( int j = 0; j < loops; j++ )
             {
-
                 name = "JCS      ";
                 start = System.currentTimeMillis();
                 for ( int i = 0; i < tries; i++ )
@@ -199,16 +175,5 @@ public class JCSvsCommonsLRUMapPerformanceTest
         ratioGet = Float.intBitsToFloat( (int) getAvJCS ) / Float.intBitsToFloat( (int) getAvHashtable );
         System.out.println( name + " gets took " + ratioGet + " times the " + cache2Name + ", the goal is <" + target
             + "x" );
-
     }
-
-    /**
-     * @param args
-     */
-    public static void main( String args[] )
-    {
-        JCSvsHashtablePerformanceTest test = new JCSvsHashtablePerformanceTest( "command" );
-        test.doWork();
-    }
-
 }

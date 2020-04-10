@@ -34,8 +34,8 @@ import org.apache.commons.jcs.auxiliary.disk.jdbc.mysql.util.ScheduleParser;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 
 /**
  * This factory should create mysql disk caches.
@@ -46,7 +46,7 @@ public class MySQLDiskCacheFactory
     extends JDBCDiskCacheFactory
 {
     /** The logger */
-    private static final Log log = LogFactory.getLog( MySQLDiskCacheFactory.class );
+    private static final Log log = LogManager.getLog( MySQLDiskCacheFactory.class );
 
     /**
      * This factory method should create an instance of the mysqlcache.
@@ -93,11 +93,8 @@ public class MySQLDiskCacheFactory
         {
             if ( attributes.getOptimizationSchedule() != null )
             {
-                if ( log.isInfoEnabled() )
-                {
-                    log.info( "Will try to configure optimization for table [" + attributes.getTableName()
-                        + "] on schedule [" + attributes.getOptimizationSchedule() + "]" );
-                }
+                log.info( "Will try to configure optimization for table [{0}] on schedule [{1}]",
+                        () -> attributes.getTableName(),  () -> attributes.getOptimizationSchedule());
 
                 MySQLTableOptimizer optimizer = new MySQLTableOptimizer( attributes, tableState, ds );
 
@@ -115,15 +112,14 @@ public class MySQLDiskCacheFactory
                 }
                 catch ( ParseException e )
                 {
-                    log.warn( "Problem creating optimization schedule for table [" + attributes.getTableName() + "]", e );
+                    log.warn( "Problem creating optimization schedule for table [{0}]",
+                            attributes.getTableName(), e );
                 }
             }
             else
             {
-                if ( log.isInfoEnabled() )
-                {
-                    log.info( "Optimization is not configured for table [" + attributes.getTableName() + "]" );
-                }
+                log.info( "Optimization is not configured for table [{0}]",
+                        attributes.getTableName());
             }
         }
     }
@@ -136,18 +132,14 @@ public class MySQLDiskCacheFactory
      */
     protected void scheduleOptimization( Date startTime, MySQLTableOptimizer optimizer )
     {
-        if ( log.isInfoEnabled() )
-        {
-            log.info( "startTime [" + startTime + "] for optimizer " + optimizer );
-        }
+        log.info( "startTime [{0}] for optimizer {1}", startTime, optimizer );
 
-        // get the runnable from the factory
-        OptimizerTask runnable = new OptimizerTask( optimizer );
         Date now = new Date();
         long initialDelay = startTime.getTime() - now.getTime();
 
-        // have the daemon execute our runnable
-        getScheduledExecutorService().scheduleAtFixedRate(runnable, initialDelay, 86400000L, TimeUnit.MILLISECONDS );
+        // have the daemon execute the optimization
+        getScheduledExecutorService().scheduleAtFixedRate(() -> optimizeTable(optimizer),
+                initialDelay, 86400L, TimeUnit.SECONDS );
     }
 
     /**
@@ -155,42 +147,16 @@ public class MySQLDiskCacheFactory
      * <p>
      * @author Aaron Smuts
      */
-    private static class OptimizerTask
-        implements Runnable
+    private void optimizeTable(MySQLTableOptimizer optimizer)
     {
-        /** Handles optimization */
-        private MySQLTableOptimizer optimizer = null;
-
-        /**
-         * Get a handle on the optimizer.
-         * <p>
-         * @param optimizer
-         */
-        public OptimizerTask( MySQLTableOptimizer optimizer )
+        if ( optimizer != null )
         {
-            this.optimizer = optimizer;
+            boolean success = optimizer.optimizeTable();
+            log.info( "Optimization success status [{0}]", success );
         }
-
-        /**
-         * This calls optimize on the optimizer.
-         * <p>
-         * @see java.lang.Runnable#run()
-         */
-        @Override
-        public void run()
+        else
         {
-            if ( optimizer != null )
-            {
-                boolean success = optimizer.optimizeTable();
-                if ( log.isInfoEnabled() )
-                {
-                    log.info( "Optimization success status [" + success + "]" );
-                }
-            }
-            else
-            {
-                log.warn( "OptimizerRunner: The optimizer is null.  Could not optimize table." );
-            }
+            log.warn( "OptimizerRunner: The optimizer is null. Could not optimize table." );
         }
     }
 }

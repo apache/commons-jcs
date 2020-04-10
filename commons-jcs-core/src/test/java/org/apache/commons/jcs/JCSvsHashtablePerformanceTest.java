@@ -19,21 +19,20 @@ package org.apache.commons.jcs;
  * under the License.
  */
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import org.apache.commons.jcs.access.CacheAccess;
-import org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import java.util.Hashtable;
 
+import org.apache.commons.jcs.access.CacheAccess;
+import org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
+
+import junit.framework.TestCase;
+
 /**
- * This test ensures that basic memory operations are with a speficified order of magnitude of the
+ * This test ensures that basic memory operations are with a specified order of magnitude of the
  * java.util.Hashtable.
  * <p>
- * Currenlty JCS is un 2x a hashtable for gets, and under 1.2x for puts.
+ * Currently JCS is under 2x a hashtable for gets, and under 1.2x for puts.
  */
 public class JCSvsHashtablePerformanceTest
     extends TestCase
@@ -54,36 +53,19 @@ public class JCSvsHashtablePerformanceTest
     int tries = 50000;
 
     /**
-     * @param testName
-     */
-    public JCSvsHashtablePerformanceTest( String testName )
-    {
-        super( testName );
-    }
-
-    /**
-     * A unit test suite for JUnit
-     * @return The test suite
-     */
-    public static Test suite()
-    {
-        return new TestSuite( JCSvsHashtablePerformanceTest.class );
-    }
-
-    /**
      * A unit test for JUnit
      * @throws Exception Description of the Exception
      */
     public void testSimpleLoad()
         throws Exception
     {
-        Log log1 = LogFactory.getLog( LRUMemoryCache.class );
+        Log log1 = LogManager.getLog( LRUMemoryCache.class );
         if ( log1.isDebugEnabled() )
         {
             System.out.println( "The log level must be at info or above for the a performance test." );
             return;
         }
-        Log log2 = LogFactory.getLog( JCS.class );
+        Log log2 = LogManager.getLog( JCS.class );
         if ( log2.isDebugEnabled() )
         {
             System.out.println( "The log level must be at info or above for the a performance test." );
@@ -99,7 +81,6 @@ public class JCSvsHashtablePerformanceTest
      */
     public void doWork()
     {
-
         long start = 0;
         long end = 0;
         long time = 0;
@@ -195,16 +176,5 @@ public class JCSvsHashtablePerformanceTest
         System.out.println( "Get average for Hashtable = " + getAvHashtable );
         ratioGet = Float.intBitsToFloat( (int) getAvJCS ) / Float.intBitsToFloat( (int) getAvHashtable );
         System.out.println( "JCS gets took " + ratioGet + " times the Hashtable, the goal is <" + target + "x" );
-
     }
-
-    /**
-     * @param args
-     */
-    public static void main( String args[] )
-    {
-        JCSvsHashtablePerformanceTest test = new JCSvsHashtablePerformanceTest( "command" );
-        test.doWork();
-    }
-
 }

@@ -25,11 +25,11 @@ import java.util.concurrent.ExecutorService;
 import org.apache.commons.jcs.engine.control.event.behavior.IElementEvent;
 import org.apache.commons.jcs.engine.control.event.behavior.IElementEventHandler;
 import org.apache.commons.jcs.engine.control.event.behavior.IElementEventQueue;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 import org.apache.commons.jcs.utils.threadpool.PoolConfiguration;
 import org.apache.commons.jcs.utils.threadpool.PoolConfiguration.WhenBlockedPolicy;
 import org.apache.commons.jcs.utils.threadpool.ThreadPoolManager;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * An event queue is used to propagate ordered cache events to one and only one target listener.
@@ -40,7 +40,7 @@ public class ElementEventQueue
     private static final String THREAD_PREFIX = "JCS-ElementEventQueue-";
 
     /** The logger */
-    private static final Log log = LogFactory.getLog( ElementEventQueue.class );
+    private static final Log log = LogManager.getLog( ElementEventQueue.class );
 
     /** shutdown or not */
     private boolean destroyed = false;
@@ -56,10 +56,7 @@ public class ElementEventQueue
         queueProcessor = ThreadPoolManager.getInstance().createPool(
         		new PoolConfiguration(false, 0, 1, 1, 0, WhenBlockedPolicy.RUN, 1), THREAD_PREFIX);
 
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "Constructed: " + this );
-        }
+        log.debug( "Constructed: {0}", this );
     }
 
     /**
@@ -77,10 +74,7 @@ public class ElementEventQueue
             queueProcessor.shutdownNow();
             queueProcessor = null;
 
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "Element event queue destroyed: " + this );
-            }
+            log.info( "Element event queue destroyed: {0}", this );
         }
     }
 
@@ -95,23 +89,17 @@ public class ElementEventQueue
         throws IOException
     {
 
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "Adding Event Handler to QUEUE, !destroyed = " + !destroyed );
-        }
+        log.debug( "Adding Event Handler to QUEUE, !destroyed = {0}", !destroyed );
 
         if (destroyed)
         {
-            log.warn("Event submitted to disposed element event queue " + event);
+            log.warn("Event submitted to disposed element event queue {0}", event);
         }
         else
         {
             ElementEventRunner runner = new ElementEventRunner( hand, event );
 
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "runner = " + runner );
-            }
+            log.debug( "runner = {0}", runner );
 
             queueProcessor.execute(runner);
         }
@@ -140,7 +128,7 @@ public class ElementEventQueue
             catch ( IOException e )
             {
                 // Too bad. The handler has problems.
-                log.warn( "Giving up element event handling " + ElementEventQueue.this, e );
+                log.warn( "Giving up element event handling {0}", ElementEventQueue.this, e );
             }
         }
 
@@ -176,10 +164,7 @@ public class ElementEventQueue
         ElementEventRunner( IElementEventHandler hand, IElementEvent<?> event )
             throws IOException
         {
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "Constructing " + this );
-            }
+            log.debug( "Constructing {0}", this );
             this.hand = hand;
             this.event = event;
         }

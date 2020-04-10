@@ -25,8 +25,8 @@ import java.util.Properties;
 
 import org.apache.commons.jcs.auxiliary.remote.RemoteUtils;
 import org.apache.commons.jcs.utils.net.HostNameUtil;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 
 /**
  *Starts the registry and runs the server via the factory.
@@ -36,7 +36,7 @@ import org.apache.commons.logging.LogFactory;
 public class RemoteCacheServerStartupUtil
 {
     /** The logger */
-    private static final Log log = LogFactory.getLog( RemoteCacheServerStartupUtil.class );
+    private static final Log log = LogManager.getLog( RemoteCacheServerStartupUtil.class );
 
     /** Registry to use in the test. */
     private static final int DEFAULT_REGISTRY_PORT = 1101;

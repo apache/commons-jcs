@@ -29,9 +29,9 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -47,9 +47,9 @@ import org.apache.commons.jcs.engine.behavior.IShutdownObserver;
 import org.apache.commons.jcs.engine.control.CompositeCache;
 import org.apache.commons.jcs.engine.control.CompositeCacheManager;
 import org.apache.commons.jcs.io.ObjectInputStreamClassLoaderAware;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 import org.apache.commons.jcs.utils.threadpool.DaemonThreadFactory;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * Listens for connections from other TCP lateral caches and handles them. The initialization method
@@ -60,7 +60,7 @@ public class LateralTCPListener<K, V>
     implements ILateralCacheListener<K, V>, IShutdownObserver
 {
     /** The logger */
-    private static final Log log = LogFactory.getLog( LateralTCPListener.class );
+    private static final Log log = LogManager.getLog( LateralTCPListener.class );
 
     /** How long the server will block on an accept(). 0 is infinite. */
     private static final int acceptTimeOut = 1000;
@@ -69,8 +69,8 @@ public class LateralTCPListener<K, V>
     private transient ICompositeCacheManager cacheManager;
 
     /** Map of available instances, keyed by port */
-    private static final HashMap<String, ILateralCacheListener<?, ?>> instances =
-        new HashMap<>();
+    private static final ConcurrentHashMap<String, ILateralCacheListener<?, ?>> instances =
+        new ConcurrentHashMap<>();
 
     /** The socket listener */
     private ListenerThread receiver;
@@ -112,26 +112,23 @@ public class LateralTCPListener<K, V>
      * @param cacheMgr
      * @return The instance value
      */
-    public synchronized static <K, V> LateralTCPListener<K, V>
+    public static <K, V> LateralTCPListener<K, V>
         getInstance( ITCPLateralCacheAttributes ilca, ICompositeCacheManager cacheMgr )
     {
         @SuppressWarnings("unchecked") // Need to cast because of common map for all instances
-        LateralTCPListener<K, V> ins = (LateralTCPListener<K, V>) instances.get( String.valueOf( ilca.getTcpListenerPort() ) );
+        LateralTCPListener<K, V> ins = (LateralTCPListener<K, V>) instances.computeIfAbsent(
+                String.valueOf( ilca.getTcpListenerPort() ),
+                k -> {
+                    LateralTCPListener<K, V> newIns = new LateralTCPListener<>( ilca );
 
-        if ( ins == null )
-        {
-            ins = new LateralTCPListener<>( ilca );
+                    newIns.init();
+                    newIns.setCacheManager( cacheMgr );
 
-            ins.init();
-            ins.setCacheManager( cacheMgr );
+                    log.info( "Created new listener {0}",
+                            () -> ilca.getTcpListenerPort() );
 
-            instances.put( String.valueOf( ilca.getTcpListenerPort() ), ins );
-
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "Created new listener " + ilca.getTcpListenerPort() );
-            }
-        }
+                    return newIns;
+                });
 
         return ins;
     }
@@ -161,7 +158,7 @@ public class LateralTCPListener<K, V>
             terminated = new AtomicBoolean(false);
             shutdown = new AtomicBoolean(false);
 
-            log.info( "Listening on port " + port );
+            log.info( "Listening on port {0}", port );
 
             ServerSocket serverSocket = new ServerSocket( port );
             serverSocket.setSoTimeout( acceptTimeOut );
@@ -196,10 +193,7 @@ public class LateralTCPListener<K, V>
         throws IOException
     {
         this.listenerId = id;
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "set listenerId = " + id );
-        }
+        log.debug( "set listenerId = {0}", id );
     }
 
     /**
@@ -226,19 +220,15 @@ public class LateralTCPListener<K, V>
         throws IOException
     {
         putCnt++;
-        if ( log.isInfoEnabled() )
+        if ( log.isInfoEnabled() && getPutCnt() % 100 == 0 )
         {
-            if ( getPutCnt() % 100 == 0 )
-            {
-                log.info( "Put Count (port " + getTcpLateralCacheAttributes().getTcpListenerPort() + ") = "
-                    + getPutCnt() );
-            }
+            log.info( "Put Count (port {0}) = {1}",
+                    () -> getTcpLateralCacheAttributes().getTcpListenerPort(),
+                    () -> getPutCnt() );
         }
 
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "handlePut> cacheName=" + element.getCacheName() + ", key=" + element.getKey() );
-        }
+        log.debug( "handlePut> cacheName={0}, key={1}",
+                () -> element.getCacheName(), () -> element.getKey() );
 
         getCache( element.getCacheName() ).localUpdate( element );
     }
@@ -255,18 +245,12 @@ public class LateralTCPListener<K, V>
         throws IOException
     {
         removeCnt++;
-        if ( log.isInfoEnabled() )
+        if ( log.isInfoEnabled() && getRemoveCnt() % 100 == 0 )
         {
-            if ( getRemoveCnt() % 100 == 0 )
-            {
-                log.info( "Remove Count = " + getRemoveCnt() );
-            }
+            log.info( "Remove Count = {0}", () -> getRemoveCnt() );
         }
 
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "handleRemove> cacheName=" + cacheName + ", key=" + key );
-        }
+        log.debug( "handleRemove> cacheName={0}, key={1}", cacheName, key );
 
         getCache( cacheName ).localRemove( key );
     }
@@ -280,10 +264,7 @@ public class LateralTCPListener<K, V>
     public void handleRemoveAll( String cacheName )
         throws IOException
     {
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "handleRemoveAll> cacheName=" + cacheName );
-        }
+        log.debug( "handleRemoveAll> cacheName={0}", cacheName );
 
         getCache( cacheName ).localRemoveAll();
     }
@@ -300,19 +281,14 @@ public class LateralTCPListener<K, V>
         throws IOException
     {
         getCnt++;
-        if ( log.isInfoEnabled() )
+        if ( log.isInfoEnabled() && getGetCnt() % 100 == 0 )
         {
-            if ( getGetCnt() % 100 == 0 )
-            {
-                log.info( "Get Count (port " + getTcpLateralCacheAttributes().getTcpListenerPort() + ") = "
-                    + getGetCnt() );
-            }
+            log.info( "Get Count (port {0}) = {1}",
+                    () -> getTcpLateralCacheAttributes().getTcpListenerPort(),
+                    () -> getGetCnt() );
         }
 
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "handleGet> cacheName=" + cacheName + ", key = " + key );
-        }
+        log.debug( "handleGet> cacheName={0}, key={1}", cacheName, key );
 
         return getCache( cacheName ).localGet( key );
     }
@@ -329,19 +305,14 @@ public class LateralTCPListener<K, V>
         throws IOException
     {
         getCnt++;
-        if ( log.isInfoEnabled() )
+        if ( log.isInfoEnabled() && getGetCnt() % 100 == 0 )
         {
-            if ( getGetCnt() % 100 == 0 )
-            {
-                log.info( "GetMatching Count (port " + getTcpLateralCacheAttributes().getTcpListenerPort() + ") = "
-                    + getGetCnt() );
-            }
+            log.info( "GetMatching Count (port {0}) = {1}",
+                    () -> getTcpLateralCacheAttributes().getTcpListenerPort(),
+                    () -> getGetCnt() );
         }
 
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "handleGetMatching> cacheName=" + cacheName + ", pattern = " + pattern );
-        }
+        log.debug( "handleGetMatching> cacheName={0}, pattern={1}", cacheName, pattern );
 
         return getCache( cacheName ).localGetMatching( pattern );
     }
@@ -367,10 +338,8 @@ public class LateralTCPListener<K, V>
     public void handleDispose( String cacheName )
         throws IOException
     {
-        if ( log.isInfoEnabled() )
-        {
-            log.info( "handleDispose > cacheName=" + cacheName + " | Ignoring message.  Do not dispose from remote." );
-        }
+        log.info( "handleDispose > cacheName={0} | Ignoring message. "
+                + "Do not dispose from remote.", cacheName );
 
         // TODO handle active deregistration, rather than passive detection
         terminated.set(true);
@@ -408,10 +377,7 @@ public class LateralTCPListener<K, V>
                 throw new RuntimeException("Could not retrieve cache manager instance", e);
             }
 
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "cacheMgr = " + getCacheManager() );
-            }
+            log.debug( "cacheMgr = {0}", () -> getCacheManager() );
         }
 
         return getCacheManager().getCache( name );
@@ -509,10 +475,7 @@ public class LateralTCPListener<K, V>
 
                 outer: while ( true )
                 {
-                    if ( log.isDebugEnabled() )
-                    {
-                        log.debug( "Waiting for clients to connect " );
-                    }
+                    log.debug( "Waiting for clients to connect " );
 
                     Socket socket = null;
                     inner: while (true)
@@ -520,10 +483,7 @@ public class LateralTCPListener<K, V>
                         // Check to see if we've been asked to exit, and exit
                         if (terminated.get())
                         {
-                            if (log.isDebugEnabled())
-                            {
-                                log.debug("Thread terminated, exiting gracefully");
-                            }
+                            log.debug("Thread terminated, exiting gracefully");
                             break outer;
                         }
 
@@ -542,7 +502,7 @@ public class LateralTCPListener<K, V>
                     if ( socket != null && log.isDebugEnabled() )
                     {
                         InetAddress inetAddress = socket.getInetAddress();
-                        log.debug( "Connected to client at " + inetAddress );
+                        log.debug( "Connected to client at {0}", inetAddress );
                     }
 
                     handler = new ConnectionHandler( socket );
@@ -582,26 +542,13 @@ public class LateralTCPListener<K, V>
             "synthetic-access" })
         public void run()
         {
-            ObjectInputStream ois;
-
-            try
-            {
-                ois = new ObjectInputStreamClassLoaderAware( socket.getInputStream(), null );
-            }
-            catch ( Exception e )
-            {
-                log.error( "Could not open ObjectInputStream on " + socket, e );
-
-                return;
-            }
-
-            LateralElementDescriptor<K, V> led;
-
-            try
+            try (ObjectInputStream ois =
+                    new ObjectInputStreamClassLoaderAware( socket.getInputStream(), null ))
             {
                 while ( true )
                 {
-                    led = (LateralElementDescriptor<K, V>) ois.readObject();
+                    LateralElementDescriptor<K, V> led =
+                            (LateralElementDescriptor<K, V>) ois.readObject();
 
                     if ( led == null )
                     {
@@ -614,11 +561,8 @@ public class LateralTCPListener<K, V>
                     }
                     else
                     {
-                        if ( log.isDebugEnabled() )
-                        {
-                            log.debug( "receiving LateralElementDescriptor from another" + "led = " + led
-                                + ", led.command = " + led.command + ", led.ce = " + led.ce );
-                        }
+                        log.debug( "receiving LateralElementDescriptor from another led = {0}",
+                                led );
 
                         handle( led );
                     }
@@ -626,24 +570,15 @@ public class LateralTCPListener<K, V>
             }
             catch ( EOFException e )
             {
-                log.info( "Caught java.io.EOFException closing connection." + e.getMessage() );
+                log.info( "Caught EOFException, closing connection.", e );
             }
             catch ( SocketException e )
             {
-                log.info( "Caught java.net.SocketException closing connection." + e.getMessage() );
+                log.info( "Caught SocketException, closing connection.", e );
             }
             catch ( Exception e )
             {
                 log.error( "Unexpected exception.", e );
-            }
-
-            try
-            {
-                ois.close();
-            }
-            catch ( IOException e )
-            {
-                log.error( "Could not close object input stream.", e );
             }
         }
 
@@ -681,20 +616,15 @@ public class LateralTCPListener<K, V>
                             {
                                 if ( test.getVal().hashCode() == led.valHashCode )
                                 {
-                                    if ( log.isDebugEnabled() )
-                                    {
-                                        log.debug( "Filtering detected identical hashCode [" + led.valHashCode
-                                            + "], not issuing a remove for led " + led );
-                                    }
+                                    log.debug( "Filtering detected identical hashCode [{0}], "
+                                            + "not issuing a remove for led {1}",
+                                            led.valHashCode, led );
                                     return;
                                 }
                                 else
                                 {
-                                    if ( log.isDebugEnabled() )
-                                    {
-                                        log.debug( "Different hashcodes, in cache [" + test.getVal().hashCode()
-                                            + "] sent [" + led.valHashCode + "]" );
-                                    }
+                                    log.debug( "Different hashcodes, in cache [{0}] sent [{1}]",
+                                            test.getVal().hashCode(), led.valHashCode );
                                 }
                             }
                         }
@@ -738,19 +668,13 @@ public class LateralTCPListener<K, V>
     {
         if ( shutdown.compareAndSet(false, true) )
         {
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "Shutting down TCP Lateral receiver." );
-            }
+            log.info( "Shutting down TCP Lateral receiver." );
 
             receiver.interrupt();
         }
         else
         {
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "Shutdown already called." );
-            }
+            log.debug( "Shutdown already called." );
         }
     }
 }

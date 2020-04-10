@@ -1,5 +1,10 @@
 package org.apache.commons.jcs.engine.logging;
 
+import java.io.StringWriter;
+
+import org.apache.commons.jcs.TestLogConfigurationUtil;
+import org.apache.commons.jcs.engine.logging.behavior.ICacheEvent;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -20,13 +25,6 @@ package org.apache.commons.jcs.engine.logging;
  */
 
 import junit.framework.TestCase;
-import org.apache.commons.jcs.engine.logging.behavior.ICacheEvent;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.apache.log4j.PatternLayout;
-import org.apache.log4j.WriterAppender;
-
-import java.io.StringWriter;
 
 /** Unit tests for the debug implementation */
 public class CacheEventLoggerDebugLoggerUnitTest
@@ -46,7 +44,7 @@ public class CacheEventLoggerDebugLoggerUnitTest
         String key = "my key";
 
         StringWriter stringWriter = new StringWriter();
-        configureLogger( stringWriter, logCategoryName );
+        TestLogConfigurationUtil.configureLogger( stringWriter, logCategoryName );
 
         CacheEventLoggerDebugLogger logger = new CacheEventLoggerDebugLogger();
         logger.setLogCategoryName( logCategoryName );
@@ -76,7 +74,7 @@ public class CacheEventLoggerDebugLoggerUnitTest
         String optionalDetails = "SomeExtraData";
 
         StringWriter stringWriter = new StringWriter();
-        configureLogger( stringWriter, logCategoryName );
+        TestLogConfigurationUtil.configureLogger( stringWriter, logCategoryName );
 
         CacheEventLoggerDebugLogger logger = new CacheEventLoggerDebugLogger();
         logger.setLogCategoryName( logCategoryName );
@@ -102,7 +100,7 @@ public class CacheEventLoggerDebugLoggerUnitTest
         String errorMessage = "SomeExtraData";
 
         StringWriter stringWriter = new StringWriter();
-        configureLogger( stringWriter, logCategoryName );
+        TestLogConfigurationUtil.configureLogger( stringWriter, logCategoryName );
 
         CacheEventLoggerDebugLogger logger = new CacheEventLoggerDebugLogger();
         logger.setLogCategoryName( logCategoryName );
@@ -115,29 +113,5 @@ public class CacheEventLoggerDebugLoggerUnitTest
         assertTrue( "An event with the source should have been logged:" + result, result.indexOf( source ) != -1 );
         assertTrue( "An event with the event name should have been logged:" + result, result.indexOf( eventName ) != -1 );
         assertTrue( "An event with the errorMessage should have been logged:" + result, result.indexOf( errorMessage ) != -1 );
-    }
-
-    /**
-     * Configures a logger for the given name. This allows us to check the log output.
-     * <p>
-     * @param stringWriter
-     * @param loggerName
-     */
-    private void configureLogger( StringWriter stringWriter, String loggerName )
-    {
-        Logger logger = Logger.getLogger( loggerName );
-        WriterAppender appender = null;
-
-        try
-        {
-            appender = new WriterAppender( new PatternLayout(), stringWriter );
-        }
-        catch ( Exception e )
-        {
-            // NOOP
-        }
-
-        logger.addAppender( appender );
-        logger.setLevel( Level.DEBUG );
     }
 }

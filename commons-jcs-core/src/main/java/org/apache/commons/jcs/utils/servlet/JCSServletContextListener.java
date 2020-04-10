@@ -23,8 +23,8 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 import org.apache.commons.jcs.JCS;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 
 /**
  * If you add this to the context listeners section of your web.xml file, this will shutdown JCS
@@ -45,7 +45,7 @@ public class JCSServletContextListener
     implements ServletContextListener
 {
     /** The logger */
-    private static final Log log = LogFactory.getLog( JCSServletContextListener.class );
+    private static final Log log = LogManager.getLog( JCSServletContextListener.class );
 
     /**
      * This does nothing. We don't want to initialize the cache here.
@@ -55,10 +55,7 @@ public class JCSServletContextListener
     @Override
     public void contextInitialized( ServletContextEvent arg0 )
     {
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "contextInitialized" );
-        }
+        log.debug( "contextInitialized" );
     }
 
     /**
@@ -69,10 +66,7 @@ public class JCSServletContextListener
     @Override
     public void contextDestroyed( ServletContextEvent arg0 )
     {
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "contextDestroyed, shutting down JCS." );
-        }
+        log.debug( "contextDestroyed, shutting down JCS." );
 
         JCS.shutdown();
     }

@@ -1,5 +1,7 @@
 package org.apache.commons.jcs;
 
+import org.apache.commons.jcs.access.CacheAccess;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -22,7 +24,6 @@ package org.apache.commons.jcs;
 import junit.extensions.ActiveTestSuite;
 import junit.framework.Test;
 import junit.framework.TestCase;
-import org.apache.commons.jcs.access.CacheAccess;
 
 /**
  * Test which exercises the indexed disk cache. This one uses three different
@@ -40,24 +41,13 @@ public class TestTCPLateralCache
     private static int items = 200;
 
     /**
-     * Constructor for the TestDiskCache object.
+     * Constructor for the TestTCPLateralCache object.
      *
      * @param testName
      */
     public TestTCPLateralCache( String testName )
     {
         super( testName );
-    }
-
-    /**
-     * Main method passes this test to the text test runner.
-     *
-     * @param args
-     */
-    public static void main( String args[] )
-    {
-        String[] testCaseName = { TestTCPLateralCache.class.getName() };
-        junit.textui.TestRunner.main( testCaseName );
     }
 
     /**

@@ -1,5 +1,7 @@
 package org.apache.commons.jcs.engine;
 
+import java.io.IOException;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -22,10 +24,6 @@ package org.apache.commons.jcs.engine;
 import org.apache.commons.jcs.engine.behavior.ICache;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.engine.behavior.ICacheListener;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import java.io.IOException;
 
 /**
  * Used for Cache-to-Cache messaging purposes. These are used in the balking
@@ -34,9 +32,6 @@ import java.io.IOException;
 public class CacheAdaptor<K, V>
     implements ICacheListener<K, V>
 {
-    /** The logger */
-    private static final Log log = LogFactory.getLog( CacheAdaptor.class );
-
     /** The cache we are adapting. */
     private final ICache<K, V> cache;
 
@@ -55,7 +50,6 @@ public class CacheAdaptor<K, V>
         throws IOException
     {
         this.listenerId = id;
-        log.debug( "listenerId = " + id );
     }
 
     /**
@@ -95,7 +89,7 @@ public class CacheAdaptor<K, V>
         {
             cache.update( item );
         }
-        catch ( Exception e )
+        catch ( IOException e )
         {
             // swallow
         }

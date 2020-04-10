@@ -27,8 +27,8 @@ import org.apache.commons.jcs.auxiliary.disk.jdbc.TableState;
 import org.apache.commons.jcs.auxiliary.disk.jdbc.dsfactory.DataSourceFactory;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 
 /**
  * The MySQLDiskCache extends the core JDBCDiskCache.
@@ -42,7 +42,7 @@ public class MySQLDiskCache<K, V>
 	extends JDBCDiskCache<K, V>
 {
     /** local logger */
-    private static final Log log = LogFactory.getLog( MySQLDiskCache.class );
+    private static final Log log = LogManager.getLog( MySQLDiskCache.class );
 
     /** config attributes */
     private final MySQLDiskCacheAttributes mySQLDiskCacheAttributes;
@@ -64,10 +64,7 @@ public class MySQLDiskCache<K, V>
 
         mySQLDiskCacheAttributes = attributes;
 
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "MySQLDiskCacheAttributes = " + attributes );
-        }
+        log.debug( "MySQLDiskCacheAttributes = {0}", attributes );
     }
 
     /**
@@ -120,10 +117,7 @@ public class MySQLDiskCache<K, V>
         String likePattern = pattern.replaceAll( "\\.\\+", "%" );
         likePattern = likePattern.replaceAll( "\\.", "_" );
 
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "pattern = [" + likePattern + "]" );
-        }
+        log.debug( "pattern = [{0}]", likePattern );
 
         return likePattern;
     }

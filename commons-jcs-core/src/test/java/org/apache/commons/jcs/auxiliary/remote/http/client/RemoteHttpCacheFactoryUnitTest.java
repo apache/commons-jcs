@@ -71,16 +71,20 @@ public class RemoteHttpCacheFactoryUnitTest
     {
         // SETUP
         ICompositeCacheManager cacheMgr = new MockCompositeCacheManager();
+        assertNotNull( "Should have a manager.", cacheMgr );
         ICacheEventLogger cacheEventLogger = null;
         IElementSerializer elementSerializer = null;
 
         RemoteHttpCacheAttributes cattr = new RemoteHttpCacheAttributes();
+        assertNotNull( "Should have attributes.", cattr );
         RemoteHttpCacheFactory factory = new RemoteHttpCacheFactory();
+        assertNotNull( "Should have a factory.", factory );
+
 
         // DO WORK
         AuxiliaryCache<String, String> result = factory.createCache(cattr, cacheMgr, cacheEventLogger, elementSerializer);
 
-        // VEIFY
+        // VERIFY
         assertNotNull( "Should have a cache.", result );
     }
 }

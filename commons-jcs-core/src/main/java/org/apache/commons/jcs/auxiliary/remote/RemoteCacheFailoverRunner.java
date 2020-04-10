@@ -112,7 +112,7 @@ public class RemoteCacheFailoverRunner<K, V> extends AbstractAuxiliaryCacheMonit
         if ( log.isInfoEnabled() )
         {
             int failoverIndex = facade.getAuxiliaryCacheAttributes().getFailoverIndex();
-            log.info( "Exiting failover runner. Failover index = " + failoverIndex);
+            log.info( "Exiting failover runner. Failover index = {0}", failoverIndex);
 
             if ( failoverIndex <= 0 )
             {
@@ -162,35 +162,28 @@ public class RemoteCacheFailoverRunner<K, V> extends AbstractAuxiliaryCacheMonit
                 }
 
                 int fidx = rca0.getFailoverIndex();
-                log.debug( "fidx = " + fidx + " failovers.size = " + failovers.size() );
+                log.debug( "fidx = {0} failovers.size = {1}", () -> fidx,
+                        () -> failovers.size() );
 
                 // shouldn't we see if the primary is backup?
                 // If we don't check the primary, if it gets connected in the
                 // background,
                 // we will disconnect it only to put it right back
                 ListIterator<RemoteLocation> i = failovers.listIterator(fidx); // + 1; // +1 skips the primary
-                if ( log.isDebugEnabled() )
-                {
-                    log.debug( "starting at failover i = " + i.nextIndex() );
-                }
+                log.debug( "starting at failover i = {0}", i );
 
                 // try them one at a time until successful
                 for ( ; i.hasNext() && !allright.get();)
                 {
                     RemoteLocation server = i.next();
-                    if ( log.isDebugEnabled() )
-                    {
-                        log.debug( "Trying server [" + server + "] at failover index i = " + i );
-                    }
+                    log.debug( "Trying server [{1}] at failover index i = {1}",
+                            server, i );
 
                     RemoteCacheAttributes rca = (RemoteCacheAttributes) rca0.clone();
                     rca.setRemoteLocation(server);
                     RemoteCacheManager rcm = cacheFactory.getManager( rca );
 
-                    if ( log.isDebugEnabled() )
-                    {
-                        log.debug( "RemoteCacheAttributes for failover = " + rca.toString() );
-                    }
+                    log.debug( "RemoteCacheAttributes for failover = {0}", rca );
 
                     if (rcm != null)
                     {
@@ -204,25 +197,20 @@ public class RemoteCacheFailoverRunner<K, V> extends AbstractAuxiliaryCacheMonit
                             facade.restorePrimaryServer((RemoteCacheNoWait<K, V>) ic);
                             rca0.setFailoverIndex( i.nextIndex() );
 
-                            if ( log.isDebugEnabled() )
+                            log.debug( "setting ALLRIGHT to true" );
+                            if ( i.hasPrevious() )
                             {
-                                log.debug( "setting ALLRIGHT to true" );
-                                if ( i.hasPrevious() )
-                                {
-                                    log.debug( "Moving to Primary Recovery Mode, failover index = " + i.nextIndex() );
-                                }
-                                else
-                                {
-                                    log.debug( "No need to connect to failover, the primary server is back up." );
-                                }
+                                log.debug( "Moving to Primary Recovery Mode, failover index = {0}", i );
+                            }
+                            else
+                            {
+                                log.debug( "No need to connect to failover, the primary server is back up." );
                             }
 
                             allright.set(true);
 
-                            if ( log.isInfoEnabled() )
-                            {
-                                log.info( "CONNECTED to host = [" + rca.getRemoteLocation() + "]" );
-                            }
+                            log.info( "CONNECTED to host = [{0}]",
+                                    () -> rca.getRemoteLocation() );
                         }
                     }
                 }
@@ -232,15 +220,10 @@ public class RemoteCacheFailoverRunner<K, V> extends AbstractAuxiliaryCacheMonit
             // connected to some backup server.
             else
             {
-                if ( log.isDebugEnabled() )
-                {
-                    log.debug( "ALLRIGHT is true " );
-                }
-                if ( log.isInfoEnabled() )
-                {
-                    log.info( "Failover runner is in primary recovery mode. Failover index = "
-                        + rca0.getFailoverIndex() + "\n" + "Will now try to reconnect to primary server." );
-                }
+                log.debug( "ALLRIGHT is true " );
+                log.info( "Failover runner is in primary recovery mode. "
+                        + "Failover index = {0} Will now try to reconnect to "
+                        + "primary server.", () -> rca0.getFailoverIndex() );
             }
 
             boolean primaryRestoredSuccessfully = false;
@@ -248,10 +231,8 @@ public class RemoteCacheFailoverRunner<K, V> extends AbstractAuxiliaryCacheMonit
             if ( rca0.getFailoverIndex() > 0 )
             {
                 primaryRestoredSuccessfully = restorePrimary();
-                if ( log.isDebugEnabled() )
-                {
-                    log.debug( "Primary recovery success state = " + primaryRestoredSuccessfully );
-                }
+                log.debug( "Primary recovery success state = {0}",
+                        primaryRestoredSuccessfully );
             }
 
             if ( !primaryRestoredSuccessfully )
@@ -260,8 +241,9 @@ public class RemoteCacheFailoverRunner<K, V> extends AbstractAuxiliaryCacheMonit
                 // attempt.
                 try
                 {
-                    log.warn( "Failed to reconnect to primary server. Cache failover runner is going to sleep for "
-                        + idlePeriod + " milliseconds." );
+                    log.warn( "Failed to reconnect to primary server. "
+                            + "Cache failover runner is going to sleep for "
+                            + "{0} milliseconds.", idlePeriod );
                     Thread.sleep( idlePeriod );
                 }
                 catch ( InterruptedException ex )
@@ -292,10 +274,8 @@ public class RemoteCacheFailoverRunner<K, V> extends AbstractAuxiliaryCacheMonit
         // try to move back to the primary
         RemoteLocation server = rca0.getFailovers().get(0);
 
-        if ( log.isInfoEnabled() )
-        {
-            log.info( "Trying to restore connection to primary remote server [" + server + "]" );
-        }
+        log.info( "Trying to restore connection to primary remote server "
+                + "[{0}]", server );
 
         RemoteCacheAttributes rca = (RemoteCacheAttributes) rca0.clone();
         rca.setRemoteLocation(server);
@@ -329,11 +309,8 @@ public class RemoteCacheFailoverRunner<K, V> extends AbstractAuxiliaryCacheMonit
                         {
                             RemoteLocation serverOld = rca0.getFailovers().get(fidx);
 
-                            if ( log.isDebugEnabled() )
-                            {
-                                log.debug( "Failover Index = " + fidx + " the server at that index is ["
-                                    + serverOld + "]" );
-                            }
+                            log.debug( "Failover Index = {0} the server at that "
+                                    + "index is [{1}]", fidx, serverOld );
 
                             if ( serverOld != null )
                             {
@@ -349,11 +326,8 @@ public class RemoteCacheFailoverRunner<K, V> extends AbstractAuxiliaryCacheMonit
                                     // necessary
                                     rcmOld.removeRemoteCacheListener( rcaOld );
                                 }
-                                if ( log.isInfoEnabled() )
-                                {
-                                    log.info( "Successfully deregistered from FAILOVER remote server = "
-                                        + serverOld );
-                                }
+                                log.info( "Successfully deregistered from "
+                                        + "FAILOVER remote server = {0}", serverOld );
                             }
                         }
                         else if ( fidx == 0 )
@@ -376,8 +350,9 @@ public class RemoteCacheFailoverRunner<K, V> extends AbstractAuxiliaryCacheMonit
                 catch ( IOException e )
                 {
                     // TODO, should try again, or somehow stop the listener
-                    log.error("Trouble trying to deregister old failover listener prior to restoring the primary = "
-                           + server, e );
+                    log.error("Trouble trying to deregister old failover "
+                            + "listener prior to restoring the primary = {0}",
+                            server, e );
                 }
 
                 // Restore primary
@@ -388,16 +363,16 @@ public class RemoteCacheFailoverRunner<K, V> extends AbstractAuxiliaryCacheMonit
                 facade.restorePrimaryServer((RemoteCacheNoWait<K, V>) ic);
                 rca0.setFailoverIndex( 0 );
 
-                if ( log.isInfoEnabled() )
-                {
-                    String message = "Successfully reconnected to PRIMARY remote server.  Substituted primary for failoverNoWait ["
-                        + failoverNoWait + "]";
-                    log.info( message );
+                String message = "Successfully reconnected to PRIMARY "
+                        + "remote server. Substituted primary for "
+                        + "failoverNoWait [" + failoverNoWait + "]";
+                log.info( message );
 
-                    if ( facade.getCacheEventLogger() != null )
-                    {
-                        facade.getCacheEventLogger().logApplicationEvent( "RemoteCacheFailoverRunner", "RestoredPrimary", message );
-                    }
+                if ( facade.getCacheEventLogger() != null )
+                {
+                    facade.getCacheEventLogger().logApplicationEvent(
+                            "RemoteCacheFailoverRunner", "RestoredPrimary",
+                            message );
                 }
                 return true;
             }
@@ -407,10 +382,7 @@ public class RemoteCacheFailoverRunner<K, V> extends AbstractAuxiliaryCacheMonit
         // if the failover index was at 0 here, we would be in a bad
         // situation, unless there were just
         // no failovers configured.
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "Primary server status in error, not connected." );
-        }
+        log.debug( "Primary server status in error, not connected." );
 
         return false;
     }

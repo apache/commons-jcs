@@ -1,9 +1,5 @@
 package org.apache.commons.jcs.utils.struct;
 
-import java.util.Map;
-
-import org.apache.commons.jcs.JCSvsHashtablePerformanceTest;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -23,9 +19,9 @@ import org.apache.commons.jcs.JCSvsHashtablePerformanceTest;
  * under the License.
  */
 
-import junit.framework.Test;
+import java.util.Map;
+
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 /**
  * This ensures that the jcs version of the LRU map is as fast as the commons
@@ -54,24 +50,6 @@ public class LRUMapPerformanceTest
 
     /** items to put and get per loop */
     int tries = 100000;
-
-    /**
-     * @param testName
-     */
-    public LRUMapPerformanceTest( String testName )
-    {
-        super( testName );
-    }
-
-    /**
-     * A unit test suite for JUnit
-     * <p>
-     * @return The test suite
-     */
-    public static Test suite()
-    {
-        return new TestSuite( LRUMapPerformanceTest.class );
-    }
 
     /**
      * A unit test for JUnit
@@ -195,14 +173,4 @@ public class LRUMapPerformanceTest
         System.out.println( name + " gets took " + ratioGet + " times the " + cache2Name + ", the goal is <" + targetGet
             + "x" );
     }
-
-    /**
-     * @param args
-     */
-    public static void main( String args[] )
-    {
-        JCSvsHashtablePerformanceTest test = new JCSvsHashtablePerformanceTest( "command" );
-        test.doWork();
-    }
-
 }

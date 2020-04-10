@@ -41,10 +41,10 @@ import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs.engine.behavior.IShutdownObserver;
 import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 import org.apache.commons.jcs.utils.discovery.UDPDiscoveryManager;
 import org.apache.commons.jcs.utils.discovery.UDPDiscoveryService;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * Constructs a LateralCacheNoWaitFacade for the given configuration. Each lateral service / local
@@ -57,7 +57,7 @@ public class LateralTCPCacheFactory
     extends AbstractAuxiliaryCacheFactory
 {
     /** The logger */
-    private static final Log log = LogFactory.getLog( LateralTCPCacheFactory.class );
+    private static final Log log = LogManager.getLog( LateralTCPCacheFactory.class );
 
     /** Address to service map. */
     private ConcurrentHashMap<String, ICacheServiceNonLocal<?, ?>> csnlInstances;
@@ -97,17 +97,12 @@ public class LateralTCPCacheFactory
         if ( lac.getTcpServers() != null )
         {
             StringTokenizer it = new StringTokenizer( lac.getTcpServers(), "," );
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "Configured for [" + it.countTokens() + "]  servers." );
-            }
+            log.debug( "Configured for [{0}] servers.", () -> it.countTokens() );
+
             while ( it.hasMoreElements() )
             {
                 String server = (String) it.nextElement();
-                if ( log.isDebugEnabled() )
-                {
-                    log.debug( "tcp server = " + server );
-                }
+                log.debug( "tcp server = {0}", server );
                 ITCPLateralCacheAttributes lacC = (ITCPLateralCacheAttributes) lac.clone();
                 lacC.setTcpServer( server );
 
@@ -142,20 +137,14 @@ public class LateralTCPCacheFactory
         cache.setCacheEventLogger( cacheEventLogger );
         cache.setElementSerializer( elementSerializer );
 
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "Created cache for noWait, cache [" + cache + "]" );
-        }
+        log.debug( "Created cache for noWait, cache [{0}]", cache );
 
         LateralCacheNoWait<K, V> lateralNoWait = new LateralCacheNoWait<>( cache );
         lateralNoWait.setCacheEventLogger( cacheEventLogger );
         lateralNoWait.setElementSerializer( elementSerializer );
 
-        if ( log.isInfoEnabled() )
-        {
-            log.info( "Created LateralCacheNoWait for [" + lca + "] LateralCacheNoWait = [" + lateralNoWait
-                + "]" );
-        }
+        log.info( "Created LateralCacheNoWait for [{0}] LateralCacheNoWait = [{1}]",
+                lca, lateralNoWait );
 
         return lateralNoWait;
     }
@@ -233,7 +222,7 @@ public class LateralTCPCacheFactory
             // If service creation did not succeed last time, force retry
             if (service instanceof ZombieCacheServiceNonLocal)
             {
-                log.info("Disposing of zombie service instance for [" + name + "]");
+                log.info("Disposing of zombie service instance for [{0}]", name);
                 return null;
             }
 
@@ -243,15 +232,12 @@ public class LateralTCPCacheFactory
         ICacheServiceNonLocal<K, V> service =
                 (ICacheServiceNonLocal<K, V>) csnlInstances.computeIfAbsent(key, name -> {
 
-                    log.info( "Instance for [" + name + "] is null, creating" );
+                    log.info( "Instance for [{0}] is null, creating", name );
 
                     // Create the service
                     try
                     {
-                        if ( log.isInfoEnabled() )
-                        {
-                            log.info( "Creating TCP service, lca = " + lca );
-                        }
+                        log.info( "Creating TCP service, lca = {0}", lca );
 
                         return new LateralTCPService<>( lca );
                     }
@@ -289,10 +275,8 @@ public class LateralTCPCacheFactory
         String key = ilca.getUdpDiscoveryAddr() + ":" + ilca.getUdpDiscoveryPort();
 
         LateralTCPDiscoveryListener ins = lTCPDLInstances.computeIfAbsent(key, key1 -> {
-            if ( log.isInfoEnabled() )
-            {
-                log.info("Created new discovery listener for " + key1 + " cacheName for request " + ilca.getCacheName());
-            }
+            log.info("Created new discovery listener for cacheName {0} for request {1}",
+                    key1, ilca.getCacheName());
             return new LateralTCPDiscoveryListener( this.getName(),  cacheManager);
         });
 
@@ -312,7 +296,8 @@ public class LateralTCPCacheFactory
         {
             try
             {
-                addLateralCacheListener( iaca.getCacheName(), LateralTCPListener.getInstance( iaca, cacheMgr ) );
+                addLateralCacheListener( iaca.getCacheName(),
+                        LateralTCPListener.getInstance( iaca, cacheMgr ) );
             }
             catch ( IOException ioe )
             {
@@ -321,10 +306,7 @@ public class LateralTCPCacheFactory
         }
         else
         {
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "Not creating a listener since we are not receiving." );
-            }
+            log.debug( "Not creating a listener since we are not receiving." );
         }
     }
 
@@ -363,10 +345,7 @@ public class LateralTCPCacheFactory
         // don't create a listener if we are not receiving.
         if ( attr.isReceive() )
         {
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "Getting listener for " + attr );
-            }
+            log.info( "Getting listener for {0}", attr );
 
             // make a listener. if one doesn't exist
             listener = LateralTCPListener.getInstance( attr, cacheMgr );
@@ -376,10 +355,7 @@ public class LateralTCPCacheFactory
         }
         else
         {
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "Not creating a listener since we are not receiving." );
-            }
+            log.debug( "Not creating a listener since we are not receiving." );
         }
 
         return listener;
@@ -420,10 +396,8 @@ public class LateralTCPCacheFactory
             discovery.addParticipatingCacheName( lac.getCacheName() );
             discovery.addDiscoveryListener( discoveryListener );
 
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "Registered TCP lateral cache [" + lac.getCacheName() + "] with UDPDiscoveryService." );
-            }
+            log.info( "Registered TCP lateral cache [{0}] with UDPDiscoveryService.",
+                    () -> lac.getCacheName() );
         }
         return discovery;
     }

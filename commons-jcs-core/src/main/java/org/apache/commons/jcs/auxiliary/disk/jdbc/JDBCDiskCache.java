@@ -45,9 +45,9 @@ import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;
 import org.apache.commons.jcs.engine.stats.StatElement;
 import org.apache.commons.jcs.engine.stats.behavior.IStatElement;
 import org.apache.commons.jcs.engine.stats.behavior.IStats;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 import org.apache.commons.jcs.utils.serialization.StandardSerializer;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * This is the jdbc disk cache plugin.
@@ -83,7 +83,7 @@ public class JDBCDiskCache<K, V>
     extends AbstractDiskCache<K, V>
 {
     /** The local logger. */
-    private static final Log log = LogFactory.getLog( JDBCDiskCache.class );
+    private static final Log log = LogManager.getLog( JDBCDiskCache.class );
 
     /** custom serialization */
     private IElementSerializer elementSerializer = new StandardSerializer();
@@ -126,10 +126,7 @@ public class JDBCDiskCache<K, V>
         setTableState( tableState );
         setJdbcDiskCacheAttributes( cattr );
 
-        if ( log.isInfoEnabled() )
-        {
-            log.info( "jdbcDiskCacheAttributes = " + getJdbcDiskCacheAttributes() );
-        }
+        log.info( "jdbcDiskCacheAttributes = {0}", () -> getJdbcDiskCacheAttributes() );
 
         // This initializes the pool access.
         this.dsFactory = dsFactory;
@@ -150,17 +147,11 @@ public class JDBCDiskCache<K, V>
     {
     	updateCount.incrementAndGet();
 
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "updating, ce = " + ce );
-        }
+        log.debug( "updating, ce = {0}", ce );
 
         try (Connection con = getDataSource().getConnection())
         {
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "Putting [" + ce.getKey() + "] on disk." );
-            }
+            log.debug( "Putting [{0}] on disk.",  () -> ce.getKey());
 
             byte[] element;
 
@@ -186,7 +177,7 @@ public class JDBCDiskCache<K, V>
             if ( updateCount.get() % LOG_INTERVAL == 0 )
             {
                 // TODO make a log stats method
-                log.info( "Update Count [" + updateCount + "]" );
+                log.info( "Update Count [{0}]", updateCount);
             }
         }
     }
@@ -315,14 +306,11 @@ public class JDBCDiskCache<K, V>
             psUpdate.setString( 6, this.getCacheName() );
             psUpdate.execute();
 
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "ran update " + sqlU );
-            }
+            log.debug( "ran update {0}", sqlU );
         }
-        catch ( SQLException e2 )
+        catch ( SQLException e )
         {
-            log.error( "e2 sql [" + sqlU + "] Exception: ", e2 );
+            log.error( "Error executing update sql [{0}]", sqlU, e );
         }
     }
 
@@ -350,10 +338,7 @@ public class JDBCDiskCache<K, V>
                 exists = rs.next();
             }
 
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "[" + ce.getKey() + "] existing status is " + exists );
-            }
+            log.debug( "[{0}] existing status is {1}", ce.getKey(), exists );
         }
         catch ( SQLException e )
         {
@@ -375,10 +360,7 @@ public class JDBCDiskCache<K, V>
     {
     	getCount.incrementAndGet();
 
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "Getting [" + key + "] from disk" );
-        }
+        log.debug( "Getting [{0}] from disk", key );
 
         if ( !isAlive() )
         {
@@ -414,13 +396,9 @@ public class JDBCDiskCache<K, V>
                                 // USE THE SERIALIZER
                                 obj = getElementSerializer().deSerialize( data, null );
                             }
-                            catch ( IOException ioe )
-                            {
-                                log.error( "Problem getting item for key [" + key + "]", ioe );
-                            }
                             catch ( Exception e )
                             {
-                                log.error( "Problem getting item for key [" + key + "]", e );
+                                log.error( "Problem getting item for key [{0}]", key, e );
                             }
                         }
                     }
@@ -429,7 +407,8 @@ public class JDBCDiskCache<K, V>
         }
         catch ( SQLException sqle )
         {
-            log.error( "Caught a SQL exception trying to get the item for key [" + key + "]", sqle );
+            log.error( "Caught a SQL exception trying to get the item for key [{0}]",
+                    key, sqle );
         }
 
         if ( log.isInfoEnabled() )
@@ -437,7 +416,7 @@ public class JDBCDiskCache<K, V>
             if ( getCount.get() % LOG_INTERVAL == 0 )
             {
                 // TODO make a log stats method
-                log.info( "Get Count [" + getCount + "]" );
+                log.info( "Get Count [{0}]", getCount );
             }
         }
         return obj;
@@ -455,10 +434,7 @@ public class JDBCDiskCache<K, V>
     {
     	getMatchingCount.incrementAndGet();
 
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "Getting [" + pattern + "] from disk" );
-        }
+        log.debug( "Getting [{0}] from disk", pattern);
 
         if ( !isAlive() )
         {
@@ -494,13 +470,9 @@ public class JDBCDiskCache<K, V>
                                     ICacheElement<K, V> value = getElementSerializer().deSerialize( data, null );
                                     results.put( (K) key, value );
                                 }
-                                catch ( IOException ioe )
-                                {
-                                    log.error( "Problem getting items for pattern [" + pattern + "]", ioe );
-                                }
                                 catch ( Exception e )
                                 {
-                                    log.error( "Problem getting items for pattern [" + pattern + "]", e );
+                                    log.error( "Problem getting items for pattern [{0}]", pattern, e );
                                 }
                             }
                         }
@@ -510,7 +482,8 @@ public class JDBCDiskCache<K, V>
         }
         catch ( SQLException sqle )
         {
-            log.error( "Caught a SQL exception trying to get items for pattern [" + pattern + "]", sqle );
+            log.error( "Caught a SQL exception trying to get items for pattern [{0}]",
+                    pattern, sqle );
         }
 
         if ( log.isInfoEnabled() )
@@ -518,7 +491,7 @@ public class JDBCDiskCache<K, V>
             if ( getMatchingCount.get() % LOG_INTERVAL == 0 )
             {
                 // TODO make a log stats method
-                log.info( "Get Matching Count [" + getMatchingCount + "]" );
+                log.info( "Get Matching Count [{0}]", getMatchingCount);
             }
         }
         return results;
@@ -533,10 +506,7 @@ public class JDBCDiskCache<K, V>
         String likePattern = pattern.replaceAll( "\\.\\+", "%" );
         likePattern = likePattern.replaceAll( "\\.", "_" );
 
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "pattern = [" + likePattern + "]" );
-        }
+        log.debug( "pattern = [{0}]", likePattern );
 
         return likePattern;
     }
@@ -584,7 +554,7 @@ public class JDBCDiskCache<K, V>
             }
             catch ( SQLException e )
             {
-                log.error( "Problem creating statement. sql [" + sql + "]", e );
+                log.error( "Problem creating statement. sql [{0}]", sql, e );
                 setAlive(false);
             }
         }
@@ -622,7 +592,7 @@ public class JDBCDiskCache<K, V>
                     setAlive(false);
                 }
             }
-            catch ( Exception e )
+            catch ( SQLException e )
             {
                 log.error( "Problem removing all.", e );
                 reset();
@@ -630,10 +600,8 @@ public class JDBCDiskCache<K, V>
         }
         else
         {
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "RemoveAll was requested but the request was not fulfilled: allowRemoveAll is set to false." );
-            }
+            log.info( "RemoveAll was requested but the request was not fulfilled: "
+                    + "allowRemoveAll is set to false." );
         }
     }
 
@@ -680,10 +648,10 @@ public class JDBCDiskCache<K, V>
             logApplicationEvent( getAuxiliaryCacheAttributes().getName(), "deleteExpired",
                                  "Deleted expired elements.  URL: " + getDiskLocation() );
         }
-        catch ( Exception e )
+        catch ( SQLException e )
         {
-            logError( getAuxiliaryCacheAttributes().getName(), "deleteExpired", e.getMessage() + " URL: "
-                + getDiskLocation() );
+            logError( getAuxiliaryCacheAttributes().getName(), "deleteExpired",
+                    e.getMessage() + " URL: " + getDiskLocation() );
             log.error( "Problem removing expired elements from the table.", e );
             reset();
         }
@@ -708,16 +676,14 @@ public class JDBCDiskCache<K, V>
     public void processDispose()
     {
         ICacheEvent<K> cacheEvent = createICacheEvent( getCacheName(), (K)"none", ICacheEventLogger.DISPOSE_EVENT );
+
         try
         {
-            try
-            {
-            	dsFactory.close();
-            }
-            catch ( SQLException e )
-            {
-                log.error( "Problem shutting down.", e );
-            }
+        	dsFactory.close();
+        }
+        catch ( SQLException e )
+        {
+            log.error( "Problem shutting down.", e );
         }
         finally
         {

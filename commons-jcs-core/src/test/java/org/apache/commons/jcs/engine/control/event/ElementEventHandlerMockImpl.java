@@ -22,8 +22,8 @@ package org.apache.commons.jcs.engine.control.event;
 import org.apache.commons.jcs.engine.control.event.behavior.ElementEventType;
 import org.apache.commons.jcs.engine.control.event.behavior.IElementEvent;
 import org.apache.commons.jcs.engine.control.event.behavior.IElementEventHandler;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 
 /**
  * @author aaronsm
@@ -35,7 +35,7 @@ public class ElementEventHandlerMockImpl
     private int callCount = 0;
 
     /** The logger */
-    private static final Log log = LogFactory.getLog( ElementEventHandlerMockImpl.class );
+    private static final Log log = LogManager.getLog( ElementEventHandlerMockImpl.class );
 
     /** ELEMENT_EVENT_SPOOLED_DISK_AVAILABLE */
     private int spoolCount = 0;

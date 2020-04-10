@@ -1,5 +1,7 @@
 package org.apache.commons.jcs;
 
+import org.apache.commons.jcs.access.CacheAccess;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -20,7 +22,6 @@ package org.apache.commons.jcs;
  */
 
 import junit.framework.TestCase;
-import org.apache.commons.jcs.access.CacheAccess;
 
 /**
  * Simple methods to be run by active test suites that test removal.
@@ -29,7 +30,6 @@ import org.apache.commons.jcs.access.CacheAccess;
 public class RemovalTestUtil
     extends TestCase
 {
-
     /**
      * Constructor for the TestSimpleLoad object
      *

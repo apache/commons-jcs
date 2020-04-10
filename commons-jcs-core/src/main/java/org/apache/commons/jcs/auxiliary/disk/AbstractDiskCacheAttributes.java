@@ -23,8 +23,8 @@ import java.io.File;
 
 import org.apache.commons.jcs.auxiliary.AbstractAuxiliaryCacheAttributes;
 import org.apache.commons.jcs.auxiliary.disk.behavior.IDiskCacheAttributes;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 
 /**
  * This has common attributes that any conceivable disk cache would need.
@@ -35,7 +35,7 @@ public abstract class AbstractDiskCacheAttributes extends AbstractAuxiliaryCache
     private static final long serialVersionUID = 8306631920391711229L;
 
     /** The logger */
-    private static final Log log = LogFactory.getLog(AbstractDiskCacheAttributes.class);
+    private static final Log log = LogManager.getLog(AbstractDiskCacheAttributes.class);
 
     /** path to disk */
     private File diskPath;
@@ -89,7 +89,7 @@ public abstract class AbstractDiskCacheAttributes extends AbstractAuxiliaryCache
         }
         if (!result)
         {
-            log.error("Failed to create directory " + diskPath);
+            log.error("Failed to create directory {0}", diskPath);
         }
     }
 

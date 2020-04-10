@@ -31,19 +31,19 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.apache.commons.jcs.engine.CacheInfo;
 import org.apache.commons.jcs.engine.behavior.IShutdownObserver;
 import org.apache.commons.jcs.io.ObjectInputStreamClassLoaderAware;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 import org.apache.commons.jcs.utils.discovery.UDPDiscoveryMessage.BroadcastType;
 import org.apache.commons.jcs.utils.threadpool.PoolConfiguration;
 import org.apache.commons.jcs.utils.threadpool.PoolConfiguration.WhenBlockedPolicy;
 import org.apache.commons.jcs.utils.threadpool.ThreadPoolManager;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /** Receives UDP Discovery messages. */
 public class UDPDiscoveryReceiver
     implements Runnable, IShutdownObserver
 {
     /** The log factory */
-    private static final Log log = LogFactory.getLog( UDPDiscoveryReceiver.class );
+    private static final Log log = LogManager.getLog( UDPDiscoveryReceiver.class );
 
     /** buffer */
     private final byte[] mBuffer = new byte[65536];
@@ -94,13 +94,12 @@ public class UDPDiscoveryReceiver
 
         // create a small thread pool to handle a barrage
         this.pooledExecutor = ThreadPoolManager.getInstance().createPool(
-        		new PoolConfiguration(false, 0, maxPoolSize, maxPoolSize, 0, WhenBlockedPolicy.DISCARDOLDEST, maxPoolSize),
+        		new PoolConfiguration(false, 0, maxPoolSize, maxPoolSize, 0,
+        		        WhenBlockedPolicy.DISCARDOLDEST, maxPoolSize),
         		"JCS-UDPDiscoveryReceiver-", Thread.MIN_PRIORITY);
 
-        if ( log.isInfoEnabled() )
-        {
-            log.info( "Constructing listener, [" + this.multicastAddressString + ":" + this.multicastPort + "]" );
-        }
+        log.info( "Constructing listener, [{0}:{1}]",
+                this.multicastAddressString, this.multicastPort );
 
         createSocket( this.multicastAddressString, this.multicastPort );
     }
@@ -118,15 +117,16 @@ public class UDPDiscoveryReceiver
         try
         {
             mSocket = new MulticastSocket( multicastPort );
-            if ( log.isInfoEnabled() )
+            if (log.isInfoEnabled())
             {
-                log.info( "Joining Group: [" + InetAddress.getByName( multicastAddressString ) + "]" );
+                log.info( "Joining Group: [{0}]", InetAddress.getByName( multicastAddressString ) );
             }
             mSocket.joinGroup( InetAddress.getByName( multicastAddressString ) );
         }
         catch ( IOException e )
         {
-            log.error( "Could not bind to multicast address [" + InetAddress.getByName( multicastAddressString ) + ":" + multicastPort + "]", e );
+            log.error( "Could not bind to multicast address [{0}:{1}]",
+                    InetAddress.getByName( multicastAddressString ), multicastPort, e );
             throw e;
         }
     }
@@ -145,17 +145,12 @@ public class UDPDiscoveryReceiver
         Object obj = null;
         try
         {
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "Waiting for message." );
-            }
+            log.debug( "Waiting for message." );
 
             mSocket.receive( packet );
 
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "Received packet from address [" + packet.getSocketAddress() + "]" );
-            }
+            log.debug( "Received packet from address [{0}]",
+                    () -> packet.getSocketAddress() );
 
             try (ByteArrayInputStream byteStream = new ByteArrayInputStream(mBuffer, 0, packet.getLength());
                  ObjectInputStream objectStream = new ObjectInputStreamClassLoaderAware(byteStream, null))
@@ -171,10 +166,8 @@ public class UDPDiscoveryReceiver
             	UDPDiscoveryMessage msg = (UDPDiscoveryMessage) obj;
             	msg.setHost(packet.getAddress().getHostAddress());
 
-	            if ( log.isDebugEnabled() )
-	            {
-	                log.debug( "Read object from address [" + packet.getSocketAddress() + "], object=[" + obj + "]" );
-	            }
+                log.debug( "Read object from address [{0}], object=[{1}]",
+                        packet.getSocketAddress(), obj );
             }
         }
         catch ( Exception e )
@@ -197,10 +190,7 @@ public class UDPDiscoveryReceiver
 
                 cnt.incrementAndGet();
 
-                if ( log.isDebugEnabled() )
-                {
-                    log.debug( getCnt() + " messages received." );
-                }
+                log.debug( "{0} messages received.", () -> getCnt() );
 
                 UDPDiscoveryMessage message = null;
 
@@ -214,10 +204,7 @@ public class UDPDiscoveryReceiver
 
                         pooledExecutor.execute( handler );
 
-                        if ( log.isDebugEnabled() )
-                        {
-                            log.debug( "Passed handler to executor." );
-                        }
+                        log.debug( "Passed handler to executor." );
                     }
                     else
                     {
@@ -226,11 +213,11 @@ public class UDPDiscoveryReceiver
                 }
                 catch ( ClassCastException cce )
                 {
-                    log.warn( "Received unknown message type " + cce.getMessage() );
+                    log.warn( "Received unknown message type", cce.getMessage() );
                 }
             } // end while
         }
-        catch ( Exception e )
+        catch ( IOException e )
         {
             log.error( "Unexpected exception in UDP receiver.", e );
             try
@@ -239,7 +226,7 @@ public class UDPDiscoveryReceiver
                 // TODO consider some failure count so we don't do this
                 // forever.
             }
-            catch ( Exception e2 )
+            catch ( InterruptedException e2 )
             {
                 log.error( "Problem sleeping", e2 );
             }
@@ -289,25 +276,16 @@ public class UDPDiscoveryReceiver
             // consider comparing ports here instead.
             if ( message.getRequesterId() == CacheInfo.listenerId )
             {
-                if ( log.isDebugEnabled() )
-                {
-                    log.debug( "Ignoring message sent from self" );
-                }
+                log.debug( "Ignoring message sent from self" );
             }
             else
             {
-                if ( log.isDebugEnabled() )
-                {
-                    log.debug( "Process message sent from another" );
-                    log.debug( "Message = " + message );
-                }
+                log.debug( "Process message sent from another" );
+                log.debug( "Message = {0}", message );
 
                 if ( message.getHost() == null || message.getCacheNames() == null || message.getCacheNames().isEmpty() )
                 {
-                    if ( log.isDebugEnabled() )
-                    {
-                        log.debug( "Ignoring invalid message: " + message );
-                    }
+                    log.debug( "Ignoring invalid message: {0}", message );
                 }
                 else
                 {
@@ -332,19 +310,13 @@ public class UDPDiscoveryReceiver
             // return
             if ( message.getMessageType() == BroadcastType.REQUEST )
             {
-                if ( log.isDebugEnabled() )
-                {
-                    log.debug( "Message is a Request Broadcast, will have the service handle it." );
-                }
+                log.debug( "Message is a Request Broadcast, will have the service handle it." );
                 service.serviceRequestBroadcast();
                 return;
             }
             else if ( message.getMessageType() == BroadcastType.REMOVE )
             {
-                if ( log.isDebugEnabled() )
-                {
-                    log.debug( "Removing service from set " + discoveredService );
-                }
+                log.debug( "Removing service from set {0}", discoveredService );
                 service.removeDiscoveredService( discoveredService );
             }
             else

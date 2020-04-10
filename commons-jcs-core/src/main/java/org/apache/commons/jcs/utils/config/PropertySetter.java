@@ -28,8 +28,8 @@ import java.util.Properties;
  * under the License.
  */
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 
 /**
  * This class is based on the log4j class org.apache.log4j.config.PropertySetter that was made by
@@ -55,7 +55,7 @@ import org.apache.commons.logging.LogFactory;
 public class PropertySetter
 {
     /** Logger */
-    private static final Log log = LogFactory.getLog( PropertySetter.class );
+    private static final Log log = LogManager.getLog( PropertySetter.class );
 
     /** Description of the Field */
     private final Object obj;
@@ -85,7 +85,7 @@ public class PropertySetter
         }
         catch ( IntrospectionException ex )
         {
-            log.error( "Failed to introspect " + obj + ": " + ex.getMessage() );
+            log.error( "Failed to introspect {0}", obj, ex );
             props = new PropertyDescriptor[0];
         }
     }
@@ -165,7 +165,7 @@ public class PropertySetter
 
         if ( prop == null )
         {
-            log.warn( "No such property [" + name + "] in " + obj.getClass().getName() + "." );
+            log.warn( "No such property [{0}] in {1}.", name, obj.getClass().getName() );
         }
         else
         {
@@ -175,7 +175,7 @@ public class PropertySetter
             }
             catch ( PropertySetterException ex )
             {
-                log.warn( "Failed to set property " + name + " to value \"" + value + "\". " + ex.getMessage() );
+                log.warn( "Failed to set property {0} to value \"{1}\".", name, value, ex );
             }
         }
     }
@@ -215,7 +215,7 @@ public class PropertySetter
         {
             throw new PropertySetterException( "Conversion to type [" + paramTypes[0] + "] failed." );
         }
-        log.debug( "Setting property [" + name + "] to [" + arg + "]." );
+        log.debug( "Setting property [{0}] to [{1}].", name, arg );
         try
         {
             setter.invoke( obj, new Object[] { arg } );

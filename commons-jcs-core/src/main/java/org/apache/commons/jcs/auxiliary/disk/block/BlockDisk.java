@@ -29,9 +29,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.apache.commons.jcs.engine.behavior.IElementSerializer;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 import org.apache.commons.jcs.utils.serialization.StandardSerializer;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * This class manages reading an writing data to disk. When asked to write a value, it returns a
@@ -42,7 +42,7 @@ import org.apache.commons.logging.LogFactory;
 public class BlockDisk implements AutoCloseable
 {
     /** The logger */
-    private static final Log log = LogFactory.getLog(BlockDisk.class);
+    private static final Log log = LogManager.getLog(BlockDisk.class);
 
     /** The size of the header that indicates the amount of data stored in an occupied block. */
     public static final byte HEADER_SIZE_BYTES = 4;
@@ -116,16 +116,13 @@ public class BlockDisk implements AutoCloseable
         throws IOException
     {
         this.filepath = file.getAbsolutePath();
-        this.fc = FileChannel.open(file.toPath(), 
-                StandardOpenOption.CREATE, 
-                StandardOpenOption.READ, 
+        this.fc = FileChannel.open(file.toPath(),
+                StandardOpenOption.CREATE,
+                StandardOpenOption.READ,
                 StandardOpenOption.WRITE);
         this.numberOfBlocks.set((int) Math.ceil(1f * this.fc.size() / blockSizeBytes));
 
-        if (log.isInfoEnabled())
-        {
-            log.info("Constructing BlockDisk, blockSizeBytes [" + blockSizeBytes + "]");
-        }
+        log.info("Constructing BlockDisk, blockSizeBytes [{0}]", blockSizeBytes);
 
         this.blockSizeBytes = blockSizeBytes;
         this.elementSerializer = elementSerializer;
@@ -179,10 +176,7 @@ public class BlockDisk implements AutoCloseable
         // serialize the object
         byte[] data = elementSerializer.serialize(object);
 
-        if (log.isDebugEnabled())
-        {
-            log.debug("write, total pre-chunking data.length = " + data.length);
-        }
+        log.debug("write, total pre-chunking data.length = {0}", data.length);
 
         this.putBytes.addAndGet(data.length);
         this.putCount.incrementAndGet();
@@ -190,10 +184,7 @@ public class BlockDisk implements AutoCloseable
         // figure out how many blocks we need.
         int numBlocksNeeded = calculateTheNumberOfBlocksNeeded(data);
 
-        if (log.isDebugEnabled())
-        {
-            log.debug("numBlocksNeeded = " + numBlocksNeeded);
-        }
+        log.debug("numBlocksNeeded = {0}", numBlocksNeeded);
 
         // allocate blocks
         int[] blocks = allocateBlocks(numBlocksNeeded);
@@ -218,7 +209,7 @@ public class BlockDisk implements AutoCloseable
             int written = fc.write(headerBuffer, position);
             assert written == HEADER_SIZE_BYTES;
 
-            //write the data 
+            //write the data
             written = fc.write(slice, position + HEADER_SIZE_BYTES);
             assert written == length;
 
@@ -278,7 +269,7 @@ public class BlockDisk implements AutoCloseable
     protected <T> T read(int[] blockNumbers)
         throws IOException, ClassNotFoundException
     {
-        ByteBuffer data = null;
+        final ByteBuffer data;
 
         if (blockNumbers.length == 1)
         {
@@ -297,10 +288,7 @@ public class BlockDisk implements AutoCloseable
             data.flip();
         }
 
-        if (log.isDebugEnabled())
-        {
-            log.debug("read, total post combination data.length = " + data.limit());
-        }
+        log.debug("read, total post combination data.length = {0}", () -> data.limit());
 
         return elementSerializer.deSerialize(data.array(), null);
     }
@@ -333,7 +321,7 @@ public class BlockDisk implements AutoCloseable
 //        else
         {
             ByteBuffer datalength = ByteBuffer.allocate(HEADER_SIZE_BYTES);
-            fc.read(datalength, position); 
+            fc.read(datalength, position);
             datalength.flip();
             datalen = datalength.getInt();
             if (position + datalen > fileLength)
@@ -345,7 +333,7 @@ public class BlockDisk implements AutoCloseable
 
         if (corrupted)
         {
-            log.warn("\n The file is corrupt: " + "\n " + message);
+            log.warn("\n The file is corrupt: \n {0}", message);
             throw new IOException("The File Is Corrupt, need to reset");
         }
 

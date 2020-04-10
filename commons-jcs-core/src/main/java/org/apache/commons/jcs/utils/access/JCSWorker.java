@@ -26,8 +26,8 @@ import org.apache.commons.jcs.JCS;
 import org.apache.commons.jcs.access.CacheAccess;
 import org.apache.commons.jcs.access.GroupCacheAccess;
 import org.apache.commons.jcs.access.exception.CacheException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 
 /**
  * Utility class to encapsulate doing a piece of work, and caching the results
@@ -94,7 +94,7 @@ import org.apache.commons.logging.LogFactory;
 public class JCSWorker<K, V>
 {
     /** The logger */
-    private static final Log logger = LogFactory.getLog( JCSWorker.class );
+    private static final Log logger = LogManager.getLog( JCSWorker.class );
 
     /** The cache we are working with */
     private CacheAccess<K, V> cache;
@@ -214,10 +214,8 @@ public class JCSWorker<K, V>
         {
             synchronized ( helper )
             {
-                if ( logger.isDebugEnabled() )
-                {
-                    logger.debug( "Found a worker already doing this work (" + getRegion() + ":" + aKey + ")." );
-                }
+                logger.debug( "Found a worker already doing this work ({0}:{1}).",
+                        () -> getRegion(), () -> aKey );
                 while ( !helper.isFinished() )
                 {
                     try
@@ -229,20 +227,15 @@ public class JCSWorker<K, V>
                         // expected
                     }
                 }
-                if ( logger.isDebugEnabled() )
-                {
-                    logger.debug( "Another thread finished our work for us. Using those results instead. ("
-                        + getRegion() + ":" + aKey + ")." );
-                }
+                logger.debug( "Another thread finished our work for us. Using "
+                        + "those results instead. ({0}:{1}).",
+                        () -> getRegion(), () -> aKey );
             }
         }
         // Do the work
         try
         {
-            if ( logger.isDebugEnabled() )
-            {
-                logger.debug( getRegion() + " is doing the work." );
-            }
+            logger.debug( "{0} is doing the work.", () -> getRegion() );
 
             // Try to get the item from the cache
             if ( aGroup != null )
@@ -257,10 +250,8 @@ public class JCSWorker<K, V>
             if ( result == null )
             {
                 result = aHelper.doWork();
-                if ( logger.isDebugEnabled() )
-                {
-                    logger.debug( "Work Done, caching: key:" + aKey + ", group:" + aGroup + ", result:" + result + "." );
-                }
+                logger.debug( "Work Done, caching: key:{0}, group:{1}, result:{2}.",
+                        aKey, aGroup, result );
                 // Stick the result of the work in the cache.
                 if ( aGroup != null )
                 {
@@ -276,10 +267,8 @@ public class JCSWorker<K, V>
         }
         finally
         {
-            if ( logger.isDebugEnabled() )
-            {
-                logger.debug( getRegion() + ":" + aKey + " entered finally." );
-            }
+            logger.debug( "{0}:{1} entered finally.", () -> getRegion(),
+                    () -> aKey );
 
             // Remove ourselves as the worker.
             if ( helper == null )

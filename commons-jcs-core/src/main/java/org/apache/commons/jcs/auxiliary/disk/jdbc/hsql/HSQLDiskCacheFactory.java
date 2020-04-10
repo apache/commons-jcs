@@ -34,8 +34,8 @@ import org.apache.commons.jcs.auxiliary.disk.jdbc.JDBCDiskCacheFactory;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 
 /**
  * This factory should create hsql disk caches.
@@ -46,7 +46,7 @@ public class HSQLDiskCacheFactory
     extends JDBCDiskCacheFactory
 {
     /** The logger */
-    private static final Log log = LogFactory.getLog( HSQLDiskCacheFactory.class );
+    private static final Log log = LogManager.getLog( HSQLDiskCacheFactory.class );
 
     /** The databases. */
     private Set<String> databases;
@@ -101,10 +101,7 @@ public class HSQLDiskCacheFactory
 
         if ( databases.contains( database ) )
         {
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "We already setup database [" + database + "]" );
-            }
+            log.info("We already setup database [{0}]", database);
             return;
         }
 
@@ -130,10 +127,7 @@ public class HSQLDiskCacheFactory
         Connection cConn = DriverManager.getConnection( database, user, password );
         setupTable( cConn, attributes.getTableName() );
 
-        if ( log.isInfoEnabled() )
-        {
-            log.info( "Finished setting up database [" + database + "]" );
-        }
+        log.info( "Finished setting up database [{0}]", database);
 
         databases.add( database );
     }

@@ -30,9 +30,9 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 import org.apache.commons.jcs.utils.config.PropertySetter;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * This manages threadpools for an application
@@ -54,7 +54,7 @@ import org.apache.commons.logging.LogFactory;
 public class ThreadPoolManager
 {
     /** The logger */
-    private static final Log log = LogFactory.getLog( ThreadPoolManager.class );
+    private static final Log log = LogManager.getLog( ThreadPoolManager.class );
 
     /** The default config, created using property defaults if present, else those above. */
     private PoolConfiguration defaultConfig;
@@ -121,19 +121,12 @@ public class ThreadPoolManager
         BlockingQueue<Runnable> queue = null;
         if ( config.isUseBoundary() )
         {
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "Creating a Bounded Buffer to use for the pool" );
-            }
-
+            log.debug( "Creating a Bounded Buffer to use for the pool" );
             queue = new LinkedBlockingQueue<>(config.getBoundarySize());
         }
         else
         {
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "Creating a non bounded Linked Queue to use for the pool" );
-            }
+            log.debug( "Creating a non bounded Linked Queue to use for the pool" );
             queue = new LinkedBlockingQueue<>();
         }
 
@@ -219,7 +212,7 @@ public class ThreadPoolManager
                 }
                 catch (Throwable t)
                 {
-                    log.warn("Failed to close pool " + pool, t);
+                    log.warn("Failed to close pool {0}", pool, t);
                 }
             }
 
@@ -231,7 +224,7 @@ public class ThreadPoolManager
                 }
                 catch (Throwable t)
                 {
-                    log.warn("Failed to close pool " + pool, t);
+                    log.warn("Failed to close pool {0}", pool, t);
                 }
             }
 
@@ -251,10 +244,7 @@ public class ThreadPoolManager
     public ExecutorService getExecutorService( String name )
     {
     	ExecutorService pool = pools.computeIfAbsent(name, key -> {
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "Creating pool for name [" + key + "]" );
-            }
+            log.debug( "Creating pool for name [{0}]", key );
             PoolConfiguration config = loadConfig( PROP_NAME_ROOT + "." + key );
             return createPool( config, "JCS-ThreadPoolManager-" + key + "-" );
     	});
@@ -274,11 +264,7 @@ public class ThreadPoolManager
     public ScheduledExecutorService getSchedulerPool( String name )
     {
     	ScheduledExecutorService pool = schedulerPools.computeIfAbsent(name, key -> {
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "Creating scheduler pool for name [" + key + "]" );
-            }
-
+            log.debug( "Creating scheduler pool for name [{0}]", key );
             PoolConfiguration defaultSchedulerConfig = loadConfig( DEFAULT_PROP_NAME_SCHEDULER_ROOT );
             PoolConfiguration config = loadConfig( PROP_NAME_SCHEDULER_ROOT + "." + key,
                     defaultSchedulerConfig );
@@ -314,19 +300,15 @@ public class ThreadPoolManager
      */
     private void configure()
     {
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "Initializing ThreadPoolManager" );
-        }
+        log.debug( "Initializing ThreadPoolManager" );
 
         if ( props == null )
         {
-            log.warn( "No configuration settings found.  Using hardcoded default values for all pools." );
+            log.warn( "No configuration settings found. Using hardcoded default values for all pools." );
             props = new Properties();
         }
 
-        // set intial default and then override if new
-        // settings are available
+        // set initial default and then override if new settings are available
         defaultConfig = new PoolConfiguration();
         defaultConfig = loadConfig( DEFAULT_PROP_NAME_ROOT );
     }
@@ -354,10 +336,7 @@ public class ThreadPoolManager
         PoolConfiguration config = defaultPoolConfiguration.clone();
         PropertySetter.setProperties( config, props, root + "." );
 
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( root + " PoolConfiguration = " + config );
-        }
+        log.debug( "{0} PoolConfiguration = {1}", root, config );
 
         return config;
     }

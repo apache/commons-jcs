@@ -40,8 +40,8 @@ import org.apache.commons.jcs.engine.stats.StatElement;
 import org.apache.commons.jcs.engine.stats.Stats;
 import org.apache.commons.jcs.engine.stats.behavior.IStatElement;
 import org.apache.commons.jcs.engine.stats.behavior.IStats;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 
 /**
  * The RemoteCacheNoWait wraps the RemoteCacheClient. The client holds a handle on the
@@ -67,7 +67,7 @@ public class RemoteCacheNoWait<K, V>
     extends AbstractAuxiliaryCache<K, V>
 {
     /** log instance */
-    private static final Log log = LogFactory.getLog( RemoteCacheNoWait.class );
+    private static final Log log = LogManager.getLog( RemoteCacheNoWait.class );
 
     /** The remote cache client */
     private final IRemoteCacheClient<K, V> remoteCacheClient;
@@ -164,10 +164,7 @@ public class RemoteCacheNoWait<K, V>
         }
         catch ( UnmarshalException ue )
         {
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "Retrying the get owing to UnmarshalException." );
-            }
+            log.debug( "Retrying the get owing to UnmarshalException." );
 
             try
             {
@@ -175,10 +172,7 @@ public class RemoteCacheNoWait<K, V>
             }
             catch ( IOException ex )
             {
-                if ( log.isInfoEnabled() )
-                {
-                    log.info( "Failed in retrying the get for the second time. " + ex.getMessage() );
-                }
+                log.info( "Failed in retrying the get for the second time. ", ex );
             }
         }
         catch ( IOException ex )
@@ -209,10 +203,7 @@ public class RemoteCacheNoWait<K, V>
         }
         catch ( UnmarshalException ue )
         {
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "Retrying the getMatching owing to UnmarshalException." );
-            }
+            log.debug( "Retrying the getMatching owing to UnmarshalException." );
 
             try
             {
@@ -220,10 +211,7 @@ public class RemoteCacheNoWait<K, V>
             }
             catch ( IOException ex )
             {
-                if ( log.isInfoEnabled() )
-                {
-                    log.info( "Failed in retrying the getMatching for the second time. " + ex.getMessage() );
-                }
+                log.info( "Failed in retrying the getMatching for the second time.", ex );
             }
         }
         catch ( IOException ex )
@@ -257,10 +245,7 @@ public class RemoteCacheNoWait<K, V>
         }
         catch ( UnmarshalException ue )
         {
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "Retrying the getMultiple owing to UnmarshalException..." );
-            }
+            log.debug( "Retrying the getMultiple owing to UnmarshalException..." );
 
             try
             {
@@ -268,10 +253,7 @@ public class RemoteCacheNoWait<K, V>
             }
             catch ( IOException ex )
             {
-                if ( log.isInfoEnabled() )
-                {
-                    log.info( "Failed in retrying the getMultiple for the second time. " + ex.getMessage() );
-                }
+                log.info( "Failed in retrying the getMultiple for the second time.", ex );
             }
         }
         catch ( IOException ex )
@@ -430,10 +412,8 @@ public class RemoteCacheNoWait<K, V>
         if ( previousQueue.isWorking() )
         {
             // we don't expect anything, it would have all gone to the zombie
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "resetEventQ, previous queue has [" + previousQueue.size() + "] items queued up." );
-            }
+            log.info( "resetEventQ, previous queue has [{0}] items queued up.",
+                    () -> previousQueue.size() );
             previousQueue.destroy();
         }
     }

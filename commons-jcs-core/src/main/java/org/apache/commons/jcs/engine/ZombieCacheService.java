@@ -1,5 +1,10 @@
 package org.apache.commons.jcs.engine;
 
+import java.io.Serializable;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Set;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -22,13 +27,8 @@ package org.apache.commons.jcs.engine;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.engine.behavior.ICacheService;
 import org.apache.commons.jcs.engine.behavior.IZombie;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import java.io.Serializable;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Set;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 
 /**
  * Zombie adapter for any cache service. Balks at every call.
@@ -37,17 +37,14 @@ public class ZombieCacheService<K, V>
     implements ICacheService<K, V>, IZombie
 {
     /** The logger. */
-    private static final Log log = LogFactory.getLog( ZombieCacheService.class );
+    private static final Log log = LogManager.getLog( ZombieCacheService.class );
 
     /**
      * @param item
      */
     public void put( ICacheElement<K, V> item )
     {
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "Zombie put for item " + item );
-        }
+        log.debug( "Zombie put for item {0}", item );
         // zombies have no inner life
     }
 
@@ -109,10 +106,8 @@ public class ZombieCacheService<K, V>
      */
     public Serializable get( String cacheName, K key, boolean container )
     {
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "Zombie get for key [" + key + "] cacheName [" + cacheName + "] container [" + container + "]" );
-        }
+        log.debug( "Zombie get for key [{0}] cacheName [{1}] container [{2}]",
+                key, cacheName, container);
         // zombies have no inner life
         return null;
     }

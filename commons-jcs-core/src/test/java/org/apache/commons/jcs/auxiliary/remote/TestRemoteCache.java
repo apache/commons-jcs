@@ -11,8 +11,8 @@ import org.apache.commons.jcs.engine.CacheElement;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs.engine.control.MockCompositeCacheManager;
 import org.apache.commons.jcs.engine.control.MockElementSerializer;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -42,7 +42,7 @@ public class TestRemoteCache
     extends TestCase
 {
     /** The logger */
-    private static final Log log = LogFactory.getLog( TestRemoteCache.class );
+    private static final Log log = LogManager.getLog( TestRemoteCache.class );
 
     /**
      * Start the cache.

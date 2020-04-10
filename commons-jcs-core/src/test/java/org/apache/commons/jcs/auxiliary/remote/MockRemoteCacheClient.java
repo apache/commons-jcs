@@ -34,8 +34,8 @@ import org.apache.commons.jcs.engine.CacheStatus;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.engine.behavior.ICacheServiceNonLocal;
 import org.apache.commons.jcs.engine.stats.behavior.IStats;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 
 /**
  * Used for testing the no wait.
@@ -47,7 +47,7 @@ public class MockRemoteCacheClient<K, V>
     implements IRemoteCacheClient<K, V>
 {
     /** log instance */
-    private static final Log log = LogFactory.getLog( MockRemoteCacheClient.class );
+    private static final Log log = LogManager.getLog( MockRemoteCacheClient.class );
 
     /** List of ICacheElement&lt;K, V&gt; objects passed into update. */
     public List<ICacheElement<K, V>> updateList = new LinkedList<>();

@@ -127,7 +127,7 @@ public class JDBCDataSourceFactoryUnitTest
         long ttl = 300000L;
 
         System.setProperty(Context.INITIAL_CONTEXT_FACTORY,
-        		  MockInitialContextFactory.class.getName());
+                MockInitialContextFactory.class.getName());
 
         MockInitialContextFactory.bind(jndiPath, new BasicDataSource());
 
@@ -166,6 +166,12 @@ public class JDBCDataSourceFactoryUnitTest
                     public Object lookup(String name) throws NamingException
                     {
                         return bindings.get(name);
+                    }
+
+                    @Override
+                    public Hashtable<?, ?> getEnvironment() throws NamingException
+                    {
+                        return new Hashtable<>();
                     }
                 };
             }

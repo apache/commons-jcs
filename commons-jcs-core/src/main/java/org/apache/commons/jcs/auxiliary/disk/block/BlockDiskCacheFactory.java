@@ -24,8 +24,8 @@ import org.apache.commons.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 
 /**
  * Creates disk cache instances.
@@ -34,7 +34,7 @@ public class BlockDiskCacheFactory
     extends AbstractAuxiliaryCacheFactory
 {
     /** The logger */
-    private static final Log log = LogFactory.getLog( BlockDiskCacheFactory.class );
+    private static final Log log = LogManager.getLog( BlockDiskCacheFactory.class );
 
     /**
      * Create an instance of the BlockDiskCache.
@@ -52,10 +52,7 @@ public class BlockDiskCacheFactory
                                        ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer )
     {
         BlockDiskCacheAttributes idca = (BlockDiskCacheAttributes) iaca;
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "Creating DiskCache for attributes = " + idca );
-        }
+        log.debug("Creating DiskCache for attributes = {0}", idca);
 
         BlockDiskCache<K, V> cache = new BlockDiskCache<>( idca, elementSerializer );
         cache.setCacheEventLogger( cacheEventLogger );

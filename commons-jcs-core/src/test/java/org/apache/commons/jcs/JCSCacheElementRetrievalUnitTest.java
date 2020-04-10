@@ -1,5 +1,8 @@
 package org.apache.commons.jcs;
 
+import org.apache.commons.jcs.access.CacheAccess;
+import org.apache.commons.jcs.engine.behavior.ICacheElement;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -20,8 +23,6 @@ package org.apache.commons.jcs;
  */
 
 import junit.framework.TestCase;
-import org.apache.commons.jcs.access.CacheAccess;
-import org.apache.commons.jcs.engine.behavior.ICacheElement;
 
 /**
  * @author Aaron Smuts
@@ -30,7 +31,6 @@ import org.apache.commons.jcs.engine.behavior.ICacheElement;
 public class JCSCacheElementRetrievalUnitTest
     extends TestCase
 {
-
     /**
      *
      * @throws Exception
@@ -50,5 +50,4 @@ public class JCSCacheElementRetrievalUnitTest
         assertTrue( "Create time should have been at or after the call", diff >= 0 );
 
     }
-
 }

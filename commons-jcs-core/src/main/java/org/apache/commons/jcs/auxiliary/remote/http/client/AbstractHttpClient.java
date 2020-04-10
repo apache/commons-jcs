@@ -21,8 +21,8 @@ package org.apache.commons.jcs.auxiliary.remote.http.client;
 
 import java.io.IOException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
 import org.apache.http.client.HttpClient;
@@ -49,7 +49,7 @@ public abstract class AbstractHttpClient
     private RemoteHttpCacheAttributes remoteHttpCacheAttributes;
 
     /** The Logger. */
-    private static final Log log = LogFactory.getLog( AbstractHttpClient.class );
+    private static final Log log = LogManager.getLog( AbstractHttpClient.class );
 
     /**
      * Sets the default Properties File and Heading, and creates the HttpClient and connection
@@ -72,7 +72,8 @@ public abstract class AbstractHttpClient
         }
         else
         {
-            log.warn( "Unrecognized value for 'httpVersion': [" + httpVersion + "], defaulting to 1.1" );
+            log.warn( "Unrecognized value for 'httpVersion': [{0}], defaulting to 1.1",
+                    httpVersion );
             this.httpVersion = HttpVersion.HTTP_1_1;
         }
 

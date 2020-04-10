@@ -19,8 +19,8 @@ package org.apache.commons.jcs.utils.struct;
  * under the License.
  */
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 
 /**
  * This is a generic thread safe double linked list. It's very simple and all the operations are so
@@ -33,7 +33,7 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
     private int size = 0;
 
     /** The logger */
-    private static final Log log = LogFactory.getLog( DoubleLinkedList.class );
+    private static final Log log = LogManager.getLog( DoubleLinkedList.class );
 
     /** LRU double linked list head node */
     private T first;
@@ -98,10 +98,7 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
      */
     public synchronized T getLast()
     {
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "returning last node" );
-        }
+        log.debug( "returning last node" );
         return last;
     }
 
@@ -112,10 +109,7 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
      */
     public synchronized T getFirst()
     {
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "returning first node" );
-        }
+        log.debug( "returning first node" );
         return first;
     }
 
@@ -210,10 +204,7 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
      */
     public synchronized boolean remove(T me)
     {
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "removing node" );
-        }
+        log.debug( "removing node" );
 
         if ( me.next == null )
         {
@@ -263,10 +254,7 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
      */
     public synchronized T removeLast()
     {
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "removing last node" );
-        }
+        log.debug( "removing last node" );
         T temp = last;
         if ( last != null )
         {
@@ -296,7 +284,7 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
             log.debug( "dumping Entries" );
             for (T me = first; me != null; me = (T) me.next)
             {
-                log.debug( "dump Entries> payload= '" + me.getPayload() + "'" );
+                log.debug( "dump Entries> payload= \"{0}\"", me.getPayload() );
             }
         }
     }

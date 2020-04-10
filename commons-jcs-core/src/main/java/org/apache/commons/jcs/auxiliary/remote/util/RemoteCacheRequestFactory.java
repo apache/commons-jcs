@@ -24,8 +24,8 @@ import java.util.Set;
 import org.apache.commons.jcs.auxiliary.remote.value.RemoteCacheRequest;
 import org.apache.commons.jcs.auxiliary.remote.value.RemoteRequestType;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 
 /**
  * This creates request objects. You could write your own client and use the objects from this
@@ -34,7 +34,7 @@ import org.apache.commons.logging.LogFactory;
 public class RemoteCacheRequestFactory
 {
     /** The Logger. */
-    private static final Log log = LogFactory.getLog( RemoteCacheRequestFactory.class );
+    private static final Log log = LogManager.getLog( RemoteCacheRequestFactory.class );
 
     /**
      * Create generic request
@@ -50,10 +50,7 @@ public class RemoteCacheRequestFactory
         request.setRequestType( requestType );
         request.setRequesterId( requesterId );
 
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "Created: " + request );
-        }
+        log.debug( "Created: {0}", request );
 
         return request;
     }

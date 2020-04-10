@@ -19,13 +19,13 @@ package org.apache.commons.jcs.utils.discovery;
  * under the License.
  */
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs.engine.behavior.IProvideScheduler;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 
 /**
  * This manages UDPDiscovery Services. We should end up with one service per Lateral Cache Manager
@@ -36,13 +36,13 @@ import org.apache.commons.logging.LogFactory;
 public class UDPDiscoveryManager
 {
     /** The logger */
-    private static final Log log = LogFactory.getLog( UDPDiscoveryManager.class );
+    private static final Log log = LogManager.getLog( UDPDiscoveryManager.class );
 
     /** Singleton instance */
     private static UDPDiscoveryManager INSTANCE = new UDPDiscoveryManager();
 
     /** Known services */
-    private final Map<String, UDPDiscoveryService> services = new HashMap<>();
+    private final ConcurrentMap<String, UDPDiscoveryService> services = new ConcurrentHashMap<>();
 
     /** private for singleton */
     private UDPDiscoveryManager()
@@ -72,43 +72,36 @@ public class UDPDiscoveryManager
      * @param cacheMgr
      * @return UDPDiscoveryService
      */
-    public synchronized UDPDiscoveryService getService( String discoveryAddress, int discoveryPort, int servicePort,
+    public UDPDiscoveryService getService( String discoveryAddress, int discoveryPort, int servicePort,
                                                         ICompositeCacheManager cacheMgr )
     {
         String key = discoveryAddress + ":" + discoveryPort + ":" + servicePort;
 
-        UDPDiscoveryService service = services.get( key );
-        if ( service == null )
-        {
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "Creating service for address:port:servicePort [" + key + "]" );
-            }
+        UDPDiscoveryService service = services.computeIfAbsent(key, k -> {
+            log.info( "Creating service for address:port:servicePort [{0}]", key );
 
             UDPDiscoveryAttributes attributes = new UDPDiscoveryAttributes();
             attributes.setUdpDiscoveryAddr( discoveryAddress );
             attributes.setUdpDiscoveryPort( discoveryPort );
             attributes.setServicePort( servicePort );
 
-            service = new UDPDiscoveryService( attributes );
+            UDPDiscoveryService newService = new UDPDiscoveryService( attributes );
 
             // register for shutdown notification
-            cacheMgr.registerShutdownObserver( service );
+            cacheMgr.registerShutdownObserver( newService );
 
             // inject scheduler
             if ( cacheMgr instanceof IProvideScheduler)
             {
-                service.setScheduledExecutorService(((IProvideScheduler)cacheMgr).getScheduledExecutorService());
+                newService.setScheduledExecutorService(((IProvideScheduler)cacheMgr)
+                        .getScheduledExecutorService());
             }
 
-            service.startup();
-            services.put( key, service );
-        }
+            newService.startup();
+            return newService;
+        });
 
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "Returning service [" + service + "] for key [" + key + "]" );
-        }
+        log.debug( "Returning service [{0}] for key [{1}]", service, key );
 
         return service;
     }

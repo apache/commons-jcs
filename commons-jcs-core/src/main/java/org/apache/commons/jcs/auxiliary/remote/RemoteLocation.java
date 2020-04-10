@@ -3,8 +3,8 @@ package org.apache.commons.jcs.auxiliary.remote;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -31,7 +31,7 @@ import org.apache.commons.logging.LogFactory;
 public final class RemoteLocation
 {
     /** The logger. */
-    private static final Log log = LogFactory.getLog( RemoteLocation.class );
+    private static final Log log = LogManager.getLog( RemoteLocation.class );
 
     /** Pattern for parsing server:port */
     private static final Pattern SERVER_COLON_PORT = Pattern.compile("(\\S+)\\s*:\\s*(\\d+)");
@@ -136,7 +136,7 @@ public final class RemoteLocation
         }
         else
         {
-            log.error("Invalid server descriptor: " + server);
+            log.error("Invalid server descriptor: {0}", server);
         }
 
         return null;

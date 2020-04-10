@@ -28,8 +28,8 @@ import java.net.Socket;
 import org.apache.commons.jcs.auxiliary.lateral.LateralElementDescriptor;
 import org.apache.commons.jcs.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttributes;
 import org.apache.commons.jcs.io.ObjectInputStreamClassLoaderAware;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 
 /**
  * This class is based on the log4j SocketAppender class. I'm using a different repair structure, so
@@ -38,7 +38,7 @@ import org.apache.commons.logging.LogFactory;
 public class LateralTCPSender
 {
     /** The logger */
-    private static final Log log = LogFactory.getLog( LateralTCPSender.class );
+    private static final Log log = LogManager.getLog( LateralTCPSender.class );
 
     /** Config */
     private int socketOpenTimeOut;
@@ -76,11 +76,7 @@ public class LateralTCPSender
 
         String h2 = p1.substring( 0, p1.indexOf( ":" ) );
         int po = Integer.parseInt( p1.substring( p1.indexOf( ":" ) + 1 ) );
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "h2 = " + h2 );
-            log.debug( "po = " + po );
-        }
+        log.debug( "h2 = {0}, po = {1}", h2, po );
 
         if ( h2.length() == 0 )
         {
@@ -102,10 +98,7 @@ public class LateralTCPSender
     {
         try
         {
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "Attempting connection to [" + host + "]" );
-            }
+            log.info( "Attempting connection to [{0}]", host );
 
             // have time out socket open do this for us
             try
@@ -131,12 +124,12 @@ public class LateralTCPSender
         }
         catch ( java.net.ConnectException e )
         {
-            log.debug( "Remote host [" + host + "] refused connection." );
+            log.debug( "Remote host [{0}] refused connection.", host );
             throw e;
         }
         catch ( IOException e )
         {
-            log.debug( "Could not connect to [" + host + "]. Exception is " + e );
+            log.debug( "Could not connect to [{0}]", host, e );
             throw e;
         }
     }
@@ -153,13 +146,10 @@ public class LateralTCPSender
         sendCnt++;
         if ( log.isInfoEnabled() && sendCnt % 100 == 0 )
         {
-            log.info( "Send Count (port " + socket.getPort() + ") = " + sendCnt );
+            log.info( "Send Count (port {0}) = {1}", socket.getPort(), sendCnt );
         }
 
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "sending LateralElementDescriptor" );
-        }
+        log.debug( "sending LateralElementDescriptor" );
 
         if ( led == null )
         {
@@ -221,7 +211,7 @@ public class LateralTCPSender
             }
             catch ( IOException ioe )
             {
-                log.error( "Problem cleaning socket before send " + socket, ioe );
+                log.error( "Problem cleaning socket before send {0}", socket, ioe );
                 throw ioe;
             }
 
@@ -261,10 +251,7 @@ public class LateralTCPSender
     public void dispose()
         throws IOException
     {
-        if ( log.isInfoEnabled() )
-        {
-            log.info( "Dispose called" );
-        }
+        log.info( "Dispose called" );
         // WILL CLOSE CONNECTION USED BY ALL
         oos.close();
         socket.close();

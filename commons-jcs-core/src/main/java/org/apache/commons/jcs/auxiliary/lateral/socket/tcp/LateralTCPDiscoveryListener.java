@@ -1,5 +1,12 @@
 package org.apache.commons.jcs.auxiliary.lateral.socket.tcp;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -26,17 +33,10 @@ import org.apache.commons.jcs.auxiliary.lateral.LateralCacheNoWait;
 import org.apache.commons.jcs.auxiliary.lateral.LateralCacheNoWaitFacade;
 import org.apache.commons.jcs.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttributes;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 import org.apache.commons.jcs.utils.discovery.DiscoveredService;
 import org.apache.commons.jcs.utils.discovery.behavior.IDiscoveryListener;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * This knows how to add and remove discovered services. It observes UDP discovery events.
@@ -47,7 +47,7 @@ public class LateralTCPDiscoveryListener
     implements IDiscoveryListener
 {
     /** The log factory */
-    private static final Log log = LogFactory.getLog( LateralTCPDiscoveryListener.class );
+    private static final Log log = LogManager.getLog( LateralTCPDiscoveryListener.class );
 
     /**
      * Map of no wait facades. these are used to determine which regions are locally configured to
@@ -148,29 +148,21 @@ public class LateralTCPDiscoveryListener
     {
         @SuppressWarnings("unchecked") // Need to cast because of common map for all facades
         LateralCacheNoWaitFacade<K, V> facade = (LateralCacheNoWaitFacade<K, V>)facades.get( noWait.getCacheName() );
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "addNoWait > Got facade for " + noWait.getCacheName() + " = " + facade );
-        }
+        log.debug( "addNoWait > Got facade for {0} = {1}", noWait.getCacheName(), facade );
 
         if ( facade != null )
         {
             boolean isNew = facade.addNoWait( noWait );
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "Called addNoWait, isNew = " + isNew );
-            }
+            log.debug( "Called addNoWait, isNew = {0}", isNew );
             return isNew;
         }
         else
         {
             if ( !knownDifferentlyConfiguredRegions.contains( noWait.getCacheName() ) )
             {
-                if ( log.isInfoEnabled() )
-                {
-                    log.info( "addNoWait > Different nodes are configured differently or region ["
-                        + noWait.getCacheName() + "] is not yet used on this side.  " );
-                }
+                log.info( "addNoWait > Different nodes are configured differently "
+                        + "or region [{0}] is not yet used on this side.",
+                        () -> noWait.getCacheName() );
                 knownDifferentlyConfiguredRegions.add( noWait.getCacheName() );
             }
             return false;
@@ -188,29 +180,21 @@ public class LateralTCPDiscoveryListener
     {
         @SuppressWarnings("unchecked") // Need to cast because of common map for all facades
         LateralCacheNoWaitFacade<K, V> facade = (LateralCacheNoWaitFacade<K, V>)facades.get( noWait.getCacheName() );
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "removeNoWait > Got facade for " + noWait.getCacheName() + " = " + facade );
-        }
+        log.debug( "removeNoWait > Got facade for {0} = {1}", noWait.getCacheName(), facade);
 
         if ( facade != null )
         {
             boolean removed = facade.removeNoWait( noWait );
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "Called removeNoWait, removed " + removed );
-            }
+            log.debug( "Called removeNoWait, removed {0}", removed );
             return removed;
         }
         else
         {
             if ( !knownDifferentlyConfiguredRegions.contains( noWait.getCacheName() ) )
             {
-                if ( log.isInfoEnabled() )
-                {
-                    log.info( "removeNoWait > Different nodes are configured differently or region ["
-                        + noWait.getCacheName() + "] is not yet used on this side.  " );
-                }
+                log.info( "removeNoWait > Different nodes are configured differently "
+                        + "or region [{0}] is not yet used on this side.",
+                        () -> noWait.getCacheName() );
                 knownDifferentlyConfiguredRegions.add( noWait.getCacheName() );
             }
             return false;
@@ -249,10 +233,7 @@ public class LateralTCPDiscoveryListener
             {
                 AuxiliaryCache<?, ?> ic = cacheManager.getAuxiliaryCache(factoryName, cacheName);
 
-                if ( log.isDebugEnabled() )
-                {
-                    log.debug( "Got cache, ic = " + ic );
-                }
+                log.debug( "Got cache, ic = {0}", ic );
 
                 // add this to the nowaits for this cachename
                 if ( ic != null )
@@ -270,16 +251,13 @@ public class LateralTCPDiscoveryListener
                     }
 
                     addNoWait( (LateralCacheNoWait<?, ?>) ic );
-                    if ( log.isDebugEnabled() )
-                    {
-                        log.debug( "Called addNoWait for cacheName [" + cacheName + "]" );
-                    }
+                    log.debug( "Called addNoWait for cacheName [{0}]", cacheName );
                 }
             }
         }
         else
         {
-            log.warn( "No cache names found in message " + service );
+            log.warn( "No cache names found in message {0}", service );
         }
     }
 
@@ -307,10 +285,7 @@ public class LateralTCPDiscoveryListener
             {
                 AuxiliaryCache<?, ?> ic = cacheManager.getAuxiliaryCache(factoryName, cacheName);
 
-                if ( log.isDebugEnabled() )
-                {
-                    log.debug( "Got cache, ic = " + ic );
-                }
+                log.debug( "Got cache, ic = {0}", ic );
 
                 // remove this to the nowaits for this cachename
                 if ( ic != null )
@@ -328,16 +303,13 @@ public class LateralTCPDiscoveryListener
                     }
 
                     removeNoWait( (LateralCacheNoWait<?, ?>) ic );
-                    if ( log.isDebugEnabled() )
-                    {
-                        log.debug( "Called removeNoWait for cacheName [" + cacheName + "]" );
-                    }
+                    log.debug( "Called removeNoWait for cacheName [{0}]", cacheName );
                 }
             }
         }
         else
         {
-            log.warn( "No cache names found in message " + service );
+            log.warn( "No cache names found in message {0}", service );
         }
     }
 }

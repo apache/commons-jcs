@@ -28,9 +28,9 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.engine.behavior.ICacheServiceNonLocal;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 import org.apache.commons.jcs.utils.timing.ElapsedTimer;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * Zombie adapter for the non local cache services. It just balks if there is no queue configured.
@@ -46,7 +46,7 @@ public class ZombieCacheServiceNonLocal<K, V>
     implements ICacheServiceNonLocal<K, V>
 {
     /** The logger */
-    private static final Log log = LogFactory.getLog( ZombieCacheServiceNonLocal.class );
+    private static final Log log = LogManager.getLog( ZombieCacheServiceNonLocal.class );
 
     /** How big can the queue grow. */
     private int maxQueueSize = 0;
@@ -211,10 +211,7 @@ public class ZombieCacheServiceNonLocal<K, V>
         throws Exception
     {
         int cnt = 0;
-        if ( log.isInfoEnabled() )
-        {
-            log.info( "Propagating events to the new ICacheServiceNonLocal." );
-        }
+        log.info( "Propagating events to the new ICacheServiceNonLocal." );
         ElapsedTimer timer = new ElapsedTimer();
         while ( !queue.isEmpty() )
         {
@@ -240,11 +237,8 @@ public class ZombieCacheServiceNonLocal<K, V>
                 service.removeAll( event.cacheName, event.requesterId );
             }
         }
-        if ( log.isInfoEnabled() )
-        {
-            log.info( "Propagated " + cnt + " events to the new ICacheServiceNonLocal in "
-                + timer.getElapsedTimeString() );
-        }
+        log.info( "Propagated {0} events to the new ICacheServiceNonLocal in {1}",
+                cnt, timer.getElapsedTimeString() );
     }
 
     /**

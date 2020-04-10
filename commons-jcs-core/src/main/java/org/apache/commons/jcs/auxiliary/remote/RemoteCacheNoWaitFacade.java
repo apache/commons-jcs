@@ -26,8 +26,8 @@ import org.apache.commons.jcs.auxiliary.remote.server.behavior.RemoteType;
 import org.apache.commons.jcs.engine.CacheStatus;
 import org.apache.commons.jcs.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 
 /**
  * Used to provide access to multiple services under nowait protection. Factory should construct
@@ -41,7 +41,7 @@ public class RemoteCacheNoWaitFacade<K, V>
     extends AbstractRemoteCacheNoWaitFacade<K, V>
 {
     /** log instance */
-    private static final Log log = LogFactory.getLog( RemoteCacheNoWaitFacade.class );
+    private static final Log log = LogManager.getLog( RemoteCacheNoWaitFacade.class );
 
     /** Provide factory instance to RemoteCacheFailoverRunner */
     private final RemoteCacheFactory cacheFactory;
@@ -73,10 +73,7 @@ public class RemoteCacheNoWaitFacade<K, V>
     @Override
     protected void failover( RemoteCacheNoWait<K, V> rcnw )
     {
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "in failover for " + rcnw );
-        }
+        log.debug( "in failover for {0}", rcnw );
 
         if ( getAuxiliaryCacheAttributes().getRemoteType() == RemoteType.LOCAL )
         {
@@ -96,10 +93,7 @@ public class RemoteCacheNoWaitFacade<K, V>
             }
             else
             {
-                if ( log.isInfoEnabled() )
-                {
-                    log.info( "The noWait is not in error" );
-                }
+                log.info( "The noWait is not in error" );
             }
         }
     }

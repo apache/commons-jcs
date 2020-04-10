@@ -55,11 +55,11 @@ import org.apache.commons.jcs.engine.control.event.ElementEventQueue;
 import org.apache.commons.jcs.engine.control.event.behavior.IElementEventQueue;
 import org.apache.commons.jcs.engine.stats.CacheStats;
 import org.apache.commons.jcs.engine.stats.behavior.ICacheStats;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 import org.apache.commons.jcs.utils.config.OptionConverter;
 import org.apache.commons.jcs.utils.threadpool.DaemonThreadFactory;
 import org.apache.commons.jcs.utils.threadpool.ThreadPoolManager;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * Manages a composite cache. This provides access to caches and is the primary way to shutdown the
@@ -73,7 +73,7 @@ public class CompositeCacheManager
     implements IRemoteCacheConstants, ICompositeCacheManager, IProvideScheduler
 {
     /** The logger */
-    private static final Log log = LogFactory.getLog( CompositeCacheManager.class );
+    private static final Log log = LogManager.getLog( CompositeCacheManager.class );
 
     /** JMX object name */
     public static final String JMX_OBJECT_NAME = "org.apache.commons.jcs:type=JCSAdminBean";
@@ -131,7 +131,7 @@ public class CompositeCacheManager
     private IElementEventQueue elementEventQueue;
 
     /** Shutdown hook thread instance */
-    private ShutdownHook shutdownHook;
+    private Thread shutdownHook;
 
     /** Indicates whether the instance has been initialized. */
     private boolean isInitialized = false;
@@ -168,11 +168,7 @@ public class CompositeCacheManager
     {
         if ( instance == null )
         {
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "Instance is null, creating with config [" + propsFilename + "]" );
-            }
-
+            log.info( "Instance is null, creating with config [{0}]", propsFilename );
             instance = createInstance();
         }
 
@@ -201,11 +197,7 @@ public class CompositeCacheManager
     {
         if ( instance == null )
         {
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "Instance is null, returning unconfigured instance" );
-            }
-
+            log.info( "Instance is null, returning unconfigured instance" );
             instance = createInstance();
         }
 
@@ -243,7 +235,13 @@ public class CompositeCacheManager
     {
         if (!isInitialized)
         {
-            this.shutdownHook = new ShutdownHook();
+            this.shutdownHook = new Thread(() -> {
+                if ( isInitialized() )
+                {
+                    log.info("Shutdown hook activated. Shutdown was not called. Shutting down JCS.");
+                    shutDown();
+                }
+            });
             try
             {
                 Runtime.getRuntime().addShutdownHook( shutdownHook );
@@ -317,18 +315,14 @@ public class CompositeCacheManager
      */
     public void configure( String propFile ) throws CacheException
     {
-        log.info( "Creating cache manager from config file: " + propFile );
+        log.info( "Creating cache manager from config file: {0}", propFile );
 
         Properties props = new Properties();
 
         try (InputStream is = getClass().getResourceAsStream( propFile ))
         {
             props.load( is );
-
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "File [" + propFile + "] contained " + props.size() + " properties" );
-            }
+            log.debug( "File [{0}] contained {1} properties", () -> propFile, () -> props.size());
         }
         catch ( IOException ex )
         {
@@ -386,7 +380,7 @@ public class CompositeCacheManager
     {
         if ( props == null )
         {
-            log.error( "No properties found.  Please configure the cache correctly." );
+            log.error( "No properties found. Please configure the cache correctly." );
             return;
         }
 
@@ -394,20 +388,14 @@ public class CompositeCacheManager
         {
             if ( !forceReconfiguration )
             {
-                if ( log.isDebugEnabled() )
-                {
-                    log.debug( "Configure called after the manager has been configured.  "
-                        + "Force reconfiguration is false.  Doing nothing" );
-                }
+                log.debug( "Configure called after the manager has been configured.  "
+                         + "Force reconfiguration is false. Doing nothing" );
                 return;
             }
             else
             {
-                if ( log.isInfoEnabled() )
-                {
-                    log.info( "Configure called after the manager has been configured.  "
-                        + "Force reconfiguration is true.  Reconfiguring as best we can." );
-                }
+                log.info( "Configure called after the manager has been configured.  "
+                        + "Force reconfiguration is true. Reconfiguring as best we can." );
             }
         }
         if ( useSystemProperties )
@@ -430,10 +418,7 @@ public class CompositeCacheManager
         // set the props value and then configure the ThreadPoolManager
         ThreadPoolManager.setProps( properties );
         ThreadPoolManager poolMgr = ThreadPoolManager.getInstance();
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "ThreadPoolManager = " + poolMgr );
-        }
+        log.debug( "ThreadPoolManager = {0}", poolMgr);
 
         // configure the cache
         CompositeCacheConfigurator configurator = newConfigurator();
@@ -444,19 +429,19 @@ public class CompositeCacheManager
         this.defaultAuxValues = OptionConverter.findAndSubst( CompositeCacheManager.DEFAULT_REGION,
                 properties );
 
-        log.info( "Setting default auxiliaries to " + this.defaultAuxValues );
+        log.info( "Setting default auxiliaries to \"{0}\"", this.defaultAuxValues );
 
         // set default cache attr
         this.defaultCacheAttr = configurator.parseCompositeCacheAttributes( properties, "",
                 new CompositeCacheAttributes(), DEFAULT_REGION );
 
-        log.info( "setting defaultCompositeCacheAttributes to " + this.defaultCacheAttr );
+        log.info( "setting defaultCompositeCacheAttributes to {0}", this.defaultCacheAttr );
 
         // set default element attr
         this.defaultElementAttr = configurator.parseElementAttributes( properties, "",
                 new ElementAttributes(), DEFAULT_REGION );
 
-        log.info( "setting defaultElementAttributes to " + this.defaultElementAttr );
+        log.info( "setting defaultElementAttributes to {0}", this.defaultElementAttr );
 
         // set up system caches to be used by non system caches
         // need to make sure there is no circularity of reference
@@ -466,10 +451,7 @@ public class CompositeCacheManager
         configurator.parseRegions( properties, this );
 
         long end = System.currentTimeMillis();
-        if ( log.isInfoEnabled() )
-        {
-            log.info( "Finished configuration in " + ( end - start ) + " ms." );
-        }
+        log.info( "Finished configuration in {0} ms.", end - start);
 
         isConfigured = true;
     }
@@ -560,10 +542,7 @@ public class CompositeCacheManager
     @SuppressWarnings("unchecked") // Need to cast because of common map for all caches
     public <K, V> CompositeCache<K, V>  getCache( ICompositeCacheAttributes cattr, IElementAttributes attr )
     {
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "attr = " + attr );
-        }
+        log.debug( "attr = {0}", attr );
 
         CompositeCache<K, V> cache = (CompositeCache<K, V>) caches.computeIfAbsent(cattr.getCacheName(),
                 cacheName -> {
@@ -691,17 +670,12 @@ public class CompositeCacheManager
             // Wait until called by the last client
             if ( clients.decrementAndGet() > 0 )
             {
-                if ( log.isDebugEnabled() )
-                {
-                    log.debug( "Release called, but " + clients + " remain" );
-                }
+                log.debug( "Release called, but {0} remain", clients);
                 return;
             }
 
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "Last client called release. There are " + caches.size() + " caches which will be disposed" );
-            }
+            log.debug( "Last client called release. There are {0} caches which will be disposed",
+                    () -> caches.size());
 
             for (ICache<?, ?> c : caches.values() )
             {
@@ -869,7 +843,7 @@ public class CompositeCacheManager
     	}
     	else
     	{
-    		log.warn("Shutdown observer added twice " + observer);
+    		log.warn("Shutdown observer added twice {0}", observer);
     	}
     }
 
@@ -916,29 +890,5 @@ public class CompositeCacheManager
             throw new IllegalStateException("Too late, MBean registration is done");
         }
         jmxName = name;
-    }
-
-    /**
-     * Called on shutdown. This gives use a chance to store the keys and to optimize even if the
-     * cache manager's shutdown method was not called manually.
-     */
-    class ShutdownHook
-        extends Thread
-    {
-        /**
-         * This will persist the keys on shutdown.
-         * <p>
-         * @see java.lang.Thread#run()
-         */
-        @SuppressWarnings("synthetic-access")
-        @Override
-        public void run()
-        {
-            if ( isInitialized() )
-            {
-                log.info( "Shutdown hook activated.  Shutdown was not called.  Shutting down JCS." );
-                shutDown();
-            }
-        }
     }
 }

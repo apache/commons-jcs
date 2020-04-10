@@ -35,8 +35,8 @@ import org.apache.commons.jcs.engine.CacheElement;
 import org.apache.commons.jcs.engine.CacheInfo;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.engine.behavior.ICacheServiceNonLocal;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 
 /**
  * A lateral cache service implementation. Does not implement getGroupKey
@@ -46,7 +46,7 @@ public class LateralTCPService<K, V>
     implements ICacheServiceNonLocal<K, V>
 {
     /** The logger. */
-    private static final Log log = LogFactory.getLog( LateralTCPService.class );
+    private static final Log log = LogManager.getLog( LateralTCPService.class );
 
     /** special configuration */
     private boolean allowPut;
@@ -76,18 +76,14 @@ public class LateralTCPService<K, V>
         {
             sender = new LateralTCPSender( lca );
 
-            if ( log.isInfoEnabled() )
-            {
-                log.debug( "Created sender to [" + lca.getTcpServer() + "]" );
-            }
+            log.debug( "Created sender to [{0}]", () -> lca.getTcpServer() );
         }
         catch ( IOException e )
         {
             // log.error( "Could not create sender", e );
             // This gets thrown over and over in recovery mode.
             // The stack trace isn't useful here.
-            log.error( "Could not create sender to [" + lca.getTcpServer() + "] -- " + e.getMessage() );
-
+            log.error( "Could not create sender to [{0}] -- {1}", lca.getTcpServer(), e.getMessage());
             throw e;
         }
     }
@@ -135,10 +131,8 @@ public class LateralTCPService<K, V>
         // on the other end, this will be a server config option
         else
         {
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "Issuing a remove for a put" );
-            }
+            log.debug( "Issuing a remove for a put" );
+
             // set the value to null so we don't send the item
             CacheElement<K, V> ce = new CacheElement<>( item.getCacheName(), item.getKey(), null );
             LateralElementDescriptor<K, V> led = new LateralElementDescriptor<>( ce );

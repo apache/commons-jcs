@@ -19,8 +19,8 @@ package org.apache.commons.jcs.utils.zip;
  * under the License.
  */
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -34,7 +34,7 @@ import java.util.zip.Inflater;
 public final class CompressionUtil
 {
     /** The logger */
-    private static final Log log = LogFactory.getLog( CompressionUtil.class );
+    private static final Log log = LogManager.getLog( CompressionUtil.class );
 
     /**
      * no instances.

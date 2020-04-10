@@ -26,8 +26,8 @@ import java.rmi.registry.Registry;
 
 import org.apache.commons.jcs.auxiliary.remote.RemoteUtils;
 import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 
 /**
  * This class tries to keep the registry alive. If if is able to create a registry, it will also
@@ -37,7 +37,7 @@ public class RegistryKeepAliveRunner
     implements Runnable
 {
     /** The logger */
-    private static final Log log = LogFactory.getLog( RegistryKeepAliveRunner.class );
+    private static final Log log = LogManager.getLog( RegistryKeepAliveRunner.class );
 
     /** The URL of the service to look for. */
     private String namingURL;
@@ -83,10 +83,8 @@ public class RegistryKeepAliveRunner
      */
     protected void checkAndRestoreIfNeeded()
     {
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "looking up server " + namingURL );
-        }
+        log.debug( "looking up server {0}", namingURL );
+
         try
         {
             Object obj = Naming.lookup( namingURL );
@@ -97,10 +95,7 @@ public class RegistryKeepAliveRunner
             {
                 cacheEventLogger.logApplicationEvent( "RegistryKeepAliveRunner", "Naming.lookup", message );
             }
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( message );
-            }
+            log.debug( message );
         }
         catch ( Exception ex )
         {
@@ -175,10 +170,7 @@ public class RegistryKeepAliveRunner
             {
                 cacheEventLogger.logApplicationEvent( "RegistryKeepAliveRunner", "registerServer", message );
             }
-            if ( log.isInfoEnabled() )
-            {
-                log.info( message );
-            }
+            log.info( message );
         }
         catch ( RemoteException e )
         {

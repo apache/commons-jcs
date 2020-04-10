@@ -38,8 +38,8 @@ import org.apache.commons.jcs.engine.memory.util.SoftReferenceElementDescriptor;
 import org.apache.commons.jcs.engine.stats.StatElement;
 import org.apache.commons.jcs.engine.stats.behavior.IStatElement;
 import org.apache.commons.jcs.engine.stats.behavior.IStats;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 
 /**
  * A JCS IMemoryCache that has {@link SoftReference} to all its values.
@@ -54,7 +54,7 @@ import org.apache.commons.logging.LogFactory;
 public class SoftReferenceMemoryCache<K, V> extends AbstractMemoryCache<K, V>
 {
     /** The logger. */
-    private static final Log log = LogFactory.getLog(SoftReferenceMemoryCache.class);
+    private static final Log log = LogManager.getLog(SoftReferenceMemoryCache.class);
 
     /**
      * Strong references to the maxObjects number of newest objects.
@@ -75,7 +75,8 @@ public class SoftReferenceMemoryCache<K, V> extends AbstractMemoryCache<K, V>
     {
         super.initialize( hub );
         strongReferences = new LinkedBlockingQueue<>();
-        log.info( "initialized Soft Reference Memory Cache for " + getCacheName() );
+        log.info( "initialized Soft Reference Memory Cache for {0}",
+                () -> getCacheName() );
     }
 
     /**

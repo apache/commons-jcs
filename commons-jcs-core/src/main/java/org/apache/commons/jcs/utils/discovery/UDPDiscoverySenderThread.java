@@ -22,8 +22,8 @@ import java.util.ArrayList;
  * under the License.
  */
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 
 /**
  * Used to periodically broadcast our location to other caches that might be listening.
@@ -32,7 +32,7 @@ public class UDPDiscoverySenderThread
     implements Runnable
 {
     /** The logger. */
-    private static final Log log = LogFactory.getLog( UDPDiscoverySenderThread.class );
+    private static final Log log = LogManager.getLog( UDPDiscoverySenderThread.class );
 
     /**
      * details of the host, port, and service being advertised to listen for TCP socket connections
@@ -47,10 +47,7 @@ public class UDPDiscoverySenderThread
      */
     protected void setCacheNames( ArrayList<String> cacheNames )
     {
-        if ( log.isInfoEnabled() )
-        {
-            log.info( "Resetting cacheNames = [" + cacheNames + "]" );
-        }
+        log.info( "Resetting cacheNames = [{0}]", cacheNames );
         this.cacheNames = cacheNames;
     }
 
@@ -75,12 +72,12 @@ public class UDPDiscoverySenderThread
 
         this.cacheNames = cacheNames;
 
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "Creating sender thread for discoveryAddress = [" + attributes.getUdpDiscoveryAddr()
-                + "] and discoveryPort = [" + attributes.getUdpDiscoveryPort() + "] myHostName = ["
-                + attributes.getServiceAddress() + "] and port = [" + attributes.getServicePort() + "]" );
-        }
+        log.debug( "Creating sender thread for discoveryAddress = [{0}] and "
+                + "discoveryPort = [{1}] myHostName = [{2}] and port = [{3}]",
+                () -> attributes.getUdpDiscoveryAddr(),
+                () -> attributes.getUdpDiscoveryPort(),
+                () -> attributes.getServiceAddress(),
+                () -> attributes.getServicePort() );
 
         try (UDPDiscoverySender sender = new UDPDiscoverySender( attributes.getUdpDiscoveryAddr(),
                 attributes.getUdpDiscoveryPort() ))
@@ -88,10 +85,7 @@ public class UDPDiscoverySenderThread
             // move this to the run method and determine how often to call it.
             sender.requestBroadcast();
 
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "Sent a request broadcast to the group" );
-            }
+            log.debug( "Sent a request broadcast to the group" );
         }
         catch ( IOException e )
         {
@@ -115,15 +109,13 @@ public class UDPDiscoverySenderThread
             // todo we should consider sending a request broadcast every so
             // often.
 
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "Called sender to issue a passive broadcast" );
-            }
+            log.debug( "Called sender to issue a passive broadcast" );
         }
         catch ( IOException e )
         {
-            log.error( "Problem calling the UDP Discovery Sender [" + attributes.getUdpDiscoveryAddr() + ":"
-                + attributes.getUdpDiscoveryPort() + "]", e );
+            log.error( "Problem calling the UDP Discovery Sender [{0}:{1}]",
+                    attributes.getUdpDiscoveryAddr(),
+                    attributes.getUdpDiscoveryPort(), e );
         }
     }
 
@@ -139,10 +131,7 @@ public class UDPDiscoverySenderThread
         {
             sender.removeBroadcast( attributes.getServiceAddress(), attributes.getServicePort(), cacheNames );
 
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "Called sender to issue a remove broadcast in shudown." );
-            }
+            log.debug( "Called sender to issue a remove broadcast in shudown." );
         }
         catch ( IOException e )
         {

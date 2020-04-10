@@ -35,8 +35,6 @@ import org.apache.commons.jcs.engine.CacheElement;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.engine.behavior.IElementAttributes;
 import org.apache.commons.jcs.engine.control.CompositeCache;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * This class provides an interface for all types of access to the cache.
@@ -53,9 +51,6 @@ public class CacheAccess<K, V>
     extends AbstractCacheAccess<K, V>
     implements ICacheAccess<K, V>
 {
-    /** The logger. */
-    private static final Log log = LogFactory.getLog( CacheAccess.class );
-
     /**
      * Constructor for the CacheAccess object.
      * <p>
@@ -319,7 +314,7 @@ public class CacheAccess<K, V>
      * @return Attributes for the object, null if object not in cache
      */
     @Override
-    public IElementAttributes getElementAttributes( K name )
+    public IElementAttributes getElementAttributes( K name ) throws CacheException
     {
         IElementAttributes attr = null;
 
@@ -329,7 +324,7 @@ public class CacheAccess<K, V>
         }
         catch ( IOException ioe )
         {
-            log.error( "Failure getting element attributes", ioe );
+            throw new CacheException("Failure getting element attributes", ioe);
         }
 
         return attr;

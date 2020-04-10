@@ -1,5 +1,13 @@
 package org.apache.commons.jcs;
 
+import java.io.StringWriter;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
+
+import org.apache.commons.jcs.log.LogManager;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -19,13 +27,6 @@ package org.apache.commons.jcs;
  * under the License.
  */
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.apache.log4j.PatternLayout;
-import org.apache.log4j.WriterAppender;
-
-import java.io.StringWriter;
-
 /** Utility for testing log messages. */
 public class TestLogConfigurationUtil
 {
@@ -37,10 +38,48 @@ public class TestLogConfigurationUtil
      */
     public static void configureLogger( StringWriter stringWriter, String loggerName )
     {
-        Logger logger = Logger.getLogger( loggerName );
-        WriterAppender appender = new WriterAppender( new PatternLayout(), stringWriter );
+        LogManager.setLogSystem("jul");
+        java.util.logging.LogManager.getLogManager().reset();
+        Logger rootLogger = java.util.logging.LogManager.getLogManager().getLogger("");
 
-        logger.addAppender( appender );
-        logger.setLevel( Level.DEBUG );
+        rootLogger.addHandler(new MockLogHandler(stringWriter));
+        rootLogger.setLevel(Level.FINE);
+    }
+
+    private static class MockLogHandler extends Handler
+    {
+        private StringWriter writer;
+
+        public MockLogHandler(StringWriter writer)
+        {
+            super();
+            this.writer = writer;
+        }
+
+        @Override
+        public void publish(LogRecord record)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.append(record.getMillis())
+              .append(" - ")
+              .append(record.getSourceClassName())
+              .append("#")
+              .append(record.getSourceMethodName())
+              .append(" - ")
+              .append(record.getMessage())
+              .append('\n');
+            writer.append(sb.toString());
+        }
+
+        @Override
+        public void flush()
+        {
+            writer.flush();
+        }
+
+        @Override
+        public void close() throws SecurityException
+        {
+        }
     }
 }

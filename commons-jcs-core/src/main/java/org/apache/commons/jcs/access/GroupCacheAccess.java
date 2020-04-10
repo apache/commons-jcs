@@ -149,6 +149,8 @@ public class GroupCacheAccess<K, V>
     }
 
     /**
+     * Removes a single item by name from a group.
+     *
      * @param name
      * @param group
      */

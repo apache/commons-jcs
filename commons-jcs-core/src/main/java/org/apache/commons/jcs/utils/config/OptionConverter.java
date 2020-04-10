@@ -21,8 +21,8 @@ package org.apache.commons.jcs.utils.config;
 
 import java.util.Properties;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 
 /**
  * This class is based on the log4j class org.apache.log4j.helpers.OptionConverter that was made by
@@ -32,7 +32,7 @@ import org.apache.commons.logging.LogFactory;
 public class OptionConverter
 {
     /** The logger */
-    private static final Log log = LogFactory.getLog( OptionConverter.class );
+    private static final Log log = LogManager.getLog( OptionConverter.class );
 
     /** System property delimter */
     private static final String DELIM_START = "${";
@@ -71,7 +71,7 @@ public class OptionConverter
 
     /**
      * Escapes special characters.
-     * 
+     *
      * @param s
      * @return String
      */
@@ -145,14 +145,14 @@ public class OptionConverter
         catch ( Throwable e )
         {
             // MS-Java throws com.ms.security.SecurityExceptionEx
-            log.debug( "Was not allowed to read system property \"" + key + "\"." );
+            log.debug( "Was not allowed to read system property \"{0}\".", key );
             return def;
         }
     }
 
     /**
      * Creates an object for the className value of the key.
-     * 
+     *
      * @param props
      * @param key
      * @param defaultValue
@@ -165,10 +165,7 @@ public class OptionConverter
         String className = findAndSubst( key, props );
         if ( className == null )
         {
-            if ( log.isTraceEnabled() )
-            {
-                log.info( "Could not find value for key " + key );
-            }
+            log.trace( "Could not find value for key {0}", key );
             return defaultValue;
         }
         // Trim className to avoid trailing spaces that cause problems.
@@ -178,7 +175,7 @@ public class OptionConverter
     /**
      * If <code>value</code> is "true", then <code>true</code> is returned. If <code>value</code> is
      * "false", then <code>true</code> is returned. Otherwise, <code>default</code> is returned.
-     * 
+     *
      * Case of value is unimportant.
      * @param value
      * @param defaultValue
@@ -204,7 +201,7 @@ public class OptionConverter
 
     /**
      * Converts to int.
-     * 
+     *
      * @param value
      * @param defaultValue
      * @return int
@@ -220,8 +217,7 @@ public class OptionConverter
             }
             catch ( NumberFormatException e )
             {
-                log.error( "[" + s + "] is not in proper int form." );
-                e.printStackTrace();
+                log.error( "[{0}] is not in proper int form.", s, e );
             }
         }
         return defaultValue;
@@ -266,8 +262,8 @@ public class OptionConverter
             }
             catch ( NumberFormatException e )
             {
-                log.error( "[" + s + "] is not in proper int form" );
-                log.error( "[" + value + "] not in expected format", e );
+                log.error( "[{0}] is not in proper int form.", s);
+                log.error( "[{0}] not in expected format", value, e );
             }
         }
         return defaultValue;
@@ -276,7 +272,7 @@ public class OptionConverter
     /**
      * Find the value corresponding to <code>key</code> in <code>props</code>. Then perform variable
      * substitution on the found value.
-     * 
+     *
      * @param key
      * @param props
      * @return substituted string
@@ -296,7 +292,7 @@ public class OptionConverter
         }
         catch ( IllegalArgumentException e )
         {
-            log.error( "Bad option value [" + value + "]", e );
+            log.error( "Bad option value [{0}]", value, e );
             return value;
         }
     }
@@ -305,7 +301,7 @@ public class OptionConverter
      * Instantiate an object given a class name. Check that the <code>className</code> is a subclass
      * of <code>superClass</code>. If that test fails or the object could not be instantiated, then
      * <code>defaultValue</code> is returned.
-     * 
+     *
      * @param className The fully qualified class name of the object to instantiate.
      * @param defaultValue The object to return in case of non-fulfillment
      * @return instantiated object
@@ -328,13 +324,14 @@ public class OptionConverter
                 }
                 catch (ClassCastException e)
                 {
-                    log.error( "A \"" + className + "\" object is not assignable to the generic variable." );
+                    log.error( "A \"{0}\" object is not assignable to the "
+                            + "generic variable.", className );
                     return defaultValue;
                 }
             }
-            catch ( Exception e )
+            catch ( ClassNotFoundException | InstantiationException | IllegalAccessException e )
             {
-                log.error( "Could not instantiate class [" + className + "]", e );
+                log.error( "Could not instantiate class [{0}]", className, e );
             }
         }
         return defaultValue;
@@ -343,9 +340,9 @@ public class OptionConverter
     /**
      * Perform variable substitution in string <code>val</code> from the values of keys found in the
      * system properties.
-     * 
+     *
      * The variable substitution delimiters are <b>${ </b> and <b>} </b>.
-     * 
+     *
      * For example, if the System properties contains "key=value", then the call
      *
      * <pre>
@@ -353,11 +350,11 @@ public class OptionConverter
      * </pre>
      *
      * will set the variable <code>s</code> to "Value of key is value.".
-     * 
+     *
      * If no value could be found for the specified key, then the <code>props</code> parameter is
      * searched, if the value could not be found there, then substitution defaults to the empty
      * string.
-     * 
+     *
      * For example, if system properties contains no value for the key "inexistentKey", then the call
      *
      * <pre>

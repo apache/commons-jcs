@@ -40,8 +40,8 @@ import org.apache.commons.jcs.engine.stats.StatElement;
 import org.apache.commons.jcs.engine.stats.Stats;
 import org.apache.commons.jcs.engine.stats.behavior.IStatElement;
 import org.apache.commons.jcs.engine.stats.behavior.IStats;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 
 /**
  * Used to provide access to multiple services under nowait protection. Composite factory should
@@ -53,7 +53,7 @@ public class LateralCacheNoWaitFacade<K, V>
     extends AbstractAuxiliaryCache<K, V>
 {
     /** The logger */
-    private static final Log log = LogFactory.getLog( LateralCacheNoWaitFacade.class );
+    private static final Log log = LogManager.getLog( LateralCacheNoWaitFacade.class );
 
     /** The queuing facade to the client. */
     public LateralCacheNoWait<K, V>[] noWaits;
@@ -78,10 +78,7 @@ public class LateralCacheNoWaitFacade<K, V>
      */
     public LateralCacheNoWaitFacade(ILateralCacheListener<K, V> listener, LateralCacheNoWait<K, V>[] noWaits, ILateralCacheAttributes cattr )
     {
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "CONSTRUCTING NO WAIT FACADE" );
-        }
+        log.debug( "CONSTRUCTING NO WAIT FACADE" );
         this.listener = listener;
         this.noWaits = noWaits;
         this.cacheName = cattr.getCacheName();
@@ -119,10 +116,7 @@ public class LateralCacheNoWaitFacade<K, V>
 
         if ( containsNoWait( noWait ) )
         {
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "No Wait already contained, [" + noWait + "]" );
-            }
+            log.debug( "No Wait already contained, [{0}]", noWait );
             return false;
         }
 
@@ -189,10 +183,8 @@ public class LateralCacheNoWaitFacade<K, V>
     public void update( ICacheElement<K, V> ce )
         throws IOException
     {
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "updating through lateral cache facade, noWaits.length = " + noWaits.length );
-        }
+        log.debug( "updating through lateral cache facade, noWaits.length = {0}",
+                noWaits.length );
 
         for (LateralCacheNoWait<K, V> nw : noWaits)
         {

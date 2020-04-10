@@ -27,8 +27,8 @@ import org.apache.commons.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes;
 import org.apache.commons.jcs.auxiliary.remote.behavior.IRemoteCacheConstants;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs.engine.behavior.IElementSerializer;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 
 /**
  * Registered with RemoteCache server. The server updates the local caches via this listener. Each
@@ -42,7 +42,7 @@ public class RemoteCacheListener<K, V>
     implements IRemoteCacheConstants
 {
     /** The logger */
-    private static final Log log = LogFactory.getLog( RemoteCacheListener.class );
+    private static final Log log = LogManager.getLog( RemoteCacheListener.class );
 
     /** Has this client been shutdown. */
     private boolean disposed = false;
@@ -85,10 +85,7 @@ public class RemoteCacheListener<K, V>
     {
         if ( !disposed )
         {
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "Unexporting listener." );
-            }
+            log.info( "Unexporting listener." );
             try
             {
                 UnicastRemoteObject.unexportObject( this, true );

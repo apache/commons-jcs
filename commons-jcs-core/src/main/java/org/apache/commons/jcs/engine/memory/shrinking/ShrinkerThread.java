@@ -26,8 +26,8 @@ import org.apache.commons.jcs.engine.behavior.IElementAttributes;
 import org.apache.commons.jcs.engine.control.CompositeCache;
 import org.apache.commons.jcs.engine.control.event.behavior.ElementEventType;
 import org.apache.commons.jcs.engine.memory.behavior.IMemoryCache;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 
 /**
  * A background memory shrinker. Memory problems and concurrent modification exception caused by
@@ -38,7 +38,7 @@ public class ShrinkerThread<K, V>
     implements Runnable
 {
     /** The logger */
-    private static final Log log = LogFactory.getLog( ShrinkerThread.class );
+    private static final Log log = LogManager.getLog( ShrinkerThread.class );
 
     /** The CompositeCache instance which this shrinker is watching */
     private final CompositeCache<K, V> cache;
@@ -108,10 +108,7 @@ public class ShrinkerThread<K, V>
      */
     protected void shrink()
     {
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "Shrinking memory cache for: " + this.cache.getCacheName() );
-        }
+        log.debug( "Shrinking memory cache for: {0}", () -> this.cache.getCacheName() );
 
         IMemoryCache<K, V> memCache = cache.getMemoryCache();
 
@@ -119,26 +116,20 @@ public class ShrinkerThread<K, V>
         {
             Set<K> keys = memCache.getKeySet();
             int size = keys.size();
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "Keys size: " + size );
-            }
-
-            ICacheElement<K, V> cacheElement;
-            IElementAttributes attributes;
+            log.debug( "Keys size: {0}", size );
 
             int spoolCount = 0;
 
             for (K key : keys)
             {
-                cacheElement = memCache.getQuiet( key );
+                final ICacheElement<K, V> cacheElement = memCache.getQuiet( key );
 
                 if ( cacheElement == null )
                 {
                     continue;
                 }
 
-                attributes = cacheElement.getElementAttributes();
+                IElementAttributes attributes = cacheElement.getElementAttributes();
 
                 boolean remove = false;
 
@@ -146,7 +137,7 @@ public class ShrinkerThread<K, V>
 
                 // If the element is not eternal, check if it should be
                 // removed and remove it if so.
-                if ( !cacheElement.getElementAttributes().getIsEternal() )
+                if ( !attributes.getIsEternal() )
                 {
                     remove = cache.isExpired( cacheElement, now,
                             ElementEventType.EXCEEDED_MAXLIFE_BACKGROUND,
@@ -154,7 +145,7 @@ public class ShrinkerThread<K, V>
 
                     if ( remove )
                     {
-                        memCache.remove( cacheElement.getKey() );
+                        memCache.remove( key );
                     }
                 }
 
@@ -169,10 +160,7 @@ public class ShrinkerThread<K, V>
 
                         if ( lastAccessTime + maxMemoryIdleTime < now )
                         {
-                            if ( log.isDebugEnabled() )
-                            {
-                                log.debug( "Exceeded memory idle time: " + cacheElement.getKey() );
-                            }
+                            log.debug( "Exceeded memory idle time: {0}", key );
 
                             // Shouldn't we ensure that the element is
                             // spooled before removing it from memory?
@@ -182,21 +170,14 @@ public class ShrinkerThread<K, V>
 
                             spoolCount++;
 
-                            memCache.remove( cacheElement.getKey() );
-
+                            memCache.remove( key );
                             memCache.waterfal( cacheElement );
-
-                            key = null;
-                            cacheElement = null;
                         }
                     }
                     else
                     {
-                        if ( log.isDebugEnabled() )
-                        {
-                            log.debug( "spoolCount = '" + spoolCount + "'; " + "maxSpoolPerRun = '" + maxSpoolPerRun
-                                + "'" );
-                        }
+                        log.debug( "spoolCount = \"{0}\"; maxSpoolPerRun = \"{1}\"",
+                                spoolCount, maxSpoolPerRun );
 
                         // stop processing if limit has been reached.
                         if ( spoolLimit && spoolCount >= this.maxSpoolPerRun )

@@ -21,11 +21,11 @@ package org.apache.commons.jcs.engine.logging;
 
 import org.apache.commons.jcs.engine.logging.behavior.ICacheEvent;
 import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 
 /**
- * This implementation simple logs to a commons logger at debug level, for all events. It's mainly
+ * This implementation simple logs to a logger at debug level, for all events. It's mainly
  * for testing. It isn't very useful otherwise.
  */
 public class CacheEventLoggerDebugLogger
@@ -35,7 +35,7 @@ public class CacheEventLoggerDebugLogger
     private String logCategoryName = CacheEventLoggerDebugLogger.class.getName();
 
     /** The logger. This is recreated on set logCategoryName */
-    private Log log = LogFactory.getLog( logCategoryName );
+    private Log log = LogManager.getLog( logCategoryName );
 
     /**
      * @param source
@@ -67,10 +67,7 @@ public class CacheEventLoggerDebugLogger
     @Override
     public void logApplicationEvent( String source, String eventName, String optionalDetails )
     {
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( source + " | " + eventName + " | " + optionalDetails );
-        }
+        log.debug( "{0} | {1} | {2}", source, eventName, optionalDetails );
     }
 
     /**
@@ -81,10 +78,7 @@ public class CacheEventLoggerDebugLogger
     @Override
     public void logError( String source, String eventName, String errorMessage )
     {
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( source + " | " + eventName + " | " + errorMessage );
-        }
+        log.debug( "{0} | {1} | {2}", source, eventName, errorMessage );
     }
 
     /**
@@ -93,10 +87,7 @@ public class CacheEventLoggerDebugLogger
     @Override
     public <T> void logICacheEvent( ICacheEvent<T> event )
     {
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( event );
-        }
+        log.debug( event );
     }
 
     /**
@@ -107,7 +98,7 @@ public class CacheEventLoggerDebugLogger
         if ( logCategoryName != null && !logCategoryName.equals( this.logCategoryName ) )
         {
             this.logCategoryName = logCategoryName;
-            log = LogFactory.getLog( logCategoryName );
+            log = LogManager.getLog( logCategoryName );
         }
     }
 }

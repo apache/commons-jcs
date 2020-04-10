@@ -41,9 +41,9 @@ import org.apache.commons.jcs.engine.stats.StatElement;
 import org.apache.commons.jcs.engine.stats.Stats;
 import org.apache.commons.jcs.engine.stats.behavior.IStatElement;
 import org.apache.commons.jcs.engine.stats.behavior.IStats;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 import org.apache.commons.jcs.utils.struct.LRUMap;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * Abstract class providing a base implementation of a disk cache, which can be easily extended to
@@ -61,7 +61,7 @@ public abstract class AbstractDiskCache<K, V>
     extends AbstractAuxiliaryCacheEventLogging<K, V>
 {
     /** The logger */
-    private static final Log log = LogFactory.getLog( AbstractDiskCache.class );
+    private static final Log log = LogManager.getLog( AbstractDiskCache.class );
 
     /** Generic disk cache attributes */
     private IDiskCacheAttributes diskCacheAttributes = null;
@@ -190,10 +190,8 @@ public abstract class AbstractDiskCache<K, V>
     public final void update( ICacheElement<K, V> cacheElement )
         throws IOException
     {
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "Putting element in purgatory, cacheName: " + cacheName + ", key: " + cacheElement.getKey() );
-        }
+        log.debug( "Putting element in purgatory, cacheName: {0}, key: {1}",
+                () -> cacheName, () -> cacheElement.getKey() );
 
         try
         {
@@ -237,10 +235,7 @@ public abstract class AbstractDiskCache<K, V>
 
         if ( !alive )
         {
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "get was called, but the disk cache is not alive." );
-            }
+            log.debug( "get was called, but the disk cache is not alive." );
             return null;
         }
 
@@ -255,12 +250,9 @@ public abstract class AbstractDiskCache<K, V>
         {
             purgHits++;
 
-            if ( log.isDebugEnabled() )
+            if ( purgHits % 100 == 0 )
             {
-                if ( purgHits % 100 == 0 )
-                {
-                    log.debug( "Purgatory hits = " + purgHits );
-                }
+                log.debug( "Purgatory hits = {0}", purgHits );
             }
 
             // Since the element will go back to the memory cache, we could set
@@ -276,10 +268,8 @@ public abstract class AbstractDiskCache<K, V>
             // Do not set spoolable to false. Just let it go to disk. This
             // will allow the memory size = 0 setting to work well.
 
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "Found element in purgatory, cacheName: " + cacheName + ", key: " + key );
-            }
+            log.debug( "Found element in purgatory, cacheName: {0}, key: {1}",
+                    cacheName, key );
 
             return pe.getCacheElement();
         }
@@ -413,10 +403,8 @@ public abstract class AbstractDiskCache<K, V>
         }
         else
         {
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "RemoveAll was requested but the request was not fulfilled: allowRemoveAll is set to false." );
-            }
+            log.info( "RemoveAll was requested but the request was not "
+                    + "fulfilled: allowRemoveAll is set to false." );
         }
     }
 
@@ -456,7 +444,8 @@ public abstract class AbstractDiskCache<K, V>
                     break;
                 }
             }
-            log.info( "No longer waiting for event queue to finish: " + cacheEventQueue.getStatistics() );
+            log.info( "No longer waiting for event queue to finish: {0}",
+                    () -> cacheEventQueue.getStatistics() );
         });
         t.start();
         // wait up to 60 seconds for dispose and then quit if not done.

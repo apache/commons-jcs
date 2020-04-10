@@ -37,15 +37,15 @@ import org.apache.commons.jcs.engine.stats.StatElement;
 import org.apache.commons.jcs.engine.stats.Stats;
 import org.apache.commons.jcs.engine.stats.behavior.IStatElement;
 import org.apache.commons.jcs.engine.stats.behavior.IStats;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 
 /** An abstract base for the No Wait Facade.  Different implementations will failover differently. */
 public abstract class AbstractRemoteCacheNoWaitFacade<K, V>
     extends AbstractAuxiliaryCache<K, V>
 {
     /** log instance */
-    private static final Log log = LogFactory.getLog( AbstractRemoteCacheNoWaitFacade.class );
+    private static final Log log = LogManager.getLog( AbstractRemoteCacheNoWaitFacade.class );
 
     /** The connection to a remote server, or a zombie. */
     protected List<RemoteCacheNoWait<K, V>> noWaits;
@@ -64,10 +64,7 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K, V>
     public AbstractRemoteCacheNoWaitFacade( List<RemoteCacheNoWait<K,V>> noWaits, IRemoteCacheAttributes rca,
                                     ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer )
     {
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "CONSTRUCTING NO WAIT FACADE" );
-        }
+        log.debug( "CONSTRUCTING NO WAIT FACADE" );
         this.remoteCacheAttributes = rca;
         setCacheEventLogger( cacheEventLogger );
         setElementSerializer( elementSerializer );
@@ -89,10 +86,8 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K, V>
     public void update( ICacheElement<K, V> ce )
         throws IOException
     {
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "updating through cache facade, noWaits.length = " + noWaits.size() );
-        }
+        log.debug( "updating through cache facade, noWaits.length = {0}",
+                () -> noWaits.size() );
 
         for (RemoteCacheNoWait<K, V> nw : noWaits)
         {

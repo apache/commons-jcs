@@ -21,8 +21,8 @@ package org.apache.commons.jcs.engine;
 
 import org.apache.commons.jcs.engine.behavior.ICacheEventQueue;
 import org.apache.commons.jcs.engine.behavior.ICacheListener;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 
 /**
  * This class hands out event Queues. This allows us to change the implementation more easily. You
@@ -33,7 +33,7 @@ import org.apache.commons.logging.LogFactory;
 public class CacheEventQueueFactory<K, V>
 {
     /** The logger. */
-    private static final Log log = LogFactory.getLog( CacheEventQueueFactory.class );
+    private static final Log log = LogManager.getLog( CacheEventQueueFactory.class );
 
     /**
      * The most commonly used factory method.
@@ -67,10 +67,7 @@ public class CacheEventQueueFactory<K, V>
                                                    int maxFailure, int waitBeforeRetry, String threadPoolName,
                                                    ICacheEventQueue.QueueType poolType )
     {
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "threadPoolName = [" + threadPoolName + "] poolType = " + poolType + " " );
-        }
+        log.debug( "threadPoolName = [{0}] poolType = {1}", threadPoolName, poolType );
 
         ICacheEventQueue<K, V> eventQueue = null;
         if ( poolType == null || ICacheEventQueue.QueueType.SINGLE == poolType )

@@ -31,17 +31,17 @@ import org.apache.commons.jcs.engine.behavior.ICacheElementSerialized;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs.engine.control.CompositeCacheManager;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 import org.apache.commons.jcs.utils.net.HostNameUtil;
 import org.apache.commons.jcs.utils.serialization.SerializationConversionUtil;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /** Shared listener base. */
 public abstract class AbstractRemoteCacheListener<K, V>
     implements IRemoteCacheListener<K, V>
 {
     /** The logger */
-    private static final Log log = LogFactory.getLog( AbstractRemoteCacheListener.class );
+    private static final Log log = LogManager.getLog( AbstractRemoteCacheListener.class );
 
     /** The cached name of the local host. The remote server gets this for logging purposes. */
     private static String localHostName = null;
@@ -91,10 +91,7 @@ public abstract class AbstractRemoteCacheListener<K, V>
         throws IOException
     {
         listenerId = id;
-        if ( log.isInfoEnabled() )
-        {
-            log.info( "set listenerId = [" + id + "]" );
-        }
+        log.info( "set listenerId = [{0}]", id );
     }
 
     /**
@@ -108,10 +105,7 @@ public abstract class AbstractRemoteCacheListener<K, V>
     public long getListenerId()
         throws IOException
     {
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "get listenerId = [" + listenerId + "]" );
-        }
+        log.debug( "get listenerId = [{0}]", listenerId );
         return listenerId;
 
     }
@@ -126,10 +120,7 @@ public abstract class AbstractRemoteCacheListener<K, V>
     public RemoteType getRemoteType()
         throws IOException
     {
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "getRemoteType = [" + irca.getRemoteType() + "]" );
-        }
+        log.debug( "getRemoteType = [{0}]", () -> irca.getRemoteType() );
         return irca.getRemoteType();
     }
 
@@ -149,35 +140,23 @@ public abstract class AbstractRemoteCacheListener<K, V>
     {
         if ( irca.getRemoveUponRemotePut() )
         {
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "PUTTING ELEMENT FROM REMOTE, (  invalidating ) " );
-            }
+            log.debug( "PUTTING ELEMENT FROM REMOTE, (  invalidating ) " );
             handleRemove( cb.getCacheName(), cb.getKey() );
         }
         else
         {
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "PUTTING ELEMENT FROM REMOTE, ( updating ) " );
-                log.debug( "cb = " + cb );
-            }
+            log.debug( "PUTTING ELEMENT FROM REMOTE, ( updating ) " );
+            log.debug( "cb = {0}", cb );
 
             // Eventually the instance of will not be necessary.
             if ( cb instanceof ICacheElementSerialized )
             {
-                if ( log.isDebugEnabled() )
-                {
-                    log.debug( "Object needs to be deserialized." );
-                }
+                log.debug( "Object needs to be deserialized." );
                 try
                 {
                     cb = SerializationConversionUtil.getDeSerializedCacheElement(
                             (ICacheElementSerialized<K, V>) cb, this.elementSerializer );
-                    if ( log.isDebugEnabled() )
-                    {
-                        log.debug( "Deserialized result = " + cb );
-                    }
+                    log.debug( "Deserialized result = {0}", cb );
                 }
                 catch ( IOException e )
                 {
@@ -204,10 +183,7 @@ public abstract class AbstractRemoteCacheListener<K, V>
     public void handleRemove( String cacheName, K key )
         throws IOException
     {
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "handleRemove> cacheName=" + cacheName + ", key=" + key );
-        }
+        log.debug( "handleRemove> cacheName={0}, key={1}", cacheName, key );
 
         getCacheManager().<K, V>getCache( cacheName ).localRemove( key );
     }
@@ -222,10 +198,7 @@ public abstract class AbstractRemoteCacheListener<K, V>
     public void handleRemoveAll( String cacheName )
         throws IOException
     {
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "handleRemoveAll> cacheName=" + cacheName );
-        }
+        log.debug( "handleRemoveAll> cacheName={0}", cacheName );
 
         getCacheManager().<K, V>getCache( cacheName ).localRemoveAll();
     }
@@ -238,10 +211,7 @@ public abstract class AbstractRemoteCacheListener<K, V>
     public void handleDispose( String cacheName )
         throws IOException
     {
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "handleDispose> cacheName=" + cacheName );
-        }
+        log.debug( "handleDispose> cacheName={0}", cacheName );
         // TODO consider what to do here, we really don't want to
         // dispose, we just want to disconnect.
         // just allow the cache to go into error recovery mode.
@@ -260,11 +230,8 @@ public abstract class AbstractRemoteCacheListener<K, V>
             {
                 cacheMgr = CompositeCacheManager.getInstance();
 
-                if ( log.isDebugEnabled() )
-                {
-                    log.debug( "had to get cacheMgr" );
-                    log.debug( "cacheMgr = " + cacheMgr );
-                }
+                log.debug( "had to get cacheMgr" );
+                log.debug( "cacheMgr = {0}", cacheMgr );
             }
             catch (CacheException e)
             {
@@ -273,10 +240,7 @@ public abstract class AbstractRemoteCacheListener<K, V>
         }
         else
         {
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "already got cacheMgr = " + cacheMgr );
-            }
+            log.debug( "already got cacheMgr = {0}", cacheMgr );
         }
 
         return cacheMgr;
@@ -315,9 +279,9 @@ public abstract class AbstractRemoteCacheListener<K, V>
     public String toString()
     {
         StringBuilder buf = new StringBuilder();
-        buf.append( "\n AbstractRemoteCacheListener: " );
-        buf.append( "\n RemoteHost = " + irca.getRemoteLocation().toString() );
-        buf.append( "\n ListenerId = " + listenerId );
+        buf.append( "\n AbstractRemoteCacheListener: " )
+           .append( "\n RemoteHost = ").append(irca.getRemoteLocation())
+           .append( "\n ListenerId = ").append(listenerId);
         return buf.toString();
     }
 }

@@ -1,5 +1,7 @@
 package org.apache.commons.jcs.utils.access;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -28,7 +30,7 @@ package org.apache.commons.jcs.utils.access;
 public abstract class AbstractJCSWorkerHelper<V> implements JCSWorkerHelper<V>
 {
     /** finished flag. Can't we use wait notify? */
-    private boolean finished = false;
+    private final AtomicBoolean finished = new AtomicBoolean(false);
 
     /**
      * Default
@@ -42,17 +44,17 @@ public abstract class AbstractJCSWorkerHelper<V> implements JCSWorkerHelper<V>
      * @return finished
      */
     @Override
-    public synchronized boolean isFinished()
+    public boolean isFinished()
     {
-        return finished;
+        return finished.get();
     }
 
     /**
      * @param isFinished
      */
     @Override
-    public synchronized void setFinished( boolean isFinished )
+    public void setFinished( boolean isFinished )
     {
-        finished = isFinished;
+        finished.set(isFinished);
     }
 }

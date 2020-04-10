@@ -31,9 +31,9 @@ import org.apache.commons.jcs.engine.memory.util.MemoryElementDescriptor;
 import org.apache.commons.jcs.engine.stats.StatElement;
 import org.apache.commons.jcs.engine.stats.behavior.IStatElement;
 import org.apache.commons.jcs.engine.stats.behavior.IStats;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 import org.apache.commons.jcs.utils.struct.DoubleLinkedList;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * This class contains methods that are common to memory caches using the double linked list, such
@@ -46,7 +46,7 @@ import org.apache.commons.logging.LogFactory;
 public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends AbstractMemoryCache<K, V>
 {
     /** The logger. */
-    private static final Log log = LogFactory.getLog(AbstractDoubleLinkedListMemoryCache.class);
+    private static final Log log = LogManager.getLog(AbstractDoubleLinkedListMemoryCache.class);
 
     /** thread-safe double linked list for lru */
     protected DoubleLinkedList<MemoryElementDescriptor<K, V>> list; // TODO privatise
@@ -62,7 +62,7 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
     {
         super.initialize(hub);
         list = new DoubleLinkedList<>();
-        log.info("initialized MemoryCache for " + getCacheName());
+        log.info("initialized MemoryCache for {0}", () -> getCacheName());
     }
 
     /**
@@ -145,19 +145,15 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
             return;
         }
 
-        if (log.isDebugEnabled())
-        {
-            log.debug("In memory limit reached, spooling");
-        }
+        log.debug("In memory limit reached, spooling");
 
         // Write the last 'chunkSize' items to disk.
         int chunkSizeCorrected = Math.min(size, chunkSize);
 
-        if (log.isDebugEnabled())
-        {
-            log.debug("About to spool to disk cache, map size: " + size + ", max objects: "
-                + this.getCacheAttributes().getMaxObjects() + ", maximum items to spool: " + chunkSizeCorrected);
-        }
+        log.debug("About to spool to disk cache, map size: {0}, max objects: {1}, "
+                + "maximum items to spool: {2}", () -> size,
+                () -> this.getCacheAttributes().getMaxObjects(),
+                () -> chunkSizeCorrected);
 
         // The spool will put them in a disk event queue, so there is no
         // need to pre-queue the queuing. This would be a bit wasteful
@@ -179,7 +175,8 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
             // where there is none.
             if (log.isDebugEnabled() && map.size() != list.size())
             {
-                log.debug("update: After spool, size mismatch: map.size() = " + map.size() + ", linked list size = " + list.size());
+                log.debug("update: After spool, size mismatch: map.size() = {0}, "
+                        + "linked list size = {1}", map.size(), list.size());
             }
         }
         finally
@@ -187,10 +184,8 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
             lock.unlock();
         }
 
-        if (log.isDebugEnabled())
-        {
-            log.debug("update: After spool map size: " + map.size() + " linked list size = " + list.size());
-        }
+        log.debug("update: After spool map size: {0} linked list size = {1}",
+                () -> map.size(), () -> list.size());
     }
 
     /**
@@ -250,9 +245,9 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
                 getCompositeCache().spoolToDisk(toSpool);
                 if (map.remove(toSpool.getKey()) == null)
                 {
-                    log.warn("update: remove failed for key: " + toSpool.getKey());
+                    log.warn("update: remove failed for key: {0}", toSpool.getKey());
 
-                    if (log.isDebugEnabled())
+                    if (log.isTraceEnabled())
                     {
                         verifyCache();
                     }
@@ -277,7 +272,7 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
     {
         ICacheElement<K, V> ce = super.get(key);
 
-        if (log.isDebugEnabled())
+        if (log.isTraceEnabled())
         {
             verifyCache();
         }
@@ -343,7 +338,7 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
         {
             MemoryElementDescriptor<K, V> me = new MemoryElementDescriptor<>(ce);
             list.addFirst(me);
-            if ( log.isDebugEnabled() )
+            if ( log.isTraceEnabled() )
             {
                 verifyCache(ce.getKey());
             }
@@ -370,7 +365,7 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
         {
             MemoryElementDescriptor<K, V> me = new MemoryElementDescriptor<>(ce);
             list.addLast(me);
-            if ( log.isDebugEnabled() )
+            if ( log.isTraceEnabled() )
             {
                 verifyCache(ce.getKey());
             }
@@ -391,10 +386,11 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
     // No generics for public fields
     private void dumpCacheEntries()
     {
-        log.debug("dumpingCacheEntries");
+        log.trace("dumpingCacheEntries");
         for (MemoryElementDescriptor<K, V> me = list.getFirst(); me != null; me = (MemoryElementDescriptor<K, V>) me.next)
         {
-            log.debug("dumpCacheEntries> key=" + me.getCacheElement().getKey() + ", val=" + me.getCacheElement().getVal());
+            log.trace("dumpCacheEntries> key={0}, val={1}",
+                    me.getCacheElement().getKey(), me.getCacheElement().getVal());
         }
     }
 
@@ -407,52 +403,56 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
     private void verifyCache()
     {
         boolean found = false;
-        log.debug("verifycache[" + getCacheName() + "]: mapContains " + map.size() + " elements, linked list contains "
-            + list.size() + " elements");
-        log.debug("verifycache: checking linked list by key ");
+        log.trace("verifycache[{0}]: map contains {1} elements, linked list "
+                + "contains {2} elements", getCacheName(), map.size(),
+                list.size());
+        log.trace("verifycache: checking linked list by key ");
         for (MemoryElementDescriptor<K, V> li = list.getFirst(); li != null; li = (MemoryElementDescriptor<K, V>) li.next)
         {
             K key = li.getCacheElement().getKey();
             if (!map.containsKey(key))
             {
-                log.error("verifycache[" + getCacheName() + "]: map does not contain key : " + key);
-                log.error("key class=" + key.getClass());
-                log.error("key hashcode=" + key.hashCode());
-                log.error("key toString=" + key.toString());
+                log.error("verifycache[{0}]: map does not contain key : {1}",
+                        getCacheName(), key);
+                log.error("key class={0}", key.getClass());
+                log.error("key hashcode={0}", key.hashCode());
+                log.error("key toString={0}", key.toString());
                 if (key instanceof GroupAttrName)
                 {
                     GroupAttrName<?> name = (GroupAttrName<?>) key;
-                    log.error("GroupID hashcode=" + name.groupId.hashCode());
-                    log.error("GroupID.class=" + name.groupId.getClass());
-                    log.error("AttrName hashcode=" + name.attrName.hashCode());
-                    log.error("AttrName.class=" + name.attrName.getClass());
+                    log.error("GroupID hashcode={0}", name.groupId.hashCode());
+                    log.error("GroupID.class={0}", name.groupId.getClass());
+                    log.error("AttrName hashcode={0}", name.attrName.hashCode());
+                    log.error("AttrName.class={0}", name.attrName.getClass());
                 }
                 dumpMap();
             }
             else if (map.get(key) == null)
             {
-                log.error("verifycache[" + getCacheName() + "]: linked list retrieval returned null for key: " + key);
+                log.error("verifycache[{0}]: linked list retrieval returned "
+                        + "null for key: {1}", getCacheName(), key);
             }
         }
 
-        log.debug("verifycache: checking linked list by value ");
-        for (MemoryElementDescriptor<K, V> li3 = list.getFirst(); li3 != null; li3 = (MemoryElementDescriptor<K, V>) li3.next)
+        log.trace("verifycache: checking linked list by value ");
+        for (MemoryElementDescriptor<K, V> li = list.getFirst(); li != null; li = (MemoryElementDescriptor<K, V>) li.next)
         {
-            if (map.containsValue(li3) == false)
+            if (!map.containsValue(li))
             {
-                log.error("verifycache[" + getCacheName() + "]: map does not contain value : " + li3);
+                log.error("verifycache[{0}]: map does not contain value: {1}",
+                        getCacheName(), li);
                 dumpMap();
             }
         }
 
-        log.debug("verifycache: checking via keysets!");
+        log.trace("verifycache: checking via keysets!");
         for (Object val : map.keySet())
         {
             found = false;
 
-            for (MemoryElementDescriptor<K, V> li2 = list.getFirst(); li2 != null; li2 = (MemoryElementDescriptor<K, V>) li2.next)
+            for (MemoryElementDescriptor<K, V> li = list.getFirst(); li != null; li = (MemoryElementDescriptor<K, V>) li.next)
             {
-                if (val.equals(li2.getCacheElement().getKey()))
+                if (val.equals(li.getCacheElement().getKey()))
                 {
                     found = true;
                     break;
@@ -460,7 +460,8 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
             }
             if (!found)
             {
-                log.error("verifycache[" + getCacheName() + "]: key not found in list : " + val);
+                log.error("verifycache[{0}]: key not found in list : {1}",
+                        getCacheName(), val);
                 dumpCacheEntries();
                 if (map.containsKey(val))
                 {
@@ -492,13 +493,14 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
             if (li.getCacheElement().getKey() == key)
             {
                 found = true;
-                log.debug("verifycache(key) key match: " + key);
+                log.trace("verifycache(key) key match: {0}", key);
                 break;
             }
         }
         if (!found)
         {
-            log.error("verifycache(key)[" + getCacheName() + "], couldn't find key! : " + key);
+            log.error("verifycache(key)[{0}], couldn't find key! : {1}",
+                    getCacheName(), key);
         }
     }
 

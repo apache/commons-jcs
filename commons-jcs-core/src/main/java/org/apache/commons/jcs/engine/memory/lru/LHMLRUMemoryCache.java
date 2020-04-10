@@ -28,8 +28,8 @@ import org.apache.commons.jcs.engine.control.CompositeCache;
 import org.apache.commons.jcs.engine.memory.AbstractMemoryCache;
 import org.apache.commons.jcs.engine.memory.util.MemoryElementDescriptor;
 import org.apache.commons.jcs.engine.stats.behavior.IStats;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 
 /**
  * This is a test memory manager using the jdk1.4 LinkedHashMap.
@@ -38,7 +38,7 @@ public class LHMLRUMemoryCache<K, V>
     extends AbstractMemoryCache<K, V>
 {
     /** The Logger. */
-    private static final Log log = LogFactory.getLog( LRUMemoryCache.class );
+    private static final Log log = LogManager.getLog( LRUMemoryCache.class );
 
     /**
      * For post reflection creation initialization
@@ -49,7 +49,7 @@ public class LHMLRUMemoryCache<K, V>
     public void initialize( CompositeCache<K, V> hub )
     {
         super.initialize( hub );
-        log.info( "initialized LHMLRUMemoryCache for " + getCacheName() );
+        log.info( "initialized LHMLRUMemoryCache for {0}", () -> getCacheName() );
     }
 
     /**
@@ -189,18 +189,12 @@ public class LHMLRUMemoryCache<K, V>
             }
             else
             {
-                if ( log.isDebugEnabled() )
-                {
-                    log.debug( "LHMLRU max size: " + getCacheAttributes().getMaxObjects()
-                        + ".  Spooling element, key: " + element.getKey() );
-                }
+                log.debug( "LHMLRU max size: {0}. Spooling element, key: {1}",
+                        () -> getCacheAttributes().getMaxObjects(), () -> element.getKey() );
 
                 waterfal( element );
 
-                if ( log.isDebugEnabled() )
-                {
-                    log.debug( "LHMLRU size: " + map.size() );
-                }
+                log.debug( "LHMLRU size: {0}", () -> map.size() );
             }
             return true;
         }

@@ -29,9 +29,9 @@ import org.apache.commons.jcs.auxiliary.remote.server.behavior.RemoteType;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 import org.apache.commons.jcs.utils.config.OptionConverter;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * The RemoteCacheFactory creates remote caches for the cache hub. It returns a no wait facade which
@@ -43,7 +43,7 @@ public class RemoteHttpCacheFactory
     extends AbstractAuxiliaryCacheFactory
 {
     /** The logger */
-    private static final Log log = LogFactory.getLog( RemoteHttpCacheFactory.class );
+    private static final Log log = LogManager.getLog( RemoteHttpCacheFactory.class );
 
     /** Monitor thread instance */
     private RemoteHttpCacheMonitor monitor;
@@ -100,11 +100,9 @@ public class RemoteHttpCacheFactory
 
         if ( remoteService == null )
         {
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "Creating the default client for " + cattr.getCacheName());
-            }
-            remoteService = new RemoteHttpCacheClient<>( );
+            log.info( "Creating the default client for {0}",
+                    () -> cattr.getCacheName());
+            remoteService = new RemoteHttpCacheClient<>();
         }
 
         remoteService.initialize( cattr );

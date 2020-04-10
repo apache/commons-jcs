@@ -19,10 +19,9 @@ package org.apache.commons.jcs;
  * under the License.
  */
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
 import org.apache.commons.jcs.access.CacheAccess;
+
+import junit.framework.TestCase;
 
 /**
  * Runs a few thousand queries.
@@ -43,33 +42,6 @@ public class JCSLightLoadUnitTest
     {
         JCS.setConfigFilename( "/TestSimpleLoad.ccf" );
         JCS.getInstance( "testCache1" );
-    }
-
-    /**
-     * @param testName
-     */
-    public JCSLightLoadUnitTest( String testName )
-    {
-        super( testName );
-    }
-
-    /**
-     * Description of the Method
-     * @param args Description of the Parameter
-     */
-    public static void main( String args[] )
-    {
-        String[] testCaseName = { JCSLightLoadUnitTest.class.getName() };
-        junit.textui.TestRunner.main( testCaseName );
-    }
-
-    /**
-     * A unit test suite for JUnit
-     * @return The test suite
-     */
-    public static Test suite()
-    {
-        return new TestSuite( JCSLightLoadUnitTest.class );
     }
 
     /**

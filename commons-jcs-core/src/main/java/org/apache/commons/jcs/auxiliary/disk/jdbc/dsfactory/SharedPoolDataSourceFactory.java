@@ -28,8 +28,8 @@ import org.apache.commons.dbcp2.cpdsadapter.DriverAdapterCPDS;
 import org.apache.commons.dbcp2.datasources.InstanceKeyDataSource;
 import org.apache.commons.dbcp2.datasources.SharedPoolDataSource;
 import org.apache.commons.jcs.auxiliary.disk.jdbc.JDBCDiskCacheAttributes;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 
 /**
  * A factory that looks up the DataSource using the JDBC2 pool methods.
@@ -42,7 +42,7 @@ import org.apache.commons.logging.LogFactory;
 public class SharedPoolDataSourceFactory implements DataSourceFactory
 {
     /** The log. */
-    private static Log log = LogFactory.getLog(SharedPoolDataSourceFactory.class);
+    private static Log log = LogManager.getLog(SharedPoolDataSourceFactory.class);
 
     /** The name of the factory. */
     private String name;

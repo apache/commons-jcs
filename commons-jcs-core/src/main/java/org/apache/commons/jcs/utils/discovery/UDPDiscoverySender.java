@@ -27,10 +27,10 @@ import java.util.ArrayList;
  */
 
 import org.apache.commons.jcs.engine.CacheInfo;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 import org.apache.commons.jcs.utils.discovery.UDPDiscoveryMessage.BroadcastType;
 import org.apache.commons.jcs.utils.serialization.StandardSerializer;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * This is a generic sender for the UDPDiscovery process.
@@ -40,7 +40,7 @@ import org.apache.commons.logging.LogFactory;
 public class UDPDiscoverySender implements AutoCloseable
 {
     /** The logger. */
-    private static final Log log = LogFactory.getLog( UDPDiscoverySender.class );
+    private static final Log log = LogManager.getLog( UDPDiscoverySender.class );
 
     /** The socket */
     private MulticastSocket localSocket;
@@ -70,10 +70,7 @@ public class UDPDiscoverySender implements AutoCloseable
     {
         try
         {
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "Constructing socket for sender on port [" + port + "]" );
-            }
+            log.debug( "Constructing socket for sender on port [{0}]", port );
             localSocket = new MulticastSocket( port );
 
             // Remote address.
@@ -81,8 +78,7 @@ public class UDPDiscoverySender implements AutoCloseable
         }
         catch ( IOException e )
         {
-            log.error( "Could not bind to multicast address [" + host + "]", e );
-
+            log.error( "Could not bind to multicast address [{0}]", host, e );
             throw e;
         }
 
@@ -95,30 +91,10 @@ public class UDPDiscoverySender implements AutoCloseable
     @Override
     public void close()
     {
-        try
+        if ( this.localSocket != null && !this.localSocket.isClosed() )
         {
-            if ( this.localSocket != null && !this.localSocket.isClosed() )
-            {
-                this.localSocket.close();
-            }
+            this.localSocket.close();
         }
-        catch ( Exception e )
-        {
-            log.error( "Problem closing sender", e );
-        }
-    }
-
-    /**
-     * Just being careful about closing the socket.
-     * <p>
-     * @throws Throwable
-     */
-    @Override
-    protected void finalize()
-        throws Throwable
-    {
-        super.finalize();
-        close();
     }
 
     /**
@@ -140,11 +116,8 @@ public class UDPDiscoverySender implements AutoCloseable
             throw new IOException( "Socket is closed, cannot send message." );
         }
 
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "sending UDPDiscoveryMessage, address [" + multicastAddress + "], port [" + multicastPort
-                + "], message = " + message );
-        }
+        log.debug( "sending UDPDiscoveryMessage, address [{0}], port [{1}], "
+                + "message = {2}", multicastAddress, multicastPort, message );
 
         try
         {
@@ -153,11 +126,8 @@ public class UDPDiscoverySender implements AutoCloseable
             // put the byte array in a packet
             final DatagramPacket packet = new DatagramPacket( bytes, bytes.length, multicastAddress, multicastPort );
 
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "Sending DatagramPacket. bytes.length [" + bytes.length + "] to " + multicastAddress + ":"
-                    + multicastPort );
-            }
+            log.debug( "Sending DatagramPacket. bytes.length [{0}] to {1}:{2}",
+                    bytes.length, multicastAddress, multicastPort );
 
             localSocket.send( packet );
         }
@@ -177,10 +147,7 @@ public class UDPDiscoverySender implements AutoCloseable
     public void requestBroadcast()
         throws IOException
     {
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "sending requestBroadcast " );
-        }
+        log.debug( "sending requestBroadcast" );
 
         UDPDiscoveryMessage message = new UDPDiscoveryMessage();
         message.setRequesterId( CacheInfo.listenerId );
@@ -215,10 +182,7 @@ public class UDPDiscoverySender implements AutoCloseable
     protected void passiveBroadcast( String host, int port, ArrayList<String> cacheNames, long listenerId )
         throws IOException
     {
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "sending passiveBroadcast " );
-        }
+        log.debug( "sending passiveBroadcast" );
 
         UDPDiscoveryMessage message = new UDPDiscoveryMessage();
         message.setHost( host );
@@ -257,10 +221,7 @@ public class UDPDiscoverySender implements AutoCloseable
     protected void removeBroadcast( String host, int port, ArrayList<String> cacheNames, long listenerId )
         throws IOException
     {
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "sending removeBroadcast " );
-        }
+        log.debug( "sending removeBroadcast" );
 
         UDPDiscoveryMessage message = new UDPDiscoveryMessage();
         message.setHost( host );

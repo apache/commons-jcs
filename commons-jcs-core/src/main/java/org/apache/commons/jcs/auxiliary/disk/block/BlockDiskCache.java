@@ -45,8 +45,8 @@ import org.apache.commons.jcs.engine.stats.StatElement;
 import org.apache.commons.jcs.engine.stats.Stats;
 import org.apache.commons.jcs.engine.stats.behavior.IStatElement;
 import org.apache.commons.jcs.engine.stats.behavior.IStats;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 
 /**
  * There is one BlockDiskCache per region. It manages the key and data store.
@@ -58,7 +58,7 @@ public class BlockDiskCache<K, V>
     implements IRequireScheduler
 {
     /** The logger. */
-    private static final Log log = LogFactory.getLog( BlockDiskCache.class );
+    private static final Log log = LogManager.getLog( BlockDiskCache.class );
 
     /** The name to prefix all log messages with. */
     private final String logCacheName;
@@ -110,19 +110,13 @@ public class BlockDiskCache<K, V>
         this.blockDiskCacheAttributes = cacheAttributes;
         this.logCacheName = "Region [" + getCacheName() + "] ";
 
-        if ( log.isInfoEnabled() )
-        {
-            log.info( logCacheName + "Constructing BlockDiskCache with attributes " + cacheAttributes );
-        }
+        log.info("{0}: Constructing BlockDiskCache with attributes {1}", logCacheName, cacheAttributes );
 
         // Make a clean file name
         this.fileName = getCacheName().replaceAll("[^a-zA-Z0-9-_\\.]", "_");
         this.rootDirectory = cacheAttributes.getDiskPath();
 
-        if ( log.isInfoEnabled() )
-        {
-            log.info( logCacheName + "Cache file root directory: [" + rootDirectory + "]");
-        }
+        log.info("{0}: Cache file root directory: [{1}]", logCacheName, rootDirectory);
 
         try
         {
@@ -149,15 +143,12 @@ public class BlockDiskCache<K, V>
 
             // Initialization finished successfully, so set alive to true.
             setAlive(true);
-            if ( log.isInfoEnabled() )
-            {
-                log.info( logCacheName + "Block Disk Cache is alive." );
-            }
+            log.info("{0}: Block Disk Cache is alive.", logCacheName);
         }
         catch ( IOException e )
         {
-            log.error( logCacheName + "Failure initializing for fileName: " + fileName + " and root directory: "
-                + rootDirectory, e );
+            log.error("{0}: Failure initializing for fileName: {1} and root directory: {2}",
+                    logCacheName, fileName, rootDirectory, e);
         }
     }
 
@@ -215,7 +206,7 @@ public class BlockDiskCache<K, V>
         }
         catch ( Exception e )
         {
-            log.warn(logCacheName + " Problem verifying disk.", e);
+            log.warn("{0}: Problem verifying disk.", logCacheName, e);
             alright = false;
         }
         finally
@@ -313,17 +304,11 @@ public class BlockDiskCache<K, V>
     {
         if ( !isAlive() )
         {
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( logCacheName + "No longer alive so returning null for key = " + key );
-            }
+            log.debug("{0}: No longer alive so returning null for key = {1}", logCacheName, key );
             return null;
         }
 
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( logCacheName + "Trying to get from disk: " + key );
-        }
+        log.debug("{0}: Trying to get from disk: {1}", logCacheName, key );
 
         ICacheElement<K, V> object = null;
 
@@ -344,12 +329,12 @@ public class BlockDiskCache<K, V>
         }
         catch ( IOException ioe )
         {
-            log.error( logCacheName + "Failure getting from disk--IOException, key = " + key, ioe );
+            log.error("{0}: Failure getting from disk--IOException, key = {1}", logCacheName, key, ioe );
             reset();
         }
         catch ( Exception e )
         {
-            log.error( logCacheName + "Failure getting from disk, key = " + key, e );
+            log.error("{0}: Failure getting from disk, key = {1}", logCacheName, key, e );
         }
         return object;
     }
@@ -370,10 +355,8 @@ public class BlockDiskCache<K, V>
     {
         if ( !isAlive() )
         {
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( logCacheName + "No longer alive; aborting put of key = " + element.getKey() );
-            }
+            log.debug("{0}: No longer alive; aborting put of key = {1}",
+                    () -> logCacheName, () -> element.getKey());
             return;
         }
 
@@ -395,24 +378,21 @@ public class BlockDiskCache<K, V>
 
             this.keyStore.put( element.getKey(), blocks );
 
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( logCacheName + "Put to file [" + fileName + "] key [" + element.getKey() + "]" );
-            }
+            log.debug("{0}: Put to file [{1}] key [{2}]", () -> logCacheName,
+                    () -> fileName, () -> element.getKey());
         }
         catch ( IOException e )
         {
-            log.error( logCacheName + "Failure updating element, key: " + element.getKey() + " old: " + Arrays.toString(old), e );
+            log.error("{0}: Failure updating element, key: {1} old: {2}",
+                    logCacheName, element.getKey(), Arrays.toString(old), e);
         }
         finally
         {
             storageLock.writeLock().unlock();
         }
 
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( logCacheName + "Storing element on disk, key: " + element.getKey() );
-        }
+        log.debug("{0}: Storing element on disk, key: {1}", () -> logCacheName,
+                () -> element.getKey() );
     }
 
     /**
@@ -428,10 +408,7 @@ public class BlockDiskCache<K, V>
     {
         if ( !isAlive() )
         {
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( logCacheName + "No longer alive so returning false for key = " + key );
-            }
+            log.debug("{0}: No longer alive so returning false for key = {1}", logCacheName, key );
             return false;
         }
 
@@ -457,7 +434,7 @@ public class BlockDiskCache<K, V>
         }
         catch ( Exception e )
         {
-            log.error( logCacheName + "Problem removing element.", e );
+            log.error("{0}: Problem removing element.", logCacheName, e );
             reset = true;
         }
         finally
@@ -538,11 +515,8 @@ public class BlockDiskCache<K, V>
 		    this.dataFile.freeBlocks( ded );
 		}
 
-		if ( log.isDebugEnabled() )
-		{
-		    log.debug( logCacheName + "Disk removal: Removed from key hash, key [" + key + "] removed = "
-		        + removed );
-		}
+	    log.debug("{0}: Disk removal: Removed from key hash, key [{1}] removed = {2}",
+	            logCacheName, key, removed);
 		return removed;
 	}
 
@@ -575,7 +549,8 @@ public class BlockDiskCache<K, V>
         }
         catch ( InterruptedException ex )
         {
-            log.error( logCacheName + "Interrupted while waiting for disposal thread to finish.", ex );
+            log.error("{0}: Interrupted while waiting for disposal thread to finish.",
+                    logCacheName, ex );
         }
     }
 
@@ -586,7 +561,7 @@ public class BlockDiskCache<K, V>
     {
         if ( !isAlive() )
         {
-            log.error( logCacheName + "Not alive and dispose was called, filename: " + fileName );
+            log.error("{0}: Not alive and dispose was called, filename: {1}", logCacheName, fileName);
             return;
         }
         storageLock.writeLock().lock();
@@ -603,10 +578,7 @@ public class BlockDiskCache<K, V>
 
             try
             {
-                if ( log.isDebugEnabled() )
-                {
-                    log.debug( logCacheName + "Closing files, base filename: " + fileName );
-                }
+                log.debug("{0}: Closing files, base filename: {1}", logCacheName, fileName );
                 dataFile.close();
                 // dataFile = null;
 
@@ -616,7 +588,8 @@ public class BlockDiskCache<K, V>
             }
             catch ( IOException e )
             {
-                log.error( logCacheName + "Failure closing files in dispose, filename: " + fileName, e );
+                log.error("{0}: Failure closing files in dispose, filename: {1}",
+                        logCacheName, fileName, e );
             }
         }
         finally
@@ -624,10 +597,7 @@ public class BlockDiskCache<K, V>
             storageLock.writeLock().unlock();
         }
 
-        if ( log.isInfoEnabled() )
-        {
-            log.info( logCacheName + "Shutdown complete." );
-        }
+        log.info("{0}: Shutdown complete.", logCacheName);
     }
 
     /**
@@ -648,10 +618,7 @@ public class BlockDiskCache<K, V>
      */
     private void reset()
     {
-        if ( log.isInfoEnabled() )
-        {
-            log.info( logCacheName + "Resetting cache" );
-        }
+        log.info("{0}: Resetting cache", logCacheName);
 
         try
         {
@@ -666,7 +633,7 @@ public class BlockDiskCache<K, V>
         }
         catch ( IOException e )
         {
-            log.error( logCacheName + "Failure resetting state", e );
+            log.error("{0}: Failure resetting state", logCacheName, e );
         }
         finally
         {

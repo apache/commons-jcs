@@ -30,26 +30,7 @@ public class ConcurrentRemovalLoadTest
     extends TestCase
 {
     /**
-     * Constructor for the TestDiskCache object.
-     * @param testName
-     */
-    public ConcurrentRemovalLoadTest( String testName )
-    {
-        super( testName );
-    }
-
-    /**
-     * Main method passes this test to the text test runner.
-     * @param args
-     */
-    public static void main( String args[] )
-    {
-        String[] testCaseName = { RemovalTestUtil.class.getName() };
-        junit.textui.TestRunner.main( testCaseName );
-    }
-
-    /**
-     * A unit test suite for JUnit. This verfies that we can remove hierarchically while the region
+     * A unit test suite for JUnit. This verifies that we can remove hierarchically while the region
      * is active.
      * @return The test suite
      */

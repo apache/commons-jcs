@@ -34,9 +34,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.jcs.access.exception.CacheException;
 import org.apache.commons.jcs.auxiliary.remote.RemoteUtils;
 import org.apache.commons.jcs.engine.control.CompositeCacheManager;
+import org.apache.commons.jcs.log.Log;
+import org.apache.commons.jcs.log.LogManager;
 import org.apache.commons.jcs.utils.net.HostNameUtil;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * This servlet can be used to startup the JCS remote cache. It is easy to
@@ -68,7 +68,7 @@ public class RemoteCacheStartupServlet
     private static final long serialVersionUID = 1L;
 
     /** The logger */
-    private static final Log log = LogFactory.getLog(RemoteCacheStartupServlet.class);
+    private static final Log log = LogManager.getLog(RemoteCacheStartupServlet.class);
 
     /** The default port to start the registry on. */
     private static final int DEFAULT_REGISTRY_PORT = 1101;
@@ -117,15 +117,12 @@ public class RemoteCacheStartupServlet
             }
         }
 
-        if (log.isDebugEnabled())
-        {
-            log.debug("registryHost = [" + registryHost + "]");
-        }
+        log.debug("registryHost = [{0}]", registryHost);
 
         if ("localhost".equals(registryHost) || "127.0.0.1".equals(registryHost))
         {
-            log.warn("The local address [" + registryHost
-                    + "] is INVALID.  Other machines must be able to use the address to reach this server.");
+            log.warn("The local address [{0}] is INVALID. Other machines must "
+                    + "be able to use the address to reach this server.", registryHost);
         }
 
         try
@@ -136,10 +133,7 @@ public class RemoteCacheStartupServlet
             }
 
             RemoteCacheServerFactory.startup(registryHost, registryPort, props);
-            if (log.isInfoEnabled())
-            {
-                log.info("Remote JCS Server started with properties from " + propsFileName);
-            }
+            log.info("Remote JCS Server started with properties from {0}", propsFileName);
         }
         catch (IOException e)
         {
@@ -171,10 +165,7 @@ public class RemoteCacheStartupServlet
             throw new ServletException(e);
         }
 
-        if (log.isInfoEnabled())
-        {
-            log.info(stats);
-        }
+        log.info(stats);
 
         try
         {
