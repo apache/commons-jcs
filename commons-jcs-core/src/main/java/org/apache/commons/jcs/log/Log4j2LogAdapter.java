@@ -53,24 +53,26 @@ public class Log4j2LogAdapter implements Log
             {
                 switch (paramSuppliers.length)
                 {
-                    case 1: logger.log(level, message, paramSuppliers[0]);
+                    case 1: logger.log(level, message, paramSuppliers[0].get());
                             break;
-                    case 2: logger.log(level, message, paramSuppliers[0],
-                            paramSuppliers[1]);
+                    case 2: logger.log(level, message, paramSuppliers[0].get(),
+                            paramSuppliers[1].get());
                             break;
-                    case 3: logger.log(level, message, paramSuppliers[0],
-                            paramSuppliers[1], paramSuppliers[2]);
+                    case 3: logger.log(level, message, paramSuppliers[0].get(),
+                            paramSuppliers[1].get(), paramSuppliers[2].get());
                             break;
-                    case 4: logger.log(level, message, paramSuppliers[0],
-                            paramSuppliers[1], paramSuppliers[2], paramSuppliers[3]);
+                    case 4: logger.log(level, message, paramSuppliers[0].get(),
+                            paramSuppliers[1].get(), paramSuppliers[2].get(),
+                            paramSuppliers[3].get());
                             break;
-                    case 5: logger.log(level, message, paramSuppliers[0],
-                            paramSuppliers[1], paramSuppliers[2], paramSuppliers[3],
-                            paramSuppliers[4]);
+                    case 5: logger.log(level, message, paramSuppliers[0].get(),
+                            paramSuppliers[1].get(), paramSuppliers[2].get(),
+                            paramSuppliers[3].get(), paramSuppliers[4].get());
                             break;
-                    default: logger.log(level, message, paramSuppliers[0],
-                            paramSuppliers[1], paramSuppliers[2], paramSuppliers[3],
-                            paramSuppliers[4], paramSuppliers[5]);
+                    default: logger.log(level, message, paramSuppliers[0].get(),
+                            paramSuppliers[1].get(), paramSuppliers[2].get(),
+                            paramSuppliers[3].get(), paramSuppliers[4].get(),
+                            paramSuppliers[5].get());
                             break;
                 }
             }

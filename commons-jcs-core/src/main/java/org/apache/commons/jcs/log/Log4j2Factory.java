@@ -1,6 +1,8 @@
 package org.apache.commons.jcs.log;
 
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.message.MessageFactory;
+import org.apache.logging.log4j.message.MessageFormatMessageFactory;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -24,6 +26,9 @@ import org.apache.logging.log4j.Logger;
  */
 public class Log4j2Factory implements LogFactory
 {
+    /** Use java.text.MessageFormat for log messages */
+    private MessageFactory messageFactory = new MessageFormatMessageFactory();
+
     /**
      * Return the name of the Log subsystem managed by this factory
      *
@@ -59,7 +64,7 @@ public class Log4j2Factory implements LogFactory
     @Override
     public Log getLog(final Class<?> clazz)
     {
-        Logger logger = org.apache.logging.log4j.LogManager.getLogger(clazz);
+        Logger logger = org.apache.logging.log4j.LogManager.getLogger(clazz, messageFactory);
         return new Log4j2LogAdapter(logger);
     }
 
@@ -77,7 +82,7 @@ public class Log4j2Factory implements LogFactory
     @Override
     public Log getLog(final String name)
     {
-        Logger logger = org.apache.logging.log4j.LogManager.getLogger(name);
+        Logger logger = org.apache.logging.log4j.LogManager.getLogger(name, messageFactory);
         return new Log4j2LogAdapter(logger);
     }
 }

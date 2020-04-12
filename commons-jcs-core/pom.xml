@@ -118,11 +118,6 @@
           <artifactId>maven-surefire-plugin</artifactId>
           <version>${commons.surefire.version}</version>
           <configuration>
-            <systemPropertyVariables>
-              <java.security.manager>true</java.security.manager>
-              <java.security.policy>${basedir}/src/test/conf/cache.policy</java.security.policy>
-              <java.util.logging.config.file>${basedir}/src/test/test-conf/logging.properties</java.util.logging.config.file>
-            </systemPropertyVariables>              
             <argLine>-Xmx256m</argLine>
             <forkCount>1</forkCount>
             <reuseForks>false</reuseForks>
@@ -171,5 +166,58 @@
       </plugin>
     </plugins>
   </build>
-
+  
+  <profiles>
+    <profile>
+      <id>testWithJUL</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+              <systemPropertyVariables>
+                <java.security.manager>true</java.security.manager>
+                <java.security.policy>${basedir}/src/test/conf/cache.policy</java.security.policy>
+                <java.util.logging.config.file>${basedir}/src/test/test-conf/logging.properties</java.util.logging.config.file>
+              </systemPropertyVariables>              
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>testWithLog4j2</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>org.apache.logging.log4j</groupId>
+          <artifactId>log4j-core</artifactId>
+          <version>2.13.1</version>
+          <scope>test</scope>
+        </dependency>
+      </dependencies>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+              <systemPropertyVariables>
+                <java.security.manager>true</java.security.manager>
+                <java.security.policy>${basedir}/src/test/conf/cache.policy</java.security.policy>
+                <jcs.logSystem>log4j2</jcs.logSystem>
+                <log4j.configurationFile>src/test/test-conf/log4j2-test.xml</log4j.configurationFile>
+              </systemPropertyVariables>              
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>

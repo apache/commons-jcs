@@ -22,7 +22,7 @@ import java.util.ServiceLoader;
 /**
  * This is a borrowed and stripped-down version of the log4j2 LogManager class.
  *
- * The anchor point for the Log4j logging system. The most common usage of this
+ * The anchor point for the JCS logging system. The most common usage of this
  * class is to obtain a named {@link Log}.
  */
 public class LogManager
@@ -30,7 +30,7 @@ public class LogManager
     /**
      * The name of log subsystem
      */
-    private static String logSystem = "jul";
+    private static String logSystem = null;
 
     /**
      * The SPI LogFactory
@@ -48,7 +48,10 @@ public class LogManager
         private static LogFactory createLogFactory()
         {
             ServiceLoader<LogFactory> factories = ServiceLoader.load(LogFactory.class);
-            LogManager.logSystem = System.getProperty("jcs.logSystem", LogManager.logSystem);
+            if (LogManager.logSystem == null)
+            {
+                LogManager.logSystem = System.getProperty("jcs.logSystem", "jul");
+            }
 
             for (LogFactory factory : factories)
             {
@@ -100,12 +103,10 @@ public class LogManager
      * name.
      *
      * @param clazz
-     *            The Class whose name should be used as the Log name. If null
-     *            it will default to the calling class.
+     *            The Class whose name should be used as the Log name.
      * @return The Log.
      * @throws UnsupportedOperationException
-     *             if {@code clazz} is {@code null} and the calling class cannot
-     *             be determined.
+     *             if {@code clazz} is {@code null}
      */
     public static Log getLog(final Class<?> clazz)
     {
@@ -116,12 +117,10 @@ public class LogManager
      * Returns a Log with the specified name.
      *
      * @param name
-     *            The logger name. If null the name of the calling class will be
-     *            used.
+     *            The logger name.
      * @return The Log.
      * @throws UnsupportedOperationException
-     *             if {@code name} is {@code null} and the calling class cannot
-     *             be determined.
+     *             if {@code name} is {@code null}
      */
     public static Log getLog(final String name)
     {
