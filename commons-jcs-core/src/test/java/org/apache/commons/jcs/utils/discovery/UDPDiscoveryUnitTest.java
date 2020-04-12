@@ -21,9 +21,9 @@ package org.apache.commons.jcs.utils.discovery;
 
 import java.util.ArrayList;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.jcs.utils.timing.SleepUtil;
+
+import junit.framework.TestCase;
 
 /**
  * Unit tests for discovery
@@ -39,7 +39,7 @@ public class UDPDiscoveryUnitTest
         throws Exception
     {
         UDPDiscoveryAttributes attributes = new UDPDiscoveryAttributes();
-        attributes.setUdpDiscoveryAddr( "228.5.6.7" );
+        attributes.setUdpDiscoveryAddr( /*"FF7E:230::1234"*/ "228.5.6.7" );
         attributes.setUdpDiscoveryPort( 6789 );
         attributes.setServicePort( 1000 );
 

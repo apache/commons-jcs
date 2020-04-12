@@ -1,12 +1,30 @@
 package org.apache.commons.jcs.utils.net;
 
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.UnknownHostException;
-import java.util.Enumeration;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.net.UnknownHostException;
+import java.util.Enumeration;
+/*
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
  * regarding copyright ownership.  The ASF licenses this file
@@ -135,12 +153,43 @@ public class HostNameUtil
             }
             return jdkSuppliedAddress;
         }
-        catch ( Exception e )
+        catch ( SocketException e )
         {
             UnknownHostException unknownHostException = new UnknownHostException( "Failed to determine LAN address: "
                 + e );
             unknownHostException.initCause( e );
             throw unknownHostException;
         }
+    }
+
+    /**
+     * On systems with multiple network interfaces and mixed IPv6/IPv4 get a valid network
+     * interface for binding to multicast
+     *
+     * @return a network interface suitable for multicast
+     * @throws SocketException if a problem occurs while reading the network interfaces
+     */
+    public static NetworkInterface getMulticastNetworkInterface() throws SocketException
+    {
+        Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();
+        while (networkInterfaces.hasMoreElements())
+        {
+            NetworkInterface networkInterface = networkInterfaces.nextElement();
+            Enumeration<InetAddress> addressesFromNetworkInterface = networkInterface.getInetAddresses();
+            while (addressesFromNetworkInterface.hasMoreElements())
+            {
+                InetAddress inetAddress = addressesFromNetworkInterface.nextElement();
+                if (inetAddress.isSiteLocalAddress()
+                        && !inetAddress.isAnyLocalAddress()
+                        && !inetAddress.isLinkLocalAddress()
+                        && !inetAddress.isLoopbackAddress()
+                        && !inetAddress.isMulticastAddress())
+                {
+                    return networkInterface;
+                }
+            }
+        }
+
+        return null;
     }
 }

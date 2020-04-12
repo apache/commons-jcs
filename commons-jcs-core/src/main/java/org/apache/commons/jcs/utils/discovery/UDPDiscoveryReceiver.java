@@ -25,6 +25,7 @@ import java.io.ObjectInputStream;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
+import java.net.NetworkInterface;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -34,6 +35,7 @@ import org.apache.commons.jcs.io.ObjectInputStreamClassLoaderAware;
 import org.apache.commons.jcs.log.Log;
 import org.apache.commons.jcs.log.LogManager;
 import org.apache.commons.jcs.utils.discovery.UDPDiscoveryMessage.BroadcastType;
+import org.apache.commons.jcs.utils.net.HostNameUtil;
 import org.apache.commons.jcs.utils.threadpool.PoolConfiguration;
 import org.apache.commons.jcs.utils.threadpool.PoolConfiguration.WhenBlockedPolicy;
 import org.apache.commons.jcs.utils.threadpool.ThreadPoolManager;
@@ -117,11 +119,17 @@ public class UDPDiscoveryReceiver
         try
         {
             mSocket = new MulticastSocket( multicastPort );
+            InetAddress multicastAddress = InetAddress.getByName( multicastAddressString );
             if (log.isInfoEnabled())
             {
-                log.info( "Joining Group: [{0}]", InetAddress.getByName( multicastAddressString ) );
+                log.info( "Joining Group: [{0}]", multicastAddress );
             }
-            mSocket.joinGroup( InetAddress.getByName( multicastAddressString ) );
+            NetworkInterface multicastInterface = HostNameUtil.getMulticastNetworkInterface();
+            if (multicastInterface != null)
+            {
+                mSocket.setNetworkInterface(multicastInterface);
+            }
+            mSocket.joinGroup( multicastAddress );
         }
         catch ( IOException e )
         {
