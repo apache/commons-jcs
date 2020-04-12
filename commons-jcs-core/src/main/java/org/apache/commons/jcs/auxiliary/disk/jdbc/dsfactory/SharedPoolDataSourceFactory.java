@@ -92,7 +92,10 @@ public class SharedPoolDataSourceFactory implements DataSourceFactory
     {
         try
         {
-            ds.close();
+            if (ds != null)
+            {
+                ds.close();
+            }
         }
         catch (Exception e)
         {
