@@ -36,7 +36,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.apache.commons.jcs.access.exception.CacheException;
 import org.apache.commons.jcs.auxiliary.lateral.LateralElementDescriptor;
 import org.apache.commons.jcs.auxiliary.lateral.behavior.ILateralCacheListener;
 import org.apache.commons.jcs.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttributes;
@@ -45,7 +44,6 @@ import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs.engine.behavior.IShutdownObserver;
 import org.apache.commons.jcs.engine.control.CompositeCache;
-import org.apache.commons.jcs.engine.control.CompositeCacheManager;
 import org.apache.commons.jcs.io.ObjectInputStreamClassLoaderAware;
 import org.apache.commons.jcs.log.Log;
 import org.apache.commons.jcs.log.LogManager;
@@ -365,21 +363,6 @@ public class LateralTCPListener<K, V>
      */
     protected CompositeCache<K, V> getCache( String name )
     {
-        if ( getCacheManager() == null )
-        {
-            // revert to singleton on failure
-            try
-            {
-                setCacheManager( CompositeCacheManager.getInstance() );
-            }
-            catch (CacheException e)
-            {
-                throw new RuntimeException("Could not retrieve cache manager instance", e);
-            }
-
-            log.debug( "cacheMgr = {0}", () -> getCacheManager() );
-        }
-
         return getCacheManager().getCache( name );
     }
 

@@ -22,7 +22,6 @@ package org.apache.commons.jcs.auxiliary.remote;
 import java.io.IOException;
 import java.net.UnknownHostException;
 
-import org.apache.commons.jcs.access.exception.CacheException;
 import org.apache.commons.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes;
 import org.apache.commons.jcs.auxiliary.remote.behavior.IRemoteCacheListener;
 import org.apache.commons.jcs.auxiliary.remote.server.behavior.RemoteType;
@@ -30,7 +29,6 @@ import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.engine.behavior.ICacheElementSerialized;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs.engine.behavior.IElementSerializer;
-import org.apache.commons.jcs.engine.control.CompositeCacheManager;
 import org.apache.commons.jcs.log.Log;
 import org.apache.commons.jcs.log.LogManager;
 import org.apache.commons.jcs.utils.net.HostNameUtil;
@@ -224,25 +222,6 @@ public abstract class AbstractRemoteCacheListener<K, V>
      */
     protected ICompositeCacheManager getCacheManager()
     {
-        if ( cacheMgr == null )
-        {
-            try
-            {
-                cacheMgr = CompositeCacheManager.getInstance();
-
-                log.debug( "had to get cacheMgr" );
-                log.debug( "cacheMgr = {0}", cacheMgr );
-            }
-            catch (CacheException e)
-            {
-                log.error( "Could not get cacheMgr", e );
-            }
-        }
-        else
-        {
-            log.debug( "already got cacheMgr = {0}", cacheMgr );
-        }
-
         return cacheMgr;
     }
 
