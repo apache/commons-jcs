@@ -1,8 +1,7 @@
 package org.apache.commons.jcs.auxiliary.disk.jdbc;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Iterator;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -39,8 +38,8 @@ public class ShrinkerThread
     private static final Log log = LogManager.getLog( ShrinkerThread.class );
 
     /** A set of JDBCDiskCache objects to call deleteExpired on. */
-    private final Set<JDBCDiskCache<?, ?>> shrinkSet =
-        Collections.synchronizedSet( new HashSet<>() );
+    private final CopyOnWriteArraySet<JDBCDiskCache<?, ?>> shrinkSet =
+            new CopyOnWriteArraySet<>();
 
     /** Default time period to use. */
     private static final long DEFAULT_PAUSE_BETWEEN_REGION_CALLS_MILLIS = 5000;
@@ -98,40 +97,29 @@ public class ShrinkerThread
         log.info( "Running JDBC disk cache shrinker. Number of regions [{0}]",
                 () -> shrinkSet.size() );
 
-        Object[] caches = null;
-
-        synchronized ( shrinkSet )
+        for (Iterator<JDBCDiskCache<?, ?>> i = shrinkSet.iterator(); i.hasNext();)
         {
-            caches = this.shrinkSet.toArray();
-        }
+            JDBCDiskCache<?, ?> cache = i.next();
+            long start = System.currentTimeMillis();
+            int deleted = cache.deleteExpired();
+            long end = System.currentTimeMillis();
 
-        if ( caches != null )
-        {
-            for ( int i = 0; i < caches.length; i++ )
+            log.info( "Deleted [{0}] expired for region [{1}] for table [{2}] in {3} ms.",
+                    deleted, cache.getCacheName(), cache.getTableName(), end - start );
+
+            // don't pause after the last call to delete expired.
+            if ( i.hasNext() )
             {
-                JDBCDiskCache<?, ?> cache = (JDBCDiskCache<?, ?>) caches[i];
+                log.info( "Pausing for [{0}] ms before shrinking the next region.",
+                        this.getPauseBetweenRegionCallsMillis() );
 
-                long start = System.currentTimeMillis();
-                int deleted = cache.deleteExpired();
-                long end = System.currentTimeMillis();
-
-                log.info( "Deleted [{0}] expired for region [{1}] for table [{2}] in {3} ms.",
-                        deleted, cache.getCacheName(), cache.getTableName(), end - start );
-
-                // don't pause after the last call to delete expired.
-                if ( i < caches.length - 1 )
+                try
                 {
-                    log.info( "Pausing for [{0}] ms before shrinking the next region.",
-                            this.getPauseBetweenRegionCallsMillis() );
-
-                    try
-                    {
-                        Thread.sleep( this.getPauseBetweenRegionCallsMillis() );
-                    }
-                    catch ( InterruptedException e )
-                    {
-                        log.warn( "Interrupted while waiting to delete expired for the next region." );
-                    }
+                    Thread.sleep( this.getPauseBetweenRegionCallsMillis() );
+                }
+                catch ( InterruptedException e )
+                {
+                    log.warn( "Interrupted while waiting to delete expired for the next region." );
                 }
             }
         }

@@ -19,15 +19,14 @@ package org.apache.commons.jcs;
  * under the License.
  */
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import junit.framework.TestCase;
 
 import org.apache.commons.jcs.access.GroupCacheAccess;
 import org.apache.commons.jcs.access.exception.CacheException;
+
+import junit.framework.TestCase;
 
 /**
  * Test Case for JCS-73, modeled after the Groovy code by Alexander Kleymenov
@@ -67,7 +66,7 @@ public class JCSConcurrentCacheAccessUnitTest extends TestCase
         JCS.setConfigFilename( "/TestJCS-73.ccf" );
         cache = JCS.getGroupCacheInstance( "cache" );
         errcount = new AtomicInteger(0);
-        valueMismatchList = Collections.synchronizedList(new ArrayList<>());
+        valueMismatchList = new CopyOnWriteArrayList<>();
 	}
 
     @Override

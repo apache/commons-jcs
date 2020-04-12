@@ -23,9 +23,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.apache.commons.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.commons.jcs.auxiliary.disk.jdbc.JDBCDiskCache;
@@ -49,7 +47,7 @@ public class HSQLDiskCacheFactory
     private static final Log log = LogManager.getLog( HSQLDiskCacheFactory.class );
 
     /** The databases. */
-    private Set<String> databases;
+    private CopyOnWriteArraySet<String> databases;
 
     /**
      * This factory method should create an instance of the hsqlcache.
@@ -79,7 +77,7 @@ public class HSQLDiskCacheFactory
     public void initialize()
     {
         super.initialize();
-        this.databases = Collections.synchronizedSet( new HashSet<>() );
+        this.databases = new CopyOnWriteArraySet<>();
     }
 
     /**
@@ -105,31 +103,34 @@ public class HSQLDiskCacheFactory
             return;
         }
 
-        // TODO get this from the attributes.
-        System.setProperty( "hsqldb.cache_scale", "8" );
-
-        // "org.hsqldb.jdbcDriver"
-        String driver = attributes.getDriverClassName();
-        // "sa"
-        String user = attributes.getUserName();
-        // ""
-        String password = attributes.getPassword();
-
-        try
+        synchronized (databases)
         {
-            Class.forName( driver ).newInstance();
+            // TODO get this from the attributes.
+            System.setProperty( "hsqldb.cache_scale", "8" );
+
+            // "org.hsqldb.jdbcDriver"
+            String driver = attributes.getDriverClassName();
+            // "sa"
+            String user = attributes.getUserName();
+            // ""
+            String password = attributes.getPassword();
+
+            try
+            {
+                Class.forName( driver ).newInstance();
+            }
+            catch (Exception e)
+            {
+                throw new SQLException( "Could not initialize driver " + driver, e );
+            }
+
+            Connection cConn = DriverManager.getConnection( database, user, password );
+            setupTable( cConn, attributes.getTableName() );
+
+            log.info( "Finished setting up database [{0}]", database);
+
+            databases.add( database );
         }
-        catch (Exception e)
-        {
-            throw new SQLException( "Could not initialize driver " + driver, e );
-        }
-
-        Connection cConn = DriverManager.getConnection( database, user, password );
-        setupTable( cConn, attributes.getTableName() );
-
-        log.info( "Finished setting up database [{0}]", database);
-
-        databases.add( database );
     }
 
     /**

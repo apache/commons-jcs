@@ -1,11 +1,9 @@
 package org.apache.commons.jcs.auxiliary.lateral.socket.tcp;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -53,15 +51,15 @@ public class LateralTCPDiscoveryListener
      * Map of no wait facades. these are used to determine which regions are locally configured to
      * use laterals.
      */
-    private final Map<String, LateralCacheNoWaitFacade<?, ?>> facades =
-        Collections.synchronizedMap( new HashMap<>() );
+    private final ConcurrentMap<String, LateralCacheNoWaitFacade<?, ?>> facades =
+        new ConcurrentHashMap<>();
 
     /**
      * List of regions that are configured differently here than on another server. We keep track of
      * this to limit the amount of info logging.
      */
-    private final Set<String> knownDifferentlyConfiguredRegions =
-        Collections.synchronizedSet( new HashSet<>() );
+    private final CopyOnWriteArrayList<String> knownDifferentlyConfiguredRegions =
+        new CopyOnWriteArrayList<>();
 
     /** The name of the cache factory */
     private String factoryName;
@@ -91,7 +89,7 @@ public class LateralTCPDiscoveryListener
      * @param facade - facade (for region) =&gt; multiple lateral clients.
      * @return true if the facade was not already registered.
      */
-    public synchronized boolean addNoWaitFacade( String cacheName, LateralCacheNoWaitFacade<?, ?> facade )
+    public boolean addNoWaitFacade( String cacheName, LateralCacheNoWaitFacade<?, ?> facade )
     {
         boolean isNew = !containsNoWaitFacade( cacheName );
 
@@ -123,7 +121,9 @@ public class LateralTCPDiscoveryListener
     public <K, V> boolean containsNoWait( String cacheName, LateralCacheNoWait<K, V> noWait )
     {
         @SuppressWarnings("unchecked") // Need to cast because of common map for all facades
-        LateralCacheNoWaitFacade<K, V> facade = (LateralCacheNoWaitFacade<K, V>)facades.get( noWait.getCacheName() );
+        LateralCacheNoWaitFacade<K, V> facade =
+            (LateralCacheNoWaitFacade<K, V>)facades.get( noWait.getCacheName() );
+
         if ( facade == null )
         {
             return false;
@@ -141,13 +141,14 @@ public class LateralTCPDiscoveryListener
      * services.
      * <p>
      * @param noWait
-     * @return true if we found the no wait and added it. False if the no wait was not present or it
+     * @return true if we found the no wait and added it. False if the no wait was not present or if
      *         we already had it.
      */
     protected <K, V> boolean addNoWait( LateralCacheNoWait<K, V> noWait )
     {
         @SuppressWarnings("unchecked") // Need to cast because of common map for all facades
-        LateralCacheNoWaitFacade<K, V> facade = (LateralCacheNoWaitFacade<K, V>)facades.get( noWait.getCacheName() );
+        LateralCacheNoWaitFacade<K, V> facade =
+            (LateralCacheNoWaitFacade<K, V>)facades.get( noWait.getCacheName() );
         log.debug( "addNoWait > Got facade for {0} = {1}", noWait.getCacheName(), facade );
 
         if ( facade != null )
@@ -158,12 +159,11 @@ public class LateralTCPDiscoveryListener
         }
         else
         {
-            if ( !knownDifferentlyConfiguredRegions.contains( noWait.getCacheName() ) )
+            if ( knownDifferentlyConfiguredRegions.addIfAbsent( noWait.getCacheName() ) )
             {
                 log.info( "addNoWait > Different nodes are configured differently "
                         + "or region [{0}] is not yet used on this side.",
                         () -> noWait.getCacheName() );
-                knownDifferentlyConfiguredRegions.add( noWait.getCacheName() );
             }
             return false;
         }
@@ -179,7 +179,8 @@ public class LateralTCPDiscoveryListener
     protected <K, V> boolean removeNoWait( LateralCacheNoWait<K, V> noWait )
     {
         @SuppressWarnings("unchecked") // Need to cast because of common map for all facades
-        LateralCacheNoWaitFacade<K, V> facade = (LateralCacheNoWaitFacade<K, V>)facades.get( noWait.getCacheName() );
+        LateralCacheNoWaitFacade<K, V> facade =
+            (LateralCacheNoWaitFacade<K, V>)facades.get( noWait.getCacheName() );
         log.debug( "removeNoWait > Got facade for {0} = {1}", noWait.getCacheName(), facade);
 
         if ( facade != null )
@@ -190,12 +191,11 @@ public class LateralTCPDiscoveryListener
         }
         else
         {
-            if ( !knownDifferentlyConfiguredRegions.contains( noWait.getCacheName() ) )
+            if ( knownDifferentlyConfiguredRegions.addIfAbsent( noWait.getCacheName() ) )
             {
-                log.info( "removeNoWait > Different nodes are configured differently "
+                log.info( "addNoWait > Different nodes are configured differently "
                         + "or region [{0}] is not yet used on this side.",
                         () -> noWait.getCacheName() );
-                knownDifferentlyConfiguredRegions.add( noWait.getCacheName() );
             }
             return false;
         }
