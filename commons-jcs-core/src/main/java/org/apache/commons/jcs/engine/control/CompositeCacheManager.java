@@ -591,7 +591,10 @@ public class CompositeCacheManager
         synchronized (CompositeCacheManager.class)
         {
             // shutdown element event queue
-            this.elementEventQueue.dispose();
+            if (this.elementEventQueue != null)
+            {
+                this.elementEventQueue.dispose();
+            }
 
             // shutdown all scheduled jobs
             this.scheduledExecutor.shutdownNow();
