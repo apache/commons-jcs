@@ -19,8 +19,8 @@ package org.apache.commons.jcs.utils.threadpool;
  * under the License.
  */
 
-import java.util.ArrayList;
 import java.util.Properties;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 
 import org.apache.commons.jcs.utils.props.PropertyLoader;
@@ -80,7 +80,7 @@ public class ThreadPoolManagerUnitTest
         String poolName2 = "testGetPoolNames2";
         mgr.getExecutorService( poolName2 );
 
-        ArrayList<String> names = mgr.getPoolNames();
+        Set<String> names = mgr.getPoolNames();
         assertTrue( "Should have name in list.", names.contains( poolName1 ) );
         assertTrue( "Should have name in list.", names.contains( poolName2 ) );
     }

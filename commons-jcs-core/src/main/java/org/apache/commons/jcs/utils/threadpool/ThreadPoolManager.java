@@ -1,26 +1,9 @@
 package org.apache.commons.jcs.utils.threadpool;
 
-/*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- */
-
-import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
@@ -59,6 +42,9 @@ public class ThreadPoolManager
     /** The default config, created using property defaults if present, else those above. */
     private PoolConfiguration defaultConfig;
 
+    /** The default scheduler config, created using property defaults if present, else those above. */
+    private PoolConfiguration defaultSchedulerConfig;
+
     /** the root property name */
     private static final String PROP_NAME_ROOT = "thread_pool";
 
@@ -77,14 +63,19 @@ public class ThreadPoolManager
      */
     private static volatile Properties props = null;
 
-    /** singleton instance */
-    private static ThreadPoolManager INSTANCE = null;
-
     /** Map of names to pools. */
     private ConcurrentHashMap<String, ExecutorService> pools;
 
     /** Map of names to scheduler pools. */
     private ConcurrentHashMap<String, ScheduledExecutorService> schedulerPools;
+
+    /**
+     * The ThreadPoolManager instance (holder pattern)
+     */
+    private static class ThreadPoolManagerHolder
+    {
+        static final ThreadPoolManager INSTANCE = new ThreadPoolManager();
+    }
 
     /**
      * No instances please. This is a singleton.
@@ -188,47 +179,44 @@ public class ThreadPoolManager
      * <p>
      * @return The single instance of the ThreadPoolManager
      */
-    public static synchronized ThreadPoolManager getInstance()
+    public static ThreadPoolManager getInstance()
     {
-        if ( INSTANCE == null )
-        {
-            INSTANCE = new ThreadPoolManager();
-        }
-        return INSTANCE;
+        return ThreadPoolManagerHolder.INSTANCE;
     }
 
     /**
      * Dispose of the instance of the ThreadPoolManger and shut down all thread pools
      */
-    public static synchronized void dispose()
+    public static void dispose()
     {
-        if ( INSTANCE != null )
+        for ( Iterator<Map.Entry<String, ExecutorService>> i =
+                getInstance().pools.entrySet().iterator(); i.hasNext(); )
         {
-            for ( ExecutorService pool : INSTANCE.pools.values() )
+            Map.Entry<String, ExecutorService> entry = i.next();
+            try
             {
-                try
-                {
-                    pool.shutdownNow();
-                }
-                catch (Throwable t)
-                {
-                    log.warn("Failed to close pool {0}", pool, t);
-                }
+                entry.getValue().shutdownNow();
             }
-
-            for ( ScheduledExecutorService pool : INSTANCE.schedulerPools.values() )
+            catch (Throwable t)
             {
-                try
-                {
-                    pool.shutdownNow();
-                }
-                catch (Throwable t)
-                {
-                    log.warn("Failed to close pool {0}", pool, t);
-                }
+                log.warn("Failed to close pool {0}", entry.getKey(), t);
             }
+            i.remove();
+        }
 
-            INSTANCE = null;
+        for ( Iterator<Map.Entry<String, ScheduledExecutorService>> i =
+                getInstance().schedulerPools.entrySet().iterator(); i.hasNext(); )
+        {
+            Map.Entry<String, ScheduledExecutorService> entry = i.next();
+            try
+            {
+                entry.getValue().shutdownNow();
+            }
+            catch (Throwable t)
+            {
+                log.warn("Failed to close pool {0}", entry.getKey(), t);
+            }
+            i.remove();
         }
     }
 
@@ -245,7 +233,7 @@ public class ThreadPoolManager
     {
     	ExecutorService pool = pools.computeIfAbsent(name, key -> {
             log.debug( "Creating pool for name [{0}]", key );
-            PoolConfiguration config = loadConfig( PROP_NAME_ROOT + "." + key );
+            PoolConfiguration config = loadConfig( PROP_NAME_ROOT + "." + key, defaultConfig );
             return createPool( config, "JCS-ThreadPoolManager-" + key + "-" );
     	});
 
@@ -265,7 +253,6 @@ public class ThreadPoolManager
     {
     	ScheduledExecutorService pool = schedulerPools.computeIfAbsent(name, key -> {
             log.debug( "Creating scheduler pool for name [{0}]", key );
-            PoolConfiguration defaultSchedulerConfig = loadConfig( DEFAULT_PROP_NAME_SCHEDULER_ROOT );
             PoolConfiguration config = loadConfig( PROP_NAME_SCHEDULER_ROOT + "." + key,
                     defaultSchedulerConfig );
             return createSchedulerPool( config, "JCS-ThreadPoolManager-" + key + "-", Thread.NORM_PRIORITY );
@@ -279,9 +266,9 @@ public class ThreadPoolManager
      * <p>
      * @return ArrayList of string names
      */
-    public ArrayList<String> getPoolNames()
+    protected Set<String> getPoolNames()
     {
-        return new ArrayList<>(pools.keySet());
+        return pools.keySet();
     }
 
     /**
@@ -309,19 +296,8 @@ public class ThreadPoolManager
         }
 
         // set initial default and then override if new settings are available
-        defaultConfig = new PoolConfiguration();
-        defaultConfig = loadConfig( DEFAULT_PROP_NAME_ROOT );
-    }
-
-    /**
-     * Configures the PoolConfiguration settings.
-     * <p>
-     * @param root the configuration key prefix
-     * @return PoolConfiguration
-     */
-    private PoolConfiguration loadConfig( String root )
-    {
-    	return loadConfig(root, defaultConfig);
+        defaultConfig = loadConfig( DEFAULT_PROP_NAME_ROOT, new PoolConfiguration() );
+        defaultSchedulerConfig = loadConfig( DEFAULT_PROP_NAME_SCHEDULER_ROOT, new PoolConfiguration() );
     }
 
     /**
