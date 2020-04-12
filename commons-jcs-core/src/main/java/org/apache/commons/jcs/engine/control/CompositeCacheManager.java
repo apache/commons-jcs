@@ -271,8 +271,6 @@ public class CompositeCacheManager
                 }
             }
 
-            this.elementEventQueue = new ElementEventQueue();
-
             isInitialized = true;
         }
     }
@@ -419,6 +417,9 @@ public class CompositeCacheManager
         ThreadPoolManager.setProps( properties );
         ThreadPoolManager poolMgr = ThreadPoolManager.getInstance();
         log.debug( "ThreadPoolManager = {0}", poolMgr);
+
+        // Create event queue
+        this.elementEventQueue = new ElementEventQueue();
 
         // configure the cache
         CompositeCacheConfigurator configurator = newConfigurator();
