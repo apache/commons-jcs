@@ -35,7 +35,6 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.commons.jcs.auxiliary.disk.AbstractDiskCache;
-import org.apache.commons.jcs.engine.CacheConstants;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs.engine.behavior.IRequireScheduler;
@@ -419,7 +418,7 @@ public class BlockDiskCache<K, V>
 
         try
         {
-            if (key instanceof String && key.toString().endsWith(CacheConstants.NAME_COMPONENT_DELIMITER))
+            if (key instanceof String && key.toString().endsWith(NAME_COMPONENT_DELIMITER))
             {
                 removed = performPartialKeyRemoval((String) key);
             }

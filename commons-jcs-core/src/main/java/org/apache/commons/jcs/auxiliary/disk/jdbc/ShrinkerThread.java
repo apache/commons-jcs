@@ -24,6 +24,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.apache.commons.jcs.log.Log;
 import org.apache.commons.jcs.log.LogManager;
+import org.apache.commons.jcs.utils.timing.ElapsedTimer;
 
 /**
  * Calls delete expired on the disk caches. The shrinker is run by a clock daemon. The shrinker
@@ -100,12 +101,11 @@ public class ShrinkerThread
         for (Iterator<JDBCDiskCache<?, ?>> i = shrinkSet.iterator(); i.hasNext();)
         {
             JDBCDiskCache<?, ?> cache = i.next();
-            long start = System.currentTimeMillis();
+            ElapsedTimer timer = new ElapsedTimer();
             int deleted = cache.deleteExpired();
-            long end = System.currentTimeMillis();
 
             log.info( "Deleted [{0}] expired for region [{1}] for table [{2}] in {3} ms.",
-                    deleted, cache.getCacheName(), cache.getTableName(), end - start );
+                    deleted, cache.getCacheName(), cache.getTableName(), timer.getElapsedTime() );
 
             // don't pause after the last call to delete expired.
             if ( i.hasNext() )

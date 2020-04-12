@@ -36,7 +36,6 @@ import java.util.stream.Stream;
 import org.apache.commons.jcs.access.exception.CacheException;
 import org.apache.commons.jcs.access.exception.ObjectNotFoundException;
 import org.apache.commons.jcs.auxiliary.AuxiliaryCache;
-import org.apache.commons.jcs.engine.CacheConstants;
 import org.apache.commons.jcs.engine.CacheStatus;
 import org.apache.commons.jcs.engine.behavior.ICache;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
@@ -242,9 +241,9 @@ public class CompositeCache<K, V>
     {
 
         if (cacheElement.getKey() instanceof String
-            && cacheElement.getKey().toString().endsWith(CacheConstants.NAME_COMPONENT_DELIMITER))
+            && cacheElement.getKey().toString().endsWith(NAME_COMPONENT_DELIMITER))
         {
-            throw new IllegalArgumentException("key must not end with " + CacheConstants.NAME_COMPONENT_DELIMITER
+            throw new IllegalArgumentException("key must not end with " + NAME_COMPONENT_DELIMITER
                 + " for a put operation");
         }
         else if (cacheElement.getKey() instanceof GroupId)

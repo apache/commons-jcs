@@ -43,7 +43,6 @@ import org.apache.commons.jcs.auxiliary.AuxiliaryCache;
 import org.apache.commons.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.commons.jcs.auxiliary.AuxiliaryCacheFactory;
 import org.apache.commons.jcs.auxiliary.remote.behavior.IRemoteCacheConstants;
-import org.apache.commons.jcs.engine.CacheConstants;
 import org.apache.commons.jcs.engine.CompositeCacheAttributes;
 import org.apache.commons.jcs.engine.ElementAttributes;
 import org.apache.commons.jcs.engine.behavior.ICache;
@@ -62,6 +61,7 @@ import org.apache.commons.jcs.log.LogManager;
 import org.apache.commons.jcs.utils.config.OptionConverter;
 import org.apache.commons.jcs.utils.threadpool.DaemonThreadFactory;
 import org.apache.commons.jcs.utils.threadpool.ThreadPoolManager;
+import org.apache.commons.jcs.utils.timing.ElapsedTimer;
 
 /**
  * Manages a composite cache. This provides access to caches and is the primary way to shutdown the
@@ -80,12 +80,20 @@ public class CompositeCacheManager
     /** JMX object name */
     public static final String JMX_OBJECT_NAME = "org.apache.commons.jcs:type=JCSAdminBean";
 
+    /** This is the name of the config file that we will look for by default. */
+    private static final String DEFAULT_CONFIG = "/cache.ccf";
+
     /** default region prefix */
     private static final String DEFAULT_REGION = "jcs.default";
 
+    /** Should we use system property substitutions. */
+    private static final boolean DEFAULT_USE_SYSTEM_PROPERTIES = true;
+
+    /** Once configured, you can force a reconfiguration of sorts. */
+    private static final boolean DEFAULT_FORCE_RECONFIGURATION = false;
+
     /** Caches managed by this cache manager */
-    private final ConcurrentMap<String, ICache<?, ?>> caches =
-        new ConcurrentHashMap<>();
+    private final ConcurrentMap<String, ICache<?, ?>> caches = new ConcurrentHashMap<>();
 
     /** Number of clients accessing this cache manager */
     private final AtomicInteger clients = new AtomicInteger(0);
@@ -116,12 +124,6 @@ public class CompositeCacheManager
 
     /** The Singleton Instance */
     private static CompositeCacheManager instance;
-
-    /** Should we use system property substitutions. */
-    private static final boolean DEFAULT_USE_SYSTEM_PROPERTIES = true;
-
-    /** Once configured, you can force a reconfiguration of sorts. */
-    private static final boolean DEFAULT_FORCE_RECONFIGURATION = false;
 
     /** Stack for those waiting for notification of a shutdown. */
     private final LinkedBlockingDeque<IShutdownObserver> shutdownObservers = new LinkedBlockingDeque<>();
@@ -156,7 +158,7 @@ public class CompositeCacheManager
      */
     public static synchronized CompositeCacheManager getInstance() throws CacheException
     {
-        return getInstance( CacheConstants.DEFAULT_CONFIG );
+        return getInstance( DEFAULT_CONFIG );
     }
 
     /**
@@ -304,7 +306,7 @@ public class CompositeCacheManager
      */
     public void configure() throws CacheException
     {
-        configure( CacheConstants.DEFAULT_CONFIG );
+        configure( DEFAULT_CONFIG );
     }
 
     /**
@@ -426,7 +428,7 @@ public class CompositeCacheManager
         // configure the cache
         CompositeCacheConfigurator configurator = newConfigurator();
 
-        long start = System.currentTimeMillis();
+        ElapsedTimer timer = new ElapsedTimer();
 
         // set default value list
         this.defaultAuxValues = OptionConverter.findAndSubst( CompositeCacheManager.DEFAULT_REGION,
@@ -453,8 +455,7 @@ public class CompositeCacheManager
         // setup preconfigured caches
         configurator.parseRegions( properties, this );
 
-        long end = System.currentTimeMillis();
-        log.info( "Finished configuration in {0} ms.", end - start);
+        log.info( "Finished configuration in {0} ms.", () -> timer.getElapsedTime());
 
         isConfigured = true;
     }

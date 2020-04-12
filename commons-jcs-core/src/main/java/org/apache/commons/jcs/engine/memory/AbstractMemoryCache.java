@@ -30,7 +30,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
-import org.apache.commons.jcs.engine.CacheConstants;
+import org.apache.commons.jcs.engine.behavior.ICache;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.commons.jcs.engine.control.CompositeCache;
@@ -415,7 +415,7 @@ public abstract class AbstractMemoryCache<K, V>
         boolean removed = false;
 
         // handle partial removal
-        if (key instanceof String && ((String) key).endsWith(CacheConstants.NAME_COMPONENT_DELIMITER))
+        if (key instanceof String && ((String) key).endsWith(ICache.NAME_COMPONENT_DELIMITER))
         {
             removed = removeByHierarchy(key);
         }

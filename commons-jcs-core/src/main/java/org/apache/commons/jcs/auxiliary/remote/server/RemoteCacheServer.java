@@ -50,6 +50,7 @@ import org.apache.commons.jcs.engine.logging.behavior.ICacheEvent;
 import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;
 import org.apache.commons.jcs.log.Log;
 import org.apache.commons.jcs.log.LogManager;
+import org.apache.commons.jcs.utils.timing.ElapsedTimer;
 
 /**
  * This class provides remote cache services. The remote cache server propagates events from local
@@ -77,9 +78,6 @@ public class RemoteCacheServer<K, V>
 
     /** log instance */
     private static final Log log = LogManager.getLog( RemoteCacheServer.class );
-
-    /** timing -- if we should record operation times. */
-    private static final boolean timing = true;
 
     /** Number of puts into the cache. */
     private int puts = 0;
@@ -264,12 +262,7 @@ public class RemoteCacheServer<K, V>
      */
     private void processUpdate( ICacheElement<K, V> item, long requesterId )
     {
-        long start = 0;
-        if ( timing )
-        {
-            start = System.currentTimeMillis();
-        }
-
+        ElapsedTimer timer = new ElapsedTimer();
         logUpdateInfo( item );
 
         try
@@ -315,7 +308,7 @@ public class RemoteCacheServer<K, V>
                         c.update( item );
                     }
                 }
-                catch ( Exception ce )
+                catch ( IOException ce )
                 {
                     // swallow
                     log.info( "Exception caught updating item. requesterId [{0}]: {1}",
@@ -347,11 +340,7 @@ public class RemoteCacheServer<K, V>
         }
 
         // TODO use JAMON for timing
-        if ( timing )
-        {
-            long end = System.currentTimeMillis();
-            log.debug( "put took {0} ms.", end - start);
-        }
+        log.debug( "put took {0} ms.", () -> timer.getElapsedTime());
     }
 
     /**

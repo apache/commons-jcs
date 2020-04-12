@@ -29,6 +29,7 @@ import javax.sql.DataSource;
 import org.apache.commons.jcs.auxiliary.disk.jdbc.TableState;
 import org.apache.commons.jcs.log.Log;
 import org.apache.commons.jcs.log.LogManager;
+import org.apache.commons.jcs.utils.timing.ElapsedTimer;
 
 /**
  * The MySQL Table Optimizer can optimize MySQL tables. It knows how to optimize for MySQL databases
@@ -115,7 +116,7 @@ public class MySQLTableOptimizer
      */
     public boolean optimizeTable()
     {
-        long start = System.currentTimeMillis();
+        ElapsedTimer timer = new ElapsedTimer();
         boolean success = false;
 
         if ( tableState.getState() == TableState.OPTIMIZATION_RUNNING )
@@ -185,9 +186,8 @@ public class MySQLTableOptimizer
         {
             tableState.setState( TableState.FREE );
 
-            long end = System.currentTimeMillis();
             log.info( "Optimization of table [{0}] took {1} ms.",
-                    this.getTableName(), end - start );
+                    () -> this.getTableName(), () -> timer.getElapsedTime() );
         }
 
         return success;

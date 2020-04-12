@@ -36,7 +36,6 @@ import javax.sql.DataSource;
 import org.apache.commons.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.commons.jcs.auxiliary.disk.AbstractDiskCache;
 import org.apache.commons.jcs.auxiliary.disk.jdbc.dsfactory.DataSourceFactory;
-import org.apache.commons.jcs.engine.CacheConstants;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs.engine.behavior.IElementSerializer;
@@ -528,7 +527,7 @@ public class JDBCDiskCache<K, V>
         try (Connection con = getDataSource().getConnection())
         {
             boolean partial = false;
-            if ( key instanceof String && key.toString().endsWith( CacheConstants.NAME_COMPONENT_DELIMITER ) )
+            if ( key instanceof String && key.toString().endsWith( NAME_COMPONENT_DELIMITER ) )
             {
                 // remove all keys of the same name group.
                 sql = "delete from " + getJdbcDiskCacheAttributes().getTableName()

@@ -40,7 +40,6 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import org.apache.commons.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.commons.jcs.auxiliary.disk.AbstractDiskCache;
 import org.apache.commons.jcs.auxiliary.disk.behavior.IDiskCacheAttributes.DiskLimitType;
-import org.apache.commons.jcs.engine.CacheConstants;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs.engine.control.group.GroupAttrName;
@@ -405,7 +404,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
      */
     protected boolean checkForDedOverlaps(IndexedDiskElementDescriptor[] sortedDescriptors)
     {
-        long start = System.currentTimeMillis();
+        ElapsedTimer timer = new ElapsedTimer();
         boolean isOk = true;
         long expectedNextPos = 0;
         for (int i = 0; i < sortedDescriptors.length; i++)
@@ -422,8 +421,8 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
                 expectedNextPos = ded.pos + IndexedDisk.HEADER_SIZE_BYTES + ded.len;
             }
         }
-        long end = System.currentTimeMillis();
-        log.debug("{0}: Check for DED overlaps took {1} ms.", logCacheName, end - start);
+        log.debug("{0}: Check for DED overlaps took {1} ms.", () -> logCacheName,
+                () -> timer.getElapsedTime());
 
         return isOk;
     }
@@ -730,7 +729,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
         {
             storageLock.writeLock().lock();
 
-            if (key instanceof String && key.toString().endsWith(CacheConstants.NAME_COMPONENT_DELIMITER))
+            if (key instanceof String && key.toString().endsWith(NAME_COMPONENT_DELIMITER))
             {
                 removed = performPartialKeyRemoval((String) key);
             }
