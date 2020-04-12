@@ -61,8 +61,16 @@ public class Log4j2LogAdapter implements Log
                     case 3: logger.log(level, message, paramSuppliers[0],
                             paramSuppliers[1], paramSuppliers[2]);
                             break;
-                    default: logger.log(level, message, paramSuppliers[0],
+                    case 4: logger.log(level, message, paramSuppliers[0],
                             paramSuppliers[1], paramSuppliers[2], paramSuppliers[3]);
+                            break;
+                    case 5: logger.log(level, message, paramSuppliers[0],
+                            paramSuppliers[1], paramSuppliers[2], paramSuppliers[3],
+                            paramSuppliers[4]);
+                            break;
+                    default: logger.log(level, message, paramSuppliers[0],
+                            paramSuppliers[1], paramSuppliers[2], paramSuppliers[3],
+                            paramSuppliers[4], paramSuppliers[5]);
                             break;
                 }
             }
