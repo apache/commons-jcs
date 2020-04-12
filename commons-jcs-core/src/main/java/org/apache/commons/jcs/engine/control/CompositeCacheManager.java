@@ -23,7 +23,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.management.ManagementFactory;
 import java.security.AccessControlException;
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -31,6 +32,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
@@ -622,16 +624,10 @@ public class CompositeCacheManager
             }
 
             // do the traditional shutdown of the regions.
-            for (String name : getCacheNames())
-            {
-                freeCache( name );
-            }
+            Arrays.stream(getCacheNames()).forEach(this::freeCache);
 
             // shut down factories
-            for (AuxiliaryCacheFactory factory : auxiliaryFactoryRegistry.values())
-            {
-                factory.dispose();
-            }
+            auxiliaryFactoryRegistry.values().forEach(AuxiliaryCacheFactory::dispose);
 
             auxiliaryAttributeRegistry.clear();
             auxiliaryFactoryRegistry.clear();
@@ -678,15 +674,11 @@ public class CompositeCacheManager
             log.debug( "Last client called release. There are {0} caches which will be disposed",
                     () -> caches.size());
 
-            for (ICache<?, ?> c : caches.values() )
-            {
-                CompositeCache<?, ?> cache = (CompositeCache<?, ?>) c;
-
-                if ( cache != null )
-                {
-                    cache.dispose( fromRemote );
-                }
-            }
+            caches.values().stream()
+                .filter(cache -> cache != null)
+                .forEach(cache -> {
+                    ((CompositeCache<?, ?>)cache).dispose( fromRemote );
+                });
         }
     }
 
@@ -798,12 +790,10 @@ public class CompositeCacheManager
 
         // force the array elements into a string.
         StringBuilder buf = new StringBuilder();
-        int statsLen = stats.length;
-        for ( int i = 0; i < statsLen; i++ )
-        {
+        Arrays.stream(stats).forEach(stat -> {
             buf.append( "\n---------------------------\n" );
-            buf.append( stats[i] );
-        }
+            buf.append( stat );
+        });
         return buf.toString();
     }
 
@@ -814,17 +804,12 @@ public class CompositeCacheManager
      */
     public ICacheStats[] getStatistics()
     {
-        ArrayList<ICacheStats> cacheStats = new ArrayList<>();
-        for (ICache<?, ?> c :  caches.values())
-        {
-            CompositeCache<?, ?> cache = (CompositeCache<?, ?>) c;
-            if ( cache != null )
-            {
-                cacheStats.add( cache.getStatistics() );
-            }
-        }
-        ICacheStats[] stats = cacheStats.toArray( new CacheStats[0] );
-        return stats;
+        List<ICacheStats> cacheStats = caches.values().stream()
+            .filter(cache -> cache != null)
+            .map(cache -> ((CompositeCache<?, ?>)cache).getStatistics() )
+            .collect(Collectors.toList());
+
+        return cacheStats.toArray( new CacheStats[0] );
     }
 
     /**
