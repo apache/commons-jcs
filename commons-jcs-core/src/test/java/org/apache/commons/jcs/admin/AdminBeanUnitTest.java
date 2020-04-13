@@ -1,5 +1,10 @@
 package org.apache.commons.jcs.admin;
 
+import java.util.List;
+
+import org.apache.commons.jcs.JCS;
+import org.apache.commons.jcs.access.CacheAccess;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -20,8 +25,6 @@ package org.apache.commons.jcs.admin;
  */
 
 import junit.framework.TestCase;
-import org.apache.commons.jcs.JCS;
-import org.apache.commons.jcs.access.CacheAccess;
 
 /**
  * Test the admin bean that is used by the JCSAdmin.jsp
@@ -49,7 +52,7 @@ public class AdminBeanUnitTest
 
         JCSAdminBean admin = new JCSAdminBean();
 
-        CacheRegionInfo[] regions = admin.buildCacheInfo();
+        List<CacheRegionInfo> regions = admin.buildCacheInfo();
 
         boolean foundRegion = false;
 
@@ -88,11 +91,10 @@ public class AdminBeanUnitTest
 
         JCSAdminBean admin = new JCSAdminBean();
 
-        CacheElementInfo[] elements = admin.buildElementInfo( regionName );
+        List<CacheElementInfo> elements = admin.buildElementInfo( regionName );
+        assertEquals( "Wrong number of elements in the region.", 1, elements.size() );
 
-        assertEquals( "Wrong number of elements in the region.", 1, elements.length );
-
-        CacheElementInfo elementInfo = elements[0];
+        CacheElementInfo elementInfo = elements.get(0);
         assertEquals( "Wrong key." + elementInfo, key, elementInfo.getKey() );
     }
 
@@ -116,18 +118,16 @@ public class AdminBeanUnitTest
         String key = "myKey";
         cache.put( key, "value" );
 
-        CacheElementInfo[] elements = admin.buildElementInfo( regionName );
+        List<CacheElementInfo> elements = admin.buildElementInfo( regionName );
+        assertEquals( "Wrong number of elements in the region.", 1, elements.size() );
 
-        assertEquals( "Wrong number of elements in the region.", 1, elements.length );
-
-        CacheElementInfo elementInfo = elements[0];
-
+        CacheElementInfo elementInfo = elements.get(0);
         assertEquals( "Wrong key.", key, elementInfo.getKey() );
 
         admin.removeItem( regionName, key );
 
-        CacheElementInfo[] elements2 = admin.buildElementInfo( regionName );
-        assertEquals( "Wrong number of elements in the region after remove.", 0, elements2.length );
+        List<CacheElementInfo> elements2 = admin.buildElementInfo( regionName );
+        assertEquals( "Wrong number of elements in the region after remove.", 0, elements2.size() );
     }
 
     /**
@@ -148,7 +148,7 @@ public class AdminBeanUnitTest
 
         admin.clearAllRegions();
 
-        CacheElementInfo[] elements2 = admin.buildElementInfo( regionName );
-        assertEquals( "Wrong number of elements in the region after remove.", 0, elements2.length );
+        List<CacheElementInfo> elements2 = admin.buildElementInfo( regionName );
+        assertEquals( "Wrong number of elements in the region after remove.", 0, elements2.size() );
     }
 }

@@ -164,13 +164,10 @@ public class RemoteCacheServer<K, V>
 
         // cacheManager would have created a number of ICache objects.
         // Use these objects to set up the cacheListenersMap.
-        String[] list = cacheManager.getCacheNames();
-        for ( int i = 0; i < list.length; i++ )
-        {
-            String name = list[i];
+        cacheManager.getCacheNames().forEach(name -> {
             CompositeCache<K, V> cache = cacheManager.getCache( name );
             cacheListenersMap.put( name, new CacheListeners<>( cache ) );
-        }
+        });
     }
 
     /**

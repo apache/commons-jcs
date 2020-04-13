@@ -1,5 +1,8 @@
 package org.apache.commons.jcs.admin;
 
+import java.io.IOException;
+import java.util.List;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -20,7 +23,6 @@ package org.apache.commons.jcs.admin;
  */
 
 import javax.management.MXBean;
-import java.io.IOException;
 
 /**
  * A MXBean to expose the JCS statistics to JMX
@@ -32,20 +34,19 @@ public interface JCSJMXBean
      * Builds up info about each element in a region.
      * <p>
      * @param cacheName
-     * @return Array of CacheElementInfo objects
-     * @throws Exception
+     * @return List of CacheElementInfo objects
+     * @throws IOException
      */
-    CacheElementInfo[] buildElementInfo( String cacheName ) throws Exception;
+    List<CacheElementInfo> buildElementInfo( String cacheName ) throws IOException;
 
     /**
      * Builds up data on every region.
      * <p>
      * TODO we need a most light weight method that does not count bytes. The byte counting can
      *       really swamp a server.
-     * @return Array of CacheRegionInfo objects
-     * @throws Exception
+     * @return List of CacheRegionInfo objects
      */
-    CacheRegionInfo[] buildCacheInfo() throws Exception;
+    List<CacheRegionInfo> buildCacheInfo();
 
     /**
      * Tries to estimate how much data is in a region. This is expensive. If there are any non serializable objects in

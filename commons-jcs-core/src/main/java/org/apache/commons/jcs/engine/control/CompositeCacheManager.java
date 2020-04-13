@@ -26,6 +26,7 @@ import java.security.AccessControlException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.Executors;
@@ -628,7 +629,7 @@ public class CompositeCacheManager
             }
 
             // do the traditional shutdown of the regions.
-            Arrays.stream(getCacheNames()).forEach(this::freeCache);
+            getCacheNames().forEach(this::freeCache);
 
             // shut down factories
             auxiliaryFactoryRegistry.values().forEach(AuxiliaryCacheFactory::dispose);
@@ -688,11 +689,11 @@ public class CompositeCacheManager
 
     /**
      * Returns a list of the current cache names.
-     * @return String[]
+     * @return Set<String>
      */
-    public String[] getCacheNames()
+    public Set<String> getCacheNames()
     {
-        return caches.keySet().toArray(new String[caches.size()]);
+        return caches.keySet();
     }
 
     /**

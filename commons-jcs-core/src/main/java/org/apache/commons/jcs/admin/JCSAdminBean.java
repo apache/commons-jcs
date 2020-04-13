@@ -1,5 +1,18 @@
 package org.apache.commons.jcs.admin;
 
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.text.DateFormat;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -28,15 +41,6 @@ import org.apache.commons.jcs.engine.behavior.IElementAttributes;
 import org.apache.commons.jcs.engine.control.CompositeCache;
 import org.apache.commons.jcs.engine.control.CompositeCacheManager;
 import org.apache.commons.jcs.engine.memory.behavior.IMemoryCache;
-
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
-import java.text.DateFormat;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.Set;
 
 /**
  * A servlet which provides HTTP access to JCS. Allows a summary of regions to be viewed, and
@@ -80,46 +84,34 @@ public class JCSAdminBean implements JCSJMXBean
      * Builds up info about each element in a region.
      * <p>
      * @param cacheName
-     * @return Array of CacheElementInfo objects
-     * @throws Exception
+     * @return List of CacheElementInfo objects
+     * @throws IOException
      */
     @Override
-    public CacheElementInfo[] buildElementInfo( String cacheName )
-        throws Exception
+    public List<CacheElementInfo> buildElementInfo( String cacheName )
+        throws IOException
     {
-        CompositeCache<Serializable, Serializable> cache = cacheHub.getCache( cacheName );
+        CompositeCache<Object, Object> cache = cacheHub.getCache( cacheName );
 
-        Serializable[] keys = cache.getMemoryCache().getKeySet().toArray(new Serializable[0]);
-
-        // Attempt to sort keys according to their natural ordering. If that
-        // fails, get the key array again and continue unsorted.
-        try
-        {
-            Arrays.sort( keys );
-        }
-        catch ( Exception e )
-        {
-            keys = cache.getMemoryCache().getKeySet().toArray(new Serializable[0]);
-        }
+        // Convert all keys to string, store in a sorted map
+        TreeMap<String, ?> keys = new TreeMap<>(cache.getMemoryCache().getKeySet()
+                .stream()
+                .collect(Collectors.toMap(k -> k.toString(), k -> k)));
 
         LinkedList<CacheElementInfo> records = new LinkedList<>();
-
-        ICacheElement<Serializable, Serializable> element;
-        IElementAttributes attributes;
-        CacheElementInfo elementInfo;
 
         DateFormat format = DateFormat.getDateTimeInstance( DateFormat.SHORT, DateFormat.SHORT );
 
         long now = System.currentTimeMillis();
 
-        for (Serializable key : keys)
+        for (Map.Entry<String, ?> key : keys.entrySet())
         {
-            element = cache.getMemoryCache().getQuiet( key );
+            ICacheElement<?, ?> element = cache.getMemoryCache().getQuiet( key.getValue() );
 
-            attributes = element.getElementAttributes();
+            IElementAttributes attributes = element.getElementAttributes();
 
-            elementInfo = new CacheElementInfo(
-            		String.valueOf( key ),
+            CacheElementInfo elementInfo = new CacheElementInfo(
+            		key.getKey(),
             		attributes.getIsEternal(),
             		format.format(new Date(attributes.getCreateTime())),
             		attributes.getMaxLife(),
@@ -128,7 +120,7 @@ public class JCSAdminBean implements JCSJMXBean
             records.add( elementInfo );
         }
 
-        return records.toArray(new CacheElementInfo[0]);
+        return records;
     }
 
     /**
@@ -136,27 +128,20 @@ public class JCSAdminBean implements JCSJMXBean
      * <p>
      * TODO we need a most light weight method that does not count bytes. The byte counting can
      *       really swamp a server.
-     * @return list of CacheRegionInfo objects
-     * @throws Exception
+     * @return List of CacheRegionInfo objects
      */
     @Override
-    public CacheRegionInfo[] buildCacheInfo()
-        throws Exception
+    public List<CacheRegionInfo> buildCacheInfo()
     {
-        String[] cacheNames = cacheHub.getCacheNames();
-
-        Arrays.sort( cacheNames );
+        TreeSet<String> cacheNames = new TreeSet<>(cacheHub.getCacheNames());
 
         LinkedList<CacheRegionInfo> cacheInfo = new LinkedList<>();
 
-        CacheRegionInfo regionInfo;
-        CompositeCache<?, ?> cache;
-
-        for ( int i = 0; i < cacheNames.length; i++ )
+        for (String cacheName : cacheNames)
         {
-            cache = cacheHub.getCache( cacheNames[i] );
+            CompositeCache<?, ?> cache = cacheHub.getCache( cacheName );
 
-            regionInfo = new CacheRegionInfo(
+            CacheRegionInfo regionInfo = new CacheRegionInfo(
                     cache.getCacheName(),
                     cache.getSize(),
                     cache.getStatus().toString(),
@@ -170,7 +155,7 @@ public class JCSAdminBean implements JCSJMXBean
             cacheInfo.add( regionInfo );
         }
 
-        return cacheInfo.toArray(new CacheRegionInfo[0]);
+        return cacheInfo;
     }
 
 
@@ -269,37 +254,25 @@ public class JCSAdminBean implements JCSJMXBean
     @Override
     public void clearAllRegions() throws IOException
     {
-        if (RemoteCacheServerFactory.getRemoteCacheServer() == null)
+        RemoteCacheServer<?, ?> remoteCacheServer = RemoteCacheServerFactory.getRemoteCacheServer();
+
+        if (remoteCacheServer == null)
         {
             // Not running in a remote cache server.
             // Remove objects from the cache directly, as no need to broadcast removes to client machines...
-
-            String[] names = cacheHub.getCacheNames();
-
-            for (int i = 0; i < names.length; i++)
+            for (String name : cacheHub.getCacheNames())
             {
-                cacheHub.getCache(names[i]).removeAll();
+                cacheHub.getCache(name).removeAll();
             }
         }
         else
         {
             // Running in a remote cache server.
             // Remove objects via the RemoteCacheServer API, so that removes will be broadcast to client machines...
-            try
+            // Call remoteCacheServer.removeAll(String) for each cacheName...
+            for (String name : cacheHub.getCacheNames())
             {
-                String[] cacheNames = cacheHub.getCacheNames();
-
-                // Call remoteCacheServer.removeAll(String) for each cacheName...
-                RemoteCacheServer<?, ?> remoteCacheServer = RemoteCacheServerFactory.getRemoteCacheServer();
-                for (int i = 0; i < cacheNames.length; i++)
-                {
-                    String cacheName = cacheNames[i];
-                    remoteCacheServer.removeAll(cacheName);
-                }
-            }
-            catch (IOException e)
-            {
-                throw new IllegalStateException("Failed to remove all elements from all cache regions: " + e, e);
+                remoteCacheServer.removeAll(name);
             }
         }
     }
