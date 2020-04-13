@@ -17,19 +17,19 @@
 # JCS Config for unit testing, just a simple memory only cache
 
 jcs.default=
-jcs.default.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
+jcs.default.cacheattributes=org.apache.commons.jcs3.engine.CompositeCacheAttributes
 jcs.default.cacheattributes.MaxObjects=1000
-jcs.default.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
+jcs.default.cacheattributes.MemoryCacheName=org.apache.commons.jcs3.engine.memory.lru.LRUMemoryCache
 
 jcs.system.groupIdCache=
-jcs.system.groupIdCache.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
+jcs.system.groupIdCache.cacheattributes=org.apache.commons.jcs3.engine.CompositeCacheAttributes
 jcs.system.groupIdCache.cacheattributes.MaxObjects=10000
-jcs.system.groupIdCache.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
+jcs.system.groupIdCache.cacheattributes.MemoryCacheName=org.apache.commons.jcs3.engine.memory.lru.LRUMemoryCache
 
 jcs.region.testCache1=
-jcs.region.testCache1.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
+jcs.region.testCache1.cacheattributes=org.apache.commons.jcs3.engine.CompositeCacheAttributes
 jcs.region.testCache1.cacheattributes.MaxObjects=1000
-jcs.region.testCache1.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
+jcs.region.testCache1.cacheattributes.MemoryCacheName=org.apache.commons.jcs3.engine.memory.lru.LRUMemoryCache
 
 
 # #############################################################

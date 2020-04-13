@@ -22,7 +22,7 @@
 
   <parent>
     <groupId>org.apache.commons</groupId>
-    <artifactId>commons-jcs</artifactId>
+    <artifactId>commons-jcs3</artifactId>
     <version>3.0-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
@@ -30,10 +30,10 @@
   <!--
 
   to run from an IDE a JMX test add:
-    -Dorg.jsr107.tck.management.agentId=MBeanServerJCS -Djavax.management.builder.initial=org.apache.commons.jcs.jcache.jmx.ConfigurableMBeanServerIdBuilder
+    -Dorg.jsr107.tck.management.agentId=MBeanServerJCS -Djavax.management.builder.initial=org.apache.commons.jcs3.jcache.jmx.ConfigurableMBeanServerIdBuilder
   -->
 
-  <artifactId>commons-jcs-jcache-tck</artifactId>
+  <artifactId>commons-jcs3-jcache-tck</artifactId>
   <version>3.0-SNAPSHOT</version>
 
   <name>Apache Commons JCS :: JCache TCK</name>
@@ -47,14 +47,14 @@
   <properties>
 
     <implementation-groupId>${project.groupId}</implementation-groupId>
-    <implementation-artifactId>commons-jcs</implementation-artifactId>
+    <implementation-artifactId>commons-jcs3</implementation-artifactId>
     <implementation-version>${project.version}</implementation-version>
 
-    <CacheManagerImpl>org.apache.commons.jcs.jcache.JCSCachingManager</CacheManagerImpl>
-    <CacheImpl>org.apache.commons.jcs.jcache.JCSCache</CacheImpl>
-    <CacheEntryImpl>org.apache.commons.jcs.jcache.JCSEntry</CacheEntryImpl>
+    <CacheManagerImpl>org.apache.commons.jcs3.jcache.JCSCachingManager</CacheManagerImpl>
+    <CacheImpl>org.apache.commons.jcs3.jcache.JCSCache</CacheImpl>
+    <CacheEntryImpl>org.apache.commons.jcs3.jcache.JCSEntry</CacheEntryImpl>
 
-    <javax.management.builder.initial>org.apache.commons.jcs.jcache.jmx.ConfigurableMBeanServerIdBuilder</javax.management.builder.initial>
+    <javax.management.builder.initial>org.apache.commons.jcs3.jcache.jmx.ConfigurableMBeanServerIdBuilder</javax.management.builder.initial>
     <org.jsr107.tck.management.agentId>MBeanServerJCS</org.jsr107.tck.management.agentId>
 
     <domain-lib-dir>${project.build.directory}/domainlib</domain-lib-dir>
@@ -64,12 +64,12 @@
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>commons-jcs-core</artifactId>
+      <artifactId>commons-jcs3-core</artifactId>
     </dependency>
 
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>commons-jcs-jcache</artifactId>
+      <artifactId>commons-jcs3-jcache</artifactId>
     </dependency>
 
     <dependency>

@@ -18,13 +18,13 @@
 # ################# DEFAULT CACHE REGION  #####################
 # sets the default aux value for any non configured caches
 jcs.default=RC
-jcs.default.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
+jcs.default.cacheattributes=org.apache.commons.jcs3.engine.CompositeCacheAttributes
 jcs.default.cacheattributes.MaxObjects=200001
-jcs.default.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
+jcs.default.cacheattributes.MemoryCacheName=org.apache.commons.jcs3.engine.memory.lru.LRUMemoryCache
 jcs.default.cacheattributes.UseMemoryShrinker=true
 jcs.default.cacheattributes.MaxMemoryIdleTimeSeconds=3600
 jcs.default.cacheattributes.ShrinkerIntervalSeconds=60
-jcs.default.elementattributes=org.apache.commons.jcs.engine.ElementAttributes
+jcs.default.elementattributes=org.apache.commons.jcs3.engine.ElementAttributes
 jcs.default.elementattributes.IsEternal=false
 jcs.default.elementattributes.MaxLife=700
 jcs.default.elementattributes.IdleTime=1800
@@ -33,8 +33,8 @@ jcs.default.elementattributes.IsRemote=true
 jcs.default.elementattributes.IsLateral=true
 
 
-jcs.auxiliary.RC=org.apache.commons.jcs.auxiliary.remote.RemoteCacheFactory
-jcs.auxiliary.RC.attributes=org.apache.commons.jcs.auxiliary.remote.RemoteCacheAttributes
+jcs.auxiliary.RC=org.apache.commons.jcs3.auxiliary.remote.RemoteCacheFactory
+jcs.auxiliary.RC.attributes=org.apache.commons.jcs3.auxiliary.remote.RemoteCacheAttributes
 jcs.auxiliary.RC.attributes.FailoverServers=localhost:1101
 jcs.auxiliary.RC.attributes.LocalPort=1201
 jcs.auxiliary.RC.attributes.RemoveUponRemotePut=false
@@ -44,4 +44,4 @@ jcs.auxiliary.RC.attributes.RemoveUponRemotePut=false
 jcs.auxiliary.RC.attributes.GetTimeoutMillis=-1
 # jcs.auxiliary.RC.attributes.ThreadPoolName=remote_cache_client
 # jcs.auxiliary.RC.attributes.GetOnly=false
-jcs.auxiliary.RC.cacheeventlogger=org.apache.commons.jcs.engine.logging.MockCacheEventLogger
+jcs.auxiliary.RC.cacheeventlogger=org.apache.commons.jcs3.engine.logging.MockCacheEventLogger

@@ -25,12 +25,12 @@
     <moduleSet>
       <useAllReactorProjects>true</useAllReactorProjects>
       <includes>
-        <include>org.apache.commons:commons-jcs-core</include>
-        <include>org.apache.commons:commons-jcs-dist</include>
-        <include>org.apache.commons:commons-jcs-jcache</include>
-        <include>org.apache.commons:commons-jcs-jcache-tck</include>
-        <include>org.apache.commons:commons-jcs-jcache-extras</include>
-        <include>org.apache.commons:commons-jcs-jcache-openjpa</include>
+        <include>org.apache.commons:commons-jcs3-core</include>
+        <include>org.apache.commons:commons-jcs3-dist</include>
+        <include>org.apache.commons:commons-jcs3-jcache</include>
+        <include>org.apache.commons:commons-jcs3-jcache-tck</include>
+        <include>org.apache.commons:commons-jcs3-jcache-extras</include>
+        <include>org.apache.commons:commons-jcs3-jcache-openjpa</include>
       </includes>
       <sources>
         <outputDirectoryMapping>${module.basedir.name}</outputDirectoryMapping>

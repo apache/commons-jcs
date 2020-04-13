@@ -15,4 +15,4 @@
 # specific language governing permissions and limitations
 # under the License.
 
-org.apache.commons.jcs.jcache.JCSCachingProvider
+org.apache.commons.jcs3.jcache.JCSCachingProvider

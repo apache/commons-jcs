@@ -18,50 +18,50 @@
 # a maximum of 100 objects, so objects should get pushed into the disk cache
 
 jcs.default=blockDiskCache
-jcs.default.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
+jcs.default.cacheattributes=org.apache.commons.jcs3.engine.CompositeCacheAttributes
 jcs.default.cacheattributes.MaxObjects=100
-jcs.default.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
+jcs.default.cacheattributes.MemoryCacheName=org.apache.commons.jcs3.engine.memory.lru.LRUMemoryCache
 
 # SYSTEM GROUP ID CACHE
 jcs.system.groupIdCache=blockDiskCache
-jcs.system.groupIdCache.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
+jcs.system.groupIdCache.cacheattributes=org.apache.commons.jcs3.engine.CompositeCacheAttributes
 jcs.system.groupIdCache.cacheattributes.MaxObjects=10000
-jcs.system.groupIdCache.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
+jcs.system.groupIdCache.cacheattributes.MemoryCacheName=org.apache.commons.jcs3.engine.memory.lru.LRUMemoryCache
 
 
 # #### CACHE REGIONS FOR TEST
 
 jcs.region.blockRegion1=blockDiskCache
-jcs.region.blockRegion1.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
+jcs.region.blockRegion1.cacheattributes=org.apache.commons.jcs3.engine.CompositeCacheAttributes
 jcs.region.blockRegion1.cacheattributes.MaxObjects=100
-jcs.region.blockRegion1.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
+jcs.region.blockRegion1.cacheattributes.MemoryCacheName=org.apache.commons.jcs3.engine.memory.lru.LRUMemoryCache
 
 jcs.region.blockRegion2=blockDiskCache
-jcs.region.blockRegion2.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
+jcs.region.blockRegion2.cacheattributes=org.apache.commons.jcs3.engine.CompositeCacheAttributes
 jcs.region.blockRegion2.cacheattributes.MaxObjects=100
-jcs.region.blockRegion2.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
+jcs.region.blockRegion2.cacheattributes.MemoryCacheName=org.apache.commons.jcs3.engine.memory.lru.LRUMemoryCache
 
 jcs.region.blockRegion3=blockDiskCache
-jcs.region.blockRegion3.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
+jcs.region.blockRegion3.cacheattributes=org.apache.commons.jcs3.engine.CompositeCacheAttributes
 jcs.region.blockRegion3.cacheattributes.MaxObjects=100
-jcs.region.blockRegion3.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
+jcs.region.blockRegion3.cacheattributes.MemoryCacheName=org.apache.commons.jcs3.engine.memory.lru.LRUMemoryCache
 
 jcs.region.blockRegion4=blockDiskCache2
-jcs.region.blockRegion4.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
+jcs.region.blockRegion4.cacheattributes=org.apache.commons.jcs3.engine.CompositeCacheAttributes
 jcs.region.blockRegion4.cacheattributes.MaxObjects=100
-jcs.region.blockRegion4.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
+jcs.region.blockRegion4.cacheattributes.MemoryCacheName=org.apache.commons.jcs3.engine.memory.lru.LRUMemoryCache
 
 
 # #### AUXILIARY CACHES
 
 # Block Disk Cache
-jcs.auxiliary.blockDiskCache=org.apache.commons.jcs.auxiliary.disk.block.BlockDiskCacheFactory
-jcs.auxiliary.blockDiskCache.attributes=org.apache.commons.jcs.auxiliary.disk.block.BlockDiskCacheAttributes
+jcs.auxiliary.blockDiskCache=org.apache.commons.jcs3.auxiliary.disk.block.BlockDiskCacheFactory
+jcs.auxiliary.blockDiskCache.attributes=org.apache.commons.jcs3.auxiliary.disk.block.BlockDiskCacheAttributes
 jcs.auxiliary.blockDiskCache.attributes.DiskPath=target/test-sandbox/block-disk-cache
 
 # Block Disk Cache
-jcs.auxiliary.blockDiskCache2=org.apache.commons.jcs.auxiliary.disk.block.BlockDiskCacheFactory
-jcs.auxiliary.blockDiskCache2.attributes=org.apache.commons.jcs.auxiliary.disk.block.BlockDiskCacheAttributes
+jcs.auxiliary.blockDiskCache2=org.apache.commons.jcs3.auxiliary.disk.block.BlockDiskCacheFactory
+jcs.auxiliary.blockDiskCache2.attributes=org.apache.commons.jcs3.auxiliary.disk.block.BlockDiskCacheAttributes
 jcs.auxiliary.blockDiskCache2.attributes.DiskPath=target/test-sandbox/block-disk-cache2
 
 # #############################################################

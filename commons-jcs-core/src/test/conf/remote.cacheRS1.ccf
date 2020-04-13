@@ -29,13 +29,13 @@ remote.cluster.LocalClusterConsistency=true
 # ################# DEFAULT CACHE REGION  #####################
 # sets the default aux value for any non configured caches
 jcs.default=DC,RCluster
-jcs.default.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
+jcs.default.cacheattributes=org.apache.commons.jcs3.engine.CompositeCacheAttributes
 jcs.default.cacheattributes.MaxObjects=250000
-jcs.default.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
+jcs.default.cacheattributes.MemoryCacheName=org.apache.commons.jcs3.engine.memory.lru.LRUMemoryCache
 jcs.default.cacheattributes.UseMemoryShrinker=false
 jcs.default.cacheattributes.MaxMemoryIdleTimeSeconds=3600
 jcs.default.cacheattributes.ShrinkerIntervalSeconds=60
-jcs.default.elementattributes=org.apache.commons.jcs.engine.ElementAttributes
+jcs.default.elementattributes=org.apache.commons.jcs3.engine.ElementAttributes
 jcs.default.elementattributes.IsEternal=false
 jcs.default.elementattributes.MaxLifeSeconds=700
 jcs.default.elementattributes.IdleTime=1800
@@ -48,14 +48,14 @@ jcs.default.elementattributes.IsLateral=true
 # ################# CACHE REGIONS AVAILABLE ###################
 # Regions preconfigured for caching
 jcs.region.testCache1=DC,RCluster
-jcs.region.testCache1.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
+jcs.region.testCache1.cacheattributes=org.apache.commons.jcs3.engine.CompositeCacheAttributes
 jcs.region.testCache1.cacheattributes.MaxObjects=250000
-jcs.region.testCache1.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
+jcs.region.testCache1.cacheattributes.MemoryCacheName=org.apache.commons.jcs3.engine.memory.lru.LRUMemoryCache
 jcs.region.testCache1.cacheattributes.UseMemoryShrinker=false
 jcs.region.testCache1.cacheattributes.ShrinkerIntervalSeconds=30
 jcs.region.testCache1.cacheattributes.MaxMemoryIdleTimeSeconds=300
 jcs.region.testCache1.cacheattributes.MaxSpoolPerRun=100
-jcs.region.testCache1.elementattributes=org.apache.commons.jcs.engine.ElementAttributes
+jcs.region.testCache1.elementattributes=org.apache.commons.jcs3.engine.ElementAttributes
 jcs.region.testCache1.elementattributes.IsEternal=false
 jcs.region.testCache1.elementattributes.MaxLifeSeconds=60000
 jcs.region.testCache1.elementattributes.IsLateral=true
@@ -66,16 +66,16 @@ jcs.region.testCache1.elementattributes.IsSpool=true
 # #############################################################
 # ################# AUXILIARY CACHES AVAILABLE ################
 # Primary Disk Cache-- faster than the rest because of memory key storage
-jcs.auxiliary.DC=org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
-jcs.auxiliary.DC.attributes=org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
+jcs.auxiliary.DC=org.apache.commons.jcs3.auxiliary.disk.indexed.IndexedDiskCacheFactory
+jcs.auxiliary.DC.attributes=org.apache.commons.jcs3.auxiliary.disk.indexed.IndexedDiskCacheAttributes
 jcs.auxiliary.DC.attributes.DiskPath=logs/rafRS1
 jcs.auxiliary.DC.attributes.MaxPurgatorySize=100000
 jcs.auxiliary.DC.attributes.MaxKeySize=500000
 jcs.auxiliary.DC.attributes.OptimizeAtRemoveCount=-1
 
 # RS2 SERVER to update for clustering
-jcs.auxiliary.RCluster=org.apache.commons.jcs.auxiliary.remote.RemoteCacheFactory
-jcs.auxiliary.RCluster.attributes=org.apache.commons.jcs.auxiliary.remote.RemoteCacheAttributes
+jcs.auxiliary.RCluster=org.apache.commons.jcs3.auxiliary.remote.RemoteCacheFactory
+jcs.auxiliary.RCluster.attributes=org.apache.commons.jcs3.auxiliary.remote.RemoteCacheAttributes
 jcs.auxiliary.RCluster.attributes.RemoteTypeName=CLUSTER
 jcs.auxiliary.RCluster.attributes.RemoveUponRemotePut=false
 jcs.auxiliary.RCluster.attributes.ClusterServers=localhost:1102

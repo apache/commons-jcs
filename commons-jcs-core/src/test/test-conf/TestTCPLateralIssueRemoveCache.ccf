@@ -18,24 +18,24 @@
 # a maximum of 100 objects, so objects should get pushed into the disk cache
 
 jcs.default=LTCP
-jcs.default.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
+jcs.default.cacheattributes=org.apache.commons.jcs3.engine.CompositeCacheAttributes
 jcs.default.cacheattributes.MaxObjects=10000
-jcs.default.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
+jcs.default.cacheattributes.MemoryCacheName=org.apache.commons.jcs3.engine.memory.lru.LRUMemoryCache
 
 
 # #### CACHE REGIONS FOR TEST
 
 jcs.region.testTcpRegion1=LTCP
-jcs.region.testTcpRegion1.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
+jcs.region.testTcpRegion1.cacheattributes=org.apache.commons.jcs3.engine.CompositeCacheAttributes
 jcs.region.testTcpRegion1.cacheattributes.MaxObjects=10000
-jcs.region.testTcpRegion1.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
+jcs.region.testTcpRegion1.cacheattributes.MemoryCacheName=org.apache.commons.jcs3.engine.memory.lru.LRUMemoryCache
 
 
 # #### AUXILIARY CACHES
 
 # simple Lateral TCP auxiliary
-jcs.auxiliary.LTCP=org.apache.commons.jcs.auxiliary.lateral.socket.tcp.LateralTCPCacheFactory
-jcs.auxiliary.LTCP.attributes=org.apache.commons.jcs.auxiliary.lateral.socket.tcp.TCPLateralCacheAttributes
+jcs.auxiliary.LTCP=org.apache.commons.jcs3.auxiliary.lateral.socket.tcp.LateralTCPCacheFactory
+jcs.auxiliary.LTCP.attributes=org.apache.commons.jcs3.auxiliary.lateral.socket.tcp.TCPLateralCacheAttributes
 jcs.auxiliary.LTCP.attributes.TcpServers=localhost:1117
 jcs.auxiliary.LTCP.attributes.TcpListenerPort=1118
 jcs.auxiliary.LTCP.attributes.AllowGet=false

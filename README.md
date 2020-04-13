@@ -61,8 +61,8 @@ Alternatively you can pull it from the central Maven repositories:
 ```xml
 <dependency>
   <groupId>org.apache.commons</groupId>
-  <artifactId>commons-jcs</artifactId>
-  <version>2.0</version>
+  <artifactId>commons-jcs3</artifactId>
+  <version>3.0</version>
 </dependency>
 ```
 

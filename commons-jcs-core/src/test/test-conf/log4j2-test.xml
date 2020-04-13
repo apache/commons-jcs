@@ -24,7 +24,7 @@
         </File>
     </Appenders>
     <Loggers>
-        <Logger name="org.apache.commons.jcs" additivity="false" level="INFO">
+        <Logger name="org.apache.commons.jcs3" additivity="false" level="INFO">
             <AppenderRef ref="jcs"/>
         </Logger> 
         <Root level="ERROR"><!-- log4j 1.2 has DEBUG -->

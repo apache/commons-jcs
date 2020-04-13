@@ -18,13 +18,13 @@
 # ################# DEFAULT CACHE REGION  #####################
 # sets the default aux value for any non configured caches
 jcs.default=LJG
-jcs.default.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
+jcs.default.cacheattributes=org.apache.commons.jcs3.engine.CompositeCacheAttributes
 jcs.default.cacheattributes.MaxObjects=250000
-jcs.default.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
+jcs.default.cacheattributes.MemoryCacheName=org.apache.commons.jcs3.engine.memory.lru.LRUMemoryCache
 jcs.default.cacheattributes.UseMemoryShrinker=false
 jcs.default.cacheattributes.MaxMemoryIdleTimeSeconds=3600
 jcs.default.cacheattributes.ShrinkerIntervalSeconds=60
-jcs.default.elementattributes=org.apache.commons.jcs.engine.ElementAttributes
+jcs.default.elementattributes=org.apache.commons.jcs3.engine.ElementAttributes
 jcs.default.elementattributes.IsEternal=false
 jcs.default.elementattributes.MaxLifeSeconds=700
 jcs.default.elementattributes.IdleTime=1800
@@ -37,14 +37,14 @@ jcs.default.elementattributes.IsLateral=true
 # ################# CACHE REGIONS AVAILABLE ###################
 # Regions preconfigured for caching
 jcs.region.testCache1=LJG
-jcs.region.testCache1.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
+jcs.region.testCache1.cacheattributes=org.apache.commons.jcs3.engine.CompositeCacheAttributes
 jcs.region.testCache1.cacheattributes.MaxObjects=250000
-jcs.region.testCache1.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
+jcs.region.testCache1.cacheattributes.MemoryCacheName=org.apache.commons.jcs3.engine.memory.lru.LRUMemoryCache
 jcs.region.testCache1.cacheattributes.UseMemoryShrinker=false
 jcs.region.testCache1.cacheattributes.ShrinkerIntervalSeconds=30
 jcs.region.testCache1.cacheattributes.MaxMemoryIdleTimeSeconds=300
 jcs.region.testCache1.cacheattributes.MaxSpoolPerRun=100
-jcs.region.testCache1.elementattributes=org.apache.commons.jcs.engine.ElementAttributes
+jcs.region.testCache1.elementattributes=org.apache.commons.jcs3.engine.ElementAttributes
 jcs.region.testCache1.elementattributes.IsEternal=false
 jcs.region.testCache1.elementattributes.MaxLifeSeconds=60000
 jcs.region.testCache1.elementattributes.IsLateral=true
@@ -55,16 +55,16 @@ jcs.region.testCache1.elementattributes.IsSpool=true
 # #############################################################
 # ################# AUXILIARY CACHES AVAILABLE ################
 # Primary Disk Cache-- faster than the rest because of memory key storage
-jcs.auxiliary.DC=org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
-jcs.auxiliary.DC.attributes=org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
+jcs.auxiliary.DC=org.apache.commons.jcs3.auxiliary.disk.indexed.IndexedDiskCacheFactory
+jcs.auxiliary.DC.attributes=org.apache.commons.jcs3.auxiliary.disk.indexed.IndexedDiskCacheAttributes
 jcs.auxiliary.DC.attributes.DiskPath=logs/rafJG1
 jcs.auxiliary.DC.attributes.MaxPurgatorySize=100000
 jcs.auxiliary.DC.attributes.MaxKeySize=500000
 jcs.auxiliary.DC.attributes.OptimizeAtRemoveCount=-1
 
 # Lateral JavaGroups Distribution
-jcs.auxiliary.LJG=org.apache.commons.jcs.auxiliary.lateral.LateralCacheFactory
-jcs.auxiliary.LJG.attributes=org.apache.commons.jcs.auxiliary.lateral.LateralCacheAttributes
+jcs.auxiliary.LJG=org.apache.commons.jcs3.auxiliary.lateral.LateralCacheFactory
+jcs.auxiliary.LJG.attributes=org.apache.commons.jcs3.auxiliary.lateral.LateralCacheAttributes
 jcs.auxiliary.LJG.attributes.TransmissionTypeName=JAVAGROUPS
 jcs.auxiliary.LJG.attributes.PutOnlyMode=true
 jcs.auxiliary.LJG.attributes.JGChannelProperties=UDP(mcast_addr=224.0.0.100;mcast_port=7501):PING:FD:STABLE:NAKACK:UNICAST:FRAG:FLUSH:GMS:QUEUE
@@ -74,8 +74,8 @@ jcs.auxiliary.LJG.attributes.JGChannelProperties=UDP(mcast_addr=224.0.0.100;mcas
 jcs.auxiliary.LJG.attributes.EventQueueType=POOLED
 jcs.auxiliary.LJG.attributes.EventQueuePolName=lg_event_queue
 
-jcs.auxiliary.JG = org.apache.commons.jcs.auxiliary.javagroups.JavaGroupsCacheFactory
-jcs.auxiliary.JG.attributes = org.apache.commons.jcs.auxiliary.javagroups.JavaGroupsCacheAttributes
+jcs.auxiliary.JG = org.apache.commons.jcs3.auxiliary.javagroups.JavaGroupsCacheFactory
+jcs.auxiliary.JG.attributes = org.apache.commons.jcs3.auxiliary.javagroups.JavaGroupsCacheAttributes
 jcs.auxiliary.JG.attributes.ChannelFactoryClassName = org.jgroups.JChannelFactory
 jcs.auxiliary.JG.attributes.ChannelProperties = UDP(mcast_addr=224.0.0.100;mcast_port=7501):PING:FD:STABLE:NAKACK:UNICAST:FRAG:FLUSH:GMS:VIEW_ENFORCER:QUEUE
 

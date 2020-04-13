@@ -24,7 +24,7 @@
     <version>50</version>
   </parent>
 
-  <artifactId>commons-jcs</artifactId>
+  <artifactId>commons-jcs3</artifactId>
   <packaging>pom</packaging>
   <version>3.0-SNAPSHOT</version>
 
@@ -290,13 +290,13 @@
 
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>commons-jcs-core</artifactId>
+        <artifactId>commons-jcs3-core</artifactId>
         <version>${project.version}</version>
       </dependency>
 
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>commons-jcs-core</artifactId>
+        <artifactId>commons-jcs3-core</artifactId>
         <version>${project.version}</version>
         <type>test-jar</type>
         <scope>test</scope>
@@ -304,15 +304,8 @@
 
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>commons-jcs-jcache</artifactId>
+        <artifactId>commons-jcs3-jcache</artifactId>
         <version>${project.version}</version>
-      </dependency>
-
-      <!--  REQUIRED FOR JCS CORE -->
-      <dependency>
-        <groupId>commons-logging</groupId>
-        <artifactId>commons-logging</artifactId>
-        <version>1.2</version>
       </dependency>
 
       <!--  JDBC DISK CACHE -->

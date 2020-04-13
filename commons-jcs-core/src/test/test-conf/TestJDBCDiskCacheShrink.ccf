@@ -18,13 +18,13 @@
 # a maximum of 100 objects, so objects should get pushed into the disk cache
 
 jcs.default=JDBC
-jcs.default.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
+jcs.default.cacheattributes=org.apache.commons.jcs3.engine.CompositeCacheAttributes
 jcs.default.cacheattributes.MaxObjects=100
-jcs.default.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
+jcs.default.cacheattributes.MemoryCacheName=org.apache.commons.jcs3.engine.memory.lru.LRUMemoryCache
 jcs.default.cacheattributes.UseMemoryShrinker=false
 jcs.default.cacheattributes.MaxMemoryIdleTimeSeconds=3600
 jcs.default.cacheattributes.ShrinkerIntervalSeconds=60
-jcs.default.elementattributes=org.apache.commons.jcs.engine.ElementAttributes
+jcs.default.elementattributes=org.apache.commons.jcs3.engine.ElementAttributes
 jcs.default.elementattributes.IsEternal=false
 jcs.default.elementattributes.MaxLife=700
 jcs.default.elementattributes.IdleTime=1800
@@ -35,29 +35,29 @@ jcs.default.elementattributes.IsLateral=true
 # #############################################################
 # ################# REGIONS ###################################
 jcs.region.expire1Second=JDBC
-jcs.region.expire1Second.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
+jcs.region.expire1Second.cacheattributes=org.apache.commons.jcs3.engine.CompositeCacheAttributes
 jcs.region.expire1Second.cacheattributes.MaxObjects=0
-jcs.region.expire1Second.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
+jcs.region.expire1Second.cacheattributes.MemoryCacheName=org.apache.commons.jcs3.engine.memory.lru.LRUMemoryCache
 jcs.region.expire1Second.elementattributes.MaxLife=1
 
 jcs.region.expire100Second=JDBC
-jcs.region.expire100Second.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
+jcs.region.expire100Second.cacheattributes=org.apache.commons.jcs3.engine.CompositeCacheAttributes
 jcs.region.expire100Second.cacheattributes.MaxObjects=0
-jcs.region.expire100Second.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
+jcs.region.expire100Second.cacheattributes.MemoryCacheName=org.apache.commons.jcs3.engine.memory.lru.LRUMemoryCache
 jcs.region.expire100Second.elementattributes.MaxLife=100
 
 jcs.region.eternal=JDBC
-jcs.region.eternal.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
+jcs.region.eternal.cacheattributes=org.apache.commons.jcs3.engine.CompositeCacheAttributes
 jcs.region.eternal.cacheattributes.MaxObjects=0
-jcs.region.eternal.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
+jcs.region.eternal.cacheattributes.MemoryCacheName=org.apache.commons.jcs3.engine.memory.lru.LRUMemoryCache
 jcs.region.eternal.elementattributes.MaxLife=1
 jcs.region.eternal.elementattributes.IsEternal=true
 
 # #############################################################
 # ################# AUXILIARY CACHES AVAILABLE ################
 # JDBC disk cache
-jcs.auxiliary.JDBC=org.apache.commons.jcs.auxiliary.disk.jdbc.JDBCDiskCacheFactory
-jcs.auxiliary.JDBC.attributes=org.apache.commons.jcs.auxiliary.disk.jdbc.JDBCDiskCacheAttributes
+jcs.auxiliary.JDBC=org.apache.commons.jcs3.auxiliary.disk.jdbc.JDBCDiskCacheFactory
+jcs.auxiliary.JDBC.attributes=org.apache.commons.jcs3.auxiliary.disk.jdbc.JDBCDiskCacheAttributes
 jcs.auxiliary.JDBC.attributes.userName=sa
 jcs.auxiliary.JDBC.attributes.password=
 jcs.auxiliary.JDBC.attributes.url=jdbc:hsqldb:target/JDBCDiskCacheShrinkUnitTest

@@ -17,21 +17,21 @@
 # Cache configuration for the 'JCSConcurrentCacheAccessUnitTest' test.
 
 jcs.default=CACHE
-jcs.default.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
+jcs.default.cacheattributes=org.apache.commons.jcs3.engine.CompositeCacheAttributes
 jcs.default.cacheattributes.MaxObjects=-1
-jcs.default.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
+jcs.default.cacheattributes.MemoryCacheName=org.apache.commons.jcs3.engine.memory.lru.LRUMemoryCache
 jcs.default.cacheattributes.DiskUsagePatternName=UPDATE
 jcs.default.cacheattributes.UseMemoryShrinker=true
 jcs.default.cacheattributes.MaxMemoryIdleTimeSeconds=10
 jcs.default.cacheattributes.ShrinkerIntervalSeconds=10
-jcs.default.elementattributes=org.apache.commons.jcs.engine.ElementAttributes
+jcs.default.elementattributes=org.apache.commons.jcs3.engine.ElementAttributes
 jcs.default.elementattributes.IsRemote=false
 jcs.default.elementattributes.IsLateral=false
 jcs.default.elementattributes.IsSpool=true
 jcs.default.elementattributes.IsEternal=true
 
-jcs.auxiliary.CACHE=org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
-jcs.auxiliary.CACHE.attributes=org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
+jcs.auxiliary.CACHE=org.apache.commons.jcs3.auxiliary.disk.indexed.IndexedDiskCacheFactory
+jcs.auxiliary.CACHE.attributes=org.apache.commons.jcs3.auxiliary.disk.indexed.IndexedDiskCacheAttributes
 jcs.auxiliary.CACHE.attributes.DiskPath=target/test-sandbox/concurrent_cache
 jcs.auxiliary.CACHE.attributes.MaxPurgatorySize=-1
 jcs.auxiliary.CACHE.attributes.MaxKeySize=-1
