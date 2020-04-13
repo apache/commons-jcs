@@ -475,7 +475,7 @@ public class CompositeCacheConfigurator
             }
             catch (Exception e)
             {
-                log.error( "Could not instantiate auxiliary cache named \"{0}\"", regName );
+                log.error( "Could not instantiate auxiliary cache named \"{0}\"", regName, e );
                 return null;
             }
 
