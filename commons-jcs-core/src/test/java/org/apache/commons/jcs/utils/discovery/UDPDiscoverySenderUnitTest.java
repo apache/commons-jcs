@@ -60,7 +60,7 @@ public class UDPDiscoverySenderUnitTest
         throws Exception
     {
         super.setUp();
-        receiver = new UDPDiscoveryReceiver( null, ADDRESS, PORT );
+        receiver = new UDPDiscoveryReceiver( null, null, ADDRESS, PORT );
         sender = new UDPDiscoverySender( ADDRESS, PORT );
     }
 

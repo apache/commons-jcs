@@ -52,6 +52,9 @@ public final class UDPDiscoveryAttributes
     /** udp discovery address */
     private String udpDiscoveryAddr = DEFAULT_UDP_DISCOVERY_ADDRESS;
 
+    /** udp discovery network interface */
+    private String udpDiscoveryInterface = null;
+
     /** udp discovery port */
     private int udpDiscoveryPort = DEFAULT_UDP_DISCOVERY_PORT;
 
@@ -129,6 +132,22 @@ public final class UDPDiscoveryAttributes
     public String getUdpDiscoveryAddr()
     {
         return udpDiscoveryAddr;
+    }
+
+    /**
+     * @param udpDiscoveryInterface The udpDiscoveryInterface to set.
+     */
+    public void setUdpDiscoveryInterface( String udpDiscoveryInterface )
+    {
+        this.udpDiscoveryInterface = udpDiscoveryInterface;
+    }
+
+    /**
+     * @return Returns the udpDiscoveryInterface.
+     */
+    public String getUdpDiscoveryInterface()
+    {
+        return udpDiscoveryInterface;
     }
 
     /**

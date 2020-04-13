@@ -94,8 +94,10 @@ public class UDPDiscoveryService
         try
         {
             // todo need some kind of recovery here.
-            receiver = new UDPDiscoveryReceiver( this, getUdpDiscoveryAttributes().getUdpDiscoveryAddr(),
-                                                 getUdpDiscoveryAttributes().getUdpDiscoveryPort() );
+            receiver = new UDPDiscoveryReceiver( this,
+                    getUdpDiscoveryAttributes().getUdpDiscoveryInterface(),
+                    getUdpDiscoveryAttributes().getUdpDiscoveryAddr(),
+                    getUdpDiscoveryAttributes().getUdpDiscoveryPort() );
         }
         catch ( IOException e )
         {

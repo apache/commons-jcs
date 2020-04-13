@@ -68,11 +68,8 @@ public class UDPDiscoveryReceiver
     /** Service to get cache names and handle request broadcasts */
     private final UDPDiscoveryService service;
 
-    /** Address */
-    private final String multicastAddressString;
-
-    /** The port */
-    private final int multicastPort;
+    /** Multicast address */
+    private final InetAddress multicastAddress;
 
     /** Is it shutdown. */
     private boolean shutdown = false;
@@ -83,16 +80,17 @@ public class UDPDiscoveryReceiver
      * We determine out own host using InetAddress
      *<p>
      * @param service
+     * @param multicastInterfaceString
      * @param multicastAddressString
      * @param multicastPort
      * @throws IOException
      */
-    public UDPDiscoveryReceiver( UDPDiscoveryService service, String multicastAddressString, int multicastPort )
+    public UDPDiscoveryReceiver( UDPDiscoveryService service, String multicastInterfaceString,
+            String multicastAddressString, int multicastPort )
         throws IOException
     {
         this.service = service;
-        this.multicastAddressString = multicastAddressString;
-        this.multicastPort = multicastPort;
+        this.multicastAddress = InetAddress.getByName( multicastAddressString );
 
         // create a small thread pool to handle a barrage
         this.pooledExecutor = ThreadPoolManager.getInstance().createPool(
@@ -100,41 +98,53 @@ public class UDPDiscoveryReceiver
         		        WhenBlockedPolicy.DISCARDOLDEST, maxPoolSize),
         		"JCS-UDPDiscoveryReceiver-", Thread.MIN_PRIORITY);
 
-        log.info( "Constructing listener, [{0}:{1}]",
-                this.multicastAddressString, this.multicastPort );
+        log.info( "Constructing listener, [{0}:{1}]", multicastAddress, multicastPort );
 
-        createSocket( this.multicastAddressString, this.multicastPort );
+        createSocket( multicastInterfaceString, multicastAddress, multicastPort );
     }
 
     /**
      * Creates the socket for this class.
      * <p>
-     * @param multicastAddressString
+     * @param multicastInterfaceString
+     * @param multicastAddress
      * @param multicastPort
      * @throws IOException
      */
-    private void createSocket( String multicastAddressString, int multicastPort )
+    private void createSocket( String multicastInterfaceString, InetAddress multicastAddress,
+            int multicastPort )
         throws IOException
     {
         try
         {
             mSocket = new MulticastSocket( multicastPort );
-            InetAddress multicastAddress = InetAddress.getByName( multicastAddressString );
             if (log.isInfoEnabled())
             {
                 log.info( "Joining Group: [{0}]", multicastAddress );
             }
-            NetworkInterface multicastInterface = HostNameUtil.getMulticastNetworkInterface();
+
+            // Use dedicated interface if specified
+            NetworkInterface multicastInterface = null;
+            if (multicastInterfaceString != null)
+            {
+                multicastInterface = NetworkInterface.getByName(multicastInterfaceString);
+            }
+            else
+            {
+                multicastInterface = HostNameUtil.getMulticastNetworkInterface();
+            }
             if (multicastInterface != null)
             {
+                log.info("Using network interface {0}", multicastInterface.getDisplayName());
                 mSocket.setNetworkInterface(multicastInterface);
             }
+
             mSocket.joinGroup( multicastAddress );
         }
         catch ( IOException e )
         {
-            log.error( "Could not bind to multicast address [{0}:{1}]",
-                    InetAddress.getByName( multicastAddressString ), multicastPort, e );
+            log.error( "Could not bind to multicast address [{0}:{1}]", multicastAddress,
+                    multicastPort, e );
             throw e;
         }
     }
@@ -338,16 +348,19 @@ public class UDPDiscoveryReceiver
     @Override
     public void shutdown()
     {
-        try
+        if (!shutdown)
         {
-            shutdown = true;
-            mSocket.leaveGroup( InetAddress.getByName( multicastAddressString ) );
-            mSocket.close();
-            pooledExecutor.shutdownNow();
-        }
-        catch ( IOException e )
-        {
-            log.error( "Problem closing socket" );
+            try
+            {
+                shutdown = true;
+                mSocket.leaveGroup( multicastAddress );
+                mSocket.close();
+                pooledExecutor.shutdownNow();
+            }
+            catch ( IOException e )
+            {
+                log.error( "Problem closing socket" );
+            }
         }
     }
 }

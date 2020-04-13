@@ -52,8 +52,10 @@ public class UDPDiscoveryUnitTest
         service.addDiscoveryListener( discoveryListener );
 
         // create a receiver with the service
-        UDPDiscoveryReceiver receiver = new UDPDiscoveryReceiver( service, attributes.getUdpDiscoveryAddr(), attributes
-            .getUdpDiscoveryPort() );
+        UDPDiscoveryReceiver receiver = new UDPDiscoveryReceiver( service,
+                null,
+                attributes.getUdpDiscoveryAddr(),
+                attributes.getUdpDiscoveryPort() );
         Thread t = new Thread( receiver );
         t.start();
 
