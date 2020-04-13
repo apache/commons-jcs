@@ -20,6 +20,33 @@
 	</properties>
 	<body>
         <release version="3.0" date="unreleased">
+            <action issue="JCS-46" dev="tv" type="add">
+                Add configuration option to specify the datagram 
+                time-to-live in UDPDiscoverySender
+            </action>
+            <action dev="tv" type="add">
+                Add configuration option to specify the network interface
+                to use for UDP multicast
+            </action>
+            <action issue="JCS-166" dev="tv" type="add">
+                Add configuration option to specify the host to bind the
+                LateralTCPListener to
+            </action>
+            <action issue="JCS-199" dev="tv" type="fix">
+                Properly shut down auxiliary caches
+            </action>
+            <action issue="JCS-182" dev="tv" type="fix">
+                Fix NPE while closing data source
+            </action>
+            <action issue="JCS-201" dev="tv" type="fix">
+                Fix initialization sequence
+            </action>
+            <action issue="JCS-122" dev="tv" type="remove">
+                Remove dependency on commons-logging
+            </action>
+            <action issue="JCS-122" dev="tv" type="add">
+                Add a log abstraction layer for java.util.logging or log4j2
+            </action>
             <action dev="tv" type="add">
                 Add a get method to CacheAccess that allows a Supplier to be specified
             </action>

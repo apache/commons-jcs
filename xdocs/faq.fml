@@ -26,10 +26,10 @@
 			<question>What jars are required by JCS?</question>
 			<answer>
                 <p>
-                    As of version 2.0, the core of JCS (the LRU
+                    As of version 3.0, the core of JCS (the LRU
                     memory cache, the indexed disk cache, the TCP
-                    lateral, and the RMI remote server) only
-                    requires commons-logging.
+                    lateral, and the RMI remote server) have no
+                    mandatory dependencies.
                 </p>
 				<p>
 					All of the other dependencies listed on the project

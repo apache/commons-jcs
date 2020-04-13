@@ -57,7 +57,10 @@
 				<li>Key pattern matching retrieval</li>
 				<li>Network efficient multi-key retrieval</li>
 			</ul>
-			<p> JCS 2.0 works on JDK versions 1.6 and up. It only has a
+            <p> JCS 3.x works on JDK versions 1.8 and up. It has no
+                mandatory external dependencies. See the document about
+                <a href="UpgradingFrom2x.html">upgrading</a>.</p>
+			<p> JCS 2.x works on JDK versions 1.6 and up. It only has a
 				dependency on Commons Logging. See the document about
                 <a href="UpgradingFrom13.html">upgrading</a>.</p>
 		</section>
