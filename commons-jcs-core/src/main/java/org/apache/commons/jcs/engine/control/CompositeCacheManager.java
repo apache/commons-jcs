@@ -631,6 +631,19 @@ public class CompositeCacheManager
             // do the traditional shutdown of the regions.
             getCacheNames().forEach(this::freeCache);
 
+            // shut down auxiliaries
+            for (String key : auxiliaryCaches.keySet())
+            {
+                try
+                {
+                    freeAuxiliaryCache(key);
+                }
+                catch (IOException e)
+                {
+                    log.warn("Auxiliary cache {0} failed to shut down", key, e);
+                }
+            }
+
             // shut down factories
             auxiliaryFactoryRegistry.values().forEach(AuxiliaryCacheFactory::dispose);
 
@@ -776,6 +789,35 @@ public class CompositeCacheManager
     {
         String key = String.format("aux.%s.region.%s", auxName, cacheName);
         return (AuxiliaryCache<K, V>) auxiliaryCaches.get(key);
+    }
+
+    /**
+     * Dispose a cache and remove it from the map of registered auxiliary caches
+     *
+     * @param auxName the auxiliary name
+     * @param cacheName the region name
+     * @throws IOException if disposing of the cache fails
+     */
+    public void freeAuxiliaryCache(String auxName, String cacheName) throws IOException
+    {
+        String key = String.format("aux.%s.region.%s", auxName, cacheName);
+        freeAuxiliaryCache(key);
+    }
+
+    /**
+     * Dispose a cache and remove it from the map of registered auxiliary caches
+     *
+     * @param key the key into the map of auxiliaries
+     * @throws IOException if disposing of the cache fails
+     */
+    public void freeAuxiliaryCache(String key) throws IOException
+    {
+        AuxiliaryCache<?, ?> aux = auxiliaryCaches.remove( key );
+
+        if ( aux != null )
+        {
+            aux.dispose();
+        }
     }
 
     /**
