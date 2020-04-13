@@ -1,5 +1,14 @@
 package org.apache.commons.jcs.auxiliary.disk.jdbc.hsql;
 
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import org.apache.commons.jcs.JCS;
+import org.apache.commons.jcs.access.CacheAccess;
+import org.apache.commons.jcs.access.exception.CacheException;
+import org.apache.commons.jcs.engine.behavior.ICacheElement;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -20,18 +29,9 @@ package org.apache.commons.jcs.auxiliary.disk.jdbc.hsql;
  */
 
 import junit.framework.TestCase;
-import org.apache.commons.jcs.JCS;
-import org.apache.commons.jcs.access.CacheAccess;
-import org.apache.commons.jcs.access.exception.CacheException;
-import org.apache.commons.jcs.engine.behavior.ICacheElement;
-
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 
 /**
- * Test which exercises the indexed disk cache. This one uses three different regions for thre
- * threads.
+ * Test which exercises the HSQL cache.
  */
 public class HSQLDiskCacheUnitTest
     extends TestCase
@@ -61,22 +61,15 @@ public class HSQLDiskCacheUnitTest
         CacheAccess<String, String> jcs = JCS.getInstance( region );
 
         // Add items to cache
-
         for ( int i = 0; i <= items; i++ )
         {
             jcs.put( i + ":key", region + " data " + i );
         }
 
-        //SleepUtil.sleepAtLeast( 1000 );
-
-//        System.out.println( jcs.getStats() );
-
         // Test that all items are in cache
-
         for ( int i = 0; i <= items; i++ )
         {
             String value = jcs.get( i + ":key" );
-
             assertEquals( "key = [" + i + ":key] value = [" + value + "]", region + " data " + i, value );
         }
 
@@ -95,16 +88,13 @@ public class HSQLDiskCacheUnitTest
             assertEquals( "value " + i + ":key", region + " data " + i, element.getVal() );
         }
 
-
         // Remove all the items
-
         for ( int i = 0; i <= items; i++ )
         {
             jcs.remove( i + ":key" );
         }
 
         // Verify removal
-
         for ( int i = 0; i <= items; i++ )
         {
             assertNull( "Removed key should be null: " + i + ":key", jcs.get( i + ":key" ) );
@@ -126,7 +116,6 @@ public class HSQLDiskCacheUnitTest
         int items = 20;
 
         // Add items to cache
-
         for ( int i = 0; i <= items; i++ )
         {
             jcs.put( i + ":key", region + " data " + i );
@@ -146,7 +135,6 @@ public class HSQLDiskCacheUnitTest
         for ( int i = 0; i <= items; i++ )
         {
             String value = jcs.get( i + ":key" );
-
             assertNull( "value should be null key = [" + i + ":key] value = [" + value + "]", value );
         }
     }
@@ -166,7 +154,6 @@ public class HSQLDiskCacheUnitTest
         int items = 20;
 
         // Add items to cache
-
         for ( int i = 0; i <= items; i++ )
         {
             jcs.put( i + ":key", region + " data " + i );
@@ -175,14 +162,11 @@ public class HSQLDiskCacheUnitTest
         // a db thread could be updating the disk when
         // Thread.sleep( 500 );
 
-//        System.out.println( jcs.getStats() );
-
         jcs.clear();
 
         for ( int i = 0; i <= items; i++ )
         {
             String value = jcs.get( i + ":key" );
-
             assertEquals( "key = [" + i + ":key] value = [" + value + "]", region + " data " + i, value );
         }
     }

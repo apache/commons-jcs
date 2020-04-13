@@ -21,6 +21,7 @@ package org.apache.commons.jcs.auxiliary.disk.jdbc;
 
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -615,37 +616,44 @@ public class JDBCDiskCache<K, V>
 
         try (Connection con = getDataSource().getConnection())
         {
-            getTableState().setState( TableState.DELETE_RUNNING );
+            // The shrinker thread might kick in before the table is created
+            // So check if the table exists first
+            DatabaseMetaData dmd = con.getMetaData();
+            ResultSet result = dmd.getTables(null, null,
+                    getJdbcDiskCacheAttributes().getTableName(), null);
 
-            long now = System.currentTimeMillis() / 1000;
-
-            // This is to slow when we push over a million records
-            // String sql = "delete from " +
-            // getJdbcDiskCacheAttributes().getTableName() + " where REGION = '"
-            // + this.getCacheName() + "' and IS_ETERNAL = 'F' and (" + now
-            // + " - UPDATE_TIME_SECONDS) > MAX_LIFE_SECONDS";
-
-            String sql = "delete from " + getJdbcDiskCacheAttributes().getTableName()
-                + " where IS_ETERNAL = ? and REGION = ? and ? > SYSTEM_EXPIRE_TIME_SECONDS";
-
-            try (PreparedStatement psDelete = con.prepareStatement( sql ))
+            if (result.next())
             {
-                psDelete.setString( 1, "F" );
-                psDelete.setString( 2, this.getCacheName() );
-                psDelete.setLong( 3, now );
+                getTableState().setState( TableState.DELETE_RUNNING );
+                long now = System.currentTimeMillis() / 1000;
 
-                setAlive(true);
+                String sql = "delete from " + getJdbcDiskCacheAttributes().getTableName()
+                    + " where IS_ETERNAL = ? and REGION = ? and ? > SYSTEM_EXPIRE_TIME_SECONDS";
 
-                deleted = psDelete.executeUpdate();
+                try (PreparedStatement psDelete = con.prepareStatement( sql ))
+                {
+                    psDelete.setString( 1, "F" );
+                    psDelete.setString( 2, this.getCacheName() );
+                    psDelete.setLong( 3, now );
+
+                    setAlive(true);
+
+                    deleted = psDelete.executeUpdate();
+                }
+                catch ( SQLException e )
+                {
+                    log.error( "Problem creating statement.", e );
+                    setAlive(false);
+                }
+
+                logApplicationEvent( getAuxiliaryCacheAttributes().getName(), "deleteExpired",
+                                     "Deleted expired elements.  URL: " + getDiskLocation() );
             }
-            catch ( SQLException e )
+            else
             {
-                log.error( "Problem creating statement.", e );
-                setAlive(false);
+                log.warn( "Trying to shrink non-existing table [{0}]",
+                        getJdbcDiskCacheAttributes().getTableName() );
             }
-
-            logApplicationEvent( getAuxiliaryCacheAttributes().getName(), "deleteExpired",
-                                 "Deleted expired elements.  URL: " + getDiskLocation() );
         }
         catch ( SQLException e )
         {

@@ -67,6 +67,7 @@ jcs.auxiliary.HSQL_NORA.attributes.tableName=JCS_STORE4
 jcs.auxiliary.HSQL_NORA.attributes.testBeforeInsert=false
 jcs.auxiliary.HSQL_NORA.attributes.maxTotal=15
 jcs.auxiliary.HSQL_NORA.attributes.allowRemoveAll=false
+jcs.auxiliary.HSQL_NORA.attributes.useDiskShrinker=false
 jcs.auxiliary.HSQL_NORA.attributes.MaxPurgatorySize=10000000
 jcs.auxiliary.HSQL_NORA.attributes.EventQueueType=POOLED
 jcs.auxiliary.HSQL_NORA.attributes.EventQueuePoolName=disk_cache_event_queue

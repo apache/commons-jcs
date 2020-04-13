@@ -130,10 +130,6 @@
                   sensitive.
               -->
               <!-- You need to manually run these test cases. -->
-              <exclude>**/BlockDiskElementDescriptorUnitTest.java</exclude>
-              <exclude>**/HSQLDiskCacheConcurrentUnitTest.java</exclude>
-              <exclude>**/HSQLDiskCacheUnitTest.java</exclude>
-              <exclude>**/IndexedDiskCacheOptimizationUnitTest.java</exclude>
               <exclude>**/TestTCPLateralUnitTest.java</exclude>
               <exclude>**/UDPDiscoveryUnitTest.java</exclude>
               <!-- Causes hang in Continuum -->

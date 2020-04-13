@@ -20,10 +20,12 @@ package org.apache.commons.jcs.auxiliary.disk.jdbc.hsql;
  */
 
 import java.sql.Connection;
-import java.sql.DriverManager;
+import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.concurrent.CopyOnWriteArraySet;
+
+import javax.sql.DataSource;
 
 import org.apache.commons.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.commons.jcs.auxiliary.disk.jdbc.JDBCDiskCache;
@@ -46,9 +48,6 @@ public class HSQLDiskCacheFactory
     /** The logger */
     private static final Log log = LogManager.getLog( HSQLDiskCacheFactory.class );
 
-    /** The databases. */
-    private CopyOnWriteArraySet<String> databases;
-
     /**
      * This factory method should create an instance of the hsqlcache.
      * <p>
@@ -66,70 +65,30 @@ public class HSQLDiskCacheFactory
 			IElementSerializer elementSerializer )
 			throws SQLException
     {
-        setupDatabase( (JDBCDiskCacheAttributes) rawAttr );
-        return super.createCache(rawAttr, compositeCacheManager, cacheEventLogger, elementSerializer);
+        // TODO get this from the attributes.
+        System.setProperty( "hsqldb.cache_scale", "8" );
+
+        JDBCDiskCache<K, V> cache = super.createCache(rawAttr, compositeCacheManager,
+                cacheEventLogger, elementSerializer);
+        setupDatabase( cache.getDataSource(), (JDBCDiskCacheAttributes) rawAttr );
+
+        return cache;
     }
 
     /**
-     * Initialize this factory
-     */
-    @Override
-    public void initialize()
-    {
-        super.initialize();
-        this.databases = new CopyOnWriteArraySet<>();
-    }
-
-    /**
-     * Creates the database if it doesn't exist, registers the driver class, etc.
+     * Creates the table if it doesn't exist
      * <p>
-     * @param attributes
+     * @param ds Data Source
+     * @param attributes Cache region configuration
      * @throws SQLException
      */
-    protected void setupDatabase( JDBCDiskCacheAttributes attributes )
+    protected void setupDatabase( DataSource ds, JDBCDiskCacheAttributes attributes )
         throws SQLException
     {
-        if ( attributes == null )
+        try (Connection cConn = ds.getConnection())
         {
-            throw new SQLException( "The attributes are null." );
-        }
-
-        // url should start with "jdbc:hsqldb:"
-        String database = attributes.getUrl() + attributes.getDatabase();
-
-        if ( databases.contains( database ) )
-        {
-            log.info("We already setup database [{0}]", database);
-            return;
-        }
-
-        synchronized (databases)
-        {
-            // TODO get this from the attributes.
-            System.setProperty( "hsqldb.cache_scale", "8" );
-
-            // "org.hsqldb.jdbcDriver"
-            String driver = attributes.getDriverClassName();
-            // "sa"
-            String user = attributes.getUserName();
-            // ""
-            String password = attributes.getPassword();
-
-            try
-            {
-                Class.forName( driver ).newInstance();
-            }
-            catch (Exception e)
-            {
-                throw new SQLException( "Could not initialize driver " + driver, e );
-            }
-
-            Connection cConn = DriverManager.getConnection( database, user, password );
             setupTable( cConn, attributes.getTableName() );
-
-            log.info( "Finished setting up database [{0}]", database);
-
-            databases.add( database );
+            log.info( "Finished setting up table [{0}]", attributes.getTableName());
         }
     }
 
@@ -141,30 +100,29 @@ public class HSQLDiskCacheFactory
      */
     protected void setupTable( Connection cConn, String tableName ) throws SQLException
     {
-        // TODO make the cached nature of the table configurable
-        StringBuilder createSql = new StringBuilder();
-        createSql.append( "CREATE CACHED TABLE ").append( tableName );
-        createSql.append( "( " );
-        createSql.append( "CACHE_KEY             VARCHAR(250)          NOT NULL, " );
-        createSql.append( "REGION                VARCHAR(250)          NOT NULL, " );
-        createSql.append( "ELEMENT               BINARY, " );
-        createSql.append( "CREATE_TIME           TIMESTAMP, " );
-        createSql.append( "UPDATE_TIME_SECONDS   BIGINT, " );
-        createSql.append( "MAX_LIFE_SECONDS      BIGINT, " );
-        createSql.append( "SYSTEM_EXPIRE_TIME_SECONDS      BIGINT, " );
-        createSql.append( "IS_ETERNAL            CHAR(1), " );
-        createSql.append( "PRIMARY KEY (CACHE_KEY, REGION) " );
-        createSql.append( ");" );
+        DatabaseMetaData dmd = cConn.getMetaData();
+        ResultSet result = dmd.getTables(null, null, tableName, null);
 
-        try (Statement sStatement = cConn.createStatement())
+        if (!result.next())
         {
-            sStatement.execute( createSql.toString() );
-        }
-        catch ( SQLException e )
-        {
-            if (!"23000".equals(e.getSQLState()))
+            // TODO make the cached nature of the table configurable
+            StringBuilder createSql = new StringBuilder();
+            createSql.append( "CREATE CACHED TABLE ").append( tableName );
+            createSql.append( "( " );
+            createSql.append( "CACHE_KEY             VARCHAR(250)          NOT NULL, " );
+            createSql.append( "REGION                VARCHAR(250)          NOT NULL, " );
+            createSql.append( "ELEMENT               BINARY, " );
+            createSql.append( "CREATE_TIME           TIMESTAMP, " );
+            createSql.append( "UPDATE_TIME_SECONDS   BIGINT, " );
+            createSql.append( "MAX_LIFE_SECONDS      BIGINT, " );
+            createSql.append( "SYSTEM_EXPIRE_TIME_SECONDS      BIGINT, " );
+            createSql.append( "IS_ETERNAL            CHAR(1), " );
+            createSql.append( "PRIMARY KEY (CACHE_KEY, REGION) " );
+            createSql.append( ");" );
+
+            try (Statement sStatement = cConn.createStatement())
             {
-                throw e;
+                sStatement.execute( createSql.toString() );
             }
         }
     }

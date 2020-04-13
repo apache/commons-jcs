@@ -1,5 +1,13 @@
 package org.apache.commons.jcs.auxiliary.disk.jdbc.hsql;
 
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import org.apache.commons.jcs.JCS;
+import org.apache.commons.jcs.access.CacheAccess;
+import org.apache.commons.jcs.engine.behavior.ICacheElement;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -22,13 +30,6 @@ package org.apache.commons.jcs.auxiliary.disk.jdbc.hsql;
 import junit.extensions.ActiveTestSuite;
 import junit.framework.Test;
 import junit.framework.TestCase;
-import org.apache.commons.jcs.JCS;
-import org.apache.commons.jcs.access.CacheAccess;
-import org.apache.commons.jcs.engine.behavior.ICacheElement;
-
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Test which exercises the indexed disk cache. This one uses three different regions for thre
@@ -49,17 +50,6 @@ public class HSQLDiskCacheConcurrentUnitTest
     public HSQLDiskCacheConcurrentUnitTest( String testName )
     {
         super( testName );
-    }
-
-    /**
-     * Main method passes this test to the text test runner.
-     * <p>
-     * @param args
-     */
-    public static void main( String args[] )
-    {
-        String[] testCaseName = { HSQLDiskCacheConcurrentUnitTest.class.getName() };
-        junit.textui.TestRunner.main( testCaseName );
     }
 
     /**
@@ -126,7 +116,6 @@ public class HSQLDiskCacheConcurrentUnitTest
         CacheAccess<String, String> jcs = JCS.getInstance( region );
 
         // Add items to cache
-
         for ( int i = 0; i <= items; i++ )
         {
             jcs.put( i + ":key", region + " data " + i );
@@ -135,7 +124,6 @@ public class HSQLDiskCacheConcurrentUnitTest
 //        System.out.println( jcs.getStats() );
 
         // Test that all items are in cache
-
         for ( int i = 0; i <= items; i++ )
         {
             String value = jcs.get( i + ":key" );
@@ -159,14 +147,12 @@ public class HSQLDiskCacheConcurrentUnitTest
         }
 
         // Remove all the items
-
         for ( int i = 0; i <= items; i++ )
         {
             jcs.remove( i + ":key" );
         }
 
         // Verify removal
-
         for ( int i = 0; i <= items; i++ )
         {
             assertNull( "Removed key should be null: " + i + ":key", jcs.get( i + ":key" ) );
