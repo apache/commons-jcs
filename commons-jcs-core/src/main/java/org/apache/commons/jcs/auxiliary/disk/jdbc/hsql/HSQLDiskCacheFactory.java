@@ -98,7 +98,7 @@ public class HSQLDiskCacheFactory
      * @param cConn
      * @param tableName
      */
-    protected void setupTable( Connection cConn, String tableName ) throws SQLException
+    protected synchronized void setupTable( Connection cConn, String tableName ) throws SQLException
     {
         DatabaseMetaData dmd = cConn.getMetaData();
         ResultSet result = dmd.getTables(null, null, tableName, null);
