@@ -1126,14 +1126,11 @@ public class RemoteCacheServer<K, V>
      */
     private static <KK, VV> void cleanupEventQMap( Map<Long, ICacheEventQueue<KK, VV>> eventQMap )
     {
-        synchronized ( eventQMap )
-        {
-            // this does not care if the q is alive (i.e. if
-            // there are active threads; it cares if the queue
-            // is working -- if it has not encountered errors
-            // above the failure threshold
-            eventQMap.entrySet().removeIf(e -> !e.getValue().isWorking());
-        }
+        // this does not care if the q is alive (i.e. if
+        // there are active threads; it cares if the queue
+        // is working -- if it has not encountered errors
+        // above the failure threshold
+        eventQMap.entrySet().removeIf(e -> !e.getValue().isWorking());
     }
 
     /**
@@ -1317,8 +1314,8 @@ public class RemoteCacheServer<K, V>
         idTypeMap.remove( Long.valueOf( listenerId ) );
         idIPMap.remove( Long.valueOf( listenerId ) );
 
-        log.info( "After removing listener [{0}] cache region {1}'s listener size [{2}]",
-                listenerId, cacheName, cacheDesc.eventQMap.size() );
+        log.info( "After removing listener [{0}] cache region {1} listener size [{2}]",
+                listenerId, cacheName, eventQMap.size() );
     }
 
     /**
