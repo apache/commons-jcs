@@ -61,7 +61,7 @@ public class UDPDiscoverySenderUnitTest
     {
         super.setUp();
         receiver = new UDPDiscoveryReceiver( null, null, ADDRESS, PORT );
-        sender = new UDPDiscoverySender( ADDRESS, PORT );
+        sender = new UDPDiscoverySender( ADDRESS, PORT, 0 );
     }
 
     /**

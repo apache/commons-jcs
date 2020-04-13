@@ -142,7 +142,8 @@ public class UDPDiscoveryService
         // more robust
         try (UDPDiscoverySender sender = new UDPDiscoverySender(
                 getUdpDiscoveryAttributes().getUdpDiscoveryAddr(),
-                getUdpDiscoveryAttributes().getUdpDiscoveryPort() ))
+                getUdpDiscoveryAttributes().getUdpDiscoveryPort(),
+                getUdpDiscoveryAttributes().getUdpTTL()))
         {
             sender.passiveBroadcast( getUdpDiscoveryAttributes().getServiceAddress(), getUdpDiscoveryAttributes()
                 .getServicePort(), this.getCacheNames() );

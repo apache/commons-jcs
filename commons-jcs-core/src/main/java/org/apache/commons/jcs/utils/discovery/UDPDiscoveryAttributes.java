@@ -58,6 +58,9 @@ public final class UDPDiscoveryAttributes
     /** udp discovery port */
     private int udpDiscoveryPort = DEFAULT_UDP_DISCOVERY_PORT;
 
+    /** udp datagram TTL */
+    private int udpTTL = 0;
+
     /** default delay between sending passive broadcasts */
     private static final int DEFAULT_SEND_DELAY_SEC = 60;
 
@@ -156,6 +159,22 @@ public final class UDPDiscoveryAttributes
     public void setUdpDiscoveryPort( int udpDiscoveryPort )
     {
         this.udpDiscoveryPort = udpDiscoveryPort;
+    }
+
+    /**
+     * @return Returns the udpTTL.
+     */
+    public int getUdpTTL()
+    {
+        return udpTTL;
+    }
+
+    /**
+     * @param udpTTL The udpTTL to set.
+     */
+    public void setUdpTTL( int udpTTL )
+    {
+        this.udpTTL = udpTTL;
     }
 
     /**

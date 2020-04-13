@@ -79,8 +79,10 @@ public class UDPDiscoverySenderThread
                 () -> attributes.getServiceAddress(),
                 () -> attributes.getServicePort() );
 
-        try (UDPDiscoverySender sender = new UDPDiscoverySender( attributes.getUdpDiscoveryAddr(),
-                attributes.getUdpDiscoveryPort() ))
+        try (UDPDiscoverySender sender = new UDPDiscoverySender(
+                attributes.getUdpDiscoveryAddr(),
+                attributes.getUdpDiscoveryPort(),
+                attributes.getUdpTTL()))
         {
             // move this to the run method and determine how often to call it.
             sender.requestBroadcast();
@@ -101,8 +103,10 @@ public class UDPDiscoverySenderThread
     {
         // create this connection each time.
         // more robust
-        try (UDPDiscoverySender sender = new UDPDiscoverySender( attributes.getUdpDiscoveryAddr(),
-                attributes.getUdpDiscoveryPort() ))
+        try (UDPDiscoverySender sender = new UDPDiscoverySender(
+                attributes.getUdpDiscoveryAddr(),
+                attributes.getUdpDiscoveryPort(),
+                attributes.getUdpTTL()))
         {
             sender.passiveBroadcast( attributes.getServiceAddress(), attributes.getServicePort(), cacheNames );
 
@@ -126,8 +130,10 @@ public class UDPDiscoverySenderThread
     {
         // create this connection each time.
         // more robust
-        try (UDPDiscoverySender sender = new UDPDiscoverySender( attributes.getUdpDiscoveryAddr(),
-                attributes.getUdpDiscoveryPort() ))
+        try (UDPDiscoverySender sender = new UDPDiscoverySender(
+                attributes.getUdpDiscoveryAddr(),
+                attributes.getUdpDiscoveryPort(),
+                attributes.getUdpTTL()))
         {
             sender.removeBroadcast( attributes.getServiceAddress(), attributes.getServicePort(), cacheNames );
 

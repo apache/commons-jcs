@@ -43,10 +43,10 @@ public class UDPDiscoverySender implements AutoCloseable
     private static final Log log = LogManager.getLog( UDPDiscoverySender.class );
 
     /** The socket */
-    private MulticastSocket localSocket;
+    private final MulticastSocket localSocket;
 
     /** The address */
-    private InetAddress multicastAddress;
+    private final InetAddress multicastAddress;
 
     /** The port */
     private final int multicastPort;
@@ -63,15 +63,21 @@ public class UDPDiscoverySender implements AutoCloseable
      * <p>
      * @param host
      * @param port
+     * @param udpTTL the Datagram packet time-to-live
      * @throws IOException
      */
-    public UDPDiscoverySender( String host, int port )
+    public UDPDiscoverySender( String host, int port, int udpTTL )
         throws IOException
     {
         try
         {
             log.debug( "Constructing socket for sender on port [{0}]", port );
             localSocket = new MulticastSocket( port );
+            if (udpTTL > 0)
+            {
+                log.debug( "Setting datagram TTL to [{0}]", udpTTL );
+                localSocket.setTimeToLive(udpTTL);
+            }
 
             // Remote address.
             multicastAddress = InetAddress.getByName( host );
@@ -82,7 +88,7 @@ public class UDPDiscoverySender implements AutoCloseable
             throw e;
         }
 
-        multicastPort = port;
+        this.multicastPort = port;
     }
 
     /**

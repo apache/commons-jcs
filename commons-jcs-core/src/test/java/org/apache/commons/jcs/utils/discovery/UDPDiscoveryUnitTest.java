@@ -60,8 +60,10 @@ public class UDPDiscoveryUnitTest
         t.start();
 
         // create a sender
-        UDPDiscoverySender sender = new UDPDiscoverySender( attributes.getUdpDiscoveryAddr(), attributes
-            .getUdpDiscoveryPort() );
+        UDPDiscoverySender sender = new UDPDiscoverySender(
+                attributes.getUdpDiscoveryAddr(),
+                attributes.getUdpDiscoveryPort(),
+                4 /* datagram TTL */);
 
         // create more names than we have no wait facades for
         // the only one that gets added should be testCache1

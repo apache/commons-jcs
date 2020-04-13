@@ -55,7 +55,8 @@
           Lateral Auxiliary Cache referenced by <code>LTCP</code>.  It uses
           UDP Discovery to locate other servers.  It broadcasts to
           multicast address <code>228.5.6.8</code> and port <code>6780</code>.
-          It listens to port <code>1110</code>.
+          It listens to port <code>1110</code>. The UDP datagram time-to-live
+          is 4. 
         </p>
         <source><![CDATA[
 jcs.auxiliary.LTCP=org.apache.commons.jcs.auxiliary.lateral.socket.tcp.LateralTCPCacheFactory
@@ -65,6 +66,7 @@ jcs.auxiliary.LTCP.attributes.PutOnlyMode=true
 jcs.auxiliary.LTCP.attributes.UdpDiscoveryAddr=228.5.6.8
 jcs.auxiliary.LTCP.attributes.UdpDiscoveryPort=6780
 jcs.auxiliary.LTCP.attributes.UdpDiscoveryEnabled=true
+jcs.auxiliary.LTCP.attributes.UdpTTL=4
         ]]></source>
       </subsection>
       <subsection name="Multi-homed hosts">
@@ -88,6 +90,7 @@ jcs.auxiliary.LTCP.attributes.UdpDiscoveryInterface=en0
 jcs.auxiliary.LTCP.attributes.UdpDiscoveryAddr=228.5.6.8
 jcs.auxiliary.LTCP.attributes.UdpDiscoveryPort=6780
 jcs.auxiliary.LTCP.attributes.UdpDiscoveryEnabled=true
+jcs.auxiliary.LTCP.attributes.UdpTTL=4
         ]]></source>
       </subsection>
     </section>
