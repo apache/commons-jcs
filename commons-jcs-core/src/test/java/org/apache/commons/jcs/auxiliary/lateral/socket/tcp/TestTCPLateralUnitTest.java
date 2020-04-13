@@ -1,5 +1,22 @@
 package org.apache.commons.jcs.auxiliary.lateral.socket.tcp;
 
+import java.util.Map;
+import java.util.Set;
+
+import org.apache.commons.jcs.JCS;
+import org.apache.commons.jcs.auxiliary.lateral.LateralCacheAttributes;
+import org.apache.commons.jcs.auxiliary.lateral.LateralCommand;
+import org.apache.commons.jcs.auxiliary.lateral.LateralElementDescriptor;
+import org.apache.commons.jcs.engine.CacheElement;
+import org.apache.commons.jcs.engine.behavior.ICacheElement;
+import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
+import org.apache.commons.jcs.engine.control.CompositeCache;
+import org.apache.commons.jcs.engine.control.CompositeCacheManager;
+import org.apache.commons.jcs.engine.control.MockCompositeCacheManager;
+import org.apache.commons.jcs.engine.control.group.GroupAttrName;
+import org.apache.commons.jcs.engine.control.group.GroupId;
+import org.apache.commons.jcs.utils.timing.SleepUtil;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -20,22 +37,6 @@ package org.apache.commons.jcs.auxiliary.lateral.socket.tcp;
  */
 
 import junit.framework.TestCase;
-import org.apache.commons.jcs.JCS;
-import org.apache.commons.jcs.auxiliary.lateral.LateralCacheAttributes;
-import org.apache.commons.jcs.auxiliary.lateral.LateralCommand;
-import org.apache.commons.jcs.auxiliary.lateral.LateralElementDescriptor;
-import org.apache.commons.jcs.engine.CacheElement;
-import org.apache.commons.jcs.engine.behavior.ICacheElement;
-import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
-import org.apache.commons.jcs.engine.control.CompositeCache;
-import org.apache.commons.jcs.engine.control.CompositeCacheManager;
-import org.apache.commons.jcs.engine.control.MockCompositeCacheManager;
-import org.apache.commons.jcs.engine.control.group.GroupAttrName;
-import org.apache.commons.jcs.engine.control.group.GroupId;
-import org.apache.commons.jcs.utils.timing.SleepUtil;
-
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Basic unit tests for the sending and receiving portions of the lateral cache.
@@ -313,7 +314,7 @@ public class TestTCPLateralUnitTest
 
         // VERIFY
         assertNotNull( "Result should not be null.", result );
-        assertEquals( "Didn't get the correct object", "key", result.toArray()[0] );
+        assertEquals( "Didn't get the correct object", "key", result.iterator().next().attrName );
     }
 
     /**

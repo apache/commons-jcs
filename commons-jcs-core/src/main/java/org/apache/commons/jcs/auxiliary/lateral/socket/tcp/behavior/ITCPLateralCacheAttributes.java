@@ -77,6 +77,21 @@ public interface ITCPLateralCacheAttributes
     int getTcpListenerPort();
 
     /**
+     * Sets the tcpListenerHost attribute of the ILateralCacheAttributes object
+     * <p>
+     * @param val
+     *            The new tcpListenerHost value
+     */
+    void setTcpListenerHost( String val );
+
+    /**
+     * Gets the tcpListenerHost attribute of the ILateralCacheAttributes object
+     * <p>
+     * @return The tcpListenerHost value
+     */
+    String getTcpListenerHost();
+
+    /**
      * Can setup UDP Discovery. This only works for TCp laterals right now. It
      * allows TCP laterals to find each other by broadcasting to a multicast
      * port.

@@ -66,8 +66,11 @@ public class TCPLateralCacheAttributes
     /** used to identify the service that this manager will be operating on */
     private String tcpServer = "";
 
-    /** The pot */
+    /** The port */
     private int tcpListenerPort = 0;
+
+    /** The host */
+    private String tcpListenerHost = "";
 
     /** udp discovery for tcp server */
     private String udpDiscoveryAddr = DEFAULT_UDP_DISCOVERY_ADDRESS;
@@ -160,6 +163,29 @@ public class TCPLateralCacheAttributes
     public int getTcpListenerPort()
     {
         return this.tcpListenerPort;
+    }
+
+    /**
+     * Sets the tcpListenerHost attribute of the ILateralCacheAttributes object
+     * <p>
+     * @param val
+     *            The new tcpListenerHost value
+     */
+    @Override
+    public void setTcpListenerHost( String val )
+    {
+        this.tcpListenerHost = val;
+    }
+
+    /**
+     * Gets the tcpListenerHost attribute of the ILateralCacheAttributes object
+     * <p>
+     * @return The tcpListenerHost value
+     */
+    @Override
+    public String getTcpListenerHost()
+    {
+        return this.tcpListenerHost;
     }
 
     /**

@@ -37,6 +37,12 @@
 						<td>N</td>
 						<td>none</td>
 					</tr>
+                    <tr>
+                        <td>TcpListenerHost</td>
+                        <td> This is the host this cache should listen on (for multi-homed hosts).</td>
+                        <td>Y</td>
+                        <td>listen on all interfaces</td>
+                    </tr>
 					<tr>
 						<td>TcpListenerPort</td>
 						<td> This is the port this cache should listen on.</td>

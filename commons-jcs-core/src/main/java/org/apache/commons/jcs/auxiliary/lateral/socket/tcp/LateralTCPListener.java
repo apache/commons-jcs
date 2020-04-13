@@ -25,8 +25,10 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketAddress;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.Map;
@@ -75,9 +77,6 @@ public class LateralTCPListener<K, V>
 
     /** Configuration attributes */
     private ITCPLateralCacheAttributes tcpLateralCacheAttributes;
-
-    /** Listening port */
-    private int port;
 
     /** The processor. We should probably use an event queue here. */
     private ExecutorService pooledExecutor;
@@ -149,16 +148,31 @@ public class LateralTCPListener<K, V>
     {
         try
         {
-            this.port = getTcpLateralCacheAttributes().getTcpListenerPort();
+            int port = getTcpLateralCacheAttributes().getTcpListenerPort();
+            String host = getTcpLateralCacheAttributes().getTcpListenerHost();
 
             pooledExecutor = Executors.newCachedThreadPool(
                     new DaemonThreadFactory("JCS-LateralTCPListener-"));
             terminated = new AtomicBoolean(false);
             shutdown = new AtomicBoolean(false);
 
-            log.info( "Listening on port {0}", port );
+            ServerSocket serverSocket;
+            if (host != null && host.length() > 0)
+            {
+                log.info( "Listening on {0}:{1}", host, port );
+                // Resolve host name
+                InetAddress inetAddress = InetAddress.getByName(host);
+                //Bind the SocketAddress with inetAddress and port
+                SocketAddress endPoint = new InetSocketAddress(inetAddress, port);
 
-            ServerSocket serverSocket = new ServerSocket( port );
+                serverSocket = new ServerSocket();
+                serverSocket.bind(endPoint);
+            }
+            else
+            {
+                log.info( "Listening on port {0}", port );
+                serverSocket = new ServerSocket( port );
+            }
             serverSocket.setSoTimeout( acceptTimeOut );
 
             receiver = new ListenerThread(serverSocket);
