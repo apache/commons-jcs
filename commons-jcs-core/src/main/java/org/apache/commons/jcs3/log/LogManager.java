@@ -32,6 +32,10 @@ public class LogManager
      */
     private static String logSystem = null;
 
+    /** Log systems currently known */
+    public static final String LOGSYSTEM_JAVA_UTIL_LOGGING = "jul";
+    public static final String LOGSYSTEM_LOG4J2 = "log4j2";
+
     /**
      * The SPI LogFactory
      */
@@ -50,7 +54,8 @@ public class LogManager
             ServiceLoader<LogFactory> factories = ServiceLoader.load(LogFactory.class);
             if (LogManager.logSystem == null)
             {
-                LogManager.logSystem = System.getProperty("jcs.logSystem", "jul");
+                LogManager.logSystem = System.getProperty("jcs.logSystem",
+                        LOGSYSTEM_JAVA_UTIL_LOGGING);
             }
 
             for (LogFactory factory : factories)

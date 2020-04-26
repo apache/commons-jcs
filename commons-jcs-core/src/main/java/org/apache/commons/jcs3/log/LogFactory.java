@@ -44,12 +44,10 @@ public interface LogFactory
      * name.
      *
      * @param clazz
-     *            The Class whose name should be used as the Log name. If null
-     *            it will default to the calling class.
+     *            The Class whose name should be used as the Log name.
      * @return The Log.
      * @throws UnsupportedOperationException
-     *             if {@code clazz} is {@code null} and the calling class cannot
-     *             be determined.
+     *             if {@code clazz} is {@code null}
      */
     Log getLog(final Class<?> clazz);
 
@@ -57,12 +55,10 @@ public interface LogFactory
      * Returns a Log with the specified name.
      *
      * @param name
-     *            The logger name. If null the name of the calling class will be
-     *            used.
+     *            The logger name.
      * @return The Log.
      * @throws UnsupportedOperationException
-     *             if {@code name} is {@code null} and the calling class cannot
-     *             be determined.
+     *             if {@code name} is {@code null}
      */
     Log getLog(final String name);
 }

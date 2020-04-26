@@ -29,6 +29,7 @@ import org.apache.commons.jcs3.engine.behavior.IElementAttributes;
 import org.apache.commons.jcs3.engine.control.CompositeCache;
 import org.apache.commons.jcs3.engine.control.CompositeCacheManager;
 import org.apache.commons.jcs3.engine.control.group.GroupAttrName;
+import org.apache.commons.jcs3.log.LogManager;
 
 /**
  * Simple class for using JCS. To use JCS in your application, you can use the static methods of
@@ -68,6 +69,18 @@ public abstract class JCS
     public static void setConfigProperties( Properties configProps )
     {
         JCS.configProps = configProps;
+    }
+
+    /**
+     * Set the log system. Must be called before getInstance is called
+     * Predefined Log systems are {@link LogManager.LOGSYSTEM_JAVA_UTIL_LOGGING}
+     * and {@link LogManager.LOGSYSTEM_LOG4J2}
+     *
+     * @param logSystem the logSystem to set
+     */
+    public static void setLogSystem(String logSystem)
+    {
+        LogManager.setLogSystem(logSystem);
     }
 
     /**
