@@ -82,7 +82,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-assembly-plugin</artifactId>
-            <version>2.4</version>
+            <version>3.1.1</version>
             <executions>
               <execution>
                 <id>create-distribution</id>
@@ -104,7 +104,7 @@
           <plugin>
             <groupId>net.nicoulaj.maven.plugins</groupId>
             <artifactId>checksum-maven-plugin</artifactId>
-            <version>1.7</version>
+            <version>1.8</version>
             <executions>
               <execution>
                 <id>generate.checksums</id>
