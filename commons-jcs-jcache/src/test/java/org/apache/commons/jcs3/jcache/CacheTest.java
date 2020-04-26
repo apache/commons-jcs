@@ -29,10 +29,8 @@ import javax.cache.configuration.CompleteConfiguration;
 import javax.cache.configuration.Factory;
 import javax.cache.configuration.MutableConfiguration;
 import javax.cache.event.CacheEntryCreatedListener;
-import javax.cache.event.CacheEntryEvent;
 import javax.cache.event.CacheEntryEventFilter;
 import javax.cache.event.CacheEntryListener;
-import javax.cache.event.CacheEntryListenerException;
 import javax.cache.event.CacheEntryRemovedListener;
 import javax.cache.event.CacheEntryUpdatedListener;
 import javax.cache.expiry.AccessedExpiryPolicy;
@@ -113,6 +111,11 @@ public class CacheTest
         final Set<String> event = new HashSet<>();
         cache.registerCacheEntryListener(new CacheEntryListenerConfiguration<String, String>()
         {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = -8253611067837660184L;
+
             @Override
             public Factory<CacheEntryListener<? super String, ? super String>> getCacheEntryListenerFactory()
             {
@@ -139,6 +142,11 @@ public class CacheTest
         });
         cache.registerCacheEntryListener(new CacheEntryListenerConfiguration<String, String>()
         {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 74774789357823553L;
+
             @Override
             public Factory<CacheEntryListener<? super String, ? super String>> getCacheEntryListenerFactory()
             {
@@ -165,6 +173,11 @@ public class CacheTest
         });
         cache.registerCacheEntryListener(new CacheEntryListenerConfiguration<String, String>()
         {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 2442816458182278519L;
+
             @Override
             public Factory<CacheEntryListener<? super String, ? super String>> getCacheEntryListenerFactory()
             {
@@ -212,6 +225,11 @@ public class CacheTest
         final CacheManager cacheManager = cachingProvider.getCacheManager();
         cacheManager.createCache("default", new CompleteConfiguration<Object, Object>()
         {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = -4598329777808827966L;
+
             @Override
             public boolean isReadThrough()
             {

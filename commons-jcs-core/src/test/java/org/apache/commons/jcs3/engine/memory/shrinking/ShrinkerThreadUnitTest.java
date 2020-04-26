@@ -30,8 +30,6 @@ import org.apache.commons.jcs3.engine.ElementAttributes;
 import org.apache.commons.jcs3.engine.behavior.ICacheElement;
 import org.apache.commons.jcs3.engine.control.CompositeCache;
 import org.apache.commons.jcs3.engine.control.event.behavior.ElementEventType;
-import org.apache.commons.jcs3.engine.memory.shrinking.ShrinkerThread;
-
 import java.io.IOException;
 
 /**

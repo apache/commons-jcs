@@ -19,7 +19,6 @@ package org.apache.commons.jcs3.engine.logging;
  * under the License.
  */
 
-import org.apache.commons.jcs3.engine.logging.CacheEvent;
 import org.apache.commons.jcs3.engine.logging.behavior.ICacheEvent;
 import org.apache.commons.jcs3.engine.logging.behavior.ICacheEventLogger;
 

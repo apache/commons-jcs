@@ -1,8 +1,6 @@
 package org.apache.commons.jcs3.utils.access;
 
-import org.apache.commons.jcs3.utils.access.AbstractJCSWorkerHelper;
-import org.apache.commons.jcs3.utils.access.JCSWorker;
-import org.apache.commons.jcs3.utils.access.JCSWorkerHelper;
+
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one

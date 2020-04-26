@@ -22,8 +22,6 @@ package org.apache.commons.jcs3.auxiliary.disk.jdbc.mysql.util;
 import java.text.ParseException;
 import java.util.Date;
 
-import org.apache.commons.jcs3.auxiliary.disk.jdbc.mysql.util.ScheduleParser;
-
 import junit.framework.TestCase;
 
 /**

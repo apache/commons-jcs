@@ -2,8 +2,7 @@ package org.apache.commons.jcs3.engine.control;
 
 import org.apache.commons.jcs3.engine.CacheStatus;
 import org.apache.commons.jcs3.engine.CompositeCacheAttributes;
-import org.apache.commons.jcs3.engine.control.CompositeCache;
-import org.apache.commons.jcs3.engine.control.CompositeCacheManager;
+
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one

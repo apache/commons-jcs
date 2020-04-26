@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.apache.commons.jcs3.JCS;
 import org.apache.commons.jcs3.access.GroupCacheAccess;
 import org.apache.commons.jcs3.access.exception.CacheException;
 

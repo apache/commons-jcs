@@ -1,6 +1,5 @@
 package org.apache.commons.jcs3;
 
-import org.apache.commons.jcs3.JCS;
 import org.apache.commons.jcs3.access.CacheAccess;
 
 /*

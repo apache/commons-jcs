@@ -22,11 +22,6 @@ package org.apache.commons.jcs3.utils.discovery;
 import java.util.ArrayList;
 
 import org.apache.commons.jcs3.utils.timing.SleepUtil;
-import org.apache.commons.jcs3.utils.discovery.UDPDiscoveryAttributes;
-import org.apache.commons.jcs3.utils.discovery.UDPDiscoveryReceiver;
-import org.apache.commons.jcs3.utils.discovery.UDPDiscoverySender;
-import org.apache.commons.jcs3.utils.discovery.UDPDiscoveryService;
-
 import junit.framework.TestCase;
 
 /**

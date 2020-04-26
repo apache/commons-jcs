@@ -30,7 +30,6 @@ import java.rmi.server.UnicastRemoteObject;
 
 import org.apache.commons.jcs3.access.exception.CacheException;
 import org.apache.commons.jcs3.access.exception.ObjectExistsException;
-import org.apache.commons.jcs3.auxiliary.remote.RemoteUtils;
 import org.apache.commons.jcs3.auxiliary.remote.behavior.IRemoteCacheConstants;
 import org.apache.commons.jcs3.auxiliary.remote.behavior.IRemoteCacheListener;
 import org.apache.commons.jcs3.auxiliary.remote.server.behavior.RemoteType;

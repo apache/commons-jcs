@@ -1,7 +1,5 @@
 package org.apache.commons.jcs3.auxiliary.disk.indexed;
 
-import org.apache.commons.jcs3.auxiliary.disk.indexed.IndexedDiskCache;
-import org.apache.commons.jcs3.auxiliary.disk.indexed.IndexedDiskCacheAttributes;
 import org.apache.commons.jcs3.engine.CacheElement;
 import org.apache.commons.jcs3.engine.ElementAttributes;
 import org.apache.commons.jcs3.engine.behavior.ICacheElement;

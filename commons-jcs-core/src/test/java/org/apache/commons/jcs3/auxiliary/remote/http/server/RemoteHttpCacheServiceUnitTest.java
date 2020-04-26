@@ -22,8 +22,6 @@ package org.apache.commons.jcs3.auxiliary.remote.http.server;
 import junit.framework.TestCase;
 import org.apache.commons.jcs3.auxiliary.MockCacheEventLogger;
 import org.apache.commons.jcs3.engine.control.MockCompositeCacheManager;
-import org.apache.commons.jcs3.auxiliary.remote.http.server.RemoteHttpCacheServerAttributes;
-import org.apache.commons.jcs3.auxiliary.remote.http.server.RemoteHttpCacheService;
 import org.apache.commons.jcs3.engine.CacheElement;
 
 import java.util.HashSet;

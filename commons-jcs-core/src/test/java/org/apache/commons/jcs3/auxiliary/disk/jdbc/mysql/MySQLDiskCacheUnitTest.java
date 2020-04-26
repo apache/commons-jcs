@@ -23,8 +23,6 @@ import java.sql.SQLException;
 
 import org.apache.commons.jcs3.auxiliary.disk.jdbc.TableState;
 import org.apache.commons.jcs3.auxiliary.disk.jdbc.dsfactory.SharedPoolDataSourceFactory;
-import org.apache.commons.jcs3.auxiliary.disk.jdbc.mysql.MySQLDiskCache;
-import org.apache.commons.jcs3.auxiliary.disk.jdbc.mysql.MySQLDiskCacheAttributes;
 import org.apache.commons.jcs3.engine.control.CompositeCacheManager;
 
 import junit.framework.TestCase;

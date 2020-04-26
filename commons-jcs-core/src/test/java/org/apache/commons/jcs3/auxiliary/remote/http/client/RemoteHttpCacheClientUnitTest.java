@@ -27,8 +27,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.jcs3.auxiliary.remote.http.client.RemoteHttpCacheAttributes;
-import org.apache.commons.jcs3.auxiliary.remote.http.client.RemoteHttpCacheClient;
 import org.apache.commons.jcs3.auxiliary.remote.value.RemoteCacheResponse;
 import org.apache.commons.jcs3.auxiliary.remote.value.RemoteRequestType;
 import org.apache.commons.jcs3.engine.CacheElement;

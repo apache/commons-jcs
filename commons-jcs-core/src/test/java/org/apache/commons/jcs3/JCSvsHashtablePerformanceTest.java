@@ -21,7 +21,6 @@ package org.apache.commons.jcs3;
 
 import java.util.Hashtable;
 
-import org.apache.commons.jcs3.JCS;
 import org.apache.commons.jcs3.access.CacheAccess;
 import org.apache.commons.jcs3.engine.memory.lru.LRUMemoryCache;
 import org.apache.commons.jcs3.log.Log;

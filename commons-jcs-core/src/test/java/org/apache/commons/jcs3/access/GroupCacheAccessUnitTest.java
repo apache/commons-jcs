@@ -22,7 +22,6 @@ package org.apache.commons.jcs3.access;
 import java.util.Set;
 
 import org.apache.commons.jcs3.JCS;
-import org.apache.commons.jcs3.access.GroupCacheAccess;
 import org.apache.commons.jcs3.access.exception.CacheException;
 
 import junit.framework.TestCase;

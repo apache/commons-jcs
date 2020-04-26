@@ -21,10 +21,6 @@ package org.apache.commons.jcs3.utils.discovery;
 
 import java.util.ArrayList;
 
-import org.apache.commons.jcs3.utils.discovery.DiscoveredService;
-import org.apache.commons.jcs3.utils.discovery.UDPDiscoveryAttributes;
-import org.apache.commons.jcs3.utils.discovery.UDPDiscoveryService;
-
 import junit.framework.TestCase;
 
 /** Unit tests for the service. */

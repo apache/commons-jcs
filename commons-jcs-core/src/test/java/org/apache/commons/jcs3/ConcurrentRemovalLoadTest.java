@@ -1,6 +1,6 @@
 package org.apache.commons.jcs3;
 
-import org.apache.commons.jcs3.JCS;
+
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one

@@ -33,7 +33,6 @@ import org.apache.commons.jcs3.auxiliary.AuxiliaryCache;
 import org.apache.commons.jcs3.auxiliary.remote.RemoteCacheAttributes;
 import org.apache.commons.jcs3.auxiliary.remote.RemoteCacheFactory;
 import org.apache.commons.jcs3.auxiliary.remote.RemoteCacheManager;
-import org.apache.commons.jcs3.auxiliary.remote.server.RemoteCacheServer;
 import org.apache.commons.jcs3.engine.CacheElement;
 import org.apache.commons.jcs3.engine.CacheStatus;
 import org.apache.commons.jcs3.engine.behavior.ICacheElement;

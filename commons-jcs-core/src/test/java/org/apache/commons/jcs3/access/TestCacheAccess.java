@@ -29,8 +29,6 @@ import java.util.StringTokenizer;
 
 import org.apache.commons.jcs3.engine.control.event.ElementEventHandlerMockImpl;
 import org.apache.commons.jcs3.JCS;
-import org.apache.commons.jcs3.access.CacheAccess;
-import org.apache.commons.jcs3.access.GroupCacheAccess;
 import org.apache.commons.jcs3.access.exception.CacheException;
 import org.apache.commons.jcs3.engine.ElementAttributes;
 import org.apache.commons.jcs3.engine.behavior.IElementAttributes;

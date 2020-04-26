@@ -31,8 +31,6 @@ import org.apache.commons.jcs3.engine.behavior.ICacheElement;
 import org.apache.commons.jcs3.engine.behavior.ICompositeCacheAttributes;
 import org.apache.commons.jcs3.engine.behavior.IElementAttributes;
 import org.apache.commons.jcs3.engine.behavior.ICacheType.CacheType;
-import org.apache.commons.jcs3.engine.control.CompositeCache;
-
 import java.io.IOException;
 import java.util.Map;
 

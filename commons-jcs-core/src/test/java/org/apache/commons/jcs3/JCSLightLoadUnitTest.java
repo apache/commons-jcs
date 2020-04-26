@@ -19,7 +19,6 @@ package org.apache.commons.jcs3;
  * under the License.
  */
 
-import org.apache.commons.jcs3.JCS;
 import org.apache.commons.jcs3.access.CacheAccess;
 
 import junit.framework.TestCase;

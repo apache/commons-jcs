@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.jcs3.utils.timing.SleepUtil;
-import org.apache.commons.jcs3.auxiliary.remote.RemoteCacheNoWait;
 import org.apache.commons.jcs3.engine.CacheElement;
 import org.apache.commons.jcs3.engine.CacheStatus;
 import org.apache.commons.jcs3.engine.behavior.ICacheElement;

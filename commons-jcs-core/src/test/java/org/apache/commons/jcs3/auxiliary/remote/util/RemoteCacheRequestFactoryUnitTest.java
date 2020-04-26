@@ -25,7 +25,6 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.Set;
 
-import org.apache.commons.jcs3.auxiliary.remote.util.RemoteCacheRequestFactory;
 import org.apache.commons.jcs3.auxiliary.remote.value.RemoteCacheRequest;
 import org.apache.commons.jcs3.auxiliary.remote.value.RemoteRequestType;
 import org.apache.commons.jcs3.engine.CacheElement;

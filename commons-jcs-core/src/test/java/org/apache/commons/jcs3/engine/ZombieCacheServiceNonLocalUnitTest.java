@@ -1,7 +1,5 @@
 package org.apache.commons.jcs3.engine;
 
-import org.apache.commons.jcs3.engine.CacheElement;
-import org.apache.commons.jcs3.engine.ZombieCacheServiceNonLocal;
 import org.apache.commons.jcs3.engine.behavior.ICacheElement;
 
 /*

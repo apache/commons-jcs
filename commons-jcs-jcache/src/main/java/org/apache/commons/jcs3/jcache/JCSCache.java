@@ -242,7 +242,7 @@ public class JCSCache<K, V> implements Cache<K, V>
 
     private ICacheElement<K, V> updateElement(final K key, final V v, final Duration duration, final IElementAttributes attrs)
     {
-        final ICacheElement<K, V> element = new CacheElement<K, V>(name, key, v);
+        final ICacheElement<K, V> element = new CacheElement<>(name, key, v);
         if (duration != null)
         {
             attrs.setTimeFactorForMilliseconds(1);
@@ -265,7 +265,7 @@ public class JCSCache<K, V> implements Cache<K, V>
             final K copy = copy(serializer, manager.getClassLoader(), key);
             try
             {
-                delegate.update(new CacheElement<K, V>(name, copy, element.getVal(), element.getElementAttributes()));
+                delegate.update(new CacheElement<>(name, copy, element.getVal(), element.getElementAttributes()));
             }
             catch (final IOException e)
             {
@@ -418,7 +418,7 @@ public class JCSCache<K, V> implements Cache<K, V>
         delegate.remove(cacheKey);
         for (final JCSListener<K, V> listener : listeners.values())
         {
-            listener.onExpired(Arrays.<CacheEntryEvent<? extends K, ? extends V>> asList(new JCSCacheEntryEvent<K, V>(this,
+            listener.onExpired(Arrays.<CacheEntryEvent<? extends K, ? extends V>> asList(new JCSCacheEntryEvent<>(this,
                     EventType.REMOVED, null, cacheKey, elt.getVal())));
         }
     }
@@ -854,7 +854,7 @@ public class JCSCache<K, V> implements Cache<K, V>
     public Iterator<Entry<K, V>> iterator()
     {
         assertNotClosed();
-        final Iterator<K> keys = new HashSet<K>(delegate.getKeySet()).iterator();
+        final Iterator<K> keys = new HashSet<>(delegate.getKeySet()).iterator();
         return new Iterator<Entry<K, V>>()
         {
             private K lastKey = null;

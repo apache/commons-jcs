@@ -37,7 +37,7 @@ package org.apache.commons.jcs3.engine;
  * under the License.
  */
 
-import org.apache.commons.jcs3.engine.ElementAttributes;
+
 
 /**
  * Allow test access to set last access time without exposing public method

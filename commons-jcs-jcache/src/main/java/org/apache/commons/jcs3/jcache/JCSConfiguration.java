@@ -48,6 +48,10 @@ import java.util.Set;
 public class JCSConfiguration<K, V> implements CompleteConfiguration<K, V>
 {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 3322514800838658711L;
     private final Class<K> keyType;
     private final Class<V> valueType;
     private final boolean storeByValue;

@@ -1,9 +1,5 @@
 package org.apache.commons.jcs3.auxiliary.lateral;
 
-import org.apache.commons.jcs3.auxiliary.lateral.LateralCache;
-import org.apache.commons.jcs3.auxiliary.lateral.LateralCacheAttributes;
-import org.apache.commons.jcs3.auxiliary.lateral.LateralCacheNoWait;
-import org.apache.commons.jcs3.auxiliary.lateral.LateralCacheNoWaitFacade;
 import org.apache.commons.jcs3.auxiliary.lateral.behavior.ILateralCacheAttributes;
 
 /*

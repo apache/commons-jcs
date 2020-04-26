@@ -1,6 +1,5 @@
 package org.apache.commons.jcs3.auxiliary.remote.server;
 
-import org.apache.commons.jcs3.auxiliary.remote.server.RemoteCacheServerAttributes;
 import org.apache.commons.jcs3.auxiliary.remote.server.behavior.RemoteType;
 
 /*

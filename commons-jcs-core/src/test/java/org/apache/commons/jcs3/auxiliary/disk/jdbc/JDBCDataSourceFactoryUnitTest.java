@@ -32,8 +32,6 @@ import javax.naming.spi.InitialContextFactory;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.commons.dbcp2.datasources.SharedPoolDataSource;
-import org.apache.commons.jcs3.auxiliary.disk.jdbc.JDBCDiskCacheAttributes;
-import org.apache.commons.jcs3.auxiliary.disk.jdbc.JDBCDiskCacheFactory;
 import org.apache.commons.jcs3.auxiliary.disk.jdbc.dsfactory.DataSourceFactory;
 import org.apache.commons.jcs3.auxiliary.disk.jdbc.dsfactory.JndiDataSourceFactory;
 import org.apache.commons.jcs3.auxiliary.disk.jdbc.dsfactory.SharedPoolDataSourceFactory;

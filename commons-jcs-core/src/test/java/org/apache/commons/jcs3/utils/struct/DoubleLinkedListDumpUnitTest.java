@@ -3,8 +3,7 @@ package org.apache.commons.jcs3.utils.struct;
 import java.io.StringWriter;
 
 import org.apache.commons.jcs3.TestLogConfigurationUtil;
-import org.apache.commons.jcs3.utils.struct.DoubleLinkedList;
-import org.apache.commons.jcs3.utils.struct.DoubleLinkedListNode;
+
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one

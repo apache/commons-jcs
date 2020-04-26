@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.util.Random;
 
 import org.apache.commons.jcs3.auxiliary.disk.DiskTestObject;
-import org.apache.commons.jcs3.auxiliary.disk.indexed.IndexedDisk;
 import org.apache.commons.jcs3.engine.CacheElement;
 import org.apache.commons.jcs3.engine.behavior.ICacheElement;
 import org.apache.commons.jcs3.utils.serialization.StandardSerializer;

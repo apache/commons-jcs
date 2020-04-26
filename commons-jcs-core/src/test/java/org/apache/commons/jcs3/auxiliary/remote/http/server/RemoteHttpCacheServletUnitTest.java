@@ -26,7 +26,6 @@ import java.util.Set;
 import junit.framework.TestCase;
 
 import org.apache.commons.jcs3.auxiliary.remote.MockRemoteCacheService;
-import org.apache.commons.jcs3.auxiliary.remote.http.server.RemoteHttpCacheServlet;
 import org.apache.commons.jcs3.auxiliary.remote.util.RemoteCacheRequestFactory;
 import org.apache.commons.jcs3.auxiliary.remote.value.RemoteCacheRequest;
 import org.apache.commons.jcs3.auxiliary.remote.value.RemoteCacheResponse;

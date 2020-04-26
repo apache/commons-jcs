@@ -24,8 +24,6 @@ import java.util.Set;
 import java.util.concurrent.ExecutorService;
 
 import org.apache.commons.jcs3.utils.props.PropertyLoader;
-import org.apache.commons.jcs3.utils.threadpool.ThreadPoolManager;
-
 import junit.framework.TestCase;
 
 /**

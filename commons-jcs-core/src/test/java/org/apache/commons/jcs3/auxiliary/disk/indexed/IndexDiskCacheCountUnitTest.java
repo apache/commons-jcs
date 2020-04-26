@@ -22,8 +22,6 @@ package org.apache.commons.jcs3.auxiliary.disk.indexed;
 import java.io.IOException;
 
 import org.apache.commons.jcs3.auxiliary.disk.behavior.IDiskCacheAttributes.DiskLimitType;
-import org.apache.commons.jcs3.auxiliary.disk.indexed.IndexedDiskCache;
-import org.apache.commons.jcs3.auxiliary.disk.indexed.IndexedDiskCacheAttributes;
 import org.apache.commons.jcs3.engine.CacheElement;
 import org.apache.commons.jcs3.engine.behavior.ICacheElement;
 

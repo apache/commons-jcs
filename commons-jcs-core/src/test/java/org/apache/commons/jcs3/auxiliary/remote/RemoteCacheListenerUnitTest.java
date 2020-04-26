@@ -22,8 +22,6 @@ package org.apache.commons.jcs3.auxiliary.remote;
 import junit.framework.TestCase;
 
 import org.apache.commons.jcs3.engine.control.MockCompositeCacheManager;
-import org.apache.commons.jcs3.auxiliary.remote.RemoteCacheAttributes;
-import org.apache.commons.jcs3.auxiliary.remote.RemoteCacheListener;
 import org.apache.commons.jcs3.auxiliary.remote.behavior.IRemoteCacheAttributes;
 import org.apache.commons.jcs3.engine.CacheElementSerialized;
 import org.apache.commons.jcs3.engine.ElementAttributes;

@@ -23,9 +23,7 @@ import java.util.List;
 
 import org.apache.commons.jcs3.JCS;
 import org.apache.commons.jcs3.access.CacheAccess;
-import org.apache.commons.jcs3.admin.CacheElementInfo;
-import org.apache.commons.jcs3.admin.CacheRegionInfo;
-import org.apache.commons.jcs3.admin.JCSAdminBean;
+
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one

@@ -26,7 +26,12 @@ import java.util.Map;
 
 public class Lang3Substitutor implements Subsitutor
 {
-    private static final StrSubstitutor SUBSTITUTOR = new StrSubstitutor(new HashMap<String, Object>() {{
+    private static final StrSubstitutor SUBSTITUTOR = new StrSubstitutor(new HashMap<String, Object>() {/**
+         * 
+         */
+        private static final long serialVersionUID = 6568870218326105688L;
+
+    {
         putAll(Map.class.cast(System.getProperties()));
         putAll(System.getenv());
     }});

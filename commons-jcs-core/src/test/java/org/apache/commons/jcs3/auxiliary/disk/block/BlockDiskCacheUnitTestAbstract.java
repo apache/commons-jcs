@@ -25,8 +25,6 @@ import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
-import org.apache.commons.jcs3.auxiliary.disk.block.BlockDisk;
-import org.apache.commons.jcs3.auxiliary.disk.block.BlockDiskCache;
 import org.apache.commons.jcs3.auxiliary.disk.block.BlockDiskCacheAttributes;
 import org.apache.commons.jcs3.engine.CacheElement;
 import org.apache.commons.jcs3.engine.ElementAttributes;

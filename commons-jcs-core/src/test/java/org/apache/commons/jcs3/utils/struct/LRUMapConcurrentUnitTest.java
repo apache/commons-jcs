@@ -21,7 +21,7 @@ package org.apache.commons.jcs3.utils.struct;
 
 import java.util.Iterator;
 
-import org.apache.commons.jcs3.utils.struct.LRUMap;
+
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one

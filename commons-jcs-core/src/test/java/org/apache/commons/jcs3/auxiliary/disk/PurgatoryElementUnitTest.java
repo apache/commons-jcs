@@ -1,6 +1,5 @@
 package org.apache.commons.jcs3.auxiliary.disk;
 
-import org.apache.commons.jcs3.auxiliary.disk.PurgatoryElement;
 import org.apache.commons.jcs3.engine.CacheElement;
 import org.apache.commons.jcs3.engine.ElementAttributes;
 import org.apache.commons.jcs3.engine.behavior.ICacheElement;

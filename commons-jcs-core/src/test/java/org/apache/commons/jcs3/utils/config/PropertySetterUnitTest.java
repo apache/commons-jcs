@@ -23,7 +23,6 @@ import static org.junit.Assert.*;
 
 import java.io.File;
 
-import org.apache.commons.jcs3.utils.config.PropertySetter;
 import org.junit.Test;
 
 /**

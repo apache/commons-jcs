@@ -37,6 +37,10 @@ import javax.interceptor.InvocationContext;
 @Priority(/*LIBRARY_BEFORE*/1000)
 public class CacheRemoveInterceptor implements Serializable
 {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -7441959527908682219L;
     @Inject
     private CDIJCacheHelper helper;
 

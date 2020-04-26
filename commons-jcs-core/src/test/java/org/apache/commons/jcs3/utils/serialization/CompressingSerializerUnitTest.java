@@ -23,9 +23,6 @@ import junit.framework.TestCase;
 
 import java.io.IOException;
 
-import org.apache.commons.jcs3.utils.serialization.CompressingSerializer;
-import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
-
 /**
  * Tests the compressing serializer.
  */

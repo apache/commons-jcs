@@ -21,9 +21,6 @@ package org.apache.commons.jcs3.auxiliary.remote;
 
 import java.rmi.registry.Registry;
 
-import org.apache.commons.jcs3.auxiliary.remote.RemoteLocation;
-import org.apache.commons.jcs3.auxiliary.remote.RemoteUtils;
-
 import junit.framework.TestCase;
 
 /**

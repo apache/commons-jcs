@@ -32,7 +32,6 @@ import org.apache.commons.jcs3.engine.CacheElement;
 import org.apache.commons.jcs3.engine.behavior.ICacheElement;
 import org.apache.commons.jcs3.engine.control.CompositeCache;
 import org.apache.commons.jcs3.engine.control.CompositeCacheManager;
-import org.apache.commons.jcs3.engine.memory.mru.MRUMemoryCache;
 
 /**
  * Tests for the test MRU implementation.

@@ -29,9 +29,6 @@ import org.apache.commons.jcs3.auxiliary.MockAuxiliaryCacheFactory;
 import org.apache.commons.jcs3.engine.logging.MockCacheEventLogger;
 import org.apache.commons.jcs3.auxiliary.AuxiliaryCache;
 import org.apache.commons.jcs3.auxiliary.AuxiliaryCacheConfigurator;
-import org.apache.commons.jcs3.engine.control.CompositeCache;
-import org.apache.commons.jcs3.engine.control.CompositeCacheConfigurator;
-import org.apache.commons.jcs3.engine.control.CompositeCacheManager;
 
 /** Unit tests for the configurator. */
 public class CompositeCacheConfiguratorUnitTest

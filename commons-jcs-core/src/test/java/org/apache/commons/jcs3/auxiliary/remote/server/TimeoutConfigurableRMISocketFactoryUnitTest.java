@@ -25,8 +25,6 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import org.apache.commons.jcs3.auxiliary.remote.server.TimeoutConfigurableRMISocketFactory;
-
 /** Unit tests for the custom factory */
 public class TimeoutConfigurableRMISocketFactoryUnitTest
     extends TestCase

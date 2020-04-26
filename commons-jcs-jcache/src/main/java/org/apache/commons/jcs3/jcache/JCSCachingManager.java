@@ -79,7 +79,7 @@ public class JCSCachingManager implements CacheManager
                 protected <K, V> CompositeCache<K, V> newCache(
                         final ICompositeCacheAttributes cca, final IElementAttributes ea)
                 {
-                    return new ExpiryAwareCache<K, V>( cca, ea );
+                    return new ExpiryAwareCache<>( cca, ea );
                 }
             };
         }

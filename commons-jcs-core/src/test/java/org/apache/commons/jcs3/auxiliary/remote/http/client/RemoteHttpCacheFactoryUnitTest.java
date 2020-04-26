@@ -2,9 +2,6 @@ package org.apache.commons.jcs3.auxiliary.remote.http.client;
 
 import org.apache.commons.jcs3.engine.control.MockCompositeCacheManager;
 import org.apache.commons.jcs3.auxiliary.AuxiliaryCache;
-import org.apache.commons.jcs3.auxiliary.remote.http.client.RemoteHttpCacheAttributes;
-import org.apache.commons.jcs3.auxiliary.remote.http.client.RemoteHttpCacheClient;
-import org.apache.commons.jcs3.auxiliary.remote.http.client.RemoteHttpCacheFactory;
 import org.apache.commons.jcs3.auxiliary.remote.http.client.behavior.IRemoteHttpCacheClient;
 import org.apache.commons.jcs3.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs3.engine.behavior.IElementSerializer;

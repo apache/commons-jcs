@@ -28,7 +28,6 @@ import java.util.Set;
 
 import org.apache.commons.jcs3.auxiliary.AbstractAuxiliaryCache;
 import org.apache.commons.jcs3.auxiliary.AuxiliaryCacheAttributes;
-import org.apache.commons.jcs3.auxiliary.remote.RemoteCacheAttributes;
 import org.apache.commons.jcs3.auxiliary.remote.behavior.IRemoteCacheClient;
 import org.apache.commons.jcs3.auxiliary.remote.behavior.IRemoteCacheListener;
 import org.apache.commons.jcs3.engine.CacheStatus;

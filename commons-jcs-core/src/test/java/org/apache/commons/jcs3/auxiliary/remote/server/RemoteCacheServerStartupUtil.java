@@ -25,7 +25,6 @@ import java.util.Properties;
 
 import org.apache.commons.jcs3.auxiliary.remote.RemoteUtils;
 import org.apache.commons.jcs3.auxiliary.remote.server.RemoteCacheServer;
-import org.apache.commons.jcs3.auxiliary.remote.server.RemoteCacheServerFactory;
 import org.apache.commons.jcs3.log.Log;
 import org.apache.commons.jcs3.log.LogManager;
 import org.apache.commons.jcs3.utils.net.HostNameUtil;

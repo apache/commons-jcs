@@ -2,7 +2,6 @@ package org.apache.commons.jcs3.engine.control;
 
 import org.apache.commons.jcs3.JCS;
 import org.apache.commons.jcs3.access.CacheAccess;
-import org.apache.commons.jcs3.engine.control.CompositeCacheManager;
 import org.apache.commons.jcs3.engine.stats.behavior.ICacheStats;
 
 /*

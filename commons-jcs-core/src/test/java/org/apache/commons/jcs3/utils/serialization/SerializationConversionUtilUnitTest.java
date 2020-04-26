@@ -29,8 +29,6 @@ import org.apache.commons.jcs3.engine.behavior.ICacheElement;
 import org.apache.commons.jcs3.engine.behavior.ICacheElementSerialized;
 import org.apache.commons.jcs3.engine.behavior.IElementAttributes;
 import org.apache.commons.jcs3.engine.behavior.IElementSerializer;
-import org.apache.commons.jcs3.utils.serialization.SerializationConversionUtil;
-import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
 
 /**
  * Tests the serialization conversion util.

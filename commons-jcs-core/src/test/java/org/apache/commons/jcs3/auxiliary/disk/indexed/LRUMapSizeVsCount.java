@@ -21,10 +21,6 @@ package org.apache.commons.jcs3.auxiliary.disk.indexed;
 
 import java.util.Map;
 
-import org.apache.commons.jcs3.auxiliary.disk.indexed.IndexedDiskCache;
-import org.apache.commons.jcs3.auxiliary.disk.indexed.IndexedDiskCacheAttributes;
-import org.apache.commons.jcs3.auxiliary.disk.indexed.IndexedDiskElementDescriptor;
-
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;

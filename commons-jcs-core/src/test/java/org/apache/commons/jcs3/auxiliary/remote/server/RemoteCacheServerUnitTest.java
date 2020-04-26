@@ -28,8 +28,6 @@ import org.apache.commons.jcs3.auxiliary.MockCacheEventLogger;
 import org.apache.commons.jcs3.auxiliary.remote.MockRemoteCacheListener;
 import org.apache.commons.jcs3.utils.timing.SleepUtil;
 import org.apache.commons.jcs3.auxiliary.remote.RemoteUtils;
-import org.apache.commons.jcs3.auxiliary.remote.server.RemoteCacheServer;
-import org.apache.commons.jcs3.auxiliary.remote.server.RemoteCacheServerAttributes;
 import org.apache.commons.jcs3.auxiliary.remote.server.behavior.IRemoteCacheServerAttributes;
 import org.apache.commons.jcs3.auxiliary.remote.server.behavior.RemoteType;
 import org.apache.commons.jcs3.engine.CacheElement;

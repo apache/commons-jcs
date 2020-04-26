@@ -21,8 +21,6 @@ package org.apache.commons.jcs3.engine;
 
 import java.io.IOException;
 
-import org.apache.commons.jcs3.engine.CacheElement;
-import org.apache.commons.jcs3.engine.CacheEventQueue;
 import org.apache.commons.jcs3.engine.behavior.ICacheElement;
 import org.apache.commons.jcs3.engine.behavior.ICacheListener;
 

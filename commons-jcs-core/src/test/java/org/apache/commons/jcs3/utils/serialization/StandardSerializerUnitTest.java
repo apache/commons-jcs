@@ -1,6 +1,6 @@
 package org.apache.commons.jcs3.utils.serialization;
 
-import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
+
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one

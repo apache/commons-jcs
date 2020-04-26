@@ -24,8 +24,6 @@ import junit.framework.TestCase;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.commons.jcs3.engine.match.KeyMatcherPatternImpl;
-
 /** Unit tests for the key matcher. */
 public class KeyMatcherPatternImpllUnitTest
     extends TestCase

@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Random;
 
-import org.apache.commons.jcs3.auxiliary.disk.block.BlockDisk;
 import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
 
 /*

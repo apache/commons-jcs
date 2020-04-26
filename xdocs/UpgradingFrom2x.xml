@@ -30,6 +30,11 @@
         This document lists a number of things that changed in Commons JCS 
         3.0. 
       </p>
+      <subsection name="Minimum Java Requirements">
+        <p>
+          JCS 3.x requires Java 8 to run. It was tested successfully with JDK 14.
+        </p>
+      </subsection>
       <subsection name="Package Names and Maven Coordinates">
         <p>
           The Apache Commons project requires a change of the package names 
@@ -82,7 +87,7 @@ jcs.default.cacheattributes=org.apache.commons.jcs3.engine.CompositeCacheAttribu
          </p>
          <p>
            Optionally, JCS can use Log4j2 as a log system. You can activate 
-           it by providing log4j.core as a dependency, a log configuration
+           it by providing log4j-core as a dependency, a log configuration
            such as log4j2.xml and a system property
           <source><![CDATA[
 -Djcs.logSystem=log4j2
@@ -104,6 +109,3 @@ jcs.default.cacheattributes=org.apache.commons.jcs3.engine.CompositeCacheAttribu
     </section>
   </body>
 </document>
-
-
-

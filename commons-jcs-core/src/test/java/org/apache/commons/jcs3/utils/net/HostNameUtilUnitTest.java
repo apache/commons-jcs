@@ -23,8 +23,6 @@ import junit.framework.TestCase;
 
 import java.net.UnknownHostException;
 
-import org.apache.commons.jcs3.utils.net.HostNameUtil;
-
 /** Tests for the host name util. */
 public class HostNameUtilUnitTest
     extends TestCase

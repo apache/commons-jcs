@@ -30,8 +30,6 @@ import org.apache.commons.jcs3.engine.CacheElement;
 import org.apache.commons.jcs3.engine.behavior.ICacheElement;
 import org.apache.commons.jcs3.engine.control.CompositeCache;
 import org.apache.commons.jcs3.engine.control.CompositeCacheManager;
-import org.apache.commons.jcs3.engine.memory.soft.SoftReferenceMemoryCache;
-
 import junit.framework.TestCase;
 
 /**

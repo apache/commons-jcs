@@ -1,7 +1,6 @@
 package org.apache.commons.jcs3.engine;
 
 import org.apache.commons.jcs3.auxiliary.remote.MockRemoteCacheListener;
-import org.apache.commons.jcs3.engine.CacheEventQueueFactory;
 import org.apache.commons.jcs3.engine.behavior.ICacheEventQueue;
 import org.apache.commons.jcs3.engine.behavior.ICacheListener;
 import org.apache.commons.jcs3.engine.behavior.ICacheEventQueue.QueueType;

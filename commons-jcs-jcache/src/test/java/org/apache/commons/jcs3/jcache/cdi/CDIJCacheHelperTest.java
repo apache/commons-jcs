@@ -30,7 +30,6 @@ import javax.interceptor.InvocationContext;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-import org.apache.commons.jcs3.jcache.cdi.CDIJCacheHelper;
 import org.junit.Test;
 
 public class CDIJCacheHelperTest

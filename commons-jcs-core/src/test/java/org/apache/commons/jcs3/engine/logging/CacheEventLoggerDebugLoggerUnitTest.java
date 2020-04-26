@@ -3,7 +3,6 @@ package org.apache.commons.jcs3.engine.logging;
 import java.io.StringWriter;
 
 import org.apache.commons.jcs3.TestLogConfigurationUtil;
-import org.apache.commons.jcs3.engine.logging.CacheEventLoggerDebugLogger;
 import org.apache.commons.jcs3.engine.logging.behavior.ICacheEvent;
 
 /*

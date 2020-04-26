@@ -26,9 +26,6 @@ import java.util.Properties;
 
 import org.apache.commons.jcs3.auxiliary.remote.behavior.ICommonRemoteCacheAttributes;
 import org.apache.commons.jcs3.auxiliary.remote.behavior.IRemoteCacheConstants;
-import org.apache.commons.jcs3.auxiliary.remote.server.RemoteCacheServerAttributes;
-import org.apache.commons.jcs3.auxiliary.remote.server.RemoteCacheServerFactory;
-import org.apache.commons.jcs3.auxiliary.remote.server.TimeoutConfigurableRMISocketFactory;
 
 /** Unit tests for the factory */
 public class RemoteCacheServerFactoryUnitTest

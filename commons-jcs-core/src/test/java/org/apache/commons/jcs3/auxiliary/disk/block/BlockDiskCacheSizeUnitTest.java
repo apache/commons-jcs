@@ -20,7 +20,6 @@ package org.apache.commons.jcs3.auxiliary.disk.block;
  */
 
 import org.apache.commons.jcs3.auxiliary.disk.behavior.IDiskCacheAttributes.DiskLimitType;
-import org.apache.commons.jcs3.auxiliary.disk.block.BlockDiskCacheAttributes;
 
 public class BlockDiskCacheSizeUnitTest extends BlockDiskCacheUnitTestAbstract
 {

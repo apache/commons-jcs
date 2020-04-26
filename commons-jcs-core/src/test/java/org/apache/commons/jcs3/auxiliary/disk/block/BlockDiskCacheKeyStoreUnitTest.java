@@ -1,9 +1,7 @@
 package org.apache.commons.jcs3.auxiliary.disk.block;
 
 import org.apache.commons.jcs3.auxiliary.disk.behavior.IDiskCacheAttributes.DiskLimitType;
-import org.apache.commons.jcs3.auxiliary.disk.block.BlockDiskCache;
-import org.apache.commons.jcs3.auxiliary.disk.block.BlockDiskCacheAttributes;
-import org.apache.commons.jcs3.auxiliary.disk.block.BlockDiskKeyStore;
+
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one

@@ -23,7 +23,6 @@ import junit.framework.TestCase;
 
 import org.apache.commons.jcs3.engine.control.MockElementSerializer;
 import org.apache.commons.jcs3.engine.logging.MockCacheEventLogger;
-import org.apache.commons.jcs3.auxiliary.AuxiliaryCacheConfigurator;
 import org.apache.commons.jcs3.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
 

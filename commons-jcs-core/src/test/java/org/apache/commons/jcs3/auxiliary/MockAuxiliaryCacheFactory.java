@@ -20,8 +20,6 @@ package org.apache.commons.jcs3.auxiliary;
  */
 
 import org.apache.commons.jcs3.auxiliary.AbstractAuxiliaryCacheFactory;
-import org.apache.commons.jcs3.auxiliary.AuxiliaryCache;
-import org.apache.commons.jcs3.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.commons.jcs3.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs3.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs3.engine.logging.behavior.ICacheEventLogger;

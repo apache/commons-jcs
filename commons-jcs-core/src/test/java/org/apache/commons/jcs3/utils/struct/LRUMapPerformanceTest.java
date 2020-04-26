@@ -21,8 +21,6 @@ package org.apache.commons.jcs3.utils.struct;
 
 import java.util.Map;
 
-import org.apache.commons.jcs3.utils.struct.LRUMap;
-
 import junit.framework.TestCase;
 
 /**

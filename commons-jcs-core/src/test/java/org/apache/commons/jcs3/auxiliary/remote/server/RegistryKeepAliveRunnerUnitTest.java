@@ -21,7 +21,6 @@ package org.apache.commons.jcs3.auxiliary.remote.server;
 
 import junit.framework.TestCase;
 import org.apache.commons.jcs3.auxiliary.MockCacheEventLogger;
-import org.apache.commons.jcs3.auxiliary.remote.server.RegistryKeepAliveRunner;
 
 /** Unit tests for the registry keep alive runner. */
 public class RegistryKeepAliveRunnerUnitTest

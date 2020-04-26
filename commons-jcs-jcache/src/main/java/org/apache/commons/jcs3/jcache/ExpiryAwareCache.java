@@ -48,7 +48,7 @@ public class ExpiryAwareCache<A, B> extends CompositeCache<A, B>
         super.doExpires(element);
         for (final JCSListener<A, B> listener : listeners.values())
         {
-            listener.onExpired(Arrays.<CacheEntryEvent<? extends A, ? extends B>> asList(new JCSCacheEntryEvent<A, B>(
+            listener.onExpired(Arrays.<CacheEntryEvent<? extends A, ? extends B>> asList(new JCSCacheEntryEvent<>(
                     cacheRef, EventType.REMOVED, null, element.getKey(), element.getVal())));
         }
     }

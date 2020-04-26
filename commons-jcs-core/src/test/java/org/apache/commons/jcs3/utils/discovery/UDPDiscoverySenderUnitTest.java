@@ -2,9 +2,6 @@ package org.apache.commons.jcs3.utils.discovery;
 
 import java.util.ArrayList;
 
-import org.apache.commons.jcs3.utils.discovery.UDPDiscoveryMessage;
-import org.apache.commons.jcs3.utils.discovery.UDPDiscoveryReceiver;
-import org.apache.commons.jcs3.utils.discovery.UDPDiscoverySender;
 import org.apache.commons.jcs3.utils.discovery.UDPDiscoveryMessage.BroadcastType;
 
 /*

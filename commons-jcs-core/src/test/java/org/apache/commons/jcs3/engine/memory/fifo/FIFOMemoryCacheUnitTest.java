@@ -26,8 +26,6 @@ import org.apache.commons.jcs3.engine.CompositeCacheAttributes;
 import org.apache.commons.jcs3.engine.ElementAttributes;
 import org.apache.commons.jcs3.engine.behavior.ICompositeCacheAttributes;
 import org.apache.commons.jcs3.engine.control.CompositeCache;
-import org.apache.commons.jcs3.engine.memory.fifo.FIFOMemoryCache;
-
 import junit.framework.TestCase;
 
 /** Unit tests for the fifo implementation. */

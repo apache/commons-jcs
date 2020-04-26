@@ -25,8 +25,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.zip.GZIPOutputStream;
 
-import org.apache.commons.jcs3.utils.zip.CompressionUtil;
-
 /** Unit tests for the compression util */
 public class CompressionUtilUnitTest
     extends TestCase

@@ -22,7 +22,6 @@ package org.apache.commons.jcs3.access;
 import junit.framework.TestCase;
 
 import org.apache.commons.jcs3.JCS;
-import org.apache.commons.jcs3.access.CacheAccess;
 import org.apache.commons.jcs3.engine.control.CompositeCacheManager;
 import org.junit.FixMethodOrder;
 import org.junit.runners.MethodSorters;
