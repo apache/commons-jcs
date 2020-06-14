@@ -202,13 +202,6 @@
   </contributors>
 
   <build>
-    <resources>
-      <resource>
-        <directory>src/main/resources</directory>
-        <targetPath>${project.build.outputDirectory}</targetPath>
-      </resource>
-    </resources>
-    
     <pluginManagement>
       <plugins>
         <!-- Re-enable standard copying of N&L files from apache parent -->
