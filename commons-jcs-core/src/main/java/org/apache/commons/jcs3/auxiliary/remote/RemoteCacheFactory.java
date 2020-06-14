@@ -117,7 +117,7 @@ public class RemoteCacheFactory
 
                             // add a listener if there are none, need to tell rca what
                             // number it is at
-                            if ( ( !primaryDefined && fCnt == 1 ) || noWaits.size() <= 0 )
+                            if (!primaryDefined && fCnt == 1 || noWaits.size() <= 0)
                             {
                                 RemoteCacheNoWait<K,V> ic = rcm.getCache( rca );
                                 noWaits.add( ic );

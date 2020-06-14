@@ -314,7 +314,7 @@ public class RemoteCacheServer<K, V>
 
                 // UPDATE LOCALS IF A REQUEST COMES FROM A CLUSTER
                 // IF LOCAL CLUSTER CONSISTENCY IS CONFIGURED
-                if ( !fromCluster || ( fromCluster && remoteCacheServerAttributes.isLocalClusterConsistency() ) )
+                if (!fromCluster || fromCluster && remoteCacheServerAttributes.isLocalClusterConsistency())
                 {
                     ICacheEventQueue<K, V>[] qlist = getEventQList( cacheDesc, requesterId );
                     log.debug( "qlist.length = {0}", qlist.length );
@@ -843,7 +843,7 @@ public class RemoteCacheServer<K, V>
 
                 // UPDATE LOCALS IF A REQUEST COMES FROM A CLUSTER
                 // IF LOCAL CLUSTER CONSISTENCY IS CONFIGURED
-                if ( !fromCluster || ( fromCluster && remoteCacheServerAttributes.isLocalClusterConsistency() ) )
+                if (!fromCluster || fromCluster && remoteCacheServerAttributes.isLocalClusterConsistency())
                 {
                     ICacheEventQueue<K, V>[] qlist = getEventQList( cacheDesc, requesterId );
 
@@ -928,13 +928,13 @@ public class RemoteCacheServer<K, V>
                 }
 
                 // update registered listeners
-                if ( !fromCluster || ( fromCluster && remoteCacheServerAttributes.isLocalClusterConsistency() ) )
+                if (!fromCluster || fromCluster && remoteCacheServerAttributes.isLocalClusterConsistency())
                 {
                     ICacheEventQueue<K, V>[] qlist = getEventQList( cacheDesc, requesterId );
 
-                    for ( int i = 0; i < qlist.length; i++ )
+                    for (ICacheEventQueue<K, V> q : qlist)
                     {
-                        qlist[i].addRemoveAllEvent();
+                        q.addRemoveAllEvent();
                     }
                 }
             }

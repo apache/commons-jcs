@@ -68,7 +68,7 @@ public class MySQLDiskCacheFactory
         TableState tableState = getTableState( cattr.getTableName() );
         DataSourceFactory dsFactory = getDataSourceFactory(cattr, compositeCacheManager.getConfigurationProperties());
 
-        MySQLDiskCache<K, V> cache = new MySQLDiskCache<>( cattr, dsFactory, tableState, compositeCacheManager );
+        MySQLDiskCache<K, V> cache = new MySQLDiskCache<>( cattr, dsFactory, tableState);
         cache.setCacheEventLogger( cacheEventLogger );
         cache.setElementSerializer( elementSerializer );
 

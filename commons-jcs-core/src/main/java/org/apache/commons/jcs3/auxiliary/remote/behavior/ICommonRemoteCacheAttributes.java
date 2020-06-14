@@ -94,7 +94,7 @@ public interface ICommonRemoteCacheAttributes
      * <p>
      * @return The remote location value
      */
-    public RemoteLocation getRemoteLocation();
+    RemoteLocation getRemoteLocation();
 
     /**
      * Gets the clusterServers attribute of the IRemoteCacheAttributes object

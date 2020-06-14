@@ -19,8 +19,6 @@ package org.apache.commons.jcs3.auxiliary;
  * under the License.
  */
 
-import org.apache.commons.jcs3.auxiliary.AuxiliaryCacheFactory;
-
 /**
  * Base class for auxiliary cache factories.
  */

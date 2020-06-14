@@ -40,9 +40,9 @@ import org.apache.commons.jcs3.engine.CacheStatus;
 import org.apache.commons.jcs3.engine.behavior.ICache;
 import org.apache.commons.jcs3.engine.behavior.ICacheElement;
 import org.apache.commons.jcs3.engine.behavior.ICompositeCacheAttributes;
+import org.apache.commons.jcs3.engine.behavior.ICompositeCacheAttributes.DiskUsagePattern;
 import org.apache.commons.jcs3.engine.behavior.IElementAttributes;
 import org.apache.commons.jcs3.engine.behavior.IRequireScheduler;
-import org.apache.commons.jcs3.engine.behavior.ICompositeCacheAttributes.DiskUsagePattern;
 import org.apache.commons.jcs3.engine.control.event.ElementEvent;
 import org.apache.commons.jcs3.engine.control.event.behavior.ElementEventType;
 import org.apache.commons.jcs3.engine.control.event.behavior.IElementEvent;
@@ -1219,7 +1219,7 @@ public class CompositeCache<K, V>
                 // - The auxiliary is not alive
                 // - The auxiliary is remote and the invocation was remote
                 if (aux == null || aux.getStatus() != CacheStatus.ALIVE
-                    || (fromRemote && aux.getCacheType() == CacheType.REMOTE_CACHE))
+                    || fromRemote && aux.getCacheType() == CacheType.REMOTE_CACHE)
                 {
                     log.info("In DISPOSE, [{0}] SKIPPING auxiliary [{1}] fromRemote [{2}]",
                             () -> this.cacheAttr.getCacheName(), () -> aux.getCacheName(),
@@ -1515,7 +1515,7 @@ public class CompositeCache<K, V>
                 // If you have a 0 size memory cache, then the last access will
                 // not get updated.
                 // you will need to set the idle time to -1.
-                if ((idleTime != -1) && (timestamp - lastAccessTime) > idleTime * timeFactorForMilliseconds)
+                if (idleTime != -1 && timestamp - lastAccessTime > idleTime * timeFactorForMilliseconds)
                 {
                     log.debug("Exceeded maxIdle: {0}", () -> element.getKey());
 

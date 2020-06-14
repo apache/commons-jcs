@@ -173,11 +173,10 @@ public class RemoteCacheFailoverRunner<K, V> extends AbstractAuxiliaryCacheMonit
                 log.debug( "starting at failover i = {0}", i );
 
                 // try them one at a time until successful
-                for ( ; i.hasNext() && !allright.get();)
+                while (i.hasNext() && !allright.get())
                 {
                     RemoteLocation server = i.next();
-                    log.debug( "Trying server [{1}] at failover index i = {1}",
-                            server, i );
+                    log.debug( "Trying server [{0}] at failover index i = {1}", server, i );
 
                     RemoteCacheAttributes rca = (RemoteCacheAttributes) rca0.clone();
                     rca.setRemoteLocation(server);

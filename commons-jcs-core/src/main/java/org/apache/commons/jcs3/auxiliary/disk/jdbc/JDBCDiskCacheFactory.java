@@ -95,7 +95,7 @@ public class JDBCDiskCacheFactory
         TableState tableState = getTableState( cattr.getTableName() );
         DataSourceFactory dsFactory = getDataSourceFactory(cattr, compositeCacheManager.getConfigurationProperties());
 
-        JDBCDiskCache<K, V> cache = new JDBCDiskCache<>( cattr, dsFactory, tableState, compositeCacheManager );
+        JDBCDiskCache<K, V> cache = new JDBCDiskCache<>(cattr, dsFactory, tableState);
         cache.setCacheEventLogger( cacheEventLogger );
         cache.setElementSerializer( elementSerializer );
 

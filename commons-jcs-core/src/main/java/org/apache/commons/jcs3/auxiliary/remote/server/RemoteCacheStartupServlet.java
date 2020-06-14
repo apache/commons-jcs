@@ -21,6 +21,7 @@ package org.apache.commons.jcs3.auxiliary.remote.server;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.util.Properties;
@@ -119,10 +120,17 @@ public class RemoteCacheStartupServlet
 
         log.debug("registryHost = [{0}]", registryHost);
 
-        if ("localhost".equals(registryHost) || "127.0.0.1".equals(registryHost))
+        try
         {
-            log.warn("The local address [{0}] is INVALID. Other machines must "
-                    + "be able to use the address to reach this server.", registryHost);
+            if (InetAddress.getByName(registryHost).isLoopbackAddress())
+            {
+                log.warn("The local address [{0}] is a loopback address. Other machines must "
+                        + "be able to use the address to reach this server.", registryHost);
+            }
+        }
+        catch (UnknownHostException e)
+        {
+            throw new ServletException("Could not resolve registry host " + registryHost, e);
         }
 
         try
