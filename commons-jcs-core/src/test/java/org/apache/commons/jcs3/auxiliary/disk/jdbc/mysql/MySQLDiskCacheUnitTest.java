@@ -23,7 +23,6 @@ import java.sql.SQLException;
 
 import org.apache.commons.jcs3.auxiliary.disk.jdbc.TableState;
 import org.apache.commons.jcs3.auxiliary.disk.jdbc.dsfactory.SharedPoolDataSourceFactory;
-import org.apache.commons.jcs3.engine.control.CompositeCacheManager;
 
 import junit.framework.TestCase;
 
@@ -60,8 +59,7 @@ public class MySQLDiskCacheUnitTest
         TableState tableState = new TableState( tableName );
         tableState.setState( TableState.OPTIMIZATION_RUNNING );
 
-        MySQLDiskCache<String, String> cache = new MySQLDiskCache<>( attributes, dsFactory, tableState,
-        		CompositeCacheManager.getUnconfiguredInstance() );
+        MySQLDiskCache<String, String> cache = new MySQLDiskCache<>(attributes, dsFactory, tableState);
 
         // DO WORK
         Object result = cache.processGet( "myKey" );
