@@ -21,7 +21,6 @@ package org.apache.commons.jcs3.auxiliary.lateral.socket.tcp;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.StringTokenizer;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.jcs3.auxiliary.AbstractAuxiliaryCacheFactory;
@@ -96,12 +95,11 @@ public class LateralTCPCacheFactory
         // no servers are required.
         if ( lac.getTcpServers() != null )
         {
-            StringTokenizer it = new StringTokenizer( lac.getTcpServers(), "," );
-            log.debug( "Configured for [{0}] servers.", () -> it.countTokens() );
+            String servers[] = lac.getTcpServers().split("\\s*,\\s*");
+            log.debug( "Configured for [{0}] servers.", servers.length );
 
-            while ( it.hasMoreElements() )
+            for (String server : servers)
             {
-                String server = (String) it.nextElement();
                 log.debug( "tcp server = {0}", server );
                 ITCPLateralCacheAttributes lacC = (ITCPLateralCacheAttributes) lac.clone();
                 lacC.setTcpServer( server );

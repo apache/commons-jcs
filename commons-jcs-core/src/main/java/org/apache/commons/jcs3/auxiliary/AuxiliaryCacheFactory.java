@@ -48,12 +48,12 @@ public interface AuxiliaryCacheFactory
     /**
      * Initialize this factory
      */
-    void initialize();
+    default void initialize() { /* empty */ }
 
     /**
      * Dispose of this factory, clean up shared resources
      */
-    void dispose();
+    default void dispose()  { /* empty */ }
 
     /**
      * Sets the name attribute of the AuxiliaryCacheFactory object

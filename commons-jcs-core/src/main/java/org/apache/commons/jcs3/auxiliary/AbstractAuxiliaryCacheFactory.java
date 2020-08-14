@@ -29,24 +29,6 @@ public abstract class AbstractAuxiliaryCacheFactory
     private String name = this.getClass().getSimpleName();
 
     /**
-     * Initialize this factory
-     */
-    @Override
-    public void initialize()
-    {
-        // empty
-    }
-
-    /**
-     * Dispose of this factory, clean up shared resources
-     */
-    @Override
-    public void dispose()
-    {
-        // empty
-    }
-
-    /**
      * Gets the name attribute of the DiskCacheFactory object
      * <p>
      * @return The name value
