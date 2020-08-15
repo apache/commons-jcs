@@ -43,12 +43,12 @@ This document contains the release notes for the ${version} version of ${project
 Commons JCS is a distributed caching system written in Java. It is intend to speed up 
 applications by providing a means to manage cached data of various dynamic natures.
 
-JCS 2.0 and onwards now targets Java 6.0, making use of features that arrived with Java 5.0 
-such as generics and concurrency.
+JCS 3.0 and onwards now targets Java 8.0, making use of features that arrived with Java 8.0 
+such as lambdas.
 
-For the advice on upgrading from 1.x to 2.x, see the following page: 
+For the advice on upgrading from 2.x to 3.x, see the following page: 
 
-    ${project.url}UpgradingFrom13.html
+    ${project.url}UpgradingFrom2x.html
 
 $introduction.replaceAll("(?<!\015)\012", "
 ").replaceAll("(?m)^ +","")
