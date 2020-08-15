@@ -26,7 +26,7 @@
 
   <artifactId>commons-jcs3</artifactId>
   <packaging>pom</packaging>
-  <version>3.0-SNAPSHOT</version>
+  <version>3.0</version>
 
   <!--
    * Build with -PjcacheTck to run the JSR-107 TCK
@@ -54,6 +54,7 @@
     <connection>scm:git:http://gitbox.apache.org/repos/asf/commons-jcs.git</connection>
     <developerConnection>scm:git:https://gitbox.apache.org/repos/asf/commons-jcs.git</developerConnection>
     <url>https://gitbox.apache.org/repos/asf?p=commons-jcs.git</url>
+    <tag>commons-jcs3-3.0-rc1</tag>
   </scm>
 
   <mailingLists>
@@ -541,6 +542,7 @@
     <commons.collections.version>4.4</commons.collections.version>
     <commons.lang.version>3.10</commons.lang.version>
     <commons.clirr.version>2.8</commons.clirr.version>
+    <commons.assembly-plugin.version>3.3.0</commons.assembly-plugin.version>
 
     <test.type>Unit</test.type>
     <doclint>none</doclint>
