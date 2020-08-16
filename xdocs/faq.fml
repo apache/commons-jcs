@@ -43,8 +43,9 @@
 			<answer>
 				<p>
 					By default JCS looks for a cache.ccf file in the
-					classpath. The documentation describes
-					how to configure the cache.
+					classpath. The 
+                    <a href="LocalCacheConfig.html">documentation</a>
+					 describes how to configure the cache.
 				</p>
 			</answer>
 		</faq>
@@ -84,6 +85,20 @@
 				</p>
 			</answer>
 		</faq>
+
+        <faq id="shutdown">
+            <question>
+                How do I shut down JCS properly?
+            </question>
+            <answer>
+                <p>
+                    As of version 3.0, you can simply call
+                </p>
+                <code>
+                    JCS.shutdown();
+                </code>
+            </answer>
+        </faq>
 	</part>
 
 	<part id="general-questions">
@@ -111,7 +126,7 @@
 				<p>
 					You can download the admin jsp
 					<a
-						href="http://svn.apache.org/viewvc/commons/proper/jcs/trunk/commons-jcs-core/src/main/java/org/apache/commons/jcs/admin/JCSAdmin.jsp?view=log">
+						href="https://raw.githubusercontent.com/apache/commons-jcs/master/commons-jcs-core/src/main/java/org/apache/commons/jcs3/admin/JCSAdmin.jsp">
 						here
 					</a>
 					.
@@ -123,15 +138,8 @@
 			<question>Where can I get the source?</question>
 			<answer>
 				<p>
-					You can view the source
-					<a
-						href="http://svn.apache.org/viewcvs.cgi/commons/proper/jcs/trunk/">
-						here
-					</a>
-					or get the source code from subversion with <code>svn co
-					http://svn.apache.org/repos/asf/commons/proper/jcs/trunk</code>.
-					The tagged releases are available with <code>svn co.</code> ex.
-					https://svn.apache.org/repos/asf/commons/proper/jcs/tags/commons-jcs-2.0
+					See the information about the 
+					<a href="scm.html">Source Repository</a>
 				</p>
 			</answer>
 		</faq>
@@ -140,12 +148,10 @@
 			<answer>
 				<p>
 					You first need to install
-					<a href="http://maven.apache.org/">Maven 2</a>
-					The download is available at
-					http://maven.apache.org/download.html.
+					<a href="http://maven.apache.org/">Maven</a>
 					After installing run
 					"mvn test" which compiles and tests the entire package.
-					To build a jar run "mvn install".
+					To build a jar run "mvn package".
 				</p>
 			</answer>
 		</faq>

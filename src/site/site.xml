@@ -35,8 +35,8 @@
       <item name="Upgrading from 2.x to 3.0" href="/UpgradingFrom2x.html"/>
       <item name="Mailing Lists" href="/mail-lists.html"/>
       <item name="Issue Tracking" href="/issue-tracking.html"/>
-      <item name="Source Repository" href="/source-repository.html"/>
-      <item name="Core Javadoc (SVN latest)" href="commons-jcs-core/apidocs/index.html"/>
+      <item name="Source Repository" href="/scm.html"/>
+      <item name="Core Javadoc" href="commons-jcs3-core/apidocs/index.html"/>
     </menu>
 
     <menu name="Getting Started">
