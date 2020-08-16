@@ -19,7 +19,7 @@
 		<author email="dev@commons.apache.org">Apache Commons Developers</author>
 	</properties>
 	<body>
-        <release version="3.0" date="2020-08-15">
+        <release version="3.0" date="2020-08-16">
             <action issue="JCS-205" dev="tv" type="fix">
                 Fix packaging
             </action>
