@@ -122,9 +122,9 @@
 				</p>
 				<source><![CDATA[
 jcs.auxiliary.DC=
-    org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
+    org.apache.commons.jcs3.auxiliary.disk.indexed.IndexedDiskCacheFactory
 jcs.auxiliary.DC.attributes=
-    org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
+    org.apache.commons.jcs3.auxiliary.disk.indexed.IndexedDiskCacheAttributes
 jcs.auxiliary.DC.attributes.DiskPath=g:\dev\jakarta-turbine-stratum\raf
 jcs.auxiliary.DC.attributes.MaxKeySize=100000
 ]]></source>
@@ -201,22 +201,22 @@ jcs.auxiliary.DC.attributes.OptimizeAtRemoveCount=30000
 ##############################################################
 ##### Default Region Configuration
 jcs.default=DC
-jcs.default.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
+jcs.default.cacheattributes=org.apache.commons.jcs3.engine.CompositeCacheAttributes
 jcs.default.cacheattributes.MaxObjects=100
-jcs.default.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
+jcs.default.cacheattributes.MemoryCacheName=org.apache.commons.jcs3.engine.memory.lru.LRUMemoryCache
 
 ##############################################################
 ##### CACHE REGIONS
 jcs.region.myRegion1=DC
-jcs.region.myRegion1.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
+jcs.region.myRegion1.cacheattributes=org.apache.commons.jcs3.engine.CompositeCacheAttributes
 jcs.region.myRegion1.cacheattributes.MaxObjects=1000
-jcs.region.myRegion1.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
+jcs.region.myRegion1.cacheattributes.MemoryCacheName=org.apache.commons.jcs3.engine.memory.lru.LRUMemoryCache
 
 ##############################################################
 ##### AUXILIARY CACHES
 # Indexed Disk Cache
-jcs.auxiliary.DC=org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
-jcs.auxiliary.DC.attributes=org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
+jcs.auxiliary.DC=org.apache.commons.jcs3.auxiliary.disk.indexed.IndexedDiskCacheFactory
+jcs.auxiliary.DC.attributes=org.apache.commons.jcs3.auxiliary.disk.indexed.IndexedDiskCacheAttributes
 jcs.auxiliary.DC.attributes.DiskPath=target/test-sandbox/indexed-disk-cache
 jcs.auxiliary.DC.attributes.MaxPurgatorySize=10000
 jcs.auxiliary.DC.attributes.MaxKeySize=10000
@@ -249,13 +249,13 @@ jcs.auxiliary.DC.attributes.DiskLimitType=COUNT
 ################## DEFAULT CACHE REGION  #####################
 # sets the default aux value for any non configured caches
 jcs.default=DC2
-jcs.default.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
+jcs.default.cacheattributes=org.apache.commons.jcs3.engine.CompositeCacheAttributes
 jcs.default.cacheattributes.MaxObjects=200001
-jcs.default.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
+jcs.default.cacheattributes.MemoryCacheName=org.apache.commons.jcs3.engine.memory.lru.LRUMemoryCache
 jcs.default.cacheattributes.UseMemoryShrinker=false
 jcs.default.cacheattributes.MaxMemoryIdleTimeSeconds=3600
 jcs.default.cacheattributes.ShrinkerIntervalSeconds=60
-jcs.default.elementattributes=org.apache.commons.jcs.engine.ElementAttributes
+jcs.default.elementattributes=org.apache.commons.jcs3.engine.ElementAttributes
 jcs.default.elementattributes.IsEternal=false
 jcs.default.elementattributes.MaxLife=700
 jcs.default.elementattributes.IdleTime=1800
@@ -273,8 +273,8 @@ jcs.default.elementattributes.IsLateral=true
 # If you want to use a separate pool for each disk cache, either use
 # the single model or define a different auxiliary for each region and use the Pooled type.
 # SINGLE is generally best unless you have a huge # of regions.
-jcs.auxiliary.DC2=org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
-jcs.auxiliary.DC2.attributes=org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
+jcs.auxiliary.DC2=org.apache.commons.jcs3.auxiliary.disk.indexed.IndexedDiskCacheFactory
+jcs.auxiliary.DC2.attributes=org.apache.commons.jcs3.auxiliary.disk.indexed.IndexedDiskCacheAttributes
 jcs.auxiliary.DC2.attributes.DiskPath=target/test-sandbox/raf
 jcs.auxiliary.DC2.attributes.MaxPurgatorySize=10000
 jcs.auxiliary.DC2.attributes.MaxKeySize=10000

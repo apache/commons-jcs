@@ -133,8 +133,8 @@
 			</subsection>
 			<subsection name="Example Configuration">
 				<source><![CDATA[
-jcs.auxiliary.LTCP=org.apache.commons.jcs.auxiliary.lateral.socket.tcp.LateralTCPCacheFactory
-jcs.auxiliary.LTCP.attributes=org.apache.commons.jcs.auxiliary.lateral.socket.tcp.TCPLateralCacheAttributes
+jcs.auxiliary.LTCP=org.apache.commons.jcs3.auxiliary.lateral.socket.tcp.LateralTCPCacheFactory
+jcs.auxiliary.LTCP.attributes=org.apache.commons.jcs3.auxiliary.lateral.socket.tcp.TCPLateralCacheAttributes
 #jcs.auxiliary.LTCP.attributes.TcpServers=
 jcs.auxiliary.LTCP.attributes.TcpListenerPort=1118
 jcs.auxiliary.LTCP.attributes.UdpDiscoveryAddr=228.5.6.8

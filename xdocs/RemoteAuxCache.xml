@@ -150,9 +150,9 @@
 					<![CDATA[
 # Remote RMI Cache set up to failover
 jcs.auxiliary.RFailover=
-    org.apache.commons.jcs.auxiliary.remote.RemoteCacheFactory
+    org.apache.commons.jcs3.auxiliary.remote.RemoteCacheFactory
 jcs.auxiliary.RFailover.attributes=
-    org.apache.commons.jcs.auxiliary.remote.RemoteCacheAttributes
+    org.apache.commons.jcs3.auxiliary.remote.RemoteCacheAttributes
 jcs.auxiliary.RFailover.attributes.FailoverServers=
     localhost:1102,localhost:1103
 jcs.auxiliary.RFailover.attributes.RemoveUponRemotePut=true
@@ -168,10 +168,10 @@ jcs.auxiliary.RFailover.attributes.GetOnly=false
 #Regions preconfirgured for caching
 jcs.region.testCache1=DC,RFailover
 jcs.region.testCache1.cacheattributes=
-    org.apache.commons.jcs.engine.CompositeCacheAttributes
+    org.apache.commons.jcs3.engine.CompositeCacheAttributes
 jcs.region.testCache1.cacheattributes.MaxObjects=1000
 jcs.region.testCache1.cacheattributes.MemoryCacheName=
-    org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
+    org.apache.commons.jcs3.engine.memory.lru.LRUMemoryCache
         ]]>
 				</source>
 			</subsection>
@@ -249,13 +249,13 @@ remote.cluster.AllowClusterGet=true
 # sets the default aux value for any non configured caches
 jcs.default=DC,RCluster1
 jcs.default.cacheattributes=
-    org.apache.commons.jcs.engine.CompositeCacheAttributes
+    org.apache.commons.jcs3.engine.CompositeCacheAttributes
 jcs.default.cacheattributes.MaxObjects=1000
 
 jcs.auxiliary.RCluster1=
-    org.apache.commons.jcs.auxiliary.remote.RemoteCacheFactory
+    org.apache.commons.jcs3.auxiliary.remote.RemoteCacheFactory
 jcs.auxiliary.RCluster1.attributes=
-    org.apache.commons.jcs.auxiliary.remote.RemoteCacheAttributes
+    org.apache.commons.jcs3.auxiliary.remote.RemoteCacheAttributes
 jcs.auxiliary.RCluster1.attributes.RemoteTypeName=CLUSTER
 jcs.auxiliary.RCluster1.attributes.RemoveUponRemotePut=false
 jcs.auxiliary.RCluster1.attributes.ClusterServers=localhost:1103
@@ -304,9 +304,9 @@ jcs.auxiliary.RCluster1.attributes.GetOnly=false
 					<![CDATA[
 	# Remote RMI Cache set up to failover
 	jcs.auxiliary.RFailover=
-	    org.apache.commons.jcs.auxiliary.remote.RemoteCacheFactory
+	    org.apache.commons.jcs3.auxiliary.remote.RemoteCacheFactory
 	jcs.auxiliary.RFailover.attributes=
-	    org.apache.commons.jcs.auxiliary.remote.RemoteCacheAttributes
+	    org.apache.commons.jcs3.auxiliary.remote.RemoteCacheAttributes
 	jcs.auxiliary.RFailover.attributes.FailoverServers=
 	    localhost:1102,localhost:1103
 	jcs.auxiliary.RC.attributes.RemoveUponRemotePut=true
@@ -336,7 +336,7 @@ jcs.auxiliary.RCluster1.attributes.GetOnly=false
     <servlet>
         <servlet-name>JCSRemoteCacheStartupServlet</servlet-name>
         <servlet-class>
-             org.apache.commons.jcs.auxiliary.remote.server.RemoteCacheStartupServlet
+             org.apache.commons.jcs3.auxiliary.remote.server.RemoteCacheStartupServlet
         </servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>

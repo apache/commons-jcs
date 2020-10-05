@@ -28,7 +28,7 @@
 				and critical errors to the same logger.</p>
 			<p>
 				To inject a custom event logger, you simply need to implement the
-				<code>org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger
+				<code>org.apache.commons.jcs3.engine.logging.behavior.ICacheEventLogger
 				</code>
 				interface and add a couple of lines to the cache.ccf file.
 			</p>
@@ -38,8 +38,8 @@
 				could do the following:</p>
 			<source><![CDATA[
 			. . .
-			jcs.auxiliary.RC=org.apache.commons.jcs.auxiliary.remote.RemoteCacheFactory
-jcs.auxiliary.RC.attributes=org.apache.commons.jcs.auxiliary.remote.RemoteCacheAttributes
+			jcs.auxiliary.RC=org.apache.commons.jcs3.auxiliary.remote.RemoteCacheFactory
+jcs.auxiliary.RC.attributes=org.apache.commons.jcs3.auxiliary.remote.RemoteCacheAttributes
 jcs.auxiliary.RC.attributes.FailoverServers=localhost:1101,localhost:1102
 jcs.auxiliary.RC.attributes.LocalPort=1201
 jcs.auxiliary.RC.attributes.RemoveUponRemotePut=false
@@ -49,7 +49,7 @@ jcs.auxiliary.RC.attributes.RemoveUponRemotePut=false
 jcs.auxiliary.RC.attributes.GetTimeoutMillis=500
 jcs.auxiliary.RC.attributes.ThreadPoolName=remote_cache_client
 jcs.auxiliary.RC.attributes.GetOnly=false
-jcs.auxiliary.RC.cacheeventlogger=org.apache.commons.jcs.engine.logging.CacheEventLoggerDebugLogger
+jcs.auxiliary.RC.cacheeventlogger=org.apache.commons.jcs3.engine.logging.CacheEventLoggerDebugLogger
 jcs.auxiliary.RC.cacheeventlogger.attributes.logCategoryName=test.RCCEventLogCategory
 			. . .
         ]]></source>
