@@ -62,7 +62,7 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
     {
         super.initialize(hub);
         list = new DoubleLinkedList<>();
-        log.info("initialized MemoryCache for {0}", () -> getCacheName());
+        log.info("initialized MemoryCache for {0}", this::getCacheName);
     }
 
     /**

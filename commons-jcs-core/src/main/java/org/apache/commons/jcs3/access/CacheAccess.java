@@ -22,6 +22,7 @@ package org.apache.commons.jcs3.access;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -121,7 +122,7 @@ public class CacheAccess<K, V>
                     .stream()
                     .filter(entry -> entry.getValue() != null)
                     .collect(Collectors.toMap(
-                            entry -> entry.getKey(),
+                            Entry::getKey,
                             entry -> entry.getValue().getVal()));
         }
 

@@ -131,7 +131,7 @@ public abstract class AbstractMemoryCache<K, V>
                 })
                 .filter(element -> element != null)
                 .collect(Collectors.toMap(
-                        element -> element.getKey(),
+                        ICacheElement::getKey,
                         element -> element));
         }
 

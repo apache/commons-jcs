@@ -150,7 +150,7 @@ public class JDBCDiskCacheFactory
      */
     protected TableState getTableState(String tableName)
     {
-        return tableStates.computeIfAbsent(tableName, key -> new TableState(key));
+        return tableStates.computeIfAbsent(tableName, TableState::new);
     }
 
     /**

@@ -91,9 +91,7 @@ public class CacheWatchRepairable
     {
         // Record the added cache listener locally, regardless of whether the
         // remote add-listener operation succeeds or fails.
-        Set<ICacheListener<?, ?>> listenerSet = cacheMap.computeIfAbsent(cacheName, key -> {
-            return new CopyOnWriteArraySet<>();
-        });
+        Set<ICacheListener<?, ?>> listenerSet = cacheMap.computeIfAbsent(cacheName, key -> new CopyOnWriteArraySet<>());
 
         listenerSet.add( obj );
 

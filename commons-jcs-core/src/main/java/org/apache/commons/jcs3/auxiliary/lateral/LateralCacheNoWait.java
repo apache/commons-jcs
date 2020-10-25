@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -173,8 +174,8 @@ public class LateralCacheNoWait<K, V>
                         key -> get(key))).entrySet().stream()
                     .filter(entry -> entry.getValue() != null)
                     .collect(Collectors.toMap(
-                            entry -> entry.getKey(),
-                            entry -> entry.getValue()));
+                            Entry::getKey,
+                            Entry::getValue));
 
             return elements;
         }

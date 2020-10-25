@@ -229,9 +229,7 @@ public class RemoteCacheManager
     public <K, V> RemoteCacheNoWait<K, V> getCache( IRemoteCacheAttributes cattr )
     {
         RemoteCacheNoWait<K, V> remoteCacheNoWait =
-                (RemoteCacheNoWait<K, V>) caches.computeIfAbsent(cattr.getCacheName(), key -> {
-                    return newRemoteCacheNoWait(cattr);
-                });
+                (RemoteCacheNoWait<K, V>) caches.computeIfAbsent(cattr.getCacheName(), key -> newRemoteCacheNoWait(cattr));
 
         // might want to do some listener sanity checking here.
         return remoteCacheNoWait;

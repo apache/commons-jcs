@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -788,8 +789,8 @@ public class CompositeCache<K, V>
                     getMatchingFromMemory(pattern).entrySet().stream(),
                     getMatchingFromAuxiliaryCaches(pattern, localOnly).entrySet().stream())
                     .collect(Collectors.toMap(
-                            entry -> entry.getKey(),
-                            entry -> entry.getValue(),
+                            Entry::getKey,
+                            Entry::getValue,
                             // Prefer memory entries
                             (mem, aux) -> mem));
         }

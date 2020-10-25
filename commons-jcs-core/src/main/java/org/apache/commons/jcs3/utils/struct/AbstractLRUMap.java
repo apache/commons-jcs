@@ -160,7 +160,7 @@ public abstract class AbstractLRUMap<K, V>
     public Collection<V> values()
     {
         return map.values().stream()
-                .map(value -> value.getPayload())
+                .map(LRUElementDescriptor::getPayload)
                 .collect(Collectors.toList());
     }
 
@@ -536,7 +536,7 @@ public abstract class AbstractLRUMap<K, V>
     public Set<K> keySet()
     {
         return map.values().stream()
-                .map(value -> value.getKey())
+                .map(LRUElementDescriptor::getKey)
                 .collect(Collectors.toSet());
     }
 }
