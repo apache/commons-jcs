@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -232,8 +233,8 @@ public class LateralCacheNoWaitFacade<K, V>
                         key -> get(key))).entrySet().stream()
                     .filter(entry -> entry.getValue() != null)
                     .collect(Collectors.toMap(
-                            entry -> entry.getKey(),
-                            entry -> entry.getValue()));
+                            Entry::getKey,
+                            Entry::getValue));
 
             return elements;
         }
@@ -301,7 +302,7 @@ public class LateralCacheNoWaitFacade<K, V>
     @Override
     public void removeAll()
     {
-        Arrays.stream(noWaits).forEach(nw -> nw.removeAll());
+        Arrays.stream(noWaits).forEach(LateralCacheNoWait::removeAll);
     }
 
     /** Adds a dispose request to the lateral cache. */
@@ -316,7 +317,7 @@ public class LateralCacheNoWaitFacade<K, V>
                 listener = null;
             }
 
-            Arrays.stream(noWaits).forEach(nw -> nw.dispose());
+            Arrays.stream(noWaits).forEach(LateralCacheNoWait::dispose);
         }
         finally
         {
@@ -376,7 +377,7 @@ public class LateralCacheNoWaitFacade<K, V>
         }
 
         List<CacheStatus> statii = Arrays.stream(noWaits)
-                .map(nw -> nw.getStatus())
+                .map(LateralCacheNoWait::getStatus)
                 .collect(Collectors.toList());
 
         // It's alive if ANY of its nowaits is alive

@@ -222,7 +222,7 @@ public class RemoteUtils
             if (factoryInUse != null && !factoryInUse.getClass().getName().startsWith("org.apache.commons.jcs3"))
             {
                 log.info("Could not create new custom socket factory. {0} Factory in use = {1}",
-                        () -> e.getMessage(), () -> RMISocketFactory.getSocketFactory());
+                        () -> e.getMessage(), RMISocketFactory::getSocketFactory);
             }
         }
     }

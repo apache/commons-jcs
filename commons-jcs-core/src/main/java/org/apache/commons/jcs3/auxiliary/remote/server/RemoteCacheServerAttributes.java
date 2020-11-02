@@ -42,13 +42,13 @@ public class RemoteCacheServerAttributes
     private String configFileName = "";
 
     /** Should we start the registry */
-    private final boolean DEFAULT_START_REGISTRY = true;
+    private final static boolean DEFAULT_START_REGISTRY = true;
 
     /** Should we start the registry */
     private boolean startRegistry = DEFAULT_START_REGISTRY;
 
     /** Should we try to keep the registry alive */
-    private final boolean DEFAULT_USE_REGISTRY_KEEP_ALIVE = true;
+    private final static boolean DEFAULT_USE_REGISTRY_KEEP_ALIVE = true;
 
     /** Should we try to keep the registry alive */
     private boolean useRegistryKeepAlive = DEFAULT_USE_REGISTRY_KEEP_ALIVE;

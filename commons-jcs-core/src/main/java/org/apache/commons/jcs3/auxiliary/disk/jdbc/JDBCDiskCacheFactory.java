@@ -95,7 +95,7 @@ public class JDBCDiskCacheFactory
         TableState tableState = getTableState( cattr.getTableName() );
         DataSourceFactory dsFactory = getDataSourceFactory(cattr, compositeCacheManager.getConfigurationProperties());
 
-        JDBCDiskCache<K, V> cache = new JDBCDiskCache<>( cattr, dsFactory, tableState, compositeCacheManager );
+        JDBCDiskCache<K, V> cache = new JDBCDiskCache<>(cattr, dsFactory, tableState);
         cache.setCacheEventLogger( cacheEventLogger );
         cache.setElementSerializer( elementSerializer );
 
@@ -150,7 +150,7 @@ public class JDBCDiskCacheFactory
      */
     protected TableState getTableState(String tableName)
     {
-        return tableStates.computeIfAbsent(tableName, key -> new TableState(key));
+        return tableStates.computeIfAbsent(tableName, TableState::new);
     }
 
     /**

@@ -134,34 +134,34 @@ public class MySQLTableOptimizer
             try (Connection con = dataSource.getConnection())
             {
                 // TEST
-
                 try (Statement sStatement = con.createStatement())
                 {
-                    ResultSet rs = sStatement.executeQuery( "optimize table " + this.getTableName() );
-
-                    // first row is error, then status
-                    // if there is only one row in the result set, everything
-                    // should be fine.
-                    // This may be mysql version specific.
-                    if ( rs.next() )
+                    try (ResultSet rs = sStatement.executeQuery( "optimize table " + this.getTableName() ))
                     {
-                        String status = rs.getString( "Msg_type" );
-                        String message = rs.getString( "Msg_text" );
-
-                        log.info( "Message Type: {0}", status );
-                        log.info( "Message: {0}", message );
-
-                        if ( "error".equals( status ) )
+                        // first row is error, then status
+                        // if there is only one row in the result set, everything
+                        // should be fine.
+                        // This may be mysql version specific.
+                        if ( rs.next() )
                         {
-                            log.warn( "Optimization was in error. Will attempt "
-                                    + "to repair the table. Message: {0}", message);
+                            String status = rs.getString( "Msg_type" );
+                            String message = rs.getString( "Msg_text" );
 
-                            // try to repair the table.
-                            success = repairTable( sStatement );
-                        }
-                        else
-                        {
-                            success = true;
+                            log.info( "Message Type: {0}", status );
+                            log.info( "Message: {0}", message );
+
+                            if ( "error".equals( status ) )
+                            {
+                                log.warn( "Optimization was in error. Will attempt "
+                                        + "to repair the table. Message: {0}", message);
+
+                                // try to repair the table.
+                                success = repairTable( sStatement );
+                            }
+                            else
+                            {
+                                success = true;
+                            }
                         }
                     }
 
@@ -187,7 +187,7 @@ public class MySQLTableOptimizer
             tableState.setState( TableState.FREE );
 
             log.info( "Optimization of table [{0}] took {1} ms.",
-                    () -> this.getTableName(), () -> timer.getElapsedTime() );
+                    this::getTableName, () -> timer.getElapsedTime() );
         }
 
         return success;
@@ -203,16 +203,20 @@ public class MySQLTableOptimizer
     protected String getTableStatus( Statement sStatement )
         throws SQLException
     {
-        ResultSet statusResultSet = sStatement.executeQuery( "show table status" );
         StringBuilder statusString = new StringBuilder();
-        int numColumns = statusResultSet.getMetaData().getColumnCount();
-        while ( statusResultSet.next() )
+        try (ResultSet statusResultSet = sStatement.executeQuery( "show table status" ))
         {
-            statusString.append( "\n" );
-            for ( int i = 1; i <= numColumns; i++ )
+            int numColumns = statusResultSet.getMetaData().getColumnCount();
+            while ( statusResultSet.next() )
             {
-                statusString.append( statusResultSet.getMetaData().getColumnLabel( i ) + " ["
-                    + statusResultSet.getString( i ) + "]  |  " );
+                statusString.append( "\n" );
+                for ( int i = 1; i <= numColumns; i++ )
+                {
+                    statusString.append(statusResultSet.getMetaData().getColumnLabel(i))
+                        .append(" [")
+                        .append(statusResultSet.getString(i))
+                        .append("]  |  ");
+                }
             }
         }
         return statusString.toString();
@@ -234,23 +238,28 @@ public class MySQLTableOptimizer
         boolean success = false;
 
         // if( message != null && message.indexOf( ) )
-        ResultSet repairResult = sStatement.executeQuery( "repair table " + this.getTableName() );
         StringBuilder repairString = new StringBuilder();
-        int numColumns = repairResult.getMetaData().getColumnCount();
-        while ( repairResult.next() )
+        try (ResultSet repairResult = sStatement.executeQuery( "repair table " + this.getTableName()))
         {
-            for ( int i = 1; i <= numColumns; i++ )
+            int numColumns = repairResult.getMetaData().getColumnCount();
+            while ( repairResult.next() )
             {
-                repairString.append( repairResult.getMetaData().getColumnLabel( i ) + " [" + repairResult.getString( i )
-                    + "]  |  " );
-            }
+                for ( int i = 1; i <= numColumns; i++ )
+                {
+                    repairString.append(repairResult.getMetaData().getColumnLabel(i))
+                        .append(" [")
+                        .append(repairResult.getString(i))
+                        .append("]  |  ");
+                }
 
-            String message = repairResult.getString( "Msg_text" );
-            if ( "OK".equals( message ) )
-            {
-                success = true;
+                String message = repairResult.getString( "Msg_text" );
+                if ( "OK".equals( message ) )
+                {
+                    success = true;
+                }
             }
         }
+
         log.info("{0}", repairString);
 
         if ( !success )

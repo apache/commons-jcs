@@ -76,7 +76,7 @@ public class SoftReferenceMemoryCache<K, V> extends AbstractMemoryCache<K, V>
         super.initialize( hub );
         strongReferences = new LinkedBlockingQueue<>();
         log.info( "initialized Soft Reference Memory Cache for {0}",
-                () -> getCacheName() );
+                this::getCacheName );
     }
 
     /**

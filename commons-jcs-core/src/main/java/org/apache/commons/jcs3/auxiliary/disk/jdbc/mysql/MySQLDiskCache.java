@@ -26,7 +26,6 @@ import org.apache.commons.jcs3.auxiliary.disk.jdbc.JDBCDiskCache;
 import org.apache.commons.jcs3.auxiliary.disk.jdbc.TableState;
 import org.apache.commons.jcs3.auxiliary.disk.jdbc.dsfactory.DataSourceFactory;
 import org.apache.commons.jcs3.engine.behavior.ICacheElement;
-import org.apache.commons.jcs3.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs3.log.Log;
 import org.apache.commons.jcs3.log.LogManager;
 
@@ -54,13 +53,12 @@ public class MySQLDiskCache<K, V>
      * @param attributes the configuration object for this cache
      * @param dsFactory the DataSourceFactory for this cache
      * @param tableState an object to track table operations
-     * @param compositeCacheManager the global cache manager
      * @throws SQLException if the pool access could not be set up
      */
     public MySQLDiskCache( MySQLDiskCacheAttributes attributes, DataSourceFactory dsFactory,
-    		TableState tableState, ICompositeCacheManager compositeCacheManager ) throws SQLException
+    		TableState tableState) throws SQLException
     {
-        super( attributes, dsFactory, tableState, compositeCacheManager );
+        super( attributes, dsFactory, tableState);
 
         mySQLDiskCacheAttributes = attributes;
 

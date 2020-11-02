@@ -30,7 +30,7 @@ public class DaemonThreadFactory
     implements ThreadFactory
 {
     private final String prefix;
-    private final boolean threadIsDaemon = true;
+    private final static boolean THREAD_IS_DAEMON = true;
     private int threadPriority = Thread.NORM_PRIORITY;
 
     /**
@@ -67,7 +67,7 @@ public class DaemonThreadFactory
         Thread t = new Thread( runner );
         String oldName = t.getName();
         t.setName( prefix + oldName );
-        t.setDaemon(threadIsDaemon);
+        t.setDaemon(THREAD_IS_DAEMON);
         t.setPriority(threadPriority);
         return t;
     }

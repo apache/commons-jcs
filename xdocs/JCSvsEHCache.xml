@@ -245,9 +245,9 @@ import net.sf.ehcache.Element;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.commons.jcs.engine.CompositeCacheAttributes;
-import org.apache.commons.jcs.engine.behavior.ICompositeCacheAttributes;
-import org.apache.commons.jcs.utils.struct.LRUMap;
+import org.apache.commons.jcs3.engine.CompositeCacheAttributes;
+import org.apache.commons.jcs3.engine.behavior.ICompositeCacheAttributes;
+import org.apache.commons.jcs3.utils.struct.LRUMap;
 
 /**
  * Compare JCS vs ehcache performance.

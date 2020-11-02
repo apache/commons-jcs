@@ -19,7 +19,10 @@
 		<author email="dev@commons.apache.org">Apache Commons Developers</author>
 	</properties>
 	<body>
-        <release version="3.0" date="unreleased">
+        <release version="3.0" date="2020-08-16">
+            <action issue="JCS-205" dev="tv" type="fix">
+                Fix packaging
+            </action>
             <action issue="JCS-46" dev="tv" type="add">
                 Add configuration option to specify the datagram 
                 time-to-live in UDPDiscoverySender

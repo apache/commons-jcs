@@ -91,7 +91,7 @@ public class JndiDataSourceFactory implements DataSourceFactory
             {
                 synchronized (ctx)
                 {
-                    ds = ((DataSource) ctx.lookup(path));
+                    ds = (DataSource) ctx.lookup(path);
                 }
                 lastLookup = time;
             }

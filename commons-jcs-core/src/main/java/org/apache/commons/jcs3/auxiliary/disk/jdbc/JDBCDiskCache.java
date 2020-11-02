@@ -38,7 +38,6 @@ import org.apache.commons.jcs3.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.commons.jcs3.auxiliary.disk.AbstractDiskCache;
 import org.apache.commons.jcs3.auxiliary.disk.jdbc.dsfactory.DataSourceFactory;
 import org.apache.commons.jcs3.engine.behavior.ICacheElement;
-import org.apache.commons.jcs3.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs3.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs3.engine.logging.behavior.ICacheEvent;
 import org.apache.commons.jcs3.engine.logging.behavior.ICacheEventLogger;
@@ -116,10 +115,8 @@ public class JDBCDiskCache<K, V>
      * @param cattr the configuration object for this cache
      * @param dsFactory the DataSourceFactory for this cache
      * @param tableState an object to track table operations
-     * @param compositeCacheManager the global cache manager
      */
-    public JDBCDiskCache( JDBCDiskCacheAttributes cattr, DataSourceFactory dsFactory, TableState tableState,
-                          ICompositeCacheManager compositeCacheManager )
+    public JDBCDiskCache(JDBCDiskCacheAttributes cattr, DataSourceFactory dsFactory, TableState tableState)
     {
         super( cattr );
 

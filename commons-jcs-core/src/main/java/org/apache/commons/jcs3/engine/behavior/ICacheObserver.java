@@ -43,8 +43,6 @@ public interface ICacheObserver
     <K, V> void addCacheListener( String cacheName, ICacheListener<K, V> obj )
         throws IOException;
 
-    //, CacheNotFoundException;
-
     /**
      * Subscribes to all caches.
      *

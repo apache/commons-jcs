@@ -522,7 +522,7 @@ public abstract class AbstractDiskCache<K, V>
     @Override
     public CacheStatus getStatus()
     {
-        return ( alive ? CacheStatus.ALIVE : CacheStatus.DISPOSED );
+        return alive ? CacheStatus.ALIVE : CacheStatus.DISPOSED;
     }
 
     /**

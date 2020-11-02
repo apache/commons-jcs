@@ -96,7 +96,7 @@ public class JCSAdminBean implements JCSJMXBean
         // Convert all keys to string, store in a sorted map
         TreeMap<String, ?> keys = new TreeMap<>(cache.getMemoryCache().getKeySet()
                 .stream()
-                .collect(Collectors.toMap(k -> k.toString(), k -> k)));
+                .collect(Collectors.toMap(Object::toString, k -> k)));
 
         LinkedList<CacheElementInfo> records = new LinkedList<>();
 

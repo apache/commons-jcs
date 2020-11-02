@@ -38,13 +38,13 @@
 ################## DEFAULT CACHE REGION  #####################
 # sets the default aux value for any non configured caches
 jcs.default=MYSQL,RCluster
-jcs.default.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
+jcs.default.cacheattributes=org.apache.commons.jcs3.engine.CompositeCacheAttributes
 jcs.default.cacheattributes.MaxObjects=5000
-jcs.default.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
+jcs.default.cacheattributes.MemoryCacheName=org.apache.commons.jcs3.engine.memory.lru.LRUMemoryCache
 jcs.default.cacheattributes.UseMemoryShrinker=true
 jcs.default.cacheattributes.MaxMemoryIdleTimeSeconds=7200
 jcs.default.cacheattributes.ShrinkerIntervalSeconds=60
-jcs.default.elementattributes=org.apache.commons.jcs.engine.ElementAttributes
+jcs.default.elementattributes=org.apache.commons.jcs3.engine.ElementAttributes
 jcs.default.elementattributes.IsEternal=false
 jcs.default.elementattributes.MaxLife=14400
 jcs.default.elementattributes.IdleTime=14400
@@ -58,8 +58,8 @@ jcs.default.elementattributes.IsLateral=true
 ##############################################################
 ################## AUXILIARY CACHES AVAILABLE ################
 # MYSQL disk cache used for flight options
-jcs.auxiliary.MYSQL=org.apache.commons.jcs.auxiliary.disk.jdbc.JDBCDiskCacheFactory
-jcs.auxiliary.MYSQL.attributes=org.apache.commons.jcs.auxiliary.disk.jdbc.JDBCDiskCacheAttributes
+jcs.auxiliary.MYSQL=org.apache.commons.jcs3.auxiliary.disk.jdbc.JDBCDiskCacheFactory
+jcs.auxiliary.MYSQL.attributes=org.apache.commons.jcs3.auxiliary.disk.jdbc.JDBCDiskCacheAttributes
 jcs.auxiliary.MYSQL.attributes.userName=myUsername
 jcs.auxiliary.MYSQL.attributes.password=myPassword
 jcs.auxiliary.MYSQL.attributes.url=jdbc:mysql://localhost:3306/YOURDBNAME?autoReconnect=true
@@ -95,13 +95,13 @@ thread_pool.disk_cache_event_queue.startUpSize=10
 				<source>
 					<![CDATA[
 jcs.default=JDBC_0
-jcs.default.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
+jcs.default.cacheattributes=org.apache.commons.jcs3.engine.CompositeCacheAttributes
 jcs.default.cacheattributes.MaxObjects=100
-jcs.default.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
+jcs.default.cacheattributes.MemoryCacheName=org.apache.commons.jcs3.engine.memory.lru.LRUMemoryCache
 jcs.default.cacheattributes.UseMemoryShrinker=false
 jcs.default.cacheattributes.MaxMemoryIdleTimeSeconds=3600
 jcs.default.cacheattributes.ShrinkerIntervalSeconds=60
-jcs.default.elementattributes=org.apache.commons.jcs.engine.ElementAttributes
+jcs.default.elementattributes=org.apache.commons.jcs3.engine.ElementAttributes
 jcs.default.elementattributes.IsEternal=false
 jcs.default.elementattributes.MaxLife=700
 jcs.default.elementattributes.IdleTime=1800
@@ -118,8 +118,8 @@ jcs.region.testCache1.cacheattributes.MaxObjects=10000
 # #############################################################
 # ################# AUXILIARY CACHES AVAILABLE ################
 # JDBC disk cache
-jcs.auxiliary.JDBC_0=org.apache.commons.jcs.auxiliary.disk.jdbc.JDBCDiskCacheFactory
-jcs.auxiliary.JDBC_0.attributes=org.apache.commons.jcs.auxiliary.disk.jdbc.JDBCDiskCacheAttributes
+jcs.auxiliary.JDBC_0=org.apache.commons.jcs3.auxiliary.disk.jdbc.JDBCDiskCacheFactory
+jcs.auxiliary.JDBC_0.attributes=org.apache.commons.jcs3.auxiliary.disk.jdbc.JDBCDiskCacheAttributes
 jcs.auxiliary.JDBC_0.attributes.tableName=JCS_STORE_0
 jcs.auxiliary.JDBC_0.attributes.testBeforeInsert=false
 jcs.auxiliary.JDBC_0.attributes.allowRemoveAll=true
@@ -128,8 +128,8 @@ jcs.auxiliary.JDBC_0.attributes.connectionPoolName=MySharedPool
 jcs.auxiliary.JDBC_0.attributes.EventQueueType=POOLED
 jcs.auxiliary.JDBC_0.attributes.EventQueuePoolName=disk_cache_event_queue
 
-jcs.auxiliary.JDBC_1=org.apache.commons.jcs.auxiliary.disk.jdbc.JDBCDiskCacheFactory
-jcs.auxiliary.JDBC_1.attributes=org.apache.commons.jcs.auxiliary.disk.jdbc.JDBCDiskCacheAttributes
+jcs.auxiliary.JDBC_1=org.apache.commons.jcs3.auxiliary.disk.jdbc.JDBCDiskCacheFactory
+jcs.auxiliary.JDBC_1.attributes=org.apache.commons.jcs3.auxiliary.disk.jdbc.JDBCDiskCacheAttributes
 jcs.auxiliary.JDBC_1.attributes.tableName=JCS_STORE_1
 jcs.auxiliary.JDBC_1.attributes.testBeforeInsert=false
 jcs.auxiliary.JDBC_1.attributes.allowRemoveAll=true
@@ -169,13 +169,13 @@ thread_pool.disk_cache_event_queue.startUpSize=10
                 <source>
                     <![CDATA[
 jcs.default=JDBC_0
-jcs.default.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
+jcs.default.cacheattributes=org.apache.commons.jcs3.engine.CompositeCacheAttributes
 jcs.default.cacheattributes.MaxObjects=100
-jcs.default.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
+jcs.default.cacheattributes.MemoryCacheName=org.apache.commons.jcs3.engine.memory.lru.LRUMemoryCache
 jcs.default.cacheattributes.UseMemoryShrinker=false
 jcs.default.cacheattributes.MaxMemoryIdleTimeSeconds=3600
 jcs.default.cacheattributes.ShrinkerIntervalSeconds=60
-jcs.default.elementattributes=org.apache.commons.jcs.engine.ElementAttributes
+jcs.default.elementattributes=org.apache.commons.jcs3.engine.ElementAttributes
 jcs.default.elementattributes.IsEternal=false
 jcs.default.elementattributes.MaxLife=700
 jcs.default.elementattributes.IdleTime=1800
@@ -192,8 +192,8 @@ jcs.region.testCache1.cacheattributes.MaxObjects=10000
 # #############################################################
 # ################# AUXILIARY CACHES AVAILABLE ################
 # JDBC disk cache
-jcs.auxiliary.JDBC_0=org.apache.commons.jcs.auxiliary.disk.jdbc.JDBCDiskCacheFactory
-jcs.auxiliary.JDBC_0.attributes=org.apache.commons.jcs.auxiliary.disk.jdbc.JDBCDiskCacheAttributes
+jcs.auxiliary.JDBC_0=org.apache.commons.jcs3.auxiliary.disk.jdbc.JDBCDiskCacheFactory
+jcs.auxiliary.JDBC_0.attributes=org.apache.commons.jcs3.auxiliary.disk.jdbc.JDBCDiskCacheAttributes
 jcs.auxiliary.JDBC_0.attributes.tableName=JCS_STORE_0
 jcs.auxiliary.JDBC_0.attributes.testBeforeInsert=false
 jcs.auxiliary.JDBC_0.attributes.allowRemoveAll=true
@@ -202,8 +202,8 @@ jcs.auxiliary.JDBC_0.attributes.connectionPoolName=JNDI
 jcs.auxiliary.JDBC_0.attributes.EventQueueType=POOLED
 jcs.auxiliary.JDBC_0.attributes.EventQueuePoolName=disk_cache_event_queue
 
-jcs.auxiliary.JDBC_1=org.apache.commons.jcs.auxiliary.disk.jdbc.JDBCDiskCacheFactory
-jcs.auxiliary.JDBC_1.attributes=org.apache.commons.jcs.auxiliary.disk.jdbc.JDBCDiskCacheAttributes
+jcs.auxiliary.JDBC_1=org.apache.commons.jcs3.auxiliary.disk.jdbc.JDBCDiskCacheFactory
+jcs.auxiliary.JDBC_1.attributes=org.apache.commons.jcs3.auxiliary.disk.jdbc.JDBCDiskCacheAttributes
 jcs.auxiliary.JDBC_1.attributes.tableName=JCS_STORE_1
 jcs.auxiliary.JDBC_1.attributes.testBeforeInsert=false
 jcs.auxiliary.JDBC_1.attributes.allowRemoveAll=true

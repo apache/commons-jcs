@@ -1,5 +1,7 @@
 package org.apache.commons.jcs3.engine;
 
+import java.util.Objects;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -135,6 +137,25 @@ public class CacheElement<K, V>
             this.attr = new ElementAttributes();
         }
         return this.attr;
+    }
+
+    /**
+     * @param obj other object
+     * @return true if this object key equals the key of obj
+     */
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (this == obj)
+        {
+            return true;
+        }
+        if (!(obj instanceof CacheElement))
+        {
+            return false;
+        }
+        CacheElement<?,?> other = (CacheElement<?,?>) obj;
+        return Objects.equals(key, other.key);
     }
 
     /**

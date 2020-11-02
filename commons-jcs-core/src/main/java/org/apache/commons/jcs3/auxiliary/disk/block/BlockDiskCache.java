@@ -26,6 +26,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -269,8 +270,8 @@ public class BlockDiskCache<K, V>
                     key -> processGet( key ))).entrySet().stream()
                 .filter(entry -> entry.getValue() != null)
                 .collect(Collectors.toMap(
-                        entry -> entry.getKey(),
-                        entry -> entry.getValue()));
+                        Entry::getKey,
+                        Entry::getValue));
 
         return elements;
     }

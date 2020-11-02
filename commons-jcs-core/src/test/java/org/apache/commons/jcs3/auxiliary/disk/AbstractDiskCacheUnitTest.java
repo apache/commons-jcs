@@ -27,11 +27,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.jcs3.TestLogConfigurationUtil;
 import org.apache.commons.jcs3.auxiliary.AuxiliaryCacheAttributes;
-import org.apache.commons.jcs3.auxiliary.disk.AbstractDiskCache;
 import org.apache.commons.jcs3.auxiliary.disk.behavior.IDiskCacheAttributes;
 import org.apache.commons.jcs3.auxiliary.disk.indexed.IndexedDiskCacheAttributes;
 import org.apache.commons.jcs3.engine.CacheElement;
@@ -39,6 +36,8 @@ import org.apache.commons.jcs3.engine.CacheStatus;
 import org.apache.commons.jcs3.engine.ElementAttributes;
 import org.apache.commons.jcs3.engine.behavior.ICacheElement;
 import org.apache.commons.jcs3.engine.behavior.IElementAttributes;
+
+import junit.framework.TestCase;
 
 /** Tests for the abstract disk cache. It's largely tested by actual instances. */
 public class AbstractDiskCacheUnitTest

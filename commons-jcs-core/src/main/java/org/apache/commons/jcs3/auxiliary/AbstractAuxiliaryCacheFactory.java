@@ -19,8 +19,6 @@ package org.apache.commons.jcs3.auxiliary;
  * under the License.
  */
 
-import org.apache.commons.jcs3.auxiliary.AuxiliaryCacheFactory;
-
 /**
  * Base class for auxiliary cache factories.
  */
@@ -29,24 +27,6 @@ public abstract class AbstractAuxiliaryCacheFactory
 {
     /** The auxiliary name. The composite cache manager keeps this in a map, keyed by name. */
     private String name = this.getClass().getSimpleName();
-
-    /**
-     * Initialize this factory
-     */
-    @Override
-    public void initialize()
-    {
-        // empty
-    }
-
-    /**
-     * Dispose of this factory, clean up shared resources
-     */
-    @Override
-    public void dispose()
-    {
-        // empty
-    }
 
     /**
      * Gets the name attribute of the DiskCacheFactory object

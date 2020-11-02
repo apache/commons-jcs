@@ -27,14 +27,13 @@ import java.util.Set;
 
 import org.apache.commons.jcs3.auxiliary.MockCacheEventLogger;
 import org.apache.commons.jcs3.auxiliary.disk.DiskTestObject;
-import org.apache.commons.jcs3.utils.timing.SleepUtil;
-import org.apache.commons.jcs3.auxiliary.disk.indexed.IndexedDiskCacheAttributes;
 import org.apache.commons.jcs3.engine.CacheElement;
 import org.apache.commons.jcs3.engine.ElementAttributes;
 import org.apache.commons.jcs3.engine.behavior.ICacheElement;
 import org.apache.commons.jcs3.engine.behavior.IElementAttributes;
 import org.apache.commons.jcs3.engine.control.group.GroupAttrName;
 import org.apache.commons.jcs3.engine.control.group.GroupId;
+import org.apache.commons.jcs3.utils.timing.SleepUtil;
 
 import junit.framework.TestCase;
 

@@ -208,7 +208,7 @@ public class UDPDiscoveryReceiver
 
                 cnt.incrementAndGet();
 
-                log.debug( "{0} messages received.", () -> getCnt() );
+                log.debug( "{0} messages received.", this::getCnt );
 
                 UDPDiscoveryMessage message = null;
 

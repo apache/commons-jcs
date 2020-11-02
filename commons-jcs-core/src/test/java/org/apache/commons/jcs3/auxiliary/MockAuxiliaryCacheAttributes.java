@@ -1,7 +1,5 @@
 package org.apache.commons.jcs3.auxiliary;
 
-import org.apache.commons.jcs3.auxiliary.AbstractAuxiliaryCacheAttributes;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file

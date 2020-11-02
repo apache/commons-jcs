@@ -49,7 +49,7 @@ public class LHMLRUMemoryCache<K, V>
     public void initialize( CompositeCache<K, V> hub )
     {
         super.initialize( hub );
-        log.info( "initialized LHMLRUMemoryCache for {0}", () -> getCacheName() );
+        log.info( "initialized LHMLRUMemoryCache for {0}", this::getCacheName );
     }
 
     /**

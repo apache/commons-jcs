@@ -65,7 +65,7 @@ public class MessageFormatter
     {
         this.messagePattern = messagePattern;
         this.parameters = Arrays.stream(paramSuppliers)
-                            .map(s -> s.get())
+                            .map(Supplier::get)
                             .toArray();
 
         final int length = parameters == null ? 0 : parameters.length;

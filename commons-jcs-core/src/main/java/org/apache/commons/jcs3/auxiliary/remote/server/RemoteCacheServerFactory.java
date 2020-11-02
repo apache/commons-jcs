@@ -20,6 +20,7 @@ package org.apache.commons.jcs3.auxiliary.remote.server;
  */
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
@@ -436,15 +437,16 @@ public class RemoteCacheServerFactory
         }
 
         // startup.
-        String host = prop.getProperty( "registry.host" );
+        String hostName = prop.getProperty( "registry.host" );
+        InetAddress host = InetAddress.getByName(hostName);
 
-        if ( host == null || host.trim().equals( "" ) || host.trim().equals( "localhost" ) )
+        if (host.isLoopbackAddress())
         {
             log.debug( "main> creating registry on the localhost" );
             RemoteUtils.createRegistry( port );
         }
         log.debug( "main> starting up RemoteCacheServer" );
-        startup( host, port, prop);
+        startup( host.getHostName(), port, prop);
         log.debug( "main> done" );
     }
 
