@@ -19,7 +19,6 @@ package org.apache.commons.jcs3.auxiliary;
  * under the License.
  */
 
-import org.apache.commons.jcs3.auxiliary.AbstractAuxiliaryCacheFactory;
 import org.apache.commons.jcs3.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs3.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs3.engine.logging.behavior.ICacheEventLogger;
