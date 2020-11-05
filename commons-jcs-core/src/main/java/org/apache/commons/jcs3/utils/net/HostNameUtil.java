@@ -111,27 +111,31 @@ public class HostNameUtil
         {
             InetAddress candidateAddress = null;
             // Iterate all NICs (network interface cards)...
-            for ( Enumeration<NetworkInterface> ifaces = NetworkInterface.getNetworkInterfaces(); ifaces.hasMoreElements(); )
+            Enumeration<NetworkInterface> ifaces = NetworkInterface.getNetworkInterfaces();
+            if ( ifaces != null ) 
             {
-                NetworkInterface iface = ifaces.nextElement();
-                // Iterate all IP addresses assigned to each card...
-                for ( Enumeration<InetAddress> inetAddrs = iface.getInetAddresses(); inetAddrs.hasMoreElements(); )
+                while ( ifaces.hasMoreElements() )
                 {
-                    InetAddress inetAddr = inetAddrs.nextElement();
-                    if ( !inetAddr.isLoopbackAddress() )
+                    NetworkInterface iface = ifaces.nextElement();
+                    // Iterate all IP addresses assigned to each card...
+                    for ( Enumeration<InetAddress> inetAddrs = iface.getInetAddresses(); inetAddrs.hasMoreElements(); )
                     {
-                        if ( inetAddr.isSiteLocalAddress() )
+                        InetAddress inetAddr = inetAddrs.nextElement();
+                        if ( !inetAddr.isLoopbackAddress() )
                         {
-                            // Found non-loopback site-local address. Return it immediately...
-                            return inetAddr;
-                        }
-                        else if ( candidateAddress == null )
-                        {
-                            // Found non-loopback address, but not necessarily site-local.
-                            // Store it as a candidate to be returned if site-local address is not subsequently found...
-                            candidateAddress = inetAddr;
-                            // Note that we don't repeatedly assign non-loopback non-site-local addresses as candidates,
-                            // only the first. For subsequent iterations, candidate will be non-null.
+                            if ( inetAddr.isSiteLocalAddress() )
+                            {
+                                // Found non-loopback site-local address. Return it immediately...
+                                return inetAddr;
+                            }
+                            else if ( candidateAddress == null )
+                            {
+                                // Found non-loopback address, but not necessarily site-local.
+                                // Store it as a candidate to be returned if site-local address is not subsequently found...
+                                candidateAddress = inetAddr;
+                                // Note that we don't repeatedly assign non-loopback non-site-local addresses as candidates,
+                                // only the first. For subsequent iterations, candidate will be non-null.
+                            }
                         }
                     }
                 }
@@ -172,20 +176,22 @@ public class HostNameUtil
     public static NetworkInterface getMulticastNetworkInterface() throws SocketException
     {
         Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();
-        while (networkInterfaces.hasMoreElements())
-        {
-            NetworkInterface networkInterface = networkInterfaces.nextElement();
-            Enumeration<InetAddress> addressesFromNetworkInterface = networkInterface.getInetAddresses();
-            while (addressesFromNetworkInterface.hasMoreElements())
+        if (networkInterfaces != null) {
+            while (networkInterfaces.hasMoreElements())
             {
-                InetAddress inetAddress = addressesFromNetworkInterface.nextElement();
-                if (inetAddress.isSiteLocalAddress()
-                        && !inetAddress.isAnyLocalAddress()
-                        && !inetAddress.isLinkLocalAddress()
-                        && !inetAddress.isLoopbackAddress()
-                        && !inetAddress.isMulticastAddress())
+                NetworkInterface networkInterface = networkInterfaces.nextElement();
+                Enumeration<InetAddress> addressesFromNetworkInterface = networkInterface.getInetAddresses();
+                while (addressesFromNetworkInterface.hasMoreElements())
                 {
-                    return networkInterface;
+                    InetAddress inetAddress = addressesFromNetworkInterface.nextElement();
+                    if (inetAddress.isSiteLocalAddress()
+                            && !inetAddress.isAnyLocalAddress()
+                            && !inetAddress.isLinkLocalAddress()
+                            && !inetAddress.isLoopbackAddress()
+                            && !inetAddress.isMulticastAddress())
+                    {
+                        return networkInterface;
+                    }
                 }
             }
         }

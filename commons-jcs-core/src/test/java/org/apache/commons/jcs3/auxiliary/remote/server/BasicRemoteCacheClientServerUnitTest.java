@@ -83,19 +83,22 @@ public class BasicRemoteCacheClientServerUnitTest extends Assert
             InetAddress ina=InetAddress.getLocalHost();
             System.out.println("InetAddress.getLocalHost()="+ina);
             // Iterate all NICs (network interface cards)...
-            for ( Enumeration<NetworkInterface> ifaces = NetworkInterface.getNetworkInterfaces(); ifaces.hasMoreElements(); )
-            {
-                NetworkInterface iface = ifaces.nextElement();
-                // Iterate all IP addresses assigned to each card...
-                for ( Enumeration<InetAddress> inetAddrs = iface.getInetAddresses(); inetAddrs.hasMoreElements(); )
+            Enumeration<NetworkInterface> ifaces = NetworkInterface.getNetworkInterfaces();
+            if ( ifaces != null ) {
+            while ( ifaces.hasMoreElements() )
                 {
-                    InetAddress inetAddr = inetAddrs.nextElement();
-                    boolean loopbackAddress = inetAddr.isLoopbackAddress();
-                    boolean siteLocalAddress = inetAddr.isSiteLocalAddress();
-                    System.out.println("Found: "+ inetAddr +
-                            " isLoopback: " + loopbackAddress +
-                            " isSiteLocal: " + siteLocalAddress +
-                            ((!loopbackAddress && siteLocalAddress) ? " *" : ""));
+                    NetworkInterface iface = ifaces.nextElement();
+                    // Iterate all IP addresses assigned to each card...
+                    for ( Enumeration<InetAddress> inetAddrs = iface.getInetAddresses(); inetAddrs.hasMoreElements(); )
+                    {
+                        InetAddress inetAddr = inetAddrs.nextElement();
+                        boolean loopbackAddress = inetAddr.isLoopbackAddress();
+                        boolean siteLocalAddress = inetAddr.isSiteLocalAddress();
+                        System.out.println("Found: "+ inetAddr +
+                                " isLoopback: " + loopbackAddress +
+                                " isSiteLocal: " + siteLocalAddress +
+                                ((!loopbackAddress && siteLocalAddress) ? " *" : ""));
+                    }
                 }
             }
         } catch (Exception e) {
