@@ -341,7 +341,7 @@
       <dependency>
         <groupId>org.hamcrest</groupId>
         <artifactId>hamcrest</artifactId>
-        <version>2.2</version>
+        <version>${hamcrest.version}</version>
         <scope>test</scope>
       </dependency>
 
@@ -552,6 +552,7 @@
 
     <test.type>Unit</test.type>
     <doclint>none</doclint>
+    <hamcrest.version>2.2</hamcrest.version>
   </properties>
 
 </project>
