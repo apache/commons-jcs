@@ -21,6 +21,7 @@ package org.apache.commons.jcs3.utils.discovery;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * This contains info about a discovered service. These objects are stored in a set in the
@@ -148,13 +149,7 @@ public class DiscoveredService
 			return false;
 		}
 		DiscoveredService other = (DiscoveredService) otherArg;
-		if (serviceAddress == null)
-		{
-			if (other.serviceAddress != null)
-			{
-				return false;
-			}
-		} else if (!serviceAddress.equals(other.serviceAddress))
+		if (!Objects.equals(serviceAddress, other.serviceAddress))
 		{
 			return false;
 		}
