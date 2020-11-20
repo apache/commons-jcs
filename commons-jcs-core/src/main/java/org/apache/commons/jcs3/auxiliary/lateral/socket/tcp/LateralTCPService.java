@@ -231,11 +231,7 @@ public class LateralTCPService<K, V>
             led.command = LateralCommand.GET;
             @SuppressWarnings("unchecked") // Need to cast from Object
             ICacheElement<K, V> response = (ICacheElement<K, V>)sender.sendAndReceive( led );
-            if ( response != null )
-            {
-                return response;
-            }
-            return null;
+            return response;
         }
         else
         {
