@@ -37,7 +37,6 @@ public abstract class AbstractJCSWorkerHelper<V> implements JCSWorkerHelper<V>
      */
     public AbstractJCSWorkerHelper()
     {
-        super();
     }
 
     /**

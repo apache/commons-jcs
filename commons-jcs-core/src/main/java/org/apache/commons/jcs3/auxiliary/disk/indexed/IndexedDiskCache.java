@@ -1554,7 +1554,6 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
          */
         public LRUMapSizeLimited(int maxKeySize)
         {
-            super();
             this.maxSize = maxKeySize;
             this.contentSize = new AtomicInteger(0);
         }

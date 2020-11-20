@@ -46,7 +46,6 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
      */
     public DoubleLinkedList()
     {
-        super();
     }
 
     /**

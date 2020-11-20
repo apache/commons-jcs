@@ -33,7 +33,6 @@ public class CacheException
      */
     public CacheException()
     {
-        super();
     }
 
     /**

@@ -29,7 +29,6 @@ public class ConfigurationException
     /** Constructor for the ConfigurationException object */
     public ConfigurationException()
     {
-        super();
     }
 
     /**

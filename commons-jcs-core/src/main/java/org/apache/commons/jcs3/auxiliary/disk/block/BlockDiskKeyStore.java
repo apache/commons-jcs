@@ -419,7 +419,6 @@ public class BlockDiskKeyStore<K>
          */
         public LRUMapSizeLimited(int maxSize)
         {
-            super();
             this.maxSize = maxSize;
             this.contentSize = new AtomicInteger(0);
         }

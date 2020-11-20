@@ -55,7 +55,6 @@ public class CacheElementInfo
     public CacheElementInfo(String key, boolean eternal, String createTime,
 			long maxLifeSeconds, long expiresInSeconds)
     {
-		super();
 		this.key = key;
 		this.eternal = eternal;
 		this.createTime = createTime;

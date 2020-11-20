@@ -105,7 +105,6 @@ public class CompositeCacheAttributes
      */
     public CompositeCacheAttributes()
     {
-        super();
         // set this as the default so the configuration is a bit simpler
         memoryCacheName = DEFAULT_MEMORY_CACHE_NAME;
     }

@@ -49,7 +49,6 @@ public class TestRemoteCache
      */
     public TestRemoteCache()
     {
-        super();
         try
         {
             System.out.println( "main> creating registry on the localhost" );

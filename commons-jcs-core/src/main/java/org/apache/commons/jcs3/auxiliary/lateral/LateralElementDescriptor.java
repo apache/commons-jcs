@@ -54,7 +54,6 @@ public class LateralElementDescriptor<K, V>
     /** Constructor for the LateralElementDescriptor object */
     public LateralElementDescriptor()
     {
-        super();
     }
 
     /**

@@ -52,7 +52,6 @@ public class TestLogConfigurationUtil
 
         public MockLogHandler(StringWriter writer)
         {
-            super();
             this.writer = writer;
         }
 

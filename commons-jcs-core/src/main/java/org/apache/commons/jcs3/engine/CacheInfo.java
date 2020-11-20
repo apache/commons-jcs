@@ -29,7 +29,6 @@ public final class CacheInfo
     /** shouldn't be instantiated */
     private CacheInfo()
     {
-        super();
     }
 
     /**

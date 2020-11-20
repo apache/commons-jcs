@@ -59,8 +59,6 @@ public class ShrinkerThread<K, V>
      */
     public ShrinkerThread( CompositeCache<K, V> cache )
     {
-        super();
-
         this.cache = cache;
 
         long maxMemoryIdleTimeSeconds = cache.getCacheAttributes().getMaxMemoryIdleTimeSeconds();

@@ -154,7 +154,6 @@ public abstract class PropertyLoader
      */
     private PropertyLoader()
     {
-        super();
     } // this class is not extentible
 
 }

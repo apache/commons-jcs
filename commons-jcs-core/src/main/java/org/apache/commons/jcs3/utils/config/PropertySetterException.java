@@ -53,7 +53,6 @@ public class PropertySetterException
      */
     public PropertySetterException( Throwable rootCause )
     {
-        super();
         this.rootCause = rootCause;
     }
 

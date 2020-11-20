@@ -70,7 +70,6 @@ public class RemoteCacheServerFactory
     /** Constructor for the RemoteCacheServerFactory object. */
     private RemoteCacheServerFactory()
     {
-        super();
     }
 
     /**

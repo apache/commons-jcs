@@ -48,7 +48,6 @@ public class JulLogAdapter implements Log
      */
     public JulLogAdapter(Logger logger)
     {
-        super();
         this.logger = logger;
     }
 

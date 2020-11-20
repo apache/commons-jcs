@@ -48,7 +48,6 @@ public class RemoteUtils
     /** No instances please. */
     private RemoteUtils()
     {
-        super();
     }
 
     /**

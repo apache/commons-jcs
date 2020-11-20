@@ -38,7 +38,6 @@ public class ObjectExistsException
     /** Constructor for the ObjectExistsException object */
     public ObjectExistsException()
     {
-        super();
     }
 
     /**

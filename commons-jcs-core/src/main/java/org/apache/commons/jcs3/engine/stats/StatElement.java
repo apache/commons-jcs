@@ -44,7 +44,6 @@ public class StatElement<V>
      */
     public StatElement(String name, V data)
     {
-        super();
         this.name = name;
         this.data = data;
     }

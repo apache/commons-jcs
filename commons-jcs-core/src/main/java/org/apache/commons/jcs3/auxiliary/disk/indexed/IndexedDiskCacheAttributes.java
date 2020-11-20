@@ -56,7 +56,6 @@ public class IndexedDiskCacheAttributes
      */
     public IndexedDiskCacheAttributes()
     {
-        super();
     }
 
     /**

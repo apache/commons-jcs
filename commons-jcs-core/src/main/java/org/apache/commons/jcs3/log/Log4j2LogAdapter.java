@@ -37,7 +37,6 @@ public class Log4j2LogAdapter implements Log
      */
     public Log4j2LogAdapter(Logger logger)
     {
-        super();
         this.logger = logger;
     }
 

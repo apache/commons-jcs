@@ -58,7 +58,6 @@ public class JCSAdminBean implements JCSJMXBean
      */
     public JCSAdminBean()
     {
-        super();
         try
         {
             this.cacheHub = CompositeCacheManager.getInstance();
@@ -76,7 +75,6 @@ public class JCSAdminBean implements JCSJMXBean
 	 */
 	public JCSAdminBean(CompositeCacheManager cacheHub)
 	{
-		super();
 		this.cacheHub = cacheHub;
 	}
 

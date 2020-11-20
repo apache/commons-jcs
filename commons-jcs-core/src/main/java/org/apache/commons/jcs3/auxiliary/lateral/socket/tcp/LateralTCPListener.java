@@ -457,7 +457,6 @@ public class LateralTCPListener<K, V>
          */
         public ListenerThread(ServerSocket serverSocket)
         {
-            super();
             this.serverSocket = serverSocket;
         }
 

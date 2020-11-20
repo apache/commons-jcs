@@ -74,7 +74,6 @@ public class CacheRegionInfo
 			String cacheStatistics, long hitCountRam, long hitCountAux,
 			long missCountNotFound, long missCountExpired, long byteCount)
 	{
-		super();
 		this.cacheName = cacheName;
 		this.cacheSize = cacheSize;
 		this.cacheStatus = cacheStatus;

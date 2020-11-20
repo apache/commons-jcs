@@ -61,7 +61,6 @@ public class CommonRemoteCacheAttributes
     /** Default constructor for the RemoteCacheAttributes object */
     public CommonRemoteCacheAttributes()
     {
-        super();
     }
 
     /**

@@ -35,7 +35,6 @@ public class LRUMap<K, V> extends AbstractLRUMap<K, V>
 
     public LRUMap()
     {
-        super();
     }
 
     /**

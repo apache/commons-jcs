@@ -33,7 +33,6 @@ public class CacheGroup
     /** Constructor for the CacheGroup object */
     public CacheGroup()
     {
-        super();
     }
 
     /**

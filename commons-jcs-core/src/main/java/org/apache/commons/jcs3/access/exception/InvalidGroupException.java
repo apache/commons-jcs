@@ -31,7 +31,6 @@ public class InvalidGroupException
     /** Constructor for the InvalidGroupException object */
     public InvalidGroupException()
     {
-        super();
     }
 
     /**

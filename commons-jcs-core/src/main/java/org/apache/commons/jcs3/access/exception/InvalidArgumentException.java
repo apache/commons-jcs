@@ -32,7 +32,6 @@ public class InvalidArgumentException
     /** Constructor for the InvalidArgumentException object */
     public InvalidArgumentException()
     {
-        super();
     }
 
     /**

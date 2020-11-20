@@ -57,7 +57,6 @@ public class ShrinkerThread
      */
     protected ShrinkerThread()
     {
-        super();
     }
 
     /**

@@ -36,7 +36,6 @@ public class ObjectNotFoundException
     /** Constructor for the ObjectNotFoundException object */
     public ObjectNotFoundException()
     {
-        super();
     }
 
     /**

@@ -49,7 +49,6 @@ public class OptionConverter
     /** No instances please. */
     private OptionConverter()
     {
-        super();
     }
 
     /**
