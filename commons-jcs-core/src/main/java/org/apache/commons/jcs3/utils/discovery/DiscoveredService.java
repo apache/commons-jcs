@@ -115,12 +115,7 @@ public class DiscoveredService
 	@Override
 	public int hashCode()
 	{
-		final int prime = 31;
-		int result = 1;
-		result = prime * result
-				+ ((serviceAddress == null) ? 0 : serviceAddress.hashCode());
-		result = prime * result + servicePort;
-		return result;
+		return Objects.hash(serviceAddress, servicePort);
 	}
 
 	/**
