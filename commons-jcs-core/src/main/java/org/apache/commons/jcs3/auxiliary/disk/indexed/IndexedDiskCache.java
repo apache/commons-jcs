@@ -439,9 +439,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
 
             keyFile.reset();
 
-            HashMap<K, IndexedDiskElementDescriptor> keys = new HashMap<>();
-            keys.putAll(keyHash);
-
+            HashMap<K, IndexedDiskElementDescriptor> keys = new HashMap<>(keyHash);
             if (keys.size() > 0)
             {
                 keyFile.writeObject(keys, 0);

@@ -231,9 +231,7 @@ public class RemoteHttpCacheServlet
                             remoteCacheService.getMultiple( request.getCacheName(), request.getKeySet(), request.getRequesterId() );
                         if ( elementMap != null )
                         {
-                            Map<Serializable, ICacheElement<Serializable, Serializable>> map = new HashMap<>();
-                            map.putAll(elementMap);
-                            response.setPayload(map);
+                            response.setPayload(new HashMap<>(elementMap));
                         }
                         break;
                     case GET_MATCHING:
@@ -241,9 +239,7 @@ public class RemoteHttpCacheServlet
                             remoteCacheService.getMatching( request.getCacheName(), request.getPattern(), request.getRequesterId() );
                         if ( elementMapMatching != null )
                         {
-                            Map<Serializable, ICacheElement<Serializable, Serializable>> map = new HashMap<>();
-                            map.putAll(elementMapMatching);
-                            response.setPayload(map);
+                            response.setPayload(new HashMap<>(elementMapMatching));
                         }
                         break;
                     case REMOVE:
