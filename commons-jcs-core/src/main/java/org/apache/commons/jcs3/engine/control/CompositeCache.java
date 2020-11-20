@@ -982,9 +982,8 @@ public class CompositeCache<K, V>
      */
     public Set<K> getKeySet(boolean localOnly)
     {
-        HashSet<K> allKeys = new HashSet<>();
+        HashSet<K> allKeys = new HashSet<>(memCache.getKeySet());
 
-        allKeys.addAll(memCache.getKeySet());
         for (AuxiliaryCache<K, V> aux : auxCaches)
         {
             if (aux != null)

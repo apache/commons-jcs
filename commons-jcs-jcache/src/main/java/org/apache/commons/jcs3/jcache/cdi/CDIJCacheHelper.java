@@ -129,9 +129,7 @@ public class CDIJCacheHelper
             annotations.add(set);
         }
 
-        final Set<Annotation> mtdAnnotations = new HashSet<>();
-        mtdAnnotations.addAll(Arrays.asList(ic.getMethod().getAnnotations()));
-
+        final Set<Annotation> mtdAnnotations = new HashSet<>(Arrays.asList(ic.getMethod().getAnnotations()));
         final CacheResult cacheResult = ic.getMethod().getAnnotation(CacheResult.class);
         final String cacheResultCacheResultName = cacheResult == null ? null : defaultName(ic.getMethod(), defaults, cacheResult.cacheName());
         final CacheResolverFactory cacheResultCacheResolverFactory = cacheResult == null ?

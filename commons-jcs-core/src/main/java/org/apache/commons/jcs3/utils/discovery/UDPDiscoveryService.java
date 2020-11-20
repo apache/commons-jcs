@@ -258,8 +258,7 @@ public class UDPDiscoveryService
      */
     protected ArrayList<String> getCacheNames()
     {
-        ArrayList<String> names = new ArrayList<>();
-        names.addAll( cacheNames );
+        ArrayList<String> names = new ArrayList<>(cacheNames);
         return names;
     }
 
@@ -343,9 +342,7 @@ public class UDPDiscoveryService
      */
     public Set<IDiscoveryListener> getCopyOfDiscoveryListeners()
     {
-        Set<IDiscoveryListener> copy = new HashSet<>();
-        copy.addAll( getDiscoveryListeners() );
-        return copy;
+        return new HashSet<>(getDiscoveryListeners());
     }
 
     /**
