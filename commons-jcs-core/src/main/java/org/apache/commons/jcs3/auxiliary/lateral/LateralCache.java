@@ -334,7 +334,7 @@ public class LateralCache<K, V>
      */
     public void fixCache( ICacheServiceNonLocal<K, V> restoredLateral )
     {
-        if ( this.lateralCacheService != null && this.lateralCacheService instanceof ZombieCacheServiceNonLocal )
+        if ( this.lateralCacheService instanceof ZombieCacheServiceNonLocal )
         {
             ZombieCacheServiceNonLocal<K, V> zombie = (ZombieCacheServiceNonLocal<K, V>) this.lateralCacheService;
             this.lateralCacheService = restoredLateral;

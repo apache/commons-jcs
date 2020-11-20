@@ -49,7 +49,7 @@ public class OpenJPAJCacheDerivation extends AbstractProductDerivation
     {
         final Map<?, ?> props = cp.getProperties();
         final Object dcm = Configurations.getProperty("DataCacheManager", props);
-        if (dcm != null && JCACHE_NAME.equals(dcm))
+        if (JCACHE_NAME.equals(dcm))
         {
             if (Configurations.getProperty("DataCache", props) == null)
             {
