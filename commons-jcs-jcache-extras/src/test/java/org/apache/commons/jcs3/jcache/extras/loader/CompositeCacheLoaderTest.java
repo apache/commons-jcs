@@ -60,7 +60,7 @@ public class CompositeCacheLoaderTest
     private final Configuration<?, ?> config = new MutableConfiguration<String, String>()
             .setStoreByValue(false)
             .setReadThrough(true)
-            .setCacheLoaderFactory(new CompositeCacheLoader<String, String>(loader1, loader2));
+            .setCacheLoaderFactory(new CompositeCacheLoader<>(loader1, loader2));
     private Cache<String, String> cache;
 
     @Test

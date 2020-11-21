@@ -62,7 +62,7 @@ public class OpenJPAJCacheQueryCache extends AbstractQueryCache
     @Override
     protected Collection keySet()
     {
-        final Collection<QueryKey> keys = new LinkedList<QueryKey>();
+        final Collection<QueryKey> keys = new LinkedList<>();
         for (final Cache.Entry<Object, Object> entry : queryCache())
         {
             keys.add(QueryKey.class.cast(entry.getKey()));

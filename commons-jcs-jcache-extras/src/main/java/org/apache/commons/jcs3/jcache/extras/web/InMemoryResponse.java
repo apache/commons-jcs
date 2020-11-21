@@ -39,8 +39,8 @@ public class InMemoryResponse extends HttpServletResponseWrapper implements Seri
 {
     private final OutputStream buffer;
 
-    private final Collection<Cookie> cookies = new CopyOnWriteArraySet<Cookie>();
-    private final Map<String, List<Serializable>> headers = new TreeMap<String, List<Serializable>>(String.CASE_INSENSITIVE_ORDER);
+    private final Collection<Cookie> cookies = new CopyOnWriteArraySet<>();
+    private final Map<String, List<Serializable>> headers = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     private int status = SC_OK;
     private String contentType = null;
     private PrintWriter writer;
@@ -56,7 +56,7 @@ public class InMemoryResponse extends HttpServletResponseWrapper implements Seri
     {
         List<Serializable> values = headers.get(s);
         if (values == null) {
-            values = new LinkedList<Serializable>();
+            values = new LinkedList<>();
             headers.put(s, values);
         }
         return values;
@@ -117,7 +117,7 @@ public class InMemoryResponse extends HttpServletResponseWrapper implements Seri
     public Collection<String> getHeaders(final String s)
     {
         final List<Serializable> serializables = headers.get(s);
-        final Collection<String> strings = new ArrayList<String>(serializables.size());
+        final Collection<String> strings = new ArrayList<>(serializables.size());
         for (final Serializable ser : serializables)
         {
             strings.add(ser.toString());

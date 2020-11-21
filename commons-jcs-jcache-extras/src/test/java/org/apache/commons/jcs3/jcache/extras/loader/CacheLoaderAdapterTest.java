@@ -58,7 +58,7 @@ public class CacheLoaderAdapterTest
         assertEquals("foo", cache.get("foo"));
 
         count.decrementAndGet();
-        cache.loadAll(new HashSet<String>(asList("a", "b")), true, null);
+        cache.loadAll(new HashSet<>(asList("a", "b")), true, null);
         int retries = 100;
         while (retries-- > 0 && count.get() != 2)
         {

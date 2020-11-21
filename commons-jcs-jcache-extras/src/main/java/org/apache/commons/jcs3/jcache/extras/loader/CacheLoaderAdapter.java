@@ -29,7 +29,7 @@ public abstract class CacheLoaderAdapter<K, V> implements CacheLoader<K, V>, Fac
     @Override
     public Map<K, V> loadAll(final Iterable<? extends K> keys) throws CacheLoaderException
     {
-        final Map<K, V> result = new HashMap<K, V>();
+        final Map<K, V> result = new HashMap<>();
         for (final K k : keys)
         {
             final V v = load(k);

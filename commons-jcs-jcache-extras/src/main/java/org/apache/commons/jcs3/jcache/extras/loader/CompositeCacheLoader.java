@@ -57,13 +57,13 @@ public class CompositeCacheLoader<K, V> implements CacheLoader<K, V>, Closeable,
     @Override
     public Map<K, V> loadAll(final Iterable<? extends K> keys) throws CacheLoaderException
     {
-        final Collection<K> list = new ArrayList<K>();
+        final Collection<K> list = new ArrayList<>();
         for (final K k : keys)
         {
             list.add(k);
         }
 
-        final Map<K, V> result = new HashMap<K, V>();
+        final Map<K, V> result = new HashMap<>();
         for (final CacheLoader<K, V> delegate : delegates)
         {
             final Map<K, V> v = delegate.loadAll(list);

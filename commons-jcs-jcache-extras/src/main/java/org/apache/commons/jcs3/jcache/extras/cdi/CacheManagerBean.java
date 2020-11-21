@@ -43,11 +43,11 @@ public class CacheManagerBean implements Bean<CacheManager>, PassivationCapable
         manager = cacheManager;
         id = getClass().getName() + "-" + hashCode();
 
-        types = new HashSet<Type>();
+        types = new HashSet<>();
         types.add(CacheManager.class);
         types.add(Object.class);
 
-        qualifiers = new HashSet<Annotation>();
+        qualifiers = new HashSet<>();
         qualifiers.add(DefaultLiteral.INSTANCE);
         qualifiers.add(AnyLiteral.INSTANCE);
     }

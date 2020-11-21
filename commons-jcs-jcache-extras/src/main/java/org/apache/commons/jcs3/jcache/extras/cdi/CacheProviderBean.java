@@ -43,11 +43,11 @@ public class CacheProviderBean implements Bean<CachingProvider>, PassivationCapa
         provider = cacheManager;
         id = getClass().getName() + "-" + hashCode();
 
-        types = new HashSet<Type>();
+        types = new HashSet<>();
         types.add(CachingProvider.class);
         types.add(Object.class);
 
-        qualifiers = new HashSet<Annotation>();
+        qualifiers = new HashSet<>();
         qualifiers.add(DefaultLiteral.INSTANCE);
         qualifiers.add(AnyLiteral.INSTANCE);
     }

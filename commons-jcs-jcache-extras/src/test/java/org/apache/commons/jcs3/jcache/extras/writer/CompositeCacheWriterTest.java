@@ -40,8 +40,8 @@ public class CompositeCacheWriterTest
     public final InternalCacheRule rule = new InternalCacheRule(this);
 
 
-    private final Map<String, String> copy1 = new HashMap<String, String>();
-    private final Map<String, String> copy2 = new HashMap<String, String>();
+    private final Map<String, String> copy1 = new HashMap<>();
+    private final Map<String, String> copy2 = new HashMap<>();
 
     private final CacheWriterAdapter<String, String> writer1 = new CacheWriterAdapter<String, String>()
     {
@@ -74,7 +74,7 @@ public class CompositeCacheWriterTest
     private final Configuration<?, ?> config = new MutableConfiguration<String, String>()
             .setStoreByValue(false)
             .setWriteThrough(true)
-            .setCacheWriterFactory(new CompositeCacheWriter<String, String>(writer1, writer2));
+            .setCacheWriterFactory(new CompositeCacheWriter<>(writer1, writer2));
     private Cache<String, String> cache;
 
     @Test

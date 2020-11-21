@@ -83,7 +83,7 @@ public class OpenJPAJCacheDataCacheManager extends DataCacheManagerImpl
         if (cache == null)
         {
             final Properties properties = cacheManager.getProperties();
-            final MutableConfiguration<Object, Object> configuration = new MutableConfiguration<Object, Object>()
+            final MutableConfiguration<Object, Object> configuration = new MutableConfiguration<>()
                     .setStoreByValue("true".equalsIgnoreCase(properties.getProperty("jcache.store-by-value", "false")));
 
             configuration.setReadThrough("true".equals(properties.getProperty("jcache.read-through", "false")));

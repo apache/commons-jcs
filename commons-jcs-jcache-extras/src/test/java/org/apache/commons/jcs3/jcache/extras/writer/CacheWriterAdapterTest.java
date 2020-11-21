@@ -41,7 +41,7 @@ public class CacheWriterAdapterTest
     @Rule
     public final InternalCacheRule rule = new InternalCacheRule(this);
 
-    private final Map<String, String> copy = new HashMap<String, String>();
+    private final Map<String, String> copy = new HashMap<>();
     private final Configuration<?, ?> config = new MutableConfiguration<String, String>()
             .setStoreByValue(false).setReadThrough(true)
             .setCacheWriterFactory(new CacheWriterAdapter<String, String>()
@@ -75,7 +75,7 @@ public class CacheWriterAdapterTest
             put("b", "c");
         }});
         assertEquals(2, copy.size());
-        cache.removeAll(new HashSet<String>(asList("a", "b")));
+        cache.removeAll(new HashSet<>(asList("a", "b")));
         assertTrue(copy.isEmpty());
     }
 }
