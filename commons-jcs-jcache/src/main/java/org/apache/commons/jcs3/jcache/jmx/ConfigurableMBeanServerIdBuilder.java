@@ -47,10 +47,12 @@ public class ConfigurableMBeanServerIdBuilder extends MBeanServerBuilder
         @Override
         public boolean equals(final Object o)
         {
-            if (this == o)
+            if (this == o) {
                 return true;
-            if (o == null || getClass() != o.getClass())
+            }
+            if (o == null || getClass() != o.getClass()) {
                 return false;
+            }
 
             final Key key = Key.class.cast(o);
             return !(domain != null ? !domain.equals(key.domain) : key.domain != null)
