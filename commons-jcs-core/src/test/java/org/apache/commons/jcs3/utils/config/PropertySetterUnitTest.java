@@ -33,7 +33,7 @@ import org.junit.Test;
  */
 public class PropertySetterUnitTest
 {
-    enum EnumTest { ONE, TWO, THREE };
+    enum EnumTest { ONE, TWO, THREE }
 
     @Test
     public void testConvertArg()
