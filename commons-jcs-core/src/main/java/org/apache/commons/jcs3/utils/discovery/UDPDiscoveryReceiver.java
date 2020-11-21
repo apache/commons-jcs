@@ -330,7 +330,6 @@ public class UDPDiscoveryReceiver
             {
                 log.debug( "Message is a Request Broadcast, will have the service handle it." );
                 service.serviceRequestBroadcast();
-                return;
             }
             else if ( message.getMessageType() == BroadcastType.REMOVE )
             {

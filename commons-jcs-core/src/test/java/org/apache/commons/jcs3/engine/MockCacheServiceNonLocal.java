@@ -132,7 +132,6 @@ public class MockCacheServiceNonLocal<K, V>
     @Override
     public void dispose( final String cacheName )
     {
-        return;
     }
 
     /**
@@ -152,7 +151,6 @@ public class MockCacheServiceNonLocal<K, V>
     @Override
     public void release()
     {
-        return;
     }
 
     /**
