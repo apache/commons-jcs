@@ -64,11 +64,10 @@ public class AuxiliaryCacheConfigurator
      */
     public static ICacheEventLogger parseCacheEventLogger( Properties props, String auxPrefix )
     {
-        ICacheEventLogger cacheEventLogger = null;
 
         // auxFactory was not previously initialized.
         String eventLoggerClassName = auxPrefix + CACHE_EVENT_LOGGER_PREFIX;
-        cacheEventLogger = OptionConverter.instantiateByKey( props, eventLoggerClassName, null );
+        ICacheEventLogger cacheEventLogger = OptionConverter.instantiateByKey( props, eventLoggerClassName, null );
         if ( cacheEventLogger != null )
         {
             String cacheEventLoggerAttributePrefix = auxPrefix + CACHE_EVENT_LOGGER_PREFIX + ATTRIBUTE_PREFIX;
@@ -93,11 +92,9 @@ public class AuxiliaryCacheConfigurator
     public static IElementSerializer parseElementSerializer( Properties props, String auxPrefix )
     {
         // TODO take in the entire prop key
-        IElementSerializer elementSerializer = null;
-
         // auxFactory was not previously initialized.
         String elementSerializerClassName = auxPrefix + SERIALIZER_PREFIX;
-        elementSerializer = OptionConverter.instantiateByKey( props, elementSerializerClassName, null );
+        IElementSerializer elementSerializer = OptionConverter.instantiateByKey( props, elementSerializerClassName, null );
         if ( elementSerializer != null )
         {
             String attributePrefix = auxPrefix + SERIALIZER_PREFIX + ATTRIBUTE_PREFIX;
