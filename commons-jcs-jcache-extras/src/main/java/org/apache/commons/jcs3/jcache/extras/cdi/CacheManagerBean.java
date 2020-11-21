@@ -107,13 +107,13 @@ public class CacheManagerBean implements Bean<CacheManager>, PassivationCapable
     }
 
     @Override
-    public CacheManager create(CreationalContext<CacheManager> cacheManagerCreationalContext)
+    public CacheManager create(final CreationalContext<CacheManager> cacheManagerCreationalContext)
     {
         return manager;
     }
 
     @Override
-    public void destroy(CacheManager cacheManager, CreationalContext<CacheManager> cacheManagerCreationalContext)
+    public void destroy(final CacheManager cacheManager, final CreationalContext<CacheManager> cacheManagerCreationalContext)
     {
         manager.close();
     }

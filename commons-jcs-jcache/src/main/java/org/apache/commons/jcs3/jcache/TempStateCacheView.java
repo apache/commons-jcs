@@ -273,7 +273,7 @@ public class TempStateCacheView<K, V> implements Cache<K, V>
     }
 
     @Override
-    public <T> Map<K, EntryProcessorResult<T>> invokeAll(Set<? extends K> keys, final EntryProcessor<K, V, T> entryProcessor,
+    public <T> Map<K, EntryProcessorResult<T>> invokeAll(final Set<? extends K> keys, final EntryProcessor<K, V, T> entryProcessor,
             final Object... arguments)
     {
         return cache.invokeAll(keys, entryProcessor, arguments);

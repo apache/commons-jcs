@@ -99,7 +99,7 @@ public class ClassLoaderAwareCache<K, V> implements Cache<K, V>
     }
 
     @Override
-    public void loadAll(final Set<? extends K> keys, boolean replaceExistingValues, final CompletionListener completionListener)
+    public void loadAll(final Set<? extends K> keys, final boolean replaceExistingValues, final CompletionListener completionListener)
     {
         final Thread thread = Thread.currentThread();
         final ClassLoader loader = before(thread);
@@ -339,7 +339,7 @@ public class ClassLoaderAwareCache<K, V> implements Cache<K, V>
     }
 
     @Override
-    public <T> Map<K, EntryProcessorResult<T>> invokeAll(Set<? extends K> keys, EntryProcessor<K, V, T> entryProcessor, Object... arguments)
+    public <T> Map<K, EntryProcessorResult<T>> invokeAll(final Set<? extends K> keys, final EntryProcessor<K, V, T> entryProcessor, final Object... arguments)
     {
         final Thread thread = Thread.currentThread();
         final ClassLoader loader = before(thread);

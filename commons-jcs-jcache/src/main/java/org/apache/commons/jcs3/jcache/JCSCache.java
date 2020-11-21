@@ -474,7 +474,7 @@ public class JCSCache<K, V> implements Cache<K, V>
         delegate.remove(cacheKey);
 
         final V value = v != null && v.getVal() != null ? v.getVal() : null;
-        boolean remove = v != null;
+        final boolean remove = v != null;
         for (final JCSListener<K, V> listener : listeners.values())
         {
             listener.onRemoved(Arrays.<CacheEntryEvent<? extends K, ? extends V>> asList(new JCSCacheEntryEvent<>(this,
@@ -625,7 +625,7 @@ public class JCSCache<K, V> implements Cache<K, V>
         assertNotClosed();
         assertNotNull(key, "key");
         assertNotNull(value, "value");
-        boolean statisticsEnabled = config.isStatisticsEnabled();
+        final boolean statisticsEnabled = config.isStatisticsEnabled();
         if (containsKey(key))
         {
             if (statisticsEnabled)

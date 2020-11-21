@@ -259,26 +259,25 @@ public class RemoteCacheClientTester
         boolean write = false;
         boolean delete = false;
 
-        for ( int i = 0; i < args.length; i++ )
-        {
-            if ( args[i].startsWith( "-" ) )
+        for (final String arg : args) {
+            if ( arg.startsWith( "-" ) )
             {
                 if ( !read )
                 {
-                    read = args[i].indexOf( "r" ) != -1;
+                    read = arg.indexOf( "r" ) != -1;
                 }
                 if ( !write )
                 {
-                    write = args[i].indexOf( "w" ) != -1;
+                    write = arg.indexOf( "w" ) != -1;
                 }
                 if ( !delete )
                 {
-                    delete = args[i].indexOf( "d" ) != -1;
+                    delete = arg.indexOf( "d" ) != -1;
                 }
             }
             else
             {
-                count = Integer.parseInt( args[i] );
+                count = Integer.parseInt( arg );
             }
         }
         new RemoteCacheClientTester( count, write, read, delete );

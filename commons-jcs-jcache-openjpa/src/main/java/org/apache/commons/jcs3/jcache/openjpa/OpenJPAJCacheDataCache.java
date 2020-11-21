@@ -49,7 +49,7 @@ public class OpenJPAJCacheDataCache extends AbstractDataCache
         if (OpenJPAId.class.isInstance(oid))
         {
             final Class<?> cls = OpenJPAId.class.cast(oid).getType();
-            Cache<Object, Object> cache = manager.getOrCreateCache(OPENJPA_PREFIX, cls.getName());
+            final Cache<Object, Object> cache = manager.getOrCreateCache(OPENJPA_PREFIX, cls.getName());
             if (cache == null)
             {
                 return null;

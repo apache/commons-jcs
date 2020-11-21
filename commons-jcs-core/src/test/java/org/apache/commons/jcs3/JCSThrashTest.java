@@ -237,9 +237,8 @@ public class JCSThrashTest
         }
 
         // Wait for the threads to finish
-        for ( int i = 0; i < threads.length; i++ )
-        {
-            threads[i].join();
+        for (final Thread thread : threads) {
+            thread.join();
         }
 
         // Throw any error that happened

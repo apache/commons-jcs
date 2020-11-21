@@ -33,7 +33,7 @@ public class NoLoader<K, V> implements CacheLoader<K, V>
     }
 
     @Override
-    public V load(K key) throws CacheLoaderException
+    public V load(final K key) throws CacheLoaderException
     {
         return null;
     }

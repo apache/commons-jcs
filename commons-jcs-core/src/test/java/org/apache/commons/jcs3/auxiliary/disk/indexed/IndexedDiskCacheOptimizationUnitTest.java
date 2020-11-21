@@ -57,9 +57,8 @@ public class IndexedDiskCacheOptimizationUnitTest
         final ICacheElement<Integer, DiskTestObject>[] elements = DiskTestObjectUtil
             .createCacheElementsWithTestObjectsOfVariableSizes( numberToInsert, cattr.getCacheName() );
 
-        for ( int i = 0; i < elements.length; i++ )
-        {
-            disk.processUpdate( elements[i] );
+        for (final ICacheElement<Integer, DiskTestObject> element : elements) {
+            disk.processUpdate( element );
         }
 
 

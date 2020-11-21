@@ -42,7 +42,7 @@ public class CompositeCacheLoaderTest
     private final CacheLoaderAdapter<String, String> loader1 = new CacheLoaderAdapter<String, String>()
     {
         @Override
-        public String load(String key) throws CacheLoaderException
+        public String load(final String key) throws CacheLoaderException
         {
             count.incrementAndGet();
             return null;
@@ -51,7 +51,7 @@ public class CompositeCacheLoaderTest
     private final CacheLoaderAdapter<String, String> loader2 = new CacheLoaderAdapter<String, String>()
     {
         @Override
-        public String load(String key) throws CacheLoaderException
+        public String load(final String key) throws CacheLoaderException
         {
             count.incrementAndGet();
             return null;

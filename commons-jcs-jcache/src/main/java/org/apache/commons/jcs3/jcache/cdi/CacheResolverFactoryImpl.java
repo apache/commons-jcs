@@ -41,7 +41,7 @@ public class CacheResolverFactoryImpl implements CacheResolverFactory
     }
 
     @Override
-    public CacheResolver getCacheResolver(CacheMethodDetails<? extends Annotation> cacheMethodDetails)
+    public CacheResolver getCacheResolver(final CacheMethodDetails<? extends Annotation> cacheMethodDetails)
     {
         return findCacheResolver(cacheMethodDetails.getCacheName());
     }
@@ -57,7 +57,7 @@ public class CacheResolverFactoryImpl implements CacheResolverFactory
         return findCacheResolver(exceptionCacheName);
     }
 
-    private CacheResolver findCacheResolver(String exceptionCacheName)
+    private CacheResolver findCacheResolver(final String exceptionCacheName)
     {
         Cache<?, ?> cache = cacheManager.getCache(exceptionCacheName);
         if (cache == null)

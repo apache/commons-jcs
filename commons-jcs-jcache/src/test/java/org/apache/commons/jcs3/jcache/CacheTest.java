@@ -266,13 +266,13 @@ public class CacheTest
                 return () -> new CacheLoader<Object, Object>()
                 {
                     @Override
-                    public Object load(Object key) throws CacheLoaderException
+                    public Object load(final Object key) throws CacheLoaderException
                     {
                         return "super";
                     }
 
                     @Override
-                    public Map<Object, Object> loadAll(Iterable<?> keys) throws CacheLoaderException
+                    public Map<Object, Object> loadAll(final Iterable<?> keys) throws CacheLoaderException
                     {
                         return null;
                     }

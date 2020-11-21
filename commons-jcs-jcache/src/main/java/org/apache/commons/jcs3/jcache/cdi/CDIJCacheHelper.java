@@ -210,7 +210,7 @@ public class CDIJCacheHelper
 
     private Integer getValueParameter(final List<Set<Annotation>> annotations)
     {
-        int idx = 0;
+        final int idx = 0;
         for (final Set<Annotation> set : annotations)
         {
             for (final Annotation a : set)
@@ -505,15 +505,15 @@ public class CDIJCacheHelper
         private final boolean cacheRemoveAllAfter;
         private final CacheRemoveAll cacheRemoveAll;
 
-        public MethodMeta(Class<?>[] parameterTypes, List<Set<Annotation>> parameterAnnotations, Set<Annotation>
-                annotations, Integer[] keysIndices, Integer valueIndex, Integer[] parameterIndices, String
-                cacheResultCacheName, CacheResolverFactory cacheResultResolverFactory, CacheKeyGenerator
-                cacheResultKeyGenerator, CacheResult cacheResult, String cachePutCacheName, CacheResolverFactory
-                cachePutResolverFactory, CacheKeyGenerator cachePutKeyGenerator, boolean cachePutAfter, CachePut cachePut, String
-                cacheRemoveCacheName, CacheResolverFactory cacheRemoveResolverFactory, CacheKeyGenerator
-                cacheRemoveKeyGenerator, boolean cacheRemoveAfter, CacheRemove cacheRemove, String cacheRemoveAllCacheName,
-                          CacheResolverFactory cacheRemoveAllResolverFactory, boolean
-                                  cacheRemoveAllAfter, CacheRemoveAll cacheRemoveAll)
+        public MethodMeta(final Class<?>[] parameterTypes, final List<Set<Annotation>> parameterAnnotations, final Set<Annotation>
+                annotations, final Integer[] keysIndices, final Integer valueIndex, final Integer[] parameterIndices, final String
+                cacheResultCacheName, final CacheResolverFactory cacheResultResolverFactory, final CacheKeyGenerator
+                cacheResultKeyGenerator, final CacheResult cacheResult, final String cachePutCacheName, final CacheResolverFactory
+                cachePutResolverFactory, final CacheKeyGenerator cachePutKeyGenerator, final boolean cachePutAfter, final CachePut cachePut, final String
+                cacheRemoveCacheName, final CacheResolverFactory cacheRemoveResolverFactory, final CacheKeyGenerator
+                cacheRemoveKeyGenerator, final boolean cacheRemoveAfter, final CacheRemove cacheRemove, final String cacheRemoveAllCacheName,
+                          final CacheResolverFactory cacheRemoveAllResolverFactory, final boolean
+                                  cacheRemoveAllAfter, final CacheRemoveAll cacheRemoveAll)
         {
             this.parameterTypes = parameterTypes;
             this.parameterAnnotations = parameterAnnotations;

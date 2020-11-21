@@ -180,7 +180,7 @@ public class InMemoryResponse extends HttpServletResponseWrapper implements Seri
     }
 
     @Override
-    public void setStatus(int i)
+    public void setStatus(final int i)
     {
         status = i;
         super.setStatus(i);

@@ -407,9 +407,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
         final ElapsedTimer timer = new ElapsedTimer();
         boolean isOk = true;
         long expectedNextPos = 0;
-        for (int i = 0; i < sortedDescriptors.length; i++)
-        {
-            final IndexedDiskElementDescriptor ded = sortedDescriptors[i];
+        for (final IndexedDiskElementDescriptor ded : sortedDescriptors) {
             if (expectedNextPos > ded.pos)
             {
                 log.error("{0}: Corrupt file: overlapping deds {1}", logCacheName, ded);
@@ -1227,16 +1225,15 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
             preFileSize = this.dataFile.length();
             // find the first gap in the disk and start defragging.
             expectedNextPos = startingPos;
-            for (int i = 0; i < defragList.length; i++)
-            {
+            for (final IndexedDiskElementDescriptor element : defragList) {
                 storageLock.writeLock().lock();
                 try
                 {
-                    if (expectedNextPos != defragList[i].pos)
+                    if (expectedNextPos != element.pos)
                     {
-                        dataFile.move(defragList[i], expectedNextPos);
+                        dataFile.move(element, expectedNextPos);
                     }
-                    expectedNextPos = defragList[i].pos + IndexedDisk.HEADER_SIZE_BYTES + defragList[i].len;
+                    expectedNextPos = element.pos + IndexedDisk.HEADER_SIZE_BYTES + element.len;
                 }
                 finally
                 {

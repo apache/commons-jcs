@@ -214,9 +214,8 @@ public abstract class IndexDiskCacheUnitTestAbstract extends TestCase
         final ICacheElement<Integer, DiskTestObject>[] elements = DiskTestObjectUtil.createCacheElementsWithTestObjects(numberToInsert,
             bytes, cattr.getCacheName());
 
-        for (int i = 0; i < elements.length; i++)
-        {
-            disk.processUpdate(elements[i]);
+        for (final ICacheElement<Integer, DiskTestObject> element : elements) {
+            disk.processUpdate(element);
         }
 
         Thread.yield();
@@ -255,9 +254,8 @@ public abstract class IndexDiskCacheUnitTestAbstract extends TestCase
         final ICacheElement<Integer, DiskTestObject>[] elements = DiskTestObjectUtil.createCacheElementsWithTestObjects(numberToInsert,
             bytes, cattr.getCacheName());
 
-        for (int i = 0; i < elements.length; i++)
-        {
-            disk.processUpdate(elements[i]);
+        for (final ICacheElement<Integer, DiskTestObject> element : elements) {
+            disk.processUpdate(element);
         }
 
         Thread.yield();
@@ -302,9 +300,8 @@ public abstract class IndexDiskCacheUnitTestAbstract extends TestCase
             bytes, cattr.getCacheName());
 
         // Add some to the disk
-        for (int i = 0; i < elements.length; i++)
-        {
-            disk.processUpdate(elements[i]);
+        for (final ICacheElement<Integer, DiskTestObject> element : elements) {
+            disk.processUpdate(element);
         }
 
         Thread.yield();
@@ -353,9 +350,8 @@ public abstract class IndexDiskCacheUnitTestAbstract extends TestCase
         final ICacheElement<Integer, DiskTestObject>[] elements = DiskTestObjectUtil.createCacheElementsWithTestObjects(numberToInsert,
             bytes, cattr.getCacheName());
 
-        for (int i = 0; i < elements.length; i++)
-        {
-            disk.processUpdate(elements[i]);
+        for (final ICacheElement<Integer, DiskTestObject> element : elements) {
+            disk.processUpdate(element);
         }
 
         Thread.yield();

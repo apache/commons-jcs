@@ -318,9 +318,8 @@ public class RemoteCacheServer<K, V>
                 {
                     final ICacheEventQueue<K, V>[] qlist = getEventQList( cacheDesc, requesterId );
                     log.debug( "qlist.length = {0}", qlist.length );
-                    for ( int i = 0; i < qlist.length; i++ )
-                    {
-                        qlist[i].addPutEvent( item );
+                    for (final ICacheEventQueue<K, V> element : qlist) {
+                        element.addPutEvent( item );
                     }
                 }
             }
@@ -847,9 +846,8 @@ public class RemoteCacheServer<K, V>
                 {
                     final ICacheEventQueue<K, V>[] qlist = getEventQList( cacheDesc, requesterId );
 
-                    for ( int i = 0; i < qlist.length; i++ )
-                    {
-                        qlist[i].addRemoveEvent( key );
+                    for (final ICacheEventQueue<K, V> element : qlist) {
+                        element.addRemoveEvent( key );
                     }
                 }
             }
@@ -1006,9 +1004,8 @@ public class RemoteCacheServer<K, V>
             {
                 final ICacheEventQueue<K, V>[] qlist = getEventQList( cacheDesc, requesterId );
 
-                for ( int i = 0; i < qlist.length; i++ )
-                {
-                    qlist[i].addDisposeEvent();
+                for (final ICacheEventQueue<K, V> element : qlist) {
+                    element.addDisposeEvent();
                 }
                 cacheManager.freeCache( cacheName );
             }
@@ -1028,9 +1025,8 @@ public class RemoteCacheServer<K, V>
         {
             final ICacheEventQueue<K, V>[] qlist = getEventQList( cacheDesc, 0 );
 
-            for ( int i = 0; i < qlist.length; i++ )
-            {
-                qlist[i].addDisposeEvent();
+            for (final ICacheEventQueue<K, V> element : qlist) {
+                element.addDisposeEvent();
             }
         }
         cacheManager.release();
@@ -1109,11 +1105,10 @@ public class RemoteCacheServer<K, V>
         // Returns only the qualified.
         final ICacheEventQueue<K, V>[] qq = new ICacheEventQueue[count];
         count = 0;
-        for ( int i = 0; i < list.length; i++ )
-        {
-            if ( list[i] != null )
+        for (final ICacheEventQueue<K, V> element : list) {
+            if ( element != null )
             {
-                qq[count++] = list[i];
+                qq[count++] = element;
             }
         }
         return qq;
