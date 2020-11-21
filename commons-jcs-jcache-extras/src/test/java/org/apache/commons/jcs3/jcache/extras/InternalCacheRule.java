@@ -48,9 +48,8 @@ public class InternalCacheRule implements TestRule
             @Override
             public void evaluate() throws Throwable
             {
-                final CachingProvider provider = Caching.getCachingProvider();
-                final CacheManager manager = provider.getCacheManager();
-                try
+                try (CachingProvider provider = Caching.getCachingProvider();
+                        CacheManager manager = provider.getCacheManager())
                 {
                     Field cache = null;
                     CompleteConfiguration<?, ?> config = null;
@@ -76,11 +75,6 @@ public class InternalCacheRule implements TestRule
                         cache.set(test, manager.createCache(cache.getName(), config));
                     }
                     base.evaluate();
-                }
-                finally
-                {
-                    manager.close();
-                    provider.close();
                 }
             }
         };
