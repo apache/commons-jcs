@@ -73,7 +73,7 @@ public class LateralTCPDiscoveryListener
      * @param factoryName the name of the related cache factory
      * @param cacheManager the global cache manager
      */
-    protected LateralTCPDiscoveryListener( String factoryName, ICompositeCacheManager cacheManager )
+    protected LateralTCPDiscoveryListener( final String factoryName, final ICompositeCacheManager cacheManager )
     {
         this.factoryName = factoryName;
         this.cacheManager = cacheManager;
@@ -89,9 +89,9 @@ public class LateralTCPDiscoveryListener
      * @param facade - facade (for region) =&gt; multiple lateral clients.
      * @return true if the facade was not already registered.
      */
-    public boolean addNoWaitFacade( String cacheName, LateralCacheNoWaitFacade<?, ?> facade )
+    public boolean addNoWaitFacade( final String cacheName, final LateralCacheNoWaitFacade<?, ?> facade )
     {
-        boolean isNew = !containsNoWaitFacade( cacheName );
+        final boolean isNew = !containsNoWaitFacade( cacheName );
 
         // override or put anew, it doesn't matter
         facades.put( cacheName, facade );
@@ -106,7 +106,7 @@ public class LateralTCPDiscoveryListener
      * @param cacheName - facades are for a region
      * @return do we contain the no wait. true if so
      */
-    public boolean containsNoWaitFacade( String cacheName )
+    public boolean containsNoWaitFacade( final String cacheName )
     {
         return facades.containsKey( cacheName );
     }
@@ -118,9 +118,10 @@ public class LateralTCPDiscoveryListener
      * @param noWait - is this no wait in the facade
      * @return do we contain the no wait. true if so
      */
-    public <K, V> boolean containsNoWait( String cacheName, LateralCacheNoWait<K, V> noWait )
+    public <K, V> boolean containsNoWait( final String cacheName, final LateralCacheNoWait<K, V> noWait )
     {
         @SuppressWarnings("unchecked") // Need to cast because of common map for all facades
+        final
         LateralCacheNoWaitFacade<K, V> facade =
             (LateralCacheNoWaitFacade<K, V>)facades.get( noWait.getCacheName() );
 
@@ -144,16 +145,17 @@ public class LateralTCPDiscoveryListener
      * @return true if we found the no wait and added it. False if the no wait was not present or if
      *         we already had it.
      */
-    protected <K, V> boolean addNoWait( LateralCacheNoWait<K, V> noWait )
+    protected <K, V> boolean addNoWait( final LateralCacheNoWait<K, V> noWait )
     {
         @SuppressWarnings("unchecked") // Need to cast because of common map for all facades
+        final
         LateralCacheNoWaitFacade<K, V> facade =
             (LateralCacheNoWaitFacade<K, V>)facades.get( noWait.getCacheName() );
         log.debug( "addNoWait > Got facade for {0} = {1}", noWait.getCacheName(), facade );
 
         if ( facade != null )
         {
-            boolean isNew = facade.addNoWait( noWait );
+            final boolean isNew = facade.addNoWait( noWait );
             log.debug( "Called addNoWait, isNew = {0}", isNew );
             return isNew;
         }
@@ -176,16 +178,17 @@ public class LateralTCPDiscoveryListener
      * @param noWait
      * @return true if we found the no wait and removed it. False if the no wait was not present.
      */
-    protected <K, V> boolean removeNoWait( LateralCacheNoWait<K, V> noWait )
+    protected <K, V> boolean removeNoWait( final LateralCacheNoWait<K, V> noWait )
     {
         @SuppressWarnings("unchecked") // Need to cast because of common map for all facades
+        final
         LateralCacheNoWaitFacade<K, V> facade =
             (LateralCacheNoWaitFacade<K, V>)facades.get( noWait.getCacheName() );
         log.debug( "removeNoWait > Got facade for {0} = {1}", noWait.getCacheName(), facade);
 
         if ( facade != null )
         {
-            boolean removed = facade.removeNoWait( noWait );
+            final boolean removed = facade.removeNoWait( noWait );
             log.debug( "Called removeNoWait, removed {0}", removed );
             return removed;
         }
@@ -218,30 +221,30 @@ public class LateralTCPDiscoveryListener
      * @param service
      */
     @Override
-    public void addDiscoveredService( DiscoveredService service )
+    public void addDiscoveredService( final DiscoveredService service )
     {
         // get a cache and add it to the no waits
         // the add method should not add the same.
         // we need the listener port from the original config.
-        ArrayList<String> regions = service.getCacheNames();
-        String serverAndPort = service.getServiceAddress() + ":" + service.getServicePort();
+        final ArrayList<String> regions = service.getCacheNames();
+        final String serverAndPort = service.getServiceAddress() + ":" + service.getServicePort();
 
         if ( regions != null )
         {
             // for each region get the cache
-            for (String cacheName : regions)
+            for (final String cacheName : regions)
             {
-                AuxiliaryCache<?, ?> ic = cacheManager.getAuxiliaryCache(factoryName, cacheName);
+                final AuxiliaryCache<?, ?> ic = cacheManager.getAuxiliaryCache(factoryName, cacheName);
 
                 log.debug( "Got cache, ic = {0}", ic );
 
                 // add this to the nowaits for this cachename
                 if ( ic != null )
                 {
-                    AuxiliaryCacheAttributes aca = ic.getAuxiliaryCacheAttributes();
+                    final AuxiliaryCacheAttributes aca = ic.getAuxiliaryCacheAttributes();
                     if (aca instanceof ITCPLateralCacheAttributes)
                     {
-                        ITCPLateralCacheAttributes lca = (ITCPLateralCacheAttributes)aca;
+                        final ITCPLateralCacheAttributes lca = (ITCPLateralCacheAttributes)aca;
                         if (lca.getTransmissionType() != LateralCacheAttributes.Type.TCP
                             || !serverAndPort.equals(lca.getTcpServer()) )
                         {
@@ -270,30 +273,30 @@ public class LateralTCPDiscoveryListener
      * @param service
      */
     @Override
-    public void removeDiscoveredService( DiscoveredService service )
+    public void removeDiscoveredService( final DiscoveredService service )
     {
         // get a cache and add it to the no waits
         // the add method should not add the same.
         // we need the listener port from the original config.
-        ArrayList<String> regions = service.getCacheNames();
-        String serverAndPort = service.getServiceAddress() + ":" + service.getServicePort();
+        final ArrayList<String> regions = service.getCacheNames();
+        final String serverAndPort = service.getServiceAddress() + ":" + service.getServicePort();
 
         if ( regions != null )
         {
             // for each region get the cache
-            for (String cacheName : regions)
+            for (final String cacheName : regions)
             {
-                AuxiliaryCache<?, ?> ic = cacheManager.getAuxiliaryCache(factoryName, cacheName);
+                final AuxiliaryCache<?, ?> ic = cacheManager.getAuxiliaryCache(factoryName, cacheName);
 
                 log.debug( "Got cache, ic = {0}", ic );
 
                 // remove this to the nowaits for this cachename
                 if ( ic != null )
                 {
-                    AuxiliaryCacheAttributes aca = ic.getAuxiliaryCacheAttributes();
+                    final AuxiliaryCacheAttributes aca = ic.getAuxiliaryCacheAttributes();
                     if (aca instanceof ITCPLateralCacheAttributes)
                     {
-                        ITCPLateralCacheAttributes lca = (ITCPLateralCacheAttributes)aca;
+                        final ITCPLateralCacheAttributes lca = (ITCPLateralCacheAttributes)aca;
                         if (lca.getTransmissionType() != LateralCacheAttributes.Type.TCP
                             || !serverAndPort.equals(lca.getTcpServer()) )
                         {

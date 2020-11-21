@@ -50,7 +50,7 @@ public class DiscoveredService
     /**
      * @param cacheNames the cacheNames to set
      */
-    public void setCacheNames( ArrayList<String> cacheNames )
+    public void setCacheNames( final ArrayList<String> cacheNames )
     {
         this.cacheNames = cacheNames;
     }
@@ -66,7 +66,7 @@ public class DiscoveredService
     /**
      * @param serviceAddress The serviceAddress to set.
      */
-    public void setServiceAddress( String serviceAddress )
+    public void setServiceAddress( final String serviceAddress )
     {
         this.serviceAddress = serviceAddress;
     }
@@ -82,7 +82,7 @@ public class DiscoveredService
     /**
      * @param servicePort The servicePort to set.
      */
-    public void setServicePort( int servicePort )
+    public void setServicePort( final int servicePort )
     {
         this.servicePort = servicePort;
     }
@@ -98,7 +98,7 @@ public class DiscoveredService
     /**
      * @param lastHearFromTime The lastHearFromTime to set.
      */
-    public void setLastHearFromTime( long lastHearFromTime )
+    public void setLastHearFromTime( final long lastHearFromTime )
     {
         this.lastHearFromTime = lastHearFromTime;
     }
@@ -129,7 +129,7 @@ public class DiscoveredService
      * @return equality based on the address/port
      */
 	@Override
-	public boolean equals(Object otherArg)
+	public boolean equals(final Object otherArg)
 	{
 		if (this == otherArg)
 		{
@@ -143,7 +143,7 @@ public class DiscoveredService
 		{
 			return false;
 		}
-		DiscoveredService other = (DiscoveredService) otherArg;
+		final DiscoveredService other = (DiscoveredService) otherArg;
 		if (!Objects.equals(serviceAddress, other.serviceAddress))
 		{
 			return false;
@@ -162,7 +162,7 @@ public class DiscoveredService
     @Override
     public String toString()
     {
-        StringBuilder buf = new StringBuilder();
+        final StringBuilder buf = new StringBuilder();
         buf.append( "\n DiscoveredService" );
         buf.append( "\n CacheNames = [" + getCacheNames() + "]" );
         buf.append( "\n ServiceAddress = [" + getServiceAddress() + "]" );

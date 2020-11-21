@@ -45,7 +45,7 @@ public class RemoteHttpCacheMonitor extends AbstractAuxiliaryCacheMonitor
      *
      * @param factory the factory to set
      */
-    public RemoteHttpCacheMonitor(RemoteHttpCacheFactory factory)
+    public RemoteHttpCacheMonitor(final RemoteHttpCacheFactory factory)
     {
         super("JCS-RemoteHttpCacheMonitor");
         this.factory = factory;
@@ -58,7 +58,7 @@ public class RemoteHttpCacheMonitor extends AbstractAuxiliaryCacheMonitor
      * <p>
      * @param remoteCache
      */
-    public void notifyError( RemoteHttpCache<?, ?> remoteCache )
+    public void notifyError( final RemoteHttpCache<?, ?> remoteCache )
     {
         if ( log.isInfoEnabled() )
         {
@@ -95,15 +95,15 @@ public class RemoteHttpCacheMonitor extends AbstractAuxiliaryCacheMonitor
         // If any cache is in error, it strongly suggests all caches
         // managed by the same RmicCacheManager instance are in error. So we fix
         // them once and for all.
-        for (RemoteHttpCache<?, ?> remoteCache : this.remoteHttpCaches.values())
+        for (final RemoteHttpCache<?, ?> remoteCache : this.remoteHttpCaches.values())
         {
             try
             {
                 if ( remoteCache.getStatus() == CacheStatus.ERROR )
                 {
-                    RemoteHttpCacheAttributes attributes = remoteCache.getRemoteHttpCacheAttributes();
+                    final RemoteHttpCacheAttributes attributes = remoteCache.getRemoteHttpCacheAttributes();
 
-                    IRemoteHttpCacheClient<Serializable, Serializable> remoteService =
+                    final IRemoteHttpCacheClient<Serializable, Serializable> remoteService =
                             factory.createRemoteHttpCacheClientForAttributes( attributes );
 
                     if ( log.isInfoEnabled() )
@@ -123,7 +123,7 @@ public class RemoteHttpCacheMonitor extends AbstractAuxiliaryCacheMonitor
                     break;
                 }
             }
-            catch ( IOException ex )
+            catch ( final IOException ex )
             {
                 allright.set(false);
                 // Problem encountered in fixing the caches managed by a

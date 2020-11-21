@@ -40,9 +40,9 @@ public class KeyMatcherPatternImpl<K>
      * @return Set of the matching keys
      */
     @Override
-    public Set<K> getMatchingKeysFromArray( String pattern, Set<K> keyArray )
+    public Set<K> getMatchingKeysFromArray( final String pattern, final Set<K> keyArray )
     {
-        Pattern compiledPattern = Pattern.compile( pattern );
+        final Pattern compiledPattern = Pattern.compile( pattern );
 
         return keyArray.stream()
                 .filter(key -> compiledPattern.matcher(key.toString()).matches())

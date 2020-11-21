@@ -65,11 +65,11 @@ public class HostNameUtil
     {
         try
         {
-            String hostAddress = getLocalHostLANAddress().getHostAddress();
+            final String hostAddress = getLocalHostLANAddress().getHostAddress();
             log.debug( "hostAddress = [{0}]", hostAddress );
             return hostAddress;
         }
-        catch ( UnknownHostException e1 )
+        catch ( final UnknownHostException e1 )
         {
             log.error( "Couldn't get localhost address", e1 );
             throw e1;
@@ -111,16 +111,16 @@ public class HostNameUtil
         {
             InetAddress candidateAddress = null;
             // Iterate all NICs (network interface cards)...
-            Enumeration<NetworkInterface> ifaces = NetworkInterface.getNetworkInterfaces();
+            final Enumeration<NetworkInterface> ifaces = NetworkInterface.getNetworkInterfaces();
             if ( ifaces != null ) 
             {
                 while ( ifaces.hasMoreElements() )
                 {
-                    NetworkInterface iface = ifaces.nextElement();
+                    final NetworkInterface iface = ifaces.nextElement();
                     // Iterate all IP addresses assigned to each card...
-                    for ( Enumeration<InetAddress> inetAddrs = iface.getInetAddresses(); inetAddrs.hasMoreElements(); )
+                    for ( final Enumeration<InetAddress> inetAddrs = iface.getInetAddresses(); inetAddrs.hasMoreElements(); )
                     {
-                        InetAddress inetAddr = inetAddrs.nextElement();
+                        final InetAddress inetAddr = inetAddrs.nextElement();
                         if ( !inetAddr.isLoopbackAddress() )
                         {
                             if ( inetAddr.isSiteLocalAddress() )
@@ -150,16 +150,16 @@ public class HostNameUtil
             }
             // At this point, we did not find a non-loopback address.
             // Fall back to returning whatever InetAddress.getLocalHost() returns...
-            InetAddress jdkSuppliedAddress = InetAddress.getLocalHost();
+            final InetAddress jdkSuppliedAddress = InetAddress.getLocalHost();
             if ( jdkSuppliedAddress == null )
             {
                 throw new UnknownHostException( "The JDK InetAddress.getLocalHost() method unexpectedly returned null." );
             }
             return jdkSuppliedAddress;
         }
-        catch ( SocketException e )
+        catch ( final SocketException e )
         {
-            UnknownHostException unknownHostException = new UnknownHostException( "Failed to determine LAN address: "
+            final UnknownHostException unknownHostException = new UnknownHostException( "Failed to determine LAN address: "
                 + e );
             unknownHostException.initCause( e );
             throw unknownHostException;
@@ -175,15 +175,15 @@ public class HostNameUtil
      */
     public static NetworkInterface getMulticastNetworkInterface() throws SocketException
     {
-        Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();
+        final Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();
         if (networkInterfaces != null) {
             while (networkInterfaces.hasMoreElements())
             {
-                NetworkInterface networkInterface = networkInterfaces.nextElement();
-                Enumeration<InetAddress> addressesFromNetworkInterface = networkInterface.getInetAddresses();
+                final NetworkInterface networkInterface = networkInterfaces.nextElement();
+                final Enumeration<InetAddress> addressesFromNetworkInterface = networkInterface.getInetAddresses();
                 while (addressesFromNetworkInterface.hasMoreElements())
                 {
-                    InetAddress inetAddress = addressesFromNetworkInterface.nextElement();
+                    final InetAddress inetAddress = addressesFromNetworkInterface.nextElement();
                     if (inetAddress.isSiteLocalAddress()
                             && !inetAddress.isAnyLocalAddress()
                             && !inetAddress.isLinkLocalAddress()

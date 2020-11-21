@@ -55,7 +55,7 @@ public class CacheElement<K, V>
      * @param key
      * @param val
      */
-    public CacheElement( String cacheName, K key, V val )
+    public CacheElement( final String cacheName, final K key, final V val )
     {
         this.cacheName = cacheName;
         this.key = key;
@@ -70,7 +70,7 @@ public class CacheElement<K, V>
      * @param val
      * @param attrArg
      */
-    public CacheElement( String cacheName, K key, V val, IElementAttributes attrArg )
+    public CacheElement( final String cacheName, final K key, final V val, final IElementAttributes attrArg )
     {
         this(cacheName, key, val);
         this.attr = attrArg;
@@ -116,7 +116,7 @@ public class CacheElement<K, V>
      *            The new IElementAttributes value
      */
     @Override
-    public void setElementAttributes( IElementAttributes attr )
+    public void setElementAttributes( final IElementAttributes attr )
     {
         this.attr = attr;
     }
@@ -144,7 +144,7 @@ public class CacheElement<K, V>
      * @return true if this object key equals the key of obj
      */
     @Override
-    public boolean equals(Object obj)
+    public boolean equals(final Object obj)
     {
         if (this == obj)
         {
@@ -154,7 +154,7 @@ public class CacheElement<K, V>
         {
             return false;
         }
-        CacheElement<?,?> other = (CacheElement<?,?>) obj;
+        final CacheElement<?,?> other = (CacheElement<?,?>) obj;
         return Objects.equals(key, other.key);
     }
 

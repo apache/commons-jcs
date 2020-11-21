@@ -58,23 +58,23 @@ public class JDBCDiskCacheRemovalUnitTest
         // SETUP
         setupDatabase();
 
-        String keyPart1 = "part1";
-        String keyPart2 = "part2";
-        String region = "testCache1";
-        String data = "adfadsfasfddsafasasd";
+        final String keyPart1 = "part1";
+        final String keyPart2 = "part2";
+        final String region = "testCache1";
+        final String data = "adfadsfasfddsafasasd";
 
-        CacheAccess<String, String> jcs = JCS.getInstance( region );
+        final CacheAccess<String, String> jcs = JCS.getInstance( region );
 
         // DO WORK
         jcs.put( keyPart1 + ":" + keyPart2, data );
         Thread.sleep( 1000 );
 
         // VERIFY
-        String resultBeforeRemove = jcs.get( keyPart1 + ":" + keyPart2 );
+        final String resultBeforeRemove = jcs.get( keyPart1 + ":" + keyPart2 );
         assertEquals( "Wrong result", data, resultBeforeRemove );
 
         jcs.remove( keyPart1 + ":" );
-        String resultAfterRemove = jcs.get( keyPart1 + ":" + keyPart2 );
+        final String resultAfterRemove = jcs.get( keyPart1 + ":" + keyPart2 );
         assertNull( "Should not have a result after removal.", resultAfterRemove );
 
 //        System.out.println( jcs.getStats() );
@@ -92,17 +92,17 @@ public class JDBCDiskCacheRemovalUnitTest
     {
         System.setProperty( "hsqldb.cache_scale", "8" );
 
-        String rafroot = "target";
-        Properties p = new Properties();
-        String driver = p.getProperty( "driver", "org.hsqldb.jdbcDriver" );
-        String url = p.getProperty( "url", "jdbc:hsqldb:" );
-        String database = p.getProperty( "database", rafroot + "/JDBCDiskCacheRemovalUnitTest" );
-        String user = p.getProperty( "user", "sa" );
-        String password = p.getProperty( "password", "" );
+        final String rafroot = "target";
+        final Properties p = new Properties();
+        final String driver = p.getProperty( "driver", "org.hsqldb.jdbcDriver" );
+        final String url = p.getProperty( "url", "jdbc:hsqldb:" );
+        final String database = p.getProperty( "database", rafroot + "/JDBCDiskCacheRemovalUnitTest" );
+        final String user = p.getProperty( "user", "sa" );
+        final String password = p.getProperty( "password", "" );
 
         new org.hsqldb.jdbcDriver();
         Class.forName( driver ).newInstance();
-        Connection cConn = DriverManager.getConnection( url + database, user, password );
+        final Connection cConn = DriverManager.getConnection( url + database, user, password );
 
         HsqlSetupTableUtil.setupTABLE( cConn, databaseName );
     }

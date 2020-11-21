@@ -80,9 +80,9 @@ public class CommonRemoteCacheAttributes
      * @param s The new remoteTypeName value
      */
     @Override
-    public void setRemoteTypeName( String s )
+    public void setRemoteTypeName( final String s )
     {
-        RemoteType rt = RemoteType.valueOf(s);
+        final RemoteType rt = RemoteType.valueOf(s);
         if (rt != null)
         {
             this.remoteType = rt;
@@ -106,7 +106,7 @@ public class CommonRemoteCacheAttributes
      * @param p The new remoteType value
      */
     @Override
-    public void setRemoteType( RemoteType p )
+    public void setRemoteType( final RemoteType p )
     {
         this.remoteType = p;
     }
@@ -128,7 +128,7 @@ public class CommonRemoteCacheAttributes
      * @param s The new remoteServiceName value
      */
     @Override
-    public void setRemoteServiceName( String s )
+    public void setRemoteServiceName( final String s )
     {
         this.remoteServiceName = s;
     }
@@ -139,7 +139,7 @@ public class CommonRemoteCacheAttributes
      * @param location The new location value
      */
     @Override
-    public void setRemoteLocation( RemoteLocation location )
+    public void setRemoteLocation( final RemoteLocation location )
     {
         this.location = location;
     }
@@ -151,7 +151,7 @@ public class CommonRemoteCacheAttributes
      * @param port The new remotePort value
      */
     @Override
-    public void setRemoteLocation( String host, int port )
+    public void setRemoteLocation( final String host, final int port )
     {
         this.location = new RemoteLocation(host, port);
     }
@@ -184,7 +184,7 @@ public class CommonRemoteCacheAttributes
      * @param s The new clusterServers value
      */
     @Override
-    public void setClusterServers( String s )
+    public void setClusterServers( final String s )
     {
         this.clusterServers = s;
     }
@@ -206,7 +206,7 @@ public class CommonRemoteCacheAttributes
      * @param r The new removeUponRemotePut value
      */
     @Override
-    public void setRemoveUponRemotePut( boolean r )
+    public void setRemoveUponRemotePut( final boolean r )
     {
         this.removeUponRemotePut = r;
     }
@@ -227,7 +227,7 @@ public class CommonRemoteCacheAttributes
      * @param r The new getOnly value
      */
     @Override
-    public void setGetOnly( boolean r )
+    public void setGetOnly( final boolean r )
     {
         this.getOnly = r;
     }
@@ -249,7 +249,7 @@ public class CommonRemoteCacheAttributes
      * @param r The new localClusterConsistency value
      */
     @Override
-    public void setLocalClusterConsistency( boolean r )
+    public void setLocalClusterConsistency( final boolean r )
     {
         this.localClusterConsistency = r;
     }
@@ -258,7 +258,7 @@ public class CommonRemoteCacheAttributes
      * @param rmiSocketFactoryTimeoutMillis The rmiSocketFactoryTimeoutMillis to set.
      */
     @Override
-    public void setRmiSocketFactoryTimeoutMillis( int rmiSocketFactoryTimeoutMillis )
+    public void setRmiSocketFactoryTimeoutMillis( final int rmiSocketFactoryTimeoutMillis )
     {
         this.rmiSocketFactoryTimeoutMillis = rmiSocketFactoryTimeoutMillis;
     }
@@ -278,7 +278,7 @@ public class CommonRemoteCacheAttributes
     @Override
     public String toString()
     {
-        StringBuilder buf = new StringBuilder();
+        final StringBuilder buf = new StringBuilder();
         buf.append( "\n RemoteCacheAttributes " );
         if (this.location != null)
         {

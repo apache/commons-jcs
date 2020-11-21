@@ -35,9 +35,9 @@ public class HsqlSetupTableUtil extends HSQLDiskCacheFactory
      *
      * @throws SQLException if database problems occur
      */
-    public static void setupTABLE( Connection cConn, String tableName ) throws SQLException
+    public static void setupTABLE( final Connection cConn, final String tableName ) throws SQLException
     {
-        HsqlSetupTableUtil util = new HsqlSetupTableUtil();
+        final HsqlSetupTableUtil util = new HsqlSetupTableUtil();
         util.setupTable(cConn, tableName);
     }
 }

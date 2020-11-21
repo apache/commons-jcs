@@ -62,7 +62,7 @@ public class LRUMapConcurrentUnitTest
      * @param testName
      *            Description of the Parameter
      */
-    public LRUMapConcurrentUnitTest( String testName )
+    public LRUMapConcurrentUnitTest( final String testName )
     {
         super( testName );
     }
@@ -75,7 +75,7 @@ public class LRUMapConcurrentUnitTest
     public static Test suite()
     {
         // run the basic tests
-        TestSuite suite = new TestSuite( LRUMapConcurrentUnitTest.class );
+        final TestSuite suite = new TestSuite( LRUMapConcurrentUnitTest.class );
 
         // run concurrent tests
         final LRUMap<String, String> map = new LRUMap<>( 2000 );
@@ -141,7 +141,7 @@ public class LRUMapConcurrentUnitTest
     public void testSimpleLoad()
         throws Exception
     {
-        LRUMap<String, String> map = new LRUMap<>( items );
+        final LRUMap<String, String> map = new LRUMap<>( items );
 
         for ( int i = 0; i < items; i++ )
         {
@@ -150,7 +150,7 @@ public class LRUMapConcurrentUnitTest
 
         for ( int i = items - 1; i >= 0; i-- )
         {
-            String res = map.get( i + ":key" );
+            final String res = map.get( i + ":key" );
             assertNotNull( "[" + i + ":key] should not be null", res );
         }
 
@@ -169,8 +169,8 @@ public class LRUMapConcurrentUnitTest
     public void testLRURemoval()
         throws Exception
     {
-        int total = 10;
-        LRUMap<String, String> map = new LRUMap<>( total );
+        final int total = 10;
+        final LRUMap<String, String> map = new LRUMap<>( total );
 
         // put the max in
         for ( int i = 0; i < total; i++ )
@@ -178,7 +178,7 @@ public class LRUMapConcurrentUnitTest
             map.put( i + ":key", "data" + i );
         }
 
-        Iterator<?> it = map.entrySet().iterator();
+        final Iterator<?> it = map.entrySet().iterator();
         while ( it.hasNext() )
         {
             assertNotNull( it.next() );
@@ -188,7 +188,7 @@ public class LRUMapConcurrentUnitTest
         // get the max out backwards
         for ( int i = total - 1; i >= 0; i-- )
         {
-            String res = map.get( i + ":key" );
+            final String res = map.get( i + ":key" );
             assertNotNull( "[" + i + ":key] should not be null", res );
         }
 
@@ -207,8 +207,8 @@ public class LRUMapConcurrentUnitTest
     public void testLRURemovalAgain()
         throws Exception
     {
-        int total = 10000;
-        LRUMap<String, String> map = new LRUMap<>( total );
+        final int total = 10000;
+        final LRUMap<String, String> map = new LRUMap<>( total );
 
         // put the max in
         for ( int i = 0; i < total * 2; i++ )
@@ -225,7 +225,7 @@ public class LRUMapConcurrentUnitTest
         // get the total to total *2 items out, these should be found.
         for ( int i = ( total * 2 ) - 1; i >= total; i-- )
         {
-            String res = map.get( i + ":key" );
+            final String res = map.get( i + ":key" );
             assertNotNull( "[" + i + ":key] should not be null", res );
         }
 
@@ -239,7 +239,7 @@ public class LRUMapConcurrentUnitTest
      * @param items
      * @throws Exception
      */
-    public void runConcurrentPutGetTests( LRUMap<String, String> map, int items )
+    public void runConcurrentPutGetTests( final LRUMap<String, String> map, final int items )
         throws Exception
     {
         for ( int i = 0; i < items; i++ )
@@ -249,7 +249,7 @@ public class LRUMapConcurrentUnitTest
 
         for ( int i = items - 1; i >= 0; i-- )
         {
-            String res = map.get( i + ":key" );
+            final String res = map.get( i + ":key" );
             assertNotNull( "[" + i + ":key] should not be null", res );
         }
     }
@@ -263,7 +263,7 @@ public class LRUMapConcurrentUnitTest
      * @param end
      * @throws Exception
      */
-    public void runConcurrentRangeTests( LRUMap<String, String> map, int start, int end )
+    public void runConcurrentRangeTests( final LRUMap<String, String> map, final int start, final int end )
         throws Exception
     {
         for ( int i = start; i < end; i++ )
@@ -273,7 +273,7 @@ public class LRUMapConcurrentUnitTest
 
         for ( int i = end - 1; i >= start; i-- )
         {
-            String res = map.get( i + ":key" );
+            final String res = map.get( i + ":key" );
             assertNotNull( "[" + i + ":key] should not be null", res );
         }
 

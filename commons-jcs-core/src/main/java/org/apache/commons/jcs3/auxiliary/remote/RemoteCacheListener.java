@@ -57,7 +57,7 @@ public class RemoteCacheListener<K, V>
      * @param cacheMgr the cache hub
      * @param elementSerializer a custom serializer
      */
-    public RemoteCacheListener( IRemoteCacheAttributes irca, ICompositeCacheManager cacheMgr, IElementSerializer elementSerializer )
+    public RemoteCacheListener( final IRemoteCacheAttributes irca, final ICompositeCacheManager cacheMgr, final IElementSerializer elementSerializer )
     {
         super( irca, cacheMgr, elementSerializer );
 
@@ -67,7 +67,7 @@ public class RemoteCacheListener<K, V>
         {
             UnicastRemoteObject.exportObject( this, irca.getLocalPort() );
         }
-        catch ( RemoteException ex )
+        catch ( final RemoteException ex )
         {
             log.error( "Problem exporting object.", ex );
             throw new IllegalStateException( ex.getMessage() );
@@ -90,7 +90,7 @@ public class RemoteCacheListener<K, V>
             {
                 UnicastRemoteObject.unexportObject( this, true );
             }
-            catch ( RemoteException ex )
+            catch ( final RemoteException ex )
             {
                 log.error( "Problem unexporting the listener.", ex );
                 throw new IllegalStateException( ex.getMessage() );
@@ -107,7 +107,7 @@ public class RemoteCacheListener<K, V>
     @Override
     public String toString()
     {
-        StringBuilder buf = new StringBuilder();
+        final StringBuilder buf = new StringBuilder();
         buf.append( "\n RemoteCacheListener: " );
         buf.append( super.toString() );
         return buf.toString();

@@ -38,7 +38,7 @@ public class DaemonThreadFactory
      *
      * @param prefix thread name prefix
      */
-    public DaemonThreadFactory(String prefix)
+    public DaemonThreadFactory(final String prefix)
     {
         this(prefix, Thread.NORM_PRIORITY);
     }
@@ -49,7 +49,7 @@ public class DaemonThreadFactory
      * @param prefix thread name prefix
      * @param threadPriority set thread priority
      */
-    public DaemonThreadFactory(String prefix, int threadPriority)
+    public DaemonThreadFactory(final String prefix, final int threadPriority)
     {
         this.prefix = prefix;
         this.threadPriority = threadPriority;
@@ -62,10 +62,10 @@ public class DaemonThreadFactory
      * @return a daemon thread
      */
     @Override
-    public Thread newThread( Runnable runner )
+    public Thread newThread( final Runnable runner )
     {
-        Thread t = new Thread( runner );
-        String oldName = t.getName();
+        final Thread t = new Thread( runner );
+        final String oldName = t.getName();
         t.setName( prefix + oldName );
         t.setDaemon(THREAD_IS_DAEMON);
         t.setPriority(threadPriority);

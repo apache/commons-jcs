@@ -56,7 +56,7 @@ public class JulLogFactory implements LogFactory
     @Override
     public Log getLog(final Class<?> clazz)
     {
-        Logger logger = Logger.getLogger(clazz.getName());
+        final Logger logger = Logger.getLogger(clazz.getName());
         return new JulLogAdapter(logger);
     }
 
@@ -70,7 +70,7 @@ public class JulLogFactory implements LogFactory
     @Override
     public Log getLog(final String name)
     {
-        Logger logger = Logger.getLogger(name);
+        final Logger logger = Logger.getLogger(name);
         return new JulLogAdapter(logger);
     }
 }

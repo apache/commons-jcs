@@ -85,8 +85,8 @@ public class UDPDiscoveryReceiver
      * @param multicastPort
      * @throws IOException
      */
-    public UDPDiscoveryReceiver( UDPDiscoveryService service, String multicastInterfaceString,
-            String multicastAddressString, int multicastPort )
+    public UDPDiscoveryReceiver( final UDPDiscoveryService service, final String multicastInterfaceString,
+            final String multicastAddressString, final int multicastPort )
         throws IOException
     {
         this.service = service;
@@ -111,8 +111,8 @@ public class UDPDiscoveryReceiver
      * @param multicastPort
      * @throws IOException
      */
-    private void createSocket( String multicastInterfaceString, InetAddress multicastAddress,
-            int multicastPort )
+    private void createSocket( final String multicastInterfaceString, final InetAddress multicastAddress,
+            final int multicastPort )
         throws IOException
     {
         try
@@ -141,7 +141,7 @@ public class UDPDiscoveryReceiver
 
             mSocket.joinGroup( multicastAddress );
         }
-        catch ( IOException e )
+        catch ( final IOException e )
         {
             log.error( "Could not bind to multicast address [{0}:{1}]", multicastAddress,
                     multicastPort, e );
@@ -181,14 +181,14 @@ public class UDPDiscoveryReceiver
             	// Ensure that the address we're supposed to send to is, indeed, the address
             	// of the machine on the other end of this connection.  This guards against
             	// instances where we don't exactly get the right local host address
-            	UDPDiscoveryMessage msg = (UDPDiscoveryMessage) obj;
+            	final UDPDiscoveryMessage msg = (UDPDiscoveryMessage) obj;
             	msg.setHost(packet.getAddress().getHostAddress());
 
                 log.debug( "Read object from address [{0}], object=[{1}]",
                         packet.getSocketAddress(), obj );
             }
         }
-        catch ( Exception e )
+        catch ( final Exception e )
         {
             log.error( "Error receiving multicast packet", e );
         }
@@ -204,7 +204,7 @@ public class UDPDiscoveryReceiver
         {
             while ( !shutdown )
             {
-                Object obj = waitForMessage();
+                final Object obj = waitForMessage();
 
                 cnt.incrementAndGet();
 
@@ -218,7 +218,7 @@ public class UDPDiscoveryReceiver
                     // check for null
                     if ( message != null )
                     {
-                        MessageHandler handler = new MessageHandler( message );
+                        final MessageHandler handler = new MessageHandler( message );
 
                         pooledExecutor.execute( handler );
 
@@ -229,13 +229,13 @@ public class UDPDiscoveryReceiver
                         log.warn( "message is null" );
                     }
                 }
-                catch ( ClassCastException cce )
+                catch ( final ClassCastException cce )
                 {
                     log.warn( "Received unknown message type", cce.getMessage() );
                 }
             } // end while
         }
-        catch ( IOException e )
+        catch ( final IOException e )
         {
             log.error( "Unexpected exception in UDP receiver.", e );
             try
@@ -244,7 +244,7 @@ public class UDPDiscoveryReceiver
                 // TODO consider some failure count so we don't do this
                 // forever.
             }
-            catch ( InterruptedException e2 )
+            catch ( final InterruptedException e2 )
             {
                 log.error( "Problem sleeping", e2 );
             }
@@ -254,7 +254,7 @@ public class UDPDiscoveryReceiver
     /**
      * @param cnt The cnt to set.
      */
-    public void setCnt( int cnt )
+    public void setCnt( final int cnt )
     {
         this.cnt.set(cnt);
     }
@@ -279,7 +279,7 @@ public class UDPDiscoveryReceiver
         /**
          * @param message
          */
-        public MessageHandler( UDPDiscoveryMessage message )
+        public MessageHandler( final UDPDiscoveryMessage message )
         {
             this.message = message;
         }
@@ -318,7 +318,7 @@ public class UDPDiscoveryReceiver
         @SuppressWarnings("synthetic-access")
         private void processMessage()
         {
-            DiscoveredService discoveredService = new DiscoveredService();
+            final DiscoveredService discoveredService = new DiscoveredService();
             discoveredService.setServiceAddress( message.getHost() );
             discoveredService.setCacheNames( message.getCacheNames() );
             discoveredService.setServicePort( message.getPort() );
@@ -357,7 +357,7 @@ public class UDPDiscoveryReceiver
                 mSocket.close();
                 pooledExecutor.shutdownNow();
             }
-            catch ( IOException e )
+            catch ( final IOException e )
             {
                 log.error( "Problem closing socket" );
             }

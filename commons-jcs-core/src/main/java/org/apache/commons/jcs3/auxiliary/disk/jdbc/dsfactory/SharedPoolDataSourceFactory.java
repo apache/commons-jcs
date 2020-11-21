@@ -72,11 +72,11 @@ public class SharedPoolDataSourceFactory implements DataSourceFactory
      * @see org.apache.commons.jcs3.auxiliary.disk.jdbc.dsfactory.DataSourceFactory#initialize(JDBCDiskCacheAttributes)
      */
     @Override
-	public void initialize(JDBCDiskCacheAttributes config) throws SQLException
+	public void initialize(final JDBCDiskCacheAttributes config) throws SQLException
     {
     	this.name = config.getConnectionPoolName();
-        ConnectionPoolDataSource cpds = initCPDS(config);
-        SharedPoolDataSource dataSource = new SharedPoolDataSource();
+        final ConnectionPoolDataSource cpds = initCPDS(config);
+        final SharedPoolDataSource dataSource = new SharedPoolDataSource();
         initJdbc2Pool(dataSource, config);
         dataSource.setConnectionPoolDataSource(cpds);
         dataSource.setMaxTotal(config.getMaxTotal());
@@ -97,7 +97,7 @@ public class SharedPoolDataSourceFactory implements DataSourceFactory
                 ds.close();
             }
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
         	throw new SQLException("Exception caught closing data source", e);
         }
@@ -116,13 +116,13 @@ public class SharedPoolDataSourceFactory implements DataSourceFactory
     {
         log.debug("Starting initCPDS");
 
-        DriverAdapterCPDS cpds = new DriverAdapterCPDS();
+        final DriverAdapterCPDS cpds = new DriverAdapterCPDS();
 
         try
         {
 			cpds.setDriver(config.getDriverClassName());
 		}
-        catch (ClassNotFoundException e)
+        catch (final ClassNotFoundException e)
         {
 			throw new SQLException("Driver class not found " + config.getDriverClassName(), e);
 		}

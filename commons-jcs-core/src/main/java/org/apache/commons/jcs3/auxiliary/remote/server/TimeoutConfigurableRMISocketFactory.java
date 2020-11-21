@@ -54,7 +54,7 @@ public class TimeoutConfigurableRMISocketFactory
      * @throws IOException
      */
     @Override
-    public ServerSocket createServerSocket( int port )
+    public ServerSocket createServerSocket( final int port )
         throws IOException
     {
         return new ServerSocket( port );
@@ -67,10 +67,10 @@ public class TimeoutConfigurableRMISocketFactory
      * @throws IOException
      */
     @Override
-    public Socket createSocket( String host, int port )
+    public Socket createSocket( final String host, final int port )
         throws IOException
     {
-        Socket socket = new Socket();
+        final Socket socket = new Socket();
         socket.setSoTimeout( readTimeout );
         socket.setSoLinger( false, 0 );
         socket.connect( new InetSocketAddress( host, port ), openTimeout );
@@ -80,7 +80,7 @@ public class TimeoutConfigurableRMISocketFactory
     /**
      * @param readTimeout the readTimeout to set
      */
-    public void setReadTimeout( int readTimeout )
+    public void setReadTimeout( final int readTimeout )
     {
         this.readTimeout = readTimeout;
     }
@@ -96,7 +96,7 @@ public class TimeoutConfigurableRMISocketFactory
     /**
      * @param openTimeout the openTimeout to set
      */
-    public void setOpenTimeout( int openTimeout )
+    public void setOpenTimeout( final int openTimeout )
     {
         this.openTimeout = openTimeout;
     }

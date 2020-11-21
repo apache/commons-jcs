@@ -45,8 +45,8 @@ public class CacheEventQueueFactory<K, V>
      * @param poolType - SINGLE, POOLED
      * @return ICacheEventQueue
      */
-    public ICacheEventQueue<K, V> createCacheEventQueue( ICacheListener<K, V> listener, long listenerId, String cacheName,
-                                                   String threadPoolName, ICacheEventQueue.QueueType poolType )
+    public ICacheEventQueue<K, V> createCacheEventQueue( final ICacheListener<K, V> listener, final long listenerId, final String cacheName,
+                                                   final String threadPoolName, final ICacheEventQueue.QueueType poolType )
     {
         return createCacheEventQueue( listener, listenerId, cacheName, 10, 500, threadPoolName, poolType );
     }
@@ -63,9 +63,9 @@ public class CacheEventQueueFactory<K, V>
      * @param poolType single or pooled
      * @return ICacheEventQueue
      */
-    public ICacheEventQueue<K, V> createCacheEventQueue( ICacheListener<K, V> listener, long listenerId, String cacheName,
-                                                   int maxFailure, int waitBeforeRetry, String threadPoolName,
-                                                   ICacheEventQueue.QueueType poolType )
+    public ICacheEventQueue<K, V> createCacheEventQueue( final ICacheListener<K, V> listener, final long listenerId, final String cacheName,
+                                                   final int maxFailure, final int waitBeforeRetry, final String threadPoolName,
+                                                   final ICacheEventQueue.QueueType poolType )
     {
         log.debug( "threadPoolName = [{0}] poolType = {1}", threadPoolName, poolType );
 

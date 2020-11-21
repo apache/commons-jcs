@@ -52,7 +52,7 @@ public class CacheEvent<K>
      * @param source the source to set
      */
     @Override
-	public void setSource( String source )
+	public void setSource( final String source )
     {
         this.source = source;
     }
@@ -70,7 +70,7 @@ public class CacheEvent<K>
      * @param region the region to set
      */
     @Override
-	public void setRegion( String region )
+	public void setRegion( final String region )
     {
         this.region = region;
     }
@@ -88,7 +88,7 @@ public class CacheEvent<K>
      * @param eventName the eventName to set
      */
     @Override
-	public void setEventName( String eventName )
+	public void setEventName( final String eventName )
     {
         this.eventName = eventName;
     }
@@ -106,7 +106,7 @@ public class CacheEvent<K>
      * @param optionalDetails the optionalDetails to set
      */
     @Override
-	public void setOptionalDetails( String optionalDetails )
+	public void setOptionalDetails( final String optionalDetails )
     {
         this.optionalDetails = optionalDetails;
     }
@@ -124,7 +124,7 @@ public class CacheEvent<K>
      * @param key the key to set
      */
     @Override
-	public void setKey( K key )
+	public void setKey( final K key )
     {
         this.key = key;
     }
@@ -154,7 +154,7 @@ public class CacheEvent<K>
     @Override
     public String toString()
     {
-    	StringBuilder sb = new StringBuilder();
+    	final StringBuilder sb = new StringBuilder();
     	sb.append("CacheEvent: ").append(eventName).append(" Created: ").append(new Date(createTime));
     	if (source != null)
     	{

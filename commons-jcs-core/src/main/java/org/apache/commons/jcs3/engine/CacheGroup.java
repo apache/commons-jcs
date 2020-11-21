@@ -41,7 +41,7 @@ public class CacheGroup
      * @param attr
      *            The new attributes value
      */
-    public void setElementAttributes( IElementAttributes attr )
+    public void setElementAttributes( final IElementAttributes attr )
     {
         this.attr = attr;
     }

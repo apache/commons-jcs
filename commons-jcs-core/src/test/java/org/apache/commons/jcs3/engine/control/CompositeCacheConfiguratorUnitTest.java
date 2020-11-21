@@ -40,27 +40,27 @@ public class CompositeCacheConfiguratorUnitTest
     public void testParseAuxiliary_CacheEventLogger_Normal()
     {
         // SETUP
-        String regionName = "MyRegion";
+        final String regionName = "MyRegion";
 
-        String auxName = "MockAux";
-        String auxPrefix = CompositeCacheConfigurator.AUXILIARY_PREFIX + auxName;
-        String auxiliaryClassName = MockAuxiliaryCacheFactory.class.getName();
-        String eventLoggerClassName = MockCacheEventLogger.class.getName();
-        String auxiliaryAttributeClassName = MockAuxiliaryCacheAttributes.class.getName();
+        final String auxName = "MockAux";
+        final String auxPrefix = CompositeCacheConfigurator.AUXILIARY_PREFIX + auxName;
+        final String auxiliaryClassName = MockAuxiliaryCacheFactory.class.getName();
+        final String eventLoggerClassName = MockCacheEventLogger.class.getName();
+        final String auxiliaryAttributeClassName = MockAuxiliaryCacheAttributes.class.getName();
 
-        Properties props = new Properties();
+        final Properties props = new Properties();
         props.put( auxPrefix, auxiliaryClassName );
         props.put( auxPrefix + CompositeCacheConfigurator.ATTRIBUTE_PREFIX, auxiliaryAttributeClassName );
         props.put( auxPrefix + AuxiliaryCacheConfigurator.CACHE_EVENT_LOGGER_PREFIX, eventLoggerClassName );
 
 //        System.out.print( props );
 
-        CompositeCacheManager manager = CompositeCacheManager.getUnconfiguredInstance();
-        CompositeCacheConfigurator configurator = new CompositeCacheConfigurator();
+        final CompositeCacheManager manager = CompositeCacheManager.getUnconfiguredInstance();
+        final CompositeCacheConfigurator configurator = new CompositeCacheConfigurator();
 
         // DO WORK
-        AuxiliaryCache<String, String> aux = configurator.parseAuxiliary( props, manager, auxName, regionName );
-        MockAuxiliaryCache<String, String> result = (MockAuxiliaryCache<String, String>)aux;
+        final AuxiliaryCache<String, String> aux = configurator.parseAuxiliary( props, manager, auxName, regionName );
+        final MockAuxiliaryCache<String, String> result = (MockAuxiliaryCache<String, String>)aux;
 
         // VERIFY
         assertNotNull( "Should have an auxcache.", result );
@@ -73,20 +73,20 @@ public class CompositeCacheConfiguratorUnitTest
     public void testParseSpoolChunkSize_Normal()
     {
         // SETUP
-        String regionName = "MyRegion";
-        int chunkSize = 5;
+        final String regionName = "MyRegion";
+        final int chunkSize = 5;
 
-        Properties props = new Properties();
+        final Properties props = new Properties();
         props.put( "jcs.default", "" );
         props.put( "jcs.default.cacheattributes.SpoolChunkSize", String.valueOf( chunkSize ) );
 
-        CompositeCacheManager manager = CompositeCacheManager.getUnconfiguredInstance();
+        final CompositeCacheManager manager = CompositeCacheManager.getUnconfiguredInstance();
 
         // DO WORK
         manager.configure( props );
 
         // VERIFY
-        CompositeCache<String, String> cache = manager.getCache( regionName );
+        final CompositeCache<String, String> cache = manager.getCache( regionName );
         assertEquals( "Wrong chunkSize", cache.getCacheAttributes().getSpoolChunkSize(), chunkSize );
     }
 }

@@ -68,8 +68,8 @@ public class PooledCacheEventQueue<K, V>
      * @param waitBeforeRetry
      * @param threadPoolName
      */
-    public PooledCacheEventQueue( ICacheListener<K, V> listener, long listenerId, String cacheName, int maxFailure,
-                                  int waitBeforeRetry, String threadPoolName )
+    public PooledCacheEventQueue( final ICacheListener<K, V> listener, final long listenerId, final String cacheName, final int maxFailure,
+                                  final int waitBeforeRetry, final String threadPoolName )
     {
         initialize( listener, listenerId, cacheName, maxFailure, waitBeforeRetry, threadPoolName );
     }
@@ -84,8 +84,8 @@ public class PooledCacheEventQueue<K, V>
      * @param waitBeforeRetry
      * @param threadPoolName
      */
-    protected void initialize( ICacheListener<K, V> listener, long listenerId, String cacheName, int maxFailure,
-                            int waitBeforeRetry, String threadPoolName )
+    protected void initialize( final ICacheListener<K, V> listener, final long listenerId, final String cacheName, final int maxFailure,
+                            final int waitBeforeRetry, final String threadPoolName )
     {
         super.initialize(listener, listenerId, cacheName, maxFailure, waitBeforeRetry);
 
@@ -128,7 +128,7 @@ public class PooledCacheEventQueue<K, V>
      * @param event
      */
     @Override
-    protected void put( AbstractCacheEvent event )
+    protected void put( final AbstractCacheEvent event )
     {
         pool.execute( event );
     }
@@ -139,10 +139,10 @@ public class PooledCacheEventQueue<K, V>
     @Override
     public IStats getStatistics()
     {
-        IStats stats = new Stats();
+        final IStats stats = new Stats();
         stats.setTypeName( "Pooled Cache Event Queue" );
 
-        ArrayList<IStatElement<?>> elems = new ArrayList<>();
+        final ArrayList<IStatElement<?>> elems = new ArrayList<>();
 
         elems.add(new StatElement<>( "Working", Boolean.valueOf(isWorking()) ) );
         elems.add(new StatElement<>( "Empty", Boolean.valueOf(this.isEmpty()) ) );

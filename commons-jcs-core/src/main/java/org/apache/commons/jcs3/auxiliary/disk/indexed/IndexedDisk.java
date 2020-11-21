@@ -54,7 +54,7 @@ public class IndexedDisk implements AutoCloseable
      * @param elementSerializer
      * @throws IOException
      */
-    public IndexedDisk(File file, IElementSerializer elementSerializer)
+    public IndexedDisk(final File file, final IElementSerializer elementSerializer)
         throws IOException
     {
         this.filepath = file.getAbsolutePath();
@@ -76,12 +76,12 @@ public class IndexedDisk implements AutoCloseable
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    protected <T> T readObject(IndexedDiskElementDescriptor ded)
+    protected <T> T readObject(final IndexedDiskElementDescriptor ded)
         throws IOException, ClassNotFoundException
     {
         String message = null;
         boolean corrupted = false;
-        long fileLength = fc.size();
+        final long fileLength = fc.size();
         if (ded.pos > fileLength)
         {
             corrupted = true;
@@ -89,10 +89,10 @@ public class IndexedDisk implements AutoCloseable
         }
         else
         {
-            ByteBuffer datalength = ByteBuffer.allocate(HEADER_SIZE_BYTES);
+            final ByteBuffer datalength = ByteBuffer.allocate(HEADER_SIZE_BYTES);
             fc.read(datalength, ded.pos);
             datalength.flip();
-            int datalen = datalength.getInt();
+            final int datalen = datalength.getInt();
             if (ded.len != datalen)
             {
                 corrupted = true;
@@ -111,7 +111,7 @@ public class IndexedDisk implements AutoCloseable
             throw new IOException("The File Is Corrupt, need to reset");
         }
 
-        ByteBuffer data = ByteBuffer.allocate(ded.len);
+        final ByteBuffer data = ByteBuffer.allocate(ded.len);
         fc.read(data, ded.pos + HEADER_SIZE_BYTES);
         data.flip();
 
@@ -128,10 +128,10 @@ public class IndexedDisk implements AutoCloseable
     protected void move(final IndexedDiskElementDescriptor ded, final long newPosition)
         throws IOException
     {
-        ByteBuffer datalength = ByteBuffer.allocate(HEADER_SIZE_BYTES);
+        final ByteBuffer datalength = ByteBuffer.allocate(HEADER_SIZE_BYTES);
         fc.read(datalength, ded.pos);
         datalength.flip();
-        int length = datalength.getInt();
+        final int length = datalength.getInt();
 
         if (length != ded.len)
         {
@@ -145,12 +145,12 @@ public class IndexedDisk implements AutoCloseable
 
         // header len + data len
         int remaining = HEADER_SIZE_BYTES + length;
-        ByteBuffer buffer = ByteBuffer.allocate(16384);
+        final ByteBuffer buffer = ByteBuffer.allocate(16384);
 
         while (remaining > 0)
         {
             // chunk it
-            int chunkSize = Math.min(remaining, buffer.capacity());
+            final int chunkSize = Math.min(remaining, buffer.capacity());
             buffer.limit(chunkSize);
             fc.read(buffer, readPos);
             buffer.flip();
@@ -173,10 +173,10 @@ public class IndexedDisk implements AutoCloseable
      * @return true if we wrote successfully
      * @throws IOException
      */
-    protected boolean write(IndexedDiskElementDescriptor ded, byte[] data)
+    protected boolean write(final IndexedDiskElementDescriptor ded, final byte[] data)
         throws IOException
     {
-        long pos = ded.pos;
+        final long pos = ded.pos;
         if (log.isTraceEnabled())
         {
             log.trace("write> pos={0}", pos);
@@ -188,7 +188,7 @@ public class IndexedDisk implements AutoCloseable
             throw new IOException("Mismatched descriptor and data lengths");
         }
 
-        ByteBuffer headerBuffer = ByteBuffer.allocate(HEADER_SIZE_BYTES);
+        final ByteBuffer headerBuffer = ByteBuffer.allocate(HEADER_SIZE_BYTES);
         headerBuffer.putInt(data.length);
         // write the header
         headerBuffer.flip();
@@ -196,7 +196,7 @@ public class IndexedDisk implements AutoCloseable
         assert written == HEADER_SIZE_BYTES;
 
         //write the data
-        ByteBuffer dataBuffer = ByteBuffer.wrap(data);
+        final ByteBuffer dataBuffer = ByteBuffer.wrap(data);
         written = fc.write(dataBuffer, pos + HEADER_SIZE_BYTES);
 
         return written == data.length;
@@ -210,10 +210,10 @@ public class IndexedDisk implements AutoCloseable
      * @param pos
      * @throws IOException
      */
-    protected <T> void writeObject(T obj, long pos)
+    protected <T> void writeObject(final T obj, final long pos)
         throws IOException
     {
-        byte[] data = elementSerializer.serialize(obj);
+        final byte[] data = elementSerializer.serialize(obj);
         write(new IndexedDiskElementDescriptor(pos, data.length), data);
     }
 
@@ -260,7 +260,7 @@ public class IndexedDisk implements AutoCloseable
      * @param length the new length of the file
      * @throws IOException
      */
-    protected void truncate(long length)
+    protected void truncate(final long length)
         throws IOException
     {
         log.info("Truncating file [{0}] to {1}", filepath, length);

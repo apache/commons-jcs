@@ -56,7 +56,7 @@ public class LRUMapSizeVsCount
     /**
      * @param testName
      */
-    public LRUMapSizeVsCount( String testName )
+    public LRUMapSizeVsCount( final String testName )
     {
         super( testName );
     }
@@ -110,14 +110,14 @@ public class LRUMapSizeVsCount
 
         try
         {
-        	IndexedDiskCacheAttributes cattr = new IndexedDiskCacheAttributes();
+        	final IndexedDiskCacheAttributes cattr = new IndexedDiskCacheAttributes();
         	cattr.setName("junit");
         	cattr.setCacheName("junit");
         	cattr.setDiskPath(".");
-        	IndexedDiskCache<String, String> idc = new IndexedDiskCache<>(cattr);
+        	final IndexedDiskCache<String, String> idc = new IndexedDiskCache<>(cattr);
 
-			Map<String, IndexedDiskElementDescriptor> cacheCount = idc.new LRUMapCountLimited( tries );
-			Map<String, IndexedDiskElementDescriptor> cacheSize = idc.new LRUMapSizeLimited( tries/1024/2 );
+			final Map<String, IndexedDiskElementDescriptor> cacheCount = idc.new LRUMapCountLimited( tries );
+			final Map<String, IndexedDiskElementDescriptor> cacheSize = idc.new LRUMapSizeLimited( tries/1024/2 );
 
             for ( int j = 0; j < loops; j++ )
             {
@@ -180,16 +180,16 @@ public class LRUMapSizeVsCount
                 System.out.println( "\n" );
             }
         }
-        catch ( Exception e )
+        catch ( final Exception e )
         {
             e.printStackTrace( System.out );
             System.out.println( e );
         }
 
-        long putAvCount = putTotalCount / loops;
-        long getAvCount = getTotalCount / loops;
-        long putAvSize = putTotalSize / loops;
-        long getAvSize = getTotalSize / loops;
+        final long putAvCount = putTotalCount / loops;
+        final long getAvCount = getTotalCount / loops;
+        final long putAvSize = putTotalSize / loops;
+        final long getAvSize = getTotalSize / loops;
 
         System.out.println( "Finished " + loops + " loops of " + tries + " gets and puts" );
 
@@ -227,9 +227,9 @@ public class LRUMapSizeVsCount
     /**
      * @param args
      */
-    public static void main( String args[] )
+    public static void main( final String args[] )
     {
-    	LRUMapSizeVsCount test = new LRUMapSizeVsCount( "command" );
+    	final LRUMapSizeVsCount test = new LRUMapSizeVsCount( "command" );
         test.doWork();
     }
 

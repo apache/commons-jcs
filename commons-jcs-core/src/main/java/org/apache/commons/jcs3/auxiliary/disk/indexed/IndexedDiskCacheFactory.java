@@ -48,13 +48,13 @@ public class IndexedDiskCacheFactory
      * @return IndexedDiskCache
      */
     @Override
-    public <K, V> IndexedDiskCache<K, V> createCache( AuxiliaryCacheAttributes iaca, ICompositeCacheManager cacheMgr,
-                                       ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer )
+    public <K, V> IndexedDiskCache<K, V> createCache( final AuxiliaryCacheAttributes iaca, final ICompositeCacheManager cacheMgr,
+                                       final ICacheEventLogger cacheEventLogger, final IElementSerializer elementSerializer )
     {
-        IndexedDiskCacheAttributes idca = (IndexedDiskCacheAttributes) iaca;
+        final IndexedDiskCacheAttributes idca = (IndexedDiskCacheAttributes) iaca;
         log.debug( "Creating DiskCache for attributes = {0}", idca );
 
-        IndexedDiskCache<K, V> cache = new IndexedDiskCache<>( idca, elementSerializer );
+        final IndexedDiskCache<K, V> cache = new IndexedDiskCache<>( idca, elementSerializer );
         cache.setCacheEventLogger( cacheEventLogger );
 
         return cache;

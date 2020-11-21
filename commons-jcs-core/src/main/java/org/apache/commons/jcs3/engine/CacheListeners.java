@@ -43,7 +43,7 @@ public class CacheListeners<K, V>
      * <p>
      * @param cache
      */
-    public CacheListeners( ICache<K, V> cache )
+    public CacheListeners( final ICache<K, V> cache )
     {
         if ( cache == null )
         {
@@ -56,7 +56,7 @@ public class CacheListeners<K, V>
     @Override
     public String toString()
     {
-        StringBuilder buffer = new StringBuilder();
+        final StringBuilder buffer = new StringBuilder();
         buffer.append( "\n CacheListeners" );
         if ( cache != null )
         {

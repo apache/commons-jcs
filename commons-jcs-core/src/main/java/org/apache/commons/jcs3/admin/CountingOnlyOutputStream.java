@@ -38,7 +38,7 @@ public class CountingOnlyOutputStream
      * @throws IOException
      */
     @Override
-    public void write( byte[] b )
+    public void write( final byte[] b )
         throws IOException
     {
         this.count += b.length;
@@ -53,7 +53,7 @@ public class CountingOnlyOutputStream
      * @throws IOException
      */
     @Override
-    public void write( byte[] b, int off, int len )
+    public void write( final byte[] b, final int off, final int len )
         throws IOException
     {
         this.count += len;
@@ -66,7 +66,7 @@ public class CountingOnlyOutputStream
      * @throws IOException
      */
     @Override
-    public void write( int b )
+    public void write( final int b )
         throws IOException
     {
         this.count++;

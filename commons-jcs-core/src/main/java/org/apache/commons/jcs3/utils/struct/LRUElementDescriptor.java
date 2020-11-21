@@ -36,7 +36,7 @@ public class LRUElementDescriptor<K, V>
      * @param key
      * @param payloadP
      */
-    public LRUElementDescriptor(K key, V payloadP)
+    public LRUElementDescriptor(final K key, final V payloadP)
     {
         super(payloadP);
         this.setKey(key);
@@ -45,7 +45,7 @@ public class LRUElementDescriptor<K, V>
     /**
      * @param key The key to set.
      */
-    public void setKey(K key)
+    public void setKey(final K key)
     {
         this.key = key;
     }

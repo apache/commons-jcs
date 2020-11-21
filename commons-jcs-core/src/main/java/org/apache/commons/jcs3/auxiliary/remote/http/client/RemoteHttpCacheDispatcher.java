@@ -62,7 +62,7 @@ public class RemoteHttpCacheDispatcher
     /**
      * @param remoteHttpCacheAttributes
      */
-    public RemoteHttpCacheDispatcher( RemoteHttpCacheAttributes remoteHttpCacheAttributes )
+    public RemoteHttpCacheDispatcher( final RemoteHttpCacheAttributes remoteHttpCacheAttributes )
     {
         super( remoteHttpCacheAttributes );
     }
@@ -78,14 +78,14 @@ public class RemoteHttpCacheDispatcher
      */
     @Override
     public <K, V, T>
-        RemoteCacheResponse<T> dispatchRequest( RemoteCacheRequest<K, V> remoteCacheRequest )
+        RemoteCacheResponse<T> dispatchRequest( final RemoteCacheRequest<K, V> remoteCacheRequest )
         throws IOException
     {
         try
         {
-            byte[] requestAsByteArray = serializer.serialize( remoteCacheRequest );
+            final byte[] requestAsByteArray = serializer.serialize( remoteCacheRequest );
 
-            byte[] responseAsByteArray = processRequest( requestAsByteArray,
+            final byte[] responseAsByteArray = processRequest( requestAsByteArray,
                     remoteCacheRequest,
                     getRemoteHttpCacheAttributes().getUrl());
 
@@ -94,13 +94,13 @@ public class RemoteHttpCacheDispatcher
             {
                 remoteCacheResponse = serializer.deSerialize( responseAsByteArray, null );
             }
-            catch ( ClassNotFoundException e )
+            catch ( final ClassNotFoundException e )
             {
                 log.error( "Couldn't deserialize the response.", e );
             }
             return remoteCacheResponse;
         }
-        catch ( Exception e )
+        catch ( final Exception e )
         {
             throw new IOException("Problem dispatching request.", e);
         }
@@ -118,11 +118,11 @@ public class RemoteHttpCacheDispatcher
      * @throws IOException
      * @throws HttpException
      */
-    protected <K, V> byte[] processRequest( byte[] requestAsByteArray,
-            RemoteCacheRequest<K, V> remoteCacheRequest, String url )
+    protected <K, V> byte[] processRequest( final byte[] requestAsByteArray,
+            final RemoteCacheRequest<K, V> remoteCacheRequest, final String url )
         throws IOException, HttpException
     {
-        RequestBuilder builder = RequestBuilder.post( url ).setCharset( DEFAULT_ENCODING );
+        final RequestBuilder builder = RequestBuilder.post( url ).setCharset( DEFAULT_ENCODING );
 
         if ( getRemoteHttpCacheAttributes().isIncludeCacheNameAsParameter()
             && remoteCacheRequest.getCacheName() != null )
@@ -160,8 +160,8 @@ public class RemoteHttpCacheDispatcher
         }
 
         builder.setEntity(new ByteArrayEntity( requestAsByteArray ));
-        HttpResponse httpResponse = doWebserviceCall( builder );
-        byte[] response = EntityUtils.toByteArray( httpResponse.getEntity() );
+        final HttpResponse httpResponse = doWebserviceCall( builder );
+        final byte[] response = EntityUtils.toByteArray( httpResponse.getEntity() );
         return response;
     }
 
@@ -173,7 +173,7 @@ public class RemoteHttpCacheDispatcher
      * @throws IOException
      */
     @Override
-    protected void preProcessWebserviceCall( RequestBuilder requestBuilder )
+    protected void preProcessWebserviceCall( final RequestBuilder requestBuilder )
         throws IOException
     {
         // do nothing. Child can override.
@@ -188,7 +188,7 @@ public class RemoteHttpCacheDispatcher
      * @throws IOException
      */
     @Override
-    protected void postProcessWebserviceCall( HttpUriRequest request, HttpResponse httpState )
+    protected void postProcessWebserviceCall( final HttpUriRequest request, final HttpResponse httpState )
         throws IOException
     {
         // do nothing. Child can override.

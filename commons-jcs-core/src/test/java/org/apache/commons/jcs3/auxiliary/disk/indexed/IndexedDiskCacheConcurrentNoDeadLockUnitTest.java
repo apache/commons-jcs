@@ -42,7 +42,7 @@ public class IndexedDiskCacheConcurrentNoDeadLockUnitTest
      *
      * @param testName
      */
-    public IndexedDiskCacheConcurrentNoDeadLockUnitTest( String testName )
+    public IndexedDiskCacheConcurrentNoDeadLockUnitTest( final String testName )
     {
         super( testName );
     }
@@ -52,9 +52,9 @@ public class IndexedDiskCacheConcurrentNoDeadLockUnitTest
      *
      * @param args
      */
-    public static void main( String args[] )
+    public static void main( final String args[] )
     {
-        String[] testCaseName = { IndexedDiskCacheConcurrentNoDeadLockUnitTest.class.getName() };
+        final String[] testCaseName = { IndexedDiskCacheConcurrentNoDeadLockUnitTest.class.getName() };
         TestRunner.main( testCaseName );
     }
 
@@ -65,7 +65,7 @@ public class IndexedDiskCacheConcurrentNoDeadLockUnitTest
      */
     public static Test suite()
     {
-        ActiveTestSuite suite = new ActiveTestSuite();
+        final ActiveTestSuite suite = new ActiveTestSuite();
 
         suite.addTest( new IndexedDiskCacheRandomConcurrentTestUtil( "testIndexedDiskCache1" )
         {
@@ -137,10 +137,10 @@ public class IndexedDiskCacheConcurrentNoDeadLockUnitTest
     {
         try
         {
-            CompositeCacheManager cacheMgr = CompositeCacheManager.getInstance();
+            final CompositeCacheManager cacheMgr = CompositeCacheManager.getInstance();
             cacheMgr.shutDown();
         }
-        catch ( Exception e )
+        catch ( final Exception e )
         {
             // log.error(e);
         }

@@ -37,13 +37,13 @@ public class TimeoutConfigurableRMISocketFactoryUnitTest
     public void testCreateAndConnect() throws IOException
     {
         // SETUP
-        int port = 3455;
-        String host = "localhost";
-        TimeoutConfigurableRMISocketFactory factory = new TimeoutConfigurableRMISocketFactory();
+        final int port = 3455;
+        final String host = "localhost";
+        final TimeoutConfigurableRMISocketFactory factory = new TimeoutConfigurableRMISocketFactory();
 
         // DO WORK
-        ServerSocket serverSocket = factory.createServerSocket( port );
-        Socket socket = factory.createSocket( host, port );
+        final ServerSocket serverSocket = factory.createServerSocket( port );
+        final Socket socket = factory.createSocket( host, port );
         socket.close();
         serverSocket.close();
 

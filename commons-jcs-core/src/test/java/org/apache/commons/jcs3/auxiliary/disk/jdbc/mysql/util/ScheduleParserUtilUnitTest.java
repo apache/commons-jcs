@@ -44,7 +44,7 @@ public class ScheduleParserUtilUnitTest
 
             fail( "Should have thrown an exception" );
         }
-        catch ( ParseException e )
+        catch ( final ParseException e )
         {
             // expected
         }
@@ -61,7 +61,7 @@ public class ScheduleParserUtilUnitTest
 
             fail( "Should have thrown an exception" );
         }
-        catch ( ParseException e )
+        catch ( final ParseException e )
         {
             // expected
         }
@@ -74,8 +74,8 @@ public class ScheduleParserUtilUnitTest
     public void testGetsDatesSingle()
         throws ParseException
     {
-        String schedule = "12:34:56";
-        Date[] dates = ScheduleParser.createDatesForSchedule( schedule );
+        final String schedule = "12:34:56";
+        final Date[] dates = ScheduleParser.createDatesForSchedule( schedule );
 
         assertEquals( "Wrong number of dates returned.", 1, dates.length );
     }
@@ -86,8 +86,8 @@ public class ScheduleParserUtilUnitTest
     public void testGetsDatesMultiple()
         throws ParseException
     {
-        String schedule = "12:34:56,03:51:00,12:34:12";
-        Date[] dates = ScheduleParser.createDatesForSchedule( schedule );
+        final String schedule = "12:34:56,03:51:00,12:34:12";
+        final Date[] dates = ScheduleParser.createDatesForSchedule( schedule );
         //System.out.println( dates );
         assertEquals( "Wrong number of dates returned.", 3, dates.length );
     }
@@ -99,12 +99,12 @@ public class ScheduleParserUtilUnitTest
     {
         try
         {
-            String schedule = "12:34:56,03:51:00,123234";
+            final String schedule = "12:34:56,03:51:00,123234";
             ScheduleParser.createDatesForSchedule( schedule );
 
             fail( "Should have thrown an exception for a malformed date" );
         }
-        catch ( ParseException e )
+        catch ( final ParseException e )
         {
             // expected
         }
@@ -116,12 +116,12 @@ public class ScheduleParserUtilUnitTest
     {
         try
         {
-            String schedule = "12:34:56,03:51:00,aa:12:12";
+            final String schedule = "12:34:56,03:51:00,aa:12:12";
             ScheduleParser.createDatesForSchedule( schedule );
 
             fail( "Should have thrown an exception for a malformed date" );
         }
-        catch ( ParseException e )
+        catch ( final ParseException e )
         {
             // expected
         }

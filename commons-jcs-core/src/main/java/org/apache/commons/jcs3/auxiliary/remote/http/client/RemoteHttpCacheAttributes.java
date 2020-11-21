@@ -64,7 +64,7 @@ public class RemoteHttpCacheAttributes
     /**
      * @param maxConnectionsPerHost the maxConnectionsPerHost to set
      */
-    public void setMaxConnectionsPerHost( int maxConnectionsPerHost )
+    public void setMaxConnectionsPerHost( final int maxConnectionsPerHost )
     {
         this.maxConnectionsPerHost = maxConnectionsPerHost;
     }
@@ -80,7 +80,7 @@ public class RemoteHttpCacheAttributes
     /**
      * @param socketTimeoutMillis the socketTimeoutMillis to set
      */
-    public void setSocketTimeoutMillis( int socketTimeoutMillis )
+    public void setSocketTimeoutMillis( final int socketTimeoutMillis )
     {
         this.socketTimeoutMillis = socketTimeoutMillis;
     }
@@ -96,7 +96,7 @@ public class RemoteHttpCacheAttributes
     /**
      * @param httpVersion the httpVersion to set
      */
-    public void setHttpVersion( String httpVersion )
+    public void setHttpVersion( final String httpVersion )
     {
         this.httpVersion = httpVersion;
     }
@@ -112,7 +112,7 @@ public class RemoteHttpCacheAttributes
     /**
      * @param connectionTimeoutMillis the connectionTimeoutMillis to set
      */
-    public void setConnectionTimeoutMillis( int connectionTimeoutMillis )
+    public void setConnectionTimeoutMillis( final int connectionTimeoutMillis )
     {
         this.connectionTimeoutMillis = connectionTimeoutMillis;
     }
@@ -128,7 +128,7 @@ public class RemoteHttpCacheAttributes
     /**
      * @param includeCacheNameInURL the includeCacheNameInURL to set
      */
-    public void setIncludeCacheNameAsParameter( boolean includeCacheNameInURL )
+    public void setIncludeCacheNameAsParameter( final boolean includeCacheNameInURL )
     {
         this.includeCacheNameAsParameter = includeCacheNameInURL;
     }
@@ -144,7 +144,7 @@ public class RemoteHttpCacheAttributes
     /**
      * @param includeKeysAndPatternsInURL the includeKeysAndPatternsInURL to set
      */
-    public void setIncludeKeysAndPatternsAsParameter( boolean includeKeysAndPatternsInURL )
+    public void setIncludeKeysAndPatternsAsParameter( final boolean includeKeysAndPatternsInURL )
     {
         this.includeKeysAndPatternsAsParameter = includeKeysAndPatternsInURL;
     }
@@ -160,7 +160,7 @@ public class RemoteHttpCacheAttributes
     /**
      * @param includeRequestTypeasAsParameter the includeRequestTypeasAsParameter to set
      */
-    public void setIncludeRequestTypeasAsParameter( boolean includeRequestTypeasAsParameter )
+    public void setIncludeRequestTypeasAsParameter( final boolean includeRequestTypeasAsParameter )
     {
         this.includeRequestTypeasAsParameter = includeRequestTypeasAsParameter;
     }
@@ -176,7 +176,7 @@ public class RemoteHttpCacheAttributes
     /**
      * @param url the url to set
      */
-    public void setUrl( String url )
+    public void setUrl( final String url )
     {
         this.url = url;
     }
@@ -192,7 +192,7 @@ public class RemoteHttpCacheAttributes
     /**
      * @param remoteHttpClientClassName the remoteHttpClientClassName to set
      */
-    public void setRemoteHttpClientClassName( String remoteHttpClientClassName )
+    public void setRemoteHttpClientClassName( final String remoteHttpClientClassName )
     {
         this.remoteHttpClientClassName = remoteHttpClientClassName;
     }
@@ -211,7 +211,7 @@ public class RemoteHttpCacheAttributes
     @Override
     public String toString()
     {
-        StringBuilder buf = new StringBuilder();
+        final StringBuilder buf = new StringBuilder();
         buf.append( "\n RemoteHttpCacheAttributes" );
         buf.append( "\n maxConnectionsPerHost = [" + getMaxConnectionsPerHost() + "]" );
         buf.append( "\n socketTimeoutMillis = [" + getSocketTimeoutMillis() + "]" );

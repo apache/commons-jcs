@@ -66,7 +66,7 @@ public class UDPDiscoverySender implements AutoCloseable
      * @param udpTTL the Datagram packet time-to-live
      * @throws IOException
      */
-    public UDPDiscoverySender( String host, int port, int udpTTL )
+    public UDPDiscoverySender( final String host, final int port, final int udpTTL )
         throws IOException
     {
         try
@@ -82,7 +82,7 @@ public class UDPDiscoverySender implements AutoCloseable
             // Remote address.
             multicastAddress = InetAddress.getByName( host );
         }
-        catch ( IOException e )
+        catch ( final IOException e )
         {
             log.error( "Could not bind to multicast address [{0}]", host, e );
             throw e;
@@ -109,7 +109,7 @@ public class UDPDiscoverySender implements AutoCloseable
      * @param message
      * @throws IOException
      */
-    public void send( UDPDiscoveryMessage message )
+    public void send( final UDPDiscoveryMessage message )
         throws IOException
     {
         if ( this.localSocket == null )
@@ -137,7 +137,7 @@ public class UDPDiscoverySender implements AutoCloseable
 
             localSocket.send( packet );
         }
-        catch ( IOException e )
+        catch ( final IOException e )
         {
             log.error( "Error sending message", e );
             throw e;
@@ -155,7 +155,7 @@ public class UDPDiscoverySender implements AutoCloseable
     {
         log.debug( "sending requestBroadcast" );
 
-        UDPDiscoveryMessage message = new UDPDiscoveryMessage();
+        final UDPDiscoveryMessage message = new UDPDiscoveryMessage();
         message.setRequesterId( CacheInfo.listenerId );
         message.setMessageType( BroadcastType.REQUEST );
         send( message );
@@ -170,7 +170,7 @@ public class UDPDiscoverySender implements AutoCloseable
      * @param cacheNames
      * @throws IOException
      */
-    public void passiveBroadcast( String host, int port, ArrayList<String> cacheNames )
+    public void passiveBroadcast( final String host, final int port, final ArrayList<String> cacheNames )
         throws IOException
     {
         passiveBroadcast( host, port, cacheNames, CacheInfo.listenerId );
@@ -185,12 +185,12 @@ public class UDPDiscoverySender implements AutoCloseable
      * @param listenerId
      * @throws IOException
      */
-    protected void passiveBroadcast( String host, int port, ArrayList<String> cacheNames, long listenerId )
+    protected void passiveBroadcast( final String host, final int port, final ArrayList<String> cacheNames, final long listenerId )
         throws IOException
     {
         log.debug( "sending passiveBroadcast" );
 
-        UDPDiscoveryMessage message = new UDPDiscoveryMessage();
+        final UDPDiscoveryMessage message = new UDPDiscoveryMessage();
         message.setHost( host );
         message.setPort( port );
         message.setCacheNames( cacheNames );
@@ -209,7 +209,7 @@ public class UDPDiscoverySender implements AutoCloseable
      * @param cacheNames names of the cache regions
      * @throws IOException on error
      */
-    public void removeBroadcast( String host, int port, ArrayList<String> cacheNames )
+    public void removeBroadcast( final String host, final int port, final ArrayList<String> cacheNames )
         throws IOException
     {
         removeBroadcast( host, port, cacheNames, CacheInfo.listenerId );
@@ -224,12 +224,12 @@ public class UDPDiscoverySender implements AutoCloseable
      * @param listenerId listener ID
      * @throws IOException on error
      */
-    protected void removeBroadcast( String host, int port, ArrayList<String> cacheNames, long listenerId )
+    protected void removeBroadcast( final String host, final int port, final ArrayList<String> cacheNames, final long listenerId )
         throws IOException
     {
         log.debug( "sending removeBroadcast" );
 
-        UDPDiscoveryMessage message = new UDPDiscoveryMessage();
+        final UDPDiscoveryMessage message = new UDPDiscoveryMessage();
         message.setHost( host );
         message.setPort( port );
         message.setCacheNames( cacheNames );

@@ -48,13 +48,13 @@ public class BlockDiskCacheFactory
      * @return BlockDiskCache
      */
     @Override
-    public <K, V> BlockDiskCache<K, V> createCache( AuxiliaryCacheAttributes iaca, ICompositeCacheManager cacheMgr,
-                                       ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer )
+    public <K, V> BlockDiskCache<K, V> createCache( final AuxiliaryCacheAttributes iaca, final ICompositeCacheManager cacheMgr,
+                                       final ICacheEventLogger cacheEventLogger, final IElementSerializer elementSerializer )
     {
-        BlockDiskCacheAttributes idca = (BlockDiskCacheAttributes) iaca;
+        final BlockDiskCacheAttributes idca = (BlockDiskCacheAttributes) iaca;
         log.debug("Creating DiskCache for attributes = {0}", idca);
 
-        BlockDiskCache<K, V> cache = new BlockDiskCache<>( idca, elementSerializer );
+        final BlockDiskCache<K, V> cache = new BlockDiskCache<>( idca, elementSerializer );
         cache.setCacheEventLogger( cacheEventLogger );
 
         return cache;

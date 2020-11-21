@@ -169,7 +169,7 @@ public class CompositeCacheManager
      * @return CompositeCacheManager configured from the give propsFileName
      * @throws CacheException if the configuration cannot be loaded
      */
-    public static synchronized CompositeCacheManager getInstance( String propsFilename ) throws CacheException
+    public static synchronized CompositeCacheManager getInstance( final String propsFilename ) throws CacheException
     {
         if ( instance == null )
         {
@@ -251,7 +251,7 @@ public class CompositeCacheManager
             {
                 Runtime.getRuntime().addShutdownHook( shutdownHook );
             }
-            catch ( AccessControlException e )
+            catch ( final AccessControlException e )
             {
                 log.error( "Could not register shutdown hook.", e );
             }
@@ -262,15 +262,15 @@ public class CompositeCacheManager
             // Register JMX bean
             if (!isJMXRegistered && jmxName != null)
             {
-                MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
-                JCSAdminBean adminBean = new JCSAdminBean(this);
+                final MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
+                final JCSAdminBean adminBean = new JCSAdminBean(this);
                 try
                 {
-                    ObjectName jmxObjectName = new ObjectName(jmxName);
+                    final ObjectName jmxObjectName = new ObjectName(jmxName);
                     mbs.registerMBean(adminBean, jmxObjectName);
                     isJMXRegistered = true;
                 }
-                catch (Exception e)
+                catch (final Exception e)
                 {
                     log.warn( "Could not register JMX bean.", e );
                 }
@@ -316,18 +316,18 @@ public class CompositeCacheManager
      * @param propFile Path <u>within classpath </u> to load configuration from
      * @throws CacheException if the configuration cannot be loaded
      */
-    public void configure( String propFile ) throws CacheException
+    public void configure( final String propFile ) throws CacheException
     {
         log.info( "Creating cache manager from config file: {0}", propFile );
 
-        Properties props = new Properties();
+        final Properties props = new Properties();
 
         try (InputStream is = getClass().getResourceAsStream( propFile ))
         {
             props.load( is );
             log.debug( "File [{0}] contained {1} properties", () -> propFile, () -> props.size());
         }
-        catch ( IOException ex )
+        catch ( final IOException ex )
         {
             throw new CacheException("Failed to load properties for name [" + propFile + "]", ex);
         }
@@ -341,7 +341,7 @@ public class CompositeCacheManager
      * This method will call configure, instructing it to use system properties as a default.
      * @param props
      */
-    public void configure( Properties props )
+    public void configure( final Properties props )
     {
         configure( props, DEFAULT_USE_SYSTEM_PROPERTIES );
     }
@@ -359,7 +359,7 @@ public class CompositeCacheManager
      * @param useSystemProperties -- if true, values starting with jcs will be put into the props
      *            file prior to configuring the cache.
      */
-    public void configure( Properties props, boolean useSystemProperties )
+    public void configure( final Properties props, final boolean useSystemProperties )
     {
         configure( props, useSystemProperties, DEFAULT_FORCE_RECONFIGURATION );
     }
@@ -379,7 +379,7 @@ public class CompositeCacheManager
      * @param forceReconfiguration - if the manager is already configured, we will try again. This
      *            may not work properly.
      */
-    public synchronized void configure( Properties props, boolean useSystemProperties, boolean forceReconfiguration )
+    public synchronized void configure( final Properties props, final boolean useSystemProperties, final boolean forceReconfiguration )
     {
         if ( props == null )
         {
@@ -413,23 +413,23 @@ public class CompositeCacheManager
      * <p>
      * @param properties assumed not null
      */
-    private void doConfigure( Properties properties )
+    private void doConfigure( final Properties properties )
     {
         // We will expose this for managers that need raw properties.
         this.configurationProperties = properties;
 
         // set the props value and then configure the ThreadPoolManager
         ThreadPoolManager.setProps( properties );
-        ThreadPoolManager poolMgr = ThreadPoolManager.getInstance();
+        final ThreadPoolManager poolMgr = ThreadPoolManager.getInstance();
         log.debug( "ThreadPoolManager = {0}", poolMgr);
 
         // Create event queue
         this.elementEventQueue = new ElementEventQueue();
 
         // configure the cache
-        CompositeCacheConfigurator configurator = newConfigurator();
+        final CompositeCacheConfigurator configurator = newConfigurator();
 
-        ElapsedTimer timer = new ElapsedTimer();
+        final ElapsedTimer timer = new ElapsedTimer();
 
         // set default value list
         this.defaultAuxValues = OptionConverter.findAndSubst( CompositeCacheManager.DEFAULT_REGION,
@@ -488,7 +488,7 @@ public class CompositeCacheManager
      * @return CompositeCache -- the cache region controller
      */
     @Override
-    public <K, V> CompositeCache<K, V> getCache( String cacheName )
+    public <K, V> CompositeCache<K, V> getCache( final String cacheName )
     {
         return getCache( cacheName, getDefaultCacheAttributes() );
     }
@@ -500,7 +500,7 @@ public class CompositeCacheManager
      * @param cattr
      * @return CompositeCache
      */
-    public <K, V> CompositeCache<K, V> getCache( String cacheName, ICompositeCacheAttributes cattr )
+    public <K, V> CompositeCache<K, V> getCache( final String cacheName, final ICompositeCacheAttributes cattr )
     {
         cattr.setCacheName( cacheName );
         return getCache( cattr, getDefaultElementAttributes() );
@@ -514,7 +514,7 @@ public class CompositeCacheManager
      * @param attr
      * @return CompositeCache
      */
-    public <K, V> CompositeCache<K, V>  getCache( String cacheName, ICompositeCacheAttributes cattr, IElementAttributes attr )
+    public <K, V> CompositeCache<K, V>  getCache( final String cacheName, final ICompositeCacheAttributes cattr, final IElementAttributes attr )
     {
         cattr.setCacheName( cacheName );
         return getCache( cattr, attr );
@@ -526,7 +526,7 @@ public class CompositeCacheManager
      * @param cattr
      * @return CompositeCache
      */
-    public <K, V> CompositeCache<K, V>  getCache( ICompositeCacheAttributes cattr )
+    public <K, V> CompositeCache<K, V>  getCache( final ICompositeCacheAttributes cattr )
     {
         return getCache( cattr, getDefaultElementAttributes() );
     }
@@ -545,13 +545,13 @@ public class CompositeCacheManager
      * @return CompositeCache
      */
     @SuppressWarnings("unchecked") // Need to cast because of common map for all caches
-    public <K, V> CompositeCache<K, V>  getCache( ICompositeCacheAttributes cattr, IElementAttributes attr )
+    public <K, V> CompositeCache<K, V>  getCache( final ICompositeCacheAttributes cattr, final IElementAttributes attr )
     {
         log.debug( "attr = {0}", attr );
 
-        CompositeCache<K, V> cache = (CompositeCache<K, V>) caches.computeIfAbsent(cattr.getCacheName(),
+        final CompositeCache<K, V> cache = (CompositeCache<K, V>) caches.computeIfAbsent(cattr.getCacheName(),
                 cacheName -> {
-            CompositeCacheConfigurator configurator = newConfigurator();
+            final CompositeCacheConfigurator configurator = newConfigurator();
             return configurator.parseRegion( this.getConfigurationProperties(), this, cacheName,
                                               this.defaultAuxValues, cattr );
         });
@@ -566,7 +566,7 @@ public class CompositeCacheManager
     /**
      * @param name
      */
-    public void freeCache( String name )
+    public void freeCache( final String name )
     {
         freeCache( name, false );
     }
@@ -575,9 +575,9 @@ public class CompositeCacheManager
      * @param name
      * @param fromRemote
      */
-    public void freeCache( String name, boolean fromRemote )
+    public void freeCache( final String name, final boolean fromRemote )
     {
-        CompositeCache<?, ?> cache = (CompositeCache<?, ?>) caches.remove( name );
+        final CompositeCache<?, ?> cache = (CompositeCache<?, ?>) caches.remove( name );
 
         if ( cache != null )
         {
@@ -614,13 +614,13 @@ public class CompositeCacheManager
             // Unregister JMX bean
             if (isJMXRegistered)
             {
-                MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
+                final MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
                 try
                 {
-                    ObjectName jmxObjectName = new ObjectName(jmxName);
+                    final ObjectName jmxObjectName = new ObjectName(jmxName);
                     mbs.unregisterMBean(jmxObjectName);
                 }
-                catch (Exception e)
+                catch (final Exception e)
                 {
                     log.warn( "Could not unregister JMX bean.", e );
                 }
@@ -632,13 +632,13 @@ public class CompositeCacheManager
             getCacheNames().forEach(this::freeCache);
 
             // shut down auxiliaries
-            for (String key : auxiliaryCaches.keySet())
+            for (final String key : auxiliaryCaches.keySet())
             {
                 try
                 {
                     freeAuxiliaryCache(key);
                 }
-                catch (IOException e)
+                catch (final IOException e)
                 {
                     log.warn("Auxiliary cache {0} failed to shut down", key, e);
                 }
@@ -656,7 +656,7 @@ public class CompositeCacheManager
                 {
                     Runtime.getRuntime().removeShutdownHook(shutdownHook);
                 }
-                catch (IllegalStateException e)
+                catch (final IllegalStateException e)
                 {
                     // May fail if the JVM is already shutting down
                 }
@@ -678,7 +678,7 @@ public class CompositeCacheManager
     /**
      * @param fromRemote
      */
-    private void release( boolean fromRemote )
+    private void release( final boolean fromRemote )
     {
         synchronized ( CompositeCacheManager.class )
         {
@@ -720,7 +720,7 @@ public class CompositeCacheManager
     /**
      * @param auxFac
      */
-    public void registryFacPut( AuxiliaryCacheFactory auxFac )
+    public void registryFacPut( final AuxiliaryCacheFactory auxFac )
     {
         auxiliaryFactoryRegistry.put( auxFac.getName(), auxFac );
     }
@@ -729,7 +729,7 @@ public class CompositeCacheManager
      * @param name
      * @return AuxiliaryCacheFactory
      */
-    public AuxiliaryCacheFactory registryFacGet( String name )
+    public AuxiliaryCacheFactory registryFacGet( final String name )
     {
         return auxiliaryFactoryRegistry.get( name );
     }
@@ -737,7 +737,7 @@ public class CompositeCacheManager
     /**
      * @param auxAttr
      */
-    public void registryAttrPut( AuxiliaryCacheAttributes auxAttr )
+    public void registryAttrPut( final AuxiliaryCacheAttributes auxAttr )
     {
         auxiliaryAttributeRegistry.put( auxAttr.getName(), auxAttr );
     }
@@ -746,7 +746,7 @@ public class CompositeCacheManager
      * @param name
      * @return AuxiliaryCacheAttributes
      */
-    public AuxiliaryCacheAttributes registryAttrGet( String name )
+    public AuxiliaryCacheAttributes registryAttrGet( final String name )
     {
         return auxiliaryAttributeRegistry.get( name );
     }
@@ -757,7 +757,7 @@ public class CompositeCacheManager
      * @param cacheName the region name
      * @param cache the cache instance
      */
-    public void addCache(String cacheName, ICache<?, ?> cache)
+    public void addCache(final String cacheName, final ICache<?, ?> cache)
     {
         caches.put(cacheName, cache);
     }
@@ -769,9 +769,9 @@ public class CompositeCacheManager
      * @param cacheName the region name
      * @param cache the cache instance
      */
-    public void addAuxiliaryCache(String auxName, String cacheName, AuxiliaryCache<?, ?> cache)
+    public void addAuxiliaryCache(final String auxName, final String cacheName, final AuxiliaryCache<?, ?> cache)
     {
-        String key = String.format("aux.%s.region.%s", auxName, cacheName);
+        final String key = String.format("aux.%s.region.%s", auxName, cacheName);
         auxiliaryCaches.put(key, cache);
     }
 
@@ -785,9 +785,9 @@ public class CompositeCacheManager
      */
     @Override
     @SuppressWarnings("unchecked") // because of common map for all auxiliary caches
-    public <K, V> AuxiliaryCache<K, V> getAuxiliaryCache(String auxName, String cacheName)
+    public <K, V> AuxiliaryCache<K, V> getAuxiliaryCache(final String auxName, final String cacheName)
     {
-        String key = String.format("aux.%s.region.%s", auxName, cacheName);
+        final String key = String.format("aux.%s.region.%s", auxName, cacheName);
         return (AuxiliaryCache<K, V>) auxiliaryCaches.get(key);
     }
 
@@ -798,9 +798,9 @@ public class CompositeCacheManager
      * @param cacheName the region name
      * @throws IOException if disposing of the cache fails
      */
-    public void freeAuxiliaryCache(String auxName, String cacheName) throws IOException
+    public void freeAuxiliaryCache(final String auxName, final String cacheName) throws IOException
     {
-        String key = String.format("aux.%s.region.%s", auxName, cacheName);
+        final String key = String.format("aux.%s.region.%s", auxName, cacheName);
         freeAuxiliaryCache(key);
     }
 
@@ -810,9 +810,9 @@ public class CompositeCacheManager
      * @param key the key into the map of auxiliaries
      * @throws IOException if disposing of the cache fails
      */
-    public void freeAuxiliaryCache(String key) throws IOException
+    public void freeAuxiliaryCache(final String key) throws IOException
     {
-        AuxiliaryCache<?, ?> aux = auxiliaryCaches.remove( key );
+        final AuxiliaryCache<?, ?> aux = auxiliaryCaches.remove( key );
 
         if ( aux != null )
         {
@@ -829,14 +829,14 @@ public class CompositeCacheManager
     @Override
     public String getStats()
     {
-        ICacheStats[] stats = getStatistics();
+        final ICacheStats[] stats = getStatistics();
         if ( stats == null )
         {
             return "NONE";
         }
 
         // force the array elements into a string.
-        StringBuilder buf = new StringBuilder();
+        final StringBuilder buf = new StringBuilder();
         Arrays.stream(stats).forEach(stat -> {
             buf.append( "\n---------------------------\n" );
             buf.append( stat );
@@ -851,7 +851,7 @@ public class CompositeCacheManager
      */
     public ICacheStats[] getStatistics()
     {
-        List<ICacheStats> cacheStats = caches.values().stream()
+        final List<ICacheStats> cacheStats = caches.values().stream()
             .filter(cache -> cache != null)
             .map(cache -> ((CompositeCache<?, ?>)cache).getStatistics() )
             .collect(Collectors.toList());
@@ -868,7 +868,7 @@ public class CompositeCacheManager
      * @param observer
      */
     @Override
-    public void registerShutdownObserver( IShutdownObserver observer )
+    public void registerShutdownObserver( final IShutdownObserver observer )
     {
     	if (!shutdownObservers.contains(observer))
     	{
@@ -884,7 +884,7 @@ public class CompositeCacheManager
      * @param observer
      */
     @Override
-    public void deregisterShutdownObserver( IShutdownObserver observer )
+    public void deregisterShutdownObserver( final IShutdownObserver observer )
     {
         shutdownObservers.remove( observer );
     }

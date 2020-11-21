@@ -85,7 +85,7 @@ public class BlockDisk implements AutoCloseable
      * @param elementSerializer
      * @throws IOException
      */
-    public BlockDisk(File file, IElementSerializer elementSerializer)
+    public BlockDisk(final File file, final IElementSerializer elementSerializer)
         throws IOException
     {
         this(file, DEFAULT_BLOCK_SIZE_BYTES, elementSerializer);
@@ -98,7 +98,7 @@ public class BlockDisk implements AutoCloseable
      * @param blockSizeBytes
      * @throws IOException
      */
-    public BlockDisk(File file, int blockSizeBytes)
+    public BlockDisk(final File file, final int blockSizeBytes)
         throws IOException
     {
         this(file, blockSizeBytes, new StandardSerializer());
@@ -112,7 +112,7 @@ public class BlockDisk implements AutoCloseable
      * @param elementSerializer
      * @throws IOException
      */
-    public BlockDisk(File file, int blockSizeBytes, IElementSerializer elementSerializer)
+    public BlockDisk(final File file, final int blockSizeBytes, final IElementSerializer elementSerializer)
         throws IOException
     {
         this.filepath = file.getAbsolutePath();
@@ -134,11 +134,11 @@ public class BlockDisk implements AutoCloseable
      * @param numBlocksNeeded
      * @return an array of allocated blocks
      */
-    private int[] allocateBlocks(int numBlocksNeeded)
+    private int[] allocateBlocks(final int numBlocksNeeded)
     {
         assert numBlocksNeeded >= 1;
 
-        int[] blocks = new int[numBlocksNeeded];
+        final int[] blocks = new int[numBlocksNeeded];
         // get them from the empty list or take the next one
         for (int i = 0; i < numBlocksNeeded; i++)
         {
@@ -170,11 +170,11 @@ public class BlockDisk implements AutoCloseable
      * @return the blocks we used.
      * @throws IOException
      */
-    protected <T> int[] write(T object)
+    protected <T> int[] write(final T object)
         throws IOException
     {
         // serialize the object
-        byte[] data = elementSerializer.serialize(object);
+        final byte[] data = elementSerializer.serialize(object);
 
         log.debug("write, total pre-chunking data.length = {0}", data.length);
 
@@ -182,29 +182,29 @@ public class BlockDisk implements AutoCloseable
         this.putCount.incrementAndGet();
 
         // figure out how many blocks we need.
-        int numBlocksNeeded = calculateTheNumberOfBlocksNeeded(data);
+        final int numBlocksNeeded = calculateTheNumberOfBlocksNeeded(data);
 
         log.debug("numBlocksNeeded = {0}", numBlocksNeeded);
 
         // allocate blocks
-        int[] blocks = allocateBlocks(numBlocksNeeded);
+        final int[] blocks = allocateBlocks(numBlocksNeeded);
 
         int offset = 0;
         final int maxChunkSize = blockSizeBytes - HEADER_SIZE_BYTES;
-        ByteBuffer headerBuffer = ByteBuffer.allocate(HEADER_SIZE_BYTES);
-        ByteBuffer dataBuffer = ByteBuffer.wrap(data);
+        final ByteBuffer headerBuffer = ByteBuffer.allocate(HEADER_SIZE_BYTES);
+        final ByteBuffer dataBuffer = ByteBuffer.wrap(data);
 
         for (int i = 0; i < numBlocksNeeded; i++)
         {
             headerBuffer.clear();
-            int length = Math.min(maxChunkSize, data.length - offset);
+            final int length = Math.min(maxChunkSize, data.length - offset);
             headerBuffer.putInt(length);
             headerBuffer.flip();
 
             dataBuffer.position(offset).limit(offset + length);
-            ByteBuffer slice = dataBuffer.slice();
+            final ByteBuffer slice = dataBuffer.slice();
 
-            long position = calculateByteOffsetForBlockAsLong(blocks[i]);
+            final long position = calculateByteOffsetForBlockAsLong(blocks[i]);
             // write the header
             int written = fc.write(headerBuffer, position);
             assert written == HEADER_SIZE_BYTES;
@@ -228,9 +228,9 @@ public class BlockDisk implements AutoCloseable
      * @param numBlocksNeeded
      * @return byte[][]
      */
-    protected byte[][] getBlockChunks(byte[] complete, int numBlocksNeeded)
+    protected byte[][] getBlockChunks(final byte[] complete, final int numBlocksNeeded)
     {
-        byte[][] chunks = new byte[numBlocksNeeded][];
+        final byte[][] chunks = new byte[numBlocksNeeded][];
 
         if (numBlocksNeeded == 1)
         {
@@ -238,15 +238,15 @@ public class BlockDisk implements AutoCloseable
         }
         else
         {
-            int maxChunkSize = this.blockSizeBytes - HEADER_SIZE_BYTES;
-            int totalBytes = complete.length;
+            final int maxChunkSize = this.blockSizeBytes - HEADER_SIZE_BYTES;
+            final int totalBytes = complete.length;
             int totalUsed = 0;
             for (short i = 0; i < numBlocksNeeded; i++)
             {
                 // use the max that can be written to a block or whatever is left in the original
                 // array
-                int chunkSize = Math.min(maxChunkSize, totalBytes - totalUsed);
-                byte[] chunk = new byte[chunkSize];
+                final int chunkSize = Math.min(maxChunkSize, totalBytes - totalUsed);
+                final byte[] chunk = new byte[chunkSize];
                 // copy from the used position to the chunk size on the complete array to the chunk
                 // array.
                 System.arraycopy(complete, totalUsed, chunk, 0, chunkSize);
@@ -266,7 +266,7 @@ public class BlockDisk implements AutoCloseable
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    protected <T> T read(int[] blockNumbers)
+    protected <T> T read(final int[] blockNumbers)
         throws IOException, ClassNotFoundException
     {
         final ByteBuffer data;
@@ -281,7 +281,7 @@ public class BlockDisk implements AutoCloseable
             // get all the blocks into data
             for (short i = 0; i < blockNumbers.length; i++)
             {
-                ByteBuffer chunk = readBlock(blockNumbers[i]);
+                final ByteBuffer chunk = readBlock(blockNumbers[i]);
                 data.put(chunk);
             }
 
@@ -303,16 +303,16 @@ public class BlockDisk implements AutoCloseable
      * @param block
      * @throws IOException
      */
-    private ByteBuffer readBlock(int block)
+    private ByteBuffer readBlock(final int block)
         throws IOException
     {
         int datalen = 0;
 
         String message = null;
         boolean corrupted = false;
-        long fileLength = fc.size();
+        final long fileLength = fc.size();
 
-        long position = calculateByteOffsetForBlockAsLong(block);
+        final long position = calculateByteOffsetForBlockAsLong(block);
 //        if (position > fileLength)
 //        {
 //            corrupted = true;
@@ -320,7 +320,7 @@ public class BlockDisk implements AutoCloseable
 //        }
 //        else
         {
-            ByteBuffer datalength = ByteBuffer.allocate(HEADER_SIZE_BYTES);
+            final ByteBuffer datalength = ByteBuffer.allocate(HEADER_SIZE_BYTES);
             fc.read(datalength, position);
             datalength.flip();
             datalen = datalength.getInt();
@@ -337,7 +337,7 @@ public class BlockDisk implements AutoCloseable
             throw new IOException("The File Is Corrupt, need to reset");
         }
 
-        ByteBuffer data = ByteBuffer.allocate(datalen);
+        final ByteBuffer data = ByteBuffer.allocate(datalen);
         fc.read(data, position + HEADER_SIZE_BYTES);
         data.flip();
 
@@ -349,7 +349,7 @@ public class BlockDisk implements AutoCloseable
      * <p>
      * @param blocksToFree
      */
-    protected void freeBlocks(int[] blocksToFree)
+    protected void freeBlocks(final int[] blocksToFree)
     {
         if (blocksToFree != null)
         {
@@ -367,7 +367,7 @@ public class BlockDisk implements AutoCloseable
      * @return the byte offset for this block in the file as a long
      * @since 2.0
      */
-    protected long calculateByteOffsetForBlockAsLong(int block)
+    protected long calculateByteOffsetForBlockAsLong(final int block)
     {
         return (long) block * blockSizeBytes;
     }
@@ -378,11 +378,11 @@ public class BlockDisk implements AutoCloseable
      * @param data
      * @return the number of blocks needed to store the byte array
      */
-    protected int calculateTheNumberOfBlocksNeeded(byte[] data)
+    protected int calculateTheNumberOfBlocksNeeded(final byte[] data)
     {
-        int dataLength = data.length;
+        final int dataLength = data.length;
 
-        int oneBlock = blockSizeBytes - HEADER_SIZE_BYTES;
+        final int oneBlock = blockSizeBytes - HEADER_SIZE_BYTES;
 
         // takes care of 0 = HEADER_SIZE_BYTES + blockSizeBytes
         if (dataLength <= oneBlock)
@@ -460,7 +460,7 @@ public class BlockDisk implements AutoCloseable
      */
     protected long getAveragePutSizeBytes()
     {
-        long count = this.putCount.get();
+        final long count = this.putCount.get();
 
         if (count == 0)
         {
@@ -485,7 +485,7 @@ public class BlockDisk implements AutoCloseable
     @Override
     public String toString()
     {
-        StringBuilder buf = new StringBuilder();
+        final StringBuilder buf = new StringBuilder();
         buf.append("\nBlock Disk ");
         buf.append("\n  Filepath [" + filepath + "]");
         buf.append("\n  NumberOfBlocks [" + this.numberOfBlocks.get() + "]");
@@ -498,7 +498,7 @@ public class BlockDisk implements AutoCloseable
         {
             buf.append("\n  Length [" + length() + "]");
         }
-        catch (IOException e)
+        catch (final IOException e)
         {
             // swallow
         }

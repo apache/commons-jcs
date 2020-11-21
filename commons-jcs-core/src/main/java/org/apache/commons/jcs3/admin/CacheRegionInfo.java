@@ -70,9 +70,9 @@ public class CacheRegionInfo
 	 */
     @ConstructorProperties({"cacheName", "cacheSize", "cacheStatus", "cacheStatistics",
     	"hitCountRam", "hitCountAux", "missCountNotFound", "missCountExpired", "byteCount"})
-	public CacheRegionInfo(String cacheName, int cacheSize, String cacheStatus,
-			String cacheStatistics, long hitCountRam, long hitCountAux,
-			long missCountNotFound, long missCountExpired, long byteCount)
+	public CacheRegionInfo(final String cacheName, final int cacheSize, final String cacheStatus,
+			final String cacheStatistics, final long hitCountRam, final long hitCountAux,
+			final long missCountNotFound, final long missCountExpired, final long byteCount)
 	{
 		this.cacheName = cacheName;
 		this.cacheSize = cacheSize;
@@ -165,7 +165,7 @@ public class CacheRegionInfo
     @Override
     public String toString()
     {
-        StringBuilder buf = new StringBuilder();
+        final StringBuilder buf = new StringBuilder();
         buf.append( "\nCacheRegionInfo " );
         if ( cacheName != null )
         {

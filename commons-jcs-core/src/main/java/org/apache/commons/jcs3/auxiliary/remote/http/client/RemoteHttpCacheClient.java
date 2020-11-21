@@ -61,7 +61,7 @@ public class RemoteHttpCacheClient<K, V>
      * <p>
      * @param attributes
      */
-    public RemoteHttpCacheClient( RemoteHttpCacheAttributes attributes )
+    public RemoteHttpCacheClient( final RemoteHttpCacheAttributes attributes )
     {
         setRemoteHttpCacheAttributes( attributes );
         initialize( attributes );
@@ -74,7 +74,7 @@ public class RemoteHttpCacheClient<K, V>
      * @param attributes
      */
     @Override
-    public void initialize( RemoteHttpCacheAttributes attributes )
+    public void initialize( final RemoteHttpCacheAttributes attributes )
     {
         setRemoteDispatcher( new RemoteHttpCacheDispatcher( attributes ) );
 
@@ -91,7 +91,7 @@ public class RemoteHttpCacheClient<K, V>
      * @throws IOException
      */
     @Override
-    public ICacheElement<K, V> get( String cacheName, K key )
+    public ICacheElement<K, V> get( final String cacheName, final K key )
         throws IOException
     {
         return get( cacheName, key, 0 );
@@ -107,19 +107,19 @@ public class RemoteHttpCacheClient<K, V>
      * @throws IOException
      */
     @Override
-    public ICacheElement<K, V> get( String cacheName, K key, long requesterId )
+    public ICacheElement<K, V> get( final String cacheName, final K key, final long requesterId )
         throws IOException
     {
         if ( !isInitialized() )
         {
-            String message = "The Remote Http Client is not initialized. Cannot process request.";
+            final String message = "The Remote Http Client is not initialized. Cannot process request.";
             log.warn( message );
             throw new IOException( message );
         }
-        RemoteCacheRequest<K, Serializable> remoteHttpCacheRequest =
+        final RemoteCacheRequest<K, Serializable> remoteHttpCacheRequest =
             RemoteCacheRequestFactory.createGetRequest( cacheName, key, requesterId );
 
-        RemoteCacheResponse<ICacheElement<K, V>> remoteHttpCacheResponse =
+        final RemoteCacheResponse<ICacheElement<K, V>> remoteHttpCacheResponse =
             getRemoteDispatcher().dispatchRequest( remoteHttpCacheRequest );
 
         log.debug( "Get [{0}] = {1}", key, remoteHttpCacheResponse );
@@ -142,7 +142,7 @@ public class RemoteHttpCacheClient<K, V>
      * @throws IOException
      */
     @Override
-    public Map<K, ICacheElement<K, V>> getMatching( String cacheName, String pattern )
+    public Map<K, ICacheElement<K, V>> getMatching( final String cacheName, final String pattern )
         throws IOException
     {
         return getMatching( cacheName, pattern, 0 );
@@ -159,20 +159,20 @@ public class RemoteHttpCacheClient<K, V>
      * @throws IOException
      */
     @Override
-    public Map<K, ICacheElement<K, V>> getMatching( String cacheName, String pattern, long requesterId )
+    public Map<K, ICacheElement<K, V>> getMatching( final String cacheName, final String pattern, final long requesterId )
         throws IOException
     {
         if ( !isInitialized() )
         {
-            String message = "The Remote Http Client is not initialized. Cannot process request.";
+            final String message = "The Remote Http Client is not initialized. Cannot process request.";
             log.warn( message );
             throw new IOException( message );
         }
 
-        RemoteCacheRequest<K, V> remoteHttpCacheRequest =
+        final RemoteCacheRequest<K, V> remoteHttpCacheRequest =
             RemoteCacheRequestFactory.createGetMatchingRequest( cacheName, pattern, requesterId );
 
-        RemoteCacheResponse<Map<K, ICacheElement<K, V>>> remoteHttpCacheResponse =
+        final RemoteCacheResponse<Map<K, ICacheElement<K, V>>> remoteHttpCacheResponse =
             getRemoteDispatcher().dispatchRequest( remoteHttpCacheRequest );
 
         log.debug( "GetMatching [{0}] = {1}", pattern, remoteHttpCacheResponse );
@@ -190,7 +190,7 @@ public class RemoteHttpCacheClient<K, V>
      * @throws IOException
      */
     @Override
-    public Map<K, ICacheElement<K, V>> getMultiple( String cacheName, Set<K> keys )
+    public Map<K, ICacheElement<K, V>> getMultiple( final String cacheName, final Set<K> keys )
         throws IOException
     {
         return getMultiple( cacheName, keys, 0 );
@@ -207,20 +207,20 @@ public class RemoteHttpCacheClient<K, V>
      * @throws IOException
      */
     @Override
-    public Map<K, ICacheElement<K, V>> getMultiple( String cacheName, Set<K> keys, long requesterId )
+    public Map<K, ICacheElement<K, V>> getMultiple( final String cacheName, final Set<K> keys, final long requesterId )
         throws IOException
     {
         if ( !isInitialized() )
         {
-            String message = "The Remote Http Client is not initialized.  Cannot process request.";
+            final String message = "The Remote Http Client is not initialized.  Cannot process request.";
             log.warn( message );
             throw new IOException( message );
         }
 
-        RemoteCacheRequest<K, V> remoteHttpCacheRequest =
+        final RemoteCacheRequest<K, V> remoteHttpCacheRequest =
             RemoteCacheRequestFactory.createGetMultipleRequest( cacheName, keys, requesterId );
 
-        RemoteCacheResponse<Map<K, ICacheElement<K, V>>> remoteHttpCacheResponse =
+        final RemoteCacheResponse<Map<K, ICacheElement<K, V>>> remoteHttpCacheResponse =
             getRemoteDispatcher().dispatchRequest( remoteHttpCacheRequest );
 
         log.debug( "GetMultiple [{0}] = {1}", keys, remoteHttpCacheResponse );
@@ -236,7 +236,7 @@ public class RemoteHttpCacheClient<K, V>
      * @throws IOException
      */
     @Override
-    public void remove( String cacheName, K key )
+    public void remove( final String cacheName, final K key )
         throws IOException
     {
         remove( cacheName, key, 0 );
@@ -251,17 +251,17 @@ public class RemoteHttpCacheClient<K, V>
      * @throws IOException
      */
     @Override
-    public void remove( String cacheName, K key, long requesterId )
+    public void remove( final String cacheName, final K key, final long requesterId )
         throws IOException
     {
         if ( !isInitialized() )
         {
-            String message = "The Remote Http Client is not initialized.  Cannot process request.";
+            final String message = "The Remote Http Client is not initialized.  Cannot process request.";
             log.warn( message );
             throw new IOException( message );
         }
 
-        RemoteCacheRequest<K, V> remoteHttpCacheRequest =
+        final RemoteCacheRequest<K, V> remoteHttpCacheRequest =
             RemoteCacheRequestFactory.createRemoveRequest( cacheName, key, requesterId );
 
         getRemoteDispatcher().dispatchRequest( remoteHttpCacheRequest );
@@ -274,7 +274,7 @@ public class RemoteHttpCacheClient<K, V>
      * @throws IOException
      */
     @Override
-    public void removeAll( String cacheName )
+    public void removeAll( final String cacheName )
         throws IOException
     {
         removeAll( cacheName, 0 );
@@ -288,17 +288,17 @@ public class RemoteHttpCacheClient<K, V>
      * @throws IOException
      */
     @Override
-    public void removeAll( String cacheName, long requesterId )
+    public void removeAll( final String cacheName, final long requesterId )
         throws IOException
     {
         if ( !isInitialized() )
         {
-            String message = "The Remote Http Client is not initialized.  Cannot process request.";
+            final String message = "The Remote Http Client is not initialized.  Cannot process request.";
             log.warn( message );
             throw new IOException( message );
         }
 
-        RemoteCacheRequest<K, V> remoteHttpCacheRequest =
+        final RemoteCacheRequest<K, V> remoteHttpCacheRequest =
             RemoteCacheRequestFactory.createRemoveAllRequest( cacheName, requesterId );
 
         getRemoteDispatcher().dispatchRequest( remoteHttpCacheRequest );
@@ -311,7 +311,7 @@ public class RemoteHttpCacheClient<K, V>
      * @throws IOException
      */
     @Override
-    public void update( ICacheElement<K, V> item )
+    public void update( final ICacheElement<K, V> item )
         throws IOException
     {
         update( item, 0 );
@@ -325,17 +325,17 @@ public class RemoteHttpCacheClient<K, V>
      * @throws IOException
      */
     @Override
-    public void update( ICacheElement<K, V> cacheElement, long requesterId )
+    public void update( final ICacheElement<K, V> cacheElement, final long requesterId )
         throws IOException
     {
         if ( !isInitialized() )
         {
-            String message = "The Remote Http Client is not initialized.  Cannot process request.";
+            final String message = "The Remote Http Client is not initialized.  Cannot process request.";
             log.warn( message );
             throw new IOException( message );
         }
 
-        RemoteCacheRequest<K, V> remoteHttpCacheRequest =
+        final RemoteCacheRequest<K, V> remoteHttpCacheRequest =
             RemoteCacheRequestFactory.createUpdateRequest( cacheElement, requesterId );
 
         getRemoteDispatcher().dispatchRequest( remoteHttpCacheRequest );
@@ -348,17 +348,17 @@ public class RemoteHttpCacheClient<K, V>
      * @throws IOException
      */
     @Override
-    public void dispose( String cacheName )
+    public void dispose( final String cacheName )
         throws IOException
     {
         if ( !isInitialized() )
         {
-            String message = "The Remote Http Client is not initialized.  Cannot process request.";
+            final String message = "The Remote Http Client is not initialized.  Cannot process request.";
             log.warn( message );
             throw new IOException( message );
         }
 
-        RemoteCacheRequest<K, V> remoteHttpCacheRequest =
+        final RemoteCacheRequest<K, V> remoteHttpCacheRequest =
             RemoteCacheRequestFactory.createDisposeRequest( cacheName, 0 );
 
         getRemoteDispatcher().dispatchRequest( remoteHttpCacheRequest );
@@ -383,19 +383,19 @@ public class RemoteHttpCacheClient<K, V>
      * @see org.apache.commons.jcs3.auxiliary.AuxiliaryCache#getKeySet()
      */
     @Override
-    public Set<K> getKeySet( String cacheName ) throws IOException
+    public Set<K> getKeySet( final String cacheName ) throws IOException
     {
         if ( !isInitialized() )
         {
-            String message = "The Remote Http Client is not initialized.  Cannot process request.";
+            final String message = "The Remote Http Client is not initialized.  Cannot process request.";
             log.warn( message );
             throw new IOException( message );
         }
 
-        RemoteCacheRequest<String, String> remoteHttpCacheRequest =
+        final RemoteCacheRequest<String, String> remoteHttpCacheRequest =
             RemoteCacheRequestFactory.createGetKeySetRequest(cacheName, 0 );
 
-        RemoteCacheResponse<Set<K>> remoteHttpCacheResponse = getRemoteDispatcher().dispatchRequest( remoteHttpCacheRequest );
+        final RemoteCacheResponse<Set<K>> remoteHttpCacheResponse = getRemoteDispatcher().dispatchRequest( remoteHttpCacheRequest );
 
         if ( remoteHttpCacheResponse != null && remoteHttpCacheResponse.getPayload() != null )
         {
@@ -417,13 +417,13 @@ public class RemoteHttpCacheClient<K, V>
     {
         if ( !isInitialized() )
         {
-            String message = "The Remote Http Client is not initialized.  Cannot process request.";
+            final String message = "The Remote Http Client is not initialized.  Cannot process request.";
             log.warn( message );
             throw new IOException( message );
         }
 
-        RemoteCacheRequest<K, V> remoteHttpCacheRequest = RemoteCacheRequestFactory.createAliveCheckRequest( 0 );
-        RemoteCacheResponse<String> remoteHttpCacheResponse =
+        final RemoteCacheRequest<K, V> remoteHttpCacheRequest = RemoteCacheRequestFactory.createAliveCheckRequest( 0 );
+        final RemoteCacheResponse<String> remoteHttpCacheResponse =
             getRemoteDispatcher().dispatchRequest( remoteHttpCacheRequest );
 
         if ( remoteHttpCacheResponse != null )
@@ -437,7 +437,7 @@ public class RemoteHttpCacheClient<K, V>
     /**
      * @param remoteDispatcher the remoteDispatcher to set
      */
-    public void setRemoteDispatcher( IRemoteCacheDispatcher remoteDispatcher )
+    public void setRemoteDispatcher( final IRemoteCacheDispatcher remoteDispatcher )
     {
         this.remoteDispatcher = remoteDispatcher;
     }
@@ -453,7 +453,7 @@ public class RemoteHttpCacheClient<K, V>
     /**
      * @param remoteHttpCacheAttributes the remoteHttpCacheAttributes to set
      */
-    public void setRemoteHttpCacheAttributes( RemoteHttpCacheAttributes remoteHttpCacheAttributes )
+    public void setRemoteHttpCacheAttributes( final RemoteHttpCacheAttributes remoteHttpCacheAttributes )
     {
         this.remoteHttpCacheAttributes = remoteHttpCacheAttributes;
     }
@@ -469,7 +469,7 @@ public class RemoteHttpCacheClient<K, V>
     /**
      * @param initialized the initialized to set
      */
-    protected void setInitialized( boolean initialized )
+    protected void setInitialized( final boolean initialized )
     {
         this.initialized = initialized;
     }

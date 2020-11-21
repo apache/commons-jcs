@@ -32,7 +32,7 @@ public class JCSRemovalSimpleConcurrentTest
     /**
      * @param testName
      */
-    public JCSRemovalSimpleConcurrentTest( String testName )
+    public JCSRemovalSimpleConcurrentTest( final String testName )
     {
         super( testName );
     }
@@ -55,9 +55,9 @@ public class JCSRemovalSimpleConcurrentTest
      * <p>
      * @param args
      */
-    public static void main( String args[] )
+    public static void main( final String args[] )
     {
-        String[] testCaseName = { JCSRemovalSimpleConcurrentTest.class.getName() };
+        final String[] testCaseName = { JCSRemovalSimpleConcurrentTest.class.getName() };
         junit.textui.TestRunner.main( testCaseName );
     }
 
@@ -69,8 +69,8 @@ public class JCSRemovalSimpleConcurrentTest
     public void testTwoDeepRemoval()
         throws Exception
     {
-        int count = 500;
-        CacheAccess<String, String> jcs = JCS.getInstance( "testCache1" );
+        final int count = 500;
+        final CacheAccess<String, String> jcs = JCS.getInstance( "testCache1" );
 
         for ( int i = 0; i <= count; i++ )
         {
@@ -79,7 +79,7 @@ public class JCSRemovalSimpleConcurrentTest
 
         for ( int i = count; i >= 0; i-- )
         {
-            String res = jcs.get( "key:" + i + ":anotherpart" );
+            final String res = jcs.get( "key:" + i + ":anotherpart" );
             assertNotNull( "[key:" + i + ":anotherpart] should not be null, " + jcs.getStats(), res );
         }
 
@@ -100,8 +100,8 @@ public class JCSRemovalSimpleConcurrentTest
         throws Exception
     {
 
-        int count = 500;
-        CacheAccess<String, String> jcs = JCS.getInstance( "testCache1" );
+        final int count = 500;
+        final CacheAccess<String, String> jcs = JCS.getInstance( "testCache1" );
 
         for ( int i = 0; i <= count; i++ )
         {
@@ -110,7 +110,7 @@ public class JCSRemovalSimpleConcurrentTest
 
         for ( int i = count; i >= 0; i-- )
         {
-            String res = jcs.get( i + ":key" );
+            final String res = jcs.get( i + ":key" );
             assertNotNull( "[" + i + ":key] should not be null", res );
         }
 
@@ -130,8 +130,8 @@ public class JCSRemovalSimpleConcurrentTest
         throws Exception
     {
 
-        int count = 500;
-        CacheAccess<String, String> jcs = JCS.getInstance( "testCache1" );
+        final int count = 500;
+        final CacheAccess<String, String> jcs = JCS.getInstance( "testCache1" );
 
         for ( int i = 0; i <= count; i++ )
         {
@@ -140,14 +140,14 @@ public class JCSRemovalSimpleConcurrentTest
 
         for ( int i = count; i >= 0; i-- )
         {
-            String res = jcs.get( i + ":key" );
+            final String res = jcs.get( i + ":key" );
             assertNotNull( "[" + i + ":key] should not be null", res );
         }
         jcs.clear();
 
         for ( int i = count; i >= 0; i-- )
         {
-            String res = jcs.get( i + ":key" );
+            final String res = jcs.get( i + ":key" );
             if ( res != null )
             {
                 assertNull( "[" + i + ":key] should be null after remvoeall" + jcs.getStats(), res );
@@ -163,8 +163,8 @@ public class JCSRemovalSimpleConcurrentTest
     public void testClearRepeatedlyWithoutError()
         throws Exception
     {
-        int count = 500;
-        CacheAccess<String, String> jcs = JCS.getInstance( "testCache1" );
+        final int count = 500;
+        final CacheAccess<String, String> jcs = JCS.getInstance( "testCache1" );
 
         jcs.clear();
 
@@ -175,7 +175,7 @@ public class JCSRemovalSimpleConcurrentTest
 
         for ( int i = count; i >= 0; i-- )
         {
-            String res = jcs.get( i + ":key" );
+            final String res = jcs.get( i + ":key" );
             assertNotNull( "[" + i + ":key] should not be null", res );
         }
 
@@ -183,7 +183,7 @@ public class JCSRemovalSimpleConcurrentTest
         {
             jcs.put( i + ":key", "data" + i );
             jcs.clear();
-            String res = jcs.get( i + ":key" );
+            final String res = jcs.get( i + ":key" );
             if ( res != null )
             {
                 assertNull( "[" + i + ":key] should be null after remvoeall" + jcs.getStats(), res );

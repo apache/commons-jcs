@@ -83,7 +83,7 @@ public abstract class AbstractMemoryCache<K, V>
      * @param hub
      */
     @Override
-    public void initialize( CompositeCache<K, V> hub )
+    public void initialize( final CompositeCache<K, V> hub )
     {
         hitCnt = new AtomicLong(0);
         missCnt = new AtomicLong(0);
@@ -113,7 +113,7 @@ public abstract class AbstractMemoryCache<K, V>
      * @throws IOException
      */
     @Override
-    public Map<K, ICacheElement<K, V>> getMultiple(Set<K> keys)
+    public Map<K, ICacheElement<K, V>> getMultiple(final Set<K> keys)
         throws IOException
     {
         if (keys != null)
@@ -124,7 +124,7 @@ public abstract class AbstractMemoryCache<K, V>
                     {
                         return get(key);
                     }
-                    catch (IOException e)
+                    catch (final IOException e)
                     {
                         return null;
                     }
@@ -147,12 +147,12 @@ public abstract class AbstractMemoryCache<K, V>
      * @throws IOException
      */
     @Override
-    public ICacheElement<K, V> getQuiet( K key )
+    public ICacheElement<K, V> getQuiet( final K key )
         throws IOException
     {
         ICacheElement<K, V> ce = null;
 
-        MemoryElementDescriptor<K, V> me = map.get( key );
+        final MemoryElementDescriptor<K, V> me = map.get( key );
         if ( me != null )
         {
             log.debug( "{0}: MemoryCache quiet hit for {1}",
@@ -227,10 +227,10 @@ public abstract class AbstractMemoryCache<K, V>
     @Override
     public IStats getStatistics()
     {
-        IStats stats = new Stats();
+        final IStats stats = new Stats();
         stats.setTypeName( "Abstract Memory Cache" );
 
-        ArrayList<IStatElement<?>> elems = new ArrayList<>();
+        final ArrayList<IStatElement<?>> elems = new ArrayList<>();
         stats.setStatElements(elems);
 
         elems.add(new StatElement<>("Put Count", putCnt));
@@ -259,7 +259,7 @@ public abstract class AbstractMemoryCache<K, V>
      */
     public String getCacheName()
     {
-        String attributeCacheName = this.cacheAttributes.getCacheName();
+        final String attributeCacheName = this.cacheAttributes.getCacheName();
         if(attributeCacheName != null)
         {
             return attributeCacheName;
@@ -273,7 +273,7 @@ public abstract class AbstractMemoryCache<K, V>
      * @param ce the item
      */
     @Override
-    public void waterfal( ICacheElement<K, V> ce )
+    public void waterfal( final ICacheElement<K, V> ce )
     {
         this.cache.spoolToDisk( ce );
     }
@@ -310,7 +310,7 @@ public abstract class AbstractMemoryCache<K, V>
      * @param cattr The new CacheAttributes value
      */
     @Override
-    public void setCacheAttributes( ICompositeCacheAttributes cattr )
+    public void setCacheAttributes( final ICompositeCacheAttributes cattr )
     {
         this.cacheAttributes = cattr;
     }
@@ -331,13 +331,13 @@ public abstract class AbstractMemoryCache<K, V>
      * @param key the key
      * @return true if something has been removed
      */
-    protected boolean removeByGroup(K key)
+    protected boolean removeByGroup(final K key)
     {
-        GroupId groupId = ((GroupAttrName<?>) key).groupId;
+        final GroupId groupId = ((GroupAttrName<?>) key).groupId;
 
         // remove all keys of the same group hierarchy.
         return map.entrySet().removeIf(entry -> {
-            K k = entry.getKey();
+            final K k = entry.getKey();
 
             if (k instanceof GroupAttrName && ((GroupAttrName<?>) k).groupId.equals(groupId))
             {
@@ -363,13 +363,13 @@ public abstract class AbstractMemoryCache<K, V>
      * @param key the key
      * @return true if something has been removed
      */
-    protected boolean removeByHierarchy(K key)
+    protected boolean removeByHierarchy(final K key)
     {
-        String keyString = key.toString();
+        final String keyString = key.toString();
 
         // remove all keys of the same name hierarchy.
         return map.entrySet().removeIf(entry -> {
-            K k = entry.getKey();
+            final K k = entry.getKey();
 
             if (k instanceof String && ((String) k).startsWith(keyString))
             {
@@ -408,7 +408,7 @@ public abstract class AbstractMemoryCache<K, V>
      * @throws IOException
      */
     @Override
-    public boolean remove(K key) throws IOException
+    public boolean remove(final K key) throws IOException
     {
         log.debug("removing item for key: {0}", key);
 
@@ -429,7 +429,7 @@ public abstract class AbstractMemoryCache<K, V>
             lock.lock();
             try
             {
-                MemoryElementDescriptor<K, V> me = map.remove(key);
+                final MemoryElementDescriptor<K, V> me = map.remove(key);
                 if (me != null)
                 {
                     lockedRemoveElement(me);
@@ -465,14 +465,14 @@ public abstract class AbstractMemoryCache<K, V>
      * @throws IOException
      */
     @Override
-    public ICacheElement<K, V> get(K key) throws IOException
+    public ICacheElement<K, V> get(final K key) throws IOException
     {
         ICacheElement<K, V> ce = null;
 
         log.debug("{0}: getting item for key {1}", () -> getCacheName(),
                 () -> key);
 
-        MemoryElementDescriptor<K, V> me = map.get(key);
+        final MemoryElementDescriptor<K, V> me = map.get(key);
 
         if (me != null)
         {

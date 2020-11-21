@@ -61,7 +61,7 @@ public class LateralElementDescriptor<K, V>
      * <p>
      * @param ce ICacheElement&lt;K, V&gt; payload
      */
-    public LateralElementDescriptor( ICacheElement<K, V> ce )
+    public LateralElementDescriptor( final ICacheElement<K, V> ce )
     {
         this.ce = ce;
     }
@@ -72,7 +72,7 @@ public class LateralElementDescriptor<K, V>
     @Override
     public String toString()
     {
-        StringBuilder buf = new StringBuilder();
+        final StringBuilder buf = new StringBuilder();
         buf.append( "\n LateralElementDescriptor " );
         buf.append( "\n command = [" + this.command + "]" );
         buf.append( "\n valHashCode = [" + this.valHashCode + "]" );

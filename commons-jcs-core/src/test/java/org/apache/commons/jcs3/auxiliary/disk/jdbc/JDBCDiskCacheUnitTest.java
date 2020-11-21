@@ -61,17 +61,17 @@ public class JDBCDiskCacheUnitTest
     {
         System.setProperty( "hsqldb.cache_scale", "8" );
 
-        String rafroot = "target";
-        Properties p = new Properties();
-        String driver = p.getProperty( "driver", "org.hsqldb.jdbcDriver" );
-        String url = p.getProperty( "url", "jdbc:hsqldb:" );
-        String database = p.getProperty( "database", rafroot + "/cache_hsql_db" );
-        String user = p.getProperty( "user", "sa" );
-        String password = p.getProperty( "password", "" );
+        final String rafroot = "target";
+        final Properties p = new Properties();
+        final String driver = p.getProperty( "driver", "org.hsqldb.jdbcDriver" );
+        final String url = p.getProperty( "url", "jdbc:hsqldb:" );
+        final String database = p.getProperty( "database", rafroot + "/cache_hsql_db" );
+        final String user = p.getProperty( "user", "sa" );
+        final String password = p.getProperty( "password", "" );
 
         new org.hsqldb.jdbcDriver();
         Class.forName( driver ).newInstance();
-        Connection cConn = DriverManager.getConnection( url + database, user, password );
+        final Connection cConn = DriverManager.getConnection( url + database, user, password );
 
         HsqlSetupTableUtil.setupTABLE( cConn, "JCS_STORE2" );
 
@@ -86,10 +86,10 @@ public class JDBCDiskCacheUnitTest
      * @param items
      * @throws Exception If an error occurs
      */
-    public void runTestForRegion( String region, int items )
+    public void runTestForRegion( final String region, final int items )
         throws Exception
     {
-        CacheAccess<String, String> jcs = JCS.getInstance( region );
+        final CacheAccess<String, String> jcs = JCS.getInstance( region );
 
 //        System.out.println( "BEFORE PUT \n" + jcs.getStats() );
 
@@ -110,22 +110,22 @@ public class JDBCDiskCacheUnitTest
 
         for ( int i = 0; i <= items; i++ )
         {
-            String value = jcs.get( i + ":key" );
+            final String value = jcs.get( i + ":key" );
 
             assertEquals( "key = [" + i + ":key] value = [" + value + "]", region + " data " + i, value );
         }
 
         // Test that getElements returns all the expected values
-        Set<String> keys = new HashSet<>();
+        final Set<String> keys = new HashSet<>();
         for ( int i = 0; i <= items; i++ )
         {
             keys.add( i + ":key" );
         }
 
-        Map<String, ICacheElement<String, String>> elements = jcs.getCacheElements( keys );
+        final Map<String, ICacheElement<String, String>> elements = jcs.getCacheElements( keys );
         for ( int i = 0; i <= items; i++ )
         {
-            ICacheElement<String, String> element = elements.get( i + ":key" );
+            final ICacheElement<String, String> element = elements.get( i + ":key" );
             assertNotNull( "element " + i + ":key is missing", element );
             assertEquals( "value " + i + ":key", region + " data " + i, element.getVal() );
         }
@@ -152,16 +152,16 @@ public class JDBCDiskCacheUnitTest
         throws Exception
     {
         // SETUP
-        String poolName = "testInitializePoolAccess_withPoolName";
+        final String poolName = "testInitializePoolAccess_withPoolName";
 
-        String url = "jdbc:hsqldb:";
-        String userName = "sa";
-        String password = "";
-        int maxActive = 10;
-        String driverClassName = "org.hsqldb.jdbcDriver";
+        final String url = "jdbc:hsqldb:";
+        final String userName = "sa";
+        final String password = "";
+        final int maxActive = 10;
+        final String driverClassName = "org.hsqldb.jdbcDriver";
 
-        Properties props = new Properties();
-        String prefix = JDBCDiskCacheFactory.POOL_CONFIGURATION_PREFIX
+        final Properties props = new Properties();
+        final String prefix = JDBCDiskCacheFactory.POOL_CONFIGURATION_PREFIX
     		+ poolName
             + JDBCDiskCacheFactory.ATTRIBUTE_PREFIX;
         props.put( prefix + ".url", url );
@@ -170,22 +170,22 @@ public class JDBCDiskCacheUnitTest
         props.put( prefix + ".maxActive", String.valueOf( maxActive ) );
         props.put( prefix + ".driverClassName", driverClassName );
 
-        JDBCDiskCacheAttributes cattr = new JDBCDiskCacheAttributes();
+        final JDBCDiskCacheAttributes cattr = new JDBCDiskCacheAttributes();
         cattr.setConnectionPoolName( poolName );
         cattr.setTableName("JCSTESTTABLE_InitializePoolAccess");
 
-        MockCompositeCacheManager compositeCacheManager = new MockCompositeCacheManager();
+        final MockCompositeCacheManager compositeCacheManager = new MockCompositeCacheManager();
         compositeCacheManager.setConfigurationProperties( props );
-        JDBCDiskCacheFactory dcFactory = new JDBCDiskCacheFactory();
+        final JDBCDiskCacheFactory dcFactory = new JDBCDiskCacheFactory();
         dcFactory.initialize();
         dcFactory.setScheduledExecutorService(Executors.newScheduledThreadPool(2,
         	new DaemonThreadFactory("JCS-JDBCDiskCacheManager-", Thread.MIN_PRIORITY)));
 
-        JDBCDiskCache<String, String> diskCache = dcFactory.createCache( cattr, compositeCacheManager, null, new StandardSerializer() );
+        final JDBCDiskCache<String, String> diskCache = dcFactory.createCache( cattr, compositeCacheManager, null, new StandardSerializer() );
         assertNotNull( "Should have a cache instance", diskCache );
 
         // DO WORK
-        DataSourceFactory result = dcFactory.getDataSourceFactory(cattr, props);
+        final DataSourceFactory result = dcFactory.getDataSourceFactory(cattr, props);
 
         // VERIFY
         assertNotNull( "Should have a data source factory class", result );
@@ -193,12 +193,12 @@ public class JDBCDiskCacheUnitTest
 
         System.setProperty( "hsqldb.cache_scale", "8" );
 
-        String rafroot = "target";
-        String database = rafroot + "/cache_hsql_db";
+        final String rafroot = "target";
+        final String database = rafroot + "/cache_hsql_db";
 
         new org.hsqldb.jdbcDriver();
         Class.forName( driverClassName ).newInstance();
-        Connection cConn = DriverManager.getConnection( url + database, userName, password );
+        final Connection cConn = DriverManager.getConnection( url + database, userName, password );
 
         HsqlSetupTableUtil.setupTABLE( cConn, "JCSTESTTABLE_InitializePoolAccess" );
 

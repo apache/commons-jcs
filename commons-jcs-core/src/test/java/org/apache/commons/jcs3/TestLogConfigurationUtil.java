@@ -36,11 +36,11 @@ public class TestLogConfigurationUtil
      * @param stringWriter string writer
      * @param loggerName logger name
      */
-    public static void configureLogger( StringWriter stringWriter, String loggerName )
+    public static void configureLogger( final StringWriter stringWriter, final String loggerName )
     {
         LogManager.setLogSystem("jul");
         java.util.logging.LogManager.getLogManager().reset();
-        Logger rootLogger = java.util.logging.LogManager.getLogManager().getLogger("");
+        final Logger rootLogger = java.util.logging.LogManager.getLogManager().getLogger("");
 
         rootLogger.addHandler(new MockLogHandler(stringWriter));
         rootLogger.setLevel(Level.FINE);
@@ -50,15 +50,15 @@ public class TestLogConfigurationUtil
     {
         private final StringWriter writer;
 
-        public MockLogHandler(StringWriter writer)
+        public MockLogHandler(final StringWriter writer)
         {
             this.writer = writer;
         }
 
         @Override
-        public void publish(LogRecord record)
+        public void publish(final LogRecord record)
         {
-            StringBuilder sb = new StringBuilder();
+            final StringBuilder sb = new StringBuilder();
             sb.append(record.getMillis())
               .append(" - ")
               .append(record.getSourceClassName())

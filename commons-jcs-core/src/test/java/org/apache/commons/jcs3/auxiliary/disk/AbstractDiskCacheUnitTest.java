@@ -52,21 +52,21 @@ public class AbstractDiskCacheUnitTest
         throws IOException
     {
         // SETUP
-        String cacheName = "testUpdateGet_allowed";
-        IDiskCacheAttributes diskCacheAttributes = new IndexedDiskCacheAttributes();
+        final String cacheName = "testUpdateGet_allowed";
+        final IDiskCacheAttributes diskCacheAttributes = new IndexedDiskCacheAttributes();
         diskCacheAttributes.setCacheName( cacheName );
 
-        AbstractDiskCacheTestInstance<String, String> diskCache = new AbstractDiskCacheTestInstance<>( diskCacheAttributes );
+        final AbstractDiskCacheTestInstance<String, String> diskCache = new AbstractDiskCacheTestInstance<>( diskCacheAttributes );
 
-        String key = "myKey";
-        String value = "myValue";
-        IElementAttributes elementAttributes = new ElementAttributes();
-        ICacheElement<String, String> cacheElement = new CacheElement<>( cacheName, key, value, elementAttributes );
+        final String key = "myKey";
+        final String value = "myValue";
+        final IElementAttributes elementAttributes = new ElementAttributes();
+        final ICacheElement<String, String> cacheElement = new CacheElement<>( cacheName, key, value, elementAttributes );
 
         diskCache.update( cacheElement );
 
         // DO WORK
-        ICacheElement<String, String> result = diskCache.get( key );
+        final ICacheElement<String, String> result = diskCache.get( key );
 
         // VERIFY
         //System.out.println( diskCache.getStats() );
@@ -82,16 +82,16 @@ public class AbstractDiskCacheUnitTest
         throws IOException
     {
         // SETUP
-        String cacheName = "testDispose";
-        IDiskCacheAttributes diskCacheAttributes = new IndexedDiskCacheAttributes();
+        final String cacheName = "testDispose";
+        final IDiskCacheAttributes diskCacheAttributes = new IndexedDiskCacheAttributes();
         diskCacheAttributes.setCacheName( cacheName );
 
-        AbstractDiskCacheTestInstance<String, String> diskCache = new AbstractDiskCacheTestInstance<>( diskCacheAttributes );
+        final AbstractDiskCacheTestInstance<String, String> diskCache = new AbstractDiskCacheTestInstance<>( diskCacheAttributes );
 
-        String key = "myKey";
-        String value = "myValue";
-        IElementAttributes elementAttributes = new ElementAttributes();
-        ICacheElement<String, String> cacheElement = new CacheElement<>( cacheName, key, value, elementAttributes );
+        final String key = "myKey";
+        final String value = "myValue";
+        final IElementAttributes elementAttributes = new ElementAttributes();
+        final ICacheElement<String, String> cacheElement = new CacheElement<>( cacheName, key, value, elementAttributes );
 
         diskCache.update( cacheElement );
 
@@ -112,25 +112,25 @@ public class AbstractDiskCacheUnitTest
         throws IOException
     {
         // SETUP
-        StringWriter stringWriter = new StringWriter();
+        final StringWriter stringWriter = new StringWriter();
         TestLogConfigurationUtil.configureLogger( stringWriter, AbstractDiskCache.class.getName() );
 
-        IDiskCacheAttributes diskCacheAttributes = new IndexedDiskCacheAttributes();
+        final IDiskCacheAttributes diskCacheAttributes = new IndexedDiskCacheAttributes();
         diskCacheAttributes.setAllowRemoveAll( false );
 
-        AbstractDiskCacheTestInstance<String, String> diskCache = new AbstractDiskCacheTestInstance<>( diskCacheAttributes );
+        final AbstractDiskCacheTestInstance<String, String> diskCache = new AbstractDiskCacheTestInstance<>( diskCacheAttributes );
 
-        String cacheName = "testRemoveAll_notAllowed";
-        String key = "myKey";
-        String value = "myValue";
-        IElementAttributes elementAttributes = new ElementAttributes();
-        ICacheElement<String, String> cacheElement = new CacheElement<>( cacheName, key, value, elementAttributes );
+        final String cacheName = "testRemoveAll_notAllowed";
+        final String key = "myKey";
+        final String value = "myValue";
+        final IElementAttributes elementAttributes = new ElementAttributes();
+        final ICacheElement<String, String> cacheElement = new CacheElement<>( cacheName, key, value, elementAttributes );
 
         diskCache.update( cacheElement );
 
         // DO WORK
         diskCache.removeAll();
-        String result = stringWriter.toString();
+        final String result = stringWriter.toString();
 
         // VERIFY
         assertTrue( "Should say not allowed.", result.indexOf( "set to false" ) != -1 );
@@ -146,16 +146,16 @@ public class AbstractDiskCacheUnitTest
         throws IOException
     {
         // SETUP
-        IDiskCacheAttributes diskCacheAttributes = new IndexedDiskCacheAttributes();
+        final IDiskCacheAttributes diskCacheAttributes = new IndexedDiskCacheAttributes();
         diskCacheAttributes.setAllowRemoveAll( true );
 
-        AbstractDiskCacheTestInstance<String, String> diskCache = new AbstractDiskCacheTestInstance<>( diskCacheAttributes );
+        final AbstractDiskCacheTestInstance<String, String> diskCache = new AbstractDiskCacheTestInstance<>( diskCacheAttributes );
 
-        String cacheName = "testRemoveAll_allowed";
-        String key = "myKey";
-        String value = "myValue";
-        IElementAttributes elementAttributes = new ElementAttributes();
-        ICacheElement<String, String> cacheElement = new CacheElement<>( cacheName, key, value, elementAttributes );
+        final String cacheName = "testRemoveAll_allowed";
+        final String key = "myKey";
+        final String value = "myValue";
+        final IElementAttributes elementAttributes = new ElementAttributes();
+        final ICacheElement<String, String> cacheElement = new CacheElement<>( cacheName, key, value, elementAttributes );
 
         diskCache.update( cacheElement );
 
@@ -181,7 +181,7 @@ public class AbstractDiskCacheUnitTest
          * <p>
          * @param attr
          */
-        public AbstractDiskCacheTestInstance( IDiskCacheAttributes attr )
+        public AbstractDiskCacheTestInstance( final IDiskCacheAttributes attr )
         {
             super( attr );
             diskCacheAttributes = attr;
@@ -235,7 +235,7 @@ public class AbstractDiskCacheUnitTest
          * @throws IOException
          */
         @Override
-        protected ICacheElement<K, V> processGet( K key )
+        protected ICacheElement<K, V> processGet( final K key )
             throws IOException
         {
             //System.out.println( "processGet: " + key );
@@ -248,7 +248,7 @@ public class AbstractDiskCacheUnitTest
          * @throws IOException
          */
         @Override
-        protected Map<K, ICacheElement<K, V>> processGetMatching( String pattern )
+        protected Map<K, ICacheElement<K, V>> processGetMatching( final String pattern )
             throws IOException
         {
             return Collections.emptyMap();
@@ -260,7 +260,7 @@ public class AbstractDiskCacheUnitTest
          * @throws IOException
          */
         @Override
-        protected boolean processRemove( K key )
+        protected boolean processRemove( final K key )
             throws IOException
         {
             return map.remove( key ) != null;
@@ -282,7 +282,7 @@ public class AbstractDiskCacheUnitTest
          * @throws IOException
          */
         @Override
-        protected void processUpdate( ICacheElement<K, V> cacheElement )
+        protected void processUpdate( final ICacheElement<K, V> cacheElement )
             throws IOException
         {
             //System.out.println( "processUpdate: " + cacheElement );

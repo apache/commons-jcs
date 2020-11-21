@@ -46,7 +46,7 @@ public class LHMLRUMemoryCache<K, V>
      * @param hub
      */
     @Override
-    public void initialize( CompositeCache<K, V> hub )
+    public void initialize( final CompositeCache<K, V> hub )
     {
         super.initialize( hub );
         log.info( "initialized LHMLRUMemoryCache for {0}", this::getCacheName );
@@ -70,7 +70,7 @@ public class LHMLRUMemoryCache<K, V>
      * @throws IOException
      */
     @Override
-    public void update( ICacheElement<K, V> ce )
+    public void update( final ICacheElement<K, V> ce )
         throws IOException
     {
         putCnt.incrementAndGet();
@@ -84,7 +84,7 @@ public class LHMLRUMemoryCache<K, V>
      * @param me the memory element descriptor
      */
     @Override
-    protected void lockedGetElement(MemoryElementDescriptor<K, V> me)
+    protected void lockedGetElement(final MemoryElementDescriptor<K, V> me)
     {
         // empty
     }
@@ -96,7 +96,7 @@ public class LHMLRUMemoryCache<K, V>
      * @param me the memory element descriptor
      */
     @Override
-    protected void lockedRemoveElement(MemoryElementDescriptor<K, V> me)
+    protected void lockedRemoveElement(final MemoryElementDescriptor<K, V> me)
     {
         // empty
     }
@@ -120,7 +120,7 @@ public class LHMLRUMemoryCache<K, V>
     @Override
     public IStats getStatistics()
     {
-        IStats stats = super.getStatistics();
+        final IStats stats = super.getStatistics();
         stats.setTypeName( "LHMLRU Memory Cache" );
 
         return stats;
@@ -144,7 +144,7 @@ public class LHMLRUMemoryCache<K, V>
      * @throws IOException
      */
     @Override
-    public int freeElements( int numberToFree )
+    public int freeElements( final int numberToFree )
         throws IOException
     {
         // can't be implemented using the LHM
@@ -179,9 +179,9 @@ public class LHMLRUMemoryCache<K, V>
          */
         @SuppressWarnings("synthetic-access")
         @Override
-        protected boolean removeEldestEntry( Map.Entry<K, MemoryElementDescriptor<K, V>> eldest )
+        protected boolean removeEldestEntry( final Map.Entry<K, MemoryElementDescriptor<K, V>> eldest )
         {
-            ICacheElement<K, V> element = eldest.getValue().getCacheElement();
+            final ICacheElement<K, V> element = eldest.getValue().getCacheElement();
 
             if ( size() <= getCacheAttributes().getMaxObjects() )
             {

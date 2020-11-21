@@ -56,7 +56,7 @@ public class ZeroSizeCacheUnitTest
     public void testPutGetRemove()
         throws Exception
     {
-        CacheAccess<String, String> jcs = JCS.getInstance( "testCache1" );
+        final CacheAccess<String, String> jcs = JCS.getInstance( "testCache1" );
 
         for ( int i = 0; i <= items; i++ )
         {
@@ -66,7 +66,7 @@ public class ZeroSizeCacheUnitTest
         // all the gets should be null
         for ( int i = items; i >= 0; i-- )
         {
-            String res = jcs.get( i + ":key" );
+            final String res = jcs.get( i + ":key" );
             assertNull( "[" + i + ":key] should be null", res );
         }
 
@@ -84,7 +84,7 @@ public class ZeroSizeCacheUnitTest
 
         for ( int i = items; i >= 0; i-- )
         {
-            String res = jcs.get( i + ":key" );
+            final String res = jcs.get( i + ":key" );
             assertNull( "[" + i + ":key] should be null", res );
         }
     }

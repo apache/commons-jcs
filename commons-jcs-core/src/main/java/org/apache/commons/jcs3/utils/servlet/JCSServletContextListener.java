@@ -53,7 +53,7 @@ public class JCSServletContextListener
      * @see javax.servlet.ServletContextListener#contextInitialized(javax.servlet.ServletContextEvent)
      */
     @Override
-    public void contextInitialized( ServletContextEvent arg0 )
+    public void contextInitialized( final ServletContextEvent arg0 )
     {
         log.debug( "contextInitialized" );
     }
@@ -64,7 +64,7 @@ public class JCSServletContextListener
      * @see javax.servlet.ServletContextListener#contextDestroyed(javax.servlet.ServletContextEvent)
      */
     @Override
-    public void contextDestroyed( ServletContextEvent arg0 )
+    public void contextDestroyed( final ServletContextEvent arg0 )
     {
         log.debug( "contextDestroyed, shutting down JCS." );
 

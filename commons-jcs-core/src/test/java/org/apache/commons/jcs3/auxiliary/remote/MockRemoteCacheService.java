@@ -67,7 +67,7 @@ public class MockRemoteCacheService<K, V>
      * @return null
      */
     @Override
-    public ICacheElement<K, V> get( String cacheName, K key, long requesterId )
+    public ICacheElement<K, V> get( final String cacheName, final K key, final long requesterId )
     {
         lastGetKey = key;
         return null;
@@ -78,7 +78,7 @@ public class MockRemoteCacheService<K, V>
      * @return empty set
      */
     @Override
-    public Set<K> getKeySet( String cacheName )
+    public Set<K> getKeySet( final String cacheName )
     {
         return new HashSet<>();
     }
@@ -91,7 +91,7 @@ public class MockRemoteCacheService<K, V>
      * @param requesterId
      */
     @Override
-    public void remove( String cacheName, K key, long requesterId )
+    public void remove( final String cacheName, final K key, final long requesterId )
     {
         lastRemoveKey = key;
     }
@@ -100,7 +100,7 @@ public class MockRemoteCacheService<K, V>
      * Set the lastRemoveAllCacheName to the cacheName.
      */
     @Override
-    public void removeAll( String cacheName, long requesterId )
+    public void removeAll( final String cacheName, final long requesterId )
         throws IOException
     {
         lastRemoveAllCacheName = cacheName;
@@ -113,7 +113,7 @@ public class MockRemoteCacheService<K, V>
      * @param requesterId
      */
     @Override
-    public void update( ICacheElement<K, V> item, long requesterId )
+    public void update( final ICacheElement<K, V> item, final long requesterId )
     {
         lastUpdate = item;
         updateRequestList.add( item );
@@ -126,7 +126,7 @@ public class MockRemoteCacheService<K, V>
      * @param cacheName
      */
     @Override
-    public void dispose( String cacheName )
+    public void dispose( final String cacheName )
     {
         return;
     }
@@ -137,7 +137,7 @@ public class MockRemoteCacheService<K, V>
      * @return null
      */
     @Override
-    public ICacheElement<K, V> get( String cacheName, K key )
+    public ICacheElement<K, V> get( final String cacheName, final K key )
     {
         return get( cacheName, key, 0 );
     }
@@ -158,7 +158,7 @@ public class MockRemoteCacheService<K, V>
      * @param key
      */
     @Override
-    public void remove( String cacheName, K key )
+    public void remove( final String cacheName, final K key )
     {
         lastRemoveKey = key;
     }
@@ -169,7 +169,7 @@ public class MockRemoteCacheService<K, V>
      * @param cacheName
      */
     @Override
-    public void removeAll( String cacheName )
+    public void removeAll( final String cacheName )
     {
         lastRemoveAllCacheName = cacheName;
     }
@@ -180,7 +180,7 @@ public class MockRemoteCacheService<K, V>
      * @param item
      */
     @Override
-    public void update( ICacheElement<K, V> item )
+    public void update( final ICacheElement<K, V> item )
     {
         lastUpdate = item;
     }
@@ -192,7 +192,7 @@ public class MockRemoteCacheService<K, V>
      * @return empty map
      */
     @Override
-    public Map<K, ICacheElement<K, V>> getMultiple( String cacheName, Set<K> keys, long requesterId )
+    public Map<K, ICacheElement<K, V>> getMultiple( final String cacheName, final Set<K> keys, final long requesterId )
     {
         lastGetMultipleKeys = keys;
         return new HashMap<>();
@@ -204,7 +204,7 @@ public class MockRemoteCacheService<K, V>
      * @return empty map
      */
     @Override
-    public Map<K, ICacheElement<K, V>> getMultiple( String cacheName, Set<K> keys )
+    public Map<K, ICacheElement<K, V>> getMultiple( final String cacheName, final Set<K> keys )
     {
         return getMultiple( cacheName, keys, 0 );
     }
@@ -218,7 +218,7 @@ public class MockRemoteCacheService<K, V>
      * @throws IOException
      */
     @Override
-    public Map<K, ICacheElement<K, V>> getMatching( String cacheName, String pattern )
+    public Map<K, ICacheElement<K, V>> getMatching( final String cacheName, final String pattern )
         throws IOException
     {
         return getMatching( cacheName, pattern, 0 );
@@ -232,7 +232,7 @@ public class MockRemoteCacheService<K, V>
      * @throws IOException
      */
     @Override
-    public Map<K, ICacheElement<K, V>> getMatching( String cacheName, String pattern, long requesterId )
+    public Map<K, ICacheElement<K, V>> getMatching( final String cacheName, final String pattern, final long requesterId )
         throws IOException
     {
         lastGetMatchingPattern = pattern;

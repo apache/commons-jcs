@@ -37,7 +37,7 @@ public class MockCacheEventLogger
      * @param optionalDetails
      */
     @Override
-    public void logApplicationEvent( String source, String eventName, String optionalDetails )
+    public void logApplicationEvent( final String source, final String eventName, final String optionalDetails )
     {
         // TODO Auto-generated method stub
     }
@@ -48,7 +48,7 @@ public class MockCacheEventLogger
      * @param errorMessage
      */
     @Override
-    public void logError( String source, String eventName, String errorMessage )
+    public void logError( final String source, final String eventName, final String errorMessage )
     {
         // TODO Auto-generated method stub
     }
@@ -62,8 +62,8 @@ public class MockCacheEventLogger
      * @return ICacheEvent
      */
     @Override
-    public <T> ICacheEvent<T> createICacheEvent( String source, String region, String eventName, String optionalDetails,
-                                          T key )
+    public <T> ICacheEvent<T> createICacheEvent( final String source, final String region, final String eventName, final String optionalDetails,
+                                          final T key )
     {
         return new CacheEvent<>();
     }
@@ -72,7 +72,7 @@ public class MockCacheEventLogger
      * @param event
      */
     @Override
-    public <T> void logICacheEvent( ICacheEvent<T> event )
+    public <T> void logICacheEvent( final ICacheEvent<T> event )
     {
         // TODO Auto-generated method stub
     }
@@ -80,7 +80,7 @@ public class MockCacheEventLogger
     /**
      * @param testProperty
      */
-    public void setTestProperty( String testProperty )
+    public void setTestProperty( final String testProperty )
     {
         this.testProperty = testProperty;
     }

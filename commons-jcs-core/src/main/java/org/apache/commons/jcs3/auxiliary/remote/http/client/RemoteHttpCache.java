@@ -54,8 +54,8 @@ public class RemoteHttpCache<K, V>
      * @param listener
      * @param monitor the cache monitor
      */
-    public RemoteHttpCache( RemoteHttpCacheAttributes remoteHttpCacheAttributes, ICacheServiceNonLocal<K, V> remote,
-                            IRemoteCacheListener<K, V> listener, RemoteHttpCacheMonitor monitor )
+    public RemoteHttpCache( final RemoteHttpCacheAttributes remoteHttpCacheAttributes, final ICacheServiceNonLocal<K, V> remote,
+                            final IRemoteCacheListener<K, V> listener, final RemoteHttpCacheMonitor monitor )
     {
         super( remoteHttpCacheAttributes, remote, listener );
 
@@ -72,13 +72,13 @@ public class RemoteHttpCache<K, V>
      * @throws IOException
      */
     @Override
-    protected void handleException( Exception ex, String msg, String eventName )
+    protected void handleException( final Exception ex, final String msg, final String eventName )
         throws IOException
     {
         // we should not switch if the existing is a zombie.
         if ( !( getRemoteCacheService() instanceof ZombieCacheServiceNonLocal ) )
         {
-            String message = "Disabling remote cache due to error: " + msg;
+            final String message = "Disabling remote cache due to error: " + msg;
             logError( cacheName, "", message );
             log.error( message, ex );
 

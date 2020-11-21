@@ -52,8 +52,8 @@ public class CacheElementInfo
 	 * @param expiresInSeconds when it will expire
 	 */
     @ConstructorProperties({"key", "eternal", "createTime", "maxLifeSeconds", "expiresInSeconds"})
-    public CacheElementInfo(String key, boolean eternal, String createTime,
-			long maxLifeSeconds, long expiresInSeconds)
+    public CacheElementInfo(final String key, final boolean eternal, final String createTime,
+			final long maxLifeSeconds, final long expiresInSeconds)
     {
 		this.key = key;
 		this.eternal = eternal;
@@ -110,7 +110,7 @@ public class CacheElementInfo
     @Override
     public String toString()
     {
-        StringBuilder buf = new StringBuilder();
+        final StringBuilder buf = new StringBuilder();
         buf.append( "\nCacheElementInfo " );
         buf.append( "\n Key [" ).append( getKey() ).append( "]" );
         buf.append( "\n Eternal [" ).append( isEternal() ).append( "]" );

@@ -51,14 +51,14 @@ public class LogManager
          */
         private static LogFactory createLogFactory()
         {
-            ServiceLoader<LogFactory> factories = ServiceLoader.load(LogFactory.class);
+            final ServiceLoader<LogFactory> factories = ServiceLoader.load(LogFactory.class);
             if (LogManager.logSystem == null)
             {
                 LogManager.logSystem = System.getProperty("jcs.logSystem",
                         LOGSYSTEM_JAVA_UTIL_LOGGING);
             }
 
-            for (LogFactory factory : factories)
+            for (final LogFactory factory : factories)
             {
                 if (logSystem.equalsIgnoreCase(factory.getName()))
                 {
@@ -75,7 +75,7 @@ public class LogManager
      *
      * @param logSystem the logSystem to set
      */
-    public static void setLogSystem(String logSystem)
+    public static void setLogSystem(final String logSystem)
     {
         LogManager.logSystem = logSystem;
     }

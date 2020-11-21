@@ -68,7 +68,7 @@ public class PropertySetter
      * {@link #setProperty}one or more times.
      * @param obj the object for which to set properties
      */
-    public PropertySetter( Object obj )
+    public PropertySetter( final Object obj )
     {
         this.obj = obj;
     }
@@ -80,10 +80,10 @@ public class PropertySetter
     {
         try
         {
-            BeanInfo bi = Introspector.getBeanInfo( obj.getClass() );
+            final BeanInfo bi = Introspector.getBeanInfo( obj.getClass() );
             props = bi.getPropertyDescriptors();
         }
-        catch ( IntrospectionException ex )
+        catch ( final IntrospectionException ex )
         {
             log.error( "Failed to introspect {0}", obj, ex );
             props = new PropertyDescriptor[0];
@@ -98,7 +98,7 @@ public class PropertySetter
      * @param properties A java.util.Properties containing keys and values.
      * @param prefix Only keys having the specified prefix will be set.
      */
-    public static void setProperties( Object obj, Properties properties, String prefix )
+    public static void setProperties( final Object obj, final Properties properties, final String prefix )
     {
         new PropertySetter( obj ).setProperties( properties, prefix );
     }
@@ -109,11 +109,11 @@ public class PropertySetter
      * @param properties The new properties value
      * @param prefix The new properties value
      */
-    public void setProperties( Properties properties, String prefix )
+    public void setProperties( final Properties properties, final String prefix )
     {
-        int len = prefix.length();
+        final int len = prefix.length();
 
-        for ( Enumeration<?> e = properties.propertyNames(); e.hasMoreElements(); )
+        for ( final Enumeration<?> e = properties.propertyNames(); e.hasMoreElements(); )
         {
             String key = (String) e.nextElement();
 
@@ -129,7 +129,7 @@ public class PropertySetter
                     continue;
                 }
 
-                String value = OptionConverter.findAndSubst( key, properties );
+                final String value = OptionConverter.findAndSubst( key, properties );
                 key = key.substring( len );
 
                 setProperty( key, value );
@@ -151,7 +151,7 @@ public class PropertySetter
      * @param value String value of the property
      */
 
-    public void setProperty( String name, String value )
+    public void setProperty( String name, final String value )
     {
         if ( value == null )
         {
@@ -159,7 +159,7 @@ public class PropertySetter
         }
 
         name = Introspector.decapitalize( name );
-        PropertyDescriptor prop = getPropertyDescriptor( name );
+        final PropertyDescriptor prop = getPropertyDescriptor( name );
 
         //log.debug("---------Key: "+name+", type="+prop.getPropertyType());
 
@@ -173,7 +173,7 @@ public class PropertySetter
             {
                 setProperty( prop, name, value );
             }
-            catch ( PropertySetterException ex )
+            catch ( final PropertySetterException ex )
             {
                 log.warn( "Failed to set property {0} to value \"{1}\".", name, value, ex );
             }
@@ -188,15 +188,15 @@ public class PropertySetter
      * @throws PropertySetterException
      */
 
-    public void setProperty( PropertyDescriptor prop, String name, String value )
+    public void setProperty( final PropertyDescriptor prop, final String name, final String value )
         throws PropertySetterException
     {
-        Method setter = prop.getWriteMethod();
+        final Method setter = prop.getWriteMethod();
         if ( setter == null )
         {
             throw new PropertySetterException( "No setter for property" );
         }
-        Class<?>[] paramTypes = setter.getParameterTypes();
+        final Class<?>[] paramTypes = setter.getParameterTypes();
         if ( paramTypes.length != 1 )
         {
             throw new PropertySetterException( "#params for setter != 1" );
@@ -207,7 +207,7 @@ public class PropertySetter
         {
             arg = convertArg( value, paramTypes[0] );
         }
-        catch ( Throwable t )
+        catch ( final Throwable t )
         {
             throw new PropertySetterException( "Conversion to type [" + paramTypes[0] + "] failed. Reason: " + t );
         }
@@ -220,7 +220,7 @@ public class PropertySetter
         {
             setter.invoke( obj, new Object[] { arg } );
         }
-        catch ( Exception ex )
+        catch ( final Exception ex )
         {
             throw new PropertySetterException( ex );
         }
@@ -232,14 +232,14 @@ public class PropertySetter
      * @param type
      * @return Object
      */
-    protected Object convertArg( String val, Class<?> type )
+    protected Object convertArg( final String val, final Class<?> type )
     {
         if ( val == null )
         {
             return null;
         }
 
-        String v = val.trim();
+        final String v = val.trim();
         if ( String.class.isAssignableFrom( type ) )
         {
             return val;
@@ -265,7 +265,7 @@ public class PropertySetter
         }
         else if( type.isEnum() )
         {
-            Enum<?> en = Enum.valueOf(type.asSubclass(Enum.class), v );
+            final Enum<?> en = Enum.valueOf(type.asSubclass(Enum.class), v );
             return en;
         }
         else if ( File.class.isAssignableFrom( type ) )
@@ -280,7 +280,7 @@ public class PropertySetter
      * @param name
      * @return The propertyDescriptor value
      */
-    protected PropertyDescriptor getPropertyDescriptor( String name )
+    protected PropertyDescriptor getPropertyDescriptor( final String name )
     {
         if ( props == null )
         {

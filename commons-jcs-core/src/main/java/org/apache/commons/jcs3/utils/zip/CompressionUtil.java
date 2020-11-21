@@ -84,11 +84,11 @@ public final class CompressionUtil
         {
             while ( !decompressor.finished() )
             {
-                int count = decompressor.inflate( buf );
+                final int count = decompressor.inflate( buf );
                 baos.write( buf, 0, count );
             }
         }
-        catch ( DataFormatException ex )
+        catch ( final DataFormatException ex )
         {
             log.error( "Problem decompressing.", ex );
         }
@@ -99,7 +99,7 @@ public final class CompressionUtil
         {
             baos.close();
         }
-        catch ( IOException ex )
+        catch ( final IOException ex )
         {
             log.error( "Problem closing stream.", ex );
         }
@@ -114,7 +114,7 @@ public final class CompressionUtil
      * @return compressed byte array
      * @throws IOException thrown if we can't close the output stream
      */
-    public static byte[] compressByteArray( byte[] input )
+    public static byte[] compressByteArray( final byte[] input )
         throws IOException
     {
         return compressByteArray( input, 1024 );
@@ -128,11 +128,11 @@ public final class CompressionUtil
      * @return compressed byte array
      * @throws IOException thrown if we can't close the output stream
      */
-    public static byte[] compressByteArray( byte[] input, int bufferLength )
+    public static byte[] compressByteArray( final byte[] input, final int bufferLength )
         throws IOException
     {
         // Compressor with highest level of compression
-        Deflater compressor = new Deflater();
+        final Deflater compressor = new Deflater();
         compressor.setLevel( Deflater.BEST_COMPRESSION );
 
         // Give the compressor the data to compress
@@ -142,13 +142,13 @@ public final class CompressionUtil
         // Create an expandable byte array to hold the compressed data.
         // It is not necessary that the compressed data will be smaller than
         // the uncompressed data.
-        ByteArrayOutputStream bos = new ByteArrayOutputStream( input.length );
+        final ByteArrayOutputStream bos = new ByteArrayOutputStream( input.length );
 
         // Compress the data
-        byte[] buf = new byte[bufferLength];
+        final byte[] buf = new byte[bufferLength];
         while ( !compressor.finished() )
         {
-            int count = compressor.deflate( buf );
+            final int count = compressor.deflate( buf );
             bos.write( buf, 0, count );
         }
 
@@ -168,7 +168,7 @@ public final class CompressionUtil
      * @return decompressed byte array
      * @throws IOException thrown if there was a failure to construct the GzipInputStream
      */
-    public static byte[] decompressGzipByteArray( byte[] compressedByteArray )
+    public static byte[] decompressGzipByteArray( final byte[] compressedByteArray )
         throws IOException
     {
         return decompressGzipByteArray( compressedByteArray, 1024 );
@@ -182,14 +182,14 @@ public final class CompressionUtil
      * @return decompressed byte array
      * @throws IOException thrown if there was a failure to construct the GzipInputStream
      */
-    public static byte[] decompressGzipByteArray( byte[] compressedByteArray, int bufferlength )
+    public static byte[] decompressGzipByteArray( final byte[] compressedByteArray, final int bufferlength )
         throws IOException
     {
-        ByteArrayOutputStream uncompressedStream = new ByteArrayOutputStream();
+        final ByteArrayOutputStream uncompressedStream = new ByteArrayOutputStream();
 
-        GZIPInputStream compressedStream = new GZIPInputStream( new ByteArrayInputStream( compressedByteArray ) );
+        final GZIPInputStream compressedStream = new GZIPInputStream( new ByteArrayInputStream( compressedByteArray ) );
 
-        byte[] buffer = new byte[bufferlength];
+        final byte[] buffer = new byte[bufferlength];
 
         int index = -1;
 

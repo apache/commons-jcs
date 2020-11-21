@@ -78,7 +78,7 @@ public class RemoteCacheServerAttributes
      * @param p The new localPort value
      */
     @Override
-    public void setServicePort( int p )
+    public void setServicePort( final int p )
     {
         this.servicePort = p;
     }
@@ -100,7 +100,7 @@ public class RemoteCacheServerAttributes
      * @param r The new localClusterConsistency value
      */
     @Override
-    public void setAllowClusterGet( boolean r )
+    public void setAllowClusterGet( final boolean r )
     {
         allowClusterGet = r;
     }
@@ -122,7 +122,7 @@ public class RemoteCacheServerAttributes
      * @param s The new clusterServers value
      */
     @Override
-    public void setConfigFileName( String s )
+    public void setConfigFileName( final String s )
     {
         configFileName = s;
     }
@@ -133,7 +133,7 @@ public class RemoteCacheServerAttributes
      * @param useRegistryKeepAlive the useRegistryKeepAlive to set
      */
     @Override
-    public void setUseRegistryKeepAlive( boolean useRegistryKeepAlive )
+    public void setUseRegistryKeepAlive( final boolean useRegistryKeepAlive )
     {
         this.useRegistryKeepAlive = useRegistryKeepAlive;
     }
@@ -146,7 +146,7 @@ public class RemoteCacheServerAttributes
      */
     @Deprecated
     @Override
-    public void setStartRegistry( boolean startRegistry )
+    public void setStartRegistry( final boolean startRegistry )
     {
         this.startRegistry = startRegistry;
     }
@@ -179,7 +179,7 @@ public class RemoteCacheServerAttributes
      * @param registryKeepAliveDelayMillis the registryKeepAliveDelayMillis to set
      */
     @Override
-    public void setRegistryKeepAliveDelayMillis( long registryKeepAliveDelayMillis )
+    public void setRegistryKeepAliveDelayMillis( final long registryKeepAliveDelayMillis )
     {
         this.registryKeepAliveDelayMillis = registryKeepAliveDelayMillis;
     }
@@ -199,7 +199,7 @@ public class RemoteCacheServerAttributes
     @Override
     public String toString()
     {
-        StringBuilder buf = new StringBuilder(super.toString());
+        final StringBuilder buf = new StringBuilder(super.toString());
         buf.append( "\n servicePort = [" + this.getServicePort() + "]" );
         buf.append( "\n allowClusterGet = [" + this.isAllowClusterGet() + "]" );
         buf.append( "\n configFileName = [" + this.getConfigFileName() + "]" );

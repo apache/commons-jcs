@@ -48,16 +48,16 @@ public class JDBCDataSourceFactoryUnitTest
     public void testConfigureDataSourceFactory_Simple() throws SQLException
     {
         // SETUP
-        String poolName = "testConfigurePoolAccessAttributes_Simple";
+        final String poolName = "testConfigurePoolAccessAttributes_Simple";
 
-        String url = "adfads";
-        String userName = "zvzvz";
-        String password = "qewrrewq";
-        int maxActive = 10;
-        String driverClassName = "org.hsqldb.jdbcDriver";
+        final String url = "adfads";
+        final String userName = "zvzvz";
+        final String password = "qewrrewq";
+        final int maxActive = 10;
+        final String driverClassName = "org.hsqldb.jdbcDriver";
 
-        Properties props = new Properties();
-        String prefix = JDBCDiskCacheFactory.POOL_CONFIGURATION_PREFIX
+        final Properties props = new Properties();
+        final String prefix = JDBCDiskCacheFactory.POOL_CONFIGURATION_PREFIX
     		+ poolName
             + JDBCDiskCacheFactory.ATTRIBUTE_PREFIX;
         props.put( prefix + ".url", url );
@@ -66,17 +66,17 @@ public class JDBCDataSourceFactoryUnitTest
         props.put( prefix + ".maxActive", String.valueOf( maxActive ) );
         props.put( prefix + ".driverClassName", driverClassName );
 
-        JDBCDiskCacheFactory factory = new JDBCDiskCacheFactory();
+        final JDBCDiskCacheFactory factory = new JDBCDiskCacheFactory();
         factory.initialize();
 
-        JDBCDiskCacheAttributes cattr = new JDBCDiskCacheAttributes();
+        final JDBCDiskCacheAttributes cattr = new JDBCDiskCacheAttributes();
         cattr.setConnectionPoolName( poolName );
 
         // DO WORK
-        DataSourceFactory result = factory.getDataSourceFactory( cattr, props );
+        final DataSourceFactory result = factory.getDataSourceFactory( cattr, props );
         assertTrue("Should be a shared pool data source factory", result instanceof SharedPoolDataSourceFactory);
 
-        SharedPoolDataSource spds = (SharedPoolDataSource) result.getDataSource();
+        final SharedPoolDataSource spds = (SharedPoolDataSource) result.getDataSource();
         assertNotNull( "Should have a data source class", spds );
 
         // VERIFY
@@ -90,16 +90,16 @@ public class JDBCDataSourceFactoryUnitTest
     public void testConfigureDataSourceFactory_Attributes() throws SQLException
     {
         // SETUP
-        String url = "adfads";
-        String userName = "zvzvz";
-        String password = "qewrrewq";
-        int maxActive = 10;
-        String driverClassName = "org.hsqldb.jdbcDriver";
+        final String url = "adfads";
+        final String userName = "zvzvz";
+        final String password = "qewrrewq";
+        final int maxActive = 10;
+        final String driverClassName = "org.hsqldb.jdbcDriver";
 
-        JDBCDiskCacheFactory factory = new JDBCDiskCacheFactory();
+        final JDBCDiskCacheFactory factory = new JDBCDiskCacheFactory();
         factory.initialize();
 
-        JDBCDiskCacheAttributes cattr = new JDBCDiskCacheAttributes();
+        final JDBCDiskCacheAttributes cattr = new JDBCDiskCacheAttributes();
         cattr.setUrl(url);
         cattr.setUserName(userName);
         cattr.setPassword(password);
@@ -107,10 +107,10 @@ public class JDBCDataSourceFactoryUnitTest
         cattr.setDriverClassName(driverClassName);
 
         // DO WORK
-        DataSourceFactory result = factory.getDataSourceFactory( cattr, null );
+        final DataSourceFactory result = factory.getDataSourceFactory( cattr, null );
         assertTrue("Should be a shared pool data source factory", result instanceof SharedPoolDataSourceFactory);
 
-        SharedPoolDataSource spds = (SharedPoolDataSource) result.getDataSource();
+        final SharedPoolDataSource spds = (SharedPoolDataSource) result.getDataSource();
         assertNotNull( "Should have a data source class", spds );
 
         // VERIFY
@@ -123,23 +123,23 @@ public class JDBCDataSourceFactoryUnitTest
     public void testConfigureDataSourceFactory_JNDI() throws SQLException
     {
         // SETUP
-        String jndiPath = "java:comp/env/jdbc/MyDB";
-        long ttl = 300000L;
+        final String jndiPath = "java:comp/env/jdbc/MyDB";
+        final long ttl = 300000L;
 
         System.setProperty(Context.INITIAL_CONTEXT_FACTORY,
                 MockInitialContextFactory.class.getName());
 
         MockInitialContextFactory.bind(jndiPath, new BasicDataSource());
 
-        JDBCDiskCacheFactory factory = new JDBCDiskCacheFactory();
+        final JDBCDiskCacheFactory factory = new JDBCDiskCacheFactory();
         factory.initialize();
 
-        JDBCDiskCacheAttributes cattr = new JDBCDiskCacheAttributes();
+        final JDBCDiskCacheAttributes cattr = new JDBCDiskCacheAttributes();
         cattr.setJndiPath(jndiPath);
         cattr.setJndiTTL(ttl);
 
         // DO WORK
-        DataSourceFactory result = factory.getDataSourceFactory( cattr, null );
+        final DataSourceFactory result = factory.getDataSourceFactory( cattr, null );
         assertTrue("Should be a JNDI data source factory", result instanceof JndiDataSourceFactory);
     }
 
@@ -157,13 +157,13 @@ public class JDBCDataSourceFactoryUnitTest
                     Map<String, Object> bindings = new HashMap<>();
 
                     @Override
-                    public void bind(String name, Object obj) throws NamingException
+                    public void bind(final String name, final Object obj) throws NamingException
                     {
                         bindings.put(name, obj);
                     }
 
                     @Override
-                    public Object lookup(String name) throws NamingException
+                    public Object lookup(final String name) throws NamingException
                     {
                         return bindings.get(name);
                     }
@@ -175,7 +175,7 @@ public class JDBCDataSourceFactoryUnitTest
                     }
                 };
             }
-            catch (NamingException e)
+            catch (final NamingException e)
             {
             	// can't happen.
                 throw new RuntimeException(e);
@@ -183,18 +183,18 @@ public class JDBCDataSourceFactoryUnitTest
         }
 
         @Override
-		public Context getInitialContext(Hashtable<?, ?> environment) throws NamingException
+		public Context getInitialContext(final Hashtable<?, ?> environment) throws NamingException
         {
             return context;
         }
 
-        public static void bind(String name, Object obj)
+        public static void bind(final String name, final Object obj)
         {
             try
             {
                 context.bind(name, obj);
             }
-            catch (NamingException e)
+            catch (final NamingException e)
             {
             	// can't happen.
                 throw new RuntimeException(e);

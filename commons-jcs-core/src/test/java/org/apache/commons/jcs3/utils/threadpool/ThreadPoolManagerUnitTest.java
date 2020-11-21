@@ -41,12 +41,12 @@ public class ThreadPoolManagerUnitTest
      */
     public void testDefaultConfig()
     {
-        Properties props = PropertyLoader.loadProperties( "thread_pool.properties" );
+        final Properties props = PropertyLoader.loadProperties( "thread_pool.properties" );
         ThreadPoolManager.setProps( props );
-        ThreadPoolManager mgr = ThreadPoolManager.getInstance();
+        final ThreadPoolManager mgr = ThreadPoolManager.getInstance();
         assertNotNull( mgr );
 
-        ExecutorService pool = mgr.getExecutorService( "test1" );
+        final ExecutorService pool = mgr.getExecutorService( "test1" );
         assertNotNull( pool );
     }
 
@@ -55,12 +55,12 @@ public class ThreadPoolManagerUnitTest
      */
     public void testSpecialConfig()
     {
-        Properties props = PropertyLoader.loadProperties( "thread_pool.properties" );
+        final Properties props = PropertyLoader.loadProperties( "thread_pool.properties" );
         ThreadPoolManager.setProps( props );
-        ThreadPoolManager mgr = ThreadPoolManager.getInstance();
+        final ThreadPoolManager mgr = ThreadPoolManager.getInstance();
         assertNotNull( mgr );
 
-        ExecutorService pool = mgr.getExecutorService( "aborttest" );
+        final ExecutorService pool = mgr.getExecutorService( "aborttest" );
         assertNotNull( pool );
     }
 
@@ -70,16 +70,16 @@ public class ThreadPoolManagerUnitTest
      */
     public void testGetPoolNames()
     {
-        ThreadPoolManager mgr = ThreadPoolManager.getInstance();
+        final ThreadPoolManager mgr = ThreadPoolManager.getInstance();
         assertNotNull( mgr );
 
-        String poolName1 = "testGetPoolNames1";
+        final String poolName1 = "testGetPoolNames1";
         mgr.getExecutorService( poolName1 );
 
-        String poolName2 = "testGetPoolNames2";
+        final String poolName2 = "testGetPoolNames2";
         mgr.getExecutorService( poolName2 );
 
-        Set<String> names = mgr.getPoolNames();
+        final Set<String> names = mgr.getPoolNames();
         assertTrue( "Should have name in list.", names.contains( poolName1 ) );
         assertTrue( "Should have name in list.", names.contains( poolName2 ) );
     }

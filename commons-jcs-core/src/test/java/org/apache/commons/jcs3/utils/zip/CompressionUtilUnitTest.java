@@ -40,7 +40,7 @@ public class CompressionUtilUnitTest
             // VERIFY
             fail( "excepted an IllegalArgumentException" );
         }
-        catch ( IllegalArgumentException exception )
+        catch ( final IllegalArgumentException exception )
         {
             // expected
             return;
@@ -56,14 +56,14 @@ public class CompressionUtilUnitTest
         throws IOException
     {
         // SETUP
-        String text = "This is some text to compress, not a lot, just a bit ";
+        final String text = "This is some text to compress, not a lot, just a bit ";
 
         // DO WORK
-        byte[] compressedText = CompressionUtil.compressByteArray( text.getBytes() );
-        byte[] output = CompressionUtil.decompressByteArray( compressedText );
+        final byte[] compressedText = CompressionUtil.compressByteArray( text.getBytes() );
+        final byte[] output = CompressionUtil.decompressByteArray( compressedText );
 
         // VERIFY
-        String result = new String( output );
+        final String result = new String( output );
         assertNotNull( "decompressed output stream shouldn't have been null ", output );
         assertEquals( text, result );
     }
@@ -77,20 +77,20 @@ public class CompressionUtilUnitTest
         throws IOException
     {
         // SETUP
-        String text = " This is some text to compress, not a lot, just a bit ";
+        final String text = " This is some text to compress, not a lot, just a bit ";
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        GZIPOutputStream os = new GZIPOutputStream( baos );
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        final GZIPOutputStream os = new GZIPOutputStream( baos );
 
         os.write( text.getBytes() );
         os.flush();
         os.close();
 
         // DO WORK
-        byte[] output = CompressionUtil.decompressGzipByteArray( baos.toByteArray() );
+        final byte[] output = CompressionUtil.decompressGzipByteArray( baos.toByteArray() );
 
         // VERIFY
-        String result = new String( output );
+        final String result = new String( output );
         assertNotNull( "decompressed output stream shouldn't have been null ", output );
         assertEquals( text, result );
     }

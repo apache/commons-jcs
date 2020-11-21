@@ -44,7 +44,7 @@ public class ElementEvent<T>
      * @param source The Cache Element
      * @param elementEvent The event id defined in the enum class.
      */
-    public ElementEvent( T source, ElementEventType elementEvent )
+    public ElementEvent( final T source, final ElementEventType elementEvent )
     {
         super( source );
         this.elementEvent = elementEvent;

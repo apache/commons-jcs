@@ -63,7 +63,7 @@ public abstract class AbstractAuxiliaryCacheMonitor extends Thread
      *
      * @param name the thread name
      */
-    public AbstractAuxiliaryCacheMonitor(String name)
+    public AbstractAuxiliaryCacheMonitor(final String name)
     {
         super(name);
     }
@@ -73,7 +73,7 @@ public abstract class AbstractAuxiliaryCacheMonitor extends Thread
      * <p>
      * @param idlePeriod The new idlePeriod value
      */
-    public static void setIdlePeriod( long idlePeriod )
+    public static void setIdlePeriod( final long idlePeriod )
     {
         if ( idlePeriod > AbstractAuxiliaryCacheMonitor.idlePeriod )
         {
@@ -153,7 +153,7 @@ public abstract class AbstractAuxiliaryCacheMonitor extends Thread
                     trigger.await();
                     // wake up only if there is an error.
                 }
-                catch ( InterruptedException ignore )
+                catch ( final InterruptedException ignore )
                 {
                     //no op, this is expected
                 }
@@ -187,7 +187,7 @@ public abstract class AbstractAuxiliaryCacheMonitor extends Thread
 
                 Thread.sleep( idlePeriod );
             }
-            catch ( InterruptedException ex )
+            catch ( final InterruptedException ex )
             {
                 // ignore;
             }

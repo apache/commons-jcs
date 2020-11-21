@@ -76,13 +76,13 @@ public class LateralCacheNoWait<K, V>
      * <p>
      * @param cache
      */
-    public LateralCacheNoWait( LateralCache<K, V> cache )
+    public LateralCacheNoWait( final LateralCache<K, V> cache )
     {
         this.cache = cache;
 
         log.debug( "Constructing LateralCacheNoWait, LateralCache = [{0}]", cache );
 
-        CacheEventQueueFactory<K, V> fact = new CacheEventQueueFactory<>();
+        final CacheEventQueueFactory<K, V> fact = new CacheEventQueueFactory<>();
         this.eventQueue = fact.createCacheEventQueue( new CacheAdaptor<>( cache ), CacheInfo.listenerId, cache
             .getCacheName(), cache.getAuxiliaryCacheAttributes().getEventQueuePoolName(), cache
             .getAuxiliaryCacheAttributes().getEventQueueType() );
@@ -104,7 +104,7 @@ public class LateralCacheNoWait<K, V>
      * @throws IOException
      */
     @Override
-    public void update( ICacheElement<K, V> ce )
+    public void update( final ICacheElement<K, V> ce )
         throws IOException
     {
         putCount++;
@@ -112,7 +112,7 @@ public class LateralCacheNoWait<K, V>
         {
             eventQueue.addPutEvent( ce );
         }
-        catch ( IOException ex )
+        catch ( final IOException ex )
         {
             log.error( ex );
             eventQueue.destroy();
@@ -126,7 +126,7 @@ public class LateralCacheNoWait<K, V>
      * @return ICacheElement&lt;K, V&gt; if found, else null
      */
     @Override
-    public ICacheElement<K, V> get( K key )
+    public ICacheElement<K, V> get( final K key )
     {
         getCount++;
         if ( this.getStatus() != CacheStatus.ERROR )
@@ -135,20 +135,20 @@ public class LateralCacheNoWait<K, V>
             {
                 return cache.get( key );
             }
-            catch ( UnmarshalException ue )
+            catch ( final UnmarshalException ue )
             {
                 log.debug( "Retrying the get owing to UnmarshalException..." );
                 try
                 {
                     return cache.get( key );
                 }
-                catch ( IOException ex )
+                catch ( final IOException ex )
                 {
                     log.error( "Failed in retrying the get for the second time." );
                     eventQueue.destroy();
                 }
             }
-            catch ( IOException ex )
+            catch ( final IOException ex )
             {
                 eventQueue.destroy();
             }
@@ -164,11 +164,11 @@ public class LateralCacheNoWait<K, V>
      *         data in cache for any of these keys
      */
     @Override
-    public Map<K, ICacheElement<K, V>> getMultiple(Set<K> keys)
+    public Map<K, ICacheElement<K, V>> getMultiple(final Set<K> keys)
     {
         if ( keys != null && !keys.isEmpty() )
         {
-            Map<K, ICacheElement<K, V>> elements = keys.stream()
+            final Map<K, ICacheElement<K, V>> elements = keys.stream()
                 .collect(Collectors.toMap(
                         key -> key,
                         key -> get(key))).entrySet().stream()
@@ -190,7 +190,7 @@ public class LateralCacheNoWait<K, V>
      * @return ICacheElement&lt;K, V&gt; if found, else empty
      */
     @Override
-    public Map<K, ICacheElement<K, V>> getMatching(String pattern)
+    public Map<K, ICacheElement<K, V>> getMatching(final String pattern)
     {
         getCount++;
         if ( this.getStatus() != CacheStatus.ERROR )
@@ -199,20 +199,20 @@ public class LateralCacheNoWait<K, V>
             {
                 return cache.getMatching( pattern );
             }
-            catch ( UnmarshalException ue )
+            catch ( final UnmarshalException ue )
             {
                 log.debug( "Retrying the get owing to UnmarshalException." );
                 try
                 {
                     return cache.getMatching( pattern );
                 }
-                catch ( IOException ex )
+                catch ( final IOException ex )
                 {
                     log.error( "Failed in retrying the get for the second time." );
                     eventQueue.destroy();
                 }
             }
-            catch ( IOException ex )
+            catch ( final IOException ex )
             {
                 eventQueue.destroy();
             }
@@ -232,7 +232,7 @@ public class LateralCacheNoWait<K, V>
         {
             return cache.getKeySet();
         }
-        catch ( IOException ex )
+        catch ( final IOException ex )
         {
             log.error( ex );
             eventQueue.destroy();
@@ -247,14 +247,14 @@ public class LateralCacheNoWait<K, V>
      * @return always false
      */
     @Override
-    public boolean remove( K key )
+    public boolean remove( final K key )
     {
         removeCount++;
         try
         {
             eventQueue.addRemoveEvent( key );
         }
-        catch ( IOException ex )
+        catch ( final IOException ex )
         {
             log.error( ex );
             eventQueue.destroy();
@@ -270,7 +270,7 @@ public class LateralCacheNoWait<K, V>
         {
             eventQueue.addRemoveAllEvent();
         }
-        catch ( IOException ex )
+        catch ( final IOException ex )
         {
             log.error( ex );
             eventQueue.destroy();
@@ -285,7 +285,7 @@ public class LateralCacheNoWait<K, V>
         {
             eventQueue.addDisposeEvent();
         }
-        catch ( IOException ex )
+        catch ( final IOException ex )
         {
             log.error( ex );
             eventQueue.destroy();
@@ -343,7 +343,7 @@ public class LateralCacheNoWait<K, V>
      * <p>
      * @param lateral
      */
-    public void fixCache( ICacheServiceNonLocal<K, V> lateral )
+    public void fixCache( final ICacheServiceNonLocal<K, V> lateral )
     {
         cache.fixCache( lateral );
         resetEventQ();
@@ -358,7 +358,7 @@ public class LateralCacheNoWait<K, V>
         {
             eventQueue.destroy();
         }
-        CacheEventQueueFactory<K, V> fact = new CacheEventQueueFactory<>();
+        final CacheEventQueueFactory<K, V> fact = new CacheEventQueueFactory<>();
         this.eventQueue = fact.createCacheEventQueue( new CacheAdaptor<>( cache ), CacheInfo.listenerId, cache
             .getCacheName(), cache.getAuxiliaryCacheAttributes().getEventQueuePoolName(), cache
             .getAuxiliaryCacheAttributes().getEventQueueType() );
@@ -400,13 +400,13 @@ public class LateralCacheNoWait<K, V>
     @Override
     public IStats getStatistics()
     {
-        IStats stats = new Stats();
+        final IStats stats = new Stats();
         stats.setTypeName( "Lateral Cache No Wait" );
 
-        ArrayList<IStatElement<?>> elems = new ArrayList<>();
+        final ArrayList<IStatElement<?>> elems = new ArrayList<>();
 
         // get the stats from the event queue too
-        IStats eqStats = this.eventQueue.getStatistics();
+        final IStats eqStats = this.eventQueue.getStatistics();
         elems.addAll(eqStats.getStatElements());
 
         elems.add(new StatElement<>( "Get Count", Integer.valueOf(this.getCount) ) );
@@ -425,7 +425,7 @@ public class LateralCacheNoWait<K, V>
     @Override
     public String toString()
     {
-        StringBuilder buf = new StringBuilder();
+        final StringBuilder buf = new StringBuilder();
         buf.append( " LateralCacheNoWait " );
         buf.append( " Status = " + this.getStatus() );
         buf.append( " cache = [" + cache.toString() + "]" );

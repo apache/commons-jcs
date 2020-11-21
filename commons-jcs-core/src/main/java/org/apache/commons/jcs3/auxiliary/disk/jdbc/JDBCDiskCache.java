@@ -116,7 +116,7 @@ public class JDBCDiskCache<K, V>
      * @param dsFactory the DataSourceFactory for this cache
      * @param tableState an object to track table operations
      */
-    public JDBCDiskCache(JDBCDiskCacheAttributes cattr, DataSourceFactory dsFactory, TableState tableState)
+    public JDBCDiskCache(final JDBCDiskCacheAttributes cattr, final DataSourceFactory dsFactory, final TableState tableState)
     {
         super( cattr );
 
@@ -140,7 +140,7 @@ public class JDBCDiskCache<K, V>
      * @param ce
      */
     @Override
-    protected void processUpdate( ICacheElement<K, V> ce )
+    protected void processUpdate( final ICacheElement<K, V> ce )
     {
     	updateCount.incrementAndGet();
 
@@ -156,7 +156,7 @@ public class JDBCDiskCache<K, V>
             {
                 element = getElementSerializer().serialize( ce );
             }
-            catch ( IOException e )
+            catch ( final IOException e )
             {
                 log.error( "Could not serialize element", e );
                 return;
@@ -164,7 +164,7 @@ public class JDBCDiskCache<K, V>
 
             insertOrUpdate( ce, con, element );
         }
-        catch ( SQLException e )
+        catch ( final SQLException e )
         {
             log.error( "Problem getting connection.", e );
         }
@@ -188,7 +188,7 @@ public class JDBCDiskCache<K, V>
      * @param con
      * @param element
      */
-    private void insertOrUpdate( ICacheElement<K, V> ce, Connection con, byte[] element )
+    private void insertOrUpdate( final ICacheElement<K, V> ce, final Connection con, final byte[] element )
     {
         boolean exists = false;
 
@@ -219,10 +219,10 @@ public class JDBCDiskCache<K, V>
      * @param element
      * @return true if the insertion fails because the record exists.
      */
-    private boolean insertRow( ICacheElement<K, V> ce, Connection con, byte[] element )
+    private boolean insertRow( final ICacheElement<K, V> ce, final Connection con, final byte[] element )
     {
         boolean exists = false;
-        String sqlI = "insert into "
+        final String sqlI = "insert into "
                 + getJdbcDiskCacheAttributes().getTableName()
                 + " (CACHE_KEY, REGION, ELEMENT, MAX_LIFE_SECONDS, IS_ETERNAL, CREATE_TIME, UPDATE_TIME_SECONDS, SYSTEM_EXPIRE_TIME_SECONDS) "
                 + " values (?, ?, ?, ?, ?, ?, ?, ?)";
@@ -241,18 +241,18 @@ public class JDBCDiskCache<K, V>
             {
                 psInsert.setString( 5, "F" );
             }
-            Timestamp createTime = new Timestamp( ce.getElementAttributes().getCreateTime() );
+            final Timestamp createTime = new Timestamp( ce.getElementAttributes().getCreateTime() );
             psInsert.setTimestamp( 6, createTime );
 
-            long now = System.currentTimeMillis() / 1000;
+            final long now = System.currentTimeMillis() / 1000;
             psInsert.setLong( 7, now );
 
-            long expireTime = now + ce.getElementAttributes().getMaxLife();
+            final long expireTime = now + ce.getElementAttributes().getMaxLife();
             psInsert.setLong( 8, expireTime );
 
             psInsert.execute();
         }
-        catch ( SQLException e )
+        catch ( final SQLException e )
         {
             if ("23000".equals(e.getSQLState()))
             {
@@ -280,9 +280,9 @@ public class JDBCDiskCache<K, V>
      * @param con
      * @param element
      */
-    private void updateRow( ICacheElement<K, V> ce, Connection con, byte[] element )
+    private void updateRow( final ICacheElement<K, V> ce, final Connection con, final byte[] element )
     {
-        String sqlU = "update " + getJdbcDiskCacheAttributes().getTableName()
+        final String sqlU = "update " + getJdbcDiskCacheAttributes().getTableName()
                 + " set ELEMENT  = ?, CREATE_TIME = ?, UPDATE_TIME_SECONDS = ?, " + " SYSTEM_EXPIRE_TIME_SECONDS = ? "
                 + " where CACHE_KEY = ? and REGION = ?";
 
@@ -290,13 +290,13 @@ public class JDBCDiskCache<K, V>
         {
             psUpdate.setBytes( 1, element );
 
-            Timestamp createTime = new Timestamp( ce.getElementAttributes().getCreateTime() );
+            final Timestamp createTime = new Timestamp( ce.getElementAttributes().getCreateTime() );
             psUpdate.setTimestamp( 2, createTime );
 
-            long now = System.currentTimeMillis() / 1000;
+            final long now = System.currentTimeMillis() / 1000;
             psUpdate.setLong( 3, now );
 
-            long expireTime = now + ce.getElementAttributes().getMaxLife();
+            final long expireTime = now + ce.getElementAttributes().getMaxLife();
             psUpdate.setLong( 4, expireTime );
 
             psUpdate.setString( 5, (String) ce.getKey() );
@@ -305,7 +305,7 @@ public class JDBCDiskCache<K, V>
 
             log.debug( "ran update {0}", sqlU );
         }
-        catch ( SQLException e )
+        catch ( final SQLException e )
         {
             log.error( "Error executing update sql [{0}]", sqlU, e );
         }
@@ -318,11 +318,11 @@ public class JDBCDiskCache<K, V>
      * @param con a database connection
      * @return boolean
      */
-    protected boolean doesElementExist( ICacheElement<K, V> ce, Connection con )
+    protected boolean doesElementExist( final ICacheElement<K, V> ce, final Connection con )
     {
         boolean exists = false;
         // don't select the element, since we want this to be fast.
-        String sqlS = "select CACHE_KEY from " + getJdbcDiskCacheAttributes().getTableName()
+        final String sqlS = "select CACHE_KEY from " + getJdbcDiskCacheAttributes().getTableName()
             + " where REGION = ? and CACHE_KEY = ?";
 
         try (PreparedStatement psSelect = con.prepareStatement( sqlS ))
@@ -337,7 +337,7 @@ public class JDBCDiskCache<K, V>
 
             log.debug( "[{0}] existing status is {1}", ce.getKey(), exists );
         }
-        catch ( SQLException e )
+        catch ( final SQLException e )
         {
             log.error( "Problem looking for item before insert.", e );
         }
@@ -353,7 +353,7 @@ public class JDBCDiskCache<K, V>
      * @see org.apache.commons.jcs3.auxiliary.disk.AbstractDiskCache#get(Object)
      */
     @Override
-    protected ICacheElement<K, V> processGet( K key )
+    protected ICacheElement<K, V> processGet( final K key )
     {
     	getCount.incrementAndGet();
 
@@ -370,7 +370,7 @@ public class JDBCDiskCache<K, V>
         try
         {
             // region, key
-            String selectString = "select ELEMENT from " + getJdbcDiskCacheAttributes().getTableName()
+            final String selectString = "select ELEMENT from " + getJdbcDiskCacheAttributes().getTableName()
                 + " where REGION = ? and CACHE_KEY = ?";
 
             try (Connection con = getDataSource().getConnection())
@@ -393,7 +393,7 @@ public class JDBCDiskCache<K, V>
                                 // USE THE SERIALIZER
                                 obj = getElementSerializer().deSerialize( data, null );
                             }
-                            catch ( Exception e )
+                            catch ( final Exception e )
                             {
                                 log.error( "Problem getting item for key [{0}]", key, e );
                             }
@@ -402,7 +402,7 @@ public class JDBCDiskCache<K, V>
                 }
             }
         }
-        catch ( SQLException sqle )
+        catch ( final SQLException sqle )
         {
             log.error( "Caught a SQL exception trying to get the item for key [{0}]",
                     key, sqle );
@@ -427,7 +427,7 @@ public class JDBCDiskCache<K, V>
      * @return key,value map
      */
     @Override
-    protected Map<K, ICacheElement<K, V>> processGetMatching( String pattern )
+    protected Map<K, ICacheElement<K, V>> processGetMatching( final String pattern )
     {
     	getMatchingCount.incrementAndGet();
 
@@ -438,12 +438,12 @@ public class JDBCDiskCache<K, V>
             return null;
         }
 
-        Map<K, ICacheElement<K, V>> results = new HashMap<>();
+        final Map<K, ICacheElement<K, V>> results = new HashMap<>();
 
         try
         {
             // region, key
-            String selectString = "select CACHE_KEY, ELEMENT from " + getJdbcDiskCacheAttributes().getTableName()
+            final String selectString = "select CACHE_KEY, ELEMENT from " + getJdbcDiskCacheAttributes().getTableName()
                 + " where REGION = ? and CACHE_KEY like ?";
 
             try (Connection con = getDataSource().getConnection())
@@ -457,17 +457,17 @@ public class JDBCDiskCache<K, V>
                     {
                         while ( rs.next() )
                         {
-                            String key = rs.getString( 1 );
-                            byte[] data = rs.getBytes( 2 );
+                            final String key = rs.getString( 1 );
+                            final byte[] data = rs.getBytes( 2 );
                             if ( data != null )
                             {
                                 try
                                 {
                                     // USE THE SERIALIZER
-                                    ICacheElement<K, V> value = getElementSerializer().deSerialize( data, null );
+                                    final ICacheElement<K, V> value = getElementSerializer().deSerialize( data, null );
                                     results.put( (K) key, value );
                                 }
-                                catch ( Exception e )
+                                catch ( final Exception e )
                                 {
                                     log.error( "Problem getting items for pattern [{0}]", pattern, e );
                                 }
@@ -477,7 +477,7 @@ public class JDBCDiskCache<K, V>
                 }
             }
         }
-        catch ( SQLException sqle )
+        catch ( final SQLException sqle )
         {
             log.error( "Caught a SQL exception trying to get items for pattern [{0}]",
                     pattern, sqle );
@@ -498,7 +498,7 @@ public class JDBCDiskCache<K, V>
      * @param pattern
      * @return String to use in the like query.
      */
-    public String constructLikeParameterFromPattern( String pattern )
+    public String constructLikeParameterFromPattern( final String pattern )
     {
         String likePattern = pattern.replaceAll( "\\.\\+", "%" );
         likePattern = likePattern.replaceAll( "\\.", "_" );
@@ -516,7 +516,7 @@ public class JDBCDiskCache<K, V>
      * @return boolean
      */
     @Override
-    protected boolean processRemove( K key )
+    protected boolean processRemove( final K key )
     {
         // remove single item.
         String sql = "delete from " + getJdbcDiskCacheAttributes().getTableName()
@@ -549,13 +549,13 @@ public class JDBCDiskCache<K, V>
 
                 setAlive(true);
             }
-            catch ( SQLException e )
+            catch ( final SQLException e )
             {
                 log.error( "Problem creating statement. sql [{0}]", sql, e );
                 setAlive(false);
             }
         }
-        catch ( SQLException e )
+        catch ( final SQLException e )
         {
             log.error( "Problem updating cache.", e );
             reset();
@@ -575,7 +575,7 @@ public class JDBCDiskCache<K, V>
         {
             try (Connection con = getDataSource().getConnection())
             {
-                String sql = "delete from " + getJdbcDiskCacheAttributes().getTableName() + " where REGION = ?";
+                final String sql = "delete from " + getJdbcDiskCacheAttributes().getTableName() + " where REGION = ?";
 
                 try (PreparedStatement psDelete = con.prepareStatement( sql ))
                 {
@@ -583,13 +583,13 @@ public class JDBCDiskCache<K, V>
                     setAlive(true);
                     psDelete.executeUpdate();
                 }
-                catch ( SQLException e )
+                catch ( final SQLException e )
                 {
                     log.error( "Problem creating statement.", e );
                     setAlive(false);
                 }
             }
-            catch ( SQLException e )
+            catch ( final SQLException e )
             {
                 log.error( "Problem removing all.", e );
                 reset();
@@ -615,16 +615,16 @@ public class JDBCDiskCache<K, V>
         {
             // The shrinker thread might kick in before the table is created
             // So check if the table exists first
-            DatabaseMetaData dmd = con.getMetaData();
-            ResultSet result = dmd.getTables(null, null,
+            final DatabaseMetaData dmd = con.getMetaData();
+            final ResultSet result = dmd.getTables(null, null,
                     getJdbcDiskCacheAttributes().getTableName(), null);
 
             if (result.next())
             {
                 getTableState().setState( TableState.DELETE_RUNNING );
-                long now = System.currentTimeMillis() / 1000;
+                final long now = System.currentTimeMillis() / 1000;
 
-                String sql = "delete from " + getJdbcDiskCacheAttributes().getTableName()
+                final String sql = "delete from " + getJdbcDiskCacheAttributes().getTableName()
                     + " where IS_ETERNAL = ? and REGION = ? and ? > SYSTEM_EXPIRE_TIME_SECONDS";
 
                 try (PreparedStatement psDelete = con.prepareStatement( sql ))
@@ -637,7 +637,7 @@ public class JDBCDiskCache<K, V>
 
                     deleted = psDelete.executeUpdate();
                 }
-                catch ( SQLException e )
+                catch ( final SQLException e )
                 {
                     log.error( "Problem creating statement.", e );
                     setAlive(false);
@@ -652,7 +652,7 @@ public class JDBCDiskCache<K, V>
                         getJdbcDiskCacheAttributes().getTableName() );
             }
         }
-        catch ( SQLException e )
+        catch ( final SQLException e )
         {
             logError( getAuxiliaryCacheAttributes().getName(), "deleteExpired",
                     e.getMessage() + " URL: " + getDiskLocation() );
@@ -679,13 +679,13 @@ public class JDBCDiskCache<K, V>
     @Override
     public void processDispose()
     {
-        ICacheEvent<K> cacheEvent = createICacheEvent( getCacheName(), (K)"none", ICacheEventLogger.DISPOSE_EVENT );
+        final ICacheEvent<K> cacheEvent = createICacheEvent( getCacheName(), (K)"none", ICacheEventLogger.DISPOSE_EVENT );
 
         try
         {
         	dsFactory.close();
         }
-        catch ( SQLException e )
+        catch ( final SQLException e )
         {
             log.error( "Problem shutting down.", e );
         }
@@ -706,7 +706,7 @@ public class JDBCDiskCache<K, V>
         int size = 0;
 
         // region, key
-        String selectString = "select count(*) from " + getJdbcDiskCacheAttributes().getTableName()
+        final String selectString = "select count(*) from " + getJdbcDiskCacheAttributes().getTableName()
             + " where REGION = ?";
 
         try (Connection con = getDataSource().getConnection())
@@ -724,7 +724,7 @@ public class JDBCDiskCache<K, V>
                 }
             }
         }
-        catch ( SQLException e )
+        catch ( final SQLException e )
         {
             log.error( "Problem getting size.", e );
         }
@@ -748,7 +748,7 @@ public class JDBCDiskCache<K, V>
      * @param elementSerializer The elementSerializer to set.
      */
     @Override
-    public void setElementSerializer( IElementSerializer elementSerializer )
+    public void setElementSerializer( final IElementSerializer elementSerializer )
     {
         this.elementSerializer = elementSerializer;
     }
@@ -765,7 +765,7 @@ public class JDBCDiskCache<K, V>
     /**
      * @param jdbcDiskCacheAttributes The jdbcDiskCacheAttributes to set.
      */
-    protected void setJdbcDiskCacheAttributes( JDBCDiskCacheAttributes jdbcDiskCacheAttributes )
+    protected void setJdbcDiskCacheAttributes( final JDBCDiskCacheAttributes jdbcDiskCacheAttributes )
     {
         this.jdbcDiskCacheAttributes = jdbcDiskCacheAttributes;
     }
@@ -795,10 +795,10 @@ public class JDBCDiskCache<K, V>
     @Override
     public IStats getStatistics()
     {
-        IStats stats = super.getStatistics();
+        final IStats stats = super.getStatistics();
         stats.setTypeName( "JDBC/Abstract Disk Cache" );
 
-        List<IStatElement<?>> elems = stats.getStatElements();
+        final List<IStatElement<?>> elems = stats.getStatElements();
 
         elems.add(new StatElement<>( "Update Count", updateCount ) );
         elems.add(new StatElement<>( "Get Count", getCount ) );
@@ -828,7 +828,7 @@ public class JDBCDiskCache<K, V>
     /**
      * @param tableState The tableState to set.
      */
-    public void setTableState( TableState tableState )
+    public void setTableState( final TableState tableState )
     {
         this.tableState = tableState;
     }

@@ -62,24 +62,24 @@ public class RemoteHttpCacheFactory
      * @return AuxiliaryCache
      */
     @Override
-    public <K, V> AuxiliaryCache<K, V> createCache( AuxiliaryCacheAttributes iaca, ICompositeCacheManager cacheMgr,
-                                       ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer )
+    public <K, V> AuxiliaryCache<K, V> createCache( final AuxiliaryCacheAttributes iaca, final ICompositeCacheManager cacheMgr,
+                                       final ICacheEventLogger cacheEventLogger, final IElementSerializer elementSerializer )
     {
-        RemoteHttpCacheAttributes rca = (RemoteHttpCacheAttributes) iaca;
+        final RemoteHttpCacheAttributes rca = (RemoteHttpCacheAttributes) iaca;
 
         // TODO, use the configured value.
         rca.setRemoteType( RemoteType.LOCAL );
 
-        RemoteHttpClientListener<K, V> listener = new RemoteHttpClientListener<>( rca, cacheMgr, elementSerializer );
+        final RemoteHttpClientListener<K, V> listener = new RemoteHttpClientListener<>( rca, cacheMgr, elementSerializer );
 
-        IRemoteHttpCacheClient<K, V> remoteService = createRemoteHttpCacheClientForAttributes(rca);
+        final IRemoteHttpCacheClient<K, V> remoteService = createRemoteHttpCacheClientForAttributes(rca);
 
-        IRemoteCacheClient<K, V> remoteCacheClient =
+        final IRemoteCacheClient<K, V> remoteCacheClient =
                 new RemoteHttpCache<>( rca, remoteService, listener, monitor );
         remoteCacheClient.setCacheEventLogger( cacheEventLogger );
         remoteCacheClient.setElementSerializer( elementSerializer );
 
-        RemoteCacheNoWait<K, V> remoteCacheNoWait = new RemoteCacheNoWait<>( remoteCacheClient );
+        final RemoteCacheNoWait<K, V> remoteCacheNoWait = new RemoteCacheNoWait<>( remoteCacheClient );
         remoteCacheNoWait.setCacheEventLogger( cacheEventLogger );
         remoteCacheNoWait.setElementSerializer( elementSerializer );
 
@@ -93,7 +93,7 @@ public class RemoteHttpCacheFactory
      * @param cattr the cache configuration
      * @return the client instance
      */
-    protected <V, K> IRemoteHttpCacheClient<K, V> createRemoteHttpCacheClientForAttributes(RemoteHttpCacheAttributes cattr)
+    protected <V, K> IRemoteHttpCacheClient<K, V> createRemoteHttpCacheClientForAttributes(final RemoteHttpCacheAttributes cattr)
     {
         IRemoteHttpCacheClient<K, V> remoteService = OptionConverter.instantiateByClassName( cattr
                         .getRemoteHttpClientClassName(), null );
@@ -134,7 +134,7 @@ public class RemoteHttpCacheFactory
             {
                 monitor.join(5000);
             }
-            catch (InterruptedException e)
+            catch (final InterruptedException e)
             {
                 // swallow
             }

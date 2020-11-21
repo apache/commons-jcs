@@ -48,7 +48,7 @@ public class MockElementSerializer
      *
      */
     @Override
-    public <T> T deSerialize( byte[] bytes, ClassLoader loader )
+    public <T> T deSerialize( final byte[] bytes, final ClassLoader loader )
         throws IOException, ClassNotFoundException
     {
         deSerializeCount++;
@@ -62,7 +62,7 @@ public class MockElementSerializer
      *
      */
     @Override
-    public <T> byte[] serialize( T obj )
+    public <T> byte[] serialize( final T obj )
         throws IOException
     {
         serializeCount++;
@@ -72,7 +72,7 @@ public class MockElementSerializer
     /**
      * @param testProperty
      */
-    public void setTestProperty( String testProperty )
+    public void setTestProperty( final String testProperty )
     {
         this.testProperty = testProperty;
     }

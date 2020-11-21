@@ -50,7 +50,7 @@ public class MockAuxiliaryCache<K, V>
      * @throws IOException
      */
     @Override
-    public void update( ICacheElement<K, V> ce )
+    public void update( final ICacheElement<K, V> ce )
         throws IOException
     {
         // TODO Auto-generated method stub
@@ -63,7 +63,7 @@ public class MockAuxiliaryCache<K, V>
      * @throws IOException
      */
     @Override
-    public ICacheElement<K, V> get( K key )
+    public ICacheElement<K, V> get( final K key )
         throws IOException
     {
         // TODO Auto-generated method stub
@@ -76,7 +76,7 @@ public class MockAuxiliaryCache<K, V>
      * @throws IOException
      */
     @Override
-    public Map<K, ICacheElement<K, V>> getMatching(String pattern)
+    public Map<K, ICacheElement<K, V>> getMatching(final String pattern)
         throws IOException
     {
         getMatchingCallCount++;
@@ -91,7 +91,7 @@ public class MockAuxiliaryCache<K, V>
      *         data in cache for any of these keys
      */
     @Override
-    public Map<K, ICacheElement<K, V>> getMultiple(Set<K> keys)
+    public Map<K, ICacheElement<K, V>> getMultiple(final Set<K> keys)
     {
         return new HashMap<>();
     }
@@ -102,7 +102,7 @@ public class MockAuxiliaryCache<K, V>
      * @throws IOException
      */
     @Override
-    public boolean remove( K key )
+    public boolean remove( final K key )
         throws IOException
     {
         // TODO Auto-generated method stub

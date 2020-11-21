@@ -35,12 +35,12 @@ public class RemoteCacheServerFactoryUnitTest
     public void testConfigureRemoteCacheServerAttributes_eventQueuePoolName()
     {
         // SETUP
-        String eventQueuePoolName = "specialName";
-        Properties props = new Properties();
+        final String eventQueuePoolName = "specialName";
+        final Properties props = new Properties();
         props.put( IRemoteCacheConstants.CACHE_SERVER_ATTRIBUTES_PROPERTY_PREFIX + ".EventQueuePoolName", eventQueuePoolName );
 
         // DO WORK
-        RemoteCacheServerAttributes result = RemoteCacheServerFactory.configureRemoteCacheServerAttributes( props );
+        final RemoteCacheServerAttributes result = RemoteCacheServerFactory.configureRemoteCacheServerAttributes( props );
 
         // VERIFY
         assertEquals( "Wrong eventQueuePoolName", eventQueuePoolName, result.getEventQueuePoolName() );
@@ -50,12 +50,12 @@ public class RemoteCacheServerFactoryUnitTest
     public void testConfigureRemoteCacheServerAttributes_timeoutPresent()
     {
         // SETUP
-        int timeout = 123245;
-        Properties props = new Properties();
+        final int timeout = 123245;
+        final Properties props = new Properties();
         props.put( IRemoteCacheConstants.SOCKET_TIMEOUT_MILLIS, String.valueOf( timeout ) );
 
         // DO WORK
-        RemoteCacheServerAttributes result = RemoteCacheServerFactory.configureRemoteCacheServerAttributes( props );
+        final RemoteCacheServerAttributes result = RemoteCacheServerFactory.configureRemoteCacheServerAttributes( props );
 
         // VERIFY
         assertEquals( "Wrong timeout", timeout, result.getRmiSocketFactoryTimeoutMillis() );
@@ -65,10 +65,10 @@ public class RemoteCacheServerFactoryUnitTest
     public void testConfigureRemoteCacheServerAttributes_timeoutNotPresent()
     {
         // SETUP
-        Properties props = new Properties();
+        final Properties props = new Properties();
 
         // DO WORK
-        RemoteCacheServerAttributes result = RemoteCacheServerFactory.configureRemoteCacheServerAttributes( props );
+        final RemoteCacheServerAttributes result = RemoteCacheServerFactory.configureRemoteCacheServerAttributes( props );
 
         // VERIFY
         assertEquals( "Wrong timeout", ICommonRemoteCacheAttributes.DEFAULT_RMI_SOCKET_FACTORY_TIMEOUT_MILLIS, result.getRmiSocketFactoryTimeoutMillis() );
@@ -78,12 +78,12 @@ public class RemoteCacheServerFactoryUnitTest
     public void testConfigureRemoteCacheServerAttributes_registryKeepAliveDelayMillisPresent()
     {
         // SETUP
-        int registryKeepAliveDelayMillis = 123245;
-        Properties props = new Properties();
+        final int registryKeepAliveDelayMillis = 123245;
+        final Properties props = new Properties();
         props.put( IRemoteCacheConstants.CACHE_SERVER_ATTRIBUTES_PROPERTY_PREFIX + ".registryKeepAliveDelayMillis", String.valueOf( registryKeepAliveDelayMillis ) );
 
         // DO WORK
-        RemoteCacheServerAttributes result = RemoteCacheServerFactory.configureRemoteCacheServerAttributes( props );
+        final RemoteCacheServerAttributes result = RemoteCacheServerFactory.configureRemoteCacheServerAttributes( props );
 
         // VERIFY
         assertEquals( "Wrong registryKeepAliveDelayMillis", registryKeepAliveDelayMillis, result.getRegistryKeepAliveDelayMillis() );
@@ -93,12 +93,12 @@ public class RemoteCacheServerFactoryUnitTest
     public void testConfigureRemoteCacheServerAttributes_useRegistryKeepAlivePresent()
     {
         // SETUP
-        boolean useRegistryKeepAlive = false;
-        Properties props = new Properties();
+        final boolean useRegistryKeepAlive = false;
+        final Properties props = new Properties();
         props.put( IRemoteCacheConstants.CACHE_SERVER_ATTRIBUTES_PROPERTY_PREFIX + ".useRegistryKeepAlive", String.valueOf( useRegistryKeepAlive ) );
 
         // DO WORK
-        RemoteCacheServerAttributes result = RemoteCacheServerFactory.configureRemoteCacheServerAttributes( props );
+        final RemoteCacheServerAttributes result = RemoteCacheServerFactory.configureRemoteCacheServerAttributes( props );
 
         // VERIFY
         assertEquals( "Wrong useRegistryKeepAlive", useRegistryKeepAlive, result.isUseRegistryKeepAlive() );
@@ -108,12 +108,12 @@ public class RemoteCacheServerFactoryUnitTest
     public void testConfigureRemoteCacheServerAttributes_startRegistryPresent()
     {
         // SETUP
-        boolean startRegistry = false;
-        Properties props = new Properties();
+        final boolean startRegistry = false;
+        final Properties props = new Properties();
         props.put( IRemoteCacheConstants.CACHE_SERVER_ATTRIBUTES_PROPERTY_PREFIX + ".startRegistry", String.valueOf( startRegistry ) );
 
         // DO WORK
-        RemoteCacheServerAttributes result = RemoteCacheServerFactory.configureRemoteCacheServerAttributes( props );
+        final RemoteCacheServerAttributes result = RemoteCacheServerFactory.configureRemoteCacheServerAttributes( props );
 
         // VERIFY
         assertEquals( "Wrong startRegistry", startRegistry, result.isStartRegistry() );
@@ -123,12 +123,12 @@ public class RemoteCacheServerFactoryUnitTest
     public void testConfigureRemoteCacheServerAttributes_rmiSocketFactoryTimeoutMillisPresent()
     {
         // SETUP
-        int rmiSocketFactoryTimeoutMillis = 123245;
-        Properties props = new Properties();
+        final int rmiSocketFactoryTimeoutMillis = 123245;
+        final Properties props = new Properties();
         props.put( IRemoteCacheConstants.CACHE_SERVER_ATTRIBUTES_PROPERTY_PREFIX + ".rmiSocketFactoryTimeoutMillis", String.valueOf( rmiSocketFactoryTimeoutMillis ) );
 
         // DO WORK
-        RemoteCacheServerAttributes result = RemoteCacheServerFactory.configureRemoteCacheServerAttributes( props );
+        final RemoteCacheServerAttributes result = RemoteCacheServerFactory.configureRemoteCacheServerAttributes( props );
 
         // VERIFY
         assertEquals( "Wrong rmiSocketFactoryTimeoutMillis", rmiSocketFactoryTimeoutMillis, result.getRmiSocketFactoryTimeoutMillis() );
@@ -138,12 +138,12 @@ public class RemoteCacheServerFactoryUnitTest
     public void testConfigureRemoteCacheServerAttributes_allowClusterGetPresent()
     {
         // SETUP
-        boolean allowClusterGet = false;
-        Properties props = new Properties();
+        final boolean allowClusterGet = false;
+        final Properties props = new Properties();
         props.put( IRemoteCacheConstants.CACHE_SERVER_ATTRIBUTES_PROPERTY_PREFIX + ".allowClusterGet", String.valueOf( allowClusterGet ) );
 
         // DO WORK
-        RemoteCacheServerAttributes result = RemoteCacheServerFactory.configureRemoteCacheServerAttributes( props );
+        final RemoteCacheServerAttributes result = RemoteCacheServerFactory.configureRemoteCacheServerAttributes( props );
 
         // VERIFY
         assertEquals( "Wrong allowClusterGet", allowClusterGet, result.isAllowClusterGet() );
@@ -153,12 +153,12 @@ public class RemoteCacheServerFactoryUnitTest
     public void testConfigureRemoteCacheServerAttributes_localClusterConsistencyPresent()
     {
         // SETUP
-        boolean localClusterConsistency = false;
-        Properties props = new Properties();
+        final boolean localClusterConsistency = false;
+        final Properties props = new Properties();
         props.put( IRemoteCacheConstants.CACHE_SERVER_ATTRIBUTES_PROPERTY_PREFIX + ".localClusterConsistency", String.valueOf( localClusterConsistency ) );
 
         // DO WORK
-        RemoteCacheServerAttributes result = RemoteCacheServerFactory.configureRemoteCacheServerAttributes( props );
+        final RemoteCacheServerAttributes result = RemoteCacheServerFactory.configureRemoteCacheServerAttributes( props );
 
         // VERIFY
         assertEquals( "Wrong localClusterConsistency", localClusterConsistency, result.isLocalClusterConsistency() );
@@ -168,13 +168,13 @@ public class RemoteCacheServerFactoryUnitTest
     public void testConfigureObjectSpecificCustomFactory_withProperty()
     {
         // SETUP
-        String testValue = "123245";
-        Properties props = new Properties();
+        final String testValue = "123245";
+        final Properties props = new Properties();
         props.put( IRemoteCacheConstants.CUSTOM_RMI_SOCKET_FACTORY_PROPERTY_PREFIX, MockRMISocketFactory.class.getName() );
         props.put( IRemoteCacheConstants.CUSTOM_RMI_SOCKET_FACTORY_PROPERTY_PREFIX + ".testStringProperty", testValue );
 
         // DO WORK
-        RMISocketFactory result = RemoteCacheServerFactory.configureObjectSpecificCustomFactory( props );
+        final RMISocketFactory result = RemoteCacheServerFactory.configureObjectSpecificCustomFactory( props );
 
         // VERIFY
         assertNotNull( "Should have a custom socket factory.", result );
@@ -185,15 +185,15 @@ public class RemoteCacheServerFactoryUnitTest
     public void testConfigureObjectSpecificCustomFactory_withProperty_TimeoutConfigurableRMIScoketFactory()
     {
         // SETUP
-        int readTimeout = 1234;
-        int openTimeout = 1234;
-        Properties props = new Properties();
+        final int readTimeout = 1234;
+        final int openTimeout = 1234;
+        final Properties props = new Properties();
         props.put( IRemoteCacheConstants.CUSTOM_RMI_SOCKET_FACTORY_PROPERTY_PREFIX, TimeoutConfigurableRMISocketFactory.class.getName() );
         props.put( IRemoteCacheConstants.CUSTOM_RMI_SOCKET_FACTORY_PROPERTY_PREFIX + ".readTimeout", String.valueOf( readTimeout ) );
         props.put( IRemoteCacheConstants.CUSTOM_RMI_SOCKET_FACTORY_PROPERTY_PREFIX + ".openTimeout", String.valueOf( openTimeout ) );
 
         // DO WORK
-        RMISocketFactory result = RemoteCacheServerFactory.configureObjectSpecificCustomFactory( props );
+        final RMISocketFactory result = RemoteCacheServerFactory.configureObjectSpecificCustomFactory( props );
 
         // VERIFY
         assertNotNull( "Should have a custom socket factory.", result );

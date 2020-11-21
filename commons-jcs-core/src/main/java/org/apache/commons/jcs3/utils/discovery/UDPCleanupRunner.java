@@ -50,7 +50,7 @@ public class UDPCleanupRunner
     /**
      * @param service UDPDiscoveryService
      */
-    public UDPCleanupRunner( UDPDiscoveryService service )
+    public UDPCleanupRunner( final UDPDiscoveryService service )
     {
         this.discoveryService = service;
     }
@@ -64,15 +64,15 @@ public class UDPCleanupRunner
     @Override
     public void run()
     {
-        long now = System.currentTimeMillis();
+        final long now = System.currentTimeMillis();
 
         // iterate through the set
         // it is thread safe
         // TODO this should get a copy.  you can't simply remove from this.
         // the listeners need to be notified.
-        Set<DiscoveredService> toRemove = new HashSet<>();
+        final Set<DiscoveredService> toRemove = new HashSet<>();
         // can't remove via the iterator. must remove directly
-        for (DiscoveredService service : discoveryService.getDiscoveredServices())
+        for (final DiscoveredService service : discoveryService.getDiscoveredServices())
         {
             if ( ( now - service.getLastHearFromTime() ) > ( maxIdleTimeSeconds * 1000 ) )
             {
@@ -83,7 +83,7 @@ public class UDPCleanupRunner
         }
 
         // remove the bad ones
-        for (DiscoveredService service : toRemove)
+        for (final DiscoveredService service : toRemove)
         {
             // call this so the listeners get notified
             discoveryService.removeDiscoveredService( service );

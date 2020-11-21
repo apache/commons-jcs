@@ -64,7 +64,7 @@ public class Log4j2Factory implements LogFactory
     @Override
     public Log getLog(final Class<?> clazz)
     {
-        Logger logger = org.apache.logging.log4j.LogManager.getLogger(clazz, messageFactory);
+        final Logger logger = org.apache.logging.log4j.LogManager.getLogger(clazz, messageFactory);
         return new Log4j2LogAdapter(logger);
     }
 
@@ -82,7 +82,7 @@ public class Log4j2Factory implements LogFactory
     @Override
     public Log getLog(final String name)
     {
-        Logger logger = org.apache.logging.log4j.LogManager.getLogger(name, messageFactory);
+        final Logger logger = org.apache.logging.log4j.LogManager.getLogger(name, messageFactory);
         return new Log4j2LogAdapter(logger);
     }
 }

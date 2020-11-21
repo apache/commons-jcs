@@ -85,7 +85,7 @@ public abstract class AbstractCacheEventQueue<K, V>
      * <p>
      * @param wtdm the ms for the q to sit idle.
      */
-    public void setWaitToDieMillis( int wtdm )
+    public void setWaitToDieMillis( final int wtdm )
     {
         waitToDieMillis = wtdm;
     }
@@ -127,8 +127,8 @@ public abstract class AbstractCacheEventQueue<K, V>
      * @param maxFailure
      * @param waitBeforeRetry
      */
-    protected void initialize( ICacheListener<K, V> listener, long listenerId, String cacheName, int maxFailure,
-                            int waitBeforeRetry)
+    protected void initialize( final ICacheListener<K, V> listener, final long listenerId, final String cacheName, final int maxFailure,
+                            final int waitBeforeRetry)
     {
         if ( listener == null )
         {
@@ -152,7 +152,7 @@ public abstract class AbstractCacheEventQueue<K, V>
      * @throws IOException
      */
     @Override
-    public void addPutEvent( ICacheElement<K, V> ce )
+    public void addPutEvent( final ICacheElement<K, V> ce )
     {
         put( new PutEvent( ce ) );
     }
@@ -165,7 +165,7 @@ public abstract class AbstractCacheEventQueue<K, V>
      * @throws IOException
      */
     @Override
-    public void addRemoveEvent( K key )
+    public void addRemoveEvent( final K key )
     {
         put( new RemoveEvent( key ) );
     }
@@ -219,7 +219,7 @@ public abstract class AbstractCacheEventQueue<K, V>
             {
                 doRun();
             }
-            catch ( IOException e )
+            catch ( final IOException e )
             {
                 log.warn( e );
                 if ( ++failures >= maxFailure )
@@ -237,7 +237,7 @@ public abstract class AbstractCacheEventQueue<K, V>
                     Thread.sleep( waitBeforeRetry );
                     run();
                 }
-                catch ( InterruptedException ie )
+                catch ( final InterruptedException ie )
                 {
                     log.warn( "Interrupted while sleeping for retry on event "
                             + "{0}.", this );
@@ -269,7 +269,7 @@ public abstract class AbstractCacheEventQueue<K, V>
          * <p>
          * @param ice
          */
-        PutEvent( ICacheElement<K, V> ice )
+        PutEvent( final ICacheElement<K, V> ice )
         {
             this.ice = ice;
         }
@@ -319,7 +319,7 @@ public abstract class AbstractCacheEventQueue<K, V>
          * <p>
          * @param key
          */
-        RemoveEvent( K key )
+        RemoveEvent( final K key )
         {
             this.key = key;
         }
@@ -430,7 +430,7 @@ public abstract class AbstractCacheEventQueue<K, V>
      * <p>
      * @param b
      */
-    public void setWorking( boolean b )
+    public void setWorking( final boolean b )
     {
         working.set(b);
     }

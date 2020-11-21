@@ -62,20 +62,20 @@ public class LateralTCPSender
      * @param lca
      * @throws IOException
      */
-    public LateralTCPSender( ITCPLateralCacheAttributes lca )
+    public LateralTCPSender( final ITCPLateralCacheAttributes lca )
         throws IOException
     {
         this.socketOpenTimeOut = lca.getOpenTimeOut();
         this.socketSoTimeOut = lca.getSocketTimeOut();
 
-        String p1 = lca.getTcpServer();
+        final String p1 = lca.getTcpServer();
         if ( p1 == null )
         {
             throw new IOException( "Invalid server (null)" );
         }
 
-        String h2 = p1.substring( 0, p1.indexOf( ":" ) );
-        int po = Integer.parseInt( p1.substring( p1.indexOf( ":" ) + 1 ) );
+        final String h2 = p1.substring( 0, p1.indexOf( ":" ) );
+        final int po = Integer.parseInt( p1.substring( p1.indexOf( ":" ) + 1 ) );
         log.debug( "h2 = {0}, po = {1}", h2, po );
 
         if ( h2.length() == 0 )
@@ -93,7 +93,7 @@ public class LateralTCPSender
      * @param port
      * @throws IOException
      */
-    protected void init( String host, int port )
+    protected void init( final String host, final int port )
         throws IOException
     {
         try
@@ -106,7 +106,7 @@ public class LateralTCPSender
                 socket = new Socket();
                 socket.connect( new InetSocketAddress( host, port ), this.socketOpenTimeOut );
             }
-            catch ( IOException ioe )
+            catch ( final IOException ioe )
             {
                 if (socket != null)
                 {
@@ -122,12 +122,12 @@ public class LateralTCPSender
                 oos = new ObjectOutputStream( socket.getOutputStream() );
             }
         }
-        catch ( java.net.ConnectException e )
+        catch ( final java.net.ConnectException e )
         {
             log.debug( "Remote host [{0}] refused connection.", host );
             throw e;
         }
-        catch ( IOException e )
+        catch ( final IOException e )
         {
             log.debug( "Could not connect to [{0}]", host, e );
             throw e;
@@ -140,7 +140,7 @@ public class LateralTCPSender
      * @param led
      * @throws IOException
      */
-    public <K, V> void send( LateralElementDescriptor<K, V> led )
+    public <K, V> void send( final LateralElementDescriptor<K, V> led )
         throws IOException
     {
         sendCnt++;
@@ -178,7 +178,7 @@ public class LateralTCPSender
      * @return ICacheElement
      * @throws IOException
      */
-    public <K, V> Object sendAndReceive( LateralElementDescriptor<K, V> led )
+    public <K, V> Object sendAndReceive( final LateralElementDescriptor<K, V> led )
         throws IOException
     {
         if ( led == null )
@@ -209,7 +209,7 @@ public class LateralTCPSender
                     socket.getInputStream().read( new byte[socket.getInputStream().available()] );
                 }
             }
-            catch ( IOException ioe )
+            catch ( final IOException ioe )
             {
                 log.error( "Problem cleaning socket before send {0}", socket, ioe );
                 throw ioe;
@@ -224,15 +224,15 @@ public class LateralTCPSender
                 socket.setSoTimeout( socketSoTimeOut );
                 response = ois.readObject();
             }
-            catch ( IOException ioe )
+            catch ( final IOException ioe )
             {
-                String message = "Could not open ObjectInputStream to " + socket +
+                final String message = "Could not open ObjectInputStream to " + socket +
                     " SoTimeout [" + socket.getSoTimeout() +
                     "] Connected [" + socket.isConnected() + "]";
                 log.error( message, ioe );
                 throw ioe;
             }
-            catch ( Exception e )
+            catch ( final Exception e )
             {
                 log.error( e );
             }

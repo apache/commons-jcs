@@ -46,7 +46,7 @@ public abstract class AbstractAuxiliaryCacheAttributes
      * @param name
      */
     @Override
-    public void setCacheName( String name )
+    public void setCacheName( final String name )
     {
         this.cacheName = name;
     }
@@ -68,7 +68,7 @@ public abstract class AbstractAuxiliaryCacheAttributes
      * @see org.apache.commons.jcs3.auxiliary.AuxiliaryCacheAttributes#setName(java.lang.String)
      */
     @Override
-    public void setName( String s )
+    public void setName( final String s )
     {
         this.name = s;
     }
@@ -90,7 +90,7 @@ public abstract class AbstractAuxiliaryCacheAttributes
      * @param queueType SINGLE or POOLED
      */
     @Override
-    public void setEventQueueType( ICacheEventQueue.QueueType queueType )
+    public void setEventQueueType( final ICacheEventQueue.QueueType queueType )
     {
         this.eventQueueType = queueType;
     }
@@ -111,7 +111,7 @@ public abstract class AbstractAuxiliaryCacheAttributes
      * @param s SINGLE or POOLED
      */
     @Override
-    public void setEventQueuePoolName( String s )
+    public void setEventQueuePoolName( final String s )
     {
         eventQueuePoolName = s;
     }
@@ -138,7 +138,7 @@ public abstract class AbstractAuxiliaryCacheAttributes
         {
             return (AbstractAuxiliaryCacheAttributes)super.clone();
         }
-        catch (CloneNotSupportedException e)
+        catch (final CloneNotSupportedException e)
         {
             throw new RuntimeException("Clone not supported. This should never happen.", e);
         }

@@ -46,7 +46,7 @@ public class RemoteCacheResponse<T>
     /**
      * @param success the success to set
      */
-    public void setSuccess( boolean success )
+    public void setSuccess( final boolean success )
     {
         this.success = success;
     }
@@ -62,7 +62,7 @@ public class RemoteCacheResponse<T>
     /**
      * @param errorMessage the errorMessage to set
      */
-    public void setErrorMessage( String errorMessage )
+    public void setErrorMessage( final String errorMessage )
     {
         this.errorMessage = errorMessage;
     }
@@ -78,7 +78,7 @@ public class RemoteCacheResponse<T>
     /**
      * @param payload the payload to set
      */
-    public void setPayload( T payload )
+    public void setPayload( final T payload )
     {
         this.payload = payload;
     }
@@ -95,7 +95,7 @@ public class RemoteCacheResponse<T>
     @Override
     public String toString()
     {
-        StringBuilder buf = new StringBuilder();
+        final StringBuilder buf = new StringBuilder();
         buf.append( "\nRemoteHttpCacheResponse" );
         buf.append( "\n success [" + isSuccess() + "]" );
         buf.append( "\n payload [" + getPayload() + "]" );

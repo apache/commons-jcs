@@ -57,7 +57,7 @@ public class MockMemoryCache<K, V>
      * @param cache
      */
     @Override
-    public void initialize( CompositeCache<K, V> cache )
+    public void initialize( final CompositeCache<K, V> cache )
     {
         // nothing
     }
@@ -102,7 +102,7 @@ public class MockMemoryCache<K, V>
      * @throws IOException
      */
     @Override
-    public boolean remove( K key )
+    public boolean remove( final K key )
         throws IOException
     {
         return map.remove( key ) != null;
@@ -124,7 +124,7 @@ public class MockMemoryCache<K, V>
      * @throws IOException
      */
     @Override
-    public ICacheElement<K, V> get( K key )
+    public ICacheElement<K, V> get( final K key )
         throws IOException
     {
         return map.get( key );
@@ -136,20 +136,20 @@ public class MockMemoryCache<K, V>
      * @throws IOException
      */
     @Override
-    public Map<K, ICacheElement<K, V>> getMultiple(Set<K> keys)
+    public Map<K, ICacheElement<K, V>> getMultiple(final Set<K> keys)
         throws IOException
     {
-        Map<K, ICacheElement<K, V>> elements = new HashMap<>();
+        final Map<K, ICacheElement<K, V>> elements = new HashMap<>();
 
         if ( keys != null && !keys.isEmpty() )
         {
-            Iterator<K> iterator = keys.iterator();
+            final Iterator<K> iterator = keys.iterator();
 
             while ( iterator.hasNext() )
             {
-                K key = iterator.next();
+                final K key = iterator.next();
 
-                ICacheElement<K, V> element = get( key );
+                final ICacheElement<K, V> element = get( key );
 
                 if ( element != null )
                 {
@@ -167,7 +167,7 @@ public class MockMemoryCache<K, V>
      * @throws IOException
      */
     @Override
-    public ICacheElement<K, V> getQuiet( K key )
+    public ICacheElement<K, V> getQuiet( final K key )
         throws IOException
     {
         return map.get( key );
@@ -178,7 +178,7 @@ public class MockMemoryCache<K, V>
      * @throws IOException
      */
     @Override
-    public void waterfal( ICacheElement<K, V> ce )
+    public void waterfal( final ICacheElement<K, V> ce )
         throws IOException
     {
         waterfallCallCount++;
@@ -189,7 +189,7 @@ public class MockMemoryCache<K, V>
      * @throws IOException
      */
     @Override
-    public void update( ICacheElement<K, V> ce )
+    public void update( final ICacheElement<K, V> ce )
         throws IOException
     {
         if ( ce != null )
@@ -211,7 +211,7 @@ public class MockMemoryCache<K, V>
      * @param cattr
      */
     @Override
-    public void setCacheAttributes( ICompositeCacheAttributes cattr )
+    public void setCacheAttributes( final ICompositeCacheAttributes cattr )
     {
         this.cacheAttr = cattr;
     }
@@ -227,7 +227,7 @@ public class MockMemoryCache<K, V>
      * @param group
      * @return null
      */
-    public Set<K> getGroupKeys( String group )
+    public Set<K> getGroupKeys( final String group )
     {
         return null;
     }
@@ -246,7 +246,7 @@ public class MockMemoryCache<K, V>
      * @throws IOException
      */
     @Override
-    public int freeElements( int numberToFree )
+    public int freeElements( final int numberToFree )
         throws IOException
     {
         lastNumberOfFreedElements = numberToFree;

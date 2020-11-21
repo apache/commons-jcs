@@ -55,7 +55,7 @@ public abstract class JCS
      * <p>
      * @param configFilename
      */
-    public static void setConfigFilename( String configFilename )
+    public static void setConfigFilename( final String configFilename )
     {
         JCS.configFilename = configFilename;
     }
@@ -66,7 +66,7 @@ public abstract class JCS
      *
      * @param configProps
      */
-    public static void setConfigProperties( Properties configProps )
+    public static void setConfigProperties( final Properties configProps )
     {
         JCS.configProps = configProps;
     }
@@ -78,7 +78,7 @@ public abstract class JCS
      *
      * @param logSystem the logSystem to set
      */
-    public static void setLogSystem(String logSystem)
+    public static void setLogSystem(final String logSystem)
     {
         LogManager.setLogSystem(logSystem);
     }
@@ -138,10 +138,10 @@ public abstract class JCS
      * @return A CacheAccess which provides access to a given region.
      * @throws CacheException
      */
-    public static <K, V> CacheAccess<K, V> getInstance( String region )
+    public static <K, V> CacheAccess<K, V> getInstance( final String region )
         throws CacheException
     {
-        CompositeCache<K, V> cache = getCacheManager().getCache( region );
+        final CompositeCache<K, V> cache = getCacheManager().getCache( region );
         return new CacheAccess<>( cache );
     }
 
@@ -153,10 +153,10 @@ public abstract class JCS
      * @return A CacheAccess which provides access to a given region.
      * @throws CacheException
      */
-    public static <K, V> CacheAccess<K, V> getInstance( String region, ICompositeCacheAttributes icca )
+    public static <K, V> CacheAccess<K, V> getInstance( final String region, final ICompositeCacheAttributes icca )
         throws CacheException
     {
-        CompositeCache<K, V> cache = getCacheManager().getCache( region, icca );
+        final CompositeCache<K, V> cache = getCacheManager().getCache( region, icca );
         return new CacheAccess<>( cache );
     }
 
@@ -169,10 +169,10 @@ public abstract class JCS
      * @return A CacheAccess which provides access to a given region.
      * @throws CacheException
      */
-    public static <K, V> CacheAccess<K, V> getInstance( String region, ICompositeCacheAttributes icca,  IElementAttributes eattr )
+    public static <K, V> CacheAccess<K, V> getInstance( final String region, final ICompositeCacheAttributes icca,  final IElementAttributes eattr )
         throws CacheException
     {
-        CompositeCache<K, V> cache = getCacheManager().getCache( region, icca, eattr );
+        final CompositeCache<K, V> cache = getCacheManager().getCache( region, icca, eattr );
         return new CacheAccess<>( cache );
     }
 
@@ -183,10 +183,10 @@ public abstract class JCS
      * @return A GroupCacheAccess which provides access to a given region.
      * @throws CacheException
      */
-    public static <K, V> GroupCacheAccess<K, V> getGroupCacheInstance( String region )
+    public static <K, V> GroupCacheAccess<K, V> getGroupCacheInstance( final String region )
         throws CacheException
     {
-        CompositeCache<GroupAttrName<K>, V> cache = getCacheManager().getCache( region );
+        final CompositeCache<GroupAttrName<K>, V> cache = getCacheManager().getCache( region );
         return new GroupCacheAccess<>( cache );
     }
 
@@ -198,10 +198,10 @@ public abstract class JCS
      * @return A GroupCacheAccess which provides access to a given region.
      * @throws CacheException
      */
-    public static <K, V> GroupCacheAccess<K, V> getGroupCacheInstance( String region, ICompositeCacheAttributes icca )
+    public static <K, V> GroupCacheAccess<K, V> getGroupCacheInstance( final String region, final ICompositeCacheAttributes icca )
         throws CacheException
     {
-        CompositeCache<GroupAttrName<K>, V> cache = getCacheManager().getCache( region, icca );
+        final CompositeCache<GroupAttrName<K>, V> cache = getCacheManager().getCache( region, icca );
         return new GroupCacheAccess<>( cache );
     }
 
@@ -214,10 +214,10 @@ public abstract class JCS
      * @return A GroupCacheAccess which provides access to a given region.
      * @throws CacheException
      */
-    public static <K, V> GroupCacheAccess<K, V> getGroupCacheInstance( String region, ICompositeCacheAttributes icca,  IElementAttributes eattr )
+    public static <K, V> GroupCacheAccess<K, V> getGroupCacheInstance( final String region, final ICompositeCacheAttributes icca,  final IElementAttributes eattr )
         throws CacheException
     {
-        CompositeCache<GroupAttrName<K>, V> cache = getCacheManager().getCache( region, icca, eattr );
+        final CompositeCache<GroupAttrName<K>, V> cache = getCacheManager().getCache( region, icca, eattr );
         return new GroupCacheAccess<>( cache );
     }
 }

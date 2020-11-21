@@ -36,7 +36,7 @@ public class ConfigurationException
      * <p>
      * @param message
      */
-    public ConfigurationException( String message )
+    public ConfigurationException( final String message )
     {
         super( message );
     }

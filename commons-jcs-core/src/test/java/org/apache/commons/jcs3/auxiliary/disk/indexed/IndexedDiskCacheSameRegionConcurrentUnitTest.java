@@ -43,7 +43,7 @@ public class IndexedDiskCacheSameRegionConcurrentUnitTest
      *
      * @param testName
      */
-    public IndexedDiskCacheSameRegionConcurrentUnitTest( String testName )
+    public IndexedDiskCacheSameRegionConcurrentUnitTest( final String testName )
     {
         super( testName );
     }
@@ -53,9 +53,9 @@ public class IndexedDiskCacheSameRegionConcurrentUnitTest
      *
      * @param args
      */
-    public static void main( String args[] )
+    public static void main( final String args[] )
     {
-        String[] testCaseName = { IndexedDiskCacheSameRegionConcurrentUnitTest.class.getName() };
+        final String[] testCaseName = { IndexedDiskCacheSameRegionConcurrentUnitTest.class.getName() };
         junit.textui.TestRunner.main( testCaseName );
     }
 
@@ -66,7 +66,7 @@ public class IndexedDiskCacheSameRegionConcurrentUnitTest
      */
     public static Test suite()
     {
-        ActiveTestSuite suite = new ActiveTestSuite();
+        final ActiveTestSuite suite = new ActiveTestSuite();
 
         suite.addTest( new IndexedDiskCacheSameRegionConcurrentUnitTest( "testIndexedDiskCache1" )
         {
@@ -160,10 +160,10 @@ public class IndexedDiskCacheSameRegionConcurrentUnitTest
      * @throws Exception
      *                If an error occurs
      */
-    public void runTestForRegion( String region, int start, int end )
+    public void runTestForRegion( final String region, final int start, final int end )
         throws Exception
     {
-        CacheAccess<String, String> jcs = JCS.getInstance( region );
+        final CacheAccess<String, String> jcs = JCS.getInstance( region );
 
         // Add items to cache
 
@@ -176,23 +176,23 @@ public class IndexedDiskCacheSameRegionConcurrentUnitTest
 
         for ( int i = start; i <= end; i++ )
         {
-            String key = i + ":key";
-            String value = jcs.get( key );
+            final String key = i + ":key";
+            final String value = jcs.get( key );
 
             assertEquals( "Wrong value for key [" + key + "]", region + " data " + i, value );
         }
 
         // Test that getElements returns all the expected values
-        Set<String> keys = new HashSet<>();
+        final Set<String> keys = new HashSet<>();
         for ( int i = start; i <= end; i++ )
         {
             keys.add( i + ":key" );
         }
 
-        Map<String, ICacheElement<String, String>> elements = jcs.getCacheElements( keys );
+        final Map<String, ICacheElement<String, String>> elements = jcs.getCacheElements( keys );
         for ( int i = start; i <= end; i++ )
         {
-            ICacheElement<String, String> element = elements.get( i + ":key" );
+            final ICacheElement<String, String> element = elements.get( i + ":key" );
             assertNotNull( "element " + i + ":key is missing", element );
             assertEquals( "value " + i + ":key", region + " data " + i, element.getVal() );
         }

@@ -46,7 +46,7 @@ public class BlockDiskCacheKeyStoreUnitTest
             throws Exception
     {
         // SETUP
-        BlockDiskCacheAttributes attributes = new BlockDiskCacheAttributes();
+        final BlockDiskCacheAttributes attributes = new BlockDiskCacheAttributes();
         attributes.setCacheName("testPutKeys");
         attributes.setDiskPath(rootDirName);
         attributes.setMaxKeySize(1000);
@@ -59,7 +59,7 @@ public class BlockDiskCacheKeyStoreUnitTest
             throws Exception
     {
         // SETUP
-        BlockDiskCacheAttributes attributes = new BlockDiskCacheAttributes();
+        final BlockDiskCacheAttributes attributes = new BlockDiskCacheAttributes();
         attributes.setCacheName("testPutKeys");
         attributes.setDiskPath(rootDirName);
         attributes.setMaxKeySize(100000);
@@ -69,13 +69,13 @@ public class BlockDiskCacheKeyStoreUnitTest
         innerTestPutKeys(attributes);
     }
 
-    private void innerTestPutKeys(BlockDiskCacheAttributes attributes)
+    private void innerTestPutKeys(final BlockDiskCacheAttributes attributes)
     {
-        BlockDiskCache<String, String> blockDiskCache = new BlockDiskCache<>(attributes);
-        BlockDiskKeyStore<String> keyStore = new BlockDiskKeyStore<>(attributes, blockDiskCache);
+        final BlockDiskCache<String, String> blockDiskCache = new BlockDiskCache<>(attributes);
+        final BlockDiskKeyStore<String> keyStore = new BlockDiskKeyStore<>(attributes, blockDiskCache);
 
         // DO WORK
-        int numElements = 100;
+        final int numElements = 100;
         for (int i = 0; i < numElements; i++)
         {
             keyStore.put(String.valueOf(i), new int[i]);
@@ -86,7 +86,7 @@ public class BlockDiskCacheKeyStoreUnitTest
         assertEquals("Wrong number of keys", numElements, keyStore.size());
         for (int i = 0; i < numElements; i++)
         {
-            int[] result = keyStore.get(String.valueOf(i));
+            final int[] result = keyStore.get(String.valueOf(i));
             assertEquals("Wrong array returned.", i, result.length);
         }
     }
@@ -102,7 +102,7 @@ public class BlockDiskCacheKeyStoreUnitTest
             throws Exception
     {
         // SETUP
-        BlockDiskCacheAttributes attributes = new BlockDiskCacheAttributes();
+        final BlockDiskCacheAttributes attributes = new BlockDiskCacheAttributes();
         attributes.setCacheName("testSaveLoadKeys");
         attributes.setDiskPath(rootDirName);
         attributes.setMaxKeySize(10000);
@@ -115,7 +115,7 @@ public class BlockDiskCacheKeyStoreUnitTest
             throws Exception
     {
         // SETUP
-        BlockDiskCacheAttributes attributes = new BlockDiskCacheAttributes();
+        final BlockDiskCacheAttributes attributes = new BlockDiskCacheAttributes();
         attributes.setCacheName("testSaveLoadKeys");
         attributes.setDiskPath(rootDirName);
         attributes.setMaxKeySize(10000);
@@ -124,21 +124,21 @@ public class BlockDiskCacheKeyStoreUnitTest
         testSaveLoadKeysInner(attributes);
     }
 
-    private void testSaveLoadKeysInner(BlockDiskCacheAttributes attributes)
+    private void testSaveLoadKeysInner(final BlockDiskCacheAttributes attributes)
     {
-        BlockDiskKeyStore<String> keyStore = new BlockDiskKeyStore<>(attributes, null);
+        final BlockDiskKeyStore<String> keyStore = new BlockDiskKeyStore<>(attributes, null);
 
         // DO WORK
-        int numElements = 1000;
+        final int numElements = 1000;
         int blockIndex = 0;
         // Random random = new Random( 89 );
         for (int i = 0; i < numElements; i++)
         {
-            int blocks = i;// random.nextInt( 10 );
+            final int blocks = i;// random.nextInt( 10 );
 
             // fill with reasonable data to make verify() happy
-            int[] block1 = new int[blocks];
-            int[] block2 = new int[blocks];
+            final int[] block1 = new int[blocks];
+            final int[] block2 = new int[blocks];
             for (int j = 0; j < blocks; j++)
             {
                 block1[j] = blockIndex++;
@@ -166,14 +166,14 @@ public class BlockDiskCacheKeyStoreUnitTest
         assertEquals("Wrong number of keys after loading", numElements, keyStore.size());
         for (int i = 0; i < numElements; i++)
         {
-            int[] result = keyStore.get(String.valueOf(i));
+            final int[] result = keyStore.get(String.valueOf(i));
             assertEquals("Wrong array returned.", i, result.length);
         }
     }
 
     public void testObjectLargerThanMaxSize()
     {
-        BlockDiskCacheAttributes attributes = new BlockDiskCacheAttributes();
+        final BlockDiskCacheAttributes attributes = new BlockDiskCacheAttributes();
         attributes.setCacheName("testObjectLargerThanMaxSize");
         attributes.setDiskPath(rootDirName);
         attributes.setMaxKeySize(1000);
@@ -181,6 +181,7 @@ public class BlockDiskCacheKeyStoreUnitTest
         attributes.setDiskLimitType(DiskLimitType.SIZE);
 
         @SuppressWarnings({ "unchecked", "rawtypes" })
+        final
         BlockDiskKeyStore<String> keyStore = new BlockDiskKeyStore<>(attributes, new BlockDiskCache(attributes));
 
         keyStore.put("1", new int[1000]);

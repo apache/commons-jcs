@@ -44,7 +44,7 @@ public class ObjectExistsException
      * Constructor for the ObjectExistsException object
      * @param message
      */
-    public ObjectExistsException( String message )
+    public ObjectExistsException( final String message )
     {
         super( message );
     }

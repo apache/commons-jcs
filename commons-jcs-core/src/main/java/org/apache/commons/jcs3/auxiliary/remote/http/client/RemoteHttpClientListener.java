@@ -38,7 +38,7 @@ public class RemoteHttpClientListener<K, V>
      * @param cacheMgr the cache hub
      * @param elementSerializer a custom serializer
      */
-    public RemoteHttpClientListener( IRemoteCacheAttributes irca, ICompositeCacheManager cacheMgr, IElementSerializer elementSerializer )
+    public RemoteHttpClientListener( final IRemoteCacheAttributes irca, final ICompositeCacheManager cacheMgr, final IElementSerializer elementSerializer )
     {
         super( irca, cacheMgr, elementSerializer );
     }

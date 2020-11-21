@@ -60,7 +60,7 @@ public class RemoteCacheRequest<K, V>
     /**
      * @param requestType the requestType to set
      */
-    public void setRequestType( RemoteRequestType requestType )
+    public void setRequestType( final RemoteRequestType requestType )
     {
         this.requestType = requestType;
     }
@@ -76,7 +76,7 @@ public class RemoteCacheRequest<K, V>
     /**
      * @param cacheName the cacheName to set
      */
-    public void setCacheName( String cacheName )
+    public void setCacheName( final String cacheName )
     {
         this.cacheName = cacheName;
     }
@@ -92,7 +92,7 @@ public class RemoteCacheRequest<K, V>
     /**
      * @param key the key to set
      */
-    public void setKey( K key )
+    public void setKey( final K key )
     {
         this.key = key;
     }
@@ -108,7 +108,7 @@ public class RemoteCacheRequest<K, V>
     /**
      * @param pattern the pattern to set
      */
-    public void setPattern( String pattern )
+    public void setPattern( final String pattern )
     {
         this.pattern = pattern;
     }
@@ -124,7 +124,7 @@ public class RemoteCacheRequest<K, V>
     /**
      * @param cacheElement the cacheElement to set
      */
-    public void setCacheElement( ICacheElement<K, V> cacheElement )
+    public void setCacheElement( final ICacheElement<K, V> cacheElement )
     {
         this.cacheElement = cacheElement;
     }
@@ -140,7 +140,7 @@ public class RemoteCacheRequest<K, V>
     /**
      * @param requesterId the requesterId to set
      */
-    public void setRequesterId( long requesterId )
+    public void setRequesterId( final long requesterId )
     {
         this.requesterId = requesterId;
     }
@@ -156,7 +156,7 @@ public class RemoteCacheRequest<K, V>
     /**
      * @param keySet the keySet to set
      */
-    public void setKeySet( Set<K> keySet )
+    public void setKeySet( final Set<K> keySet )
     {
         this.keySet = keySet;
     }
@@ -173,7 +173,7 @@ public class RemoteCacheRequest<K, V>
     @Override
     public String toString()
     {
-        StringBuilder buf = new StringBuilder();
+        final StringBuilder buf = new StringBuilder();
         buf.append( "\nRemoteHttpCacheRequest" );
         buf.append( "\n requesterId [" + getRequesterId() + "]" );
         buf.append( "\n requestType [" + getRequestType() + "]" );

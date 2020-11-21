@@ -69,7 +69,7 @@ public abstract class AbstractRemoteCacheListener<K, V>
      * @param cacheMgr the cache hub
      * @param elementSerializer a custom serializer
      */
-    public AbstractRemoteCacheListener( IRemoteCacheAttributes irca, ICompositeCacheManager cacheMgr, IElementSerializer elementSerializer )
+    public AbstractRemoteCacheListener( final IRemoteCacheAttributes irca, final ICompositeCacheManager cacheMgr, final IElementSerializer elementSerializer )
     {
         this.irca = irca;
         this.cacheMgr = cacheMgr;
@@ -85,7 +85,7 @@ public abstract class AbstractRemoteCacheListener<K, V>
      * @throws IOException
      */
     @Override
-    public void setListenerId( long id )
+    public void setListenerId( final long id )
         throws IOException
     {
         listenerId = id;
@@ -156,11 +156,11 @@ public abstract class AbstractRemoteCacheListener<K, V>
                             (ICacheElementSerialized<K, V>) cb, this.elementSerializer );
                     log.debug( "Deserialized result = {0}", cb );
                 }
-                catch ( IOException e )
+                catch ( final IOException e )
                 {
                     throw e;
                 }
-                catch ( ClassNotFoundException e )
+                catch ( final ClassNotFoundException e )
                 {
                     log.error( "Received a serialized version of a class that we don't know about.", e );
                 }
@@ -178,7 +178,7 @@ public abstract class AbstractRemoteCacheListener<K, V>
      * @throws IOException
      */
     @Override
-    public void handleRemove( String cacheName, K key )
+    public void handleRemove( final String cacheName, final K key )
         throws IOException
     {
         log.debug( "handleRemove> cacheName={0}, key={1}", cacheName, key );
@@ -193,7 +193,7 @@ public abstract class AbstractRemoteCacheListener<K, V>
      * @throws IOException
      */
     @Override
-    public void handleRemoveAll( String cacheName )
+    public void handleRemoveAll( final String cacheName )
         throws IOException
     {
         log.debug( "handleRemoveAll> cacheName={0}", cacheName );
@@ -206,7 +206,7 @@ public abstract class AbstractRemoteCacheListener<K, V>
      * @throws IOException
      */
     @Override
-    public void handleDispose( String cacheName )
+    public void handleDispose( final String cacheName )
         throws IOException
     {
         log.debug( "handleDispose> cacheName={0}", cacheName );
@@ -241,7 +241,7 @@ public abstract class AbstractRemoteCacheListener<K, V>
             {
                 localHostName = HostNameUtil.getLocalHostAddress();
             }
-            catch ( UnknownHostException uhe )
+            catch ( final UnknownHostException uhe )
             {
                 localHostName = "unknown";
             }
@@ -257,7 +257,7 @@ public abstract class AbstractRemoteCacheListener<K, V>
     @Override
     public String toString()
     {
-        StringBuilder buf = new StringBuilder();
+        final StringBuilder buf = new StringBuilder();
         buf.append( "\n AbstractRemoteCacheListener: " )
            .append( "\n RemoteHost = ").append(irca.getRemoteLocation())
            .append( "\n ListenerId = ").append(listenerId);

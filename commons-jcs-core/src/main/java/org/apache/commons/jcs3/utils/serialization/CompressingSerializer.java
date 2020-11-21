@@ -36,11 +36,11 @@ public class CompressingSerializer extends StandardSerializer
      * @throws IOException on i/o problem
      */
     @Override
-    public <T> byte[] serialize( T obj )
+    public <T> byte[] serialize( final T obj )
         throws IOException
     {
-        byte[] uncompressed = super.serialize(obj);
-        byte[] compressed = CompressionUtil.compressByteArray( uncompressed );
+        final byte[] uncompressed = super.serialize(obj);
+        final byte[] compressed = CompressionUtil.compressByteArray( uncompressed );
         return compressed;
     }
 
@@ -55,7 +55,7 @@ public class CompressingSerializer extends StandardSerializer
      * @throws ClassNotFoundException if class is not found during deserialization
      */
     @Override
-    public <T> T deSerialize( byte[] data, ClassLoader loader )
+    public <T> T deSerialize( final byte[] data, final ClassLoader loader )
         throws IOException, ClassNotFoundException
     {
         if ( data == null )
@@ -63,7 +63,7 @@ public class CompressingSerializer extends StandardSerializer
             return null;
         }
 
-        byte[] decompressedByteArray = CompressionUtil.decompressByteArray( data );
+        final byte[] decompressedByteArray = CompressionUtil.decompressByteArray( data );
         return super.deSerialize(decompressedByteArray, loader);
     }
 }

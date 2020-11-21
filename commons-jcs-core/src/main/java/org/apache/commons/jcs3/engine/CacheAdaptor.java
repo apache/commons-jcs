@@ -46,7 +46,7 @@ public class CacheAdaptor<K, V>
      * @throws IOException
      */
     @Override
-    public void setListenerId( long id )
+    public void setListenerId( final long id )
         throws IOException
     {
         this.listenerId = id;
@@ -70,7 +70,7 @@ public class CacheAdaptor<K, V>
      * <p>
      * @param cache
      */
-    public CacheAdaptor( ICache<K, V> cache )
+    public CacheAdaptor( final ICache<K, V> cache )
     {
         this.cache = cache;
     }
@@ -82,14 +82,14 @@ public class CacheAdaptor<K, V>
      * @throws IOException
      */
     @Override
-    public void handlePut( ICacheElement<K, V> item )
+    public void handlePut( final ICacheElement<K, V> item )
         throws IOException
     {
         try
         {
             cache.update( item );
         }
-        catch ( IOException e )
+        catch ( final IOException e )
         {
             // swallow
         }
@@ -103,7 +103,7 @@ public class CacheAdaptor<K, V>
      * @throws IOException
      */
     @Override
-    public void handleRemove( String cacheName, K key )
+    public void handleRemove( final String cacheName, final K key )
         throws IOException
     {
         cache.remove( key );
@@ -116,7 +116,7 @@ public class CacheAdaptor<K, V>
      * @throws IOException
      */
     @Override
-    public void handleRemoveAll( String cacheName )
+    public void handleRemoveAll( final String cacheName )
         throws IOException
     {
         cache.removeAll();
@@ -129,7 +129,7 @@ public class CacheAdaptor<K, V>
      * @throws IOException
      */
     @Override
-    public void handleDispose( String cacheName )
+    public void handleDispose( final String cacheName )
         throws IOException
     {
         cache.dispose();

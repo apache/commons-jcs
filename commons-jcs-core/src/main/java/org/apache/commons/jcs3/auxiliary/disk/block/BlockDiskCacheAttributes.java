@@ -52,7 +52,7 @@ public class BlockDiskCacheAttributes
      * <p>
      * @param blockSizeBytes The blockSizeBytes to set.
      */
-    public void setBlockSizeBytes( int blockSizeBytes )
+    public void setBlockSizeBytes( final int blockSizeBytes )
     {
         this.blockSizeBytes = blockSizeBytes;
     }
@@ -68,7 +68,7 @@ public class BlockDiskCacheAttributes
     /**
      * @param maxKeySize The maxKeySize to set.
      */
-    public void setMaxKeySize( int maxKeySize )
+    public void setMaxKeySize( final int maxKeySize )
     {
         this.maxKeySize = maxKeySize;
     }
@@ -84,7 +84,7 @@ public class BlockDiskCacheAttributes
     /**
      * @param keyPersistenceIntervalSeconds The keyPersistenceIntervalSeconds to set.
      */
-    public void setKeyPersistenceIntervalSeconds( long keyPersistenceIntervalSeconds )
+    public void setKeyPersistenceIntervalSeconds( final long keyPersistenceIntervalSeconds )
     {
         this.keyPersistenceIntervalSeconds = keyPersistenceIntervalSeconds;
     }
@@ -105,7 +105,7 @@ public class BlockDiskCacheAttributes
     @Override
     public String toString()
     {
-        StringBuilder str = new StringBuilder();
+        final StringBuilder str = new StringBuilder();
         str.append( "\nBlockDiskAttributes " );
         str.append( "\n DiskPath [" + this.getDiskPath() + "]" );
         str.append( "\n MaxKeySize [" + this.getMaxKeySize() + "]" );

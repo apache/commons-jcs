@@ -80,7 +80,7 @@ public abstract class PropertyLoader
      *             if the resource was not found and THROW_ON_LOAD_FAILURE is
      *             true
      */
-    public static Properties loadProperties( String name, ClassLoader loader )
+    public static Properties loadProperties( final String name, final ClassLoader loader )
     {
         boolean isCCFSuffix = true;
 
@@ -89,7 +89,7 @@ public abstract class PropertyLoader
             throw new IllegalArgumentException( "null input: name" );
         }
 
-        ClassLoader classLoader = ( loader == null ) ? ClassLoader.getSystemClassLoader() : loader;
+        final ClassLoader classLoader = ( loader == null ) ? ClassLoader.getSystemClassLoader() : loader;
 
         String fileName = name.startsWith( "/" ) ? name.substring( 1 ) : name;
 
@@ -122,7 +122,7 @@ public abstract class PropertyLoader
             result = new Properties();
             result.load( in ); // can throw IOException
         }
-        catch ( IOException e )
+        catch ( final IOException e )
         {
             result = null;
         }

@@ -42,9 +42,9 @@ public class JCSUnitTest
     public void testJCS()
         throws Exception
     {
-        CacheAccess<String, LinkedList<HashMap<String, String>>> jcs = JCS.getInstance( "testCache1" );
+        final CacheAccess<String, LinkedList<HashMap<String, String>>> jcs = JCS.getInstance( "testCache1" );
 
-        LinkedList<HashMap<String, String>> list = buildList();
+        final LinkedList<HashMap<String, String>> list = buildList();
 
         jcs.put( "some:key", list );
 
@@ -56,7 +56,7 @@ public class JCSUnitTest
      */
     private LinkedList<HashMap<String, String>> buildList()
     {
-        LinkedList<HashMap<String, String>> list = new LinkedList<>();
+        final LinkedList<HashMap<String, String>> list = new LinkedList<>();
 
         for ( int i = 0; i < 100; i++ )
         {
@@ -71,10 +71,10 @@ public class JCSUnitTest
      */
     private HashMap<String, String> buildMap()
     {
-        HashMap<String, String> map = new HashMap<>();
+        final HashMap<String, String> map = new HashMap<>();
 
-        byte[] keyBytes = new byte[32];
-        byte[] valBytes = new byte[128];
+        final byte[] keyBytes = new byte[32];
+        final byte[] valBytes = new byte[128];
 
         for ( int i = 0; i < 10; i++ )
         {

@@ -36,7 +36,7 @@ public class MemoryElementDescriptor<K, V>
      * <p>
      * @param ce
      */
-    public MemoryElementDescriptor( ICacheElement<K, V> ce )
+    public MemoryElementDescriptor( final ICacheElement<K, V> ce )
     {
         super( ce );
     }

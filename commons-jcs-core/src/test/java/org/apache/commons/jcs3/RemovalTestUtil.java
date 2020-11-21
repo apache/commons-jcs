@@ -36,7 +36,7 @@ public class RemovalTestUtil
      * @param testName
      *            Description of the Parameter
      */
-    public RemovalTestUtil( String testName )
+    public RemovalTestUtil( final String testName )
     {
         super( testName );
     }
@@ -51,10 +51,10 @@ public class RemovalTestUtil
      * @throws Exception
      *                Description of the Exception
      */
-    public void runTestPutThenRemoveCategorical( int start, int end )
+    public void runTestPutThenRemoveCategorical( final int start, final int end )
         throws Exception
     {
-        CacheAccess<String, String> jcs = JCS.getInstance( "testCache1" );
+        final CacheAccess<String, String> jcs = JCS.getInstance( "testCache1" );
 
         for ( int i = start; i <= end; i++ )
         {
@@ -63,7 +63,7 @@ public class RemovalTestUtil
 
         for ( int i = end; i >= start; i-- )
         {
-            String res = jcs.get( i + ":key" );
+            final String res = jcs.get( i + ":key" );
             assertNotNull( "[" + i + ":key] should not be null", res );
         }
 
@@ -84,10 +84,10 @@ public class RemovalTestUtil
      *            int
      * @throws Exception
      */
-    public void runPutInRange( int start, int end )
+    public void runPutInRange( final int start, final int end )
         throws Exception
     {
-        CacheAccess<String, String> jcs = JCS.getInstance( "testCache1" );
+        final CacheAccess<String, String> jcs = JCS.getInstance( "testCache1" );
 
         for ( int i = start; i <= end; i++ )
         {
@@ -96,7 +96,7 @@ public class RemovalTestUtil
 
         for ( int i = end; i >= start; i-- )
         {
-            String res = jcs.get( i + ":key" );
+            final String res = jcs.get( i + ":key" );
             assertNotNull( "[" + i + ":key] should not be null", res );
         }
     }
@@ -112,15 +112,15 @@ public class RemovalTestUtil
      *            boolean -- check to see if the items are in the cache.
      * @throws Exception
      */
-    public void runGetInRange( int start, int end, boolean check )
+    public void runGetInRange( final int start, final int end, final boolean check )
         throws Exception
     {
-        CacheAccess<String, String> jcs = JCS.getInstance( "testCache1" );
+        final CacheAccess<String, String> jcs = JCS.getInstance( "testCache1" );
 
         // don't care if they are found
         for ( int i = end; i >= start; i-- )
         {
-            String res = jcs.get( i + ":key" );
+            final String res = jcs.get( i + ":key" );
             if ( check )
             {
                 assertNotNull( "[" + i + ":key] should not be null", res );

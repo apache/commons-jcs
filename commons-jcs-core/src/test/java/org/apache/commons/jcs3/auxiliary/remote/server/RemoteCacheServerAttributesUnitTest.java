@@ -37,7 +37,7 @@ public class RemoteCacheServerAttributesUnitTest
      */
     public void testToString()
     {
-        RemoteCacheServerAttributes attributes = new RemoteCacheServerAttributes();
+        final RemoteCacheServerAttributes attributes = new RemoteCacheServerAttributes();
         assertNotNull( "Should have a string.", attributes.toString() );
     }
 
@@ -46,7 +46,7 @@ public class RemoteCacheServerAttributesUnitTest
      */
     public void testSetRemoteTypeName_local()
     {
-        RemoteCacheServerAttributes attributes = new RemoteCacheServerAttributes();
+        final RemoteCacheServerAttributes attributes = new RemoteCacheServerAttributes();
         attributes.setRemoteTypeName( "LOCAL" );
         assertEquals( "Wrong type.", RemoteType.LOCAL, attributes.getRemoteType() );
         assertEquals( "Wrong name", "LOCAL", attributes.getRemoteTypeName() );
@@ -57,7 +57,7 @@ public class RemoteCacheServerAttributesUnitTest
      */
     public void testSetRemoteTypeName_cluster()
     {
-        RemoteCacheServerAttributes attributes = new RemoteCacheServerAttributes();
+        final RemoteCacheServerAttributes attributes = new RemoteCacheServerAttributes();
         attributes.setRemoteTypeName( "CLUSTER" );
         assertEquals( "Wrong type.", RemoteType.CLUSTER, attributes.getRemoteType() );
         assertEquals( "Wrong name", "CLUSTER", attributes.getRemoteTypeName() );

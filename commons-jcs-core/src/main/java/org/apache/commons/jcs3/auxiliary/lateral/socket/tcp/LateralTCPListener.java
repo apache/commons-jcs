@@ -110,13 +110,14 @@ public class LateralTCPListener<K, V>
      * @return The instance value
      */
     public static <K, V> LateralTCPListener<K, V>
-        getInstance( ITCPLateralCacheAttributes ilca, ICompositeCacheManager cacheMgr )
+        getInstance( final ITCPLateralCacheAttributes ilca, final ICompositeCacheManager cacheMgr )
     {
         @SuppressWarnings("unchecked") // Need to cast because of common map for all instances
+        final
         LateralTCPListener<K, V> ins = (LateralTCPListener<K, V>) instances.computeIfAbsent(
                 String.valueOf( ilca.getTcpListenerPort() ),
                 k -> {
-                    LateralTCPListener<K, V> newIns = new LateralTCPListener<>( ilca );
+                    final LateralTCPListener<K, V> newIns = new LateralTCPListener<>( ilca );
 
                     newIns.init();
                     newIns.setCacheManager( cacheMgr );
@@ -135,7 +136,7 @@ public class LateralTCPListener<K, V>
      * <p>
      * @param ilca
      */
-    protected LateralTCPListener( ITCPLateralCacheAttributes ilca )
+    protected LateralTCPListener( final ITCPLateralCacheAttributes ilca )
     {
         this.setTcpLateralCacheAttributes( ilca );
     }
@@ -148,8 +149,8 @@ public class LateralTCPListener<K, V>
     {
         try
         {
-            int port = getTcpLateralCacheAttributes().getTcpListenerPort();
-            String host = getTcpLateralCacheAttributes().getTcpListenerHost();
+            final int port = getTcpLateralCacheAttributes().getTcpListenerPort();
+            final String host = getTcpLateralCacheAttributes().getTcpListenerHost();
 
             pooledExecutor = Executors.newCachedThreadPool(
                     new DaemonThreadFactory("JCS-LateralTCPListener-"));
@@ -161,9 +162,9 @@ public class LateralTCPListener<K, V>
             {
                 log.info( "Listening on {0}:{1}", host, port );
                 // Resolve host name
-                InetAddress inetAddress = InetAddress.getByName(host);
+                final InetAddress inetAddress = InetAddress.getByName(host);
                 //Bind the SocketAddress with inetAddress and port
-                SocketAddress endPoint = new InetSocketAddress(inetAddress, port);
+                final SocketAddress endPoint = new InetSocketAddress(inetAddress, port);
 
                 serverSocket = new ServerSocket();
                 serverSocket.bind(endPoint);
@@ -179,7 +180,7 @@ public class LateralTCPListener<K, V>
             receiver.setDaemon( true );
             receiver.start();
         }
-        catch ( IOException ex )
+        catch ( final IOException ex )
         {
             throw new IllegalStateException( ex );
         }
@@ -201,7 +202,7 @@ public class LateralTCPListener<K, V>
      * @throws IOException
      */
     @Override
-    public void setListenerId( long id )
+    public void setListenerId( final long id )
         throws IOException
     {
         this.listenerId = id;
@@ -228,7 +229,7 @@ public class LateralTCPListener<K, V>
      * @see org.apache.commons.jcs3.engine.behavior.ICacheListener#handlePut(org.apache.commons.jcs3.engine.behavior.ICacheElement)
      */
     @Override
-    public void handlePut( ICacheElement<K, V> element )
+    public void handlePut( final ICacheElement<K, V> element )
         throws IOException
     {
         putCnt++;
@@ -253,7 +254,7 @@ public class LateralTCPListener<K, V>
      *      Object)
      */
     @Override
-    public void handleRemove( String cacheName, K key )
+    public void handleRemove( final String cacheName, final K key )
         throws IOException
     {
         removeCnt++;
@@ -273,7 +274,7 @@ public class LateralTCPListener<K, V>
      * @see org.apache.commons.jcs3.engine.behavior.ICacheListener#handleRemoveAll(java.lang.String)
      */
     @Override
-    public void handleRemoveAll( String cacheName )
+    public void handleRemoveAll( final String cacheName )
         throws IOException
     {
         log.debug( "handleRemoveAll> cacheName={0}", cacheName );
@@ -289,7 +290,7 @@ public class LateralTCPListener<K, V>
      * @return a ICacheElement
      * @throws IOException
      */
-    public ICacheElement<K, V> handleGet( String cacheName, K key )
+    public ICacheElement<K, V> handleGet( final String cacheName, final K key )
         throws IOException
     {
         getCnt++;
@@ -313,7 +314,7 @@ public class LateralTCPListener<K, V>
      * @return Map
      * @throws IOException
      */
-    public Map<K, ICacheElement<K, V>> handleGetMatching( String cacheName, String pattern )
+    public Map<K, ICacheElement<K, V>> handleGetMatching( final String cacheName, final String pattern )
         throws IOException
     {
         getCnt++;
@@ -336,7 +337,7 @@ public class LateralTCPListener<K, V>
      * @return a set of keys
      * @throws IOException
      */
-    public Set<K> handleGetKeySet( String cacheName ) throws IOException
+    public Set<K> handleGetKeySet( final String cacheName ) throws IOException
     {
     	return getCache( cacheName ).getKeySet(true);
     }
@@ -347,7 +348,7 @@ public class LateralTCPListener<K, V>
      * @see org.apache.commons.jcs3.engine.behavior.ICacheListener#handleDispose(java.lang.String)
      */
     @Override
-    public void handleDispose( String cacheName )
+    public void handleDispose( final String cacheName )
         throws IOException
     {
         log.info( "handleDispose > cacheName={0} | Ignoring message. "
@@ -375,7 +376,7 @@ public class LateralTCPListener<K, V>
      * @param name
      * @return CompositeCache
      */
-    protected CompositeCache<K, V> getCache( String name )
+    protected CompositeCache<K, V> getCache( final String name )
     {
         return getCacheManager().getCache( name );
     }
@@ -410,7 +411,7 @@ public class LateralTCPListener<K, V>
      * @param cacheMgr The cacheMgr to set.
      */
     @Override
-    public void setCacheManager( ICompositeCacheManager cacheMgr )
+    public void setCacheManager( final ICompositeCacheManager cacheMgr )
     {
         this.cacheManager = cacheMgr;
     }
@@ -427,7 +428,7 @@ public class LateralTCPListener<K, V>
     /**
      * @param tcpLateralCacheAttributes The tcpLateralCacheAttributes to set.
      */
-    public void setTcpLateralCacheAttributes( ITCPLateralCacheAttributes tcpLateralCacheAttributes )
+    public void setTcpLateralCacheAttributes( final ITCPLateralCacheAttributes tcpLateralCacheAttributes )
     {
         this.tcpLateralCacheAttributes = tcpLateralCacheAttributes;
     }
@@ -455,7 +456,7 @@ public class LateralTCPListener<K, V>
          *
          * @param serverSocket
          */
-        public ListenerThread(ServerSocket serverSocket)
+        public ListenerThread(final ServerSocket serverSocket)
         {
             this.serverSocket = serverSocket;
         }
@@ -488,7 +489,7 @@ public class LateralTCPListener<K, V>
                             socket = ssck.accept();
                             break inner;
                         }
-                        catch (SocketTimeoutException e)
+                        catch (final SocketTimeoutException e)
                         {
                             // No problem! We loop back up!
                             continue inner;
@@ -497,7 +498,7 @@ public class LateralTCPListener<K, V>
 
                     if ( socket != null && log.isDebugEnabled() )
                     {
-                        InetAddress inetAddress = socket.getInetAddress();
+                        final InetAddress inetAddress = socket.getInetAddress();
                         log.debug( "Connected to client at {0}", inetAddress );
                     }
 
@@ -505,7 +506,7 @@ public class LateralTCPListener<K, V>
                     pooledExecutor.execute( handler );
                 }
             }
-            catch ( IOException e )
+            catch ( final IOException e )
             {
                 log.error( "Exception caught in TCP listener", e );
             }
@@ -525,7 +526,7 @@ public class LateralTCPListener<K, V>
          * Construct for a given socket
          * @param socket
          */
-        public ConnectionHandler( Socket socket )
+        public ConnectionHandler( final Socket socket )
         {
             this.socket = socket;
         }
@@ -543,7 +544,7 @@ public class LateralTCPListener<K, V>
             {
                 while ( true )
                 {
-                    LateralElementDescriptor<K, V> led =
+                    final LateralElementDescriptor<K, V> led =
                             (LateralElementDescriptor<K, V>) ois.readObject();
 
                     if ( led == null )
@@ -564,15 +565,15 @@ public class LateralTCPListener<K, V>
                     }
                 }
             }
-            catch ( EOFException e )
+            catch ( final EOFException e )
             {
                 log.info( "Caught EOFException, closing connection.", e );
             }
-            catch ( SocketException e )
+            catch ( final SocketException e )
             {
                 log.info( "Caught SocketException, closing connection.", e );
             }
-            catch ( Exception e )
+            catch ( final Exception e )
             {
                 log.error( "Unexpected exception.", e );
             }
@@ -586,11 +587,11 @@ public class LateralTCPListener<K, V>
          * @throws IOException
          */
         @SuppressWarnings("synthetic-access")
-        private void handle( LateralElementDescriptor<K, V> led )
+        private void handle( final LateralElementDescriptor<K, V> led )
             throws IOException
         {
-            String cacheName = led.ce.getCacheName();
-            K key = led.ce.getKey();
+            final String cacheName = led.ce.getCacheName();
+            final K key = led.ce.getKey();
             Serializable obj = null;
 
             switch (led.command)
@@ -607,7 +608,7 @@ public class LateralTCPListener<K, V>
                     {
                         if ( getTcpLateralCacheAttributes().isFilterRemoveByHashCode() )
                         {
-                            ICacheElement<K, V> test = getCache( cacheName ).localGet( key );
+                            final ICacheElement<K, V> test = getCache( cacheName ).localGet( key );
                             if ( test != null )
                             {
                                 if ( test.getVal().hashCode() == led.valHashCode )
@@ -649,7 +650,7 @@ public class LateralTCPListener<K, V>
 
             if (obj != null)
             {
-                ObjectOutputStream oos = new ObjectOutputStream( socket.getOutputStream() );
+                final ObjectOutputStream oos = new ObjectOutputStream( socket.getOutputStream() );
                 oos.writeObject( obj );
                 oos.flush();
             }

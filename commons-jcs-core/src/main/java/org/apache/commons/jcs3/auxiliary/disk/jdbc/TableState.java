@@ -58,7 +58,7 @@ public class TableState
      * <p>
      * @param tableName
      */
-    public TableState( String tableName )
+    public TableState( final String tableName )
     {
         this.setTableName( tableName );
     }
@@ -67,7 +67,7 @@ public class TableState
      * @param tableName
      *            The tableName to set.
      */
-    public void setTableName( String tableName )
+    public void setTableName( final String tableName )
     {
         this.tableName = tableName;
     }
@@ -84,7 +84,7 @@ public class TableState
      * @param state
      *            The state to set.
      */
-    public void setState( int state )
+    public void setState( final int state )
     {
         this.state = state;
     }
@@ -105,7 +105,7 @@ public class TableState
     @Override
     public String toString()
     {
-        StringBuilder str = new StringBuilder();
+        final StringBuilder str = new StringBuilder();
         str.append( "TableState " );
         str.append( "\n TableName = " + getTableName() );
         str.append( "\n State = " + getState() );

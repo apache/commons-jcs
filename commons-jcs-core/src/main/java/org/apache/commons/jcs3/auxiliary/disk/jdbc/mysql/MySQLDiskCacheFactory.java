@@ -59,16 +59,16 @@ public class MySQLDiskCacheFactory
      * @throws SQLException if the cache instance could not be created
      */
     @Override
-    public <K, V> MySQLDiskCache<K, V> createCache( AuxiliaryCacheAttributes rawAttr,
-            ICompositeCacheManager compositeCacheManager,
-            ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer )
+    public <K, V> MySQLDiskCache<K, V> createCache( final AuxiliaryCacheAttributes rawAttr,
+            final ICompositeCacheManager compositeCacheManager,
+            final ICacheEventLogger cacheEventLogger, final IElementSerializer elementSerializer )
             throws SQLException
     {
-        MySQLDiskCacheAttributes cattr = (MySQLDiskCacheAttributes) rawAttr;
-        TableState tableState = getTableState( cattr.getTableName() );
-        DataSourceFactory dsFactory = getDataSourceFactory(cattr, compositeCacheManager.getConfigurationProperties());
+        final MySQLDiskCacheAttributes cattr = (MySQLDiskCacheAttributes) rawAttr;
+        final TableState tableState = getTableState( cattr.getTableName() );
+        final DataSourceFactory dsFactory = getDataSourceFactory(cattr, compositeCacheManager.getConfigurationProperties());
 
-        MySQLDiskCache<K, V> cache = new MySQLDiskCache<>( cattr, dsFactory, tableState);
+        final MySQLDiskCache<K, V> cache = new MySQLDiskCache<>( cattr, dsFactory, tableState);
         cache.setCacheEventLogger( cacheEventLogger );
         cache.setElementSerializer( elementSerializer );
 
@@ -87,7 +87,7 @@ public class MySQLDiskCacheFactory
      * @param tableState for noting optimization in progress, etc.
      * @param ds the DataSource
      */
-    protected void scheduleOptimizations( MySQLDiskCacheAttributes attributes, TableState tableState, DataSource ds  )
+    protected void scheduleOptimizations( final MySQLDiskCacheAttributes attributes, final TableState tableState, final DataSource ds  )
     {
         if ( attributes != null )
         {
@@ -96,12 +96,12 @@ public class MySQLDiskCacheFactory
                 log.info( "Will try to configure optimization for table [{0}] on schedule [{1}]",
                         () -> attributes.getTableName(),  () -> attributes.getOptimizationSchedule());
 
-                MySQLTableOptimizer optimizer = new MySQLTableOptimizer( attributes, tableState, ds );
+                final MySQLTableOptimizer optimizer = new MySQLTableOptimizer( attributes, tableState, ds );
 
                 // loop through the dates.
                 try
                 {
-                    Date[] dates = ScheduleParser.createDatesForSchedule( attributes.getOptimizationSchedule() );
+                    final Date[] dates = ScheduleParser.createDatesForSchedule( attributes.getOptimizationSchedule() );
                     if ( dates != null )
                     {
                         for ( int i = 0; i < dates.length; i++ )
@@ -110,7 +110,7 @@ public class MySQLDiskCacheFactory
                         }
                     }
                 }
-                catch ( ParseException e )
+                catch ( final ParseException e )
                 {
                     log.warn( "Problem creating optimization schedule for table [{0}]",
                             attributes.getTableName(), e );
@@ -130,12 +130,12 @@ public class MySQLDiskCacheFactory
      * @param startTime -- HH:MM:SS format
      * @param optimizer
      */
-    protected void scheduleOptimization( Date startTime, MySQLTableOptimizer optimizer )
+    protected void scheduleOptimization( final Date startTime, final MySQLTableOptimizer optimizer )
     {
         log.info( "startTime [{0}] for optimizer {1}", startTime, optimizer );
 
-        Date now = new Date();
-        long initialDelay = startTime.getTime() - now.getTime();
+        final Date now = new Date();
+        final long initialDelay = startTime.getTime() - now.getTime();
 
         // have the daemon execute the optimization
         getScheduledExecutorService().scheduleAtFixedRate(() -> optimizeTable(optimizer),
@@ -147,11 +147,11 @@ public class MySQLDiskCacheFactory
      * <p>
      * @author Aaron Smuts
      */
-    private void optimizeTable(MySQLTableOptimizer optimizer)
+    private void optimizeTable(final MySQLTableOptimizer optimizer)
     {
         if ( optimizer != null )
         {
-            boolean success = optimizer.optimizeTable();
+            final boolean success = optimizer.optimizeTable();
             log.info( "Optimization success status [{0}]", success );
         }
         else

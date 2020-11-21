@@ -40,14 +40,14 @@ public class ZombieRemoteCacheServiceUnitTest
         throws Exception
     {
         // SETUP
-        MockRemoteCacheService<String, String> service = new MockRemoteCacheService<>();
+        final MockRemoteCacheService<String, String> service = new MockRemoteCacheService<>();
 
-        ZombieCacheServiceNonLocal<String, String> zombie = new ZombieCacheServiceNonLocal<>( 10 );
+        final ZombieCacheServiceNonLocal<String, String> zombie = new ZombieCacheServiceNonLocal<>( 10 );
 
-        String cacheName = "testUpdate";
+        final String cacheName = "testUpdate";
 
         // DO WORK
-        ICacheElement<String, String> element = new CacheElement<>( cacheName, "key", "value" );
+        final ICacheElement<String, String> element = new CacheElement<>( cacheName, "key", "value" );
         zombie.update( element, 123l );
         zombie.propagateEvents( service );
 
@@ -64,14 +64,14 @@ public class ZombieRemoteCacheServiceUnitTest
         throws Exception
     {
         // SETUP
-        MockRemoteCacheService<String, String> service = new MockRemoteCacheService<>();
+        final MockRemoteCacheService<String, String> service = new MockRemoteCacheService<>();
 
-        ZombieCacheServiceNonLocal<String, String> zombie = new ZombieCacheServiceNonLocal<>( 0 );
+        final ZombieCacheServiceNonLocal<String, String> zombie = new ZombieCacheServiceNonLocal<>( 0 );
 
-        String cacheName = "testUpdate";
+        final String cacheName = "testUpdate";
 
         // DO WORK
-        ICacheElement<String, String> element = new CacheElement<>( cacheName, "key", "value" );
+        final ICacheElement<String, String> element = new CacheElement<>( cacheName, "key", "value" );
         zombie.update( element, 123l );
         zombie.propagateEvents( service );
 
@@ -88,12 +88,12 @@ public class ZombieRemoteCacheServiceUnitTest
         throws Exception
     {
         // SETUP
-        MockRemoteCacheService<String, String> service = new MockRemoteCacheService<>();
+        final MockRemoteCacheService<String, String> service = new MockRemoteCacheService<>();
 
-        ZombieCacheServiceNonLocal<String, String> zombie = new ZombieCacheServiceNonLocal<>( 10 );
+        final ZombieCacheServiceNonLocal<String, String> zombie = new ZombieCacheServiceNonLocal<>( 10 );
 
-        String cacheName = "testRemoveThenWalk";
-        String key = "myKey";
+        final String cacheName = "testRemoveThenWalk";
+        final String key = "myKey";
 
         // DO WORK
         zombie.remove( cacheName, key, 123l );
@@ -112,11 +112,11 @@ public class ZombieRemoteCacheServiceUnitTest
         throws Exception
     {
         // SETUP
-        MockRemoteCacheService<String, String> service = new MockRemoteCacheService<>();
+        final MockRemoteCacheService<String, String> service = new MockRemoteCacheService<>();
 
-        ZombieCacheServiceNonLocal<String, String> zombie = new ZombieCacheServiceNonLocal<>( 10 );
+        final ZombieCacheServiceNonLocal<String, String> zombie = new ZombieCacheServiceNonLocal<>( 10 );
 
-        String cacheName = "testRemoveThenWalk";
+        final String cacheName = "testRemoveThenWalk";
 
         // DO WORK
         zombie.removeAll( cacheName, 123l );

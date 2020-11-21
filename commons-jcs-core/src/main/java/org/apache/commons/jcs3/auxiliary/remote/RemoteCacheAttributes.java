@@ -86,7 +86,7 @@ public class RemoteCacheAttributes
      * @param p The new failoverIndex value
      */
     @Override
-    public void setFailoverIndex( int p )
+    public void setFailoverIndex( final int p )
     {
         this.failoverIndex = p;
     }
@@ -108,7 +108,7 @@ public class RemoteCacheAttributes
      * @param failovers The new failovers value
      */
     @Override
-    public void setFailovers( List<RemoteLocation> failovers )
+    public void setFailovers( final List<RemoteLocation> failovers )
     {
         this.failovers = failovers;
     }
@@ -130,7 +130,7 @@ public class RemoteCacheAttributes
      * @param s The new failoverServers value
      */
     @Override
-    public void setFailoverServers( String s )
+    public void setFailoverServers( final String s )
     {
         this.failoverServers = s;
     }
@@ -151,7 +151,7 @@ public class RemoteCacheAttributes
      * @param p The new localPort value
      */
     @Override
-    public void setLocalPort( int p )
+    public void setLocalPort( final int p )
     {
         this.localPort = p;
     }
@@ -169,7 +169,7 @@ public class RemoteCacheAttributes
      * @param name
      */
     @Override
-    public void setThreadPoolName( String name )
+    public void setThreadPoolName( final String name )
     {
         threadPoolName = name;
     }
@@ -187,7 +187,7 @@ public class RemoteCacheAttributes
      * @param millis
      */
     @Override
-    public void setGetTimeoutMillis( int millis )
+    public void setGetTimeoutMillis( final int millis )
     {
         getTimeoutMillis = millis;
     }
@@ -199,7 +199,7 @@ public class RemoteCacheAttributes
      * @param receive
      */
     @Override
-    public void setReceive( boolean receive )
+    public void setReceive( final boolean receive )
     {
         this.receive = receive;
     }
@@ -228,7 +228,7 @@ public class RemoteCacheAttributes
      * @param zombieQueueMaxSize The zombieQueueMaxSize to set.
      */
     @Override
-    public void setZombieQueueMaxSize( int zombieQueueMaxSize )
+    public void setZombieQueueMaxSize( final int zombieQueueMaxSize )
     {
         this.zombieQueueMaxSize = zombieQueueMaxSize;
     }
@@ -251,7 +251,7 @@ public class RemoteCacheAttributes
     @Override
     public String toString()
     {
-        StringBuilder buf = new StringBuilder(super.toString());
+        final StringBuilder buf = new StringBuilder(super.toString());
         buf.append( "\n receive = [" + isReceive() + "]" );
         buf.append( "\n getTimeoutMillis = [" + getGetTimeoutMillis() + "]" );
         buf.append( "\n threadPoolName = [" + getThreadPoolName() + "]" );

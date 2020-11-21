@@ -43,8 +43,8 @@ public class CacheElementSerialized<K, V>
      * @param serializedValueArg
      * @param elementAttributesArg
      */
-    public CacheElementSerialized( String cacheNameArg, K keyArg, byte[] serializedValueArg,
-                                   IElementAttributes elementAttributesArg )
+    public CacheElementSerialized( final String cacheNameArg, final K keyArg, final byte[] serializedValueArg,
+                                   final IElementAttributes elementAttributesArg )
     {
         super(cacheNameArg, keyArg, null, elementAttributesArg);
         this.serializedValue = serializedValueArg;
@@ -65,7 +65,7 @@ public class CacheElementSerialized<K, V>
     @Override
     public String toString()
     {
-        StringBuilder buf = new StringBuilder();
+        final StringBuilder buf = new StringBuilder();
         buf.append( "\n CacheElementSerialized: " );
         buf.append( "\n CacheName = [" + getCacheName() + "]" );
         buf.append( "\n Key = [" + getKey() + "]" );

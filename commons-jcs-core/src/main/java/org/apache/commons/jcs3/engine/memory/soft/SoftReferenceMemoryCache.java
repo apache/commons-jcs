@@ -71,7 +71,7 @@ public class SoftReferenceMemoryCache<K, V> extends AbstractMemoryCache<K, V>
      * @param hub
      */
     @Override
-    public synchronized void initialize( CompositeCache<K, V> hub )
+    public synchronized void initialize( final CompositeCache<K, V> hub )
     {
         super.initialize( hub );
         strongReferences = new LinkedBlockingQueue<>();
@@ -94,10 +94,10 @@ public class SoftReferenceMemoryCache<K, V> extends AbstractMemoryCache<K, V>
     @Override
     public Set<K> getKeySet()
     {
-        Set<K> keys = new HashSet<>();
-        for (Map.Entry<K, MemoryElementDescriptor<K, V>> e : map.entrySet())
+        final Set<K> keys = new HashSet<>();
+        for (final Map.Entry<K, MemoryElementDescriptor<K, V>> e : map.entrySet())
         {
-            SoftReferenceElementDescriptor<K, V> sred = (SoftReferenceElementDescriptor<K, V>) e.getValue();
+            final SoftReferenceElementDescriptor<K, V> sred = (SoftReferenceElementDescriptor<K, V>) e.getValue();
             if (sred.getCacheElement() != null)
             {
                 keys.add(e.getKey());
@@ -116,9 +116,9 @@ public class SoftReferenceMemoryCache<K, V> extends AbstractMemoryCache<K, V>
     public int getSize()
     {
         int size = 0;
-        for (MemoryElementDescriptor<K, V> me : map.values())
+        for (final MemoryElementDescriptor<K, V> me : map.values())
         {
-            SoftReferenceElementDescriptor<K, V> sred = (SoftReferenceElementDescriptor<K, V>) me;
+            final SoftReferenceElementDescriptor<K, V> sred = (SoftReferenceElementDescriptor<K, V>) me;
             if (sred.getCacheElement() != null)
             {
                 size++;
@@ -133,11 +133,11 @@ public class SoftReferenceMemoryCache<K, V> extends AbstractMemoryCache<K, V>
     @Override
     public IStats getStatistics()
     {
-        IStats stats = super.getStatistics();
+        final IStats stats = super.getStatistics();
         stats.setTypeName("Soft Reference Memory Cache");
 
-        List<IStatElement<?>> elems = stats.getStatElements();
-        int emptyrefs = map.size() - getSize();
+        final List<IStatElement<?>> elems = stats.getStatElements();
+        final int emptyrefs = map.size() - getSize();
         elems.add(new StatElement<>("Empty References", Integer.valueOf(emptyrefs)));
         elems.add(new StatElement<>("Strong References", Integer.valueOf(strongReferences.size())));
 
@@ -151,9 +151,9 @@ public class SoftReferenceMemoryCache<K, V> extends AbstractMemoryCache<K, V>
      * @param me the memory element descriptor
      */
     @Override
-    protected void lockedGetElement(MemoryElementDescriptor<K, V> me)
+    protected void lockedGetElement(final MemoryElementDescriptor<K, V> me)
     {
-        ICacheElement<K, V> val = me.getCacheElement();
+        final ICacheElement<K, V> val = me.getCacheElement();
         val.getElementAttributes().setLastAccessTimeNow();
 
         // update the ordering of the strong references
@@ -168,7 +168,7 @@ public class SoftReferenceMemoryCache<K, V> extends AbstractMemoryCache<K, V>
      * @param me the memory element descriptor
      */
     @Override
-    protected void lockedRemoveElement(MemoryElementDescriptor<K, V> me)
+    protected void lockedRemoveElement(final MemoryElementDescriptor<K, V> me)
     {
         strongReferences.remove(me.getCacheElement());
     }
@@ -190,7 +190,7 @@ public class SoftReferenceMemoryCache<K, V> extends AbstractMemoryCache<K, V>
      * @throws IOException Description of the Exception
      */
     @Override
-    public void update(ICacheElement<K, V> ce) throws IOException
+    public void update(final ICacheElement<K, V> ce) throws IOException
     {
         putCnt.incrementAndGet();
         ce.getElementAttributes().setLastAccessTimeNow();
@@ -215,12 +215,12 @@ public class SoftReferenceMemoryCache<K, V> extends AbstractMemoryCache<K, V>
      */
     private void trimStrongReferences()
     {
-        int max = getCacheAttributes().getMaxObjects();
-        int startsize = strongReferences.size();
+        final int max = getCacheAttributes().getMaxObjects();
+        final int startsize = strongReferences.size();
 
         for (int cursize = startsize; cursize > max; cursize--)
         {
-            ICacheElement<K, V> ce = strongReferences.poll();
+            final ICacheElement<K, V> ce = strongReferences.poll();
             waterfal(ce);
         }
     }
@@ -233,7 +233,7 @@ public class SoftReferenceMemoryCache<K, V> extends AbstractMemoryCache<K, V>
      * @throws IOException
      */
     @Override
-    public int freeElements(int numberToFree) throws IOException
+    public int freeElements(final int numberToFree) throws IOException
     {
         return 0;
     }

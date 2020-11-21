@@ -66,7 +66,7 @@ public class LateralCache<K, V>
      * @param lateral
      * @param monitor
      */
-    public LateralCache( ILateralCacheAttributes cattr, ICacheServiceNonLocal<K, V> lateral, LateralCacheMonitor monitor )
+    public LateralCache( final ILateralCacheAttributes cattr, final ICacheServiceNonLocal<K, V> lateral, final LateralCacheMonitor monitor )
     {
         this.cacheName = cattr.getCacheName();
         this.lateralCacheAttributes = cattr;
@@ -79,7 +79,7 @@ public class LateralCache<K, V>
      * <p>
      * @param cattr
      */
-    public LateralCache( ILateralCacheAttributes cattr )
+    public LateralCache( final ILateralCacheAttributes cattr )
     {
         this.cacheName = cattr.getCacheName();
         this.lateralCacheAttributes = cattr;
@@ -92,7 +92,7 @@ public class LateralCache<K, V>
      * @throws IOException
      */
     @Override
-    protected void processUpdate( ICacheElement<K, V> ce )
+    protected void processUpdate( final ICacheElement<K, V> ce )
         throws IOException
     {
         try
@@ -104,7 +104,7 @@ public class LateralCache<K, V>
                 lateralCacheService.update( ce, CacheInfo.listenerId );
             }
         }
-        catch ( IOException ex )
+        catch ( final IOException ex )
         {
             handleException( ex, "Failed to put [" + ce.getKey() + "] to " + ce.getCacheName() + "@" + lateralCacheAttributes );
         }
@@ -118,7 +118,7 @@ public class LateralCache<K, V>
      * @throws IOException
      */
     @Override
-    protected ICacheElement<K, V> processGet( K key )
+    protected ICacheElement<K, V> processGet( final K key )
         throws IOException
     {
         ICacheElement<K, V> obj = null;
@@ -131,7 +131,7 @@ public class LateralCache<K, V>
         {
             obj = lateralCacheService.get( cacheName, key );
         }
-        catch ( Exception e )
+        catch ( final Exception e )
         {
             log.error( e );
             handleException( e, "Failed to get [" + key + "] from " + lateralCacheAttributes.getCacheName() + "@" + lateralCacheAttributes );
@@ -146,7 +146,7 @@ public class LateralCache<K, V>
      * @throws IOException
      */
     @Override
-    protected Map<K, ICacheElement<K, V>> processGetMatching( String pattern )
+    protected Map<K, ICacheElement<K, V>> processGetMatching( final String pattern )
         throws IOException
     {
         if ( this.lateralCacheAttributes.getPutOnlyMode() )
@@ -157,7 +157,7 @@ public class LateralCache<K, V>
         {
             return lateralCacheService.getMatching( cacheName, pattern );
         }
-        catch ( IOException e )
+        catch ( final IOException e )
         {
             log.error( e );
             handleException( e, "Failed to getMatching [" + pattern + "] from " + lateralCacheAttributes.getCacheName() + "@" + lateralCacheAttributes );
@@ -177,7 +177,7 @@ public class LateralCache<K, V>
         {
             return lateralCacheService.getKeySet( cacheName );
         }
-        catch ( IOException ex )
+        catch ( final IOException ex )
         {
             handleException( ex, "Failed to get key set from " + lateralCacheAttributes.getCacheName() + "@"
                 + lateralCacheAttributes );
@@ -194,7 +194,7 @@ public class LateralCache<K, V>
      * @throws IOException
      */
     @Override
-    protected boolean processRemove( K key )
+    protected boolean processRemove( final K key )
         throws IOException
     {
         log.debug( "removing key: {0}", key );
@@ -203,7 +203,7 @@ public class LateralCache<K, V>
         {
             lateralCacheService.remove( cacheName, key, CacheInfo.listenerId );
         }
-        catch ( IOException ex )
+        catch ( final IOException ex )
         {
             handleException( ex, "Failed to remove " + key + " from " + lateralCacheAttributes.getCacheName() + "@" + lateralCacheAttributes );
         }
@@ -224,7 +224,7 @@ public class LateralCache<K, V>
         {
             lateralCacheService.removeAll( cacheName, CacheInfo.listenerId );
         }
-        catch ( IOException ex )
+        catch ( final IOException ex )
         {
             handleException( ex, "Failed to remove all from " + lateralCacheAttributes.getCacheName() + "@" + lateralCacheAttributes );
         }
@@ -250,7 +250,7 @@ public class LateralCache<K, V>
             lateralCacheService.dispose( this.lateralCacheAttributes.getCacheName() );
             // Should remove connection
         }
-        catch ( IOException ex )
+        catch ( final IOException ex )
         {
             log.error( "Couldn't dispose", ex );
             handleException( ex, "Failed to dispose " + lateralCacheAttributes.getCacheName() );
@@ -308,7 +308,7 @@ public class LateralCache<K, V>
      * @param msg
      * @throws IOException
      */
-    private void handleException( Exception ex, String msg )
+    private void handleException( final Exception ex, final String msg )
         throws IOException
     {
         log.error( "Disabling lateral cache due to error {0}", msg, ex );
@@ -332,23 +332,23 @@ public class LateralCache<K, V>
      * <p>
      * @param restoredLateral
      */
-    public void fixCache( ICacheServiceNonLocal<K, V> restoredLateral )
+    public void fixCache( final ICacheServiceNonLocal<K, V> restoredLateral )
     {
         if ( this.lateralCacheService instanceof ZombieCacheServiceNonLocal )
         {
-            ZombieCacheServiceNonLocal<K, V> zombie = (ZombieCacheServiceNonLocal<K, V>) this.lateralCacheService;
+            final ZombieCacheServiceNonLocal<K, V> zombie = (ZombieCacheServiceNonLocal<K, V>) this.lateralCacheService;
             this.lateralCacheService = restoredLateral;
             try
             {
                 zombie.propagateEvents( restoredLateral );
             }
-            catch ( Exception e )
+            catch ( final Exception e )
             {
                 try
                 {
                     handleException( e, "Problem propagating events from Zombie Queue to new Lateral Service." );
                 }
-                catch ( IOException e1 )
+                catch ( final IOException e1 )
                 {
                     // swallow, since this is just expected kick back.  Handle always throws
                 }
@@ -386,7 +386,7 @@ public class LateralCache<K, V>
     @Override
     public String toString()
     {
-        StringBuilder buf = new StringBuilder();
+        final StringBuilder buf = new StringBuilder();
         buf.append( "\n LateralCache " );
         buf.append( "\n Cache Name [" + lateralCacheAttributes.getCacheName() + "]" );
         buf.append( "\n cattr =  [" + lateralCacheAttributes + "]" );
@@ -410,7 +410,7 @@ public class LateralCache<K, V>
     @Override
     public IStats getStatistics()
     {
-        IStats stats = new Stats();
+        final IStats stats = new Stats();
         stats.setTypeName( "LateralCache" );
         return stats;
     }

@@ -75,15 +75,15 @@ public class IndexedDiskCacheDefragPerformanceTest
         throws Exception
     {
         JCS.setConfigFilename( "/TestDiskCacheDefragPerformance.ccf" );
-        CacheAccess<Integer, Tile> jcs = JCS.getInstance( "defrag" );
+        final CacheAccess<Integer, Tile> jcs = JCS.getInstance( "defrag" );
 
         Tile tile;
         System.out.println( "Cache Defrag Test" );
 
-        Random random = new Random( 89 );
+        final Random random = new Random( 89 );
         for ( int i = 0; i < TOTAL_ELEMENTS; i++ )
         {
-            int bytes = random.nextInt( 20 );
+            final int bytes = random.nextInt( 20 );
             // 4-24 KB
             tile = new Tile( Integer.valueOf( i ), new byte[( bytes + 4 ) * 1024] );
             // images
@@ -124,10 +124,10 @@ public class IndexedDiskCacheDefragPerformanceTest
      */
     private static void logMemoryUsage()
     {
-        long byte2MB = 1024 * 1024;
-        long total = rt.totalMemory() / byte2MB;
-        long free = rt.freeMemory() / byte2MB;
-        long used = total - free;
+        final long byte2MB = 1024 * 1024;
+        final long total = rt.totalMemory() / byte2MB;
+        final long free = rt.freeMemory() / byte2MB;
+        final long used = total - free;
         System.out.println( LOG_DIVIDER );
         System.out.println( "Memory:" + " Used:" + format.format( used ) + "MB" + " Free:" + format.format( free )
             + "MB" + " Total:" + format.format( total ) + "MB" );
@@ -156,7 +156,7 @@ public class IndexedDiskCacheDefragPerformanceTest
          * @param id
          * @param imageBytes
          */
-        public Tile( Integer id, byte[] imageBytes )
+        public Tile( final Integer id, final byte[] imageBytes )
         {
             this.id = id;
             this.imageBytes = imageBytes;
@@ -166,14 +166,14 @@ public class IndexedDiskCacheDefragPerformanceTest
     /**
      * @param args
      */
-    public static void main( String args[] )
+    public static void main( final String args[] )
     {
         try
         {
-            IndexedDiskCacheDefragPerformanceTest tester = new IndexedDiskCacheDefragPerformanceTest();
+            final IndexedDiskCacheDefragPerformanceTest tester = new IndexedDiskCacheDefragPerformanceTest();
             tester.testRealTimeOptimization();
         }
-        catch ( Exception e )
+        catch ( final Exception e )
         {
             e.printStackTrace();
         }

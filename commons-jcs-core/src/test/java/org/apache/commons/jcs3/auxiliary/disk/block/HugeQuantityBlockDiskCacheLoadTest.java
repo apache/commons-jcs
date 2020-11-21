@@ -52,19 +52,19 @@ public class HugeQuantityBlockDiskCacheLoadTest
     public void testLargeNumberOfItems()
         throws Exception
     {
-        int items = 300000;
-        String region = "testCache1";
+        final int items = 300000;
+        final String region = "testCache1";
 
         System.out.println( "--------------------------" );
-        long initialMemory = measureMemoryUse();
+        final long initialMemory = measureMemoryUse();
         System.out.println( "Before getting JCS: " + initialMemory );
 
-        CacheAccess<String, String> jcs = JCS.getInstance( region );
+        final CacheAccess<String, String> jcs = JCS.getInstance( region );
         jcs.clear();
 
         try
         {
-            ElapsedTimer timer = new ElapsedTimer();
+            final ElapsedTimer timer = new ElapsedTimer();
             System.out.println( "Start: " + measureMemoryUse() );
 
             // Add items to cache
@@ -98,7 +98,7 @@ public class HugeQuantityBlockDiskCacheLoadTest
             for ( int i = 0; i <= items; i++ )
             {
                 //System.out.print(  "\033[s" );
-                String value = jcs.get( i + ":key" );
+                final String value = jcs.get( i + ":key" );
                 if ( i % 1000 == 0 )
                 {
                     //System.out.print(  "\033[r" );
@@ -106,7 +106,7 @@ public class HugeQuantityBlockDiskCacheLoadTest
                 }
                 assertEquals( "Wrong value returned.", region + " data " + i, value );
             }
-            long aftetGet = measureMemoryUse();
+            final long aftetGet = measureMemoryUse();
             System.out.println( "After get: " + aftetGet + " diff = " + ( aftetGet - initialMemory ) );
 
         }
@@ -115,7 +115,7 @@ public class HugeQuantityBlockDiskCacheLoadTest
             // dump the stats to the report
             System.out.println( jcs.getStats() );
             System.out.println( "--------------------------" );
-            long endMemory = measureMemoryUse();
+            final long endMemory = measureMemoryUse();
             System.out.println( "End: " + endMemory + " diff = " + ( endMemory - initialMemory ) );
         }
     }

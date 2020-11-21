@@ -94,7 +94,7 @@ public final class PoolConfiguration
     /**
      * @param useBoundary The useBoundary to set.
      */
-    public void setUseBoundary( boolean useBoundary )
+    public void setUseBoundary( final boolean useBoundary )
     {
         this.useBoundary = useBoundary;
     }
@@ -128,8 +128,8 @@ public final class PoolConfiguration
      * @param whenBlockedPolicy
      * @param startUpSize
      */
-    public PoolConfiguration( boolean useBoundary, int boundarySize, int maximumPoolSize, int minimumPoolSize,
-                              int keepAliveTime, WhenBlockedPolicy whenBlockedPolicy, int startUpSize )
+    public PoolConfiguration( final boolean useBoundary, final int boundarySize, final int maximumPoolSize, final int minimumPoolSize,
+                              final int keepAliveTime, final WhenBlockedPolicy whenBlockedPolicy, final int startUpSize )
     {
         setUseBoundary( useBoundary );
         setBoundarySize( boundarySize );
@@ -143,7 +143,7 @@ public final class PoolConfiguration
     /**
      * @param boundarySize The boundarySize to set.
      */
-    public void setBoundarySize( int boundarySize )
+    public void setBoundarySize( final int boundarySize )
     {
         this.boundarySize = boundarySize;
     }
@@ -159,7 +159,7 @@ public final class PoolConfiguration
     /**
      * @param maximumPoolSize The maximumPoolSize to set.
      */
-    public void setMaximumPoolSize( int maximumPoolSize )
+    public void setMaximumPoolSize( final int maximumPoolSize )
     {
         this.maximumPoolSize = maximumPoolSize;
     }
@@ -175,7 +175,7 @@ public final class PoolConfiguration
     /**
      * @param minimumPoolSize The minimumPoolSize to set.
      */
-    public void setMinimumPoolSize( int minimumPoolSize )
+    public void setMinimumPoolSize( final int minimumPoolSize )
     {
         this.minimumPoolSize = minimumPoolSize;
     }
@@ -191,7 +191,7 @@ public final class PoolConfiguration
     /**
      * @param keepAliveTime The keepAliveTime to set.
      */
-    public void setKeepAliveTime( int keepAliveTime )
+    public void setKeepAliveTime( final int keepAliveTime )
     {
         this.keepAliveTime = keepAliveTime;
     }
@@ -207,11 +207,11 @@ public final class PoolConfiguration
     /**
      * @param whenBlockedPolicy The whenBlockedPolicy to set.
      */
-    public void setWhenBlockedPolicy( String whenBlockedPolicy )
+    public void setWhenBlockedPolicy( final String whenBlockedPolicy )
     {
         if ( whenBlockedPolicy != null )
         {
-            WhenBlockedPolicy policy = WhenBlockedPolicy.valueOf(whenBlockedPolicy.trim().toUpperCase());
+            final WhenBlockedPolicy policy = WhenBlockedPolicy.valueOf(whenBlockedPolicy.trim().toUpperCase());
             setWhenBlockedPolicy(policy);
         }
         else
@@ -224,7 +224,7 @@ public final class PoolConfiguration
     /**
      * @param whenBlockedPolicy The whenBlockedPolicy to set.
      */
-    public void setWhenBlockedPolicy( WhenBlockedPolicy whenBlockedPolicy )
+    public void setWhenBlockedPolicy( final WhenBlockedPolicy whenBlockedPolicy )
     {
         if ( whenBlockedPolicy != null )
         {
@@ -248,7 +248,7 @@ public final class PoolConfiguration
     /**
      * @param startUpSize The startUpSize to set.
      */
-    public void setStartUpSize( int startUpSize )
+    public void setStartUpSize( final int startUpSize )
     {
         this.startUpSize = startUpSize;
     }
@@ -268,7 +268,7 @@ public final class PoolConfiguration
     @Override
     public String toString()
     {
-        StringBuilder buf = new StringBuilder();
+        final StringBuilder buf = new StringBuilder();
         buf.append( "useBoundary = [" + isUseBoundary() + "] " );
         buf.append( "boundarySize = [" + boundarySize + "] " );
         buf.append( "maximumPoolSize = [" + maximumPoolSize + "] " );

@@ -31,9 +31,9 @@ public class SleepUtil
      * <p>
      * @param milliseconds the number of milliseconds to sleep
      */
-    public static void sleepAtLeast( long milliseconds )
+    public static void sleepAtLeast( final long milliseconds )
     {
-        long endTime = System.currentTimeMillis() + milliseconds;
+        final long endTime = System.currentTimeMillis() + milliseconds;
 
         while ( System.currentTimeMillis() <= endTime )
         {
@@ -41,7 +41,7 @@ public class SleepUtil
             {
                 Thread.sleep( milliseconds );
             }
-            catch ( InterruptedException e )
+            catch ( final InterruptedException e )
             {
                 // TODO - Do something here?
             }

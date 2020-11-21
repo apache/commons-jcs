@@ -54,7 +54,7 @@ public abstract class AbstractCacheAccess<K, V>
      * <p>
      * @param cacheControl The cache which the created instance accesses
      */
-    protected AbstractCacheAccess( CompositeCache<K, V> cacheControl )
+    protected AbstractCacheAccess( final CompositeCache<K, V> cacheControl )
     {
         this.cacheControl = cacheControl;
     }
@@ -72,7 +72,7 @@ public abstract class AbstractCacheAccess<K, V>
         {
             this.getCacheControl().removeAll();
         }
-        catch ( IOException e )
+        catch ( final IOException e )
         {
             throw new CacheException( e );
         }
@@ -89,7 +89,7 @@ public abstract class AbstractCacheAccess<K, V>
      * @throws CacheException if something goes wrong.
      */
     @Override
-    public void setDefaultElementAttributes( IElementAttributes attr )
+    public void setDefaultElementAttributes( final IElementAttributes attr )
         throws CacheException
     {
         this.getCacheControl().setElementAttributes( attr );
@@ -164,7 +164,7 @@ public abstract class AbstractCacheAccess<K, V>
      * @param cattr The new ICompositeCacheAttribute value
      */
     @Override
-    public void setCacheAttributes( ICompositeCacheAttributes cattr )
+    public void setCacheAttributes( final ICompositeCacheAttributes cattr )
     {
         this.getCacheControl().setCacheAttributes( cattr );
     }
@@ -180,7 +180,7 @@ public abstract class AbstractCacheAccess<K, V>
      * @throws CacheException
      */
     @Override
-    public int freeMemoryElements( int numberToFree )
+    public int freeMemoryElements( final int numberToFree )
         throws CacheException
     {
         int numFreed = -1;
@@ -188,9 +188,9 @@ public abstract class AbstractCacheAccess<K, V>
         {
             numFreed = this.getCacheControl().getMemoryCache().freeElements( numberToFree );
         }
-        catch ( IOException ioe )
+        catch ( final IOException ioe )
         {
-            String message = "Failure freeing memory elements.";
+            final String message = "Failure freeing memory elements.";
             throw new CacheException( message, ioe );
         }
         return numFreed;

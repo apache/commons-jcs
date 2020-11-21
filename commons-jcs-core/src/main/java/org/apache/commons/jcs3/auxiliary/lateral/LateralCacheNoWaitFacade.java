@@ -77,7 +77,7 @@ public class LateralCacheNoWaitFacade<K, V>
      * @param noWaits
      * @param cattr
      */
-    public LateralCacheNoWaitFacade(ILateralCacheListener<K, V> listener, LateralCacheNoWait<K, V>[] noWaits, ILateralCacheAttributes cattr )
+    public LateralCacheNoWaitFacade(final ILateralCacheListener<K, V> listener, final LateralCacheNoWait<K, V>[] noWaits, final ILateralCacheAttributes cattr )
     {
         log.debug( "CONSTRUCTING NO WAIT FACADE" );
         this.listener = listener;
@@ -92,9 +92,9 @@ public class LateralCacheNoWaitFacade<K, V>
      * @param noWait
      * @return true if the noWait is in the list.
      */
-    public boolean containsNoWait( LateralCacheNoWait<K, V> noWait )
+    public boolean containsNoWait( final LateralCacheNoWait<K, V> noWait )
     {
-        Optional<LateralCacheNoWait<K, V>> optional = Arrays.stream(noWaits)
+        final Optional<LateralCacheNoWait<K, V>> optional = Arrays.stream(noWaits)
                 // we know noWait isn't null
                 .filter(nw -> noWait.equals( nw ))
                 .findFirst();
@@ -108,7 +108,7 @@ public class LateralCacheNoWaitFacade<K, V>
      * @param noWait
      * @return true if it wasn't already contained
      */
-    public synchronized boolean addNoWait( LateralCacheNoWait<K, V> noWait )
+    public synchronized boolean addNoWait( final LateralCacheNoWait<K, V> noWait )
     {
         if ( noWait == null )
         {
@@ -122,6 +122,7 @@ public class LateralCacheNoWaitFacade<K, V>
         }
 
         @SuppressWarnings("unchecked") // No generic arrays in java
+        final
         LateralCacheNoWait<K, V>[] newArray = new LateralCacheNoWait[noWaits.length + 1];
 
         System.arraycopy( noWaits, 0, newArray, 0, noWaits.length );
@@ -140,7 +141,7 @@ public class LateralCacheNoWaitFacade<K, V>
      * @param noWait
      * @return true if it was already in the array
      */
-    public synchronized boolean removeNoWait( LateralCacheNoWait<K, V> noWait )
+    public synchronized boolean removeNoWait( final LateralCacheNoWait<K, V> noWait )
     {
         if ( noWait == null )
         {
@@ -164,6 +165,7 @@ public class LateralCacheNoWaitFacade<K, V>
         }
 
         @SuppressWarnings("unchecked") // No generic arrays in java
+        final
         LateralCacheNoWait<K, V>[] newArray = new LateralCacheNoWait[noWaits.length - 1];
 
         System.arraycopy( noWaits, 0, newArray, 0, position );
@@ -181,13 +183,13 @@ public class LateralCacheNoWaitFacade<K, V>
      * @throws IOException
      */
     @Override
-    public void update( ICacheElement<K, V> ce )
+    public void update( final ICacheElement<K, V> ce )
         throws IOException
     {
         log.debug( "updating through lateral cache facade, noWaits.length = {0}",
                 noWaits.length );
 
-        for (LateralCacheNoWait<K, V> nw : noWaits)
+        for (final LateralCacheNoWait<K, V> nw : noWaits)
         {
             nw.update( ce );
         }
@@ -200,9 +202,9 @@ public class LateralCacheNoWaitFacade<K, V>
      * @return ICacheElement
      */
     @Override
-    public ICacheElement<K, V> get( K key )
+    public ICacheElement<K, V> get( final K key )
     {
-        Optional<ICacheElement<K, V>> optional = Arrays.stream(noWaits)
+        final Optional<ICacheElement<K, V>> optional = Arrays.stream(noWaits)
             .map(nw -> nw.get( key ))
             .filter(obj -> obj != null)
             .findFirst();
@@ -223,11 +225,11 @@ public class LateralCacheNoWaitFacade<K, V>
      *         data in cache for any of these keys
      */
     @Override
-    public Map<K, ICacheElement<K, V>> getMultiple(Set<K> keys)
+    public Map<K, ICacheElement<K, V>> getMultiple(final Set<K> keys)
     {
         if ( keys != null && !keys.isEmpty() )
         {
-            Map<K, ICacheElement<K, V>> elements = keys.stream()
+            final Map<K, ICacheElement<K, V>> elements = keys.stream()
                 .collect(Collectors.toMap(
                         key -> key,
                         key -> get(key))).entrySet().stream()
@@ -250,10 +252,10 @@ public class LateralCacheNoWaitFacade<K, V>
      * @return ICacheElement
      */
     @Override
-    public Map<K, ICacheElement<K, V>> getMatching(String pattern)
+    public Map<K, ICacheElement<K, V>> getMatching(final String pattern)
     {
-        Map<K, ICacheElement<K, V>> elements = new HashMap<>();
-        for (LateralCacheNoWait<K, V> nw : noWaits)
+        final Map<K, ICacheElement<K, V>> elements = new HashMap<>();
+        for (final LateralCacheNoWait<K, V> nw : noWaits)
         {
             elements.putAll( nw.getMatching( pattern ) );
         }
@@ -268,12 +270,12 @@ public class LateralCacheNoWaitFacade<K, V>
     @Override
     public Set<K> getKeySet() throws IOException
     {
-        HashSet<K> allKeys = new HashSet<>();
-        for (LateralCacheNoWait<K, V> nw : noWaits)
+        final HashSet<K> allKeys = new HashSet<>();
+        for (final LateralCacheNoWait<K, V> nw : noWaits)
         {
             if ( nw != null )
             {
-                Set<K> keys = nw.getKeySet();
+                final Set<K> keys = nw.getKeySet();
                 if (keys != null)
                 {
                     allKeys.addAll( keys );
@@ -290,7 +292,7 @@ public class LateralCacheNoWaitFacade<K, V>
      * @return always false.
      */
     @Override
-    public boolean remove( K key )
+    public boolean remove( final K key )
     {
         Arrays.stream(noWaits).forEach(nw -> nw.remove( key ));
         return false;
@@ -376,7 +378,7 @@ public class LateralCacheNoWaitFacade<K, V>
             return CacheStatus.ALIVE;
         }
 
-        List<CacheStatus> statii = Arrays.stream(noWaits)
+        final List<CacheStatus> statii = Arrays.stream(noWaits)
                 .map(LateralCacheNoWait::getStatus)
                 .collect(Collectors.toList());
 
@@ -441,21 +443,21 @@ public class LateralCacheNoWaitFacade<K, V>
     @Override
     public IStats getStatistics()
     {
-        IStats stats = new Stats();
+        final IStats stats = new Stats();
         stats.setTypeName( "Lateral Cache No Wait Facade" );
 
-        ArrayList<IStatElement<?>> elems = new ArrayList<>();
+        final ArrayList<IStatElement<?>> elems = new ArrayList<>();
 
         if ( noWaits != null )
         {
             elems.add(new StatElement<>( "Number of No Waits", Integer.valueOf(noWaits.length) ) );
 
-            for ( LateralCacheNoWait<K, V> lcnw : noWaits )
+            for ( final LateralCacheNoWait<K, V> lcnw : noWaits )
             {
                 if ( lcnw != null )
                 {
                     // get the stats from the super too
-                    IStats sStats = lcnw.getStatistics();
+                    final IStats sStats = lcnw.getStatistics();
                     elems.addAll(sStats.getStatElements());
                 }
             }

@@ -47,13 +47,13 @@ public class SystemPropertyUnitTest
         throws Exception
     {
 
-        int maxMemory = 1234;
+        final int maxMemory = 1234;
         System.getProperties().setProperty( "MY_SYSTEM_PROPERTY_DISK_DIR", "system_set" );
         System.getProperties().setProperty( "MY_SYSTEM_PROPERTY_MAX_SIZE", String.valueOf( maxMemory ) );
 
         JCS.setConfigFilename( "/TestSystemProperties.ccf" );
 
-        CacheAccess<String, String> cache = JCS.getInstance( "test1" );
+        final CacheAccess<String, String> cache = JCS.getInstance( "test1" );
         assertEquals( "We should have used the system property for the memory size", maxMemory, cache
             .getCacheAttributes().getMaxObjects() );
 
@@ -74,10 +74,10 @@ public class SystemPropertyUnitTest
     {
         System.getProperties().setProperty( "MY_SYSTEM_PROPERTY_DISK_DIR", "system_set" );
 
-        CompositeCacheManager mgr = CompositeCacheManager.getUnconfiguredInstance();
+        final CompositeCacheManager mgr = CompositeCacheManager.getUnconfiguredInstance();
         mgr.configure( "/TestSystemProperties.ccf" );
 
-        CacheAccess<String, String> cache = JCS.getInstance( "missing" );
+        final CacheAccess<String, String> cache = JCS.getInstance( "missing" );
         // TODO check against the actual default def
         assertEquals( "We should have used the default property for the memory size", 100, cache.getCacheAttributes()
             .getMaxObjects() );

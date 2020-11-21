@@ -137,7 +137,7 @@ public abstract class AbstractLRUMap<K, V>
      * @see java.util.Map#containsKey(java.lang.Object)
      */
     @Override
-    public boolean containsKey( Object key )
+    public boolean containsKey( final Object key )
     {
         return map.containsKey( key );
     }
@@ -148,7 +148,7 @@ public abstract class AbstractLRUMap<K, V>
      * @see java.util.Map#containsValue(java.lang.Object)
      */
     @Override
-    public boolean containsValue( Object value )
+    public boolean containsValue( final Object value )
     {
         return map.containsValue( value );
     }
@@ -168,7 +168,7 @@ public abstract class AbstractLRUMap<K, V>
      * @param source
      */
     @Override
-    public void putAll( Map<? extends K, ? extends V> source )
+    public void putAll( final Map<? extends K, ? extends V> source )
     {
         if ( source != null )
         {
@@ -182,13 +182,13 @@ public abstract class AbstractLRUMap<K, V>
      * @return Object
      */
     @Override
-    public V get( Object key )
+    public V get( final Object key )
     {
         V retVal;
 
         log.debug( "getting item  for key {0}", key );
 
-        LRUElementDescriptor<K, V> me = map.get( key );
+        final LRUElementDescriptor<K, V> me = map.get( key );
 
         if ( me == null )
         {
@@ -223,10 +223,10 @@ public abstract class AbstractLRUMap<K, V>
      * @param key
      * @return Object
      */
-    public V getQuiet( Object key )
+    public V getQuiet( final Object key )
     {
         V ce = null;
-        LRUElementDescriptor<K, V> me = map.get( key );
+        final LRUElementDescriptor<K, V> me = map.get( key );
 
         if ( me != null )
         {
@@ -250,7 +250,7 @@ public abstract class AbstractLRUMap<K, V>
      * @return Object removed
      */
     @Override
-    public V remove( Object key )
+    public V remove( final Object key )
     {
         log.debug( "removing item for key: {0}", key );
 
@@ -258,7 +258,7 @@ public abstract class AbstractLRUMap<K, V>
         lock.lock();
         try
         {
-            LRUElementDescriptor<K, V> me = map.remove(key);
+            final LRUElementDescriptor<K, V> me = map.remove(key);
 
             if (me != null)
             {
@@ -280,12 +280,12 @@ public abstract class AbstractLRUMap<K, V>
      * @return Object
      */
     @Override
-    public V put(K key, V value)
+    public V put(final K key, final V value)
     {
         putCnt++;
 
         LRUElementDescriptor<K, V> old = null;
-        LRUElementDescriptor<K, V> me = new LRUElementDescriptor<>(key, value);
+        final LRUElementDescriptor<K, V> me = new LRUElementDescriptor<>(key, value);
 
         lock.lock();
         try
@@ -317,7 +317,7 @@ public abstract class AbstractLRUMap<K, V>
                 lock.lock();
                 try
                 {
-                    LRUElementDescriptor<K, V> last = list.getLast();
+                    final LRUElementDescriptor<K, V> last = list.getLast();
                     if (last != null)
                     {
                         processRemovedLRU(last.getKey(), last.getPayload());
@@ -405,7 +405,7 @@ public abstract class AbstractLRUMap<K, V>
         log.trace( "verifycache: checking linked list by key" );
         for (LRUElementDescriptor<K, V> li = list.getFirst(); li != null; li = (LRUElementDescriptor<K, V>) li.next )
         {
-            K key = li.getKey();
+            final K key = li.getKey();
             if ( !map.containsKey( key ) )
             {
                 log.error( "verifycache: map does not contain key : {0}", li.getKey() );
@@ -415,7 +415,7 @@ public abstract class AbstractLRUMap<K, V>
                 log.error( "key toString={0}", key.toString() );
                 if ( key instanceof GroupAttrName )
                 {
-                    GroupAttrName<?> name = (GroupAttrName<?>) key;
+                    final GroupAttrName<?> name = (GroupAttrName<?>) key;
                     log.error( "GroupID hashcode={0}", name.groupId.hashCode() );
                     log.error( "GroupID.class={0}", name.groupId.getClass() );
                     log.error( "AttrName hashcode={0}", name.attrName.hashCode() );
@@ -475,7 +475,7 @@ public abstract class AbstractLRUMap<K, V>
      * @param key
      * @param value
      */
-    protected void processRemovedLRU(K key, V value )
+    protected void processRemovedLRU(final K key, final V value )
     {
         log.debug( "Removing key: [{0}] from LRUMap store, value = [{1}]", key, value );
         log.debug( "LRUMap store size: \"{0}\".", this.size() );
@@ -486,10 +486,10 @@ public abstract class AbstractLRUMap<K, V>
      */
     public IStats getStatistics()
     {
-        IStats stats = new Stats();
+        final IStats stats = new Stats();
         stats.setTypeName( "LRUMap" );
 
-        ArrayList<IStatElement<?>> elems = new ArrayList<>();
+        final ArrayList<IStatElement<?>> elems = new ArrayList<>();
 
         elems.add(new StatElement<>( "List Size", Integer.valueOf(list.size()) ) );
         elems.add(new StatElement<>( "Map Size", Integer.valueOf(map.size()) ) );

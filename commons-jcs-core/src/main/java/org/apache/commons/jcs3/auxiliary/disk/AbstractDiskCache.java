@@ -108,13 +108,13 @@ public abstract class AbstractDiskCache<K, V>
      *
      * @param attr
      */
-    protected AbstractDiskCache( IDiskCacheAttributes attr )
+    protected AbstractDiskCache( final IDiskCacheAttributes attr )
     {
         this.diskCacheAttributes = attr;
         this.cacheName = attr.getCacheName();
 
         // create queue
-        CacheEventQueueFactory<K, V> fact = new CacheEventQueueFactory<>();
+        final CacheEventQueueFactory<K, V> fact = new CacheEventQueueFactory<>();
         this.cacheEventQueue = fact.createCacheEventQueue( new MyCacheListener(), CacheInfo.listenerId, cacheName,
                                                            diskCacheAttributes.getEventQueuePoolName(),
                                                            diskCacheAttributes.getEventQueueType() );
@@ -134,7 +134,7 @@ public abstract class AbstractDiskCache<K, V>
     /**
      * @param alive set the alive status
      */
-    public void setAlive(boolean alive)
+    public void setAlive(final boolean alive)
     {
         this.alive = alive;
     }
@@ -187,7 +187,7 @@ public abstract class AbstractDiskCache<K, V>
      * @see org.apache.commons.jcs3.engine.behavior.ICache#update
      */
     @Override
-    public final void update( ICacheElement<K, V> cacheElement )
+    public final void update( final ICacheElement<K, V> cacheElement )
         throws IOException
     {
         log.debug( "Putting element in purgatory, cacheName: {0}, key: {1}",
@@ -196,7 +196,7 @@ public abstract class AbstractDiskCache<K, V>
         try
         {
             // Wrap the CacheElement in a PurgatoryElement
-            PurgatoryElement<K, V> pe = new PurgatoryElement<>( cacheElement );
+            final PurgatoryElement<K, V> pe = new PurgatoryElement<>( cacheElement );
 
             // Indicates the the element is eligible to be spooled to disk,
             // this will remain true unless the item is pulled back into
@@ -212,7 +212,7 @@ public abstract class AbstractDiskCache<K, V>
             // Queue element for serialization
             cacheEventQueue.addPutEvent( pe );
         }
-        catch ( IOException ex )
+        catch ( final IOException ex )
         {
             log.error( "Problem adding put event to queue.", ex );
 
@@ -229,7 +229,7 @@ public abstract class AbstractDiskCache<K, V>
      * @see AuxiliaryCache#get
      */
     @Override
-    public final ICacheElement<K, V> get( K key )
+    public final ICacheElement<K, V> get( final K key )
     {
         // If not alive, always return null.
 
@@ -280,7 +280,7 @@ public abstract class AbstractDiskCache<K, V>
         {
             return doGet( key );
         }
-        catch ( Exception e )
+        catch ( final Exception e )
         {
             log.error( e );
 
@@ -305,7 +305,7 @@ public abstract class AbstractDiskCache<K, V>
      * @throws IOException
      */
     @Override
-    public Map<K, ICacheElement<K, V>> getMatching( String pattern )
+    public Map<K, ICacheElement<K, V>> getMatching( final String pattern )
         throws IOException
     {
         // Get the keys from purgatory
@@ -317,13 +317,13 @@ public abstract class AbstractDiskCache<K, V>
             keyArray = new HashSet<>(purgatory.keySet());
         }
 
-        Set<K> matchingKeys = getKeyMatcher().getMatchingKeysFromArray( pattern, keyArray );
+        final Set<K> matchingKeys = getKeyMatcher().getMatchingKeysFromArray( pattern, keyArray );
 
         // call getMultiple with the set
-        Map<K, ICacheElement<K, V>> result = processGetMultiple( matchingKeys );
+        final Map<K, ICacheElement<K, V>> result = processGetMultiple( matchingKeys );
 
         // Get the keys from disk
-        Map<K, ICacheElement<K, V>> diskMatches = doGetMatching( pattern );
+        final Map<K, ICacheElement<K, V>> diskMatches = doGetMatching( pattern );
 
         result.putAll( diskMatches );
 
@@ -347,7 +347,7 @@ public abstract class AbstractDiskCache<K, V>
      * @see org.apache.commons.jcs3.engine.behavior.ICache#remove
      */
     @Override
-    public final boolean remove( K key )
+    public final boolean remove( final K key )
         throws IOException
     {
         PurgatoryElement<K, V> pe = null;
@@ -425,11 +425,11 @@ public abstract class AbstractDiskCache<K, V>
     public final void dispose()
         throws IOException
     {
-        Thread t = new Thread(() ->
+        final Thread t = new Thread(() ->
         {
             boolean keepGoing = true;
             // long total = 0;
-            long interval = 100;
+            final long interval = 100;
             while ( keepGoing )
             {
                 keepGoing = !cacheEventQueue.isEmpty();
@@ -439,7 +439,7 @@ public abstract class AbstractDiskCache<K, V>
                     // total += interval;
                     // log.info( "total = " + total );
                 }
-                catch ( InterruptedException e )
+                catch ( final InterruptedException e )
                 {
                     break;
                 }
@@ -453,7 +453,7 @@ public abstract class AbstractDiskCache<K, V>
         {
             t.join( this.diskCacheAttributes.getShutdownSpoolTimeLimit() * 1000L );
         }
-        catch ( InterruptedException ex )
+        catch ( final InterruptedException ex )
         {
             log.error( "The Shutdown Spool Process was interrupted.", ex );
         }
@@ -498,16 +498,16 @@ public abstract class AbstractDiskCache<K, V>
     @Override
     public IStats getStatistics()
     {
-        IStats stats = new Stats();
+        final IStats stats = new Stats();
         stats.setTypeName( "Abstract Disk Cache" );
 
-        ArrayList<IStatElement<?>> elems = new ArrayList<>();
+        final ArrayList<IStatElement<?>> elems = new ArrayList<>();
 
         elems.add(new StatElement<>( "Purgatory Hits", Integer.valueOf(purgHits) ) );
         elems.add(new StatElement<>( "Purgatory Size", Integer.valueOf(purgatory.size()) ) );
 
         // get the stats from the event queue too
-        IStats eqStats = this.cacheEventQueue.getStatistics();
+        final IStats eqStats = this.cacheEventQueue.getStatistics();
         elems.addAll(eqStats.getStatElements());
 
         stats.setStatElements( elems );
@@ -573,7 +573,7 @@ public abstract class AbstractDiskCache<K, V>
          * @see ICacheListener#setListenerId
          */
         @Override
-        public void setListenerId( long id )
+        public void setListenerId( final long id )
             throws IOException
         {
             this.listenerId = id;
@@ -597,7 +597,7 @@ public abstract class AbstractDiskCache<K, V>
                 // if it is still spoolable, and remove it from purgatory.
                 if ( element instanceof PurgatoryElement )
                 {
-                    PurgatoryElement<K, V> pe = (PurgatoryElement<K, V>) element;
+                    final PurgatoryElement<K, V> pe = (PurgatoryElement<K, V>) element;
 
                     synchronized ( pe.getCacheElement() )
                     {
@@ -671,7 +671,7 @@ public abstract class AbstractDiskCache<K, V>
          * @see ICacheListener#handleRemove
          */
         @Override
-        public void handleRemove( String cacheName, K key )
+        public void handleRemove( final String cacheName, final K key )
             throws IOException
         {
             if ( alive )
@@ -689,7 +689,7 @@ public abstract class AbstractDiskCache<K, V>
          * @see ICacheListener#handleRemoveAll
          */
         @Override
-        public void handleRemoveAll( String cacheName )
+        public void handleRemoveAll( final String cacheName )
             throws IOException
         {
             if ( alive )
@@ -704,7 +704,7 @@ public abstract class AbstractDiskCache<K, V>
          * @see ICacheListener#handleDispose
          */
         @Override
-        public void handleDispose( String cacheName )
+        public void handleDispose( final String cacheName )
             throws IOException
         {
             if ( alive )
@@ -733,7 +733,7 @@ public abstract class AbstractDiskCache<K, V>
      * @return An object matching key, or null.
      * @throws IOException
      */
-    protected final ICacheElement<K, V> doGet( K key )
+    protected final ICacheElement<K, V> doGet( final K key )
         throws IOException
     {
         return super.getWithEventLogging( key );
@@ -750,7 +750,7 @@ public abstract class AbstractDiskCache<K, V>
      * @return A map of matches..
      * @throws IOException
      */
-    protected final Map<K, ICacheElement<K, V>> doGetMatching( String pattern )
+    protected final Map<K, ICacheElement<K, V>> doGetMatching( final String pattern )
         throws IOException
     {
         return super.getMatchingWithEventLogging( pattern );
@@ -766,7 +766,7 @@ public abstract class AbstractDiskCache<K, V>
      * @param cacheElement
      * @throws IOException
      */
-    protected final void doUpdate( ICacheElement<K, V> cacheElement )
+    protected final void doUpdate( final ICacheElement<K, V> cacheElement )
         throws IOException
     {
         super.updateWithEventLogging( cacheElement );
@@ -783,7 +783,7 @@ public abstract class AbstractDiskCache<K, V>
      * @return whether or no the item was present when removed
      * @throws IOException
      */
-    protected final boolean doRemove( K key )
+    protected final boolean doRemove( final K key )
         throws IOException
     {
         return super.removeWithEventLogging( key );

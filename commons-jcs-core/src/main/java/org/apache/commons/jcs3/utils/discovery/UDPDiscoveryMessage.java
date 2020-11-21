@@ -68,7 +68,7 @@ public class UDPDiscoveryMessage
     /**
      * @param port The port to set.
      */
-    public void setPort( int port )
+    public void setPort( final int port )
     {
         this.port = port;
     }
@@ -84,7 +84,7 @@ public class UDPDiscoveryMessage
     /**
      * @param host The host to set.
      */
-    public void setHost( String host )
+    public void setHost( final String host )
     {
         this.host = host;
     }
@@ -100,7 +100,7 @@ public class UDPDiscoveryMessage
     /**
      * @param requesterId The requesterId to set.
      */
-    public void setRequesterId( long requesterId )
+    public void setRequesterId( final long requesterId )
     {
         this.requesterId = requesterId;
     }
@@ -116,7 +116,7 @@ public class UDPDiscoveryMessage
     /**
      * @param messageType The messageType to set.
      */
-    public void setMessageType( BroadcastType messageType )
+    public void setMessageType( final BroadcastType messageType )
     {
         this.messageType = messageType;
     }
@@ -132,7 +132,7 @@ public class UDPDiscoveryMessage
     /**
      * @param cacheNames The cacheNames to set.
      */
-    public void setCacheNames( ArrayList<String> cacheNames )
+    public void setCacheNames( final ArrayList<String> cacheNames )
     {
         this.cacheNames = cacheNames;
     }
@@ -151,13 +151,13 @@ public class UDPDiscoveryMessage
     @Override
     public String toString()
     {
-        StringBuilder buf = new StringBuilder();
+        final StringBuilder buf = new StringBuilder();
         buf.append( "\n host = [" + host + "]" );
         buf.append( "\n port = [" + port + "]" );
         buf.append( "\n requesterId = [" + requesterId + "]" );
         buf.append( "\n messageType = [" + messageType + "]" );
         buf.append( "\n Cache Names" );
-        for (String name : cacheNames)
+        for (final String name : cacheNames)
         {
             buf.append( " cacheName = [" + name + "]" );
         }

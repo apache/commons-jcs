@@ -38,7 +38,7 @@ public class RemoteUtilsUnitTest
      */
     public void testCreateRegistry()
     {
-        Registry registry = RemoteUtils.createRegistry( 1102 );
+        final Registry registry = RemoteUtils.createRegistry( 1102 );
         assertNotNull("Registry should not be null", registry);
     }
 

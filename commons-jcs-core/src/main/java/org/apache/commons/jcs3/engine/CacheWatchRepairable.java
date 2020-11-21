@@ -55,13 +55,13 @@ public class CacheWatchRepairable
      * <p>
      * @param cacheWatch The new cacheWatch value
      */
-    public void setCacheWatch( ICacheObserver cacheWatch )
+    public void setCacheWatch( final ICacheObserver cacheWatch )
     {
         this.cacheWatch = cacheWatch;
-        for (Map.Entry<String, Set<ICacheListener<?, ?>>> entry : cacheMap.entrySet())
+        for (final Map.Entry<String, Set<ICacheListener<?, ?>>> entry : cacheMap.entrySet())
         {
-            String cacheName = entry.getKey();
-            for (ICacheListener<?, ?> listener : entry.getValue())
+            final String cacheName = entry.getKey();
+            for (final ICacheListener<?, ?> listener : entry.getValue())
             {
                 try
                 {
@@ -69,7 +69,7 @@ public class CacheWatchRepairable
                             + "{0} | ICacheObserver = {1}", listener, cacheWatch );
                     cacheWatch.addCacheListener( cacheName, listener );
                 }
-                catch ( IOException ex )
+                catch ( final IOException ex )
                 {
                     log.error( "Problem adding listener. ICacheListener = {0} | "
                             + "ICacheObserver = {1}", listener, cacheWatch, ex );
@@ -86,12 +86,12 @@ public class CacheWatchRepairable
      * @throws IOException
      */
     @Override
-    public <K, V> void addCacheListener( String cacheName, ICacheListener<K, V> obj )
+    public <K, V> void addCacheListener( final String cacheName, final ICacheListener<K, V> obj )
         throws IOException
     {
         // Record the added cache listener locally, regardless of whether the
         // remote add-listener operation succeeds or fails.
-        Set<ICacheListener<?, ?>> listenerSet = cacheMap.computeIfAbsent(cacheName, key -> new CopyOnWriteArraySet<>());
+        final Set<ICacheListener<?, ?>> listenerSet = cacheMap.computeIfAbsent(cacheName, key -> new CopyOnWriteArraySet<>());
 
         listenerSet.add( obj );
 
@@ -108,12 +108,12 @@ public class CacheWatchRepairable
      * @throws IOException
      */
     @Override
-    public <K, V> void addCacheListener( ICacheListener<K, V> obj )
+    public <K, V> void addCacheListener( final ICacheListener<K, V> obj )
         throws IOException
     {
         // Record the added cache listener locally, regardless of whether the
         // remote add-listener operation succeeds or fails.
-        for (Set<ICacheListener<?, ?>> listenerSet : cacheMap.values())
+        for (final Set<ICacheListener<?, ?>> listenerSet : cacheMap.values())
         {
             listenerSet.add( obj );
         }
@@ -131,13 +131,13 @@ public class CacheWatchRepairable
      * @throws IOException
      */
     @Override
-    public <K, V> void removeCacheListener( String cacheName, ICacheListener<K, V> obj )
+    public <K, V> void removeCacheListener( final String cacheName, final ICacheListener<K, V> obj )
         throws IOException
     {
         log.info( "removeCacheListener, cacheName [{0}]", cacheName );
         // Record the removal locally, regardless of whether the remote
         // remove-listener operation succeeds or fails.
-        Set<ICacheListener<?, ?>> listenerSet = cacheMap.get( cacheName );
+        final Set<ICacheListener<?, ?>> listenerSet = cacheMap.get( cacheName );
         if ( listenerSet != null )
         {
             listenerSet.remove( obj );
@@ -150,14 +150,14 @@ public class CacheWatchRepairable
      * @throws IOException
      */
     @Override
-    public <K, V> void removeCacheListener( ICacheListener<K, V> obj )
+    public <K, V> void removeCacheListener( final ICacheListener<K, V> obj )
         throws IOException
     {
         log.info( "removeCacheListener, ICacheListener [{0}]", obj );
 
         // Record the removal locally, regardless of whether the remote
         // remove-listener operation succeeds or fails.
-        for (Set<ICacheListener<?, ?>> listenerSet : cacheMap.values())
+        for (final Set<ICacheListener<?, ?>> listenerSet : cacheMap.values())
         {
             log.debug( "Before removing [{0}] the listenerSet = {1}", obj,
                     listenerSet );

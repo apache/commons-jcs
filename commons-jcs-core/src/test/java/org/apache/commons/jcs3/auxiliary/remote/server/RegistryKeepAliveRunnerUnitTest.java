@@ -30,12 +30,12 @@ public class RegistryKeepAliveRunnerUnitTest
     public void testCheckAndRestoreIfNeeded_failure()
     {
         // SETUP
-        String host = "localhost";
-        int port = 1234;
-        String service = "doesn'texist";
-        MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
+        final String host = "localhost";
+        final int port = 1234;
+        final String service = "doesn'texist";
+        final MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
 
-        RegistryKeepAliveRunner runner = new RegistryKeepAliveRunner( host, port, service );
+        final RegistryKeepAliveRunner runner = new RegistryKeepAliveRunner( host, port, service );
         runner.setCacheEventLogger( cacheEventLogger );
 
         // DO WORK

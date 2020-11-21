@@ -85,7 +85,7 @@ public class ElementEventQueue
      * @throws IOException
      */
     @Override
-    public <T> void addElementEvent( IElementEventHandler hand, IElementEvent<T> event )
+    public <T> void addElementEvent( final IElementEventHandler hand, final IElementEvent<T> event )
         throws IOException
     {
 
@@ -97,7 +97,7 @@ public class ElementEventQueue
         }
         else
         {
-            ElementEventRunner runner = new ElementEventRunner( hand, event );
+            final ElementEventRunner runner = new ElementEventRunner( hand, event );
 
             log.debug( "runner = {0}", runner );
 
@@ -125,7 +125,7 @@ public class ElementEventQueue
                 doRun();
                 // happy and done.
             }
-            catch ( IOException e )
+            catch ( final IOException e )
             {
                 // Too bad. The handler has problems.
                 log.warn( "Giving up element event handling {0}", ElementEventQueue.this, e );
@@ -161,7 +161,7 @@ public class ElementEventQueue
          * @throws IOException
          */
         @SuppressWarnings("synthetic-access")
-        ElementEventRunner( IElementEventHandler hand, IElementEvent<?> event )
+        ElementEventRunner( final IElementEventHandler hand, final IElementEvent<?> event )
             throws IOException
         {
             log.debug( "Constructing {0}", this );

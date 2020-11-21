@@ -55,11 +55,11 @@ public class RemoteCacheNoWaitFacade<K, V>
      * @param elementSerializer
      * @param cacheFactory
      */
-    public RemoteCacheNoWaitFacade( List<RemoteCacheNoWait<K,V>> noWaits,
-                                    IRemoteCacheAttributes rca,
-                                    ICacheEventLogger cacheEventLogger,
-                                    IElementSerializer elementSerializer,
-                                    RemoteCacheFactory cacheFactory)
+    public RemoteCacheNoWaitFacade( final List<RemoteCacheNoWait<K,V>> noWaits,
+                                    final IRemoteCacheAttributes rca,
+                                    final ICacheEventLogger cacheEventLogger,
+                                    final IElementSerializer elementSerializer,
+                                    final RemoteCacheFactory cacheFactory)
     {
         super( noWaits, rca, cacheEventLogger, elementSerializer );
         this.cacheFactory = cacheFactory;
@@ -71,7 +71,7 @@ public class RemoteCacheNoWaitFacade<K, V>
      * @param rcnw The no wait in error.
      */
     @Override
-    protected void failover( RemoteCacheNoWait<K, V> rcnw )
+    protected void failover( final RemoteCacheNoWait<K, V> rcnw )
     {
         log.debug( "in failover for {0}", rcnw );
 
@@ -80,7 +80,7 @@ public class RemoteCacheNoWaitFacade<K, V>
             if ( rcnw.getStatus() == CacheStatus.ERROR )
             {
                 // start failover, primary recovery process
-                RemoteCacheFailoverRunner<K, V> runner = new RemoteCacheFailoverRunner<>( this, this.cacheFactory );
+                final RemoteCacheFailoverRunner<K, V> runner = new RemoteCacheFailoverRunner<>( this, this.cacheFactory );
                 runner.setDaemon( true );
                 runner.start();
                 runner.notifyError();

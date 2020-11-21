@@ -59,7 +59,7 @@ public class RegistryKeepAliveRunner
      * @param registryPort - the port on which to start the registry
      * @param serviceName
      */
-    public RegistryKeepAliveRunner( String registryHost, int registryPort, String serviceName )
+    public RegistryKeepAliveRunner( final String registryHost, final int registryPort, final String serviceName )
     {
         this.namingURL = RemoteUtils.getNamingURL(registryHost, registryPort, serviceName);
         this.serviceName = serviceName;
@@ -87,20 +87,20 @@ public class RegistryKeepAliveRunner
 
         try
         {
-            Object obj = Naming.lookup( namingURL );
+            final Object obj = Naming.lookup( namingURL );
 
             // Successful connection to the remote server.
-            String message = "RMI registry looks fine.  Found [" + obj + "] in registry [" + namingURL + "]";
+            final String message = "RMI registry looks fine.  Found [" + obj + "] in registry [" + namingURL + "]";
             if ( cacheEventLogger != null )
             {
                 cacheEventLogger.logApplicationEvent( "RegistryKeepAliveRunner", "Naming.lookup", message );
             }
             log.debug( message );
         }
-        catch ( Exception ex )
+        catch ( final Exception ex )
         {
             // Failed to connect to the remote server.
-            String message = "Problem finding server at [" + namingURL
+            final String message = "Problem finding server at [" + namingURL
                 + "].  Will attempt to start registry and rebind.";
             log.error( message, ex );
             if ( cacheEventLogger != null )
@@ -116,7 +116,7 @@ public class RegistryKeepAliveRunner
      * <p>
      * @param serviceName the service name
      */
-    protected void createAndRegister( String serviceName )
+    protected void createAndRegister( final String serviceName )
     {
         createReqistry( serviceName );
         registerServer( serviceName );
@@ -127,7 +127,7 @@ public class RegistryKeepAliveRunner
      * <p>
      * @param serviceName the service name
      */
-    protected void createReqistry( String serviceName )
+    protected void createReqistry( final String serviceName )
     {
         // TODO: Refactor method signature. This is ugly but required to keep the binary API compatibility
         this.registry = RemoteUtils.createRegistry(registryPort);
@@ -152,12 +152,12 @@ public class RegistryKeepAliveRunner
      * <p>
      * @param serviceName the service name
      */
-    protected void registerServer( String serviceName )
+    protected void registerServer( final String serviceName )
     {
         try
         {
             // try to rebind anyway
-            Remote server = RemoteCacheServerFactory.getRemoteCacheServer();
+            final Remote server = RemoteCacheServerFactory.getRemoteCacheServer();
 
             if ( server == null )
             {
@@ -165,16 +165,16 @@ public class RegistryKeepAliveRunner
             }
 
             this.registry.rebind( serviceName, server );
-            String message = "Successfully rebound server to registry [" + serviceName + "].";
+            final String message = "Successfully rebound server to registry [" + serviceName + "].";
             if ( cacheEventLogger != null )
             {
                 cacheEventLogger.logApplicationEvent( "RegistryKeepAliveRunner", "registerServer", message );
             }
             log.info( message );
         }
-        catch ( RemoteException e )
+        catch ( final RemoteException e )
         {
-            String message = "Could not rebind server to registry [" + serviceName + "].";
+            final String message = "Could not rebind server to registry [" + serviceName + "].";
             log.error( message, e );
             if ( cacheEventLogger != null )
             {
@@ -189,7 +189,7 @@ public class RegistryKeepAliveRunner
      * <p>
      * @param cacheEventLogger
      */
-    public void setCacheEventLogger( ICacheEventLogger cacheEventLogger )
+    public void setCacheEventLogger( final ICacheEventLogger cacheEventLogger )
     {
         this.cacheEventLogger = cacheEventLogger;
     }

@@ -38,7 +38,7 @@ public class InvalidGroupException
      * <p>
      * @param message
      */
-    public InvalidGroupException( String message )
+    public InvalidGroupException( final String message )
     {
         super( message );
     }

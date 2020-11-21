@@ -40,7 +40,7 @@ public class PropertySetterException
      * <p>
      * @param msg
      */
-    public PropertySetterException( String msg )
+    public PropertySetterException( final String msg )
     {
         super( msg );
         this.rootCause = null;
@@ -51,7 +51,7 @@ public class PropertySetterException
      * <p>
      * @param rootCause
      */
-    public PropertySetterException( Throwable rootCause )
+    public PropertySetterException( final Throwable rootCause )
     {
         this.rootCause = rootCause;
     }

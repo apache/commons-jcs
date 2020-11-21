@@ -40,7 +40,7 @@ public class CacheEventQueue<K, V>
      * @param listenerId
      * @param cacheName
      */
-    public CacheEventQueue( ICacheListener<K, V> listener, long listenerId, String cacheName )
+    public CacheEventQueue( final ICacheListener<K, V> listener, final long listenerId, final String cacheName )
     {
         this( listener, listenerId, cacheName, 10, 500 );
     }
@@ -54,8 +54,8 @@ public class CacheEventQueue<K, V>
      * @param maxFailure
      * @param waitBeforeRetry
      */
-    public CacheEventQueue( ICacheListener<K, V> listener, long listenerId, String cacheName, int maxFailure,
-                            int waitBeforeRetry )
+    public CacheEventQueue( final ICacheListener<K, V> listener, final long listenerId, final String cacheName, final int maxFailure,
+                            final int waitBeforeRetry )
     {
         super( listener, listenerId, cacheName, maxFailure, waitBeforeRetry, null );
     }
@@ -71,8 +71,8 @@ public class CacheEventQueue<K, V>
      * @param threadPoolName
      */
     @Override
-    protected void initialize( ICacheListener<K, V> listener, long listenerId, String cacheName, int maxFailure,
-                            int waitBeforeRetry, String threadPoolName )
+    protected void initialize( final ICacheListener<K, V> listener, final long listenerId, final String cacheName, final int maxFailure,
+                            final int waitBeforeRetry, final String threadPoolName )
     {
         super.initialize(listener, listenerId, cacheName, maxFailure, waitBeforeRetry);
 

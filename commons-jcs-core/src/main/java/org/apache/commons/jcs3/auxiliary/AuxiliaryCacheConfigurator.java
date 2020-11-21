@@ -62,15 +62,15 @@ public class AuxiliaryCacheConfigurator
      * @param auxPrefix - ex. AUXILIARY_PREFIX + auxName
      * @return cacheEventLogger
      */
-    public static ICacheEventLogger parseCacheEventLogger( Properties props, String auxPrefix )
+    public static ICacheEventLogger parseCacheEventLogger( final Properties props, final String auxPrefix )
     {
 
         // auxFactory was not previously initialized.
-        String eventLoggerClassName = auxPrefix + CACHE_EVENT_LOGGER_PREFIX;
-        ICacheEventLogger cacheEventLogger = OptionConverter.instantiateByKey( props, eventLoggerClassName, null );
+        final String eventLoggerClassName = auxPrefix + CACHE_EVENT_LOGGER_PREFIX;
+        final ICacheEventLogger cacheEventLogger = OptionConverter.instantiateByKey( props, eventLoggerClassName, null );
         if ( cacheEventLogger != null )
         {
-            String cacheEventLoggerAttributePrefix = auxPrefix + CACHE_EVENT_LOGGER_PREFIX + ATTRIBUTE_PREFIX;
+            final String cacheEventLoggerAttributePrefix = auxPrefix + CACHE_EVENT_LOGGER_PREFIX + ATTRIBUTE_PREFIX;
             PropertySetter.setProperties( cacheEventLogger, props, cacheEventLoggerAttributePrefix + "." );
             log.info( "Using custom cache event logger [{0}] for auxiliary [{1}]",
                     cacheEventLogger, auxPrefix );
@@ -89,15 +89,15 @@ public class AuxiliaryCacheConfigurator
      * @param auxPrefix - ex. AUXILIARY_PREFIX + auxName
      * @return cacheEventLogger
      */
-    public static IElementSerializer parseElementSerializer( Properties props, String auxPrefix )
+    public static IElementSerializer parseElementSerializer( final Properties props, final String auxPrefix )
     {
         // TODO take in the entire prop key
         // auxFactory was not previously initialized.
-        String elementSerializerClassName = auxPrefix + SERIALIZER_PREFIX;
+        final String elementSerializerClassName = auxPrefix + SERIALIZER_PREFIX;
         IElementSerializer elementSerializer = OptionConverter.instantiateByKey( props, elementSerializerClassName, null );
         if ( elementSerializer != null )
         {
-            String attributePrefix = auxPrefix + SERIALIZER_PREFIX + ATTRIBUTE_PREFIX;
+            final String attributePrefix = auxPrefix + SERIALIZER_PREFIX + ATTRIBUTE_PREFIX;
             PropertySetter.setProperties( elementSerializer, props, attributePrefix + "." );
             log.info( "Using custom element serializer [{0}] for auxiliary [{1}]",
                     elementSerializer, auxPrefix );

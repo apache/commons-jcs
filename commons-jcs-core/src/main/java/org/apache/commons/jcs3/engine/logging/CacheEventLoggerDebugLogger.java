@@ -46,10 +46,10 @@ public class CacheEventLoggerDebugLogger
      * @return ICacheEvent
      */
     @Override
-    public <T> ICacheEvent<T> createICacheEvent( String source, String region, String eventName,
-            String optionalDetails, T key )
+    public <T> ICacheEvent<T> createICacheEvent( final String source, final String region, final String eventName,
+            final String optionalDetails, final T key )
     {
-        ICacheEvent<T> event = new CacheEvent<>();
+        final ICacheEvent<T> event = new CacheEvent<>();
         event.setSource( source );
         event.setRegion( region );
         event.setEventName( eventName );
@@ -65,7 +65,7 @@ public class CacheEventLoggerDebugLogger
      * @param optionalDetails
      */
     @Override
-    public void logApplicationEvent( String source, String eventName, String optionalDetails )
+    public void logApplicationEvent( final String source, final String eventName, final String optionalDetails )
     {
         log.debug( "{0} | {1} | {2}", source, eventName, optionalDetails );
     }
@@ -76,7 +76,7 @@ public class CacheEventLoggerDebugLogger
      * @param errorMessage
      */
     @Override
-    public void logError( String source, String eventName, String errorMessage )
+    public void logError( final String source, final String eventName, final String errorMessage )
     {
         log.debug( "{0} | {1} | {2}", source, eventName, errorMessage );
     }
@@ -85,7 +85,7 @@ public class CacheEventLoggerDebugLogger
      * @param event
      */
     @Override
-    public <T> void logICacheEvent( ICacheEvent<T> event )
+    public <T> void logICacheEvent( final ICacheEvent<T> event )
     {
         log.debug( event );
     }
@@ -93,7 +93,7 @@ public class CacheEventLoggerDebugLogger
     /**
      * @param logCategoryName
      */
-    public synchronized void setLogCategoryName( String logCategoryName )
+    public synchronized void setLogCategoryName( final String logCategoryName )
     {
         if ( logCategoryName != null && !logCategoryName.equals( this.logCategoryName ) )
         {

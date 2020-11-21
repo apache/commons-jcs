@@ -63,14 +63,14 @@ public class TestCacheAccess
     /**
      * @param regionName the name of the region.
      */
-    public TestCacheAccess( String regionName )
+    public TestCacheAccess( final String regionName )
     {
         try
         {
             cache_control = JCS.getInstance( regionName );
             group_cache_control = JCS.getGroupCacheInstance( regionName );
         }
-        catch ( Exception e )
+        catch ( final Exception e )
         {
             log.error( "Problem getting cache instance", e );
             p( e.toString() );
@@ -88,7 +88,7 @@ public class TestCacheAccess
             boolean notDone = true;
             String message = null;
             // wait to dispose
-            BufferedReader br = new BufferedReader( new InputStreamReader( System.in ) );
+            final BufferedReader br = new BufferedReader( new InputStreamReader( System.in ) );
 
             help();
 
@@ -108,21 +108,21 @@ public class TestCacheAccess
                 }
                 else if ( message.startsWith( "getAttributeNames" ) )
                 {
-                    long n_start = System.currentTimeMillis();
+                    final long n_start = System.currentTimeMillis();
                     String groupName = null;
-                    StringTokenizer toke = new StringTokenizer( message );
+                    final StringTokenizer toke = new StringTokenizer( message );
                     int tcnt = 0;
                     while ( toke.hasMoreElements() )
                     {
                         tcnt++;
-                        String t = (String) toke.nextElement();
+                        final String t = (String) toke.nextElement();
                         if ( tcnt == 2 )
                         {
                             groupName = t.trim();
                         }
                     }
                     getAttributeNames( groupName );
-                    long n_end = System.currentTimeMillis();
+                    final long n_end = System.currentTimeMillis();
                     p( "---got attrNames for " + groupName + " in " + String.valueOf( n_end - n_start ) + " millis ---" );
                 }
                 else if ( message.startsWith( "shutDown" ) )
@@ -166,36 +166,36 @@ public class TestCacheAccess
                 }
                 else if ( message.startsWith( "putm" ) )
                 {
-                    String numS = message.substring( message.indexOf( " " ) + 1, message.length() );
+                    final String numS = message.substring( message.indexOf( " " ) + 1, message.length() );
                     if ( numS == null )
                     {
                         p( "usage: putm numbertoput" );
                     }
                     else
                     {
-                        int num = Integer.parseInt( numS.trim() );
+                        final int num = Integer.parseInt( numS.trim() );
                         putMultiple( num );
                     }
                 }
                 else if ( message.startsWith( "pute" ) )
                 {
-                    String numS = message.substring( message.indexOf( " " ) + 1, message.length() );
+                    final String numS = message.substring( message.indexOf( " " ) + 1, message.length() );
                     if ( numS == null )
                     {
                         p( "usage: putme numbertoput" );
                     }
                     else
                     {
-                        int num = Integer.parseInt( numS.trim() );
-                        long n_start = System.currentTimeMillis();
+                        final int num = Integer.parseInt( numS.trim() );
+                        final long n_start = System.currentTimeMillis();
                         for ( int n = 0; n < num; n++ )
                         {
-                            IElementAttributes attrp = cache_control.getDefaultElementAttributes();
-                            ElementEventHandlerMockImpl hand = new ElementEventHandlerMockImpl();
+                            final IElementAttributes attrp = cache_control.getDefaultElementAttributes();
+                            final ElementEventHandlerMockImpl hand = new ElementEventHandlerMockImpl();
                             attrp.addElementEventHandler( hand );
                             cache_control.put( "key" + n, "data" + n + " put from ta = junk", attrp );
                         }
-                        long n_end = System.currentTimeMillis();
+                        final long n_end = System.currentTimeMillis();
                         p( "---put " + num + " in " + String.valueOf( n_end - n_start ) + " millis ---" );
                     }
                 }
@@ -205,14 +205,14 @@ public class TestCacheAccess
                 }
                 else if ( message.startsWith( "removem" ) )
                 {
-                    String numS = message.substring( message.indexOf( " " ) + 1, message.length() );
+                    final String numS = message.substring( message.indexOf( " " ) + 1, message.length() );
                     if ( numS == null )
                     {
                         p( "usage: removem numbertoremove" );
                     }
                     else
                     {
-                        int num = Integer.parseInt( numS.trim() );
+                        final int num = Integer.parseInt( numS.trim() );
                         removeMultiple( num );
                     }
                 }
@@ -223,38 +223,38 @@ public class TestCacheAccess
                 }
                 else if ( message.startsWith( "remove" ) )
                 {
-                    String key = message.substring( message.indexOf( " " ) + 1, message.length() );
+                    final String key = message.substring( message.indexOf( " " ) + 1, message.length() );
                     cache_control.remove( key );
                     p( "removed " + key );
                 }
                 else if ( message.startsWith( "deattr" ) )
                 {
-                    IElementAttributes ae = cache_control.getDefaultElementAttributes();
+                    final IElementAttributes ae = cache_control.getDefaultElementAttributes();
                     p( "Default IElementAttributes " + ae );
                 }
                 else if ( message.startsWith( "cloneattr" ) )
                 {
-                    String numS = message.substring( message.indexOf( " " ) + 1, message.length() );
+                    final String numS = message.substring( message.indexOf( " " ) + 1, message.length() );
                     if ( numS == null )
                     {
                         p( "usage: put numbertoput" );
                     }
                     else
                     {
-                        int num = Integer.parseInt( numS.trim() );
-                        IElementAttributes attrp = new ElementAttributes();
-                        long n_start = System.currentTimeMillis();
+                        final int num = Integer.parseInt( numS.trim() );
+                        final IElementAttributes attrp = new ElementAttributes();
+                        final long n_start = System.currentTimeMillis();
                         for ( int n = 0; n < num; n++ )
                         {
                             attrp.clone();
                         }
-                        long n_end = System.currentTimeMillis();
+                        final long n_end = System.currentTimeMillis();
                         p( "---cloned attr " + num + " in " + String.valueOf( n_end - n_start ) + " millis ---" );
                     }
                 }
                 else if ( message.startsWith( "switch" ) )
                 {
-                    String name = message.substring( message.indexOf( " " ) + 1, message.length() );
+                    final String name = message.substring( message.indexOf( " " ) + 1, message.length() );
 
                     setRegion( name );
                     p( "switched to cache = " + name );
@@ -285,24 +285,24 @@ public class TestCacheAccess
     /**
      * @param message
      */
-    private void processGetMultiple( String message )
+    private void processGetMultiple( final String message )
     {
         int num = 0;
         boolean show = true;
 
-        StringTokenizer toke = new StringTokenizer( message );
+        final StringTokenizer toke = new StringTokenizer( message );
         int tcnt = 0;
         while ( toke.hasMoreElements() )
         {
             tcnt++;
-            String t = (String) toke.nextElement();
+            final String t = (String) toke.nextElement();
             if ( tcnt == 2 )
             {
                 try
                 {
                     num = Integer.parseInt( t.trim() );
                 }
-                catch ( NumberFormatException nfe )
+                catch ( final NumberFormatException nfe )
                 {
                     p( t + "not a number" );
                 }
@@ -326,18 +326,18 @@ public class TestCacheAccess
     /**
      * @param message
      */
-    private void processGetGroup( String message )
+    private void processGetGroup( final String message )
     {
         String key = null;
         String group = null;
         boolean show = true;
 
-        StringTokenizer toke = new StringTokenizer( message );
+        final StringTokenizer toke = new StringTokenizer( message );
         int tcnt = 0;
         while ( toke.hasMoreElements() )
         {
             tcnt++;
-            String t = (String) toke.nextElement();
+            final String t = (String) toke.nextElement();
             if ( tcnt == 2 )
             {
                 key = t.trim();
@@ -358,20 +358,20 @@ public class TestCacheAccess
         }
         else
         {
-            long n_start = System.currentTimeMillis();
+            final long n_start = System.currentTimeMillis();
             try
             {
-                Object obj = group_cache_control.getFromGroup( key, group );
+                final Object obj = group_cache_control.getFromGroup( key, group );
                 if ( show && obj != null )
                 {
                     p( obj.toString() );
                 }
             }
-            catch ( Exception e )
+            catch ( final Exception e )
             {
                 log.error( e );
             }
-            long n_end = System.currentTimeMillis();
+            final long n_end = System.currentTimeMillis();
             p( "---got " + key + " from group " + group + " in " + String.valueOf( n_end - n_start ) + " millis ---" );
         }
     }
@@ -379,7 +379,7 @@ public class TestCacheAccess
     /**
      * @param message
      */
-    private void processGetAutoGroup( String message )
+    private void processGetAutoGroup( final String message )
     {
         // get auto from group
 
@@ -387,12 +387,12 @@ public class TestCacheAccess
         String group = null;
         boolean show = true;
 
-        StringTokenizer toke = new StringTokenizer( message );
+        final StringTokenizer toke = new StringTokenizer( message );
         int tcnt = 0;
         while ( toke.hasMoreElements() )
         {
             tcnt++;
-            String t = (String) toke.nextElement();
+            final String t = (String) toke.nextElement();
             if ( tcnt == 2 )
             {
                 num = Integer.parseInt( t.trim() );
@@ -413,23 +413,23 @@ public class TestCacheAccess
         }
         else
         {
-            long n_start = System.currentTimeMillis();
+            final long n_start = System.currentTimeMillis();
             try
             {
                 for ( int a = 0; a < num; a++ )
                 {
-                    Object obj = group_cache_control.getFromGroup( "keygr" + a, group );
+                    final Object obj = group_cache_control.getFromGroup( "keygr" + a, group );
                     if ( show && obj != null )
                     {
                         p( obj.toString() );
                     }
                 }
             }
-            catch ( Exception e )
+            catch ( final Exception e )
             {
                 log.error( e );
             }
-            long n_end = System.currentTimeMillis();
+            final long n_end = System.currentTimeMillis();
             p( "---got " + num + " from group " + group + " in " + String.valueOf( n_end - n_start ) + " millis ---" );
         }
     }
@@ -438,17 +438,17 @@ public class TestCacheAccess
      * @param message
      * @throws CacheException
      */
-    private void processPutGroup( String message )
+    private void processPutGroup( final String message )
         throws CacheException
     {
         String group = null;
         String key = null;
-        StringTokenizer toke = new StringTokenizer( message );
+        final StringTokenizer toke = new StringTokenizer( message );
         int tcnt = 0;
         while ( toke.hasMoreElements() )
         {
             tcnt++;
-            String t = (String) toke.nextElement();
+            final String t = (String) toke.nextElement();
             if ( tcnt == 2 )
             {
                 key = t.trim();
@@ -465,9 +465,9 @@ public class TestCacheAccess
         }
         else
         {
-            long n_start = System.currentTimeMillis();
+            final long n_start = System.currentTimeMillis();
             group_cache_control.putInGroup( key, group, "data from putg ----asdfasfas-asfasfas-asfas in group " + group );
-            long n_end = System.currentTimeMillis();
+            final long n_end = System.currentTimeMillis();
             p( "---put " + key + " in group " + group + " in " + String.valueOf( n_end - n_start ) + " millis ---" );
         }
     }
@@ -476,17 +476,17 @@ public class TestCacheAccess
      * @param message
      * @throws CacheException
      */
-    private void processPutAutoGroup( String message )
+    private void processPutAutoGroup( final String message )
         throws CacheException
     {
         String group = null;
         int num = 0;
-        StringTokenizer toke = new StringTokenizer( message );
+        final StringTokenizer toke = new StringTokenizer( message );
         int tcnt = 0;
         while ( toke.hasMoreElements() )
         {
             tcnt++;
-            String t = (String) toke.nextElement();
+            final String t = (String) toke.nextElement();
             if ( tcnt == 2 )
             {
                 num = Integer.parseInt( t.trim() );
@@ -503,13 +503,13 @@ public class TestCacheAccess
         }
         else
         {
-            long n_start = System.currentTimeMillis();
+            final long n_start = System.currentTimeMillis();
             for ( int a = 0; a < num; a++ )
             {
                 group_cache_control.putInGroup( "keygr" + a, group, "data " + a
                     + " from putag ----asdfasfas-asfasfas-asfas in group " + group );
             }
-            long n_end = System.currentTimeMillis();
+            final long n_end = System.currentTimeMillis();
             p( "---put " + num + " in group " + group + " in " + String.valueOf( n_end - n_start ) + " millis ---" );
         }
     }
@@ -518,17 +518,17 @@ public class TestCacheAccess
      * @param message
      * @throws CacheException
      */
-    private void processPut( String message )
+    private void processPut( final String message )
         throws CacheException
     {
         String key = null;
         String val = null;
-        StringTokenizer toke = new StringTokenizer( message );
+        final StringTokenizer toke = new StringTokenizer( message );
         int tcnt = 0;
         while ( toke.hasMoreElements() )
         {
             tcnt++;
-            String t = (String) toke.nextElement();
+            final String t = (String) toke.nextElement();
             if ( tcnt == 2 )
             {
                 key = t.trim();
@@ -546,9 +546,9 @@ public class TestCacheAccess
         else
         {
 
-            long n_start = System.currentTimeMillis();
+            final long n_start = System.currentTimeMillis();
             cache_control.put( key, val );
-            long n_end = System.currentTimeMillis();
+            final long n_end = System.currentTimeMillis();
             p( "---put " + key + " | " + val + " in " + String.valueOf( n_end - n_start ) + " millis ---" );
         }
     }
@@ -556,18 +556,18 @@ public class TestCacheAccess
     /**
      * @param message
      */
-    private void processRandom( String message )
+    private void processRandom( final String message )
     {
         String rangeS = "";
         String numOpsS = "";
         boolean show = true;
 
-        StringTokenizer toke = new StringTokenizer( message );
+        final StringTokenizer toke = new StringTokenizer( message );
         int tcnt = 0;
         while ( toke.hasMoreElements() )
         {
             tcnt++;
-            String t = (String) toke.nextElement();
+            final String t = (String) toke.nextElement();
             if ( tcnt == 2 )
             {
                 rangeS = t.trim();
@@ -582,7 +582,7 @@ public class TestCacheAccess
             }
         }
 
-        String numS = message.substring( message.indexOf( " " ) + 1, message.length() );
+        final String numS = message.substring( message.indexOf( " " ) + 1, message.length() );
 
         int range = 0;
         int numOps = 0;
@@ -591,7 +591,7 @@ public class TestCacheAccess
             range = Integer.parseInt( rangeS.trim() );
             numOps = Integer.parseInt( numOpsS.trim() );
         }
-        catch ( Exception e )
+        catch ( final Exception e )
         {
             p( "usage: random range numOps show" );
             p( "ex.  random 100 1000 false" );
@@ -610,19 +610,19 @@ public class TestCacheAccess
     /**
      * @param message
      */
-    private void processGet( String message )
+    private void processGet( final String message )
     {
         // plain old get
 
         String key = null;
         boolean show = true;
 
-        StringTokenizer toke = new StringTokenizer( message );
+        final StringTokenizer toke = new StringTokenizer( message );
         int tcnt = 0;
         while ( toke.hasMoreElements() )
         {
             tcnt++;
-            String t = (String) toke.nextElement();
+            final String t = (String) toke.nextElement();
             if ( tcnt == 2 )
             {
                 key = t.trim();
@@ -639,20 +639,20 @@ public class TestCacheAccess
         }
         else
         {
-            long n_start = System.currentTimeMillis();
+            final long n_start = System.currentTimeMillis();
             try
             {
-                Object obj = cache_control.get( key );
+                final Object obj = cache_control.get( key );
                 if ( show && obj != null )
                 {
                     p( obj.toString() );
                 }
             }
-            catch ( Exception e )
+            catch ( final Exception e )
             {
                 log.error( e );
             }
-            long n_end = System.currentTimeMillis();
+            final long n_end = System.currentTimeMillis();
             p( "---got " + key + " in " + String.valueOf( n_end - n_start ) + " millis ---" );
         }
     }
@@ -660,19 +660,19 @@ public class TestCacheAccess
     /**
      * @param message
      */
-    private void processGetMatching( String message )
+    private void processGetMatching( final String message )
     {
         // plain old get
 
         String pattern = null;
         boolean show = true;
 
-        StringTokenizer toke = new StringTokenizer( message );
+        final StringTokenizer toke = new StringTokenizer( message );
         int tcnt = 0;
         while ( toke.hasMoreElements() )
         {
             tcnt++;
-            String t = (String) toke.nextElement();
+            final String t = (String) toke.nextElement();
             if ( tcnt == 2 )
             {
                 pattern = t.trim();
@@ -689,20 +689,20 @@ public class TestCacheAccess
         }
         else
         {
-            long n_start = System.currentTimeMillis();
+            final long n_start = System.currentTimeMillis();
             try
             {
-                Map<String, String> results = cache_control.getMatching( pattern );
+                final Map<String, String> results = cache_control.getMatching( pattern );
                 if ( show && results != null )
                 {
                     p( results.toString() );
                 }
             }
-            catch ( Exception e )
+            catch ( final Exception e )
             {
                 log.error( e );
             }
-            long n_end = System.currentTimeMillis();
+            final long n_end = System.currentTimeMillis();
             p( "---gotMatching [" + pattern + "] in " + String.valueOf( n_end - n_start ) + " millis ---" );
         }
     }
@@ -711,15 +711,15 @@ public class TestCacheAccess
      * Test harness.
      * @param args The command line arguments
      */
-    public static void main( String[] args )
+    public static void main( final String[] args )
     {
         isSysOut = true;
-        String ccfFileName = args[0];
+        final String ccfFileName = args[0];
         if ( ccfFileName != null )
         {
             JCS.setConfigFilename( ccfFileName );
         }
-        TestCacheAccess tca = new TestCacheAccess( "testCache1" );
+        final TestCacheAccess tca = new TestCacheAccess( "testCache1" );
         tca.runLoop();
     }
 
@@ -730,7 +730,7 @@ public class TestCacheAccess
      * Gets multiple items from the cache with keys of the form key1, key2, key3 up to key[num].
      * @param num int
      */
-    public void getMultiple( int num )
+    public void getMultiple( final int num )
     {
         getMultiple( num, false );
     }
@@ -739,25 +739,25 @@ public class TestCacheAccess
      * @param num
      * @param show
      */
-    public void getMultiple( int num, boolean show )
+    public void getMultiple( final int num, final boolean show )
     {
-        long n_start = System.currentTimeMillis();
+        final long n_start = System.currentTimeMillis();
         for ( int n = 0; n < num; n++ )
         {
             try
             {
-                Object obj = cache_control.get( "key" + n );
+                final Object obj = cache_control.get( "key" + n );
                 if ( show && obj != null )
                 {
                     p( obj.toString() );
                 }
             }
-            catch ( Exception e )
+            catch ( final Exception e )
             {
                 log.error( e );
             }
         }
-        long n_end = System.currentTimeMillis();
+        final long n_end = System.currentTimeMillis();
         p( "---got " + num + " in " + String.valueOf( n_end - n_start ) + " millis ---" );
     }
 
@@ -765,19 +765,19 @@ public class TestCacheAccess
      * Puts multiple items into the cache.
      * @param num int
      */
-    public void putMultiple( int num )
+    public void putMultiple( final int num )
     {
         try
         {
-            long n_start = System.currentTimeMillis();
+            final long n_start = System.currentTimeMillis();
             for ( int n = 0; n < num; n++ )
             {
                 cache_control.put( "key" + n, "data" + n + " put from ta = junk" );
             }
-            long n_end = System.currentTimeMillis();
+            final long n_end = System.currentTimeMillis();
             p( "---put " + num + " in " + String.valueOf( n_end - n_start ) + " millis ---" );
         }
-        catch ( Exception e )
+        catch ( final Exception e )
         {
             log.error( e );
         }
@@ -787,19 +787,19 @@ public class TestCacheAccess
      * Removes multiple items from the cache.
      * @param num int
      */
-    public void removeMultiple( int num )
+    public void removeMultiple( final int num )
     {
         try
         {
-            long n_start = System.currentTimeMillis();
+            final long n_start = System.currentTimeMillis();
             for ( int n = 0; n < num; n++ )
             {
                 cache_control.remove( "key" + n );
             }
-            long n_end = System.currentTimeMillis();
+            final long n_end = System.currentTimeMillis();
             p( "---removed " + num + " in " + String.valueOf( n_end - n_start ) + " millis ---" );
         }
-        catch ( Exception e )
+        catch ( final Exception e )
         {
             log.error( e );
         }
@@ -811,7 +811,7 @@ public class TestCacheAccess
      * @param range int The end of the key range.
      * @param numOps int The number of operations to perform
      */
-    public void random( int range, int numOps )
+    public void random( final int range, final int numOps )
     {
         random( range, numOps, false );
     }
@@ -821,16 +821,16 @@ public class TestCacheAccess
      * @param numOps
      * @param show
      */
-    public void random( int range, int numOps, boolean show )
+    public void random( final int range, final int numOps, final boolean show )
     {
         try
         {
             for ( int i = 1; i < numOps; i++ )
             {
-                Random ran = new Random( i );
-                int n = ran.nextInt( 4 );
-                int kn = ran.nextInt( range );
-                String key = "key" + kn;
+                final Random ran = new Random( i );
+                final int n = ran.nextInt( 4 );
+                final int kn = ran.nextInt( range );
+                final String key = "key" + kn;
                 if ( n == 1 )
                 {
                     cache_control.put( key, "data" + i + " junk asdfffffffadfasdfasf " + kn + ":" + n );
@@ -850,7 +850,7 @@ public class TestCacheAccess
                 else
                 {
                     // slightly greater chance of get
-                    Object obj = cache_control.get( key );
+                    final Object obj = cache_control.get( key );
                     if ( show && obj != null )
                     {
                         p( obj.toString() );
@@ -865,7 +865,7 @@ public class TestCacheAccess
             }
             p( "Finished random cycle of " + numOps );
         }
-        catch ( Exception e )
+        catch ( final Exception e )
         {
             p( e.toString() );
             e.printStackTrace( System.out );
@@ -876,13 +876,13 @@ public class TestCacheAccess
      * Sets the region to be used by test methods.
      * @param name String -- Name of region
      */
-    public void setRegion( String name )
+    public void setRegion( final String name )
     {
         try
         {
             cache_control = JCS.getInstance( name );
         }
-        catch ( Exception e )
+        catch ( final Exception e )
         {
             p( e.toString() );
             e.printStackTrace( System.out );
@@ -896,7 +896,7 @@ public class TestCacheAccess
      * default. When run via the main method, isSysOut will be set to true
      * @param s String to print or log
      */
-    public static void p( String s )
+    public static void p( final String s )
     {
         if ( isSysOut )
         {
@@ -945,9 +945,9 @@ public class TestCacheAccess
      * Gets the attributeNames attribute of the TestCacheAccess class
      * @param groupName
      */
-    public void getAttributeNames( String groupName )
+    public void getAttributeNames( final String groupName )
     {
-        Iterator<String> iter = group_cache_control.getGroupKeys( groupName ).iterator();
+        final Iterator<String> iter = group_cache_control.getGroupKeys( groupName ).iterator();
 
         while ( iter.hasNext() )
         {

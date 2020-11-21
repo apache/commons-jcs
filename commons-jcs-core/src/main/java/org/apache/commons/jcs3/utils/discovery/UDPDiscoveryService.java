@@ -77,7 +77,7 @@ public class UDPDiscoveryService
     /**
      * @param attributes
      */
-    public UDPDiscoveryService( UDPDiscoveryAttributes attributes)
+    public UDPDiscoveryService( final UDPDiscoveryAttributes attributes)
     {
         udpDiscoveryAttributes = attributes.clone();
 
@@ -86,7 +86,7 @@ public class UDPDiscoveryService
             // todo, you should be able to set this
             udpDiscoveryAttributes.setServiceAddress( HostNameUtil.getLocalHostAddress() );
         }
-        catch ( UnknownHostException e )
+        catch ( final UnknownHostException e )
         {
             log.error( "Couldn't get localhost address", e );
         }
@@ -99,7 +99,7 @@ public class UDPDiscoveryService
                     getUdpDiscoveryAttributes().getUdpDiscoveryAddr(),
                     getUdpDiscoveryAttributes().getUdpDiscoveryPort() );
         }
-        catch ( IOException e )
+        catch ( final IOException e )
         {
             log.error( "Problem creating UDPDiscoveryReceiver, address [{0}] "
                     + "port [{1}] we won't be able to find any other caches",
@@ -115,7 +115,7 @@ public class UDPDiscoveryService
      * @see org.apache.commons.jcs3.engine.behavior.IRequireScheduler#setScheduledExecutorService(java.util.concurrent.ScheduledExecutorService)
      */
     @Override
-    public void setScheduledExecutorService(ScheduledExecutorService scheduledExecutor)
+    public void setScheduledExecutorService(final ScheduledExecutorService scheduledExecutor)
     {
         if (sender != null)
         {
@@ -123,7 +123,7 @@ public class UDPDiscoveryService
         }
 
         /** removes things that have been idle for too long */
-        UDPCleanupRunner cleanup = new UDPCleanupRunner( this );
+        final UDPCleanupRunner cleanup = new UDPCleanupRunner( this );
         // I'm going to use this as both, but it could happen
         // that something could hang around twice the time using this as the
         // delay and the idle time.
@@ -153,7 +153,7 @@ public class UDPDiscoveryService
 
             log.debug( "Called sender to issue a passive broadcast" );
         }
-        catch ( IOException e )
+        catch ( final IOException e )
         {
             log.error( "Problem calling the UDP Discovery Sender, address [{0}] "
                     + "port [{1}]",
@@ -167,7 +167,7 @@ public class UDPDiscoveryService
      * <p>
      * @param cacheName
      */
-    public void addParticipatingCacheName( String cacheName )
+    public void addParticipatingCacheName( final String cacheName )
     {
         cacheNames.add( cacheName );
         sender.setCacheNames( getCacheNames() );
@@ -178,16 +178,16 @@ public class UDPDiscoveryService
      * <p>
      * @param service
      */
-    public void removeDiscoveredService( DiscoveredService service )
+    public void removeDiscoveredService( final DiscoveredService service )
     {
-        boolean contained = getDiscoveredServices().remove( service );
+        final boolean contained = getDiscoveredServices().remove( service );
 
         if ( contained )
         {
             log.info( "Removing {0}", service );
         }
 
-        for (IDiscoveryListener listener : getDiscoveryListeners())
+        for (final IDiscoveryListener listener : getDiscoveryListeners())
         {
             listener.removeDiscoveredService( service );
         }
@@ -198,9 +198,9 @@ public class UDPDiscoveryService
      * <p>
      * @param discoveredService discovered service
      */
-    protected void addOrUpdateService( DiscoveredService discoveredService )
+    protected void addOrUpdateService( final DiscoveredService discoveredService )
     {
-        Set<DiscoveredService> discoveredServices = getDiscoveredServices();
+        final Set<DiscoveredService> discoveredServices = getDiscoveredServices();
         // Since this is a set we can add it over an over.
         // We want to replace the old one, since we may add info that is not part of the equals.
         // The equals method on the object being added is intentionally restricted.
@@ -218,7 +218,7 @@ public class UDPDiscoveryService
             // Update the list of cache names if it has changed.
             DiscoveredService theOldServiceInformation = null;
             // need to update the time this sucks. add has no effect convert to a map
-            for (DiscoveredService service1 : discoveredServices)
+            for (final DiscoveredService service1 : discoveredServices)
             {
                 if ( discoveredService.equals( service1 ) )
                 {
@@ -245,7 +245,7 @@ public class UDPDiscoveryService
         // If we don't do this, then if a region using the default config is initialized after notification,
         // it will never get the service in it's no wait list.
         // Leave it to the listeners to decide what to do.
-        for (IDiscoveryListener listener : getDiscoveryListeners())
+        for (final IDiscoveryListener listener : getDiscoveryListeners())
         {
             listener.addDiscoveredService( discoveredService );
         }
@@ -258,14 +258,14 @@ public class UDPDiscoveryService
      */
     protected ArrayList<String> getCacheNames()
     {
-        ArrayList<String> names = new ArrayList<>(cacheNames);
+        final ArrayList<String> names = new ArrayList<>(cacheNames);
         return names;
     }
 
     /**
      * @param attr The UDPDiscoveryAttributes to set.
      */
-    public void setUdpDiscoveryAttributes( UDPDiscoveryAttributes attr )
+    public void setUdpDiscoveryAttributes( final UDPDiscoveryAttributes attr )
     {
         this.udpDiscoveryAttributes = attr;
     }
@@ -351,7 +351,7 @@ public class UDPDiscoveryService
      * @param listener
      * @return true if it wasn't already in the set
      */
-    public boolean addDiscoveryListener( IDiscoveryListener listener )
+    public boolean addDiscoveryListener( final IDiscoveryListener listener )
     {
         return getDiscoveryListeners().add( listener );
     }
@@ -362,7 +362,7 @@ public class UDPDiscoveryService
      * @param listener
      * @return true if it was in the set
      */
-    public boolean removeDiscoveryListener( IDiscoveryListener listener )
+    public boolean removeDiscoveryListener( final IDiscoveryListener listener )
     {
         return getDiscoveryListeners().remove( listener );
     }

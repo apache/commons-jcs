@@ -115,7 +115,7 @@ public class CompositeCacheAttributes
      * @param maxObjs The new maxObjects value
      */
     @Override
-    public void setMaxObjects( int maxObjs )
+    public void setMaxObjects( final int maxObjs )
     {
         this.maxObjs = maxObjs;
     }
@@ -137,7 +137,7 @@ public class CompositeCacheAttributes
      * @param useDisk The new useDisk value
      */
     @Override
-    public void setUseDisk( boolean useDisk )
+    public void setUseDisk( final boolean useDisk )
     {
         this.useDisk = useDisk;
     }
@@ -159,7 +159,7 @@ public class CompositeCacheAttributes
      * @param b The new useLateral value
      */
     @Override
-    public void setUseLateral( boolean b )
+    public void setUseLateral( final boolean b )
     {
         this.useLateral = b;
     }
@@ -181,7 +181,7 @@ public class CompositeCacheAttributes
      * @param useRemote The new useRemote value
      */
     @Override
-    public void setUseRemote( boolean useRemote )
+    public void setUseRemote( final boolean useRemote )
     {
         this.useRemote = useRemote;
     }
@@ -203,7 +203,7 @@ public class CompositeCacheAttributes
      * @param s The new cacheName value
      */
     @Override
-    public void setCacheName( String s )
+    public void setCacheName( final String s )
     {
         this.cacheName = s;
     }
@@ -225,7 +225,7 @@ public class CompositeCacheAttributes
      * @param s The new memoryCacheName value
      */
     @Override
-    public void setMemoryCacheName( String s )
+    public void setMemoryCacheName( final String s )
     {
         this.memoryCacheName = s;
     }
@@ -247,7 +247,7 @@ public class CompositeCacheAttributes
      * @param useShrinker The new UseMemoryShrinker value
      */
     @Override
-    public void setUseMemoryShrinker( boolean useShrinker )
+    public void setUseMemoryShrinker( final boolean useShrinker )
     {
         this.useMemoryShrinker = useShrinker;
     }
@@ -269,7 +269,7 @@ public class CompositeCacheAttributes
      * @param seconds The new MaxMemoryIdleTimeSeconds value
      */
     @Override
-    public void setMaxMemoryIdleTimeSeconds( long seconds )
+    public void setMaxMemoryIdleTimeSeconds( final long seconds )
     {
         this.maxMemoryIdleTimeSeconds = seconds;
     }
@@ -292,7 +292,7 @@ public class CompositeCacheAttributes
      * @param seconds The new ShrinkerIntervalSeconds value
      */
     @Override
-    public void setShrinkerIntervalSeconds( long seconds )
+    public void setShrinkerIntervalSeconds( final long seconds )
     {
         this.shrinkerIntervalSeconds = seconds;
     }
@@ -318,7 +318,7 @@ public class CompositeCacheAttributes
      * @param maxSpoolPerRun The new maxSpoolPerRun value
      */
     @Override
-    public void setMaxSpoolPerRun( int maxSpoolPerRun )
+    public void setMaxSpoolPerRun( final int maxSpoolPerRun )
     {
         this.maxSpoolPerRun = maxSpoolPerRun;
     }
@@ -341,7 +341,7 @@ public class CompositeCacheAttributes
      * @param diskUsagePattern The diskUsagePattern to set.
      */
     @Override
-    public void setDiskUsagePattern( DiskUsagePattern diskUsagePattern )
+    public void setDiskUsagePattern( final DiskUsagePattern diskUsagePattern )
     {
         this.diskUsagePattern = diskUsagePattern;
     }
@@ -354,11 +354,11 @@ public class CompositeCacheAttributes
      * @param diskUsagePatternName The diskUsagePattern to set.
      */
     @Override
-    public void setDiskUsagePatternName( String diskUsagePatternName )
+    public void setDiskUsagePatternName( final String diskUsagePatternName )
     {
         if ( diskUsagePatternName != null )
         {
-            String name = diskUsagePatternName.toUpperCase().trim();
+            final String name = diskUsagePatternName.toUpperCase().trim();
             if ( name.startsWith( "SWAP" ) )
             {
                 this.setDiskUsagePattern( DiskUsagePattern.SWAP );
@@ -387,7 +387,7 @@ public class CompositeCacheAttributes
      * @param spoolChunkSize
      */
     @Override
-    public void setSpoolChunkSize( int spoolChunkSize )
+    public void setSpoolChunkSize( final int spoolChunkSize )
     {
         this.spoolChunkSize = spoolChunkSize;
     }
@@ -409,7 +409,7 @@ public class CompositeCacheAttributes
     @Override
     public String toString()
     {
-        StringBuilder dump = new StringBuilder();
+        final StringBuilder dump = new StringBuilder();
 
         dump.append( "[ " );
         dump.append( "useLateral = " ).append( useLateral );
@@ -434,7 +434,7 @@ public class CompositeCacheAttributes
         {
             return (ICompositeCacheAttributes)super.clone();
         }
-        catch (CloneNotSupportedException e)
+        catch (final CloneNotSupportedException e)
         {
             throw new RuntimeException("Clone not supported. This should never happen.", e);
         }

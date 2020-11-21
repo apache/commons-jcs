@@ -44,10 +44,10 @@ public class StandardSerializer
      * @throws IOException
      */
     @Override
-    public <T> byte[] serialize(T obj)
+    public <T> byte[] serialize(final T obj)
         throws IOException
     {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
         try (ObjectOutputStream oos = new ObjectOutputStream(baos))
         {
@@ -68,13 +68,14 @@ public class StandardSerializer
      * @throws ClassNotFoundException
      */
     @Override
-    public <T> T deSerialize(byte[] data, ClassLoader loader)
+    public <T> T deSerialize(final byte[] data, final ClassLoader loader)
         throws IOException, ClassNotFoundException
     {
         try (ByteArrayInputStream bais = new ByteArrayInputStream(data);
              ObjectInputStream ois = new ObjectInputStreamClassLoaderAware(bais, loader))
         {
             @SuppressWarnings("unchecked") // Need to cast from Object
+            final
             T readObject = (T) ois.readObject();
             return readObject;
         }

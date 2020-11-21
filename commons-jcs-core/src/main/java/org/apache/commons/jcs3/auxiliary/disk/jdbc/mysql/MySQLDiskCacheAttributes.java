@@ -58,7 +58,7 @@ public class MySQLDiskCacheAttributes
     /**
      * @param optimizationSchedule The optimizationSchedule to set.
      */
-    public void setOptimizationSchedule( String optimizationSchedule )
+    public void setOptimizationSchedule( final String optimizationSchedule )
     {
         this.optimizationSchedule = optimizationSchedule;
     }
@@ -74,7 +74,7 @@ public class MySQLDiskCacheAttributes
     /**
      * @param balkDuringOptimization The balkDuringOptimization to set.
      */
-    public void setBalkDuringOptimization( boolean balkDuringOptimization )
+    public void setBalkDuringOptimization( final boolean balkDuringOptimization )
     {
         this.balkDuringOptimization = balkDuringOptimization;
     }
@@ -97,7 +97,7 @@ public class MySQLDiskCacheAttributes
     @Override
     public String toString()
     {
-        StringBuilder buf = new StringBuilder();
+        final StringBuilder buf = new StringBuilder();
         buf.append( "\nMySQLDiskCacheAttributes" );
         buf.append( "\n OptimizationSchedule [" + getOptimizationSchedule() + "]" );
         buf.append( "\n BalkDuringOptimization [" + isBalkDuringOptimization() + "]" );

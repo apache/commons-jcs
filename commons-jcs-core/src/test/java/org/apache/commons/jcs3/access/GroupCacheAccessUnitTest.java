@@ -41,16 +41,16 @@ public class GroupCacheAccessUnitTest
     public void testPutAndGet()
         throws Exception
     {
-        GroupCacheAccess<String, String> access = JCS.getGroupCacheInstance( "test" );
+        final GroupCacheAccess<String, String> access = JCS.getGroupCacheInstance( "test" );
         assertNotNull( "We should have an access class", access );
 
-        String key = "mykey";
-        String group = "mygroup";
-        String value = "myvalue";
+        final String key = "mykey";
+        final String group = "mygroup";
+        final String value = "myvalue";
 
         access.putInGroup(key, group, value);
 
-        String returnedValue1 = access.getFromGroup(key, group);
+        final String returnedValue1 = access.getFromGroup(key, group);
         assertEquals( "Wrong value returned.", value, returnedValue1 );
     }
 
@@ -61,19 +61,19 @@ public class GroupCacheAccessUnitTest
     public void testPutNullKey()
         throws Exception
     {
-        GroupCacheAccess<String, String> access = JCS.getGroupCacheInstance( "test" );
+        final GroupCacheAccess<String, String> access = JCS.getGroupCacheInstance( "test" );
         assertNotNull( "We should have an access class", access );
 
-        String key = null;
-        String group = "mygroup";
-        String value = "myvalue";
+        final String key = null;
+        final String group = "mygroup";
+        final String value = "myvalue";
 
         try
         {
             access.putInGroup(key, group, value);
             fail( "Should not have been able to put a null key." );
         }
-        catch ( CacheException e )
+        catch ( final CacheException e )
         {
             assertTrue( "Should have the word null in the error message.", e.getMessage().indexOf( "null" ) != -1 );
         }
@@ -86,19 +86,19 @@ public class GroupCacheAccessUnitTest
     public void testPutNullValue()
         throws Exception
     {
-        GroupCacheAccess<String, String> access = JCS.getGroupCacheInstance( "test" );
+        final GroupCacheAccess<String, String> access = JCS.getGroupCacheInstance( "test" );
         assertNotNull( "We should have an access class", access );
 
-        String key = "myKey";
-        String group = "mygroup";
-        String value = null;
+        final String key = "myKey";
+        final String group = "mygroup";
+        final String value = null;
 
         try
         {
             access.putInGroup(key, group, value);
             fail( "Should not have been able to put a null object." );
         }
-        catch ( CacheException e )
+        catch ( final CacheException e )
         {
             assertTrue( "Should have the word null in the error message.", e.getMessage().indexOf( "null" ) != -1 );
         }
@@ -111,12 +111,12 @@ public class GroupCacheAccessUnitTest
     public void testRemove()
         throws Exception
     {
-        GroupCacheAccess<String, String> access = JCS.getGroupCacheInstance( "test" );
+        final GroupCacheAccess<String, String> access = JCS.getGroupCacheInstance( "test" );
         assertNotNull( "We should have an access class", access );
 
-        String key = "mykey";
-        String group = "mygroup";
-        String value = "myvalue";
+        final String key = "mykey";
+        final String group = "mygroup";
+        final String value = "myvalue";
 
         for (int i = 0; i < 10; i++)
         {
@@ -126,7 +126,7 @@ public class GroupCacheAccessUnitTest
         // Make sure cache contains some data
         for (int i = 0; i < 10; i++)
         {
-            String returnedValue1 = access.getFromGroup(key + i, group);
+            final String returnedValue1 = access.getFromGroup(key + i, group);
             assertEquals( "Wrong value returned.", value + i, returnedValue1 );
         }
 
@@ -136,7 +136,7 @@ public class GroupCacheAccessUnitTest
 
         for (int i = 1; i < 10; i++)
         {
-            String returnedValue1 = access.getFromGroup(key + i, group);
+            final String returnedValue1 = access.getFromGroup(key + i, group);
             assertEquals( "Wrong value returned.", value + i, returnedValue1 );
         }
     }
@@ -148,12 +148,12 @@ public class GroupCacheAccessUnitTest
     public void testInvalidate()
         throws Exception
     {
-        GroupCacheAccess<String, String> access = JCS.getGroupCacheInstance( "test" );
+        final GroupCacheAccess<String, String> access = JCS.getGroupCacheInstance( "test" );
         assertNotNull( "We should have an access class", access );
 
-        String key = "mykey";
-        String group = "mygroup";
-        String value = "myvalue";
+        final String key = "mykey";
+        final String group = "mygroup";
+        final String value = "myvalue";
 
         for (int i = 0; i < 10; i++)
         {
@@ -168,9 +168,9 @@ public class GroupCacheAccessUnitTest
         // Make sure cache contains some data
         for (int i = 0; i < 10; i++)
         {
-            String returnedValue1 = access.getFromGroup(key + i, group + 0);
+            final String returnedValue1 = access.getFromGroup(key + i, group + 0);
             assertEquals( "Wrong value returned.", value + i, returnedValue1 );
-            String returnedValue2 = access.getFromGroup(key + i, group + 1);
+            final String returnedValue2 = access.getFromGroup(key + i, group + 1);
             assertEquals( "Wrong value returned.", value + i, returnedValue2 );
         }
 
@@ -183,7 +183,7 @@ public class GroupCacheAccessUnitTest
 
         for (int i = 0; i < 10; i++)
         {
-            String returnedValue1 = access.getFromGroup(key + i, group + 1);
+            final String returnedValue1 = access.getFromGroup(key + i, group + 1);
             assertEquals( "Wrong value returned.", value + i, returnedValue1 );
         }
     }
@@ -196,9 +196,9 @@ public class GroupCacheAccessUnitTest
     public void testGroupCache()
         throws Exception
     {
-        GroupCacheAccess<String, Integer> access = JCS.getGroupCacheInstance( "testGroup" );
-        String groupName1 = "testgroup1";
-        String groupName2 = "testgroup2";
+        final GroupCacheAccess<String, Integer> access = JCS.getGroupCacheInstance( "testGroup" );
+        final String groupName1 = "testgroup1";
+        final String groupName2 = "testgroup2";
 
         Set<String> keys1 = access.getGroupKeys( groupName1 );
         assertNotNull(keys1);
@@ -209,14 +209,14 @@ public class GroupCacheAccessUnitTest
         assertEquals(0, keys2.size());
 
         // DO WORK
-        int numToInsertGroup1 = 10;
+        final int numToInsertGroup1 = 10;
         // insert with prefix1
         for ( int i = 0; i < numToInsertGroup1; i++ )
         {
             access.putInGroup(String.valueOf( i ), groupName1, Integer.valueOf( i ) );
         }
 
-        int numToInsertGroup2 = 50;
+        final int numToInsertGroup2 = 50;
         // insert with prefix1
         for ( int i = 0; i < numToInsertGroup2; i++ )
         {

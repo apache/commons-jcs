@@ -40,7 +40,7 @@ public class CacheManagerStatsUnitTest
      */
     public void testSimpleGetStats() throws Exception
     {
-        CacheAccess<String, String> cache = JCS.getInstance( "testCache1" );
+        final CacheAccess<String, String> cache = JCS.getInstance( "testCache1" );
 
         // 1 miss, 1 hit, 1 put
         cache.get( "testKey" );
@@ -51,8 +51,8 @@ public class CacheManagerStatsUnitTest
         cache.get( "testKey" );
         cache.get( "testKey" );
 
-        CompositeCacheManager mgr = CompositeCacheManager.getInstance();
-        String statsString = mgr.getStats();
+        final CompositeCacheManager mgr = CompositeCacheManager.getInstance();
+        final String statsString = mgr.getStats();
 
 //        System.out.println( statsString );
 
@@ -60,8 +60,8 @@ public class CacheManagerStatsUnitTest
         assertTrue( "Should have the HitCountRam in here.", statsString.indexOf("HitCountRam") != -1 );
         assertTrue( "Should have the 4 in here.", statsString.indexOf("4") != -1 );
 
-        ICacheStats[] stats = mgr.getStatistics();
-        int statsLen = stats.length;
+        final ICacheStats[] stats = mgr.getStatistics();
+        final int statsLen = stats.length;
 //        System.out.println( "statsLen = " + statsLen );
         for ( int i = 0; i < statsLen; i++ )
         {

@@ -53,14 +53,14 @@ public class MySQLDiskCacheHsqlBackedUnitTest
     {
         System.setProperty( "hsqldb.cache_scale", "8" );
 
-        String rafroot = "target";
-        String url = "jdbc:hsqldb:";
-        String database = rafroot + "/MySQLDiskCacheHsqlBackedUnitTest";
-        String user = "sa";
-        String password = "";
+        final String rafroot = "target";
+        final String url = "jdbc:hsqldb:";
+        final String database = rafroot + "/MySQLDiskCacheHsqlBackedUnitTest";
+        final String user = "sa";
+        final String password = "";
 
         new org.hsqldb.jdbcDriver();
-        Connection cConn = DriverManager.getConnection( url + database, user, password );
+        final Connection cConn = DriverManager.getConnection( url + database, user, password );
 
         HsqlSetupTableUtil.setupTABLE( cConn, "JCS_STORE_MYSQL" );
     }
@@ -93,10 +93,10 @@ public class MySQLDiskCacheHsqlBackedUnitTest
      * @param items
      * @throws Exception If an error occurs
      */
-    public void runTestForRegion( String region, int items )
+    public void runTestForRegion( final String region, final int items )
         throws Exception
     {
-        CacheAccess<String, String> jcs = JCS.getInstance( region );
+        final CacheAccess<String, String> jcs = JCS.getInstance( region );
         //System.out.println( "BEFORE PUT \n" + jcs.getStats() );
 
         // Add items to cache
@@ -112,22 +112,22 @@ public class MySQLDiskCacheHsqlBackedUnitTest
         // Test that all items are in cache
         for ( int i = 0; i < items; i++ )
         {
-            String value = jcs.get( i + ":key" );
+            final String value = jcs.get( i + ":key" );
 
             assertEquals( "key = [" + i + ":key] value = [" + value + "]", region + " data " + i, value );
         }
 
         // Test that getElements returns all the expected values
-        Set<String> keys = new HashSet<>();
+        final Set<String> keys = new HashSet<>();
         for ( int i = 0; i < items; i++ )
         {
             keys.add( i + ":key" );
         }
 
-        Map<String, ICacheElement<String, String>> elements = jcs.getCacheElements( keys );
+        final Map<String, ICacheElement<String, String>> elements = jcs.getCacheElements( keys );
         for ( int i = 0; i < items; i++ )
         {
-            ICacheElement<String, String> element = elements.get( i + ":key" );
+            final ICacheElement<String, String> element = elements.get( i + ":key" );
             assertNotNull( "element " + i + ":key is missing", element );
             assertEquals( "value " + i + ":key", region + " data " + i, element.getVal() );
         }
@@ -156,9 +156,9 @@ public class MySQLDiskCacheHsqlBackedUnitTest
         throws Exception
     {
         // SETUP
-        int items = 200;
-        String region = "testCache2";
-        CacheAccess<String, String> jcs = JCS.getInstance( region );
+        final int items = 200;
+        final String region = "testCache2";
+        final CacheAccess<String, String> jcs = JCS.getInstance( region );
 //        System.out.println( "BEFORE PUT \n" + jcs.getStats() );
 
         // DO WORK
@@ -168,7 +168,7 @@ public class MySQLDiskCacheHsqlBackedUnitTest
         }
         Thread.sleep( 1000 );
 
-        Map<String, ICacheElement<String, String>> matchingResults = jcs.getMatchingCacheElements( "1.8.+" );
+        final Map<String, ICacheElement<String, String>> matchingResults = jcs.getMatchingCacheElements( "1.8.+" );
 
         // VERIFY
         assertEquals( "Wrong number returned", 10, matchingResults.size() );

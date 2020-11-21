@@ -59,16 +59,16 @@ public class HSQLDiskCacheFactory
      * @throws SQLException if the creation of the cache instance fails
      */
     @Override
-    public <K, V> JDBCDiskCache<K, V> createCache( AuxiliaryCacheAttributes rawAttr,
-			ICompositeCacheManager compositeCacheManager,
-			ICacheEventLogger cacheEventLogger,
-			IElementSerializer elementSerializer )
+    public <K, V> JDBCDiskCache<K, V> createCache( final AuxiliaryCacheAttributes rawAttr,
+			final ICompositeCacheManager compositeCacheManager,
+			final ICacheEventLogger cacheEventLogger,
+			final IElementSerializer elementSerializer )
 			throws SQLException
     {
         // TODO get this from the attributes.
         System.setProperty( "hsqldb.cache_scale", "8" );
 
-        JDBCDiskCache<K, V> cache = super.createCache(rawAttr, compositeCacheManager,
+        final JDBCDiskCache<K, V> cache = super.createCache(rawAttr, compositeCacheManager,
                 cacheEventLogger, elementSerializer);
         setupDatabase( cache.getDataSource(), (JDBCDiskCacheAttributes) rawAttr );
 
@@ -82,7 +82,7 @@ public class HSQLDiskCacheFactory
      * @param attributes Cache region configuration
      * @throws SQLException
      */
-    protected void setupDatabase( DataSource ds, JDBCDiskCacheAttributes attributes )
+    protected void setupDatabase( final DataSource ds, final JDBCDiskCacheAttributes attributes )
         throws SQLException
     {
         try (Connection cConn = ds.getConnection())
@@ -98,15 +98,15 @@ public class HSQLDiskCacheFactory
      * @param cConn
      * @param tableName
      */
-    protected synchronized void setupTable( Connection cConn, String tableName ) throws SQLException
+    protected synchronized void setupTable( final Connection cConn, final String tableName ) throws SQLException
     {
-        DatabaseMetaData dmd = cConn.getMetaData();
-        ResultSet result = dmd.getTables(null, null, tableName, null);
+        final DatabaseMetaData dmd = cConn.getMetaData();
+        final ResultSet result = dmd.getTables(null, null, tableName, null);
 
         if (!result.next())
         {
             // TODO make the cached nature of the table configurable
-            StringBuilder createSql = new StringBuilder();
+            final StringBuilder createSql = new StringBuilder();
             createSql.append( "CREATE CACHED TABLE ").append( tableName );
             createSql.append( "( " );
             createSql.append( "CACHE_KEY             VARCHAR(250)          NOT NULL, " );

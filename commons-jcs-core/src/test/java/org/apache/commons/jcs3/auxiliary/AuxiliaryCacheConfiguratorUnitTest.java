@@ -38,10 +38,10 @@ public class AuxiliaryCacheConfiguratorUnitTest
     public void testParseCacheEventLogger_Null()
     {
         // SETUP
-        Properties props = new Properties();
+        final Properties props = new Properties();
 
         // DO WORK
-        MockCacheEventLogger result = (MockCacheEventLogger) AuxiliaryCacheConfigurator.parseCacheEventLogger( props,
+        final MockCacheEventLogger result = (MockCacheEventLogger) AuxiliaryCacheConfigurator.parseCacheEventLogger( props,
                                                                                                                "junk" );
 
         // VERIFY
@@ -54,10 +54,10 @@ public class AuxiliaryCacheConfiguratorUnitTest
     public void testParseCacheEventLogger_NullName()
     {
         // SETUP
-        Properties props = new Properties();
+        final Properties props = new Properties();
 
         // DO WORK
-        MockCacheEventLogger result = (MockCacheEventLogger) AuxiliaryCacheConfigurator.parseCacheEventLogger( props,
+        final MockCacheEventLogger result = (MockCacheEventLogger) AuxiliaryCacheConfigurator.parseCacheEventLogger( props,
                                                                                                                null );
 
         // VERIFY
@@ -70,17 +70,17 @@ public class AuxiliaryCacheConfiguratorUnitTest
     public void testParseCacheEventLogger_Normal()
     {
         // SETUP
-        String auxPrefix = "jcs.auxiliary." + "MYAux";
-        String testPropertyValue = "This is the value";
-        String className = MockCacheEventLogger.class.getName();
+        final String auxPrefix = "jcs.auxiliary." + "MYAux";
+        final String testPropertyValue = "This is the value";
+        final String className = MockCacheEventLogger.class.getName();
 
-        Properties props = new Properties();
+        final Properties props = new Properties();
         props.put( auxPrefix + AuxiliaryCacheConfigurator.CACHE_EVENT_LOGGER_PREFIX, className );
         props.put( auxPrefix + AuxiliaryCacheConfigurator.CACHE_EVENT_LOGGER_PREFIX
             + AuxiliaryCacheConfigurator.ATTRIBUTE_PREFIX + ".testProperty", testPropertyValue );
 
         // DO WORK
-        MockCacheEventLogger result = (MockCacheEventLogger) AuxiliaryCacheConfigurator
+        final MockCacheEventLogger result = (MockCacheEventLogger) AuxiliaryCacheConfigurator
             .parseCacheEventLogger( props, auxPrefix );
 
         // VERIFY
@@ -94,17 +94,17 @@ public class AuxiliaryCacheConfiguratorUnitTest
     public void testParseElementSerializer_Normal()
     {
         // SETUP
-        String auxPrefix = "jcs.auxiliary." + "MYAux";
-        String testPropertyValue = "This is the value";
-        String className = MockElementSerializer.class.getName();
+        final String auxPrefix = "jcs.auxiliary." + "MYAux";
+        final String testPropertyValue = "This is the value";
+        final String className = MockElementSerializer.class.getName();
 
-        Properties props = new Properties();
+        final Properties props = new Properties();
         props.put( auxPrefix + AuxiliaryCacheConfigurator.SERIALIZER_PREFIX, className );
         props.put( auxPrefix + AuxiliaryCacheConfigurator.SERIALIZER_PREFIX
             + AuxiliaryCacheConfigurator.ATTRIBUTE_PREFIX + ".testProperty", testPropertyValue );
 
         // DO WORK
-        MockElementSerializer result = (MockElementSerializer) AuxiliaryCacheConfigurator
+        final MockElementSerializer result = (MockElementSerializer) AuxiliaryCacheConfigurator
             .parseElementSerializer( props, auxPrefix );
 
         // VERIFY
@@ -118,10 +118,10 @@ public class AuxiliaryCacheConfiguratorUnitTest
     public void testParseElementSerializer_Null()
     {
         // SETUP
-        Properties props = new Properties();
+        final Properties props = new Properties();
 
         // DO WORK
-        IElementSerializer result = AuxiliaryCacheConfigurator
+        final IElementSerializer result = AuxiliaryCacheConfigurator
             .parseElementSerializer( props, "junk" );
 
         // VERIFY

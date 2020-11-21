@@ -62,7 +62,7 @@ public class JCSAdminBean implements JCSJMXBean
         {
             this.cacheHub = CompositeCacheManager.getInstance();
         }
-        catch (CacheException e)
+        catch (final CacheException e)
         {
             throw new RuntimeException("Could not retrieve cache manager instance", e);
         }
@@ -73,7 +73,7 @@ public class JCSAdminBean implements JCSJMXBean
      *
 	 * @param cacheHub the cache manager instance
 	 */
-	public JCSAdminBean(CompositeCacheManager cacheHub)
+	public JCSAdminBean(final CompositeCacheManager cacheHub)
 	{
 		this.cacheHub = cacheHub;
 	}
@@ -86,29 +86,29 @@ public class JCSAdminBean implements JCSJMXBean
      * @throws IOException
      */
     @Override
-    public List<CacheElementInfo> buildElementInfo( String cacheName )
+    public List<CacheElementInfo> buildElementInfo( final String cacheName )
         throws IOException
     {
-        CompositeCache<Object, Object> cache = cacheHub.getCache( cacheName );
+        final CompositeCache<Object, Object> cache = cacheHub.getCache( cacheName );
 
         // Convert all keys to string, store in a sorted map
-        TreeMap<String, ?> keys = new TreeMap<>(cache.getMemoryCache().getKeySet()
+        final TreeMap<String, ?> keys = new TreeMap<>(cache.getMemoryCache().getKeySet()
                 .stream()
                 .collect(Collectors.toMap(Object::toString, k -> k)));
 
-        LinkedList<CacheElementInfo> records = new LinkedList<>();
+        final LinkedList<CacheElementInfo> records = new LinkedList<>();
 
-        DateFormat format = DateFormat.getDateTimeInstance( DateFormat.SHORT, DateFormat.SHORT );
+        final DateFormat format = DateFormat.getDateTimeInstance( DateFormat.SHORT, DateFormat.SHORT );
 
-        long now = System.currentTimeMillis();
+        final long now = System.currentTimeMillis();
 
-        for (Map.Entry<String, ?> key : keys.entrySet())
+        for (final Map.Entry<String, ?> key : keys.entrySet())
         {
-            ICacheElement<?, ?> element = cache.getMemoryCache().getQuiet( key.getValue() );
+            final ICacheElement<?, ?> element = cache.getMemoryCache().getQuiet( key.getValue() );
 
-            IElementAttributes attributes = element.getElementAttributes();
+            final IElementAttributes attributes = element.getElementAttributes();
 
-            CacheElementInfo elementInfo = new CacheElementInfo(
+            final CacheElementInfo elementInfo = new CacheElementInfo(
             		key.getKey(),
             		attributes.getIsEternal(),
             		format.format(new Date(attributes.getCreateTime())),
@@ -131,15 +131,15 @@ public class JCSAdminBean implements JCSJMXBean
     @Override
     public List<CacheRegionInfo> buildCacheInfo()
     {
-        TreeSet<String> cacheNames = new TreeSet<>(cacheHub.getCacheNames());
+        final TreeSet<String> cacheNames = new TreeSet<>(cacheHub.getCacheNames());
 
-        LinkedList<CacheRegionInfo> cacheInfo = new LinkedList<>();
+        final LinkedList<CacheRegionInfo> cacheInfo = new LinkedList<>();
 
-        for (String cacheName : cacheNames)
+        for (final String cacheName : cacheNames)
         {
-            CompositeCache<?, ?> cache = cacheHub.getCache( cacheName );
+            final CompositeCache<?, ?> cache = cacheHub.getCache( cacheName );
 
-            CacheRegionInfo regionInfo = new CacheRegionInfo(
+            final CacheRegionInfo regionInfo = new CacheRegionInfo(
                     cache.getCacheName(),
                     cache.getSize(),
                     cache.getStatus().toString(),
@@ -165,7 +165,7 @@ public class JCSAdminBean implements JCSJMXBean
      * @return int The size of the region in bytes.
      */
 	@Override
-    public long getByteCount(String cacheName)
+    public long getByteCount(final String cacheName)
 	{
 		return getByteCount(cacheHub.getCache(cacheName));
 	}
@@ -177,7 +177,7 @@ public class JCSAdminBean implements JCSJMXBean
      *
      * @return int The size of the region in bytes.
      */
-    public <K, V> long getByteCount(CompositeCache<K, V> cache)
+    public <K, V> long getByteCount(final CompositeCache<K, V> cache)
     {
         if (cache == null)
         {
@@ -185,16 +185,16 @@ public class JCSAdminBean implements JCSJMXBean
         }
 
         long size = 0;
-        IMemoryCache<K, V> memCache = cache.getMemoryCache();
+        final IMemoryCache<K, V> memCache = cache.getMemoryCache();
 
-        for (K key : memCache.getKeySet())
+        for (final K key : memCache.getKeySet())
         {
             ICacheElement<K, V> ice = null;
 			try
 			{
 				ice = memCache.get(key);
 			}
-			catch (IOException e)
+			catch (final IOException e)
 			{
                 throw new RuntimeException("IOException while trying to get a cached element", e);
 			}
@@ -210,15 +210,15 @@ public class JCSAdminBean implements JCSJMXBean
             }
             else
             {
-                Object element = ice.getVal();
+                final Object element = ice.getVal();
 
                 //CountingOnlyOutputStream: Keeps track of the number of bytes written to it, but doesn't write them anywhere.
-                CountingOnlyOutputStream counter = new CountingOnlyOutputStream();
+                final CountingOnlyOutputStream counter = new CountingOnlyOutputStream();
                 try (ObjectOutputStream out = new ObjectOutputStream(counter);)
                 {
                     out.writeObject(element);
                 }
-                catch (IOException e)
+                catch (final IOException e)
                 {
                     throw new RuntimeException("IOException while trying to measure the size of the cached element", e);
                 }
@@ -228,7 +228,7 @@ public class JCSAdminBean implements JCSJMXBean
                 	{
 						counter.close();
 					}
-                	catch (IOException e)
+                	catch (final IOException e)
                 	{
                 		// ignore
 					}
@@ -252,13 +252,13 @@ public class JCSAdminBean implements JCSJMXBean
     @Override
     public void clearAllRegions() throws IOException
     {
-        RemoteCacheServer<?, ?> remoteCacheServer = RemoteCacheServerFactory.getRemoteCacheServer();
+        final RemoteCacheServer<?, ?> remoteCacheServer = RemoteCacheServerFactory.getRemoteCacheServer();
 
         if (remoteCacheServer == null)
         {
             // Not running in a remote cache server.
             // Remove objects from the cache directly, as no need to broadcast removes to client machines...
-            for (String name : cacheHub.getCacheNames())
+            for (final String name : cacheHub.getCacheNames())
             {
                 cacheHub.getCache(name).removeAll();
             }
@@ -268,7 +268,7 @@ public class JCSAdminBean implements JCSJMXBean
             // Running in a remote cache server.
             // Remove objects via the RemoteCacheServer API, so that removes will be broadcast to client machines...
             // Call remoteCacheServer.removeAll(String) for each cacheName...
-            for (String name : cacheHub.getCacheNames())
+            for (final String name : cacheHub.getCacheNames())
             {
                 remoteCacheServer.removeAll(name);
             }
@@ -283,7 +283,7 @@ public class JCSAdminBean implements JCSJMXBean
      * cache API.
      */
     @Override
-    public void clearRegion(String cacheName) throws IOException
+    public void clearRegion(final String cacheName) throws IOException
     {
         if (cacheName == null)
         {
@@ -302,10 +302,10 @@ public class JCSAdminBean implements JCSJMXBean
             try
             {
                 // Call remoteCacheServer.removeAll(String)...
-                RemoteCacheServer<?, ?> remoteCacheServer = RemoteCacheServerFactory.getRemoteCacheServer();
+                final RemoteCacheServer<?, ?> remoteCacheServer = RemoteCacheServerFactory.getRemoteCacheServer();
                 remoteCacheServer.removeAll(cacheName);
             }
-            catch (IOException e)
+            catch (final IOException e)
             {
                 throw new IllegalStateException("Failed to remove all elements from cache region [" + cacheName + "]: " + e, e);
             }
@@ -325,7 +325,7 @@ public class JCSAdminBean implements JCSJMXBean
      * @throws IOException
      */
     @Override
-    public void removeItem(String cacheName, String key) throws IOException
+    public void removeItem(final String cacheName, final String key) throws IOException
     {
         if (cacheName == null)
         {
@@ -348,14 +348,14 @@ public class JCSAdminBean implements JCSJMXBean
             try
             {
                 Object keyToRemove = null;
-                CompositeCache<?, ?> cache = CompositeCacheManager.getInstance().getCache(cacheName);
+                final CompositeCache<?, ?> cache = CompositeCacheManager.getInstance().getCache(cacheName);
 
                 // A String key was supplied, but to remove elements via the RemoteCacheServer API, we need the
                 // actual key object as stored in the cache (i.e. a Serializable object). To find the key in this form,
                 // we iterate through all keys stored in the memory cache until we find one whose toString matches
                 // the string supplied...
-                Set<?> allKeysInCache = cache.getMemoryCache().getKeySet();
-                for (Object keyInCache : allKeysInCache)
+                final Set<?> allKeysInCache = cache.getMemoryCache().getKeySet();
+                for (final Object keyInCache : allKeysInCache)
                 {
                     if (keyInCache.toString().equals(key))
                     {
@@ -377,10 +377,10 @@ public class JCSAdminBean implements JCSJMXBean
                 // At this point, we have retrieved the matching K key.
 
                 // Call remoteCacheServer.remove(String, Serializable)...
-                RemoteCacheServer<Serializable, Serializable> remoteCacheServer = RemoteCacheServerFactory.getRemoteCacheServer();
+                final RemoteCacheServer<Serializable, Serializable> remoteCacheServer = RemoteCacheServerFactory.getRemoteCacheServer();
                 remoteCacheServer.remove(cacheName, key);
             }
-            catch (Exception e)
+            catch (final Exception e)
             {
                 throw new IllegalStateException("Failed to remove element with key [" + key + ", " + key.getClass() + "] from cache region [" + cacheName + "]: " + e, e);
             }

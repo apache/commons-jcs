@@ -44,12 +44,12 @@ public class MockRMISocketFactory
      * @throws IOException
      */
     @Override
-    public Socket createSocket( String host, int port )
+    public Socket createSocket( final String host, final int port )
         throws IOException
     {
 //        System.out.println( "Creating socket" );
 
-        Socket socket = new Socket();
+        final Socket socket = new Socket();
         socket.setSoTimeout( 1000 );
         socket.setSoLinger( false, 0 );
         socket.connect( new InetSocketAddress( host, port ), 1000 );
@@ -62,7 +62,7 @@ public class MockRMISocketFactory
      * @throws IOException
      */
     @Override
-    public ServerSocket createServerSocket( int port )
+    public ServerSocket createServerSocket( final int port )
         throws IOException
     {
 //        System.out.println( "Creating server socket" );
@@ -73,7 +73,7 @@ public class MockRMISocketFactory
     /**
      * @param testStringProperty the testStringProperty to set
      */
-    public void setTestStringProperty( String testStringProperty )
+    public void setTestStringProperty( final String testStringProperty )
     {
         this.testStringProperty = testStringProperty;
     }

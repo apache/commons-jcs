@@ -38,7 +38,7 @@ public class LateralTCPNoDeadLockConcurrentTest
      *
      * @param testName
      */
-    public LateralTCPNoDeadLockConcurrentTest( String testName )
+    public LateralTCPNoDeadLockConcurrentTest( final String testName )
     {
         super( testName );
     }
@@ -48,9 +48,9 @@ public class LateralTCPNoDeadLockConcurrentTest
      *
      * @param args
      */
-    public static void main( String args[] )
+    public static void main( final String args[] )
     {
-        String[] testCaseName = { LateralTCPNoDeadLockConcurrentTest.class.getName() };
+        final String[] testCaseName = { LateralTCPNoDeadLockConcurrentTest.class.getName() };
         junit.textui.TestRunner.main( testCaseName );
     }
 
@@ -64,7 +64,7 @@ public class LateralTCPNoDeadLockConcurrentTest
 
         System.setProperty( "jcs.auxiliary.LTCP.attributes.PutOnlyMode", "false" );
 
-        ActiveTestSuite suite = new ActiveTestSuite();
+        final ActiveTestSuite suite = new ActiveTestSuite();
 
         suite.addTest( new LateralTCPConcurrentRandomTestUtil( "testLateralTCPCache1" )
         {
@@ -136,10 +136,10 @@ public class LateralTCPNoDeadLockConcurrentTest
     {
         try
         {
-            CompositeCacheManager cacheMgr = CompositeCacheManager.getInstance();
+            final CompositeCacheManager cacheMgr = CompositeCacheManager.getInstance();
             cacheMgr.shutDown();
         }
-        catch ( Exception e )
+        catch ( final Exception e )
         {
             e.printStackTrace();
         }

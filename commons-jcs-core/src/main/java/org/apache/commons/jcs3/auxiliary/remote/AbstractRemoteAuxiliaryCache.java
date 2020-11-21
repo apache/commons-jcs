@@ -89,8 +89,8 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
      * @param remote
      * @param listener
      */
-    public AbstractRemoteAuxiliaryCache( IRemoteCacheAttributes cattr, ICacheServiceNonLocal<K, V> remote,
-                                         IRemoteCacheListener<K, V> listener )
+    public AbstractRemoteAuxiliaryCache( final IRemoteCacheAttributes cattr, final ICacheServiceNonLocal<K, V> remote,
+                                         final IRemoteCacheListener<K, V> listener )
     {
         this.setRemoteCacheAttributes( cattr );
         this.cacheName = cattr.getCacheName();
@@ -134,7 +134,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
                 getRemoteCacheListener().dispose();
             }
         }
-        catch ( IOException ex )
+        catch ( final IOException ex )
         {
             log.error( "Couldn't dispose", ex );
             handleException( ex, "Failed to dispose [" + cacheName + "]", ICacheEventLogger.DISPOSE_EVENT );
@@ -155,7 +155,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
      * @throws IOException
      */
     @Override
-    protected ICacheElement<K, V> processGet( K key )
+    protected ICacheElement<K, V> processGet( final K key )
         throws IOException
     {
         ICacheElement<K, V> retVal = null;
@@ -183,7 +183,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
                 }
             }
         }
-        catch ( Exception ex )
+        catch ( final Exception ex )
         {
             handleException( ex, "Failed to get [" + key + "] from [" + cacheName + "]", ICacheEventLogger.GET_EVENT );
         }
@@ -200,17 +200,17 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
     public ICacheElement<K, V> getUsingPool( final K key )
         throws IOException
     {
-        int timeout = getRemoteCacheAttributes().getGetTimeoutMillis();
+        final int timeout = getRemoteCacheAttributes().getGetTimeoutMillis();
 
         try
         {
-            Callable<ICacheElement<K, V>> command = () -> getRemoteCacheService().get( cacheName, key, getListenerId() );
+            final Callable<ICacheElement<K, V>> command = () -> getRemoteCacheService().get( cacheName, key, getListenerId() );
 
             // execute using the pool
-            Future<ICacheElement<K, V>> future = pool.submit(command);
+            final Future<ICacheElement<K, V>> future = pool.submit(command);
 
             // used timed get in order to timeout
-            ICacheElement<K, V> ice = future.get(timeout, TimeUnit.MILLISECONDS);
+            final ICacheElement<K, V> ice = future.get(timeout, TimeUnit.MILLISECONDS);
 
             if ( ice == null )
             {
@@ -222,17 +222,17 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
             }
             return ice;
         }
-        catch ( TimeoutException te )
+        catch ( final TimeoutException te )
         {
             log.warn( "TimeoutException, Get Request timed out after {0}", timeout );
             throw new IOException( "Get Request timed out after " + timeout );
         }
-        catch ( InterruptedException ex )
+        catch ( final InterruptedException ex )
         {
             log.warn( "InterruptedException, Get Request timed out after {0}", timeout );
             throw new IOException( "Get Request timed out after " + timeout );
         }
-        catch (ExecutionException ex)
+        catch (final ExecutionException ex)
         {
             // assume that this is an IOException thrown by the callable.
             log.error( "ExecutionException, Assuming an IO exception thrown in the background.", ex );
@@ -248,18 +248,18 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
      * @throws IOException
      */
     @Override
-    public Map<K, ICacheElement<K, V>> processGetMatching( String pattern )
+    public Map<K, ICacheElement<K, V>> processGetMatching( final String pattern )
         throws IOException
     {
-        Map<K, ICacheElement<K, V>> results = new HashMap<>();
+        final Map<K, ICacheElement<K, V>> results = new HashMap<>();
         try
         {
-            Map<K, ICacheElement<K, V>> rawResults = getRemoteCacheService().getMatching( cacheName, pattern, getListenerId() );
+            final Map<K, ICacheElement<K, V>> rawResults = getRemoteCacheService().getMatching( cacheName, pattern, getListenerId() );
 
             // Eventually the instance of will not be necessary.
             if ( rawResults != null )
             {
-                for (Map.Entry<K, ICacheElement<K, V>> entry : rawResults.entrySet())
+                for (final Map.Entry<K, ICacheElement<K, V>> entry : rawResults.entrySet())
                 {
                     ICacheElement<K, V> unwrappedResult = null;
                     if ( entry.getValue() instanceof ICacheElementSerialized )
@@ -282,7 +282,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
                 }
             }
         }
-        catch ( Exception ex )
+        catch ( final Exception ex )
         {
             handleException( ex, "Failed to getMatching [" + pattern + "] from [" + cacheName + "]",
                              ICacheEventLogger.GET_EVENT );
@@ -299,7 +299,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
      * @throws IOException
      */
     @Override
-    protected boolean processRemove( K key )
+    protected boolean processRemove( final K key )
         throws IOException
     {
         if ( !this.getRemoteCacheAttributes().getGetOnly() )
@@ -309,7 +309,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
             {
                 getRemoteCacheService().remove( cacheName, key, getListenerId() );
             }
-            catch ( Exception ex )
+            catch ( final Exception ex )
             {
                 handleException( ex, "Failed to remove " + key + " from " + cacheName, ICacheEventLogger.REMOVE_EVENT );
             }
@@ -334,7 +334,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
             {
                 getRemoteCacheService().removeAll( cacheName, getListenerId() );
             }
-            catch ( Exception ex )
+            catch ( final Exception ex )
             {
                 handleException( ex, "Failed to remove all from " + cacheName, ICacheEventLogger.REMOVEALL_EVENT );
             }
@@ -350,7 +350,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
      * @throws IOException
      */
     @Override
-    protected void processUpdate( ICacheElement<K, V> ce )
+    protected void processUpdate( final ICacheElement<K, V> ce )
         throws IOException
     {
         if ( !getRemoteCacheAttributes().getGetOnly() )
@@ -366,11 +366,11 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
 
                 remoteCacheService.update( serialized, getListenerId() );
             }
-            catch ( NullPointerException npe )
+            catch ( final NullPointerException npe )
             {
                 log.error( "npe for ce = {0} ce.attr = {1}", ce, ce.getElementAttributes(), npe );
             }
-            catch ( Exception ex )
+            catch ( final Exception ex )
             {
                 // event queue will wait and retry
                 handleException( ex, "Failed to put [" + ce.getKey() + "] to " + ce.getCacheName(),
@@ -414,7 +414,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
      * <p>
      * @param id The new listenerId value
      */
-    public void setListenerId( long id )
+    public void setListenerId( final long id )
     {
         if ( getRemoteCacheListener() != null )
         {
@@ -424,7 +424,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
 
                 log.debug( "set listenerId = {0}", id );
             }
-            catch ( Exception e )
+            catch ( final Exception e )
             {
                 log.error( "Problem setting listenerId", e );
             }
@@ -446,7 +446,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
                 log.debug( "get listenerId = {0}", getRemoteCacheListener().getListenerId() );
                 return getRemoteCacheListener().getListenerId();
             }
-            catch ( IOException e )
+            catch ( final IOException e )
             {
                 log.error( "Problem getting listenerId", e );
             }
@@ -492,10 +492,10 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
     @Override
     public IStats getStatistics()
     {
-        IStats stats = new Stats();
+        final IStats stats = new Stats();
         stats.setTypeName( "AbstractRemoteAuxiliaryCache" );
 
-        ArrayList<IStatElement<?>> elems = new ArrayList<>();
+        final ArrayList<IStatElement<?>> elems = new ArrayList<>();
 
         elems.add(new StatElement<>( "Remote Type", this.getRemoteCacheAttributes().getRemoteTypeName() ) );
 
@@ -540,27 +540,28 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
      * @param restoredRemote ICacheServiceNonLocal -- the remote server or proxy to the remote server
      */
     @Override
-    public void fixCache( ICacheServiceNonLocal<?, ?> restoredRemote )
+    public void fixCache( final ICacheServiceNonLocal<?, ?> restoredRemote )
     {
         @SuppressWarnings("unchecked") // Don't know how to do this properly
+        final
         ICacheServiceNonLocal<K, V> remote = (ICacheServiceNonLocal<K, V>)restoredRemote;
-        ICacheServiceNonLocal<K, V> prevRemote = getRemoteCacheService();
+        final ICacheServiceNonLocal<K, V> prevRemote = getRemoteCacheService();
         if ( prevRemote instanceof ZombieCacheServiceNonLocal )
         {
-            ZombieCacheServiceNonLocal<K, V> zombie = (ZombieCacheServiceNonLocal<K, V>) prevRemote;
+            final ZombieCacheServiceNonLocal<K, V> zombie = (ZombieCacheServiceNonLocal<K, V>) prevRemote;
             setRemoteCacheService( remote );
             try
             {
                 zombie.propagateEvents( remote );
             }
-            catch ( Exception e )
+            catch ( final Exception e )
             {
                 try
                 {
                     handleException( e, "Problem propagating events from Zombie Queue to new Remote Service.",
                                      "fixCache" );
                 }
-                catch ( IOException e1 )
+                catch ( final IOException e1 )
                 {
                     // swallow, since this is just expected kick back.  Handle always throws
                 }
@@ -597,7 +598,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
     /**
      * @param remote the remote to set
      */
-    protected void setRemoteCacheService( ICacheServiceNonLocal<K, V> remote )
+    protected void setRemoteCacheService( final ICacheServiceNonLocal<K, V> remote )
     {
         this.remoteCacheService = remote;
     }
@@ -622,7 +623,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
     /**
      * @param remoteCacheAttributes the remoteCacheAttributes to set
      */
-    protected void setRemoteCacheAttributes( IRemoteCacheAttributes remoteCacheAttributes )
+    protected void setRemoteCacheAttributes( final IRemoteCacheAttributes remoteCacheAttributes )
     {
         this.remoteCacheAttributes = remoteCacheAttributes;
     }
@@ -638,7 +639,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
     /**
      * @param remoteCacheListener the remoteCacheListener to set
      */
-    protected void setRemoteCacheListener( IRemoteCacheListener<K, V> remoteCacheListener )
+    protected void setRemoteCacheListener( final IRemoteCacheListener<K, V> remoteCacheListener )
     {
         this.remoteCacheListener = remoteCacheListener;
     }

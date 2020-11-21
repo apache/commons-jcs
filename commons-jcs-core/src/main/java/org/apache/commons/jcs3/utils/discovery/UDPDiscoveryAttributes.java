@@ -76,7 +76,7 @@ public final class UDPDiscoveryAttributes
     /**
      * @param serviceName The serviceName to set.
      */
-    public void setServiceName( String serviceName )
+    public void setServiceName( final String serviceName )
     {
         this.serviceName = serviceName;
     }
@@ -92,7 +92,7 @@ public final class UDPDiscoveryAttributes
     /**
      * @param serviceAddress The serviceAddress to set.
      */
-    public void setServiceAddress( String serviceAddress )
+    public void setServiceAddress( final String serviceAddress )
     {
         this.serviceAddress = serviceAddress;
     }
@@ -108,7 +108,7 @@ public final class UDPDiscoveryAttributes
     /**
      * @param servicePort The servicePort to set.
      */
-    public void setServicePort( int servicePort )
+    public void setServicePort( final int servicePort )
     {
         this.servicePort = servicePort;
     }
@@ -124,7 +124,7 @@ public final class UDPDiscoveryAttributes
     /**
      * @param udpDiscoveryAddr The udpDiscoveryAddr to set.
      */
-    public void setUdpDiscoveryAddr( String udpDiscoveryAddr )
+    public void setUdpDiscoveryAddr( final String udpDiscoveryAddr )
     {
         this.udpDiscoveryAddr = udpDiscoveryAddr;
     }
@@ -140,7 +140,7 @@ public final class UDPDiscoveryAttributes
     /**
      * @param udpDiscoveryInterface The udpDiscoveryInterface to set.
      */
-    public void setUdpDiscoveryInterface( String udpDiscoveryInterface )
+    public void setUdpDiscoveryInterface( final String udpDiscoveryInterface )
     {
         this.udpDiscoveryInterface = udpDiscoveryInterface;
     }
@@ -156,7 +156,7 @@ public final class UDPDiscoveryAttributes
     /**
      * @param udpDiscoveryPort The udpDiscoveryPort to set.
      */
-    public void setUdpDiscoveryPort( int udpDiscoveryPort )
+    public void setUdpDiscoveryPort( final int udpDiscoveryPort )
     {
         this.udpDiscoveryPort = udpDiscoveryPort;
     }
@@ -172,7 +172,7 @@ public final class UDPDiscoveryAttributes
     /**
      * @param udpTTL The udpTTL to set.
      */
-    public void setUdpTTL( int udpTTL )
+    public void setUdpTTL( final int udpTTL )
     {
         this.udpTTL = udpTTL;
     }
@@ -188,7 +188,7 @@ public final class UDPDiscoveryAttributes
     /**
      * @param sendDelaySec The sendDelaySec to set.
      */
-    public void setSendDelaySec( int sendDelaySec )
+    public void setSendDelaySec( final int sendDelaySec )
     {
         this.sendDelaySec = sendDelaySec;
     }
@@ -204,7 +204,7 @@ public final class UDPDiscoveryAttributes
     /**
      * @param maxIdleTimeSec The maxIdleTimeSec to set.
      */
-    public void setMaxIdleTimeSec( int maxIdleTimeSec )
+    public void setMaxIdleTimeSec( final int maxIdleTimeSec )
     {
         this.maxIdleTimeSec = maxIdleTimeSec;
     }
@@ -228,7 +228,7 @@ public final class UDPDiscoveryAttributes
     /**
      * @param isDark The isDark to set.
      */
-    public void setDark( boolean isDark )
+    public void setDark( final boolean isDark )
     {
         this.isDark = isDark;
     }
@@ -237,7 +237,7 @@ public final class UDPDiscoveryAttributes
     @Override
     public UDPDiscoveryAttributes clone()
     {
-        UDPDiscoveryAttributes attributes = new UDPDiscoveryAttributes();
+        final UDPDiscoveryAttributes attributes = new UDPDiscoveryAttributes();
         attributes.setSendDelaySec( this.getSendDelaySec() );
         attributes.setMaxIdleTimeSec( this.getMaxIdleTimeSec() );
         attributes.setServiceName( this.getServiceName() );
@@ -254,7 +254,7 @@ public final class UDPDiscoveryAttributes
     @Override
     public String toString()
     {
-        StringBuilder buf = new StringBuilder();
+        final StringBuilder buf = new StringBuilder();
         buf.append( "\n UDPDiscoveryAttributes" );
         buf.append( "\n ServiceName = [" + getServiceName() + "]" );
         buf.append( "\n ServiceAddress = [" + getServiceAddress() + "]" );

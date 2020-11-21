@@ -44,7 +44,7 @@ public class GroupAttrName<T>
      * @param groupId
      * @param attrName
      */
-    public GroupAttrName( GroupId groupId, T attrName )
+    public GroupAttrName( final GroupId groupId, final T attrName )
     {
         this.groupId = groupId;
         this.attrName = attrName;
@@ -61,13 +61,13 @@ public class GroupAttrName<T>
      * @return Whether equal.
      */
     @Override
-    public boolean equals( Object obj )
+    public boolean equals( final Object obj )
     {
         if ( obj == null || !( obj instanceof GroupAttrName ) )
         {
             return false;
         }
-        GroupAttrName<?> to = (GroupAttrName<?>) obj;
+        final GroupAttrName<?> to = (GroupAttrName<?>) obj;
 
         if (groupId.equals( to.groupId ))
         {

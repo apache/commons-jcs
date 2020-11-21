@@ -47,7 +47,7 @@ public class HSQLDiskCacheConcurrentUnitTest
      * Constructor for the TestDiskCache object.
      * @param testName
      */
-    public HSQLDiskCacheConcurrentUnitTest( String testName )
+    public HSQLDiskCacheConcurrentUnitTest( final String testName )
     {
         super( testName );
     }
@@ -59,7 +59,7 @@ public class HSQLDiskCacheConcurrentUnitTest
      */
     public static Test suite()
     {
-        ActiveTestSuite suite = new ActiveTestSuite();
+        final ActiveTestSuite suite = new ActiveTestSuite();
 
         suite.addTest( new HSQLDiskCacheConcurrentUnitTest( "testHSQLDiskCache1" )
         {
@@ -110,10 +110,10 @@ public class HSQLDiskCacheConcurrentUnitTest
      * @param region Name of the region to access
      * @throws Exception If an error occurs
      */
-    public void runTestForRegion( String region )
+    public void runTestForRegion( final String region )
         throws Exception
     {
-        CacheAccess<String, String> jcs = JCS.getInstance( region );
+        final CacheAccess<String, String> jcs = JCS.getInstance( region );
 
         // Add items to cache
         for ( int i = 0; i <= items; i++ )
@@ -126,22 +126,22 @@ public class HSQLDiskCacheConcurrentUnitTest
         // Test that all items are in cache
         for ( int i = 0; i <= items; i++ )
         {
-            String value = jcs.get( i + ":key" );
+            final String value = jcs.get( i + ":key" );
 
             assertEquals( "key = [" + i + ":key] value = [" + value + "]", region + " data " + i, value );
         }
 
         // Test that getElements returns all the expected values
-        Set<String> keys = new HashSet<>();
+        final Set<String> keys = new HashSet<>();
         for ( int i = 0; i <= items; i++ )
         {
             keys.add( i + ":key" );
         }
 
-        Map<String, ICacheElement<String, String>> elements = jcs.getCacheElements( keys );
+        final Map<String, ICacheElement<String, String>> elements = jcs.getCacheElements( keys );
         for ( int i = 0; i <= items; i++ )
         {
-            ICacheElement<String, String> element = elements.get( i + ":key" );
+            final ICacheElement<String, String> element = elements.get( i + ":key" );
             assertNotNull( "element " + i + ":key is missing", element );
             assertEquals( "value " + i + ":key", region + " data " + i, element.getVal() );
         }

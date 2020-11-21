@@ -76,7 +76,7 @@ public class MockRemoteCacheClient<K, V>
      */
     @Override
     @SuppressWarnings("unchecked") // Don't know how to do this properly
-    public void fixCache( ICacheServiceNonLocal<?, ?> remote )
+    public void fixCache( final ICacheServiceNonLocal<?, ?> remote )
     {
         fixed = (ICacheServiceNonLocal<K, V>)remote;
     }
@@ -103,7 +103,7 @@ public class MockRemoteCacheClient<K, V>
      * Adds the argument to the updatedList.
      */
     @Override
-    public void update( ICacheElement<K, V> ce )
+    public void update( final ICacheElement<K, V> ce )
     {
         updateList.add( ce );
     }
@@ -112,7 +112,7 @@ public class MockRemoteCacheClient<K, V>
      * Looks in the getSetupMap for a value.
      */
     @Override
-    public ICacheElement<K, V> get( K key )
+    public ICacheElement<K, V> get( final K key )
     {
         log.info( "get [" + key + "]" );
         return getSetupMap.get( key );
@@ -126,7 +126,7 @@ public class MockRemoteCacheClient<K, V>
      *         data in cache for any of these keys
      */
     @Override
-    public Map<K, ICacheElement<K, V>> getMultiple(Set<K> keys)
+    public Map<K, ICacheElement<K, V>> getMultiple(final Set<K> keys)
     {
         log.info( "get [" + keys + "]" );
         return getMultipleSetupMap.get( keys );
@@ -136,7 +136,7 @@ public class MockRemoteCacheClient<K, V>
      * Adds the key to the remove list.
      */
     @Override
-    public boolean remove( K key )
+    public boolean remove( final K key )
     {
         removeList.add( key );
         return false;
@@ -242,7 +242,7 @@ public class MockRemoteCacheClient<K, V>
      * @throws IOException
      */
     @Override
-    public Map<K, ICacheElement<K, V>> getMatching(String pattern)
+    public Map<K, ICacheElement<K, V>> getMatching(final String pattern)
         throws IOException
     {
         return new HashMap<>();

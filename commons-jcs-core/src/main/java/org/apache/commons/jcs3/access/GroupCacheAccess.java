@@ -45,7 +45,7 @@ public class GroupCacheAccess<K, V>
      * <p>
      * @param cacheControl
      */
-    public GroupCacheAccess( CompositeCache<GroupAttrName<K>, V> cacheControl )
+    public GroupCacheAccess( final CompositeCache<GroupAttrName<K>, V> cacheControl )
     {
         super(cacheControl);
     }
@@ -60,9 +60,9 @@ public class GroupCacheAccess<K, V>
      * @return The cached value, null if not found.
      */
     @Override
-    public V getFromGroup( K name, String group )
+    public V getFromGroup( final K name, final String group )
     {
-        ICacheElement<GroupAttrName<K>, V> element = this.getCacheControl().get( getGroupAttrName( group, name ) );
+        final ICacheElement<GroupAttrName<K>, V> element = this.getCacheControl().get( getGroupAttrName( group, name ) );
         return ( element != null ) ? element.getVal() : null;
     }
 
@@ -73,9 +73,9 @@ public class GroupCacheAccess<K, V>
      * @param name
      * @return GroupAttrName
      */
-    private GroupAttrName<K> getGroupAttrName( String group, K name )
+    private GroupAttrName<K> getGroupAttrName( final String group, final K name )
     {
-        GroupId gid = new GroupId( this.getCacheControl().getCacheName(), group );
+        final GroupId gid = new GroupId( this.getCacheControl().getCacheName(), group );
         return new GroupAttrName<>( gid, name );
     }
 
@@ -93,7 +93,7 @@ public class GroupCacheAccess<K, V>
      * @throws CacheException
      */
     @Override
-    public void putInGroup( K name, String groupName, V value )
+    public void putInGroup( final K name, final String groupName, final V value )
         throws CacheException
     {
         putInGroup( name, groupName, value, null );
@@ -115,7 +115,7 @@ public class GroupCacheAccess<K, V>
      * @throws CacheException
      */
     @Override
-    public void putInGroup( K name, String groupName, V value, IElementAttributes attr )
+    public void putInGroup( final K name, final String groupName, final V value, final IElementAttributes attr )
         throws CacheException
     {
         if ( name == null )
@@ -132,16 +132,16 @@ public class GroupCacheAccess<K, V>
         // should be wrapped by cache access.
         try
         {
-            GroupAttrName<K> key = getGroupAttrName( groupName, name );
-            CacheElement<GroupAttrName<K>, V> ce =
+            final GroupAttrName<K> key = getGroupAttrName( groupName, name );
+            final CacheElement<GroupAttrName<K>, V> ce =
                 new CacheElement<>( this.getCacheControl().getCacheName(), key, value );
 
-            IElementAttributes attributes = (attr == null) ? this.getCacheControl().getElementAttributes() : attr;
+            final IElementAttributes attributes = (attr == null) ? this.getCacheControl().getElementAttributes() : attr;
             ce.setElementAttributes( attributes );
 
             this.getCacheControl().update( ce );
         }
-        catch ( IOException e )
+        catch ( final IOException e )
         {
             throw new CacheException( e );
         }
@@ -155,9 +155,9 @@ public class GroupCacheAccess<K, V>
      * @param group
      */
     @Override
-    public void removeFromGroup( K name, String group )
+    public void removeFromGroup( final K name, final String group )
     {
-        GroupAttrName<K> key = getGroupAttrName( group, name );
+        final GroupAttrName<K> key = getGroupAttrName( group, name );
         this.getCacheControl().remove( key );
     }
 
@@ -168,9 +168,9 @@ public class GroupCacheAccess<K, V>
      * @return A Set of keys.
      */
     @Override
-    public Set<K> getGroupKeys( String group )
+    public Set<K> getGroupKeys( final String group )
     {
-        GroupId groupId = new GroupId( this.getCacheControl().getCacheName(), group );
+        final GroupId groupId = new GroupId( this.getCacheControl().getCacheName(), group );
 
         return this.getCacheControl().getKeySet()
                 .stream()
@@ -199,7 +199,7 @@ public class GroupCacheAccess<K, V>
      *            The name of the group to invalidate
      */
     @Override
-    public void invalidateGroup( String group )
+    public void invalidateGroup( final String group )
     {
         this.getCacheControl().remove(getGroupAttrName(group, null));
     }

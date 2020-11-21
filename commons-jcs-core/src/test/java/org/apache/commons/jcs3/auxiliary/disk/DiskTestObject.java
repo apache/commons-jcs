@@ -44,7 +44,7 @@ public class DiskTestObject implements Serializable
      * @param id
      * @param imageBytes
      */
-    public DiskTestObject(Integer id, byte[] imageBytes)
+    public DiskTestObject(final Integer id, final byte[] imageBytes)
     {
         this.id = id;
         this.imageBytes = imageBytes;
@@ -54,11 +54,11 @@ public class DiskTestObject implements Serializable
      * @see java.lang.Object#equals(Object other)
      */
     @Override
-    public boolean equals(Object other)
+    public boolean equals(final Object other)
     {
         if (other instanceof DiskTestObject)
         {
-            DiskTestObject o = (DiskTestObject) other;
+            final DiskTestObject o = (DiskTestObject) other;
             if (id != null)
                 return id.equals(o.id) && Arrays.equals(imageBytes, o.imageBytes);
             else if (id == null && o.id == null) return Arrays.equals(imageBytes, o.imageBytes);

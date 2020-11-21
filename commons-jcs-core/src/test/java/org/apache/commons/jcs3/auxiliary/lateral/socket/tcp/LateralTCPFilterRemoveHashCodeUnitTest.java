@@ -45,7 +45,7 @@ public class LateralTCPFilterRemoveHashCodeUnitTest
      *
      * @param testName
      */
-    public LateralTCPFilterRemoveHashCodeUnitTest( String testName )
+    public LateralTCPFilterRemoveHashCodeUnitTest( final String testName )
     {
         super( testName );
     }
@@ -82,14 +82,14 @@ public class LateralTCPFilterRemoveHashCodeUnitTest
      * @throws Exception
      *                If an error occurs
      */
-    public void runTestForRegion( String region, int numOps, int testNum )
+    public void runTestForRegion( final String region, final int numOps, final int testNum )
         throws Exception
     {
-        CacheAccess<String, Serializable> cache = JCS.getInstance( region );
+        final CacheAccess<String, Serializable> cache = JCS.getInstance( region );
 
         Thread.sleep( 100 );
 
-        TCPLateralCacheAttributes lattr2 = new TCPLateralCacheAttributes();
+        final TCPLateralCacheAttributes lattr2 = new TCPLateralCacheAttributes();
         lattr2.setTcpListenerPort( 1102 );
         lattr2.setTransmissionTypeName( "TCP" );
         lattr2.setTcpServer( "localhost:" + serverPort );
@@ -100,14 +100,14 @@ public class LateralTCPFilterRemoveHashCodeUnitTest
         // this service will put and remove using the lateral to
         // the cache instance above
         // the cache thinks it is different since the listenerid is different
-        LateralTCPService<String, Serializable> service = new LateralTCPService<>( lattr2 );
+        final LateralTCPService<String, Serializable> service = new LateralTCPService<>( lattr2 );
         service.setListenerId( 123456 );
 
-        String keyToBeRemovedOnPut = "test1";
+        final String keyToBeRemovedOnPut = "test1";
 
-        String keyToNotBeRemovedOnPut = "test2";
+        final String keyToNotBeRemovedOnPut = "test2";
 
-        Serializable dataToPassHashCodeCompare = new Serializable()
+        final Serializable dataToPassHashCodeCompare = new Serializable()
         {
             private static final long serialVersionUID = 1L;
 
@@ -123,12 +123,12 @@ public class LateralTCPFilterRemoveHashCodeUnitTest
         // dataToPassHashCodeCompare.hashCode() );
 
         cache.put( keyToBeRemovedOnPut, "this should get removed." );
-        ICacheElement<String, Serializable> element1 = new CacheElement<>( region, keyToBeRemovedOnPut, region
+        final ICacheElement<String, Serializable> element1 = new CacheElement<>( region, keyToBeRemovedOnPut, region
             + ":data-this shouldn't get there" );
         service.update( element1 );
 
         cache.put( keyToNotBeRemovedOnPut, dataToPassHashCodeCompare );
-        ICacheElement<String, Serializable> element2 = new CacheElement<>( region, keyToNotBeRemovedOnPut, dataToPassHashCodeCompare );
+        final ICacheElement<String, Serializable> element2 = new CacheElement<>( region, keyToNotBeRemovedOnPut, dataToPassHashCodeCompare );
         service.update( element2 );
 
         /*
@@ -145,18 +145,18 @@ public class LateralTCPFilterRemoveHashCodeUnitTest
          * e.toString() ); e.printStackTrace( System.out ); throw e; }
          */
 
-        CacheAccess<String, String> jcs = JCS.getInstance( region );
-        String key = "testKey" + testNum;
-        String data = "testData" + testNum;
+        final CacheAccess<String, String> jcs = JCS.getInstance( region );
+        final String key = "testKey" + testNum;
+        final String data = "testData" + testNum;
         jcs.put( key, data );
-        String value = jcs.get( key );
+        final String value = jcs.get( key );
         assertEquals( "Couldn't put normally.", data, value );
 
         // make sure the items we can find are in the correct region.
         for ( int i = 1; i < numOps; i++ )
         {
-            String keyL = "key" + i;
-            String dataL = jcs.get( keyL );
+            final String keyL = "key" + i;
+            final String dataL = jcs.get( keyL );
             if ( dataL != null )
             {
                 assertTrue( "Incorrect region detected.", dataL.startsWith( region ) );
@@ -166,11 +166,11 @@ public class LateralTCPFilterRemoveHashCodeUnitTest
 
         Thread.sleep( 200 );
 
-        Object testObj1 = cache.get( keyToBeRemovedOnPut );
+        final Object testObj1 = cache.get( keyToBeRemovedOnPut );
         p( "test object1 = " + testObj1 );
         assertNull( "The test object should have been remvoed by a put.", testObj1 );
 
-        Object testObj2 = cache.get( keyToNotBeRemovedOnPut );
+        final Object testObj2 = cache.get( keyToNotBeRemovedOnPut );
         p( "test object2 = " + testObj2 + " hashCode = " );
         if ( testObj2 != null )
         {
@@ -183,7 +183,7 @@ public class LateralTCPFilterRemoveHashCodeUnitTest
     /**
      * @param s String to print
      */
-    public static void p( String s )
+    public static void p( final String s )
     {
         if ( isSysOut )
         {

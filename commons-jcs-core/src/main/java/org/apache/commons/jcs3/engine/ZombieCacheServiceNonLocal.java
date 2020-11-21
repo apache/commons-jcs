@@ -67,7 +67,7 @@ public class ZombieCacheServiceNonLocal<K, V>
      * <p>
      * @param maxQueueSize
      */
-    public ZombieCacheServiceNonLocal( int maxQueueSize )
+    public ZombieCacheServiceNonLocal( final int maxQueueSize )
     {
         this.maxQueueSize = maxQueueSize;
         queue = new ConcurrentLinkedQueue<>();
@@ -83,7 +83,7 @@ public class ZombieCacheServiceNonLocal<K, V>
         return queue.size();
     }
 
-    private void addQueue(ZombieEvent event)
+    private void addQueue(final ZombieEvent event)
     {
         queue.add(event);
         if (queue.size() > maxQueueSize)
@@ -99,11 +99,11 @@ public class ZombieCacheServiceNonLocal<K, V>
      * @param listenerId - identifies the caller.
      */
     @Override
-    public void update( ICacheElement<K, V> item, long listenerId )
+    public void update( final ICacheElement<K, V> item, final long listenerId )
     {
         if ( maxQueueSize > 0 )
         {
-            PutEvent<K, V> event = new PutEvent<>( item, listenerId );
+            final PutEvent<K, V> event = new PutEvent<>( item, listenerId );
             addQueue( event );
         }
         // Zombies have no inner life
@@ -117,11 +117,11 @@ public class ZombieCacheServiceNonLocal<K, V>
      * @param listenerId - identifies the caller.
      */
     @Override
-    public void remove( String cacheName, K key, long listenerId )
+    public void remove( final String cacheName, final K key, final long listenerId )
     {
         if ( maxQueueSize > 0 )
         {
-            RemoveEvent<K> event = new RemoveEvent<>( cacheName, key, listenerId );
+            final RemoveEvent<K> event = new RemoveEvent<>( cacheName, key, listenerId );
             addQueue( event );
         }
         // Zombies have no inner life
@@ -134,11 +134,11 @@ public class ZombieCacheServiceNonLocal<K, V>
      * @param listenerId - identifies the caller.
      */
     @Override
-    public void removeAll( String cacheName, long listenerId )
+    public void removeAll( final String cacheName, final long listenerId )
     {
         if ( maxQueueSize > 0 )
         {
-            RemoveAllEvent event = new RemoveAllEvent( cacheName, listenerId );
+            final RemoveAllEvent event = new RemoveAllEvent( cacheName, listenerId );
             addQueue( event );
         }
         // Zombies have no inner life
@@ -154,7 +154,7 @@ public class ZombieCacheServiceNonLocal<K, V>
      * @throws IOException
      */
     @Override
-    public ICacheElement<K, V> get( String cacheName, K key, long requesterId )
+    public ICacheElement<K, V> get( final String cacheName, final K key, final long requesterId )
         throws IOException
     {
         // Zombies have no inner life
@@ -171,7 +171,7 @@ public class ZombieCacheServiceNonLocal<K, V>
      * @throws IOException
      */
     @Override
-    public Map<K, ICacheElement<K, V>> getMatching( String cacheName, String pattern, long requesterId )
+    public Map<K, ICacheElement<K, V>> getMatching( final String cacheName, final String pattern, final long requesterId )
         throws IOException
     {
         return Collections.emptyMap();
@@ -184,7 +184,7 @@ public class ZombieCacheServiceNonLocal<K, V>
      * @return an empty map. zombies have no internal data
      */
     @Override
-    public Map<K, ICacheElement<K, V>> getMultiple( String cacheName, Set<K> keys, long requesterId )
+    public Map<K, ICacheElement<K, V>> getMultiple( final String cacheName, final Set<K> keys, final long requesterId )
     {
         return new HashMap<>();
     }
@@ -196,7 +196,7 @@ public class ZombieCacheServiceNonLocal<K, V>
      * @return empty set
      */
     @Override
-    public Set<K> getKeySet( String cacheName )
+    public Set<K> getKeySet( final String cacheName )
     {
         return Collections.emptySet();
     }
@@ -207,28 +207,30 @@ public class ZombieCacheServiceNonLocal<K, V>
      * @param service
      * @throws Exception
      */
-    public synchronized void propagateEvents( ICacheServiceNonLocal<K, V> service )
+    public synchronized void propagateEvents( final ICacheServiceNonLocal<K, V> service )
         throws Exception
     {
         int cnt = 0;
         log.info( "Propagating events to the new ICacheServiceNonLocal." );
-        ElapsedTimer timer = new ElapsedTimer();
+        final ElapsedTimer timer = new ElapsedTimer();
         while ( !queue.isEmpty() )
         {
             cnt++;
 
             // for each item, call the appropriate service method
-            ZombieEvent event = queue.poll();
+            final ZombieEvent event = queue.poll();
 
             if ( event instanceof PutEvent )
             {
                 @SuppressWarnings("unchecked") // Type checked by instanceof
+                final
                 PutEvent<K, V> putEvent = (PutEvent<K, V>) event;
                 service.update( putEvent.element, event.requesterId );
             }
             else if ( event instanceof RemoveEvent )
             {
                 @SuppressWarnings("unchecked") // Type checked by instanceof
+                final
                 RemoveEvent<K> removeEvent = (RemoveEvent<K>) event;
                 service.remove( event.cacheName, removeEvent.key, event.requesterId );
             }
@@ -267,7 +269,7 @@ public class ZombieCacheServiceNonLocal<K, V>
          * @param element
          * @param requesterId
          */
-        public PutEvent( ICacheElement<K, V> element, long requesterId )
+        public PutEvent( final ICacheElement<K, V> element, final long requesterId )
         {
             this.requesterId = requesterId;
             this.element = element;
@@ -289,7 +291,7 @@ public class ZombieCacheServiceNonLocal<K, V>
          * @param key
          * @param requesterId
          */
-        public RemoveEvent( String cacheName, K key, long requesterId )
+        public RemoveEvent( final String cacheName, final K key, final long requesterId )
         {
             this.cacheName = cacheName;
             this.requesterId = requesterId;
@@ -307,7 +309,7 @@ public class ZombieCacheServiceNonLocal<K, V>
          * @param cacheName
          * @param requesterId
          */
-        public RemoveAllEvent( String cacheName, long requesterId )
+        public RemoveAllEvent( final String cacheName, final long requesterId )
         {
             this.cacheName = cacheName;
             this.requesterId = requesterId;

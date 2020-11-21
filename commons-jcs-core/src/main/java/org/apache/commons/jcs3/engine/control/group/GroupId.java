@@ -46,7 +46,7 @@ public class GroupId
      * @param cacheName
      * @param groupName
      */
-    public GroupId( String cacheName, String groupName )
+    public GroupId( final String cacheName, final String groupName )
     {
         this.cacheName = cacheName;
         this.groupName = groupName;
@@ -66,13 +66,13 @@ public class GroupId
      * @return cacheName.equals( g.cacheName ) &amp;&amp;groupName.equals( g.groupName );
      */
     @Override
-    public boolean equals( Object obj )
+    public boolean equals( final Object obj )
     {
         if ( obj == null || !( obj instanceof GroupId ) )
         {
             return false;
         }
-        GroupId g = (GroupId) obj;
+        final GroupId g = (GroupId) obj;
         return cacheName.equals( g.cacheName ) && groupName.equals( g.groupName );
     }
 

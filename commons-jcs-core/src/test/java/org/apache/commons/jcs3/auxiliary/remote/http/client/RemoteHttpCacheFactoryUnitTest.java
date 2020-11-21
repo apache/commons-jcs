@@ -36,14 +36,14 @@ public class RemoteHttpCacheFactoryUnitTest
     public void testCreateRemoteHttpCacheClient_Bad()
     {
         // SETUP
-        String remoteHttpClientClassName = "junk";
-        RemoteHttpCacheAttributes cattr = new RemoteHttpCacheAttributes();
+        final String remoteHttpClientClassName = "junk";
+        final RemoteHttpCacheAttributes cattr = new RemoteHttpCacheAttributes();
         cattr.setRemoteHttpClientClassName( remoteHttpClientClassName );
 
-        RemoteHttpCacheFactory factory = new RemoteHttpCacheFactory();
+        final RemoteHttpCacheFactory factory = new RemoteHttpCacheFactory();
 
         // DO WORK
-        IRemoteHttpCacheClient<String, String> result = factory.createRemoteHttpCacheClientForAttributes( cattr );
+        final IRemoteHttpCacheClient<String, String> result = factory.createRemoteHttpCacheClientForAttributes( cattr );
 
         // VEIFY
         assertNotNull( "Should have a cache.", result );
@@ -55,11 +55,11 @@ public class RemoteHttpCacheFactoryUnitTest
     public void testCreateRemoteHttpCacheClient_default()
     {
         // SETUP
-        RemoteHttpCacheAttributes cattr = new RemoteHttpCacheAttributes();
-        RemoteHttpCacheFactory factory = new RemoteHttpCacheFactory();
+        final RemoteHttpCacheAttributes cattr = new RemoteHttpCacheAttributes();
+        final RemoteHttpCacheFactory factory = new RemoteHttpCacheFactory();
 
         // DO WORK
-        IRemoteHttpCacheClient<String, String> result = factory.createRemoteHttpCacheClientForAttributes( cattr );
+        final IRemoteHttpCacheClient<String, String> result = factory.createRemoteHttpCacheClientForAttributes( cattr );
 
         // VEIFY
         assertNotNull( "Should have a cache.", result );
@@ -70,19 +70,19 @@ public class RemoteHttpCacheFactoryUnitTest
     public void testGetCache_normal()
     {
         // SETUP
-        ICompositeCacheManager cacheMgr = new MockCompositeCacheManager();
+        final ICompositeCacheManager cacheMgr = new MockCompositeCacheManager();
         assertNotNull( "Should have a manager.", cacheMgr );
-        ICacheEventLogger cacheEventLogger = null;
-        IElementSerializer elementSerializer = null;
+        final ICacheEventLogger cacheEventLogger = null;
+        final IElementSerializer elementSerializer = null;
 
-        RemoteHttpCacheAttributes cattr = new RemoteHttpCacheAttributes();
+        final RemoteHttpCacheAttributes cattr = new RemoteHttpCacheAttributes();
         assertNotNull( "Should have attributes.", cattr );
-        RemoteHttpCacheFactory factory = new RemoteHttpCacheFactory();
+        final RemoteHttpCacheFactory factory = new RemoteHttpCacheFactory();
         assertNotNull( "Should have a factory.", factory );
 
 
         // DO WORK
-        AuxiliaryCache<String, String> result = factory.createCache(cattr, cacheMgr, cacheEventLogger, elementSerializer);
+        final AuxiliaryCache<String, String> result = factory.createCache(cattr, cacheMgr, cacheEventLogger, elementSerializer);
 
         // VERIFY
         assertNotNull( "Should have a cache.", result );

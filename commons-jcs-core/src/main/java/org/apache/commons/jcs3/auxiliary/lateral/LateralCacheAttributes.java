@@ -74,7 +74,7 @@ public class LateralCacheAttributes
      * @param val The new httpServer value
      */
     @Override
-    public void setHttpServer( String val )
+    public void setHttpServer( final String val )
     {
         httpServer = val;
     }
@@ -94,7 +94,7 @@ public class LateralCacheAttributes
      * @param val The new httpServers value
      */
     @Override
-    public void setHttpServers( String val )
+    public void setHttpServers( final String val )
     {
         httpServers = val;
     }
@@ -114,7 +114,7 @@ public class LateralCacheAttributes
      * @param val The new tcpListenerPort value
      */
     @Override
-    public void setHttpListenerPort( int val )
+    public void setHttpListenerPort( final int val )
     {
         this.httpListenerPort = val;
     }
@@ -134,7 +134,7 @@ public class LateralCacheAttributes
      * @param val The new udpMulticastAddr value
      */
     @Override
-    public void setUdpMulticastAddr( String val )
+    public void setUdpMulticastAddr( final String val )
     {
         udpMulticastAddr = val;
     }
@@ -154,7 +154,7 @@ public class LateralCacheAttributes
      * @param val The new udpMulticastPort value
      */
     @Override
-    public void setUdpMulticastPort( int val )
+    public void setUdpMulticastPort( final int val )
     {
         udpMulticastPort = val;
     }
@@ -174,7 +174,7 @@ public class LateralCacheAttributes
      * @param val The new transmissionType value
      */
     @Override
-    public void setTransmissionType( Type val )
+    public void setTransmissionType( final Type val )
     {
         this.transmissionType = val;
         this.transmissionTypeName = val.toString();
@@ -195,7 +195,7 @@ public class LateralCacheAttributes
      * @param val The new transmissionTypeName value
      */
     @Override
-    public void setTransmissionTypeName( String val )
+    public void setTransmissionTypeName( final String val )
     {
         this.transmissionTypeName = val;
         this.transmissionType = Type.valueOf(val);
@@ -218,7 +218,7 @@ public class LateralCacheAttributes
      * @param val The new transmissionTypeName value
      */
     @Override
-    public void setPutOnlyMode( boolean val )
+    public void setPutOnlyMode( final boolean val )
     {
         this.putOnlyMode = val;
     }
@@ -236,7 +236,7 @@ public class LateralCacheAttributes
      * @param receive The receive to set.
      */
     @Override
-    public void setReceive( boolean receive )
+    public void setReceive( final boolean receive )
     {
         this.receive = receive;
     }
@@ -257,7 +257,7 @@ public class LateralCacheAttributes
      * @param zombieQueueMaxSize The zombieQueueMaxSize to set.
      */
     @Override
-    public void setZombieQueueMaxSize( int zombieQueueMaxSize )
+    public void setZombieQueueMaxSize( final int zombieQueueMaxSize )
     {
         this.zombieQueueMaxSize = zombieQueueMaxSize;
     }
@@ -280,7 +280,7 @@ public class LateralCacheAttributes
     @Override
     public String toString()
     {
-        StringBuilder buf = new StringBuilder();
+        final StringBuilder buf = new StringBuilder();
         //buf.append( "cacheName=" + cacheName + "\n" );
         //buf.append( "putOnlyMode=" + putOnlyMode + "\n" );
         //buf.append( "transmissionTypeName=" + transmissionTypeName + "\n" );

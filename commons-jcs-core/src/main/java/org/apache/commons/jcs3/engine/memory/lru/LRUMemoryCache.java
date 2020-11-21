@@ -48,7 +48,7 @@ public class LRUMemoryCache<K, V>
      * @throws IOException
      */
     @Override
-    protected MemoryElementDescriptor<K, V> adjustListForUpdate( ICacheElement<K, V> ce )
+    protected MemoryElementDescriptor<K, V> adjustListForUpdate( final ICacheElement<K, V> ce )
         throws IOException
     {
         return addFirst( ce );
@@ -60,7 +60,7 @@ public class LRUMemoryCache<K, V>
      * @param me
      */
     @Override
-    protected void adjustListForGet( MemoryElementDescriptor<K, V> me )
+    protected void adjustListForGet( final MemoryElementDescriptor<K, V> me )
     {
         list.makeFirst( me );
     }

@@ -64,7 +64,7 @@ public class ShrinkerThread
      * <p>
      * @param diskCache
      */
-    public void addDiskCacheToShrinkList( JDBCDiskCache<?, ?> diskCache )
+    public void addDiskCacheToShrinkList( final JDBCDiskCache<?, ?> diskCache )
     {
         // the set will prevent dupes.
         // we could also just add these to a hashmap by region name
@@ -83,7 +83,7 @@ public class ShrinkerThread
         {
             deleteExpiredFromAllRegisteredRegions();
         }
-        catch ( Throwable e )
+        catch ( final Throwable e )
         {
             log.error( "Caught an exception while trying to delete expired items.", e );
         }
@@ -97,11 +97,11 @@ public class ShrinkerThread
         log.info( "Running JDBC disk cache shrinker. Number of regions [{0}]",
                 () -> shrinkSet.size() );
 
-        for (Iterator<JDBCDiskCache<?, ?>> i = shrinkSet.iterator(); i.hasNext();)
+        for (final Iterator<JDBCDiskCache<?, ?>> i = shrinkSet.iterator(); i.hasNext();)
         {
-            JDBCDiskCache<?, ?> cache = i.next();
-            ElapsedTimer timer = new ElapsedTimer();
-            int deleted = cache.deleteExpired();
+            final JDBCDiskCache<?, ?> cache = i.next();
+            final ElapsedTimer timer = new ElapsedTimer();
+            final int deleted = cache.deleteExpired();
 
             log.info( "Deleted [{0}] expired for region [{1}] for table [{2}] in {3} ms.",
                     deleted, cache.getCacheName(), cache.getTableName(), timer.getElapsedTime() );
@@ -116,7 +116,7 @@ public class ShrinkerThread
                 {
                     Thread.sleep( this.getPauseBetweenRegionCallsMillis() );
                 }
-                catch ( InterruptedException e )
+                catch ( final InterruptedException e )
                 {
                     log.warn( "Interrupted while waiting to delete expired for the next region." );
                 }
@@ -130,7 +130,7 @@ public class ShrinkerThread
      * <p>
      * @param pauseBetweenRegionCallsMillis The pauseBetweenRegionCallsMillis to set.
      */
-    public void setPauseBetweenRegionCallsMillis( long pauseBetweenRegionCallsMillis )
+    public void setPauseBetweenRegionCallsMillis( final long pauseBetweenRegionCallsMillis )
     {
         this.pauseBetweenRegionCallsMillis = pauseBetweenRegionCallsMillis;
     }

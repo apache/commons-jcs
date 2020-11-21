@@ -38,23 +38,23 @@ public class PropertySetterUnitTest
     @Test
     public void testConvertArg()
     {
-        PropertySetter ps = new PropertySetter(this);
-        Object s = ps.convertArg("test", String.class);
+        final PropertySetter ps = new PropertySetter(this);
+        final Object s = ps.convertArg("test", String.class);
         assertEquals("Should be a string", "test", s);
 
-        Object i = ps.convertArg("1", Integer.TYPE);
+        final Object i = ps.convertArg("1", Integer.TYPE);
         assertEquals("Should be an integer", Integer.valueOf(1), i);
 
-        Object l = ps.convertArg("1", Long.TYPE);
+        final Object l = ps.convertArg("1", Long.TYPE);
         assertEquals("Should be a long", Long.valueOf(1), l);
 
-        Object b = ps.convertArg("true", Boolean.TYPE);
+        final Object b = ps.convertArg("true", Boolean.TYPE);
         assertEquals("Should be a boolean", Boolean.TRUE, b);
 
-        Object e = ps.convertArg("TWO", EnumTest.class);
+        final Object e = ps.convertArg("TWO", EnumTest.class);
         assertEquals("Should be an enum", EnumTest.TWO, e);
 
-        Object f = ps.convertArg("test.conf", File.class);
+        final Object f = ps.convertArg("test.conf", File.class);
         assertTrue("Should be a file", f instanceof File);
     }
 

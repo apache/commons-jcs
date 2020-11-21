@@ -47,7 +47,7 @@ public class DoubleLinkedListNode<T>
     /**
      * @param payloadP
      */
-    public DoubleLinkedListNode(T payloadP)
+    public DoubleLinkedListNode(final T payloadP)
     {
         payload = payloadP;
     }

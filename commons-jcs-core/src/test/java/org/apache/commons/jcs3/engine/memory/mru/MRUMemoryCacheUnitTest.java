@@ -57,8 +57,8 @@ public class MRUMemoryCacheUnitTest
     public void testLoadFromCCF()
         throws CacheException
     {
-        CacheAccess<String, String> cache = JCS.getInstance( "testPutGet" );
-        String memoryCacheName = cache.getCacheAttributes().getMemoryCacheName();
+        final CacheAccess<String, String> cache = JCS.getInstance( "testPutGet" );
+        final String memoryCacheName = cache.getCacheAttributes().getMemoryCacheName();
         assertTrue( "Cache name should have MRU in it.", memoryCacheName.indexOf( "MRUMemoryCache" ) != -1 );
     }
 
@@ -70,10 +70,10 @@ public class MRUMemoryCacheUnitTest
     public void testPutGetThroughHub()
         throws CacheException
     {
-        CacheAccess<String, String> cache = JCS.getInstance( "testPutGetThroughHub" );
+        final CacheAccess<String, String> cache = JCS.getInstance( "testPutGetThroughHub" );
 
-        int max = cache.getCacheAttributes().getMaxObjects();
-        int items = max * 2;
+        final int max = cache.getCacheAttributes().getMaxObjects();
+        final int items = max * 2;
 
         for ( int i = 0; i < items; i++ )
         {
@@ -83,7 +83,7 @@ public class MRUMemoryCacheUnitTest
         // Test that first items are not in the cache
         for ( int i = max -1; i >= 0; i-- )
         {
-            String value = cache.get( i + ":key" );
+            final String value = cache.get( i + ":key" );
             assertNull( "Should not have value for key [" + i + ":key" + "] in the cache." + cache.getStats(), value );
         }
 
@@ -91,25 +91,25 @@ public class MRUMemoryCacheUnitTest
         // skip 2 for the buffer.
         for ( int i = max + 2; i < items; i++ )
         {
-            String value = cache.get( i + ":key" );
+            final String value = cache.get( i + ":key" );
             assertEquals( "myregion" + " data " + i, value );
         }
 
         // Test that getMultiple returns all the items remaining in cache and none of the missing ones
-        Set<String> keys = new HashSet<>();
+        final Set<String> keys = new HashSet<>();
         for ( int i = 0; i < items; i++ )
         {
             keys.add( i + ":key" );
         }
 
-        Map<String, ICacheElement<String, String>> elements = cache.getCacheElements( keys );
+        final Map<String, ICacheElement<String, String>> elements = cache.getCacheElements( keys );
         for ( int i = max-1; i >= 0; i-- )
         {
             assertNull( "Should not have value for key [" + i + ":key" + "] in the cache." + cache.getStats(), elements.get( i + ":key" ) );
         }
         for ( int i = max + 2; i < items; i++ )
         {
-            ICacheElement<String, String> element = elements.get( i + ":key" );
+            final ICacheElement<String, String> element = elements.get( i + ":key" );
             assertNotNull( "element " + i + ":key is missing", element );
             assertEquals( "value " + i + ":key", "myregion" + " data " + i, element.getVal() );
         }
@@ -123,10 +123,10 @@ public class MRUMemoryCacheUnitTest
     public void testPutGetThroughHubTwice()
         throws CacheException
     {
-        CacheAccess<String, String> cache = JCS.getInstance( "testPutGetThroughHub" );
+        final CacheAccess<String, String> cache = JCS.getInstance( "testPutGetThroughHub" );
 
-        int max = cache.getCacheAttributes().getMaxObjects();
-        int items = max * 2;
+        final int max = cache.getCacheAttributes().getMaxObjects();
+        final int items = max * 2;
 
         for ( int i = 0; i < items; i++ )
         {
@@ -141,7 +141,7 @@ public class MRUMemoryCacheUnitTest
         // Test that first items are not in the cache
         for ( int i = max-1; i >= 0; i-- )
         {
-            String value = cache.get( i + ":key" );
+            final String value = cache.get( i + ":key" );
             assertNull( "Should not have value for key [" + i + ":key" + "] in the cache.", value );
         }
 
@@ -149,7 +149,7 @@ public class MRUMemoryCacheUnitTest
         // skip 2 for the buffer.
         for ( int i = max + 2; i < items; i++ )
         {
-            String value = cache.get( i + ":key" );
+            final String value = cache.get( i + ":key" );
             assertEquals( "myregion" + " data " + i, value );
         }
 
@@ -163,10 +163,10 @@ public class MRUMemoryCacheUnitTest
     public void testPutRemoveThroughHub()
         throws CacheException
     {
-        CacheAccess<String, String> cache = JCS.getInstance( "testPutGetThroughHub" );
+        final CacheAccess<String, String> cache = JCS.getInstance( "testPutGetThroughHub" );
 
-        int max = cache.getCacheAttributes().getMaxObjects();
-        int items = max * 2;
+        final int max = cache.getCacheAttributes().getMaxObjects();
+        final int items = max * 2;
 
         for ( int i = 0; i < items; i++ )
         {
@@ -181,7 +181,7 @@ public class MRUMemoryCacheUnitTest
         // Test that first items are not in the cache
         for ( int i = max; i >= 0; i-- )
         {
-            String value = cache.get( i + ":key" );
+            final String value = cache.get( i + ":key" );
             assertNull( "Should not have value for key [" + i + ":key" + "] in the cache.", value );
         }
     }
@@ -194,10 +194,10 @@ public class MRUMemoryCacheUnitTest
     public void testClearThroughHub()
         throws CacheException
     {
-        CacheAccess<String, String> cache = JCS.getInstance( "testPutGetThroughHub" );
+        final CacheAccess<String, String> cache = JCS.getInstance( "testPutGetThroughHub" );
 
-        int max = cache.getCacheAttributes().getMaxObjects();
-        int items = max * 2;
+        final int max = cache.getCacheAttributes().getMaxObjects();
+        final int items = max * 2;
 
         for ( int i = 0; i < items; i++ )
         {
@@ -209,7 +209,7 @@ public class MRUMemoryCacheUnitTest
         // Test that first items are not in the cache
         for ( int i = max; i >= 0; i-- )
         {
-            String value = cache.get( i + ":key" );
+            final String value = cache.get( i + ":key" );
             assertNull( "Should not have value for key [" + i + ":key" + "] in the cache.", value );
         }
     }
@@ -222,17 +222,17 @@ public class MRUMemoryCacheUnitTest
     public void testGetStatsThroughHub()
         throws CacheException
     {
-        CacheAccess<String, String> cache = JCS.getInstance( "testGetStatsThroughHub" );
+        final CacheAccess<String, String> cache = JCS.getInstance( "testGetStatsThroughHub" );
 
-        int max = cache.getCacheAttributes().getMaxObjects();
-        int items = max * 2;
+        final int max = cache.getCacheAttributes().getMaxObjects();
+        final int items = max * 2;
 
         for ( int i = 0; i < items; i++ )
         {
             cache.put( i + ":key", "myregion" + " data " + i );
         }
 
-        String stats = cache.getStats();
+        final String stats = cache.getStats();
 
 //        System.out.println( stats );
 
@@ -249,24 +249,24 @@ public class MRUMemoryCacheUnitTest
     public void testGetKeyArray()
         throws Exception
     {
-        CompositeCacheManager cacheMgr = CompositeCacheManager.getUnconfiguredInstance();
+        final CompositeCacheManager cacheMgr = CompositeCacheManager.getUnconfiguredInstance();
         cacheMgr.configure( "/TestMRUCache.ccf" );
-        CompositeCache<String, String> cache = cacheMgr.getCache( "testGetKeyArray" );
+        final CompositeCache<String, String> cache = cacheMgr.getCache( "testGetKeyArray" );
 
-        MRUMemoryCache<String, String> mru = new MRUMemoryCache<>();
+        final MRUMemoryCache<String, String> mru = new MRUMemoryCache<>();
         mru.initialize( cache );
 
-        int max = cache.getCacheAttributes().getMaxObjects();
-        int items = max / 2;
+        final int max = cache.getCacheAttributes().getMaxObjects();
+        final int items = max / 2;
 
         for ( int i = 0; i < items; i++ )
         {
-            ICacheElement<String, String> ice = new CacheElement<>( cache.getCacheName(), i + ":key", cache.getCacheName() + " data " + i );
+            final ICacheElement<String, String> ice = new CacheElement<>( cache.getCacheName(), i + ":key", cache.getCacheName() + " data " + i );
             ice.setElementAttributes( cache.getElementAttributes() );
             mru.update( ice );
         }
 
-        Set<String> keys = mru.getKeySet();
+        final Set<String> keys = mru.getKeySet();
 
         assertEquals( "Wrong number of keys.", items, keys.size() );
     }
@@ -279,14 +279,14 @@ public class MRUMemoryCacheUnitTest
     public void testRemovePartialThroughHub()
         throws CacheException
     {
-        CacheAccess<String, String> cache = JCS.getInstance( "testGetStatsThroughHub" );
+        final CacheAccess<String, String> cache = JCS.getInstance( "testGetStatsThroughHub" );
 
-        int max = cache.getCacheAttributes().getMaxObjects();
-        int items = max / 2;
+        final int max = cache.getCacheAttributes().getMaxObjects();
+        final int items = max / 2;
 
         cache.put( "test", "data" );
 
-        String root = "myroot";
+        final String root = "myroot";
 
         for ( int i = 0; i < items; i++ )
         {
@@ -296,7 +296,7 @@ public class MRUMemoryCacheUnitTest
         // Test that last items are in cache
         for ( int i = 0; i < items; i++ )
         {
-            String value = cache.get( root + ":" + i + ":key" );
+            final String value = cache.get( root + ":" + i + ":key" );
             assertEquals( "myregion" + " data " + i, value );
         }
 

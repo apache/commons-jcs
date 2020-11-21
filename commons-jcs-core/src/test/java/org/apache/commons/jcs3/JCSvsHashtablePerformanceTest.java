@@ -59,13 +59,13 @@ public class JCSvsHashtablePerformanceTest
     public void testSimpleLoad()
         throws Exception
     {
-        Log log1 = LogManager.getLog( LRUMemoryCache.class );
+        final Log log1 = LogManager.getLog( LRUMemoryCache.class );
         if ( log1.isDebugEnabled() )
         {
             System.out.println( "The log level must be at info or above for the a performance test." );
             return;
         }
-        Log log2 = LogManager.getLog( JCS.class );
+        final Log log2 = LogManager.getLog( JCS.class );
         if ( log2.isDebugEnabled() )
         {
             System.out.println( "The log level must be at info or above for the a performance test." );
@@ -95,7 +95,7 @@ public class JCSvsHashtablePerformanceTest
         {
 
             JCS.setConfigFilename( "/TestJCSvHashtablePerf.ccf" );
-            CacheAccess<String, String> cache = JCS.getInstance( "testCache1" );
+            final CacheAccess<String, String> cache = JCS.getInstance( "testCache1" );
 
             for ( int j = 0; j < loops; j++ )
             {
@@ -125,7 +125,7 @@ public class JCSvsHashtablePerformanceTest
 
                 // /////////////////////////////////////////////////////////////
                 name = "Hashtable";
-                Hashtable<String, String> cache2 = new Hashtable<>();
+                final Hashtable<String, String> cache2 = new Hashtable<>();
                 start = System.currentTimeMillis();
                 for ( int i = 0; i < tries; i++ )
                 {
@@ -152,16 +152,16 @@ public class JCSvsHashtablePerformanceTest
             }
 
         }
-        catch ( Exception e )
+        catch ( final Exception e )
         {
             e.printStackTrace( System.out );
             System.out.println( e );
         }
 
-        long putAvJCS = putTotalJCS / loops;
-        long getAvJCS = getTotalJCS / loops;
-        long putAvHashtable = putTotalHashtable / loops;
-        long getAvHashtable = getTotalHashtable / loops;
+        final long putAvJCS = putTotalJCS / loops;
+        final long getAvJCS = getTotalJCS / loops;
+        final long putAvHashtable = putTotalHashtable / loops;
+        final long getAvHashtable = getTotalHashtable / loops;
 
         System.out.println( "Finished " + loops + " loops of " + tries + " gets and puts" );
 

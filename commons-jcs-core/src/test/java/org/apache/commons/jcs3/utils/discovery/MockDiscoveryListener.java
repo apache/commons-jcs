@@ -37,7 +37,7 @@ public class MockDiscoveryListener
      * @param service
      */
     @Override
-    public void addDiscoveredService( DiscoveredService service )
+    public void addDiscoveredService( final DiscoveredService service )
     {
         discoveredServices.add( service );
     }
@@ -48,7 +48,7 @@ public class MockDiscoveryListener
      * @param service
      */
     @Override
-    public void removeDiscoveredService( DiscoveredService service )
+    public void removeDiscoveredService( final DiscoveredService service )
     {
         discoveredServices.remove( service );
     }

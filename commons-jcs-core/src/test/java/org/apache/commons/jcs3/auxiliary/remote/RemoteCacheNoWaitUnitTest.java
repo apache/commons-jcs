@@ -48,10 +48,10 @@ public class RemoteCacheNoWaitUnitTest
         throws Exception
     {
         // SETUP
-        MockRemoteCacheClient<String, String> client = new MockRemoteCacheClient<>();
-        RemoteCacheNoWait<String, String> noWait = new RemoteCacheNoWait<>( client );
+        final MockRemoteCacheClient<String, String> client = new MockRemoteCacheClient<>();
+        final RemoteCacheNoWait<String, String> noWait = new RemoteCacheNoWait<>( client );
 
-        ICacheElement<String, String> element = new CacheElement<>( "testUpdate", "key", "value" );
+        final ICacheElement<String, String> element = new CacheElement<>( "testUpdate", "key", "value" );
 
         // DO WORK
         noWait.update( element );
@@ -72,14 +72,14 @@ public class RemoteCacheNoWaitUnitTest
         throws Exception
     {
         // SETUP
-        MockRemoteCacheClient<String, String> client = new MockRemoteCacheClient<>();
-        RemoteCacheNoWait<String, String> noWait = new RemoteCacheNoWait<>( client );
+        final MockRemoteCacheClient<String, String> client = new MockRemoteCacheClient<>();
+        final RemoteCacheNoWait<String, String> noWait = new RemoteCacheNoWait<>( client );
 
-        ICacheElement<String, String> input = new CacheElement<>( "testUpdate", "key", "value" );
+        final ICacheElement<String, String> input = new CacheElement<>( "testUpdate", "key", "value" );
         client.getSetupMap.put( "key", input );
 
         // DO WORK
-        ICacheElement<String, String> result = noWait.get( "key" );
+        final ICacheElement<String, String> result = noWait.get( "key" );
 
         // VERIFY
         assertEquals( "Wrong element", input, result );
@@ -94,20 +94,20 @@ public class RemoteCacheNoWaitUnitTest
         throws Exception
     {
         // SETUP
-        MockRemoteCacheClient<String, String> client = new MockRemoteCacheClient<>();
-        RemoteCacheNoWait<String, String> noWait = new RemoteCacheNoWait<>( client );
+        final MockRemoteCacheClient<String, String> client = new MockRemoteCacheClient<>();
+        final RemoteCacheNoWait<String, String> noWait = new RemoteCacheNoWait<>( client );
 
-        ICacheElement<String, String> inputElement = new CacheElement<>( "testUpdate", "key", "value" );
-        Map<String, ICacheElement<String, String>> inputMap = new HashMap<>();
+        final ICacheElement<String, String> inputElement = new CacheElement<>( "testUpdate", "key", "value" );
+        final Map<String, ICacheElement<String, String>> inputMap = new HashMap<>();
         inputMap.put( "key", inputElement );
 
-        Set<String> keys = new HashSet<>();
+        final Set<String> keys = new HashSet<>();
         keys.add( "key" );
 
         client.getMultipleSetupMap.put( keys, inputMap );
 
         // DO WORK
-        Map<String, ICacheElement<String, String>> result = noWait.getMultiple( keys );
+        final Map<String, ICacheElement<String, String>> result = noWait.getMultiple( keys );
 
         // VERIFY
         assertEquals( "elements map", inputMap, result );
@@ -122,10 +122,10 @@ public class RemoteCacheNoWaitUnitTest
         throws Exception
     {
         // SETUP
-        MockRemoteCacheClient<String, String> client = new MockRemoteCacheClient<>();
-        RemoteCacheNoWait<String, String> noWait = new RemoteCacheNoWait<>( client );
+        final MockRemoteCacheClient<String, String> client = new MockRemoteCacheClient<>();
+        final RemoteCacheNoWait<String, String> noWait = new RemoteCacheNoWait<>( client );
 
-        String input = "MyKey";
+        final String input = "MyKey";
 
         // DO WORK
         noWait.remove( input );
@@ -146,12 +146,12 @@ public class RemoteCacheNoWaitUnitTest
         throws Exception
     {
         // SETUP
-        MockRemoteCacheClient<String, String> client = new MockRemoteCacheClient<>();
+        final MockRemoteCacheClient<String, String> client = new MockRemoteCacheClient<>();
         client.status = CacheStatus.ALIVE;
-        RemoteCacheNoWait<String, String> noWait = new RemoteCacheNoWait<>( client );
+        final RemoteCacheNoWait<String, String> noWait = new RemoteCacheNoWait<>( client );
 
         // DO WORK
-        String result = noWait.getStats();
+        final String result = noWait.getStats();
 
         // VERIFY
         assertTrue( "Status should contain 'ALIVE'", result.indexOf( "ALIVE" ) != -1 );
@@ -166,12 +166,12 @@ public class RemoteCacheNoWaitUnitTest
         throws Exception
     {
         // SETUP
-        MockRemoteCacheClient<String, String> client = new MockRemoteCacheClient<>();
+        final MockRemoteCacheClient<String, String> client = new MockRemoteCacheClient<>();
         client.status = CacheStatus.ERROR;
-        RemoteCacheNoWait<String, String> noWait = new RemoteCacheNoWait<>( client );
+        final RemoteCacheNoWait<String, String> noWait = new RemoteCacheNoWait<>( client );
 
         // DO WORK
-        CacheStatus result = noWait.getStatus();
+        final CacheStatus result = noWait.getStatus();
 
         // VERIFY
         assertEquals( "Wrong status", CacheStatus.ERROR, result );
@@ -187,13 +187,13 @@ public class RemoteCacheNoWaitUnitTest
         throws Exception
     {
         // SETUP
-        MockRemoteCacheClient<String, String> client = new MockRemoteCacheClient<>();
+        final MockRemoteCacheClient<String, String> client = new MockRemoteCacheClient<>();
         client.status = CacheStatus.ALIVE;
-        RemoteCacheNoWait<String, String> noWait = new RemoteCacheNoWait<>( client );
+        final RemoteCacheNoWait<String, String> noWait = new RemoteCacheNoWait<>( client );
 
-        MockRemoteCacheService<String, String> service = new MockRemoteCacheService<>();
+        final MockRemoteCacheService<String, String> service = new MockRemoteCacheService<>();
 
-        ICacheElement<String, String> element = new CacheElement<>( "testUpdate", "key", "value" );
+        final ICacheElement<String, String> element = new CacheElement<>( "testUpdate", "key", "value" );
 
         // DO WORK
         noWait.update( element );

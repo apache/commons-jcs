@@ -80,12 +80,12 @@ public class RemoteUtils
             registry = LocateRegistry.createRegistry(port);
             log.info("createRegistry> Created the registry on port {0}", port);
         }
-        catch (RemoteException e)
+        catch (final RemoteException e)
         {
             log.warn("createRegistry> Problem creating registry. It may already be started.",
                     e);
         }
-        catch (Throwable t)
+        catch (final Throwable t)
         {
             log.error("createRegistry> Problem creating registry.", t);
         }
@@ -96,7 +96,7 @@ public class RemoteUtils
             {
                 registry = LocateRegistry.getRegistry(port);
             }
-            catch (RemoteException e)
+            catch (final RemoteException e)
             {
                 log.error("createRegistry> Problem getting a registry reference.", e);
             }
@@ -114,7 +114,7 @@ public class RemoteUtils
      * @return The properties object for the file
      * @throws IOException
      */
-    public static Properties loadProps(String propFile)
+    public static Properties loadProps(final String propFile)
             throws IOException
     {
         InputStream is = RemoteUtils.class.getResourceAsStream(propFile);
@@ -142,7 +142,7 @@ public class RemoteUtils
             }
         }
 
-        Properties props = new Properties();
+        final Properties props = new Properties();
         try
         {
             props.load(is);
@@ -150,14 +150,14 @@ public class RemoteUtils
 
             if (log.isTraceEnabled())
             {
-                StringBuilder buf = new StringBuilder();
+                final StringBuilder buf = new StringBuilder();
                 props.forEach((key, value)
                         -> buf.append('\n').append(key).append(" = ").append(value));
                 log.trace(buf.toString());
             }
 
         }
-        catch (IOException ex)
+        catch (final IOException ex)
         {
             log.error("Error loading remote properties, for file name "
                     + "[{0}]", propFile, ex);
@@ -194,10 +194,10 @@ public class RemoteUtils
                 RMISocketFactory.setSocketFactory(new RMISocketFactory()
                 {
                     @Override
-                    public Socket createSocket(String host, int port)
+                    public Socket createSocket(final String host, final int port)
                             throws IOException
                     {
-                        Socket socket = new Socket();
+                        final Socket socket = new Socket();
                         socket.setSoTimeout(timeoutMillis);
                         socket.setSoLinger(false, 0);
                         socket.connect(new InetSocketAddress(host, port), timeoutMillis);
@@ -205,7 +205,7 @@ public class RemoteUtils
                     }
 
                     @Override
-                    public ServerSocket createServerSocket(int port)
+                    public ServerSocket createServerSocket(final int port)
                             throws IOException
                     {
                         return new ServerSocket(port);
@@ -213,11 +213,11 @@ public class RemoteUtils
                 });
             }
         }
-        catch (IOException e)
+        catch (final IOException e)
         {
             // Only try to do it once. Otherwise we
             // Generate errors for each region on construction.
-            RMISocketFactory factoryInUse = RMISocketFactory.getSocketFactory();
+            final RMISocketFactory factoryInUse = RMISocketFactory.getSocketFactory();
             if (factoryInUse != null && !factoryInUse.getClass().getName().startsWith("org.apache.commons.jcs3"))
             {
                 log.info("Could not create new custom socket factory. {0} Factory in use = {1}",

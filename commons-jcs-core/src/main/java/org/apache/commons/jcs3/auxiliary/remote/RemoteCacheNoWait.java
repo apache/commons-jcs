@@ -96,7 +96,7 @@ public class RemoteCacheNoWait<K, V>
      * <p>
      * @param cache
      */
-    public RemoteCacheNoWait( IRemoteCacheClient<K, V> cache )
+    public RemoteCacheNoWait( final IRemoteCacheClient<K, V> cache )
     {
         remoteCacheClient = cache;
         this.cacheEventQueue = createCacheEventQueue(cache);
@@ -111,10 +111,10 @@ public class RemoteCacheNoWait<K, V>
      * Create a cache event queue from the parameters of the remote client
      * @param client the remote client
      */
-    private ICacheEventQueue<K, V> createCacheEventQueue( IRemoteCacheClient<K, V> client )
+    private ICacheEventQueue<K, V> createCacheEventQueue( final IRemoteCacheClient<K, V> client )
     {
-        CacheEventQueueFactory<K, V> factory = new CacheEventQueueFactory<>();
-        ICacheEventQueue<K, V> ceq = factory.createCacheEventQueue(
+        final CacheEventQueueFactory<K, V> factory = new CacheEventQueueFactory<>();
+        final ICacheEventQueue<K, V> ceq = factory.createCacheEventQueue(
             new CacheAdaptor<>( client ),
             client.getListenerId(),
             client.getCacheName(),
@@ -130,7 +130,7 @@ public class RemoteCacheNoWait<K, V>
      * @throws IOException
      */
     @Override
-    public void update( ICacheElement<K, V> element )
+    public void update( final ICacheElement<K, V> element )
         throws IOException
     {
         putCount++;
@@ -138,7 +138,7 @@ public class RemoteCacheNoWait<K, V>
         {
             cacheEventQueue.addPutEvent( element );
         }
-        catch ( IOException e )
+        catch ( final IOException e )
         {
             log.error( "Problem adding putEvent to queue.", e );
             cacheEventQueue.destroy();
@@ -154,7 +154,7 @@ public class RemoteCacheNoWait<K, V>
      * @throws IOException
      */
     @Override
-    public ICacheElement<K, V> get( K key )
+    public ICacheElement<K, V> get( final K key )
         throws IOException
     {
         getCount++;
@@ -162,7 +162,7 @@ public class RemoteCacheNoWait<K, V>
         {
             return remoteCacheClient.get( key );
         }
-        catch ( UnmarshalException ue )
+        catch ( final UnmarshalException ue )
         {
             log.debug( "Retrying the get owing to UnmarshalException." );
 
@@ -170,12 +170,12 @@ public class RemoteCacheNoWait<K, V>
             {
                 return remoteCacheClient.get( key );
             }
-            catch ( IOException ex )
+            catch ( final IOException ex )
             {
                 log.info( "Failed in retrying the get for the second time. ", ex );
             }
         }
-        catch ( IOException ex )
+        catch ( final IOException ex )
         {
             // We don't want to destroy the queue on a get failure.
             // The RemoteCache will Zombie and queue.
@@ -193,7 +193,7 @@ public class RemoteCacheNoWait<K, V>
      *
      */
     @Override
-    public Map<K, ICacheElement<K, V>> getMatching( String pattern )
+    public Map<K, ICacheElement<K, V>> getMatching( final String pattern )
         throws IOException
     {
         getMatchingCount++;
@@ -201,7 +201,7 @@ public class RemoteCacheNoWait<K, V>
         {
             return remoteCacheClient.getMatching( pattern );
         }
-        catch ( UnmarshalException ue )
+        catch ( final UnmarshalException ue )
         {
             log.debug( "Retrying the getMatching owing to UnmarshalException." );
 
@@ -209,12 +209,12 @@ public class RemoteCacheNoWait<K, V>
             {
                 return remoteCacheClient.getMatching( pattern );
             }
-            catch ( IOException ex )
+            catch ( final IOException ex )
             {
                 log.info( "Failed in retrying the getMatching for the second time.", ex );
             }
         }
-        catch ( IOException ex )
+        catch ( final IOException ex )
         {
             // We don't want to destroy the queue on a get failure.
             // The RemoteCache will Zombie and queue.
@@ -235,7 +235,7 @@ public class RemoteCacheNoWait<K, V>
      * @throws IOException
      */
     @Override
-    public Map<K, ICacheElement<K, V>> getMultiple( Set<K> keys )
+    public Map<K, ICacheElement<K, V>> getMultiple( final Set<K> keys )
         throws IOException
     {
         getMultipleCount++;
@@ -243,7 +243,7 @@ public class RemoteCacheNoWait<K, V>
         {
             return remoteCacheClient.getMultiple( keys );
         }
-        catch ( UnmarshalException ue )
+        catch ( final UnmarshalException ue )
         {
             log.debug( "Retrying the getMultiple owing to UnmarshalException..." );
 
@@ -251,12 +251,12 @@ public class RemoteCacheNoWait<K, V>
             {
                 return remoteCacheClient.getMultiple( keys );
             }
-            catch ( IOException ex )
+            catch ( final IOException ex )
             {
                 log.info( "Failed in retrying the getMultiple for the second time.", ex );
             }
         }
-        catch ( IOException ex )
+        catch ( final IOException ex )
         {
             // We don't want to destroy the queue on a get failure.
             // The RemoteCache will Zombie and queue.
@@ -286,7 +286,7 @@ public class RemoteCacheNoWait<K, V>
      * @throws IOException
      */
     @Override
-    public boolean remove( K key )
+    public boolean remove( final K key )
         throws IOException
     {
         removeCount++;
@@ -294,7 +294,7 @@ public class RemoteCacheNoWait<K, V>
         {
             cacheEventQueue.addRemoveEvent( key );
         }
-        catch ( IOException e )
+        catch ( final IOException e )
         {
             log.error( "Problem adding RemoveEvent to queue.", e );
             cacheEventQueue.destroy();
@@ -316,7 +316,7 @@ public class RemoteCacheNoWait<K, V>
         {
             cacheEventQueue.addRemoveAllEvent();
         }
-        catch ( IOException e )
+        catch ( final IOException e )
         {
             log.error( "Problem adding RemoveAllEvent to queue.", e );
             cacheEventQueue.destroy();
@@ -332,7 +332,7 @@ public class RemoteCacheNoWait<K, V>
         {
             cacheEventQueue.addDisposeEvent();
         }
-        catch ( IOException e )
+        catch ( final IOException e )
         {
             log.error( "Problem adding DisposeEvent to queue.", e );
             cacheEventQueue.destroy();
@@ -390,7 +390,7 @@ public class RemoteCacheNoWait<K, V>
      * <p>
      * @param remote
      */
-    public void fixCache( ICacheServiceNonLocal<?, ?> remote )
+    public void fixCache( final ICacheServiceNonLocal<?, ?> remote )
     {
         remoteCacheClient.fixCache( remote );
         resetEventQ();
@@ -405,7 +405,7 @@ public class RemoteCacheNoWait<K, V>
      */
     public void resetEventQ()
     {
-        ICacheEventQueue<K, V> previousQueue = cacheEventQueue;
+        final ICacheEventQueue<K, V> previousQueue = cacheEventQueue;
 
         this.cacheEventQueue = createCacheEventQueue(this.remoteCacheClient);
 
@@ -475,22 +475,22 @@ public class RemoteCacheNoWait<K, V>
     @Override
     public IStats getStatistics()
     {
-        IStats stats = new Stats();
+        final IStats stats = new Stats();
         stats.setTypeName( "Remote Cache No Wait" );
 
-        ArrayList<IStatElement<?>> elems = new ArrayList<>();
+        final ArrayList<IStatElement<?>> elems = new ArrayList<>();
 
         elems.add(new StatElement<>( "Status", getStatus() ) );
 
         // get the stats from the cache queue too
-        IStats cStats = this.remoteCacheClient.getStatistics();
+        final IStats cStats = this.remoteCacheClient.getStatistics();
         if ( cStats != null )
         {
             elems.addAll(cStats.getStatElements());
         }
 
         // get the stats from the event queue too
-        IStats eqStats = this.cacheEventQueue.getStatistics();
+        final IStats eqStats = this.cacheEventQueue.getStatistics();
         elems.addAll(eqStats.getStatElements());
 
         elems.add(new StatElement<>( "Get Count", Integer.valueOf(this.getCount) ) );

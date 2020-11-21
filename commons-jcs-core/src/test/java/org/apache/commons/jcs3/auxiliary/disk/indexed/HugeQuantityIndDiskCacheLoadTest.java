@@ -48,10 +48,10 @@ public class HugeQuantityIndDiskCacheLoadTest
     public void testLargeNumberOfItems()
         throws Exception
     {
-        int items = 300000;
-        String region = "testCache1";
+        final int items = 300000;
+        final String region = "testCache1";
 
-        CacheAccess<String, String> jcs = JCS.getInstance( region );
+        final CacheAccess<String, String> jcs = JCS.getInstance( region );
 
         try
         {
@@ -78,7 +78,7 @@ public class HugeQuantityIndDiskCacheLoadTest
 
             for ( int i = 0; i <= items; i++ )
             {
-                String value = jcs.get( i + ":key" );
+                final String value = jcs.get( i + ":key" );
 
                 assertEquals( region + " data " + i, value );
             }

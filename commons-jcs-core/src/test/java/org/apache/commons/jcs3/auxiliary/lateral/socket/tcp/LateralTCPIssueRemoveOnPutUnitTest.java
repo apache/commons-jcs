@@ -46,7 +46,7 @@ public class LateralTCPIssueRemoveOnPutUnitTest
      * <p>
      * @param testName
      */
-    public LateralTCPIssueRemoveOnPutUnitTest( String testName )
+    public LateralTCPIssueRemoveOnPutUnitTest( final String testName )
     {
         super( testName );
     }
@@ -80,13 +80,13 @@ public class LateralTCPIssueRemoveOnPutUnitTest
     public void testStandardPut()
         throws Exception
     {
-        String region = "region1";
+        final String region = "region1";
 
-        CacheAccess<String, String> cache = JCS.getInstance( region );
+        final CacheAccess<String, String> cache = JCS.getInstance( region );
 
         Thread.sleep( 100 );
 
-        TCPLateralCacheAttributes lattr2 = new TCPLateralCacheAttributes();
+        final TCPLateralCacheAttributes lattr2 = new TCPLateralCacheAttributes();
         lattr2.setTcpListenerPort( 1102 );
         lattr2.setTransmissionTypeName( "TCP" );
         lattr2.setTcpServer( "localhost:" + serverPort );
@@ -97,18 +97,18 @@ public class LateralTCPIssueRemoveOnPutUnitTest
         // Using the lateral, this service will put to and remove from
         // the cache instance above.
         // The cache thinks it is different since the listenerid is different
-        LateralTCPService<String, String> service = new LateralTCPService<>( lattr2 );
+        final LateralTCPService<String, String> service = new LateralTCPService<>( lattr2 );
         service.setListenerId( 123456 );
 
-        String keyToBeRemovedOnPut = "test1_notremoved";
+        final String keyToBeRemovedOnPut = "test1_notremoved";
 
-        ICacheElement<String, String> element1 = new CacheElement<>( region, keyToBeRemovedOnPut, region
+        final ICacheElement<String, String> element1 = new CacheElement<>( region, keyToBeRemovedOnPut, region
             + ":data-this shouldn't get removed, it should get to the cache." );
         service.update( element1 );
 
         Thread.sleep( 1000 );
 
-        Object testObj = cache.get( keyToBeRemovedOnPut );
+        final Object testObj = cache.get( keyToBeRemovedOnPut );
         p( "testStandardPut, test object = " + testObj );
         assertNotNull( "The test object should not have been removed by a put.", testObj );
     }
@@ -123,17 +123,17 @@ public class LateralTCPIssueRemoveOnPutUnitTest
      * @param testNum
      * @throws Exception If an error occurs
      */
-    public void runTestForRegion( String region, int range, int numOps, int testNum )
+    public void runTestForRegion( final String region, final int range, final int numOps, final int testNum )
         throws Exception
     {
 
-        boolean show = false;
+        final boolean show = false;
 
-        CacheAccess<String, String> cache = JCS.getInstance( region );
+        final CacheAccess<String, String> cache = JCS.getInstance( region );
 
         Thread.sleep( 100 );
 
-        TCPLateralCacheAttributes lattr2 = new TCPLateralCacheAttributes();
+        final TCPLateralCacheAttributes lattr2 = new TCPLateralCacheAttributes();
         lattr2.setTcpListenerPort( 1102 );
         lattr2.setTransmissionTypeName( "TCP" );
         lattr2.setTcpServer( "localhost:" + serverPort );
@@ -144,13 +144,13 @@ public class LateralTCPIssueRemoveOnPutUnitTest
         // Using the lateral, this service will put to and remove from
         // the cache instance above.
         // The cache thinks it is different since the listenerid is different
-        LateralTCPService<String, String> service = new LateralTCPService<>( lattr2 );
+        final LateralTCPService<String, String> service = new LateralTCPService<>( lattr2 );
         service.setListenerId( 123456 );
 
-        String keyToBeRemovedOnPut = "test1";
+        final String keyToBeRemovedOnPut = "test1";
         cache.put( keyToBeRemovedOnPut, "this should get removed." );
 
-        ICacheElement<String, String> element1 = new CacheElement<>( region, keyToBeRemovedOnPut, region
+        final ICacheElement<String, String> element1 = new CacheElement<>( region, keyToBeRemovedOnPut, region
             + ":data-this shouldn't get there" );
         service.update( element1 );
 
@@ -158,12 +158,12 @@ public class LateralTCPIssueRemoveOnPutUnitTest
         {
             for ( int i = 1; i < numOps; i++ )
             {
-                Random ran = new Random( i );
-                int n = ran.nextInt( 4 );
-                int kn = ran.nextInt( range );
-                String key = "key" + kn;
+                final Random ran = new Random( i );
+                final int n = ran.nextInt( 4 );
+                final int kn = ran.nextInt( range );
+                final String key = "key" + kn;
 
-                ICacheElement<String, String> element = new CacheElement<>( region, key, region + ":data" + i
+                final ICacheElement<String, String> element = new CacheElement<>( region, key, region + ":data" + i
                     + " junk asdfffffffadfasdfasf " + kn + ":" + n );
                 service.update( element );
                 if ( show )
@@ -179,25 +179,25 @@ public class LateralTCPIssueRemoveOnPutUnitTest
             }
             p( "Finished cycle of " + numOps );
         }
-        catch ( Exception e )
+        catch ( final Exception e )
         {
             p( e.toString() );
             e.printStackTrace( System.out );
             throw e;
         }
 
-        CacheAccess<String, String> jcs = JCS.getInstance( region );
-        String key = "testKey" + testNum;
-        String data = "testData" + testNum;
+        final CacheAccess<String, String> jcs = JCS.getInstance( region );
+        final String key = "testKey" + testNum;
+        final String data = "testData" + testNum;
         jcs.put( key, data );
-        String value = jcs.get( key );
+        final String value = jcs.get( key );
         assertEquals( "Couldn't put normally.", data, value );
 
         // make sure the items we can find are in the correct region.
         for ( int i = 1; i < numOps; i++ )
         {
-            String keyL = "key" + i;
-            String dataL = jcs.get( keyL );
+            final String keyL = "key" + i;
+            final String dataL = jcs.get( keyL );
             if ( dataL != null )
             {
                 assertTrue( "Incorrect region detected.", dataL.startsWith( region ) );
@@ -207,7 +207,7 @@ public class LateralTCPIssueRemoveOnPutUnitTest
 
         Thread.sleep( 200 );
 
-        Object testObj = cache.get( keyToBeRemovedOnPut );
+        final Object testObj = cache.get( keyToBeRemovedOnPut );
         p( "runTestForRegion, test object = " + testObj );
         assertNull( "The test object should have been removed by a put.", testObj );
 
@@ -216,7 +216,7 @@ public class LateralTCPIssueRemoveOnPutUnitTest
     /**
      * @param s String to be printed
      */
-    public static void p( String s )
+    public static void p( final String s )
     {
         if ( isSysOut )
         {

@@ -108,7 +108,7 @@ public class MockRemoteCacheListener<K, V>
      * @throws IOException
      */
     @Override
-    public void setListenerId( long id )
+    public void setListenerId( final long id )
         throws IOException
     {
         listenerId = id;
@@ -119,7 +119,7 @@ public class MockRemoteCacheListener<K, V>
      * @throws IOException
      */
     @Override
-    public void handleDispose( String cacheName )
+    public void handleDispose( final String cacheName )
         throws IOException
     {
         // TODO Auto-generated method stub
@@ -133,7 +133,7 @@ public class MockRemoteCacheListener<K, V>
      * @throws IOException
      */
     @Override
-    public void handlePut( ICacheElement<K, V> item )
+    public void handlePut( final ICacheElement<K, V> item )
         throws IOException
     {
         putCount++;
@@ -148,7 +148,7 @@ public class MockRemoteCacheListener<K, V>
      * @throws IOException
      */
     @Override
-    public void handleRemove( String cacheName, K key )
+    public void handleRemove( final String cacheName, final K key )
         throws IOException
     {
         removeCount++;
@@ -160,7 +160,7 @@ public class MockRemoteCacheListener<K, V>
      * @throws IOException
      */
     @Override
-    public void handleRemoveAll( String cacheName )
+    public void handleRemoveAll( final String cacheName )
         throws IOException
     {
         // TODO Auto-generated method stub

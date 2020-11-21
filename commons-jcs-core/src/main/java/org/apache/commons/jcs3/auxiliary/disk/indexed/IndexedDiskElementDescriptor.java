@@ -43,7 +43,7 @@ public class IndexedDiskElementDescriptor
      * @param pos
      * @param len
      */
-    public IndexedDiskElementDescriptor( long pos, int len )
+    public IndexedDiskElementDescriptor( final long pos, final int len )
     {
         this.pos = pos;
         this.len = len;
@@ -55,7 +55,7 @@ public class IndexedDiskElementDescriptor
     @Override
     public String toString()
     {
-        StringBuilder buf = new StringBuilder();
+        final StringBuilder buf = new StringBuilder();
         buf.append( "[DED: " );
         buf.append( " pos = " + pos );
         buf.append( " len = " + len );
@@ -76,7 +76,7 @@ public class IndexedDiskElementDescriptor
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
-    public boolean equals(Object o)
+    public boolean equals(final Object o)
     {
     	if (o == null)
     	{
@@ -84,7 +84,7 @@ public class IndexedDiskElementDescriptor
     	}
     	else if (o instanceof IndexedDiskElementDescriptor)
         {
-    		IndexedDiskElementDescriptor ided = (IndexedDiskElementDescriptor)o;
+    		final IndexedDiskElementDescriptor ided = (IndexedDiskElementDescriptor)o;
             return pos == ided.pos && len == ided.len;
         }
 
@@ -98,7 +98,7 @@ public class IndexedDiskElementDescriptor
      * @return int
      */
     @Override
-    public int compareTo( IndexedDiskElementDescriptor o )
+    public int compareTo( final IndexedDiskElementDescriptor o )
     {
         if ( o == null )
         {

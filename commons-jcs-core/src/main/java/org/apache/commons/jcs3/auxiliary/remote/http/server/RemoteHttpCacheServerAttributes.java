@@ -52,7 +52,7 @@ public class RemoteHttpCacheServerAttributes
      * <p>
      * @param r The new localClusterConsistency value
      */
-    public void setLocalClusterConsistency( boolean r )
+    public void setLocalClusterConsistency( final boolean r )
     {
         this.localClusterConsistency = r;
     }
@@ -72,7 +72,7 @@ public class RemoteHttpCacheServerAttributes
      * <p>
      * @param r The new localClusterConsistency value
      */
-    public void setAllowClusterGet( boolean r )
+    public void setAllowClusterGet( final boolean r )
     {
         allowClusterGet = r;
     }
@@ -83,7 +83,7 @@ public class RemoteHttpCacheServerAttributes
     @Override
     public String toString()
     {
-        StringBuilder buf = new StringBuilder();
+        final StringBuilder buf = new StringBuilder();
         buf.append( "\nRemoteHttpCacheServiceAttributes" );
         buf.append( "\n cacheName = [" + this.getCacheName() + "]" );
         buf.append( "\n allowClusterGet = [" + this.isAllowClusterGet() + "]" );

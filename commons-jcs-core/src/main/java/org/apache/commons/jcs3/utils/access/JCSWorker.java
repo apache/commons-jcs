@@ -125,7 +125,7 @@ public class JCSWorker<K, V>
             cache = JCS.getInstance( aRegion );
             groupCache = JCS.getGroupCacheInstance( aRegion );
         }
-        catch ( CacheException e )
+        catch ( final CacheException e )
         {
             throw new RuntimeException( e.getMessage() );
         }
@@ -157,7 +157,7 @@ public class JCSWorker<K, V>
      *             Throws an exception if anything goes wrong while doing the
      *             work.
      */
-    public V getResult( K aKey, JCSWorkerHelper<V> aWorker )
+    public V getResult( final K aKey, final JCSWorkerHelper<V> aWorker )
         throws Exception
     {
         return run( aKey, null, aWorker );
@@ -182,7 +182,7 @@ public class JCSWorker<K, V>
      *             Throws an exception if anything goes wrong while doing the
      *             work.
      */
-    public V getResult( K aKey, String aGroup, JCSWorkerHelper<V> aWorker )
+    public V getResult( final K aKey, final String aGroup, final JCSWorkerHelper<V> aWorker )
         throws Exception
     {
         return run( aKey, aGroup, aWorker );
@@ -202,13 +202,13 @@ public class JCSWorker<K, V>
      *             If something goes wrong while doing the work, throw an
      *             exception.
      */
-    private V run( K aKey, String aGroup, JCSWorkerHelper<V> aHelper )
+    private V run( final K aKey, final String aGroup, final JCSWorkerHelper<V> aHelper )
         throws Exception
     {
         V result = null;
         // long start = 0;
         // long dbTime = 0;
-        JCSWorkerHelper<V> helper = map.putIfAbsent(getRegion() + aKey, aHelper);
+        final JCSWorkerHelper<V> helper = map.putIfAbsent(getRegion() + aKey, aHelper);
 
         if ( helper != null )
         {
@@ -222,7 +222,7 @@ public class JCSWorker<K, V>
                     {
                         helper.wait();
                     }
-                    catch (InterruptedException e)
+                    catch (final InterruptedException e)
                     {
                         // expected
                     }

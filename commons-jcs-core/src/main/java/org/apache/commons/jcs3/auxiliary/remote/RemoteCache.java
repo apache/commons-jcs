@@ -63,10 +63,10 @@ public class RemoteCache<K, V>
      * @param listener a listener
      * @param monitor the cache monitor
      */
-    public RemoteCache( IRemoteCacheAttributes cattr,
-        ICacheServiceNonLocal<K, V> remote,
-        IRemoteCacheListener<K, V> listener,
-        RemoteCacheMonitor monitor )
+    public RemoteCache( final IRemoteCacheAttributes cattr,
+        final ICacheServiceNonLocal<K, V> remote,
+        final IRemoteCacheListener<K, V> listener,
+        final RemoteCacheMonitor monitor )
     {
         super( cattr, remote, listener );
         this.monitor = monitor;
@@ -80,10 +80,10 @@ public class RemoteCache<K, V>
     @Override
     public IStats getStatistics()
     {
-        IStats stats = new Stats();
+        final IStats stats = new Stats();
         stats.setTypeName( "Remote Cache" );
 
-        ArrayList<IStatElement<?>> elems = new ArrayList<>();
+        final ArrayList<IStatElement<?>> elems = new ArrayList<>();
 
         elems.add(new StatElement<>( "Remote Host:Port", getIPAddressForService() ) );
         elems.add(new StatElement<>( "Remote Type", this.getRemoteCacheAttributes().getRemoteTypeName() ) );
@@ -94,7 +94,7 @@ public class RemoteCache<K, V>
 //      }
 
         // get the stats from the super too
-        IStats sStats = super.getStatistics();
+        final IStats sStats = super.getStatistics();
         elems.addAll(sStats.getStatElements());
 
         stats.setStatElements( elems );
@@ -107,7 +107,7 @@ public class RemoteCache<K, V>
      *
      * @param facade the facade to set
      */
-    protected void setFacade(AbstractRemoteCacheNoWaitFacade<K, V> facade)
+    protected void setFacade(final AbstractRemoteCacheNoWaitFacade<K, V> facade)
     {
         this.facade = facade;
     }
@@ -132,10 +132,10 @@ public class RemoteCache<K, V>
      * @throws IOException
      */
     @Override
-    protected void handleException( Exception ex, String msg, String eventName )
+    protected void handleException( final Exception ex, final String msg, final String eventName )
         throws IOException
     {
-        String message = "Disabling remote cache due to error: " + msg;
+        final String message = "Disabling remote cache due to error: " + msg;
 
         logError( cacheName, "", message );
         log.error( message, ex );

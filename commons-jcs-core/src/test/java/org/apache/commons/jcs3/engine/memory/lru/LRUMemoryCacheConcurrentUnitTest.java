@@ -50,7 +50,7 @@ public class LRUMemoryCacheConcurrentUnitTest
      * <p>
      * @param testName
      */
-    public LRUMemoryCacheConcurrentUnitTest( String testName )
+    public LRUMemoryCacheConcurrentUnitTest( final String testName )
     {
         super( testName );
     }
@@ -60,9 +60,9 @@ public class LRUMemoryCacheConcurrentUnitTest
      * <p>
      * @param args
      */
-    public static void main( String args[] )
+    public static void main( final String args[] )
     {
-        String[] testCaseName = { LRUMemoryCacheConcurrentUnitTest.class.getName() };
+        final String[] testCaseName = { LRUMemoryCacheConcurrentUnitTest.class.getName() };
         junit.textui.TestRunner.main( testCaseName );
     }
 
@@ -73,7 +73,7 @@ public class LRUMemoryCacheConcurrentUnitTest
      */
     public static Test suite()
     {
-        ActiveTestSuite suite = new ActiveTestSuite();
+        final ActiveTestSuite suite = new ActiveTestSuite();
 
         suite.addTest( new LRUMemoryCacheConcurrentUnitTest( "testLRUMemoryCache" )
         {
@@ -106,21 +106,21 @@ public class LRUMemoryCacheConcurrentUnitTest
      * @throws Exception
      *                If an error occurs
      */
-    public void runTestForRegion( String region )
+    public void runTestForRegion( final String region )
         throws Exception
     {
-        CompositeCacheManager cacheMgr = CompositeCacheManager.getUnconfiguredInstance();
+        final CompositeCacheManager cacheMgr = CompositeCacheManager.getUnconfiguredInstance();
         cacheMgr.configure( "/TestDiskCache.ccf" );
-        CompositeCache<String, String> cache = cacheMgr.getCache( region );
+        final CompositeCache<String, String> cache = cacheMgr.getCache( region );
 
-        LRUMemoryCache<String, String> lru = new LRUMemoryCache<>();
+        final LRUMemoryCache<String, String> lru = new LRUMemoryCache<>();
         lru.initialize( cache );
 
         // Add items to cache
 
         for ( int i = 0; i < items; i++ )
         {
-            ICacheElement<String, String> ice = new CacheElement<>( cache.getCacheName(), i + ":key", region + " data " + i );
+            final ICacheElement<String, String> ice = new CacheElement<>( cache.getCacheName(), i + ":key", region + " data " + i );
             ice.setElementAttributes( cache.getElementAttributes() );
             lru.update( ice );
         }
@@ -134,25 +134,25 @@ public class LRUMemoryCacheConcurrentUnitTest
         // Test that last items are in cache
         for ( int i = 100; i < items; i++ )
         {
-            String value = lru.get( i + ":key" ).getVal();
+            final String value = lru.get( i + ":key" ).getVal();
             assertEquals( region + " data " + i, value );
         }
 
         // Test that getMultiple returns all the items remaining in cache and none of the missing ones
-        Set<String> keys = new HashSet<>();
+        final Set<String> keys = new HashSet<>();
         for ( int i = 0; i < items; i++ )
         {
             keys.add( i + ":key" );
         }
 
-        Map<String, ICacheElement<String, String>> elements = lru.getMultiple( keys );
+        final Map<String, ICacheElement<String, String>> elements = lru.getMultiple( keys );
         for ( int i = 0; i < 100; i++ )
         {
             assertNull( "Should not have " + i + ":key", elements.get( i + ":key" ) );
         }
         for ( int i = 100; i < items; i++ )
         {
-            ICacheElement<String, String> element = elements.get( i + ":key" );
+            final ICacheElement<String, String> element = elements.get( i + ":key" );
             assertNotNull( "element " + i + ":key is missing", element );
             assertEquals( "value " + i + ":key", region + " data " + i, element.getVal() );
         }

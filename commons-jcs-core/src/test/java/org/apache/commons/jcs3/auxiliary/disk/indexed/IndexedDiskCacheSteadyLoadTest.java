@@ -61,16 +61,16 @@ public class IndexedDiskCacheSteadyLoadTest
 
         logMemoryUsage();
 
-        int numPerRun = 200;
-        long pauseBetweenRuns = 1000;
+        final int numPerRun = 200;
+        final long pauseBetweenRuns = 1000;
         int runCount = 0;
-        int runs = 1000;
-        int upperKB = 50;
+        final int runs = 1000;
+        final int upperKB = 50;
 
-        CacheAccess<String, DiskTestObject> jcs = JCS.getInstance( ( numPerRun / 2 ) + "aSecond" );
+        final CacheAccess<String, DiskTestObject> jcs = JCS.getInstance( ( numPerRun / 2 ) + "aSecond" );
 
-        ElapsedTimer timer = new ElapsedTimer();
-        int numToGet = numPerRun * ( runs / 10 );
+        final ElapsedTimer timer = new ElapsedTimer();
+        final int numToGet = numPerRun * ( runs / 10 );
         for ( int i = 0; i < numToGet; i++ )
         {
             jcs.get( String.valueOf( i ) );
@@ -88,18 +88,18 @@ public class IndexedDiskCacheSteadyLoadTest
         long totalSize = 0;
         int totalPut = 0;
 
-        Random random = new Random( 89 );
+        final Random random = new Random( 89 );
         while ( runCount < runs )
         {
             runCount++;
             for ( int i = 0; i < numPerRun; i++ )
             {
                 // 1/2 upper to upperKB-4 KB
-                int kiloBytes = Math.max( upperKB / 2, random.nextInt( upperKB ) );
-                int bytes = ( kiloBytes ) * 1024;
+                final int kiloBytes = Math.max( upperKB / 2, random.nextInt( upperKB ) );
+                final int bytes = ( kiloBytes ) * 1024;
                 totalSize += bytes;
                 totalPut++;
-                DiskTestObject object = new DiskTestObject( Integer.valueOf( i ), new byte[bytes] );
+                final DiskTestObject object = new DiskTestObject( Integer.valueOf( i ), new byte[bytes] );
                 jcs.put( String.valueOf( totalPut ), object );
             }
 
@@ -143,10 +143,10 @@ public class IndexedDiskCacheSteadyLoadTest
      */
     private static void logMemoryUsage()
     {
-        long byte2MB = 1024 * 1024;
-        long total = rt.totalMemory() / byte2MB;
-        long free = rt.freeMemory() / byte2MB;
-        long used = total - free;
+        final long byte2MB = 1024 * 1024;
+        final long total = rt.totalMemory() / byte2MB;
+        final long free = rt.freeMemory() / byte2MB;
+        final long used = total - free;
         System.out.println( LOG_DIVIDER );
         System.out.println( "Memory:" + " Used:" + format.format( used ) + "MB" + " Free:" + format.format( free )
             + "MB" + " Total:" + format.format( total ) + "MB" );

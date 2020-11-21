@@ -35,7 +35,7 @@ public class HostNameUtilUnitTest
     public void testGetLocalHostAddress_Simple() throws UnknownHostException
     {
         // DO WORK
-        String result = HostNameUtil.getLocalHostAddress();
+        final String result = HostNameUtil.getLocalHostAddress();
 
         // VERIFY
         //System.out.print( result );

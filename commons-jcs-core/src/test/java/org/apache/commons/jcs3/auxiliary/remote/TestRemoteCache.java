@@ -53,11 +53,11 @@ public class TestRemoteCache
         {
             System.out.println( "main> creating registry on the localhost" );
             RemoteUtils.createRegistry( 1101 );
-            Properties config = RemoteUtils.loadProps("/TestRemoteServer.ccf");
+            final Properties config = RemoteUtils.loadProps("/TestRemoteServer.ccf");
 
             RemoteCacheServerFactory.startup( "localhost", 1101, config);
         }
-        catch ( Exception e )
+        catch ( final Exception e )
         {
             e.printStackTrace();
         }
@@ -82,7 +82,7 @@ public class TestRemoteCache
     {
         log.info( "testSimpleSend" );
 
-        CacheAccess<String, String> cache = JCS.getInstance( "testCache" );
+        final CacheAccess<String, String> cache = JCS.getInstance( "testCache" );
 
         log.info( "cache = " + cache );
 
@@ -104,22 +104,22 @@ public class TestRemoteCache
 
         Thread.sleep( 100 );
 
-        ICompositeCacheManager cacheMgr = new MockCompositeCacheManager();
+        final ICompositeCacheManager cacheMgr = new MockCompositeCacheManager();
 
-        RemoteCacheAttributes rca = new RemoteCacheAttributes();
+        final RemoteCacheAttributes rca = new RemoteCacheAttributes();
         rca.setRemoteLocation( "localhost", 1101 );
         rca.setCacheName( "testCache" );
 
-        RemoteCacheFactory factory = new RemoteCacheFactory();
+        final RemoteCacheFactory factory = new RemoteCacheFactory();
         factory.initialize();
-        RemoteCacheManager mgr = factory.getManager( rca, cacheMgr, new MockCacheEventLogger(), new MockElementSerializer() );
-        AuxiliaryCache<String, String> cache = mgr.getCache( rca );
+        final RemoteCacheManager mgr = factory.getManager( rca, cacheMgr, new MockCacheEventLogger(), new MockElementSerializer() );
+        final AuxiliaryCache<String, String> cache = mgr.getCache( rca );
 
-        int numMes = 100;
+        final int numMes = 100;
         for ( int i = 0; i < numMes; i++ )
         {
-            String message = "adsfasasfasfasdasf";
-            CacheElement<String, String> ce = new CacheElement<>( "key" + 1, "data" + i, message );
+            final String message = "adsfasasfasfasdasf";
+            final CacheElement<String, String> ce = new CacheElement<>( "key" + 1, "data" + i, message );
             cache.update( ce );
 //            System.out.println( "put " + ce );
         }

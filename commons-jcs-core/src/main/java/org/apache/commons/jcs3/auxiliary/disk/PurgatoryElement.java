@@ -46,7 +46,7 @@ public class PurgatoryElement<K, V>
      *
      * @param cacheElement CacheElement
      */
-    public PurgatoryElement( ICacheElement<K, V> cacheElement )
+    public PurgatoryElement( final ICacheElement<K, V> cacheElement )
     {
         super(cacheElement.getCacheName(),
                 cacheElement.getKey(), cacheElement.getVal(),
@@ -69,7 +69,7 @@ public class PurgatoryElement<K, V>
      *
      * @param spoolable The new spoolable value
      */
-    public void setSpoolable( boolean spoolable )
+    public void setSpoolable( final boolean spoolable )
     {
         this.spoolable = spoolable;
     }
@@ -131,7 +131,7 @@ public class PurgatoryElement<K, V>
      * @see ICacheElement#setElementAttributes
      */
     @Override
-    public void setElementAttributes( IElementAttributes attr )
+    public void setElementAttributes( final IElementAttributes attr )
     {
         cacheElement.setElementAttributes( attr );
     }
@@ -142,7 +142,7 @@ public class PurgatoryElement<K, V>
     @Override
     public String toString()
     {
-        StringBuilder buf = new StringBuilder();
+        final StringBuilder buf = new StringBuilder();
         buf.append( "[PurgatoryElement: " );
         buf.append( " isSpoolable = " + isSpoolable() );
         buf.append( " CacheElement = " + getCacheElement() );

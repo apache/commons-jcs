@@ -66,7 +66,7 @@ public abstract class AbstractDiskCacheAttributes extends AbstractAuxiliaryCache
      *            The new diskPath value
      */
     @Override
-    public void setDiskPath(String path)
+    public void setDiskPath(final String path)
     {
         setDiskPath(new File(path));
     }
@@ -78,7 +78,7 @@ public abstract class AbstractDiskCacheAttributes extends AbstractAuxiliaryCache
      * @param diskPath
      *            The new diskPath value
      */
-    public void setDiskPath(File diskPath)
+    public void setDiskPath(final File diskPath)
     {
         this.diskPath = diskPath;
         boolean result = this.diskPath.isDirectory();
@@ -125,7 +125,7 @@ public abstract class AbstractDiskCacheAttributes extends AbstractAuxiliaryCache
      *            The new maxPurgatorySize value
      */
     @Override
-    public void setMaxPurgatorySize(int maxPurgatorySize)
+    public void setMaxPurgatorySize(final int maxPurgatorySize)
     {
         this.maxPurgatorySize = maxPurgatorySize;
     }
@@ -156,7 +156,7 @@ public abstract class AbstractDiskCacheAttributes extends AbstractAuxiliaryCache
      *            the time in seconds
      */
     @Override
-    public void setShutdownSpoolTimeLimit(int shutdownSpoolTimeLimit)
+    public void setShutdownSpoolTimeLimit(final int shutdownSpoolTimeLimit)
     {
         this.shutdownSpoolTimeLimit = shutdownSpoolTimeLimit;
     }
@@ -166,7 +166,7 @@ public abstract class AbstractDiskCacheAttributes extends AbstractAuxiliaryCache
      *            The allowRemoveAll to set.
      */
     @Override
-    public void setAllowRemoveAll(boolean allowRemoveAll)
+    public void setAllowRemoveAll(final boolean allowRemoveAll)
     {
         this.allowRemoveAll = allowRemoveAll;
     }
@@ -189,7 +189,7 @@ public abstract class AbstractDiskCacheAttributes extends AbstractAuxiliaryCache
     @Override
     public String toString()
     {
-        StringBuilder str = new StringBuilder();
+        final StringBuilder str = new StringBuilder();
         str.append("AbstractDiskCacheAttributes ");
         str.append("\n diskPath = " + getDiskPath());
         str.append("\n maxPurgatorySize   = " + getMaxPurgatorySize());
@@ -199,13 +199,13 @@ public abstract class AbstractDiskCacheAttributes extends AbstractAuxiliaryCache
     }
 
     @Override
-    public void setDiskLimitType(DiskLimitType diskLimitType)
+    public void setDiskLimitType(final DiskLimitType diskLimitType)
     {
         this.diskLimitType = diskLimitType;
     }
 
     @Override
-    public void setDiskLimitTypeName(String diskLimitTypeName)
+    public void setDiskLimitTypeName(final String diskLimitTypeName)
     {
         if (diskLimitTypeName != null)
         {

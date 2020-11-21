@@ -61,7 +61,7 @@ public class MySQLTableOptimizer
      * @param tableState We mark the table status as optimizing when this is happening.
      * @param dataSource access to the database
      */
-    public MySQLTableOptimizer( MySQLDiskCacheAttributes attributes, TableState tableState, DataSource dataSource )
+    public MySQLTableOptimizer( final MySQLDiskCacheAttributes attributes, final TableState tableState, final DataSource dataSource )
     {
         setTableName( attributes.getTableName() );
 
@@ -116,7 +116,7 @@ public class MySQLTableOptimizer
      */
     public boolean optimizeTable()
     {
-        ElapsedTimer timer = new ElapsedTimer();
+        final ElapsedTimer timer = new ElapsedTimer();
         boolean success = false;
 
         if ( tableState.getState() == TableState.OPTIMIZATION_RUNNING )
@@ -144,8 +144,8 @@ public class MySQLTableOptimizer
                         // This may be mysql version specific.
                         if ( rs.next() )
                         {
-                            String status = rs.getString( "Msg_type" );
-                            String message = rs.getString( "Msg_text" );
+                            final String status = rs.getString( "Msg_type" );
+                            final String message = rs.getString( "Msg_text" );
 
                             log.info( "Message Type: {0}", status );
                             log.info( "Message: {0}", message );
@@ -166,18 +166,18 @@ public class MySQLTableOptimizer
                     }
 
                     // log the table status
-                    String statusString = getTableStatus( sStatement );
+                    final String statusString = getTableStatus( sStatement );
                     log.info( "Table status after optimizing table [{0}]: {1}",
                             this.getTableName(), statusString );
                 }
-                catch ( SQLException e )
+                catch ( final SQLException e )
                 {
                     log.error( "Problem optimizing table [{0}]",
                             this.getTableName(), e );
                     return false;
                 }
             }
-            catch ( SQLException e )
+            catch ( final SQLException e )
             {
                 log.error( "Problem getting connection.", e );
             }
@@ -200,13 +200,13 @@ public class MySQLTableOptimizer
      * @return String
      * @throws SQLException
      */
-    protected String getTableStatus( Statement sStatement )
+    protected String getTableStatus( final Statement sStatement )
         throws SQLException
     {
-        StringBuilder statusString = new StringBuilder();
+        final StringBuilder statusString = new StringBuilder();
         try (ResultSet statusResultSet = sStatement.executeQuery( "show table status" ))
         {
-            int numColumns = statusResultSet.getMetaData().getColumnCount();
+            final int numColumns = statusResultSet.getMetaData().getColumnCount();
             while ( statusResultSet.next() )
             {
                 statusString.append( "\n" );
@@ -232,16 +232,16 @@ public class MySQLTableOptimizer
      * @return true if successful
      * @throws SQLException
      */
-    protected boolean repairTable( Statement sStatement )
+    protected boolean repairTable( final Statement sStatement )
         throws SQLException
     {
         boolean success = false;
 
         // if( message != null && message.indexOf( ) )
-        StringBuilder repairString = new StringBuilder();
+        final StringBuilder repairString = new StringBuilder();
         try (ResultSet repairResult = sStatement.executeQuery( "repair table " + this.getTableName()))
         {
-            int numColumns = repairResult.getMetaData().getColumnCount();
+            final int numColumns = repairResult.getMetaData().getColumnCount();
             while ( repairResult.next() )
             {
                 for ( int i = 1; i <= numColumns; i++ )
@@ -252,7 +252,7 @@ public class MySQLTableOptimizer
                         .append("]  |  ");
                 }
 
-                String message = repairResult.getString( "Msg_text" );
+                final String message = repairResult.getString( "Msg_text" );
                 if ( "OK".equals( message ) )
                 {
                     success = true;
@@ -272,7 +272,7 @@ public class MySQLTableOptimizer
     /**
      * @param tableName The tableName to set.
      */
-    public void setTableName( String tableName )
+    public void setTableName( final String tableName )
     {
         this.tableName = tableName;
     }

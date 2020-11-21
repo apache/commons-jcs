@@ -38,15 +38,15 @@ public class JCSCacheElementRetrievalUnitTest
     public void testSimpleElementRetrieval()
         throws Exception
     {
-        CacheAccess<String, String> jcs = JCS.getInstance( "testCache1" );
+        final CacheAccess<String, String> jcs = JCS.getInstance( "testCache1" );
 
         jcs.put( "test_key", "test_data" );
 
-        long now = System.currentTimeMillis();
-        ICacheElement<String, String> elem = jcs.getCacheElement( "test_key" );
+        final long now = System.currentTimeMillis();
+        final ICacheElement<String, String> elem = jcs.getCacheElement( "test_key" );
         assertEquals( "Name wasn't right", "testCache1", elem.getCacheName() );
 
-        long diff = now - elem.getElementAttributes().getCreateTime();
+        final long diff = now - elem.getElementAttributes().getCreateTime();
         assertTrue( "Create time should have been at or after the call", diff >= 0 );
 
     }

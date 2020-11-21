@@ -97,7 +97,7 @@ public class JDBCDiskCacheAttributes
     /**
      * @param userName The userName to set.
      */
-    public void setUserName( String userName )
+    public void setUserName( final String userName )
     {
         this.userName = userName;
     }
@@ -113,7 +113,7 @@ public class JDBCDiskCacheAttributes
     /**
      * @param password The password to set.
      */
-    public void setPassword( String password )
+    public void setPassword( final String password )
     {
         this.password = password;
     }
@@ -129,7 +129,7 @@ public class JDBCDiskCacheAttributes
     /**
      * @param url The url to set.
      */
-    public void setUrl( String url )
+    public void setUrl( final String url )
     {
         this.url = url;
     }
@@ -146,7 +146,7 @@ public class JDBCDiskCacheAttributes
      * This is appended to the url.
      * @param database The database to set.
      */
-    public void setDatabase( String database )
+    public void setDatabase( final String database )
     {
         this.database = database;
     }
@@ -162,7 +162,7 @@ public class JDBCDiskCacheAttributes
     /**
      * @param driverClassName The driverClassName to set.
      */
-    public void setDriverClassName( String driverClassName )
+    public void setDriverClassName( final String driverClassName )
     {
         this.driverClassName = driverClassName;
     }
@@ -186,7 +186,7 @@ public class JDBCDiskCacheAttributes
 	/**
 	 * @param jndiPath the jndiPath to set
 	 */
-	public void setJndiPath(String jndiPath)
+	public void setJndiPath(final String jndiPath)
 	{
 		this.jndiPath = jndiPath;
 	}
@@ -202,7 +202,7 @@ public class JDBCDiskCacheAttributes
 	/**
 	 * @param jndiTTL the jndiTTL to set
 	 */
-	public void setJndiTTL(long jndiTTL)
+	public void setJndiTTL(final long jndiTTL)
 	{
 		this.jndiTTL = jndiTTL;
 	}
@@ -210,7 +210,7 @@ public class JDBCDiskCacheAttributes
 	/**
      * @param tableName The tableName to set.
      */
-    public void setTableName( String tableName )
+    public void setTableName( final String tableName )
     {
         this.tableName = tableName;
     }
@@ -229,7 +229,7 @@ public class JDBCDiskCacheAttributes
      * <p>
      * @param testBeforeInsert The testBeforeInsert to set.
      */
-    public void setTestBeforeInsert( boolean testBeforeInsert )
+    public void setTestBeforeInsert( final boolean testBeforeInsert )
     {
         this.testBeforeInsert = testBeforeInsert;
     }
@@ -245,7 +245,7 @@ public class JDBCDiskCacheAttributes
     /**
      * @param maxTotal The maxTotal to set.
      */
-    public void setMaxTotal( int maxActive )
+    public void setMaxTotal( final int maxActive )
     {
         this.maxTotal = maxActive;
     }
@@ -261,7 +261,7 @@ public class JDBCDiskCacheAttributes
     /**
      * @param shrinkerIntervalSecondsArg The shrinkerIntervalSeconds to set.
      */
-    public void setShrinkerIntervalSeconds( int shrinkerIntervalSecondsArg )
+    public void setShrinkerIntervalSeconds( final int shrinkerIntervalSecondsArg )
     {
         this.shrinkerIntervalSeconds = shrinkerIntervalSecondsArg;
     }
@@ -277,7 +277,7 @@ public class JDBCDiskCacheAttributes
     /**
      * @param useDiskShrinker The useDiskShrinker to set.
      */
-    public void setUseDiskShrinker( boolean useDiskShrinker )
+    public void setUseDiskShrinker( final boolean useDiskShrinker )
     {
         this.useDiskShrinker = useDiskShrinker;
     }
@@ -293,7 +293,7 @@ public class JDBCDiskCacheAttributes
     /**
      * @param connectionPoolName the connectionPoolName to set
      */
-    public void setConnectionPoolName( String connectionPoolName )
+    public void setConnectionPoolName( final String connectionPoolName )
     {
         this.connectionPoolName = connectionPoolName;
     }
@@ -314,7 +314,7 @@ public class JDBCDiskCacheAttributes
     @Override
     public String toString()
     {
-        StringBuilder buf = new StringBuilder();
+        final StringBuilder buf = new StringBuilder();
         buf.append( "\nJDBCCacheAttributes" );
         buf.append( "\n UserName [" + getUserName() + "]" );
         buf.append( "\n Url [" + getUrl() + "]" );

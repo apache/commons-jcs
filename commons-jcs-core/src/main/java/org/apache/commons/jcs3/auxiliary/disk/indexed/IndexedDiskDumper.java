@@ -37,7 +37,7 @@ public class IndexedDiskDumper
      * @param args
      *            The command line arguments
      */
-    public static void main( String[] args )
+    public static void main( final String[] args )
     {
         if ( args.length != 1 )
         {
@@ -45,12 +45,12 @@ public class IndexedDiskDumper
             System.exit( 0 );
         }
 
-        IndexedDiskCacheAttributes attr = new IndexedDiskCacheAttributes();
+        final IndexedDiskCacheAttributes attr = new IndexedDiskCacheAttributes();
 
         attr.setCacheName( args[0] );
         attr.setDiskPath( args[0] );
 
-        IndexedDiskCache<Serializable, Serializable> dc = new IndexedDiskCache<>( attr );
+        final IndexedDiskCache<Serializable, Serializable> dc = new IndexedDiskCache<>( attr );
         dc.dump( true );
         System.exit( 0 );
     }

@@ -46,7 +46,7 @@ public class ObjectInputStreamClassLoaderAware extends ObjectInputStream {
 
         try {
             return Proxy.getProxyClass(classLoader, cinterfaces);
-        } catch (IllegalArgumentException e) {
+        } catch (final IllegalArgumentException e) {
             throw new ClassNotFoundException(null, e);
         }
     }
@@ -81,7 +81,7 @@ public class ObjectInputStreamClassLoaderAware extends ObjectInputStream {
             return property == null ? null : property.split(" *, *");
         }
 
-        private static boolean contains(final String[] list, String name) {
+        private static boolean contains(final String[] list, final String name) {
             if (list != null) {
                 for (final String white : list) {
                     if (name.startsWith(white)) {

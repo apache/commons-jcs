@@ -37,7 +37,7 @@ public class BlockDiskCacheRandomConcurrentTestUtil
      *
      * @param testName
      */
-    public BlockDiskCacheRandomConcurrentTestUtil( String testName )
+    public BlockDiskCacheRandomConcurrentTestUtil( final String testName )
     {
         super( testName );
     }
@@ -62,21 +62,21 @@ public class BlockDiskCacheRandomConcurrentTestUtil
      * @throws Exception
      *                If an error occurs
      */
-    public void runTestForRegion( String region, int range, int numOps, int testNum )
+    public void runTestForRegion( final String region, final int range, final int numOps, final int testNum )
         throws Exception
     {
         // run a rondom operation test to detect deadlocks
-        TestCacheAccess tca = new TestCacheAccess( "/TestBlockDiskCacheCon.ccf" );
+        final TestCacheAccess tca = new TestCacheAccess( "/TestBlockDiskCacheCon.ccf" );
         tca.setRegion( region );
         tca.random( range, numOps );
 
         // make sure a simple put then get works
         // this may fail if the other tests are flooding the disk cache
-        CacheAccess<String, String> jcs = JCS.getInstance( region );
-        String key = "testKey" + testNum;
-        String data = "testData" + testNum;
+        final CacheAccess<String, String> jcs = JCS.getInstance( region );
+        final String key = "testKey" + testNum;
+        final String data = "testData" + testNum;
         jcs.put( key, data );
-        String value = jcs.get( key );
+        final String value = jcs.get( key );
         assertEquals( data, value );
     }
 

@@ -55,8 +55,8 @@ public class MySQLDiskCache<K, V>
      * @param tableState an object to track table operations
      * @throws SQLException if the pool access could not be set up
      */
-    public MySQLDiskCache( MySQLDiskCacheAttributes attributes, DataSourceFactory dsFactory,
-    		TableState tableState) throws SQLException
+    public MySQLDiskCache( final MySQLDiskCacheAttributes attributes, final DataSourceFactory dsFactory,
+    		final TableState tableState) throws SQLException
     {
         super( attributes, dsFactory, tableState);
 
@@ -73,7 +73,7 @@ public class MySQLDiskCache<K, V>
      * @return An object matching key, or null.
      */
     @Override
-    protected ICacheElement<K, V> processGet( K key )
+    protected ICacheElement<K, V> processGet( final K key )
     {
         if ( this.getTableState().getState() == TableState.OPTIMIZATION_RUNNING )
         {
@@ -93,7 +93,7 @@ public class MySQLDiskCache<K, V>
      * @return An object matching key, or null.
      */
     @Override
-    protected Map<K, ICacheElement<K, V>> processGetMatching( String pattern )
+    protected Map<K, ICacheElement<K, V>> processGetMatching( final String pattern )
     {
         if ( this.getTableState().getState() == TableState.OPTIMIZATION_RUNNING )
         {
@@ -110,7 +110,7 @@ public class MySQLDiskCache<K, V>
      * @return String to use in the like query.
      */
     @Override
-    public String constructLikeParameterFromPattern( String pattern )
+    public String constructLikeParameterFromPattern( final String pattern )
     {
         String likePattern = pattern.replaceAll( "\\.\\+", "%" );
         likePattern = likePattern.replaceAll( "\\.", "_" );
@@ -127,7 +127,7 @@ public class MySQLDiskCache<K, V>
      * @param element
      */
     @Override
-    protected void processUpdate( ICacheElement<K, V> element )
+    protected void processUpdate( final ICacheElement<K, V> element )
     {
         if ( this.getTableState().getState() == TableState.OPTIMIZATION_RUNNING )
         {

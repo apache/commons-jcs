@@ -86,16 +86,16 @@ public class JDBCDiskCacheFactory
      * @throws SQLException if the cache instance could not be created
      */
     @Override
-    public <K, V> JDBCDiskCache<K, V> createCache( AuxiliaryCacheAttributes rawAttr,
-            ICompositeCacheManager compositeCacheManager,
-            ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer )
+    public <K, V> JDBCDiskCache<K, V> createCache( final AuxiliaryCacheAttributes rawAttr,
+            final ICompositeCacheManager compositeCacheManager,
+            final ICacheEventLogger cacheEventLogger, final IElementSerializer elementSerializer )
             throws SQLException
     {
-        JDBCDiskCacheAttributes cattr = (JDBCDiskCacheAttributes) rawAttr;
-        TableState tableState = getTableState( cattr.getTableName() );
-        DataSourceFactory dsFactory = getDataSourceFactory(cattr, compositeCacheManager.getConfigurationProperties());
+        final JDBCDiskCacheAttributes cattr = (JDBCDiskCacheAttributes) rawAttr;
+        final TableState tableState = getTableState( cattr.getTableName() );
+        final DataSourceFactory dsFactory = getDataSourceFactory(cattr, compositeCacheManager.getConfigurationProperties());
 
-        JDBCDiskCache<K, V> cache = new JDBCDiskCache<>(cattr, dsFactory, tableState);
+        final JDBCDiskCache<K, V> cache = new JDBCDiskCache<>(cattr, dsFactory, tableState);
         cache.setCacheEventLogger( cacheEventLogger );
         cache.setElementSerializer( elementSerializer );
 
@@ -125,13 +125,13 @@ public class JDBCDiskCacheFactory
     {
         this.tableStates.clear();
 
-        for (DataSourceFactory dsFactory : this.dsFactories.values())
+        for (final DataSourceFactory dsFactory : this.dsFactories.values())
         {
         	try
         	{
 				dsFactory.close();
 			}
-        	catch (SQLException e)
+        	catch (final SQLException e)
         	{
         		log.error("Could not close data source factory {0}", dsFactory.getName(), e);
 			}
@@ -148,7 +148,7 @@ public class JDBCDiskCacheFactory
      * @param tableName
      * @return a cached instance of the table state
      */
-    protected TableState getTableState(String tableName)
+    protected TableState getTableState(final String tableName)
     {
         return tableStates.computeIfAbsent(tableName, TableState::new);
     }
@@ -157,7 +157,7 @@ public class JDBCDiskCacheFactory
 	 * @see org.apache.commons.jcs3.engine.behavior.IRequireScheduler#setScheduledExecutorService(java.util.concurrent.ScheduledExecutorService)
 	 */
 	@Override
-	public void setScheduledExecutorService(ScheduledExecutorService scheduledExecutor)
+	public void setScheduledExecutorService(final ScheduledExecutorService scheduledExecutor)
 	{
 		this.scheduler = scheduledExecutor;
 	}
@@ -178,16 +178,16 @@ public class JDBCDiskCacheFactory
      * @param cattr
      * @param raf
      */
-    protected void createShrinkerWhenNeeded( JDBCDiskCacheAttributes cattr, JDBCDiskCache<?, ?> raf )
+    protected void createShrinkerWhenNeeded( final JDBCDiskCacheAttributes cattr, final JDBCDiskCache<?, ?> raf )
     {
         // add cache to shrinker.
         if ( cattr.isUseDiskShrinker() )
         {
-            ScheduledExecutorService shrinkerService = getScheduledExecutorService();
-            ShrinkerThread shrinkerThread = shrinkerThreadMap.computeIfAbsent(cattr.getTableName(), key -> {
-                ShrinkerThread newShrinkerThread = new ShrinkerThread();
+            final ScheduledExecutorService shrinkerService = getScheduledExecutorService();
+            final ShrinkerThread shrinkerThread = shrinkerThreadMap.computeIfAbsent(cattr.getTableName(), key -> {
+                final ShrinkerThread newShrinkerThread = new ShrinkerThread();
 
-                long intervalMillis = Math.max( 999, cattr.getShrinkerIntervalSeconds() * 1000 );
+                final long intervalMillis = Math.max( 999, cattr.getShrinkerIntervalSeconds() * 1000 );
                 log.info( "Setting the shrinker to run every [{0}] ms. for table [{1}]",
                         intervalMillis, key );
                 shrinkerService.scheduleAtFixedRate(newShrinkerThread, 0, intervalMillis, TimeUnit.MILLISECONDS);
@@ -207,8 +207,8 @@ public class JDBCDiskCacheFactory
      * @return a DataSourceFactory
      * @throws SQLException if a database access error occurs
      */
-    protected DataSourceFactory getDataSourceFactory( JDBCDiskCacheAttributes cattr,
-                                                      Properties configProps ) throws SQLException
+    protected DataSourceFactory getDataSourceFactory( final JDBCDiskCacheAttributes cattr,
+                                                      final Properties configProps ) throws SQLException
     {
     	String poolName = null;
 
@@ -222,7 +222,7 @@ public class JDBCDiskCacheFactory
         }
 
 
-    	DataSourceFactory dsFactory = this.dsFactories.computeIfAbsent(poolName, key -> {
+    	final DataSourceFactory dsFactory = this.dsFactories.computeIfAbsent(poolName, key -> {
     	    DataSourceFactory newDsFactory;
             JDBCDiskCacheAttributes dsConfig = null;
 
@@ -233,7 +233,7 @@ public class JDBCDiskCacheFactory
             else
             {
                 dsConfig = new JDBCDiskCacheAttributes();
-                String dsConfigAttributePrefix = POOL_CONFIGURATION_PREFIX + key + ATTRIBUTE_PREFIX;
+                final String dsConfigAttributePrefix = POOL_CONFIGURATION_PREFIX + key + ATTRIBUTE_PREFIX;
                 PropertySetter.setProperties( dsConfig,
                         configProps,
                         dsConfigAttributePrefix + "." );
@@ -254,7 +254,7 @@ public class JDBCDiskCacheFactory
             {
                 newDsFactory.initialize(dsConfig);
             }
-            catch (SQLException e)
+            catch (final SQLException e)
             {
                 throw new RuntimeException(e);
             }

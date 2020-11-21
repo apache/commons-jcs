@@ -47,7 +47,7 @@ public class RemoteHttpCacheManualTester
     public void testSimpleLoad()
         throws Exception
     {
-        CacheAccess<String, String> jcs = JCS.getInstance( "testCache1" );
+        final CacheAccess<String, String> jcs = JCS.getInstance( "testCache1" );
 
         jcs.put( "TestKey", "TestValue" );
 
@@ -60,7 +60,7 @@ public class RemoteHttpCacheManualTester
 
         for ( int i = items; i > 0; i-- )
         {
-            String res = jcs.get( i + ":key" );
+            final String res = jcs.get( i + ":key" );
             if ( res == null )
             {
                 //assertNotNull( "[" + i + ":key] should not be null", res );

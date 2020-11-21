@@ -47,11 +47,11 @@ public class SerializationConversionUtilUnitTest
         throws IOException
     {
         // SETUP
-        IElementSerializer elementSerializer = new StandardSerializer();
-        ICacheElement<String, String> before = null;
+        final IElementSerializer elementSerializer = new StandardSerializer();
+        final ICacheElement<String, String> before = null;
 
         // DO WORK
-        ICacheElementSerialized<String, String> result =
+        final ICacheElementSerialized<String, String> result =
             SerializationConversionUtil.getSerializedCacheElement( before, elementSerializer );
 
         // VERIFY
@@ -67,11 +67,11 @@ public class SerializationConversionUtilUnitTest
         throws Exception
     {
         // SETUP
-        IElementSerializer elementSerializer = new StandardSerializer();
-        ICacheElementSerialized<String, String> before = null;
+        final IElementSerializer elementSerializer = new StandardSerializer();
+        final ICacheElementSerialized<String, String> before = null;
 
         // DO WORK
-        ICacheElement<String, String> result =
+        final ICacheElement<String, String> result =
             SerializationConversionUtil.getDeSerializedCacheElement( before, elementSerializer );
 
         // VERIFY
@@ -87,27 +87,27 @@ public class SerializationConversionUtilUnitTest
         throws Exception
     {
         // SETUP
-        String cacheName = "testName";
-        String key = "key";
-        String value = "value fdsadf dsafdsa fdsaf dsafdsaf dsafdsaf dsaf dsaf dsaf dsafa dsaf dsaf dsafdsaf";
+        final String cacheName = "testName";
+        final String key = "key";
+        final String value = "value fdsadf dsafdsa fdsaf dsafdsaf dsafdsaf dsaf dsaf dsaf dsafa dsaf dsaf dsafdsaf";
 
-        IElementSerializer elementSerializer = new StandardSerializer();
+        final IElementSerializer elementSerializer = new StandardSerializer();
 
-        IElementAttributes attr = new ElementAttributes();
+        final IElementAttributes attr = new ElementAttributes();
         attr.setMaxLife(34);
 
-        ICacheElement<String, String> before = new CacheElement<>( cacheName, key, value );
+        final ICacheElement<String, String> before = new CacheElement<>( cacheName, key, value );
         before.setElementAttributes( attr );
 
         // DO WORK
-        ICacheElementSerialized<String, String> serialized =
+        final ICacheElementSerialized<String, String> serialized =
             SerializationConversionUtil.getSerializedCacheElement( before, elementSerializer );
 
         // VERIFY
         assertNotNull( "Should have a serialized object.", serialized );
 
         // DO WORK
-        ICacheElement<String, String> after =
+        final ICacheElement<String, String> after =
             SerializationConversionUtil.getDeSerializedCacheElement( serialized, elementSerializer );
 
         // VERIFY
@@ -128,29 +128,29 @@ public class SerializationConversionUtilUnitTest
         throws Exception
     {
         // SETUP
-        String cacheName = "testName";
-        String key = "key";
-        String value = "value fdsadf dsafdsa fdsaf dsafdsaf dsafdsaf dsaf dsaf dsaf dsafa dsaf dsaf dsafdsaf";
+        final String cacheName = "testName";
+        final String key = "key";
+        final String value = "value fdsadf dsafdsa fdsaf dsafdsaf dsafdsaf dsaf dsaf dsaf dsafa dsaf dsaf dsafdsaf";
 
-        IElementSerializer elementSerializer = new StandardSerializer();
+        final IElementSerializer elementSerializer = new StandardSerializer();
 
-        IElementAttributes attr = new ElementAttributes();
+        final IElementAttributes attr = new ElementAttributes();
         attr.setMaxLife(34);
 
-        ICacheElement<String, String> before = new CacheElement<>( cacheName, key, value );
+        final ICacheElement<String, String> before = new CacheElement<>( cacheName, key, value );
         before.setElementAttributes( attr );
 
         // DO WORK
-        ICacheElementSerialized<String, String> alreadySerialized =
+        final ICacheElementSerialized<String, String> alreadySerialized =
             SerializationConversionUtil.getSerializedCacheElement( before, elementSerializer );
-        ICacheElementSerialized<String, String> serialized =
+        final ICacheElementSerialized<String, String> serialized =
             SerializationConversionUtil.getSerializedCacheElement( alreadySerialized, elementSerializer );
 
         // VERIFY
         assertNotNull( "Should have a serialized object.", serialized );
 
         // DO WORK
-        ICacheElement<String, String> after =
+        final ICacheElement<String, String> after =
             SerializationConversionUtil.getDeSerializedCacheElement( serialized, elementSerializer );
 
         // VERIFY
@@ -168,16 +168,16 @@ public class SerializationConversionUtilUnitTest
     public void testNullSerializerConversion()
     {
         // SETUP
-        String cacheName = "testName";
-        String key = "key";
-        String value = "value fdsadf dsafdsa fdsaf dsafdsaf dsafdsaf dsaf dsaf dsaf dsafa dsaf dsaf dsafdsaf";
+        final String cacheName = "testName";
+        final String key = "key";
+        final String value = "value fdsadf dsafdsa fdsaf dsafdsaf dsafdsaf dsaf dsaf dsaf dsafa dsaf dsaf dsafdsaf";
 
-        IElementSerializer elementSerializer = null;// new StandardSerializer();
+        final IElementSerializer elementSerializer = null;// new StandardSerializer();
 
-        IElementAttributes attr = new ElementAttributes();
+        final IElementAttributes attr = new ElementAttributes();
         attr.setMaxLife(34);
 
-        ICacheElement<String, String> before = new CacheElement<>( cacheName, key, value );
+        final ICacheElement<String, String> before = new CacheElement<>( cacheName, key, value );
         before.setElementAttributes( attr );
 
         // DO WORK
@@ -188,7 +188,7 @@ public class SerializationConversionUtilUnitTest
             // VERIFY
             fail( "We should have received an IOException." );
         }
-        catch ( IOException e )
+        catch ( final IOException e )
         {
             // expected
         }

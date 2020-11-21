@@ -34,14 +34,14 @@ public class CacheEventQueueFactoryUnitTest
     public void testCreateCacheEventQueue_Single()
     {
         // SETUP
-        QueueType eventQueueType = QueueType.SINGLE;
-        ICacheListener<String, String> listener = new MockRemoteCacheListener<>();
-        long listenerId = 1;
+        final QueueType eventQueueType = QueueType.SINGLE;
+        final ICacheListener<String, String> listener = new MockRemoteCacheListener<>();
+        final long listenerId = 1;
 
-        CacheEventQueueFactory<String, String> factory = new CacheEventQueueFactory<>();
+        final CacheEventQueueFactory<String, String> factory = new CacheEventQueueFactory<>();
 
         // DO WORK
-        ICacheEventQueue<String, String> result = factory.createCacheEventQueue( listener, listenerId, "cacheName", "threadPoolName", eventQueueType );
+        final ICacheEventQueue<String, String> result = factory.createCacheEventQueue( listener, listenerId, "cacheName", "threadPoolName", eventQueueType );
 
         // VERIFY
         assertNotNull( "Should have a result", result );
@@ -52,14 +52,14 @@ public class CacheEventQueueFactoryUnitTest
     public void testCreateCacheEventQueue_Pooled()
     {
         // SETUP
-        QueueType eventQueueType = QueueType.POOLED;
-        ICacheListener<String, String> listener = new MockRemoteCacheListener<>();
-        long listenerId = 1;
+        final QueueType eventQueueType = QueueType.POOLED;
+        final ICacheListener<String, String> listener = new MockRemoteCacheListener<>();
+        final long listenerId = 1;
 
-        CacheEventQueueFactory<String, String> factory = new CacheEventQueueFactory<>();
+        final CacheEventQueueFactory<String, String> factory = new CacheEventQueueFactory<>();
 
         // DO WORK
-        ICacheEventQueue<String, String> result = factory.createCacheEventQueue( listener, listenerId, "cacheName", "threadPoolName", eventQueueType );
+        final ICacheEventQueue<String, String> result = factory.createCacheEventQueue( listener, listenerId, "cacheName", "threadPoolName", eventQueueType );
 
         // VERIFY
         assertNotNull( "Should have a result", result );

@@ -40,7 +40,7 @@ public class ScheduleParser
      * @return Date[]
      * @throws ParseException
      */
-    public static Date[] createDatesForSchedule( String schedule )
+    public static Date[] createDatesForSchedule( final String schedule )
         throws ParseException
     {
         if ( schedule == null )
@@ -48,12 +48,12 @@ public class ScheduleParser
             throw new ParseException( "Cannot create schedules for a null String.", 0 );
         }
 
-        StringTokenizer toker = new StringTokenizer( schedule, "," );
-        Date[] dates = new Date[toker.countTokens()];
+        final StringTokenizer toker = new StringTokenizer( schedule, "," );
+        final Date[] dates = new Date[toker.countTokens()];
         int cnt = 0;
         while ( toker.hasMoreTokens() )
         {
-            String time = toker.nextToken();
+            final String time = toker.nextToken();
             dates[cnt] = getDateForSchedule( time );
             cnt++;
         }
@@ -68,7 +68,7 @@ public class ScheduleParser
      * @return Date
      * @throws ParseException
      */
-    public static Date getDateForSchedule( String startTime )
+    public static Date getDateForSchedule( final String startTime )
         throws ParseException
     {
         if ( startTime == null )
@@ -76,13 +76,13 @@ public class ScheduleParser
             throw new ParseException( "Cannot create date for a null String.", 0 );
         }
 
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-        Date date = sdf.parse(startTime);
-        Calendar cal = Calendar.getInstance();
+        final SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+        final Date date = sdf.parse(startTime);
+        final Calendar cal = Calendar.getInstance();
         // This will result in a date of 1/1/1970
         cal.setTime(date);
 
-        Calendar now = Calendar.getInstance();
+        final Calendar now = Calendar.getInstance();
         cal.set(now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH));
 
         // if the date is less than now, add a day.

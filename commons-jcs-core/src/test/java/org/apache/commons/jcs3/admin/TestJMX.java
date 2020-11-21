@@ -27,9 +27,9 @@ import org.apache.commons.jcs3.access.CacheAccess;
  */
 public class TestJMX
 {
-	public static void main(String[] args) throws Exception
+	public static void main(final String[] args) throws Exception
 	{
-		CacheAccess<String, String> cache = JCS.getInstance("test");
+		final CacheAccess<String, String> cache = JCS.getInstance("test");
 
 		cache.put("key", "value");
         System.out.println("Waiting...");

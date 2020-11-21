@@ -42,7 +42,7 @@ public class ZombieCacheService<K, V>
     /**
      * @param item
      */
-    public void put( ICacheElement<K, V> item )
+    public void put( final ICacheElement<K, V> item )
     {
         log.debug( "Zombie put for item {0}", item );
         // zombies have no inner life
@@ -54,7 +54,7 @@ public class ZombieCacheService<K, V>
      * @param item
      */
     @Override
-    public void update( ICacheElement<K, V> item )
+    public void update( final ICacheElement<K, V> item )
     {
         // zombies have no inner life
     }
@@ -65,7 +65,7 @@ public class ZombieCacheService<K, V>
      * @return null. zombies have no internal data
      */
     @Override
-    public ICacheElement<K, V> get( String cacheName, K key )
+    public ICacheElement<K, V> get( final String cacheName, final K key )
     {
         return null;
     }
@@ -78,7 +78,7 @@ public class ZombieCacheService<K, V>
      * @return Collections.EMPTY_MAP
      */
     @Override
-    public Map<K, ICacheElement<K, V>> getMultiple( String cacheName, Set<K> keys )
+    public Map<K, ICacheElement<K, V>> getMultiple( final String cacheName, final Set<K> keys )
     {
         return Collections.emptyMap();
     }
@@ -91,7 +91,7 @@ public class ZombieCacheService<K, V>
      * @return Collections.EMPTY_MAP
      */
     @Override
-    public Map<K, ICacheElement<K, V>> getMatching( String cacheName, String pattern )
+    public Map<K, ICacheElement<K, V>> getMatching( final String cacheName, final String pattern )
     {
         return Collections.emptyMap();
     }
@@ -104,7 +104,7 @@ public class ZombieCacheService<K, V>
      * @param container
      * @return null always
      */
-    public Serializable get( String cacheName, K key, boolean container )
+    public Serializable get( final String cacheName, final K key, final boolean container )
     {
         log.debug( "Zombie get for key [{0}] cacheName [{1}] container [{2}]",
                 key, cacheName, container);
@@ -117,7 +117,7 @@ public class ZombieCacheService<K, V>
      * @param key
      */
     @Override
-    public void remove( String cacheName, K key )
+    public void remove( final String cacheName, final K key )
     {
         // zombies have no inner life
     }
@@ -126,7 +126,7 @@ public class ZombieCacheService<K, V>
      * @param cacheName
      */
     @Override
-    public void removeAll( String cacheName )
+    public void removeAll( final String cacheName )
     {
         // zombies have no inner life
     }
@@ -135,7 +135,7 @@ public class ZombieCacheService<K, V>
      * @param cacheName
      */
     @Override
-    public void dispose( String cacheName )
+    public void dispose( final String cacheName )
     {
         // zombies have no inner life
     }

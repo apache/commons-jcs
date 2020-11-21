@@ -78,22 +78,22 @@ public class BasicRemoteCacheClientServerUnitTest extends Assert
     {
         // Add some debug to try and find out why test fails on Jenkins/Continuum
         try {
-            InetAddress lh = InetAddress.getByName("localhost");
+            final InetAddress lh = InetAddress.getByName("localhost");
             System.out.println("localhost="+lh);
-            InetAddress ina=InetAddress.getLocalHost();
+            final InetAddress ina=InetAddress.getLocalHost();
             System.out.println("InetAddress.getLocalHost()="+ina);
             // Iterate all NICs (network interface cards)...
-            Enumeration<NetworkInterface> ifaces = NetworkInterface.getNetworkInterfaces();
+            final Enumeration<NetworkInterface> ifaces = NetworkInterface.getNetworkInterfaces();
             if ( ifaces != null ) {
             while ( ifaces.hasMoreElements() )
                 {
-                    NetworkInterface iface = ifaces.nextElement();
+                    final NetworkInterface iface = ifaces.nextElement();
                     // Iterate all IP addresses assigned to each card...
-                    for ( Enumeration<InetAddress> inetAddrs = iface.getInetAddresses(); inetAddrs.hasMoreElements(); )
+                    for ( final Enumeration<InetAddress> inetAddrs = iface.getInetAddresses(); inetAddrs.hasMoreElements(); )
                     {
-                        InetAddress inetAddr = inetAddrs.nextElement();
-                        boolean loopbackAddress = inetAddr.isLoopbackAddress();
-                        boolean siteLocalAddress = inetAddr.isSiteLocalAddress();
+                        final InetAddress inetAddr = inetAddrs.nextElement();
+                        final boolean loopbackAddress = inetAddr.isLoopbackAddress();
+                        final boolean siteLocalAddress = inetAddr.isSiteLocalAddress();
                         System.out.println("Found: "+ inetAddr +
                                 " isLoopback: " + loopbackAddress +
                                 " isSiteLocal: " + siteLocalAddress +
@@ -101,11 +101,11 @@ public class BasicRemoteCacheClientServerUnitTest extends Assert
                     }
                 }
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             e.printStackTrace();
         }
         // end of debug
-        String configFile = "TestRemoteCacheClientServer.ccf";
+        final String configFile = "TestRemoteCacheClientServer.ccf";
         server = RemoteCacheServerStartupUtil.startServerUsingProperties(configFile);
         factory = new RemoteCacheFactory();
         factory.initialize();
@@ -120,8 +120,8 @@ public class BasicRemoteCacheClientServerUnitTest extends Assert
         }
         // Debug: unfortunately Surefire restarts JVM so log files get overwritten
         // There's probably a better way to fix this ...
-        java.io.File jcsLog = new java.io.File("target/jcs.log");
-        java.io.File logSave = new java.io.File("target/BasicRemoteCacheClientServerUnitTest_jcs.log");
+        final java.io.File jcsLog = new java.io.File("target/jcs.log");
+        final java.io.File logSave = new java.io.File("target/BasicRemoteCacheClientServerUnitTest_jcs.log");
         System.out.println("Renamed log file? "+jcsLog.renameTo(logSave));
     }
 
@@ -143,19 +143,19 @@ public class BasicRemoteCacheClientServerUnitTest extends Assert
             throws Exception
             {
         // SETUP
-        MockCompositeCacheManager compositeCacheManager = new MockCompositeCacheManager();
+        final MockCompositeCacheManager compositeCacheManager = new MockCompositeCacheManager();
 
-        RemoteCacheAttributes attributes = new RemoteCacheAttributes();
+        final RemoteCacheAttributes attributes = new RemoteCacheAttributes();
         attributes.setRemoteLocation("localhost", remotePort);
         attributes.setLocalPort(LOCAL_PORT);
         attributes.setCacheName("testSinglePut");
 
-        RemoteCacheManager remoteCacheManager = factory.getManager(attributes, compositeCacheManager, new MockCacheEventLogger(), new MockElementSerializer());
-        AuxiliaryCache<String, String> cache = remoteCacheManager.getCache(attributes);
+        final RemoteCacheManager remoteCacheManager = factory.getManager(attributes, compositeCacheManager, new MockCacheEventLogger(), new MockElementSerializer());
+        final AuxiliaryCache<String, String> cache = remoteCacheManager.getCache(attributes);
 
         // DO WORK
-        int numPutsPrior = server.getPutCount();
-        ICacheElement<String, String> element = new CacheElement<>(cache.getCacheName(), "key", "value");
+        final int numPutsPrior = server.getPutCount();
+        final ICacheElement<String, String> element = new CacheElement<>(cache.getCacheName(), "key", "value");
         cache.update(element);
         SleepUtil.sleepAtLeast(200);
 
@@ -165,7 +165,7 @@ public class BasicRemoteCacheClientServerUnitTest extends Assert
             assertEquals("Cache is alive", CacheStatus.ALIVE, cache.getStatus());
             assertEquals("Wrong number of puts", 1, server.getPutCount() - numPutsPrior);
         }
-        catch (junit.framework.AssertionFailedError e)
+        catch (final junit.framework.AssertionFailedError e)
         {
             System.out.println(cache.getStats());
             System.out.println(server.getStats());
@@ -173,7 +173,7 @@ public class BasicRemoteCacheClientServerUnitTest extends Assert
         }
 
         // DO WORK
-        ICacheElement<String, String> result = cache.get("key");
+        final ICacheElement<String, String> result = cache.get("key");
 
         // VERIFY
         assertEquals("Wrong element.", element.getVal(), result.getVal());
@@ -190,21 +190,21 @@ public class BasicRemoteCacheClientServerUnitTest extends Assert
             throws Exception
             {
         // SETUP
-        MockCompositeCacheManager compositeCacheManager = new MockCompositeCacheManager();
+        final MockCompositeCacheManager compositeCacheManager = new MockCompositeCacheManager();
 
-        RemoteCacheAttributes attributes = new RemoteCacheAttributes();
+        final RemoteCacheAttributes attributes = new RemoteCacheAttributes();
         attributes.setRemoteLocation("localhost", remotePort);
         attributes.setLocalPort(LOCAL_PORT);
         attributes.setCacheName("testPutRemove");
 
-        MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
+        final MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
 
-        RemoteCacheManager remoteCacheManager = factory.getManager(attributes, compositeCacheManager, cacheEventLogger, null);
-        AuxiliaryCache<String, String> cache = remoteCacheManager.getCache(attributes);
+        final RemoteCacheManager remoteCacheManager = factory.getManager(attributes, compositeCacheManager, cacheEventLogger, null);
+        final AuxiliaryCache<String, String> cache = remoteCacheManager.getCache(attributes);
 
         // DO WORK
-        int numPutsPrior = server.getPutCount();
-        ICacheElement<String, String> element = new CacheElement<>(cache.getCacheName(), "key", "value");
+        final int numPutsPrior = server.getPutCount();
+        final ICacheElement<String, String> element = new CacheElement<>(cache.getCacheName(), "key", "value");
         cache.update(element);
         SleepUtil.sleepAtLeast(50);
 
@@ -214,7 +214,7 @@ public class BasicRemoteCacheClientServerUnitTest extends Assert
             assertEquals("Cache is alive", CacheStatus.ALIVE, cache.getStatus());
             assertEquals("Wrong number of puts", 1, server.getPutCount() - numPutsPrior);
         }
-        catch (junit.framework.AssertionFailedError e)
+        catch (final junit.framework.AssertionFailedError e)
         {
             System.out.println(cache.getStats());
             System.out.println(server.getStats());
@@ -222,7 +222,7 @@ public class BasicRemoteCacheClientServerUnitTest extends Assert
         }
 
         // DO WORK
-        ICacheElement<String, String> result = cache.get("key");
+        final ICacheElement<String, String> result = cache.get("key");
 
         // VERIFY
         assertEquals("Wrong element.", element.getVal(), result.getVal());
@@ -230,7 +230,7 @@ public class BasicRemoteCacheClientServerUnitTest extends Assert
         // DO WORK
         cache.remove("key");
         SleepUtil.sleepAtLeast(200);
-        ICacheElement<String, String> resultAfterRemote = cache.get("key");
+        final ICacheElement<String, String> resultAfterRemote = cache.get("key");
 
         // VERIFY
         assertNull("Element resultAfterRemote should be null.", resultAfterRemote);
@@ -246,22 +246,22 @@ public class BasicRemoteCacheClientServerUnitTest extends Assert
             throws Exception
             {
         // SETUP
-        MockCompositeCacheManager compositeCacheManager = new MockCompositeCacheManager();
+        final MockCompositeCacheManager compositeCacheManager = new MockCompositeCacheManager();
 
-        RemoteCacheAttributes attributes = new RemoteCacheAttributes();
+        final RemoteCacheAttributes attributes = new RemoteCacheAttributes();
         attributes.setRemoteLocation("localhost", remotePort);
         attributes.setLocalPort(LOCAL_PORT);
         attributes.setCacheName("testPutAndListen");
 
-        RemoteCacheManager remoteCacheManager = factory.getManager(attributes, compositeCacheManager, new MockCacheEventLogger(), new MockElementSerializer());
-        AuxiliaryCache<String, String> cache = remoteCacheManager.getCache(attributes);
+        final RemoteCacheManager remoteCacheManager = factory.getManager(attributes, compositeCacheManager, new MockCacheEventLogger(), new MockElementSerializer());
+        final AuxiliaryCache<String, String> cache = remoteCacheManager.getCache(attributes);
 
-        MockRemoteCacheListener<String, String> listener = new MockRemoteCacheListener<>();
+        final MockRemoteCacheListener<String, String> listener = new MockRemoteCacheListener<>();
         server.addCacheListener(cache.getCacheName(), listener);
 
         // DO WORK
-        int numPutsPrior = server.getPutCount();
-        ICacheElement<String, String> element = new CacheElement<>(cache.getCacheName(), "key", "value");
+        final int numPutsPrior = server.getPutCount();
+        final ICacheElement<String, String> element = new CacheElement<>(cache.getCacheName(), "key", "value");
         cache.update(element);
         SleepUtil.sleepAtLeast(50);
 
@@ -272,7 +272,7 @@ public class BasicRemoteCacheClientServerUnitTest extends Assert
             assertEquals("Wrong number of puts", 1, server.getPutCount() - numPutsPrior);
             assertEquals("Wrong number of puts to listener.", 1, listener.putCount);
         }
-        catch (junit.framework.AssertionFailedError e)
+        catch (final junit.framework.AssertionFailedError e)
         {
             System.out.println(cache.getStats());
             System.out.println(server.getStats());
@@ -295,25 +295,25 @@ public class BasicRemoteCacheClientServerUnitTest extends Assert
             throws Exception
     {
         // SETUP
-        MockCompositeCacheManager compositeCacheManager = new MockCompositeCacheManager();
+        final MockCompositeCacheManager compositeCacheManager = new MockCompositeCacheManager();
 
-        RemoteCacheAttributes attributes = new RemoteCacheAttributes();
+        final RemoteCacheAttributes attributes = new RemoteCacheAttributes();
         attributes.setRemoteLocation("localhost", remotePort);
         attributes.setLocalPort(LOCAL_PORT);
         attributes.setCacheName("testPutaMultipleAndListen");
 
-        RemoteCacheManager remoteCacheManager = factory.getManager(attributes, compositeCacheManager, new MockCacheEventLogger(), new MockElementSerializer());
-        AuxiliaryCache<String, String> cache = remoteCacheManager.getCache(attributes);
+        final RemoteCacheManager remoteCacheManager = factory.getManager(attributes, compositeCacheManager, new MockCacheEventLogger(), new MockElementSerializer());
+        final AuxiliaryCache<String, String> cache = remoteCacheManager.getCache(attributes);
 
-        MockRemoteCacheListener<String, String> listener = new MockRemoteCacheListener<>();
+        final MockRemoteCacheListener<String, String> listener = new MockRemoteCacheListener<>();
         server.addCacheListener(cache.getCacheName(), listener);
 
         // DO WORK
-        int numPutsPrior = server.getPutCount();
-        int numToPut = 100;
+        final int numPutsPrior = server.getPutCount();
+        final int numToPut = 100;
         for (int i = 0; i < numToPut; i++)
         {
-            ICacheElement<String, String> element = new CacheElement<>(cache.getCacheName(), "key" + 1, "value" + i);
+            final ICacheElement<String, String> element = new CacheElement<>(cache.getCacheName(), "key" + 1, "value" + i);
             cache.update(element);
         }
         SleepUtil.sleepAtLeast(500);
@@ -325,7 +325,7 @@ public class BasicRemoteCacheClientServerUnitTest extends Assert
             assertEquals("Wrong number of puts", numToPut, server.getPutCount() - numPutsPrior);
             assertEquals("Wrong number of puts to listener.", numToPut, listener.putCount);
         }
-        catch (junit.framework.AssertionFailedError e)
+        catch (final junit.framework.AssertionFailedError e)
         {
             System.out.println(cache.getStats());
             System.out.println(server.getStats());

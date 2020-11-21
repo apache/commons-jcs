@@ -43,9 +43,9 @@ public class RemoteCacheRequestFactory
      * @param requesterId id of requester
      * @return the request
      */
-    private static <K, V> RemoteCacheRequest<K, V> createRequest(String cacheName, RemoteRequestType requestType, long requesterId)
+    private static <K, V> RemoteCacheRequest<K, V> createRequest(final String cacheName, final RemoteRequestType requestType, final long requesterId)
     {
-        RemoteCacheRequest<K, V> request = new RemoteCacheRequest<>();
+        final RemoteCacheRequest<K, V> request = new RemoteCacheRequest<>();
         request.setCacheName( cacheName );
         request.setRequestType( requestType );
         request.setRequesterId( requesterId );
@@ -63,9 +63,9 @@ public class RemoteCacheRequestFactory
      * @param requesterId
      * @return RemoteHttpCacheRequest
      */
-    public static <K, V> RemoteCacheRequest<K, V> createGetRequest( String cacheName, K key, long requesterId )
+    public static <K, V> RemoteCacheRequest<K, V> createGetRequest( final String cacheName, final K key, final long requesterId )
     {
-        RemoteCacheRequest<K, V> request = createRequest(cacheName, RemoteRequestType.GET, requesterId);
+        final RemoteCacheRequest<K, V> request = createRequest(cacheName, RemoteRequestType.GET, requesterId);
         request.setKey( key );
 
         return request;
@@ -79,9 +79,9 @@ public class RemoteCacheRequestFactory
      * @param requesterId
      * @return RemoteHttpCacheRequest
      */
-    public static <K, V> RemoteCacheRequest<K, V> createGetMatchingRequest( String cacheName, String pattern, long requesterId )
+    public static <K, V> RemoteCacheRequest<K, V> createGetMatchingRequest( final String cacheName, final String pattern, final long requesterId )
     {
-        RemoteCacheRequest<K, V> request = createRequest(cacheName, RemoteRequestType.GET_MATCHING, requesterId);
+        final RemoteCacheRequest<K, V> request = createRequest(cacheName, RemoteRequestType.GET_MATCHING, requesterId);
         request.setPattern( pattern );
 
         return request;
@@ -95,9 +95,9 @@ public class RemoteCacheRequestFactory
      * @param requesterId
      * @return RemoteHttpCacheRequest
      */
-    public static <K, V> RemoteCacheRequest<K, V> createGetMultipleRequest( String cacheName, Set<K> keys, long requesterId )
+    public static <K, V> RemoteCacheRequest<K, V> createGetMultipleRequest( final String cacheName, final Set<K> keys, final long requesterId )
     {
-        RemoteCacheRequest<K, V> request = createRequest(cacheName, RemoteRequestType.GET_MULTIPLE, requesterId);
+        final RemoteCacheRequest<K, V> request = createRequest(cacheName, RemoteRequestType.GET_MULTIPLE, requesterId);
         request.setKeySet(keys);
 
         return request;
@@ -111,9 +111,9 @@ public class RemoteCacheRequestFactory
      * @param requesterId
      * @return RemoteHttpCacheRequest
      */
-    public static <K, V> RemoteCacheRequest<K, V> createRemoveRequest( String cacheName, K key, long requesterId )
+    public static <K, V> RemoteCacheRequest<K, V> createRemoveRequest( final String cacheName, final K key, final long requesterId )
     {
-        RemoteCacheRequest<K, V> request = createRequest(cacheName, RemoteRequestType.REMOVE, requesterId);
+        final RemoteCacheRequest<K, V> request = createRequest(cacheName, RemoteRequestType.REMOVE, requesterId);
         request.setKey( key );
 
         return request;
@@ -126,9 +126,9 @@ public class RemoteCacheRequestFactory
      * @param requesterId
      * @return RemoteHttpCacheRequest
      */
-    public static RemoteCacheRequest<String, String> createGetKeySetRequest( String cacheName, long requesterId )
+    public static RemoteCacheRequest<String, String> createGetKeySetRequest( final String cacheName, final long requesterId )
     {
-        RemoteCacheRequest<String, String> request = createRequest(cacheName, RemoteRequestType.GET_KEYSET, requesterId);
+        final RemoteCacheRequest<String, String> request = createRequest(cacheName, RemoteRequestType.GET_KEYSET, requesterId);
         request.setKey( cacheName );
 
         return request;
@@ -141,9 +141,9 @@ public class RemoteCacheRequestFactory
      * @param requesterId
      * @return RemoteHttpCacheRequest
      */
-    public static <K, V> RemoteCacheRequest<K, V> createRemoveAllRequest( String cacheName, long requesterId )
+    public static <K, V> RemoteCacheRequest<K, V> createRemoveAllRequest( final String cacheName, final long requesterId )
     {
-        RemoteCacheRequest<K, V> request = createRequest(cacheName, RemoteRequestType.REMOVE_ALL, requesterId);
+        final RemoteCacheRequest<K, V> request = createRequest(cacheName, RemoteRequestType.REMOVE_ALL, requesterId);
 
         return request;
     }
@@ -155,9 +155,9 @@ public class RemoteCacheRequestFactory
      * @param requesterId
      * @return RemoteHttpCacheRequest
      */
-    public static <K, V> RemoteCacheRequest<K, V> createDisposeRequest( String cacheName, long requesterId )
+    public static <K, V> RemoteCacheRequest<K, V> createDisposeRequest( final String cacheName, final long requesterId )
     {
-        RemoteCacheRequest<K, V> request = createRequest(cacheName, RemoteRequestType.DISPOSE, requesterId);
+        final RemoteCacheRequest<K, V> request = createRequest(cacheName, RemoteRequestType.DISPOSE, requesterId);
 
         return request;
     }
@@ -169,9 +169,9 @@ public class RemoteCacheRequestFactory
      * @param requesterId
      * @return RemoteHttpCacheRequest
      */
-    public static <K, V> RemoteCacheRequest<K, V> createUpdateRequest( ICacheElement<K, V> cacheElement, long requesterId )
+    public static <K, V> RemoteCacheRequest<K, V> createUpdateRequest( final ICacheElement<K, V> cacheElement, final long requesterId )
     {
-        RemoteCacheRequest<K, V> request = createRequest(null, RemoteRequestType.UPDATE, requesterId);
+        final RemoteCacheRequest<K, V> request = createRequest(null, RemoteRequestType.UPDATE, requesterId);
         if ( cacheElement != null )
         {
             request.setCacheName( cacheElement.getCacheName() );
@@ -192,9 +192,9 @@ public class RemoteCacheRequestFactory
      * @param requesterId
      * @return RemoteHttpCacheRequest
      */
-    public static <K, V> RemoteCacheRequest<K, V> createAliveCheckRequest( long requesterId )
+    public static <K, V> RemoteCacheRequest<K, V> createAliveCheckRequest( final long requesterId )
     {
-        RemoteCacheRequest<K, V> request = createRequest(null, RemoteRequestType.ALIVE_CHECK, requesterId);
+        final RemoteCacheRequest<K, V> request = createRequest(null, RemoteRequestType.ALIVE_CHECK, requesterId);
 
         return request;
     }

@@ -35,27 +35,27 @@ public class CacheEventLoggerDebugLoggerUnitTest
     public void testLogICacheEvent_normal()
     {
         // SETUP
-        String logCategoryName = "testLogEvent_normal";
+        final String logCategoryName = "testLogEvent_normal";
 
-        String source = "mySource";
-        String region = "my region";
-        String eventName = "MyEventName";
-        String optionalDetails = "SomeExtraData";
-        String key = "my key";
+        final String source = "mySource";
+        final String region = "my region";
+        final String eventName = "MyEventName";
+        final String optionalDetails = "SomeExtraData";
+        final String key = "my key";
 
-        StringWriter stringWriter = new StringWriter();
+        final StringWriter stringWriter = new StringWriter();
         TestLogConfigurationUtil.configureLogger( stringWriter, logCategoryName );
 
-        CacheEventLoggerDebugLogger logger = new CacheEventLoggerDebugLogger();
+        final CacheEventLoggerDebugLogger logger = new CacheEventLoggerDebugLogger();
         logger.setLogCategoryName( logCategoryName );
 
-        ICacheEvent<String> event = logger.createICacheEvent( source, region, eventName, optionalDetails, key );
+        final ICacheEvent<String> event = logger.createICacheEvent( source, region, eventName, optionalDetails, key );
 
         // DO WORK
         logger.logICacheEvent( event );
 
         // VERIFY
-        String result = stringWriter.toString();
+        final String result = stringWriter.toString();
         assertTrue( "An event with the source should have been logged:" + result, result.indexOf( source ) != -1 );
         assertTrue( "An event with the region should have been logged:" + result, result.indexOf( region ) != -1 );
         assertTrue( "An event with the event name should have been logged:" + result, result.indexOf( eventName ) != -1 );
@@ -67,23 +67,23 @@ public class CacheEventLoggerDebugLoggerUnitTest
     public void testLogApplicationEvent_normal()
     {
         // SETUP
-        String logCategoryName = "testLogApplicationEvent_normal";
+        final String logCategoryName = "testLogApplicationEvent_normal";
 
-        String source = "mySource";
-        String eventName = "MyEventName";
-        String optionalDetails = "SomeExtraData";
+        final String source = "mySource";
+        final String eventName = "MyEventName";
+        final String optionalDetails = "SomeExtraData";
 
-        StringWriter stringWriter = new StringWriter();
+        final StringWriter stringWriter = new StringWriter();
         TestLogConfigurationUtil.configureLogger( stringWriter, logCategoryName );
 
-        CacheEventLoggerDebugLogger logger = new CacheEventLoggerDebugLogger();
+        final CacheEventLoggerDebugLogger logger = new CacheEventLoggerDebugLogger();
         logger.setLogCategoryName( logCategoryName );
 
         // DO WORK
         logger.logApplicationEvent( source, eventName, optionalDetails );
 
         // VERIFY
-        String result = stringWriter.toString();
+        final String result = stringWriter.toString();
         assertTrue( "An event with the source should have been logged:" + result, result.indexOf( source ) != -1 );
         assertTrue( "An event with the event name should have been logged:" + result, result.indexOf( eventName ) != -1 );
         assertTrue( "An event with the optionalDetails should have been logged:" + result, result.indexOf( optionalDetails ) != -1 );
@@ -93,23 +93,23 @@ public class CacheEventLoggerDebugLoggerUnitTest
     public void testLogError_normal()
     {
         // SETUP
-        String logCategoryName = "testLogApplicationEvent_normal";
+        final String logCategoryName = "testLogApplicationEvent_normal";
 
-        String source = "mySource";
-        String eventName = "MyEventName";
-        String errorMessage = "SomeExtraData";
+        final String source = "mySource";
+        final String eventName = "MyEventName";
+        final String errorMessage = "SomeExtraData";
 
-        StringWriter stringWriter = new StringWriter();
+        final StringWriter stringWriter = new StringWriter();
         TestLogConfigurationUtil.configureLogger( stringWriter, logCategoryName );
 
-        CacheEventLoggerDebugLogger logger = new CacheEventLoggerDebugLogger();
+        final CacheEventLoggerDebugLogger logger = new CacheEventLoggerDebugLogger();
         logger.setLogCategoryName( logCategoryName );
 
         // DO WORK
         logger.logError( source, eventName, errorMessage );
 
         // VERIFY
-        String result = stringWriter.toString();
+        final String result = stringWriter.toString();
         assertTrue( "An event with the source should have been logged:" + result, result.indexOf( source ) != -1 );
         assertTrue( "An event with the event name should have been logged:" + result, result.indexOf( eventName ) != -1 );
         assertTrue( "An event with the errorMessage should have been logged:" + result, result.indexOf( errorMessage ) != -1 );

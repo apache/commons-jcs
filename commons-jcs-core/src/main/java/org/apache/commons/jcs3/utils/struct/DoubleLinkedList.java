@@ -53,7 +53,7 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
      * <p>
      * @param me The feature to be added to the Last
      */
-    public synchronized void addLast(T me)
+    public synchronized void addLast(final T me)
     {
         if ( first == null )
         {
@@ -74,7 +74,7 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
      * <p>
      * @param me The feature to be added to the First
      */
-    public synchronized void addFirst(T me)
+    public synchronized void addFirst(final T me)
     {
         if ( last == null )
         {
@@ -117,7 +117,7 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
      * <p>
      * @param ln The node to set as the head.
      */
-    public synchronized void makeFirst(T ln)
+    public synchronized void makeFirst(final T ln)
     {
         if ( ln.prev == null )
         {
@@ -149,7 +149,7 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
      * <p>
      * @param ln The node to set as the head.
      */
-    public synchronized void makeLast(T ln)
+    public synchronized void makeLast(final T ln)
     {
         if ( ln.next == null )
         {
@@ -187,7 +187,7 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
             {
                 me.prev = null;
             }
-            T next = (T) me.next;
+            final T next = (T) me.next;
             me = next;
         }
         first = last = null;
@@ -201,7 +201,7 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
      * @param me Description of the Parameter
      * @return true if an element was removed.
      */
-    public synchronized boolean remove(T me)
+    public synchronized boolean remove(final T me)
     {
         log.debug( "removing node" );
 
@@ -254,7 +254,7 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
     public synchronized T removeLast()
     {
         log.debug( "removing last node" );
-        T temp = last;
+        final T temp = last;
         if ( last != null )
         {
             remove( last );

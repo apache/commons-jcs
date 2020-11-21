@@ -52,7 +52,7 @@ public class Stats
      * @param stats
      */
     @Override
-    public void setStatElements( List<IStatElement<?>> stats )
+    public void setStatElements( final List<IStatElement<?>> stats )
     {
         this.stats = stats;
     }
@@ -70,7 +70,7 @@ public class Stats
      * @param name
      */
     @Override
-    public void setTypeName( String name )
+    public void setTypeName( final String name )
     {
         typeName = name;
     }
@@ -81,13 +81,13 @@ public class Stats
     @Override
     public String toString()
     {
-        StringBuilder buf = new StringBuilder();
+        final StringBuilder buf = new StringBuilder();
 
         buf.append( typeName );
 
         if ( stats != null )
         {
-            for (Object stat : stats)
+            for (final Object stat : stats)
             {
                 buf.append( "\n" );
                 buf.append( stat );

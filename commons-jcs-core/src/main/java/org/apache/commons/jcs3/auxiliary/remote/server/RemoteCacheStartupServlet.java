@@ -103,7 +103,7 @@ public class RemoteCacheStartupServlet
         super.init();
 
         loadInitParams();
-        Properties props = loadPropertiesFromFile();
+        final Properties props = loadPropertiesFromFile();
 
         if (registryHost == null)
         {
@@ -112,7 +112,7 @@ public class RemoteCacheStartupServlet
             {
                 registryHost = HostNameUtil.getLocalHostAddress();
             }
-            catch (UnknownHostException e)
+            catch (final UnknownHostException e)
             {
                 log.error("Could not get local address to use for the registry!", e);
             }
@@ -128,7 +128,7 @@ public class RemoteCacheStartupServlet
                         + "be able to use the address to reach this server.", registryHost);
             }
         }
-        catch (UnknownHostException e)
+        catch (final UnknownHostException e)
         {
             throw new ServletException("Could not resolve registry host " + registryHost, e);
         }
@@ -143,7 +143,7 @@ public class RemoteCacheStartupServlet
             RemoteCacheServerFactory.startup(registryHost, registryPort, props);
             log.info("Remote JCS Server started with properties from {0}", propsFileName);
         }
-        catch (IOException e)
+        catch (final IOException e)
         {
             throw new ServletException("Problem starting remote cache server.", e);
         }
@@ -159,7 +159,7 @@ public class RemoteCacheStartupServlet
      * @throws IOException
      */
     @Override
-    protected void service(HttpServletRequest request, HttpServletResponse response)
+    protected void service(final HttpServletRequest request, final HttpServletResponse response)
             throws ServletException, IOException
     {
         String stats = "";
@@ -168,7 +168,7 @@ public class RemoteCacheStartupServlet
         {
             stats = CompositeCacheManager.getInstance().getStats();
         }
-        catch (CacheException e)
+        catch (final CacheException e)
         {
             throw new ServletException(e);
         }
@@ -183,11 +183,11 @@ public class RemoteCacheStartupServlet
                 characterEncoding = StandardCharsets.UTF_8.name();
                 response.setCharacterEncoding(characterEncoding);
             }
-            OutputStream os = response.getOutputStream();
+            final OutputStream os = response.getOutputStream();
             os.write(stats.getBytes(characterEncoding));
             os.close();
         }
-        catch (IOException e)
+        catch (final IOException e)
         {
             log.error("Problem writing response.", e);
         }
@@ -207,7 +207,7 @@ public class RemoteCacheStartupServlet
         {
             RemoteCacheServerFactory.shutdownImpl(registryHost, registryPort);
         }
-        catch (IOException e)
+        catch (final IOException e)
         {
             log.error("Problem shutting down.", e);
         }
@@ -216,7 +216,7 @@ public class RemoteCacheStartupServlet
         {
             CompositeCacheManager.getInstance().shutDown();
         }
-        catch (CacheException e)
+        catch (final CacheException e)
         {
             log.error("Could not retrieve cache manager instance", e);
         }
@@ -235,11 +235,11 @@ public class RemoteCacheStartupServlet
             if (props != null)
             {
                 registryHost = props.getProperty("registry.host", registryHost);
-                String portS = props.getProperty("registry.port", String.valueOf(registryPort));
+                final String portS = props.getProperty("registry.port", String.valueOf(registryPort));
                 setRegistryPort(portS);
             }
         }
-        catch (IOException e)
+        catch (final IOException e)
         {
             log.error("Problem loading props.", e);
         }
@@ -252,18 +252,18 @@ public class RemoteCacheStartupServlet
      */
     private void loadInitParams()
     {
-        ServletConfig config = getServletConfig();
-        String _propsFileName = config.getInitParameter("propsFileName");
+        final ServletConfig config = getServletConfig();
+        final String _propsFileName = config.getInitParameter("propsFileName");
         if (null != _propsFileName)
         {
             this.propsFileName = _propsFileName;
         }
-        String _registryHost = config.getInitParameter("registryHost");
+        final String _registryHost = config.getInitParameter("registryHost");
         if (null != _registryHost)
         {
             this.registryHost = _registryHost;
         }
-        String regPortString = config.getInitParameter("registryPort");
+        final String regPortString = config.getInitParameter("registryPort");
         if (null != regPortString)
         {
             setRegistryPort(regPortString);
@@ -276,13 +276,13 @@ public class RemoteCacheStartupServlet
      *
      * @param portS
      */
-    private void setRegistryPort(String portS)
+    private void setRegistryPort(final String portS)
     {
         try
         {
             this.registryPort = Integer.parseInt(portS);
         }
-        catch (NumberFormatException e)
+        catch (final NumberFormatException e)
         {
             log.error("Problem converting port to an int.", e);
             this.registryPort = DEFAULT_REGISTRY_PORT;

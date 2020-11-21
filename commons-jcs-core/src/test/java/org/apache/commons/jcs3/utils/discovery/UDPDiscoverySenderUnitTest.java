@@ -87,18 +87,18 @@ public class UDPDiscoverySenderUnitTest
         throws Exception
     {
         // SETUP
-        ArrayList<String> cacheNames = new ArrayList<>();
+        final ArrayList<String> cacheNames = new ArrayList<>();
 
         // DO WORK
         sender.passiveBroadcast( SENDING_HOST, SENDING_PORT, cacheNames, 1L );
 
         // VERIFY
         // grab the sent message
-        Object obj = receiver.waitForMessage() ;
+        final Object obj = receiver.waitForMessage() ;
 
         assertTrue( "unexpected crap received", obj instanceof UDPDiscoveryMessage );
 
-        UDPDiscoveryMessage msg = (UDPDiscoveryMessage) obj;
+        final UDPDiscoveryMessage msg = (UDPDiscoveryMessage) obj;
         // disabled test because of JCS-89
         // assertEquals( "wrong host", SENDING_HOST, msg.getHost() );
         assertEquals( "wrong port", SENDING_PORT, msg.getPort() );
@@ -114,18 +114,18 @@ public class UDPDiscoverySenderUnitTest
         throws Exception
     {
         // SETUP
-        ArrayList<String> cacheNames = new ArrayList<>();
+        final ArrayList<String> cacheNames = new ArrayList<>();
 
         // DO WORK
         sender.removeBroadcast( SENDING_HOST, SENDING_PORT, cacheNames, 1L );
 
         // VERIFY
         // grab the sent message
-        Object obj = receiver.waitForMessage();
+        final Object obj = receiver.waitForMessage();
 
         assertTrue( "unexpected crap received", obj instanceof UDPDiscoveryMessage );
 
-        UDPDiscoveryMessage msg = (UDPDiscoveryMessage) obj;
+        final UDPDiscoveryMessage msg = (UDPDiscoveryMessage) obj;
         // disabled test because of JCS-89
         // assertEquals( "wrong host", SENDING_HOST, msg.getHost() );
         assertEquals( "wrong port", SENDING_PORT, msg.getPort() );
@@ -145,11 +145,11 @@ public class UDPDiscoverySenderUnitTest
 
         // VERIFY
         // grab the sent message
-        Object obj = receiver.waitForMessage();
+        final Object obj = receiver.waitForMessage();
 
         assertTrue( "unexpected crap received", obj instanceof UDPDiscoveryMessage );
 
-        UDPDiscoveryMessage msg = (UDPDiscoveryMessage) obj;
+        final UDPDiscoveryMessage msg = (UDPDiscoveryMessage) obj;
         assertEquals( "wrong message type", BroadcastType.REQUEST, msg.getMessageType() );
     }
 }

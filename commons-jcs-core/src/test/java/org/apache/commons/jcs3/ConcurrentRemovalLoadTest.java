@@ -38,7 +38,7 @@ public class ConcurrentRemovalLoadTest
      */
     public static Test suite()
     {
-        ActiveTestSuite suite = new ActiveTestSuite();
+        final ActiveTestSuite suite = new ActiveTestSuite();
 
         suite.addTest( new RemovalTestUtil( "testRemoveCache1" )
         {

@@ -66,21 +66,21 @@ public class RemoteCacheUnitTest
         throws Exception
     {
         // SETUP
-        long listenerId = 123;
+        final long listenerId = 123;
         listener.setListenerId( listenerId );
 
-        RemoteCache<String, String> remoteCache = new RemoteCache<>( cattr, service, listener, monitor );
+        final RemoteCache<String, String> remoteCache = new RemoteCache<>( cattr, service, listener, monitor );
 
-        String cacheName = "testUpdate";
+        final String cacheName = "testUpdate";
 
         // DO WORK
-        ICacheElement<String, String> element = new CacheElement<>( cacheName, "key", "value" );
+        final ICacheElement<String, String> element = new CacheElement<>( cacheName, "key", "value" );
         remoteCache.update( element );
 
         // VERIFY
         assertTrue( "The element should be in the serialized wrapper.",
                     service.lastUpdate instanceof ICacheElementSerialized );
-        ICacheElement<String, String> result = SerializationConversionUtil
+        final ICacheElement<String, String> result = SerializationConversionUtil
             .getDeSerializedCacheElement( (ICacheElementSerialized<String, String>) service.lastUpdate, remoteCache
                 .getElementSerializer() );
         assertEquals( "Wrong element updated.", element.getVal(), result.getVal() );
@@ -96,15 +96,15 @@ public class RemoteCacheUnitTest
         throws Exception
     {
         // SETUP
-        ZombieCacheServiceNonLocal<String, String> zombie = new ZombieCacheServiceNonLocal<>( 10 );
+        final ZombieCacheServiceNonLocal<String, String> zombie = new ZombieCacheServiceNonLocal<>( 10 );
 
         // set the zombie
-        RemoteCache<String, String> remoteCache = new RemoteCache<>( cattr, zombie, listener, monitor );
+        final RemoteCache<String, String> remoteCache = new RemoteCache<>( cattr, zombie, listener, monitor );
 
-        String cacheName = "testUpdate";
+        final String cacheName = "testUpdate";
 
         // DO WORK
-        ICacheElement<String, String> element = new CacheElement<>( cacheName, "key", "value" );
+        final ICacheElement<String, String> element = new CacheElement<>( cacheName, "key", "value" );
         remoteCache.update( element );
         // set the new service, this should call propagate
         remoteCache.fixCache( service );
@@ -112,7 +112,7 @@ public class RemoteCacheUnitTest
         // VERIFY
         assertTrue( "The element should be in the serialized warapper.",
                     service.lastUpdate instanceof ICacheElementSerialized );
-        ICacheElement<String, String> result = SerializationConversionUtil
+        final ICacheElement<String, String> result = SerializationConversionUtil
             .getDeSerializedCacheElement( (ICacheElementSerialized<String, String>) service.lastUpdate, remoteCache
                 .getElementSerializer() );
         assertEquals( "Wrong element updated.", element.getVal(), result.getVal() );
@@ -126,12 +126,12 @@ public class RemoteCacheUnitTest
     public void testUpdate_simple()
         throws Exception
     {
-        RemoteCache<String, String> remoteCache = new RemoteCache<>( cattr, service, listener, monitor );
+        final RemoteCache<String, String> remoteCache = new RemoteCache<>( cattr, service, listener, monitor );
 
-        MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
+        final MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
         remoteCache.setCacheEventLogger( cacheEventLogger );
 
-        ICacheElement<String, String> item = new CacheElement<>( "region", "key", "value" );
+        final ICacheElement<String, String> item = new CacheElement<>( "region", "key", "value" );
 
         // DO WORK
         remoteCache.update( item );
@@ -149,9 +149,9 @@ public class RemoteCacheUnitTest
     public void testGet_simple()
         throws Exception
     {
-        RemoteCache<String, String> remoteCache = new RemoteCache<>( cattr, service, listener, monitor );
+        final RemoteCache<String, String> remoteCache = new RemoteCache<>( cattr, service, listener, monitor );
 
-        MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
+        final MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
         remoteCache.setCacheEventLogger( cacheEventLogger );
 
         // DO WORK
@@ -170,9 +170,9 @@ public class RemoteCacheUnitTest
     public void testGetMultiple_simple()
         throws Exception
     {
-        RemoteCache<String, String> remoteCache = new RemoteCache<>( cattr, service, listener, monitor );
+        final RemoteCache<String, String> remoteCache = new RemoteCache<>( cattr, service, listener, monitor );
 
-        MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
+        final MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
         remoteCache.setCacheEventLogger( cacheEventLogger );
 
         // DO WORK
@@ -191,9 +191,9 @@ public class RemoteCacheUnitTest
     public void testRemove_simple()
         throws Exception
     {
-        RemoteCache<String, String> remoteCache = new RemoteCache<>( cattr, service, listener, monitor );
+        final RemoteCache<String, String> remoteCache = new RemoteCache<>( cattr, service, listener, monitor );
 
-        MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
+        final MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
         remoteCache.setCacheEventLogger( cacheEventLogger );
 
         // DO WORK
@@ -212,9 +212,9 @@ public class RemoteCacheUnitTest
     public void testRemoveAll_simple()
         throws Exception
     {
-        RemoteCache<String, String> remoteCache = new RemoteCache<>( cattr, service, listener, monitor );
+        final RemoteCache<String, String> remoteCache = new RemoteCache<>( cattr, service, listener, monitor );
 
-        MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
+        final MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
         remoteCache.setCacheEventLogger( cacheEventLogger );
 
         // DO WORK
@@ -234,15 +234,15 @@ public class RemoteCacheUnitTest
         throws Exception
     {
         // SETUP
-        String pattern = "adsfasdfasd.?";
+        final String pattern = "adsfasdfasd.?";
 
-        RemoteCache<String, String> remoteCache = new RemoteCache<>( cattr, service, listener, monitor );
+        final RemoteCache<String, String> remoteCache = new RemoteCache<>( cattr, service, listener, monitor );
 
-        MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
+        final MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
         remoteCache.setCacheEventLogger( cacheEventLogger );
 
         // DO WORK
-        Map<String, ICacheElement<String, String>> result = remoteCache.getMatching( pattern );
+        final Map<String, ICacheElement<String, String>> result = remoteCache.getMatching( pattern );
 
         // VERIFY
         assertNotNull( "Should have a map", result );
@@ -258,9 +258,9 @@ public class RemoteCacheUnitTest
     public void testDispose_simple()
         throws Exception
     {
-        RemoteCache<String, String> remoteCache = new RemoteCache<>( cattr, service, listener, monitor );
+        final RemoteCache<String, String> remoteCache = new RemoteCache<>( cattr, service, listener, monitor );
 
-        MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
+        final MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
         remoteCache.setCacheEventLogger( cacheEventLogger );
 
         // DO WORK
@@ -280,9 +280,9 @@ public class RemoteCacheUnitTest
         throws Exception
     {
         // SETUP
-        RemoteCache<String, String> remoteCache = new RemoteCache<>( cattr, service, null, monitor );
+        final RemoteCache<String, String> remoteCache = new RemoteCache<>( cattr, service, null, monitor );
 
-        MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
+        final MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
         remoteCache.setCacheEventLogger( cacheEventLogger );
 
         // DO WORK

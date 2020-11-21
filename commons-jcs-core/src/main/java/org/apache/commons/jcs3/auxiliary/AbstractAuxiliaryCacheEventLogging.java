@@ -44,7 +44,7 @@ public abstract class AbstractAuxiliaryCacheEventLogging<K, V>
      * @throws IOException
      */
     @Override
-    public void update( ICacheElement<K, V> cacheElement )
+    public void update( final ICacheElement<K, V> cacheElement )
         throws IOException
     {
         updateWithEventLogging( cacheElement );
@@ -56,10 +56,10 @@ public abstract class AbstractAuxiliaryCacheEventLogging<K, V>
      * @param cacheElement
      * @throws IOException
      */
-    protected final void updateWithEventLogging( ICacheElement<K, V> cacheElement )
+    protected final void updateWithEventLogging( final ICacheElement<K, V> cacheElement )
         throws IOException
     {
-        ICacheEvent<K> cacheEvent = createICacheEvent( cacheElement, ICacheEventLogger.UPDATE_EVENT );
+        final ICacheEvent<K> cacheEvent = createICacheEvent( cacheElement, ICacheEventLogger.UPDATE_EVENT );
         try
         {
             processUpdate( cacheElement );
@@ -87,7 +87,7 @@ public abstract class AbstractAuxiliaryCacheEventLogging<K, V>
      * @throws IOException
      */
     @Override
-    public ICacheElement<K, V> get( K key )
+    public ICacheElement<K, V> get( final K key )
         throws IOException
     {
         return getWithEventLogging( key );
@@ -100,10 +100,10 @@ public abstract class AbstractAuxiliaryCacheEventLogging<K, V>
      * @return ICacheElement, a wrapper around the key, value, and attributes
      * @throws IOException
      */
-    protected final ICacheElement<K, V> getWithEventLogging( K key )
+    protected final ICacheElement<K, V> getWithEventLogging( final K key )
         throws IOException
     {
-        ICacheEvent<K> cacheEvent = createICacheEvent( getCacheName(), key, ICacheEventLogger.GET_EVENT );
+        final ICacheEvent<K> cacheEvent = createICacheEvent( getCacheName(), key, ICacheEventLogger.GET_EVENT );
         try
         {
             return processGet( key );
@@ -133,7 +133,7 @@ public abstract class AbstractAuxiliaryCacheEventLogging<K, V>
      * @throws IOException
      */
     @Override
-    public Map<K, ICacheElement<K, V>> getMultiple(Set<K> keys)
+    public Map<K, ICacheElement<K, V>> getMultiple(final Set<K> keys)
         throws IOException
     {
         return getMultipleWithEventLogging( keys );
@@ -147,10 +147,10 @@ public abstract class AbstractAuxiliaryCacheEventLogging<K, V>
      *         data in cache for any of these keys
      * @throws IOException
      */
-    protected final Map<K, ICacheElement<K, V>> getMultipleWithEventLogging(Set<K> keys )
+    protected final Map<K, ICacheElement<K, V>> getMultipleWithEventLogging(final Set<K> keys )
         throws IOException
     {
-        ICacheEvent<Serializable> cacheEvent = createICacheEvent( getCacheName(), (Serializable) keys,
+        final ICacheEvent<Serializable> cacheEvent = createICacheEvent( getCacheName(), (Serializable) keys,
                                                     ICacheEventLogger.GETMULTIPLE_EVENT );
         try
         {
@@ -177,7 +177,7 @@ public abstract class AbstractAuxiliaryCacheEventLogging<K, V>
      * @throws IOException
      */
     @Override
-    public Map<K, ICacheElement<K, V>> getMatching( String pattern )
+    public Map<K, ICacheElement<K, V>> getMatching( final String pattern )
         throws IOException
     {
         return getMatchingWithEventLogging( pattern );
@@ -191,10 +191,10 @@ public abstract class AbstractAuxiliaryCacheEventLogging<K, V>
      *         data matching the pattern.
      * @throws IOException
      */
-    protected final Map<K, ICacheElement<K, V>> getMatchingWithEventLogging( String pattern )
+    protected final Map<K, ICacheElement<K, V>> getMatchingWithEventLogging( final String pattern )
         throws IOException
     {
-        ICacheEvent<String> cacheEvent = createICacheEvent( getCacheName(), pattern, ICacheEventLogger.GETMATCHING_EVENT );
+        final ICacheEvent<String> cacheEvent = createICacheEvent( getCacheName(), pattern, ICacheEventLogger.GETMATCHING_EVENT );
         try
         {
             return processGetMatching( pattern );
@@ -224,7 +224,7 @@ public abstract class AbstractAuxiliaryCacheEventLogging<K, V>
      * @throws IOException
      */
     @Override
-    public boolean remove( K key )
+    public boolean remove( final K key )
         throws IOException
     {
         return removeWithEventLogging( key );
@@ -237,10 +237,10 @@ public abstract class AbstractAuxiliaryCacheEventLogging<K, V>
      * @return boolean, whether or not the item was removed
      * @throws IOException
      */
-    protected final boolean removeWithEventLogging( K key )
+    protected final boolean removeWithEventLogging( final K key )
         throws IOException
     {
-        ICacheEvent<K> cacheEvent = createICacheEvent( getCacheName(), key, ICacheEventLogger.REMOVE_EVENT );
+        final ICacheEvent<K> cacheEvent = createICacheEvent( getCacheName(), key, ICacheEventLogger.REMOVE_EVENT );
         try
         {
             return processRemove( key );
@@ -281,7 +281,7 @@ public abstract class AbstractAuxiliaryCacheEventLogging<K, V>
     protected final void removeAllWithEventLogging()
         throws IOException
     {
-        ICacheEvent<String> cacheEvent = createICacheEvent( getCacheName(), "all", ICacheEventLogger.REMOVEALL_EVENT );
+        final ICacheEvent<String> cacheEvent = createICacheEvent( getCacheName(), "all", ICacheEventLogger.REMOVEALL_EVENT );
         try
         {
             processRemoveAll();
@@ -321,7 +321,7 @@ public abstract class AbstractAuxiliaryCacheEventLogging<K, V>
     protected final void disposeWithEventLogging()
         throws IOException
     {
-        ICacheEvent<String> cacheEvent = createICacheEvent( getCacheName(), "none", ICacheEventLogger.DISPOSE_EVENT );
+        final ICacheEvent<String> cacheEvent = createICacheEvent( getCacheName(), "none", ICacheEventLogger.DISPOSE_EVENT );
         try
         {
             processDispose();

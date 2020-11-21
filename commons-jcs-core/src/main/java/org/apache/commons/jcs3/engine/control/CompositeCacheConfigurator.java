@@ -95,14 +95,14 @@ public class CompositeCacheConfigurator
      * @param props Configuration properties
      * @param ccm Cache hub
      */
-    protected void parseSystemRegions( Properties props, CompositeCacheManager ccm )
+    protected void parseSystemRegions( final Properties props, final CompositeCacheManager ccm )
     {
-        for (String key : props.stringPropertyNames() )
+        for (final String key : props.stringPropertyNames() )
         {
             if ( key.startsWith( SYSTEM_REGION_PREFIX ) && key.indexOf( "attributes" ) == -1 )
             {
-                String regionName = key.substring( SYSTEM_REGION_PREFIX.length() );
-                String auxiliaries = OptionConverter.findAndSubst( key, props );
+                final String regionName = key.substring( SYSTEM_REGION_PREFIX.length() );
+                final String auxiliaries = OptionConverter.findAndSubst( key, props );
                 ICache<?, ?> cache;
                 synchronized ( regionName )
                 {
@@ -119,17 +119,17 @@ public class CompositeCacheConfigurator
      * @param props Configuration properties
      * @param ccm Cache hub
      */
-    protected void parseRegions( Properties props, CompositeCacheManager ccm )
+    protected void parseRegions( final Properties props, final CompositeCacheManager ccm )
     {
-        List<String> regionNames = new ArrayList<>();
+        final List<String> regionNames = new ArrayList<>();
 
-        for (String key : props.stringPropertyNames() )
+        for (final String key : props.stringPropertyNames() )
         {
             if ( key.startsWith( REGION_PREFIX ) && key.indexOf( "attributes" ) == -1 )
             {
-                String regionName = key.substring( REGION_PREFIX.length() );
+                final String regionName = key.substring( REGION_PREFIX.length() );
                 regionNames.add( regionName );
-                String auxiliaries = OptionConverter.findAndSubst( key, props );
+                final String auxiliaries = OptionConverter.findAndSubst( key, props );
                 ICache<?, ?> cache;
                 synchronized ( regionName )
                 {
@@ -153,7 +153,7 @@ public class CompositeCacheConfigurator
      * @return CompositeCache
      */
     protected <K, V> CompositeCache<K, V> parseRegion(
-            Properties props, CompositeCacheManager ccm, String regName, String auxiliaries )
+            final Properties props, final CompositeCacheManager ccm, final String regName, final String auxiliaries )
     {
         return parseRegion( props, ccm, regName, auxiliaries, null, REGION_PREFIX );
     }
@@ -172,8 +172,8 @@ public class CompositeCacheConfigurator
      * @return CompositeCache
      */
     protected <K, V> CompositeCache<K, V> parseRegion(
-            Properties props, CompositeCacheManager ccm, String regName, String auxiliaries,
-            ICompositeCacheAttributes cca )
+            final Properties props, final CompositeCacheManager ccm, final String regName, final String auxiliaries,
+            final ICompositeCacheAttributes cca )
     {
         return parseRegion( props, ccm, regName, auxiliaries, cca, REGION_PREFIX );
     }
@@ -191,18 +191,18 @@ public class CompositeCacheConfigurator
      * @return CompositeCache
      */
     protected <K, V> CompositeCache<K, V> parseRegion(
-            Properties props, CompositeCacheManager ccm, String regName, String auxiliaries,
-            ICompositeCacheAttributes cca, String regionPrefix )
+            final Properties props, final CompositeCacheManager ccm, final String regName, final String auxiliaries,
+            final ICompositeCacheAttributes cca, final String regionPrefix )
     {
         // First, create or get the cache and element attributes, and create
         // the cache.
-        IElementAttributes ea = parseElementAttributes( props, regName,
+        final IElementAttributes ea = parseElementAttributes( props, regName,
                 ccm.getDefaultElementAttributes(), regionPrefix );
 
-        ICompositeCacheAttributes instantiationCca = cca == null
+        final ICompositeCacheAttributes instantiationCca = cca == null
                 ? parseCompositeCacheAttributes(props, regName, ccm.getDefaultCacheAttributes(), regionPrefix)
                 : cca;
-        CompositeCache<K, V> cache = newCache(instantiationCca, ea);
+        final CompositeCache<K, V> cache = newCache(instantiationCca, ea);
 
         // Inject cache manager
         cache.setCompositeCacheManager(ccm);
@@ -222,12 +222,12 @@ public class CompositeCacheConfigurator
         if (auxiliaries != null)
         {
             // Next, create the auxiliaries for the new cache
-            List<AuxiliaryCache<K, V>> auxList = new ArrayList<>();
+            final List<AuxiliaryCache<K, V>> auxList = new ArrayList<>();
 
             log.debug( "Parsing region name \"{0}\", value \"{1}\"", regName, auxiliaries );
 
             // We must skip over ',' but not white space
-            StringTokenizer st = new StringTokenizer( auxiliaries, "," );
+            final StringTokenizer st = new StringTokenizer( auxiliaries, "," );
 
             // If value is not in the form ", appender.." or "", then we should set
             // the priority of the category.
@@ -268,6 +268,7 @@ public class CompositeCacheConfigurator
 
             // Associate the auxiliaries with the cache
             @SuppressWarnings("unchecked") // No generic arrays in java
+            final
             AuxiliaryCache<K, V>[] auxArray = auxList.toArray( new AuxiliaryCache[0] );
             cache.setAuxCaches( auxArray );
         }
@@ -277,7 +278,7 @@ public class CompositeCacheConfigurator
     }
 
     protected <K, V> CompositeCache<K, V> newCache(
-            ICompositeCacheAttributes cca, IElementAttributes ea)
+            final ICompositeCacheAttributes cca, final IElementAttributes ea)
     {
         return new CompositeCache<>( cca, ea );
     }
@@ -291,8 +292,8 @@ public class CompositeCacheConfigurator
      *
      * @return ICompositeCacheAttributes
      */
-    protected ICompositeCacheAttributes parseCompositeCacheAttributes( Properties props,
-            String regName, ICompositeCacheAttributes defaultCCAttr )
+    protected ICompositeCacheAttributes parseCompositeCacheAttributes( final Properties props,
+            final String regName, final ICompositeCacheAttributes defaultCCAttr )
     {
         return parseCompositeCacheAttributes( props, regName, defaultCCAttr, REGION_PREFIX );
     }
@@ -307,12 +308,12 @@ public class CompositeCacheConfigurator
      *
      * @return ICompositeCacheAttributes
      */
-    protected ICompositeCacheAttributes parseCompositeCacheAttributes( Properties props,
-            String regName, ICompositeCacheAttributes defaultCCAttr, String regionPrefix )
+    protected ICompositeCacheAttributes parseCompositeCacheAttributes( final Properties props,
+            final String regName, final ICompositeCacheAttributes defaultCCAttr, final String regionPrefix )
     {
         ICompositeCacheAttributes ccAttr;
 
-        String attrName = regionPrefix + regName + CACHE_ATTRIBUTE_PREFIX;
+        final String attrName = regionPrefix + regName + CACHE_ATTRIBUTE_PREFIX;
 
         // auxFactory was not previously initialized.
         // String prefix = regionPrefix + regName + ATTRIBUTE_PREFIX;
@@ -348,12 +349,12 @@ public class CompositeCacheConfigurator
      *
      * @return IElementAttributes
      */
-    protected IElementAttributes parseElementAttributes( Properties props, String regName,
-            IElementAttributes defaultEAttr, String regionPrefix )
+    protected IElementAttributes parseElementAttributes( final Properties props, final String regName,
+            final IElementAttributes defaultEAttr, final String regionPrefix )
     {
         IElementAttributes eAttr;
 
-        String attrName = regionPrefix + regName + CompositeCacheConfigurator.ELEMENT_ATTRIBUTE_PREFIX;
+        final String attrName = regionPrefix + regName + CompositeCacheConfigurator.ELEMENT_ATTRIBUTE_PREFIX;
 
         // auxFactory was not previously initialized.
         // String prefix = regionPrefix + regName + ATTRIBUTE_PREFIX;
@@ -387,8 +388,8 @@ public class CompositeCacheConfigurator
      * @param regName the name of the region.
      * @return AuxiliaryCache
      */
-    protected <K, V> AuxiliaryCache<K, V> parseAuxiliary( Properties props, CompositeCacheManager ccm,
-            String auxName, String regName )
+    protected <K, V> AuxiliaryCache<K, V> parseAuxiliary( final Properties props, final CompositeCacheManager ccm,
+            final String auxName, final String regName )
     {
         log.debug( "parseAuxiliary {0}", auxName );
 
@@ -403,7 +404,7 @@ public class CompositeCacheConfigurator
             if ( auxFac == null )
             {
                 // auxFactory was not previously initialized.
-                String prefix = AUXILIARY_PREFIX + auxName;
+                final String prefix = AUXILIARY_PREFIX + auxName;
                 auxFac = OptionConverter.instantiateByKey( props, prefix, null );
                 if ( auxFac == null )
                 {
@@ -424,11 +425,11 @@ public class CompositeCacheConfigurator
 
             // GET ATTRIBUTES
             AuxiliaryCacheAttributes auxAttr = ccm.registryAttrGet( auxName );
-            String attrName = AUXILIARY_PREFIX + auxName + ATTRIBUTE_PREFIX;
+            final String attrName = AUXILIARY_PREFIX + auxName + ATTRIBUTE_PREFIX;
             if ( auxAttr == null )
             {
                 // auxFactory was not previously initialized.
-                String prefix = AUXILIARY_PREFIX + auxName + ATTRIBUTE_PREFIX;
+                final String prefix = AUXILIARY_PREFIX + auxName + ATTRIBUTE_PREFIX;
                 auxAttr = OptionConverter.instantiateByKey( props, prefix, null );
                 if ( auxAttr == null )
                 {
@@ -451,14 +452,14 @@ public class CompositeCacheConfigurator
             // GET CACHE FROM FACTORY WITH ATTRIBUTES
             auxAttr.setCacheName( regName );
 
-            String auxPrefix = AUXILIARY_PREFIX + auxName;
+            final String auxPrefix = AUXILIARY_PREFIX + auxName;
 
             // CONFIGURE THE EVENT LOGGER
-            ICacheEventLogger cacheEventLogger =
+            final ICacheEventLogger cacheEventLogger =
                     AuxiliaryCacheConfigurator.parseCacheEventLogger( props, auxPrefix );
 
             // CONFIGURE THE ELEMENT SERIALIZER
-            IElementSerializer elementSerializer =
+            final IElementSerializer elementSerializer =
                     AuxiliaryCacheConfigurator.parseElementSerializer( props, auxPrefix );
 
             // CONFIGURE THE KEYMATCHER
@@ -473,7 +474,7 @@ public class CompositeCacheConfigurator
             {
                 auxCache = auxFac.createCache( auxAttr, ccm, cacheEventLogger, elementSerializer );
             }
-            catch (Exception e)
+            catch (final Exception e)
             {
                 log.error( "Could not instantiate auxiliary cache named \"{0}\"", regName, e );
                 return null;
@@ -490,11 +491,11 @@ public class CompositeCacheConfigurator
      * <p>
      * @param props
      */
-    protected static void overrideWithSystemProperties( Properties props )
+    protected static void overrideWithSystemProperties( final Properties props )
     {
         // override any setting with values from the system properties.
-        Properties sysProps = System.getProperties();
-        for (String key : sysProps.stringPropertyNames())
+        final Properties sysProps = System.getProperties();
+        for (final String key : sysProps.stringPropertyNames())
         {
             if ( key.startsWith( SYSTEM_PROPERTY_KEY_PREFIX ) )
             {
@@ -512,15 +513,15 @@ public class CompositeCacheConfigurator
      * @param auxPrefix - ex. AUXILIARY_PREFIX + auxName
      * @return IKeyMatcher
      */
-    protected <K> IKeyMatcher<K> parseKeyMatcher( Properties props, String auxPrefix )
+    protected <K> IKeyMatcher<K> parseKeyMatcher( final Properties props, final String auxPrefix )
     {
 
         // auxFactory was not previously initialized.
-        String keyMatcherClassName = auxPrefix + KEY_MATCHER_PREFIX;
+        final String keyMatcherClassName = auxPrefix + KEY_MATCHER_PREFIX;
         IKeyMatcher<K> keyMatcher = OptionConverter.instantiateByKey( props, keyMatcherClassName, null );
         if ( keyMatcher != null )
         {
-            String attributePrefix = auxPrefix + KEY_MATCHER_PREFIX + ATTRIBUTE_PREFIX;
+            final String attributePrefix = auxPrefix + KEY_MATCHER_PREFIX + ATTRIBUTE_PREFIX;
             PropertySetter.setProperties( keyMatcher, props, attributePrefix + "." );
             log.info( "Using custom key matcher [{0}] for auxiliary [{1}]", keyMatcher, auxPrefix );
         }

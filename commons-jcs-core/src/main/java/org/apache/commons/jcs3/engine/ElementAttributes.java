@@ -101,7 +101,7 @@ public class ElementAttributes
      * <p>
      * @param attr
      */
-    protected ElementAttributes( ElementAttributes attr )
+    protected ElementAttributes( final ElementAttributes attr )
     {
         IS_ETERNAL = attr.IS_ETERNAL;
 
@@ -126,7 +126,7 @@ public class ElementAttributes
      * @param mls The new MaxLifeSeconds value
      */
     @Override
-    public void setMaxLife(long mls)
+    public void setMaxLife(final long mls)
     {
         this.maxLife = mls;
     }
@@ -154,7 +154,7 @@ public class ElementAttributes
      * @param idle The new idleTime value
      */
     @Override
-    public void setIdleTime( long idle )
+    public void setIdleTime( final long idle )
     {
         this.maxIdleTime = idle;
     }
@@ -166,7 +166,7 @@ public class ElementAttributes
      * @param size The new size value
      */
     @Override
-    public void setSize( int size )
+    public void setSize( final int size )
     {
         this.size = size;
     }
@@ -253,7 +253,7 @@ public class ElementAttributes
     /**
      * only for use from test code
      */
-    public void setLastAccessTime(long time)
+    public void setLastAccessTime(final long time)
     {
         this.lastAccessTime = time;
     }
@@ -277,7 +277,7 @@ public class ElementAttributes
      * @param val The new isSpool value
      */
     @Override
-    public void setIsSpool( boolean val )
+    public void setIsSpool( final boolean val )
     {
         this.IS_SPOOL = val;
     }
@@ -301,7 +301,7 @@ public class ElementAttributes
      * @param val The new isLateral value
      */
     @Override
-    public void setIsLateral( boolean val )
+    public void setIsLateral( final boolean val )
     {
         this.IS_LATERAL = val;
     }
@@ -321,7 +321,7 @@ public class ElementAttributes
      * @param val The new isRemote value
      */
     @Override
-    public void setIsRemote( boolean val )
+    public void setIsRemote( final boolean val )
     {
         this.IS_REMOTE = val;
     }
@@ -345,7 +345,7 @@ public class ElementAttributes
      * @param val The new isEternal value
      */
     @Override
-    public void setIsEternal( boolean val )
+    public void setIsEternal( final boolean val )
     {
         this.IS_ETERNAL = val;
     }
@@ -360,7 +360,7 @@ public class ElementAttributes
      * @param eventHandler The ElementEventHandler to be added to the list.
      */
     @Override
-    public void addElementEventHandler( IElementEventHandler eventHandler )
+    public void addElementEventHandler( final IElementEventHandler eventHandler )
     {
         // lazy here, no concurrency problems expected
         if ( this.eventHandlers == null )
@@ -379,14 +379,14 @@ public class ElementAttributes
      * @param eventHandlers List of IElementEventHandler objects
      */
     @Override
-    public void addElementEventHandlers( List<IElementEventHandler> eventHandlers )
+    public void addElementEventHandlers( final List<IElementEventHandler> eventHandlers )
     {
         if ( eventHandlers == null )
         {
             return;
         }
 
-        for (IElementEventHandler handler : eventHandlers)
+        for (final IElementEventHandler handler : eventHandlers)
         {
             addElementEventHandler(handler);
         }
@@ -399,7 +399,7 @@ public class ElementAttributes
     }
 
     @Override
-    public void setTimeFactorForMilliseconds(long factor)
+    public void setTimeFactorForMilliseconds(final long factor)
     {
         this.timeFactor = factor;
     }
@@ -423,7 +423,7 @@ public class ElementAttributes
     @Override
     public String toString()
     {
-        StringBuilder dump = new StringBuilder();
+        final StringBuilder dump = new StringBuilder();
 
         dump.append( "[ IS_LATERAL = " ).append( IS_LATERAL );
         dump.append( ", IS_SPOOL = " ).append( IS_SPOOL );
@@ -447,11 +447,11 @@ public class ElementAttributes
     {
         try
         {
-        	ElementAttributes c = (ElementAttributes) super.clone();
+        	final ElementAttributes c = (ElementAttributes) super.clone();
         	c.setCreateTime();
             return c;
         }
-        catch (CloneNotSupportedException e)
+        catch (final CloneNotSupportedException e)
         {
             throw new RuntimeException("Clone not supported. This should never happen.", e);
         }

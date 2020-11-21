@@ -86,7 +86,7 @@ public class JCSConcurrentCacheAccessUnitTest extends TestCase
     	@Override
 		public void run()
 		{
-			String name = getName();
+			final String name = getName();
 
 			for (int idx = 0; idx < LOOPS; idx++)
 			{
@@ -119,7 +119,7 @@ public class JCSConcurrentCacheAccessUnitTest extends TestCase
 		                    {
 								Thread.sleep(1000);
 							}
-		                    catch (InterruptedException e)
+		                    catch (final InterruptedException e)
 							{
 								// continue
 							}
@@ -137,7 +137,7 @@ public class JCSConcurrentCacheAccessUnitTest extends TestCase
 		        {
 					cache.putInGroup(Integer.valueOf(idx), group, String.valueOf(idx));
 				}
-		        catch (CacheException e)
+		        catch (final CacheException e)
 		        {
 		        	// continue
 				}
@@ -158,7 +158,7 @@ public class JCSConcurrentCacheAccessUnitTest extends TestCase
     public void testConcurrentAccess()
         throws Exception
     {
-    	Worker[] worker = new Worker[THREADS];
+    	final Worker[] worker = new Worker[THREADS];
 
         for (int i = 0; i < THREADS; i++)
         {
@@ -172,7 +172,7 @@ public class JCSConcurrentCacheAccessUnitTest extends TestCase
         }
 
         assertEquals("Error count should be 0",  0, errcount.intValue());
-        for (String msg : valueMismatchList)
+        for (final String msg : valueMismatchList)
         {
             System.out.println(msg);
         }

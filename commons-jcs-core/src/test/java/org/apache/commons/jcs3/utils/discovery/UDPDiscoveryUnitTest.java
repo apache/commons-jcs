@@ -37,37 +37,37 @@ public class UDPDiscoveryUnitTest
     public void testSimpleUDPDiscovery()
         throws Exception
     {
-        UDPDiscoveryAttributes attributes = new UDPDiscoveryAttributes();
+        final UDPDiscoveryAttributes attributes = new UDPDiscoveryAttributes();
         attributes.setUdpDiscoveryAddr( /*"FF7E:230::1234"*/ "228.5.6.7" );
         attributes.setUdpDiscoveryPort( 6789 );
         attributes.setServicePort( 1000 );
 
         // create the service
-        UDPDiscoveryService service = new UDPDiscoveryService( attributes );
+        final UDPDiscoveryService service = new UDPDiscoveryService( attributes );
         service.startup();
         service.addParticipatingCacheName( "testCache1" );
 
-        MockDiscoveryListener discoveryListener = new MockDiscoveryListener();
+        final MockDiscoveryListener discoveryListener = new MockDiscoveryListener();
         service.addDiscoveryListener( discoveryListener );
 
         // create a receiver with the service
-        UDPDiscoveryReceiver receiver = new UDPDiscoveryReceiver( service,
+        final UDPDiscoveryReceiver receiver = new UDPDiscoveryReceiver( service,
                 null,
                 attributes.getUdpDiscoveryAddr(),
                 attributes.getUdpDiscoveryPort() );
-        Thread t = new Thread( receiver );
+        final Thread t = new Thread( receiver );
         t.start();
 
         // create a sender
-        UDPDiscoverySender sender = new UDPDiscoverySender(
+        final UDPDiscoverySender sender = new UDPDiscoverySender(
                 attributes.getUdpDiscoveryAddr(),
                 attributes.getUdpDiscoveryPort(),
                 4 /* datagram TTL */);
 
         // create more names than we have no wait facades for
         // the only one that gets added should be testCache1
-        ArrayList<String> cacheNames = new ArrayList<>();
-        int numJunk = 10;
+        final ArrayList<String> cacheNames = new ArrayList<>();
+        final int numJunk = 10;
         for ( int i = 0; i < numJunk; i++ )
         {
             cacheNames.add( "junkCacheName" + i );
@@ -75,7 +75,7 @@ public class UDPDiscoveryUnitTest
         cacheNames.add( "testCache1" );
 
         // send max messages
-        int max = 10;
+        final int max = 10;
         int cnt = 0;
         for ( ; cnt < max; cnt++ )
         {

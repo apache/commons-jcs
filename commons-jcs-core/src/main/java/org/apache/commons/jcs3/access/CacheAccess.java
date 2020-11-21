@@ -57,7 +57,7 @@ public class CacheAccess<K, V>
      * <p>
      * @param cacheControl The cache which the created instance accesses
      */
-    public CacheAccess( CompositeCache<K, V> cacheControl )
+    public CacheAccess( final CompositeCache<K, V> cacheControl )
     {
         super(cacheControl);
     }
@@ -69,9 +69,9 @@ public class CacheAccess<K, V>
      * @return The object if found or null
      */
     @Override
-    public V get( K name )
+    public V get( final K name )
     {
-        ICacheElement<K, V> element = this.getCacheControl().get( name );
+        final ICacheElement<K, V> element = this.getCacheControl().get( name );
 
         return ( element != null ) ? element.getVal() : null;
     }
@@ -86,7 +86,7 @@ public class CacheAccess<K, V>
      * @return Object.
      */
     @Override
-    public V get(K name, Supplier<V> supplier)
+    public V get(final K name, final Supplier<V> supplier)
     {
         V value = get(name);
 
@@ -106,11 +106,11 @@ public class CacheAccess<K, V>
      * @return A map of key to values.  These are stripped from the wrapper.
      */
     @Override
-    public Map<K, V> getMatching( String pattern )
+    public Map<K, V> getMatching( final String pattern )
     {
         Map<K, V> unwrappedResults;
 
-        Map<K, ICacheElement<K, V>> wrappedResults = this.getCacheControl().getMatching( pattern );
+        final Map<K, ICacheElement<K, V>> wrappedResults = this.getCacheControl().getMatching( pattern );
 
         if ( wrappedResults == null )
         {
@@ -145,7 +145,7 @@ public class CacheAccess<K, V>
      * @return The ICacheElement&lt;K, V&gt; if the object is found or null
      */
     @Override
-    public ICacheElement<K, V> getCacheElement( K name )
+    public ICacheElement<K, V> getCacheElement( final K name )
     {
         return this.getCacheControl().get( name );
     }
@@ -168,7 +168,7 @@ public class CacheAccess<K, V>
      * @return a map of K key to ICacheElement&lt;K, V&gt; element, or empty map if none of the keys are present
      */
     @Override
-    public Map<K, ICacheElement<K, V>> getCacheElements( Set<K> names )
+    public Map<K, ICacheElement<K, V>> getCacheElements( final Set<K> names )
     {
         return this.getCacheControl().getMultiple( names );
     }
@@ -191,7 +191,7 @@ public class CacheAccess<K, V>
      * @return a map of K key to ICacheElement&lt;K, V&gt; element, or empty map if no keys match the pattern
      */
     @Override
-    public Map<K, ICacheElement<K, V>> getMatchingCacheElements( String pattern )
+    public Map<K, ICacheElement<K, V>> getMatchingCacheElements( final String pattern )
     {
         return this.getCacheControl().getMatching( pattern );
     }
@@ -207,7 +207,7 @@ public class CacheAccess<K, V>
      *                cache.
      */
     @Override
-    public void putSafe( K key, V value )
+    public void putSafe( final K key, final V value )
     {
         if ( this.getCacheControl().get( key ) != null )
         {
@@ -225,7 +225,7 @@ public class CacheAccess<K, V>
      * @param obj Object to store
      */
     @Override
-    public void put( K name, V obj )
+    public void put( final K name, final V obj )
     {
         // Call put with a copy of the contained caches default attributes.
         // the attributes are copied by the cacheControl
@@ -240,7 +240,7 @@ public class CacheAccess<K, V>
      * @see org.apache.commons.jcs3.access.behavior.ICacheAccess#put(Object, Object, IElementAttributes)
      */
     @Override
-    public void put( K key, V val, IElementAttributes attr )
+    public void put( final K key, final V val, final IElementAttributes attr )
     {
         if ( key == null )
         {
@@ -256,14 +256,14 @@ public class CacheAccess<K, V>
         // should be wrapped by cache access.
         try
         {
-            CacheElement<K, V> ce = new CacheElement<>( this.getCacheControl().getCacheName(), key,
+            final CacheElement<K, V> ce = new CacheElement<>( this.getCacheControl().getCacheName(), key,
                                                 val );
 
             ce.setElementAttributes( attr );
 
             this.getCacheControl().update( ce );
         }
-        catch ( IOException e )
+        catch ( final IOException e )
         {
             throw new CacheException( e );
         }
@@ -275,7 +275,7 @@ public class CacheAccess<K, V>
      * @param name the name of the item to remove.
      */
     @Override
-    public void remove( K name )
+    public void remove( final K name )
     {
         this.getCacheControl().remove( name );
     }
@@ -289,9 +289,9 @@ public class CacheAccess<K, V>
      * @throws InvalidHandleException if the item does not exist.
      */
     @Override
-    public void resetElementAttributes( K name, IElementAttributes attr )
+    public void resetElementAttributes( final K name, final IElementAttributes attr )
     {
-        ICacheElement<K, V> element = this.getCacheControl().get( name );
+        final ICacheElement<K, V> element = this.getCacheControl().get( name );
 
         if ( element == null )
         {
@@ -315,7 +315,7 @@ public class CacheAccess<K, V>
      * @return Attributes for the object, null if object not in cache
      */
     @Override
-    public IElementAttributes getElementAttributes( K name ) throws CacheException
+    public IElementAttributes getElementAttributes( final K name ) throws CacheException
     {
         IElementAttributes attr = null;
 
@@ -323,7 +323,7 @@ public class CacheAccess<K, V>
         {
             attr = this.getCacheControl().getElementAttributes( name );
         }
-        catch ( IOException ioe )
+        catch ( final IOException ioe )
         {
             throw new CacheException("Failure getting element attributes", ioe);
         }

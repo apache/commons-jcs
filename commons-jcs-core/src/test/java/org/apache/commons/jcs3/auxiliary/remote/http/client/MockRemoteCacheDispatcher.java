@@ -44,7 +44,7 @@ public class MockRemoteCacheDispatcher
     @Override
     @SuppressWarnings("unchecked")
     public <K, V, T>
-        RemoteCacheResponse<T> dispatchRequest( RemoteCacheRequest<K, V> remoteCacheRequest )
+        RemoteCacheResponse<T> dispatchRequest( final RemoteCacheRequest<K, V> remoteCacheRequest )
         throws IOException
     {
         this.lastRemoteCacheRequest = remoteCacheRequest;

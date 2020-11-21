@@ -81,7 +81,7 @@ public class RemoteCacheClientTester
      * @throws NotBoundException
      * @throws IOException
      */
-    public RemoteCacheClientTester( int count )
+    public RemoteCacheClientTester( final int count )
         throws MalformedURLException, NotBoundException, IOException
     {
         this( count, true, true, false );
@@ -97,7 +97,7 @@ public class RemoteCacheClientTester
      * @throws NotBoundException
      * @throws IOException
      */
-    public RemoteCacheClientTester( int count, boolean write, boolean read, boolean delete )
+    public RemoteCacheClientTester( final int count, final boolean write, final boolean read, final boolean delete )
         throws MalformedURLException, NotBoundException, IOException
     {
         this( "", Registry.REGISTRY_PORT, count, write, read, delete );
@@ -116,7 +116,7 @@ public class RemoteCacheClientTester
      * @throws IOException
      */
     @SuppressWarnings("unchecked")
-    public RemoteCacheClientTester( String host, int port, int count, boolean write, boolean read, boolean delete )
+    public RemoteCacheClientTester( final String host, final int port, final int count, final boolean write, final boolean read, final boolean delete )
         throws MalformedURLException, NotBoundException, IOException
     {
         this.count = count;
@@ -132,7 +132,7 @@ public class RemoteCacheClientTester
             // using an anonymous port.
             UnicastRemoteObject.exportObject( this );
         }
-        catch ( ExportException e )
+        catch ( final ExportException e )
         {
             // use already exported object; remember exception
             ee = e;
@@ -144,11 +144,11 @@ public class RemoteCacheClientTester
         {
             service = REMOTE_CACHE_SERVICE_VAL;
         }
-        String registry = RemoteUtils.getNamingURL(host, port, service);
+        final String registry = RemoteUtils.getNamingURL(host, port, service);
 
         p( "looking up server " + registry );
 
-        Object obj = Naming.lookup( registry );
+        final Object obj = Naming.lookup( registry );
 
         p( "server found" );
 
@@ -178,7 +178,7 @@ public class RemoteCacheClientTester
                 {
                     cache.update( cb );
                 }
-                catch ( ObjectExistsException oee )
+                catch ( final ObjectExistsException oee )
                 {
                     p( oee.toString() );
                 }
@@ -187,10 +187,10 @@ public class RemoteCacheClientTester
             {
                 try
                 {
-                    Object val = cache.get( cb.getCacheName(), cb.getKey() );
+                    final Object val = cache.get( cb.getCacheName(), cb.getKey() );
                     p( "get " + cb.getKey() + " returns " + val );
                 }
-                catch ( CacheException onfe )
+                catch ( final CacheException onfe )
                 {
                     // nothing
                 }
@@ -203,7 +203,7 @@ public class RemoteCacheClientTester
      * @throws IOException
      */
     @Override
-    public void handlePut( ICacheElement<String, String> cb )
+    public void handlePut( final ICacheElement<String, String> cb )
         throws IOException
     {
         p( "handlePut> cb=" + cb );
@@ -215,7 +215,7 @@ public class RemoteCacheClientTester
      * @throws IOException
      */
     @Override
-    public void handleRemove( String cacheName, String key )
+    public void handleRemove( final String cacheName, final String key )
         throws IOException
     {
         p( "handleRemove> cacheName=" + cacheName + ", key=" + key );
@@ -226,7 +226,7 @@ public class RemoteCacheClientTester
      * @throws IOException
      */
     @Override
-    public void handleRemoveAll( String cacheName )
+    public void handleRemoveAll( final String cacheName )
         throws IOException
     {
         p( "handleRemove> cacheName=" + cacheName );
@@ -237,7 +237,7 @@ public class RemoteCacheClientTester
      * @throws IOException
      */
     @Override
-    public void handleDispose( String cacheName )
+    public void handleDispose( final String cacheName )
         throws IOException
     {
         p( "handleDispose> cacheName=" + cacheName );
@@ -251,7 +251,7 @@ public class RemoteCacheClientTester
      * @param args The command line arguments
      * @throws Exception
      */
-    public static void main( String[] args )
+    public static void main( final String[] args )
         throws Exception
     {
         int count = 0;
@@ -290,7 +290,7 @@ public class RemoteCacheClientTester
      * @throws IOException
      */
     @Override
-    public void setListenerId( long id )
+    public void setListenerId( final long id )
         throws IOException
     {
         listenerId = id;
@@ -313,7 +313,7 @@ public class RemoteCacheClientTester
      * Helper for output, this is an user run test class
      * @param s
      */
-    private static void p( String s )
+    private static void p( final String s )
     {
         System.out.println( s );
     }

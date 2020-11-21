@@ -57,11 +57,11 @@ public abstract class AbstractHttpClient
      * <p>
      * @param remoteHttpCacheAttributes
      */
-    public AbstractHttpClient( RemoteHttpCacheAttributes remoteHttpCacheAttributes )
+    public AbstractHttpClient( final RemoteHttpCacheAttributes remoteHttpCacheAttributes )
     {
         this.remoteHttpCacheAttributes = remoteHttpCacheAttributes;
 
-        String httpVersion = getRemoteHttpCacheAttributes().getHttpVersion();
+        final String httpVersion = getRemoteHttpCacheAttributes().getHttpVersion();
         if ( "1.1".equals( httpVersion ) )
         {
             this.httpVersion = HttpVersion.HTTP_1_1;
@@ -77,7 +77,7 @@ public abstract class AbstractHttpClient
             this.httpVersion = HttpVersion.HTTP_1_1;
         }
 
-        HttpClientBuilder builder = HttpClientBuilder.create();
+        final HttpClientBuilder builder = HttpClientBuilder.create();
         configureClient(builder);
         this.httpClient = builder.build();
     }
@@ -87,7 +87,7 @@ public abstract class AbstractHttpClient
      *
      * @param builder client builder to configure
      */
-    protected void configureClient(HttpClientBuilder builder)
+    protected void configureClient(final HttpClientBuilder builder)
     {
         if ( getRemoteHttpCacheAttributes().getMaxConnectionsPerHost() > 0 )
         {
@@ -112,12 +112,12 @@ public abstract class AbstractHttpClient
      *
      * @throws IOException on i/o error
      */
-    protected final HttpResponse doWebserviceCall( RequestBuilder builder )
+    protected final HttpResponse doWebserviceCall( final RequestBuilder builder )
         throws IOException
     {
         preProcessWebserviceCall( builder.setVersion(httpVersion) );
-        HttpUriRequest request = builder.build();
-        HttpResponse httpResponse = this.httpClient.execute( request );
+        final HttpUriRequest request = builder.build();
+        final HttpResponse httpResponse = this.httpClient.execute( request );
         postProcessWebserviceCall( request, httpResponse );
 
         return httpResponse;

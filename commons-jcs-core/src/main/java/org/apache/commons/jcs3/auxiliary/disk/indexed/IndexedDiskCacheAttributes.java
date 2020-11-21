@@ -73,7 +73,7 @@ public class IndexedDiskCacheAttributes
      * <p>
      * @param maxKeySize The new maxKeySize value
      */
-    public void setMaxKeySize( int maxKeySize )
+    public void setMaxKeySize( final int maxKeySize )
     {
         this.maxKeySize = maxKeySize;
     }
@@ -94,7 +94,7 @@ public class IndexedDiskCacheAttributes
      * <p>
      * @param cnt The new optimizeAtRemoveCount value
      */
-    public void setOptimizeAtRemoveCount( int cnt )
+    public void setOptimizeAtRemoveCount( final int cnt )
     {
         this.optimizeAtRemoveCount = cnt;
     }
@@ -102,7 +102,7 @@ public class IndexedDiskCacheAttributes
     /**
      * @param optimizeOnShutdown The optimizeOnShutdown to set.
      */
-    public void setOptimizeOnShutdown( boolean optimizeOnShutdown )
+    public void setOptimizeOnShutdown( final boolean optimizeOnShutdown )
     {
         this.optimizeOnShutdown = optimizeOnShutdown;
     }
@@ -118,7 +118,7 @@ public class IndexedDiskCacheAttributes
     /**
      * @param clearDiskOnStartup the clearDiskOnStartup to set
      */
-    public void setClearDiskOnStartup( boolean clearDiskOnStartup )
+    public void setClearDiskOnStartup( final boolean clearDiskOnStartup )
     {
         this.clearDiskOnStartup = clearDiskOnStartup;
     }
@@ -139,7 +139,7 @@ public class IndexedDiskCacheAttributes
     @Override
     public String toString()
     {
-        StringBuilder str = new StringBuilder();
+        final StringBuilder str = new StringBuilder();
         str.append( "IndexedDiskCacheAttributes " );
         str.append( "\n diskPath = " + super.getDiskPath() );
         str.append( "\n maxPurgatorySize   = " + super.getMaxPurgatorySize() );

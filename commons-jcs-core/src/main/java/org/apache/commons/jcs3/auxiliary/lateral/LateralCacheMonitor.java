@@ -53,7 +53,7 @@ public class LateralCacheMonitor extends AbstractAuxiliaryCacheMonitor
      * <p>
      * @param idlePeriod
      */
-    protected static void forceShortIdlePeriod( long idlePeriod )
+    protected static void forceShortIdlePeriod( final long idlePeriod )
     {
         LateralCacheMonitor.idlePeriod = idlePeriod;
     }
@@ -65,7 +65,7 @@ public class LateralCacheMonitor extends AbstractAuxiliaryCacheMonitor
      *
      * @param factory a reference to the factory that manages the service instances
      */
-    public LateralCacheMonitor(LateralTCPCacheFactory factory)
+    public LateralCacheMonitor(final LateralTCPCacheFactory factory)
     {
         super("JCS-LateralCacheMonitor");
         this.factory = factory;
@@ -78,7 +78,7 @@ public class LateralCacheMonitor extends AbstractAuxiliaryCacheMonitor
      *
      * @param cache the cache
      */
-    public void addCache(LateralCacheNoWait<?, ?> cache)
+    public void addCache(final LateralCacheNoWait<?, ?> cache)
     {
         this.caches.put(cache.getCacheName(), cache);
 
@@ -107,20 +107,21 @@ public class LateralCacheMonitor extends AbstractAuxiliaryCacheMonitor
         // Monitor each cache instance one after the other.
         log.info( "Number of caches to monitor = " + caches.size() );
         //for
-        for (Map.Entry<String, LateralCacheNoWait<?, ?>> entry : caches.entrySet())
+        for (final Map.Entry<String, LateralCacheNoWait<?, ?>> entry : caches.entrySet())
         {
-            String cacheName = entry.getKey();
+            final String cacheName = entry.getKey();
 
             @SuppressWarnings("unchecked") // Downcast to match service
+            final
             LateralCacheNoWait<Object, Object> c = (LateralCacheNoWait<Object, Object>) entry.getValue();
             if ( c.getStatus() == CacheStatus.ERROR )
             {
                 log.info( "Found LateralCacheNoWait in error, " + cacheName );
 
-                ITCPLateralCacheAttributes lca = (ITCPLateralCacheAttributes)c.getAuxiliaryCacheAttributes();
+                final ITCPLateralCacheAttributes lca = (ITCPLateralCacheAttributes)c.getAuxiliaryCacheAttributes();
 
                 // Get service instance
-                ICacheServiceNonLocal<Object, Object> cacheService = factory.getCSNLInstance(lca);
+                final ICacheServiceNonLocal<Object, Object> cacheService = factory.getCSNLInstance(lca);
 
                 // If we can't fix them, just skip and re-try in the
                 // next round.

@@ -58,7 +58,7 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
      * @param hub
      */
     @Override
-    public void initialize(CompositeCache<K, V> hub)
+    public void initialize(final CompositeCache<K, V> hub)
     {
         super.initialize(hub);
         list = new DoubleLinkedList<>();
@@ -91,18 +91,18 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
      * @throws IOException
      */
     @Override
-    public final void update(ICacheElement<K, V> ce) throws IOException
+    public final void update(final ICacheElement<K, V> ce) throws IOException
     {
         putCnt.incrementAndGet();
 
         lock.lock();
         try
         {
-            MemoryElementDescriptor<K, V> newNode = adjustListForUpdate(ce);
+            final MemoryElementDescriptor<K, V> newNode = adjustListForUpdate(ce);
 
             // this should be synchronized if we were not using a ConcurrentHashMap
             final K key = newNode.getCacheElement().getKey();
-            MemoryElementDescriptor<K, V> oldNode = map.put(key, newNode);
+            final MemoryElementDescriptor<K, V> oldNode = map.put(key, newNode);
 
             // If the node was the same as an existing node, remove it.
             if (oldNode != null && key.equals(oldNode.getCacheElement().getKey()))
@@ -137,7 +137,7 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
      */
     private void spoolIfNeeded() throws Error
     {
-        int size = map.size();
+        final int size = map.size();
         // If the element limit is reached, we need to spool
 
         if (size <= this.getCacheAttributes().getMaxObjects())
@@ -148,7 +148,7 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
         log.debug("In memory limit reached, spooling");
 
         // Write the last 'chunkSize' items to disk.
-        int chunkSizeCorrected = Math.min(size, chunkSize);
+        final int chunkSizeCorrected = Math.min(size, chunkSize);
 
         log.debug("About to spool to disk cache, map size: {0}, max objects: {1}, "
                 + "maximum items to spool: {2}", () -> size,
@@ -164,7 +164,7 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
         {
             for (int i = 0; i < chunkSizeCorrected; i++)
             {
-                ICacheElement<K, V> lastElement = spoolLastElement();
+                final ICacheElement<K, V> lastElement = spoolLastElement();
                 if (lastElement == null)
                 {
                     break;
@@ -200,7 +200,7 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
      * @throws IOException
      */
     @Override
-    public int freeElements(int numberToFree) throws IOException
+    public int freeElements(final int numberToFree) throws IOException
     {
         int freed = 0;
 
@@ -210,7 +210,7 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
         {
             for (; freed < numberToFree; freed++)
             {
-                ICacheElement<K, V> element = spoolLastElement();
+                final ICacheElement<K, V> element = spoolLastElement();
                 if (element == null)
                 {
                     break;
@@ -268,9 +268,9 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
      * @see org.apache.commons.jcs3.engine.memory.AbstractMemoryCache#get(java.lang.Object)
      */
     @Override
-    public ICacheElement<K, V> get(K key) throws IOException
+    public ICacheElement<K, V> get(final K key) throws IOException
     {
-        ICacheElement<K, V> ce = super.get(key);
+        final ICacheElement<K, V> ce = super.get(key);
 
         if (log.isTraceEnabled())
         {
@@ -295,7 +295,7 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
      * @param me the memory element descriptor
      */
     @Override
-    protected void lockedGetElement(MemoryElementDescriptor<K, V> me)
+    protected void lockedGetElement(final MemoryElementDescriptor<K, V> me)
     {
         adjustListForGet(me);
     }
@@ -307,7 +307,7 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
      * @param me the memory element descriptor
      */
     @Override
-    protected void lockedRemoveElement(MemoryElementDescriptor<K, V> me)
+    protected void lockedRemoveElement(final MemoryElementDescriptor<K, V> me)
     {
         list.remove(me);
     }
@@ -331,12 +331,12 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
      *            The feature to be added to the First
      * @return MemoryElementDescriptor
      */
-    protected MemoryElementDescriptor<K, V> addFirst(ICacheElement<K, V> ce)
+    protected MemoryElementDescriptor<K, V> addFirst(final ICacheElement<K, V> ce)
     {
         lock.lock();
         try
         {
-            MemoryElementDescriptor<K, V> me = new MemoryElementDescriptor<>(ce);
+            final MemoryElementDescriptor<K, V> me = new MemoryElementDescriptor<>(ce);
             list.addFirst(me);
             if ( log.isTraceEnabled() )
             {
@@ -358,12 +358,12 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
      *            The feature to be added to the First
      * @return MemoryElementDescriptor
      */
-    protected MemoryElementDescriptor<K, V> addLast(ICacheElement<K, V> ce)
+    protected MemoryElementDescriptor<K, V> addLast(final ICacheElement<K, V> ce)
     {
         lock.lock();
         try
         {
-            MemoryElementDescriptor<K, V> me = new MemoryElementDescriptor<>(ce);
+            final MemoryElementDescriptor<K, V> me = new MemoryElementDescriptor<>(ce);
             list.addLast(me);
             if ( log.isTraceEnabled() )
             {
@@ -409,7 +409,7 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
         log.trace("verifycache: checking linked list by key ");
         for (MemoryElementDescriptor<K, V> li = list.getFirst(); li != null; li = (MemoryElementDescriptor<K, V>) li.next)
         {
-            K key = li.getCacheElement().getKey();
+            final K key = li.getCacheElement().getKey();
             if (!map.containsKey(key))
             {
                 log.error("verifycache[{0}]: map does not contain key : {1}",
@@ -419,7 +419,7 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
                 log.error("key toString={0}", key.toString());
                 if (key instanceof GroupAttrName)
                 {
-                    GroupAttrName<?> name = (GroupAttrName<?>) key;
+                    final GroupAttrName<?> name = (GroupAttrName<?>) key;
                     log.error("GroupID hashcode={0}", name.groupId.hashCode());
                     log.error("GroupID.class={0}", name.groupId.getClass());
                     log.error("AttrName hashcode={0}", name.attrName.hashCode());
@@ -446,7 +446,7 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
         }
 
         log.trace("verifycache: checking via keysets!");
-        for (Object val : map.keySet())
+        for (final Object val : map.keySet())
         {
             found = false;
 
@@ -483,7 +483,7 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
      */
     @SuppressWarnings("unchecked")
     // No generics for public fields
-    private void verifyCache(K key)
+    private void verifyCache(final K key)
     {
         boolean found = false;
 
@@ -514,10 +514,10 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
     @Override
     public IStats getStatistics()
     {
-        IStats stats = super.getStatistics();
+        final IStats stats = super.getStatistics();
         stats.setTypeName( /* add algorithm name */"Memory Cache");
 
-        List<IStatElement<?>> elems = stats.getStatElements();
+        final List<IStatElement<?>> elems = stats.getStatElements();
 
         elems.add(new StatElement<>("List Size", Integer.valueOf(list.size())));
 

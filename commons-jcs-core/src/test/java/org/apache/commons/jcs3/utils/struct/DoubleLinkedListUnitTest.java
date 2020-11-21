@@ -31,10 +31,10 @@ public class DoubleLinkedListUnitTest
     public void testAddLast_Empty()
     {
         // SETUP
-        DoubleLinkedList<DoubleLinkedListNode<String>> list = new DoubleLinkedList<>();
+        final DoubleLinkedList<DoubleLinkedListNode<String>> list = new DoubleLinkedList<>();
 
-        String payload1 = "payload1";
-        DoubleLinkedListNode<String> node1 = new DoubleLinkedListNode<>( payload1 );
+        final String payload1 = "payload1";
+        final DoubleLinkedListNode<String> node1 = new DoubleLinkedListNode<>( payload1 );
 
         // WO WORK
         list.addLast( node1 );
@@ -47,13 +47,13 @@ public class DoubleLinkedListUnitTest
     public void testAddLast_NotEmpty()
     {
         // SETUP
-        DoubleLinkedList<DoubleLinkedListNode<String>> list = new DoubleLinkedList<>();
+        final DoubleLinkedList<DoubleLinkedListNode<String>> list = new DoubleLinkedList<>();
 
-        String payload1 = "payload1";
-        DoubleLinkedListNode<String> node1 = new DoubleLinkedListNode<>( payload1 );
+        final String payload1 = "payload1";
+        final DoubleLinkedListNode<String> node1 = new DoubleLinkedListNode<>( payload1 );
 
-        String payload2 = "payload2";
-        DoubleLinkedListNode<String> node2 = new DoubleLinkedListNode<>( payload2 );
+        final String payload2 = "payload2";
+        final DoubleLinkedListNode<String> node2 = new DoubleLinkedListNode<>( payload2 );
 
         // WO WORK
         list.addLast( node1 );
@@ -67,13 +67,13 @@ public class DoubleLinkedListUnitTest
     public void testMakeLast_wasFirst()
     {
         // SETUP
-        DoubleLinkedList<DoubleLinkedListNode<String>> list = new DoubleLinkedList<>();
+        final DoubleLinkedList<DoubleLinkedListNode<String>> list = new DoubleLinkedList<>();
 
-        String payload1 = "payload1";
-        DoubleLinkedListNode<String> node1 = new DoubleLinkedListNode<>( payload1 );
+        final String payload1 = "payload1";
+        final DoubleLinkedListNode<String> node1 = new DoubleLinkedListNode<>( payload1 );
 
-        String payload2 = "payload2";
-        DoubleLinkedListNode<String> node2 = new DoubleLinkedListNode<>( payload2 );
+        final String payload2 = "payload2";
+        final DoubleLinkedListNode<String> node2 = new DoubleLinkedListNode<>( payload2 );
 
         list.addFirst( node2 );
         list.addFirst(  node1 );
@@ -91,13 +91,13 @@ public class DoubleLinkedListUnitTest
     public void testMakeLast_wasLast()
     {
         // SETUP
-        DoubleLinkedList<DoubleLinkedListNode<String>> list = new DoubleLinkedList<>();
+        final DoubleLinkedList<DoubleLinkedListNode<String>> list = new DoubleLinkedList<>();
 
-        String payload1 = "payload1";
-        DoubleLinkedListNode<String> node1 = new DoubleLinkedListNode<>( payload1 );
+        final String payload1 = "payload1";
+        final DoubleLinkedListNode<String> node1 = new DoubleLinkedListNode<>( payload1 );
 
-        String payload2 = "payload2";
-        DoubleLinkedListNode<String> node2 = new DoubleLinkedListNode<>( payload2 );
+        final String payload2 = "payload2";
+        final DoubleLinkedListNode<String> node2 = new DoubleLinkedListNode<>( payload2 );
 
         list.addFirst( node1 );
         list.addFirst(  node2 );
@@ -115,10 +115,10 @@ public class DoubleLinkedListUnitTest
     public void testMakeLast_wasAlone()
     {
         // SETUP
-        DoubleLinkedList<DoubleLinkedListNode<String>> list = new DoubleLinkedList<>();
+        final DoubleLinkedList<DoubleLinkedListNode<String>> list = new DoubleLinkedList<>();
 
-        String payload1 = "payload1";
-        DoubleLinkedListNode<String> node1 = new DoubleLinkedListNode<>( payload1 );
+        final String payload1 = "payload1";
+        final DoubleLinkedListNode<String> node1 = new DoubleLinkedListNode<>( payload1 );
 
         list.addFirst( node1 );
 
@@ -135,16 +135,16 @@ public class DoubleLinkedListUnitTest
     public void testMakeLast_wasInMiddle()
     {
         // SETUP
-        DoubleLinkedList<DoubleLinkedListNode<String>> list = new DoubleLinkedList<>();
+        final DoubleLinkedList<DoubleLinkedListNode<String>> list = new DoubleLinkedList<>();
 
-        String payload1 = "payload1";
-        DoubleLinkedListNode<String> node1 = new DoubleLinkedListNode<>( payload1 );
+        final String payload1 = "payload1";
+        final DoubleLinkedListNode<String> node1 = new DoubleLinkedListNode<>( payload1 );
 
-        String payload2 = "payload2";
-        DoubleLinkedListNode<String> node2 = new DoubleLinkedListNode<>( payload2 );
+        final String payload2 = "payload2";
+        final DoubleLinkedListNode<String> node2 = new DoubleLinkedListNode<>( payload2 );
 
-        String payload3 = "payload3";
-        DoubleLinkedListNode<String> node3 = new DoubleLinkedListNode<>( payload3 );
+        final String payload3 = "payload3";
+        final DoubleLinkedListNode<String> node3 = new DoubleLinkedListNode<>( payload3 );
 
         list.addFirst( node2 );
         list.addFirst(  node1 );

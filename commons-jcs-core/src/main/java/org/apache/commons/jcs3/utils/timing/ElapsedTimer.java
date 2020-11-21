@@ -40,8 +40,8 @@ public class ElapsedTimer
      */
     public long getElapsedTime()
     {
-        long now = System.currentTimeMillis();
-        long elapsed = now - timeStamp;
+        final long now = System.currentTimeMillis();
+        final long elapsed = now - timeStamp;
         timeStamp = now;
         return elapsed;
     }

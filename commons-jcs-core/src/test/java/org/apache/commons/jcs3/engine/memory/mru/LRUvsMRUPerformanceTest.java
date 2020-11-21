@@ -55,13 +55,13 @@ public class LRUvsMRUPerformanceTest
     public void testSimpleLoad()
         throws Exception
     {
-        Log log1 = LogManager.getLog( LRUMemoryCache.class );
+        final Log log1 = LogManager.getLog( LRUMemoryCache.class );
         if ( log1.isDebugEnabled() )
         {
             System.out.println( "The log level must be at info or above for the a performance test." );
             return;
         }
-        Log log2 = LogManager.getLog( MRUMemoryCache.class );
+        final Log log2 = LogManager.getLog( MRUMemoryCache.class );
         if ( log2.isDebugEnabled() )
         {
             System.out.println( "The log level must be at info or above for the a performance test." );
@@ -94,8 +94,8 @@ public class LRUvsMRUPerformanceTest
         {
 
             JCS.setConfigFilename( "/TestMRUCache.ccf" );
-            CacheAccess<String, String> cache = JCS.getInstance( "lruDefined" );
-            CacheAccess<String, String> mru = JCS.getInstance( "mruDefined" );
+            final CacheAccess<String, String> cache = JCS.getInstance( "lruDefined" );
+            final CacheAccess<String, String> mru = JCS.getInstance( "mruDefined" );
 
             System.out.println( "LRU = " + cache );
 
@@ -155,16 +155,16 @@ public class LRUvsMRUPerformanceTest
             }
 
         }
-        catch ( Exception e )
+        catch ( final Exception e )
         {
             e.printStackTrace( System.out );
             System.out.println( e );
         }
 
-        long putAvJCS = putTotalLRU / loops;
-        long getAvJCS = getTotalLRU / loops;
-        long putAvHashtable = putTotalMRU / loops;
-        long getAvHashtable = getTotalMRU / loops;
+        final long putAvJCS = putTotalLRU / loops;
+        final long getAvJCS = getTotalLRU / loops;
+        final long putAvHashtable = putTotalMRU / loops;
+        final long getAvHashtable = getTotalMRU / loops;
 
         System.out.println( "Finished " + loops + " loops of " + tries + " gets and puts" );
 

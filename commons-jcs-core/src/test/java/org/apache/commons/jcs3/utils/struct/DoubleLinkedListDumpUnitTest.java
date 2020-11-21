@@ -34,23 +34,23 @@ public class DoubleLinkedListDumpUnitTest
     public void testDumpEntries_DebugTrue()
     {
         // SETUP
-        StringWriter stringWriter = new StringWriter();
+        final StringWriter stringWriter = new StringWriter();
         TestLogConfigurationUtil.configureLogger( stringWriter, DoubleLinkedList.class.getName() );
 
-        DoubleLinkedList<DoubleLinkedListNode<String>> list = new DoubleLinkedList<>();
+        final DoubleLinkedList<DoubleLinkedListNode<String>> list = new DoubleLinkedList<>();
 
-        String payload1 = "payload1";
-        DoubleLinkedListNode<String> node1 = new DoubleLinkedListNode<>( payload1 );
+        final String payload1 = "payload1";
+        final DoubleLinkedListNode<String> node1 = new DoubleLinkedListNode<>( payload1 );
 
-        String payload2 = "payload2";
-        DoubleLinkedListNode<String> node2 = new DoubleLinkedListNode<>( payload2 );
+        final String payload2 = "payload2";
+        final DoubleLinkedListNode<String> node2 = new DoubleLinkedListNode<>( payload2 );
 
         list.addLast( node1 );
         list.addLast( node2 );
         list.debugDumpEntries();
 
         // WO WORK
-        String result = stringWriter.toString();
+        final String result = stringWriter.toString();
 
         // VERIFY
         assertTrue( "Missing node in log dump", result.indexOf( payload1 ) != -1 );

@@ -27,7 +27,7 @@ public class BlockDiskCacheCountUnitTest extends BlockDiskCacheUnitTestAbstract
     @Override
     public BlockDiskCacheAttributes getCacheAttributes()
     {
-        BlockDiskCacheAttributes ret = new BlockDiskCacheAttributes();
+        final BlockDiskCacheAttributes ret = new BlockDiskCacheAttributes();
         ret.setDiskLimitType(DiskLimitType.COUNT);
         return ret;
     }

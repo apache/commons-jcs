@@ -43,12 +43,12 @@ public class MockCompositeCacheManager
      */
     @Override
     @SuppressWarnings("unchecked")
-    public <K, V> CompositeCache<K, V> getCache( String cacheName )
+    public <K, V> CompositeCache<K, V> getCache( final String cacheName )
     {
         if ( cache == null )
         {
 //            System.out.println( "Creating mock cache" );
-            CompositeCache<K, V> newCache =
+            final CompositeCache<K, V> newCache =
                 new CompositeCache<>( new CompositeCacheAttributes(), new ElementAttributes() );
             this.setCache( newCache );
         }
@@ -57,7 +57,7 @@ public class MockCompositeCacheManager
     }
 
     @Override
-    public <K, V> AuxiliaryCache<K, V> getAuxiliaryCache(String auxName, String cacheName)
+    public <K, V> AuxiliaryCache<K, V> getAuxiliaryCache(final String auxName, final String cacheName)
     {
         return null;
     }
@@ -65,7 +65,7 @@ public class MockCompositeCacheManager
     /**
      * @param cache The cache to set.
      */
-    public void setCache( CompositeCache<?, ?> cache )
+    public void setCache( final CompositeCache<?, ?> cache )
     {
         this.cache = cache;
     }
@@ -83,7 +83,7 @@ public class MockCompositeCacheManager
      * <p>
      * @param props
      */
-    public void setConfigurationProperties( Properties props )
+    public void setConfigurationProperties( final Properties props )
     {
         this.configurationProperties = props;
     }
@@ -110,7 +110,7 @@ public class MockCompositeCacheManager
 	 * @see org.apache.commons.jcs3.engine.behavior.IShutdownObservable#registerShutdownObserver(org.apache.commons.jcs3.engine.behavior.IShutdownObserver)
 	 */
 	@Override
-	public void registerShutdownObserver(IShutdownObserver observer)
+	public void registerShutdownObserver(final IShutdownObserver observer)
 	{
 		// Do nothing
 	}
@@ -119,7 +119,7 @@ public class MockCompositeCacheManager
 	 * @see org.apache.commons.jcs3.engine.behavior.IShutdownObservable#deregisterShutdownObserver(org.apache.commons.jcs3.engine.behavior.IShutdownObserver)
 	 */
 	@Override
-	public void deregisterShutdownObserver(IShutdownObserver observer)
+	public void deregisterShutdownObserver(final IShutdownObserver observer)
 	{
 		// Do nothing
 	}

@@ -72,20 +72,20 @@ public class UDPDiscoveryManager
      * @param cacheMgr
      * @return UDPDiscoveryService
      */
-    public UDPDiscoveryService getService( String discoveryAddress, int discoveryPort, int servicePort,
-                                                        ICompositeCacheManager cacheMgr )
+    public UDPDiscoveryService getService( final String discoveryAddress, final int discoveryPort, final int servicePort,
+                                                        final ICompositeCacheManager cacheMgr )
     {
-        String key = discoveryAddress + ":" + discoveryPort + ":" + servicePort;
+        final String key = discoveryAddress + ":" + discoveryPort + ":" + servicePort;
 
-        UDPDiscoveryService service = services.computeIfAbsent(key, k -> {
+        final UDPDiscoveryService service = services.computeIfAbsent(key, k -> {
             log.info( "Creating service for address:port:servicePort [{0}]", key );
 
-            UDPDiscoveryAttributes attributes = new UDPDiscoveryAttributes();
+            final UDPDiscoveryAttributes attributes = new UDPDiscoveryAttributes();
             attributes.setUdpDiscoveryAddr( discoveryAddress );
             attributes.setUdpDiscoveryPort( discoveryPort );
             attributes.setServicePort( servicePort );
 
-            UDPDiscoveryService newService = new UDPDiscoveryService( attributes );
+            final UDPDiscoveryService newService = new UDPDiscoveryService( attributes );
 
             // register for shutdown notification
             cacheMgr.registerShutdownObserver( newService );

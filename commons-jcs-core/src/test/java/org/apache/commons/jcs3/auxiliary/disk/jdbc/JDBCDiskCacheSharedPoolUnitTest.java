@@ -56,17 +56,17 @@ public class JDBCDiskCacheSharedPoolUnitTest
     {
         System.setProperty( "hsqldb.cache_scale", "8" );
 
-        String rafroot = "target";
-        Properties p = new Properties();
-        String driver = p.getProperty( "driver", "org.hsqldb.jdbcDriver" );
-        String url = p.getProperty( "url", "jdbc:hsqldb:" );
-        String database = p.getProperty( "database", rafroot + "/cache_hsql_db_sharedpool" );
-        String user = p.getProperty( "user", "sa" );
-        String password = p.getProperty( "password", "" );
+        final String rafroot = "target";
+        final Properties p = new Properties();
+        final String driver = p.getProperty( "driver", "org.hsqldb.jdbcDriver" );
+        final String url = p.getProperty( "url", "jdbc:hsqldb:" );
+        final String database = p.getProperty( "database", rafroot + "/cache_hsql_db_sharedpool" );
+        final String user = p.getProperty( "user", "sa" );
+        final String password = p.getProperty( "password", "" );
 
         new org.hsqldb.jdbcDriver();
         Class.forName( driver ).newInstance();
-        Connection cConn = DriverManager.getConnection( url + database, user, password );
+        final Connection cConn = DriverManager.getConnection( url + database, user, password );
 
         HsqlSetupTableUtil.setupTABLE( cConn, "JCS_STORE_0" );
 
@@ -83,10 +83,10 @@ public class JDBCDiskCacheSharedPoolUnitTest
      * @param items
      * @throws Exception If an error occurs
      */
-    public void runTestForRegion( String region, int items )
+    public void runTestForRegion( final String region, final int items )
         throws Exception
     {
-        CacheAccess<String, String> jcs = JCS.getInstance( region );
+        final CacheAccess<String, String> jcs = JCS.getInstance( region );
 
 //        System.out.println( "BEFORE PUT \n" + jcs.getStats() );
 
@@ -107,22 +107,22 @@ public class JDBCDiskCacheSharedPoolUnitTest
 
         for ( int i = 0; i <= items; i++ )
         {
-            String value = jcs.get( i + ":key" );
+            final String value = jcs.get( i + ":key" );
 
             assertEquals( "key = [" + i + ":key] value = [" + value + "]", region + " data " + i, value );
         }
 
         // Test that getElements returns all the expected values
-        Set<String> keys = new HashSet<>();
+        final Set<String> keys = new HashSet<>();
         for ( int i = 0; i <= items; i++ )
         {
             keys.add( i + ":key" );
         }
 
-        Map<String, ICacheElement<String, String>> elements = jcs.getCacheElements( keys );
+        final Map<String, ICacheElement<String, String>> elements = jcs.getCacheElements( keys );
         for ( int i = 0; i <= items; i++ )
         {
-            ICacheElement<String, String> element = elements.get( i + ":key" );
+            final ICacheElement<String, String> element = elements.get( i + ":key" );
             assertNotNull( "element " + i + ":key is missing", element );
             assertEquals( "value " + i + ":key", region + " data " + i, element.getVal() );
         }
