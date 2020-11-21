@@ -48,7 +48,7 @@ public class ZombieRemoteCacheServiceUnitTest
 
         // DO WORK
         final ICacheElement<String, String> element = new CacheElement<>( cacheName, "key", "value" );
-        zombie.update( element, 123l );
+        zombie.update( element, 123L );
         zombie.propagateEvents( service );
 
         // VERIFY
@@ -72,7 +72,7 @@ public class ZombieRemoteCacheServiceUnitTest
 
         // DO WORK
         final ICacheElement<String, String> element = new CacheElement<>( cacheName, "key", "value" );
-        zombie.update( element, 123l );
+        zombie.update( element, 123L );
         zombie.propagateEvents( service );
 
         // VERIFY
@@ -96,7 +96,7 @@ public class ZombieRemoteCacheServiceUnitTest
         final String key = "myKey";
 
         // DO WORK
-        zombie.remove( cacheName, key, 123l );
+        zombie.remove( cacheName, key, 123L );
         zombie.propagateEvents( service );
 
         // VERIFY
@@ -119,7 +119,7 @@ public class ZombieRemoteCacheServiceUnitTest
         final String cacheName = "testRemoveThenWalk";
 
         // DO WORK
-        zombie.removeAll( cacheName, 123l );
+        zombie.removeAll( cacheName, 123L );
         zombie.propagateEvents( service );
 
         // VERIFY
