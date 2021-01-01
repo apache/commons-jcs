@@ -214,7 +214,7 @@ public class JCSAdminBean implements JCSJMXBean
 
                 //CountingOnlyOutputStream: Keeps track of the number of bytes written to it, but doesn't write them anywhere.
                 final CountingOnlyOutputStream counter = new CountingOnlyOutputStream();
-                try (ObjectOutputStream out = new ObjectOutputStream(counter);)
+                try (ObjectOutputStream out = new ObjectOutputStream(counter))
                 {
                     out.writeObject(element);
                 }

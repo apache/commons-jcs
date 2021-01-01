@@ -150,7 +150,7 @@ public class JDBCDiskCache<K, V>
         {
             log.debug( "Putting [{0}] on disk.",  () -> ce.getKey());
 
-            byte[] element;
+            final byte[] element;
 
             try
             {

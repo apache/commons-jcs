@@ -223,7 +223,7 @@ public class JDBCDiskCacheFactory
 
 
     	final DataSourceFactory dsFactory = this.dsFactories.computeIfAbsent(poolName, key -> {
-    	    DataSourceFactory newDsFactory;
+    	    final DataSourceFactory newDsFactory;
             JDBCDiskCacheAttributes dsConfig = null;
 
             if (cattr.getConnectionPoolName() == null)

@@ -275,7 +275,7 @@ public class TestCacheAccess
                 }
             }
         }
-        catch ( CacheException | IOException e )
+        catch ( final CacheException | IOException e )
         {
             p( e.toString() );
             e.printStackTrace( System.out );

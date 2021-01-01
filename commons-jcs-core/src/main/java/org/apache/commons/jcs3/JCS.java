@@ -73,8 +73,8 @@ public abstract class JCS
 
     /**
      * Set the log system. Must be called before getInstance is called
-     * Predefined Log systems are {@link LogManager.LOGSYSTEM_JAVA_UTIL_LOGGING}
-     * and {@link LogManager.LOGSYSTEM_LOG4J2}
+     * Predefined Log systems are {@link LogManager#LOGSYSTEM_JAVA_UTIL_LOGGING}
+     * and {@link LogManager#LOGSYSTEM_LOG4J2}
      *
      * @param logSystem the logSystem to set
      */

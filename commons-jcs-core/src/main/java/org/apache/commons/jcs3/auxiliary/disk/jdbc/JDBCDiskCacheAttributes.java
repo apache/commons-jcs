@@ -243,7 +243,7 @@ public class JDBCDiskCacheAttributes
     }
 
     /**
-     * @param maxTotal The maxTotal to set.
+     * @param maxActive The maxTotal to set.
      */
     public void setMaxTotal( final int maxActive )
     {

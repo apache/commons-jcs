@@ -846,7 +846,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
      */
     private boolean performSingleKeyRemoval(final K key)
     {
-        boolean removed;
+        final boolean removed;
         // remove single item.
         final IndexedDiskElementDescriptor ded = keyHash.remove(key);
         removed = ded != null;
