@@ -19,8 +19,6 @@
 package org.apache.commons.jcs3.jcache.extras.loader;
 
 import org.apache.commons.jcs3.jcache.extras.InternalCacheRule;
-import org.apache.commons.jcs3.jcache.extras.loader.CacheLoaderAdapter;
-import org.apache.commons.jcs3.jcache.extras.loader.CompositeCacheLoader;
 import org.junit.Rule;
 import org.junit.Test;
 

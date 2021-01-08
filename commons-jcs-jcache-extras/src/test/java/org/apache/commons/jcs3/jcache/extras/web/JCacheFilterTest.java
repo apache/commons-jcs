@@ -38,7 +38,6 @@ import org.apache.catalina.deploy.FilterDef;
 import org.apache.catalina.deploy.FilterMap;
 import org.apache.catalina.startup.Tomcat;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.jcs3.jcache.extras.web.JCacheFilter;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
