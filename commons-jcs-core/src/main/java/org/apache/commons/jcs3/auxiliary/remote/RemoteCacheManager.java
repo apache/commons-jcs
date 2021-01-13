@@ -243,7 +243,7 @@ public class RemoteCacheManager
      */
     protected <K, V> RemoteCacheNoWait<K, V> newRemoteCacheNoWait(final IRemoteCacheAttributes cattr)
     {
-        RemoteCacheNoWait<K, V> remoteCacheNoWait;
+        final RemoteCacheNoWait<K, V> remoteCacheNoWait;
         // create a listener first and pass it to the remotecache
         // sender.
         RemoteCacheListener<K, V> listener = null;

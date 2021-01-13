@@ -35,7 +35,7 @@ public class LateralTCPConcurrentRandomTestUtil
     extends TestCase
 {
     /** Should we write out. */
-    private static boolean isSysOut = false;
+    private static final boolean isSysOut = false;
     //private static boolean isSysOut = true;
 
     /**

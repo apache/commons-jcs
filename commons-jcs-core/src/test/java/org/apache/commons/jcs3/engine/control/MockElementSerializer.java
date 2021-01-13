@@ -35,10 +35,10 @@ public class MockElementSerializer
     private final StandardSerializer serializer = new StandardSerializer();
 
     /** times out was called */
-    public int deSerializeCount = 0;
+    public int deSerializeCount;
 
     /** times in was called */
-    public int serializeCount = 0;
+    public int serializeCount;
 
     /**
      * @param bytes

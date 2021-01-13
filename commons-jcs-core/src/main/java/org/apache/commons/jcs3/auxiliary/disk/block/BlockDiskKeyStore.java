@@ -403,8 +403,8 @@ public class BlockDiskKeyStore<K>
         public final static String TAG = "orig-lru-size";
 
         // size of the content in kB
-        private AtomicInteger contentSize;
-        private int maxSize;
+        private final AtomicInteger contentSize;
+        private final int maxSize;
 
         /**
          * Default

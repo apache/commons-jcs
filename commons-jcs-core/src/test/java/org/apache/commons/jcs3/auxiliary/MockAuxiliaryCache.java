@@ -43,7 +43,7 @@ public class MockAuxiliaryCache<K, V>
     public CacheStatus status = CacheStatus.ALIVE;
 
     /** Times getMatching was Called */
-    public int getMatchingCallCount = 0;
+    public int getMatchingCallCount;
 
     /**
      * @param ce

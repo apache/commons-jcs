@@ -46,10 +46,10 @@ public class MySQLTableOptimizer
     private static final Log log = LogManager.getLog( MySQLTableOptimizer.class );
 
     /** The data source */
-    private DataSource dataSource = null;
+    private final DataSource dataSource;
 
     /** The name of the table. */
-    private String tableName = null;
+    private String tableName;
 
     /** optimizing, etc. */
     private final TableState tableState;

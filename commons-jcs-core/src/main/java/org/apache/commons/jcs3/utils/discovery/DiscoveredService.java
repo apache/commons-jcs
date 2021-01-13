@@ -45,7 +45,7 @@ public class DiscoveredService
     private int servicePort;
 
     /** last time we heard from this service? */
-    private long lastHearFromTime = 0;
+    private long lastHearFromTime;
 
     /**
      * @param cacheNames the cacheNames to set
@@ -148,13 +148,8 @@ public class DiscoveredService
 		{
 			return false;
 		}
-		if (servicePort != other.servicePort)
-		{
-			return false;
-		}
-
-		return true;
-	}
+        return servicePort == other.servicePort;
+    }
 
     /**
      * @return string for debugging purposes.

@@ -54,7 +54,7 @@ public class LRUMapConcurrentUnitTest
     extends TestCase
 {
     /** number to test with */
-    private static int items = 20000;
+    private static final int items = 20000;
 
     /**
      * Constructor for the TestSimpleLoad object

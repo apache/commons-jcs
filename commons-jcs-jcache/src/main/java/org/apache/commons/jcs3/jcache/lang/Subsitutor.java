@@ -23,7 +23,7 @@ public interface Subsitutor
 {
     String substitute(String value);
 
-    public static class Helper {
+    class Helper {
         public static final Subsitutor INSTANCE;
         static {
             Subsitutor value = null;

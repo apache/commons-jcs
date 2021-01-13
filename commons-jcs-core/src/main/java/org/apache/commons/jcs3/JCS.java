@@ -41,10 +41,10 @@ import org.apache.commons.jcs3.log.LogManager;
 public abstract class JCS
 {
     /** cache.ccf alternative. */
-    private static String configFilename = null;
+    private static String configFilename;
 
     /** alternative configuration properties */
-    private static Properties configProps = null;
+    private static Properties configProps;
 
     /** Cache manager use by the various forms of defineRegion and getAccess */
     private static CompositeCacheManager cacheMgr;
@@ -73,8 +73,8 @@ public abstract class JCS
 
     /**
      * Set the log system. Must be called before getInstance is called
-     * Predefined Log systems are {@link LogManager.LOGSYSTEM_JAVA_UTIL_LOGGING}
-     * and {@link LogManager.LOGSYSTEM_LOG4J2}
+     * Predefined Log systems are {@link LogManager#LOGSYSTEM_JAVA_UTIL_LOGGING}
+     * and {@link LogManager#LOGSYSTEM_LOG4J2}
      *
      * @param logSystem the logSystem to set
      */

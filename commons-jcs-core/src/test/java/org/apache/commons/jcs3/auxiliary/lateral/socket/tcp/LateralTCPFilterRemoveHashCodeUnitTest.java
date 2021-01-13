@@ -35,7 +35,7 @@ public class LateralTCPFilterRemoveHashCodeUnitTest
     extends TestCase
 {
     /** Does the test print to system out. */
-    private static boolean isSysOut = false;
+    private static final boolean isSysOut = false;
 
     /** The port the server will listen to. */
     private final int serverPort = 2001;

@@ -103,7 +103,7 @@ public class JDBCDiskCache<K, V>
     private static final int LOG_INTERVAL = 100;
 
     /** db connection pool */
-    private DataSourceFactory dsFactory = null;
+    private final DataSourceFactory dsFactory;
 
     /** tracks optimization */
     private TableState tableState;
@@ -150,7 +150,7 @@ public class JDBCDiskCache<K, V>
         {
             log.debug( "Putting [{0}] on disk.",  () -> ce.getKey());
 
-            byte[] element;
+            final byte[] element;
 
             try
             {

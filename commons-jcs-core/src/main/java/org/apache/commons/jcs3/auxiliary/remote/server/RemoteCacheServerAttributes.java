@@ -33,7 +33,7 @@ public class RemoteCacheServerAttributes
     private static final long serialVersionUID = -2741662082869155365L;
 
     /** port the server will listen to */
-    private int servicePort = 0;
+    private int servicePort;
 
     /** Can a cluster remote get from other remotes */
     private boolean allowClusterGet = true;

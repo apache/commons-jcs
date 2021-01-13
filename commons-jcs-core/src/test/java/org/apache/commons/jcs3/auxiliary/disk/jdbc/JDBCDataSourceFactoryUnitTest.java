@@ -146,7 +146,7 @@ public class JDBCDataSourceFactoryUnitTest
     /* For JNDI mocking */
     public static class MockInitialContextFactory implements InitialContextFactory
     {
-        private static Context context;
+        private static final Context context;
 
         static
         {
@@ -154,7 +154,7 @@ public class JDBCDataSourceFactoryUnitTest
             {
                 context = new InitialContext(true)
                 {
-                    Map<String, Object> bindings = new HashMap<>();
+                    final Map<String, Object> bindings = new HashMap<>();
 
                     @Override
                     public void bind(final String name, final Object obj) throws NamingException

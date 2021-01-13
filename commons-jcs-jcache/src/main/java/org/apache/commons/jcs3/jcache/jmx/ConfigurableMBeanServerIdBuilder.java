@@ -31,7 +31,7 @@ import java.util.concurrent.ConcurrentMap;
 
 public class ConfigurableMBeanServerIdBuilder extends MBeanServerBuilder
 {
-    private static ConcurrentMap<Key, MBeanServer> JVM_SINGLETONS = new ConcurrentHashMap<>();
+    private static final ConcurrentMap<Key, MBeanServer> JVM_SINGLETONS = new ConcurrentHashMap<>();
 
     private static class Key
     {

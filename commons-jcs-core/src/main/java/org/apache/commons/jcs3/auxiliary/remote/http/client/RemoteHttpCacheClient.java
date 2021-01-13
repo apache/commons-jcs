@@ -48,7 +48,7 @@ public class RemoteHttpCacheClient<K, V>
     private RemoteHttpCacheAttributes remoteHttpCacheAttributes;
 
     /** Set to true when initialize is called */
-    private boolean initialized = false;
+    private boolean initialized;
 
     /** For factory construction. */
     public RemoteHttpCacheClient()

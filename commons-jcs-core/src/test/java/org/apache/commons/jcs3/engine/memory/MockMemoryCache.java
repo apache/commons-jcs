@@ -47,10 +47,10 @@ public class MockMemoryCache<K, V>
     private final HashMap<K, ICacheElement<K, V>> map = new HashMap<>();
 
     /** The number of times waterfall was called. */
-    public int waterfallCallCount = 0;
+    public int waterfallCallCount;
 
     /** The number passed to the last call of free elements. */
-    public int lastNumberOfFreedElements = 0;
+    public int lastNumberOfFreedElements;
 
     /**
      * Does nothing

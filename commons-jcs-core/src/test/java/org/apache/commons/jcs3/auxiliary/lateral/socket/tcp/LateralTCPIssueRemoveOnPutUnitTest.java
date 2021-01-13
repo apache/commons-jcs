@@ -36,7 +36,7 @@ public class LateralTCPIssueRemoveOnPutUnitTest
     extends TestCase
 {
     /** Should log data go to system out. */
-    private static boolean isSysOut = false;
+    private static final boolean isSysOut = false;
 
     /** The port the server will listen to. */
     private final int serverPort = 1118;

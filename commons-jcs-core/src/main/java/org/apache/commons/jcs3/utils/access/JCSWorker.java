@@ -97,15 +97,15 @@ public class JCSWorker<K, V>
     private static final Log logger = LogManager.getLog( JCSWorker.class );
 
     /** The cache we are working with */
-    private CacheAccess<K, V> cache;
+    private final CacheAccess<K, V> cache;
 
     /** The cache we are working with */
-    private GroupCacheAccess<K, V> groupCache;
+    private final GroupCacheAccess<K, V> groupCache;
 
     /**
      * Map to hold who's doing work presently.
      */
-    private volatile ConcurrentMap<String, JCSWorkerHelper<V>> map = new ConcurrentHashMap<>();
+    private final ConcurrentMap<String, JCSWorkerHelper<V>> map = new ConcurrentHashMap<>();
 
     /**
      * Region for the JCS cache.

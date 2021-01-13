@@ -51,7 +51,7 @@ public abstract class AbstractRemoteCacheService<K, V>
     private String eventLogSourceName = "AbstractRemoteCacheService";
 
     /** Number of puts into the cache. */
-    private int puts = 0;
+    private int puts;
 
     /** The interval at which we will log updates. */
     private final int logInterval = 100;

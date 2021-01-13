@@ -74,7 +74,7 @@ public class RemoteHttpCacheServlet
     private final StandardSerializer serializer = new StandardSerializer();
 
     /** Number of service calls. */
-    private int serviceCalls = 0;
+    private int serviceCalls;
 
     /** The interval at which we will log the count. */
     private final int logInterval = 100;

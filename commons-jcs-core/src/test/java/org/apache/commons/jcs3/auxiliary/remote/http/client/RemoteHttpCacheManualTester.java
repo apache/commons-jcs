@@ -29,7 +29,7 @@ public class RemoteHttpCacheManualTester
     extends TestCase
 {
     /** number to use for the test */
-    private static int items = 100;
+    private static final int items = 100;
 
     /**
      * Test setup

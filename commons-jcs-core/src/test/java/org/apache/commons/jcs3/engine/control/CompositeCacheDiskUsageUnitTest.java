@@ -326,7 +326,7 @@ public class CompositeCacheDiskUsageUnitTest
         public ICacheElement<K, V> lastUpdatedItem;
 
         /** The number of times update was called. */
-        public int updateCount = 0;
+        public int updateCount;
 
         /** The type that should be returned from getCacheType. */
         public CacheType cacheType = CacheType.DISK_CACHE;

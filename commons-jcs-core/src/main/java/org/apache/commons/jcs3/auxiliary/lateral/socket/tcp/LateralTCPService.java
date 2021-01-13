@@ -54,7 +54,7 @@ public class LateralTCPService<K, V>
     private final boolean issueRemoveOnPut;
 
     /** Sends to another lateral. */
-    private LateralTCPSender sender;
+    private final LateralTCPSender sender;
 
     /** use the vmid by default */
     private long listenerId = CacheInfo.listenerId;

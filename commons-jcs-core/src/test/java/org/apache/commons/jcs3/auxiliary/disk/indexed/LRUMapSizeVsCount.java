@@ -36,10 +36,10 @@ public class LRUMapSizeVsCount
     extends TestCase
 {
     /** The put put ration after the test */
-    double ratioPut = 0;
+    double ratioPut;
 
     /** The ratio after the test */
-    double ratioGet = 0;
+    double ratioGet;
 
     /** put size / count  ratio */
     float targetPut = 1.2f;

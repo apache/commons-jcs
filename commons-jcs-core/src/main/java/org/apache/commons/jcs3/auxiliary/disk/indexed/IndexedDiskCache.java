@@ -97,19 +97,19 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
     private boolean isShutdownOptimizationEnabled = true;
 
     /** are we currently optimizing the files */
-    private boolean isOptimizing = false;
+    private boolean isOptimizing;
 
     /** The number of times the file has been optimized. */
-    private int timesOptimized = 0;
+    private int timesOptimized;
 
     /** The thread optimizing the file. */
     private volatile Thread currentOptimizationThread;
 
     /** used for counting the number of requests */
-    private int removeCount = 0;
+    private int removeCount;
 
     /** Should we queue puts. True when optimizing. We write the queue post optimization. */
-    private boolean queueInput = false;
+    private boolean queueInput;
 
     /** list where puts made during optimization are made */
     private final ConcurrentSkipListSet<IndexedDiskElementDescriptor> queuedPutList;
@@ -121,10 +121,10 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
     private final IndexedDiskCacheAttributes cattr;
 
     /** How many slots have we recycled. */
-    private int recycleCnt = 0;
+    private int recycleCnt;
 
     /** How many items were there on startup. */
-    private int startupSize = 0;
+    private int startupSize;
 
     /** the number of bytes free on disk. */
     private final AtomicLong bytesFree = new AtomicLong(0);
@@ -846,7 +846,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
      */
     private boolean performSingleKeyRemoval(final K key)
     {
-        boolean removed;
+        final boolean removed;
         // remove single item.
         final IndexedDiskElementDescriptor ded = keyHash.remove(key);
         removed = ded != null;
@@ -1533,8 +1533,8 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
         public static final String TAG = "orig";
 
         // size of the content in kB
-        private AtomicInteger contentSize;
-        private int maxSize;
+        private final AtomicInteger contentSize;
+        private final int maxSize;
 
         /**
          * Default

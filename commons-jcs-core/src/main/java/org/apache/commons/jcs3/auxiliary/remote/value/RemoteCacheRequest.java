@@ -37,10 +37,10 @@ public class RemoteCacheRequest<K, V>
     private static final long serialVersionUID = -8858447417390442569L;
 
     /** The request type specifies the type of request: get, put, remove, . . */
-    private RemoteRequestType requestType = null;
+    private RemoteRequestType requestType;
 
     /** Used to identify the source. Same as listener id on the client side. */
-    private long requesterId = 0;
+    private long requesterId;
 
     /** The name of the region */
     private String cacheName;

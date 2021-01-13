@@ -42,7 +42,7 @@ public abstract class AbstractRemoteCacheListener<K, V>
     private static final Log log = LogManager.getLog( AbstractRemoteCacheListener.class );
 
     /** The cached name of the local host. The remote server gets this for logging purposes. */
-    private static String localHostName = null;
+    private static String localHostName;
 
     /**
      * The cache manager used to put items in different regions. This is set lazily and should not
@@ -54,7 +54,7 @@ public abstract class AbstractRemoteCacheListener<K, V>
     private final IRemoteCacheAttributes irca;
 
     /** This is set by the remote cache server. */
-    private long listenerId = 0;
+    private long listenerId;
 
     /** Custom serializer. */
     private final IElementSerializer elementSerializer;

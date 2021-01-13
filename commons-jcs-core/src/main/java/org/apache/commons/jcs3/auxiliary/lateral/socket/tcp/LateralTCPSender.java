@@ -51,7 +51,7 @@ public class LateralTCPSender
     private Socket socket;
 
     /** how many messages sent */
-    private int sendCnt = 0;
+    private int sendCnt;
 
     /** Use to synchronize multiple threads that may be trying to get. */
     private final Object getLock = new int[0];
