@@ -184,7 +184,7 @@ public abstract class AbstractLRUMap<K, V>
     @Override
     public V get( final Object key )
     {
-        V retVal;
+        final V retVal;
 
         log.debug( "getting item  for key {0}", key );
 

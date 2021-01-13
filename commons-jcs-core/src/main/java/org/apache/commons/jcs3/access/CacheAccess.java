@@ -108,7 +108,7 @@ public class CacheAccess<K, V>
     @Override
     public Map<K, V> getMatching( final String pattern )
     {
-        Map<K, V> unwrappedResults;
+        final Map<K, V> unwrappedResults;
 
         final Map<K, ICacheElement<K, V>> wrappedResults = this.getCacheControl().getMatching( pattern );
 

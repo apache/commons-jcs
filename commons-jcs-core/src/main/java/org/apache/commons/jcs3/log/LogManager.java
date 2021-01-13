@@ -135,7 +135,7 @@ public class LogManager
     /**
      * Returns the root logger.
      *
-     * @return the root logger, named {@link LogFactory.ROOT_LOGGER_NAME}.
+     * @return the root logger, named {@link LogFactory#ROOT_LOGGER_NAME}.
      */
     public static Log getRootLogger()
     {

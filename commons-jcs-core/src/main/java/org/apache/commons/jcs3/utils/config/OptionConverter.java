@@ -329,7 +329,7 @@ public class OptionConverter
                     return defaultValue;
                 }
             }
-            catch ( ClassNotFoundException | InstantiationException | IllegalAccessException e )
+            catch ( final ClassNotFoundException | InstantiationException | IllegalAccessException e )
             {
                 log.error( "Could not instantiate class [{0}]", className, e );
             }

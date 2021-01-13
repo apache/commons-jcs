@@ -1148,7 +1148,7 @@ public class RemoteCacheServer<K, V>
         {
             throw new IllegalArgumentException( "cacheName and listener must not be null" );
         }
-        CacheListeners<KK, VV> cacheListeners;
+        final CacheListeners<KK, VV> cacheListeners;
 
         final IRemoteCacheListener<KK, VV> ircl = (IRemoteCacheListener<KK, VV>) listener;
 
