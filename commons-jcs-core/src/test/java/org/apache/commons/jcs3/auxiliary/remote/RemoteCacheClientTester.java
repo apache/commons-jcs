@@ -60,7 +60,7 @@ public class RemoteCacheClientTester
     final int count;
 
     /** Description of the Field */
-    protected static long listenerId = 0;
+    protected static long listenerId;
 
     /**
      * Gets the remoteType attribute of the RemoteCacheClientTest object

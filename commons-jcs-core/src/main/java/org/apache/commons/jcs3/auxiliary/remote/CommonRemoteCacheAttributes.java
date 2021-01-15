@@ -50,10 +50,10 @@ public class CommonRemoteCacheAttributes
     private boolean removeUponRemotePut = true;
 
     /** Can we receive from or put to the remote. this probably shouldn't be used. Use receive. */
-    private boolean getOnly = false;
+    private boolean getOnly;
 
     /** Should we put and get from the clusters. */
-    private boolean localClusterConsistency = false;
+    private boolean localClusterConsistency;
 
     /** read and connect timeout */
     private int rmiSocketFactoryTimeoutMillis = DEFAULT_RMI_SOCKET_FACTORY_TIMEOUT_MILLIS;

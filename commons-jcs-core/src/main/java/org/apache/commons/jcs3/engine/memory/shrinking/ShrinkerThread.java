@@ -50,7 +50,7 @@ public class ShrinkerThread<K, V>
     private final int maxSpoolPerRun;
 
     /** Should we limit the number spooled per run. If so, the maxSpoolPerRun will be used. */
-    private boolean spoolLimit = false;
+    private boolean spoolLimit;
 
     /**
      * Constructor for the ShrinkerThread object.

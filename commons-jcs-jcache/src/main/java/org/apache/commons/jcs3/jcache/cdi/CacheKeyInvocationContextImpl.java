@@ -26,8 +26,8 @@ import javax.interceptor.InvocationContext;
 
 public class CacheKeyInvocationContextImpl<A extends Annotation> extends CacheInvocationContextImpl<A> implements CacheKeyInvocationContext<A>
 {
-    private CacheInvocationParameter[] keyParams = null;
-    private CacheInvocationParameter valueParam = null;
+    private CacheInvocationParameter[] keyParams;
+    private CacheInvocationParameter valueParam;
 
     public CacheKeyInvocationContextImpl(final InvocationContext delegate, final A annotation, final String name,
                                          final CDIJCacheHelper.MethodMeta methodMeta)

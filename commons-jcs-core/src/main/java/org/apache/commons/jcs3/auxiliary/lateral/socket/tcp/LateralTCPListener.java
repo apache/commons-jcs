@@ -82,13 +82,13 @@ public class LateralTCPListener<K, V>
     private ExecutorService pooledExecutor;
 
     /** put count */
-    private int putCnt = 0;
+    private int putCnt;
 
     /** remove count */
-    private int removeCnt = 0;
+    private int removeCnt;
 
     /** get count */
-    private int getCnt = 0;
+    private int getCnt;
 
     /**
      * Use the vmid by default. This can be set for testing. If we ever need to run more than one

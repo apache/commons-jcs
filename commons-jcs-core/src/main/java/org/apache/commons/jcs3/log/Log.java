@@ -24,7 +24,7 @@ import java.util.function.Supplier;
  * All logging operations, except configuration, are done through this interface.
  *
  * <p>
- * The canonical way to obtain a Logger for a class is through {@link LogManager#getLog()}.
+ * The canonical way to obtain a Logger for a class is through {@link LogManager#getLog(String)}}.
  * Typically, each class should get its own Log named after its fully qualified class name
  * </p>
  *

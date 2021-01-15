@@ -32,25 +32,25 @@ public class ElementEventHandlerMockImpl
     implements IElementEventHandler
 {
     /** Times called. */
-    private int callCount = 0;
+    private int callCount;
 
     /** The logger */
     private static final Log log = LogManager.getLog( ElementEventHandlerMockImpl.class );
 
     /** ELEMENT_EVENT_SPOOLED_DISK_AVAILABLE */
-    private int spoolCount = 0;
+    private int spoolCount;
 
     /** ELEMENT_EVENT_SPOOLED_NOT_ALLOWED */
-    private int spoolNotAllowedCount = 0;
+    private int spoolNotAllowedCount;
 
     /** ELEMENT_EVENT_SPOOLED_DISK_NOT_AVAILABLE */
-    private int spoolNoDiskCount = 0;
+    private int spoolNoDiskCount;
 
     /** ELEMENT_EVENT_EXCEEDED_MAXLIFE_BACKGROUND */
-    private int exceededMaxLifeBackgroundCount = 0;
+    private int exceededMaxLifeBackgroundCount;
 
     /** ELEMENT_EVENT_EXCEEDED_IDLETIME_BACKGROUND */
-    private int exceededIdleTimeBackgroundCount = 0;
+    private int exceededIdleTimeBackgroundCount;
 
     /**
      * @param event

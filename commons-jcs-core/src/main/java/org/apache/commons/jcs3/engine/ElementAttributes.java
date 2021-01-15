@@ -68,13 +68,13 @@ public class ElementAttributes
     private long maxIdleTime = -1;
 
     /** The byte size of the field. Must be manually set. */
-    private int size = 0;
+    private int size;
 
     /** The creation time. This is used to enforce the max life. */
-    private long createTime = 0;
+    private long createTime;
 
     /** The last access time. This is used to enforce the max idel time. */
-    private long lastAccessTime = 0;
+    private long lastAccessTime;
 
     /**
      * The list of Event handlers to use. This is transient, since the event handlers cannot usually

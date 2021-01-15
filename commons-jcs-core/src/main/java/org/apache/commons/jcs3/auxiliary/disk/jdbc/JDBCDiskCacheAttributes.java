@@ -54,7 +54,7 @@ public class JDBCDiskCacheAttributes
     private String jndiPath;
 
     /** The time between two JNDI lookups */
-    private long jndiTTL = 0L;
+    private long jndiTTL;
 
     /** The table name */
     private String tableName = DEFAULT_TABLE_NAME;

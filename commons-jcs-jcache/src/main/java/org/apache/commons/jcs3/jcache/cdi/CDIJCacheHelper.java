@@ -55,7 +55,7 @@ public class CDIJCacheHelper
     private static final Logger LOGGER = Logger.getLogger(CDIJCacheHelper.class.getName());
     private static final boolean CLOSE_CACHE = !Boolean.getBoolean("org.apache.commons.jcs3.jcache.cdi.skip-close");
 
-    private volatile CacheResolverFactoryImpl defaultCacheResolverFactory = null; // lazy to not create any cache if not needed
+    private volatile CacheResolverFactoryImpl defaultCacheResolverFactory; // lazy to not create any cache if not needed
     private final CacheKeyGeneratorImpl defaultCacheKeyGenerator = new CacheKeyGeneratorImpl();
 
     private final Collection<CreationalContext<?>> toRelease = new ArrayList<>();

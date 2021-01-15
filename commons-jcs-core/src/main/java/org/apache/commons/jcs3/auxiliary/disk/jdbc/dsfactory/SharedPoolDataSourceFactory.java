@@ -42,13 +42,13 @@ import org.apache.commons.jcs3.log.LogManager;
 public class SharedPoolDataSourceFactory implements DataSourceFactory
 {
     /** The log. */
-    private static Log log = LogManager.getLog(SharedPoolDataSourceFactory.class);
+    private static final Log log = LogManager.getLog(SharedPoolDataSourceFactory.class);
 
     /** The name of the factory. */
     private String name;
 
     /** The wrapped <code>DataSource</code>. */
-    private SharedPoolDataSource ds = null;
+    private SharedPoolDataSource ds;
 
     /**
      * @return the name of the factory.

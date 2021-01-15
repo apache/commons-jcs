@@ -37,7 +37,7 @@ public class SystemPropertyUsageUnitTest
     private static final String JCS_DEFAULT_CACHEATTRIBUTES_MAX_OBJECTS = "jcs.default.cacheattributes.MaxObjects";
     private static final int testValue = 6789;
 
-    private CompositeCacheManager manager = null;
+    private CompositeCacheManager manager;
 
     @Override
     protected void setUp() throws Exception

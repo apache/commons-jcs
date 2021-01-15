@@ -34,16 +34,16 @@ public class MockCacheEventLogger
     implements ICacheEventLogger
 {
     /** times called */
-    public int applicationEventCalls = 0;
+    public int applicationEventCalls;
 
     /** times called */
-    public int startICacheEventCalls = 0;
+    public int startICacheEventCalls;
 
     /** times called */
-    public int endICacheEventCalls = 0;
+    public int endICacheEventCalls;
 
     /** times called */
-    public int errorEventCalls = 0;
+    public int errorEventCalls;
 
     /** list of messages */
     public List<String> errorMessages = new ArrayList<>();

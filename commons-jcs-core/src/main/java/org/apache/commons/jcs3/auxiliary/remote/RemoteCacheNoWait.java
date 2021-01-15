@@ -76,19 +76,19 @@ public class RemoteCacheNoWait<K, V>
     private ICacheEventQueue<K, V> cacheEventQueue;
 
     /** how many times get has been called. */
-    private int getCount = 0;
+    private int getCount;
 
     /** how many times getMatching has been called. */
-    private int getMatchingCount = 0;
+    private int getMatchingCount;
 
     /** how many times getMultiple has been called. */
-    private int getMultipleCount = 0;
+    private int getMultipleCount;
 
     /** how many times remove has been called. */
-    private int removeCount = 0;
+    private int removeCount;
 
     /** how many times put has been called. */
-    private int putCount = 0;
+    private int putCount;
 
     /**
      * Constructs with the given remote cache, and fires up an event queue for asynchronous

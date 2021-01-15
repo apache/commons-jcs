@@ -139,13 +139,13 @@ public class CompositeCacheManager
     private Thread shutdownHook;
 
     /** Indicates whether the instance has been initialized. */
-    private boolean isInitialized = false;
+    private boolean isInitialized;
 
     /** Indicates whether configure has been called. */
-    private boolean isConfigured = false;
+    private boolean isConfigured;
 
     /** Indicates whether JMX bean has been registered. */
-    private boolean isJMXRegistered = false;
+    private boolean isJMXRegistered;
 
     private String jmxName = JMX_OBJECT_NAME;
 

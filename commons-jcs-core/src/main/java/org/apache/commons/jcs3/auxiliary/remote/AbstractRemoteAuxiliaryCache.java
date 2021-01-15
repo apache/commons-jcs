@@ -77,10 +77,10 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
     private IRemoteCacheAttributes remoteCacheAttributes;
 
     /** A thread pool for gets if configured. */
-    private ExecutorService pool = null;
+    private ExecutorService pool;
 
     /** Should we get asynchronously using a pool. */
-    private boolean usePoolForGet = false;
+    private boolean usePoolForGet;
 
     /**
      * Creates the base.

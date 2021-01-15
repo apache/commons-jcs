@@ -42,7 +42,7 @@ public class InMemoryResponse extends HttpServletResponseWrapper implements Seri
     private final Collection<Cookie> cookies = new CopyOnWriteArraySet<>();
     private final Map<String, List<Serializable>> headers = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     private int status = SC_OK;
-    private String contentType = null;
+    private String contentType;
     private PrintWriter writer;
     private int contentLength;
 

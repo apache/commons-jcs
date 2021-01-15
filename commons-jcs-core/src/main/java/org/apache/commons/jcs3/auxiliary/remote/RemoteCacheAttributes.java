@@ -41,10 +41,10 @@ public class RemoteCacheAttributes
     private String failoverServers = "";
 
     /** callback */
-    private int localPort = 0;
+    private int localPort;
 
     /** what failover server we are connected to. */
-    private int failoverIndex = 0;
+    private int failoverIndex;
 
     /** List of failover server addresses */
     private List<RemoteLocation> failovers;

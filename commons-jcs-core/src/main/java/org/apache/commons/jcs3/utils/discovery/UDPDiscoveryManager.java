@@ -39,7 +39,7 @@ public class UDPDiscoveryManager
     private static final Log log = LogManager.getLog( UDPDiscoveryManager.class );
 
     /** Singleton instance */
-    private static UDPDiscoveryManager INSTANCE = new UDPDiscoveryManager();
+    private static final UDPDiscoveryManager INSTANCE = new UDPDiscoveryManager();
 
     /** Known services */
     private final ConcurrentMap<String, UDPDiscoveryService> services = new ConcurrentHashMap<>();

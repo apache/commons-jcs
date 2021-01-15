@@ -30,7 +30,7 @@ public class LogManager
     /**
      * The name of log subsystem
      */
-    private static String logSystem = null;
+    private static String logSystem;
 
     /** Log systems currently known */
     public static final String LOGSYSTEM_JAVA_UTIL_LOGGING = "jul";

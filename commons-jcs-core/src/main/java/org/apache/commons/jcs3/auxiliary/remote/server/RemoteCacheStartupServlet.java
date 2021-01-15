@@ -84,7 +84,7 @@ public class RemoteCacheStartupServlet
     private int registryPort = DEFAULT_REGISTRY_PORT;
 
     /** Configuration properties */
-    private String registryHost = null;
+    private String registryHost;
 
     /**
      * Starts the registry and then tries to bind to it.

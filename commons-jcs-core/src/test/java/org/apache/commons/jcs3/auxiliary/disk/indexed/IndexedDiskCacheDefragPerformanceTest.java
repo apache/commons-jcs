@@ -47,10 +47,10 @@ public class IndexedDiskCacheDefragPerformanceTest
     private static final int LOG_INCREMENT = 5000;
 
     /** for getting memory usage */
-    private static Runtime rt = Runtime.getRuntime();
+    private static final Runtime rt = Runtime.getRuntime();
 
     /** for displaying memory usage */
-    private static DecimalFormat format = new DecimalFormat( "#,###" );
+    private static final DecimalFormat format = new DecimalFormat( "#,###" );
 
     /**
      * @throws Exception

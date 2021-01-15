@@ -46,13 +46,13 @@ public class TestCacheAccess
     private static final Log log = LogManager.getLog( TestCacheAccess.class );
 
     /** cache instance to use in testing */
-    private CacheAccess<String, String> cache_control = null;
+    private CacheAccess<String, String> cache_control;
 
     /** cache instance to use in testing */
-    private GroupCacheAccess<String, String> group_cache_control = null;
+    private GroupCacheAccess<String, String> group_cache_control;
 
     /** do we use system.out.println to print out debug data? */
-    private static boolean isSysOut = false;
+    private static boolean isSysOut;
 
     /** Construct and initialize the cachecontrol based on the config file. */
     public TestCacheAccess()

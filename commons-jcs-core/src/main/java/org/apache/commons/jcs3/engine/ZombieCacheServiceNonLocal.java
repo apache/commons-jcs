@@ -49,7 +49,7 @@ public class ZombieCacheServiceNonLocal<K, V>
     private static final Log log = LogManager.getLog( ZombieCacheServiceNonLocal.class );
 
     /** How big can the queue grow. */
-    private int maxQueueSize = 0;
+    private int maxQueueSize;
 
     /** The queue */
     private final ConcurrentLinkedQueue<ZombieEvent> queue;

@@ -38,7 +38,7 @@ public class RemoteHttpCacheMonitor extends AbstractAuxiliaryCacheMonitor
     private final ConcurrentHashMap<RemoteHttpCache<?, ?>, RemoteHttpCache<?, ?>> remoteHttpCaches;
 
     /** Factory instance */
-    private RemoteHttpCacheFactory factory = null;
+    private final RemoteHttpCacheFactory factory;
 
     /**
      * Constructor for the RemoteCacheMonitor object

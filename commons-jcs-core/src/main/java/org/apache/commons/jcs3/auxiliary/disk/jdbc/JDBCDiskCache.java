@@ -103,7 +103,7 @@ public class JDBCDiskCache<K, V>
     private static final int LOG_INTERVAL = 100;
 
     /** db connection pool */
-    private DataSourceFactory dsFactory = null;
+    private final DataSourceFactory dsFactory;
 
     /** tracks optimization */
     private TableState tableState;

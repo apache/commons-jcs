@@ -41,10 +41,10 @@ import org.apache.commons.jcs3.log.LogManager;
 public abstract class JCS
 {
     /** cache.ccf alternative. */
-    private static String configFilename = null;
+    private static String configFilename;
 
     /** alternative configuration properties */
-    private static Properties configProps = null;
+    private static Properties configProps;
 
     /** Cache manager use by the various forms of defineRegion and getAccess */
     private static CompositeCacheManager cacheMgr;

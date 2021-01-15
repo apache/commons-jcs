@@ -34,10 +34,10 @@ public class LRUMapPerformanceTest
     extends TestCase
 {
     /** The put put ration after the test */
-    float ratioPut = 0;
+    float ratioPut;
 
     /** The ratio after the test */
-    float ratioGet = 0;
+    float ratioGet;
 
     /** put jcs / commons ratio */
     float targetPut = 1.2f;

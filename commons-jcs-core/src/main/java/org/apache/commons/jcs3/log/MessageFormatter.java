@@ -29,7 +29,7 @@ import java.util.function.Supplier;
 public class MessageFormatter
 {
     private final String messagePattern;
-    private transient Object[] parameters;
+    private final transient Object[] parameters;
     private transient String formattedMessage;
     private transient Throwable throwable;
 

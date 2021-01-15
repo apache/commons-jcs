@@ -43,7 +43,7 @@ public class LHMLRUMemoryCacheConcurrentUnitTest
      * Number of items to cache, twice the configured maxObjects for the memory
      * cache regions.
      */
-    private static int items = 200;
+    private static final int items = 200;
 
     /**
      * Constructor for the TestDiskCache object.

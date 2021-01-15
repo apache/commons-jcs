@@ -62,13 +62,13 @@ public class LateralCacheNoWait<K, V>
     private ICacheEventQueue<K, V> eventQueue;
 
     /** times get called */
-    private int getCount = 0;
+    private int getCount;
 
     /** times remove called */
-    private int removeCount = 0;
+    private int removeCount;
 
     /** times put called */
-    private int putCount = 0;
+    private int putCount;
 
     /**
      * Constructs with the given lateral cache, and fires up an event queue for asynchronous

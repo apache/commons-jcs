@@ -34,8 +34,8 @@ public class ExtraJCacheExtension implements Extension
 {
     private static final boolean ACTIVATED = "true".equals(System.getProperty("org.apache.jcs.extra.cdi", "true"));
 
-    private boolean cacheManagerFound = false;
-    private boolean cacheProviderFound = false;
+    private boolean cacheManagerFound;
+    private boolean cacheProviderFound;
     private CacheManager cacheManager;
     private CachingProvider cachingProvider;
 

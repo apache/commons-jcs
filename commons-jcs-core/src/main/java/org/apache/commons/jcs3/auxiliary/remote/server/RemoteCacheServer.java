@@ -80,7 +80,7 @@ public class RemoteCacheServer<K, V>
     private static final Log log = LogManager.getLog( RemoteCacheServer.class );
 
     /** Number of puts into the cache. */
-    private int puts = 0;
+    private int puts;
 
     /** Maps cache name to CacheListeners object. association of listeners (regions). */
     private final transient ConcurrentMap<String, CacheListeners<K, V>> cacheListenersMap =

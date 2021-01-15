@@ -30,7 +30,7 @@ import org.apache.commons.jcs3.log.LogManager;
 public class DoubleLinkedList<T extends DoubleLinkedListNode>
 {
     /** record size to avoid having to iterate */
-    private int size = 0;
+    private int size;
 
     /** The logger */
     private static final Log log = LogManager.getLog( DoubleLinkedList.class );

@@ -36,7 +36,7 @@ public class PurgatoryElement<K, V>
     private static final long serialVersionUID = -8152034342684135628L;
 
     /** Is the element ready to be spooled? */
-    private boolean spoolable = false;
+    private boolean spoolable;
 
     /** Wrapped cache Element */
     private final ICacheElement<K, V> cacheElement;

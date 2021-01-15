@@ -49,7 +49,7 @@ public class JCSWorkerUnitTest
         // This is the helper.
         final JCSWorkerHelper<Long> helper = new AbstractJCSWorkerHelper<Long>()
         {
-            int timesCalled = 0;
+            int timesCalled;
 
             @Override
             public Long doWork()

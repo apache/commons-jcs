@@ -43,7 +43,7 @@ public class ElementEventQueue
     private static final Log log = LogManager.getLog( ElementEventQueue.class );
 
     /** shutdown or not */
-    private boolean destroyed = false;
+    private boolean destroyed;
 
     /** The worker thread pool. */
     private ExecutorService queueProcessor;
