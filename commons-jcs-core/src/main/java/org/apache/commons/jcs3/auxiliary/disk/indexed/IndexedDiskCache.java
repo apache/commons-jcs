@@ -187,7 +187,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
             log.info("{0}: Indexed Disk Cache is alive.", logCacheName);
 
             // TODO: Should we improve detection of whether or not the file should be optimized.
-            if (isRealTimeOptimizationEnabled && keyHash.size() > 0)
+            if (isRealTimeOptimizationEnabled && !keyHash.isEmpty())
             {
                 // Kick off a real time optimization, in case we didn't do a final optimization.
                 doOptimizeRealTime();
@@ -438,7 +438,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
             keyFile.reset();
 
             final HashMap<K, IndexedDiskElementDescriptor> keys = new HashMap<>(keyHash);
-            if (keys.size() > 0)
+            if (!keys.isEmpty())
             {
                 keyFile.writeObject(keys, 0);
             }
@@ -1636,7 +1636,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
         @Override
         protected boolean shouldRemove()
         {
-            return maxSize > 0 && contentSize.get() > maxSize && this.size() > 0;
+            return maxSize > 0 && contentSize.get() > maxSize && !this.isEmpty();
         }
     }
 
