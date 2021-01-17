@@ -25,7 +25,6 @@ import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.io.File;
 import java.lang.reflect.Method;
-import java.util.Enumeration;
 import java.util.Properties;
 
 import org.apache.commons.jcs3.log.Log;
@@ -113,14 +112,11 @@ public class PropertySetter
     {
         final int len = prefix.length();
 
-        for ( final Enumeration<?> e = properties.propertyNames(); e.hasMoreElements(); )
+        for (final String key : properties.stringPropertyNames())
         {
-            String key = (String) e.nextElement();
-
             // handle only properties that start with the desired prefix.
             if ( key.startsWith( prefix ) )
             {
-
                 // ignore key if it contains dots after the prefix
                 if ( key.indexOf( '.', len + 1 ) > 0 )
                 {
@@ -130,9 +126,8 @@ public class PropertySetter
                 }
 
                 final String value = OptionConverter.findAndSubst( key, properties );
-                key = key.substring( len );
 
-                setProperty( key, value );
+                setProperty( key.substring( len ), value );
             }
         }
 

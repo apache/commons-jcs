@@ -78,7 +78,7 @@ public class LateralTCPSender
         final int po = Integer.parseInt( p1.substring( p1.indexOf( ":" ) + 1 ) );
         log.debug( "h2 = {0}, po = {1}", h2, po );
 
-        if ( h2.length() == 0 )
+        if ( h2.isEmpty() )
         {
             throw new IOException( "Cannot connect to invalid address [" + h2 + ":" + po + "]" );
         }
