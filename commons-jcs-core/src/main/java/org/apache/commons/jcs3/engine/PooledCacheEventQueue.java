@@ -53,10 +53,10 @@ public class PooledCacheEventQueue<K, V>
     private static final QueueType queueType = QueueType.POOLED;
 
     /** The Thread Pool to execute events with. */
-    protected ExecutorService pool = null;
+    protected ExecutorService pool;
 
     /** The Thread Pool queue */
-    protected BlockingQueue<Runnable> queue = null;
+    protected BlockingQueue<Runnable> queue;
 
     /**
      * Constructor for the CacheEventQueue object

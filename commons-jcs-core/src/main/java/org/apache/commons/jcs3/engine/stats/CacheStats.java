@@ -37,10 +37,10 @@ public class CacheStats
     private static final long serialVersionUID = 529914708798168590L;
 
     /** The region */
-    private String regionName = null;
+    private String regionName;
 
     /** What that auxiliaries are reporting. */
-    private List<IStats> auxStats = null;
+    private List<IStats> auxStats;
 
     /**
      * Stats are for a region, though auxiliary data may be for more.

@@ -41,10 +41,10 @@ public class BlockDiskCacheSteadyLoadTest
     private static final String LOG_DIVIDER = "---------------------------";
 
     /** the runtime. */
-    private static Runtime rt = Runtime.getRuntime();
+    private static final Runtime rt = Runtime.getRuntime();
 
     /** The decimal format to use int he logs. */
-    private static DecimalFormat format = new DecimalFormat( "#,###" );
+    private static final DecimalFormat format = new DecimalFormat( "#,###" );
 
     /**
      * Insert 2000 wait 1 second, repeat. Average 1000 / sec.

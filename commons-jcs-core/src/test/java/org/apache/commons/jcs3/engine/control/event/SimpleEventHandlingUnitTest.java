@@ -35,7 +35,7 @@ public class SimpleEventHandlingUnitTest
     extends TestCase
 {
     /** Items to test with */
-    private static int items = 20000;
+    private static final int items = 20000;
 
     /**
      * Test setup with expected configuration parameters.
@@ -281,19 +281,19 @@ public class SimpleEventHandlingUnitTest
         implements IElementEventHandler
     {
         /** times spool called */
-        private int spoolCount = 0;
+        private int spoolCount;
 
         /** times spool not allowed */
-        private int spoolNotAllowedCount = 0;
+        private int spoolNotAllowedCount;
 
         /** times spool without disk */
-        private int spoolNoDiskCount = 0;
+        private int spoolNoDiskCount;
 
         /** times exceeded maxlife */
-        private int exceededMaxlifeCount = 0;
+        private int exceededMaxlifeCount;
 
         /** times exceeded idle time */
-        private int exceededIdletimeCount = 0;
+        private int exceededIdletimeCount;
 
         /**
          * @param event

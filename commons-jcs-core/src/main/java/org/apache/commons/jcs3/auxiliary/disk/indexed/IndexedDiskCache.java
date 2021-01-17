@@ -97,19 +97,19 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
     private boolean isShutdownOptimizationEnabled = true;
 
     /** are we currently optimizing the files */
-    private boolean isOptimizing = false;
+    private boolean isOptimizing;
 
     /** The number of times the file has been optimized. */
-    private int timesOptimized = 0;
+    private int timesOptimized;
 
     /** The thread optimizing the file. */
     private volatile Thread currentOptimizationThread;
 
     /** used for counting the number of requests */
-    private int removeCount = 0;
+    private int removeCount;
 
     /** Should we queue puts. True when optimizing. We write the queue post optimization. */
-    private boolean queueInput = false;
+    private boolean queueInput;
 
     /** list where puts made during optimization are made */
     private final ConcurrentSkipListSet<IndexedDiskElementDescriptor> queuedPutList;
@@ -121,10 +121,10 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
     private final IndexedDiskCacheAttributes cattr;
 
     /** How many slots have we recycled. */
-    private int recycleCnt = 0;
+    private int recycleCnt;
 
     /** How many items were there on startup. */
-    private int startupSize = 0;
+    private int startupSize;
 
     /** the number of bytes free on disk. */
     private final AtomicLong bytesFree = new AtomicLong(0);
@@ -187,7 +187,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
             log.info("{0}: Indexed Disk Cache is alive.", logCacheName);
 
             // TODO: Should we improve detection of whether or not the file should be optimized.
-            if (isRealTimeOptimizationEnabled && keyHash.size() > 0)
+            if (isRealTimeOptimizationEnabled && !keyHash.isEmpty())
             {
                 // Kick off a real time optimization, in case we didn't do a final optimization.
                 doOptimizeRealTime();
@@ -232,7 +232,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
                     logCacheName);
             initializeEmptyStore();
         }
-        else if (keyFile.length() > 0)
+        else if (!keyFile.isEmpty())
         {
             // If the key file has contents, try to initialize the keys
             // from it. In no keys are loaded reset the data file.
@@ -256,7 +256,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
     {
         this.keyHash.clear();
 
-        if (dataFile.length() > 0)
+        if (!dataFile.isEmpty())
         {
             dataFile.reset();
         }
@@ -438,7 +438,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
             keyFile.reset();
 
             final HashMap<K, IndexedDiskElementDescriptor> keys = new HashMap<>(keyHash);
-            if (keys.size() > 0)
+            if (!keys.isEmpty())
             {
                 keyFile.writeObject(keys, 0);
             }
@@ -846,7 +846,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
      */
     private boolean performSingleKeyRemoval(final K key)
     {
-        boolean removed;
+        final boolean removed;
         // remove single item.
         final IndexedDiskElementDescriptor ded = keyHash.remove(key);
         removed = ded != null;
@@ -1533,8 +1533,8 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
         public static final String TAG = "orig";
 
         // size of the content in kB
-        private AtomicInteger contentSize;
-        private int maxSize;
+        private final AtomicInteger contentSize;
+        private final int maxSize;
 
         /**
          * Default
@@ -1636,7 +1636,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
         @Override
         protected boolean shouldRemove()
         {
-            return maxSize > 0 && contentSize.get() > maxSize && this.size() > 0;
+            return maxSize > 0 && contentSize.get() > maxSize && !this.isEmpty();
         }
     }
 

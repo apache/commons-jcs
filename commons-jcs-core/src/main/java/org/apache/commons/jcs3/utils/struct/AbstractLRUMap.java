@@ -67,13 +67,13 @@ public abstract class AbstractLRUMap<K, V>
     private final Lock lock = new ReentrantLock();
 
     /** stats */
-    private long hitCnt = 0;
+    private long hitCnt;
 
     /** stats */
-    private long missCnt = 0;
+    private long missCnt;
 
     /** stats */
-    private long putCnt = 0;
+    private long putCnt;
 
     /**
      * This creates an unbounded version. Setting the max objects will result in spooling on
@@ -184,7 +184,7 @@ public abstract class AbstractLRUMap<K, V>
     @Override
     public V get( final Object key )
     {
-        V retVal;
+        final V retVal;
 
         log.debug( "getting item  for key {0}", key );
 

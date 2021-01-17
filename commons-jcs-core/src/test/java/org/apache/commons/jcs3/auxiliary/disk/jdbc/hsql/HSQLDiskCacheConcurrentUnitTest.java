@@ -41,7 +41,7 @@ public class HSQLDiskCacheConcurrentUnitTest
     /**
      * Number of items to cache, twice the configured maxObjects for the memory cache regions.
      */
-    private static int items = 100;
+    private static final int items = 100;
 
     /**
      * Constructor for the TestDiskCache object.

@@ -34,10 +34,10 @@ public class LRUvsMRUPerformanceTest
     extends TestCase
 {
     /** ration we want */
-    float ratioPut = 0;
+    float ratioPut;
 
     /** ration we want */
-    float ratioGet = 0;
+    float ratioGet;
 
     /** ration we want */
     float target = 1.20f;

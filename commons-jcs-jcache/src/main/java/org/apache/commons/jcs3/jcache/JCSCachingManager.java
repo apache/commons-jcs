@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
 import java.util.Map;
 import java.util.Properties;
@@ -96,7 +97,7 @@ public class JCSCachingManager implements CacheManager
     private final Properties properties;
     private final ConcurrentMap<String, Cache<?, ?>> caches = new ConcurrentHashMap<>();
     private final Properties configProperties;
-    private volatile boolean closed = false;
+    private volatile boolean closed;
     private final InternalManager delegate = InternalManager.create();
 
     public JCSCachingManager(final CachingProvider provider, final URI uri, final ClassLoader loader, final Properties properties)
@@ -125,7 +126,7 @@ public class JCSCachingManager implements CacheManager
                 final Enumeration<URL> resources = loader.getResources(uri.getPath());
                 if (!resources.hasMoreElements()) // default
                 {
-                    props.load(new ByteArrayInputStream(DEFAULT_CONFIG.getBytes("UTF-8")));
+                    props.load(new ByteArrayInputStream(DEFAULT_CONFIG.getBytes(StandardCharsets.UTF_8)));
                 }
                 else
                 {

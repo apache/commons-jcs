@@ -65,7 +65,7 @@ public class RemoteCacheServerFactory
     private static ScheduledExecutorService keepAliveDaemon;
 
     /** A reference to the registry. */
-    private static Registry registry = null;
+    private static Registry registry;
 
     /** Constructor for the RemoteCacheServerFactory object. */
     private RemoteCacheServerFactory()

@@ -34,10 +34,10 @@ public class Stats
     private static final long serialVersionUID = 227327902875154010L;
 
     /** The stats */
-    private List<IStatElement<?>> stats = null;
+    private List<IStatElement<?>> stats;
 
     /** The type of stat */
-    private String typeName = null;
+    private String typeName;
 
     /**
      * @return IStatElement[]

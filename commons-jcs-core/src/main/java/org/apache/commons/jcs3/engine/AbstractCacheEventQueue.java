@@ -206,7 +206,7 @@ public abstract class AbstractCacheEventQueue<K, V>
     protected abstract class AbstractCacheEvent implements Runnable
     {
         /** Number of failures encountered processing this event. */
-        int failures = 0;
+        int failures;
 
         /**
          * Main processing method for the AbstractCacheEvent object

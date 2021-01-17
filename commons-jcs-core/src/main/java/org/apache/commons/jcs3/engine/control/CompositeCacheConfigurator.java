@@ -103,7 +103,7 @@ public class CompositeCacheConfigurator
             {
                 final String regionName = key.substring( SYSTEM_REGION_PREFIX.length() );
                 final String auxiliaries = OptionConverter.findAndSubst( key, props );
-                ICache<?, ?> cache;
+                final ICache<?, ?> cache;
                 synchronized ( regionName )
                 {
                     cache = parseRegion( props, ccm, regionName, auxiliaries, null, SYSTEM_REGION_PREFIX );
@@ -130,7 +130,7 @@ public class CompositeCacheConfigurator
                 final String regionName = key.substring( REGION_PREFIX.length() );
                 regionNames.add( regionName );
                 final String auxiliaries = OptionConverter.findAndSubst( key, props );
-                ICache<?, ?> cache;
+                final ICache<?, ?> cache;
                 synchronized ( regionName )
                 {
                     cache = parseRegion( props, ccm, regionName, auxiliaries );

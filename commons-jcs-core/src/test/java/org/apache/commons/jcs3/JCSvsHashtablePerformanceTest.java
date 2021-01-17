@@ -38,10 +38,10 @@ public class JCSvsHashtablePerformanceTest
     extends TestCase
 {
     /** jcs / hashtable */
-    float ratioPut = 0;
+    float ratioPut;
 
     /** jcs / hashtable */
-    float ratioGet = 0;
+    float ratioGet;
 
     /** ration goal */
     float target = 3.50f;

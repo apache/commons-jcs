@@ -197,7 +197,7 @@ public class PropertySetter
             throw new PropertySetterException( "#params for setter != 1" );
         }
 
-        Object arg;
+        final Object arg;
         try
         {
             arg = convertArg( value, paramTypes[0] );

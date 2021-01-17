@@ -174,7 +174,7 @@ public class JavaGroupsCache
 
             // If there were any non null results, return the first
 
-            if ( results.size() > 0 )
+            if ( !results.isEmpty() )
             {
                 return ( ICacheElement<K, V> ) results.get( 0 );
             }

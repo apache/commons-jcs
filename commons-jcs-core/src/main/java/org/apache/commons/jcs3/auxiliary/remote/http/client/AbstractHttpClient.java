@@ -43,7 +43,7 @@ public abstract class AbstractHttpClient
     private final HttpClient httpClient;
 
     /** The protocol version */
-    private HttpVersion httpVersion;
+    private final HttpVersion httpVersion;
 
     /** Configuration settings. */
     private final RemoteHttpCacheAttributes remoteHttpCacheAttributes;

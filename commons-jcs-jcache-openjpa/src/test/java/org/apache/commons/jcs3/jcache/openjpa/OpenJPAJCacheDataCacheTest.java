@@ -18,8 +18,6 @@
  */
 package org.apache.commons.jcs3.jcache.openjpa;
 
-import org.apache.commons.jcs3.jcache.openjpa.OpenJPAJCacheDataCache;
-import org.apache.commons.jcs3.jcache.openjpa.OpenJPAJCacheDataCacheManager;
 import org.apache.derby.jdbc.EmbeddedDriver;
 import org.apache.openjpa.conf.OpenJPAConfiguration;
 import org.apache.openjpa.datacache.QueryKey;

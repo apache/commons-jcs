@@ -64,7 +64,7 @@ public abstract class AbstractDiskCache<K, V>
     private static final Log log = LogManager.getLog( AbstractDiskCache.class );
 
     /** Generic disk cache attributes */
-    private IDiskCacheAttributes diskCacheAttributes = null;
+    private final IDiskCacheAttributes diskCacheAttributes;
 
     /**
      * Map where elements are stored between being added to this cache and actually spooled to disk.
@@ -86,13 +86,13 @@ public abstract class AbstractDiskCache<K, V>
      * Indicates whether the cache is 'alive': initialized, but not yet disposed. Child classes must
      * set this to true.
      */
-    private boolean alive = false;
+    private boolean alive;
 
     /** Every cache will have a name, subclasses must set this when they are initialized. */
     private final String cacheName;
 
     /** DEBUG: Keeps a count of the number of purgatory hits for debug messages */
-    private int purgHits = 0;
+    private int purgHits;
 
     /**
      * We lock here, so that we cannot get an update after a remove all. an individual removal locks
@@ -553,7 +553,7 @@ public abstract class AbstractDiskCache<K, V>
         implements ICacheListener<K, V>
     {
         /** Id of the listener */
-        private long listenerId = 0;
+        private long listenerId;
 
         /**
          * @return cacheElement.getElementAttributes();

@@ -19,7 +19,6 @@
 package org.apache.commons.jcs3.jcache.extras.writer;
 
 import org.apache.commons.jcs3.jcache.extras.InternalCacheRule;
-import org.apache.commons.jcs3.jcache.extras.writer.CacheWriterAdapter;
 import org.junit.Rule;
 import org.junit.Test;
 

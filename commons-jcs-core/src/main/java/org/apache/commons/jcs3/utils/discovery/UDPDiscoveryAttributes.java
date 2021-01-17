@@ -53,13 +53,13 @@ public final class UDPDiscoveryAttributes
     private String udpDiscoveryAddr = DEFAULT_UDP_DISCOVERY_ADDRESS;
 
     /** udp discovery network interface */
-    private String udpDiscoveryInterface = null;
+    private String udpDiscoveryInterface;
 
     /** udp discovery port */
     private int udpDiscoveryPort = DEFAULT_UDP_DISCOVERY_PORT;
 
     /** udp datagram TTL */
-    private int udpTTL = 0;
+    private int udpTTL;
 
     /** default delay between sending passive broadcasts */
     private static final int DEFAULT_SEND_DELAY_SEC = 60;

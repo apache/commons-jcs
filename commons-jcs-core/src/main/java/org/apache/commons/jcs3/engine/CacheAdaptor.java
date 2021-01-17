@@ -36,7 +36,7 @@ public class CacheAdaptor<K, V>
     private final ICache<K, V> cache;
 
     /** The unique id of this listener. */
-    private long listenerId = 0;
+    private long listenerId;
 
     /**
      * Sets the listenerId attribute of the CacheAdaptor object

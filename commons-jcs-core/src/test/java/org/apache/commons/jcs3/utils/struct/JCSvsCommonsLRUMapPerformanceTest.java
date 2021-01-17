@@ -34,10 +34,10 @@ public class JCSvsCommonsLRUMapPerformanceTest
     extends TestCase
 {
     /** jcs / commons */
-    float ratioPut = 0;
+    float ratioPut;
 
     /** jcs / commons */
-    float ratioGet = 0;
+    float ratioGet;
 
     /** goal */
     float target = 1.0f;

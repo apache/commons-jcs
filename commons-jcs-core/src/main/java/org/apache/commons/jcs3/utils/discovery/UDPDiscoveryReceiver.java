@@ -72,7 +72,7 @@ public class UDPDiscoveryReceiver
     private final InetAddress multicastAddress;
 
     /** Is it shutdown. */
-    private boolean shutdown = false;
+    private boolean shutdown;
 
     /**
      * Constructor for the LateralUDPReceiver object.
@@ -274,7 +274,7 @@ public class UDPDiscoveryReceiver
         implements Runnable
     {
         /** The message to handle. Passed in during construction. */
-        private UDPDiscoveryMessage message = null;
+        private final UDPDiscoveryMessage message;
 
         /**
          * @param message

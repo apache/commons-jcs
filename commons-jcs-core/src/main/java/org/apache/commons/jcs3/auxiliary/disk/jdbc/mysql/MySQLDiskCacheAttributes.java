@@ -41,7 +41,7 @@ public class MySQLDiskCacheAttributes
      * <p>
      * 03:01,15:00 will cause the optimizer to run at 3 am and at 3 pm.
      */
-    private String optimizationSchedule = null;
+    private String optimizationSchedule;
 
     /**
      * If true, we will balk, that is return null during optimization rather than block.

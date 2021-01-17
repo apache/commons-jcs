@@ -67,7 +67,7 @@ public class TCPLateralCacheAttributes
     private String tcpServer = "";
 
     /** The port */
-    private int tcpListenerPort = 0;
+    private int tcpListenerPort;
 
     /** The host */
     private String tcpListenerHost = "";

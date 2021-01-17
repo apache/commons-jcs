@@ -43,7 +43,7 @@ public class IndexedDiskCacheNoMemoryUnitTest
      * Number of items to cache; the configured maxObjects for the memory cache
      * regions is 0.
      */
-    private static int items = 2000;
+    private static final int items = 2000;
 
     /**
      * @param testName

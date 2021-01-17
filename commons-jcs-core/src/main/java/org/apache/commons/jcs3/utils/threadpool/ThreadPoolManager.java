@@ -80,7 +80,7 @@ public class ThreadPoolManager
      * You can specify the properties to be used to configure the thread pool. Setting this post
      * initialization will have no effect.
      */
-    private static volatile Properties props = null;
+    private static volatile Properties props;
 
     /** Map of names to pools. */
     private final ConcurrentHashMap<String, ExecutorService> pools;

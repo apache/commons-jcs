@@ -58,12 +58,12 @@ public class BasicRemoteCacheClientServerUnitTest extends Assert
    /**
      * Server instance to use in the tests.
      */
-    private static RemoteCacheServer<String, String> server = null;
+    private static RemoteCacheServer<String, String> server;
 
     /**
      * Factory instance to use in the tests.
      */
-    private static RemoteCacheFactory factory = null;
+    private static RemoteCacheFactory factory;
 
     /**
      * the remote server port

@@ -54,7 +54,7 @@ public class JDBCDiskCacheAttributes
     private String jndiPath;
 
     /** The time between two JNDI lookups */
-    private long jndiTTL = 0L;
+    private long jndiTTL;
 
     /** The table name */
     private String tableName = DEFAULT_TABLE_NAME;
@@ -243,7 +243,7 @@ public class JDBCDiskCacheAttributes
     }
 
     /**
-     * @param maxTotal The maxTotal to set.
+     * @param maxActive The maxTotal to set.
      */
     public void setMaxTotal( final int maxActive )
     {

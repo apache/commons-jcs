@@ -136,7 +136,7 @@ public class BlockDiskCache<K, V>
 
             final boolean alright = verifyDisk();
 
-            if ( keyStore.size() == 0 || !alright )
+            if ( keyStore.isEmpty() || !alright )
             {
                 this.reset();
             }
@@ -196,7 +196,7 @@ public class BlockDiskCache<K, V>
                             throw new IOException("Data is null");
                         }
                     }
-                    catch (IOException | ClassNotFoundException e)
+                    catch (final IOException | ClassNotFoundException e)
                     {
                         throw new RuntimeException(logCacheName
                                 + " Couldn't find data for key [" + entry.getKey() + "]", e);
@@ -506,7 +506,7 @@ public class BlockDiskCache<K, V>
 
 
 	private boolean performSingleKeyRemoval(final K key) {
-		boolean removed;
+		final boolean removed;
 		// remove single item.
 		final int[] ded = this.keyStore.remove( key );
 		removed = ded != null;

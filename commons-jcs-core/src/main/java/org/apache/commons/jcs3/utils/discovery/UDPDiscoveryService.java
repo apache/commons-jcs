@@ -57,13 +57,13 @@ public class UDPDiscoveryService
     private UDPDiscoveryReceiver receiver;
 
     /** the runnable that sends messages via the clock daemon */
-    private UDPDiscoverySenderThread sender = null;
+    private final UDPDiscoverySenderThread sender;
 
     /** attributes */
-    private UDPDiscoveryAttributes udpDiscoveryAttributes = null;
+    private UDPDiscoveryAttributes udpDiscoveryAttributes;
 
     /** is this shut down? */
-    private boolean shutdown = false;
+    private boolean shutdown;
 
     /** This is a set of services that have been discovered. */
     private final Set<DiscoveredService> discoveredServices = new CopyOnWriteArraySet<>();

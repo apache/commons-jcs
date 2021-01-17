@@ -38,10 +38,10 @@ public class EventQueueConcurrentLoadTest
     extends TestCase
 {
     /** The queue implementation */
-    private static CacheEventQueue<String, String> queue = null;
+    private static CacheEventQueue<String, String> queue;
 
     /** The mock listener */
-    private static CacheListenerImpl<String, String> listen = null;
+    private static CacheListenerImpl<String, String> listen;
 
     /** max failure setting */
     private final int maxFailure = 3;
@@ -269,12 +269,12 @@ public class EventQueueConcurrentLoadTest
         /**
          * <code>putCount</code>
          */
-        protected int putCount = 0;
+        protected int putCount;
 
         /**
          * <code>removeCount</code>
          */
-        protected int removeCount = 0;
+        protected int removeCount;
 
         /**
          * @param item

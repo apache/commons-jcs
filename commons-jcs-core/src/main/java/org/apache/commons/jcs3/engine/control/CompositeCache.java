@@ -113,7 +113,7 @@ public class CompositeCache<K, V>
     private final AtomicLong missCountExpired;
 
     /** Cache manager. */
-    private CompositeCacheManager cacheManager = null;
+    private CompositeCacheManager cacheManager;
 
     /**
      * The cache hub can only have one memory cache. This could be made more flexible in the future,

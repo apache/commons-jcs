@@ -80,7 +80,7 @@ public class JCSCache<K, V> implements Cache<K, V>
     private final ObjectName cacheConfigObjectName;
     private final ObjectName cacheStatsObjectName;
     private final String name;
-    private volatile boolean closed = false;
+    private volatile boolean closed;
     private final Map<CacheEntryListenerConfiguration<K, V>, JCSListener<K, V>> listeners = new ConcurrentHashMap<>();
     private final Statistics statistics = new Statistics();
     private final ExecutorService pool;
@@ -857,7 +857,7 @@ public class JCSCache<K, V> implements Cache<K, V>
         final Iterator<K> keys = new HashSet<>(delegate.getKeySet()).iterator();
         return new Iterator<Entry<K, V>>()
         {
-            private K lastKey = null;
+            private K lastKey;
 
             @Override
             public boolean hasNext()
