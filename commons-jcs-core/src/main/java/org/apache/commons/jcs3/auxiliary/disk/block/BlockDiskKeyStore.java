@@ -52,6 +52,163 @@ import org.apache.commons.jcs3.utils.timing.ElapsedTimer;
  */
 public class BlockDiskKeyStore<K>
 {
+    /**
+     * Class for recycling and lru. This implements the LRU overflow callback,
+     * so we can mark the blocks as free.
+     */
+    public class LRUMapCountLimited extends LRUMap<K, int[]>
+    {
+        /**
+         * <code>tag</code> tells us which map we are working on.
+         */
+        public final static String TAG = "orig-lru-count";
+
+        public LRUMapCountLimited(final int maxKeySize)
+        {
+            super(maxKeySize);
+        }
+
+        /**
+         * This is called when the may key size is reached. The least recently
+         * used item will be passed here. We will store the position and size of
+         * the spot on disk in the recycle bin.
+         * <p>
+         *
+         * @param key
+         * @param value
+         */
+        @Override
+        protected void processRemovedLRU(final K key, final int[] value)
+        {
+            blockDiskCache.freeBlocks(value);
+            if (log.isDebugEnabled())
+            {
+                log.debug("{0}: Removing key: [{1}] from key store.", logCacheName, key);
+                log.debug("{0}: Key store size: [{1}].", logCacheName, super.size());
+            }
+        }
+    }
+
+    /**
+     * Class for recycling and lru. This implements the LRU size overflow
+     * callback, so we can mark the blocks as free.
+     */
+    public class LRUMapSizeLimited extends AbstractLRUMap<K, int[]>
+    {
+        /**
+         * <code>tag</code> tells us which map we are working on.
+         */
+        public final static String TAG = "orig-lru-size";
+
+        // size of the content in kB
+        private final AtomicInteger contentSize;
+        private final int maxSize;
+
+        /**
+         * Default
+         */
+        public LRUMapSizeLimited()
+        {
+            this(-1);
+        }
+
+        /**
+         * @param maxSize
+         *            maximum cache size in kB
+         */
+        public LRUMapSizeLimited(final int maxSize)
+        {
+            this.maxSize = maxSize;
+            this.contentSize = new AtomicInteger(0);
+        }
+
+        // keep the content size in kB, so 2^31 kB is reasonable value
+        private void addLengthToCacheSize(final int[] value)
+        {
+            contentSize.addAndGet(value.length * blockSize / 1024 + 1);
+        }
+
+        /**
+         * This is called when the may key size is reached. The least recently
+         * used item will be passed here. We will store the position and size of
+         * the spot on disk in the recycle bin.
+         * <p>
+         *
+         * @param key
+         * @param value
+         */
+        @Override
+        protected void processRemovedLRU(final K key, final int[] value)
+        {
+            blockDiskCache.freeBlocks(value);
+            if (log.isDebugEnabled())
+            {
+                log.debug("{0}: Removing key: [{1}] from key store.", logCacheName, key);
+                log.debug("{0}: Key store size: [{1}].", logCacheName, super.size());
+            }
+
+            if (value != null)
+            {
+                subLengthFromCacheSize(value);
+            }
+        }
+
+        @Override
+        public int[] put(final K key, final int[] value)
+        {
+            int[] oldValue = null;
+
+            try
+            {
+                oldValue = super.put(key, value);
+            }
+            finally
+            {
+                if (value != null)
+                {
+                    addLengthToCacheSize(value);
+                }
+                if (oldValue != null)
+                {
+                    subLengthFromCacheSize(oldValue);
+                }
+            }
+
+            return oldValue;
+        }
+
+        @Override
+        public int[] remove(final Object key)
+        {
+            int[] value = null;
+
+            try
+            {
+                value = super.remove(key);
+                return value;
+            }
+            finally
+            {
+                if (value != null)
+                {
+                    subLengthFromCacheSize(value);
+                }
+            }
+        }
+
+        @Override
+        protected boolean shouldRemove()
+        {
+            return maxSize > 0 && contentSize.get() > maxSize && this.size() > 1;
+        }
+
+        // keep the content size in kB, so 2^31 kB is reasonable value
+        private void subLengthFromCacheSize(final int[] value)
+        {
+            contentSize.addAndGet(value.length * blockSize / -1024 - 1);
+        }
+    }
+
     /** The logger */
     private static final Log log = LogManager.getLog(BlockDiskKeyStore.class);
 
@@ -126,71 +283,35 @@ public class BlockDiskKeyStore<K>
     }
 
     /**
-     * Saves key file to disk. This gets the LRUMap entry set and write the
-     * entries out one by one after putting them in a wrapper.
-     */
-    protected void saveKeys()
-    {
-        try
-        {
-            final ElapsedTimer timer = new ElapsedTimer();
-            final int numKeys = keyHash.size();
-            log.info("{0}: Saving keys to [{1}], key count [{2}]", () -> logCacheName,
-                    () -> this.keyFile.getAbsolutePath(), () -> numKeys);
-
-            synchronized (keyFile)
-            {
-                final FileOutputStream fos = new FileOutputStream(keyFile);
-                final BufferedOutputStream bos = new BufferedOutputStream(fos, 65536);
-
-                try (ObjectOutputStream oos = new ObjectOutputStream(bos))
-                {
-                    if (!verify())
-                    {
-                        throw new IOException("Inconsistent key file");
-                    }
-                    // don't need to synchronize, since the underlying
-                    // collection makes a copy
-                    for (final Map.Entry<K, int[]> entry : keyHash.entrySet())
-                    {
-                        final BlockDiskElementDescriptor<K> descriptor = new BlockDiskElementDescriptor<>();
-                        descriptor.setKey(entry.getKey());
-                        descriptor.setBlocks(entry.getValue());
-                        // stream these out in the loop.
-                        oos.writeUnshared(descriptor);
-                    }
-                }
-            }
-
-            log.info("{0}: Finished saving keys. It took {1} to store {2} keys. Key file length [{3}]",
-                    () -> logCacheName, () -> timer.getElapsedTimeString(), () -> numKeys,
-                    () -> keyFile.length());
-        }
-        catch (final IOException e)
-        {
-            log.error("{0}: Problem storing keys.", logCacheName, e);
-        }
-    }
-
-    /**
-     * Resets the file and creates a new key map.
-     */
-    protected void reset()
-    {
-        synchronized (keyFile)
-        {
-            clearMemoryMap();
-            saveKeys();
-        }
-    }
-
-    /**
      * This is mainly used for testing. It leave the disk in tact, and just
      * clears memory.
      */
     protected void clearMemoryMap()
     {
         this.keyHash.clear();
+    }
+
+    /**
+     * Gets the entry set.
+     * <p>
+     *
+     * @return entry set.
+     */
+    public Set<Map.Entry<K, int[]>> entrySet()
+    {
+        return this.keyHash.entrySet();
+    }
+
+    /**
+     * gets the object for the key.
+     * <p>
+     *
+     * @param key
+     * @return Object
+     */
+    public int[] get(final K key)
+    {
+        return this.keyHash.get(key);
     }
 
     /**
@@ -219,6 +340,17 @@ public class BlockDiskKeyStore<K>
             // keyHash = Collections.synchronizedMap( new HashMap() );
             log.info("{0}: Set maxKeySize to unlimited", logCacheName);
         }
+    }
+
+    /**
+     * Gets the key set.
+     * <p>
+     *
+     * @return key set.
+     */
+    public Set<K> keySet()
+    {
+        return this.keyHash.keySet();
     }
 
     /**
@@ -278,51 +410,6 @@ public class BlockDiskKeyStore<K>
     }
 
     /**
-     * Gets the entry set.
-     * <p>
-     *
-     * @return entry set.
-     */
-    public Set<Map.Entry<K, int[]>> entrySet()
-    {
-        return this.keyHash.entrySet();
-    }
-
-    /**
-     * Gets the key set.
-     * <p>
-     *
-     * @return key set.
-     */
-    public Set<K> keySet()
-    {
-        return this.keyHash.keySet();
-    }
-
-    /**
-     * Gets the size of the key hash.
-     * <p>
-     *
-     * @return the number of keys.
-     */
-    public int size()
-    {
-        return this.keyHash.size();
-    }
-
-    /**
-     * gets the object for the key.
-     * <p>
-     *
-     * @param key
-     * @return Object
-     */
-    public int[] get(final K key)
-    {
-        return this.keyHash.get(key);
-    }
-
-    /**
      * Puts a int[] in the keyStore.
      * <p>
      *
@@ -344,6 +431,76 @@ public class BlockDiskKeyStore<K>
     public int[] remove(final K key)
     {
         return this.keyHash.remove(key);
+    }
+
+    /**
+     * Resets the file and creates a new key map.
+     */
+    protected void reset()
+    {
+        synchronized (keyFile)
+        {
+            clearMemoryMap();
+            saveKeys();
+        }
+    }
+
+    /**
+     * Saves key file to disk. This gets the LRUMap entry set and write the
+     * entries out one by one after putting them in a wrapper.
+     */
+    protected void saveKeys()
+    {
+        try
+        {
+            final ElapsedTimer timer = new ElapsedTimer();
+            final int numKeys = keyHash.size();
+            log.info("{0}: Saving keys to [{1}], key count [{2}]", () -> logCacheName,
+                    () -> this.keyFile.getAbsolutePath(), () -> numKeys);
+
+            synchronized (keyFile)
+            {
+                final FileOutputStream fos = new FileOutputStream(keyFile);
+                final BufferedOutputStream bos = new BufferedOutputStream(fos, 65536);
+
+                try (ObjectOutputStream oos = new ObjectOutputStream(bos))
+                {
+                    if (!verify())
+                    {
+                        throw new IOException("Inconsistent key file");
+                    }
+                    // don't need to synchronize, since the underlying
+                    // collection makes a copy
+                    for (final Map.Entry<K, int[]> entry : keyHash.entrySet())
+                    {
+                        final BlockDiskElementDescriptor<K> descriptor = new BlockDiskElementDescriptor<>();
+                        descriptor.setKey(entry.getKey());
+                        descriptor.setBlocks(entry.getValue());
+                        // stream these out in the loop.
+                        oos.writeUnshared(descriptor);
+                    }
+                }
+            }
+
+            log.info("{0}: Finished saving keys. It took {1} to store {2} keys. Key file length [{3}]",
+                    () -> logCacheName, () -> timer.getElapsedTimeString(), () -> numKeys,
+                    () -> keyFile.length());
+        }
+        catch (final IOException e)
+        {
+            log.error("{0}: Problem storing keys.", logCacheName, e);
+        }
+    }
+
+    /**
+     * Gets the size of the key hash.
+     * <p>
+     *
+     * @return the number of keys.
+     */
+    public int size()
+    {
+        return this.keyHash.size();
     }
 
     /**
@@ -388,163 +545,6 @@ public class BlockDiskKeyStore<K>
         else
         {
             return ok;
-        }
-    }
-
-    /**
-     * Class for recycling and lru. This implements the LRU size overflow
-     * callback, so we can mark the blocks as free.
-     */
-    public class LRUMapSizeLimited extends AbstractLRUMap<K, int[]>
-    {
-        /**
-         * <code>tag</code> tells us which map we are working on.
-         */
-        public final static String TAG = "orig-lru-size";
-
-        // size of the content in kB
-        private final AtomicInteger contentSize;
-        private final int maxSize;
-
-        /**
-         * Default
-         */
-        public LRUMapSizeLimited()
-        {
-            this(-1);
-        }
-
-        /**
-         * @param maxSize
-         *            maximum cache size in kB
-         */
-        public LRUMapSizeLimited(final int maxSize)
-        {
-            this.maxSize = maxSize;
-            this.contentSize = new AtomicInteger(0);
-        }
-
-        // keep the content size in kB, so 2^31 kB is reasonable value
-        private void subLengthFromCacheSize(final int[] value)
-        {
-            contentSize.addAndGet(value.length * blockSize / -1024 - 1);
-        }
-
-        // keep the content size in kB, so 2^31 kB is reasonable value
-        private void addLengthToCacheSize(final int[] value)
-        {
-            contentSize.addAndGet(value.length * blockSize / 1024 + 1);
-        }
-
-        @Override
-        public int[] put(final K key, final int[] value)
-        {
-            int[] oldValue = null;
-
-            try
-            {
-                oldValue = super.put(key, value);
-            }
-            finally
-            {
-                if (value != null)
-                {
-                    addLengthToCacheSize(value);
-                }
-                if (oldValue != null)
-                {
-                    subLengthFromCacheSize(oldValue);
-                }
-            }
-
-            return oldValue;
-        }
-
-        @Override
-        public int[] remove(final Object key)
-        {
-            int[] value = null;
-
-            try
-            {
-                value = super.remove(key);
-                return value;
-            }
-            finally
-            {
-                if (value != null)
-                {
-                    subLengthFromCacheSize(value);
-                }
-            }
-        }
-
-        /**
-         * This is called when the may key size is reached. The least recently
-         * used item will be passed here. We will store the position and size of
-         * the spot on disk in the recycle bin.
-         * <p>
-         *
-         * @param key
-         * @param value
-         */
-        @Override
-        protected void processRemovedLRU(final K key, final int[] value)
-        {
-            blockDiskCache.freeBlocks(value);
-            if (log.isDebugEnabled())
-            {
-                log.debug("{0}: Removing key: [{1}] from key store.", logCacheName, key);
-                log.debug("{0}: Key store size: [{1}].", logCacheName, super.size());
-            }
-
-            if (value != null)
-            {
-                subLengthFromCacheSize(value);
-            }
-        }
-
-        @Override
-        protected boolean shouldRemove()
-        {
-            return maxSize > 0 && contentSize.get() > maxSize && this.size() > 1;
-        }
-    }
-
-    /**
-     * Class for recycling and lru. This implements the LRU overflow callback,
-     * so we can mark the blocks as free.
-     */
-    public class LRUMapCountLimited extends LRUMap<K, int[]>
-    {
-        /**
-         * <code>tag</code> tells us which map we are working on.
-         */
-        public final static String TAG = "orig-lru-count";
-
-        public LRUMapCountLimited(final int maxKeySize)
-        {
-            super(maxKeySize);
-        }
-
-        /**
-         * This is called when the may key size is reached. The least recently
-         * used item will be passed here. We will store the position and size of
-         * the spot on disk in the recycle bin.
-         * <p>
-         *
-         * @param key
-         * @param value
-         */
-        @Override
-        protected void processRemovedLRU(final K key, final int[] value)
-        {
-            blockDiskCache.freeBlocks(value);
-            if (log.isDebugEnabled())
-            {
-                log.debug("{0}: Removing key: [{1}] from key store.", logCacheName, key);
-                log.debug("{0}: Key store size: [{1}].", logCacheName, super.size());
-            }
         }
     }
 }
