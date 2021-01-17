@@ -136,7 +136,7 @@ public class BlockDiskCache<K, V>
 
             final boolean alright = verifyDisk();
 
-            if ( keyStore.size() == 0 || !alright )
+            if ( keyStore.isEmpty() || !alright )
             {
                 this.reset();
             }

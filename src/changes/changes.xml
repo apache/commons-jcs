@@ -19,6 +19,11 @@
 		<author email="dev@commons.apache.org">Apache Commons Developers</author>
 	</properties>
 	<body>
+        <release version="3.1" date="20YY-MM-DD">
+            <action dev="ggregory" type="add">
+                Add BlockDiskKeyStore.isEmpty().
+            </action>
+        </release>
         <release version="3.0" date="2020-08-16">
             <action issue="JCS-205" dev="tv" type="fix">
                 Fix packaging
