@@ -232,7 +232,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
                     logCacheName);
             initializeEmptyStore();
         }
-        else if (keyFile.length() > 0)
+        else if (!keyFile.isEmpty())
         {
             // If the key file has contents, try to initialize the keys
             // from it. In no keys are loaded reset the data file.
@@ -256,7 +256,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
     {
         this.keyHash.clear();
 
-        if (dataFile.length() > 0)
+        if (!dataFile.isEmpty())
         {
             dataFile.reset();
         }

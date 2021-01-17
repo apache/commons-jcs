@@ -20,8 +20,11 @@
 	</properties>
 	<body>
         <release version="3.1" date="20YY-MM-DD">
-            <action dev="ggregory" type="add">
+            <action dev="ggregory" type="add" due-to="Gary Gregory">
                 Add BlockDiskKeyStore.isEmpty().
+            </action>
+            <action dev="ggregory" type="add" due-to="Gary Gregory">
+                Add IndexedDisk.isEmpty().
             </action>
         </release>
         <release version="3.0" date="2020-08-16">

@@ -158,7 +158,7 @@ public class LateralTCPListener<K, V>
             shutdown = new AtomicBoolean(false);
 
             final ServerSocket serverSocket;
-            if (host != null && host.length() > 0)
+            if (host != null && !host.isEmpty())
             {
                 log.info( "Listening on {0}:{1}", host, port );
                 // Resolve host name
