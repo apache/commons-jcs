@@ -205,45 +205,40 @@ public abstract class AbstractCacheEventQueue<K, V>
      */
     protected abstract class AbstractCacheEvent implements Runnable
     {
-        /** Number of failures encountered processing this event. */
-        int failures;
-
         /**
          * Main processing method for the AbstractCacheEvent object
          */
         @Override
-        @SuppressWarnings("synthetic-access")
         public void run()
         {
-            try
+            for (int failures = 0; failures < maxFailure; failures++)
             {
-                doRun();
-            }
-            catch ( final IOException e )
-            {
-                log.warn( e );
-                if ( ++failures >= maxFailure )
+                try
                 {
-                    log.warn( "Error while running event from Queue: {0}. "
-                            + "Dropping Event and marking Event Queue as "
-                            + "non-functional.", this );
-                    destroy();
+                    doRun();
                     return;
                 }
-                log.info( "Error while running event from Queue: {0}. "
-                        + "Retrying...", this );
+                catch (final IOException e)
+                {
+                    log.warn("Error while running event from Queue: {0}. "
+                            + "Retrying...", this, e);
+                }
+
                 try
                 {
                     Thread.sleep( waitBeforeRetry );
-                    run();
                 }
                 catch ( final InterruptedException ie )
                 {
-                    log.warn( "Interrupted while sleeping for retry on event "
-                            + "{0}.", this );
-                    destroy();
+                    log.warn("Interrupted while sleeping for retry on event "
+                            + "{0}.", this, ie);
+                    break;
                 }
             }
+
+            log.warn( "Dropping Event and marking Event Queue {0} as "
+                    + "non-functional.", this );
+            destroy();
         }
 
         /**

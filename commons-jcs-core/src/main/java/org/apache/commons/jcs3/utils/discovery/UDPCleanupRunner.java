@@ -19,9 +19,6 @@ package org.apache.commons.jcs3.utils.discovery;
  * under the License.
  */
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.apache.commons.jcs3.log.Log;
 import org.apache.commons.jcs3.log.LogManager;
 
@@ -66,27 +63,20 @@ public class UDPCleanupRunner
     {
         final long now = System.currentTimeMillis();
 
-        // iterate through the set
-        // it is thread safe
-        // TODO this should get a copy.  you can't simply remove from this.
         // the listeners need to be notified.
-        final Set<DiscoveredService> toRemove = new HashSet<>();
-        // can't remove via the iterator. must remove directly
-        for (final DiscoveredService service : discoveryService.getDiscoveredServices())
-        {
-            if ( ( now - service.getLastHearFromTime() ) > ( maxIdleTimeSeconds * 1000 ) )
-            {
-                log.info( "Removing service, since we haven't heard from it in "
-                        + "{0} seconds. service = {1}", maxIdleTimeSeconds, service );
-                toRemove.add( service );
-            }
-        }
+        discoveryService.getDiscoveredServices().stream()
+            .filter(service -> {
+                if (now - service.getLastHearFromTime() > maxIdleTimeSeconds * 1000)
+                {
+                    log.info( "Removing service, since we haven't heard from it in "
+                            + "{0} seconds. service = {1}", maxIdleTimeSeconds, service );
+                    return true;
+                }
 
-        // remove the bad ones
-        for (final DiscoveredService service : toRemove)
-        {
+                return false;
+            })
+            // remove the bad ones
             // call this so the listeners get notified
-            discoveryService.removeDiscoveredService( service );
-        }
+            .forEach(service -> discoveryService.removeDiscoveredService(service));
     }
 }

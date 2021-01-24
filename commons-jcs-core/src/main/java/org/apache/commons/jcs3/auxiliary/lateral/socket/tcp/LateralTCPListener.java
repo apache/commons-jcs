@@ -19,7 +19,6 @@ package org.apache.commons.jcs3.auxiliary.lateral.socket.tcp;
  * under the License.
  */
 
-import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -29,7 +28,6 @@ import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketAddress;
-import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.Map;
 import java.util.Set;
@@ -71,9 +69,6 @@ public class LateralTCPListener<K, V>
     /** Map of available instances, keyed by port */
     private static final ConcurrentHashMap<String, ILateralCacheListener<?, ?>> instances =
         new ConcurrentHashMap<>();
-
-    /** The socket listener */
-    private ListenerThread receiver;
 
     /** Configuration attributes */
     private ITCPLateralCacheAttributes tcpLateralCacheAttributes;
@@ -122,8 +117,7 @@ public class LateralTCPListener<K, V>
                     newIns.init();
                     newIns.setCacheManager( cacheMgr );
 
-                    log.info( "Created new listener {0}",
-                            () -> ilca.getTcpListenerPort() );
+                    log.info("Created new listener {0}", () -> ilca.getTcpListenerPort());
 
                     return newIns;
                 });
@@ -176,9 +170,7 @@ public class LateralTCPListener<K, V>
             }
             serverSocket.setSoTimeout( acceptTimeOut );
 
-            receiver = new ListenerThread(serverSocket);
-            receiver.setDaemon( true );
-            receiver.start();
+            pooledExecutor.execute(() -> runListener(serverSocket));
         }
         catch ( final IOException ex )
         {
@@ -444,7 +436,9 @@ public class LateralTCPListener<K, V>
     /**
      * Processes commands from the server socket. There should be one listener for each configured
      * TCP lateral.
+     * @deprecated No longer used
      */
+    @Deprecated
     public class ListenerThread
         extends Thread
     {
@@ -462,60 +456,62 @@ public class LateralTCPListener<K, V>
         }
 
         /** Main processing method for the ListenerThread object */
-        @SuppressWarnings("synthetic-access")
         @Override
         public void run()
         {
-            try (ServerSocket ssck = serverSocket)
+            runListener(serverSocket);
+        }
+    }
+
+    /**
+     * Processes commands from the server socket. There should be one listener for each configured
+     * TCP lateral.
+     */
+    private void runListener(final ServerSocket serverSocket)
+    {
+        try
+        {
+            while ( true )
             {
-                ConnectionHandler handler;
+                log.debug( "Waiting for clients to connect " );
 
-                outer: while ( true )
+                // Check to see if we've been asked to exit, and exit
+                if (terminated.get())
                 {
-                    log.debug( "Waiting for clients to connect " );
+                    log.debug("Thread terminated, exiting gracefully");
+                    break;
+                }
 
-                    Socket socket = null;
-                    inner: while (true)
+                try
+                {
+                    final Socket socket = serverSocket.accept();
+
+                    if (socket != null)
                     {
-                        // Check to see if we've been asked to exit, and exit
-                        if (terminated.get())
-                        {
-                            log.debug("Thread terminated, exiting gracefully");
-                            break outer;
-                        }
-
-                        try
-                        {
-                            socket = ssck.accept();
-                            break inner;
-                        }
-                        catch (final SocketTimeoutException e)
-                        {
-                            // No problem! We loop back up!
-                            continue inner;
-                        }
+                        log.debug("Connected to client at {0}", () -> socket.getInetAddress());
                     }
 
-                    if ( socket != null && log.isDebugEnabled() )
-                    {
-                        final InetAddress inetAddress = socket.getInetAddress();
-                        log.debug( "Connected to client at {0}", inetAddress );
-                    }
-
-                    handler = new ConnectionHandler( socket );
-                    pooledExecutor.execute( handler );
+                    pooledExecutor.execute(() -> handleConnection(socket));
+                }
+                catch (final SocketTimeoutException e)
+                {
+                    // No problem! We loop back up!
                 }
             }
-            catch ( final IOException e )
-            {
-                log.error( "Exception caught in TCP listener", e );
-            }
+
+            serverSocket.close();
+        }
+        catch ( final IOException e )
+        {
+            log.error( "Exception caught in TCP listener", e );
         }
     }
 
     /**
      * A Separate thread that runs when a command comes into the LateralTCPReceiver.
+     * @deprecated No longer used
      */
+    @Deprecated
     public class ConnectionHandler
         implements Runnable
     {
@@ -535,125 +531,127 @@ public class LateralTCPListener<K, V>
          * Main processing method for the LateralTCPReceiverConnection object
          */
         @Override
-        @SuppressWarnings({"unchecked", // Need to cast from Object
-            "synthetic-access" })
         public void run()
         {
-            try (ObjectInputStream ois =
-                    new ObjectInputStreamClassLoaderAware( socket.getInputStream(), null ))
+            handleConnection(socket);
+        }
+    }
+
+    /**
+     * A Separate thread that runs when a command comes into the LateralTCPReceiver.
+     */
+    private void handleConnection(final Socket socket)
+    {
+        try (ObjectInputStream ois =
+                new ObjectInputStreamClassLoaderAware( socket.getInputStream(), null ))
+        {
+            while ( true )
             {
-                while ( true )
+                @SuppressWarnings("unchecked") // Need to cast from Object
+                final LateralElementDescriptor<K, V> led =
+                        (LateralElementDescriptor<K, V>) ois.readObject();
+
+                if ( led == null )
                 {
-                    final LateralElementDescriptor<K, V> led =
-                            (LateralElementDescriptor<K, V>) ois.readObject();
+                    log.debug( "LateralElementDescriptor is null" );
+                    continue;
+                }
+                if ( led.requesterId == getListenerId() )
+                {
+                    log.debug( "from self" );
+                }
+                else
+                {
+                    log.debug( "receiving LateralElementDescriptor from another led = {0}",
+                            led );
 
-                    if ( led == null )
-                    {
-                        log.debug( "LateralElementDescriptor is null" );
-                        continue;
-                    }
-                    if ( led.requesterId == getListenerId() )
-                    {
-                        log.debug( "from self" );
-                    }
-                    else
-                    {
-                        log.debug( "receiving LateralElementDescriptor from another led = {0}",
-                                led );
-
-                        handle( led );
-                    }
+                    handleElement(led, socket);
                 }
             }
-            catch ( final EOFException e )
-            {
-                log.info( "Caught EOFException, closing connection.", e );
-            }
-            catch ( final SocketException e )
-            {
-                log.info( "Caught SocketException, closing connection.", e );
-            }
-            catch ( final Exception e )
-            {
-                log.error( "Unexpected exception.", e );
-            }
         }
-
-        /**
-         * This calls the appropriate method, based on the command sent in the Lateral element
-         * descriptor.
-         * <p>
-         * @param led
-         * @throws IOException
-         */
-        @SuppressWarnings("synthetic-access")
-        private void handle( final LateralElementDescriptor<K, V> led )
-            throws IOException
+        catch (final IOException e)
         {
-            final String cacheName = led.ce.getCacheName();
-            final K key = led.ce.getKey();
-            Serializable obj = null;
+            log.info("Caught {0}, closing connection.", e.getClass().getSimpleName(), e);
+        }
+        catch (final ClassNotFoundException e)
+        {
+            log.error( "Deserialization failed reading from socket", e );
+        }
+    }
 
-            switch (led.command)
-            {
-                case UPDATE:
-                    handlePut( led.ce );
-                    break;
+    /**
+     * This calls the appropriate method, based on the command sent in the Lateral element
+     * descriptor.
+     * <p>
+     * @param led the lateral element
+     * @param socket the socket
+     * @throws IOException
+     */
+    private void handleElement(final LateralElementDescriptor<K, V> led, Socket socket) throws IOException
+    {
+        final String cacheName = led.ce.getCacheName();
+        final K key = led.ce.getKey();
+        Serializable obj = null;
 
-                case REMOVE:
-                    // if a hashcode was given and filtering is on
-                    // check to see if they are the same
-                    // if so, then don't remove, otherwise issue a remove
-                    if ( led.valHashCode != -1 )
+        switch (led.command)
+        {
+            case UPDATE:
+                handlePut( led.ce );
+                break;
+
+            case REMOVE:
+                // if a hashcode was given and filtering is on
+                // check to see if they are the same
+                // if so, then don't remove, otherwise issue a remove
+                if ( led.valHashCode != -1 )
+                {
+                    if ( getTcpLateralCacheAttributes().isFilterRemoveByHashCode() )
                     {
-                        if ( getTcpLateralCacheAttributes().isFilterRemoveByHashCode() )
+                        final ICacheElement<K, V> test = getCache( cacheName ).localGet( key );
+                        if ( test != null )
                         {
-                            final ICacheElement<K, V> test = getCache( cacheName ).localGet( key );
-                            if ( test != null )
+                            if ( test.getVal().hashCode() == led.valHashCode )
                             {
-                                if ( test.getVal().hashCode() == led.valHashCode )
-                                {
-                                    log.debug( "Filtering detected identical hashCode [{0}], "
-                                            + "not issuing a remove for led {1}",
-                                            led.valHashCode, led );
-                                    return;
-                                }
-                                else
-                                {
-                                    log.debug( "Different hashcodes, in cache [{0}] sent [{1}]",
-                                            test.getVal().hashCode(), led.valHashCode );
-                                }
+                                log.debug( "Filtering detected identical hashCode [{0}], "
+                                        + "not issuing a remove for led {1}",
+                                        led.valHashCode, led );
+                                return;
+                            }
+                            else
+                            {
+                                log.debug( "Different hashcodes, in cache [{0}] sent [{1}]",
+                                        test.getVal().hashCode(), led.valHashCode );
                             }
                         }
                     }
-                    handleRemove( cacheName, key );
-                    break;
+                }
+                handleRemove( cacheName, key );
+                break;
 
-                case REMOVEALL:
-                    handleRemoveAll( cacheName );
-                    break;
+            case REMOVEALL:
+                handleRemoveAll( cacheName );
+                break;
 
-                case GET:
-                    obj = handleGet( cacheName, key );
-                    break;
+            case GET:
+                obj = handleGet( cacheName, key );
+                break;
 
-                case GET_MATCHING:
-                    obj = (Serializable) handleGetMatching( cacheName, (String) key );
-                    break;
+            case GET_MATCHING:
+                obj = (Serializable) handleGetMatching( cacheName, (String) key );
+                break;
 
-                case GET_KEYSET:
-                	obj = (Serializable) handleGetKeySet(cacheName);
-                    break;
+            case GET_KEYSET:
+                obj = (Serializable) handleGetKeySet(cacheName);
+                break;
 
-                default: break;
-            }
+            default: break;
+        }
 
-            if (obj != null)
-            {
-                final ObjectOutputStream oos = new ObjectOutputStream( socket.getOutputStream() );
-                oos.writeObject( obj );
-                oos.flush();
-            }
+        if (obj != null)
+        {
+            final ObjectOutputStream oos = new ObjectOutputStream( socket.getOutputStream() );
+            oos.writeObject( obj );
+            oos.flush();
         }
     }
 
@@ -666,8 +664,7 @@ public class LateralTCPListener<K, V>
         if ( shutdown.compareAndSet(false, true) )
         {
             log.info( "Shutting down TCP Lateral receiver." );
-
-            receiver.interrupt();
+            pooledExecutor.shutdownNow();
         }
         else
         {

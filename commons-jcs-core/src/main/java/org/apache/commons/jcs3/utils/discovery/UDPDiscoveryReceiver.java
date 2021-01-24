@@ -37,8 +37,8 @@ import org.apache.commons.jcs3.log.LogManager;
 import org.apache.commons.jcs3.utils.discovery.UDPDiscoveryMessage.BroadcastType;
 import org.apache.commons.jcs3.utils.net.HostNameUtil;
 import org.apache.commons.jcs3.utils.threadpool.PoolConfiguration;
-import org.apache.commons.jcs3.utils.threadpool.ThreadPoolManager;
 import org.apache.commons.jcs3.utils.threadpool.PoolConfiguration.WhenBlockedPolicy;
+import org.apache.commons.jcs3.utils.threadpool.ThreadPoolManager;
 
 /** Receives UDP Discovery messages. */
 public class UDPDiscoveryReceiver
@@ -210,18 +210,13 @@ public class UDPDiscoveryReceiver
 
                 log.debug( "{0} messages received.", this::getCnt );
 
-                UDPDiscoveryMessage message = null;
-
                 try
                 {
-                    message = (UDPDiscoveryMessage) obj;
+                    UDPDiscoveryMessage message = (UDPDiscoveryMessage) obj;
                     // check for null
                     if ( message != null )
                     {
-                        final MessageHandler handler = new MessageHandler( message );
-
-                        pooledExecutor.execute( handler );
-
+                        pooledExecutor.execute(() -> handleMessage(message));
                         log.debug( "Passed handler to executor." );
                     }
                     else
@@ -269,7 +264,9 @@ public class UDPDiscoveryReceiver
 
     /**
      * Separate thread run when a command comes into the UDPDiscoveryReceiver.
+     * @deprectaed No longer used
      */
+    @Deprecated
     public class MessageHandler
         implements Runnable
     {
@@ -287,59 +284,66 @@ public class UDPDiscoveryReceiver
         /**
          * Process the message.
          */
-        @SuppressWarnings("synthetic-access")
         @Override
         public void run()
         {
-            // consider comparing ports here instead.
-            if ( message.getRequesterId() == CacheInfo.listenerId )
-            {
-                log.debug( "Ignoring message sent from self" );
-            }
-            else
-            {
-                log.debug( "Process message sent from another" );
-                log.debug( "Message = {0}", message );
-
-                if ( message.getHost() == null || message.getCacheNames() == null || message.getCacheNames().isEmpty() )
-                {
-                    log.debug( "Ignoring invalid message: {0}", message );
-                }
-                else
-                {
-                    processMessage();
-                }
-            }
+            handleMessage(message);
         }
 
-        /**
-         * Process the incoming message.
-         */
-        @SuppressWarnings("synthetic-access")
-        private void processMessage()
-        {
-            final DiscoveredService discoveredService = new DiscoveredService();
-            discoveredService.setServiceAddress( message.getHost() );
-            discoveredService.setCacheNames( message.getCacheNames() );
-            discoveredService.setServicePort( message.getPort() );
-            discoveredService.setLastHearFromTime( System.currentTimeMillis() );
+    }
 
-            // if this is a request message, have the service handle it and
-            // return
-            if ( message.getMessageType() == BroadcastType.REQUEST )
+    /**
+     * Separate thread run when a command comes into the UDPDiscoveryReceiver.
+     */
+    private void handleMessage(UDPDiscoveryMessage message)
+    {
+        // consider comparing ports here instead.
+        if ( message.getRequesterId() == CacheInfo.listenerId )
+        {
+            log.debug( "Ignoring message sent from self" );
+        }
+        else
+        {
+            log.debug( "Process message sent from another" );
+            log.debug( "Message = {0}", message );
+
+            if ( message.getHost() == null || message.getCacheNames() == null || message.getCacheNames().isEmpty() )
             {
-                log.debug( "Message is a Request Broadcast, will have the service handle it." );
-                service.serviceRequestBroadcast();
-            }
-            else if ( message.getMessageType() == BroadcastType.REMOVE )
-            {
-                log.debug( "Removing service from set {0}", discoveredService );
-                service.removeDiscoveredService( discoveredService );
+                log.debug( "Ignoring invalid message: {0}", message );
             }
             else
             {
-                service.addOrUpdateService( discoveredService );
+                processMessage(message);
             }
+        }
+    }
+
+    /**
+     * Process the incoming message.
+     */
+    private void processMessage(UDPDiscoveryMessage message)
+    {
+        final DiscoveredService discoveredService = new DiscoveredService();
+        discoveredService.setServiceAddress( message.getHost() );
+        discoveredService.setCacheNames( message.getCacheNames() );
+        discoveredService.setServicePort( message.getPort() );
+        discoveredService.setLastHearFromTime( System.currentTimeMillis() );
+
+        // if this is a request message, have the service handle it and
+        // return
+        if ( message.getMessageType() == BroadcastType.REQUEST )
+        {
+            log.debug( "Message is a Request Broadcast, will have the service handle it." );
+            service.serviceRequestBroadcast();
+        }
+        else if ( message.getMessageType() == BroadcastType.REMOVE )
+        {
+            log.debug( "Removing service from set {0}", discoveredService );
+            service.removeDiscoveredService( discoveredService );
+        }
+        else
+        {
+            service.addOrUpdateService( discoveredService );
         }
     }
 
