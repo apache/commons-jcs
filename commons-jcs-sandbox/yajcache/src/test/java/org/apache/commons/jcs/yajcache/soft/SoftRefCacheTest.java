@@ -63,7 +63,7 @@ public class SoftRefCacheTest extends TestCase {
 //        for (int i=0; i < 100; i++) {
 //            log.debug("get i="+i +":"+ c.get(String.valueOf(i)));
 //        }
-//        log.debug("sleeping for 5 secs");
+//        log.debug("sleeping for 5 seconds");
 //        Thread.sleep(5*1000);
 
         for (int i=0; i < 100; i++) {
