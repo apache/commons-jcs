@@ -20,6 +20,18 @@
 	</properties>
 	<body>
         <release version="3.1" date="20YY-MM-DD">
+            <action dev="tv" type="update">
+               Replace several Runnable classes with Lambdas
+               Deprecate original classes
+            </action>
+            <action dev="tv" type="remove">
+                Remove support for long deprecated and inconsistent 
+                RemoteCacheServer configuration keys
+                - remote.cache.service.port is now jcs.remotecache.serverattributes.servicePort
+                - remote.cache.rmiSocketFactoryTimeoutMillis is now jcs.remotecache.serverattributes.rmiSocketFactoryTimeoutMillis
+                - remote.cluster.LocalClusterConsistency is now jcs.remotecache.serverattributes.LocalClusterConsistency
+                - remote.cluster.AllowClusterGet is now jcs.remotecache.serverattributes.AllowClusterGet
+            </action>
             <action dev="ggregory" type="add" due-to="Gary Gregory">
                 Add BlockDiskKeyStore.isEmpty().
             </action>
