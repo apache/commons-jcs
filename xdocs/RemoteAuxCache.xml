@@ -188,7 +188,7 @@ jcs.region.testCache1.cacheattributes.MemoryCacheName=
 					that listens to port
 					<code>1102</code>
 					and performs call backs on the
-					<code>remote.cache.service.port</code>
+					<code>jcs.remotecache.serverattributes.servicePort</code>
 					, also specified as port
 					<code>1102</code>
 					.
