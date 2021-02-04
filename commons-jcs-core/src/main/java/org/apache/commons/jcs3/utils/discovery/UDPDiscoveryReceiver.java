@@ -27,6 +27,7 @@ import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.net.NetworkInterface;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.jcs3.engine.CacheInfo;
@@ -34,7 +35,6 @@ import org.apache.commons.jcs3.engine.behavior.IShutdownObserver;
 import org.apache.commons.jcs3.io.ObjectInputStreamClassLoaderAware;
 import org.apache.commons.jcs3.log.Log;
 import org.apache.commons.jcs3.log.LogManager;
-import org.apache.commons.jcs3.utils.discovery.UDPDiscoveryMessage.BroadcastType;
 import org.apache.commons.jcs3.utils.net.HostNameUtil;
 import org.apache.commons.jcs3.utils.threadpool.PoolConfiguration;
 import org.apache.commons.jcs3.utils.threadpool.PoolConfiguration.WhenBlockedPolicy;
@@ -72,7 +72,7 @@ public class UDPDiscoveryReceiver
     private final InetAddress multicastAddress;
 
     /** Is it shutdown. */
-    private boolean shutdown;
+    private AtomicBoolean shutdown = new AtomicBoolean(false);
 
     /**
      * Constructor for the LateralUDPReceiver object.
@@ -202,7 +202,7 @@ public class UDPDiscoveryReceiver
     {
         try
         {
-            while ( !shutdown )
+            while (!shutdown.get())
             {
                 final Object obj = waitForMessage();
 
@@ -329,21 +329,22 @@ public class UDPDiscoveryReceiver
         discoveredService.setServicePort( message.getPort() );
         discoveredService.setLastHearFromTime( System.currentTimeMillis() );
 
-        // if this is a request message, have the service handle it and
-        // return
-        if ( message.getMessageType() == BroadcastType.REQUEST )
+        switch (message.getMessageType())
         {
-            log.debug( "Message is a Request Broadcast, will have the service handle it." );
-            service.serviceRequestBroadcast();
-        }
-        else if ( message.getMessageType() == BroadcastType.REMOVE )
-        {
-            log.debug( "Removing service from set {0}", discoveredService );
-            service.removeDiscoveredService( discoveredService );
-        }
-        else
-        {
-            service.addOrUpdateService( discoveredService );
+            case REMOVE:
+                log.debug( "Removing service from set {0}", discoveredService );
+                service.removeDiscoveredService( discoveredService );
+                break;
+            case REQUEST:
+                // if this is a request message, have the service handle it and
+                // return
+                log.debug( "Message is a Request Broadcast, will have the service handle it." );
+                service.serviceRequestBroadcast();
+                break;
+            case PASSIVE:
+            default:
+                service.addOrUpdateService( discoveredService );
+                break;
         }
     }
 
@@ -351,11 +352,10 @@ public class UDPDiscoveryReceiver
     @Override
     public void shutdown()
     {
-        if (!shutdown)
+        if (shutdown.compareAndSet(false, true))
         {
             try
             {
-                shutdown = true;
                 mSocket.leaveGroup( multicastAddress );
                 mSocket.close();
                 pooledExecutor.shutdownNow();

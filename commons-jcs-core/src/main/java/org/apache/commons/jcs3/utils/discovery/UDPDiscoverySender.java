@@ -125,23 +125,15 @@ public class UDPDiscoverySender implements AutoCloseable
         log.debug( "sending UDPDiscoveryMessage, address [{0}], port [{1}], "
                 + "message = {2}", multicastAddress, multicastPort, message );
 
-        try
-        {
-            final byte[] bytes = serializer.serialize( message );
+        final byte[] bytes = serializer.serialize( message );
 
-            // put the byte array in a packet
-            final DatagramPacket packet = new DatagramPacket( bytes, bytes.length, multicastAddress, multicastPort );
+        // put the byte array in a packet
+        final DatagramPacket packet = new DatagramPacket( bytes, bytes.length, multicastAddress, multicastPort );
 
-            log.debug( "Sending DatagramPacket. bytes.length [{0}] to {1}:{2}",
-                    bytes.length, multicastAddress, multicastPort );
+        log.debug( "Sending DatagramPacket with {0} bytes to {1}:{2}",
+                bytes.length, multicastAddress, multicastPort );
 
-            localSocket.send( packet );
-        }
-        catch ( final IOException e )
-        {
-            log.error( "Error sending message", e );
-            throw e;
-        }
+        localSocket.send( packet );
     }
 
     /**
@@ -244,8 +236,9 @@ public class UDPDiscoverySender implements AutoCloseable
  * <p>
  * @author asmuts
  * @created January 15, 2002
+ * @deprecated No longer used
  */
-
+@Deprecated
 class MyByteArrayOutputStream
     extends ByteArrayOutputStream
 {

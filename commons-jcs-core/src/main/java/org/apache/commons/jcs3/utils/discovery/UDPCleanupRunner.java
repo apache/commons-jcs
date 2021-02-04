@@ -28,7 +28,9 @@ import org.apache.commons.jcs3.log.LogManager;
  * If they exceed the configurable limit, it removes them from the set.
  * <p>
  * @author Aaron Smuts
+ * @deprecated Functionality moved to UDPDiscoveryService
  */
+@Deprecated
 public class UDPCleanupRunner
     implements Runnable
 {

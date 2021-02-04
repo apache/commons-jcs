@@ -26,7 +26,9 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.commons.jcs3.engine.behavior.IRequireScheduler;
 import org.apache.commons.jcs3.engine.behavior.IShutdownObserver;
@@ -56,14 +58,11 @@ public class UDPDiscoveryService
     /** the runnable that the receiver thread runs */
     private UDPDiscoveryReceiver receiver;
 
-    /** the runnable that sends messages via the clock daemon */
-    private final UDPDiscoverySenderThread sender;
-
     /** attributes */
     private UDPDiscoveryAttributes udpDiscoveryAttributes;
 
     /** is this shut down? */
-    private boolean shutdown;
+    private AtomicBoolean shutdown = new AtomicBoolean(false);
 
     /** This is a set of services that have been discovered. */
     private final Set<DiscoveredService> discoveredServices = new CopyOnWriteArraySet<>();
@@ -73,6 +72,12 @@ public class UDPDiscoveryService
 
     /** Set of listeners. */
     private final Set<IDiscoveryListener> discoveryListeners = new CopyOnWriteArraySet<>();
+
+    /** Handle to cancel the scheduled broadcast task */
+    private ScheduledFuture<?> broadcastTaskFuture = null;
+
+    /** Handle to cancel the scheduled cleanup task */
+    private ScheduledFuture<?> cleanupTaskFuture = null;
 
     /**
      * @param attributes
@@ -107,8 +112,8 @@ public class UDPDiscoveryService
                     getUdpDiscoveryAttributes().getUdpDiscoveryPort(), e );
         }
 
-        // create a sender thread
-        sender = new UDPDiscoverySenderThread( getUdpDiscoveryAttributes(), getCacheNames() );
+        // initiate sender broadcast
+        initiateBroadcast();
     }
 
     /**
@@ -117,17 +122,69 @@ public class UDPDiscoveryService
     @Override
     public void setScheduledExecutorService(final ScheduledExecutorService scheduledExecutor)
     {
-        if (sender != null)
-        {
-            scheduledExecutor.scheduleAtFixedRate(sender, 0, 15, TimeUnit.SECONDS);
-        }
+        this.broadcastTaskFuture = scheduledExecutor.scheduleAtFixedRate(
+                () -> serviceRequestBroadcast(), 0, 15, TimeUnit.SECONDS);
 
         /** removes things that have been idle for too long */
-        final UDPCleanupRunner cleanup = new UDPCleanupRunner( this );
         // I'm going to use this as both, but it could happen
         // that something could hang around twice the time using this as the
         // delay and the idle time.
-        scheduledExecutor.scheduleAtFixedRate(cleanup, 0, getUdpDiscoveryAttributes().getMaxIdleTimeSec(), TimeUnit.SECONDS);
+        this.cleanupTaskFuture = scheduledExecutor.scheduleAtFixedRate(
+                () -> cleanup(), 0,
+                getUdpDiscoveryAttributes().getMaxIdleTimeSec(), TimeUnit.SECONDS);
+    }
+
+    /**
+     * This goes through the list of services and removes those that we haven't heard from in longer
+     * than the max idle time.
+     */
+    protected void cleanup()
+    {
+        final long now = System.currentTimeMillis();
+
+        // the listeners need to be notified.
+        getDiscoveredServices().stream()
+            .filter(service -> {
+                if (now - service.getLastHearFromTime() > getUdpDiscoveryAttributes().getMaxIdleTimeSec() * 1000)
+                {
+                    log.info( "Removing service, since we haven't heard from it in "
+                            + "{0} seconds. service = {1}",
+                            getUdpDiscoveryAttributes().getMaxIdleTimeSec(), service );
+                    return true;
+                }
+
+                return false;
+            })
+            // remove the bad ones
+            // call this so the listeners get notified
+            .forEach(service -> removeDiscoveredService(service));
+    }
+
+    /**
+     * Initial request that the other caches let it know their addresses.
+     */
+    public void initiateBroadcast()
+    {
+        log.debug( "Creating sender thread for discoveryAddress = [{0}] and "
+                + "discoveryPort = [{1}] myHostName = [{2}] and port = [{3}]",
+                () -> getUdpDiscoveryAttributes().getUdpDiscoveryAddr(),
+                () -> getUdpDiscoveryAttributes().getUdpDiscoveryPort(),
+                () -> getUdpDiscoveryAttributes().getServiceAddress(),
+                () -> getUdpDiscoveryAttributes().getServicePort() );
+
+        try (UDPDiscoverySender sender = new UDPDiscoverySender(
+                getUdpDiscoveryAttributes().getUdpDiscoveryAddr(),
+                getUdpDiscoveryAttributes().getUdpDiscoveryPort(),
+                getUdpDiscoveryAttributes().getUdpTTL()))
+        {
+            sender.requestBroadcast();
+
+            log.debug( "Sent a request broadcast to the group" );
+        }
+        catch ( final IOException e )
+        {
+            log.error( "Problem sending a Request Broadcast", e );
+        }
     }
 
     /**
@@ -145,11 +202,10 @@ public class UDPDiscoveryService
                 getUdpDiscoveryAttributes().getUdpDiscoveryPort(),
                 getUdpDiscoveryAttributes().getUdpTTL()))
         {
-            sender.passiveBroadcast( getUdpDiscoveryAttributes().getServiceAddress(), getUdpDiscoveryAttributes()
-                .getServicePort(), this.getCacheNames() );
-
-            // todo we should consider sending a request broadcast every so
-            // often.
+            sender.passiveBroadcast(
+                    getUdpDiscoveryAttributes().getServiceAddress(),
+                    getUdpDiscoveryAttributes().getServicePort(),
+                    this.getCacheNames() );
 
             log.debug( "Called sender to issue a passive broadcast" );
         }
@@ -163,6 +219,31 @@ public class UDPDiscoveryService
     }
 
     /**
+     * Issues a remove broadcast to the others.
+     */
+    protected void shutdownBroadcast()
+    {
+        // create this connection each time.
+        // more robust
+        try (UDPDiscoverySender sender = new UDPDiscoverySender(
+                getUdpDiscoveryAttributes().getUdpDiscoveryAddr(),
+                getUdpDiscoveryAttributes().getUdpDiscoveryPort(),
+                getUdpDiscoveryAttributes().getUdpTTL()))
+        {
+            sender.removeBroadcast(
+                    getUdpDiscoveryAttributes().getServiceAddress(),
+                    getUdpDiscoveryAttributes().getServicePort(),
+                    this.getCacheNames() );
+
+            log.debug( "Called sender to issue a remove broadcast in shutdown." );
+        }
+        catch ( final IOException e )
+        {
+            log.error( "Problem calling the UDP Discovery Sender", e );
+        }
+    }
+
+    /**
      * Adds a region to the list that is participating in discovery.
      * <p>
      * @param cacheName
@@ -170,7 +251,6 @@ public class UDPDiscoveryService
     public void addParticipatingCacheName( final String cacheName )
     {
         cacheNames.add( cacheName );
-        sender.setCacheNames( getCacheNames() );
     }
 
     /**
@@ -295,9 +375,17 @@ public class UDPDiscoveryService
     @Override
     public void shutdown()
     {
-        if ( !shutdown )
+        if (shutdown.compareAndSet(false, true))
         {
-            shutdown = true;
+            // Stop the scheduled tasks
+            if (broadcastTaskFuture != null)
+            {
+                broadcastTaskFuture.cancel(false);
+            }
+            if (cleanupTaskFuture != null)
+            {
+                cleanupTaskFuture.cancel(false);
+            }
 
             // no good way to do this right now.
             if (receiver != null)
@@ -307,13 +395,10 @@ public class UDPDiscoveryService
                 udpReceiverThread.interrupt();
             }
 
-            if (sender != null)
-            {
-                log.info( "Shutting down UDP discovery service sender." );
-                // also call the shutdown on the sender thread itself, which
-                // will result in a remove command.
-                sender.shutdown();
-            }
+            log.info( "Shutting down UDP discovery service sender." );
+            // also call the shutdown on the sender thread itself, which
+            // will result in a remove command.
+            shutdownBroadcast();
         }
         else
         {

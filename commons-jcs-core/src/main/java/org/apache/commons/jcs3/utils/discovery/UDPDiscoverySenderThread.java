@@ -27,7 +27,9 @@ import org.apache.commons.jcs3.log.LogManager;
 
 /**
  * Used to periodically broadcast our location to other caches that might be listening.
+ * @deprecated Functionality moved to UDPDiscoveryService
  */
+@Deprecated
 public class UDPDiscoverySenderThread
     implements Runnable
 {

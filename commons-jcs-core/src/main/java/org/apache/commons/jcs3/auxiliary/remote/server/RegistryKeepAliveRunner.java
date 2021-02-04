@@ -32,7 +32,9 @@ import org.apache.commons.jcs3.log.LogManager;
 /**
  * This class tries to keep the registry alive. If if is able to create a registry, it will also
  * rebind the remote cache server.
+ * @deprecated Functionality moved to RemoteCacheServerFactory
  */
+@Deprecated
 public class RegistryKeepAliveRunner
     implements Runnable
 {
