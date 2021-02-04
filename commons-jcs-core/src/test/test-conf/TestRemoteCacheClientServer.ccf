@@ -21,11 +21,11 @@ registry.host=localhost
 registry.port=11020
 
 # client callback port.
-remote.cache.service.port=13010
-remote.cache.rmiSocketFactoryTimeoutMillis=12345
+jcs.remotecache.serverattributes.servicePort=13010
+jcs.remotecache.serverattributes.RmiSocketFactoryTimeoutMillis=12345
 
 # cluster setting
-remote.cluster.LocalClusterConsistency=true
+jcs.remotecache.serverattributes.LocalClusterConsistency=true
 
 # #############################################################
 # ################# DEFAULT CACHE REGION  #####################

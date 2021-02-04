@@ -47,7 +47,11 @@ public interface IRemoteCacheConstants
     /** Property prefix, should be jcs.remote but this would break existing config. */
     String PROPERTY_PREFIX = "remote";
 
-    /** Mapping to props file value */
+    /**
+     * Mapping to props file value
+     * @deprecated Use CACHE_SERVER_ATTRIBUTES_PROPERTY_PREFIX + ".rmiSocketFactoryTimeoutMillis"
+     */
+    @Deprecated
     String SOCKET_TIMEOUT_MILLIS = PROPERTY_PREFIX + ".cache.rmiSocketFactoryTimeoutMillis";
 
     /** Mapping to props file value */
@@ -59,12 +63,24 @@ public interface IRemoteCacheConstants
     /** Mapping to props file value */
     String TOMCAT_ON = PROPERTY_PREFIX + ".tomcat.on";
 
-    /** Mapping to props file value */
+    /**
+     * Mapping to props file value
+     * @deprecated Use CACHE_SERVER_ATTRIBUTES_PROPERTY_PREFIX + ".servicePort"
+     */
+    @Deprecated
     String REMOTE_CACHE_SERVICE_PORT = PROPERTY_PREFIX + ".cache.service.port";
 
-    /** Mapping to props file value */
+    /**
+     * Mapping to props file value
+     * @deprecated Use CACHE_SERVER_ATTRIBUTES_PROPERTY_PREFIX + ".localClusterConsistency"
+     */
+    @Deprecated
     String REMOTE_LOCAL_CLUSTER_CONSISTENCY = PROPERTY_PREFIX + ".cluster.LocalClusterConsistency";
 
-    /** Mapping to props file value */
+    /**
+     * Mapping to props file value
+     * @deprecated Use CACHE_SERVER_ATTRIBUTES_PROPERTY_PREFIX + ".allowClusterGet"
+     */
+    @Deprecated
     String REMOTE_ALLOW_CLUSTER_GET = PROPERTY_PREFIX + ".cluster.AllowClusterGet";
 }

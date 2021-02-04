@@ -20,9 +20,9 @@
 registry.host=localhost
 registry.port=1102
 # call back port to local caches.
-remote.cache.service.port=1102
+jcs.remotecache.serverattributes.servicePort=1102
 # cluster setting
-remote.cluster.LocalClusterConsistency=true
+jcs.remotecache.serverattributes.LocalClusterConsistency=true
 
 
 # #############################################################

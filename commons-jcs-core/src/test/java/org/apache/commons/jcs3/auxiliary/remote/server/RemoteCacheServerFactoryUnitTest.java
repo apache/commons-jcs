@@ -1,5 +1,11 @@
 package org.apache.commons.jcs3.auxiliary.remote.server;
 
+import java.rmi.server.RMISocketFactory;
+import java.util.Properties;
+
+import org.apache.commons.jcs3.auxiliary.remote.behavior.ICommonRemoteCacheAttributes;
+import org.apache.commons.jcs3.auxiliary.remote.behavior.IRemoteCacheConstants;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -21,12 +27,6 @@ package org.apache.commons.jcs3.auxiliary.remote.server;
 
 import junit.framework.TestCase;
 
-import java.rmi.server.RMISocketFactory;
-import java.util.Properties;
-
-import org.apache.commons.jcs3.auxiliary.remote.behavior.ICommonRemoteCacheAttributes;
-import org.apache.commons.jcs3.auxiliary.remote.behavior.IRemoteCacheConstants;
-
 /** Unit tests for the factory */
 public class RemoteCacheServerFactoryUnitTest
     extends TestCase
@@ -44,21 +44,6 @@ public class RemoteCacheServerFactoryUnitTest
 
         // VERIFY
         assertEquals( "Wrong eventQueuePoolName", eventQueuePoolName, result.getEventQueuePoolName() );
-    }
-
-    /** verify that we get the timeout value */
-    public void testConfigureRemoteCacheServerAttributes_timeoutPresent()
-    {
-        // SETUP
-        final int timeout = 123245;
-        final Properties props = new Properties();
-        props.put( IRemoteCacheConstants.SOCKET_TIMEOUT_MILLIS, String.valueOf( timeout ) );
-
-        // DO WORK
-        final RemoteCacheServerAttributes result = RemoteCacheServerFactory.configureRemoteCacheServerAttributes( props );
-
-        // VERIFY
-        assertEquals( "Wrong timeout", timeout, result.getRmiSocketFactoryTimeoutMillis() );
     }
 
     /** verify that we get the timeout value */

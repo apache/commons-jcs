@@ -165,7 +165,7 @@ jcs.auxiliary.RFailover.attributes.GetOnly=false
 				</p>
 				<source>
 					<![CDATA[
-#Regions preconfirgured for caching
+#Regions preconfigured for caching
 jcs.region.testCache1=DC,RFailover
 jcs.region.testCache1.cacheattributes=
     org.apache.commons.jcs3.engine.CompositeCacheAttributes
@@ -200,12 +200,12 @@ jcs.region.testCache1.cacheattributes.MemoryCacheName=
 registry.host=localhost
 registry.port=1102
 # call back port to local caches.
-remote.cache.service.port=1102
+jcs.remotecache.serverattributes.servicePort=1102
 # rmi socket factory timeout
-remote.cache.rmiSocketFactoryTimeoutMillis=5000
+jcs.remotecache.serverattributes.rmiSocketFactoryTimeoutMillis=5000
 # cluster setting
-remote.cluster.LocalClusterConsistency=true
-remote.cluster.AllowClusterGet=true
+jcs.remotecache.serverattributes.LocalClusterConsistency=true
+jcs.remotecache.serverattributes.AllowClusterGet=true
         ]]>
 				</source>
 				<p>

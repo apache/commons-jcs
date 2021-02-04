@@ -19,8 +19,8 @@
 # Registry used to register and provide the IRmiCacheService service.
 registry.host=localhost
 registry.port=1101
-remote.cache.service.port=1101
-remote.cluster.LocalClusterConsistency=true
+jcs.remotecache.serverattributes.servicePort=1101
+jcs.remotecache.serverattributes.LocalClusterConsistency=true
 remote.cacheeventlogger=org.apache.commons.jcs3.engine.logging.CacheEventLoggerDebugLogger
 remote.cacheeventlogger.attributes.logCategoryName=test.RCSEventLogCategory
 
