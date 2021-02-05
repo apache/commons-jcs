@@ -323,11 +323,7 @@ public class UDPDiscoveryReceiver
      */
     private void processMessage(UDPDiscoveryMessage message)
     {
-        final DiscoveredService discoveredService = new DiscoveredService();
-        discoveredService.setServiceAddress( message.getHost() );
-        discoveredService.setCacheNames( message.getCacheNames() );
-        discoveredService.setServicePort( message.getPort() );
-        discoveredService.setLastHearFromTime( System.currentTimeMillis() );
+        final DiscoveredService discoveredService = new DiscoveredService(message);
 
         switch (message.getMessageType())
         {

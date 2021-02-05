@@ -19,7 +19,6 @@ package org.apache.commons.jcs3.auxiliary.remote.server;
  * under the License.
  */
 
-import java.rmi.Naming;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
@@ -41,11 +40,8 @@ public class RegistryKeepAliveRunner
     /** The logger */
     private static final Log log = LogManager.getLog( RegistryKeepAliveRunner.class );
 
-    /** The URL of the service to look for. */
-    private final String namingURL;
-
-    /** The service name. */
-    private final String serviceName;
+    /** the host on which to start the registry */
+    private final String registryHost;
 
     /** the port on which to start the registry */
     private final int registryPort;
@@ -63,8 +59,7 @@ public class RegistryKeepAliveRunner
      */
     public RegistryKeepAliveRunner( final String registryHost, final int registryPort, final String serviceName )
     {
-        this.namingURL = RemoteUtils.getNamingURL(registryHost, registryPort, serviceName);
-        this.serviceName = serviceName;
+        this.registryHost = registryHost;
         this.registryPort = registryPort;
     }
 
@@ -85,32 +80,7 @@ public class RegistryKeepAliveRunner
      */
     protected void checkAndRestoreIfNeeded()
     {
-        log.debug( "looking up server {0}", namingURL );
-
-        try
-        {
-            final Object obj = Naming.lookup( namingURL );
-
-            // Successful connection to the remote server.
-            final String message = "RMI registry looks fine.  Found [" + obj + "] in registry [" + namingURL + "]";
-            if ( cacheEventLogger != null )
-            {
-                cacheEventLogger.logApplicationEvent( "RegistryKeepAliveRunner", "Naming.lookup", message );
-            }
-            log.debug( message );
-        }
-        catch ( final Exception ex )
-        {
-            // Failed to connect to the remote server.
-            final String message = "Problem finding server at [" + namingURL
-                + "].  Will attempt to start registry and rebind.";
-            log.error( message, ex );
-            if ( cacheEventLogger != null )
-            {
-                cacheEventLogger.logError( "RegistryKeepAliveRunner", "Naming.lookup", message + ":" + ex.getMessage() );
-            }
-            createAndRegister( serviceName );
-        }
+        RemoteCacheServerFactory.keepAlive(registryHost, registryPort, cacheEventLogger);
     }
 
     /**
@@ -160,13 +130,8 @@ public class RegistryKeepAliveRunner
         {
             // try to rebind anyway
             final Remote server = RemoteCacheServerFactory.getRemoteCacheServer();
+            RemoteCacheServerFactory.registerServer(serviceName, server);
 
-            if ( server == null )
-            {
-                throw new RemoteException( "Cannot register the server until it is created." );
-            }
-
-            this.registry.rebind( serviceName, server );
             final String message = "Successfully rebound server to registry [" + serviceName + "].";
             if ( cacheEventLogger != null )
             {

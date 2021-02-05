@@ -48,6 +48,27 @@ public class DiscoveredService
     private long lastHearFromTime;
 
     /**
+     * Default constructor
+     */
+    public DiscoveredService()
+    {
+        // empty
+    }
+
+    /**
+     * Constructor
+     *
+     * @param message incoming message
+     */
+    public DiscoveredService(UDPDiscoveryMessage message)
+    {
+        setServiceAddress( message.getHost() );
+        setCacheNames( message.getCacheNames() );
+        setServicePort( message.getPort() );
+        setLastHearFromTime( System.currentTimeMillis() );
+    }
+
+    /**
      * @param cacheNames the cacheNames to set
      */
     public void setCacheNames( final ArrayList<String> cacheNames )

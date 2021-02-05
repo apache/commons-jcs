@@ -267,10 +267,7 @@ public class UDPDiscoveryService
             log.info( "Removing {0}", service );
         }
 
-        for (final IDiscoveryListener listener : getDiscoveryListeners())
-        {
-            listener.removeDiscoveredService( service );
-        }
+        getDiscoveryListeners().forEach(listener -> listener.removeDiscoveredService(service));
     }
 
     /**
@@ -296,24 +293,17 @@ public class UDPDiscoveryService
             log.debug( "Updating service in the set {0}", discoveredService );
 
             // Update the list of cache names if it has changed.
-            DiscoveredService theOldServiceInformation = null;
             // need to update the time this sucks. add has no effect convert to a map
-            for (final DiscoveredService service1 : discoveredServices)
+            DiscoveredService theOldServiceInformation = discoveredServices.stream()
+                .filter(service -> discoveredService.equals(service))
+                .findFirst()
+                .orElse(null);
+
+            if (theOldServiceInformation != null &&
+                !theOldServiceInformation.getCacheNames().equals(discoveredService.getCacheNames()))
             {
-                if ( discoveredService.equals( service1 ) )
-                {
-                    theOldServiceInformation = service1;
-                    break;
-                }
-            }
-            if ( theOldServiceInformation != null )
-            {
-                if ( !theOldServiceInformation.getCacheNames().equals(
-                        discoveredService.getCacheNames() ) )
-                {
-                    log.info( "List of cache names changed for service: {0}",
-                            discoveredService );
-                }
+                log.info( "List of cache names changed for service: {0}",
+                        discoveredService );
             }
 
             // replace it, we want to reset the payload and the last heard from time.
@@ -325,10 +315,7 @@ public class UDPDiscoveryService
         // If we don't do this, then if a region using the default config is initialized after notification,
         // it will never get the service in it's no wait list.
         // Leave it to the listeners to decide what to do.
-        for (final IDiscoveryListener listener : getDiscoveryListeners())
-        {
-            listener.addDiscoveredService( discoveredService );
-        }
+        getDiscoveryListeners().forEach(listener -> listener.addDiscoveredService( discoveredService));
     }
 
     /**
@@ -338,8 +325,7 @@ public class UDPDiscoveryService
      */
     protected ArrayList<String> getCacheNames()
     {
-        final ArrayList<String> names = new ArrayList<>(cacheNames);
-        return names;
+        return new ArrayList<>(cacheNames);
     }
 
     /**
