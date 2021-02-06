@@ -20,6 +20,7 @@ package org.apache.commons.jcs3.engine.control;
  */
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,17 +30,16 @@ import org.apache.commons.jcs3.JCS;
 import org.apache.commons.jcs3.access.CacheAccess;
 import org.apache.commons.jcs3.access.exception.CacheException;
 import org.apache.commons.jcs3.auxiliary.AbstractAuxiliaryCache;
-import org.apache.commons.jcs3.auxiliary.AuxiliaryCache;
 import org.apache.commons.jcs3.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.commons.jcs3.engine.CacheElement;
 import org.apache.commons.jcs3.engine.CacheStatus;
 import org.apache.commons.jcs3.engine.CompositeCacheAttributes;
 import org.apache.commons.jcs3.engine.ElementAttributes;
 import org.apache.commons.jcs3.engine.behavior.ICacheElement;
+import org.apache.commons.jcs3.engine.behavior.ICacheType.CacheType;
 import org.apache.commons.jcs3.engine.behavior.ICompositeCacheAttributes;
 import org.apache.commons.jcs3.engine.behavior.IElementAttributes;
 import org.apache.commons.jcs3.engine.behavior.IElementSerializer;
-import org.apache.commons.jcs3.engine.behavior.ICacheType.CacheType;
 import org.apache.commons.jcs3.engine.logging.behavior.ICacheEventLogger;
 import org.apache.commons.jcs3.engine.stats.behavior.IStats;
 
@@ -107,11 +107,7 @@ public class CompositeCacheDiskUsageUnitTest
 
         final MockAuxCache<String, String> mock = new MockAuxCache<>();
         mock.cacheType = CacheType.DISK_CACHE;
-
-        @SuppressWarnings("unchecked")
-        final
-        AuxiliaryCache<String, String>[] auxArray = new AuxiliaryCache[] { mock };
-        cache.setAuxCaches( auxArray );
+        cache.setAuxCaches(Arrays.asList(mock));
 
         final ICacheElement<String, String> inputElement = new CacheElement<>( CACHE_NAME, "key", "value" );
 
@@ -140,11 +136,7 @@ public class CompositeCacheDiskUsageUnitTest
 
         final MockAuxCache<String, String> mock = new MockAuxCache<>();
         mock.cacheType = CacheType.DISK_CACHE;
-
-        @SuppressWarnings("unchecked")
-        final
-        AuxiliaryCache<String, String>[] auxArray = new AuxiliaryCache[] { mock };
-        cache.setAuxCaches( auxArray );
+        cache.setAuxCaches(Arrays.asList(mock));
 
         final ICacheElement<String, String> inputElement = new CacheElement<>( CACHE_NAME, "key", "value" );
 
@@ -177,11 +169,7 @@ public class CompositeCacheDiskUsageUnitTest
 
         final MockAuxCache<String, String> mock = new MockAuxCache<>();
         mock.cacheType = CacheType.DISK_CACHE;
-
-        @SuppressWarnings("unchecked")
-        final
-        AuxiliaryCache<String, String>[] auxArray = new AuxiliaryCache[] { mock };
-        cache.setAuxCaches( auxArray );
+        cache.setAuxCaches(Arrays.asList(mock));
 
         final ICacheElement<String, String> inputElement = new CacheElement<>( CACHE_NAME, "key", "value" );
 
@@ -216,11 +204,7 @@ public class CompositeCacheDiskUsageUnitTest
 
         final MockAuxCache<String, String> mock = new MockAuxCache<>();
         mock.cacheType = CacheType.DISK_CACHE;
-
-        @SuppressWarnings("unchecked")
-        final
-        AuxiliaryCache<String, String>[] auxArray = new AuxiliaryCache[] { mock };
-        cache.setAuxCaches( auxArray );
+        cache.setAuxCaches(Arrays.asList(mock));
 
         final ICacheElement<String, String> inputElement = new CacheElement<>( CACHE_NAME, "key", "value" );
 
@@ -255,11 +239,7 @@ public class CompositeCacheDiskUsageUnitTest
 
         final MockAuxCache<String, String> mock = new MockAuxCache<>();
         mock.cacheType = CacheType.DISK_CACHE;
-
-        @SuppressWarnings("unchecked")
-        final
-        AuxiliaryCache<String, String>[] auxArray = new AuxiliaryCache[] { mock };
-        cache.setAuxCaches( auxArray );
+        cache.setAuxCaches(Arrays.asList(mock));
 
         final ICacheElement<String, String> inputElement = new CacheElement<>( CACHE_NAME, "key", "value" );
 
@@ -295,11 +275,7 @@ public class CompositeCacheDiskUsageUnitTest
 
         final MockAuxCache<String, String> mockLateral = new MockAuxCache<>();
         mockLateral.cacheType = CacheType.LATERAL_CACHE;
-
-        @SuppressWarnings("unchecked")
-        final
-        AuxiliaryCache<String, String>[] auxArray = new AuxiliaryCache[] { mock, mockLateral };
-        cache.setAuxCaches( auxArray );
+        cache.setAuxCaches(Arrays.asList(mock, mockLateral));
 
         final ICacheElement<String, String> inputElement = new CacheElement<>( CACHE_NAME, "key", "value" );
 

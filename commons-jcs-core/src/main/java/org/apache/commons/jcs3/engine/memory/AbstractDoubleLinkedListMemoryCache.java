@@ -162,14 +162,7 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
 
         try
         {
-            for (int i = 0; i < chunkSizeCorrected; i++)
-            {
-                final ICacheElement<K, V> lastElement = spoolLastElement();
-                if (lastElement == null)
-                {
-                    break;
-                }
-            }
+            freeElements(chunkSizeCorrected);
 
             // If this is out of the sync block it can detect a mismatch
             // where there is none.
@@ -197,10 +190,9 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
      * @param numberToFree
      * @return the number that were removed. if you ask to free 5, but there are only 3, you will
      *         get 3.
-     * @throws IOException
      */
     @Override
-    public int freeElements(final int numberToFree) throws IOException
+    public int freeElements(final int numberToFree)
     {
         int freed = 0;
 

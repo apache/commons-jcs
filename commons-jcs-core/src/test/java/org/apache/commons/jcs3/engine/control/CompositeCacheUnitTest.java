@@ -1,5 +1,19 @@
 package org.apache.commons.jcs3.engine.control;
 
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Map;
+
+import org.apache.commons.jcs3.auxiliary.MockAuxiliaryCache;
+import org.apache.commons.jcs3.engine.CacheElement;
+import org.apache.commons.jcs3.engine.CompositeCacheAttributes;
+import org.apache.commons.jcs3.engine.ElementAttributes;
+import org.apache.commons.jcs3.engine.behavior.ICacheElement;
+import org.apache.commons.jcs3.engine.behavior.ICacheType.CacheType;
+import org.apache.commons.jcs3.engine.behavior.ICompositeCacheAttributes;
+import org.apache.commons.jcs3.engine.behavior.IElementAttributes;
+import org.apache.commons.jcs3.engine.memory.MockMemoryCache;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -20,19 +34,6 @@ package org.apache.commons.jcs3.engine.control;
  */
 
 import junit.framework.TestCase;
-
-import org.apache.commons.jcs3.auxiliary.MockAuxiliaryCache;
-import org.apache.commons.jcs3.engine.memory.MockMemoryCache;
-import org.apache.commons.jcs3.auxiliary.AuxiliaryCache;
-import org.apache.commons.jcs3.engine.CacheElement;
-import org.apache.commons.jcs3.engine.CompositeCacheAttributes;
-import org.apache.commons.jcs3.engine.ElementAttributes;
-import org.apache.commons.jcs3.engine.behavior.ICacheElement;
-import org.apache.commons.jcs3.engine.behavior.ICompositeCacheAttributes;
-import org.apache.commons.jcs3.engine.behavior.IElementAttributes;
-import org.apache.commons.jcs3.engine.behavior.ICacheType.CacheType;
-import java.io.IOException;
-import java.util.Map;
 
 /**
  * Tests that directly engage the composite cache.
@@ -63,10 +64,7 @@ public class CompositeCacheUnitTest
 
         final MockAuxiliaryCache<String, Integer> diskMock = new MockAuxiliaryCache<>();
         diskMock.cacheType = CacheType.DISK_CACHE;
-        @SuppressWarnings("unchecked")
-        final
-        AuxiliaryCache<String, Integer>[] aux = new AuxiliaryCache[] { diskMock };
-        cache.setAuxCaches( aux );
+        cache.setAuxCaches(Arrays.asList(diskMock));
 
         // DO WORK
         final int numToInsert = 10;
@@ -104,10 +102,7 @@ public class CompositeCacheUnitTest
 
         final MockAuxiliaryCache<String, Integer> diskMock = new MockAuxiliaryCache<>();
         diskMock.cacheType = CacheType.REMOTE_CACHE;
-        @SuppressWarnings("unchecked")
-        final
-        AuxiliaryCache<String, Integer>[] aux = new AuxiliaryCache[] { diskMock };
-        cache.setAuxCaches( aux );
+        cache.setAuxCaches(Arrays.asList(diskMock));
 
         // DO WORK
         final int numToInsert = 10;
@@ -148,10 +143,7 @@ public class CompositeCacheUnitTest
 
         final MockAuxiliaryCache<String, Integer> diskMock = new MockAuxiliaryCache<>();
         diskMock.cacheType = CacheType.DISK_CACHE;
-        @SuppressWarnings("unchecked")
-        final
-        AuxiliaryCache<String, Integer>[] aux = new AuxiliaryCache[] { diskMock };
-        cache.setAuxCaches( aux );
+        cache.setAuxCaches(Arrays.asList(diskMock));
 
         // DO WORK
         final int numToInsertPrefix1 = 10;
@@ -201,10 +193,7 @@ public class CompositeCacheUnitTest
 
         final MockAuxiliaryCache<String, Integer> diskMock = new MockAuxiliaryCache<>();
         diskMock.cacheType = CacheType.DISK_CACHE;
-        @SuppressWarnings("unchecked")
-        final
-        AuxiliaryCache<String, Integer>[] aux = new AuxiliaryCache[] { diskMock };
-        cache.setAuxCaches( aux );
+        cache.setAuxCaches(Arrays.asList(diskMock));
 
         // DO WORK
         cache.getMatching( "junk" );
@@ -236,10 +225,7 @@ public class CompositeCacheUnitTest
 
         final MockAuxiliaryCache<String, Integer> diskMock = new MockAuxiliaryCache<>();
         diskMock.cacheType = CacheType.REMOTE_CACHE;
-        @SuppressWarnings("unchecked")
-        final
-        AuxiliaryCache<String, Integer>[] aux = new AuxiliaryCache[] { diskMock };
-        cache.setAuxCaches( aux );
+        cache.setAuxCaches(Arrays.asList(diskMock));
 
         // DO WORK
         cache.getMatching( "junk" );

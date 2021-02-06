@@ -441,19 +441,16 @@ public abstract class AbstractLRUMap<K, V>
         }
 
         log.trace( "verifycache: checking via keysets!" );
-        map.forEach((key, value) -> {
-            boolean found = false;
-
-            for (LRUElementDescriptor<K, V> li2 = list.getFirst(); li2 != null; li2 = (LRUElementDescriptor<K, V>) li2.next )
-            {
-                if ( key.equals( li2.getKey() ) )
+        map.keySet().stream()
+            .filter(key -> {
+                for (LRUElementDescriptor<K, V> li2 = list.getFirst(); li2 != null; li2 = (LRUElementDescriptor<K, V>) li2.next )
                 {
-                    found = true;
-                    break;
+                    if ( key.equals( li2.getKey() ) )
+                    {
+                        return true;
+                    }
                 }
-            }
-            if ( !found )
-            {
+
                 log.error( "verifycache: key not found in list : {0}", key );
                 dumpCacheEntries();
                 if ( map.containsKey( key ) )
@@ -464,8 +461,10 @@ public abstract class AbstractLRUMap<K, V>
                 {
                     log.error( "verifycache: map does NOT contain key, what the HECK!" );
                 }
-            }
-        });
+
+                return false;
+            })
+            .findFirst();
     }
 
     /**

@@ -21,11 +21,15 @@ package org.apache.commons.jcs3.engine.control;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
@@ -82,8 +86,7 @@ public class CompositeCache<K, V>
     private IElementEventQueue elementEventQ;
 
     /** Auxiliary caches. */
-    @SuppressWarnings("unchecked") // OK because this is an empty array
-    private AuxiliaryCache<K, V>[] auxCaches = new AuxiliaryCache[0];
+    private CopyOnWriteArrayList<AuxiliaryCache<K, V>> auxCaches = new CopyOnWriteArrayList<>();
 
     /** is this alive? */
     private final AtomicBoolean alive;
@@ -186,12 +189,27 @@ public class CompositeCache<K, V>
 
     /**
      * This sets the list of auxiliary caches for this region.
+     * It filters out null caches
      * <p>
      * @param auxCaches
      */
+    public void setAuxCaches(final List<AuxiliaryCache<K, V>> auxCaches)
+    {
+        this.auxCaches = auxCaches.stream()
+                .filter(aux -> aux != null)
+                .collect(Collectors.toCollection(CopyOnWriteArrayList::new));
+    }
+
+    /**
+     * This sets the list of auxiliary caches for this region.
+     * <p>
+     * @param auxCaches
+     * @deprecated Use List method
+     */
+    @Deprecated
     public void setAuxCaches(final AuxiliaryCache<K, V>[] auxCaches)
     {
-        this.auxCaches = auxCaches;
+        setAuxCaches(Arrays.asList(auxCaches));
     }
 
     /**
@@ -199,9 +217,22 @@ public class CompositeCache<K, V>
      * <p>
      * @return an array of auxiliary caches, may be empty, never null
      */
-    public AuxiliaryCache<K, V>[] getAuxCaches()
+    public List<AuxiliaryCache<K, V>> getAuxCacheList()
     {
         return this.auxCaches;
+    }
+
+    /**
+     * Get the list of auxiliary caches for this region.
+     * <p>
+     * @return an array of auxiliary caches, may be empty, never null
+     * @deprecated Use List method
+     */
+    @SuppressWarnings("unchecked") // No generic arrays in Java
+    @Deprecated
+    public AuxiliaryCache<K, V>[] getAuxCaches()
+    {
+        return getAuxCacheList().toArray(new AuxiliaryCache[0]);
     }
 
     /**
@@ -286,7 +317,7 @@ public class CompositeCache<K, V>
         // more can be added if future auxiliary caches don't fit the model
         // You could run a database cache as either a remote or a local disk.
         // The types would describe the purpose.
-        if (auxCaches.length > 0)
+        if (!auxCaches.isEmpty())
         {
             log.debug("Updating auxiliary caches");
         }
@@ -385,7 +416,7 @@ public class CompositeCache<K, V>
         // SPOOL TO DISK.
         for (final ICache<K, V> aux : auxCaches)
         {
-            if (aux != null && aux.getCacheType() == CacheType.DISK_CACHE)
+            if (aux.getCacheType() == CacheType.DISK_CACHE)
             {
                 diskAvailable = true;
 
@@ -496,56 +527,53 @@ public class CompositeCache<K, V>
                 // caches, even if not local look in disk auxiliaries
                 for (final AuxiliaryCache<K, V> aux : auxCaches)
                 {
-                    if (aux != null)
+                    final CacheType cacheType = aux.getCacheType();
+
+                    if (!localOnly || cacheType == CacheType.DISK_CACHE)
                     {
-                        final CacheType cacheType = aux.getCacheType();
+                        log.debug("Attempting to get from aux [{0}] which is of type: {1}",
+                                () -> aux.getCacheName(), () -> cacheType);
 
-                        if (!localOnly || cacheType == CacheType.DISK_CACHE)
+                        try
                         {
-                            log.debug("Attempting to get from aux [{0}] which is of type: {1}",
-                                    () -> aux.getCacheName(), () -> cacheType);
+                            element = aux.get(key);
+                        }
+                        catch (final IOException e)
+                        {
+                            log.error("Error getting from aux", e);
+                        }
+                    }
 
-                            try
-                            {
-                                element = aux.get(key);
-                            }
-                            catch (final IOException e)
-                            {
-                                log.error("Error getting from aux", e);
-                            }
+                    log.debug("Got CacheElement: {0}", element);
+
+                    // Item found in one of the auxiliary caches.
+                    if (element != null)
+                    {
+                        if (isExpired(element))
+                        {
+                            log.debug("{0} - Aux cache[{1}] hit, but element expired.",
+                                    () -> cacheAttr.getCacheName(), () -> aux.getCacheName());
+
+                            // This will tell the remotes to remove the item
+                            // based on the element's expiration policy. The elements attributes
+                            // associated with the item when it created govern its behavior
+                            // everywhere.
+                            doExpires(element);
+                            element = null;
+                        }
+                        else
+                        {
+                            log.debug("{0} - Aux cache[{1}] hit.",
+                                    () -> cacheAttr.getCacheName(), () -> aux.getCacheName());
+
+                            // Update counters
+                            hitCountAux.incrementAndGet();
+                            copyAuxiliaryRetrievedItemToMemory(element);
                         }
 
-                        log.debug("Got CacheElement: {0}", element);
+                        found = true;
 
-                        // Item found in one of the auxiliary caches.
-                        if (element != null)
-                        {
-                            if (isExpired(element))
-                            {
-                                log.debug("{0} - Aux cache[{1}] hit, but element expired.",
-                                        () -> cacheAttr.getCacheName(), () -> aux.getCacheName());
-
-                                // This will tell the remotes to remove the item
-                                // based on the element's expiration policy. The elements attributes
-                                // associated with the item when it created govern its behavior
-                                // everywhere.
-                                doExpires(element);
-                                element = null;
-                            }
-                            else
-                            {
-                                log.debug("{0} - Aux cache[{1}] hit.",
-                                        () -> cacheAttr.getCacheName(), () -> aux.getCacheName());
-
-                                // Update counters
-                                hitCountAux.incrementAndGet();
-                                copyAuxiliaryRetrievedItemToMemory(element);
-                            }
-
-                            found = true;
-
-                            break;
-                        }
+                        break;
                     }
                 }
             }
@@ -699,41 +727,38 @@ public class CompositeCache<K, V>
 
         for (final AuxiliaryCache<K, V> aux : auxCaches)
         {
-            if (aux != null)
+            final Map<K, ICacheElement<K, V>> elementsFromAuxiliary =
+                new HashMap<>();
+
+            final CacheType cacheType = aux.getCacheType();
+
+            if (!localOnly || cacheType == CacheType.DISK_CACHE)
             {
-                final Map<K, ICacheElement<K, V>> elementsFromAuxiliary =
-                    new HashMap<>();
+                log.debug("Attempting to get from aux [{0}] which is of type: {1}",
+                        () -> aux.getCacheName(), () -> cacheType);
 
-                final CacheType cacheType = aux.getCacheType();
-
-                if (!localOnly || cacheType == CacheType.DISK_CACHE)
+                try
                 {
-                    log.debug("Attempting to get from aux [{0}] which is of type: {1}",
-                            () -> aux.getCacheName(), () -> cacheType);
-
-                    try
-                    {
-                        elementsFromAuxiliary.putAll(aux.getMultiple(remainingKeys));
-                    }
-                    catch (final IOException e)
-                    {
-                        log.error("Error getting from aux", e);
-                    }
+                    elementsFromAuxiliary.putAll(aux.getMultiple(remainingKeys));
                 }
-
-                log.debug("Got CacheElements: {0}", elementsFromAuxiliary);
-
-                processRetrievedElements(aux, elementsFromAuxiliary);
-                elements.putAll(elementsFromAuxiliary);
-
-                if (elements.size() == keys.size())
+                catch (final IOException e)
                 {
-                    break;
+                    log.error("Error getting from aux", e);
                 }
-                else
-                {
-                    remainingKeys = pruneKeysFound(keys, elements);
-                }
+            }
+
+            log.debug("Got CacheElements: {0}", elementsFromAuxiliary);
+
+            processRetrievedElements(aux, elementsFromAuxiliary);
+            elements.putAll(elementsFromAuxiliary);
+
+            if (elements.size() == keys.size())
+            {
+                break;
+            }
+            else
+            {
+                remainingKeys = pruneKeysFound(keys, elements);
             }
         }
 
@@ -840,36 +865,33 @@ public class CompositeCache<K, V>
     {
         final Map<K, ICacheElement<K, V>> elements = new HashMap<>();
 
-        for (int i = auxCaches.length - 1; i >= 0; i--)
+        for (ListIterator<AuxiliaryCache<K, V>> i = auxCaches.listIterator(auxCaches.size()); i.hasPrevious();)
         {
-            final AuxiliaryCache<K, V> aux = auxCaches[i];
+            final AuxiliaryCache<K, V> aux = i.previous();
 
-            if (aux != null)
+            final Map<K, ICacheElement<K, V>> elementsFromAuxiliary =
+                new HashMap<>();
+
+            final CacheType cacheType = aux.getCacheType();
+
+            if (!localOnly || cacheType == CacheType.DISK_CACHE)
             {
-                final Map<K, ICacheElement<K, V>> elementsFromAuxiliary =
-                    new HashMap<>();
+                log.debug("Attempting to get from aux [{0}] which is of type: {1}",
+                        () -> aux.getCacheName(), () -> cacheType);
 
-                final CacheType cacheType = aux.getCacheType();
-
-                if (!localOnly || cacheType == CacheType.DISK_CACHE)
+                try
                 {
-                    log.debug("Attempting to get from aux [{0}] which is of type: {1}",
-                            () -> aux.getCacheName(), () -> cacheType);
-
-                    try
-                    {
-                        elementsFromAuxiliary.putAll(aux.getMatching(pattern));
-                    }
-                    catch (final IOException e)
-                    {
-                        log.error("Error getting from aux", e);
-                    }
-
-                    log.debug("Got CacheElements: {0}", elementsFromAuxiliary);
-
-                    processRetrievedElements(aux, elementsFromAuxiliary);
-                    elements.putAll(elementsFromAuxiliary);
+                    elementsFromAuxiliary.putAll(aux.getMatching(pattern));
                 }
+                catch (final IOException e)
+                {
+                    log.error("Error getting from aux", e);
+                }
+
+                log.debug("Got CacheElements: {0}", elementsFromAuxiliary);
+
+                processRetrievedElements(aux, elementsFromAuxiliary);
+                elements.putAll(elementsFromAuxiliary);
             }
         }
 
@@ -982,26 +1004,19 @@ public class CompositeCache<K, V>
      */
     public Set<K> getKeySet(final boolean localOnly)
     {
-        final HashSet<K> allKeys = new HashSet<>(memCache.getKeySet());
-
-        for (final AuxiliaryCache<K, V> aux : auxCaches)
-        {
-            if (aux != null)
-            {
-                if(!localOnly || aux.getCacheType() == CacheType.DISK_CACHE)
+        return Stream.concat(memCache.getKeySet().stream(), auxCaches.stream()
+            .filter(aux -> !localOnly || aux.getCacheType() == CacheType.DISK_CACHE)
+            .flatMap(aux -> {
+                try
                 {
-                    try
-                    {
-                        allKeys.addAll(aux.getKeySet());
-                    }
-                    catch (final IOException e)
-                    {
-                        // ignore
-                    }
+                    return aux.getKeySet().stream();
                 }
-            }
-        }
-        return allKeys;
+                catch (final IOException e)
+                {
+                    return Stream.of();
+                }
+            }))
+            .collect(Collectors.toSet());
     }
 
     /**
@@ -1142,10 +1157,9 @@ public class CompositeCache<K, V>
         }
 
         // Removes from all auxiliary disk caches.
-        for (final ICache<K, V> aux : auxCaches)
-        {
-            if (aux != null && (aux.getCacheType() == CacheType.DISK_CACHE || !localOnly))
-            {
+        auxCaches.stream()
+            .filter(aux -> aux.getCacheType() == CacheType.DISK_CACHE || !localOnly)
+            .forEach(aux -> {
                 try
                 {
                     log.debug("Removing All keys from cacheType {0}",
@@ -1155,10 +1169,9 @@ public class CompositeCache<K, V>
                 }
                 catch (final IOException ex)
                 {
-                    log.error("Failure removing all from aux", ex);
+                    log.error("Failure removing all from aux " + aux, ex);
                 }
-            }
-        }
+            });
     }
 
     /**
@@ -1274,16 +1287,15 @@ public class CompositeCache<K, V>
      */
     public void save()
     {
-        if (alive.compareAndSet(true, false) == false)
+        if (!alive.get())
         {
             return;
         }
 
-        for (final ICache<K, V> aux : auxCaches)
-        {
-            try
-            {
-                if (aux.getStatus() == CacheStatus.ALIVE)
+        auxCaches.stream()
+            .filter(aux -> aux.getStatus() == CacheStatus.ALIVE)
+            .forEach(aux -> {
+                try
                 {
                     for (final K key : memCache.getKeySet())
                     {
@@ -1295,12 +1307,11 @@ public class CompositeCache<K, V>
                         }
                     }
                 }
-            }
-            catch (final IOException ex)
-            {
-                log.error("Failure saving aux caches.", ex);
-            }
-        }
+                catch (final IOException ex)
+                {
+                    log.error("Failure saving aux caches.", ex);
+                }
+            });
 
         log.debug("Called save for [{0}]", () -> cacheAttr.getCacheName());
     }
@@ -1369,15 +1380,12 @@ public class CompositeCache<K, V>
         stats.setStatElements(elems);
 
         // memory + aux, memory is not considered an auxiliary internally
-        final int total = auxCaches.length + 1;
-        final ArrayList<IStats> auxStats = new ArrayList<>(total);
+        final ArrayList<IStats> auxStats = new ArrayList<>(auxCaches.size() + 1);
 
         auxStats.add(getMemoryCache().getStatistics());
-
-        for (final AuxiliaryCache<K, V> aux : auxCaches)
-        {
-            auxStats.add(aux.getStatistics());
-        }
+        auxStats.addAll(auxCaches.stream()
+                .map(AuxiliaryCache::getStatistics)
+                .collect(Collectors.toList()));
 
         // store the auxiliary stats
         stats.setAuxiliaryCacheStats(auxStats);

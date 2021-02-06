@@ -357,26 +357,22 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
         log.debug("{0}: Performing inital consistency check", logCacheName);
 
         boolean isOk = true;
-        long fileLength = 0;
         try
         {
-            fileLength = dataFile.length();
+            final long fileLength = dataFile.length();
 
-            for (final Map.Entry<K, IndexedDiskElementDescriptor> e : keyHash.entrySet())
+            final IndexedDiskElementDescriptor corruptDed = keyHash.values().stream()
+                .filter(ded -> ded.pos + IndexedDisk.HEADER_SIZE_BYTES + ded.len > fileLength)
+                .findFirst()
+                .orElse(null);
+
+            if (corruptDed != null)
             {
-                final IndexedDiskElementDescriptor ded = e.getValue();
-
-                isOk = ded.pos + IndexedDisk.HEADER_SIZE_BYTES + ded.len <= fileLength;
-
-                if (!isOk)
-                {
-                    log.warn("{0}: The dataFile is corrupted!\n raf.length() = {1}\n ded.pos = {2}",
-                            logCacheName, fileLength, ded.pos);
-                    break;
-                }
+                isOk = false;
+                log.warn("{0}: The dataFile is corrupted!\n raf.length() = {1}\n ded.pos = {2}",
+                        logCacheName, fileLength, corruptDed.pos);
             }
-
-            if (isOk && checkForDedOverlaps)
+            else if (checkForDedOverlaps)
             {
                 isOk = checkForDedOverlaps(createPositionSortedDescriptorList());
             }

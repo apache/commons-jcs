@@ -24,6 +24,8 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -65,7 +67,7 @@ public class UDPDiscoveryService
     private AtomicBoolean shutdown = new AtomicBoolean(false);
 
     /** This is a set of services that have been discovered. */
-    private final Set<DiscoveredService> discoveredServices = new CopyOnWriteArraySet<>();
+    private final ConcurrentMap<Integer, DiscoveredService> discoveredServices = new ConcurrentHashMap<>();
 
     /** This a list of regions that are configured to use discovery. */
     private final Set<String> cacheNames = new CopyOnWriteArraySet<>();
@@ -260,9 +262,7 @@ public class UDPDiscoveryService
      */
     public void removeDiscoveredService( final DiscoveredService service )
     {
-        final boolean contained = getDiscoveredServices().remove( service );
-
-        if ( contained )
+        if (discoveredServices.remove(service.hashCode()) != null)
         {
             log.info( "Removing {0}", service );
         }
@@ -277,39 +277,29 @@ public class UDPDiscoveryService
      */
     protected void addOrUpdateService( final DiscoveredService discoveredService )
     {
-        final Set<DiscoveredService> discoveredServices = getDiscoveredServices();
-        // Since this is a set we can add it over an over.
         // We want to replace the old one, since we may add info that is not part of the equals.
         // The equals method on the object being added is intentionally restricted.
-        if ( !discoveredServices.contains( discoveredService ) )
-        {
-            log.info( "Set does not contain service. I discovered {0}", discoveredService );
-            log.debug( "Adding service in the set {0}", discoveredService );
-            discoveredServices.add( discoveredService );
-        }
-        else
-        {
+        discoveredServices.merge(discoveredService.hashCode(), discoveredService, (oldService, newService) -> {
             log.debug( "Set contains service." );
-            log.debug( "Updating service in the set {0}", discoveredService );
+            log.debug( "Updating service in the set {0}", newService );
 
             // Update the list of cache names if it has changed.
             // need to update the time this sucks. add has no effect convert to a map
-            DiscoveredService theOldServiceInformation = discoveredServices.stream()
-                .filter(service -> discoveredService.equals(service))
-                .findFirst()
-                .orElse(null);
-
-            if (theOldServiceInformation != null &&
-                !theOldServiceInformation.getCacheNames().equals(discoveredService.getCacheNames()))
+            if (!oldService.getCacheNames().equals(newService.getCacheNames()))
             {
-                log.info( "List of cache names changed for service: {0}",
-                        discoveredService );
+                log.info( "List of cache names changed for service: {0}", newService );
+
+                // replace it, we want to reset the payload and the last heard from time.
+                return newService;
             }
 
-            // replace it, we want to reset the payload and the last heard from time.
-            discoveredServices.remove( discoveredService );
-            discoveredServices.add( discoveredService );
-        }
+            if (oldService.getLastHearFromTime() != newService.getLastHearFromTime())
+            {
+                return newService;
+            }
+
+            return oldService;
+        });
 
         // Always Notify the listeners
         // If we don't do this, then if a region using the default config is initialized after notification,
@@ -397,7 +387,7 @@ public class UDPDiscoveryService
      */
     public Set<DiscoveredService> getDiscoveredServices()
     {
-        return discoveredServices;
+        return new HashSet<>(discoveredServices.values());
     }
 
     /**

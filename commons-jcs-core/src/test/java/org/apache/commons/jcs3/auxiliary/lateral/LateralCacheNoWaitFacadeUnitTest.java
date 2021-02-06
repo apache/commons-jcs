@@ -56,7 +56,7 @@ public class LateralCacheNoWaitFacadeUnitTest
         facade.removeNoWait( noWait );
 
         // VERIFY
-        assertEquals( "Should have 0", 0, facade.noWaits.length );
+        assertEquals( "Should have 0", 0, facade.getNoWaitSize() );
         assertFalse( "Should not be in the list. ", facade.containsNoWait( noWait ) );
     }
 
@@ -83,7 +83,7 @@ public class LateralCacheNoWaitFacadeUnitTest
         facade.addNoWait( noWait2 );
 
         // VERIFY
-        assertEquals( "Should have 2", 2, facade.noWaits.length );
+        assertEquals( "Should have 2", 2, facade.getNoWaitSize() );
         assertTrue( "Should be in the list.", facade.containsNoWait( noWait ) );
         assertTrue( "Should be in the list.", facade.containsNoWait( noWait2 ) );
 
@@ -91,7 +91,7 @@ public class LateralCacheNoWaitFacadeUnitTest
         facade.removeNoWait( noWait );
 
         // VERIFY
-        assertEquals( "Should only have 1", 1, facade.noWaits.length );
+        assertEquals( "Should only have 1", 1, facade.getNoWaitSize() );
         assertFalse( "Should not be in the list. ", facade.containsNoWait( noWait ) );
         assertTrue( "Should be in the list.", facade.containsNoWait( noWait2 ) );
     }
@@ -119,7 +119,7 @@ public class LateralCacheNoWaitFacadeUnitTest
 
         // VERIFY
         assertTrue( "Should be in the list.", facade.containsNoWait( noWait ) );
-        assertEquals( "Should only have 1", 1, facade.noWaits.length );
+        assertEquals( "Should only have 1", 1, facade.getNoWaitSize() );
     }
 
     /**

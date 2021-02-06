@@ -471,16 +471,10 @@ public class LateralTCPListener<K, V>
     {
         try
         {
-            while ( true )
+            // Check to see if we've been asked to exit, and exit
+            while ( !terminated.get() )
             {
                 log.debug( "Waiting for clients to connect " );
-
-                // Check to see if we've been asked to exit, and exit
-                if (terminated.get())
-                {
-                    log.debug("Thread terminated, exiting gracefully");
-                    break;
-                }
 
                 try
                 {
@@ -499,6 +493,7 @@ public class LateralTCPListener<K, V>
                 }
             }
 
+            log.debug("Thread terminated, exiting gracefully");
             serverSocket.close();
         }
         catch ( final IOException e )
