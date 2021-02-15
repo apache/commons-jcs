@@ -20,6 +20,7 @@ package org.apache.commons.jcs3.engine.control.group;
  */
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * Description of the Class
@@ -35,9 +36,6 @@ public class GroupAttrName<T>
 
     /** the name of the attribute */
     public final T attrName;
-
-    /** Cached toString value */
-    private String toString;
 
     /**
      * Constructor for the GroupAttrName object
@@ -71,16 +69,7 @@ public class GroupAttrName<T>
 
         if (groupId.equals( to.groupId ))
         {
-            if (attrName == null && to.attrName == null)
-            {
-                return true;
-            }
-            else if (attrName == null || to.attrName == null)
-            {
-                return false;
-            }
-
-            return  attrName.equals( to.attrName );
+            return Objects.equals(attrName, to.attrName);
         }
 
         return false;
@@ -92,12 +81,7 @@ public class GroupAttrName<T>
     @Override
     public int hashCode()
     {
-        if (attrName == null)
-        {
-            return groupId.hashCode();
-        }
-
-        return groupId.hashCode() ^ attrName.hashCode();
+        return Objects.hash(groupId, attrName);
     }
 
     /**
@@ -106,12 +90,7 @@ public class GroupAttrName<T>
     @Override
     public String toString()
     {
-        if ( toString == null )
-        {
-            toString = "[GAN: groupId=" + groupId + ", attrName=" + attrName + "]";
-        }
-
-        return toString;
+        return String.format("GAN:%s:%s", groupId, Objects.toString(attrName, ""));
     }
 
 }

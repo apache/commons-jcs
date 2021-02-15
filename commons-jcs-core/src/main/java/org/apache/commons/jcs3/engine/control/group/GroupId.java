@@ -20,6 +20,7 @@ package org.apache.commons.jcs3.engine.control.group;
  */
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * Used to avoid name conflict when group cache items are mixed with non-group cache items in the
@@ -36,9 +37,6 @@ public class GroupId
 
     /** the name of the region. */
     public final String cacheName;
-
-    /** Cached toString value. */
-    private String toString;
 
     /**
      * Constructor for the GroupId object
@@ -77,27 +75,22 @@ public class GroupId
     }
 
     /**
-     * @return cacheName.hashCode() + groupName.hashCode();
+     * @return Objects.hash(cacheName, groupName);
      */
     @Override
     public int hashCode()
     {
-        return cacheName.hashCode() + groupName.hashCode();
+        return Objects.hash(cacheName, groupName);
     }
 
     /**
-     * Caches the value.
-     * <p>
-     * @return debugging string.
+     * Convert to string
+     *
+     * @return the string representation of this ID.
      */
     @Override
     public String toString()
     {
-        if ( toString == null )
-        {
-            toString = "[groupId=" + cacheName + ", " + groupName + ']';
-        }
-
-        return toString;
+        return String.format("[groupId=%s, %s]", cacheName, groupName);
     }
 }
