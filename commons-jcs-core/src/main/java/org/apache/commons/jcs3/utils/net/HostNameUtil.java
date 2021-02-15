@@ -112,7 +112,7 @@ public class HostNameUtil
             InetAddress candidateAddress = null;
             // Iterate all NICs (network interface cards)...
             final Enumeration<NetworkInterface> ifaces = NetworkInterface.getNetworkInterfaces();
-            if ( ifaces != null ) 
+            if ( ifaces != null )
             {
                 while ( ifaces.hasMoreElements() )
                 {

@@ -219,7 +219,7 @@ public class IndexedDisk implements AutoCloseable
 
     /**
      * Returns the raf length.
-     * 
+     *
      * @return the length of the file.
      * @throws IOException If an I/O error occurs.
      */
@@ -283,7 +283,7 @@ public class IndexedDisk implements AutoCloseable
      * @throws IOException If an I/O error occurs.
      * @since 3.1
      */
-    protected boolean isEmpty() throws IOException 
+    protected boolean isEmpty() throws IOException
     {
         return length() == 0;
     }

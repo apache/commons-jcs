@@ -37,7 +37,7 @@ import javax.interceptor.InvocationContext;
 public class CacheRemoveAllInterceptor implements Serializable
 {
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = -51261182430571546L;
     @Inject

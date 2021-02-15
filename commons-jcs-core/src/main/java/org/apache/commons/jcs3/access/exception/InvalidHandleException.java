@@ -32,7 +32,7 @@ public class InvalidHandleException
     public InvalidHandleException()
     {
         // nothing
-        
+
     }
 
     /**

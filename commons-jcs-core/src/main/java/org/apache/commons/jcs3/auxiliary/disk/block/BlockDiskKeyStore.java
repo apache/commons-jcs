@@ -344,7 +344,7 @@ public class BlockDiskKeyStore<K>
 
     /**
      * Tests emptiness (size == 0).
-     * 
+     *
      * @return Whether or not this is empty.
      * @since 3.1
      */
