@@ -22,9 +22,10 @@ package org.apache.commons.jcs3.engine;
 import org.apache.commons.jcs3.engine.behavior.IElementAttributes;
 
 /**
- * Holder for attributes specific to a group. The grouping functionality is on
- * the way out.
+ * Holder for attributes specific to a group.
+ * @deprecated The grouping functionality is on the way out.
  */
+@Deprecated
 public class CacheGroup
 {
     /** Element configuration. */
@@ -47,9 +48,9 @@ public class CacheGroup
     }
 
     /**
-     * Gets the attrributes attribute of the CacheGroup object
+     * Gets the attributes attribute of the CacheGroup object
      * <p>
-     * @return The attrributes value
+     * @return The attributes value
      */
     public IElementAttributes getElementAttrributes()
     {
