@@ -143,13 +143,13 @@ public class MakeJCacheCDIInterceptorFriendly implements Extension
             this.qualifiers.add(new AnnotationLiteral<Default>() {
 
                 /**
-                 * 
+                 *
                  */
                 private static final long serialVersionUID = 3314657767813459983L;});
             this.qualifiers.add(new AnnotationLiteral<Any>() {
 
                 /**
-                 * 
+                 *
                  */
                 private static final long serialVersionUID = 7419841275942488170L;});
         }
