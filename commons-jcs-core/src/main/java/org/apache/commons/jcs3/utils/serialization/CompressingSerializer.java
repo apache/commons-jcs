@@ -21,6 +21,7 @@ package org.apache.commons.jcs3.utils.serialization;
 
 import java.io.IOException;
 
+import org.apache.commons.jcs3.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs3.utils.zip.CompressionUtil;
 
 /**
@@ -28,6 +29,28 @@ import org.apache.commons.jcs3.utils.zip.CompressionUtil;
  */
 public class CompressingSerializer extends StandardSerializer
 {
+    /** Wrapped serializer */
+    private final IElementSerializer serializer;
+
+
+    /**
+     * Default constructor
+     */
+    public CompressingSerializer()
+    {
+        this(new StandardSerializer());
+    }
+
+    /**
+     * Wrapper constructor
+     *
+     * @param serializer the wrapped serializer
+     */
+    public CompressingSerializer(IElementSerializer serializer)
+    {
+        this.serializer = serializer;
+    }
+
     /**
      * Serializes an object using default serialization. Compresses the byte array.
      * <p>
@@ -39,7 +62,7 @@ public class CompressingSerializer extends StandardSerializer
     public <T> byte[] serialize( final T obj )
         throws IOException
     {
-        final byte[] uncompressed = super.serialize(obj);
+        final byte[] uncompressed = serializer.serialize(obj);
         final byte[] compressed = CompressionUtil.compressByteArray( uncompressed );
         return compressed;
     }
@@ -64,6 +87,6 @@ public class CompressingSerializer extends StandardSerializer
         }
 
         final byte[] decompressedByteArray = CompressionUtil.decompressByteArray( data );
-        return super.deSerialize(decompressedByteArray, loader);
+        return serializer.deSerialize(decompressedByteArray, loader);
     }
 }
