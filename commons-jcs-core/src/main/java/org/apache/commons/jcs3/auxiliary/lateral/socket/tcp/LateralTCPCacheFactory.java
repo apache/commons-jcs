@@ -390,7 +390,9 @@ public class LateralTCPCacheFactory
             // get dereferenced, also we don't want one for every region.
             discovery = UDPDiscoveryManager.getInstance().getService( lac.getUdpDiscoveryAddr(),
                                                                       lac.getUdpDiscoveryPort(),
-                                                                      lac.getTcpListenerPort(), cacheMgr);
+                                                                      lac.getTcpListenerPort(),
+                                                                      cacheMgr,
+                                                                      elementSerializer);
 
             discovery.addParticipatingCacheName( lac.getCacheName() );
             discovery.addDiscoveryListener( discoveryListener );

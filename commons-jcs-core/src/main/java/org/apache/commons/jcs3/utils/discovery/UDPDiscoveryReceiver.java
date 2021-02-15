@@ -19,9 +19,7 @@ package org.apache.commons.jcs3.utils.discovery;
  * under the License.
  */
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
@@ -32,7 +30,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.jcs3.engine.CacheInfo;
 import org.apache.commons.jcs3.engine.behavior.IShutdownObserver;
-import org.apache.commons.jcs3.io.ObjectInputStreamClassLoaderAware;
 import org.apache.commons.jcs3.log.Log;
 import org.apache.commons.jcs3.log.LogManager;
 import org.apache.commons.jcs3.utils.net.HostNameUtil;
@@ -46,9 +43,6 @@ public class UDPDiscoveryReceiver
 {
     /** The log factory */
     private static final Log log = LogManager.getLog( UDPDiscoveryReceiver.class );
-
-    /** buffer */
-    private final byte[] mBuffer = new byte[65536];
 
     /** The socket used for communication. */
     private MulticastSocket mSocket;
@@ -159,7 +153,8 @@ public class UDPDiscoveryReceiver
     public Object waitForMessage()
         throws IOException
     {
-        final DatagramPacket packet = new DatagramPacket( mBuffer, mBuffer.length );
+        final byte[] mBuffer = new byte[65536];
+        final DatagramPacket packet = new DatagramPacket(mBuffer, mBuffer.length);
         Object obj = null;
         try
         {
@@ -170,11 +165,7 @@ public class UDPDiscoveryReceiver
             log.debug( "Received packet from address [{0}]",
                     () -> packet.getSocketAddress() );
 
-            try (ByteArrayInputStream byteStream = new ByteArrayInputStream(mBuffer, 0, packet.getLength());
-                 ObjectInputStream objectStream = new ObjectInputStreamClassLoaderAware(byteStream, null))
-            {
-                obj = objectStream.readObject();
-            }
+            obj = service.getSerializer().deSerialize(mBuffer, null);
 
             if ( obj instanceof UDPDiscoveryMessage )
             {
@@ -188,7 +179,7 @@ public class UDPDiscoveryReceiver
                         packet.getSocketAddress(), obj );
             }
         }
-        catch ( final Exception e )
+        catch ( final IOException | ClassNotFoundException e )
         {
             log.error( "Error receiving multicast packet", e );
         }

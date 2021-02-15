@@ -27,6 +27,7 @@ import java.net.MulticastSocket;
 import java.util.ArrayList;
 
 import org.apache.commons.jcs3.engine.CacheInfo;
+import org.apache.commons.jcs3.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs3.log.Log;
 import org.apache.commons.jcs3.log.LogManager;
 import org.apache.commons.jcs3.utils.discovery.UDPDiscoveryMessage.BroadcastType;
@@ -52,7 +53,7 @@ public class UDPDiscoverySender implements AutoCloseable
     private final int multicastPort;
 
     /** Used to serialize messages */
-    private final StandardSerializer serializer = new StandardSerializer();
+    private final IElementSerializer serializer;
 
     /**
      * Constructor for the UDPDiscoverySender object
@@ -65,8 +66,29 @@ public class UDPDiscoverySender implements AutoCloseable
      * @param port
      * @param udpTTL the Datagram packet time-to-live
      * @throws IOException
+     * @deprecated Specify serializer implementation explicitly
      */
+    @Deprecated
     public UDPDiscoverySender( final String host, final int port, final int udpTTL )
+        throws IOException
+    {
+        this(host, port, udpTTL, new StandardSerializer());
+    }
+
+    /**
+     * Constructor for the UDPDiscoverySender object
+     * <p>
+     * This sender can be used to send multiple messages.
+     * <p>
+     * When you are done sending, you should destroy the socket sender.
+     * <p>
+     * @param host
+     * @param port
+     * @param udpTTL the Datagram packet time-to-live
+     * @param serializer the Serializer to use when sending messages
+     * @throws IOException
+     */
+    public UDPDiscoverySender( final String host, final int port, final int udpTTL, IElementSerializer serializer)
         throws IOException
     {
         try
@@ -89,6 +111,7 @@ public class UDPDiscoverySender implements AutoCloseable
         }
 
         this.multicastPort = port;
+        this.serializer = serializer;
     }
 
     /**

@@ -32,12 +32,14 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.apache.commons.jcs3.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs3.engine.behavior.IRequireScheduler;
 import org.apache.commons.jcs3.engine.behavior.IShutdownObserver;
 import org.apache.commons.jcs3.log.Log;
 import org.apache.commons.jcs3.log.LogManager;
 import org.apache.commons.jcs3.utils.discovery.behavior.IDiscoveryListener;
 import org.apache.commons.jcs3.utils.net.HostNameUtil;
+import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
 
 /**
  * This service creates a listener that can create lateral caches and add them to the no wait list.
@@ -63,8 +65,11 @@ public class UDPDiscoveryService
     /** attributes */
     private UDPDiscoveryAttributes udpDiscoveryAttributes;
 
+    /** Used to serialize messages */
+    private final IElementSerializer serializer;
+
     /** is this shut down? */
-    private AtomicBoolean shutdown = new AtomicBoolean(false);
+    private final AtomicBoolean shutdown = new AtomicBoolean(false);
 
     /** This is a set of services that have been discovered. */
     private final ConcurrentMap<Integer, DiscoveredService> discoveredServices = new ConcurrentHashMap<>();
@@ -82,9 +87,24 @@ public class UDPDiscoveryService
     private ScheduledFuture<?> cleanupTaskFuture = null;
 
     /**
-     * @param attributes
+     * Constructor
+     *
+     * @param attributes settings of the service
+     * @deprecated Specify serializer implementation explicitly
      */
-    public UDPDiscoveryService( final UDPDiscoveryAttributes attributes)
+    @Deprecated
+    public UDPDiscoveryService(final UDPDiscoveryAttributes attributes)
+    {
+        this(attributes, new StandardSerializer());
+    }
+
+    /**
+     * Constructor
+     *
+     * @param attributes settings of service
+     * @param serializer the serializer to use to send and receive messages
+     */
+    public UDPDiscoveryService(final UDPDiscoveryAttributes attributes, IElementSerializer serializer)
     {
         udpDiscoveryAttributes = attributes.clone();
 
@@ -113,6 +133,8 @@ public class UDPDiscoveryService
                     getUdpDiscoveryAttributes().getUdpDiscoveryAddr(),
                     getUdpDiscoveryAttributes().getUdpDiscoveryPort(), e );
         }
+
+        this.serializer = serializer;
 
         // initiate sender broadcast
         initiateBroadcast();
@@ -177,7 +199,8 @@ public class UDPDiscoveryService
         try (UDPDiscoverySender sender = new UDPDiscoverySender(
                 getUdpDiscoveryAttributes().getUdpDiscoveryAddr(),
                 getUdpDiscoveryAttributes().getUdpDiscoveryPort(),
-                getUdpDiscoveryAttributes().getUdpTTL()))
+                getUdpDiscoveryAttributes().getUdpTTL(),
+                getSerializer()))
         {
             sender.requestBroadcast();
 
@@ -202,7 +225,8 @@ public class UDPDiscoveryService
         try (UDPDiscoverySender sender = new UDPDiscoverySender(
                 getUdpDiscoveryAttributes().getUdpDiscoveryAddr(),
                 getUdpDiscoveryAttributes().getUdpDiscoveryPort(),
-                getUdpDiscoveryAttributes().getUdpTTL()))
+                getUdpDiscoveryAttributes().getUdpTTL(),
+                getSerializer()))
         {
             sender.passiveBroadcast(
                     getUdpDiscoveryAttributes().getServiceAddress(),
@@ -230,7 +254,8 @@ public class UDPDiscoveryService
         try (UDPDiscoverySender sender = new UDPDiscoverySender(
                 getUdpDiscoveryAttributes().getUdpDiscoveryAddr(),
                 getUdpDiscoveryAttributes().getUdpDiscoveryPort(),
-                getUdpDiscoveryAttributes().getUdpTTL()))
+                getUdpDiscoveryAttributes().getUdpTTL(),
+                getSerializer()))
         {
             sender.removeBroadcast(
                     getUdpDiscoveryAttributes().getServiceAddress(),
@@ -332,6 +357,16 @@ public class UDPDiscoveryService
     public UDPDiscoveryAttributes getUdpDiscoveryAttributes()
     {
         return this.udpDiscoveryAttributes;
+    }
+
+    /**
+     * Return the serializer implementation
+     *
+     * @return the serializer
+     */
+    public IElementSerializer getSerializer()
+    {
+        return serializer;
     }
 
     /**
