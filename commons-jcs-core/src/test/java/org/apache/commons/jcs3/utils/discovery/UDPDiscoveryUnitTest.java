@@ -21,7 +21,9 @@ package org.apache.commons.jcs3.utils.discovery;
 
 import java.util.ArrayList;
 
+import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
 import org.apache.commons.jcs3.utils.timing.SleepUtil;
+
 import junit.framework.TestCase;
 
 /**
@@ -43,7 +45,7 @@ public class UDPDiscoveryUnitTest
         attributes.setServicePort( 1000 );
 
         // create the service
-        final UDPDiscoveryService service = new UDPDiscoveryService( attributes );
+        final UDPDiscoveryService service = new UDPDiscoveryService(attributes, new StandardSerializer());
         service.startup();
         service.addParticipatingCacheName( "testCache1" );
 
@@ -62,7 +64,8 @@ public class UDPDiscoveryUnitTest
         final UDPDiscoverySender sender = new UDPDiscoverySender(
                 attributes.getUdpDiscoveryAddr(),
                 attributes.getUdpDiscoveryPort(),
-                4 /* datagram TTL */);
+                4, /* datagram TTL */
+                service.getSerializer());
 
         // create more names than we have no wait facades for
         // the only one that gets added should be testCache1

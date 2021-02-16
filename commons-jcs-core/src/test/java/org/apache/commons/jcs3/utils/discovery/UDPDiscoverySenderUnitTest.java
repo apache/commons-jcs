@@ -3,6 +3,7 @@ package org.apache.commons.jcs3.utils.discovery;
 import java.util.ArrayList;
 
 import org.apache.commons.jcs3.utils.discovery.UDPDiscoveryMessage.BroadcastType;
+import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -61,7 +62,7 @@ public class UDPDiscoverySenderUnitTest
     {
         super.setUp();
         receiver = new UDPDiscoveryReceiver( null, null, ADDRESS, PORT );
-        sender = new UDPDiscoverySender( ADDRESS, PORT, 0 );
+        sender = new UDPDiscoverySender( ADDRESS, PORT, 0, new StandardSerializer() );
     }
 
     /**

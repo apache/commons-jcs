@@ -21,6 +21,8 @@ package org.apache.commons.jcs3.utils.discovery;
 
 import java.util.ArrayList;
 
+import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
+
 import junit.framework.TestCase;
 
 /** Unit tests for the service. */
@@ -39,7 +41,7 @@ public class UDPDiscoveryServiceUnitTest
         attributes.setServicePort( 1000 );
 
         // create the service
-        final UDPDiscoveryService service = new UDPDiscoveryService( attributes );
+        final UDPDiscoveryService service = new UDPDiscoveryService(attributes, new StandardSerializer());
         service.startup();
         service.addParticipatingCacheName( "testCache1" );
 
@@ -74,7 +76,7 @@ public class UDPDiscoveryServiceUnitTest
         attributes.setServicePort( 1000 );
 
         // create the service
-        final UDPDiscoveryService service = new UDPDiscoveryService( attributes );
+        final UDPDiscoveryService service = new UDPDiscoveryService(attributes, new StandardSerializer());
         service.startup();
         service.addParticipatingCacheName( "testCache1" );
 
@@ -137,7 +139,7 @@ public class UDPDiscoveryServiceUnitTest
         attributes.setServicePort( 1000 );
 
         // create the service
-        final UDPDiscoveryService service = new UDPDiscoveryService( attributes );
+        final UDPDiscoveryService service = new UDPDiscoveryService(attributes, new StandardSerializer());
         service.startup();
         service.addParticipatingCacheName( "testCache1" );
 
@@ -199,7 +201,7 @@ public class UDPDiscoveryServiceUnitTest
         attributes.setServicePort( 1000 );
 
         // create the service
-        final UDPDiscoveryService service = new UDPDiscoveryService( attributes );
+        final UDPDiscoveryService service = new UDPDiscoveryService(attributes, new StandardSerializer());
         service.startup();
         service.addParticipatingCacheName( "testCache1" );
 
