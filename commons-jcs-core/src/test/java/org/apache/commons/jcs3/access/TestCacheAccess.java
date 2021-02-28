@@ -309,7 +309,7 @@ public class TestCacheAccess
             }
             else if ( tcnt == 3 )
             {
-                show = Boolean.valueOf( t ).booleanValue();
+                show = Boolean.parseBoolean(t);
             }
         }
 
@@ -348,7 +348,7 @@ public class TestCacheAccess
             }
             else if ( tcnt == 4 )
             {
-                show = Boolean.valueOf( t ).booleanValue();
+                show = Boolean.parseBoolean(t);
             }
         }
 
@@ -403,7 +403,7 @@ public class TestCacheAccess
             }
             else if ( tcnt == 4 )
             {
-                show = Boolean.valueOf( t ).booleanValue();
+                show = Boolean.parseBoolean(t);
             }
         }
 
@@ -578,7 +578,7 @@ public class TestCacheAccess
             }
             else if ( tcnt == 4 )
             {
-                show = Boolean.valueOf( t ).booleanValue();
+                show = Boolean.parseBoolean(t);
             }
         }
 
@@ -629,7 +629,7 @@ public class TestCacheAccess
             }
             else if ( tcnt == 3 )
             {
-                show = Boolean.valueOf( t ).booleanValue();
+                show = Boolean.parseBoolean(t);
             }
         }
 
@@ -679,7 +679,7 @@ public class TestCacheAccess
             }
             else if ( tcnt == 3 )
             {
-                show = Boolean.valueOf( t ).booleanValue();
+                show = Boolean.parseBoolean(t);
             }
         }
 
