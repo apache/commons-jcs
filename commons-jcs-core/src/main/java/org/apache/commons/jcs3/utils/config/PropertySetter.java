@@ -213,7 +213,7 @@ public class PropertySetter
         log.debug( "Setting property [{0}] to [{1}].", name, arg );
         try
         {
-            setter.invoke( obj, new Object[] { arg } );
+            setter.invoke( obj, arg );
         }
         catch ( final Exception ex )
         {
