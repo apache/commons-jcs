@@ -166,7 +166,7 @@ public class TestCacheAccess
                 }
                 else if ( message.startsWith( "putm" ) )
                 {
-                    final String numS = message.substring( message.indexOf( " " ) + 1, message.length() );
+                    final String numS = message.substring( message.indexOf( " " ) + 1 );
                     if ( numS == null )
                     {
                         p( "usage: putm numbertoput" );
@@ -179,7 +179,7 @@ public class TestCacheAccess
                 }
                 else if ( message.startsWith( "pute" ) )
                 {
-                    final String numS = message.substring( message.indexOf( " " ) + 1, message.length() );
+                    final String numS = message.substring( message.indexOf( " " ) + 1 );
                     if ( numS == null )
                     {
                         p( "usage: putme numbertoput" );
@@ -205,7 +205,7 @@ public class TestCacheAccess
                 }
                 else if ( message.startsWith( "removem" ) )
                 {
-                    final String numS = message.substring( message.indexOf( " " ) + 1, message.length() );
+                    final String numS = message.substring( message.indexOf( " " ) + 1 );
                     if ( numS == null )
                     {
                         p( "usage: removem numbertoremove" );
@@ -223,7 +223,7 @@ public class TestCacheAccess
                 }
                 else if ( message.startsWith( "remove" ) )
                 {
-                    final String key = message.substring( message.indexOf( " " ) + 1, message.length() );
+                    final String key = message.substring( message.indexOf( " " ) + 1 );
                     cache_control.remove( key );
                     p( "removed " + key );
                 }
@@ -234,7 +234,7 @@ public class TestCacheAccess
                 }
                 else if ( message.startsWith( "cloneattr" ) )
                 {
-                    final String numS = message.substring( message.indexOf( " " ) + 1, message.length() );
+                    final String numS = message.substring( message.indexOf( " " ) + 1 );
                     if ( numS == null )
                     {
                         p( "usage: put numbertoput" );
@@ -254,7 +254,7 @@ public class TestCacheAccess
                 }
                 else if ( message.startsWith( "switch" ) )
                 {
-                    final String name = message.substring( message.indexOf( " " ) + 1, message.length() );
+                    final String name = message.substring( message.indexOf( " " ) + 1 );
 
                     setRegion( name );
                     p( "switched to cache = " + name );
@@ -582,7 +582,7 @@ public class TestCacheAccess
             }
         }
 
-        final String numS = message.substring( message.indexOf( " " ) + 1, message.length() );
+        final String numS = message.substring( message.indexOf( " " ) + 1 );
 
         int range = 0;
         int numOps = 0;

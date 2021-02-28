@@ -393,7 +393,7 @@ public class OptionConverter
                 {
                     return val;
                 }
-                sbuf.append( val.substring( i, val.length() ) );
+                sbuf.append( val.substring( i ) );
                 return sbuf.toString();
             }
             sbuf.append( val.substring( i, j ) );
