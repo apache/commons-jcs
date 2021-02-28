@@ -598,28 +598,25 @@ public class LateralTCPListener<K, V>
                 // if a hashcode was given and filtering is on
                 // check to see if they are the same
                 // if so, then don't remove, otherwise issue a remove
-                if ( led.valHashCode != -1 )
+            if ( (led.valHashCode != -1) && getTcpLateralCacheAttributes().isFilterRemoveByHashCode() )
+            {
+                final ICacheElement<K, V> test = getCache( cacheName ).localGet( key );
+                if ( test != null )
                 {
-                    if ( getTcpLateralCacheAttributes().isFilterRemoveByHashCode() )
+                    if ( test.getVal().hashCode() == led.valHashCode )
                     {
-                        final ICacheElement<K, V> test = getCache( cacheName ).localGet( key );
-                        if ( test != null )
-                        {
-                            if ( test.getVal().hashCode() == led.valHashCode )
-                            {
-                                log.debug( "Filtering detected identical hashCode [{0}], "
-                                        + "not issuing a remove for led {1}",
-                                        led.valHashCode, led );
-                                return;
-                            }
-                            else
-                            {
-                                log.debug( "Different hashcodes, in cache [{0}] sent [{1}]",
-                                        test.getVal().hashCode(), led.valHashCode );
-                            }
-                        }
+                        log.debug( "Filtering detected identical hashCode [{0}], "
+                                + "not issuing a remove for led {1}",
+                                led.valHashCode, led );
+                        return;
+                    }
+                    else
+                    {
+                        log.debug( "Different hashcodes, in cache [{0}] sent [{1}]",
+                                test.getVal().hashCode(), led.valHashCode );
                     }
                 }
+            }
                 handleRemove( cacheName, key );
                 break;
 

@@ -73,12 +73,9 @@ public class CacheRemoveInterceptor implements Serializable
         }
         catch (final Throwable t)
         {
-            if (afterInvocation)
+            if (afterInvocation && helper.isIncluded(t.getClass(), cacheRemove.evictFor(), cacheRemove.noEvictFor()))
             {
-                if (helper.isIncluded(t.getClass(), cacheRemove.evictFor(), cacheRemove.noEvictFor()))
-                {
-                    cache.remove(cacheKey);
-                }
+                cache.remove(cacheKey);
             }
 
             throw t;

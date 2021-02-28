@@ -232,13 +232,10 @@ public class CompositeCacheConfigurator
             // If value is not in the form ", appender.." or "", then we should set
             // the priority of the category.
 
-            if ( !( auxiliaries.startsWith( "," ) || auxiliaries.equals( "" ) ) )
+            // just to be on the safe side...
+            if ( !( auxiliaries.startsWith( "," ) || auxiliaries.equals( "" ) ) && !st.hasMoreTokens() )
             {
-                // just to be on the safe side...
-                if ( !st.hasMoreTokens() )
-                {
-                    return null;
-                }
+                return null;
             }
 
             AuxiliaryCache<K, V> auxCache;

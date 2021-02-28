@@ -73,12 +73,9 @@ public class CachePutInterceptor implements Serializable
         }
         catch (final Throwable t)
         {
-            if (afterInvocation)
+            if (afterInvocation && helper.isIncluded(t.getClass(), cachePut.cacheFor(), cachePut.noCacheFor()))
             {
-                if (helper.isIncluded(t.getClass(), cachePut.cacheFor(), cachePut.noCacheFor()))
-                {
-                    cache.put(cacheKey, context.getValueParameter());
-                }
+                cache.put(cacheKey, context.getValueParameter());
             }
 
             throw t;

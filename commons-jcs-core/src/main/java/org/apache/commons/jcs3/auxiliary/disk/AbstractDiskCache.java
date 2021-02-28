@@ -674,12 +674,9 @@ public abstract class AbstractDiskCache<K, V>
         public void handleRemove( final String cacheName, final K key )
             throws IOException
         {
-            if ( alive )
+            if ( alive && doRemove( key ) )
             {
-                if ( doRemove( key ) )
-                {
-                    log.debug( "Element removed, key: " + key );
-                }
+                log.debug( "Element removed, key: " + key );
             }
         }
 

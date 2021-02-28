@@ -349,12 +349,9 @@ public class RemoteCacheServer<K, V>
         // not thread safe, but it doesn't have to be 100% accurate
         puts++;
 
-        if ( log.isInfoEnabled() )
+        if ( log.isInfoEnabled() && (puts % logInterval == 0) )
         {
-            if ( puts % logInterval == 0 )
-            {
-                log.info( "puts = {0}", puts );
-            }
+            log.info( "puts = {0}", puts );
         }
 
         log.debug( "In update, put [{0}] in [{1}]",

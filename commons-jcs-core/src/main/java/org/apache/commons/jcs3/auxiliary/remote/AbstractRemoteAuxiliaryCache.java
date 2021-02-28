@@ -171,16 +171,13 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
             }
 
             // Eventually the instance of will not be necessary.
-            if ( retVal instanceof ICacheElementSerialized )
+            // Never try to deserialize if you are a cluster client. Cluster
+            // clients are merely intra-remote cache communicators. Remote caches are assumed
+            // to have no ability to deserialize the objects.
+            if ( (retVal instanceof ICacheElementSerialized) && (this.getRemoteCacheAttributes().getRemoteType() != RemoteType.CLUSTER) )
             {
-                // Never try to deserialize if you are a cluster client. Cluster
-                // clients are merely intra-remote cache communicators. Remote caches are assumed
-                // to have no ability to deserialize the objects.
-                if ( this.getRemoteCacheAttributes().getRemoteType() != RemoteType.CLUSTER )
-                {
-                    retVal = SerializationConversionUtil.getDeSerializedCacheElement( (ICacheElementSerialized<K, V>) retVal,
-                            super.getElementSerializer() );
-                }
+                retVal = SerializationConversionUtil.getDeSerializedCacheElement( (ICacheElementSerialized<K, V>) retVal,
+                        super.getElementSerializer() );
             }
         }
         catch ( final Exception ex )
