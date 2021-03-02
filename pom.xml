@@ -546,7 +546,7 @@
 
     <jsr107.api.version>1.0.1</jsr107.api.version>
     <commons.collections.version>4.4</commons.collections.version>
-    <commons.lang.version>3.10</commons.lang.version>
+    <commons.lang.version>3.12.0</commons.lang.version>
     <commons.clirr.version>2.8</commons.clirr.version>
     <commons.assembly-plugin.version>3.3.0</commons.assembly-plugin.version>
 
