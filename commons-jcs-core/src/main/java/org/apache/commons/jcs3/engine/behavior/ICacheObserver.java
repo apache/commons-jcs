@@ -20,6 +20,7 @@ package org.apache.commons.jcs3.engine.behavior;
  */
 
 import java.io.IOException;
+import java.rmi.Remote;
 
 /**
  * Used to register interest in receiving cache changes. <br>
@@ -29,7 +30,7 @@ import java.io.IOException;
  * a remote cache event notification service.
  *
  */
-public interface ICacheObserver
+public interface ICacheObserver extends Remote
 {
     /**
      * Subscribes to the specified cache.
