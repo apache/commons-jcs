@@ -57,6 +57,7 @@
       </item>
       <item name="Auxiliary" href="/JCSPlugins.html" collapse="true">
         <item name="Cache Event Logging" href="/CacheEventLogging.html"/>
+        <item name="Element Serializers" href="/ElementSerializers.html"/>
         <item name="Indexed Disk Cache" href="/IndexedDiskAuxCache.html"/>
         <item name="Indexed Disk Properties" href="/IndexedDiskCacheProperties.html"/>
         <item name="Block Disk Cache" href="/BlockDiskCache.html"/>

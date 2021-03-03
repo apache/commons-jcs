@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+	<!--
+		Licensed to the Apache Software Foundation (ASF) under one or more
+		contributor license agreements. See the NOTICE file distributed with
+		this work for additional information regarding copyright ownership.
+		The ASF licenses this file to you under the Apache License, Version
+		2.0 (the "License"); you may not use this file except in compliance
+		with the License. You may obtain a copy of the License at
+		http://www.apache.org/licenses/LICENSE-2.0 Unless required by
+		applicable law or agreed to in writing, software distributed under the
+		License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+		CONDITIONS OF ANY KIND, either express or implied. See the License for
+		the specific language governing permissions and limitations under the
+		License.
+	-->
+<document>
+	<properties>
+		<title>Element Serializers</title>
+		<author email="tv@apache.org">Thomas Vandahl</author>
+	</properties>
+	<body>
+		<section name="Serializing and De-serializing Cache Objects">
+			<p> When using auxiliary caches, cache elements need to be serialized 
+                into a byte stream in order to be stored on disk or transported 
+                through a network. For reading from these caches, bytes must be 
+                de-serialized into objects. By default, JCS uses the standard JDK
+                methods for serializing and de-serializing objects. However, all 
+                of the auxiliaries also support setting a custom serializer to 
+                have finer control of the behavior.</p>
+                
+			<p> This document describes the built-in serializers and their 
+                configuration.</p>
+		</section>
+        <section name="Compressing Serializer">
+            <p> The <code>CompressingSerializer</code> gzips the bytes
+                after serializing the cache object the default way. For reading, 
+                the bytes will be de-compressed first and then de-serialized into 
+                a Java object. The class can also be used as a wrapper around an
+                arbitrary class implementing <code>IElementSerializer</code>.</p>
+                
+            <p> The configuration for a typical application looks like this:</p>
+            <source>
+                <![CDATA[
+# Block Disk Cache
+jcs.auxiliary.blockDiskCache=org.apache.commons.jcs3.auxiliary.disk.block.BlockDiskCacheFactory
+jcs.auxiliary.blockDiskCache.attributes=org.apache.commons.jcs3.auxiliary.disk.block.BlockDiskCacheAttributes
+jcs.auxiliary.blockDiskCache.attributes.DiskPath=target/test-sandbox/block-disk-cache
+jcs.auxiliary.blockDiskCache.serializer=org.apache.commons.jcs3.utils.serialization.CompressingSerializer
+                ]]>
+            </source>
+        </section>
+        <section name="Encrypting Serializer">
+            <p> The <code>EncryptingSerializer</code> uses AES to encrypt the bytes
+                after serializing the cache object the default way. For reading, 
+                the bytes will be decrypted first and then de-serialized into 
+                a Java object. The class can also be used as a wrapper around an
+                arbitrary class implementing <code>IElementSerializer</code>.</p>
+
+            <p> The implementation uses a symmetrical pre-shared key for encrypting
+                and decrypting the data.</p>
+                
+            <p> The configuration for a typical application looks like this:</p>
+            <source>
+                <![CDATA[
+# Block Disk Cache
+jcs.auxiliary.blockDiskCache2=org.apache.commons.jcs3.auxiliary.disk.block.BlockDiskCacheFactory
+jcs.auxiliary.blockDiskCache2.attributes=org.apache.commons.jcs3.auxiliary.disk.block.BlockDiskCacheAttributes
+jcs.auxiliary.blockDiskCache2.attributes.DiskPath=target/test-sandbox/block-disk-cache2
+jcs.auxiliary.blockDiskCache2.serializer=org.apache.commons.jcs3.utils.serialization.EncryptingSerializer
+jcs.auxiliary.blockDiskCache2.serializer.attributes.preSharedKey=my_secret
+                ]]>
+            </source>
+            
+            <p> The AES cipher transformation to be used can be configured like this:</p>
+            <source>
+                <![CDATA[
+jcs.auxiliary.blockDiskCache.serializer.attributes.aesCipherTransformation=AES/ECB/PKCS5Padding
+                ]]>
+            </source>
+        </section>
+	</body>
+</document>

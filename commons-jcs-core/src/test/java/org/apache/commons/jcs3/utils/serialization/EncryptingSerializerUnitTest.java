@@ -24,17 +24,19 @@ import java.io.IOException;
 import junit.framework.TestCase;
 
 /**
- * Tests the compressing serializer.
+ * Tests the encrypting serializer.
  */
-public class CompressingSerializerUnitTest
+public class EncryptingSerializerUnitTest
     extends TestCase
 {
-    private CompressingSerializer serializer;
+    private EncryptingSerializer serializer;
 
     @Override
     protected void setUp() throws Exception
     {
-        this.serializer = new CompressingSerializer();
+        this.serializer = new EncryptingSerializer();
+        this.serializer.setPreSharedKey("my_secret_key");
+        this.serializer.setAesCipherTransformation("AES");
     }
 
     /**
@@ -87,29 +89,5 @@ public class CompressingSerializerUnitTest
 
         // VERIFY
         assertNull( "Should have nothing. after =" + after, after );
-    }
-
-    /**
-     * Verify that the compressed is smaller.
-     * <p>
-     * @throws Exception on error
-     */
-    public void testSerialize_CompareCompressedAndUncompressed()
-        throws Exception
-    {
-        // I hate for loops.
-        final String before = "adsfdsafdsafdsafdsafdsafdsafdsagfdsafdsafdssaf dsaf sadf dsaf dsaf dsaf "
-            + "dsafdsa fdsaf dsaf dsafdsa dsaf dsaf dsaf dsaf dsafdsa76f dsa798f dsa6fdsa 087f  "
-            + "gh 987dsahb dsahbuhbfnui nufdsa hbv87 f8vhdsgbnfv h8fdg8dfjvn8fdwgj fdsgjb9fdsjbv"
-            + "jvhjv hg98f-dsaghj j9fdsb gfsb 9fdshjbgb987fdsbfdwgh ujbhjbhb hbfdsgh fdshb "
-            + "Ofdsgyfesgyfdsafdsafsa333 31231";
-
-        // DO WORK
-        final byte[] compressed = serializer.serialize( before );
-        final byte[] nonCompressed = new StandardSerializer().serialize( before );
-
-        // VERIFY
-        assertTrue( "Compressed should be smaller. compressed size = " + compressed.length + "nonCompressed size = "
-            + nonCompressed.length, compressed.length < nonCompressed.length );
     }
 }

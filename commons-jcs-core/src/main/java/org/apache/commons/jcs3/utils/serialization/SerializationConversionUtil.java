@@ -120,17 +120,9 @@ public class SerializationConversionUtil
         {
             try
             {
-                try
-                {
-                    deSerializedValue = elementSerializer.deSerialize( serialized.getSerializedValue(), null );
-                }
-                catch ( final ClassNotFoundException e )
-                {
-                    log.error( "Problem de-serializing object.", e );
-                    throw e;
-                }
+                deSerializedValue = elementSerializer.deSerialize( serialized.getSerializedValue(), null );
             }
-            catch ( final IOException e )
+            catch ( final ClassNotFoundException | IOException e )
             {
                 log.error( "Problem de-serializing object.", e );
                 throw e;
@@ -140,7 +132,7 @@ public class SerializationConversionUtil
         {
             // we could just use the default.
             throw new IOException( "Could not de-serialize object. The ElementSerializer is null." );
-       }
+        }
         final ICacheElement<K, V> deSerialized = new CacheElement<>( serialized.getCacheName(), serialized.getKey(), deSerializedValue );
         deSerialized.setElementAttributes( serialized.getElementAttributes() );
 

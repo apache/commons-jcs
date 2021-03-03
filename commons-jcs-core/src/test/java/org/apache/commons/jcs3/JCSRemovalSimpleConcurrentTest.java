@@ -1,5 +1,24 @@
 package org.apache.commons.jcs3;
 
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
 import org.apache.commons.jcs3.access.CacheAccess;
 
 /*
@@ -29,13 +48,7 @@ import junit.framework.TestCase;
 public class JCSRemovalSimpleConcurrentTest
     extends TestCase
 {
-    /**
-     * @param testName
-     */
-    public JCSRemovalSimpleConcurrentTest( final String testName )
-    {
-        super( testName );
-    }
+    private CacheAccess<String, String> jcs;
 
     /**
      * Test setup
@@ -47,18 +60,7 @@ public class JCSRemovalSimpleConcurrentTest
         throws Exception
     {
         JCS.setConfigFilename( "/TestRemoval.ccf" );
-        JCS.getInstance( "testCache1" );
-    }
-
-    /**
-     * Main method passes this test to the text test runner.
-     * <p>
-     * @param args
-     */
-    public static void main( final String args[] )
-    {
-        final String[] testCaseName = { JCSRemovalSimpleConcurrentTest.class.getName() };
-        junit.textui.TestRunner.main( testCaseName );
+        jcs = JCS.getInstance( "testCache1" );
     }
 
     /**
@@ -70,7 +72,6 @@ public class JCSRemovalSimpleConcurrentTest
         throws Exception
     {
         final int count = 500;
-        final CacheAccess<String, String> jcs = JCS.getInstance( "testCache1" );
 
         for ( int i = 0; i <= count; i++ )
         {
@@ -101,7 +102,6 @@ public class JCSRemovalSimpleConcurrentTest
     {
 
         final int count = 500;
-        final CacheAccess<String, String> jcs = JCS.getInstance( "testCache1" );
 
         for ( int i = 0; i <= count; i++ )
         {
@@ -131,7 +131,6 @@ public class JCSRemovalSimpleConcurrentTest
     {
 
         final int count = 500;
-        final CacheAccess<String, String> jcs = JCS.getInstance( "testCache1" );
 
         for ( int i = 0; i <= count; i++ )
         {
@@ -164,7 +163,6 @@ public class JCSRemovalSimpleConcurrentTest
         throws Exception
     {
         final int count = 500;
-        final CacheAccess<String, String> jcs = JCS.getInstance( "testCache1" );
 
         jcs.clear();
 
