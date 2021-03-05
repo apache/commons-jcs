@@ -203,6 +203,7 @@
   </contributors>
 
   <build>
+    <defaultGoal>clean apache-rat:check package javadoc:javadoc</defaultGoal>
     <pluginManagement>
       <plugins>
         <!-- Re-enable standard copying of N&L files from apache parent -->
