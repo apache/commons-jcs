@@ -183,9 +183,6 @@ public class PooledCacheEventQueue<K, V>
         {
             return 0;
         }
-        else
-        {
-            return queue.size();
-        }
+        return queue.size();
     }
 }

@@ -395,11 +395,8 @@ public class CompositeCacheManager
                          + "Force reconfiguration is false. Doing nothing" );
                 return;
             }
-            else
-            {
-                log.info( "Configure called after the manager has been configured.  "
-                        + "Force reconfiguration is true. Reconfiguring as best we can." );
-            }
+            log.info( "Configure called after the manager has been configured.  "
+                    + "Force reconfiguration is true. Reconfiguring as best we can." );
         }
         if ( useSystemProperties )
         {

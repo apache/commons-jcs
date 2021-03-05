@@ -134,10 +134,7 @@ public final class RemoteLocation
             final RemoteLocation location = new RemoteLocation( match.group(1), Integer.parseInt( match.group(2) ) );
             return location;
         }
-        else
-        {
-            log.error("Invalid server descriptor: {0}", server);
-        }
+        log.error("Invalid server descriptor: {0}", server);
 
         return null;
     }

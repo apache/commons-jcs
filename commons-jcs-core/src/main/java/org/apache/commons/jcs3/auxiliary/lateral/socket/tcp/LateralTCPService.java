@@ -234,11 +234,8 @@ public class LateralTCPService<K, V>
             ICacheElement<K, V> response = (ICacheElement<K, V>)sender.sendAndReceive( led );
             return response;
         }
-        else
-        {
-            // nothing needs to be done
-            return null;
-        }
+        // nothing needs to be done
+        return null;
     }
 
     /**
@@ -273,25 +270,21 @@ public class LateralTCPService<K, V>
         throws IOException
     {
         // if get is not allowed return
-        if ( this.allowGet )
-        {
-            final CacheElement<String, String> ce = new CacheElement<>( cacheName, pattern, null );
-            final LateralElementDescriptor<String, String> led = new LateralElementDescriptor<>( ce );
-            // led.requesterId = requesterId; // later
-            led.command = LateralCommand.GET_MATCHING;
-
-            final Object response = sender.sendAndReceive( led );
-            if ( response != null )
-            {
-                return (Map<K, ICacheElement<K, V>>) response;
-            }
-            return Collections.emptyMap();
-        }
-        else
-        {
+        if ( !this.allowGet ) {
             // nothing needs to be done
             return null;
         }
+        final CacheElement<String, String> ce = new CacheElement<>( cacheName, pattern, null );
+        final LateralElementDescriptor<String, String> led = new LateralElementDescriptor<>( ce );
+        // led.requesterId = requesterId; // later
+        led.command = LateralCommand.GET_MATCHING;
+
+        final Object response = sender.sendAndReceive( led );
+        if ( response != null )
+        {
+            return (Map<K, ICacheElement<K, V>>) response;
+        }
+        return Collections.emptyMap();
     }
 
     /**

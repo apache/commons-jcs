@@ -128,7 +128,7 @@ public class HostNameUtil
                                 // Found non-loopback site-local address. Return it immediately...
                                 return inetAddr;
                             }
-                            else if ( candidateAddress == null )
+                            if ( candidateAddress == null )
                             {
                                 // Found non-loopback address, but not necessarily site-local.
                                 // Store it as a candidate to be returned if site-local address is not subsequently found...

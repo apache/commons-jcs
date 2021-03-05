@@ -359,15 +359,11 @@ public class JCSAdminBean implements JCSJMXBean
                 {
                     if (keyInCache.toString().equals(key))
                     {
-                        if (keyToRemove == null)
-                        {
-                            keyToRemove = keyInCache;
-                        }
-                        else
-                        {
+                        if (keyToRemove != null) {
                             // A key matching the one specified was already found...
                             throw new IllegalStateException("Unexpectedly found duplicate keys in the cache region matching the key specified.");
                         }
+                        keyToRemove = keyInCache;
                     }
                 }
                 if (keyToRemove == null)

@@ -610,11 +610,8 @@ public class LateralTCPListener<K, V>
                                 led.valHashCode, led );
                         return;
                     }
-                    else
-                    {
-                        log.debug( "Different hashcodes, in cache [{0}] sent [{1}]",
-                                test.getVal().hashCode(), led.valHashCode );
-                    }
+                    log.debug( "Different hashcodes, in cache [{0}] sent [{1}]",
+                            test.getVal().hashCode(), led.valHashCode );
                 }
             }
                 handleRemove( cacheName, key );

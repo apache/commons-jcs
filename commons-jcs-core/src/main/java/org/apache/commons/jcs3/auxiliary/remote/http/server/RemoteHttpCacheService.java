@@ -82,10 +82,7 @@ public class RemoteHttpCacheService<K, V>
         {
             return cache.localGet( key );
         }
-        else
-        {
-            return cache.get( key );
-        }
+        return cache.get( key );
     }
 
     /**
@@ -111,10 +108,7 @@ public class RemoteHttpCacheService<K, V>
         {
             return cache.localGetMultiple( keys );
         }
-        else
-        {
-            return cache.getMultiple( keys );
-        }
+        return cache.getMultiple( keys );
     }
 
     /**
@@ -140,10 +134,7 @@ public class RemoteHttpCacheService<K, V>
         {
             return cache.localGetMatching( pattern );
         }
-        else
-        {
-            return cache.getMatching( pattern );
-        }
+        return cache.getMatching( pattern );
     }
 
     /**

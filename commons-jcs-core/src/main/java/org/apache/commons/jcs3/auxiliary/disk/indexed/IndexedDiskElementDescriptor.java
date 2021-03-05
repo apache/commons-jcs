@@ -82,7 +82,7 @@ public class IndexedDiskElementDescriptor
     	{
     		return false;
     	}
-    	else if (o instanceof IndexedDiskElementDescriptor)
+        if (o instanceof IndexedDiskElementDescriptor)
         {
     		final IndexedDiskElementDescriptor ided = (IndexedDiskElementDescriptor)o;
             return pos == ided.pos && len == ided.len;
@@ -111,22 +111,16 @@ public class IndexedDiskElementDescriptor
         	{
         		return 0;
         	}
-        	else if ( o.pos < pos )
+            if ( o.pos < pos )
         	{
         		return -1;
         	}
-        	else
-        	{
-        		return 1;
-        	}
+            return 1;
         }
-        else if ( o.len > len )
+        if ( o.len > len )
         {
             return -1;
         }
-        else
-        {
-            return 1;
-        }
+        return 1;
     }
 }

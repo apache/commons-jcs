@@ -541,21 +541,17 @@ public class BlockDiskKeyStore<K>
             }
         }
         boolean ok = true;
-        if (log.isTraceEnabled())
+        if (!log.isTraceEnabled()) {
+            return ok;
+        }
+        for (final Entry<Integer, Set<K>> e : blockAllocationMap.entrySet())
         {
-            for (final Entry<Integer, Set<K>> e : blockAllocationMap.entrySet())
+            log.trace("Block {0}: {1}", e.getKey(), e.getValue());
+            if (e.getValue().size() > 1)
             {
-                log.trace("Block {0}: {1}", e.getKey(), e.getValue());
-                if (e.getValue().size() > 1)
-                {
-                    ok = false;
-                }
+                ok = false;
             }
-            return ok;
         }
-        else
-        {
-            return ok;
-        }
+        return ok;
     }
 }

@@ -278,7 +278,7 @@ public class CompositeCache<K, V>
             throw new IllegalArgumentException("key must not end with " + NAME_COMPONENT_DELIMITER
                 + " for a put operation");
         }
-        else if (cacheElement.getKey() instanceof GroupId)
+        if (cacheElement.getKey() instanceof GroupId)
         {
             throw new IllegalArgumentException("key cannot be a GroupId " + " for a put operation");
         }
@@ -698,14 +698,11 @@ public class CompositeCache<K, V>
                 doExpires(element);
                 return true;
             }
-            else
-            {
-                log.debug("{0} - Memory cache hit", () -> cacheAttr.getCacheName());
+            log.debug("{0} - Memory cache hit", () -> cacheAttr.getCacheName());
 
-                // Update counters
-                hitCountRam.incrementAndGet();
-                return false;
-            }
+            // Update counters
+            hitCountRam.incrementAndGet();
+            return false;
         });
 
         return elementsFromMemory;
@@ -756,10 +753,7 @@ public class CompositeCache<K, V>
             {
                 break;
             }
-            else
-            {
-                remainingKeys = pruneKeysFound(keys, elements);
-            }
+            remainingKeys = pruneKeysFound(keys, elements);
         }
 
         return elements;
@@ -926,22 +920,19 @@ public class CompositeCache<K, V>
                     doExpires(element);
                     return true;
                 }
-                else
-                {
-                    log.debug("{0} - Aux cache[{1}] hit.",
-                            () -> cacheAttr.getCacheName(), () -> aux.getCacheName());
+                log.debug("{0} - Aux cache[{1}] hit.",
+                        () -> cacheAttr.getCacheName(), () -> aux.getCacheName());
 
-                    // Update counters
-                    hitCountAux.incrementAndGet();
-                    try
-                    {
-                        copyAuxiliaryRetrievedItemToMemory(element);
-                    }
-                    catch (final IOException e)
-                    {
-                        log.error("{0} failed to copy element to memory {1}",
-                                cacheAttr.getCacheName(), element, e);
-                    }
+                // Update counters
+                hitCountAux.incrementAndGet();
+                try
+                {
+                    copyAuxiliaryRetrievedItemToMemory(element);
+                }
+                catch (final IOException e)
+                {
+                    log.error("{0} failed to copy element to memory {1}",
+                            cacheAttr.getCacheName(), element, e);
                 }
             }
 

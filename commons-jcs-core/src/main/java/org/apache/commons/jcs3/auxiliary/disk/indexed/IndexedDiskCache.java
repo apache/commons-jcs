@@ -410,10 +410,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
                 isOk = false;
                 break;
             }
-            else
-            {
-                expectedNextPos = ded.pos + IndexedDisk.HEADER_SIZE_BYTES + ded.len;
-            }
+            expectedNextPos = ded.pos + IndexedDisk.HEADER_SIZE_BYTES + ded.len;
         }
         log.debug("{0}: Check for DED overlaps took {1} ms.", () -> logCacheName,
                 () -> timer.getElapsedTime());
@@ -1506,14 +1503,11 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
             {
                 return -1;
             }
-            else if (ded1.pos == ded2.pos)
+            if (ded1.pos == ded2.pos)
             {
                 return 0;
             }
-            else
-            {
-                return 1;
-            }
+            return 1;
         }
     }
 

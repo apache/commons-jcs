@@ -210,20 +210,16 @@ public class JCSCachingManager implements CacheManager
         assertNotNull(configuration, "configuration");
         final Class<?> keyType = configuration == null ? Object.class : configuration.getKeyType();
         final Class<?> valueType = configuration == null ? Object.class : configuration.getValueType();
-        if (!caches.containsKey(cacheName))
-        {
-            final Cache<K, V> cache = ClassLoaderAwareCache.wrap(loader,
-                    new JCSCache/*<K, V>*/(
-                            loader, this, cacheName,
-                            new JCSConfiguration/*<K, V>*/(configuration, keyType, valueType),
-                            properties,
-                            ExpiryAwareCache.class.cast(delegate.getCache(cacheName))));
-            caches.putIfAbsent(cacheName, cache);
-        }
-        else
-        {
+        if (caches.containsKey(cacheName)) {
             throw new javax.cache.CacheException("cache " + cacheName + " already exists");
         }
+        final Cache<K, V> cache = ClassLoaderAwareCache.wrap(loader,
+                new JCSCache/*<K, V>*/(
+                        loader, this, cacheName,
+                        new JCSConfiguration/*<K, V>*/(configuration, keyType, valueType),
+                        properties,
+                        ExpiryAwareCache.class.cast(delegate.getCache(cacheName))));
+        caches.putIfAbsent(cacheName, cache);
         return (Cache<K, V>) getCache(cacheName, keyType, valueType);
     }
 

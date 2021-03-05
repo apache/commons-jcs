@@ -54,10 +54,7 @@ public class OpenJPAJCacheDataCache extends AbstractDataCache
             {
                 return null;
             }
-            else
-            {
-                result = cache.get(oid);
-            }
+            result = cache.get(oid);
         }
         else
         {

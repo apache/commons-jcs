@@ -318,22 +318,18 @@ public abstract class AbstractLRUMap<K, V>
                 try
                 {
                     final LRUElementDescriptor<K, V> last = list.getLast();
-                    if (last != null)
-                    {
-                        processRemovedLRU(last.getKey(), last.getPayload());
-                        if (map.remove(last.getKey()) == null)
-                        {
-                            log.warn("update: remove failed for key: {0}",
-                                    () -> last.getKey());
-                            verifyCache();
-                        }
-                        list.removeLast();
-                    }
-                    else
-                    {
+                    if (last == null) {
                         verifyCache();
                         throw new Error("update: last is null!");
                     }
+                    processRemovedLRU(last.getKey(), last.getPayload());
+                    if (map.remove(last.getKey()) == null)
+                    {
+                        log.warn("update: remove failed for key: {0}",
+                                () -> last.getKey());
+                        verifyCache();
+                    }
+                    list.removeLast();
                 }
                 finally
                 {

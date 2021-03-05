@@ -501,7 +501,7 @@ public class JCSCache<K, V> implements Cache<K, V>
             remove(key);
             return true;
         }
-        else if (v != null)
+        if (v != null)
         {
             // weird but just for stats to be right (org.jsr107.tck.expiry.CacheExpiryTest.removeSpecifiedEntryShouldNotCallExpiryPolicyMethods())
             expiryPolicy.getExpiryForAccess();
@@ -596,7 +596,7 @@ public class JCSCache<K, V> implements Cache<K, V>
                 put(key, newValue);
                 return true;
             }
-            else if (value != null)
+            if (value != null)
             {
                 final Duration expiryForAccess = expiryPolicy.getExpiryForAccess();
                 if (expiryForAccess != null && (!elt.getElementAttributes().getIsEternal() || !expiryForAccess.isEternal()))
@@ -635,7 +635,7 @@ public class JCSCache<K, V> implements Cache<K, V>
             put(key, value);
             return true;
         }
-        else if (statisticsEnabled)
+        if (statisticsEnabled)
         {
             statistics.increaseMisses(1);
         }
@@ -666,7 +666,7 @@ public class JCSCache<K, V> implements Cache<K, V>
             put(key, value);
             return oldValue;
         }
-        else if (statisticsEnabled)
+        if (statisticsEnabled)
         {
             statistics.increaseMisses(1);
         }
@@ -739,7 +739,7 @@ public class JCSCache<K, V> implements Cache<K, V>
                     doLoad(k, containsKey(k), now, completionListener != null);
                     continue;
                 }
-                else if (containsKey(k))
+                if (containsKey(k))
                 {
                     continue;
                 }

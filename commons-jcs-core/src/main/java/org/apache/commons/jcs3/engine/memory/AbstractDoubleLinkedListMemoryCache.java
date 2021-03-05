@@ -232,22 +232,18 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
         if (last != null)
         {
             toSpool = last.getCacheElement();
-            if (toSpool != null)
-            {
-                getCompositeCache().spoolToDisk(toSpool);
-                if (map.remove(toSpool.getKey()) == null)
-                {
-                    log.warn("update: remove failed for key: {0}", toSpool.getKey());
-
-                    if (log.isTraceEnabled())
-                    {
-                        verifyCache();
-                    }
-                }
-            }
-            else
-            {
+            if (toSpool == null) {
                 throw new Error("update: last.ce is null!");
+            }
+            getCompositeCache().spoolToDisk(toSpool);
+            if (map.remove(toSpool.getKey()) == null)
+            {
+                log.warn("update: remove failed for key: {0}", toSpool.getKey());
+
+                if (log.isTraceEnabled())
+                {
+                    verifyCache();
+                }
             }
 
             list.remove(last);

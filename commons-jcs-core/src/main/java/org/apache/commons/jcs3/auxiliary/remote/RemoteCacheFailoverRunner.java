@@ -154,7 +154,7 @@ public class RemoteCacheFailoverRunner<K, V> extends AbstractAuxiliaryCacheMonit
                     log.warn( "Remote is misconfigured, failovers was null." );
                     return;
                 }
-                else if ( failovers.size() == 1 )
+                if ( failovers.size() == 1 )
                 {
                     // if there is only the primary, return out of this
                     log.info( "No failovers defined, exiting failover runner." );

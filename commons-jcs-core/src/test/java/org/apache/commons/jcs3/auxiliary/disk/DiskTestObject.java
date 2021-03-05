@@ -61,7 +61,8 @@ public class DiskTestObject implements Serializable
             final DiskTestObject o = (DiskTestObject) other;
             if (id != null) {
                 return id.equals(o.id) && Arrays.equals(imageBytes, o.imageBytes);
-            } else if (id == null && o.id == null) {
+            }
+            if (id == null && o.id == null) {
                 return Arrays.equals(imageBytes, o.imageBytes);
             }
         }

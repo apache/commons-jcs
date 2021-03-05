@@ -239,21 +239,21 @@ public class PropertySetter
         {
             return val;
         }
-        else if ( Integer.TYPE.isAssignableFrom( type ) )
+        if ( Integer.TYPE.isAssignableFrom( type ) )
         {
             return Integer.valueOf( v );
         }
-        else if ( Long.TYPE.isAssignableFrom( type ) )
+        if ( Long.TYPE.isAssignableFrom( type ) )
         {
             return Long.valueOf( v );
         }
-        else if ( Boolean.TYPE.isAssignableFrom( type ) )
+        if ( Boolean.TYPE.isAssignableFrom( type ) )
         {
             if ( "true".equalsIgnoreCase( v ) )
             {
                 return Boolean.TRUE;
             }
-            else if ( "false".equalsIgnoreCase( v ) )
+            if ( "false".equalsIgnoreCase( v ) )
             {
                 return Boolean.FALSE;
             }

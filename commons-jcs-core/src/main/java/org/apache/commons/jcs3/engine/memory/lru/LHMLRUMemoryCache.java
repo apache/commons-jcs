@@ -187,15 +187,12 @@ public class LHMLRUMemoryCache<K, V>
             {
                 return false;
             }
-            else
-            {
-                log.debug( "LHMLRU max size: {0}. Spooling element, key: {1}",
-                        () -> getCacheAttributes().getMaxObjects(), () -> element.getKey() );
+            log.debug( "LHMLRU max size: {0}. Spooling element, key: {1}",
+                    () -> getCacheAttributes().getMaxObjects(), () -> element.getKey() );
 
-                waterfal( element );
+            waterfal( element );
 
-                log.debug( "LHMLRU size: {0}", () -> map.size() );
-            }
+            log.debug( "LHMLRU size: {0}", () -> map.size() );
             return true;
         }
     }
