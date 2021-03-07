@@ -20,6 +20,9 @@
 	</properties>
 	<body>
         <release version="3.1" date="20YY-MM-DD">
+            <action dev="tv" type="fix">
+               Fix shutdown race conditions
+            </action>
             <action dev="tv" type="add">
                Add EncryptingSerializer and some documentation
             </action>

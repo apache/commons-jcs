@@ -47,12 +47,12 @@ import org.apache.commons.jcs3.auxiliary.remote.behavior.IRemoteCacheConstants;
 import org.apache.commons.jcs3.engine.CompositeCacheAttributes;
 import org.apache.commons.jcs3.engine.ElementAttributes;
 import org.apache.commons.jcs3.engine.behavior.ICache;
+import org.apache.commons.jcs3.engine.behavior.ICacheType.CacheType;
 import org.apache.commons.jcs3.engine.behavior.ICompositeCacheAttributes;
 import org.apache.commons.jcs3.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs3.engine.behavior.IElementAttributes;
 import org.apache.commons.jcs3.engine.behavior.IProvideScheduler;
 import org.apache.commons.jcs3.engine.behavior.IShutdownObserver;
-import org.apache.commons.jcs3.engine.behavior.ICacheType.CacheType;
 import org.apache.commons.jcs3.engine.control.event.ElementEventQueue;
 import org.apache.commons.jcs3.engine.control.event.behavior.IElementEventQueue;
 import org.apache.commons.jcs3.engine.stats.CacheStats;
@@ -595,12 +595,6 @@ public class CompositeCacheManager
                 this.elementEventQueue.dispose();
             }
 
-            // shutdown all scheduled jobs
-            this.scheduledExecutor.shutdownNow();
-
-            // shutdown all thread pools
-            ThreadPoolManager.dispose();
-
             // notify any observers
             IShutdownObserver observer = null;
             while ((observer = shutdownObservers.poll()) != null)
@@ -646,6 +640,12 @@ public class CompositeCacheManager
 
             auxiliaryAttributeRegistry.clear();
             auxiliaryFactoryRegistry.clear();
+
+            // shutdown all scheduled jobs
+            this.scheduledExecutor.shutdownNow();
+
+            // shutdown all thread pools
+            ThreadPoolManager.dispose();
 
             if (shutdownHook != null)
             {

@@ -61,6 +61,12 @@ public class SerializerUnitTest
         JCS.setConfigFilename( "/TestElementSerializer.ccf" );
     }
 
+    @Override
+    protected void tearDown() throws Exception
+    {
+        JCS.shutdown();
+    }
+
     /**
      * Verify that object reading and writing works
      * <p>
@@ -70,6 +76,7 @@ public class SerializerUnitTest
         throws Exception
     {
         final int count = 500; // 100 fit in memory
+        // CompressingSerializer
         final CacheAccess<String, String> jcs1 = JCS.getInstance( "blockRegion1" );
 
         for ( int i = 0; i < count; i++ )
@@ -77,12 +84,13 @@ public class SerializerUnitTest
             jcs1.put( "key:" + i, "data" + i );
         }
 
-        for ( int i = count-1; i >= 0; i-- )
+        for ( int i = 0; i < count; i++ )
         {
             final String res = jcs1.get( "key:" + i );
             assertNotNull( "[key:" + i + "] should not be null, " + jcs1.getStats(), res );
         }
 
+        // EncryptingSerializer
         final CacheAccess<String, String> jcs2 = JCS.getInstance( "blockRegion2" );
 
         for ( int i = 0; i < count; i++ )
@@ -90,10 +98,22 @@ public class SerializerUnitTest
             jcs2.put( "key:" + i, "data" + i );
         }
 
-        for ( int i = count-1; i >= 0; i-- )
+        for ( int i = 0; i < count; i++ )
         {
             final String res = jcs2.get( "key:" + i );
             assertNotNull( "[key:" + i + "] should not be null, " + jcs2.getStats(), res );
+        }
+
+        JCS.shutdown();
+
+        // Re-init
+        // EncryptingSerializer
+        final CacheAccess<String, String> jcs3 = JCS.getInstance( "blockRegion2" );
+
+        for ( int i = 0; i < count; i++ )
+        {
+            final String res = jcs3.get( "key:" + i );
+            assertNotNull( "[key:" + i + "] should not be null, " + jcs3.getStats(), res );
         }
     }
 }

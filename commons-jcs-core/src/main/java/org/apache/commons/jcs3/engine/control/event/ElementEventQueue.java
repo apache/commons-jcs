@@ -68,8 +68,8 @@ public class ElementEventQueue
     {
         if (destroyed.compareAndSet(false, true))
         {
-            // shut down the QueueProcessor
-            queueProcessor.shutdownNow();
+            // Pool will be shut down by the ThreadPoolManager
+            // queueProcessor.shutdownNow();
             log.info( "Element event queue destroyed: {0}", this );
         }
     }

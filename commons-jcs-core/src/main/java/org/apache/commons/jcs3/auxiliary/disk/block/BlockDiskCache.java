@@ -581,10 +581,6 @@ public class BlockDiskCache<K, V>
                 log.debug("{0}: Closing files, base filename: {1}", logCacheName, fileName );
                 dataFile.close();
                 // dataFile = null;
-
-                // TOD make a close
-                // keyFile.close();
-                // keyFile = null;
             }
             catch ( final IOException e )
             {

@@ -89,14 +89,24 @@ public class PooledCacheEventQueue<K, V>
     {
         super.initialize(listener, listenerId, cacheName, maxFailure, waitBeforeRetry);
 
-        // this will share the same pool with other event queues by default.
-        pool = ThreadPoolManager.getInstance().getExecutorService(
-                (threadPoolName == null) ? "cache_event_queue" : threadPoolName );
+        pool = createPool(threadPoolName);
 
         if (pool instanceof ThreadPoolExecutor)
         {
         	queue = ((ThreadPoolExecutor) pool).getQueue();
         }
+    }
+
+    /**
+     * Create the thread pool.
+     * <p>
+     * @param threadPoolName
+     */
+    protected ExecutorService createPool(final String threadPoolName)
+    {
+        // this will share the same pool with other event queues by default.
+        return ThreadPoolManager.getInstance().getExecutorService(
+                (threadPoolName == null) ? "cache_event_queue" : threadPoolName );
     }
 
     /**
@@ -117,7 +127,6 @@ public class PooledCacheEventQueue<K, V>
         if ( isWorking() )
         {
             setWorking(false);
-            pool.shutdownNow();
             log.info( "Cache event queue destroyed: {0}", this );
         }
     }

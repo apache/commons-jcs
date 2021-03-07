@@ -345,7 +345,6 @@ public class UDPDiscoveryReceiver
             {
                 mSocket.leaveGroup( multicastAddress );
                 mSocket.close();
-                pooledExecutor.shutdownNow();
             }
             catch ( final IOException e )
             {
