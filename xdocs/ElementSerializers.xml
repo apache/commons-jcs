@@ -56,8 +56,10 @@ jcs.auxiliary.blockDiskCache.serializer=org.apache.commons.jcs3.utils.serializat
                 a Java object. The class can also be used as a wrapper around an
                 arbitrary class implementing <code>IElementSerializer</code>.</p>
 
-            <p> The implementation uses a symmetrical pre-shared key for encrypting
-                and decrypting the data.</p>
+            <p> The implementation uses a symmetrical pre-shared key phrase for 
+                encrypting and decrypting the data. The key is salted separately
+                for each object and the salt is stored together with the serialized
+                data.</p>
                 
             <p> The configuration for a typical application looks like this:</p>
             <source>
@@ -71,10 +73,14 @@ jcs.auxiliary.blockDiskCache2.serializer.attributes.preSharedKey=my_secret
                 ]]>
             </source>
             
-            <p> The AES cipher transformation to be used can be configured like this:</p>
+            <p> The AES cipher transformation default is AES/ECB/PKCS5Padding as this 
+                algorithm must be supported by every JDK 8, according to the 
+                <a href="https://docs.oracle.com/javase/8/docs/api/javax/crypto/Cipher.html">docs</a>. 
+                Special handling is provided for the AES/GCM/NoPadding algorithm which 
+                can be activated like this:</p>
             <source>
                 <![CDATA[
-jcs.auxiliary.blockDiskCache.serializer.attributes.aesCipherTransformation=AES/ECB/PKCS5Padding
+jcs.auxiliary.blockDiskCache2.serializer.attributes.aesCipherTransformation=AES/GCM/NoPadding
                 ]]>
             </source>
         </section>

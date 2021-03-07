@@ -20,16 +20,19 @@ package org.apache.commons.jcs3.utils.serialization;
  */
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
+import java.nio.ByteBuffer;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.spec.InvalidKeySpecException;
 
 import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.GCMParameterSpec;
+import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.jcs3.engine.behavior.IElementSerializer;
-import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 
 /**
  * Performs serialization and de-serialization. It encrypts and decrypts the
@@ -37,16 +40,22 @@ import org.apache.commons.jcs3.log.LogManager;
  */
 public class EncryptingSerializer extends StandardSerializer
 {
-    /** The logger */
-    private static final Log log = LogManager.getLog( EncryptingSerializer.class );
-
     private static final String DEFAULT_CIPHER = "AES/ECB/PKCS5Padding";
+    private static final int TAG_LENGTH = 128;
+    private static final int IV_LENGTH = 12;
+    private static final int SALT_LENGTH = 16;
 
     /** The pre-shared key */
-    private SecretKeySpec secretKey;
+    private String psk;
 
     /** The cipher transformation */
     private String cipherTransformation = DEFAULT_CIPHER;
+
+    /** The random source */
+    private final SecureRandom secureRandom;
+
+    /** The secret-key factory */
+    private final SecretKeyFactory secretKeyFactory;
 
     /** Wrapped serializer */
     private final IElementSerializer serializer;
@@ -68,6 +77,16 @@ public class EncryptingSerializer extends StandardSerializer
     public EncryptingSerializer(IElementSerializer serializer)
     {
         this.serializer = serializer;
+
+        try
+        {
+            this.secureRandom = SecureRandom.getInstanceStrong();
+            this.secretKeyFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
+        }
+        catch (NoSuchAlgorithmException e)
+        {
+            throw new RuntimeException("Could not set up encryption tools", e);
+        }
     }
 
     /**
@@ -77,16 +96,7 @@ public class EncryptingSerializer extends StandardSerializer
      */
     public void setPreSharedKey(String psk)
     {
-        try
-        {
-            MessageDigest sha = MessageDigest.getInstance("SHA-1");
-            byte[] key = sha.digest(psk.getBytes(StandardCharsets.UTF_8));
-            secretKey = new SecretKeySpec(key, 0, 16, "AES");
-        }
-        catch (NoSuchAlgorithmException e)
-        {
-            log.error("Cannot set pre-shared key", e);
-        }
+        this.psk = psk;
     }
 
     /**
@@ -100,13 +110,48 @@ public class EncryptingSerializer extends StandardSerializer
         this.cipherTransformation = transformation;
     }
 
+    private byte[] getRandomBytes(int length) throws NoSuchAlgorithmException
+    {
+        byte[] bytes = new byte[length];
+        secureRandom.nextBytes(bytes);
+
+        return bytes;
+    }
+
+    private SecretKey createSecretKey(String password, byte[] salt) throws NoSuchAlgorithmException, InvalidKeySpecException
+    {
+        /* Derive the key, given password and salt. */
+        PBEKeySpec spec = new PBEKeySpec(password.toCharArray(), salt, 1000, 256);
+        SecretKey tmp = secretKeyFactory.generateSecret(spec);
+        return new SecretKeySpec(tmp.getEncoded(), "AES");
+    }
+
     private byte[] encrypt(byte[] source) throws IOException
     {
         try
         {
+            byte[] salt = getRandomBytes(SALT_LENGTH);
+            byte[] iv = getRandomBytes(IV_LENGTH);
+
+            SecretKey secretKey = createSecretKey(psk, salt);
             Cipher cipher = Cipher.getInstance(cipherTransformation);
-            cipher.init(Cipher.ENCRYPT_MODE, secretKey);
-            return cipher.doFinal(source);
+            if (cipher.getAlgorithm().startsWith("AES/GCM"))
+            {
+                cipher.init(Cipher.ENCRYPT_MODE, secretKey, new GCMParameterSpec(TAG_LENGTH, iv));
+            }
+            else
+            {
+                cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+            }
+
+            byte[] encrypted = cipher.doFinal(source);
+
+            // join initial vector, salt and encrypted data for later decryption
+            return ByteBuffer.allocate(IV_LENGTH + SALT_LENGTH + encrypted.length)
+                    .put(iv)
+                    .put(salt)
+                    .put(encrypted)
+                    .array();
         }
         catch (Exception e)
         {
@@ -118,9 +163,31 @@ public class EncryptingSerializer extends StandardSerializer
     {
         try
         {
+            // split data in initial vector, salt and encrypted data
+            ByteBuffer wrapped = ByteBuffer.wrap(source);
+
+            byte[] iv = new byte[IV_LENGTH];
+            wrapped.get(iv);
+
+            byte[] salt = new byte[SALT_LENGTH];
+            wrapped.get(salt);
+
+            byte[] encrypted = new byte[wrapped.remaining()];
+            wrapped.get(encrypted);
+
+            SecretKey secretKey = createSecretKey(psk, salt);
             Cipher cipher = Cipher.getInstance(cipherTransformation);
-            cipher.init(Cipher.DECRYPT_MODE, secretKey);
-            return cipher.doFinal(source);
+
+            if (cipher.getAlgorithm().startsWith("AES/GCM"))
+            {
+                cipher.init(Cipher.DECRYPT_MODE, secretKey, new GCMParameterSpec(TAG_LENGTH, iv));
+            }
+            else
+            {
+                cipher.init(Cipher.DECRYPT_MODE, secretKey);
+            }
+
+            return cipher.doFinal(encrypted);
         }
         catch (Exception e)
         {

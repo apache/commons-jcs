@@ -1,7 +1,5 @@
 package org.apache.commons.jcs3.utils.serialization;
 
-import java.io.IOException;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -21,6 +19,10 @@ import java.io.IOException;
  * under the License.
  */
 
+import static org.junit.Assert.assertThrows;
+
+import java.io.IOException;
+
 import junit.framework.TestCase;
 
 /**
@@ -36,11 +38,10 @@ public class EncryptingSerializerUnitTest
     {
         this.serializer = new EncryptingSerializer();
         this.serializer.setPreSharedKey("my_secret_key");
-        this.serializer.setAesCipherTransformation("AES");
     }
 
     /**
-     * Verify that we don't get any erorrs for null input.
+     * Verify that we don't get any errors for null input.
      * <p>
      * @throws ClassNotFoundException
      * @throws IOException
@@ -67,10 +68,46 @@ public class EncryptingSerializerUnitTest
     {
         // DO WORK
         final String before = "adsfdsafdsafdsafdsafdsafdsafdsagfdsafdsafdsfdsafdsafsa333 31231";
-        final String after = (String) serializer.deSerialize( serializer.serialize( before ), null );
+        final String after = serializer.deSerialize( serializer.serialize( before ), null );
 
         // VERIFY
         assertEquals( "Before and after should be the same.", before, after );
+    }
+
+    /**
+     * Test simple back and forth with a string.
+     * <p>
+     * ))&lt;=&gt;((
+     * <p>
+     * @throws Exception on error
+     */
+    public void testGCMBackAndForth()
+        throws Exception
+    {
+        this.serializer.setAesCipherTransformation("AES/GCM/NoPadding");
+
+        // DO WORK
+        final String before = "adsfdsafdsafdsafdsafdsafdsafdsagfdsafdsafdsfdsafdsafsa333 31231";
+        final String after = serializer.deSerialize( serializer.serialize( before ), null );
+
+        // VERIFY
+        assertEquals( "Before and after should be the same.", before, after );
+    }
+
+    /**
+     * Test different key.
+     * <p>
+     * @throws Exception on error
+     */
+    public void testDifferentKey()
+        throws Exception
+    {
+        // DO WORK
+        final String before = "adsfdsafdsafdsafdsafdsafdsafdsagfdsafdsafdsfdsafdsafsa333 31231";
+        byte[] serialized = serializer.serialize(before);
+        serializer.setPreSharedKey("another_key");
+
+        assertThrows(IOException.class, () -> serializer.deSerialize(serialized, null));
     }
 
     /**
