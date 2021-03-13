@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.io.Serializable;
+import java.util.Arrays;
 
 /**
  * This represents an element on disk. This is used when we persist the keys. We only store the
@@ -43,6 +44,27 @@ public class BlockDiskElementDescriptor<K>
 
     /** The array of block numbers */
     private int[] blocks;
+
+    /**
+     * Default constructor
+     */
+    public BlockDiskElementDescriptor()
+    {
+        super();
+    }
+
+    /**
+     * Constructor
+     *
+     * @param key the key
+     * @param blocks the data
+     */
+    public BlockDiskElementDescriptor(K key, int[] blocks)
+    {
+        super();
+        this.key = key;
+        this.blocks = blocks;
+    }
 
     /**
      * @param key The key to set.
@@ -92,10 +114,7 @@ public class BlockDiskElementDescriptor<K>
         buf.append( "\n blocks [" );
         if ( this.getBlocks() != null )
         {
-            for ( int i = 0; i < blocks.length; i++ )
-            {
-                buf.append( this.getBlocks()[i] );
-            }
+            Arrays.stream(this.getBlocks()).forEach(buf::append);
         }
         buf.append( "]" );
         return buf.toString();
