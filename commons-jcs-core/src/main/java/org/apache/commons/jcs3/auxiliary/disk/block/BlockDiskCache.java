@@ -47,6 +47,7 @@ import org.apache.commons.jcs3.engine.stats.behavior.IStatElement;
 import org.apache.commons.jcs3.engine.stats.behavior.IStats;
 import org.apache.commons.jcs3.log.Log;
 import org.apache.commons.jcs3.log.LogManager;
+import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
 
 /**
  * There is one BlockDiskCache per region. It manages the key and data store.
@@ -93,7 +94,7 @@ public class BlockDiskCache<K, V>
      */
     public BlockDiskCache( final BlockDiskCacheAttributes cacheAttributes )
     {
-        this( cacheAttributes, null );
+        this( cacheAttributes, new StandardSerializer() );
     }
 
     /**
