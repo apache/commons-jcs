@@ -20,13 +20,13 @@ package org.apache.commons.jcs3.auxiliary.remote;
  */
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.URL;
+import java.nio.file.Files;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -127,10 +127,11 @@ public class RemoteUtils
 
         if (null == is) // not found in class path
         {
-            if (new File(propFile).exists())
+            File file = new File(propFile);
+            if (file.exists())
             {
                 // file found
-                is = new FileInputStream(propFile);
+                is = Files.newInputStream(file.toPath());
             }
             else
             {

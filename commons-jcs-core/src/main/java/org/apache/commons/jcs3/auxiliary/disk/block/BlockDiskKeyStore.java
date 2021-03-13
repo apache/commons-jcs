@@ -23,11 +23,12 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.EOFException;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -381,7 +382,7 @@ public class BlockDiskKeyStore<K>
 
             synchronized (keyFile)
             {
-                final FileInputStream fis = new FileInputStream(keyFile);
+                final InputStream fis = Files.newInputStream(keyFile.toPath());
                 final BufferedInputStream bis = new BufferedInputStream(fis, 65536);
 
                 try (ObjectInputStream ois = new ObjectInputStreamClassLoaderAware(bis, null))
@@ -471,7 +472,7 @@ public class BlockDiskKeyStore<K>
 
             synchronized (keyFile)
             {
-                final FileOutputStream fos = new FileOutputStream(keyFile);
+                final OutputStream fos = Files.newOutputStream(keyFile.toPath());
                 final BufferedOutputStream bos = new BufferedOutputStream(fos, 65536);
 
                 try (ObjectOutputStream oos = new ObjectOutputStream(bos))
