@@ -51,7 +51,7 @@ public class StandardSerializer
 
         try (ObjectOutputStream oos = new ObjectOutputStream(baos))
         {
-            oos.writeObject(obj);
+            oos.writeUnshared(obj);
         }
 
         return baos.toByteArray();
