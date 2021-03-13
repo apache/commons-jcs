@@ -34,7 +34,6 @@ import org.apache.commons.jcs3.auxiliary.lateral.socket.tcp.behavior.ITCPLateral
 import org.apache.commons.jcs3.engine.CacheWatchRepairable;
 import org.apache.commons.jcs3.engine.ZombieCacheServiceNonLocal;
 import org.apache.commons.jcs3.engine.ZombieCacheWatch;
-import org.apache.commons.jcs3.engine.behavior.ICache;
 import org.apache.commons.jcs3.engine.behavior.ICacheServiceNonLocal;
 import org.apache.commons.jcs3.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs3.engine.behavior.IElementSerializer;
@@ -88,7 +87,7 @@ public class LateralTCPCacheFactory
            final ICacheEventLogger cacheEventLogger, final IElementSerializer elementSerializer )
     {
         final ITCPLateralCacheAttributes lac = (ITCPLateralCacheAttributes) iaca;
-        final ArrayList<ICache<K, V>> noWaits = new ArrayList<>();
+        final ArrayList<LateralCacheNoWait<K, V>> noWaits = new ArrayList<>();
 
         // pairs up the tcp servers and set the tcpServer value and
         // get the manager and then get the cache
@@ -115,11 +114,8 @@ public class LateralTCPCacheFactory
         final ILateralCacheListener<K, V> listener = createListener( lac, cacheMgr );
 
         // create the no wait facade.
-        @SuppressWarnings("unchecked") // No generic arrays in java
-        final
-        LateralCacheNoWait<K, V>[] lcnwArray = noWaits.toArray( new LateralCacheNoWait[0] );
         final LateralCacheNoWaitFacade<K, V> lcnwf =
-            new LateralCacheNoWaitFacade<>(listener, lcnwArray, lac );
+            new LateralCacheNoWaitFacade<>(listener, noWaits, lac);
 
         // create udp discovery if available.
         createDiscoveryService( lac, lcnwf, cacheMgr, cacheEventLogger, elementSerializer );

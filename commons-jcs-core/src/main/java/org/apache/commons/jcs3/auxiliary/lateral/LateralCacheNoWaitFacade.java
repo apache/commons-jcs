@@ -83,15 +83,33 @@ public class LateralCacheNoWaitFacade<K, V>
     /**
      * Constructs with the given lateral cache, and fires events to any listeners.
      * <p>
-     * @param noWaits
-     * @param cattr
+     * @param listener the cache listener
+     * @param noWaits the array of noWaits
+     * @param cattr the configuration
+     *
+     * @deprecated Use list constructor
      */
+    @Deprecated
     public LateralCacheNoWaitFacade(final ILateralCacheListener<K, V> listener, final LateralCacheNoWait<K, V>[] noWaits, final ILateralCacheAttributes cattr )
+    {
+        this(listener, Arrays.asList(noWaits), cattr);
+    }
+
+    /**
+     * Constructs with the given lateral cache, and fires events to any listeners.
+     * <p>
+     * @param listener the cache listener
+     * @param noWaits the list of noWaits
+     * @param cattr the configuration
+     */
+    @SuppressWarnings("unchecked") // No generic arrays in java
+    public LateralCacheNoWaitFacade(final ILateralCacheListener<K, V> listener,
+            final List<LateralCacheNoWait<K, V>> noWaits, final ILateralCacheAttributes cattr )
     {
         log.debug( "CONSTRUCTING NO WAIT FACADE" );
         this.listener = listener;
-        this.noWaits = noWaits;
-        this.noWaitSet = new CopyOnWriteArraySet<>(Arrays.asList(noWaits));
+        this.noWaits = noWaits.toArray(new LateralCacheNoWait[0]);
+        this.noWaitSet = new CopyOnWriteArraySet<>(noWaits);
         this.cacheName = cattr.getCacheName();
         this.lateralCacheAttributes = cattr;
     }
