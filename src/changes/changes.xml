@@ -20,6 +20,14 @@
 	</properties>
 	<body>
         <release version="3.1" date="20YY-MM-DD">
+            <action dev="tv" type="update">
+               IMPORTANT CHANGE
+               Use IElementSerializer for Block disk key storage
+            </action>
+            <action dev="tv" type="update">
+               IMPORTANT CHANGE
+               Use IElementSerializer for UDP service discovery
+            </action>
             <action dev="tv" type="fix">
                Fix shutdown race conditions
             </action>
