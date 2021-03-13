@@ -1,5 +1,7 @@
 package org.apache.commons.jcs3.auxiliary.disk.block;
 
+import java.io.EOFException;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -19,15 +21,14 @@ package org.apache.commons.jcs3.auxiliary.disk.block;
  * under the License.
  */
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.EOFException;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.nio.ByteBuffer;
+import java.nio.channels.SeekableByteChannel;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -37,9 +38,11 @@ import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.jcs3.auxiliary.disk.behavior.IDiskCacheAttributes.DiskLimitType;
+import org.apache.commons.jcs3.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs3.io.ObjectInputStreamClassLoaderAware;
 import org.apache.commons.jcs3.log.Log;
 import org.apache.commons.jcs3.log.LogManager;
+import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
 import org.apache.commons.jcs3.utils.struct.AbstractLRUMap;
 import org.apache.commons.jcs3.utils.struct.LRUMap;
 import org.apache.commons.jcs3.utils.timing.ElapsedTimer;
@@ -221,6 +224,9 @@ public class BlockDiskKeyStore<K>
     /** The file where we persist the keys */
     private final File keyFile;
 
+    /** The key file signature for new-style key files */
+    private final static int KEY_FILE_SIGNATURE = 0x6A63734B; // "jcsK"
+
     /** The name to prefix log messages with. */
     protected final String logCacheName;
 
@@ -241,6 +247,11 @@ public class BlockDiskKeyStore<K>
     private final int blockSize;
 
     /**
+     * Serializer for reading and writing key file
+     */
+    private final IElementSerializer serializer;
+
+    /**
      * Set the configuration options.
      * <p>
      *
@@ -257,6 +268,15 @@ public class BlockDiskKeyStore<K>
         this.blockDiskCache = blockDiskCache;
         this.diskLimitType = cacheAttributes.getDiskLimitType();
         this.blockSize = cacheAttributes.getBlockSizeBytes();
+
+        if (blockDiskCache == null)
+        {
+            this.serializer = new StandardSerializer();
+        }
+        else
+        {
+            this.serializer = blockDiskCache.getElementSerializer();
+        }
 
         final File rootDirectory = cacheAttributes.getDiskPath();
 
@@ -366,25 +386,66 @@ public class BlockDiskKeyStore<K>
 
     /**
      * Loads the keys from the .key file. The keys are stored individually on
-     * disk. They are added one by one to an LRUMap..
+     * disk. They are added one by one to an LRUMap.
      */
     protected void loadKeys()
     {
         log.info("{0}: Loading keys for {1}", () -> logCacheName, () -> keyFile.toString());
 
-        try
+        // create a key map to use.
+        initKeyMap();
+
+        final HashMap<K, int[]> keys = new HashMap<>();
+
+        synchronized (keyFile)
         {
-            // create a key map to use.
-            initKeyMap();
+            // Check file type
+            int fileSignature = 0;
 
-            final HashMap<K, int[]> keys = new HashMap<>();
-
-            synchronized (keyFile)
+            try (SeekableByteChannel bc = Files.newByteChannel(keyFile.toPath(),
+                    StandardOpenOption.READ))
             {
-                final FileInputStream fis = new FileInputStream(keyFile);
-                final BufferedInputStream bis = new BufferedInputStream(fis, 65536);
+                final ByteBuffer signature = ByteBuffer.allocate(4);
+                bc.read(signature);
+                signature.rewind();
+                fileSignature = signature.getInt();
 
-                try (ObjectInputStream ois = new ObjectInputStreamClassLoaderAware(bis, null))
+                if (fileSignature == KEY_FILE_SIGNATURE)
+                {
+                    while (true)
+                    {
+                        final ByteBuffer bufferSize = ByteBuffer.allocate(4);
+                        int read = bc.read(bufferSize);
+                        if (read < 0)
+                        {
+                            break;
+                        }
+                        assert read == bufferSize.capacity();
+                        bufferSize.rewind();
+
+                        final ByteBuffer serialized = ByteBuffer.allocate(bufferSize.getInt());
+                        read = bc.read(serialized);
+                        assert read == serialized.capacity();
+                        serialized.rewind();
+
+                        final BlockDiskElementDescriptor<K> descriptor =
+                                serializer.deSerialize(serialized.array(), null);
+                        if (descriptor != null)
+                        {
+                            keys.put(descriptor.getKey(), descriptor.getBlocks());
+                        }
+                    }
+                }
+            }
+            catch (final IOException | ClassNotFoundException e)
+            {
+                log.error("{0}: Problem loading keys for file {1}", logCacheName, fileName, e);
+            }
+
+            if (fileSignature != KEY_FILE_SIGNATURE)
+            {
+                try (final InputStream fis = Files.newInputStream(keyFile.toPath());
+                     final ObjectInputStream ois = new ObjectInputStreamClassLoaderAware(fis, null))
                 {
                     while (true)
                     {
@@ -402,21 +463,21 @@ public class BlockDiskKeyStore<K>
                 {
                     // nothing
                 }
-            }
-
-            if (!keys.isEmpty())
-            {
-                keyHash.putAll(keys);
-
-                log.debug("{0}: Found {1} in keys file.", logCacheName, keys.size());
-                log.info("{0}: Loaded keys from [{1}], key count: {2}; up to {3} will be available.",
-                        () -> logCacheName, () -> fileName, () -> keyHash.size(),
-                        () -> maxKeySize);
+                catch (final IOException | ClassNotFoundException e)
+                {
+                    log.error("{0}: Problem loading keys (old style) for file {1}", logCacheName, fileName, e);
+                }
             }
         }
-        catch (final Exception e)
+
+        if (!keys.isEmpty())
         {
-            log.error("{0}: Problem loading keys for file {1}", logCacheName, fileName, e);
+            keyHash.putAll(keys);
+
+            log.debug("{0}: Found {1} in keys file.", logCacheName, keys.size());
+            log.info("{0}: Loaded keys from [{1}], key count: {2}; up to {3} will be available.",
+                    () -> logCacheName, () -> fileName, () -> keyHash.size(),
+                    () -> maxKeySize);
         }
     }
 
@@ -462,45 +523,50 @@ public class BlockDiskKeyStore<K>
      */
     protected void saveKeys()
     {
-        try
+        final ElapsedTimer timer = new ElapsedTimer();
+        log.info("{0}: Saving keys to [{1}], key count [{2}]", () -> logCacheName,
+                () -> this.keyFile.getAbsolutePath(), () -> keyHash.size());
+
+        synchronized (keyFile)
         {
-            final ElapsedTimer timer = new ElapsedTimer();
-            final int numKeys = keyHash.size();
-            log.info("{0}: Saving keys to [{1}], key count [{2}]", () -> logCacheName,
-                    () -> this.keyFile.getAbsolutePath(), () -> numKeys);
-
-            synchronized (keyFile)
+            try (SeekableByteChannel bc = Files.newByteChannel(keyFile.toPath(),
+                    StandardOpenOption.CREATE, StandardOpenOption.WRITE))
             {
-                final FileOutputStream fos = new FileOutputStream(keyFile);
-                final BufferedOutputStream bos = new BufferedOutputStream(fos, 65536);
-
-                try (ObjectOutputStream oos = new ObjectOutputStream(bos))
+                if (!verify())
                 {
-                    if (!verify())
-                    {
-                        throw new IOException("Inconsistent key file");
-                    }
-                    // don't need to synchronize, since the underlying
-                    // collection makes a copy
-                    for (final Map.Entry<K, int[]> entry : keyHash.entrySet())
-                    {
-                        final BlockDiskElementDescriptor<K> descriptor = new BlockDiskElementDescriptor<>();
-                        descriptor.setKey(entry.getKey());
-                        descriptor.setBlocks(entry.getValue());
-                        // stream these out in the loop.
-                        oos.writeUnshared(descriptor);
-                    }
+                    throw new IOException("Inconsistent key file");
+                }
+
+                // Write signature to distinguish old format from new one
+                ByteBuffer signature = ByteBuffer.allocate(4);
+                signature.putInt(KEY_FILE_SIGNATURE).flip();
+                bc.write(signature);
+
+                // don't need to synchronize, since the underlying
+                // collection makes a copy
+                for (final Map.Entry<K, int[]> entry : keyHash.entrySet())
+                {
+                    final BlockDiskElementDescriptor<K> descriptor =
+                            new BlockDiskElementDescriptor<>(entry.getKey(),entry.getValue());
+                    // stream these out in the loop.
+                    byte[] serialized = serializer.serialize(descriptor);
+                    final ByteBuffer buffer = ByteBuffer.allocate(4 + serialized.length);
+                    buffer.putInt(serialized.length);
+                    buffer.put(serialized);
+                    buffer.flip();
+                    final int written = bc.write(buffer);
+                    assert written == buffer.capacity();
                 }
             }
+            catch (final IOException e)
+            {
+                log.error("{0}: Problem storing keys.", logCacheName, e);
+            }
+        }
 
-            log.info("{0}: Finished saving keys. It took {1} to store {2} keys. Key file length [{3}]",
-                    () -> logCacheName, () -> timer.getElapsedTimeString(), () -> numKeys,
-                    () -> keyFile.length());
-        }
-        catch (final IOException e)
-        {
-            log.error("{0}: Problem storing keys.", logCacheName, e);
-        }
+        log.info("{0}: Finished saving keys. It took {1} to store {2} keys. Key file length [{3}]",
+                () -> logCacheName, () -> timer.getElapsedTimeString(), () -> keyHash.size(),
+                () -> keyFile.length());
     }
 
     /**
