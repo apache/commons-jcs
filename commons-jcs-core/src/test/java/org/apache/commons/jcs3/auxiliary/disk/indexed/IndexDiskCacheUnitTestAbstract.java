@@ -960,7 +960,7 @@ public abstract class IndexDiskCacheUnitTestAbstract extends TestCase
         final IndexedDiskCacheAttributes cattr = getCacheAttributes();
         cattr.setCacheName(cacheName);
         cattr.setMaxKeySize(100);
-        cattr.setDiskPath("target/test-sandbox/BlockDiskCacheUnitTest");
+        cattr.setDiskPath("target/test-sandbox/IndexDiskCacheUnitTest");
         IndexedDiskCache<String, String> diskCache = new IndexedDiskCache<>(cattr);
 
         // DO WORK
