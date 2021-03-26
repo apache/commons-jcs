@@ -39,6 +39,15 @@
     <tag>HEAD</tag>
   </scm>
 
+  <properties>
+     <commons.bc.version>3.0</commons.bc.version>
+     <!-- generate report even if there are binary incompatible changes -->
+     <commons.japicmp.breakBuildOnBinaryIncompatibleModifications>false</commons.japicmp.breakBuildOnBinaryIncompatibleModifications>
+     <commons.japicmp.ignoreMissingClasses>false</commons.japicmp.ignoreMissingClasses>
+     <commons.japicmp.version>0.15.3</commons.japicmp.version>
+     <japicmp.skip>false</japicmp.skip>
+  </properties>
+
   <dependencies>
 
     <dependency>
