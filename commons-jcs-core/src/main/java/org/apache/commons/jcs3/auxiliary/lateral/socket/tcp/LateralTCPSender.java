@@ -20,10 +20,12 @@ package org.apache.commons.jcs3.auxiliary.lateral.socket.tcp;
  */
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.InetSocketAddress;
-import java.net.Socket;
+import java.nio.channels.AsynchronousSocketChannel;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -50,8 +52,8 @@ public class LateralTCPSender
     /** The serializer. */
     private IElementSerializer serializer;
 
-    /** The socket connection with the server. */
-    private Socket socket;
+    /** The client connection with the server. */
+    private AsynchronousSocketChannel client;
 
     /** how many messages sent */
     private int sendCnt;
@@ -108,32 +110,22 @@ public class LateralTCPSender
     protected void init( final String host, final int port )
         throws IOException
     {
+        log.info( "Attempting connection to [{0}:{1}]", host, port );
+
         try
         {
-            log.info( "Attempting connection to [{0}]", host );
+            client = AsynchronousSocketChannel.open();
+            InetSocketAddress hostAddress = new InetSocketAddress(host, port);
+            Future<Void> future = client.connect(hostAddress);
 
-            try
-            {
-                this.socket = new Socket();
-                this.socket.connect(new InetSocketAddress(host, port), this.socketOpenTimeOut);
-            }
-            catch ( final IOException ioe )
-            {
-                throw new IOException( "Cannot connect to " + host + ":" + port, ioe );
-            }
+            future.get(this.socketOpenTimeOut, TimeUnit.MILLISECONDS);
+        }
+        catch (final IOException | InterruptedException | ExecutionException | TimeoutException ioe)
+        {
+            throw new IOException( "Cannot connect to " + host + ":" + port, ioe );
+        }
 
-            socket.setSoTimeout( socketSoTimeOut );
-        }
-        catch ( final java.net.ConnectException e )
-        {
-            log.debug( "Remote host [{0}] refused connection.", host );
-            throw e;
-        }
-        catch ( final IOException e )
-        {
-            log.debug( "Could not connect to [{0}]", host, e );
-            throw e;
-        }
+        // socket.setSoTimeout( socketSoTimeOut );
     }
 
     /**
@@ -148,7 +140,7 @@ public class LateralTCPSender
         sendCnt++;
         if ( log.isInfoEnabled() && sendCnt % 100 == 0 )
         {
-            log.info( "Send Count (port {0}) = {1}", socket.getPort(), sendCnt );
+            log.info( "Send Count {0} = {1}", client.getRemoteAddress(), sendCnt );
         }
 
         log.debug( "sending LateralElementDescriptor" );
@@ -158,13 +150,10 @@ public class LateralTCPSender
             return;
         }
 
-        final OutputStream sos = socket.getOutputStream();
-
         lock.lock();
         try
         {
-            serializer.serializeTo(led, sos);
-            sos.flush();
+            serializer.serializeTo(led, client, socketSoTimeOut);
         }
         finally
         {
@@ -201,31 +190,15 @@ public class LateralTCPSender
         lock.lock();
         try
         {
-            try
-            {
-                // clean up input stream, nothing should be there yet.
-                if ( socket.getInputStream().available() > 0 )
-                {
-                    socket.getInputStream().read( new byte[socket.getInputStream().available()] );
-                }
-            }
-            catch ( final IOException ioe )
-            {
-                log.error( "Problem cleaning socket before send {0}", socket, ioe );
-                throw ioe;
-            }
-
             // write object to listener
             send(led);
-
-            InputStream sis = socket.getInputStream();
-            response = serializer.deSerializeFrom(sis, null);
+            response = serializer.deSerializeFrom(client, socketSoTimeOut, null);
         }
         catch ( final IOException | ClassNotFoundException ioe )
         {
-            final String message = "Could not open InputStream to " + socket +
-                " SoTimeout [" + socket.getSoTimeout() +
-                "] Connected [" + socket.isConnected() + "]";
+            final String message = "Could not open InputStream to " +
+                client.getRemoteAddress() + " SoTimeout [" + socketSoTimeOut +
+                "] Connected [" + client.isOpen() + "]";
             log.error( message, ioe );
             throw new IOException(message, ioe);
         }
@@ -248,6 +221,6 @@ public class LateralTCPSender
         throws IOException
     {
         log.info( "Dispose called" );
-        socket.close();
+        client.close();
     }
 }

@@ -24,8 +24,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
+import java.nio.channels.AsynchronousByteChannel;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Defines the behavior for cache element serializers. This layer of abstraction allows us to plug
@@ -59,8 +64,8 @@ public interface IElementSerializer
         throws IOException, ClassNotFoundException;
 
     /**
-     * Convenience method to write serialized object into a stream
-     * The stream data will be prepended with a four-byte length prefix
+     * Convenience method to write serialized object into a stream.
+     * The stream data will be prepended with a four-byte length prefix.
      *
      * @param <T> the type of the object
      * @param obj the object to serialize
@@ -82,8 +87,8 @@ public interface IElementSerializer
     }
 
     /**
-     * Convenience method to write serialized object into a channel
-     * The stream data will be prepended with a four-byte length prefix
+     * Convenience method to write serialized object into a channel.
+     * The stream data will be prepended with a four-byte length prefix.
      *
      * @param <T> the type of the object
      * @param obj the object to serialize
@@ -100,12 +105,54 @@ public interface IElementSerializer
         buffer.put(serialized);
         buffer.flip();
 
-        oc.write(buffer);
-        return buffer.capacity();
+        int count = 0;
+        while (buffer.hasRemaining())
+        {
+            count += oc.write(buffer);
+        }
+        return count;
     }
 
     /**
-     * Convenience method to read serialized object from a stream
+     * Convenience method to write serialized object into an
+     * asynchronous channel.
+     * The stream data will be prepended with a four-byte length prefix.
+     *
+     * @param <T> the type of the object
+     * @param obj the object to serialize
+     * @param oc the output channel
+     * @param writeTimeoutMs the write timeout im milliseconds
+     * @return the number of bytes written
+     * @throws IOException if serialization or writing fails
+     */
+    default <T> int serializeTo(T obj, AsynchronousByteChannel oc, int writeTimeoutMs)
+        throws IOException
+    {
+        final byte[] serialized = serialize(obj);
+        final ByteBuffer buffer = ByteBuffer.allocate(4 + serialized.length);
+        buffer.putInt(serialized.length);
+        buffer.put(serialized);
+        buffer.flip();
+
+        int count = 0;
+        while (buffer.hasRemaining())
+        {
+            Future<Integer> bytesWritten = oc.write(buffer);
+            try
+            {
+                count += bytesWritten.get(writeTimeoutMs, TimeUnit.MILLISECONDS);
+            }
+            catch (InterruptedException | ExecutionException | TimeoutException e)
+            {
+                throw new IOException("Write timeout exceeded " + writeTimeoutMs, e);
+            }
+        }
+
+        return count;
+    }
+
+    /**
+     * Convenience method to read serialized object from a stream.
      * The method expects to find a four-byte length prefix in the
      * stream data.
      *
@@ -135,7 +182,7 @@ public interface IElementSerializer
     }
 
     /**
-     * Convenience method to read serialized object from a channel
+     * Convenience method to read serialized object from a channel.
      * The method expects to find a four-byte length prefix in the
      * stream data.
      *
@@ -152,14 +199,78 @@ public interface IElementSerializer
         int read = ic.read(bufferSize);
         if (read < 0)
         {
-            throw new EOFException("End of stream reached");
+            throw new EOFException("End of stream reached (length)");
         }
         assert read == bufferSize.capacity();
         bufferSize.flip();
 
         final ByteBuffer serialized = ByteBuffer.allocate(bufferSize.getInt());
-        read = ic.read(serialized);
-        assert read == serialized.capacity();
+        while (serialized.remaining() > 0)
+        {
+            read = ic.read(serialized);
+            if (read < 0)
+            {
+                throw new EOFException("End of stream reached (object)");
+            }
+        }
+        serialized.flip();
+
+        return deSerialize(serialized.array(), loader);
+    }
+
+    /**
+     * Convenience method to read serialized object from an
+     * asynchronous channel.
+     * The method expects to find a four-byte length prefix in the
+     * stream data.
+     *
+     * @param <T> the type of the object
+     * @param ic the input channel
+     * @param readTimeoutMs the read timeout in milliseconds
+     * @param loader class loader to use
+     * @throws IOException if serialization or reading fails
+     * @throws ClassNotFoundException thrown if we don't know the object.
+     */
+    default <T> T deSerializeFrom(AsynchronousByteChannel ic, int readTimeoutMs, ClassLoader loader)
+        throws IOException, ClassNotFoundException
+    {
+        final ByteBuffer bufferSize = ByteBuffer.allocate(4);
+        Future<Integer> readFuture = ic.read(bufferSize);
+
+        try
+        {
+            int read = readFuture.get(readTimeoutMs, TimeUnit.MILLISECONDS);
+            if (read < 0)
+            {
+                throw new EOFException("End of stream reached (length)");
+            }
+            assert read == bufferSize.capacity();
+        }
+        catch (InterruptedException | ExecutionException | TimeoutException e)
+        {
+            throw new IOException("Read timeout exceeded (length)" + readTimeoutMs, e);
+        }
+
+        bufferSize.flip();
+
+        final ByteBuffer serialized = ByteBuffer.allocate(bufferSize.getInt());
+        while (serialized.remaining() > 0)
+        {
+            readFuture = ic.read(serialized);
+            try
+            {
+                int read = readFuture.get(readTimeoutMs, TimeUnit.MILLISECONDS);
+                if (read < 0)
+                {
+                    throw new EOFException("End of stream reached (object)");
+                }
+            }
+            catch (InterruptedException | ExecutionException | TimeoutException e)
+            {
+                throw new IOException("Read timeout exceeded (object)" + readTimeoutMs, e);
+            }
+        }
+
         serialized.flip();
 
         return deSerialize(serialized.array(), loader);
