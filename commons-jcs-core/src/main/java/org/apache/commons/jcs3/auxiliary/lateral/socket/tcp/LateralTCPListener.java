@@ -499,9 +499,20 @@ public class LateralTCPListener<K, V>
                 {
                     SelectionKey key = i.next();
 
+                    if (!key.isValid())
+                    {
+                        continue;
+                    }
+
                     if (key.isAcceptable())
                     {
-                        SocketChannel client = serverSocket.accept();
+                        ServerSocketChannel server = (ServerSocketChannel) key.channel();
+                        SocketChannel client = server.accept();
+                        if (client == null)
+                        {
+                            //may happen in non-blocking mode
+                            continue;
+                        }
 
                         log.info("Connected to client at {0}", client.getRemoteAddress());
 
@@ -519,6 +530,18 @@ public class LateralTCPListener<K, V>
             }
 
             log.debug("Thread terminated, exiting gracefully");
+
+            //close all registered channels
+            selector.keys().forEach(key -> {
+                try
+                {
+                    key.channel().close();
+                }
+                catch (IOException e)
+                {
+                    log.warn("Problem closing channel", e);
+                }
+            });
         }
         catch (final IOException e)
         {
