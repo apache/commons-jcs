@@ -19,7 +19,13 @@ package org.apache.commons.jcs3.engine.behavior;
  * under the License.
  */
 
+import java.io.EOFException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.ByteBuffer;
+import java.nio.channels.ReadableByteChannel;
+import java.nio.channels.WritableByteChannel;
 
 /**
  * Defines the behavior for cache element serializers. This layer of abstraction allows us to plug
@@ -31,21 +37,131 @@ public interface IElementSerializer
 {
     /**
      * Turns an object into a byte array.
-     * @param obj
-     * @return byte[]
-     * @throws IOException
+     *
+     * @param <T> the type of the object
+     * @param obj the object to serialize
+     * @return byte[] a byte array containing the serialized object
+     * @throws IOException if serialization fails
      */
     <T> byte[] serialize( T obj )
         throws IOException;
 
     /**
      * Turns a byte array into an object.
+     *
      * @param bytes data bytes
      * @param loader class loader to use
      * @return Object
-     * @throws IOException
+     * @throws IOException if de-serialization fails
      * @throws ClassNotFoundException thrown if we don't know the object.
      */
     <T> T deSerialize( byte[] bytes, ClassLoader loader )
         throws IOException, ClassNotFoundException;
+
+    /**
+     * Convenience method to write serialized object into a stream
+     * The stream data will be prepended with a four-byte length prefix
+     *
+     * @param <T> the type of the object
+     * @param obj the object to serialize
+     * @param os the output stream
+     * @return the number of bytes written
+     * @throws IOException if serialization or writing fails
+     */
+    default <T> int serializeTo(T obj, OutputStream os)
+        throws IOException
+    {
+        final byte[] serialized = serialize(obj);
+        final ByteBuffer buffer = ByteBuffer.allocate(4 + serialized.length);
+        buffer.putInt(serialized.length);
+        buffer.put(serialized);
+        buffer.flip();
+
+        os.write(buffer.array());
+        return buffer.capacity();
+    }
+
+    /**
+     * Convenience method to write serialized object into a channel
+     * The stream data will be prepended with a four-byte length prefix
+     *
+     * @param <T> the type of the object
+     * @param obj the object to serialize
+     * @param oc the output channel
+     * @return the number of bytes written
+     * @throws IOException if serialization or writing fails
+     */
+    default <T> int serializeTo(T obj, WritableByteChannel oc)
+        throws IOException
+    {
+        final byte[] serialized = serialize(obj);
+        final ByteBuffer buffer = ByteBuffer.allocate(4 + serialized.length);
+        buffer.putInt(serialized.length);
+        buffer.put(serialized);
+        buffer.flip();
+
+        oc.write(buffer);
+        return buffer.capacity();
+    }
+
+    /**
+     * Convenience method to read serialized object from a stream
+     * The method expects to find a four-byte length prefix in the
+     * stream data.
+     *
+     * @param <T> the type of the object
+     * @param is the input stream
+     * @param loader class loader to use
+     * @throws IOException if serialization or reading fails
+     * @throws ClassNotFoundException thrown if we don't know the object.
+     */
+    default <T> T deSerializeFrom(InputStream is, ClassLoader loader)
+        throws IOException, ClassNotFoundException
+    {
+        final byte[] bufferSize = new byte[4];
+        int read = is.read(bufferSize);
+        if (read < 0)
+        {
+            throw new EOFException("End of stream reached");
+        }
+        assert read == bufferSize.length;
+        ByteBuffer size = ByteBuffer.wrap(bufferSize);
+
+        byte[] serialized = new byte[size.getInt()];
+        read = is.read(serialized);
+        assert read == serialized.length;
+
+        return deSerialize(serialized, loader);
+    }
+
+    /**
+     * Convenience method to read serialized object from a channel
+     * The method expects to find a four-byte length prefix in the
+     * stream data.
+     *
+     * @param <T> the type of the object
+     * @param ic the input channel
+     * @param loader class loader to use
+     * @throws IOException if serialization or reading fails
+     * @throws ClassNotFoundException thrown if we don't know the object.
+     */
+    default <T> T deSerializeFrom(ReadableByteChannel ic, ClassLoader loader)
+        throws IOException, ClassNotFoundException
+    {
+        final ByteBuffer bufferSize = ByteBuffer.allocate(4);
+        int read = ic.read(bufferSize);
+        if (read < 0)
+        {
+            throw new EOFException("End of stream reached");
+        }
+        assert read == bufferSize.capacity();
+        bufferSize.flip();
+
+        final ByteBuffer serialized = ByteBuffer.allocate(bufferSize.getInt());
+        read = ic.read(serialized);
+        assert read == serialized.capacity();
+        serialized.flip();
+
+        return deSerialize(serialized.array(), loader);
+    }
 }

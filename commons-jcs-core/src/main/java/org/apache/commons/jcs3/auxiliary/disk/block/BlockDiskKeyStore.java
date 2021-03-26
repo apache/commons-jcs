@@ -407,32 +407,25 @@ public class BlockDiskKeyStore<K>
             {
                 final ByteBuffer signature = ByteBuffer.allocate(4);
                 bc.read(signature);
-                signature.rewind();
+                signature.flip();
                 fileSignature = signature.getInt();
 
                 if (fileSignature == KEY_FILE_SIGNATURE)
                 {
                     while (true)
                     {
-                        final ByteBuffer bufferSize = ByteBuffer.allocate(4);
-                        int read = bc.read(bufferSize);
-                        if (read < 0)
+                        try
+                        {
+                            final BlockDiskElementDescriptor<K> descriptor =
+                                    serializer.deSerializeFrom(bc, null);
+                            if (descriptor != null)
+                            {
+                                keys.put(descriptor.getKey(), descriptor.getBlocks());
+                            }
+                        }
+                        catch (EOFException e)
                         {
                             break;
-                        }
-                        assert read == bufferSize.capacity();
-                        bufferSize.rewind();
-
-                        final ByteBuffer serialized = ByteBuffer.allocate(bufferSize.getInt());
-                        read = bc.read(serialized);
-                        assert read == serialized.capacity();
-                        serialized.rewind();
-
-                        final BlockDiskElementDescriptor<K> descriptor =
-                                serializer.deSerialize(serialized.array(), null);
-                        if (descriptor != null)
-                        {
-                            keys.put(descriptor.getKey(), descriptor.getBlocks());
                         }
                     }
                 }
@@ -549,13 +542,7 @@ public class BlockDiskKeyStore<K>
                     final BlockDiskElementDescriptor<K> descriptor =
                             new BlockDiskElementDescriptor<>(entry.getKey(),entry.getValue());
                     // stream these out in the loop.
-                    byte[] serialized = serializer.serialize(descriptor);
-                    final ByteBuffer buffer = ByteBuffer.allocate(4 + serialized.length);
-                    buffer.putInt(serialized.length);
-                    buffer.put(serialized);
-                    buffer.flip();
-                    final int written = bc.write(buffer);
-                    assert written == buffer.capacity();
+                    serializer.serializeTo(descriptor, bc);
                 }
             }
             catch (final IOException e)
