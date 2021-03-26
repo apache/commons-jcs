@@ -21,7 +21,6 @@ package org.apache.commons.jcs3.auxiliary.remote.http.server;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.ObjectInputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.HashMap;
@@ -45,7 +44,6 @@ import org.apache.commons.jcs3.engine.behavior.ICacheServiceNonLocal;
 import org.apache.commons.jcs3.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs3.engine.control.CompositeCacheManager;
 import org.apache.commons.jcs3.engine.logging.behavior.ICacheEventLogger;
-import org.apache.commons.jcs3.io.ObjectInputStreamClassLoaderAware;
 import org.apache.commons.jcs3.log.Log;
 import org.apache.commons.jcs3.log.LogManager;
 import org.apache.commons.jcs3.utils.config.PropertySetter;
@@ -135,17 +133,17 @@ public class RemoteHttpCacheServlet
     protected RemoteCacheRequest<Serializable, Serializable> readRequest( final HttpServletRequest request )
     {
         RemoteCacheRequest<Serializable, Serializable> remoteRequest = null;
-        try
-        {
-            final InputStream inputStream = request.getInputStream();
-            log.debug( "After getting input stream and before reading it" );
 
+        try (final InputStream inputStream = request.getInputStream())
+        {
+            log.debug( "After getting input stream and before reading it" );
             remoteRequest = readRequestFromStream( inputStream );
         }
-        catch ( final Exception e )
+        catch ( final IOException | ClassNotFoundException e )
         {
             log.error( "Could not get a RemoteHttpCacheRequest object from the input stream.", e );
         }
+
         return remoteRequest;
     }
 
@@ -160,14 +158,7 @@ public class RemoteHttpCacheServlet
     protected RemoteCacheRequest<Serializable, Serializable> readRequestFromStream( final InputStream inputStream )
         throws IOException, ClassNotFoundException
     {
-        final ObjectInputStream ois = new ObjectInputStreamClassLoaderAware( inputStream, null );
-
-        @SuppressWarnings("unchecked") // Need to cast from Object
-        final
-        RemoteCacheRequest<Serializable, Serializable> remoteRequest
-            = (RemoteCacheRequest<Serializable, Serializable>) ois.readObject();
-        ois.close();
-        return remoteRequest;
+        return serializer.deSerializeFrom(inputStream, null);
     }
 
     /**
@@ -178,20 +169,10 @@ public class RemoteHttpCacheServlet
      */
     protected void writeResponse( final HttpServletResponse response, final RemoteCacheResponse<Object> cacheResponse )
     {
-        try
+        try (final OutputStream outputStream = response.getOutputStream())
         {
             response.setContentType( "application/octet-stream" );
-
-            final byte[] responseAsByteAray = serializer.serialize( cacheResponse );
-            response.setContentLength( responseAsByteAray.length );
-
-            final OutputStream outputStream = response.getOutputStream();
-            log.debug( "Opened output stream.  Response size: {0}",
-                    () -> responseAsByteAray.length );
-            // WRITE
-            outputStream.write( responseAsByteAray );
-            outputStream.flush();
-            outputStream.close();
+            serializer.serializeTo(cacheResponse, outputStream);
         }
         catch ( final IOException e )
         {
