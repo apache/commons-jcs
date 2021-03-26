@@ -29,6 +29,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 import org.apache.commons.jcs3.auxiliary.AbstractAuxiliaryCache;
@@ -78,7 +79,7 @@ public class LateralCacheNoWaitFacade<K, V>
     private final ILateralCacheAttributes lateralCacheAttributes;
 
     /** Disposed state of this facade */
-    private boolean disposed;
+    private AtomicBoolean disposed = new AtomicBoolean(false);
 
     /**
      * Constructs with the given lateral cache, and fires events to any listeners.
@@ -312,7 +313,7 @@ public class LateralCacheNoWaitFacade<K, V>
     @Override
     public void dispose()
     {
-        try
+        if (disposed.compareAndSet(false, true))
         {
             if ( listener != null )
             {
@@ -321,10 +322,6 @@ public class LateralCacheNoWaitFacade<K, V>
             }
 
             noWaitSet.forEach(LateralCacheNoWait::dispose);
-        }
-        finally
-        {
-            disposed = true;
         }
     }
 
@@ -369,7 +366,7 @@ public class LateralCacheNoWaitFacade<K, V>
     @Override
     public CacheStatus getStatus()
     {
-        if (disposed)
+        if (disposed.get())
         {
             return CacheStatus.DISPOSED;
         }
