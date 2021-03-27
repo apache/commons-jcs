@@ -70,7 +70,6 @@
         <item name="Lateral TCP Cache" href="/LateralTCPAuxCache.html"/>
         <item name="Lateral TCP Properties" href="/LateralTCPProperties.html"/>
         <item name="Lateral UDP Discovery" href="/LateralUDPDiscovery.html"/>
-        <item name="Lateral JGroups Cache" href="/LateralJavaGroupsAuxCache.html"/>
       </item>
     </menu>
 
