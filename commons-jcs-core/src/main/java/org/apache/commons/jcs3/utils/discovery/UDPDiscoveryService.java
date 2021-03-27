@@ -106,7 +106,8 @@ public class UDPDiscoveryService
      */
     public UDPDiscoveryService(final UDPDiscoveryAttributes attributes, IElementSerializer serializer)
     {
-        udpDiscoveryAttributes = attributes.clone();
+        this.udpDiscoveryAttributes = attributes.clone();
+        this.serializer = serializer;
 
         try
         {
@@ -133,8 +134,6 @@ public class UDPDiscoveryService
                     getUdpDiscoveryAttributes().getUdpDiscoveryAddr(),
                     getUdpDiscoveryAttributes().getUdpDiscoveryPort(), e );
         }
-
-        this.serializer = serializer;
 
         // initiate sender broadcast
         initiateBroadcast();
@@ -197,10 +196,7 @@ public class UDPDiscoveryService
                 () -> getUdpDiscoveryAttributes().getServicePort() );
 
         try (UDPDiscoverySender sender = new UDPDiscoverySender(
-                getUdpDiscoveryAttributes().getUdpDiscoveryAddr(),
-                getUdpDiscoveryAttributes().getUdpDiscoveryPort(),
-                getUdpDiscoveryAttributes().getUdpTTL(),
-                getSerializer()))
+                getUdpDiscoveryAttributes(), getSerializer()))
         {
             sender.requestBroadcast();
 
@@ -223,10 +219,7 @@ public class UDPDiscoveryService
         // create this connection each time.
         // more robust
         try (UDPDiscoverySender sender = new UDPDiscoverySender(
-                getUdpDiscoveryAttributes().getUdpDiscoveryAddr(),
-                getUdpDiscoveryAttributes().getUdpDiscoveryPort(),
-                getUdpDiscoveryAttributes().getUdpTTL(),
-                getSerializer()))
+                getUdpDiscoveryAttributes(), getSerializer()))
         {
             sender.passiveBroadcast(
                     getUdpDiscoveryAttributes().getServiceAddress(),
@@ -252,10 +245,7 @@ public class UDPDiscoveryService
         // create this connection each time.
         // more robust
         try (UDPDiscoverySender sender = new UDPDiscoverySender(
-                getUdpDiscoveryAttributes().getUdpDiscoveryAddr(),
-                getUdpDiscoveryAttributes().getUdpDiscoveryPort(),
-                getUdpDiscoveryAttributes().getUdpTTL(),
-                getSerializer()))
+                getUdpDiscoveryAttributes(), getSerializer()))
         {
             sender.removeBroadcast(
                     getUdpDiscoveryAttributes().getServiceAddress(),

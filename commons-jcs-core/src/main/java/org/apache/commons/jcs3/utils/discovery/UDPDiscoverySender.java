@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
+import java.net.NetworkInterface;
 import java.util.ArrayList;
 
 import org.apache.commons.jcs3.engine.CacheInfo;
@@ -31,6 +32,7 @@ import org.apache.commons.jcs3.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs3.log.Log;
 import org.apache.commons.jcs3.log.LogManager;
 import org.apache.commons.jcs3.utils.discovery.UDPDiscoveryMessage.BroadcastType;
+import org.apache.commons.jcs3.utils.net.HostNameUtil;
 import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
 
 /**
@@ -72,7 +74,7 @@ public class UDPDiscoverySender implements AutoCloseable
     public UDPDiscoverySender( final String host, final int port, final int udpTTL )
         throws IOException
     {
-        this(host, port, udpTTL, new StandardSerializer());
+        this(null, host, port, udpTTL, new StandardSerializer());
     }
 
     /**
@@ -82,19 +84,43 @@ public class UDPDiscoverySender implements AutoCloseable
      * <p>
      * When you are done sending, you should destroy the socket sender.
      * <p>
+     * @param udpDiscoveryAttributes configuration object
+     * @param serializer the Serializer to use when sending messages
+     * @throws IOException
+     */
+    public UDPDiscoverySender(final UDPDiscoveryAttributes udpDiscoveryAttributes, final IElementSerializer serializer)
+        throws IOException
+    {
+        this(udpDiscoveryAttributes.getUdpDiscoveryInterface(),
+            udpDiscoveryAttributes.getUdpDiscoveryAddr(),
+            udpDiscoveryAttributes.getUdpDiscoveryPort(),
+            udpDiscoveryAttributes.getUdpTTL(),
+            serializer);
+    }
+
+    /**
+     * Constructor for the UDPDiscoverySender object
+     * <p>
+     * This sender can be used to send multiple messages.
+     * <p>
+     * When you are done sending, you should destroy the socket sender.
+     * <p>
+     * @param mcastInterface the Multicast interface name to use, if null, try to autodetect
      * @param host
      * @param port
      * @param udpTTL the Datagram packet time-to-live
      * @param serializer the Serializer to use when sending messages
      * @throws IOException
      */
-    public UDPDiscoverySender( final String host, final int port, final int udpTTL, IElementSerializer serializer)
+    public UDPDiscoverySender(final String mcastInterface, final String host,
+            final int port, final int udpTTL, IElementSerializer serializer)
         throws IOException
     {
         try
         {
             log.debug( "Constructing socket for sender on port [{0}]", port );
             localSocket = new MulticastSocket( port );
+
             if (udpTTL > 0)
             {
                 log.debug( "Setting datagram TTL to [{0}]", udpTTL );
@@ -103,6 +129,22 @@ public class UDPDiscoverySender implements AutoCloseable
 
             // Remote address.
             multicastAddress = InetAddress.getByName( host );
+
+            // Use dedicated interface if specified
+            NetworkInterface multicastInterface = null;
+            if (mcastInterface != null)
+            {
+                multicastInterface = NetworkInterface.getByName(mcastInterface);
+            }
+            else
+            {
+                multicastInterface = HostNameUtil.getMulticastNetworkInterface();
+            }
+            if (multicastInterface != null)
+            {
+                log.info("Using network interface {0}", multicastInterface.getDisplayName());
+                localSocket.setNetworkInterface(multicastInterface);
+            }
         }
         catch ( final IOException e )
         {

@@ -29,25 +29,35 @@ import junit.framework.TestCase;
 public class UDPDiscoveryServiceUnitTest
     extends TestCase
 {
-    /** Verify that the list is updated. */
-    public void testAddOrUpdateService_NotInList()
+    private final static String host = "228.5.6.7";
+    private final static int port = 6789;
+
+    private UDPDiscoveryService service;
+    private MockDiscoveryListener discoveryListener;
+
+    @Override
+    protected void setUp() throws Exception
     {
+        super.setUp();
+
         // SETUP
-        final String host = "228.5.6.7";
-        final int port = 6789;
         final UDPDiscoveryAttributes attributes = new UDPDiscoveryAttributes();
         attributes.setUdpDiscoveryAddr( host );
         attributes.setUdpDiscoveryPort( port );
         attributes.setServicePort( 1000 );
 
         // create the service
-        final UDPDiscoveryService service = new UDPDiscoveryService(attributes, new StandardSerializer());
+        service = new UDPDiscoveryService(attributes, new StandardSerializer());
         service.startup();
         service.addParticipatingCacheName( "testCache1" );
 
-        final MockDiscoveryListener discoveryListener = new MockDiscoveryListener();
+        discoveryListener = new MockDiscoveryListener();
         service.addDiscoveryListener( discoveryListener );
+    }
 
+    /** Verify that the list is updated. */
+    public void testAddOrUpdateService_NotInList()
+    {
         final DiscoveredService discoveredService = new DiscoveredService();
         discoveredService.setServiceAddress( host );
         discoveredService.setCacheNames( new ArrayList<>() );
@@ -67,35 +77,19 @@ public class UDPDiscoveryServiceUnitTest
     /** Verify that the list is updated. */
     public void testAddOrUpdateService_InList_NamesDoNotChange()
     {
-        // SETUP
-        final String host = "228.5.6.7";
-        final int port = 6789;
-        final UDPDiscoveryAttributes attributes = new UDPDiscoveryAttributes();
-        attributes.setUdpDiscoveryAddr( host );
-        attributes.setUdpDiscoveryPort( port );
-        attributes.setServicePort( 1000 );
-
-        // create the service
-        final UDPDiscoveryService service = new UDPDiscoveryService(attributes, new StandardSerializer());
-        service.startup();
-        service.addParticipatingCacheName( "testCache1" );
-
-        final MockDiscoveryListener discoveryListener = new MockDiscoveryListener();
-        service.addDiscoveryListener( discoveryListener );
-
-        final ArrayList<String> sametCacheNames = new ArrayList<>();
-        sametCacheNames.add( "name1" );
+        final ArrayList<String> sameCacheNames = new ArrayList<>();
+        sameCacheNames.add( "name1" );
 
         final DiscoveredService discoveredService = new DiscoveredService();
         discoveredService.setServiceAddress( host );
-        discoveredService.setCacheNames( sametCacheNames );
+        discoveredService.setCacheNames( sameCacheNames );
         discoveredService.setServicePort( 1000 );
         discoveredService.setLastHearFromTime( 100 );
 
 
         final DiscoveredService discoveredService2 = new DiscoveredService();
         discoveredService2.setServiceAddress( host );
-        discoveredService2.setCacheNames( sametCacheNames );
+        discoveredService2.setCacheNames( sameCacheNames );
         discoveredService2.setServicePort( 1000 );
         discoveredService2.setLastHearFromTime( 500 );
 
@@ -130,22 +124,6 @@ public class UDPDiscoveryServiceUnitTest
     /** Verify that the list is updated. */
     public void testAddOrUpdateService_InList_NamesChange()
     {
-        // SETUP
-        final String host = "228.5.6.7";
-        final int port = 6789;
-        final UDPDiscoveryAttributes attributes = new UDPDiscoveryAttributes();
-        attributes.setUdpDiscoveryAddr( host );
-        attributes.setUdpDiscoveryPort( port );
-        attributes.setServicePort( 1000 );
-
-        // create the service
-        final UDPDiscoveryService service = new UDPDiscoveryService(attributes, new StandardSerializer());
-        service.startup();
-        service.addParticipatingCacheName( "testCache1" );
-
-        final MockDiscoveryListener discoveryListener = new MockDiscoveryListener();
-        service.addDiscoveryListener( discoveryListener );
-
         final DiscoveredService discoveredService = new DiscoveredService();
         discoveredService.setServiceAddress( host );
         discoveredService.setCacheNames( new ArrayList<>() );
@@ -192,22 +170,6 @@ public class UDPDiscoveryServiceUnitTest
     /** Verify that the list is updated. */
     public void testRemoveDiscoveredService()
     {
-        // SETUP
-        final String host = "228.5.6.7";
-        final int port = 6789;
-        final UDPDiscoveryAttributes attributes = new UDPDiscoveryAttributes();
-        attributes.setUdpDiscoveryAddr( host );
-        attributes.setUdpDiscoveryPort( port );
-        attributes.setServicePort( 1000 );
-
-        // create the service
-        final UDPDiscoveryService service = new UDPDiscoveryService(attributes, new StandardSerializer());
-        service.startup();
-        service.addParticipatingCacheName( "testCache1" );
-
-        final MockDiscoveryListener discoveryListener = new MockDiscoveryListener();
-        service.addDiscoveryListener( discoveryListener );
-
         final DiscoveredService discoveredService = new DiscoveredService();
         discoveredService.setServiceAddress( host );
         discoveredService.setCacheNames( new ArrayList<>() );
