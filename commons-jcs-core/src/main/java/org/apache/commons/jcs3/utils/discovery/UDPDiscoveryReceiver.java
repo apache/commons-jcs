@@ -82,7 +82,7 @@ public class UDPDiscoveryReceiver
     private IElementSerializer serializer;
 
     /** Is it shutdown. */
-    private AtomicBoolean shutdown = new AtomicBoolean(false);
+    private final AtomicBoolean shutdown = new AtomicBoolean(false);
 
     /**
      * Constructor for the LateralUDPReceiver object.
