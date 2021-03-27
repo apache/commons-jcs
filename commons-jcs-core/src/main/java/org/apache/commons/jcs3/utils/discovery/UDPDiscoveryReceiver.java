@@ -85,7 +85,7 @@ public class UDPDiscoveryReceiver
     private final AtomicBoolean shutdown = new AtomicBoolean(false);
 
     /**
-     * Constructor for the LateralUDPReceiver object.
+     * Constructor for the UDPDiscoveryReceiver object.
      * <p>
      * We determine out own host using InetAddress
      *<p>
@@ -95,8 +95,10 @@ public class UDPDiscoveryReceiver
      * @param multicastPort
      * @throws IOException
      */
-    public UDPDiscoveryReceiver( final UDPDiscoveryService service, final String multicastInterfaceString,
-            final String multicastAddressString, final int multicastPort )
+    public UDPDiscoveryReceiver( final UDPDiscoveryService service,
+            final String multicastInterfaceString,
+            final String multicastAddressString,
+            final int multicastPort )
         throws IOException
     {
         this.service = service;
