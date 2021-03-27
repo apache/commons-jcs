@@ -120,7 +120,7 @@ public class JCSCache<K, V> implements Cache<K, V>
         final Factory<CacheLoader<K, V>> cacheLoaderFactory = configuration.getCacheLoaderFactory();
         if (cacheLoaderFactory == null)
         {
-            loader = NoLoader.INSTANCE;
+            loader = (CacheLoader<K, V>) NoLoader.INSTANCE;
         }
         else
         {
@@ -131,7 +131,7 @@ public class JCSCache<K, V> implements Cache<K, V>
         final Factory<CacheWriter<? super K, ? super V>> cacheWriterFactory = configuration.getCacheWriterFactory();
         if (cacheWriterFactory == null)
         {
-            writer = NoWriter.INSTANCE;
+            writer = (CacheWriter<K, V>) NoWriter.INSTANCE;
         }
         else
         {

@@ -31,7 +31,7 @@ public class EvictionListener implements IElementEventHandler
     }
 
     @Override
-    public void handleElementEvent(final IElementEvent event)
+    public <T> void handleElementEvent(final IElementEvent<T> event)
     {
         switch (event.getElementEvent())
         {
@@ -40,6 +40,8 @@ public class EvictionListener implements IElementEventHandler
             case EXCEEDED_IDLETIME_ONREQUEST:
             case EXCEEDED_IDLETIME_BACKGROUND:
                 stats.increaseEvictions(1);
+                break;
+            default:
                 break;
         }
     }
