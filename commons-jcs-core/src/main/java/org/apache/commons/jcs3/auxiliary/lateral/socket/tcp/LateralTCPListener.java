@@ -493,10 +493,13 @@ public class LateralTCPListener<K, V>
                     continue;
                 }
 
-                Set<SelectionKey> selectedKeys = selector.selectedKeys();
-
-                for (Iterator<SelectionKey> i = selectedKeys.iterator(); i.hasNext();)
+                for (Iterator<SelectionKey> i = selector.selectedKeys().iterator(); i.hasNext();)
                 {
+                    if (terminated.get())
+                    {
+                        break;
+                    }
+
                     SelectionKey key = i.next();
 
                     if (!key.isValid())
