@@ -40,7 +40,7 @@
                     <tr>
                         <td>TcpListenerHost</td>
                         <td> This is the host this cache should listen on (for multi-homed hosts).</td>
-                        <td>Y</td>
+                        <td>N</td>
                         <td>listen on all interfaces</td>
                     </tr>
 					<tr>
