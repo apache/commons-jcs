@@ -196,7 +196,7 @@ public class LateralTCPSender
         }
         catch ( final IOException | ClassNotFoundException ioe )
         {
-            final String message = "Could not open InputStream to " +
+            final String message = "Could not open channel to " +
                 client.getRemoteAddress() + " SoTimeout [" + socketSoTimeOut +
                 "] Connected [" + client.isOpen() + "]";
             log.error( message, ioe );
