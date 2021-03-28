@@ -423,8 +423,7 @@ public class RemoteCacheServer<K, V>
 
         final CacheListeners<K, V> cacheDesc = getCacheListeners( cacheName );
 
-        final ICacheElement<K, V> element = getFromCacheListeners( key, fromCluster, cacheDesc, null );
-        return element;
+        return getFromCacheListeners( key, fromCluster, cacheDesc, null );
     }
 
     /**
@@ -653,8 +652,7 @@ public class RemoteCacheServer<K, V>
                 keys, cacheName, requesterId, fromCluster );
 
         final CacheListeners<K, V> cacheDesc = getCacheListeners( cacheName );
-        final Map<K, ICacheElement<K, V>> elements = getMultipleFromCacheListeners( keys, null, fromCluster, cacheDesc );
-        return elements;
+        return getMultipleFromCacheListeners( keys, null, fromCluster, cacheDesc );
     }
 
     /**
@@ -1038,12 +1036,11 @@ public class RemoteCacheServer<K, V>
      */
     protected CacheListeners<K, V> getCacheListeners( final String cacheName )
     {
-        final CacheListeners<K, V> cacheListeners = cacheListenersMap.computeIfAbsent(cacheName, key -> {
+
+        return cacheListenersMap.computeIfAbsent(cacheName, key -> {
             final CompositeCache<K, V> cache = cacheManager.getCache(key);
             return new CacheListeners<>( cache );
         });
-
-        return cacheListeners;
     }
 
     /**
@@ -1055,12 +1052,11 @@ public class RemoteCacheServer<K, V>
      */
     protected CacheListeners<K, V> getClusterListeners( final String cacheName )
     {
-        final CacheListeners<K, V> cacheListeners = clusterListenersMap.computeIfAbsent(cacheName, key -> {
+
+        return clusterListenersMap.computeIfAbsent(cacheName, key -> {
             final CompositeCache<K, V> cache = cacheManager.getCache( cacheName );
             return new CacheListeners<>( cache );
         });
-
-        return cacheListeners;
     }
 
     /**
@@ -1504,8 +1500,7 @@ public class RemoteCacheServer<K, V>
      */
     protected String getExtraInfoForRequesterId( final long requesterId )
     {
-        final String ipAddress = idIPMap.get( Long.valueOf( requesterId ) );
-        return ipAddress;
+        return idIPMap.get( Long.valueOf( requesterId ) );
     }
 
     /**

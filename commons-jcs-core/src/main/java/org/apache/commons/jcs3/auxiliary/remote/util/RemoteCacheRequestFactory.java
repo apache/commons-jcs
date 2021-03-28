@@ -143,9 +143,8 @@ public class RemoteCacheRequestFactory
      */
     public static <K, V> RemoteCacheRequest<K, V> createRemoveAllRequest( final String cacheName, final long requesterId )
     {
-        final RemoteCacheRequest<K, V> request = createRequest(cacheName, RemoteRequestType.REMOVE_ALL, requesterId);
 
-        return request;
+        return createRequest(cacheName, RemoteRequestType.REMOVE_ALL, requesterId);
     }
 
     /**
@@ -157,9 +156,8 @@ public class RemoteCacheRequestFactory
      */
     public static <K, V> RemoteCacheRequest<K, V> createDisposeRequest( final String cacheName, final long requesterId )
     {
-        final RemoteCacheRequest<K, V> request = createRequest(cacheName, RemoteRequestType.DISPOSE, requesterId);
 
-        return request;
+        return createRequest(cacheName, RemoteRequestType.DISPOSE, requesterId);
     }
 
     /**
@@ -194,8 +192,7 @@ public class RemoteCacheRequestFactory
      */
     public static <K, V> RemoteCacheRequest<K, V> createAliveCheckRequest( final long requesterId )
     {
-        final RemoteCacheRequest<K, V> request = createRequest(null, RemoteRequestType.ALIVE_CHECK, requesterId);
 
-        return request;
+        return createRequest(null, RemoteRequestType.ALIVE_CHECK, requesterId);
     }
 }

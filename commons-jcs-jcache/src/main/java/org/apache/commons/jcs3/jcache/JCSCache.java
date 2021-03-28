@@ -468,10 +468,9 @@ public class JCSCache<K, V> implements Cache<K, V>
         final long start = Times.now(!statisticsEnabled);
 
         writer.delete(key);
-        final K cacheKey = key;
 
-        final ICacheElement<K, V> v = delegate.get(cacheKey);
-        delegate.remove(cacheKey);
+        final ICacheElement<K, V> v = delegate.get(key);
+        delegate.remove(key);
 
         final V value = v != null && v.getVal() != null ? v.getVal() : null;
         final boolean remove = v != null;

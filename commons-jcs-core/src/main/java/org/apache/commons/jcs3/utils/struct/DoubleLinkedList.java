@@ -187,8 +187,7 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
             {
                 me.prev = null;
             }
-            final T next = (T) me.next;
-            me = next;
+            me = (T) me.next;
         }
         first = last = null;
         // make sure this will work, could be add while this is happening.
