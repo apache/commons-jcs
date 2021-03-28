@@ -107,15 +107,7 @@ public class IndexedDiskElementDescriptor
 
         if ( o.len == len )
         {
-        	if ( o.pos == pos )
-        	{
-        		return 0;
-        	}
-            if ( o.pos < pos )
-        	{
-        		return -1;
-        	}
-            return 1;
+            return Long.compare(o.pos, pos);
         }
         if ( o.len > len )
         {

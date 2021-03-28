@@ -1496,15 +1496,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
         @Override
         public int compare(final IndexedDiskElementDescriptor ded1, final IndexedDiskElementDescriptor ded2)
         {
-            if (ded1.pos < ded2.pos)
-            {
-                return -1;
-            }
-            if (ded1.pos == ded2.pos)
-            {
-                return 0;
-            }
-            return 1;
+            return Long.compare(ded1.pos, ded2.pos);
         }
     }
 
