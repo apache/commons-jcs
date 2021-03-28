@@ -76,10 +76,10 @@ public class UDPDiscoverySenderThread
 
         log.debug( "Creating sender thread for discoveryAddress = [{0}] and "
                 + "discoveryPort = [{1}] myHostName = [{2}] and port = [{3}]",
-                () -> attributes.getUdpDiscoveryAddr(),
-                () -> attributes.getUdpDiscoveryPort(),
-                () -> attributes.getServiceAddress(),
-                () -> attributes.getServicePort() );
+                attributes::getUdpDiscoveryAddr,
+                attributes::getUdpDiscoveryPort,
+                attributes::getServiceAddress,
+                attributes::getServicePort);
 
         try (UDPDiscoverySender sender = new UDPDiscoverySender(
                 attributes.getUdpDiscoveryAddr(),

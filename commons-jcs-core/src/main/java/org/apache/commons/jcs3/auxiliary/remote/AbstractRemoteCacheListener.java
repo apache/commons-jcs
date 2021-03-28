@@ -118,7 +118,7 @@ public abstract class AbstractRemoteCacheListener<K, V>
     public RemoteType getRemoteType()
         throws IOException
     {
-        log.debug( "getRemoteType = [{0}]", () -> irca.getRemoteType() );
+        log.debug( "getRemoteType = [{0}]", irca::getRemoteType);
         return irca.getRemoteType();
     }
 

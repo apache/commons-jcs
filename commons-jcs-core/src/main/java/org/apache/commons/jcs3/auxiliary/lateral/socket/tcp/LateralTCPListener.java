@@ -123,7 +123,7 @@ public class LateralTCPListener<K, V>
                     newIns.init();
                     newIns.setCacheManager( cacheMgr );
 
-                    log.info("Created new listener {0}", () -> ilca.getTcpListenerPort());
+                    log.info("Created new listener {0}", ilca::getTcpListenerPort);
 
                     return newIns;
                 });
@@ -238,11 +238,11 @@ public class LateralTCPListener<K, V>
         {
             log.info( "Put Count (port {0}) = {1}",
                     () -> getTcpLateralCacheAttributes().getTcpListenerPort(),
-                    () -> getPutCnt() );
+                    this::getPutCnt);
         }
 
         log.debug( "handlePut> cacheName={0}, key={1}",
-                () -> element.getCacheName(), () -> element.getKey() );
+                element::getCacheName, element::getKey);
 
         getCache( element.getCacheName() ).localUpdate( element );
     }
@@ -261,7 +261,7 @@ public class LateralTCPListener<K, V>
         removeCnt++;
         if ( log.isInfoEnabled() && getRemoveCnt() % 100 == 0 )
         {
-            log.info( "Remove Count = {0}", () -> getRemoveCnt() );
+            log.info( "Remove Count = {0}", this::getRemoveCnt);
         }
 
         log.debug( "handleRemove> cacheName={0}, key={1}", cacheName, key );
@@ -299,7 +299,7 @@ public class LateralTCPListener<K, V>
         {
             log.info( "Get Count (port {0}) = {1}",
                     () -> getTcpLateralCacheAttributes().getTcpListenerPort(),
-                    () -> getGetCnt() );
+                    this::getGetCnt);
         }
 
         log.debug( "handleGet> cacheName={0}, key={1}", cacheName, key );
@@ -323,7 +323,7 @@ public class LateralTCPListener<K, V>
         {
             log.info( "GetMatching Count (port {0}) = {1}",
                     () -> getTcpLateralCacheAttributes().getTcpListenerPort(),
-                    () -> getGetCnt() );
+                    this::getGetCnt);
         }
 
         log.debug( "handleGetMatching> cacheName={0}, pattern={1}", cacheName, pattern );

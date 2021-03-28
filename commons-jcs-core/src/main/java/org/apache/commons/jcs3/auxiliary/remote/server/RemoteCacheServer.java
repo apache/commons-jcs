@@ -336,7 +336,7 @@ public class RemoteCacheServer<K, V>
         }
 
         // TODO use JAMON for timing
-        log.debug( "put took {0} ms.", () -> timer.getElapsedTime());
+        log.debug( "put took {0} ms.", timer::getElapsedTime);
     }
 
     /**
@@ -355,7 +355,7 @@ public class RemoteCacheServer<K, V>
         }
 
         log.debug( "In update, put [{0}] in [{1}]",
-                () -> item.getKey(), () -> item.getCacheName() );
+                item::getKey, item::getCacheName);
     }
 
     /**

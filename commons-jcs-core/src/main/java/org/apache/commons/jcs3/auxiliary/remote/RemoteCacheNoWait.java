@@ -413,7 +413,7 @@ public class RemoteCacheNoWait<K, V>
         {
             // we don't expect anything, it would have all gone to the zombie
             log.info( "resetEventQ, previous queue has [{0}] items queued up.",
-                    () -> previousQueue.size() );
+                    previousQueue::size);
             previousQueue.destroy();
         }
     }

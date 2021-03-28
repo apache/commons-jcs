@@ -188,7 +188,7 @@ public class LHMLRUMemoryCache<K, V>
                 return false;
             }
             log.debug( "LHMLRU max size: {0}. Spooling element, key: {1}",
-                    () -> getCacheAttributes().getMaxObjects(), () -> element.getKey() );
+                    () -> getCacheAttributes().getMaxObjects(), element::getKey);
 
             waterfal( element );
 

@@ -394,7 +394,7 @@ public class LateralTCPCacheFactory
             discovery.addDiscoveryListener( discoveryListener );
 
             log.info( "Registered TCP lateral cache [{0}] with UDPDiscoveryService.",
-                    () -> lac.getCacheName() );
+                    lac::getCacheName);
         }
         return discovery;
     }

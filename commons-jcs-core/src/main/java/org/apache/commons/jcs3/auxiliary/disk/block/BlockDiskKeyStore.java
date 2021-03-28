@@ -390,7 +390,7 @@ public class BlockDiskKeyStore<K>
      */
     protected void loadKeys()
     {
-        log.info("{0}: Loading keys for {1}", () -> logCacheName, () -> keyFile.toString());
+        log.info("{0}: Loading keys for {1}", () -> logCacheName, keyFile::toString);
 
         // create a key map to use.
         initKeyMap();
@@ -518,7 +518,7 @@ public class BlockDiskKeyStore<K>
     {
         final ElapsedTimer timer = new ElapsedTimer();
         log.info("{0}: Saving keys to [{1}], key count [{2}]", () -> logCacheName,
-                () -> this.keyFile.getAbsolutePath(), () -> keyHash.size());
+                this.keyFile::getAbsolutePath, () -> keyHash.size());
 
         synchronized (keyFile)
         {
@@ -554,8 +554,8 @@ public class BlockDiskKeyStore<K>
         }
 
         log.info("{0}: Finished saving keys. It took {1} to store {2} keys. Key file length [{3}]",
-                () -> logCacheName, () -> timer.getElapsedTimeString(), () -> keyHash.size(),
-                () -> keyFile.length());
+                () -> logCacheName, timer::getElapsedTimeString, () -> keyHash.size(),
+                keyFile::length);
     }
 
     /**

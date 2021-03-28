@@ -94,7 +94,7 @@ public class MySQLDiskCacheFactory
             if ( attributes.getOptimizationSchedule() != null )
             {
                 log.info( "Will try to configure optimization for table [{0}] on schedule [{1}]",
-                        () -> attributes.getTableName(),  () -> attributes.getOptimizationSchedule());
+                        attributes::getTableName, attributes::getOptimizationSchedule);
 
                 final MySQLTableOptimizer optimizer = new MySQLTableOptimizer( attributes, tableState, ds );
 

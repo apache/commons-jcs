@@ -191,7 +191,7 @@ public abstract class AbstractDiskCache<K, V>
         throws IOException
     {
         log.debug( "Putting element in purgatory, cacheName: {0}, key: {1}",
-                () -> cacheName, () -> cacheElement.getKey() );
+                () -> cacheName, cacheElement::getKey);
 
         try
         {
@@ -444,7 +444,7 @@ public abstract class AbstractDiskCache<K, V>
         if (shutdownSpoolTime <= 0)
         {
             log.info( "No longer waiting for event queue to finish: {0}",
-                    () -> cacheEventQueue.getStatistics() );
+                    cacheEventQueue::getStatistics);
         }
 
         log.info( "In dispose, destroying event queue." );

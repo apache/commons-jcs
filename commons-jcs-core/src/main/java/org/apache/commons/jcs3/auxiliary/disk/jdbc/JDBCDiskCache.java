@@ -121,7 +121,7 @@ public class JDBCDiskCache<K, V>
         setTableState( tableState );
         setJdbcDiskCacheAttributes( cattr );
 
-        log.info( "jdbcDiskCacheAttributes = {0}", () -> getJdbcDiskCacheAttributes() );
+        log.info( "jdbcDiskCacheAttributes = {0}", this::getJdbcDiskCacheAttributes);
 
         // This initializes the pool access.
         this.dsFactory = dsFactory;
@@ -146,7 +146,7 @@ public class JDBCDiskCache<K, V>
 
         try (Connection con = getDataSource().getConnection())
         {
-            log.debug( "Putting [{0}] on disk.",  () -> ce.getKey());
+            log.debug( "Putting [{0}] on disk.", ce::getKey);
 
             try
             {

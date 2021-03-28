@@ -22,6 +22,7 @@ package org.apache.commons.jcs3.auxiliary;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -69,7 +70,7 @@ public abstract class AbstractAuxiliaryCache<K, V>
                         return null;
                     }
                 })
-                .filter(element -> element != null)
+                .filter(Objects::nonNull)
                 .collect(Collectors.toMap(
                         ICacheElement::getKey,
                         element -> element));
