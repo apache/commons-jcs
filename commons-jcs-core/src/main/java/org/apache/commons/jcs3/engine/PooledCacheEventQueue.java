@@ -49,9 +49,6 @@ public class PooledCacheEventQueue<K, V>
     /** The logger. */
     private static final Log log = LogManager.getLog( PooledCacheEventQueue.class );
 
-    /** The type of event queue */
-    private static final QueueType queueType = QueueType.POOLED;
-
     /** The Thread Pool to execute events with. */
     protected ExecutorService pool;
 
@@ -115,7 +112,8 @@ public class PooledCacheEventQueue<K, V>
     @Override
     public QueueType getQueueType()
     {
-        return queueType;
+        /** The type of queue -- there are pooled and single */
+        return QueueType.POOLED;
     }
 
     /**
