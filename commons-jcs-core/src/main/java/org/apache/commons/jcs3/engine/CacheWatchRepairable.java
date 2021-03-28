@@ -58,9 +58,7 @@ public class CacheWatchRepairable
     public void setCacheWatch( final ICacheObserver cacheWatch )
     {
         this.cacheWatch = cacheWatch;
-        cacheMap.entrySet().forEach(entry -> {
-            final String cacheName = entry.getKey();
-            entry.getValue().forEach(listener -> {
+        cacheMap.forEach((cacheName, value) -> value.forEach(listener -> {
                 try
                 {
                     log.info( "Adding listener to cache watch. ICacheListener = "
@@ -72,8 +70,7 @@ public class CacheWatchRepairable
                     log.error( "Problem adding listener. ICacheListener = {0} | "
                             + "ICacheObserver = {1}", listener, cacheWatch, ex );
                 }
-            });
-        });
+        }));
     }
 
     /**

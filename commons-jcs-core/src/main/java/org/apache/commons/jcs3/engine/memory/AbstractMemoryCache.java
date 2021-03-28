@@ -287,9 +287,9 @@ public abstract class AbstractMemoryCache<K, V>
         if (log.isTraceEnabled())
         {
             log.trace("dumpingMap");
-            map.entrySet().forEach(e ->
-                log.trace("dumpMap> key={0}, val={1}", e.getKey(),
-                        e.getValue().getCacheElement().getVal()));
+            map.forEach((key, value) ->
+                log.trace("dumpMap> key={0}, val={1}",key, key,
+                        value.getCacheElement().getVal()));
         }
     }
 

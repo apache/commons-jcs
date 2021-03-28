@@ -172,8 +172,7 @@ public abstract class AbstractLRUMap<K, V>
     {
         if ( source != null )
         {
-            source.entrySet()
-                .forEach(entry -> put(entry.getKey(), entry.getValue()));
+            source.forEach((key, value) -> put(key, value));
         }
     }
 
@@ -379,8 +378,7 @@ public abstract class AbstractLRUMap<K, V>
         if (log.isTraceEnabled())
         {
             log.trace("dumpingMap");
-            map.entrySet().forEach(e ->
-                log.trace("dumpMap> key={0}, val={1}", e.getKey(), e.getValue().getPayload()));
+            map.forEach((key, value) -> log.trace("dumpMap> key={0}, val={1}", key, value.getPayload()));
         }
     }
 
