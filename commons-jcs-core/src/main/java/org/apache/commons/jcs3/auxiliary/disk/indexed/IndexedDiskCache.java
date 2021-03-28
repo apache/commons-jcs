@@ -636,8 +636,6 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
      */
     private ICacheElement<K, V> readElement(final K key) throws IOException
     {
-        ICacheElement<K, V> object = null;
-
         final IndexedDiskElementDescriptor ded = keyHash.get(key);
 
         if (ded != null)
@@ -646,8 +644,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
 
             try
             {
-                final ICacheElement<K, V> readObject = dataFile.readObject(ded);
-                object = readObject;
+                return dataFile.readObject(ded);
                 // TODO consider checking key equality and throwing if there is a failure
             }
             catch (final IOException e)
@@ -662,7 +659,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
             }
         }
 
-        return object;
+        return null;
     }
 
     /**
