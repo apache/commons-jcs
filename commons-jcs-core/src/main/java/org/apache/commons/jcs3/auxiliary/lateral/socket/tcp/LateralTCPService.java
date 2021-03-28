@@ -76,7 +76,7 @@ public class LateralTCPService<K, V>
         {
             sender = new LateralTCPSender( lca );
 
-            log.debug( "Created sender to [{0}]", () -> lca.getTcpServer() );
+            log.debug( "Created sender to [{0}]", lca::getTcpServer);
         }
         catch ( final IOException e )
         {

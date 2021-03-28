@@ -322,7 +322,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
                 keyHash.putAll(keys);
 
                 log.info("{0}: Loaded keys from [{1}], key count: {2}; up to {3} will be available.",
-                        () -> logCacheName, () -> fileName, () -> keyHash.size(), () -> maxKeySize);
+                        () -> logCacheName, () -> fileName, keyHash::size, () -> maxKeySize);
             }
 
             if (log.isTraceEnabled())
@@ -413,7 +413,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
             expectedNextPos = ded.pos + IndexedDisk.HEADER_SIZE_BYTES + ded.len;
         }
         log.debug("{0}: Check for DED overlaps took {1} ms.", () -> logCacheName,
-                () -> timer.getElapsedTime());
+                timer::getElapsedTime);
 
         return isOk;
     }
@@ -426,7 +426,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
         try
         {
             log.info("{0}: Saving keys to: {1}, key count: {2}",
-                    () -> logCacheName, () -> fileName, () -> keyHash.size());
+                    () -> logCacheName, () -> fileName, keyHash::size);
 
             keyFile.reset();
 
@@ -458,12 +458,12 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
         if (!isAlive())
         {
             log.error("{0}: No longer alive; aborting put of key = {1}",
-                    () -> logCacheName, () -> ce.getKey());
+                    () -> logCacheName, ce::getKey);
             return;
         }
 
         log.debug("{0}: Storing element on disk, key: {1}",
-                () -> logCacheName, () -> ce.getKey());
+                () -> logCacheName, ce::getKey);
 
         IndexedDiskElementDescriptor ded = null;
 
@@ -517,7 +517,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
                     {
                         queuedPutList.add(ded);
                         log.debug("{0}: added to queued put list. {1}",
-                                () -> logCacheName, () -> queuedPutList.size());
+                                () -> logCacheName, queuedPutList::size);
                     }
 
                     // add the old slot to the recycle bin

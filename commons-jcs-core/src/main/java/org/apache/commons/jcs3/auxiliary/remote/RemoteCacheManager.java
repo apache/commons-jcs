@@ -209,7 +209,7 @@ public class RemoteCacheManager
 	{
 		final IRemoteCacheClient<?, ?> rc = cache.getRemoteCache();
 	    log.debug( "Found cache for [{0}], deregistering listener.",
-	            () -> cache.getCacheName() );
+                cache::getCacheName);
 		// could also store the listener for a server in the manager.
 		final IRemoteCacheListener<?, ?> listener = rc.getListener();
         remoteWatch.removeCacheListener( cache.getCacheName(), listener );
@@ -277,7 +277,7 @@ public class RemoteCacheManager
         {
             try
             {
-                log.info( "freeCache [{0}]", () -> c.getCacheName() );
+                log.info( "freeCache [{0}]", c::getCacheName);
 
                 removeListenerFromCache(c);
                 c.dispose();

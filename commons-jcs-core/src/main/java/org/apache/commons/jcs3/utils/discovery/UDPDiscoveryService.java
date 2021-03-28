@@ -146,14 +146,14 @@ public class UDPDiscoveryService
     public void setScheduledExecutorService(final ScheduledExecutorService scheduledExecutor)
     {
         this.broadcastTaskFuture = scheduledExecutor.scheduleAtFixedRate(
-                () -> serviceRequestBroadcast(), 0, 15, TimeUnit.SECONDS);
+                this::serviceRequestBroadcast, 0, 15, TimeUnit.SECONDS);
 
         /** removes things that have been idle for too long */
         // I'm going to use this as both, but it could happen
         // that something could hang around twice the time using this as the
         // delay and the idle time.
         this.cleanupTaskFuture = scheduledExecutor.scheduleAtFixedRate(
-                () -> cleanup(), 0,
+                this::cleanup, 0,
                 getUdpDiscoveryAttributes().getMaxIdleTimeSec(), TimeUnit.SECONDS);
     }
 
@@ -180,7 +180,7 @@ public class UDPDiscoveryService
             })
             // remove the bad ones
             // call this so the listeners get notified
-            .forEach(service -> removeDiscoveredService(service));
+            .forEach(this::removeDiscoveredService);
     }
 
     /**

@@ -326,7 +326,7 @@ public abstract class AbstractLRUMap<K, V>
                     if (map.remove(last.getKey()) == null)
                     {
                         log.warn("update: remove failed for key: {0}",
-                                () -> last.getKey());
+                                last::getKey);
                         verifyCache();
                     }
                     list.removeLast();
@@ -337,12 +337,12 @@ public abstract class AbstractLRUMap<K, V>
                 }
             }
 
-            log.debug( "update: After spool map size: {0}", () -> map.size() );
+            log.debug( "update: After spool map size: {0}", map::size);
             if ( map.size() != list.size() )
             {
                 log.error("update: After spool, size mismatch: map.size() = {0}, "
                         + "linked list size = {1}",
-                        () -> map.size(), () -> list.size());
+                        map::size, list::size);
             }
         }
 

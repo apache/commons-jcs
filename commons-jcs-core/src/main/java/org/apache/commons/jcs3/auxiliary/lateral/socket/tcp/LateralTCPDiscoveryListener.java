@@ -163,7 +163,7 @@ public class LateralTCPDiscoveryListener
         {
             log.info( "addNoWait > Different nodes are configured differently "
                     + "or region [{0}] is not yet used on this side.",
-                    () -> noWait.getCacheName() );
+                    noWait::getCacheName);
         }
         return false;
     }
@@ -193,7 +193,7 @@ public class LateralTCPDiscoveryListener
         {
             log.info( "addNoWait > Different nodes are configured differently "
                     + "or region [{0}] is not yet used on this side.",
-                    () -> noWait.getCacheName() );
+                    noWait::getCacheName);
         }
         return false;
     }

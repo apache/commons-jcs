@@ -99,8 +99,8 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
 
         if ( log.isDebugEnabled() )
         {
-            log.debug( "Construct> cacheName={0}", () -> cattr.getCacheName() );
-            log.debug( "irca = {0}", () -> getRemoteCacheAttributes() );
+            log.debug( "Construct> cacheName={0}", cattr::getCacheName);
+            log.debug( "irca = {0}", this::getRemoteCacheAttributes);
             log.debug( "remote = {0}", remote );
             log.debug( "listener = {0}", listener );
         }

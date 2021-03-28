@@ -268,7 +268,7 @@ public class BlockDiskCache<K, V>
         final Map<K, ICacheElement<K, V>> elements = matchingKeys.stream()
             .collect(Collectors.toMap(
                     key -> key,
-                    key -> processGet( key ))).entrySet().stream()
+                    this::processGet)).entrySet().stream()
                 .filter(entry -> entry.getValue() != null)
                 .collect(Collectors.toMap(
                         Entry::getKey,
@@ -357,7 +357,7 @@ public class BlockDiskCache<K, V>
         if ( !isAlive() )
         {
             log.debug("{0}: No longer alive; aborting put of key = {1}",
-                    () -> logCacheName, () -> element.getKey());
+                    () -> logCacheName, element::getKey);
             return;
         }
 
@@ -380,7 +380,7 @@ public class BlockDiskCache<K, V>
             this.keyStore.put( element.getKey(), blocks );
 
             log.debug("{0}: Put to file [{1}] key [{2}]", () -> logCacheName,
-                    () -> fileName, () -> element.getKey());
+                    () -> fileName, element::getKey);
         }
         catch ( final IOException e )
         {
@@ -393,7 +393,7 @@ public class BlockDiskCache<K, V>
         }
 
         log.debug("{0}: Storing element on disk, key: {1}", () -> logCacheName,
-                () -> element.getKey() );
+                element::getKey);
     }
 
     /**
@@ -472,7 +472,7 @@ public class BlockDiskCache<K, V>
         // remove matches.
         // Don't add to recycle bin here
         // https://issues.apache.org/jira/browse/JCS-67
-        itemsToRemove.forEach(fullKey -> performSingleKeyRemoval(fullKey));
+        itemsToRemove.forEach(this::performSingleKeyRemoval);
         // TODO this needs to update the remove count separately
 
         return !itemsToRemove.isEmpty();
@@ -499,7 +499,7 @@ public class BlockDiskCache<K, V>
         // remove matches.
         // Don't add to recycle bin here
         // https://issues.apache.org/jira/browse/JCS-67
-        itemsToRemove.forEach(fullKey -> performSingleKeyRemoval(fullKey));
+        itemsToRemove.forEach(this::performSingleKeyRemoval);
         // TODO this needs to update the remove count separately
 
         return !itemsToRemove.isEmpty();

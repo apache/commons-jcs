@@ -27,6 +27,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -199,7 +200,7 @@ public class LateralCacheNoWaitFacade<K, V>
         throws IOException
     {
         log.debug("updating through lateral cache facade, noWaits.length = {0}",
-                () -> noWaitSet.size());
+                noWaitSet::size);
 
         for (final LateralCacheNoWait<K, V> nw : noWaitSet)
         {
@@ -218,7 +219,7 @@ public class LateralCacheNoWaitFacade<K, V>
     {
         return noWaitSet.stream()
             .map(nw -> nw.get(key))
-            .filter(obj -> obj != null)
+            .filter(Objects::nonNull)
             .findFirst()
             .orElse(null);
     }
@@ -238,7 +239,7 @@ public class LateralCacheNoWaitFacade<K, V>
             final Map<K, ICacheElement<K, V>> elements = keys.stream()
                 .collect(Collectors.toMap(
                         key -> key,
-                        key -> get(key))).entrySet().stream()
+                        this::get)).entrySet().stream()
                     .filter(entry -> entry.getValue() != null)
                     .collect(Collectors.toMap(
                             Entry::getKey,

@@ -78,7 +78,7 @@ public class RemoteHttpCacheClient<K, V>
     {
         setRemoteDispatcher( new RemoteHttpCacheDispatcher( attributes ) );
 
-        log.info( "Created remote Dispatcher. {0}", () -> getRemoteDispatcher() );
+        log.info( "Created remote Dispatcher. {0}", this::getRemoteDispatcher);
         setInitialized( true );
     }
 
