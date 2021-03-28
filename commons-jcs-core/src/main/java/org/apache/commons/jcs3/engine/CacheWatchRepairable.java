@@ -20,7 +20,7 @@ package org.apache.commons.jcs3.engine;
  */
 
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -89,7 +89,7 @@ public class CacheWatchRepairable
     {
         // Record the added cache listener locally, regardless of whether the
         // remote add-listener operation succeeds or fails.
-        cacheMap.computeIfAbsent(cacheName, key -> new CopyOnWriteArraySet<>(Arrays.asList(obj)));
+        cacheMap.computeIfAbsent(cacheName, key -> new CopyOnWriteArraySet<>(Collections.singletonList(obj)));
 
         log.info( "Adding listener to cache watch. ICacheListener = {0} | "
                 + "ICacheObserver = {1} | cacheName = {2}", obj, cacheWatch,
