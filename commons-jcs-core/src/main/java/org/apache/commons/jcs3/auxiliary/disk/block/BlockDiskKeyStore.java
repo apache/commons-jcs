@@ -26,7 +26,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.nio.ByteBuffer;
-import java.nio.channels.SeekableByteChannel;
+import java.nio.channels.FileChannel;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.util.HashMap;
@@ -402,8 +402,7 @@ public class BlockDiskKeyStore<K>
             // Check file type
             int fileSignature = 0;
 
-            try (SeekableByteChannel bc = Files.newByteChannel(keyFile.toPath(),
-                    StandardOpenOption.READ))
+            try (FileChannel bc = FileChannel.open(keyFile.toPath(), StandardOpenOption.READ))
             {
                 final ByteBuffer signature = ByteBuffer.allocate(4);
                 bc.read(signature);
@@ -522,7 +521,7 @@ public class BlockDiskKeyStore<K>
 
         synchronized (keyFile)
         {
-            try (SeekableByteChannel bc = Files.newByteChannel(keyFile.toPath(),
+            try (FileChannel bc = FileChannel.open(keyFile.toPath(),
                     StandardOpenOption.CREATE,
                     StandardOpenOption.WRITE,
                     StandardOpenOption.TRUNCATE_EXISTING))
