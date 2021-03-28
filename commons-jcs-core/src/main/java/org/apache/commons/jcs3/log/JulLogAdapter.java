@@ -146,7 +146,6 @@ public class JulLogAdapter implements Log
      *
      * @param message the message to log; the format depends on the message factory.
      * @param params parameters to the message.
-     * @see #getMessageFactory()
      */
     @Override
     public void debug(final String message, final Object... params)
