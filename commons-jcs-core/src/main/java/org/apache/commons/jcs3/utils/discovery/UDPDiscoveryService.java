@@ -81,10 +81,10 @@ public class UDPDiscoveryService
     private final Set<IDiscoveryListener> discoveryListeners = new CopyOnWriteArraySet<>();
 
     /** Handle to cancel the scheduled broadcast task */
-    private ScheduledFuture<?> broadcastTaskFuture = null;
+    private ScheduledFuture<?> broadcastTaskFuture;
 
     /** Handle to cancel the scheduled cleanup task */
-    private ScheduledFuture<?> cleanupTaskFuture = null;
+    private ScheduledFuture<?> cleanupTaskFuture;
 
     /**
      * Constructor
