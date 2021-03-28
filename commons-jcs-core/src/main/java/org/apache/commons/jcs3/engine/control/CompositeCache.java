@@ -1583,7 +1583,8 @@ public class CompositeCache<K, V>
                 final Class<?> c = Class.forName(cattr.getMemoryCacheName());
                 @SuppressWarnings("unchecked") // Need cast
                 final
-                IMemoryCache<K, V> newInstance = (IMemoryCache<K, V>) c.newInstance();
+                IMemoryCache<K, V> newInstance =
+                    (IMemoryCache<K, V>) c.getDeclaredConstructor().newInstance();
                 memCache = newInstance;
                 memCache.initialize(this);
             }
