@@ -523,7 +523,9 @@ public class BlockDiskKeyStore<K>
         synchronized (keyFile)
         {
             try (SeekableByteChannel bc = Files.newByteChannel(keyFile.toPath(),
-                    StandardOpenOption.CREATE, StandardOpenOption.WRITE))
+                    StandardOpenOption.CREATE,
+                    StandardOpenOption.WRITE,
+                    StandardOpenOption.TRUNCATE_EXISTING))
             {
                 if (!verify())
                 {
