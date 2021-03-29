@@ -1259,7 +1259,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
     private IndexedDiskElementDescriptor[] createPositionSortedDescriptorList()
     {
         final List<IndexedDiskElementDescriptor> defragList = new ArrayList<>(keyHash.values());
-        Collections.sort(defragList, new PositionComparator());
+        Collections.sort(defragList, (ded1, ded2) -> Long.compare(ded1.pos, ded2.pos));
 
         return defragList.toArray(new IndexedDiskElementDescriptor[0]);
     }
@@ -1481,7 +1481,9 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
     /**
      * Compares IndexedDiskElementDescriptor based on their position.
      * <p>
+     * @deprecated Use lambda instead
      */
+    @Deprecated
     protected static final class PositionComparator implements Comparator<IndexedDiskElementDescriptor>, Serializable
     {
         /** serialVersionUID */
