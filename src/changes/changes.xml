@@ -20,6 +20,9 @@
 	</properties>
 	<body>
         <release version="3.1" date="20YY-MM-DD">
+            <action dev="tv" type="fix">
+               Fix UDP service discovery with LateralCache
+            </action>
             <action dev="tv" type="update">
                Use NIO for UDP service discovery, works with IPv6 now
             </action>
