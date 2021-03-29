@@ -142,7 +142,8 @@ public class UDPDiscoverySender implements AutoCloseable
             }
             if (multicastInterface != null)
             {
-                log.info("Using network interface {0}", multicastInterface.getDisplayName());
+                log.info("Sending multicast via network interface {0}",
+                        multicastInterface::getDisplayName);
                 localSocket.setNetworkInterface(multicastInterface);
             }
         }
