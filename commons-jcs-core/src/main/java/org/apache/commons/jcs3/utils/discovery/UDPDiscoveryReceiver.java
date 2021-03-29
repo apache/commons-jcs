@@ -101,18 +101,37 @@ public class UDPDiscoveryReceiver
             final int multicastPort )
         throws IOException
     {
+        this(service, multicastInterfaceString,
+                InetAddress.getByName( multicastAddressString ),
+                multicastPort);
+    }
+
+    /**
+     * Constructor for the UDPDiscoveryReceiver object.
+     * <p>
+     * @param service
+     * @param multicastInterfaceString
+     * @param multicastAddress
+     * @param multicastPort
+     * @throws IOException
+     */
+    public UDPDiscoveryReceiver( final UDPDiscoveryService service,
+            final String multicastInterfaceString,
+            final InetAddress multicastAddress,
+            final int multicastPort )
+        throws IOException
+    {
         this.service = service;
         if (service != null)
         {
             this.serializer = service.getSerializer();
         }
-        InetAddress multicastAddress = InetAddress.getByName( multicastAddressString );
 
         // create a small thread pool to handle a barrage
         this.pooledExecutor = ThreadPoolManager.getInstance().createPool(
-        		new PoolConfiguration(false, 0, maxPoolSize, maxPoolSize, 0,
-        		        WhenBlockedPolicy.DISCARDOLDEST, maxPoolSize),
-        		"JCS-UDPDiscoveryReceiver-", Thread.MIN_PRIORITY);
+                new PoolConfiguration(false, 0, maxPoolSize, maxPoolSize, 0,
+                        WhenBlockedPolicy.DISCARDOLDEST, maxPoolSize),
+                "JCS-UDPDiscoveryReceiver-", Thread.MIN_PRIORITY);
 
         log.info( "Constructing listener, [{0}:{1}]", multicastAddress, multicastPort );
         createSocket( multicastInterfaceString, multicastAddress, multicastPort );
@@ -387,6 +406,7 @@ public class UDPDiscoveryReceiver
                 break;
             case PASSIVE:
             default:
+                log.debug( "Adding or updating service to set {0}", discoveredService );
                 service.addOrUpdateService( discoveredService );
                 break;
         }

@@ -20,9 +20,12 @@ package org.apache.commons.jcs3.utils.discovery;
  */
 
 import java.io.IOException;
+import java.net.Inet6Address;
+import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -72,7 +75,8 @@ public class UDPDiscoveryService
     private final AtomicBoolean shutdown = new AtomicBoolean(false);
 
     /** This is a set of services that have been discovered. */
-    private final ConcurrentMap<Integer, DiscoveredService> discoveredServices = new ConcurrentHashMap<>();
+    private final ConcurrentMap<Integer, DiscoveredService> discoveredServices =
+            new ConcurrentHashMap<>();
 
     /** This a list of regions that are configured to use discovery. */
     private final Set<String> cacheNames = new CopyOnWriteArraySet<>();
@@ -111,20 +115,42 @@ public class UDPDiscoveryService
 
         try
         {
-            // todo, you should be able to set this
-            udpDiscoveryAttributes.setServiceAddress( HostNameUtil.getLocalHostAddress() );
-        }
-        catch ( final UnknownHostException e )
-        {
-            log.error( "Couldn't get localhost address", e );
-        }
+            InetAddress multicastAddress = InetAddress.getByName(
+                    getUdpDiscoveryAttributes().getUdpDiscoveryAddr());
 
-        try
-        {
+            // Set service address if still empty
+            if (getUdpDiscoveryAttributes().getServiceAddress() == null ||
+                    getUdpDiscoveryAttributes().getServiceAddress().isEmpty())
+            {
+                try
+                {
+                    final List<InetAddress> addresses = HostNameUtil.getLocalHostLANAddresses();
+                    final InetAddress serviceAddress;
+
+                    if (multicastAddress instanceof Inet6Address)
+                    {
+                        // if Multicast uses IPv6, try to publish our IPv6 address
+                        serviceAddress = addresses.stream()
+                                .filter(address -> address instanceof Inet6Address)
+                                .findFirst().orElse(addresses.get(0));
+                    }
+                    else
+                    {
+                        serviceAddress = addresses.get(0);
+                    }
+
+                    getUdpDiscoveryAttributes().setServiceAddress(serviceAddress.getHostAddress());
+                }
+                catch ( final UnknownHostException e )
+                {
+                    log.error( "Couldn't get local host address", e );
+                }
+            }
+
             // todo need some kind of recovery here.
             receiver = new UDPDiscoveryReceiver( this,
                     getUdpDiscoveryAttributes().getUdpDiscoveryInterface(),
-                    getUdpDiscoveryAttributes().getUdpDiscoveryAddr(),
+                    multicastAddress,
                     getUdpDiscoveryAttributes().getUdpDiscoveryPort() );
         }
         catch ( final IOException e )
@@ -320,7 +346,7 @@ public class UDPDiscoveryService
         // If we don't do this, then if a region using the default config is initialized after notification,
         // it will never get the service in it's no wait list.
         // Leave it to the listeners to decide what to do.
-        getDiscoveryListeners().forEach(listener -> listener.addDiscoveredService( discoveredService));
+        getDiscoveryListeners().forEach(listener -> listener.addDiscoveredService(discoveredService));
     }
 
     /**
