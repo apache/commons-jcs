@@ -403,11 +403,9 @@ public class LateralCacheNoWait<K, V>
         final IStats stats = new Stats();
         stats.setTypeName( "Lateral Cache No Wait" );
 
-        final ArrayList<IStatElement<?>> elems = new ArrayList<>();
-
         // get the stats from the event queue too
         final IStats eqStats = this.eventQueue.getStatistics();
-        elems.addAll(eqStats.getStatElements());
+        final ArrayList<IStatElement<?>> elems = new ArrayList<>(eqStats.getStatElements());
 
         elems.add(new StatElement<>( "Get Count", Integer.valueOf(this.getCount) ) );
         elems.add(new StatElement<>( "Remove Count", Integer.valueOf(this.removeCount) ) );
