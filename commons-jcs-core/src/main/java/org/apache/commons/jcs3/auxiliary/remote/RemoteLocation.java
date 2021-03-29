@@ -131,8 +131,7 @@ public final class RemoteLocation
 
         if (match.find() && match.groupCount() == 2)
         {
-            final RemoteLocation location = new RemoteLocation( match.group(1), Integer.parseInt( match.group(2) ) );
-            return location;
+            return new RemoteLocation( match.group(1), Integer.parseInt( match.group(2) ) );
         }
         log.error("Invalid server descriptor: {0}", server);
 

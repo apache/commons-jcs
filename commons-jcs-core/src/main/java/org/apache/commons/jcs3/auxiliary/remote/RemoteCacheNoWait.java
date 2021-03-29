@@ -114,13 +114,12 @@ public class RemoteCacheNoWait<K, V>
     private ICacheEventQueue<K, V> createCacheEventQueue( final IRemoteCacheClient<K, V> client )
     {
         final CacheEventQueueFactory<K, V> factory = new CacheEventQueueFactory<>();
-        final ICacheEventQueue<K, V> ceq = factory.createCacheEventQueue(
+        return factory.createCacheEventQueue(
             new CacheAdaptor<>( client ),
             client.getListenerId(),
             client.getCacheName(),
             client.getAuxiliaryCacheAttributes().getEventQueuePoolName(),
             client.getAuxiliaryCacheAttributes().getEventQueueType() );
-        return ceq;
     }
 
     /**

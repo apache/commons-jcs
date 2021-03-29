@@ -63,8 +63,7 @@ public class CompressingSerializer extends StandardSerializer
         throws IOException
     {
         final byte[] uncompressed = serializer.serialize(obj);
-        final byte[] compressed = CompressionUtil.compressByteArray( uncompressed );
-        return compressed;
+        return CompressionUtil.compressByteArray( uncompressed );
     }
 
     /**

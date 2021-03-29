@@ -151,10 +151,7 @@ public class RemoteCacheFactory
                 break;
         }
 
-        final RemoteCacheNoWaitFacade<K, V> rcnwf =
-            new RemoteCacheNoWaitFacade<>(noWaits, rca, cacheEventLogger, elementSerializer, this );
-
-        return rcnwf;
+        return new RemoteCacheNoWaitFacade<>(noWaits, rca, cacheEventLogger, elementSerializer, this);
     }
 
     // end createCache
@@ -176,9 +173,8 @@ public class RemoteCacheFactory
         }
 
         final RemoteLocation loc = cattr.getRemoteLocation();
-        final RemoteCacheManager ins = managers.get( loc );
 
-        return ins;
+        return managers.get( loc );
     }
 
     /**

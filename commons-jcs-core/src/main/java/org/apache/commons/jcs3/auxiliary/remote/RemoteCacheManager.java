@@ -228,11 +228,9 @@ public class RemoteCacheManager
     @SuppressWarnings("unchecked") // Need to cast because of common map for all caches
     public <K, V> RemoteCacheNoWait<K, V> getCache( final IRemoteCacheAttributes cattr )
     {
-        final RemoteCacheNoWait<K, V> remoteCacheNoWait =
-                (RemoteCacheNoWait<K, V>) caches.computeIfAbsent(cattr.getCacheName(), key -> newRemoteCacheNoWait(cattr));
 
         // might want to do some listener sanity checking here.
-        return remoteCacheNoWait;
+        return (RemoteCacheNoWait<K, V>) caches.computeIfAbsent(cattr.getCacheName(), key -> newRemoteCacheNoWait(cattr));
     }
 
     /**

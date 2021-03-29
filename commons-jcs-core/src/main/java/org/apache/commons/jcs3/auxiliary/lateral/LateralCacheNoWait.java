@@ -168,7 +168,7 @@ public class LateralCacheNoWait<K, V>
     {
         if ( keys != null && !keys.isEmpty() )
         {
-            final Map<K, ICacheElement<K, V>> elements = keys.stream()
+            return keys.stream()
                 .collect(Collectors.toMap(
                         key -> key,
                         this::get)).entrySet().stream()
@@ -176,8 +176,6 @@ public class LateralCacheNoWait<K, V>
                     .collect(Collectors.toMap(
                             Entry::getKey,
                             Entry::getValue));
-
-            return elements;
         }
 
         return new HashMap<>();

@@ -222,9 +222,9 @@ public class JDBCDiskCacheFactory
         }
 
 
-    	final DataSourceFactory dsFactory = this.dsFactories.computeIfAbsent(poolName, key -> {
+    	return this.dsFactories.computeIfAbsent(poolName, key -> {
     	    final DataSourceFactory newDsFactory;
-            JDBCDiskCacheAttributes dsConfig = null;
+            JDBCDiskCacheAttributes dsConfig;
 
             if (cattr.getConnectionPoolName() == null)
             {
@@ -260,7 +260,5 @@ public class JDBCDiskCacheFactory
             }
     	    return newDsFactory;
     	});
-
-    	return dsFactory;
     }
 }

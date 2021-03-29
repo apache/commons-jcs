@@ -547,14 +547,12 @@ public class CompositeCacheManager
     {
         log.debug( "attr = {0}", attr );
 
-        final CompositeCache<K, V> cache = (CompositeCache<K, V>) caches.computeIfAbsent(cattr.getCacheName(),
+        return (CompositeCache<K, V>) caches.computeIfAbsent(cattr.getCacheName(),
                 cacheName -> {
             final CompositeCacheConfigurator configurator = newConfigurator();
             return configurator.parseRegion( this.getConfigurationProperties(), this, cacheName,
                                               this.defaultAuxValues, cattr );
         });
-
-        return cache;
     }
 
     protected CompositeCacheConfigurator newConfigurator() {

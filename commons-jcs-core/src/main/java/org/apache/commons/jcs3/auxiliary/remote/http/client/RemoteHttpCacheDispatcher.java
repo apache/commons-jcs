@@ -161,8 +161,7 @@ public class RemoteHttpCacheDispatcher
 
         builder.setEntity(new ByteArrayEntity( requestAsByteArray ));
         final HttpResponse httpResponse = doWebserviceCall( builder );
-        final byte[] response = EntityUtils.toByteArray( httpResponse.getEntity() );
-        return response;
+        return EntityUtils.toByteArray( httpResponse.getEntity() );
     }
 
     /**

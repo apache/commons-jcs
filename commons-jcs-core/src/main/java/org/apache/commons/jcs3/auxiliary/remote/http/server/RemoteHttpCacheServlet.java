@@ -287,10 +287,9 @@ public class RemoteHttpCacheServlet
      */
     protected ICacheEventLogger configureCacheEventLogger( final Properties props )
     {
-        final ICacheEventLogger cacheEventLogger = AuxiliaryCacheConfigurator
-            .parseCacheEventLogger( props, IRemoteHttpCacheConstants.HTTP_CACHE_SERVER_PREFIX );
 
-        return cacheEventLogger;
+        return AuxiliaryCacheConfigurator
+            .parseCacheEventLogger( props, IRemoteHttpCacheConstants.HTTP_CACHE_SERVER_PREFIX );
     }
 
     /**
