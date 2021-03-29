@@ -142,6 +142,10 @@ public class UDPDiscoveryReceiver
             {
                 multicastInterface = HostNameUtil.getMulticastNetworkInterface();
             }
+            if (multicastInterface != null)
+            {
+                log.info("Using network interface {0}", multicastInterface::getDisplayName);
+            }
 
             multicastChannel = DatagramChannel.open(
                     multicastAddress instanceof Inet6Address ?
