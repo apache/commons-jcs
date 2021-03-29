@@ -25,7 +25,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
 
 import org.apache.commons.jcs3.engine.behavior.ICacheListener;
-import org.apache.commons.jcs3.engine.behavior.ICacheEventQueue.QueueType;
 import org.apache.commons.jcs3.engine.stats.StatElement;
 import org.apache.commons.jcs3.engine.stats.Stats;
 import org.apache.commons.jcs3.engine.stats.behavior.IStatElement;
