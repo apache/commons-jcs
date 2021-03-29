@@ -195,7 +195,6 @@ public class UDPDiscoveryReceiver
     {
         try
         {
-            ByteBuffer byteBuffer = ByteBuffer.allocate(65536);
             log.debug( "Waiting for message." );
 
             while (!shutdown.get())
@@ -227,7 +226,7 @@ public class UDPDiscoveryReceiver
 
                         DatagramChannel mc = (DatagramChannel) key.channel();
 
-                        byteBuffer.clear();
+                        ByteBuffer byteBuffer = ByteBuffer.allocate(65536);
                         InetSocketAddress sourceAddress =
                                 (InetSocketAddress) mc.receive(byteBuffer);
                         byteBuffer.flip();
