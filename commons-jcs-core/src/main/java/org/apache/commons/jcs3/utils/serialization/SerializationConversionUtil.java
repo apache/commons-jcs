@@ -84,10 +84,9 @@ public class SerializationConversionUtil
                 throw e;
             }
         }
-        final ICacheElementSerialized<K, V> serialized = new CacheElementSerialized<>(
-                element.getCacheName(), element.getKey(), serializedValue, element.getElementAttributes() );
 
-        return serialized;
+        return new CacheElementSerialized<>(
+                element.getCacheName(), element.getKey(), serializedValue, element.getElementAttributes() );
     }
 
     /**

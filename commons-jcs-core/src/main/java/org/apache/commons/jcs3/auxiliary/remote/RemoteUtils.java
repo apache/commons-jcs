@@ -256,7 +256,6 @@ public class RemoteUtils
         { // TODO improve this check? See also JCS-133
             return "//[" + registryHost.replaceFirst("%", "%25") + "]:" + registryPort + "/" + serviceName;
         }
-        final String registryURL = "//" + registryHost + ":" + registryPort + "/" + serviceName;
-        return registryURL;
+        return "//" + registryHost + ":" + registryPort + "/" + serviceName;
     }
 }

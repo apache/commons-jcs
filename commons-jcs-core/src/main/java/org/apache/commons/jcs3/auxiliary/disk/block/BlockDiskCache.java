@@ -265,7 +265,7 @@ public class BlockDiskCache<K, V>
 
         final Set<K> matchingKeys = getKeyMatcher().getMatchingKeysFromArray( pattern, keyArray );
 
-        final Map<K, ICacheElement<K, V>> elements = matchingKeys.stream()
+        return matchingKeys.stream()
             .collect(Collectors.toMap(
                     key -> key,
                     this::processGet)).entrySet().stream()
@@ -273,8 +273,6 @@ public class BlockDiskCache<K, V>
                 .collect(Collectors.toMap(
                         Entry::getKey,
                         Entry::getValue));
-
-        return elements;
     }
 
     /**

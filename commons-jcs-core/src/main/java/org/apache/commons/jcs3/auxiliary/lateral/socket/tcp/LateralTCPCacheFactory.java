@@ -226,8 +226,7 @@ public class LateralTCPCacheFactory
             return service;
         });
 
-        final ICacheServiceNonLocal<K, V> service =
-                (ICacheServiceNonLocal<K, V>) csnlInstances.computeIfAbsent(key, name -> {
+        return (ICacheServiceNonLocal<K, V>) csnlInstances.computeIfAbsent(key, name -> {
 
                     log.info( "Instance for [{0}] is null, creating", name );
 
@@ -255,8 +254,6 @@ public class LateralTCPCacheFactory
                         return zombieService;
                     }
                 });
-
-        return service;
     }
 
     /**
@@ -275,15 +272,13 @@ public class LateralTCPCacheFactory
     {
         final String key = ilca.getUdpDiscoveryAddr() + ":" + ilca.getUdpDiscoveryPort();
 
-        final LateralTCPDiscoveryListener ins = lTCPDLInstances.computeIfAbsent(key, key1 -> {
+        return lTCPDLInstances.computeIfAbsent(key, key1 -> {
             log.info("Created new discovery listener for cacheName {0} for request {1}",
                     key1, ilca.getCacheName());
             return new LateralTCPDiscoveryListener( this.getName(),
                     (CompositeCacheManager) cacheManager,
                     cacheEventLogger, elementSerializer);
         });
-
-        return ins;
     }
 
     /**

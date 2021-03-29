@@ -260,8 +260,7 @@ public class PropertySetter
         }
         else if( type.isEnum() )
         {
-            final Enum<?> en = Enum.valueOf(type.asSubclass(Enum.class), v );
-            return en;
+            return Enum.valueOf(type.asSubclass(Enum.class), v );
         }
         else if ( File.class.isAssignableFrom( type ) )
         {

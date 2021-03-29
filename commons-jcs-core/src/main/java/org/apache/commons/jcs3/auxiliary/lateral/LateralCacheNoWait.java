@@ -193,7 +193,7 @@ public class LateralCacheNoWait<K, V>
     {
         if ( keys != null && !keys.isEmpty() )
         {
-            final Map<K, ICacheElement<K, V>> elements = keys.stream()
+            return keys.stream()
                 .collect(Collectors.toMap(
                         key -> key,
                         this::get)).entrySet().stream()
@@ -201,8 +201,6 @@ public class LateralCacheNoWait<K, V>
                     .collect(Collectors.toMap(
                             Entry::getKey,
                             Entry::getValue));
-
-            return elements;
         }
 
         return new HashMap<>();
@@ -429,11 +427,9 @@ public class LateralCacheNoWait<K, V>
         final IStats stats = new Stats();
         stats.setTypeName( "Lateral Cache No Wait" );
 
-        final ArrayList<IStatElement<?>> elems = new ArrayList<>();
-
         // get the stats from the event queue too
         final IStats eqStats = this.eventQueue.getStatistics();
-        elems.addAll(eqStats.getStatElements());
+        final ArrayList<IStatElement<?>> elems = new ArrayList<>(eqStats.getStatElements());
 
         elems.add(new StatElement<>( "Get Count", Integer.valueOf(this.getCount) ) );
         elems.add(new StatElement<>( "Remove Count", Integer.valueOf(this.removeCount) ) );

@@ -24,6 +24,7 @@ import static org.apache.commons.jcs3.jcache.serialization.Serializations.copy;
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -382,12 +383,12 @@ public class JCSCache<K, V> implements Cache<K, V>
             {
                 if (created)
                 {
-                    listener.onCreated(Arrays.<CacheEntryEvent<? extends K, ? extends V>> asList(new JCSCacheEntryEvent<>(this,
+                    listener.onCreated(Collections.<CacheEntryEvent<? extends K, ? extends V>>singletonList(new JCSCacheEntryEvent<>(this,
                             EventType.CREATED, null, key, value)));
                 }
                 else
                 {
-                    listener.onUpdated(Arrays.<CacheEntryEvent<? extends K, ? extends V>> asList(new JCSCacheEntryEvent<>(this,
+                    listener.onUpdated(Collections.<CacheEntryEvent<? extends K, ? extends V>>singletonList(new JCSCacheEntryEvent<>(this,
                             EventType.UPDATED, old, key, value)));
                 }
             }
@@ -418,7 +419,7 @@ public class JCSCache<K, V> implements Cache<K, V>
         delegate.remove(cacheKey);
         for (final JCSListener<K, V> listener : listeners.values())
         {
-            listener.onExpired(Arrays.<CacheEntryEvent<? extends K, ? extends V>> asList(new JCSCacheEntryEvent<>(this,
+            listener.onExpired(Collections.<CacheEntryEvent<? extends K, ? extends V>>singletonList(new JCSCacheEntryEvent<>(this,
                     EventType.REMOVED, null, cacheKey, elt.getVal())));
         }
     }
@@ -468,16 +469,15 @@ public class JCSCache<K, V> implements Cache<K, V>
         final long start = Times.now(!statisticsEnabled);
 
         writer.delete(key);
-        final K cacheKey = key;
 
-        final ICacheElement<K, V> v = delegate.get(cacheKey);
-        delegate.remove(cacheKey);
+        final ICacheElement<K, V> v = delegate.get(key);
+        delegate.remove(key);
 
         final V value = v != null && v.getVal() != null ? v.getVal() : null;
         final boolean remove = v != null;
         for (final JCSListener<K, V> listener : listeners.values())
         {
-            listener.onRemoved(Arrays.<CacheEntryEvent<? extends K, ? extends V>> asList(new JCSCacheEntryEvent<>(this,
+            listener.onRemoved(Collections.<CacheEntryEvent<? extends K, ? extends V>>singletonList(new JCSCacheEntryEvent<>(this,
                     EventType.REMOVED, null, key, value)));
         }
         if (remove && statisticsEnabled)
