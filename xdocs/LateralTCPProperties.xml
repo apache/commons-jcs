@@ -144,7 +144,7 @@ jcs.auxiliary.LTCP.attributes.Receive=true
 jcs.auxiliary.LTCP.attributes.AllowGet=false
 jcs.auxiliary.LTCP.attributes.IssueRemoveOnPut=false
 jcs.auxiliary.LTCP.attributes.FilterRemoveByHashCode=false
-jcs.auxiliary.LTCP.attributes.SocketTimeoOt=1001
+jcs.auxiliary.LTCP.attributes.SocketTimeOut=1001
 jcs.auxiliary.LTCP.attributes.OpenTimeOut=2002
 jcs.auxiliary.LTCP.attributes.ZombieQueueMaxSize=2000
         ]]></source>
