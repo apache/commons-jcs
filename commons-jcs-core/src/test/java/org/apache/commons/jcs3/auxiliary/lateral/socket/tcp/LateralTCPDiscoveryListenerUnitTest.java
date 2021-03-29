@@ -1,5 +1,20 @@
 package org.apache.commons.jcs3.auxiliary.lateral.socket.tcp;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.jcs3.auxiliary.lateral.LateralCache;
+import org.apache.commons.jcs3.auxiliary.lateral.LateralCacheAttributes;
+import org.apache.commons.jcs3.auxiliary.lateral.LateralCacheNoWait;
+import org.apache.commons.jcs3.auxiliary.lateral.LateralCacheNoWaitFacade;
+import org.apache.commons.jcs3.auxiliary.lateral.behavior.ILateralCacheAttributes;
+import org.apache.commons.jcs3.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttributes;
+import org.apache.commons.jcs3.engine.behavior.IElementSerializer;
+import org.apache.commons.jcs3.engine.control.CompositeCacheManager;
+import org.apache.commons.jcs3.engine.logging.MockCacheEventLogger;
+import org.apache.commons.jcs3.utils.discovery.DiscoveredService;
+import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -20,20 +35,6 @@ package org.apache.commons.jcs3.auxiliary.lateral.socket.tcp;
  */
 
 import junit.framework.TestCase;
-
-import org.apache.commons.jcs3.engine.logging.MockCacheEventLogger;
-import org.apache.commons.jcs3.auxiliary.lateral.LateralCache;
-import org.apache.commons.jcs3.auxiliary.lateral.LateralCacheAttributes;
-import org.apache.commons.jcs3.auxiliary.lateral.LateralCacheNoWait;
-import org.apache.commons.jcs3.auxiliary.lateral.LateralCacheNoWaitFacade;
-import org.apache.commons.jcs3.auxiliary.lateral.behavior.ILateralCacheAttributes;
-import org.apache.commons.jcs3.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttributes;
-import org.apache.commons.jcs3.engine.behavior.IElementSerializer;
-import org.apache.commons.jcs3.engine.control.CompositeCacheManager;
-import org.apache.commons.jcs3.utils.discovery.DiscoveredService;
-import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
-
-import java.util.ArrayList;
 
 /** Test for the listener that observers UDP discovery events. */
 public class LateralTCPDiscoveryListenerUnitTest
@@ -65,7 +66,8 @@ public class LateralTCPDiscoveryListenerUnitTest
         cacheEventLogger = new MockCacheEventLogger();
         elementSerializer = new StandardSerializer();
 
-        listener = new LateralTCPDiscoveryListener( factory.getName(), cacheMgr );
+        listener = new LateralTCPDiscoveryListener( factory.getName(), cacheMgr,
+                cacheEventLogger, elementSerializer );
     }
 
     /**
@@ -76,9 +78,7 @@ public class LateralTCPDiscoveryListenerUnitTest
         // SETUP
         final String cacheName = "testAddNoWaitFacade_NotInList";
 
-        @SuppressWarnings("unchecked")
-        final
-        LateralCacheNoWait<String, String>[] noWaits = new LateralCacheNoWait[0];
+        List<LateralCacheNoWait<String, String>> noWaits = new ArrayList<>();
         final ILateralCacheAttributes cattr = new LateralCacheAttributes();
         cattr.setCacheName( cacheName );
 
@@ -99,9 +99,7 @@ public class LateralTCPDiscoveryListenerUnitTest
         // SETUP
         final String cacheName = "testAddNoWaitFacade_FacadeInList";
 
-        @SuppressWarnings("unchecked")
-        final
-        LateralCacheNoWait<String, String>[] noWaits = new LateralCacheNoWait[0];
+        List<LateralCacheNoWait<String, String>> noWaits = new ArrayList<>();
         final ILateralCacheAttributes cattr = new LateralCacheAttributes();
         cattr.setCacheName( cacheName );
 
@@ -166,9 +164,7 @@ public class LateralTCPDiscoveryListenerUnitTest
         // SETUP
         final String cacheName = "testAddNoWaitFacade_FacadeInList";
 
-        @SuppressWarnings("unchecked")
-        final
-        LateralCacheNoWait<String, String>[] noWaits = new LateralCacheNoWait[0];
+        List<LateralCacheNoWait<String, String>> noWaits = new ArrayList<>();
         final ILateralCacheAttributes cattr = new LateralCacheAttributes();
         cattr.setCacheName( cacheName );
 
@@ -193,9 +189,7 @@ public class LateralTCPDiscoveryListenerUnitTest
         // SETUP
         final String cacheName = "testRemoveNoWaitFacade_FacadeInListNoWaitIs";
 
-        @SuppressWarnings("unchecked")
-        final
-        LateralCacheNoWait<String, String>[] noWaits = new LateralCacheNoWait[0];
+        List<LateralCacheNoWait<String, String>> noWaits = new ArrayList<>();
         final ILateralCacheAttributes cattr = new LateralCacheAttributes();
         cattr.setCacheName( cacheName );
 
@@ -229,20 +223,17 @@ public class LateralTCPDiscoveryListenerUnitTest
         service.setServiceAddress( "localhost" );
         service.setServicePort( 9999 );
 
-        // since the no waits are compared by object equality, I have to do this
-        // TODO add an equals method to the noWait.  the problem if is figuring out what to compare.
         final ITCPLateralCacheAttributes lca = new TCPLateralCacheAttributes();
-        lca.setTransmissionType( LateralCacheAttributes.Type.TCP );
+        // used as identifying key by factory
         lca.setTcpServer( service.getServiceAddress() + ":" + service.getServicePort() );
         lca.setCacheName(cacheName);
         final LateralCacheNoWait<String, String> noWait = factory.createCacheNoWait(lca, cacheEventLogger, elementSerializer);
         // this is the normal process, the discovery service expects it there
         cacheMgr.addAuxiliaryCache(factory.getName(), cacheName, noWait);
+        cacheMgr.registryFacPut(factory);
 
-        @SuppressWarnings("unchecked")
-        final
-        LateralCacheNoWait<String, String>[] noWaits = new LateralCacheNoWait[0];
-        final ILateralCacheAttributes cattr = new LateralCacheAttributes();
+        List<LateralCacheNoWait<String, String>> noWaits = new ArrayList<>();
+        final ILateralCacheAttributes cattr = new TCPLateralCacheAttributes();
         cattr.setCacheName( cacheName );
         final LateralCacheNoWaitFacade<String, String> facade = new LateralCacheNoWaitFacade<>( null, noWaits, cattr );
         listener.addNoWaitFacade( cacheName, facade );
@@ -270,20 +261,17 @@ public class LateralTCPDiscoveryListenerUnitTest
         service.setServiceAddress( "localhost" );
         service.setServicePort( 9999 );
 
-        // since the no waits are compared by object equality, I have to do this
-        // TODO add an equals method to the noWait.  the problem if is figuring out what to compare.
         final ITCPLateralCacheAttributes lca = new TCPLateralCacheAttributes();
-        lca.setTransmissionType( LateralCacheAttributes.Type.TCP );
+        // used as identifying key by factory
         lca.setTcpServer( service.getServiceAddress() + ":" + service.getServicePort() );
         lca.setCacheName(cacheName);
         final LateralCacheNoWait<String, String> noWait = factory.createCacheNoWait(lca, cacheEventLogger, elementSerializer);
         // this is the normal process, the discovery service expects it there
         cacheMgr.addAuxiliaryCache(factory.getName(), cacheName, noWait);
+        cacheMgr.registryFacPut(factory);
 
-        @SuppressWarnings("unchecked")
-        final
-        LateralCacheNoWait<String, String>[] noWaits = new LateralCacheNoWait[0];
-        final ILateralCacheAttributes cattr = new LateralCacheAttributes();
+        List<LateralCacheNoWait<String, String>> noWaits = new ArrayList<>();
+        final ILateralCacheAttributes cattr = new TCPLateralCacheAttributes();
         cattr.setCacheName( cacheName );
         final LateralCacheNoWaitFacade<String, String> facade = new LateralCacheNoWaitFacade<>( null, noWaits, cattr );
         listener.addNoWaitFacade( cacheName, facade );

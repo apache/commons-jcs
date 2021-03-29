@@ -29,12 +29,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
-import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 import org.apache.commons.jcs3.auxiliary.AbstractAuxiliaryCache;
-import org.apache.commons.jcs3.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.commons.jcs3.auxiliary.lateral.behavior.ILateralCacheAttributes;
 import org.apache.commons.jcs3.auxiliary.lateral.behavior.ILateralCacheListener;
 import org.apache.commons.jcs3.engine.CacheStatus;
@@ -68,7 +67,7 @@ public class LateralCacheNoWaitFacade<K, V>
     /**
      * The queuing facade to the client.
      */
-    private final CopyOnWriteArraySet<LateralCacheNoWait<K, V>> noWaitSet;
+    private final ConcurrentHashMap<String, LateralCacheNoWait<K, V>> noWaitMap;
 
     /** The region name */
     private final String cacheName;
@@ -110,8 +109,9 @@ public class LateralCacheNoWaitFacade<K, V>
     {
         log.debug( "CONSTRUCTING NO WAIT FACADE" );
         this.listener = listener;
-        this.noWaits = noWaits.toArray(new LateralCacheNoWait[0]);
-        this.noWaitSet = new CopyOnWriteArraySet<>(noWaits);
+        this.noWaits = noWaits.toArray(new LateralCacheNoWait[noWaits.size()]);
+        this.noWaitMap = new ConcurrentHashMap<>();
+        noWaits.forEach(noWait -> noWaitMap.put(noWait.getIdentityKey(), noWait));
         this.cacheName = cattr.getCacheName();
         this.lateralCacheAttributes = cattr;
     }
@@ -123,7 +123,7 @@ public class LateralCacheNoWaitFacade<K, V>
      */
     protected int getNoWaitSize()
     {
-        return noWaitSet.size();
+        return noWaitMap.size();
     }
 
     /**
@@ -134,7 +134,19 @@ public class LateralCacheNoWaitFacade<K, V>
      */
     public boolean containsNoWait( final LateralCacheNoWait<K, V> noWait )
     {
-        return noWaitSet.contains(noWait);
+        return containsNoWait(noWait.getIdentityKey());
+    }
+
+    /**
+     * Tells you if the no wait is in the list or not by checking for its
+     * identifying key
+     * <p>
+     * @param tcpServer the identifying key
+     * @return true if the noWait is in the list.
+     */
+    public boolean containsNoWait(final String tcpServer)
+    {
+        return noWaitMap.containsKey(tcpServer);
     }
 
     /**
@@ -151,15 +163,16 @@ public class LateralCacheNoWaitFacade<K, V>
             return false;
         }
 
-        final boolean added = noWaitSet.add(noWait);
+        final LateralCacheNoWait<K,V> added =
+                noWaitMap.putIfAbsent(noWait.getIdentityKey(), noWait);
 
-        if (!added)
+        if (added != null)
         {
             log.debug( "No Wait already contained, [{0}]", noWait );
             return false;
         }
 
-        noWaits = noWaitSet.toArray(new LateralCacheNoWait[0]);
+        noWaits = noWaitMap.values().toArray(new LateralCacheNoWait[0]);
 
         return true;
     }
@@ -170,24 +183,35 @@ public class LateralCacheNoWaitFacade<K, V>
      * @param noWait
      * @return true if it was already in the array
      */
-    @SuppressWarnings("unchecked") // No generic arrays in java
     public synchronized boolean removeNoWait( final LateralCacheNoWait<K, V> noWait )
     {
-        if ( noWait == null )
+        if (noWait == null)
         {
             return false;
         }
 
-        final boolean contained = noWaitSet.remove(noWait);
+        return removeNoWait(noWait.getIdentityKey());
+    }
 
-        if (!contained)
+    /**
+     * Removes a no wait from the list if it is already there by its
+     * identifying key
+     * <p>
+     * @param tcpServer the identifying key.
+     * @return true if it was already in the array
+     */
+    @SuppressWarnings("unchecked") // No generic arrays in java
+    public synchronized boolean removeNoWait(final String tcpServer)
+    {
+        if (tcpServer == null)
         {
             return false;
         }
 
-        noWaits = noWaitSet.toArray(new LateralCacheNoWait[0]);
+        final LateralCacheNoWait<K,V> contained = noWaitMap.remove(tcpServer);
+        noWaits = noWaitMap.values().toArray(new LateralCacheNoWait[0]);
 
-        return true;
+        return contained != null;
     }
 
     /**
@@ -200,9 +224,9 @@ public class LateralCacheNoWaitFacade<K, V>
         throws IOException
     {
         log.debug("updating through lateral cache facade, noWaits.length = {0}",
-                noWaitSet::size);
+                noWaitMap::size);
 
-        for (final LateralCacheNoWait<K, V> nw : noWaitSet)
+        for (final LateralCacheNoWait<K, V> nw : noWaitMap.values())
         {
             nw.update( ce );
         }
@@ -217,7 +241,7 @@ public class LateralCacheNoWaitFacade<K, V>
     @Override
     public ICacheElement<K, V> get( final K key )
     {
-        return noWaitSet.stream()
+        return noWaitMap.values().stream()
             .map(nw -> nw.get(key))
             .filter(Objects::nonNull)
             .findFirst()
@@ -261,7 +285,7 @@ public class LateralCacheNoWaitFacade<K, V>
     @Override
     public Map<K, ICacheElement<K, V>> getMatching(final String pattern)
     {
-        return noWaitSet.stream()
+        return noWaitMap.values().stream()
                 .flatMap(nw -> nw.getMatching(pattern).entrySet().stream())
                 .collect(Collectors.toMap(
                         Entry::getKey,
@@ -277,7 +301,7 @@ public class LateralCacheNoWaitFacade<K, V>
     public Set<K> getKeySet() throws IOException
     {
         final HashSet<K> allKeys = new HashSet<>();
-        for (final LateralCacheNoWait<K, V> nw : noWaitSet)
+        for (final LateralCacheNoWait<K, V> nw : noWaitMap.values())
         {
             final Set<K> keys = nw.getKeySet();
             if (keys != null)
@@ -297,7 +321,7 @@ public class LateralCacheNoWaitFacade<K, V>
     @Override
     public boolean remove( final K key )
     {
-        noWaitSet.forEach(nw -> nw.remove( key ));
+        noWaitMap.values().forEach(nw -> nw.remove( key ));
         return false;
     }
 
@@ -307,7 +331,7 @@ public class LateralCacheNoWaitFacade<K, V>
     @Override
     public void removeAll()
     {
-        noWaitSet.forEach(LateralCacheNoWait::removeAll);
+        noWaitMap.values().forEach(LateralCacheNoWait::removeAll);
     }
 
     /** Adds a dispose request to the lateral cache. */
@@ -322,7 +346,8 @@ public class LateralCacheNoWaitFacade<K, V>
                 listener = null;
             }
 
-            noWaitSet.forEach(LateralCacheNoWait::dispose);
+            noWaitMap.values().forEach(LateralCacheNoWait::dispose);
+            noWaitMap.clear();
         }
     }
 
@@ -356,8 +381,7 @@ public class LateralCacheNoWaitFacade<K, V>
     @Override
     public String getCacheName()
     {
-        return "";
-        //cache.getCacheName();
+        return cacheName;
     }
 
     /**
@@ -372,12 +396,12 @@ public class LateralCacheNoWaitFacade<K, V>
             return CacheStatus.DISPOSED;
         }
 
-        if (noWaitSet.isEmpty() || listener != null)
+        if (noWaitMap.isEmpty() || listener != null)
         {
             return CacheStatus.ALIVE;
         }
 
-        final List<CacheStatus> statii = noWaitSet.stream()
+        final List<CacheStatus> statii = noWaitMap.values().stream()
                 .map(LateralCacheNoWait::getStatus)
                 .collect(Collectors.toList());
 
@@ -401,7 +425,7 @@ public class LateralCacheNoWaitFacade<K, V>
      * @return Returns the AuxiliaryCacheAttributes.
      */
     @Override
-    public AuxiliaryCacheAttributes getAuxiliaryCacheAttributes()
+    public ILateralCacheAttributes getAuxiliaryCacheAttributes()
     {
         return this.lateralCacheAttributes;
     }
@@ -447,11 +471,11 @@ public class LateralCacheNoWaitFacade<K, V>
 
         final ArrayList<IStatElement<?>> elems = new ArrayList<>();
 
-        if (noWaitSet != null)
+        if (noWaitMap != null)
         {
-            elems.add(new StatElement<>("Number of No Waits", Integer.valueOf(noWaitSet.size())));
+            elems.add(new StatElement<>("Number of No Waits", Integer.valueOf(noWaitMap.size())));
 
-            elems.addAll(noWaitSet.stream()
+            elems.addAll(noWaitMap.values().stream()
                     .flatMap(lcnw -> lcnw.getStatistics().getStatElements().stream())
                     .collect(Collectors.toList()));
         }
