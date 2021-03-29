@@ -140,6 +140,20 @@ public interface ITCPLateralCacheAttributes
     void setUdpDiscoveryAddr( String udpDiscoveryAddr );
 
     /**
+     * The time-to-live for the UDP multicast packets
+     * <p>
+     * @return Returns the udpTTL.
+     */
+    int getUdpTTL();
+
+    /**
+     * Sets the time-to-live for the UDP multicast packet
+     * <p>
+     * @param udpTTL The udpTTL to set.
+     */
+    void setUdpTTL( final int udpTTL );
+
+    /**
      * Is the lateral allowed to try and get from other laterals.
      * <p>
      * This replaces the old putOnlyMode

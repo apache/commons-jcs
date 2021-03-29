@@ -81,6 +81,9 @@ public class TCPLateralCacheAttributes
     /** discovery switch */
     private boolean udpDiscoveryEnabled = DEFAULT_UDP_DISCOVERY_ENABLED;
 
+    /** udp datagram TTL */
+    private int udpTTL = 0;
+
     /** can we put */
     private boolean allowPut = DEFAULT_ALLOW_GET;
 
@@ -253,6 +256,28 @@ public class TCPLateralCacheAttributes
     public void setUdpDiscoveryAddr( final String udpDiscoveryAddr )
     {
         this.udpDiscoveryAddr = udpDiscoveryAddr;
+    }
+
+    /**
+     * The time-to-live for the UDP multicast packets
+     * <p>
+     * @return Returns the udpTTL.
+     */
+    @Override
+    public int getUdpTTL()
+    {
+        return udpTTL;
+    }
+
+    /**
+     * Sets the time-to-live for the UDP multicast packet
+     * <p>
+     * @param udpTTL The udpTTL to set.
+     */
+    @Override
+    public void setUdpTTL( final int udpTTL )
+    {
+        this.udpTTL = udpTTL;
     }
 
     /**
