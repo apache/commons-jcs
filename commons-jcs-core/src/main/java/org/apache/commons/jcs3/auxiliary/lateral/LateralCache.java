@@ -25,7 +25,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.jcs3.auxiliary.AbstractAuxiliaryCacheEventLogging;
-import org.apache.commons.jcs3.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.commons.jcs3.auxiliary.lateral.behavior.ILateralCacheAttributes;
 import org.apache.commons.jcs3.engine.CacheInfo;
 import org.apache.commons.jcs3.engine.CacheStatus;
@@ -375,7 +374,7 @@ public class LateralCache<K, V>
      * @return Returns the AuxiliaryCacheAttributes.
      */
     @Override
-    public AuxiliaryCacheAttributes getAuxiliaryCacheAttributes()
+    public ILateralCacheAttributes getAuxiliaryCacheAttributes()
     {
         return lateralCacheAttributes;
     }
