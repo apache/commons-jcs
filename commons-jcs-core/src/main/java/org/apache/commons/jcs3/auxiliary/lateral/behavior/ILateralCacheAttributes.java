@@ -33,16 +33,29 @@ public interface ILateralCacheAttributes
     enum Type
     {
         /** HTTP type */
-        HTTP, // 1
+        HTTP("HTTP"), // 1
 
         /** UDP type */
-        UDP, // 2
+        UDP("UDP"), // 2
 
         /** TCP type */
-        TCP, // 3
+        TCP("TCP"), // 3
 
         /** XMLRPC type */
-        XMLRPC // 4
+        XMLRPC("XMLRPC"); // 4
+
+        private final String typeName;
+
+        Type(String typeName)
+        {
+            this.typeName = typeName;
+        }
+
+        @Override
+        public String toString()
+        {
+            return typeName;
+        }
     }
 
     /**
