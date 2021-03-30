@@ -273,8 +273,8 @@ public class LateralTCPCacheFactory
         final String key = ilca.getUdpDiscoveryAddr() + ":" + ilca.getUdpDiscoveryPort();
 
         return lTCPDLInstances.computeIfAbsent(key, key1 -> {
-            log.info("Created new discovery listener for cacheName {0} for request {1}",
-                    key1, ilca.getCacheName());
+            log.info("Created new discovery listener for cacheName {0} and request {1}",
+                    ilca.getCacheName(), key1);
             return new LateralTCPDiscoveryListener( this.getName(),
                     (CompositeCacheManager) cacheManager,
                     cacheEventLogger, elementSerializer);
