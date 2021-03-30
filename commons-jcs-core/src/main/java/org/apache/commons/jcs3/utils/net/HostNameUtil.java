@@ -129,13 +129,20 @@ public class HostNameUtil
                 while ( ifaces.hasMoreElements() )
                 {
                     final NetworkInterface iface = ifaces.nextElement();
+
+                    // Skip loopback interfaces
+                    if (iface.isLoopback() || !iface.isUp())
+                    {
+                        continue;
+                    }
+
                     // Iterate all IP addresses assigned to each card...
                     for ( final Enumeration<InetAddress> inetAddrs = iface.getInetAddresses(); inetAddrs.hasMoreElements(); )
                     {
                         final InetAddress inetAddr = inetAddrs.nextElement();
                         if ( !inetAddr.isLoopbackAddress() )
                         {
-                            if ( inetAddr.isSiteLocalAddress() )
+                            if (inetAddr.isSiteLocalAddress())
                             {
                                 // Found non-loopback site-local address.
                                 addresses.add(inetAddr);
