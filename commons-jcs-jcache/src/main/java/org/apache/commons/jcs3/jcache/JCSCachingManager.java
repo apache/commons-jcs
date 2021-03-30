@@ -166,29 +166,10 @@ public class JCSCachingManager implements CacheManager
 
     private void addProperties(final URL url, final Properties aggregator)
     {
-        InputStream inStream = null;
-        try
-        {
-            inStream = url.openStream();
+        try (InputStream inStream = url.openStream()) {
             aggregator.load(inStream);
-        }
-        catch (final IOException e)
-        {
+        } catch (final IOException e) {
             throw new IllegalArgumentException(e);
-        }
-        finally
-        {
-            if (inStream != null)
-            {
-                try
-                {
-                    inStream.close();
-                }
-                catch (final IOException e)
-                {
-                    // no-op
-                }
-            }
         }
     }
 
