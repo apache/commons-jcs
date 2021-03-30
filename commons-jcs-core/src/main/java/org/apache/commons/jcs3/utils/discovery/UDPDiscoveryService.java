@@ -20,12 +20,14 @@ package org.apache.commons.jcs3.utils.discovery;
  */
 
 import java.io.IOException;
+import java.net.Inet4Address;
 import java.net.Inet6Address;
 import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -122,21 +124,55 @@ public class UDPDiscoveryService
             if (getUdpDiscoveryAttributes().getServiceAddress() == null ||
                     getUdpDiscoveryAttributes().getServiceAddress().isEmpty())
             {
+                // Use same interface as for multicast
+                NetworkInterface serviceInterface = null;
+                if (getUdpDiscoveryAttributes().getUdpDiscoveryInterface() != null)
+                {
+                    serviceInterface = NetworkInterface.getByName(
+                            getUdpDiscoveryAttributes().getUdpDiscoveryInterface());
+                }
+                else
+                {
+                    serviceInterface = HostNameUtil.getMulticastNetworkInterface();
+                }
+
                 try
                 {
-                    final List<InetAddress> addresses = HostNameUtil.getLocalHostLANAddresses();
-                    final InetAddress serviceAddress;
+                    InetAddress serviceAddress = null;
 
-                    if (multicastAddress instanceof Inet6Address)
+                    for (Enumeration<InetAddress> addresses = serviceInterface.getInetAddresses();
+                            addresses.hasMoreElements();)
                     {
-                        // if Multicast uses IPv6, try to publish our IPv6 address
-                        serviceAddress = addresses.stream()
-                                .filter(address -> address instanceof Inet6Address)
-                                .findFirst().orElse(addresses.get(0));
+                        serviceAddress = addresses.nextElement();
+
+                        if (multicastAddress instanceof Inet6Address)
+                        {
+                            if (serviceAddress instanceof Inet6Address &&
+                                !serviceAddress.isLoopbackAddress() &&
+                                !serviceAddress.isMulticastAddress() &&
+                                serviceAddress.isLinkLocalAddress())
+                            {
+                                // if Multicast uses IPv6, try to publish our IPv6 address
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            if (serviceAddress instanceof Inet4Address &&
+                                !serviceAddress.isLoopbackAddress() &&
+                                !serviceAddress.isMulticastAddress() &&
+                                serviceAddress.isSiteLocalAddress())
+                            {
+                                // if Multicast uses IPv4, try to publish our IPv4 address
+                                break;
+                            }
+                        }
                     }
-                    else
+
+                    if (serviceAddress == null)
                     {
-                        serviceAddress = addresses.get(0);
+                        // Nothing found for given interface, fall back
+                        serviceAddress = HostNameUtil.getLocalHostLANAddress();
                     }
 
                     getUdpDiscoveryAttributes().setServiceAddress(serviceAddress.getHostAddress());
@@ -214,7 +250,7 @@ public class UDPDiscoveryService
      */
     public void initiateBroadcast()
     {
-        log.debug( "Creating sender thread for discoveryAddress = [{0}] and "
+        log.debug( "Creating sender for discoveryAddress = [{0}] and "
                 + "discoveryPort = [{1}] myHostName = [{2}] and port = [{3}]",
                 () -> getUdpDiscoveryAttributes().getUdpDiscoveryAddr(),
                 () -> getUdpDiscoveryAttributes().getUdpDiscoveryPort(),
@@ -414,12 +450,10 @@ public class UDPDiscoveryService
                 cleanupTaskFuture.cancel(false);
             }
 
-            // no good way to do this right now.
             if (receiver != null)
             {
                 log.info( "Shutting down UDP discovery service receiver." );
                 receiver.shutdown();
-                udpReceiverThread.interrupt();
             }
 
             log.info( "Shutting down UDP discovery service sender." );

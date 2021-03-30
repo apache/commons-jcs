@@ -214,6 +214,8 @@ public class UDPDiscoverySender implements AutoCloseable
         log.debug( "sending requestBroadcast" );
 
         final UDPDiscoveryMessage message = new UDPDiscoveryMessage();
+        message.setHost(multicastAddress.getHostAddress());
+        message.setPort(multicastPort);
         message.setRequesterId( CacheInfo.listenerId );
         message.setMessageType( BroadcastType.REQUEST );
         send( message );
