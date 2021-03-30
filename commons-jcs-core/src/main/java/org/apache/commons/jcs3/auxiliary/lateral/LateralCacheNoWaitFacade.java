@@ -211,6 +211,11 @@ public class LateralCacheNoWaitFacade<K, V>
         final LateralCacheNoWait<K,V> contained = noWaitMap.remove(tcpServer);
         noWaits = noWaitMap.values().toArray(new LateralCacheNoWait[0]);
 
+        if (contained != null)
+        {
+            contained.dispose();
+        }
+
         return contained != null;
     }
 
