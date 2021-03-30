@@ -20,6 +20,15 @@
 	</properties>
 	<body>
         <release version="3.1" date="20YY-MM-DD">
+            <action dev="tv" type="update">
+               Autodetect lateral service address on the interface used for multicast - 
+               depending on the multicast protocol: 
+               IPv6 link-local address for IPv6 multicast,
+               IPv4 site-local address for IPv4 multicast
+            </action>
+            <action dev="tv" type="fix">
+               Use configured listener address for UDP service broadcast
+            </action>
             <action dev="tv" type="fix">
                Fix UDP service discovery with LateralCache
             </action>
