@@ -32,7 +32,7 @@ public class Closeables
             {
                 try
                 {
-                    Closeable.class.cast(closeable).close();
+                    ((Closeable) closeable).close();
                 } catch (final IOException ex) {
                     if (e == null)
                     {

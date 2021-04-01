@@ -54,7 +54,7 @@ public class ConfigurableMBeanServerIdBuilder extends MBeanServerBuilder
                 return false;
             }
 
-            final Key key = Key.class.cast(o);
+            final Key key = (Key) o;
             return !(domain != null ? !domain.equals(key.domain) : key.domain != null)
                     && !(outer != null ? !outer.equals(key.outer) : key.outer != null);
 

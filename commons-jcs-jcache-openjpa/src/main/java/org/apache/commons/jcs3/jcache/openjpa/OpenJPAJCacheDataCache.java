@@ -39,7 +39,7 @@ public class OpenJPAJCacheDataCache extends AbstractDataCache
     public void initialize(final DataCacheManager manager)
     {
         super.initialize(manager);
-        this.manager = OpenJPAJCacheDataCacheManager.class.cast(manager);
+        this.manager = (OpenJPAJCacheDataCacheManager) manager;
     }
 
     @Override
@@ -48,7 +48,7 @@ public class OpenJPAJCacheDataCache extends AbstractDataCache
         Object result = null;
         if (OpenJPAId.class.isInstance(oid))
         {
-            final Class<?> cls = OpenJPAId.class.cast(oid).getType();
+            final Class<?> cls = ((OpenJPAId) oid).getType();
             final Cache<Object, Object> cache = manager.getOrCreateCache(OPENJPA_PREFIX, cls.getName());
             if (cache == null)
             {
@@ -77,7 +77,7 @@ public class OpenJPAJCacheDataCache extends AbstractDataCache
         {
             return null;
         }
-        return DataCachePCData.class.cast(result);
+        return (DataCachePCData) result;
     }
 
     @Override
@@ -92,12 +92,12 @@ public class OpenJPAJCacheDataCache extends AbstractDataCache
     {
         if (OpenJPAId.class.isInstance(oid))
         {
-            final Object remove = manager.getOrCreateCache(OPENJPA_PREFIX, OpenJPAId.class.cast(oid).getType().getName()).getAndRemove(oid);
+            final Object remove = manager.getOrCreateCache(OPENJPA_PREFIX, ((OpenJPAId) oid).getType().getName()).getAndRemove(oid);
             if (remove == null)
             {
                 return null;
             }
-            return DataCachePCData.class.cast(remove);
+            return (DataCachePCData) remove;
         }
         return null;
     }

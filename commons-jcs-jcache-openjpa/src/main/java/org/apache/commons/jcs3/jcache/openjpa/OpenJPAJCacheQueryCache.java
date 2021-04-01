@@ -42,7 +42,7 @@ public class OpenJPAJCacheQueryCache extends AbstractQueryCache
     public void initialize(final DataCacheManager manager)
     {
         super.initialize(manager);
-        this.manager = OpenJPAJCacheDataCacheManager.class.cast(manager);
+        this.manager = (OpenJPAJCacheDataCacheManager) manager;
     }
 
     @Override
@@ -65,7 +65,7 @@ public class OpenJPAJCacheQueryCache extends AbstractQueryCache
         final Collection<QueryKey> keys = new LinkedList<>();
         for (final Cache.Entry<Object, Object> entry : queryCache())
         {
-            keys.add(QueryKey.class.cast(entry.getKey()));
+            keys.add((QueryKey) entry.getKey());
         }
         return keys;
     }
@@ -73,7 +73,7 @@ public class OpenJPAJCacheQueryCache extends AbstractQueryCache
     @Override
     protected QueryResult getInternal(final QueryKey qk)
     {
-        return QueryResult.class.cast(queryCache().get(qk));
+        return (QueryResult) queryCache().get(qk);
     }
 
     private Cache<Object, Object> queryCache()
@@ -96,7 +96,7 @@ public class OpenJPAJCacheQueryCache extends AbstractQueryCache
         {
             return null;
         }
-        return QueryResult.class.cast(remove);
+        return (QueryResult) remove;
     }
 
     @Override

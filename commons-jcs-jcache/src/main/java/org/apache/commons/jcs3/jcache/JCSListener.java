@@ -71,7 +71,7 @@ public class JCSListener<K, V> implements Closeable
     {
         if (remove)
         {
-            CacheEntryRemovedListener.class.cast(delegate).onRemoved(filter(events));
+            ((CacheEntryRemovedListener) delegate).onRemoved(filter(events));
         }
     }
 
@@ -79,7 +79,7 @@ public class JCSListener<K, V> implements Closeable
     {
         if (expire)
         {
-            CacheEntryExpiredListener.class.cast(delegate).onExpired(filter(events));
+            ((CacheEntryExpiredListener) delegate).onExpired(filter(events));
         }
     }
 
@@ -87,7 +87,7 @@ public class JCSListener<K, V> implements Closeable
     {
         if (update)
         {
-            CacheEntryUpdatedListener.class.cast(delegate).onUpdated(filter(events));
+            ((CacheEntryUpdatedListener) delegate).onUpdated(filter(events));
         }
     }
 
@@ -95,7 +95,7 @@ public class JCSListener<K, V> implements Closeable
     {
         if (create)
         {
-            CacheEntryCreatedListener.class.cast(delegate).onCreated(filter(events));
+            ((CacheEntryCreatedListener) delegate).onCreated(filter(events));
         }
     }
 

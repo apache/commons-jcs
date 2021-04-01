@@ -117,7 +117,7 @@ public class JCacheFilter implements Filter
         boolean gzip = false;
         if (HttpServletRequest.class.isInstance(servletRequest))
         {
-            final Enumeration<String> acceptEncoding = HttpServletRequest.class.cast(servletRequest).getHeaders("Accept-Encoding");
+            final Enumeration<String> acceptEncoding = ((HttpServletRequest) servletRequest).getHeaders("Accept-Encoding");
             while (acceptEncoding != null && acceptEncoding.hasMoreElements())
             {
                 if ("gzip".equals(acceptEncoding.nextElement()))
@@ -128,7 +128,7 @@ public class JCacheFilter implements Filter
             }
         }
 
-        final HttpServletResponse httpServletResponse = HttpServletResponse.class.cast(servletResponse);
+        final HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
         checkResponse(httpServletResponse);
 
         final PageKey key = new PageKey(key(servletRequest), gzip);
@@ -185,15 +185,15 @@ public class JCacheFilter implements Filter
                 {
                     if (Integer.class.isInstance(value))
                     {
-                        httpServletResponse.addIntHeader(entry.getKey(), Integer.class.cast(value));
+                        httpServletResponse.addIntHeader(entry.getKey(), (Integer) value);
                     }
                     else if (String.class.isInstance(value))
                     {
-                        httpServletResponse.addHeader(entry.getKey(), String.class.cast(value));
+                        httpServletResponse.addHeader(entry.getKey(), (String) value);
                     }
                     else if (Long.class.isInstance(value))
                     {
-                        httpServletResponse.addDateHeader(entry.getKey(), Long.class.cast(value));
+                        httpServletResponse.addDateHeader(entry.getKey(), (Long) value);
                     }
                 }
             }
@@ -215,7 +215,7 @@ public class JCacheFilter implements Filter
     {
         if (HttpServletRequest.class.isInstance(servletRequest))
         {
-            final HttpServletRequest request = HttpServletRequest.class.cast(servletRequest);
+            final HttpServletRequest request = (HttpServletRequest) servletRequest;
             return request.getMethod() + '_' + request.getRequestURI() + '_' + request.getQueryString();
         }
         return servletRequest.toString();
@@ -269,7 +269,7 @@ public class JCacheFilter implements Filter
                 return false;
             }
 
-            final PageKey pageKey = PageKey.class.cast(o);
+            final PageKey pageKey = (PageKey) o;
             return gzip == pageKey.gzip && uri.equals(pageKey.uri);
 
         }
@@ -316,7 +316,7 @@ public class JCacheFilter implements Filter
                 return false;
             }
 
-            final Page page = Page.class.cast(o);
+            final Page page = (Page) o;
             return contentLength == page.contentLength
                     && status == page.status
                     && !(contentType != null ? !contentType.equals(page.contentType) : page.contentType != null)

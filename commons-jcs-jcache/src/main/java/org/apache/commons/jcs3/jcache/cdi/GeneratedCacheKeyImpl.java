@@ -47,7 +47,7 @@ public class GeneratedCacheKeyImpl implements GeneratedCacheKey
         {
             return false;
         }
-        final GeneratedCacheKeyImpl that = GeneratedCacheKeyImpl.class.cast(o);
+        final GeneratedCacheKeyImpl that = (GeneratedCacheKeyImpl) o;
         return Arrays.deepEquals(params, that.params);
 
     }

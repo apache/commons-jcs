@@ -36,7 +36,7 @@ public class OpenJPAJCacheDerivation extends AbstractProductDerivation
     public boolean beforeConfigurationLoad(final Configuration conf)
     {
         if (OpenJPAConfiguration.class.isInstance(conf)) {
-            final OpenJPAConfigurationImpl oconf = OpenJPAConfigurationImpl.class.cast(conf);
+            final OpenJPAConfigurationImpl oconf = (OpenJPAConfigurationImpl) conf;
             oconf.dataCacheManagerPlugin.setAlias(JCACHE_NAME, OpenJPAJCacheDataCacheManager.class.getName());
             oconf.dataCachePlugin.setAlias(JCACHE_NAME, OpenJPAJCacheDataCache.class.getName());
             oconf.queryCachePlugin.setAlias(JCACHE_NAME, OpenJPAJCacheQueryCache.class.getName());

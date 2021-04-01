@@ -111,7 +111,7 @@ public class JCSCache<K, V> implements Cache<K, V>
 
         try
         {
-            serializer = IElementSerializer.class.cast(classLoader.loadClass(property(properties, "serializer", cacheName, StandardSerializer.class.getName())).newInstance());
+            serializer = (IElementSerializer) classLoader.loadClass(property(properties, "serializer", cacheName, StandardSerializer.class.getName())).newInstance();
         }
         catch (final Exception e)
         {
@@ -225,7 +225,7 @@ public class JCSCache<K, V> implements Cache<K, V>
                 final IElementAttributes clone = delegate.getElementAttributes().clone();
                 if (ElementAttributes.class.isInstance(clone))
                 {
-                    ElementAttributes.class.cast(clone).setCreateTime();
+                    ((ElementAttributes) clone).setCreateTime();
                 }
                 final ICacheElement<K, V> element = updateElement(key, v, duration, clone);
                 try
@@ -354,7 +354,7 @@ public class JCSCache<K, V> implements Cache<K, V>
                 final boolean eternal = duration.isEternal();
                 copy.setIsEternal(eternal);
                 if (ElementAttributes.class.isInstance(copy)) {
-                    ElementAttributes.class.cast(copy).setCreateTime();
+                    ((ElementAttributes) copy).setCreateTime();
                 }
                 if (!eternal)
                 {
@@ -800,7 +800,7 @@ public class JCSCache<K, V> implements Cache<K, V>
     {
         if (EntryProcessorException.class.isInstance(ex))
         {
-            throw EntryProcessorException.class.cast(ex);
+            throw (EntryProcessorException) ex;
         }
         throw new EntryProcessorException(ex);
     }

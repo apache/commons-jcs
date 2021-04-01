@@ -478,7 +478,7 @@ public class ClassLoaderAwareCache<K, V> implements Cache<K, V>
     {
         if (ClassLoaderAwareCache.class.isInstance(obj))
         {
-            return delegate.equals(ClassLoaderAwareCache.class.cast(obj).delegate);
+            return delegate.equals(((ClassLoaderAwareCache) obj).delegate);
         }
         return super.equals(obj);
     }

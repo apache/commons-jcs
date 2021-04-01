@@ -199,7 +199,7 @@ public class JCSCachingManager implements CacheManager
                         loader, this, cacheName,
                         new JCSConfiguration/*<K, V>*/(configuration, keyType, valueType),
                         properties,
-                        ExpiryAwareCache.class.cast(delegate.getCache(cacheName))));
+                        (ExpiryAwareCache) delegate.getCache(cacheName)));
         caches.putIfAbsent(cacheName, cache);
         return (Cache<K, V>) getCache(cacheName, keyType, valueType);
     }
@@ -239,7 +239,7 @@ public class JCSCachingManager implements CacheManager
     private JCSCache<?, ?> getJCSCache(final String cacheName)
     {
         final Cache<?, ?> cache = caches.get(cacheName);
-        return JCSCache.class.cast(ClassLoaderAwareCache.getDelegate(cache));
+        return (JCSCache) ClassLoaderAwareCache.getDelegate(cache);
     }
 
     @Override
@@ -278,7 +278,7 @@ public class JCSCachingManager implements CacheManager
         closed = true;
         if (JCSCachingProvider.class.isInstance(provider))
         {
-            JCSCachingProvider.class.cast(provider).remove(this);
+            ((JCSCachingProvider) provider).remove(this);
         }
         delegate.shutDown();
     }

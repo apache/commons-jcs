@@ -462,7 +462,7 @@ public class CDIJCacheHelper
             {
                 return false;
             }
-            final MethodKey classKey = MethodKey.class.cast(o);
+            final MethodKey classKey = (MethodKey) o;
             return delegate.equals(classKey.delegate) && ((base == null && classKey.base == null) || (base != null && base.equals(classKey.base)));
         }
 

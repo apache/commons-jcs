@@ -32,7 +32,7 @@ public class Lang3Substitutor implements Subsitutor
         private static final long serialVersionUID = 6568870218326105688L;
 
         {
-            putAll(Map.class.cast(System.getProperties()));
+            putAll((Map) System.getProperties());
             putAll(System.getenv());
         }
     });

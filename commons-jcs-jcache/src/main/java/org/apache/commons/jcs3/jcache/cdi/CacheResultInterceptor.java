@@ -78,7 +78,7 @@ public class CacheResultInterceptor implements Serializable
                 final Object exception = exceptionCache.get(cacheKey);
                 if (exception != null)
                 {
-                    throw Throwable.class.cast(exception);
+                    throw (Throwable) exception;
                 }
             }
         }
