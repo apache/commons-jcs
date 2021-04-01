@@ -18,7 +18,6 @@
  */
 package org.apache.commons.jcs3.jcache;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
 

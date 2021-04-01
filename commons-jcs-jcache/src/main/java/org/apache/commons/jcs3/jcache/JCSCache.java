@@ -23,7 +23,6 @@ import static org.apache.commons.jcs3.jcache.serialization.Serializations.copy;
 
 import java.io.Closeable;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -111,7 +110,7 @@ public class JCSCache<K, V> implements Cache<K, V>
 
         try
         {
-            serializer = IElementSerializer.class.cast(classLoader.loadClass(property(properties, "serializer", cacheName, StandardSerializer.class.getName())).newInstance());
+            serializer = (IElementSerializer) classLoader.loadClass(property(properties, "serializer", cacheName, StandardSerializer.class.getName())).getDeclaredConstructor().newInstance();
         }
         catch (final Exception e)
         {
