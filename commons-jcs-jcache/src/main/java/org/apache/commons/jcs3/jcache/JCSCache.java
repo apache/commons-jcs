@@ -110,7 +110,7 @@ public class JCSCache<K, V> implements Cache<K, V>
 
         try
         {
-            serializer = IElementSerializer.class.cast(classLoader.loadClass(property(properties, "serializer", cacheName, StandardSerializer.class.getName())).newInstance());
+            serializer = (IElementSerializer) classLoader.loadClass(property(properties, "serializer", cacheName, StandardSerializer.class.getName())).getDeclaredConstructor().newInstance();
         }
         catch (final Exception e)
         {

@@ -54,8 +54,7 @@ public class InMemoryResponse extends HttpServletResponseWrapper implements Seri
 
     private List<Serializable> ensureHeaderExists(final String s)
     {
-        List<Serializable> values = headers.computeIfAbsent(s, k -> new LinkedList<>());
-        return values;
+        return headers.computeIfAbsent(s, k -> new LinkedList<>());
     }
 
     @Override
