@@ -427,7 +427,7 @@ public abstract class AbstractLRUMap<K, V>
         log.trace( "verifycache: checking linked list by value " );
         for (LRUElementDescriptor<K, V> li3 = list.getFirst(); li3 != null; li3 = (LRUElementDescriptor<K, V>) li3.next )
         {
-            if ( map.containsValue( li3 ) == false )
+            if (!map.containsValue(li3))
             {
                 log.error( "verifycache: map does not contain value : {0}", li3 );
                 dumpMap();

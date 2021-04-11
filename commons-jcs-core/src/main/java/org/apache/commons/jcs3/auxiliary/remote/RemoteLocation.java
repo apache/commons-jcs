@@ -81,7 +81,7 @@ public final class RemoteLocation
         {
             return true;
         }
-        if ( obj == null || !( obj instanceof RemoteLocation ) )
+        if (!(obj instanceof RemoteLocation))
         {
             return false;
         }

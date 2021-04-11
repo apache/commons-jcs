@@ -50,7 +50,7 @@ public class LateralTCPSender
     private final int socketSoTimeOut;
 
     /** The serializer. */
-    private IElementSerializer serializer;
+    private final IElementSerializer serializer;
 
     /** The client connection with the server. */
     private AsynchronousSocketChannel client;

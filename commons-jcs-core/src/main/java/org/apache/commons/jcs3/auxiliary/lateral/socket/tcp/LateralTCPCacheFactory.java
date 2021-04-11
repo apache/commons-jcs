@@ -367,9 +367,8 @@ public class LateralTCPCacheFactory
      * @param cacheMgr a reference to the global cache manager
      * @param cacheEventLogger Reference to the cache event logger for auxiliary cache creation
      * @param elementSerializer Reference to the cache element serializer for auxiliary cache
-     * @return null if none is created.
      */
-    private synchronized <K, V> UDPDiscoveryService createDiscoveryService(
+    private synchronized <K, V> void createDiscoveryService(
             final ITCPLateralCacheAttributes lac,
             final LateralCacheNoWaitFacade<K, V> lcnwf,
             final ICompositeCacheManager cacheMgr,
@@ -399,6 +398,5 @@ public class LateralTCPCacheFactory
             log.info( "Registered TCP lateral cache [{0}] with UDPDiscoveryService.",
                     lac::getCacheName);
         }
-        return discovery;
     }
 }
