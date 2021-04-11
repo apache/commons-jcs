@@ -66,7 +66,7 @@ public class GroupId
     @Override
     public boolean equals( final Object obj )
     {
-        if ( obj == null || !( obj instanceof GroupId ) )
+        if (!(obj instanceof GroupId))
         {
             return false;
         }

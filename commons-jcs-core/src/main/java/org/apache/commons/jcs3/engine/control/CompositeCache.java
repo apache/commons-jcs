@@ -1185,7 +1185,7 @@ public class CompositeCache<K, V>
     public void dispose(final boolean fromRemote)
     {
          // If already disposed, return immediately
-        if (alive.compareAndSet(true, false) == false)
+        if (!alive.compareAndSet(true, false))
         {
             return;
         }
