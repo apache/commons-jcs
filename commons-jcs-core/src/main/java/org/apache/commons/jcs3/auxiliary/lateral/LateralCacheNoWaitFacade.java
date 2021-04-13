@@ -476,7 +476,7 @@ public class LateralCacheNoWaitFacade<K, V>
 
         if (noWaitMap != null)
         {
-            elems.add(new StatElement<>("Number of No Waits", Integer.valueOf(noWaitMap.size())));
+            elems.add(new StatElement<>("Number of No Waits", noWaitMap.size()));
 
             elems.addAll(noWaitMap.values().stream()
                     .flatMap(lcnw -> lcnw.getStatistics().getStatElements().stream())

@@ -237,7 +237,7 @@ public abstract class AbstractMemoryCache<K, V>
         elems.add(new StatElement<>("Put Count", putCnt));
         elems.add(new StatElement<>("Hit Count", hitCnt));
         elems.add(new StatElement<>("Miss Count", missCnt));
-        elems.add(new StatElement<>( "Map Size", Integer.valueOf(getSize()) ) );
+        elems.add(new StatElement<>( "Map Size", getSize()) );
 
         return stats;
     }

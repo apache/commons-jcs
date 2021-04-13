@@ -484,11 +484,11 @@ public abstract class AbstractLRUMap<K, V>
 
         final ArrayList<IStatElement<?>> elems = new ArrayList<>();
 
-        elems.add(new StatElement<>( "List Size", Integer.valueOf(list.size()) ) );
-        elems.add(new StatElement<>( "Map Size", Integer.valueOf(map.size()) ) );
-        elems.add(new StatElement<>( "Put Count", Long.valueOf(putCnt) ) );
-        elems.add(new StatElement<>( "Hit Count", Long.valueOf(hitCnt) ) );
-        elems.add(new StatElement<>( "Miss Count", Long.valueOf(missCnt) ) );
+        elems.add(new StatElement<>( "List Size", list.size()) );
+        elems.add(new StatElement<>( "Map Size", map.size()) );
+        elems.add(new StatElement<>( "Put Count", putCnt) );
+        elems.add(new StatElement<>( "Hit Count", hitCnt) );
+        elems.add(new StatElement<>( "Miss Count", missCnt) );
 
         stats.setStatElements( elems );
 

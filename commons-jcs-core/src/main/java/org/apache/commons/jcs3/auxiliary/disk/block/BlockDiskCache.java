@@ -659,14 +659,14 @@ public class BlockDiskCache<K, V>
 
         final ArrayList<IStatElement<?>> elems = new ArrayList<>();
 
-        elems.add(new StatElement<>( "Is Alive", Boolean.valueOf(isAlive()) ) );
-        elems.add(new StatElement<>( "Key Map Size", Integer.valueOf(this.keyStore.size()) ) );
+        elems.add(new StatElement<>( "Is Alive", isAlive()) );
+        elems.add(new StatElement<>( "Key Map Size", this.keyStore.size()) );
 
         if (this.dataFile != null)
         {
             try
             {
-                elems.add(new StatElement<>( "Data File Length", Long.valueOf(this.dataFile.length()) ) );
+                elems.add(new StatElement<>( "Data File Length", this.dataFile.length()) );
             }
             catch ( final IOException e )
             {
@@ -674,13 +674,13 @@ public class BlockDiskCache<K, V>
             }
 
             elems.add(new StatElement<>( "Block Size Bytes",
-                    Integer.valueOf(this.dataFile.getBlockSizeBytes()) ) );
+                    this.dataFile.getBlockSizeBytes()) );
             elems.add(new StatElement<>( "Number Of Blocks",
-                    Integer.valueOf(this.dataFile.getNumberOfBlocks()) ) );
+                    this.dataFile.getNumberOfBlocks()) );
             elems.add(new StatElement<>( "Average Put Size Bytes",
-                    Long.valueOf(this.dataFile.getAveragePutSizeBytes()) ) );
+                    this.dataFile.getAveragePutSizeBytes()) );
             elems.add(new StatElement<>( "Empty Blocks",
-                    Integer.valueOf(this.dataFile.getEmptyBlocks()) ) );
+                    this.dataFile.getEmptyBlocks()) );
         }
 
         // get the stats from the super too

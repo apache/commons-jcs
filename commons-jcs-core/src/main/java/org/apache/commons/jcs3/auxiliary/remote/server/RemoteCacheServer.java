@@ -665,7 +665,7 @@ public class RemoteCacheServer<K, V>
      */
     private boolean isRequestFromCluster( final long requesterId )
     {
-        final RemoteType remoteTypeL = idTypeMap.get( Long.valueOf( requesterId ) );
+        final RemoteType remoteTypeL = idTypeMap.get(requesterId);
         return remoteTypeL == RemoteType.CLUSTER;
     }
 
@@ -1195,10 +1195,10 @@ public class RemoteCacheServer<K, V>
                 }
 
                 // relate the type to an id
-                this.idTypeMap.put( Long.valueOf( id ), remoteType);
+                this.idTypeMap.put(id, remoteType);
                 if ( listenerAddress != null )
                 {
-                    this.idIPMap.put( Long.valueOf( id ), listenerAddress );
+                    this.idIPMap.put(id, listenerAddress );
                 }
             }
             catch ( final IOException ioe )
@@ -1217,7 +1217,7 @@ public class RemoteCacheServer<K, V>
             final ICacheEventQueue<KK, VV> q = fact.createCacheEventQueue( listener, id, cacheName, remoteCacheServerAttributes
                 .getEventQueuePoolName(), remoteCacheServerAttributes.getEventQueueType() );
 
-            eventQMap.put(Long.valueOf(listener.getListenerId()), q);
+            eventQMap.put(listener.getListenerId(), q);
 
             log.info( cacheListeners );
         }
@@ -1283,7 +1283,7 @@ public class RemoteCacheServer<K, V>
         }
         final Map<Long, ICacheEventQueue<K, V>> eventQMap = cacheDesc.eventQMap;
         cleanupEventQMap( eventQMap );
-        final ICacheEventQueue<K, V> q = eventQMap.remove( Long.valueOf( listenerId ) );
+        final ICacheEventQueue<K, V> q = eventQMap.remove(listenerId);
 
         if ( q != null )
         {
@@ -1299,8 +1299,8 @@ public class RemoteCacheServer<K, V>
         }
 
         // cleanup
-        idTypeMap.remove( Long.valueOf( listenerId ) );
-        idIPMap.remove( Long.valueOf( listenerId ) );
+        idTypeMap.remove(listenerId);
+        idIPMap.remove(listenerId);
 
         log.info( "After removing listener [{0}] cache region {1} listener size [{2}]",
                 listenerId, cacheName, eventQMap.size() );
@@ -1500,7 +1500,7 @@ public class RemoteCacheServer<K, V>
      */
     protected String getExtraInfoForRequesterId( final long requesterId )
     {
-        return idIPMap.get( Long.valueOf( requesterId ) );
+        return idIPMap.get(requesterId);
     }
 
     /**

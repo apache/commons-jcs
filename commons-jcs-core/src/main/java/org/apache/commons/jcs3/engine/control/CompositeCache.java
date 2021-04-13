@@ -1366,8 +1366,8 @@ public class CompositeCache<K, V>
         // store the composite cache stats first
         final ArrayList<IStatElement<?>> elems = new ArrayList<>();
 
-        elems.add(new StatElement<>("HitCountRam", Long.valueOf(getHitCountRam())));
-        elems.add(new StatElement<>("HitCountAux", Long.valueOf(getHitCountAux())));
+        elems.add(new StatElement<>("HitCountRam", getHitCountRam()));
+        elems.add(new StatElement<>("HitCountAux", getHitCountAux()));
 
         stats.setStatElements(elems);
 

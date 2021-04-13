@@ -406,7 +406,7 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K, V>
 
         if ( noWaits != null )
         {
-            elems.add(new StatElement<>( "Number of No Waits", Integer.valueOf(noWaits.size()) ) );
+            elems.add(new StatElement<>( "Number of No Waits", noWaits.size()) );
 
             for ( final RemoteCacheNoWait<K, V> rcnw : noWaits )
             {

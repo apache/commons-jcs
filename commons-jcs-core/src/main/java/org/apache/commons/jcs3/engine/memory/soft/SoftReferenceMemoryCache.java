@@ -138,8 +138,8 @@ public class SoftReferenceMemoryCache<K, V> extends AbstractMemoryCache<K, V>
 
         final List<IStatElement<?>> elems = stats.getStatElements();
         final int emptyrefs = map.size() - getSize();
-        elems.add(new StatElement<>("Empty References", Integer.valueOf(emptyrefs)));
-        elems.add(new StatElement<>("Strong References", Integer.valueOf(strongReferences.size())));
+        elems.add(new StatElement<>("Empty References", emptyrefs));
+        elems.add(new StatElement<>("Strong References", strongReferences.size()));
 
         return stats;
     }

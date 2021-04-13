@@ -492,11 +492,11 @@ public class RemoteCacheNoWait<K, V>
         final IStats eqStats = this.cacheEventQueue.getStatistics();
         elems.addAll(eqStats.getStatElements());
 
-        elems.add(new StatElement<>( "Get Count", Integer.valueOf(this.getCount) ) );
-        elems.add(new StatElement<>( "GetMatching Count", Integer.valueOf(this.getMatchingCount) ) );
-        elems.add(new StatElement<>( "GetMultiple Count", Integer.valueOf(this.getMultipleCount) ) );
-        elems.add(new StatElement<>( "Remove Count", Integer.valueOf(this.removeCount) ) );
-        elems.add(new StatElement<>( "Put Count", Integer.valueOf(this.putCount) ) );
+        elems.add(new StatElement<>( "Get Count", this.getCount) );
+        elems.add(new StatElement<>( "GetMatching Count", this.getMatchingCount) );
+        elems.add(new StatElement<>( "GetMultiple Count", this.getMultipleCount) );
+        elems.add(new StatElement<>( "Remove Count", this.removeCount) );
+        elems.add(new StatElement<>( "Put Count", this.putCount) );
 
         stats.setStatElements( elems );
 

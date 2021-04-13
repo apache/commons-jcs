@@ -431,9 +431,9 @@ public class LateralCacheNoWait<K, V>
         final IStats eqStats = this.eventQueue.getStatistics();
         final ArrayList<IStatElement<?>> elems = new ArrayList<>(eqStats.getStatElements());
 
-        elems.add(new StatElement<>( "Get Count", Integer.valueOf(this.getCount) ) );
-        elems.add(new StatElement<>( "Remove Count", Integer.valueOf(this.removeCount) ) );
-        elems.add(new StatElement<>( "Put Count", Integer.valueOf(this.putCount) ) );
+        elems.add(new StatElement<>( "Get Count", this.getCount) );
+        elems.add(new StatElement<>( "Remove Count", this.removeCount) );
+        elems.add(new StatElement<>( "Put Count", this.putCount) );
         elems.add(new StatElement<>( "Attributes", cache.getAuxiliaryCacheAttributes() ) );
 
         stats.setStatElements( elems );

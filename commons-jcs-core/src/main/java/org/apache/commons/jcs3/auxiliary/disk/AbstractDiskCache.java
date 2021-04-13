@@ -471,8 +471,8 @@ public abstract class AbstractDiskCache<K, V>
 
         final ArrayList<IStatElement<?>> elems = new ArrayList<>();
 
-        elems.add(new StatElement<>( "Purgatory Hits", Integer.valueOf(purgHits) ) );
-        elems.add(new StatElement<>( "Purgatory Size", Integer.valueOf(purgatory.size()) ) );
+        elems.add(new StatElement<>( "Purgatory Hits", purgHits) );
+        elems.add(new StatElement<>( "Purgatory Size", purgatory.size()) );
 
         // get the stats from the event queue too
         final IStats eqStats = this.cacheEventQueue.getStatistics();

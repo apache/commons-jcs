@@ -501,7 +501,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
 //          // something cluster specific
 //      }
 
-        elems.add(new StatElement<>( "UsePoolForGet", Boolean.valueOf(usePoolForGet) ) );
+        elems.add(new StatElement<>( "UsePoolForGet", usePoolForGet) );
 
         if ( pool != null )
         {
@@ -511,7 +511,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
         if ( getRemoteCacheService() instanceof ZombieCacheServiceNonLocal )
         {
             elems.add(new StatElement<>( "Zombie Queue Size",
-                    Integer.valueOf(( (ZombieCacheServiceNonLocal<K, V>) getRemoteCacheService() ).getQueueSize()) ) );
+                    ((ZombieCacheServiceNonLocal<K, V>) getRemoteCacheService()).getQueueSize()) );
         }
 
         stats.setStatElements( elems );

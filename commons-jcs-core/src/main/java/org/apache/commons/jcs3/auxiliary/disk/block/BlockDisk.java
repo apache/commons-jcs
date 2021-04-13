@@ -145,7 +145,7 @@ public class BlockDisk implements AutoCloseable
             Integer emptyBlock = emptyBlocks.poll();
             if (emptyBlock == null)
             {
-                emptyBlock = Integer.valueOf(numberOfBlocks.getAndIncrement());
+                emptyBlock = numberOfBlocks.getAndIncrement();
             }
             blocks[i] = emptyBlock.intValue();
         }
@@ -355,7 +355,7 @@ public class BlockDisk implements AutoCloseable
         {
             for (short i = 0; i < blocksToFree.length; i++)
             {
-                emptyBlocks.offer(Integer.valueOf(blocksToFree[i]));
+                emptyBlocks.offer(blocksToFree[i]);
             }
         }
     }

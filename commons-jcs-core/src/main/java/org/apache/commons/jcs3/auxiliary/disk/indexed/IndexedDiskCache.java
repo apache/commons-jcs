@@ -1426,12 +1426,12 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
 
         final ArrayList<IStatElement<?>> elems = new ArrayList<>();
 
-        elems.add(new StatElement<>("Is Alive", Boolean.valueOf(isAlive())));
-        elems.add(new StatElement<>("Key Map Size", Integer.valueOf(this.keyHash != null ? this.keyHash.size() : -1)));
+        elems.add(new StatElement<>("Is Alive", isAlive()));
+        elems.add(new StatElement<>("Key Map Size", this.keyHash != null ? this.keyHash.size() : -1));
         try
         {
             elems.add(
-                    new StatElement<>("Data File Length", Long.valueOf(this.dataFile != null ? this.dataFile.length() : -1L)));
+                    new StatElement<>("Data File Length", this.dataFile != null ? this.dataFile.length() : -1L));
         }
         catch (final IOException e)
         {
@@ -1440,11 +1440,11 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
         elems.add(new StatElement<>("Max Key Size", this.maxKeySize));
         elems.add(new StatElement<>("Hit Count", this.hitCount));
         elems.add(new StatElement<>("Bytes Free", this.bytesFree));
-        elems.add(new StatElement<>("Optimize Operation Count", Integer.valueOf(this.removeCount)));
-        elems.add(new StatElement<>("Times Optimized", Integer.valueOf(this.timesOptimized)));
-        elems.add(new StatElement<>("Recycle Count", Integer.valueOf(this.recycleCnt)));
-        elems.add(new StatElement<>("Recycle Bin Size", Integer.valueOf(this.recycle.size())));
-        elems.add(new StatElement<>("Startup Size", Integer.valueOf(this.startupSize)));
+        elems.add(new StatElement<>("Optimize Operation Count", this.removeCount));
+        elems.add(new StatElement<>("Times Optimized", this.timesOptimized));
+        elems.add(new StatElement<>("Recycle Count", this.recycleCnt));
+        elems.add(new StatElement<>("Recycle Bin Size", this.recycle.size()));
+        elems.add(new StatElement<>("Startup Size", this.startupSize));
 
         // get the stats from the super too
         final IStats sStats = super.getStatistics();

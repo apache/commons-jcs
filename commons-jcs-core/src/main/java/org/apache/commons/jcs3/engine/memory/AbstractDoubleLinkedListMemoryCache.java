@@ -507,7 +507,7 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
 
         final List<IStatElement<?>> elems = stats.getStatElements();
 
-        elems.add(new StatElement<>("List Size", Integer.valueOf(list.size())));
+        elems.add(new StatElement<>("List Size", list.size()));
 
         return stats;
     }
