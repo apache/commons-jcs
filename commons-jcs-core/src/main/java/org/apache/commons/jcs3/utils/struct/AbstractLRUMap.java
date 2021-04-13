@@ -172,7 +172,7 @@ public abstract class AbstractLRUMap<K, V>
     {
         if ( source != null )
         {
-            source.forEach((key, value) -> put(key, value));
+            source.forEach(this::put);
         }
     }
 

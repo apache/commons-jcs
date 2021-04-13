@@ -690,9 +690,7 @@ public class CompositeCacheManager
 
             caches.values().stream()
                 .filter(Objects::nonNull)
-                .forEach(cache -> {
-                    ((CompositeCache<?, ?>)cache).dispose( fromRemote );
-                });
+                .forEach(cache -> ((CompositeCache<?, ?>)cache).dispose( fromRemote ));
         }
     }
 
