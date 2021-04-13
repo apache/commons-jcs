@@ -635,7 +635,7 @@ public class JDBCDiskCache<K, V>
     @Override
     public void processDispose()
     {
-        final ICacheEvent<K> cacheEvent = createICacheEvent( getCacheName(), (K)null, ICacheEventLogger.DISPOSE_EVENT );
+        final ICacheEvent<K> cacheEvent = createICacheEvent( getCacheName(), null, ICacheEventLogger.DISPOSE_EVENT );
 
         try
         {
