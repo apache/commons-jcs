@@ -153,7 +153,7 @@ public abstract class AbstractDiskCache<K, V>
     private void initPurgatory()
     {
         // we need this so we can stop the updates from happening after a
-        // removeall
+        // remove all
         removeAllLock.writeLock().lock();
 
         try

@@ -607,9 +607,9 @@ public class BlockDiskCache<K, V>
     }
 
     /**
-     * Reset effectively clears the disk cache, creating new files, recyclebins, and keymaps.
+     * Reset effectively clears the disk cache, creating new files, recycle bins, and keymaps.
      * <p>
-     * It can be used to handle errors by last resort, force content update, or removeall.
+     * It can be used to handle errors by last resort, force content update, or remove all.
      */
     private void reset()
     {
