@@ -29,7 +29,7 @@ import java.util.Arrays;
 /**
  * This represents an element on disk. This is used when we persist the keys. We only store the
  * block addresses in memory. We don't need the length here, since all the blocks are the same size
- * receyle bin.
+ * recycle bin.
  * <p>
  * @author Aaron Smuts
  */
