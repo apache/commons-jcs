@@ -389,7 +389,7 @@ public class CompositeCacheConfigurator
 
         // GET CACHE
         @SuppressWarnings("unchecked") // Common map for all caches
-        AuxiliaryCache<K, V> auxCache = (AuxiliaryCache<K, V>) ccm.getAuxiliaryCache(auxName, regName);
+        AuxiliaryCache<K, V> auxCache = ccm.getAuxiliaryCache(auxName, regName);
 
         if (auxCache == null)
         {

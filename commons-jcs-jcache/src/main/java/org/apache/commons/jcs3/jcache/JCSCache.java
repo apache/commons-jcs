@@ -41,7 +41,6 @@ import javax.cache.CacheManager;
 import javax.cache.configuration.CacheEntryListenerConfiguration;
 import javax.cache.configuration.Configuration;
 import javax.cache.configuration.Factory;
-import javax.cache.event.CacheEntryEvent;
 import javax.cache.event.EventType;
 import javax.cache.expiry.Duration;
 import javax.cache.expiry.EternalExpiryPolicy;
@@ -382,12 +381,12 @@ public class JCSCache<K, V> implements Cache<K, V>
             {
                 if (created)
                 {
-                    listener.onCreated(Collections.<CacheEntryEvent<? extends K, ? extends V>>singletonList(new JCSCacheEntryEvent<>(this,
+                    listener.onCreated(Collections.singletonList(new JCSCacheEntryEvent<>(this,
                             EventType.CREATED, null, key, value)));
                 }
                 else
                 {
-                    listener.onUpdated(Collections.<CacheEntryEvent<? extends K, ? extends V>>singletonList(new JCSCacheEntryEvent<>(this,
+                    listener.onUpdated(Collections.singletonList(new JCSCacheEntryEvent<>(this,
                             EventType.UPDATED, old, key, value)));
                 }
             }
@@ -418,7 +417,7 @@ public class JCSCache<K, V> implements Cache<K, V>
         delegate.remove(cacheKey);
         for (final JCSListener<K, V> listener : listeners.values())
         {
-            listener.onExpired(Collections.<CacheEntryEvent<? extends K, ? extends V>>singletonList(new JCSCacheEntryEvent<>(this,
+            listener.onExpired(Collections.singletonList(new JCSCacheEntryEvent<>(this,
                     EventType.REMOVED, null, cacheKey, elt.getVal())));
         }
     }
@@ -476,7 +475,7 @@ public class JCSCache<K, V> implements Cache<K, V>
         final boolean remove = v != null;
         for (final JCSListener<K, V> listener : listeners.values())
         {
-            listener.onRemoved(Collections.<CacheEntryEvent<? extends K, ? extends V>>singletonList(new JCSCacheEntryEvent<>(this,
+            listener.onRemoved(Collections.singletonList(new JCSCacheEntryEvent<>(this,
                     EventType.REMOVED, null, key, value)));
         }
         if (remove && statisticsEnabled)
