@@ -26,10 +26,10 @@
                IPv6 link-local address for IPv6 multicast,
                IPv4 site-local address for IPv4 multicast
             </action>
-            <action dev="tv" type="fix">
+            <action dev="tv" type="fix" due-to="Alex L" issue="JCS-186">
                Use configured listener address for UDP service broadcast
             </action>
-            <action dev="tv" type="fix">
+            <action dev="tv" type="fix" due-to="Alex L" issue="JCS-186">
                Fix UDP service discovery with LateralCache
             </action>
             <action dev="tv" type="update">
