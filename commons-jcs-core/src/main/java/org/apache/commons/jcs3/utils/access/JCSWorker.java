@@ -215,7 +215,7 @@ public class JCSWorker<K, V>
             synchronized ( helper )
             {
                 logger.debug( "Found a worker already doing this work ({0}:{1}).",
-                        () -> getRegion(), () -> aKey );
+                        this::getRegion, () -> aKey );
                 while ( !helper.isFinished() )
                 {
                     try
@@ -229,13 +229,13 @@ public class JCSWorker<K, V>
                 }
                 logger.debug( "Another thread finished our work for us. Using "
                         + "those results instead. ({0}:{1}).",
-                        () -> getRegion(), () -> aKey );
+                        this::getRegion, () -> aKey );
             }
         }
         // Do the work
         try
         {
-            logger.debug( "{0} is doing the work.", () -> getRegion() );
+            logger.debug( "{0} is doing the work.", this::getRegion);
 
             // Try to get the item from the cache
             if ( aGroup != null )
@@ -267,7 +267,7 @@ public class JCSWorker<K, V>
         }
         finally
         {
-            logger.debug( "{0}:{1} entered finally.", () -> getRegion(),
+            logger.debug( "{0}:{1} entered finally.", this::getRegion,
                     () -> aKey );
 
             // Remove ourselves as the worker.

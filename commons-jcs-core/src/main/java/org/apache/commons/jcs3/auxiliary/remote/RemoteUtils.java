@@ -145,7 +145,7 @@ public class RemoteUtils
         try
         {
             props.load(is);
-            log.debug("props.size={0}", () -> props.size());
+            log.debug("props.size={0}", props::size);
 
             if (log.isTraceEnabled())
             {
@@ -220,7 +220,7 @@ public class RemoteUtils
             if (factoryInUse != null && !factoryInUse.getClass().getName().startsWith("org.apache.commons.jcs3"))
             {
                 log.info("Could not create new custom socket factory. {0} Factory in use = {1}",
-                        () -> e.getMessage(), RMISocketFactory::getSocketFactory);
+                        e::getMessage, RMISocketFactory::getSocketFactory);
             }
         }
     }
@@ -256,7 +256,6 @@ public class RemoteUtils
         { // TODO improve this check? See also JCS-133
             return "//[" + registryHost.replaceFirst("%", "%25") + "]:" + registryPort + "/" + serviceName;
         }
-        final String registryURL = "//" + registryHost + ":" + registryPort + "/" + serviceName;
-        return registryURL;
+        return "//" + registryHost + ":" + registryPort + "/" + serviceName;
     }
 }

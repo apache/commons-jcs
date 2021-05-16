@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.Lock;
@@ -129,7 +130,7 @@ public abstract class AbstractMemoryCache<K, V>
                         return null;
                     }
                 })
-                .filter(element -> element != null)
+                .filter(Objects::nonNull)
                 .collect(Collectors.toMap(
                         ICacheElement::getKey,
                         element -> element));
@@ -156,14 +157,14 @@ public abstract class AbstractMemoryCache<K, V>
         if ( me != null )
         {
             log.debug( "{0}: MemoryCache quiet hit for {1}",
-                    () -> getCacheName(), () -> key );
+                    this::getCacheName, () -> key );
 
             ce = me.getCacheElement();
         }
         else
         {
             log.debug( "{0}: MemoryCache quiet miss for {1}",
-                    () -> getCacheName(), () -> key );
+                    this::getCacheName, () -> key );
         }
 
         return ce;
@@ -287,9 +288,9 @@ public abstract class AbstractMemoryCache<K, V>
         if (log.isTraceEnabled())
         {
             log.trace("dumpingMap");
-            map.entrySet().forEach(e ->
-                log.trace("dumpMap> key={0}, val={1}", e.getKey(),
-                        e.getValue().getCacheElement().getVal()));
+            map.forEach((key, value) ->
+                log.trace("dumpMap> key={0}, val={1}",key, key,
+                        value.getCacheElement().getVal()));
         }
     }
 
@@ -469,7 +470,7 @@ public abstract class AbstractMemoryCache<K, V>
     {
         ICacheElement<K, V> ce = null;
 
-        log.debug("{0}: getting item for key {1}", () -> getCacheName(),
+        log.debug("{0}: getting item for key {1}", this::getCacheName,
                 () -> key);
 
         final MemoryElementDescriptor<K, V> me = map.get(key);
@@ -489,14 +490,14 @@ public abstract class AbstractMemoryCache<K, V>
                 lock.unlock();
             }
 
-            log.debug("{0}: MemoryCache hit for {1}", () -> getCacheName(),
+            log.debug("{0}: MemoryCache hit for {1}", this::getCacheName,
                     () -> key);
         }
         else
         {
             missCnt.incrementAndGet();
 
-            log.debug("{0}: MemoryCache miss for {1}", () -> getCacheName(),
+            log.debug("{0}: MemoryCache miss for {1}", this::getCacheName,
                     () -> key);
         }
 

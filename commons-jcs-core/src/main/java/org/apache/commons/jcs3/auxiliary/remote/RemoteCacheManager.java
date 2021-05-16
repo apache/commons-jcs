@@ -209,7 +209,7 @@ public class RemoteCacheManager
 	{
 		final IRemoteCacheClient<?, ?> rc = cache.getRemoteCache();
 	    log.debug( "Found cache for [{0}], deregistering listener.",
-	            () -> cache.getCacheName() );
+                cache::getCacheName);
 		// could also store the listener for a server in the manager.
 		final IRemoteCacheListener<?, ?> listener = rc.getListener();
         remoteWatch.removeCacheListener( cache.getCacheName(), listener );
@@ -228,11 +228,9 @@ public class RemoteCacheManager
     @SuppressWarnings("unchecked") // Need to cast because of common map for all caches
     public <K, V> RemoteCacheNoWait<K, V> getCache( final IRemoteCacheAttributes cattr )
     {
-        final RemoteCacheNoWait<K, V> remoteCacheNoWait =
-                (RemoteCacheNoWait<K, V>) caches.computeIfAbsent(cattr.getCacheName(), key -> newRemoteCacheNoWait(cattr));
 
         // might want to do some listener sanity checking here.
-        return remoteCacheNoWait;
+        return (RemoteCacheNoWait<K, V>) caches.computeIfAbsent(cattr.getCacheName(), key -> newRemoteCacheNoWait(cattr));
     }
 
     /**
@@ -277,7 +275,7 @@ public class RemoteCacheManager
         {
             try
             {
-                log.info( "freeCache [{0}]", () -> c.getCacheName() );
+                log.info( "freeCache [{0}]", c::getCacheName);
 
                 removeListenerFromCache(c);
                 c.dispose();

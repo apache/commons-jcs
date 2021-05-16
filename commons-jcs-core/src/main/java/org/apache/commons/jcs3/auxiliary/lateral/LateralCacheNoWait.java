@@ -30,7 +30,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.jcs3.auxiliary.AbstractAuxiliaryCache;
-import org.apache.commons.jcs3.auxiliary.AuxiliaryCacheAttributes;
+import org.apache.commons.jcs3.auxiliary.lateral.behavior.ILateralCacheAttributes;
 import org.apache.commons.jcs3.engine.CacheAdaptor;
 import org.apache.commons.jcs3.engine.CacheEventQueueFactory;
 import org.apache.commons.jcs3.engine.CacheInfo;
@@ -58,6 +58,9 @@ public class LateralCacheNoWait<K, V>
     /** The cache */
     private final LateralCache<K, V> cache;
 
+    /** Identify this object */
+    private String identityKey;
+
     /** The event queue */
     private ICacheEventQueue<K, V> eventQueue;
 
@@ -79,13 +82,15 @@ public class LateralCacheNoWait<K, V>
     public LateralCacheNoWait( final LateralCache<K, V> cache )
     {
         this.cache = cache;
+        this.identityKey = cache.getCacheName();
 
         log.debug( "Constructing LateralCacheNoWait, LateralCache = [{0}]", cache );
 
         final CacheEventQueueFactory<K, V> fact = new CacheEventQueueFactory<>();
-        this.eventQueue = fact.createCacheEventQueue( new CacheAdaptor<>( cache ), CacheInfo.listenerId, cache
-            .getCacheName(), cache.getAuxiliaryCacheAttributes().getEventQueuePoolName(), cache
-            .getAuxiliaryCacheAttributes().getEventQueueType() );
+        this.eventQueue = fact.createCacheEventQueue( new CacheAdaptor<>( cache ),
+                CacheInfo.listenerId, cache.getCacheName(),
+                getAuxiliaryCacheAttributes().getEventQueuePoolName(),
+                getAuxiliaryCacheAttributes().getEventQueueType() );
 
         // need each no wait to handle each of its real updates and removes,
         // since there may
@@ -97,6 +102,26 @@ public class LateralCacheNoWait<K, V>
         {
             eventQueue.destroy();
         }
+    }
+
+    /**
+     * The identifying key to this no wait
+     *
+     * @return the identity key
+     */
+    public String getIdentityKey()
+    {
+        return identityKey;
+    }
+
+    /**
+     * Set the identifying key to this no wait
+     *
+     * @param identityKey the identityKey to set
+     */
+    public void setIdentityKey(String identityKey)
+    {
+        this.identityKey = identityKey;
     }
 
     /**
@@ -168,16 +193,14 @@ public class LateralCacheNoWait<K, V>
     {
         if ( keys != null && !keys.isEmpty() )
         {
-            final Map<K, ICacheElement<K, V>> elements = keys.stream()
+            return keys.stream()
                 .collect(Collectors.toMap(
                         key -> key,
-                        key -> get(key))).entrySet().stream()
+                        this::get)).entrySet().stream()
                     .filter(entry -> entry.getValue() != null)
                     .collect(Collectors.toMap(
                             Entry::getKey,
                             Entry::getValue));
-
-            return elements;
         }
 
         return new HashMap<>();
@@ -359,16 +382,17 @@ public class LateralCacheNoWait<K, V>
             eventQueue.destroy();
         }
         final CacheEventQueueFactory<K, V> fact = new CacheEventQueueFactory<>();
-        this.eventQueue = fact.createCacheEventQueue( new CacheAdaptor<>( cache ), CacheInfo.listenerId, cache
-            .getCacheName(), cache.getAuxiliaryCacheAttributes().getEventQueuePoolName(), cache
-            .getAuxiliaryCacheAttributes().getEventQueueType() );
+        this.eventQueue = fact.createCacheEventQueue( new CacheAdaptor<>( cache ),
+                CacheInfo.listenerId, cache.getCacheName(),
+                getAuxiliaryCacheAttributes().getEventQueuePoolName(),
+                getAuxiliaryCacheAttributes().getEventQueueType() );
     }
 
     /**
      * @return Returns the AuxiliaryCacheAttributes.
      */
     @Override
-    public AuxiliaryCacheAttributes getAuxiliaryCacheAttributes()
+    public ILateralCacheAttributes getAuxiliaryCacheAttributes()
     {
         return cache.getAuxiliaryCacheAttributes();
     }
@@ -403,11 +427,9 @@ public class LateralCacheNoWait<K, V>
         final IStats stats = new Stats();
         stats.setTypeName( "Lateral Cache No Wait" );
 
-        final ArrayList<IStatElement<?>> elems = new ArrayList<>();
-
         // get the stats from the event queue too
         final IStats eqStats = this.eventQueue.getStatistics();
-        elems.addAll(eqStats.getStatElements());
+        final ArrayList<IStatElement<?>> elems = new ArrayList<>(eqStats.getStatElements());
 
         elems.add(new StatElement<>( "Get Count", Integer.valueOf(this.getCount) ) );
         elems.add(new StatElement<>( "Remove Count", Integer.valueOf(this.removeCount) ) );

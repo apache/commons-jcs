@@ -105,22 +105,12 @@ public class IndexedDiskElementDescriptor
             return 1;
         }
 
-        if ( o.len == len )
+        int lenCompare = Integer.compare(len, o.len);
+        if (lenCompare == 0)
         {
-        	if ( o.pos == pos )
-        	{
-        		return 0;
-        	}
-            if ( o.pos < pos )
-        	{
-        		return -1;
-        	}
-            return 1;
+            return Long.compare(o.pos, pos);
         }
-        if ( o.len > len )
-        {
-            return -1;
-        }
-        return 1;
+
+        return lenCompare;
     }
 }

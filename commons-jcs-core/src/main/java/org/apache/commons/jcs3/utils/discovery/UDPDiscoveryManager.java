@@ -66,39 +66,43 @@ public class UDPDiscoveryManager
     /**
      * Creates a service for the address and port if one doesn't exist already.
      * <p>
-     * We need to key this using the listener port too. TODO think of making one discovery service
-     * work for multiple types of clients.
+     * We need to key this using the listener port too.
+     * TODO think of making one discovery service work for multiple types of clients.
      * <p>
      * @param discoveryAddress
      * @param discoveryPort
      * @param servicePort
      * @param cacheMgr
      * @return UDPDiscoveryService
-     * @deprecated Specify serializer implementation explicitly
+     * @deprecated Specify serializer implementation explicitly, allow to specify udpTTL
      */
     @Deprecated
     public UDPDiscoveryService getService( final String discoveryAddress, final int discoveryPort, final int servicePort,
                                                         final ICompositeCacheManager cacheMgr )
     {
-        return getService(discoveryAddress, discoveryPort, servicePort, cacheMgr, new StandardSerializer());
+        return getService(discoveryAddress, discoveryPort, null, servicePort, 0,
+                cacheMgr, new StandardSerializer());
     }
 
     /**
      * Creates a service for the address and port if one doesn't exist already.
      * <p>
-     * We need to key this using the listener port too. TODO think of making one discovery service
-     * work for multiple types of clients.
+     * We need to key this using the listener port too.
+     * TODO think of making one discovery service work for multiple types of clients.
      * <p>
      * @param discoveryAddress
      * @param discoveryPort
+     * @param serviceAddress
      * @param servicePort
+     * @param udpTTL
      * @param cacheMgr
      * @param serializer
      *
      * @return UDPDiscoveryService
      */
     public UDPDiscoveryService getService( final String discoveryAddress, final int discoveryPort,
-            final int servicePort, final ICompositeCacheManager cacheMgr, final IElementSerializer serializer )
+            final String serviceAddress, final int servicePort, final int updTTL,
+            final ICompositeCacheManager cacheMgr, final IElementSerializer serializer )
     {
         final String key = String.join(":", discoveryAddress, String.valueOf(discoveryPort), String.valueOf(servicePort));
 
@@ -106,9 +110,11 @@ public class UDPDiscoveryManager
             log.info( "Creating service for address:port:servicePort [{0}]", key );
 
             final UDPDiscoveryAttributes attributes = new UDPDiscoveryAttributes();
-            attributes.setUdpDiscoveryAddr( discoveryAddress );
-            attributes.setUdpDiscoveryPort( discoveryPort );
-            attributes.setServicePort( servicePort );
+            attributes.setUdpDiscoveryAddr(discoveryAddress);
+            attributes.setUdpDiscoveryPort(discoveryPort);
+            attributes.setServiceAddress(serviceAddress);
+            attributes.setServicePort(servicePort);
+            attributes.setUdpTTL(updTTL);
 
             final UDPDiscoveryService newService = new UDPDiscoveryService(attributes, serializer);
 

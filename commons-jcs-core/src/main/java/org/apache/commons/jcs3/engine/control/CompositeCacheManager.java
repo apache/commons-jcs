@@ -25,6 +25,7 @@ import java.lang.management.ManagementFactory;
 import java.security.AccessControlException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -325,7 +326,7 @@ public class CompositeCacheManager
         try (InputStream is = getClass().getResourceAsStream( propFile ))
         {
             props.load( is );
-            log.debug( "File [{0}] contained {1} properties", () -> propFile, () -> props.size());
+            log.debug( "File [{0}] contained {1} properties", () -> propFile, props::size);
         }
         catch ( final IOException ex )
         {
@@ -453,7 +454,7 @@ public class CompositeCacheManager
         // setup preconfigured caches
         configurator.parseRegions( properties, this );
 
-        log.info( "Finished configuration in {0} ms.", () -> timer.getElapsedTime());
+        log.info( "Finished configuration in {0} ms.", timer::getElapsedTime);
 
         isConfigured = true;
     }
@@ -546,14 +547,12 @@ public class CompositeCacheManager
     {
         log.debug( "attr = {0}", attr );
 
-        final CompositeCache<K, V> cache = (CompositeCache<K, V>) caches.computeIfAbsent(cattr.getCacheName(),
+        return (CompositeCache<K, V>) caches.computeIfAbsent(cattr.getCacheName(),
                 cacheName -> {
             final CompositeCacheConfigurator configurator = newConfigurator();
             return configurator.parseRegion( this.getConfigurationProperties(), this, cacheName,
                                               this.defaultAuxValues, cattr );
         });
-
-        return cache;
     }
 
     protected CompositeCacheConfigurator newConfigurator() {
@@ -687,10 +686,10 @@ public class CompositeCacheManager
             }
 
             log.debug( "Last client called release. There are {0} caches which will be disposed",
-                    () -> caches.size());
+                    caches::size);
 
             caches.values().stream()
-                .filter(cache -> cache != null)
+                .filter(Objects::nonNull)
                 .forEach(cache -> {
                     ((CompositeCache<?, ?>)cache).dispose( fromRemote );
                 });
@@ -849,7 +848,7 @@ public class CompositeCacheManager
     public ICacheStats[] getStatistics()
     {
         final List<ICacheStats> cacheStats = caches.values().stream()
-            .filter(cache -> cache != null)
+            .filter(Objects::nonNull)
             .map(cache -> ((CompositeCache<?, ?>)cache).getStatistics() )
             .collect(Collectors.toList());
 

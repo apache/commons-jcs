@@ -18,6 +18,10 @@
  */
 package org.apache.commons.jcs3.jcache;
 
+import java.io.Closeable;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.cache.configuration.CacheEntryListenerConfiguration;
 import javax.cache.configuration.Factory;
 import javax.cache.event.CacheEntryCreatedListener;
@@ -28,14 +32,11 @@ import javax.cache.event.CacheEntryListener;
 import javax.cache.event.CacheEntryListenerException;
 import javax.cache.event.CacheEntryRemovedListener;
 import javax.cache.event.CacheEntryUpdatedListener;
-import java.io.Closeable;
-import java.util.ArrayList;
-import java.util.List;
 
 public class JCSListener<K, V> implements Closeable
 {
-    private final boolean oldValue;
-    private final boolean synchronous;
+//    private final boolean oldValue;
+//    private final boolean synchronous;
     private final CacheEntryEventFilter<? super K, ? super V> filter;
     private final CacheEntryListener<? super K, ? super V> delegate;
     private final boolean remove;
@@ -45,8 +46,8 @@ public class JCSListener<K, V> implements Closeable
 
     public JCSListener(final CacheEntryListenerConfiguration<K, V> cacheEntryListenerConfiguration)
     {
-        oldValue = cacheEntryListenerConfiguration.isOldValueRequired();
-        synchronous = cacheEntryListenerConfiguration.isSynchronous();
+//        oldValue = cacheEntryListenerConfiguration.isOldValueRequired();
+//        synchronous = cacheEntryListenerConfiguration.isSynchronous();
 
         final Factory<CacheEntryEventFilter<? super K, ? super V>> filterFactory = cacheEntryListenerConfiguration
                 .getCacheEntryEventFilterFactory();

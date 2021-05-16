@@ -35,9 +35,6 @@ public class LateralCacheAttributes
     /** Default receive setting */
     private static final boolean DEFAULT_RECEIVE = true;
 
-    /** THe type of lateral */
-    private String transmissionTypeName = "UDP";
-
     /** indicates the lateral type, this needs to change */
     private Type transmissionType = Type.UDP;
 
@@ -177,7 +174,6 @@ public class LateralCacheAttributes
     public void setTransmissionType( final Type val )
     {
         this.transmissionType = val;
-        this.transmissionTypeName = val.toString();
     }
 
     /**
@@ -197,7 +193,6 @@ public class LateralCacheAttributes
     @Override
     public void setTransmissionTypeName( final String val )
     {
-        this.transmissionTypeName = val;
         this.transmissionType = Type.valueOf(val);
     }
 
@@ -208,7 +203,7 @@ public class LateralCacheAttributes
     @Override
     public String getTransmissionTypeName()
     {
-        return this.transmissionTypeName;
+        return this.transmissionType.toString();
     }
 
     /**
@@ -286,7 +281,7 @@ public class LateralCacheAttributes
         //buf.append( "transmissionTypeName=" + transmissionTypeName + "\n" );
         //buf.append( "transmissionType=" + transmissionType + "\n" );
         //buf.append( "tcpServer=" + tcpServer + "\n" );
-        buf.append( transmissionTypeName + httpServer + udpMulticastAddr + String.valueOf( udpMulticastPort ) );
+        buf.append( transmissionType.toString() + httpServer + udpMulticastAddr + String.valueOf( udpMulticastPort ) );
         return buf.toString();
     }
 }

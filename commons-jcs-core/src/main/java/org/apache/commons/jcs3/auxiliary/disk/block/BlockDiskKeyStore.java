@@ -26,7 +26,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.nio.ByteBuffer;
-import java.nio.channels.SeekableByteChannel;
+import java.nio.channels.FileChannel;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.util.HashMap;
@@ -390,7 +390,7 @@ public class BlockDiskKeyStore<K>
      */
     protected void loadKeys()
     {
-        log.info("{0}: Loading keys for {1}", () -> logCacheName, () -> keyFile.toString());
+        log.info("{0}: Loading keys for {1}", () -> logCacheName, keyFile::toString);
 
         // create a key map to use.
         initKeyMap();
@@ -402,37 +402,29 @@ public class BlockDiskKeyStore<K>
             // Check file type
             int fileSignature = 0;
 
-            try (SeekableByteChannel bc = Files.newByteChannel(keyFile.toPath(),
-                    StandardOpenOption.READ))
+            try (FileChannel bc = FileChannel.open(keyFile.toPath(), StandardOpenOption.READ))
             {
                 final ByteBuffer signature = ByteBuffer.allocate(4);
                 bc.read(signature);
-                signature.rewind();
+                signature.flip();
                 fileSignature = signature.getInt();
 
                 if (fileSignature == KEY_FILE_SIGNATURE)
                 {
                     while (true)
                     {
-                        final ByteBuffer bufferSize = ByteBuffer.allocate(4);
-                        int read = bc.read(bufferSize);
-                        if (read < 0)
+                        try
+                        {
+                            final BlockDiskElementDescriptor<K> descriptor =
+                                    serializer.deSerializeFrom(bc, null);
+                            if (descriptor != null)
+                            {
+                                keys.put(descriptor.getKey(), descriptor.getBlocks());
+                            }
+                        }
+                        catch (EOFException e)
                         {
                             break;
-                        }
-                        assert read == bufferSize.capacity();
-                        bufferSize.rewind();
-
-                        final ByteBuffer serialized = ByteBuffer.allocate(bufferSize.getInt());
-                        read = bc.read(serialized);
-                        assert read == serialized.capacity();
-                        serialized.rewind();
-
-                        final BlockDiskElementDescriptor<K> descriptor =
-                                serializer.deSerialize(serialized.array(), null);
-                        if (descriptor != null)
-                        {
-                            keys.put(descriptor.getKey(), descriptor.getBlocks());
                         }
                     }
                 }
@@ -525,12 +517,14 @@ public class BlockDiskKeyStore<K>
     {
         final ElapsedTimer timer = new ElapsedTimer();
         log.info("{0}: Saving keys to [{1}], key count [{2}]", () -> logCacheName,
-                () -> this.keyFile.getAbsolutePath(), () -> keyHash.size());
+                this.keyFile::getAbsolutePath, () -> keyHash.size());
 
         synchronized (keyFile)
         {
-            try (SeekableByteChannel bc = Files.newByteChannel(keyFile.toPath(),
-                    StandardOpenOption.CREATE, StandardOpenOption.WRITE))
+            try (FileChannel bc = FileChannel.open(keyFile.toPath(),
+                    StandardOpenOption.CREATE,
+                    StandardOpenOption.WRITE,
+                    StandardOpenOption.TRUNCATE_EXISTING))
             {
                 if (!verify())
                 {
@@ -549,13 +543,7 @@ public class BlockDiskKeyStore<K>
                     final BlockDiskElementDescriptor<K> descriptor =
                             new BlockDiskElementDescriptor<>(entry.getKey(),entry.getValue());
                     // stream these out in the loop.
-                    byte[] serialized = serializer.serialize(descriptor);
-                    final ByteBuffer buffer = ByteBuffer.allocate(4 + serialized.length);
-                    buffer.putInt(serialized.length);
-                    buffer.put(serialized);
-                    buffer.flip();
-                    final int written = bc.write(buffer);
-                    assert written == buffer.capacity();
+                    serializer.serializeTo(descriptor, bc);
                 }
             }
             catch (final IOException e)
@@ -565,8 +553,8 @@ public class BlockDiskKeyStore<K>
         }
 
         log.info("{0}: Finished saving keys. It took {1} to store {2} keys. Key file length [{3}]",
-                () -> logCacheName, () -> timer.getElapsedTimeString(), () -> keyHash.size(),
-                () -> keyFile.length());
+                () -> logCacheName, timer::getElapsedTimeString, () -> keyHash.size(),
+                keyFile::length);
     }
 
     /**

@@ -21,6 +21,32 @@
 	<body>
         <release version="3.1" date="20YY-MM-DD">
             <action dev="tv" type="update">
+               Autodetect lateral service address on the interface used for multicast - 
+               depending on the multicast protocol: 
+               IPv6 link-local address for IPv6 multicast,
+               IPv4 site-local address for IPv4 multicast
+            </action>
+            <action dev="tv" type="fix">
+               Use configured listener address for UDP service broadcast
+            </action>
+            <action dev="tv" type="fix">
+               Fix UDP service discovery with LateralCache
+            </action>
+            <action dev="tv" type="update">
+               Use NIO for UDP service discovery, works with IPv6 now
+            </action>
+            <action dev="tv" type="update">
+               Use NIO for LateralTCPListener
+            </action>
+            <action dev="tv" type="update">
+               IMPORTANT CHANGE
+               Use IElementSerializer for LateralTCPSender and listener
+            </action>
+            <action dev="tv" type="update">
+               IMPORTANT CHANGE
+               Use IElementSerializer for RemoteHttpCacheServlet
+            </action>
+            <action dev="tv" type="update">
                IMPORTANT CHANGE
                Use IElementSerializer for Block disk key storage
             </action>
@@ -54,6 +80,9 @@
             </action>
             <action type="update" dev="ggregory" due-to="Gary Gregory">
                 Update from Apache Commons Lang 3.10 to 3.12.0.
+            </action>
+            <action dev="ggregory" type="update" due-to="Gary Gregory">
+               Bump build actions/setup-java from v1.4.3 to v2.
             </action>
         </release>
         <release version="3.0" date="2020-08-16">

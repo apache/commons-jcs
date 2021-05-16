@@ -61,7 +61,7 @@ public class GroupAttrName<T>
     @Override
     public boolean equals( final Object obj )
     {
-        if ( obj == null || !( obj instanceof GroupAttrName ) )
+        if (!(obj instanceof GroupAttrName))
         {
             return false;
         }

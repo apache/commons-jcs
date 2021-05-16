@@ -187,7 +187,7 @@ public class MySQLTableOptimizer
             tableState.setState( TableState.FREE );
 
             log.info( "Optimization of table [{0}] took {1} ms.",
-                    this::getTableName, () -> timer.getElapsedTime() );
+                    this::getTableName, timer::getElapsedTime);
         }
 
         return success;

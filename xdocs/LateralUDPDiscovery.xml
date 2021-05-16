@@ -35,9 +35,19 @@
 	  <p>
 		On startup each lateral will issue a special message requesting a
 		broadcast from the other caches.  Normal broadcasts occur every
-		30 seconds. (This is to be made configurable.)  Regions that don't
+		15 seconds. (This is to be made configurable.)  Regions that don't
 		receive, are running in send only mode, don't broadcast anything but requests.
   	  </p>
+      <p>
+        The normal broadcasts publish the address and port of the service.
+        This can be configured as <code>TcpListenerHost</code> and 
+        <code>TcpListenerPort</code>, respectively. If the service address
+        is not set, the service tries to detect a suitable address using the 
+        same interface as the one that is used for multicast. If the multicast
+        uses IPv6, a link-local IPv6 address is selected if one exists. 
+        Otherwise, a site-local IPv4 address is chosen. If that attempt also 
+        fails, the first address on any non-loopback interface is used.
+      </p>
       <p>
 	    When a lateral receives a discovery message it will try to add
 	    the lateral to the nowait facade for the region.  If it already exists
@@ -51,12 +61,12 @@
         <p>
           The configuration is fairly straightforward and is done in the
           auxiliary cache section of the <code>cache.ccf</code>
-          configuration file.  In the example below, I created a TCP
-          Lateral Auxiliary Cache referenced by <code>LTCP</code>.  It uses
+          configuration file.  In the example below, a TCP
+          Lateral Auxiliary Cache referenced by <code>LTCP</code> is created.  It uses
           UDP Discovery to locate other servers.  It broadcasts to
           multicast address <code>228.5.6.8</code> and port <code>6780</code>.
           It listens to port <code>1110</code>. The UDP datagram time-to-live
-          is 4. 
+          is 4 hops. 
         </p>
         <source><![CDATA[
 jcs.auxiliary.LTCP=org.apache.commons.jcs3.auxiliary.lateral.socket.tcp.LateralTCPCacheFactory

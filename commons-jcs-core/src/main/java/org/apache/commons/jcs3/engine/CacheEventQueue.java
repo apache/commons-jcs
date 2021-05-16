@@ -32,9 +32,6 @@ import org.apache.commons.jcs3.utils.threadpool.ThreadPoolManager;
 public class CacheEventQueue<K, V>
     extends PooledCacheEventQueue<K, V>
 {
-    /** The type of queue -- there are pooled and single */
-    private static final QueueType queueType = QueueType.SINGLE;
-
     /**
      * Constructs with the specified listener and the cache name.
      * <p>
@@ -84,6 +81,7 @@ public class CacheEventQueue<K, V>
     @Override
     public QueueType getQueueType()
     {
-        return queueType;
+        /** The type of queue -- there are pooled and single */
+        return QueueType.SINGLE;
     }
 }

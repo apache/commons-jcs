@@ -265,16 +265,14 @@ public class BlockDiskCache<K, V>
 
         final Set<K> matchingKeys = getKeyMatcher().getMatchingKeysFromArray( pattern, keyArray );
 
-        final Map<K, ICacheElement<K, V>> elements = matchingKeys.stream()
+        return matchingKeys.stream()
             .collect(Collectors.toMap(
                     key -> key,
-                    key -> processGet( key ))).entrySet().stream()
+                    this::processGet)).entrySet().stream()
                 .filter(entry -> entry.getValue() != null)
                 .collect(Collectors.toMap(
                         Entry::getKey,
                         Entry::getValue));
-
-        return elements;
     }
 
     /**
@@ -357,7 +355,7 @@ public class BlockDiskCache<K, V>
         if ( !isAlive() )
         {
             log.debug("{0}: No longer alive; aborting put of key = {1}",
-                    () -> logCacheName, () -> element.getKey());
+                    () -> logCacheName, element::getKey);
             return;
         }
 
@@ -380,7 +378,7 @@ public class BlockDiskCache<K, V>
             this.keyStore.put( element.getKey(), blocks );
 
             log.debug("{0}: Put to file [{1}] key [{2}]", () -> logCacheName,
-                    () -> fileName, () -> element.getKey());
+                    () -> fileName, element::getKey);
         }
         catch ( final IOException e )
         {
@@ -393,7 +391,7 @@ public class BlockDiskCache<K, V>
         }
 
         log.debug("{0}: Storing element on disk, key: {1}", () -> logCacheName,
-                () -> element.getKey() );
+                element::getKey);
     }
 
     /**
@@ -472,7 +470,7 @@ public class BlockDiskCache<K, V>
         // remove matches.
         // Don't add to recycle bin here
         // https://issues.apache.org/jira/browse/JCS-67
-        itemsToRemove.forEach(fullKey -> performSingleKeyRemoval(fullKey));
+        itemsToRemove.forEach(this::performSingleKeyRemoval);
         // TODO this needs to update the remove count separately
 
         return !itemsToRemove.isEmpty();
@@ -499,7 +497,7 @@ public class BlockDiskCache<K, V>
         // remove matches.
         // Don't add to recycle bin here
         // https://issues.apache.org/jira/browse/JCS-67
-        itemsToRemove.forEach(fullKey -> performSingleKeyRemoval(fullKey));
+        itemsToRemove.forEach(this::performSingleKeyRemoval);
         // TODO this needs to update the remove count separately
 
         return !itemsToRemove.isEmpty();
@@ -609,9 +607,9 @@ public class BlockDiskCache<K, V>
     }
 
     /**
-     * Reset effectively clears the disk cache, creating new files, recyclebins, and keymaps.
+     * Reset effectively clears the disk cache, creating new files, recycle bins, and keymaps.
      * <p>
-     * It can be used to handle errors by last resort, force content update, or removeall.
+     * It can be used to handle errors by last resort, force content update, or remove all.
      */
     private void reset()
     {

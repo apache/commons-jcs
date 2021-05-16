@@ -18,12 +18,11 @@
  */
 package org.apache.commons.jcs3.jcache;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.Map;
 
 import javax.cache.Cache;
 import javax.cache.configuration.CacheEntryListenerConfiguration;
-import javax.cache.event.CacheEntryEvent;
 import javax.cache.event.EventType;
 
 import org.apache.commons.jcs3.engine.behavior.ICacheElement;
@@ -48,7 +47,7 @@ public class ExpiryAwareCache<A, B> extends CompositeCache<A, B>
         super.doExpires(element);
         for (final JCSListener<A, B> listener : listeners.values())
         {
-            listener.onExpired(Arrays.<CacheEntryEvent<? extends A, ? extends B>> asList(new JCSCacheEntryEvent<>(
+            listener.onExpired(Collections.singletonList(new JCSCacheEntryEvent<>(
                     cacheRef, EventType.REMOVED, null, element.getKey(), element.getVal())));
         }
     }

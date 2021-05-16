@@ -61,8 +61,13 @@ public class UDPDiscoverySenderUnitTest
         throws Exception
     {
         super.setUp();
+
         receiver = new UDPDiscoveryReceiver( null, null, ADDRESS, PORT );
-        sender = new UDPDiscoverySender( ADDRESS, PORT, 0, new StandardSerializer() );
+        receiver.setSerializer(new StandardSerializer());
+        final Thread t = new Thread( receiver );
+        t.start();
+
+        sender = new UDPDiscoverySender(null, ADDRESS, PORT, 1, new StandardSerializer());
     }
 
     /**

@@ -23,7 +23,7 @@ import static org.apache.commons.jcs3.jcache.serialization.Serializations.copy;
 
 import java.io.Closeable;
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -41,7 +41,6 @@ import javax.cache.CacheManager;
 import javax.cache.configuration.CacheEntryListenerConfiguration;
 import javax.cache.configuration.Configuration;
 import javax.cache.configuration.Factory;
-import javax.cache.event.CacheEntryEvent;
 import javax.cache.event.EventType;
 import javax.cache.expiry.Duration;
 import javax.cache.expiry.EternalExpiryPolicy;
@@ -110,7 +109,7 @@ public class JCSCache<K, V> implements Cache<K, V>
 
         try
         {
-            serializer = IElementSerializer.class.cast(classLoader.loadClass(property(properties, "serializer", cacheName, StandardSerializer.class.getName())).newInstance());
+            serializer = (IElementSerializer) classLoader.loadClass(property(properties, "serializer", cacheName, StandardSerializer.class.getName())).getDeclaredConstructor().newInstance();
         }
         catch (final Exception e)
         {
@@ -120,7 +119,7 @@ public class JCSCache<K, V> implements Cache<K, V>
         final Factory<CacheLoader<K, V>> cacheLoaderFactory = configuration.getCacheLoaderFactory();
         if (cacheLoaderFactory == null)
         {
-            loader = NoLoader.INSTANCE;
+            loader = (CacheLoader<K, V>) NoLoader.INSTANCE;
         }
         else
         {
@@ -131,7 +130,7 @@ public class JCSCache<K, V> implements Cache<K, V>
         final Factory<CacheWriter<? super K, ? super V>> cacheWriterFactory = configuration.getCacheWriterFactory();
         if (cacheWriterFactory == null)
         {
-            writer = NoWriter.INSTANCE;
+            writer = (CacheWriter<K, V>) NoWriter.INSTANCE;
         }
         else
         {
@@ -382,12 +381,12 @@ public class JCSCache<K, V> implements Cache<K, V>
             {
                 if (created)
                 {
-                    listener.onCreated(Arrays.<CacheEntryEvent<? extends K, ? extends V>> asList(new JCSCacheEntryEvent<>(this,
+                    listener.onCreated(Collections.singletonList(new JCSCacheEntryEvent<>(this,
                             EventType.CREATED, null, key, value)));
                 }
                 else
                 {
-                    listener.onUpdated(Arrays.<CacheEntryEvent<? extends K, ? extends V>> asList(new JCSCacheEntryEvent<>(this,
+                    listener.onUpdated(Collections.singletonList(new JCSCacheEntryEvent<>(this,
                             EventType.UPDATED, old, key, value)));
                 }
             }
@@ -418,7 +417,7 @@ public class JCSCache<K, V> implements Cache<K, V>
         delegate.remove(cacheKey);
         for (final JCSListener<K, V> listener : listeners.values())
         {
-            listener.onExpired(Arrays.<CacheEntryEvent<? extends K, ? extends V>> asList(new JCSCacheEntryEvent<>(this,
+            listener.onExpired(Collections.singletonList(new JCSCacheEntryEvent<>(this,
                     EventType.REMOVED, null, cacheKey, elt.getVal())));
         }
     }
@@ -468,16 +467,15 @@ public class JCSCache<K, V> implements Cache<K, V>
         final long start = Times.now(!statisticsEnabled);
 
         writer.delete(key);
-        final K cacheKey = key;
 
-        final ICacheElement<K, V> v = delegate.get(cacheKey);
-        delegate.remove(cacheKey);
+        final ICacheElement<K, V> v = delegate.get(key);
+        delegate.remove(key);
 
         final V value = v != null && v.getVal() != null ? v.getVal() : null;
         final boolean remove = v != null;
         for (final JCSListener<K, V> listener : listeners.values())
         {
-            listener.onRemoved(Arrays.<CacheEntryEvent<? extends K, ? extends V>> asList(new JCSCacheEntryEvent<>(this,
+            listener.onRemoved(Collections.singletonList(new JCSCacheEntryEvent<>(this,
                     EventType.REMOVED, null, key, value)));
         }
         if (remove && statisticsEnabled)

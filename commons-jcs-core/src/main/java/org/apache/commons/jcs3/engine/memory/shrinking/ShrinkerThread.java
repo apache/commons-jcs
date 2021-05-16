@@ -106,7 +106,7 @@ public class ShrinkerThread<K, V>
      */
     protected void shrink()
     {
-        log.debug( "Shrinking memory cache for: {0}", () -> this.cache.getCacheName() );
+        log.debug( "Shrinking memory cache for: {0}", this.cache::getCacheName);
 
         final IMemoryCache<K, V> memCache = cache.getMemoryCache();
 

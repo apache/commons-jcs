@@ -163,7 +163,7 @@ public class RemoteCacheFailoverRunner<K, V> extends AbstractAuxiliaryCacheMonit
 
                 final int fidx = rca0.getFailoverIndex();
                 log.debug( "fidx = {0} failovers.size = {1}", () -> fidx,
-                        () -> failovers.size() );
+                        failovers::size);
 
                 // shouldn't we see if the primary is backup?
                 // If we don't check the primary, if it gets connected in the
@@ -209,7 +209,7 @@ public class RemoteCacheFailoverRunner<K, V> extends AbstractAuxiliaryCacheMonit
                             allright.set(true);
 
                             log.info( "CONNECTED to host = [{0}]",
-                                    () -> rca.getRemoteLocation() );
+                                    rca::getRemoteLocation);
                         }
                     }
                 }
@@ -222,7 +222,7 @@ public class RemoteCacheFailoverRunner<K, V> extends AbstractAuxiliaryCacheMonit
                 log.debug( "ALLRIGHT is true " );
                 log.info( "Failover runner is in primary recovery mode. "
                         + "Failover index = {0} Will now try to reconnect to "
-                        + "primary server.", () -> rca0.getFailoverIndex() );
+                        + "primary server.", rca0::getFailoverIndex);
             }
 
             boolean primaryRestoredSuccessfully = false;

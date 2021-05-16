@@ -166,29 +166,10 @@ public class JCSCachingManager implements CacheManager
 
     private void addProperties(final URL url, final Properties aggregator)
     {
-        InputStream inStream = null;
-        try
-        {
-            inStream = url.openStream();
+        try (InputStream inStream = url.openStream()) {
             aggregator.load(inStream);
-        }
-        catch (final IOException e)
-        {
+        } catch (final IOException e) {
             throw new IllegalArgumentException(e);
-        }
-        finally
-        {
-            if (inStream != null)
-            {
-                try
-                {
-                    inStream.close();
-                }
-                catch (final IOException e)
-                {
-                    // no-op
-                }
-            }
         }
     }
 
@@ -351,12 +332,14 @@ public class JCSCachingManager implements CacheManager
 
     private <K, V> Cache<K, V> doGetCache(final String cacheName, final Class<K> keyType, final Class<V> valueType)
     {
+        @SuppressWarnings("unchecked") // common map for all caches
         final Cache<K, V> cache = (Cache<K, V>) caches.get(cacheName);
         if (cache == null)
         {
             return null;
         }
 
+        @SuppressWarnings("unchecked") // don't know how to solve this
         final Configuration<K, V> config = cache.getConfiguration(Configuration.class);
         if ((keyType != null && !config.getKeyType().isAssignableFrom(keyType))
                 || (valueType != null && !config.getValueType().isAssignableFrom(valueType)))

@@ -95,7 +95,7 @@ public class ShrinkerThread
     private void deleteExpiredFromAllRegisteredRegions()
     {
         log.info( "Running JDBC disk cache shrinker. Number of regions [{0}]",
-                () -> shrinkSet.size() );
+                shrinkSet::size);
 
         for (final Iterator<JDBCDiskCache<?, ?>> i = shrinkSet.iterator(); i.hasNext();)
         {

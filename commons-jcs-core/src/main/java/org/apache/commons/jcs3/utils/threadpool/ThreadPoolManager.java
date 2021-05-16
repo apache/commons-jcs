@@ -185,11 +185,10 @@ public class ThreadPoolManager
      */
     public ScheduledExecutorService createSchedulerPool( final PoolConfiguration config, final String threadNamePrefix, final int threadPriority )
     {
-    	final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(
-    			config.getMaximumPoolSize(),
-    			new DaemonThreadFactory(threadNamePrefix, threadPriority));
 
-        return scheduler;
+        return Executors.newScheduledThreadPool(
+                config.getMaximumPoolSize(),
+                new DaemonThreadFactory(threadNamePrefix, threadPriority));
     }
 
     /**
@@ -250,13 +249,11 @@ public class ThreadPoolManager
      */
     public ExecutorService getExecutorService( final String name )
     {
-    	final ExecutorService pool = pools.computeIfAbsent(name, key -> {
+    	return pools.computeIfAbsent(name, key -> {
             log.debug( "Creating pool for name [{0}]", key );
             final PoolConfiguration config = loadConfig( PROP_NAME_ROOT + "." + key, defaultConfig );
             return createPool( config, "JCS-ThreadPoolManager-" + key + "-" );
     	});
-
-        return pool;
     }
 
     /**
@@ -270,14 +267,12 @@ public class ThreadPoolManager
      */
     public ScheduledExecutorService getSchedulerPool( final String name )
     {
-    	final ScheduledExecutorService pool = schedulerPools.computeIfAbsent(name, key -> {
+    	return schedulerPools.computeIfAbsent(name, key -> {
             log.debug( "Creating scheduler pool for name [{0}]", key );
             final PoolConfiguration config = loadConfig( PROP_NAME_SCHEDULER_ROOT + "." + key,
                     defaultSchedulerConfig );
             return createSchedulerPool( config, "JCS-ThreadPoolManager-" + key + "-", Thread.NORM_PRIORITY );
     	});
-
-        return pool;
     }
 
     /**

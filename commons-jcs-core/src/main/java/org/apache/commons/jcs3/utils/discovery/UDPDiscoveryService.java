@@ -20,8 +20,13 @@ package org.apache.commons.jcs3.utils.discovery;
  */
 
 import java.io.IOException;
+import java.net.Inet4Address;
+import java.net.Inet6Address;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -72,7 +77,8 @@ public class UDPDiscoveryService
     private final AtomicBoolean shutdown = new AtomicBoolean(false);
 
     /** This is a set of services that have been discovered. */
-    private final ConcurrentMap<Integer, DiscoveredService> discoveredServices = new ConcurrentHashMap<>();
+    private final ConcurrentMap<Integer, DiscoveredService> discoveredServices =
+            new ConcurrentHashMap<>();
 
     /** This a list of regions that are configured to use discovery. */
     private final Set<String> cacheNames = new CopyOnWriteArraySet<>();
@@ -81,10 +87,10 @@ public class UDPDiscoveryService
     private final Set<IDiscoveryListener> discoveryListeners = new CopyOnWriteArraySet<>();
 
     /** Handle to cancel the scheduled broadcast task */
-    private ScheduledFuture<?> broadcastTaskFuture = null;
+    private ScheduledFuture<?> broadcastTaskFuture;
 
     /** Handle to cancel the scheduled cleanup task */
-    private ScheduledFuture<?> cleanupTaskFuture = null;
+    private ScheduledFuture<?> cleanupTaskFuture;
 
     /**
      * Constructor
@@ -106,24 +112,81 @@ public class UDPDiscoveryService
      */
     public UDPDiscoveryService(final UDPDiscoveryAttributes attributes, IElementSerializer serializer)
     {
-        udpDiscoveryAttributes = attributes.clone();
+        this.udpDiscoveryAttributes = attributes.clone();
+        this.serializer = serializer;
 
         try
         {
-            // todo, you should be able to set this
-            udpDiscoveryAttributes.setServiceAddress( HostNameUtil.getLocalHostAddress() );
-        }
-        catch ( final UnknownHostException e )
-        {
-            log.error( "Couldn't get localhost address", e );
-        }
+            InetAddress multicastAddress = InetAddress.getByName(
+                    getUdpDiscoveryAttributes().getUdpDiscoveryAddr());
 
-        try
-        {
+            // Set service address if still empty
+            if (getUdpDiscoveryAttributes().getServiceAddress() == null ||
+                    getUdpDiscoveryAttributes().getServiceAddress().isEmpty())
+            {
+                // Use same interface as for multicast
+                NetworkInterface serviceInterface = null;
+                if (getUdpDiscoveryAttributes().getUdpDiscoveryInterface() != null)
+                {
+                    serviceInterface = NetworkInterface.getByName(
+                            getUdpDiscoveryAttributes().getUdpDiscoveryInterface());
+                }
+                else
+                {
+                    serviceInterface = HostNameUtil.getMulticastNetworkInterface();
+                }
+
+                try
+                {
+                    InetAddress serviceAddress = null;
+
+                    for (Enumeration<InetAddress> addresses = serviceInterface.getInetAddresses();
+                            addresses.hasMoreElements();)
+                    {
+                        serviceAddress = addresses.nextElement();
+
+                        if (multicastAddress instanceof Inet6Address)
+                        {
+                            if (serviceAddress instanceof Inet6Address &&
+                                !serviceAddress.isLoopbackAddress() &&
+                                !serviceAddress.isMulticastAddress() &&
+                                serviceAddress.isLinkLocalAddress())
+                            {
+                                // if Multicast uses IPv6, try to publish our IPv6 address
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            if (serviceAddress instanceof Inet4Address &&
+                                !serviceAddress.isLoopbackAddress() &&
+                                !serviceAddress.isMulticastAddress() &&
+                                serviceAddress.isSiteLocalAddress())
+                            {
+                                // if Multicast uses IPv4, try to publish our IPv4 address
+                                break;
+                            }
+                        }
+                    }
+
+                    if (serviceAddress == null)
+                    {
+                        // Nothing found for given interface, fall back
+                        serviceAddress = HostNameUtil.getLocalHostLANAddress();
+                    }
+
+                    getUdpDiscoveryAttributes().setServiceAddress(serviceAddress.getHostAddress());
+                }
+                catch ( final UnknownHostException e )
+                {
+                    log.error( "Couldn't get local host address", e );
+                }
+            }
+
             // todo need some kind of recovery here.
             receiver = new UDPDiscoveryReceiver( this,
                     getUdpDiscoveryAttributes().getUdpDiscoveryInterface(),
-                    getUdpDiscoveryAttributes().getUdpDiscoveryAddr(),
+                    multicastAddress,
                     getUdpDiscoveryAttributes().getUdpDiscoveryPort() );
         }
         catch ( final IOException e )
@@ -133,8 +196,6 @@ public class UDPDiscoveryService
                     getUdpDiscoveryAttributes().getUdpDiscoveryAddr(),
                     getUdpDiscoveryAttributes().getUdpDiscoveryPort(), e );
         }
-
-        this.serializer = serializer;
 
         // initiate sender broadcast
         initiateBroadcast();
@@ -147,14 +208,14 @@ public class UDPDiscoveryService
     public void setScheduledExecutorService(final ScheduledExecutorService scheduledExecutor)
     {
         this.broadcastTaskFuture = scheduledExecutor.scheduleAtFixedRate(
-                () -> serviceRequestBroadcast(), 0, 15, TimeUnit.SECONDS);
+                this::serviceRequestBroadcast, 0, 15, TimeUnit.SECONDS);
 
         /** removes things that have been idle for too long */
         // I'm going to use this as both, but it could happen
         // that something could hang around twice the time using this as the
         // delay and the idle time.
         this.cleanupTaskFuture = scheduledExecutor.scheduleAtFixedRate(
-                () -> cleanup(), 0,
+                this::cleanup, 0,
                 getUdpDiscoveryAttributes().getMaxIdleTimeSec(), TimeUnit.SECONDS);
     }
 
@@ -181,7 +242,7 @@ public class UDPDiscoveryService
             })
             // remove the bad ones
             // call this so the listeners get notified
-            .forEach(service -> removeDiscoveredService(service));
+            .forEach(this::removeDiscoveredService);
     }
 
     /**
@@ -189,7 +250,7 @@ public class UDPDiscoveryService
      */
     public void initiateBroadcast()
     {
-        log.debug( "Creating sender thread for discoveryAddress = [{0}] and "
+        log.debug( "Creating sender for discoveryAddress = [{0}] and "
                 + "discoveryPort = [{1}] myHostName = [{2}] and port = [{3}]",
                 () -> getUdpDiscoveryAttributes().getUdpDiscoveryAddr(),
                 () -> getUdpDiscoveryAttributes().getUdpDiscoveryPort(),
@@ -197,10 +258,7 @@ public class UDPDiscoveryService
                 () -> getUdpDiscoveryAttributes().getServicePort() );
 
         try (UDPDiscoverySender sender = new UDPDiscoverySender(
-                getUdpDiscoveryAttributes().getUdpDiscoveryAddr(),
-                getUdpDiscoveryAttributes().getUdpDiscoveryPort(),
-                getUdpDiscoveryAttributes().getUdpTTL(),
-                getSerializer()))
+                getUdpDiscoveryAttributes(), getSerializer()))
         {
             sender.requestBroadcast();
 
@@ -223,10 +281,7 @@ public class UDPDiscoveryService
         // create this connection each time.
         // more robust
         try (UDPDiscoverySender sender = new UDPDiscoverySender(
-                getUdpDiscoveryAttributes().getUdpDiscoveryAddr(),
-                getUdpDiscoveryAttributes().getUdpDiscoveryPort(),
-                getUdpDiscoveryAttributes().getUdpTTL(),
-                getSerializer()))
+                getUdpDiscoveryAttributes(), getSerializer()))
         {
             sender.passiveBroadcast(
                     getUdpDiscoveryAttributes().getServiceAddress(),
@@ -252,10 +307,7 @@ public class UDPDiscoveryService
         // create this connection each time.
         // more robust
         try (UDPDiscoverySender sender = new UDPDiscoverySender(
-                getUdpDiscoveryAttributes().getUdpDiscoveryAddr(),
-                getUdpDiscoveryAttributes().getUdpDiscoveryPort(),
-                getUdpDiscoveryAttributes().getUdpTTL(),
-                getSerializer()))
+                getUdpDiscoveryAttributes(), getSerializer()))
         {
             sender.removeBroadcast(
                     getUdpDiscoveryAttributes().getServiceAddress(),
@@ -330,7 +382,7 @@ public class UDPDiscoveryService
         // If we don't do this, then if a region using the default config is initialized after notification,
         // it will never get the service in it's no wait list.
         // Leave it to the listeners to decide what to do.
-        getDiscoveryListeners().forEach(listener -> listener.addDiscoveredService( discoveredService));
+        getDiscoveryListeners().forEach(listener -> listener.addDiscoveredService(discoveredService));
     }
 
     /**
@@ -398,12 +450,10 @@ public class UDPDiscoveryService
                 cleanupTaskFuture.cancel(false);
             }
 
-            // no good way to do this right now.
             if (receiver != null)
             {
                 log.info( "Shutting down UDP discovery service receiver." );
                 receiver.shutdown();
-                udpReceiverThread.interrupt();
             }
 
             log.info( "Shutting down UDP discovery service sender." );

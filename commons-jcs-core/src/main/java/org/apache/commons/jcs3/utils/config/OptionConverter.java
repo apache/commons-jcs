@@ -313,7 +313,7 @@ public class OptionConverter
             try
             {
                 final Class<?> classObj = Class.forName( className );
-                final Object o = classObj.newInstance();
+                final Object o = classObj.getDeclaredConstructor().newInstance();
 
                 try
                 {
@@ -329,7 +329,7 @@ public class OptionConverter
                     return defaultValue;
                 }
             }
-            catch ( final ClassNotFoundException | InstantiationException | IllegalAccessException e )
+            catch (final Exception e )
             {
                 log.error( "Could not instantiate class [{0}]", className, e );
             }
@@ -396,7 +396,7 @@ public class OptionConverter
                 sbuf.append( val.substring( i ) );
                 return sbuf.toString();
             }
-            sbuf.append( val.substring( i, j ) );
+            sbuf.append(val, i, j);
             k = val.indexOf( DELIM_STOP, j );
             if ( k == -1 )
             {

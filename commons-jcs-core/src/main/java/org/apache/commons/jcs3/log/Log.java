@@ -275,7 +275,6 @@ public interface Log
      *
      * @param message the message to log; the format depends on the message factory.
      * @param params parameters to the message.
-     * @see #getMessageFactory()
      */
     void trace(String message, Object... params);
 
@@ -318,7 +317,6 @@ public interface Log
      *
      * @param message the message to log; the format depends on the message factory.
      * @param params parameters to the message.
-     * @see #getMessageFactory()
      */
     void warn(String message, Object... params);
 

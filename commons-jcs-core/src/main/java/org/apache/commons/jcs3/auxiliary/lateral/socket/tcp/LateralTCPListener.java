@@ -20,20 +20,21 @@ package org.apache.commons.jcs3.auxiliary.lateral.socket.tcp;
  */
 
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.Serializable;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketAddress;
-import java.net.SocketTimeoutException;
+import java.nio.channels.SelectionKey;
+import java.nio.channels.Selector;
+import java.nio.channels.ServerSocketChannel;
+import java.nio.channels.SocketChannel;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.commons.jcs3.auxiliary.lateral.LateralElementDescriptor;
@@ -42,12 +43,12 @@ import org.apache.commons.jcs3.auxiliary.lateral.socket.tcp.behavior.ITCPLateral
 import org.apache.commons.jcs3.engine.CacheInfo;
 import org.apache.commons.jcs3.engine.behavior.ICacheElement;
 import org.apache.commons.jcs3.engine.behavior.ICompositeCacheManager;
+import org.apache.commons.jcs3.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs3.engine.behavior.IShutdownObserver;
 import org.apache.commons.jcs3.engine.control.CompositeCache;
-import org.apache.commons.jcs3.io.ObjectInputStreamClassLoaderAware;
 import org.apache.commons.jcs3.log.Log;
 import org.apache.commons.jcs3.log.LogManager;
-import org.apache.commons.jcs3.utils.threadpool.DaemonThreadFactory;
+import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
 
 /**
  * Listens for connections from other TCP lateral caches and handles them. The initialization method
@@ -73,8 +74,13 @@ public class LateralTCPListener<K, V>
     /** Configuration attributes */
     private ITCPLateralCacheAttributes tcpLateralCacheAttributes;
 
-    /** The processor. We should probably use an event queue here. */
-    private ExecutorService pooledExecutor;
+    /** The listener thread */
+    private Thread listenerThread;
+
+    /**
+     * Serializer for reading and writing
+     */
+    private IElementSerializer serializer;
 
     /** put count */
     private int putCnt;
@@ -117,7 +123,7 @@ public class LateralTCPListener<K, V>
                     newIns.init();
                     newIns.setCacheManager( cacheMgr );
 
-                    log.info("Created new listener {0}", () -> ilca.getTcpListenerPort());
+                    log.info("Created new listener {0}", ilca::getTcpListenerPort);
 
                     return newIns;
                 });
@@ -146,31 +152,34 @@ public class LateralTCPListener<K, V>
             final int port = getTcpLateralCacheAttributes().getTcpListenerPort();
             final String host = getTcpLateralCacheAttributes().getTcpListenerHost();
 
-            pooledExecutor = Executors.newCachedThreadPool(
-                    new DaemonThreadFactory("JCS-LateralTCPListener-"));
             terminated = new AtomicBoolean(false);
             shutdown = new AtomicBoolean(false);
 
-            final ServerSocket serverSocket;
+            serializer = new StandardSerializer();
+
+            final ServerSocketChannel serverSocket = ServerSocketChannel.open();
+
+            SocketAddress endPoint;
+
             if (host != null && !host.isEmpty())
             {
                 log.info( "Listening on {0}:{1}", host, port );
-                // Resolve host name
-                final InetAddress inetAddress = InetAddress.getByName(host);
-                //Bind the SocketAddress with inetAddress and port
-                final SocketAddress endPoint = new InetSocketAddress(inetAddress, port);
-
-                serverSocket = new ServerSocket();
-                serverSocket.bind(endPoint);
+                //Bind the SocketAddress with host and port
+                endPoint = new InetSocketAddress(host, port);
             }
             else
             {
                 log.info( "Listening on port {0}", port );
-                serverSocket = new ServerSocket( port );
+                endPoint = new InetSocketAddress(port);
             }
-            serverSocket.setSoTimeout( acceptTimeOut );
 
-            pooledExecutor.execute(() -> runListener(serverSocket));
+            serverSocket.bind(endPoint);
+            serverSocket.configureBlocking(false);
+
+            listenerThread = new Thread(() -> runListener(serverSocket),
+                    "JCS-LateralTCPListener-" + host + ":" + port);
+            listenerThread.setDaemon(true);
+            listenerThread.start();
         }
         catch ( final IOException ex )
         {
@@ -229,11 +238,11 @@ public class LateralTCPListener<K, V>
         {
             log.info( "Put Count (port {0}) = {1}",
                     () -> getTcpLateralCacheAttributes().getTcpListenerPort(),
-                    () -> getPutCnt() );
+                    this::getPutCnt);
         }
 
         log.debug( "handlePut> cacheName={0}, key={1}",
-                () -> element.getCacheName(), () -> element.getKey() );
+                element::getCacheName, element::getKey);
 
         getCache( element.getCacheName() ).localUpdate( element );
     }
@@ -252,7 +261,7 @@ public class LateralTCPListener<K, V>
         removeCnt++;
         if ( log.isInfoEnabled() && getRemoveCnt() % 100 == 0 )
         {
-            log.info( "Remove Count = {0}", () -> getRemoveCnt() );
+            log.info( "Remove Count = {0}", this::getRemoveCnt);
         }
 
         log.debug( "handleRemove> cacheName={0}, key={1}", cacheName, key );
@@ -290,7 +299,7 @@ public class LateralTCPListener<K, V>
         {
             log.info( "Get Count (port {0}) = {1}",
                     () -> getTcpLateralCacheAttributes().getTcpListenerPort(),
-                    () -> getGetCnt() );
+                    this::getGetCnt);
         }
 
         log.debug( "handleGet> cacheName={0}, key={1}", cacheName, key );
@@ -314,7 +323,7 @@ public class LateralTCPListener<K, V>
         {
             log.info( "GetMatching Count (port {0}) = {1}",
                     () -> getTcpLateralCacheAttributes().getTcpListenerPort(),
-                    () -> getGetCnt() );
+                    this::getGetCnt);
         }
 
         log.debug( "handleGetMatching> cacheName={0}, pattern={1}", cacheName, pattern );
@@ -347,16 +356,17 @@ public class LateralTCPListener<K, V>
                 + "Do not dispose from remote.", cacheName );
 
         // TODO handle active deregistration, rather than passive detection
-        terminated.set(true);
+        dispose();
     }
 
     @Override
     public synchronized void dispose()
     {
-        terminated.set(true);
-        notify();
-
-        pooledExecutor.shutdownNow();
+        if (terminated.compareAndSet(false, true))
+        {
+            notify();
+            listenerThread.interrupt();
+        }
     }
 
     /**
@@ -459,7 +469,7 @@ public class LateralTCPListener<K, V>
         @Override
         public void run()
         {
-            runListener(serverSocket);
+            runListener(serverSocket.getChannel());
         }
     }
 
@@ -467,38 +477,89 @@ public class LateralTCPListener<K, V>
      * Processes commands from the server socket. There should be one listener for each configured
      * TCP lateral.
      */
-    private void runListener(final ServerSocket serverSocket)
+    private void runListener(final ServerSocketChannel serverSocket)
     {
-        try
+        try (final Selector selector = Selector.open())
         {
+            serverSocket.register(selector, SelectionKey.OP_ACCEPT);
+            log.debug("Waiting for clients to connect");
+
             // Check to see if we've been asked to exit, and exit
-            while ( !terminated.get() )
+            while (!terminated.get())
             {
-                log.debug( "Waiting for clients to connect " );
-
-                try
+                int activeKeys = selector.select(acceptTimeOut);
+                if (activeKeys == 0)
                 {
-                    final Socket socket = serverSocket.accept();
+                    continue;
+                }
 
-                    if (socket != null)
+                for (Iterator<SelectionKey> i = selector.selectedKeys().iterator(); i.hasNext();)
+                {
+                    if (terminated.get())
                     {
-                        log.debug("Connected to client at {0}", () -> socket.getInetAddress());
+                        break;
                     }
 
-                    pooledExecutor.execute(() -> handleConnection(socket));
-                }
-                catch (final SocketTimeoutException e)
-                {
-                    // No problem! We loop back up!
+                    SelectionKey key = i.next();
+
+                    if (!key.isValid())
+                    {
+                        continue;
+                    }
+
+                    if (key.isAcceptable())
+                    {
+                        ServerSocketChannel server = (ServerSocketChannel) key.channel();
+                        SocketChannel client = server.accept();
+                        if (client == null)
+                        {
+                            //may happen in non-blocking mode
+                            continue;
+                        }
+
+                        log.info("Connected to client at {0}", client.getRemoteAddress());
+
+                        client.configureBlocking(false);
+                        client.register(selector, SelectionKey.OP_READ);
+                    }
+
+                    if (key.isReadable())
+                    {
+                        handleClient(key);
+                    }
+
+                    i.remove();
                 }
             }
 
             log.debug("Thread terminated, exiting gracefully");
-            serverSocket.close();
+
+            //close all registered channels
+            selector.keys().forEach(key -> {
+                try
+                {
+                    key.channel().close();
+                }
+                catch (IOException e)
+                {
+                    log.warn("Problem closing channel", e);
+                }
+            });
         }
-        catch ( final IOException e )
+        catch (final IOException e)
         {
             log.error( "Exception caught in TCP listener", e );
+        }
+        finally
+        {
+            try
+            {
+                serverSocket.close();
+            }
+            catch (IOException e)
+            {
+                log.error( "Exception closing TCP listener", e );
+            }
         }
     }
 
@@ -528,45 +589,93 @@ public class LateralTCPListener<K, V>
         @Override
         public void run()
         {
-            handleConnection(socket);
+            try (InputStream is = socket.getInputStream())
+            {
+                while ( true )
+                {
+                    final LateralElementDescriptor<K, V> led =
+                            serializer.deSerializeFrom(is, null);
+
+                    if ( led == null )
+                    {
+                        log.debug( "LateralElementDescriptor is null" );
+                        continue;
+                    }
+                    if ( led.requesterId == getListenerId() )
+                    {
+                        log.debug( "from self" );
+                    }
+                    else
+                    {
+                        log.debug( "receiving LateralElementDescriptor from another led = {0}",
+                                led );
+
+                        Serializable obj = handleElement(led);
+                        if (obj != null)
+                        {
+                            OutputStream os = socket.getOutputStream();
+                            serializer.serializeTo(obj, os);
+                            os.flush();
+                        }
+                    }
+                }
+            }
+            catch (final IOException e)
+            {
+                log.info("Caught {0}, closing connection.", e.getClass().getSimpleName(), e);
+            }
+            catch (final ClassNotFoundException e)
+            {
+                log.error( "Deserialization failed reading from socket", e );
+            }
         }
     }
 
     /**
      * A Separate thread that runs when a command comes into the LateralTCPReceiver.
      */
-    private void handleConnection(final Socket socket)
+    private void handleClient(final SelectionKey key)
     {
-        try (ObjectInputStream ois =
-                new ObjectInputStreamClassLoaderAware( socket.getInputStream(), null ))
+        final SocketChannel socketChannel = (SocketChannel) key.channel();
+
+        try
         {
-            while ( true )
+            final LateralElementDescriptor<K, V> led =
+                    serializer.deSerializeFrom(socketChannel, null);
+
+            if ( led == null )
             {
-                @SuppressWarnings("unchecked") // Need to cast from Object
-                final LateralElementDescriptor<K, V> led =
-                        (LateralElementDescriptor<K, V>) ois.readObject();
+                log.debug("LateralElementDescriptor is null");
+                return;
+            }
 
-                if ( led == null )
-                {
-                    log.debug( "LateralElementDescriptor is null" );
-                    continue;
-                }
-                if ( led.requesterId == getListenerId() )
-                {
-                    log.debug( "from self" );
-                }
-                else
-                {
-                    log.debug( "receiving LateralElementDescriptor from another led = {0}",
-                            led );
+            if ( led.requesterId == getListenerId() )
+            {
+                log.debug( "from self" );
+            }
+            else
+            {
+                log.debug( "receiving LateralElementDescriptor from another led = {0}",
+                        led );
 
-                    handleElement(led, socket);
+                Serializable obj = handleElement(led);
+                if (obj != null)
+                {
+                    serializer.serializeTo(obj, socketChannel);
                 }
             }
         }
         catch (final IOException e)
         {
             log.info("Caught {0}, closing connection.", e.getClass().getSimpleName(), e);
+            try
+            {
+                socketChannel.close();
+            }
+            catch (IOException e1)
+            {
+                log.error("Error while closing connection", e );
+            }
         }
         catch (final ClassNotFoundException e)
         {
@@ -579,10 +688,10 @@ public class LateralTCPListener<K, V>
      * descriptor.
      * <p>
      * @param led the lateral element
-     * @param socket the socket
+     * @return a possible response
      * @throws IOException
      */
-    private void handleElement(final LateralElementDescriptor<K, V> led, Socket socket) throws IOException
+    private Serializable handleElement(final LateralElementDescriptor<K, V> led) throws IOException
     {
         final String cacheName = led.ce.getCacheName();
         final K key = led.ce.getKey();
@@ -598,22 +707,23 @@ public class LateralTCPListener<K, V>
                 // if a hashcode was given and filtering is on
                 // check to see if they are the same
                 // if so, then don't remove, otherwise issue a remove
-            if ( (led.valHashCode != -1) && getTcpLateralCacheAttributes().isFilterRemoveByHashCode() )
-            {
-                final ICacheElement<K, V> test = getCache( cacheName ).localGet( key );
-                if ( test != null )
+                if ( (led.valHashCode != -1) &&
+                        getTcpLateralCacheAttributes().isFilterRemoveByHashCode() )
                 {
-                    if ( test.getVal().hashCode() == led.valHashCode )
+                    final ICacheElement<K, V> test = getCache( cacheName ).localGet( key );
+                    if ( test != null )
                     {
-                        log.debug( "Filtering detected identical hashCode [{0}], "
-                                + "not issuing a remove for led {1}",
-                                led.valHashCode, led );
-                        return;
+                        if ( test.getVal().hashCode() == led.valHashCode )
+                        {
+                            log.debug( "Filtering detected identical hashCode [{0}], "
+                                    + "not issuing a remove for led {1}",
+                                    led.valHashCode, led );
+                            return null;
+                        }
+                        log.debug( "Different hashcodes, in cache [{0}] sent [{1}]",
+                                test.getVal().hashCode(), led.valHashCode );
                     }
-                    log.debug( "Different hashcodes, in cache [{0}] sent [{1}]",
-                            test.getVal().hashCode(), led.valHashCode );
                 }
-            }
                 handleRemove( cacheName, key );
                 break;
 
@@ -636,12 +746,7 @@ public class LateralTCPListener<K, V>
             default: break;
         }
 
-        if (obj != null)
-        {
-            final ObjectOutputStream oos = new ObjectOutputStream( socket.getOutputStream() );
-            oos.writeObject( obj );
-            oos.flush();
-        }
+        return obj;
     }
 
     /**
@@ -653,7 +758,7 @@ public class LateralTCPListener<K, V>
         if ( shutdown.compareAndSet(false, true) )
         {
             log.info( "Shutting down TCP Lateral receiver." );
-            pooledExecutor.shutdownNow();
+            dispose();
         }
         else
         {

@@ -18,14 +18,15 @@
  */
 package org.apache.commons.jcs3.jcache;
 
+import java.util.Collection;
+
 import javax.cache.Cache;
 import javax.cache.integration.CacheWriter;
 import javax.cache.integration.CacheWriterException;
-import java.util.Collection;
 
 public class NoWriter<K, V> implements CacheWriter<K, V>
 {
-    public static final NoWriter INSTANCE = new NoWriter();
+    public static final NoWriter<?, ?> INSTANCE = new NoWriter<>();
 
     @Override
     public void write(final Cache.Entry<? extends K, ? extends V> entry) throws CacheWriterException
@@ -42,18 +43,12 @@ public class NoWriter<K, V> implements CacheWriter<K, V>
     @Override
     public void writeAll(final Collection<Cache.Entry<? extends K, ? extends V>> entries) throws CacheWriterException
     {
-        for (final Cache.Entry<? extends K, ? extends V> entry : entries)
-        {
-            write(entry);
-        }
+        entries.forEach(this::write);
     }
 
     @Override
     public void deleteAll(final Collection<?> keys) throws CacheWriterException
     {
-        for (final Object k : keys)
-        {
-            delete(k);
-        }
+        keys.forEach(this::delete);
     }
 }

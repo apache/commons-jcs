@@ -172,8 +172,7 @@ public abstract class AbstractLRUMap<K, V>
     {
         if ( source != null )
         {
-            source.entrySet()
-                .forEach(entry -> put(entry.getKey(), entry.getValue()));
+            source.forEach((key, value) -> put(key, value));
         }
     }
 
@@ -326,7 +325,7 @@ public abstract class AbstractLRUMap<K, V>
                     if (map.remove(last.getKey()) == null)
                     {
                         log.warn("update: remove failed for key: {0}",
-                                () -> last.getKey());
+                                last::getKey);
                         verifyCache();
                     }
                     list.removeLast();
@@ -337,12 +336,12 @@ public abstract class AbstractLRUMap<K, V>
                 }
             }
 
-            log.debug( "update: After spool map size: {0}", () -> map.size() );
+            log.debug( "update: After spool map size: {0}", map::size);
             if ( map.size() != list.size() )
             {
                 log.error("update: After spool, size mismatch: map.size() = {0}, "
                         + "linked list size = {1}",
-                        () -> map.size(), () -> list.size());
+                        map::size, list::size);
             }
         }
 
@@ -379,8 +378,7 @@ public abstract class AbstractLRUMap<K, V>
         if (log.isTraceEnabled())
         {
             log.trace("dumpingMap");
-            map.entrySet().forEach(e ->
-                log.trace("dumpMap> key={0}, val={1}", e.getKey(), e.getValue().getPayload()));
+            map.forEach((key, value) -> log.trace("dumpMap> key={0}, val={1}", key, value.getPayload()));
         }
     }
 
@@ -429,7 +427,7 @@ public abstract class AbstractLRUMap<K, V>
         log.trace( "verifycache: checking linked list by value " );
         for (LRUElementDescriptor<K, V> li3 = list.getFirst(); li3 != null; li3 = (LRUElementDescriptor<K, V>) li3.next )
         {
-            if ( map.containsValue( li3 ) == false )
+            if (!map.containsValue(li3))
             {
                 log.error( "verifycache: map does not contain value : {0}", li3 );
                 dumpMap();

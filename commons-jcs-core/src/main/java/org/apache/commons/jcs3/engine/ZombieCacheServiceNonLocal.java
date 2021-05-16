@@ -262,7 +262,7 @@ public class ZombieCacheServiceNonLocal<K, V>
         extends ZombieEvent
     {
         /** The element to put */
-        ICacheElement<K, V> element;
+        final ICacheElement<K, V> element;
 
         /**
          * Set the element
@@ -283,7 +283,7 @@ public class ZombieCacheServiceNonLocal<K, V>
         extends ZombieEvent
     {
         /** The key to remove */
-        K key;
+        final K key;
 
         /**
          * Set the element

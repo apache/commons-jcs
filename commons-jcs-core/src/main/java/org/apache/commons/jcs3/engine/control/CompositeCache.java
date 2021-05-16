@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ScheduledExecutorService;
@@ -196,7 +197,7 @@ public class CompositeCache<K, V>
     public void setAuxCaches(final List<AuxiliaryCache<K, V>> auxCaches)
     {
         this.auxCaches = auxCaches.stream()
-                .filter(aux -> aux != null)
+                .filter(Objects::nonNull)
                 .collect(Collectors.toCollection(CopyOnWriteArrayList::new));
     }
 
@@ -283,7 +284,7 @@ public class CompositeCache<K, V>
             throw new IllegalArgumentException("key cannot be a GroupId " + " for a put operation");
         }
 
-        log.debug("Updating memory cache {0}", () -> cacheElement.getKey());
+        log.debug("Updating memory cache {0}", cacheElement::getKey);
 
         updateCount.incrementAndGet();
         memCache.update(cacheElement);
@@ -370,7 +371,7 @@ public class CompositeCache<K, V>
                         // Currently always multicast even if the value is
                         // unchanged, to cause the cache item to move to the front.
                         aux.update(cacheElement);
-                        log.debug("updated lateral cache for {0}", () -> cacheElement.getKey());
+                        log.debug("updated lateral cache for {0}", cacheElement::getKey);
                     }
                     break;
 
@@ -382,7 +383,7 @@ public class CompositeCache<K, V>
                         && cacheElement.getElementAttributes().getIsSpool())
                     {
                         aux.update(cacheElement);
-                        log.debug("updated disk cache for {0}", () -> cacheElement.getKey());
+                        log.debug("updated disk cache for {0}", cacheElement::getKey);
                     }
                     break;
 
@@ -436,7 +437,7 @@ public class CompositeCache<K, V>
                     }
 
                     log.debug("spoolToDisk done for: {0} on disk cache[{1}]",
-                            () -> ce.getKey(), () -> aux.getCacheName());
+                            ce::getKey, aux::getCacheName);
                 }
                 else
                 {
@@ -532,7 +533,7 @@ public class CompositeCache<K, V>
                     if (!localOnly || cacheType == CacheType.DISK_CACHE)
                     {
                         log.debug("Attempting to get from aux [{0}] which is of type: {1}",
-                                () -> aux.getCacheName(), () -> cacheType);
+                                aux::getCacheName, () -> cacheType);
 
                         try
                         {
@@ -552,7 +553,7 @@ public class CompositeCache<K, V>
                         if (isExpired(element))
                         {
                             log.debug("{0} - Aux cache[{1}] hit, but element expired.",
-                                    () -> cacheAttr.getCacheName(), () -> aux.getCacheName());
+                                    () -> cacheAttr.getCacheName(), aux::getCacheName);
 
                             // This will tell the remotes to remove the item
                             // based on the element's expiration policy. The elements attributes
@@ -564,7 +565,7 @@ public class CompositeCache<K, V>
                         else
                         {
                             log.debug("{0} - Aux cache[{1}] hit.",
-                                    () -> cacheAttr.getCacheName(), () -> aux.getCacheName());
+                                    () -> cacheAttr.getCacheName(), aux::getCacheName);
 
                             // Update counters
                             hitCountAux.incrementAndGet();
@@ -732,7 +733,7 @@ public class CompositeCache<K, V>
             if (!localOnly || cacheType == CacheType.DISK_CACHE)
             {
                 log.debug("Attempting to get from aux [{0}] which is of type: {1}",
-                        () -> aux.getCacheName(), () -> cacheType);
+                        aux::getCacheName, () -> cacheType);
 
                 try
                 {
@@ -871,7 +872,7 @@ public class CompositeCache<K, V>
             if (!localOnly || cacheType == CacheType.DISK_CACHE)
             {
                 log.debug("Attempting to get from aux [{0}] which is of type: {1}",
-                        () -> aux.getCacheName(), () -> cacheType);
+                        aux::getCacheName, () -> cacheType);
 
                 try
                 {
@@ -911,7 +912,7 @@ public class CompositeCache<K, V>
                 if (isExpired(element))
                 {
                     log.debug("{0} - Aux cache[{1}] hit, but element expired.",
-                            () -> cacheAttr.getCacheName(), () -> aux.getCacheName());
+                            () -> cacheAttr.getCacheName(), aux::getCacheName);
 
                     // This will tell the remote caches to remove the item
                     // based on the element's expiration policy. The elements attributes
@@ -921,7 +922,7 @@ public class CompositeCache<K, V>
                     return true;
                 }
                 log.debug("{0} - Aux cache[{1}] hit.",
-                        () -> cacheAttr.getCacheName(), () -> aux.getCacheName());
+                        () -> cacheAttr.getCacheName(), aux::getCacheName);
 
                 // Update counters
                 hitCountAux.incrementAndGet();
@@ -1154,7 +1155,7 @@ public class CompositeCache<K, V>
                 try
                 {
                     log.debug("Removing All keys from cacheType {0}",
-                            () -> aux.getCacheType());
+                            aux::getCacheType);
 
                     aux.removeAll();
                 }
@@ -1184,7 +1185,7 @@ public class CompositeCache<K, V>
     public void dispose(final boolean fromRemote)
     {
          // If already disposed, return immediately
-        if (alive.compareAndSet(true, false) == false)
+        if (!alive.compareAndSet(true, false))
         {
             return;
         }
@@ -1226,13 +1227,13 @@ public class CompositeCache<K, V>
                     || fromRemote && aux.getCacheType() == CacheType.REMOTE_CACHE)
                 {
                     log.info("In DISPOSE, [{0}] SKIPPING auxiliary [{1}] fromRemote [{2}]",
-                            () -> this.cacheAttr.getCacheName(), () -> aux.getCacheName(),
+                            () -> this.cacheAttr.getCacheName(), aux::getCacheName,
                             () -> fromRemote);
                     continue;
                 }
 
                 log.info("In DISPOSE, [{0}] auxiliary [{1}]",
-                        () -> this.cacheAttr.getCacheName(), () -> aux.getCacheName());
+                        () -> this.cacheAttr.getCacheName(), aux::getCacheName);
 
                 // IT USED TO BE THE CASE THAT (If the auxiliary is not a lateral, or the cache
                 // attributes
@@ -1247,7 +1248,7 @@ public class CompositeCache<K, V>
 
                     log.info("In DISPOSE, [{0}] put {1} into auxiliary [{2}]",
                             () -> this.cacheAttr.getCacheName(), () -> numToFree,
-                            () -> aux.getCacheName());
+                            aux::getCacheName);
                 }
 
                 // Dispose of the auxiliary
@@ -1502,7 +1503,7 @@ public class CompositeCache<K, V>
 
                 if (maxLifeSeconds != -1 && (timestamp - createTime) > (maxLifeSeconds * timeFactorForMilliseconds))
                 {
-                    log.debug("Exceeded maxLife: {0}", () -> element.getKey());
+                    log.debug("Exceeded maxLife: {0}", element::getKey);
 
                     handleElementEvent(element, eventMaxlife);
                     return true;
@@ -1516,7 +1517,7 @@ public class CompositeCache<K, V>
                 // you will need to set the idle time to -1.
                 if (idleTime != -1 && timestamp - lastAccessTime > idleTime * timeFactorForMilliseconds)
                 {
-                    log.debug("Exceeded maxIdle: {0}", () -> element.getKey());
+                    log.debug("Exceeded maxIdle: {0}", element::getKey);
 
                     handleElementEvent(element, eventIdle);
                     return true;
@@ -1583,7 +1584,8 @@ public class CompositeCache<K, V>
                 final Class<?> c = Class.forName(cattr.getMemoryCacheName());
                 @SuppressWarnings("unchecked") // Need cast
                 final
-                IMemoryCache<K, V> newInstance = (IMemoryCache<K, V>) c.newInstance();
+                IMemoryCache<K, V> newInstance =
+                    (IMemoryCache<K, V>) c.getDeclaredConstructor().newInstance();
                 memCache = newInstance;
                 memCache.initialize(this);
             }

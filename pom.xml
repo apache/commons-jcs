@@ -330,7 +330,7 @@
       <dependency>
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
-        <version>4.13.1</version>
+        <version>4.13.2</version>
         <scope>test</scope>
         <exclusions>
           <exclusion>
@@ -404,7 +404,7 @@
       <dependency>
         <groupId>org.apache.openwebbeans</groupId>
         <artifactId>openwebbeans-impl</artifactId>
-        <version>1.6.1</version>
+        <version>1.7.6</version>
         <scope>test</scope>
       </dependency>
 
@@ -517,6 +517,24 @@
         </plugins>
       </build>
     </profile>
+    <profile>
+      <id>javaNinePlus</id>
+      <activation>
+        <jdk>[9,)</jdk>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+              <argLine>--add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.util=ALL-UNNAMED</argLine>
+            </configuration>
+          </plugin>
+
+        </plugins>
+      </build>
+    </profile>
   </profiles>
 
   <properties>
@@ -547,8 +565,7 @@
 
     <jsr107.api.version>1.0.1</jsr107.api.version>
     <commons.collections.version>4.4</commons.collections.version>
-    <commons.lang.version>3.12.0</commons.lang.version>
-    <commons.clirr.version>2.8</commons.clirr.version>
+    <commons.text.version>1.9</commons.text.version>
     <commons.assembly-plugin.version>3.3.0</commons.assembly-plugin.version>
 
     <test.type>Unit</test.type>
