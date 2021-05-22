@@ -58,8 +58,8 @@ import org.apache.commons.jcs3.log.LogManager;
  *        JCSWorkerHelper helper = new AbstractJCSWorkerHelper(){
  *          public Object doWork(){
  *            // Do some (DB?) work here which results in a list
- *            // This only happens if the cache dosn't have a item in this region for aKey
- *            // Note this is especially useful with Hibernate, which will cache indiviual
+ *            // This only happens if the cache doesn't have a item in this region for aKey
+ *            // Note this is especially useful with Hibernate, which will cache individual
  *            // Objects, but not entire query result sets.
  *            List results = query.list();
  *            // Whatever we return here get's cached with aKey, and future calls to
@@ -246,7 +246,7 @@ public class JCSWorker<K, V>
             {
                 result = cache.get( aKey );
             }
-            // If the cache dosn't have it, do the work.
+            // If the cache doesn't have it, do the work.
             if ( result == null )
             {
                 result = aHelper.doWork();

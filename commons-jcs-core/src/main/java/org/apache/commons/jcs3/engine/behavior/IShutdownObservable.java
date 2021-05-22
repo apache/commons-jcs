@@ -46,7 +46,7 @@ public interface IShutdownObservable
     void registerShutdownObserver( IShutdownObserver observer );
 
     /**
-     * Deregisters the observer with the observable.
+     * Deregister the observer with the observable.
      *
      * @param observer
      */

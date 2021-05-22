@@ -26,7 +26,7 @@ import org.apache.commons.jcs3.log.LogManager;
 
 /**
  * This class hands out event Queues. This allows us to change the implementation more easily. You
- * can confugure the cache to use a custom type.
+ * can configure the cache to use a custom type.
  * <p>
  * @author aaronsm
  */

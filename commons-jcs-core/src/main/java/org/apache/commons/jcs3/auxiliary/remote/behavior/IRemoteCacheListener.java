@@ -72,7 +72,7 @@ public interface IRemoteCacheListener<K, V>
         throws IOException;
 
     /**
-     * Deregisters itself.
+     * Deregistered itself.
      * <p>
      * @throws IOException
      */

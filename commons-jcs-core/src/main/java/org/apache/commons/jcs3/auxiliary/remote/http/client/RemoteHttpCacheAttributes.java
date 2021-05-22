@@ -28,7 +28,7 @@ public class RemoteHttpCacheAttributes
     /** Don't change. */
     private static final long serialVersionUID = -5944327125140505212L;
 
-    /** http verison to use. */
+    /** http version to use. */
     private static final String DEFAULT_HTTP_VERSION = "1.1";
 
     /** The max connections allowed per host */
@@ -40,7 +40,7 @@ public class RemoteHttpCacheAttributes
     /** The socket connections timeout */
     private int connectionTimeoutMillis = 5000;
 
-    /** http verison to use. */
+    /** http version to use. */
     private String httpVersion = DEFAULT_HTTP_VERSION;
 
     /** The cache name will be included on the parameters */
