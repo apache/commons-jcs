@@ -205,7 +205,7 @@ public class CDIJCacheHelper
                 list.add(i);
             }
         }
-        return list.toArray(new Integer[list.size()]);
+        return list.toArray(new Integer[0]);
     }
 
     private Integer getValueParameter(final List<Set<Annotation>> annotations)
@@ -435,7 +435,7 @@ public class CDIJCacheHelper
                 }
             }
         }
-        return keys.toArray(new Integer[keys.size()]);
+        return keys.toArray(new Integer[0]);
     }
 
     private static final class MethodKey

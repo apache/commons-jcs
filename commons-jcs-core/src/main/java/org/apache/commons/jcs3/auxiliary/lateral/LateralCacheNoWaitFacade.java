@@ -109,7 +109,7 @@ public class LateralCacheNoWaitFacade<K, V>
     {
         log.debug( "CONSTRUCTING NO WAIT FACADE" );
         this.listener = listener;
-        this.noWaits = noWaits.toArray(new LateralCacheNoWait[noWaits.size()]);
+        this.noWaits = noWaits.toArray(new LateralCacheNoWait[0]);
         this.noWaitMap = new ConcurrentHashMap<>();
         noWaits.forEach(noWait -> noWaitMap.put(noWait.getIdentityKey(), noWait));
         this.cacheName = cattr.getCacheName();
