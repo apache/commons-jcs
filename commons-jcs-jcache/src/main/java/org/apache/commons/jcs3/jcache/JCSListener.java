@@ -35,9 +35,7 @@ import javax.cache.event.CacheEntryUpdatedListener;
 
 public class JCSListener<K, V> implements Closeable
 {
-//    private final boolean oldValue;
-//    private final boolean synchronous;
-    private final CacheEntryEventFilter<? super K, ? super V> filter;
+private final CacheEntryEventFilter<? super K, ? super V> filter;
     private final CacheEntryListener<? super K, ? super V> delegate;
     private final boolean remove;
     private final boolean expire;
@@ -46,8 +44,6 @@ public class JCSListener<K, V> implements Closeable
 
     public JCSListener(final CacheEntryListenerConfiguration<K, V> cacheEntryListenerConfiguration)
     {
-//        oldValue = cacheEntryListenerConfiguration.isOldValueRequired();
-//        synchronous = cacheEntryListenerConfiguration.isSynchronous();
 
         final Factory<CacheEntryEventFilter<? super K, ? super V>> filterFactory = cacheEntryListenerConfiguration
                 .getCacheEntryEventFilterFactory();

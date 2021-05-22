@@ -496,11 +496,6 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
 
         elems.add(new StatElement<>( "Remote Type", this.getRemoteCacheAttributes().getRemoteTypeName() ) );
 
-//      if ( this.getRemoteCacheAttributes().getRemoteType() == RemoteType.CLUSTER )
-//      {
-//          // something cluster specific
-//      }
-
         elems.add(new StatElement<>( "UsePoolForGet", Boolean.valueOf(usePoolForGet) ) );
 
         if ( pool != null )

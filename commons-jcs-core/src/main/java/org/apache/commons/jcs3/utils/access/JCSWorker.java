@@ -206,8 +206,6 @@ public class JCSWorker<K, V>
         throws Exception
     {
         V result = null;
-        // long start = 0;
-        // long dbTime = 0;
         final JCSWorkerHelper<V> helper = map.putIfAbsent(getRegion() + aKey, aHelper);
 
         if ( helper != null )

@@ -62,13 +62,6 @@ public class RemoteUtils
     {
         Registry registry = null;
 
-        // if ( log.isInfoEnabled() )
-        // {
-        // log.info( "createRegistry> Setting security manager" );
-        // }
-        //
-        // System.setSecurityManager( new RMISecurityManager() );
-
         if (port < 1024)
         {
             log.warn("createRegistry> Port chosen was less than 1024, will use default [{0}] instead.",

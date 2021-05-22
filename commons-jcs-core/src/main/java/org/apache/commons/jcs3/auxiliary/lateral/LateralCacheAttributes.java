@@ -276,11 +276,6 @@ public class LateralCacheAttributes
     public String toString()
     {
         final StringBuilder buf = new StringBuilder();
-        //buf.append( "cacheName=" + cacheName + "\n" );
-        //buf.append( "putOnlyMode=" + putOnlyMode + "\n" );
-        //buf.append( "transmissionTypeName=" + transmissionTypeName + "\n" );
-        //buf.append( "transmissionType=" + transmissionType + "\n" );
-        //buf.append( "tcpServer=" + tcpServer + "\n" );
         buf.append( transmissionType.toString() + httpServer + udpMulticastAddr + String.valueOf( udpMulticastPort ) );
         return buf.toString();
     }

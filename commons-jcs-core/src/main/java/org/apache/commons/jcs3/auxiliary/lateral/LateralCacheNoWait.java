@@ -96,8 +96,6 @@ public class LateralCacheNoWait<K, V>
         // since there may
         // be more than one per cache? alternative is to have the cache
         // perform updates using a different method that specifies the listener
-        // this.q = new CacheEventQueue(new CacheAdaptor(this),
-        // LateralCacheInfo.listenerId, cache.getCacheName());
         if ( cache.getStatus() == CacheStatus.ERROR )
         {
             eventQueue.destroy();

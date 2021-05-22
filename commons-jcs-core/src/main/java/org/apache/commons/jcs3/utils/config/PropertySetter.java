@@ -120,8 +120,6 @@ public class PropertySetter
                 // ignore key if it contains dots after the prefix
                 if ( key.indexOf( '.', len + 1 ) > 0 )
                 {
-                    //System.err.println("----------Ignoring---["+key
-                    //	     +"], prefix=["+prefix+"].");
                     continue;
                 }
 
