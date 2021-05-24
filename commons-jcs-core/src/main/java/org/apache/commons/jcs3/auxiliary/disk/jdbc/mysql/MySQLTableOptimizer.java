@@ -55,7 +55,7 @@ public class MySQLTableOptimizer
     private final TableState tableState;
 
     /**
-     * This constructs an optimizer with the disk cacn properties.
+     * This constructs an optimizer with the disk can properties.
      * <p>
      * @param attributes
      * @param tableState We mark the table status as optimizing when this is happening.

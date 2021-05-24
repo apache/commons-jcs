@@ -338,7 +338,7 @@ public class LateralCacheNoWait<K, V>
     }
 
     /**
-     * Returns the asyn cache status. An error status indicates either the lateral connection is not
+     * Returns the async cache status. An error status indicates either the lateral connection is not
      * available, or the asyn queue has been unexpectedly destroyed. No lateral invocation.
      * <p>
      * @return The status value

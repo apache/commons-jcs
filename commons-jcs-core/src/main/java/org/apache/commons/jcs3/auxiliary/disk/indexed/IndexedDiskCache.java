@@ -114,7 +114,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
     /** list where puts made during optimization are made */
     private final ConcurrentSkipListSet<IndexedDiskElementDescriptor> queuedPutList;
 
-    /** RECYLCE BIN -- array of empty spots */
+    /** RECYCLE BIN -- array of empty spots */
     private final ConcurrentSkipListSet<IndexedDiskElementDescriptor> recycle;
 
     /** User configurable parameters */
@@ -228,7 +228,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
 
         if (cattr.isClearDiskOnStartup())
         {
-            log.info("{0}: ClearDiskOnStartup is set to true.  Ingnoring any persisted data.",
+            log.info("{0}: ClearDiskOnStartup is set to true. Ignoring any persisted data.",
                     logCacheName);
             initializeEmptyStore();
         }
@@ -848,7 +848,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
     }
 
     /**
-     * Remove all the items from the disk cache by reseting everything.
+     * Remove all the items from the disk cache by resetting everything.
      */
     @Override
     public void processRemoveAll()

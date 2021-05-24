@@ -94,7 +94,7 @@ public class UDPDiscoveryManager
      * @param discoveryPort
      * @param serviceAddress
      * @param servicePort
-     * @param udpTTL
+     * @param updTTL
      * @param cacheMgr
      * @param serializer
      *
