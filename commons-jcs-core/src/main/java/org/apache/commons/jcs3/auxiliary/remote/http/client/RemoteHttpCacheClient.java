@@ -281,7 +281,7 @@ public class RemoteHttpCacheClient<K, V>
     }
 
     /**
-     * Remove all keys from the sepcified cache.
+     * Remove all keys from the specified cache.
      * <p>
      * @param cacheName
      * @param requesterId

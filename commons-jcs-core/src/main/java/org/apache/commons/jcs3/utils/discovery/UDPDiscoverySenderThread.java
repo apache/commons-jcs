@@ -139,7 +139,7 @@ public class UDPDiscoverySenderThread
         {
             sender.removeBroadcast( attributes.getServiceAddress(), attributes.getServicePort(), cacheNames );
 
-            log.debug( "Called sender to issue a remove broadcast in shudown." );
+            log.debug( "Called sender to issue a remove broadcast in shutdown." );
         }
         catch ( final IOException e )
         {
