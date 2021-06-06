@@ -39,7 +39,6 @@ import org.apache.commons.jcs3.auxiliary.disk.AbstractDiskCache;
 import org.apache.commons.jcs3.auxiliary.disk.jdbc.dsfactory.DataSourceFactory;
 import org.apache.commons.jcs3.engine.behavior.ICache;
 import org.apache.commons.jcs3.engine.behavior.ICacheElement;
-import org.apache.commons.jcs3.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs3.engine.logging.behavior.ICacheEvent;
 import org.apache.commons.jcs3.engine.logging.behavior.ICacheEventLogger;
 import org.apache.commons.jcs3.engine.stats.StatElement;
@@ -47,7 +46,6 @@ import org.apache.commons.jcs3.engine.stats.behavior.IStatElement;
 import org.apache.commons.jcs3.engine.stats.behavior.IStats;
 import org.apache.commons.jcs3.log.Log;
 import org.apache.commons.jcs3.log.LogManager;
-import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
 
 /**
  * This is the jdbc disk cache plugin.
@@ -84,9 +82,6 @@ public class JDBCDiskCache<K, V>
 {
     /** The local logger. */
     private static final Log log = LogManager.getLog( JDBCDiskCache.class );
-
-    /** custom serialization */
-    private IElementSerializer elementSerializer = new StandardSerializer();
 
     /** configuration */
     private JDBCDiskCacheAttributes jdbcDiskCacheAttributes;
@@ -698,24 +693,6 @@ public class JDBCDiskCache<K, V>
     {
         throw new UnsupportedOperationException( "Groups not implemented." );
         // return null;
-    }
-
-    /**
-     * @param elementSerializer The elementSerializer to set.
-     */
-    @Override
-    public void setElementSerializer( final IElementSerializer elementSerializer )
-    {
-        this.elementSerializer = elementSerializer;
-    }
-
-    /**
-     * @return Returns the elementSerializer.
-     */
-    @Override
-    public IElementSerializer getElementSerializer()
-    {
-        return elementSerializer;
     }
 
     /**
