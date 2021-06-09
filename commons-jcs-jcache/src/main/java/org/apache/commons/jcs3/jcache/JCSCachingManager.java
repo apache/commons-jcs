@@ -189,8 +189,8 @@ public class JCSCachingManager implements CacheManager
         assertNotClosed();
         assertNotNull(cacheName, "cacheName");
         assertNotNull(configuration, "configuration");
-        final Class<?> keyType = configuration == null ? Object.class : configuration.getKeyType();
-        final Class<?> valueType = configuration == null ? Object.class : configuration.getValueType();
+        final Class<?> keyType = configuration.getKeyType();
+        final Class<?> valueType = configuration.getValueType();
         if (caches.containsKey(cacheName)) {
             throw new javax.cache.CacheException("cache " + cacheName + " already exists");
         }

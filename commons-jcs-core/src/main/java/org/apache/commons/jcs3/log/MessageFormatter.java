@@ -68,7 +68,7 @@ public class MessageFormatter
                             .map(Supplier::get)
                             .toArray();
 
-        final int length = parameters == null ? 0 : parameters.length;
+        final int length = parameters.length;
         if (length > 0 && parameters[length - 1] instanceof Throwable)
         {
             this.throwable = (Throwable) parameters[length - 1];

@@ -232,12 +232,9 @@ public class RemoteCacheStartupServlet
         try
         {
             props = RemoteUtils.loadProps(propsFileName);
-            if (props != null)
-            {
-                registryHost = props.getProperty("registry.host", registryHost);
-                final String portS = props.getProperty("registry.port", String.valueOf(registryPort));
-                setRegistryPort(portS);
-            }
+            registryHost = props.getProperty("registry.host", registryHost);
+            final String portS = props.getProperty("registry.port", String.valueOf(registryPort));
+            setRegistryPort(portS);
         }
         catch (final IOException e)
         {
