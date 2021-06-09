@@ -50,7 +50,7 @@ public class CacheResolverFactoryImpl implements CacheResolverFactory
     public CacheResolver getExceptionCacheResolver(final CacheMethodDetails<CacheResult> cacheMethodDetails)
     {
         final String exceptionCacheName = cacheMethodDetails.getCacheAnnotation().exceptionCacheName();
-        if (exceptionCacheName == null || exceptionCacheName.isEmpty())
+        if (exceptionCacheName.isEmpty())
         {
             throw new IllegalArgumentException("CacheResult.exceptionCacheName() not specified");
         }

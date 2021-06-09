@@ -596,7 +596,7 @@ public class BlockDiskKeyStore<K>
         }
         boolean ok = true;
         if (!log.isTraceEnabled()) {
-            return ok;
+            return true;
         }
         for (final Entry<Integer, Set<K>> e : blockAllocationMap.entrySet())
         {

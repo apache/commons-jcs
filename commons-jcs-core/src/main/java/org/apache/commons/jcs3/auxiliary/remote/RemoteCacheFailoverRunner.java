@@ -118,8 +118,7 @@ public class RemoteCacheFailoverRunner<K, V> extends AbstractAuxiliaryCacheMonit
             {
                 log.info( "Failover index is <= 0, meaning we are not connected to a failover server." );
             }
-            else if ( failoverIndex > 0 )
-            {
+            else {
                 log.info( "Failover index is > 0, meaning we are connected to a failover server." );
             }
             // log if we are allright or not.
@@ -339,8 +338,7 @@ public class RemoteCacheFailoverRunner<K, V> extends AbstractAuxiliaryCacheMonit
                                 return true;
                             }
                         }
-                        else if ( fidx < 0 )
-                        {
+                        else {
                             // this should never happen
                             log.warn( "Failover index is less than 0, this shouldn't happen" );
                         }

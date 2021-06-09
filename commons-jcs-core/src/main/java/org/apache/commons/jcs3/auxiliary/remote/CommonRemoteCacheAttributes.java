@@ -82,11 +82,7 @@ public class CommonRemoteCacheAttributes
     @Override
     public void setRemoteTypeName( final String s )
     {
-        final RemoteType rt = RemoteType.valueOf(s);
-        if (rt != null)
-        {
-            this.remoteType = rt;
-        }
+        this.remoteType = RemoteType.valueOf(s);
     }
 
     /**

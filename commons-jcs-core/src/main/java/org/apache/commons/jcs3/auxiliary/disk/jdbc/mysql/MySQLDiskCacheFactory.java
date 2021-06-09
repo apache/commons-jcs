@@ -102,11 +102,8 @@ public class MySQLDiskCacheFactory
                 try
                 {
                     final Date[] dates = ScheduleParser.createDatesForSchedule( attributes.getOptimizationSchedule() );
-                    if ( dates != null )
-                    {
-                        for (final Date date : dates) {
-                            this.scheduleOptimization( date, optimizer );
-                        }
+                    for (final Date date : dates) {
+                        this.scheduleOptimization( date, optimizer );
                     }
                 }
                 catch ( final ParseException e )
