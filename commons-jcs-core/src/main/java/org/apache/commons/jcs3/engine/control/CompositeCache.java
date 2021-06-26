@@ -141,12 +141,12 @@ public class CompositeCache<K, V>
         this.attr = attr;
         this.cacheAttr = cattr;
         this.alive = new AtomicBoolean(true);
-        this.updateCount = new AtomicLong(0);
-        this.removeCount = new AtomicLong(0);
-        this.hitCountRam = new AtomicLong(0);
-        this.hitCountAux = new AtomicLong(0);
-        this.missCountNotFound = new AtomicLong(0);
-        this.missCountExpired = new AtomicLong(0);
+        this.updateCount = new AtomicLong();
+        this.removeCount = new AtomicLong();
+        this.hitCountRam = new AtomicLong();
+        this.hitCountAux = new AtomicLong();
+        this.missCountNotFound = new AtomicLong();
+        this.missCountExpired = new AtomicLong();
 
         createMemoryCache(cattr);
 

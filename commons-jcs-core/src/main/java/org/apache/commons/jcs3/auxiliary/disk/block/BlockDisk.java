@@ -73,10 +73,10 @@ public class BlockDisk implements AutoCloseable
     private final FileChannel fc;
 
     /** How many bytes have we put to disk */
-    private final AtomicLong putBytes = new AtomicLong(0);
+    private final AtomicLong putBytes = new AtomicLong();
 
     /** How many items have we put to disk */
-    private final AtomicLong putCount = new AtomicLong(0);
+    private final AtomicLong putCount = new AtomicLong();
 
     /**
      * Constructor for the Disk object

@@ -86,9 +86,9 @@ public abstract class AbstractMemoryCache<K, V>
     @Override
     public void initialize( final CompositeCache<K, V> hub )
     {
-        hitCnt = new AtomicLong(0);
-        missCnt = new AtomicLong(0);
-        putCnt = new AtomicLong(0);
+        hitCnt = new AtomicLong();
+        missCnt = new AtomicLong();
+        putCnt = new AtomicLong();
 
         this.cacheAttributes = hub.getCacheAttributes();
         this.chunkSize = cacheAttributes.getSpoolChunkSize();
