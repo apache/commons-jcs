@@ -18,9 +18,9 @@ package org.apache.commons.jcs3.log;
  */
 
 import java.text.MessageFormat;
-import java.util.Arrays;
 import java.util.IllegalFormatException;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 /**
  * Handles messages that consist of a format string conforming to
@@ -64,7 +64,7 @@ public class MessageFormatter
     public MessageFormatter(final String messagePattern, final Supplier<?>... paramSuppliers)
     {
         this.messagePattern = messagePattern;
-        this.parameters = Arrays.stream(paramSuppliers)
+        this.parameters = Stream.of(paramSuppliers)
                             .map(Supplier::get)
                             .toArray();
 

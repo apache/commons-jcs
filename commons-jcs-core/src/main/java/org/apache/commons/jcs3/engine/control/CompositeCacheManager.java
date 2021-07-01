@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.management.ManagementFactory;
 import java.security.AccessControlException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
@@ -35,6 +34,7 @@ import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
@@ -831,7 +831,7 @@ public class CompositeCacheManager
 
         // force the array elements into a string.
         final StringBuilder buf = new StringBuilder();
-        Arrays.stream(stats).forEach(stat -> {
+        Stream.of(stats).forEach(stat -> {
             buf.append( "\n---------------------------\n" );
             buf.append( stat );
         });
