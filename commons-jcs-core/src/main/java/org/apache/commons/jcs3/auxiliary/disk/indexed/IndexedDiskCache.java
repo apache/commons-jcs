@@ -733,11 +733,6 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
             storageLock.writeLock().unlock();
         }
 
-        if (reset)
-        {
-            reset();
-        }
-
         // this increments the remove count.
         // there is no reason to call this if an item was not removed.
         if (removed)

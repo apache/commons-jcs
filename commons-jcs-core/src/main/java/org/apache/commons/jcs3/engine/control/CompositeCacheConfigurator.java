@@ -243,7 +243,7 @@ public class CompositeCacheConfigurator
             while ( st.hasMoreTokens() )
             {
                 auxName = st.nextToken().trim();
-                if ( auxName == null || auxName.equals( "," ) )
+                if (auxName.equals( "," ))
                 {
                     continue;
                 }

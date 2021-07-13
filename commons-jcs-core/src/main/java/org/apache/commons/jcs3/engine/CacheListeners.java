@@ -58,22 +58,12 @@ public class CacheListeners<K, V>
     {
         final StringBuilder buffer = new StringBuilder();
         buffer.append( "\n CacheListeners" );
-        if ( cache != null )
-        {
-            buffer.append( "\n Region = " + cache.getCacheName() );
-        }
-        if ( eventQMap != null )
-        {
-            buffer.append( "\n Event Queue Map " );
-            buffer.append( "\n size = " + eventQMap.size() );
-            eventQMap.forEach((key, value)
-                    -> buffer.append( "\n Entry: key: ").append(key)
-                        .append(", value: ").append(value));
-        }
-        else
-        {
-            buffer.append( "\n No Listeners. " );
-        }
+        buffer.append( "\n Region = " + cache.getCacheName() );
+        buffer.append( "\n Event Queue Map " );
+        buffer.append( "\n size = " + eventQMap.size() );
+        eventQMap.forEach((key, value)
+                -> buffer.append( "\n Entry: key: ").append(key)
+                    .append(", value: ").append(value));
         return buffer.toString();
     }
 }
