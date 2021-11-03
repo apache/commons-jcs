@@ -253,17 +253,14 @@ public class OptionConverter
             multiplier = 1024 * 1024 * 1024;
             s = s.substring( 0, index );
         }
-        if ( s != null )
+        try
         {
-            try
-            {
-                return Long.parseLong(s) * multiplier;
-            }
-            catch ( final NumberFormatException e )
-            {
-                log.error( "[{0}] is not in proper int form.", s);
-                log.error( "[{0}] not in expected format", value, e );
-            }
+            return Long.parseLong(s) * multiplier;
+        }
+        catch ( final NumberFormatException e )
+        {
+            log.error( "[{0}] is not in proper int form.", s);
+            log.error( "[{0}] not in expected format", value, e );
         }
         return defaultValue;
     }

@@ -121,7 +121,7 @@ public class RemoteUtils
         InputStream is = RemoteUtils.class.getResourceAsStream(propFile);
 
         // Try root of class path
-        if ((null == is) && (propFile != null && !propFile.startsWith("/")))
+        if (null == is && !propFile.startsWith("/"))
         {
             is = RemoteUtils.class.getResourceAsStream("/" + propFile);
         }
