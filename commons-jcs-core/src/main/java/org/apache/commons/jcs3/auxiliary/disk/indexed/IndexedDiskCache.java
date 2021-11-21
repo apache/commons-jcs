@@ -709,7 +709,6 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
             return false;
         }
 
-        final boolean reset = false;
         boolean removed = false;
         try
         {
