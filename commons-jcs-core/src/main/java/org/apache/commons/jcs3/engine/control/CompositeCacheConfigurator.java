@@ -243,7 +243,7 @@ public class CompositeCacheConfigurator
             while ( st.hasMoreTokens() )
             {
                 auxName = st.nextToken().trim();
-                if ( auxName == null || auxName.equals( "," ) )
+                if (auxName.equals( "," ))
                 {
                     continue;
                 }
@@ -388,7 +388,6 @@ public class CompositeCacheConfigurator
         log.debug( "parseAuxiliary {0}", auxName );
 
         // GET CACHE
-        @SuppressWarnings("unchecked") // Common map for all caches
         AuxiliaryCache<K, V> auxCache = ccm.getAuxiliaryCache(auxName, regName);
 
         if (auxCache == null)

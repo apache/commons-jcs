@@ -112,7 +112,7 @@ public class RemoteUtils
      * <p>
      *
      * @param propFile
-     * @return The properties object for the file
+     * @return The properties object for the file, never null
      * @throws IOException
      */
     public static Properties loadProps(final String propFile)
@@ -121,7 +121,7 @@ public class RemoteUtils
         InputStream is = RemoteUtils.class.getResourceAsStream(propFile);
 
         // Try root of class path
-        if ((null == is) && (propFile != null && !propFile.startsWith("/")))
+        if (null == is && !propFile.startsWith("/"))
         {
             is = RemoteUtils.class.getResourceAsStream("/" + propFile);
         }
