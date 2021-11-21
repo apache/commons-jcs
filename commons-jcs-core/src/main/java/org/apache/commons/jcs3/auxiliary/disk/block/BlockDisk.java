@@ -288,7 +288,7 @@ public class BlockDisk implements AutoCloseable
             data.flip();
         }
 
-        log.debug("read, total post combination data.length = {0}", data::limit);
+        log.debug("read, total post combination data.length = {0}", () -> data.limit());
 
         return elementSerializer.deSerialize(data.array(), null);
     }
