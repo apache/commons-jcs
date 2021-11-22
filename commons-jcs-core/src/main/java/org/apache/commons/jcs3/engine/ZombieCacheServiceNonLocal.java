@@ -69,8 +69,8 @@ public class ZombieCacheServiceNonLocal<K, V>
      */
     public ZombieCacheServiceNonLocal( final int maxQueueSize )
     {
+        this();
         this.maxQueueSize = maxQueueSize;
-        queue = new ConcurrentLinkedQueue<>();
     }
 
     /**

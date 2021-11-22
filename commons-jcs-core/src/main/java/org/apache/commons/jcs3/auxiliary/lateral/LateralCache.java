@@ -77,11 +77,13 @@ public class LateralCache<K, V>
      * Constructor for the LateralCache object
      * <p>
      * @param cattr
+     *
+     * @deprecated Causes NPE
      */
+    @Deprecated
     public LateralCache( final ILateralCacheAttributes cattr )
     {
-        this.cacheName = cattr.getCacheName();
-        this.lateralCacheAttributes = cattr;
+        this(cattr, null, null);
     }
 
     /**
@@ -240,10 +242,6 @@ public class LateralCache<K, V>
     {
         log.debug( "Disposing of lateral cache" );
 
-        ///* HELP: This section did nothing but generate compilation warnings.
-        // TODO: may limit this functionality. It is dangerous.
-        // asmuts -- Added functionality to help with warnings. I'm not getting
-        // any.
         try
         {
             lateralCacheService.dispose( this.lateralCacheAttributes.getCacheName() );

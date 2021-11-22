@@ -4,11 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.jcs3.auxiliary.lateral.LateralCache;
-import org.apache.commons.jcs3.auxiliary.lateral.LateralCacheAttributes;
 import org.apache.commons.jcs3.auxiliary.lateral.LateralCacheNoWait;
 import org.apache.commons.jcs3.auxiliary.lateral.LateralCacheNoWaitFacade;
-import org.apache.commons.jcs3.auxiliary.lateral.behavior.ILateralCacheAttributes;
 import org.apache.commons.jcs3.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttributes;
+import org.apache.commons.jcs3.engine.ZombieCacheServiceNonLocal;
 import org.apache.commons.jcs3.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs3.engine.control.CompositeCacheManager;
 import org.apache.commons.jcs3.engine.logging.MockCacheEventLogger;
@@ -70,6 +69,24 @@ public class LateralTCPDiscoveryListenerUnitTest
                 cacheEventLogger, elementSerializer );
     }
 
+    private LateralCacheNoWaitFacade<String, String> setupFacade(final String cacheName)
+    {
+        List<LateralCacheNoWait<String, String>> noWaits = new ArrayList<>();
+        final ITCPLateralCacheAttributes cattr = new TCPLateralCacheAttributes();
+        cattr.setCacheName( cacheName );
+
+        return new LateralCacheNoWaitFacade<>( null, noWaits, cattr );
+    }
+
+    private LateralCacheNoWait<String, String> setupNoWait(final String cacheName)
+    {
+        final ITCPLateralCacheAttributes cattr = new TCPLateralCacheAttributes();
+        cattr.setCacheName( cacheName );
+
+        final LateralCache<String, String> cache = new LateralCache<>(cattr, new ZombieCacheServiceNonLocal<>(), null);
+        return new LateralCacheNoWait<>( cache );
+    }
+
     /**
      * Add a no wait facade.
      */
@@ -77,12 +94,7 @@ public class LateralTCPDiscoveryListenerUnitTest
     {
         // SETUP
         final String cacheName = "testAddNoWaitFacade_NotInList";
-
-        List<LateralCacheNoWait<String, String>> noWaits = new ArrayList<>();
-        final ILateralCacheAttributes cattr = new LateralCacheAttributes();
-        cattr.setCacheName( cacheName );
-
-        final LateralCacheNoWaitFacade<String, String> facade = new LateralCacheNoWaitFacade<>( null, noWaits, cattr );
+        final LateralCacheNoWaitFacade<String, String> facade = setupFacade(cacheName);
 
         // DO WORK
         listener.addNoWaitFacade( cacheName, facade );
@@ -98,16 +110,10 @@ public class LateralTCPDiscoveryListenerUnitTest
     {
         // SETUP
         final String cacheName = "testAddNoWaitFacade_FacadeInList";
-
-        List<LateralCacheNoWait<String, String>> noWaits = new ArrayList<>();
-        final ILateralCacheAttributes cattr = new LateralCacheAttributes();
-        cattr.setCacheName( cacheName );
-
-        final LateralCacheNoWaitFacade<String, String> facade = new LateralCacheNoWaitFacade<>( null, noWaits, cattr );
+        final LateralCacheNoWaitFacade<String, String> facade = setupFacade(cacheName);
         listener.addNoWaitFacade( cacheName, facade );
 
-        final LateralCache<String, String> cache = new LateralCache<>( cattr );
-        final LateralCacheNoWait<String, String> noWait = new LateralCacheNoWait<>( cache );
+        final LateralCacheNoWait<String, String> noWait = setupNoWait(cacheName);
 
         // DO WORK
         final boolean result = listener.addNoWait( noWait );
@@ -123,11 +129,7 @@ public class LateralTCPDiscoveryListenerUnitTest
     {
         // SETUP
         final String cacheName = "testAddNoWaitFacade_FacadeInList";
-        final ILateralCacheAttributes cattr = new LateralCacheAttributes();
-        cattr.setCacheName( cacheName );
-
-        final LateralCache<String, String> cache = new LateralCache<>( cattr );
-        final LateralCacheNoWait<String, String> noWait = new LateralCacheNoWait<>( cache );
+        final LateralCacheNoWait<String, String> noWait = setupNoWait(cacheName);
 
         // DO WORK
         final boolean result = listener.addNoWait( noWait );
@@ -143,11 +145,7 @@ public class LateralTCPDiscoveryListenerUnitTest
     {
         // SETUP
         final String cacheName = "testRemoveNoWaitFacade_FacadeNotInList";
-        final ILateralCacheAttributes cattr = new LateralCacheAttributes();
-        cattr.setCacheName( cacheName );
-
-        final LateralCache<String, String> cache = new LateralCache<>( cattr );
-        final LateralCacheNoWait<String, String> noWait = new LateralCacheNoWait<>( cache );
+        final LateralCacheNoWait<String, String> noWait = setupNoWait(cacheName);
 
         // DO WORK
         final boolean result = listener.removeNoWait( noWait );
@@ -163,16 +161,10 @@ public class LateralTCPDiscoveryListenerUnitTest
     {
         // SETUP
         final String cacheName = "testAddNoWaitFacade_FacadeInList";
-
-        List<LateralCacheNoWait<String, String>> noWaits = new ArrayList<>();
-        final ILateralCacheAttributes cattr = new LateralCacheAttributes();
-        cattr.setCacheName( cacheName );
-
-        final LateralCacheNoWaitFacade<String, String> facade = new LateralCacheNoWaitFacade<>( null, noWaits, cattr );
+        final LateralCacheNoWaitFacade<String, String> facade = setupFacade(cacheName);
         listener.addNoWaitFacade( cacheName, facade );
 
-        final LateralCache<String, String> cache = new LateralCache<>( cattr );
-        final LateralCacheNoWait<String, String> noWait = new LateralCacheNoWait<>( cache );
+        final LateralCacheNoWait<String, String> noWait = setupNoWait(cacheName);
 
         // DO WORK
         final boolean result = listener.removeNoWait( noWait );
@@ -188,16 +180,10 @@ public class LateralTCPDiscoveryListenerUnitTest
     {
         // SETUP
         final String cacheName = "testRemoveNoWaitFacade_FacadeInListNoWaitIs";
-
-        List<LateralCacheNoWait<String, String>> noWaits = new ArrayList<>();
-        final ILateralCacheAttributes cattr = new LateralCacheAttributes();
-        cattr.setCacheName( cacheName );
-
-        final LateralCacheNoWaitFacade<String, String> facade = new LateralCacheNoWaitFacade<>( null, noWaits, cattr );
+        final LateralCacheNoWaitFacade<String, String> facade = setupFacade(cacheName);
         listener.addNoWaitFacade( cacheName, facade );
 
-        final LateralCache<String, String> cache = new LateralCache<>( cattr );
-        final LateralCacheNoWait<String, String> noWait = new LateralCacheNoWait<>( cache );
+        final LateralCacheNoWait<String, String> noWait = setupNoWait(cacheName);
         listener.addNoWait( noWait );
 
         // DO WORK
@@ -214,7 +200,6 @@ public class LateralTCPDiscoveryListenerUnitTest
     {
         // SETUP
         final String cacheName = "testAddDiscoveredService_FacadeInList_NoWaitNot";
-
         final ArrayList<String> cacheNames = new ArrayList<>();
         cacheNames.add( cacheName );
 
@@ -232,10 +217,7 @@ public class LateralTCPDiscoveryListenerUnitTest
         cacheMgr.addAuxiliaryCache(factory.getName(), cacheName, noWait);
         cacheMgr.registryFacPut(factory);
 
-        List<LateralCacheNoWait<String, String>> noWaits = new ArrayList<>();
-        final ILateralCacheAttributes cattr = new TCPLateralCacheAttributes();
-        cattr.setCacheName( cacheName );
-        final LateralCacheNoWaitFacade<String, String> facade = new LateralCacheNoWaitFacade<>( null, noWaits, cattr );
+        final LateralCacheNoWaitFacade<String, String> facade = setupFacade(cacheName);
         listener.addNoWaitFacade( cacheName, facade );
 
         // DO WORK
@@ -270,10 +252,7 @@ public class LateralTCPDiscoveryListenerUnitTest
         cacheMgr.addAuxiliaryCache(factory.getName(), cacheName, noWait);
         cacheMgr.registryFacPut(factory);
 
-        List<LateralCacheNoWait<String, String>> noWaits = new ArrayList<>();
-        final ILateralCacheAttributes cattr = new TCPLateralCacheAttributes();
-        cattr.setCacheName( cacheName );
-        final LateralCacheNoWaitFacade<String, String> facade = new LateralCacheNoWaitFacade<>( null, noWaits, cattr );
+        final LateralCacheNoWaitFacade<String, String> facade = setupFacade(cacheName);
         listener.addNoWaitFacade( cacheName, facade );
         listener.addDiscoveredService( service );
 
