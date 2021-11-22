@@ -22,7 +22,6 @@ package org.apache.commons.jcs3.auxiliary.lateral.socket.tcp;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.Serializable;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -98,10 +97,10 @@ public class LateralTCPListener<K, V>
     private long listenerId = CacheInfo.listenerId;
 
     /** is this shut down? */
-    private AtomicBoolean shutdown;
+    private final AtomicBoolean shutdown = new AtomicBoolean();
 
     /** is this terminated? */
-    private AtomicBoolean terminated;
+    private final AtomicBoolean terminated = new AtomicBoolean();
 
     /**
      * Gets the instance attribute of the LateralCacheTCPListener class.
@@ -110,12 +109,11 @@ public class LateralTCPListener<K, V>
      * @param cacheMgr
      * @return The instance value
      */
+    @SuppressWarnings("unchecked") // Need to cast because of common map for all instances
     public static <K, V> LateralTCPListener<K, V>
         getInstance( final ITCPLateralCacheAttributes ilca, final ICompositeCacheManager cacheMgr )
     {
-        @SuppressWarnings("unchecked") // Need to cast because of common map for all instances
-        final
-        LateralTCPListener<K, V> ins = (LateralTCPListener<K, V>) instances.computeIfAbsent(
+        return (LateralTCPListener<K, V>) instances.computeIfAbsent(
                 String.valueOf( ilca.getTcpListenerPort() ),
                 k -> {
                     final LateralTCPListener<K, V> newIns = new LateralTCPListener<>( ilca );
@@ -127,8 +125,6 @@ public class LateralTCPListener<K, V>
 
                     return newIns;
                 });
-
-        return ins;
     }
 
     /**
@@ -152,8 +148,8 @@ public class LateralTCPListener<K, V>
             final int port = getTcpLateralCacheAttributes().getTcpListenerPort();
             final String host = getTcpLateralCacheAttributes().getTcpListenerHost();
 
-            terminated = new AtomicBoolean(false);
-            shutdown = new AtomicBoolean(false);
+            terminated.set(false);
+            shutdown.set(false);
 
             serializer = new StandardSerializer();
 
@@ -610,7 +606,7 @@ public class LateralTCPListener<K, V>
                         log.debug( "receiving LateralElementDescriptor from another led = {0}",
                                 led );
 
-                        Serializable obj = handleElement(led);
+                        Object obj = handleElement(led);
                         if (obj != null)
                         {
                             OutputStream os = socket.getOutputStream();
@@ -658,7 +654,7 @@ public class LateralTCPListener<K, V>
                 log.debug( "receiving LateralElementDescriptor from another led = {0}",
                         led );
 
-                Serializable obj = handleElement(led);
+                Object obj = handleElement(led);
                 if (obj != null)
                 {
                     serializer.serializeTo(obj, socketChannel);
@@ -691,11 +687,11 @@ public class LateralTCPListener<K, V>
      * @return a possible response
      * @throws IOException
      */
-    private Serializable handleElement(final LateralElementDescriptor<K, V> led) throws IOException
+    private Object handleElement(final LateralElementDescriptor<K, V> led) throws IOException
     {
         final String cacheName = led.ce.getCacheName();
         final K key = led.ce.getKey();
-        Serializable obj = null;
+        Object obj = null;
 
         switch (led.command)
         {
@@ -736,11 +732,11 @@ public class LateralTCPListener<K, V>
                 break;
 
             case GET_MATCHING:
-                obj = (Serializable) handleGetMatching( cacheName, (String) key );
+                obj = handleGetMatching( cacheName, (String) key );
                 break;
 
             case GET_KEYSET:
-                obj = (Serializable) handleGetKeySet(cacheName);
+                obj = handleGetKeySet(cacheName);
                 break;
 
             default: break;
