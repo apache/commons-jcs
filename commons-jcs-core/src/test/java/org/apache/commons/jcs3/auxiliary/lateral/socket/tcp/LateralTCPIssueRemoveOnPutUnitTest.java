@@ -129,8 +129,6 @@ public class LateralTCPIssueRemoveOnPutUnitTest
     public void runTestForRegion( final String region, final int range, final int numOps, final int testNum )
         throws Exception
     {
-        final boolean show = false;
-
         final CacheAccess<String, String> cache = JCS.getInstance( region );
 
         Thread.sleep( 100 );
@@ -169,23 +167,19 @@ public class LateralTCPIssueRemoveOnPutUnitTest
                 final ICacheElement<String, String> element = new CacheElement<>( region, key, region + ":data" + i
                     + " junk asdfffffffadfasdfasf " + kn + ":" + n );
                 service.update( element );
-                if ( show )
-                {
-                    p( "put " + key );
-                }
+                p("put " + key);
 
-                if (show && i % 100 == 0 )
+                if (i % 100 == 0)
                 {
-                    System.out.println( cache.getStats() );
+                    p(cache.getStats());
                 }
 
             }
-            p( "Finished cycle of " + numOps );
+            p("Finished cycle of " + numOps);
         }
         catch ( final Exception e )
         {
             p( e.toString() );
-            e.printStackTrace( System.out );
             throw e;
         }
 
