@@ -52,6 +52,7 @@ public class LateralElementDescriptor<K, V>
     public int valHashCode = -1;
 
     /** Constructor for the LateralElementDescriptor object */
+    @Deprecated // Not used
     public LateralElementDescriptor()
     {
     }
@@ -64,6 +65,69 @@ public class LateralElementDescriptor<K, V>
     public LateralElementDescriptor( final ICacheElement<K, V> ce )
     {
         this.ce = ce;
+    }
+
+    /**
+     * Constructor for the LateralElementDescriptor object
+     * <p>
+     * @param ce ICacheElement&lt;K, V&gt; payload
+     * @param command operation requested by the client
+     */
+    public LateralElementDescriptor( final ICacheElement<K, V> ce, LateralCommand command)
+    {
+        this(ce);
+        this.command = command;
+    }
+
+    /**
+     * Constructor for the LateralElementDescriptor object
+     * <p>
+     * @param ce ICacheElement&lt;K, V&gt; payload
+     * @param command operation requested by the client
+     * @param requesterId id of the the source of the request
+     */
+    public LateralElementDescriptor( final ICacheElement<K, V> ce, LateralCommand command, long requesterId)
+    {
+        this(ce, command);
+        this.requesterId = requesterId;
+    }
+
+    /**
+     * Return payload
+     *
+     * @return the ce
+     */
+    public ICacheElement<K, V> getPayload()
+    {
+        return ce;
+    }
+
+    /**
+     * Return id of the the source of the request
+     *
+     * @return the requesterId
+     */
+    public long getRequesterId()
+    {
+        return requesterId;
+    }
+
+    /**
+     * Return operation requested by the client
+     *
+     * @return the command
+     */
+    public LateralCommand getCommand()
+    {
+        return command;
+    }
+
+    /**
+     * @return the valHashCode
+     */
+    public int getValHashCode()
+    {
+        return valHashCode;
     }
 
     /**
