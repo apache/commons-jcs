@@ -124,19 +124,19 @@ public class LateralCache<K, V>
     {
         ICacheElement<K, V> obj = null;
 
-        if ( this.lateralCacheAttributes.getPutOnlyMode() )
+        if ( !this.lateralCacheAttributes.getPutOnlyMode() )
         {
-            return null;
+            try
+            {
+                obj = lateralCacheService.get( cacheName, key );
+            }
+            catch ( final Exception e )
+            {
+                log.error( e );
+                handleException( e, "Failed to get [" + key + "] from " + lateralCacheAttributes.getCacheName() + "@" + lateralCacheAttributes );
+            }
         }
-        try
-        {
-            obj = lateralCacheService.get( cacheName, key );
-        }
-        catch ( final Exception e )
-        {
-            log.error( e );
-            handleException( e, "Failed to get [" + key + "] from " + lateralCacheAttributes.getCacheName() + "@" + lateralCacheAttributes );
-        }
+
         return obj;
     }
 
@@ -150,20 +150,22 @@ public class LateralCache<K, V>
     protected Map<K, ICacheElement<K, V>> processGetMatching( final String pattern )
         throws IOException
     {
-        if ( this.lateralCacheAttributes.getPutOnlyMode() )
+        Map<K, ICacheElement<K, V>> map = Collections.emptyMap();
+
+        if ( !this.lateralCacheAttributes.getPutOnlyMode() )
         {
-            return Collections.emptyMap();
+            try
+            {
+                return lateralCacheService.getMatching( cacheName, pattern );
+            }
+            catch ( final IOException e )
+            {
+                log.error( e );
+                handleException( e, "Failed to getMatching [" + pattern + "] from " + lateralCacheAttributes.getCacheName() + "@" + lateralCacheAttributes );
+            }
         }
-        try
-        {
-            return lateralCacheService.getMatching( cacheName, pattern );
-        }
-        catch ( final IOException e )
-        {
-            log.error( e );
-            handleException( e, "Failed to getMatching [" + pattern + "] from " + lateralCacheAttributes.getCacheName() + "@" + lateralCacheAttributes );
-            return Collections.emptyMap();
-        }
+
+        return map;
     }
 
     /**
