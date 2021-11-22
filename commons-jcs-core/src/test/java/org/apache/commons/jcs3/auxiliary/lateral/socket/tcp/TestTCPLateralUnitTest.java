@@ -1,23 +1,5 @@
 package org.apache.commons.jcs3.auxiliary.lateral.socket.tcp;
 
-import java.io.IOException;
-import java.util.Map;
-import java.util.Set;
-
-import org.apache.commons.jcs3.JCS;
-import org.apache.commons.jcs3.auxiliary.lateral.LateralCacheAttributes;
-import org.apache.commons.jcs3.auxiliary.lateral.LateralCommand;
-import org.apache.commons.jcs3.auxiliary.lateral.LateralElementDescriptor;
-import org.apache.commons.jcs3.engine.CacheElement;
-import org.apache.commons.jcs3.engine.behavior.ICacheElement;
-import org.apache.commons.jcs3.engine.behavior.ICompositeCacheManager;
-import org.apache.commons.jcs3.engine.control.CompositeCache;
-import org.apache.commons.jcs3.engine.control.CompositeCacheManager;
-import org.apache.commons.jcs3.engine.control.MockCompositeCacheManager;
-import org.apache.commons.jcs3.engine.control.group.GroupAttrName;
-import org.apache.commons.jcs3.engine.control.group.GroupId;
-import org.apache.commons.jcs3.utils.timing.SleepUtil;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -36,6 +18,25 @@ import org.apache.commons.jcs3.utils.timing.SleepUtil;
  * specific language governing permissions and limitations
  * under the License.
  */
+
+import java.io.IOException;
+import java.util.Map;
+import java.util.Set;
+
+import org.apache.commons.jcs3.JCS;
+import org.apache.commons.jcs3.auxiliary.lateral.LateralCacheAttributes;
+import org.apache.commons.jcs3.auxiliary.lateral.LateralCommand;
+import org.apache.commons.jcs3.auxiliary.lateral.LateralElementDescriptor;
+import org.apache.commons.jcs3.engine.CacheElement;
+import org.apache.commons.jcs3.engine.behavior.ICacheElement;
+import org.apache.commons.jcs3.engine.behavior.ICompositeCacheManager;
+import org.apache.commons.jcs3.engine.control.CompositeCache;
+import org.apache.commons.jcs3.engine.control.CompositeCacheManager;
+import org.apache.commons.jcs3.engine.control.MockCompositeCacheManager;
+import org.apache.commons.jcs3.engine.control.group.GroupAttrName;
+import org.apache.commons.jcs3.engine.control.group.GroupId;
+import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
+import org.apache.commons.jcs3.utils.timing.SleepUtil;
 
 import junit.framework.TestCase;
 
@@ -81,7 +82,7 @@ public class TestTCPLateralUnitTest
         lattr2.setTransmissionType(LateralCacheAttributes.Type.TCP);
         lattr2.setTcpServer("localhost:" + serverPort);
 
-        final LateralTCPService<K, V> service = new LateralTCPService<>( lattr2 );
+        final LateralTCPService<K, V> service = new LateralTCPService<>(lattr2,  new StandardSerializer());
         service.setListenerId(listenerId);
 
         return service;
@@ -112,7 +113,7 @@ public class TestTCPLateralUnitTest
         final LateralTCPListener<String, String> listener = LateralTCPListener.getInstance( lac, cacheMgr );
 
         // send to the listener
-        final LateralTCPSender lur = new LateralTCPSender( lac );
+        final LateralTCPSender lur = new LateralTCPSender(lac,  new StandardSerializer());
 
         // DO WORK
         final int numMes = 10;

@@ -1,5 +1,14 @@
 package org.apache.commons.jcs3.auxiliary.lateral.socket.tcp;
 
+import java.util.Random;
+
+import org.apache.commons.jcs3.JCS;
+import org.apache.commons.jcs3.access.CacheAccess;
+import org.apache.commons.jcs3.auxiliary.lateral.LateralCacheAttributes;
+import org.apache.commons.jcs3.engine.CacheElement;
+import org.apache.commons.jcs3.engine.behavior.ICacheElement;
+import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -20,14 +29,6 @@ package org.apache.commons.jcs3.auxiliary.lateral.socket.tcp;
  */
 
 import junit.framework.TestCase;
-
-import java.util.Random;
-
-import org.apache.commons.jcs3.JCS;
-import org.apache.commons.jcs3.access.CacheAccess;
-import org.apache.commons.jcs3.auxiliary.lateral.LateralCacheAttributes;
-import org.apache.commons.jcs3.engine.CacheElement;
-import org.apache.commons.jcs3.engine.behavior.ICacheElement;
 
 /**
  * Tests the issue remove on put fuctionality.
@@ -98,7 +99,8 @@ public class LateralTCPIssueRemoveOnPutUnitTest
         // Using the lateral, this service will put to and remove from
         // the cache instance above.
         // The cache thinks it is different since the listenerid is different
-        final LateralTCPService<String, String> service = new LateralTCPService<>( lattr2 );
+        final LateralTCPService<String, String> service =
+                new LateralTCPService<>(lattr2,  new StandardSerializer());
         service.setListenerId( 123456 );
 
         final String keyToBeRemovedOnPut = "test1_notremoved";
@@ -127,7 +129,6 @@ public class LateralTCPIssueRemoveOnPutUnitTest
     public void runTestForRegion( final String region, final int range, final int numOps, final int testNum )
         throws Exception
     {
-
         final boolean show = false;
 
         final CacheAccess<String, String> cache = JCS.getInstance( region );
@@ -145,7 +146,8 @@ public class LateralTCPIssueRemoveOnPutUnitTest
         // Using the lateral, this service will put to and remove from
         // the cache instance above.
         // The cache thinks it is different since the listenerid is different
-        final LateralTCPService<String, String> service = new LateralTCPService<>( lattr2 );
+        final LateralTCPService<String, String> service =
+                new LateralTCPService<>( lattr2,  new StandardSerializer());
         service.setListenerId( 123456 );
 
         final String keyToBeRemovedOnPut = "test1";

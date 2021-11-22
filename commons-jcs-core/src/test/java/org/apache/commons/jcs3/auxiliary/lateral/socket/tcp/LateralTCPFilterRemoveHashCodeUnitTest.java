@@ -1,5 +1,14 @@
 package org.apache.commons.jcs3.auxiliary.lateral.socket.tcp;
 
+import java.io.Serializable;
+
+import org.apache.commons.jcs3.JCS;
+import org.apache.commons.jcs3.access.CacheAccess;
+import org.apache.commons.jcs3.auxiliary.lateral.LateralCacheAttributes;
+import org.apache.commons.jcs3.engine.CacheElement;
+import org.apache.commons.jcs3.engine.behavior.ICacheElement;
+import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -20,14 +29,6 @@ package org.apache.commons.jcs3.auxiliary.lateral.socket.tcp;
  */
 
 import junit.framework.TestCase;
-
-import java.io.Serializable;
-
-import org.apache.commons.jcs3.JCS;
-import org.apache.commons.jcs3.access.CacheAccess;
-import org.apache.commons.jcs3.auxiliary.lateral.LateralCacheAttributes;
-import org.apache.commons.jcs3.engine.CacheElement;
-import org.apache.commons.jcs3.engine.behavior.ICacheElement;
 
 /**
  * @author Aaron Smuts
@@ -101,7 +102,8 @@ public class LateralTCPFilterRemoveHashCodeUnitTest
         // this service will put and remove using the lateral to
         // the cache instance above
         // the cache thinks it is different since the listenerid is different
-        final LateralTCPService<String, Serializable> service = new LateralTCPService<>( lattr2 );
+        final LateralTCPService<String, Serializable> service =
+                new LateralTCPService<>(lattr2,  new StandardSerializer());
         service.setListenerId( 123456 );
 
         final String keyToBeRemovedOnPut = "test1";
