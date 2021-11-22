@@ -305,6 +305,7 @@ public class LateralTCPDiscoveryListener
 
                     LateralCacheNoWait<?, ?> noWait =
                             factory.createCacheNoWait(lca, cacheEventLogger, elementSerializer);
+                    factory.monitorCache(noWait);
 
                     if (addNoWait(noWait))
                     {

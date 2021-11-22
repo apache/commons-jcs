@@ -66,14 +66,29 @@ public class LateralTCPSender
      * <p>
      * @param lca
      * @throws IOException
+     * @deprecated Specify serializer
      */
+    @Deprecated
     public LateralTCPSender( final ITCPLateralCacheAttributes lca )
+        throws IOException
+    {
+        this(lca, new StandardSerializer());
+    }
+
+    /**
+     * Constructor for the LateralTCPSender object.
+     * <p>
+     * @param lca the configuration object
+     * @param serializer the serializer to use when sending
+     * @throws IOException
+     */
+    public LateralTCPSender( final ITCPLateralCacheAttributes lca, final IElementSerializer serializer )
         throws IOException
     {
         this.socketOpenTimeOut = lca.getOpenTimeOut();
         this.socketSoTimeOut = lca.getSocketTimeOut();
 
-        this.serializer = new StandardSerializer();
+        this.serializer = serializer;
 
         final String p1 = lca.getTcpServer();
         if ( p1 == null )
@@ -124,8 +139,6 @@ public class LateralTCPSender
         {
             throw new IOException( "Cannot connect to " + host + ":" + port, ioe );
         }
-
-        // socket.setSoTimeout( socketSoTimeOut );
     }
 
     /**

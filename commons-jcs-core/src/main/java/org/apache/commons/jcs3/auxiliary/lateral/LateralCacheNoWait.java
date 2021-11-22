@@ -83,6 +83,8 @@ public class LateralCacheNoWait<K, V>
     {
         this.cache = cache;
         this.identityKey = cache.getCacheName();
+        this.setCacheEventLogger(cache.getCacheEventLogger());
+        this.setElementSerializer(cache.getElementSerializer());
 
         log.debug( "Constructing LateralCacheNoWait, LateralCache = [{0}]", cache );
 

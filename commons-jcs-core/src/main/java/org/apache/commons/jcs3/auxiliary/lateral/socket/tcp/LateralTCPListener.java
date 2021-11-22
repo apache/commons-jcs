@@ -597,7 +597,7 @@ public class LateralTCPListener<K, V>
                         log.debug( "LateralElementDescriptor is null" );
                         continue;
                     }
-                    if ( led.requesterId == getListenerId() )
+                    if ( led.getRequesterId() == getListenerId() )
                     {
                         log.debug( "from self" );
                     }
@@ -645,7 +645,7 @@ public class LateralTCPListener<K, V>
                 return;
             }
 
-            if ( led.requesterId == getListenerId() )
+            if ( led.getRequesterId() == getListenerId() )
             {
                 log.debug( "from self" );
             }
@@ -689,35 +689,35 @@ public class LateralTCPListener<K, V>
      */
     private Object handleElement(final LateralElementDescriptor<K, V> led) throws IOException
     {
-        final String cacheName = led.ce.getCacheName();
-        final K key = led.ce.getKey();
+        final String cacheName = led.getPayload().getCacheName();
+        final K key = led.getPayload().getKey();
         Object obj = null;
 
-        switch (led.command)
+        switch (led.getCommand())
         {
             case UPDATE:
-                handlePut( led.ce );
+                handlePut(led.getPayload());
                 break;
 
             case REMOVE:
                 // if a hashcode was given and filtering is on
                 // check to see if they are the same
                 // if so, then don't remove, otherwise issue a remove
-                if ( (led.valHashCode != -1) &&
+                if ( (led.getValHashCode() != -1) &&
                         getTcpLateralCacheAttributes().isFilterRemoveByHashCode() )
                 {
                     final ICacheElement<K, V> test = getCache( cacheName ).localGet( key );
                     if ( test != null )
                     {
-                        if ( test.getVal().hashCode() == led.valHashCode )
+                        if ( test.getVal().hashCode() == led.getValHashCode() )
                         {
                             log.debug( "Filtering detected identical hashCode [{0}], "
                                     + "not issuing a remove for led {1}",
-                                    led.valHashCode, led );
+                                    led.getValHashCode(), led );
                             return null;
                         }
                         log.debug( "Different hashcodes, in cache [{0}] sent [{1}]",
-                                test.getVal().hashCode(), led.valHashCode );
+                                test.getVal()::hashCode, led::getValHashCode );
                     }
                 }
                 handleRemove( cacheName, key );

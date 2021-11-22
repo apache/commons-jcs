@@ -112,16 +112,19 @@ public class LateralCacheMonitor extends AbstractAuxiliaryCacheMonitor
             final String cacheName = entry.getKey();
 
             @SuppressWarnings("unchecked") // Downcast to match service
-            final
-            LateralCacheNoWait<Object, Object> c = (LateralCacheNoWait<Object, Object>) entry.getValue();
-            if ( c.getStatus() == CacheStatus.ERROR )
+            final LateralCacheNoWait<Object, Object> c =
+                (LateralCacheNoWait<Object, Object>) entry.getValue();
+
+            if (c.getStatus() == CacheStatus.ERROR)
             {
                 log.info( "Found LateralCacheNoWait in error, " + cacheName );
 
-                final ITCPLateralCacheAttributes lca = (ITCPLateralCacheAttributes)c.getAuxiliaryCacheAttributes();
+                final ITCPLateralCacheAttributes lca =
+                        (ITCPLateralCacheAttributes) c.getAuxiliaryCacheAttributes();
 
                 // Get service instance
-                final ICacheServiceNonLocal<Object, Object> cacheService = factory.getCSNLInstance(lca);
+                final ICacheServiceNonLocal<Object, Object> cacheService =
+                        factory.getCSNLInstance(lca, c.getElementSerializer());
 
                 // If we can't fix them, just skip and re-try in the
                 // next round.
