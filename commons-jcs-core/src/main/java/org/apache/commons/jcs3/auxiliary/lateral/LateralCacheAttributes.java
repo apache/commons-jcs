@@ -191,6 +191,7 @@ public class LateralCacheAttributes
      * @param val The new transmissionTypeName value
      */
     @Override
+    @Deprecated
     public void setTransmissionTypeName( final String val )
     {
         this.transmissionType = Type.valueOf(val);
@@ -201,6 +202,7 @@ public class LateralCacheAttributes
      * @return The transmissionTypeName value
      */
     @Override
+    @Deprecated
     public String getTransmissionTypeName()
     {
         return this.transmissionType.toString();

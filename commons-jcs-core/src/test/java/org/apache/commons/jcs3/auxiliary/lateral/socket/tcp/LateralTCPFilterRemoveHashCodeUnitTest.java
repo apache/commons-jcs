@@ -25,6 +25,7 @@ import java.io.Serializable;
 
 import org.apache.commons.jcs3.JCS;
 import org.apache.commons.jcs3.access.CacheAccess;
+import org.apache.commons.jcs3.auxiliary.lateral.LateralCacheAttributes;
 import org.apache.commons.jcs3.engine.CacheElement;
 import org.apache.commons.jcs3.engine.behavior.ICacheElement;
 
@@ -91,7 +92,7 @@ public class LateralTCPFilterRemoveHashCodeUnitTest
 
         final TCPLateralCacheAttributes lattr2 = new TCPLateralCacheAttributes();
         lattr2.setTcpListenerPort( 1102 );
-        lattr2.setTransmissionTypeName( "TCP" );
+        lattr2.setTransmissionType(LateralCacheAttributes.Type.TCP);
         lattr2.setTcpServer( "localhost:" + serverPort );
         lattr2.setIssueRemoveOnPut( true );
         // should still try to remove
