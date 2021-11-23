@@ -83,8 +83,7 @@ public class RemoteCacheMonitor extends AbstractAuxiliaryCacheMonitor
     {
         // Monitor each RemoteCacheManager instance one after the other.
         // Each RemoteCacheManager corresponds to one remote connection.
-        for (final RemoteCacheManager mgr : managers.values())
-        {
+        managers.values().forEach(mgr -> {
             // If we can't fix them, just skip and re-try in
             // the next round.
             if ( mgr.canFixCaches() )
@@ -95,6 +94,6 @@ public class RemoteCacheMonitor extends AbstractAuxiliaryCacheMonitor
             {
                 allright.set(false);
             }
-        }
+        });
     }
 }

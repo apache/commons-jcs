@@ -22,6 +22,7 @@ package org.apache.commons.jcs3.auxiliary.remote;
 import java.io.IOException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.commons.jcs3.auxiliary.remote.behavior.IRemoteCacheAttributes;
 import org.apache.commons.jcs3.auxiliary.remote.behavior.IRemoteCacheConstants;
@@ -45,7 +46,7 @@ public class RemoteCacheListener<K, V>
     private static final Log log = LogManager.getLog( RemoteCacheListener.class );
 
     /** Has this client been shutdown. */
-    private boolean disposed;
+    private AtomicBoolean disposed;
 
     /**
      * Only need one since it does work for all regions, just reference by multiple region names.
@@ -57,9 +58,12 @@ public class RemoteCacheListener<K, V>
      * @param cacheMgr the cache hub
      * @param elementSerializer a custom serializer
      */
-    public RemoteCacheListener( final IRemoteCacheAttributes irca, final ICompositeCacheManager cacheMgr, final IElementSerializer elementSerializer )
+    public RemoteCacheListener( final IRemoteCacheAttributes irca,
+                                final ICompositeCacheManager cacheMgr,
+                                final IElementSerializer elementSerializer )
     {
         super( irca, cacheMgr, elementSerializer );
+        disposed = new AtomicBoolean(false);
 
         // Export this remote object to make it available to receive incoming
         // calls.
@@ -83,7 +87,7 @@ public class RemoteCacheListener<K, V>
     public synchronized void dispose()
         throws IOException
     {
-        if ( !disposed )
+        if (disposed.compareAndSet(false, true))
         {
             log.info( "Unexporting listener." );
             try
@@ -95,7 +99,6 @@ public class RemoteCacheListener<K, V>
                 log.error( "Problem unexporting the listener.", ex );
                 throw new IllegalStateException( ex.getMessage() );
             }
-            disposed = true;
         }
     }
 

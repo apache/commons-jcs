@@ -19,7 +19,6 @@ package org.apache.commons.jcs3.auxiliary.lateral;
  * under the License.
  */
 
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.jcs3.auxiliary.AbstractAuxiliaryCacheMonitor;
@@ -41,7 +40,7 @@ public class LateralCacheMonitor extends AbstractAuxiliaryCacheMonitor
     /**
      * Map of caches to monitor
      */
-    private final ConcurrentHashMap<String, LateralCacheNoWait<?, ?>> caches;
+    private final ConcurrentHashMap<String, LateralCacheNoWait<Object, Object>> caches;
 
     /**
      * Reference to the factory
@@ -78,9 +77,10 @@ public class LateralCacheMonitor extends AbstractAuxiliaryCacheMonitor
      *
      * @param cache the cache
      */
+    @SuppressWarnings("unchecked") // common map for all caches
     public void addCache(final LateralCacheNoWait<?, ?> cache)
     {
-        this.caches.put(cache.getCacheName(), cache);
+        this.caches.put(cache.getCacheName(), (LateralCacheNoWait<Object, Object>)cache);
 
         // if not yet started, go ahead
         if (this.getState() == Thread.State.NEW)
@@ -106,35 +106,27 @@ public class LateralCacheMonitor extends AbstractAuxiliaryCacheMonitor
     {
         // Monitor each cache instance one after the other.
         log.info( "Number of caches to monitor = " + caches.size() );
-        //for
-        for (final Map.Entry<String, LateralCacheNoWait<?, ?>> entry : caches.entrySet())
-        {
-            final String cacheName = entry.getKey();
 
-            @SuppressWarnings("unchecked") // Downcast to match service
-            final LateralCacheNoWait<Object, Object> c =
-                (LateralCacheNoWait<Object, Object>) entry.getValue();
+        caches.forEach((cacheName, cache) -> {
 
-            if (c.getStatus() == CacheStatus.ERROR)
+            if (cache.getStatus() == CacheStatus.ERROR)
             {
                 log.info( "Found LateralCacheNoWait in error, " + cacheName );
 
                 final ITCPLateralCacheAttributes lca =
-                        (ITCPLateralCacheAttributes) c.getAuxiliaryCacheAttributes();
+                        (ITCPLateralCacheAttributes) cache.getAuxiliaryCacheAttributes();
 
                 // Get service instance
                 final ICacheServiceNonLocal<Object, Object> cacheService =
-                        factory.getCSNLInstance(lca, c.getElementSerializer());
+                        factory.getCSNLInstance(lca, cache.getElementSerializer());
 
                 // If we can't fix them, just skip and re-try in the
                 // next round.
-                if (cacheService instanceof ZombieCacheServiceNonLocal)
+                if (!(cacheService instanceof ZombieCacheServiceNonLocal))
                 {
-                    continue;
+                    cache.fixCache(cacheService);
                 }
-
-                c.fixCache(cacheService);
             }
-        }
+        });
     }
 }

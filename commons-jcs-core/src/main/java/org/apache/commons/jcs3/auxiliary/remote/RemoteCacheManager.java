@@ -208,11 +208,9 @@ public class RemoteCacheManager
 	private void removeListenerFromCache(final RemoteCacheNoWait<?, ?> cache) throws IOException
 	{
 		final IRemoteCacheClient<?, ?> rc = cache.getRemoteCache();
-	    log.debug( "Found cache for [{0}], deregistering listener.",
-                cache::getCacheName);
+	    log.debug( "Found cache for [{0}], deregistering listener.", cache::getCacheName);
 		// could also store the listener for a server in the manager.
-		final IRemoteCacheListener<?, ?> listener = rc.getListener();
-        remoteWatch.removeCacheListener( cache.getCacheName(), listener );
+        remoteWatch.removeCacheListener(cache.getCacheName(), rc.getListener());
 	}
 
     /**
@@ -228,9 +226,9 @@ public class RemoteCacheManager
     @SuppressWarnings("unchecked") // Need to cast because of common map for all caches
     public <K, V> RemoteCacheNoWait<K, V> getCache( final IRemoteCacheAttributes cattr )
     {
-
         // might want to do some listener sanity checking here.
-        return (RemoteCacheNoWait<K, V>) caches.computeIfAbsent(cattr.getCacheName(), key -> newRemoteCacheNoWait(cattr));
+        return (RemoteCacheNoWait<K, V>) caches.computeIfAbsent(cattr.getCacheName(),
+                key -> newRemoteCacheNoWait(cattr));
     }
 
     /**
@@ -256,8 +254,9 @@ public class RemoteCacheManager
                     listener, e );
         }
 
+        @SuppressWarnings("unchecked")
         final IRemoteCacheClient<K, V> remoteCacheClient =
-            new RemoteCache<>( cattr, (ICacheServiceNonLocal<K, V>) remoteService, listener, monitor );
+            new RemoteCache<>(cattr, (ICacheServiceNonLocal<K, V>) remoteService, listener, monitor);
         remoteCacheClient.setCacheEventLogger( cacheEventLogger );
         remoteCacheClient.setElementSerializer( elementSerializer );
 
@@ -271,21 +270,19 @@ public class RemoteCacheManager
     /** Shutdown all. */
     public void release()
     {
-        for (final RemoteCacheNoWait<?, ?> c : caches.values())
-        {
+        caches.forEach((name, cache) -> {
             try
             {
-                log.info( "freeCache [{0}]", c::getCacheName);
+                log.info("freeCache [{0}]", name);
 
-                removeListenerFromCache(c);
-                c.dispose();
+                removeListenerFromCache(cache);
+                cache.dispose();
             }
             catch ( final IOException ex )
             {
-                log.error( "Problem releasing {0}", c.getCacheName(), ex );
+                log.error("Problem releasing {0}", name, ex);
             }
-        }
-
+        });
         caches.clear();
     }
 
@@ -302,13 +299,9 @@ public class RemoteCacheManager
         log.info( "Fixing caches. ICacheServiceNonLocal {0} | IRemoteCacheObserver {1}",
                 remoteService, remoteWatch );
 
-        for (final RemoteCacheNoWait<?, ?> c : caches.values())
-        {
-            if (c.getStatus() == CacheStatus.ERROR)
-            {
-                c.fixCache( remoteService );
-            }
-        }
+        caches.values().stream()
+            .filter(cache -> cache.getStatus() == CacheStatus.ERROR)
+            .forEach(cache -> cache.fixCache(remoteService));
 
         if ( log.isInfoEnabled() )
         {

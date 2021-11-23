@@ -98,7 +98,7 @@ public class RemoteCacheNoWait<K, V>
      */
     public RemoteCacheNoWait( final IRemoteCacheClient<K, V> cache )
     {
-        remoteCacheClient = cache;
+        this.remoteCacheClient = cache;
         this.cacheEventQueue = createCacheEventQueue(cache);
 
         if ( remoteCacheClient.getStatus() == CacheStatus.ERROR )

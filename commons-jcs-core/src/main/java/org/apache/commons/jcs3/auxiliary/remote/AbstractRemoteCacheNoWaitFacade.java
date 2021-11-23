@@ -25,6 +25,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import org.apache.commons.jcs3.auxiliary.AbstractAuxiliaryCache;
@@ -86,8 +87,7 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K, V>
     public void update( final ICacheElement<K, V> ce )
         throws IOException
     {
-        log.debug( "updating through cache facade, noWaits.length = {0}",
-                () -> noWaits.size() );
+        log.debug("updating through cache facade, noWaits.length = {0}", noWaits::size);
 
         for (final RemoteCacheNoWait<K, V> nw : noWaits)
         {
@@ -117,10 +117,6 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K, V>
                 // if it is a zombie, then move to the next in the failover list
                 // will need to keep them in order or a count
                 failover( nw );
-                // should start a failover thread
-                // should probably only failover if there is only one in the noWait
-                // list
-                // Should start a background thread to restore the original primary if we are in failover state.
             }
         }
     }
@@ -134,23 +130,22 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K, V>
     @Override
     public ICacheElement<K, V> get( final K key )
     {
-        for (final RemoteCacheNoWait<K, V> nw : noWaits)
-        {
-            try
-            {
-                final ICacheElement<K, V> obj = nw.get( key );
-                if ( obj != null )
+        return noWaits.stream()
+            .map(nw -> {
+                try
                 {
-                    return obj;
+                    return nw.get( key );
                 }
-            }
-            catch ( final IOException ex )
-            {
-                log.debug( "Failed to get." );
+                catch ( final IOException ex )
+                {
+                    log.debug( "Failed to get." );
+                }
+
                 return null;
-            }
-        }
-        return null;
+            })
+            .filter(Objects::nonNull)
+            .findFirst()
+            .orElse(null);
     }
 
     /**
@@ -175,6 +170,7 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K, V>
                 log.debug( "Failed to getMatching." );
             }
         }
+
         return Collections.emptyMap();
     }
 
@@ -217,15 +213,13 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K, V>
         final HashSet<K> allKeys = new HashSet<>();
         for (final RemoteCacheNoWait<K, V> nw : noWaits)
         {
-            if ( nw != null )
+            final Set<K> keys = nw.getKeySet();
+            if(keys != null)
             {
-                final Set<K> keys = nw.getKeySet();
-                if(keys != null)
-                {
-                    allKeys.addAll( keys );
-                }
+                allKeys.addAll( keys );
             }
         }
+
         return allKeys;
     }
 
@@ -238,17 +232,17 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K, V>
     @Override
     public boolean remove( final K key )
     {
-        try
-        {
-            for (final RemoteCacheNoWait<K, V> nw : noWaits)
+        noWaits.forEach(nw -> {
+            try
             {
                 nw.remove( key );
             }
-        }
-        catch ( final IOException ex )
-        {
-            log.error( ex );
-        }
+            catch ( final IOException ex )
+            {
+                log.error( ex );
+            }
+        });
+
         return false;
     }
 
@@ -258,27 +252,23 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K, V>
     @Override
     public void removeAll()
     {
-        try
-        {
-            for (final RemoteCacheNoWait<K, V> nw : noWaits)
+        noWaits.forEach(nw -> {
+            try
             {
                 nw.removeAll();
             }
-        }
-        catch ( final IOException ex )
-        {
-            log.error( ex );
-        }
+            catch ( final IOException ex )
+            {
+                log.error( ex );
+            }
+        });
     }
 
     /** Adds a dispose request to the remote cache. */
     @Override
     public void dispose()
     {
-        for (final RemoteCacheNoWait<K, V> nw : noWaits)
-        {
-            nw.dispose();
-        }
+        noWaits.forEach(RemoteCacheNoWait::dispose);
     }
 
     /**
@@ -325,15 +315,11 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K, V>
     @Override
     public CacheStatus getStatus()
     {
-        for (final RemoteCacheNoWait<K, V> nw : noWaits)
-        {
-            if ( nw.getStatus() == CacheStatus.ALIVE )
-            {
-                return CacheStatus.ALIVE;
-            }
-        }
-
-        return CacheStatus.DISPOSED;
+        return noWaits.stream()
+                .map(nw -> nw.getStatus())
+                .filter(status -> status == CacheStatus.ALIVE)
+                .findFirst()
+                .orElse(CacheStatus.DISPOSED);
     }
 
     /**
@@ -344,7 +330,8 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K, V>
     @Override
     public String toString()
     {
-        return "RemoteCacheNoWaitFacade: " + remoteCacheAttributes.getCacheName() + ", rca = " + remoteCacheAttributes;
+        return "RemoteCacheNoWaitFacade: " + remoteCacheAttributes.getCacheName() +
+                ", rca = " + remoteCacheAttributes;
     }
 
     /**
