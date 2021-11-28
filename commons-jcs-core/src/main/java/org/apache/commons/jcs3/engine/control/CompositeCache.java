@@ -63,7 +63,6 @@ import org.apache.commons.jcs3.engine.memory.shrinking.ShrinkerThread;
 import org.apache.commons.jcs3.engine.stats.CacheStats;
 import org.apache.commons.jcs3.engine.stats.StatElement;
 import org.apache.commons.jcs3.engine.stats.behavior.ICacheStats;
-import org.apache.commons.jcs3.engine.stats.behavior.IStatElement;
 import org.apache.commons.jcs3.engine.stats.behavior.IStats;
 import org.apache.commons.jcs3.log.Log;
 import org.apache.commons.jcs3.log.LogManager;
@@ -341,7 +340,7 @@ public class CompositeCache<K, V>
                 // SEND TO REMOTE STORE
                 case REMOTE_CACHE:
                     log.debug("ce.getElementAttributes().getIsRemote() = {0}",
-                        () -> cacheElement.getElementAttributes().getIsRemote());
+                        cacheElement.getElementAttributes()::getIsRemote);
 
                     if (cacheElement.getElementAttributes().getIsRemote() && !localOnly)
                     {
@@ -364,7 +363,7 @@ public class CompositeCache<K, V>
                 case LATERAL_CACHE:
                     // lateral can't do the checking since it is dependent on the
                     // cache region restrictions
-                    log.debug("lateralcache in aux list: cattr {0}", () -> cacheAttr.isUseLateral());
+                    log.debug("lateralcache in aux list: cattr {0}", cacheAttr::isUseLateral);
                     if (cacheAttr.isUseLateral() && cacheElement.getElementAttributes().getIsLateral() && !localOnly)
                     {
                         // DISTRIBUTE LATERALLY
@@ -377,7 +376,7 @@ public class CompositeCache<K, V>
 
                 // update disk if the usage pattern permits
                 case DISK_CACHE:
-                    log.debug("diskcache in aux list: cattr {0}", () -> cacheAttr.isUseDisk());
+                    log.debug("diskcache in aux list: cattr {0}", cacheAttr::isUseDisk);
                     if (cacheAttr.isUseDisk()
                         && cacheAttr.getDiskUsagePattern() == DiskUsagePattern.UPDATE
                         && cacheElement.getElementAttributes().getIsSpool())
@@ -1191,7 +1190,7 @@ public class CompositeCache<K, V>
         }
 
         log.info("In DISPOSE, [{0}] fromRemote [{1}]",
-                () -> this.cacheAttr.getCacheName(), () -> fromRemote);
+                this.cacheAttr::getCacheName, () -> fromRemote);
 
         // Remove us from the cache managers list
         // This will call us back but exit immediately
@@ -1227,13 +1226,13 @@ public class CompositeCache<K, V>
                     || fromRemote && aux.getCacheType() == CacheType.REMOTE_CACHE)
                 {
                     log.info("In DISPOSE, [{0}] SKIPPING auxiliary [{1}] fromRemote [{2}]",
-                            () -> this.cacheAttr.getCacheName(), aux::getCacheName,
+                            this.cacheAttr::getCacheName, aux::getCacheName,
                             () -> fromRemote);
                     continue;
                 }
 
                 log.info("In DISPOSE, [{0}] auxiliary [{1}]",
-                        () -> this.cacheAttr.getCacheName(), aux::getCacheName);
+                        this.cacheAttr::getCacheName, aux::getCacheName);
 
                 // IT USED TO BE THE CASE THAT (If the auxiliary is not a lateral, or the cache
                 // attributes
@@ -1247,7 +1246,7 @@ public class CompositeCache<K, V>
                     memCache.freeElements(numToFree);
 
                     log.info("In DISPOSE, [{0}] put {1} into auxiliary [{2}]",
-                            () -> this.cacheAttr.getCacheName(), () -> numToFree,
+                            this.cacheAttr::getCacheName, () -> numToFree,
                             aux::getCacheName);
                 }
 
@@ -1261,7 +1260,7 @@ public class CompositeCache<K, V>
         }
 
         log.info("In DISPOSE, [{0}] disposing of memory cache.",
-                () -> this.cacheAttr.getCacheName());
+                this.cacheAttr::getCacheName);
         try
         {
             memCache.dispose();
@@ -1287,25 +1286,22 @@ public class CompositeCache<K, V>
         auxCaches.stream()
             .filter(aux -> aux.getStatus() == CacheStatus.ALIVE)
             .forEach(aux -> {
-                try
-                {
-                    for (final K key : memCache.getKeySet())
-                    {
-                        final ICacheElement<K, V> ce = memCache.get(key);
-
-                        if (ce != null)
+                memCache.getKeySet().stream()
+                    .map(this::localGet)
+                    .filter(Objects::nonNull)
+                    .forEach(ce -> {
+                        try
                         {
                             aux.update(ce);
                         }
-                    }
-                }
-                catch (final IOException ex)
-                {
-                    log.error("Failure saving aux caches.", ex);
-                }
+                        catch (IOException e)
+                        {
+                            log.warn("Failure saving element {0} to aux {1}.", ce, aux, e);
+                        }
+                    });
             });
 
-        log.debug("Called save for [{0}]", () -> cacheAttr.getCacheName());
+        log.debug("Called save for [{0}]", cacheAttr::getCacheName);
     }
 
     /**
@@ -1364,12 +1360,9 @@ public class CompositeCache<K, V>
         stats.setRegionName(this.getCacheName());
 
         // store the composite cache stats first
-        final ArrayList<IStatElement<?>> elems = new ArrayList<>();
-
-        elems.add(new StatElement<>("HitCountRam", Long.valueOf(getHitCountRam())));
-        elems.add(new StatElement<>("HitCountAux", Long.valueOf(getHitCountAux())));
-
-        stats.setStatElements(elems);
+        stats.setStatElements(Arrays.asList(
+                new StatElement<>("HitCountRam", Long.valueOf(getHitCountRam())),
+                new StatElement<>("HitCountAux", Long.valueOf(getHitCountAux()))));
 
         // memory + aux, memory is not considered an auxiliary internally
         final ArrayList<IStats> auxStats = new ArrayList<>(auxCaches.size() + 1);
@@ -1550,7 +1543,7 @@ public class CompositeCache<K, V>
             log.debug("Element Handlers are registered.  Create event type {0}", eventType);
             if (elementEventQ == null)
             {
-                log.warn("No element event queue available for cache {0}", getCacheName());
+                log.warn("No element event queue available for cache {0}", this::getCacheName);
                 return;
             }
             final IElementEvent<ICacheElement<K, V>> event = new ElementEvent<>(element, eventType);

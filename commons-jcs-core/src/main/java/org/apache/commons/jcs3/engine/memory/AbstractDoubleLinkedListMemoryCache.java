@@ -152,7 +152,7 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
 
         log.debug("About to spool to disk cache, map size: {0}, max objects: {1}, "
                 + "maximum items to spool: {2}", () -> size,
-                () -> this.getCacheAttributes().getMaxObjects(),
+                this.getCacheAttributes()::getMaxObjects,
                 () -> chunkSizeCorrected);
 
         // The spool will put them in a disk event queue, so there is no
@@ -219,6 +219,7 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
 
     /**
      * This spools the last element in the LRU, if one exists.
+     * The method is called guarded by the lock
      * <p>
      *
      * @return ICacheElement&lt;K, V&gt; if there was a last element, else null.
@@ -232,7 +233,8 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
         if (last != null)
         {
             toSpool = last.getCacheElement();
-            if (toSpool == null) {
+            if (toSpool == null)
+            {
                 throw new Error("update: last.ce is null!");
             }
             getCompositeCache().spoolToDisk(toSpool);

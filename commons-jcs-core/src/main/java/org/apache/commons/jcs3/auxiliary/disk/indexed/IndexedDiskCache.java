@@ -465,13 +465,12 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
         log.debug("{0}: Storing element on disk, key: {1}",
                 () -> logCacheName, ce::getKey);
 
-        IndexedDiskElementDescriptor ded = null;
-
         // old element with same key
         IndexedDiskElementDescriptor old = null;
 
         try
         {
+            IndexedDiskElementDescriptor ded = null;
             final byte[] data = getElementSerializer().serialize(ce);
 
             // make sure this only locks for one particular cache region
