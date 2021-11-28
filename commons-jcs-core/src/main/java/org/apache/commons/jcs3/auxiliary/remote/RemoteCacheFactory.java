@@ -79,11 +79,8 @@ public class RemoteCacheFactory
                 // not necessary if a failover list is defined
                 // REGISTER PRIMARY LISTENER
                 // if it is a primary
-                boolean primaryDefined = false;
                 if ( rca.getRemoteLocation() != null )
                 {
-                    primaryDefined = true;
-
                     failovers.add( rca.getRemoteLocation() );
                     final RemoteCacheManager rcm = getManager( rca, cacheMgr, cacheEventLogger, elementSerializer );
                     noWaits.add(rcm.getCache(rca));
@@ -94,10 +91,8 @@ public class RemoteCacheFactory
                 if ( failoverList != null )
                 {
                     final String[] failoverServers = failoverList.split("\\s*,\\s*");
-                    int fCnt = 0;
                     for (String server : failoverServers)
                     {
-                        fCnt++;
                         final RemoteLocation location = RemoteLocation.parseServerAndPort(server);
 
                         if (location != null)
@@ -109,8 +104,9 @@ public class RemoteCacheFactory
 
                             // add a listener if there are none, need to tell rca what
                             // number it is at
-                            if (!primaryDefined && fCnt == 1 || noWaits.isEmpty())
+                            if (noWaits.isEmpty())
                             {
+                                frca.setFailoverIndex(0);
                                 noWaits.add(rcm.getCache(frca));
                             }
                         }

@@ -25,8 +25,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.commons.jcs3.auxiliary.AbstractAuxiliaryCache;
 import org.apache.commons.jcs3.auxiliary.remote.behavior.IRemoteCacheAttributes;
@@ -91,33 +91,7 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K, V>
 
         for (final RemoteCacheNoWait<K, V> nw : noWaits)
         {
-            try
-            {
-                nw.update( ce );
-                // an initial move into a zombie will lock this to primary
-                // recovery. will not discover other servers until primary
-                // reconnect
-                // and subsequent error
-            }
-            catch ( final IOException ex )
-            {
-                final String message = "Problem updating no wait. Will initiate failover if the noWait is in error.";
-                log.error( message, ex );
-
-                if ( getCacheEventLogger() != null )
-                {
-                    getCacheEventLogger().logError( "RemoteCacheNoWaitFacade",
-                                                    ICacheEventLogger.UPDATE_EVENT,
-                                                    message + ":" + ex.getMessage() + " REGION: " + ce.getCacheName()
-                                                        + " ELEMENT: " + ce );
-                }
-
-                // can handle failover here? Is it safe to try the others?
-                // check to see it the noWait is now a zombie
-                // if it is a zombie, then move to the next in the failover list
-                // will need to keep them in order or a count
-                failover( nw );
-            }
+            nw.update( ce );
         }
     }
 
@@ -128,24 +102,14 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K, V>
      * @return Either an ICacheElement&lt;K, V&gt; or null if it is not found.
      */
     @Override
-    public ICacheElement<K, V> get( final K key )
+    public ICacheElement<K, V> get( final K key ) throws IOException
     {
-        return noWaits.stream()
-            .map(nw -> {
-                try
-                {
-                    return nw.get( key );
-                }
-                catch ( final IOException ex )
-                {
-                    log.debug( "Failed to get." );
-                }
+        for (final RemoteCacheNoWait<K, V> nw : noWaits)
+        {
+            return nw.get(key);
+        }
 
-                return null;
-            })
-            .filter(Objects::nonNull)
-            .findFirst()
-            .orElse(null);
+        return null;
     }
 
     /**
@@ -161,14 +125,7 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K, V>
     {
         for (final RemoteCacheNoWait<K, V> nw : noWaits)
         {
-            try
-            {
-                return nw.getMatching( pattern );
-            }
-            catch ( final IOException ex )
-            {
-                log.debug( "Failed to getMatching." );
-            }
+            return nw.getMatching( pattern );
         }
 
         return Collections.emptyMap();
@@ -182,20 +139,13 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K, V>
      *         data in cache for any of these keys
      */
     @Override
-    public Map<K, ICacheElement<K, V>> getMultiple( final Set<K> keys )
+    public Map<K, ICacheElement<K, V>> getMultiple( final Set<K> keys ) throws IOException
     {
         if ( keys != null && !keys.isEmpty() )
         {
             for (final RemoteCacheNoWait<K, V> nw : noWaits)
             {
-                try
-                {
-                    return nw.getMultiple( keys );
-                }
-                catch ( final IOException ex )
-                {
-                    log.debug( "Failed to get." );
-                }
+                return nw.getMultiple( keys );
             }
         }
 
@@ -230,18 +180,12 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K, V>
      * @return whether or not it was removed, right now it return false.
      */
     @Override
-    public boolean remove( final K key )
+    public boolean remove( final K key ) throws IOException
     {
-        noWaits.forEach(nw -> {
-            try
-            {
-                nw.remove( key );
-            }
-            catch ( final IOException ex )
-            {
-                log.error( ex );
-            }
-        });
+        for (final RemoteCacheNoWait<K, V> nw : noWaits)
+        {
+            nw.remove( key );
+        }
 
         return false;
     }
@@ -250,18 +194,12 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K, V>
      * Adds a removeAll request to the remote cache.
      */
     @Override
-    public void removeAll()
+    public void removeAll() throws IOException
     {
-        noWaits.forEach(nw -> {
-            try
-            {
-                nw.removeAll();
-            }
-            catch ( final IOException ex )
-            {
-                log.error( ex );
-            }
-        });
+        for (final RemoteCacheNoWait<K, V> nw : noWaits)
+        {
+            nw.removeAll();
+        }
     }
 
     /** Adds a dispose request to the remote cache. */
@@ -395,12 +333,10 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K, V>
         {
             elems.add(new StatElement<>( "Number of No Waits", Integer.valueOf(noWaits.size()) ) );
 
-            for ( final RemoteCacheNoWait<K, V> rcnw : noWaits )
-            {
-                // get the stats from the super too
-                final IStats sStats = rcnw.getStatistics();
-                elems.addAll(sStats.getStatElements());
-            }
+            // get the stats from the super too
+            elems.addAll(noWaits.stream()
+                .flatMap(rcnw -> rcnw.getStatistics().getStatElements().stream())
+                .collect(Collectors.toList()));
         }
 
         stats.setStatElements( elems );

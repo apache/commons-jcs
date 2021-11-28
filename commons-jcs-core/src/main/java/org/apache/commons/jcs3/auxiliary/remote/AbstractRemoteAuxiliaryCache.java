@@ -174,13 +174,13 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
             // Never try to deserialize if you are a cluster client. Cluster
             // clients are merely intra-remote cache communicators. Remote caches are assumed
             // to have no ability to deserialize the objects.
-            if ( (retVal instanceof ICacheElementSerialized) && (this.getRemoteCacheAttributes().getRemoteType() != RemoteType.CLUSTER) )
+            if (retVal instanceof ICacheElementSerialized && this.getRemoteCacheAttributes().getRemoteType() != RemoteType.CLUSTER)
             {
                 retVal = SerializationConversionUtil.getDeSerializedCacheElement( (ICacheElementSerialized<K, V>) retVal,
                         super.getElementSerializer() );
             }
         }
-        catch ( final Exception ex )
+        catch ( final IOException | ClassNotFoundException ex )
         {
             handleException( ex, "Failed to get [" + key + "] from [" + cacheName + "]", ICacheEventLogger.GET_EVENT );
         }
@@ -279,7 +279,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
                 }
             }
         }
-        catch ( final Exception ex )
+        catch ( final IOException | ClassNotFoundException ex )
         {
             handleException( ex, "Failed to getMatching [" + pattern + "] from [" + cacheName + "]",
                              ICacheEventLogger.GET_EVENT );
@@ -306,7 +306,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
             {
                 getRemoteCacheService().remove( cacheName, key, getListenerId() );
             }
-            catch ( final Exception ex )
+            catch ( final IOException ex )
             {
                 handleException( ex, "Failed to remove " + key + " from " + cacheName, ICacheEventLogger.REMOVE_EVENT );
             }
@@ -331,7 +331,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
             {
                 getRemoteCacheService().removeAll( cacheName, getListenerId() );
             }
-            catch ( final Exception ex )
+            catch ( final IOException ex )
             {
                 handleException( ex, "Failed to remove all from " + cacheName, ICacheEventLogger.REMOVEALL_EVENT );
             }
@@ -352,22 +352,17 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
     {
         if ( !getRemoteCacheAttributes().getGetOnly() )
         {
-            ICacheElementSerialized<K, V> serialized = null;
             try
             {
                 log.debug( "sending item to remote server" );
 
                 // convert so we don't have to know about the object on the
                 // other end.
-                serialized = SerializationConversionUtil.getSerializedCacheElement( ce, super.getElementSerializer() );
+                ICacheElementSerialized<K, V> serialized = SerializationConversionUtil.getSerializedCacheElement( ce, super.getElementSerializer() );
 
                 remoteCacheService.update( serialized, getListenerId() );
             }
-            catch ( final NullPointerException npe )
-            {
-                log.error( "npe for ce = {0} ce.attr = {1}", ce, ce.getElementAttributes(), npe );
-            }
-            catch ( final Exception ex )
+            catch ( final IOException ex )
             {
                 // event queue will wait and retry
                 handleException( ex, "Failed to put [" + ce.getKey() + "] to " + ce.getCacheName(),
@@ -421,7 +416,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
 
                 log.debug( "set listenerId = {0}", id );
             }
-            catch ( final Exception e )
+            catch ( final IOException e )
             {
                 log.error( "Problem setting listenerId", e );
             }

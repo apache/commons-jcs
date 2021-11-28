@@ -140,8 +140,7 @@ public class RemoteCacheNoWaitFacade<K, V>
                 // Each RemoteCacheManager corresponds to one remote connection.
                 final List<RemoteLocation> failovers = rca0.getFailovers();
                 // we should probably check to see if there are any failovers,
-                // even though the caller
-                // should have already.
+                // even though the caller should have already.
 
                 if ( failovers == null )
                 {
