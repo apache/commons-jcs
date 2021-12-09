@@ -19,10 +19,6 @@ package org.apache.commons.jcs3.auxiliary.disk.indexed;
  * under the License.
  */
 
-import junit.extensions.ActiveTestSuite;
-import junit.framework.Test;
-import junit.framework.TestCase;
-
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -30,6 +26,10 @@ import java.util.Set;
 import org.apache.commons.jcs3.JCS;
 import org.apache.commons.jcs3.access.CacheAccess;
 import org.apache.commons.jcs3.engine.behavior.ICacheElement;
+
+import junit.extensions.ActiveTestSuite;
+import junit.framework.Test;
+import junit.framework.TestCase;
 
 /**
  * Test which exercises the indexed disk cache. Runs three threads against the
@@ -46,17 +46,6 @@ public class IndexedDiskCacheSameRegionConcurrentUnitTest
     public IndexedDiskCacheSameRegionConcurrentUnitTest( final String testName )
     {
         super( testName );
-    }
-
-    /**
-     * Main method passes this test to the text test runner.
-     *
-     * @param args
-     */
-    public static void main( final String args[] )
-    {
-        final String[] testCaseName = { IndexedDiskCacheSameRegionConcurrentUnitTest.class.getName() };
-        junit.textui.TestRunner.main( testCaseName );
     }
 
     /**

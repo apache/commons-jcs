@@ -1,5 +1,13 @@
 package org.apache.commons.jcs3.auxiliary.disk.block;
 
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import org.apache.commons.jcs3.JCS;
+import org.apache.commons.jcs3.access.CacheAccess;
+import org.apache.commons.jcs3.engine.behavior.ICacheElement;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -22,14 +30,6 @@ package org.apache.commons.jcs3.auxiliary.disk.block;
 import junit.extensions.ActiveTestSuite;
 import junit.framework.Test;
 import junit.framework.TestCase;
-
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
-import org.apache.commons.jcs3.JCS;
-import org.apache.commons.jcs3.access.CacheAccess;
-import org.apache.commons.jcs3.engine.behavior.ICacheElement;
 
 /**
  * Test which exercises the block disk cache. This one uses three different
@@ -54,17 +54,6 @@ public class BlockDiskCacheConcurrentUnitTest
         throws Exception
     {
         super( testName );
-    }
-
-    /**
-     * Main method passes this test to the text test runner.
-     *
-     * @param args
-     */
-    public static void main( final String args[] )
-    {
-        final String[] testCaseName = { BlockDiskCacheConcurrentUnitTest.class.getName() };
-        junit.textui.TestRunner.main( testCaseName );
     }
 
     /**

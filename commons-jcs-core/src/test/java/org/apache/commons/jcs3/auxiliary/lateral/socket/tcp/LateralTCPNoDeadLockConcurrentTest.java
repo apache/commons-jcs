@@ -44,17 +44,6 @@ public class LateralTCPNoDeadLockConcurrentTest
     }
 
     /**
-     * Main method passes this test to the text test runner.
-     *
-     * @param args
-     */
-    public static void main( final String args[] )
-    {
-        final String[] testCaseName = { LateralTCPNoDeadLockConcurrentTest.class.getName() };
-        junit.textui.TestRunner.main( testCaseName );
-    }
-
-    /**
      * A unit test suite for JUnit
      *
      * @return The test suite

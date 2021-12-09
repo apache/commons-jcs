@@ -1,5 +1,14 @@
 package org.apache.commons.jcs3.engine.memory.lru;
 
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import org.apache.commons.jcs3.engine.CacheElement;
+import org.apache.commons.jcs3.engine.behavior.ICacheElement;
+import org.apache.commons.jcs3.engine.control.CompositeCache;
+import org.apache.commons.jcs3.engine.control.CompositeCacheManager;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -23,15 +32,6 @@ import junit.extensions.ActiveTestSuite;
 import junit.framework.Test;
 import junit.framework.TestCase;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
-import org.apache.commons.jcs3.engine.CacheElement;
-import org.apache.commons.jcs3.engine.behavior.ICacheElement;
-import org.apache.commons.jcs3.engine.control.CompositeCache;
-import org.apache.commons.jcs3.engine.control.CompositeCacheManager;
-
 /**
  * Test which exercises the LRUMemory cache. This one uses three different
  * regions for three threads.
@@ -53,17 +53,6 @@ public class LRUMemoryCacheConcurrentUnitTest
     public LRUMemoryCacheConcurrentUnitTest( final String testName )
     {
         super( testName );
-    }
-
-    /**
-     * Main method passes this test to the text test runner.
-     * <p>
-     * @param args
-     */
-    public static void main( final String args[] )
-    {
-        final String[] testCaseName = { LRUMemoryCacheConcurrentUnitTest.class.getName() };
-        junit.textui.TestRunner.main( testCaseName );
     }
 
     /**

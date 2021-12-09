@@ -44,13 +44,13 @@ public class EventQueueConcurrentLoadTest
     private static CacheListenerImpl<String, String> listen;
 
     /** max failure setting */
-    private final int maxFailure = 3;
+    private static final int maxFailure = 3;
 
     /** time to wait before retrying on failure. */
-    private final int waitBeforeRetry = 100;
+    private static final int waitBeforeRetry = 100;
 
     /** very small idle time */
-    private final int idleTime = 2;
+    private static final int idleTime = 2;
 
     /**
      * Constructor for the TestDiskCache object.
@@ -59,16 +59,6 @@ public class EventQueueConcurrentLoadTest
     public EventQueueConcurrentLoadTest( final String testName )
     {
         super( testName );
-    }
-
-    /**
-     * Main method passes this test to the text test runner.
-     * @param args
-     */
-    public static void main( final String args[] )
-    {
-        final String[] testCaseName = { EventQueueConcurrentLoadTest.class.getName() };
-        junit.textui.TestRunner.main( testCaseName );
     }
 
     /**

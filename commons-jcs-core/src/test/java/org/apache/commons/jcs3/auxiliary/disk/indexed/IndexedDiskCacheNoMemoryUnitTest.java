@@ -1,5 +1,13 @@
 package org.apache.commons.jcs3.auxiliary.disk.indexed;
 
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import org.apache.commons.jcs3.JCS;
+import org.apache.commons.jcs3.access.CacheAccess;
+import org.apache.commons.jcs3.engine.behavior.ICacheElement;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -23,14 +31,6 @@ import junit.extensions.ActiveTestSuite;
 import junit.framework.Test;
 import junit.framework.TestCase;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
-import org.apache.commons.jcs3.JCS;
-import org.apache.commons.jcs3.access.CacheAccess;
-import org.apache.commons.jcs3.engine.behavior.ICacheElement;
-
 /**
  * Test which exercises the indexed disk cache. This one uses three different
  * regions for thre threads. It uses a config file that specifies 0 items in
@@ -51,17 +51,6 @@ public class IndexedDiskCacheNoMemoryUnitTest
     public IndexedDiskCacheNoMemoryUnitTest( final String testName )
     {
         super( testName );
-    }
-
-    /**
-     * Main method passes this test to the text test runner.
-     * <p>
-     * @param args
-     */
-    public static void main( final String args[] )
-    {
-        final String[] testCaseName = { IndexedDiskCacheNoMemoryUnitTest.class.getName() };
-        junit.textui.TestRunner.main( testCaseName );
     }
 
     /**

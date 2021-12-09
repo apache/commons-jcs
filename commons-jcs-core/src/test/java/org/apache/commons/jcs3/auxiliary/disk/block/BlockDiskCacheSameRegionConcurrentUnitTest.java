@@ -1,5 +1,13 @@
 package org.apache.commons.jcs3.auxiliary.disk.block;
 
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import org.apache.commons.jcs3.JCS;
+import org.apache.commons.jcs3.access.CacheAccess;
+import org.apache.commons.jcs3.engine.behavior.ICacheElement;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -23,14 +31,6 @@ import junit.extensions.ActiveTestSuite;
 import junit.framework.Test;
 import junit.framework.TestCase;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
-import org.apache.commons.jcs3.JCS;
-import org.apache.commons.jcs3.access.CacheAccess;
-import org.apache.commons.jcs3.engine.behavior.ICacheElement;
-
 /**
  * Test which exercises the block disk cache. Runs three threads against the same region.
  */
@@ -45,21 +45,6 @@ public class BlockDiskCacheSameRegionConcurrentUnitTest
     public BlockDiskCacheSameRegionConcurrentUnitTest( final String testName )
     {
         super( testName );
-    }
-
-    /**
-     * Main method passes this test to the text test runner.
-     * <p>
-     * @param args
-     * @throws InterruptedException
-     */
-    public static void main( final String args[] ) throws InterruptedException
-    {
-        final String[] testCaseName = { BlockDiskCacheSameRegionConcurrentUnitTest.class.getName() };
-        junit.textui.TestRunner.main( testCaseName );
-
-        // Give test threads some time to finish
-        Thread.sleep(2000);
     }
 
     /**

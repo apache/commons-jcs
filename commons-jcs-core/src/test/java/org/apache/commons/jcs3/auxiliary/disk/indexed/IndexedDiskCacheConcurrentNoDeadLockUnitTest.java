@@ -1,7 +1,6 @@
 package org.apache.commons.jcs3.auxiliary.disk.indexed;
 
 import org.apache.commons.jcs3.JCS;
-import org.apache.commons.jcs3.engine.control.CompositeCacheManager;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -25,7 +24,6 @@ import org.apache.commons.jcs3.engine.control.CompositeCacheManager;
 import junit.extensions.ActiveTestSuite;
 import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.textui.TestRunner;
 
 /**
  * Test which exercises the indexed disk cache. Runs three threads against the
@@ -45,17 +43,6 @@ public class IndexedDiskCacheConcurrentNoDeadLockUnitTest
     public IndexedDiskCacheConcurrentNoDeadLockUnitTest( final String testName )
     {
         super( testName );
-    }
-
-    /**
-     * Main method passes this test to the text test runner.
-     *
-     * @param args
-     */
-    public static void main( final String args[] )
-    {
-        final String[] testCaseName = { IndexedDiskCacheConcurrentNoDeadLockUnitTest.class.getName() };
-        TestRunner.main( testCaseName );
     }
 
     /**
@@ -135,15 +122,6 @@ public class IndexedDiskCacheConcurrentNoDeadLockUnitTest
     @Override
     public void tearDown()
     {
-        try
-        {
-            final CompositeCacheManager cacheMgr = CompositeCacheManager.getInstance();
-            cacheMgr.shutDown();
-        }
-        catch ( final Exception e )
-        {
-            // log.error(e);
-        }
+        JCS.shutdown();
     }
-
 }

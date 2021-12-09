@@ -21,9 +21,7 @@ package org.apache.commons.jcs3.auxiliary.disk.indexed;
 
 import java.util.Map;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 /**
  * This ensures that the jcs version of the LRU map is as fast as the commons
@@ -59,16 +57,6 @@ public class LRUMapSizeVsCount
     public LRUMapSizeVsCount( final String testName )
     {
         super( testName );
-    }
-
-    /**
-     * A unit test suite for JUnit
-     * <p>
-     * @return The test suite
-     */
-    public static Test suite()
-    {
-        return new TestSuite( LRUMapSizeVsCount.class );
     }
 
     /**
@@ -221,16 +209,5 @@ public class LRUMapSizeVsCount
         ratioPut = (minTimeSizeGet * 1.0) / minTimeCountGet;
         System.out.println( cache2Name.trim() + " puts took " + ratioPut + " times the " + cacheName.trim() + ", the goal is <" + targetGet
             + "x" );
-
     }
-
-    /**
-     * @param args
-     */
-    public static void main( final String args[] )
-    {
-    	final LRUMapSizeVsCount test = new LRUMapSizeVsCount( "command" );
-        test.doWork();
-    }
-
 }
