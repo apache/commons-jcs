@@ -275,7 +275,7 @@ public class UDPDiscoveryReceiver
                                 synchronized (msgQueue)
                                 {
                                     // Check if queue full already?
-                                    if (msgQueue.size() == maxPoolSize)
+                                    if (msgQueue.remainingCapacity() == 0)
                                     {
                                         // remove oldest element from queue
                                         msgQueue.remove();
