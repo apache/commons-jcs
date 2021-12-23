@@ -22,7 +22,6 @@ package org.apache.commons.jcs3.engine.control;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-import java.util.StringTokenizer;
 
 import org.apache.commons.jcs3.auxiliary.AuxiliaryCache;
 import org.apache.commons.jcs3.auxiliary.AuxiliaryCacheAttributes;
@@ -220,30 +219,19 @@ public class CompositeCacheConfigurator
 
             log.debug( "Parsing region name \"{0}\", value \"{1}\"", regName, auxiliaries );
 
-            // We must skip over ',' but not white space
-            final StringTokenizer st = new StringTokenizer( auxiliaries, "," );
-
-            // If value is not in the form ", appender.." or "", then we should set
-            // the priority of the category.
+            String auxNames[] = auxiliaries.split("\\s*,\\s*");
 
             // just to be on the safe side...
-            if ( !( auxiliaries.startsWith( "," ) || auxiliaries.equals( "" ) ) && !st.hasMoreTokens() )
+            if (auxNames.length == 0)
             {
                 return null;
             }
 
-            AuxiliaryCache<K, V> auxCache;
-            String auxName;
-            while ( st.hasMoreTokens() )
+            for (String auxName : auxNames)
             {
-                auxName = st.nextToken().trim();
-                if (auxName.equals( "," ))
-                {
-                    continue;
-                }
                 log.debug( "Parsing auxiliary named \"{0}\".", auxName );
 
-                auxCache = parseAuxiliary( props, ccm, auxName, regName );
+                AuxiliaryCache<K, V> auxCache = parseAuxiliary( props, ccm, auxName, regName );
 
                 if ( auxCache != null )
                 {

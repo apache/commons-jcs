@@ -51,10 +51,13 @@ public class LateralCacheMonitor extends AbstractAuxiliaryCacheMonitor
      * Allows close classes, ie testers to set the idle period to something testable.
      * <p>
      * @param idlePeriod
+     * 
+     * @deprecated Use setIdlePeriod()
      */
+    @Deprecated
     protected static void forceShortIdlePeriod( final long idlePeriod )
     {
-        LateralCacheMonitor.idlePeriod = idlePeriod;
+        LateralCacheMonitor.setIdlePeriod(idlePeriod);
     }
 
     /**

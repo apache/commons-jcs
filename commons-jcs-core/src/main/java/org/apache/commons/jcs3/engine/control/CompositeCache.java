@@ -1231,7 +1231,8 @@ public class CompositeCache<K, V>
                     || fromRemote && aux.getCacheType() == CacheType.REMOTE_CACHE)
                 {
                     log.info("In DISPOSE, [{0}] SKIPPING auxiliary [{1}] fromRemote [{2}]",
-                            this.cacheAttr::getCacheName, aux::getCacheName,
+                            this.cacheAttr::getCacheName, 
+                            () -> aux == null ? "null" : aux.getCacheName(),
                             () -> fromRemote);
                     continue;
                 }

@@ -33,7 +33,7 @@ public class SoftReferenceElementDescriptor<K, V>
     private static final long serialVersionUID = -1905161209035522460L;
 
     /** The CacheElement wrapped by this descriptor */
-    private final SoftReference<ICacheElement<K, V>> srce;
+    private transient final SoftReference<ICacheElement<K, V>> srce;
 
     /**
      * Constructs a usable MemoryElementDescriptor.

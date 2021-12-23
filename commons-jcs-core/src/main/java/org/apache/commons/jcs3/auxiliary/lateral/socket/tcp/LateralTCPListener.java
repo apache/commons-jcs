@@ -475,7 +475,7 @@ public class LateralTCPListener<K, V>
      */
     private void runListener(final ServerSocketChannel serverSocket)
     {
-        try (final Selector selector = Selector.open())
+        try (Selector selector = Selector.open())
         {
             serverSocket.register(selector, SelectionKey.OP_ACCEPT);
             log.debug("Waiting for clients to connect");
@@ -703,8 +703,8 @@ public class LateralTCPListener<K, V>
                 // if a hashcode was given and filtering is on
                 // check to see if they are the same
                 // if so, then don't remove, otherwise issue a remove
-                if ( (led.getValHashCode() != -1) &&
-                        getTcpLateralCacheAttributes().isFilterRemoveByHashCode() )
+                if (led.getValHashCode() != -1 &&
+                    getTcpLateralCacheAttributes().isFilterRemoveByHashCode())
                 {
                     final ICacheElement<K, V> test = getCache( cacheName ).localGet( key );
                     if ( test != null )

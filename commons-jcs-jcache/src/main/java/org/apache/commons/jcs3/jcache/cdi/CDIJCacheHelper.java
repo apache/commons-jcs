@@ -347,6 +347,7 @@ public class CDIJCacheHelper
         return defaultCacheResolverFactory();
     }
 
+    @SuppressWarnings("unchecked")
     private <T> T instance(final Class<T> type)
     {
         final Set<Bean<?>> beans = beanManager.getBeans(type);
@@ -463,7 +464,8 @@ public class CDIJCacheHelper
                 return false;
             }
             final MethodKey classKey = MethodKey.class.cast(o);
-            return delegate.equals(classKey.delegate) && ((base == null && classKey.base == null) || (base != null && base.equals(classKey.base)));
+            return delegate.equals(classKey.delegate) &&
+                (base == null && classKey.base == null || base != null && base.equals(classKey.base));
         }
 
         @Override

@@ -265,8 +265,6 @@ public class RemoteCacheServer<K, V>
         try
         {
             final CacheListeners<K, V> cacheDesc = getCacheListeners( item.getCacheName() );
-            /* Object val = */item.getVal();
-
             final boolean fromCluster = isRequestFromCluster( requesterId );
 
             log.debug( "In update, requesterId = [{0}] fromCluster = {1}", requesterId, fromCluster );

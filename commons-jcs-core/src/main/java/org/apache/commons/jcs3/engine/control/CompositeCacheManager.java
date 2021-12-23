@@ -237,7 +237,7 @@ public class CompositeCacheManager
     }
 
     /** Creates a shutdown hook and starts the scheduler service */
-    protected void initialize()
+    protected synchronized void initialize()
     {
         if (!isInitialized)
         {
@@ -411,7 +411,7 @@ public class CompositeCacheManager
      * <p>
      * @param properties assumed not null
      */
-    private void doConfigure( final Properties properties )
+    private synchronized void doConfigure( final Properties properties )
     {
         // We will expose this for managers that need raw properties.
         this.configurationProperties = properties;
@@ -584,85 +584,82 @@ public class CompositeCacheManager
     /**
      * Calls freeCache on all regions
      */
-    public void shutDown()
+    public synchronized void shutDown()
     {
-        synchronized (CompositeCacheManager.class)
+        // shutdown element event queue
+        if (this.elementEventQueue != null)
         {
-            // shutdown element event queue
-            if (this.elementEventQueue != null)
-            {
-                this.elementEventQueue.dispose();
-            }
-
-            // notify any observers
-            IShutdownObserver observer = null;
-            while ((observer = shutdownObservers.poll()) != null)
-            {
-                observer.shutdown();
-            }
-
-            // Unregister JMX bean
-            if (isJMXRegistered)
-            {
-                final MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
-                try
-                {
-                    final ObjectName jmxObjectName = new ObjectName(jmxName);
-                    mbs.unregisterMBean(jmxObjectName);
-                }
-                catch (final Exception e)
-                {
-                    log.warn( "Could not unregister JMX bean.", e );
-                }
-
-                isJMXRegistered = false;
-            }
-
-            // do the traditional shutdown of the regions.
-            getCacheNames().forEach(this::freeCache);
-
-            // shut down auxiliaries
-            for (final String key : auxiliaryCaches.keySet())
-            {
-                try
-                {
-                    freeAuxiliaryCache(key);
-                }
-                catch (final IOException e)
-                {
-                    log.warn("Auxiliary cache {0} failed to shut down", key, e);
-                }
-            }
-
-            // shut down factories
-            auxiliaryFactoryRegistry.values().forEach(AuxiliaryCacheFactory::dispose);
-
-            auxiliaryAttributeRegistry.clear();
-            auxiliaryFactoryRegistry.clear();
-
-            // shutdown all scheduled jobs
-            this.scheduledExecutor.shutdownNow();
-
-            // shutdown all thread pools
-            ThreadPoolManager.dispose();
-
-            if (shutdownHook != null)
-            {
-                try
-                {
-                    Runtime.getRuntime().removeShutdownHook(shutdownHook);
-                }
-                catch (final IllegalStateException e)
-                {
-                    // May fail if the JVM is already shutting down
-                }
-
-                this.shutdownHook = null;
-            }
-
-            isConfigured = false;
-            isInitialized = false;
+            this.elementEventQueue.dispose();
         }
+
+        // notify any observers
+        IShutdownObserver observer = null;
+        while ((observer = shutdownObservers.poll()) != null)
+        {
+            observer.shutdown();
+        }
+
+        // Unregister JMX bean
+        if (isJMXRegistered)
+        {
+            final MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
+            try
+            {
+                final ObjectName jmxObjectName = new ObjectName(jmxName);
+                mbs.unregisterMBean(jmxObjectName);
+            }
+            catch (final Exception e)
+            {
+                log.warn( "Could not unregister JMX bean.", e );
+            }
+
+            isJMXRegistered = false;
+        }
+
+        // do the traditional shutdown of the regions.
+        getCacheNames().forEach(this::freeCache);
+
+        // shut down auxiliaries
+        for (final String key : auxiliaryCaches.keySet())
+        {
+            try
+            {
+                freeAuxiliaryCache(key);
+            }
+            catch (final IOException e)
+            {
+                log.warn("Auxiliary cache {0} failed to shut down", key, e);
+            }
+        }
+
+        // shut down factories
+        auxiliaryFactoryRegistry.values().forEach(AuxiliaryCacheFactory::dispose);
+
+        auxiliaryAttributeRegistry.clear();
+        auxiliaryFactoryRegistry.clear();
+
+        // shutdown all scheduled jobs
+        this.scheduledExecutor.shutdownNow();
+
+        // shutdown all thread pools
+        ThreadPoolManager.dispose();
+
+        if (shutdownHook != null)
+        {
+            try
+            {
+                Runtime.getRuntime().removeShutdownHook(shutdownHook);
+            }
+            catch (final IllegalStateException e)
+            {
+                // May fail if the JVM is already shutting down
+            }
+
+            this.shutdownHook = null;
+        }
+
+        isConfigured = false;
+        isInitialized = false;
     }
 
     /** */

@@ -69,13 +69,13 @@ public class RemoteHttpCacheServlet
     private static ICacheServiceNonLocal<Serializable, Serializable> remoteCacheService;
 
     /** This needs to be standard, since the other side is standard */
-    private final StandardSerializer serializer = new StandardSerializer();
+    private static final StandardSerializer serializer = new StandardSerializer();
 
     /** Number of service calls. */
     private int serviceCalls;
 
     /** The interval at which we will log the count. */
-    private final int logInterval = 100;
+    private static final int logInterval = 100;
 
     /**
      * Initializes the cache.
@@ -134,7 +134,7 @@ public class RemoteHttpCacheServlet
     {
         RemoteCacheRequest<Serializable, Serializable> remoteRequest = null;
 
-        try (final InputStream inputStream = request.getInputStream())
+        try (InputStream inputStream = request.getInputStream())
         {
             log.debug( "After getting input stream and before reading it" );
             remoteRequest = readRequestFromStream( inputStream );
@@ -169,7 +169,7 @@ public class RemoteHttpCacheServlet
      */
     protected void writeResponse( final HttpServletResponse response, final RemoteCacheResponse<Object> cacheResponse )
     {
-        try (final OutputStream outputStream = response.getOutputStream())
+        try (OutputStream outputStream = response.getOutputStream())
         {
             response.setContentType( "application/octet-stream" );
             serializer.serializeTo(cacheResponse, outputStream);

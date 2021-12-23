@@ -23,7 +23,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.StringTokenizer;
 
 /**
  * Parses the very simple schedule format.
@@ -48,14 +47,12 @@ public class ScheduleParser
             throw new ParseException( "Cannot create schedules for a null String.", 0 );
         }
 
-        final StringTokenizer toker = new StringTokenizer( schedule, "," );
-        final Date[] dates = new Date[toker.countTokens()];
+        final String timeStrings[] = schedule.split("\\s*,\\s*");
+        final Date[] dates = new Date[timeStrings.length];
         int cnt = 0;
-        while ( toker.hasMoreTokens() )
+        for (String time : timeStrings)
         {
-            final String time = toker.nextToken();
-            dates[cnt] = getDateForSchedule( time );
-            cnt++;
+            dates[cnt++] = getDateForSchedule(time);
         }
         return dates;
     }

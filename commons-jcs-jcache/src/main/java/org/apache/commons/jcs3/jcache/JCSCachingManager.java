@@ -189,19 +189,20 @@ public class JCSCachingManager implements CacheManager
         assertNotClosed();
         assertNotNull(cacheName, "cacheName");
         assertNotNull(configuration, "configuration");
-        final Class<?> keyType = configuration.getKeyType();
-        final Class<?> valueType = configuration.getValueType();
+        final Class<K> keyType = configuration.getKeyType();
+        final Class<V> valueType = configuration.getValueType();
         if (caches.containsKey(cacheName)) {
             throw new javax.cache.CacheException("cache " + cacheName + " already exists");
         }
+        @SuppressWarnings("unchecked")
         final Cache<K, V> cache = ClassLoaderAwareCache.wrap(loader,
-                new JCSCache/*<K, V>*/(
+                new JCSCache<>(
                         loader, this, cacheName,
-                        new JCSConfiguration/*<K, V>*/(configuration, keyType, valueType),
+                        new JCSConfiguration<K, V>(configuration, keyType, valueType),
                         properties,
                         ExpiryAwareCache.class.cast(delegate.getCache(cacheName))));
         caches.putIfAbsent(cacheName, cache);
-        return (Cache<K, V>) getCache(cacheName, keyType, valueType);
+        return getCache(cacheName, keyType, valueType);
     }
 
     @Override
@@ -341,8 +342,8 @@ public class JCSCachingManager implements CacheManager
 
         @SuppressWarnings("unchecked") // don't know how to solve this
         final Configuration<K, V> config = cache.getConfiguration(Configuration.class);
-        if ((keyType != null && !config.getKeyType().isAssignableFrom(keyType))
-                || (valueType != null && !config.getValueType().isAssignableFrom(valueType)))
+        if (keyType != null && !config.getKeyType().isAssignableFrom(keyType) ||
+            valueType != null && !config.getValueType().isAssignableFrom(valueType))
         {
             throw new IllegalArgumentException("this cache is <" + config.getKeyType().getName() + ", " + config.getValueType().getName()
                     + "> " + " and not <" + keyType.getName() + ", " + valueType.getName() + ">");

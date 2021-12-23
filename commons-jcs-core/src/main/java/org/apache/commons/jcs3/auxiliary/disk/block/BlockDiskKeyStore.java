@@ -436,8 +436,8 @@ public class BlockDiskKeyStore<K>
 
             if (fileSignature != KEY_FILE_SIGNATURE)
             {
-                try (final InputStream fis = Files.newInputStream(keyFile.toPath());
-                     final ObjectInputStream ois = new ObjectInputStreamClassLoaderAware(fis, null))
+                try (InputStream fis = Files.newInputStream(keyFile.toPath());
+                     ObjectInputStream ois = new ObjectInputStreamClassLoaderAware(fis, null))
                 {
                     while (true)
                     {

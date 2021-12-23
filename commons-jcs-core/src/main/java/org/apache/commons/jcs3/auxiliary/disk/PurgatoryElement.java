@@ -30,7 +30,8 @@ import org.apache.commons.jcs3.engine.behavior.IElementAttributes;
  * been written to disk.
  */
 public class PurgatoryElement<K, V>
-    extends CacheElement<K, V>
+    extends CacheElement<K, V> // Remove this superclass in next major release
+//    implements ICacheElement<K, V>
 {
     /** Don't change */
     private static final long serialVersionUID = -8152034342684135628L;
@@ -48,9 +49,7 @@ public class PurgatoryElement<K, V>
      */
     public PurgatoryElement( final ICacheElement<K, V> cacheElement )
     {
-        super(cacheElement.getCacheName(),
-                cacheElement.getKey(), cacheElement.getVal(),
-                cacheElement.getElementAttributes());
+        super(cacheElement.getCacheName(), cacheElement.getKey(), cacheElement.getVal());
         this.cacheElement = cacheElement;
     }
 
