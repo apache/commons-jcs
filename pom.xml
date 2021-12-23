@@ -510,6 +510,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-javadoc-plugin</artifactId>
+            <version>3.3.1</version>
             <configuration>
               <aggregate>true</aggregate>
             </configuration>
@@ -531,7 +532,6 @@
               <argLine>--add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.util=ALL-UNNAMED</argLine>
             </configuration>
           </plugin>
-
         </plugins>
       </build>
     </profile>
@@ -547,8 +547,8 @@
     <commons.componentid>jcs</commons.componentid>
     <commons.osgi.symbolicName>org.apache.commons.${project.artifactId}</commons.osgi.symbolicName>
     <commons.module.name>org.apache.commons.jcs3</commons.module.name>
-    <commons.release.version>3.0</commons.release.version>
-    <commons.release.name>commons-jcs3-dist-3.0</commons.release.name>
+    <commons.release.version>3.1</commons.release.version>
+    <commons.release.name>commons-jcs3-dist-3.1</commons.release.name>
     <commons.release.desc>(Java 8+)</commons.release.desc>
     <!-- The RC version used in the staging repository URL. -->
     <commons.rc.version>RC1</commons.rc.version>
