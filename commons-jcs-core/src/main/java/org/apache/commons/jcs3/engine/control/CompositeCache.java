@@ -185,6 +185,11 @@ public class CompositeCache<K, V>
                     new ShrinkerThread<>(this), 0, cacheAttr.getShrinkerIntervalSeconds(),
                     TimeUnit.SECONDS);
         }
+
+        if (memCache instanceof IRequireScheduler)
+        {
+            ((IRequireScheduler) memCache).setScheduledExecutorService(scheduledExecutor);
+        }
     }
 
     /**

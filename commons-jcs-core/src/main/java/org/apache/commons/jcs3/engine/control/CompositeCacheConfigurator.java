@@ -213,12 +213,6 @@ public class CompositeCacheConfigurator
         // Inject element event queue
         cache.setElementEventQueue(ccm.getElementEventQueue());
 
-        if (cache.getMemoryCache() instanceof IRequireScheduler)
-        {
-            ((IRequireScheduler)cache.getMemoryCache()).setScheduledExecutorService(
-                    ccm.getScheduledExecutorService());
-        }
-
         if (auxiliaries != null)
         {
             // Next, create the auxiliaries for the new cache
