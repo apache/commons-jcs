@@ -260,7 +260,8 @@ public class PropertySetter
         }
         else if( type.isEnum() )
         {
-            return Enum.valueOf(type.asSubclass(Enum.class), v );
+            Enum<?> valueOf = Enum.valueOf(type.asSubclass(Enum.class), v);
+            return valueOf;
         }
         else if ( File.class.isAssignableFrom( type ) )
         {
@@ -281,7 +282,8 @@ public class PropertySetter
             introspect();
         }
 
-        for (final PropertyDescriptor prop : props) {
+        for (final PropertyDescriptor prop : props)
+        {
             if ( name.equals( prop.getName() ) )
             {
                 return prop;
