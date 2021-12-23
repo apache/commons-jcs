@@ -126,6 +126,8 @@ public class RemoteCacheNoWaitFacade<K, V>
      * Connection in the background. If failovers are defined, the Failover runner
      * will try to connect to a failover until the primary is restored.
      * If no failovers are defined, this will exit automatically.
+     *
+     * @since 3.1
      */
     protected void connectAndRestore()
     {

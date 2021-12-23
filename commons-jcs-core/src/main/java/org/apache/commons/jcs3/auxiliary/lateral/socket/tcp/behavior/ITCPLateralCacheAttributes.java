@@ -143,6 +143,7 @@ public interface ITCPLateralCacheAttributes
      * The time-to-live for the UDP multicast packets
      * <p>
      * @return Returns the udpTTL.
+     * @since 3.1
      */
     int getUdpTTL();
 
@@ -150,6 +151,7 @@ public interface ITCPLateralCacheAttributes
      * Sets the time-to-live for the UDP multicast packet
      * <p>
      * @param udpTTL The udpTTL to set.
+     * @since 3.1
      */
     void setUdpTTL( final int udpTTL );
 

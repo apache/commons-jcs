@@ -99,6 +99,7 @@ public class UDPDiscoveryManager
      * @param serializer
      *
      * @return UDPDiscoveryService
+     * @since 3.1
      */
     public UDPDiscoveryService getService( final String discoveryAddress, final int discoveryPort,
             final String serviceAddress, final int servicePort, final int updTTL,

@@ -110,6 +110,7 @@ public class LateralCacheNoWait<K, V>
      * The identifying key to this no wait
      *
      * @return the identity key
+     * @since 3.1
      */
     public String getIdentityKey()
     {
@@ -120,6 +121,7 @@ public class LateralCacheNoWait<K, V>
      * Set the identifying key to this no wait
      *
      * @param identityKey the identityKey to set
+     * @since 3.1
      */
     public void setIdentityKey(String identityKey)
     {

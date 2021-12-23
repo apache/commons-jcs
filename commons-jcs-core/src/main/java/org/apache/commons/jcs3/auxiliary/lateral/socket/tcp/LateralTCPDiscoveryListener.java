@@ -94,6 +94,7 @@ public class LateralTCPDiscoveryListener
      * @param cacheEventLogger Reference to the cache event logger for auxiliary cache creation
      * @param elementSerializer Reference to the cache element serializer for auxiliary cache
      * creation
+     * @since 3.1
      */
     protected LateralTCPDiscoveryListener( final String factoryName,
             final CompositeCacheManager cacheManager,
@@ -191,6 +192,7 @@ public class LateralTCPDiscoveryListener
      * @param facade the related facade
      * @return true if we found the no wait and added it. False if the no wait was not present or if
      *         we already had it.
+     * @since 3.1
      */
     protected <K, V> boolean addNoWait(final LateralCacheNoWait<K, V> noWait,
             final LateralCacheNoWaitFacade<K, V> facade)
@@ -235,6 +237,7 @@ public class LateralTCPDiscoveryListener
      * @param cacheName
      * @param tcpServer
      * @return true if we found the no wait and removed it. False if the no wait was not present.
+     * @since 3.1
      */
     protected <K, V> boolean removeNoWait(final LateralCacheNoWaitFacade<K, V> facade,
             final String cacheName, final String tcpServer)

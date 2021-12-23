@@ -81,6 +81,7 @@ public class LateralTCPSender
      * @param lca the configuration object
      * @param serializer the serializer to use when sending
      * @throws IOException
+     * @since 3.1
      */
     public LateralTCPSender( final ITCPLateralCacheAttributes lca, final IElementSerializer serializer )
         throws IOException

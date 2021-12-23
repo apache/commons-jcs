@@ -239,6 +239,7 @@ public class LateralTCPCacheFactory
      * @param elementSerializer the serializer to use when sending or receiving
      *
      * @return ICacheServiceNonLocal&lt;K, V&gt;
+     * @since 3.1
      */
     // Need to cast because of common map for all cache services
     @SuppressWarnings("unchecked")
@@ -292,6 +293,7 @@ public class LateralTCPCacheFactory
      * Add cache instance to monitor
      *
      * @param cache the cache instance
+     * @since 3.1
      */
     public void monitorCache(final LateralCacheNoWait<?, ?> cache)
     {

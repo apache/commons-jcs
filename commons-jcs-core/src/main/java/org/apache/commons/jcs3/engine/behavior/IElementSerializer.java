@@ -72,6 +72,7 @@ public interface IElementSerializer
      * @param os the output stream
      * @return the number of bytes written
      * @throws IOException if serialization or writing fails
+     * @since 3.1
      */
     default <T> int serializeTo(T obj, OutputStream os)
         throws IOException
@@ -95,6 +96,7 @@ public interface IElementSerializer
      * @param oc the output channel
      * @return the number of bytes written
      * @throws IOException if serialization or writing fails
+     * @since 3.1
      */
     default <T> int serializeTo(T obj, WritableByteChannel oc)
         throws IOException
@@ -124,6 +126,7 @@ public interface IElementSerializer
      * @param writeTimeoutMs the write timeout im milliseconds
      * @return the number of bytes written
      * @throws IOException if serialization or writing fails
+     * @since 3.1
      */
     default <T> int serializeTo(T obj, AsynchronousByteChannel oc, int writeTimeoutMs)
         throws IOException
@@ -161,6 +164,7 @@ public interface IElementSerializer
      * @param loader class loader to use
      * @throws IOException if serialization or reading fails
      * @throws ClassNotFoundException thrown if we don't know the object.
+     * @since 3.1
      */
     default <T> T deSerializeFrom(InputStream is, ClassLoader loader)
         throws IOException, ClassNotFoundException
@@ -191,6 +195,7 @@ public interface IElementSerializer
      * @param loader class loader to use
      * @throws IOException if serialization or reading fails
      * @throws ClassNotFoundException thrown if we don't know the object.
+     * @since 3.1
      */
     default <T> T deSerializeFrom(ReadableByteChannel ic, ClassLoader loader)
         throws IOException, ClassNotFoundException
@@ -230,6 +235,7 @@ public interface IElementSerializer
      * @param loader class loader to use
      * @throws IOException if serialization or reading fails
      * @throws ClassNotFoundException thrown if we don't know the object.
+     * @since 3.1
      */
     default <T> T deSerializeFrom(AsynchronousByteChannel ic, int readTimeoutMs, ClassLoader loader)
         throws IOException, ClassNotFoundException

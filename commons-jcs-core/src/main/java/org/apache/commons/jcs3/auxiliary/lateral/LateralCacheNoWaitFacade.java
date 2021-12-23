@@ -102,6 +102,7 @@ public class LateralCacheNoWaitFacade<K, V>
      * @param listener the cache listener
      * @param noWaits the list of noWaits
      * @param cattr the configuration
+     * @since 3.1
      */
     @SuppressWarnings("unchecked") // No generic arrays in java
     public LateralCacheNoWaitFacade(final ILateralCacheListener<K, V> listener,
@@ -120,6 +121,7 @@ public class LateralCacheNoWaitFacade<K, V>
      * Return the size of the no wait list (for testing)
      *
      * @return the noWait list size.
+     * @since 3.1
      */
     protected int getNoWaitSize()
     {
@@ -143,6 +145,7 @@ public class LateralCacheNoWaitFacade<K, V>
      * <p>
      * @param tcpServer the identifying key
      * @return true if the noWait is in the list.
+     * @since 3.1
      */
     public boolean containsNoWait(final String tcpServer)
     {
@@ -199,6 +202,7 @@ public class LateralCacheNoWaitFacade<K, V>
      * <p>
      * @param tcpServer the identifying key.
      * @return true if it was already in the array
+     * @since 3.1
      */
     @SuppressWarnings("unchecked") // No generic arrays in java
     public synchronized boolean removeNoWait(final String tcpServer)

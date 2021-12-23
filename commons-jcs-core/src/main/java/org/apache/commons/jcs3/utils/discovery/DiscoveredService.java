@@ -59,6 +59,7 @@ public class DiscoveredService
      * Constructor
      *
      * @param message incoming message
+     * @since 3.1
      */
     public DiscoveredService(UDPDiscoveryMessage message)
     {

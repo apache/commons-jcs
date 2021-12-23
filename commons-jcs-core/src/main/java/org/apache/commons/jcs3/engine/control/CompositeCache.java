@@ -197,6 +197,7 @@ public class CompositeCache<K, V>
      * It filters out null caches
      * <p>
      * @param auxCaches
+     * @since 3.1
      */
     public void setAuxCaches(final List<AuxiliaryCache<K, V>> auxCaches)
     {
@@ -220,7 +221,8 @@ public class CompositeCache<K, V>
     /**
      * Get the list of auxiliary caches for this region.
      * <p>
-     * @return an array of auxiliary caches, may be empty, never null
+     * @return a list of auxiliary caches, may be empty, never null
+     * @since 3.1
      */
     public List<AuxiliaryCache<K, V>> getAuxCacheList()
     {
@@ -1231,7 +1233,7 @@ public class CompositeCache<K, V>
                     || fromRemote && aux.getCacheType() == CacheType.REMOTE_CACHE)
                 {
                     log.info("In DISPOSE, [{0}] SKIPPING auxiliary [{1}] fromRemote [{2}]",
-                            this.cacheAttr::getCacheName, 
+                            this.cacheAttr::getCacheName,
                             () -> aux == null ? "null" : aux.getCacheName(),
                             () -> fromRemote);
                     continue;

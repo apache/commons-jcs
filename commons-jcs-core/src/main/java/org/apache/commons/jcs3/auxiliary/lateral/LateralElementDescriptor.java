@@ -72,6 +72,7 @@ public class LateralElementDescriptor<K, V>
      * <p>
      * @param ce ICacheElement&lt;K, V&gt; payload
      * @param command operation requested by the client
+     * @since 3.1
      */
     public LateralElementDescriptor( final ICacheElement<K, V> ce, LateralCommand command)
     {
@@ -85,6 +86,7 @@ public class LateralElementDescriptor<K, V>
      * @param ce ICacheElement&lt;K, V&gt; payload
      * @param command operation requested by the client
      * @param requesterId id of the the source of the request
+     * @since 3.1
      */
     public LateralElementDescriptor( final ICacheElement<K, V> ce, LateralCommand command, long requesterId)
     {
@@ -96,6 +98,7 @@ public class LateralElementDescriptor<K, V>
      * Return payload
      *
      * @return the ce
+     * @since 3.1
      */
     public ICacheElement<K, V> getPayload()
     {
@@ -106,6 +109,7 @@ public class LateralElementDescriptor<K, V>
      * Return id of the the source of the request
      *
      * @return the requesterId
+     * @since 3.1
      */
     public long getRequesterId()
     {
@@ -116,6 +120,7 @@ public class LateralElementDescriptor<K, V>
      * Return operation requested by the client
      *
      * @return the command
+     * @since 3.1
      */
     public LateralCommand getCommand()
     {
@@ -124,6 +129,7 @@ public class LateralElementDescriptor<K, V>
 
     /**
      * @return the valHashCode
+     * @since 3.1
      */
     public int getValHashCode()
     {

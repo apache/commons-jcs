@@ -51,6 +51,9 @@ public interface ILateralCacheAttributes
             this.typeName = typeName;
         }
 
+        /**
+         * @since 3.1
+         */
         @Override
         public String toString()
         {

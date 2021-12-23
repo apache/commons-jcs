@@ -114,6 +114,7 @@ public class UDPDiscoveryReceiver
      * @param multicastAddress
      * @param multicastPort
      * @throws IOException
+     * @since 3.1
      */
     public UDPDiscoveryReceiver( final UDPDiscoveryService service,
             final String multicastInterfaceString,
@@ -324,6 +325,7 @@ public class UDPDiscoveryReceiver
      * For testing
      *
      * @param serializer the serializer to set
+     * @since 3.1
      */
     protected void setSerializer(IElementSerializer serializer)
     {

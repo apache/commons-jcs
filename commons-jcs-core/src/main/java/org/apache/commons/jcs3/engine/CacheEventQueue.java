@@ -63,6 +63,7 @@ public class CacheEventQueue<K, V>
      * Create the thread pool.
      * <p>
      * @param threadPoolName
+     * @since 3.1
      */
     @Override
     protected ExecutorService createPool(final String threadPoolName)

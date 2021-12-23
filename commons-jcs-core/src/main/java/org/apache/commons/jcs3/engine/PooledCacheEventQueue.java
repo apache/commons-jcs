@@ -98,6 +98,7 @@ public class PooledCacheEventQueue<K, V>
      * Create the thread pool.
      * <p>
      * @param threadPoolName
+     * @since 3.1
      */
     protected ExecutorService createPool(final String threadPoolName)
     {

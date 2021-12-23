@@ -37,6 +37,8 @@ import org.apache.commons.jcs3.engine.behavior.IElementSerializer;
 /**
  * Performs serialization and de-serialization. It encrypts and decrypts the
  * value.
+ *
+ * @since 3.1
  */
 public class EncryptingSerializer extends StandardSerializer
 {

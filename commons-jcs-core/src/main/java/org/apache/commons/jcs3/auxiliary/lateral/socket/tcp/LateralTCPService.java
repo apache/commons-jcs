@@ -82,6 +82,7 @@ public class LateralTCPService<K, V>
      * @param lca ITCPLateralCacheAttributes the configuration object
      * @param serializer the serializer to use when sending
      * @throws IOException
+     * @since 3.1
      */
     public LateralTCPService( final ITCPLateralCacheAttributes lca, final IElementSerializer serializer )
         throws IOException

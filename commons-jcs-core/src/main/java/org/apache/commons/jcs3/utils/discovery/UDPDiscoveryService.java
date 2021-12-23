@@ -109,6 +109,7 @@ public class UDPDiscoveryService
      *
      * @param attributes settings of service
      * @param serializer the serializer to use to send and receive messages
+     * @since 3.1
      */
     public UDPDiscoveryService(final UDPDiscoveryAttributes attributes, IElementSerializer serializer)
     {
@@ -222,6 +223,8 @@ public class UDPDiscoveryService
     /**
      * This goes through the list of services and removes those that we haven't heard from in longer
      * than the max idle time.
+     *
+     * @since 3.1
      */
     protected void cleanup()
     {
@@ -247,6 +250,8 @@ public class UDPDiscoveryService
 
     /**
      * Initial request that the other caches let it know their addresses.
+     *
+     * @since 3.1
      */
     public void initiateBroadcast()
     {
@@ -301,6 +306,8 @@ public class UDPDiscoveryService
 
     /**
      * Issues a remove broadcast to the others.
+     *
+     * @since 3.1
      */
     protected void shutdownBroadcast()
     {
@@ -415,6 +422,7 @@ public class UDPDiscoveryService
      * Return the serializer implementation
      *
      * @return the serializer
+     * @since 3.1
      */
     public IElementSerializer getSerializer()
     {

@@ -97,6 +97,7 @@ public class HostNameUtil
      * <p>
      * @return InetAddress
      * @throws UnknownHostException If the LAN address of the machine cannot be found.
+     * @since 3.1
      */
     public static InetAddress getLocalHostLANAddress()
         throws UnknownHostException

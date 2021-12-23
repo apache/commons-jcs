@@ -87,6 +87,7 @@ public class UDPDiscoverySender implements AutoCloseable
      * @param udpDiscoveryAttributes configuration object
      * @param serializer the Serializer to use when sending messages
      * @throws IOException
+     * @since 3.1
      */
     public UDPDiscoverySender(final UDPDiscoveryAttributes udpDiscoveryAttributes, final IElementSerializer serializer)
         throws IOException
@@ -111,6 +112,7 @@ public class UDPDiscoverySender implements AutoCloseable
      * @param udpTTL the Datagram packet time-to-live
      * @param serializer the Serializer to use when sending messages
      * @throws IOException
+     * @since 3.1
      */
     public UDPDiscoverySender(final String mcastInterface, final String host,
             final int port, final int udpTTL, IElementSerializer serializer)
