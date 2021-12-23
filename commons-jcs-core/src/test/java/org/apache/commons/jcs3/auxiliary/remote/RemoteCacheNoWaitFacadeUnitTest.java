@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.commons.jcs3.auxiliary.AuxiliaryCache;
 import org.apache.commons.jcs3.auxiliary.remote.behavior.IRemoteCacheAttributes;
+import org.apache.commons.jcs3.engine.CacheStatus;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -76,9 +77,11 @@ public class RemoteCacheNoWaitFacadeUnitTest
         assertEquals("Should have two managers.", 2, factory.managers.size());
         assertEquals("Should have primary server.", 0, cattr.getFailoverIndex());
         RemoteCacheNoWait<String, String> primary = facade.getPrimaryServer();
+        assertEquals("Should be ALIVE", CacheStatus.ALIVE, primary.getStatus());
 
         // Make primary unusable
         facade.getPrimaryServer().getCacheEventQueue().destroy();
+        assertEquals("Should be ERROR", CacheStatus.ERROR, primary.getStatus());
         facade.attemptRestorePrimary = false;
         facade.connectAndRestore();
 
@@ -87,5 +90,6 @@ public class RemoteCacheNoWaitFacadeUnitTest
         assertEquals("Should have two managers.", 2, factory.managers.size());
         assertEquals("Should have switched to secondary server.", 1, cattr.getFailoverIndex());
         assertNotSame("Should have diferent primary now", primary, facade.getPrimaryServer());
+        assertEquals("Should be ALIVE", CacheStatus.ALIVE, facade.getPrimaryServer().getStatus());
     }
 }
