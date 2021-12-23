@@ -20,6 +20,9 @@
 	</properties>
 	<body>
         <release version="3.1" date="20YY-MM-DD">
+            <action dev="tv" type="fix" due-to="Patrick Ziegler" issue="JCS-228">
+               Attempt to fix osgi import packages
+            </action>
             <action dev="tv" type="fix" due-to="Prajakta Uplaikar" issue="JCS-191">
                Fix for Server Failover mechanism not working, add test
             </action>
