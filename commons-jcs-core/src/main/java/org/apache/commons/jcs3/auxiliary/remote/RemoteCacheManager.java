@@ -248,7 +248,7 @@ public class RemoteCacheManager
             listener = new RemoteCacheListener<>( cattr, cacheMgr, elementSerializer );
             addRemoteCacheListener( cattr, listener );
         }
-        catch ( final Exception e )
+        catch ( final IOException e )
         {
             log.error( "Problem adding listener. RemoteCacheListener = {0}",
                     listener, e );
