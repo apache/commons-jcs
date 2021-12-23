@@ -19,7 +19,7 @@
 		<author email="dev@commons.apache.org">Apache Commons Developers</author>
 	</properties>
 	<body>
-        <release version="3.1" date="20YY-MM-DD">
+        <release version="3.1" date="2021-12-23">
             <action dev="tv" type="fix" due-to="Patrick Ziegler" issue="JCS-228">
                Attempt to fix osgi import packages
             </action>
