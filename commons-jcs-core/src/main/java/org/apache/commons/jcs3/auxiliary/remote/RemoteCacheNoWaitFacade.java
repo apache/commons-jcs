@@ -51,6 +51,9 @@ public class RemoteCacheNoWaitFacade<K, V>
     /** Provide factory instance to RemoteCacheFailoverRunner */
     private final RemoteCacheFactory cacheFactory;
 
+    /** Attempt to restore primary connection (switched off for testing) */
+    protected boolean attemptRestorePrimary = true;
+
     /** Time in ms to sleep between failover attempts */
     private static final long idlePeriod = 20000L;
 
@@ -127,6 +130,23 @@ public class RemoteCacheNoWaitFacade<K, V>
     protected void connectAndRestore()
     {
         final IRemoteCacheAttributes rca0 = getAuxiliaryCacheAttributes();
+        // Each RemoteCacheManager corresponds to one remote connection.
+        final List<RemoteLocation> failovers = rca0.getFailovers();
+        // we should probably check to see if there are any failovers,
+        // even though the caller should have already.
+
+        if ( failovers == null )
+        {
+            log.warn( "Remote is misconfigured, failovers was null." );
+            return;
+        }
+        if ( failovers.size() == 1 )
+        {
+            // if there is only the primary, return out of this
+            log.info( "No failovers defined, exiting failover runner." );
+            return;
+        }
+
         final AtomicBoolean allright = new AtomicBoolean(false);
 
         do
@@ -137,27 +157,9 @@ public class RemoteCacheNoWaitFacade<K, V>
             if ( !allright.get() )
             {
                 // Monitor each RemoteCacheManager instance one after the other.
-                // Each RemoteCacheManager corresponds to one remote connection.
-                final List<RemoteLocation> failovers = rca0.getFailovers();
-                // we should probably check to see if there are any failovers,
-                // even though the caller should have already.
-
-                if ( failovers == null )
-                {
-                    log.warn( "Remote is misconfigured, failovers was null." );
-                    return;
-                }
-                if ( failovers.size() == 1 )
-                {
-                    // if there is only the primary, return out of this
-                    log.info( "No failovers defined, exiting failover runner." );
-                    return;
-                }
-
                 final int fidx = rca0.getFailoverIndex();
-                log.debug( "fidx = {0} failovers.size = {1}", () -> fidx, failovers::size);
+                log.debug( "fidx = {0} failovers.size = {1}", rca0::getFailoverIndex, failovers::size);
 
-                // shouldn't we see if the primary is backup?
                 // If we don't check the primary, if it gets connected in the
                 // background,
                 // we will disconnect it only to put it right back
@@ -167,8 +169,9 @@ public class RemoteCacheNoWaitFacade<K, V>
                 // try them one at a time until successful
                 while (i.hasNext() && !allright.get())
                 {
+                    final int failoverIndex = i.nextIndex();
                     final RemoteLocation server = i.next();
-                    log.debug( "Trying server [{0}] at failover index i = {1}", server, i );
+                    log.debug("Trying server [{0}] at failover index i = {1}", server, failoverIndex);
 
                     final RemoteCacheAttributes rca = (RemoteCacheAttributes) rca0.clone();
                     rca.setRemoteLocation(server);
@@ -186,16 +189,16 @@ public class RemoteCacheNoWaitFacade<K, V>
                             // may need to do this more gracefully
                             log.debug( "resetting no wait" );
                             restorePrimaryServer((RemoteCacheNoWait<K, V>) ic);
-                            rca0.setFailoverIndex( i.nextIndex() );
+                            rca0.setFailoverIndex(failoverIndex);
 
-                            log.debug( "setting ALLRIGHT to true" );
-                            if ( i.hasPrevious() )
+                            log.debug("setting ALLRIGHT to true");
+                            if (i.hasPrevious())
                             {
-                                log.debug( "Moving to Primary Recovery Mode, failover index = {0}", i );
+                                log.debug("Moving to Primary Recovery Mode, failover index = {0}", failoverIndex);
                             }
                             else
                             {
-                                log.debug( "No need to connect to failover, the primary server is back up." );
+                                log.debug("No need to connect to failover, the primary server is back up.");
                             }
 
                             allright.set(true);
@@ -216,19 +219,24 @@ public class RemoteCacheNoWaitFacade<K, V>
                         + "primary server.", rca0::getFailoverIndex);
             }
 
+            // Exit loop if in test mode
+            if (allright.get() && !attemptRestorePrimary)
+            {
+                break;
+            }
+
             boolean primaryRestoredSuccessfully = false;
             // if we are not connected to the primary, try.
-            if ( rca0.getFailoverIndex() > 0 )
+            if (rca0.getFailoverIndex() > 0)
             {
                 primaryRestoredSuccessfully = restorePrimary();
                 log.debug( "Primary recovery success state = {0}",
                         primaryRestoredSuccessfully );
             }
 
-            if ( !primaryRestoredSuccessfully )
+            if (!primaryRestoredSuccessfully)
             {
-                // Time driven mode: sleep between each round of recovery
-                // attempt.
+                // Time driven mode: sleep between each round of recovery attempt.
                 try
                 {
                     log.warn( "Failed to reconnect to primary server. "
@@ -244,12 +252,12 @@ public class RemoteCacheNoWaitFacade<K, V>
 
             // try to bring the listener back to the primary
         }
-        while ( rca0.getFailoverIndex() > 0 || !allright.get() );
+        while (rca0.getFailoverIndex() > 0 || !allright.get());
         // continue if the primary is not restored or if things are not allright.
 
         if ( log.isInfoEnabled() )
         {
-            final int failoverIndex = getAuxiliaryCacheAttributes().getFailoverIndex();
+            final int failoverIndex = rca0.getFailoverIndex();
             log.info( "Exiting failover runner. Failover index = {0}", failoverIndex);
 
             if ( failoverIndex <= 0 )

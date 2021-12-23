@@ -3,6 +3,7 @@ package org.apache.commons.jcs3.auxiliary.remote;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.jcs3.auxiliary.AuxiliaryCache;
 import org.apache.commons.jcs3.auxiliary.remote.behavior.IRemoteCacheAttributes;
 
 /*
@@ -52,5 +53,39 @@ public class RemoteCacheNoWaitFacadeUnitTest
         assertEquals( "Should have one entry.", 1, facade.noWaits.size() );
         assertTrue( "Should be in the list.", facade.noWaits.contains( noWait ) );
         assertSame( "Should have same facade.", facade, ((RemoteCache<String, String>)facade.noWaits.get(0).getRemoteCache()).getFacade() );
+    }
+
+    /**
+     * Verify that failover works
+     */
+    public void testFailover()
+    {
+        // SETUP
+        final IRemoteCacheAttributes cattr = new RemoteCacheAttributes();
+        cattr.setCacheName("testCache1");
+        cattr.setFailoverServers("localhost:1101,localhost:1102");
+        cattr.setReceive(false);
+
+        final TestRemoteCacheFactory factory = new TestRemoteCacheFactory();
+        factory.initialize();
+
+        final AuxiliaryCache<String, String> cache = factory.createCache(cattr, null, null, null);
+        final RemoteCacheNoWaitFacade<String, String> facade =
+                (RemoteCacheNoWaitFacade<String, String>) cache;
+        assertEquals("Should have two failovers.", 2, cattr.getFailovers().size());
+        assertEquals("Should have two managers.", 2, factory.managers.size());
+        assertEquals("Should have primary server.", 0, cattr.getFailoverIndex());
+        RemoteCacheNoWait<String, String> primary = facade.getPrimaryServer();
+
+        // Make primary unusable
+        facade.getPrimaryServer().getCacheEventQueue().destroy();
+        facade.attemptRestorePrimary = false;
+        facade.connectAndRestore();
+
+        // VERIFY
+        assertEquals("Should have two failovers.", 2, cattr.getFailovers().size());
+        assertEquals("Should have two managers.", 2, factory.managers.size());
+        assertEquals("Should have switched to secondary server.", 1, cattr.getFailoverIndex());
+        assertNotSame("Should have diferent primary now", primary, facade.getPrimaryServer());
     }
 }
