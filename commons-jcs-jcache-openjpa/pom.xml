@@ -21,12 +21,12 @@
   <parent>
     <artifactId>commons-jcs3</artifactId>
     <groupId>org.apache.commons</groupId>
-    <version>3.2-SNAPSHOT</version>
+    <version>3.1-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>commons-jcs3-jcache-openjpa</artifactId>
-  <version>3.2-SNAPSHOT</version>
+  <version>3.1-SNAPSHOT</version>
   <name>Apache Commons JCS :: JCache OpenJPA</name>
 
   <scm>
