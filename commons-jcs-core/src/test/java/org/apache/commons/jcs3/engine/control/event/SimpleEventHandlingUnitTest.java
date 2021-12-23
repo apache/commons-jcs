@@ -35,7 +35,10 @@ public class SimpleEventHandlingUnitTest
     extends TestCase
 {
     /** Items to test with */
-    private static final int items = 20000;
+    private static final int items = 2000;
+
+    /** Event handler instance */
+    private MyEventHandler meh;
 
     /**
      * Test setup with expected configuration parameters.
@@ -44,6 +47,7 @@ public class SimpleEventHandlingUnitTest
     public void setUp()
     {
         JCS.setConfigFilename( "/TestSimpleEventHandling.ccf" );
+        this.meh = new MyEventHandler();
     }
 
     /**
@@ -54,9 +58,6 @@ public class SimpleEventHandlingUnitTest
     public void testSpoolEvent()
         throws Exception
     {
-        // SETUP
-        final MyEventHandler meh = new MyEventHandler();
-
         final CacheAccess<String, String> jcs = JCS.getInstance( "WithDisk" );
         // this should add the event handler to all items as they are created.
         final IElementAttributes attributes = jcs.getDefaultElementAttributes();
@@ -65,11 +66,10 @@ public class SimpleEventHandlingUnitTest
 
         // DO WORK
         // put them in
-        for ( int i = 0; i <= items; i++ )
+        for ( int i = 0; i < items; i++ )
         {
             jcs.put( i + ":key", "data" + i );
         }
-
         // wait a bit for it to finish
         Thread.sleep( items / 20 );
 
@@ -89,15 +89,13 @@ public class SimpleEventHandlingUnitTest
     {
         final CacheAccess<String, String> jcs = JCS.getInstance( "NoDisk" );
 
-        final MyEventHandler meh = new MyEventHandler();
-
         // this should add the event handler to all items as they are created.
         final IElementAttributes attributes = jcs.getDefaultElementAttributes();
         attributes.addElementEventHandler( meh );
         jcs.setDefaultElementAttributes( attributes );
 
         // put them in
-        for ( int i = 0; i <= items; i++ )
+        for ( int i = 0; i < items; i++ )
         {
             jcs.put( i + ":key", "data" + i );
         }
@@ -118,8 +116,6 @@ public class SimpleEventHandlingUnitTest
     public void testSpoolNotAllowedEvent()
         throws Exception
     {
-        final MyEventHandler meh = new MyEventHandler();
-
         final CacheAccess<String, String> jcs = JCS.getInstance( "DiskButNotAllowed" );
         // this should add the event handler to all items as they are created.
         final IElementAttributes attributes = jcs.getDefaultElementAttributes();
@@ -127,7 +123,7 @@ public class SimpleEventHandlingUnitTest
         jcs.setDefaultElementAttributes( attributes );
 
         // put them in
-        for ( int i = 0; i <= items; i++ )
+        for ( int i = 0; i < items; i++ )
         {
             jcs.put( i + ":key", "data" + i );
         }
@@ -148,8 +144,6 @@ public class SimpleEventHandlingUnitTest
     public void testSpoolNotAllowedEventOnItem()
         throws Exception
     {
-        final MyEventHandler meh = new MyEventHandler();
-
         final CacheAccess<String, String> jcs = JCS.getInstance( "DiskButNotAllowed" );
         // this should add the event handler to all items as they are created.
         //IElementAttributes attributes = jcs.getDefaultElementAttributes();
@@ -157,7 +151,7 @@ public class SimpleEventHandlingUnitTest
         //jcs.setDefaultElementAttributes( attributes );
 
         // put them in
-        for ( int i = 0; i <= items; i++ )
+        for ( int i = 0; i < items; i++ )
         {
             final IElementAttributes attributes = jcs.getDefaultElementAttributes();
             attributes.addElementEventHandler( meh );
@@ -180,8 +174,6 @@ public class SimpleEventHandlingUnitTest
     public void testExceededMaxlifeOnrequestEvent()
         throws Exception
     {
-        final MyEventHandler meh = new MyEventHandler();
-
         final CacheAccess<String, String> jcs = JCS.getInstance( "Maxlife" );
         // this should add the event handler to all items as they are created.
         final IElementAttributes attributes = jcs.getDefaultElementAttributes();
@@ -195,7 +187,7 @@ public class SimpleEventHandlingUnitTest
         }
 
         // wait a bit for the items to expire
-        Thread.sleep( 3000 );
+        Thread.sleep(attributes.getMaxLife() * 1000 + 100);
 
         for ( int i = 0; i < 200; i++ )
         {
@@ -218,8 +210,6 @@ public class SimpleEventHandlingUnitTest
     public void testExceededIdletimeOnrequestEvent()
         throws Exception
     {
-        final MyEventHandler meh = new MyEventHandler();
-
         final CacheAccess<String, String> jcs = JCS.getInstance( "Idletime" );
         // this should add the event handler to all items as they are created.
         final IElementAttributes attributes = jcs.getDefaultElementAttributes();
@@ -240,7 +230,7 @@ public class SimpleEventHandlingUnitTest
         }
 
         // wait a bit for the items to expire
-        Thread.sleep( 1500 );
+        Thread.sleep(attributes.getIdleTime() * 1000 + 100);
 
         for ( int i = 0; i < 200; i++ )
         {

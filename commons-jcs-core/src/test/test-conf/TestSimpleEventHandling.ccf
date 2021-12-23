@@ -47,7 +47,7 @@ jcs.region.Maxlife.cacheattributes=org.apache.commons.jcs3.engine.CompositeCache
 jcs.region.Maxlife.cacheattributes.MaxObjects=200
 jcs.region.Maxlife.cacheattributes.MemoryCacheName=org.apache.commons.jcs3.engine.memory.lru.LRUMemoryCache
 jcs.region.Maxlife.elementattributes.IsEternal=false
-jcs.region.Maxlife.elementattributes.MaxLife=2
+jcs.region.Maxlife.elementattributes.MaxLife=1
 
 jcs.region.Idletime=
 jcs.region.Idletime.cacheattributes=org.apache.commons.jcs3.engine.CompositeCacheAttributes
