@@ -97,7 +97,7 @@
                Bump actions/cache from 2.1.5 to 2.1.6 #70.
             </action>
             <action type="update" dev="ggregory" due-to="Dependabot">
-               Bump log4j-api from 2.13.2 to 2.17.0 #79.
+               Bump log4j-api from 2.13.2 to 2.17.1 #79, #81.
             </action>
         </release>
         <release version="3.0" date="2020-08-16">
