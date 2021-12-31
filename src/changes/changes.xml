@@ -19,7 +19,11 @@
 		<author email="dev@commons.apache.org">Apache Commons Developers</author>
 	</properties>
 	<body>
-        <release version="3.1" date="2021-12-23">
+        <release version="3.1" date="2022-01-02">
+            <action dev="tv" type="fix" due-to="Bruno Kinoshita">
+               Use new SecureRandom() instead of SecureRandom.getStrongInstance() to 
+               avoid potential performance problems on Linux
+            </action>
             <action dev="tv" type="fix" due-to="Patrick Ziegler" issue="JCS-228">
                Attempt to fix osgi import packages
             </action>
