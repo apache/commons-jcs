@@ -83,6 +83,12 @@ jcs.auxiliary.blockDiskCache2.serializer.attributes.preSharedKey=my_secret
 jcs.auxiliary.blockDiskCache2.serializer.attributes.aesCipherTransformation=AES/GCM/NoPadding
                 ]]>
             </source>
+
+            <p> The encryption code uses the default constructor of SecureRandom() to create
+                a random number generator. Depending on your security requirements, you should
+                configure a SecureRandom that works for your environment, giving preference to 
+                the ones with good randomness (given that your environment generates entropy fast 
+                enough, we saw problems with Linux).</p>
         </section>
 	</body>
 </document>
