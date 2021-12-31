@@ -21,11 +21,16 @@ package org.apache.commons.jcs3.utils.serialization;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.GCMParameterSpec;
@@ -42,7 +47,10 @@ import org.apache.commons.jcs3.engine.behavior.IElementSerializer;
  */
 public class EncryptingSerializer extends StandardSerializer
 {
+    private static final String DEFAULT_SECRET_KEY_ALGORITHM = "PBKDF2WithHmacSHA256";
     private static final String DEFAULT_CIPHER = "AES/ECB/PKCS5Padding";
+    private static final int KEYHASH_ITERATION_COUNT = 1000;
+    private static final int KEY_LENGTH = 256;
     private static final int TAG_LENGTH = 128;
     private static final int IV_LENGTH = 12;
     private static final int SALT_LENGTH = 16;
@@ -82,8 +90,8 @@ public class EncryptingSerializer extends StandardSerializer
 
         try
         {
-            this.secureRandom = SecureRandom.getInstanceStrong();
-            this.secretKeyFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
+            this.secureRandom = new SecureRandom();
+            this.secretKeyFactory = SecretKeyFactory.getInstance(DEFAULT_SECRET_KEY_ALGORITHM);
         }
         catch (NoSuchAlgorithmException e)
         {
@@ -112,7 +120,7 @@ public class EncryptingSerializer extends StandardSerializer
         this.cipherTransformation = transformation;
     }
 
-    private byte[] getRandomBytes(int length) throws NoSuchAlgorithmException
+    private byte[] getRandomBytes(int length)
     {
         byte[] bytes = new byte[length];
         secureRandom.nextBytes(bytes);
@@ -120,10 +128,11 @@ public class EncryptingSerializer extends StandardSerializer
         return bytes;
     }
 
-    private SecretKey createSecretKey(String password, byte[] salt) throws NoSuchAlgorithmException, InvalidKeySpecException
+    private SecretKey createSecretKey(String password, byte[] salt) throws InvalidKeySpecException
     {
         /* Derive the key, given password and salt. */
-        PBEKeySpec spec = new PBEKeySpec(password.toCharArray(), salt, 1000, 256);
+        PBEKeySpec spec = new PBEKeySpec(password.toCharArray(), salt,
+                KEYHASH_ITERATION_COUNT, KEY_LENGTH);
         SecretKey tmp = secretKeyFactory.generateSecret(spec);
         return new SecretKeySpec(tmp.getEncoded(), "AES");
     }
@@ -155,7 +164,9 @@ public class EncryptingSerializer extends StandardSerializer
                     .put(encrypted)
                     .array();
         }
-        catch (Exception e)
+        catch (NoSuchAlgorithmException | NoSuchPaddingException | BadPaddingException |
+                IllegalBlockSizeException | InvalidKeyException | InvalidKeySpecException |
+                InvalidAlgorithmParameterException e)
         {
             throw new IOException("Error while encrypting", e);
         }
@@ -191,7 +202,9 @@ public class EncryptingSerializer extends StandardSerializer
 
             return cipher.doFinal(encrypted);
         }
-        catch (Exception e)
+        catch (NoSuchAlgorithmException | NoSuchPaddingException | BadPaddingException |
+                IllegalBlockSizeException | InvalidKeyException | InvalidKeySpecException |
+                InvalidAlgorithmParameterException e)
         {
             throw new IOException("Error while decrypting", e);
         }
