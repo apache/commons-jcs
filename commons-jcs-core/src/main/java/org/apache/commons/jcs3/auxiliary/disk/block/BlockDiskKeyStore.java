@@ -466,9 +466,9 @@ public class BlockDiskKeyStore<K>
         {
             keyHash.putAll(keys);
 
-            log.debug("{0}: Found {1} in keys file.", logCacheName, keys.size());
+            log.debug("{0}: Found {1} in keys file.", () -> logCacheName, keys::size);
             log.info("{0}: Loaded keys from [{1}], key count: {2}; up to {3} will be available.",
-                    () -> logCacheName, () -> fileName, () -> keyHash.size(),
+                    () -> logCacheName, () -> fileName, this::size,
                     () -> maxKeySize);
         }
     }
@@ -517,7 +517,7 @@ public class BlockDiskKeyStore<K>
     {
         final ElapsedTimer timer = new ElapsedTimer();
         log.info("{0}: Saving keys to [{1}], key count [{2}]", () -> logCacheName,
-                this.keyFile::getAbsolutePath, () -> keyHash.size());
+                this.keyFile::getAbsolutePath, this::size);
 
         synchronized (keyFile)
         {
@@ -553,7 +553,7 @@ public class BlockDiskKeyStore<K>
         }
 
         log.info("{0}: Finished saving keys. It took {1} to store {2} keys. Key file length [{3}]",
-                () -> logCacheName, timer::getElapsedTimeString, () -> keyHash.size(),
+                () -> logCacheName, timer::getElapsedTimeString, this::size,
                 keyFile::length);
     }
 
@@ -580,13 +580,8 @@ public class BlockDiskKeyStore<K>
         {
             for (final int block : e.getValue())
             {
-                Set<K> keys = blockAllocationMap.get(block);
-                if (keys == null)
-                {
-                    keys = new HashSet<>();
-                    blockAllocationMap.put(block, keys);
-                }
-                else if (!log.isTraceEnabled())
+                Set<K> keys = blockAllocationMap.computeIfAbsent(block, HashSet::new);
+                if (!keys.isEmpty() && !log.isTraceEnabled())
                 {
                     // keys are not null, and no debug - fail fast
                     return false;
@@ -594,13 +589,14 @@ public class BlockDiskKeyStore<K>
                 keys.add(e.getKey());
             }
         }
-        boolean ok = true;
-        if (!log.isTraceEnabled()) {
+        if (!log.isTraceEnabled())
+        {
             return true;
         }
+        boolean ok = true;
         for (final Entry<Integer, Set<K>> e : blockAllocationMap.entrySet())
         {
-            log.trace("Block {0}: {1}", e.getKey(), e.getValue());
+            log.trace("Block {0}: {1}", e::getKey, e::getValue);
             if (e.getValue().size() > 1)
             {
                 ok = false;
