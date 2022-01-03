@@ -41,6 +41,8 @@ o           Add BlockDiskKeyStore.isEmpty(). Thanks to Gary Gregory.
 o           Add IndexedDisk.isEmpty(). Thanks to Gary Gregory.
 
 Fixed Bugs:
+o           Use new SecureRandom() instead of SecureRandom.getStrongInstance() to 
+            avoid potential performance problems on Linux Thanks to Bruno Kinoshita.
 o JCS-228:  Attempt to fix osgi import packages Thanks to Patrick Ziegler.
 o JCS-191:  Fix for Server Failover mechanism not working, add test Thanks to Prajakta Uplaikar.
 o JCS-186:  Use configured listener address for UDP service broadcast Thanks to Alex L.
@@ -48,7 +50,7 @@ o JCS-186:  Fix UDP service discovery with LateralCache Thanks to Alex L.
 o           Fix shutdown race conditions
 
 Changes:
-o           Update from Apache Log4j 2.15.0 to 2.17.0 Thanks to Gary Gregory.
+o           Update from Apache Log4j 2.14.1 to 2.17.1 Thanks to Gary Gregory.
 o           Autodetect lateral service address on the interface used for multicast - 
             depending on the multicast protocol: 
             IPv6 link-local address for IPv6 multicast,
@@ -69,7 +71,7 @@ o           Update from Apache Commons Lang 3.10 to 3.12.0. Thanks to Gary Grego
 o           Bump build actions/setup-java from v1.4.3 to v2. Thanks to Gary Gregory.
 o           Update from Apache Commons IO 2.8.0 to 2.10.0, #72. Thanks to Gary Gregory, Dependabot.
 o           Bump actions/cache from 2.1.5 to 2.1.6 #70. Thanks to Dependabot.
-o           Bump log4j-api from 2.13.2 to 2.17.0 #79. Thanks to Dependabot.
+o           Bump log4j-api from 2.13.2 to 2.17.1 #79, #81. Thanks to Dependabot.
 
 Removed:
 o           Remove support for long deprecated and inconsistent 
