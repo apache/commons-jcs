@@ -580,7 +580,7 @@ public class BlockDiskKeyStore<K>
         {
             for (final int block : e.getValue())
             {
-                Set<K> keys = blockAllocationMap.computeIfAbsent(block, HashSet::new);
+                Set<K> keys = blockAllocationMap.computeIfAbsent(block, s -> new HashSet<>());
                 if (!keys.isEmpty() && !log.isTraceEnabled())
                 {
                     // keys are not null, and no debug - fail fast
