@@ -19,6 +19,11 @@
 		<author email="dev@commons.apache.org">Apache Commons Developers</author>
 	</properties>
 	<body>
+        <release version="3.2" date="TBD">
+            <action dev="ggregory" type="update" due-to="Dependabot">
+               Bump actions/checkout from 2 to 3 #93.
+            </action>
+        </release>
         <release version="3.1" date="2022-01-03">
             <action dev="tv" type="fix" due-to="Bruno Kinoshita">
                Use new SecureRandom() instead of SecureRandom.getStrongInstance() to 
