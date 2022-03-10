@@ -61,7 +61,6 @@ import java.util.Vector;
  * implementation this could provide much higher cache consistency (but with
  * a substantial speed penalty).
  *
- * @version $Id$
  */
 public class JavaGroupsCache
     implements AuxiliaryCache, RequestHandler, MembershipListener

@@ -32,7 +32,6 @@ import org.apache.commons.jcs3.log.LogManager;
 /**
  * A background memory shrinker. Memory problems and concurrent modification exception caused by
  * acting directly on an iterator of the underlying memory cache should have been solved.
- * @version $Id$
  */
 public class ShrinkerThread<K, V>
     implements Runnable
