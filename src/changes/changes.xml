@@ -26,6 +26,9 @@
             <action dev="ggregory" type="update" due-to="Dependabot">
                Bump log4j-api from 2.17.1 to 2.17.2 #85.
             </action>
+            <action dev="ggregory" type="update" due-to="Dependabot">
+               Bump actions/cache from 2.1.7 to 3 #86.
+            </action>
         </release>
         <release version="3.1" date="2022-01-03">
             <action dev="tv" type="fix" due-to="Bruno Kinoshita">
