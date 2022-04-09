@@ -109,13 +109,13 @@ public class LateralTCPCacheFactory
 
                 final LateralCacheNoWait<K, V> lateralNoWait = createCacheNoWait(lacClone, cacheEventLogger, elementSerializer);
 
-                addListenerIfNeeded( lacClone, cacheMgr );
+                addListenerIfNeeded( lacClone, cacheMgr, elementSerializer );
                 monitorCache(lateralNoWait);
                 noWaits.add( lateralNoWait );
             }
         }
 
-        final ILateralCacheListener<K, V> listener = createListener( lac, cacheMgr );
+        final ILateralCacheListener<K, V> listener = createListener( lac, cacheMgr, elementSerializer );
 
         // create the no wait facade.
         final LateralCacheNoWaitFacade<K, V> lcnwf =
@@ -330,15 +330,16 @@ public class LateralTCPCacheFactory
      * <p>
      * @param iaca cache configuration attributes
      * @param cacheMgr the composite cache manager
+     * @param serializer the serializer to use when receiving
      */
-    private void addListenerIfNeeded( final ITCPLateralCacheAttributes iaca, final ICompositeCacheManager cacheMgr )
+    private void addListenerIfNeeded( final ITCPLateralCacheAttributes iaca, final ICompositeCacheManager cacheMgr, final IElementSerializer elementSerializer )
     {
         // don't create a listener if we are not receiving.
         if ( iaca.isReceive() )
         {
             try
             {
-                addLateralCacheListener(iaca.getCacheName(), createListener(iaca, cacheMgr));
+                addLateralCacheListener(iaca.getCacheName(), createListener(iaca, cacheMgr, elementSerializer));
             }
             catch ( final IOException ioe )
             {
@@ -375,11 +376,12 @@ public class LateralTCPCacheFactory
      * <p>
      * @param attr  ITCPLateralCacheAttributes
      * @param cacheMgr the composite cache manager
+     * @param serializer the serializer to use when receiving
      *
      * @return the listener if created, else null
      */
     private static <K, V> ILateralCacheListener<K, V> createListener( final ITCPLateralCacheAttributes attr,
-            final ICompositeCacheManager cacheMgr )
+            final ICompositeCacheManager cacheMgr, final IElementSerializer elementSerializer )
     {
         ILateralCacheListener<K, V> listener = null;
 
@@ -389,7 +391,7 @@ public class LateralTCPCacheFactory
             log.info( "Getting listener for {0}", attr );
 
             // make a listener. if one doesn't exist
-            listener = LateralTCPListener.getInstance( attr, cacheMgr );
+            listener = LateralTCPListener.getInstance( attr, cacheMgr, elementSerializer );
 
             // register for shutdown notification
             cacheMgr.registerShutdownObserver( (IShutdownObserver) listener );

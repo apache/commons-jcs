@@ -108,15 +108,43 @@ public class LateralTCPListener<K, V>
      * @param ilca ITCPLateralCacheAttributes
      * @param cacheMgr
      * @return The instance value
+     * @deprecated Specify serializer
      */
+    @Deprecated
     @SuppressWarnings("unchecked") // Need to cast because of common map for all instances
     public static <K, V> LateralTCPListener<K, V>
-        getInstance( final ITCPLateralCacheAttributes ilca, final ICompositeCacheManager cacheMgr )
+        getInstance( final ITCPLateralCacheAttributes ilca, final ICompositeCacheManager cacheMgr)
     {
         return (LateralTCPListener<K, V>) instances.computeIfAbsent(
                 String.valueOf( ilca.getTcpListenerPort() ),
                 k -> {
-                    final LateralTCPListener<K, V> newIns = new LateralTCPListener<>( ilca );
+                    final LateralTCPListener<K, V> newIns = new LateralTCPListener<>( ilca, new StandardSerializer() );
+
+                    newIns.init();
+                    newIns.setCacheManager( cacheMgr );
+
+                    log.info("Created new listener {0}", ilca::getTcpListenerPort);
+
+                    return newIns;
+                });
+    }
+    
+    /**
+     * Gets the instance attribute of the LateralCacheTCPListener class.
+     * <p>
+     * @param ilca ITCPLateralCacheAttributes
+     * @param cacheMgr
+     * @param serializer the serializer to use when receiving
+     * @return The instance value
+     */
+    @SuppressWarnings("unchecked") // Need to cast because of common map for all instances
+    public static <K, V> LateralTCPListener<K, V>
+        getInstance( final ITCPLateralCacheAttributes ilca, final ICompositeCacheManager cacheMgr, final IElementSerializer serializer )
+    {
+        return (LateralTCPListener<K, V>) instances.computeIfAbsent(
+                String.valueOf( ilca.getTcpListenerPort() ),
+                k -> {
+                    final LateralTCPListener<K, V> newIns = new LateralTCPListener<>( ilca, serializer );
 
                     newIns.init();
                     newIns.setCacheManager( cacheMgr );
@@ -131,10 +159,12 @@ public class LateralTCPListener<K, V>
      * Only need one since it does work for all regions, just reference by multiple region names.
      * <p>
      * @param ilca
+     * @param serializer the serializer to use when receiving
      */
-    protected LateralTCPListener( final ITCPLateralCacheAttributes ilca )
+    protected LateralTCPListener( final ITCPLateralCacheAttributes ilca, final IElementSerializer serializer )
     {
         this.setTcpLateralCacheAttributes( ilca );
+        this.serializer = serializer;
     }
 
     /**
@@ -150,8 +180,6 @@ public class LateralTCPListener<K, V>
 
             terminated.set(false);
             shutdown.set(false);
-
-            serializer = new StandardSerializer();
 
             final ServerSocketChannel serverSocket = ServerSocketChannel.open();
 

@@ -30,11 +30,13 @@ import org.apache.commons.jcs3.auxiliary.lateral.LateralElementDescriptor;
 import org.apache.commons.jcs3.engine.CacheElement;
 import org.apache.commons.jcs3.engine.behavior.ICacheElement;
 import org.apache.commons.jcs3.engine.behavior.ICompositeCacheManager;
+import org.apache.commons.jcs3.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs3.engine.control.CompositeCache;
 import org.apache.commons.jcs3.engine.control.CompositeCacheManager;
 import org.apache.commons.jcs3.engine.control.MockCompositeCacheManager;
 import org.apache.commons.jcs3.engine.control.group.GroupAttrName;
 import org.apache.commons.jcs3.engine.control.group.GroupId;
+import org.apache.commons.jcs3.utils.serialization.EncryptingSerializer;
 import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
 import org.apache.commons.jcs3.utils.timing.SleepUtil;
 
@@ -70,7 +72,7 @@ public class TestTCPLateralUnitTest
         // get the listener started
         // give it our mock cache manager
         //LateralTCPListener listener = (LateralTCPListener)
-        LateralTCPListener.getInstance( lattr, cacheMgr );
+        LateralTCPListener.getInstance( lattr, cacheMgr, new StandardSerializer());
 
         return cache;
     }
@@ -98,22 +100,38 @@ public class TestTCPLateralUnitTest
     public void testSimpleSend()
         throws Exception
     {
-        // SETUP
+    	simpleSend(new StandardSerializer(), 8111);
+    }
+    
+    /**
+     * @throws Exception
+     */
+    public void testSimpleEncriptedSend()
+            throws Exception
+    {
+    	EncryptingSerializer serializer = new EncryptingSerializer();
+    	serializer.setPreSharedKey("my_key");
+    	simpleSend(serializer, 8112);
+    }
+    
+    private void simpleSend(final IElementSerializer serializer, final int port ) throws IOException {
+    	// SETUP
         // force initialization
         JCS.getInstance( "test" );
 
         final TCPLateralCacheAttributes lac = new TCPLateralCacheAttributes();
         lac.setTransmissionType(LateralCacheAttributes.Type.TCP);
-        lac.setTcpServer( "localhost:" + 8111 );
-        lac.setTcpListenerPort( 8111 );
+        lac.setTcpServer( "localhost:" + port );
+        lac.setTcpListenerPort( port );
 
         final ICompositeCacheManager cacheMgr = CompositeCacheManager.getInstance();
 
+
         // start the listener
-        final LateralTCPListener<String, String> listener = LateralTCPListener.getInstance( lac, cacheMgr );
+        final LateralTCPListener<String, String> listener = LateralTCPListener.getInstance( lac, cacheMgr, serializer );
 
         // send to the listener
-        final LateralTCPSender lur = new LateralTCPSender(lac,  new StandardSerializer());
+        final LateralTCPSender lur = new LateralTCPSender(lac,  serializer);
 
         // DO WORK
         final int numMes = 10;
