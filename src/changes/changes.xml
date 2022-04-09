@@ -20,7 +20,16 @@
 	</properties>
 	<body>
         <release version="3.2" date="TBD">
+            <action dev="tv" type="fix" issue="JCS-230" due-to="Dorota Oeknigk-Urbanska">
+               UDPDiscoveryReceiver with EncryptingSerializer fails #88.
+            </action>
+            <action dev="tv" type="fix" issue="JCS-229" due-to="Dorota Oeknigk-Urbanska">
+               LateralTCPListener class uses always StandardSerializer #89.
+            </action>
             <!-- UPDATE -->
+            <action dev="tv" type="update" due-to="Dependabot">
+               Bump commons-parent from 52 to 53 #90.
+            </action>
             <action dev="ggregory" type="update" due-to="Dependabot">
                Bump actions/checkout from 2 to 3 #93.
             </action>
