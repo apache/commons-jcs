@@ -24,19 +24,19 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.util.Enumeration;
 
+import org.apache.commons.jcs3.auxiliary.AuxiliaryCache;
 import org.apache.commons.jcs3.auxiliary.MockCacheEventLogger;
 import org.apache.commons.jcs3.auxiliary.remote.MockRemoteCacheListener;
-import org.apache.commons.jcs3.engine.control.MockCompositeCacheManager;
-import org.apache.commons.jcs3.engine.control.MockElementSerializer;
-import org.apache.commons.jcs3.utils.timing.SleepUtil;
-import org.apache.commons.jcs3.auxiliary.AuxiliaryCache;
 import org.apache.commons.jcs3.auxiliary.remote.RemoteCacheAttributes;
 import org.apache.commons.jcs3.auxiliary.remote.RemoteCacheFactory;
 import org.apache.commons.jcs3.auxiliary.remote.RemoteCacheManager;
 import org.apache.commons.jcs3.engine.CacheElement;
 import org.apache.commons.jcs3.engine.CacheStatus;
 import org.apache.commons.jcs3.engine.behavior.ICacheElement;
+import org.apache.commons.jcs3.engine.control.MockCompositeCacheManager;
+import org.apache.commons.jcs3.engine.control.MockElementSerializer;
 import org.apache.commons.jcs3.utils.net.HostNameUtil;
+import org.apache.commons.jcs3.utils.timing.SleepUtil;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -118,11 +118,6 @@ public class BasicRemoteCacheClientServerUnitTest extends Assert
         if (server != null) { // in case setup failed, no point throwing NPE as well
             server.shutdown("localhost", remotePort);
         }
-        // Debug: unfortunately Surefire restarts JVM so log files get overwritten
-        // There's probably a better way to fix this ...
-        final java.io.File jcsLog = new java.io.File("target/jcs.log");
-        final java.io.File logSave = new java.io.File("target/BasicRemoteCacheClientServerUnitTest_jcs.log");
-        System.out.println("Renamed log file? "+jcsLog.renameTo(logSave));
     }
 
     /**
