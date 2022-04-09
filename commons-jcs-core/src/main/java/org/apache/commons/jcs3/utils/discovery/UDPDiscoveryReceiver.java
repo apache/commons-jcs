@@ -258,8 +258,9 @@ public class UDPDiscoveryReceiver
                         try
                         {
                             log.debug("Received packet from address [{0}]", sourceAddress);
-
-                            Object obj = serializer.deSerialize(byteBuffer.array(), null);
+                            byte[] bytes = new byte[byteBuffer.limit()];
+                            byteBuffer.get(bytes);
+                            Object obj = serializer.deSerialize(bytes, null);
 
                             if (obj instanceof UDPDiscoveryMessage)
                             {
