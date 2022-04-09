@@ -37,7 +37,7 @@ import junit.framework.TestCase;
 /**
  * Tests for the sender with EncryptingSerializer.
  */
-public class UDPDiscoverySenderEncriptedUnitTest
+public class UDPDiscoverySenderEncryptedUnitTest
 	extends TestCase
 {
     /** multicast address to send/receive on */
