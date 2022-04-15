@@ -27,17 +27,20 @@
                LateralTCPListener class uses always StandardSerializer #89.
             </action>
             <!-- UPDATE -->
+            <action dev="ggregory" type="update" due-to="Dependabot">
+               Bump actions/checkout from 2 to 3 #93.
+            </action>
+            <action dev="ggregory" type="update" due-to="Dependabot, Gary Gregory">
+               Bump actions/cache from 2.1.7 to 3.0.2 #86.
+            </action>
+            <action dev="ggregory" type="update" due-to="Gary Gregory">
+               Bump actions/setup-java from 2 to 3.
+            </action>
             <action dev="tv" type="update" due-to="Dependabot">
                Bump commons-parent from 52 to 53 #90.
             </action>
             <action dev="ggregory" type="update" due-to="Dependabot">
-               Bump actions/checkout from 2 to 3 #93.
-            </action>
-            <action dev="ggregory" type="update" due-to="Dependabot">
                Bump log4j-api from 2.17.1 to 2.17.2 #85.
-            </action>
-            <action dev="ggregory" type="update" due-to="Dependabot, Gary Gregory">
-               Bump actions/cache from 2.1.7 to 3.0.2 #86.
             </action>
             <action dev="ggregory" type="update" due-to="Dependabot">
                Bump log4j-core from 2.17.1 to 2.17.2 #87.
