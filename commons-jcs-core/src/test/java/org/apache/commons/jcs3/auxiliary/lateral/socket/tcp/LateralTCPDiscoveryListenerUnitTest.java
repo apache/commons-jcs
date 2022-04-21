@@ -194,6 +194,25 @@ public class LateralTCPDiscoveryListenerUnitTest
     }
 
     /**
+     * Test cache creation with empty noWaits.
+     */
+    public void testEmptyNoWaits()
+    {
+        // SETUP
+        final String cacheName = "testEmptyNoWaits";
+
+        final ITCPLateralCacheAttributes lca = new TCPLateralCacheAttributes();
+        lca.setTcpServers(""); // default
+        lca.setTcpListenerPort(1120);
+        lca.setCacheName(cacheName);
+        lca.setUdpDiscoveryEnabled(false);
+        final LateralCacheNoWaitFacade<String, String> noWait = factory.createCache(lca, cacheMgr, cacheEventLogger, elementSerializer);
+
+        // VERIFY
+        assertFalse( "No waits should be empty.", noWait.containsNoWait(""));
+    }
+
+    /**
      * Add a no wait to a known facade.
      */
     public void testAddDiscoveredService_FacadeInList_NoWaitNot()

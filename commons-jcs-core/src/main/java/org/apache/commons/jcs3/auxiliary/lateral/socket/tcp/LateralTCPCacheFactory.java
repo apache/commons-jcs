@@ -96,7 +96,7 @@ public class LateralTCPCacheFactory
         // pairs up the tcp servers and set the tcpServer value and
         // get the manager and then get the cache
         // no servers are required.
-        if ( lac.getTcpServers() != null )
+        if (lac.getTcpServers() != null && !lac.getTcpServers().isEmpty())
         {
             final String servers[] = lac.getTcpServers().split("\\s*,\\s*");
             log.debug( "Configured for [{0}] servers.", servers.length );
