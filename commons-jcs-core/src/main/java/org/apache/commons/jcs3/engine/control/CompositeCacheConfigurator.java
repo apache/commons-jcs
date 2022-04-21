@@ -229,6 +229,12 @@ public class CompositeCacheConfigurator
 
             for (String auxName : auxNames)
             {
+                if (auxName.isEmpty())
+                {
+                    log.warn( "Skipping empty auxiliary name" );
+                    continue;
+                }
+
                 log.debug( "Parsing auxiliary named \"{0}\".", auxName );
 
                 AuxiliaryCache<K, V> auxCache = parseAuxiliary( props, ccm, auxName, regName );

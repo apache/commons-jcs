@@ -42,9 +42,9 @@ public class ScheduleParser
     public static Date[] createDatesForSchedule( final String schedule )
         throws ParseException
     {
-        if ( schedule == null )
+        if (schedule == null || schedule.isEmpty())
         {
-            throw new ParseException( "Cannot create schedules for a null String.", 0 );
+            throw new ParseException( "Cannot create schedules for a null or empty String.", 0 );
         }
 
         final String timeStrings[] = schedule.split("\\s*,\\s*");
