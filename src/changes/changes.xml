@@ -20,6 +20,9 @@
 	</properties>
 	<body>
         <release version="3.2" date="TBD">
+            <action dev="tv" type="fix" issue="JCS-231" due-to="Andrea Vettori">
+               Fix Lateral TCP cache recovery loop for empty TCP servers
+            </action>
             <action dev="tv" type="fix" issue="JCS-230" due-to="Dorota Oeknigk-Urbanska">
                UDPDiscoveryReceiver with EncryptingSerializer fails #88.
             </action>
