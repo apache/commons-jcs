@@ -135,7 +135,7 @@
           <version>${commons.surefire.version}</version>
           <configuration>
             <argLine>-Xmx256m</argLine>
-            <forkCount>1</forkCount>
+            <forkCount>1.5C</forkCount>
             <reuseForks>false</reuseForks>
             <includes>
               <include>**/*UnitTest.java</include>
