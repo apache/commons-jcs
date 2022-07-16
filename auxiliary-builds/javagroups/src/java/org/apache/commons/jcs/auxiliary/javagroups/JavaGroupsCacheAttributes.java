@@ -43,7 +43,6 @@ import org.apache.commons.jcs.auxiliary.AuxiliaryCacheAttributes;
  *   </dd>
  * </dl>
  *
- * @version $Id$
  */
 public class JavaGroupsCacheAttributes implements AuxiliaryCacheAttributes
 {

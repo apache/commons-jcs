@@ -35,7 +35,6 @@ import junit.framework.TestCase;
  * Test which exercises the indexed disk cache. This one uses three different
  * regions for thre threads.
  *
- * @version $Id$
  */
 public class IndexedDiskCacheConcurrentUnitTest
     extends TestCase

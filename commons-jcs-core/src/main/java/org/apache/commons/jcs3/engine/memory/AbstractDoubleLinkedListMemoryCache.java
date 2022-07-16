@@ -372,8 +372,6 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
     /**
      * Dump the cache entries from first to list for debugging.
      */
-    @SuppressWarnings("unchecked")
-    // No generics for public fields
     private void dumpCacheEntries()
     {
         log.trace("dumpingCacheEntries");
@@ -388,8 +386,6 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
      * Checks to see if all the items that should be in the cache are. Checks consistency between
      * List and map.
      */
-    @SuppressWarnings("unchecked")
-    // No generics for public fields
     private void verifyCache()
     {
         boolean found = false;
@@ -471,8 +467,6 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
      *
      * @param key
      */
-    @SuppressWarnings("unchecked")
-    // No generics for public fields
     private void verifyCache(final K key)
     {
         boolean found = false;

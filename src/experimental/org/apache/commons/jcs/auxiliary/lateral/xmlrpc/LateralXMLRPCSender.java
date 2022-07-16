@@ -44,7 +44,6 @@ import java.util.Vector;
  * This class is based on the log4j SocketAppender class. I'm using a differnet
  * repair structure, so it is significant;y different.
  *
- * @version $Id$
  */
 public class LateralXMLRPCSender implements IXMLRPCConstants
 {

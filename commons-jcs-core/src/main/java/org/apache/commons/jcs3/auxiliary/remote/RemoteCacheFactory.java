@@ -88,7 +88,7 @@ public class RemoteCacheFactory
 
                 // GET HANDLE BUT DONT REGISTER A LISTENER FOR FAILOVERS
                 final String failoverList = rca.getFailoverServers();
-                if ( failoverList != null )
+                if (failoverList != null && !failoverList.isEmpty())
                 {
                     final String[] failoverServers = failoverList.split("\\s*,\\s*");
                     for (String server : failoverServers)
@@ -123,6 +123,11 @@ public class RemoteCacheFactory
                 final String[] clusterServers = rca.getClusterServers().split("\\s*,\\s*");
                 for (String server: clusterServers)
                 {
+                    if (server.isEmpty())
+                    {
+                        continue;
+                    }
+
                     final RemoteLocation location = RemoteLocation.parseServerAndPort(server);
 
                     if (location != null)

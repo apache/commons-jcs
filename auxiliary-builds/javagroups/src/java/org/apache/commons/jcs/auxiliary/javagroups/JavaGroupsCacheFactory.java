@@ -32,7 +32,6 @@ import org.javagroups.ChannelFactory;
  * AuxiliaryCacheFactory for creating instances of {@link JavaGroupsCache}
  * for a particular CompositeCache and {@link JavaGroupsCacheAttributes}.
  *
- * @version $Id$
  */
 public class JavaGroupsCacheFactory implements AuxiliaryCacheFactory
 {
