@@ -31,7 +31,7 @@
             </action>
             <!-- UPDATE -->
             <action dev="ggregory" type="update" due-to="Dependabot, Gary Gregory">
-               Bump actions/cache from 2.1.7 to 3.0.6 #86.
+               Bump actions/cache from 2.1.7 to 3.0.7 #86.
             </action>
             <action dev="ggregory" type="update" due-to="Dependabot">
                Bump actions/checkout from 2 to 3 #93.
