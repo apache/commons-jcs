@@ -51,7 +51,7 @@ public class DiskTestObject implements Serializable
     }
 
     /**
-     * @see java.lang.Object#equals(Object other)
+     * @see Object#equals(Object other)
      */
     @Override
     public boolean equals(final Object other)
@@ -70,7 +70,7 @@ public class DiskTestObject implements Serializable
     }
 
     /**
-     * @see java.lang.Object#hashCode()
+     * @see Object#hashCode()
      */
     @Override
     public int hashCode()

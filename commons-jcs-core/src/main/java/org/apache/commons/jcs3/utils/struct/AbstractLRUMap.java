@@ -134,7 +134,7 @@ public abstract class AbstractLRUMap<K, V>
     /**
      * Returns true if the map contains an element for the supplied key.
      * <p>
-     * @see java.util.Map#containsKey(java.lang.Object)
+     * @see java.util.Map#containsKey(Object)
      */
     @Override
     public boolean containsKey( final Object key )
@@ -145,7 +145,7 @@ public abstract class AbstractLRUMap<K, V>
     /**
      * This is an expensive operation that determines if the object supplied is mapped to any key.
      * <p>
-     * @see java.util.Map#containsValue(java.lang.Object)
+     * @see java.util.Map#containsValue(Object)
      */
     @Override
     public boolean containsValue( final Object value )

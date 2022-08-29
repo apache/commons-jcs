@@ -440,7 +440,7 @@ public class ElementAttributes
     }
 
     /**
-     * @see java.lang.Object#clone()
+     * @see Object#clone()
      */
     @Override
     public IElementAttributes clone()

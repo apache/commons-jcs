@@ -65,7 +65,7 @@ public abstract class AbstractAuxiliaryCacheAttributes
     /**
      * This is the name of the auxiliary in configuration file.
      * <p>
-     * @see org.apache.commons.jcs3.auxiliary.AuxiliaryCacheAttributes#setName(java.lang.String)
+     * @see org.apache.commons.jcs3.auxiliary.AuxiliaryCacheAttributes#setName(String)
      */
     @Override
     public void setName( final String s )
@@ -129,7 +129,7 @@ public abstract class AbstractAuxiliaryCacheAttributes
     }
 
     /**
-     * @see java.lang.Object#clone()
+     * @see Object#clone()
      */
     @Override
     public AbstractAuxiliaryCacheAttributes clone()

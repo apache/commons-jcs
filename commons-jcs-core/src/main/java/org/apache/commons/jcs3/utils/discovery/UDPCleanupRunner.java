@@ -46,7 +46,7 @@ public class UDPCleanupRunner
      * This goes through the list of services and removes those that we haven't heard from in longer
      * than the max idle time.
      * <p>
-     * @see java.lang.Runnable#run()
+     * @see Runnable#run()
      */
     @Override
     public void run()

@@ -275,7 +275,7 @@ public class LateralTCPListener<K, V>
      * Increments the remove count. Gets the cache that was injected by the lateral factory. Calls
      * remove on the cache.
      * <p>
-     * @see org.apache.commons.jcs3.engine.behavior.ICacheListener#handleRemove(java.lang.String,
+     * @see org.apache.commons.jcs3.engine.behavior.ICacheListener#handleRemove(String,
      *      Object)
      */
     @Override
@@ -296,7 +296,7 @@ public class LateralTCPListener<K, V>
     /**
      * Gets the cache that was injected by the lateral factory. Calls removeAll on the cache.
      * <p>
-     * @see org.apache.commons.jcs3.engine.behavior.ICacheListener#handleRemoveAll(java.lang.String)
+     * @see org.apache.commons.jcs3.engine.behavior.ICacheListener#handleRemoveAll(String)
      */
     @Override
     public void handleRemoveAll( final String cacheName )
@@ -370,7 +370,7 @@ public class LateralTCPListener<K, V>
     /**
      * This marks this instance as terminated.
      * <p>
-     * @see org.apache.commons.jcs3.engine.behavior.ICacheListener#handleDispose(java.lang.String)
+     * @see org.apache.commons.jcs3.engine.behavior.ICacheListener#handleDispose(String)
      */
     @Override
     public void handleDispose( final String cacheName )

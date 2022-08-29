@@ -425,7 +425,7 @@ public class CompositeCacheAttributes
     }
 
     /**
-     * @see java.lang.Object#clone()
+     * @see Object#clone()
      */
     @Override
     public ICompositeCacheAttributes clone()

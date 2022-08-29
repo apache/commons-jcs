@@ -1486,7 +1486,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
          * Compares two descriptors based on position.
          * <p>
          *
-         * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
+         * @see java.util.Comparator#compare(Object, Object)
          */
         @Override
         public int compare(final IndexedDiskElementDescriptor ded1, final IndexedDiskElementDescriptor ded2)

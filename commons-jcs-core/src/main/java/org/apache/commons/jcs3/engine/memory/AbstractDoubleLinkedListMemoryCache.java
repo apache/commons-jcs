@@ -255,7 +255,7 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
     }
 
     /**
-     * @see org.apache.commons.jcs3.engine.memory.AbstractMemoryCache#get(java.lang.Object)
+     * @see org.apache.commons.jcs3.engine.memory.AbstractMemoryCache#get(Object)
      */
     @Override
     public ICacheElement<K, V> get(final K key) throws IOException

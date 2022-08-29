@@ -449,7 +449,7 @@ public class RemoteCacheNoWait<K, V>
     /**
      * Returns the stats and the cache.toString().
      * <p>
-     * @see java.lang.Object#toString()
+     * @see Object#toString()
      */
     @Override
     public String toString()
