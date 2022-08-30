@@ -26,8 +26,6 @@ import org.apache.commons.jcs3.engine.control.CompositeCache;
 
 /**
  * I need the interface so I can plug in mock managers for testing.
- *
- * @author Aaron Smuts
  */
 public interface ICompositeCacheManager extends IShutdownObservable
 {

@@ -31,8 +31,6 @@ import junit.framework.TestCase;
 /**
  * This test case is designed to makes sure there are no deadlocks in the event queue. The time to
  * live should be set to a very short interval to make a deadlock more likely.
- * <p>
- * @author Aaron Smuts
  */
 public class EventQueueConcurrentLoadTest
     extends TestCase

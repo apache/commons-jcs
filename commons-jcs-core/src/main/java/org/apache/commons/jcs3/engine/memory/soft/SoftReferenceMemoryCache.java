@@ -48,8 +48,7 @@ import org.apache.commons.jcs3.log.LogManager;
  * <p>
  * The cache also has strong references to a maximum number of objects given by
  * the maxObjects parameter
- *
- * @author halset
+ * </p>
  */
 public class SoftReferenceMemoryCache<K, V> extends AbstractMemoryCache<K, V>
 {

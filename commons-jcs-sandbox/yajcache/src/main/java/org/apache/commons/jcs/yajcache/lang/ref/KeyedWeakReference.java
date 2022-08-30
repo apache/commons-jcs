@@ -25,8 +25,6 @@ import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
 /**
  * {@link WeakReference} with an embedded key.
- *
- * @author Hanson Char
  */
 @CopyRightApache
 public class KeyedWeakReference<K,T> extends WeakReference<T>

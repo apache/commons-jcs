@@ -26,8 +26,6 @@ import junit.framework.TestCase;
 
 /**
  * Unit tests for the schedule parser.
- * <p>
- * @author Aaron Smuts
  */
 public class ScheduleParserUtilUnitTest
     extends TestCase

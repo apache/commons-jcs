@@ -24,7 +24,6 @@ import org.apache.commons.jcs.yajcache.lang.annotation.*;
 import java.io.File;
 
 /**
- * @author Hanson Char
  */
 //@CopyRightApache
 //@TODO("Optional configuration via XML config file")

@@ -26,9 +26,6 @@ import javax.servlet.ServletException;
 
 /**
  * Description of the Class
- *
- * @author asmuts
- * @created January 15, 2002
  */
 public class DeleteCacheServlet extends AbstractDeleteCacheServlet
 {

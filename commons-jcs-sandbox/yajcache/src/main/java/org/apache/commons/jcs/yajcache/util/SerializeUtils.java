@@ -26,7 +26,6 @@ import java.io.Serializable;
 import java.lang.reflect.Array;
 
 /**
- * @author Hanson Char
  */
 // @CopyRightApache
 // http://www.netbeans.org/issues/show_bug.cgi?id=53704

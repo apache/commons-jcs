@@ -26,8 +26,6 @@ import java.util.Map;
 
 /**
  * Interface of a Cache.
- *
- * @author Hanson Char
  */
 @CopyRightApache
 @ThreadSafety(ThreadSafetyType.SAFE)

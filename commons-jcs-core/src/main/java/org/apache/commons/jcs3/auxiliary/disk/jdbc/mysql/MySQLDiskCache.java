@@ -34,8 +34,7 @@ import org.apache.commons.jcs3.log.LogManager;
  * <p>
  * Although the generic JDBC Disk Cache can be used for MySQL, the MySQL JDBC Disk Cache has
  * additional features, such as table optimization that are particular to MySQL.
- * <p>
- * @author Aaron Smuts
+ * </p>
  */
 public class MySQLDiskCache<K, V>
 	extends JDBCDiskCache<K, V>

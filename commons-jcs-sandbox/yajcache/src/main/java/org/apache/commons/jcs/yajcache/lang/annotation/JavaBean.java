@@ -28,8 +28,6 @@ import java.lang.annotation.Target;
 
 /**
  * Element so annotated is expected to be a JavaBean.
- *
- * @author Hanson Char
  */
 @CopyRightApache
 @Documented

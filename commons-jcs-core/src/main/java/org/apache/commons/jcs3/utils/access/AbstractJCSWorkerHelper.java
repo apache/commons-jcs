@@ -24,8 +24,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * This is an abstract template for JCSWorkerHelper implementations. it simple has a convenience
  * method for setting the finished flag.
- * <p>
- * @author tsavo
  */
 public abstract class AbstractJCSWorkerHelper<V> implements JCSWorkerHelper<V>
 {

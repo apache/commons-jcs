@@ -38,8 +38,6 @@ import junit.framework.TestCase;
 /**
  * Since the server does not know that it is a server, it is easy to unit test. The factory does all
  * the rmi work.
- * <p>
- * @author Aaron Smuts
  */
 public class RemoteCacheServerUnitTest
     extends TestCase

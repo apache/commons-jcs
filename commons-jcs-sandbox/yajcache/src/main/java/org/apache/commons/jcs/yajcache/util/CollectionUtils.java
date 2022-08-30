@@ -25,8 +25,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Collection related Utilities.
- *
- * @author Hanson Char
  */
 @CopyRightApache
 public enum CollectionUtils {

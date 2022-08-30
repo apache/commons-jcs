@@ -25,9 +25,6 @@ import java.util.concurrent.ScheduledExecutorService;
 /**
  * Marker interface to allow the injection of a central ScheduledExecutorService
  * for all modules requiring scheduled background operations.
- * <p>
- * @author Thomas Vandahl
- *
  */
 public interface IRequireScheduler
 {

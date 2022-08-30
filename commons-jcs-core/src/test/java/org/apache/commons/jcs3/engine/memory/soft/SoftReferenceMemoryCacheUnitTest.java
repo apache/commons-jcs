@@ -34,8 +34,6 @@ import junit.framework.TestCase;
 
 /**
  * Tests for the test Soft reference implementation.
- * <p>
- * @author Aaron Smuts
  */
 public class SoftReferenceMemoryCacheUnitTest
     extends TestCase

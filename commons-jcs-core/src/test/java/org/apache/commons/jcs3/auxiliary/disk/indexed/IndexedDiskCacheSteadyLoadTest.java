@@ -32,8 +32,6 @@ import java.util.Random;
 /**
  * This allows you to put thousands of large objects into the disk cache and to force removes to
  * trigger optimizations along the way.
- * <p>
- * @author Aaron Smuts
  */
 public class IndexedDiskCacheSteadyLoadTest
     extends TestCase

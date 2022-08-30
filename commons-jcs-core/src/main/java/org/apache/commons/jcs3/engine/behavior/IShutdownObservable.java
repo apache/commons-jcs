@@ -1,5 +1,3 @@
-package org.apache.commons.jcs3.engine.behavior;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -19,6 +17,8 @@ package org.apache.commons.jcs3.engine.behavior;
  * under the License.
  */
 
+package org.apache.commons.jcs3.engine.behavior;
+
 /**
  * ShutdownObservers can observe ShutdownObservable objects.
  * The CacheManager is the primary observable that this is intended for.
@@ -26,15 +26,14 @@ package org.apache.commons.jcs3.engine.behavior;
  * Most shutdown operations will occur outside this framework for now.  The initial
  * goal is to allow background threads that are not reachable through any reference
  * that the cache manager maintains to be killed on shutdown.
+ * </p>
  * <p>
  * Perhaps the composite cache itself should be the observable object.
  * It doesn't make much of a difference.  There are some problems with
  * region by region shutdown.  Some auxiliaries are local.  They will
  * need to track when every region has shutdown before doing things like
  * closing the socket with a lateral.
- * <p>
- * @author Aaron Smuts
- *
+ * </p>
  */
 public interface IShutdownObservable
 {

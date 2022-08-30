@@ -23,8 +23,7 @@ package org.apache.commons.jcs3.utils.discovery;
  * This class periodically check the lastHeardFrom time on the services.
  * <p>
  * If they exceed the configurable limit, it removes them from the set.
- * <p>
- * @author Aaron Smuts
+ * </p>
  * @deprecated Functionality moved to UDPDiscoveryService
  */
 @Deprecated

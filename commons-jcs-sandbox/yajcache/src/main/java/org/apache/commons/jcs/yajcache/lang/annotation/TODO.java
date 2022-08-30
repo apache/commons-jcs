@@ -25,8 +25,6 @@ import java.lang.annotation.RetentionPolicy;
 
 /**
  * Annotates what needs to be done.
- *
- * @author Hanson Char
  */
 @CopyRightApache
 @Documented

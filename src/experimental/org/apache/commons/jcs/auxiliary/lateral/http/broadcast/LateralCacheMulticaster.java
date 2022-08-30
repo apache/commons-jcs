@@ -33,9 +33,6 @@ import java.util.Iterator;
  */
 /**
  * Description of the Class
- *
- * @author asmuts
- * @created January 15, 2002
  */
 public class LateralCacheMulticaster
 {

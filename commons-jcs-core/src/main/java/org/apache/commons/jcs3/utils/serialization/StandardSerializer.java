@@ -30,8 +30,6 @@ import org.apache.commons.jcs3.io.ObjectInputStreamClassLoaderAware;
 
 /**
  * Performs default serialization and de-serialization.
- * <p>
- * @author Aaron Smuts
  */
 public class StandardSerializer
     implements IElementSerializer

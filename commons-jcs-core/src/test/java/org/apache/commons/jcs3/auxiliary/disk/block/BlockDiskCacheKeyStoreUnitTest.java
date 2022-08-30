@@ -26,9 +26,6 @@ import junit.framework.TestCase;
 
 /**
  * Tests for the keyStore.
- * <p>
- *
- * @author Aaron Smuts
  */
 public class BlockDiskCacheKeyStoreUnitTest
         extends TestCase
@@ -38,7 +35,6 @@ public class BlockDiskCacheKeyStoreUnitTest
 
     /**
      * Put a bunch of keys in the key store and verify that they are present.
-     * <p>
      *
      * @throws Exception
      */

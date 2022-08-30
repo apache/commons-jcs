@@ -35,8 +35,6 @@ import org.apache.commons.jcs3.engine.control.CompositeCacheManager;
 
 /**
  * Tests for the test LHMLRU implementation.
- * <p>
- * @author Aaron Smuts
  */
 public class LHMLRUMemoryCacheUnitTest
     extends TestCase

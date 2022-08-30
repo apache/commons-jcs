@@ -26,8 +26,6 @@ import java.io.RandomAccessFile;
 
 /**
  * Corrupted Cache File Content.
- *
- * @author Hanson Char
  */
 @CopyRightApache
 public class CacheFileContentCorrupted extends CacheFileContent {

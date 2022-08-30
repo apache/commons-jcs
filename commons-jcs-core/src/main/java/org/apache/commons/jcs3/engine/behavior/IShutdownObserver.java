@@ -27,9 +27,7 @@ package org.apache.commons.jcs3.engine.behavior;
  * Most shutdown operations will occur outside this framework for now.  The initial
  * goal is to allow background threads that are not reachable through any reference
  * that the cache manager maintains to be killed on shutdown.
- *
- * @author Aaron Smuts
- *
+ * </p>
  */
 public interface IShutdownObserver
 {

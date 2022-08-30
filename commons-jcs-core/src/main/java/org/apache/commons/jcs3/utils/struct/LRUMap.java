@@ -20,9 +20,6 @@ package org.apache.commons.jcs3.utils.struct;
  */
 
 /**
- *
- * @author Wiktor Niesiobędzki
- *
  *         Simple LRUMap implementation that keeps the number of the objects below or equal maxObjects
  *
  * @param <K>

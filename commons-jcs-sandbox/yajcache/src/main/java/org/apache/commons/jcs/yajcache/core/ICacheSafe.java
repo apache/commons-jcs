@@ -24,8 +24,6 @@ import org.apache.commons.jcs.yajcache.lang.annotation.*;
 import java.util.Map;
 
 /**
- *
- * @author Hanson Char
  */
 @CopyRightApache
 @ThreadSafety(ThreadSafetyType.SAFE)

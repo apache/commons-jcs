@@ -26,8 +26,6 @@ import java.lang.annotation.RetentionPolicy;
 
 /**
  * Annotates the target is for testing purposes only.
- *
- * @author Hanson Char
  */
 @CopyRightApache
 @Documented

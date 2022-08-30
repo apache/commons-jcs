@@ -29,8 +29,6 @@ import org.apache.commons.jcs.engine.control.CompositeCacheManager;
 
 /**
  * Initial tests for the ARCMemoryCache
- * <p>
- * @author Aaron Smuts
  */
 public class ARCMemoryCacheUnitTest
     extends TestCase

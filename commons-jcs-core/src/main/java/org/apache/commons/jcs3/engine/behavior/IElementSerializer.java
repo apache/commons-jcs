@@ -35,8 +35,6 @@ import java.util.concurrent.TimeoutException;
 /**
  * Defines the behavior for cache element serializers. This layer of abstraction allows us to plug
  * in different serialization mechanisms, such as a compressing standard serializer.
- * <p>
- * @author Aaron Smuts
  */
 public interface IElementSerializer
 {

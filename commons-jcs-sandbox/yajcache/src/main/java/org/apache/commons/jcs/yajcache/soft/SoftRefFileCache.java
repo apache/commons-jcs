@@ -58,8 +58,6 @@ import java.util.concurrent.locks.Lock;
 
 /**
  * Cache implemented using Soft References.
- *
- * @author Hanson Char
  */
 @CopyRightApache
 @TODO("Annotate the thread-safetyness of the methods")

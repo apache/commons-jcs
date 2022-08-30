@@ -26,8 +26,6 @@ import java.util.Objects;
 /**
  * This contains info about a discovered service. These objects are stored in a set in the
  * UDPDiscoveryService.
- * <p>
- * @author Aaron Smuts
  */
 public class DiscoveredService
     implements Serializable

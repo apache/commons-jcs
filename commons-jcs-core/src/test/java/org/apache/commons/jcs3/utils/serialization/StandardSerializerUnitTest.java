@@ -25,8 +25,6 @@ import junit.framework.TestCase;
 
 /**
  * Tests the standard serializer.
- *<p>
- * @author Aaron Smuts
  */
 public class StandardSerializerUnitTest
     extends TestCase

@@ -26,7 +26,6 @@ import org.apache.commons.jcs3.log.Log;
 import org.apache.commons.jcs3.log.LogManager;
 
 /**
- * @author aaronsm
  */
 public class ElementEventHandlerMockImpl
     implements IElementEventHandler

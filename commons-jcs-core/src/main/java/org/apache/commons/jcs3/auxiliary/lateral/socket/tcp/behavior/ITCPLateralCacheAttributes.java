@@ -25,8 +25,6 @@ import org.apache.commons.jcs3.auxiliary.lateral.behavior.ILateralCacheAttribute
  * This interface defines functions that are particular to the TCP Lateral Cache
  * plugin. It extends the generic LateralCacheAttributes interface which in turn
  * extends the AuxiliaryCache interface.
- * <p>
- * @author Aaron Smuts
  */
 public interface ITCPLateralCacheAttributes
     extends ILateralCacheAttributes

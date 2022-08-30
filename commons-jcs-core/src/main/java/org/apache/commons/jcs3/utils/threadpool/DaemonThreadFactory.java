@@ -23,8 +23,6 @@ import java.util.concurrent.ThreadFactory;
 
 /**
  * Allows us to set the daemon status on the threads.
- * <p>
- * @author aaronsm
  */
 public class DaemonThreadFactory
     implements ThreadFactory

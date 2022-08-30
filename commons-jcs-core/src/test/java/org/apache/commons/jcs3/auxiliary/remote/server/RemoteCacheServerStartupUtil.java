@@ -29,9 +29,7 @@ import org.apache.commons.jcs3.log.LogManager;
 import org.apache.commons.jcs3.utils.net.HostNameUtil;
 
 /**
- *Starts the registry and runs the server via the factory.
- *<p>
- * @author Aaron Smuts
+ * Starts the registry and runs the server via the factory.
  */
 public class RemoteCacheServerStartupUtil
 {

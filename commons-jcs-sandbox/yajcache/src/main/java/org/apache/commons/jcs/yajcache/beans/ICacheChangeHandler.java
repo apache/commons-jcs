@@ -23,8 +23,6 @@ import org.apache.commons.jcs.yajcache.lang.annotation.*;
 
 /**
  * Cache change beans listener/handler.
- *
- * @author Hanson CHar
  */
 @CopyRightApache
 public interface ICacheChangeHandler<V> {

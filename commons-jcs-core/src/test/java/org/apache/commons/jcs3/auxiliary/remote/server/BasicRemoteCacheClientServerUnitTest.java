@@ -46,9 +46,6 @@ import org.junit.runners.MethodSorters;
 
 /**
  * These tests startup the remote server and make requests to it.
- * <p>
- *
- * @author Aaron Smuts
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class BasicRemoteCacheClientServerUnitTest extends Assert

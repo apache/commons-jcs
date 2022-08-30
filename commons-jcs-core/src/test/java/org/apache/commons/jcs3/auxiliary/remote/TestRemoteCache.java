@@ -36,7 +36,6 @@ import org.apache.commons.jcs3.log.LogManager;
 import junit.framework.TestCase;
 
 /**
- * @author Aaron SMuts
  */
 public class TestRemoteCache
     extends TestCase

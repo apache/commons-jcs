@@ -30,9 +30,6 @@ import junit.framework.TestCase;
 
 /**
  * Test Case for JCS-73, modeled after the Groovy code by Alexander Kleymenov
- *
- * @author Thomas Vandahl
- *
  */
 public class JCSConcurrentCacheAccessUnitTest extends TestCase
 {

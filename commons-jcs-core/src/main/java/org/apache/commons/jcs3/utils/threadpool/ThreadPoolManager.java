@@ -40,18 +40,21 @@ import org.apache.commons.jcs3.utils.config.PropertySetter;
  * This manages threadpools for an application
  * <p>
  * It is a singleton since threads need to be managed vm wide.
+ * </p>
  * <p>
  * This manager forces you to use a bounded queue. By default it uses the current thread for
  * execution when the buffer is full and no free threads can be created.
+ * </p>
  * <p>
  * You can specify the props file to use or pass in a properties object prior to configuration.
+ * </p>
  * <p>
  * If set, the Properties object will take precedence.
+ * </p>
  * <p>
  * If a value is not set for a particular pool, the hard coded defaults in <code>PoolConfiguration</code> will be used.
  * You can configure default settings by specifying <code>thread_pool.default</code> in the properties, ie "cache.ccf"
- * <p>
- * @author Aaron Smuts
+ * </p>
  */
 public class ThreadPoolManager
 {

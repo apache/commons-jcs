@@ -28,9 +28,6 @@ import junit.framework.TestCase;
 
 /**
  * Basic unit tests for the LRUMap
- *
- * @author Aaron Smuts
- *
  */
 public class LRUMapUnitTest
     extends TestCase

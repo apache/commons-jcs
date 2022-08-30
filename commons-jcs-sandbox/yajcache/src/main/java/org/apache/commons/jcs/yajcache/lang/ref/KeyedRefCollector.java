@@ -35,8 +35,6 @@ import java.util.concurrent.atomic.AtomicInteger;
  * from the given {@link ConcurrentMap} using the embedded keys.
  * The stale Keyed References are put into the given {@link ReferenceQueue}
  * by the JVM garbage collector.
- *
- * @author Hanson Char
  */
 @CopyRightApache
 public class KeyedRefCollector<K> implements Runnable {

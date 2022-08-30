@@ -29,8 +29,6 @@ import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
 
 /**
  * Utility for dealing with test objects.
- * <p>
- * @author Aaron Smuts
  */
 public class DiskTestObjectUtil
 {

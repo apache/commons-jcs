@@ -32,8 +32,6 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * Cache File Data Access Object.
- *
- * @author Hanson Char
  */
 // @CopyRightApache
 // http://www.netbeans.org/issues/show_bug.cgi?id=53704

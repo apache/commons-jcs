@@ -29,8 +29,6 @@ import org.apache.commons.jcs3.engine.behavior.ICacheElement;
 
 /**
  * For testing.
- * <p>
- * @author Aaron Smuts
  */
 public class MockRemoteCacheListener<K, V>
     implements IRemoteCacheListener<K, V>

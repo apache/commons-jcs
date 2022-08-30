@@ -36,8 +36,6 @@ import junit.framework.TestCase;
 
 /**
  * Tests the methods of the cache access class.
- * <p>
- * @author Aaron Smuts
  */
 public class CacheAccessUnitTest
     extends TestCase

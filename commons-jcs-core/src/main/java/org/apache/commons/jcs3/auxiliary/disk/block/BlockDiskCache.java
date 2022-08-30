@@ -51,8 +51,6 @@ import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
 
 /**
  * There is one BlockDiskCache per region. It manages the key and data store.
- * <p>
- * @author Aaron Smuts
  */
 public class BlockDiskCache<K, V>
     extends AbstractDiskCache<K, V>

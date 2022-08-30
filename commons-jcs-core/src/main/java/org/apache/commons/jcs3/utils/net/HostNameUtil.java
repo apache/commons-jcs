@@ -49,8 +49,6 @@ import org.apache.commons.jcs3.log.LogManager;
 
 /**
  * Simple utility for getting the local host name.
- * <p>
- * @author Aaron Smuts
  */
 public class HostNameUtil
 {

@@ -59,8 +59,6 @@ import org.apache.commons.jcs3.utils.net.HostNameUtil;
         &lt;url-pattern&gt;/jcs&lt;/url-pattern&gt;
     &lt;/servlet-mapping&gt;
  * </code>
- *
- * @author Aaron Smuts
  */
 public class RemoteCacheStartupServlet
         extends HttpServlet

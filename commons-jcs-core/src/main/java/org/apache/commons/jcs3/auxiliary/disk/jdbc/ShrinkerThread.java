@@ -29,8 +29,6 @@ import org.apache.commons.jcs3.utils.timing.ElapsedTimer;
 /**
  * Calls delete expired on the disk caches. The shrinker is run by a clock daemon. The shrinker
  * calls delete on each region. It pauses between calls.
- * <p>
- * @author Aaron Smuts
  */
 public class ShrinkerThread
     implements Runnable

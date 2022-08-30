@@ -28,9 +28,6 @@ import junit.framework.TestCase;
 
 /**
  * Test store and load keys.
- *
- * @author Aaron Smuts
- *
  */
 public class IndexedDiskCacheKeyStoreUnitTest
     extends TestCase

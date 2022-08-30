@@ -23,10 +23,10 @@ package org.apache.commons.jcs3.engine.behavior;
  * This interface defines the behavior of the serialized element wrapper.
  * <p>
  * The value is stored as a byte array. This should allow for a variety of serialization mechanisms.
+ * </p>
  * <p>
  * This currently extends ICacheElement&lt;K, V&gt; for backward compatibility.
- *<p>
- * @author Aaron Smuts
+ * </p>
  */
 public interface ICacheElementSerialized<K, V>
     extends ICacheElement<K, V>

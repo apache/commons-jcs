@@ -39,8 +39,6 @@ import org.apache.commons.jcs3.log.LogManager;
 
 /**
  * Used for testing the no wait.
- * <p>
- * @author Aaron Smuts
  */
 public class MockRemoteCacheClient<K, V>
     extends AbstractAuxiliaryCache<K, V>

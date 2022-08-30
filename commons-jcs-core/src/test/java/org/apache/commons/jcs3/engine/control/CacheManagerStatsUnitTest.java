@@ -26,8 +26,6 @@ import org.apache.commons.jcs3.engine.stats.behavior.ICacheStats;
 import junit.framework.TestCase;
 
 /**
- * @author Aaron Smuts
- *
  */
 public class CacheManagerStatsUnitTest
     extends TestCase

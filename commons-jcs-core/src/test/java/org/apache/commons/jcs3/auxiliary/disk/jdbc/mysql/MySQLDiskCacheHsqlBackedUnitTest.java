@@ -39,7 +39,6 @@ import org.junit.Test;
 
 /**
  * Runs basic tests for the JDBC disk cache.
- * @author Aaron Smuts
  */
 public class MySQLDiskCacheHsqlBackedUnitTest
 {

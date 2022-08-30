@@ -24,9 +24,6 @@ import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * Marker interface for providers of the central ScheduledExecutorService
- * <p>
- * @author Thomas Vandahl
- *
  */
 public interface IProvideScheduler
 {

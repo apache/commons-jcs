@@ -26,8 +26,7 @@ package org.apache.commons.jcs3.utils.access;
  * Implement doWork() to return the work being done. isFinished() should return
  * false until setFinished(true) is called, after which time it should return
  * true.
- * <p>
- * @author tsavo
+ * </p>
  */
 public interface JCSWorkerHelper<V>
 {

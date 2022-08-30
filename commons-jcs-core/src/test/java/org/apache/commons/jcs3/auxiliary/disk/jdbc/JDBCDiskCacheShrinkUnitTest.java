@@ -36,14 +36,12 @@ import org.junit.Test;
 
 /**
  * Runs basic tests for the JDBC disk cache.
- * <p>
- * @author Aaron Smuts
  */
 public class JDBCDiskCacheShrinkUnitTest
 {
     /**
      * Creates the DB
-     * <p>
+     *
      * @throws Exception
      */
     @BeforeClass

@@ -41,8 +41,6 @@ import org.apache.commons.jcs3.utils.config.PropertySetter;
 
 /**
  * This factory should create JDBC auxiliary caches.
- * <p>
- * @author Aaron Smuts
  */
 public class JDBCDiskCacheFactory
     extends AbstractAuxiliaryCacheFactory

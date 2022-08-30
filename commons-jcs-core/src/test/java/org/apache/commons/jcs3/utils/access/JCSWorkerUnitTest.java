@@ -25,9 +25,6 @@ import junit.framework.TestCase;
 
 /**
  * Test cases for the JCS worker.
- *
- * @author Aaron Smuts
- *
  */
 public class JCSWorkerUnitTest
     extends TestCase

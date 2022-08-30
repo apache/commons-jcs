@@ -48,9 +48,6 @@ import junit.framework.TestCase;
 
 /**
  * Test the admin bean that is used by the JCSAdmin.jsp
- *
- * @author Aaron Smuts
- *
  */
 public class AdminBeanUnitTest
     extends TestCase

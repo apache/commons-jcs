@@ -36,8 +36,6 @@ import java.util.Arrays;
  * &lt;ByteArrayHashCode&gt;  : int
  * &lt;ByteArray&gt;          : byte[]
  *</pre>
- *
- * @author Hanson Char
  */
 @CopyRightApache
 public class CacheFileContent {

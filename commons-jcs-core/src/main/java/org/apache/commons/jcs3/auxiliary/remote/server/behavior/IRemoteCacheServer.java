@@ -1,11 +1,3 @@
-package org.apache.commons.jcs3.auxiliary.remote.server.behavior;
-
-import java.rmi.Remote;
-
-import org.apache.commons.jcs3.engine.behavior.ICacheObserver;
-import org.apache.commons.jcs3.engine.behavior.ICacheServiceAdmin;
-import org.apache.commons.jcs3.engine.behavior.ICacheServiceNonLocal;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -25,11 +17,16 @@ import org.apache.commons.jcs3.engine.behavior.ICacheServiceNonLocal;
  * under the License.
  */
 
+package org.apache.commons.jcs3.auxiliary.remote.server.behavior;
+
+import java.rmi.Remote;
+
+import org.apache.commons.jcs3.engine.behavior.ICacheObserver;
+import org.apache.commons.jcs3.engine.behavior.ICacheServiceAdmin;
+import org.apache.commons.jcs3.engine.behavior.ICacheServiceNonLocal;
+
 /**
  * Interface for managing Remote objects
- *
- * @author Thomas Vandahl
- *
  */
 public interface IRemoteCacheServer<K, V>
     extends ICacheServiceNonLocal<K, V>, ICacheObserver, ICacheServiceAdmin, Remote

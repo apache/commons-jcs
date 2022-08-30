@@ -37,8 +37,6 @@ import junit.framework.TestCase;
 
 /**
  * Tests that directly engage the composite cache.
- * <p>
- * @author Aaron Smuts
  */
 public class CompositeCacheUnitTest
     extends TestCase

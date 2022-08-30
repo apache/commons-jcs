@@ -47,8 +47,6 @@ import junit.framework.TestCase;
 
 /**
  * Tests of the disk usage settings for the CompositeCache.
- * <p>
- * @author Aaron Smuts
  */
 public class CompositeCacheDiskUsageUnitTest
     extends TestCase
@@ -292,8 +290,6 @@ public class CompositeCacheDiskUsageUnitTest
 
     /**
      * Used to test the disk cache functionality.
-     * <p>
-     * @author Aaron Smuts
      */
     public static class MockAuxCache<K, V>
         extends AbstractAuxiliaryCache<K, V>

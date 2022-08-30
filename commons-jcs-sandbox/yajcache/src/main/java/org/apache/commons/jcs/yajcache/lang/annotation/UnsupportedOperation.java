@@ -27,8 +27,6 @@ import java.lang.annotation.Target;
 
 /**
  * Unsupported Operation.
- *
- * @author Hanson Char
  */
 @CopyRightApache
 @Documented

@@ -23,8 +23,6 @@ package org.apache.commons.jcs.yajcache.lang.annotation;
  * Thread Safety Types.
  *
  * http://www-106.ibm.com/developerworks/java/library/j-jtp09263.html
- *
- * @author Hanson Char
  */
 // @CopyRightApache
 // http://www.netbeans.org/issues/show_bug.cgi?id=53704

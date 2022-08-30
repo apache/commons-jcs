@@ -200,8 +200,6 @@ public abstract class AbstractCacheEventQueue<K, V>
     // /////////////////////////// Inner classes /////////////////////////////
     /**
      * Retries before declaring failure.
-     * <p>
-     * @author asmuts
      */
     protected abstract class AbstractCacheEvent implements Runnable
     {
@@ -250,8 +248,6 @@ public abstract class AbstractCacheEventQueue<K, V>
 
     /**
      * An element should be put in the cache.
-     * <p>
-     * @author asmuts
      */
     protected class PutEvent
         extends AbstractCacheEvent
@@ -300,8 +296,6 @@ public abstract class AbstractCacheEventQueue<K, V>
 
     /**
      * An element should be removed from the cache.
-     * <p>
-     * @author asmuts
      */
     protected class RemoveEvent
         extends AbstractCacheEvent
@@ -348,8 +342,6 @@ public abstract class AbstractCacheEventQueue<K, V>
 
     /**
      * All elements should be removed from the cache when this event is processed.
-     * <p>
-     * @author asmuts
      */
     protected class RemoveAllEvent
         extends AbstractCacheEvent
@@ -380,15 +372,13 @@ public abstract class AbstractCacheEventQueue<K, V>
 
     /**
      * The cache should be disposed when this event is processed.
-     * <p>
-     * @author asmuts
      */
     protected class DisposeEvent
         extends AbstractCacheEvent
     {
         /**
          * Called when gets to the end of the queue
-         * <p>
+         *
          * @throws IOException
          */
         @Override
@@ -400,7 +390,7 @@ public abstract class AbstractCacheEventQueue<K, V>
 
         /**
          * For debugging.
-         * <p>
+         *
          * @return The name of the event.
          */
         @Override

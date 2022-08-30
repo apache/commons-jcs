@@ -26,8 +26,6 @@ import java.util.Date;
 
 /**
  * Parses the very simple schedule format.
- * <p>
- * @author Aaron Smuts
  */
 public class ScheduleParser
 {

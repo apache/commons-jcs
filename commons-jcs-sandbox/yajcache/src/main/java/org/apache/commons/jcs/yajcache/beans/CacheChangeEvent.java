@@ -22,8 +22,6 @@ package org.apache.commons.jcs.yajcache.beans;
 import org.apache.commons.jcs.yajcache.core.ICache;
 import org.apache.commons.jcs.yajcache.lang.annotation.*;
 /**
- *
- * @author Hanson Char
  */
 @CopyRightApache
 public abstract class CacheChangeEvent<V> extends java.util.EventObject {

@@ -33,8 +33,6 @@ import junit.framework.TestCase;
 
 /**
  * Unit tests for the remote cache no wait. The no wait manages a queue on top of the client.
- * <p>
- * @author Aaron Smuts
  */
 public class RemoteCacheNoWaitUnitTest
     extends TestCase

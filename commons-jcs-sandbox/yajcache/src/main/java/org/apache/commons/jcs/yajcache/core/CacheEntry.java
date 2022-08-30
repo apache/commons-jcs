@@ -26,8 +26,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import java.util.Map;
 
 /**
- *
- * @author Hanson Char
  */
 @CopyRightApache
 public class CacheEntry<V> implements Map.Entry<String,V> {

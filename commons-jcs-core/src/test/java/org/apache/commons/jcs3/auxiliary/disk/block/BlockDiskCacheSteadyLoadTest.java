@@ -31,8 +31,6 @@ import org.apache.commons.jcs3.access.CacheAccess;
 /**
  * This allows you to put thousands of large objects into the disk cache and to force removes to
  * trigger optimizations along the way.
- * <p>
- * @author Aaron Smuts
  */
 public class BlockDiskCacheSteadyLoadTest
     extends TestCase
@@ -48,7 +46,7 @@ public class BlockDiskCacheSteadyLoadTest
 
     /**
      * Insert 2000 wait 1 second, repeat. Average 1000 / sec.
-     * <p>
+     *
      * @throws Exception
      */
     public void testRunSteadyLoadTest()

@@ -28,8 +28,6 @@ import junit.framework.TestCase;
 
 /**
  * Tests the methods of the group cache access class.
- * <p>
- * @author Aaron Smuts
  */
 public class GroupCacheAccessUnitTest
     extends TestCase

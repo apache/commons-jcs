@@ -26,8 +26,6 @@ import java.io.File;
 
 /**
  * Cache File Utilities.
- *
- * @author Hanson Char
  */
 // @CopyRightApache
 // http://www.netbeans.org/issues/show_bug.cgi?id=53704

@@ -88,8 +88,7 @@ import org.apache.commons.jcs3.log.LogManager;
  * circumstances if multiple threads all tried to do the same query at the same
  * time, the same query would happen multiple times on the database, and the
  * resulting object would get put into JCS multiple times.
- * <p>
- * @author Travis Savo
+ * </p>
  */
 public class JCSWorker<K, V>
 {

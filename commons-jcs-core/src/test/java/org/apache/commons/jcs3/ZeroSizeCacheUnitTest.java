@@ -24,9 +24,6 @@ import org.apache.commons.jcs3.access.CacheAccess;
 import junit.framework.TestCase;
 
 /**
- *
- * @author Aaron Smuts
- *
  */
 public class ZeroSizeCacheUnitTest
     extends TestCase

@@ -23,8 +23,6 @@ import org.apache.commons.jcs3.auxiliary.disk.AbstractDiskCacheAttributes;
 
 /**
  * The configurator will set these values based on what is in the cache.ccf file.
- * <p>
- * @author Aaron Smuts
  */
 public class JDBCDiskCacheAttributes
     extends AbstractDiskCacheAttributes

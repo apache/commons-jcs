@@ -39,8 +39,6 @@ import org.apache.commons.jcs3.utils.threadpool.DaemonThreadFactory;
 
 /**
  * Runs basic tests for the JDBC disk cache.
- *<p>
- * @author Aaron Smuts
  */
 public class JDBCDiskCacheUnitTest
     extends TestCase

@@ -24,8 +24,6 @@ import org.apache.commons.jcs.yajcache.lang.annotation.*;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 /**
- *
- * @author Hanson Char
  */
 // @CopyRightApache
 // http://www.netbeans.org/issues/show_bug.cgi?id=53704

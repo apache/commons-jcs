@@ -30,8 +30,7 @@ import junit.framework.TestCase;
  * Simple tests for the MySQLDisk Cache.
  * <p>
  * We will probably need to setup an hsql behind this, to test some of the pass through methods.
- * <p>
- * @author Aaron Smuts
+ * </p>
  */
 public class MySQLDiskCacheUnitTest
     extends TestCase
@@ -42,6 +41,7 @@ public class MySQLDiskCacheUnitTest
      * <p>
      * This is a bit tricky since we don't want to have to have a mysql instance
      * running. Right now this doesn't really test much
+     * </p>
      * @throws SQLException
      */
     public void testBalkOnGet() throws SQLException

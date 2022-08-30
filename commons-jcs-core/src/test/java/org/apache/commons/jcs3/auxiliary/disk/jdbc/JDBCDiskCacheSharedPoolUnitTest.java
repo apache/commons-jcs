@@ -34,8 +34,6 @@ import org.apache.commons.jcs3.engine.behavior.ICacheElement;
 
 /**
  * Runs basic tests for the JDBC disk cache using a shared connection pool.
- *<p>
- * @author Aaron Smuts
  */
 public class JDBCDiskCacheSharedPoolUnitTest
     extends TestCase

@@ -26,8 +26,6 @@ import junit.framework.TestCase;
 
 /**
  * Put a few hundred thousand entries in the disk cache.
- * <p>
- * @author Aaron Smuts
  */
 public class HugeQuantityIndDiskCacheLoadTest
     extends TestCase

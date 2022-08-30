@@ -29,8 +29,6 @@ import junit.framework.TestCase;
 /**
  * Verify that the manager can create pools as intended by the default and
  * specified file names.
- *
- * @author asmuts
  */
 public class ThreadPoolManagerUnitTest
     extends TestCase

@@ -23,8 +23,7 @@ package org.apache.commons.jcs3.utils.discovery;
  * Configuration properties for UDP discover service.
  * <p>
  * The service will allow out applications to find each other.
- * <p>
- * @author Aaron Smuts
+ * </p>
  */
 public final class UDPDiscoveryAttributes
     implements Cloneable

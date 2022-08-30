@@ -22,7 +22,6 @@ package org.apache.commons.jcs.yajcache.util;
 import java.util.Arrays;
 
 /**
- * @author Hanson Char
  */
 public enum EqualsUtils {
     inst;

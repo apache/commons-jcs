@@ -27,8 +27,6 @@ import junit.framework.TestCase;
 
 /**
  * Tests for the optimization routine.
- * <p>
- * @author Aaron Smuts
  */
 public class IndexedDiskCacheOptimizationUnitTest
     extends TestCase

@@ -49,9 +49,6 @@ import org.apache.commons.jcs3.utils.timing.ElapsedTimer;
 
 /**
  * This is responsible for storing the keys.
- * <p>
- *
- * @author Aaron Smuts
  */
 public class BlockDiskKeyStore<K>
 {

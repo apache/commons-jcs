@@ -31,7 +31,6 @@ import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
 import junit.framework.TestCase;
 
 /**
- * @author Aaron Smuts
  */
 public class LateralTCPFilterRemoveHashCodeUnitTest
     extends TestCase

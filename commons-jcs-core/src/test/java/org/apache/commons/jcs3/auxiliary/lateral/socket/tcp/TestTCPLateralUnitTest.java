@@ -44,8 +44,6 @@ import junit.framework.TestCase;
 
 /**
  * Basic unit tests for the sending and receiving portions of the lateral cache.
- * <p>
- * @author Aaron Smuts
  */
 public class TestTCPLateralUnitTest
     extends TestCase

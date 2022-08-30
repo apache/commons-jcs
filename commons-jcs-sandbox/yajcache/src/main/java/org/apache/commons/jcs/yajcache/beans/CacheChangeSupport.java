@@ -30,8 +30,6 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
- *
- * @author Hanson Char
  */
 @CopyRightApache
 public class CacheChangeSupport<V> {

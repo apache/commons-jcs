@@ -23,8 +23,6 @@ import org.apache.commons.jcs3.auxiliary.disk.jdbc.JDBCDiskCacheAttributes;
 
 /**
  * This has additional attributes that are particular to the MySQL disk cache.
- * <p>
- * @author Aaron Smuts
  */
 public class MySQLDiskCacheAttributes
     extends JDBCDiskCacheAttributes

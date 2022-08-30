@@ -30,8 +30,6 @@ import org.apache.commons.jcs3.engine.stats.behavior.IStats;
 
 /**
  * Mock auxiliary for unit tests.
- * <p>
- * @author Aaron Smuts
  */
 public class MockAuxiliaryCache<K, V>
     extends AbstractAuxiliaryCache<K, V>

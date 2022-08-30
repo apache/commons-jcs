@@ -32,8 +32,6 @@ import java.util.Set;
 
 /**
  * Safe Cache as a wrapper of an underlying cache.
- *
- * @author Hanson Char
  */
 @CopyRightApache
 public class SafeCacheWrapper<V> implements ICacheSafe<V>

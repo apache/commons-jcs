@@ -31,8 +31,6 @@ import org.apache.commons.jcs3.log.LogManager;
 
 /**
  * This uses a supplied Serializer to convert to and from cache elements.
- * <p>
- * @author Aaron Smuts
  */
 public class SerializationConversionUtil
 {

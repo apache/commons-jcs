@@ -27,9 +27,6 @@ import org.junit.Test;
 
 /**
  * Test property settings
- *
- * @author Thomas Vandahl
- *
  */
 public class PropertySetterUnitTest
 {

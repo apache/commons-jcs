@@ -37,8 +37,6 @@ import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
 
 /**
  * This is a generic sender for the UDPDiscovery process.
- * <p>
- * @author Aaron Smuts
  */
 public class UDPDiscoverySender implements AutoCloseable
 {
@@ -303,9 +301,7 @@ public class UDPDiscoverySender implements AutoCloseable
 
 /**
  * This allows us to get the byte array from an output stream.
- * <p>
- * @author asmuts
- * @created January 15, 2002
+ *
  * @deprecated No longer used
  */
 @Deprecated

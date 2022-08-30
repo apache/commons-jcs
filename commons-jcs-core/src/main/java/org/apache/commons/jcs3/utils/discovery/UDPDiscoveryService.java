@@ -50,10 +50,10 @@ import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
  * This service creates a listener that can create lateral caches and add them to the no wait list.
  * <p>
  * It also creates a sender that periodically broadcasts its availability.
+ * </p>
  * <p>
  * The sender also broadcasts a request for other caches to broadcast their addresses.
- * <p>
- * @author Aaron Smuts
+ * </p>
  */
 public class UDPDiscoveryService
     implements IShutdownObserver, IRequireScheduler

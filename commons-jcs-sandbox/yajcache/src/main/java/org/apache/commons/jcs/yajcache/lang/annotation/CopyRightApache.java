@@ -25,8 +25,6 @@ import java.lang.annotation.RetentionPolicy;
 
 /**
  * Annotates the Apache Copyright.
- *
- * @author Hanson Char
  */
 @CopyRightApache
 @Documented

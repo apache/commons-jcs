@@ -46,8 +46,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Cache implemented using {@link KeyedSoftReference} and {@link ConcurrentHashMap}.
- *
- * @author Hanson Char
  */
 @CopyRightApache
 @TODO("Annotate the thread-safetyness of the methods")

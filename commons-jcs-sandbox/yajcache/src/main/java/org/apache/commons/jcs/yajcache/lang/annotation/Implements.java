@@ -21,8 +21,6 @@ package org.apache.commons.jcs.yajcache.lang.annotation;
 
 /**
  * Implements the specified interface.
- *
- * @author Hanson Char
  */
 @CopyRightApache
 public @interface Implements {

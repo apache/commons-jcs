@@ -210,9 +210,6 @@ public class LateralUDPSender
 
 /**
  * Description of the Class
- *
- * @author asmuts
- * @created January 15, 2002
  */
 class MyByteArrayOutputStream extends ByteArrayOutputStream
 {

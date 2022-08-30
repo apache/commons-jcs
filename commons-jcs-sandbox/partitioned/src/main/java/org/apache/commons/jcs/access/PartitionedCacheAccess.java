@@ -42,19 +42,21 @@ import org.apache.commons.jcs.utils.props.AbstractPropertyContainer;
  * TODO:  Add new methods that will allow you to provide a partition indicator for all major calls.  Add an interface as well.
  * <p>
  * This handles dividing puts and gets.
+ * </p>
  * <p>
  * There are two required properties.
- * <p>
+ * </p>
  * <ol>
  * <li>.numberOfPartitions</li>
  * <li>.partitionRegionNamePrefix</li>
  * </ol>
+ * <p>
  * System properties will override values in the properties file.
+ * </p>
  * <p>
  * We use a JCS region name for each partition that looks like this: partitionRegionNamePrefix + "_"
  * + partitionNumber. The number is 0 indexed based.
- * <p>
- * @author Aaron Smuts
+ * </p>
  */
 public class PartitionedCacheAccess<K, V>
     extends AbstractPropertyContainer

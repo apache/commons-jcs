@@ -29,10 +29,6 @@ import org.apache.commons.jcs3.auxiliary.disk.jdbc.JDBCDiskCacheAttributes;
 /**
  * A factory that returns a DataSource.
  * Borrowed from Apache DB Torque
- *
- * @author <a href="mailto:jmcnally@apache.org">John McNally</a>
- * @author <a href="mailto:fischer@seitenbau.de">Thomas Fischer</a>
- * @version $Id: DataSourceFactory.java 1336091 2012-05-09 11:09:40Z tfischer $
  */
 public interface DataSourceFactory
 {

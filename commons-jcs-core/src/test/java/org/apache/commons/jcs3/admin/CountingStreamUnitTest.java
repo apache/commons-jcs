@@ -25,9 +25,6 @@ import junit.framework.TestCase;
 
 /**
  * Tests for the counting only output stream.
- *
- * @author Aaron Smuts
- *
  */
 public class CountingStreamUnitTest
     extends TestCase

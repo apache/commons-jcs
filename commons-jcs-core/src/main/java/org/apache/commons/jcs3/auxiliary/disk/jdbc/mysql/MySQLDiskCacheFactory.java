@@ -39,8 +39,6 @@ import org.apache.commons.jcs3.log.LogManager;
 
 /**
  * This factory should create mysql disk caches.
- * <p>
- * @author Aaron Smuts
  */
 public class MySQLDiskCacheFactory
     extends JDBCDiskCacheFactory
@@ -141,8 +139,6 @@ public class MySQLDiskCacheFactory
 
     /**
      * This calls the optimizers' optimize table method. This is used by the timer.
-     * <p>
-     * @author Aaron Smuts
      */
     private void optimizeTable(final MySQLTableOptimizer optimizer)
     {

@@ -34,8 +34,6 @@ import java.io.IOException;
 
 /**
  * This tests the functionality of the shrinker thread.
- * <p>
- * @author Aaron Smuts
  */
 public class ShrinkerThreadUnitTest
     extends TestCase

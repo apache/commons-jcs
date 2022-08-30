@@ -26,8 +26,6 @@ import org.apache.commons.jcs.yajcache.lang.annotation.TestOnly;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
 /**
- *
- * @author Hanson Char
  */
 @CopyRightApache
 @TestOnly

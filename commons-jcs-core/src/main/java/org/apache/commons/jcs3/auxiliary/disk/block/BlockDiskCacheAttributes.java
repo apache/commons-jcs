@@ -23,8 +23,6 @@ import org.apache.commons.jcs3.auxiliary.disk.AbstractDiskCacheAttributes;
 
 /**
  * This holds attributes for Block Disk Cache configuration.
- * <p>
- * @author Aaron Smuts
  */
 public class BlockDiskCacheAttributes
     extends AbstractDiskCacheAttributes

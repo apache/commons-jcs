@@ -28,9 +28,6 @@ import org.junit.runners.MethodSorters;
 
 /**
  * This test is for the system property usage in configuration values.
- *
- * @author Aaron Smuts
- *
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class SystemPropertyUnitTest

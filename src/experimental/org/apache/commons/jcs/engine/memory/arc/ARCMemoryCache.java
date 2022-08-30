@@ -725,9 +725,7 @@ public class ARCMemoryCache
         return stats;
     }
 
-    // ///////////////////////////////////////////////
     /**
-     * @author Aaron Smuts
      */
     public class ElementDescriptor
         extends MemoryElementDescriptor

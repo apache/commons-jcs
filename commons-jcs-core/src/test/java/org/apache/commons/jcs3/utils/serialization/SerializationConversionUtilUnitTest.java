@@ -32,8 +32,6 @@ import org.apache.commons.jcs3.engine.behavior.IElementSerializer;
 
 /**
  * Tests the serialization conversion util.
- * <p>
- * @author Aaron Smuts
  */
 public class SerializationConversionUtilUnitTest
     extends TestCase

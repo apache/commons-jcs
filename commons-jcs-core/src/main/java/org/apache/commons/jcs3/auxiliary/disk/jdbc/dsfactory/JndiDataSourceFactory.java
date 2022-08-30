@@ -41,9 +41,6 @@ import org.apache.commons.jcs3.log.LogManager;
  * The time between two lookups can be configured. The default is 0 (no cache).
  *
  * Borrowed and adapted from Apache DB Torque
- *
- * @author <a href="mailto:jmcnally@apache.org">John McNally</a>
- * @author <a href="mailto:thomas@vandahl.org">Thomas Vandahl</a>
  */
 public class JndiDataSourceFactory implements DataSourceFactory
 {

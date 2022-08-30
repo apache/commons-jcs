@@ -36,8 +36,6 @@ import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
 /**
  * This class manages reading an writing data to disk. When asked to write a value, it returns a
  * block array. It can read an object from the block numbers in a byte array.
- * <p>
- * @author Aaron Smuts
  */
 public class BlockDisk implements AutoCloseable
 {

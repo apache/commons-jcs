@@ -51,8 +51,7 @@ import org.apache.commons.jcs3.log.LogManager;
  * This is the jdbc disk cache plugin.
  * <p>
  * It expects a table created by the following script. The table name is configurable.
- * <p>
- *
+ * </p>
  * <pre>
  *                       drop TABLE JCS_STORE;
  *                       CREATE TABLE JCS_STORE
@@ -71,11 +70,11 @@ import org.apache.commons.jcs3.log.LogManager;
  * <p>
  * The cleanup thread will delete non eternal items where (now - create time) &gt; max life seconds *
  * 1000
+ * </p>
  * <p>
  * To speed up the deletion the SYSTEM_EXPIRE_TIME_SECONDS is used instead. It is recommended that
  * an index be created on this column is you will have over a million records.
- * <p>
- * @author Aaron Smuts
+ * </p>
  */
 public class JDBCDiskCache<K, V>
     extends AbstractDiskCache<K, V>

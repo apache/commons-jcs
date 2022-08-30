@@ -24,9 +24,6 @@ import java.util.List;
 
 /**
  * This interface defines the common behavior for a stats holder.
- *
- * @author aaronsm
- *
  */
 public interface IStats
     extends Serializable

@@ -25,8 +25,6 @@ import junit.framework.TestCase;
 
 /**
  * Simple tests for remote utils. It is difficult to verify most of the things is does.
- *<p>
- * @author Aaron Smuts
  */
 public class RemoteUtilsUnitTest
     extends TestCase
@@ -35,6 +33,7 @@ public class RemoteUtilsUnitTest
      * Call create registry.
      * <p>
      * The exception is in the security manager setting.
+     * </p>
      */
     public void testCreateRegistry()
     {

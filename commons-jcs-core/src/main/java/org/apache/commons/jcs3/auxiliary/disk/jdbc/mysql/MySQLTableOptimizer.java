@@ -37,8 +37,7 @@ import org.apache.commons.jcs3.utils.timing.ElapsedTimer;
  * <p>
  * We will probably be able to abstract out a generic optimizer interface from this class in the
  * future.
- * <p>
- * @author Aaron Smuts
+ * </p>
  */
 public class MySQLTableOptimizer
 {

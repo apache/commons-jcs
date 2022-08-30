@@ -25,8 +25,6 @@ import org.apache.commons.jcs3.engine.behavior.ICacheElement;
 import junit.framework.TestCase;
 
 /**
- * @author Aaron Smuts
- *
  */
 public class JCSCacheElementRetrievalUnitTest
     extends TestCase

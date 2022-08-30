@@ -27,8 +27,7 @@ import org.apache.commons.jcs3.engine.behavior.ICacheServiceNonLocal;
  * in turn extends ICache.
  * <p>
  * I'd like generalize this a bit.
- * <p>
- * @author Aaron Smuts
+ * </p>
  */
 public interface IRemoteCacheClient<K, V>
     extends AuxiliaryCache<K, V>

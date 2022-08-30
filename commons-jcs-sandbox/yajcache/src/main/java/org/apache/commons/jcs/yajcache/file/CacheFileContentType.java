@@ -29,8 +29,6 @@ import java.io.Serializable;
  * format of a cache item.
  * Currently the content of a cache item can be persisted into an array of
  * bytes via either Java Serialization, or the XMLEncoder.
- *
- * @author Hanson Char
  */
 // @CopyRightApache
 // http://www.netbeans.org/issues/show_bug.cgi?id=53704

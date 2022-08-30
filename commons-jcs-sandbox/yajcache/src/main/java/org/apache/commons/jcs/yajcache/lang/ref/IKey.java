@@ -22,8 +22,6 @@ package org.apache.commons.jcs.yajcache.lang.ref;
 import org.apache.commons.jcs.yajcache.lang.annotation.*;
 /**
  * Interface for accessing a key.
- *
- * @author Hanson Char
  */
 @CopyRightApache
 public interface IKey<K> {

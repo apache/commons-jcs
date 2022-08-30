@@ -39,8 +39,6 @@ import org.apache.commons.jcs3.log.LogManager;
 
 /**
  * This factory should create hsql disk caches.
- * <p>
- * @author Aaron Smuts
  */
 public class HSQLDiskCacheFactory
     extends JDBCDiskCacheFactory

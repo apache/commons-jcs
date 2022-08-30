@@ -26,8 +26,6 @@ import java.lang.ref.SoftReference;
 
 /**
  * {@link SoftReference} with an embedded key.
- *
- * @author Hanson Char
  */
 @CopyRightApache
 public class KeyedSoftReference<K,T> extends SoftReference<T>

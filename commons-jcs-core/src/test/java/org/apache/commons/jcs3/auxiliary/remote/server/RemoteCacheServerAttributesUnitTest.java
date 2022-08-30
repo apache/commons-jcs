@@ -25,8 +25,6 @@ import junit.framework.TestCase;
 
 /**
  * Tests for the remote cache server attributes.
- * <p>
- * @author Aaron Smuts
  */
 public class RemoteCacheServerAttributesUnitTest
     extends TestCase

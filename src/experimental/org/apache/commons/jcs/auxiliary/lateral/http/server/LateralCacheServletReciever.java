@@ -36,8 +36,6 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 /**
- * @author Aaron Smuts
- * @created January 15, 2002
  * @version 1.0
  */
 public class LateralCacheServletReciever

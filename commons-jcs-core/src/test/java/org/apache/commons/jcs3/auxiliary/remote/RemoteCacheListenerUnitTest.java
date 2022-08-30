@@ -35,8 +35,6 @@ import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
 
 /**
  * Tests for the remote cache listener.
- * <p>
- * @author Aaron Smuts
  */
 public class RemoteCacheListenerUnitTest
     extends TestCase

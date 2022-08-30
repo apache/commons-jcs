@@ -22,7 +22,6 @@ package org.apache.commons.jcs.yajcache.config;
 import org.apache.commons.jcs.yajcache.lang.annotation.*;
 
 /**
- * @author Hanson Char
  */
 @CopyRightApache
 @JavaBean

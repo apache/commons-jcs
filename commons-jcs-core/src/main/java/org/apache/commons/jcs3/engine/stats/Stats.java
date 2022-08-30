@@ -25,7 +25,6 @@ import org.apache.commons.jcs3.engine.stats.behavior.IStatElement;
 import org.apache.commons.jcs3.engine.stats.behavior.IStats;
 
 /**
- * @author aaronsm
  */
 public class Stats
     implements IStats

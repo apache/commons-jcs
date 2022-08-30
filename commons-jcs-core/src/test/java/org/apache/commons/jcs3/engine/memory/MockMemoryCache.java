@@ -34,8 +34,6 @@ import org.apache.commons.jcs3.engine.stats.behavior.IStats;
 
 /**
  * Mock implementation of a memory cache for testing things like the memory shrinker.
- * <p>
- * @author Aaron Smuts
  */
 public class MockMemoryCache<K, V>
     implements IMemoryCache<K, V>

@@ -35,9 +35,6 @@ import org.apache.commons.jcs3.log.LogManager;
  * A factory that looks up the DataSource using the JDBC2 pool methods.
  *
  * Borrowed and adapted from Apache DB Torque
- *
- * @author <a href="mailto:jmcnally@apache.org">John McNally</a>
- * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
  */
 public class SharedPoolDataSourceFactory implements DataSourceFactory
 {

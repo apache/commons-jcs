@@ -29,8 +29,6 @@ import junit.framework.TestCase;
 
 /**
  * Test for the disk access layer of the Block Disk Cache.
- * <p>
- * @author Aaron Smuts
  */
 public class BlockDiskUnitTest
     extends TestCase

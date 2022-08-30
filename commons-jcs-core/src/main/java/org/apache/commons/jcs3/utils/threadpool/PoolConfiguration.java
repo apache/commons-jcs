@@ -21,8 +21,6 @@ package org.apache.commons.jcs3.utils.threadpool;
 
 /**
  * This object holds configuration data for a thread pool.
- * <p>
- * @author Aaron Smuts
  */
 public final class PoolConfiguration
     implements Cloneable

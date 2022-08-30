@@ -26,8 +26,6 @@ import java.io.Serializable;
  * status of a table. The MySQL disk cache, for instance, marks the status as
  * optimizing when a scheduled optimization is taking place. This allows the
  * cache to balk rather than block during long running optimizations.
- * <p>
- * @author Aaron Smuts
  */
 public class TableState
     implements Serializable

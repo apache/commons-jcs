@@ -43,13 +43,14 @@ import org.apache.commons.jcs3.log.LogManager;
  * <p>
  * Children can implement the processRemovedLRU method if they want to handle the removal of the
  * least recently used item.
+ * </p>
  * <p>
  * This class was abstracted out of the LRU Memory cache. Put, remove, and get should be thread
  * safe. It uses a hashtable and our own double linked list.
+ * </p>
  * <p>
  * Locking is done on the instance.
- * <p>
- * @author aaron smuts
+ * </p>
  */
 public abstract class AbstractLRUMap<K, V>
     implements Map<K, V>

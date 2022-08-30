@@ -39,9 +39,6 @@ import junit.framework.TestCase;
 
 /**
  * Tests for common functionality.
- * <p>
- *
- * @author Aaron Smuts
  */
 public abstract class IndexDiskCacheUnitTestAbstract extends TestCase
 {

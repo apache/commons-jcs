@@ -25,8 +25,6 @@ import org.apache.commons.jcs.yajcache.soft.SoftRefFileCache;
 
 /**
  * Cache Type.
- *
- * @author Hanson Char
  */
 // @CopyRightApache
 // http://www.netbeans.org/issues/show_bug.cgi?id=53704

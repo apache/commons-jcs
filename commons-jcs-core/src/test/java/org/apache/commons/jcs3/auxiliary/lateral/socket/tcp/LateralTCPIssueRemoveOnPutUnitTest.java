@@ -32,7 +32,6 @@ import junit.framework.TestCase;
 
 /**
  * Tests the issue remove on put fuctionality.
- * @author asmuts
  */
 public class LateralTCPIssueRemoveOnPutUnitTest
     extends TestCase

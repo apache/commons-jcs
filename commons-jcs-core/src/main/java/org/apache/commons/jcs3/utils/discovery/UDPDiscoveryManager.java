@@ -32,8 +32,6 @@ import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
 /**
  * This manages UDPDiscovery Services. We should end up with one service per Lateral Cache Manager
  * Instance. One service works for multiple regions. We don't want a connection for each region.
- * <p>
- * @author Aaron Smuts
  */
 public class UDPDiscoveryManager
 {

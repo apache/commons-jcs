@@ -33,8 +33,6 @@ import java.util.concurrent.locks.Lock;
 
 /**
  * Cache Manager for getting, creating and removing named caches.
- *
- * @author Hanson Char
  */
 // @CopyRightApache
 // http://www.netbeans.org/issues/show_bug.cgi?id=53704

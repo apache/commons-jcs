@@ -27,8 +27,6 @@ import java.lang.annotation.RetentionPolicy;
  * Characterizing thread safety.
  *
  * http://www-106.ibm.com/developerworks/java/library/j-jtp09263.html
- *
- * @author Hanson Char
  */
 @CopyRightApache
 @Documented

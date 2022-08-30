@@ -28,7 +28,6 @@ import org.apache.commons.jcs3.utils.timing.ElapsedTimer;
 
 /**
  * Put a few hundred thousand entries in the block disk cache.
- * @author Aaron Smuts
  */
 public class HugeQuantityBlockDiskCacheLoadTest
     extends TestCase

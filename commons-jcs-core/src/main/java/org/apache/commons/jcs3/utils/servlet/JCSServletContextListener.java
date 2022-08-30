@@ -39,7 +39,6 @@ import org.apache.commons.jcs3.log.LogManager;
  *  &lt;/listener-class&gt;
  *  &lt;/listener&gt;
  * </pre>
- * @author Aaron Smuts
  */
 public class JCSServletContextListener
     implements ServletContextListener
