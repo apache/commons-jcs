@@ -44,7 +44,7 @@ Apache Commons JCS
 ===================
 
 [![Build Status](https://travis-ci.org/apache/commons-jcs.svg)](https://travis-ci.org/apache/commons-jcs)
-[![Coverage Status](https://coveralls.io/repos/apache/commons-jcs/badge.svg)](https://coveralls.io/r/apache/commons-jcs)
+[![Coverage Status](https://codecov.io/gh/apache/commons-jcs/branch/master/graph/badge.svg)](https://app.codecov.io/gh/apache/commons-jcs)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-jcs3/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-jcs3/)
 [![Javadocs](https://javadoc.io/badge/org.apache.commons/commons-jcs3/3.1.svg)](https://javadoc.io/doc/org.apache.commons/commons-jcs3/3.1)
 
