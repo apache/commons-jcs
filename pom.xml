@@ -464,7 +464,7 @@
             <excludes combine.children="merge">
             so that the child pom entries replace the parent entries
           -->
-          <excludes combine.children="merge">
+          <excludes combine.children="append">
             <exclude>.java-version</exclude>
             <exclude>**/zipcodes.txt</exclude>
             <exclude>**/.gitignore</exclude>
@@ -497,21 +497,6 @@
             <artifactId>maven-release-plugin</artifactId>
             <configuration>
               <releaseProfiles>release</releaseProfiles>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-    <profile>
-      <id>site</id>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-javadoc-plugin</artifactId>
-            <version>3.4.1</version>
-            <configuration>
-              <aggregate>true</aggregate>
             </configuration>
           </plugin>
         </plugins>
