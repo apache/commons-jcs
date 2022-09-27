@@ -449,9 +449,9 @@
         </configuration>
       </plugin>
       <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>findbugs-maven-plugin</artifactId>
-        <version>${commons.findbugs.version}</version>
+        <groupId>com.github.spotbugs</groupId>
+        <artifactId>spotbugs-maven-plugin</artifactId>
+        <version>${commons.spotbugs.plugin.version}</version>
       </plugin>
       <plugin>
         <groupId>org.apache.rat</groupId>
