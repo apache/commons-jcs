@@ -242,7 +242,7 @@
             <excludes combine.children="merge">
             so that the child pom entries replace the parent entries
           -->
-          <excludes combine.children="merge">
+          <excludes combine.children="append">
             <exclude>.java-version</exclude>
             <exclude>**/zipcodes.txt</exclude>
             <exclude>**/.gitignore</exclude>
