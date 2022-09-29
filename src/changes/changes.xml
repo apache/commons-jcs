@@ -48,6 +48,9 @@
             <action dev="ggregory" type="update" due-to="Dependabot">
                Bump log4j-core from 2.17.1 to 2.17.2 #87.
             </action>
+            <action dev="ggregory" type="update" due-to="Dependabot">
+               Bump commons-text from 1.9 to 1.10.0 #110.
+            </action>
         </release>
         <release version="3.1" date="2022-01-03">
             <action dev="tv" type="fix" due-to="Bruno Kinoshita">
