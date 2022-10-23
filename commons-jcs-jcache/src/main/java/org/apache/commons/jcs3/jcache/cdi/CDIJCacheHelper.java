@@ -402,7 +402,7 @@ public class CDIJCacheHelper
         final List<Integer> keys = new LinkedList<>();
         final Annotation[][] parameterAnnotations = method.getParameterAnnotations();
 
-        // first check if keys are specified explicitely
+        // first check if keys are specified explicitly
         for (int i = 0; i < method.getParameterTypes().length; i++)
         {
             final Annotation[] annotations = parameterAnnotations[i];
