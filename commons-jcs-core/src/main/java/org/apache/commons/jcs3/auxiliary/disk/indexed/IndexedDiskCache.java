@@ -1153,7 +1153,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
             {
                 if (!queuedPutList.isEmpty())
                 {
-                    defragList = queuedPutList.toArray(new IndexedDiskElementDescriptor[queuedPutList.size()]);
+                    defragList = queuedPutList.toArray(new IndexedDiskElementDescriptor[0]);
 
                     // pack them at the end
                     expectedNextPos = defragFile(defragList, expectedNextPos);
