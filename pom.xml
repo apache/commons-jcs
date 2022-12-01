@@ -143,6 +143,8 @@
   </mailingLists>
 
   <modules>
+    <module>commons-jcs-logging</module>
+    <module>commons-jcs-log4j</module>
     <module>commons-jcs-core</module>
     <module>commons-jcs-jcache</module>
     <module>commons-jcs-tck-tests</module>

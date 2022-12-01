@@ -57,10 +57,14 @@
   <dependencies>
 
     <dependency>
-      <groupId>org.apache.logging.log4j</groupId>
-      <artifactId>log4j-api</artifactId>
-      <version>2.19.0</version>
-      <optional>true</optional>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-jcs3-logging</artifactId>
+      <version>${project.parent.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-jcs3-log4j</artifactId>
+      <version>${project.parent.version}</version>
     </dependency>
 
     <!--  JDBC DISK CACHE -->
