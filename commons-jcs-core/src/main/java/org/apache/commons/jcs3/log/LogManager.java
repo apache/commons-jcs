@@ -17,6 +17,10 @@ package org.apache.commons.jcs3.log;
  * limitations under the license.
  */
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
 
 /**
@@ -57,15 +61,34 @@ public class LogManager
                 LogManager.logSystem = System.getProperty("jcs.logSystem",
                         LOGSYSTEM_JAVA_UTIL_LOGGING);
             }
-
-            for (final LogFactory factory : factories)
-            {
-                if (logSystem.equalsIgnoreCase(factory.getName()))
-                {
-                    return factory;
+            List<ServiceConfigurationError> errors = new ArrayList<>();
+            Iterator<LogFactory> itr = factories.iterator();
+            LogFactory factory = null;
+            while (itr.hasNext()) {
+                try {
+                    LogFactory instance = itr.next();
+                    if (logSystem.equalsIgnoreCase(instance.getName())) {
+                        factory = instance;
+                        break;
+                    }
+                } catch (ServiceConfigurationError e) {
+                    errors.add(e);
                 }
             }
-
+            if (factory != null) {
+                if (!errors.isEmpty()) {
+                    Log log = factory.getLog(LogFactoryHolder.class);
+                    for (ServiceConfigurationError error : errors) {
+                        log.debug("Error loading LogFactory", error);
+                    }
+                    log.debug("Found LogFacgtory for " + logSystem);
+                }
+                return factory;
+            }
+            if (!errors.isEmpty()) {
+                throw new RuntimeException("Could not find factory implementation for log subsystem " + logSystem,
+                        errors.get(0));
+            }
             throw new RuntimeException("Could not find factory implementation for log subsystem " + logSystem);
         }
     }
