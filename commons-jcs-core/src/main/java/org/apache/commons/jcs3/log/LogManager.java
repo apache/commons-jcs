@@ -64,10 +64,13 @@ public class LogManager
             List<ServiceConfigurationError> errors = new ArrayList<>();
             Iterator<LogFactory> itr = factories.iterator();
             LogFactory factory = null;
-            while (itr.hasNext()) {
-                try {
+            while (itr.hasNext())
+            {
+                try
+                {
                     LogFactory instance = itr.next();
-                    if (logSystem.equalsIgnoreCase(instance.getName())) {
+                    if (logSystem.equalsIgnoreCase(instance.getName()))
+                    {
                         factory = instance;
                         break;
                     }
@@ -75,10 +78,13 @@ public class LogManager
                     errors.add(e);
                 }
             }
-            if (factory != null) {
-                if (!errors.isEmpty()) {
-                    Log log = factory.getLog(LogFactoryHolder.class);
-                    for (ServiceConfigurationError error : errors) {
+            if (factory != null)
+            {
+                Log log = factory.getLog(LogFactoryHolder.class);
+                if (!errors.isEmpty())
+                {
+                    for (ServiceConfigurationError error : errors)
+                    {
                         log.debug("Error loading LogFactory", error);
                     }
                     log.debug("Found LogFactory for " + logSystem);
