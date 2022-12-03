@@ -81,7 +81,7 @@ public class LogManager
                     for (ServiceConfigurationError error : errors) {
                         log.debug("Error loading LogFactory", error);
                     }
-                    log.debug("Found LogFacgtory for " + logSystem);
+                    log.debug("Found LogFactory for " + logSystem);
                 }
                 return factory;
             }
