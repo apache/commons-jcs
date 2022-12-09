@@ -61,6 +61,8 @@ public class LogManager
                 LogManager.logSystem = System.getProperty("jcs.logSystem",
                         LOGSYSTEM_JAVA_UTIL_LOGGING);
             }
+
+            // Store errors that may occur until log system is available
             List<ServiceConfigurationError> errors = new ArrayList<>();
             Iterator<LogFactory> itr = factories.iterator();
             LogFactory factory = null;
@@ -74,15 +76,18 @@ public class LogManager
                         factory = instance;
                         break;
                     }
-                } catch (ServiceConfigurationError e) {
+                }
+                catch (ServiceConfigurationError e)
+                {
                     errors.add(e);
                 }
             }
             if (factory != null)
             {
-                Log log = factory.getLog(LogFactoryHolder.class);
                 if (!errors.isEmpty())
                 {
+                    Log log = factory.getLog(LogFactoryHolder.class);
+
                     for (ServiceConfigurationError error : errors)
                     {
                         log.debug("Error loading LogFactory", error);
@@ -91,10 +96,9 @@ public class LogManager
                 }
                 return factory;
             }
-            if (!errors.isEmpty()) {
-                throw new RuntimeException("Could not find factory implementation for log subsystem " + logSystem,
-                        errors.get(0));
-            }
+
+            // No log system could be found --> report errors to stderr
+            errors.forEach(e -> System.err.println(e.getMessage()));
             throw new RuntimeException("Could not find factory implementation for log subsystem " + logSystem);
         }
     }
