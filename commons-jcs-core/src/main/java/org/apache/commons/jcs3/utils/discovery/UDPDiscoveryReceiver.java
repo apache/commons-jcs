@@ -87,7 +87,7 @@ public class UDPDiscoveryReceiver
     /**
      * Constructor for the UDPDiscoveryReceiver object.
      * <p>
-     * We determine out own host using InetAddress
+     * We determine our own host using InetAddress
      *<p>
      * @param service
      * @param multicastInterfaceString
@@ -335,7 +335,7 @@ public class UDPDiscoveryReceiver
 
     /**
      * Separate thread run when a command comes into the UDPDiscoveryReceiver.
-     * @deprectaed No longer used
+     * @deprecated No longer used
      */
     @Deprecated
     public class MessageHandler
