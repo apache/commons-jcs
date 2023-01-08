@@ -128,7 +128,7 @@ public class LateralTCPListener<K, V>
                     return newIns;
                 });
     }
-    
+
     /**
      * Gets the instance attribute of the LateralCacheTCPListener class.
      * <p>
@@ -158,7 +158,19 @@ public class LateralTCPListener<K, V>
     /**
      * Only need one since it does work for all regions, just reference by multiple region names.
      * <p>
-     * @param ilca
+     * @param ilca ITCPLateralCacheAttributes
+     * @deprecated Specify serializer
+     */
+    @Deprecated
+    protected LateralTCPListener( final ITCPLateralCacheAttributes ilca )
+    {
+        this(ilca, new StandardSerializer());
+    }
+
+    /**
+     * Only need one since it does work for all regions, just reference by multiple region names.
+     * <p>
+     * @param ilca ITCPLateralCacheAttributes
      * @param serializer the serializer to use when receiving
      */
     protected LateralTCPListener( final ITCPLateralCacheAttributes ilca, final IElementSerializer serializer )
