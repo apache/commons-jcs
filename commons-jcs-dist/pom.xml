@@ -21,12 +21,12 @@
   <parent>
     <artifactId>commons-jcs3</artifactId>
     <groupId>org.apache.commons</groupId>
-    <version>3.2</version>
+    <version>3.3-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>commons-jcs3-dist</artifactId>
-  <version>3.2</version>
+  <version>3.3-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>Apache Commons JCS :: Distribution</name>
   <description>Creates the Apache Commons JCS multimodule distribution.</description>
@@ -35,7 +35,7 @@
     <connection>scm:git:http://gitbox.apache.org/repos/asf/commons-jcs.git</connection>
     <developerConnection>scm:git:https://gitbox.apache.org/repos/asf/commons-jcs.git</developerConnection>
     <url>https://gitbox.apache.org/repos/asf?p=commons-jcs.git</url>
-    <tag>commons-jcs3-3.2</tag>
+    <tag>HEAD</tag>
   </scm>
 
   <!-- NOTE: These dependency declarations are only required to sort this project to the 
@@ -72,7 +72,7 @@
   </build>
 
   <properties>
-    <project.build.outputTimestamp>2023-01-08T19:56:24Z</project.build.outputTimestamp>
+    <project.build.outputTimestamp>2023-01-08T20:02:30Z</project.build.outputTimestamp>
   </properties>
 
   <profiles>

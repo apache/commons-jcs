@@ -23,19 +23,19 @@
   <parent>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-jcs3</artifactId>
-    <version>3.2</version>
+    <version>3.3-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
   <artifactId>commons-jcs3-jcache</artifactId>
-  <version>3.2</version>
+  <version>3.3-SNAPSHOT</version>
   <name>Apache Commons JCS :: JCache</name>
 
   <scm>
     <connection>scm:git:http://gitbox.apache.org/repos/asf/commons-jcs.git</connection>
     <developerConnection>scm:git:https://gitbox.apache.org/repos/asf/commons-jcs.git</developerConnection>
     <url>https://gitbox.apache.org/repos/asf?p=commons-jcs.git</url>
-    <tag>commons-jcs3-3.2</tag>
+    <tag>HEAD</tag>
   </scm>
 
   <dependencies>
@@ -128,6 +128,6 @@
   </build>
   
   <properties>
-    <project.build.outputTimestamp>2023-01-08T19:56:24Z</project.build.outputTimestamp>
+    <project.build.outputTimestamp>2023-01-08T20:02:30Z</project.build.outputTimestamp>
   </properties>
 </project>
