@@ -16,18 +16,20 @@ limitations under the License.
 
 
                         Apache Commons JCS
-                        Version 3.1
+                        Version 3.2
                         Release Notes
 
 
 INTRODUCTION:
 
-This document contains the release notes for the 3.1 version of Apache Commons JCS.
-Commons JCS is a distributed caching system written in Java. It is intend to speed up 
-applications by providing a means to manage cached data of various dynamic natures.
+This document contains the release notes for the 3.2 version of Apache Commons 
+JCS.
+Commons JCS is a distributed caching system written in Java. It is intend to 
+speed up applications by providing a means to manage cached data of various 
+dynamic natures.
 
-JCS 3.0 and onwards now targets Java 8.0, making use of features that arrived with Java 8.0 
-such as lambdas.
+JCS 3.0 and onwards now targets Java 8.0, making use of features that arrived 
+with Java 8.0 such as lambdas.
 
 For the advice on upgrading from 2.x to 3.x, see the following page: 
 
@@ -35,55 +37,26 @@ For the advice on upgrading from 2.x to 3.x, see the following page:
 
 Changes in this version include:
 
-New features:
-o           Add EncryptingSerializer and some documentation
-o           Add BlockDiskKeyStore.isEmpty(). Thanks to Gary Gregory.
-o           Add IndexedDisk.isEmpty(). Thanks to Gary Gregory.
-
 Fixed Bugs:
-o           Use new SecureRandom() instead of SecureRandom.getStrongInstance() to 
-            avoid potential performance problems on Linux Thanks to Bruno Kinoshita.
-o JCS-228:  Attempt to fix osgi import packages Thanks to Patrick Ziegler.
-o JCS-191:  Fix for Server Failover mechanism not working, add test Thanks to Prajakta Uplaikar.
-o JCS-186:  Use configured listener address for UDP service broadcast Thanks to Alex L.
-o JCS-186:  Fix UDP service discovery with LateralCache Thanks to Alex L.
-o           Fix shutdown race conditions
+o JCS-232:  Handle ServiceConfigurationError when using a different logging framework Thanks to Jeremy Long.
+o JCS-231:  Fix Lateral TCP cache recovery loop for empty TCP servers Thanks to Andrea Vettori.
+o JCS-230:  UDPDiscoveryReceiver with EncryptingSerializer fails #88. Thanks to Dorota Oeknigk-Urbanska.
+o JCS-229:  LateralTCPListener class uses always StandardSerializer #89. Thanks to Dorota Oeknigk-Urbanska.
 
 Changes:
-o           Update from Apache Log4j 2.14.1 to 2.17.1 Thanks to Gary Gregory.
-o           Autodetect lateral service address on the interface used for multicast - 
-            depending on the multicast protocol: 
-            IPv6 link-local address for IPv6 multicast,
-            IPv4 site-local address for IPv4 multicast
-o           Use NIO for UDP service discovery, works with IPv6 now
-o           Use NIO for LateralTCPListener
-o           IMPORTANT CHANGE
-            Use IElementSerializer for LateralTCPSender and listener
-o           IMPORTANT CHANGE
-            Use IElementSerializer for RemoteHttpCacheServlet
-o           IMPORTANT CHANGE
-            Use IElementSerializer for Block disk key storage
-o           IMPORTANT CHANGE
-            Use IElementSerializer for UDP service discovery
-o           Replace several Runnable classes with Lambdas
-            Deprecate original classes
-o           Update from Apache Commons Lang 3.10 to 3.12.0. Thanks to Gary Gregory.
-o           Bump build actions/setup-java from v1.4.3 to v2. Thanks to Gary Gregory.
-o           Update from Apache Commons IO 2.8.0 to 2.10.0, #72. Thanks to Gary Gregory, Dependabot.
-o           Bump actions/cache from 2.1.5 to 2.1.6 #70. Thanks to Dependabot.
-o           Bump log4j-api from 2.13.2 to 2.17.1 #79, #81. Thanks to Dependabot.
+o           Bump actions/cache from 2.1.7 to 3.0.9 #86, #111. Thanks to Dependabot, Gary Gregory.
+o           Bump actions/checkout from 2 to 3.0.2 #93. Thanks to Dependabot, Gary Gregory.
+o           Bump actions/setup-java from 2 to 3.5.1. Thanks to Gary Gregory.
+o           Bump commons-parent from 52 to 56 #90, #130. Thanks to Dependabot.
+o           Bump log4j-api from 2.17.1 to 2.19.0 #85, #100, #107. Thanks to Dependabot.
+o           Bump log4j-core from 2.17.1 to 2.19.0 #87, #99, #108. Thanks to Dependabot.
+o           Bump commons-text from 1.9 to 1.10.0 #110. Thanks to Dependabot.
 
-Removed:
-o           Remove support for long deprecated and inconsistent 
-            RemoteCacheServer configuration keys
-            - remote.cache.service.port is now jcs.remotecache.serverattributes.servicePort
-            - remote.cache.rmiSocketFactoryTimeoutMillis is now jcs.remotecache.serverattributes.rmiSocketFactoryTimeoutMillis
-            - remote.cluster.LocalClusterConsistency is now jcs.remotecache.serverattributes.LocalClusterConsistency
-            - remote.cluster.AllowClusterGet is now jcs.remotecache.serverattributes.AllowClusterGet
 
 Historical list of changes: http://commons.apache.org/proper/commons-jcs/changes-report.html
 
-For complete information on Apache Commons JCS, including instructions on how to submit bug reports,
-patches, or suggestions for improvement, see the Apache Commons JCS website:
+For complete information on Apache Commons JCS, including instructions on how 
+to submit bug reports, patches, or suggestions for improvement, see the Apache 
+Commons JCS website:
 
 http://commons.apache.org/proper/commons-jcs/
