@@ -19,7 +19,10 @@
 		<author email="dev@commons.apache.org">Apache Commons Developers</author>
 	</properties>
 	<body>
-        <release version="3.2" date="TBD">
+        <release version="3.1.1" date="TBD">Jeremy Long
+            <action dev="tv" type="fix" issue="JCS-232" due-to="Jeremy Long">
+               Handle ServiceConfigurationError when using a different logging framework
+            </action>
             <action dev="tv" type="fix" issue="JCS-231" due-to="Andrea Vettori">
                Fix Lateral TCP cache recovery loop for empty TCP servers
             </action>
@@ -43,10 +46,10 @@
                Bump commons-parent from 52 to 56 #90, #130.
             </action>
             <action dev="ggregory" type="update" due-to="Dependabot">
-               Bump log4j-api from 2.17.1 to 2.17.2 #85.
+               Bump log4j-api from 2.17.1 to 2.19.0 #85, #100, #107.
             </action>
             <action dev="ggregory" type="update" due-to="Dependabot">
-               Bump log4j-core from 2.17.1 to 2.17.2 #87.
+               Bump log4j-core from 2.17.1 to 2.19.0 #87, #99, #108.
             </action>
             <action dev="ggregory" type="update" due-to="Dependabot">
                Bump commons-text from 1.9 to 1.10.0 #110.
