@@ -19,7 +19,7 @@
 		<author email="dev@commons.apache.org">Apache Commons Developers</author>
 	</properties>
 	<body>
-        <release version="3.1.1" date="TBD">Jeremy Long
+        <release version="3.1.1" date="2023-01-08">
             <action dev="tv" type="fix" issue="JCS-232" due-to="Jeremy Long">
                Handle ServiceConfigurationError when using a different logging framework
             </action>
