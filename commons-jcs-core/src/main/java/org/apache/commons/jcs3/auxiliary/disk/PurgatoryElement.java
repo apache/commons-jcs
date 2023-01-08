@@ -19,6 +19,8 @@ package org.apache.commons.jcs3.auxiliary.disk;
  * under the License.
  */
 
+import java.util.Objects;
+
 import org.apache.commons.jcs3.engine.CacheElement;
 import org.apache.commons.jcs3.engine.behavior.ICacheElement;
 import org.apache.commons.jcs3.engine.behavior.IElementAttributes;
@@ -133,6 +135,34 @@ public class PurgatoryElement<K, V>
     public void setElementAttributes( final IElementAttributes attr )
     {
         cacheElement.setElementAttributes( attr );
+    }
+
+    /**
+     * @param obj other object
+     * @return true if this object key equals the key of obj
+     */
+    @Override
+    public boolean equals(final Object obj)
+    {
+        if (this == obj)
+        {
+            return true;
+        }
+        if (!(obj instanceof PurgatoryElement))
+        {
+            return false;
+        }
+        final PurgatoryElement<?,?> other = (PurgatoryElement<?,?>) obj;
+        return Objects.equals(getKey(), other.getKey());
+    }
+
+    /**
+     * @return a hash of the key only
+     */
+    @Override
+    public int hashCode()
+    {
+        return getKey().hashCode();
     }
 
     /**

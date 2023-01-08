@@ -20,6 +20,7 @@ package org.apache.commons.jcs3.engine;
  */
 
 import java.util.Arrays;
+import java.util.Objects;
 
 import org.apache.commons.jcs3.engine.behavior.ICacheElementSerialized;
 import org.apache.commons.jcs3.engine.behavior.IElementAttributes;
@@ -55,6 +56,25 @@ public class CacheElementSerialized<K, V>
     public byte[] getSerializedValue()
     {
         return this.serializedValue;
+    }
+
+    /**
+     * @param obj other object
+     * @return true if this object key equals the key of obj
+     */
+    @Override
+    public boolean equals(final Object obj)
+    {
+        if (this == obj)
+        {
+            return true;
+        }
+        if (!(obj instanceof CacheElementSerialized))
+        {
+            return false;
+        }
+        final CacheElementSerialized<?,?> other = (CacheElementSerialized<?,?>) obj;
+        return Objects.equals(getKey(), other.getKey());
     }
 
     /**
