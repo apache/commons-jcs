@@ -43,10 +43,11 @@
 Apache Commons JCS
 ===================
 
+[![Travis-CI Status](https://travis-ci.org/apache/commons-jcs.svg)](https://travis-ci.org/apache/commons-jcs)
 [![GitHub Actions Status](https://github.com/apache/commons-jcs/workflows/Java%20CI/badge.svg)](https://github.com/apache/commons-jcs/actions)
-[![Coverage Status](https://codecov.io/gh/apache/commons-jcs/branch/master/graph/badge.svg)](https://app.codecov.io/gh/apache/commons-jcs)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-jcs3/badge.svg?gav=true)](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-jcs3/?gav=true)
-[![Javadocs](https://javadoc.io/badge/org.apache.commons/commons-jcs3/3.1.svg)](https://javadoc.io/doc/org.apache.commons/commons-jcs3/3.1)
+[![Coverage Status](https://coveralls.io/repos/apache/commons-jcs/badge.svg)](https://coveralls.io/r/apache/commons-jcs)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-jcs3/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-jcs3/)
+[![Javadocs](https://javadoc.io/badge/org.apache.commons/commons-jcs3/3.2.svg)](https://javadoc.io/doc/org.apache.commons/commons-jcs3/3.2)
 
 Apache Commons JCS is a distributed, versatile caching system.
 
@@ -67,7 +68,7 @@ Alternatively you can pull it from the central Maven repositories:
 <dependency>
   <groupId>org.apache.commons</groupId>
   <artifactId>commons-jcs3</artifactId>
-  <version>3.1</version>
+  <version>3.2</version>
 </dependency>
 ```
 
@@ -79,7 +80,7 @@ There are some guidelines which will make applying PRs easier for us:
 + No tabs! Please use spaces for indentation.
 + Respect the code style.
 + Create minimal diffs - disable on save actions like reformat source code or organize imports. If you feel the source code should be reformatted create a separate PR for this change.
-+ Provide JUnit tests for your changes and make sure your changes don't break any existing tests by running ```mvn```.
++ Provide JUnit tests for your changes and make sure your changes don't break any existing tests by running ```mvn clean test```.
 
 If you plan to contribute on a regular basis, please consider filing a [contributor license agreement](https://www.apache.org/licenses/#clas).
 You can learn more about contributing via GitHub in our [contribution guidelines](CONTRIBUTING.md).
