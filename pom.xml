@@ -531,8 +531,8 @@
     <commons.componentid>jcs</commons.componentid>
     <commons.osgi.symbolicName>org.apache.commons.${project.artifactId}</commons.osgi.symbolicName>
     <commons.module.name>org.apache.commons.jcs3</commons.module.name>
-    <commons.release.version>3.1.1</commons.release.version>
-    <commons.release.name>commons-jcs3-dist-3.1.1</commons.release.name>
+    <commons.release.version>3.2</commons.release.version>
+    <commons.release.name>commons-jcs3-dist-3.2</commons.release.name>
     <commons.release.desc>(Java 8+)</commons.release.desc>
     <commons.releaseManagerName>tv</commons.releaseManagerName>
     <commons.releaseManagerKey>88817402</commons.releaseManagerKey>
