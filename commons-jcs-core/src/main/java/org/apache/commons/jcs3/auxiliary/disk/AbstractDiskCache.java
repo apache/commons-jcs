@@ -202,7 +202,7 @@ public abstract class AbstractDiskCache<K, V>
             // Wrap the CacheElement in a PurgatoryElement
             final PurgatoryElement<K, V> pe = new PurgatoryElement<>( cacheElement );
 
-            // Indicates the the element is eligible to be spooled to disk,
+            // Indicates the element is eligible to be spooled to disk,
             // this will remain true unless the item is pulled back into
             // memory.
             pe.setSpoolable( true );

@@ -27,7 +27,7 @@ import java.net.Socket;
 import java.rmi.server.RMISocketFactory;
 
 /**
- * This can be injected into the the remote cache server as follows:
+ * This can be injected into the remote cache server as follows:
  *
  * <pre>
  * jcs.remotecache.customrmisocketfactory=org.apache.commons.jcs3.auxiliary.remote.server.TimeoutConfigurableRMISocketFactory

@@ -326,7 +326,7 @@ public class ShrinkerThreadUnitTest
         // VERIFY
         Thread.sleep( 500 );
         assertEquals( "Waterfall called the wrong number of times.", 3, memory.waterfallCallCount );
-        // the shrinker delegates the the composite cache on the memory cache to put the
+        // the shrinker delegates the composite cache on the memory cache to put the
         // event on the queue.  This make it hard to test.  TODO we need to change this to make it easier to verify.
         //assertEquals( "Event handler ExceededIdleTimeBackground called the wrong number of times.", 3, handler.getExceededIdleTimeBackgroundCount() );
         assertEquals( "Wrong number of elements remain.", 7, memory.getSize() );

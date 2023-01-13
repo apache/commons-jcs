@@ -1188,7 +1188,7 @@ public class RemoteCacheServer<K, V>
                         + listenerAddress + "]";
                     logApplicationEvent( "RemoteCacheServer", "addCacheListener", message );
                     log.info( message );
-                    // should confirm the the host is the same as we have on
+                    // should confirm the host is the same as we have on
                     // record, just in case a client has made a mistake.
                 }
 

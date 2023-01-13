@@ -260,7 +260,7 @@ public class LateralTCPDiscoveryListener
     /**
      * Creates the lateral cache if needed.
      * <p>
-     * We could go to the composite cache manager and get the the cache for the region. This would
+     * We could go to the composite cache manager and get the cache for the region. This would
      * force a full configuration of the region. One advantage of this would be that the creation of
      * the later would go through the factory, which would add the item to the no wait list. But we
      * don't want to do this. This would force this client to have all the regions as the other.

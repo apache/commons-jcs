@@ -203,7 +203,7 @@ public class UDPDiscoverySender implements AutoCloseable
     }
 
     /**
-     * Ask other to broadcast their info the the multicast address. If a lateral is non receiving it
+     * Ask other to broadcast their info the multicast address. If a lateral is non receiving it
      * can use this. This is also called on startup so we can get info.
      * <p>
      * @throws IOException

@@ -44,7 +44,7 @@ public interface IRemoteCacheClient<K, V>
      * Gets the listenerId attribute of the RemoteCacheListener object.
      * <p>
      * All requests to the remote cache must include a listener id. This allows the server to avoid
-     * sending updates the the listener associated with this client.
+     * sending updates the listener associated with this client.
      * <p>
      * @return The listenerId value
      */
