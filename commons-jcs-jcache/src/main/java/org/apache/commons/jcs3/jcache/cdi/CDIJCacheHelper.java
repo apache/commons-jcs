@@ -258,7 +258,7 @@ public class CDIJCacheHelper
 
     private CacheDefaults findDefaults(final Class<?> targetType, final Method method)
     {
-        if (Proxy.isProxyClass(targetType)) // target doesnt hold annotations
+        if (Proxy.isProxyClass(targetType)) // target doesn't hold annotations
         {
             final Class<?> api = method.getDeclaringClass();
             for (final Class<?> type : targetType
