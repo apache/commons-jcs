@@ -33,7 +33,7 @@
         for distribution.
       </p>
       <p>
-		The Lateral Lateral JGroups Auxiliary Cache is far slower than
+		The Lateral JGroups Auxiliary Cache is far slower than
 		that Lateral TCP Auxiliary Cache.  Since the Lateral TCP Auxiliary
 		is faster and has UDP discovery built in, the TCP auxiliary is the recommended form of lateral
 		distribution.  However, the JGroups Auxiliary requires fewer socket connections than

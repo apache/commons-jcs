@@ -30,7 +30,7 @@ import junit.framework.TestCase;
 public class LRUMapSizeVsCount
     extends TestCase
 {
-    /** The put put ration after the test */
+    /** The put ration after the test */
     double ratioPut;
 
     /** The ratio after the test */

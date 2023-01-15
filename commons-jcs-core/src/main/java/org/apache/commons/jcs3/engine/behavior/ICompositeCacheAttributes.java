@@ -224,7 +224,7 @@ public interface ICompositeCacheAttributes
     DiskUsagePattern getDiskUsagePattern();
 
     /**
-     * Number to send to disk at at time when memory is full.
+     * Number to send to disk at time when memory is full.
      * <p>
      * @return int
      */

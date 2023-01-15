@@ -371,7 +371,7 @@ public class CompositeCacheAttributes
     }
 
     /**
-     * Number to send to disk at at time when memory is full.
+     * Number to send to disk at the time when memory is full.
      * <p>
      * @return int
      */

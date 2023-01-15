@@ -403,7 +403,7 @@ public class CompositeCache<K, V>
      * Writes the specified element to any disk auxiliaries. Might want to rename this "overflow" in
      * case the hub wants to do something else.
      * <p>
-     * If JCS is not configured to use the disk as a swap, that is if the the
+     * If JCS is not configured to use the disk as a swap, that is if the
      * CompositeCacheAttribute diskUsagePattern is not SWAP_ONLY, then the item will not be spooled.
      * <p>
      * @param ce The CacheElement
