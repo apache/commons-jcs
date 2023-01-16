@@ -439,7 +439,7 @@ public class FileDiskCache<K, V>
             {
                 if ( log.isDebugEnabled() )
                 {
-                    log.debug( logCacheName + "Max reached, removing least recently modifed" );
+                    log.debug( logCacheName + "Max reached, removing least recently modified" );
                 }
 
                 long oldestLastModified = System.currentTimeMillis();
@@ -459,7 +459,7 @@ public class FileDiskCache<K, V>
                 {
                     if ( log.isDebugEnabled() )
                     {
-                        log.debug( logCacheName + "Least recently modifed: " + theLeastRecentlyModified );
+                        log.debug( logCacheName + "Least recently modified: " + theLeastRecentlyModified );
                     }
                     deleteWithRetry( theLeastRecentlyModified );
                 }
