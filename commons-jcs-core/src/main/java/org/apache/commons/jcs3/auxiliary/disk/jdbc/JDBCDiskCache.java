@@ -452,8 +452,8 @@ public class JDBCDiskCache<K, V>
      */
     public String constructLikeParameterFromPattern( final String pattern )
     {
-        String likePattern = pattern.replaceAll( "\\.\\+", "%" );
-        likePattern = likePattern.replaceAll( "\\.", "_" );
+        String likePattern = pattern.replace( ".+", "%" );
+        likePattern = likePattern.replace( ".", "_" );
 
         log.debug( "pattern = [{0}]", likePattern );
 
