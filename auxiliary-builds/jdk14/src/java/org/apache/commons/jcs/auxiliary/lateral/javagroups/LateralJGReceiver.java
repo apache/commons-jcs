@@ -89,7 +89,7 @@ public class LateralJGReceiver
                 try
                 {
                     Object obj = javagroups.receive( 0 );
-                    if ( obj != null && obj instanceof org.jgroups.Message )
+                    if ( obj instanceof org.jgroups.Message )
                     {
                         mes = (Message) obj;
                         if ( log.isDebugEnabled() )

@@ -141,7 +141,7 @@ public class RemoteCache<K, V>
         log.error( message, ex );
 
         // we should not switch if the existing is a zombie.
-        if ( getRemoteCacheService() == null || !( getRemoteCacheService() instanceof ZombieCacheServiceNonLocal ) )
+        if ( !( getRemoteCacheService() instanceof ZombieCacheServiceNonLocal ) )
         {
             // TODO make configurable
             setRemoteCacheService( new ZombieCacheServiceNonLocal<>( getRemoteCacheAttributes().getZombieQueueMaxSize() ) );
