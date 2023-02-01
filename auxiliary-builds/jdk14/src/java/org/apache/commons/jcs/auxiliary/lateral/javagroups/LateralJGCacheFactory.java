@@ -41,6 +41,7 @@ import java.util.ArrayList;
  *
  * @deprecated use the new TYPE specific lateral factories.
  */
+@Deprecated
 public class LateralJGCacheFactory
     extends LateralCacheAbstractFactory
 {
