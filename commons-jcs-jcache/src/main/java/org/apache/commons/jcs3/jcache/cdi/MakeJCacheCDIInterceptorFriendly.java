@@ -118,7 +118,7 @@ public class MakeJCacheCDIInterceptorFriendly implements Extension
     }
 
     // TODO: make it better for ear+cluster case with CDI 1.0
-    private String findIdSuffix() {
+    private static String findIdSuffix() {
         // big disadvantage is all deployments of a cluster needs to be in the exact same order but it works with ears
         if (USE_ID) {
             return "lib" + id.incrementAndGet();

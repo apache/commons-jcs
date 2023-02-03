@@ -107,7 +107,7 @@ public class RemoteCacheServer<K, V>
     final IRemoteCacheServerAttributes remoteCacheServerAttributes;
 
     /** The interval at which we will log updates. */
-    private final int logInterval = 100;
+    private static final int logInterval = 100;
 
     /** An optional event logger */
     private transient ICacheEventLogger cacheEventLogger;
@@ -178,7 +178,7 @@ public class RemoteCacheServer<K, V>
      *
      * @throws CacheException if the configuration cannot be loaded
      */
-    private CompositeCacheManager createCacheManager( final Properties prop ) throws CacheException
+    private static CompositeCacheManager createCacheManager( final Properties prop ) throws CacheException
     {
         final CompositeCacheManager hub = CompositeCacheManager.getUnconfiguredInstance();
         hub.configure( prop );

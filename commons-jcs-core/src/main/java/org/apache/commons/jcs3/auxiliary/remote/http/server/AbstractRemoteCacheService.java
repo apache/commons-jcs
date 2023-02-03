@@ -54,7 +54,7 @@ public abstract class AbstractRemoteCacheService<K, V>
     private int puts;
 
     /** The interval at which we will log updates. */
-    private final int logInterval = 100;
+    private final static int logInterval = 100;
 
     /** log instance */
     private static final Log log = LogManager.getLog( AbstractRemoteCacheService.class );

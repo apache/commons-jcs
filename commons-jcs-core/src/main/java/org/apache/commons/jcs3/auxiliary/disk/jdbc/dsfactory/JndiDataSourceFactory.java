@@ -159,7 +159,7 @@ public class JndiDataSourceFactory implements DataSourceFactory
      * @param ctx the context
      * @throws NamingException
      */
-    private void debugCtx(final Context ctx) throws NamingException
+    private static void debugCtx(final Context ctx) throws NamingException
     {
         log.trace("InitialContext -------------------------------");
         final Map<?, ?> env = ctx.getEnvironment();

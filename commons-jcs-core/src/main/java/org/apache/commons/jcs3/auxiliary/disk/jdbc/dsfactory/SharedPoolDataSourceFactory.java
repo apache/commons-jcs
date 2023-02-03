@@ -108,7 +108,7 @@ public class SharedPoolDataSourceFactory implements DataSourceFactory
      * @throws SQLException if a property set fails
      * @return a configured <code>ConnectionPoolDataSource</code>
      */
-    private ConnectionPoolDataSource initCPDS(final JDBCDiskCacheAttributes config)
+    private static ConnectionPoolDataSource initCPDS(final JDBCDiskCacheAttributes config)
         throws SQLException
     {
         log.debug("Starting initCPDS");
@@ -139,7 +139,7 @@ public class SharedPoolDataSourceFactory implements DataSourceFactory
      *
      * @throws SQLException if a property set fails.
      */
-    private void initJdbc2Pool(final InstanceKeyDataSource dataSource, final JDBCDiskCacheAttributes config)
+    private static void initJdbc2Pool(final InstanceKeyDataSource dataSource, final JDBCDiskCacheAttributes config)
         throws SQLException
     {
         log.debug("Starting initJdbc2Pool");

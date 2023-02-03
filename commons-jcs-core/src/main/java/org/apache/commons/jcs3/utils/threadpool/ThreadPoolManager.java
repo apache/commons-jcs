@@ -324,7 +324,7 @@ public class ThreadPoolManager
      * @param defaultPoolConfiguration the default configuration
      * @return PoolConfiguration
      */
-    private PoolConfiguration loadConfig( final String root, final PoolConfiguration defaultPoolConfiguration )
+    private static PoolConfiguration loadConfig( final String root, final PoolConfiguration defaultPoolConfiguration )
     {
         final PoolConfiguration config = defaultPoolConfiguration.clone();
         PropertySetter.setProperties( config, props, root + "." );
