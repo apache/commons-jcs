@@ -189,6 +189,7 @@ public class LateralCacheAttributes
     /**
      * Sets the transmissionTypeName attribute of the LateralCacheAttributes object
      * @param val The new transmissionTypeName value
+     * @deprecated
      */
     @Override
     @Deprecated
@@ -200,6 +201,7 @@ public class LateralCacheAttributes
     /**
      * Gets the transmissionTypeName attribute of the LateralCacheAttributes object
      * @return The transmissionTypeName value
+     * @deprecated
      */
     @Override
     @Deprecated

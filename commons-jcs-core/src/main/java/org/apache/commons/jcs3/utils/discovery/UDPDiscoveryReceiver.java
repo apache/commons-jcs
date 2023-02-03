@@ -335,7 +335,7 @@ public class UDPDiscoveryReceiver
 
     /**
      * Separate thread run when a command comes into the UDPDiscoveryReceiver.
-     * @deprectaed No longer used
+     * @deprecated No longer used
      */
     @Deprecated
     public class MessageHandler
