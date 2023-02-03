@@ -51,6 +51,7 @@ import java.util.Map;
  *
  * @deprecated use individual cache managers
  */
+@Deprecated
 public class LateralCacheManager
     implements ILateralCacheManager
 {
