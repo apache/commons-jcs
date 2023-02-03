@@ -36,6 +36,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.jcs3.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.commons.jcs3.auxiliary.disk.AbstractDiskCache;
+import org.apache.commons.jcs3.auxiliary.disk.indexed.IndexedDiskCache;
 import org.apache.commons.jcs3.engine.behavior.ICacheElement;
 import org.apache.commons.jcs3.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs3.engine.behavior.IRequireScheduler;
@@ -112,7 +113,7 @@ public class BlockDiskCache<K, V>
         log.info("{0}: Constructing BlockDiskCache with attributes {1}", logCacheName, cacheAttributes );
 
         // Make a clean file name
-        this.fileName = getCacheName().replaceAll("[^a-zA-Z0-9-_\\.]", "_");
+        this.fileName = IndexedDiskCache.pName.matcher(getCacheName()).replaceAll("_");
         this.rootDirectory = cacheAttributes.getDiskPath();
 
         log.info("{0}: Cache file root directory: [{1}]", logCacheName, rootDirectory);

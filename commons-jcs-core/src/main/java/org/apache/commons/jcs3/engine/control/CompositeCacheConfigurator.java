@@ -22,6 +22,7 @@ package org.apache.commons.jcs3.engine.control;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.regex.Pattern;
 
 import org.apache.commons.jcs3.auxiliary.AuxiliaryCache;
 import org.apache.commons.jcs3.auxiliary.AuxiliaryCacheAttributes;
@@ -79,6 +80,8 @@ public class CompositeCacheConfigurator
      * jcs.auxiliary.NAME.keymatcher.attributes.CUSTOMPROPERTY=VALUE
      */
     public static final String KEY_MATCHER_PREFIX = ".keymatcher";
+
+    public static final Pattern pSplit = Pattern.compile("\\s*,\\s*");
 
     /**
      * Constructor for the CompositeCacheConfigurator object
@@ -219,7 +222,7 @@ public class CompositeCacheConfigurator
 
             log.debug( "Parsing region name \"{0}\", value \"{1}\"", regName, auxiliaries );
 
-            String auxNames[] = auxiliaries.split("\\s*,\\s*");
+            String auxNames[] = pSplit.split(auxiliaries);
 
             // just to be on the safe side...
             if (auxNames.length == 0)

@@ -38,6 +38,7 @@ import org.apache.commons.jcs3.engine.behavior.ICacheServiceNonLocal;
 import org.apache.commons.jcs3.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs3.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs3.engine.behavior.IShutdownObserver;
+import org.apache.commons.jcs3.engine.control.CompositeCacheConfigurator;
 import org.apache.commons.jcs3.engine.control.CompositeCacheManager;
 import org.apache.commons.jcs3.engine.logging.behavior.ICacheEventLogger;
 import org.apache.commons.jcs3.log.Log;
@@ -98,7 +99,7 @@ public class LateralTCPCacheFactory
         // no servers are required.
         if (lac.getTcpServers() != null && !lac.getTcpServers().isEmpty())
         {
-            final String servers[] = lac.getTcpServers().split("\\s*,\\s*");
+            final String servers[] = CompositeCacheConfigurator.pSplit.split(lac.getTcpServers());
             log.debug( "Configured for [{0}] servers.", servers.length );
 
             for (final String server : servers)

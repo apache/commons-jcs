@@ -23,6 +23,7 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectStreamClass;
 import java.lang.reflect.Proxy;
+import java.util.regex.Pattern;
 
 public class ObjectInputStreamClassLoaderAware extends ObjectInputStream {
     private final ClassLoader classLoader;
@@ -61,6 +62,8 @@ public class ObjectInputStreamClassLoaderAware extends ObjectInputStream {
         private final String[] blacklist;
         private final String[] whitelist;
 
+        private static final Pattern p = Pattern.compile(" *, *");
+
         protected BlacklistClassResolver(final String[] blacklist, final String[] whitelist) {
             this.whitelist = whitelist;
             this.blacklist = blacklist;
@@ -78,7 +81,7 @@ public class ObjectInputStreamClassLoaderAware extends ObjectInputStream {
         }
 
         private static String[] toArray(final String property) {
-            return property == null ? null : property.split(" *, *");
+            return property == null ? null : p.split(property);
         }
 
         private static boolean contains(final String[] list, final String name) {

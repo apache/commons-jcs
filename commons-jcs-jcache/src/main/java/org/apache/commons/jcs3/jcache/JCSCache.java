@@ -34,6 +34,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.regex.Pattern;
 
 import javax.cache.Cache;
 import javax.cache.CacheException;
@@ -84,6 +85,8 @@ public class JCSCache<K, V> implements Cache<K, V>
     private final Statistics statistics = new Statistics();
     private final ExecutorService pool;
     private final IElementSerializer serializer; // using json/xml should work as well -> don't force Serializable
+
+    public static final Pattern p = Pattern.compile(",|:|=|\n");
 
 
     public JCSCache(final ClassLoader classLoader, final JCSCachingManager mgr,
@@ -156,8 +159,8 @@ public class JCSCache<K, V> implements Cache<K, V>
 
         statistics.setActive(config.isStatisticsEnabled());
 
-        final String mgrStr = manager.getURI().toString().replaceAll(",|:|=|\n", ".");
-        final String cacheStr = name.replaceAll(",|:|=|\n", ".");
+        final String mgrStr = p.matcher(manager.getURI().toString()).replaceAll(".");
+        final String cacheStr = p.matcher(name).replaceAll(".");
         try
         {
             cacheConfigObjectName = new ObjectName("javax.cache:type=CacheConfiguration,"

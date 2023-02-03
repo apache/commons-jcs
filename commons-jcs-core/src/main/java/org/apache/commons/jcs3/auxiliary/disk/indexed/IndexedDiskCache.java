@@ -36,6 +36,7 @@ import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.regex.Pattern;
 
 import org.apache.commons.jcs3.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.commons.jcs3.auxiliary.disk.AbstractDiskCache;
@@ -140,6 +141,8 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
      */
     protected ReentrantReadWriteLock storageLock = new ReentrantReadWriteLock();
 
+    public static final Pattern pName = Pattern.compile("[^a-zA-Z0-9-_.]");
+
     /**
      * Constructor for the DiskCache object.
      * <p>
@@ -172,7 +175,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
         this.logCacheName = "Region [" + getCacheName() + "] ";
         this.diskLimitType = cattr.getDiskLimitType();
         // Make a clean file name
-        this.fileName = getCacheName().replaceAll("[^a-zA-Z0-9-_\\.]", "_");
+        this.fileName = pName.matcher(getCacheName()).replaceAll("_");
         this.keyHash = createInitialKeyMap();
         this.queuedPutList = new ConcurrentSkipListSet<>(new PositionComparator());
         this.recycle = new ConcurrentSkipListSet<>();

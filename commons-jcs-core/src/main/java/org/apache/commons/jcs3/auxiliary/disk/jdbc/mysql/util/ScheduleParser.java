@@ -19,6 +19,8 @@ package org.apache.commons.jcs3.auxiliary.disk.jdbc.mysql.util;
  * under the License.
  */
 
+import org.apache.commons.jcs3.engine.control.CompositeCacheConfigurator;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -45,7 +47,7 @@ public class ScheduleParser
             throw new ParseException( "Cannot create schedules for a null or empty String.", 0 );
         }
 
-        final String timeStrings[] = schedule.split("\\s*,\\s*");
+        final String timeStrings[] = CompositeCacheConfigurator.pSplit.split(schedule);
         final Date[] dates = new Date[timeStrings.length];
         int cnt = 0;
         for (String time : timeStrings)

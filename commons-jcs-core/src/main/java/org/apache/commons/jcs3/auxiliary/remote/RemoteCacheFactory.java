@@ -31,6 +31,7 @@ import org.apache.commons.jcs3.auxiliary.remote.behavior.IRemoteCacheAttributes;
 import org.apache.commons.jcs3.auxiliary.remote.server.behavior.RemoteType;
 import org.apache.commons.jcs3.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs3.engine.behavior.IElementSerializer;
+import org.apache.commons.jcs3.engine.control.CompositeCacheConfigurator;
 import org.apache.commons.jcs3.engine.logging.behavior.ICacheEventLogger;
 
 /**
@@ -90,7 +91,7 @@ public class RemoteCacheFactory
                 final String failoverList = rca.getFailoverServers();
                 if (failoverList != null && !failoverList.isEmpty())
                 {
-                    final String[] failoverServers = failoverList.split("\\s*,\\s*");
+                    final String[] failoverServers = CompositeCacheConfigurator.pSplit.split(failoverList);
                     for (String server : failoverServers)
                     {
                         final RemoteLocation location = RemoteLocation.parseServerAndPort(server);
@@ -120,7 +121,7 @@ public class RemoteCacheFactory
 
             case CLUSTER:
                 // REGISTER LISTENERS FOR EACH SYSTEM CLUSTERED CACHEs
-                final String[] clusterServers = rca.getClusterServers().split("\\s*,\\s*");
+                final String[] clusterServers = CompositeCacheConfigurator.pSplit.split(rca.getClusterServers());
                 for (String server: clusterServers)
                 {
                     if (server.isEmpty())

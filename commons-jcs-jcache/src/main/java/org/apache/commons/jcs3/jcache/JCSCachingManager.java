@@ -110,7 +110,7 @@ public class JCSCachingManager implements CacheManager
 
         delegate.setJmxName(CompositeCacheManager.JMX_OBJECT_NAME
                 + ",provider=" + provider.hashCode()
-                + ",uri=" + uri.toString().replaceAll(",|:|=|\n", ".")
+                + ",uri=" + JCSCache.p.matcher(uri.toString()).replaceAll(".")
                 + ",classloader=" + loader.hashCode()
                 + ",properties=" + this.properties.hashCode());
         delegate.initialize();
