@@ -73,7 +73,7 @@ public enum CacheManager {
     public ICacheSafe getSafeCache(@NonNullable String name) {
         ICache c = this.getCache(name);
 
-        if (c == null || !(c instanceof ICacheSafe))
+        if (!(c instanceof ICacheSafe))
             return null;
         return (ICacheSafe)c;
     }
