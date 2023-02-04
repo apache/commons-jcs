@@ -536,6 +536,7 @@
     <commons.releaseManagerName>tv</commons.releaseManagerName>
     <commons.releaseManagerKey>88817402</commons.releaseManagerKey>
     <!-- The RC version used in the staging repository URL. -->
+    <commons.bc.version>3.1</commons.bc.version>
     <commons.rc.version>rc1</commons.rc.version>
     <commons.jira.id>JCS</commons.jira.id>
     <commons.site.path>commons-jcs</commons.site.path>
