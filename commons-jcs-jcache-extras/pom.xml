@@ -21,19 +21,18 @@
   <parent>
     <artifactId>commons-jcs3</artifactId>
     <groupId>org.apache.commons</groupId>
-    <version>3.3-SNAPSHOT</version>
+    <version>3.2-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>commons-jcs3-jcache-extras</artifactId>
-  <version>3.3-SNAPSHOT</version>
+  <version>3.2-SNAPSHOT</version>
   <name>Apache Commons JCS :: JCache Extras</name>
 
   <scm>
     <connection>scm:git:http://gitbox.apache.org/repos/asf/commons-jcs.git</connection>
     <developerConnection>scm:git:https://gitbox.apache.org/repos/asf/commons-jcs.git</developerConnection>
     <url>https://gitbox.apache.org/repos/asf?p=commons-jcs.git</url>
-    <tag>HEAD</tag>
   </scm>
 
   <dependencies>
@@ -110,6 +109,6 @@
   </dependencies>
 
   <properties>
-    <project.build.outputTimestamp>2023-01-08T20:02:30Z</project.build.outputTimestamp>
+    <project.build.outputTimestamp>2022-01-01T00:00:00Z</project.build.outputTimestamp>
   </properties>
 </project>
