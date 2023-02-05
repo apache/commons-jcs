@@ -23,7 +23,7 @@
   <parent>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-jcs3</artifactId>
-    <version>3.2-SNAPSHOT</version>
+    <version>3.2</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
@@ -34,7 +34,7 @@
   -->
 
   <artifactId>commons-jcs3-jcache-tck</artifactId>
-  <version>3.2-SNAPSHOT</version>
+  <version>3.2</version>
 
   <name>Apache Commons JCS :: JCache TCK</name>
 
@@ -42,6 +42,7 @@
     <connection>scm:git:http://gitbox.apache.org/repos/asf/commons-jcs.git</connection>
     <developerConnection>scm:git:https://gitbox.apache.org/repos/asf/commons-jcs.git</developerConnection>
     <url>https://gitbox.apache.org/repos/asf?p=commons-jcs.git</url>
+    <tag>commons-jcs3-3.2</tag>
   </scm>
 
   <properties>
@@ -60,7 +61,7 @@
     <domain-lib-dir>${project.build.directory}/domainlib</domain-lib-dir>
     <domain-jar>domain.jar</domain-jar>
 
-    <project.build.outputTimestamp>2022-01-01T00:00:00Z</project.build.outputTimestamp>
+    <project.build.outputTimestamp>2023-02-05T15:38:09Z</project.build.outputTimestamp>
   </properties>
 
   <dependencies>
