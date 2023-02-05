@@ -535,6 +535,8 @@
     <commons.release.desc>(Java 8+)</commons.release.desc>
     <commons.releaseManagerName>tv</commons.releaseManagerName>
     <commons.releaseManagerKey>88817402</commons.releaseManagerKey>
+    <commons.release.isDistModule>false</commons.release.isDistModule>
+    <commons.distSvnStagingUrl>scm:svn:https://dist.apache.org/repos/dist/dev/commons/${commons.componentid}</commons.distSvnStagingUrl>
     <!-- The RC version used in the staging repository URL. -->
     <commons.bc.version>3.1</commons.bc.version>
     <commons.rc.version>rc1</commons.rc.version>
