@@ -42,6 +42,7 @@ import java.util.StringTokenizer;
  *
  * @deprecated use the new TYPE specific lateral factories.
  */
+@Deprecated
 public class LateralCacheFactory
     extends LateralCacheAbstractFactory
 {

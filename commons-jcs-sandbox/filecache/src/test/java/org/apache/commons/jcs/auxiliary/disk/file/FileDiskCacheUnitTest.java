@@ -358,7 +358,7 @@ public class FileDiskCacheUnitTest
     }
 
     /**
-     * Verify RemoveIfLimitIsSetAndReached. Since touch on get is false, the the oldest
+     * Verify RemoveIfLimitIsSetAndReached. Since touch on get is false, the oldest
      * should be removed.
      * <p>
      * @throws Exception

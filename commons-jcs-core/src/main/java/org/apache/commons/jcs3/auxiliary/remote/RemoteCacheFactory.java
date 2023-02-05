@@ -86,7 +86,7 @@ public class RemoteCacheFactory
                     noWaits.add(rcm.getCache(rca));
                 }
 
-                // GET HANDLE BUT DONT REGISTER A LISTENER FOR FAILOVERS
+                // GET HANDLE BUT DON'T REGISTER A LISTENER FOR FAILOVERS
                 final String failoverList = rca.getFailoverServers();
                 if (failoverList != null && !failoverList.isEmpty())
                 {

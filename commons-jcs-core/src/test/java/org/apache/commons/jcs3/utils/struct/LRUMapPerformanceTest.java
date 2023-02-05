@@ -30,7 +30,7 @@ import junit.framework.TestCase;
 public class LRUMapPerformanceTest
     extends TestCase
 {
-    /** The put put ration after the test */
+    /** The put ration after the test */
     float ratioPut;
 
     /** The ratio after the test */

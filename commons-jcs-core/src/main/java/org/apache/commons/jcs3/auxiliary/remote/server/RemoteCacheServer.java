@@ -236,7 +236,7 @@ public class RemoteCacheServer<K, V>
 
     /**
      * An update can come from either a local cache's remote auxiliary, or it can come from a remote
-     * server. A remote server is considered a a source of type cluster.
+     * server. A remote server is considered a source of type cluster.
      * <p>
      * If the update came from a cluster, then we should tell the cache manager that this was a
      * remote put. This way, any lateral and remote auxiliaries configured for the region will not
@@ -1188,7 +1188,7 @@ public class RemoteCacheServer<K, V>
                         + listenerAddress + "]";
                     logApplicationEvent( "RemoteCacheServer", "addCacheListener", message );
                     log.info( message );
-                    // should confirm the the host is the same as we have on
+                    // should confirm the host is the same as we have on
                     // record, just in case a client has made a mistake.
                 }
 

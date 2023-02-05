@@ -107,7 +107,7 @@ public class IndexedDiskCacheDefragPerformanceTest
         System.out.println( "Stats prior to sleeping " + jcs.getStats() );
 
         // Allow system to settle down
-        System.out.println( "Sleeping for a a minute." );
+        System.out.println( "Sleeping for a minute." );
         Thread.sleep( 60000 );
 
         System.out.println( LOG_DIVIDER );

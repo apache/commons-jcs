@@ -38,7 +38,7 @@ public class LateralElementDescriptor<K, V>
     public ICacheElement<K, V> ce;
 
     /**
-     * The id of the the source of the request. This is used to prevent infinite
+     * The id of the source of the request. This is used to prevent infinite
      * loops.
      */
     public long requesterId;
@@ -85,7 +85,7 @@ public class LateralElementDescriptor<K, V>
      * <p>
      * @param ce ICacheElement&lt;K, V&gt; payload
      * @param command operation requested by the client
-     * @param requesterId id of the the source of the request
+     * @param requesterId id of the source of the request
      * @since 3.1
      */
     public LateralElementDescriptor( final ICacheElement<K, V> ce, LateralCommand command, long requesterId)
@@ -106,7 +106,7 @@ public class LateralElementDescriptor<K, V>
     }
 
     /**
-     * Return id of the the source of the request
+     * Return id of the source of the request
      *
      * @return the requesterId
      * @since 3.1

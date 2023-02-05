@@ -487,7 +487,7 @@ public class JCSvsEHCachePerformanceTest
 			</p>
 			<p>
 				You can saturate the EH version much more quickly, since
-				it will hold as many items as you can put in in 200 ms.
+				it will hold as many items as you can put in 200 ms.
 			</p>
 			<p>
 				I tried with 100k and JCS could handle it, but EH died

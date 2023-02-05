@@ -45,7 +45,7 @@ public interface AuxiliaryCacheAttributes
     String getCacheName();
 
     /**
-     * Name known by by configurator
+     * Name known by configurator
      * <p>
      * @param s The new name value
      */
