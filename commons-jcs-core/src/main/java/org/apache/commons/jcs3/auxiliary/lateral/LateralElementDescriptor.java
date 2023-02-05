@@ -51,7 +51,9 @@ public class LateralElementDescriptor<K, V>
      */
     public int valHashCode = -1;
 
-    /** Constructor for the LateralElementDescriptor object */
+    /** Constructor for the LateralElementDescriptor object
+     * @deprecated
+     */
     @Deprecated // Not used
     public LateralElementDescriptor()
     {
