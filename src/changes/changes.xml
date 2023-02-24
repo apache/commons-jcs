@@ -46,7 +46,7 @@
                Bump commons-parent from 52 to 56 #90, #130.
             </action>
             <action dev="ggregory" type="update" due-to="Dependabot">
-               Bump log4j-api from 2.17.1 to 2.19.0 #85, #100, #107.
+               Bump log4j-api from 2.17.1 to 2.20.0 #85, #100, #107, #145.
             </action>
             <action dev="ggregory" type="update" due-to="Dependabot">
                Bump log4j-core from 2.17.1 to 2.19.0 #87, #99, #108.
