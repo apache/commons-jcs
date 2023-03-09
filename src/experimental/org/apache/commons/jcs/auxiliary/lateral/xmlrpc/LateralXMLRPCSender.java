@@ -130,7 +130,7 @@ public class LateralXMLRPCSender implements IXMLRPCConstants
      * @return The addressByName value
      * @param host
      */
-    private InetAddress getAddressByName( String host )
+    private static InetAddress getAddressByName( String host )
     {
         try
         {

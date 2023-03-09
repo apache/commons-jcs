@@ -104,7 +104,7 @@ public class CDIJCacheHelper
         return methodMeta;
     }
 
-    private Class<?> findKeyType(final Object target)
+    private static Class<?> findKeyType(final Object target)
     {
         if (null == target)
         {
@@ -183,7 +183,7 @@ public class CDIJCacheHelper
                 cacheRemoveAll);
     }
 
-    private Integer[] getKeyParameters(final List<Set<Annotation>> annotations)
+    private static Integer[] getKeyParameters(final List<Set<Annotation>> annotations)
     {
         final Collection<Integer> list = new ArrayList<>();
         int idx = 0;
@@ -208,7 +208,7 @@ public class CDIJCacheHelper
         return list.toArray(new Integer[0]);
     }
 
-    private Integer getValueParameter(final List<Set<Annotation>> annotations)
+    private static Integer getValueParameter(final List<Set<Annotation>> annotations)
     {
         final int idx = 0;
         for (final Set<Annotation> set : annotations)
@@ -224,7 +224,7 @@ public class CDIJCacheHelper
         return -1;
     }
 
-    private String defaultName(final Method method, final CacheDefaults defaults, final String cacheName)
+    private static String defaultName(final Method method, final CacheDefaults defaults, final String cacheName)
     {
         if (!cacheName.isEmpty())
         {
@@ -256,7 +256,7 @@ public class CDIJCacheHelper
         return name.toString();
     }
 
-    private CacheDefaults findDefaults(final Class<?> targetType, final Method method)
+    private static CacheDefaults findDefaults(final Class<?> targetType, final Method method)
     {
         if (Proxy.isProxyClass(targetType)) // target doesn't hold annotations
         {
@@ -274,7 +274,7 @@ public class CDIJCacheHelper
         return extractDefaults(targetType);
     }
 
-    private CacheDefaults extractDefaults(final Class<?> type)
+    private static CacheDefaults extractDefaults(final Class<?> type)
     {
         CacheDefaults annotation = null;
         Class<?> clazz = type;
@@ -397,7 +397,7 @@ public class CDIJCacheHelper
         return defaultCacheResolverFactory;
     }
 
-    private Integer[] keyParameterIndexes(final Method method)
+    private static Integer[] keyParameterIndexes(final Method method)
     {
         final List<Integer> keys = new LinkedList<>();
         final Annotation[][] parameterAnnotations = method.getParameterAnnotations();

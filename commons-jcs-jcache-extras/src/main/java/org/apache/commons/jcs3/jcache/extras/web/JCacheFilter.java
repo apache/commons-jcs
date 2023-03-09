@@ -221,7 +221,7 @@ public class JCacheFilter implements Filter
         return servletRequest.toString();
     }
 
-    private void checkResponse(final ServletResponse servletResponse)
+    private static void checkResponse(final ServletResponse servletResponse)
     {
         if (servletResponse.isCommitted()) {
             throw new IllegalStateException("Response committed");

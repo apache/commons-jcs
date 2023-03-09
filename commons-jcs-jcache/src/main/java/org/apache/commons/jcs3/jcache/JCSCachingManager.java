@@ -117,7 +117,7 @@ public class JCSCachingManager implements CacheManager
         delegate.configure(this.properties);
     }
 
-    private Properties readConfig(final URI uri, final ClassLoader loader, final Properties properties) {
+    private static Properties readConfig(final URI uri, final ClassLoader loader, final Properties properties) {
         final Properties props = new Properties();
         try {
             if (JCSCachingProvider.DEFAULT_URI.toString().equals(uri.toString()) || uri.toURL().getProtocol().equals("jcs"))
@@ -164,7 +164,7 @@ public class JCSCachingManager implements CacheManager
         return props;
     }
 
-    private void addProperties(final URL url, final Properties aggregator)
+    private static void addProperties(final URL url, final Properties aggregator)
     {
         try (InputStream inStream = url.openStream()) {
             aggregator.load(inStream);
