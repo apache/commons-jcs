@@ -13,13 +13,15 @@
 		the specific language governing permissions and limitations under the
 		License.
 	-->
-<document>
+<document xmlns="http://maven.apache.org/changes/1.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
 	<properties>
 		<title>JCS Change Log</title>
 		<author email="dev@commons.apache.org">Apache Commons Developers</author>
 	</properties>
 	<body>
-        <release version="3.1.1" date="TBD">Jeremy Long
+        <release version="3.1.1" date="TBD">
             <action dev="tv" type="fix" issue="JCS-232" due-to="Jeremy Long">
                Handle ServiceConfigurationError when using a different logging framework
             </action>
