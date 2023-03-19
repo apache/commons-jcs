@@ -22,7 +22,6 @@ package org.apache.commons.jcs3.engine;
 /**
  * Cache statuses
  * <p>
- * @version $Id: CacheStatus.java 536904 2007-05-10 16:03:42Z tv $
  */
 public enum CacheStatus
 {

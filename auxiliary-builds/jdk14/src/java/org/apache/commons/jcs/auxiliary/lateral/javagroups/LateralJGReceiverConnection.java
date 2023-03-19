@@ -31,8 +31,6 @@ import java.io.Serializable;
 /**
  * Separate thread run when a command comes into the LateralJGReceiver.
  *
- * @version $Id: LateralJGReceiverConnection.java,v 1.7 2002/02/15 04:33:37
- *          jtaylor Exp $
  */
 public class LateralJGReceiverConnection
     implements Runnable

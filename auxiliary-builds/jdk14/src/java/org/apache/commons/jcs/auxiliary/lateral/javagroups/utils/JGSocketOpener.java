@@ -30,7 +30,6 @@ import org.jgroups.JChannelFactory;
  * Socket openere that will timeout on the initial connect rather than block
  * forever.
  *
- * @version $Id: JGSocketOpener.java 234393 2005-08-22 00:12:06Z asmuts $
  */
 public class JGSocketOpener
     implements Runnable

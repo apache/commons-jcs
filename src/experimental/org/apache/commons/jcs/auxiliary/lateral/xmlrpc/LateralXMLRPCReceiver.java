@@ -29,8 +29,6 @@ import org.apache.xmlrpc.WebServer;
 /**
  * Processes commands from the server socket.
  *
- * @version $Id: LateralXMLRPCReceiver.java,v 1.8 2002/02/16 02:37:19 jtaylor
- *      Exp $
  */
 public class LateralXMLRPCReceiver implements IXMLRPCConstants
 {

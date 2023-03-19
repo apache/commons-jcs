@@ -40,7 +40,6 @@ import java.util.Set;
 /**
  * A lateral cache service implementation.
  *
- * @version $Id: LateralXMLRPCService.java,v 1.8 2002/02/17 07:16:24 asmuts Exp
  *      $
  */
 public class LateralXMLRPCService

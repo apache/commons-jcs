@@ -42,7 +42,6 @@ import java.util.Vector;
  * This class is based on the log4j SocketAppender class. I'm using a differnet
  * repair structure, so it is significant;y different.
  *
- * @version $Id: LateralJGSender.java 240226 2005-08-26 12:47:59Z asmuts $
  */
 public class LateralJGSender
     implements IJGConstants
