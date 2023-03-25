@@ -30,7 +30,6 @@ import org.jgroups.blocks.RpcDispatcher;
 /**
  * Socket openere that will timeout on the initial connect rather than block
  * forever. Technique from core java II.
- *
  */
 public class JGRpcOpener
     implements Runnable

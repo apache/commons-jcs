@@ -39,7 +39,6 @@ import org.apache.commons.jcs.auxiliary.AuxiliaryCacheAttributes;
  * containing the properties in XML form is valid. Defaults to null which causes
  * the Channel implementation to use its defaults.</dd>
  * </dl>
- *
  */
 public class JavaGroupsCacheAttributes
     extends AbstractAuxiliaryCacheAttributes

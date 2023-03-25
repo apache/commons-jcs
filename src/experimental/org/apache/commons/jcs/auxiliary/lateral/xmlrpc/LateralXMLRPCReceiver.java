@@ -28,7 +28,6 @@ import org.apache.xmlrpc.WebServer;
 
 /**
  * Processes commands from the server socket.
- *
  */
 public class LateralXMLRPCReceiver implements IXMLRPCConstants
 {

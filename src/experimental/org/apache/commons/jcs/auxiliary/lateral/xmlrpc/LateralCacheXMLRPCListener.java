@@ -35,7 +35,6 @@ import java.util.HashMap;
 
 /**
  * Description of the Class
- *
  */
 public class LateralCacheXMLRPCListener implements ILateralCacheXMLRPCListener, Serializable
 {

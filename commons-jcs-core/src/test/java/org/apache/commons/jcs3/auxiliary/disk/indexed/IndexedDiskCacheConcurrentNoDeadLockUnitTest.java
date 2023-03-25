@@ -28,7 +28,6 @@ import junit.framework.TestCase;
 /**
  * Test which exercises the indexed disk cache. Runs three threads against the
  * same region.
- *
  */
 public class IndexedDiskCacheConcurrentNoDeadLockUnitTest
     extends TestCase

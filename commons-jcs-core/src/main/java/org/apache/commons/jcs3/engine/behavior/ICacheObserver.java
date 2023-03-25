@@ -28,7 +28,6 @@ import java.rmi.Remote;
  * Note: server which implements this interface provides a local cache event
  * notification service, whereas server which implements IRmiCacheWatch provides
  * a remote cache event notification service.
- *
  */
 public interface ICacheObserver extends Remote
 {

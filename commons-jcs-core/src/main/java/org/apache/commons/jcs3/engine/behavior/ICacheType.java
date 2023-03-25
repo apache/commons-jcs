@@ -21,7 +21,6 @@ package org.apache.commons.jcs3.engine.behavior;
 
 /**
  * Interface implemented by a specific cache.
- *
  */
 public interface ICacheType
 {

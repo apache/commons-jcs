@@ -38,7 +38,6 @@ import java.util.Set;
 
 /**
  * A lateral cache service implementation.
- *
  */
 public class LateralJGService
     implements ICacheServiceNonLocal, ILateralCacheObserver

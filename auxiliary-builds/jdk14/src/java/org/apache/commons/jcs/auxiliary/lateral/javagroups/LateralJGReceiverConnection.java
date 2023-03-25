@@ -30,7 +30,6 @@ import java.io.Serializable;
 
 /**
  * Separate thread run when a command comes into the LateralJGReceiver.
- *
  */
 public class LateralJGReceiverConnection
     implements Runnable

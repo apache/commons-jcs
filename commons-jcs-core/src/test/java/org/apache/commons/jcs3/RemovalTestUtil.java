@@ -25,7 +25,6 @@ import junit.framework.TestCase;
 
 /**
  * Simple methods to be run by active test suites that test removal.
- *
  */
 public class RemovalTestUtil
     extends TestCase
