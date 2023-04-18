@@ -70,7 +70,7 @@ public class CacheManagerTest extends TestCase {
         try {
             ICache<Integer> c2 = CacheManager.inst.getCache("myCache", Integer.class);
             assert false : "Bug: Cache for string cannot be used for Integer";
-        } catch(ClassCastException ex) {
+        } catch (ClassCastException ex) {
             // should go here.
         }
         log.debug(CacheManager.inst);
@@ -89,7 +89,7 @@ public class CacheManagerTest extends TestCase {
                     CacheManager.inst.testCreateCacheRaceCondition(
                     "race", Double.class, CacheType.SOFT_REFERENCE);
             assert false : "Bug: Cache for Integer cannot be used for Double";
-        } catch(ClassCastException ex) {
+        } catch (ClassCastException ex) {
             // should go here.
         }
         assertTrue(intCache == intCache1);

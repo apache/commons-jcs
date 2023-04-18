@@ -49,7 +49,7 @@ public enum BeanUtils {
             return bean;
         try {
             return (B)org.apache.commons.beanutils.BeanUtils.cloneBean(bean);
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             LogFactory.getLog(this.getClass()).error("", ex);
             throw new RuntimeException(ex);
         }

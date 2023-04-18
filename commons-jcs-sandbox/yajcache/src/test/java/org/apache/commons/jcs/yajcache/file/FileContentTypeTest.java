@@ -47,7 +47,7 @@ public class FileContentTypeTest extends TestCase {
         try {
             CacheFileContentType.fromByte((byte)99);
             assert false;
-        } catch(IllegalArgumentException ex) {
+        } catch (IllegalArgumentException ex) {
         }
     }
 }

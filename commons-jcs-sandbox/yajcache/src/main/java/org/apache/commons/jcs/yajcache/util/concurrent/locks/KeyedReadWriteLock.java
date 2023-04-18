@@ -119,9 +119,9 @@ public class KeyedReadWriteLock<K> implements IKeyedReadWriteLock<K> {
             this.countRWLockCreate.incrementAndGet();
         try {
             return rwlClass.newInstance();
-        } catch(IllegalAccessException ex) {
+        } catch (IllegalAccessException ex) {
             throw new RuntimeException(ex);
-        } catch(InstantiationException ex) {
+        } catch (InstantiationException ex) {
             throw new RuntimeException(ex);
         }
     }
