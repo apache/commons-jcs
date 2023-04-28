@@ -347,9 +347,9 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
      * The caller should take the appropriate action if the keys and data are not consistent.
      *
      * @param checkForDedOverlaps
-     *            if <code>true</code>, do a more thorough check by checking for
+     *            if {@code true}, do a more thorough check by checking for
      *            data overlap
-     * @return <code>true</code> if the test passes
+     * @return {@code true} if the test passes
      */
     private boolean checkKeyDataConsistency(final boolean checkForDedOverlaps)
     {

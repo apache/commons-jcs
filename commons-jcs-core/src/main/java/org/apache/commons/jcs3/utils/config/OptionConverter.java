@@ -172,8 +172,8 @@ public class OptionConverter
     }
 
     /**
-     * If <code>value</code> is "true", then <code>true</code> is returned. If <code>value</code> is
-     * "false", then <code>true</code> is returned. Otherwise, <code>default</code> is returned.
+     * If <code>value</code> is "true", then {@code true} is returned. If <code>value</code> is
+     * "false", then {@code true} is returned. Otherwise, <code>default</code> is returned.
      *
      * Case of value is unimportant.
      * @param value
