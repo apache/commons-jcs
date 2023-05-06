@@ -21,11 +21,10 @@
 		<author email="dev@commons.apache.org">Apache Commons Developers</author>
 	</properties>
 	<body>
-<<<<<<< HEAD
         <release version="3.2" date="2023-02-05">
-=======
-        <release version="3.1.1" date="TBD">
->>>>>>> refs/remotes/origin/master
+            <action dev="tv" type="fix" issue="JCS-234" due-to="Chris Lake">
+               Fix OSGi manifest
+            </action>
             <action dev="tv" type="fix" issue="JCS-232" due-to="Jeremy Long">
                Handle ServiceConfigurationError when using a different logging framework
             </action>
