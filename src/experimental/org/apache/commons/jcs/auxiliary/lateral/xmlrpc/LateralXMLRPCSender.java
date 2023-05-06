@@ -43,7 +43,6 @@ import java.util.Vector;
 /**
  * This class is based on the log4j SocketAppender class. I'm using a differnet
  * repair structure, so it is significant;y different.
- *
  */
 public class LateralXMLRPCSender implements IXMLRPCConstants
 {
@@ -130,7 +129,7 @@ public class LateralXMLRPCSender implements IXMLRPCConstants
      * @return The addressByName value
      * @param host
      */
-    private InetAddress getAddressByName( String host )
+    private static InetAddress getAddressByName( String host )
     {
         try
         {

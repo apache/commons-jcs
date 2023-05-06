@@ -65,14 +65,14 @@ public enum CacheFileDAO {
             raf = new RandomAccessFile(file, "rw");
             CacheFileContent.getInstance(type, val).write(raf);
             return true;
-        } catch(IOException ex) {
+        } catch (IOException ex) {
             countWriteIOException.incrementAndGet();
             log.error("", ex);
         } finally {
             if (raf != null) {
                 try {
                     raf.close();
-                } catch(Exception ex) {
+                } catch (Exception ex) {
                     countWriteCloseException.incrementAndGet();
                     log.error("", ex);
                 }
@@ -124,17 +124,17 @@ public enum CacheFileDAO {
                 return CacheFileContent.CORRUPTED;
             }
             return cfc;
-        } catch(IOException ex) {
+        } catch (IOException ex) {
             countReadIOException.incrementAndGet();
             log.warn(ex.getClass().getName(), ex);
-        } catch(org.apache.commons.lang3.SerializationException ex) {
+        } catch (org.apache.commons.lang3.SerializationException ex) {
             countReadIOException.incrementAndGet();
             log.warn(ex.getClass().getName(), ex);
        } finally {
             if (raf != null) {
                 try {
                     raf.close();
-                } catch(Exception ex) {
+                } catch (Exception ex) {
                     countReadCloseException.incrementAndGet();
                     log.error("", ex);
                 }

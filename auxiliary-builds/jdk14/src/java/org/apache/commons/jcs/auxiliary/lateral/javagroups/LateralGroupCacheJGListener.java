@@ -27,8 +27,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * @version $Id: LateralGroupCacheJGListener.java,v 1.6 2002/02/15 04:33:37
- *          jtaylor Exp $
  */
 public class LateralGroupCacheJGListener
     extends LateralCacheJGListener

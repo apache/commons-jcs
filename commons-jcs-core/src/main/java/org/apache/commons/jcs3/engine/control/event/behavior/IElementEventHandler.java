@@ -26,7 +26,6 @@ package org.apache.commons.jcs3.engine.control.event.behavior;
  * If you want an event handler by default for all elements in a region, then
  * you can add it to the default element attributes. This way it will get created
  * whenever an item gets put into the cache.
- *
  */
 public interface IElementEventHandler
 {

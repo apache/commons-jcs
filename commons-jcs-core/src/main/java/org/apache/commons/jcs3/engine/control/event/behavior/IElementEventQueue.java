@@ -24,7 +24,6 @@ import java.io.IOException;
 /**
  * Interface for an element event queue. An event queue is used to propagate
  * ordered element events in one region.
- *
  */
 public interface IElementEventQueue
 {

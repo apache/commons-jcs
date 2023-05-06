@@ -21,7 +21,6 @@ package org.apache.commons.jcs3.engine.behavior;
 
 /**
  * Interface to mark an object as zombie for error recovery purposes.
- *
  */
 public interface IZombie
 {

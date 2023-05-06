@@ -140,7 +140,7 @@ public class MySQLDiskCacheFactory
     /**
      * This calls the optimizers' optimize table method. This is used by the timer.
      */
-    private void optimizeTable(final MySQLTableOptimizer optimizer)
+    private static void optimizeTable(final MySQLTableOptimizer optimizer)
     {
         if ( optimizer != null )
         {

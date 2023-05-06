@@ -67,8 +67,6 @@ import java.util.Vector;
  * added using MessageDispatcher or RpcDispatcher. Combined with a get
  * implementation this could provide much higher cache consistency (but with a
  * substantial speed penalty).
- *
- * @version $Id: JavaGroupsCache.java 264665 2005-08-30 01:10:34Z asmuts $
  */
 public class JavaGroupsCache
     implements AuxiliaryCache, RequestHandler, MembershipListener

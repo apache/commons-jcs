@@ -48,7 +48,6 @@ import junit.framework.TestSuite;
 
 /**
  * Tests the LRUMap
- *
  */
 public class LRUMapConcurrentUnitTest
     extends TestCase

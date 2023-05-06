@@ -29,7 +29,6 @@ import java.io.Serializable;
  * The element attributes have lots of useful information about each element,
  * such as when they were created, how long they have to live, and if they are
  * allowed to be spooled, etc.
- *
  */
 public interface ICacheElement<K, V>
     extends Serializable

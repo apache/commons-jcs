@@ -35,9 +35,6 @@ import java.util.HashMap;
 
 /**
  * Description of the Class
- *
- * @version $Id: LateralCacheXMLRPCListener.java,v 1.8 2002/02/15 04:33:37 jtaylor
- *      Exp $
  */
 public class LateralCacheXMLRPCListener implements ILateralCacheXMLRPCListener, Serializable
 {

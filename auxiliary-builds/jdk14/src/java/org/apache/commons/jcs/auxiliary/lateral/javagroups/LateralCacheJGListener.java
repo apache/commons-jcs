@@ -39,7 +39,6 @@ import java.util.HashMap;
  * JavaGroups listener. Good for distributing cache data accross multiple vms on
  * the same machine. You also don't need to know the number of listerners for
  * configuration.
- *
  */
 public class LateralCacheJGListener
     implements ILateralCacheJGListener, Serializable

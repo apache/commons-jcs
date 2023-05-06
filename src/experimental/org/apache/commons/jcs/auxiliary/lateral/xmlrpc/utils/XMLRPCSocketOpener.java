@@ -29,7 +29,6 @@ import java.io.IOException;
 /**
  * Socket openere that will timeout on the initial connect rather than block
  * forever. Technique from core java II.
- *
  */
 public class XMLRPCSocketOpener implements Runnable
 {

@@ -26,9 +26,6 @@ import java.io.Serializable;
 
 /**
  * Listens for lateral cache event notification.
- *
- * @version $Id:   asmuts
- *      Exp $
  */
 public interface ILateralCacheXMLRPCListener extends ILateralCacheListener
 {

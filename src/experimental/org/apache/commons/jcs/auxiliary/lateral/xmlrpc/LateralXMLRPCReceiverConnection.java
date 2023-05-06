@@ -35,9 +35,6 @@ import java.util.Vector;
 
 /**
  * Separate thread run when a command comes into the LateralXMLRPCReceiver.
- *
- * @version $Id: LateralXMLRPCReceiverConnection.java,v 1.7 2002/02/15 04:33:37
- *      jtaylor Exp $
  */
 public class LateralXMLRPCReceiverConnection implements XmlRpcHandler, IXMLRPCConstants
 {//implements Runnable

@@ -26,8 +26,6 @@ import java.io.Serializable;
 
 /**
  * Listens for lateral cache event notification.
- *
- * @version $Id: ILateralCacheJGListener.java 224346 2005-06-04 02:01:59Z asmuts $
  */
 public interface ILateralCacheJGListener
     extends ILateralCacheListener

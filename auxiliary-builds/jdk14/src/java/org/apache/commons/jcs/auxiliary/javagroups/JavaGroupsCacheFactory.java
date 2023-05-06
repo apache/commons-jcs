@@ -31,9 +31,6 @@ import org.jgroups.ChannelFactory;
 /**
  * AuxiliaryCacheFactory for creating instances of {@link JavaGroupsCache}for a
  * particular CompositeCache and {@link JavaGroupsCacheAttributes}.
- *
- * @version $Id: JavaGroupsCacheFactory.java,v 1.2 2004/06/12 02:34:13 asmuts
- *          Exp $
  */
 public class JavaGroupsCacheFactory
     implements AuxiliaryCacheFactory

@@ -34,7 +34,6 @@ import java.util.HashMap;
 
 /**
  * Description of the Class
- *
  */
 public class LateralCacheUDPListener implements ILateralCacheListener, Serializable
 {

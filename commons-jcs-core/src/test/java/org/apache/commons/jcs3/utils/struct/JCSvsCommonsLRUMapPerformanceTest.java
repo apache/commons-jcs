@@ -28,7 +28,6 @@ import junit.framework.TestCase;
 /**
  * This ensures that the jcs version of the LRU map is as fast as the commons
  * version. It has been testing at .6 to .7 times the commons LRU.
- *
  */
 public class JCSvsCommonsLRUMapPerformanceTest
     extends TestCase

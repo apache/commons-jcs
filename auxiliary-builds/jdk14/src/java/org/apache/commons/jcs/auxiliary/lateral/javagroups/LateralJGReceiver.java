@@ -33,8 +33,6 @@ import java.io.IOException;
 
 /**
  * Processes commands from the server socket.
- *
- * @version $Id: LateralJGReceiver.java 224346 2005-06-04 02:01:59Z asmuts $
  */
 public class LateralJGReceiver
     implements IJGConstants, Runnable

@@ -90,7 +90,7 @@ public class CacheInvocationContextImpl<A extends Annotation> extends CacheMetho
         return parametersAsArray;
     }
 
-    private CacheInvocationParameterImpl newCacheInvocationParameterImpl(final Class<?> type, final Object arg,
+    private static CacheInvocationParameterImpl newCacheInvocationParameterImpl(final Class<?> type, final Object arg,
                                                                          final Set<Annotation> annotations, final int i) {
         return new CacheInvocationParameterImpl(type, arg, annotations, i);
     }
