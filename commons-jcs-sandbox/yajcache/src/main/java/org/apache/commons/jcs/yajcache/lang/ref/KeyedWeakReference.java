@@ -52,7 +52,7 @@ public class KeyedWeakReference<K,T> extends WeakReference<T>
      * @param key the embedded key of the new weak reference
      * @param referent object the new weak reference will refer to
      * @param q the queue with which the reference is to be registered,
-     *          or <tt>null</tt> if registration is not required
+     *          or {@code null} if registration is not required
      */
     public KeyedWeakReference(@NonNullable @Immutable K key, T referent,
             ReferenceQueue<? super T> q)
