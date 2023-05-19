@@ -684,7 +684,7 @@ public class PartitionedCacheAccess<K, V>
         {
             // THIS IS UGLY, but I can't think of a better failsafe right now.
             keyNum = key.hashCode();
-            log.warn( "Couldn't convert [{0}] into a number.  Will use hashcode [{1}]", key, keyNum);
+            log.warn( "Couldn't convert [{0}] into a number.  Will use hash code [{1}]", key, keyNum);
         }
         return keyNum;
     }
