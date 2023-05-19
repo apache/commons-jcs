@@ -41,6 +41,6 @@ public final class CacheInfo
      */
     private static final VMID vmid = new VMID();
 
-    /** By default this is the hashcode of the VMID */
+    /** By default this is the hash code of the VMID */
     public static final long listenerId = vmid.hashCode();
 }

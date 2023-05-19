@@ -131,7 +131,7 @@ public class DiscoveredService
         return lastHearFromTime;
     }
 
-    /** @return hashcode based on address/port */
+    /** @return hash code based on address/port */
 	@Override
 	public int hashCode()
 	{

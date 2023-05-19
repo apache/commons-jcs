@@ -74,7 +74,7 @@ public class CacheFileContent {
         raf.writeByte(this.contentType);
         // Byte array length.
         raf.writeInt(this.contentLength);
-        // Byte array hashcode.
+        // Byte array hash code.
         raf.writeInt(this.contentHashCode);
         // Byte array.
         raf.write(this.content);

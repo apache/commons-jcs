@@ -728,7 +728,7 @@ public class LateralTCPListener<K, V>
                 break;
 
             case REMOVE:
-                // if a hashcode was given and filtering is on
+                // if a hash code was given and filtering is on
                 // check to see if they are the same
                 // if so, then don't remove, otherwise issue a remove
                 if (led.getValHashCode() != -1 &&
@@ -744,7 +744,7 @@ public class LateralTCPListener<K, V>
                                     led.getValHashCode(), led );
                             return null;
                         }
-                        log.debug( "Different hashcodes, in cache [{0}] sent [{1}]",
+                        log.debug( "Different hash codes, in cache [{0}] sent [{1}]",
                                 test.getVal()::hashCode, led::getValHashCode );
                     }
                 }

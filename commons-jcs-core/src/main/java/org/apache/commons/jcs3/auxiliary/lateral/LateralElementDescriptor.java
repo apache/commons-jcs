@@ -47,7 +47,7 @@ public class LateralElementDescriptor<K, V>
     public LateralCommand command = LateralCommand.UPDATE;
 
     /**
-     * The hashcode value for this element.
+     * The hash code value for this element.
      */
     public int valHashCode = -1;
 
