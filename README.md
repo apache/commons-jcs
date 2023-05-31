@@ -43,11 +43,10 @@
 Apache Commons JCS
 ===================
 
-[![Travis-CI Status](https://travis-ci.org/apache/commons-jcs.svg)](https://travis-ci.org/apache/commons-jcs)
 [![GitHub Actions Status](https://github.com/apache/commons-jcs/workflows/Java%20CI/badge.svg)](https://github.com/apache/commons-jcs/actions)
-[![Coverage Status](https://coveralls.io/repos/apache/commons-jcs/badge.svg)](https://coveralls.io/r/apache/commons-jcs)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-jcs3/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-jcs3/)
-[![Javadocs](https://javadoc.io/badge/org.apache.commons/commons-jcs3/3.2.svg)](https://javadoc.io/doc/org.apache.commons/commons-jcs3/3.2)
+[![Coverage Status](https://codecov.io/gh/apache/commons-jcs/branch/master/graph/badge.svg)](https://app.codecov.io/gh/apache/commons-jcs)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-jcs3/badge.svg?gav=true)](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-jcs3/?gav=true)
+[![Javadocs](https://javadoc.io/badge/org.apache.commons/commons-jcs3/3.1.svg)](https://javadoc.io/doc/org.apache.commons/commons-jcs3/3.1)
 
 Apache Commons JCS is a distributed, versatile caching system.
 
@@ -62,7 +61,7 @@ Where can I get the latest release?
 -----------------------------------
 You can download source and binaries from our [download page](https://commons.apache.org/proper/commons-jcs/download_jcs.cgi).
 
-Alternatively you can pull it from the central Maven repositories:
+Alternatively, you can pull it from the central Maven repositories:
 
 ```xml
 <dependency>

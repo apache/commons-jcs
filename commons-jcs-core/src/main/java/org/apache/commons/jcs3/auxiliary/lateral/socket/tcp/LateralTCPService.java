@@ -145,7 +145,7 @@ public class LateralTCPService<K, V>
                     new LateralElementDescriptor<>(item, LateralCommand.UPDATE, requesterId);
             sender.send( led );
         }
-        // else issue a remove with the hashcode for remove check on
+        // else issue a remove with the hash code for remove check on
         // on the other end, this will be a server config option
         else
         {

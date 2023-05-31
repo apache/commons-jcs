@@ -202,11 +202,11 @@ public interface ITCPLateralCacheAttributes
     boolean isIssueRemoveOnPut();
 
     /**
-     * Should the receiver try to match hashcodes. If true, the receiver will
-     * see if the client supplied a hashcode. If it did, then it will try to get
-     * the item locally. If the item exists, then it will compare the hashcode.
+     * Should the receiver try to match hash codes. If true, the receiver will
+     * see if the client supplied a hash code. If it did, then it will try to get
+     * the item locally. If the item exists, then it will compare the hash code.
      * if they are the same, it will not remove. This isn't perfect since
-     * different objects can have the same hashcode, but it is unlikely of
+     * different objects can have the same hash code, but it is unlikely of
      * objects of the same type.
      * <p>
      * @return boolean
@@ -214,11 +214,11 @@ public interface ITCPLateralCacheAttributes
     boolean isFilterRemoveByHashCode();
 
     /**
-     * Should the receiver try to match hashcodes. If true, the receiver will
-     * see if the client supplied a hashcode. If it did, then it will try to get
-     * the item locally. If the item exists, then it will compare the hashcode.
+     * Should the receiver try to match hash codes. If true, the receiver will
+     * see if the client supplied a hash code. If it did, then it will try to get
+     * the item locally. If the item exists, then it will compare the hash code.
      * if they are the same, it will not remove. This isn't perfect since
-     * different objects can have the same hashcode, but it is unlikely of
+     * different objects can have the same hash code, but it is unlikely of
      * objects of the same type.
      * <p>
      * @param filter

@@ -93,7 +93,7 @@ public class TCPLateralCacheAttributes
     /** call remove when there is a put */
     private boolean issueRemoveOnPut = DEFAULT_ISSUE_REMOVE_FOR_PUT;
 
-    /** don't remove it the hashcode is the same */
+    /** don't remove it the hash code is the same */
     private boolean filterRemoveByHashCode = DEFAULT_FILTER_REMOVE_BY_HASH_CODE;
 
     /** Only block for socketTimeOut seconds before timing out on a read.  */
@@ -355,10 +355,10 @@ public class TCPLateralCacheAttributes
     }
 
     /**
-     * Should the receiver try to match hashcodes. If true, the receiver will see if the client
-     * supplied a hashcode. If it did, then it will try to get the item locally. If the item exists,
-     * then it will compare the hashcode. if they are the same, it will not remove. This isn't
-     * perfect since different objects can have the same hashcode, but it is unlikely of objects of
+     * Should the receiver try to match hash codes. If true, the receiver will see if the client
+     * supplied a hash code. If it did, then it will try to get the item locally. If the item exists,
+     * then it will compare the hash code. if they are the same, it will not remove. This isn't
+     * perfect since different objects can have the same hash code, but it is unlikely of objects of
      * the same type.
      * <p>
      * @return boolean
@@ -370,10 +370,10 @@ public class TCPLateralCacheAttributes
     }
 
     /**
-     * Should the receiver try to match hashcodes. If true, the receiver will see if the client
-     * supplied a hashcode. If it did, then it will try to get the item locally. If the item exists,
-     * then it will compare the hashcode. if they are the same, it will not remove. This isn't
-     * perfect since different objects can have the same hashcode, but it is unlikely of objects of
+     * Should the receiver try to match hash codes. If true, the receiver will see if the client
+     * supplied a hash code. If it did, then it will try to get the item locally. If the item exists,
+     * then it will compare the hash code. if they are the same, it will not remove. This isn't
+     * perfect since different objects can have the same hash code, but it is unlikely of objects of
      * the same type.
      * <p>
      * @param filter

@@ -302,7 +302,7 @@ public class PartitionedCacheAccess<K, V>
     /**
      * This is tricky. Do we need to get from all the partitions?
      * <p>
-     * If this interface took an object, we could use the hashcode to determine the partition. Then
+     * If this interface took an object, we could use the hash code to determine the partition. Then
      * we could use the toString for the pattern.
      * <p>
      * @param pattern
@@ -643,7 +643,7 @@ public class PartitionedCacheAccess<K, V>
 
     /**
      * This expects a numeric key. If the key cannot be converted into a number, we will return 0.
-     * TODO we could md5 it or get the hashcode.
+     * TODO we could md5 it or get the hash code.
      * <p>
      * We determine the partition by taking the mod of the number of partitions.
      * <p>
@@ -684,7 +684,7 @@ public class PartitionedCacheAccess<K, V>
         {
             // THIS IS UGLY, but I can't think of a better failsafe right now.
             keyNum = key.hashCode();
-            log.warn( "Couldn't convert [{0}] into a number.  Will use hashcode [{1}]", key, keyNum);
+            log.warn( "Couldn't convert [{0}] into a number.  Will use hash code [{1}]", key, keyNum);
         }
         return keyNum;
     }

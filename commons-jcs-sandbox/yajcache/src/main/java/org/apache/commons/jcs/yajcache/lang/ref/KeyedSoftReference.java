@@ -54,7 +54,7 @@ public class KeyedSoftReference<K,T> extends SoftReference<T>
      * @param key the embedded key of the new soft reference
      * @param referent object the new soft reference will refer to
      * @param q the queue with which the reference is to be registered,
-     *          or <tt>null</tt> if registration is not required
+     *          or {@code null} if registration is not required
      */
     public KeyedSoftReference(@NonNullable @Immutable K key, T referent,
             ReferenceQueue<? super T> q)

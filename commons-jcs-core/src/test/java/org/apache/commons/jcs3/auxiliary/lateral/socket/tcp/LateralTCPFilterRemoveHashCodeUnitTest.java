@@ -121,7 +121,7 @@ public class LateralTCPFilterRemoveHashCodeUnitTest
         };
         //String dataToPassHashCodeCompare = "this should be the same and not
         // get removed.";
-        //p( "dataToPassHashCodeCompare hashcode = " + +
+        //p( "dataToPassHashCodeCompare hashCode = " + +
         // dataToPassHashCodeCompare.hashCode() );
 
         cache.put( keyToBeRemovedOnPut, "this should get removed." );
@@ -176,7 +176,7 @@ public class LateralTCPFilterRemoveHashCodeUnitTest
         p( "test object2 = " + testObj2 + " hashCode = " );
         if ( testObj2 != null )
         {
-            p( "test2 hashcode = " + +testObj2.hashCode() );
+            p( "test2 hashCode = " + +testObj2.hashCode() );
         }
         assertNotNull( "This should not have been removed, since the hascode were the same.", testObj2 );
 

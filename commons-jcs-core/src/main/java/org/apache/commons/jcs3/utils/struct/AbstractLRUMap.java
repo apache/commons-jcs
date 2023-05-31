@@ -404,16 +404,16 @@ public abstract class AbstractLRUMap<K, V>
             if ( !map.containsKey( key ) )
             {
                 log.error( "verifycache: map does not contain key : {0}", li.getKey() );
-                log.error( "li.hashcode={0}", li.getKey().hashCode() );
+                log.error( "li.hashCode={0}", li.getKey().hashCode() );
                 log.error( "key class={0}", key.getClass() );
-                log.error( "key hashcode={0}", key.hashCode() );
+                log.error( "key hashCode={0}", key.hashCode() );
                 log.error( "key toString={0}", key.toString() );
                 if ( key instanceof GroupAttrName )
                 {
                     final GroupAttrName<?> name = (GroupAttrName<?>) key;
-                    log.error( "GroupID hashcode={0}", name.groupId.hashCode() );
+                    log.error( "GroupID hashCode={0}", name.groupId.hashCode() );
                     log.error( "GroupID.class={0}", name.groupId.getClass() );
-                    log.error( "AttrName hashcode={0}", name.attrName.hashCode() );
+                    log.error( "AttrName hashCode={0}", name.attrName.hashCode() );
                     log.error( "AttrName.class={0}", name.attrName.getClass() );
                 }
                 dumpMap();
