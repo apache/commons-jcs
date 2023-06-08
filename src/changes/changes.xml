@@ -57,7 +57,7 @@
                Bump commons-text from 1.9 to 1.10.0 #110.
             </action>
             <action type="update" dev="ggregory" due-to="Gary Gregory">
-               Bump commons-io from 2.11.0 to 2.12.0.
+               Bump commons-io from 2.11.0 to 2.13.0.
             </action>
         </release>
         <release version="3.1" date="2022-01-03">
