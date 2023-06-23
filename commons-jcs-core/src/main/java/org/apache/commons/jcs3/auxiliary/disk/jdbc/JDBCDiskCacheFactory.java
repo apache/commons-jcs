@@ -254,7 +254,7 @@ public class JDBCDiskCacheFactory
             }
             catch (final SQLException e)
             {
-                throw new RuntimeException(e);
+                throw new IllegalStateException(e);
             }
     	    return newDsFactory;
     	});

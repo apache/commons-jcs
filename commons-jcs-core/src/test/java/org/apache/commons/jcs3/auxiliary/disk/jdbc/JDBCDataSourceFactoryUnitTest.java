@@ -178,7 +178,7 @@ public class JDBCDataSourceFactoryUnitTest
             catch (final NamingException e)
             {
             	// can't happen.
-                throw new RuntimeException(e);
+                throw new IllegalStateException(e);
             }
         }
 
@@ -197,7 +197,7 @@ public class JDBCDataSourceFactoryUnitTest
             catch (final NamingException e)
             {
             	// can't happen.
-                throw new RuntimeException(e);
+                throw new IllegalArgumentException(e);
             }
         }
     }

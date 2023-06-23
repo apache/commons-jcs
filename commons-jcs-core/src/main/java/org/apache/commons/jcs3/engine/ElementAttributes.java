@@ -453,7 +453,7 @@ public class ElementAttributes
         }
         catch (final CloneNotSupportedException e)
         {
-            throw new RuntimeException("Clone not supported. This should never happen.", e);
+            throw new IllegalStateException("Clone not supported. This should never happen.", e);
         }
     }
 }

@@ -197,7 +197,7 @@ public class BlockDiskCache<K, V>
                     }
                     catch (final IOException | ClassNotFoundException e)
                     {
-                        throw new RuntimeException(logCacheName
+                        throw new IllegalStateException(logCacheName
                                 + " Couldn't find data for key [" + entry.getKey() + "]", e);
                     }
                 });

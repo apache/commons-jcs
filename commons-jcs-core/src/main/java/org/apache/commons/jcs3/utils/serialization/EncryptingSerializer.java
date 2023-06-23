@@ -95,7 +95,7 @@ public class EncryptingSerializer extends StandardSerializer
         }
         catch (NoSuchAlgorithmException e)
         {
-            throw new RuntimeException("Could not set up encryption tools", e);
+            throw new IllegalStateException("Could not set up encryption tools", e);
         }
     }
 

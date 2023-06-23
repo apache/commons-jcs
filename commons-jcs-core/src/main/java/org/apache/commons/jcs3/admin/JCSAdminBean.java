@@ -64,7 +64,7 @@ public class JCSAdminBean implements JCSJMXBean
         }
         catch (final CacheException e)
         {
-            throw new RuntimeException("Could not retrieve cache manager instance", e);
+            throw new IllegalStateException("Could not retrieve cache manager instance", e);
         }
     }
 
@@ -196,7 +196,7 @@ public class JCSAdminBean implements JCSJMXBean
 			}
 			catch (final IOException e)
 			{
-                throw new RuntimeException("IOException while trying to get a cached element", e);
+                throw new IllegalStateException("IOException while trying to get a cached element", e);
 			}
 
 			if (ice == null)
@@ -220,7 +220,7 @@ public class JCSAdminBean implements JCSJMXBean
                 }
                 catch (final IOException e)
                 {
-                    throw new RuntimeException("IOException while trying to measure the size of the cached element", e);
+                    throw new IllegalStateException("IOException while trying to measure the size of the cached element", e);
                 }
                 finally
                 {

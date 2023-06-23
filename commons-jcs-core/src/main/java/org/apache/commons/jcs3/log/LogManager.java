@@ -99,7 +99,7 @@ public class LogManager
 
             // No log system could be found --> report errors to stderr
             errors.forEach(e -> System.err.println(e.getMessage()));
-            throw new RuntimeException("Could not find factory implementation for log subsystem " + logSystem);
+            throw new IllegalStateException("Could not find factory implementation for log subsystem " + logSystem);
         }
     }
 

@@ -163,7 +163,7 @@ public class ThreadPoolManager
                 break;
 
             case WAIT:
-                throw new RuntimeException("POLICY_WAIT no longer supported");
+                throw new UnsupportedOperationException("POLICY_WAIT no longer supported");
 
             case DISCARDOLDEST:
                 pool.setRejectedExecutionHandler(new ThreadPoolExecutor.DiscardOldestPolicy());

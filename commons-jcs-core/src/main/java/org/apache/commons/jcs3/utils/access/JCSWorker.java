@@ -126,7 +126,7 @@ public class JCSWorker<K, V>
         }
         catch ( final CacheException e )
         {
-            throw new RuntimeException( e.getMessage() );
+            throw new IllegalArgumentException( e.getMessage() );
         }
     }
 
