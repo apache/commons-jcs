@@ -34,6 +34,9 @@
             <action dev="tv" type="fix" issue="JCS-229" due-to="Dorota Oeknigk-Urbanska">
                LateralTCPListener class uses always StandardSerializer #89.
             </action>
+            <action dev="ggregory" type="fix" due-to="step-security-bot, Gary Gregory">
+                [StepSecurity] ci: Harden GitHub Actions #156.
+            </action>            
             <!-- UPDATE -->
             <action dev="ggregory" type="update" due-to="Dependabot, Gary Gregory">
                Bump actions/cache from 2.1.7 to 3.0.9 #86, #111.
