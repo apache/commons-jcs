@@ -361,6 +361,6 @@ public class BlockDiskUnitTest
         setUpBlockDisk("testJCS156", 4096);
         final long offset = disk.calculateByteOffsetForBlockAsLong(Integer.MAX_VALUE);
         assertTrue("Must not wrap round", offset > 0);
-        assertEquals(Integer.MAX_VALUE*4096L,offset);
+        assertEquals(Integer.MAX_VALUE * 4096L, offset);
     }
 }

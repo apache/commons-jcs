@@ -106,7 +106,7 @@ public class SoftRefFileCache<V> implements ICache<V>
     }
     public SoftRefFileCache(
             @NonNullable String name, @NonNullable Class<V> valueType,
-            int initialCapacity,float loadFactor, int concurrencyLevel)
+            int initialCapacity, float loadFactor, int concurrencyLevel)
     {
         this.map = CollectionUtils.inst.newConcurrentHashMap(initialCapacity, loadFactor, concurrencyLevel);
         this.collector = new KeyedRefCollector<String>(refq, map);

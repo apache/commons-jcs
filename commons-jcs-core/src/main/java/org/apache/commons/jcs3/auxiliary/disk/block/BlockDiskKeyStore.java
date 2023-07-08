@@ -538,7 +538,7 @@ public class BlockDiskKeyStore<K>
                 for (final Map.Entry<K, int[]> entry : keyHash.entrySet())
                 {
                     final BlockDiskElementDescriptor<K> descriptor =
-                            new BlockDiskElementDescriptor<>(entry.getKey(),entry.getValue());
+                            new BlockDiskElementDescriptor<>(entry.getKey(), entry.getValue());
                     // stream these out in the loop.
                     serializer.serializeTo(descriptor, bc);
                 }

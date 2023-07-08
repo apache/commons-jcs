@@ -111,7 +111,7 @@ public class MakeJCacheCDIInterceptorFriendly implements Extension
     }
 
     protected void vetoScannedCDIJCacheHelperQualifiers(final @Observes ProcessAnnotatedType<CDIJCacheHelper> pat) {
-        if (!needHelper) { // already seen, shouldn't really happen,just a protection
+        if (!needHelper) { // already seen, shouldn't really happen, just a protection
             pat.veto();
         }
         needHelper = false;
