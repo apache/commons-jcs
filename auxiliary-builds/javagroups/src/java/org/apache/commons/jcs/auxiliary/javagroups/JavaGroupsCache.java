@@ -52,14 +52,17 @@ import java.util.Vector;
  * same name as the cache / region name this auxiliary is associated with.
  * update / remove / removeAll operations are broadcast to all members of the
  * group. A listener thread processes requests from other members of the group,
- * and dispatches to appropriate methods on the associated CompositeCache. </p>
+ * and dispatches to appropriate methods on the associated CompositeCache.
+ * </p>
  * <p>
  * Calls to get are currently ignored.
+ * </p>
  * <p>
  * Messages are sent to peers asynchronously. Synchronous messaging could be
  * added using MessageDispatcher or RpcDispatcher. Combined with a get
  * implementation this could provide much higher cache consistency (but with
  * a substantial speed penalty).
+ * </p>
  */
 public class JavaGroupsCache
     implements AuxiliaryCache, RequestHandler, MembershipListener
