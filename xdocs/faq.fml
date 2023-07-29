@@ -126,7 +126,7 @@
 				<p>
 					You can download the admin jsp
 					<a
-						href="https://raw.githubusercontent.com/apache/commons-jcs/master/commons-jcs-core/src/main/java/org/apache/commons/jcs3/admin/JCSAdmin.jsp">
+						href="https://raw.githubusercontent.com/apache/commons-jcs/master/commons-jcs3-core/src/main/java/org/apache/commons/jcs3/admin/JCSAdmin.jsp">
 						here
 					</a>
 					.

@@ -143,12 +143,12 @@
   </mailingLists>
 
   <modules>
-    <module>commons-jcs-core</module>
-    <module>commons-jcs-jcache</module>
-    <module>commons-jcs-tck-tests</module>
-    <module>commons-jcs-jcache-extras</module>
-    <module>commons-jcs-jcache-openjpa</module>
-    <module>commons-jcs-dist</module>
+    <module>commons-jcs3-core</module>
+    <module>commons-jcs3-jcache</module>
+    <module>commons-jcs3-jcache-tck</module>
+    <module>commons-jcs3-jcache-extras</module>
+    <module>commons-jcs3-jcache-openjpa</module>
+    <module>commons-jcs3-dist</module>
   </modules>
 
   <developers>
@@ -518,7 +518,7 @@
     <profile>
       <id>sandbox</id>
       <modules>
-        <module>commons-jcs-sandbox</module>
+        <module>commons-jcs3-sandbox</module>
       </modules>
     </profile>
     <profile>

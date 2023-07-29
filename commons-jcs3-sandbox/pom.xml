@@ -23,30 +23,18 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.apache.commons</groupId>
-    <artifactId>commons-jcs-sandbox</artifactId>
-    <version>3.0-SNAPSHOT</version>
+    <artifactId>commons-jcs3</artifactId>
+    <version>3.2-SNAPSHOT</version>
   </parent>
 
-  <artifactId>commons-jcs-filecache</artifactId>
+  <artifactId>commons-jcs3-sandbox</artifactId>
+  <packaging>pom</packaging>
 
-  <name>Apache Commons JCS :: Sandbox :: FileCache</name>
+  <name>Apache Commons JCS :: Sandbox</name>
 
-  <dependencies>
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-jcs-core</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-jcs-core</artifactId>
-      <type>test-jar</type>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-    </dependency>
-  </dependencies>
-
+  <modules>
+    <module>commons-jcs3-yajcache</module>
+    <module>commons-jcs3-filecache</module>
+  </modules>
 
 </project>

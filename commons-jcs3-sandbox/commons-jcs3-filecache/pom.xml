@@ -23,37 +23,30 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.apache.commons</groupId>
-    <artifactId>commons-jcs-sandbox</artifactId>
-    <version>3.0-SNAPSHOT</version>
+    <artifactId>commons-jcs3-sandbox</artifactId>
+    <version>3.2-SNAPSHOT</version>
   </parent>
 
-  <artifactId>commons-jcs-yajcache</artifactId>
+  <artifactId>commons-jcs3-filecache</artifactId>
 
-  <name>Apache Commons JCS :: Sandbox :: yajcache</name>
+  <name>Apache Commons JCS :: Sandbox :: FileCache</name>
 
   <dependencies>
     <dependency>
-      <groupId>commons-beanutils</groupId>
-      <artifactId>commons-beanutils</artifactId>
-      <version>1.9.4</version>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-jcs3-core</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.commons</groupId>
-      <artifactId>commons-lang3</artifactId>
-      <version>${commons.lang.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>commons-logging</groupId>
-      <artifactId>commons-logging</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>log4j</groupId>
-      <artifactId>log4j</artifactId>
+      <artifactId>commons-jcs3-core</artifactId>
+      <type>test-jar</type>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
     </dependency>
   </dependencies>
+
 
 </project>
