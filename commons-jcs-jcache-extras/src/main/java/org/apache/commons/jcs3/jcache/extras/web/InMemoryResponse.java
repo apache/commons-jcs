@@ -31,6 +31,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 import javax.servlet.ServletOutputStream;
+import javax.servlet.WriteListener;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
@@ -203,6 +204,18 @@ public class InMemoryResponse extends HttpServletResponseWrapper implements Seri
             public void write(final int b) throws IOException
             {
                 buffer.write(b);
+            }
+
+            @Override
+            public boolean isReady() {
+                // TODO Auto-generated method stub
+                return false;
+            }
+
+            @Override
+            public void setWriteListener(WriteListener writeListener) {
+                // TODO Auto-generated method stub
+                
             }
         };
     }
