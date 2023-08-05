@@ -2,8 +2,8 @@ package org.apache.commons.jcs3.engine;
 
 import org.apache.commons.jcs3.auxiliary.remote.MockRemoteCacheListener;
 import org.apache.commons.jcs3.engine.behavior.ICacheEventQueue;
-import org.apache.commons.jcs3.engine.behavior.ICacheListener;
 import org.apache.commons.jcs3.engine.behavior.ICacheEventQueue.QueueType;
+import org.apache.commons.jcs3.engine.behavior.ICacheListener;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -45,7 +45,7 @@ public class CacheEventQueueFactoryUnitTest
 
         // VERIFY
         assertNotNull( "Should have a result", result );
-        assertTrue( "Wrong type", result.getQueueType() == QueueType.SINGLE );
+        assertEquals( "Wrong type", QueueType.SINGLE, result.getQueueType() );
     }
 
     /** Test create */
