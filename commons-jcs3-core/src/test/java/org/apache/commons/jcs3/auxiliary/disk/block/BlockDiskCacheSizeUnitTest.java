@@ -21,7 +21,7 @@ package org.apache.commons.jcs3.auxiliary.disk.block;
 
 import org.apache.commons.jcs3.auxiliary.disk.behavior.IDiskCacheAttributes.DiskLimitType;
 
-public class BlockDiskCacheSizeUnitTest extends BlockDiskCacheUnitTestAbstract
+public class BlockDiskCacheSizeUnitTest extends AbstractBlockDiskCacheUnitTest
 {
 
     @Override

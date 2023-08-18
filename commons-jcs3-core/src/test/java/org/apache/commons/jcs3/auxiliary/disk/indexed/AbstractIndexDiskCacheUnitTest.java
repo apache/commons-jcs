@@ -40,7 +40,7 @@ import junit.framework.TestCase;
 /**
  * Tests for common functionality.
  */
-public abstract class IndexDiskCacheUnitTestAbstract extends TestCase
+public abstract class AbstractIndexDiskCacheUnitTest extends TestCase
 {
     public abstract IndexedDiskCacheAttributes getCacheAttributes();
 
