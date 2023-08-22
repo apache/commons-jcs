@@ -22,12 +22,12 @@
   <parent>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-jcs3</artifactId>
-    <version>3.2</version>
+    <version>3.3-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
   <artifactId>commons-jcs3-core</artifactId>
-  <version>3.2</version>
+  <version>3.3-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>Apache Commons JCS :: Core</name>
@@ -51,7 +51,7 @@
          org.apache.http.*;resolution:=optional,
          org.apache.logging.log4j.*;resolution:=optional
      </commons.osgi.import>
-     <project.build.outputTimestamp>2023-08-22T10:45:18Z</project.build.outputTimestamp>
+     <project.build.outputTimestamp>2023-08-22T10:56:13Z</project.build.outputTimestamp>
   </properties>
 
   <dependencies>
