@@ -26,7 +26,9 @@ import java.rmi.registry.Registry;
 import java.rmi.server.RMISocketFactory;
 import java.rmi.server.UnicastRemoteObject;
 import java.rmi.server.Unreferenced;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -314,9 +316,10 @@ public class RemoteCacheServer<K, V>
                 // IF LOCAL CLUSTER CONSISTENCY IS CONFIGURED
                 if (!fromCluster || fromCluster && remoteCacheServerAttributes.isLocalClusterConsistency())
                 {
-                    final ICacheEventQueue<K, V>[] qlist = getEventQList( cacheDesc, requesterId );
-                    log.debug( "qlist.length = {0}", qlist.length );
-                    for (final ICacheEventQueue<K, V> element : qlist) {
+                    final List<ICacheEventQueue<K,V>> qlist = getEventQList( cacheDesc, requesterId );
+                    log.debug("qlist.size() = {0}", qlist.size());
+                    for (final ICacheEventQueue<K, V> element : qlist)
+                    {
                         element.addPutEvent( item );
                     }
                 }
@@ -837,9 +840,10 @@ public class RemoteCacheServer<K, V>
                 // IF LOCAL CLUSTER CONSISTENCY IS CONFIGURED
                 if (!fromCluster || fromCluster && remoteCacheServerAttributes.isLocalClusterConsistency())
                 {
-                    final ICacheEventQueue<K, V>[] qlist = getEventQList( cacheDesc, requesterId );
+                    final List<ICacheEventQueue<K,V>> qlist = getEventQList( cacheDesc, requesterId );
 
-                    for (final ICacheEventQueue<K, V> element : qlist) {
+                    for (final ICacheEventQueue<K, V> element : qlist)
+                    {
                         element.addRemoveEvent( key );
                     }
                 }
@@ -921,7 +925,7 @@ public class RemoteCacheServer<K, V>
                 // update registered listeners
                 if (!fromCluster || fromCluster && remoteCacheServerAttributes.isLocalClusterConsistency())
                 {
-                    final ICacheEventQueue<K, V>[] qlist = getEventQList( cacheDesc, requesterId );
+                    final List<ICacheEventQueue<K,V>> qlist = getEventQList( cacheDesc, requesterId );
 
                     for (final ICacheEventQueue<K, V> q : qlist)
                     {
@@ -995,9 +999,10 @@ public class RemoteCacheServer<K, V>
             // best attempt to achieve ordered free-cache-op and notification.
             synchronized ( cacheDesc )
             {
-                final ICacheEventQueue<K, V>[] qlist = getEventQList( cacheDesc, requesterId );
+                final List<ICacheEventQueue<K,V>> qlist = getEventQList( cacheDesc, requesterId );
 
-                for (final ICacheEventQueue<K, V> element : qlist) {
+                for (final ICacheEventQueue<K, V> element : qlist)
+                {
                     element.addDisposeEvent();
                 }
                 cacheManager.freeCache( cacheName );
@@ -1016,9 +1021,10 @@ public class RemoteCacheServer<K, V>
     {
         for (final CacheListeners<K, V> cacheDesc : cacheListenersMap.values())
         {
-            final ICacheEventQueue<K, V>[] qlist = getEventQList( cacheDesc, 0 );
+            final List<ICacheEventQueue<K,V>> qlist = getEventQList( cacheDesc, 0 );
 
-            for (final ICacheEventQueue<K, V> element : qlist) {
+            for (final ICacheEventQueue<K, V> element : qlist)
+            {
                 element.addDisposeEvent();
             }
         }
@@ -1034,7 +1040,6 @@ public class RemoteCacheServer<K, V>
      */
     protected CacheListeners<K, V> getCacheListeners( final String cacheName )
     {
-
         return cacheListenersMap.computeIfAbsent(cacheName, key -> {
             final CompositeCache<K, V> cache = cacheManager.getCache(key);
             return new CacheListeners<>( cache );
@@ -1050,7 +1055,6 @@ public class RemoteCacheServer<K, V>
      */
     protected CacheListeners<K, V> getClusterListeners( final String cacheName )
     {
-
         return clusterListenersMap.computeIfAbsent(cacheName, key -> {
             final CompositeCache<K, V> cache = cacheManager.getCache( cacheName );
             return new CacheListeners<>( cache );
@@ -1069,40 +1073,14 @@ public class RemoteCacheServer<K, V>
      * @param requesterId
      * @return The eventQList value
      */
-    @SuppressWarnings("unchecked") // No generic arrays in java
-    private ICacheEventQueue<K, V>[] getEventQList( final CacheListeners<K, V> cacheListeners, final long requesterId )
+    private List<ICacheEventQueue<K, V>> getEventQList( final CacheListeners<K, V> cacheListeners, final long requesterId )
     {
-        final ICacheEventQueue<K, V>[] list = cacheListeners.eventQMap.values().toArray( new ICacheEventQueue[0] );
-        int count = 0;
-        // Set those not qualified to null; Count those qualified.
-        for ( int i = 0; i < list.length; i++ )
-        {
-            final ICacheEventQueue<K, V> q = list[i];
-            if ( q.isWorking() && q.getListenerId() != requesterId )
-            {
-                count++;
-            }
-            else
-            {
-                list[i] = null;
-            }
-        }
-        if ( count == list.length )
-        {
-            // All qualified.
-            return list;
-        }
+        final List<ICacheEventQueue<K, V>> list = new ArrayList<>(cacheListeners.eventQMap.values());
 
-        // Returns only the qualified.
-        final ICacheEventQueue<K, V>[] qq = new ICacheEventQueue[count];
-        count = 0;
-        for (final ICacheEventQueue<K, V> element : list) {
-            if ( element != null )
-            {
-                qq[count++] = element;
-            }
-        }
-        return qq;
+        // Only return qualified event queues
+        list.removeIf(q -> (!q.isWorking() || q.getListenerId() == requesterId));
+
+        return list;
     }
 
     /**
