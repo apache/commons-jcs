@@ -20,6 +20,7 @@ package org.apache.commons.jcs3.engine;
  */
 
 import java.util.Arrays;
+import java.util.Objects;
 
 import org.apache.commons.jcs3.engine.behavior.ICacheElementSerialized;
 import org.apache.commons.jcs3.engine.behavior.IElementAttributes;
@@ -58,6 +59,25 @@ public class CacheElementSerialized<K, V>
     }
 
     /**
+     * @param obj other object
+     * @return true if this object key equals the key of obj
+     */
+    @Override
+    public boolean equals(final Object obj)
+    {
+        if (this == obj)
+        {
+            return true;
+        }
+        if (!(obj instanceof CacheElementSerialized))
+        {
+            return false;
+        }
+        final CacheElementSerialized<?,?> other = (CacheElementSerialized<?,?>) obj;
+        return Objects.equals(getKey(), other.getKey());
+    }
+
+    /**
      * For debugging only.
      * <p>
      * @return debugging string.
@@ -67,10 +87,10 @@ public class CacheElementSerialized<K, V>
     {
         final StringBuilder buf = new StringBuilder();
         buf.append( "\n CacheElementSerialized: " );
-        buf.append( "\n CacheName = [" + getCacheName() + "]" );
-        buf.append( "\n Key = [" + getKey() + "]" );
-        buf.append( "\n SerializedValue = " + Arrays.toString(getSerializedValue()) );
-        buf.append( "\n ElementAttributes = " + getElementAttributes() );
+        buf.append( "\n CacheName = [").append(getCacheName()).append("]");
+        buf.append( "\n Key = [").append(getKey()).append("]");
+        buf.append( "\n SerializedValue = ").append(Arrays.toString(getSerializedValue()));
+        buf.append( "\n ElementAttributes = ").append(getElementAttributes());
         return buf.toString();
     }
 

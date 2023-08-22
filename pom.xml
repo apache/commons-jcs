@@ -531,6 +531,25 @@
               <releaseProfiles>release</releaseProfiles>
             </configuration>
           </plugin>
+          <!-- Disable commons-release-plugin -->
+          <plugin>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-release-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>clean-staging</id>
+                <phase>none</phase>
+              </execution>
+              <execution>
+                <id>detatch-distributions</id>
+                <phase>none</phase>
+              </execution>
+              <execution>
+                <id>stage-distributions</id>
+                <phase>none</phase>
+              </execution>
+            </executions>
+          </plugin>
         </plugins>
       </build>
     </profile>
