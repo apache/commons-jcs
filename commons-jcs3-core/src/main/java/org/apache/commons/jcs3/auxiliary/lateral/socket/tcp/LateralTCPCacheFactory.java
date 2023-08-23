@@ -98,7 +98,7 @@ public class LateralTCPCacheFactory
         // no servers are required.
         if (lac.getTcpServers() != null && !lac.getTcpServers().isEmpty())
         {
-            final String servers[] = lac.getTcpServers().split("\\s*,\\s*");
+            final String[] servers = lac.getTcpServers().split("\\s*,\\s*");
             log.debug( "Configured for [{0}] servers.", servers.length );
 
             for (final String server : servers)

@@ -45,7 +45,7 @@ public class ScheduleParser
             throw new ParseException( "Cannot create schedules for a null or empty String.", 0 );
         }
 
-        final String timeStrings[] = schedule.split("\\s*,\\s*");
+        final String[] timeStrings = schedule.split("\\s*,\\s*");
         final Date[] dates = new Date[timeStrings.length];
         int cnt = 0;
         for (String time : timeStrings)
