@@ -23,7 +23,7 @@
 	<body>
         <release version="3.2.1" date="TBD">
             <action dev="tv" type="update">
-               Update dependency servlet-api 2.5 to java.servlet-api 3.1.0
+               Update dependency servlet-api 2.5 to javax.servlet-api 3.1.0
             </action>
             <action dev="tv" type="update">
                Update dependency openwebbeans-impl 1.7.6 to 2.0.27
