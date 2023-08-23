@@ -18,6 +18,22 @@
  */
 package org.apache.commons.jcs3.jcache.extras.web;
 
+import static java.util.Collections.list;
+import static javax.servlet.http.HttpServletResponse.SC_OK;
+
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.Serializable;
+import java.net.URI;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.zip.GZIPOutputStream;
+
 import javax.cache.Cache;
 import javax.cache.CacheManager;
 import javax.cache.Caching;
@@ -36,21 +52,6 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.Serializable;
-import java.net.URI;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.zip.GZIPOutputStream;
-
-import static java.util.Collections.list;
-import static javax.servlet.http.HttpServletResponse.SC_OK;
 
 public class JCacheFilter implements Filter
 {
@@ -100,10 +101,10 @@ public class JCacheFilter implements Filter
             {
                 configuration.setCacheWriterFactory(new FactoryBuilder.ClassFactory<CacheWriter<? super PageKey, ? super Page>>(properties.getProperty("cache-writer-factory")));
             }
-            final String expirtyPolicy = properties.getProperty("expiry-policy-factory");
-            if (expirtyPolicy != null)
+            final String expiryPolicy = properties.getProperty("expiry-policy-factory");
+            if (expiryPolicy != null)
             {
-                configuration.setExpiryPolicyFactory(new FactoryBuilder.ClassFactory<ExpiryPolicy>(expirtyPolicy));
+                configuration.setExpiryPolicyFactory(new FactoryBuilder.ClassFactory<ExpiryPolicy>(expiryPolicy));
             }
             configuration.setManagementEnabled("true".equals(properties.getProperty("management-enabled", "false")));
             configuration.setStatisticsEnabled("true".equals(properties.getProperty("statistics-enabled", "false")));
