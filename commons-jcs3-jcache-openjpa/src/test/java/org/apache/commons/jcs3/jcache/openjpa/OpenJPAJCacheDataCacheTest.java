@@ -18,12 +18,14 @@
  */
 package org.apache.commons.jcs3.jcache.openjpa;
 
-import org.apache.derby.jdbc.EmbeddedDriver;
-import org.apache.openjpa.conf.OpenJPAConfiguration;
-import org.apache.openjpa.datacache.QueryKey;
-import org.apache.openjpa.persistence.JPAFacadeHelper;
-import org.apache.openjpa.persistence.OpenJPAEntityManagerFactorySPI;
-import org.junit.Test;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+import java.util.Map;
+import java.util.Properties;
 
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
@@ -32,15 +34,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import org.apache.derby.jdbc.EmbeddedDriver;
+import org.apache.openjpa.conf.OpenJPAConfiguration;
+import org.apache.openjpa.datacache.QueryKey;
+import org.apache.openjpa.persistence.JPAFacadeHelper;
+import org.apache.openjpa.persistence.OpenJPAEntityManagerFactorySPI;
+import org.junit.Test;
 
 public class OpenJPAJCacheDataCacheTest
 {
@@ -78,7 +78,6 @@ public class OpenJPAJCacheDataCacheTest
         assertTrue(conf.getDataCacheManagerInstance().getDataCache("default").contains(JPAFacadeHelper.toOpenJPAObjectId(conf.getMetaDataRepositoryInstance().getCachedMetaData(MyEntity.class), entity.getId())));
 
         em.close();
-
         emf.close();
     }
 
@@ -103,15 +102,11 @@ public class OpenJPAJCacheDataCacheTest
         assertThat(conf.getDataCacheManagerInstance().getDataCache("default"), instanceOf(OpenJPAJCacheDataCache.class));
         assertTrue(conf.getDataCacheManagerInstance().getDataCache("default").contains(JPAFacadeHelper.toOpenJPAObjectId(conf.getMetaDataRepositoryInstance().getCachedMetaData(MyEntity.class), entity.getId())));
 
-        final Map<Object, Object> args = new HashMap<Object, Object>()
-        {{
-                put("id", entity.getId());
-        }};
+        final Map<Object, Object> args = Map.of("id", entity.getId());
         final QueryKey qk = QueryKey.newInstance(query.unwrap(org.apache.openjpa.kernel.Query.class), args);
         assertNotNull(conf.getDataCacheManagerInstance().getSystemQueryCache().get(qk));
 
         em.close();
-
         emf.close();
     }
 

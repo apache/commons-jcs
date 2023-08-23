@@ -21,7 +21,27 @@
 		<author email="dev@commons.apache.org">Apache Commons Developers</author>
 	</properties>
 	<body>
-        <release version="3.1.1" date="TBD">
+        <release version="3.2.1" date="TBD">
+            <action dev="tv" type="update">
+               Update dependency servlet-api 2.5 to java.servlet-api 3.1.0
+            </action>
+            <action dev="tv" type="update">
+               Update dependency openwebbeans-impl 1.7.6 to 2.0.27
+            </action>
+            <action dev="tv" type="update">
+               Update dependency cache-tests 1.0.1 to 1.1.1
+            </action>
+            <action dev="tv" type="update">
+               Update Tomcat libraries 7.0.22 to 9.0.79
+            </action>
+            <action dev="tv" type="update">
+               From this release on we require Java 17
+            </action>
+        </release>
+        <release version="3.2" date="2023-08-22">
+            <action dev="tv" type="fix" issue="JCS-234" due-to="Chris Lake">
+               Fix OSGi manifest
+            </action>
             <action dev="tv" type="fix" issue="JCS-232" due-to="Jeremy Long">
                Handle ServiceConfigurationError when using a different logging framework
             </action>

@@ -362,18 +362,11 @@
 
       <dependency>
         <groupId>javax.servlet</groupId>
-        <artifactId>servlet-api</artifactId>
-        <version>2.5</version>
+        <artifactId>javax.servlet-api</artifactId>
+        <version>3.1.0</version>
         <optional>true</optional>
       </dependency>
 
-<!--      <dependency>-->
-<!--        <groupId>org.apache.geronimo.specs</groupId>-->
-<!--        <artifactId>geronimo-jcdi_2.0_spec</artifactId>-->
-<!--        <version>1.3</version>-->
-<!--        <scope>provided</scope>-->
-<!--      </dependency>-->
-      
       <dependency>
         <groupId>javax</groupId>
         <artifactId>javaee-api</artifactId>
@@ -385,86 +378,46 @@
 			</exclusion>
 		</exclusions>
       </dependency>
-<!--      <dependency>-->
-<!--        <groupId>org.apache.geronimo.specs</groupId>-->
-<!--        <artifactId>geronimo-interceptor_1.2_spec</artifactId>-->
-<!--        <version>1.2</version>-->
-<!--        <scope>provided</scope>-->
-<!--      </dependency>-->
-      
-<!--      <dependency>-->
-<!--        <groupId>javax.inject</groupId>-->
-<!--        <artifactId>javax.inject</artifactId>-->
-<!--        <version>1</version>-->
-<!--        <scope>provided</scope>-->
-<!--      </dependency>-->
-<!--      <dependency>-->
-<!--        <groupId>org.apache.geronimo.specs</groupId>-->
-<!--        <artifactId>geronimo-atinject_1.0_spec</artifactId>-->
-<!--        <version>1.2</version>-->
-<!--        <scope>provided</scope>-->
-<!--      </dependency>-->
-
       <dependency>
         <groupId>javax.cache</groupId>
         <artifactId>cache-api</artifactId>
         <version>1.1.1</version>
         <scope>provided</scope>
       </dependency>
-<!-- Does not work with JPMS/moditect -->
-<!--      <dependency>-->
-<!--        <groupId>org.apache.geronimo.specs</groupId>-->
-<!--        <artifactId>geronimo-jcache_1.0_spec</artifactId>-->
-<!--        <version>1.0-alpha-1</version>-->
-<!--        <scope>provided</scope>-->
-<!--      </dependency>-->
-
       <dependency>
         <groupId>javax.annotation</groupId>
         <artifactId>javax.annotation-api</artifactId>
         <version>1.3.2</version>
         <scope>provided</scope>
       </dependency>
-
-<!--      <dependency>-->
-<!--        <groupId>org.apache.geronimo.specs</groupId>-->
-<!--        <artifactId>geronimo-annotation_1.2_spec</artifactId>-->
-<!--        <version>1.0</version>-->
-<!--        <scope>provided</scope>-->
-<!--      </dependency>-->
-
       <dependency>
         <groupId>org.apache.openwebbeans</groupId>
         <artifactId>openwebbeans-impl</artifactId>
-        <version>1.7.6</version>
+        <version>2.0.27</version>
         <scope>test</scope>
       </dependency>
-
       <dependency>
         <groupId>javax.cache</groupId>
         <artifactId>test-domain</artifactId>
         <version>${jsr107.api.version}</version>
         <scope>test</scope>
       </dependency>
-
       <dependency>
         <groupId>javax.cache</groupId>
         <artifactId>app-domain</artifactId>
         <version>${jsr107.api.version}</version>
       </dependency>
-
       <dependency>
         <groupId>javax.cache</groupId>
         <artifactId>cache-tests</artifactId>
-        <version>${jsr107.api.version}</version>
+        <version>1.1.1</version>
         <scope>test</scope>
       </dependency>
-
       <dependency>
         <groupId>javax.cache</groupId>
         <artifactId>cache-tests</artifactId>
         <classifier>tests</classifier>
-        <version>${jsr107.api.version}</version>
+        <version>1.1.1</version>
         <scope>test</scope>
       </dependency>
 
@@ -478,7 +431,7 @@
         <artifactId>maven-pmd-plugin</artifactId>
         <version>${commons.pmd.version}</version>
         <configuration>
-          <targetJdk>1.8</targetJdk>
+          <targetJdk>${maven.compiler.target}</targetJdk>
         </configuration>
       </plugin>
       <plugin>
@@ -576,15 +529,16 @@
 
     <!-- Default configuration for compiler source and target JVM -->
     <maven.compiler.sourceEncoding>UTF-8</maven.compiler.sourceEncoding>
-    <maven.compiler.source>1.8</maven.compiler.source>
-    <maven.compiler.target>1.8</maven.compiler.target>
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
+    <commons.compiler.release>17</commons.compiler.release>
 
     <commons.componentid>jcs</commons.componentid>
     <commons.osgi.symbolicName>org.apache.commons.${project.artifactId}</commons.osgi.symbolicName>
     <commons.module.name>org.apache.commons.jcs3</commons.module.name>
     <commons.release.version>3.2</commons.release.version>
     <commons.release.name>commons-jcs3-dist-3.2</commons.release.name>
-    <commons.release.desc>(Java 8+)</commons.release.desc>
+    <commons.release.desc>(Java 17+)</commons.release.desc>
     <commons.releaseManagerName>tv</commons.releaseManagerName>
     <commons.releaseManagerKey>88817402</commons.releaseManagerKey>
     <!-- The RC version used in the staging repository URL. -->
@@ -599,7 +553,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <commons.encoding>UTF-8</commons.encoding>
-    <commons.javadoc.java.link>https://docs.oracle.com/javase/8/docs/api/</commons.javadoc.java.link>
+    <commons.javadoc.java.link>https://docs.oracle.com/javase/17/docs/api/</commons.javadoc.java.link>
 
     <jsr107.api.version>1.0.1</jsr107.api.version>
     <commons.collections.version>4.4</commons.collections.version>
