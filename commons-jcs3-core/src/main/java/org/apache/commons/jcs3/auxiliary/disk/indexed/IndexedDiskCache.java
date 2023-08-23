@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -398,7 +399,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
      * @param sortedDescriptors
      * @return false if there are overlaps.
      */
-    protected boolean checkForDedOverlaps(final IndexedDiskElementDescriptor[] sortedDescriptors)
+    protected boolean checkForDedOverlaps(final Collection<IndexedDiskElementDescriptor> sortedDescriptors)
     {
         final ElapsedTimer timer = new ElapsedTimer();
         boolean isOk = true;
@@ -1124,7 +1125,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
         log.info("{0}: Beginning Optimization #{1}", logCacheName, timesOptimized);
 
         // CREATE SNAPSHOT
-        IndexedDiskElementDescriptor[] defragList = null;
+        Collection<IndexedDiskElementDescriptor> defragList = null;
 
         storageLock.writeLock().lock();
 
@@ -1153,10 +1154,8 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
             {
                 if (!queuedPutList.isEmpty())
                 {
-                    defragList = queuedPutList.toArray(new IndexedDiskElementDescriptor[0]);
-
                     // pack them at the end
-                    expectedNextPos = defragFile(defragList, expectedNextPos);
+                    expectedNextPos = defragFile(queuedPutList, expectedNextPos);
                 }
                 // TRUNCATE THE FILE
                 dataFile.truncate(expectedNextPos);
@@ -1197,7 +1196,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
      *            the start position in the file
      * @return this is the potential new file end
      */
-    private long defragFile(final IndexedDiskElementDescriptor[] defragList, final long startingPos)
+    private long defragFile(final Collection<IndexedDiskElementDescriptor> defragList, final long startingPos)
     {
         final ElapsedTimer timer = new ElapsedTimer();
         long preFileSize = 0;
@@ -1208,7 +1207,8 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
             preFileSize = this.dataFile.length();
             // find the first gap in the disk and start defragging.
             expectedNextPos = startingPos;
-            for (final IndexedDiskElementDescriptor element : defragList) {
+            for (final IndexedDiskElementDescriptor element : defragList)
+            {
                 storageLock.writeLock().lock();
                 try
                 {
@@ -1247,14 +1247,14 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
      * sorted by position in the dataFile.
      * <p>
      *
-     * @return IndexedDiskElementDescriptor[]
+     * @return Collection<IndexedDiskElementDescriptor>
      */
-    private IndexedDiskElementDescriptor[] createPositionSortedDescriptorList()
+    private Collection<IndexedDiskElementDescriptor> createPositionSortedDescriptorList()
     {
         final List<IndexedDiskElementDescriptor> defragList = new ArrayList<>(keyHash.values());
         Collections.sort(defragList, (ded1, ded2) -> Long.compare(ded1.pos, ded2.pos));
 
-        return defragList.toArray(new IndexedDiskElementDescriptor[0]);
+        return defragList;
     }
 
     /**

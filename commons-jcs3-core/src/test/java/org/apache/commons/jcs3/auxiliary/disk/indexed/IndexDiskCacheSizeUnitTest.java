@@ -26,7 +26,7 @@ import org.apache.commons.jcs3.auxiliary.disk.behavior.IDiskCacheAttributes.Disk
 import org.apache.commons.jcs3.engine.CacheElement;
 import org.apache.commons.jcs3.engine.behavior.ICacheElement;
 
-public class IndexDiskCacheSizeUnitTest extends IndexDiskCacheUnitTestAbstract {
+public class IndexDiskCacheSizeUnitTest extends AbstractIndexDiskCacheUnitTest {
 
 	@Override
 	public IndexedDiskCacheAttributes getCacheAttributes() {

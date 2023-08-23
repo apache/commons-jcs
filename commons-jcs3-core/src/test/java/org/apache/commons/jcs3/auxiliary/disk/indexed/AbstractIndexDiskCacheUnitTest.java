@@ -21,7 +21,9 @@ package org.apache.commons.jcs3.auxiliary.disk.indexed;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -40,7 +42,7 @@ import junit.framework.TestCase;
 /**
  * Tests for common functionality.
  */
-public abstract class IndexDiskCacheUnitTestAbstract extends TestCase
+public abstract class AbstractIndexDiskCacheUnitTest extends TestCase
 {
     public abstract IndexedDiskCacheAttributes getCacheAttributes();
 
@@ -147,12 +149,12 @@ public abstract class IndexDiskCacheUnitTestAbstract extends TestCase
 
         final int numDescriptors = 5;
         int pos = 0;
-        final IndexedDiskElementDescriptor[] sortedDescriptors = new IndexedDiskElementDescriptor[numDescriptors];
+        final List<IndexedDiskElementDescriptor> sortedDescriptors = new ArrayList<>();
         for (int i = 0; i < numDescriptors; i++)
         {
             final IndexedDiskElementDescriptor descriptor = new IndexedDiskElementDescriptor(pos, i * 2);
             pos = pos + (i * 2) + IndexedDisk.HEADER_SIZE_BYTES;
-            sortedDescriptors[i] = descriptor;
+            sortedDescriptors.add(descriptor);
         }
 
         // DO WORK
@@ -175,13 +177,13 @@ public abstract class IndexDiskCacheUnitTestAbstract extends TestCase
 
         final int numDescriptors = 5;
         int pos = 0;
-        final IndexedDiskElementDescriptor[] sortedDescriptors = new IndexedDiskElementDescriptor[numDescriptors];
+        final List<IndexedDiskElementDescriptor> sortedDescriptors = new ArrayList<>();
         for (int i = 0; i < numDescriptors; i++)
         {
             final IndexedDiskElementDescriptor descriptor = new IndexedDiskElementDescriptor(pos, i * 2);
             // don't add the header + IndexedDisk.RECORD_HEADER;
             pos = pos + (i * 2);
-            sortedDescriptors[i] = descriptor;
+            sortedDescriptors.add(descriptor);
         }
 
         // DO WORK

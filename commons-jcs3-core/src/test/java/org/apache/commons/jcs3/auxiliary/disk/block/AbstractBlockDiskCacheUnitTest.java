@@ -36,7 +36,7 @@ import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
 import junit.framework.TestCase;
 
 /** Unit tests for the Block Disk Cache */
-public abstract class BlockDiskCacheUnitTestAbstract extends TestCase
+public abstract class AbstractBlockDiskCacheUnitTest extends TestCase
 {
     public abstract BlockDiskCacheAttributes getCacheAttributes();
 

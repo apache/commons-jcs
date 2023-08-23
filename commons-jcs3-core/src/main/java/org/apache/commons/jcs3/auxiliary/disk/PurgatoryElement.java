@@ -1,5 +1,7 @@
 package org.apache.commons.jcs3.auxiliary.disk;
 
+import java.util.Objects;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -136,6 +138,35 @@ public class PurgatoryElement<K, V>
     }
 
     /**
+     * @param obj other object
+     * @return true if this object key equals the key of obj
+     */
+    @Override
+    public boolean equals(final Object obj)
+    {
+        if (this == obj)
+        {
+            return true;
+        }
+        if (!(obj instanceof PurgatoryElement))
+        {
+            return false;
+        }
+        final PurgatoryElement<?,?> other = (PurgatoryElement<?,?>) obj;
+        return Objects.equals(getKey(), other.getKey());
+    }
+
+    /**
+     * @return a hash of the key only
+     */
+    @Override
+    public int hashCode()
+    {
+        return getKey().hashCode();
+    }
+
+
+    /**
      * @return debug string
      */
     @Override
@@ -143,12 +174,12 @@ public class PurgatoryElement<K, V>
     {
         final StringBuilder buf = new StringBuilder();
         buf.append( "[PurgatoryElement: " );
-        buf.append( " isSpoolable = " + isSpoolable() );
-        buf.append( " CacheElement = " + getCacheElement() );
-        buf.append( " CacheName = " + getCacheName() );
-        buf.append( " Key = " + getKey() );
-        buf.append( " Value = " + getVal() );
-        buf.append( " ElementAttributes = " + getElementAttributes() );
+        buf.append( " isSpoolable = ").append(isSpoolable());
+        buf.append( " CacheElement = ").append(getCacheElement());
+        buf.append( " CacheName = ").append(getCacheName());
+        buf.append( " Key = ").append(getKey());
+        buf.append( " Value = ").append(getVal());
+        buf.append( " ElementAttributes = ").append(getElementAttributes());
         buf.append( "]" );
         return buf.toString();
     }
