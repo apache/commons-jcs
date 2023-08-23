@@ -40,45 +40,10 @@
       <groupId>javax.cache</groupId>
       <artifactId>cache-api</artifactId>
     </dependency>
-<!--    <dependency>-->
-<!--      <groupId>org.apache.geronimo.specs</groupId>-->
-<!--      <artifactId>geronimo-jcache_1.0_spec</artifactId>-->
-<!--    </dependency>-->
-<!--    <dependency>-->
-<!--      <groupId>javax.inject</groupId>-->
-<!--      <artifactId>javax.inject</artifactId>-->
-<!--    </dependency>-->
-<!--    <dependency>-->
-<!--      <groupId>org.apache.geronimo.specs</groupId>-->
-<!--      <artifactId>geronimo-atinject_1.0_spec</artifactId>-->
-<!--    </dependency>-->
-<!--    <dependency>-->
-<!--      <groupId>org.apache.geronimo.specs</groupId>-->
-<!--      <artifactId>geronimo-jcdi_2.0_spec</artifactId>-->
-<!--    </dependency>-->
     <dependency>
       <groupId>javax</groupId>
       <artifactId>javaee-api</artifactId>
     </dependency>
-<!--    <dependency>-->
-<!--      <groupId>org.apache.geronimo.specs</groupId>-->
-<!--      <artifactId>geronimo-interceptor_1.2_spec</artifactId>-->
-<!--    </dependency>-->
-<!--    <dependency>-->
-<!--      <groupId>javax.annotation</groupId>-->
-<!--      <artifactId>javax.annotation-api</artifactId>-->
-<!--    </dependency>-->
-<!--    <dependency>-->
-<!--      <groupId>org.apache.geronimo.specs</groupId>-->
-<!--      <artifactId>geronimo-annotation_1.2_spec</artifactId>-->
-<!--    </dependency>-->
-<!--    <dependency>-->
-<!--      <groupId>org.apache.geronimo.specs</groupId>-->
-<!--      <artifactId>geronimo-servlet_3.0_spec</artifactId>-->
-<!--      <version>1.0</version>-->
-<!--      <scope>provided</scope>-->
-<!--    </dependency>-->
-
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
@@ -99,21 +64,26 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>org.apache.tomcat</groupId>
       <artifactId>tomcat-catalina</artifactId>
-      <version>7.0.72</version>
+      <version>${tomcat.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.tomcat</groupId>
       <artifactId>tomcat-jasper</artifactId>
-      <version>7.0.72</version>
+      <version>${tomcat.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.tomcat</groupId>
       <artifactId>tomcat-coyote</artifactId>
-      <version>7.0.72</version>
+      <version>${tomcat.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -127,5 +97,6 @@
   <properties>
     <commons.module.name>org.apache.commons.jcs3.jcache.extras</commons.module.name>
     <project.build.outputTimestamp>2022-01-01T00:00:00Z</project.build.outputTimestamp>
+    <tomcat.version>9.0.79</tomcat.version>
   </properties>
 </project>

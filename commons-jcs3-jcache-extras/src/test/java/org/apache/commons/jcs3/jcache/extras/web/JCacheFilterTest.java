@@ -23,6 +23,7 @@ import static org.junit.Assert.assertEquals;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.servlet.ServletException;
@@ -34,10 +35,10 @@ import org.apache.catalina.Context;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.LifecycleState;
 import org.apache.catalina.core.StandardContext;
-import org.apache.catalina.deploy.FilterDef;
-import org.apache.catalina.deploy.FilterMap;
 import org.apache.catalina.startup.Tomcat;
 import org.apache.commons.io.IOUtils;
+import org.apache.tomcat.util.descriptor.web.FilterDef;
+import org.apache.tomcat.util.descriptor.web.FilterMap;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -64,16 +65,16 @@ public class JCacheFilterTest
             tomcat.start();
             final Context ctx = tomcat.addWebapp("/sample", docBase.getAbsolutePath());
             Tomcat.addServlet(ctx, "empty", Empty.class.getName());
-            ctx.addServletMapping("/", "empty");
+            ctx.addServletMappingDecoded("/", "empty");
             addJcsFilter(ctx);
             StandardContext.class.cast(ctx).filterStart();
 
             final URL url = new URL("http://localhost:" + tomcat.getConnector().getLocalPort() + "/sample/");
 
-            assertEquals("", IOUtils.toString(url.openStream()));
+            assertEquals("", IOUtils.toString(url.openStream(), StandardCharsets.UTF_8));
             assertEquals(1, Empty.COUNTER.get());
 
-            assertEquals("", IOUtils.toString(url.openStream()));
+            assertEquals("", IOUtils.toString(url.openStream(), StandardCharsets.UTF_8));
             assertEquals(1, Empty.COUNTER.get());
         } finally {
             stop(tomcat);
@@ -91,15 +92,15 @@ public class JCacheFilterTest
             tomcat.start();
             final Context ctx = tomcat.addContext("/sample", docBase.getAbsolutePath());
             Tomcat.addServlet(ctx, "hello", Hello.class.getName());
-            ctx.addServletMapping("/", "hello");
+            ctx.addServletMappingDecoded("/", "hello");
             addJcsFilter(ctx);
             StandardContext.class.cast(ctx).filterStart();
 
             final URL url = new URL("http://localhost:" + tomcat.getConnector().getLocalPort() + "/sample/");
-            assertEquals("hello", IOUtils.toString(url.openStream()));
+            assertEquals("hello", IOUtils.toString(url.openStream(), StandardCharsets.UTF_8));
             assertEquals(1, Hello.COUNTER.get());
 
-            assertEquals("hello", IOUtils.toString(url.openStream()));
+            assertEquals("hello", IOUtils.toString(url.openStream(), StandardCharsets.UTF_8));
             assertEquals(1, Hello.COUNTER.get());
         } finally {
             stop(tomcat);
@@ -126,6 +127,7 @@ public class JCacheFilterTest
     }
 
     public static class Hello extends HttpServlet {
+        private static final long serialVersionUID = 3436497661391300025L;
         public static final AtomicInteger COUNTER = new AtomicInteger();
 
         @Override
@@ -136,6 +138,7 @@ public class JCacheFilterTest
     }
 
     public static class Empty extends HttpServlet {
+        private static final long serialVersionUID = 4131092201964167043L;
         public static final AtomicInteger COUNTER = new AtomicInteger();
 
         @Override
