@@ -27,7 +27,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import org.apache.commons.jcs3.auxiliary.lateral.LateralCacheNoWait;
 import org.apache.commons.jcs3.auxiliary.lateral.LateralCacheNoWaitFacade;
 import org.apache.commons.jcs3.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttributes;
-import org.apache.commons.jcs3.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs3.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs3.engine.control.CompositeCacheManager;
 import org.apache.commons.jcs3.engine.logging.behavior.ICacheEventLogger;
@@ -72,19 +71,6 @@ public class LateralTCPDiscoveryListener
 
     /** Reference to the cache element serializer for auxiliary cache creation */
     private final IElementSerializer elementSerializer;
-
-    /**
-     * This plugs into the udp discovery system. It will receive add and remove events.
-     * <p>
-     * @param factoryName the name of the related cache factory
-     * @param cacheManager the global cache manager
-     * @deprecated Use constructor with four parameters
-     */
-    @Deprecated
-    protected LateralTCPDiscoveryListener( final String factoryName, final ICompositeCacheManager cacheManager )
-    {
-        this(factoryName, (CompositeCacheManager) cacheManager, null, null);
-    }
 
     /**
      * This plugs into the udp discovery system. It will receive add and remove events.

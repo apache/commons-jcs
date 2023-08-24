@@ -207,18 +207,6 @@ public class CompositeCache<K, V>
     }
 
     /**
-     * This sets the list of auxiliary caches for this region.
-     * <p>
-     * @param auxCaches
-     * @deprecated Use List method
-     */
-    @Deprecated
-    public void setAuxCaches(final AuxiliaryCache<K, V>[] auxCaches)
-    {
-        setAuxCaches(Arrays.asList(auxCaches));
-    }
-
-    /**
      * Get the list of auxiliary caches for this region.
      * <p>
      * @return a list of auxiliary caches, may be empty, never null
@@ -227,19 +215,6 @@ public class CompositeCache<K, V>
     public List<AuxiliaryCache<K, V>> getAuxCacheList()
     {
         return this.auxCaches;
-    }
-
-    /**
-     * Get the list of auxiliary caches for this region.
-     * <p>
-     * @return an array of auxiliary caches, may be empty, never null
-     * @deprecated Use List method
-     */
-    @SuppressWarnings("unchecked") // No generic arrays in Java
-    @Deprecated
-    public AuxiliaryCache<K, V>[] getAuxCaches()
-    {
-        return getAuxCacheList().toArray(new AuxiliaryCache[0]);
     }
 
     /**

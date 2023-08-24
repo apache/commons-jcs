@@ -152,24 +152,6 @@ public interface ILateralCacheAttributes
     Type getTransmissionType();
 
     /**
-     * Sets the transmissionTypeName attribute of the ILateralCacheAttributes object
-     * <p>
-     * @param val The new transmissionTypeName value
-     * @deprecated Use setTransmissionType()
-     */
-    @Deprecated
-    void setTransmissionTypeName( String val );
-
-    /**
-     * Gets the transmissionTypeName attribute of the ILateralCacheAttributes object
-     * <p>
-     * @return The transmissionTypeName value
-     * @deprecated Use getTransmissionType
-     */
-    @Deprecated
-    String getTransmissionTypeName();
-
-    /**
      * Sets the putOnlyMode attribute of the ILateralCacheAttributes. When this is true the lateral
      * cache will only issue put and remove order and will not try to retrieve elements from other
      * lateral caches.

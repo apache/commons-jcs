@@ -34,7 +34,6 @@ import org.apache.commons.jcs3.auxiliary.lateral.socket.tcp.behavior.ITCPLateral
 import org.apache.commons.jcs3.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs3.log.Log;
 import org.apache.commons.jcs3.log.LogManager;
-import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
 
 /**
  * This class is based on the log4j SocketAppender class. I'm using a different repair structure, so
@@ -60,20 +59,6 @@ public class LateralTCPSender
 
     /** Use to synchronize multiple threads that may be trying to get. */
     private final Lock lock = new ReentrantLock(true);
-
-    /**
-     * Constructor for the LateralTCPSender object.
-     * <p>
-     * @param lca
-     * @throws IOException
-     * @deprecated Specify serializer
-     */
-    @Deprecated
-    public LateralTCPSender( final ITCPLateralCacheAttributes lca )
-        throws IOException
-    {
-        this(lca, new StandardSerializer());
-    }
 
     /**
      * Constructor for the LateralTCPSender object.

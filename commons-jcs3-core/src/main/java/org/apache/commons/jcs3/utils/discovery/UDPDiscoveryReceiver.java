@@ -193,14 +193,12 @@ public class UDPDiscoveryReceiver
             new ArrayBlockingQueue<>(maxPoolSize);
 
     /**
-     * Wait for multicast message
+     * Wait for multicast message (used for testing)
      *
      * @return the object message
      * @throws IOException
-     * @deprecated no longer used
      */
-    @Deprecated
-    public Object waitForMessage()
+    protected Object waitForMessage()
         throws IOException
     {
         try
@@ -273,7 +271,7 @@ public class UDPDiscoveryReceiver
                                 log.debug( "Read object from address [{0}], object=[{1}]",
                                         sourceAddress, obj );
 
-                                // Just to keep the functionality of the deprecated waitForMessage method
+                                // Just to keep the functionality of the test waitForMessage method
                                 synchronized (msgQueue)
                                 {
                                     // Check if queue full already?
@@ -331,35 +329,6 @@ public class UDPDiscoveryReceiver
     protected void setSerializer(IElementSerializer serializer)
     {
         this.serializer = serializer;
-    }
-
-    /**
-     * Separate thread run when a command comes into the UDPDiscoveryReceiver.
-     * @deprecated No longer used
-     */
-    @Deprecated
-    public class MessageHandler
-        implements Runnable
-    {
-        /** The message to handle. Passed in during construction. */
-        private final UDPDiscoveryMessage message;
-
-        /**
-         * @param message
-         */
-        public MessageHandler( final UDPDiscoveryMessage message )
-        {
-            this.message = message;
-        }
-
-        /**
-         * Process the message.
-         */
-        @Override
-        public void run()
-        {
-            handleMessage(message);
-        }
     }
 
     /**

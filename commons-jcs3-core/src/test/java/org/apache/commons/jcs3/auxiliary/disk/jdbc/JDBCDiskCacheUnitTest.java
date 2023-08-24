@@ -20,22 +20,21 @@ package org.apache.commons.jcs3.auxiliary.disk.jdbc;
  */
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.Executors;
 
-import junit.framework.TestCase;
-
-import org.apache.commons.jcs3.engine.control.MockCompositeCacheManager;
 import org.apache.commons.jcs3.JCS;
 import org.apache.commons.jcs3.access.CacheAccess;
 import org.apache.commons.jcs3.auxiliary.disk.jdbc.dsfactory.DataSourceFactory;
 import org.apache.commons.jcs3.engine.behavior.ICacheElement;
+import org.apache.commons.jcs3.engine.control.MockCompositeCacheManager;
 import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
 import org.apache.commons.jcs3.utils.threadpool.DaemonThreadFactory;
+
+import junit.framework.TestCase;
 
 /**
  * Runs basic tests for the JDBC disk cache.
@@ -57,21 +56,10 @@ public class JDBCDiskCacheUnitTest
     public void testSimpleJDBCPutGetWithHSQL()
         throws Exception
     {
-        System.setProperty( "hsqldb.cache_scale", "8" );
-
-        final String rafroot = "target";
-        final Properties p = new Properties();
-        final String driver = p.getProperty( "driver", "org.hsqldb.jdbcDriver" );
-        final String url = p.getProperty( "url", "jdbc:hsqldb:" );
-        final String database = p.getProperty( "database", rafroot + "/cache_hsql_db" );
-        final String user = p.getProperty( "user", "sa" );
-        final String password = p.getProperty( "password", "" );
-
-        new org.hsqldb.jdbcDriver();
-        Class.forName( driver ).newInstance();
-        final Connection cConn = DriverManager.getConnection( url + database, user, password );
-
-        HsqlSetupTableUtil.setupTABLE( cConn, "JCS_STORE2" );
+        try (Connection con = HsqlSetupUtil.getTestDatabaseConnection(new Properties(), "cache_hsql_db"))
+        {
+            HsqlSetupUtil.setupTable(con, "JCS_STORE2");
+        }
 
         runTestForRegion( "testCache1", 200 );
     }
@@ -89,24 +77,16 @@ public class JDBCDiskCacheUnitTest
     {
         final CacheAccess<String, String> jcs = JCS.getInstance( region );
 
-//        System.out.println( "BEFORE PUT \n" + jcs.getStats() );
-
         // Add items to cache
-
-        for ( int i = 0; i <= items; i++ )
+        for ( int i = 0; i < items; i++ )
         {
             jcs.put( i + ":key", region + " data " + i );
         }
 
-//        System.out.println( jcs.getStats() );
-
         Thread.sleep( 1000 );
 
-//        System.out.println( jcs.getStats() );
-
         // Test that all items are in cache
-
-        for ( int i = 0; i <= items; i++ )
+        for ( int i = 0; i < items; i++ )
         {
             final String value = jcs.get( i + ":key" );
 
@@ -115,13 +95,13 @@ public class JDBCDiskCacheUnitTest
 
         // Test that getElements returns all the expected values
         final Set<String> keys = new HashSet<>();
-        for ( int i = 0; i <= items; i++ )
+        for ( int i = 0; i < items; i++ )
         {
             keys.add( i + ":key" );
         }
 
         final Map<String, ICacheElement<String, String>> elements = jcs.getCacheElements( keys );
-        for ( int i = 0; i <= items; i++ )
+        for ( int i = 0; i < items; i++ )
         {
             final ICacheElement<String, String> element = elements.get( i + ":key" );
             assertNotNull( "element " + i + ":key is missing", element );
@@ -129,13 +109,13 @@ public class JDBCDiskCacheUnitTest
         }
 
         // Remove all the items
-        for ( int i = 0; i <= items; i++ )
+        for ( int i = 0; i < items; i++ )
         {
             jcs.remove( i + ":key" );
         }
 
         // Verify removal
-        for ( int i = 0; i <= items; i++ )
+        for ( int i = 0; i < items; i++ )
         {
             assertNull( "Removed key should be null: " + i + ":key", jcs.get( i + ":key" ) );
         }
@@ -150,23 +130,18 @@ public class JDBCDiskCacheUnitTest
         throws Exception
     {
         // SETUP
+        System.setProperty( "hsqldb.cache_scale", "8" );
         final String poolName = "testInitializePoolAccess_withPoolName";
-
-        final String url = "jdbc:hsqldb:";
-        final String userName = "sa";
-        final String password = "";
-        final int maxActive = 10;
-        final String driverClassName = "org.hsqldb.jdbcDriver";
 
         final Properties props = new Properties();
         final String prefix = JDBCDiskCacheFactory.POOL_CONFIGURATION_PREFIX
     		+ poolName
             + JDBCDiskCacheFactory.ATTRIBUTE_PREFIX;
-        props.put( prefix + ".url", url );
-        props.put( prefix + ".userName", userName );
-        props.put( prefix + ".password", password );
-        props.put( prefix + ".maxActive", String.valueOf( maxActive ) );
-        props.put( prefix + ".driverClassName", driverClassName );
+        props.put( prefix + ".url", "jdbc:hsqldb:target/cache_hsql_db" );
+        props.put( prefix + ".userName", "sa" );
+        props.put( prefix + ".password", "" );
+        props.put( prefix + ".maxActive", String.valueOf(10) );
+        props.put( prefix + ".driverClassName", "org.hsqldb.jdbcDriver" );
 
         final JDBCDiskCacheAttributes cattr = new JDBCDiskCacheAttributes();
         cattr.setConnectionPoolName( poolName );
@@ -189,16 +164,9 @@ public class JDBCDiskCacheUnitTest
         assertNotNull( "Should have a data source factory class", result );
         assertEquals( "wrong name", poolName, result.getName() );
 
-        System.setProperty( "hsqldb.cache_scale", "8" );
 
-        final String rafroot = "target";
-        final String database = rafroot + "/cache_hsql_db";
-
-        new org.hsqldb.jdbcDriver();
-        Class.forName( driverClassName ).newInstance();
-        final Connection cConn = DriverManager.getConnection( url + database, userName, password );
-
-        HsqlSetupTableUtil.setupTABLE( cConn, "JCSTESTTABLE_InitializePoolAccess" );
+        final Connection cConn = result.getDataSource().getConnection();
+        HsqlSetupUtil.setupTable( cConn, cattr.getTableName());
 
     }
 }

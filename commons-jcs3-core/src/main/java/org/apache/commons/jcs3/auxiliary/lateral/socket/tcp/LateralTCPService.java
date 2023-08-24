@@ -19,10 +19,7 @@ package org.apache.commons.jcs3.auxiliary.lateral.socket.tcp;
  * under the License.
  */
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -38,7 +35,6 @@ import org.apache.commons.jcs3.engine.behavior.ICacheServiceNonLocal;
 import org.apache.commons.jcs3.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs3.log.Log;
 import org.apache.commons.jcs3.log.LogManager;
-import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
 
 /**
  * A lateral cache service implementation. Does not implement getGroupKey
@@ -60,21 +56,6 @@ public class LateralTCPService<K, V>
 
     /** use the vmid by default */
     private long listenerId = CacheInfo.listenerId;
-
-    /**
-     * Constructor for the LateralTCPService object
-     * <p>
-     * @param lca ITCPLateralCacheAttributes the configuration object
-     * @throws IOException
-     *
-     * @deprecated Specify serializer
-     */
-    @Deprecated
-    public LateralTCPService( final ITCPLateralCacheAttributes lca )
-        throws IOException
-    {
-        this(lca, new StandardSerializer());
-    }
 
     /**
      * Constructor for the LateralTCPService object
@@ -399,47 +380,6 @@ public class LateralTCPService<K, V>
         final LateralElementDescriptor<String, String> led =
                 new LateralElementDescriptor<>(ce, LateralCommand.REMOVEALL, requesterId);
         sender.send( led );
-    }
-
-    /**
-     * Test
-     * @param args
-     *
-     * @deprecated Use unit tests
-     */
-    @Deprecated
-    public static void main( final String args[] )
-    {
-        try
-        {
-            final LateralTCPSender sender = new LateralTCPSender( new TCPLateralCacheAttributes() );
-
-            // process user input till done
-            boolean notDone = true;
-            String message = null;
-            // wait to dispose
-            final BufferedReader br = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8));
-
-            while ( notDone )
-            {
-                System.out.println( "enter message:" );
-                message = br.readLine();
-
-                if (message == null)
-                {
-                    notDone = false;
-                    continue;
-                }
-
-                final CacheElement<String, String> ce = new CacheElement<>( "test", "test", message );
-                final LateralElementDescriptor<String, String> led = new LateralElementDescriptor<>( ce );
-                sender.send( led );
-            }
-        }
-        catch ( final IOException e )
-        {
-            System.out.println( e.toString() );
-        }
     }
 
     /**

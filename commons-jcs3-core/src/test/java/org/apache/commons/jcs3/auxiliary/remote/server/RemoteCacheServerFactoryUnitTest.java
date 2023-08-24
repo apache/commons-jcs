@@ -89,21 +89,6 @@ public class RemoteCacheServerFactoryUnitTest
         assertEquals( "Wrong useRegistryKeepAlive", useRegistryKeepAlive, result.isUseRegistryKeepAlive() );
     }
 
-    /** verify that we get the startRegistry value */
-    public void testConfigureRemoteCacheServerAttributes_startRegistryPresent()
-    {
-        // SETUP
-        final boolean startRegistry = false;
-        final Properties props = new Properties();
-        props.put( IRemoteCacheConstants.CACHE_SERVER_ATTRIBUTES_PROPERTY_PREFIX + ".startRegistry", String.valueOf( startRegistry ) );
-
-        // DO WORK
-        final RemoteCacheServerAttributes result = RemoteCacheServerFactory.configureRemoteCacheServerAttributes( props );
-
-        // VERIFY
-        assertEquals( "Wrong startRegistry", startRegistry, result.isStartRegistry() );
-    }
-
     /** verify that we get the registryKeepAliveDelayMillis value */
     public void testConfigureRemoteCacheServerAttributes_rmiSocketFactoryTimeoutMillisPresent()
     {

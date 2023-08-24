@@ -48,19 +48,6 @@ public class LateralCacheMonitor extends AbstractAuxiliaryCacheMonitor
     private final LateralTCPCacheFactory factory;
 
     /**
-     * Allows close classes, ie testers to set the idle period to something testable.
-     * <p>
-     * @param idlePeriod
-     * 
-     * @deprecated Use setIdlePeriod()
-     */
-    @Deprecated
-    protected static void forceShortIdlePeriod( final long idlePeriod )
-    {
-        LateralCacheMonitor.setIdlePeriod(idlePeriod);
-    }
-
-    /**
      * Constructor for the LateralCacheMonitor object
      * <p>
      * It's the clients responsibility to decide how many of these there will be.

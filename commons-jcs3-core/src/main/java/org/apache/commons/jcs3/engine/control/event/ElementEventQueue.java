@@ -96,41 +96,4 @@ public class ElementEventQueue
             queueProcessor.execute(() -> hand.handleElementEvent(event));
         }
     }
-
-    // /////////////////////////// Inner classes /////////////////////////////
-
-    /**
-     * Retries before declaring failure.
-     * @deprecated No longer used
-     */
-    @Deprecated
-    protected abstract class AbstractElementEventRunner
-        implements Runnable
-    {
-        /**
-         * Main processing method for the AbstractElementEvent object
-         */
-        @Override
-        public void run()
-        {
-            try
-            {
-                doRun();
-                // happy and done.
-            }
-            catch ( final IOException e )
-            {
-                // Too bad. The handler has problems.
-                log.warn( "Giving up element event handling {0}", ElementEventQueue.this, e );
-            }
-        }
-
-        /**
-         * This will do the work or trigger the work to be done.
-         * <p>
-         * @throws IOException
-         */
-        protected abstract void doRun()
-            throws IOException;
-    }
 }

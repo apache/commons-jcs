@@ -27,7 +27,6 @@ import org.apache.commons.jcs3.engine.behavior.IElementAttributes;
 
 /** Either serialized value or the value should be null; */
 public class CacheElementSerialized<K, V>
-    extends CacheElement<K, V>
     implements ICacheElementSerialized<K, V>
 {
     /** Don't change. */
@@ -35,6 +34,18 @@ public class CacheElementSerialized<K, V>
 
     /** The serialized value. */
     private final byte[] serializedValue;
+
+    /** The name of the cache region. This is a namespace. */
+    private final String cacheName;
+
+    /** This is the cache key by which the value can be referenced. */
+    private final K key;
+
+    /**
+     * These attributes hold information about the element and what it is
+     * allowed to do.
+     */
+    private IElementAttributes attr;
 
     /**
      * Constructs a usable wrapper.
@@ -44,11 +55,76 @@ public class CacheElementSerialized<K, V>
      * @param serializedValueArg
      * @param elementAttributesArg
      */
-    public CacheElementSerialized( final String cacheNameArg, final K keyArg, final byte[] serializedValueArg,
-                                   final IElementAttributes elementAttributesArg )
+    public CacheElementSerialized( final String cacheName, final K key, final byte[] serializedValue,
+                                   final IElementAttributes elementAttributes)
     {
-        super(cacheNameArg, keyArg, null, elementAttributesArg);
-        this.serializedValue = serializedValueArg;
+        this.cacheName = cacheName;
+        this.key = key;
+        this.serializedValue = serializedValue;
+        this.attr = elementAttributes;
+    }
+
+    /**
+     * Gets the cacheName attribute of the CacheElement object
+     * <p>
+     * @return The cacheName value
+     */
+    @Override
+    public String getCacheName()
+    {
+        return this.cacheName;
+    }
+
+    /**
+     * Gets the key attribute of the CacheElement object
+     * <p>
+     * @return The key value
+     */
+    @Override
+    public K getKey()
+    {
+        return this.key;
+    }
+
+    /**
+     * Gets the val attribute of the CacheElement object
+     * <p>
+     * @return The val value
+     */
+    @Override
+    public V getVal()
+    {
+        return null;
+    }
+
+    /**
+     * Sets the attributes attribute of the CacheElement object
+     * <p>
+     * @param attr
+     *            The new IElementAttributes value
+     */
+    @Override
+    public void setElementAttributes( final IElementAttributes attr )
+    {
+        this.attr = attr;
+    }
+
+    /**
+     * Gets the IElementAttributes attribute of the CacheElement object
+     * <p>
+     * @return The IElementAttributes value, never null
+     */
+    @Override
+    public IElementAttributes getElementAttributes()
+    {
+        // create default attributes if they are null
+        // this shouldn't happen, but could if a corrupt
+        // object was sent over the wire.
+        if ( this.attr == null )
+        {
+            this.attr = new ElementAttributes();
+        }
+        return this.attr;
     }
 
     /** @return byte[] */

@@ -21,12 +21,10 @@ package org.apache.commons.jcs3.auxiliary.disk.indexed;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.Serializable;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -175,7 +173,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
         // Make a clean file name
         this.fileName = getCacheName().replaceAll("[^a-zA-Z0-9-_\\.]", "_");
         this.keyHash = createInitialKeyMap();
-        this.queuedPutList = new ConcurrentSkipListSet<>(new PositionComparator());
+        this.queuedPutList = new ConcurrentSkipListSet<>((ded1, ded2) -> Long.compare(ded1.pos, ded2.pos));
         this.recycle = new ConcurrentSkipListSet<>();
 
         try
@@ -1469,30 +1467,6 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
     protected String getDiskLocation()
     {
         return dataFile.getFilePath();
-    }
-
-    /**
-     * Compares IndexedDiskElementDescriptor based on their position.
-     * <p>
-     * @deprecated Use lambda instead
-     */
-    @Deprecated
-    protected static final class PositionComparator implements Comparator<IndexedDiskElementDescriptor>, Serializable
-    {
-        /** serialVersionUID */
-        private static final long serialVersionUID = -8387365338590814113L;
-
-        /**
-         * Compares two descriptors based on position.
-         * <p>
-         *
-         * @see java.util.Comparator#compare(Object, Object)
-         */
-        @Override
-        public int compare(final IndexedDiskElementDescriptor ded1, final IndexedDiskElementDescriptor ded2)
-        {
-            return Long.compare(ded1.pos, ded2.pos);
-        }
     }
 
     /**

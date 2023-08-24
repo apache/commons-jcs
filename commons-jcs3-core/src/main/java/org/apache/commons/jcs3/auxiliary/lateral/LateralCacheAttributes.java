@@ -187,30 +187,6 @@ public class LateralCacheAttributes
     }
 
     /**
-     * Sets the transmissionTypeName attribute of the LateralCacheAttributes object
-     * @param val The new transmissionTypeName value
-     * @deprecated
-     */
-    @Override
-    @Deprecated
-    public void setTransmissionTypeName( final String val )
-    {
-        this.transmissionType = Type.valueOf(val);
-    }
-
-    /**
-     * Gets the transmissionTypeName attribute of the LateralCacheAttributes object
-     * @return The transmissionTypeName value
-     * @deprecated
-     */
-    @Override
-    @Deprecated
-    public String getTransmissionTypeName()
-    {
-        return this.transmissionType.toString();
-    }
-
-    /**
      * Sets the outgoingOnlyMode attribute of the ILateralCacheAttributes. When this is true the
      * lateral cache will only issue put and remove order and will not try to retrieve elements from
      * other lateral caches.

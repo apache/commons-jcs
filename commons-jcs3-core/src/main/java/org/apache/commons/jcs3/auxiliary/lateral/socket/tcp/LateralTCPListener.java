@@ -20,11 +20,7 @@ package org.apache.commons.jcs3.auxiliary.lateral.socket.tcp;
  */
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.InetSocketAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
 import java.net.SocketAddress;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
@@ -47,7 +43,6 @@ import org.apache.commons.jcs3.engine.behavior.IShutdownObserver;
 import org.apache.commons.jcs3.engine.control.CompositeCache;
 import org.apache.commons.jcs3.log.Log;
 import org.apache.commons.jcs3.log.LogManager;
-import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
 
 /**
  * Listens for connections from other TCP lateral caches and handles them. The initialization method
@@ -102,33 +97,6 @@ public class LateralTCPListener<K, V>
     /** is this terminated? */
     private final AtomicBoolean terminated = new AtomicBoolean();
 
-    /**
-     * Gets the instance attribute of the LateralCacheTCPListener class.
-     * <p>
-     * @param ilca ITCPLateralCacheAttributes
-     * @param cacheMgr
-     * @return The instance value
-     * @deprecated Specify serializer
-     */
-    @Deprecated
-    @SuppressWarnings("unchecked") // Need to cast because of common map for all instances
-    public static <K, V> LateralTCPListener<K, V>
-        getInstance( final ITCPLateralCacheAttributes ilca, final ICompositeCacheManager cacheMgr)
-    {
-        return (LateralTCPListener<K, V>) instances.computeIfAbsent(
-                String.valueOf( ilca.getTcpListenerPort() ),
-                k -> {
-                    final LateralTCPListener<K, V> newIns = new LateralTCPListener<>( ilca, new StandardSerializer() );
-
-                    newIns.init();
-                    newIns.setCacheManager( cacheMgr );
-
-                    log.info("Created new listener {0}", ilca::getTcpListenerPort);
-
-                    return newIns;
-                });
-    }
-    
     /**
      * Gets the instance attribute of the LateralCacheTCPListener class.
      * <p>
@@ -470,36 +438,6 @@ public class LateralTCPListener<K, V>
     /**
      * Processes commands from the server socket. There should be one listener for each configured
      * TCP lateral.
-     * @deprecated No longer used
-     */
-    @Deprecated
-    public class ListenerThread
-        extends Thread
-    {
-        /** The socket listener */
-        private final ServerSocket serverSocket;
-
-        /**
-         * Constructor
-         *
-         * @param serverSocket
-         */
-        public ListenerThread(final ServerSocket serverSocket)
-        {
-            this.serverSocket = serverSocket;
-        }
-
-        /** Main processing method for the ListenerThread object */
-        @Override
-        public void run()
-        {
-            runListener(serverSocket.getChannel());
-        }
-    }
-
-    /**
-     * Processes commands from the server socket. There should be one listener for each configured
-     * TCP lateral.
      */
     private void runListener(final ServerSocketChannel serverSocket)
     {
@@ -583,74 +521,6 @@ public class LateralTCPListener<K, V>
             catch (IOException e)
             {
                 log.error( "Exception closing TCP listener", e );
-            }
-        }
-    }
-
-    /**
-     * A Separate thread that runs when a command comes into the LateralTCPReceiver.
-     * @deprecated No longer used
-     */
-    @Deprecated
-    public class ConnectionHandler
-        implements Runnable
-    {
-        /** The socket connection, passed in via constructor */
-        private final Socket socket;
-
-        /**
-         * Construct for a given socket
-         * @param socket
-         */
-        public ConnectionHandler( final Socket socket )
-        {
-            this.socket = socket;
-        }
-
-        /**
-         * Main processing method for the LateralTCPReceiverConnection object
-         */
-        @Override
-        public void run()
-        {
-            try (InputStream is = socket.getInputStream())
-            {
-                while ( true )
-                {
-                    final LateralElementDescriptor<K, V> led =
-                            serializer.deSerializeFrom(is, null);
-
-                    if ( led == null )
-                    {
-                        log.debug( "LateralElementDescriptor is null" );
-                        continue;
-                    }
-                    if ( led.getRequesterId() == getListenerId() )
-                    {
-                        log.debug( "from self" );
-                    }
-                    else
-                    {
-                        log.debug( "receiving LateralElementDescriptor from another led = {0}",
-                                led );
-
-                        Object obj = handleElement(led);
-                        if (obj != null)
-                        {
-                            OutputStream os = socket.getOutputStream();
-                            serializer.serializeTo(obj, os);
-                            os.flush();
-                        }
-                    }
-                }
-            }
-            catch (final IOException e)
-            {
-                log.info("Caught {0}, closing connection.", e.getClass().getSimpleName(), e);
-            }
-            catch (final ClassNotFoundException e)
-            {
-                log.error( "Deserialization failed reading from socket", e );
             }
         }
     }

@@ -23,15 +23,13 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.util.Properties;
 
-import org.apache.commons.jcs3.utils.timing.SleepUtil;
 import org.apache.commons.jcs3.JCS;
 import org.apache.commons.jcs3.access.CacheAccess;
 import org.apache.commons.jcs3.access.exception.CacheException;
+import org.apache.commons.jcs3.utils.timing.SleepUtil;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -40,37 +38,17 @@ import org.junit.Test;
 public class JDBCDiskCacheShrinkUnitTest
 {
     /**
-     * Creates the DB
-     *
+     * Test setup
      * @throws Exception
      */
-    @BeforeClass
-    public static void setupDatabase() throws Exception
-    {
-        System.setProperty( "hsqldb.cache_scale", "8" );
-
-        final String rafroot = "target";
-        final Properties p = new Properties();
-        final String driver = p.getProperty( "driver", "org.hsqldb.jdbcDriver" );
-        final String url = p.getProperty( "url", "jdbc:hsqldb:" );
-        final String database = p.getProperty( "database", rafroot + "/JDBCDiskCacheShrinkUnitTest" );
-        final String user = p.getProperty( "user", "sa" );
-        final String password = p.getProperty( "password", "" );
-
-        new org.hsqldb.jdbcDriver();
-        Class.forName( driver ).newInstance();
-        final Connection cConn = DriverManager.getConnection( url + database, user, password );
-
-        HsqlSetupTableUtil.setupTABLE( cConn, "JCS_STORE_SHRINK" );
-    }
-
-    /**
-     * Test setup
-     */
     @Before
-    public void setUp()
+    public void setUp() throws Exception
     {
         JCS.setConfigFilename( "/TestJDBCDiskCacheShrink.ccf" );
+        try (Connection con = HsqlSetupUtil.getTestDatabaseConnection(new Properties(), getClass().getSimpleName()))
+        {
+            HsqlSetupUtil.setupTable(con, "JCS_STORE_SHRINK");
+        }
     }
 
     /**
@@ -88,24 +66,17 @@ public class JDBCDiskCacheShrinkUnitTest
 
         final CacheAccess<String, String> jcsExpire = JCS.getInstance( regionExpire );
 
-//        System.out.println( "BEFORE PUT \n" + jcsExpire.getStats() );
-
         // Add items to cache
-
-        for ( int i = 0; i <= items; i++ )
+        for ( int i = 0; i < items; i++ )
         {
             jcsExpire.put( i + ":key", regionExpire + " data " + i );
         }
 
-//        System.out.println( jcsExpire.getStats() );
-
         // the shrinker is supposed to run every second
         SleepUtil.sleepAtLeast( 3000 );
 
-//        System.out.println( jcsExpire.getStats() );
-
         // Test that all items have been removed from the cache
-        for ( int i = 0; i <= items; i++ )
+        for ( int i = 0; i < items; i++ )
         {
             assertNull( "Removed key should be null: " + i + ":key", jcsExpire.get( i + ":key" ) );
         }
@@ -126,24 +97,16 @@ public class JDBCDiskCacheShrinkUnitTest
 
         final CacheAccess<String, String> jcs = JCS.getInstance( region );
 
-//        System.out.println( "BEFORE PUT \n" + jcs.getStats() );
-
         // Add items to cache
-
-        for ( int i = 0; i <= items; i++ )
+        for ( int i = 0; i < items; i++ )
         {
             jcs.put( i + ":key", region + " data " + i );
         }
 
-//        System.out.println( jcs.getStats() );
-
         SleepUtil.sleepAtLeast( 1000 );
 
-//        System.out.println( jcs.getStats() );
-
         // Test that all items are in cache
-
-        for ( int i = 0; i <= items; i++ )
+        for ( int i = 0; i < items; i++ )
         {
             final String value = jcs.get( i + ":key" );
 
@@ -151,15 +114,13 @@ public class JDBCDiskCacheShrinkUnitTest
         }
 
         // Remove all the items
-
-        for ( int i = 0; i <= items; i++ )
+        for ( int i = 0; i < items; i++ )
         {
             jcs.remove( i + ":key" );
         }
 
         // Verify removal
-
-        for ( int i = 0; i <= items; i++ )
+        for ( int i = 0; i < items; i++ )
         {
             assertNull( "Removed key should be null: " + i + ":key", jcs.get( i + ":key" ) );
         }
@@ -179,24 +140,16 @@ public class JDBCDiskCacheShrinkUnitTest
 
         final CacheAccess<String, String> jcs = JCS.getInstance( region );
 
-//        System.out.println( "BEFORE PUT \n" + jcs.getStats() );
-
         // Add items to cache
-
-        for ( int i = 0; i <= items; i++ )
+        for ( int i = 0; i < items; i++ )
         {
             jcs.put( i + ":key", region + " data " + i );
         }
 
-//        System.out.println( jcs.getStats() );
-
         SleepUtil.sleepAtLeast( 1000 );
 
-//        System.out.println( jcs.getStats() );
-
         // Test that all items are in cache
-
-        for ( int i = 0; i <= items; i++ )
+        for ( int i = 0; i < items; i++ )
         {
             final String value = jcs.get( i + ":key" );
 
@@ -204,15 +157,13 @@ public class JDBCDiskCacheShrinkUnitTest
         }
 
         // Remove all the items
-
-        for ( int i = 0; i <= items; i++ )
+        for ( int i = 0; i < items; i++ )
         {
             jcs.remove( i + ":key" );
         }
 
         // Verify removal
-
-        for ( int i = 0; i <= items; i++ )
+        for ( int i = 0; i < items; i++ )
         {
             assertNull( "Removed key should be null: " + i + ":key", jcs.get( i + ":key" ) );
         }

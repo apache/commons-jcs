@@ -86,24 +86,6 @@ public interface IRemoteCacheServerAttributes
     void setUseRegistryKeepAlive( boolean useRegistryKeepAlive );
 
     /**
-     * Should we start the registry
-     * <p>
-     * @param startRegistry the startRegistry to set
-     * @deprecated Always true, to be removed
-     */
-    @Deprecated
-    void setStartRegistry( boolean startRegistry );
-
-    /**
-     * Should we start the registry
-     * <p>
-     * @return the startRegistry
-     * @deprecated Always true, to be removed
-     */
-    @Deprecated
-    boolean isStartRegistry();
-
-    /**
      * Should we try to keep the registry alive
      * <p>
      * @return the useRegistryKeepAlive

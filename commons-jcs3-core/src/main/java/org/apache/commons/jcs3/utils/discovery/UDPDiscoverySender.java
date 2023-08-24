@@ -19,7 +19,6 @@ package org.apache.commons.jcs3.utils.discovery;
  * under the License.
  */
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
@@ -33,7 +32,6 @@ import org.apache.commons.jcs3.log.Log;
 import org.apache.commons.jcs3.log.LogManager;
 import org.apache.commons.jcs3.utils.discovery.UDPDiscoveryMessage.BroadcastType;
 import org.apache.commons.jcs3.utils.net.HostNameUtil;
-import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
 
 /**
  * This is a generic sender for the UDPDiscovery process.
@@ -54,26 +52,6 @@ public class UDPDiscoverySender implements AutoCloseable
 
     /** Used to serialize messages */
     private final IElementSerializer serializer;
-
-    /**
-     * Constructor for the UDPDiscoverySender object
-     * <p>
-     * This sender can be used to send multiple messages.
-     * <p>
-     * When you are done sending, you should destroy the socket sender.
-     * <p>
-     * @param host
-     * @param port
-     * @param udpTTL the Datagram packet time-to-live
-     * @throws IOException
-     * @deprecated Specify serializer implementation explicitly
-     */
-    @Deprecated
-    public UDPDiscoverySender( final String host, final int port, final int udpTTL )
-        throws IOException
-    {
-        this(null, host, port, udpTTL, new StandardSerializer());
-    }
 
     /**
      * Constructor for the UDPDiscoverySender object
@@ -296,24 +274,5 @@ public class UDPDiscoverySender implements AutoCloseable
         message.setRequesterId( listenerId );
         message.setMessageType( BroadcastType.REMOVE );
         send( message );
-    }
-}
-
-/**
- * This allows us to get the byte array from an output stream.
- *
- * @deprecated No longer used
- */
-@Deprecated
-class MyByteArrayOutputStream
-    extends ByteArrayOutputStream
-{
-    /**
-     * Gets the bytes attribute of the MyByteArrayOutputStream object
-     * @return The bytes value
-     */
-    public byte[] getBytes()
-    {
-        return buf;
     }
 }

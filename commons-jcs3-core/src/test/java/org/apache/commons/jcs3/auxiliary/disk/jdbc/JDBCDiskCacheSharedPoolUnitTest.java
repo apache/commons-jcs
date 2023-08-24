@@ -18,11 +18,7 @@ package org.apache.commons.jcs3.auxiliary.disk.jdbc;
  * specific language governing permissions and limitations
  * under the License.
  */
-
-import junit.framework.TestCase;
-
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
@@ -32,17 +28,26 @@ import org.apache.commons.jcs3.JCS;
 import org.apache.commons.jcs3.access.CacheAccess;
 import org.apache.commons.jcs3.engine.behavior.ICacheElement;
 
+import junit.framework.TestCase;
+
 /**
  * Runs basic tests for the JDBC disk cache using a shared connection pool.
  */
 public class JDBCDiskCacheSharedPoolUnitTest
     extends TestCase
 {
-    /** Test setup */
+    /** Test setup
+     * @throws Exception
+     */
     @Override
-    public void setUp()
+    public void setUp() throws Exception
     {
         JCS.setConfigFilename( "/TestJDBCDiskCacheSharedPool.ccf" );
+        try (Connection con = HsqlSetupUtil.getTestDatabaseConnection(new Properties(), "cache_hsql_db_sharedpool"))
+        {
+            HsqlSetupUtil.setupTable(con, "JCS_STORE_0");
+            HsqlSetupUtil.setupTable(con, "JCS_STORE_1");
+        }
     }
 
     /**
@@ -52,24 +57,6 @@ public class JDBCDiskCacheSharedPoolUnitTest
     public void testSimpleJDBCPutGetWithHSQL()
         throws Exception
     {
-        System.setProperty( "hsqldb.cache_scale", "8" );
-
-        final String rafroot = "target";
-        final Properties p = new Properties();
-        final String driver = p.getProperty( "driver", "org.hsqldb.jdbcDriver" );
-        final String url = p.getProperty( "url", "jdbc:hsqldb:" );
-        final String database = p.getProperty( "database", rafroot + "/cache_hsql_db_sharedpool" );
-        final String user = p.getProperty( "user", "sa" );
-        final String password = p.getProperty( "password", "" );
-
-        new org.hsqldb.jdbcDriver();
-        Class.forName( driver ).newInstance();
-        final Connection cConn = DriverManager.getConnection( url + database, user, password );
-
-        HsqlSetupTableUtil.setupTABLE( cConn, "JCS_STORE_0" );
-
-        HsqlSetupTableUtil.setupTABLE( cConn, "JCS_STORE_1" );
-
         runTestForRegion( "testCache1", 200 );
     }
 
@@ -95,14 +82,9 @@ public class JDBCDiskCacheSharedPoolUnitTest
             jcs.put( i + ":key", region + " data " + i );
         }
 
-//        System.out.println( jcs.getStats() );
-
         Thread.sleep( 1000 );
 
-//        System.out.println( jcs.getStats() );
-
         // Test that all items are in cache
-
         for ( int i = 0; i <= items; i++ )
         {
             final String value = jcs.get( i + ":key" );

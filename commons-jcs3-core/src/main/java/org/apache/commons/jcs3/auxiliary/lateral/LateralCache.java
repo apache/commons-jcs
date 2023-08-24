@@ -74,19 +74,6 @@ public class LateralCache<K, V>
     }
 
     /**
-     * Constructor for the LateralCache object
-     * <p>
-     * @param cattr
-     *
-     * @deprecated Causes NPE
-     */
-    @Deprecated
-    public LateralCache( final ILateralCacheAttributes cattr )
-    {
-        this(cattr, null, null);
-    }
-
-    /**
      * Update lateral.
      * <p>
      * @param ce

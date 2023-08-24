@@ -41,12 +41,6 @@ public class RemoteCacheServerAttributes
     /** The config file, the initialization is multistage. Remote cache then composite cache. */
     private String configFileName = "";
 
-    /** Should we start the registry */
-    private final static boolean DEFAULT_START_REGISTRY = true;
-
-    /** Should we start the registry */
-    private boolean startRegistry = DEFAULT_START_REGISTRY;
-
     /** Should we try to keep the registry alive */
     private final static boolean DEFAULT_USE_REGISTRY_KEEP_ALIVE = true;
 
@@ -136,32 +130,6 @@ public class RemoteCacheServerAttributes
     public void setUseRegistryKeepAlive( final boolean useRegistryKeepAlive )
     {
         this.useRegistryKeepAlive = useRegistryKeepAlive;
-    }
-
-    /**
-     * Should we start the registry
-     * <p>
-     * @param startRegistry the startRegistry to set
-     * @deprecated Always true, to be removed
-     */
-    @Deprecated
-    @Override
-    public void setStartRegistry( final boolean startRegistry )
-    {
-        this.startRegistry = startRegistry;
-    }
-
-    /**
-     * Should we start the registry
-     * <p>
-     * @return the startRegistry
-     * @deprecated Always true, to be removed
-     */
-    @Deprecated
-    @Override
-    public boolean isStartRegistry()
-    {
-        return startRegistry;
     }
 
     /**

@@ -1,7 +1,5 @@
 package org.apache.commons.jcs3.auxiliary.disk;
 
-import java.util.Objects;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -21,7 +19,8 @@ import java.util.Objects;
  * under the License.
  */
 
-import org.apache.commons.jcs3.engine.CacheElement;
+import java.util.Objects;
+
 import org.apache.commons.jcs3.engine.behavior.ICacheElement;
 import org.apache.commons.jcs3.engine.behavior.IElementAttributes;
 
@@ -32,8 +31,7 @@ import org.apache.commons.jcs3.engine.behavior.IElementAttributes;
  * been written to disk.
  */
 public class PurgatoryElement<K, V>
-    extends CacheElement<K, V> // Remove this superclass in next major release
-//    implements ICacheElement<K, V>
+    implements ICacheElement<K, V>
 {
     /** Don't change */
     private static final long serialVersionUID = -8152034342684135628L;
@@ -51,7 +49,6 @@ public class PurgatoryElement<K, V>
      */
     public PurgatoryElement( final ICacheElement<K, V> cacheElement )
     {
-        super(cacheElement.getCacheName(), cacheElement.getKey(), cacheElement.getVal());
         this.cacheElement = cacheElement;
     }
 

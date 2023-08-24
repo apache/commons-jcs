@@ -44,7 +44,6 @@ import org.apache.commons.jcs3.log.Log;
 import org.apache.commons.jcs3.log.LogManager;
 import org.apache.commons.jcs3.utils.discovery.UDPDiscoveryManager;
 import org.apache.commons.jcs3.utils.discovery.UDPDiscoveryService;
-import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
 
 /**
  * Constructs a LateralCacheNoWaitFacade for the given configuration. Each lateral service / local
@@ -211,23 +210,6 @@ public class LateralTCPCacheFactory
             }
             this.monitor = null;
         }
-    }
-
-    /**
-     * Returns an instance of the cache service.
-     * <p>
-     * @param <K> cache key type
-     * @param <V> cache value type
-     * @param lca configuration for the creation of a new service instance
-     *
-     * @return ICacheServiceNonLocal&lt;K, V&gt;
-     *
-     * @deprecated Specify serializer
-     */
-    @Deprecated
-    public <K, V> ICacheServiceNonLocal<K, V> getCSNLInstance( final ITCPLateralCacheAttributes lca )
-    {
-        return getCSNLInstance(lca, new StandardSerializer());
     }
 
     /**

@@ -21,7 +21,6 @@ package org.apache.commons.jcs3.auxiliary.lateral;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -59,13 +58,6 @@ public class LateralCacheNoWaitFacade<K, V>
 
     /**
      * The queuing facade to the client.
-     * @deprecated Should not have been public in the first place
-     */
-    @Deprecated
-    public LateralCacheNoWait<K, V>[] noWaits;
-
-    /**
-     * The queuing facade to the client.
      */
     private final ConcurrentHashMap<String, LateralCacheNoWait<K, V>> noWaitMap;
 
@@ -85,32 +77,15 @@ public class LateralCacheNoWaitFacade<K, V>
      * Constructs with the given lateral cache, and fires events to any listeners.
      * <p>
      * @param listener the cache listener
-     * @param noWaits the array of noWaits
-     * @param cattr the configuration
-     *
-     * @deprecated Use list constructor
-     */
-    @Deprecated
-    public LateralCacheNoWaitFacade(final ILateralCacheListener<K, V> listener, final LateralCacheNoWait<K, V>[] noWaits, final ILateralCacheAttributes cattr )
-    {
-        this(listener, Arrays.asList(noWaits), cattr);
-    }
-
-    /**
-     * Constructs with the given lateral cache, and fires events to any listeners.
-     * <p>
-     * @param listener the cache listener
      * @param noWaits the list of noWaits
      * @param cattr the configuration
      * @since 3.1
      */
-    @SuppressWarnings("unchecked") // No generic arrays in java
     public LateralCacheNoWaitFacade(final ILateralCacheListener<K, V> listener,
             final List<LateralCacheNoWait<K, V>> noWaits, final ILateralCacheAttributes cattr )
     {
         log.debug( "CONSTRUCTING NO WAIT FACADE" );
         this.listener = listener;
-        this.noWaits = noWaits.toArray(new LateralCacheNoWait[0]);
         this.noWaitMap = new ConcurrentHashMap<>();
         noWaits.forEach(noWait -> noWaitMap.put(noWait.getIdentityKey(), noWait));
         this.cacheName = cattr.getCacheName();
@@ -158,7 +133,6 @@ public class LateralCacheNoWaitFacade<K, V>
      * @param noWait
      * @return true if it wasn't already contained
      */
-    @SuppressWarnings("unchecked") // No generic arrays in Java
     public synchronized boolean addNoWait( final LateralCacheNoWait<K, V> noWait )
     {
         if ( noWait == null )
@@ -174,8 +148,6 @@ public class LateralCacheNoWaitFacade<K, V>
             log.debug( "No Wait already contained, [{0}]", noWait );
             return false;
         }
-
-        noWaits = noWaitMap.values().toArray(new LateralCacheNoWait[0]);
 
         return true;
     }
@@ -204,7 +176,6 @@ public class LateralCacheNoWaitFacade<K, V>
      * @return true if it was already in the array
      * @since 3.1
      */
-    @SuppressWarnings("unchecked") // No generic arrays in java
     public synchronized boolean removeNoWait(final String tcpServer)
     {
         if (tcpServer == null)
@@ -213,7 +184,6 @@ public class LateralCacheNoWaitFacade<K, V>
         }
 
         final LateralCacheNoWait<K,V> contained = noWaitMap.remove(tcpServer);
-        noWaits = noWaitMap.values().toArray(new LateralCacheNoWait[0]);
 
         if (contained != null)
         {

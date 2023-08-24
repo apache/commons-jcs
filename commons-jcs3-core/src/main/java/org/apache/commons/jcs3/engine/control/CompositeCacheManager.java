@@ -22,7 +22,6 @@ package org.apache.commons.jcs3.engine.control;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.management.ManagementFactory;
-import java.security.AccessControlException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
@@ -252,7 +251,7 @@ public class CompositeCacheManager
             {
                 Runtime.getRuntime().addShutdownHook( shutdownHook );
             }
-            catch ( final AccessControlException e )
+            catch ( final SecurityException e )
             {
                 log.error( "Could not register shutdown hook.", e );
             }

@@ -44,7 +44,6 @@ import org.apache.commons.jcs3.log.Log;
 import org.apache.commons.jcs3.log.LogManager;
 import org.apache.commons.jcs3.utils.discovery.behavior.IDiscoveryListener;
 import org.apache.commons.jcs3.utils.net.HostNameUtil;
-import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
 
 /**
  * This service creates a listener that can create lateral caches and add them to the no wait list.
@@ -91,18 +90,6 @@ public class UDPDiscoveryService
 
     /** Handle to cancel the scheduled cleanup task */
     private ScheduledFuture<?> cleanupTaskFuture;
-
-    /**
-     * Constructor
-     *
-     * @param attributes settings of the service
-     * @deprecated Specify serializer implementation explicitly
-     */
-    @Deprecated
-    public UDPDiscoveryService(final UDPDiscoveryAttributes attributes)
-    {
-        this(attributes, new StandardSerializer());
-    }
 
     /**
      * Constructor
