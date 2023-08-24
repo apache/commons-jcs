@@ -201,10 +201,11 @@ public class JDBCDiskCache<K, V>
     private boolean insertRow( final ICacheElement<K, V> ce, final Connection con, final byte[] element )
     {
         boolean exists = false;
-        final String sqlI = String.format("insert into %s"
-                + " (CACHE_KEY, REGION, ELEMENT, MAX_LIFE_SECONDS, IS_ETERNAL, CREATE_TIME, UPDATE_TIME_SECONDS,"
-                + " SYSTEM_EXPIRE_TIME_SECONDS) "
-                + " values (?, ?, ?, ?, ?, ?, ?, ?)", getJdbcDiskCacheAttributes().getTableName());
+        final String sqlI = String.format("""
+        	insert into %s\
+        	 (CACHE_KEY, REGION, ELEMENT, MAX_LIFE_SECONDS, IS_ETERNAL, CREATE_TIME, UPDATE_TIME_SECONDS,\
+        	 SYSTEM_EXPIRE_TIME_SECONDS)\s\
+        	 values (?, ?, ?, ?, ?, ?, ?, ?)""", getJdbcDiskCacheAttributes().getTableName());
 
         try (PreparedStatement psInsert = con.prepareStatement( sqlI ))
         {
@@ -255,9 +256,11 @@ public class JDBCDiskCache<K, V>
      */
     private void updateRow( final ICacheElement<K, V> ce, final Connection con, final byte[] element )
     {
-        final String sqlU = String.format("update %s"
-                + " set ELEMENT  = ?, CREATE_TIME = ?, UPDATE_TIME_SECONDS = ?, " + " SYSTEM_EXPIRE_TIME_SECONDS = ? "
-                + " where CACHE_KEY = ? and REGION = ?", getJdbcDiskCacheAttributes().getTableName());
+        final String sqlU = String.format("""
+        	update %s\
+        	 set ELEMENT  = ?, CREATE_TIME = ?, UPDATE_TIME_SECONDS = ?,\s\
+        	 SYSTEM_EXPIRE_TIME_SECONDS = ?\s\
+        	 where CACHE_KEY = ? and REGION = ?""", getJdbcDiskCacheAttributes().getTableName());
 
         try (PreparedStatement psUpdate = con.prepareStatement( sqlU ))
         {

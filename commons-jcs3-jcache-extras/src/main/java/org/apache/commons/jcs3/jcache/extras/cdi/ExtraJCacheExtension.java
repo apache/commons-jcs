@@ -41,12 +41,7 @@ public class ExtraJCacheExtension implements Extension
 
     public <A> void processBean(final @Observes ProcessBean<A> processBeanEvent)
     {
-        if (!ACTIVATED)
-        {
-            return;
-        }
-
-        if (cacheManagerFound && cacheProviderFound)
+        if (!ACTIVATED || (cacheManagerFound && cacheProviderFound))
         {
             return;
         }
@@ -69,12 +64,7 @@ public class ExtraJCacheExtension implements Extension
 
     public void addJCacheBeans(final @Observes AfterBeanDiscovery afterBeanDiscovery)
     {
-        if (!ACTIVATED)
-        {
-            return;
-        }
-
-        if (cacheManagerFound && cacheProviderFound) {
+        if (!ACTIVATED || (cacheManagerFound && cacheProviderFound)) {
             return;
         }
 

@@ -44,7 +44,7 @@ public class JCSWorkerUnitTest
         final JCSWorker<String, Long> cachingWorker = new JCSWorker<>( "example region" );
 
         // This is the helper.
-        final JCSWorkerHelper<Long> helper = new AbstractJCSWorkerHelper<Long>()
+        final JCSWorkerHelper<Long> helper = new AbstractJCSWorkerHelper<>()
         {
             int timesCalled;
 

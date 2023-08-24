@@ -254,7 +254,7 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K, V>
     public CacheStatus getStatus()
     {
         return noWaits.stream()
-                .map(nw -> nw.getStatus())
+                .map(RemoteCacheNoWait::getStatus)
                 .filter(status -> status == CacheStatus.ALIVE)
                 .findFirst()
                 .orElse(CacheStatus.DISPOSED);

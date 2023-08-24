@@ -100,7 +100,7 @@ public class TestTCPLateralUnitTest
     {
     	simpleSend(new StandardSerializer(), 8111);
     }
-    
+
     /**
      * @throws Exception
      */
@@ -111,7 +111,7 @@ public class TestTCPLateralUnitTest
     	serializer.setPreSharedKey("my_key");
     	simpleSend(serializer, 8112);
     }
-    
+
     private void simpleSend(final IElementSerializer serializer, final int port ) throws IOException {
     	// SETUP
         // force initialization

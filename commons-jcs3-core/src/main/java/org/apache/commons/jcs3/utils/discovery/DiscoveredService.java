@@ -155,11 +155,7 @@ public class DiscoveredService
 		{
 			return true;
 		}
-		if (otherArg == null)
-		{
-			return false;
-		}
-		if (!(otherArg instanceof DiscoveredService))
+		if ((otherArg == null) || !(otherArg instanceof DiscoveredService))
 		{
 			return false;
 		}

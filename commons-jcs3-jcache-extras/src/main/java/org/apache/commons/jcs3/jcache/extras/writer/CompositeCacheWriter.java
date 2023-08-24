@@ -31,6 +31,7 @@ import java.util.Collection;
 
 public class CompositeCacheWriter<K, V> implements CacheWriter<K, V>, Closeable, Factory<CacheWriter<K, V>>
 {
+    private static final long serialVersionUID = -3305787850424123811L;
     private final CacheWriter<K, V>[] writers;
 
     public CompositeCacheWriter(final CacheWriter<K, V>... writers)

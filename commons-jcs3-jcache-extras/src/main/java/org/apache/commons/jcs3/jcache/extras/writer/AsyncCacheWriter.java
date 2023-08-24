@@ -35,6 +35,8 @@ import java.util.logging.Logger;
 
 public class AsyncCacheWriter<K, V> implements CacheWriter<K, V>, Closeable, Factory<CacheWriter<K, V>>
 {
+    private static final long serialVersionUID = 4135226004268295465L;
+
     private static final Logger LOGGER = Logger.getLogger(AsyncCacheWriter.class.getName());
 
     private final CacheWriter<K, V> writer;

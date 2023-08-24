@@ -19,7 +19,7 @@
 
 package org.apache.commons.jcs3.jcache;
 
-import org.junit.Test;
+import static org.junit.Assert.assertFalse;
 
 import javax.cache.Cache;
 import javax.cache.CacheManager;
@@ -28,10 +28,9 @@ import javax.cache.configuration.FactoryBuilder;
 import javax.cache.configuration.MutableConfiguration;
 import javax.cache.expiry.CreatedExpiryPolicy;
 import javax.cache.expiry.Duration;
-import javax.cache.expiry.ExpiryPolicy;
 import javax.cache.spi.CachingProvider;
 
-import static org.junit.Assert.assertFalse;
+import org.junit.Test;
 
 public class ImmediateExpiryTest
 {
@@ -43,7 +42,7 @@ public class ImmediateExpiryTest
         cacheManager.createCache("default",
                 new MutableConfiguration<>()
                         .setExpiryPolicyFactory(
-                                new FactoryBuilder.SingletonFactory<ExpiryPolicy>(new CreatedExpiryPolicy(Duration.ZERO))));
+                                new FactoryBuilder.SingletonFactory<>(new CreatedExpiryPolicy(Duration.ZERO))));
         final Cache<String, String> cache = cacheManager.getCache("default");
         assertFalse(cache.containsKey("foo"));
         cache.put("foo", "bar");

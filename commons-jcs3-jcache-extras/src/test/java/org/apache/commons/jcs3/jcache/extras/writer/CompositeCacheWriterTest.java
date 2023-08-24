@@ -41,8 +41,10 @@ public class CompositeCacheWriterTest
     private final Map<String, String> copy1 = new HashMap<>();
     private final Map<String, String> copy2 = new HashMap<>();
 
-    private final CacheWriterAdapter<String, String> writer1 = new CacheWriterAdapter<String, String>()
+    private final CacheWriterAdapter<String, String> writer1 = new CacheWriterAdapter<>()
     {
+        private static final long serialVersionUID = -5802177697962311794L;
+
         @Override
         public void write(final Cache.Entry<? extends String, ? extends String> entry) throws CacheWriterException
         {
@@ -55,8 +57,10 @@ public class CompositeCacheWriterTest
             copy1.remove(key);
         }
     };
-    private final CacheWriterAdapter<String, String> writer2 = new CacheWriterAdapter<String, String>()
+    private final CacheWriterAdapter<String, String> writer2 = new CacheWriterAdapter<>()
     {
+        private static final long serialVersionUID = 3495295030098159027L;
+
         @Override
         public void write(final Cache.Entry<? extends String, ? extends String> entry) throws CacheWriterException
         {

@@ -38,7 +38,6 @@ import javax.cache.event.CacheEntryExpiredListener;
 import javax.cache.event.CacheEntryListenerException;
 import javax.cache.expiry.CreatedExpiryPolicy;
 import javax.cache.expiry.Duration;
-import javax.cache.expiry.ExpiryPolicy;
 import javax.cache.spi.CachingProvider;
 
 import org.junit.Test;
@@ -51,7 +50,7 @@ public class ExpiryListenerTest {
         final CacheManager cacheManager = cachingProvider.getCacheManager();
         final CacheEntryExpiredListenerImpl listener = new CacheEntryExpiredListenerImpl();
         cacheManager.createCache("default", new MutableConfiguration<String, String>()
-                .setExpiryPolicyFactory(new FactoryBuilder.SingletonFactory<ExpiryPolicy>(
+                .setExpiryPolicyFactory(new FactoryBuilder.SingletonFactory<>(
                         new CreatedExpiryPolicy(new Duration(TimeUnit.MILLISECONDS, 1))))
                 .addCacheEntryListenerConfiguration(new MutableCacheEntryListenerConfiguration<>(
                         FactoryBuilder.factoryOf(listener),

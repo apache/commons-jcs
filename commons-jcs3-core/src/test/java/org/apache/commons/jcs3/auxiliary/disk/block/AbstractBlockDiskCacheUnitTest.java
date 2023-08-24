@@ -129,7 +129,7 @@ public abstract class AbstractBlockDiskCacheUnitTest extends TestCase
         // get the individual sub arrays.
         final byte[][] chunks = blockDisk.getBlockChunks(data, numBlocksNeeded);
 
-        byte[] resultData = new byte[0];
+        byte[] resultData = {};
 
         for (short i = 0; i < chunks.length; i++)
         {

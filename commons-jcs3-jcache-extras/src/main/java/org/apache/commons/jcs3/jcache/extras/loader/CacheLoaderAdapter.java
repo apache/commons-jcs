@@ -26,6 +26,8 @@ import java.util.Map;
 
 public abstract class CacheLoaderAdapter<K, V> implements CacheLoader<K, V>, Factory<CacheLoader<K, V>>
 {
+    private static final long serialVersionUID = -2683385801194322067L;
+
     @Override
     public Map<K, V> loadAll(final Iterable<? extends K> keys) throws CacheLoaderException
     {

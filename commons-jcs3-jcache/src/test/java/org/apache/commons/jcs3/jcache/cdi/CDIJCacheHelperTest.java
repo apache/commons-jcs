@@ -70,6 +70,7 @@ public class CDIJCacheHelperTest
                 }
             }
 
+            @Override
             public Constructor<?> getConstructor()
             {
                 return null;

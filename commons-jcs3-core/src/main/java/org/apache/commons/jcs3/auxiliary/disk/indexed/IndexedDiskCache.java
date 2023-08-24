@@ -25,6 +25,7 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -173,7 +174,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
         // Make a clean file name
         this.fileName = getCacheName().replaceAll("[^a-zA-Z0-9-_\\.]", "_");
         this.keyHash = createInitialKeyMap();
-        this.queuedPutList = new ConcurrentSkipListSet<>((ded1, ded2) -> Long.compare(ded1.pos, ded2.pos));
+        this.queuedPutList = new ConcurrentSkipListSet<>(Comparator.comparing(ded1 -> ded1.pos));
         this.recycle = new ConcurrentSkipListSet<>();
 
         try
@@ -1250,7 +1251,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
     private Collection<IndexedDiskElementDescriptor> createPositionSortedDescriptorList()
     {
         final List<IndexedDiskElementDescriptor> defragList = new ArrayList<>(keyHash.values());
-        Collections.sort(defragList, (ded1, ded2) -> Long.compare(ded1.pos, ded2.pos));
+        Collections.sort(defragList, Comparator.comparing(ded1 -> ded1.pos));
 
         return defragList;
     }

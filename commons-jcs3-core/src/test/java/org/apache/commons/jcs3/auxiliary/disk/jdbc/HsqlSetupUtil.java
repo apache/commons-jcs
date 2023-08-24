@@ -36,7 +36,7 @@ public final class HsqlSetupUtil
         {
             super.setupTable(cConn, tableName);
         }
-    };
+    }
 
     private static HSQLDiskCacheFactoryHelper factory = new HSQLDiskCacheFactoryHelper();
 

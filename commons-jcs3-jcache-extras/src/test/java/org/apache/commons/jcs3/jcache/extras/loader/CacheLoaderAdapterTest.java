@@ -41,6 +41,8 @@ public class CacheLoaderAdapterTest
     private final AtomicInteger count = new AtomicInteger(0);
     private final Configuration<?, ?> config = new MutableConfiguration<String, String>().setStoreByValue(false).setReadThrough(true).setCacheLoaderFactory(new CacheLoaderAdapter<String, String>()
     {
+        private static final long serialVersionUID = 5824701188219321027L;
+
         @Override
         public String load(final String key) throws CacheLoaderException
         {

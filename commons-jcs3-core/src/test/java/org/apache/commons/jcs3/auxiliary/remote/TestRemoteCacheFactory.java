@@ -84,10 +84,7 @@ public class TestRemoteCacheFactory extends RemoteCacheFactory
             rca.setRemoteLocation("", Registry.REGISTRY_PORT);
         }
 
-        return managers.computeIfAbsent(rca.getRemoteLocation(), key -> {
-
-            return new TestRemoteCacheManager(rca, cacheMgr, null, cacheEventLogger, elementSerializer);
-        });
+        return managers.computeIfAbsent(rca.getRemoteLocation(), key -> new TestRemoteCacheManager(rca, cacheMgr, null, cacheEventLogger, elementSerializer));
     }
 
     /**

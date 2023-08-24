@@ -33,6 +33,7 @@ import java.util.Map;
 
 public class CompositeCacheLoader<K, V> implements CacheLoader<K, V>, Closeable, Factory<CacheLoader<K, V>>
 {
+    private static final long serialVersionUID = 5636608842581992435L;
     private final CacheLoader<K, V>[] delegates;
 
     public CompositeCacheLoader(final CacheLoader<K, V>... delegates)

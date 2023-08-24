@@ -23,6 +23,7 @@ import javax.enterprise.util.AnnotationLiteral;
 
 public class AnyLiteral extends AnnotationLiteral<Any> implements Any
 {
+    private static final long serialVersionUID = 3065708715639538185L;
     public static final AnyLiteral INSTANCE = new AnyLiteral();
 
     @Override

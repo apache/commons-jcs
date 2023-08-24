@@ -91,7 +91,7 @@ public class CacheTest
     {
         final CachingProvider cachingProvider = Caching.getCachingProvider();
         final CacheManager cacheManager = cachingProvider.getCacheManager();
-        final Cache<String, String> cache = cacheManager.createCache("default", new MutableConfiguration<String, String>());
+        final Cache<String, String> cache = cacheManager.createCache("default", new MutableConfiguration<>());
         assertFalse(cache.containsKey("foo"));
         cache.put("foo", "bar");
         assertTrue(cache.containsKey("foo"));
@@ -263,7 +263,7 @@ public class CacheTest
             @Override
             public Factory<CacheLoader<Object, Object>> getCacheLoaderFactory()
             {
-                return () -> new CacheLoader<Object, Object>()
+                return () -> new CacheLoader<>()
                 {
                     @Override
                     public Object load(final Object key) throws CacheLoaderException

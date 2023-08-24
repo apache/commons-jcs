@@ -74,7 +74,7 @@ public class LateralTCPListener<K, V>
     /**
      * Serializer for reading and writing
      */
-    private IElementSerializer serializer;
+    private final IElementSerializer serializer;
 
     /** put count */
     private int putCnt;

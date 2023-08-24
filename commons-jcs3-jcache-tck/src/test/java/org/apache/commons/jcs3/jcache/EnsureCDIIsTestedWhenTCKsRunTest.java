@@ -18,15 +18,16 @@
  */
 package org.apache.commons.jcs3.jcache;
 
-import org.junit.Test;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertTrue;
 
-import javax.cache.annotation.BeanProvider;
 import java.util.Iterator;
 import java.util.ServiceLoader;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import javax.cache.annotation.BeanProvider;
+
+import org.junit.Test;
 
 // useless test but without it we are not sure
 // CDI TCKs passed

@@ -38,6 +38,8 @@ import javax.servlet.http.HttpServletResponseWrapper;
 
 public class InMemoryResponse extends HttpServletResponseWrapper implements Serializable
 {
+    private static final long serialVersionUID = 6827502171557661881L;
+
     private final OutputStream buffer;
 
     private final Collection<Cookie> cookies = new CopyOnWriteArraySet<>();
@@ -215,7 +217,7 @@ public class InMemoryResponse extends HttpServletResponseWrapper implements Seri
             @Override
             public void setWriteListener(WriteListener writeListener) {
                 // TODO Auto-generated method stub
-                
+
             }
         };
     }

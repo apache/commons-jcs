@@ -201,7 +201,7 @@ public class JCSCache<K, V> implements Cache<K, V>
         return doGetControllingExpiry(getStart, key, true, false, false, true);
     }
 
-    private V doLoad(final K key, final boolean update, final long now, final boolean propagateLoadException)
+    private V doLoad(final K key, final boolean update, final boolean propagateLoadException)
     {
         V v = null;
         try
@@ -291,7 +291,7 @@ public class JCSCache<K, V> implements Cache<K, V>
             V val = elt != null ? elt.getVal() : null;
             if (val == null && config.isReadThrough())
             {
-                val = doLoad(key, false, now, false);
+                val = doLoad(key, false, false);
                 if (val != null)
                 {
                     result.put(key, val);
@@ -528,7 +528,7 @@ public class JCSCache<K, V> implements Cache<K, V>
         {
             if (!skipLoad)
             {
-                v = doLoad(key, false, getStart, propagateLoadException);
+                v = doLoad(key, false, propagateLoadException);
             }
         }
         else if (statisticsEnabled)
@@ -587,7 +587,7 @@ public class JCSCache<K, V> implements Cache<K, V>
             }
             if (value == null && config.isReadThrough())
             {
-                value = doLoad(key, false, Times.now(false), false);
+                value = doLoad(key, false, false);
             }
             if (value != null && value.equals(oldValue))
             {
@@ -655,7 +655,7 @@ public class JCSCache<K, V> implements Cache<K, V>
             V oldValue = elt.getVal();
             if (oldValue == null && config.isReadThrough())
             {
-                oldValue = doLoad(key, false, Times.now(false), false);
+                oldValue = doLoad(key, false, false);
             }
             else if (statisticsEnabled)
             {
@@ -734,7 +734,7 @@ public class JCSCache<K, V> implements Cache<K, V>
             {
                 if (replaceExistingValues)
                 {
-                    doLoad(k, containsKey(k), now, completionListener != null);
+                    doLoad(k, containsKey(k), completionListener != null);
                     continue;
                 }
                 if (containsKey(k))
@@ -853,7 +853,7 @@ public class JCSCache<K, V> implements Cache<K, V>
     {
         assertNotClosed();
         final Iterator<K> keys = new HashSet<>(delegate.getKeySet()).iterator();
-        return new Iterator<Entry<K, V>>()
+        return new Iterator<>()
         {
             private K lastKey;
 

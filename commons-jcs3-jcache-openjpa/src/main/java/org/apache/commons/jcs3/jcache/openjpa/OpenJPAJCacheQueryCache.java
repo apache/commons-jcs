@@ -32,6 +32,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class OpenJPAJCacheQueryCache extends AbstractQueryCache
 {
+    private static final long serialVersionUID = 6646905946950592841L;
     private static final String OPENJPA_PREFIX = "openjpa.querycache.";
     private static final String QUERY_CACHE_NAME = "query";
 

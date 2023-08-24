@@ -86,7 +86,7 @@ public class ConfigurableMBeanServerIdBuilder extends MBeanServerBuilder
         return server;
     }
 
-    private class ForceIdMBeanServerDelegate extends MBeanServerDelegate
+    private static class ForceIdMBeanServerDelegate extends MBeanServerDelegate
     {
         private final MBeanServerDelegate delegate;
 

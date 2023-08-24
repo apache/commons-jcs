@@ -49,20 +49,22 @@ public class JCSCachingManager implements CacheManager
 {
     private static final Subsitutor SUBSTITUTOR = Subsitutor.Helper.INSTANCE;
     private static final String DEFAULT_CONFIG =
-        "jcs.default=DC\n" +
-        "jcs.default.cacheattributes=org.apache.commons.jcs3.engine.CompositeCacheAttributes\n" +
-        "jcs.default.cacheattributes.MaxObjects=200001\n" +
-        "jcs.default.cacheattributes.MemoryCacheName=org.apache.commons.jcs3.engine.memory.lru.LRUMemoryCache\n" +
-        "jcs.default.cacheattributes.UseMemoryShrinker=true\n" +
-        "jcs.default.cacheattributes.MaxMemoryIdleTimeSeconds=3600\n" +
-        "jcs.default.cacheattributes.ShrinkerIntervalSeconds=60\n" +
-        "jcs.default.elementattributes=org.apache.commons.jcs3.engine.ElementAttributes\n" +
-        "jcs.default.elementattributes.IsEternal=false\n" +
-        "jcs.default.elementattributes.MaxLife=700\n" +
-        "jcs.default.elementattributes.IdleTime=1800\n" +
-        "jcs.default.elementattributes.IsSpool=true\n" +
-        "jcs.default.elementattributes.IsRemote=true\n" +
-        "jcs.default.elementattributes.IsLateral=true\n";
+        """
+    	jcs.default=DC
+    	jcs.default.cacheattributes=org.apache.commons.jcs3.engine.CompositeCacheAttributes
+    	jcs.default.cacheattributes.MaxObjects=200001
+    	jcs.default.cacheattributes.MemoryCacheName=org.apache.commons.jcs3.engine.memory.lru.LRUMemoryCache
+    	jcs.default.cacheattributes.UseMemoryShrinker=true
+    	jcs.default.cacheattributes.MaxMemoryIdleTimeSeconds=3600
+    	jcs.default.cacheattributes.ShrinkerIntervalSeconds=60
+    	jcs.default.elementattributes=org.apache.commons.jcs3.engine.ElementAttributes
+    	jcs.default.elementattributes.IsEternal=false
+    	jcs.default.elementattributes.MaxLife=700
+    	jcs.default.elementattributes.IdleTime=1800
+    	jcs.default.elementattributes.IsSpool=true
+    	jcs.default.elementattributes.IsRemote=true
+    	jcs.default.elementattributes.IsLateral=true
+    	""";
 
     private static class InternalManager extends CompositeCacheManager
     {
@@ -198,7 +200,7 @@ public class JCSCachingManager implements CacheManager
         final Cache<K, V> cache = ClassLoaderAwareCache.wrap(loader,
                 new JCSCache<>(
                         loader, this, cacheName,
-                        new JCSConfiguration<K, V>(configuration, keyType, valueType),
+                        new JCSConfiguration<>(configuration, keyType, valueType),
                         properties,
                         ExpiryAwareCache.class.cast(delegate.getCache(cacheName))));
         caches.putIfAbsent(cacheName, cache);

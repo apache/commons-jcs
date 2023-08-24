@@ -30,6 +30,8 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class OpenJPAJCacheDataCache extends AbstractDataCache
 {
+    private static final long serialVersionUID = -5472249582181438434L;
+
     private static final String OPENJPA_PREFIX = "openjpa.datacache.";
 
     private final Lock lock = new ReentrantLock();

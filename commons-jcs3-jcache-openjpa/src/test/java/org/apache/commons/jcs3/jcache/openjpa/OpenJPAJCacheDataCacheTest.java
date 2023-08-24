@@ -45,7 +45,9 @@ import org.junit.Test;
 public class OpenJPAJCacheDataCacheTest
 {
     private static final Properties props = new Properties()
-    {{
+    {private static final long serialVersionUID = 498881935058549341L;
+
+    {
         setProperty("openjpa.MetaDataFactory", "jpa(Types=" + MyEntity.class.getName() + ")");
         setProperty("openjpa.ConnectionDriverName", EmbeddedDriver.class.getName());
         setProperty("openjpa.ConnectionURL", "jdbc:derby:memory:test;create=true");

@@ -39,9 +39,6 @@ import javax.cache.CacheManager;
 import javax.cache.Caching;
 import javax.cache.configuration.FactoryBuilder;
 import javax.cache.configuration.MutableConfiguration;
-import javax.cache.expiry.ExpiryPolicy;
-import javax.cache.integration.CacheLoader;
-import javax.cache.integration.CacheWriter;
 import javax.cache.spi.CachingProvider;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -95,16 +92,16 @@ public class JCacheFilter implements Filter
             configuration.setWriteThrough("true".equals(properties.getProperty("write-through", "false")));
             if (configuration.isReadThrough())
             {
-                configuration.setCacheLoaderFactory(new FactoryBuilder.ClassFactory<CacheLoader<PageKey, Page>>(properties.getProperty("cache-loader-factory")));
+                configuration.setCacheLoaderFactory(new FactoryBuilder.ClassFactory<>(properties.getProperty("cache-loader-factory")));
             }
             if (configuration.isWriteThrough())
             {
-                configuration.setCacheWriterFactory(new FactoryBuilder.ClassFactory<CacheWriter<? super PageKey, ? super Page>>(properties.getProperty("cache-writer-factory")));
+                configuration.setCacheWriterFactory(new FactoryBuilder.ClassFactory<>(properties.getProperty("cache-writer-factory")));
             }
             final String expiryPolicy = properties.getProperty("expiry-policy-factory");
             if (expiryPolicy != null)
             {
-                configuration.setExpiryPolicyFactory(new FactoryBuilder.ClassFactory<ExpiryPolicy>(expiryPolicy));
+                configuration.setExpiryPolicyFactory(new FactoryBuilder.ClassFactory<>(expiryPolicy));
             }
             configuration.setManagementEnabled("true".equals(properties.getProperty("management-enabled", "false")));
             configuration.setStatisticsEnabled("true".equals(properties.getProperty("statistics-enabled", "false")));
@@ -244,6 +241,7 @@ public class JCacheFilter implements Filter
     }
 
     protected static class PageKey implements Serializable {
+        private static final long serialVersionUID = 3401480765010789184L;
         private final String uri;
         private boolean gzip;
 
@@ -285,6 +283,7 @@ public class JCacheFilter implements Filter
     }
 
     protected static class Page implements Serializable {
+        private static final long serialVersionUID = 76822335849713095L;
         private final int status;
         private final String contentType;
         private final int contentLength;

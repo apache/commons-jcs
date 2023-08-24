@@ -18,9 +18,9 @@
  */
 package org.apache.commons.jcs3.jcache.openjpa;
 
-import org.apache.openjpa.conf.OpenJPAConfiguration;
-import org.apache.openjpa.datacache.DataCacheManagerImpl;
-import org.apache.openjpa.lib.conf.ObjectValue;
+import java.net.URI;
+import java.util.Map;
+import java.util.Properties;
 
 import javax.cache.Cache;
 import javax.cache.CacheManager;
@@ -29,13 +29,11 @@ import javax.cache.configuration.FactoryBuilder;
 import javax.cache.configuration.MutableConfiguration;
 import javax.cache.expiry.CreatedExpiryPolicy;
 import javax.cache.expiry.Duration;
-import javax.cache.expiry.ExpiryPolicy;
-import javax.cache.integration.CacheLoader;
-import javax.cache.integration.CacheWriter;
 import javax.cache.spi.CachingProvider;
-import java.net.URI;
-import java.util.Map;
-import java.util.Properties;
+
+import org.apache.openjpa.conf.OpenJPAConfiguration;
+import org.apache.openjpa.datacache.DataCacheManagerImpl;
+import org.apache.openjpa.lib.conf.ObjectValue;
 
 public class OpenJPAJCacheDataCacheManager extends DataCacheManagerImpl
 {
@@ -90,20 +88,20 @@ public class OpenJPAJCacheDataCacheManager extends DataCacheManagerImpl
             configuration.setWriteThrough("true".equals(properties.getProperty("jcache.write-through", "false")));
             if (configuration.isReadThrough())
             {
-                configuration.setCacheLoaderFactory(new FactoryBuilder.ClassFactory<CacheLoader<Object, Object>>(properties.getProperty("jcache.cache-loader-factory")));
+                configuration.setCacheLoaderFactory(new FactoryBuilder.ClassFactory<>(properties.getProperty("jcache.cache-loader-factory")));
             }
             if (configuration.isWriteThrough())
             {
-                configuration.setCacheWriterFactory(new FactoryBuilder.ClassFactory<CacheWriter<Object, Object>>(properties.getProperty("jcache.cache-writer-factory")));
+                configuration.setCacheWriterFactory(new FactoryBuilder.ClassFactory<>(properties.getProperty("jcache.cache-writer-factory")));
             }
             final String expirtyPolicy = properties.getProperty("jcache.expiry-policy-factory");
             if (expirtyPolicy != null)
             {
-                configuration.setExpiryPolicyFactory(new FactoryBuilder.ClassFactory<ExpiryPolicy>(expirtyPolicy));
+                configuration.setExpiryPolicyFactory(new FactoryBuilder.ClassFactory<>(expirtyPolicy));
             }
             else
             {
-                configuration.setExpiryPolicyFactory(new FactoryBuilder.SingletonFactory<ExpiryPolicy>(new CreatedExpiryPolicy(Duration.FIVE_MINUTES)));
+                configuration.setExpiryPolicyFactory(new FactoryBuilder.SingletonFactory<>(new CreatedExpiryPolicy(Duration.FIVE_MINUTES)));
             }
             configuration.setManagementEnabled("true".equals(properties.getProperty("jcache.management-enabled", "false")));
             configuration.setStatisticsEnabled("true".equals(properties.getProperty("jcache.statistics-enabled", "false")));

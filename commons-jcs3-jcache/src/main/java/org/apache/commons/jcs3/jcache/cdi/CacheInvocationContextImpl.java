@@ -28,7 +28,7 @@ import javax.interceptor.InvocationContext;
 
 public class CacheInvocationContextImpl<A extends Annotation> extends CacheMethodDetailsImpl<A> implements CacheInvocationContext<A>
 {
-    private static final Object[] EMPTY_ARGS = new Object[0];
+    private static final Object[] EMPTY_ARGS = {};
 
     private CacheInvocationParameter[] parameters;
 

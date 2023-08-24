@@ -45,6 +45,8 @@ public class CacheWriterAdapterTest
             .setStoreByValue(false).setReadThrough(true)
             .setCacheWriterFactory(new CacheWriterAdapter<String, String>()
             {
+                private static final long serialVersionUID = 124351798952737984L;
+
                 @Override
                 public void write(final Cache.Entry<? extends String, ? extends String> entry) throws CacheWriterException
                 {
@@ -69,7 +71,9 @@ public class CacheWriterAdapterTest
         cache.remove("foo");
         assertTrue(copy.isEmpty());
 
-        cache.putAll(new HashMap<String, String>() {{
+        cache.putAll(new HashMap<String, String>() {private static final long serialVersionUID = -5341092848989593322L;
+
+        {
             put("a", "b");
             put("b", "c");
         }});

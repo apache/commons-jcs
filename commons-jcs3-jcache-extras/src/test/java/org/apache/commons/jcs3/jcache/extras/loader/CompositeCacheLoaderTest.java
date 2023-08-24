@@ -37,8 +37,10 @@ public class CompositeCacheLoaderTest
 
     private final AtomicInteger count = new AtomicInteger(0);
 
-    private final CacheLoaderAdapter<String, String> loader1 = new CacheLoaderAdapter<String, String>()
+    private final CacheLoaderAdapter<String, String> loader1 = new CacheLoaderAdapter<>()
     {
+        private static final long serialVersionUID = 4115224634848656083L;
+
         @Override
         public String load(final String key) throws CacheLoaderException
         {
@@ -46,8 +48,10 @@ public class CompositeCacheLoaderTest
             return null;
         }
     };
-    private final CacheLoaderAdapter<String, String> loader2 = new CacheLoaderAdapter<String, String>()
+    private final CacheLoaderAdapter<String, String> loader2 = new CacheLoaderAdapter<>()
     {
+        private static final long serialVersionUID = 6521646710056500743L;
+
         @Override
         public String load(final String key) throws CacheLoaderException
         {

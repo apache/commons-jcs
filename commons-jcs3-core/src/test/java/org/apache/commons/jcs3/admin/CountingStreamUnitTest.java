@@ -53,7 +53,7 @@ public class CountingStreamUnitTest
     public void testByteArray() throws Exception
     {
         final CountingOnlyOutputStream out = new CountingOnlyOutputStream();
-        final byte[] array = new byte[]{1,2,3,4,5};
+        final byte[] array = {1,2,3,4,5};
         out.write( array );
         assertEquals( "Wrong number of bytes written.", array.length, out.getCount() );
         out.close();
@@ -67,7 +67,7 @@ public class CountingStreamUnitTest
     public void testByteArrayLenCount() throws Exception
     {
         final CountingOnlyOutputStream out = new CountingOnlyOutputStream();
-        final byte[] array = new byte[]{1,2,3,4,5};
+        final byte[] array = {1,2,3,4,5};
         final int len = 3;
         out.write( array, 0, len );
         assertEquals( "Wrong number of bytes written.", len, out.getCount() );

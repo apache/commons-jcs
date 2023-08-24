@@ -216,9 +216,10 @@ public class RemoteCacheNoWaitFacade<K, V>
             else
             {
                 log.debug( "ALLRIGHT is true " );
-                log.info( "Failover runner is in primary recovery mode. "
-                        + "Failover index = {0} Will now try to reconnect to "
-                        + "primary server.", rca0::getFailoverIndex);
+                log.info( """
+                	Failover runner is in primary recovery mode.\s\
+                	Failover index = {0} Will now try to reconnect to\s\
+                	primary server.""", rca0::getFailoverIndex);
             }
 
             // Exit loop if in test mode
@@ -241,9 +242,10 @@ public class RemoteCacheNoWaitFacade<K, V>
                 // Time driven mode: sleep between each round of recovery attempt.
                 try
                 {
-                    log.warn( "Failed to reconnect to primary server. "
-                            + "Cache failover runner is going to sleep for "
-                            + "{0} milliseconds.", idlePeriod );
+                    log.warn( """
+                    	Failed to reconnect to primary server.\s\
+                    	Cache failover runner is going to sleep for\s\
+                    	{0} milliseconds.""", idlePeriod );
                     Thread.sleep( idlePeriod );
                 }
                 catch ( final InterruptedException ex )

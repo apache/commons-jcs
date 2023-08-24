@@ -23,6 +23,7 @@ import javax.enterprise.util.AnnotationLiteral;
 
 public class DefaultLiteral extends AnnotationLiteral<Default> implements Default
 {
+    private static final long serialVersionUID = -7075220723272831665L;
     public static final DefaultLiteral INSTANCE = new DefaultLiteral();
 
     @Override

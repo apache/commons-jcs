@@ -160,9 +160,10 @@ public class RemoteCacheManager
     {
         if ( cattr.isReceive() )
         {
-            log.info( "The remote cache is configured to receive events from the remote server. "
-                + "We will register a listener. remoteWatch = {0} | IRemoteCacheListener = {1}"
-                + " | cacheName ", remoteWatch, listener, cattr.getCacheName() );
+            log.info( """
+            	The remote cache is configured to receive events from the remote server.\s\
+            	We will register a listener. remoteWatch = {0} | IRemoteCacheListener = {1}\
+            	 | cacheName\s""", remoteWatch, listener, cattr.getCacheName() );
 
             remoteWatch.addCacheListener( cattr.getCacheName(), listener );
         }

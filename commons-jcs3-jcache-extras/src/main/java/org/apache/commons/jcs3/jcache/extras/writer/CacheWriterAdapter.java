@@ -26,6 +26,8 @@ import java.util.Collection;
 
 public abstract class CacheWriterAdapter<K, V> implements CacheWriter<K, V>, Factory<CacheWriter<K, V>>
 {
+    private static final long serialVersionUID = -2784825625311754333L;
+
     @Override
     public void writeAll(final Collection<Cache.Entry<? extends K, ? extends V>> entries) throws CacheWriterException
     {

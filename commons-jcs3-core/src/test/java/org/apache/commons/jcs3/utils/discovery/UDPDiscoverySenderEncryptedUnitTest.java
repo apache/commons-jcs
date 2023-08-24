@@ -1,25 +1,5 @@
 package org.apache.commons.jcs3.utils.discovery;
 
-/*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- */
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -57,7 +37,7 @@ public class UDPDiscoverySenderEncryptedUnitTest
 
     /** sender instance for tests */
     private UDPDiscoverySender sender;
-    
+
 
     /**
      * Set up the receiver. Maybe better to just code sockets here? Set up the sender for sending
@@ -73,7 +53,7 @@ public class UDPDiscoverySenderEncryptedUnitTest
 
         EncryptingSerializer serializer = new EncryptingSerializer();
         serializer.setPreSharedKey("my_key");
-        
+
         receiver = new UDPDiscoveryReceiver( null, null, ADDRESS, PORT );
         receiver.setSerializer(serializer);
         final Thread t = new Thread( receiver );
@@ -157,25 +137,21 @@ public class UDPDiscoverySenderEncryptedUnitTest
         assertNotNull("message not received", msg);
         assertEquals( "wrong message type", BroadcastType.REQUEST, msg.getMessageType() );
 
-        
+
     }
-    
+
     /**
      * Wait for multicast message for 3 seconds
-     * 
+     *
      * @return the object message or null if nothing received within 3 seconds
      */
     private UDPDiscoveryMessage getMessage() {
     	ExecutorService executor = Executors.newCachedThreadPool();
-        Callable<Object> task = new Callable<Object>() {
-           public Object call() throws IOException {
-              return receiver.waitForMessage();
-           }
-        };
+        Callable<Object> task = () -> receiver.waitForMessage();
         Future<Object> future = executor.submit(task);
         try {
         	Object obj = future.get(3, TimeUnit.SECONDS);
- 
+
         	assertTrue( "unexpected crap received", obj instanceof UDPDiscoveryMessage );
 
             return (UDPDiscoveryMessage) obj;

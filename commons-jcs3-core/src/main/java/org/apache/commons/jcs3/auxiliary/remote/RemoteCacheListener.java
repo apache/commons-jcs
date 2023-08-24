@@ -46,7 +46,7 @@ public class RemoteCacheListener<K, V>
     private static final Log log = LogManager.getLog( RemoteCacheListener.class );
 
     /** Has this client been shutdown. */
-    private AtomicBoolean disposed;
+    private final AtomicBoolean disposed;
 
     /**
      * Only need one since it does work for all regions, just reference by multiple region names.

@@ -56,7 +56,7 @@ public class LateralCache<K, V>
     private ICacheServiceNonLocal<K, V> lateralCacheService;
 
     /** Monitors the connection. */
-    private LateralCacheMonitor monitor;
+    private final LateralCacheMonitor monitor;
 
     /**
      * Constructor for the LateralCache object
