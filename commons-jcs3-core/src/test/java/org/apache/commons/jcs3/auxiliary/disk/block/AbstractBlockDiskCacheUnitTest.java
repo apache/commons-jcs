@@ -53,7 +53,7 @@ public abstract class AbstractBlockDiskCacheUnitTest extends TestCase
         final BlockDiskCache<String, String> diskCache = new BlockDiskCache<>(cattr);
 
         // DO WORK
-        for (int i = 0; i <= items; i++)
+        for (int i = 0; i < items; i++)
         {
             diskCache.update(new CacheElement<>(cacheName, i + ":key", cacheName + " data " + i));
         }
@@ -86,7 +86,7 @@ public abstract class AbstractBlockDiskCacheUnitTest extends TestCase
         final BlockDiskCache<String, String> diskCache = new BlockDiskCache<>(cattr);
 
         // DO WORK
-        for (int i = 0; i <= items; i++)
+        for (int i = 0; i < items; i++)
         {
             diskCache.update(new CacheElement<>(cacheName, i + ":key", cacheName + " data " + i));
         }

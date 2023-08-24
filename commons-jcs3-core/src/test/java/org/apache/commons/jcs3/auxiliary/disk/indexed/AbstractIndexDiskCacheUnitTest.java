@@ -661,7 +661,7 @@ public abstract class AbstractIndexDiskCacheUnitTest extends TestCase
         final IndexedDiskCache<String, String> diskCache = new IndexedDiskCache<>(cattr);
 
         // DO WORK
-        for (int i = 0; i <= items; i++)
+        for (int i = 0; i < items; i++)
         {
             diskCache.update(new CacheElement<>(cacheName, i + ":key", cacheName + " data " + i));
         }
@@ -694,7 +694,7 @@ public abstract class AbstractIndexDiskCacheUnitTest extends TestCase
         final IndexedDiskCache<String, String> diskCache = new IndexedDiskCache<>(cattr);
 
         // DO WORK
-        for (int i = 0; i <= items; i++)
+        for (int i = 0; i < items; i++)
         {
             diskCache.update(new CacheElement<>(cacheName, i + ":key", cacheName + " data " + i));
         }

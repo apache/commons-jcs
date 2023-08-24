@@ -112,14 +112,14 @@ public class TestTCPLateralCache
 
         // Add items to cache
 
-        for ( int i = 0; i <= items; i++ )
+        for ( int i = 0; i < items; i++ )
         {
             jcs.put( i + ":key", region + " data " + i );
         }
 
         // Test that all items are in cache
 
-        for ( int i = 0; i <= items; i++ )
+        for ( int i = 0; i < items; i++ )
         {
             final String value = jcs.get( i + ":key" );
 
@@ -128,14 +128,14 @@ public class TestTCPLateralCache
 
         // Remove all the items
 
-        for ( int i = 0; i <= items; i++ )
+        for ( int i = 0; i < items; i++ )
         {
             jcs.remove( i + ":key" );
         }
 
         // Verify removal
 
-        for ( int i = 0; i <= items; i++ )
+        for ( int i = 0; i < items; i++ )
         {
             assertNull( "Removed key should be null: " + i + ":key", jcs.get( i + ":key" ) );
         }

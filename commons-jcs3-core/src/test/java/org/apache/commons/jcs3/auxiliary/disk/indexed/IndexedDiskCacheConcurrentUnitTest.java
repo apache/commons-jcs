@@ -131,13 +131,13 @@ public class IndexedDiskCacheConcurrentUnitTest
         final CacheAccess<String, String> jcs = JCS.getInstance( region );
 
         // Add items to cache
-        for ( int i = 0; i <= items; i++ )
+        for ( int i = 0; i < items; i++ )
         {
             jcs.put( i + ":key", region + " data " + i );
         }
 
         // Test that all items are in cache
-        for ( int i = 0; i <= items; i++ )
+        for ( int i = 0; i < items; i++ )
         {
             final String value = jcs.get( i + ":key" );
 
@@ -146,13 +146,13 @@ public class IndexedDiskCacheConcurrentUnitTest
 
         // Test that getElements returns all the expected values
         final Set<String> keys = new HashSet<>();
-        for ( int i = 0; i <= items; i++ )
+        for ( int i = 0; i < items; i++ )
         {
             keys.add( i + ":key" );
         }
 
         final Map<String, ICacheElement<String, String>> elements = jcs.getCacheElements( keys );
-        for ( int i = 0; i <= items; i++ )
+        for ( int i = 0; i < items; i++ )
         {
             final ICacheElement<String, String> element = elements.get( i + ":key" );
             assertNotNull( "element " + i + ":key is missing", element );
@@ -160,14 +160,14 @@ public class IndexedDiskCacheConcurrentUnitTest
         }
 
         // Remove all the items
-        for ( int i = 0; i <= items; i++ )
+        for ( int i = 0; i < items; i++ )
         {
             jcs.remove( i + ":key" );
         }
 
         // Verify removal
         // another thread may have inserted since
-        for ( int i = 0; i <= items; i++ )
+        for ( int i = 0; i < items; i++ )
         {
             assertNull( "Removed key should be null: " + i + ":key" + "\n stats " + jcs.getStats(), jcs
                 .get( i + ":key" ) );

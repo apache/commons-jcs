@@ -55,7 +55,7 @@ public class ZeroSizeCacheUnitTest
     {
         final CacheAccess<String, String> jcs = JCS.getInstance( "testCache1" );
 
-        for ( int i = 0; i <= items; i++ )
+        for ( int i = 0; i < items; i++ )
         {
             jcs.put( i + ":key", "data" + i );
         }
@@ -74,7 +74,7 @@ public class ZeroSizeCacheUnitTest
         Thread.sleep( 500 );
 
         // do it again.
-        for ( int i = 0; i <= items; i++ )
+        for ( int i = 0; i < items; i++ )
         {
             jcs.put( i + ":key", "data" + i );
         }

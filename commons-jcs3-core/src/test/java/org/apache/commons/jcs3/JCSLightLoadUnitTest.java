@@ -41,7 +41,6 @@ public class JCSLightLoadUnitTest
         throws Exception
     {
         JCS.setConfigFilename( "/TestSimpleLoad.ccf" );
-        JCS.getInstance( "testCache1" );
     }
 
     /**
@@ -52,16 +51,13 @@ public class JCSLightLoadUnitTest
         throws Exception
     {
         final CacheAccess<String, String> jcs = JCS.getInstance( "testCache1" );
-        //        ICompositeCacheAttributes cattr = jcs.getCacheAttributes();
-        //        cattr.setMaxObjects( 20002 );
-        //        jcs.setCacheAttributes( cattr );
 
-        for ( int i = 1; i <= items; i++ )
+        for ( int i = 1; i < items; i++ )
         {
             jcs.put( i + ":key", "data" + i );
         }
 
-        for ( int i = items; i > 0; i-- )
+        for ( int i = items-1; i > 0; i-- )
         {
             final String res = jcs.get( i + ":key" );
             assertNotNull( "[" + i + ":key] should not be null", res );

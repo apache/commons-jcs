@@ -53,7 +53,7 @@ public class RemoteHttpCacheManualTester
 
 //        System.out.println( jcs.getStats() );
 
-        for ( int i = 1; i <= items; i++ )
+        for ( int i = 1; i < items; i++ )
         {
             jcs.put( i + ":key", "data" + i );
         }

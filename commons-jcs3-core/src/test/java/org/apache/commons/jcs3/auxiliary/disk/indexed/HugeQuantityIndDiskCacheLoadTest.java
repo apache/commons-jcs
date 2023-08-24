@@ -57,7 +57,7 @@ public class HugeQuantityIndDiskCacheLoadTest
 
             // Add items to cache
 
-            for ( int i = 0; i <= items; i++ )
+            for ( int i = 0; i < items; i++ )
             {
                 jcs.put( i + ":key", region + " data " + i );
             }
@@ -74,7 +74,7 @@ public class HugeQuantityIndDiskCacheLoadTest
 
             // Test that all items are in cache
 
-            for ( int i = 0; i <= items; i++ )
+            for ( int i = 0; i < items; i++ )
             {
                 final String value = jcs.get( i + ":key" );
 
@@ -84,13 +84,13 @@ public class HugeQuantityIndDiskCacheLoadTest
             System.out.println( "After get: " + measureMemoryUse() );
 
             // // Remove all the items
-            // for ( int i = 0; i <= items; i++ )
+            // for ( int i = 0; i < items; i++ )
             // {
             // jcs.remove( i + ":key" );
             // }
             //
             // // Verify removal
-            // for ( int i = 0; i <= items; i++ )
+            // for ( int i = 0; i < items; i++ )
             // {
             // assertNull( "Removed key should be null: " + i + ":key" + "\n
             // stats " + jcs.getStats(), jcs.get( i + ":key" ) );

@@ -67,7 +67,7 @@ public class HugeQuantityBlockDiskCacheLoadTest
             System.out.println( "Start: " + measureMemoryUse() );
 
             // Add items to cache
-            for ( int i = 0; i <= items; i++ )
+            for ( int i = 0; i < items; i++ )
             {
                 jcs.put( i + ":key", region + " data " + i );
             }
@@ -94,7 +94,7 @@ public class HugeQuantityBlockDiskCacheLoadTest
             // Test that all items are in cache
             System.out.println( "--------------------------" );
             System.out.println( "Retrieving all." );
-            for ( int i = 0; i <= items; i++ )
+            for ( int i = 0; i < items; i++ )
             {
                 //System.out.print(  "\033[s" );
                 final String value = jcs.get( i + ":key" );
