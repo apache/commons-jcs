@@ -18,6 +18,11 @@
  */
 package org.apache.commons.jcs3.jcache.proxy;
 
+import java.io.Serializable;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+
 import javax.cache.Cache;
 import javax.cache.CacheManager;
 import javax.cache.configuration.CacheEntryListenerConfiguration;
@@ -28,11 +33,6 @@ import javax.cache.processor.EntryProcessorException;
 import javax.cache.processor.EntryProcessorResult;
 
 import org.apache.commons.jcs3.jcache.JCSCache;
-
-import java.io.Serializable;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
 
 // don't use a proxy, reflection is too slow here :(
 public class ClassLoaderAwareCache<K, V> implements Cache<K, V>
@@ -503,6 +503,7 @@ public class ClassLoaderAwareCache<K, V> implements Cache<K, V>
         return new ClassLoaderAwareCache<>(loader, delegate);
     }
 
+    @SuppressWarnings("unchecked")
     public static <K extends Serializable, V extends Serializable> JCSCache<K, V> getDelegate(final Cache<?, ?> cache)
     {
         if (JCSCache.class.isInstance(cache))

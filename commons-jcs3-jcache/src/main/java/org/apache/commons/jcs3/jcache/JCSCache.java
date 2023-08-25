@@ -86,6 +86,7 @@ public class JCSCache<K, V> implements Cache<K, V>
     private final IElementSerializer serializer; // using json/xml should work as well -> don't force Serializable
 
 
+    @SuppressWarnings("unchecked")
     public JCSCache(final ClassLoader classLoader, final JCSCachingManager mgr,
                     final String cacheName, final JCSConfiguration<K, V> configuration,
                     final Properties properties, final ExpiryAwareCache<K, V> cache)
@@ -282,9 +283,9 @@ public class JCSCache<K, V> implements Cache<K, V>
             assertNotNull(k, "key");
         }
 
-        final long now = Times.now(false);
         final Map<K, V> result = new HashMap<>();
-        for (final K key : keys) {
+        for (final K key : keys)
+        {
             assertNotNull(key, "key");
 
             final ICacheElement<K, V> elt = delegate.get(key);
