@@ -1,5 +1,9 @@
 package org.apache.commons.jcs3.utils.discovery;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -22,12 +26,11 @@ package org.apache.commons.jcs3.utils.discovery;
 import java.util.ArrayList;
 
 import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
-
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 /** Unit tests for the service. */
 public class UDPDiscoveryServiceUnitTest
-    extends TestCase
 {
     private final static String host = "228.5.6.7";
     private final static int port = 6789;
@@ -35,11 +38,9 @@ public class UDPDiscoveryServiceUnitTest
     private UDPDiscoveryService service;
     private MockDiscoveryListener discoveryListener;
 
-    @Override
-    protected void setUp() throws Exception
+    @Before
+    public void setUp() throws Exception
     {
-        super.setUp();
-
         // SETUP
         final UDPDiscoveryAttributes attributes = new UDPDiscoveryAttributes();
         attributes.setUdpDiscoveryAddr( host );
@@ -56,6 +57,7 @@ public class UDPDiscoveryServiceUnitTest
     }
 
     /** Verify that the list is updated. */
+    @Test
     public void testAddOrUpdateService_NotInList()
     {
         final DiscoveredService discoveredService = new DiscoveredService();
@@ -75,6 +77,7 @@ public class UDPDiscoveryServiceUnitTest
     }
 
     /** Verify that the list is updated. */
+    @Test
     public void testAddOrUpdateService_InList_NamesDoNotChange()
     {
         final ArrayList<String> sameCacheNames = new ArrayList<>();
@@ -122,6 +125,7 @@ public class UDPDiscoveryServiceUnitTest
     }
 
     /** Verify that the list is updated. */
+    @Test
     public void testAddOrUpdateService_InList_NamesChange()
     {
         final DiscoveredService discoveredService = new DiscoveredService();
@@ -168,6 +172,7 @@ public class UDPDiscoveryServiceUnitTest
     }
 
     /** Verify that the list is updated. */
+    @Test
     public void testRemoveDiscoveredService()
     {
         final DiscoveredService discoveredService = new DiscoveredService();

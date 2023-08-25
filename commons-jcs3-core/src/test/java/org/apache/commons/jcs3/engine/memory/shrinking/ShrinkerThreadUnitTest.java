@@ -19,28 +19,34 @@ package org.apache.commons.jcs3.engine.memory.shrinking;
  * under the License.
  */
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
-import org.apache.commons.jcs3.engine.ElementAttributesUtils;
-import org.apache.commons.jcs3.engine.control.event.ElementEventHandlerMockImpl;
-import org.apache.commons.jcs3.engine.memory.MockMemoryCache;
+import java.io.IOException;
+
 import org.apache.commons.jcs3.engine.CacheElement;
 import org.apache.commons.jcs3.engine.CompositeCacheAttributes;
 import org.apache.commons.jcs3.engine.ElementAttributes;
+import org.apache.commons.jcs3.engine.ElementAttributesUtils;
 import org.apache.commons.jcs3.engine.behavior.ICacheElement;
 import org.apache.commons.jcs3.engine.control.CompositeCache;
+import org.apache.commons.jcs3.engine.control.event.ElementEventHandlerMockImpl;
 import org.apache.commons.jcs3.engine.control.event.behavior.ElementEventType;
-import java.io.IOException;
+import org.apache.commons.jcs3.engine.memory.MockMemoryCache;
+import org.junit.Test;
 
 /**
  * This tests the functionality of the shrinker thread.
  */
 public class ShrinkerThreadUnitTest
-    extends TestCase
 {
     /** verify the check for removal
      * <p>
      * @throws IOException */
+    @Test
     public void testCheckForRemoval_Expired() throws IOException
     {
         // SETUP
@@ -76,6 +82,7 @@ public class ShrinkerThreadUnitTest
     /** verify the check for removal
      * <p>
      * @throws IOException */
+    @Test
     public void testCheckForRemoval_NotExpired() throws IOException
     {
         // SETUP
@@ -111,6 +118,7 @@ public class ShrinkerThreadUnitTest
     /** verify the check for removal
      * <p>
      * @throws IOException */
+    @Test
     public void testCheckForRemoval_IdleTooLong() throws IOException
     {
         // SETUP
@@ -147,6 +155,7 @@ public class ShrinkerThreadUnitTest
     /** verify the check for removal
      * <p>
      * @throws IOException */
+    @Test
     public void testCheckForRemoval_NotIdleTooLong() throws IOException
     {
         // SETUP
@@ -186,6 +195,7 @@ public class ShrinkerThreadUnitTest
      * <p>
      * @throws Exception
      */
+    @Test
     public void testSimpleShrink()
         throws Exception
     {
@@ -233,6 +243,7 @@ public class ShrinkerThreadUnitTest
      * <p>
      * @throws Exception
      */
+    @Test
     public void testSimpleShrinkMultiple()
         throws Exception
     {
@@ -283,6 +294,7 @@ public class ShrinkerThreadUnitTest
      * <p>
      * @throws Exception
      */
+    @Test
     public void testSimpleShrinkMultipleWithEventHandler()
         throws Exception
     {

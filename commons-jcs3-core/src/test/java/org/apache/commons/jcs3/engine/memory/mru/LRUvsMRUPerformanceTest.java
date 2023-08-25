@@ -1,11 +1,5 @@
 package org.apache.commons.jcs3.engine.memory.mru;
 
-import org.apache.commons.jcs3.JCS;
-import org.apache.commons.jcs3.access.CacheAccess;
-import org.apache.commons.jcs3.engine.memory.lru.LRUMemoryCache;
-import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -25,13 +19,17 @@ import org.apache.commons.jcs3.log.LogManager;
  * under the License.
  */
 
-import junit.framework.TestCase;
+import org.apache.commons.jcs3.JCS;
+import org.apache.commons.jcs3.access.CacheAccess;
+import org.apache.commons.jcs3.engine.memory.lru.LRUMemoryCache;
+import org.apache.commons.jcs3.log.Log;
+import org.apache.commons.jcs3.log.LogManager;
+import org.junit.Test;
 
 /**
  * Tests the performance difference between the LRU and the MRU. There should be very little.
  */
 public class LRUvsMRUPerformanceTest
-    extends TestCase
 {
     /** ration we want */
     float ratioPut;
@@ -52,6 +50,7 @@ public class LRUvsMRUPerformanceTest
      * A unit test for JUnit
      * @throws Exception Description of the Exception
      */
+    @Test
     public void testSimpleLoad()
         throws Exception
     {

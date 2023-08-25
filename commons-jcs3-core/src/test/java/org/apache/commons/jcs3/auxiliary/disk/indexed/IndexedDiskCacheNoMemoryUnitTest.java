@@ -1,13 +1,5 @@
 package org.apache.commons.jcs3.auxiliary.disk.indexed;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
-import org.apache.commons.jcs3.JCS;
-import org.apache.commons.jcs3.access.CacheAccess;
-import org.apache.commons.jcs3.engine.behavior.ICacheElement;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -27,17 +19,28 @@ import org.apache.commons.jcs3.engine.behavior.ICacheElement;
  * under the License.
  */
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import org.apache.commons.jcs3.JCS;
+import org.apache.commons.jcs3.access.CacheAccess;
+import org.apache.commons.jcs3.engine.behavior.ICacheElement;
+
 import junit.extensions.ActiveTestSuite;
 import junit.framework.Test;
 import junit.framework.TestCase;
 
 /**
  * Test which exercises the indexed disk cache. This one uses three different
- * regions for thre threads. It uses a config file that specifies 0 items in
+ * regions for three threads. It uses a config file that specifies 0 items in
  * memory.
  */
 public class IndexedDiskCacheNoMemoryUnitTest
-    extends TestCase
 {
     /**
      * Number of items to cache; the configured maxObjects for the memory cache
@@ -46,62 +49,46 @@ public class IndexedDiskCacheNoMemoryUnitTest
     private static final int items = 2000;
 
     /**
-     * @param testName
-     */
-    public IndexedDiskCacheNoMemoryUnitTest( final String testName )
-    {
-        super( testName );
-    }
-
-    /**
      * A unit test suite for JUnit
      * <p>
      * @return The test suite
      */
     public static Test suite()
     {
+        JCS.setConfigFilename( "/TestDiskCacheNoMemory.ccf" );
         final ActiveTestSuite suite = new ActiveTestSuite();
 
-        suite.addTest( new IndexedDiskCacheNoMemoryUnitTest( "testIndexedDiskCache1" )
+        suite.addTest(new TestCase("testIndexedDiskCache1")
         {
             @Override
             public void runTest()
                 throws Exception
             {
-                this.runTestForRegion( "indexedRegion1" );
+                runTestForRegion( "indexedRegion1" );
             }
-        } );
+        });
 
-        suite.addTest( new IndexedDiskCacheNoMemoryUnitTest( "testIndexedDiskCache2" )
+        suite.addTest(new TestCase("testIndexedDiskCache2")
         {
             @Override
             public void runTest()
                 throws Exception
             {
-                this.runTestForRegion( "indexedRegion2" );
+                runTestForRegion( "indexedRegion2" );
             }
-        } );
+        });
 
-        suite.addTest( new IndexedDiskCacheNoMemoryUnitTest( "testIndexedDiskCache3" )
+        suite.addTest(new TestCase("testIndexedDiskCache3")
         {
             @Override
             public void runTest()
                 throws Exception
             {
-                this.runTestForRegion( "indexedRegion3" );
+                runTestForRegion( "indexedRegion3" );
             }
-        } );
+        });
 
         return suite;
-    }
-
-    /**
-     * Test setup
-     */
-    @Override
-    public void setUp()
-    {
-        JCS.setConfigFilename( "/TestDiskCacheNoMemory.ccf" );
     }
 
     /**
@@ -114,7 +101,7 @@ public class IndexedDiskCacheNoMemoryUnitTest
      * @throws Exception
      *                If an error occurs
      */
-    public void runTestForRegion( final String region )
+    protected static void runTestForRegion( final String region )
         throws Exception
     {
         final CacheAccess<String, String> jcs = JCS.getInstance( region );

@@ -1,12 +1,5 @@
 package org.apache.commons.jcs3.auxiliary.remote.http.client;
 
-import org.apache.commons.jcs3.engine.control.MockCompositeCacheManager;
-import org.apache.commons.jcs3.auxiliary.AuxiliaryCache;
-import org.apache.commons.jcs3.auxiliary.remote.http.client.behavior.IRemoteHttpCacheClient;
-import org.apache.commons.jcs3.engine.behavior.ICompositeCacheManager;
-import org.apache.commons.jcs3.engine.behavior.IElementSerializer;
-import org.apache.commons.jcs3.engine.logging.behavior.ICacheEventLogger;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -26,13 +19,22 @@ import org.apache.commons.jcs3.engine.logging.behavior.ICacheEventLogger;
  * under the License.
  */
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+import org.apache.commons.jcs3.auxiliary.AuxiliaryCache;
+import org.apache.commons.jcs3.auxiliary.remote.http.client.behavior.IRemoteHttpCacheClient;
+import org.apache.commons.jcs3.engine.behavior.ICompositeCacheManager;
+import org.apache.commons.jcs3.engine.behavior.IElementSerializer;
+import org.apache.commons.jcs3.engine.control.MockCompositeCacheManager;
+import org.apache.commons.jcs3.engine.logging.behavior.ICacheEventLogger;
+import org.junit.Test;
 
 /** Unit tests for the manager. */
 public class RemoteHttpCacheFactoryUnitTest
-    extends TestCase
 {
     /** Verify that we get the default. */
+    @Test
     public void testCreateRemoteHttpCacheClient_Bad()
     {
         // SETUP
@@ -52,6 +54,7 @@ public class RemoteHttpCacheFactoryUnitTest
     }
 
     /** Verify that we get the default. */
+    @Test
     public void testCreateRemoteHttpCacheClient_default()
     {
         // SETUP
@@ -67,6 +70,7 @@ public class RemoteHttpCacheFactoryUnitTest
     }
 
     /** Verify that we get a cache no wait. */
+    @Test
     public void testGetCache_normal()
     {
         // SETUP

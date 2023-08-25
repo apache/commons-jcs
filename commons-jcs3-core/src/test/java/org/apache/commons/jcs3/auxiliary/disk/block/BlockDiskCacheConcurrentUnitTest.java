@@ -1,5 +1,9 @@
 package org.apache.commons.jcs3.auxiliary.disk.block;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -7,6 +11,7 @@ import java.util.Set;
 import org.apache.commons.jcs3.JCS;
 import org.apache.commons.jcs3.access.CacheAccess;
 import org.apache.commons.jcs3.engine.behavior.ICacheElement;
+import org.junit.Before;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -36,25 +41,12 @@ import junit.framework.TestCase;
  * regions for three threads.
  */
 public class BlockDiskCacheConcurrentUnitTest
-    extends TestCase
 {
     /**
      * Number of items to cache, twice the configured maxObjects for the memory
      * cache regions.
      */
     private static final int items = 200;
-
-    /**
-     * Constructor for the TestDiskCache object.
-     *
-     * @param testName
-     * @throws Exception
-     */
-    public BlockDiskCacheConcurrentUnitTest( final String testName )
-        throws Exception
-    {
-        super( testName );
-    }
 
     /**
      * A unit test suite for JUnit
@@ -72,45 +64,45 @@ public class BlockDiskCacheConcurrentUnitTest
         JCS.getInstance( "indexedRegion2" ).clear();
         JCS.getInstance( "indexedRegion3" ).clear();
 
-        suite.addTest( new BlockDiskCacheConcurrentUnitTest( "testBlockDiskCache1" )
+        suite.addTest(new TestCase("testBlockDiskCache1" )
         {
             @Override
             public void runTest()
                 throws Exception
             {
-                this.runTestForRegion( "indexedRegion1" );
+                runTestForRegion( "indexedRegion1" );
             }
-        } );
+        });
 
-        suite.addTest( new BlockDiskCacheConcurrentUnitTest( "testBlockDiskCache2" )
+        suite.addTest(new TestCase("testBlockDiskCache2" )
         {
             @Override
             public void runTest()
                 throws Exception
             {
-                this.runTestForRegion( "indexedRegion2" );
+                runTestForRegion( "indexedRegion2" );
             }
-        } );
+        });
 
-        suite.addTest( new BlockDiskCacheConcurrentUnitTest( "testBlockDiskCache3" )
+        suite.addTest(new TestCase("testBlockDiskCache3" )
         {
             @Override
             public void runTest()
                 throws Exception
             {
-                this.runTestForRegion( "indexedRegion3" );
+                runTestForRegion( "indexedRegion3" );
             }
-        } );
+        });
 
-        suite.addTest( new BlockDiskCacheConcurrentUnitTest( "testBlockDiskCache4" )
+        suite.addTest(new TestCase("testBlockDiskCache4" )
         {
             @Override
             public void runTest()
                 throws Exception
             {
-                this.runTestForRegionInRange( "indexedRegion3", 300, 600 );
+                runTestForRegionInRange( "indexedRegion3", 300, 600 );
             }
-        } );
+        });
 
         return suite;
     }
@@ -118,7 +110,7 @@ public class BlockDiskCacheConcurrentUnitTest
     /**
      * Test setup
      */
-    @Override
+    @Before
     public void setUp()
     {
         JCS.setConfigFilename( "/TestBlockDiskCache.ccf" );
@@ -134,7 +126,7 @@ public class BlockDiskCacheConcurrentUnitTest
      * @throws Exception
      *                If an error occurs
      */
-    public void runTestForRegion( final String region )
+    public static void runTestForRegion( final String region )
         throws Exception
     {
         final CacheAccess<String, String> jcs = JCS.getInstance( region );
@@ -195,7 +187,7 @@ public class BlockDiskCacheConcurrentUnitTest
      * @throws Exception
      *                If an error occurs
      */
-    public void runTestForRegionInRange( final String region, final int start, final int end )
+    public static void runTestForRegionInRange( final String region, final int start, final int end )
         throws Exception
     {
         final CacheAccess<String, String> jcs = JCS.getInstance( region );

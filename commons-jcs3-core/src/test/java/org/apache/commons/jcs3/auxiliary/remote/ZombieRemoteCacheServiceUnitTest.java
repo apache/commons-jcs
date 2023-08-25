@@ -1,9 +1,5 @@
 package org.apache.commons.jcs3.auxiliary.remote;
 
-import org.apache.commons.jcs3.engine.CacheElement;
-import org.apache.commons.jcs3.engine.ZombieCacheServiceNonLocal;
-import org.apache.commons.jcs3.engine.behavior.ICacheElement;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -23,19 +19,25 @@ import org.apache.commons.jcs3.engine.behavior.ICacheElement;
  * under the License.
  */
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+
+import org.apache.commons.jcs3.engine.CacheElement;
+import org.apache.commons.jcs3.engine.ZombieCacheServiceNonLocal;
+import org.apache.commons.jcs3.engine.behavior.ICacheElement;
+import org.junit.Test;
 
 /**
  * Tests for the zombie remote cache service.
  */
 public class ZombieRemoteCacheServiceUnitTest
-    extends TestCase
 {
     /**
      * Verify that an update event gets added and then is sent to the service passed to propagate.
      * <p>
      * @throws Exception
      */
+    @Test
     public void testUpdateThenWalk()
         throws Exception
     {
@@ -60,6 +62,7 @@ public class ZombieRemoteCacheServiceUnitTest
      * <p>
      * @throws Exception
      */
+    @Test
     public void testUpdateThenWalk_zeroSize()
         throws Exception
     {
@@ -84,6 +87,7 @@ public class ZombieRemoteCacheServiceUnitTest
      * <p>
      * @throws Exception
      */
+    @Test
     public void testRemoveThenWalk()
         throws Exception
     {
@@ -108,6 +112,7 @@ public class ZombieRemoteCacheServiceUnitTest
      * <p>
      * @throws Exception
      */
+    @Test
     public void testRemoveAllThenWalk()
         throws Exception
     {

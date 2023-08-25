@@ -1,5 +1,9 @@
 package org.apache.commons.jcs3.auxiliary.disk.jdbc.hsql;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -7,6 +11,7 @@ import java.util.Set;
 import org.apache.commons.jcs3.JCS;
 import org.apache.commons.jcs3.access.CacheAccess;
 import org.apache.commons.jcs3.engine.behavior.ICacheElement;
+import org.junit.Before;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -36,21 +41,11 @@ import junit.framework.TestCase;
  * threads.
  */
 public class HSQLDiskCacheConcurrentUnitTest
-    extends TestCase
 {
     /**
      * Number of items to cache, twice the configured maxObjects for the memory cache regions.
      */
     private static final int items = 100;
-
-    /**
-     * Constructor for the TestDiskCache object.
-     * @param testName
-     */
-    public HSQLDiskCacheConcurrentUnitTest( final String testName )
-    {
-        super( testName );
-    }
 
     /**
      * A unit test suite for JUnit. Uses ActiveTestSuite to run multiple tests concurrently.
@@ -61,35 +56,35 @@ public class HSQLDiskCacheConcurrentUnitTest
     {
         final ActiveTestSuite suite = new ActiveTestSuite();
 
-        suite.addTest( new HSQLDiskCacheConcurrentUnitTest( "testHSQLDiskCache1" )
+        suite.addTest(new TestCase("testHSQLDiskCache1" )
         {
             @Override
             public void runTest()
                 throws Exception
             {
-                this.runTestForRegion( "indexedRegion1" );
+                runTestForRegion( "indexedRegion1" );
             }
-        } );
+        });
 
-        suite.addTest( new HSQLDiskCacheConcurrentUnitTest( "testHSQLDiskCache2" )
+        suite.addTest(new TestCase("testHSQLDiskCache2" )
         {
             @Override
             public void runTest()
                 throws Exception
             {
-                this.runTestForRegion( "indexedRegion2" );
+                runTestForRegion( "indexedRegion2" );
             }
-        } );
+        });
 
-        suite.addTest( new HSQLDiskCacheConcurrentUnitTest( "testHSQLDiskCache3" )
+        suite.addTest(new TestCase("testHSQLDiskCache3" )
         {
             @Override
             public void runTest()
                 throws Exception
             {
-                this.runTestForRegion( "indexedRegion3" );
+                runTestForRegion( "indexedRegion3" );
             }
-        } );
+        });
 
         return suite;
     }
@@ -97,7 +92,7 @@ public class HSQLDiskCacheConcurrentUnitTest
     /**
      * Test setup
      */
-    @Override
+    @Before
     public void setUp()
     {
         JCS.setConfigFilename( "/TestHSQLDiskCacheConcurrent.ccf" );
@@ -110,7 +105,7 @@ public class HSQLDiskCacheConcurrentUnitTest
      * @param region Name of the region to access
      * @throws Exception If an error occurs
      */
-    public void runTestForRegion( final String region )
+    public static void runTestForRegion( final String region )
         throws Exception
     {
         final CacheAccess<String, String> jcs = JCS.getInstance( region );

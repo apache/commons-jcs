@@ -1,19 +1,5 @@
 package org.apache.commons.jcs3.auxiliary.remote;
 
-import java.util.Properties;
-
-import org.apache.commons.jcs3.auxiliary.MockCacheEventLogger;
-import org.apache.commons.jcs3.engine.control.MockCompositeCacheManager;
-import org.apache.commons.jcs3.engine.control.MockElementSerializer;
-import org.apache.commons.jcs3.JCS;
-import org.apache.commons.jcs3.access.CacheAccess;
-import org.apache.commons.jcs3.auxiliary.AuxiliaryCache;
-import org.apache.commons.jcs3.auxiliary.remote.server.RemoteCacheServerFactory;
-import org.apache.commons.jcs3.engine.CacheElement;
-import org.apache.commons.jcs3.engine.behavior.ICompositeCacheManager;
-import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -33,12 +19,26 @@ import org.apache.commons.jcs3.log.LogManager;
  * under the License.
  */
 
-import junit.framework.TestCase;
+import java.util.Properties;
+
+import org.apache.commons.jcs3.JCS;
+import org.apache.commons.jcs3.access.CacheAccess;
+import org.apache.commons.jcs3.auxiliary.AuxiliaryCache;
+import org.apache.commons.jcs3.auxiliary.MockCacheEventLogger;
+import org.apache.commons.jcs3.auxiliary.remote.server.RemoteCacheServerFactory;
+import org.apache.commons.jcs3.engine.CacheElement;
+import org.apache.commons.jcs3.engine.behavior.ICompositeCacheManager;
+import org.apache.commons.jcs3.engine.control.MockCompositeCacheManager;
+import org.apache.commons.jcs3.engine.control.MockElementSerializer;
+import org.apache.commons.jcs3.log.Log;
+import org.apache.commons.jcs3.log.LogManager;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
 
 /**
  */
 public class TestRemoteCache
-    extends TestCase
 {
     /** The logger */
     private static final Log log = LogManager.getLog( TestRemoteCache.class );
@@ -65,7 +65,7 @@ public class TestRemoteCache
     /**
      * Test setup
      */
-    @Override
+    @Before
     public void setUp()
     {
         JCS.setConfigFilename( "/TestRemoteClient.ccf" );
@@ -73,10 +73,10 @@ public class TestRemoteCache
 
     /**
      * @throws Exception
-     *
-     *
      */
-    public void skiptestSimpleSend()
+    @Test
+    @Ignore
+    public void testSimpleSend()
         throws Exception
     {
         log.info( "testSimpleSend" );
@@ -97,6 +97,7 @@ public class TestRemoteCache
     /**
      * @throws Exception
      */
+    @Test
     public void testService()
         throws Exception
     {

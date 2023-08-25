@@ -19,22 +19,26 @@ package org.apache.commons.jcs3.auxiliary;
  * under the License.
  */
 
-import junit.framework.TestCase;
-
-import org.apache.commons.jcs3.engine.control.MockElementSerializer;
-import org.apache.commons.jcs3.engine.logging.MockCacheEventLogger;
-import org.apache.commons.jcs3.engine.behavior.IElementSerializer;
-import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Properties;
 
+import org.apache.commons.jcs3.engine.behavior.IElementSerializer;
+import org.apache.commons.jcs3.engine.control.MockElementSerializer;
+import org.apache.commons.jcs3.engine.logging.MockCacheEventLogger;
+import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
+import org.junit.Test;
+
 /** Unit tests for the auxiliary cache configurator. */
 public class AuxiliaryCacheConfiguratorUnitTest
-    extends TestCase
 {
     /**
      * Verify that we don't get an error.
      */
+    @Test
     public void testParseCacheEventLogger_Null()
     {
         // SETUP
@@ -51,6 +55,7 @@ public class AuxiliaryCacheConfiguratorUnitTest
     /**
      * Verify that we don't get an error.
      */
+    @Test
     public void testParseCacheEventLogger_NullName()
     {
         // SETUP
@@ -67,6 +72,7 @@ public class AuxiliaryCacheConfiguratorUnitTest
     /**
      * Verify that we can parse the event logger.
      */
+    @Test
     public void testParseCacheEventLogger_Normal()
     {
         // SETUP
@@ -91,6 +97,7 @@ public class AuxiliaryCacheConfiguratorUnitTest
     /**
      * Verify that we can parse the ElementSerializer.
      */
+    @Test
     public void testParseElementSerializer_Normal()
     {
         // SETUP
@@ -115,6 +122,7 @@ public class AuxiliaryCacheConfiguratorUnitTest
     /**
      * Verify that we can parse the ElementSerializer.
      */
+    @Test
     public void testParseElementSerializer_Null()
     {
         // SETUP

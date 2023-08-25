@@ -1,8 +1,5 @@
 package org.apache.commons.jcs3.auxiliary.disk.block;
 
-import org.apache.commons.jcs3.auxiliary.disk.behavior.IDiskCacheAttributes.DiskLimitType;
-
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -22,13 +19,17 @@ import org.apache.commons.jcs3.auxiliary.disk.behavior.IDiskCacheAttributes.Disk
  * under the License.
  */
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
+import org.apache.commons.jcs3.auxiliary.disk.behavior.IDiskCacheAttributes.DiskLimitType;
+import org.junit.Test;
 
 /**
  * Tests for the keyStore.
  */
 public class BlockDiskCacheKeyStoreUnitTest
-        extends TestCase
 {
     /** Directory name */
     private final String rootDirName = "target/test-sandbox/block";
@@ -38,6 +39,7 @@ public class BlockDiskCacheKeyStoreUnitTest
      *
      * @throws Exception
      */
+    @Test
     public void testPutKeys()
             throws Exception
     {
@@ -51,6 +53,7 @@ public class BlockDiskCacheKeyStoreUnitTest
         innerTestPutKeys(attributes);
     }
 
+    @Test
     public void testPutKeysSize()
             throws Exception
     {
@@ -94,6 +97,7 @@ public class BlockDiskCacheKeyStoreUnitTest
      *
      * @throws Exception
      */
+    @Test
     public void testSaveLoadKeys()
             throws Exception
     {
@@ -107,6 +111,7 @@ public class BlockDiskCacheKeyStoreUnitTest
         testSaveLoadKeysInner(attributes);
     }
 
+    @Test
     public void testSaveLoadKeysSize()
             throws Exception
     {
@@ -167,6 +172,7 @@ public class BlockDiskCacheKeyStoreUnitTest
         }
     }
 
+    @Test
     public void testObjectLargerThanMaxSize()
     {
         final BlockDiskCacheAttributes attributes = new BlockDiskCacheAttributes();

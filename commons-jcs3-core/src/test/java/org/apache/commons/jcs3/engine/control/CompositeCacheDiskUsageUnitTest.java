@@ -19,6 +19,8 @@ package org.apache.commons.jcs3.engine.control;
  * under the License.
  */
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
@@ -42,21 +44,20 @@ import org.apache.commons.jcs3.engine.behavior.IElementAttributes;
 import org.apache.commons.jcs3.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs3.engine.logging.behavior.ICacheEventLogger;
 import org.apache.commons.jcs3.engine.stats.behavior.IStats;
-
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Tests of the disk usage settings for the CompositeCache.
  */
 public class CompositeCacheDiskUsageUnitTest
-    extends TestCase
 {
     private static final String CACHE_NAME = "testSpoolAllowed";
 
     /**
      * Test setup
      */
-    @Override
+    @Before
     public void setUp()
     {
         JCS.setConfigFilename( "/TestDiskCacheUsagePattern.ccf" );
@@ -67,6 +68,7 @@ public class CompositeCacheDiskUsageUnitTest
      * <p>
      * @throws CacheException
      */
+    @Test
     public void testSwapConfig()
         throws CacheException
     {
@@ -80,6 +82,7 @@ public class CompositeCacheDiskUsageUnitTest
      * <p>
      * @throws CacheException
      */
+    @Test
     public void testUpdateConfig()
         throws CacheException
     {
@@ -92,6 +95,7 @@ public class CompositeCacheDiskUsageUnitTest
      * Setup a disk cache. Configure the disk usage pattern to swap. Call spool. Verify that the
      * item is put to disk.
      */
+    @Test
     public void testSpoolAllowed()
     {
         // SETUP
@@ -121,6 +125,7 @@ public class CompositeCacheDiskUsageUnitTest
      * Setup a disk cache. Configure the disk usage pattern to not swap. Call spool. Verify that the
      * item is not put to disk.
      */
+    @Test
     public void testSpoolNotAllowed()
     {
         // SETUP
@@ -153,6 +158,7 @@ public class CompositeCacheDiskUsageUnitTest
      * appropriately.
      * @throws IOException
      */
+    @Test
     public void testUpdateAllowed()
         throws IOException
     {
@@ -188,6 +194,7 @@ public class CompositeCacheDiskUsageUnitTest
      * <p>
      * @throws IOException
      */
+    @Test
     public void testUpdateAllowed_localFalse()
         throws IOException
     {
@@ -223,6 +230,7 @@ public class CompositeCacheDiskUsageUnitTest
      * <p>
      * @throws IOException
      */
+    @Test
     public void testUpdateNotAllowed()
         throws IOException
     {
@@ -256,6 +264,7 @@ public class CompositeCacheDiskUsageUnitTest
      * appropriately.
      * @throws IOException
      */
+    @Test
     public void testUpdateAllowed_withOtherCaches()
         throws IOException
     {

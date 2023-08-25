@@ -19,7 +19,8 @@ package org.apache.commons.jcs3.auxiliary.remote.util;
  * under the License.
  */
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import java.io.Serializable;
 import java.util.Collections;
@@ -28,12 +29,13 @@ import java.util.Set;
 import org.apache.commons.jcs3.auxiliary.remote.value.RemoteCacheRequest;
 import org.apache.commons.jcs3.auxiliary.remote.value.RemoteRequestType;
 import org.apache.commons.jcs3.engine.CacheElement;
+import org.junit.Test;
 
 /** Unit tests for the request creator. */
 public class RemoteCacheRequestFactoryUnitTest
-    extends TestCase
 {
     /** Simple test */
+    @Test
     public void testCreateGetRequest_Normal()
     {
         // SETUP
@@ -52,6 +54,7 @@ public class RemoteCacheRequestFactoryUnitTest
     }
 
     /** Simple test */
+    @Test
     public void testCreateGetMatchingRequest_Normal()
     {
         // SETUP
@@ -70,6 +73,7 @@ public class RemoteCacheRequestFactoryUnitTest
     }
 
     /** Simple test */
+    @Test
     public void testCreateGetMultipleRequest_Normal()
     {
         // SETUP
@@ -88,6 +92,7 @@ public class RemoteCacheRequestFactoryUnitTest
     }
 
     /** Simple test */
+    @Test
     public void testCreateRemoveRequest_Normal()
     {
         // SETUP
@@ -106,6 +111,7 @@ public class RemoteCacheRequestFactoryUnitTest
     }
 
     /** Simple test */
+    @Test
     public void testCreateRemoveAllRequest_Normal()
     {
         // SETUP
@@ -123,6 +129,7 @@ public class RemoteCacheRequestFactoryUnitTest
     }
 
     /** Simple test */
+    @Test
     public void testCreateUpdateRequest_Normal()
     {
         // SETUP

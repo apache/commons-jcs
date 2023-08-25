@@ -106,7 +106,7 @@ public class DiskTestObjectUtil
         {
             // 24 KB
             final int size = bytes * 1024;
-            final DiskTestObject tile = new DiskTestObject( Integer.valueOf( i ), new byte[size] );
+            final DiskTestObject tile = new DiskTestObject( Integer.valueOf( i ), new byte[size]);
 
             final ICacheElement<Integer, DiskTestObject> element = new CacheElement<>( cacheName, tile.id, tile );
             elements[i] = element;
@@ -132,7 +132,7 @@ public class DiskTestObjectUtil
             final int bytes = random.nextInt( 20 );
             // 4-24 KB
             final int size = ( bytes + 4 ) * 1024;
-            final DiskTestObject tile = new DiskTestObject( Integer.valueOf( i ), new byte[size] );
+            final DiskTestObject tile = new DiskTestObject( Integer.valueOf( i ), new byte[size]);
 
             final ICacheElement<Integer, DiskTestObject> element = new CacheElement<>( cacheName, tile.id, tile );
             elements[i] = element;

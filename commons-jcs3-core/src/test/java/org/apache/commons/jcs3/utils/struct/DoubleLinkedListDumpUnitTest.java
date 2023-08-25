@@ -1,10 +1,5 @@
 package org.apache.commons.jcs3.utils.struct;
 
-import java.io.StringWriter;
-
-import org.apache.commons.jcs3.TestLogConfigurationUtil;
-
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -24,13 +19,18 @@ import org.apache.commons.jcs3.TestLogConfigurationUtil;
  * under the License.
  */
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertTrue;
+
+import java.io.StringWriter;
+
+import org.apache.commons.jcs3.TestLogConfigurationUtil;
+import org.junit.Test;
 
 /** Unit tests for the double linked list. */
 public class DoubleLinkedListDumpUnitTest
-    extends TestCase
 {
     /** verify that the entries are dumped. */
+    @Test
     public void testDumpEntries_DebugTrue()
     {
         // SETUP

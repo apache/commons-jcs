@@ -19,10 +19,14 @@ package org.apache.commons.jcs3.engine;
  * under the License.
  */
 
+import static org.junit.Assert.assertTrue;
+
 import java.io.IOException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.jcs3.engine.behavior.ICacheElement;
 import org.apache.commons.jcs3.engine.behavior.ICacheListener;
+import org.junit.Before;
 
 import junit.extensions.ActiveTestSuite;
 import junit.framework.Test;
@@ -33,7 +37,6 @@ import junit.framework.TestCase;
  * live should be set to a very short interval to make a deadlock more likely.
  */
 public class EventQueueConcurrentLoadTest
-    extends TestCase
 {
     /** The queue implementation */
     private static CacheEventQueue<String, String> queue;
@@ -51,15 +54,6 @@ public class EventQueueConcurrentLoadTest
     private static final int idleTime = 2;
 
     /**
-     * Constructor for the TestDiskCache object.
-     * @param testName
-     */
-    public EventQueueConcurrentLoadTest( final String testName )
-    {
-        super( testName );
-    }
-
-    /**
      * A unit test suite for JUnit
      * @return The test suite
      */
@@ -67,65 +61,65 @@ public class EventQueueConcurrentLoadTest
     {
         final ActiveTestSuite suite = new ActiveTestSuite();
 
-        suite.addTest( new EventQueueConcurrentLoadTest( "testRunPutTest1" )
+        suite.addTest(new TestCase("testRunPutTest1" )
         {
             @Override
             public void runTest()
                 throws Exception
             {
-                this.runPutTest( 200, 200 );
+                runPutTest( 200, 200 );
             }
-        } );
+        });
 
-        suite.addTest( new EventQueueConcurrentLoadTest( "testRunPutTest2" )
+        suite.addTest(new TestCase("testRunPutTest2" )
         {
             @Override
             public void runTest()
                 throws Exception
             {
-                this.runPutTest( 1200, 1400 );
+                runPutTest( 1200, 1400 );
             }
-        } );
+        });
 
-        suite.addTest( new EventQueueConcurrentLoadTest( "testRunRemoveTest1" )
+        suite.addTest(new TestCase("testRunRemoveTest1" )
         {
             @Override
             public void runTest()
                 throws Exception
             {
-                this.runRemoveTest( 2200 );
+                runRemoveTest( 2200 );
             }
-        } );
+        });
 
-        suite.addTest( new EventQueueConcurrentLoadTest( "testRunPutTest4" )
+        suite.addTest(new TestCase("testRunPutTest4" )
         {
             @Override
             public void runTest()
                 throws Exception
             {
-                this.runPutTest( 5200, 6600 );
+                runPutTest( 5200, 6600 );
             }
-        } );
+        });
 
-        suite.addTest( new EventQueueConcurrentLoadTest( "testRunRemoveTest2" )
+        suite.addTest(new TestCase("testRunRemoveTest2" )
         {
             @Override
             public void runTest()
                 throws Exception
             {
-                this.runRemoveTest( 5200 );
+                runRemoveTest( 5200 );
             }
-        } );
+        });
 
-        suite.addTest( new EventQueueConcurrentLoadTest( "testRunPutDelayTest" )
+        suite.addTest(new TestCase("testRunPutDelayTest" )
         {
             @Override
             public void runTest()
                 throws Exception
             {
-                this.runPutDelayTest( 100, 6700 );
+                runPutDelayTest( 100, 6700 );
             }
-        } );
+        });
 
         return suite;
     }
@@ -133,12 +127,11 @@ public class EventQueueConcurrentLoadTest
     /**
      * Test setup. Create the static queue to be used by all tests
      */
-    @Override
+    @Before
     public void setUp()
     {
         listen = new CacheListenerImpl<>();
         queue = new CacheEventQueue<>( listen, 1L, "testCache1", maxFailure, waitBeforeRetry );
-
         queue.setWaitToDieMillis( idleTime );
     }
 
@@ -148,10 +141,10 @@ public class EventQueueConcurrentLoadTest
      * @param expectedPutCount
      * @throws Exception
      */
-    public void runPutTest( final int end, final int expectedPutCount )
+    public static void runPutTest( final int end, final int expectedPutCount )
         throws Exception
     {
-        for ( int i = 0; i <= end; i++ )
+        for ( int i = 0; i < end; i++ )
         {
             final CacheElement<String, String> elem = new CacheElement<>( "testCache1", i + ":key", i + "data" );
             queue.addPutEvent( elem );
@@ -159,10 +152,10 @@ public class EventQueueConcurrentLoadTest
 
         while ( !queue.isEmpty() )
         {
-            synchronized ( this )
+            synchronized ( queue )
             {
                 System.out.println( "queue is still busy, waiting 250 millis" );
-                this.wait( 250 );
+                queue.wait( 250 );
             }
         }
         System.out.println( "queue is empty, comparing putCount" );
@@ -170,7 +163,7 @@ public class EventQueueConcurrentLoadTest
         // this becomes less accurate with each test. It should never fail. If
         // it does things are very off.
         assertTrue( "The put count [" + listen.putCount + "] is below the expected minimum threshold ["
-            + expectedPutCount + "]", listen.putCount >= ( expectedPutCount - 1 ) );
+            + expectedPutCount + "]", listen.putCount.get() >= ( expectedPutCount - 1 ) );
 
     }
 
@@ -179,10 +172,10 @@ public class EventQueueConcurrentLoadTest
      * @param end
      * @throws Exception
      */
-    public void runRemoveTest( final int end )
+    public static void runRemoveTest( final int end )
         throws Exception
     {
-        for ( int i = 0; i <= end; i++ )
+        for ( int i = 0; i < end; i++ )
         {
             queue.addRemoveEvent( i + ":key" );
         }
@@ -195,15 +188,15 @@ public class EventQueueConcurrentLoadTest
      * @param expectedPutCount
      * @throws Exception
      */
-    public void runPutDelayTest( final int end, final int expectedPutCount )
+    public static void runPutDelayTest( final int end, final int expectedPutCount )
         throws Exception
     {
         while ( !queue.isEmpty() )
         {
-            synchronized ( this )
+            synchronized ( queue )
             {
                 System.out.println( "queue is busy, waiting 250 millis to begin" );
-                this.wait( 250 );
+                queue.wait( 250 );
             }
         }
         System.out.println( "queue is empty, begin" );
@@ -212,17 +205,17 @@ public class EventQueueConcurrentLoadTest
         final CacheElement<String, String> elem = new CacheElement<>( "testCache1", "a:key", "adata" );
         queue.addPutEvent( elem );
 
-        for ( int i = 0; i <= end; i++ )
+        for ( int i = 0; i < end; i++ )
         {
-            synchronized ( this )
+            synchronized ( queue )
             {
                 if ( i % 2 == 0 )
                 {
-                    this.wait( idleTime );
+                    queue.wait( idleTime );
                 }
                 else
                 {
-                    this.wait( idleTime / 2 );
+                    queue.wait( idleTime / 2 );
                 }
             }
             final CacheElement<String, String> elem2 = new CacheElement<>( "testCache1", i + ":key", i + "data" );
@@ -231,10 +224,10 @@ public class EventQueueConcurrentLoadTest
 
         while ( !queue.isEmpty() )
         {
-            synchronized ( this )
+            synchronized ( queue )
             {
                 System.out.println( "queue is still busy, waiting 250 millis" );
-                this.wait( 250 );
+                queue.wait( 250 );
             }
         }
         System.out.println( "queue is empty, comparing putCount" );
@@ -244,7 +237,7 @@ public class EventQueueConcurrentLoadTest
         // this becomes less accurate with each test. It should never fail. If
         // it does things are very off.
         assertTrue( "The put count [" + listen.putCount + "] is below the expected minimum threshold ["
-            + expectedPutCount + "]", listen.putCount >= ( expectedPutCount - 1 ) );
+            + expectedPutCount + "]", listen.putCount.get() >= ( expectedPutCount - 1 ) );
 
     }
 
@@ -257,12 +250,12 @@ public class EventQueueConcurrentLoadTest
         /**
          * <code>putCount</code>
          */
-        protected int putCount;
+        protected AtomicInteger putCount = new AtomicInteger();
 
         /**
          * <code>removeCount</code>
          */
-        protected int removeCount;
+        protected AtomicInteger removeCount = new AtomicInteger();
 
         /**
          * @param item
@@ -272,10 +265,7 @@ public class EventQueueConcurrentLoadTest
         public void handlePut( final ICacheElement<K, V> item )
             throws IOException
         {
-            synchronized ( this )
-            {
-                putCount++;
-            }
+            putCount.incrementAndGet();
         }
 
         /**
@@ -287,11 +277,7 @@ public class EventQueueConcurrentLoadTest
         public void handleRemove( final String cacheName, final K key )
             throws IOException
         {
-            synchronized ( this )
-            {
-                removeCount++;
-            }
-
+            removeCount.incrementAndGet();
         }
 
         /**
@@ -303,7 +289,6 @@ public class EventQueueConcurrentLoadTest
             throws IOException
         {
             // TODO Auto-generated method stub
-
         }
 
         /**
@@ -315,7 +300,6 @@ public class EventQueueConcurrentLoadTest
             throws IOException
         {
             // TODO Auto-generated method stub
-
         }
 
         /**
@@ -327,7 +311,6 @@ public class EventQueueConcurrentLoadTest
             throws IOException
         {
             // TODO Auto-generated method stub
-
         }
 
         /**
@@ -341,6 +324,5 @@ public class EventQueueConcurrentLoadTest
             // TODO Auto-generated method stub
             return 0;
         }
-
     }
 }

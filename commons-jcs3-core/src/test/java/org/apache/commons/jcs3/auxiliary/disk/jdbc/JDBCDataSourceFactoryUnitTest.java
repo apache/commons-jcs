@@ -19,6 +19,10 @@ package org.apache.commons.jcs3.auxiliary.disk.jdbc;
  * under the License.
  */
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -35,16 +39,16 @@ import org.apache.commons.dbcp2.datasources.SharedPoolDataSource;
 import org.apache.commons.jcs3.auxiliary.disk.jdbc.dsfactory.DataSourceFactory;
 import org.apache.commons.jcs3.auxiliary.disk.jdbc.dsfactory.JndiDataSourceFactory;
 import org.apache.commons.jcs3.auxiliary.disk.jdbc.dsfactory.SharedPoolDataSourceFactory;
-
-import junit.framework.TestCase;
+import org.junit.Test;
 
 /** Unit tests for the data source factories */
 public class JDBCDataSourceFactoryUnitTest
-    extends TestCase
 {
-    /** Verify that we can configure the object based on the props.
-     *  @throws SQLException
+    /**
+     * Verify that we can configure the object based on the props.
+     * @throws SQLException
      */
+    @Test
     public void testConfigureDataSourceFactory_Simple() throws SQLException
     {
         // SETUP
@@ -84,9 +88,11 @@ public class JDBCDataSourceFactoryUnitTest
         assertEquals( "Wrong maxActive value", maxActive, spds.getMaxTotal() );
     }
 
-    /** Verify that we can configure the object based on the attributes.
-     *  @throws SQLException
+    /**
+     * Verify that we can configure the object based on the attributes.
+     * @throws SQLException
      */
+    @Test
     public void testConfigureDataSourceFactory_Attributes() throws SQLException
     {
         // SETUP
@@ -117,9 +123,11 @@ public class JDBCDataSourceFactoryUnitTest
         assertEquals( "Wrong maxActive value", maxActive, spds.getMaxTotal() );
     }
 
-    /** Verify that we can configure the object based on JNDI.
-     *  @throws SQLException
+    /**
+     * Verify that we can configure the object based on JNDI.
+     * @throws SQLException
      */
+    @Test
     public void testConfigureDataSourceFactory_JNDI() throws SQLException
     {
         // SETUP

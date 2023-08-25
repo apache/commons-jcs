@@ -19,24 +19,25 @@ package org.apache.commons.jcs3.auxiliary.disk.block;
  * under the License.
  */
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
 
-import org.apache.commons.jcs3.utils.timing.SleepUtil;
 import org.apache.commons.jcs3.JCS;
 import org.apache.commons.jcs3.access.CacheAccess;
 import org.apache.commons.jcs3.utils.timing.ElapsedTimer;
+import org.apache.commons.jcs3.utils.timing.SleepUtil;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Put a few hundred thousand entries in the block disk cache.
  */
 public class HugeQuantityBlockDiskCacheLoadTest
-    extends TestCase
 {
 
     /**
      * Test setup
      */
-    @Override
+    @Before
     public void setUp()
     {
         JCS.setConfigFilename( "/TestBlockDiskCacheHuge.ccf" );
@@ -48,6 +49,7 @@ public class HugeQuantityBlockDiskCacheLoadTest
      * <p>
      * @throws Exception If an error occurs
      */
+    @Test
     public void testLargeNumberOfItems()
         throws Exception
     {

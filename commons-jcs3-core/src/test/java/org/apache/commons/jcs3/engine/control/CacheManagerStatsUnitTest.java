@@ -1,9 +1,5 @@
 package org.apache.commons.jcs3.engine.control;
 
-import org.apache.commons.jcs3.JCS;
-import org.apache.commons.jcs3.access.CacheAccess;
-import org.apache.commons.jcs3.engine.stats.behavior.ICacheStats;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -23,12 +19,16 @@ import org.apache.commons.jcs3.engine.stats.behavior.ICacheStats;
  * under the License.
  */
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertTrue;
+
+import org.apache.commons.jcs3.JCS;
+import org.apache.commons.jcs3.access.CacheAccess;
+import org.apache.commons.jcs3.engine.stats.behavior.ICacheStats;
+import org.junit.Test;
 
 /**
  */
 public class CacheManagerStatsUnitTest
-    extends TestCase
 {
 
     /**
@@ -36,6 +36,7 @@ public class CacheManagerStatsUnitTest
      *
      * @throws Exception
      */
+    @Test
     public void testSimpleGetStats() throws Exception
     {
         final CacheAccess<String, String> cache = JCS.getInstance( "testCache1" );

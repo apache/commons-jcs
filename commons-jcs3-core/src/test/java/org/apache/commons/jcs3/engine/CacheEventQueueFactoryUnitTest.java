@@ -1,10 +1,5 @@
 package org.apache.commons.jcs3.engine;
 
-import org.apache.commons.jcs3.auxiliary.remote.MockRemoteCacheListener;
-import org.apache.commons.jcs3.engine.behavior.ICacheEventQueue;
-import org.apache.commons.jcs3.engine.behavior.ICacheEventQueue.QueueType;
-import org.apache.commons.jcs3.engine.behavior.ICacheListener;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -24,13 +19,21 @@ import org.apache.commons.jcs3.engine.behavior.ICacheListener;
  * under the License.
  */
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+import org.apache.commons.jcs3.auxiliary.remote.MockRemoteCacheListener;
+import org.apache.commons.jcs3.engine.behavior.ICacheEventQueue;
+import org.apache.commons.jcs3.engine.behavior.ICacheEventQueue.QueueType;
+import org.apache.commons.jcs3.engine.behavior.ICacheListener;
+import org.junit.Test;
 
 /** Unit tests for the CacheEventQueueFactory */
 public class CacheEventQueueFactoryUnitTest
-    extends TestCase
 {
     /** Test create */
+    @Test
     public void testCreateCacheEventQueue_Single()
     {
         // SETUP
@@ -49,6 +52,7 @@ public class CacheEventQueueFactoryUnitTest
     }
 
     /** Test create */
+    @Test
     public void testCreateCacheEventQueue_Pooled()
     {
         // SETUP

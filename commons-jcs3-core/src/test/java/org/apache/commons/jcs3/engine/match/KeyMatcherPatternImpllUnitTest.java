@@ -19,18 +19,20 @@ package org.apache.commons.jcs3.engine.match;
  * under the License.
  */
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
 
 import java.util.HashSet;
 import java.util.Set;
 
+import org.junit.Test;
+
 /** Unit tests for the key matcher. */
 public class KeyMatcherPatternImpllUnitTest
-    extends TestCase
 {
     /**
      * Verify that the matching method works.
      */
+    @Test
     public void testGetMatchingKeysFromArray_AllMatch()
     {
         // SETUP
@@ -57,6 +59,7 @@ public class KeyMatcherPatternImpllUnitTest
     /**
      * Verify that the matching method works.
      */
+    @Test
     public void testGetMatchingKeysFromArray_AllMatchFirstNull()
     {
         // SETUP
@@ -83,6 +86,7 @@ public class KeyMatcherPatternImpllUnitTest
     /**
      * Verify that the matching method works.
      */
+    @Test
     public void testGetMatchingKeysFromArray_TwoTypes()
     {
         // SETUP

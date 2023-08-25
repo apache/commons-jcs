@@ -1,12 +1,5 @@
 package org.apache.commons.jcs3.engine.control.event;
 
-import org.apache.commons.jcs3.JCS;
-import org.apache.commons.jcs3.access.CacheAccess;
-import org.apache.commons.jcs3.engine.ElementAttributes;
-import org.apache.commons.jcs3.engine.behavior.IElementAttributes;
-import org.apache.commons.jcs3.engine.control.event.behavior.IElementEvent;
-import org.apache.commons.jcs3.engine.control.event.behavior.IElementEventHandler;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -26,13 +19,24 @@ import org.apache.commons.jcs3.engine.control.event.behavior.IElementEventHandle
  * under the License.
  */
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
+import org.apache.commons.jcs3.JCS;
+import org.apache.commons.jcs3.access.CacheAccess;
+import org.apache.commons.jcs3.engine.ElementAttributes;
+import org.apache.commons.jcs3.engine.behavior.IElementAttributes;
+import org.apache.commons.jcs3.engine.control.event.behavior.IElementEvent;
+import org.apache.commons.jcs3.engine.control.event.behavior.IElementEventHandler;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * This test suite verifies that the basic ElementEvent are called as they should be.
  */
 public class SimpleEventHandlingUnitTest
-    extends TestCase
 {
     /** Items to test with */
     private static final int items = 2000;
@@ -43,7 +47,7 @@ public class SimpleEventHandlingUnitTest
     /**
      * Test setup with expected configuration parameters.
      */
-    @Override
+    @Before
     public void setUp()
     {
         JCS.setConfigFilename( "/TestSimpleEventHandling.ccf" );
@@ -55,6 +59,7 @@ public class SimpleEventHandlingUnitTest
      * <p>
      * @throws Exception Description of the Exception
      */
+    @Test
     public void testSpoolEvent()
         throws Exception
     {
@@ -84,6 +89,7 @@ public class SimpleEventHandlingUnitTest
      * <p>
      * @throws Exception
      */
+    @Test
     public void testSpoolNoDiskEvent()
         throws Exception
     {
@@ -113,6 +119,7 @@ public class SimpleEventHandlingUnitTest
      * Test the ELEMENT_EVENT_SPOOLED_NOT_ALLOWED event.
      * @throws Exception
      */
+    @Test
     public void testSpoolNotAllowedEvent()
         throws Exception
     {
@@ -141,6 +148,7 @@ public class SimpleEventHandlingUnitTest
      * Test the ELEMENT_EVENT_SPOOLED_NOT_ALLOWED event.
      * @throws Exception
      */
+    @Test
     public void testSpoolNotAllowedEventOnItem()
         throws Exception
     {
@@ -171,6 +179,7 @@ public class SimpleEventHandlingUnitTest
      * Test the ELEMENT_EVENT_EXCEEDED_MAXLIFE_ONREQUEST event.
      * @throws Exception
      */
+    @Test
     public void testExceededMaxlifeOnrequestEvent()
         throws Exception
     {
@@ -207,6 +216,7 @@ public class SimpleEventHandlingUnitTest
      * Test the ELEMENT_EVENT_EXCEEDED_IDLETIME_ONREQUEST event.
      * @throws Exception
      */
+    @Test
     public void testExceededIdletimeOnrequestEvent()
         throws Exception
     {
@@ -250,6 +260,7 @@ public class SimpleEventHandlingUnitTest
      * Test that cloned ElementAttributes have different creation times.
      * @throws Exception
      */
+    @Test
     public void testElementAttributesCreationTime()
         throws Exception
     {

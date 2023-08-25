@@ -1,5 +1,10 @@
 package org.apache.commons.jcs3;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -28,8 +33,9 @@ import org.apache.commons.jcs3.engine.stats.behavior.IStatElement;
 import org.apache.commons.jcs3.engine.stats.behavior.IStats;
 import org.apache.commons.jcs3.log.Log;
 import org.apache.commons.jcs3.log.LogManager;
-
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * This is based on a test that was posted to the user's list:
@@ -37,7 +43,6 @@ import junit.framework.TestCase;
  * http://www.opensubscriber.com/message/jcs-users@jakarta.apache.org/2435965.html
  */
 public class JCSThrashTest
-    extends TestCase
 {
     /** The logger. */
     private static final Log LOG = LogManager.getLog( JCSThrashTest.class.getName() );
@@ -51,11 +56,10 @@ public class JCSThrashTest
      * Sets up the test
      * @throws Exception
      */
-    @Override
-    protected void setUp()
+    @Before
+    public void setUp()
         throws Exception
     {
-        super.setUp();
         JCS.setConfigFilename( "/TestThrash.ccf" );
         jcs = JCS.getInstance( "testcache" );
     }
@@ -63,11 +67,10 @@ public class JCSThrashTest
     /**
      * @throws Exception
      */
-    @Override
-    protected void tearDown()
+    @After
+    public void tearDown()
         throws Exception
     {
-        super.tearDown();
         jcs.clear();
         jcs.dispose();
     }
@@ -76,6 +79,7 @@ public class JCSThrashTest
      * Tests adding an entry.
      * @throws Exception
      */
+    @Test
     public void testPut()
         throws Exception
     {
@@ -100,6 +104,7 @@ public class JCSThrashTest
      * Test elements can be removed from the store
      * @throws Exception
      */
+    @Test
     public void testRemove()
         throws Exception
     {
@@ -126,6 +131,7 @@ public class JCSThrashTest
      * the time the amount of memory used after the test is less.
      * @throws Exception
      */
+    @Test
     public void testForMemoryLeaks()
         throws Exception
     {
@@ -244,7 +250,7 @@ public class JCSThrashTest
         // Throw any error that happened
         if ( errors[0] != null )
         {
-            throw new Exception( "Test thread failed.", errors[0] );
+            throw new Exception( "Test thread failed.", errors[0]);
         }
     }
 

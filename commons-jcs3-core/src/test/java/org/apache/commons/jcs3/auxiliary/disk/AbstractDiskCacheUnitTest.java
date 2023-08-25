@@ -1,5 +1,11 @@
 package org.apache.commons.jcs3.auxiliary.disk;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -36,18 +42,17 @@ import org.apache.commons.jcs3.engine.CacheStatus;
 import org.apache.commons.jcs3.engine.ElementAttributes;
 import org.apache.commons.jcs3.engine.behavior.ICacheElement;
 import org.apache.commons.jcs3.engine.behavior.IElementAttributes;
-
-import junit.framework.TestCase;
+import org.junit.Test;
 
 /** Tests for the abstract disk cache. It's largely tested by actual instances. */
 public class AbstractDiskCacheUnitTest
-    extends TestCase
 {
     /**
      * Verify that update and get work.
      * <p>
      * @throws IOException
      */
+    @Test
     public void testUpdateGet_allowed()
         throws IOException
     {
@@ -78,6 +83,7 @@ public class AbstractDiskCacheUnitTest
      * <p>
      * @throws IOException
      */
+    @Test
     public void testDispose()
         throws IOException
     {
@@ -108,6 +114,7 @@ public class AbstractDiskCacheUnitTest
      * <p>
      * @throws IOException
      */
+    @Test
     public void testRemoveAll_notAllowed()
         throws IOException
     {
@@ -142,6 +149,7 @@ public class AbstractDiskCacheUnitTest
      * <p>
      * @throws IOException
      */
+    @Test
     public void testRemoveAll_allowed()
         throws IOException
     {

@@ -19,7 +19,10 @@ package org.apache.commons.jcs3.engine.memory.mru;
  * under the License.
  */
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -32,15 +35,16 @@ import org.apache.commons.jcs3.engine.CacheElement;
 import org.apache.commons.jcs3.engine.behavior.ICacheElement;
 import org.apache.commons.jcs3.engine.control.CompositeCache;
 import org.apache.commons.jcs3.engine.control.CompositeCacheManager;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Tests for the test MRU implementation.
  */
 public class MRUMemoryCacheUnitTest
-    extends TestCase
 {
     /** Test setup */
-    @Override
+    @Before
     public void setUp()
     {
         JCS.setConfigFilename( "/TestMRUCache.ccf" );
@@ -52,6 +56,7 @@ public class MRUMemoryCacheUnitTest
      * <p>
      * @throws CacheException
      */
+    @Test
     public void testLoadFromCCF()
         throws CacheException
     {
@@ -65,6 +70,7 @@ public class MRUMemoryCacheUnitTest
      * <p>
      * @throws CacheException
      */
+    @Test
     public void testPutGetThroughHub()
         throws CacheException
     {
@@ -118,6 +124,7 @@ public class MRUMemoryCacheUnitTest
      * <p>
      * @throws CacheException
      */
+    @Test
     public void testPutGetThroughHubTwice()
         throws CacheException
     {
@@ -158,6 +165,7 @@ public class MRUMemoryCacheUnitTest
      * <p>
      * @throws CacheException
      */
+    @Test
     public void testPutRemoveThroughHub()
         throws CacheException
     {
@@ -189,6 +197,7 @@ public class MRUMemoryCacheUnitTest
      * <p>
      * @throws CacheException
      */
+    @Test
     public void testClearThroughHub()
         throws CacheException
     {
@@ -217,6 +226,7 @@ public class MRUMemoryCacheUnitTest
      * <p>
      * @throws CacheException
      */
+    @Test
     public void testGetStatsThroughHub()
         throws CacheException
     {
@@ -244,6 +254,7 @@ public class MRUMemoryCacheUnitTest
      * <p>
      * @throws Exception
      */
+    @Test
     public void testGetKeyArray()
         throws Exception
     {
@@ -274,6 +285,7 @@ public class MRUMemoryCacheUnitTest
      * <p>
      * @throws CacheException
      */
+    @Test
     public void testRemovePartialThroughHub()
         throws CacheException
     {

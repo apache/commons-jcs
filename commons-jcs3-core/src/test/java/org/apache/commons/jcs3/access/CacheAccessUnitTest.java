@@ -1,5 +1,12 @@
 package org.apache.commons.jcs3.access;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -31,19 +38,18 @@ import org.apache.commons.jcs3.engine.ElementAttributes;
 import org.apache.commons.jcs3.engine.behavior.ICacheElement;
 import org.apache.commons.jcs3.engine.behavior.ICompositeCacheAttributes;
 import org.apache.commons.jcs3.engine.behavior.IElementAttributes;
-
-import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  * Tests the methods of the cache access class.
  */
 public class CacheAccessUnitTest
-    extends TestCase
 {
     /**
      * Verify that we get an object exists exception if the item is in the cache.
      * @throws Exception
      */
+    @Test
     public void testPutSafe()
         throws Exception
     {
@@ -77,6 +83,7 @@ public class CacheAccessUnitTest
      * Try to put a null key and verify that we get an exception.
      * @throws Exception
      */
+    @Test
     public void testPutNullKey()
         throws Exception
     {
@@ -101,6 +108,7 @@ public class CacheAccessUnitTest
      * Try to put a null value and verify that we get an exception.
      * @throws Exception
      */
+    @Test
     public void testPutNullValue()
         throws Exception
     {
@@ -125,6 +133,7 @@ public class CacheAccessUnitTest
      * Verify that elements that go in the region after this call take the new attributes.
      * @throws Exception
      */
+    @Test
     public void testSetDefaultElementAttributes()
         throws Exception
     {
@@ -155,6 +164,7 @@ public class CacheAccessUnitTest
      * Verify that getCacheElements returns the elements requested based on the key.
      * @throws Exception
      */
+    @Test
     public void testGetCacheElements()
         throws Exception
     {
@@ -204,6 +214,7 @@ public class CacheAccessUnitTest
      * Verify that we can get a region using the define region method.
      * @throws Exception
      */
+    @Test
     public void testRegionDefiniton()
         throws Exception
     {
@@ -215,6 +226,7 @@ public class CacheAccessUnitTest
      * Verify that we can get a region using the define region method with cache attributes.
      * @throws Exception
      */
+    @Test
     public void testRegionDefinitonWithAttributes()
         throws Exception
     {
@@ -235,6 +247,7 @@ public class CacheAccessUnitTest
      * element attributes.
      * @throws Exception
      */
+    @Test
     public void testRegionDefinitonWithBothAttributes()
         throws Exception
     {
@@ -259,6 +272,7 @@ public class CacheAccessUnitTest
      * <p>
      * @throws Exception
      */
+    @Test
     public void testGetMatching_Normal()
         throws Exception
     {
@@ -313,6 +327,7 @@ public class CacheAccessUnitTest
      * <p>
      * @throws Exception
      */
+    @Test
     public void testGetMatchingElements_Normal()
         throws Exception
     {

@@ -19,32 +19,32 @@ package org.apache.commons.jcs3.auxiliary.remote.http.server;
  * under the License.
  */
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.Set;
-
-import junit.framework.TestCase;
 
 import org.apache.commons.jcs3.auxiliary.remote.MockRemoteCacheService;
 import org.apache.commons.jcs3.auxiliary.remote.util.RemoteCacheRequestFactory;
 import org.apache.commons.jcs3.auxiliary.remote.value.RemoteCacheRequest;
 import org.apache.commons.jcs3.auxiliary.remote.value.RemoteCacheResponse;
 import org.apache.commons.jcs3.engine.CacheElement;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /** Unit tests for the servlet. */
 public class RemoteHttpCacheServletUnitTest
-    extends TestCase
 {
     private RemoteHttpCacheServlet servlet;
     private MockRemoteCacheService<Serializable, Serializable> remoteHttpCacheService;
 
-    /**
-     * @see junit.framework.TestCase#setUp()
-     */
-    @Override
-    protected void setUp() throws Exception
+    @Before
+    public void setUp() throws Exception
     {
-        super.setUp();
         servlet = new RemoteHttpCacheServlet();
         servlet.init(null);
 
@@ -52,17 +52,14 @@ public class RemoteHttpCacheServletUnitTest
         servlet.setRemoteCacheService( remoteHttpCacheService );
     }
 
-    /**
-     * @see junit.framework.TestCase#tearDown()
-     */
-    @Override
-    protected void tearDown() throws Exception
+    @After
+    public void tearDown() throws Exception
     {
         servlet.destroy();
-        super.tearDown();
     }
 
     /** Verify that we balk and return an error. */
+    @Test
     public void testProcessRequest_null()
     {
         final RemoteCacheRequest<Serializable, Serializable> request = null;
@@ -77,6 +74,7 @@ public class RemoteHttpCacheServletUnitTest
     }
 
     /** Verify that the service is called. */
+    @Test
     public void testProcessRequest_Get()
     {
         final String cacheName = "test";
@@ -93,6 +91,7 @@ public class RemoteHttpCacheServletUnitTest
     }
 
     /** Verify that the service is called. */
+    @Test
     public void testProcessRequest_GetMatching()
     {
         final String cacheName = "test";
@@ -110,6 +109,7 @@ public class RemoteHttpCacheServletUnitTest
     }
 
     /** Verify that the service is called. */
+    @Test
     public void testProcessRequest_GetMultiple()
     {
         final String cacheName = "test";
@@ -128,6 +128,7 @@ public class RemoteHttpCacheServletUnitTest
     }
 
     /** Verify that the service is called. */
+    @Test
     public void testProcessRequest_Update()
     {
         final String cacheName = "test";
@@ -145,6 +146,7 @@ public class RemoteHttpCacheServletUnitTest
     }
 
     /** Verify that the service is called. */
+    @Test
     public void testProcessRequest_Remove()
     {
         final String cacheName = "test";
@@ -161,6 +163,7 @@ public class RemoteHttpCacheServletUnitTest
     }
 
     /** Verify that the service is called. */
+    @Test
     public void testProcessRequest_RemoveAll()
     {
         final String cacheName = "testRemoveALl";

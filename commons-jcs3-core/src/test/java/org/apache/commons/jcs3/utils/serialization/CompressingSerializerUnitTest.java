@@ -1,7 +1,5 @@
 package org.apache.commons.jcs3.utils.serialization;
 
-import java.io.IOException;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -21,18 +19,24 @@ import java.io.IOException;
  * under the License.
  */
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
+import java.io.IOException;
+
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Tests the compressing serializer.
  */
 public class CompressingSerializerUnitTest
-    extends TestCase
 {
     private CompressingSerializer serializer;
 
-    @Override
-    protected void setUp() throws Exception
+    @Before
+    public void setUp() throws Exception
     {
         this.serializer = new CompressingSerializer();
     }
@@ -43,6 +47,7 @@ public class CompressingSerializerUnitTest
      * @throws ClassNotFoundException
      * @throws IOException
      */
+    @Test
     public void testDeserialize_NullInput()
         throws IOException, ClassNotFoundException
     {
@@ -60,6 +65,7 @@ public class CompressingSerializerUnitTest
      * <p>
      * @throws Exception on error
      */
+    @Test
     public void testSimpleBackAndForth()
         throws Exception
     {
@@ -76,6 +82,7 @@ public class CompressingSerializerUnitTest
      * <p>
      * @throws Exception on error
      */
+    @Test
     public void testSerialize_NullInput()
         throws Exception
     {
@@ -94,6 +101,7 @@ public class CompressingSerializerUnitTest
      * <p>
      * @throws Exception on error
      */
+    @Test
     public void testSerialize_CompareCompressedAndUncompressed()
         throws Exception
     {

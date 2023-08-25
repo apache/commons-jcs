@@ -19,20 +19,18 @@ package org.apache.commons.jcs3.auxiliary.disk.indexed;
  * under the License.
  */
 
-import junit.framework.TestCase;
-
 import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.Random;
 
 import org.apache.commons.jcs3.JCS;
 import org.apache.commons.jcs3.access.CacheAccess;
+import org.junit.Test;
 
 /**
  * This is for manually testing the defrag process.
  */
 public class IndexedDiskCacheDefragPerformanceTest
-    extends TestCase
 {
     /** For readability */
     private static final String LOG_DIVIDER = "---------------------------";
@@ -55,6 +53,7 @@ public class IndexedDiskCacheDefragPerformanceTest
     /**
      * @throws Exception
      */
+    @Test
     public void testRealTimeOptimization()
         throws Exception
     {
@@ -85,7 +84,7 @@ public class IndexedDiskCacheDefragPerformanceTest
         {
             final int bytes = random.nextInt( 20 );
             // 4-24 KB
-            tile = new Tile( Integer.valueOf( i ), new byte[( bytes + 4 ) * 1024] );
+            tile = new Tile( Integer.valueOf( i ), new byte[( bytes + 4 ) * 1024]);
             // images
 
             jcs.put( tile.id, tile );
@@ -147,8 +146,8 @@ public class IndexedDiskCacheDefragPerformanceTest
          */
         public Integer id;
 
-        /**Byte size
-         *
+        /**
+         * Byte size
          */
         public byte[] imageBytes;
 
@@ -160,22 +159,6 @@ public class IndexedDiskCacheDefragPerformanceTest
         {
             this.id = id;
             this.imageBytes = imageBytes;
-        }
-    }
-
-    /**
-     * @param args
-     */
-    public static void main( final String args[] )
-    {
-        try
-        {
-            final IndexedDiskCacheDefragPerformanceTest tester = new IndexedDiskCacheDefragPerformanceTest();
-            tester.testRealTimeOptimization();
-        }
-        catch ( final Exception e )
-        {
-            e.printStackTrace();
         }
     }
 }

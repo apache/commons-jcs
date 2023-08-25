@@ -1,11 +1,5 @@
 package org.apache.commons.jcs3.auxiliary.disk.block;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Random;
-
-import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -25,26 +19,33 @@ import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
  * under the License.
  */
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Random;
+
+import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Test for the disk access layer of the Block Disk Cache.
  */
 public class BlockDiskUnitTest
-    extends TestCase
 {
     /** data file. */
     private File rafDir;
     private BlockDisk disk;
 
     /**
-     * @see junit.framework.TestCase#setUp()
      * Creates the base directory
      */
-    @Override
-    protected void setUp() throws Exception
+    @Before
+    public void setUp() throws Exception
     {
-        super.setUp();
         final String rootDirName = "target/test-sandbox/block";
         this.rafDir = new File( rootDirName );
         this.rafDir.mkdirs();
@@ -64,14 +65,10 @@ public class BlockDiskUnitTest
         this.disk = new BlockDisk(file, blockSize, new StandardSerializer());
     }
 
-    /**
-     * @see junit.framework.TestCase#tearDown()
-     */
-    @Override
-    protected void tearDown() throws Exception
+    @After
+    public void tearDown() throws Exception
     {
         disk.close();
-        super.tearDown();
     }
 
     /**
@@ -79,6 +76,7 @@ public class BlockDiskUnitTest
      * <p>
      * @throws Exception
      */
+    @Test
     public void testWrite_NullBlockElement()
         throws Exception
     {
@@ -91,7 +89,7 @@ public class BlockDiskUnitTest
         // VERIFY
         assertEquals( "Wrong number of blocks recorded.", 1, disk.getNumberOfBlocks() );
         assertEquals( "Wrong number of blocks returned.", 1, blocks.length );
-        assertEquals( "Wrong block returned.", 0, blocks[0] );
+        assertEquals( "Wrong block returned.", 0, blocks[0]);
     }
 
     /**
@@ -99,6 +97,7 @@ public class BlockDiskUnitTest
      * <p>
      * @throws Exception
      */
+    @Test
     public void testWrite_SingleBlockElement()
         throws Exception
     {
@@ -107,12 +106,12 @@ public class BlockDiskUnitTest
 
         // DO WORK
         final int bytes = 1 * 1024;
-        final int[] blocks = disk.write( new byte[bytes] );
+        final int[] blocks = disk.write( new byte[bytes]);
 
         // VERIFY
         assertEquals( "Wrong number of blocks recorded.", 1, disk.getNumberOfBlocks() );
         assertEquals( "Wrong number of blocks returned.", 1, blocks.length );
-        assertEquals( "Wrong block returned.", 0, blocks[0] );
+        assertEquals( "Wrong block returned.", 0, blocks[0]);
     }
 
     /**
@@ -120,6 +119,7 @@ public class BlockDiskUnitTest
      * <p>
      * @throws Exception
      */
+    @Test
     public void testWriteAndRead_SingleBlockElement()
         throws Exception
     {
@@ -128,7 +128,7 @@ public class BlockDiskUnitTest
 
         // DO WORK
         final int bytes = 1 * 1024;
-        final int[] blocks = disk.write( new byte[bytes] );
+        final int[] blocks = disk.write( new byte[bytes]);
 
         final byte[] result = (byte[]) disk.read( blocks );
 
@@ -141,6 +141,7 @@ public class BlockDiskUnitTest
      * <p>
      * @throws Exception
      */
+    @Test
     public void testWrite_TwoSingleBlockElements()
         throws Exception
     {
@@ -149,15 +150,15 @@ public class BlockDiskUnitTest
 
         // DO WORK
         final int bytes = 1 * 1024;
-        final int[] blocks1 = disk.write( new byte[bytes] );
-        final int[] blocks2 = disk.write( new byte[bytes] );
+        final int[] blocks1 = disk.write( new byte[bytes]);
+        final int[] blocks2 = disk.write( new byte[bytes]);
 
         // VERIFY
         assertEquals( "Wrong number of blocks recorded.", 2, disk.getNumberOfBlocks() );
         assertEquals( "Wrong number of blocks returned.", 1, blocks1.length );
-        assertEquals( "Wrong block returned.", 0, blocks1[0] );
+        assertEquals( "Wrong block returned.", 0, blocks1[0]);
         assertEquals( "Wrong number of blocks returned.", 1, blocks2.length );
-        assertEquals( "Wrong block returned.", 1, blocks2[0] );
+        assertEquals( "Wrong block returned.", 1, blocks2[0]);
     }
 
     /**
@@ -165,6 +166,7 @@ public class BlockDiskUnitTest
      * <p>
      * @throws Exception
      */
+    @Test
     public void testCalculateBlocksNeededDouble()
         throws Exception
     {
@@ -173,7 +175,7 @@ public class BlockDiskUnitTest
 
         // DO WORK
         final int result = disk.calculateTheNumberOfBlocksNeeded( new byte[disk.getBlockSizeBytes() * 2
-            - ( 2 * BlockDisk.HEADER_SIZE_BYTES )] );
+            - ( 2 * BlockDisk.HEADER_SIZE_BYTES )]);
 
         // Verify
         assertEquals( "Wrong number of blocks", 2, result );
@@ -184,6 +186,7 @@ public class BlockDiskUnitTest
      * <p>
      * @throws Exception
      */
+    @Test
     public void testWrite_DoubleBlockElement()
         throws Exception
     {
@@ -193,12 +196,12 @@ public class BlockDiskUnitTest
         // DO WORK
         // byte arrays encur 27 bytes of serialization overhead.
         final int bytes = getBytesForBlocksOfByteArrays( disk.getBlockSizeBytes(), 2 );
-        final int[] blocks = disk.write( new byte[bytes] );
+        final int[] blocks = disk.write( new byte[bytes]);
 
         // VERIFY
         assertEquals( "Wrong number of blocks recorded.", 2, disk.getNumberOfBlocks() );
         assertEquals( "Wrong number of blocks returned.", 2, blocks.length );
-        assertEquals( "Wrong block returned.", 0, blocks[0] );
+        assertEquals( "Wrong block returned.", 0, blocks[0]);
     }
 
     /**
@@ -206,6 +209,7 @@ public class BlockDiskUnitTest
      * <p>
      * @throws Exception
      */
+    @Test
     public void testWrite_128BlockElement()
         throws Exception
     {
@@ -217,12 +221,12 @@ public class BlockDiskUnitTest
         // DO WORK
         // byte arrays encur 27 bytes of serialization overhead.
         final int bytes = getBytesForBlocksOfByteArrays( disk.getBlockSizeBytes(), numBlocks );
-        final int[] blocks = disk.write( new byte[bytes] );
+        final int[] blocks = disk.write( new byte[bytes]);
 
         // VERIFY
         assertEquals( "Wrong number of blocks recorded.", numBlocks, disk.getNumberOfBlocks() );
         assertEquals( "Wrong number of blocks returned.", numBlocks, blocks.length );
-        assertEquals( "Wrong block returned.", 0, blocks[0] );
+        assertEquals( "Wrong block returned.", 0, blocks[0]);
     }
 
     /**
@@ -230,6 +234,7 @@ public class BlockDiskUnitTest
      * <p>
      * @throws Exception
      */
+    @Test
     public void testWriteAndReadMultipleMultiBlockElement()
         throws Exception
     {
@@ -243,7 +248,7 @@ public class BlockDiskUnitTest
         final int numElements = 100;
         for ( int i = 0; i < numElements; i++ )
         {
-            final int[] blocks = disk.write( new byte[bytes] );
+            final int[] blocks = disk.write( new byte[bytes]);
             final byte[] result = (byte[]) disk.read( blocks );
 
             // VERIFY
@@ -257,6 +262,7 @@ public class BlockDiskUnitTest
      * <p>
      * @throws Exception
      */
+    @Test
     public void testWriteAndReadMultipleMultiBlockElement_setSize()
         throws Exception
     {
@@ -282,7 +288,7 @@ public class BlockDiskUnitTest
 
             // We check the array contents, too, to ensure we read back what we wrote out
             for (int j = 0 ; j < src.length ; j++) {
-                assertEquals( "Mismatch at offset " + j + " in attempt # " + (i + 1), src[j], result[j] );
+                assertEquals( "Mismatch at offset " + j + " in attempt # " + (i + 1), src[j], result[j]);
             }
         }
         assertEquals( "Wrong number of elements. "+disk, numBlocksPerElement * numElements, disk.getNumberOfBlocks() );
@@ -306,6 +312,7 @@ public class BlockDiskUnitTest
      * <p>
      * @throws Exception
      */
+    @Test
     public void testWriteAndRead_BigString()
         throws Exception
     {
@@ -337,6 +344,7 @@ public class BlockDiskUnitTest
      * <p>
      * @throws Exception
      */
+    @Test
     public void testWriteAndRead_BigString2()
         throws Exception
     {
@@ -355,6 +363,7 @@ public class BlockDiskUnitTest
         assertEquals( "Wrong item retured.", string, result );
     }
 
+    @Test
     public void testJCS156() throws Exception
     {
         // SETUP

@@ -1,5 +1,8 @@
 package org.apache.commons.jcs3.utils.discovery;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -43,13 +46,14 @@ import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
  * under the License.
  */
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Tests for the sender.
  */
 public class UDPDiscoverySenderUnitTest
-    extends TestCase
 {
     /** multicast address to send/receive on */
     private static final String ADDRESS = "228.4.5.9";
@@ -75,12 +79,10 @@ public class UDPDiscoverySenderUnitTest
      * <p>
      * @throws Exception on error
      */
-    @Override
-    protected void setUp()
+    @Before
+    public void setUp()
         throws Exception
     {
-        super.setUp();
-
         receiver = new UDPDiscoveryReceiver( null, null, ADDRESS, PORT );
         receiver.setSerializer(new StandardSerializer());
         final Thread t = new Thread( receiver );
@@ -94,13 +96,12 @@ public class UDPDiscoverySenderUnitTest
      * <p>
      * @throws Exception on error
      */
-    @Override
-    protected void tearDown()
+    @After
+    public void tearDown()
         throws Exception
     {
         receiver.shutdown();
         sender.close();
-        super.tearDown();
     }
 
     /**
@@ -108,6 +109,7 @@ public class UDPDiscoverySenderUnitTest
      * <p>
      * @throws Exception on error
      */
+    @Test
     public void testPassiveBroadcast()
         throws Exception
     {
@@ -135,6 +137,7 @@ public class UDPDiscoverySenderUnitTest
      * <p>
      * @throws Exception on error
      */
+    @Test
     public void testRemoveBroadcast()
         throws Exception
     {
@@ -162,6 +165,7 @@ public class UDPDiscoverySenderUnitTest
      * <p>
      * @throws Exception on error
      */
+    @Test
     public void testRequestBroadcast()
         throws Exception
     {

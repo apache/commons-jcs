@@ -19,29 +19,19 @@ package org.apache.commons.jcs3.auxiliary.disk.block;
  * under the License.
  */
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
 
-import org.apache.commons.jcs3.access.TestCacheAccess;
 import org.apache.commons.jcs3.JCS;
 import org.apache.commons.jcs3.access.CacheAccess;
+import org.apache.commons.jcs3.access.TestCacheAccess;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
  * This is used by other tests to generate a random load on the disk cache.
  */
 public class BlockDiskCacheRandomConcurrentTestUtil
-    extends TestCase
 {
-    /**
-     * Constructor for the TestDiskCache object.
-     *
-     * @param testName
-     */
-    public BlockDiskCacheRandomConcurrentTestUtil( final String testName )
-    {
-        super( testName );
-    }
-
     @Test
     public void test()
     {
@@ -62,7 +52,7 @@ public class BlockDiskCacheRandomConcurrentTestUtil
      * @throws Exception
      *                If an error occurs
      */
-    public void runTestForRegion( final String region, final int range, final int numOps, final int testNum )
+    public static void runTestForRegion( final String region, final int range, final int numOps, final int testNum )
         throws Exception
     {
         // run a rondom operation test to detect deadlocks
@@ -83,7 +73,7 @@ public class BlockDiskCacheRandomConcurrentTestUtil
     /**
      * Test setup
      */
-    @Override
+    @Before
     public void setUp()
     {
         JCS.setConfigFilename( "/TestBlockDiskCacheCon.ccf" );

@@ -19,6 +19,11 @@ package org.apache.commons.jcs3.auxiliary.disk.block;
  * under the License.
  */
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
@@ -32,14 +37,13 @@ import org.apache.commons.jcs3.engine.behavior.IElementAttributes;
 import org.apache.commons.jcs3.engine.control.group.GroupAttrName;
 import org.apache.commons.jcs3.engine.control.group.GroupId;
 import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
-
-import junit.framework.TestCase;
+import org.junit.Test;
 
 /** Unit tests for the Block Disk Cache */
-public abstract class AbstractBlockDiskCacheUnitTest extends TestCase
-{
+public abstract class AbstractBlockDiskCacheUnitTest{
     public abstract BlockDiskCacheAttributes getCacheAttributes();
 
+    @Test
     public void testPutGetMatching_SmallWait() throws Exception
     {
         // SETUP
@@ -73,6 +77,7 @@ public abstract class AbstractBlockDiskCacheUnitTest extends TestCase
      *
      * @throws Exception
      */
+    @Test
     public void testPutGetMatching_NoWait() throws Exception
     {
         // SETUP
@@ -105,6 +110,7 @@ public abstract class AbstractBlockDiskCacheUnitTest extends TestCase
      *
      * @throws Exception
      */
+    @Test
     public void testChunk_BigString() throws Exception
     {
         String string = "This is my big string ABCDEFGH";
@@ -155,6 +161,7 @@ public abstract class AbstractBlockDiskCacheUnitTest extends TestCase
      *
      * @throws Exception
      */
+    @Test
     public void testPutGet_BigString() throws Exception
     {
         String string = "This is my big string ABCDEFGH";
@@ -196,6 +203,7 @@ public abstract class AbstractBlockDiskCacheUnitTest extends TestCase
      *
      * @throws Exception
      */
+    @Test
     public void testUTF8String() throws Exception
     {
         String string = "IÒtÎrn‚tiÙn‡lizÊti¯n";
@@ -239,6 +247,7 @@ public abstract class AbstractBlockDiskCacheUnitTest extends TestCase
      *
      * @throws Exception
      */
+    @Test
     public void testUTF8ByteArray() throws Exception
     {
         String string = "IÒtÎrn‚tiÙn‡lizÊti¯n";
@@ -285,6 +294,7 @@ public abstract class AbstractBlockDiskCacheUnitTest extends TestCase
      *
      * @throws Exception
      */
+    @Test
     public void testUTF8StringAndBytes() throws Exception
     {
         final X before = new X();
@@ -325,6 +335,7 @@ public abstract class AbstractBlockDiskCacheUnitTest extends TestCase
 
     }
 
+    @Test
     public void testLoadFromDisk() throws Exception
     {
         for (int i = 0; i < 20; i++)
@@ -333,6 +344,7 @@ public abstract class AbstractBlockDiskCacheUnitTest extends TestCase
         }
     }
 
+    @Test
     public void testAppendToDisk() throws Exception
     {
         final String cacheName = "testAppendToDisk";
@@ -412,6 +424,7 @@ public abstract class AbstractBlockDiskCacheUnitTest extends TestCase
      *
      * @throws IOException
      */
+    @Test
     public void testRemoveItems() throws IOException
     {
         final BlockDiskCacheAttributes cattr = getCacheAttributes();
@@ -447,6 +460,7 @@ public abstract class AbstractBlockDiskCacheUnitTest extends TestCase
      *
      * @throws IOException
      */
+    @Test
     public void testRemove_PartialKey() throws IOException
     {
         final BlockDiskCacheAttributes cattr = getCacheAttributes();
@@ -490,6 +504,7 @@ public abstract class AbstractBlockDiskCacheUnitTest extends TestCase
      *
      * @throws IOException
      */
+    @Test
     public void testRemove_Group() throws IOException
     {
         // SETUP

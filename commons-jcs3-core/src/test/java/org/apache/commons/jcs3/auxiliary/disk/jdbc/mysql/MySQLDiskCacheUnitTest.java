@@ -19,12 +19,13 @@ package org.apache.commons.jcs3.auxiliary.disk.jdbc.mysql;
  * under the License.
  */
 
+import static org.junit.Assert.assertNull;
+
 import java.sql.SQLException;
 
 import org.apache.commons.jcs3.auxiliary.disk.jdbc.TableState;
 import org.apache.commons.jcs3.auxiliary.disk.jdbc.dsfactory.SharedPoolDataSourceFactory;
-
-import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  * Simple tests for the MySQLDisk Cache.
@@ -33,7 +34,6 @@ import junit.framework.TestCase;
  * </p>
  */
 public class MySQLDiskCacheUnitTest
-    extends TestCase
 {
     /**
      * Verify that we simply return null on get if an optimization is in
@@ -44,6 +44,7 @@ public class MySQLDiskCacheUnitTest
      * </p>
      * @throws SQLException
      */
+    @Test
     public void testBalkOnGet() throws SQLException
     {
         // SETUP

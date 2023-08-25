@@ -19,21 +19,24 @@ package org.apache.commons.jcs3.auxiliary.disk.jdbc.mysql.util;
  * under the License.
  */
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 import java.text.ParseException;
 import java.util.Date;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  * Unit tests for the schedule parser.
  */
 public class ScheduleParserUtilUnitTest
-    extends TestCase
 {
 
     /**
      * Verify that we get an exception and not a null pointer for null input.
      */
+    @Test
     public void testGetDatesWithNullInput()
     {
         try
@@ -51,6 +54,7 @@ public class ScheduleParserUtilUnitTest
     /**
      * Verify that we get an exception and not a null pointer for null input.
      */
+    @Test
     public void testGetDateWithNullInput()
     {
         try
@@ -69,6 +73,7 @@ public class ScheduleParserUtilUnitTest
      * Verify that we get one date for one date.
      * @throws ParseException
      */
+    @Test
     public void testGetsDatesSingle()
         throws ParseException
     {
@@ -81,6 +86,7 @@ public class ScheduleParserUtilUnitTest
      * Verify that we get one date for one date.
      * @throws ParseException
      */
+    @Test
     public void testGetsDatesMultiple()
         throws ParseException
     {
@@ -93,6 +99,7 @@ public class ScheduleParserUtilUnitTest
     /**
      * Verify that we get an exception for a single bad date in a list.
      */
+    @Test
     public void testGetDatesMalformedNoColon()
     {
         try
@@ -110,6 +117,7 @@ public class ScheduleParserUtilUnitTest
     /**
      * Verify that we get an exception for a schedule that has a non numeric item.
      */
+    @Test
     public void testGetDatesMalformedNan()
     {
         try

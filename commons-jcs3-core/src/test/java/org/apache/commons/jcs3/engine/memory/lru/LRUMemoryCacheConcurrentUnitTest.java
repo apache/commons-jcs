@@ -1,14 +1,5 @@
 package org.apache.commons.jcs3.engine.memory.lru;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
-import org.apache.commons.jcs3.engine.CacheElement;
-import org.apache.commons.jcs3.engine.behavior.ICacheElement;
-import org.apache.commons.jcs3.engine.control.CompositeCache;
-import org.apache.commons.jcs3.engine.control.CompositeCacheManager;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -28,6 +19,20 @@ import org.apache.commons.jcs3.engine.control.CompositeCacheManager;
  * under the License.
  */
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import org.apache.commons.jcs3.engine.CacheElement;
+import org.apache.commons.jcs3.engine.behavior.ICacheElement;
+import org.apache.commons.jcs3.engine.control.CompositeCache;
+import org.apache.commons.jcs3.engine.control.CompositeCacheManager;
+import org.junit.Before;
+
 import junit.extensions.ActiveTestSuite;
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -37,23 +42,12 @@ import junit.framework.TestCase;
  * regions for three threads.
  */
 public class LRUMemoryCacheConcurrentUnitTest
-    extends TestCase
 {
     /**
      * Number of items to cache, twice the configured maxObjects for the memory
      * cache regions.
      */
     private static final int items = 200;
-
-    /**
-     * Constructor for the TestDiskCache object.
-     * <p>
-     * @param testName
-     */
-    public LRUMemoryCacheConcurrentUnitTest( final String testName )
-    {
-        super( testName );
-    }
 
     /**
      * A unit test suite for JUnit
@@ -64,15 +58,15 @@ public class LRUMemoryCacheConcurrentUnitTest
     {
         final ActiveTestSuite suite = new ActiveTestSuite();
 
-        suite.addTest( new LRUMemoryCacheConcurrentUnitTest( "testLRUMemoryCache" )
+        suite.addTest(new TestCase("testLRUMemoryCache" )
         {
             @Override
             public void runTest()
                 throws Exception
             {
-                this.runTestForRegion( "testRegion1" );
+                runTestForRegion( "testRegion1" );
             }
-        } );
+        });
 
         return suite;
     }
@@ -80,7 +74,7 @@ public class LRUMemoryCacheConcurrentUnitTest
     /**
      * Test setup
      */
-    @Override
+    @Before
     public void setUp()
     {
         //JCS.setConfigFilename( "/TestDiskCache.ccf" );
@@ -95,7 +89,7 @@ public class LRUMemoryCacheConcurrentUnitTest
      * @throws Exception
      *                If an error occurs
      */
-    public void runTestForRegion( final String region )
+    public static void runTestForRegion( final String region )
         throws Exception
     {
         final CompositeCacheManager cacheMgr = CompositeCacheManager.getUnconfiguredInstance();

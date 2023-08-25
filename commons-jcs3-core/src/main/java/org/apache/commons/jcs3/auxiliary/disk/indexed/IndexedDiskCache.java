@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -1251,7 +1250,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
     private Collection<IndexedDiskElementDescriptor> createPositionSortedDescriptorList()
     {
         final List<IndexedDiskElementDescriptor> defragList = new ArrayList<>(keyHash.values());
-        Collections.sort(defragList, Comparator.comparing(ded1 -> ded1.pos));
+        defragList.sort(Comparator.comparing(ded1 -> ded1.pos));
 
         return defragList;
     }

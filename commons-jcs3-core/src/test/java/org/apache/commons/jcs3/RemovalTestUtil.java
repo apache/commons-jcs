@@ -1,7 +1,5 @@
 package org.apache.commons.jcs3;
 
-import org.apache.commons.jcs3.access.CacheAccess;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -21,25 +19,16 @@ import org.apache.commons.jcs3.access.CacheAccess;
  * under the License.
  */
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
+import org.apache.commons.jcs3.access.CacheAccess;
 
 /**
  * Simple methods to be run by active test suites that test removal.
  */
 public class RemovalTestUtil
-    extends TestCase
 {
-    /**
-     * Constructor for the TestSimpleLoad object
-     *
-     * @param testName
-     *            Description of the Parameter
-     */
-    public RemovalTestUtil( final String testName )
-    {
-        super( testName );
-    }
-
     /**
      * Adds elements in the range specified and then removes them using the
      * categorical or substring removal method.
@@ -50,12 +39,12 @@ public class RemovalTestUtil
      * @throws Exception
      *                Description of the Exception
      */
-    public void runTestPutThenRemoveCategorical( final int start, final int end )
+    public static void runTestPutThenRemoveCategorical( final int start, final int end )
         throws Exception
     {
         final CacheAccess<String, String> jcs = JCS.getInstance( "testCache1" );
 
-        for ( int i = start; i <= end; i++ )
+        for ( int i = start; i < end; i++ )
         {
             jcs.put( i + ":key", "data" + i );
         }
@@ -66,7 +55,7 @@ public class RemovalTestUtil
             assertNotNull( "[" + i + ":key] should not be null", res );
         }
 
-        for ( int i = start; i <= end; i++ )
+        for ( int i = start; i < end; i++ )
         {
             jcs.remove( i + ":" );
             assertNull( jcs.get( i + ":key" ) );
@@ -83,12 +72,12 @@ public class RemovalTestUtil
      *            int
      * @throws Exception
      */
-    public void runPutInRange( final int start, final int end )
+    public static void runPutInRange( final int start, final int end )
         throws Exception
     {
         final CacheAccess<String, String> jcs = JCS.getInstance( "testCache1" );
 
-        for ( int i = start; i <= end; i++ )
+        for ( int i = start; i < end; i++ )
         {
             jcs.put( i + ":key", "data" + i );
         }
@@ -111,7 +100,7 @@ public class RemovalTestUtil
      *            boolean -- check to see if the items are in the cache.
      * @throws Exception
      */
-    public void runGetInRange( final int start, final int end, final boolean check )
+    public static void runGetInRange( final int start, final int end, final boolean check )
         throws Exception
     {
         final CacheAccess<String, String> jcs = JCS.getInstance( "testCache1" );

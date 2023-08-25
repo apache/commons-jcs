@@ -1,10 +1,5 @@
 package org.apache.commons.jcs3.engine.logging;
 
-import java.io.StringWriter;
-
-import org.apache.commons.jcs3.TestLogConfigurationUtil;
-import org.apache.commons.jcs3.engine.logging.behavior.ICacheEvent;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -24,14 +19,20 @@ import org.apache.commons.jcs3.engine.logging.behavior.ICacheEvent;
  * under the License.
  */
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertTrue;
+
+import java.io.StringWriter;
+
+import org.apache.commons.jcs3.TestLogConfigurationUtil;
+import org.apache.commons.jcs3.engine.logging.behavior.ICacheEvent;
+import org.junit.Test;
 
 /** Unit tests for the debug implementation */
 public class CacheEventLoggerDebugLoggerUnitTest
-    extends TestCase
 {
 
     /** verify that we can log */
+    @Test
     public void testLogICacheEvent_normal()
     {
         // SETUP
@@ -64,6 +65,7 @@ public class CacheEventLoggerDebugLoggerUnitTest
     }
 
     /** verify that we can log */
+    @Test
     public void testLogApplicationEvent_normal()
     {
         // SETUP
@@ -90,6 +92,7 @@ public class CacheEventLoggerDebugLoggerUnitTest
     }
 
     /** verify that we can log */
+    @Test
     public void testLogError_normal()
     {
         // SETUP

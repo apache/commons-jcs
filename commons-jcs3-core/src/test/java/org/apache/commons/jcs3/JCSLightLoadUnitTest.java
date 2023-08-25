@@ -1,5 +1,8 @@
 package org.apache.commons.jcs3;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -20,14 +23,13 @@ package org.apache.commons.jcs3;
  */
 
 import org.apache.commons.jcs3.access.CacheAccess;
-
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Runs a few thousand queries.
  */
 public class JCSLightLoadUnitTest
-    extends TestCase
 {
     /** number to use for the test */
     private static final int items = 20000;
@@ -36,7 +38,7 @@ public class JCSLightLoadUnitTest
      * Test setup
      * @throws Exception
      */
-    @Override
+    @Before
     public void setUp()
         throws Exception
     {
@@ -47,6 +49,7 @@ public class JCSLightLoadUnitTest
      * A unit test for JUnit
      * @throws Exception Description of the Exception
      */
+    @Test
     public void testSimpleLoad()
         throws Exception
     {

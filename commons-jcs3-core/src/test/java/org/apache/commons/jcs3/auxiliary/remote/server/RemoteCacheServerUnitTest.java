@@ -19,6 +19,9 @@ package org.apache.commons.jcs3.auxiliary.remote.server;
  * under the License.
  */
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -26,44 +29,40 @@ import java.util.Properties;
 
 import org.apache.commons.jcs3.auxiliary.MockCacheEventLogger;
 import org.apache.commons.jcs3.auxiliary.remote.MockRemoteCacheListener;
-import org.apache.commons.jcs3.utils.timing.SleepUtil;
 import org.apache.commons.jcs3.auxiliary.remote.RemoteUtils;
 import org.apache.commons.jcs3.auxiliary.remote.server.behavior.IRemoteCacheServerAttributes;
 import org.apache.commons.jcs3.auxiliary.remote.server.behavior.RemoteType;
 import org.apache.commons.jcs3.engine.CacheElement;
 import org.apache.commons.jcs3.engine.behavior.ICacheElement;
-
-import junit.framework.TestCase;
+import org.apache.commons.jcs3.utils.timing.SleepUtil;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Since the server does not know that it is a server, it is easy to unit test. The factory does all
  * the rmi work.
  */
 public class RemoteCacheServerUnitTest
-    extends TestCase
 {
     private static final String expectedIp1 = "adfasdf";
     private static final String expectedIp2 = "adsfadsafaf";
 
     private RemoteCacheServer<String, String> server;
 
-    @Override
-    protected void setUp() throws Exception
+    @Before
+    public void setUp() throws Exception
     {
-        super.setUp();
-
         final IRemoteCacheServerAttributes rcsa = new RemoteCacheServerAttributes();
         rcsa.setConfigFileName( "/TestRemoteCacheServer.ccf" );
         final Properties config = RemoteUtils.loadProps(rcsa.getConfigFileName());
         this.server = new RemoteCacheServer<>( rcsa, config );
     }
 
-    @Override
-    protected void tearDown() throws Exception
+    @After
+    public void tearDown() throws Exception
     {
         this.server.shutdown();
-
-        super.tearDown();
     }
 
     /**
@@ -72,6 +71,7 @@ public class RemoteCacheServerUnitTest
      * <p>
      * @throws Exception
      */
+    @Test
     public void testAddListenerToCache_LOCALtype()
         throws Exception
     {
@@ -101,6 +101,7 @@ public class RemoteCacheServerUnitTest
      * <p>
      * @throws Exception
      */
+    @Test
     public void testAddListenerToCache_CLUSTERtype()
         throws Exception
     {
@@ -158,6 +159,7 @@ public class RemoteCacheServerUnitTest
      * <p>
      * @throws Exception
      */
+    @Test
     public void testAddListener_ToAllThenRemove()
         throws Exception
     {
@@ -187,6 +189,7 @@ public class RemoteCacheServerUnitTest
      * <p>
      * @throws Exception
      */
+    @Test
     public void testAddListener_ToAllThenRemove_clusterType()
         throws Exception
     {
@@ -218,6 +221,7 @@ public class RemoteCacheServerUnitTest
      * id.
      * @throws Exception
      */
+    @Test
     public void testSimpleRegisterListenerAndPut()
         throws Exception
     {
@@ -263,6 +267,7 @@ public class RemoteCacheServerUnitTest
      * <p>
      * @throws Exception
      */
+    @Test
     public void testSimpleRegisterListenerAndPut_FromClusterWithLCC()
         throws Exception
     {
@@ -316,6 +321,7 @@ public class RemoteCacheServerUnitTest
      * id.
      * @throws Exception
      */
+    @Test
     public void testSimpleRegisterListenerAndRemove()
         throws Exception
     {
@@ -350,6 +356,7 @@ public class RemoteCacheServerUnitTest
      * <p>
      * @throws Exception
      */
+    @Test
     public void testUpdate_simple()
         throws Exception
     {
@@ -371,6 +378,7 @@ public class RemoteCacheServerUnitTest
      * <p>
      * @throws Exception
      */
+    @Test
     public void testGet_simple()
         throws Exception
     {
@@ -390,6 +398,7 @@ public class RemoteCacheServerUnitTest
      * <p>
      * @throws Exception
      */
+    @Test
     public void testGetMatching_simple()
         throws Exception
     {
@@ -409,6 +418,7 @@ public class RemoteCacheServerUnitTest
      * <p>
      * @throws Exception
      */
+    @Test
     public void testGetMultiple_simple()
         throws Exception
     {
@@ -428,6 +438,7 @@ public class RemoteCacheServerUnitTest
      * <p>
      * @throws Exception
      */
+    @Test
     public void testRemove_simple()
         throws Exception
     {
@@ -447,6 +458,7 @@ public class RemoteCacheServerUnitTest
      * <p>
      * @throws Exception
      */
+    @Test
     public void testRemoveAll_simple()
         throws Exception
     {

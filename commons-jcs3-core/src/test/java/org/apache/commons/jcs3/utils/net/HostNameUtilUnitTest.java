@@ -19,19 +19,21 @@ package org.apache.commons.jcs3.utils.net;
  * under the License.
  */
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertNotNull;
 
 import java.net.UnknownHostException;
 
+import org.junit.Test;
+
 /** Tests for the host name util. */
 public class HostNameUtilUnitTest
-    extends TestCase
 {
     /**
      * It's nearly impossible to unit test the getLocalHostLANAddress method.
      * <p>
      * @throws UnknownHostException
      */
+    @Test
     public void testGetLocalHostAddress_Simple() throws UnknownHostException
     {
         // DO WORK

@@ -19,29 +19,17 @@ package org.apache.commons.jcs3.auxiliary.disk.indexed;
  * under the License.
  */
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
 
-import org.apache.commons.jcs3.access.TestCacheAccess;
 import org.apache.commons.jcs3.JCS;
 import org.apache.commons.jcs3.access.CacheAccess;
+import org.apache.commons.jcs3.access.TestCacheAccess;
 
 /**
  * This is used by other tests to generate a random load on the disk cache.
  */
 public class IndexedDiskCacheRandomConcurrentTestUtil
-    extends TestCase
 {
-
-    /**
-     * Constructor for the TestDiskCache object.
-     *
-     * @param testName
-     */
-    public IndexedDiskCacheRandomConcurrentTestUtil( final String testName )
-    {
-        super( testName );
-    }
-
     /**
      * Randomly adds items to cache, gets them, and removes them. The range
      * count is more than the size of the memory cache, so items should spool to
@@ -56,10 +44,10 @@ public class IndexedDiskCacheRandomConcurrentTestUtil
      * @throws Exception
      *                If an error occurs
      */
-    public void runTestForRegion( final String region, final int range, final int numOps, final int testNum )
+    public static void runTestForRegion( final String region, final int range, final int numOps, final int testNum )
         throws Exception
     {
-        // run a rondom operation test to detect deadlocks
+        // run a random operation test to detect deadlocks
         final TestCacheAccess tca = new TestCacheAccess( "/TestDiskCacheCon.ccf" );
         tca.setRegion( region );
         tca.random( range, numOps );
@@ -74,14 +62,4 @@ public class IndexedDiskCacheRandomConcurrentTestUtil
         assertEquals( data, value );
 
     }
-
-    /**
-     * Test setup
-     */
-    @Override
-    public void setUp()
-    {
-        JCS.setConfigFilename( "/TestDiskCacheCon.ccf" );
-    }
-
 }

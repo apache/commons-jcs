@@ -22,18 +22,16 @@ package org.apache.commons.jcs3.auxiliary.disk.block;
 import java.text.DecimalFormat;
 import java.util.Random;
 
-import junit.framework.TestCase;
-
-import org.apache.commons.jcs3.auxiliary.disk.DiskTestObject;
 import org.apache.commons.jcs3.JCS;
 import org.apache.commons.jcs3.access.CacheAccess;
+import org.apache.commons.jcs3.auxiliary.disk.DiskTestObject;
+import org.junit.Test;
 
 /**
  * This allows you to put thousands of large objects into the disk cache and to force removes to
  * trigger optimizations along the way.
  */
 public class BlockDiskCacheSteadyLoadTest
-    extends TestCase
 {
     /** String for separating log entries. */
     private static final String LOG_DIVIDER = "---------------------------";
@@ -49,6 +47,7 @@ public class BlockDiskCacheSteadyLoadTest
      *
      * @throws Exception
      */
+    @Test
     public void testRunSteadyLoadTest()
         throws Exception
     {
@@ -94,7 +93,7 @@ public class BlockDiskCacheSteadyLoadTest
                 final int bytes = ( kiloBytes ) * 1024;
 //                totalSize += bytes;
                 totalPut++;
-                final DiskTestObject object = new DiskTestObject( Integer.valueOf( i ), new byte[bytes] );
+                final DiskTestObject object = new DiskTestObject( Integer.valueOf( i ), new byte[bytes]);
                 jcs.put( String.valueOf( totalPut ), object );
             }
 

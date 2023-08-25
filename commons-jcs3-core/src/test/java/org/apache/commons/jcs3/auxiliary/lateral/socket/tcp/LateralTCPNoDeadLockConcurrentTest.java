@@ -1,7 +1,8 @@
 package org.apache.commons.jcs3.auxiliary.lateral.socket.tcp;
 
 import org.apache.commons.jcs3.JCS;
-import org.apache.commons.jcs3.engine.control.CompositeCacheManager;
+import org.junit.After;
+import org.junit.Before;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -31,18 +32,7 @@ import junit.framework.TestCase;
  * same region and two against other regions.
  */
 public class LateralTCPNoDeadLockConcurrentTest
-    extends TestCase
 {
-    /**
-     * Constructor for the TestDiskCache object.
-     *
-     * @param testName
-     */
-    public LateralTCPNoDeadLockConcurrentTest( final String testName )
-    {
-        super( testName );
-    }
-
     /**
      * A unit test suite for JUnit
      *
@@ -50,60 +40,59 @@ public class LateralTCPNoDeadLockConcurrentTest
      */
     public static Test suite()
     {
-
         System.setProperty( "jcs.auxiliary.LTCP.attributes.PutOnlyMode", "false" );
 
         final ActiveTestSuite suite = new ActiveTestSuite();
 
-        suite.addTest( new LateralTCPConcurrentRandomTestUtil( "testLateralTCPCache1" )
+        suite.addTest(new TestCase("testLateralTCPCache1" )
         {
             @Override
             public void runTest()
                 throws Exception
             {
-                this.runTestForRegion( "region1", 1, 200, 1 );
+                LateralTCPConcurrentRandomTestUtil.runTestForRegion( "region1", 1, 200, 1 );
             }
-        } );
+        });
 
-        suite.addTest( new LateralTCPConcurrentRandomTestUtil( "testLateralTCPCache2" )
+        suite.addTest(new TestCase("testLateralTCPCache2" )
         {
             @Override
             public void runTest()
                 throws Exception
             {
-                this.runTestForRegion( "region2", 10000, 12000, 2 );
+                LateralTCPConcurrentRandomTestUtil.runTestForRegion( "region2", 10000, 12000, 2 );
             }
-        } );
+        });
 
-        suite.addTest( new LateralTCPConcurrentRandomTestUtil( "testLateralTCPCache3" )
+        suite.addTest(new TestCase("testLateralTCPCache3" )
         {
             @Override
             public void runTest()
                 throws Exception
             {
-                this.runTestForRegion( "region3", 10000, 12000, 3 );
+                LateralTCPConcurrentRandomTestUtil.runTestForRegion( "region3", 10000, 12000, 3 );
             }
-        } );
+        });
 
-        suite.addTest( new LateralTCPConcurrentRandomTestUtil( "testLateralTCPCache4" )
+        suite.addTest(new TestCase("testLateralTCPCache4" )
         {
             @Override
             public void runTest()
                 throws Exception
             {
-                this.runTestForRegion( "region3", 10000, 13000, 4 );
+                LateralTCPConcurrentRandomTestUtil.runTestForRegion( "region3", 10000, 13000, 4 );
             }
-        } );
+        });
 
-        suite.addTest( new LateralTCPConcurrentRandomTestUtil( "testLateralTCPCache5" )
+        suite.addTest(new TestCase("testLateralTCPCache5" )
         {
             @Override
             public void runTest()
                 throws Exception
             {
-                this.runTestForRegion( "region4", 10000, 11000, 5 );
+                LateralTCPConcurrentRandomTestUtil.runTestForRegion( "region4", 10000, 11000, 5 );
             }
-        } );
+        });
 
         return suite;
     }
@@ -111,7 +100,7 @@ public class LateralTCPNoDeadLockConcurrentTest
     /**
      * Test setup
      */
-    @Override
+    @Before
     public void setUp()
     {
         JCS.setConfigFilename( "/TestTCPLateralCacheConcurrent.ccf" );
@@ -120,17 +109,9 @@ public class LateralTCPNoDeadLockConcurrentTest
     /**
      * Test tearDown. Dispose of the cache.
      */
-    @Override
+    @After
     public void tearDown()
     {
-        try
-        {
-            final CompositeCacheManager cacheMgr = CompositeCacheManager.getInstance();
-            cacheMgr.shutDown();
-        }
-        catch ( final Exception e )
-        {
-            e.printStackTrace();
-        }
+        JCS.shutdown();
     }
 }

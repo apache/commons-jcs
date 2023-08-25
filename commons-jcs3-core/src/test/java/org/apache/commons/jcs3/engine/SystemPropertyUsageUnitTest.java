@@ -19,40 +19,38 @@ package org.apache.commons.jcs3.engine;
  * under the License.
  */
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
 
-import org.apache.commons.jcs3.utils.props.PropertyLoader;
+import java.util.Properties;
+
 import org.apache.commons.jcs3.JCS;
 import org.apache.commons.jcs3.access.CacheAccess;
 import org.apache.commons.jcs3.engine.control.CompositeCacheManager;
-
-import java.util.Properties;
+import org.apache.commons.jcs3.utils.props.PropertyLoader;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Verify that system properties can override.
  */
 public class SystemPropertyUsageUnitTest
-    extends TestCase
 {
     private static final String JCS_DEFAULT_CACHEATTRIBUTES_MAX_OBJECTS = "jcs.default.cacheattributes.MaxObjects";
     private static final int testValue = 6789;
 
     private CompositeCacheManager manager;
 
-    @Override
-    protected void setUp() throws Exception
+    @Before
+    public void setUp() throws Exception
     {
-       super.setUp();
        //First shut down any previously running manager.
        manager = CompositeCacheManager.getInstance();
        manager.shutDown();
     }
 
-	/**
-	 * @see junit.framework.TestCase#tearDown()
-	 */
-	@Override
-	protected void tearDown() throws Exception
+    @After
+    public void tearDown() throws Exception
 	{
 		if (manager != null)
 		{
@@ -60,7 +58,6 @@ public class SystemPropertyUsageUnitTest
 		}
 
         System.clearProperty(JCS_DEFAULT_CACHEATTRIBUTES_MAX_OBJECTS);
-		super.tearDown();
 	}
 
 	/**
@@ -68,6 +65,7 @@ public class SystemPropertyUsageUnitTest
      * @throws Exception
      *
      */
+    @Test
     public void testSystemPropertyUsage()
         throws Exception
     {
@@ -88,6 +86,7 @@ public class SystemPropertyUsageUnitTest
      * @throws Exception
      *
      */
+    @Test
     public void testSystemPropertyUsage_inactive()
         throws Exception
     {

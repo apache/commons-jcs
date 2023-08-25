@@ -18,6 +18,11 @@ package org.apache.commons.jcs3.auxiliary.disk.jdbc;
  * specific language governing permissions and limitations
  * under the License.
  */
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
 import java.sql.Connection;
 import java.util.HashSet;
 import java.util.Map;
@@ -27,19 +32,18 @@ import java.util.Set;
 import org.apache.commons.jcs3.JCS;
 import org.apache.commons.jcs3.access.CacheAccess;
 import org.apache.commons.jcs3.engine.behavior.ICacheElement;
-
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Runs basic tests for the JDBC disk cache using a shared connection pool.
  */
 public class JDBCDiskCacheSharedPoolUnitTest
-    extends TestCase
 {
     /** Test setup
      * @throws Exception
      */
-    @Override
+    @Before
     public void setUp() throws Exception
     {
         JCS.setConfigFilename( "/TestJDBCDiskCacheSharedPool.ccf" );
@@ -54,6 +58,7 @@ public class JDBCDiskCacheSharedPoolUnitTest
      * Test the basic JDBC disk cache functionality with a hsql backing.
      * @throws Exception
      */
+    @Test
     public void testSimpleJDBCPutGetWithHSQL()
         throws Exception
     {
@@ -68,7 +73,7 @@ public class JDBCDiskCacheSharedPoolUnitTest
      * @param items
      * @throws Exception If an error occurs
      */
-    public void runTestForRegion( final String region, final int items )
+    public static void runTestForRegion( final String region, final int items )
         throws Exception
     {
         final CacheAccess<String, String> jcs = JCS.getInstance( region );

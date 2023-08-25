@@ -1,6 +1,8 @@
 package org.apache.commons.jcs3.auxiliary.disk.indexed;
 
 import org.apache.commons.jcs3.JCS;
+import org.junit.After;
+import org.junit.Before;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -30,18 +32,7 @@ import junit.framework.TestCase;
  * same region.
  */
 public class IndexedDiskCacheConcurrentNoDeadLockUnitTest
-    extends TestCase
 {
-    /**
-     * Constructor for the TestDiskCache object.
-     *
-     * @param testName
-     */
-    public IndexedDiskCacheConcurrentNoDeadLockUnitTest( final String testName )
-    {
-        super( testName );
-    }
-
     /**
      * A unit test suite for JUnit
      *
@@ -51,55 +42,55 @@ public class IndexedDiskCacheConcurrentNoDeadLockUnitTest
     {
         final ActiveTestSuite suite = new ActiveTestSuite();
 
-        suite.addTest( new IndexedDiskCacheRandomConcurrentTestUtil( "testIndexedDiskCache1" )
+        suite.addTest(new TestCase("testIndexedDiskCache1" )
         {
             @Override
             public void runTest()
                 throws Exception
             {
-                this.runTestForRegion( "indexedRegion4", 1, 200, 1 );
+                IndexedDiskCacheRandomConcurrentTestUtil.runTestForRegion( "indexedRegion4", 1, 200, 1 );
             }
-        } );
+        });
 
-        suite.addTest( new IndexedDiskCacheRandomConcurrentTestUtil( "testIndexedDiskCache2" )
+        suite.addTest(new TestCase("testIndexedDiskCache2" )
         {
             @Override
             public void runTest()
                 throws Exception
             {
-                this.runTestForRegion( "indexedRegion4", 10000, 50000, 2 );
+                IndexedDiskCacheRandomConcurrentTestUtil.runTestForRegion( "indexedRegion4", 10000, 50000, 2 );
             }
-        } );
+        });
 
-        suite.addTest( new IndexedDiskCacheRandomConcurrentTestUtil( "testIndexedDiskCache3" )
+        suite.addTest(new TestCase("testIndexedDiskCache3" )
         {
             @Override
             public void runTest()
                 throws Exception
             {
-                this.runTestForRegion( "indexedRegion4", 10000, 50000, 3 );
+                IndexedDiskCacheRandomConcurrentTestUtil.runTestForRegion( "indexedRegion4", 10000, 50000, 3 );
             }
-        } );
+        });
 
-        suite.addTest( new IndexedDiskCacheRandomConcurrentTestUtil( "testIndexedDiskCache4" )
+        suite.addTest(new TestCase("testIndexedDiskCache4" )
         {
             @Override
             public void runTest()
                 throws Exception
             {
-                this.runTestForRegion( "indexedRegion4", 10000, 50000, 4 );
+                IndexedDiskCacheRandomConcurrentTestUtil.runTestForRegion( "indexedRegion4", 10000, 50000, 4 );
             }
-        } );
+        });
 
-        suite.addTest( new IndexedDiskCacheRandomConcurrentTestUtil( "testIndexedDiskCache5" )
+        suite.addTest(new TestCase("testIndexedDiskCache5" )
         {
             @Override
             public void runTest()
                 throws Exception
             {
-                this.runTestForRegion( "indexedRegion4", 10000, 50000, 5 );
+                IndexedDiskCacheRandomConcurrentTestUtil.runTestForRegion( "indexedRegion4", 10000, 50000, 5 );
             }
-        } );
+        });
 
         return suite;
     }
@@ -107,7 +98,7 @@ public class IndexedDiskCacheConcurrentNoDeadLockUnitTest
     /**
      * Test setup
      */
-    @Override
+    @Before
     public void setUp()
     {
         JCS.setConfigFilename( "/TestDiskCacheCon.ccf" );
@@ -116,7 +107,7 @@ public class IndexedDiskCacheConcurrentNoDeadLockUnitTest
     /**
      * Test tearDown. Dispose of the cache.
      */
-    @Override
+    @After
     public void tearDown()
     {
         JCS.shutdown();

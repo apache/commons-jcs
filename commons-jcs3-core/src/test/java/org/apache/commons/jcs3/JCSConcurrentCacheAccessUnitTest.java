@@ -1,5 +1,7 @@
 package org.apache.commons.jcs3;
 
+import static org.junit.Assert.assertEquals;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -25,14 +27,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.jcs3.access.GroupCacheAccess;
 import org.apache.commons.jcs3.access.exception.CacheException;
-
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Test Case for JCS-73, modeled after the Groovy code by Alexander Kleymenov
  */
-public class JCSConcurrentCacheAccessUnitTest extends TestCase
-{
+public class JCSConcurrentCacheAccessUnitTest{
     private final static int THREADS = 20;
     private final static int LOOPS = 10000;
 
@@ -56,21 +58,19 @@ public class JCSConcurrentCacheAccessUnitTest extends TestCase
      */
     protected List<String> valueMismatchList;
 
-    @Override
-	protected void setUp() throws Exception
+    @Before
+    public void setUp() throws Exception
 	{
-        super.setUp();
         JCS.setConfigFilename( "/TestJCS-73.ccf" );
         cache = JCS.getGroupCacheInstance( "cache" );
         errcount = new AtomicInteger(0);
         valueMismatchList = new CopyOnWriteArrayList<>();
 	}
 
-    @Override
-    protected void tearDown()
+    @After
+    public void tearDown()
         throws Exception
     {
-        super.tearDown();
         cache.clear();
         cache.dispose();
     }
@@ -152,6 +152,7 @@ public class JCSConcurrentCacheAccessUnitTest extends TestCase
      *
      * @throws Exception
      */
+    @Test
     public void testConcurrentAccess()
         throws Exception
     {

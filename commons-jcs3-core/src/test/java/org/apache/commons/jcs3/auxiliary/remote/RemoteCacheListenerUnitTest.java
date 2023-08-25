@@ -19,9 +19,10 @@ package org.apache.commons.jcs3.auxiliary.remote;
  * under the License.
  */
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
-import org.apache.commons.jcs3.engine.control.MockCompositeCacheManager;
 import org.apache.commons.jcs3.auxiliary.remote.behavior.IRemoteCacheAttributes;
 import org.apache.commons.jcs3.engine.CacheElementSerialized;
 import org.apache.commons.jcs3.engine.ElementAttributes;
@@ -31,13 +32,14 @@ import org.apache.commons.jcs3.engine.behavior.ICacheElementSerialized;
 import org.apache.commons.jcs3.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs3.engine.behavior.IElementAttributes;
 import org.apache.commons.jcs3.engine.behavior.IElementSerializer;
+import org.apache.commons.jcs3.engine.control.MockCompositeCacheManager;
 import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
+import org.junit.Test;
 
 /**
  * Tests for the remote cache listener.
  */
 public class RemoteCacheListenerUnitTest
-    extends TestCase
 {
     /**
      * Create a RemoteCacheListener with a mock cache manager.  Set remove on put to false.
@@ -46,6 +48,7 @@ public class RemoteCacheListenerUnitTest
      * <p>
      * @throws Exception
      */
+    @Test
     public void testUpdate_PutOnPut()
         throws Exception
     {
@@ -89,6 +92,7 @@ public class RemoteCacheListenerUnitTest
      * <p>
      * @throws Exception
      */
+    @Test
     public void testUpdate_RemoveOnPut()
         throws Exception
     {

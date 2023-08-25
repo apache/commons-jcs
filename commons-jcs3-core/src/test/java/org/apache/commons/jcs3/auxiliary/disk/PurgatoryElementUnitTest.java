@@ -1,10 +1,5 @@
 package org.apache.commons.jcs3.auxiliary.disk;
 
-import org.apache.commons.jcs3.engine.CacheElement;
-import org.apache.commons.jcs3.engine.ElementAttributes;
-import org.apache.commons.jcs3.engine.behavior.ICacheElement;
-import org.apache.commons.jcs3.engine.behavior.IElementAttributes;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -24,13 +19,21 @@ import org.apache.commons.jcs3.engine.behavior.IElementAttributes;
  * under the License.
  */
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import org.apache.commons.jcs3.engine.CacheElement;
+import org.apache.commons.jcs3.engine.ElementAttributes;
+import org.apache.commons.jcs3.engine.behavior.ICacheElement;
+import org.apache.commons.jcs3.engine.behavior.IElementAttributes;
+import org.junit.Test;
 
 /** Simple unit tests for the Purgatory Element. */
 public class PurgatoryElementUnitTest
-    extends TestCase
 {
     /** Verify basic data */
+    @Test
     public void testSpoolable_normal()
     {
         // SETUP
@@ -50,6 +53,7 @@ public class PurgatoryElementUnitTest
     }
 
     /** Verify basic data */
+    @Test
     public void testElementAttributes_normal()
     {
         // SETUP
@@ -70,6 +74,7 @@ public class PurgatoryElementUnitTest
     }
 
     /** Verify basic data */
+    @Test
     public void testToString_normal()
     {
         // SETUP

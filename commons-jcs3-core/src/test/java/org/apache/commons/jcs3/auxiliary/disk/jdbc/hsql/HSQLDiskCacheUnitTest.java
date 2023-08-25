@@ -1,14 +1,5 @@
 package org.apache.commons.jcs3.auxiliary.disk.jdbc.hsql;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
-import org.apache.commons.jcs3.JCS;
-import org.apache.commons.jcs3.access.CacheAccess;
-import org.apache.commons.jcs3.access.exception.CacheException;
-import org.apache.commons.jcs3.engine.behavior.ICacheElement;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -28,18 +19,30 @@ import org.apache.commons.jcs3.engine.behavior.ICacheElement;
  * under the License.
  */
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import org.apache.commons.jcs3.JCS;
+import org.apache.commons.jcs3.access.CacheAccess;
+import org.apache.commons.jcs3.access.exception.CacheException;
+import org.apache.commons.jcs3.engine.behavior.ICacheElement;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Test which exercises the HSQL cache.
  */
 public class HSQLDiskCacheUnitTest
-    extends TestCase
 {
     /**
      * Test setup
      */
-    @Override
+    @Before
     public void setUp()
     {
         JCS.setConfigFilename( "/TestHSQLDiskCache.ccf" );
@@ -51,6 +54,7 @@ public class HSQLDiskCacheUnitTest
      * <p>
      * @throws Exception If an error occurs
      */
+    @Test
     public void testBasicPutRemove()
         throws Exception
     {
@@ -107,6 +111,7 @@ public class HSQLDiskCacheUnitTest
      * @throws CacheException
      * @throws InterruptedException
      */
+    @Test
     public void testRemoveAll()
         throws CacheException, InterruptedException
     {
@@ -145,6 +150,7 @@ public class HSQLDiskCacheUnitTest
      * @throws CacheException
      * @throws InterruptedException
      */
+    @Test
     public void testRemoveAllProhibition()
         throws CacheException, InterruptedException
     {

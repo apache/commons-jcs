@@ -1,14 +1,5 @@
 package org.apache.commons.jcs3.auxiliary.lateral.socket.tcp;
 
-import java.util.Random;
-
-import org.apache.commons.jcs3.JCS;
-import org.apache.commons.jcs3.access.CacheAccess;
-import org.apache.commons.jcs3.auxiliary.lateral.LateralCacheAttributes;
-import org.apache.commons.jcs3.engine.CacheElement;
-import org.apache.commons.jcs3.engine.behavior.ICacheElement;
-import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -28,48 +19,51 @@ import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
  * under the License.
  */
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
+import java.util.Random;
+
+import org.apache.commons.jcs3.JCS;
+import org.apache.commons.jcs3.access.CacheAccess;
+import org.apache.commons.jcs3.auxiliary.lateral.LateralCacheAttributes;
+import org.apache.commons.jcs3.engine.CacheElement;
+import org.apache.commons.jcs3.engine.behavior.ICacheElement;
+import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Tests the issue remove on put fuctionality.
  */
 public class LateralTCPIssueRemoveOnPutUnitTest
-    extends TestCase
 {
     /** Should log data go to system out. */
     private static final boolean isSysOut = false;
 
     /** The port the server will listen to. */
-    private final int serverPort = 1118;
-
-    /**
-     * Constructor for the TestDiskCache object.
-     * <p>
-     * @param testName
-     */
-    public LateralTCPIssueRemoveOnPutUnitTest( final String testName )
-    {
-        super( testName );
-    }
+    private static final int serverPort = 1118;
 
     /**
      * Test setup
      */
-    @Override
+    @Before
     public void setUp()
     {
         System.setProperty( "jcs.auxiliary.LTCP.attributes.TcpServers", "localhost:" + serverPort );
-
         JCS.setConfigFilename( "/TestTCPLateralIssueRemoveCache.ccf" );
     }
 
     /**
      * @throws Exception
      */
+    @Test
     public void testPutLocalPutRemoteGetBusyVerifyRemoved()
         throws Exception
     {
-        this.runTestForRegion( "region1", 1, 200, 1 );
+        runTestForRegion( "region1", 1, 200, 1 );
     }
 
     /**
@@ -78,6 +72,7 @@ public class LateralTCPIssueRemoveOnPutUnitTest
      * <p>
      * @throws Exception
      */
+    @Test
     public void testStandardPut()
         throws Exception
     {
@@ -125,7 +120,7 @@ public class LateralTCPIssueRemoveOnPutUnitTest
      * @param testNum
      * @throws Exception If an error occurs
      */
-    public void runTestForRegion( final String region, final int range, final int numOps, final int testNum )
+    public static void runTestForRegion( final String region, final int range, final int numOps, final int testNum )
         throws Exception
     {
         final CacheAccess<String, String> cache = JCS.getInstance( region );

@@ -1,5 +1,8 @@
 package org.apache.commons.jcs3.auxiliary.lateral.socket.tcp;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -39,21 +42,20 @@ import org.apache.commons.jcs3.engine.control.group.GroupId;
 import org.apache.commons.jcs3.utils.serialization.EncryptingSerializer;
 import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
 import org.apache.commons.jcs3.utils.timing.SleepUtil;
-
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Basic unit tests for the sending and receiving portions of the lateral cache.
  */
 public class TestTCPLateralUnitTest
-    extends TestCase
 {
     private final MockCompositeCacheManager cacheMgr = new MockCompositeCacheManager();
 
     /**
      * Test setup
      */
-    @Override
+    @Before
     public void setUp()
     {
         JCS.setConfigFilename( "/TestTCPLateralCache.ccf" );
@@ -95,6 +97,7 @@ public class TestTCPLateralUnitTest
      * <p>
      * @throws Exception
      */
+    @Test
     public void testSimpleSend()
         throws Exception
     {
@@ -104,7 +107,8 @@ public class TestTCPLateralUnitTest
     /**
      * @throws Exception
      */
-    public void testSimpleEncriptedSend()
+    @Test
+    public void testSimpleEncryptedSend()
             throws Exception
     {
     	EncryptingSerializer serializer = new EncryptingSerializer();
@@ -112,7 +116,8 @@ public class TestTCPLateralUnitTest
     	simpleSend(serializer, 8112);
     }
 
-    private void simpleSend(final IElementSerializer serializer, final int port ) throws IOException {
+    private void simpleSend(final IElementSerializer serializer, final int port ) throws IOException
+    {
     	// SETUP
         // force initialization
         JCS.getInstance( "test" );
@@ -151,6 +156,7 @@ public class TestTCPLateralUnitTest
     /**
      * @throws Exception
      */
+    @Test
     public void testReceive()
         throws Exception
     {
@@ -178,6 +184,7 @@ public class TestTCPLateralUnitTest
      * <p>
      * @throws Exception
      */
+    @Test
     public void testSameKeyDifferentObject()
         throws Exception
     {
@@ -208,6 +215,7 @@ public class TestTCPLateralUnitTest
      * <p>
      * @throws Exception
      */
+    @Test
     public void testSameKeyObjectDifferentValueObject()
         throws Exception
     {
@@ -238,6 +246,7 @@ public class TestTCPLateralUnitTest
      * <p>
      * @throws Exception
      */
+    @Test
     public void testGet_SendAndReceived()
         throws Exception
     {
@@ -267,6 +276,7 @@ public class TestTCPLateralUnitTest
      * <p>
      * @throws Exception
      */
+    @Test
     public void testGetGroupKeys_SendAndReceived()  throws Exception
     {
         // SETUP
@@ -299,6 +309,7 @@ public class TestTCPLateralUnitTest
      * <p>
      * @throws Exception
      */
+    @Test
     public void testGetMatching_WithData()
         throws Exception
     {

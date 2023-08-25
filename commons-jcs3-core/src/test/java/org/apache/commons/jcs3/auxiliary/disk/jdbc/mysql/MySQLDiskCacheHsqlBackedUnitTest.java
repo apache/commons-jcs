@@ -74,7 +74,7 @@ public class MySQLDiskCacheHsqlBackedUnitTest
      * @param items
      * @throws Exception If an error occurs
      */
-    public void runTestForRegion( final String region, final int items )
+    public static void runTestForRegion( final String region, final int items )
         throws Exception
     {
         final CacheAccess<String, String> jcs = JCS.getInstance( region );

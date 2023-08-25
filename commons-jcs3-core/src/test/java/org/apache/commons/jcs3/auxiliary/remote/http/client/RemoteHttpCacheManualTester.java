@@ -1,8 +1,5 @@
 package org.apache.commons.jcs3.auxiliary.remote.http.client;
 
-import org.apache.commons.jcs3.JCS;
-import org.apache.commons.jcs3.access.CacheAccess;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -22,11 +19,15 @@ import org.apache.commons.jcs3.access.CacheAccess;
  * under the License.
  */
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertNull;
+
+import org.apache.commons.jcs3.JCS;
+import org.apache.commons.jcs3.access.CacheAccess;
+import org.junit.Before;
+import org.junit.Test;
 
 /** Manual tester for a JCS instance configured to use the http client. */
 public class RemoteHttpCacheManualTester
-    extends TestCase
 {
     /** number to use for the test */
     private static final int items = 100;
@@ -34,7 +35,7 @@ public class RemoteHttpCacheManualTester
     /**
      * Test setup
      */
-    @Override
+    @Before
     public void setUp()
     {
         JCS.setConfigFilename( "/TestRemoteHttpCache.ccf" );
@@ -44,6 +45,7 @@ public class RemoteHttpCacheManualTester
      * A unit test for JUnit
      * @throws Exception Description of the Exception
      */
+    @Test
     public void testSimpleLoad()
         throws Exception
     {

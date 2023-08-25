@@ -1,14 +1,5 @@
 package org.apache.commons.jcs3.auxiliary.lateral.socket.tcp;
 
-import java.util.Random;
-
-import org.apache.commons.jcs3.JCS;
-import org.apache.commons.jcs3.access.CacheAccess;
-import org.apache.commons.jcs3.auxiliary.lateral.LateralCacheAttributes;
-import org.apache.commons.jcs3.engine.CacheElement;
-import org.apache.commons.jcs3.engine.behavior.ICacheElement;
-import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -28,35 +19,25 @@ import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
  * under the License.
  */
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import java.util.Random;
+
+import org.apache.commons.jcs3.JCS;
+import org.apache.commons.jcs3.access.CacheAccess;
+import org.apache.commons.jcs3.auxiliary.lateral.LateralCacheAttributes;
+import org.apache.commons.jcs3.engine.CacheElement;
+import org.apache.commons.jcs3.engine.behavior.ICacheElement;
+import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
 
 /**
  */
 public class LateralTCPConcurrentRandomTestUtil
-    extends TestCase
 {
     /** Should we write out. */
     private static final boolean isSysOut = false;
     //private static boolean isSysOut = true;
-
-    /**
-     * Constructor for the TestDiskCache object.
-     *
-     * @param testName
-     */
-    public LateralTCPConcurrentRandomTestUtil( final String testName )
-    {
-        super( testName );
-    }
-
-    /**
-     * Test setup
-     */
-    @Override
-    public void setUp()
-    {
-        JCS.setConfigFilename( "/TestTCPLateralCacheConcurrent.ccf" );
-    }
 
     /**
      * Randomly adds items to cache, gets them, and removes them. The range
@@ -72,7 +53,7 @@ public class LateralTCPConcurrentRandomTestUtil
      * @throws Exception
      *                If an error occurs
      */
-    public void runTestForRegion( final String region, final int range, final int numOps, final int testNum )
+    public static void runTestForRegion( final String region, final int range, final int numOps, final int testNum )
         throws Exception
     {
         final boolean show = true;//false;

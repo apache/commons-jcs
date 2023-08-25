@@ -1,7 +1,5 @@
 package org.apache.commons.jcs3.admin;
 
-
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -21,13 +19,14 @@ package org.apache.commons.jcs3.admin;
  * under the License.
  */
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
 
 /**
  * Tests for the counting only output stream.
  */
 public class CountingStreamUnitTest
-    extends TestCase
 {
 
     /**
@@ -35,6 +34,7 @@ public class CountingStreamUnitTest
      *
      * @throws Exception
      */
+    @Test
     public void testSingleByte() throws Exception
     {
         final CountingOnlyOutputStream out = new CountingOnlyOutputStream();
@@ -50,6 +50,7 @@ public class CountingStreamUnitTest
      *
      * @throws Exception
      */
+    @Test
     public void testByteArray() throws Exception
     {
         final CountingOnlyOutputStream out = new CountingOnlyOutputStream();
@@ -64,6 +65,7 @@ public class CountingStreamUnitTest
      *
      * @throws Exception
      */
+    @Test
     public void testByteArrayLenCount() throws Exception
     {
         final CountingOnlyOutputStream out = new CountingOnlyOutputStream();

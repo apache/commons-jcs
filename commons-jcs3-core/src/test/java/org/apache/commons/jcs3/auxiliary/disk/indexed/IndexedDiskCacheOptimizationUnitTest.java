@@ -1,9 +1,5 @@
 package org.apache.commons.jcs3.auxiliary.disk.indexed;
 
-import org.apache.commons.jcs3.auxiliary.disk.DiskTestObject;
-import org.apache.commons.jcs3.utils.timing.SleepUtil;
-import org.apache.commons.jcs3.engine.behavior.ICacheElement;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -23,19 +19,25 @@ import org.apache.commons.jcs3.engine.behavior.ICacheElement;
  * under the License.
  */
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import org.apache.commons.jcs3.auxiliary.disk.DiskTestObject;
+import org.apache.commons.jcs3.engine.behavior.ICacheElement;
+import org.apache.commons.jcs3.utils.timing.SleepUtil;
+import org.junit.Test;
 
 /**
  * Tests for the optimization routine.
  */
 public class IndexedDiskCacheOptimizationUnitTest
-    extends TestCase
 {
     /**
      * Set the optimize at remove count to 10. Add 20. Check the file size. Remove 10. Check the
      * times optimized. Check the file size.
      * @throws Exception
      */
+    @Test
     public void testBasicOptimization()
         throws Exception
     {

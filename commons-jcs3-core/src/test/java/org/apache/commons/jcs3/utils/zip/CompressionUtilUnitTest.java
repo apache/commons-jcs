@@ -19,7 +19,9 @@ package org.apache.commons.jcs3.utils.zip;
  * under the License.
  */
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -27,7 +29,6 @@ import java.util.zip.GZIPOutputStream;
 
 /** Unit tests for the compression util */
 public class CompressionUtilUnitTest
-    extends TestCase
 {
     /** Test method for decompressByteArray. */
     public final void testDecompressByteArray_failure()

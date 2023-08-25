@@ -19,24 +19,26 @@ package org.apache.commons.jcs3.engine.control;
  * under the License.
  */
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import java.util.Properties;
 
-import junit.framework.TestCase;
-
+import org.apache.commons.jcs3.auxiliary.AuxiliaryCache;
+import org.apache.commons.jcs3.auxiliary.AuxiliaryCacheConfigurator;
 import org.apache.commons.jcs3.auxiliary.MockAuxiliaryCache;
 import org.apache.commons.jcs3.auxiliary.MockAuxiliaryCacheAttributes;
 import org.apache.commons.jcs3.auxiliary.MockAuxiliaryCacheFactory;
 import org.apache.commons.jcs3.engine.logging.MockCacheEventLogger;
-import org.apache.commons.jcs3.auxiliary.AuxiliaryCache;
-import org.apache.commons.jcs3.auxiliary.AuxiliaryCacheConfigurator;
+import org.junit.Test;
 
 /** Unit tests for the configurator. */
 public class CompositeCacheConfiguratorUnitTest
-    extends TestCase
 {
     /**
      * Verify that we can parse the event logger correctly
      */
+    @Test
     public void testParseAuxiliary_CacheEventLogger_Normal()
     {
         // SETUP
@@ -70,6 +72,7 @@ public class CompositeCacheConfiguratorUnitTest
     /**
      * Verify that we can parse the spool chunk size
      */
+    @Test
     public void testParseSpoolChunkSize_Normal()
     {
         // SETUP

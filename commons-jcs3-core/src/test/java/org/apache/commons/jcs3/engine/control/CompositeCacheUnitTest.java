@@ -1,19 +1,5 @@
 package org.apache.commons.jcs3.engine.control;
 
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Map;
-
-import org.apache.commons.jcs3.auxiliary.MockAuxiliaryCache;
-import org.apache.commons.jcs3.engine.CacheElement;
-import org.apache.commons.jcs3.engine.CompositeCacheAttributes;
-import org.apache.commons.jcs3.engine.ElementAttributes;
-import org.apache.commons.jcs3.engine.behavior.ICacheElement;
-import org.apache.commons.jcs3.engine.behavior.ICacheType.CacheType;
-import org.apache.commons.jcs3.engine.behavior.ICompositeCacheAttributes;
-import org.apache.commons.jcs3.engine.behavior.IElementAttributes;
-import org.apache.commons.jcs3.engine.memory.MockMemoryCache;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -33,13 +19,27 @@ import org.apache.commons.jcs3.engine.memory.MockMemoryCache;
  * under the License.
  */
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Map;
+
+import org.apache.commons.jcs3.auxiliary.MockAuxiliaryCache;
+import org.apache.commons.jcs3.engine.CacheElement;
+import org.apache.commons.jcs3.engine.CompositeCacheAttributes;
+import org.apache.commons.jcs3.engine.ElementAttributes;
+import org.apache.commons.jcs3.engine.behavior.ICacheElement;
+import org.apache.commons.jcs3.engine.behavior.ICacheType.CacheType;
+import org.apache.commons.jcs3.engine.behavior.ICompositeCacheAttributes;
+import org.apache.commons.jcs3.engine.behavior.IElementAttributes;
+import org.apache.commons.jcs3.engine.memory.MockMemoryCache;
+import org.junit.Test;
 
 /**
  * Tests that directly engage the composite cache.
  */
 public class CompositeCacheUnitTest
-    extends TestCase
 {
     /**
      * Verify that the freeMemoryElements method on the memory cache is called on shutdown if there
@@ -47,6 +47,7 @@ public class CompositeCacheUnitTest
      * <p>
      * @throws IOException
      */
+    @Test
     public void testShutdownMemoryFlush()
         throws IOException
     {
@@ -85,6 +86,7 @@ public class CompositeCacheUnitTest
      * <p>
      * @throws IOException
      */
+    @Test
     public void testShutdownMemoryFlush_noDisk()
         throws IOException
     {
@@ -122,6 +124,7 @@ public class CompositeCacheUnitTest
      * <p>
      * @throws IOException
      */
+    @Test
     public void testGetMatching_Normal()
         throws IOException
     {
@@ -173,6 +176,7 @@ public class CompositeCacheUnitTest
      * <p>
      * @throws IOException
      */
+    @Test
     public void testGetMatching_NotOnDisk()
         throws IOException
     {
@@ -205,6 +209,7 @@ public class CompositeCacheUnitTest
      * <p>
      * @throws IOException
      */
+    @Test
     public void testGetMatching_NotOnRemote()
         throws IOException
     {

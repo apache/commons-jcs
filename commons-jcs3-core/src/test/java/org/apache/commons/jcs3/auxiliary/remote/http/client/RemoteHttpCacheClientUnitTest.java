@@ -19,7 +19,8 @@ package org.apache.commons.jcs3.auxiliary.remote.http.client;
  * under the License.
  */
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -31,16 +32,17 @@ import org.apache.commons.jcs3.auxiliary.remote.value.RemoteCacheResponse;
 import org.apache.commons.jcs3.auxiliary.remote.value.RemoteRequestType;
 import org.apache.commons.jcs3.engine.CacheElement;
 import org.apache.commons.jcs3.engine.behavior.ICacheElement;
+import org.junit.Test;
 
 /** Unit tests for the client. */
 public class RemoteHttpCacheClientUnitTest
-    extends TestCase
 {
     /**
      * Verify get functionality
      * <p>
      * @throws IOException
      */
+    @Test
     public void testGet_nullFromDispatcher()
         throws IOException
     {
@@ -70,6 +72,7 @@ public class RemoteHttpCacheClientUnitTest
      * <p>
      * @throws IOException
      */
+    @Test
     public void testGet_normal()
         throws IOException
     {
@@ -104,6 +107,7 @@ public class RemoteHttpCacheClientUnitTest
      * <p>
      * @throws IOException
      */
+    @Test
     public void testGetMatching_normal()
         throws IOException
     {
@@ -140,6 +144,7 @@ public class RemoteHttpCacheClientUnitTest
      * <p>
      * @throws IOException
      */
+    @Test
     public void testGetMultiple_normal()
         throws IOException
     {
@@ -176,6 +181,7 @@ public class RemoteHttpCacheClientUnitTest
      * <p>
      * @throws IOException
      */
+    @Test
     public void testRemove_normal()
         throws IOException
     {
@@ -202,6 +208,7 @@ public class RemoteHttpCacheClientUnitTest
      * <p>
      * @throws IOException
      */
+    @Test
     public void testRemoveAll_normal()
         throws IOException
     {
@@ -227,6 +234,7 @@ public class RemoteHttpCacheClientUnitTest
      * <p>
      * @throws IOException
      */
+    @Test
     public void testUpdate_normal()
         throws IOException
     {
@@ -254,6 +262,7 @@ public class RemoteHttpCacheClientUnitTest
      * <p>
      * @throws IOException
      */
+    @Test
     public void testDispose_normal()
         throws IOException
     {

@@ -1,13 +1,5 @@
 package org.apache.commons.jcs3.auxiliary.disk.block;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
-import org.apache.commons.jcs3.JCS;
-import org.apache.commons.jcs3.access.CacheAccess;
-import org.apache.commons.jcs3.engine.behavior.ICacheElement;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -27,87 +19,76 @@ import org.apache.commons.jcs3.engine.behavior.ICacheElement;
  * under the License.
  */
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import org.apache.commons.jcs3.JCS;
+import org.apache.commons.jcs3.access.CacheAccess;
+import org.apache.commons.jcs3.engine.behavior.ICacheElement;
+
 import junit.extensions.ActiveTestSuite;
 import junit.framework.Test;
 import junit.framework.TestCase;
 
 /**
- * Test which exercises the block disk cache. Runs three threads against the same region.
+ * Test which exercises the block disk cache. Runs four threads against the same region.
  */
 public class BlockDiskCacheSameRegionConcurrentUnitTest
-    extends TestCase
 {
-    /**
-     * Constructor for the TestDiskCache object.
-     * <p>
-     * @param testName
-     */
-    public BlockDiskCacheSameRegionConcurrentUnitTest( final String testName )
-    {
-        super( testName );
-    }
-
     /**
      * A unit test suite for JUnit
      * @return The test suite
      */
     public static Test suite()
     {
+        JCS.setConfigFilename( "/TestBlockDiskCacheCon.ccf" );
         final ActiveTestSuite suite = new ActiveTestSuite();
 
-        suite.addTest( new BlockDiskCacheSameRegionConcurrentUnitTest( "testBlockDiskCache1" )
+        suite.addTest(new TestCase("testBlockDiskCache1" )
         {
             @Override
             public void runTest()
                 throws Exception
             {
-                this.runTestForRegion( "blockRegion4", 0, 200 );
+                runTestForRegion( "blockRegion4", 0, 200 );
             }
-        } );
+        });
 
-        suite.addTest( new BlockDiskCacheSameRegionConcurrentUnitTest( "testBlockDiskCache2" )
+        suite.addTest(new TestCase("testBlockDiskCache2" )
         {
             @Override
             public void runTest()
                 throws Exception
             {
-                this.runTestForRegion( "blockRegion4", 1000, 1200 );
+                runTestForRegion( "blockRegion4", 1000, 1200 );
             }
-        } );
+        });
 
-        suite.addTest( new BlockDiskCacheSameRegionConcurrentUnitTest( "testBlockDiskCache3" )
+        suite.addTest(new TestCase("testBlockDiskCache3" )
         {
             @Override
             public void runTest()
                 throws Exception
             {
-                this.runTestForRegion( "blockRegion4", 2000, 2200 );
+                runTestForRegion( "blockRegion4", 2000, 2200 );
             }
-        } );
+        });
 
-        suite.addTest( new BlockDiskCacheSameRegionConcurrentUnitTest( "testBlockDiskCache4" )
+        suite.addTest(new TestCase("testBlockDiskCache4" )
         {
             @Override
             public void runTest()
                 throws Exception
             {
-                this.runTestForRegion( "blockRegion4", 2200, 5200 );
+                runTestForRegion( "blockRegion4", 2200, 5200 );
             }
-        } );
+        });
 
         return suite;
-    }
-
-    /**
-     * Test setup.  Sets the config name and clears the region.
-     * <p>
-     * @throws Exception
-     */
-    @Override
-    public void setUp()
-        throws Exception
-    {
-        JCS.setConfigFilename( "/TestBlockDiskCacheCon.ccf" );
     }
 
     /**
@@ -118,21 +99,19 @@ public class BlockDiskCacheSameRegionConcurrentUnitTest
      * @param end
      * @throws Exception If an error occurs
      */
-    public void runTestForRegion( final String region, final int start, final int end )
+    public static void runTestForRegion( final String region, final int start, final int end )
         throws Exception
     {
         final CacheAccess<String, String> jcs = JCS.getInstance( region );
 
         // Add items to cache
-
-        for ( int i = start; i <= end; i++ )
+        for ( int i = start; i < end; i++ )
         {
             jcs.put( i + ":key", region + " data " + i + "-" + region );
         }
 
         // Test that all items are in cache
-
-        for ( int i = start; i <= end; i++ )
+        for ( int i = start; i < end; i++ )
         {
             final String key = i + ":key";
             final String value = jcs.get( key );
@@ -142,13 +121,13 @@ public class BlockDiskCacheSameRegionConcurrentUnitTest
 
         // Test that getElements returns all the expected values
         final Set<String> keys = new HashSet<>();
-        for ( int i = start; i <= end; i++ )
+        for ( int i = start; i < end; i++ )
         {
             keys.add( i + ":key" );
         }
 
         final Map<String, ICacheElement<String, String>> elements = jcs.getCacheElements( keys );
-        for ( int i = start; i <= end; i++ )
+        for ( int i = start; i < end; i++ )
         {
             final ICacheElement<String, String> element = elements.get( i + ":key" );
             assertNotNull( "element " + i + ":key is missing", element );

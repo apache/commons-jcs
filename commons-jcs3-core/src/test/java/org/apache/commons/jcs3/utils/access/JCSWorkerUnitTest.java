@@ -1,7 +1,5 @@
 package org.apache.commons.jcs3.utils.access;
 
-
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -21,13 +19,14 @@ package org.apache.commons.jcs3.utils.access;
  * under the License.
  */
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
 
 /**
  * Test cases for the JCS worker.
  */
 public class JCSWorkerUnitTest
-    extends TestCase
 {
 
     /**
@@ -38,6 +37,7 @@ public class JCSWorkerUnitTest
      * @throws Exception
      *
      */
+    @Test
     public void testSimpleGet()
         throws Exception
     {

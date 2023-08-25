@@ -1,5 +1,7 @@
 package org.apache.commons.jcs3.utils.discovery;
 
+import static org.junit.Assert.assertTrue;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -23,19 +25,18 @@ import java.util.ArrayList;
 
 import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
 import org.apache.commons.jcs3.utils.timing.SleepUtil;
-
-import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  * Unit tests for discovery
  */
 public class UDPDiscoveryUnitTest
-    extends TestCase
 {
     /**
      * <p>
      * @throws Exception
      */
+    @Test
     public void testSimpleUDPDiscoveryIPv4()
         throws Exception
     {
@@ -46,6 +47,7 @@ public class UDPDiscoveryUnitTest
      * <p>
      * @throws Exception
      */
+    @Test
     public void testSimpleUDPDiscoveryIPv6()
         throws Exception
     {

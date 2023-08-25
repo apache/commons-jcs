@@ -40,6 +40,9 @@
             <action dev="tv" type="remove">
                Remove all deprecated code
             </action>
+            <action dev="tv" type="update">
+               Migrate all tests to JUnit 4
+            </action>
         </release>
         <release version="3.2" date="2023-08-22">
             <action dev="tv" type="fix" issue="JCS-234" due-to="Chris Lake">

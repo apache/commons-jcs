@@ -1,11 +1,5 @@
 package org.apache.commons.jcs3.auxiliary.remote.server;
 
-import java.rmi.server.RMISocketFactory;
-import java.util.Properties;
-
-import org.apache.commons.jcs3.auxiliary.remote.behavior.ICommonRemoteCacheAttributes;
-import org.apache.commons.jcs3.auxiliary.remote.behavior.IRemoteCacheConstants;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -25,13 +19,21 @@ import org.apache.commons.jcs3.auxiliary.remote.behavior.IRemoteCacheConstants;
  * under the License.
  */
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
+import java.rmi.server.RMISocketFactory;
+import java.util.Properties;
+
+import org.apache.commons.jcs3.auxiliary.remote.behavior.ICommonRemoteCacheAttributes;
+import org.apache.commons.jcs3.auxiliary.remote.behavior.IRemoteCacheConstants;
+import org.junit.Test;
 
 /** Unit tests for the factory */
 public class RemoteCacheServerFactoryUnitTest
-    extends TestCase
 {
     /** verify that we get the timeout value */
+    @Test
     public void testConfigureRemoteCacheServerAttributes_eventQueuePoolName()
     {
         // SETUP
@@ -47,6 +49,7 @@ public class RemoteCacheServerFactoryUnitTest
     }
 
     /** verify that we get the timeout value */
+    @Test
     public void testConfigureRemoteCacheServerAttributes_timeoutNotPresent()
     {
         // SETUP
@@ -60,6 +63,7 @@ public class RemoteCacheServerFactoryUnitTest
     }
 
     /** verify that we get the registryKeepAliveDelayMillis value */
+    @Test
     public void testConfigureRemoteCacheServerAttributes_registryKeepAliveDelayMillisPresent()
     {
         // SETUP
@@ -75,6 +79,7 @@ public class RemoteCacheServerFactoryUnitTest
     }
 
     /** verify that we get the useRegistryKeepAlive value */
+    @Test
     public void testConfigureRemoteCacheServerAttributes_useRegistryKeepAlivePresent()
     {
         // SETUP
@@ -90,6 +95,7 @@ public class RemoteCacheServerFactoryUnitTest
     }
 
     /** verify that we get the registryKeepAliveDelayMillis value */
+    @Test
     public void testConfigureRemoteCacheServerAttributes_rmiSocketFactoryTimeoutMillisPresent()
     {
         // SETUP
@@ -105,6 +111,7 @@ public class RemoteCacheServerFactoryUnitTest
     }
 
     /** verify that we get the startRegistry value */
+    @Test
     public void testConfigureRemoteCacheServerAttributes_allowClusterGetPresent()
     {
         // SETUP
@@ -120,6 +127,7 @@ public class RemoteCacheServerFactoryUnitTest
     }
 
     /** verify that we get the startRegistry value */
+    @Test
     public void testConfigureRemoteCacheServerAttributes_localClusterConsistencyPresent()
     {
         // SETUP
@@ -135,6 +143,7 @@ public class RemoteCacheServerFactoryUnitTest
     }
 
     /** verify that we get the timeout value */
+    @Test
     public void testConfigureObjectSpecificCustomFactory_withProperty()
     {
         // SETUP
@@ -152,6 +161,7 @@ public class RemoteCacheServerFactoryUnitTest
     }
 
     /** verify that we get the timeout value */
+    @Test
     public void testConfigureObjectSpecificCustomFactory_withProperty_TimeoutConfigurableRMIScoketFactory()
     {
         // SETUP

@@ -1,5 +1,9 @@
 package org.apache.commons.jcs3.auxiliary.remote;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -22,8 +26,6 @@ package org.apache.commons.jcs3.auxiliary.remote;
 import java.util.HashSet;
 import java.util.Map;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.jcs3.auxiliary.MockCacheEventLogger;
 import org.apache.commons.jcs3.auxiliary.remote.behavior.IRemoteCacheAttributes;
 import org.apache.commons.jcs3.engine.CacheElement;
@@ -31,25 +33,22 @@ import org.apache.commons.jcs3.engine.ZombieCacheServiceNonLocal;
 import org.apache.commons.jcs3.engine.behavior.ICacheElement;
 import org.apache.commons.jcs3.engine.behavior.ICacheElementSerialized;
 import org.apache.commons.jcs3.utils.serialization.SerializationConversionUtil;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Unit Tests for the Remote Cache.
  */
 public class RemoteCacheUnitTest
-    extends TestCase
 {
     private IRemoteCacheAttributes cattr;
     private MockRemoteCacheService<String, String> service;
     private MockRemoteCacheListener<String, String> listener;
     private RemoteCacheMonitor monitor;
 
-    /**
-     * @see junit.framework.TestCase#setUp()
-     */
-    @Override
-    protected void setUp() throws Exception
+    @Before
+    public void setUp() throws Exception
     {
-        super.setUp();
         cattr = new RemoteCacheAttributes();
         service = new MockRemoteCacheService<>();
         listener = new MockRemoteCacheListener<>();
@@ -62,6 +61,7 @@ public class RemoteCacheUnitTest
      * <p>
      * @throws Exception
      */
+    @Test
     public void testUpdate()
         throws Exception
     {
@@ -92,6 +92,7 @@ public class RemoteCacheUnitTest
      * <p>
      * @throws Exception
      */
+    @Test
     public void testUpdateZombieThenFix()
         throws Exception
     {
@@ -123,6 +124,7 @@ public class RemoteCacheUnitTest
      * <p>
      * @throws Exception
      */
+    @Test
     public void testUpdate_simple()
         throws Exception
     {
@@ -146,6 +148,7 @@ public class RemoteCacheUnitTest
      * <p>
      * @throws Exception
      */
+    @Test
     public void testGet_simple()
         throws Exception
     {
@@ -167,6 +170,7 @@ public class RemoteCacheUnitTest
      * <p>
      * @throws Exception
      */
+    @Test
     public void testGetMultiple_simple()
         throws Exception
     {
@@ -188,6 +192,7 @@ public class RemoteCacheUnitTest
      * <p>
      * @throws Exception
      */
+    @Test
     public void testRemove_simple()
         throws Exception
     {
@@ -209,6 +214,7 @@ public class RemoteCacheUnitTest
      * <p>
      * @throws Exception
      */
+    @Test
     public void testRemoveAll_simple()
         throws Exception
     {
@@ -230,6 +236,7 @@ public class RemoteCacheUnitTest
      * <p>
      * @throws Exception
      */
+    @Test
     public void testGetMatching_simple()
         throws Exception
     {
@@ -255,6 +262,7 @@ public class RemoteCacheUnitTest
      * <p>
      * @throws Exception
      */
+    @Test
     public void testDispose_simple()
         throws Exception
     {
@@ -276,6 +284,7 @@ public class RemoteCacheUnitTest
      * <p>
      * @throws Exception
      */
+    @Test
     public void testDispose_nullListener()
         throws Exception
     {

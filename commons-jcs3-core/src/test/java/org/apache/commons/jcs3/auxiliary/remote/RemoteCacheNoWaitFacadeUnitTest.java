@@ -1,12 +1,5 @@
 package org.apache.commons.jcs3.auxiliary.remote;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.jcs3.auxiliary.AuxiliaryCache;
-import org.apache.commons.jcs3.auxiliary.remote.behavior.IRemoteCacheAttributes;
-import org.apache.commons.jcs3.engine.CacheStatus;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -26,17 +19,28 @@ import org.apache.commons.jcs3.engine.CacheStatus;
  * under the License.
  */
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.jcs3.auxiliary.AuxiliaryCache;
+import org.apache.commons.jcs3.auxiliary.remote.behavior.IRemoteCacheAttributes;
+import org.apache.commons.jcs3.engine.CacheStatus;
+import org.junit.Test;
 
 /**
  * Tests for RemoteCacheNoWaitFacade.
  */
 public class RemoteCacheNoWaitFacadeUnitTest
-    extends TestCase
 {
     /**
      * Verify that we can add an item.
      */
+    @Test
     public void testAddNoWait_InList()
     {
         // SETUP
@@ -59,6 +63,7 @@ public class RemoteCacheNoWaitFacadeUnitTest
     /**
      * Verify that failover works
      */
+    @Test
     public void testFailover()
     {
         // SETUP

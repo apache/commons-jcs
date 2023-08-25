@@ -19,6 +19,12 @@ package org.apache.commons.jcs3.auxiliary.disk.indexed;
  * under the License.
  */
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -36,14 +42,12 @@ import org.apache.commons.jcs3.engine.behavior.IElementAttributes;
 import org.apache.commons.jcs3.engine.control.group.GroupAttrName;
 import org.apache.commons.jcs3.engine.control.group.GroupId;
 import org.apache.commons.jcs3.utils.timing.SleepUtil;
-
-import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  * Tests for common functionality.
  */
-public abstract class AbstractIndexDiskCacheUnitTest extends TestCase
-{
+public abstract class AbstractIndexDiskCacheUnitTest{
     public abstract IndexedDiskCacheAttributes getCacheAttributes();
 
     /**
@@ -51,6 +55,7 @@ public abstract class AbstractIndexDiskCacheUnitTest extends TestCase
      *
      * @throws IOException
      */
+    @Test
     public void testSimplePutAndGet() throws IOException
     {
         final IndexedDiskCacheAttributes cattr = getCacheAttributes();
@@ -100,6 +105,7 @@ public abstract class AbstractIndexDiskCacheUnitTest extends TestCase
      *
      * @throws IOException
      */
+    @Test
     public void testRemoveItems() throws IOException
     {
         final IndexedDiskCacheAttributes cattr = getCacheAttributes();
@@ -139,6 +145,7 @@ public abstract class AbstractIndexDiskCacheUnitTest extends TestCase
     /**
      * Verify that the overlap check returns true when there are no overlaps.
      */
+    @Test
     public void testCheckForDedOverlaps_noOverlap()
     {
         // SETUP
@@ -167,6 +174,7 @@ public abstract class AbstractIndexDiskCacheUnitTest extends TestCase
     /**
      * Verify that the overlap check returns false when there are overlaps.
      */
+    @Test
     public void testCheckForDedOverlaps_overlaps()
     {
         // SETUP
@@ -200,6 +208,7 @@ public abstract class AbstractIndexDiskCacheUnitTest extends TestCase
      * @throws IOException
      * @throws InterruptedException
      */
+    @Test
     public void testFileSize() throws IOException, InterruptedException
     {
         // SETUP
@@ -236,6 +245,7 @@ public abstract class AbstractIndexDiskCacheUnitTest extends TestCase
      * @throws IOException
      * @throws InterruptedException
      */
+    @Test
     public void testRecyleBinSize() throws IOException, InterruptedException
     {
         // SETUP
@@ -280,6 +290,7 @@ public abstract class AbstractIndexDiskCacheUnitTest extends TestCase
      * @throws IOException
      * @throws InterruptedException
      */
+    @Test
     public void testRecyleBinUsage() throws IOException, InterruptedException
     {
         // SETUP
@@ -336,6 +347,7 @@ public abstract class AbstractIndexDiskCacheUnitTest extends TestCase
      * @throws IOException
      * @throws InterruptedException
      */
+    @Test
     public void testBytesFreeSize() throws IOException, InterruptedException
     {
         // SETUP
@@ -389,6 +401,7 @@ public abstract class AbstractIndexDiskCacheUnitTest extends TestCase
      *
      * @throws IOException
      */
+    @Test
     public void testRemove_PartialKey() throws IOException
     {
         final IndexedDiskCacheAttributes cattr = getCacheAttributes();
@@ -433,6 +446,7 @@ public abstract class AbstractIndexDiskCacheUnitTest extends TestCase
      *
      * @throws IOException
      */
+    @Test
     public void testRemove_Group() throws IOException
     {
         // SETUP
@@ -505,6 +519,7 @@ public abstract class AbstractIndexDiskCacheUnitTest extends TestCase
      *
      * @throws Exception
      */
+    @Test
     public void testUpdate_EventLogging_simple() throws Exception
     {
         // SETUP
@@ -536,6 +551,7 @@ public abstract class AbstractIndexDiskCacheUnitTest extends TestCase
      *
      * @throws Exception
      */
+    @Test
     public void testGet_EventLogging_simple() throws Exception
     {
         // SETUP
@@ -563,6 +579,7 @@ public abstract class AbstractIndexDiskCacheUnitTest extends TestCase
      *
      * @throws Exception
      */
+    @Test
     public void testGetMultiple_EventLogging_simple() throws Exception
     {
         // SETUP
@@ -594,6 +611,7 @@ public abstract class AbstractIndexDiskCacheUnitTest extends TestCase
      *
      * @throws Exception
      */
+    @Test
     public void testRemove_EventLogging_simple() throws Exception
     {
         // SETUP
@@ -621,6 +639,7 @@ public abstract class AbstractIndexDiskCacheUnitTest extends TestCase
      *
      * @throws Exception
      */
+    @Test
     public void testRemoveAll_EventLogging_simple() throws Exception
     {
         // SETUP
@@ -648,6 +667,7 @@ public abstract class AbstractIndexDiskCacheUnitTest extends TestCase
      *
      * @throws Exception
      */
+    @Test
     public void testPutGetMatching_SmallWait() throws Exception
     {
         // SETUP
@@ -681,6 +701,7 @@ public abstract class AbstractIndexDiskCacheUnitTest extends TestCase
      *
      * @throws Exception
      */
+    @Test
     public void testPutGetMatching_NoWait() throws Exception
     {
         // SETUP
@@ -713,6 +734,7 @@ public abstract class AbstractIndexDiskCacheUnitTest extends TestCase
      *
      * @throws Exception
      */
+    @Test
     public void testUTF8String() throws Exception
     {
         String string = "IÒtÎrn‚tiÙn‡lizÊti¯n";
@@ -755,6 +777,7 @@ public abstract class AbstractIndexDiskCacheUnitTest extends TestCase
      *
      * @throws Exception
      */
+    @Test
     public void testUTF8ByteArray() throws Exception
     {
         String string = "IÒtÎrn‚tiÙn‡lizÊti¯n";
@@ -797,6 +820,7 @@ public abstract class AbstractIndexDiskCacheUnitTest extends TestCase
      *
      * @throws IOException
      */
+    @Test
     public void testProcessUpdate_Simple() throws IOException
     {
         // SETUP
@@ -827,6 +851,7 @@ public abstract class AbstractIndexDiskCacheUnitTest extends TestCase
      *
      * @throws IOException
      */
+    @Test
     public void testProcessUpdate_SameKeySameSize() throws IOException
     {
         // SETUP
@@ -864,6 +889,7 @@ public abstract class AbstractIndexDiskCacheUnitTest extends TestCase
      *
      * @throws IOException
      */
+    @Test
     public void testProcessUpdate_SameKeySmallerSize() throws IOException
     {
         // SETUP
@@ -902,6 +928,7 @@ public abstract class AbstractIndexDiskCacheUnitTest extends TestCase
      *
      * @throws IOException
      */
+    @Test
     public void testProcessUpdate_SameKeyBiggerSize() throws IOException
     {
         // SETUP
@@ -934,6 +961,7 @@ public abstract class AbstractIndexDiskCacheUnitTest extends TestCase
         assertEquals("Should be one in the bin.", 1, binSize);
     }
 
+    @Test
     public void testLoadFromDisk() throws Exception
     {
         for (int i = 0; i < 15; i++)

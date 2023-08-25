@@ -1,7 +1,5 @@
 package org.apache.commons.jcs3;
 
-import org.apache.commons.jcs3.access.CacheAccess;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -21,12 +19,15 @@ import org.apache.commons.jcs3.access.CacheAccess;
  * under the License.
  */
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertNull;
+
+import org.apache.commons.jcs3.access.CacheAccess;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  */
 public class ZeroSizeCacheUnitTest
-    extends TestCase
 {
     /** number to get each loop */
     private static final int items = 20000;
@@ -36,12 +37,11 @@ public class ZeroSizeCacheUnitTest
      * <p>
      * @throws Exception
      */
-    @Override
+    @Before
     public void setUp()
         throws Exception
     {
         JCS.setConfigFilename( "/TestZeroSizeCache.ccf" );
-        JCS.getInstance( "testCache1" );
     }
 
     /**
@@ -50,6 +50,7 @@ public class ZeroSizeCacheUnitTest
      * @throws Exception
      *
      */
+    @Test
     public void testPutGetRemove()
         throws Exception
     {

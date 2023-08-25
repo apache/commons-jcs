@@ -1,5 +1,7 @@
 package org.apache.commons.jcs3;
 
+import static org.junit.Assert.assertEquals;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -24,14 +26,12 @@ import java.util.LinkedList;
 import java.util.Random;
 
 import org.apache.commons.jcs3.access.CacheAccess;
-
-import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  * Simple test for the JCS class.
  */
 public class JCSUnitTest
-    extends TestCase
 {
     /** A random for key generation. */
     Random random = new Random();
@@ -39,6 +39,7 @@ public class JCSUnitTest
     /**
      * @throws Exception
      */
+    @Test
     public void testJCS()
         throws Exception
     {

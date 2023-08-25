@@ -1,7 +1,5 @@
 package org.apache.commons.jcs3.utils.serialization;
 
-
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -21,19 +19,22 @@ package org.apache.commons.jcs3.utils.serialization;
  * under the License.
  */
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+
+import org.junit.Test;
 
 /**
  * Tests the standard serializer.
  */
 public class StandardSerializerUnitTest
-    extends TestCase
 {
     /**
      * Test simple back and forth with a string.
      *<p>
      * @throws Exception
      */
+    @Test
     public void testSimpleBackAndForth()
         throws Exception
     {
@@ -54,6 +55,7 @@ public class StandardSerializerUnitTest
      *<p>
      * @throws Exception
      */
+    @Test
     public void testNullInput()
         throws Exception
     {
@@ -78,6 +80,7 @@ public class StandardSerializerUnitTest
      *<p>
      * @throws Exception
      */
+    @Test
     public void testBigStringBackAndForth()
         throws Exception
     {

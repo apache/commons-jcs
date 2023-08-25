@@ -19,7 +19,10 @@ package org.apache.commons.jcs3.utils.serialization;
  * under the License.
  */
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
 
 import java.io.IOException;
 
@@ -29,18 +32,19 @@ import org.apache.commons.jcs3.engine.behavior.ICacheElement;
 import org.apache.commons.jcs3.engine.behavior.ICacheElementSerialized;
 import org.apache.commons.jcs3.engine.behavior.IElementAttributes;
 import org.apache.commons.jcs3.engine.behavior.IElementSerializer;
+import org.junit.Test;
 
 /**
  * Tests the serialization conversion util.
  */
 public class SerializationConversionUtilUnitTest
-    extends TestCase
 {
     /**
      * Verify null for null.
      * <p>
      * @throws IOException
      */
+    @Test
     public void testgGetSerializedCacheElement_null()
         throws IOException
     {
@@ -61,6 +65,7 @@ public class SerializationConversionUtilUnitTest
      * <p>
      * @throws Exception
      */
+    @Test
     public void testgGetDeSerializedCacheElement_null()
         throws Exception
     {
@@ -81,6 +86,7 @@ public class SerializationConversionUtilUnitTest
      * <p>
      * @throws Exception
      */
+    @Test
     public void testSimpleConversion()
         throws Exception
     {
@@ -122,6 +128,7 @@ public class SerializationConversionUtilUnitTest
      *<p>
      * @throws Exception
      */
+    @Test
     public void testAccidentalDoubleConversion()
         throws Exception
     {
@@ -163,6 +170,7 @@ public class SerializationConversionUtilUnitTest
     /**
      * Verify that we get an IOException for a null serializer.
      */
+    @Test
     public void testNullSerializerConversion()
     {
         // SETUP

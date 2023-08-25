@@ -1,7 +1,5 @@
 package org.apache.commons.jcs3.utils.struct;
 
-
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -21,13 +19,15 @@ package org.apache.commons.jcs3.utils.struct;
  * under the License.
  */
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
 
 /** Unit tests for the double linked list. */
 public class DoubleLinkedListUnitTest
-    extends TestCase
 {
     /** verify that the last is added when the list is empty. */
+    @Test
     public void testAddLast_Empty()
     {
         // SETUP
@@ -44,6 +44,7 @@ public class DoubleLinkedListUnitTest
     }
 
     /** verify that the last is added when the list is empty. */
+    @Test
     public void testAddLast_NotEmpty()
     {
         // SETUP
@@ -64,6 +65,7 @@ public class DoubleLinkedListUnitTest
     }
 
     /** verify that it's added last. */
+    @Test
     public void testMakeLast_wasFirst()
     {
         // SETUP
@@ -88,6 +90,7 @@ public class DoubleLinkedListUnitTest
     }
 
     /** verify that it's added last. */
+    @Test
     public void testMakeLast_wasLast()
     {
         // SETUP
@@ -112,6 +115,7 @@ public class DoubleLinkedListUnitTest
     }
 
     /** verify that it's added last. */
+    @Test
     public void testMakeLast_wasAlone()
     {
         // SETUP
@@ -132,6 +136,7 @@ public class DoubleLinkedListUnitTest
     }
 
     /** verify that it's added last. */
+    @Test
     public void testMakeLast_wasInMiddle()
     {
         // SETUP

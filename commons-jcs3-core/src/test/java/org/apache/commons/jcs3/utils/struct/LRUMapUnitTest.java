@@ -19,24 +19,27 @@ package org.apache.commons.jcs3.utils.struct;
  * under the License.
  */
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import java.util.Map;
 import java.util.Map.Entry;
-
 import java.util.Set;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  * Basic unit tests for the LRUMap
  */
 public class LRUMapUnitTest
-    extends TestCase
 {
 
     /**
      * Put up to the size limit and then make sure they are all there.
      *
      */
+    @Test
     public void testPutWithSizeLimit()
     {
         final int size = 10;
@@ -58,6 +61,7 @@ public class LRUMapUnitTest
      * Put into the lru with no limit and then make sure they are all there.
      *
      */
+    @Test
     public void testPutWithNoSizeLimit()
     {
         final int size = 10;
@@ -79,6 +83,7 @@ public class LRUMapUnitTest
      * Put and then remove.  Make sure the element is returned.
      *
      */
+    @Test
     public void testPutAndRemove()
     {
         final int size = 10;
@@ -93,6 +98,7 @@ public class LRUMapUnitTest
      * Call remove on an empty map
      *
      */
+    @Test
     public void testRemoveEmpty()
     {
         final int size = 10;
@@ -107,6 +113,7 @@ public class LRUMapUnitTest
      * Add items to the map and then test to see that they come back in the entry set.
      *
      */
+    @Test
     public void testGetEntrySet()
     {
         final int size = 10;

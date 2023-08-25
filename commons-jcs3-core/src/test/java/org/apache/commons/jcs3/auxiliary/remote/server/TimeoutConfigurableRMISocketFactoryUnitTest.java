@@ -19,21 +19,21 @@ package org.apache.commons.jcs3.auxiliary.remote.server;
  * under the License.
  */
 
-import junit.framework.TestCase;
-
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import org.junit.Test;
+
 /** Unit tests for the custom factory */
 public class TimeoutConfigurableRMISocketFactoryUnitTest
-    extends TestCase
 {
     /**
      * Simple test to see that we can create a server socket and connect.
      * <p>
      * @throws IOException
      */
+    @Test
     public void testCreateAndConnect() throws IOException
     {
         // SETUP

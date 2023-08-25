@@ -1,9 +1,5 @@
 package org.apache.commons.jcs3.engine.control;
 
-import org.apache.commons.jcs3.engine.CacheStatus;
-import org.apache.commons.jcs3.engine.CompositeCacheAttributes;
-
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -23,16 +19,20 @@ import org.apache.commons.jcs3.engine.CompositeCacheAttributes;
  * under the License.
  */
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+
+import org.apache.commons.jcs3.engine.CacheStatus;
+import org.apache.commons.jcs3.engine.CompositeCacheAttributes;
+import org.junit.Test;
 
 /** Unit tests for the composite cache manager */
 public class CompositeCacheManagerTest
-    extends TestCase
 {
 
     /**
      * Verify that calling release, when there are active clients, the caches are correctly disposed or not.
      */
+    @Test
     public void testRelease()
     {
         // See JCS-184

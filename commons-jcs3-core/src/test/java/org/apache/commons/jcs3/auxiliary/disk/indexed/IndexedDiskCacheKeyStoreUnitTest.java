@@ -1,10 +1,5 @@
 package org.apache.commons.jcs3.auxiliary.disk.indexed;
 
-import org.apache.commons.jcs3.engine.CacheElement;
-import org.apache.commons.jcs3.engine.ElementAttributes;
-import org.apache.commons.jcs3.engine.behavior.ICacheElement;
-import org.apache.commons.jcs3.engine.behavior.IElementAttributes;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -24,13 +19,20 @@ import org.apache.commons.jcs3.engine.behavior.IElementAttributes;
  * under the License.
  */
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+import org.apache.commons.jcs3.engine.CacheElement;
+import org.apache.commons.jcs3.engine.ElementAttributes;
+import org.apache.commons.jcs3.engine.behavior.ICacheElement;
+import org.apache.commons.jcs3.engine.behavior.IElementAttributes;
+import org.junit.Test;
 
 /**
  * Test store and load keys.
  */
 public class IndexedDiskCacheKeyStoreUnitTest
-    extends TestCase
 {
 
     /**
@@ -40,6 +42,7 @@ public class IndexedDiskCacheKeyStoreUnitTest
      * @throws Exception
      *
      */
+    @Test
     public void testStoreKeys()
         throws Exception
     {
@@ -94,6 +97,7 @@ public class IndexedDiskCacheKeyStoreUnitTest
      * @throws Exception
      *
      */
+    @Test
     public void testOptiimize()
         throws Exception
     {

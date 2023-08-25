@@ -19,11 +19,12 @@ package org.apache.commons.jcs3.access;
  * under the License.
  */
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
 
 import org.apache.commons.jcs3.JCS;
 import org.apache.commons.jcs3.engine.control.CompositeCacheManager;
 import org.junit.FixMethodOrder;
+import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
 /**
@@ -31,7 +32,6 @@ import org.junit.runners.MethodSorters;
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class SystemPropertyUnitTest
-    extends TestCase
 {
 
     /**
@@ -40,6 +40,7 @@ public class SystemPropertyUnitTest
      * @throws Exception
      *
      */
+    @Test
     public void test1SystemPropertyInValueDelimiter()
         throws Exception
     {
@@ -66,6 +67,7 @@ public class SystemPropertyUnitTest
      * @throws Exception
      *
      */
+    @Test
     public void test2SystemPropertyMissingInValueDelimeter()
         throws Exception
     {

@@ -446,9 +446,9 @@ public abstract class AbstractMemoryCache<K, V>
     }
 
     /**
-     * Get an Array of the keys for all elements in the memory cache
+     * Get a set of the keys for all elements in the memory cache
      *
-     * @return An Object[]
+     * @return a set of keys
      */
     @Override
     public Set<K> getKeySet()

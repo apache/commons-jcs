@@ -19,22 +19,24 @@ package org.apache.commons.jcs3.auxiliary.remote.http.server;
  * under the License.
  */
 
-import junit.framework.TestCase;
-import org.apache.commons.jcs3.auxiliary.MockCacheEventLogger;
-import org.apache.commons.jcs3.engine.control.MockCompositeCacheManager;
-import org.apache.commons.jcs3.engine.CacheElement;
+import static org.junit.Assert.assertEquals;
 
 import java.util.HashSet;
 
+import org.apache.commons.jcs3.auxiliary.MockCacheEventLogger;
+import org.apache.commons.jcs3.engine.CacheElement;
+import org.apache.commons.jcs3.engine.control.MockCompositeCacheManager;
+import org.junit.Test;
+
 /** Unit tests for the service. */
 public class RemoteHttpCacheServiceUnitTest
-    extends TestCase
 {
     /**
      * Verify event log calls.
      * <p>
      * @throws Exception
      */
+    @Test
     public void testUpdate_simple()
         throws Exception
     {
@@ -64,6 +66,7 @@ public class RemoteHttpCacheServiceUnitTest
      * <p>
      * @throws Exception
      */
+    @Test
     public void testGet_simple()
         throws Exception
     {
@@ -88,6 +91,7 @@ public class RemoteHttpCacheServiceUnitTest
      * <p>
      * @throws Exception
      */
+    @Test
     public void testGetMatching_simple()
         throws Exception
     {
@@ -112,6 +116,7 @@ public class RemoteHttpCacheServiceUnitTest
      * <p>
      * @throws Exception
      */
+    @Test
     public void testGetMultiple_simple()
         throws Exception
     {
@@ -136,6 +141,7 @@ public class RemoteHttpCacheServiceUnitTest
      * <p>
      * @throws Exception
      */
+    @Test
     public void testRemove_simple()
         throws Exception
     {
@@ -160,6 +166,7 @@ public class RemoteHttpCacheServiceUnitTest
      * <p>
      * @throws Exception
      */
+    @Test
     public void testRemoveAll_simple()
         throws Exception
     {

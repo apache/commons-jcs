@@ -1,7 +1,5 @@
 package org.apache.commons.jcs3.auxiliary.remote.server;
 
-import org.apache.commons.jcs3.auxiliary.remote.server.behavior.RemoteType;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -21,18 +19,22 @@ import org.apache.commons.jcs3.auxiliary.remote.server.behavior.RemoteType;
  * under the License.
  */
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
+import org.apache.commons.jcs3.auxiliary.remote.server.behavior.RemoteType;
+import org.junit.Test;
 
 /**
  * Tests for the remote cache server attributes.
  */
 public class RemoteCacheServerAttributesUnitTest
-    extends TestCase
 {
 
     /**
      * Verify that we get a string, even if not attributes are set.
      */
+    @Test
     public void testToString()
     {
         final RemoteCacheServerAttributes attributes = new RemoteCacheServerAttributes();
@@ -42,6 +44,7 @@ public class RemoteCacheServerAttributesUnitTest
     /**
      * Verify that the type is set correctly and that the correct name is returned for the type.
      */
+    @Test
     public void testSetRemoteTypeName_local()
     {
         final RemoteCacheServerAttributes attributes = new RemoteCacheServerAttributes();
@@ -53,6 +56,7 @@ public class RemoteCacheServerAttributesUnitTest
     /**
      * Verify that the type is set correctly and that the correct name is returned for the type.
      */
+    @Test
     public void testSetRemoteTypeName_cluster()
     {
         final RemoteCacheServerAttributes attributes = new RemoteCacheServerAttributes();

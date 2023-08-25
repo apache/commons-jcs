@@ -1,5 +1,11 @@
 package org.apache.commons.jcs3.access;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -23,19 +29,18 @@ import java.util.Set;
 
 import org.apache.commons.jcs3.JCS;
 import org.apache.commons.jcs3.access.exception.CacheException;
-
-import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  * Tests the methods of the group cache access class.
  */
 public class GroupCacheAccessUnitTest
-    extends TestCase
 {
     /**
      * Verify that we can put and get an object
      * @throws Exception
      */
+    @Test
     public void testPutAndGet()
         throws Exception
     {
@@ -56,6 +61,7 @@ public class GroupCacheAccessUnitTest
      * Try to put a null key and verify that we get an exception.
      * @throws Exception
      */
+    @Test
     public void testPutNullKey()
         throws Exception
     {
@@ -81,6 +87,7 @@ public class GroupCacheAccessUnitTest
      * Try to put a null value and verify that we get an exception.
      * @throws Exception
      */
+    @Test
     public void testPutNullValue()
         throws Exception
     {
@@ -106,6 +113,7 @@ public class GroupCacheAccessUnitTest
      * Verify that we can remove items from the cache
      * @throws Exception
      */
+    @Test
     public void testRemove()
         throws Exception
     {
@@ -143,6 +151,7 @@ public class GroupCacheAccessUnitTest
      * Verify that we can invalidate the group
      * @throws Exception
      */
+    @Test
     public void testInvalidate()
         throws Exception
     {
@@ -191,6 +200,7 @@ public class GroupCacheAccessUnitTest
      * <p>
      * @throws Exception
      */
+    @Test
     public void testGroupCache()
         throws Exception
     {

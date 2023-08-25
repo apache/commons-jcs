@@ -1,5 +1,10 @@
 package org.apache.commons.jcs3.engine.memory.soft;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -30,16 +35,17 @@ import org.apache.commons.jcs3.engine.CacheElement;
 import org.apache.commons.jcs3.engine.behavior.ICacheElement;
 import org.apache.commons.jcs3.engine.control.CompositeCache;
 import org.apache.commons.jcs3.engine.control.CompositeCacheManager;
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Tests for the test Soft reference implementation.
  */
 public class SoftReferenceMemoryCacheUnitTest
-    extends TestCase
 {
     /** Test setup */
-    @Override
+    @Before
     public void setUp()
     {
         JCS.setConfigFilename( "/TestSoftReferenceCache.ccf" );
@@ -48,10 +54,10 @@ public class SoftReferenceMemoryCacheUnitTest
     /**
      * @see junit.framework.TestCase#tearDown()
      */
-    @Override
-    protected void tearDown() throws Exception
+    @After
+    public void tearDown() throws Exception
     {
-        CompositeCacheManager.getInstance().shutDown();
+        JCS.shutdown();
     }
 
     /**
@@ -60,6 +66,7 @@ public class SoftReferenceMemoryCacheUnitTest
      * <p>
      * @throws CacheException
      */
+    @Test
     public void testLoadFromCCF()
         throws CacheException
     {
@@ -74,6 +81,7 @@ public class SoftReferenceMemoryCacheUnitTest
      * <p>
      * @throws CacheException
      */
+    @Test
     public void testPutGetThroughHub()
         throws CacheException
     {
@@ -117,6 +125,7 @@ public class SoftReferenceMemoryCacheUnitTest
      * <p>
      * @throws CacheException
      */
+    @Test
     public void testPutRemoveThroughHub()
         throws CacheException
     {
@@ -148,6 +157,7 @@ public class SoftReferenceMemoryCacheUnitTest
      * <p>
      * @throws CacheException
      */
+    @Test
     public void testClearThroughHub()
         throws CacheException
     {
@@ -177,6 +187,7 @@ public class SoftReferenceMemoryCacheUnitTest
      * <p>
      * @throws Exception
      */
+    @Test
     public void testGetKeyArray()
         throws Exception
     {
@@ -207,6 +218,7 @@ public class SoftReferenceMemoryCacheUnitTest
      * <p>
      * @throws CacheException
      */
+    @Test
     public void testRemovePartialThroughHub()
         throws CacheException
     {

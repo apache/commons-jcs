@@ -19,16 +19,17 @@ package org.apache.commons.jcs3.auxiliary.disk.indexed;
  * under the License.
  */
 
+import static org.junit.Assert.assertTrue;
+
 import java.util.Map;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  * This ensures that the jcs version of the LRU map is as fast as the commons
  * version. It has been testing at .6 to .7 times the commons LRU.
  */
 public class LRUMapSizeVsCount
-    extends TestCase
 {
     /** The put ration after the test */
     double ratioPut;
@@ -49,19 +50,12 @@ public class LRUMapSizeVsCount
     int tries = 100000;
 
     /**
-     * @param testName
-     */
-    public LRUMapSizeVsCount( final String testName )
-    {
-        super( testName );
-    }
-
-    /**
      * A unit test for JUnit
      *
      * @throws Exception
      *                Description of the Exception
      */
+    @Test
     public void testSimpleLoad()
         throws Exception
     {

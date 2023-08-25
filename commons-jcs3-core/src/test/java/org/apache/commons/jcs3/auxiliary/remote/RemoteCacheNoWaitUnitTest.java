@@ -1,15 +1,5 @@
 package org.apache.commons.jcs3.auxiliary.remote;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
-import org.apache.commons.jcs3.utils.timing.SleepUtil;
-import org.apache.commons.jcs3.engine.CacheElement;
-import org.apache.commons.jcs3.engine.CacheStatus;
-import org.apache.commons.jcs3.engine.behavior.ICacheElement;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -29,19 +19,31 @@ import org.apache.commons.jcs3.engine.behavior.ICacheElement;
  * under the License.
  */
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import org.apache.commons.jcs3.engine.CacheElement;
+import org.apache.commons.jcs3.engine.CacheStatus;
+import org.apache.commons.jcs3.engine.behavior.ICacheElement;
+import org.apache.commons.jcs3.utils.timing.SleepUtil;
+import org.junit.Test;
 
 /**
  * Unit tests for the remote cache no wait. The no wait manages a queue on top of the client.
  */
 public class RemoteCacheNoWaitUnitTest
-    extends TestCase
 {
     /**
      * Simply verify that the client gets updated via the no wait.
      * <p>
      * @throws Exception
      */
+    @Test
     public void testUpdate()
         throws Exception
     {
@@ -66,6 +68,7 @@ public class RemoteCacheNoWaitUnitTest
      * <p>
      * @throws Exception
      */
+    @Test
     public void testGet()
         throws Exception
     {
@@ -88,6 +91,7 @@ public class RemoteCacheNoWaitUnitTest
      * <p>
      * @throws Exception
      */
+    @Test
     public void testGetMultiple()
         throws Exception
     {
@@ -116,6 +120,7 @@ public class RemoteCacheNoWaitUnitTest
      * <p>
      * @throws Exception
      */
+    @Test
     public void testRemove()
         throws Exception
     {
@@ -140,6 +145,7 @@ public class RemoteCacheNoWaitUnitTest
      * <p>
      * @throws Exception
      */
+    @Test
     public void testGetStats()
         throws Exception
     {
@@ -160,6 +166,7 @@ public class RemoteCacheNoWaitUnitTest
      * <p>
      * @throws Exception
      */
+    @Test
     public void testGetStatus_error()
         throws Exception
     {
@@ -181,6 +188,7 @@ public class RemoteCacheNoWaitUnitTest
      * <p>
      * @throws Exception
      */
+    @Test
     public void testFixCache()
         throws Exception
     {

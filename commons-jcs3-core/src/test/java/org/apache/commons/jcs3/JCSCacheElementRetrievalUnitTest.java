@@ -1,8 +1,5 @@
 package org.apache.commons.jcs3;
 
-import org.apache.commons.jcs3.access.CacheAccess;
-import org.apache.commons.jcs3.engine.behavior.ICacheElement;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -22,17 +19,22 @@ import org.apache.commons.jcs3.engine.behavior.ICacheElement;
  * under the License.
  */
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import org.apache.commons.jcs3.access.CacheAccess;
+import org.apache.commons.jcs3.engine.behavior.ICacheElement;
+import org.junit.Test;
 
 /**
  */
 public class JCSCacheElementRetrievalUnitTest
-    extends TestCase
 {
     /**
      *
      * @throws Exception
      */
+    @Test
     public void testSimpleElementRetrieval()
         throws Exception
     {

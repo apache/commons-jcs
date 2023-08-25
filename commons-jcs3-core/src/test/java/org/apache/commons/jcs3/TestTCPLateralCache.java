@@ -1,6 +1,10 @@
 package org.apache.commons.jcs3;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+
 import org.apache.commons.jcs3.access.CacheAccess;
+import org.junit.Before;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -27,26 +31,15 @@ import junit.framework.TestCase;
 
 /**
  * Test which exercises the indexed disk cache. This one uses three different
- * regions for thre threads.
+ * regions for three threads.
  */
 public class TestTCPLateralCache
-    extends TestCase
 {
     /**
      * Number of items to cache, twice the configured maxObjects for the memory
      * cache regions.
      */
     private static final int items = 200;
-
-    /**
-     * Constructor for the TestTCPLateralCache object.
-     *
-     * @param testName
-     */
-    public TestTCPLateralCache( final String testName )
-    {
-        super( testName );
-    }
 
     /**
      * A unit test suite for JUnit
@@ -57,31 +50,31 @@ public class TestTCPLateralCache
     {
         final ActiveTestSuite suite = new ActiveTestSuite();
 
-        suite.addTest( new TestTCPLateralCache( "testTcpRegion1_no_receiver" )
+        suite.addTest(new TestCase("testTcpRegion1_no_receiver" )
         {
             @Override
             public void runTest()
                 throws Exception
             {
-                this.runTestForRegion( "testTcpRegion1" );
+                runTestForRegion( "testTcpRegion1" );
             }
-        } );
+        });
 
-        //        suite.addTest( new TestTCPLateralCache( "testIndexedDiskCache2" )
+        //        suite.addTest(new TestCase("testIndexedDiskCache2" )
         //        {
         //            public void runTest() throws Exception
         //            {
-        //                this.runTestForRegion( "indexedRegion2" );
+        //                runTestForRegion( "indexedRegion2" );
         //            }
-        //        } );
+        //        });
         //
-        //        suite.addTest( new TestTCPLateralCache( "testIndexedDiskCache3" )
+        //        suite.addTest(new TestCase("testIndexedDiskCache3" )
         //        {
         //            public void runTest() throws Exception
         //            {
-        //                this.runTestForRegion( "indexedRegion3" );
+        //                runTestForRegion( "indexedRegion3" );
         //            }
-        //        } );
+        //        });
 
         return suite;
     }
@@ -89,7 +82,7 @@ public class TestTCPLateralCache
     /**
      * Test setup
      */
-    @Override
+    @Before
     public void setUp()
     {
         JCS.setConfigFilename( "/TestTCPLateralCache.ccf" );
@@ -105,7 +98,7 @@ public class TestTCPLateralCache
      * @throws Exception
      *                If an error occurs
      */
-    public void runTestForRegion( final String region )
+    public static void runTestForRegion( final String region )
         throws Exception
     {
         final CacheAccess<String, String> jcs = JCS.getInstance( region );

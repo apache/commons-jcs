@@ -1,5 +1,8 @@
 package org.apache.commons.jcs3.utils.threadpool;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -24,19 +27,19 @@ import java.util.Set;
 import java.util.concurrent.ExecutorService;
 
 import org.apache.commons.jcs3.utils.props.PropertyLoader;
-import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  * Verify that the manager can create pools as intended by the default and
  * specified file names.
  */
 public class ThreadPoolManagerUnitTest
-    extends TestCase
 {
 
     /**
      * Make sure it can load a default cache.ccf file
      */
+    @Test
     public void testDefaultConfig()
     {
         final Properties props = PropertyLoader.loadProperties( "thread_pool.properties" );
@@ -51,6 +54,7 @@ public class ThreadPoolManagerUnitTest
     /**
      * Make sure it can load a certain configuration
      */
+    @Test
     public void testSpecialConfig()
     {
         final Properties props = PropertyLoader.loadProperties( "thread_pool.properties" );
@@ -66,6 +70,7 @@ public class ThreadPoolManagerUnitTest
      * Get a couple pools by name and then see if they are in the list.
      *
      */
+    @Test
     public void testGetPoolNames()
     {
         final ThreadPoolManager mgr = ThreadPoolManager.getInstance();

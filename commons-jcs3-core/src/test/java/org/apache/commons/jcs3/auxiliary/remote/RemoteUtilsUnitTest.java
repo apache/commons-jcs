@@ -1,5 +1,9 @@
 package org.apache.commons.jcs3.auxiliary.remote;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -21,13 +25,12 @@ package org.apache.commons.jcs3.auxiliary.remote;
 
 import java.rmi.registry.Registry;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  * Simple tests for remote utils. It is difficult to verify most of the things is does.
  */
 public class RemoteUtilsUnitTest
-    extends TestCase
 {
     /**
      * Call create registry.
@@ -35,12 +38,14 @@ public class RemoteUtilsUnitTest
      * The exception is in the security manager setting.
      * </p>
      */
+    @Test
     public void testCreateRegistry()
     {
         final Registry registry = RemoteUtils.createRegistry( 1102 );
         assertNotNull("Registry should not be null", registry);
     }
 
+    @Test
     public void testGetNamingURL()
     {
         assertEquals("//host:1/servicename", RemoteUtils.getNamingURL("host",1,"servicename"));
@@ -48,6 +53,7 @@ public class RemoteUtilsUnitTest
         assertEquals("//[0:0:0:0:0:0:0:1%251]:3/servicename", RemoteUtils.getNamingURL("0:0:0:0:0:0:0:1%1",3,"servicename"));
     }
 
+    @Test
     public void testParseServerAndPort()
     {
         RemoteLocation loc = RemoteLocation.parseServerAndPort("server1:1234");

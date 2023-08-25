@@ -1,5 +1,7 @@
 package org.apache.commons.jcs3;
 
+import static org.junit.Assert.assertTrue;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -25,8 +27,7 @@ import org.apache.commons.jcs3.access.CacheAccess;
 import org.apache.commons.jcs3.engine.memory.lru.LRUMemoryCache;
 import org.apache.commons.jcs3.log.Log;
 import org.apache.commons.jcs3.log.LogManager;
-
-import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  * This test ensures that basic memory operations are with a specified order of magnitude of the
@@ -35,7 +36,6 @@ import junit.framework.TestCase;
  * Currently JCS is under 2x a hashtable for gets, and under 1.2x for puts.
  */
 public class JCSvsHashtablePerformanceTest
-    extends TestCase
 {
     /** jcs / hashtable */
     float ratioPut;
@@ -56,6 +56,7 @@ public class JCSvsHashtablePerformanceTest
      * A unit test for JUnit
      * @throws Exception Description of the Exception
      */
+    @Test
     public void testSimpleLoad()
         throws Exception
     {

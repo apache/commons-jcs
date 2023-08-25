@@ -1,19 +1,5 @@
 package org.apache.commons.jcs3.auxiliary.lateral.socket.tcp;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.jcs3.auxiliary.lateral.LateralCache;
-import org.apache.commons.jcs3.auxiliary.lateral.LateralCacheNoWait;
-import org.apache.commons.jcs3.auxiliary.lateral.LateralCacheNoWaitFacade;
-import org.apache.commons.jcs3.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttributes;
-import org.apache.commons.jcs3.engine.ZombieCacheServiceNonLocal;
-import org.apache.commons.jcs3.engine.behavior.IElementSerializer;
-import org.apache.commons.jcs3.engine.control.CompositeCacheManager;
-import org.apache.commons.jcs3.engine.logging.MockCacheEventLogger;
-import org.apache.commons.jcs3.utils.discovery.DiscoveredService;
-import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -33,11 +19,27 @@ import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
  * under the License.
  */
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.jcs3.auxiliary.lateral.LateralCache;
+import org.apache.commons.jcs3.auxiliary.lateral.LateralCacheNoWait;
+import org.apache.commons.jcs3.auxiliary.lateral.LateralCacheNoWaitFacade;
+import org.apache.commons.jcs3.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttributes;
+import org.apache.commons.jcs3.engine.ZombieCacheServiceNonLocal;
+import org.apache.commons.jcs3.engine.behavior.IElementSerializer;
+import org.apache.commons.jcs3.engine.control.CompositeCacheManager;
+import org.apache.commons.jcs3.engine.logging.MockCacheEventLogger;
+import org.apache.commons.jcs3.utils.discovery.DiscoveredService;
+import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
+import org.junit.Before;
+import org.junit.Test;
 
 /** Test for the listener that observers UDP discovery events. */
 public class LateralTCPDiscoveryListenerUnitTest
-    extends TestCase
 {
     /** the listener */
     private LateralTCPDiscoveryListener listener;
@@ -55,8 +57,8 @@ public class LateralTCPDiscoveryListenerUnitTest
     protected IElementSerializer elementSerializer;
 
     /** Create the listener for testing */
-    @Override
-    protected void setUp() throws Exception
+    @Before
+    public void setUp() throws Exception
     {
         factory = new LateralTCPCacheFactory();
         factory.initialize();
@@ -90,6 +92,7 @@ public class LateralTCPDiscoveryListenerUnitTest
     /**
      * Add a no wait facade.
      */
+    @Test
     public void testAddNoWaitFacade_NotInList()
     {
         // SETUP
@@ -106,6 +109,7 @@ public class LateralTCPDiscoveryListenerUnitTest
     /**
      * Add a no wait to a known facade.
      */
+    @Test
     public void testAddNoWait_FacadeInList()
     {
         // SETUP
@@ -125,6 +129,7 @@ public class LateralTCPDiscoveryListenerUnitTest
     /**
      * Add a no wait from an unknown facade.
      */
+    @Test
     public void testAddNoWait_FacadeNotInList()
     {
         // SETUP
@@ -141,6 +146,7 @@ public class LateralTCPDiscoveryListenerUnitTest
     /**
      * Remove a no wait from an unknown facade.
      */
+    @Test
     public void testRemoveNoWait_FacadeNotInList()
     {
         // SETUP
@@ -157,6 +163,7 @@ public class LateralTCPDiscoveryListenerUnitTest
     /**
      * Remove a no wait from a known facade.
      */
+    @Test
     public void testRemoveNoWait_FacadeInList_NoWaitNot()
     {
         // SETUP
@@ -176,6 +183,7 @@ public class LateralTCPDiscoveryListenerUnitTest
     /**
      * Remove a no wait from a known facade.
      */
+    @Test
     public void testRemoveNoWait_FacadeInList_NoWaitIs()
     {
         // SETUP
@@ -196,6 +204,7 @@ public class LateralTCPDiscoveryListenerUnitTest
     /**
      * Test cache creation with empty noWaits.
      */
+    @Test
     public void testEmptyNoWaits()
     {
         // SETUP
@@ -215,6 +224,7 @@ public class LateralTCPDiscoveryListenerUnitTest
     /**
      * Add a no wait to a known facade.
      */
+    @Test
     public void testAddDiscoveredService_FacadeInList_NoWaitNot()
     {
         // SETUP
@@ -249,6 +259,7 @@ public class LateralTCPDiscoveryListenerUnitTest
     /**
      * Remove a no wait from a known facade.
      */
+    @Test
     public void testRemoveDiscoveredService_FacadeInList_NoWaitIs()
     {
         // SETUP

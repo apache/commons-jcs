@@ -1,8 +1,5 @@
 package org.apache.commons.jcs3.auxiliary.disk.indexed;
 
-import org.apache.commons.jcs3.JCS;
-import org.apache.commons.jcs3.access.CacheAccess;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -22,16 +19,20 @@ import org.apache.commons.jcs3.access.CacheAccess;
  * under the License.
  */
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+
+import org.apache.commons.jcs3.JCS;
+import org.apache.commons.jcs3.access.CacheAccess;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Put a few hundred thousand entries in the disk cache.
  */
 public class HugeQuantityIndDiskCacheLoadTest
-    extends TestCase
 {
     /** Test setup.  */
-    @Override
+    @Before
     public void setUp()
     {
         JCS.setConfigFilename( "/TestDiskCacheHuge.ccf" );
@@ -43,6 +44,7 @@ public class HugeQuantityIndDiskCacheLoadTest
      * <p>
      * @throws Exception If an error occurs
      */
+    @Test
     public void testLargeNumberOfItems()
         throws Exception
     {

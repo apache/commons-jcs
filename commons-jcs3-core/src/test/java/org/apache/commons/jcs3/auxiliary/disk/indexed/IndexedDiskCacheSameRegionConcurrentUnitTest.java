@@ -1,5 +1,8 @@
 package org.apache.commons.jcs3.auxiliary.disk.indexed;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -36,18 +39,7 @@ import junit.framework.TestCase;
  * same region.
  */
 public class IndexedDiskCacheSameRegionConcurrentUnitTest
-    extends TestCase
 {
-    /**
-     * Constructor for the TestDiskCache object.
-     *
-     * @param testName
-     */
-    public IndexedDiskCacheSameRegionConcurrentUnitTest( final String testName )
-    {
-        super( testName );
-    }
-
     /**
      * A unit test suite for JUnit
      *
@@ -55,68 +47,60 @@ public class IndexedDiskCacheSameRegionConcurrentUnitTest
      */
     public static Test suite()
     {
+        JCS.setConfigFilename( "/TestDiskCacheCon.ccf" );
         final ActiveTestSuite suite = new ActiveTestSuite();
 
-        suite.addTest( new IndexedDiskCacheSameRegionConcurrentUnitTest( "testIndexedDiskCache1" )
+        suite.addTest(new TestCase("testIndexedDiskCache1" )
         {
             @Override
             public void runTest()
                 throws Exception
             {
-                this.runTestForRegion( "indexedRegion4", 0, 200 );
+                runTestForRegion( "indexedRegion4", 0, 200 );
             }
-        } );
+        });
 
-        suite.addTest( new IndexedDiskCacheSameRegionConcurrentUnitTest( "testIndexedDiskCache2" )
+        suite.addTest(new TestCase("testIndexedDiskCache2" )
         {
             @Override
             public void runTest()
                 throws Exception
             {
-                this.runTestForRegion( "indexedRegion4", 1000, 1200 );
+                runTestForRegion( "indexedRegion4", 1000, 1200 );
             }
-        } );
+        });
 
-        suite.addTest( new IndexedDiskCacheSameRegionConcurrentUnitTest( "testIndexedDiskCache3" )
+        suite.addTest(new TestCase("testIndexedDiskCache3" )
         {
             @Override
             public void runTest()
                 throws Exception
             {
-                this.runTestForRegion( "indexedRegion4", 2000, 2200 );
+                runTestForRegion( "indexedRegion4", 2000, 2200 );
             }
-        } );
+        });
 
-        suite.addTest( new IndexedDiskCacheSameRegionConcurrentUnitTest( "testIndexedDiskCache4" )
+        suite.addTest(new TestCase("testIndexedDiskCache4" )
         {
             @Override
             public void runTest()
                 throws Exception
             {
-                this.runTestForRegion( "indexedRegion4", 2200, 5200 );
+                runTestForRegion( "indexedRegion4", 2200, 5200 );
             }
-        } );
+        });
 
-        suite.addTest( new IndexedDiskCacheSameRegionConcurrentUnitTest( "testIndexedDiskCache5" )
+        suite.addTest(new TestCase("testIndexedDiskCache5" )
         {
             @Override
             public void runTest()
                 throws Exception
             {
-                this.runTestForRegion( "indexedRegion4", 0, 5100 );
+                runTestForRegion( "indexedRegion4", 0, 5100 );
             }
-        } );
+        });
 
         return suite;
-    }
-
-    /**
-     * Test setup
-     */
-    @Override
-    public void setUp()
-    {
-        JCS.setConfigFilename( "/TestDiskCacheCon.ccf" );
     }
 
     // /**
@@ -149,21 +133,21 @@ public class IndexedDiskCacheSameRegionConcurrentUnitTest
      * @throws Exception
      *                If an error occurs
      */
-    public void runTestForRegion( final String region, final int start, final int end )
+    public static void runTestForRegion( final String region, final int start, final int end )
         throws Exception
     {
         final CacheAccess<String, String> jcs = JCS.getInstance( region );
 
         // Add items to cache
 
-        for ( int i = start; i <= end; i++ )
+        for ( int i = start; i < end; i++ )
         {
             jcs.put( i + ":key", region + " data " + i );
         }
 
         // Test that all items are in cache
 
-        for ( int i = start; i <= end; i++ )
+        for ( int i = start; i < end; i++ )
         {
             final String key = i + ":key";
             final String value = jcs.get( key );
@@ -173,13 +157,13 @@ public class IndexedDiskCacheSameRegionConcurrentUnitTest
 
         // Test that getElements returns all the expected values
         final Set<String> keys = new HashSet<>();
-        for ( int i = start; i <= end; i++ )
+        for ( int i = start; i < end; i++ )
         {
             keys.add( i + ":key" );
         }
 
         final Map<String, ICacheElement<String, String>> elements = jcs.getCacheElements( keys );
-        for ( int i = start; i <= end; i++ )
+        for ( int i = start; i < end; i++ )
         {
             final ICacheElement<String, String> element = elements.get( i + ":key" );
             assertNotNull( "element " + i + ":key is missing", element );
@@ -189,10 +173,10 @@ public class IndexedDiskCacheSameRegionConcurrentUnitTest
         // you can't remove in one thread and expect them to be in another //
         //          Remove all the items
         //
-        //          for ( int i = start; i <= end; i++ ) { jcs.remove( i + ":key" ); } //
+        //          for ( int i = start; i < end; i++ ) { jcs.remove( i + ":key" ); } //
         //          Verify removal
         //
-        //          for ( int i = start; i <= end; i++ ) { assertNull( "Removed key
+        //          for ( int i = start; i < end; i++ ) { assertNull( "Removed key
         //          should be null: " + i + ":key", jcs.get( i + ":key" ) ); }
     }
 }

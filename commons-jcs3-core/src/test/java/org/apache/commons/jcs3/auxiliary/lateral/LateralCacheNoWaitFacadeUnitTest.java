@@ -1,11 +1,5 @@
 package org.apache.commons.jcs3.auxiliary.lateral;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.jcs3.auxiliary.lateral.socket.tcp.TCPLateralCacheAttributes;
-import org.apache.commons.jcs3.engine.ZombieCacheServiceNonLocal;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -25,19 +19,28 @@ import org.apache.commons.jcs3.engine.ZombieCacheServiceNonLocal;
  * under the License.
  */
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.jcs3.auxiliary.lateral.socket.tcp.TCPLateralCacheAttributes;
+import org.apache.commons.jcs3.engine.ZombieCacheServiceNonLocal;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Tests for LateralCacheNoWaitFacade.
  */
 public class LateralCacheNoWaitFacadeUnitTest
-    extends TestCase
 {
     private LateralCacheNoWaitFacade<String, String> facade;
     private LateralCache<String, String> cache;
 
-    @Override
-    protected void setUp() throws Exception
+    @Before
+    public void setUp() throws Exception
     {
         // SETUP
         List<LateralCacheNoWait<String, String>> noWaits = new ArrayList<>();
@@ -53,6 +56,7 @@ public class LateralCacheNoWaitFacadeUnitTest
     /**
      * Verify that we can remove an item.
      */
+    @Test
     public void testAddThenRemoveNoWait_InList()
     {
         LateralCacheNoWait<String, String> noWait = new LateralCacheNoWait<>( cache );
@@ -74,6 +78,7 @@ public class LateralCacheNoWaitFacadeUnitTest
     /**
      * Verify that we can remove an item.
      */
+    @Test
     public void testAddThenRemoveNoWait_InListSize2()
     {
         final LateralCacheNoWait<String, String> noWait = new LateralCacheNoWait<>( cache );
@@ -102,6 +107,7 @@ public class LateralCacheNoWaitFacadeUnitTest
     /**
      * Verify that we can remove an item.
      */
+    @Test
     public void testAdd_InList()
     {
         final LateralCacheNoWait<String, String> noWait = new LateralCacheNoWait<>( cache );
@@ -118,6 +124,7 @@ public class LateralCacheNoWaitFacadeUnitTest
     /**
      * Verify that we can remove an item.
      */
+    @Test
     public void testAddThenRemoveNoWait_NotInList()
     {
         final LateralCacheNoWait<String, String> noWait = new LateralCacheNoWait<>( cache );

@@ -19,6 +19,9 @@ package org.apache.commons.jcs3.engine.memory.fifo;
  * under the License.
  */
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import java.io.IOException;
 
 import org.apache.commons.jcs3.engine.CacheElement;
@@ -26,17 +29,17 @@ import org.apache.commons.jcs3.engine.CompositeCacheAttributes;
 import org.apache.commons.jcs3.engine.ElementAttributes;
 import org.apache.commons.jcs3.engine.behavior.ICompositeCacheAttributes;
 import org.apache.commons.jcs3.engine.control.CompositeCache;
-import junit.framework.TestCase;
+import org.junit.Test;
 
 /** Unit tests for the fifo implementation. */
 public class FIFOMemoryCacheUnitTest
-    extends TestCase
 {
     /**
      * Verify that the oldest inserted item is removed
      * <p>
      * @throws IOException
      */
+    @Test
     public void testExpirationPolicy_oneExtra()
         throws IOException
     {
@@ -52,7 +55,7 @@ public class FIFOMemoryCacheUnitTest
         final FIFOMemoryCache<String, String> cache = new FIFOMemoryCache<>();
         cache.initialize( new CompositeCache<>( attributes, new ElementAttributes() ) );
 
-        for ( int i = 0; i <= maxObjects; i++ )
+        for ( int i = 0; i < maxObjects; i++ )
         {
             final CacheElement<String, String> element = new CacheElement<>( cacheName, "key" + i, "value" + i );
             cache.update( element );
@@ -66,7 +69,7 @@ public class FIFOMemoryCacheUnitTest
         // VERIFY
         assertEquals( "Should have max elements", maxObjects, cache.getSize() );
         System.out.println(cache.getKeySet());
-        for ( int i = maxObjects; i > 1; i-- )
+        for ( int i = maxObjects - 1; i > 1; i-- )
         {
             assertNotNull( "Should have element " + i, cache.get( "key" + i ) );
         }
@@ -78,6 +81,7 @@ public class FIFOMemoryCacheUnitTest
      * <p>
      * @throws IOException
      */
+    @Test
     public void testExpirationPolicy_doubleOver()
         throws IOException
     {
@@ -94,7 +98,7 @@ public class FIFOMemoryCacheUnitTest
         cache.initialize( new CompositeCache<>( attributes, new ElementAttributes() ) );
 
         // DO WORK
-        for ( int i = 0; i <= (maxObjects * 2); i++ )
+        for ( int i = 0; i < (maxObjects * 2); i++ )
         {
             final CacheElement<String, String> element = new CacheElement<>( cacheName, "key" + i, "value" + i );
             cache.update( element );
@@ -102,9 +106,9 @@ public class FIFOMemoryCacheUnitTest
 
         // VERIFY
         assertEquals( "Should have max elements", maxObjects, cache.getSize() );
-        for ( int i = (maxObjects * 2); i > maxObjects; i-- )
+        for ( int i = maxObjects * 2 - 1; i > maxObjects; i-- )
         {
-            assertNotNull( "Shjould have elemnt " + i, cache.get( "key" + i ) );
+            assertNotNull( "Should have elemnt " + i, cache.get( "key" + i ) );
         }
     }
 }

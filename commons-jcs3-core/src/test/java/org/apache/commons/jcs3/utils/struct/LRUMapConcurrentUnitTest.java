@@ -19,114 +19,85 @@ package org.apache.commons.jcs3.utils.struct;
  * under the License.
  */
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
 import java.util.Iterator;
 
+import org.junit.Test;
 
-
-/*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- */
-
-import junit.framework.Test;
+import junit.extensions.ActiveTestSuite;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 /**
  * Tests the LRUMap
  */
 public class LRUMapConcurrentUnitTest
-    extends TestCase
 {
     /** number to test with */
     private static final int items = 20000;
-
-    /**
-     * Constructor for the TestSimpleLoad object
-     * <p>
-     * @param testName
-     *            Description of the Parameter
-     */
-    public LRUMapConcurrentUnitTest( final String testName )
-    {
-        super( testName );
-    }
 
     /**
      * A unit test suite for JUnit
      * <p>
      * @return The test suite
      */
-    public static Test suite()
+    public static junit.framework.Test suite()
     {
         // run the basic tests
-        final TestSuite suite = new TestSuite( LRUMapConcurrentUnitTest.class );
+        final ActiveTestSuite suite = new ActiveTestSuite();
 
         // run concurrent tests
         final LRUMap<String, String> map = new LRUMap<>( 2000 );
-        suite.addTest( new LRUMapConcurrentUnitTest( "conc1" )
+        suite.addTest(new TestCase("conc1" )
         {
             @Override
             public void runTest()
                 throws Exception
             {
-                this.runConcurrentPutGetTests( map, 2000 );
+                runConcurrentPutGetTests( map, 2000 );
             }
-        } );
-        suite.addTest( new LRUMapConcurrentUnitTest( "conc2" )
+        });
+        suite.addTest(new TestCase("conc2" )
         {
             @Override
             public void runTest()
                 throws Exception
             {
-                this.runConcurrentPutGetTests( map, 2000 );
+                runConcurrentPutGetTests( map, 2000 );
             }
-        } );
-        suite.addTest( new LRUMapConcurrentUnitTest( "conc3" )
+        });
+        suite.addTest(new TestCase("conc3" )
         {
             @Override
             public void runTest()
                 throws Exception
             {
-                this.runConcurrentPutGetTests( map, 2000 );
+                runConcurrentPutGetTests( map, 2000 );
             }
-        } );
+        });
 
         // run more concurrent tests
         final int max2 = 20000;
         final LRUMap<String, String> map2 = new LRUMap<>( max2 );
-        suite.addTest( new LRUMapConcurrentUnitTest( "concB1" )
+        suite.addTest(new TestCase("concB1" )
         {
             @Override
             public void runTest()
                 throws Exception
             {
-                this.runConcurrentRangeTests( map2, 10000, max2 );
+                runConcurrentRangeTests( map2, 10000, max2 );
             }
-        } );
-        suite.addTest( new LRUMapConcurrentUnitTest( "concB1" )
+        });
+        suite.addTest(new TestCase("concB1" )
         {
             @Override
             public void runTest()
                 throws Exception
             {
-                this.runConcurrentRangeTests( map2, 0, 9999 );
+                runConcurrentRangeTests( map2, 0, 9999 );
             }
-        } );
+        });
 
         return suite;
     }
@@ -137,6 +108,7 @@ public class LRUMapConcurrentUnitTest
      * @throws Exception
      *                Description of the Exception
      */
+    @Test
     public void testSimpleLoad()
         throws Exception
     {
@@ -156,7 +128,6 @@ public class LRUMapConcurrentUnitTest
         // test removal
         map.remove( "300:key" );
         assertNull( map.get( "300:key" ) );
-
     }
 
     /**
@@ -165,6 +136,7 @@ public class LRUMapConcurrentUnitTest
      * @throws Exception
      *                Description of the Exception
      */
+    @Test
     public void testLRURemoval()
         throws Exception
     {
@@ -182,7 +154,6 @@ public class LRUMapConcurrentUnitTest
         {
             assertNotNull( it.next() );
         }
-//        System.out.println( map.getStatistics() );
 
         // get the max out backwards
         for ( int i = total - 1; i >= 0; i-- )
@@ -191,18 +162,16 @@ public class LRUMapConcurrentUnitTest
             assertNotNull( "[" + i + ":key] should not be null", res );
         }
 
-//        System.out.println( map.getStatistics() );
-
         //since we got them backwards the total should be at the end.
         // add one confirm that total is gone.
         map.put( ( total ) + ":key", "data" + ( total ) );
         assertNull( map.get( ( total - 1 ) + ":key" ) );
-
     }
 
     /**
      * @throws Exception
      */
+    @Test
     public void testLRURemovalAgain()
         throws Exception
     {
@@ -238,7 +207,7 @@ public class LRUMapConcurrentUnitTest
      * @param items
      * @throws Exception
      */
-    public void runConcurrentPutGetTests( final LRUMap<String, String> map, final int items )
+    public static void runConcurrentPutGetTests( final LRUMap<String, String> map, final int items )
         throws Exception
     {
         for ( int i = 0; i < items; i++ )
@@ -262,7 +231,7 @@ public class LRUMapConcurrentUnitTest
      * @param end
      * @throws Exception
      */
-    public void runConcurrentRangeTests( final LRUMap<String, String> map, final int start, final int end )
+    public static void runConcurrentRangeTests( final LRUMap<String, String> map, final int start, final int end )
         throws Exception
     {
         for ( int i = start; i < end; i++ )
