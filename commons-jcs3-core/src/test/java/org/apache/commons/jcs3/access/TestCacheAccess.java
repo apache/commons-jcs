@@ -31,7 +31,6 @@ import org.apache.commons.jcs3.JCS;
 import org.apache.commons.jcs3.access.exception.CacheException;
 import org.apache.commons.jcs3.engine.ElementAttributes;
 import org.apache.commons.jcs3.engine.behavior.IElementAttributes;
-import org.apache.commons.jcs3.engine.control.CompositeCacheManager;
 import org.apache.commons.jcs3.engine.control.event.ElementEventHandlerMockImpl;
 import org.apache.commons.jcs3.log.Log;
 import org.apache.commons.jcs3.log.LogManager;
@@ -127,7 +126,7 @@ public class TestCacheAccess
                 }
                 else if ( message.startsWith( "shutDown" ) )
                 {
-                    CompositeCacheManager.getInstance().shutDown();
+                    JCS.shutdown();
                     //cache_control.dispose();
                     notDone = false;
                     //System.exit( -1 );
