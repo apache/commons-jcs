@@ -37,8 +37,8 @@
 				instance, to add debug event logging to a remote cache client, you
 				could do the following:</p>
 			<source><![CDATA[
-			. . .
-			jcs.auxiliary.RC=org.apache.commons.jcs3.auxiliary.remote.RemoteCacheFactory
+. . .
+jcs.auxiliary.RC=org.apache.commons.jcs3.auxiliary.remote.RemoteCacheFactory
 jcs.auxiliary.RC.attributes=org.apache.commons.jcs3.auxiliary.remote.RemoteCacheAttributes
 jcs.auxiliary.RC.attributes.FailoverServers=localhost:1101,localhost:1102
 jcs.auxiliary.RC.attributes.LocalPort=1201
@@ -51,7 +51,7 @@ jcs.auxiliary.RC.attributes.ThreadPoolName=remote_cache_client
 jcs.auxiliary.RC.attributes.GetOnly=false
 jcs.auxiliary.RC.cacheeventlogger=org.apache.commons.jcs3.engine.logging.CacheEventLoggerDebugLogger
 jcs.auxiliary.RC.cacheeventlogger.attributes.logCategoryName=test.RCCEventLogCategory
-			. . .
+. . .
         ]]></source>
 			<p> The attribute "logCateoryName" is a property of this
 				implementation. You can configure any properties on your
