@@ -31,7 +31,7 @@
 					</tr>
 					<tr>
 						<td>url</td>
-						<td> This is the full url for the http service.</td>
+						<td> This is the full URL for the HTTP service.</td>
 						<td>Y</td>
 						<td>n/a</td>
 					</tr>
@@ -55,27 +55,27 @@
 					</tr>
 					<tr>
 						<td>httpVersion</td>
-						<td> The http version to use.</td>
+						<td> The HTTP version to use.</td>
 						<td>N</td>
 						<td>1.1</td>
 					</tr>
 					<tr>
 						<td>includeCacheNameAsParameter</td>
-						<td> Should the cache name be appended to the url.</td>
+						<td> Should the cache name be appended to the URL.</td>
 						<td>N</td>
 						<td>true</td>
 					</tr>
 					<tr>
 						<td>includeKeysAndPatternsAsParameter
 						</td>
-						<td> Should the key be appended to the url.</td>
+						<td> Should the key be appended to the URL.</td>
 						<td>N</td>
 						<td>true</td>
 					</tr>
 					<tr>
 						<td>includeRequestTypeasAsParameter
 						</td>
-						<td> Should the request type be appended to the url.</td>
+						<td> Should the request type be appended to the URL.</td>
 						<td>N</td>
 						<td>true</td>
 					</tr>

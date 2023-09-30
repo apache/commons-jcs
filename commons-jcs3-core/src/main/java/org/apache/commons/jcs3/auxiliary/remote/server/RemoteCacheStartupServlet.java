@@ -32,6 +32,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.jcs3.JCS;
 import org.apache.commons.jcs3.access.exception.CacheException;
 import org.apache.commons.jcs3.auxiliary.remote.RemoteUtils;
 import org.apache.commons.jcs3.engine.control.CompositeCacheManager;
@@ -212,7 +213,7 @@ public class RemoteCacheStartupServlet
 
         try
         {
-            CompositeCacheManager.getInstance().shutDown();
+            JCS.shutdown();
         }
         catch (final CacheException e)
         {

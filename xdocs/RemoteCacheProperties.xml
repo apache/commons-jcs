@@ -52,7 +52,7 @@
 							server in the list. If a connection is
 							successfully established with a failover
 							server, then the cache will attempt to
-							restore the conenction with the primary
+							restore the connection with the primary
 							server.
 						</td>
 						<td>Y</td>

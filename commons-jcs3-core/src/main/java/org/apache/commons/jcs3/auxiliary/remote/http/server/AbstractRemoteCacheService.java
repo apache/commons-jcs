@@ -36,7 +36,7 @@ import org.apache.commons.jcs3.log.LogManager;
 
 /**
  * This class contains common methods for remote cache services. Eventually I hope to extract out
- * much of the RMI server to use this as well. I'm starting with the Http service.
+ * much of the RMI server to use this as well. I'm starting with the HTTP service.
  */
 public abstract class AbstractRemoteCacheService<K, V>
     implements ICacheServiceNonLocal<K, V>
