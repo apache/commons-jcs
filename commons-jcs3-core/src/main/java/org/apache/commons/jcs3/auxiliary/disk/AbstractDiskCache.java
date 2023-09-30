@@ -672,7 +672,7 @@ public abstract class AbstractDiskCache<K, V>
      * methods call the *WithEventLogging method on the super. The *WithEventLogging methods call
      * the abstract process* methods. The children implement the process methods.
      *
-     * ex. doGet calls getWithEventLogging, which calls processGet
+     * For example, doGet calls getWithEventLogging, which calls processGet
      */
 
     /**

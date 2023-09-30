@@ -27,7 +27,7 @@ import java.io.Serializable;
 public interface IStatElement<V> extends Serializable
 {
     /**
-     * Get the name of the stat element, ex. HitCount
+     * Get the name of the stat element, for example, HitCount
      * <p>
      * @return the stat element name
      */
@@ -39,7 +39,7 @@ public interface IStatElement<V> extends Serializable
     void setName( String name );
 
     /**
-     * Get the data, ex. for hit count you would get a value for some number.
+     * Get the data, for example, for hit count you would get a value for some number.
      * <p>
      * @return data
      */
