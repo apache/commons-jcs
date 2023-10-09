@@ -18,16 +18,16 @@
  */
 package org.apache.commons.jcs3.jcache.extras.writer;
 
+import java.io.Closeable;
+import java.io.IOException;
+import java.util.Collection;
+
 import javax.cache.Cache;
 import javax.cache.configuration.Factory;
 import javax.cache.integration.CacheWriter;
 import javax.cache.integration.CacheWriterException;
 
 import org.apache.commons.jcs3.jcache.extras.closeable.Closeables;
-
-import java.io.Closeable;
-import java.io.IOException;
-import java.util.Collection;
 
 public class CompositeCacheWriter<K, V> implements CacheWriter<K, V>, Closeable, Factory<CacheWriter<K, V>>
 {

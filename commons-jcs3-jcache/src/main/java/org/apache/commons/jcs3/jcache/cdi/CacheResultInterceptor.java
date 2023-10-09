@@ -19,6 +19,7 @@
 package org.apache.commons.jcs3.jcache.cdi;
 
 import java.io.Serializable;
+
 import javax.annotation.Priority;
 import javax.cache.Cache;
 import javax.cache.annotation.CacheKeyInvocationContext;

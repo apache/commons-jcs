@@ -18,11 +18,12 @@
  */
 package org.apache.commons.jcs3.jcache.extras.loader;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.cache.configuration.Factory;
 import javax.cache.integration.CacheLoader;
 import javax.cache.integration.CacheLoaderException;
-import java.util.HashMap;
-import java.util.Map;
 
 public abstract class CacheLoaderAdapter<K, V> implements CacheLoader<K, V>, Factory<CacheLoader<K, V>>
 {

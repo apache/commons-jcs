@@ -18,11 +18,12 @@
  */
 package org.apache.commons.jcs3.jcache.cdi;
 
-import javax.cache.annotation.CacheMethodDetails;
-import javax.interceptor.InvocationContext;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.Set;
+
+import javax.cache.annotation.CacheMethodDetails;
+import javax.interceptor.InvocationContext;
 
 public class CacheMethodDetailsImpl<A extends Annotation> implements CacheMethodDetails<A>
 {

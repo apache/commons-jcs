@@ -18,10 +18,6 @@
  */
 package org.apache.commons.jcs3.jcache.extras.writer;
 
-import javax.cache.Cache;
-import javax.cache.configuration.Factory;
-import javax.cache.integration.CacheWriter;
-import javax.cache.integration.CacheWriterException;
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.Collection;
@@ -32,6 +28,11 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.cache.Cache;
+import javax.cache.configuration.Factory;
+import javax.cache.integration.CacheWriter;
+import javax.cache.integration.CacheWriterException;
 
 public class AsyncCacheWriter<K, V> implements CacheWriter<K, V>, Closeable, Factory<CacheWriter<K, V>>
 {

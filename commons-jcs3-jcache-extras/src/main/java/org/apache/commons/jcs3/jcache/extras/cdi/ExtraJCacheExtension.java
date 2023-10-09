@@ -18,6 +18,8 @@
  */
 package org.apache.commons.jcs3.jcache.extras.cdi;
 
+import java.util.Properties;
+
 import javax.cache.CacheManager;
 import javax.cache.Caching;
 import javax.cache.spi.CachingProvider;
@@ -27,7 +29,6 @@ import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeforeShutdown;
 import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.ProcessBean;
-import java.util.Properties;
 
 // add default CacheProvider and CacheManager
 public class ExtraJCacheExtension implements Extension

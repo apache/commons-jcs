@@ -18,14 +18,15 @@
  */
 package org.apache.commons.jcs3.jcache;
 
-import javax.cache.CacheManager;
-import javax.cache.configuration.OptionalFeature;
-import javax.cache.spi.CachingProvider;
 import java.net.URI;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+
+import javax.cache.CacheManager;
+import javax.cache.configuration.OptionalFeature;
+import javax.cache.spi.CachingProvider;
 
 public class JCSCachingProvider implements CachingProvider
 {

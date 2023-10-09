@@ -1,5 +1,7 @@
 package org.apache.commons.jcs.auxiliary.disk.file;
 
+import java.io.File;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -20,12 +22,11 @@ package org.apache.commons.jcs.auxiliary.disk.file;
  */
 
 import junit.framework.TestCase;
-import org.apache.commons.jcs.engine.CacheElement;
-import org.apache.commons.jcs.engine.CacheStatus;
-import org.apache.commons.jcs.engine.behavior.ICacheElement;
-import org.apache.commons.jcs.utils.timing.SleepUtil;
 
-import java.io.File;
+import org.apache.commons.jcs3.engine.CacheElement;
+import org.apache.commons.jcs3.engine.CacheStatus;
+import org.apache.commons.jcs3.engine.behavior.ICacheElement;
+import org.apache.commons.jcs3.utils.timing.SleepUtil;
 
 /** Unit tests for the disk file cache. */
 public class FileDiskCacheUnitTest

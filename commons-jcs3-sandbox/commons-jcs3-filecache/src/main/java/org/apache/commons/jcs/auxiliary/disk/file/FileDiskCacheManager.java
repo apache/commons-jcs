@@ -24,10 +24,10 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import org.apache.commons.jcs.engine.behavior.IElementSerializer;
-import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.jcs3.engine.behavior.IElementSerializer;
+import org.apache.commons.jcs3.engine.logging.behavior.ICacheEventLogger;
+import org.apache.commons.jcs3.log.Log;
+import org.apache.commons.jcs3.log.LogFactory;
 
 /**
  * This is a non singleton. It creates caches on a per region basis.

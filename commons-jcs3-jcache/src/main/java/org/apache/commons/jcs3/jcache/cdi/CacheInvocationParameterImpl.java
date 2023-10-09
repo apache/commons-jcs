@@ -18,9 +18,10 @@
  */
 package org.apache.commons.jcs3.jcache.cdi;
 
-import javax.cache.annotation.CacheInvocationParameter;
 import java.lang.annotation.Annotation;
 import java.util.Set;
+
+import javax.cache.annotation.CacheInvocationParameter;
 
 public class CacheInvocationParameterImpl implements CacheInvocationParameter
 {

@@ -18,18 +18,18 @@
  */
 package org.apache.commons.jcs3.jcache.extras.loader;
 
-import javax.cache.configuration.Factory;
-import javax.cache.integration.CacheLoader;
-import javax.cache.integration.CacheLoaderException;
-
-import org.apache.commons.jcs3.jcache.extras.closeable.Closeables;
-
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.cache.configuration.Factory;
+import javax.cache.integration.CacheLoader;
+import javax.cache.integration.CacheLoaderException;
+
+import org.apache.commons.jcs3.jcache.extras.closeable.Closeables;
 
 public class CompositeCacheLoader<K, V> implements CacheLoader<K, V>, Closeable, Factory<CacheLoader<K, V>>
 {

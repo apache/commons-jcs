@@ -18,6 +18,9 @@
  */
 package org.apache.commons.jcs3.jcache.jmx;
 
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+
 import javax.management.ListenerNotFoundException;
 import javax.management.MBeanNotificationInfo;
 import javax.management.MBeanServer;
@@ -26,8 +29,6 @@ import javax.management.MBeanServerDelegate;
 import javax.management.Notification;
 import javax.management.NotificationFilter;
 import javax.management.NotificationListener;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 public class ConfigurableMBeanServerIdBuilder extends MBeanServerBuilder
 {

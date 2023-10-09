@@ -24,13 +24,13 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.apache.commons.jcs3.engine.behavior.ICacheElement;
-import org.apache.commons.jcs3.engine.behavior.ICacheListener;
-import org.junit.Before;
-
 import junit.extensions.ActiveTestSuite;
 import junit.framework.Test;
 import junit.framework.TestCase;
+
+import org.apache.commons.jcs3.engine.behavior.ICacheElement;
+import org.apache.commons.jcs3.engine.behavior.ICacheListener;
+import org.junit.Before;
 
 /**
  * This test case is designed to makes sure there are no deadlocks in the event queue. The time to

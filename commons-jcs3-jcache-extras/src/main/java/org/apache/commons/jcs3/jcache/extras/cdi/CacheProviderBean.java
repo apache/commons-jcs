@@ -18,18 +18,19 @@
  */
 package org.apache.commons.jcs3.jcache.extras.cdi;
 
+import static java.util.Collections.emptySet;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.cache.spi.CachingProvider;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.enterprise.inject.spi.PassivationCapable;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Type;
-import java.util.HashSet;
-import java.util.Set;
-
-import static java.util.Collections.emptySet;
 
 public class CacheProviderBean implements Bean<CachingProvider>, PassivationCapable
 {
