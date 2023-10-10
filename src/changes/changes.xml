@@ -22,6 +22,11 @@
 	</properties>
 	<body>
         <release version="4.0" date="TBD">
+            <!-- REMOVE -->
+            <action dev="tv" type="remove">
+               Remove all deprecated code
+            </action>
+            <!-- UPDATE -->
             <action dev="tv" type="update">
                Update dependency servlet-api 2.5 to javax.servlet-api 3.1.0
             </action>
@@ -35,10 +40,10 @@
                Update Tomcat libraries 7.0.22 to 9.0.79
             </action>
             <action dev="tv" type="update">
-               From this release on we require Java 17
+               Bump Java to 17.
             </action>
-            <action dev="tv" type="remove">
-               Remove all deprecated code
+            <action dev="tv" type="update">
+               From this release on we require Java 17
             </action>
             <action dev="tv" type="update">
                Migrate all tests to JUnit 4
