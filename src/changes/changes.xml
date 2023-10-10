@@ -54,6 +54,9 @@
             <action type="update" dev="ggregory" due-to="Gary Gregory">
                Bump commons-io from 2.13.0 to 2.14.0 #11.
             </action>
+            <action type="update" dev="ggregory" due-to="Gary Gregory">
+               Bump org.apache.commons:commons-parent from 59 to 64.
+            </action>
         </release>
         <release version="3.2" date="2023-08-22">
             <action dev="tv" type="fix" issue="JCS-234" due-to="Chris Lake">
