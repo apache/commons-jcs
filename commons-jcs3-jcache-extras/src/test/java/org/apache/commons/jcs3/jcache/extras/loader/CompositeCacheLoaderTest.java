@@ -18,17 +18,18 @@
  */
 package org.apache.commons.jcs3.jcache.extras.loader;
 
-import org.apache.commons.jcs3.jcache.extras.InternalCacheRule;
-import org.junit.Rule;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.cache.Cache;
 import javax.cache.configuration.Configuration;
 import javax.cache.configuration.MutableConfiguration;
 import javax.cache.integration.CacheLoaderException;
-import java.util.concurrent.atomic.AtomicInteger;
 
-import static org.junit.Assert.assertEquals;
+import org.apache.commons.jcs3.jcache.extras.InternalCacheRule;
+import org.junit.Rule;
+import org.junit.Test;
 
 public class CompositeCacheLoaderTest
 {

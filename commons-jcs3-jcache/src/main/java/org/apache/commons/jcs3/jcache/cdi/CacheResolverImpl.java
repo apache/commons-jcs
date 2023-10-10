@@ -18,10 +18,11 @@
  */
 package org.apache.commons.jcs3.jcache.cdi;
 
+import java.lang.annotation.Annotation;
+
 import javax.cache.Cache;
 import javax.cache.annotation.CacheInvocationContext;
 import javax.cache.annotation.CacheResolver;
-import java.lang.annotation.Annotation;
 
 public class CacheResolverImpl implements CacheResolver
 {

@@ -18,10 +18,11 @@
  */
 package org.apache.commons.jcs3.jcache.jmx;
 
+import java.lang.management.ManagementFactory;
+
 import javax.management.MBeanServer;
 import javax.management.MBeanServerFactory;
 import javax.management.ObjectName;
-import java.lang.management.ManagementFactory;
 
 public class JMXs
 {

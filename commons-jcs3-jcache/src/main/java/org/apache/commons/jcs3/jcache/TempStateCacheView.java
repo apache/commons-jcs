@@ -18,16 +18,6 @@
  */
 package org.apache.commons.jcs3.jcache;
 
-import javax.cache.Cache;
-import javax.cache.CacheManager;
-import javax.cache.configuration.CacheEntryListenerConfiguration;
-import javax.cache.configuration.CompleteConfiguration;
-import javax.cache.configuration.Configuration;
-import javax.cache.integration.CompletionListener;
-import javax.cache.processor.EntryProcessor;
-import javax.cache.processor.EntryProcessorException;
-import javax.cache.processor.EntryProcessorResult;
-
 import static org.apache.commons.jcs3.jcache.Asserts.assertNotNull;
 
 import java.util.Collection;
@@ -37,6 +27,16 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
+
+import javax.cache.Cache;
+import javax.cache.CacheManager;
+import javax.cache.configuration.CacheEntryListenerConfiguration;
+import javax.cache.configuration.CompleteConfiguration;
+import javax.cache.configuration.Configuration;
+import javax.cache.integration.CompletionListener;
+import javax.cache.processor.EntryProcessor;
+import javax.cache.processor.EntryProcessorException;
+import javax.cache.processor.EntryProcessorResult;
 
 // kind of transactional view for a Cache<K, V>, to use with EntryProcessor
 public class TempStateCacheView<K, V> implements Cache<K, V>

@@ -18,12 +18,15 @@
  */
 package org.apache.commons.jcs3.jcache.cdi;
 
+import static java.util.Arrays.asList;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
+
 import javax.cache.annotation.CachePut;
 import javax.cache.annotation.CacheRemove;
 import javax.cache.annotation.CacheRemoveAll;
@@ -44,8 +47,6 @@ import javax.enterprise.inject.spi.InjectionTarget;
 import javax.enterprise.inject.spi.PassivationCapable;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
 import javax.enterprise.util.AnnotationLiteral;
-
-import static java.util.Arrays.asList;
 
 // TODO: observe annotated type (or maybe sthg else) to cache data and inject this extension (used as metadata cache)
 // to get class model and this way allow to add cache annotation on the fly - == avoid java pure reflection to get metadata

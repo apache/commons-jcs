@@ -33,6 +33,10 @@
  */
 package org.apache.commons.jcs3.jcache;
 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.cache.configuration.CacheEntryListenerConfiguration;
 import javax.cache.configuration.CompleteConfiguration;
 import javax.cache.configuration.Configuration;
@@ -41,9 +45,6 @@ import javax.cache.expiry.EternalExpiryPolicy;
 import javax.cache.expiry.ExpiryPolicy;
 import javax.cache.integration.CacheLoader;
 import javax.cache.integration.CacheWriter;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 
 public class JCSConfiguration<K, V> implements CompleteConfiguration<K, V>
 {

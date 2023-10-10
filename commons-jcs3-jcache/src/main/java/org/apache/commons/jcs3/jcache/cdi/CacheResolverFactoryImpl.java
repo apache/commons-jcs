@@ -18,6 +18,8 @@
  */
 package org.apache.commons.jcs3.jcache.cdi;
 
+import java.lang.annotation.Annotation;
+
 import javax.cache.Cache;
 import javax.cache.CacheManager;
 import javax.cache.Caching;
@@ -27,7 +29,6 @@ import javax.cache.annotation.CacheResolverFactory;
 import javax.cache.annotation.CacheResult;
 import javax.cache.configuration.MutableConfiguration;
 import javax.cache.spi.CachingProvider;
-import java.lang.annotation.Annotation;
 
 public class CacheResolverFactoryImpl implements CacheResolverFactory
 {

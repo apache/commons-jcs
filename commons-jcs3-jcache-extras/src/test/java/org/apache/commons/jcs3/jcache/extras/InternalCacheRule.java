@@ -18,9 +18,7 @@
  */
 package org.apache.commons.jcs3.jcache.extras;
 
-import org.junit.rules.TestRule;
-import org.junit.runner.Description;
-import org.junit.runners.model.Statement;
+import java.lang.reflect.Field;
 
 import javax.cache.Cache;
 import javax.cache.CacheManager;
@@ -28,7 +26,10 @@ import javax.cache.Caching;
 import javax.cache.configuration.CompleteConfiguration;
 import javax.cache.configuration.Configuration;
 import javax.cache.spi.CachingProvider;
-import java.lang.reflect.Field;
+
+import org.junit.rules.TestRule;
+import org.junit.runner.Description;
+import org.junit.runners.model.Statement;
 
 // TODO: *if needed* define @CacheDeifnition instead of relying on field types
 public class InternalCacheRule implements TestRule

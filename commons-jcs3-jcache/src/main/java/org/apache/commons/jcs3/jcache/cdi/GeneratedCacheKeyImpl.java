@@ -18,8 +18,9 @@
  */
 package org.apache.commons.jcs3.jcache.cdi;
 
-import javax.cache.annotation.GeneratedCacheKey;
 import java.util.Arrays;
+
+import javax.cache.annotation.GeneratedCacheKey;
 
 public class GeneratedCacheKeyImpl implements GeneratedCacheKey
 {

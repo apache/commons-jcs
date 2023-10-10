@@ -18,11 +18,12 @@
  */
 package org.apache.commons.jcs3.jcache.extras.writer;
 
+import java.util.Collection;
+
 import javax.cache.Cache;
 import javax.cache.configuration.Factory;
 import javax.cache.integration.CacheWriter;
 import javax.cache.integration.CacheWriterException;
-import java.util.Collection;
 
 public abstract class CacheWriterAdapter<K, V> implements CacheWriter<K, V>, Factory<CacheWriter<K, V>>
 {

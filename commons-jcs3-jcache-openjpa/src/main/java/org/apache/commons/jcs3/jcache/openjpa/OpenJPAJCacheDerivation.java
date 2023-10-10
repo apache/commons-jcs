@@ -18,6 +18,8 @@
  */
 package org.apache.commons.jcs3.jcache.openjpa;
 
+import java.util.Map;
+
 import org.apache.openjpa.conf.OpenJPAConfiguration;
 import org.apache.openjpa.conf.OpenJPAConfigurationImpl;
 import org.apache.openjpa.event.SingleJVMRemoteCommitProvider;
@@ -25,8 +27,6 @@ import org.apache.openjpa.lib.conf.AbstractProductDerivation;
 import org.apache.openjpa.lib.conf.Configuration;
 import org.apache.openjpa.lib.conf.ConfigurationProvider;
 import org.apache.openjpa.lib.conf.Configurations;
-
-import java.util.Map;
 
 public class OpenJPAJCacheDerivation extends AbstractProductDerivation
 {

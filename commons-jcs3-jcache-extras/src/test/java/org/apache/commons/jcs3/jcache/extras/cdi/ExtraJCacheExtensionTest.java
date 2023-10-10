@@ -18,6 +18,12 @@
  */
 package org.apache.commons.jcs3.jcache.extras.cdi;
 
+import static org.junit.Assert.assertNotNull;
+
+import javax.cache.CacheManager;
+import javax.cache.spi.CachingProvider;
+import javax.inject.Inject;
+
 import org.apache.webbeans.config.WebBeansContext;
 import org.apache.webbeans.container.BeanManagerImpl;
 import org.apache.webbeans.inject.OWBInjector;
@@ -26,12 +32,6 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import javax.cache.CacheManager;
-import javax.cache.spi.CachingProvider;
-import javax.inject.Inject;
-
-import static org.junit.Assert.assertNotNull;
 
 public class ExtraJCacheExtensionTest
 {

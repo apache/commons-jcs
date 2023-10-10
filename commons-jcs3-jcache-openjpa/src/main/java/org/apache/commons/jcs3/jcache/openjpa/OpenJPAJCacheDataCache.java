@@ -18,15 +18,16 @@
  */
 package org.apache.commons.jcs3.jcache.openjpa;
 
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
+import javax.cache.Cache;
+import javax.cache.CacheManager;
+
 import org.apache.openjpa.datacache.AbstractDataCache;
 import org.apache.openjpa.datacache.DataCacheManager;
 import org.apache.openjpa.datacache.DataCachePCData;
 import org.apache.openjpa.util.OpenJPAId;
-
-import javax.cache.Cache;
-import javax.cache.CacheManager;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 public class OpenJPAJCacheDataCache extends AbstractDataCache
 {

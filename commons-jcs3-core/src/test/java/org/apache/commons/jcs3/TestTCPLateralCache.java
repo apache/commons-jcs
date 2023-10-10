@@ -3,9 +3,6 @@ package org.apache.commons.jcs3;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
-import org.apache.commons.jcs3.access.CacheAccess;
-import org.junit.Before;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -28,6 +25,9 @@ import org.junit.Before;
 import junit.extensions.ActiveTestSuite;
 import junit.framework.Test;
 import junit.framework.TestCase;
+
+import org.apache.commons.jcs3.access.CacheAccess;
+import org.junit.Before;
 
 /**
  * Test which exercises the indexed disk cache. This one uses three different

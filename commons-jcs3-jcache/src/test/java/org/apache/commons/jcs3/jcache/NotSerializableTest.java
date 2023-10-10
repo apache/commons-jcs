@@ -18,7 +18,9 @@
  */
 package org.apache.commons.jcs3.jcache;
 
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import javax.cache.Cache;
 import javax.cache.CacheManager;
@@ -26,9 +28,7 @@ import javax.cache.Caching;
 import javax.cache.configuration.MutableConfiguration;
 import javax.cache.spi.CachingProvider;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import org.junit.Test;
 
 public class NotSerializableTest
 {

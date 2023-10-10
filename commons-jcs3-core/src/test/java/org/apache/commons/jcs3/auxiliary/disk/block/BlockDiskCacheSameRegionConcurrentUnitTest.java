@@ -26,13 +26,13 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.jcs3.JCS;
-import org.apache.commons.jcs3.access.CacheAccess;
-import org.apache.commons.jcs3.engine.behavior.ICacheElement;
-
 import junit.extensions.ActiveTestSuite;
 import junit.framework.Test;
 import junit.framework.TestCase;
+
+import org.apache.commons.jcs3.JCS;
+import org.apache.commons.jcs3.access.CacheAccess;
+import org.apache.commons.jcs3.engine.behavior.ICacheElement;
 
 /**
  * Test which exercises the block disk cache. Runs four threads against the same region.

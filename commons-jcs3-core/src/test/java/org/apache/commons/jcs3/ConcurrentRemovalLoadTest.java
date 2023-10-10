@@ -1,5 +1,9 @@
 package org.apache.commons.jcs3;
 
+import junit.extensions.ActiveTestSuite;
+import junit.framework.Test;
+import junit.framework.TestCase;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -20,10 +24,6 @@ package org.apache.commons.jcs3;
  */
 
 import org.junit.Before;
-
-import junit.extensions.ActiveTestSuite;
-import junit.framework.Test;
-import junit.framework.TestCase;
 
 /**
  * Test which exercises the hierarchical removal when the cache is active.

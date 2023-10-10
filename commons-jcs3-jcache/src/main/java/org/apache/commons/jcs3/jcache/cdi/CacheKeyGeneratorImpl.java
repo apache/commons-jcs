@@ -18,11 +18,12 @@
  */
 package org.apache.commons.jcs3.jcache.cdi;
 
+import java.lang.annotation.Annotation;
+
 import javax.cache.annotation.CacheInvocationParameter;
 import javax.cache.annotation.CacheKeyGenerator;
 import javax.cache.annotation.CacheKeyInvocationContext;
 import javax.cache.annotation.GeneratedCacheKey;
-import java.lang.annotation.Annotation;
 
 public class CacheKeyGeneratorImpl implements CacheKeyGenerator
 {

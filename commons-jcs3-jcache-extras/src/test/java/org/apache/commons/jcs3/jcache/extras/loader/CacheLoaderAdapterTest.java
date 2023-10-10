@@ -18,20 +18,21 @@
  */
 package org.apache.commons.jcs3.jcache.extras.loader;
 
-import org.apache.commons.jcs3.jcache.extras.InternalCacheRule;
-import org.junit.Rule;
-import org.junit.Test;
+import static java.util.Arrays.asList;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+
+import java.util.HashSet;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.cache.Cache;
 import javax.cache.configuration.Configuration;
 import javax.cache.configuration.MutableConfiguration;
 import javax.cache.integration.CacheLoaderException;
-import java.util.HashSet;
-import java.util.concurrent.atomic.AtomicInteger;
 
-import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import org.apache.commons.jcs3.jcache.extras.InternalCacheRule;
+import org.junit.Rule;
+import org.junit.Test;
 
 public class CacheLoaderAdapterTest
 {

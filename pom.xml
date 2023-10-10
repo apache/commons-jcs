@@ -546,8 +546,6 @@
     <commons.release.version>3.2</commons.release.version>
     <commons.release.name>commons-jcs3-dist-3.2</commons.release.name>
     <commons.release.desc>(Java 17+)</commons.release.desc>
-    <commons.releaseManagerName>tv</commons.releaseManagerName>
-    <commons.releaseManagerKey>88817402</commons.releaseManagerKey>
     <!-- The RC version used in the staging repository URL. -->
     <commons.bc.version>3.1</commons.bc.version>
     <commons.rc.version>rc1</commons.rc.version>

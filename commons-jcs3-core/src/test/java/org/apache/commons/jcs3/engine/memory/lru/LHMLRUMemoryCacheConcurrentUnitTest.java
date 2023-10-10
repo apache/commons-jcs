@@ -27,12 +27,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.jcs3.engine.CacheElement;
-import org.apache.commons.jcs3.engine.behavior.ICacheElement;
-import org.apache.commons.jcs3.engine.control.CompositeCache;
-import org.apache.commons.jcs3.engine.control.CompositeCacheManager;
-import org.junit.Before;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -55,6 +49,12 @@ import org.junit.Before;
 import junit.extensions.ActiveTestSuite;
 import junit.framework.Test;
 import junit.framework.TestCase;
+
+import org.apache.commons.jcs3.engine.CacheElement;
+import org.apache.commons.jcs3.engine.behavior.ICacheElement;
+import org.apache.commons.jcs3.engine.control.CompositeCache;
+import org.apache.commons.jcs3.engine.control.CompositeCacheManager;
+import org.junit.Before;
 
 /**
  * Test which exercises the LRUMemory cache. This one uses three different

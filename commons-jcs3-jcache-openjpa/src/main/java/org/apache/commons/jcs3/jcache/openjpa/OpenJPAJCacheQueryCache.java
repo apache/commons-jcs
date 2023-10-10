@@ -18,17 +18,18 @@
  */
 package org.apache.commons.jcs3.jcache.openjpa;
 
-import org.apache.openjpa.datacache.AbstractQueryCache;
-import org.apache.openjpa.datacache.DataCacheManager;
-import org.apache.openjpa.datacache.QueryKey;
-import org.apache.openjpa.datacache.QueryResult;
-
-import javax.cache.Cache;
-import javax.cache.CacheManager;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+
+import javax.cache.Cache;
+import javax.cache.CacheManager;
+
+import org.apache.openjpa.datacache.AbstractQueryCache;
+import org.apache.openjpa.datacache.DataCacheManager;
+import org.apache.openjpa.datacache.QueryKey;
+import org.apache.openjpa.datacache.QueryResult;
 
 public class OpenJPAJCacheQueryCache extends AbstractQueryCache
 {

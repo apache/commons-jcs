@@ -24,10 +24,10 @@ import static org.junit.Assert.assertNull;
 
 import java.util.Iterator;
 
-import org.junit.Test;
-
 import junit.extensions.ActiveTestSuite;
 import junit.framework.TestCase;
+
+import org.junit.Test;
 
 /**
  * Tests the LRUMap

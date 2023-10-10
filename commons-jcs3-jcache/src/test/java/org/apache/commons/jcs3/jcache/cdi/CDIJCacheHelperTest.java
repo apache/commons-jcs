@@ -1,5 +1,8 @@
 package org.apache.commons.jcs3.jcache.cdi;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -23,12 +26,10 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Map;
+
 import javax.cache.annotation.CacheDefaults;
 import javax.cache.annotation.CacheResult;
 import javax.interceptor.InvocationContext;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 import org.junit.Test;
 

@@ -29,15 +29,15 @@ import java.io.OutputStream;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.jcs.auxiliary.AuxiliaryCacheAttributes;
-import org.apache.commons.jcs.auxiliary.disk.AbstractDiskCache;
-import org.apache.commons.jcs.engine.behavior.ICacheElement;
-import org.apache.commons.jcs.engine.behavior.IElementSerializer;
-import org.apache.commons.jcs.engine.logging.behavior.ICacheEvent;
-import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;
 import org.apache.commons.jcs.utils.timing.SleepUtil;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.jcs3.auxiliary.AuxiliaryCacheAttributes;
+import org.apache.commons.jcs3.auxiliary.disk.AbstractDiskCache;
+import org.apache.commons.jcs3.engine.behavior.ICacheElement;
+import org.apache.commons.jcs3.engine.behavior.IElementSerializer;
+import org.apache.commons.jcs3.engine.logging.behavior.ICacheEvent;
+import org.apache.commons.jcs3.engine.logging.behavior.ICacheEventLogger;
+import org.apache.commons.jcs3.log.Log;
+import org.apache.commons.jcs3.log.LogFactory;
 
 /**
  * This disk cache writes each item to a separate file. This is for regions with very few items,
