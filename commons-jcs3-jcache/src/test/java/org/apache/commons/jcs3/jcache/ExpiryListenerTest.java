@@ -65,7 +65,7 @@ public class ExpiryListenerTest {
         assertEquals(1, listener.events.size());
     }
 
-    private static class CacheEntryExpiredListenerImpl implements CacheEntryExpiredListener<String, String>, Serializable {
+    private static final class CacheEntryExpiredListenerImpl implements CacheEntryExpiredListener<String, String>, Serializable {
         /**
          *
          */

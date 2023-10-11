@@ -119,7 +119,7 @@ public class AsyncCacheWriter<K, V> implements CacheWriter<K, V>, Closeable, Fac
     }
 
     // avoid dep on impl
-    private static class DaemonThreadFactory implements ThreadFactory
+    private static final class DaemonThreadFactory implements ThreadFactory
     {
         private final AtomicInteger index = new AtomicInteger(1);
         private final String prefix;

@@ -43,7 +43,7 @@ public class LogManager
     /**
      * The SPI LogFactory
      */
-    private static class LogFactoryHolder
+    private static final class LogFactoryHolder
     {
         static final LogFactory INSTANCE = createLogFactory();
 
