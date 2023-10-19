@@ -140,7 +140,7 @@ public class FileDiskCache<K, V>
     {
         StringBuilder fileNameBuffer = new StringBuilder();
 
-        // add key as filename in a file system safe way
+        // add key as file name in a file system safe way
         String keys = key.toString();
         int l = keys.length();
         for ( int i = 0; i < l; i++ )

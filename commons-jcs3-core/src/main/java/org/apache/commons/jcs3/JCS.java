@@ -50,9 +50,9 @@ public abstract class JCS
     private static CompositeCacheManager cacheMgr;
 
     /**
-     * Set the filename that the cache manager will be initialized with. Only matters before the
+     * Set the file name that the cache manager will be initialized with. Only matters before the
      * instance is initialized.
-     * <p>
+     *
      * @param configFilename
      */
     public static void setConfigFilename( final String configFilename )
