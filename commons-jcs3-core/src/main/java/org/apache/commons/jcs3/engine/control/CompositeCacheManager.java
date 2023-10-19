@@ -164,16 +164,16 @@ public class CompositeCacheManager
 
     /**
      * Initializes the cache manager using the props file for the given name.
-     * <p>
-     * @param propsFilename
+     *
+     * @param propsFileName
      * @return CompositeCacheManager configured from the give propsFileName
      * @throws CacheException if the configuration cannot be loaded
      */
-    public static synchronized CompositeCacheManager getInstance( final String propsFilename ) throws CacheException
+    public static synchronized CompositeCacheManager getInstance( final String propsFileName ) throws CacheException
     {
         if ( instance == null )
         {
-            log.info( "Instance is null, creating with config [{0}]", propsFilename );
+            log.info( "Instance is null, creating with config [{0}]", propsFileName );
             instance = createInstance();
         }
 
@@ -184,7 +184,7 @@ public class CompositeCacheManager
 
         if (!instance.isConfigured())
         {
-            instance.configure( propsFilename );
+            instance.configure( propsFileName );
         }
 
         instance.clients.incrementAndGet();
