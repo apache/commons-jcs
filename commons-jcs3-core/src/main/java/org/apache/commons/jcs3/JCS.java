@@ -41,7 +41,7 @@ import org.apache.commons.jcs3.log.LogManager;
 public abstract class JCS
 {
     /** cache.ccf alternative. */
-    private static String configFilename;
+    private static String configFileName;
 
     /** alternative configuration properties */
     private static Properties configProps;
@@ -53,11 +53,11 @@ public abstract class JCS
      * Set the file name that the cache manager will be initialized with. Only matters before the
      * instance is initialized.
      *
-     * @param configFilename
+     * @param configFileName
      */
-    public static void setConfigFilename( final String configFilename )
+    public static void setConfigFilename( final String configFileName )
     {
-        JCS.configFilename = configFilename;
+        JCS.configFileName = configFileName;
     }
 
     /**
@@ -116,10 +116,10 @@ public abstract class JCS
                     cacheMgr = CompositeCacheManager.getUnconfiguredInstance();
                     cacheMgr.configure( configProps );
                 }
-                else if ( configFilename != null )
+                else if ( configFileName != null )
                 {
                     cacheMgr = CompositeCacheManager.getUnconfiguredInstance();
-                    cacheMgr.configure( configFilename );
+                    cacheMgr.configure( configFileName );
                 }
                 else
                 {
