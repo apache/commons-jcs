@@ -34,7 +34,7 @@ public class ConfigurableMBeanServerIdBuilder extends MBeanServerBuilder
 {
     private static final ConcurrentMap<Key, MBeanServer> JVM_SINGLETONS = new ConcurrentHashMap<>();
 
-    private static class Key
+    private static final class Key
     {
         private final String domain;
         private final MBeanServer outer;
@@ -87,7 +87,7 @@ public class ConfigurableMBeanServerIdBuilder extends MBeanServerBuilder
         return server;
     }
 
-    private static class ForceIdMBeanServerDelegate extends MBeanServerDelegate
+    private static final class ForceIdMBeanServerDelegate extends MBeanServerDelegate
     {
         private final MBeanServerDelegate delegate;
 

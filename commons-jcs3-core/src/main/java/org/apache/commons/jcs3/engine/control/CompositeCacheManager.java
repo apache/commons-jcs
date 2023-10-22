@@ -71,6 +71,7 @@ import org.apache.commons.jcs3.utils.timing.ElapsedTimer;
  * The composite cache manager is responsible for creating / configuring cache regions. It serves as
  * a factory for the ComositeCache class. The CompositeCache is the core of JCS, the hub for various
  * auxiliaries.
+ * </p>
  */
 public class CompositeCacheManager
     implements IRemoteCacheConstants, ICompositeCacheManager, IProvideScheduler
@@ -164,16 +165,16 @@ public class CompositeCacheManager
 
     /**
      * Initializes the cache manager using the props file for the given name.
-     * <p>
-     * @param propsFilename
+     *
+     * @param propsFileName
      * @return CompositeCacheManager configured from the give propsFileName
      * @throws CacheException if the configuration cannot be loaded
      */
-    public static synchronized CompositeCacheManager getInstance( final String propsFilename ) throws CacheException
+    public static synchronized CompositeCacheManager getInstance( final String propsFileName ) throws CacheException
     {
         if ( instance == null )
         {
-            log.info( "Instance is null, creating with config [{0}]", propsFilename );
+            log.info( "Instance is null, creating with config [{0}]", propsFileName );
             instance = createInstance();
         }
 
@@ -184,7 +185,7 @@ public class CompositeCacheManager
 
         if (!instance.isConfigured())
         {
-            instance.configure( propsFilename );
+            instance.configure( propsFileName );
         }
 
         instance.clients.incrementAndGet();
@@ -195,7 +196,7 @@ public class CompositeCacheManager
     /**
      * Get a CacheHub instance which is not configured. If an instance already exists, it will be
      * returned.
-     *<p>
+     *
      * @return CompositeCacheManager
      */
     public static synchronized CompositeCacheManager getUnconfiguredInstance()
@@ -219,7 +220,7 @@ public class CompositeCacheManager
     /**
      * Simple factory method, must override in subclasses so getInstance creates / returns the
      * correct object.
-     * <p>
+     *
      * @return CompositeCacheManager
      */
     protected static CompositeCacheManager createInstance()
@@ -312,7 +313,7 @@ public class CompositeCacheManager
 
     /**
      * Configure from specific properties file.
-     * <p>
+     *
      * @param propFile Path <u>within classpath </u> to load configuration from
      * @throws CacheException if the configuration cannot be loaded
      */
@@ -351,10 +352,11 @@ public class CompositeCacheManager
      * instructed.
      * <p>
      * You can override a specific value by passing in a system property:
+     * </p>
      * <p>
      * For example, you could override this value in the cache.ccf file by starting up your program
      * with the argument: -Djcs.auxiliary.LTCP.attributes.TcpListenerPort=1111
-     * <p>
+     * </p>
      * @param props
      * @param useSystemProperties -- if true, values starting with jcs will be put into the props
      *            file prior to configuring the cache.
@@ -369,10 +371,11 @@ public class CompositeCacheManager
      * instructed.
      * <p>
      * You can override a specific value by passing in a system property:
+     * </p>
      * <p>
      * For example, you could override this value in the cache.ccf file by starting up your program
      * with the argument: -Djcs.auxiliary.LTCP.attributes.TcpListenerPort=1111
-     * <p>
+     * </p>
      * @param props
      * @param useSystemProperties -- if true, values starting with jcs will be put into the props
      *            file prior to configuring the cache.
@@ -407,7 +410,7 @@ public class CompositeCacheManager
 
     /**
      * Configure the cache using the supplied properties.
-     * <p>
+     *
      * @param properties assumed not null
      */
     private synchronized void doConfigure( final Properties properties )
@@ -460,7 +463,7 @@ public class CompositeCacheManager
 
     /**
      * Gets the defaultCacheAttributes attribute of the CacheHub object
-     * <p>
+     *
      * @return The defaultCacheAttributes value
      */
     public ICompositeCacheAttributes getDefaultCacheAttributes()
@@ -470,7 +473,7 @@ public class CompositeCacheManager
 
     /**
      * Gets the defaultElementAttributes attribute of the CacheHub object
-     * <p>
+     *
      * @return The defaultElementAttributes value
      */
     public IElementAttributes getDefaultElementAttributes()
@@ -480,7 +483,7 @@ public class CompositeCacheManager
 
     /**
      * Gets the cache attribute of the CacheHub object
-     * <p>
+     *
      * @param cacheName
      * @return CompositeCache -- the cache region controller
      */
@@ -492,7 +495,7 @@ public class CompositeCacheManager
 
     /**
      * Gets the cache attribute of the CacheHub object
-     * <p>
+     *
      * @param cacheName
      * @param cattr
      * @return CompositeCache
@@ -519,7 +522,7 @@ public class CompositeCacheManager
 
     /**
      * Gets the cache attribute of the CacheHub object
-     * <p>
+     *
      * @param cattr
      * @return CompositeCache
      */
@@ -536,7 +539,7 @@ public class CompositeCacheManager
      * Overriding the default elemental attributes will require changing the way the attributes are
      * assigned to elements. Get cache creates a cache with defaults if none are specified. We might
      * want to create separate method for creating/getting. . .
-     * <p>
+     * </p>
      * @param cattr
      * @param attr
      * @return CompositeCache
@@ -691,7 +694,8 @@ public class CompositeCacheManager
     }
 
     /**
-     * Returns a list of the current cache names.
+     * Gets a list of the current cache names.
+     *
      * @return Set<String>
      */
     public Set<String> getCacheNames()
@@ -813,7 +817,7 @@ public class CompositeCacheManager
     /**
      * Gets stats for debugging. This calls gets statistics and then puts all the results in a
      * string. This returns data for all regions.
-     * <p>
+     *
      * @return String
      */
     @Override
@@ -836,7 +840,7 @@ public class CompositeCacheManager
 
     /**
      * This returns data gathered for all regions and all the auxiliaries they currently uses.
-     * <p>
+     *
      * @return ICacheStats[]
      */
     public ICacheStats[] getStatistics()
@@ -854,7 +858,7 @@ public class CompositeCacheManager
      * difference. There are some problems with region by region shutdown. Some auxiliaries are
      * global. They will need to track when every region has shutdown before doing things like
      * closing the socket with a lateral.
-     * <p>
+     *
      * @param observer
      */
     @Override
@@ -881,7 +885,7 @@ public class CompositeCacheManager
 
     /**
      * This is exposed so other manager can get access to the props.
-     * <p>
+     *
      * @return the configurationProperties
      */
     @Override

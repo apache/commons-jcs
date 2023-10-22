@@ -28,13 +28,13 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
-        java: [ 17 ]
+        java: [ 17, 21 ]
         experimental: [false]
 #        include:
-#          - java: 18-ea
+#          - java: 22-ea
 #            os: ubuntu-latest
 #            experimental: true        
-#          - java: 18-ea
+#          - java: 22-ea
 #            os: windows-latest
 #            experimental: true        
       fail-fast: false
@@ -55,4 +55,4 @@ jobs:
         distribution: 'temurin'
         java-version: ${{ matrix.java }}
     - name: Build with Maven
-      run: mvn -V --file pom.xml --no-transfer-progress -DtrimStackTrace=false
+      run: mvn --show-version --batch-mode --no-transfer-progress -DtrimStackTrace=false

@@ -55,7 +55,7 @@ public class RemoteHttpCacheAttributes
     /** The complete URL to the service. */
     private String url;
 
-    /** The default classname for the client.  */
+    /** The default class name for the client.  */
     public static final String DEFAULT_REMOTE_HTTP_CLIENT_CLASS_NAME = RemoteHttpCacheClient.class.getName();
 
     /** This allows users to inject their own client implementation. */
