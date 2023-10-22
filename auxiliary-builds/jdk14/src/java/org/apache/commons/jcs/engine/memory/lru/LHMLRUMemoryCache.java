@@ -39,8 +39,6 @@ import java.util.Map;
  *  There may be some thread safety issues.
  *  So far i cannot notice any performance difference between this and the
  *  standard LRU implementation.  It neeLogds more testing.
- *
- *@version    $Id$
  */
 public class LHMLRUMemoryCache
     extends AbstractMemoryCache
