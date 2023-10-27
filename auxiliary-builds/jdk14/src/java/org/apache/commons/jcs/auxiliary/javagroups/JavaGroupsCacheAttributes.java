@@ -46,9 +46,9 @@ public class JavaGroupsCacheAttributes
 {
     private String channelFactoryClassName = "org.jgroups.JChannelFactory";
 
-    private String channelProperties = null;
+    private String channelProperties;
 
-    private boolean getFromPeers = false;
+    private boolean getFromPeers;
 
     public String getChannelFactoryClassName()
     {

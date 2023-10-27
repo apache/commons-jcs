@@ -82,7 +82,7 @@ public class TCPLateralCacheAttributes
     private boolean udpDiscoveryEnabled = DEFAULT_UDP_DISCOVERY_ENABLED;
 
     /** udp datagram TTL */
-    private int udpTTL = 0;
+    private int udpTTL;
 
     /** can we put */
     private boolean allowPut = DEFAULT_ALLOW_GET;

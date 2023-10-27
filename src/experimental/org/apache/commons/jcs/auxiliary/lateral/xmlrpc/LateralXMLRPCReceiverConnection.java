@@ -44,7 +44,7 @@ public class LateralXMLRPCReceiverConnection implements XmlRpcHandler, IXMLRPCCo
 
     private ILateralCacheXMLRPCListener ilcl;
 
-    private int puts = 0;
+    private int puts;
 
      /**
      * Constructor for the LateralXMLRPCReceiverConnection object
