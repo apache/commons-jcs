@@ -562,7 +562,7 @@
 
     <jsr107.api.version>1.0.1</jsr107.api.version>
     <commons.collections.version>4.4</commons.collections.version>
-    <commons.text.version>1.10.0</commons.text.version>
+    <commons.text.version>1.11.0</commons.text.version>
     <commons.lang.version>3.13.0</commons.lang.version>
 
     <test.type>Unit</test.type>
