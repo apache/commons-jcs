@@ -104,7 +104,7 @@ public class LogManager
     }
 
     /**
-     * Set the log system. Must be called before getLog is called
+     * Sets the log system. Must be called before getLog is called
      *
      * @param logSystem the logSystem to set
      */

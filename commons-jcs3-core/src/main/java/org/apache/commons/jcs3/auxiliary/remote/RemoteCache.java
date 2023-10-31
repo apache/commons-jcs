@@ -103,7 +103,7 @@ public class RemoteCache<K, V>
     }
 
     /**
-     * Set facade
+     * Sets facade
      *
      * @param facade the facade to set
      */

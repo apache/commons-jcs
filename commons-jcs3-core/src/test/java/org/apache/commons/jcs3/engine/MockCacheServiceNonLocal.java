@@ -84,7 +84,7 @@ public class MockCacheServiceNonLocal<K, V>
     }
 
     /**
-     * Set the last remove key.
+     * Sets the last remove key.
      * <p>
      * @param cacheName
      * @param key
@@ -97,7 +97,7 @@ public class MockCacheServiceNonLocal<K, V>
     }
 
     /**
-     * Set the lastRemoveAllCacheName to the cacheName.
+     * Sets the lastRemoveAllCacheName to the cacheName.
      * <p>
      * @param cacheName - region name
      * @param requesterId - identity of requester
@@ -111,7 +111,7 @@ public class MockCacheServiceNonLocal<K, V>
     }
 
     /**
-     * Set the last update item.
+     * Sets the last update item.
      * <p>
      * @param item
      * @param requesterId - identity of requester
@@ -154,7 +154,7 @@ public class MockCacheServiceNonLocal<K, V>
     }
 
     /**
-     * Set the last remove key.
+     * Sets the last remove key.
      * <p>
      * @param cacheName
      * @param key
@@ -166,7 +166,7 @@ public class MockCacheServiceNonLocal<K, V>
     }
 
     /**
-     * Set the last remove all cache name.
+     * Sets the last remove all cache name.
      * <p>
      * @param cacheName
      */
@@ -177,7 +177,7 @@ public class MockCacheServiceNonLocal<K, V>
     }
 
     /**
-     * Set the last update item.
+     * Sets the last update item.
      * <p>
      * @param item
      */

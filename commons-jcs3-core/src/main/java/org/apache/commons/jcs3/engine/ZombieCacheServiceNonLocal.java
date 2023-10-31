@@ -265,7 +265,7 @@ public class ZombieCacheServiceNonLocal<K, V>
         final ICacheElement<K, V> element;
 
         /**
-         * Set the element
+         * Sets the element
          * @param element
          * @param requesterId
          */
@@ -286,7 +286,7 @@ public class ZombieCacheServiceNonLocal<K, V>
         final K key;
 
         /**
-         * Set the element
+         * Sets the element
          * @param cacheName
          * @param key
          * @param requesterId

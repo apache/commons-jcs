@@ -74,7 +74,7 @@ public class UDPDiscoverySenderUnitTest
     private UDPDiscoverySender sender;
 
     /**
-     * Set up the receiver. Maybe better to just code sockets here? Set up the sender for sending
+     * Sets up the receiver. Maybe better to just code sockets here? Set up the sender for sending
      * the message.
      * <p>
      * @throws Exception on error

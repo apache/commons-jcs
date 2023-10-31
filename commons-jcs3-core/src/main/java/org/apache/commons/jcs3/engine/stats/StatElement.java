@@ -80,7 +80,7 @@ public class StatElement<V>
     }
 
     /**
-     * Set the data for this element.
+     * Sets the data for this element.
      * <p>
      * @param data
      */

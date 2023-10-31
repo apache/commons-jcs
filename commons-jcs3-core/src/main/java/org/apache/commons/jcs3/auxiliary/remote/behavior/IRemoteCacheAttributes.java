@@ -114,7 +114,7 @@ public interface IRemoteCacheAttributes
     String getThreadPoolName();
 
     /**
-     * Set the name of the pool to use. Pools should be defined in the cache.ccf.
+     * Sets the name of the pool to use. Pools should be defined in the cache.ccf.
      * <p>
      * @param name
      */

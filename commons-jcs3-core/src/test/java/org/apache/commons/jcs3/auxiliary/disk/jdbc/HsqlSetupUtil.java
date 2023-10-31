@@ -41,7 +41,7 @@ public final class HsqlSetupUtil
     private static HSQLDiskCacheFactoryHelper factory = new HSQLDiskCacheFactoryHelper();
 
     /**
-     * Set up a table for cache testing
+     * Sets up a table for cache testing
      * <p>
      * @param cConn
      * @param tableName

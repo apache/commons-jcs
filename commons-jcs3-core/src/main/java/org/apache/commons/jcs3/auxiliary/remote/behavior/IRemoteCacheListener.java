@@ -42,7 +42,7 @@ public interface IRemoteCacheListener<K, V>
         throws IOException;
 
     /**
-     * Set the id to be used by this manager. The remote cache server identifies clients by this id.
+     * Sets the id to be used by this manager. The remote cache server identifies clients by this id.
      * The value will be set by the server through the remote cache listener.
      * <p>
      * @param id

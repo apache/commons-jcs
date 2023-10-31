@@ -50,7 +50,7 @@ public abstract class JCS
     private static CompositeCacheManager cacheMgr;
 
     /**
-     * Set the file name that the cache manager will be initialized with. Only matters before the
+     * Sets the file name that the cache manager will be initialized with. Only matters before the
      * instance is initialized.
      *
      * @param configFileName
@@ -61,7 +61,7 @@ public abstract class JCS
     }
 
     /**
-     * Set the properties that the cache manager will be initialized with. Only
+     * Sets the properties that the cache manager will be initialized with. Only
      * matters before the instance is initialized.
      *
      * @param configProps
@@ -72,7 +72,7 @@ public abstract class JCS
     }
 
     /**
-     * Set the log system. Must be called before getInstance is called
+     * Sets the log system. Must be called before getInstance is called
      * Predefined Log systems are {@link LogManager#LOGSYSTEM_JAVA_UTIL_LOGGING}
      * and {@link LogManager#LOGSYSTEM_LOG4J2}
      *

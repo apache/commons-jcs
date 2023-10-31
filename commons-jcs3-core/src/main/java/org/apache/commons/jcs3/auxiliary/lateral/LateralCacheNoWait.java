@@ -118,7 +118,7 @@ public class LateralCacheNoWait<K, V>
     }
 
     /**
-     * Set the identifying key to this no wait
+     * Sets the identifying key to this no wait
      *
      * @param identityKey the identityKey to set
      * @since 3.1
