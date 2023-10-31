@@ -101,7 +101,7 @@ public class ARCMemoryCache
     }
 
     /**
-     * Get an Array of the keys for all elements in the memory cache
+     * Gets an Array of the keys for all elements in the memory cache
      * @return Object[]
      */
     public Object[] getKeyArray()

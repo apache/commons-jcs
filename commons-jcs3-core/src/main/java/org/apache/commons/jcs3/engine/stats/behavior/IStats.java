@@ -44,7 +44,7 @@ public interface IStats
     void setStatElements( List<IStatElement<?>> stats );
 
     /**
-     * Get the type name, such as "LRU Memory Cache." No formal type is defined.
+     * Gets the type name, such as "LRU Memory Cache." No formal type is defined.
      *
      * @return String
      */

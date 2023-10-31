@@ -113,7 +113,7 @@ public class RemoteCache<K, V>
     }
 
     /**
-     * Get facade
+     * Gets facade
      *
      * @return the facade
      */

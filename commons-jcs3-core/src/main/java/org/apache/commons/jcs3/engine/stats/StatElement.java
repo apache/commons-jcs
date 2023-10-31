@@ -49,7 +49,7 @@ public class StatElement<V>
     }
 
     /**
-     * Get the name of the stat element, for example, HitCount
+     * Gets the name of the stat element, for example, HitCount
      * <p>
      * @return the stat element name
      */
@@ -69,7 +69,7 @@ public class StatElement<V>
     }
 
     /**
-     * Get the data, for example, for hit count you would get a value for some number.
+     * Gets the data, for example, for hit count you would get a value for some number.
      * <p>
      * @return data
      */

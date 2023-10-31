@@ -67,7 +67,7 @@ public class ThreadPoolManagerUnitTest
     }
 
     /**
-     * Get a couple pools by name and then see if they are in the list.
+     * Gets a couple pools by name and then see if they are in the list.
      *
      */
     @Test

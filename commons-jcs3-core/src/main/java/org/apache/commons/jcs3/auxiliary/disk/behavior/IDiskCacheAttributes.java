@@ -73,7 +73,7 @@ public interface IDiskCacheAttributes
     void setMaxPurgatorySize( int maxPurgatorySize );
 
     /**
-     * Get the amount of time in seconds we will wait for elements to move to
+     * Gets the amount of time in seconds we will wait for elements to move to
      * disk during shutdown for a particular region.
      * <p>
      * @return the time in seconds.

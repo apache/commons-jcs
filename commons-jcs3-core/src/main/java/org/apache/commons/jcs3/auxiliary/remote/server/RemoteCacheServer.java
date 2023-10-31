@@ -64,7 +64,7 @@ import org.apache.commons.jcs3.utils.timing.ElapsedTimer;
  * broadcast such event to their client, then remove an puts can be sent to all locals in the
  * cluster.
  * <p>
- * Get requests are made between clustered servers if AllowClusterGet is true. You can setup several
+ * Gets requests are made between clustered servers if AllowClusterGet is true. You can setup several
  * clients to use one remote server and several to use another. The get local will be distributed
  * between the two servers. Since caches are usually high get and low put, this should allow you to
  * scale.

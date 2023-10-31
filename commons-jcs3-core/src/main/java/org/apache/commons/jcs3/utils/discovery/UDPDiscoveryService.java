@@ -380,7 +380,7 @@ public class UDPDiscoveryService
     }
 
     /**
-     * Get all the cache names we have facades for.
+     * Gets all the cache names we have facades for.
      * <p>
      * @return ArrayList
      */

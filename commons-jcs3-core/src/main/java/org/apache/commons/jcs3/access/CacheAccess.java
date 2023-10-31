@@ -151,7 +151,7 @@ public class CacheAccess<K, V>
     }
 
     /**
-     * Get multiple elements from the cache based on a set of cache keys.
+     * Gets multiple elements from the cache based on a set of cache keys.
      * <p>
      * This method returns the ICacheElement&lt;K, V&gt; wrapper which provides access to element info and other
      * attributes.
@@ -174,7 +174,7 @@ public class CacheAccess<K, V>
     }
 
     /**
-     * Get multiple elements from the cache based on a set of cache keys.
+     * Gets multiple elements from the cache based on a set of cache keys.
      * <p>
      * This method returns the ICacheElement&lt;K, V&gt; wrapper which provides access to element info and other
      * attributes.

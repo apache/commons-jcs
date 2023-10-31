@@ -131,7 +131,7 @@ public abstract class AbstractDiskCacheAttributes extends AbstractAuxiliaryCache
     }
 
     /**
-     * Get the amount of time in seconds we will wait for elements to move to disk during shutdown
+     * Gets the amount of time in seconds we will wait for elements to move to disk during shutdown
      * for a particular region.
      * <p>
      *

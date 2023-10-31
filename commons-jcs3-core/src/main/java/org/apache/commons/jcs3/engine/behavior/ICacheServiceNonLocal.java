@@ -106,7 +106,7 @@ public interface ICacheServiceNonLocal<K, V>
         throws IOException;
 
     /**
-     * Get a set of the keys for all elements in the cache.
+     * Gets a set of the keys for all elements in the cache.
      * <p>
      * @param cacheName the name of the cache
      * @return a set of the key type

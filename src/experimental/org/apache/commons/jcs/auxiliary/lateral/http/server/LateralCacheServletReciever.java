@@ -182,7 +182,7 @@ public class LateralCacheServletReciever
         cacheMgr.release();
     }
 
-    /** Get servlet information */
+    /** Gets servlet information */
     public String getServletInfo()
     {
         return "LateralCacheServlet v1";

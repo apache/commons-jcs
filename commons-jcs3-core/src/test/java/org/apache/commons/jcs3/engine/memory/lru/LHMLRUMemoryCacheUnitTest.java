@@ -222,7 +222,7 @@ public class LHMLRUMemoryCacheUnitTest
     }
 
     /**
-     * Get stats.
+     * Gets stats.
      * <p>
      * @throws CacheException
      */

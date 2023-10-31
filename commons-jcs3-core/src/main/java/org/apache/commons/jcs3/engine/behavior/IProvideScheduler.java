@@ -28,7 +28,7 @@ import java.util.concurrent.ScheduledExecutorService;
 public interface IProvideScheduler
 {
     /**
-     * Get an instance of a central ScheduledExecutorService
+     * Gets an instance of a central ScheduledExecutorService
      * @return the central scheduler
      */
     ScheduledExecutorService getScheduledExecutorService();

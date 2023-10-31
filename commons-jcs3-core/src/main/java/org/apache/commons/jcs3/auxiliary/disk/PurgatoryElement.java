@@ -73,7 +73,7 @@ public class PurgatoryElement<K, V>
     }
 
     /**
-     * Get the wrapped cache element.
+     * Gets the wrapped cache element.
      *
      * @return ICacheElement
      */

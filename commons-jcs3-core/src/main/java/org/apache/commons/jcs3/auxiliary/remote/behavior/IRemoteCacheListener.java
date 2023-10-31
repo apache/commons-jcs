@@ -32,7 +32,7 @@ public interface IRemoteCacheListener<K, V>
     extends ICacheListener<K, V>, Remote
 {
     /**
-     * Get the id to be used by this manager.
+     * Gets the id to be used by this manager.
      * <p>
      * @return long
      * @throws IOException

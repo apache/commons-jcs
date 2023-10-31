@@ -194,7 +194,7 @@ public class CompositeCacheManager
     }
 
     /**
-     * Get a CacheHub instance which is not configured. If an instance already exists, it will be
+     * Gets a CacheHub instance which is not configured. If an instance already exists, it will be
      * returned.
      *
      * @return CompositeCacheManager
@@ -282,7 +282,7 @@ public class CompositeCacheManager
     }
 
     /**
-     * Get the element event queue
+     * Gets the element event queue
      *
      * @return the elementEventQueue
      */
@@ -292,7 +292,7 @@ public class CompositeCacheManager
     }
 
     /**
-     * Get the scheduler service
+     * Gets the scheduler service
      *
      * @return the scheduledExecutor
      */
@@ -770,7 +770,7 @@ public class CompositeCacheManager
     }
 
     /**
-     * Get a cache from the map of registered auxiliary caches
+     * Gets a cache from the map of registered auxiliary caches
      *
      * @param auxName the auxiliary name
      * @param cacheName the region name

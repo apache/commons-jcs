@@ -108,7 +108,7 @@ public interface ICacheAccess<K, V>
     ICacheElement<K, V> getCacheElement(K name);
 
     /**
-     * Get multiple elements from the cache based on a set of cache keys.
+     * Gets multiple elements from the cache based on a set of cache keys.
      * <p>
      * This method returns the ICacheElement&lt;K, V&gt; wrapper which provides access to element info and other
      * attributes.
@@ -128,7 +128,7 @@ public interface ICacheAccess<K, V>
     Map<K, ICacheElement<K, V>> getCacheElements(Set<K> names);
 
     /**
-     * Get multiple elements from the cache based on a set of cache keys.
+     * Gets multiple elements from the cache based on a set of cache keys.
      * <p>
      * This method returns the ICacheElement&lt;K, V&gt; wrapper which provides access to element info and other
      * attributes.
