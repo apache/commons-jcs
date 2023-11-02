@@ -49,7 +49,7 @@ public class LateralCacheUDPListener implements ILateralCacheListener, Serializa
     // instance vars
     private LateralUDPReceiver receiver;
     private ILateralCacheAttributes ilca;
-    private boolean inited = false;
+    private boolean inited;
 
 
     /**

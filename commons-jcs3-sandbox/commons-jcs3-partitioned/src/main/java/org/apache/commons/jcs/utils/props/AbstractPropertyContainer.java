@@ -37,7 +37,7 @@ public abstract class AbstractPropertyContainer
      * A property group is a subsection of properties. It's sent to the properties factory to
      * specify which group of properties to pull back. This will probably mean different things to
      * different property factories. For PropertiesFactoryFileImpl, the propertiesGroup maps to a
-     * filename.
+     * file name.
      */
     private String propertiesGroup;
 

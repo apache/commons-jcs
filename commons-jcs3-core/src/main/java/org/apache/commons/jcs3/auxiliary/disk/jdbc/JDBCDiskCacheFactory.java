@@ -141,7 +141,7 @@ public class JDBCDiskCacheFactory
     }
 
     /**
-     * Get a table state for a given table name
+     * Gets a table state for a given table name
      *
      * @param tableName
      * @return a cached instance of the table state
@@ -161,7 +161,7 @@ public class JDBCDiskCacheFactory
 	}
 
 	/**
-     * Get the scheduler service
+     * Gets the scheduler service
      *
      * @return the scheduler
      */

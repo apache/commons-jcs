@@ -43,7 +43,7 @@ public class LogManager
     /**
      * The SPI LogFactory
      */
-    private static class LogFactoryHolder
+    private static final class LogFactoryHolder
     {
         static final LogFactory INSTANCE = createLogFactory();
 
@@ -104,7 +104,7 @@ public class LogManager
     }
 
     /**
-     * Set the log system. Must be called before getLog is called
+     * Sets the log system. Must be called before getLog is called
      *
      * @param logSystem the logSystem to set
      */

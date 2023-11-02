@@ -267,7 +267,7 @@ public class RemoteCacheStartupServlet
     }
 
     /**
-     * Set registry port from string If the string cannot be parsed, the default
+     * Sets registry port from string If the string cannot be parsed, the default
      * value is used
      *
      * @param portS

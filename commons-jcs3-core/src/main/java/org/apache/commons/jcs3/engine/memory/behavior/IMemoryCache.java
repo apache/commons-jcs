@@ -47,7 +47,7 @@ public interface IMemoryCache<K, V>
         throws IOException;
 
     /**
-     * Get the number of elements contained in the memory store
+     * Gets the number of elements contained in the memory store
      * <p>
      * @return Element count
      */
@@ -61,7 +61,7 @@ public interface IMemoryCache<K, V>
     IStats getStatistics();
 
     /**
-     * Get a set of the keys for all elements in the memory cache.
+     * Gets a set of the keys for all elements in the memory cache.
      * <p>
      * @return a set of the key type
      * TODO This should probably be done in chunks with a range passed in. This
@@ -106,7 +106,7 @@ public interface IMemoryCache<K, V>
         throws IOException;
 
     /**
-     * Get an item from the cache
+     * Gets an item from the cache
      * <p>
      * @param key
      *            Description of the Parameter
@@ -129,7 +129,7 @@ public interface IMemoryCache<K, V>
         throws IOException;
 
     /**
-     * Get an item from the cache without effecting its order or last access
+     * Gets an item from the cache without effecting its order or last access
      * time
      * <p>
      * @param key

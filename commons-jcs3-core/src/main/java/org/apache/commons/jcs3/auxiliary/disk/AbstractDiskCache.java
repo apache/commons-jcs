@@ -655,7 +655,7 @@ public abstract class AbstractDiskCache<K, V>
      */
 
     /**
-     * Get a value from the persistent store.
+     * Gets a value from the persistent store.
      *
      * Before the event logging layer, the subclasses implemented the do* methods. Now the do*
      * methods call the *EventLogging method on the super. The *WithEventLogging methods call the
@@ -672,7 +672,7 @@ public abstract class AbstractDiskCache<K, V>
     }
 
     /**
-     * Get a value from the persistent store.
+     * Gets a value from the persistent store.
      *
      * Before the event logging layer, the subclasses implemented the do* methods. Now the do*
      * methods call the *EventLogging method on the super. The *WithEventLogging methods call the

@@ -24,7 +24,7 @@
   <parent>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-jcs3-sandbox</artifactId>
-    <version>3.2-SNAPSHOT</version>
+    <version>3.2.1-SNAPSHOT</version>
   </parent>
 
   <artifactId>commons-jcs3-filecache</artifactId>

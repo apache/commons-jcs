@@ -158,7 +158,7 @@ public class CompositeCacheConfigurator
     }
 
     /**
-     * Get all the properties for a region and configure its cache.
+     * Gets all the properties for a region and configure its cache.
      * <p>
      * This method tells the other parse method the name of the region prefix.
      *<p>
@@ -178,7 +178,7 @@ public class CompositeCacheConfigurator
     }
 
     /**
-     * Get all the properties for a region and configure its cache.
+     * Gets all the properties for a region and configure its cache.
      *<p>
      * @param props Configuration properties
      * @param ccm Cache hub
@@ -266,7 +266,7 @@ public class CompositeCacheConfigurator
     }
 
     /**
-     * Get an ICompositeCacheAttributes for the listed region.
+     * Gets an ICompositeCacheAttributes for the listed region.
      *<p>
      * @param props Configuration properties
      * @param regName the region name
@@ -281,7 +281,7 @@ public class CompositeCacheConfigurator
     }
 
     /**
-     * Get the main attributes for a region.
+     * Gets the main attributes for a region.
      *<p>
      * @param props Configuration properties
      * @param regName the region name
@@ -362,7 +362,7 @@ public class CompositeCacheConfigurator
     }
 
     /**
-     * Get an aux cache for the listed aux for a region.
+     * Gets an aux cache for the listed aux for a region.
      *<p>
      * @param props the configuration properties
      * @param ccm Cache hub

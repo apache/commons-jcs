@@ -342,7 +342,7 @@ public class RemoteHttpCacheServlet
     }
 
     /**
-     * Get servlet information
+     * Gets servlet information
      * <p>
      * @return basic info
      */

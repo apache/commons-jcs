@@ -94,7 +94,7 @@ public class ThreadPoolManager
     /**
      * The ThreadPoolManager instance (holder pattern)
      */
-    private static class ThreadPoolManagerHolder
+    private static final class ThreadPoolManagerHolder
     {
         static final ThreadPoolManager INSTANCE = new ThreadPoolManager();
     }

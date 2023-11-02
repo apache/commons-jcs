@@ -78,7 +78,7 @@ public class PartitionedCacheAccess<K, V>
     private ICacheAccess<K, V>[] partitions;
 
     /** Is the class initialized. */
-    private boolean initialized = false;
+    private boolean initialized;
 
     /** Sets default properties heading and group. */
     public PartitionedCacheAccess()

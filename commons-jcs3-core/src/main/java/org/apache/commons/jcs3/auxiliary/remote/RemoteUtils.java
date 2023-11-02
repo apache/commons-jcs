@@ -226,7 +226,7 @@ public class RemoteUtils
     }
 
     /**
-     * Get the naming url used for RMI registration
+     * Gets the naming url used for RMI registration
      *
      * @param location
      *            the remote location
@@ -240,7 +240,7 @@ public class RemoteUtils
     }
 
     /**
-     * Get the naming url used for RMI registration
+     * Gets the naming url used for RMI registration
      *
      * @param registryHost
      *            the remote host

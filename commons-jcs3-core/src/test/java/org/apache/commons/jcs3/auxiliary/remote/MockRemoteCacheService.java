@@ -84,7 +84,7 @@ public class MockRemoteCacheService<K, V>
     }
 
     /**
-     * Set the last remove key.
+     * Sets the last remove key.
      * <p>
      * @param cacheName
      * @param key
@@ -97,7 +97,7 @@ public class MockRemoteCacheService<K, V>
     }
 
     /**
-     * Set the lastRemoveAllCacheName to the cacheName.
+     * Sets the lastRemoveAllCacheName to the cacheName.
      */
     @Override
     public void removeAll( final String cacheName, final long requesterId )
@@ -107,7 +107,7 @@ public class MockRemoteCacheService<K, V>
     }
 
     /**
-     * Set the last update item.
+     * Sets the last update item.
      * <p>
      * @param item
      * @param requesterId
@@ -150,7 +150,7 @@ public class MockRemoteCacheService<K, V>
     }
 
     /**
-     * Set the last remove key.
+     * Sets the last remove key.
      * <p>
      * @param cacheName
      * @param key
@@ -162,7 +162,7 @@ public class MockRemoteCacheService<K, V>
     }
 
     /**
-     * Set the last remove all cache name.
+     * Sets the last remove all cache name.
      * <p>
      * @param cacheName
      */
@@ -173,7 +173,7 @@ public class MockRemoteCacheService<K, V>
     }
 
     /**
-     * Set the last update item.
+     * Sets the last update item.
      * <p>
      * @param item
      */

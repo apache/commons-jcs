@@ -60,7 +60,7 @@ public class LateralCacheJGListener
 
     private ILateralCacheAttributes ilca;
 
-    private int puts = 0;
+    private int puts;
 
     /**
      * Only need one since it does work for all regions, just reference by

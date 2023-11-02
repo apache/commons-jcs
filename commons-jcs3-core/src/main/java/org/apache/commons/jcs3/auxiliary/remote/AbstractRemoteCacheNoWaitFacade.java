@@ -280,7 +280,7 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K, V>
     protected abstract void failover( RemoteCacheNoWait<K, V> rcnw );
 
     /**
-     * Get the primary server from the list of failovers
+     * Gets the primary server from the list of failovers
      *
      * @return a no wait
      */

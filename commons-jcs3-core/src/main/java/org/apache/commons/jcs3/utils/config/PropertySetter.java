@@ -90,7 +90,7 @@ public class PropertySetter
     }
 
     /**
-     * Set the properties of an object passed as a parameter in one go. The <code>properties</code>
+     * Sets the properties of an object passed as a parameter in one go. The <code>properties</code>
      * are parsed relative to a <code>prefix</code>.
      * <p>
      * @param obj The object to configure.
@@ -103,7 +103,7 @@ public class PropertySetter
     }
 
     /**
-     * Set the properties for the object that match the <code>prefix</code> passed as parameter.
+     * Sets the properties for the object that match the <code>prefix</code> passed as parameter.
      * <p>
      * @param properties The new properties value
      * @param prefix The new properties value
@@ -134,7 +134,7 @@ public class PropertySetter
     }
 
     /**
-     * Set a property on this PropertySetter's Object. If successful, this method will invoke a
+     * Sets a property on this PropertySetter's Object. If successful, this method will invoke a
      * setter method on the underlying Object. The setter is the one for the specified property name
      * and the value is determined partly from the setter argument type and partly from the value
      * specified in the call to this method.
@@ -176,7 +176,7 @@ public class PropertySetter
     }
 
     /**
-     * Set the named property given a {@link PropertyDescriptor}.
+     * Sets the named property given a {@link PropertyDescriptor}.
      * @param prop A PropertyDescriptor describing the characteristics of the property to set.
      * @param name The named of the property to set.
      * @param value The value of the property.

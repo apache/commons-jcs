@@ -66,7 +66,7 @@ public class JCSCachingManager implements CacheManager
     	jcs.default.elementattributes.IsLateral=true
     	""";
 
-    private static class InternalManager extends CompositeCacheManager
+    private static final class InternalManager extends CompositeCacheManager
     {
         protected static InternalManager create()
         {

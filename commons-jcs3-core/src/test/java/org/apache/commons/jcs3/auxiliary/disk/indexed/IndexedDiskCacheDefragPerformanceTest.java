@@ -135,7 +135,7 @@ public class IndexedDiskCacheDefragPerformanceTest
     /**
      * Resembles a cached image.
      */
-    private static class Tile
+    private static final class Tile
         implements Serializable
     {
         /** Don't change */

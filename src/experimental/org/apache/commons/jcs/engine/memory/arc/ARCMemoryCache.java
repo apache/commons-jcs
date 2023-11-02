@@ -54,7 +54,7 @@ public class ARCMemoryCache
     // private int[] loc = new int[0];
 
     // maximum size
-    private int maxSize = 0;
+    private int maxSize;
 
     private DoubleLinkedList T1 = new DoubleLinkedList();
 
@@ -77,17 +77,17 @@ public class ARCMemoryCache
     protected static final int _B2_ = 4;
 
     // ideal size of T1
-    private int target_T1 = 0;
+    private int target_T1;
 
     private ConcurrentHashMap map = new ConcurrentHashMap();
 
-    private int cnt = 0;
+    private int cnt;
 
-    private int hitCnt = 0;
+    private int hitCnt;
 
-    private int missCnt = 0;
+    private int missCnt;
 
-    private int putCnt = 0;
+    private int putCnt;
 
     /**
      * Default constructor.
@@ -101,7 +101,7 @@ public class ARCMemoryCache
     }
 
     /**
-     * Get an Array of the keys for all elements in the memory cache
+     * Gets an Array of the keys for all elements in the memory cache
      * @return Object[]
      */
     public Object[] getKeyArray()

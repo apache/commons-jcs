@@ -51,7 +51,7 @@ public class ObjectInputStreamClassLoaderAware extends ObjectInputStream {
         }
     }
 
-    private static class BlacklistClassResolver {
+    private static final class BlacklistClassResolver {
         private static final BlacklistClassResolver DEFAULT = new BlacklistClassResolver(
             toArray(System.getProperty(
                 "jcs.serialization.class.blacklist",

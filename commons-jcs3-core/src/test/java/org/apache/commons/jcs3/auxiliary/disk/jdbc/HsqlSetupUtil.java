@@ -29,7 +29,7 @@ import org.apache.commons.jcs3.auxiliary.disk.jdbc.hsql.HSQLDiskCacheFactory;
 /** Can use this to setup a table. */
 public final class HsqlSetupUtil
 {
-    private static class HSQLDiskCacheFactoryHelper extends HSQLDiskCacheFactory
+    private static final class HSQLDiskCacheFactoryHelper extends HSQLDiskCacheFactory
     {
         @Override
         protected synchronized void setupTable(Connection cConn, String tableName) throws SQLException
@@ -41,7 +41,7 @@ public final class HsqlSetupUtil
     private static HSQLDiskCacheFactoryHelper factory = new HSQLDiskCacheFactoryHelper();
 
     /**
-     * Set up a table for cache testing
+     * Sets up a table for cache testing
      * <p>
      * @param cConn
      * @param tableName

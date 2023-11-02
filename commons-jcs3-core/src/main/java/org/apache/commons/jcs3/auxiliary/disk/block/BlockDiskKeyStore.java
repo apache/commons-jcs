@@ -249,7 +249,7 @@ public class BlockDiskKeyStore<K>
     private final IElementSerializer serializer;
 
     /**
-     * Set the configuration options.
+     * Sets the configuration options.
      * <p>
      *
      * @param cacheAttributes

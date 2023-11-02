@@ -140,7 +140,7 @@ public abstract class AbstractMemoryCache<K, V>
     }
 
     /**
-     * Get an item from the cache without affecting its last access time or position. Not all memory
+     * Gets an item from the cache without affecting its last access time or position. Not all memory
      * cache implementations can get quietly.
      * <p>
      * @param key Identifies item to find
@@ -446,7 +446,7 @@ public abstract class AbstractMemoryCache<K, V>
     }
 
     /**
-     * Get a set of the keys for all elements in the memory cache
+     * Gets a set of the keys for all elements in the memory cache
      *
      * @return a set of keys
      */
@@ -457,7 +457,7 @@ public abstract class AbstractMemoryCache<K, V>
     }
 
     /**
-     * Get an item from the cache.
+     * Gets an item from the cache.
      * <p>
      *
      * @param key Identifies item to find

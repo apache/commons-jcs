@@ -558,7 +558,7 @@ public class BlockDiskCache<K, V>
     {
         if ( !isAlive() )
         {
-            log.error("{0}: Not alive and dispose was called, filename: {1}", logCacheName, fileName);
+            log.error("{0}: Not alive and dispose was called, file name: {1}", logCacheName, fileName);
             return;
         }
         storageLock.writeLock().lock();
@@ -575,13 +575,13 @@ public class BlockDiskCache<K, V>
 
             try
             {
-                log.debug("{0}: Closing files, base filename: {1}", logCacheName, fileName );
+                log.debug("{0}: Closing files, base file name: {1}", logCacheName, fileName );
                 dataFile.close();
                 // dataFile = null;
             }
             catch ( final IOException e )
             {
-                log.error("{0}: Failure closing files in dispose, filename: {1}",
+                log.error("{0}: Failure closing files in dispose, file name: {1}",
                         logCacheName, fileName, e );
             }
         }

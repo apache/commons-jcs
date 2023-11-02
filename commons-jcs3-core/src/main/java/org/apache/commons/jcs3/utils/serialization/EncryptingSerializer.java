@@ -100,7 +100,7 @@ public class EncryptingSerializer extends StandardSerializer
     }
 
     /**
-     * Set the pre-shared key for encryption and decryption
+     * Sets the pre-shared key for encryption and decryption
      *
      * @param psk the key
      */
@@ -110,7 +110,7 @@ public class EncryptingSerializer extends StandardSerializer
     }
 
     /**
-     * Set the cipher transformation for encryption and decryption
+     * Sets the cipher transformation for encryption and decryption
      * Default is AES/ECB/PKCS5Padding
      *
      * @param transformation the transformation

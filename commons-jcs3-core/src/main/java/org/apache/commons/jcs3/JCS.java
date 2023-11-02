@@ -41,7 +41,7 @@ import org.apache.commons.jcs3.log.LogManager;
 public abstract class JCS
 {
     /** cache.ccf alternative. */
-    private static String configFilename;
+    private static String configFileName;
 
     /** alternative configuration properties */
     private static Properties configProps;
@@ -50,18 +50,18 @@ public abstract class JCS
     private static CompositeCacheManager cacheMgr;
 
     /**
-     * Set the filename that the cache manager will be initialized with. Only matters before the
+     * Sets the file name that the cache manager will be initialized with. Only matters before the
      * instance is initialized.
-     * <p>
-     * @param configFilename
+     *
+     * @param configFileName
      */
-    public static void setConfigFilename( final String configFilename )
+    public static void setConfigFilename( final String configFileName )
     {
-        JCS.configFilename = configFilename;
+        JCS.configFileName = configFileName;
     }
 
     /**
-     * Set the properties that the cache manager will be initialized with. Only
+     * Sets the properties that the cache manager will be initialized with. Only
      * matters before the instance is initialized.
      *
      * @param configProps
@@ -72,7 +72,7 @@ public abstract class JCS
     }
 
     /**
-     * Set the log system. Must be called before getInstance is called
+     * Sets the log system. Must be called before getInstance is called
      * Predefined Log systems are {@link LogManager#LOGSYSTEM_JAVA_UTIL_LOGGING}
      * and {@link LogManager#LOGSYSTEM_LOG4J2}
      *
@@ -116,10 +116,10 @@ public abstract class JCS
                     cacheMgr = CompositeCacheManager.getUnconfiguredInstance();
                     cacheMgr.configure( configProps );
                 }
-                else if ( configFilename != null )
+                else if ( configFileName != null )
                 {
                     cacheMgr = CompositeCacheManager.getUnconfiguredInstance();
-                    cacheMgr.configure( configFilename );
+                    cacheMgr.configure( configFileName );
                 }
                 else
                 {
@@ -132,7 +132,7 @@ public abstract class JCS
     }
 
     /**
-     * Get a CacheAccess which accesses the provided region.
+     * Gets a CacheAccess which accesses the provided region.
      * <p>
      * @param region Region that return CacheAccess will provide access to
      * @return A CacheAccess which provides access to a given region.
@@ -146,7 +146,7 @@ public abstract class JCS
     }
 
     /**
-     * Get a CacheAccess which accesses the provided region.
+     * Gets a CacheAccess which accesses the provided region.
      * <p>
      * @param region Region that return CacheAccess will provide access to
      * @param icca CacheAttributes for region
@@ -161,7 +161,7 @@ public abstract class JCS
     }
 
     /**
-     * Get a CacheAccess which accesses the provided region.
+     * Gets a CacheAccess which accesses the provided region.
      * <p>
      * @param region Region that return CacheAccess will provide access to
      * @param icca CacheAttributes for region
@@ -177,7 +177,7 @@ public abstract class JCS
     }
 
     /**
-     * Get a GroupCacheAccess which accesses the provided region.
+     * Gets a GroupCacheAccess which accesses the provided region.
      * <p>
      * @param region Region that return GroupCacheAccess will provide access to
      * @return A GroupCacheAccess which provides access to a given region.
@@ -191,7 +191,7 @@ public abstract class JCS
     }
 
     /**
-     * Get a GroupCacheAccess which accesses the provided region.
+     * Gets a GroupCacheAccess which accesses the provided region.
      * <p>
      * @param region Region that return GroupCacheAccess will provide access to
      * @param icca CacheAttributes for region
@@ -206,7 +206,7 @@ public abstract class JCS
     }
 
     /**
-     * Get a GroupCacheAccess which accesses the provided region.
+     * Gets a GroupCacheAccess which accesses the provided region.
      * <p>
      * @param region Region that return CacheAccess will provide access to
      * @param icca CacheAttributes for region

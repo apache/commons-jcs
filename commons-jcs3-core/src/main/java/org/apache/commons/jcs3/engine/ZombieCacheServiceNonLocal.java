@@ -258,14 +258,14 @@ public class ZombieCacheServiceNonLocal<K, V>
     /**
      * A basic put event.
      */
-    private static class PutEvent<K, V>
+    private static final class PutEvent<K, V>
         extends ZombieEvent
     {
         /** The element to put */
         final ICacheElement<K, V> element;
 
         /**
-         * Set the element
+         * Sets the element
          * @param element
          * @param requesterId
          */
@@ -279,14 +279,14 @@ public class ZombieCacheServiceNonLocal<K, V>
     /**
      * A basic Remove event.
      */
-    private static class RemoveEvent<K>
+    private static final class RemoveEvent<K>
         extends ZombieEvent
     {
         /** The key to remove */
         final K key;
 
         /**
-         * Set the element
+         * Sets the element
          * @param cacheName
          * @param key
          * @param requesterId
@@ -302,7 +302,7 @@ public class ZombieCacheServiceNonLocal<K, V>
     /**
      * A basic RemoveAll event.
      */
-    private static class RemoveAllEvent
+    private static final class RemoveAllEvent
         extends ZombieEvent
     {
         /**

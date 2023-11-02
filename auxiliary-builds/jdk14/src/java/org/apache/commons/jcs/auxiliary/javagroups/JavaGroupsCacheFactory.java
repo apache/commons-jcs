@@ -55,7 +55,7 @@ public class JavaGroupsCacheFactory
 
             JavaGroupsCacheAttributes attributes = (JavaGroupsCacheAttributes) iaca;
 
-            // Create a ChannelFactory using the classname specified in the
+            // Create a ChannelFactory using the class name specified in the
             // config as 'channelFactoryClassName'
 
             ChannelFactory factory = (ChannelFactory) Class.forName( attributes.getChannelFactoryClassName() )

@@ -46,7 +46,7 @@ public class TestLogConfigurationUtil
         rootLogger.setLevel(Level.FINE);
     }
 
-    private static class MockLogHandler extends Handler
+    private static final class MockLogHandler extends Handler
     {
         private final StringWriter writer;
 

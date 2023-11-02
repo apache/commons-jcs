@@ -207,7 +207,7 @@ public class CompositeCache<K, V>
     }
 
     /**
-     * Get the list of auxiliary caches for this region.
+     * Gets the list of auxiliary caches for this region.
      * <p>
      * @return a list of auxiliary caches, may be empty, never null
      * @since 3.1
@@ -959,7 +959,7 @@ public class CompositeCache<K, V>
     }
 
     /**
-     * Get a set of the keys for all elements in the cache
+     * Gets a set of the keys for all elements in the cache
      * <p>
      * @return A set of the key type
      */
@@ -969,7 +969,7 @@ public class CompositeCache<K, V>
     }
 
     /**
-     * Get a set of the keys for all elements in the cache
+     * Gets a set of the keys for all elements in the cache
      * <p>
      * @param localOnly true if only memory keys are requested
      *

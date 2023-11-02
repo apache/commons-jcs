@@ -49,7 +49,7 @@ public class LateralCacheXMLRPCListener implements ILateralCacheXMLRPCListener, 
     // instance vars
     private LateralXMLRPCReceiver receiver;
     private ILateralCacheAttributes ilca;
-    private boolean inited = false;
+    private boolean inited;
 
 
     /**

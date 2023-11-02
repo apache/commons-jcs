@@ -27,13 +27,13 @@ public enum RemoteRequestType
     /** Alive check request type. */
     ALIVE_CHECK,
 
-    /** Get request type. */
+    /** Gets request type. */
     GET,
 
-    /** Get Multiple request type. */
+    /** Gets Multiple request type. */
     GET_MULTIPLE,
 
-    /** Get Matching request type. */
+    /** Gets Matching request type. */
     GET_MATCHING,
 
     /** Update request type. */
@@ -45,7 +45,7 @@ public enum RemoteRequestType
     /** Remove All request type. */
     REMOVE_ALL,
 
-    /** Get keys request type. */
+    /** Gets keys request type. */
     GET_KEYSET,
 
     /** Dispose request type. */
