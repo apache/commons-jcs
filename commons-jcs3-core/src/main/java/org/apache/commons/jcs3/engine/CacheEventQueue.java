@@ -1,7 +1,5 @@
 package org.apache.commons.jcs3.engine;
 
-import java.util.concurrent.ExecutorService;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -20,6 +18,8 @@ import java.util.concurrent.ExecutorService;
  * specific language governing permissions and limitations
  * under the License.
  */
+
+import java.util.concurrent.ExecutorService;
 
 import org.apache.commons.jcs3.engine.behavior.ICacheListener;
 import org.apache.commons.jcs3.utils.threadpool.PoolConfiguration;
@@ -70,7 +70,7 @@ public class CacheEventQueue<K, V>
     {
         // create a default pool with one worker thread to mimic the SINGLE queue behavior
         return ThreadPoolManager.getInstance().createPool(
-                new PoolConfiguration(false, 0, 1, 1, getWaitToDieMillis(), WhenBlockedPolicy.BLOCK, 1),
+                new PoolConfiguration(false, 0, 1, 1, getWaitToDieMillis(), WhenBlockedPolicy.RUN, 1),
                 "CacheEventQueue.QProcessor-" + getCacheName());
     }
 
