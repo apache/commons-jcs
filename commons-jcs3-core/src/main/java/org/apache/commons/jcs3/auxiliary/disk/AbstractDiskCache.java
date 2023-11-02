@@ -404,31 +404,10 @@ public abstract class AbstractDiskCache<K, V>
     public final void dispose()
         throws IOException
     {
-        // wait up to 60 seconds for dispose and then quit if not done.
-        long shutdownSpoolTime = this.diskCacheAttributes.getShutdownSpoolTimeLimit() * 1000L;
-
-        while (!cacheEventQueue.isEmpty() && shutdownSpoolTime > 0)
-        {
-            try
-            {
-                Thread.sleep(100);
-                shutdownSpoolTime -= 100;
-            }
-            catch ( final InterruptedException e )
-            {
-                break;
-            }
-        }
-
-        if (shutdownSpoolTime <= 0)
-        {
-            log.info( "No longer waiting for event queue to finish: {0}",
-                    cacheEventQueue::getStatistics);
-        }
-
         log.info( "In dispose, destroying event queue." );
-        // This stops the processor thread.
-        cacheEventQueue.destroy();
+
+        // wait for dispose and then quit if not done.
+        cacheEventQueue.destroy(this.diskCacheAttributes.getShutdownSpoolTimeLimit());
 
         // Invoke any implementation specific disposal code
         // need to handle the disposal first.

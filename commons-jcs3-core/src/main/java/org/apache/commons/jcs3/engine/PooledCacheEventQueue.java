@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.jcs3.engine.behavior.ICacheListener;
 import org.apache.commons.jcs3.engine.stats.StatElement;
@@ -118,14 +119,33 @@ public class PooledCacheEventQueue<K, V>
     }
 
     /**
-     * Destroy the queue. Interrupt all threads.
+     * Destroy the queue
+     *
+     * @param waitSeconds number of seconds to wait for the queue to drain
      */
     @Override
-    public synchronized void destroy()
+    public synchronized void destroy(int waitSeconds)
     {
         if ( isWorking() )
         {
             setWorking(false);
+            pool.shutdown();
+
+            if (waitSeconds > 0)
+            {
+                try
+                {
+                    if (!pool.awaitTermination(waitSeconds, TimeUnit.SECONDS))
+                    {
+                        log.info( "No longer waiting for event queue to finish: {0}",
+                                this::getStatistics);
+                    }
+                }
+                catch (InterruptedException e)
+                {
+                    // ignore
+                }
+            }
             log.info( "Cache event queue destroyed: {0}", this );
         }
     }
@@ -136,7 +156,7 @@ public class PooledCacheEventQueue<K, V>
      * @param event
      */
     @Override
-    protected void put( final AbstractCacheEvent event )
+    protected void put( final AbstractCacheEvent<?> event )
     {
         pool.execute( event );
     }

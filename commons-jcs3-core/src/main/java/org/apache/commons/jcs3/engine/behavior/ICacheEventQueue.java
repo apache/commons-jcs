@@ -91,8 +91,20 @@ public interface ICacheEventQueue<K, V>
      */
     long getListenerId();
 
-    /** Description of the Method */
-    void destroy();
+    /**
+     * Destroy the queue
+     */
+    default void destroy()
+    {
+        destroy(0);
+    }
+
+    /**
+     * Destroy the queue
+     *
+     * @param waitSeconds number of seconds to wait for the queue to drain
+     */
+    void destroy(int waitSeconds);
 
     /**
      * A Queue is working unless it has reached its max failure count.
@@ -102,8 +114,8 @@ public interface ICacheEventQueue<K, V>
     boolean isWorking();
 
     /**
-     * Returns the number of elements in the queue.  If the queue cannot
-     * determine the size accurately it will return 1.
+     * Returns the number of elements in the queue. If the queue cannot
+     * determine the size accurately it will return 0.
      * <p>
      * @return number of items in the queue.
      */
@@ -112,7 +124,7 @@ public interface ICacheEventQueue<K, V>
     /**
      * Are there elements in the queue.
      * <p>
-     * @return true if there are stil elements.
+     * @return true if there are still elements in the queue.
      */
     boolean isEmpty();
 
