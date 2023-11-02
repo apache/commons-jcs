@@ -21,6 +21,7 @@ package org.apache.commons.jcs3.engine;
 
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
 
 import org.apache.commons.jcs3.engine.behavior.ICacheElement;
 import org.apache.commons.jcs3.engine.behavior.ICacheEventQueue;
@@ -190,19 +191,64 @@ public abstract class AbstractCacheEventQueue<K, V>
     }
 
     /**
+     * Call remove on the listener.
+     * Helper method to allow method reference in RemoveEvent
+     * <p>
+     * @throws IOException
+     */
+    private void remove(K key) throws IOException
+    {
+        listener.handleRemove( cacheName, key );
+    }
+
+    /**
      * Adds an event to the queue.
      * <p>
      * @param event
      */
-    protected abstract void put( AbstractCacheEvent event );
+    protected abstract void put( AbstractCacheEvent<?> event );
 
 
     // /////////////////////////// Inner classes /////////////////////////////
+    protected interface IOExConsumer<T>
+    {
+        void accept(T t) throws IOException;
+
+        static <T> Consumer<T> unchecked(IOExConsumer<T> consumer)
+        {
+            return t -> {
+                try
+                {
+                    consumer.accept(t);
+                }
+                catch (IOException e)
+                {
+                    throw new RuntimeException(e);
+                }
+            };
+        }
+    }
+
     /**
      * Retries before declaring failure.
      */
-    protected abstract class AbstractCacheEvent implements Runnable
+    protected class AbstractCacheEvent<T> implements Runnable
     {
+        protected final T eventData;
+        private final IOExConsumer<T> eventRun;
+
+        /**
+         * Constructor
+         *
+         * @param eventData data of the event
+         * @param eventRun operation to apply on the event
+         */
+        protected AbstractCacheEvent(final T eventData, final IOExConsumer<T> eventRun)
+        {
+            this.eventData = eventData;
+            this.eventRun = eventRun;
+        }
+
         /**
          * Main processing method for the AbstractCacheEvent object
          */
@@ -213,10 +259,10 @@ public abstract class AbstractCacheEventQueue<K, V>
             {
                 try
                 {
-                    doRun();
+                    eventRun.accept(eventData);
                     return;
                 }
-                catch (final IOException e)
+                catch (final Throwable e)
                 {
                     log.warn("Error while running event from Queue: {0}. "
                             + "Retrying...", this, e);
@@ -238,43 +284,21 @@ public abstract class AbstractCacheEventQueue<K, V>
                     + "non-functional.", this );
             destroy();
         }
-
-        /**
-         * @throws IOException
-         */
-        protected abstract void doRun()
-            throws IOException;
     }
 
     /**
      * An element should be put in the cache.
      */
-    protected class PutEvent
-        extends AbstractCacheEvent
+    protected class PutEvent extends AbstractCacheEvent<ICacheElement<K, V>>
     {
-        /** The element to put to the listener */
-        private final ICacheElement<K, V> ice;
-
         /**
          * Constructor for the PutEvent object.
          * <p>
-         * @param ice
+         * @param ice a cache element
          */
         PutEvent( final ICacheElement<K, V> ice )
         {
-            this.ice = ice;
-        }
-
-        /**
-         * Call put on the listener.
-         * <p>
-         * @throws IOException
-         */
-        @Override
-        protected void doRun()
-            throws IOException
-        {
-            listener.handlePut( ice );
+            super(ice, listener::handlePut);
         }
 
         /**
@@ -285,24 +309,15 @@ public abstract class AbstractCacheEventQueue<K, V>
         @Override
         public String toString()
         {
-            return new StringBuilder( "PutEvent for key: " )
-                    .append( ice.getKey() )
-                    .append( " value: " )
-                    .append( ice.getVal() )
-                    .toString();
+            return "PutEvent for key: " + eventData.getKey() + " value: " + eventData.getVal();
         }
-
     }
 
     /**
      * An element should be removed from the cache.
      */
-    protected class RemoveEvent
-        extends AbstractCacheEvent
+    protected class RemoveEvent extends AbstractCacheEvent<K>
     {
-        /** The key to remove from the listener */
-        private final K key;
-
         /**
          * Constructor for the RemoveEvent object
          * <p>
@@ -310,19 +325,7 @@ public abstract class AbstractCacheEventQueue<K, V>
          */
         RemoveEvent( final K key )
         {
-            this.key = key;
-        }
-
-        /**
-         * Call remove on the listener.
-         * <p>
-         * @throws IOException
-         */
-        @Override
-        protected void doRun()
-            throws IOException
-        {
-            listener.handleRemove( cacheName, key );
+            super(key, AbstractCacheEventQueue.this::remove);
         }
 
         /**
@@ -333,29 +336,21 @@ public abstract class AbstractCacheEventQueue<K, V>
         @Override
         public String toString()
         {
-            return new StringBuilder( "RemoveEvent for " )
-                    .append( key )
-                    .toString();
+            return "RemoveEvent for " + eventData;
         }
-
     }
 
     /**
      * All elements should be removed from the cache when this event is processed.
      */
-    protected class RemoveAllEvent
-        extends AbstractCacheEvent
+    protected class RemoveAllEvent extends AbstractCacheEvent<String>
     {
         /**
-         * Call removeAll on the listener.
-         * <p>
-         * @throws IOException
+         * Constructor for the RemoveAllEvent object.
          */
-        @Override
-        protected void doRun()
-            throws IOException
+        protected RemoveAllEvent()
         {
-            listener.handleRemoveAll( cacheName );
+            super(cacheName, listener::handleRemoveAll);
         }
 
         /**
@@ -373,19 +368,14 @@ public abstract class AbstractCacheEventQueue<K, V>
     /**
      * The cache should be disposed when this event is processed.
      */
-    protected class DisposeEvent
-        extends AbstractCacheEvent
+    protected class DisposeEvent extends AbstractCacheEvent<String>
     {
         /**
-         * Called when gets to the end of the queue
-         *
-         * @throws IOException
+         * Constructor for the DisposeEvent object.
          */
-        @Override
-        protected void doRun()
-            throws IOException
+        protected DisposeEvent()
         {
-            listener.handleDispose( cacheName );
+            super(cacheName, listener::handleDispose);
         }
 
         /**
