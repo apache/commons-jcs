@@ -40,7 +40,6 @@
   </scm>
 
   <properties>
-     <commons.bc.version>3.1</commons.bc.version>
      <!-- generate report even if there are binary incompatible changes -->
      <commons.japicmp.breakBuildOnBinaryIncompatibleModifications>false</commons.japicmp.breakBuildOnBinaryIncompatibleModifications>
      <commons.japicmp.ignoreMissingClasses>false</commons.japicmp.ignoreMissingClasses>
