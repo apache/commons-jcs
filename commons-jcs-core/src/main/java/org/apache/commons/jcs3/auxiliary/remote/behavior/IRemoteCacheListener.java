@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.rmi.Remote;
 
 import org.apache.commons.jcs3.auxiliary.remote.server.behavior.RemoteType;
+import org.apache.commons.jcs3.engine.behavior.ICacheElement;
 import org.apache.commons.jcs3.engine.behavior.ICacheListener;
 
 /**
@@ -50,6 +51,47 @@ public interface IRemoteCacheListener<K, V>
      */
     @Override
     void setListenerId( long id )
+        throws IOException;
+
+    /**
+     * Notifies the subscribers for a cache entry update.
+     * <p>
+     * @param item
+     * @throws IOException
+     */
+    @Override
+    void handlePut( ICacheElement<K, V> item )
+        throws IOException;
+
+    /**
+     * Notifies the subscribers for a cache entry removal.
+     * <p>
+     * @param cacheName
+     * @param key
+     * @throws IOException
+     */
+    @Override
+    void handleRemove( String cacheName, K key )
+        throws IOException;
+
+    /**
+     * Notifies the subscribers for a cache remove-all.
+     * <p>
+     * @param cacheName
+     * @throws IOException
+     */
+    @Override
+    void handleRemoveAll( String cacheName )
+        throws IOException;
+
+    /**
+     * Notifies the subscribers for freeing up the named cache.
+     * <p>
+     * @param cacheName
+     * @throws IOException
+     */
+    @Override
+    void handleDispose( String cacheName )
         throws IOException;
 
     /**
