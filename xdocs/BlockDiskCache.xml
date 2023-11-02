@@ -89,7 +89,7 @@ thread_pool.default.boundarySize=2000
 thread_pool.default.maximumPoolSize=150
 thread_pool.default.minimumPoolSize=4
 thread_pool.default.keepAliveTime=350000
-#RUN ABORT WAIT BLOCK DISCARDOLDEST
+#RUN ABORT DISCARDOLDEST DISCARD
 thread_pool.default.whenBlockedPolicy=RUN
 thread_pool.default.startUpSize=4
 

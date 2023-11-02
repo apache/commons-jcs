@@ -70,17 +70,14 @@ public final class PoolConfiguration
         /** abort when queue is full and max threads is reached. */
         ABORT,
 
-        /** block when queue is full and max threads is reached. */
-        BLOCK,
-
         /** run in current thread when queue is full and max threads is reached. */
         RUN,
 
-        /** wait when queue is full and max threads is reached. */
-        WAIT,
-
         /** discard oldest when queue is full and max threads is reached. */
-        DISCARDOLDEST
+        DISCARDOLDEST,
+
+        /** silently discard submitted job when queue is full and max threads is reached. */
+        DISCARD
     }
 
     /** should be ABORT, BLOCK, RUN, WAIT, DISCARDOLDEST, */

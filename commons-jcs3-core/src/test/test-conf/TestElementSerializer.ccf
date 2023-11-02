@@ -65,5 +65,5 @@ thread_pool.cache_event_queue.useBoundary=false
 thread_pool.cache_event_queue.maximumPoolSize=10
 thread_pool.cache_event_queue.minimumPoolSize=5
 thread_pool.cache_event_queue.keepAliveTime=3500
-thread_pool.cache_event_queue.whenBlockedPolicy=BLOCK
+thread_pool.cache_event_queue.whenBlockedPolicy=RUN
 thread_pool.cache_event_queue.startUpSize=5

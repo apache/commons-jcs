@@ -162,14 +162,12 @@ public class ThreadPoolManager
                 pool.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
                 break;
 
-            case WAIT:
-                throw new UnsupportedOperationException("POLICY_WAIT no longer supported");
-
             case DISCARDOLDEST:
                 pool.setRejectedExecutionHandler(new ThreadPoolExecutor.DiscardOldestPolicy());
                 break;
 
-            default:
+            case DISCARD:
+                pool.setRejectedExecutionHandler(new ThreadPoolExecutor.DiscardPolicy());
                 break;
         }
 
