@@ -25,7 +25,7 @@ import java.io.IOException;
  * Used to receive a cache event notification.
  * <p>
  * Note: objects which implement this interface are local listeners to cache changes, whereas
- * objects which implement IRmiCacheListener are remote listeners to cache changes.
+ * objects which implement IRemoteCacheListener are remote listeners to cache changes.
  */
 public interface ICacheListener<K, V>
 {
