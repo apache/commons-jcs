@@ -33,7 +33,7 @@ import org.junit.Test;
 public class NotSerializableTest
 {
     @Test
-    public void run()
+    public void testRun()
     {
         final CachingProvider cachingProvider = Caching.getCachingProvider();
         final CacheManager cacheManager = cachingProvider.getCacheManager();

@@ -67,7 +67,7 @@ public class CompositeCacheLoaderTest
     private Cache<String, String> cache;
 
     @Test
-    public void checkComposite()
+    public void testCheckComposite()
     {
         cache.get("foo");
         assertEquals(2, count.get());

@@ -53,7 +53,7 @@ import org.junit.Test;
 public class CacheTest
 {
     @Test
-    public void accessExpiry() throws InterruptedException
+    public void testAccessExpiry() throws InterruptedException
     {
         final CachingProvider cachingProvider = Caching.getCachingProvider();
         final CacheManager cacheManager = cachingProvider.getCacheManager(cachingProvider.getDefaultURI(),
@@ -88,7 +88,7 @@ public class CacheTest
     }
 
     @Test
-    public void getPut()
+    public void testGetPut()
     {
         final CachingProvider cachingProvider = Caching.getCachingProvider();
         final CacheManager cacheManager = cachingProvider.getCacheManager();
@@ -103,7 +103,7 @@ public class CacheTest
     }
 
     @Test
-    public void listeners()
+    public void testListeners()
     {
         final CachingProvider cachingProvider = Caching.getCachingProvider();
         final CacheManager cacheManager = cachingProvider.getCacheManager();
@@ -220,7 +220,7 @@ public class CacheTest
     }
 
     @Test
-    public void loader()
+    public void testLoader()
     {
         final CachingProvider cachingProvider = Caching.getCachingProvider();
         final CacheManager cacheManager = cachingProvider.getCacheManager();

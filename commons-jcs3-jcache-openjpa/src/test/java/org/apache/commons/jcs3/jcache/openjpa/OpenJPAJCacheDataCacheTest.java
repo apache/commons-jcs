@@ -61,7 +61,7 @@ public class OpenJPAJCacheDataCacheTest
     }};
 
     @Test
-    public void entity()
+    public void testEntity()
     {
         final EntityManagerFactory emf = Persistence.createEntityManagerFactory("test-jcache", props);
         final OpenJPAConfiguration conf = OpenJPAEntityManagerFactorySPI.class.cast(emf).getConfiguration();
@@ -84,7 +84,7 @@ public class OpenJPAJCacheDataCacheTest
     }
 
     @Test
-    public void query()
+    public void testQuery()
     {
         final EntityManagerFactory emf = Persistence.createEntityManagerFactory("test-jcache", props);
         final OpenJPAConfiguration conf = OpenJPAEntityManagerFactorySPI.class.cast(emf).getConfiguration();

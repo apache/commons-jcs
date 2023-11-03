@@ -81,7 +81,7 @@ public class CompositeCacheWriterTest
     private Cache<String, String> cache;
 
     @Test
-    public void checkComposite()
+    public void testCheckComposite()
     {
         cache.put("a", "b");
         assertEquals("b", copy1.get("a"));

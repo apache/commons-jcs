@@ -45,7 +45,7 @@ import org.junit.Test;
 public class ExpiryListenerTest {
 
     @Test
-    public void listener() throws InterruptedException {
+    public void testListener() throws InterruptedException {
         final CachingProvider cachingProvider = Caching.getCachingProvider();
         final CacheManager cacheManager = cachingProvider.getCacheManager();
         final CacheEntryExpiredListenerImpl listener = new CacheEntryExpiredListenerImpl();

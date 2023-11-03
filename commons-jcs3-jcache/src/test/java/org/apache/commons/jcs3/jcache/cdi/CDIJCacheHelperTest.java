@@ -36,7 +36,7 @@ import org.junit.Test;
 public class CDIJCacheHelperTest
 {
     @Test
-    public void proxyCacheDefaults()
+    public void testProxyCacheDefaults()
     {
         final CDIJCacheHelper helper = new CDIJCacheHelper();
 

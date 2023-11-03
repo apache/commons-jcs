@@ -63,13 +63,13 @@ public class ExtraJCacheExtensionTest
     private BeanWithInjections bean;
 
     @Test
-    public void defaultCacheManager()
+    public void testDefaultCacheManager()
     {
         assertNotNull(bean.getMgr());
     }
 
     @Test
-    public void defaultCacheProvider()
+    public void testDefaultCacheProvider()
     {
         assertNotNull(bean.getProvider());
     }

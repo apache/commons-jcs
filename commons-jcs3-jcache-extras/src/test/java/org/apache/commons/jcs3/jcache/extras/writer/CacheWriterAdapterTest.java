@@ -63,7 +63,7 @@ public class CacheWriterAdapterTest
     private Cache<String, String> cache;
 
     @Test
-    public void checkWriteAllAndDeleteAll()
+    public void testCheckWriteAllAndDeleteAll()
     {
         assertTrue(copy.isEmpty());
         assertFalse(cache.iterator().hasNext());
