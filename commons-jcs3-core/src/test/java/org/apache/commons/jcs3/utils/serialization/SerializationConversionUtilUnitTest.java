@@ -40,90 +40,6 @@ import org.junit.Test;
 public class SerializationConversionUtilUnitTest
 {
     /**
-     * Verify null for null.
-     * <p>
-     * @throws IOException
-     */
-    @Test
-    public void testgGetSerializedCacheElement_null()
-        throws IOException
-    {
-        // SETUP
-        final IElementSerializer elementSerializer = new StandardSerializer();
-        final ICacheElement<String, String> before = null;
-
-        // DO WORK
-        final ICacheElementSerialized<String, String> result =
-            SerializationConversionUtil.getSerializedCacheElement( before, elementSerializer );
-
-        // VERIFY
-        assertNull( "Should get null for null", result );
-    }
-
-    /**
-     * Verify null for null.
-     * <p>
-     * @throws Exception
-     */
-    @Test
-    public void testgGetDeSerializedCacheElement_null()
-        throws Exception
-    {
-        // SETUP
-        final IElementSerializer elementSerializer = new StandardSerializer();
-        final ICacheElementSerialized<String, String> before = null;
-
-        // DO WORK
-        final ICacheElement<String, String> result =
-            SerializationConversionUtil.getDeSerializedCacheElement( before, elementSerializer );
-
-        // VERIFY
-        assertNull( "Should get null for null", result );
-    }
-
-    /**
-     * Verify that we can go back and forth with the simplest of objects.
-     * <p>
-     * @throws Exception
-     */
-    @Test
-    public void testSimpleConversion()
-        throws Exception
-    {
-        // SETUP
-        final String cacheName = "testName";
-        final String key = "key";
-        final String value = "value fdsadf dsafdsa fdsaf dsafdsaf dsafdsaf dsaf dsaf dsaf dsafa dsaf dsaf dsafdsaf";
-
-        final IElementSerializer elementSerializer = new StandardSerializer();
-
-        final IElementAttributes attr = new ElementAttributes();
-        attr.setMaxLife(34);
-
-        final ICacheElement<String, String> before = new CacheElement<>( cacheName, key, value );
-        before.setElementAttributes( attr );
-
-        // DO WORK
-        final ICacheElementSerialized<String, String> serialized =
-            SerializationConversionUtil.getSerializedCacheElement( before, elementSerializer );
-
-        // VERIFY
-        assertNotNull( "Should have a serialized object.", serialized );
-
-        // DO WORK
-        final ICacheElement<String, String> after =
-            SerializationConversionUtil.getDeSerializedCacheElement( serialized, elementSerializer );
-
-        // VERIFY
-        assertNotNull( "Should have a deserialized object.", after );
-        assertEquals( "Values should be the same.", before.getVal(), after.getVal() );
-        assertEquals( "Attributes should be the same.", before.getElementAttributes().getMaxLife(), after
-            .getElementAttributes().getMaxLife() );
-        assertEquals( "Keys should be the same.", before.getKey(), after.getKey() );
-        assertEquals( "Cache name should be the same.", before.getCacheName(), after.getCacheName() );
-    }
-
-    /**
      * Verify that we can go back and forth with the simplest of objects.
      *<p>
      * @throws Exception
@@ -168,6 +84,48 @@ public class SerializationConversionUtilUnitTest
     }
 
     /**
+     * Verify null for null.
+     * <p>
+     * @throws Exception
+     */
+    @Test
+    public void testgGetDeSerializedCacheElement_null()
+        throws Exception
+    {
+        // SETUP
+        final IElementSerializer elementSerializer = new StandardSerializer();
+        final ICacheElementSerialized<String, String> before = null;
+
+        // DO WORK
+        final ICacheElement<String, String> result =
+            SerializationConversionUtil.getDeSerializedCacheElement( before, elementSerializer );
+
+        // VERIFY
+        assertNull( "Should get null for null", result );
+    }
+
+    /**
+     * Verify null for null.
+     * <p>
+     * @throws IOException
+     */
+    @Test
+    public void testgGetSerializedCacheElement_null()
+        throws IOException
+    {
+        // SETUP
+        final IElementSerializer elementSerializer = new StandardSerializer();
+        final ICacheElement<String, String> before = null;
+
+        // DO WORK
+        final ICacheElementSerialized<String, String> result =
+            SerializationConversionUtil.getSerializedCacheElement( before, elementSerializer );
+
+        // VERIFY
+        assertNull( "Should get null for null", result );
+    }
+
+    /**
      * Verify that we get an IOException for a null serializer.
      */
     @Test
@@ -198,5 +156,47 @@ public class SerializationConversionUtilUnitTest
         {
             // expected
         }
+    }
+
+    /**
+     * Verify that we can go back and forth with the simplest of objects.
+     * <p>
+     * @throws Exception
+     */
+    @Test
+    public void testSimpleConversion()
+        throws Exception
+    {
+        // SETUP
+        final String cacheName = "testName";
+        final String key = "key";
+        final String value = "value fdsadf dsafdsa fdsaf dsafdsaf dsafdsaf dsaf dsaf dsaf dsafa dsaf dsaf dsafdsaf";
+
+        final IElementSerializer elementSerializer = new StandardSerializer();
+
+        final IElementAttributes attr = new ElementAttributes();
+        attr.setMaxLife(34);
+
+        final ICacheElement<String, String> before = new CacheElement<>( cacheName, key, value );
+        before.setElementAttributes( attr );
+
+        // DO WORK
+        final ICacheElementSerialized<String, String> serialized =
+            SerializationConversionUtil.getSerializedCacheElement( before, elementSerializer );
+
+        // VERIFY
+        assertNotNull( "Should have a serialized object.", serialized );
+
+        // DO WORK
+        final ICacheElement<String, String> after =
+            SerializationConversionUtil.getDeSerializedCacheElement( serialized, elementSerializer );
+
+        // VERIFY
+        assertNotNull( "Should have a deserialized object.", after );
+        assertEquals( "Values should be the same.", before.getVal(), after.getVal() );
+        assertEquals( "Attributes should be the same.", before.getElementAttributes().getMaxLife(), after
+            .getElementAttributes().getMaxLife() );
+        assertEquals( "Keys should be the same.", before.getKey(), after.getKey() );
+        assertEquals( "Cache name should be the same.", before.getCacheName(), after.getCacheName() );
     }
 }

@@ -74,27 +74,190 @@ public class LateralCache<K, V>
     }
 
     /**
-     * Update lateral.
+     * Replaces the current remote cache service handle with the given handle.
      * <p>
-     * @param ce
-     * @throws IOException
+     * @param restoredLateral
+     */
+    public void fixCache( final ICacheServiceNonLocal<K, V> restoredLateral )
+    {
+        if ( this.lateralCacheService instanceof ZombieCacheServiceNonLocal )
+        {
+            final ZombieCacheServiceNonLocal<K, V> zombie = (ZombieCacheServiceNonLocal<K, V>) this.lateralCacheService;
+            this.lateralCacheService = restoredLateral;
+            try
+            {
+                zombie.propagateEvents( restoredLateral );
+            }
+            catch ( final Exception e )
+            {
+                try
+                {
+                    handleException( e, "Problem propagating events from Zombie Queue to new Lateral Service." );
+                }
+                catch ( final IOException e1 )
+                {
+                    // swallow, since this is just expected kick back.  Handle always throws
+                }
+            }
+        }
+        else
+        {
+            this.lateralCacheService = restoredLateral;
+        }
+    }
+
+    /**
+     * @return Returns the AuxiliaryCacheAttributes.
      */
     @Override
-    protected void processUpdate( final ICacheElement<K, V> ce )
-        throws IOException
+    public ILateralCacheAttributes getAuxiliaryCacheAttributes()
+    {
+        return lateralCacheAttributes;
+    }
+
+    /**
+     * Gets the cacheName attribute of the LateralCache object
+     * <p>
+     * @return The cacheName value
+     */
+    @Override
+    public String getCacheName()
+    {
+        return cacheName;
+    }
+
+    /**
+     * Gets the cacheType attribute of the LateralCache object
+     * <p>
+     * @return The cacheType value
+     */
+    @Override
+    public CacheType getCacheType()
+    {
+        return CacheType.LATERAL_CACHE;
+    }
+
+    /**
+     * @return extra data.
+     */
+    @Override
+    public String getEventLoggingExtraInfo()
+    {
+        return null;
+    }
+
+    /**
+     * Return the keys in this cache.
+     * <p>
+     * @see org.apache.commons.jcs3.auxiliary.AuxiliaryCache#getKeySet()
+     */
+    @Override
+    public Set<K> getKeySet() throws IOException
     {
         try
         {
-            if (ce != null)
-            {
-                log.debug( "update: lateral = [{0}], CacheInfo.listenerId = {1}",
-                        lateralCacheService, CacheInfo.listenerId );
-                lateralCacheService.update( ce, CacheInfo.listenerId );
-            }
+            return lateralCacheService.getKeySet( cacheName );
         }
         catch ( final IOException ex )
         {
-            handleException( ex, "Failed to put [" + ce.getKey() + "] to " + ce.getCacheName() + "@" + lateralCacheAttributes );
+            handleException( ex, "Failed to get key set from " + lateralCacheAttributes.getCacheName() + "@"
+                + lateralCacheAttributes );
+        }
+        return Collections.emptySet();
+    }
+
+    /**
+     * Returns the current cache size.
+     * <p>
+     * @return The size value
+     */
+    @Override
+    public int getSize()
+    {
+        return 0;
+    }
+
+    /**
+     * The NoWait on top does not call out to here yet.
+     * <p>
+     * @return almost nothing
+     */
+    @Override
+    public IStats getStatistics()
+    {
+        final IStats stats = new Stats();
+        stats.setTypeName( "LateralCache" );
+        return stats;
+    }
+
+    /**
+     * getStats
+     * <p>
+     * @return String
+     */
+    @Override
+    public String getStats()
+    {
+        return "";
+    }
+
+    /**
+     * Returns the cache status.
+     * <p>
+     * @return The status value
+     */
+    @Override
+    public CacheStatus getStatus()
+    {
+        return this.lateralCacheService instanceof IZombie ? CacheStatus.ERROR : CacheStatus.ALIVE;
+    }
+
+    /**
+     * Not yet sure what to do here.
+     * <p>
+     * @param ex
+     * @param msg
+     * @throws IOException
+     */
+    private void handleException( final Exception ex, final String msg )
+        throws IOException
+    {
+        log.error( "Disabling lateral cache due to error {0}", msg, ex );
+
+        lateralCacheService = new ZombieCacheServiceNonLocal<>( lateralCacheAttributes.getZombieQueueMaxSize() );
+        // may want to flush if region specifies
+        // Notify the cache monitor about the error, and kick off the recovery
+        // process.
+        monitor.notifyError();
+
+        // could stop the net search if it is built and try to reconnect?
+        if ( ex instanceof IOException )
+        {
+            throw (IOException) ex;
+        }
+        throw new IOException( ex.getMessage() );
+    }
+
+    /**
+     * Synchronously dispose the cache. Not sure we want this.
+     * <p>
+     * @throws IOException
+     */
+    @Override
+    protected void processDispose()
+        throws IOException
+    {
+        log.debug( "Disposing of lateral cache" );
+
+        try
+        {
+            lateralCacheService.dispose( this.lateralCacheAttributes.getCacheName() );
+            // Should remove connection
+        }
+        catch ( final IOException ex )
+        {
+            log.error( "Couldn't dispose", ex );
+            handleException( ex, "Failed to dispose " + lateralCacheAttributes.getCacheName() );
         }
     }
 
@@ -156,26 +319,6 @@ public class LateralCache<K, V>
     }
 
     /**
-     * Return the keys in this cache.
-     * <p>
-     * @see org.apache.commons.jcs3.auxiliary.AuxiliaryCache#getKeySet()
-     */
-    @Override
-    public Set<K> getKeySet() throws IOException
-    {
-        try
-        {
-            return lateralCacheService.getKeySet( cacheName );
-        }
-        catch ( final IOException ex )
-        {
-            handleException( ex, "Failed to get key set from " + lateralCacheAttributes.getCacheName() + "@"
-                + lateralCacheAttributes );
-        }
-        return Collections.emptySet();
-    }
-
-    /**
      * Synchronously remove from the remote cache; if failed, replace the remote handle with a
      * zombie.
      * <p>
@@ -221,149 +364,28 @@ public class LateralCache<K, V>
     }
 
     /**
-     * Synchronously dispose the cache. Not sure we want this.
+     * Update lateral.
      * <p>
+     * @param ce
      * @throws IOException
      */
     @Override
-    protected void processDispose()
+    protected void processUpdate( final ICacheElement<K, V> ce )
         throws IOException
     {
-        log.debug( "Disposing of lateral cache" );
-
         try
         {
-            lateralCacheService.dispose( this.lateralCacheAttributes.getCacheName() );
-            // Should remove connection
+            if (ce != null)
+            {
+                log.debug( "update: lateral = [{0}], CacheInfo.listenerId = {1}",
+                        lateralCacheService, CacheInfo.listenerId );
+                lateralCacheService.update( ce, CacheInfo.listenerId );
+            }
         }
         catch ( final IOException ex )
         {
-            log.error( "Couldn't dispose", ex );
-            handleException( ex, "Failed to dispose " + lateralCacheAttributes.getCacheName() );
+            handleException( ex, "Failed to put [" + ce.getKey() + "] to " + ce.getCacheName() + "@" + lateralCacheAttributes );
         }
-    }
-
-    /**
-     * Returns the cache status.
-     * <p>
-     * @return The status value
-     */
-    @Override
-    public CacheStatus getStatus()
-    {
-        return this.lateralCacheService instanceof IZombie ? CacheStatus.ERROR : CacheStatus.ALIVE;
-    }
-
-    /**
-     * Returns the current cache size.
-     * <p>
-     * @return The size value
-     */
-    @Override
-    public int getSize()
-    {
-        return 0;
-    }
-
-    /**
-     * Gets the cacheType attribute of the LateralCache object
-     * <p>
-     * @return The cacheType value
-     */
-    @Override
-    public CacheType getCacheType()
-    {
-        return CacheType.LATERAL_CACHE;
-    }
-
-    /**
-     * Gets the cacheName attribute of the LateralCache object
-     * <p>
-     * @return The cacheName value
-     */
-    @Override
-    public String getCacheName()
-    {
-        return cacheName;
-    }
-
-    /**
-     * Not yet sure what to do here.
-     * <p>
-     * @param ex
-     * @param msg
-     * @throws IOException
-     */
-    private void handleException( final Exception ex, final String msg )
-        throws IOException
-    {
-        log.error( "Disabling lateral cache due to error {0}", msg, ex );
-
-        lateralCacheService = new ZombieCacheServiceNonLocal<>( lateralCacheAttributes.getZombieQueueMaxSize() );
-        // may want to flush if region specifies
-        // Notify the cache monitor about the error, and kick off the recovery
-        // process.
-        monitor.notifyError();
-
-        // could stop the net search if it is built and try to reconnect?
-        if ( ex instanceof IOException )
-        {
-            throw (IOException) ex;
-        }
-        throw new IOException( ex.getMessage() );
-    }
-
-    /**
-     * Replaces the current remote cache service handle with the given handle.
-     * <p>
-     * @param restoredLateral
-     */
-    public void fixCache( final ICacheServiceNonLocal<K, V> restoredLateral )
-    {
-        if ( this.lateralCacheService instanceof ZombieCacheServiceNonLocal )
-        {
-            final ZombieCacheServiceNonLocal<K, V> zombie = (ZombieCacheServiceNonLocal<K, V>) this.lateralCacheService;
-            this.lateralCacheService = restoredLateral;
-            try
-            {
-                zombie.propagateEvents( restoredLateral );
-            }
-            catch ( final Exception e )
-            {
-                try
-                {
-                    handleException( e, "Problem propagating events from Zombie Queue to new Lateral Service." );
-                }
-                catch ( final IOException e1 )
-                {
-                    // swallow, since this is just expected kick back.  Handle always throws
-                }
-            }
-        }
-        else
-        {
-            this.lateralCacheService = restoredLateral;
-        }
-    }
-
-    /**
-     * getStats
-     * <p>
-     * @return String
-     */
-    @Override
-    public String getStats()
-    {
-        return "";
-    }
-
-    /**
-     * @return Returns the AuxiliaryCacheAttributes.
-     */
-    @Override
-    public ILateralCacheAttributes getAuxiliaryCacheAttributes()
-    {
-        return lateralCacheAttributes;
     }
 
     /**
@@ -377,27 +399,5 @@ public class LateralCache<K, V>
         buf.append( "\n Cache Name [" + lateralCacheAttributes.getCacheName() + "]" );
         buf.append( "\n cattr =  [" + lateralCacheAttributes + "]" );
         return buf.toString();
-    }
-
-    /**
-     * @return extra data.
-     */
-    @Override
-    public String getEventLoggingExtraInfo()
-    {
-        return null;
-    }
-
-    /**
-     * The NoWait on top does not call out to here yet.
-     * <p>
-     * @return almost nothing
-     */
-    @Override
-    public IStats getStatistics()
-    {
-        final IStats stats = new Stats();
-        stats.setTypeName( "LateralCache" );
-        return stats;
     }
 }

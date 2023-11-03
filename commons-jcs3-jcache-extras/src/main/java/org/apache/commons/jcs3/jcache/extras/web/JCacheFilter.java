@@ -52,61 +52,128 @@ import javax.servlet.http.HttpServletResponse;
 
 public class JCacheFilter implements Filter
 {
+    protected static class Page implements Serializable {
+        private static final long serialVersionUID = 76822335849713095L;
+        private final int status;
+        private final String contentType;
+        private final int contentLength;
+        private final Collection<Cookie> cookies;
+        private final Map<String, List<Serializable>> headers;
+        private final byte[] out;
+
+        public Page(final int status,
+                    final String contentType, final int contentLength,
+                    final Collection<Cookie> cookies, final Map<String, List<Serializable>> headers,
+                    final byte[] out)
+        {
+            this.status = status;
+            this.contentType = contentType;
+            this.contentLength = contentLength;
+            this.cookies = cookies;
+            this.headers = headers;
+            this.out = out;
+        }
+
+        @Override
+        public boolean equals(final Object o)
+        {
+            if (this == o)
+            {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass())
+            {
+                return false;
+            }
+
+            final Page page = Page.class.cast(o);
+            return contentLength == page.contentLength
+                    && status == page.status
+                    && !(contentType != null ? !contentType.equals(page.contentType) : page.contentType != null)
+                    && cookies.equals(page.cookies)
+                    && headers.equals(page.headers)
+                    && Arrays.equals(out, page.out);
+
+        }
+
+        @Override
+        public int hashCode()
+        {
+            int result = status;
+            result = 31 * result + (contentType != null ? contentType.hashCode() : 0);
+            result = 31 * result + contentLength;
+            result = 31 * result + cookies.hashCode();
+            result = 31 * result + headers.hashCode();
+            result = 31 * result + Arrays.hashCode(out);
+            return result;
+        }
+    }
+    protected static class PageKey implements Serializable {
+        private static final long serialVersionUID = 3401480765010789184L;
+        private final String uri;
+        private boolean gzip;
+
+        public PageKey(final String uri, final boolean gzip)
+        {
+            this.uri = uri;
+            this.gzip = gzip;
+        }
+
+        @Override
+        public boolean equals(final Object o)
+        {
+            if (this == o)
+            {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass())
+            {
+                return false;
+            }
+
+            final PageKey pageKey = PageKey.class.cast(o);
+            return gzip == pageKey.gzip && uri.equals(pageKey.uri);
+
+        }
+
+        @Override
+        public int hashCode()
+        {
+            int result = uri.hashCode();
+            result = 31 * result + (gzip ? 1 : 0);
+            return result;
+        }
+
+        public void setGzip(final boolean gzip)
+        {
+            this.gzip = gzip;
+        }
+    }
+    private static void checkResponse(final ServletResponse servletResponse)
+    {
+        if (servletResponse.isCommitted()) {
+            throw new IllegalStateException("Response committed");
+        }
+    }
+
     private Cache<PageKey, Page> cache;
+
     private CachingProvider provider;
+
     private CacheManager manager;
 
     @Override
-    public void init(final FilterConfig filterConfig) throws ServletException
+    public void destroy()
     {
-        final ClassLoader classLoader = filterConfig.getServletContext().getClassLoader();
-        provider = Caching.getCachingProvider(classLoader);
-
-        String uri = filterConfig.getInitParameter("configuration");
-        if (uri == null)
+        if (!cache.isClosed())
         {
-            uri = provider.getDefaultURI().toString();
+            cache.close();
         }
-        final Properties properties = new Properties();
-        for (final String key : list(filterConfig.getInitParameterNames()))
+        if (!manager.isClosed())
         {
-            final String value = filterConfig.getInitParameter(key);
-            if (value != null)
-            {
-                properties.put(key, value);
-            }
+            manager.close();
         }
-        manager = provider.getCacheManager(URI.create(uri), classLoader, properties);
-
-        String cacheName = filterConfig.getInitParameter("cache-name");
-        if (cacheName == null)
-        {
-            cacheName = JCacheFilter.class.getName();
-        }
-        cache = manager.getCache(cacheName);
-        if (cache == null)
-        {
-            final MutableConfiguration<PageKey, Page> configuration = new MutableConfiguration<PageKey, Page>()
-                    .setStoreByValue(false);
-            configuration.setReadThrough("true".equals(properties.getProperty("read-through", "false")));
-            configuration.setWriteThrough("true".equals(properties.getProperty("write-through", "false")));
-            if (configuration.isReadThrough())
-            {
-                configuration.setCacheLoaderFactory(new FactoryBuilder.ClassFactory<>(properties.getProperty("cache-loader-factory")));
-            }
-            if (configuration.isWriteThrough())
-            {
-                configuration.setCacheWriterFactory(new FactoryBuilder.ClassFactory<>(properties.getProperty("cache-writer-factory")));
-            }
-            final String expiryPolicy = properties.getProperty("expiry-policy-factory");
-            if (expiryPolicy != null)
-            {
-                configuration.setExpiryPolicyFactory(new FactoryBuilder.ClassFactory<>(expiryPolicy));
-            }
-            configuration.setManagementEnabled("true".equals(properties.getProperty("management-enabled", "false")));
-            configuration.setStatisticsEnabled("true".equals(properties.getProperty("statistics-enabled", "false")));
-            cache = manager.createCache(cacheName, configuration);
-        }
+        provider.close();
     }
 
     @Override
@@ -209,6 +276,59 @@ public class JCacheFilter implements Filter
         }
     }
 
+    @Override
+    public void init(final FilterConfig filterConfig) throws ServletException
+    {
+        final ClassLoader classLoader = filterConfig.getServletContext().getClassLoader();
+        provider = Caching.getCachingProvider(classLoader);
+
+        String uri = filterConfig.getInitParameter("configuration");
+        if (uri == null)
+        {
+            uri = provider.getDefaultURI().toString();
+        }
+        final Properties properties = new Properties();
+        for (final String key : list(filterConfig.getInitParameterNames()))
+        {
+            final String value = filterConfig.getInitParameter(key);
+            if (value != null)
+            {
+                properties.put(key, value);
+            }
+        }
+        manager = provider.getCacheManager(URI.create(uri), classLoader, properties);
+
+        String cacheName = filterConfig.getInitParameter("cache-name");
+        if (cacheName == null)
+        {
+            cacheName = JCacheFilter.class.getName();
+        }
+        cache = manager.getCache(cacheName);
+        if (cache == null)
+        {
+            final MutableConfiguration<PageKey, Page> configuration = new MutableConfiguration<PageKey, Page>()
+                    .setStoreByValue(false);
+            configuration.setReadThrough("true".equals(properties.getProperty("read-through", "false")));
+            configuration.setWriteThrough("true".equals(properties.getProperty("write-through", "false")));
+            if (configuration.isReadThrough())
+            {
+                configuration.setCacheLoaderFactory(new FactoryBuilder.ClassFactory<>(properties.getProperty("cache-loader-factory")));
+            }
+            if (configuration.isWriteThrough())
+            {
+                configuration.setCacheWriterFactory(new FactoryBuilder.ClassFactory<>(properties.getProperty("cache-writer-factory")));
+            }
+            final String expiryPolicy = properties.getProperty("expiry-policy-factory");
+            if (expiryPolicy != null)
+            {
+                configuration.setExpiryPolicyFactory(new FactoryBuilder.ClassFactory<>(expiryPolicy));
+            }
+            configuration.setManagementEnabled("true".equals(properties.getProperty("management-enabled", "false")));
+            configuration.setStatisticsEnabled("true".equals(properties.getProperty("statistics-enabled", "false")));
+            cache = manager.createCache(cacheName, configuration);
+        }
+    }
+
     protected String key(final ServletRequest servletRequest)
     {
         if (HttpServletRequest.class.isInstance(servletRequest))
@@ -217,125 +337,5 @@ public class JCacheFilter implements Filter
             return request.getMethod() + '_' + request.getRequestURI() + '_' + request.getQueryString();
         }
         return servletRequest.toString();
-    }
-
-    private static void checkResponse(final ServletResponse servletResponse)
-    {
-        if (servletResponse.isCommitted()) {
-            throw new IllegalStateException("Response committed");
-        }
-    }
-
-    @Override
-    public void destroy()
-    {
-        if (!cache.isClosed())
-        {
-            cache.close();
-        }
-        if (!manager.isClosed())
-        {
-            manager.close();
-        }
-        provider.close();
-    }
-
-    protected static class PageKey implements Serializable {
-        private static final long serialVersionUID = 3401480765010789184L;
-        private final String uri;
-        private boolean gzip;
-
-        public PageKey(final String uri, final boolean gzip)
-        {
-            this.uri = uri;
-            this.gzip = gzip;
-        }
-
-        public void setGzip(final boolean gzip)
-        {
-            this.gzip = gzip;
-        }
-
-        @Override
-        public boolean equals(final Object o)
-        {
-            if (this == o)
-            {
-                return true;
-            }
-            if (o == null || getClass() != o.getClass())
-            {
-                return false;
-            }
-
-            final PageKey pageKey = PageKey.class.cast(o);
-            return gzip == pageKey.gzip && uri.equals(pageKey.uri);
-
-        }
-
-        @Override
-        public int hashCode()
-        {
-            int result = uri.hashCode();
-            result = 31 * result + (gzip ? 1 : 0);
-            return result;
-        }
-    }
-
-    protected static class Page implements Serializable {
-        private static final long serialVersionUID = 76822335849713095L;
-        private final int status;
-        private final String contentType;
-        private final int contentLength;
-        private final Collection<Cookie> cookies;
-        private final Map<String, List<Serializable>> headers;
-        private final byte[] out;
-
-        public Page(final int status,
-                    final String contentType, final int contentLength,
-                    final Collection<Cookie> cookies, final Map<String, List<Serializable>> headers,
-                    final byte[] out)
-        {
-            this.status = status;
-            this.contentType = contentType;
-            this.contentLength = contentLength;
-            this.cookies = cookies;
-            this.headers = headers;
-            this.out = out;
-        }
-
-        @Override
-        public boolean equals(final Object o)
-        {
-            if (this == o)
-            {
-                return true;
-            }
-            if (o == null || getClass() != o.getClass())
-            {
-                return false;
-            }
-
-            final Page page = Page.class.cast(o);
-            return contentLength == page.contentLength
-                    && status == page.status
-                    && !(contentType != null ? !contentType.equals(page.contentType) : page.contentType != null)
-                    && cookies.equals(page.cookies)
-                    && headers.equals(page.headers)
-                    && Arrays.equals(out, page.out);
-
-        }
-
-        @Override
-        public int hashCode()
-        {
-            int result = status;
-            result = 31 * result + (contentType != null ? contentType.hashCode() : 0);
-            result = 31 * result + contentLength;
-            result = 31 * result + cookies.hashCode();
-            result = 31 * result + headers.hashCode();
-            result = 31 * result + Arrays.hashCode(out);
-            return result;
-        }
     }
 }

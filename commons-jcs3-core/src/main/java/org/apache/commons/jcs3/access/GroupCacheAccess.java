@@ -80,6 +80,49 @@ public class GroupCacheAccess<K, V>
     }
 
     /**
+     * Gets the set of keys of objects currently in the group.
+     * <p>
+     * @param group
+     * @return A Set of keys.
+     */
+    @Override
+    public Set<K> getGroupKeys( final String group )
+    {
+        final GroupId groupId = new GroupId( this.getCacheControl().getCacheName(), group );
+
+        return this.getCacheControl().getKeySet()
+                .stream()
+                .filter(gan -> gan.groupId.equals(groupId))
+                .map(gan -> gan.attrName)
+                .collect(Collectors.toSet());
+    }
+
+    /**
+     * Gets the set of group names in the cache
+     * <p>
+     * @return A Set of group names.
+     */
+    public Set<String> getGroupNames()
+    {
+        return this.getCacheControl().getKeySet()
+                .stream()
+                .map(gan -> gan.groupId.groupName)
+                .collect(Collectors.toSet());
+    }
+
+    /**
+     * Invalidates a group: remove all the group members
+     * <p>
+     * @param group
+     *            The name of the group to invalidate
+     */
+    @Override
+    public void invalidateGroup( final String group )
+    {
+        this.getCacheControl().remove(getGroupAttrName(group, null));
+    }
+
+    /**
      * Allows the user to put an object into a group within a particular cache
      * region. This method sets the object's attributes to the default for the
      * region.
@@ -159,48 +202,5 @@ public class GroupCacheAccess<K, V>
     {
         final GroupAttrName<K> key = getGroupAttrName( group, name );
         this.getCacheControl().remove( key );
-    }
-
-    /**
-     * Gets the set of keys of objects currently in the group.
-     * <p>
-     * @param group
-     * @return A Set of keys.
-     */
-    @Override
-    public Set<K> getGroupKeys( final String group )
-    {
-        final GroupId groupId = new GroupId( this.getCacheControl().getCacheName(), group );
-
-        return this.getCacheControl().getKeySet()
-                .stream()
-                .filter(gan -> gan.groupId.equals(groupId))
-                .map(gan -> gan.attrName)
-                .collect(Collectors.toSet());
-    }
-
-    /**
-     * Gets the set of group names in the cache
-     * <p>
-     * @return A Set of group names.
-     */
-    public Set<String> getGroupNames()
-    {
-        return this.getCacheControl().getKeySet()
-                .stream()
-                .map(gan -> gan.groupId.groupName)
-                .collect(Collectors.toSet());
-    }
-
-    /**
-     * Invalidates a group: remove all the group members
-     * <p>
-     * @param group
-     *            The name of the group to invalidate
-     */
-    @Override
-    public void invalidateGroup( final String group )
-    {
-        this.getCacheControl().remove(getGroupAttrName(group, null));
     }
 }

@@ -40,16 +40,16 @@ public interface Log
     /**
      * Logs a message object with the DEBUG level.
      *
-     * @param message the message string to log.
+     * @param message the message object to log.
      */
-    void debug(String message);
+    void debug(Object message);
 
     /**
      * Logs a message object with the DEBUG level.
      *
-     * @param message the message object to log.
+     * @param message the message string to log.
      */
-    void debug(Object message);
+    void debug(String message);
 
     /**
      * Logs a message with parameters at the DEBUG level.
@@ -81,16 +81,16 @@ public interface Log
     /**
      * Logs a message object with the ERROR level.
      *
-     * @param message the message string to log.
+     * @param message the message object to log.
      */
-    void error(String message);
+    void error(Object message);
 
     /**
      * Logs a message object with the ERROR level.
      *
-     * @param message the message object to log.
+     * @param message the message string to log.
      */
-    void error(Object message);
+    void error(String message);
 
     /**
      * Logs a message with parameters at the ERROR level.
@@ -122,16 +122,16 @@ public interface Log
     /**
      * Logs a message object with the FATAL level.
      *
-     * @param message the message string to log.
+     * @param message the message object to log.
      */
-    void fatal(String message);
+    void fatal(Object message);
 
     /**
      * Logs a message object with the FATAL level.
      *
-     * @param message the message object to log.
+     * @param message the message string to log.
      */
-    void fatal(Object message);
+    void fatal(String message);
 
     /**
      * Logs a message with parameters at the FATAL level.
@@ -170,16 +170,16 @@ public interface Log
     /**
      * Logs a message object with the INFO level.
      *
-     * @param message the message string to log.
+     * @param message the message object to log.
      */
-    void info(String message);
+    void info(Object message);
 
     /**
      * Logs a message object with the INFO level.
      *
-     * @param message the message object to log.
+     * @param message the message string to log.
      */
-    void info(Object message);
+    void info(String message);
 
     /**
      * Logs a message with parameters at the INFO level.
@@ -259,16 +259,16 @@ public interface Log
     /**
      * Logs a message object with the TRACE level.
      *
-     * @param message the message string to log.
+     * @param message the message object to log.
      */
-    void trace(String message);
+    void trace(Object message);
 
     /**
      * Logs a message object with the TRACE level.
      *
-     * @param message the message object to log.
+     * @param message the message string to log.
      */
-    void trace(Object message);
+    void trace(String message);
 
     /**
      * Logs a message with parameters at the TRACE level.
@@ -301,16 +301,16 @@ public interface Log
     /**
      * Logs a message object with the WARN level.
      *
-     * @param message the message string to log.
+     * @param message the message object to log.
      */
-    void warn(String message);
+    void warn(Object message);
 
     /**
      * Logs a message object with the WARN level.
      *
-     * @param message the message object to log.
+     * @param message the message string to log.
      */
-    void warn(Object message);
+    void warn(String message);
 
     /**
      * Logs a message with parameters at the WARN level.

@@ -118,73 +118,212 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
     }
 
     /**
-     * Synchronously dispose the remote cache; if failed, replace the remote handle with a zombie.
+     * Replaces the current remote cache service handle with the given handle. If the current remote
+     * is a Zombie, then it propagates any events that are queued to the restored service.
      * <p>
-     * @throws IOException
+     * @param restoredRemote ICacheServiceNonLocal -- the remote server or proxy to the remote server
      */
     @Override
-    protected void processDispose()
-        throws IOException
+    public void fixCache( final ICacheServiceNonLocal<?, ?> restoredRemote )
     {
-        log.info( "Disposing of remote cache." );
-        try
+        @SuppressWarnings("unchecked") // Don't know how to do this properly
+        final
+        ICacheServiceNonLocal<K, V> remote = (ICacheServiceNonLocal<K, V>)restoredRemote;
+        final ICacheServiceNonLocal<K, V> prevRemote = getRemoteCacheService();
+        if ( prevRemote instanceof ZombieCacheServiceNonLocal )
         {
-            if ( getRemoteCacheListener() != null )
+            final ZombieCacheServiceNonLocal<K, V> zombie = (ZombieCacheServiceNonLocal<K, V>) prevRemote;
+            setRemoteCacheService( remote );
+            try
             {
-                getRemoteCacheListener().dispose();
+                zombie.propagateEvents( remote );
+            }
+            catch ( final Exception e )
+            {
+                try
+                {
+                    handleException( e, "Problem propagating events from Zombie Queue to new Remote Service.",
+                                     "fixCache" );
+                }
+                catch ( final IOException e1 )
+                {
+                    // swallow, since this is just expected kick back.  Handle always throws
+                }
             }
         }
-        catch ( final IOException ex )
+        else
         {
-            log.error( "Couldn't dispose", ex );
-            handleException( ex, "Failed to dispose [" + cacheName + "]", ICacheEventLogger.DISPOSE_EVENT );
+            setRemoteCacheService( remote );
         }
     }
 
     /**
-     * Synchronously get from the remote cache; if failed, replace the remote handle with a zombie.
-     * <p>
-     * Use threadpool to timeout if a value is set for GetTimeoutMillis
-     * <p>
-     * If we are a cluster client, we need to leave the Element in its serialized form. Cluster
-     * clients cannot deserialize objects. Cluster clients get ICacheElementSerialized objects from
-     * other remote servers.
-     * <p>
-     * @param key
-     * @return ICacheElement, a wrapper around the key, value, and attributes
-     * @throws IOException
+     * @return Returns the AuxiliaryCacheAttributes.
      */
     @Override
-    protected ICacheElement<K, V> processGet( final K key )
+    public AuxiliaryCacheAttributes getAuxiliaryCacheAttributes()
+    {
+        return getRemoteCacheAttributes();
+    }
+
+    /**
+     * Gets the cacheName attribute of the RemoteCache object.
+     * <p>
+     * @return The cacheName value
+     */
+    @Override
+    public String getCacheName()
+    {
+        return cacheName;
+    }
+
+    /**
+     * Gets the cacheType attribute of the RemoteCache object
+     * @return The cacheType value
+     */
+    @Override
+    public CacheType getCacheType()
+    {
+        return CacheType.REMOTE_CACHE;
+    }
+
+    /**
+     * Return the keys in this cache.
+     * <p>
+     * @see org.apache.commons.jcs3.auxiliary.AuxiliaryCache#getKeySet()
+     */
+    @Override
+    public Set<K> getKeySet()
         throws IOException
     {
-        ICacheElement<K, V> retVal = null;
-        try
-        {
-            if ( usePoolForGet )
-            {
-                retVal = getUsingPool( key );
-            }
-            else
-            {
-                retVal = getRemoteCacheService().get( cacheName, key, getListenerId() );
-            }
+        return getRemoteCacheService().getKeySet(cacheName);
+    }
 
-            // Eventually the instance of will not be necessary.
-            // Never try to deserialize if you are a cluster client. Cluster
-            // clients are merely intra-remote cache communicators. Remote caches are assumed
-            // to have no ability to deserialize the objects.
-            if (retVal instanceof ICacheElementSerialized && this.getRemoteCacheAttributes().getRemoteType() != RemoteType.CLUSTER)
+    /**
+     * Allows other member of this package to access the listener. This is mainly needed for
+     * deregistering a listener.
+     * <p>
+     * @return IRemoteCacheListener, the listener for this remote server
+     */
+    @Override
+    public IRemoteCacheListener<K, V> getListener()
+    {
+        return getRemoteCacheListener();
+    }
+
+    /**
+     * Gets the listenerId attribute of the RemoteCacheListener object
+     * <p>
+     * @return The listenerId value
+     */
+    @Override
+    public long getListenerId()
+    {
+        if ( getRemoteCacheListener() != null )
+        {
+            try
             {
-                retVal = SerializationConversionUtil.getDeSerializedCacheElement( (ICacheElementSerialized<K, V>) retVal,
-                        super.getElementSerializer() );
+                log.debug( "get listenerId = {0}", getRemoteCacheListener().getListenerId() );
+                return getRemoteCacheListener().getListenerId();
+            }
+            catch ( final IOException e )
+            {
+                log.error( "Problem getting listenerId", e );
             }
         }
-        catch ( final IOException | ClassNotFoundException ex )
+        return -1;
+    }
+
+    /**
+     * @return the remoteCacheAttributes
+     */
+    protected IRemoteCacheAttributes getRemoteCacheAttributes()
+    {
+        return remoteCacheAttributes;
+    }
+
+    /**
+     * @return the remoteCacheListener
+     */
+    protected IRemoteCacheListener<K, V> getRemoteCacheListener()
+    {
+        return remoteCacheListener;
+    }
+
+    /**
+     * @return the remote
+     */
+    protected ICacheServiceNonLocal<K, V> getRemoteCacheService()
+    {
+        return remoteCacheService;
+    }
+
+    /**
+     * Returns the current cache size.
+     * @return The size value
+     */
+    @Override
+    public int getSize()
+    {
+        return 0;
+    }
+
+    /**
+     * @return IStats object
+     */
+    @Override
+    public IStats getStatistics()
+    {
+        final IStats stats = new Stats();
+        stats.setTypeName( "AbstractRemoteAuxiliaryCache" );
+
+        final ArrayList<IStatElement<?>> elems = new ArrayList<>();
+
+        elems.add(new StatElement<>( "Remote Type", this.getRemoteCacheAttributes().getRemoteTypeName() ) );
+
+//      if ( this.getRemoteCacheAttributes().getRemoteType() == RemoteType.CLUSTER )
+//      {
+//          // something cluster specific
+//      }
+
+        elems.add(new StatElement<>( "UsePoolForGet", Boolean.valueOf(usePoolForGet) ) );
+
+        if ( pool != null )
         {
-            handleException( ex, "Failed to get [" + key + "] from [" + cacheName + "]", ICacheEventLogger.GET_EVENT );
+            elems.add(new StatElement<>( "Pool", pool ) );
         }
-        return retVal;
+
+        if ( getRemoteCacheService() instanceof ZombieCacheServiceNonLocal )
+        {
+            elems.add(new StatElement<>( "Zombie Queue Size",
+                    Integer.valueOf(( (ZombieCacheServiceNonLocal<K, V>) getRemoteCacheService() ).getQueueSize()) ) );
+        }
+
+        stats.setStatElements( elems );
+
+        return stats;
+    }
+
+    /**
+     * Gets the stats attribute of the RemoteCache object.
+     * <p>
+     * @return The stats value
+     */
+    @Override
+    public String getStats()
+    {
+        return getStatistics().toString();
+    }
+
+    /**
+     * Returns the cache status. An error status indicates the remote connection is not available.
+     * <p>
+     * @return The status value
+     */
+    @Override
+    public CacheStatus getStatus()
+    {
+        return getRemoteCacheService() instanceof IZombie ? CacheStatus.ERROR : CacheStatus.ALIVE;
     }
 
     /**
@@ -235,6 +374,88 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
             log.error( "ExecutionException, Assuming an IO exception thrown in the background.", ex );
             throw new IOException( "Get Request timed out after " + timeout );
         }
+    }
+
+    /**
+     * Custom exception handling some children.  This should be used to initiate failover.
+     * <p>
+     * @param ex
+     * @param msg
+     * @param eventName
+     * @throws IOException
+     */
+    protected abstract void handleException( Exception ex, String msg, String eventName )
+        throws IOException;
+
+    /**
+     * Synchronously dispose the remote cache; if failed, replace the remote handle with a zombie.
+     * <p>
+     * @throws IOException
+     */
+    @Override
+    protected void processDispose()
+        throws IOException
+    {
+        log.info( "Disposing of remote cache." );
+        try
+        {
+            if ( getRemoteCacheListener() != null )
+            {
+                getRemoteCacheListener().dispose();
+            }
+        }
+        catch ( final IOException ex )
+        {
+            log.error( "Couldn't dispose", ex );
+            handleException( ex, "Failed to dispose [" + cacheName + "]", ICacheEventLogger.DISPOSE_EVENT );
+        }
+    }
+
+
+    /**
+     * Synchronously get from the remote cache; if failed, replace the remote handle with a zombie.
+     * <p>
+     * Use threadpool to timeout if a value is set for GetTimeoutMillis
+     * <p>
+     * If we are a cluster client, we need to leave the Element in its serialized form. Cluster
+     * clients cannot deserialize objects. Cluster clients get ICacheElementSerialized objects from
+     * other remote servers.
+     * <p>
+     * @param key
+     * @return ICacheElement, a wrapper around the key, value, and attributes
+     * @throws IOException
+     */
+    @Override
+    protected ICacheElement<K, V> processGet( final K key )
+        throws IOException
+    {
+        ICacheElement<K, V> retVal = null;
+        try
+        {
+            if ( usePoolForGet )
+            {
+                retVal = getUsingPool( key );
+            }
+            else
+            {
+                retVal = getRemoteCacheService().get( cacheName, key, getListenerId() );
+            }
+
+            // Eventually the instance of will not be necessary.
+            // Never try to deserialize if you are a cluster client. Cluster
+            // clients are merely intra-remote cache communicators. Remote caches are assumed
+            // to have no ability to deserialize the objects.
+            if (retVal instanceof ICacheElementSerialized && this.getRemoteCacheAttributes().getRemoteType() != RemoteType.CLUSTER)
+            {
+                retVal = SerializationConversionUtil.getDeSerializedCacheElement( (ICacheElementSerialized<K, V>) retVal,
+                        super.getElementSerializer() );
+            }
+        }
+        catch ( final IOException | ClassNotFoundException ex )
+        {
+            handleException( ex, "Failed to get [" + key + "] from [" + cacheName + "]", ICacheEventLogger.GET_EVENT );
+        }
+        return retVal;
     }
 
     /**
@@ -376,30 +597,6 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
     }
 
     /**
-     * Return the keys in this cache.
-     * <p>
-     * @see org.apache.commons.jcs3.auxiliary.AuxiliaryCache#getKeySet()
-     */
-    @Override
-    public Set<K> getKeySet()
-        throws IOException
-    {
-        return getRemoteCacheService().getKeySet(cacheName);
-    }
-
-    /**
-     * Allows other member of this package to access the listener. This is mainly needed for
-     * deregistering a listener.
-     * <p>
-     * @return IRemoteCacheListener, the listener for this remote server
-     */
-    @Override
-    public IRemoteCacheListener<K, V> getListener()
-    {
-        return getRemoteCacheListener();
-    }
-
-    /**
      * let the remote cache set a listener_id. Since there is only one listener for all the regions
      * and every region gets registered? the id shouldn't be set if it isn't zero. If it is we
      * assume that it is a reconnect.
@@ -424,208 +621,11 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
     }
 
     /**
-     * Gets the listenerId attribute of the RemoteCacheListener object
-     * <p>
-     * @return The listenerId value
-     */
-    @Override
-    public long getListenerId()
-    {
-        if ( getRemoteCacheListener() != null )
-        {
-            try
-            {
-                log.debug( "get listenerId = {0}", getRemoteCacheListener().getListenerId() );
-                return getRemoteCacheListener().getListenerId();
-            }
-            catch ( final IOException e )
-            {
-                log.error( "Problem getting listenerId", e );
-            }
-        }
-        return -1;
-    }
-
-    /**
-     * Returns the current cache size.
-     * @return The size value
-     */
-    @Override
-    public int getSize()
-    {
-        return 0;
-    }
-
-    /**
-     * Custom exception handling some children.  This should be used to initiate failover.
-     * <p>
-     * @param ex
-     * @param msg
-     * @param eventName
-     * @throws IOException
-     */
-    protected abstract void handleException( Exception ex, String msg, String eventName )
-        throws IOException;
-
-    /**
-     * Gets the stats attribute of the RemoteCache object.
-     * <p>
-     * @return The stats value
-     */
-    @Override
-    public String getStats()
-    {
-        return getStatistics().toString();
-    }
-
-    /**
-     * @return IStats object
-     */
-    @Override
-    public IStats getStatistics()
-    {
-        final IStats stats = new Stats();
-        stats.setTypeName( "AbstractRemoteAuxiliaryCache" );
-
-        final ArrayList<IStatElement<?>> elems = new ArrayList<>();
-
-        elems.add(new StatElement<>( "Remote Type", this.getRemoteCacheAttributes().getRemoteTypeName() ) );
-
-//      if ( this.getRemoteCacheAttributes().getRemoteType() == RemoteType.CLUSTER )
-//      {
-//          // something cluster specific
-//      }
-
-        elems.add(new StatElement<>( "UsePoolForGet", Boolean.valueOf(usePoolForGet) ) );
-
-        if ( pool != null )
-        {
-            elems.add(new StatElement<>( "Pool", pool ) );
-        }
-
-        if ( getRemoteCacheService() instanceof ZombieCacheServiceNonLocal )
-        {
-            elems.add(new StatElement<>( "Zombie Queue Size",
-                    Integer.valueOf(( (ZombieCacheServiceNonLocal<K, V>) getRemoteCacheService() ).getQueueSize()) ) );
-        }
-
-        stats.setStatElements( elems );
-
-        return stats;
-    }
-
-    /**
-     * Returns the cache status. An error status indicates the remote connection is not available.
-     * <p>
-     * @return The status value
-     */
-    @Override
-    public CacheStatus getStatus()
-    {
-        return getRemoteCacheService() instanceof IZombie ? CacheStatus.ERROR : CacheStatus.ALIVE;
-    }
-
-    /**
-     * Replaces the current remote cache service handle with the given handle. If the current remote
-     * is a Zombie, then it propagates any events that are queued to the restored service.
-     * <p>
-     * @param restoredRemote ICacheServiceNonLocal -- the remote server or proxy to the remote server
-     */
-    @Override
-    public void fixCache( final ICacheServiceNonLocal<?, ?> restoredRemote )
-    {
-        @SuppressWarnings("unchecked") // Don't know how to do this properly
-        final
-        ICacheServiceNonLocal<K, V> remote = (ICacheServiceNonLocal<K, V>)restoredRemote;
-        final ICacheServiceNonLocal<K, V> prevRemote = getRemoteCacheService();
-        if ( prevRemote instanceof ZombieCacheServiceNonLocal )
-        {
-            final ZombieCacheServiceNonLocal<K, V> zombie = (ZombieCacheServiceNonLocal<K, V>) prevRemote;
-            setRemoteCacheService( remote );
-            try
-            {
-                zombie.propagateEvents( remote );
-            }
-            catch ( final Exception e )
-            {
-                try
-                {
-                    handleException( e, "Problem propagating events from Zombie Queue to new Remote Service.",
-                                     "fixCache" );
-                }
-                catch ( final IOException e1 )
-                {
-                    // swallow, since this is just expected kick back.  Handle always throws
-                }
-            }
-        }
-        else
-        {
-            setRemoteCacheService( remote );
-        }
-    }
-
-
-    /**
-     * Gets the cacheType attribute of the RemoteCache object
-     * @return The cacheType value
-     */
-    @Override
-    public CacheType getCacheType()
-    {
-        return CacheType.REMOTE_CACHE;
-    }
-
-    /**
-     * Gets the cacheName attribute of the RemoteCache object.
-     * <p>
-     * @return The cacheName value
-     */
-    @Override
-    public String getCacheName()
-    {
-        return cacheName;
-    }
-
-    /**
-     * @param remote the remote to set
-     */
-    protected void setRemoteCacheService( final ICacheServiceNonLocal<K, V> remote )
-    {
-        this.remoteCacheService = remote;
-    }
-
-    /**
-     * @return the remote
-     */
-    protected ICacheServiceNonLocal<K, V> getRemoteCacheService()
-    {
-        return remoteCacheService;
-    }
-
-    /**
-     * @return Returns the AuxiliaryCacheAttributes.
-     */
-    @Override
-    public AuxiliaryCacheAttributes getAuxiliaryCacheAttributes()
-    {
-        return getRemoteCacheAttributes();
-    }
-
-    /**
      * @param remoteCacheAttributes the remoteCacheAttributes to set
      */
     protected void setRemoteCacheAttributes( final IRemoteCacheAttributes remoteCacheAttributes )
     {
         this.remoteCacheAttributes = remoteCacheAttributes;
-    }
-
-    /**
-     * @return the remoteCacheAttributes
-     */
-    protected IRemoteCacheAttributes getRemoteCacheAttributes()
-    {
-        return remoteCacheAttributes;
     }
 
     /**
@@ -637,10 +637,10 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
     }
 
     /**
-     * @return the remoteCacheListener
+     * @param remote the remote to set
      */
-    protected IRemoteCacheListener<K, V> getRemoteCacheListener()
+    protected void setRemoteCacheService( final ICacheServiceNonLocal<K, V> remote )
     {
-        return remoteCacheListener;
+        this.remoteCacheService = remote;
     }
 }

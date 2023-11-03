@@ -31,6 +31,21 @@ import org.junit.Test;
  */
 public class HugeQuantityIndDiskCacheLoadTest
 {
+    /**
+     * Measure memory used by the VM.
+     * <p>
+     * @return memory used
+     * @throws InterruptedException
+     */
+    protected long measureMemoryUse()
+        throws InterruptedException
+    {
+        System.gc();
+        Thread.sleep( 3000 );
+        System.gc();
+        return Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+    }
+
     /** Test setup.  */
     @Before
     public void setUp()
@@ -106,20 +121,5 @@ public class HugeQuantityIndDiskCacheLoadTest
             System.out.println( "--------------------------" );
             System.out.println( "End: " + measureMemoryUse() );
         }
-    }
-
-    /**
-     * Measure memory used by the VM.
-     * <p>
-     * @return memory used
-     * @throws InterruptedException
-     */
-    protected long measureMemoryUse()
-        throws InterruptedException
-    {
-        System.gc();
-        Thread.sleep( 3000 );
-        System.gc();
-        return Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
     }
 }

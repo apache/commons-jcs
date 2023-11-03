@@ -40,21 +40,10 @@ public class ZombieCacheService<K, V>
     private static final Log log = LogManager.getLog( ZombieCacheService.class );
 
     /**
-     * @param item
-     */
-    public void put( final ICacheElement<K, V> item )
-    {
-        log.debug( "Zombie put for item {0}", item );
-        // zombies have no inner life
-    }
-
-    /**
-     * Does nothing.
-     * <p>
-     * @param item
+     * @param cacheName
      */
     @Override
-    public void update( final ICacheElement<K, V> item )
+    public void dispose( final String cacheName )
     {
         // zombies have no inner life
     }
@@ -71,16 +60,19 @@ public class ZombieCacheService<K, V>
     }
 
     /**
-     * Returns an empty map. Zombies have no internal data.
+     * Logs the get to debug, but always balks.
      * <p>
      * @param cacheName
-     * @param keys
-     * @return Collections.EMPTY_MAP
+     * @param key
+     * @param container
+     * @return null always
      */
-    @Override
-    public Map<K, ICacheElement<K, V>> getMultiple( final String cacheName, final Set<K> keys )
+    public Serializable get( final String cacheName, final K key, final boolean container )
     {
-        return Collections.emptyMap();
+        log.debug( "Zombie get for key [{0}] cacheName [{1}] container [{2}]",
+                key, cacheName, container);
+        // zombies have no inner life
+        return null;
     }
 
     /**
@@ -97,19 +89,34 @@ public class ZombieCacheService<K, V>
     }
 
     /**
-     * Logs the get to debug, but always balks.
+     * Returns an empty map. Zombies have no internal data.
      * <p>
      * @param cacheName
-     * @param key
-     * @param container
-     * @return null always
+     * @param keys
+     * @return Collections.EMPTY_MAP
      */
-    public Serializable get( final String cacheName, final K key, final boolean container )
+    @Override
+    public Map<K, ICacheElement<K, V>> getMultiple( final String cacheName, final Set<K> keys )
     {
-        log.debug( "Zombie get for key [{0}] cacheName [{1}] container [{2}]",
-                key, cacheName, container);
+        return Collections.emptyMap();
+    }
+
+    /**
+     * @param item
+     */
+    public void put( final ICacheElement<K, V> item )
+    {
+        log.debug( "Zombie put for item {0}", item );
         // zombies have no inner life
-        return null;
+    }
+
+    /**
+     * Frees all caches.
+     */
+    @Override
+    public void release()
+    {
+        // zombies have no inner life
     }
 
     /**
@@ -132,19 +139,12 @@ public class ZombieCacheService<K, V>
     }
 
     /**
-     * @param cacheName
+     * Does nothing.
+     * <p>
+     * @param item
      */
     @Override
-    public void dispose( final String cacheName )
-    {
-        // zombies have no inner life
-    }
-
-    /**
-     * Frees all caches.
-     */
-    @Override
-    public void release()
+    public void update( final ICacheElement<K, V> item )
     {
         // zombies have no inner life
     }

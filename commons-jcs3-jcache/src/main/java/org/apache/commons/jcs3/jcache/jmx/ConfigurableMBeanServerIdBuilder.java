@@ -32,7 +32,89 @@ import javax.management.NotificationListener;
 
 public class ConfigurableMBeanServerIdBuilder extends MBeanServerBuilder
 {
-    private static final ConcurrentMap<Key, MBeanServer> JVM_SINGLETONS = new ConcurrentHashMap<>();
+    private static final class ForceIdMBeanServerDelegate extends MBeanServerDelegate
+    {
+        private final MBeanServerDelegate delegate;
+
+        public ForceIdMBeanServerDelegate(final MBeanServerDelegate delegate)
+        {
+            this.delegate = delegate;
+        }
+
+        @Override
+        public void addNotificationListener(final NotificationListener listener, final NotificationFilter filter, final Object handback)
+                throws IllegalArgumentException
+        {
+            delegate.addNotificationListener(listener, filter, handback);
+        }
+
+        @Override
+        public String getImplementationName()
+        {
+            return delegate.getImplementationName();
+        }
+
+        @Override
+        public String getImplementationVendor()
+        {
+            return delegate.getImplementationVendor();
+        }
+
+        @Override
+        public String getImplementationVersion()
+        {
+            return delegate.getImplementationVersion();
+        }
+
+        @Override
+        public String getMBeanServerId()
+        {
+            return System.getProperty("org.jsr107.tck.management.agentId", delegate.getMBeanServerId());
+        }
+
+        @Override
+        public MBeanNotificationInfo[] getNotificationInfo()
+        {
+            return delegate.getNotificationInfo();
+        }
+
+        @Override
+        public String getSpecificationName()
+        {
+            return delegate.getSpecificationName();
+        }
+
+        @Override
+        public String getSpecificationVendor()
+        {
+            return delegate.getSpecificationVendor();
+        }
+
+        @Override
+        public String getSpecificationVersion()
+        {
+            return delegate.getSpecificationVersion();
+        }
+
+        @Override
+        public void removeNotificationListener(final NotificationListener listener) throws ListenerNotFoundException
+        {
+            delegate.removeNotificationListener(listener);
+        }
+
+        @Override
+        public void removeNotificationListener(final NotificationListener listener, final NotificationFilter filter, final Object handback)
+                throws ListenerNotFoundException
+        {
+            delegate.removeNotificationListener(listener, filter, handback);
+        }
+
+        @Override
+        public void sendNotification(final Notification notification)
+        {
+            delegate.sendNotification(notification);
+        }
+    }
 
     private static final class Key
     {
@@ -70,6 +152,8 @@ public class ConfigurableMBeanServerIdBuilder extends MBeanServerBuilder
         }
     }
 
+    private static final ConcurrentMap<Key, MBeanServer> JVM_SINGLETONS = new ConcurrentHashMap<>();
+
     @Override
     public MBeanServer newMBeanServer(final String defaultDomain, final MBeanServer outer, final MBeanServerDelegate delegate)
     {
@@ -85,89 +169,5 @@ public class ConfigurableMBeanServerIdBuilder extends MBeanServerBuilder
             }
         }
         return server;
-    }
-
-    private static final class ForceIdMBeanServerDelegate extends MBeanServerDelegate
-    {
-        private final MBeanServerDelegate delegate;
-
-        public ForceIdMBeanServerDelegate(final MBeanServerDelegate delegate)
-        {
-            this.delegate = delegate;
-        }
-
-        @Override
-        public String getMBeanServerId()
-        {
-            return System.getProperty("org.jsr107.tck.management.agentId", delegate.getMBeanServerId());
-        }
-
-        @Override
-        public String getSpecificationName()
-        {
-            return delegate.getSpecificationName();
-        }
-
-        @Override
-        public String getSpecificationVersion()
-        {
-            return delegate.getSpecificationVersion();
-        }
-
-        @Override
-        public String getSpecificationVendor()
-        {
-            return delegate.getSpecificationVendor();
-        }
-
-        @Override
-        public String getImplementationName()
-        {
-            return delegate.getImplementationName();
-        }
-
-        @Override
-        public String getImplementationVersion()
-        {
-            return delegate.getImplementationVersion();
-        }
-
-        @Override
-        public String getImplementationVendor()
-        {
-            return delegate.getImplementationVendor();
-        }
-
-        @Override
-        public MBeanNotificationInfo[] getNotificationInfo()
-        {
-            return delegate.getNotificationInfo();
-        }
-
-        @Override
-        public void addNotificationListener(final NotificationListener listener, final NotificationFilter filter, final Object handback)
-                throws IllegalArgumentException
-        {
-            delegate.addNotificationListener(listener, filter, handback);
-        }
-
-        @Override
-        public void removeNotificationListener(final NotificationListener listener, final NotificationFilter filter, final Object handback)
-                throws ListenerNotFoundException
-        {
-            delegate.removeNotificationListener(listener, filter, handback);
-        }
-
-        @Override
-        public void removeNotificationListener(final NotificationListener listener) throws ListenerNotFoundException
-        {
-            delegate.removeNotificationListener(listener);
-        }
-
-        @Override
-        public void sendNotification(final Notification notification)
-        {
-            delegate.sendNotification(notification);
-        }
     }
 }

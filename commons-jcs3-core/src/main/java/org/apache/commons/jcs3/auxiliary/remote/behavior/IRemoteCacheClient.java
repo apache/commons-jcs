@@ -41,6 +41,14 @@ public interface IRemoteCacheClient<K, V>
     void fixCache( ICacheServiceNonLocal<?, ?> remote );
 
     /**
+     * This returns the listener associated with this remote cache. TODO we should try to get this
+     * out of the interface.
+     * <p>
+     * @return IRemoteCacheListener
+     */
+    IRemoteCacheListener<K, V> getListener();
+
+    /**
      * Gets the listenerId attribute of the RemoteCacheListener object.
      * <p>
      * All requests to the remote cache must include a listener id. This allows the server to avoid
@@ -49,12 +57,4 @@ public interface IRemoteCacheClient<K, V>
      * @return The listenerId value
      */
     long getListenerId();
-
-    /**
-     * This returns the listener associated with this remote cache. TODO we should try to get this
-     * out of the interface.
-     * <p>
-     * @return IRemoteCacheListener
-     */
-    IRemoteCacheListener<K, V> getListener();
 }

@@ -89,98 +89,6 @@ public class LateralTCPService<K, V>
     }
 
     /**
-     * @param item
-     * @throws IOException
-     */
-    @Override
-    public void update( final ICacheElement<K, V> item )
-        throws IOException
-    {
-        update( item, getListenerId() );
-    }
-
-    /**
-     * If put is allowed, we will issue a put. If issue put on remove is configured, we will issue a
-     * remove. Either way, we create a lateral element descriptor, which is essentially a JCS TCP
-     * packet. It describes what operation the receiver should take when it gets the packet.
-     * <p>
-     * @see org.apache.commons.jcs3.engine.behavior.ICacheServiceNonLocal#update(org.apache.commons.jcs3.engine.behavior.ICacheElement,
-     *      long)
-     */
-    @Override
-    public void update( final ICacheElement<K, V> item, final long requesterId )
-        throws IOException
-    {
-        // if we don't allow put, see if we should remove on put
-        if ( !this.allowPut &&
-            // if we can't remove on put, and we can't put then return
-            !this.issueRemoveOnPut )
-        {
-            return;
-        }
-
-        // if we shouldn't remove on put, then put
-        if ( !this.issueRemoveOnPut )
-        {
-            final LateralElementDescriptor<K, V> led =
-                    new LateralElementDescriptor<>(item, LateralCommand.UPDATE, requesterId);
-            sender.send( led );
-        }
-        // else issue a remove with the hash code for remove check on
-        // on the other end, this will be a server config option
-        else
-        {
-            log.debug( "Issuing a remove for a put" );
-
-            // set the value to null so we don't send the item
-            final CacheElement<K, V> ce = new CacheElement<>( item.getCacheName(), item.getKey(), null );
-            final LateralElementDescriptor<K, V> led =
-                    new LateralElementDescriptor<>(ce, LateralCommand.REMOVE, requesterId);
-            led.valHashCode = item.getVal().hashCode();
-            sender.send( led );
-        }
-    }
-
-    /**
-     * Uses the default listener id and calls the next remove method.
-     * <p>
-     * @see org.apache.commons.jcs3.engine.behavior.ICacheService#remove(String, Object)
-     */
-    @Override
-    public void remove( final String cacheName, final K key )
-        throws IOException
-    {
-        remove( cacheName, key, getListenerId() );
-    }
-
-    /**
-     * Wraps the key in a LateralElementDescriptor.
-     * <p>
-     * @see org.apache.commons.jcs3.engine.behavior.ICacheServiceNonLocal#remove(String, Object, long)
-     */
-    @Override
-    public void remove( final String cacheName, final K key, final long requesterId )
-        throws IOException
-    {
-        final CacheElement<K, V> ce = new CacheElement<>( cacheName, key, null );
-        final LateralElementDescriptor<K, V> led =
-                new LateralElementDescriptor<>(ce, LateralCommand.REMOVE, requesterId);
-        sender.send( led );
-    }
-
-    /**
-     * Does nothing.
-     * <p>
-     * @throws IOException
-     */
-    @Override
-    public void release()
-        throws IOException
-    {
-        // nothing needs to be done
-    }
-
-    /**
      * Will close the connection.
      * <p>
      * @param cacheName
@@ -233,6 +141,37 @@ public class LateralTCPService<K, V>
         }
         // nothing needs to be done
         return null;
+    }
+
+    /**
+     * Return the keys in this cache.
+     * <p>
+     * @param cacheName the name of the cache region
+     * @see org.apache.commons.jcs3.auxiliary.AuxiliaryCache#getKeySet()
+     */
+    @Override
+    @SuppressWarnings("unchecked") // Need cast from Object
+    public Set<K> getKeySet(final String cacheName) throws IOException
+    {
+        final CacheElement<String, String> ce = new CacheElement<>(cacheName, null, null);
+        final LateralElementDescriptor<String, String> led =
+                new LateralElementDescriptor<>(ce, LateralCommand.GET_KEYSET);
+        // led.requesterId = requesterId; // later
+        final Object response = sender.sendAndReceive(led);
+        if (response != null)
+        {
+            return (Set<K>) response;
+        }
+
+        return null;
+    }
+
+    /**
+     * @return Returns the listernId.
+     */
+    protected long getListenerId()
+    {
+        return listenerId;
     }
 
     /**
@@ -334,26 +273,42 @@ public class LateralTCPService<K, V>
     }
 
     /**
-     * Return the keys in this cache.
+     * Does nothing.
      * <p>
-     * @param cacheName the name of the cache region
-     * @see org.apache.commons.jcs3.auxiliary.AuxiliaryCache#getKeySet()
+     * @throws IOException
      */
     @Override
-    @SuppressWarnings("unchecked") // Need cast from Object
-    public Set<K> getKeySet(final String cacheName) throws IOException
+    public void release()
+        throws IOException
     {
-        final CacheElement<String, String> ce = new CacheElement<>(cacheName, null, null);
-        final LateralElementDescriptor<String, String> led =
-                new LateralElementDescriptor<>(ce, LateralCommand.GET_KEYSET);
-        // led.requesterId = requesterId; // later
-        final Object response = sender.sendAndReceive(led);
-        if (response != null)
-        {
-            return (Set<K>) response;
-        }
+        // nothing needs to be done
+    }
 
-        return null;
+    /**
+     * Uses the default listener id and calls the next remove method.
+     * <p>
+     * @see org.apache.commons.jcs3.engine.behavior.ICacheService#remove(String, Object)
+     */
+    @Override
+    public void remove( final String cacheName, final K key )
+        throws IOException
+    {
+        remove( cacheName, key, getListenerId() );
+    }
+
+    /**
+     * Wraps the key in a LateralElementDescriptor.
+     * <p>
+     * @see org.apache.commons.jcs3.engine.behavior.ICacheServiceNonLocal#remove(String, Object, long)
+     */
+    @Override
+    public void remove( final String cacheName, final K key, final long requesterId )
+        throws IOException
+    {
+        final CacheElement<K, V> ce = new CacheElement<>( cacheName, key, null );
+        final LateralElementDescriptor<K, V> led =
+                new LateralElementDescriptor<>(ce, LateralCommand.REMOVE, requesterId);
+        sender.send( led );
     }
 
     /**
@@ -391,10 +346,55 @@ public class LateralTCPService<K, V>
     }
 
     /**
-     * @return Returns the listernId.
+     * @param item
+     * @throws IOException
      */
-    protected long getListenerId()
+    @Override
+    public void update( final ICacheElement<K, V> item )
+        throws IOException
     {
-        return listenerId;
+        update( item, getListenerId() );
+    }
+
+    /**
+     * If put is allowed, we will issue a put. If issue put on remove is configured, we will issue a
+     * remove. Either way, we create a lateral element descriptor, which is essentially a JCS TCP
+     * packet. It describes what operation the receiver should take when it gets the packet.
+     * <p>
+     * @see org.apache.commons.jcs3.engine.behavior.ICacheServiceNonLocal#update(org.apache.commons.jcs3.engine.behavior.ICacheElement,
+     *      long)
+     */
+    @Override
+    public void update( final ICacheElement<K, V> item, final long requesterId )
+        throws IOException
+    {
+        // if we don't allow put, see if we should remove on put
+        if ( !this.allowPut &&
+            // if we can't remove on put, and we can't put then return
+            !this.issueRemoveOnPut )
+        {
+            return;
+        }
+
+        // if we shouldn't remove on put, then put
+        if ( !this.issueRemoveOnPut )
+        {
+            final LateralElementDescriptor<K, V> led =
+                    new LateralElementDescriptor<>(item, LateralCommand.UPDATE, requesterId);
+            sender.send( led );
+        }
+        // else issue a remove with the hash code for remove check on
+        // on the other end, this will be a server config option
+        else
+        {
+            log.debug( "Issuing a remove for a put" );
+
+            // set the value to null so we don't send the item
+            final CacheElement<K, V> ce = new CacheElement<>( item.getCacheName(), item.getKey(), null );
+            final LateralElementDescriptor<K, V> led =
+                    new LateralElementDescriptor<>(ce, LateralCommand.REMOVE, requesterId);
+            led.valHashCode = item.getVal().hashCode();
+            sender.send( led );
+        }
     }
 }

@@ -33,8 +33,40 @@ import org.apache.commons.jcs3.engine.logging.behavior.ICacheEventLogger;
  */
 public class TestRemoteCacheFactory extends RemoteCacheFactory
 {
+    // Mock
+    public class TestRemoteCacheManager extends RemoteCacheManager
+    {
+        protected TestRemoteCacheManager(IRemoteCacheAttributes cattr, ICompositeCacheManager cacheMgr, RemoteCacheMonitor monitor, ICacheEventLogger cacheEventLogger,
+                IElementSerializer elementSerializer)
+        {
+            super(cattr, cacheMgr, monitor, cacheEventLogger, elementSerializer);
+        }
+
+        @Override
+        protected void lookupRemoteService() throws IOException
+        {
+            // Skip
+        }
+
+        @Override
+        public void removeRemoteCacheListener(IRemoteCacheAttributes cattr) throws IOException
+        {
+            // Skip
+        }
+    }
+
     /** Contains mappings of RemoteLocation instance to RemoteCacheManager instance. */
     protected ConcurrentMap<RemoteLocation, RemoteCacheManager> managers;
+
+    /**
+     * @see org.apache.commons.jcs3.auxiliary.AbstractAuxiliaryCacheFactory#dispose()
+     */
+    @Override
+    public void dispose()
+    {
+        managers.values().forEach(RemoteCacheManager::release);
+        managers.clear();
+    }
 
     /**
      * Returns an instance of RemoteCacheManager for the given connection parameters.
@@ -94,37 +126,5 @@ public class TestRemoteCacheFactory extends RemoteCacheFactory
     public void initialize()
     {
         managers = new ConcurrentHashMap<>();
-    }
-
-    /**
-     * @see org.apache.commons.jcs3.auxiliary.AbstractAuxiliaryCacheFactory#dispose()
-     */
-    @Override
-    public void dispose()
-    {
-        managers.values().forEach(RemoteCacheManager::release);
-        managers.clear();
-    }
-
-    // Mock
-    public class TestRemoteCacheManager extends RemoteCacheManager
-    {
-        protected TestRemoteCacheManager(IRemoteCacheAttributes cattr, ICompositeCacheManager cacheMgr, RemoteCacheMonitor monitor, ICacheEventLogger cacheEventLogger,
-                IElementSerializer elementSerializer)
-        {
-            super(cattr, cacheMgr, monitor, cacheEventLogger, elementSerializer);
-        }
-
-        @Override
-        protected void lookupRemoteService() throws IOException
-        {
-            // Skip
-        }
-
-        @Override
-        public void removeRemoteCacheListener(IRemoteCacheAttributes cattr) throws IOException
-        {
-            // Skip
-        }
     }
 }

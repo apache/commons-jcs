@@ -37,6 +37,9 @@ public abstract class AbstractDiskCacheAttributes extends AbstractAuxiliaryCache
     /** The logger */
     private static final Log log = LogManager.getLog(AbstractDiskCacheAttributes.class);
 
+    /** Default amount of time to allow for key persistence on shutdown */
+    private static final int DEFAULT_shutdownSpoolTimeLimit = 60;
+
     /** path to disk */
     private File diskPath;
 
@@ -45,9 +48,6 @@ public abstract class AbstractDiskCacheAttributes extends AbstractAuxiliaryCache
 
     /** default to 5000 */
     private int maxPurgatorySize = MAX_PURGATORY_SIZE_DEFAULT;
-
-    /** Default amount of time to allow for key persistence on shutdown */
-    private static final int DEFAULT_shutdownSpoolTimeLimit = 60;
 
     /**
      * This default determines how long the shutdown will wait for the key spool and data defrag to
@@ -58,39 +58,10 @@ public abstract class AbstractDiskCacheAttributes extends AbstractAuxiliaryCache
     /** Type of disk limit: SIZE or COUNT */
     private DiskLimitType diskLimitType = DiskLimitType.COUNT;
 
-    /**
-     * Sets the diskPath attribute of the DiskCacheAttributes object
-     * <p>
-     *
-     * @param path
-     *            The new diskPath value
-     */
     @Override
-    public void setDiskPath(final String path)
+    public DiskLimitType getDiskLimitType()
     {
-        setDiskPath(new File(path));
-    }
-
-    /**
-     * Sets the diskPath attribute of the DiskCacheAttributes object
-     * <p>
-     *
-     * @param diskPath
-     *            The new diskPath value
-     */
-    public void setDiskPath(final File diskPath)
-    {
-        this.diskPath = diskPath;
-        boolean result = this.diskPath.isDirectory();
-
-        if (!result)
-        {
-            result = this.diskPath.mkdirs();
-        }
-        if (!result)
-        {
-            log.error("Failed to create directory {0}", diskPath);
-        }
+        return diskLimitType;
     }
 
     /**
@@ -118,19 +89,6 @@ public abstract class AbstractDiskCacheAttributes extends AbstractAuxiliaryCache
     }
 
     /**
-     * Sets the maxPurgatorySize attribute of the DiskCacheAttributes object
-     * <p>
-     *
-     * @param maxPurgatorySize
-     *            The new maxPurgatorySize value
-     */
-    @Override
-    public void setMaxPurgatorySize(final int maxPurgatorySize)
-    {
-        this.maxPurgatorySize = maxPurgatorySize;
-    }
-
-    /**
      * Gets the amount of time in seconds we will wait for elements to move to disk during shutdown
      * for a particular region.
      * <p>
@@ -141,6 +99,88 @@ public abstract class AbstractDiskCacheAttributes extends AbstractAuxiliaryCache
     public int getShutdownSpoolTimeLimit()
     {
         return this.shutdownSpoolTimeLimit;
+    }
+
+    /**
+     * @return Returns the allowRemoveAll.
+     */
+    @Override
+    public boolean isAllowRemoveAll()
+    {
+        return allowRemoveAll;
+    }
+
+    /**
+     * @param allowRemoveAll
+     *            The allowRemoveAll to set.
+     */
+    @Override
+    public void setAllowRemoveAll(final boolean allowRemoveAll)
+    {
+        this.allowRemoveAll = allowRemoveAll;
+    }
+
+    @Override
+    public void setDiskLimitType(final DiskLimitType diskLimitType)
+    {
+        this.diskLimitType = diskLimitType;
+    }
+
+    @Override
+    public void setDiskLimitTypeName(final String diskLimitTypeName)
+    {
+        if (diskLimitTypeName != null)
+        {
+            diskLimitType = DiskLimitType.valueOf(diskLimitTypeName.trim());
+        }
+    }
+
+    /**
+     * Sets the diskPath attribute of the DiskCacheAttributes object
+     * <p>
+     *
+     * @param diskPath
+     *            The new diskPath value
+     */
+    public void setDiskPath(final File diskPath)
+    {
+        this.diskPath = diskPath;
+        boolean result = this.diskPath.isDirectory();
+
+        if (!result)
+        {
+            result = this.diskPath.mkdirs();
+        }
+        if (!result)
+        {
+            log.error("Failed to create directory {0}", diskPath);
+        }
+    }
+
+    /**
+     * Sets the diskPath attribute of the DiskCacheAttributes object
+     * <p>
+     *
+     * @param path
+     *            The new diskPath value
+     */
+    @Override
+    public void setDiskPath(final String path)
+    {
+        setDiskPath(new File(path));
+    }
+
+    /**
+     * Sets the maxPurgatorySize attribute of the DiskCacheAttributes object
+     * <p>
+     *
+     * @param maxPurgatorySize
+     *            The new maxPurgatorySize value
+     */
+    @Override
+    public void setMaxPurgatorySize(final int maxPurgatorySize)
+    {
+        this.maxPurgatorySize = maxPurgatorySize;
     }
 
     /**
@@ -162,25 +202,6 @@ public abstract class AbstractDiskCacheAttributes extends AbstractAuxiliaryCache
     }
 
     /**
-     * @param allowRemoveAll
-     *            The allowRemoveAll to set.
-     */
-    @Override
-    public void setAllowRemoveAll(final boolean allowRemoveAll)
-    {
-        this.allowRemoveAll = allowRemoveAll;
-    }
-
-    /**
-     * @return Returns the allowRemoveAll.
-     */
-    @Override
-    public boolean isAllowRemoveAll()
-    {
-        return allowRemoveAll;
-    }
-
-    /**
      * Includes the common attributes for a debug message.
      * <p>
      *
@@ -196,26 +217,5 @@ public abstract class AbstractDiskCacheAttributes extends AbstractAuxiliaryCache
         str.append("\n allowRemoveAll   = " + isAllowRemoveAll());
         str.append("\n ShutdownSpoolTimeLimit   = " + getShutdownSpoolTimeLimit());
         return str.toString();
-    }
-
-    @Override
-    public void setDiskLimitType(final DiskLimitType diskLimitType)
-    {
-        this.diskLimitType = diskLimitType;
-    }
-
-    @Override
-    public void setDiskLimitTypeName(final String diskLimitTypeName)
-    {
-        if (diskLimitTypeName != null)
-        {
-            diskLimitType = DiskLimitType.valueOf(diskLimitTypeName.trim());
-        }
-    }
-
-    @Override
-    public DiskLimitType getDiskLimitType()
-    {
-        return diskLimitType;
     }
 }

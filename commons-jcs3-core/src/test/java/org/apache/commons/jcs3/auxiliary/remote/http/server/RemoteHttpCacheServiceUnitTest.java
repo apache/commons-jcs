@@ -37,36 +37,6 @@ public class RemoteHttpCacheServiceUnitTest
      * @throws Exception
      */
     @Test
-    public void testUpdate_simple()
-        throws Exception
-    {
-        // SETUP
-        final MockCompositeCacheManager manager = new MockCompositeCacheManager();
-        final MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
-
-        final RemoteHttpCacheServerAttributes rcsa = new RemoteHttpCacheServerAttributes();
-        final RemoteHttpCacheService<String, String> server =
-            new RemoteHttpCacheService<>( manager, rcsa, cacheEventLogger );
-
-        final String cacheName = "test";
-        final String key = "key";
-        final long requesterId = 2;
-        final CacheElement<String, String> element = new CacheElement<>( cacheName, key, null );
-
-        // DO WORK
-        server.update( element, requesterId );
-
-        // VERIFY
-        assertEquals( "Start should have been called.", 1, cacheEventLogger.startICacheEventCalls );
-        assertEquals( "End should have been called.", 1, cacheEventLogger.endICacheEventCalls );
-    }
-
-    /**
-     * Verify event log calls.
-     * <p>
-     * @throws Exception
-     */
-    @Test
     public void testGet_simple()
         throws Exception
     {
@@ -180,6 +150,36 @@ public class RemoteHttpCacheServiceUnitTest
 
         // DO WORK
         server.removeAll( "region" );
+
+        // VERIFY
+        assertEquals( "Start should have been called.", 1, cacheEventLogger.startICacheEventCalls );
+        assertEquals( "End should have been called.", 1, cacheEventLogger.endICacheEventCalls );
+    }
+
+    /**
+     * Verify event log calls.
+     * <p>
+     * @throws Exception
+     */
+    @Test
+    public void testUpdate_simple()
+        throws Exception
+    {
+        // SETUP
+        final MockCompositeCacheManager manager = new MockCompositeCacheManager();
+        final MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
+
+        final RemoteHttpCacheServerAttributes rcsa = new RemoteHttpCacheServerAttributes();
+        final RemoteHttpCacheService<String, String> server =
+            new RemoteHttpCacheService<>( manager, rcsa, cacheEventLogger );
+
+        final String cacheName = "test";
+        final String key = "key";
+        final long requesterId = 2;
+        final CacheElement<String, String> element = new CacheElement<>( cacheName, key, null );
+
+        // DO WORK
+        server.update( element, requesterId );
 
         // VERIFY
         assertEquals( "Start should have been called.", 1, cacheEventLogger.startICacheEventCalls );

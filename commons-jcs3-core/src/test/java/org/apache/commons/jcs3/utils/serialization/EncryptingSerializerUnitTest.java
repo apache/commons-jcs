@@ -60,22 +60,20 @@ public class EncryptingSerializerUnitTest
     }
 
     /**
-     * Test simple back and forth with a string.
-     * <p>
-     * ))&lt;=&gt;((
+     * Test different key.
      * <p>
      * @throws Exception on error
      */
     @Test
-    public void testSimpleBackAndForth()
+    public void testDifferentKey()
         throws Exception
     {
         // DO WORK
         final String before = "adsfdsafdsafdsafdsafdsafdsafdsagfdsafdsafdsfdsafdsafsa333 31231";
-        final String after = serializer.deSerialize( serializer.serialize( before ), null );
+        byte[] serialized = serializer.serialize(before);
+        serializer.setPreSharedKey("another_key");
 
-        // VERIFY
-        assertEquals( "Before and after should be the same.", before, after );
+        assertThrows(IOException.class, () -> serializer.deSerialize(serialized, null));
     }
 
     /**
@@ -100,23 +98,6 @@ public class EncryptingSerializerUnitTest
     }
 
     /**
-     * Test different key.
-     * <p>
-     * @throws Exception on error
-     */
-    @Test
-    public void testDifferentKey()
-        throws Exception
-    {
-        // DO WORK
-        final String before = "adsfdsafdsafdsafdsafdsafdsafdsagfdsafdsafdsfdsafdsafsa333 31231";
-        byte[] serialized = serializer.serialize(before);
-        serializer.setPreSharedKey("another_key");
-
-        assertThrows(IOException.class, () -> serializer.deSerialize(serialized, null));
-    }
-
-    /**
      * Test serialization with a null object. Verify that we don't get an error.
      * <p>
      * @throws Exception on error
@@ -133,5 +114,24 @@ public class EncryptingSerializerUnitTest
 
         // VERIFY
         assertNull( "Should have nothing. after =" + after, after );
+    }
+
+    /**
+     * Test simple back and forth with a string.
+     * <p>
+     * ))&lt;=&gt;((
+     * <p>
+     * @throws Exception on error
+     */
+    @Test
+    public void testSimpleBackAndForth()
+        throws Exception
+    {
+        // DO WORK
+        final String before = "adsfdsafdsafdsafdsafdsafdsafdsagfdsafdsafdsfdsafdsafsa333 31231";
+        final String after = serializer.deSerialize( serializer.serialize( before ), null );
+
+        // VERIFY
+        assertEquals( "Before and after should be the same.", before, after );
     }
 }

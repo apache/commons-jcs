@@ -75,6 +75,44 @@ public class RemoteCache<K, V>
     }
 
     /**
+     * Gets the extra info for the event log.
+     * <p>
+     * @return disk location
+     */
+    @Override
+    public String getEventLoggingExtraInfo()
+    {
+        return getIPAddressForService();
+    }
+
+    /**
+     * Gets facade
+     *
+     * @return the facade
+     */
+    protected AbstractRemoteCacheNoWaitFacade<K, V> getFacade()
+    {
+        return facade;
+    }
+
+    /**
+     * IP address for the service, if one is stored.
+     * <p>
+     * Protected for testing.
+     * <p>
+     * @return String
+     */
+    protected String getIPAddressForService()
+    {
+        String ipAddress = "(null)";
+        if (this.getRemoteCacheAttributes().getRemoteLocation() != null)
+        {
+            ipAddress = this.getRemoteCacheAttributes().getRemoteLocation().toString();
+        }
+        return ipAddress;
+    }
+
+    /**
      * @return IStats object
      */
     @Override
@@ -100,26 +138,6 @@ public class RemoteCache<K, V>
         stats.setStatElements( elems );
 
         return stats;
-    }
-
-    /**
-     * Sets facade
-     *
-     * @param facade the facade to set
-     */
-    protected void setFacade(final AbstractRemoteCacheNoWaitFacade<K, V> facade)
-    {
-        this.facade = facade;
-    }
-
-    /**
-     * Gets facade
-     *
-     * @return the facade
-     */
-    protected AbstractRemoteCacheNoWaitFacade<K, V> getFacade()
-    {
-        return facade;
     }
 
     /**
@@ -169,6 +187,16 @@ public class RemoteCache<K, V>
     }
 
     /**
+     * Sets facade
+     *
+     * @param facade the facade to set
+     */
+    protected void setFacade(final AbstractRemoteCacheNoWaitFacade<K, V> facade)
+    {
+        this.facade = facade;
+    }
+
+    /**
      * Debugging info.
      * <p>
      * @return basic info about the RemoteCache
@@ -177,33 +205,5 @@ public class RemoteCache<K, V>
     public String toString()
     {
         return "RemoteCache: " + cacheName + " attributes = " + getRemoteCacheAttributes();
-    }
-
-    /**
-     * Gets the extra info for the event log.
-     * <p>
-     * @return disk location
-     */
-    @Override
-    public String getEventLoggingExtraInfo()
-    {
-        return getIPAddressForService();
-    }
-
-    /**
-     * IP address for the service, if one is stored.
-     * <p>
-     * Protected for testing.
-     * <p>
-     * @return String
-     */
-    protected String getIPAddressForService()
-    {
-        String ipAddress = "(null)";
-        if (this.getRemoteCacheAttributes().getRemoteLocation() != null)
-        {
-            ipAddress = this.getRemoteCacheAttributes().getRemoteLocation().toString();
-        }
-        return ipAddress;
     }
 }

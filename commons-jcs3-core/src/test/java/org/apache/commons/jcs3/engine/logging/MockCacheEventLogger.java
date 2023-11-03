@@ -33,6 +33,29 @@ public class MockCacheEventLogger
 
     /**
      * @param source
+     * @param region
+     * @param eventName
+     * @param optionalDetails
+     * @param key
+     * @return ICacheEvent
+     */
+    @Override
+    public <T> ICacheEvent<T> createICacheEvent( final String source, final String region, final String eventName, final String optionalDetails,
+                                          final T key )
+    {
+        return new CacheEvent<>();
+    }
+
+    /**
+     * @return testProperty
+     */
+    public String getTestProperty()
+    {
+        return testProperty;
+    }
+
+    /**
+     * @param source
      * @param eventName
      * @param optionalDetails
      */
@@ -54,21 +77,6 @@ public class MockCacheEventLogger
     }
 
     /**
-     * @param source
-     * @param region
-     * @param eventName
-     * @param optionalDetails
-     * @param key
-     * @return ICacheEvent
-     */
-    @Override
-    public <T> ICacheEvent<T> createICacheEvent( final String source, final String region, final String eventName, final String optionalDetails,
-                                          final T key )
-    {
-        return new CacheEvent<>();
-    }
-
-    /**
      * @param event
      */
     @Override
@@ -83,13 +91,5 @@ public class MockCacheEventLogger
     public void setTestProperty( final String testProperty )
     {
         this.testProperty = testProperty;
-    }
-
-    /**
-     * @return testProperty
-     */
-    public String getTestProperty()
-    {
-        return testProperty;
     }
 }

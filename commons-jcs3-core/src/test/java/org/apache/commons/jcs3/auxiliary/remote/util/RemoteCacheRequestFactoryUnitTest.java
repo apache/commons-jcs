@@ -36,25 +36,6 @@ public class RemoteCacheRequestFactoryUnitTest
 {
     /** Simple test */
     @Test
-    public void testCreateGetRequest_Normal()
-    {
-        // SETUP
-        final String cacheName = "test";
-        final Serializable key = "key";
-        final long requesterId = 2;
-
-        // DO WORK
-        final RemoteCacheRequest<Serializable, Serializable> result =
-            RemoteCacheRequestFactory.createGetRequest( cacheName, key, requesterId );
-
-        // VERIFY
-        assertNotNull( "Should have a result", result );
-        assertEquals( "Wrong cacheName", cacheName, result.getCacheName() );
-        assertEquals( "Wrong type", RemoteRequestType.GET, result.getRequestType() );
-    }
-
-    /** Simple test */
-    @Test
     public void testCreateGetMatchingRequest_Normal()
     {
         // SETUP
@@ -93,7 +74,7 @@ public class RemoteCacheRequestFactoryUnitTest
 
     /** Simple test */
     @Test
-    public void testCreateRemoveRequest_Normal()
+    public void testCreateGetRequest_Normal()
     {
         // SETUP
         final String cacheName = "test";
@@ -101,13 +82,13 @@ public class RemoteCacheRequestFactoryUnitTest
         final long requesterId = 2;
 
         // DO WORK
-        final RemoteCacheRequest<Serializable, Serializable> result = RemoteCacheRequestFactory
-            .createRemoveRequest( cacheName, key, requesterId );
+        final RemoteCacheRequest<Serializable, Serializable> result =
+            RemoteCacheRequestFactory.createGetRequest( cacheName, key, requesterId );
 
         // VERIFY
         assertNotNull( "Should have a result", result );
         assertEquals( "Wrong cacheName", cacheName, result.getCacheName() );
-        assertEquals( "Wrong type", RemoteRequestType.REMOVE, result.getRequestType() );
+        assertEquals( "Wrong type", RemoteRequestType.GET, result.getRequestType() );
     }
 
     /** Simple test */
@@ -126,6 +107,25 @@ public class RemoteCacheRequestFactoryUnitTest
         assertNotNull( "Should have a result", result );
         assertEquals( "Wrong cacheName", cacheName, result.getCacheName() );
         assertEquals( "Wrong type", RemoteRequestType.REMOVE_ALL, result.getRequestType() );
+    }
+
+    /** Simple test */
+    @Test
+    public void testCreateRemoveRequest_Normal()
+    {
+        // SETUP
+        final String cacheName = "test";
+        final Serializable key = "key";
+        final long requesterId = 2;
+
+        // DO WORK
+        final RemoteCacheRequest<Serializable, Serializable> result = RemoteCacheRequestFactory
+            .createRemoveRequest( cacheName, key, requesterId );
+
+        // VERIFY
+        assertNotNull( "Should have a result", result );
+        assertEquals( "Wrong cacheName", cacheName, result.getCacheName() );
+        assertEquals( "Wrong type", RemoteRequestType.REMOVE, result.getRequestType() );
     }
 
     /** Simple test */

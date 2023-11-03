@@ -35,27 +35,6 @@ public class StandardSerializer
     implements IElementSerializer
 {
     /**
-     * Serializes an object using default serialization.
-     * <p>
-     * @param obj
-     * @return byte[]
-     * @throws IOException
-     */
-    @Override
-    public <T> byte[] serialize(final T obj)
-        throws IOException
-    {
-        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
-        try (ObjectOutputStream oos = new ObjectOutputStream(baos))
-        {
-            oos.writeUnshared(obj);
-        }
-
-        return baos.toByteArray();
-    }
-
-    /**
      * Uses default de-serialization to turn a byte array into an object. All exceptions are
      * converted into IOExceptions.
      * <p>
@@ -77,5 +56,26 @@ public class StandardSerializer
             T readObject = (T) ois.readObject();
             return readObject;
         }
+    }
+
+    /**
+     * Serializes an object using default serialization.
+     * <p>
+     * @param obj
+     * @return byte[]
+     * @throws IOException
+     */
+    @Override
+    public <T> byte[] serialize(final T obj)
+        throws IOException
+    {
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+        try (ObjectOutputStream oos = new ObjectOutputStream(baos))
+        {
+            oos.writeUnshared(obj);
+        }
+
+        return baos.toByteArray();
     }
 }

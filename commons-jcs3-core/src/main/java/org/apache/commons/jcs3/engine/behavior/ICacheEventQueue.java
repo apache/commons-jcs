@@ -39,11 +39,13 @@ public interface ICacheEventQueue<K, V>
     }
 
     /**
-     * Return the type of event queue we are using, either single or pooled.
+     * Adds a feature to the DisposeEvent attribute of the ICacheEventQueue
+     * object
      * <p>
-     * @return the queue type: single or pooled
+     * @throws IOException
      */
-    QueueType getQueueType();
+    void addDisposeEvent()
+        throws IOException;
 
     /**
      * Adds a feature to the PutEvent attribute of the ICacheEventQueue object
@@ -56,17 +58,6 @@ public interface ICacheEventQueue<K, V>
         throws IOException;
 
     /**
-     * Adds a feature to the RemoveEvent attribute of the ICacheEventQueue
-     * object
-     * <p>
-     * @param key
-     *            The feature to be added to the RemoveEvent attribute
-     * @throws IOException
-     */
-    void addRemoveEvent( K key )
-        throws IOException;
-
-    /**
      * Adds a feature to the RemoveAllEvent attribute of the ICacheEventQueue
      * object
      * <p>
@@ -76,20 +67,15 @@ public interface ICacheEventQueue<K, V>
         throws IOException;
 
     /**
-     * Adds a feature to the DisposeEvent attribute of the ICacheEventQueue
+     * Adds a feature to the RemoveEvent attribute of the ICacheEventQueue
      * object
      * <p>
+     * @param key
+     *            The feature to be added to the RemoveEvent attribute
      * @throws IOException
      */
-    void addDisposeEvent()
+    void addRemoveEvent( K key )
         throws IOException;
-
-    /**
-     * Gets the listenerId attribute of the ICacheEventQueue object
-     *
-     * @return The listenerId value
-     */
-    long getListenerId();
 
     /**
      * Destroy the queue
@@ -107,6 +93,34 @@ public interface ICacheEventQueue<K, V>
     void destroy(int waitSeconds);
 
     /**
+     * Gets the listenerId attribute of the ICacheEventQueue object
+     *
+     * @return The listenerId value
+     */
+    long getListenerId();
+
+    /**
+     * Return the type of event queue we are using, either single or pooled.
+     * <p>
+     * @return the queue type: single or pooled
+     */
+    QueueType getQueueType();
+
+    /**
+     * Returns the historical and statistical data for an event queue cache.
+     * <p>
+     * @return IStats
+     */
+    IStats getStatistics();
+
+    /**
+     * Are there elements in the queue.
+     * <p>
+     * @return true if there are still elements in the queue.
+     */
+    boolean isEmpty();
+
+    /**
      * A Queue is working unless it has reached its max failure count.
      * <p>
      * @return boolean
@@ -120,18 +134,4 @@ public interface ICacheEventQueue<K, V>
      * @return number of items in the queue.
      */
     int size();
-
-    /**
-     * Are there elements in the queue.
-     * <p>
-     * @return true if there are still elements in the queue.
-     */
-    boolean isEmpty();
-
-    /**
-     * Returns the historical and statistical data for an event queue cache.
-     * <p>
-     * @return IStats
-     */
-    IStats getStatistics();
 }

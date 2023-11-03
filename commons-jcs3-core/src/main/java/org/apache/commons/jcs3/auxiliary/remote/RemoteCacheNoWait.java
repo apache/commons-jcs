@@ -122,27 +122,31 @@ public class RemoteCacheNoWait<K, V>
             client.getAuxiliaryCacheAttributes().getEventQueueType() );
     }
 
-    /**
-     * Adds a put event to the queue.
-     * <p>
-     * @param element
-     * @throws IOException
-     */
+    /** Adds a dispose request to the remote cache. */
     @Override
-    public void update( final ICacheElement<K, V> element )
-        throws IOException
+    public void dispose()
     {
-        putCount++;
         try
         {
-            cacheEventQueue.addPutEvent( element );
+            cacheEventQueue.addDisposeEvent();
         }
         catch ( final IOException e )
         {
-            log.error( "Problem adding putEvent to queue.", e );
+            log.error( "Problem adding DisposeEvent to queue.", e );
             cacheEventQueue.destroy();
-            throw e;
         }
+    }
+
+    /**
+     * Replaces the remote cache service handle with the given handle and reset the event queue by
+     * starting up a new instance.
+     * <p>
+     * @param remote
+     */
+    public void fixCache( final ICacheServiceNonLocal<?, ?> remote )
+    {
+        remoteCacheClient.fixCache( remote );
+        resetEventQ();
     }
 
     /**
@@ -183,6 +187,69 @@ public class RemoteCacheNoWait<K, V>
         }
 
         return null;
+    }
+
+    /**
+     * @return Returns the AuxiliaryCacheAttributes.
+     */
+    @Override
+    public AuxiliaryCacheAttributes getAuxiliaryCacheAttributes()
+    {
+        return remoteCacheClient.getAuxiliaryCacheAttributes();
+    }
+
+    /**
+     * This is for testing only. It allows you to take a look at the event queue.
+     * <p>
+     * @return ICacheEventQueue
+     */
+    protected ICacheEventQueue<K, V> getCacheEventQueue()
+    {
+        return this.cacheEventQueue;
+    }
+
+    /**
+     * Gets the cacheName attribute of the RemoteCacheNoWait object
+     * <p>
+     * @return The cacheName value
+     */
+    @Override
+    public String getCacheName()
+    {
+        return remoteCacheClient.getCacheName();
+    }
+
+    /**
+     * No remote invocation.
+     * <p>
+     * @return The cacheType value
+     */
+    @Override
+    public CacheType getCacheType()
+    {
+        return CacheType.REMOTE_CACHE;
+    }
+
+    /**
+     * this won't be called since we don't do ICache logging here.
+     * <p>
+     * @return String
+     */
+    @Override
+    public String getEventLoggingExtraInfo()
+    {
+        return "Remote Cache No Wait";
+    }
+
+    /**
+     * Return the keys in this cache.
+     * <p>
+     * @see org.apache.commons.jcs3.auxiliary.AuxiliaryCache#getKeySet()
+     */
+    @Override
+    public Set<K> getKeySet() throws IOException
+    {
+        return remoteCacheClient.getKeySet();
     }
 
     /**
@@ -267,14 +334,82 @@ public class RemoteCacheNoWait<K, V>
     }
 
     /**
-     * Return the keys in this cache.
+     * This is temporary. It allows the manager to get the lister.
      * <p>
-     * @see org.apache.commons.jcs3.auxiliary.AuxiliaryCache#getKeySet()
+     * @return the instance of the remote cache client used by this object
+     */
+    protected IRemoteCacheClient<K, V> getRemoteCache()
+    {
+        return remoteCacheClient;
+    }
+
+    /**
+     * No remote invocation.
+     * <p>
+     * @return The size value
      */
     @Override
-    public Set<K> getKeySet() throws IOException
+    public int getSize()
     {
-        return remoteCacheClient.getKeySet();
+        return remoteCacheClient.getSize();
+    }
+
+    /**
+     * @return statistics about this communication
+     */
+    @Override
+    public IStats getStatistics()
+    {
+        final IStats stats = new Stats();
+        stats.setTypeName( "Remote Cache No Wait" );
+
+        final ArrayList<IStatElement<?>> elems = new ArrayList<>();
+
+        elems.add(new StatElement<>( "Status", getStatus() ) );
+
+        // get the stats from the cache queue too
+        final IStats cStats = this.remoteCacheClient.getStatistics();
+        if ( cStats != null )
+        {
+            elems.addAll(cStats.getStatElements());
+        }
+
+        // get the stats from the event queue too
+        final IStats eqStats = this.cacheEventQueue.getStatistics();
+        elems.addAll(eqStats.getStatElements());
+
+        elems.add(new StatElement<>( "Get Count", Integer.valueOf(this.getCount) ) );
+        elems.add(new StatElement<>( "GetMatching Count", Integer.valueOf(this.getMatchingCount) ) );
+        elems.add(new StatElement<>( "GetMultiple Count", Integer.valueOf(this.getMultipleCount) ) );
+        elems.add(new StatElement<>( "Remove Count", Integer.valueOf(this.removeCount) ) );
+        elems.add(new StatElement<>( "Put Count", Integer.valueOf(this.putCount) ) );
+
+        stats.setStatElements( elems );
+
+        return stats;
+    }
+
+    /**
+     * Returns the statistics in String form.
+     * <p>
+     * @return String
+     */
+    @Override
+    public String getStats()
+    {
+        return getStatistics().toString();
+    }
+
+    /**
+     * Returns the async cache status. An error status indicates either the remote connection is not
+     * available, or the asyn queue has been unexpectedly destroyed. No remote invocation.
+     * <p>
+     * @return The status value
+     */
+    @Override
+    public CacheStatus getStatus()
+    {
+        return cacheEventQueue.isWorking() ? remoteCacheClient.getStatus() : CacheStatus.ERROR;
     }
 
     /**
@@ -323,78 +458,6 @@ public class RemoteCacheNoWait<K, V>
         }
     }
 
-    /** Adds a dispose request to the remote cache. */
-    @Override
-    public void dispose()
-    {
-        try
-        {
-            cacheEventQueue.addDisposeEvent();
-        }
-        catch ( final IOException e )
-        {
-            log.error( "Problem adding DisposeEvent to queue.", e );
-            cacheEventQueue.destroy();
-        }
-    }
-
-    /**
-     * No remote invocation.
-     * <p>
-     * @return The size value
-     */
-    @Override
-    public int getSize()
-    {
-        return remoteCacheClient.getSize();
-    }
-
-    /**
-     * No remote invocation.
-     * <p>
-     * @return The cacheType value
-     */
-    @Override
-    public CacheType getCacheType()
-    {
-        return CacheType.REMOTE_CACHE;
-    }
-
-    /**
-     * Returns the async cache status. An error status indicates either the remote connection is not
-     * available, or the asyn queue has been unexpectedly destroyed. No remote invocation.
-     * <p>
-     * @return The status value
-     */
-    @Override
-    public CacheStatus getStatus()
-    {
-        return cacheEventQueue.isWorking() ? remoteCacheClient.getStatus() : CacheStatus.ERROR;
-    }
-
-    /**
-     * Gets the cacheName attribute of the RemoteCacheNoWait object
-     * <p>
-     * @return The cacheName value
-     */
-    @Override
-    public String getCacheName()
-    {
-        return remoteCacheClient.getCacheName();
-    }
-
-    /**
-     * Replaces the remote cache service handle with the given handle and reset the event queue by
-     * starting up a new instance.
-     * <p>
-     * @param remote
-     */
-    public void fixCache( final ICacheServiceNonLocal<?, ?> remote )
-    {
-        remoteCacheClient.fixCache( remote );
-        resetEventQ();
-    }
-
     /**
      * Resets the event q by first destroying the existing one and starting up new one.
      * <p>
@@ -418,35 +481,6 @@ public class RemoteCacheNoWait<K, V>
     }
 
     /**
-     * This is temporary. It allows the manager to get the lister.
-     * <p>
-     * @return the instance of the remote cache client used by this object
-     */
-    protected IRemoteCacheClient<K, V> getRemoteCache()
-    {
-        return remoteCacheClient;
-    }
-
-    /**
-     * @return Returns the AuxiliaryCacheAttributes.
-     */
-    @Override
-    public AuxiliaryCacheAttributes getAuxiliaryCacheAttributes()
-    {
-        return remoteCacheClient.getAuxiliaryCacheAttributes();
-    }
-
-    /**
-     * This is for testing only. It allows you to take a look at the event queue.
-     * <p>
-     * @return ICacheEventQueue
-     */
-    protected ICacheEventQueue<K, V> getCacheEventQueue()
-    {
-        return this.cacheEventQueue;
-    }
-
-    /**
      * Returns the stats and the cache.toString().
      * <p>
      * @see Object#toString()
@@ -458,59 +492,25 @@ public class RemoteCacheNoWait<K, V>
     }
 
     /**
-     * Returns the statistics in String form.
+     * Adds a put event to the queue.
      * <p>
-     * @return String
+     * @param element
+     * @throws IOException
      */
     @Override
-    public String getStats()
+    public void update( final ICacheElement<K, V> element )
+        throws IOException
     {
-        return getStatistics().toString();
-    }
-
-    /**
-     * @return statistics about this communication
-     */
-    @Override
-    public IStats getStatistics()
-    {
-        final IStats stats = new Stats();
-        stats.setTypeName( "Remote Cache No Wait" );
-
-        final ArrayList<IStatElement<?>> elems = new ArrayList<>();
-
-        elems.add(new StatElement<>( "Status", getStatus() ) );
-
-        // get the stats from the cache queue too
-        final IStats cStats = this.remoteCacheClient.getStatistics();
-        if ( cStats != null )
+        putCount++;
+        try
         {
-            elems.addAll(cStats.getStatElements());
+            cacheEventQueue.addPutEvent( element );
         }
-
-        // get the stats from the event queue too
-        final IStats eqStats = this.cacheEventQueue.getStatistics();
-        elems.addAll(eqStats.getStatElements());
-
-        elems.add(new StatElement<>( "Get Count", Integer.valueOf(this.getCount) ) );
-        elems.add(new StatElement<>( "GetMatching Count", Integer.valueOf(this.getMatchingCount) ) );
-        elems.add(new StatElement<>( "GetMultiple Count", Integer.valueOf(this.getMultipleCount) ) );
-        elems.add(new StatElement<>( "Remove Count", Integer.valueOf(this.removeCount) ) );
-        elems.add(new StatElement<>( "Put Count", Integer.valueOf(this.putCount) ) );
-
-        stats.setStatElements( elems );
-
-        return stats;
-    }
-
-    /**
-     * this won't be called since we don't do ICache logging here.
-     * <p>
-     * @return String
-     */
-    @Override
-    public String getEventLoggingExtraInfo()
-    {
-        return "Remote Cache No Wait";
+        catch ( final IOException e )
+        {
+            log.error( "Problem adding putEvent to queue.", e );
+            cacheEventQueue.destroy();
+            throw e;
+        }
     }
 }

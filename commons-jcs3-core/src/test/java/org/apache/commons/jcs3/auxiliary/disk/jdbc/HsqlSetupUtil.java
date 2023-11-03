@@ -41,19 +41,6 @@ public final class HsqlSetupUtil
     private static HSQLDiskCacheFactoryHelper factory = new HSQLDiskCacheFactoryHelper();
 
     /**
-     * Sets up a table for cache testing
-     * <p>
-     * @param cConn
-     * @param tableName
-     *
-     * @throws SQLException if database problems occur
-     */
-    public static void setupTable( final Connection cConn, final String tableName ) throws SQLException
-    {
-        factory.setupTable(cConn, tableName);
-    }
-
-    /**
      * Connect to the database and return a connection.
      *
      * @param testProperties test database properties
@@ -77,5 +64,18 @@ public final class HsqlSetupUtil
 
         Class.forName(driver).getDeclaredConstructor().newInstance();
         return DriverManager.getConnection(url + database, user, password);
+    }
+
+    /**
+     * Sets up a table for cache testing
+     * <p>
+     * @param cConn
+     * @param tableName
+     *
+     * @throws SQLException if database problems occur
+     */
+    public static void setupTable( final Connection cConn, final String tableName ) throws SQLException
+    {
+        factory.setupTable(cConn, tableName);
     }
 }

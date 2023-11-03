@@ -36,11 +36,50 @@ import javax.cache.integration.CacheWriterException;
 
 public class AsyncCacheWriter<K, V> implements CacheWriter<K, V>, Closeable, Factory<CacheWriter<K, V>>
 {
-    private static final long serialVersionUID = 4135226004268295465L;
+    // avoid dep on impl
+    private static final class DaemonThreadFactory implements ThreadFactory
+    {
+        private final AtomicInteger index = new AtomicInteger(1);
+        private final String prefix;
 
+        public DaemonThreadFactory(final String prefix)
+        {
+            this.prefix = prefix;
+        }
+
+        @Override
+        public Thread newThread( final Runnable runner )
+        {
+            final Thread t = new Thread( runner );
+            t.setName(prefix + index.getAndIncrement());
+            t.setDaemon(true);
+            return t;
+        }
+    }
+
+    private static abstract class ExceptionProtectionRunnable implements Runnable
+    {
+        protected abstract void doRun();
+
+        @Override
+        public void run()
+        {
+            try
+            {
+                doRun();
+            }
+            catch (final Exception e)
+            {
+                LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            }
+        }
+    }
+
+    private static final long serialVersionUID = 4135226004268295465L;
     private static final Logger LOGGER = Logger.getLogger(AsyncCacheWriter.class.getName());
 
     private final CacheWriter<K, V> writer;
+
     private final ExecutorService pool;
 
     public AsyncCacheWriter(final CacheWriter<K, V> delegate, final int poolSize)
@@ -51,29 +90,19 @@ public class AsyncCacheWriter<K, V> implements CacheWriter<K, V>, Closeable, Fac
     }
 
     @Override
-    public void write(final Cache.Entry<? extends K, ? extends V> entry) throws CacheWriterException
+    public void close() throws IOException
     {
-        pool.submit(new ExceptionProtectionRunnable()
+        final List<Runnable> runnables = pool.shutdownNow();
+        for (final Runnable r : runnables)
         {
-            @Override
-            public void doRun()
-            {
-                writer.write(entry);
-            }
-        });
+            r.run();
+        }
     }
 
     @Override
-    public void writeAll(final Collection<Cache.Entry<? extends K, ? extends V>> entries) throws CacheWriterException
+    public CacheWriter<K, V> create()
     {
-        pool.submit(new ExceptionProtectionRunnable()
-        {
-            @Override
-            public void doRun()
-            {
-                writer.writeAll(entries);
-            }
-        });
+        return this;
     }
 
     @Override
@@ -103,57 +132,28 @@ public class AsyncCacheWriter<K, V> implements CacheWriter<K, V>, Closeable, Fac
     }
 
     @Override
-    public void close() throws IOException
+    public void write(final Cache.Entry<? extends K, ? extends V> entry) throws CacheWriterException
     {
-        final List<Runnable> runnables = pool.shutdownNow();
-        for (final Runnable r : runnables)
+        pool.submit(new ExceptionProtectionRunnable()
         {
-            r.run();
-        }
+            @Override
+            public void doRun()
+            {
+                writer.write(entry);
+            }
+        });
     }
 
     @Override
-    public CacheWriter<K, V> create()
+    public void writeAll(final Collection<Cache.Entry<? extends K, ? extends V>> entries) throws CacheWriterException
     {
-        return this;
-    }
-
-    // avoid dep on impl
-    private static final class DaemonThreadFactory implements ThreadFactory
-    {
-        private final AtomicInteger index = new AtomicInteger(1);
-        private final String prefix;
-
-        public DaemonThreadFactory(final String prefix)
+        pool.submit(new ExceptionProtectionRunnable()
         {
-            this.prefix = prefix;
-        }
-
-        @Override
-        public Thread newThread( final Runnable runner )
-        {
-            final Thread t = new Thread( runner );
-            t.setName(prefix + index.getAndIncrement());
-            t.setDaemon(true);
-            return t;
-        }
-    }
-
-    private static abstract class ExceptionProtectionRunnable implements Runnable
-    {
-        @Override
-        public void run()
-        {
-            try
+            @Override
+            public void doRun()
             {
-                doRun();
+                writer.writeAll(entries);
             }
-            catch (final Exception e)
-            {
-                LOGGER.log(Level.SEVERE, e.getMessage(), e);
-            }
-        }
-
-        protected abstract void doRun();
+        });
     }
 }

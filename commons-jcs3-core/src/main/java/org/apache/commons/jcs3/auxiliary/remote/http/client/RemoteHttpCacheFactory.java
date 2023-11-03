@@ -110,18 +110,6 @@ public class RemoteHttpCacheFactory
     }
 
     /**
-     * @see org.apache.commons.jcs3.auxiliary.AbstractAuxiliaryCacheFactory#initialize()
-     */
-    @Override
-    public void initialize()
-    {
-        super.initialize();
-        monitor = new RemoteHttpCacheMonitor(this);
-        monitor.setDaemon(true);
-        monitor.start();
-    }
-
-    /**
      * @see org.apache.commons.jcs3.auxiliary.AbstractAuxiliaryCacheFactory#dispose()
      */
     @Override
@@ -142,5 +130,17 @@ public class RemoteHttpCacheFactory
         }
 
         super.dispose();
+    }
+
+    /**
+     * @see org.apache.commons.jcs3.auxiliary.AbstractAuxiliaryCacheFactory#initialize()
+     */
+    @Override
+    public void initialize()
+    {
+        super.initialize();
+        monitor = new RemoteHttpCacheMonitor(this);
+        monitor.setDaemon(true);
+        monitor.start();
     }
 }

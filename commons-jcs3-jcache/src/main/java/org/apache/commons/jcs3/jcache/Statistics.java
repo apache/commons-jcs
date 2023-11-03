@@ -34,6 +34,26 @@ public class Statistics
     private final AtomicLong getTimeTaken = new AtomicLong();
     private final AtomicLong removeTimeTaken = new AtomicLong();
 
+    public void addGetTime(final long duration)
+    {
+        increment(duration, getTimeTaken);
+    }
+
+    public void addPutTime(final long duration)
+    {
+        increment(duration, putTimeTaken);
+    }
+
+    public void addRemoveTime(final long duration)
+    {
+        increment(duration, removeTimeTaken);
+    }
+
+    public long getEvictions()
+    {
+        return evictions.get();
+    }
+
     public long getHits()
     {
         return hits.get();
@@ -54,11 +74,6 @@ public class Statistics
         return removals.get();
     }
 
-    public long getEvictions()
-    {
-        return evictions.get();
-    }
-
     public long getTimeTakenForGets()
     {
         return getTimeTaken.get();
@@ -74,19 +89,14 @@ public class Statistics
         return removeTimeTaken.get();
     }
 
-    public void increaseRemovals(final long number)
+    public void increaseEvictions(final long number)
     {
-        increment(removals, number);
+        increment(evictions, number);
     }
 
     public void increaseExpiries(final long number)
     {
         increment(expiries, number);
-    }
-
-    public void increasePuts(final long number)
-    {
-        increment(puts, number);
     }
 
     public void increaseHits(final long number)
@@ -99,24 +109,14 @@ public class Statistics
         increment(misses, number);
     }
 
-    public void increaseEvictions(final long number)
+    public void increasePuts(final long number)
     {
-        increment(evictions, number);
+        increment(puts, number);
     }
 
-    public void addGetTime(final long duration)
+    public void increaseRemovals(final long number)
     {
-        increment(duration, getTimeTaken);
-    }
-
-    public void addPutTime(final long duration)
-    {
-        increment(duration, putTimeTaken);
-    }
-
-    public void addRemoveTime(final long duration)
-    {
-        increment(duration, removeTimeTaken);
+        increment(removals, number);
     }
 
     private void increment(final AtomicLong counter, final long number)

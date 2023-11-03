@@ -41,6 +41,12 @@ import org.apache.commons.jcs3.log.LogManager;
 public abstract class AbstractRemoteCacheService<K, V>
     implements ICacheServiceNonLocal<K, V>
 {
+    /** The interval at which we will log updates. */
+    private final static int logInterval = 100;
+
+    /** log instance */
+    private static final Log log = LogManager.getLog( AbstractRemoteCacheService.class );
+
     /** An optional event logger */
     private transient ICacheEventLogger cacheEventLogger;
 
@@ -52,12 +58,6 @@ public abstract class AbstractRemoteCacheService<K, V>
 
     /** Number of puts into the cache. */
     private int puts;
-
-    /** The interval at which we will log updates. */
-    private final static int logInterval = 100;
-
-    /** log instance */
-    private static final Log log = LogManager.getLog( AbstractRemoteCacheService.class );
 
     /**
      * Creates the super with the needed items.
@@ -72,69 +72,75 @@ public abstract class AbstractRemoteCacheService<K, V>
     }
 
     /**
-     * @param item
-     * @throws IOException
-     */
-    @Override
-    public void update( final ICacheElement<K, V> item )
-        throws IOException
-    {
-        update( item, 0 );
-    }
-
-    /**
-     * The internal processing is wrapped in event logging calls.
+     * Logs an event if an event logger is configured.
      * <p>
      * @param item
      * @param requesterId
+     * @param eventName
+     * @return ICacheEvent
+     */
+    protected ICacheEvent<ICacheElement<K, V>> createICacheEvent( final ICacheElement<K, V> item, final long requesterId, final String eventName )
+    {
+        if ( cacheEventLogger == null )
+        {
+            return new CacheEvent<>();
+        }
+        final String ipAddress = getExtraInfoForRequesterId( requesterId );
+        return cacheEventLogger.createICacheEvent( getEventLogSourceName(), item.getCacheName(), eventName, ipAddress,
+                                                   item );
+    }
+
+    /**
+     * Logs an event if an event logger is configured.
+     * <p>
+     * @param cacheName
+     * @param key
+     * @param requesterId
+     * @param eventName
+     * @return ICacheEvent
+     */
+    protected <T> ICacheEvent<T> createICacheEvent( final String cacheName, final T key, final long requesterId, final String eventName )
+    {
+        if ( cacheEventLogger == null )
+        {
+            return new CacheEvent<>();
+        }
+        final String ipAddress = getExtraInfoForRequesterId( requesterId );
+        return cacheEventLogger.createICacheEvent( getEventLogSourceName(), cacheName, eventName, ipAddress, key );
+    }
+
+    /**
+     * Frees the specified remote cache.
+     * <p>
+     * @param cacheName
      * @throws IOException
      */
     @Override
-    public void update( final ICacheElement<K, V> item, final long requesterId )
+    public void dispose( final String cacheName )
         throws IOException
     {
-        final ICacheEvent<ICacheElement<K, V>> cacheEvent = createICacheEvent( item, requesterId, ICacheEventLogger.UPDATE_EVENT );
+        dispose( cacheName, 0 );
+    }
+
+    /**
+     * Frees the specified remote cache.
+     * <p>
+     * @param cacheName
+     * @param requesterId
+     * @throws IOException
+     */
+    public void dispose( final String cacheName, final long requesterId )
+        throws IOException
+    {
+        final ICacheEvent<String> cacheEvent = createICacheEvent( cacheName, "none", requesterId, ICacheEventLogger.DISPOSE_EVENT );
         try
         {
-            logUpdateInfo( item );
-
-            processUpdate( item, requesterId );
+            processDispose( cacheName, requesterId );
         }
         finally
         {
             logICacheEvent( cacheEvent );
         }
-    }
-
-    /**
-     * The internal processing is wrapped in event logging calls.
-     * <p>
-     * @param item
-     * @param requesterId
-     * @throws IOException
-     */
-    abstract void processUpdate( ICacheElement<K, V> item, long requesterId )
-        throws IOException;
-
-    /**
-     * Log some details.
-     * <p>
-     * @param item
-     */
-    private void logUpdateInfo( final ICacheElement<K, V> item )
-    {
-        if ( log.isInfoEnabled() )
-        {
-            // not thread safe, but it doesn't have to be accurate
-            puts++;
-            if ( puts % logInterval == 0 )
-            {
-                log.info( "puts = {0}", puts );
-            }
-        }
-
-        log.debug( "In update, put [{0}] in [{1}]", item::getKey,
-                item::getCacheName);
     }
 
     /**
@@ -184,18 +190,41 @@ public abstract class AbstractRemoteCacheService<K, V>
     }
 
     /**
-     * Returns a cache bean from the specified cache; or null if the key does not exist.
-     * <p>
-     * Adding the requestor id, allows the cache to determine the source of the get.
-     * <p>
-     * @param cacheName
-     * @param key
-     * @param requesterId
-     * @return ICacheElement
-     * @throws IOException
+     * @return the cacheManager
      */
-    abstract ICacheElement<K, V> processGet( String cacheName, K key, long requesterId )
-        throws IOException;
+    protected ICompositeCacheManager getCacheManager()
+    {
+        return cacheManager;
+    }
+
+    /**
+     * @return the eventLogSourceName
+     */
+    protected String getEventLogSourceName()
+    {
+        return eventLogSourceName;
+    }
+
+    /**
+     * Ip address for the client, if one is stored.
+     * <p>
+     * Protected for testing.
+     * <p>
+     * @param requesterId
+     * @return String
+     */
+    protected abstract String getExtraInfoForRequesterId( long requesterId );
+
+    /**
+     * Return the keys in this cache.
+     * <p>
+     * @see org.apache.commons.jcs3.auxiliary.AuxiliaryCache#getKeySet()
+     */
+    @Override
+    public Set<K> getKeySet( final String cacheName )
+    {
+        return processGetKeySet( cacheName );
+    }
 
     /**
      * Gets all matching items.
@@ -236,18 +265,6 @@ public abstract class AbstractRemoteCacheService<K, V>
             logICacheEvent( cacheEvent );
         }
     }
-
-    /**
-     * Retrieves all matching keys.
-     * <p>
-     * @param cacheName
-     * @param pattern
-     * @param requesterId
-     * @return Map of keys and wrapped objects
-     * @throws IOException
-     */
-    abstract Map<K, ICacheElement<K, V>> processGetMatching( String cacheName, String pattern, long requesterId )
-        throws IOException;
 
     /**
      * Gets multiple items from the cache based on the given set of keys.
@@ -294,28 +311,87 @@ public abstract class AbstractRemoteCacheService<K, V>
     }
 
     /**
-     * Gets multiple items from the cache based on the given set of keys.
+     * Gets the stats attribute of the RemoteCacheServer object.
      * <p>
-     * @param cacheName
-     * @param keys
-     * @param requesterId
-     * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
-     *         data in cache for any of these keys
+     * @return The stats value
      * @throws IOException
      */
-    abstract Map<K, ICacheElement<K, V>> processGetMultiple( String cacheName, Set<K> keys, long requesterId )
+    public String getStats()
+        throws IOException
+    {
+        return cacheManager.getStats();
+    }
+
+    /**
+     * Logs an event if an event logger is configured.
+     * <p>
+     * @param source
+     * @param eventName
+     * @param optionalDetails
+     */
+    protected void logApplicationEvent( final String source, final String eventName, final String optionalDetails )
+    {
+        if ( cacheEventLogger != null )
+        {
+            cacheEventLogger.logApplicationEvent( source, eventName, optionalDetails );
+        }
+    }
+
+    /**
+     * Logs an event if an event logger is configured.
+     * <p>
+     * @param cacheEvent
+     */
+    protected <T> void logICacheEvent( final ICacheEvent<T> cacheEvent )
+    {
+        if ( cacheEventLogger != null )
+        {
+            cacheEventLogger.logICacheEvent( cacheEvent );
+        }
+    }
+
+    /**
+     * Log some details.
+     * <p>
+     * @param item
+     */
+    private void logUpdateInfo( final ICacheElement<K, V> item )
+    {
+        if ( log.isInfoEnabled() )
+        {
+            // not thread safe, but it doesn't have to be accurate
+            puts++;
+            if ( puts % logInterval == 0 )
+            {
+                log.info( "puts = {0}", puts );
+            }
+        }
+
+        log.debug( "In update, put [{0}] in [{1}]", item::getKey,
+                item::getCacheName);
+    }
+
+    /**
+     * @param cacheName
+     * @param requesterId
+     * @throws IOException
+     */
+    abstract void processDispose( String cacheName, long requesterId )
         throws IOException;
 
     /**
-     * Return the keys in this cache.
+     * Returns a cache bean from the specified cache; or null if the key does not exist.
      * <p>
-     * @see org.apache.commons.jcs3.auxiliary.AuxiliaryCache#getKeySet()
+     * Adding the requestor id, allows the cache to determine the source of the get.
+     * <p>
+     * @param cacheName
+     * @param key
+     * @param requesterId
+     * @return ICacheElement
+     * @throws IOException
      */
-    @Override
-    public Set<K> getKeySet( final String cacheName )
-    {
-        return processGetKeySet( cacheName );
-    }
+    abstract ICacheElement<K, V> processGet( String cacheName, K key, long requesterId )
+        throws IOException;
 
     /**
      * Gets the set of keys of objects currently in the cache.
@@ -329,6 +405,62 @@ public abstract class AbstractRemoteCacheService<K, V>
 
         return cache.getKeySet();
     }
+
+    /**
+     * Retrieves all matching keys.
+     * <p>
+     * @param cacheName
+     * @param pattern
+     * @param requesterId
+     * @return Map of keys and wrapped objects
+     * @throws IOException
+     */
+    abstract Map<K, ICacheElement<K, V>> processGetMatching( String cacheName, String pattern, long requesterId )
+        throws IOException;
+
+    /**
+     * Gets multiple items from the cache based on the given set of keys.
+     * <p>
+     * @param cacheName
+     * @param keys
+     * @param requesterId
+     * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
+     *         data in cache for any of these keys
+     * @throws IOException
+     */
+    abstract Map<K, ICacheElement<K, V>> processGetMultiple( String cacheName, Set<K> keys, long requesterId )
+        throws IOException;
+
+    /**
+     * Remove the key from the cache region and don't tell the source listener about it.
+     * <p>
+     * @param cacheName
+     * @param key
+     * @param requesterId
+     * @throws IOException
+     */
+    abstract void processRemove( String cacheName, K key, long requesterId )
+        throws IOException;
+
+    /**
+     * Remove all keys from the specified remote cache.
+     * <p>
+     * @param cacheName
+     * @param requesterId
+     * @throws IOException
+     */
+    abstract void processRemoveAll( String cacheName, long requesterId )
+        throws IOException;
+
+    /**
+     * The internal processing is wrapped in event logging calls.
+     * <p>
+     * @param item
+     * @param requesterId
+     * @throws IOException
+     */
+    abstract void processUpdate( ICacheElement<K, V> item, long requesterId )
+        throws IOException;
 
     /**
      * Removes the given key from the specified remote cache. Defaults the listener id to 0.
@@ -370,17 +502,6 @@ public abstract class AbstractRemoteCacheService<K, V>
     }
 
     /**
-     * Remove the key from the cache region and don't tell the source listener about it.
-     * <p>
-     * @param cacheName
-     * @param key
-     * @param requesterId
-     * @throws IOException
-     */
-    abstract void processRemove( String cacheName, K key, long requesterId )
-        throws IOException;
-
-    /**
      * Remove all keys from the specified remote cache.
      * <p>
      * @param cacheName
@@ -418,146 +539,6 @@ public abstract class AbstractRemoteCacheService<K, V>
     }
 
     /**
-     * Remove all keys from the specified remote cache.
-     * <p>
-     * @param cacheName
-     * @param requesterId
-     * @throws IOException
-     */
-    abstract void processRemoveAll( String cacheName, long requesterId )
-        throws IOException;
-
-    /**
-     * Frees the specified remote cache.
-     * <p>
-     * @param cacheName
-     * @throws IOException
-     */
-    @Override
-    public void dispose( final String cacheName )
-        throws IOException
-    {
-        dispose( cacheName, 0 );
-    }
-
-    /**
-     * Frees the specified remote cache.
-     * <p>
-     * @param cacheName
-     * @param requesterId
-     * @throws IOException
-     */
-    public void dispose( final String cacheName, final long requesterId )
-        throws IOException
-    {
-        final ICacheEvent<String> cacheEvent = createICacheEvent( cacheName, "none", requesterId, ICacheEventLogger.DISPOSE_EVENT );
-        try
-        {
-            processDispose( cacheName, requesterId );
-        }
-        finally
-        {
-            logICacheEvent( cacheEvent );
-        }
-    }
-
-    /**
-     * @param cacheName
-     * @param requesterId
-     * @throws IOException
-     */
-    abstract void processDispose( String cacheName, long requesterId )
-        throws IOException;
-
-    /**
-     * Gets the stats attribute of the RemoteCacheServer object.
-     * <p>
-     * @return The stats value
-     * @throws IOException
-     */
-    public String getStats()
-        throws IOException
-    {
-        return cacheManager.getStats();
-    }
-
-    /**
-     * Logs an event if an event logger is configured.
-     * <p>
-     * @param item
-     * @param requesterId
-     * @param eventName
-     * @return ICacheEvent
-     */
-    protected ICacheEvent<ICacheElement<K, V>> createICacheEvent( final ICacheElement<K, V> item, final long requesterId, final String eventName )
-    {
-        if ( cacheEventLogger == null )
-        {
-            return new CacheEvent<>();
-        }
-        final String ipAddress = getExtraInfoForRequesterId( requesterId );
-        return cacheEventLogger.createICacheEvent( getEventLogSourceName(), item.getCacheName(), eventName, ipAddress,
-                                                   item );
-    }
-
-    /**
-     * Logs an event if an event logger is configured.
-     * <p>
-     * @param cacheName
-     * @param key
-     * @param requesterId
-     * @param eventName
-     * @return ICacheEvent
-     */
-    protected <T> ICacheEvent<T> createICacheEvent( final String cacheName, final T key, final long requesterId, final String eventName )
-    {
-        if ( cacheEventLogger == null )
-        {
-            return new CacheEvent<>();
-        }
-        final String ipAddress = getExtraInfoForRequesterId( requesterId );
-        return cacheEventLogger.createICacheEvent( getEventLogSourceName(), cacheName, eventName, ipAddress, key );
-    }
-
-    /**
-     * Logs an event if an event logger is configured.
-     * <p>
-     * @param source
-     * @param eventName
-     * @param optionalDetails
-     */
-    protected void logApplicationEvent( final String source, final String eventName, final String optionalDetails )
-    {
-        if ( cacheEventLogger != null )
-        {
-            cacheEventLogger.logApplicationEvent( source, eventName, optionalDetails );
-        }
-    }
-
-    /**
-     * Logs an event if an event logger is configured.
-     * <p>
-     * @param cacheEvent
-     */
-    protected <T> void logICacheEvent( final ICacheEvent<T> cacheEvent )
-    {
-        if ( cacheEventLogger != null )
-        {
-            cacheEventLogger.logICacheEvent( cacheEvent );
-        }
-    }
-
-    /**
-     * Ip address for the client, if one is stored.
-     * <p>
-     * Protected for testing.
-     * <p>
-     * @param requesterId
-     * @return String
-     */
-    protected abstract String getExtraInfoForRequesterId( long requesterId );
-
-    /**
      * Allows it to be injected.
      * <p>
      * @param cacheEventLogger
@@ -576,14 +557,6 @@ public abstract class AbstractRemoteCacheService<K, V>
     }
 
     /**
-     * @return the cacheManager
-     */
-    protected ICompositeCacheManager getCacheManager()
-    {
-        return cacheManager;
-    }
-
-    /**
      * @param eventLogSourceName the eventLogSourceName to set
      */
     protected void setEventLogSourceName( final String eventLogSourceName )
@@ -592,10 +565,37 @@ public abstract class AbstractRemoteCacheService<K, V>
     }
 
     /**
-     * @return the eventLogSourceName
+     * @param item
+     * @throws IOException
      */
-    protected String getEventLogSourceName()
+    @Override
+    public void update( final ICacheElement<K, V> item )
+        throws IOException
     {
-        return eventLogSourceName;
+        update( item, 0 );
+    }
+
+    /**
+     * The internal processing is wrapped in event logging calls.
+     * <p>
+     * @param item
+     * @param requesterId
+     * @throws IOException
+     */
+    @Override
+    public void update( final ICacheElement<K, V> item, final long requesterId )
+        throws IOException
+    {
+        final ICacheEvent<ICacheElement<K, V>> cacheEvent = createICacheEvent( item, requesterId, ICacheEventLogger.UPDATE_EVENT );
+        try
+        {
+            logUpdateInfo( item );
+
+            processUpdate( item, requesterId );
+        }
+        finally
+        {
+            logICacheEvent( cacheEvent );
+        }
     }
 }

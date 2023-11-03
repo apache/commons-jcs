@@ -45,6 +45,79 @@ public class ZombieCacheServiceNonLocal<K, V>
     extends ZombieCacheService<K, V>
     implements ICacheServiceNonLocal<K, V>
 {
+    /**
+     * A basic put event.
+     */
+    private static final class PutEvent<K, V>
+        extends ZombieEvent
+    {
+        /** The element to put */
+        final ICacheElement<K, V> element;
+
+        /**
+         * Sets the element
+         * @param element
+         * @param requesterId
+         */
+        public PutEvent( final ICacheElement<K, V> element, final long requesterId )
+        {
+            this.requesterId = requesterId;
+            this.element = element;
+        }
+    }
+
+    /**
+     * A basic RemoveAll event.
+     */
+    private static final class RemoveAllEvent
+        extends ZombieEvent
+    {
+        /**
+         * @param cacheName
+         * @param requesterId
+         */
+        public RemoveAllEvent( final String cacheName, final long requesterId )
+        {
+            this.cacheName = cacheName;
+            this.requesterId = requesterId;
+        }
+    }
+
+    /**
+     * A basic Remove event.
+     */
+    private static final class RemoveEvent<K>
+        extends ZombieEvent
+    {
+        /** The key to remove */
+        final K key;
+
+        /**
+         * Sets the element
+         * @param cacheName
+         * @param key
+         * @param requesterId
+         */
+        public RemoveEvent( final String cacheName, final K key, final long requesterId )
+        {
+            this.cacheName = cacheName;
+            this.requesterId = requesterId;
+            this.key = key;
+        }
+    }
+
+    /**
+     * Base of the other events.
+     */
+    protected static abstract class ZombieEvent
+    {
+        /** The name of the region. */
+        String cacheName;
+
+        /** The id of the requester */
+        long requesterId;
+    }
+
     /** The logger */
     private static final Log log = LogManager.getLog( ZombieCacheServiceNonLocal.class );
 
@@ -73,16 +146,6 @@ public class ZombieCacheServiceNonLocal<K, V>
         this.maxQueueSize = maxQueueSize;
     }
 
-    /**
-     * Gets the number of items on the queue.
-     * <p>
-     * @return size of the queue.
-     */
-    public int getQueueSize()
-    {
-        return queue.size();
-    }
-
     private void addQueue(final ZombieEvent event)
     {
         queue.add(event);
@@ -90,58 +153,6 @@ public class ZombieCacheServiceNonLocal<K, V>
         {
             queue.poll(); // drop oldest entry
         }
-    }
-
-    /**
-     * Adds an update event to the queue if the maxSize is greater than 0;
-     * <p>
-     * @param item ICacheElement
-     * @param listenerId - identifies the caller.
-     */
-    @Override
-    public void update( final ICacheElement<K, V> item, final long listenerId )
-    {
-        if ( maxQueueSize > 0 )
-        {
-            final PutEvent<K, V> event = new PutEvent<>( item, listenerId );
-            addQueue( event );
-        }
-        // Zombies have no inner life
-    }
-
-    /**
-     * Adds a removeAll event to the queue if the maxSize is greater than 0;
-     * <p>
-     * @param cacheName - region name
-     * @param key - item key
-     * @param listenerId - identifies the caller.
-     */
-    @Override
-    public void remove( final String cacheName, final K key, final long listenerId )
-    {
-        if ( maxQueueSize > 0 )
-        {
-            final RemoveEvent<K> event = new RemoveEvent<>( cacheName, key, listenerId );
-            addQueue( event );
-        }
-        // Zombies have no inner life
-    }
-
-    /**
-     * Adds a removeAll event to the queue if the maxSize is greater than 0;
-     * <p>
-     * @param cacheName - name of the region
-     * @param listenerId - identifies the caller.
-     */
-    @Override
-    public void removeAll( final String cacheName, final long listenerId )
-    {
-        if ( maxQueueSize > 0 )
-        {
-            final RemoveAllEvent event = new RemoveAllEvent( cacheName, listenerId );
-            addQueue( event );
-        }
-        // Zombies have no inner life
     }
 
     /**
@@ -159,6 +170,18 @@ public class ZombieCacheServiceNonLocal<K, V>
     {
         // Zombies have no inner life
         return null;
+    }
+
+    /**
+     * Does nothing.
+     * <p>
+     * @param cacheName - region name
+     * @return empty set
+     */
+    @Override
+    public Set<K> getKeySet( final String cacheName )
+    {
+        return Collections.emptySet();
     }
 
     /**
@@ -190,15 +213,13 @@ public class ZombieCacheServiceNonLocal<K, V>
     }
 
     /**
-     * Does nothing.
+     * Gets the number of items on the queue.
      * <p>
-     * @param cacheName - region name
-     * @return empty set
+     * @return size of the queue.
      */
-    @Override
-    public Set<K> getKeySet( final String cacheName )
+    public int getQueueSize()
     {
-        return Collections.emptySet();
+        return queue.size();
     }
 
     /**
@@ -244,75 +265,54 @@ public class ZombieCacheServiceNonLocal<K, V>
     }
 
     /**
-     * Base of the other events.
+     * Adds a removeAll event to the queue if the maxSize is greater than 0;
+     * <p>
+     * @param cacheName - region name
+     * @param key - item key
+     * @param listenerId - identifies the caller.
      */
-    protected static abstract class ZombieEvent
+    @Override
+    public void remove( final String cacheName, final K key, final long listenerId )
     {
-        /** The name of the region. */
-        String cacheName;
-
-        /** The id of the requester */
-        long requesterId;
+        if ( maxQueueSize > 0 )
+        {
+            final RemoveEvent<K> event = new RemoveEvent<>( cacheName, key, listenerId );
+            addQueue( event );
+        }
+        // Zombies have no inner life
     }
 
     /**
-     * A basic put event.
+     * Adds a removeAll event to the queue if the maxSize is greater than 0;
+     * <p>
+     * @param cacheName - name of the region
+     * @param listenerId - identifies the caller.
      */
-    private static final class PutEvent<K, V>
-        extends ZombieEvent
+    @Override
+    public void removeAll( final String cacheName, final long listenerId )
     {
-        /** The element to put */
-        final ICacheElement<K, V> element;
-
-        /**
-         * Sets the element
-         * @param element
-         * @param requesterId
-         */
-        public PutEvent( final ICacheElement<K, V> element, final long requesterId )
+        if ( maxQueueSize > 0 )
         {
-            this.requesterId = requesterId;
-            this.element = element;
+            final RemoveAllEvent event = new RemoveAllEvent( cacheName, listenerId );
+            addQueue( event );
         }
+        // Zombies have no inner life
     }
 
     /**
-     * A basic Remove event.
+     * Adds an update event to the queue if the maxSize is greater than 0;
+     * <p>
+     * @param item ICacheElement
+     * @param listenerId - identifies the caller.
      */
-    private static final class RemoveEvent<K>
-        extends ZombieEvent
+    @Override
+    public void update( final ICacheElement<K, V> item, final long listenerId )
     {
-        /** The key to remove */
-        final K key;
-
-        /**
-         * Sets the element
-         * @param cacheName
-         * @param key
-         * @param requesterId
-         */
-        public RemoveEvent( final String cacheName, final K key, final long requesterId )
+        if ( maxQueueSize > 0 )
         {
-            this.cacheName = cacheName;
-            this.requesterId = requesterId;
-            this.key = key;
+            final PutEvent<K, V> event = new PutEvent<>( item, listenerId );
+            addQueue( event );
         }
-    }
-
-    /**
-     * A basic RemoveAll event.
-     */
-    private static final class RemoveAllEvent
-        extends ZombieEvent
-    {
-        /**
-         * @param cacheName
-         * @param requesterId
-         */
-        public RemoveAllEvent( final String cacheName, final long requesterId )
-        {
-            this.cacheName = cacheName;
-            this.requesterId = requesterId;
-        }
+        // Zombies have no inner life
     }
 }

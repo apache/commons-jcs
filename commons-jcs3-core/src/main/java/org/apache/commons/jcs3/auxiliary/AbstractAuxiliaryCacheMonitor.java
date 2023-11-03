@@ -36,11 +36,24 @@ import org.apache.commons.jcs3.log.LogManager;
  */
 public abstract class AbstractAuxiliaryCacheMonitor extends Thread
 {
-    /** The logger */
-    protected final Log log = LogManager.getLog( this.getClass() );
-
     /** How long to wait between runs */
     protected static long idlePeriod = 20 * 1000;
+
+    /**
+     * Configures the idle period between repairs.
+     * <p>
+     * @param idlePeriod The new idlePeriod value
+     */
+    public static void setIdlePeriod( final long idlePeriod )
+    {
+        if ( idlePeriod > AbstractAuxiliaryCacheMonitor.idlePeriod )
+        {
+            AbstractAuxiliaryCacheMonitor.idlePeriod = idlePeriod;
+        }
+    }
+
+    /** The logger */
+    protected final Log log = LogManager.getLog( this.getClass() );
 
     /**
      * Must make sure AbstractAuxiliaryCacheMonitor is started before any error can be detected!
@@ -69,17 +82,14 @@ public abstract class AbstractAuxiliaryCacheMonitor extends Thread
     }
 
     /**
-     * Configures the idle period between repairs.
-     * <p>
-     * @param idlePeriod The new idlePeriod value
+     * Clean up all resources before shutdown
      */
-    public static void setIdlePeriod( final long idlePeriod )
-    {
-        if ( idlePeriod > AbstractAuxiliaryCacheMonitor.idlePeriod )
-        {
-            AbstractAuxiliaryCacheMonitor.idlePeriod = idlePeriod;
-        }
-    }
+    protected abstract void dispose();
+
+    /**
+     * do actual work
+     */
+    protected abstract void doWork();
 
     /**
      * Notifies the cache monitor that an error occurred, and kicks off the error recovery process.
@@ -102,30 +112,6 @@ public abstract class AbstractAuxiliaryCacheMonitor extends Thread
             signalTrigger();
         }
     }
-
-    // Trigger continuation of loop
-    private void signalTrigger()
-    {
-        try
-        {
-            lock.lock();
-            trigger.signal();
-        }
-        finally
-        {
-            lock.unlock();
-        }
-    }
-
-    /**
-     * Clean up all resources before shutdown
-     */
-    protected abstract void dispose();
-
-    /**
-     * do actual work
-     */
-    protected abstract void doWork();
 
     /**
      * Main processing method for the AbstractAuxiliaryCacheMonitor object
@@ -193,5 +179,19 @@ public abstract class AbstractAuxiliaryCacheMonitor extends Thread
             }
         }
         while ( true );
+    }
+
+    // Trigger continuation of loop
+    private void signalTrigger()
+    {
+        try
+        {
+            lock.lock();
+            trigger.signal();
+        }
+        finally
+        {
+            lock.unlock();
+        }
     }
 }

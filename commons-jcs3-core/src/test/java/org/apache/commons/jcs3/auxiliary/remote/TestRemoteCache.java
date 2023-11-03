@@ -75,29 +75,6 @@ public class TestRemoteCache
      * @throws Exception
      */
     @Test
-    @Ignore
-    public void testSimpleSend()
-        throws Exception
-    {
-        log.info( "testSimpleSend" );
-
-        final CacheAccess<String, String> cache = JCS.getInstance( "testCache" );
-
-        log.info( "cache = " + cache );
-
-        for ( int i = 0; i < 1000; i++ )
-        {
-//            System.out.println( "puttting " + i );
-            cache.put( "key" + i, "data" + i );
-//            System.out.println( "put " + i );
-            log.info( "put " + i );
-        }
-    }
-
-    /**
-     * @throws Exception
-     */
-    @Test
     public void testService()
         throws Exception
     {
@@ -136,5 +113,28 @@ public class TestRemoteCache
          * i ); Object data = cacheReceiver.get( "key" + i );
          * System.out.println( i + " = " + data ); }
          */
+    }
+
+    /**
+     * @throws Exception
+     */
+    @Test
+    @Ignore
+    public void testSimpleSend()
+        throws Exception
+    {
+        log.info( "testSimpleSend" );
+
+        final CacheAccess<String, String> cache = JCS.getInstance( "testCache" );
+
+        log.info( "cache = " + cache );
+
+        for ( int i = 0; i < 1000; i++ )
+        {
+//            System.out.println( "puttting " + i );
+            cache.put( "key" + i, "data" + i );
+//            System.out.println( "put " + i );
+            log.info( "put " + i );
+        }
     }
 }

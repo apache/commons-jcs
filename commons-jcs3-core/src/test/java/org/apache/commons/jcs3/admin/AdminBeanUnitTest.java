@@ -36,6 +36,56 @@ public class AdminBeanUnitTest
 {
 
     /**
+     * Add an item to a region. Call clear all and verify that it doesn't exist.
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testClearAll()
+        throws Exception
+    {
+        final JCSAdminBean admin = new JCSAdminBean();
+
+        final String regionName = "myRegion";
+        final CacheAccess<String, String> cache = JCS.getInstance( regionName );
+
+        final String key = "myKey";
+        cache.put( key, "value" );
+
+        admin.clearAllRegions();
+
+        final List<CacheElementInfo> elements2 = admin.buildElementInfo( regionName );
+        assertEquals( "Wrong number of elements in the region after remove.", 0, elements2.size() );
+    }
+
+    /**
+     * Put a value in a region and verify that it shows up.
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testGetElementForRegionInfo()
+        throws Exception
+    {
+        final String regionName = "myRegion";
+        final CacheAccess<String, String> cache = JCS.getInstance( regionName );
+
+        // clear the region
+        cache.clear();
+
+        final String key = "myKey";
+        cache.put( key, "value" );
+
+        final JCSAdminBean admin = new JCSAdminBean();
+
+        final List<CacheElementInfo> elements = admin.buildElementInfo( regionName );
+        assertEquals( "Wrong number of elements in the region.", 1, elements.size() );
+
+        final CacheElementInfo elementInfo = elements.get(0);
+        assertEquals( "Wrong key." + elementInfo, key, elementInfo.getKey() );
+    }
+
+    /**
      * Create a test region and then verify that we get it from the list.
      *
      * @throws Exception
@@ -73,33 +123,6 @@ public class AdminBeanUnitTest
     }
 
     /**
-     * Put a value in a region and verify that it shows up.
-     *
-     * @throws Exception
-     */
-    @Test
-    public void testGetElementForRegionInfo()
-        throws Exception
-    {
-        final String regionName = "myRegion";
-        final CacheAccess<String, String> cache = JCS.getInstance( regionName );
-
-        // clear the region
-        cache.clear();
-
-        final String key = "myKey";
-        cache.put( key, "value" );
-
-        final JCSAdminBean admin = new JCSAdminBean();
-
-        final List<CacheElementInfo> elements = admin.buildElementInfo( regionName );
-        assertEquals( "Wrong number of elements in the region.", 1, elements.size() );
-
-        final CacheElementInfo elementInfo = elements.get(0);
-        assertEquals( "Wrong key." + elementInfo, key, elementInfo.getKey() );
-    }
-
-    /**
      * Remove an item via the remove method.
      *
      * @throws Exception
@@ -127,29 +150,6 @@ public class AdminBeanUnitTest
         assertEquals( "Wrong key.", key, elementInfo.getKey() );
 
         admin.removeItem( regionName, key );
-
-        final List<CacheElementInfo> elements2 = admin.buildElementInfo( regionName );
-        assertEquals( "Wrong number of elements in the region after remove.", 0, elements2.size() );
-    }
-
-    /**
-     * Add an item to a region. Call clear all and verify that it doesn't exist.
-     *
-     * @throws Exception
-     */
-    @Test
-    public void testClearAll()
-        throws Exception
-    {
-        final JCSAdminBean admin = new JCSAdminBean();
-
-        final String regionName = "myRegion";
-        final CacheAccess<String, String> cache = JCS.getInstance( regionName );
-
-        final String key = "myKey";
-        cache.put( key, "value" );
-
-        admin.clearAllRegions();
 
         final List<CacheElementInfo> elements2 = admin.buildElementInfo( regionName );
         assertEquals( "Wrong number of elements in the region after remove.", 0, elements2.size() );

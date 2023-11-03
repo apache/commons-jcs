@@ -54,6 +54,12 @@ public class UDPDiscoveryReceiver
     /** The log factory */
     private static final Log log = LogManager.getLog( UDPDiscoveryReceiver.class );
 
+    /**
+     * TODO: Consider using the threadpool manager to get this thread pool. For now place a tight
+     * restriction on the pool size
+     */
+    private static final int maxPoolSize = 2;
+
     /** The channel used for communication. */
     private DatagramChannel multicastChannel;
 
@@ -62,12 +68,6 @@ public class UDPDiscoveryReceiver
 
     /** The selector. */
     private Selector selector;
-
-    /**
-     * TODO: Consider using the threadpool manager to get this thread pool. For now place a tight
-     * restriction on the pool size
-     */
-    private static final int maxPoolSize = 2;
 
     /** The processor */
     private final ExecutorService pooledExecutor;
@@ -84,27 +84,8 @@ public class UDPDiscoveryReceiver
     /** Is it shutdown. */
     private final AtomicBoolean shutdown = new AtomicBoolean(false);
 
-    /**
-     * Constructor for the UDPDiscoveryReceiver object.
-     * <p>
-     * We determine our own host using InetAddress
-     *<p>
-     * @param service
-     * @param multicastInterfaceString
-     * @param multicastAddressString
-     * @param multicastPort
-     * @throws IOException
-     */
-    public UDPDiscoveryReceiver( final UDPDiscoveryService service,
-            final String multicastInterfaceString,
-            final String multicastAddressString,
-            final int multicastPort )
-        throws IOException
-    {
-        this(service, multicastInterfaceString,
-                InetAddress.getByName( multicastAddressString ),
-                multicastPort);
-    }
+    private final ArrayBlockingQueue<UDPDiscoveryMessage> msgQueue =
+            new ArrayBlockingQueue<>(maxPoolSize);
 
     /**
      * Constructor for the UDPDiscoveryReceiver object.
@@ -136,6 +117,28 @@ public class UDPDiscoveryReceiver
 
         log.info( "Constructing listener, [{0}:{1}]", multicastAddress, multicastPort );
         createSocket( multicastInterfaceString, multicastAddress, multicastPort );
+    }
+
+    /**
+     * Constructor for the UDPDiscoveryReceiver object.
+     * <p>
+     * We determine our own host using InetAddress
+     *<p>
+     * @param service
+     * @param multicastInterfaceString
+     * @param multicastAddressString
+     * @param multicastPort
+     * @throws IOException
+     */
+    public UDPDiscoveryReceiver( final UDPDiscoveryService service,
+            final String multicastInterfaceString,
+            final String multicastAddressString,
+            final int multicastPort )
+        throws IOException
+    {
+        this(service, multicastInterfaceString,
+                InetAddress.getByName( multicastAddressString ),
+                multicastPort);
     }
 
     /**
@@ -189,25 +192,64 @@ public class UDPDiscoveryReceiver
         }
     }
 
-    private final ArrayBlockingQueue<UDPDiscoveryMessage> msgQueue =
-            new ArrayBlockingQueue<>(maxPoolSize);
+    /**
+     * @return Returns the cnt.
+     */
+    public int getCnt()
+    {
+        return cnt.get();
+    }
 
     /**
-     * Wait for multicast message (used for testing)
-     *
-     * @return the object message
-     * @throws IOException
+     * Separate thread run when a command comes into the UDPDiscoveryReceiver.
      */
-    protected Object waitForMessage()
-        throws IOException
+    private void handleMessage(UDPDiscoveryMessage message)
     {
-        try
+        // consider comparing ports here instead.
+        if ( message.getRequesterId() == CacheInfo.listenerId )
         {
-            return msgQueue.take();
+            log.debug( "Ignoring message sent from self" );
         }
-        catch (InterruptedException e)
+        else
         {
-            throw new IOException("Interrupted waiting for message", e);
+            log.debug( "Process message sent from another" );
+            log.debug( "Message = {0}", message );
+
+            if ( message.getHost() == null || message.getCacheNames() == null || message.getCacheNames().isEmpty() )
+            {
+                log.debug( "Ignoring invalid message: {0}", message );
+            }
+            else
+            {
+                processMessage(message);
+            }
+        }
+    }
+
+    /**
+     * Process the incoming message.
+     */
+    private void processMessage(UDPDiscoveryMessage message)
+    {
+        final DiscoveredService discoveredService = new DiscoveredService(message);
+
+        switch (message.getMessageType())
+        {
+            case REMOVE:
+                log.debug( "Removing service from set {0}", discoveredService );
+                service.removeDiscoveredService( discoveredService );
+                break;
+            case REQUEST:
+                // if this is a request message, have the service handle it and
+                // return
+                log.debug( "Message is a Request Broadcast, will have the service handle it." );
+                service.serviceRequestBroadcast();
+                break;
+            case PASSIVE:
+            default:
+                log.debug( "Adding or updating service to set {0}", discoveredService );
+                service.addOrUpdateService( discoveredService );
+                break;
         }
     }
 
@@ -313,14 +355,6 @@ public class UDPDiscoveryReceiver
     }
 
     /**
-     * @return Returns the cnt.
-     */
-    public int getCnt()
-    {
-        return cnt.get();
-    }
-
-    /**
      * For testing
      *
      * @param serializer the serializer to set
@@ -329,59 +363,6 @@ public class UDPDiscoveryReceiver
     protected void setSerializer(IElementSerializer serializer)
     {
         this.serializer = serializer;
-    }
-
-    /**
-     * Separate thread run when a command comes into the UDPDiscoveryReceiver.
-     */
-    private void handleMessage(UDPDiscoveryMessage message)
-    {
-        // consider comparing ports here instead.
-        if ( message.getRequesterId() == CacheInfo.listenerId )
-        {
-            log.debug( "Ignoring message sent from self" );
-        }
-        else
-        {
-            log.debug( "Process message sent from another" );
-            log.debug( "Message = {0}", message );
-
-            if ( message.getHost() == null || message.getCacheNames() == null || message.getCacheNames().isEmpty() )
-            {
-                log.debug( "Ignoring invalid message: {0}", message );
-            }
-            else
-            {
-                processMessage(message);
-            }
-        }
-    }
-
-    /**
-     * Process the incoming message.
-     */
-    private void processMessage(UDPDiscoveryMessage message)
-    {
-        final DiscoveredService discoveredService = new DiscoveredService(message);
-
-        switch (message.getMessageType())
-        {
-            case REMOVE:
-                log.debug( "Removing service from set {0}", discoveredService );
-                service.removeDiscoveredService( discoveredService );
-                break;
-            case REQUEST:
-                // if this is a request message, have the service handle it and
-                // return
-                log.debug( "Message is a Request Broadcast, will have the service handle it." );
-                service.serviceRequestBroadcast();
-                break;
-            case PASSIVE:
-            default:
-                log.debug( "Adding or updating service to set {0}", discoveredService );
-                service.addOrUpdateService( discoveredService );
-                break;
-        }
     }
 
     /** Shuts down the socket. */
@@ -400,6 +381,25 @@ public class UDPDiscoveryReceiver
             {
                 log.error( "Problem closing socket" );
             }
+        }
+    }
+
+    /**
+     * Wait for multicast message (used for testing)
+     *
+     * @return the object message
+     * @throws IOException
+     */
+    protected Object waitForMessage()
+        throws IOException
+    {
+        try
+        {
+            return msgQueue.take();
+        }
+        catch (InterruptedException e)
+        {
+            throw new IOException("Interrupted waiting for message", e);
         }
     }
 }

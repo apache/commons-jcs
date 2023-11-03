@@ -50,6 +50,22 @@ public class MockCacheEventLogger
 
     /**
      * @param source
+     * @param region
+     * @param eventName
+     * @param optionalDetails
+     * @param key
+     * @return ICacheEvent
+     */
+    @Override
+    public <T> ICacheEvent<T> createICacheEvent( final String source, final String region,
+            final String eventName, final String optionalDetails, final T key )
+    {
+        startICacheEventCalls++;
+        return new CacheEvent<>();
+    }
+
+    /**
+     * @param source
      * @param eventName
      * @param optionalDetails
      */
@@ -57,15 +73,6 @@ public class MockCacheEventLogger
     public void logApplicationEvent( final String source, final String eventName, final String optionalDetails )
     {
         applicationEventCalls++;
-    }
-
-    /**
-     * @param event
-     */
-    @Override
-    public <T> void logICacheEvent( final ICacheEvent<T> event )
-    {
-        endICacheEventCalls++;
     }
 
     /**
@@ -81,18 +88,11 @@ public class MockCacheEventLogger
     }
 
     /**
-     * @param source
-     * @param region
-     * @param eventName
-     * @param optionalDetails
-     * @param key
-     * @return ICacheEvent
+     * @param event
      */
     @Override
-    public <T> ICacheEvent<T> createICacheEvent( final String source, final String region,
-            final String eventName, final String optionalDetails, final T key )
+    public <T> void logICacheEvent( final ICacheEvent<T> event )
     {
-        startICacheEventCalls++;
-        return new CacheEvent<>();
+        endICacheEventCalls++;
     }
 }

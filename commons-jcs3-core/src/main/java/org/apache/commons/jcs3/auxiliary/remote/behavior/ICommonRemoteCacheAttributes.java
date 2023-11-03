@@ -33,32 +33,25 @@ public interface ICommonRemoteCacheAttributes
     int DEFAULT_RMI_SOCKET_FACTORY_TIMEOUT_MILLIS = 10000;
 
     /**
-     * Gets the remoteTypeName attribute of the IRemoteCacheAttributes object
+     * Gets the clusterServers attribute of the IRemoteCacheAttributes object
      * <p>
-     * @return The remoteTypeName value
+     * @return The clusterServers value
      */
-    String getRemoteTypeName();
+    String getClusterServers();
 
     /**
-     * Sets the remoteTypeName attribute of the IRemoteCacheAttributes object
+     * Gets the getOnly attribute of the IRemoteCacheAttributes object
      * <p>
-     * @param s The new remoteTypeName value
+     * @return The getOnly value
      */
-    void setRemoteTypeName( String s );
+    boolean getGetOnly();
 
     /**
-     * Gets the remoteType attribute of the IRemoteCacheAttributes object
+     * Gets the location attribute of the RemoteCacheAttributes object.
      * <p>
-     * @return The remoteType value
+     * @return The remote location value
      */
-    RemoteType getRemoteType();
-
-    /**
-     * Sets the remoteType attribute of the IRemoteCacheAttributes object
-     * <p>
-     * @param p The new remoteType value
-     */
-    void setRemoteType( RemoteType p );
+    RemoteLocation getRemoteLocation();
 
     /**
      * Gets the remoteServiceName attribute of the IRemoteCacheAttributes object
@@ -68,11 +61,63 @@ public interface ICommonRemoteCacheAttributes
     String getRemoteServiceName();
 
     /**
-     * Sets the remoteServiceName attribute of the IRemoteCacheAttributes object
+     * Gets the remoteType attribute of the IRemoteCacheAttributes object
      * <p>
-     * @param s The new remoteServiceName value
+     * @return The remoteType value
      */
-    void setRemoteServiceName( String s );
+    RemoteType getRemoteType();
+
+    /**
+     * Gets the remoteTypeName attribute of the IRemoteCacheAttributes object
+     * <p>
+     * @return The remoteTypeName value
+     */
+    String getRemoteTypeName();
+
+    /**
+     * Gets the removeUponRemotePut attribute of the IRemoteCacheAttributes object
+     * <p>
+     * @return The removeUponRemotePut value
+     */
+    boolean getRemoveUponRemotePut();
+
+    /**
+     * This sets a general timeout on the rmi socket factory. By default the socket factory will
+     * block forever.
+     * <p>
+     * We have a default setting. The default rmi behavior should never be used.
+     * <p>
+     * @return int milliseconds
+     */
+    int getRmiSocketFactoryTimeoutMillis();
+
+    /**
+     * Should cluster updates be propagated to the locals
+     * <p>
+     * @return The localClusterConsistency value
+     */
+    boolean isLocalClusterConsistency();
+
+    /**
+     * Sets the clusterServers attribute of the IRemoteCacheAttributes object
+     * <p>
+     * @param s The new clusterServers value
+     */
+    void setClusterServers( String s );
+
+    /**
+     * Sets the getOnly attribute of the IRemoteCacheAttributes object
+     * <p>
+     * @param r The new getOnly value
+     */
+    void setGetOnly( boolean r );
+
+    /**
+     * Should cluster updates be propagated to the locals
+     * <p>
+     * @param r The new localClusterConsistency value
+     */
+    void setLocalClusterConsistency( boolean r );
 
     /**
      * Sets the location attribute of the RemoteCacheAttributes object.
@@ -90,32 +135,25 @@ public interface ICommonRemoteCacheAttributes
     void setRemoteLocation( String host, int port );
 
     /**
-     * Gets the location attribute of the RemoteCacheAttributes object.
+     * Sets the remoteServiceName attribute of the IRemoteCacheAttributes object
      * <p>
-     * @return The remote location value
+     * @param s The new remoteServiceName value
      */
-    RemoteLocation getRemoteLocation();
+    void setRemoteServiceName( String s );
 
     /**
-     * Gets the clusterServers attribute of the IRemoteCacheAttributes object
+     * Sets the remoteType attribute of the IRemoteCacheAttributes object
      * <p>
-     * @return The clusterServers value
+     * @param p The new remoteType value
      */
-    String getClusterServers();
+    void setRemoteType( RemoteType p );
 
     /**
-     * Sets the clusterServers attribute of the IRemoteCacheAttributes object
+     * Sets the remoteTypeName attribute of the IRemoteCacheAttributes object
      * <p>
-     * @param s The new clusterServers value
+     * @param s The new remoteTypeName value
      */
-    void setClusterServers( String s );
-
-    /**
-     * Gets the removeUponRemotePut attribute of the IRemoteCacheAttributes object
-     * <p>
-     * @return The removeUponRemotePut value
-     */
-    boolean getRemoveUponRemotePut();
+    void setRemoteTypeName( String s );
 
     /**
      * Sets the removeUponRemotePut attribute of the IRemoteCacheAttributes object
@@ -123,44 +161,6 @@ public interface ICommonRemoteCacheAttributes
      * @param r The new removeUponRemotePut value
      */
     void setRemoveUponRemotePut( boolean r );
-
-    /**
-     * Gets the getOnly attribute of the IRemoteCacheAttributes object
-     * <p>
-     * @return The getOnly value
-     */
-    boolean getGetOnly();
-
-    /**
-     * Sets the getOnly attribute of the IRemoteCacheAttributes object
-     * <p>
-     * @param r The new getOnly value
-     */
-    void setGetOnly( boolean r );
-
-    /**
-     * Should cluster updates be propagated to the locals
-     * <p>
-     * @return The localClusterConsistency value
-     */
-    boolean isLocalClusterConsistency();
-
-    /**
-     * Should cluster updates be propagated to the locals
-     * <p>
-     * @param r The new localClusterConsistency value
-     */
-    void setLocalClusterConsistency( boolean r );
-
-    /**
-     * This sets a general timeout on the rmi socket factory. By default the socket factory will
-     * block forever.
-     * <p>
-     * We have a default setting. The default rmi behavior should never be used.
-     * <p>
-     * @return int milliseconds
-     */
-    int getRmiSocketFactoryTimeoutMillis();
 
     /**
      * This sets a general timeout on the RMI socket factory. By default the socket factory will

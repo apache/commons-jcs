@@ -106,46 +106,31 @@ public class LateralCacheNoWait<K, V>
         }
     }
 
-    /**
-     * The identifying key to this no wait
-     *
-     * @return the identity key
-     * @since 3.1
-     */
-    public String getIdentityKey()
-    {
-        return identityKey;
-    }
-
-    /**
-     * Sets the identifying key to this no wait
-     *
-     * @param identityKey the identityKey to set
-     * @since 3.1
-     */
-    public void setIdentityKey(String identityKey)
-    {
-        this.identityKey = identityKey;
-    }
-
-    /**
-     * @param ce
-     * @throws IOException
-     */
+    /** Adds a dispose request to the lateral cache. */
     @Override
-    public void update( final ICacheElement<K, V> ce )
-        throws IOException
+    public void dispose()
     {
-        putCount++;
         try
         {
-            eventQueue.addPutEvent( ce );
+            eventQueue.addDisposeEvent();
         }
         catch ( final IOException ex )
         {
             log.error( ex );
             eventQueue.destroy();
         }
+    }
+
+    /**
+     * Replaces the lateral cache service handle with the given handle and reset the queue by
+     * starting up a new instance.
+     * <p>
+     * @param lateral
+     */
+    public void fixCache( final ICacheServiceNonLocal<K, V> lateral )
+    {
+        cache.fixCache( lateral );
+        resetEventQ();
     }
 
     /**
@@ -186,28 +171,76 @@ public class LateralCacheNoWait<K, V>
     }
 
     /**
-     * Gets multiple items from the cache based on the given set of keys.
-     * <p>
-     * @param keys
-     * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
-     *         data in cache for any of these keys
+     * @return Returns the AuxiliaryCacheAttributes.
      */
     @Override
-    public Map<K, ICacheElement<K, V>> getMultiple(final Set<K> keys)
+    public ILateralCacheAttributes getAuxiliaryCacheAttributes()
     {
-        if ( keys != null && !keys.isEmpty() )
-        {
-            return keys.stream()
-                .collect(Collectors.toMap(
-                        key -> key,
-                        this::get)).entrySet().stream()
-                    .filter(entry -> entry.getValue() != null)
-                    .collect(Collectors.toMap(
-                            Entry::getKey,
-                            Entry::getValue));
-        }
+        return cache.getAuxiliaryCacheAttributes();
+    }
 
-        return new HashMap<>();
+    /**
+     * Gets the cacheName attribute of the LateralCacheNoWait object
+     * <p>
+     * @return The cacheName value
+     */
+    @Override
+    public String getCacheName()
+    {
+        return cache.getCacheName();
+    }
+
+    /**
+     * No lateral invocation.
+     * <p>
+     * @return The cacheType value
+     */
+    @Override
+    public CacheType getCacheType()
+    {
+        return cache.getCacheType();
+    }
+
+    /**
+     * this won't be called since we don't do ICache logging here.
+     * <p>
+     * @return String
+     */
+    @Override
+    public String getEventLoggingExtraInfo()
+    {
+        return "Lateral Cache No Wait";
+    }
+
+    /**
+     * The identifying key to this no wait
+     *
+     * @return the identity key
+     * @since 3.1
+     */
+    public String getIdentityKey()
+    {
+        return identityKey;
+    }
+
+    /**
+     * Return the keys in this cache.
+     * <p>
+     * @see org.apache.commons.jcs3.auxiliary.AuxiliaryCache#getKeySet()
+     */
+    @Override
+    public Set<K> getKeySet() throws IOException
+    {
+        try
+        {
+            return cache.getKeySet();
+        }
+        catch ( final IOException ex )
+        {
+            log.error( ex );
+            eventQueue.destroy();
+        }
+        return Collections.emptySet();
     }
 
     /**
@@ -248,23 +281,84 @@ public class LateralCacheNoWait<K, V>
     }
 
     /**
-     * Return the keys in this cache.
+     * Gets multiple items from the cache based on the given set of keys.
      * <p>
-     * @see org.apache.commons.jcs3.auxiliary.AuxiliaryCache#getKeySet()
+     * @param keys
+     * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
+     *         data in cache for any of these keys
      */
     @Override
-    public Set<K> getKeySet() throws IOException
+    public Map<K, ICacheElement<K, V>> getMultiple(final Set<K> keys)
     {
-        try
+        if ( keys != null && !keys.isEmpty() )
         {
-            return cache.getKeySet();
+            return keys.stream()
+                .collect(Collectors.toMap(
+                        key -> key,
+                        this::get)).entrySet().stream()
+                    .filter(entry -> entry.getValue() != null)
+                    .collect(Collectors.toMap(
+                            Entry::getKey,
+                            Entry::getValue));
         }
-        catch ( final IOException ex )
-        {
-            log.error( ex );
-            eventQueue.destroy();
-        }
-        return Collections.emptySet();
+
+        return new HashMap<>();
+    }
+
+    /**
+     * No lateral invocation.
+     * <p>
+     * @return The size value
+     */
+    @Override
+    public int getSize()
+    {
+        return cache.getSize();
+    }
+
+    /**
+     * @return statistics about this communication
+     */
+    @Override
+    public IStats getStatistics()
+    {
+        final IStats stats = new Stats();
+        stats.setTypeName( "Lateral Cache No Wait" );
+
+        // get the stats from the event queue too
+        final IStats eqStats = this.eventQueue.getStatistics();
+        final ArrayList<IStatElement<?>> elems = new ArrayList<>(eqStats.getStatElements());
+
+        elems.add(new StatElement<>( "Get Count", Integer.valueOf(this.getCount) ) );
+        elems.add(new StatElement<>( "Remove Count", Integer.valueOf(this.removeCount) ) );
+        elems.add(new StatElement<>( "Put Count", Integer.valueOf(this.putCount) ) );
+        elems.add(new StatElement<>( "Attributes", cache.getAuxiliaryCacheAttributes() ) );
+
+        stats.setStatElements( elems );
+
+        return stats;
+    }
+
+    /**
+     * getStats
+     * @return String
+     */
+    @Override
+    public String getStats()
+    {
+        return getStatistics().toString();
+    }
+
+    /**
+     * Returns the async cache status. An error status indicates either the lateral connection is not
+     * available, or the asyn queue has been unexpectedly destroyed. No lateral invocation.
+     * <p>
+     * @return The status value
+     */
+    @Override
+    public CacheStatus getStatus()
+    {
+        return eventQueue.isWorking() ? cache.getStatus() : CacheStatus.ERROR;
     }
 
     /**
@@ -304,78 +398,6 @@ public class LateralCacheNoWait<K, V>
         }
     }
 
-    /** Adds a dispose request to the lateral cache. */
-    @Override
-    public void dispose()
-    {
-        try
-        {
-            eventQueue.addDisposeEvent();
-        }
-        catch ( final IOException ex )
-        {
-            log.error( ex );
-            eventQueue.destroy();
-        }
-    }
-
-    /**
-     * No lateral invocation.
-     * <p>
-     * @return The size value
-     */
-    @Override
-    public int getSize()
-    {
-        return cache.getSize();
-    }
-
-    /**
-     * No lateral invocation.
-     * <p>
-     * @return The cacheType value
-     */
-    @Override
-    public CacheType getCacheType()
-    {
-        return cache.getCacheType();
-    }
-
-    /**
-     * Returns the async cache status. An error status indicates either the lateral connection is not
-     * available, or the asyn queue has been unexpectedly destroyed. No lateral invocation.
-     * <p>
-     * @return The status value
-     */
-    @Override
-    public CacheStatus getStatus()
-    {
-        return eventQueue.isWorking() ? cache.getStatus() : CacheStatus.ERROR;
-    }
-
-    /**
-     * Gets the cacheName attribute of the LateralCacheNoWait object
-     * <p>
-     * @return The cacheName value
-     */
-    @Override
-    public String getCacheName()
-    {
-        return cache.getCacheName();
-    }
-
-    /**
-     * Replaces the lateral cache service handle with the given handle and reset the queue by
-     * starting up a new instance.
-     * <p>
-     * @param lateral
-     */
-    public void fixCache( final ICacheServiceNonLocal<K, V> lateral )
-    {
-        cache.fixCache( lateral );
-        resetEventQ();
-    }
-
     /**
      * Resets the event q by first destroying the existing one and starting up new one.
      */
@@ -393,56 +415,14 @@ public class LateralCacheNoWait<K, V>
     }
 
     /**
-     * @return Returns the AuxiliaryCacheAttributes.
+     * Sets the identifying key to this no wait
+     *
+     * @param identityKey the identityKey to set
+     * @since 3.1
      */
-    @Override
-    public ILateralCacheAttributes getAuxiliaryCacheAttributes()
+    public void setIdentityKey(String identityKey)
     {
-        return cache.getAuxiliaryCacheAttributes();
-    }
-
-    /**
-     * getStats
-     * @return String
-     */
-    @Override
-    public String getStats()
-    {
-        return getStatistics().toString();
-    }
-
-    /**
-     * this won't be called since we don't do ICache logging here.
-     * <p>
-     * @return String
-     */
-    @Override
-    public String getEventLoggingExtraInfo()
-    {
-        return "Lateral Cache No Wait";
-    }
-
-    /**
-     * @return statistics about this communication
-     */
-    @Override
-    public IStats getStatistics()
-    {
-        final IStats stats = new Stats();
-        stats.setTypeName( "Lateral Cache No Wait" );
-
-        // get the stats from the event queue too
-        final IStats eqStats = this.eventQueue.getStatistics();
-        final ArrayList<IStatElement<?>> elems = new ArrayList<>(eqStats.getStatElements());
-
-        elems.add(new StatElement<>( "Get Count", Integer.valueOf(this.getCount) ) );
-        elems.add(new StatElement<>( "Remove Count", Integer.valueOf(this.removeCount) ) );
-        elems.add(new StatElement<>( "Put Count", Integer.valueOf(this.putCount) ) );
-        elems.add(new StatElement<>( "Attributes", cache.getAuxiliaryCacheAttributes() ) );
-
-        stats.setStatElements( elems );
-
-        return stats;
+        this.identityKey = identityKey;
     }
 
     /**
@@ -456,5 +436,25 @@ public class LateralCacheNoWait<K, V>
         buf.append( " Status = " + this.getStatus() );
         buf.append( " cache = [" + cache.toString() + "]" );
         return buf.toString();
+    }
+
+    /**
+     * @param ce
+     * @throws IOException
+     */
+    @Override
+    public void update( final ICacheElement<K, V> ce )
+        throws IOException
+    {
+        putCount++;
+        try
+        {
+            eventQueue.addPutEvent( ce );
+        }
+        catch ( final IOException ex )
+        {
+            log.error( ex );
+            eventQueue.destroy();
+        }
     }
 }

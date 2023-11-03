@@ -44,27 +44,6 @@ public interface DataSourceFactory
     String FACTORY_KEY = "factory";
 
     /**
-     * @return the name of the factory.
-     */
-    String getName();
-
-    /**
-     * @return the <code>DataSource</code> configured by the factory.
-     * @throws SQLException if the source can't be returned
-     */
-    DataSource getDataSource() throws SQLException;
-
-    /**
-     * Initialize the factory.
-     *
-     * @param config the factory settings
-     * @throws SQLException Any exceptions caught during processing will be
-     *         rethrown wrapped into a SQLException.
-     */
-    void initialize(JDBCDiskCacheAttributes config)
-        throws SQLException;
-
-    /**
      * A hook which is called when the resources of the associated DataSource
      * can be released.
      * After close() is called, the other methods may not work any more
@@ -77,5 +56,26 @@ public interface DataSourceFactory
      *         rethrown wrapped into a SQLException.
      */
     void close()
+        throws SQLException;
+
+    /**
+     * @return the <code>DataSource</code> configured by the factory.
+     * @throws SQLException if the source can't be returned
+     */
+    DataSource getDataSource() throws SQLException;
+
+    /**
+     * @return the name of the factory.
+     */
+    String getName();
+
+    /**
+     * Initialize the factory.
+     *
+     * @param config the factory settings
+     * @throws SQLException Any exceptions caught during processing will be
+     *         rethrown wrapped into a SQLException.
+     */
+    void initialize(JDBCDiskCacheAttributes config)
         throws SQLException;
 }

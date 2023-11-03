@@ -49,47 +49,6 @@ public abstract class AbstractAuxiliaryCache<K, V>
     private IKeyMatcher<K> keyMatcher = new KeyMatcherPatternImpl<>();
 
     /**
-     * Gets multiple items from the cache based on the given set of keys.
-     *
-     * @param keys
-     * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
-     *         data in cache for any of these keys
-     */
-    protected Map<K, ICacheElement<K, V>> processGetMultiple(final Set<K> keys) throws IOException
-    {
-        if (keys != null)
-        {
-            return keys.stream()
-                .map(key -> {
-                    try
-                    {
-                        return get(key);
-                    }
-                    catch (final IOException e)
-                    {
-                        return null;
-                    }
-                })
-                .filter(Objects::nonNull)
-                .collect(Collectors.toMap(
-                        ICacheElement::getKey,
-                        element -> element));
-        }
-
-        return new HashMap<>();
-    }
-
-    /**
-     * Gets the item from the cache.
-     *
-     * @param key
-     * @return ICacheElement, a wrapper around the key, value, and attributes
-     * @throws IOException
-     */
-    @Override
-    public abstract ICacheElement<K, V> get( K key ) throws IOException;
-
-    /**
      * Logs an event if an event logger is configured.
      * <p>
      * @param item
@@ -135,16 +94,50 @@ public abstract class AbstractAuxiliaryCache<K, V>
     }
 
     /**
-     * Logs an event if an event logger is configured.
-     * <p>
-     * @param cacheEvent
+     * Gets the item from the cache.
+     *
+     * @param key
+     * @return ICacheElement, a wrapper around the key, value, and attributes
+     * @throws IOException
      */
-    protected <T> void logICacheEvent( final ICacheEvent<T> cacheEvent )
+    @Override
+    public abstract ICacheElement<K, V> get( K key ) throws IOException;
+
+    /**
+     * Allows it to be injected.
+     * <p>
+     * @return cacheEventLogger
+     */
+    public ICacheEventLogger getCacheEventLogger()
     {
-        if ( cacheEventLogger != null )
-        {
-            cacheEventLogger.logICacheEvent( cacheEvent );
-        }
+        return this.cacheEventLogger;
+    }
+
+    /**
+     * Allows it to be injected.
+     * <p>
+     * @return elementSerializer
+     */
+    public IElementSerializer getElementSerializer()
+    {
+        return this.elementSerializer;
+    }
+
+    /**
+     * Gets the extra info for the event log.
+     * <p>
+     * @return IP, or disk location, etc.
+     */
+    public abstract String getEventLoggingExtraInfo();
+
+    /**
+     * Returns the key matcher used by get matching.
+     * <p>
+     * @return keyMatcher
+     */
+    public IKeyMatcher<K> getKeyMatcher()
+    {
+        return this.keyMatcher;
     }
 
     /**
@@ -178,11 +171,48 @@ public abstract class AbstractAuxiliaryCache<K, V>
     }
 
     /**
-     * Gets the extra info for the event log.
+     * Logs an event if an event logger is configured.
      * <p>
-     * @return IP, or disk location, etc.
+     * @param cacheEvent
      */
-    public abstract String getEventLoggingExtraInfo();
+    protected <T> void logICacheEvent( final ICacheEvent<T> cacheEvent )
+    {
+        if ( cacheEventLogger != null )
+        {
+            cacheEventLogger.logICacheEvent( cacheEvent );
+        }
+    }
+
+    /**
+     * Gets multiple items from the cache based on the given set of keys.
+     *
+     * @param keys
+     * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
+     *         data in cache for any of these keys
+     */
+    protected Map<K, ICacheElement<K, V>> processGetMultiple(final Set<K> keys) throws IOException
+    {
+        if (keys != null)
+        {
+            return keys.stream()
+                .map(key -> {
+                    try
+                    {
+                        return get(key);
+                    }
+                    catch (final IOException e)
+                    {
+                        return null;
+                    }
+                })
+                .filter(Objects::nonNull)
+                .collect(Collectors.toMap(
+                        ICacheElement::getKey,
+                        element -> element));
+        }
+
+        return new HashMap<>();
+    }
 
     /**
      * Allows it to be injected.
@@ -193,16 +223,6 @@ public abstract class AbstractAuxiliaryCache<K, V>
     public void setCacheEventLogger( final ICacheEventLogger cacheEventLogger )
     {
         this.cacheEventLogger = cacheEventLogger;
-    }
-
-    /**
-     * Allows it to be injected.
-     * <p>
-     * @return cacheEventLogger
-     */
-    public ICacheEventLogger getCacheEventLogger()
-    {
-        return this.cacheEventLogger;
     }
 
     /**
@@ -223,16 +243,6 @@ public abstract class AbstractAuxiliaryCache<K, V>
     }
 
     /**
-     * Allows it to be injected.
-     * <p>
-     * @return elementSerializer
-     */
-    public IElementSerializer getElementSerializer()
-    {
-        return this.elementSerializer;
-    }
-
-    /**
      * Sets the key matcher used by get matching.
      * <p>
      * @param keyMatcher
@@ -244,15 +254,5 @@ public abstract class AbstractAuxiliaryCache<K, V>
         {
             this.keyMatcher = keyMatcher;
         }
-    }
-
-    /**
-     * Returns the key matcher used by get matching.
-     * <p>
-     * @return keyMatcher
-     */
-    public IKeyMatcher<K> getKeyMatcher()
-    {
-        return this.keyMatcher;
     }
 }

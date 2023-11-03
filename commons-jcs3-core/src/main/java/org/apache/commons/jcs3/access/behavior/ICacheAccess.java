@@ -52,45 +52,6 @@ public interface ICacheAccess<K, V>
     V get(K name, Supplier<V> supplier);
 
     /**
-     * Retrieve matching objects from the cache region this instance provides access to.
-     * <p>
-     * @param pattern - a key pattern for the objects stored
-     * @return A map of key to values. These are stripped from the wrapper.
-     */
-    Map<K, V> getMatching(String pattern);
-
-    /**
-     * Puts in cache if an item does not exist with the name in that region.
-     * <p>
-     * @param name
-     * @param obj
-     * @throws CacheException
-     */
-    void putSafe(K name, V obj)
-        throws CacheException;
-
-    /**
-     * Puts and/or overrides an element with the name in that region.
-     * <p>
-     * @param name
-     * @param obj
-     * @throws CacheException
-     */
-    void put(K name, V obj)
-        throws CacheException;
-
-    /**
-     * Description of the Method
-     * <p>
-     * @param name
-     * @param obj
-     * @param attr
-     * @throws CacheException
-     */
-    void put(K name, V obj, IElementAttributes attr)
-        throws CacheException;
-
-    /**
      * This method returns the ICacheElement&lt;K, V&gt; wrapper which provides access to element info and other
      * attributes.
      * <p>
@@ -128,6 +89,24 @@ public interface ICacheAccess<K, V>
     Map<K, ICacheElement<K, V>> getCacheElements(Set<K> names);
 
     /**
+     * Gets the elementAttributes attribute of the ICacheAccess object
+     * <p>
+     * @param name
+     * @return The elementAttributes value
+     * @throws CacheException
+     */
+    IElementAttributes getElementAttributes(K name)
+        throws CacheException;
+
+    /**
+     * Retrieve matching objects from the cache region this instance provides access to.
+     * <p>
+     * @param pattern - a key pattern for the objects stored
+     * @return A map of key to values. These are stripped from the wrapper.
+     */
+    Map<K, V> getMatching(String pattern);
+
+    /**
      * Gets multiple elements from the cache based on a set of cache keys.
      * <p>
      * This method returns the ICacheElement&lt;K, V&gt; wrapper which provides access to element info and other
@@ -148,6 +127,37 @@ public interface ICacheAccess<K, V>
     Map<K, ICacheElement<K, V>> getMatchingCacheElements(String pattern);
 
     /**
+     * Puts and/or overrides an element with the name in that region.
+     * <p>
+     * @param name
+     * @param obj
+     * @throws CacheException
+     */
+    void put(K name, V obj)
+        throws CacheException;
+
+    /**
+     * Description of the Method
+     * <p>
+     * @param name
+     * @param obj
+     * @param attr
+     * @throws CacheException
+     */
+    void put(K name, V obj, IElementAttributes attr)
+        throws CacheException;
+
+    /**
+     * Puts in cache if an item does not exist with the name in that region.
+     * <p>
+     * @param name
+     * @param obj
+     * @throws CacheException
+     */
+    void putSafe(K name, V obj)
+        throws CacheException;
+
+    /**
      * Remove an object for this key if one exists, else do nothing.
      * <p>
      * @param name
@@ -164,15 +174,5 @@ public interface ICacheAccess<K, V>
      * @throws CacheException
      */
     void resetElementAttributes(K name, IElementAttributes attributes)
-        throws CacheException;
-
-    /**
-     * Gets the elementAttributes attribute of the ICacheAccess object
-     * <p>
-     * @param name
-     * @return The elementAttributes value
-     * @throws CacheException
-     */
-    IElementAttributes getElementAttributes(K name)
         throws CacheException;
 }

@@ -30,6 +30,24 @@ import java.io.IOException;
 public interface ICacheListener<K, V>
 {
     /**
+     * Gets the listenerId attribute of the ICacheListener object
+     * <p>
+     * @return The listenerId value
+     * @throws IOException
+     */
+    long getListenerId()
+        throws IOException;
+
+    /**
+     * Notifies the subscribers for freeing up the named cache.
+     * <p>
+     * @param cacheName
+     * @throws IOException
+     */
+    void handleDispose( String cacheName )
+        throws IOException;
+
+    /**
      * Notifies the subscribers for a cache entry update.
      * <p>
      * @param item
@@ -58,29 +76,11 @@ public interface ICacheListener<K, V>
         throws IOException;
 
     /**
-     * Notifies the subscribers for freeing up the named cache.
-     * <p>
-     * @param cacheName
-     * @throws IOException
-     */
-    void handleDispose( String cacheName )
-        throws IOException;
-
-    /**
      * sets unique identifier of listener home
      * <p>
      * @param id The new listenerId value
      * @throws IOException
      */
     void setListenerId( long id )
-        throws IOException;
-
-    /**
-     * Gets the listenerId attribute of the ICacheListener object
-     * <p>
-     * @return The listenerId value
-     * @throws IOException
-     */
-    long getListenerId()
         throws IOException;
 }

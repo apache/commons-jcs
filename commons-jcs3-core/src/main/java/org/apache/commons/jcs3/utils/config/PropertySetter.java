@@ -56,6 +56,19 @@ public class PropertySetter
     /** Logger */
     private static final Log log = LogManager.getLog( PropertySetter.class );
 
+    /**
+     * Sets the properties of an object passed as a parameter in one go. The <code>properties</code>
+     * are parsed relative to a <code>prefix</code>.
+     * <p>
+     * @param obj The object to configure.
+     * @param properties A java.util.Properties containing keys and values.
+     * @param prefix Only keys having the specified prefix will be set.
+     */
+    public static void setProperties( final Object obj, final Properties properties, final String prefix )
+    {
+        new PropertySetter( obj ).setProperties( properties, prefix );
+    }
+
     /** Description of the Field */
     private final Object obj;
 
@@ -70,155 +83,6 @@ public class PropertySetter
     public PropertySetter( final Object obj )
     {
         this.obj = obj;
-    }
-
-    /**
-     * Uses JavaBeans {@link Introspector}to compute setters of object to be configured.
-     */
-    protected void introspect()
-    {
-        try
-        {
-            final BeanInfo bi = Introspector.getBeanInfo( obj.getClass() );
-            props = bi.getPropertyDescriptors();
-        }
-        catch ( final IntrospectionException ex )
-        {
-            log.error( "Failed to introspect {0}", obj, ex );
-            props = new PropertyDescriptor[0];
-        }
-    }
-
-    /**
-     * Sets the properties of an object passed as a parameter in one go. The <code>properties</code>
-     * are parsed relative to a <code>prefix</code>.
-     * <p>
-     * @param obj The object to configure.
-     * @param properties A java.util.Properties containing keys and values.
-     * @param prefix Only keys having the specified prefix will be set.
-     */
-    public static void setProperties( final Object obj, final Properties properties, final String prefix )
-    {
-        new PropertySetter( obj ).setProperties( properties, prefix );
-    }
-
-    /**
-     * Sets the properties for the object that match the <code>prefix</code> passed as parameter.
-     * <p>
-     * @param properties The new properties value
-     * @param prefix The new properties value
-     */
-    public void setProperties( final Properties properties, final String prefix )
-    {
-        final int len = prefix.length();
-
-        for (final String key : properties.stringPropertyNames())
-        {
-            // handle only properties that start with the desired prefix.
-            if ( key.startsWith( prefix ) )
-            {
-                // ignore key if it contains dots after the prefix
-                if ( key.indexOf( '.', len + 1 ) > 0 )
-                {
-                    //System.err.println("----------Ignoring---["+key
-                    //	     +"], prefix=["+prefix+"].");
-                    continue;
-                }
-
-                final String value = OptionConverter.findAndSubst( key, properties );
-
-                setProperty( key.substring( len ), value );
-            }
-        }
-
-    }
-
-    /**
-     * Sets a property on this PropertySetter's Object. If successful, this method will invoke a
-     * setter method on the underlying Object. The setter is the one for the specified property name
-     * and the value is determined partly from the setter argument type and partly from the value
-     * specified in the call to this method.
-     * <p>
-     * If the setter expects a String no conversion is necessary. If it expects an int, then an
-     * attempt is made to convert 'value' to an int using Integer.valueOf(value). If the setter expects
-     * a boolean, the conversion is by Boolean.valueOf(value).
-     * @param name name of the property
-     * @param value String value of the property
-     */
-
-    public void setProperty( String name, final String value )
-    {
-        if ( value == null )
-        {
-            return;
-        }
-
-        name = Introspector.decapitalize( name );
-        final PropertyDescriptor prop = getPropertyDescriptor( name );
-
-        //log.debug("---------Key: "+name+", type="+prop.getPropertyType());
-
-        if ( prop == null )
-        {
-            log.warn( "No such property [{0}] in {1}.", name, obj.getClass().getName() );
-        }
-        else
-        {
-            try
-            {
-                setProperty( prop, name, value );
-            }
-            catch ( final PropertySetterException ex )
-            {
-                log.warn( "Failed to set property {0} to value \"{1}\".", name, value, ex );
-            }
-        }
-    }
-
-    /**
-     * Sets the named property given a {@link PropertyDescriptor}.
-     * @param prop A PropertyDescriptor describing the characteristics of the property to set.
-     * @param name The named of the property to set.
-     * @param value The value of the property.
-     * @throws PropertySetterException
-     */
-
-    public void setProperty( final PropertyDescriptor prop, final String name, final String value )
-        throws PropertySetterException
-    {
-        final Method setter = prop.getWriteMethod();
-        if ( setter == null )
-        {
-            throw new PropertySetterException( "No setter for property" );
-        }
-        final Class<?>[] paramTypes = setter.getParameterTypes();
-        if ( paramTypes.length != 1 )
-        {
-            throw new PropertySetterException( "#params for setter != 1" );
-        }
-
-        final Object arg;
-        try
-        {
-            arg = convertArg( value, paramTypes[0] );
-        }
-        catch ( final Throwable t )
-        {
-            throw new PropertySetterException( "Conversion to type [" + paramTypes[0] + "] failed. Reason: " + t );
-        }
-        if ( arg == null )
-        {
-            throw new PropertySetterException( "Conversion to type [" + paramTypes[0] + "] failed." );
-        }
-        log.debug( "Setting property [{0}] to [{1}].", name, arg );
-        try
-        {
-            setter.invoke( obj, arg );
-        }
-        catch ( final Exception ex )
-        {
-            throw new PropertySetterException( ex );
-        }
     }
 
     /**
@@ -290,5 +154,141 @@ public class PropertySetter
             }
         }
         return null;
+    }
+
+    /**
+     * Uses JavaBeans {@link Introspector}to compute setters of object to be configured.
+     */
+    protected void introspect()
+    {
+        try
+        {
+            final BeanInfo bi = Introspector.getBeanInfo( obj.getClass() );
+            props = bi.getPropertyDescriptors();
+        }
+        catch ( final IntrospectionException ex )
+        {
+            log.error( "Failed to introspect {0}", obj, ex );
+            props = new PropertyDescriptor[0];
+        }
+    }
+
+    /**
+     * Sets the properties for the object that match the <code>prefix</code> passed as parameter.
+     * <p>
+     * @param properties The new properties value
+     * @param prefix The new properties value
+     */
+    public void setProperties( final Properties properties, final String prefix )
+    {
+        final int len = prefix.length();
+
+        for (final String key : properties.stringPropertyNames())
+        {
+            // handle only properties that start with the desired prefix.
+            if ( key.startsWith( prefix ) )
+            {
+                // ignore key if it contains dots after the prefix
+                if ( key.indexOf( '.', len + 1 ) > 0 )
+                {
+                    //System.err.println("----------Ignoring---["+key
+                    //	     +"], prefix=["+prefix+"].");
+                    continue;
+                }
+
+                final String value = OptionConverter.findAndSubst( key, properties );
+
+                setProperty( key.substring( len ), value );
+            }
+        }
+
+    }
+
+    /**
+     * Sets the named property given a {@link PropertyDescriptor}.
+     * @param prop A PropertyDescriptor describing the characteristics of the property to set.
+     * @param name The named of the property to set.
+     * @param value The value of the property.
+     * @throws PropertySetterException
+     */
+
+    public void setProperty( final PropertyDescriptor prop, final String name, final String value )
+        throws PropertySetterException
+    {
+        final Method setter = prop.getWriteMethod();
+        if ( setter == null )
+        {
+            throw new PropertySetterException( "No setter for property" );
+        }
+        final Class<?>[] paramTypes = setter.getParameterTypes();
+        if ( paramTypes.length != 1 )
+        {
+            throw new PropertySetterException( "#params for setter != 1" );
+        }
+
+        final Object arg;
+        try
+        {
+            arg = convertArg( value, paramTypes[0] );
+        }
+        catch ( final Throwable t )
+        {
+            throw new PropertySetterException( "Conversion to type [" + paramTypes[0] + "] failed. Reason: " + t );
+        }
+        if ( arg == null )
+        {
+            throw new PropertySetterException( "Conversion to type [" + paramTypes[0] + "] failed." );
+        }
+        log.debug( "Setting property [{0}] to [{1}].", name, arg );
+        try
+        {
+            setter.invoke( obj, arg );
+        }
+        catch ( final Exception ex )
+        {
+            throw new PropertySetterException( ex );
+        }
+    }
+
+    /**
+     * Sets a property on this PropertySetter's Object. If successful, this method will invoke a
+     * setter method on the underlying Object. The setter is the one for the specified property name
+     * and the value is determined partly from the setter argument type and partly from the value
+     * specified in the call to this method.
+     * <p>
+     * If the setter expects a String no conversion is necessary. If it expects an int, then an
+     * attempt is made to convert 'value' to an int using Integer.valueOf(value). If the setter expects
+     * a boolean, the conversion is by Boolean.valueOf(value).
+     * @param name name of the property
+     * @param value String value of the property
+     */
+
+    public void setProperty( String name, final String value )
+    {
+        if ( value == null )
+        {
+            return;
+        }
+
+        name = Introspector.decapitalize( name );
+        final PropertyDescriptor prop = getPropertyDescriptor( name );
+
+        //log.debug("---------Key: "+name+", type="+prop.getPropertyType());
+
+        if ( prop == null )
+        {
+            log.warn( "No such property [{0}] in {1}.", name, obj.getClass().getName() );
+        }
+        else
+        {
+            try
+            {
+                setProperty( prop, name, value );
+            }
+            catch ( final PropertySetterException ex )
+            {
+                log.warn( "Failed to set property {0} to value \"{1}\".", name, value, ex );
+            }
+        }
     }
 }

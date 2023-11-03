@@ -41,29 +41,6 @@ public class OpenJPAJCacheDataCacheManager extends DataCacheManagerImpl
     private CacheManager cacheManager;
 
     @Override
-    public void initialize(final OpenJPAConfiguration conf, final ObjectValue dataCache, final ObjectValue queryCache)
-    {
-        super.initialize(conf, dataCache, queryCache);
-        provider = Caching.getCachingProvider();
-
-        final Properties properties = new Properties();
-        final Map<String, Object> props = conf.toProperties(false);
-        if (props != null)
-        {
-            for (final Map.Entry<?, ?> entry : props.entrySet())
-            {
-                if (entry.getKey() != null && entry.getValue() != null)
-                {
-                    properties.setProperty(entry.getKey().toString(), entry.getValue().toString());
-                }
-            }
-        }
-
-        final String uri = properties.getProperty("jcache.uri", provider.getDefaultURI().toString());
-        cacheManager = provider.getCacheManager(URI.create(uri), provider.getDefaultClassLoader(), properties);
-    }
-
-    @Override
     public void close()
     {
         super.close();
@@ -72,6 +49,11 @@ public class OpenJPAJCacheDataCacheManager extends DataCacheManagerImpl
             cacheManager.close();
         }
         provider.close();
+    }
+
+    CacheManager getCacheManager()
+    {
+        return cacheManager;
     }
 
     Cache<Object, Object> getOrCreateCache(final String prefix, final String entity)
@@ -111,8 +93,26 @@ public class OpenJPAJCacheDataCacheManager extends DataCacheManagerImpl
         return cache;
     }
 
-    CacheManager getCacheManager()
+    @Override
+    public void initialize(final OpenJPAConfiguration conf, final ObjectValue dataCache, final ObjectValue queryCache)
     {
-        return cacheManager;
+        super.initialize(conf, dataCache, queryCache);
+        provider = Caching.getCachingProvider();
+
+        final Properties properties = new Properties();
+        final Map<String, Object> props = conf.toProperties(false);
+        if (props != null)
+        {
+            for (final Map.Entry<?, ?> entry : props.entrySet())
+            {
+                if (entry.getKey() != null && entry.getValue() != null)
+                {
+                    properties.setProperty(entry.getKey().toString(), entry.getValue().toString());
+                }
+            }
+        }
+
+        final String uri = properties.getProperty("jcache.uri", provider.getDefaultURI().toString());
+        cacheManager = provider.getCacheManager(URI.create(uri), provider.getDefaultClassLoader(), properties);
     }
 }

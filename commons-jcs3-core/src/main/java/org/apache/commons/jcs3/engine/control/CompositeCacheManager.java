@@ -94,61 +94,19 @@ public class CompositeCacheManager
     /** Once configured, you can force a reconfiguration of sorts. */
     private static final boolean DEFAULT_FORCE_RECONFIGURATION = false;
 
-    /** Caches managed by this cache manager */
-    private final ConcurrentMap<String, ICache<?, ?>> caches = new ConcurrentHashMap<>();
-
-    /** Number of clients accessing this cache manager */
-    private final AtomicInteger clients = new AtomicInteger(0);
-
-    /** Default cache attributes for this cache manager */
-    private ICompositeCacheAttributes defaultCacheAttr = new CompositeCacheAttributes();
-
-    /** Default element attributes for this cache manager */
-    private IElementAttributes defaultElementAttr = new ElementAttributes();
-
-    /** Used to keep track of configured auxiliaries */
-    private final ConcurrentMap<String, AuxiliaryCacheFactory> auxiliaryFactoryRegistry =
-        new ConcurrentHashMap<>( );
-
-    /** Used to keep track of attributes for auxiliaries. */
-    private final ConcurrentMap<String, AuxiliaryCacheAttributes> auxiliaryAttributeRegistry =
-        new ConcurrentHashMap<>( );
-
-    /** Used to keep track of configured auxiliaries */
-    private final ConcurrentMap<String, AuxiliaryCache<?, ?>> auxiliaryCaches =
-        new ConcurrentHashMap<>( );
-
-    /** Properties with which this manager was configured. This is exposed for other managers. */
-    private Properties configurationProperties;
-
-    /** The default auxiliary caches to be used if not preconfigured */
-    private String defaultAuxValues;
-
     /** The Singleton Instance */
     private static CompositeCacheManager instance;
 
-    /** Stack for those waiting for notification of a shutdown. */
-    private final LinkedBlockingDeque<IShutdownObserver> shutdownObservers = new LinkedBlockingDeque<>();
-
-    /** The central background scheduler. */
-    private ScheduledExecutorService scheduledExecutor;
-
-    /** The central event queue. */
-    private IElementEventQueue elementEventQueue;
-
-    /** Shutdown hook thread instance */
-    private Thread shutdownHook;
-
-    /** Indicates whether the instance has been initialized. */
-    private boolean isInitialized;
-
-    /** Indicates whether configure has been called. */
-    private boolean isConfigured;
-
-    /** Indicates whether JMX bean has been registered. */
-    private boolean isJMXRegistered;
-
-    private String jmxName = JMX_OBJECT_NAME;
+    /**
+     * Simple factory method, must override in subclasses so getInstance creates / returns the
+     * correct object.
+     *
+     * @return CompositeCacheManager
+     */
+    protected static CompositeCacheManager createInstance()
+    {
+        return new CompositeCacheManager();
+    }
 
     /**
      * Gets the CacheHub instance. For backward compatibility, if this creates the instance it will
@@ -217,16 +175,58 @@ public class CompositeCacheManager
         return instance;
     }
 
-    /**
-     * Simple factory method, must override in subclasses so getInstance creates / returns the
-     * correct object.
-     *
-     * @return CompositeCacheManager
-     */
-    protected static CompositeCacheManager createInstance()
-    {
-        return new CompositeCacheManager();
-    }
+    /** Caches managed by this cache manager */
+    private final ConcurrentMap<String, ICache<?, ?>> caches = new ConcurrentHashMap<>();
+
+    /** Number of clients accessing this cache manager */
+    private final AtomicInteger clients = new AtomicInteger(0);
+
+    /** Default cache attributes for this cache manager */
+    private ICompositeCacheAttributes defaultCacheAttr = new CompositeCacheAttributes();
+
+    /** Default element attributes for this cache manager */
+    private IElementAttributes defaultElementAttr = new ElementAttributes();
+
+    /** Used to keep track of configured auxiliaries */
+    private final ConcurrentMap<String, AuxiliaryCacheFactory> auxiliaryFactoryRegistry =
+        new ConcurrentHashMap<>( );
+
+    /** Used to keep track of attributes for auxiliaries. */
+    private final ConcurrentMap<String, AuxiliaryCacheAttributes> auxiliaryAttributeRegistry =
+        new ConcurrentHashMap<>( );
+
+    /** Used to keep track of configured auxiliaries */
+    private final ConcurrentMap<String, AuxiliaryCache<?, ?>> auxiliaryCaches =
+        new ConcurrentHashMap<>( );
+
+    /** Properties with which this manager was configured. This is exposed for other managers. */
+    private Properties configurationProperties;
+
+    /** The default auxiliary caches to be used if not preconfigured */
+    private String defaultAuxValues;
+
+    /** Stack for those waiting for notification of a shutdown. */
+    private final LinkedBlockingDeque<IShutdownObserver> shutdownObservers = new LinkedBlockingDeque<>();
+
+    /** The central background scheduler. */
+    private ScheduledExecutorService scheduledExecutor;
+
+    /** The central event queue. */
+    private IElementEventQueue elementEventQueue;
+
+    /** Shutdown hook thread instance */
+    private Thread shutdownHook;
+
+    /** Indicates whether the instance has been initialized. */
+    private boolean isInitialized;
+
+    /** Indicates whether configure has been called. */
+    private boolean isConfigured;
+
+    /** Indicates whether JMX bean has been registered. */
+    private boolean isJMXRegistered;
+
+    private String jmxName = JMX_OBJECT_NAME;
 
     /**
      * Default constructor
@@ -236,70 +236,28 @@ public class CompositeCacheManager
         // empty
     }
 
-    /** Creates a shutdown hook and starts the scheduler service */
-    protected synchronized void initialize()
+    /**
+     * Add a cache to the map of registered auxiliary caches
+     *
+     * @param auxName the auxiliary name
+     * @param cacheName the region name
+     * @param cache the cache instance
+     */
+    public void addAuxiliaryCache(final String auxName, final String cacheName, final AuxiliaryCache<?, ?> cache)
     {
-        if (!isInitialized)
-        {
-            this.shutdownHook = new Thread(() -> {
-                if ( isInitialized() )
-                {
-                    log.info("Shutdown hook activated. Shutdown was not called. Shutting down JCS.");
-                    shutDown();
-                }
-            });
-            try
-            {
-                Runtime.getRuntime().addShutdownHook( shutdownHook );
-            }
-            catch ( final SecurityException e )
-            {
-                log.error( "Could not register shutdown hook.", e );
-            }
-
-            this.scheduledExecutor = Executors.newScheduledThreadPool(4,
-                    new DaemonThreadFactory("JCS-Scheduler-", Thread.MIN_PRIORITY));
-
-            // Register JMX bean
-            if (!isJMXRegistered && jmxName != null)
-            {
-                final MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
-                final JCSAdminBean adminBean = new JCSAdminBean(this);
-                try
-                {
-                    final ObjectName jmxObjectName = new ObjectName(jmxName);
-                    mbs.registerMBean(adminBean, jmxObjectName);
-                    isJMXRegistered = true;
-                }
-                catch (final Exception e)
-                {
-                    log.warn( "Could not register JMX bean.", e );
-                }
-            }
-
-            isInitialized = true;
-        }
+        final String key = String.format("aux.%s.region.%s", auxName, cacheName);
+        auxiliaryCaches.put(key, cache);
     }
 
     /**
-     * Gets the element event queue
+     * Add a cache to the map of registered caches
      *
-     * @return the elementEventQueue
+     * @param cacheName the region name
+     * @param cache the cache instance
      */
-    public IElementEventQueue getElementEventQueue()
+    public void addCache(final String cacheName, final ICache<?, ?> cache)
     {
-        return elementEventQueue;
-    }
-
-    /**
-     * Gets the scheduler service
-     *
-     * @return the scheduledExecutor
-     */
-    @Override
-    public ScheduledExecutorService getScheduledExecutorService()
-    {
-        return scheduledExecutor;
+        caches.put(cacheName, cache);
     }
 
     /**
@@ -309,31 +267,6 @@ public class CompositeCacheManager
     public void configure() throws CacheException
     {
         configure( DEFAULT_CONFIG );
-    }
-
-    /**
-     * Configure from specific properties file.
-     *
-     * @param propFile Path <u>within classpath </u> to load configuration from
-     * @throws CacheException if the configuration cannot be loaded
-     */
-    public void configure( final String propFile ) throws CacheException
-    {
-        log.info( "Creating cache manager from config file: {0}", propFile );
-
-        final Properties props = new Properties();
-
-        try (InputStream is = getClass().getResourceAsStream( propFile ))
-        {
-            props.load( is );
-            log.debug( "File [{0}] contained {1} properties", () -> propFile, props::size);
-        }
-        catch ( final IOException ex )
-        {
-            throw new CacheException("Failed to load properties for name [" + propFile + "]", ex);
-        }
-
-        configure( props );
     }
 
     /**
@@ -409,6 +342,40 @@ public class CompositeCacheManager
     }
 
     /**
+     * Configure from specific properties file.
+     *
+     * @param propFile Path <u>within classpath </u> to load configuration from
+     * @throws CacheException if the configuration cannot be loaded
+     */
+    public void configure( final String propFile ) throws CacheException
+    {
+        log.info( "Creating cache manager from config file: {0}", propFile );
+
+        final Properties props = new Properties();
+
+        try (InputStream is = getClass().getResourceAsStream( propFile ))
+        {
+            props.load( is );
+            log.debug( "File [{0}] contained {1} properties", () -> propFile, props::size);
+        }
+        catch ( final IOException ex )
+        {
+            throw new CacheException("Failed to load properties for name [" + propFile + "]", ex);
+        }
+
+        configure( props );
+    }
+
+    /**
+     * @param observer
+     */
+    @Override
+    public void deregisterShutdownObserver( final IShutdownObserver observer )
+    {
+        shutdownObservers.remove( observer );
+    }
+
+    /**
      * Configure the cache using the supplied properties.
      *
      * @param properties assumed not null
@@ -462,23 +429,107 @@ public class CompositeCacheManager
     }
 
     /**
-     * Gets the defaultCacheAttributes attribute of the CacheHub object
+     * Dispose a cache and remove it from the map of registered auxiliary caches
      *
-     * @return The defaultCacheAttributes value
+     * @param key the key into the map of auxiliaries
+     * @throws IOException if disposing of the cache fails
      */
-    public ICompositeCacheAttributes getDefaultCacheAttributes()
+    public void freeAuxiliaryCache(final String key) throws IOException
     {
-        return this.defaultCacheAttr.clone();
+        final AuxiliaryCache<?, ?> aux = auxiliaryCaches.remove( key );
+
+        if ( aux != null )
+        {
+            aux.dispose();
+        }
     }
 
     /**
-     * Gets the defaultElementAttributes attribute of the CacheHub object
+     * Dispose a cache and remove it from the map of registered auxiliary caches
      *
-     * @return The defaultElementAttributes value
+     * @param auxName the auxiliary name
+     * @param cacheName the region name
+     * @throws IOException if disposing of the cache fails
      */
-    public IElementAttributes getDefaultElementAttributes()
+    public void freeAuxiliaryCache(final String auxName, final String cacheName) throws IOException
     {
-        return this.defaultElementAttr.clone();
+        final String key = String.format("aux.%s.region.%s", auxName, cacheName);
+        freeAuxiliaryCache(key);
+    }
+
+    /**
+     * @param name
+     */
+    public void freeCache( final String name )
+    {
+        freeCache( name, false );
+    }
+
+    /**
+     * @param name
+     * @param fromRemote
+     */
+    public void freeCache( final String name, final boolean fromRemote )
+    {
+        final CompositeCache<?, ?> cache = (CompositeCache<?, ?>) caches.remove( name );
+
+        if ( cache != null )
+        {
+            cache.dispose( fromRemote );
+        }
+    }
+
+    /**
+     * Gets a cache from the map of registered auxiliary caches
+     *
+     * @param auxName the auxiliary name
+     * @param cacheName the region name
+     *
+     * @return the cache instance
+     */
+    @Override
+    @SuppressWarnings("unchecked") // because of common map for all auxiliary caches
+    public <K, V> AuxiliaryCache<K, V> getAuxiliaryCache(final String auxName, final String cacheName)
+    {
+        final String key = String.format("aux.%s.region.%s", auxName, cacheName);
+        return (AuxiliaryCache<K, V>) auxiliaryCaches.get(key);
+    }
+
+    /**
+     * Gets the cache attribute of the CacheHub object
+     *
+     * @param cattr
+     * @return CompositeCache
+     */
+    public <K, V> CompositeCache<K, V>  getCache( final ICompositeCacheAttributes cattr )
+    {
+        return getCache( cattr, getDefaultElementAttributes() );
+    }
+
+    /**
+     * If the cache has already been created, then the CacheAttributes and the element Attributes
+     * will be ignored. Currently there is no overriding the CacheAttributes once it is set up. You
+     * can change the default ElementAttributes for a region later.
+     * <p>
+     * Overriding the default elemental attributes will require changing the way the attributes are
+     * assigned to elements. Get cache creates a cache with defaults if none are specified. We might
+     * want to create separate method for creating/getting. . .
+     * </p>
+     * @param cattr
+     * @param attr
+     * @return CompositeCache
+     */
+    @SuppressWarnings("unchecked") // Need to cast because of common map for all caches
+    public <K, V> CompositeCache<K, V>  getCache( final ICompositeCacheAttributes cattr, final IElementAttributes attr )
+    {
+        log.debug( "attr = {0}", attr );
+
+        return (CompositeCache<K, V>) caches.computeIfAbsent(cattr.getCacheName(),
+                cacheName -> {
+            final CompositeCacheConfigurator configurator = newConfigurator();
+            return configurator.parseRegion( this.getConfigurationProperties(), this, cacheName,
+                                              this.defaultAuxValues, cattr );
+        });
     }
 
     /**
@@ -521,40 +572,173 @@ public class CompositeCacheManager
     }
 
     /**
-     * Gets the cache attribute of the CacheHub object
+     * Gets a list of the current cache names.
      *
-     * @param cattr
-     * @return CompositeCache
+     * @return Set<String>
      */
-    public <K, V> CompositeCache<K, V>  getCache( final ICompositeCacheAttributes cattr )
+    public Set<String> getCacheNames()
     {
-        return getCache( cattr, getDefaultElementAttributes() );
+        return caches.keySet();
     }
 
     /**
-     * If the cache has already been created, then the CacheAttributes and the element Attributes
-     * will be ignored. Currently there is no overriding the CacheAttributes once it is set up. You
-     * can change the default ElementAttributes for a region later.
-     * <p>
-     * Overriding the default elemental attributes will require changing the way the attributes are
-     * assigned to elements. Get cache creates a cache with defaults if none are specified. We might
-     * want to create separate method for creating/getting. . .
-     * </p>
-     * @param cattr
-     * @param attr
-     * @return CompositeCache
+     * @return ICacheType.CACHE_HUB
      */
-    @SuppressWarnings("unchecked") // Need to cast because of common map for all caches
-    public <K, V> CompositeCache<K, V>  getCache( final ICompositeCacheAttributes cattr, final IElementAttributes attr )
+    public CacheType getCacheType()
     {
-        log.debug( "attr = {0}", attr );
+        return CacheType.CACHE_HUB;
+    }
 
-        return (CompositeCache<K, V>) caches.computeIfAbsent(cattr.getCacheName(),
-                cacheName -> {
-            final CompositeCacheConfigurator configurator = newConfigurator();
-            return configurator.parseRegion( this.getConfigurationProperties(), this, cacheName,
-                                              this.defaultAuxValues, cattr );
+    /**
+     * This is exposed so other manager can get access to the props.
+     *
+     * @return the configurationProperties
+     */
+    @Override
+    public Properties getConfigurationProperties()
+    {
+        return configurationProperties;
+    }
+
+    /**
+     * Gets the defaultCacheAttributes attribute of the CacheHub object
+     *
+     * @return The defaultCacheAttributes value
+     */
+    public ICompositeCacheAttributes getDefaultCacheAttributes()
+    {
+        return this.defaultCacheAttr.clone();
+    }
+
+    /**
+     * Gets the defaultElementAttributes attribute of the CacheHub object
+     *
+     * @return The defaultElementAttributes value
+     */
+    public IElementAttributes getDefaultElementAttributes()
+    {
+        return this.defaultElementAttr.clone();
+    }
+
+    /**
+     * Gets the element event queue
+     *
+     * @return the elementEventQueue
+     */
+    public IElementEventQueue getElementEventQueue()
+    {
+        return elementEventQueue;
+    }
+
+    /**
+     * Gets the scheduler service
+     *
+     * @return the scheduledExecutor
+     */
+    @Override
+    public ScheduledExecutorService getScheduledExecutorService()
+    {
+        return scheduledExecutor;
+    }
+
+    /**
+     * This returns data gathered for all regions and all the auxiliaries they currently uses.
+     *
+     * @return ICacheStats[]
+     */
+    public ICacheStats[] getStatistics()
+    {
+        final List<ICacheStats> cacheStats = caches.values().stream()
+            .filter(Objects::nonNull)
+            .map(cache -> ((CompositeCache<?, ?>)cache).getStatistics() )
+            .collect(Collectors.toList());
+
+        return cacheStats.toArray( new CacheStats[0] );
+    }
+
+    /**
+     * Gets stats for debugging. This calls gets statistics and then puts all the results in a
+     * string. This returns data for all regions.
+     *
+     * @return String
+     */
+    @Override
+    public String getStats()
+    {
+        final ICacheStats[] stats = getStatistics();
+        if ( stats == null )
+        {
+            return "NONE";
+        }
+
+        // force the array elements into a string.
+        final StringBuilder buf = new StringBuilder();
+        Stream.of(stats).forEach(stat -> {
+            buf.append( "\n---------------------------\n" );
+            buf.append( stat );
         });
+        return buf.toString();
+    }
+
+    /** Creates a shutdown hook and starts the scheduler service */
+    protected synchronized void initialize()
+    {
+        if (!isInitialized)
+        {
+            this.shutdownHook = new Thread(() -> {
+                if ( isInitialized() )
+                {
+                    log.info("Shutdown hook activated. Shutdown was not called. Shutting down JCS.");
+                    shutDown();
+                }
+            });
+            try
+            {
+                Runtime.getRuntime().addShutdownHook( shutdownHook );
+            }
+            catch ( final SecurityException e )
+            {
+                log.error( "Could not register shutdown hook.", e );
+            }
+
+            this.scheduledExecutor = Executors.newScheduledThreadPool(4,
+                    new DaemonThreadFactory("JCS-Scheduler-", Thread.MIN_PRIORITY));
+
+            // Register JMX bean
+            if (!isJMXRegistered && jmxName != null)
+            {
+                final MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
+                final JCSAdminBean adminBean = new JCSAdminBean(this);
+                try
+                {
+                    final ObjectName jmxObjectName = new ObjectName(jmxName);
+                    mbs.registerMBean(adminBean, jmxObjectName);
+                    isJMXRegistered = true;
+                }
+                catch (final Exception e)
+                {
+                    log.warn( "Could not register JMX bean.", e );
+                }
+            }
+
+            isInitialized = true;
+        }
+    }
+
+    /**
+     * @return the isConfigured
+     */
+    public boolean isConfigured()
+    {
+        return isConfigured;
+    }
+
+    /**
+     * @return the isInitialized
+     */
+    public boolean isInitialized()
+    {
+        return isInitialized;
     }
 
     protected CompositeCacheConfigurator newConfigurator() {
@@ -562,25 +746,96 @@ public class CompositeCacheManager
     }
 
     /**
-     * @param name
+     * Perhaps the composite cache itself should be the observable object. It doesn't make much of a
+     * difference. There are some problems with region by region shutdown. Some auxiliaries are
+     * global. They will need to track when every region has shutdown before doing things like
+     * closing the socket with a lateral.
+     *
+     * @param observer
      */
-    public void freeCache( final String name )
+    @Override
+    public void registerShutdownObserver( final IShutdownObserver observer )
     {
-        freeCache( name, false );
+    	if (!shutdownObservers.contains(observer))
+    	{
+    		shutdownObservers.push( observer );
+    	}
+    	else
+    	{
+    		log.warn("Shutdown observer added twice {0}", observer);
+    	}
     }
 
     /**
      * @param name
+     * @return AuxiliaryCacheAttributes
+     */
+    public AuxiliaryCacheAttributes registryAttrGet( final String name )
+    {
+        return auxiliaryAttributeRegistry.get( name );
+    }
+
+    /**
+     * @param auxAttr
+     */
+    public void registryAttrPut( final AuxiliaryCacheAttributes auxAttr )
+    {
+        auxiliaryAttributeRegistry.put( auxAttr.getName(), auxAttr );
+    }
+
+    /**
+     * @param name
+     * @return AuxiliaryCacheFactory
+     */
+    public AuxiliaryCacheFactory registryFacGet( final String name )
+    {
+        return auxiliaryFactoryRegistry.get( name );
+    }
+
+    /**
+     * @param auxFac
+     */
+    public void registryFacPut( final AuxiliaryCacheFactory auxFac )
+    {
+        auxiliaryFactoryRegistry.put( auxFac.getName(), auxFac );
+    }
+
+    /** */
+    public void release()
+    {
+        release( false );
+    }
+
+    /**
      * @param fromRemote
      */
-    public void freeCache( final String name, final boolean fromRemote )
+    private void release( final boolean fromRemote )
     {
-        final CompositeCache<?, ?> cache = (CompositeCache<?, ?>) caches.remove( name );
-
-        if ( cache != null )
+        synchronized ( CompositeCacheManager.class )
         {
-            cache.dispose( fromRemote );
+            // Wait until called by the last client
+            if ( clients.decrementAndGet() > 0 )
+            {
+                log.debug( "Release called, but {0} remain", clients);
+                return;
+            }
+
+            log.debug( "Last client called release. There are {0} caches which will be disposed",
+                    caches::size);
+
+            caches.values().stream()
+                .filter(Objects::nonNull)
+                .forEach(cache -> ((CompositeCache<?, ?>)cache).dispose( fromRemote ));
         }
+    }
+
+    public void setJmxName(final String name)
+    {
+        if (isJMXRegistered)
+        {
+            throw new IllegalStateException("Too late, MBean registration is done");
+        }
+        jmxName = name;
     }
 
     /**
@@ -662,260 +917,5 @@ public class CompositeCacheManager
 
         isConfigured = false;
         isInitialized = false;
-    }
-
-    /** */
-    public void release()
-    {
-        release( false );
-    }
-
-    /**
-     * @param fromRemote
-     */
-    private void release( final boolean fromRemote )
-    {
-        synchronized ( CompositeCacheManager.class )
-        {
-            // Wait until called by the last client
-            if ( clients.decrementAndGet() > 0 )
-            {
-                log.debug( "Release called, but {0} remain", clients);
-                return;
-            }
-
-            log.debug( "Last client called release. There are {0} caches which will be disposed",
-                    caches::size);
-
-            caches.values().stream()
-                .filter(Objects::nonNull)
-                .forEach(cache -> ((CompositeCache<?, ?>)cache).dispose( fromRemote ));
-        }
-    }
-
-    /**
-     * Gets a list of the current cache names.
-     *
-     * @return Set<String>
-     */
-    public Set<String> getCacheNames()
-    {
-        return caches.keySet();
-    }
-
-    /**
-     * @return ICacheType.CACHE_HUB
-     */
-    public CacheType getCacheType()
-    {
-        return CacheType.CACHE_HUB;
-    }
-
-    /**
-     * @param auxFac
-     */
-    public void registryFacPut( final AuxiliaryCacheFactory auxFac )
-    {
-        auxiliaryFactoryRegistry.put( auxFac.getName(), auxFac );
-    }
-
-    /**
-     * @param name
-     * @return AuxiliaryCacheFactory
-     */
-    public AuxiliaryCacheFactory registryFacGet( final String name )
-    {
-        return auxiliaryFactoryRegistry.get( name );
-    }
-
-    /**
-     * @param auxAttr
-     */
-    public void registryAttrPut( final AuxiliaryCacheAttributes auxAttr )
-    {
-        auxiliaryAttributeRegistry.put( auxAttr.getName(), auxAttr );
-    }
-
-    /**
-     * @param name
-     * @return AuxiliaryCacheAttributes
-     */
-    public AuxiliaryCacheAttributes registryAttrGet( final String name )
-    {
-        return auxiliaryAttributeRegistry.get( name );
-    }
-
-    /**
-     * Add a cache to the map of registered caches
-     *
-     * @param cacheName the region name
-     * @param cache the cache instance
-     */
-    public void addCache(final String cacheName, final ICache<?, ?> cache)
-    {
-        caches.put(cacheName, cache);
-    }
-
-    /**
-     * Add a cache to the map of registered auxiliary caches
-     *
-     * @param auxName the auxiliary name
-     * @param cacheName the region name
-     * @param cache the cache instance
-     */
-    public void addAuxiliaryCache(final String auxName, final String cacheName, final AuxiliaryCache<?, ?> cache)
-    {
-        final String key = String.format("aux.%s.region.%s", auxName, cacheName);
-        auxiliaryCaches.put(key, cache);
-    }
-
-    /**
-     * Gets a cache from the map of registered auxiliary caches
-     *
-     * @param auxName the auxiliary name
-     * @param cacheName the region name
-     *
-     * @return the cache instance
-     */
-    @Override
-    @SuppressWarnings("unchecked") // because of common map for all auxiliary caches
-    public <K, V> AuxiliaryCache<K, V> getAuxiliaryCache(final String auxName, final String cacheName)
-    {
-        final String key = String.format("aux.%s.region.%s", auxName, cacheName);
-        return (AuxiliaryCache<K, V>) auxiliaryCaches.get(key);
-    }
-
-    /**
-     * Dispose a cache and remove it from the map of registered auxiliary caches
-     *
-     * @param auxName the auxiliary name
-     * @param cacheName the region name
-     * @throws IOException if disposing of the cache fails
-     */
-    public void freeAuxiliaryCache(final String auxName, final String cacheName) throws IOException
-    {
-        final String key = String.format("aux.%s.region.%s", auxName, cacheName);
-        freeAuxiliaryCache(key);
-    }
-
-    /**
-     * Dispose a cache and remove it from the map of registered auxiliary caches
-     *
-     * @param key the key into the map of auxiliaries
-     * @throws IOException if disposing of the cache fails
-     */
-    public void freeAuxiliaryCache(final String key) throws IOException
-    {
-        final AuxiliaryCache<?, ?> aux = auxiliaryCaches.remove( key );
-
-        if ( aux != null )
-        {
-            aux.dispose();
-        }
-    }
-
-    /**
-     * Gets stats for debugging. This calls gets statistics and then puts all the results in a
-     * string. This returns data for all regions.
-     *
-     * @return String
-     */
-    @Override
-    public String getStats()
-    {
-        final ICacheStats[] stats = getStatistics();
-        if ( stats == null )
-        {
-            return "NONE";
-        }
-
-        // force the array elements into a string.
-        final StringBuilder buf = new StringBuilder();
-        Stream.of(stats).forEach(stat -> {
-            buf.append( "\n---------------------------\n" );
-            buf.append( stat );
-        });
-        return buf.toString();
-    }
-
-    /**
-     * This returns data gathered for all regions and all the auxiliaries they currently uses.
-     *
-     * @return ICacheStats[]
-     */
-    public ICacheStats[] getStatistics()
-    {
-        final List<ICacheStats> cacheStats = caches.values().stream()
-            .filter(Objects::nonNull)
-            .map(cache -> ((CompositeCache<?, ?>)cache).getStatistics() )
-            .collect(Collectors.toList());
-
-        return cacheStats.toArray( new CacheStats[0] );
-    }
-
-    /**
-     * Perhaps the composite cache itself should be the observable object. It doesn't make much of a
-     * difference. There are some problems with region by region shutdown. Some auxiliaries are
-     * global. They will need to track when every region has shutdown before doing things like
-     * closing the socket with a lateral.
-     *
-     * @param observer
-     */
-    @Override
-    public void registerShutdownObserver( final IShutdownObserver observer )
-    {
-    	if (!shutdownObservers.contains(observer))
-    	{
-    		shutdownObservers.push( observer );
-    	}
-    	else
-    	{
-    		log.warn("Shutdown observer added twice {0}", observer);
-    	}
-    }
-
-    /**
-     * @param observer
-     */
-    @Override
-    public void deregisterShutdownObserver( final IShutdownObserver observer )
-    {
-        shutdownObservers.remove( observer );
-    }
-
-    /**
-     * This is exposed so other manager can get access to the props.
-     *
-     * @return the configurationProperties
-     */
-    @Override
-    public Properties getConfigurationProperties()
-    {
-        return configurationProperties;
-    }
-
-    /**
-     * @return the isInitialized
-     */
-    public boolean isInitialized()
-    {
-        return isInitialized;
-    }
-
-    /**
-     * @return the isConfigured
-     */
-    public boolean isConfigured()
-    {
-        return isConfigured;
-    }
-
-    public void setJmxName(final String name)
-    {
-        if (isJMXRegistered)
-        {
-            throw new IllegalStateException("Too late, MBean registration is done");
-        }
-        jmxName = name;
     }
 }

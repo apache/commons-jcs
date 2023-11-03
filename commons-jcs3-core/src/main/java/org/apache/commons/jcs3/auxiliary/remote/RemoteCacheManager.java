@@ -120,35 +120,6 @@ public class RemoteCacheManager
     }
 
     /**
-     * Lookup remote service from registry
-     * @throws IOException if the remote service could not be found
-     *
-     */
-    protected void lookupRemoteService() throws IOException
-    {
-        log.info( "Looking up server [{0}]", registry );
-        try
-        {
-            final Object obj = Naming.lookup( registry );
-            log.info( "Server found: {0}", obj );
-
-            // Successful connection to the remote server.
-            this.remoteService = (ICacheServiceNonLocal<?, ?>) obj;
-            log.debug( "Remote Service = {0}", remoteService );
-            remoteWatch.setCacheWatch( (ICacheObserver) remoteService );
-        }
-        catch ( final Exception ex )
-        {
-            // Failed to connect to the remote server.
-            // Configure this RemoteCacheManager instance to use the "zombie"
-            // services.
-            this.remoteService = new ZombieCacheServiceNonLocal<>();
-            remoteWatch.setCacheWatch( new ZombieCacheWatch() );
-            throw new IOException( "Problem finding server at [" + registry + "]", ex );
-        }
-    }
-
-    /**
      * Adds the remote cache listener to the underlying cache-watch service.
      * <p>
      * @param cattr The feature to be added to the RemoteCacheListener attribute
@@ -175,44 +146,53 @@ public class RemoteCacheManager
     }
 
     /**
-     * Removes a listener. When the primary recovers the failover must deregister itself for a
-     * region. The failover runner will call this method to de-register. We do not want to deregister
-     * all listeners to a remote server, in case a failover is a primary of another region. Having
-     * one regions failover act as another servers primary is not currently supported.
+     * Returns true if the connection to the remote host can be
+     * successfully re-established.
      * <p>
-     * @param cattr
-     * @throws IOException
+     * @return true if we found a failover server
      */
-    public void removeRemoteCacheListener( final IRemoteCacheAttributes cattr )
-        throws IOException
+    public boolean canFixCaches()
     {
-        final RemoteCacheNoWait<?, ?> cache = caches.get( cattr.getCacheName() );
-        if ( cache != null )
+        try
         {
-        	removeListenerFromCache(cache);
+            lookupRemoteService();
         }
-        else
+        catch (final IOException e)
         {
-            if ( cattr.isReceive() )
-            {
-                log.warn( "Trying to deregister Cache Listener that was never registered." );
-            }
-            else
-            {
-                log.debug( "Since the remote cache is configured to not receive, "
-                    + "there is no listener to deregister." );
-            }
+            log.error("Could not find server", e);
+            canFix = false;
         }
+
+        return canFix;
     }
 
-    // common helper method
-	private void removeListenerFromCache(final RemoteCacheNoWait<?, ?> cache) throws IOException
-	{
-		final IRemoteCacheClient<?, ?> rc = cache.getRemoteCache();
-	    log.debug( "Found cache for [{0}], deregistering listener.", cache::getCacheName);
-		// could also store the listener for a server in the manager.
-        remoteWatch.removeCacheListener(cache.getCacheName(), rc.getListener());
-	}
+    /**
+     * Fixes up all the caches managed by this cache manager.
+     */
+    public void fixCaches()
+    {
+        if ( !canFix )
+        {
+            return;
+        }
+
+        log.info( "Fixing caches. ICacheServiceNonLocal {0} | IRemoteCacheObserver {1}",
+                remoteService, remoteWatch );
+
+        caches.values().stream()
+            .filter(cache -> cache.getStatus() == CacheStatus.ERROR)
+            .forEach(cache -> cache.fixCache(remoteService));
+
+        if ( log.isInfoEnabled() )
+        {
+            final String msg = "Remote connection to " + registry + " resumed.";
+            if ( cacheEventLogger != null )
+            {
+                cacheEventLogger.logApplicationEvent( "RemoteCacheManager", "fix", msg );
+            }
+            log.info( msg );
+        }
+    }
 
     /**
      * Gets a RemoteCacheNoWait from the RemoteCacheManager. The RemoteCacheNoWait objects are
@@ -230,6 +210,35 @@ public class RemoteCacheManager
         // might want to do some listener sanity checking here.
         return (RemoteCacheNoWait<K, V>) caches.computeIfAbsent(cattr.getCacheName(),
                 key -> newRemoteCacheNoWait(cattr));
+    }
+
+    /**
+     * Lookup remote service from registry
+     * @throws IOException if the remote service could not be found
+     *
+     */
+    protected void lookupRemoteService() throws IOException
+    {
+        log.info( "Looking up server [{0}]", registry );
+        try
+        {
+            final Object obj = Naming.lookup( registry );
+            log.info( "Server found: {0}", obj );
+
+            // Successful connection to the remote server.
+            this.remoteService = (ICacheServiceNonLocal<?, ?>) obj;
+            log.debug( "Remote Service = {0}", remoteService );
+            remoteWatch.setCacheWatch( (ICacheObserver) remoteService );
+        }
+        catch ( final Exception ex )
+        {
+            // Failed to connect to the remote server.
+            // Configure this RemoteCacheManager instance to use the "zombie"
+            // services.
+            this.remoteService = new ZombieCacheServiceNonLocal<>();
+            remoteWatch.setCacheWatch( new ZombieCacheWatch() );
+            throw new IOException( "Problem finding server at [" + registry + "]", ex );
+        }
     }
 
     /**
@@ -287,52 +296,43 @@ public class RemoteCacheManager
         caches.clear();
     }
 
-    /**
-     * Fixes up all the caches managed by this cache manager.
-     */
-    public void fixCaches()
-    {
-        if ( !canFix )
-        {
-            return;
-        }
-
-        log.info( "Fixing caches. ICacheServiceNonLocal {0} | IRemoteCacheObserver {1}",
-                remoteService, remoteWatch );
-
-        caches.values().stream()
-            .filter(cache -> cache.getStatus() == CacheStatus.ERROR)
-            .forEach(cache -> cache.fixCache(remoteService));
-
-        if ( log.isInfoEnabled() )
-        {
-            final String msg = "Remote connection to " + registry + " resumed.";
-            if ( cacheEventLogger != null )
-            {
-                cacheEventLogger.logApplicationEvent( "RemoteCacheManager", "fix", msg );
-            }
-            log.info( msg );
-        }
-    }
+    // common helper method
+	private void removeListenerFromCache(final RemoteCacheNoWait<?, ?> cache) throws IOException
+	{
+		final IRemoteCacheClient<?, ?> rc = cache.getRemoteCache();
+	    log.debug( "Found cache for [{0}], deregistering listener.", cache::getCacheName);
+		// could also store the listener for a server in the manager.
+        remoteWatch.removeCacheListener(cache.getCacheName(), rc.getListener());
+	}
 
     /**
-     * Returns true if the connection to the remote host can be
-     * successfully re-established.
+     * Removes a listener. When the primary recovers the failover must deregister itself for a
+     * region. The failover runner will call this method to de-register. We do not want to deregister
+     * all listeners to a remote server, in case a failover is a primary of another region. Having
+     * one regions failover act as another servers primary is not currently supported.
      * <p>
-     * @return true if we found a failover server
+     * @param cattr
+     * @throws IOException
      */
-    public boolean canFixCaches()
+    public void removeRemoteCacheListener( final IRemoteCacheAttributes cattr )
+        throws IOException
     {
-        try
+        final RemoteCacheNoWait<?, ?> cache = caches.get( cattr.getCacheName() );
+        if ( cache != null )
         {
-            lookupRemoteService();
+        	removeListenerFromCache(cache);
         }
-        catch (final IOException e)
+        else
         {
-            log.error("Could not find server", e);
-            canFix = false;
+            if ( cattr.isReceive() )
+            {
+                log.warn( "Trying to deregister Cache Listener that was never registered." );
+            }
+            else
+            {
+                log.debug( "Since the remote cache is configured to not receive, "
+                    + "there is no listener to deregister." );
+            }
         }
-
-        return canFix;
     }
 }

@@ -77,6 +77,25 @@ public class CacheElement<K, V>
     }
 
     /**
+     * @param obj other object
+     * @return true if this object key equals the key of obj
+     */
+    @Override
+    public boolean equals(final Object obj)
+    {
+        if (this == obj)
+        {
+            return true;
+        }
+        if (!(obj instanceof CacheElement))
+        {
+            return false;
+        }
+        final CacheElement<?,?> other = (CacheElement<?,?>) obj;
+        return Objects.equals(key, other.key);
+    }
+
+    /**
      * Gets the cacheName attribute of the CacheElement object
      * <p>
      * @return The cacheName value
@@ -85,6 +104,24 @@ public class CacheElement<K, V>
     public String getCacheName()
     {
         return this.cacheName;
+    }
+
+    /**
+     * Gets the IElementAttributes attribute of the CacheElement object
+     * <p>
+     * @return The IElementAttributes value, never null
+     */
+    @Override
+    public IElementAttributes getElementAttributes()
+    {
+        // create default attributes if they are null
+        // this shouldn't happen, but could if a corrupt
+        // object was sent over the wire.
+        if ( this.attr == null )
+        {
+            this.attr = new ElementAttributes();
+        }
+        return this.attr;
     }
 
     /**
@@ -110,6 +147,15 @@ public class CacheElement<K, V>
     }
 
     /**
+     * @return a hash of the key only
+     */
+    @Override
+    public int hashCode()
+    {
+        return key.hashCode();
+    }
+
+    /**
      * Sets the attributes attribute of the CacheElement object
      * <p>
      * @param attr
@@ -119,52 +165,6 @@ public class CacheElement<K, V>
     public void setElementAttributes( final IElementAttributes attr )
     {
         this.attr = attr;
-    }
-
-    /**
-     * Gets the IElementAttributes attribute of the CacheElement object
-     * <p>
-     * @return The IElementAttributes value, never null
-     */
-    @Override
-    public IElementAttributes getElementAttributes()
-    {
-        // create default attributes if they are null
-        // this shouldn't happen, but could if a corrupt
-        // object was sent over the wire.
-        if ( this.attr == null )
-        {
-            this.attr = new ElementAttributes();
-        }
-        return this.attr;
-    }
-
-    /**
-     * @param obj other object
-     * @return true if this object key equals the key of obj
-     */
-    @Override
-    public boolean equals(final Object obj)
-    {
-        if (this == obj)
-        {
-            return true;
-        }
-        if (!(obj instanceof CacheElement))
-        {
-            return false;
-        }
-        final CacheElement<?,?> other = (CacheElement<?,?>) obj;
-        return Objects.equals(key, other.key);
-    }
-
-    /**
-     * @return a hash of the key only
-     */
-    @Override
-    public int hashCode()
-    {
-        return key.hashCode();
     }
 
     /**

@@ -40,15 +40,6 @@ public class UDPDiscoveryManager
     /** Singleton instance */
     private static final UDPDiscoveryManager INSTANCE = new UDPDiscoveryManager();
 
-    /** Known services */
-    private final ConcurrentMap<String, UDPDiscoveryService> services = new ConcurrentHashMap<>();
-
-    /** private for singleton */
-    private UDPDiscoveryManager()
-    {
-        // noopt
-    }
-
     /**
      * Singleton
      * <p>
@@ -57,6 +48,15 @@ public class UDPDiscoveryManager
     public static UDPDiscoveryManager getInstance()
     {
         return INSTANCE;
+    }
+
+    /** Known services */
+    private final ConcurrentMap<String, UDPDiscoveryService> services = new ConcurrentHashMap<>();
+
+    /** private for singleton */
+    private UDPDiscoveryManager()
+    {
+        // noopt
     }
 
     /**

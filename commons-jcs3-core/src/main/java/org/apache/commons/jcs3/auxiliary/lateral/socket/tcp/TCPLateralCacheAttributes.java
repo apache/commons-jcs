@@ -103,81 +103,21 @@ public class TCPLateralCacheAttributes
     private int openTimeOut = DEFAULT_OPEN_TIMEOUT;
 
     /**
-     * Sets the tcpServer attribute of the ILateralCacheAttributes object
-     * <p>
-     * @param val The new tcpServer value
+     * @return the openTimeOut
      */
     @Override
-    public void setTcpServer( final String val )
+    public int getOpenTimeOut()
     {
-        this.tcpServer = val;
+        return openTimeOut;
     }
 
     /**
-     * Gets the tcpServer attribute of the ILateralCacheAttributes object
-     * <p>
-     * @return The tcpServer value
+     * @return the socketTimeOut
      */
     @Override
-    public String getTcpServer()
+    public int getSocketTimeOut()
     {
-        return this.tcpServer;
-    }
-
-    /**
-     * Sets the tcpServers attribute of the ILateralCacheAttributes object
-     * <p>
-     * @param val The new tcpServers value
-     */
-    @Override
-    public void setTcpServers( final String val )
-    {
-        this.tcpServers = val;
-    }
-
-    /**
-     * Gets the tcpServers attribute of the ILateralCacheAttributes object
-     * <p>
-     * @return The tcpServers value
-     */
-    @Override
-    public String getTcpServers()
-    {
-        return this.tcpServers;
-    }
-
-    /**
-     * Sets the tcpListenerPort attribute of the ILateralCacheAttributes object
-     * <p>
-     * @param val The new tcpListenerPort value
-     */
-    @Override
-    public void setTcpListenerPort( final int val )
-    {
-        this.tcpListenerPort = val;
-    }
-
-    /**
-     * Gets the tcpListenerPort attribute of the ILateralCacheAttributes object
-     * <p>
-     * @return The tcpListenerPort value
-     */
-    @Override
-    public int getTcpListenerPort()
-    {
-        return this.tcpListenerPort;
-    }
-
-    /**
-     * Sets the tcpListenerHost attribute of the ILateralCacheAttributes object
-     * <p>
-     * @param val
-     *            The new tcpListenerHost value
-     */
-    @Override
-    public void setTcpListenerHost( final String val )
-    {
-        this.tcpListenerHost = val;
+        return socketTimeOut;
     }
 
     /**
@@ -192,48 +132,36 @@ public class TCPLateralCacheAttributes
     }
 
     /**
-     * Can setup UDP Discovery. This only works for TCp laterals right now. It allows TCP laterals
-     * to find each other by broadcasting to a multicast port.
+     * Gets the tcpListenerPort attribute of the ILateralCacheAttributes object
      * <p>
-     * @param udpDiscoveryEnabled The udpDiscoveryEnabled to set.
+     * @return The tcpListenerPort value
      */
     @Override
-    public void setUdpDiscoveryEnabled( final boolean udpDiscoveryEnabled )
+    public int getTcpListenerPort()
     {
-        this.udpDiscoveryEnabled = udpDiscoveryEnabled;
+        return this.tcpListenerPort;
     }
 
     /**
-     * Whether or not TCP laterals can try to find each other by multicast communication.
+     * Gets the tcpServer attribute of the ILateralCacheAttributes object
      * <p>
-     * @return Returns the udpDiscoveryEnabled.
+     * @return The tcpServer value
      */
     @Override
-    public boolean isUdpDiscoveryEnabled()
+    public String getTcpServer()
     {
-        return this.udpDiscoveryEnabled;
+        return this.tcpServer;
     }
 
     /**
-     * The port to use if UDPDiscovery is enabled.
+     * Gets the tcpServers attribute of the ILateralCacheAttributes object
      * <p>
-     * @return Returns the udpDiscoveryPort.
+     * @return The tcpServers value
      */
     @Override
-    public int getUdpDiscoveryPort()
+    public String getTcpServers()
     {
-        return this.udpDiscoveryPort;
-    }
-
-    /**
-     * Sets the port to use if UDPDiscovery is enabled.
-     * <p>
-     * @param udpDiscoveryPort The udpDiscoveryPort to set.
-     */
-    @Override
-    public void setUdpDiscoveryPort( final int udpDiscoveryPort )
-    {
-        this.udpDiscoveryPort = udpDiscoveryPort;
+        return this.tcpServers;
     }
 
     /**
@@ -248,14 +176,14 @@ public class TCPLateralCacheAttributes
     }
 
     /**
-     * Sets the address to broadcast to if UDPDiscovery is enabled.
+     * The port to use if UDPDiscovery is enabled.
      * <p>
-     * @param udpDiscoveryAddr The udpDiscoveryAddr to set.
+     * @return Returns the udpDiscoveryPort.
      */
     @Override
-    public void setUdpDiscoveryAddr( final String udpDiscoveryAddr )
+    public int getUdpDiscoveryPort()
     {
-        this.udpDiscoveryAddr = udpDiscoveryAddr;
+        return this.udpDiscoveryPort;
     }
 
     /**
@@ -268,31 +196,6 @@ public class TCPLateralCacheAttributes
     public int getUdpTTL()
     {
         return udpTTL;
-    }
-
-    /**
-     * Sets the time-to-live for the UDP multicast packet
-     * <p>
-     * @param udpTTL The udpTTL to set.
-     * @since 3.1
-     */
-    @Override
-    public void setUdpTTL( final int udpTTL )
-    {
-        this.udpTTL = udpTTL;
-    }
-
-    /**
-     * Is the lateral allowed to try and get from other laterals.
-     * <p>
-     * This replaces the old putOnlyMode
-     * <p>
-     * @param allowGet
-     */
-    @Override
-    public void setAllowGet( final boolean allowGet )
-    {
-        this.allowGet = allowGet;
     }
 
     /**
@@ -309,49 +212,12 @@ public class TCPLateralCacheAttributes
     /**
      * Is the lateral allowed to put objects to other laterals.
      * <p>
-     * @param allowPut
-     */
-    @Override
-    public void setAllowPut( final boolean allowPut )
-    {
-        this.allowPut = allowPut;
-    }
-
-    /**
-     * Is the lateral allowed to put objects to other laterals.
-     * <p>
      * @return true if puts are allowed
      */
     @Override
     public boolean isAllowPut()
     {
         return this.allowPut;
-    }
-
-    /**
-     * Should the client send a remove command rather than a put when update is called. This is a
-     * client option, not a receiver option. This allows you to prevent the lateral from serializing
-     * objects.
-     * <p>
-     * @param issueRemoveOnPut
-     */
-    @Override
-    public void setIssueRemoveOnPut( final boolean issueRemoveOnPut )
-    {
-        this.issueRemoveOnPut = issueRemoveOnPut;
-    }
-
-    /**
-     * Should the client send a remove command rather than a put when update is called. This is a
-     * client option, not a receiver option. This allows you to prevent the lateral from serializing
-     * objects.
-     * <p>
-     * @return true if updates will result in a remove command being sent.
-     */
-    @Override
-    public boolean isIssueRemoveOnPut()
-    {
-        return this.issueRemoveOnPut;
     }
 
     /**
@@ -370,6 +236,54 @@ public class TCPLateralCacheAttributes
     }
 
     /**
+     * Should the client send a remove command rather than a put when update is called. This is a
+     * client option, not a receiver option. This allows you to prevent the lateral from serializing
+     * objects.
+     * <p>
+     * @return true if updates will result in a remove command being sent.
+     */
+    @Override
+    public boolean isIssueRemoveOnPut()
+    {
+        return this.issueRemoveOnPut;
+    }
+
+    /**
+     * Whether or not TCP laterals can try to find each other by multicast communication.
+     * <p>
+     * @return Returns the udpDiscoveryEnabled.
+     */
+    @Override
+    public boolean isUdpDiscoveryEnabled()
+    {
+        return this.udpDiscoveryEnabled;
+    }
+
+    /**
+     * Is the lateral allowed to try and get from other laterals.
+     * <p>
+     * This replaces the old putOnlyMode
+     * <p>
+     * @param allowGet
+     */
+    @Override
+    public void setAllowGet( final boolean allowGet )
+    {
+        this.allowGet = allowGet;
+    }
+
+    /**
+     * Is the lateral allowed to put objects to other laterals.
+     * <p>
+     * @param allowPut
+     */
+    @Override
+    public void setAllowPut( final boolean allowPut )
+    {
+        this.allowPut = allowPut;
+    }
+
+    /**
      * Should the receiver try to match hash codes. If true, the receiver will see if the client
      * supplied a hash code. If it did, then it will try to get the item locally. If the item exists,
      * then it will compare the hash code. if they are the same, it will not remove. This isn't
@@ -385,21 +299,16 @@ public class TCPLateralCacheAttributes
     }
 
     /**
-     * @param socketTimeOut the socketTimeOut to set
+     * Should the client send a remove command rather than a put when update is called. This is a
+     * client option, not a receiver option. This allows you to prevent the lateral from serializing
+     * objects.
+     * <p>
+     * @param issueRemoveOnPut
      */
     @Override
-    public void setSocketTimeOut( final int socketTimeOut )
+    public void setIssueRemoveOnPut( final boolean issueRemoveOnPut )
     {
-        this.socketTimeOut = socketTimeOut;
-    }
-
-    /**
-     * @return the socketTimeOut
-     */
-    @Override
-    public int getSocketTimeOut()
-    {
-        return socketTimeOut;
+        this.issueRemoveOnPut = issueRemoveOnPut;
     }
 
     /**
@@ -412,12 +321,103 @@ public class TCPLateralCacheAttributes
     }
 
     /**
-     * @return the openTimeOut
+     * @param socketTimeOut the socketTimeOut to set
      */
     @Override
-    public int getOpenTimeOut()
+    public void setSocketTimeOut( final int socketTimeOut )
     {
-        return openTimeOut;
+        this.socketTimeOut = socketTimeOut;
+    }
+
+    /**
+     * Sets the tcpListenerHost attribute of the ILateralCacheAttributes object
+     * <p>
+     * @param val
+     *            The new tcpListenerHost value
+     */
+    @Override
+    public void setTcpListenerHost( final String val )
+    {
+        this.tcpListenerHost = val;
+    }
+
+    /**
+     * Sets the tcpListenerPort attribute of the ILateralCacheAttributes object
+     * <p>
+     * @param val The new tcpListenerPort value
+     */
+    @Override
+    public void setTcpListenerPort( final int val )
+    {
+        this.tcpListenerPort = val;
+    }
+
+    /**
+     * Sets the tcpServer attribute of the ILateralCacheAttributes object
+     * <p>
+     * @param val The new tcpServer value
+     */
+    @Override
+    public void setTcpServer( final String val )
+    {
+        this.tcpServer = val;
+    }
+
+    /**
+     * Sets the tcpServers attribute of the ILateralCacheAttributes object
+     * <p>
+     * @param val The new tcpServers value
+     */
+    @Override
+    public void setTcpServers( final String val )
+    {
+        this.tcpServers = val;
+    }
+
+    /**
+     * Sets the address to broadcast to if UDPDiscovery is enabled.
+     * <p>
+     * @param udpDiscoveryAddr The udpDiscoveryAddr to set.
+     */
+    @Override
+    public void setUdpDiscoveryAddr( final String udpDiscoveryAddr )
+    {
+        this.udpDiscoveryAddr = udpDiscoveryAddr;
+    }
+
+    /**
+     * Can setup UDP Discovery. This only works for TCp laterals right now. It allows TCP laterals
+     * to find each other by broadcasting to a multicast port.
+     * <p>
+     * @param udpDiscoveryEnabled The udpDiscoveryEnabled to set.
+     */
+    @Override
+    public void setUdpDiscoveryEnabled( final boolean udpDiscoveryEnabled )
+    {
+        this.udpDiscoveryEnabled = udpDiscoveryEnabled;
+    }
+
+    /**
+     * Sets the port to use if UDPDiscovery is enabled.
+     * <p>
+     * @param udpDiscoveryPort The udpDiscoveryPort to set.
+     */
+    @Override
+    public void setUdpDiscoveryPort( final int udpDiscoveryPort )
+    {
+        this.udpDiscoveryPort = udpDiscoveryPort;
+    }
+
+    /**
+     * Sets the time-to-live for the UDP multicast packet
+     * <p>
+     * @param udpTTL The udpTTL to set.
+     * @since 3.1
+     */
+    @Override
+    public void setUdpTTL( final int udpTTL )
+    {
+        this.udpTTL = udpTTL;
     }
 
     /**

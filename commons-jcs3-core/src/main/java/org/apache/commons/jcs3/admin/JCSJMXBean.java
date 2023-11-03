@@ -31,15 +31,6 @@ import javax.management.MXBean;
 public interface JCSJMXBean
 {
     /**
-     * Builds up info about each element in a region.
-     * <p>
-     * @param cacheName
-     * @return List of CacheElementInfo objects
-     * @throws IOException
-     */
-    List<CacheElementInfo> buildElementInfo( String cacheName ) throws IOException;
-
-    /**
      * Builds up data on every region.
      * <p>
      * TODO we need a most light weight method that does not count bytes. The byte counting can
@@ -49,13 +40,13 @@ public interface JCSJMXBean
     List<CacheRegionInfo> buildCacheInfo();
 
     /**
-     * Tries to estimate how much data is in a region. This is expensive. If there are any non serializable objects in
-     * the region or an error occurs, suppresses exceptions and returns 0.
+     * Builds up info about each element in a region.
      * <p>
-     *
-     * @return long The size of the region in bytes.
+     * @param cacheName
+     * @return List of CacheElementInfo objects
+     * @throws IOException
      */
-    long getByteCount(String cacheName);
+    List<CacheElementInfo> buildElementInfo( String cacheName ) throws IOException;
 
     /**
      * Clears all regions in the cache.
@@ -74,6 +65,15 @@ public interface JCSJMXBean
      * cache API.
      */
     void clearRegion(String cacheName) throws IOException;
+
+    /**
+     * Tries to estimate how much data is in a region. This is expensive. If there are any non serializable objects in
+     * the region or an error occurs, suppresses exceptions and returns 0.
+     * <p>
+     *
+     * @return long The size of the region in bytes.
+     */
+    long getByteCount(String cacheName);
 
     /**
      * Removes a particular item from a particular region.

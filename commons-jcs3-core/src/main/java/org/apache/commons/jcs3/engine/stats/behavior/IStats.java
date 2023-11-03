@@ -37,18 +37,18 @@ public interface IStats
     List<IStatElement<?>> getStatElements();
 
     /**
-     * Sets the generic statistical or historical data.
-     *
-     * @param stats
-     */
-    void setStatElements( List<IStatElement<?>> stats );
-
-    /**
      * Gets the type name, such as "LRU Memory Cache." No formal type is defined.
      *
      * @return String
      */
     String getTypeName();
+
+    /**
+     * Sets the generic statistical or historical data.
+     *
+     * @param stats
+     */
+    void setStatElements( List<IStatElement<?>> stats );
 
     /**
      * Sets the type name, such as "LRU Memory Cache." No formal type is defined.

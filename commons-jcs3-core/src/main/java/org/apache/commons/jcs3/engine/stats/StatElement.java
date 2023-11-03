@@ -49,26 +49,6 @@ public class StatElement<V>
     }
 
     /**
-     * Gets the name of the stat element, for example, HitCount
-     * <p>
-     * @return the stat element name
-     */
-    @Override
-    public String getName()
-    {
-        return name;
-    }
-
-    /**
-     * @param name
-     */
-    @Override
-    public void setName( final String name )
-    {
-        this.name = name;
-    }
-
-    /**
      * Gets the data, for example, for hit count you would get a value for some number.
      * <p>
      * @return data
@@ -80,6 +60,17 @@ public class StatElement<V>
     }
 
     /**
+     * Gets the name of the stat element, for example, HitCount
+     * <p>
+     * @return the stat element name
+     */
+    @Override
+    public String getName()
+    {
+        return name;
+    }
+
+    /**
      * Sets the data for this element.
      * <p>
      * @param data
@@ -88,6 +79,15 @@ public class StatElement<V>
     public void setData( final V data )
     {
         this.data = data;
+    }
+
+    /**
+     * @param name
+     */
+    @Override
+    public void setName( final String name )
+    {
+        this.name = name;
     }
 
     /**

@@ -86,6 +86,35 @@ public class RemoteCacheStartupServlet
     private String registryHost;
 
     /**
+     * shuts the cache down.
+     */
+    @Override
+    public void destroy()
+    {
+        super.destroy();
+
+        log.info("Shutting down remote cache ");
+
+        try
+        {
+            RemoteCacheServerFactory.shutdownImpl(registryHost, registryPort);
+        }
+        catch (final IOException e)
+        {
+            log.error("Problem shutting down.", e);
+        }
+
+        try
+        {
+            JCS.shutdown();
+        }
+        catch (final CacheException e)
+        {
+            log.error("Could not retrieve cache manager instance", e);
+        }
+    }
+
+    /**
      * Starts the registry and then tries to bind to it.
      * <p>
      * Gets the port from a props file. Uses the local host name for the
@@ -149,6 +178,51 @@ public class RemoteCacheStartupServlet
     }
 
     /**
+     * Load configuration values from init params if possible
+     */
+    private void loadInitParams()
+    {
+        final ServletConfig config = getServletConfig();
+        final String _propsFileName = config.getInitParameter("propsFileName");
+        if (null != _propsFileName)
+        {
+            this.propsFileName = _propsFileName;
+        }
+        final String _registryHost = config.getInitParameter("registryHost");
+        if (null != _registryHost)
+        {
+            this.registryHost = _registryHost;
+        }
+        final String regPortString = config.getInitParameter("registryPort");
+        if (null != regPortString)
+        {
+            setRegistryPort(regPortString);
+        }
+    }
+
+    /**
+     * Load configuration values from config file if possible
+     */
+    private Properties loadPropertiesFromFile()
+    {
+        Properties props = null;
+
+        try
+        {
+            props = RemoteUtils.loadProps(propsFileName);
+            registryHost = props.getProperty("registry.host", registryHost);
+            final String portS = props.getProperty("registry.port", String.valueOf(registryPort));
+            setRegistryPort(portS);
+        }
+        catch (final IOException e)
+        {
+            log.error("Problem loading props.", e);
+        }
+
+        return props;
+    }
+
+    /**
      * It just dumps the stats.
      * <p>
      *
@@ -189,80 +263,6 @@ public class RemoteCacheStartupServlet
         catch (final IOException e)
         {
             log.error("Problem writing response.", e);
-        }
-    }
-
-    /**
-     * shuts the cache down.
-     */
-    @Override
-    public void destroy()
-    {
-        super.destroy();
-
-        log.info("Shutting down remote cache ");
-
-        try
-        {
-            RemoteCacheServerFactory.shutdownImpl(registryHost, registryPort);
-        }
-        catch (final IOException e)
-        {
-            log.error("Problem shutting down.", e);
-        }
-
-        try
-        {
-            JCS.shutdown();
-        }
-        catch (final CacheException e)
-        {
-            log.error("Could not retrieve cache manager instance", e);
-        }
-    }
-
-    /**
-     * Load configuration values from config file if possible
-     */
-    private Properties loadPropertiesFromFile()
-    {
-        Properties props = null;
-
-        try
-        {
-            props = RemoteUtils.loadProps(propsFileName);
-            registryHost = props.getProperty("registry.host", registryHost);
-            final String portS = props.getProperty("registry.port", String.valueOf(registryPort));
-            setRegistryPort(portS);
-        }
-        catch (final IOException e)
-        {
-            log.error("Problem loading props.", e);
-        }
-
-        return props;
-    }
-
-    /**
-     * Load configuration values from init params if possible
-     */
-    private void loadInitParams()
-    {
-        final ServletConfig config = getServletConfig();
-        final String _propsFileName = config.getInitParameter("propsFileName");
-        if (null != _propsFileName)
-        {
-            this.propsFileName = _propsFileName;
-        }
-        final String _registryHost = config.getInitParameter("registryHost");
-        if (null != _registryHost)
-        {
-            this.registryHost = _registryHost;
-        }
-        final String regPortString = config.getInitParameter("registryPort");
-        if (null != regPortString)
-        {
-            setRegistryPort(regPortString);
         }
     }
 

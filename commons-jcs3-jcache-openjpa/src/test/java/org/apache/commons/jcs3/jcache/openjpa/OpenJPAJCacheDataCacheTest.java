@@ -44,6 +44,30 @@ import org.junit.Test;
 
 public class OpenJPAJCacheDataCacheTest
 {
+    @Entity
+    public static class MyEntity
+    {
+        @Id
+        @GeneratedValue
+        private long id;
+        private String name;
+
+        public long getId()
+        {
+            return id;
+        }
+
+        public String getName()
+        {
+            return name;
+        }
+
+        public void setName(final String name)
+        {
+            this.name = name;
+        }
+    }
+
     private static final Properties props = new Properties()
     {private static final long serialVersionUID = 498881935058549341L;
 
@@ -110,29 +134,5 @@ public class OpenJPAJCacheDataCacheTest
 
         em.close();
         emf.close();
-    }
-
-    @Entity
-    public static class MyEntity
-    {
-        @Id
-        @GeneratedValue
-        private long id;
-        private String name;
-
-        public long getId()
-        {
-            return id;
-        }
-
-        public String getName()
-        {
-            return name;
-        }
-
-        public void setName(final String name)
-        {
-            this.name = name;
-        }
     }
 }

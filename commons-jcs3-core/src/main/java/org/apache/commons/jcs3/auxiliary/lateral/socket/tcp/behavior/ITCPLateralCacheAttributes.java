@@ -30,57 +30,14 @@ public interface ITCPLateralCacheAttributes
     extends ILateralCacheAttributes
 {
     /**
-     * Sets the tcpServer attribute of the ILateralCacheAttributes object
-     * <p>
-     * @param val
-     *            The new tcpServer value
+     * @return the openTimeOut
      */
-    void setTcpServer( String val );
+    int getOpenTimeOut();
 
     /**
-     * Gets the tcpServer attribute of the ILateralCacheAttributes object
-     * <p>
-     * @return The tcpServer value
+     * @return the socketTimeOut
      */
-    String getTcpServer();
-
-    /**
-     * Sets the tcpServers attribute of the ILateralCacheAttributes object
-     * <p>
-     * @param val
-     *            The new tcpServers value
-     */
-    void setTcpServers( String val );
-
-    /**
-     * Gets the tcpServers attribute of the ILateralCacheAttributes object
-     * <p>
-     * @return The tcpServers value
-     */
-    String getTcpServers();
-
-    /**
-     * Sets the tcpListenerPort attribute of the ILateralCacheAttributes object
-     * <p>
-     * @param val
-     *            The new tcpListenerPort value
-     */
-    void setTcpListenerPort( int val );
-
-    /**
-     * Gets the tcpListenerPort attribute of the ILateralCacheAttributes object
-     * <p>
-     * @return The tcpListenerPort value
-     */
-    int getTcpListenerPort();
-
-    /**
-     * Sets the tcpListenerHost attribute of the ILateralCacheAttributes object
-     * <p>
-     * @param val
-     *            The new tcpListenerHost value
-     */
-    void setTcpListenerHost( String val );
+    int getSocketTimeOut();
 
     /**
      * Gets the tcpListenerHost attribute of the ILateralCacheAttributes object
@@ -90,37 +47,25 @@ public interface ITCPLateralCacheAttributes
     String getTcpListenerHost();
 
     /**
-     * Can setup UDP Discovery. This only works for TCp laterals right now. It
-     * allows TCP laterals to find each other by broadcasting to a multicast
-     * port.
+     * Gets the tcpListenerPort attribute of the ILateralCacheAttributes object
      * <p>
-     * @param udpDiscoveryEnabled
-     *            The udpDiscoveryEnabled to set.
+     * @return The tcpListenerPort value
      */
-    void setUdpDiscoveryEnabled( boolean udpDiscoveryEnabled );
+    int getTcpListenerPort();
 
     /**
-     * Whether or not TCP laterals can try to find each other by multicast
-     * communication.
+     * Gets the tcpServer attribute of the ILateralCacheAttributes object
      * <p>
-     * @return Returns the udpDiscoveryEnabled.
+     * @return The tcpServer value
      */
-    boolean isUdpDiscoveryEnabled();
+    String getTcpServer();
 
     /**
-     * The port to use if UDPDiscovery is enabled.
+     * Gets the tcpServers attribute of the ILateralCacheAttributes object
      * <p>
-     * @return Returns the udpDiscoveryPort.
+     * @return The tcpServers value
      */
-    int getUdpDiscoveryPort();
-
-    /**
-     * Sets the port to use if UDPDiscovery is enabled.
-     * <p>
-     * @param udpDiscoveryPort
-     *            The udpDiscoveryPort to set.
-     */
-    void setUdpDiscoveryPort( int udpDiscoveryPort );
+    String getTcpServers();
 
     /**
      * The address to broadcast to if UDPDiscovery is enabled.
@@ -130,12 +75,11 @@ public interface ITCPLateralCacheAttributes
     String getUdpDiscoveryAddr();
 
     /**
-     * Sets the address to broadcast to if UDPDiscovery is enabled.
+     * The port to use if UDPDiscovery is enabled.
      * <p>
-     * @param udpDiscoveryAddr
-     *            The udpDiscoveryAddr to set.
+     * @return Returns the udpDiscoveryPort.
      */
-    void setUdpDiscoveryAddr( String udpDiscoveryAddr );
+    int getUdpDiscoveryPort();
 
     /**
      * The time-to-live for the UDP multicast packets
@@ -144,23 +88,6 @@ public interface ITCPLateralCacheAttributes
      * @since 3.1
      */
     int getUdpTTL();
-
-    /**
-     * Sets the time-to-live for the UDP multicast packet
-     * <p>
-     * @param udpTTL The udpTTL to set.
-     * @since 3.1
-     */
-    void setUdpTTL( final int udpTTL );
-
-    /**
-     * Is the lateral allowed to try and get from other laterals.
-     * <p>
-     * This replaces the old putOnlyMode
-     * <p>
-     * @param allowGet
-     */
-    void setAllowGet( boolean allowGet );
 
     /**
      * Is the lateral allowed to try and get from other laterals.
@@ -172,34 +99,9 @@ public interface ITCPLateralCacheAttributes
     /**
      * Is the lateral allowed to put objects to other laterals.
      * <p>
-     * @param allowPut
-     */
-    void setAllowPut( boolean allowPut );
-
-    /**
-     * Is the lateral allowed to put objects to other laterals.
-     * <p>
      * @return true if puts are allowed
      */
     boolean isAllowPut();
-
-    /**
-     * Should the client send a remove command rather than a put when update is
-     * called. This is a client option, not a receiver option. This allows you
-     * to prevent the lateral from serializing objects.
-     * <p>
-     * @param issueRemoveOnPut
-     */
-    void setIssueRemoveOnPut( boolean issueRemoveOnPut );
-
-    /**
-     * Should the client send a remove command rather than a put when update is
-     * called. This is a client option, not a receiver option. This allows you
-     * to prevent the lateral from serializing objects.
-     * <p>
-     * @return true if updates will result in a remove command being sent.
-     */
-    boolean isIssueRemoveOnPut();
 
     /**
      * Should the receiver try to match hash codes. If true, the receiver will
@@ -214,6 +116,39 @@ public interface ITCPLateralCacheAttributes
     boolean isFilterRemoveByHashCode();
 
     /**
+     * Should the client send a remove command rather than a put when update is
+     * called. This is a client option, not a receiver option. This allows you
+     * to prevent the lateral from serializing objects.
+     * <p>
+     * @return true if updates will result in a remove command being sent.
+     */
+    boolean isIssueRemoveOnPut();
+
+    /**
+     * Whether or not TCP laterals can try to find each other by multicast
+     * communication.
+     * <p>
+     * @return Returns the udpDiscoveryEnabled.
+     */
+    boolean isUdpDiscoveryEnabled();
+
+    /**
+     * Is the lateral allowed to try and get from other laterals.
+     * <p>
+     * This replaces the old putOnlyMode
+     * <p>
+     * @param allowGet
+     */
+    void setAllowGet( boolean allowGet );
+
+    /**
+     * Is the lateral allowed to put objects to other laterals.
+     * <p>
+     * @param allowPut
+     */
+    void setAllowPut( boolean allowPut );
+
+    /**
      * Should the receiver try to match hash codes. If true, the receiver will
      * see if the client supplied a hash code. If it did, then it will try to get
      * the item locally. If the item exists, then it will compare the hash code.
@@ -226,14 +161,13 @@ public interface ITCPLateralCacheAttributes
     void setFilterRemoveByHashCode( boolean filter );
 
     /**
-     * @param socketTimeOut the socketTimeOut to set
+     * Should the client send a remove command rather than a put when update is
+     * called. This is a client option, not a receiver option. This allows you
+     * to prevent the lateral from serializing objects.
+     * <p>
+     * @param issueRemoveOnPut
      */
-    void setSocketTimeOut( int socketTimeOut );
-
-    /**
-     * @return the socketTimeOut
-     */
-    int getSocketTimeOut();
+    void setIssueRemoveOnPut( boolean issueRemoveOnPut );
 
     /**
      * @param openTimeOut the openTimeOut to set
@@ -241,7 +175,73 @@ public interface ITCPLateralCacheAttributes
     void setOpenTimeOut( int openTimeOut );
 
     /**
-     * @return the openTimeOut
+     * @param socketTimeOut the socketTimeOut to set
      */
-    int getOpenTimeOut();
+    void setSocketTimeOut( int socketTimeOut );
+
+    /**
+     * Sets the tcpListenerHost attribute of the ILateralCacheAttributes object
+     * <p>
+     * @param val
+     *            The new tcpListenerHost value
+     */
+    void setTcpListenerHost( String val );
+
+    /**
+     * Sets the tcpListenerPort attribute of the ILateralCacheAttributes object
+     * <p>
+     * @param val
+     *            The new tcpListenerPort value
+     */
+    void setTcpListenerPort( int val );
+
+    /**
+     * Sets the tcpServer attribute of the ILateralCacheAttributes object
+     * <p>
+     * @param val
+     *            The new tcpServer value
+     */
+    void setTcpServer( String val );
+
+    /**
+     * Sets the tcpServers attribute of the ILateralCacheAttributes object
+     * <p>
+     * @param val
+     *            The new tcpServers value
+     */
+    void setTcpServers( String val );
+
+    /**
+     * Sets the address to broadcast to if UDPDiscovery is enabled.
+     * <p>
+     * @param udpDiscoveryAddr
+     *            The udpDiscoveryAddr to set.
+     */
+    void setUdpDiscoveryAddr( String udpDiscoveryAddr );
+
+    /**
+     * Can setup UDP Discovery. This only works for TCp laterals right now. It
+     * allows TCP laterals to find each other by broadcasting to a multicast
+     * port.
+     * <p>
+     * @param udpDiscoveryEnabled
+     *            The udpDiscoveryEnabled to set.
+     */
+    void setUdpDiscoveryEnabled( boolean udpDiscoveryEnabled );
+
+    /**
+     * Sets the port to use if UDPDiscovery is enabled.
+     * <p>
+     * @param udpDiscoveryPort
+     *            The udpDiscoveryPort to set.
+     */
+    void setUdpDiscoveryPort( int udpDiscoveryPort );
+
+    /**
+     * Sets the time-to-live for the UDP multicast packet
+     * <p>
+     * @param udpTTL The udpTTL to set.
+     * @since 3.1
+     */
+    void setUdpTTL( final int udpTTL );
 }

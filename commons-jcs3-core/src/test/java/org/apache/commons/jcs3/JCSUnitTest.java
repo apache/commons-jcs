@@ -37,22 +37,6 @@ public class JCSUnitTest
     Random random = new Random();
 
     /**
-     * @throws Exception
-     */
-    @Test
-    public void testJCS()
-        throws Exception
-    {
-        final CacheAccess<String, LinkedList<HashMap<String, String>>> jcs = JCS.getInstance( "testCache1" );
-
-        final LinkedList<HashMap<String, String>> list = buildList();
-
-        jcs.put( "some:key", list );
-
-        assertEquals( list, jcs.get( "some:key" ) );
-    }
-
-    /**
      * @return builds a list
      */
     private LinkedList<HashMap<String, String>> buildList()
@@ -86,5 +70,21 @@ public class JCSUnitTest
         }
 
         return map;
+    }
+
+    /**
+     * @throws Exception
+     */
+    @Test
+    public void testJCS()
+        throws Exception
+    {
+        final CacheAccess<String, LinkedList<HashMap<String, String>>> jcs = JCS.getInstance( "testCache1" );
+
+        final LinkedList<HashMap<String, String>> list = buildList();
+
+        jcs.put( "some:key", list );
+
+        assertEquals( list, jcs.get( "some:key" ) );
     }
 }

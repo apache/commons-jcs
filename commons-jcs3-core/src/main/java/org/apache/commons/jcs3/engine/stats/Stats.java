@@ -48,21 +48,21 @@ public class Stats
     }
 
     /**
-     * @param stats
-     */
-    @Override
-    public void setStatElements( final List<IStatElement<?>> stats )
-    {
-        this.stats = stats;
-    }
-
-    /**
      * @return typeName
      */
     @Override
     public String getTypeName()
     {
         return typeName;
+    }
+
+    /**
+     * @param stats
+     */
+    @Override
+    public void setStatElements( final List<IStatElement<?>> stats )
+    {
+        this.stats = stats;
     }
 
     /**

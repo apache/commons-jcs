@@ -34,25 +34,6 @@ public class CacheEventQueueFactoryUnitTest
 {
     /** Test create */
     @Test
-    public void testCreateCacheEventQueue_Single()
-    {
-        // SETUP
-        final QueueType eventQueueType = QueueType.SINGLE;
-        final ICacheListener<String, String> listener = new MockRemoteCacheListener<>();
-        final long listenerId = 1;
-
-        final CacheEventQueueFactory<String, String> factory = new CacheEventQueueFactory<>();
-
-        // DO WORK
-        final ICacheEventQueue<String, String> result = factory.createCacheEventQueue( listener, listenerId, "cacheName", "threadPoolName", eventQueueType );
-
-        // VERIFY
-        assertNotNull( "Should have a result", result );
-        assertEquals( "Wrong type", QueueType.SINGLE, result.getQueueType() );
-    }
-
-    /** Test create */
-    @Test
     public void testCreateCacheEventQueue_Pooled()
     {
         // SETUP
@@ -68,5 +49,24 @@ public class CacheEventQueueFactoryUnitTest
         // VERIFY
         assertNotNull( "Should have a result", result );
         assertTrue( "Wrong type", result.getQueueType() == QueueType.POOLED );
+    }
+
+    /** Test create */
+    @Test
+    public void testCreateCacheEventQueue_Single()
+    {
+        // SETUP
+        final QueueType eventQueueType = QueueType.SINGLE;
+        final ICacheListener<String, String> listener = new MockRemoteCacheListener<>();
+        final long listenerId = 1;
+
+        final CacheEventQueueFactory<String, String> factory = new CacheEventQueueFactory<>();
+
+        // DO WORK
+        final ICacheEventQueue<String, String> result = factory.createCacheEventQueue( listener, listenerId, "cacheName", "threadPoolName", eventQueueType );
+
+        // VERIFY
+        assertNotNull( "Should have a result", result );
+        assertEquals( "Wrong type", QueueType.SINGLE, result.getQueueType() );
     }
 }

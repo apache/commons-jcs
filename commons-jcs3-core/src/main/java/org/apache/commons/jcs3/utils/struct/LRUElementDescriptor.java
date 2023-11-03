@@ -43,18 +43,18 @@ public class LRUElementDescriptor<K, V>
     }
 
     /**
-     * @param key The key to set.
-     */
-    public void setKey(final K key)
-    {
-        this.key = key;
-    }
-
-    /**
      * @return Returns the key.
      */
     public K getKey()
     {
         return key;
+    }
+
+    /**
+     * @param key The key to set.
+     */
+    public void setKey(final K key)
+    {
+        this.key = key;
     }
 }

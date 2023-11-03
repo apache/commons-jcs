@@ -69,6 +69,43 @@ public class MySQLTableOptimizer
     }
 
     /**
+     * @return Returns the tableName.
+     */
+    public String getTableName()
+    {
+        return tableName;
+    }
+
+    /**
+     * This calls show table status and returns the result as a String.
+     * <p>
+     * @param sStatement
+     * @return String
+     * @throws SQLException
+     */
+    protected String getTableStatus( final Statement sStatement )
+        throws SQLException
+    {
+        final StringBuilder statusString = new StringBuilder();
+        try (ResultSet statusResultSet = sStatement.executeQuery( "show table status" ))
+        {
+            final int numColumns = statusResultSet.getMetaData().getColumnCount();
+            while ( statusResultSet.next() )
+            {
+                statusString.append( "\n" );
+                for ( int i = 1; i <= numColumns; i++ )
+                {
+                    statusString.append(statusResultSet.getMetaData().getColumnLabel(i))
+                        .append(" [")
+                        .append(statusResultSet.getString(i))
+                        .append("]  |  ");
+                }
+            }
+        }
+        return statusString.toString();
+    }
+
+    /**
      * A scheduler will call this method. When it is called the table state is marked as optimizing.
      * TODO we need to verify that no deletions are running before we call optimize. We should wait
      * if a deletion is in progress.
@@ -193,35 +230,6 @@ public class MySQLTableOptimizer
     }
 
     /**
-     * This calls show table status and returns the result as a String.
-     * <p>
-     * @param sStatement
-     * @return String
-     * @throws SQLException
-     */
-    protected String getTableStatus( final Statement sStatement )
-        throws SQLException
-    {
-        final StringBuilder statusString = new StringBuilder();
-        try (ResultSet statusResultSet = sStatement.executeQuery( "show table status" ))
-        {
-            final int numColumns = statusResultSet.getMetaData().getColumnCount();
-            while ( statusResultSet.next() )
-            {
-                statusString.append( "\n" );
-                for ( int i = 1; i <= numColumns; i++ )
-                {
-                    statusString.append(statusResultSet.getMetaData().getColumnLabel(i))
-                        .append(" [")
-                        .append(statusResultSet.getString(i))
-                        .append("]  |  ");
-                }
-            }
-        }
-        return statusString.toString();
-    }
-
-    /**
      * This is called if the optimization is in error.
      * <p>
      * It looks for "OK" in response. If it find "OK" as a message in any result set row, it returns
@@ -274,13 +282,5 @@ public class MySQLTableOptimizer
     public void setTableName( final String tableName )
     {
         this.tableName = tableName;
-    }
-
-    /**
-     * @return Returns the tableName.
-     */
-    public String getTableName()
-    {
-        return tableName;
     }
 }

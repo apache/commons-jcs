@@ -40,6 +40,17 @@ public class LateralTCPConcurrentRandomTestUtil
     //private static boolean isSysOut = true;
 
     /**
+     * @param s string to print
+     */
+    public static void p( final String s )
+    {
+        if ( isSysOut )
+        {
+            System.out.println( s );
+        }
+    }
+
+    /**
      * Randomly adds items to cache, gets them, and removes them. The range
      * count is more than the size of the memory cache, so items should spool to
      * disk.
@@ -164,16 +175,5 @@ public class LateralTCPConcurrentRandomTestUtil
         //assertEquals( "Couldn't put laterally, could be too much traffic in
         // queue.", "testdata", value2 );
 
-    }
-
-    /**
-     * @param s string to print
-     */
-    public static void p( final String s )
-    {
-        if ( isSysOut )
-        {
-            System.out.println( s );
-        }
     }
 }

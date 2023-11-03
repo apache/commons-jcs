@@ -83,42 +83,6 @@ public class ShrinkerThreadUnitTest
      * <p>
      * @throws IOException */
     @Test
-    public void testCheckForRemoval_NotExpired() throws IOException
-    {
-        // SETUP
-        final CompositeCacheAttributes cacheAttr = new CompositeCacheAttributes();
-        cacheAttr.setCacheName("testRegion");
-        cacheAttr.setMaxMemoryIdleTimeSeconds( 10 );
-        cacheAttr.setMaxSpoolPerRun( 10 );
-
-        final CompositeCache<String, String> cache = new CompositeCache<>(cacheAttr, new ElementAttributes());
-
-        final String key = "key";
-        final String value = "value";
-
-        final ICacheElement<String, String> element = new CacheElement<>( "testRegion", key, value );
-        final ElementAttributes elementAttr = new ElementAttributes();
-        elementAttr.setIsEternal( false );
-        element.setElementAttributes( elementAttr );
-        element.getElementAttributes().setMaxLife(1);
-
-        long now = System.currentTimeMillis();
-        // subtract two seconds
-        now -= 2000;
-
-        // DO WORK
-        final boolean result = cache.isExpired( element, now,
-                ElementEventType.EXCEEDED_MAXLIFE_BACKGROUND,
-                ElementEventType.EXCEEDED_IDLETIME_BACKGROUND );
-
-        // VERIFY
-        assertFalse( "Item should not have expired.", result );
-    }
-
-    /** verify the check for removal
-     * <p>
-     * @throws IOException */
-    @Test
     public void testCheckForRemoval_IdleTooLong() throws IOException
     {
         // SETUP
@@ -150,6 +114,42 @@ public class ShrinkerThreadUnitTest
 
         // VERIFY
         assertTrue( "Item should have expired.", result );
+    }
+
+    /** verify the check for removal
+     * <p>
+     * @throws IOException */
+    @Test
+    public void testCheckForRemoval_NotExpired() throws IOException
+    {
+        // SETUP
+        final CompositeCacheAttributes cacheAttr = new CompositeCacheAttributes();
+        cacheAttr.setCacheName("testRegion");
+        cacheAttr.setMaxMemoryIdleTimeSeconds( 10 );
+        cacheAttr.setMaxSpoolPerRun( 10 );
+
+        final CompositeCache<String, String> cache = new CompositeCache<>(cacheAttr, new ElementAttributes());
+
+        final String key = "key";
+        final String value = "value";
+
+        final ICacheElement<String, String> element = new CacheElement<>( "testRegion", key, value );
+        final ElementAttributes elementAttr = new ElementAttributes();
+        elementAttr.setIsEternal( false );
+        element.setElementAttributes( elementAttr );
+        element.getElementAttributes().setMaxLife(1);
+
+        long now = System.currentTimeMillis();
+        // subtract two seconds
+        now -= 2000;
+
+        // DO WORK
+        final boolean result = cache.isExpired( element, now,
+                ElementEventType.EXCEEDED_MAXLIFE_BACKGROUND,
+                ElementEventType.EXCEEDED_IDLETIME_BACKGROUND );
+
+        // VERIFY
+        assertFalse( "Item should not have expired.", result );
     }
 
     /** verify the check for removal

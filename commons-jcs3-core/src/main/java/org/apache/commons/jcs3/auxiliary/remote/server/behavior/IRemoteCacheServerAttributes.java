@@ -29,19 +29,23 @@ public interface IRemoteCacheServerAttributes
     extends ICommonRemoteCacheAttributes
 {
     /**
+     * Gets the ConfigFileName attribute of the IRemoteCacheAttributes object.
+     * <p>
+     * @return The configuration file name
+     */
+    String getConfigFileName();
+
+    /**
+     * @return the registryKeepAliveDelayMillis
+     */
+    long getRegistryKeepAliveDelayMillis();
+
+    /**
      * Gets the localPort attribute of the IRemoteCacheAttributes object.
      * <p>
      * @return The localPort value
      */
     int getServicePort();
-
-    /**
-     * Sets the localPort attribute of the IRemoteCacheAttributes object.
-     * <p>
-     * @param p
-     *            The new localPort value
-     */
-    void setServicePort( int p );
 
     /**
      * Should we try to get remotely when the request does not come in from a
@@ -56,19 +60,19 @@ public interface IRemoteCacheServerAttributes
     boolean isAllowClusterGet();
 
     /**
+     * Should we try to keep the registry alive
+     * <p>
+     * @return the useRegistryKeepAlive
+     */
+    boolean isUseRegistryKeepAlive();
+
+    /**
      * Should cluster updates be propagated to the locals.
      * <p>
      * @param r
      *            The new localClusterConsistency value
      */
     void setAllowClusterGet( boolean r );
-
-    /**
-     * Gets the ConfigFileName attribute of the IRemoteCacheAttributes object.
-     * <p>
-     * @return The configuration file name
-     */
-    String getConfigFileName();
 
     /**
      * Sets the ConfigFileName attribute of the IRemoteCacheAttributes object.
@@ -79,26 +83,22 @@ public interface IRemoteCacheServerAttributes
     void setConfigFileName( String s );
 
     /**
-     * Should we try to keep the registry alive
-     * <p>
-     * @param useRegistryKeepAlive the useRegistryKeepAlive to set
-     */
-    void setUseRegistryKeepAlive( boolean useRegistryKeepAlive );
-
-    /**
-     * Should we try to keep the registry alive
-     * <p>
-     * @return the useRegistryKeepAlive
-     */
-    boolean isUseRegistryKeepAlive();
-
-    /**
      * @param registryKeepAliveDelayMillis the registryKeepAliveDelayMillis to set
      */
     void setRegistryKeepAliveDelayMillis( long registryKeepAliveDelayMillis );
 
     /**
-     * @return the registryKeepAliveDelayMillis
+     * Sets the localPort attribute of the IRemoteCacheAttributes object.
+     * <p>
+     * @param p
+     *            The new localPort value
      */
-    long getRegistryKeepAliveDelayMillis();
+    void setServicePort( int p );
+
+    /**
+     * Should we try to keep the registry alive
+     * <p>
+     * @param useRegistryKeepAlive the useRegistryKeepAlive to set
+     */
+    void setUseRegistryKeepAlive( boolean useRegistryKeepAlive );
 }

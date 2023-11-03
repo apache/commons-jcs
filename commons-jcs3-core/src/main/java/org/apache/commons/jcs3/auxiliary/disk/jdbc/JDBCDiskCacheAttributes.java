@@ -33,6 +33,15 @@ public class JDBCDiskCacheAttributes
     /** default */
     private static final String DEFAULT_TABLE_NAME = "JCS_STORE";
 
+    /** This is the default limit on the maximum number of active connections. */
+    public static final int DEFAULT_MAX_TOTAL = 10;
+
+    /** This is the default setting for the cleanup routine. */
+    public static final int DEFAULT_SHRINKER_INTERVAL_SECONDS = 300;
+
+    /** The default Pool Name to which the connection pool will be keyed. */
+    public static final String DEFAULT_POOL_NAME = "jcs";
+
     /** DB username */
     private String userName;
 
@@ -60,23 +69,14 @@ public class JDBCDiskCacheAttributes
     /** If false we will insert and if it fails we will update. */
     private boolean testBeforeInsert = true;
 
-    /** This is the default limit on the maximum number of active connections. */
-    public static final int DEFAULT_MAX_TOTAL = 10;
-
     /** Max connections allowed */
     private int maxTotal = DEFAULT_MAX_TOTAL;
-
-    /** This is the default setting for the cleanup routine. */
-    public static final int DEFAULT_SHRINKER_INTERVAL_SECONDS = 300;
 
     /** How often should we remove expired. */
     private int shrinkerIntervalSeconds = DEFAULT_SHRINKER_INTERVAL_SECONDS;
 
     /** Should we remove expired in the background. */
     private boolean useDiskShrinker = true;
-
-    /** The default Pool Name to which the connection pool will be keyed. */
-    public static final String DEFAULT_POOL_NAME = "jcs";
 
     /**
      * If a pool name is supplied, the manager will attempt to load it. It should be configured in a
@@ -93,60 +93,11 @@ public class JDBCDiskCacheAttributes
     private String connectionPoolName;
 
     /**
-     * @param userName The userName to set.
+     * @return the connectionPoolName
      */
-    public void setUserName( final String userName )
+    public String getConnectionPoolName()
     {
-        this.userName = userName;
-    }
-
-    /**
-     * @return Returns the userName.
-     */
-    public String getUserName()
-    {
-        return userName;
-    }
-
-    /**
-     * @param password The password to set.
-     */
-    public void setPassword( final String password )
-    {
-        this.password = password;
-    }
-
-    /**
-     * @return Returns the password.
-     */
-    public String getPassword()
-    {
-        return password;
-    }
-
-    /**
-     * @param url The url to set.
-     */
-    public void setUrl( final String url )
-    {
-        this.url = url;
-    }
-
-    /**
-     * @return Returns the url.
-     */
-    public String getUrl()
-    {
-        return url;
-    }
-
-    /**
-     * This is appended to the url.
-     * @param database The database to set.
-     */
-    public void setDatabase( final String database )
-    {
-        this.database = database;
+        return connectionPoolName;
     }
 
     /**
@@ -155,14 +106,6 @@ public class JDBCDiskCacheAttributes
     public String getDatabase()
     {
         return database;
-    }
-
-    /**
-     * @param driverClassName The driverClassName to set.
-     */
-    public void setDriverClassName( final String driverClassName )
-    {
-        this.driverClassName = driverClassName;
     }
 
     /**
@@ -181,15 +124,7 @@ public class JDBCDiskCacheAttributes
 		return jndiPath;
 	}
 
-	/**
-	 * @param jndiPath the jndiPath to set
-	 */
-	public void setJndiPath(final String jndiPath)
-	{
-		this.jndiPath = jndiPath;
-	}
-
-	/**
+    /**
 	 * @return the jndiTTL
 	 */
 	public long getJndiTTL()
@@ -197,20 +132,28 @@ public class JDBCDiskCacheAttributes
 		return jndiTTL;
 	}
 
-	/**
-	 * @param jndiTTL the jndiTTL to set
-	 */
-	public void setJndiTTL(final long jndiTTL)
-	{
-		this.jndiTTL = jndiTTL;
-	}
-
-	/**
-     * @param tableName The tableName to set.
+    /**
+     * @return Returns the maxTotal.
      */
-    public void setTableName( final String tableName )
+    public int getMaxTotal()
     {
-        this.tableName = tableName;
+        return maxTotal;
+    }
+
+    /**
+     * @return Returns the password.
+     */
+    public String getPassword()
+    {
+        return password;
+    }
+
+    /**
+     * @return Returns the shrinkerIntervalSeconds.
+     */
+    public int getShrinkerIntervalSeconds()
+    {
+        return shrinkerIntervalSeconds;
     }
 
     /**
@@ -219,6 +162,111 @@ public class JDBCDiskCacheAttributes
     public String getTableName()
     {
         return tableName;
+    }
+
+    /**
+     * @return Returns the url.
+     */
+    public String getUrl()
+    {
+        return url;
+    }
+
+    /**
+     * @return Returns the userName.
+     */
+    public String getUserName()
+    {
+        return userName;
+    }
+
+	/**
+     * @return Returns the testBeforeInsert.
+     */
+    public boolean isTestBeforeInsert()
+    {
+        return testBeforeInsert;
+    }
+
+	/**
+     * @return Returns the useDiskShrinker.
+     */
+    public boolean isUseDiskShrinker()
+    {
+        return useDiskShrinker;
+    }
+
+	/**
+     * @param connectionPoolName the connectionPoolName to set
+     */
+    public void setConnectionPoolName( final String connectionPoolName )
+    {
+        this.connectionPoolName = connectionPoolName;
+    }
+
+	/**
+     * This is appended to the url.
+     * @param database The database to set.
+     */
+    public void setDatabase( final String database )
+    {
+        this.database = database;
+    }
+
+    /**
+     * @param driverClassName The driverClassName to set.
+     */
+    public void setDriverClassName( final String driverClassName )
+    {
+        this.driverClassName = driverClassName;
+    }
+
+    /**
+	 * @param jndiPath the jndiPath to set
+	 */
+	public void setJndiPath(final String jndiPath)
+	{
+		this.jndiPath = jndiPath;
+	}
+
+    /**
+	 * @param jndiTTL the jndiTTL to set
+	 */
+	public void setJndiTTL(final long jndiTTL)
+	{
+		this.jndiTTL = jndiTTL;
+	}
+
+    /**
+     * @param maxActive The maxTotal to set.
+     */
+    public void setMaxTotal( final int maxActive )
+    {
+        this.maxTotal = maxActive;
+    }
+
+    /**
+     * @param password The password to set.
+     */
+    public void setPassword( final String password )
+    {
+        this.password = password;
+    }
+
+    /**
+     * @param shrinkerIntervalSecondsArg The shrinkerIntervalSeconds to set.
+     */
+    public void setShrinkerIntervalSeconds( final int shrinkerIntervalSecondsArg )
+    {
+        this.shrinkerIntervalSeconds = shrinkerIntervalSecondsArg;
+    }
+
+    /**
+     * @param tableName The tableName to set.
+     */
+    public void setTableName( final String tableName )
+    {
+        this.tableName = tableName;
     }
 
     /**
@@ -233,43 +281,11 @@ public class JDBCDiskCacheAttributes
     }
 
     /**
-     * @return Returns the testBeforeInsert.
+     * @param url The url to set.
      */
-    public boolean isTestBeforeInsert()
+    public void setUrl( final String url )
     {
-        return testBeforeInsert;
-    }
-
-    /**
-     * @param maxActive The maxTotal to set.
-     */
-    public void setMaxTotal( final int maxActive )
-    {
-        this.maxTotal = maxActive;
-    }
-
-    /**
-     * @return Returns the maxTotal.
-     */
-    public int getMaxTotal()
-    {
-        return maxTotal;
-    }
-
-    /**
-     * @param shrinkerIntervalSecondsArg The shrinkerIntervalSeconds to set.
-     */
-    public void setShrinkerIntervalSeconds( final int shrinkerIntervalSecondsArg )
-    {
-        this.shrinkerIntervalSeconds = shrinkerIntervalSecondsArg;
-    }
-
-    /**
-     * @return Returns the shrinkerIntervalSeconds.
-     */
-    public int getShrinkerIntervalSeconds()
-    {
-        return shrinkerIntervalSeconds;
+        this.url = url;
     }
 
     /**
@@ -281,27 +297,11 @@ public class JDBCDiskCacheAttributes
     }
 
     /**
-     * @return Returns the useDiskShrinker.
+     * @param userName The userName to set.
      */
-    public boolean isUseDiskShrinker()
+    public void setUserName( final String userName )
     {
-        return useDiskShrinker;
-    }
-
-    /**
-     * @param connectionPoolName the connectionPoolName to set
-     */
-    public void setConnectionPoolName( final String connectionPoolName )
-    {
-        this.connectionPoolName = connectionPoolName;
-    }
-
-    /**
-     * @return the connectionPoolName
-     */
-    public String getConnectionPoolName()
-    {
-        return connectionPoolName;
+        this.userName = userName;
     }
 
     /**

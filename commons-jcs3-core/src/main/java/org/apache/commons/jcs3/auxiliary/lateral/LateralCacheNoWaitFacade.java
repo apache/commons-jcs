@@ -93,14 +93,28 @@ public class LateralCacheNoWaitFacade<K, V>
     }
 
     /**
-     * Return the size of the no wait list (for testing)
-     *
-     * @return the noWait list size.
-     * @since 3.1
+     * Adds a no wait to the list if it isn't already in the list.
+     * <p>
+     * @param noWait
+     * @return true if it wasn't already contained
      */
-    protected int getNoWaitSize()
+    public synchronized boolean addNoWait( final LateralCacheNoWait<K, V> noWait )
     {
-        return noWaitMap.size();
+        if ( noWait == null )
+        {
+            return false;
+        }
+
+        final LateralCacheNoWait<K,V> added =
+                noWaitMap.putIfAbsent(noWait.getIdentityKey(), noWait);
+
+        if (added != null)
+        {
+            log.debug( "No Wait already contained, [{0}]", noWait );
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -127,29 +141,257 @@ public class LateralCacheNoWaitFacade<K, V>
         return noWaitMap.containsKey(tcpServer);
     }
 
-    /**
-     * Adds a no wait to the list if it isn't already in the list.
-     * <p>
-     * @param noWait
-     * @return true if it wasn't already contained
-     */
-    public synchronized boolean addNoWait( final LateralCacheNoWait<K, V> noWait )
+    /** Adds a dispose request to the lateral cache. */
+    @Override
+    public void dispose()
     {
-        if ( noWait == null )
+        if (disposed.compareAndSet(false, true))
         {
-            return false;
+            if ( listener != null )
+            {
+                listener.dispose();
+                listener = null;
+            }
+
+            noWaitMap.values().forEach(LateralCacheNoWait::dispose);
+            noWaitMap.clear();
+        }
+    }
+
+    /**
+     * Synchronously reads from the lateral cache.
+     * <p>
+     * @param key
+     * @return ICacheElement
+     */
+    @Override
+    public ICacheElement<K, V> get( final K key )
+    {
+        return noWaitMap.values().stream()
+            .map(nw -> nw.get(key))
+            .filter(Objects::nonNull)
+            .findFirst()
+            .orElse(null);
+    }
+
+    /**
+     * @return Returns the AuxiliaryCacheAttributes.
+     */
+    @Override
+    public ILateralCacheAttributes getAuxiliaryCacheAttributes()
+    {
+        return this.lateralCacheAttributes;
+    }
+
+    /**
+     * Gets the cacheName attribute of the LateralCacheNoWaitFacade object.
+     * <p>
+     * @return The cacheName value
+     */
+    @Override
+    public String getCacheName()
+    {
+        return cacheName;
+    }
+
+    /**
+     * Gets the cacheType attribute of the LateralCacheNoWaitFacade object.
+     * <p>
+     * @return The cacheType value
+     */
+    @Override
+    public CacheType getCacheType()
+    {
+        return CacheType.LATERAL_CACHE;
+    }
+
+    /**
+     * this won't be called since we don't do ICache logging here.
+     * <p>
+     * @return String
+     */
+    @Override
+    public String getEventLoggingExtraInfo()
+    {
+        return "Lateral Cache No Wait";
+    }
+
+    /**
+     * Return the keys in this cache.
+     * <p>
+     * @see org.apache.commons.jcs3.auxiliary.AuxiliaryCache#getKeySet()
+     */
+    @Override
+    public Set<K> getKeySet() throws IOException
+    {
+        final HashSet<K> allKeys = new HashSet<>();
+        for (final LateralCacheNoWait<K, V> nw : noWaitMap.values())
+        {
+            final Set<K> keys = nw.getKeySet();
+            if (keys != null)
+            {
+                allKeys.addAll(keys);
+            }
+        }
+        return allKeys;
+    }
+
+    /**
+     * Synchronously reads from the lateral cache. Get a response from each! This will be slow.
+     * Merge them.
+     * <p>
+     * @param pattern
+     * @return ICacheElement
+     */
+    @Override
+    public Map<K, ICacheElement<K, V>> getMatching(final String pattern)
+    {
+        return noWaitMap.values().stream()
+                .flatMap(nw -> nw.getMatching(pattern).entrySet().stream())
+                .collect(Collectors.toMap(
+                        Entry::getKey,
+                        Entry::getValue));
+    }
+
+    /**
+     * Gets multiple items from the cache based on the given set of keys.
+     * <p>
+     * @param keys
+     * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
+     *         data in cache for any of these keys
+     */
+    @Override
+    public Map<K, ICacheElement<K, V>> getMultiple(final Set<K> keys)
+    {
+        if (keys != null && !keys.isEmpty())
+        {
+            return keys.stream()
+                .collect(Collectors.toMap(
+                        key -> key,
+                        this::get)).entrySet().stream()
+                    .filter(entry -> entry.getValue() != null)
+                    .collect(Collectors.toMap(
+                            Entry::getKey,
+                            Entry::getValue));
         }
 
-        final LateralCacheNoWait<K,V> added =
-                noWaitMap.putIfAbsent(noWait.getIdentityKey(), noWait);
+        return new HashMap<>();
+    }
 
-        if (added != null)
+    /**
+     * Return the size of the no wait list (for testing)
+     *
+     * @return the noWait list size.
+     * @since 3.1
+     */
+    protected int getNoWaitSize()
+    {
+        return noWaitMap.size();
+    }
+
+    /**
+     * No lateral invocation.
+     * @return The size value
+     */
+    @Override
+    public int getSize()
+    {
+        return 0;
+        //cache.getSize();
+    }
+
+    /**
+     * @return IStats
+     */
+    @Override
+    public IStats getStatistics()
+    {
+        final IStats stats = new Stats();
+        stats.setTypeName( "Lateral Cache No Wait Facade" );
+
+        final ArrayList<IStatElement<?>> elems = new ArrayList<>();
+
+        if (noWaitMap != null)
         {
-            log.debug( "No Wait already contained, [{0}]", noWait );
-            return false;
+            elems.add(new StatElement<>("Number of No Waits", Integer.valueOf(noWaitMap.size())));
+
+            elems.addAll(noWaitMap.values().stream()
+                    .flatMap(lcnw -> lcnw.getStatistics().getStatElements().stream())
+                    .collect(Collectors.toList()));
         }
 
-        return true;
+        stats.setStatElements( elems );
+
+        return stats;
+    }
+
+    /**
+     * getStats
+     * @return String
+     */
+    @Override
+    public String getStats()
+    {
+        return getStatistics().toString();
+    }
+
+    /**
+     * Gets the status attribute of the LateralCacheNoWaitFacade object
+     * @return The status value
+     */
+    @Override
+    public CacheStatus getStatus()
+    {
+        if (disposed.get())
+        {
+            return CacheStatus.DISPOSED;
+        }
+
+        if (noWaitMap.isEmpty() || listener != null)
+        {
+            return CacheStatus.ALIVE;
+        }
+
+        final List<CacheStatus> statii = noWaitMap.values().stream()
+                .map(LateralCacheNoWait::getStatus)
+                .collect(Collectors.toList());
+
+        // It's alive if ANY of its nowaits is alive
+        if (statii.contains(CacheStatus.ALIVE))
+        {
+            return CacheStatus.ALIVE;
+        }
+        // It's alive if ANY of its nowaits is in error, but
+        // none are alive, then it's in error
+        if (statii.contains(CacheStatus.ERROR))
+        {
+            return CacheStatus.ERROR;
+        }
+
+        // Otherwise, it's been disposed, since it's the only status left
+        return CacheStatus.DISPOSED;
+    }
+
+    /**
+     * Adds a remove request to the lateral cache.
+     * <p>
+     * @param key
+     * @return always false.
+     */
+    @Override
+    public boolean remove( final K key )
+    {
+        noWaitMap.values().forEach(nw -> nw.remove( key ));
+        return false;
+    }
+
+    /**
+     * Adds a removeAll request to the lateral cache.
+     */
+    @Override
+    public void removeAll()
+    {
+        noWaitMap.values().forEach(LateralCacheNoWait::removeAll);
     }
 
     /**
@@ -194,6 +436,15 @@ public class LateralCacheNoWaitFacade<K, V>
     }
 
     /**
+     * @return "LateralCacheNoWaitFacade: " + cacheName;
+     */
+    @Override
+    public String toString()
+    {
+        return "LateralCacheNoWaitFacade: " + cacheName;
+    }
+
+    /**
      * Update the cache element in all lateral caches
      * @param ce the cache element
      * @throws IOException
@@ -209,256 +460,5 @@ public class LateralCacheNoWaitFacade<K, V>
         {
             nw.update( ce );
         }
-    }
-
-    /**
-     * Synchronously reads from the lateral cache.
-     * <p>
-     * @param key
-     * @return ICacheElement
-     */
-    @Override
-    public ICacheElement<K, V> get( final K key )
-    {
-        return noWaitMap.values().stream()
-            .map(nw -> nw.get(key))
-            .filter(Objects::nonNull)
-            .findFirst()
-            .orElse(null);
-    }
-
-    /**
-     * Gets multiple items from the cache based on the given set of keys.
-     * <p>
-     * @param keys
-     * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
-     *         data in cache for any of these keys
-     */
-    @Override
-    public Map<K, ICacheElement<K, V>> getMultiple(final Set<K> keys)
-    {
-        if (keys != null && !keys.isEmpty())
-        {
-            return keys.stream()
-                .collect(Collectors.toMap(
-                        key -> key,
-                        this::get)).entrySet().stream()
-                    .filter(entry -> entry.getValue() != null)
-                    .collect(Collectors.toMap(
-                            Entry::getKey,
-                            Entry::getValue));
-        }
-
-        return new HashMap<>();
-    }
-
-    /**
-     * Synchronously reads from the lateral cache. Get a response from each! This will be slow.
-     * Merge them.
-     * <p>
-     * @param pattern
-     * @return ICacheElement
-     */
-    @Override
-    public Map<K, ICacheElement<K, V>> getMatching(final String pattern)
-    {
-        return noWaitMap.values().stream()
-                .flatMap(nw -> nw.getMatching(pattern).entrySet().stream())
-                .collect(Collectors.toMap(
-                        Entry::getKey,
-                        Entry::getValue));
-    }
-
-    /**
-     * Return the keys in this cache.
-     * <p>
-     * @see org.apache.commons.jcs3.auxiliary.AuxiliaryCache#getKeySet()
-     */
-    @Override
-    public Set<K> getKeySet() throws IOException
-    {
-        final HashSet<K> allKeys = new HashSet<>();
-        for (final LateralCacheNoWait<K, V> nw : noWaitMap.values())
-        {
-            final Set<K> keys = nw.getKeySet();
-            if (keys != null)
-            {
-                allKeys.addAll(keys);
-            }
-        }
-        return allKeys;
-    }
-
-    /**
-     * Adds a remove request to the lateral cache.
-     * <p>
-     * @param key
-     * @return always false.
-     */
-    @Override
-    public boolean remove( final K key )
-    {
-        noWaitMap.values().forEach(nw -> nw.remove( key ));
-        return false;
-    }
-
-    /**
-     * Adds a removeAll request to the lateral cache.
-     */
-    @Override
-    public void removeAll()
-    {
-        noWaitMap.values().forEach(LateralCacheNoWait::removeAll);
-    }
-
-    /** Adds a dispose request to the lateral cache. */
-    @Override
-    public void dispose()
-    {
-        if (disposed.compareAndSet(false, true))
-        {
-            if ( listener != null )
-            {
-                listener.dispose();
-                listener = null;
-            }
-
-            noWaitMap.values().forEach(LateralCacheNoWait::dispose);
-            noWaitMap.clear();
-        }
-    }
-
-    /**
-     * No lateral invocation.
-     * @return The size value
-     */
-    @Override
-    public int getSize()
-    {
-        return 0;
-        //cache.getSize();
-    }
-
-    /**
-     * Gets the cacheType attribute of the LateralCacheNoWaitFacade object.
-     * <p>
-     * @return The cacheType value
-     */
-    @Override
-    public CacheType getCacheType()
-    {
-        return CacheType.LATERAL_CACHE;
-    }
-
-    /**
-     * Gets the cacheName attribute of the LateralCacheNoWaitFacade object.
-     * <p>
-     * @return The cacheName value
-     */
-    @Override
-    public String getCacheName()
-    {
-        return cacheName;
-    }
-
-    /**
-     * Gets the status attribute of the LateralCacheNoWaitFacade object
-     * @return The status value
-     */
-    @Override
-    public CacheStatus getStatus()
-    {
-        if (disposed.get())
-        {
-            return CacheStatus.DISPOSED;
-        }
-
-        if (noWaitMap.isEmpty() || listener != null)
-        {
-            return CacheStatus.ALIVE;
-        }
-
-        final List<CacheStatus> statii = noWaitMap.values().stream()
-                .map(LateralCacheNoWait::getStatus)
-                .collect(Collectors.toList());
-
-        // It's alive if ANY of its nowaits is alive
-        if (statii.contains(CacheStatus.ALIVE))
-        {
-            return CacheStatus.ALIVE;
-        }
-        // It's alive if ANY of its nowaits is in error, but
-        // none are alive, then it's in error
-        if (statii.contains(CacheStatus.ERROR))
-        {
-            return CacheStatus.ERROR;
-        }
-
-        // Otherwise, it's been disposed, since it's the only status left
-        return CacheStatus.DISPOSED;
-    }
-
-    /**
-     * @return Returns the AuxiliaryCacheAttributes.
-     */
-    @Override
-    public ILateralCacheAttributes getAuxiliaryCacheAttributes()
-    {
-        return this.lateralCacheAttributes;
-    }
-
-    /**
-     * @return "LateralCacheNoWaitFacade: " + cacheName;
-     */
-    @Override
-    public String toString()
-    {
-        return "LateralCacheNoWaitFacade: " + cacheName;
-    }
-
-    /**
-     * this won't be called since we don't do ICache logging here.
-     * <p>
-     * @return String
-     */
-    @Override
-    public String getEventLoggingExtraInfo()
-    {
-        return "Lateral Cache No Wait";
-    }
-
-    /**
-     * getStats
-     * @return String
-     */
-    @Override
-    public String getStats()
-    {
-        return getStatistics().toString();
-    }
-
-    /**
-     * @return IStats
-     */
-    @Override
-    public IStats getStatistics()
-    {
-        final IStats stats = new Stats();
-        stats.setTypeName( "Lateral Cache No Wait Facade" );
-
-        final ArrayList<IStatElement<?>> elems = new ArrayList<>();
-
-        if (noWaitMap != null)
-        {
-            elems.add(new StatElement<>("Number of No Waits", Integer.valueOf(noWaitMap.size())));
-
-            elems.addAll(noWaitMap.values().stream()
-                    .flatMap(lcnw -> lcnw.getStatistics().getStatElements().stream())
-                    .collect(Collectors.toList()));
-        }
-
-        stats.setStatElements( elems );
-
-        return stats;
     }
 }

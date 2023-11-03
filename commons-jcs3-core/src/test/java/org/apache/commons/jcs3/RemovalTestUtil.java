@@ -30,35 +30,29 @@ import org.apache.commons.jcs3.access.CacheAccess;
 public class RemovalTestUtil
 {
     /**
-     * Adds elements in the range specified and then removes them using the
-     * categorical or substring removal method.
+     * Just get from start to end.
      *
      * @param start
+     *            int
      * @param end
-     *
+     *            int
+     * @param check
+     *            boolean -- check to see if the items are in the cache.
      * @throws Exception
-     *                Description of the Exception
      */
-    public static void runTestPutThenRemoveCategorical( final int start, final int end )
+    public static void runGetInRange( final int start, final int end, final boolean check )
         throws Exception
     {
         final CacheAccess<String, String> jcs = JCS.getInstance( "testCache1" );
 
-        for ( int i = start; i < end; i++ )
-        {
-            jcs.put( i + ":key", "data" + i );
-        }
-
+        // don't care if they are found
         for ( int i = end; i >= start; i-- )
         {
             final String res = jcs.get( i + ":key" );
-            assertNotNull( "[" + i + ":key] should not be null", res );
-        }
-
-        for ( int i = start; i < end; i++ )
-        {
-            jcs.remove( i + ":" );
-            assertNull( jcs.get( i + ":key" ) );
+            if ( check )
+            {
+                assertNotNull( "[" + i + ":key] should not be null", res );
+            }
         }
     }
 
@@ -90,29 +84,35 @@ public class RemovalTestUtil
     }
 
     /**
-     * Just get from start to end.
+     * Adds elements in the range specified and then removes them using the
+     * categorical or substring removal method.
      *
      * @param start
-     *            int
      * @param end
-     *            int
-     * @param check
-     *            boolean -- check to see if the items are in the cache.
+     *
      * @throws Exception
+     *                Description of the Exception
      */
-    public static void runGetInRange( final int start, final int end, final boolean check )
+    public static void runTestPutThenRemoveCategorical( final int start, final int end )
         throws Exception
     {
         final CacheAccess<String, String> jcs = JCS.getInstance( "testCache1" );
 
-        // don't care if they are found
+        for ( int i = start; i < end; i++ )
+        {
+            jcs.put( i + ":key", "data" + i );
+        }
+
         for ( int i = end; i >= start; i-- )
         {
             final String res = jcs.get( i + ":key" );
-            if ( check )
-            {
-                assertNotNull( "[" + i + ":key] should not be null", res );
-            }
+            assertNotNull( "[" + i + ":key] should not be null", res );
+        }
+
+        for ( int i = start; i < end; i++ )
+        {
+            jcs.remove( i + ":" );
+            assertNull( jcs.get( i + ":key" ) );
         }
     }
 }

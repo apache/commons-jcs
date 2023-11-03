@@ -58,27 +58,11 @@ public class RemoteCacheRequest<K, V>
     private ICacheElement<K, V> cacheElement;
 
     /**
-     * @param requestType the requestType to set
+     * @return the cacheElement
      */
-    public void setRequestType( final RemoteRequestType requestType )
+    public ICacheElement<K, V> getCacheElement()
     {
-        this.requestType = requestType;
-    }
-
-    /**
-     * @return the requestType
-     */
-    public RemoteRequestType getRequestType()
-    {
-        return requestType;
-    }
-
-    /**
-     * @param cacheName the cacheName to set
-     */
-    public void setCacheName( final String cacheName )
-    {
-        this.cacheName = cacheName;
+        return cacheElement;
     }
 
     /**
@@ -90,14 +74,6 @@ public class RemoteCacheRequest<K, V>
     }
 
     /**
-     * @param key the key to set
-     */
-    public void setKey( final K key )
-    {
-        this.key = key;
-    }
-
-    /**
      * @return the key
      */
     public K getKey()
@@ -106,11 +82,11 @@ public class RemoteCacheRequest<K, V>
     }
 
     /**
-     * @param pattern the pattern to set
+     * @return the keySet
      */
-    public void setPattern( final String pattern )
+    public Set<K> getKeySet()
     {
-        this.pattern = pattern;
+        return keySet;
     }
 
     /**
@@ -122,6 +98,22 @@ public class RemoteCacheRequest<K, V>
     }
 
     /**
+     * @return the requesterId
+     */
+    public long getRequesterId()
+    {
+        return requesterId;
+    }
+
+    /**
+     * @return the requestType
+     */
+    public RemoteRequestType getRequestType()
+    {
+        return requestType;
+    }
+
+    /**
      * @param cacheElement the cacheElement to set
      */
     public void setCacheElement( final ICacheElement<K, V> cacheElement )
@@ -130,27 +122,19 @@ public class RemoteCacheRequest<K, V>
     }
 
     /**
-     * @return the cacheElement
+     * @param cacheName the cacheName to set
      */
-    public ICacheElement<K, V> getCacheElement()
+    public void setCacheName( final String cacheName )
     {
-        return cacheElement;
+        this.cacheName = cacheName;
     }
 
     /**
-     * @param requesterId the requesterId to set
+     * @param key the key to set
      */
-    public void setRequesterId( final long requesterId )
+    public void setKey( final K key )
     {
-        this.requesterId = requesterId;
-    }
-
-    /**
-     * @return the requesterId
-     */
-    public long getRequesterId()
-    {
-        return requesterId;
+        this.key = key;
     }
 
     /**
@@ -162,11 +146,27 @@ public class RemoteCacheRequest<K, V>
     }
 
     /**
-     * @return the keySet
+     * @param pattern the pattern to set
      */
-    public Set<K> getKeySet()
+    public void setPattern( final String pattern )
     {
-        return keySet;
+        this.pattern = pattern;
+    }
+
+    /**
+     * @param requesterId the requesterId to set
+     */
+    public void setRequesterId( final long requesterId )
+    {
+        this.requesterId = requesterId;
+    }
+
+    /**
+     * @param requestType the requestType to set
+     */
+    public void setRequestType( final RemoteRequestType requestType )
+    {
+        this.requestType = requestType;
     }
 
     /** @return string */

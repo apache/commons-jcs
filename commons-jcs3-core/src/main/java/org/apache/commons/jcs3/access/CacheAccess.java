@@ -100,36 +100,6 @@ public class CacheAccess<K, V>
     }
 
     /**
-     * Retrieve matching objects from the cache region this instance provides access to.
-     * <p>
-     * @param pattern - a key pattern for the objects stored
-     * @return A map of key to values.  These are stripped from the wrapper.
-     */
-    @Override
-    public Map<K, V> getMatching( final String pattern )
-    {
-        final Map<K, V> unwrappedResults;
-
-        final Map<K, ICacheElement<K, V>> wrappedResults = this.getCacheControl().getMatching( pattern );
-
-        if ( wrappedResults == null )
-        {
-            unwrappedResults = new HashMap<>();
-        }
-        else
-        {
-            unwrappedResults = wrappedResults.entrySet()
-                    .stream()
-                    .filter(entry -> entry.getValue() != null)
-                    .collect(Collectors.toMap(
-                            Entry::getKey,
-                            entry -> entry.getValue().getVal()));
-        }
-
-        return unwrappedResults;
-    }
-
-    /**
      * This method returns the ICacheElement&lt;K, V&gt; wrapper which provides access to element info and other
      * attributes.
      * <p>
@@ -174,6 +144,61 @@ public class CacheAccess<K, V>
     }
 
     /**
+     * GetElementAttributes will return an attribute object describing the current attributes
+     * associated with the object name. The name object must override the Object.equals and
+     * Object.hashCode methods.
+     * <p>
+     * @param name Key of object to get attributes for
+     * @return Attributes for the object, null if object not in cache
+     */
+    @Override
+    public IElementAttributes getElementAttributes( final K name ) throws CacheException
+    {
+        IElementAttributes attr = null;
+
+        try
+        {
+            attr = this.getCacheControl().getElementAttributes( name );
+        }
+        catch ( final IOException ioe )
+        {
+            throw new CacheException("Failure getting element attributes", ioe);
+        }
+
+        return attr;
+    }
+
+    /**
+     * Retrieve matching objects from the cache region this instance provides access to.
+     * <p>
+     * @param pattern - a key pattern for the objects stored
+     * @return A map of key to values.  These are stripped from the wrapper.
+     */
+    @Override
+    public Map<K, V> getMatching( final String pattern )
+    {
+        final Map<K, V> unwrappedResults;
+
+        final Map<K, ICacheElement<K, V>> wrappedResults = this.getCacheControl().getMatching( pattern );
+
+        if ( wrappedResults == null )
+        {
+            unwrappedResults = new HashMap<>();
+        }
+        else
+        {
+            unwrappedResults = wrappedResults.entrySet()
+                    .stream()
+                    .filter(entry -> entry.getValue() != null)
+                    .collect(Collectors.toMap(
+                            Entry::getKey,
+                            entry -> entry.getValue().getVal()));
+        }
+
+        return unwrappedResults;
+    }
+
+    /**
      * Gets multiple elements from the cache based on a set of cache keys.
      * <p>
      * This method returns the ICacheElement&lt;K, V&gt; wrapper which provides access to element info and other
@@ -194,27 +219,6 @@ public class CacheAccess<K, V>
     public Map<K, ICacheElement<K, V>> getMatchingCacheElements( final String pattern )
     {
         return this.getCacheControl().getMatching( pattern );
-    }
-
-    /**
-     * Place a new object in the cache, associated with key name. If there is currently an object
-     * associated with name in the region an ObjectExistsException is thrown. Names are scoped to a
-     * region so they must be unique within the region they are placed.
-     * <p>
-     * @param key Key object will be stored with
-     * @param value Object to store
-     * @throws CacheException and ObjectExistsException is thrown if the item is already in the
-     *                cache.
-     */
-    @Override
-    public void putSafe( final K key, final V value )
-    {
-        if ( this.getCacheControl().get( key ) != null )
-        {
-            throw new ObjectExistsException( "putSafe failed.  Object exists in the cache for key [" + key
-                + "].  Remove first or use a non-safe put to override the value." );
-        }
-        put( key, value );
     }
 
     /**
@@ -270,6 +274,27 @@ public class CacheAccess<K, V>
     }
 
     /**
+     * Place a new object in the cache, associated with key name. If there is currently an object
+     * associated with name in the region an ObjectExistsException is thrown. Names are scoped to a
+     * region so they must be unique within the region they are placed.
+     * <p>
+     * @param key Key object will be stored with
+     * @param value Object to store
+     * @throws CacheException and ObjectExistsException is thrown if the item is already in the
+     *                cache.
+     */
+    @Override
+    public void putSafe( final K key, final V value )
+    {
+        if ( this.getCacheControl().get( key ) != null )
+        {
+            throw new ObjectExistsException( "putSafe failed.  Object exists in the cache for key [" + key
+                + "].  Remove first or use a non-safe put to override the value." );
+        }
+        put( key, value );
+    }
+
+    /**
      * Removes a single item by name.
      * <p>
      * @param name the name of the item to remove.
@@ -304,30 +329,5 @@ public class CacheAccess<K, V>
         // Another reason to call put is to force the changes to be distributed.
 
         put( element.getKey(), element.getVal(), attr );
-    }
-
-    /**
-     * GetElementAttributes will return an attribute object describing the current attributes
-     * associated with the object name. The name object must override the Object.equals and
-     * Object.hashCode methods.
-     * <p>
-     * @param name Key of object to get attributes for
-     * @return Attributes for the object, null if object not in cache
-     */
-    @Override
-    public IElementAttributes getElementAttributes( final K name ) throws CacheException
-    {
-        IElementAttributes attr = null;
-
-        try
-        {
-            attr = this.getCacheControl().getElementAttributes( name );
-        }
-        catch ( final IOException ioe )
-        {
-            throw new CacheException("Failure getting element attributes", ioe);
-        }
-
-        return attr;
     }
 }

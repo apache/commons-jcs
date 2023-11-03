@@ -32,63 +32,11 @@ import org.apache.commons.jcs3.engine.stats.behavior.IStats;
 public interface IMemoryCache<K, V>
 {
     /**
-     * Initialize the memory cache
-     * <p>
-     * @param cache The cache (region) this memory store is attached to.
-     */
-    void initialize( CompositeCache<K, V> cache );
-
-    /**
      * Destroy the memory cache
      * <p>
      * @throws IOException
      */
     void dispose()
-        throws IOException;
-
-    /**
-     * Gets the number of elements contained in the memory store
-     * <p>
-     * @return Element count
-     */
-    int getSize();
-
-    /**
-     * Returns the historical and statistical data for a region's memory cache.
-     * <p>
-     * @return Statistics and Info for the Memory Cache.
-     */
-    IStats getStatistics();
-
-    /**
-     * Gets a set of the keys for all elements in the memory cache.
-     * <p>
-     * @return a set of the key type
-     * TODO This should probably be done in chunks with a range passed in. This
-     *       will be a problem if someone puts a 1,000,000 or so items in a
-     *       region.
-     */
-    Set<K> getKeySet();
-
-    /**
-     * Removes an item from the cache
-     * <p>
-     * @param key
-     *            Identifies item to be removed
-     * @return Description of the Return Value
-     * @throws IOException
-     *                Description of the Exception
-     */
-    boolean remove( K key )
-        throws IOException;
-
-    /**
-     * Removes all cached items from the cache.
-     * <p>
-     * @throws IOException
-     *                Description of the Exception
-     */
-    void removeAll()
         throws IOException;
 
     /**
@@ -118,6 +66,30 @@ public interface IMemoryCache<K, V>
         throws IOException;
 
     /**
+     * Returns the CacheAttributes for the region.
+     * <p>
+     * @return The cacheAttributes value
+     */
+    ICompositeCacheAttributes getCacheAttributes();
+
+    /**
+     * Gets the cache hub / region that uses the MemoryCache.
+     * <p>
+     * @return The cache value
+     */
+    CompositeCache<K, V> getCompositeCache();
+
+    /**
+     * Gets a set of the keys for all elements in the memory cache.
+     * <p>
+     * @return a set of the key type
+     * TODO This should probably be done in chunks with a range passed in. This
+     *       will be a problem if someone puts a 1,000,000 or so items in a
+     *       region.
+     */
+    Set<K> getKeySet();
+
+    /**
      * Gets multiple items from the cache based on the given set of keys.
      * <p>
      * @param keys
@@ -142,15 +114,54 @@ public interface IMemoryCache<K, V>
         throws IOException;
 
     /**
-     * Spools the item contained in the provided element to disk
+     * Gets the number of elements contained in the memory store
      * <p>
-     * @param ce
-     *            Description of the Parameter
+     * @return Element count
+     */
+    int getSize();
+
+    /**
+     * Returns the historical and statistical data for a region's memory cache.
+     * <p>
+     * @return Statistics and Info for the Memory Cache.
+     */
+    IStats getStatistics();
+
+    /**
+     * Initialize the memory cache
+     * <p>
+     * @param cache The cache (region) this memory store is attached to.
+     */
+    void initialize( CompositeCache<K, V> cache );
+
+    /**
+     * Removes an item from the cache
+     * <p>
+     * @param key
+     *            Identifies item to be removed
+     * @return Description of the Return Value
      * @throws IOException
      *                Description of the Exception
      */
-    void waterfal( ICacheElement<K, V> ce ) // FIXME: Correct typo before 4.0, see JCS-222
+    boolean remove( K key )
         throws IOException;
+
+    /**
+     * Removes all cached items from the cache.
+     * <p>
+     * @throws IOException
+     *                Description of the Exception
+     */
+    void removeAll()
+        throws IOException;
+
+    /**
+     * Sets the CacheAttributes of the region.
+     * <p>
+     * @param cattr
+     *            The new cacheAttributes value
+     */
+    void setCacheAttributes( ICompositeCacheAttributes cattr );
 
     /**
      * Puts an item to the cache.
@@ -164,24 +175,13 @@ public interface IMemoryCache<K, V>
         throws IOException;
 
     /**
-     * Returns the CacheAttributes for the region.
+     * Spools the item contained in the provided element to disk
      * <p>
-     * @return The cacheAttributes value
+     * @param ce
+     *            Description of the Parameter
+     * @throws IOException
+     *                Description of the Exception
      */
-    ICompositeCacheAttributes getCacheAttributes();
-
-    /**
-     * Sets the CacheAttributes of the region.
-     * <p>
-     * @param cattr
-     *            The new cacheAttributes value
-     */
-    void setCacheAttributes( ICompositeCacheAttributes cattr );
-
-    /**
-     * Gets the cache hub / region that uses the MemoryCache.
-     * <p>
-     * @return The cache value
-     */
-    CompositeCache<K, V> getCompositeCache();
+    void waterfal( ICacheElement<K, V> ce ) // FIXME: Correct typo before 4.0, see JCS-222
+        throws IOException;
 }

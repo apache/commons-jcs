@@ -32,6 +32,15 @@ import org.junit.Test;
 
 public class NotSerializableTest
 {
+    public static class NotSerializableAndImHappyWithIt {
+        private final String name;
+
+        public NotSerializableAndImHappyWithIt(final String name)
+        {
+            this.name = name;
+        }
+    }
+
     @Test
     public void testRun()
     {
@@ -48,14 +57,5 @@ public class NotSerializableTest
         cache.close();
         cacheManager.close();
         cachingProvider.close();
-    }
-
-    public static class NotSerializableAndImHappyWithIt {
-        private final String name;
-
-        public NotSerializableAndImHappyWithIt(final String name)
-        {
-            this.name = name;
-        }
     }
 }

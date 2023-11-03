@@ -40,29 +40,6 @@ public class ExtraJCacheExtension implements Extension
     private CacheManager cacheManager;
     private CachingProvider cachingProvider;
 
-    public <A> void processBean(final @Observes ProcessBean<A> processBeanEvent)
-    {
-        if (!ACTIVATED || (cacheManagerFound && cacheProviderFound))
-        {
-            return;
-        }
-
-        final Bean<A> bean = processBeanEvent.getBean();
-        if (CacheManagerBean.class.isInstance(bean) || CacheProviderBean.class.isInstance(bean))
-        {
-            return;
-        }
-
-        if (!cacheManagerFound)
-        {
-            cacheManagerFound = bean.getTypes().contains(CacheManager.class);
-        }
-        if (!cacheProviderFound)
-        {
-            cacheProviderFound = bean.getTypes().contains(CachingProvider.class);
-        }
-    }
-
     public void addJCacheBeans(final @Observes AfterBeanDiscovery afterBeanDiscovery)
     {
         if (!ACTIVATED || (cacheManagerFound && cacheProviderFound)) {
@@ -93,6 +70,29 @@ public class ExtraJCacheExtension implements Extension
         if (cachingProvider != null)
         {
             cachingProvider.close();
+        }
+    }
+
+    public <A> void processBean(final @Observes ProcessBean<A> processBeanEvent)
+    {
+        if (!ACTIVATED || (cacheManagerFound && cacheProviderFound))
+        {
+            return;
+        }
+
+        final Bean<A> bean = processBeanEvent.getBean();
+        if (CacheManagerBean.class.isInstance(bean) || CacheProviderBean.class.isInstance(bean))
+        {
+            return;
+        }
+
+        if (!cacheManagerFound)
+        {
+            cacheManagerFound = bean.getTypes().contains(CacheManager.class);
+        }
+        if (!cacheProviderFound)
+        {
+            cacheProviderFound = bean.getTypes().contains(CachingProvider.class);
         }
     }
 }

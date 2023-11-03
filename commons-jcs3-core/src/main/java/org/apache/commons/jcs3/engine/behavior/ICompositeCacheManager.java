@@ -30,14 +30,6 @@ import org.apache.commons.jcs3.engine.control.CompositeCache;
 public interface ICompositeCacheManager extends IShutdownObservable
 {
     /**
-     * Gets the cache attribute of the CacheHub object
-     *
-     * @param cacheName
-     * @return CompositeCache
-     */
-    <K, V> CompositeCache<K, V>  getCache( String cacheName );
-
-    /**
      * Gets the auxiliary cache attribute of the CacheHub object
      *
      * @param auxName
@@ -45,6 +37,14 @@ public interface ICompositeCacheManager extends IShutdownObservable
      * @return AuxiliaryCache
      */
     <K, V> AuxiliaryCache<K, V>  getAuxiliaryCache( String auxName, String cacheName );
+
+    /**
+     * Gets the cache attribute of the CacheHub object
+     *
+     * @param cacheName
+     * @return CompositeCache
+     */
+    <K, V> CompositeCache<K, V>  getCache( String cacheName );
 
     /**
      * This is exposed so other manager can get access to the props.

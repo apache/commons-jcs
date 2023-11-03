@@ -25,6 +25,48 @@ import java.io.ObjectStreamClass;
 import java.lang.reflect.Proxy;
 
 public class ObjectInputStreamClassLoaderAware extends ObjectInputStream {
+    private static final class BlacklistClassResolver {
+        private static final BlacklistClassResolver DEFAULT = new BlacklistClassResolver(
+            toArray(System.getProperty(
+                "jcs.serialization.class.blacklist",
+                "org.codehaus.groovy.runtime.,org.apache.commons.collections.functors.,org.apache.xalan")),
+            toArray(System.getProperty("jcs.serialization.class.whitelist")));
+
+        private static boolean contains(final String[] list, final String name) {
+            if (list != null) {
+                for (final String white : list) {
+                    if (name.startsWith(white)) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+        private static String[] toArray(final String property) {
+            return property == null ? null : property.split(" *, *");
+        }
+
+        private final String[] blacklist;
+
+        private final String[] whitelist;
+
+        protected BlacklistClassResolver(final String[] blacklist, final String[] whitelist) {
+            this.whitelist = whitelist;
+            this.blacklist = blacklist;
+        }
+
+        public final String check(final String name) {
+            if (isBlacklisted(name)) {
+                throw new SecurityException(name + " is not whitelisted as deserialisable, prevented before loading.");
+            }
+            return name;
+        }
+
+        protected boolean isBlacklisted(final String name) {
+            return whitelist != null && !contains(whitelist, name) || contains(blacklist, name);
+        }
+    }
+
     private final ClassLoader classLoader;
 
     public ObjectInputStreamClassLoaderAware(final InputStream in, final ClassLoader classLoader) throws IOException {
@@ -48,48 +90,6 @@ public class ObjectInputStreamClassLoaderAware extends ObjectInputStream {
             return Proxy.getProxyClass(classLoader, cinterfaces);
         } catch (final IllegalArgumentException e) {
             throw new ClassNotFoundException(null, e);
-        }
-    }
-
-    private static final class BlacklistClassResolver {
-        private static final BlacklistClassResolver DEFAULT = new BlacklistClassResolver(
-            toArray(System.getProperty(
-                "jcs.serialization.class.blacklist",
-                "org.codehaus.groovy.runtime.,org.apache.commons.collections.functors.,org.apache.xalan")),
-            toArray(System.getProperty("jcs.serialization.class.whitelist")));
-
-        private final String[] blacklist;
-        private final String[] whitelist;
-
-        protected BlacklistClassResolver(final String[] blacklist, final String[] whitelist) {
-            this.whitelist = whitelist;
-            this.blacklist = blacklist;
-        }
-
-        protected boolean isBlacklisted(final String name) {
-            return whitelist != null && !contains(whitelist, name) || contains(blacklist, name);
-        }
-
-        public final String check(final String name) {
-            if (isBlacklisted(name)) {
-                throw new SecurityException(name + " is not whitelisted as deserialisable, prevented before loading.");
-            }
-            return name;
-        }
-
-        private static String[] toArray(final String property) {
-            return property == null ? null : property.split(" *, *");
-        }
-
-        private static boolean contains(final String[] list, final String name) {
-            if (list != null) {
-                for (final String white : list) {
-                    if (name.startsWith(white)) {
-                        return true;
-                    }
-                }
-            }
-            return false;
         }
     }
 }

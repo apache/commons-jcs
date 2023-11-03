@@ -51,72 +51,15 @@ public class JulLogAdapter implements Log
         this.logger = logger;
     }
 
-    private void log(final Level level, final String message)
+    /**
+     * Logs a message object with the DEBUG level.
+     *
+     * @param message the message object to log.
+     */
+    @Override
+    public void debug(final Object message)
     {
-        if (logger.isLoggable(level))
-        {
-            logger.logp(level, logger.getName(), "", message);
-        }
-    }
-
-    private void log(final Level level, final Object message)
-    {
-        if (logger.isLoggable(level))
-        {
-            if (message instanceof Throwable)
-            {
-                logger.logp(level, logger.getName(), "", "Exception:", (Throwable) message);
-            }
-            else
-            {
-                logger.logp(level, logger.getName(), "",
-                        message == null ? null : message.toString());
-            }
-        }
-    }
-
-    private void log(final Level level, final String message, final Throwable t)
-    {
-        if (logger.isLoggable(level))
-        {
-            logger.logp(level, logger.getName(), "", message, t);
-        }
-    }
-
-    private void log(final Level level, final String message, final Object... params)
-    {
-        if (logger.isLoggable(level))
-        {
-            final MessageFormatter formatter = new MessageFormatter(message, params);
-            if (formatter.hasThrowable())
-            {
-                logger.logp(level, logger.getName(), "",
-                        formatter.getFormattedMessage(), formatter.getThrowable());
-            }
-            else
-            {
-                logger.logp(level, logger.getName(), "",
-                        formatter.getFormattedMessage());
-            }
-        }
-    }
-
-    private void log(final Level level, final String message, final Supplier<?>... paramSuppliers)
-    {
-        if (logger.isLoggable(level))
-        {
-            final MessageFormatter formatter = new MessageFormatter(message, paramSuppliers);
-            if (formatter.hasThrowable())
-            {
-                logger.logp(level, logger.getName(), "",
-                        formatter.getFormattedMessage(), formatter.getThrowable());
-            }
-            else
-            {
-                logger.logp(level, logger.getName(), "",
-                        formatter.getFormattedMessage());
-            }
-        }
+        log(Level.FINE, message);
     }
 
     /**
@@ -126,17 +69,6 @@ public class JulLogAdapter implements Log
      */
     @Override
     public void debug(final String message)
-    {
-        log(Level.FINE, message);
-    }
-
-    /**
-     * Logs a message object with the DEBUG level.
-     *
-     * @param message the message object to log.
-     */
-    @Override
-    public void debug(final Object message)
     {
         log(Level.FINE, message);
     }
@@ -183,10 +115,10 @@ public class JulLogAdapter implements Log
     /**
      * Logs a message object with the ERROR level.
      *
-     * @param message the message string to log.
+     * @param message the message object to log.
      */
     @Override
-    public void error(final String message)
+    public void error(final Object message)
     {
         log(Level.SEVERE, message);
     }
@@ -194,10 +126,10 @@ public class JulLogAdapter implements Log
     /**
      * Logs a message object with the ERROR level.
      *
-     * @param message the message object to log.
+     * @param message the message string to log.
      */
     @Override
-    public void error(final Object message)
+    public void error(final String message)
     {
         log(Level.SEVERE, message);
     }
@@ -245,10 +177,10 @@ public class JulLogAdapter implements Log
     /**
      * Logs a message object with the FATAL level.
      *
-     * @param message the message string to log.
+     * @param message the message object to log.
      */
     @Override
-    public void fatal(final String message)
+    public void fatal(final Object message)
     {
         log(Level.SEVERE, message);
     }
@@ -256,10 +188,10 @@ public class JulLogAdapter implements Log
     /**
      * Logs a message object with the FATAL level.
      *
-     * @param message the message object to log.
+     * @param message the message string to log.
      */
     @Override
-    public void fatal(final Object message)
+    public void fatal(final String message)
     {
         log(Level.SEVERE, message);
     }
@@ -317,10 +249,10 @@ public class JulLogAdapter implements Log
     /**
      * Logs a message object with the INFO level.
      *
-     * @param message the message string to log.
+     * @param message the message object to log.
      */
     @Override
-    public void info(final String message)
+    public void info(final Object message)
     {
         log(Level.INFO, message);
     }
@@ -328,10 +260,10 @@ public class JulLogAdapter implements Log
     /**
      * Logs a message object with the INFO level.
      *
-     * @param message the message object to log.
+     * @param message the message string to log.
      */
     @Override
-    public void info(final Object message)
+    public void info(final String message)
     {
         log(Level.INFO, message);
     }
@@ -447,15 +379,72 @@ public class JulLogAdapter implements Log
         return logger.isLoggable(Level.WARNING);
     }
 
-    /**
-     * Logs a message object with the TRACE level.
-     *
-     * @param message the message string to log.
-     */
-    @Override
-    public void trace(final String message)
+    private void log(final Level level, final Object message)
     {
-        log(Level.FINER, message);
+        if (logger.isLoggable(level))
+        {
+            if (message instanceof Throwable)
+            {
+                logger.logp(level, logger.getName(), "", "Exception:", (Throwable) message);
+            }
+            else
+            {
+                logger.logp(level, logger.getName(), "",
+                        message == null ? null : message.toString());
+            }
+        }
+    }
+
+    private void log(final Level level, final String message)
+    {
+        if (logger.isLoggable(level))
+        {
+            logger.logp(level, logger.getName(), "", message);
+        }
+    }
+
+    private void log(final Level level, final String message, final Object... params)
+    {
+        if (logger.isLoggable(level))
+        {
+            final MessageFormatter formatter = new MessageFormatter(message, params);
+            if (formatter.hasThrowable())
+            {
+                logger.logp(level, logger.getName(), "",
+                        formatter.getFormattedMessage(), formatter.getThrowable());
+            }
+            else
+            {
+                logger.logp(level, logger.getName(), "",
+                        formatter.getFormattedMessage());
+            }
+        }
+    }
+
+    private void log(final Level level, final String message, final Supplier<?>... paramSuppliers)
+    {
+        if (logger.isLoggable(level))
+        {
+            final MessageFormatter formatter = new MessageFormatter(message, paramSuppliers);
+            if (formatter.hasThrowable())
+            {
+                logger.logp(level, logger.getName(), "",
+                        formatter.getFormattedMessage(), formatter.getThrowable());
+            }
+            else
+            {
+                logger.logp(level, logger.getName(), "",
+                        formatter.getFormattedMessage());
+            }
+        }
+    }
+
+    private void log(final Level level, final String message, final Throwable t)
+    {
+        if (logger.isLoggable(level))
+        {
+            logger.logp(level, logger.getName(), "", message, t);
+        }
     }
 
     /**
@@ -465,6 +454,17 @@ public class JulLogAdapter implements Log
      */
     @Override
     public void trace(final Object message)
+    {
+        log(Level.FINER, message);
+    }
+
+    /**
+     * Logs a message object with the TRACE level.
+     *
+     * @param message the message string to log.
+     */
+    @Override
+    public void trace(final String message)
     {
         log(Level.FINER, message);
     }
@@ -512,10 +512,10 @@ public class JulLogAdapter implements Log
     /**
      * Logs a message object with the WARN level.
      *
-     * @param message the message string to log.
+     * @param message the message object to log.
      */
     @Override
-    public void warn(final String message)
+    public void warn(final Object message)
     {
         log(Level.WARNING, message);
     }
@@ -523,10 +523,10 @@ public class JulLogAdapter implements Log
     /**
      * Logs a message object with the WARN level.
      *
-     * @param message the message object to log.
+     * @param message the message string to log.
      */
     @Override
-    public void warn(final Object message)
+    public void warn(final String message)
     {
         log(Level.WARNING, message);
     }

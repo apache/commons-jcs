@@ -26,39 +26,14 @@ public interface ICacheEvent<K>
     extends Serializable
 {
     /**
-     * @param source the source to set
-     */
-    void setSource( String source );
-
-    /**
-     * @return the source
-     */
-    String getSource();
-
-    /**
-     * @param region the region to set
-     */
-    void setRegion( String region );
-
-    /**
-     * @return the region
-     */
-    String getRegion();
-
-    /**
-     * @param eventName the eventName to set
-     */
-    void setEventName( String eventName );
-
-    /**
      * @return the eventName
      */
     String getEventName();
 
     /**
-     * @param optionalDetails the optionalDetails to set
+     * @return the key
      */
-    void setOptionalDetails( String optionalDetails );
+    K getKey();
 
     /**
      * @return the optionalDetails
@@ -66,12 +41,37 @@ public interface ICacheEvent<K>
     String getOptionalDetails();
 
     /**
+     * @return the region
+     */
+    String getRegion();
+
+    /**
+     * @return the source
+     */
+    String getSource();
+
+    /**
+     * @param eventName the eventName to set
+     */
+    void setEventName( String eventName );
+
+    /**
      * @param key the key to set
      */
     void setKey( K key );
 
     /**
-     * @return the key
+     * @param optionalDetails the optionalDetails to set
      */
-    K getKey();
+    void setOptionalDetails( String optionalDetails );
+
+    /**
+     * @param region the region to set
+     */
+    void setRegion( String region );
+
+    /**
+     * @param source the source to set
+     */
+    void setSource( String source );
 }

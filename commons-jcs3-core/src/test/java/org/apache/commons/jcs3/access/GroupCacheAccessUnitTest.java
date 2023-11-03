@@ -37,6 +37,105 @@ import org.junit.Test;
 public class GroupCacheAccessUnitTest
 {
     /**
+     * Verify we can use the group cache.
+     * <p>
+     * @throws Exception
+     */
+    @Test
+    public void testGroupCache()
+        throws Exception
+    {
+        final GroupCacheAccess<String, Integer> access = JCS.getGroupCacheInstance( "testGroup" );
+        final String groupName1 = "testgroup1";
+        final String groupName2 = "testgroup2";
+
+        Set<String> keys1 = access.getGroupKeys( groupName1 );
+        assertNotNull(keys1);
+        assertEquals(0, keys1.size());
+
+        Set<String> keys2 = access.getGroupKeys( groupName2 );
+        assertNotNull(keys2);
+        assertEquals(0, keys2.size());
+
+        // DO WORK
+        final int numToInsertGroup1 = 10;
+        // insert with prefix1
+        for ( int i = 0; i < numToInsertGroup1; i++ )
+        {
+            access.putInGroup(String.valueOf( i ), groupName1, Integer.valueOf( i ) );
+        }
+
+        final int numToInsertGroup2 = 50;
+        // insert with prefix1
+        for ( int i = 0; i < numToInsertGroup2; i++ )
+        {
+            access.putInGroup(String.valueOf( i ), groupName2, Integer.valueOf( i + 1 ) );
+        }
+
+        keys1 = access.getGroupKeys( groupName1 ); // Test for JCS-102
+        assertNotNull(keys1);
+        assertEquals("Wrong number returned 1:", 10, keys1.size());
+
+        keys2 = access.getGroupKeys( groupName2 );
+        assertNotNull(keys2);
+        assertEquals("Wrong number returned 2:", 50, keys2.size());
+
+        assertEquals(Integer.valueOf(5), access.getFromGroup("5", groupName1));
+        assertEquals(Integer.valueOf(6), access.getFromGroup("5", groupName2));
+
+        assertTrue(access.getGroupNames().contains(groupName1));
+        assertTrue(access.getGroupNames().contains(groupName2));
+    }
+
+    /**
+     * Verify that we can invalidate the group
+     * @throws Exception
+     */
+    @Test
+    public void testInvalidate()
+        throws Exception
+    {
+        final GroupCacheAccess<String, String> access = JCS.getGroupCacheInstance( "test" );
+        assertNotNull( "We should have an access class", access );
+
+        final String key = "mykey";
+        final String group = "mygroup";
+        final String value = "myvalue";
+
+        for (int i = 0; i < 10; i++)
+        {
+            access.putInGroup(key + i, group + 0, value + i);
+        }
+
+        for (int i = 0; i < 10; i++)
+        {
+            access.putInGroup(key + i, group + 1, value + i);
+        }
+
+        // Make sure cache contains some data
+        for (int i = 0; i < 10; i++)
+        {
+            final String returnedValue1 = access.getFromGroup(key + i, group + 0);
+            assertEquals( "Wrong value returned.", value + i, returnedValue1 );
+            final String returnedValue2 = access.getFromGroup(key + i, group + 1);
+            assertEquals( "Wrong value returned.", value + i, returnedValue2 );
+        }
+
+        access.invalidateGroup(group + 0);
+
+        for (int i = 0; i < 10; i++)
+        {
+            assertNull("Should not be in cache", access.getFromGroup(key + i, group + 0));
+        }
+
+        for (int i = 0; i < 10; i++)
+        {
+            final String returnedValue1 = access.getFromGroup(key + i, group + 1);
+            assertEquals( "Wrong value returned.", value + i, returnedValue1 );
+        }
+    }
+
+    /**
      * Verify that we can put and get an object
      * @throws Exception
      */
@@ -145,104 +244,5 @@ public class GroupCacheAccessUnitTest
             final String returnedValue1 = access.getFromGroup(key + i, group);
             assertEquals( "Wrong value returned.", value + i, returnedValue1 );
         }
-    }
-
-    /**
-     * Verify that we can invalidate the group
-     * @throws Exception
-     */
-    @Test
-    public void testInvalidate()
-        throws Exception
-    {
-        final GroupCacheAccess<String, String> access = JCS.getGroupCacheInstance( "test" );
-        assertNotNull( "We should have an access class", access );
-
-        final String key = "mykey";
-        final String group = "mygroup";
-        final String value = "myvalue";
-
-        for (int i = 0; i < 10; i++)
-        {
-            access.putInGroup(key + i, group + 0, value + i);
-        }
-
-        for (int i = 0; i < 10; i++)
-        {
-            access.putInGroup(key + i, group + 1, value + i);
-        }
-
-        // Make sure cache contains some data
-        for (int i = 0; i < 10; i++)
-        {
-            final String returnedValue1 = access.getFromGroup(key + i, group + 0);
-            assertEquals( "Wrong value returned.", value + i, returnedValue1 );
-            final String returnedValue2 = access.getFromGroup(key + i, group + 1);
-            assertEquals( "Wrong value returned.", value + i, returnedValue2 );
-        }
-
-        access.invalidateGroup(group + 0);
-
-        for (int i = 0; i < 10; i++)
-        {
-            assertNull("Should not be in cache", access.getFromGroup(key + i, group + 0));
-        }
-
-        for (int i = 0; i < 10; i++)
-        {
-            final String returnedValue1 = access.getFromGroup(key + i, group + 1);
-            assertEquals( "Wrong value returned.", value + i, returnedValue1 );
-        }
-    }
-
-    /**
-     * Verify we can use the group cache.
-     * <p>
-     * @throws Exception
-     */
-    @Test
-    public void testGroupCache()
-        throws Exception
-    {
-        final GroupCacheAccess<String, Integer> access = JCS.getGroupCacheInstance( "testGroup" );
-        final String groupName1 = "testgroup1";
-        final String groupName2 = "testgroup2";
-
-        Set<String> keys1 = access.getGroupKeys( groupName1 );
-        assertNotNull(keys1);
-        assertEquals(0, keys1.size());
-
-        Set<String> keys2 = access.getGroupKeys( groupName2 );
-        assertNotNull(keys2);
-        assertEquals(0, keys2.size());
-
-        // DO WORK
-        final int numToInsertGroup1 = 10;
-        // insert with prefix1
-        for ( int i = 0; i < numToInsertGroup1; i++ )
-        {
-            access.putInGroup(String.valueOf( i ), groupName1, Integer.valueOf( i ) );
-        }
-
-        final int numToInsertGroup2 = 50;
-        // insert with prefix1
-        for ( int i = 0; i < numToInsertGroup2; i++ )
-        {
-            access.putInGroup(String.valueOf( i ), groupName2, Integer.valueOf( i + 1 ) );
-        }
-
-        keys1 = access.getGroupKeys( groupName1 ); // Test for JCS-102
-        assertNotNull(keys1);
-        assertEquals("Wrong number returned 1:", 10, keys1.size());
-
-        keys2 = access.getGroupKeys( groupName2 );
-        assertNotNull(keys2);
-        assertEquals("Wrong number returned 2:", 50, keys2.size());
-
-        assertEquals(Integer.valueOf(5), access.getFromGroup("5", groupName1));
-        assertEquals(Integer.valueOf(6), access.getFromGroup("5", groupName2));
-
-        assertTrue(access.getGroupNames().contains(groupName1));
-        assertTrue(access.getGroupNames().contains(groupName2));
     }
 }

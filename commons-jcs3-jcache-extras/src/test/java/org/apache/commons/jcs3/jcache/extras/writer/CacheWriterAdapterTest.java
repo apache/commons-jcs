@@ -49,15 +49,15 @@ public class CacheWriterAdapterTest
                 private static final long serialVersionUID = 124351798952737984L;
 
                 @Override
-                public void write(final Cache.Entry<? extends String, ? extends String> entry) throws CacheWriterException
-                {
-                    copy.put(entry.getKey(), entry.getValue());
-                }
-
-                @Override
                 public void delete(final Object key) throws CacheWriterException
                 {
                     copy.remove(key);
+                }
+
+                @Override
+                public void write(final Cache.Entry<? extends String, ? extends String> entry) throws CacheWriterException
+                {
+                    copy.put(entry.getKey(), entry.getValue());
                 }
             });
     private Cache<String, String> cache;

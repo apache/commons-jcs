@@ -47,6 +47,20 @@ public class JndiDataSourceFactory implements DataSourceFactory
     /** The log. */
     private static final Log log = LogManager.getLog(JndiDataSourceFactory.class);
 
+    /**
+     *
+     * @param ctx the context
+     * @throws NamingException
+     */
+    private static void debugCtx(final Context ctx) throws NamingException
+    {
+        log.trace("InitialContext -------------------------------");
+        final Map<?, ?> env = ctx.getEnvironment();
+        log.trace("Environment properties: {0}", env.size());
+        env.forEach((key, value) -> log.trace("    {0}: {1}", key, value));
+        log.trace("----------------------------------------------");
+    }
+
     /** The name of the factory. */
     private String name;
 
@@ -66,12 +80,13 @@ public class JndiDataSourceFactory implements DataSourceFactory
     private long ttl; // ms
 
     /**
-     * @return the name of the factory.
+     * Does nothing. We do not want to close a dataSource retrieved from Jndi,
+     * because other applications might use it as well.
      */
     @Override
-	public String getName()
+	public void close()
     {
-    	return name;
+        // do nothing
     }
 
     /**
@@ -99,6 +114,15 @@ public class JndiDataSourceFactory implements DataSourceFactory
         }
 
         return ds;
+    }
+
+    /**
+     * @return the name of the factory.
+     */
+    @Override
+	public String getName()
+    {
+    	return name;
     }
 
     /**
@@ -142,29 +166,5 @@ public class JndiDataSourceFactory implements DataSourceFactory
         {
             throw new SQLException(e);
         }
-    }
-
-    /**
-     * Does nothing. We do not want to close a dataSource retrieved from Jndi,
-     * because other applications might use it as well.
-     */
-    @Override
-	public void close()
-    {
-        // do nothing
-    }
-
-    /**
-     *
-     * @param ctx the context
-     * @throws NamingException
-     */
-    private static void debugCtx(final Context ctx) throws NamingException
-    {
-        log.trace("InitialContext -------------------------------");
-        final Map<?, ?> env = ctx.getEnvironment();
-        log.trace("Environment properties: {0}", env.size());
-        env.forEach((key, value) -> log.trace("    {0}: {1}", key, value));
-        log.trace("----------------------------------------------");
     }
 }

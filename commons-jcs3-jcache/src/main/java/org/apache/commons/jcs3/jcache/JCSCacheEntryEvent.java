@@ -40,27 +40,27 @@ public class JCSCacheEntryEvent<K, V> extends CacheEntryEvent<K, V>
     }
 
     @Override
-    public V getOldValue()
-    {
-        return old;
-    }
-
-    @Override
-    public boolean isOldValueAvailable()
-    {
-        return old != null;
-    }
-
-    @Override
     public K getKey()
     {
         return key;
     }
 
     @Override
+    public V getOldValue()
+    {
+        return old;
+    }
+
+    @Override
     public V getValue()
     {
         return value;
+    }
+
+    @Override
+    public boolean isOldValueAvailable()
+    {
+        return old != null;
     }
 
     @Override

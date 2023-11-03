@@ -40,42 +40,15 @@ public class Log4j2LogAdapter implements Log
         this.logger = logger;
     }
 
-    private void log(final Level level, final String message, final Supplier<?>... paramSuppliers)
+    /**
+     * Logs a message object with the DEBUG level.
+     *
+     * @param message the message object to log.
+     */
+    @Override
+    public void debug(final Object message)
     {
-        if (logger.isEnabled(level))
-        {
-            if (paramSuppliers == null)
-            {
-                logger.log(level, message);
-            }
-            else
-            {
-                switch (paramSuppliers.length)
-                {
-                    case 1: logger.log(level, message, paramSuppliers[0].get());
-                            break;
-                    case 2: logger.log(level, message, paramSuppliers[0].get(),
-                            paramSuppliers[1].get());
-                            break;
-                    case 3: logger.log(level, message, paramSuppliers[0].get(),
-                            paramSuppliers[1].get(), paramSuppliers[2].get());
-                            break;
-                    case 4: logger.log(level, message, paramSuppliers[0].get(),
-                            paramSuppliers[1].get(), paramSuppliers[2].get(),
-                            paramSuppliers[3].get());
-                            break;
-                    case 5: logger.log(level, message, paramSuppliers[0].get(),
-                            paramSuppliers[1].get(), paramSuppliers[2].get(),
-                            paramSuppliers[3].get(), paramSuppliers[4].get());
-                            break;
-                    default: logger.log(level, message, paramSuppliers[0].get(),
-                            paramSuppliers[1].get(), paramSuppliers[2].get(),
-                            paramSuppliers[3].get(), paramSuppliers[4].get(),
-                            paramSuppliers[5].get());
-                            break;
-                }
-            }
-        }
+        logger.debug(message);
     }
 
     /**
@@ -85,17 +58,6 @@ public class Log4j2LogAdapter implements Log
      */
     @Override
     public void debug(final String message)
-    {
-        logger.debug(message);
-    }
-
-    /**
-     * Logs a message object with the DEBUG level.
-     *
-     * @param message the message object to log.
-     */
-    @Override
-    public void debug(final Object message)
     {
         logger.debug(message);
     }
@@ -142,10 +104,10 @@ public class Log4j2LogAdapter implements Log
     /**
      * Logs a message object with the ERROR level.
      *
-     * @param message the message string to log.
+     * @param message the message object to log.
      */
     @Override
-    public void error(final String message)
+    public void error(final Object message)
     {
         logger.error(message);
     }
@@ -153,10 +115,10 @@ public class Log4j2LogAdapter implements Log
     /**
      * Logs a message object with the ERROR level.
      *
-     * @param message the message object to log.
+     * @param message the message string to log.
      */
     @Override
-    public void error(final Object message)
+    public void error(final String message)
     {
         logger.error(message);
     }
@@ -203,10 +165,10 @@ public class Log4j2LogAdapter implements Log
     /**
      * Logs a message object with the FATAL level.
      *
-     * @param message the message string to log.
+     * @param message the message object to log.
      */
     @Override
-    public void fatal(final String message)
+    public void fatal(final Object message)
     {
         logger.fatal(message);
     }
@@ -214,10 +176,10 @@ public class Log4j2LogAdapter implements Log
     /**
      * Logs a message object with the FATAL level.
      *
-     * @param message the message object to log.
+     * @param message the message string to log.
      */
     @Override
-    public void fatal(final Object message)
+    public void fatal(final String message)
     {
         logger.fatal(message);
     }
@@ -275,10 +237,10 @@ public class Log4j2LogAdapter implements Log
     /**
      * Logs a message object with the INFO level.
      *
-     * @param message the message string to log.
+     * @param message the message object to log.
      */
     @Override
-    public void info(final String message)
+    public void info(final Object message)
     {
         logger.info(message);
     }
@@ -286,10 +248,10 @@ public class Log4j2LogAdapter implements Log
     /**
      * Logs a message object with the INFO level.
      *
-     * @param message the message object to log.
+     * @param message the message string to log.
      */
     @Override
-    public void info(final Object message)
+    public void info(final String message)
     {
         logger.info(message);
     }
@@ -405,15 +367,42 @@ public class Log4j2LogAdapter implements Log
         return logger.isWarnEnabled();
     }
 
-    /**
-     * Logs a message object with the TRACE level.
-     *
-     * @param message the message string to log.
-     */
-    @Override
-    public void trace(final String message)
+    private void log(final Level level, final String message, final Supplier<?>... paramSuppliers)
     {
-        logger.trace(message);
+        if (logger.isEnabled(level))
+        {
+            if (paramSuppliers == null)
+            {
+                logger.log(level, message);
+            }
+            else
+            {
+                switch (paramSuppliers.length)
+                {
+                    case 1: logger.log(level, message, paramSuppliers[0].get());
+                            break;
+                    case 2: logger.log(level, message, paramSuppliers[0].get(),
+                            paramSuppliers[1].get());
+                            break;
+                    case 3: logger.log(level, message, paramSuppliers[0].get(),
+                            paramSuppliers[1].get(), paramSuppliers[2].get());
+                            break;
+                    case 4: logger.log(level, message, paramSuppliers[0].get(),
+                            paramSuppliers[1].get(), paramSuppliers[2].get(),
+                            paramSuppliers[3].get());
+                            break;
+                    case 5: logger.log(level, message, paramSuppliers[0].get(),
+                            paramSuppliers[1].get(), paramSuppliers[2].get(),
+                            paramSuppliers[3].get(), paramSuppliers[4].get());
+                            break;
+                    default: logger.log(level, message, paramSuppliers[0].get(),
+                            paramSuppliers[1].get(), paramSuppliers[2].get(),
+                            paramSuppliers[3].get(), paramSuppliers[4].get(),
+                            paramSuppliers[5].get());
+                            break;
+                }
+            }
+        }
     }
 
     /**
@@ -423,6 +412,17 @@ public class Log4j2LogAdapter implements Log
      */
     @Override
     public void trace(final Object message)
+    {
+        logger.trace(message);
+    }
+
+    /**
+     * Logs a message object with the TRACE level.
+     *
+     * @param message the message string to log.
+     */
+    @Override
+    public void trace(final String message)
     {
         logger.trace(message);
     }
@@ -470,10 +470,10 @@ public class Log4j2LogAdapter implements Log
     /**
      * Logs a message object with the WARN level.
      *
-     * @param message the message string to log.
+     * @param message the message object to log.
      */
     @Override
-    public void warn(final String message)
+    public void warn(final Object message)
     {
         logger.warn(message);
     }
@@ -481,10 +481,10 @@ public class Log4j2LogAdapter implements Log
     /**
      * Logs a message object with the WARN level.
      *
-     * @param message the message object to log.
+     * @param message the message string to log.
      */
     @Override
-    public void warn(final Object message)
+    public void warn(final String message)
     {
         logger.warn(message);
     }

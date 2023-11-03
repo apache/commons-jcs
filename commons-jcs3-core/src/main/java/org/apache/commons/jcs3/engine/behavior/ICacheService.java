@@ -35,14 +35,13 @@ import org.apache.commons.jcs3.access.exception.ObjectNotFoundException;
 public interface ICacheService<K, V>
 {
     /**
-     * Puts a cache item to the cache.
+     * Frees the specified cache.
      * <p>
-     * @param item
-     * @throws ObjectExistsException
+     * @param cacheName
      * @throws IOException
      */
-    void update( ICacheElement<K, V> item )
-        throws ObjectExistsException, IOException;
+    void dispose( String cacheName )
+        throws IOException;
 
     /**
      * Returns a cache bean from the specified cache; or null if the key does not exist.
@@ -55,6 +54,18 @@ public interface ICacheService<K, V>
      */
     ICacheElement<K, V> get( String cacheName, K key )
         throws ObjectNotFoundException, IOException;
+
+    /**
+     * Gets multiple items from the cache matching the pattern.
+     * <p>
+     * @param cacheName
+     * @param pattern
+     * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
+     *         data in cache matching the pattern.
+     * @throws IOException
+     */
+    Map<K, ICacheElement<K, V>> getMatching( String cacheName, String pattern )
+        throws IOException;
 
     /**
      * Gets multiple items from the cache based on the given set of keys.
@@ -70,15 +81,10 @@ public interface ICacheService<K, V>
         throws ObjectNotFoundException, IOException;
 
     /**
-     * Gets multiple items from the cache matching the pattern.
-     * <p>
-     * @param cacheName
-     * @param pattern
-     * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
-     *         data in cache matching the pattern.
+     * Frees all caches.
      * @throws IOException
      */
-    Map<K, ICacheElement<K, V>> getMatching( String cacheName, String pattern )
+    void release()
         throws IOException;
 
     /**
@@ -100,18 +106,12 @@ public interface ICacheService<K, V>
         throws IOException;
 
     /**
-     * Frees the specified cache.
+     * Puts a cache item to the cache.
      * <p>
-     * @param cacheName
+     * @param item
+     * @throws ObjectExistsException
      * @throws IOException
      */
-    void dispose( String cacheName )
-        throws IOException;
-
-    /**
-     * Frees all caches.
-     * @throws IOException
-     */
-    void release()
-        throws IOException;
+    void update( ICacheElement<K, V> item )
+        throws ObjectExistsException, IOException;
 }

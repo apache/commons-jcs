@@ -38,6 +38,29 @@ public class MockCompositeCacheManager
     private Properties configurationProperties;
 
     /**
+	 * @see org.apache.commons.jcs3.engine.behavior.IShutdownObservable#deregisterShutdownObserver(org.apache.commons.jcs3.engine.behavior.IShutdownObserver)
+	 */
+	@Override
+	public void deregisterShutdownObserver(final IShutdownObserver observer)
+	{
+		// Do nothing
+	}
+
+    @Override
+    public <K, V> AuxiliaryCache<K, V> getAuxiliaryCache(final String auxName, final String cacheName)
+    {
+        return null;
+    }
+
+    /**
+     * @return Returns the cache.
+     */
+    public CompositeCache<?, ?> getCache()
+    {
+        return cache;
+    }
+
+    /**
      * @param cacheName
      * @return Returns a CompositeCache
      */
@@ -54,38 +77,6 @@ public class MockCompositeCacheManager
         }
 
         return (CompositeCache<K, V>)cache;
-    }
-
-    @Override
-    public <K, V> AuxiliaryCache<K, V> getAuxiliaryCache(final String auxName, final String cacheName)
-    {
-        return null;
-    }
-
-    /**
-     * @param cache The cache to set.
-     */
-    public void setCache( final CompositeCache<?, ?> cache )
-    {
-        this.cache = cache;
-    }
-
-    /**
-     * @return Returns the cache.
-     */
-    public CompositeCache<?, ?> getCache()
-    {
-        return cache;
-    }
-
-    /**
-     * This is exposed so other manager can get access to the props.
-     * <p>
-     * @param props
-     */
-    public void setConfigurationProperties( final Properties props )
-    {
-        this.configurationProperties = props;
     }
 
     /**
@@ -106,7 +97,7 @@ public class MockCompositeCacheManager
         return "Mock";
     }
 
-	/**
+    /**
 	 * @see org.apache.commons.jcs3.engine.behavior.IShutdownObservable#registerShutdownObserver(org.apache.commons.jcs3.engine.behavior.IShutdownObserver)
 	 */
 	@Override
@@ -116,11 +107,20 @@ public class MockCompositeCacheManager
 	}
 
 	/**
-	 * @see org.apache.commons.jcs3.engine.behavior.IShutdownObservable#deregisterShutdownObserver(org.apache.commons.jcs3.engine.behavior.IShutdownObserver)
-	 */
-	@Override
-	public void deregisterShutdownObserver(final IShutdownObserver observer)
-	{
-		// Do nothing
-	}
+     * @param cache The cache to set.
+     */
+    public void setCache( final CompositeCache<?, ?> cache )
+    {
+        this.cache = cache;
+    }
+
+	/**
+     * This is exposed so other manager can get access to the props.
+     * <p>
+     * @param props
+     */
+    public void setConfigurationProperties( final Properties props )
+    {
+        this.configurationProperties = props;
+    }
 }

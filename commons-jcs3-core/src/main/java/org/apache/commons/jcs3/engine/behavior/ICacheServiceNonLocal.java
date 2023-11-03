@@ -35,13 +35,54 @@ public interface ICacheServiceNonLocal<K, V>
     extends Remote, ICacheService<K, V>
 {
     /**
-     * Puts a cache item to the cache.
+     * Returns a cache bean from the specified cache; or null if the key does not exist.
      * <p>
-     * @param item
+     * Adding the requester id, allows the cache to determine the source of the get.
+     * <p>
+     * @param cacheName
+     * @param key
      * @param requesterId
+     * @return ICacheElement
      * @throws IOException
      */
-    void update( ICacheElement<K, V> item, long requesterId )
+    ICacheElement<K, V> get( String cacheName, K key, long requesterId )
+        throws IOException;
+
+    /**
+     * Gets a set of the keys for all elements in the cache.
+     * <p>
+     * @param cacheName the name of the cache
+     * @return a set of the key type
+     * TODO This should probably be done in chunks with a range passed in. This
+     *       will be a problem if someone puts a 1,000,000 or so items in a
+     *       region.
+     */
+    Set<K> getKeySet( String cacheName ) throws IOException;
+
+    /**
+     * Gets multiple items from the cache matching the pattern.
+     * <p>
+     * @param cacheName
+     * @param pattern
+     * @param requesterId
+     * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
+     *         data in cache matching the pattern.
+     * @throws IOException
+     */
+    Map<K, ICacheElement<K, V>> getMatching( String cacheName, String pattern, long requesterId )
+        throws IOException;
+
+    /**
+     * Gets multiple items from the cache based on the given set of keys.
+     * <p>
+     * @param cacheName
+     * @param keys
+     * @param requesterId
+     * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
+     *         data in cache for any of these keys
+     * @throws IOException
+     */
+    Map<K, ICacheElement<K, V>> getMultiple( String cacheName, Set<K> keys, long requesterId )
         throws IOException;
 
     /**
@@ -66,53 +107,12 @@ public interface ICacheServiceNonLocal<K, V>
         throws IOException;
 
     /**
-     * Returns a cache bean from the specified cache; or null if the key does not exist.
+     * Puts a cache item to the cache.
      * <p>
-     * Adding the requester id, allows the cache to determine the source of the get.
-     * <p>
-     * @param cacheName
-     * @param key
+     * @param item
      * @param requesterId
-     * @return ICacheElement
      * @throws IOException
      */
-    ICacheElement<K, V> get( String cacheName, K key, long requesterId )
+    void update( ICacheElement<K, V> item, long requesterId )
         throws IOException;
-
-    /**
-     * Gets multiple items from the cache based on the given set of keys.
-     * <p>
-     * @param cacheName
-     * @param keys
-     * @param requesterId
-     * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
-     *         data in cache for any of these keys
-     * @throws IOException
-     */
-    Map<K, ICacheElement<K, V>> getMultiple( String cacheName, Set<K> keys, long requesterId )
-        throws IOException;
-
-    /**
-     * Gets multiple items from the cache matching the pattern.
-     * <p>
-     * @param cacheName
-     * @param pattern
-     * @param requesterId
-     * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
-     *         data in cache matching the pattern.
-     * @throws IOException
-     */
-    Map<K, ICacheElement<K, V>> getMatching( String cacheName, String pattern, long requesterId )
-        throws IOException;
-
-    /**
-     * Gets a set of the keys for all elements in the cache.
-     * <p>
-     * @param cacheName the name of the cache
-     * @return a set of the key type
-     * TODO This should probably be done in chunks with a range passed in. This
-     *       will be a problem if someone puts a 1,000,000 or so items in a
-     *       region.
-     */
-    Set<K> getKeySet( String cacheName ) throws IOException;
 }

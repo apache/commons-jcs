@@ -47,33 +47,6 @@ public class LRUvsMRUPerformanceTest
     int tries = 10000;
 
     /**
-     * A unit test for JUnit
-     * @throws Exception Description of the Exception
-     */
-    @Test
-    public void testSimpleLoad()
-        throws Exception
-    {
-        final Log log1 = LogManager.getLog( LRUMemoryCache.class );
-        if ( log1.isDebugEnabled() )
-        {
-            System.out.println( "The log level must be at info or above for the a performance test." );
-            return;
-        }
-        final Log log2 = LogManager.getLog( MRUMemoryCache.class );
-        if ( log2.isDebugEnabled() )
-        {
-            System.out.println( "The log level must be at info or above for the a performance test." );
-            return;
-        }
-        doWork();
-
-        // these were when the mru was implemented with the jdk linked list
-        //assertTrue( "Ratio is unacceptible.", this.ratioPut < target );
-        ///assertTrue( "Ratio is unacceptible.", this.ratioGet < target );
-    }
-
-    /**
      * Runs the test
      */
     public void doWork()
@@ -178,6 +151,33 @@ public class LRUvsMRUPerformanceTest
         System.out.println( "Get average for MRU = " + getAvHashtable );
         ratioGet = Float.intBitsToFloat( (int) getAvJCS ) / Float.intBitsToFloat( (int) getAvHashtable );
         System.out.println( "JCS gets took " + ratioGet + " times the Hashtable, the goal is <" + target + "x" );
+    }
+
+    /**
+     * A unit test for JUnit
+     * @throws Exception Description of the Exception
+     */
+    @Test
+    public void testSimpleLoad()
+        throws Exception
+    {
+        final Log log1 = LogManager.getLog( LRUMemoryCache.class );
+        if ( log1.isDebugEnabled() )
+        {
+            System.out.println( "The log level must be at info or above for the a performance test." );
+            return;
+        }
+        final Log log2 = LogManager.getLog( MRUMemoryCache.class );
+        if ( log2.isDebugEnabled() )
+        {
+            System.out.println( "The log level must be at info or above for the a performance test." );
+            return;
+        }
+        doWork();
+
+        // these were when the mru was implemented with the jdk linked list
+        //assertTrue( "Ratio is unacceptible.", this.ratioPut < target );
+        ///assertTrue( "Ratio is unacceptible.", this.ratioGet < target );
     }
 
 }

@@ -36,12 +36,12 @@ public class ShrinkerThread
     /** The logger. */
     private static final Log log = LogManager.getLog( ShrinkerThread.class );
 
+    /** Default time period to use. */
+    private static final long DEFAULT_PAUSE_BETWEEN_REGION_CALLS_MILLIS = 5000;
+
     /** A set of JDBCDiskCache objects to call deleteExpired on. */
     private final CopyOnWriteArraySet<JDBCDiskCache<?, ?>> shrinkSet =
             new CopyOnWriteArraySet<>();
-
-    /** Default time period to use. */
-    private static final long DEFAULT_PAUSE_BETWEEN_REGION_CALLS_MILLIS = 5000;
 
     /**
      * How long should we wait between calls to deleteExpired when we are iterating through the list
@@ -69,22 +69,6 @@ public class ShrinkerThread
         // but that might cause a problem if you wanted to use two different
         // jbdc disk caches for the same region.
         shrinkSet.add( diskCache );
-    }
-
-    /**
-     * Calls deleteExpired on each item in the set. It pauses between each call.
-     */
-    @Override
-    public void run()
-    {
-        try
-        {
-            deleteExpiredFromAllRegisteredRegions();
-        }
-        catch ( final Throwable e )
-        {
-            log.error( "Caught an exception while trying to delete expired items.", e );
-        }
     }
 
     /**
@@ -126,21 +110,37 @@ public class ShrinkerThread
      * How long should we wait between calls to deleteExpired when we are iterating through the list
      * of regions.
      * <p>
-     * @param pauseBetweenRegionCallsMillis The pauseBetweenRegionCallsMillis to set.
+     * @return Returns the pauseBetweenRegionCallsMillis.
      */
-    public void setPauseBetweenRegionCallsMillis( final long pauseBetweenRegionCallsMillis )
+    public long getPauseBetweenRegionCallsMillis()
     {
-        this.pauseBetweenRegionCallsMillis = pauseBetweenRegionCallsMillis;
+        return pauseBetweenRegionCallsMillis;
+    }
+
+    /**
+     * Calls deleteExpired on each item in the set. It pauses between each call.
+     */
+    @Override
+    public void run()
+    {
+        try
+        {
+            deleteExpiredFromAllRegisteredRegions();
+        }
+        catch ( final Throwable e )
+        {
+            log.error( "Caught an exception while trying to delete expired items.", e );
+        }
     }
 
     /**
      * How long should we wait between calls to deleteExpired when we are iterating through the list
      * of regions.
      * <p>
-     * @return Returns the pauseBetweenRegionCallsMillis.
+     * @param pauseBetweenRegionCallsMillis The pauseBetweenRegionCallsMillis to set.
      */
-    public long getPauseBetweenRegionCallsMillis()
+    public void setPauseBetweenRegionCallsMillis( final long pauseBetweenRegionCallsMillis )
     {
-        return pauseBetweenRegionCallsMillis;
+        this.pauseBetweenRegionCallsMillis = pauseBetweenRegionCallsMillis;
     }
 }

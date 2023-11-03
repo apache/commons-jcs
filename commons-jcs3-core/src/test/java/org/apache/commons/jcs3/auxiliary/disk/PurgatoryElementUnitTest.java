@@ -34,26 +34,6 @@ public class PurgatoryElementUnitTest
 {
     /** Verify basic data */
     @Test
-    public void testSpoolable_normal()
-    {
-        // SETUP
-        final String cacheName = "myCacheName";
-        final String key = "myKey";
-        final String value = "myValue";
-        final IElementAttributes elementAttributes = new ElementAttributes();
-        final ICacheElement<String, String> cacheElement = new CacheElement<>( cacheName, key, value, elementAttributes );
-        final PurgatoryElement<String, String> purgatoryElement = new PurgatoryElement<>( cacheElement );
-        purgatoryElement.setSpoolable( false );
-
-        // DO WORK
-        final boolean result = purgatoryElement.isSpoolable();
-
-        // VERIFY
-        assertFalse( "Should not be spoolable.", result );
-    }
-
-    /** Verify basic data */
-    @Test
     public void testElementAttributes_normal()
     {
         // SETUP
@@ -71,6 +51,26 @@ public class PurgatoryElementUnitTest
 
         // VERIFY
         assertEquals( "Should have set the attributes on the element", elementAttributes, result );
+    }
+
+    /** Verify basic data */
+    @Test
+    public void testSpoolable_normal()
+    {
+        // SETUP
+        final String cacheName = "myCacheName";
+        final String key = "myKey";
+        final String value = "myValue";
+        final IElementAttributes elementAttributes = new ElementAttributes();
+        final ICacheElement<String, String> cacheElement = new CacheElement<>( cacheName, key, value, elementAttributes );
+        final PurgatoryElement<String, String> purgatoryElement = new PurgatoryElement<>( cacheElement );
+        purgatoryElement.setSpoolable( false );
+
+        // DO WORK
+        final boolean result = purgatoryElement.isSpoolable();
+
+        // VERIFY
+        assertFalse( "Should not be spoolable.", result );
     }
 
     /** Verify basic data */

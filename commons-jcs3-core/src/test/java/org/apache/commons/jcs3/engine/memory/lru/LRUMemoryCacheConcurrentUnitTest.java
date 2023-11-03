@@ -50,37 +50,6 @@ public class LRUMemoryCacheConcurrentUnitTest
     private static final int items = 200;
 
     /**
-     * A unit test suite for JUnit
-     * <p>
-     * @return The test suite
-     */
-    public static Test suite()
-    {
-        final ActiveTestSuite suite = new ActiveTestSuite();
-
-        suite.addTest(new TestCase("testLRUMemoryCache" )
-        {
-            @Override
-            public void runTest()
-                throws Exception
-            {
-                runTestForRegion( "testRegion1" );
-            }
-        });
-
-        return suite;
-    }
-
-    /**
-     * Test setup
-     */
-    @Before
-    public void setUp()
-    {
-        //JCS.setConfigFilename( "/TestDiskCache.ccf" );
-    }
-
-    /**
      * Adds items to cache, gets them, and removes them. The item count is more
      * than the size of the memory cache, so items should be dumped.
      * <p>
@@ -151,5 +120,36 @@ public class LRUMemoryCacheConcurrentUnitTest
         {
             assertNull( "Removed key should be null: " + i + ":key", lru.get( i + ":key" ) );
         }
+    }
+
+    /**
+     * A unit test suite for JUnit
+     * <p>
+     * @return The test suite
+     */
+    public static Test suite()
+    {
+        final ActiveTestSuite suite = new ActiveTestSuite();
+
+        suite.addTest(new TestCase("testLRUMemoryCache" )
+        {
+            @Override
+            public void runTest()
+                throws Exception
+            {
+                runTestForRegion( "testRegion1" );
+            }
+        });
+
+        return suite;
+    }
+
+    /**
+     * Test setup
+     */
+    @Before
+    public void setUp()
+    {
+        //JCS.setConfigFilename( "/TestDiskCache.ccf" );
     }
 }

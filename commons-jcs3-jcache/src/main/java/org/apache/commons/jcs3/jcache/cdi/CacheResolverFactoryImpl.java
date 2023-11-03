@@ -41,6 +41,22 @@ public class CacheResolverFactoryImpl implements CacheResolverFactory
         cacheManager = provider.getCacheManager(provider.getDefaultURI(), provider.getDefaultClassLoader());
     }
 
+    private Cache<?, ?> createCache(final String exceptionCacheName)
+    {
+        cacheManager.createCache(exceptionCacheName, new MutableConfiguration<>().setStoreByValue(false));
+        return cacheManager.getCache(exceptionCacheName);
+    }
+
+    private CacheResolver findCacheResolver(final String exceptionCacheName)
+    {
+        Cache<?, ?> cache = cacheManager.getCache(exceptionCacheName);
+        if (cache == null)
+        {
+            cache = createCache(exceptionCacheName);
+        }
+        return new CacheResolverImpl(cache);
+    }
+
     @Override
     public CacheResolver getCacheResolver(final CacheMethodDetails<? extends Annotation> cacheMethodDetails)
     {
@@ -56,22 +72,6 @@ public class CacheResolverFactoryImpl implements CacheResolverFactory
             throw new IllegalArgumentException("CacheResult.exceptionCacheName() not specified");
         }
         return findCacheResolver(exceptionCacheName);
-    }
-
-    private CacheResolver findCacheResolver(final String exceptionCacheName)
-    {
-        Cache<?, ?> cache = cacheManager.getCache(exceptionCacheName);
-        if (cache == null)
-        {
-            cache = createCache(exceptionCacheName);
-        }
-        return new CacheResolverImpl(cache);
-    }
-
-    private Cache<?, ?> createCache(final String exceptionCacheName)
-    {
-        cacheManager.createCache(exceptionCacheName, new MutableConfiguration<>().setStoreByValue(false));
-        return cacheManager.getCache(exceptionCacheName);
     }
 
     public void release()

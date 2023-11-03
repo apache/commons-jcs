@@ -36,6 +36,53 @@ public interface IRemoteCacheListener<K, V>
     extends ICacheListener<K, V>, Remote
 {
     /**
+     * De-Registers itself.
+     * <p>
+     * @throws IOException
+     */
+    void dispose()
+        throws IOException;
+
+    /**
+     * Gets the listenerId attribute of the ICacheListener object
+     * <p>
+     * @return The listenerId value
+     * @throws IOException
+     */
+    @Override
+    long getListenerId()
+        throws IOException;
+
+    /**
+     * This is for debugging. It allows the remote cache server to log the address of any listeners
+     * that register.
+     * <p>
+     * @return the local host address.
+     * @throws IOException
+     */
+    String getLocalHostAddress()
+        throws IOException;
+
+    /**
+     * Gets the remoteType attribute of the IRemoteCacheListener object
+     * <p>
+     * @return The remoteType value
+     * @throws IOException
+     */
+    RemoteType getRemoteType()
+        throws IOException;
+
+    /**
+     * Notifies the subscribers for freeing up the named cache.
+     * <p>
+     * @param cacheName
+     * @throws IOException
+     */
+    @Override
+    void handleDispose( String cacheName )
+        throws IOException;
+
+    /**
      * Notifies the subscribers for a cache entry update.
      * <p>
      * @param item
@@ -67,16 +114,6 @@ public interface IRemoteCacheListener<K, V>
         throws IOException;
 
     /**
-     * Notifies the subscribers for freeing up the named cache.
-     * <p>
-     * @param cacheName
-     * @throws IOException
-     */
-    @Override
-    void handleDispose( String cacheName )
-        throws IOException;
-
-    /**
      * sets unique identifier of listener home
      * <p>
      * @param id The new listenerId value
@@ -84,42 +121,5 @@ public interface IRemoteCacheListener<K, V>
      */
     @Override
     void setListenerId( long id )
-        throws IOException;
-
-    /**
-     * Gets the listenerId attribute of the ICacheListener object
-     * <p>
-     * @return The listenerId value
-     * @throws IOException
-     */
-    @Override
-    long getListenerId()
-        throws IOException;
-
-    /**
-     * Gets the remoteType attribute of the IRemoteCacheListener object
-     * <p>
-     * @return The remoteType value
-     * @throws IOException
-     */
-    RemoteType getRemoteType()
-        throws IOException;
-
-    /**
-     * This is for debugging. It allows the remote cache server to log the address of any listeners
-     * that register.
-     * <p>
-     * @return the local host address.
-     * @throws IOException
-     */
-    String getLocalHostAddress()
-        throws IOException;
-
-    /**
-     * De-Registers itself.
-     * <p>
-     * @throws IOException
-     */
-    void dispose()
         throws IOException;
 }

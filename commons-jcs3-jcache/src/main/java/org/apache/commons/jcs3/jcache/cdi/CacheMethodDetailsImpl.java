@@ -44,12 +44,6 @@ public class CacheMethodDetailsImpl<A extends Annotation> implements CacheMethod
     }
 
     @Override
-    public Method getMethod()
-    {
-        return delegate.getMethod();
-    }
-
-    @Override
     public Set<Annotation> getAnnotations()
     {
         return annotations;
@@ -65,5 +59,11 @@ public class CacheMethodDetailsImpl<A extends Annotation> implements CacheMethod
     public String getCacheName()
     {
         return cacheName;
+    }
+
+    @Override
+    public Method getMethod()
+    {
+        return delegate.getMethod();
     }
 }

@@ -67,93 +67,6 @@ public class RemoteCacheServerUnitTest
 
     /**
      * Add a listener. Pass the id of 0, verify that the server sets a new listener id. Do another
-     * and verify that the second gets an id of 2.
-     * <p>
-     * @throws Exception
-     */
-    @Test
-    public void testAddListenerToCache_LOCALtype()
-        throws Exception
-    {
-        final MockRemoteCacheListener<String, String> mockListener1 = new MockRemoteCacheListener<>();
-        mockListener1.remoteType = RemoteType.LOCAL;
-        mockListener1.localAddress = expectedIp1;
-        final MockRemoteCacheListener<String, String> mockListener2 = new MockRemoteCacheListener<>();
-        mockListener1.remoteType = RemoteType.LOCAL;
-        mockListener2.localAddress = expectedIp2;
-
-        final String cacheName = "testAddListener";
-
-        // DO WORK
-        server.addCacheListener( cacheName, mockListener1 );
-        server.addCacheListener( cacheName, mockListener2 );
-
-        // VERIFY
-        assertEquals( "Wrong listener id.", 1, mockListener1.getListenerId() );
-        assertEquals( "Wrong listener id.", 2, mockListener2.getListenerId() );
-        assertEquals( "Wrong ip.", expectedIp1, server.getExtraInfoForRequesterId( 1 ) );
-        assertEquals( "Wrong ip.", expectedIp2, server.getExtraInfoForRequesterId( 2 ) );
-    }
-
-    /**
-     * Add a listener. Pass the id of 0, verify that the server sets a new listener id. Do another
-     * and verify that the second gets an id of 2.
-     * <p>
-     * @throws Exception
-     */
-    @Test
-    public void testAddListenerToCache_CLUSTERtype()
-        throws Exception
-    {
-        final MockRemoteCacheListener<String, String> mockListener1 = new MockRemoteCacheListener<>();
-        mockListener1.remoteType = RemoteType.CLUSTER;
-        mockListener1.localAddress = expectedIp1;
-        final MockRemoteCacheListener<String, String> mockListener2 = new MockRemoteCacheListener<>();
-        mockListener1.remoteType = RemoteType.CLUSTER;
-        mockListener2.localAddress = expectedIp2;
-
-        final String cacheName = "testAddListener";
-
-        // DO WORK
-        server.addCacheListener( cacheName, mockListener1 );
-        server.addCacheListener( cacheName, mockListener2 );
-
-        // VERIFY
-        assertEquals( "Wrong listener id.", 1, mockListener1.getListenerId() );
-        assertEquals( "Wrong listener id.", 2, mockListener2.getListenerId() );
-        assertEquals( "Wrong ip.", expectedIp1, server.getExtraInfoForRequesterId( 1 ) );
-        assertEquals( "Wrong ip.", expectedIp2, server.getExtraInfoForRequesterId( 2 ) );
-    }
-
-    // TODO: This test only works if preconfigured remote caches exist. Need to fix.
-//    /**
-//     * Add a listener. Pass the id of 0, verify that the server sets a new listener id. Do another
-//     * and verify that the second gets an id of 2.
-//     * <p>
-//     * @throws Exception
-//     */
-//    public void testAddListener_ToAll()
-//        throws Exception
-//    {
-//        MockRemoteCacheListener<String, String> mockListener1 = new MockRemoteCacheListener<>();
-//        mockListener1.localAddress = expectedIp1;
-//        MockRemoteCacheListener<String, String> mockListener2 = new MockRemoteCacheListener<>();
-//        mockListener2.localAddress = expectedIp2;
-//
-//        // DO WORK
-//        // don't specify the cache name
-//        server.addCacheListener( mockListener1 );
-//        server.addCacheListener( mockListener2 );
-//
-//        // VERIFY
-//        assertEquals( "Wrong listener id.", 1, mockListener1.getListenerId() );
-//        assertEquals( "Wrong listener id.", 2, mockListener2.getListenerId() );
-//        assertEquals( "Wrong ip.", expectedIp1, server.getExtraInfoForRequesterId( 1 ) );
-//        assertEquals( "Wrong ip.", expectedIp2, server.getExtraInfoForRequesterId( 2 ) );
-//    }
-
-    /**
-     * Add a listener. Pass the id of 0, verify that the server sets a new listener id. Do another
      * and verify that the second gets an id of 2. Call remove Listener and verify that it is
      * removed.
      * <p>
@@ -214,6 +127,193 @@ public class RemoteCacheServerUnitTest
         server.removeCacheListener( cacheName, mockListener1.getListenerId() );
         assertEquals( "Wrong number of listeners.", 1, server.getClusterListeners( cacheName ).eventQMap.size() );
         assertNull( "Should be no entry in the ip map.", server.getExtraInfoForRequesterId( 1 ) );
+    }
+
+    // TODO: This test only works if preconfigured remote caches exist. Need to fix.
+//    /**
+//     * Add a listener. Pass the id of 0, verify that the server sets a new listener id. Do another
+//     * and verify that the second gets an id of 2.
+//     * <p>
+//     * @throws Exception
+//     */
+//    public void testAddListener_ToAll()
+//        throws Exception
+//    {
+//        MockRemoteCacheListener<String, String> mockListener1 = new MockRemoteCacheListener<>();
+//        mockListener1.localAddress = expectedIp1;
+//        MockRemoteCacheListener<String, String> mockListener2 = new MockRemoteCacheListener<>();
+//        mockListener2.localAddress = expectedIp2;
+//
+//        // DO WORK
+//        // don't specify the cache name
+//        server.addCacheListener( mockListener1 );
+//        server.addCacheListener( mockListener2 );
+//
+//        // VERIFY
+//        assertEquals( "Wrong listener id.", 1, mockListener1.getListenerId() );
+//        assertEquals( "Wrong listener id.", 2, mockListener2.getListenerId() );
+//        assertEquals( "Wrong ip.", expectedIp1, server.getExtraInfoForRequesterId( 1 ) );
+//        assertEquals( "Wrong ip.", expectedIp2, server.getExtraInfoForRequesterId( 2 ) );
+//    }
+
+    /**
+     * Add a listener. Pass the id of 0, verify that the server sets a new listener id. Do another
+     * and verify that the second gets an id of 2.
+     * <p>
+     * @throws Exception
+     */
+    @Test
+    public void testAddListenerToCache_CLUSTERtype()
+        throws Exception
+    {
+        final MockRemoteCacheListener<String, String> mockListener1 = new MockRemoteCacheListener<>();
+        mockListener1.remoteType = RemoteType.CLUSTER;
+        mockListener1.localAddress = expectedIp1;
+        final MockRemoteCacheListener<String, String> mockListener2 = new MockRemoteCacheListener<>();
+        mockListener1.remoteType = RemoteType.CLUSTER;
+        mockListener2.localAddress = expectedIp2;
+
+        final String cacheName = "testAddListener";
+
+        // DO WORK
+        server.addCacheListener( cacheName, mockListener1 );
+        server.addCacheListener( cacheName, mockListener2 );
+
+        // VERIFY
+        assertEquals( "Wrong listener id.", 1, mockListener1.getListenerId() );
+        assertEquals( "Wrong listener id.", 2, mockListener2.getListenerId() );
+        assertEquals( "Wrong ip.", expectedIp1, server.getExtraInfoForRequesterId( 1 ) );
+        assertEquals( "Wrong ip.", expectedIp2, server.getExtraInfoForRequesterId( 2 ) );
+    }
+
+    /**
+     * Add a listener. Pass the id of 0, verify that the server sets a new listener id. Do another
+     * and verify that the second gets an id of 2.
+     * <p>
+     * @throws Exception
+     */
+    @Test
+    public void testAddListenerToCache_LOCALtype()
+        throws Exception
+    {
+        final MockRemoteCacheListener<String, String> mockListener1 = new MockRemoteCacheListener<>();
+        mockListener1.remoteType = RemoteType.LOCAL;
+        mockListener1.localAddress = expectedIp1;
+        final MockRemoteCacheListener<String, String> mockListener2 = new MockRemoteCacheListener<>();
+        mockListener1.remoteType = RemoteType.LOCAL;
+        mockListener2.localAddress = expectedIp2;
+
+        final String cacheName = "testAddListener";
+
+        // DO WORK
+        server.addCacheListener( cacheName, mockListener1 );
+        server.addCacheListener( cacheName, mockListener2 );
+
+        // VERIFY
+        assertEquals( "Wrong listener id.", 1, mockListener1.getListenerId() );
+        assertEquals( "Wrong listener id.", 2, mockListener2.getListenerId() );
+        assertEquals( "Wrong ip.", expectedIp1, server.getExtraInfoForRequesterId( 1 ) );
+        assertEquals( "Wrong ip.", expectedIp2, server.getExtraInfoForRequesterId( 2 ) );
+    }
+
+    /**
+     * Verify event log calls.
+     * <p>
+     * @throws Exception
+     */
+    @Test
+    public void testGet_simple()
+        throws Exception
+    {
+        final MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
+        server.setCacheEventLogger( cacheEventLogger );
+
+        // DO WORK
+        server.get( "region", "key" );
+
+        // VERIFY
+        assertEquals( "Start should have been called.", 1, cacheEventLogger.startICacheEventCalls );
+        assertEquals( "End should have been called.", 1, cacheEventLogger.endICacheEventCalls );
+    }
+
+    /**
+     * Verify event log calls.
+     * <p>
+     * @throws Exception
+     */
+    @Test
+    public void testGetMatching_simple()
+        throws Exception
+    {
+        final MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
+        server.setCacheEventLogger( cacheEventLogger );
+
+        // DO WORK
+        server.getMatching( "region", "pattern", 0 );
+
+        // VERIFY
+        assertEquals( "Start should have been called.", 1, cacheEventLogger.startICacheEventCalls );
+        assertEquals( "End should have been called.", 1, cacheEventLogger.endICacheEventCalls );
+    }
+
+    /**
+     * Verify event log calls.
+     * <p>
+     * @throws Exception
+     */
+    @Test
+    public void testGetMultiple_simple()
+        throws Exception
+    {
+        final MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
+        server.setCacheEventLogger( cacheEventLogger );
+
+        // DO WORK
+        server.getMultiple( "region", new HashSet<>() );
+
+        // VERIFY
+        assertEquals( "Start should have been called.", 1, cacheEventLogger.startICacheEventCalls );
+        assertEquals( "End should have been called.", 1, cacheEventLogger.endICacheEventCalls );
+    }
+
+    /**
+     * Verify event log calls.
+     * <p>
+     * @throws Exception
+     */
+    @Test
+    public void testRemove_simple()
+        throws Exception
+    {
+        final MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
+        server.setCacheEventLogger( cacheEventLogger );
+
+        // DO WORK
+        server.remove( "region", "key" );
+
+        // VERIFY
+        assertEquals( "Start should have been called.", 1, cacheEventLogger.startICacheEventCalls );
+        assertEquals( "End should have been called.", 1, cacheEventLogger.endICacheEventCalls );
+    }
+
+    /**
+     * Verify event log calls.
+     * <p>
+     * @throws Exception
+     */
+    @Test
+    public void testRemoveAll_simple()
+        throws Exception
+    {
+        final MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
+        server.setCacheEventLogger( cacheEventLogger );
+
+        // DO WORK
+        server.removeAll( "region" );
+
+        // VERIFY
+        assertEquals( "Start should have been called.", 1, cacheEventLogger.startICacheEventCalls );
+        assertEquals( "End should have been called.", 1, cacheEventLogger.endICacheEventCalls );
     }
 
     /**
@@ -367,106 +467,6 @@ public class RemoteCacheServerUnitTest
 
         // DO WORK
         server.update( item );
-
-        // VERIFY
-        assertEquals( "Start should have been called.", 1, cacheEventLogger.startICacheEventCalls );
-        assertEquals( "End should have been called.", 1, cacheEventLogger.endICacheEventCalls );
-    }
-
-    /**
-     * Verify event log calls.
-     * <p>
-     * @throws Exception
-     */
-    @Test
-    public void testGet_simple()
-        throws Exception
-    {
-        final MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
-        server.setCacheEventLogger( cacheEventLogger );
-
-        // DO WORK
-        server.get( "region", "key" );
-
-        // VERIFY
-        assertEquals( "Start should have been called.", 1, cacheEventLogger.startICacheEventCalls );
-        assertEquals( "End should have been called.", 1, cacheEventLogger.endICacheEventCalls );
-    }
-
-    /**
-     * Verify event log calls.
-     * <p>
-     * @throws Exception
-     */
-    @Test
-    public void testGetMatching_simple()
-        throws Exception
-    {
-        final MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
-        server.setCacheEventLogger( cacheEventLogger );
-
-        // DO WORK
-        server.getMatching( "region", "pattern", 0 );
-
-        // VERIFY
-        assertEquals( "Start should have been called.", 1, cacheEventLogger.startICacheEventCalls );
-        assertEquals( "End should have been called.", 1, cacheEventLogger.endICacheEventCalls );
-    }
-
-    /**
-     * Verify event log calls.
-     * <p>
-     * @throws Exception
-     */
-    @Test
-    public void testGetMultiple_simple()
-        throws Exception
-    {
-        final MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
-        server.setCacheEventLogger( cacheEventLogger );
-
-        // DO WORK
-        server.getMultiple( "region", new HashSet<>() );
-
-        // VERIFY
-        assertEquals( "Start should have been called.", 1, cacheEventLogger.startICacheEventCalls );
-        assertEquals( "End should have been called.", 1, cacheEventLogger.endICacheEventCalls );
-    }
-
-    /**
-     * Verify event log calls.
-     * <p>
-     * @throws Exception
-     */
-    @Test
-    public void testRemove_simple()
-        throws Exception
-    {
-        final MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
-        server.setCacheEventLogger( cacheEventLogger );
-
-        // DO WORK
-        server.remove( "region", "key" );
-
-        // VERIFY
-        assertEquals( "Start should have been called.", 1, cacheEventLogger.startICacheEventCalls );
-        assertEquals( "End should have been called.", 1, cacheEventLogger.endICacheEventCalls );
-    }
-
-    /**
-     * Verify event log calls.
-     * <p>
-     * @throws Exception
-     */
-    @Test
-    public void testRemoveAll_simple()
-        throws Exception
-    {
-        final MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
-        server.setCacheEventLogger( cacheEventLogger );
-
-        // DO WORK
-        server.removeAll( "region" );
 
         // VERIFY
         assertEquals( "Start should have been called.", 1, cacheEventLogger.startICacheEventCalls );

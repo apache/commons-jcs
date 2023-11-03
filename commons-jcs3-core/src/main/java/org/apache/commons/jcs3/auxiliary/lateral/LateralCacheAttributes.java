@@ -66,14 +66,13 @@ public class LateralCacheAttributes
     private int zombieQueueMaxSize = DEFAULT_ZOMBIE_QUEUE_MAX_SIZE;
 
     /**
-     * Sets the httpServer attribute of the LateralCacheAttributes object
-     * <P>
-     * @param val The new httpServer value
+     * Gets the httpListenerPort attribute of the ILateralCacheAttributes object
+     * @return The httpListenerPort value
      */
     @Override
-    public void setHttpServer( final String val )
+    public int getHttpListenerPort()
     {
-        httpServer = val;
+        return this.httpListenerPort;
     }
 
     /**
@@ -87,16 +86,6 @@ public class LateralCacheAttributes
     }
 
     /**
-     * Sets the httpServers attribute of the LateralCacheAttributes object
-     * @param val The new httpServers value
-     */
-    @Override
-    public void setHttpServers( final String val )
-    {
-        httpServers = val;
-    }
-
-    /**
      * Gets the httpSrvers attribute of the LateralCacheAttributes object
      * @return The httpServers value
      */
@@ -107,33 +96,22 @@ public class LateralCacheAttributes
     }
 
     /**
-     * Sets the httpListenerPort attribute of the ILateralCacheAttributes object
-     * @param val The new tcpListenerPort value
+     * @return The outgoingOnlyMode value. Stops gets from going remote.
      */
     @Override
-    public void setHttpListenerPort( final int val )
+    public boolean getPutOnlyMode()
     {
-        this.httpListenerPort = val;
+        return putOnlyMode;
     }
 
     /**
-     * Gets the httpListenerPort attribute of the ILateralCacheAttributes object
-     * @return The httpListenerPort value
+     * Gets the transmissionType attribute of the LateralCacheAttributes object
+     * @return The transmissionType value
      */
     @Override
-    public int getHttpListenerPort()
+    public Type getTransmissionType()
     {
-        return this.httpListenerPort;
-    }
-
-    /**
-     * Sets the udpMulticastAddr attribute of the LateralCacheAttributes object
-     * @param val The new udpMulticastAddr value
-     */
-    @Override
-    public void setUdpMulticastAddr( final String val )
-    {
-        udpMulticastAddr = val;
+        return this.transmissionType;
     }
 
     /**
@@ -147,16 +125,6 @@ public class LateralCacheAttributes
     }
 
     /**
-     * Sets the udpMulticastPort attribute of the LateralCacheAttributes object
-     * @param val The new udpMulticastPort value
-     */
-    @Override
-    public void setUdpMulticastPort( final int val )
-    {
-        udpMulticastPort = val;
-    }
-
-    /**
      * Gets the udpMulticastPort attribute of the LateralCacheAttributes object
      * @return The udpMulticastPort value
      */
@@ -167,23 +135,55 @@ public class LateralCacheAttributes
     }
 
     /**
-     * Sets the transmissionType attribute of the LateralCacheAttributes object
-     * @param val The new transmissionType value
+     * The number of elements the zombie queue will hold. This queue is used to store events if we
+     * loose our connection with the server.
+     * <p>
+     * @return Returns the zombieQueueMaxSize.
      */
     @Override
-    public void setTransmissionType( final Type val )
+    public int getZombieQueueMaxSize()
     {
-        this.transmissionType = val;
+        return zombieQueueMaxSize;
     }
 
     /**
-     * Gets the transmissionType attribute of the LateralCacheAttributes object
-     * @return The transmissionType value
+     * @return Returns the receive.
      */
     @Override
-    public Type getTransmissionType()
+    public boolean isReceive()
     {
-        return this.transmissionType;
+        return receive;
+    }
+
+    /**
+     * Sets the httpListenerPort attribute of the ILateralCacheAttributes object
+     * @param val The new tcpListenerPort value
+     */
+    @Override
+    public void setHttpListenerPort( final int val )
+    {
+        this.httpListenerPort = val;
+    }
+
+    /**
+     * Sets the httpServer attribute of the LateralCacheAttributes object
+     * <P>
+     * @param val The new httpServer value
+     */
+    @Override
+    public void setHttpServer( final String val )
+    {
+        httpServer = val;
+    }
+
+    /**
+     * Sets the httpServers attribute of the LateralCacheAttributes object
+     * @param val The new httpServers value
+     */
+    @Override
+    public void setHttpServers( final String val )
+    {
+        httpServers = val;
     }
 
     /**
@@ -199,15 +199,6 @@ public class LateralCacheAttributes
     }
 
     /**
-     * @return The outgoingOnlyMode value. Stops gets from going remote.
-     */
-    @Override
-    public boolean getPutOnlyMode()
-    {
-        return putOnlyMode;
-    }
-
-    /**
      * @param receive The receive to set.
      */
     @Override
@@ -217,12 +208,33 @@ public class LateralCacheAttributes
     }
 
     /**
-     * @return Returns the receive.
+     * Sets the transmissionType attribute of the LateralCacheAttributes object
+     * @param val The new transmissionType value
      */
     @Override
-    public boolean isReceive()
+    public void setTransmissionType( final Type val )
     {
-        return receive;
+        this.transmissionType = val;
+    }
+
+    /**
+     * Sets the udpMulticastAddr attribute of the LateralCacheAttributes object
+     * @param val The new udpMulticastAddr value
+     */
+    @Override
+    public void setUdpMulticastAddr( final String val )
+    {
+        udpMulticastAddr = val;
+    }
+
+    /**
+     * Sets the udpMulticastPort attribute of the LateralCacheAttributes object
+     * @param val The new udpMulticastPort value
+     */
+    @Override
+    public void setUdpMulticastPort( final int val )
+    {
+        udpMulticastPort = val;
     }
 
     /**
@@ -235,18 +247,6 @@ public class LateralCacheAttributes
     public void setZombieQueueMaxSize( final int zombieQueueMaxSize )
     {
         this.zombieQueueMaxSize = zombieQueueMaxSize;
-    }
-
-    /**
-     * The number of elements the zombie queue will hold. This queue is used to store events if we
-     * loose our connection with the server.
-     * <p>
-     * @return Returns the zombieQueueMaxSize.
-     */
-    @Override
-    public int getZombieQueueMaxSize()
-    {
-        return zombieQueueMaxSize;
     }
 
     /**

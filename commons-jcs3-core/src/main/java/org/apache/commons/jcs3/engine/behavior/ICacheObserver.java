@@ -32,6 +32,16 @@ import java.rmi.Remote;
 public interface ICacheObserver extends Remote
 {
     /**
+     * Subscribes to all caches.
+     *
+     * @param obj
+     *            object to notify for all cache changes.
+     * @throws IOException
+     */
+    <K, V> void addCacheListener( ICacheListener<K, V> obj )
+        throws IOException;
+
+    /**
      * Subscribes to the specified cache.
      *
      * @param cacheName
@@ -44,13 +54,13 @@ public interface ICacheObserver extends Remote
         throws IOException;
 
     /**
-     * Subscribes to all caches.
+     * Unsubscribes from all caches.
      *
      * @param obj
-     *            object to notify for all cache changes.
+     *            existing subscriber.
      * @throws IOException
      */
-    <K, V> void addCacheListener( ICacheListener<K, V> obj )
+    <K, V> void removeCacheListener( ICacheListener<K, V> obj )
         throws IOException;
 
     /**
@@ -62,15 +72,5 @@ public interface ICacheObserver extends Remote
      * @throws IOException
      */
     <K, V> void removeCacheListener( String cacheName, ICacheListener<K, V> obj )
-        throws IOException;
-
-    /**
-     * Unsubscribes from all caches.
-     *
-     * @param obj
-     *            existing subscriber.
-     * @throws IOException
-     */
-    <K, V> void removeCacheListener( ICacheListener<K, V> obj )
         throws IOException;
 }

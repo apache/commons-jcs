@@ -31,6 +31,17 @@ package org.apache.commons.jcs3.utils.access;
 public interface JCSWorkerHelper<V>
 {
     /**
+     * The method to implement to do the work that should be cached. JCSWorker
+     * will call this itself! You should not call this directly.
+     * <p>
+     * @return The result of doing the work to be cached.
+     * @throws Exception
+     *             If anything goes wrong while doing the work, an Exception
+     *             should be thrown.
+     */
+    V doWork() throws Exception;
+
+    /**
      * Tells us whether or not the work has been completed. This will be called
      * automatically by JCSWorker. You should not call it yourself.
      * <p>
@@ -45,15 +56,4 @@ public interface JCSWorkerHelper<V>
      *            True if the work has already been done, otherwise false.
      */
     void setFinished( boolean isFinished );
-
-    /**
-     * The method to implement to do the work that should be cached. JCSWorker
-     * will call this itself! You should not call this directly.
-     * <p>
-     * @return The result of doing the work to be cached.
-     * @throws Exception
-     *             If anything goes wrong while doing the work, an Exception
-     *             should be thrown.
-     */
-    V doWork() throws Exception;
 }

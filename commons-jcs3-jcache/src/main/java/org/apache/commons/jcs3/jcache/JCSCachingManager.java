@@ -47,7 +47,34 @@ import org.apache.commons.jcs3.jcache.proxy.ClassLoaderAwareCache;
 
 public class JCSCachingManager implements CacheManager
 {
+    private static final class InternalManager extends CompositeCacheManager
+    {
+        protected static InternalManager create()
+        {
+            return new InternalManager();
+        }
+
+        @Override // needed to call it from JCSCachingManager
+        protected void initialize() {
+            super.initialize();
+        }
+
+        @Override
+        protected CompositeCacheConfigurator newConfigurator()
+        {
+            return new CompositeCacheConfigurator()
+            {
+                @Override
+                protected <K, V> CompositeCache<K, V> newCache(
+                        final ICompositeCacheAttributes cca, final IElementAttributes ea)
+                {
+                    return new ExpiryAwareCache<>( cca, ea );
+                }
+            };
+        }
+    }
     private static final Subsitutor SUBSTITUTOR = Subsitutor.Helper.INSTANCE;
+
     private static final String DEFAULT_CONFIG =
         """
     	jcs.default=DC
@@ -66,59 +93,14 @@ public class JCSCachingManager implements CacheManager
     	jcs.default.elementattributes.IsLateral=true
     	""";
 
-    private static final class InternalManager extends CompositeCacheManager
+    private static void addProperties(final URL url, final Properties aggregator)
     {
-        protected static InternalManager create()
-        {
-            return new InternalManager();
-        }
-
-        @Override
-        protected CompositeCacheConfigurator newConfigurator()
-        {
-            return new CompositeCacheConfigurator()
-            {
-                @Override
-                protected <K, V> CompositeCache<K, V> newCache(
-                        final ICompositeCacheAttributes cca, final IElementAttributes ea)
-                {
-                    return new ExpiryAwareCache<>( cca, ea );
-                }
-            };
-        }
-
-        @Override // needed to call it from JCSCachingManager
-        protected void initialize() {
-            super.initialize();
+        try (InputStream inStream = url.openStream()) {
+            aggregator.load(inStream);
+        } catch (final IOException e) {
+            throw new IllegalArgumentException(e);
         }
     }
-
-    private final CachingProvider provider;
-    private final URI uri;
-    private final ClassLoader loader;
-    private final Properties properties;
-    private final ConcurrentMap<String, Cache<?, ?>> caches = new ConcurrentHashMap<>();
-    private final Properties configProperties;
-    private volatile boolean closed;
-    private final InternalManager delegate = InternalManager.create();
-
-    public JCSCachingManager(final CachingProvider provider, final URI uri, final ClassLoader loader, final Properties properties)
-    {
-        this.provider = provider;
-        this.uri = uri;
-        this.loader = loader;
-        this.properties = readConfig(uri, loader, properties);
-        this.configProperties = properties;
-
-        delegate.setJmxName(CompositeCacheManager.JMX_OBJECT_NAME
-                + ",provider=" + provider.hashCode()
-                + ",uri=" + uri.toString().replaceAll(",|:|=|\n", ".")
-                + ",classloader=" + loader.hashCode()
-                + ",properties=" + this.properties.hashCode());
-        delegate.initialize();
-        delegate.configure(this.properties);
-    }
-
     private static Properties readConfig(final URI uri, final ClassLoader loader, final Properties properties) {
         final Properties props = new Properties();
         try {
@@ -165,14 +147,32 @@ public class JCSCachingManager implements CacheManager
         }
         return props;
     }
+    private final CachingProvider provider;
+    private final URI uri;
+    private final ClassLoader loader;
+    private final Properties properties;
+    private final ConcurrentMap<String, Cache<?, ?>> caches = new ConcurrentHashMap<>();
+    private final Properties configProperties;
 
-    private static void addProperties(final URL url, final Properties aggregator)
+    private volatile boolean closed;
+
+    private final InternalManager delegate = InternalManager.create();
+
+    public JCSCachingManager(final CachingProvider provider, final URI uri, final ClassLoader loader, final Properties properties)
     {
-        try (InputStream inStream = url.openStream()) {
-            aggregator.load(inStream);
-        } catch (final IOException e) {
-            throw new IllegalArgumentException(e);
-        }
+        this.provider = provider;
+        this.uri = uri;
+        this.loader = loader;
+        this.properties = readConfig(uri, loader, properties);
+        this.configProperties = properties;
+
+        delegate.setJmxName(CompositeCacheManager.JMX_OBJECT_NAME
+                + ",provider=" + provider.hashCode()
+                + ",uri=" + uri.toString().replaceAll(",|:|=|\n", ".")
+                + ",classloader=" + loader.hashCode()
+                + ",properties=" + this.properties.hashCode());
+        delegate.initialize();
+        delegate.configure(this.properties);
     }
 
     private void assertNotClosed()
@@ -181,6 +181,28 @@ public class JCSCachingManager implements CacheManager
         {
             throw new IllegalStateException("cache manager closed");
         }
+    }
+
+    @Override
+    public synchronized void close()
+    {
+        if (isClosed())
+        {
+            return;
+        }
+
+        assertNotClosed();
+        for (final Cache<?, ?> c : caches.values())
+        {
+            c.close();
+        }
+        caches.clear();
+        closed = true;
+        if (JCSCachingProvider.class.isInstance(provider))
+        {
+            JCSCachingProvider.class.cast(provider).remove(this);
+        }
+        delegate.shutDown();
     }
 
     @Override
@@ -220,6 +242,26 @@ public class JCSCachingManager implements CacheManager
         }
     }
 
+    private <K, V> Cache<K, V> doGetCache(final String cacheName, final Class<K> keyType, final Class<V> valueType)
+    {
+        @SuppressWarnings("unchecked") // common map for all caches
+        final Cache<K, V> cache = (Cache<K, V>) caches.get(cacheName);
+        if (cache == null)
+        {
+            return null;
+        }
+
+        @SuppressWarnings("unchecked") // don't know how to solve this
+        final Configuration<K, V> config = cache.getConfiguration(Configuration.class);
+        if (keyType != null && !config.getKeyType().isAssignableFrom(keyType) ||
+            valueType != null && !config.getValueType().isAssignableFrom(valueType))
+        {
+            throw new IllegalArgumentException("this cache is <" + config.getKeyType().getName() + ", " + config.getValueType().getName()
+                    + "> " + " and not <" + keyType.getName() + ", " + valueType.getName() + ">");
+        }
+        return cache;
+    }
+
     @Override
     public void enableManagement(final String cacheName, final boolean enabled)
     {
@@ -237,12 +279,6 @@ public class JCSCachingManager implements CacheManager
                 cache.disableManagement();
             }
         }
-    }
-
-    private JCSCache<?, ?> getJCSCache(final String cacheName)
-    {
-        final Cache<?, ?> cache = caches.get(cacheName);
-        return JCSCache.class.cast(ClassLoaderAwareCache.getDelegate(cache));
     }
 
     @Override
@@ -265,55 +301,11 @@ public class JCSCachingManager implements CacheManager
     }
 
     @Override
-    public synchronized void close()
-    {
-        if (isClosed())
-        {
-            return;
-        }
-
-        assertNotClosed();
-        for (final Cache<?, ?> c : caches.values())
-        {
-            c.close();
-        }
-        caches.clear();
-        closed = true;
-        if (JCSCachingProvider.class.isInstance(provider))
-        {
-            JCSCachingProvider.class.cast(provider).remove(this);
-        }
-        delegate.shutDown();
-    }
-
-    @Override
-    public <T> T unwrap(final Class<T> clazz)
-    {
-        if (clazz.isInstance(this))
-        {
-            return clazz.cast(this);
-        }
-        throw new IllegalArgumentException(clazz.getName() + " not supported in unwrap");
-    }
-
-    @Override
-    public boolean isClosed()
-    {
-        return closed;
-    }
-
-    @Override
     public <K, V> Cache<K, V> getCache(final String cacheName)
     {
         assertNotClosed();
         assertNotNull(cacheName, "cacheName");
         return (Cache<K, V>) doGetCache(cacheName, Object.class, Object.class);
-    }
-
-    @Override
-    public Iterable<String> getCacheNames()
-    {
-        return new ImmutableIterable<>(caches.keySet());
     }
 
     @Override
@@ -333,24 +325,10 @@ public class JCSCachingManager implements CacheManager
         }
     }
 
-    private <K, V> Cache<K, V> doGetCache(final String cacheName, final Class<K> keyType, final Class<V> valueType)
+    @Override
+    public Iterable<String> getCacheNames()
     {
-        @SuppressWarnings("unchecked") // common map for all caches
-        final Cache<K, V> cache = (Cache<K, V>) caches.get(cacheName);
-        if (cache == null)
-        {
-            return null;
-        }
-
-        @SuppressWarnings("unchecked") // don't know how to solve this
-        final Configuration<K, V> config = cache.getConfiguration(Configuration.class);
-        if (keyType != null && !config.getKeyType().isAssignableFrom(keyType) ||
-            valueType != null && !config.getValueType().isAssignableFrom(valueType))
-        {
-            throw new IllegalArgumentException("this cache is <" + config.getKeyType().getName() + ", " + config.getValueType().getName()
-                    + "> " + " and not <" + keyType.getName() + ", " + valueType.getName() + ">");
-        }
-        return cache;
+        return new ImmutableIterable<>(caches.keySet());
     }
 
     @Override
@@ -360,15 +338,15 @@ public class JCSCachingManager implements CacheManager
     }
 
     @Override
-    public URI getURI()
-    {
-        return uri;
-    }
-
-    @Override
     public ClassLoader getClassLoader()
     {
         return loader;
+    }
+
+    private JCSCache<?, ?> getJCSCache(final String cacheName)
+    {
+        final Cache<?, ?> cache = caches.get(cacheName);
+        return JCSCache.class.cast(ClassLoaderAwareCache.getDelegate(cache));
     }
 
     @Override
@@ -377,7 +355,29 @@ public class JCSCachingManager implements CacheManager
         return configProperties;
     }
 
+    @Override
+    public URI getURI()
+    {
+        return uri;
+    }
+
+    @Override
+    public boolean isClosed()
+    {
+        return closed;
+    }
+
     public void release(final String name) {
         caches.remove(name);
+    }
+
+    @Override
+    public <T> T unwrap(final Class<T> clazz)
+    {
+        if (clazz.isInstance(this))
+        {
+            return clazz.cast(this);
+        }
+        throw new IllegalArgumentException(clazz.getName() + " not supported in unwrap");
     }
 }

@@ -42,6 +42,18 @@ public class CompositeCacheLoader<K, V> implements CacheLoader<K, V>, Closeable,
     }
 
     @Override
+    public void close() throws IOException
+    {
+        Closeables.close(delegates);
+    }
+
+    @Override
+    public CacheLoader<K, V> create()
+    {
+        return this;
+    }
+
+    @Override
     public V load(final K key) throws CacheLoaderException
     {
         for (final CacheLoader<K, V> delegate : delegates)
@@ -80,17 +92,5 @@ public class CompositeCacheLoader<K, V> implements CacheLoader<K, V>, Closeable,
         }
 
         return result;
-    }
-
-    @Override
-    public void close() throws IOException
-    {
-        Closeables.close(delegates);
-    }
-
-    @Override
-    public CacheLoader<K, V> create()
-    {
-        return this;
     }
 }

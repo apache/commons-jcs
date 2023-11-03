@@ -61,6 +61,67 @@ public class SoftReferenceMemoryCacheUnitTest
     }
 
     /**
+     * put the max and clear. verify that no elements remain.
+     * <p>
+     * @throws CacheException
+     */
+    @Test
+    public void testClearThroughHub()
+        throws CacheException
+    {
+        final CacheAccess<String, String> cache = JCS.getInstance( "testPutGetThroughHub" );
+
+        final int max = cache.getCacheAttributes().getMaxObjects();
+        final int items = max * 2;
+
+        for ( int i = 0; i < items; i++ )
+        {
+            cache.put( i + ":key", "myregion" + " data " + i );
+        }
+
+        cache.clear();
+
+        // Test that first items are not in the cache
+        for ( int i = max; i >= 0; i-- )
+        {
+            final String value = cache.get( i + ":key" );
+            assertNull( "Should not have value for key [" + i + ":key" + "] in the cache.", value );
+        }
+    }
+
+    /**
+     * Put half the max and clear. get the key array and verify that it has the correct number of
+     * items.
+     * <p>
+     * @throws Exception
+     */
+    @Test
+    public void testGetKeyArray()
+        throws Exception
+    {
+        final CompositeCacheManager cacheMgr = CompositeCacheManager.getUnconfiguredInstance();
+        cacheMgr.configure( "/TestSoftReferenceCache.ccf" );
+        final CompositeCache<String, String> cache = cacheMgr.getCache( "testGetKeyArray" );
+
+        final SoftReferenceMemoryCache<String, String> srmc = new SoftReferenceMemoryCache<>();
+        srmc.initialize( cache );
+
+        final int max = cache.getCacheAttributes().getMaxObjects();
+        final int items = max / 2;
+
+        for ( int i = 0; i < items; i++ )
+        {
+            final ICacheElement<String, String> ice = new CacheElement<>( cache.getCacheName(), i + ":key", cache.getCacheName() + " data " + i );
+            ice.setElementAttributes( cache.getElementAttributes() );
+            srmc.update( ice );
+        }
+
+        final Set<String> keys = srmc.getKeySet();
+
+        assertEquals( "Wrong number of keys.", items, keys.size() );
+    }
+
+    /**
      * Verify that the cache gets used by a non-defined region when it is set as the default in the
      * default region.
      * <p>
@@ -150,67 +211,6 @@ public class SoftReferenceMemoryCacheUnitTest
             final String value = cache.get( i + ":key" );
             assertNull( "Should not have value for key [" + i + ":key" + "] in the cache.", value );
         }
-    }
-
-    /**
-     * put the max and clear. verify that no elements remain.
-     * <p>
-     * @throws CacheException
-     */
-    @Test
-    public void testClearThroughHub()
-        throws CacheException
-    {
-        final CacheAccess<String, String> cache = JCS.getInstance( "testPutGetThroughHub" );
-
-        final int max = cache.getCacheAttributes().getMaxObjects();
-        final int items = max * 2;
-
-        for ( int i = 0; i < items; i++ )
-        {
-            cache.put( i + ":key", "myregion" + " data " + i );
-        }
-
-        cache.clear();
-
-        // Test that first items are not in the cache
-        for ( int i = max; i >= 0; i-- )
-        {
-            final String value = cache.get( i + ":key" );
-            assertNull( "Should not have value for key [" + i + ":key" + "] in the cache.", value );
-        }
-    }
-
-    /**
-     * Put half the max and clear. get the key array and verify that it has the correct number of
-     * items.
-     * <p>
-     * @throws Exception
-     */
-    @Test
-    public void testGetKeyArray()
-        throws Exception
-    {
-        final CompositeCacheManager cacheMgr = CompositeCacheManager.getUnconfiguredInstance();
-        cacheMgr.configure( "/TestSoftReferenceCache.ccf" );
-        final CompositeCache<String, String> cache = cacheMgr.getCache( "testGetKeyArray" );
-
-        final SoftReferenceMemoryCache<String, String> srmc = new SoftReferenceMemoryCache<>();
-        srmc.initialize( cache );
-
-        final int max = cache.getCacheAttributes().getMaxObjects();
-        final int items = max / 2;
-
-        for ( int i = 0; i < items; i++ )
-        {
-            final ICacheElement<String, String> ice = new CacheElement<>( cache.getCacheName(), i + ":key", cache.getCacheName() + " data " + i );
-            ice.setElementAttributes( cache.getElementAttributes() );
-            srmc.update( ice );
-        }
-
-        final Set<String> keys = srmc.getKeySet();
-
-        assertEquals( "Wrong number of keys.", items, keys.size() );
     }
 
     /**

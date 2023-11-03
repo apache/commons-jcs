@@ -60,28 +60,6 @@ public class UDPDiscoverySender implements AutoCloseable
      * <p>
      * When you are done sending, you should destroy the socket sender.
      * <p>
-     * @param udpDiscoveryAttributes configuration object
-     * @param serializer the Serializer to use when sending messages
-     * @throws IOException
-     * @since 3.1
-     */
-    public UDPDiscoverySender(final UDPDiscoveryAttributes udpDiscoveryAttributes, final IElementSerializer serializer)
-        throws IOException
-    {
-        this(udpDiscoveryAttributes.getUdpDiscoveryInterface(),
-            udpDiscoveryAttributes.getUdpDiscoveryAddr(),
-            udpDiscoveryAttributes.getUdpDiscoveryPort(),
-            udpDiscoveryAttributes.getUdpTTL(),
-            serializer);
-    }
-
-    /**
-     * Constructor for the UDPDiscoverySender object
-     * <p>
-     * This sender can be used to send multiple messages.
-     * <p>
-     * When you are done sending, you should destroy the socket sender.
-     * <p>
      * @param mcastInterface the Multicast interface name to use, if null, try to autodetect
      * @param host
      * @param port
@@ -136,6 +114,28 @@ public class UDPDiscoverySender implements AutoCloseable
     }
 
     /**
+     * Constructor for the UDPDiscoverySender object
+     * <p>
+     * This sender can be used to send multiple messages.
+     * <p>
+     * When you are done sending, you should destroy the socket sender.
+     * <p>
+     * @param udpDiscoveryAttributes configuration object
+     * @param serializer the Serializer to use when sending messages
+     * @throws IOException
+     * @since 3.1
+     */
+    public UDPDiscoverySender(final UDPDiscoveryAttributes udpDiscoveryAttributes, final IElementSerializer serializer)
+        throws IOException
+    {
+        this(udpDiscoveryAttributes.getUdpDiscoveryInterface(),
+            udpDiscoveryAttributes.getUdpDiscoveryAddr(),
+            udpDiscoveryAttributes.getUdpDiscoveryPort(),
+            udpDiscoveryAttributes.getUdpTTL(),
+            serializer);
+    }
+
+    /**
      * Closes the socket connection.
      */
     @Override
@@ -145,58 +145,6 @@ public class UDPDiscoverySender implements AutoCloseable
         {
             this.localSocket.close();
         }
-    }
-
-    /**
-     * Send messages.
-     * <p>
-     * @param message
-     * @throws IOException
-     */
-    public void send( final UDPDiscoveryMessage message )
-        throws IOException
-    {
-        if ( this.localSocket == null )
-        {
-            throw new IOException( "Socket is null, cannot send message." );
-        }
-
-        if ( this.localSocket.isClosed() )
-        {
-            throw new IOException( "Socket is closed, cannot send message." );
-        }
-
-        log.debug( "sending UDPDiscoveryMessage, address [{0}], port [{1}], "
-                + "message = {2}", multicastAddress, multicastPort, message );
-
-        final byte[] bytes = serializer.serialize( message );
-
-        // put the byte array in a packet
-        final DatagramPacket packet = new DatagramPacket( bytes, bytes.length, multicastAddress, multicastPort );
-
-        log.debug( "Sending DatagramPacket with {0} bytes to {1}:{2}",
-                bytes.length, multicastAddress, multicastPort );
-
-        localSocket.send( packet );
-    }
-
-    /**
-     * Ask other to broadcast their info the multicast address. If a lateral is non receiving it
-     * can use this. This is also called on startup so we can get info.
-     * <p>
-     * @throws IOException
-     */
-    public void requestBroadcast()
-        throws IOException
-    {
-        log.debug( "sending requestBroadcast" );
-
-        final UDPDiscoveryMessage message = new UDPDiscoveryMessage();
-        message.setHost(multicastAddress.getHostAddress());
-        message.setPort(multicastPort);
-        message.setRequesterId( CacheInfo.listenerId );
-        message.setMessageType( BroadcastType.REQUEST );
-        send( message );
     }
 
     /**
@@ -274,5 +222,57 @@ public class UDPDiscoverySender implements AutoCloseable
         message.setRequesterId( listenerId );
         message.setMessageType( BroadcastType.REMOVE );
         send( message );
+    }
+
+    /**
+     * Ask other to broadcast their info the multicast address. If a lateral is non receiving it
+     * can use this. This is also called on startup so we can get info.
+     * <p>
+     * @throws IOException
+     */
+    public void requestBroadcast()
+        throws IOException
+    {
+        log.debug( "sending requestBroadcast" );
+
+        final UDPDiscoveryMessage message = new UDPDiscoveryMessage();
+        message.setHost(multicastAddress.getHostAddress());
+        message.setPort(multicastPort);
+        message.setRequesterId( CacheInfo.listenerId );
+        message.setMessageType( BroadcastType.REQUEST );
+        send( message );
+    }
+
+    /**
+     * Send messages.
+     * <p>
+     * @param message
+     * @throws IOException
+     */
+    public void send( final UDPDiscoveryMessage message )
+        throws IOException
+    {
+        if ( this.localSocket == null )
+        {
+            throw new IOException( "Socket is null, cannot send message." );
+        }
+
+        if ( this.localSocket.isClosed() )
+        {
+            throw new IOException( "Socket is closed, cannot send message." );
+        }
+
+        log.debug( "sending UDPDiscoveryMessage, address [{0}], port [{1}], "
+                + "message = {2}", multicastAddress, multicastPort, message );
+
+        final byte[] bytes = serializer.serialize( message );
+
+        // put the byte array in a packet
+        final DatagramPacket packet = new DatagramPacket( bytes, bytes.length, multicastAddress, multicastPort );
+
+        log.debug( "Sending DatagramPacket with {0} bytes to {1}:{2}",
+                bytes.length, multicastAddress, multicastPort );
+
+        localSocket.send( packet );
     }
 }

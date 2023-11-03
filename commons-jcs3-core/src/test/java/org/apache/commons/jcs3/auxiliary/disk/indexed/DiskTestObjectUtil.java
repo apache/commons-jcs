@@ -33,6 +33,57 @@ import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
 public class DiskTestObjectUtil
 {
     /**
+     * Creates an array of ICacheElements with DiskTestObjects with payloads the byte size.
+     * <p>
+     * @param numToCreate
+     * @param bytes
+     * @param cacheName
+     * @return ICacheElement[]
+     */
+    public static ICacheElement<Integer, DiskTestObject>[] createCacheElementsWithTestObjects( final int numToCreate, final int bytes, final String cacheName )
+    {
+        @SuppressWarnings("unchecked")
+        final
+        ICacheElement<Integer, DiskTestObject>[] elements = new ICacheElement[numToCreate];
+        for ( int i = 0; i < numToCreate; i++ )
+        {
+            // 24 KB
+            final int size = bytes * 1024;
+            final DiskTestObject tile = new DiskTestObject( Integer.valueOf( i ), new byte[size]);
+
+            final ICacheElement<Integer, DiskTestObject> element = new CacheElement<>( cacheName, tile.id, tile );
+            elements[i] = element;
+        }
+        return elements;
+    }
+
+    /**
+     * Creates an array of ICacheElements with DiskTestObjects with payloads the byte size.
+     * <p>
+     * @param numToCreate
+     * @param cacheName
+     * @return ICacheElement[]
+     */
+    public static ICacheElement<Integer, DiskTestObject>[] createCacheElementsWithTestObjectsOfVariableSizes( final int numToCreate, final String cacheName )
+    {
+        @SuppressWarnings("unchecked")
+        final
+        ICacheElement<Integer, DiskTestObject>[] elements = new ICacheElement[numToCreate];
+        final Random random = new Random( 89 );
+        for ( int i = 0; i < numToCreate; i++ )
+        {
+            final int bytes = random.nextInt( 20 );
+            // 4-24 KB
+            final int size = ( bytes + 4 ) * 1024;
+            final DiskTestObject tile = new DiskTestObject( Integer.valueOf( i ), new byte[size]);
+
+            final ICacheElement<Integer, DiskTestObject> element = new CacheElement<>( cacheName, tile.id, tile );
+            elements[i] = element;
+        }
+        return elements;
+    }
+
+    /**
      * Total from the start to the endPostion.
      * <p>
      * @param testObjects
@@ -87,57 +138,6 @@ public class DiskTestObjectUtil
             total += tileSize;
         }
         return total;
-    }
-
-    /**
-     * Creates an array of ICacheElements with DiskTestObjects with payloads the byte size.
-     * <p>
-     * @param numToCreate
-     * @param bytes
-     * @param cacheName
-     * @return ICacheElement[]
-     */
-    public static ICacheElement<Integer, DiskTestObject>[] createCacheElementsWithTestObjects( final int numToCreate, final int bytes, final String cacheName )
-    {
-        @SuppressWarnings("unchecked")
-        final
-        ICacheElement<Integer, DiskTestObject>[] elements = new ICacheElement[numToCreate];
-        for ( int i = 0; i < numToCreate; i++ )
-        {
-            // 24 KB
-            final int size = bytes * 1024;
-            final DiskTestObject tile = new DiskTestObject( Integer.valueOf( i ), new byte[size]);
-
-            final ICacheElement<Integer, DiskTestObject> element = new CacheElement<>( cacheName, tile.id, tile );
-            elements[i] = element;
-        }
-        return elements;
-    }
-
-    /**
-     * Creates an array of ICacheElements with DiskTestObjects with payloads the byte size.
-     * <p>
-     * @param numToCreate
-     * @param cacheName
-     * @return ICacheElement[]
-     */
-    public static ICacheElement<Integer, DiskTestObject>[] createCacheElementsWithTestObjectsOfVariableSizes( final int numToCreate, final String cacheName )
-    {
-        @SuppressWarnings("unchecked")
-        final
-        ICacheElement<Integer, DiskTestObject>[] elements = new ICacheElement[numToCreate];
-        final Random random = new Random( 89 );
-        for ( int i = 0; i < numToCreate; i++ )
-        {
-            final int bytes = random.nextInt( 20 );
-            // 4-24 KB
-            final int size = ( bytes + 4 ) * 1024;
-            final DiskTestObject tile = new DiskTestObject( Integer.valueOf( i ), new byte[size]);
-
-            final ICacheElement<Integer, DiskTestObject> element = new CacheElement<>( cacheName, tile.id, tile );
-            elements[i] = element;
-        }
-        return elements;
     }
 
 }

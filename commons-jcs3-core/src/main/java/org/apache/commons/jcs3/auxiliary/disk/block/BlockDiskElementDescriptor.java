@@ -67,11 +67,13 @@ public class BlockDiskElementDescriptor<K>
     }
 
     /**
-     * @param key The key to set.
+     * This holds the block numbers. An item my be dispersed between multiple blocks.
+     * <p>
+     * @return Returns the blocks.
      */
-    public void setKey( final K key )
+    public int[] getBlocks()
     {
-        this.key = key;
+        return blocks;
     }
 
     /**
@@ -83,6 +85,21 @@ public class BlockDiskElementDescriptor<K>
     }
 
     /**
+     * Saves on reflection.
+     * <p>
+     * (non-Javadoc)
+     * @see java.io.Externalizable#readExternal(java.io.ObjectInput)
+     */
+    @Override
+    @SuppressWarnings("unchecked") // Need cast to K
+    public void readExternal( final ObjectInput input )
+        throws IOException, ClassNotFoundException
+    {
+        this.key = (K) input.readObject();
+        this.blocks = (int[]) input.readObject();
+    }
+
+    /**
      * @param blocks The blocks to set.
      */
     public void setBlocks( final int[] blocks )
@@ -91,13 +108,11 @@ public class BlockDiskElementDescriptor<K>
     }
 
     /**
-     * This holds the block numbers. An item my be dispersed between multiple blocks.
-     * <p>
-     * @return Returns the blocks.
+     * @param key The key to set.
      */
-    public int[] getBlocks()
+    public void setKey( final K key )
     {
-        return blocks;
+        this.key = key;
     }
 
     /**
@@ -118,21 +133,6 @@ public class BlockDiskElementDescriptor<K>
         }
         buf.append( "]" );
         return buf.toString();
-    }
-
-    /**
-     * Saves on reflection.
-     * <p>
-     * (non-Javadoc)
-     * @see java.io.Externalizable#readExternal(java.io.ObjectInput)
-     */
-    @Override
-    @SuppressWarnings("unchecked") // Need cast to K
-    public void readExternal( final ObjectInput input )
-        throws IOException, ClassNotFoundException
-    {
-        this.key = (K) input.readObject();
-        this.blocks = (int[]) input.readObject();
     }
 
     /**

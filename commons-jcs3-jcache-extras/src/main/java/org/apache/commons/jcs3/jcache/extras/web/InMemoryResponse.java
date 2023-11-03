@@ -56,11 +56,6 @@ public class InMemoryResponse extends HttpServletResponseWrapper implements Seri
         this.buffer = baos;
     }
 
-    private List<Serializable> ensureHeaderExists(final String s)
-    {
-        return headers.computeIfAbsent(s, k -> new LinkedList<>());
-    }
-
     @Override
     public void addCookie(final Cookie cookie)
     {
@@ -95,6 +90,40 @@ public class InMemoryResponse extends HttpServletResponseWrapper implements Seri
         return headers.containsKey(s);
     }
 
+    private List<Serializable> ensureHeaderExists(final String s)
+    {
+        return headers.computeIfAbsent(s, k -> new LinkedList<>());
+    }
+
+    @Override
+    public void flushBuffer() throws IOException
+    {
+        if (writer != null)
+        {
+            writer.flush();
+        }
+        else
+        {
+            buffer.flush();
+        }
+    }
+
+    public int getContentLength()
+    {
+        return contentLength;
+    }
+
+    @Override
+    public String getContentType()
+    {
+        return contentType;
+    }
+
+    public Collection<Cookie> getCookies()
+    {
+        return cookies;
+    }
+
     @Override
     public String getHeader(final String s)
     {
@@ -112,6 +141,11 @@ public class InMemoryResponse extends HttpServletResponseWrapper implements Seri
         return headers.keySet();
     }
 
+    public Map<String, List<Serializable>> getHeaders()
+    {
+        return headers;
+    }
+
     @Override
     public Collection<String> getHeaders(final String s)
     {
@@ -125,9 +159,54 @@ public class InMemoryResponse extends HttpServletResponseWrapper implements Seri
     }
 
     @Override
+    public ServletOutputStream getOutputStream() throws IOException
+    {
+        return new ServletOutputStream()
+        {
+            @Override
+            public boolean isReady() {
+                // TODO Auto-generated method stub
+                return false;
+            }
+
+            @Override
+            public void setWriteListener(WriteListener writeListener) {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void write(final int b) throws IOException
+            {
+                buffer.write(b);
+            }
+        };
+    }
+
+    @Override
     public int getStatus()
     {
         return status;
+    }
+
+    @Override
+    public PrintWriter getWriter() throws IOException
+    {
+        if (writer == null) {
+            writer = new PrintWriter(new OutputStreamWriter(buffer, getCharacterEncoding()), true);
+        }
+        return writer;
+    }
+
+    @Override
+    public void reset()
+    {
+        super.reset();
+        status = SC_OK;
+        headers.clear();
+        cookies.clear();
+        contentType = null;
+        contentLength = 0;
     }
 
     @Override
@@ -149,6 +228,20 @@ public class InMemoryResponse extends HttpServletResponseWrapper implements Seri
     {
         status = SC_MOVED_TEMPORARILY;
         super.sendRedirect(s);
+    }
+
+    @Override
+    public void setContentLength(final int i)
+    {
+        super.setContentLength(i);
+        contentLength = i;
+    }
+
+    @Override
+    public void setContentType(final String s)
+    {
+        contentType = s;
+        super.setContentType(s);
     }
 
     @Override
@@ -190,98 +283,5 @@ public class InMemoryResponse extends HttpServletResponseWrapper implements Seri
     {
         status = i;
         super.setStatus(i, s);
-    }
-
-    @Override
-    public String getContentType()
-    {
-        return contentType;
-    }
-
-    @Override
-    public ServletOutputStream getOutputStream() throws IOException
-    {
-        return new ServletOutputStream()
-        {
-            @Override
-            public void write(final int b) throws IOException
-            {
-                buffer.write(b);
-            }
-
-            @Override
-            public boolean isReady() {
-                // TODO Auto-generated method stub
-                return false;
-            }
-
-            @Override
-            public void setWriteListener(WriteListener writeListener) {
-                // TODO Auto-generated method stub
-
-            }
-        };
-    }
-
-    @Override
-    public PrintWriter getWriter() throws IOException
-    {
-        if (writer == null) {
-            writer = new PrintWriter(new OutputStreamWriter(buffer, getCharacterEncoding()), true);
-        }
-        return writer;
-    }
-
-    @Override
-    public void reset()
-    {
-        super.reset();
-        status = SC_OK;
-        headers.clear();
-        cookies.clear();
-        contentType = null;
-        contentLength = 0;
-    }
-
-    @Override
-    public void setContentLength(final int i)
-    {
-        super.setContentLength(i);
-        contentLength = i;
-    }
-
-    @Override
-    public void setContentType(final String s)
-    {
-        contentType = s;
-        super.setContentType(s);
-    }
-
-    @Override
-    public void flushBuffer() throws IOException
-    {
-        if (writer != null)
-        {
-            writer.flush();
-        }
-        else
-        {
-            buffer.flush();
-        }
-    }
-
-    public int getContentLength()
-    {
-        return contentLength;
-    }
-
-    public Collection<Cookie> getCookies()
-    {
-        return cookies;
-    }
-
-    public Map<String, List<Serializable>> getHeaders()
-    {
-        return headers;
     }
 }

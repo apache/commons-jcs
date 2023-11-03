@@ -53,21 +53,6 @@ public class CompressingSerializer extends StandardSerializer
     }
 
     /**
-     * Serializes an object using default serialization. Compresses the byte array.
-     * <p>
-     * @param obj object
-     * @return byte[]
-     * @throws IOException on i/o problem
-     */
-    @Override
-    public <T> byte[] serialize( final T obj )
-        throws IOException
-    {
-        final byte[] uncompressed = serializer.serialize(obj);
-        return CompressionUtil.compressByteArray( uncompressed );
-    }
-
-    /**
      * Uses default de-serialization to turn a byte array into an object. Decompresses the value
      * first. All exceptions are converted into IOExceptions.
      * <p>
@@ -88,5 +73,20 @@ public class CompressingSerializer extends StandardSerializer
 
         final byte[] decompressedByteArray = CompressionUtil.decompressByteArray( data );
         return serializer.deSerialize(decompressedByteArray, loader);
+    }
+
+    /**
+     * Serializes an object using default serialization. Compresses the byte array.
+     * <p>
+     * @param obj object
+     * @return byte[]
+     * @throws IOException on i/o problem
+     */
+    @Override
+    public <T> byte[] serialize( final T obj )
+        throws IOException
+    {
+        final byte[] uncompressed = serializer.serialize(obj);
+        return CompressionUtil.compressByteArray( uncompressed );
     }
 }

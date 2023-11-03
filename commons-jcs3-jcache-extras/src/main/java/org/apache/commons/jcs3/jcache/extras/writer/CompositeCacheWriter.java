@@ -40,51 +40,15 @@ public class CompositeCacheWriter<K, V> implements CacheWriter<K, V>, Closeable,
     }
 
     @Override
-    public void write(final Cache.Entry<? extends K, ? extends V> entry) throws CacheWriterException
+    public void close() throws IOException
     {
-        CacheWriterException e = null;
-        for (final CacheWriter<K, V> writer : writers)
-        {
-            try
-            {
-                writer.write(entry);
-            }
-            catch (final CacheWriterException ex)
-            {
-                if (e == null)
-                {
-                    e = ex;
-                }
-            }
-        }
-        if (e != null)
-        {
-            throw e;
-        }
+        Closeables.close(writers);
     }
 
     @Override
-    public void writeAll(final Collection<Cache.Entry<? extends K, ? extends V>> entries) throws CacheWriterException
+    public CacheWriter<K, V> create()
     {
-        CacheWriterException e = null;
-        for (final CacheWriter<K, V> writer : writers)
-        {
-            try
-            {
-                writer.writeAll(entries);
-            }
-            catch (final CacheWriterException ex)
-            {
-                if (e == null)
-                {
-                    e = ex;
-                }
-            }
-        }
-        if (e != null)
-        {
-            throw e;
-        }
+        return this;
     }
 
     @Override
@@ -136,14 +100,50 @@ public class CompositeCacheWriter<K, V> implements CacheWriter<K, V>, Closeable,
     }
 
     @Override
-    public CacheWriter<K, V> create()
+    public void write(final Cache.Entry<? extends K, ? extends V> entry) throws CacheWriterException
     {
-        return this;
+        CacheWriterException e = null;
+        for (final CacheWriter<K, V> writer : writers)
+        {
+            try
+            {
+                writer.write(entry);
+            }
+            catch (final CacheWriterException ex)
+            {
+                if (e == null)
+                {
+                    e = ex;
+                }
+            }
+        }
+        if (e != null)
+        {
+            throw e;
+        }
     }
 
     @Override
-    public void close() throws IOException
+    public void writeAll(final Collection<Cache.Entry<? extends K, ? extends V>> entries) throws CacheWriterException
     {
-        Closeables.close(writers);
+        CacheWriterException e = null;
+        for (final CacheWriter<K, V> writer : writers)
+        {
+            try
+            {
+                writer.writeAll(entries);
+            }
+            catch (final CacheWriterException ex)
+            {
+                if (e == null)
+                {
+                    e = ex;
+                }
+            }
+        }
+        if (e != null)
+        {
+            throw e;
+        }
     }
 }

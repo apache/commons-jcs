@@ -37,11 +37,57 @@ public final class CompressionUtil
     private static final Log log = LogManager.getLog( CompressionUtil.class );
 
     /**
-     * no instances.
+     * Compress the byte array passed
+     * <p>
+     * @param input byte array
+     * @return compressed byte array
+     * @throws IOException thrown if we can't close the output stream
      */
-    private CompressionUtil()
+    public static byte[] compressByteArray( final byte[] input )
+        throws IOException
     {
-        // NO OP
+        return compressByteArray( input, 1024 );
+    }
+
+    /**
+     * Compress the byte array passed
+     * <p>
+     * @param input byte array
+     * @param bufferLength buffer length
+     * @return compressed byte array
+     * @throws IOException thrown if we can't close the output stream
+     */
+    public static byte[] compressByteArray( final byte[] input, final int bufferLength )
+        throws IOException
+    {
+        // Compressor with highest level of compression
+        final Deflater compressor = new Deflater();
+        compressor.setLevel( Deflater.BEST_COMPRESSION );
+
+        // Give the compressor the data to compress
+        compressor.setInput( input );
+        compressor.finish();
+
+        // Create an expandable byte array to hold the compressed data.
+        // It is not necessary that the compressed data will be smaller than
+        // the uncompressed data.
+        final ByteArrayOutputStream bos = new ByteArrayOutputStream( input.length );
+
+        // Compress the data
+        final byte[] buf = new byte[bufferLength];
+        while ( !compressor.finished() )
+        {
+            final int count = compressor.deflate( buf );
+            bos.write( buf, 0, count );
+        }
+
+        // JCS-136 ( Details here : http://www.devguli.com/blog/eng/java-deflater-and-outofmemoryerror/ )
+        compressor.end();
+        bos.close();
+
+        // Get the compressed data
+        return bos.toByteArray();
+
     }
 
     /**
@@ -108,60 +154,6 @@ public final class CompressionUtil
     }
 
     /**
-     * Compress the byte array passed
-     * <p>
-     * @param input byte array
-     * @return compressed byte array
-     * @throws IOException thrown if we can't close the output stream
-     */
-    public static byte[] compressByteArray( final byte[] input )
-        throws IOException
-    {
-        return compressByteArray( input, 1024 );
-    }
-
-    /**
-     * Compress the byte array passed
-     * <p>
-     * @param input byte array
-     * @param bufferLength buffer length
-     * @return compressed byte array
-     * @throws IOException thrown if we can't close the output stream
-     */
-    public static byte[] compressByteArray( final byte[] input, final int bufferLength )
-        throws IOException
-    {
-        // Compressor with highest level of compression
-        final Deflater compressor = new Deflater();
-        compressor.setLevel( Deflater.BEST_COMPRESSION );
-
-        // Give the compressor the data to compress
-        compressor.setInput( input );
-        compressor.finish();
-
-        // Create an expandable byte array to hold the compressed data.
-        // It is not necessary that the compressed data will be smaller than
-        // the uncompressed data.
-        final ByteArrayOutputStream bos = new ByteArrayOutputStream( input.length );
-
-        // Compress the data
-        final byte[] buf = new byte[bufferLength];
-        while ( !compressor.finished() )
-        {
-            final int count = compressor.deflate( buf );
-            bos.write( buf, 0, count );
-        }
-
-        // JCS-136 ( Details here : http://www.devguli.com/blog/eng/java-deflater-and-outofmemoryerror/ )
-        compressor.end();
-        bos.close();
-
-        // Get the compressed data
-        return bos.toByteArray();
-
-    }
-
-    /**
      * decompress a gzip byte array, using a default buffer length of 1024
      * <p>
      * @param compressedByteArray gzip-compressed byte array
@@ -199,5 +191,13 @@ public final class CompressionUtil
         }
 
         return uncompressedStream.toByteArray();
+    }
+
+    /**
+     * no instances.
+     */
+    private CompressionUtil()
+    {
+        // NO OP
     }
 }

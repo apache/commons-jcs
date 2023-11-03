@@ -46,9 +46,58 @@ public class RemoteUtils
     /** The logger. */
     private static final Log log = LogManager.getLog(RemoteUtils.class);
 
-    /** No instances please. */
-    private RemoteUtils()
+    /**
+     * Configure a custom socket factory to set the timeout value. This sets the
+     * global socket factory. It's used only if a custom factory is not
+     * configured for the specific object.
+     * <p>
+     *
+     * @param timeoutMillis
+     */
+    public static void configureGlobalCustomSocketFactory(final int timeoutMillis)
     {
+        try
+        {
+            // Don't set a socket factory if the setting is -1
+            if (timeoutMillis > 0)
+            {
+                log.info("RmiSocketFactoryTimeoutMillis [{0}]. "
+                    + " Configuring a custom socket factory.", timeoutMillis);
+
+                // use this socket factory to add a timeout.
+                RMISocketFactory.setSocketFactory(new RMISocketFactory()
+                {
+                    @Override
+                    public ServerSocket createServerSocket(final int port)
+                            throws IOException
+                    {
+                        return new ServerSocket(port);
+                    }
+
+                    @Override
+                    public Socket createSocket(final String host, final int port)
+                            throws IOException
+                    {
+                        final Socket socket = new Socket();
+                        socket.setSoTimeout(timeoutMillis);
+                        socket.setSoLinger(false, 0);
+                        socket.connect(new InetSocketAddress(host, port), timeoutMillis);
+                        return socket;
+                    }
+                });
+            }
+        }
+        catch (final IOException e)
+        {
+            // Only try to do it once. Otherwise we
+            // Generate errors for each region on construction.
+            final RMISocketFactory factoryInUse = RMISocketFactory.getSocketFactory();
+            if (factoryInUse != null && !factoryInUse.getClass().getName().startsWith("org.apache.commons.jcs3"))
+            {
+                log.info("Could not create new custom socket factory. {0} Factory in use = {1}",
+                        e::getMessage, RMISocketFactory::getSocketFactory);
+            }
+        }
     }
 
     /**
@@ -104,6 +153,40 @@ public class RemoteUtils
         }
 
         return registry;
+    }
+
+    /**
+     * Gets the naming url used for RMI registration
+     *
+     * @param location
+     *            the remote location
+     * @param serviceName
+     *            the remote service name
+     * @return the URL for RMI lookup
+     */
+    public static String getNamingURL(final RemoteLocation location, final String serviceName)
+    {
+        return getNamingURL(location.getHost(), location.getPort(), serviceName);
+    }
+
+    /**
+     * Gets the naming url used for RMI registration
+     *
+     * @param registryHost
+     *            the remote host
+     * @param registryPort
+     *            the remote port
+     * @param serviceName
+     *            the remote service name
+     * @return the URL for RMI lookup
+     */
+    public static String getNamingURL(final String registryHost, final int registryPort, final String serviceName)
+    {
+        if (registryHost.contains(":"))
+        { // TODO improve this check? See also JCS-133
+            return "//[" + registryHost.replaceFirst("%", "%25") + "]:" + registryPort + "/" + serviceName;
+        }
+        return "//" + registryHost + ":" + registryPort + "/" + serviceName;
     }
 
     /**
@@ -171,91 +254,8 @@ public class RemoteUtils
         return props;
     }
 
-    /**
-     * Configure a custom socket factory to set the timeout value. This sets the
-     * global socket factory. It's used only if a custom factory is not
-     * configured for the specific object.
-     * <p>
-     *
-     * @param timeoutMillis
-     */
-    public static void configureGlobalCustomSocketFactory(final int timeoutMillis)
+    /** No instances please. */
+    private RemoteUtils()
     {
-        try
-        {
-            // Don't set a socket factory if the setting is -1
-            if (timeoutMillis > 0)
-            {
-                log.info("RmiSocketFactoryTimeoutMillis [{0}]. "
-                    + " Configuring a custom socket factory.", timeoutMillis);
-
-                // use this socket factory to add a timeout.
-                RMISocketFactory.setSocketFactory(new RMISocketFactory()
-                {
-                    @Override
-                    public Socket createSocket(final String host, final int port)
-                            throws IOException
-                    {
-                        final Socket socket = new Socket();
-                        socket.setSoTimeout(timeoutMillis);
-                        socket.setSoLinger(false, 0);
-                        socket.connect(new InetSocketAddress(host, port), timeoutMillis);
-                        return socket;
-                    }
-
-                    @Override
-                    public ServerSocket createServerSocket(final int port)
-                            throws IOException
-                    {
-                        return new ServerSocket(port);
-                    }
-                });
-            }
-        }
-        catch (final IOException e)
-        {
-            // Only try to do it once. Otherwise we
-            // Generate errors for each region on construction.
-            final RMISocketFactory factoryInUse = RMISocketFactory.getSocketFactory();
-            if (factoryInUse != null && !factoryInUse.getClass().getName().startsWith("org.apache.commons.jcs3"))
-            {
-                log.info("Could not create new custom socket factory. {0} Factory in use = {1}",
-                        e::getMessage, RMISocketFactory::getSocketFactory);
-            }
-        }
-    }
-
-    /**
-     * Gets the naming url used for RMI registration
-     *
-     * @param location
-     *            the remote location
-     * @param serviceName
-     *            the remote service name
-     * @return the URL for RMI lookup
-     */
-    public static String getNamingURL(final RemoteLocation location, final String serviceName)
-    {
-        return getNamingURL(location.getHost(), location.getPort(), serviceName);
-    }
-
-    /**
-     * Gets the naming url used for RMI registration
-     *
-     * @param registryHost
-     *            the remote host
-     * @param registryPort
-     *            the remote port
-     * @param serviceName
-     *            the remote service name
-     * @return the URL for RMI lookup
-     */
-    public static String getNamingURL(final String registryHost, final int registryPort, final String serviceName)
-    {
-        if (registryHost.contains(":"))
-        { // TODO improve this check? See also JCS-133
-            return "//[" + registryHost.replaceFirst("%", "%25") + "]:" + registryPort + "/" + serviceName;
-        }
-        return "//" + registryHost + ":" + registryPort + "/" + serviceName;
     }
 }

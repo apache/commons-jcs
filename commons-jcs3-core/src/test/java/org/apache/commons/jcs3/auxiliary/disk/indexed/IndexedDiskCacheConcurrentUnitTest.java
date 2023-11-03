@@ -68,67 +68,6 @@ public class IndexedDiskCacheConcurrentUnitTest
     private static final int items = 200;
 
     /**
-     * A unit test suite for JUnit
-     *
-     * @return The test suite
-     */
-    public static Test suite()
-    {
-        final ActiveTestSuite suite = new ActiveTestSuite();
-
-        suite.addTest(new TestCase("testIndexedDiskCache1" )
-        {
-            @Override
-            public void runTest()
-                throws Exception
-            {
-                runTestForRegion( "indexedRegion1" );
-            }
-        });
-
-        suite.addTest(new TestCase("testIndexedDiskCache2" )
-        {
-            @Override
-            public void runTest()
-                throws Exception
-            {
-                runTestForRegion( "indexedRegion2" );
-            }
-        });
-
-        suite.addTest(new TestCase("testIndexedDiskCache3" )
-        {
-            @Override
-            public void runTest()
-                throws Exception
-            {
-                runTestForRegion( "indexedRegion3" );
-            }
-        });
-
-        suite.addTest(new TestCase("testIndexedDiskCache4" )
-        {
-            @Override
-            public void runTest()
-                throws Exception
-            {
-                runTestForRegionInRange( "indexedRegion3", 300, 600 );
-            }
-        });
-
-        return suite;
-    }
-
-    /**
-     * Test setup
-     */
-    @Before
-    public void setUp()
-    {
-        JCS.setConfigFilename( "/TestDiskCache.ccf" );
-    }
-
-    /**
      * Adds items to cache, gets them, and removes them. The item count is more
      * than the size of the memory cache, so items should spool to disk.
      *
@@ -248,5 +187,66 @@ public class IndexedDiskCacheConcurrentUnitTest
             assertNull( "Removed key should be null: " + i + ":key " + "\n stats " + jcs.getStats(), jcs.get( i
                 + ":key" ) );
         }
+    }
+
+    /**
+     * A unit test suite for JUnit
+     *
+     * @return The test suite
+     */
+    public static Test suite()
+    {
+        final ActiveTestSuite suite = new ActiveTestSuite();
+
+        suite.addTest(new TestCase("testIndexedDiskCache1" )
+        {
+            @Override
+            public void runTest()
+                throws Exception
+            {
+                runTestForRegion( "indexedRegion1" );
+            }
+        });
+
+        suite.addTest(new TestCase("testIndexedDiskCache2" )
+        {
+            @Override
+            public void runTest()
+                throws Exception
+            {
+                runTestForRegion( "indexedRegion2" );
+            }
+        });
+
+        suite.addTest(new TestCase("testIndexedDiskCache3" )
+        {
+            @Override
+            public void runTest()
+                throws Exception
+            {
+                runTestForRegion( "indexedRegion3" );
+            }
+        });
+
+        suite.addTest(new TestCase("testIndexedDiskCache4" )
+        {
+            @Override
+            public void runTest()
+                throws Exception
+            {
+                runTestForRegionInRange( "indexedRegion3", 300, 600 );
+            }
+        });
+
+        return suite;
+    }
+
+    /**
+     * Test setup
+     */
+    @Before
+    public void setUp()
+    {
+        JCS.setConfigFilename( "/TestDiskCache.ccf" );
     }
 }

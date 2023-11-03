@@ -27,8 +27,8 @@ import java.util.concurrent.ThreadFactory;
 public class DaemonThreadFactory
     implements ThreadFactory
 {
-    private final String prefix;
     private final static boolean THREAD_IS_DAEMON = true;
+    private final String prefix;
     private int threadPriority = Thread.NORM_PRIORITY;
 
     /**

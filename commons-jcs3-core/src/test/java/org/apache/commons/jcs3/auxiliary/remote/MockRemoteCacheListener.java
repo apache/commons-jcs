@@ -100,19 +100,6 @@ public class MockRemoteCacheListener<K, V>
     }
 
     /**
-     * Allows you to setup the listener id.
-     * <p>
-     * @param id
-     * @throws IOException
-     */
-    @Override
-    public void setListenerId( final long id )
-        throws IOException
-    {
-        listenerId = id;
-    }
-
-    /**
      * @param cacheName
      * @throws IOException
      */
@@ -162,5 +149,18 @@ public class MockRemoteCacheListener<K, V>
         throws IOException
     {
         // TODO Auto-generated method stub
+    }
+
+    /**
+     * Allows you to setup the listener id.
+     * <p>
+     * @param id
+     * @throws IOException
+     */
+    @Override
+    public void setListenerId( final long id )
+        throws IOException
+    {
+        listenerId = id;
     }
 }

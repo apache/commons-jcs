@@ -36,28 +36,6 @@ public class UDPDiscoveryUnitTest
      * <p>
      * @throws Exception
      */
-    @Test
-    public void testSimpleUDPDiscoveryIPv4()
-        throws Exception
-    {
-        simpleUDPDiscovery("228.5.6.7");
-    }
-
-    /**
-     * <p>
-     * @throws Exception
-     */
-    @Test
-    public void testSimpleUDPDiscoveryIPv6()
-        throws Exception
-    {
-        simpleUDPDiscovery("FF02::5678");
-    }
-
-    /**
-     * <p>
-     * @throws Exception
-     */
     private void simpleUDPDiscovery(String discoveryAddress)
         throws Exception
     {
@@ -115,5 +93,27 @@ public class UDPDiscoveryUnitTest
             assertTrue( "Receiver count [" + receiver.getCnt() + "] should be the at least the number sent [" + cnt + "].",
                         cnt <= receiver.getCnt() );
         }
+    }
+
+    /**
+     * <p>
+     * @throws Exception
+     */
+    @Test
+    public void testSimpleUDPDiscoveryIPv4()
+        throws Exception
+    {
+        simpleUDPDiscovery("228.5.6.7");
+    }
+
+    /**
+     * <p>
+     * @throws Exception
+     */
+    @Test
+    public void testSimpleUDPDiscoveryIPv6()
+        throws Exception
+    {
+        simpleUDPDiscovery("FF02::5678");
     }
 }

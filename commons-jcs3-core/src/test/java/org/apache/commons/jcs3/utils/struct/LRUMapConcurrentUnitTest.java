@@ -38,6 +38,56 @@ public class LRUMapConcurrentUnitTest
     private static final int items = 20000;
 
     /**
+     * Just make sure that we can put and get concurrently
+     *
+     * @param map
+     * @param items
+     * @throws Exception
+     */
+    public static void runConcurrentPutGetTests( final LRUMap<String, String> map, final int items )
+        throws Exception
+    {
+        for ( int i = 0; i < items; i++ )
+        {
+            map.put( i + ":key", "data" + i );
+        }
+
+        for ( int i = items - 1; i >= 0; i-- )
+        {
+            final String res = map.get( i + ":key" );
+            assertNotNull( "[" + i + ":key] should not be null", res );
+        }
+    }
+
+    /**
+     * Put, get, and remove from a range. This should occur at a range that is
+     * not touched by other tests.
+     * <p>
+     * @param map
+     * @param start
+     * @param end
+     * @throws Exception
+     */
+    public static void runConcurrentRangeTests( final LRUMap<String, String> map, final int start, final int end )
+        throws Exception
+    {
+        for ( int i = start; i < end; i++ )
+        {
+            map.put( i + ":key", "data" + i );
+        }
+
+        for ( int i = end - 1; i >= start; i-- )
+        {
+            final String res = map.get( i + ":key" );
+            assertNotNull( "[" + i + ":key] should not be null", res );
+        }
+
+        // test removal
+        map.remove( start + ":key" );
+        assertNull( map.get( start + ":key" ) );
+    }
+
+    /**
      * A unit test suite for JUnit
      * <p>
      * @return The test suite
@@ -100,34 +150,6 @@ public class LRUMapConcurrentUnitTest
         });
 
         return suite;
-    }
-
-    /**
-     * Just test that we can put, get and remove as expected.
-     * <p>
-     * @throws Exception
-     *                Description of the Exception
-     */
-    @Test
-    public void testSimpleLoad()
-        throws Exception
-    {
-        final LRUMap<String, String> map = new LRUMap<>( items );
-
-        for ( int i = 0; i < items; i++ )
-        {
-            map.put( i + ":key", "data" + i );
-        }
-
-        for ( int i = items - 1; i >= 0; i-- )
-        {
-            final String res = map.get( i + ":key" );
-            assertNotNull( "[" + i + ":key] should not be null", res );
-        }
-
-        // test removal
-        map.remove( "300:key" );
-        assertNull( map.get( "300:key" ) );
     }
 
     /**
@@ -201,15 +223,17 @@ public class LRUMapConcurrentUnitTest
     }
 
     /**
-     * Just make sure that we can put and get concurrently
-     *
-     * @param map
-     * @param items
+     * Just test that we can put, get and remove as expected.
+     * <p>
      * @throws Exception
+     *                Description of the Exception
      */
-    public static void runConcurrentPutGetTests( final LRUMap<String, String> map, final int items )
+    @Test
+    public void testSimpleLoad()
         throws Exception
     {
+        final LRUMap<String, String> map = new LRUMap<>( items );
+
         for ( int i = 0; i < items; i++ )
         {
             map.put( i + ":key", "data" + i );
@@ -220,33 +244,9 @@ public class LRUMapConcurrentUnitTest
             final String res = map.get( i + ":key" );
             assertNotNull( "[" + i + ":key] should not be null", res );
         }
-    }
-
-    /**
-     * Put, get, and remove from a range. This should occur at a range that is
-     * not touched by other tests.
-     * <p>
-     * @param map
-     * @param start
-     * @param end
-     * @throws Exception
-     */
-    public static void runConcurrentRangeTests( final LRUMap<String, String> map, final int start, final int end )
-        throws Exception
-    {
-        for ( int i = start; i < end; i++ )
-        {
-            map.put( i + ":key", "data" + i );
-        }
-
-        for ( int i = end - 1; i >= start; i-- )
-        {
-            final String res = map.get( i + ":key" );
-            assertNotNull( "[" + i + ":key] should not be null", res );
-        }
 
         // test removal
-        map.remove( start + ":key" );
-        assertNull( map.get( start + ":key" ) );
+        map.remove( "300:key" );
+        assertNull( map.get( "300:key" ) );
     }
 }

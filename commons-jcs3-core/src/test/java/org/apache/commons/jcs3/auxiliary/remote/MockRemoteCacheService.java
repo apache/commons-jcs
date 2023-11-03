@@ -61,66 +61,6 @@ public class MockRemoteCacheService<K, V>
     public String lastRemoveAllCacheName;
 
     /**
-     * @param cacheName
-     * @param key
-     * @param requesterId
-     * @return null
-     */
-    @Override
-    public ICacheElement<K, V> get( final String cacheName, final K key, final long requesterId )
-    {
-        lastGetKey = key;
-        return null;
-    }
-
-    /**
-     * @param cacheName
-     * @return empty set
-     */
-    @Override
-    public Set<K> getKeySet( final String cacheName )
-    {
-        return new HashSet<>();
-    }
-
-    /**
-     * Sets the last remove key.
-     * <p>
-     * @param cacheName
-     * @param key
-     * @param requesterId
-     */
-    @Override
-    public void remove( final String cacheName, final K key, final long requesterId )
-    {
-        lastRemoveKey = key;
-    }
-
-    /**
-     * Sets the lastRemoveAllCacheName to the cacheName.
-     */
-    @Override
-    public void removeAll( final String cacheName, final long requesterId )
-        throws IOException
-    {
-        lastRemoveAllCacheName = cacheName;
-    }
-
-    /**
-     * Sets the last update item.
-     * <p>
-     * @param item
-     * @param requesterId
-     */
-    @Override
-    public void update( final ICacheElement<K, V> item, final long requesterId )
-    {
-        lastUpdate = item;
-        updateRequestList.add( item );
-        updateRequestIdList.add( Long.valueOf( requesterId ) );
-    }
-
-    /**
      * Do nothing.
      * <p>
      * @param cacheName
@@ -142,69 +82,26 @@ public class MockRemoteCacheService<K, V>
     }
 
     /**
-     * Do nothing.
-     */
-    @Override
-    public void release()
-    {
-    }
-
-    /**
-     * Sets the last remove key.
-     * <p>
      * @param cacheName
      * @param key
-     */
-    @Override
-    public void remove( final String cacheName, final K key )
-    {
-        lastRemoveKey = key;
-    }
-
-    /**
-     * Sets the last remove all cache name.
-     * <p>
-     * @param cacheName
-     */
-    @Override
-    public void removeAll( final String cacheName )
-    {
-        lastRemoveAllCacheName = cacheName;
-    }
-
-    /**
-     * Sets the last update item.
-     * <p>
-     * @param item
-     */
-    @Override
-    public void update( final ICacheElement<K, V> item )
-    {
-        lastUpdate = item;
-    }
-
-    /**
-     * @param cacheName
-     * @param keys
      * @param requesterId
-     * @return empty map
+     * @return null
      */
     @Override
-    public Map<K, ICacheElement<K, V>> getMultiple( final String cacheName, final Set<K> keys, final long requesterId )
+    public ICacheElement<K, V> get( final String cacheName, final K key, final long requesterId )
     {
-        lastGetMultipleKeys = keys;
-        return new HashMap<>();
+        lastGetKey = key;
+        return null;
     }
 
     /**
      * @param cacheName
-     * @param keys
-     * @return empty map
+     * @return empty set
      */
     @Override
-    public Map<K, ICacheElement<K, V>> getMultiple( final String cacheName, final Set<K> keys )
+    public Set<K> getKeySet( final String cacheName )
     {
-        return getMultiple( cacheName, keys, 0 );
+        return new HashSet<>();
     }
 
     /**
@@ -235,5 +132,108 @@ public class MockRemoteCacheService<K, V>
     {
         lastGetMatchingPattern = pattern;
         return new HashMap<>();
+    }
+
+    /**
+     * @param cacheName
+     * @param keys
+     * @return empty map
+     */
+    @Override
+    public Map<K, ICacheElement<K, V>> getMultiple( final String cacheName, final Set<K> keys )
+    {
+        return getMultiple( cacheName, keys, 0 );
+    }
+
+    /**
+     * @param cacheName
+     * @param keys
+     * @param requesterId
+     * @return empty map
+     */
+    @Override
+    public Map<K, ICacheElement<K, V>> getMultiple( final String cacheName, final Set<K> keys, final long requesterId )
+    {
+        lastGetMultipleKeys = keys;
+        return new HashMap<>();
+    }
+
+    /**
+     * Do nothing.
+     */
+    @Override
+    public void release()
+    {
+    }
+
+    /**
+     * Sets the last remove key.
+     * <p>
+     * @param cacheName
+     * @param key
+     */
+    @Override
+    public void remove( final String cacheName, final K key )
+    {
+        lastRemoveKey = key;
+    }
+
+    /**
+     * Sets the last remove key.
+     * <p>
+     * @param cacheName
+     * @param key
+     * @param requesterId
+     */
+    @Override
+    public void remove( final String cacheName, final K key, final long requesterId )
+    {
+        lastRemoveKey = key;
+    }
+
+    /**
+     * Sets the last remove all cache name.
+     * <p>
+     * @param cacheName
+     */
+    @Override
+    public void removeAll( final String cacheName )
+    {
+        lastRemoveAllCacheName = cacheName;
+    }
+
+    /**
+     * Sets the lastRemoveAllCacheName to the cacheName.
+     */
+    @Override
+    public void removeAll( final String cacheName, final long requesterId )
+        throws IOException
+    {
+        lastRemoveAllCacheName = cacheName;
+    }
+
+    /**
+     * Sets the last update item.
+     * <p>
+     * @param item
+     */
+    @Override
+    public void update( final ICacheElement<K, V> item )
+    {
+        lastUpdate = item;
+    }
+
+    /**
+     * Sets the last update item.
+     * <p>
+     * @param item
+     * @param requesterId
+     */
+    @Override
+    public void update( final ICacheElement<K, V> item, final long requesterId )
+    {
+        lastUpdate = item;
+        updateRequestList.add( item );
+        updateRequestIdList.add( Long.valueOf( requesterId ) );
     }
 }

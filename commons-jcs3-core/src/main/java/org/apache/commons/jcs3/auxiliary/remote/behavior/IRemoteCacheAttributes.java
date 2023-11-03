@@ -56,39 +56,11 @@ public interface IRemoteCacheAttributes
     int getFailoverIndex();
 
     /**
-     * Sets the failoverIndex attribute of the IRemoteCacheAttributes object
-     * <p>
-     * @param p The new failoverIndex value
-     */
-    void setFailoverIndex( int p );
-
-    /**
      * Gets the failovers attribute of the IRemoteCacheAttributes object
      * <p>
      * @return The failovers value
      */
     List<RemoteLocation> getFailovers();
-
-    /**
-     * Sets the failovers attribute of the IRemoteCacheAttributes object
-     * <p>
-     * @param failovers The new failovers value
-     */
-    void setFailovers( List<RemoteLocation> failovers );
-
-    /**
-     * Gets the localPort attribute of the IRemoteCacheAttributes object
-     * <p>
-     * @return The localPort value
-     */
-    int getLocalPort();
-
-    /**
-     * Sets the localPort attribute of the IRemoteCacheAttributes object
-     * <p>
-     * @param p The new localPort value
-     */
-    void setLocalPort( int p );
 
     /**
      * Gets the failoverServers attribute of the IRemoteCacheAttributes object
@@ -98,11 +70,19 @@ public interface IRemoteCacheAttributes
     String getFailoverServers();
 
     /**
-     * Sets the failoverServers attribute of the IRemoteCacheAttributes object
+     * -1 and 0 mean no timeout, this is the default if the timeout is -1 or 0, no threadpool will
+     * be used.
      * <p>
-     * @param s The new failoverServers value
+     * @return the time in millis
      */
-    void setFailoverServers( String s );
+    int getGetTimeoutMillis();
+
+    /**
+     * Gets the localPort attribute of the IRemoteCacheAttributes object
+     * <p>
+     * @return The localPort value
+     */
+    int getLocalPort();
 
     /**
      * The thread pool the remote cache should use. At first this will only be for gets.
@@ -114,35 +94,12 @@ public interface IRemoteCacheAttributes
     String getThreadPoolName();
 
     /**
-     * Sets the name of the pool to use. Pools should be defined in the cache.ccf.
+     * The number of elements the zombie queue will hold. This queue is used to store events if we
+     * loose our connection with the server.
      * <p>
-     * @param name
+     * @return Returns the zombieQueueMaxSize.
      */
-    void setThreadPoolName( String name );
-
-    /**
-     * -1 and 0 mean no timeout, this is the default if the timeout is -1 or 0, no threadpool will
-     * be used.
-     * <p>
-     * @return the time in millis
-     */
-    int getGetTimeoutMillis();
-
-    /**
-     * -1 means no timeout, this is the default if the timeout is -1 or 0, no threadpool will be
-     * used. If the timeout is greater than 0 a threadpool will be used for get requests.
-     * <p>
-     * @param millis
-     */
-    void setGetTimeoutMillis( int millis );
-
-    /**
-     * By default this option is true. If you set it to false, you will not receive updates or
-     * removes from the remote server.
-     * <p>
-     * @param receive
-     */
-    void setReceive( boolean receive );
+    int getZombieQueueMaxSize();
 
     /**
      * If RECEIVE is false then the remote cache will not register a listener with the remote
@@ -165,18 +122,61 @@ public interface IRemoteCacheAttributes
     boolean isReceive();
 
     /**
+     * Sets the failoverIndex attribute of the IRemoteCacheAttributes object
+     * <p>
+     * @param p The new failoverIndex value
+     */
+    void setFailoverIndex( int p );
+
+    /**
+     * Sets the failovers attribute of the IRemoteCacheAttributes object
+     * <p>
+     * @param failovers The new failovers value
+     */
+    void setFailovers( List<RemoteLocation> failovers );
+
+    /**
+     * Sets the failoverServers attribute of the IRemoteCacheAttributes object
+     * <p>
+     * @param s The new failoverServers value
+     */
+    void setFailoverServers( String s );
+
+    /**
+     * -1 means no timeout, this is the default if the timeout is -1 or 0, no threadpool will be
+     * used. If the timeout is greater than 0 a threadpool will be used for get requests.
+     * <p>
+     * @param millis
+     */
+    void setGetTimeoutMillis( int millis );
+
+    /**
+     * Sets the localPort attribute of the IRemoteCacheAttributes object
+     * <p>
+     * @param p The new localPort value
+     */
+    void setLocalPort( int p );
+
+    /**
+     * By default this option is true. If you set it to false, you will not receive updates or
+     * removes from the remote server.
+     * <p>
+     * @param receive
+     */
+    void setReceive( boolean receive );
+
+    /**
+     * Sets the name of the pool to use. Pools should be defined in the cache.ccf.
+     * <p>
+     * @param name
+     */
+    void setThreadPoolName( String name );
+
+    /**
      * The number of elements the zombie queue will hold. This queue is used to store events if we
      * loose our connection with the server.
      * <p>
      * @param zombieQueueMaxSize The zombieQueueMaxSize to set.
      */
     void setZombieQueueMaxSize( int zombieQueueMaxSize );
-
-    /**
-     * The number of elements the zombie queue will hold. This queue is used to store events if we
-     * loose our connection with the server.
-     * <p>
-     * @return Returns the zombieQueueMaxSize.
-     */
-    int getZombieQueueMaxSize();
 }

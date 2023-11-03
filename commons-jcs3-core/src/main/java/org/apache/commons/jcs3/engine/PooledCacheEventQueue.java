@@ -73,29 +73,6 @@ public class PooledCacheEventQueue<K, V>
     }
 
     /**
-     * Initializes the queue.
-     * <p>
-     * @param listener
-     * @param listenerId
-     * @param cacheName
-     * @param maxFailure
-     * @param waitBeforeRetry
-     * @param threadPoolName
-     */
-    protected void initialize( final ICacheListener<K, V> listener, final long listenerId, final String cacheName, final int maxFailure,
-                            final int waitBeforeRetry, final String threadPoolName )
-    {
-        super.initialize(listener, listenerId, cacheName, maxFailure, waitBeforeRetry);
-
-        pool = createPool(threadPoolName);
-
-        if (pool instanceof ThreadPoolExecutor)
-        {
-        	queue = ((ThreadPoolExecutor) pool).getQueue();
-        }
-    }
-
-    /**
      * Create the thread pool.
      * <p>
      * @param threadPoolName
@@ -106,16 +83,6 @@ public class PooledCacheEventQueue<K, V>
         // this will share the same pool with other event queues by default.
         return ThreadPoolManager.getInstance().getExecutorService(
                 (threadPoolName == null) ? "cache_event_queue" : threadPoolName );
-    }
-
-    /**
-     * @return the queue type
-     */
-    @Override
-    public QueueType getQueueType()
-    {
-        /** The type of queue -- there are pooled and single */
-        return QueueType.POOLED;
     }
 
     /**
@@ -151,14 +118,13 @@ public class PooledCacheEventQueue<K, V>
     }
 
     /**
-     * Adds an event to the queue.
-     * <p>
-     * @param event
+     * @return the queue type
      */
     @Override
-    protected void put( final AbstractCacheEvent<?> event )
+    public QueueType getQueueType()
     {
-        pool.execute( event );
+        /** The type of queue -- there are pooled and single */
+        return QueueType.POOLED;
     }
 
     /**
@@ -187,6 +153,29 @@ public class PooledCacheEventQueue<K, V>
     }
 
     /**
+     * Initializes the queue.
+     * <p>
+     * @param listener
+     * @param listenerId
+     * @param cacheName
+     * @param maxFailure
+     * @param waitBeforeRetry
+     * @param threadPoolName
+     */
+    protected void initialize( final ICacheListener<K, V> listener, final long listenerId, final String cacheName, final int maxFailure,
+                            final int waitBeforeRetry, final String threadPoolName )
+    {
+        super.initialize(listener, listenerId, cacheName, maxFailure, waitBeforeRetry);
+
+        pool = createPool(threadPoolName);
+
+        if (pool instanceof ThreadPoolExecutor)
+        {
+        	queue = ((ThreadPoolExecutor) pool).getQueue();
+        }
+    }
+
+    /**
      * If the Queue is using a bounded channel we can determine the size. If it is zero or we can't
      * determine the size, we return true.
      * <p>
@@ -196,6 +185,17 @@ public class PooledCacheEventQueue<K, V>
     public boolean isEmpty()
     {
         return size() == 0;
+    }
+
+    /**
+     * Adds an event to the queue.
+     * <p>
+     * @param event
+     */
+    @Override
+    protected void put( final AbstractCacheEvent<?> event )
+    {
+        pool.execute( event );
     }
 
     /**

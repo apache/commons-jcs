@@ -118,6 +118,12 @@ public class CacheTest
             private static final long serialVersionUID = -8253611067837660184L;
 
             @Override
+            public Factory<CacheEntryEventFilter<? super String, ? super String>> getCacheEntryEventFilterFactory()
+            {
+                return null;
+            }
+
+            @Override
             public Factory<CacheEntryListener<? super String, ? super String>> getCacheEntryListenerFactory()
             {
                 return () -> (CacheEntryCreatedListener<String, String>) cacheEntryEvents -> event.add(cacheEntryEvents.iterator().next().getKey());
@@ -127,12 +133,6 @@ public class CacheTest
             public boolean isOldValueRequired()
             {
                 return false;
-            }
-
-            @Override
-            public Factory<CacheEntryEventFilter<? super String, ? super String>> getCacheEntryEventFilterFactory()
-            {
-                return null;
             }
 
             @Override
@@ -149,6 +149,12 @@ public class CacheTest
             private static final long serialVersionUID = 74774789357823553L;
 
             @Override
+            public Factory<CacheEntryEventFilter<? super String, ? super String>> getCacheEntryEventFilterFactory()
+            {
+                return null;
+            }
+
+            @Override
             public Factory<CacheEntryListener<? super String, ? super String>> getCacheEntryListenerFactory()
             {
                 return () -> (CacheEntryUpdatedListener<String, String>) cacheEntryEvents -> event.add(cacheEntryEvents.iterator().next().getKey());
@@ -158,12 +164,6 @@ public class CacheTest
             public boolean isOldValueRequired()
             {
                 return false;
-            }
-
-            @Override
-            public Factory<CacheEntryEventFilter<? super String, ? super String>> getCacheEntryEventFilterFactory()
-            {
-                return null;
             }
 
             @Override
@@ -180,6 +180,12 @@ public class CacheTest
             private static final long serialVersionUID = 2442816458182278519L;
 
             @Override
+            public Factory<CacheEntryEventFilter<? super String, ? super String>> getCacheEntryEventFilterFactory()
+            {
+                return null;
+            }
+
+            @Override
             public Factory<CacheEntryListener<? super String, ? super String>> getCacheEntryListenerFactory()
             {
                 return () -> (CacheEntryRemovedListener<String, String>) cacheEntryEvents -> event.add(cacheEntryEvents.iterator().next().getKey());
@@ -189,12 +195,6 @@ public class CacheTest
             public boolean isOldValueRequired()
             {
                 return false;
-            }
-
-            @Override
-            public Factory<CacheEntryEventFilter<? super String, ? super String>> getCacheEntryEventFilterFactory()
-            {
-                return null;
             }
 
             @Override
@@ -230,30 +230,6 @@ public class CacheTest
              *
              */
             private static final long serialVersionUID = -4598329777808827966L;
-
-            @Override
-            public boolean isReadThrough()
-            {
-                return true;
-            }
-
-            @Override
-            public boolean isWriteThrough()
-            {
-                return false;
-            }
-
-            @Override
-            public boolean isStatisticsEnabled()
-            {
-                return false;
-            }
-
-            @Override
-            public boolean isManagementEnabled()
-            {
-                return false;
-            }
 
             @Override
             public Iterable<CacheEntryListenerConfiguration<Object, Object>> getCacheEntryListenerConfigurations()
@@ -305,7 +281,31 @@ public class CacheTest
             }
 
             @Override
+            public boolean isManagementEnabled()
+            {
+                return false;
+            }
+
+            @Override
+            public boolean isReadThrough()
+            {
+                return true;
+            }
+
+            @Override
+            public boolean isStatisticsEnabled()
+            {
+                return false;
+            }
+
+            @Override
             public boolean isStoreByValue()
+            {
+                return false;
+            }
+
+            @Override
+            public boolean isWriteThrough()
             {
                 return false;
             }

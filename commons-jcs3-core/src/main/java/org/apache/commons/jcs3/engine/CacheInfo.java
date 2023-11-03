@@ -26,11 +26,6 @@ import java.rmi.dgc.VMID;
  */
 public final class CacheInfo
 {
-    /** shouldn't be instantiated */
-    private CacheInfo()
-    {
-    }
-
     /**
      * Used to identify a client, so we can run multiple clients off one host.
      * Need since there is no way to identify a client other than by host in
@@ -43,4 +38,9 @@ public final class CacheInfo
 
     /** By default this is the hash code of the VMID */
     public static final long listenerId = vmid.hashCode();
+
+    /** shouldn't be instantiated */
+    private CacheInfo()
+    {
+    }
 }

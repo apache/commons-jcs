@@ -71,11 +71,93 @@ public class RemoteHttpCacheServlet
     /** This needs to be standard, since the other side is standard */
     private static final StandardSerializer serializer = new StandardSerializer();
 
+    /** The interval at which we will log the count. */
+    private static final int logInterval = 100;
+
     /** Number of service calls. */
     private int serviceCalls;
 
-    /** The interval at which we will log the count. */
-    private static final int logInterval = 100;
+    /**
+     * Tries to get the event logger.
+     * <p>
+     * @param props
+     * @return ICacheEventLogger
+     */
+    protected ICacheEventLogger configureCacheEventLogger( final Properties props )
+    {
+
+        return AuxiliaryCacheConfigurator
+            .parseCacheEventLogger( props, IRemoteHttpCacheConstants.HTTP_CACHE_SERVER_PREFIX );
+    }
+
+    /**
+     * Configure.
+     * <p>
+     * jcs.remotehttpcache.serverattributes.ATTRIBUTENAME=ATTRIBUTEVALUE
+     * <p>
+     * @param prop
+     * @return RemoteCacheServerAttributesconfigureRemoteCacheServerAttributes
+     */
+    protected RemoteHttpCacheServerAttributes configureRemoteHttpCacheServerAttributes( final Properties prop )
+    {
+        final RemoteHttpCacheServerAttributes rcsa = new RemoteHttpCacheServerAttributes();
+
+        // configure automatically
+        PropertySetter.setProperties( rcsa, prop,
+                                      IRemoteHttpCacheConstants.HTTP_CACHE_SERVER_ATTRIBUTES_PROPERTY_PREFIX + "." );
+
+        return rcsa;
+    }
+
+    /**
+     * Configures the attributes and the event logger and constructs a service.
+     * <p>
+     * @param cacheManager
+     * @return RemoteHttpCacheService
+     */
+    protected <K, V> RemoteHttpCacheService<K, V> createRemoteHttpCacheService( final ICompositeCacheManager cacheManager )
+    {
+        final Properties props = cacheManager.getConfigurationProperties();
+        final ICacheEventLogger cacheEventLogger = configureCacheEventLogger( props );
+        final RemoteHttpCacheServerAttributes attributes = configureRemoteHttpCacheServerAttributes( props );
+
+        final RemoteHttpCacheService<K, V> service = new RemoteHttpCacheService<>( cacheManager, attributes, cacheEventLogger );
+        log.info( "Created new RemoteHttpCacheService {0}", service );
+        return service;
+    }
+
+    /** Release the cache manager. */
+    @Override
+    public void destroy()
+    {
+        log.info( "Servlet Destroyed, shutting down JCS." );
+
+        cacheMgr.shutDown();
+    }
+
+    /**
+     * Gets servlet information
+     * <p>
+     * @return basic info
+     */
+    @Override
+    public String getServletInfo()
+    {
+        return "RemoteHttpCacheServlet";
+    }
+
+    /**
+     * Log some details.
+     */
+    private void incrementServiceCallCount()
+    {
+        // not thread safe, but it doesn't have to be accurate
+        serviceCalls++;
+        if ( log.isInfoEnabled() && (serviceCalls % logInterval == 0) )
+        {
+            log.info( "serviceCalls = {0}", serviceCalls );
+        }
+    }
 
     /**
      * Initializes the cache.
@@ -101,83 +183,6 @@ public class RemoteHttpCacheServlet
         remoteCacheService = createRemoteHttpCacheService( cacheMgr );
 
         super.init( config );
-    }
-
-    /**
-     * Read the request, call the processor, write the response.
-     * <p>
-     * @param request
-     * @param response
-     * @throws ServletException
-     * @throws IOException
-     */
-    @Override
-    public void service( final HttpServletRequest request, final HttpServletResponse response )
-        throws ServletException, IOException
-    {
-        incrementServiceCallCount();
-        log.debug( "Servicing a request. {0}", request );
-
-        final RemoteCacheRequest<Serializable, Serializable> remoteRequest = readRequest( request );
-        final RemoteCacheResponse<Object> cacheResponse = processRequest( remoteRequest );
-
-        writeResponse( response, cacheResponse );
-    }
-
-    /**
-     * Read the request from the input stream.
-     * <p>
-     * @param request
-     * @return RemoteHttpCacheRequest
-     */
-    protected RemoteCacheRequest<Serializable, Serializable> readRequest( final HttpServletRequest request )
-    {
-        RemoteCacheRequest<Serializable, Serializable> remoteRequest = null;
-
-        try (InputStream inputStream = request.getInputStream())
-        {
-            log.debug( "After getting input stream and before reading it" );
-            remoteRequest = readRequestFromStream( inputStream );
-        }
-        catch ( final IOException | ClassNotFoundException e )
-        {
-            log.error( "Could not get a RemoteHttpCacheRequest object from the input stream.", e );
-        }
-
-        return remoteRequest;
-    }
-
-    /**
-     * Reads the response from the stream and then closes it.
-     * <p>
-     * @param inputStream
-     * @return RemoteHttpCacheRequest
-     * @throws IOException
-     * @throws ClassNotFoundException
-     */
-    protected RemoteCacheRequest<Serializable, Serializable> readRequestFromStream( final InputStream inputStream )
-        throws IOException, ClassNotFoundException
-    {
-        return serializer.deSerializeFrom(inputStream, null);
-    }
-
-    /**
-     * Write the response to the output stream.
-     * <p>
-     * @param response
-     * @param cacheResponse
-     */
-    protected void writeResponse( final HttpServletResponse response, final RemoteCacheResponse<Object> cacheResponse )
-    {
-        try (OutputStream outputStream = response.getOutputStream())
-        {
-            response.setContentType( "application/octet-stream" );
-            serializer.serializeTo(cacheResponse, outputStream);
-        }
-        catch ( final IOException e )
-        {
-            log.error( "Problem writing response. {0}", cacheResponse, e );
-        }
     }
 
     /**
@@ -263,52 +268,61 @@ public class RemoteHttpCacheServlet
     }
 
     /**
-     * Configures the attributes and the event logger and constructs a service.
+     * Read the request from the input stream.
      * <p>
-     * @param cacheManager
-     * @return RemoteHttpCacheService
+     * @param request
+     * @return RemoteHttpCacheRequest
      */
-    protected <K, V> RemoteHttpCacheService<K, V> createRemoteHttpCacheService( final ICompositeCacheManager cacheManager )
+    protected RemoteCacheRequest<Serializable, Serializable> readRequest( final HttpServletRequest request )
     {
-        final Properties props = cacheManager.getConfigurationProperties();
-        final ICacheEventLogger cacheEventLogger = configureCacheEventLogger( props );
-        final RemoteHttpCacheServerAttributes attributes = configureRemoteHttpCacheServerAttributes( props );
+        RemoteCacheRequest<Serializable, Serializable> remoteRequest = null;
 
-        final RemoteHttpCacheService<K, V> service = new RemoteHttpCacheService<>( cacheManager, attributes, cacheEventLogger );
-        log.info( "Created new RemoteHttpCacheService {0}", service );
-        return service;
+        try (InputStream inputStream = request.getInputStream())
+        {
+            log.debug( "After getting input stream and before reading it" );
+            remoteRequest = readRequestFromStream( inputStream );
+        }
+        catch ( final IOException | ClassNotFoundException e )
+        {
+            log.error( "Could not get a RemoteHttpCacheRequest object from the input stream.", e );
+        }
+
+        return remoteRequest;
     }
 
     /**
-     * Tries to get the event logger.
+     * Reads the response from the stream and then closes it.
      * <p>
-     * @param props
-     * @return ICacheEventLogger
+     * @param inputStream
+     * @return RemoteHttpCacheRequest
+     * @throws IOException
+     * @throws ClassNotFoundException
      */
-    protected ICacheEventLogger configureCacheEventLogger( final Properties props )
+    protected RemoteCacheRequest<Serializable, Serializable> readRequestFromStream( final InputStream inputStream )
+        throws IOException, ClassNotFoundException
     {
-
-        return AuxiliaryCacheConfigurator
-            .parseCacheEventLogger( props, IRemoteHttpCacheConstants.HTTP_CACHE_SERVER_PREFIX );
+        return serializer.deSerializeFrom(inputStream, null);
     }
 
     /**
-     * Configure.
+     * Read the request, call the processor, write the response.
      * <p>
-     * jcs.remotehttpcache.serverattributes.ATTRIBUTENAME=ATTRIBUTEVALUE
-     * <p>
-     * @param prop
-     * @return RemoteCacheServerAttributesconfigureRemoteCacheServerAttributes
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException
      */
-    protected RemoteHttpCacheServerAttributes configureRemoteHttpCacheServerAttributes( final Properties prop )
+    @Override
+    public void service( final HttpServletRequest request, final HttpServletResponse response )
+        throws ServletException, IOException
     {
-        final RemoteHttpCacheServerAttributes rcsa = new RemoteHttpCacheServerAttributes();
+        incrementServiceCallCount();
+        log.debug( "Servicing a request. {0}", request );
 
-        // configure automatically
-        PropertySetter.setProperties( rcsa, prop,
-                                      IRemoteHttpCacheConstants.HTTP_CACHE_SERVER_ATTRIBUTES_PROPERTY_PREFIX + "." );
+        final RemoteCacheRequest<Serializable, Serializable> remoteRequest = readRequest( request );
+        final RemoteCacheResponse<Object> cacheResponse = processRequest( remoteRequest );
 
-        return rcsa;
+        writeResponse( response, cacheResponse );
     }
 
     /**
@@ -320,35 +334,21 @@ public class RemoteHttpCacheServlet
     }
 
     /**
-     * Log some details.
-     */
-    private void incrementServiceCallCount()
-    {
-        // not thread safe, but it doesn't have to be accurate
-        serviceCalls++;
-        if ( log.isInfoEnabled() && (serviceCalls % logInterval == 0) )
-        {
-            log.info( "serviceCalls = {0}", serviceCalls );
-        }
-    }
-
-    /** Release the cache manager. */
-    @Override
-    public void destroy()
-    {
-        log.info( "Servlet Destroyed, shutting down JCS." );
-
-        cacheMgr.shutDown();
-    }
-
-    /**
-     * Gets servlet information
+     * Write the response to the output stream.
      * <p>
-     * @return basic info
+     * @param response
+     * @param cacheResponse
      */
-    @Override
-    public String getServletInfo()
+    protected void writeResponse( final HttpServletResponse response, final RemoteCacheResponse<Object> cacheResponse )
     {
-        return "RemoteHttpCacheServlet";
+        try (OutputStream outputStream = response.getOutputStream())
+        {
+            response.setContentType( "application/octet-stream" );
+            serializer.serializeTo(cacheResponse, outputStream);
+        }
+        catch ( final IOException e )
+        {
+            log.error( "Problem writing response. {0}", cacheResponse, e );
+        }
     }
 }

@@ -110,14 +110,50 @@ public class CompositeCacheAttributes
     }
 
     /**
-     * Sets the maxObjects attribute of the CompositeCacheAttributes object
-     * <p>
-     * @param maxObjs The new maxObjects value
+     * @see Object#clone()
      */
     @Override
-    public void setMaxObjects( final int maxObjs )
+    public ICompositeCacheAttributes clone()
     {
-        this.maxObjs = maxObjs;
+        try
+        {
+            return (ICompositeCacheAttributes)super.clone();
+        }
+        catch (final CloneNotSupportedException e)
+        {
+            throw new IllegalStateException("Clone not supported. This should never happen.", e);
+        }
+    }
+
+    /**
+     * Gets the cacheName attribute of the CompositeCacheAttributes object
+     * <p>
+     * @return The cacheName value
+     */
+    @Override
+    public String getCacheName()
+    {
+        return this.cacheName;
+    }
+
+    /**
+     * @return Returns the diskUsagePattern.
+     */
+    @Override
+    public DiskUsagePattern getDiskUsagePattern()
+    {
+        return diskUsagePattern;
+    }
+
+    /**
+     * If UseMemoryShrinker is true the memory cache should auto-expire elements to reclaim space.
+     * <p>
+     * @return The MaxMemoryIdleTimeSeconds value
+     */
+    @Override
+    public long getMaxMemoryIdleTimeSeconds()
+    {
+        return this.maxMemoryIdleTimeSeconds;
     }
 
     /**
@@ -132,14 +168,49 @@ public class CompositeCacheAttributes
     }
 
     /**
-     * Sets the useDisk attribute of the CompositeCacheAttributes object
+     * If UseMemoryShrinker is true the memory cache should auto-expire elements to reclaim space.
+     * This gets the maximum number of items to spool per run.
      * <p>
-     * @param useDisk The new useDisk value
+     * @return The maxSpoolPerRun value
      */
     @Override
-    public void setUseDisk( final boolean useDisk )
+    public int getMaxSpoolPerRun()
     {
-        this.useDisk = useDisk;
+        return this.maxSpoolPerRun;
+    }
+
+    /**
+     * Gets the memoryCacheName attribute of the CompositeCacheAttributes object
+     * <p>
+     * @return The memoryCacheName value
+     */
+    @Override
+    public String getMemoryCacheName()
+    {
+        return this.memoryCacheName;
+    }
+
+    /**
+     * If UseMemoryShrinker is true the memory cache should auto-expire elements to reclaim space.
+     * This gets the shrinker interval.
+     * <p>
+     * @return The ShrinkerIntervalSeconds value
+     */
+    @Override
+    public long getShrinkerIntervalSeconds()
+    {
+        return this.shrinkerIntervalSeconds;
+    }
+
+    /**
+     * Number to send to disk at the time when memory is full.
+     * <p>
+     * @return int
+     */
+    @Override
+    public int getSpoolChunkSize()
+    {
+        return spoolChunkSize;
     }
 
     /**
@@ -154,17 +225,6 @@ public class CompositeCacheAttributes
     }
 
     /**
-     * Sets the useLateral attribute of the CompositeCacheAttributes object
-     * <p>
-     * @param b The new useLateral value
-     */
-    @Override
-    public void setUseLateral( final boolean b )
-    {
-        this.useLateral = b;
-    }
-
-    /**
      * Gets the useLateral attribute of the CompositeCacheAttributes object
      * <p>
      * @return The useLateral value
@@ -176,14 +236,14 @@ public class CompositeCacheAttributes
     }
 
     /**
-     * Sets the useRemote attribute of the CompositeCacheAttributes object
+     * Whether the memory cache should perform background memory shrinkage.
      * <p>
-     * @param useRemote The new useRemote value
+     * @return The UseMemoryShrinker value
      */
     @Override
-    public void setUseRemote( final boolean useRemote )
+    public boolean isUseMemoryShrinker()
     {
-        this.useRemote = useRemote;
+        return this.useMemoryShrinker;
     }
 
     /**
@@ -206,133 +266,6 @@ public class CompositeCacheAttributes
     public void setCacheName( final String s )
     {
         this.cacheName = s;
-    }
-
-    /**
-     * Gets the cacheName attribute of the CompositeCacheAttributes object
-     * <p>
-     * @return The cacheName value
-     */
-    @Override
-    public String getCacheName()
-    {
-        return this.cacheName;
-    }
-
-    /**
-     * Sets the memoryCacheName attribute of the CompositeCacheAttributes object
-     * <p>
-     * @param s The new memoryCacheName value
-     */
-    @Override
-    public void setMemoryCacheName( final String s )
-    {
-        this.memoryCacheName = s;
-    }
-
-    /**
-     * Gets the memoryCacheName attribute of the CompositeCacheAttributes object
-     * <p>
-     * @return The memoryCacheName value
-     */
-    @Override
-    public String getMemoryCacheName()
-    {
-        return this.memoryCacheName;
-    }
-
-    /**
-     * Whether the memory cache should perform background memory shrinkage.
-     * <p>
-     * @param useShrinker The new UseMemoryShrinker value
-     */
-    @Override
-    public void setUseMemoryShrinker( final boolean useShrinker )
-    {
-        this.useMemoryShrinker = useShrinker;
-    }
-
-    /**
-     * Whether the memory cache should perform background memory shrinkage.
-     * <p>
-     * @return The UseMemoryShrinker value
-     */
-    @Override
-    public boolean isUseMemoryShrinker()
-    {
-        return this.useMemoryShrinker;
-    }
-
-    /**
-     * If UseMemoryShrinker is true the memory cache should auto-expire elements to reclaim space.
-     * <p>
-     * @param seconds The new MaxMemoryIdleTimeSeconds value
-     */
-    @Override
-    public void setMaxMemoryIdleTimeSeconds( final long seconds )
-    {
-        this.maxMemoryIdleTimeSeconds = seconds;
-    }
-
-    /**
-     * If UseMemoryShrinker is true the memory cache should auto-expire elements to reclaim space.
-     * <p>
-     * @return The MaxMemoryIdleTimeSeconds value
-     */
-    @Override
-    public long getMaxMemoryIdleTimeSeconds()
-    {
-        return this.maxMemoryIdleTimeSeconds;
-    }
-
-    /**
-     * If UseMemoryShrinker is true the memory cache should auto-expire elements to reclaim space.
-     * This sets the shrinker interval.
-     * <p>
-     * @param seconds The new ShrinkerIntervalSeconds value
-     */
-    @Override
-    public void setShrinkerIntervalSeconds( final long seconds )
-    {
-        this.shrinkerIntervalSeconds = seconds;
-    }
-
-    /**
-     * If UseMemoryShrinker is true the memory cache should auto-expire elements to reclaim space.
-     * This gets the shrinker interval.
-     * <p>
-     * @return The ShrinkerIntervalSeconds value
-     */
-    @Override
-    public long getShrinkerIntervalSeconds()
-    {
-        return this.shrinkerIntervalSeconds;
-    }
-
-    /**
-     * If UseMemoryShrinker is true the memory cache should auto-expire elements to reclaim space.
-     * This sets the maximum number of items to spool per run.
-     * <p>
-     * If the value is -1, then there is no limit to the number of items to be spooled.
-     * <p>
-     * @param maxSpoolPerRun The new maxSpoolPerRun value
-     */
-    @Override
-    public void setMaxSpoolPerRun( final int maxSpoolPerRun )
-    {
-        this.maxSpoolPerRun = maxSpoolPerRun;
-    }
-
-    /**
-     * If UseMemoryShrinker is true the memory cache should auto-expire elements to reclaim space.
-     * This gets the maximum number of items to spool per run.
-     * <p>
-     * @return The maxSpoolPerRun value
-     */
-    @Override
-    public int getMaxSpoolPerRun()
-    {
-        return this.maxSpoolPerRun;
     }
 
     /**
@@ -371,14 +304,62 @@ public class CompositeCacheAttributes
     }
 
     /**
-     * Number to send to disk at the time when memory is full.
+     * If UseMemoryShrinker is true the memory cache should auto-expire elements to reclaim space.
      * <p>
-     * @return int
+     * @param seconds The new MaxMemoryIdleTimeSeconds value
      */
     @Override
-    public int getSpoolChunkSize()
+    public void setMaxMemoryIdleTimeSeconds( final long seconds )
     {
-        return spoolChunkSize;
+        this.maxMemoryIdleTimeSeconds = seconds;
+    }
+
+    /**
+     * Sets the maxObjects attribute of the CompositeCacheAttributes object
+     * <p>
+     * @param maxObjs The new maxObjects value
+     */
+    @Override
+    public void setMaxObjects( final int maxObjs )
+    {
+        this.maxObjs = maxObjs;
+    }
+
+    /**
+     * If UseMemoryShrinker is true the memory cache should auto-expire elements to reclaim space.
+     * This sets the maximum number of items to spool per run.
+     * <p>
+     * If the value is -1, then there is no limit to the number of items to be spooled.
+     * <p>
+     * @param maxSpoolPerRun The new maxSpoolPerRun value
+     */
+    @Override
+    public void setMaxSpoolPerRun( final int maxSpoolPerRun )
+    {
+        this.maxSpoolPerRun = maxSpoolPerRun;
+    }
+
+    /**
+     * Sets the memoryCacheName attribute of the CompositeCacheAttributes object
+     * <p>
+     * @param s The new memoryCacheName value
+     */
+    @Override
+    public void setMemoryCacheName( final String s )
+    {
+        this.memoryCacheName = s;
+    }
+
+    /**
+     * If UseMemoryShrinker is true the memory cache should auto-expire elements to reclaim space.
+     * This sets the shrinker interval.
+     * <p>
+     * @param seconds The new ShrinkerIntervalSeconds value
+     */
+    @Override
+    public void setShrinkerIntervalSeconds( final long seconds )
+    {
+        this.shrinkerIntervalSeconds = seconds;
     }
 
     /**
@@ -393,12 +374,47 @@ public class CompositeCacheAttributes
     }
 
     /**
-     * @return Returns the diskUsagePattern.
+     * Sets the useDisk attribute of the CompositeCacheAttributes object
+     * <p>
+     * @param useDisk The new useDisk value
      */
     @Override
-    public DiskUsagePattern getDiskUsagePattern()
+    public void setUseDisk( final boolean useDisk )
     {
-        return diskUsagePattern;
+        this.useDisk = useDisk;
+    }
+
+    /**
+     * Sets the useLateral attribute of the CompositeCacheAttributes object
+     * <p>
+     * @param b The new useLateral value
+     */
+    @Override
+    public void setUseLateral( final boolean b )
+    {
+        this.useLateral = b;
+    }
+
+    /**
+     * Whether the memory cache should perform background memory shrinkage.
+     * <p>
+     * @param useShrinker The new UseMemoryShrinker value
+     */
+    @Override
+    public void setUseMemoryShrinker( final boolean useShrinker )
+    {
+        this.useMemoryShrinker = useShrinker;
+    }
+
+    /**
+     * Sets the useRemote attribute of the CompositeCacheAttributes object
+     * <p>
+     * @param useRemote The new useRemote value
+     */
+    @Override
+    public void setUseRemote( final boolean useRemote )
+    {
+        this.useRemote = useRemote;
     }
 
     /**
@@ -422,21 +438,5 @@ public class CompositeCacheAttributes
         dump.append( " ]" );
 
         return dump.toString();
-    }
-
-    /**
-     * @see Object#clone()
-     */
-    @Override
-    public ICompositeCacheAttributes clone()
-    {
-        try
-        {
-            return (ICompositeCacheAttributes)super.clone();
-        }
-        catch (final CloneNotSupportedException e)
-        {
-            throw new IllegalStateException("Clone not supported. This should never happen.", e);
-        }
     }
 }

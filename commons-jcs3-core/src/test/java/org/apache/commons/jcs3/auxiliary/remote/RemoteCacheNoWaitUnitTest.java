@@ -39,28 +39,36 @@ import org.junit.Test;
 public class RemoteCacheNoWaitUnitTest
 {
     /**
-     * Simply verify that the client gets updated via the no wait.
+     * Simply verify that the serviced supplied to fix is passed onto the client. Verify that the
+     * original event queue is destroyed. A new event queue willbe plugged in on fix.
      * <p>
      * @throws Exception
      */
     @Test
-    public void testUpdate()
+    public void testFixCache()
         throws Exception
     {
         // SETUP
         final MockRemoteCacheClient<String, String> client = new MockRemoteCacheClient<>();
+        client.status = CacheStatus.ALIVE;
         final RemoteCacheNoWait<String, String> noWait = new RemoteCacheNoWait<>( client );
+
+        final MockRemoteCacheService<String, String> service = new MockRemoteCacheService<>();
 
         final ICacheElement<String, String> element = new CacheElement<>( "testUpdate", "key", "value" );
 
         // DO WORK
         noWait.update( element );
+        SleepUtil.sleepAtLeast( 10 );
+        // ICacheEventQueue<String, String> originalQueue = noWait.getCacheEventQueue();
 
-        // VERIFY
+        noWait.fixCache( service );
+
+        noWait.update( element );
         SleepUtil.sleepAtLeast( 10 );
 
-        assertEquals( "Wrong number updated.", 1, client.updateList.size() );
-        assertEquals( "Wrong element", element, client.updateList.get( 0 ) );
+        // VERIFY
+        assertEquals( "Wrong status", service, client.fixed );
     }
 
     /**
@@ -116,31 +124,6 @@ public class RemoteCacheNoWaitUnitTest
     }
 
     /**
-     * Simply verify that the client gets updated via the no wait.
-     * <p>
-     * @throws Exception
-     */
-    @Test
-    public void testRemove()
-        throws Exception
-    {
-        // SETUP
-        final MockRemoteCacheClient<String, String> client = new MockRemoteCacheClient<>();
-        final RemoteCacheNoWait<String, String> noWait = new RemoteCacheNoWait<>( client );
-
-        final String input = "MyKey";
-
-        // DO WORK
-        noWait.remove( input );
-
-        SleepUtil.sleepAtLeast( 10 );
-
-        // VERIFY
-        assertEquals( "Wrong number updated.", 1, client.removeList.size() );
-        assertEquals( "Wrong key", input, client.removeList.get( 0 ) );
-    }
-
-    /**
      * Simply verify that the client status is returned in the stats.
      * <p>
      * @throws Exception
@@ -183,35 +166,52 @@ public class RemoteCacheNoWaitUnitTest
     }
 
     /**
-     * Simply verify that the serviced supplied to fix is passed onto the client. Verify that the
-     * original event queue is destroyed. A new event queue willbe plugged in on fix.
+     * Simply verify that the client gets updated via the no wait.
      * <p>
      * @throws Exception
      */
     @Test
-    public void testFixCache()
+    public void testRemove()
         throws Exception
     {
         // SETUP
         final MockRemoteCacheClient<String, String> client = new MockRemoteCacheClient<>();
-        client.status = CacheStatus.ALIVE;
         final RemoteCacheNoWait<String, String> noWait = new RemoteCacheNoWait<>( client );
 
-        final MockRemoteCacheService<String, String> service = new MockRemoteCacheService<>();
+        final String input = "MyKey";
+
+        // DO WORK
+        noWait.remove( input );
+
+        SleepUtil.sleepAtLeast( 10 );
+
+        // VERIFY
+        assertEquals( "Wrong number updated.", 1, client.removeList.size() );
+        assertEquals( "Wrong key", input, client.removeList.get( 0 ) );
+    }
+
+    /**
+     * Simply verify that the client gets updated via the no wait.
+     * <p>
+     * @throws Exception
+     */
+    @Test
+    public void testUpdate()
+        throws Exception
+    {
+        // SETUP
+        final MockRemoteCacheClient<String, String> client = new MockRemoteCacheClient<>();
+        final RemoteCacheNoWait<String, String> noWait = new RemoteCacheNoWait<>( client );
 
         final ICacheElement<String, String> element = new CacheElement<>( "testUpdate", "key", "value" );
 
         // DO WORK
         noWait.update( element );
-        SleepUtil.sleepAtLeast( 10 );
-        // ICacheEventQueue<String, String> originalQueue = noWait.getCacheEventQueue();
-
-        noWait.fixCache( service );
-
-        noWait.update( element );
-        SleepUtil.sleepAtLeast( 10 );
 
         // VERIFY
-        assertEquals( "Wrong status", service, client.fixed );
+        SleepUtil.sleepAtLeast( 10 );
+
+        assertEquals( "Wrong number updated.", 1, client.updateList.size() );
+        assertEquals( "Wrong element", element, client.updateList.get( 0 ) );
     }
 }

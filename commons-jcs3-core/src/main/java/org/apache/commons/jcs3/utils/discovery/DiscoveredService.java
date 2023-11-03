@@ -68,77 +68,6 @@ public class DiscoveredService
     }
 
     /**
-     * @param cacheNames the cacheNames to set
-     */
-    public void setCacheNames( final ArrayList<String> cacheNames )
-    {
-        this.cacheNames = cacheNames;
-    }
-
-    /**
-     * @return the cacheNames
-     */
-    public ArrayList<String> getCacheNames()
-    {
-        return cacheNames;
-    }
-
-    /**
-     * @param serviceAddress The serviceAddress to set.
-     */
-    public void setServiceAddress( final String serviceAddress )
-    {
-        this.serviceAddress = serviceAddress;
-    }
-
-    /**
-     * @return Returns the serviceAddress.
-     */
-    public String getServiceAddress()
-    {
-        return serviceAddress;
-    }
-
-    /**
-     * @param servicePort The servicePort to set.
-     */
-    public void setServicePort( final int servicePort )
-    {
-        this.servicePort = servicePort;
-    }
-
-    /**
-     * @return Returns the servicePort.
-     */
-    public int getServicePort()
-    {
-        return servicePort;
-    }
-
-    /**
-     * @param lastHearFromTime The lastHearFromTime to set.
-     */
-    public void setLastHearFromTime( final long lastHearFromTime )
-    {
-        this.lastHearFromTime = lastHearFromTime;
-    }
-
-    /**
-     * @return Returns the lastHearFromTime.
-     */
-    public long getLastHearFromTime()
-    {
-        return lastHearFromTime;
-    }
-
-    /** @return hash code based on address/port */
-	@Override
-	public int hashCode()
-	{
-		return Objects.hash(serviceAddress, servicePort);
-	}
-
-	/**
      * NOTE - this object is often put into sets, so equals needs to be overridden.
      * <p>
      * We can't use cache names as part of the equals unless we manually only use the address and
@@ -165,6 +94,77 @@ public class DiscoveredService
 			return false;
 		}
         return servicePort == other.servicePort;
+    }
+
+    /**
+     * @return the cacheNames
+     */
+    public ArrayList<String> getCacheNames()
+    {
+        return cacheNames;
+    }
+
+    /**
+     * @return Returns the lastHearFromTime.
+     */
+    public long getLastHearFromTime()
+    {
+        return lastHearFromTime;
+    }
+
+    /**
+     * @return Returns the serviceAddress.
+     */
+    public String getServiceAddress()
+    {
+        return serviceAddress;
+    }
+
+    /**
+     * @return Returns the servicePort.
+     */
+    public int getServicePort()
+    {
+        return servicePort;
+    }
+
+    /** @return hash code based on address/port */
+	@Override
+	public int hashCode()
+	{
+		return Objects.hash(serviceAddress, servicePort);
+	}
+
+    /**
+     * @param cacheNames the cacheNames to set
+     */
+    public void setCacheNames( final ArrayList<String> cacheNames )
+    {
+        this.cacheNames = cacheNames;
+    }
+
+    /**
+     * @param lastHearFromTime The lastHearFromTime to set.
+     */
+    public void setLastHearFromTime( final long lastHearFromTime )
+    {
+        this.lastHearFromTime = lastHearFromTime;
+    }
+
+    /**
+     * @param serviceAddress The serviceAddress to set.
+     */
+    public void setServiceAddress( final String serviceAddress )
+    {
+        this.serviceAddress = serviceAddress;
+    }
+
+	/**
+     * @param servicePort The servicePort to set.
+     */
+    public void setServicePort( final int servicePort )
+    {
+        this.servicePort = servicePort;
     }
 
     /**

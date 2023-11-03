@@ -35,7 +35,25 @@ import org.junit.Test;
 
 public class ExtraJCacheExtensionTest
 {
+    public static class BeanWithInjections {
+        @Inject
+        private CacheManager mgr;
+
+        @Inject
+        private CachingProvider provider;
+
+        public CacheManager getMgr()
+        {
+            return mgr;
+        }
+
+        public CachingProvider getProvider()
+        {
+            return provider;
+        }
+    }
     private static BeanManagerImpl bm;
+
     private static ContainerLifecycle lifecycle;
 
     @BeforeClass
@@ -53,14 +71,14 @@ public class ExtraJCacheExtensionTest
         lifecycle.stopApplication(null);
     }
 
+    @Inject
+    private BeanWithInjections bean;
+
     @Before
     public void inject() throws Exception
     {
         OWBInjector.inject(bm, this, bm.createCreationalContext(null));
     }
-
-    @Inject
-    private BeanWithInjections bean;
 
     @Test
     public void testDefaultCacheManager()
@@ -72,23 +90,5 @@ public class ExtraJCacheExtensionTest
     public void testDefaultCacheProvider()
     {
         assertNotNull(bean.getProvider());
-    }
-
-    public static class BeanWithInjections {
-        @Inject
-        private CacheManager mgr;
-
-        @Inject
-        private CachingProvider provider;
-
-        public CacheManager getMgr()
-        {
-            return mgr;
-        }
-
-        public CachingProvider getProvider()
-        {
-            return provider;
-        }
     }
 }

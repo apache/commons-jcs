@@ -44,6 +44,19 @@ import org.junit.Test;
  */
 public class JCSThrashTest
 {
+    /**
+     * A runnable, that can throw an exception.
+     */
+    protected interface Executable
+    {
+        /**
+         * Executes this object.
+         * @throws Exception
+         */
+        void execute()
+            throws Exception;
+    }
+
     /** The logger. */
     private static final Log LOG = LogManager.getLog( JCSThrashTest.class.getName() );
 
@@ -51,6 +64,101 @@ public class JCSThrashTest
      * the cache instance
      */
     protected CacheAccess<String, Serializable> jcs;
+
+    /**
+     * @return size
+     */
+    private int getListSize()
+    {
+        final String listSize = "List Size";
+        final String lruMemoryCache = "LRU Memory Cache";
+        String result = "0";
+        final List<IStats> istats = jcs.getStatistics().getAuxiliaryCacheStats();
+        for ( final IStats istat : istats )
+        {
+            final List<IStatElement<?>> statElements = istat.getStatElements();
+            if ( lruMemoryCache.equals( istat.getTypeName() ) )
+            {
+                for ( final IStatElement<?> statElement : statElements )
+                {
+                    if ( listSize.equals( statElement.getName() ) )
+                    {
+                        result = statElement.getData().toString();
+                        break;
+                    }
+                }
+            }
+        }
+        return Integer.parseInt( result );
+    }
+
+    /**
+     * Measure memory used by the VM.
+     * <p>
+     * @return bytes
+     * @throws InterruptedException
+     */
+    protected long measureMemoryUse()
+        throws InterruptedException
+    {
+        System.gc();
+        Thread.sleep( 3000 );
+        System.gc();
+        return Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+    }
+
+    /**
+     * Runs a set of threads, for a fixed amount of time.
+     * <p>
+     * @param executables
+     * @throws Exception
+     */
+    protected void runThreads( final List<Executable> executables )
+        throws Exception
+    {
+
+        final long endTime = System.currentTimeMillis() + 10000;
+        final Throwable[] errors = new Throwable[1];
+
+        // Spin up the threads
+        final Thread[] threads = new Thread[executables.size()];
+        for ( int i = 0; i < threads.length; i++ )
+        {
+            final JCSThrashTest.Executable executable = executables.get( i );
+            threads[i] = new Thread()
+            {
+                @Override
+                public void run()
+                {
+                    try
+                    {
+                        // Run the thread until the given end time
+                        while ( System.currentTimeMillis() < endTime )
+                        {
+                            executable.execute();
+                        }
+                    }
+                    catch ( final Throwable t )
+                    {
+                        // Hang on to any errors
+                        errors[0] = t;
+                    }
+                }
+            };
+            threads[i].start();
+        }
+
+        // Wait for the threads to finish
+        for (final Thread thread : threads) {
+            thread.join();
+        }
+
+        // Throw any error that happened
+        if ( errors[0] != null )
+        {
+            throw new Exception( "Test thread failed.", errors[0]);
+        }
+    }
 
     /**
      * Sets up the test
@@ -73,6 +181,22 @@ public class JCSThrashTest
     {
         jcs.clear();
         jcs.dispose();
+    }
+
+    /**
+     * This does a bunch of work and then verifies that the memory has not grown by much. Most of
+     * the time the amount of memory used after the test is less.
+     * @throws Exception
+     */
+    @Test
+    public void testForMemoryLeaks()
+        throws Exception
+    {
+        final long differenceMemoryCache = thrashCache();
+        LOG.info( "Memory Difference is: " + differenceMemoryCache );
+        assertTrue( differenceMemoryCache < 500000 );
+
+        //LOG.info( "Memory Used is: " + measureMemoryUse() );
     }
 
     /**
@@ -124,22 +248,6 @@ public class JCSThrashTest
         // Try to remove an object that is not there in the store
         jcs.remove( "key4" );
         assertEquals( 1, getListSize() );
-    }
-
-    /**
-     * This does a bunch of work and then verifies that the memory has not grown by much. Most of
-     * the time the amount of memory used after the test is less.
-     * @throws Exception
-     */
-    @Test
-    public void testForMemoryLeaks()
-        throws Exception
-    {
-        final long differenceMemoryCache = thrashCache();
-        LOG.info( "Memory Difference is: " + differenceMemoryCache );
-        assertTrue( differenceMemoryCache < 500000 );
-
-        //LOG.info( "Memory Used is: " + measureMemoryUse() );
     }
 
     /**
@@ -199,113 +307,5 @@ public class JCSThrashTest
         final long finishingSize = measureMemoryUse();
         LOG.info( "Memory Used is: " + finishingSize );
         return finishingSize - startingSize;
-    }
-
-    /**
-     * Runs a set of threads, for a fixed amount of time.
-     * <p>
-     * @param executables
-     * @throws Exception
-     */
-    protected void runThreads( final List<Executable> executables )
-        throws Exception
-    {
-
-        final long endTime = System.currentTimeMillis() + 10000;
-        final Throwable[] errors = new Throwable[1];
-
-        // Spin up the threads
-        final Thread[] threads = new Thread[executables.size()];
-        for ( int i = 0; i < threads.length; i++ )
-        {
-            final JCSThrashTest.Executable executable = executables.get( i );
-            threads[i] = new Thread()
-            {
-                @Override
-                public void run()
-                {
-                    try
-                    {
-                        // Run the thread until the given end time
-                        while ( System.currentTimeMillis() < endTime )
-                        {
-                            executable.execute();
-                        }
-                    }
-                    catch ( final Throwable t )
-                    {
-                        // Hang on to any errors
-                        errors[0] = t;
-                    }
-                }
-            };
-            threads[i].start();
-        }
-
-        // Wait for the threads to finish
-        for (final Thread thread : threads) {
-            thread.join();
-        }
-
-        // Throw any error that happened
-        if ( errors[0] != null )
-        {
-            throw new Exception( "Test thread failed.", errors[0]);
-        }
-    }
-
-    /**
-     * Measure memory used by the VM.
-     * <p>
-     * @return bytes
-     * @throws InterruptedException
-     */
-    protected long measureMemoryUse()
-        throws InterruptedException
-    {
-        System.gc();
-        Thread.sleep( 3000 );
-        System.gc();
-        return Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
-    }
-
-    /**
-     * A runnable, that can throw an exception.
-     */
-    protected interface Executable
-    {
-        /**
-         * Executes this object.
-         * @throws Exception
-         */
-        void execute()
-            throws Exception;
-    }
-
-    /**
-     * @return size
-     */
-    private int getListSize()
-    {
-        final String listSize = "List Size";
-        final String lruMemoryCache = "LRU Memory Cache";
-        String result = "0";
-        final List<IStats> istats = jcs.getStatistics().getAuxiliaryCacheStats();
-        for ( final IStats istat : istats )
-        {
-            final List<IStatElement<?>> statElements = istat.getStatElements();
-            if ( lruMemoryCache.equals( istat.getTypeName() ) )
-            {
-                for ( final IStatElement<?> statElement : statElements )
-                {
-                    if ( listSize.equals( statElement.getName() ) )
-                    {
-                        result = statElement.getData().toString();
-                        break;
-                    }
-                }
-            }
-        }
-        return Integer.parseInt( result );
     }
 }

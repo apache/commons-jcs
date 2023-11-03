@@ -66,6 +66,27 @@ public class DoubleLinkedListUnitTest
 
     /** verify that it's added last. */
     @Test
+    public void testMakeLast_wasAlone()
+    {
+        // SETUP
+        final DoubleLinkedList<DoubleLinkedListNode<String>> list = new DoubleLinkedList<>();
+
+        final String payload1 = "payload1";
+        final DoubleLinkedListNode<String> node1 = new DoubleLinkedListNode<>( payload1 );
+
+        list.addFirst( node1 );
+
+        // DO WORK
+        list.makeLast( node1 );
+
+        // VERIFY
+        assertEquals( "Wrong size", 1, list.size() );
+        assertEquals( "Wrong last", node1, list.getLast() );
+        assertEquals( "Wrong first", node1, list.getFirst() );
+    }
+
+    /** verify that it's added last. */
+    @Test
     public void testMakeLast_wasFirst()
     {
         // SETUP
@@ -87,52 +108,6 @@ public class DoubleLinkedListUnitTest
         assertEquals( "Wrong size", 2, list.size() );
         assertEquals( "Wrong last", node1, list.getLast() );
         assertEquals( "Wrong first", node2, list.getFirst() );
-    }
-
-    /** verify that it's added last. */
-    @Test
-    public void testMakeLast_wasLast()
-    {
-        // SETUP
-        final DoubleLinkedList<DoubleLinkedListNode<String>> list = new DoubleLinkedList<>();
-
-        final String payload1 = "payload1";
-        final DoubleLinkedListNode<String> node1 = new DoubleLinkedListNode<>( payload1 );
-
-        final String payload2 = "payload2";
-        final DoubleLinkedListNode<String> node2 = new DoubleLinkedListNode<>( payload2 );
-
-        list.addFirst( node1 );
-        list.addFirst(  node2 );
-
-        // DO WORK
-        list.makeLast( node1 );
-
-        // VERIFY
-        assertEquals( "Wrong size", 2, list.size() );
-        assertEquals( "Wrong last", node1, list.getLast() );
-        assertEquals( "Wrong first", node2, list.getFirst() );
-    }
-
-    /** verify that it's added last. */
-    @Test
-    public void testMakeLast_wasAlone()
-    {
-        // SETUP
-        final DoubleLinkedList<DoubleLinkedListNode<String>> list = new DoubleLinkedList<>();
-
-        final String payload1 = "payload1";
-        final DoubleLinkedListNode<String> node1 = new DoubleLinkedListNode<>( payload1 );
-
-        list.addFirst( node1 );
-
-        // DO WORK
-        list.makeLast( node1 );
-
-        // VERIFY
-        assertEquals( "Wrong size", 1, list.size() );
-        assertEquals( "Wrong last", node1, list.getLast() );
-        assertEquals( "Wrong first", node1, list.getFirst() );
     }
 
     /** verify that it's added last. */
@@ -162,5 +137,30 @@ public class DoubleLinkedListUnitTest
         assertEquals( "Wrong size", 3, list.size() );
         assertEquals( "Wrong last", node1, list.getLast() );
         assertEquals( "Wrong first", node3, list.getFirst() );
+    }
+
+    /** verify that it's added last. */
+    @Test
+    public void testMakeLast_wasLast()
+    {
+        // SETUP
+        final DoubleLinkedList<DoubleLinkedListNode<String>> list = new DoubleLinkedList<>();
+
+        final String payload1 = "payload1";
+        final DoubleLinkedListNode<String> node1 = new DoubleLinkedListNode<>( payload1 );
+
+        final String payload2 = "payload2";
+        final DoubleLinkedListNode<String> node2 = new DoubleLinkedListNode<>( payload2 );
+
+        list.addFirst( node1 );
+        list.addFirst(  node2 );
+
+        // DO WORK
+        list.makeLast( node1 );
+
+        // VERIFY
+        assertEquals( "Wrong size", 2, list.size() );
+        assertEquals( "Wrong last", node1, list.getLast() );
+        assertEquals( "Wrong first", node2, list.getFirst() );
     }
 }

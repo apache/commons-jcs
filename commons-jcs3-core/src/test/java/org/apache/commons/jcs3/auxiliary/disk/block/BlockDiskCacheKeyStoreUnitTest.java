@@ -34,6 +34,48 @@ public class BlockDiskCacheKeyStoreUnitTest
     /** Directory name */
     private final String rootDirName = "target/test-sandbox/block";
 
+    private void innerTestPutKeys(final BlockDiskCacheAttributes attributes)
+    {
+        final BlockDiskCache<String, String> blockDiskCache = new BlockDiskCache<>(attributes);
+        final BlockDiskKeyStore<String> keyStore = new BlockDiskKeyStore<>(attributes, blockDiskCache);
+
+        // DO WORK
+        final int numElements = 100;
+        for (int i = 0; i < numElements; i++)
+        {
+            keyStore.put(String.valueOf(i), new int[i]);
+        }
+        // System.out.println( "testPutKeys " + keyStore );
+
+        // VERIFY
+        assertEquals("Wrong number of keys", numElements, keyStore.size());
+        for (int i = 0; i < numElements; i++)
+        {
+            final int[] result = keyStore.get(String.valueOf(i));
+            assertEquals("Wrong array returned.", i, result.length);
+        }
+    }
+
+    @Test
+    public void testObjectLargerThanMaxSize()
+    {
+        final BlockDiskCacheAttributes attributes = new BlockDiskCacheAttributes();
+        attributes.setCacheName("testObjectLargerThanMaxSize");
+        attributes.setDiskPath(rootDirName);
+        attributes.setMaxKeySize(1000);
+        attributes.setBlockSizeBytes(2000);
+        attributes.setDiskLimitType(DiskLimitType.SIZE);
+
+        @SuppressWarnings({ "unchecked", "rawtypes" })
+        final
+        BlockDiskKeyStore<String> keyStore = new BlockDiskKeyStore<>(attributes, new BlockDiskCache(attributes));
+
+        keyStore.put("1", new int[1000]);
+        keyStore.put("2", new int[1000]);
+        assertNull(keyStore.get("1"));
+        assertNotNull(keyStore.get("2"));
+    }
+
     /**
      * Put a bunch of keys in the key store and verify that they are present.
      *
@@ -68,28 +110,6 @@ public class BlockDiskCacheKeyStoreUnitTest
         innerTestPutKeys(attributes);
     }
 
-    private void innerTestPutKeys(final BlockDiskCacheAttributes attributes)
-    {
-        final BlockDiskCache<String, String> blockDiskCache = new BlockDiskCache<>(attributes);
-        final BlockDiskKeyStore<String> keyStore = new BlockDiskKeyStore<>(attributes, blockDiskCache);
-
-        // DO WORK
-        final int numElements = 100;
-        for (int i = 0; i < numElements; i++)
-        {
-            keyStore.put(String.valueOf(i), new int[i]);
-        }
-        // System.out.println( "testPutKeys " + keyStore );
-
-        // VERIFY
-        assertEquals("Wrong number of keys", numElements, keyStore.size());
-        for (int i = 0; i < numElements; i++)
-        {
-            final int[] result = keyStore.get(String.valueOf(i));
-            assertEquals("Wrong array returned.", i, result.length);
-        }
-    }
-
     /**
      * Verify that we can load keys that we saved. Add a bunch. Save them. Clear
      * the memory key hash. Load the keys. Verify.
@@ -99,20 +119,6 @@ public class BlockDiskCacheKeyStoreUnitTest
      */
     @Test
     public void testSaveLoadKeys()
-            throws Exception
-    {
-        // SETUP
-        final BlockDiskCacheAttributes attributes = new BlockDiskCacheAttributes();
-        attributes.setCacheName("testSaveLoadKeys");
-        attributes.setDiskPath(rootDirName);
-        attributes.setMaxKeySize(10000);
-        attributes.setBlockSizeBytes(2000);
-
-        testSaveLoadKeysInner(attributes);
-    }
-
-    @Test
-    public void testSaveLoadKeysSize()
             throws Exception
     {
         // SETUP
@@ -173,22 +179,16 @@ public class BlockDiskCacheKeyStoreUnitTest
     }
 
     @Test
-    public void testObjectLargerThanMaxSize()
+    public void testSaveLoadKeysSize()
+            throws Exception
     {
+        // SETUP
         final BlockDiskCacheAttributes attributes = new BlockDiskCacheAttributes();
-        attributes.setCacheName("testObjectLargerThanMaxSize");
+        attributes.setCacheName("testSaveLoadKeys");
         attributes.setDiskPath(rootDirName);
-        attributes.setMaxKeySize(1000);
+        attributes.setMaxKeySize(10000);
         attributes.setBlockSizeBytes(2000);
-        attributes.setDiskLimitType(DiskLimitType.SIZE);
 
-        @SuppressWarnings({ "unchecked", "rawtypes" })
-        final
-        BlockDiskKeyStore<String> keyStore = new BlockDiskKeyStore<>(attributes, new BlockDiskCache(attributes));
-
-        keyStore.put("1", new int[1000]);
-        keyStore.put("2", new int[1000]);
-        assertNull(keyStore.get("1"));
-        assertNotNull(keyStore.get("2"));
+        testSaveLoadKeysInner(attributes);
     }
 }

@@ -38,6 +38,91 @@ import org.junit.Before;
  */
 public class EventQueueConcurrentLoadTest
 {
+    /**
+     * This is a dummy cache listener to use when testing the event queue.
+     */
+    protected static class CacheListenerImpl<K, V>
+        implements ICacheListener<K, V>
+    {
+        /**
+         * <code>putCount</code>
+         */
+        protected AtomicInteger putCount = new AtomicInteger();
+
+        /**
+         * <code>removeCount</code>
+         */
+        protected AtomicInteger removeCount = new AtomicInteger();
+
+        /**
+         * @return 0
+         * @throws IOException
+         */
+        @Override
+        public long getListenerId()
+            throws IOException
+        {
+            // TODO Auto-generated method stub
+            return 0;
+        }
+
+        /**
+         * @param cacheName
+         * @throws IOException
+         */
+        @Override
+        public void handleDispose( final String cacheName )
+            throws IOException
+        {
+            // TODO Auto-generated method stub
+        }
+
+        /**
+         * @param item
+         * @throws IOException
+         */
+        @Override
+        public void handlePut( final ICacheElement<K, V> item )
+            throws IOException
+        {
+            putCount.incrementAndGet();
+        }
+
+        /**
+         * @param cacheName
+         * @param key
+         * @throws IOException
+         */
+        @Override
+        public void handleRemove( final String cacheName, final K key )
+            throws IOException
+        {
+            removeCount.incrementAndGet();
+        }
+
+        /**
+         * @param cacheName
+         * @throws IOException
+         */
+        @Override
+        public void handleRemoveAll( final String cacheName )
+            throws IOException
+        {
+            // TODO Auto-generated method stub
+        }
+
+        /**
+         * @param id
+         * @throws IOException
+         */
+        @Override
+        public void setListenerId( final long id )
+            throws IOException
+        {
+            // TODO Auto-generated method stub
+        }
+    }
+
     /** The queue implementation */
     private static CacheEventQueue<String, String> queue;
 
@@ -52,6 +137,112 @@ public class EventQueueConcurrentLoadTest
 
     /** very small idle time */
     private static final int idleTime = 2;
+
+    /**
+     * Test putting and a delay. Waits until queue is empty to start.
+     * @param end
+     * @param expectedPutCount
+     * @throws Exception
+     */
+    public static void runPutDelayTest( final int end, final int expectedPutCount )
+        throws Exception
+    {
+        while ( !queue.isEmpty() )
+        {
+            synchronized ( queue )
+            {
+                System.out.println( "queue is busy, waiting 250 millis to begin" );
+                queue.wait( 250 );
+            }
+        }
+        System.out.println( "queue is empty, begin" );
+
+        // get it going
+        final CacheElement<String, String> elem = new CacheElement<>( "testCache1", "a:key", "adata" );
+        queue.addPutEvent( elem );
+
+        for ( int i = 0; i < end; i++ )
+        {
+            synchronized ( queue )
+            {
+                if ( i % 2 == 0 )
+                {
+                    queue.wait( idleTime );
+                }
+                else
+                {
+                    queue.wait( idleTime / 2 );
+                }
+            }
+            final CacheElement<String, String> elem2 = new CacheElement<>( "testCache1", i + ":key", i + "data" );
+            queue.addPutEvent( elem2 );
+        }
+
+        while ( !queue.isEmpty() )
+        {
+            synchronized ( queue )
+            {
+                System.out.println( "queue is still busy, waiting 250 millis" );
+                queue.wait( 250 );
+            }
+        }
+        System.out.println( "queue is empty, comparing putCount" );
+
+        Thread.sleep( 1000 );
+
+        // this becomes less accurate with each test. It should never fail. If
+        // it does things are very off.
+        assertTrue( "The put count [" + listen.putCount + "] is below the expected minimum threshold ["
+            + expectedPutCount + "]", listen.putCount.get() >= ( expectedPutCount - 1 ) );
+
+    }
+
+    /**
+     * Adds put events to the queue.
+     * @param end
+     * @param expectedPutCount
+     * @throws Exception
+     */
+    public static void runPutTest( final int end, final int expectedPutCount )
+        throws Exception
+    {
+        for ( int i = 0; i < end; i++ )
+        {
+            final CacheElement<String, String> elem = new CacheElement<>( "testCache1", i + ":key", i + "data" );
+            queue.addPutEvent( elem );
+        }
+
+        while ( !queue.isEmpty() )
+        {
+            synchronized ( queue )
+            {
+                System.out.println( "queue is still busy, waiting 250 millis" );
+                queue.wait( 250 );
+            }
+        }
+        System.out.println( "queue is empty, comparing putCount" );
+
+        // this becomes less accurate with each test. It should never fail. If
+        // it does things are very off.
+        assertTrue( "The put count [" + listen.putCount + "] is below the expected minimum threshold ["
+            + expectedPutCount + "]", listen.putCount.get() >= ( expectedPutCount - 1 ) );
+
+    }
+
+    /**
+     * Add remove events to the event queue.
+     * @param end
+     * @throws Exception
+     */
+    public static void runRemoveTest( final int end )
+        throws Exception
+    {
+        for ( int i = 0; i < end; i++ )
+        {
+            queue.addRemoveEvent( i + ":key" );
+        }
+
+    }
 
     /**
      * A unit test suite for JUnit
@@ -133,196 +324,5 @@ public class EventQueueConcurrentLoadTest
         listen = new CacheListenerImpl<>();
         queue = new CacheEventQueue<>( listen, 1L, "testCache1", maxFailure, waitBeforeRetry );
         queue.setWaitToDieMillis( idleTime );
-    }
-
-    /**
-     * Adds put events to the queue.
-     * @param end
-     * @param expectedPutCount
-     * @throws Exception
-     */
-    public static void runPutTest( final int end, final int expectedPutCount )
-        throws Exception
-    {
-        for ( int i = 0; i < end; i++ )
-        {
-            final CacheElement<String, String> elem = new CacheElement<>( "testCache1", i + ":key", i + "data" );
-            queue.addPutEvent( elem );
-        }
-
-        while ( !queue.isEmpty() )
-        {
-            synchronized ( queue )
-            {
-                System.out.println( "queue is still busy, waiting 250 millis" );
-                queue.wait( 250 );
-            }
-        }
-        System.out.println( "queue is empty, comparing putCount" );
-
-        // this becomes less accurate with each test. It should never fail. If
-        // it does things are very off.
-        assertTrue( "The put count [" + listen.putCount + "] is below the expected minimum threshold ["
-            + expectedPutCount + "]", listen.putCount.get() >= ( expectedPutCount - 1 ) );
-
-    }
-
-    /**
-     * Add remove events to the event queue.
-     * @param end
-     * @throws Exception
-     */
-    public static void runRemoveTest( final int end )
-        throws Exception
-    {
-        for ( int i = 0; i < end; i++ )
-        {
-            queue.addRemoveEvent( i + ":key" );
-        }
-
-    }
-
-    /**
-     * Test putting and a delay. Waits until queue is empty to start.
-     * @param end
-     * @param expectedPutCount
-     * @throws Exception
-     */
-    public static void runPutDelayTest( final int end, final int expectedPutCount )
-        throws Exception
-    {
-        while ( !queue.isEmpty() )
-        {
-            synchronized ( queue )
-            {
-                System.out.println( "queue is busy, waiting 250 millis to begin" );
-                queue.wait( 250 );
-            }
-        }
-        System.out.println( "queue is empty, begin" );
-
-        // get it going
-        final CacheElement<String, String> elem = new CacheElement<>( "testCache1", "a:key", "adata" );
-        queue.addPutEvent( elem );
-
-        for ( int i = 0; i < end; i++ )
-        {
-            synchronized ( queue )
-            {
-                if ( i % 2 == 0 )
-                {
-                    queue.wait( idleTime );
-                }
-                else
-                {
-                    queue.wait( idleTime / 2 );
-                }
-            }
-            final CacheElement<String, String> elem2 = new CacheElement<>( "testCache1", i + ":key", i + "data" );
-            queue.addPutEvent( elem2 );
-        }
-
-        while ( !queue.isEmpty() )
-        {
-            synchronized ( queue )
-            {
-                System.out.println( "queue is still busy, waiting 250 millis" );
-                queue.wait( 250 );
-            }
-        }
-        System.out.println( "queue is empty, comparing putCount" );
-
-        Thread.sleep( 1000 );
-
-        // this becomes less accurate with each test. It should never fail. If
-        // it does things are very off.
-        assertTrue( "The put count [" + listen.putCount + "] is below the expected minimum threshold ["
-            + expectedPutCount + "]", listen.putCount.get() >= ( expectedPutCount - 1 ) );
-
-    }
-
-    /**
-     * This is a dummy cache listener to use when testing the event queue.
-     */
-    protected static class CacheListenerImpl<K, V>
-        implements ICacheListener<K, V>
-    {
-        /**
-         * <code>putCount</code>
-         */
-        protected AtomicInteger putCount = new AtomicInteger();
-
-        /**
-         * <code>removeCount</code>
-         */
-        protected AtomicInteger removeCount = new AtomicInteger();
-
-        /**
-         * @param item
-         * @throws IOException
-         */
-        @Override
-        public void handlePut( final ICacheElement<K, V> item )
-            throws IOException
-        {
-            putCount.incrementAndGet();
-        }
-
-        /**
-         * @param cacheName
-         * @param key
-         * @throws IOException
-         */
-        @Override
-        public void handleRemove( final String cacheName, final K key )
-            throws IOException
-        {
-            removeCount.incrementAndGet();
-        }
-
-        /**
-         * @param cacheName
-         * @throws IOException
-         */
-        @Override
-        public void handleRemoveAll( final String cacheName )
-            throws IOException
-        {
-            // TODO Auto-generated method stub
-        }
-
-        /**
-         * @param cacheName
-         * @throws IOException
-         */
-        @Override
-        public void handleDispose( final String cacheName )
-            throws IOException
-        {
-            // TODO Auto-generated method stub
-        }
-
-        /**
-         * @param id
-         * @throws IOException
-         */
-        @Override
-        public void setListenerId( final long id )
-            throws IOException
-        {
-            // TODO Auto-generated method stub
-        }
-
-        /**
-         * @return 0
-         * @throws IOException
-         */
-        @Override
-        public long getListenerId()
-            throws IOException
-        {
-            // TODO Auto-generated method stub
-            return 0;
-        }
     }
 }

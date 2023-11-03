@@ -35,29 +35,35 @@ import org.junit.Test;
 
 public class CDIJCacheHelperTest
 {
-    @Test
-    public void testProxyCacheDefaults()
+    @CacheDefaults(cacheName = "child")
+    public interface MyChild1 extends MyParent
     {
-        final CDIJCacheHelper helper = new CDIJCacheHelper();
+    }
 
-        final MyParent child1 = MyParent.class.cast(Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(),
-                new Class<?>[]{MyChild1.class}, (proxy, method, args) -> null));
-        final CDIJCacheHelper.MethodMeta meta1 = helper.findMeta(newContext(child1));
-        assertEquals("child", meta1.getCacheResultCacheName());
+    @CacheDefaults(cacheName = "child2")
+    public interface MyChild2 extends MyParent
+    {
+    }
 
-        final MyParent child2 = MyParent.class.cast(Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(),
-                new Class<?>[]{MyChild2.class}, (proxy, method, args) -> null));
-        final CDIJCacheHelper.MethodMeta meta2 = helper.findMeta(newContext(child2));
-        assertEquals("child2", meta2.getCacheResultCacheName());
+    public interface MyParent
+    {
+        @CacheResult
+        String foo();
     }
 
     private InvocationContext newContext(final MyParent child1) {
         return new InvocationContext()
         {
             @Override
-            public Object getTarget()
+            public Constructor<?> getConstructor()
             {
-                return child1;
+                return null;
+            }
+
+            @Override
+            public Map<String, Object> getContextData()
+            {
+                return null;
             }
 
             @Override
@@ -72,25 +78,19 @@ public class CDIJCacheHelperTest
             }
 
             @Override
-            public Constructor<?> getConstructor()
-            {
-                return null;
-            }
-
-            @Override
             public Object[] getParameters()
             {
                 return new Object[0];
             }
 
             @Override
-            public void setParameters(final Object[] objects)
+            public Object getTarget()
             {
-
+                return child1;
             }
 
             @Override
-            public Map<String, Object> getContextData()
+            public Object getTimer()
             {
                 return null;
             }
@@ -102,26 +102,26 @@ public class CDIJCacheHelperTest
             }
 
             @Override
-            public Object getTimer()
+            public void setParameters(final Object[] objects)
             {
-                return null;
+
             }
         };
     }
 
-    public interface MyParent
+    @Test
+    public void testProxyCacheDefaults()
     {
-        @CacheResult
-        String foo();
-    }
+        final CDIJCacheHelper helper = new CDIJCacheHelper();
 
-    @CacheDefaults(cacheName = "child")
-    public interface MyChild1 extends MyParent
-    {
-    }
+        final MyParent child1 = MyParent.class.cast(Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(),
+                new Class<?>[]{MyChild1.class}, (proxy, method, args) -> null));
+        final CDIJCacheHelper.MethodMeta meta1 = helper.findMeta(newContext(child1));
+        assertEquals("child", meta1.getCacheResultCacheName());
 
-    @CacheDefaults(cacheName = "child2")
-    public interface MyChild2 extends MyParent
-    {
+        final MyParent child2 = MyParent.class.cast(Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(),
+                new Class<?>[]{MyChild2.class}, (proxy, method, args) -> null));
+        final CDIJCacheHelper.MethodMeta meta2 = helper.findMeta(newContext(child2));
+        assertEquals("child2", meta2.getCacheResultCacheName());
     }
 }

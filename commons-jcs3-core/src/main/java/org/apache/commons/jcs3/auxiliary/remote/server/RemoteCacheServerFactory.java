@@ -68,9 +68,60 @@ public class RemoteCacheServerFactory
     /** A reference to the registry. */
     private static Registry registry;
 
-    /** Constructor for the RemoteCacheServerFactory object. */
-    private RemoteCacheServerFactory()
+    /**
+     * Tries to get the event logger.
+     * <p>
+     * @param props configuration properties
+     * @return ICacheEventLogger, may be null
+     */
+    protected static ICacheEventLogger configureCacheEventLogger( final Properties props )
     {
+        return AuxiliaryCacheConfigurator
+                .parseCacheEventLogger( props, IRemoteCacheConstants.CACHE_SERVER_PREFIX );
+    }
+
+    /**
+     * This configures an object specific custom factory. This will be configured for just this
+     * object in the registry. This can be null.
+     * <p>
+     * @param props
+     * @return RMISocketFactory
+     */
+    protected static RMISocketFactory configureObjectSpecificCustomFactory( final Properties props )
+    {
+        final RMISocketFactory customRMISocketFactory =
+            OptionConverter.instantiateByKey( props, CUSTOM_RMI_SOCKET_FACTORY_PROPERTY_PREFIX, null );
+
+        if ( customRMISocketFactory != null )
+        {
+            PropertySetter.setProperties( customRMISocketFactory, props, CUSTOM_RMI_SOCKET_FACTORY_PROPERTY_PREFIX
+                + "." );
+            log.info( "Will use server specific custom socket factory. {0}",
+                    customRMISocketFactory );
+        }
+        else
+        {
+            log.info( "No server specific custom socket factory defined." );
+        }
+        return customRMISocketFactory;
+    }
+
+    /**
+     * Configure.
+     * <p>
+     * jcs.remotecache.serverattributes.ATTRIBUTENAME=ATTRIBUTEVALUE
+     * <p>
+     * @param prop
+     * @return RemoteCacheServerAttributesconfigureRemoteCacheServerAttributes
+     */
+    protected static RemoteCacheServerAttributes configureRemoteCacheServerAttributes( final Properties prop )
+    {
+        final RemoteCacheServerAttributes rcsa = new RemoteCacheServerAttributes();
+
+        // configure automatically
+        PropertySetter.setProperties( rcsa, prop, CACHE_SERVER_ATTRIBUTES_PROPERTY_PREFIX + "." );
+
+        return rcsa;
     }
 
     /**
@@ -87,78 +138,12 @@ public class RemoteCacheServerFactory
         return (RemoteCacheServer<K, V>)remoteCacheServer;
     }
 
-    // ///////////////////// Startup/shutdown methods. //////////////////
     /**
-     * Starts up the remote cache server on this JVM, and binds it to the registry on the given host
-     * and port.
-     * <p>
-     * A remote cache is either a local cache or a cluster cache.
-     * <p>
-     * @param host
-     * @param port
-     * @param props
-     * @throws IOException
+     * @return the serviceName
      */
-    public static void startup( String host, final int port, final Properties props)
-        throws IOException
+    protected static String getServiceName()
     {
-        if ( remoteCacheServer != null )
-        {
-            throw new IllegalArgumentException( "Server already started." );
-        }
-
-        synchronized ( RemoteCacheServer.class )
-        {
-            if ( remoteCacheServer != null )
-            {
-                return;
-            }
-
-            final RemoteCacheServerAttributes rcsa = configureRemoteCacheServerAttributes(props);
-
-            // These should come from the file!
-            rcsa.setRemoteLocation( Objects.toString(host, ""), port );
-            log.info( "Creating server with these attributes: {0}", rcsa );
-
-            setServiceName( rcsa.getRemoteServiceName() );
-
-            final RMISocketFactory customRMISocketFactory = configureObjectSpecificCustomFactory( props );
-
-            RemoteUtils.configureGlobalCustomSocketFactory( rcsa.getRmiSocketFactoryTimeoutMillis() );
-
-            // CONFIGURE THE EVENT LOGGER
-            final ICacheEventLogger cacheEventLogger = configureCacheEventLogger( props );
-
-            // CREATE SERVER
-            if ( customRMISocketFactory != null )
-            {
-                remoteCacheServer = new RemoteCacheServer<>( rcsa, props, customRMISocketFactory );
-            }
-            else
-            {
-                remoteCacheServer = new RemoteCacheServer<>( rcsa, props );
-            }
-
-            remoteCacheServer.setCacheEventLogger( cacheEventLogger );
-
-            // START THE REGISTRY
-        	registry = RemoteUtils.createRegistry(port);
-
-            // REGISTER THE SERVER
-            registerServer( serviceName, remoteCacheServer );
-
-            // KEEP THE REGISTRY ALIVE
-            if ( rcsa.isUseRegistryKeepAlive() )
-            {
-                if ( keepAliveDaemon == null )
-                {
-                    keepAliveDaemon = Executors.newScheduledThreadPool(1,
-                            new DaemonThreadFactory("JCS-RemoteCacheServerFactory-"));
-                }
-                keepAliveDaemon.scheduleAtFixedRate(() -> keepAlive(host, port, cacheEventLogger),
-                        0, rcsa.getRegistryKeepAliveDelayMillis(), TimeUnit.MILLISECONDS);
-            }
-        }
+        return serviceName;
     }
 
     /**
@@ -239,136 +224,24 @@ public class RemoteCacheServerFactory
     }
 
     /**
-     * Tries to get the event logger.
-     * <p>
-     * @param props configuration properties
-     * @return ICacheEventLogger, may be null
+     * Look up the remote cache service admin instance
+     *
+     * @param config the configuration properties
+     * @param port the local port
+     * @return the admin object instance
+     *
+     * @throws Exception if lookup fails
      */
-    protected static ICacheEventLogger configureCacheEventLogger( final Properties props )
+    private static ICacheServiceAdmin lookupCacheServiceAdmin(final Properties config, final int port) throws Exception
     {
-        return AuxiliaryCacheConfigurator
-                .parseCacheEventLogger( props, IRemoteCacheConstants.CACHE_SERVER_PREFIX );
-    }
+        final String remoteServiceName = config.getProperty( REMOTE_CACHE_SERVICE_NAME, REMOTE_CACHE_SERVICE_VAL ).trim();
+        final String registry = RemoteUtils.getNamingURL("", port, remoteServiceName);
 
-    /**
-     * This configures an object specific custom factory. This will be configured for just this
-     * object in the registry. This can be null.
-     * <p>
-     * @param props
-     * @return RMISocketFactory
-     */
-    protected static RMISocketFactory configureObjectSpecificCustomFactory( final Properties props )
-    {
-        final RMISocketFactory customRMISocketFactory =
-            OptionConverter.instantiateByKey( props, CUSTOM_RMI_SOCKET_FACTORY_PROPERTY_PREFIX, null );
+        log.debug( "looking up server {0}", registry );
+        final Object obj = Naming.lookup( registry );
+        log.debug( "server found" );
 
-        if ( customRMISocketFactory != null )
-        {
-            PropertySetter.setProperties( customRMISocketFactory, props, CUSTOM_RMI_SOCKET_FACTORY_PROPERTY_PREFIX
-                + "." );
-            log.info( "Will use server specific custom socket factory. {0}",
-                    customRMISocketFactory );
-        }
-        else
-        {
-            log.info( "No server specific custom socket factory defined." );
-        }
-        return customRMISocketFactory;
-    }
-
-    /**
-     * Registers the server with the registry. I broke this off because we might want to have code
-     * that will restart a dead registry. It will need to rebind the server.
-     * <p>
-     * @param serviceName the name of the service
-     * @param server the server object to bind
-     * @throws RemoteException
-     */
-    protected static void registerServer(final String serviceName, final Remote server )
-        throws RemoteException
-    {
-        if ( server == null )
-        {
-            throw new RemoteException( "Cannot register the server until it is created." );
-        }
-
-        if ( registry == null )
-        {
-            throw new RemoteException( "Cannot register the server: Registry is null." );
-        }
-
-        log.info( "Binding server to {0}", serviceName );
-
-        registry.rebind( serviceName, server );
-    }
-
-    /**
-     * Configure.
-     * <p>
-     * jcs.remotecache.serverattributes.ATTRIBUTENAME=ATTRIBUTEVALUE
-     * <p>
-     * @param prop
-     * @return RemoteCacheServerAttributesconfigureRemoteCacheServerAttributes
-     */
-    protected static RemoteCacheServerAttributes configureRemoteCacheServerAttributes( final Properties prop )
-    {
-        final RemoteCacheServerAttributes rcsa = new RemoteCacheServerAttributes();
-
-        // configure automatically
-        PropertySetter.setProperties( rcsa, prop, CACHE_SERVER_ATTRIBUTES_PROPERTY_PREFIX + "." );
-
-        return rcsa;
-    }
-
-    /**
-     * Unbinds the remote server.
-     * <p>
-     * @param host
-     * @param port
-     * @throws IOException
-     */
-    static void shutdownImpl( final String host, final int port )
-        throws IOException
-    {
-        synchronized ( RemoteCacheServer.class )
-        {
-            if ( remoteCacheServer == null )
-            {
-                return;
-            }
-            log.info( "Unbinding host={0}, port={1}, serviceName={2}",
-                    host, port, getServiceName() );
-            try
-            {
-                Naming.unbind( RemoteUtils.getNamingURL(host, port, getServiceName()) );
-            }
-            catch ( final MalformedURLException ex )
-            {
-                // impossible case.
-                throw new IllegalArgumentException( ex.getMessage() + "; host=" + host + ", port=" + port
-                    + ", serviceName=" + getServiceName() );
-            }
-            catch ( final NotBoundException ex )
-            {
-                // ignore.
-            }
-            remoteCacheServer.release();
-            remoteCacheServer = null;
-
-            // Shut down keepalive scheduler
-            if ( keepAliveDaemon != null )
-            {
-                keepAliveDaemon.shutdownNow();
-                keepAliveDaemon = null;
-            }
-
-            // Try to release registry
-            if (registry != null)
-            {
-            	UnicastRemoteObject.unexportObject(registry, true);
-            	registry = null;
-            }
-        }
+        return (ICacheServiceAdmin) obj;
     }
 
     /**
@@ -453,24 +326,29 @@ public class RemoteCacheServerFactory
     }
 
     /**
-     * Look up the remote cache service admin instance
-     *
-     * @param config the configuration properties
-     * @param port the local port
-     * @return the admin object instance
-     *
-     * @throws Exception if lookup fails
+     * Registers the server with the registry. I broke this off because we might want to have code
+     * that will restart a dead registry. It will need to rebind the server.
+     * <p>
+     * @param serviceName the name of the service
+     * @param server the server object to bind
+     * @throws RemoteException
      */
-    private static ICacheServiceAdmin lookupCacheServiceAdmin(final Properties config, final int port) throws Exception
+    protected static void registerServer(final String serviceName, final Remote server )
+        throws RemoteException
     {
-        final String remoteServiceName = config.getProperty( REMOTE_CACHE_SERVICE_NAME, REMOTE_CACHE_SERVICE_VAL ).trim();
-        final String registry = RemoteUtils.getNamingURL("", port, remoteServiceName);
+        if ( server == null )
+        {
+            throw new RemoteException( "Cannot register the server until it is created." );
+        }
 
-        log.debug( "looking up server {0}", registry );
-        final Object obj = Naming.lookup( registry );
-        log.debug( "server found" );
+        if ( registry == null )
+        {
+            throw new RemoteException( "Cannot register the server: Registry is null." );
+        }
 
-        return (ICacheServiceAdmin) obj;
+        log.info( "Binding server to {0}", serviceName );
+
+        registry.rebind( serviceName, server );
     }
 
     /**
@@ -482,10 +360,132 @@ public class RemoteCacheServerFactory
     }
 
     /**
-     * @return the serviceName
+     * Unbinds the remote server.
+     * <p>
+     * @param host
+     * @param port
+     * @throws IOException
      */
-    protected static String getServiceName()
+    static void shutdownImpl( final String host, final int port )
+        throws IOException
     {
-        return serviceName;
+        synchronized ( RemoteCacheServer.class )
+        {
+            if ( remoteCacheServer == null )
+            {
+                return;
+            }
+            log.info( "Unbinding host={0}, port={1}, serviceName={2}",
+                    host, port, getServiceName() );
+            try
+            {
+                Naming.unbind( RemoteUtils.getNamingURL(host, port, getServiceName()) );
+            }
+            catch ( final MalformedURLException ex )
+            {
+                // impossible case.
+                throw new IllegalArgumentException( ex.getMessage() + "; host=" + host + ", port=" + port
+                    + ", serviceName=" + getServiceName() );
+            }
+            catch ( final NotBoundException ex )
+            {
+                // ignore.
+            }
+            remoteCacheServer.release();
+            remoteCacheServer = null;
+
+            // Shut down keepalive scheduler
+            if ( keepAliveDaemon != null )
+            {
+                keepAliveDaemon.shutdownNow();
+                keepAliveDaemon = null;
+            }
+
+            // Try to release registry
+            if (registry != null)
+            {
+            	UnicastRemoteObject.unexportObject(registry, true);
+            	registry = null;
+            }
+        }
+    }
+
+    // ///////////////////// Startup/shutdown methods. //////////////////
+    /**
+     * Starts up the remote cache server on this JVM, and binds it to the registry on the given host
+     * and port.
+     * <p>
+     * A remote cache is either a local cache or a cluster cache.
+     * <p>
+     * @param host
+     * @param port
+     * @param props
+     * @throws IOException
+     */
+    public static void startup( String host, final int port, final Properties props)
+        throws IOException
+    {
+        if ( remoteCacheServer != null )
+        {
+            throw new IllegalArgumentException( "Server already started." );
+        }
+
+        synchronized ( RemoteCacheServer.class )
+        {
+            if ( remoteCacheServer != null )
+            {
+                return;
+            }
+
+            final RemoteCacheServerAttributes rcsa = configureRemoteCacheServerAttributes(props);
+
+            // These should come from the file!
+            rcsa.setRemoteLocation( Objects.toString(host, ""), port );
+            log.info( "Creating server with these attributes: {0}", rcsa );
+
+            setServiceName( rcsa.getRemoteServiceName() );
+
+            final RMISocketFactory customRMISocketFactory = configureObjectSpecificCustomFactory( props );
+
+            RemoteUtils.configureGlobalCustomSocketFactory( rcsa.getRmiSocketFactoryTimeoutMillis() );
+
+            // CONFIGURE THE EVENT LOGGER
+            final ICacheEventLogger cacheEventLogger = configureCacheEventLogger( props );
+
+            // CREATE SERVER
+            if ( customRMISocketFactory != null )
+            {
+                remoteCacheServer = new RemoteCacheServer<>( rcsa, props, customRMISocketFactory );
+            }
+            else
+            {
+                remoteCacheServer = new RemoteCacheServer<>( rcsa, props );
+            }
+
+            remoteCacheServer.setCacheEventLogger( cacheEventLogger );
+
+            // START THE REGISTRY
+        	registry = RemoteUtils.createRegistry(port);
+
+            // REGISTER THE SERVER
+            registerServer( serviceName, remoteCacheServer );
+
+            // KEEP THE REGISTRY ALIVE
+            if ( rcsa.isUseRegistryKeepAlive() )
+            {
+                if ( keepAliveDaemon == null )
+                {
+                    keepAliveDaemon = Executors.newScheduledThreadPool(1,
+                            new DaemonThreadFactory("JCS-RemoteCacheServerFactory-"));
+                }
+                keepAliveDaemon.scheduleAtFixedRate(() -> keepAlive(host, port, cacheEventLogger),
+                        0, rcsa.getRegistryKeepAliveDelayMillis(), TimeUnit.MILLISECONDS);
+            }
+        }
+    }
+
+    /** Constructor for the RemoteCacheServerFactory object. */
+    private RemoteCacheServerFactory()
+    {
     }
 }

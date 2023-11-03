@@ -47,133 +47,6 @@ import org.junit.Test;
 /** Tests for the abstract disk cache. It's largely tested by actual instances. */
 public class AbstractDiskCacheUnitTest
 {
-    /**
-     * Verify that update and get work.
-     * <p>
-     * @throws IOException
-     */
-    @Test
-    public void testUpdateGet_allowed()
-        throws IOException
-    {
-        // SETUP
-        final String cacheName = "testUpdateGet_allowed";
-        final IDiskCacheAttributes diskCacheAttributes = new IndexedDiskCacheAttributes();
-        diskCacheAttributes.setCacheName( cacheName );
-
-        final AbstractDiskCacheTestInstance<String, String> diskCache = new AbstractDiskCacheTestInstance<>( diskCacheAttributes );
-
-        final String key = "myKey";
-        final String value = "myValue";
-        final IElementAttributes elementAttributes = new ElementAttributes();
-        final ICacheElement<String, String> cacheElement = new CacheElement<>( cacheName, key, value, elementAttributes );
-
-        diskCache.update( cacheElement );
-
-        // DO WORK
-        final ICacheElement<String, String> result = diskCache.get( key );
-
-        // VERIFY
-        //System.out.println( diskCache.getStats() );
-        assertNotNull( "Item should be in the map.", result );
-    }
-
-    /**
-     * Verify that alive is set to false..
-     * <p>
-     * @throws IOException
-     */
-    @Test
-    public void testDispose()
-        throws IOException
-    {
-        // SETUP
-        final String cacheName = "testDispose";
-        final IDiskCacheAttributes diskCacheAttributes = new IndexedDiskCacheAttributes();
-        diskCacheAttributes.setCacheName( cacheName );
-
-        final AbstractDiskCacheTestInstance<String, String> diskCache = new AbstractDiskCacheTestInstance<>( diskCacheAttributes );
-
-        final String key = "myKey";
-        final String value = "myValue";
-        final IElementAttributes elementAttributes = new ElementAttributes();
-        final ICacheElement<String, String> cacheElement = new CacheElement<>( cacheName, key, value, elementAttributes );
-
-        diskCache.update( cacheElement );
-
-        // DO WORK
-        diskCache.dispose();
-
-        // VERIFY
-        assertFalse( "disk cache should not be alive.", diskCache.isAlive() );
-        assertEquals( "Status should be disposed", CacheStatus.DISPOSED, diskCache.getStatus() );
-    }
-
-    /**
-     * Verify that removeAll is prohibited.
-     * <p>
-     * @throws IOException
-     */
-    @Test
-    public void testRemoveAll_notAllowed()
-        throws IOException
-    {
-        // SETUP
-        final StringWriter stringWriter = new StringWriter();
-        TestLogConfigurationUtil.configureLogger( stringWriter, AbstractDiskCache.class.getName() );
-
-        final IDiskCacheAttributes diskCacheAttributes = new IndexedDiskCacheAttributes();
-        diskCacheAttributes.setAllowRemoveAll( false );
-
-        final AbstractDiskCacheTestInstance<String, String> diskCache = new AbstractDiskCacheTestInstance<>( diskCacheAttributes );
-
-        final String cacheName = "testRemoveAll_notAllowed";
-        final String key = "myKey";
-        final String value = "myValue";
-        final IElementAttributes elementAttributes = new ElementAttributes();
-        final ICacheElement<String, String> cacheElement = new CacheElement<>( cacheName, key, value, elementAttributes );
-
-        diskCache.update( cacheElement );
-
-        // DO WORK
-        diskCache.removeAll();
-        final String result = stringWriter.toString();
-
-        // VERIFY
-        assertTrue( "Should say not allowed.", result.indexOf( "set to false" ) != -1 );
-        assertNotNull( "Item should be in the map.", diskCache.get( key ) );
-    }
-
-    /**
-     * Verify that removeAll is allowed.
-     * <p>
-     * @throws IOException
-     */
-    @Test
-    public void testRemoveAll_allowed()
-        throws IOException
-    {
-        // SETUP
-        final IDiskCacheAttributes diskCacheAttributes = new IndexedDiskCacheAttributes();
-        diskCacheAttributes.setAllowRemoveAll( true );
-
-        final AbstractDiskCacheTestInstance<String, String> diskCache = new AbstractDiskCacheTestInstance<>( diskCacheAttributes );
-
-        final String cacheName = "testRemoveAll_allowed";
-        final String key = "myKey";
-        final String value = "myValue";
-        final IElementAttributes elementAttributes = new ElementAttributes();
-        final ICacheElement<String, String> cacheElement = new CacheElement<>( cacheName, key, value, elementAttributes );
-
-        diskCache.update( cacheElement );
-
-        // DO WORK
-        diskCache.removeAll();
-
-        // VERIFY
-        assertNull( "Item should not be in the map.", diskCache.get( key ) );
-    }
-
     /** Concrete, testable instance. */
     protected static class AbstractDiskCacheTestInstance<K, V>
         extends AbstractDiskCache<K, V>
@@ -194,6 +67,15 @@ public class AbstractDiskCacheUnitTest
             super( attr );
             diskCacheAttributes = attr;
             setAlive(true);
+        }
+
+        /**
+         * @return null
+         */
+        @Override
+        public AuxiliaryCacheAttributes getAuxiliaryCacheAttributes()
+        {
+            return diskCacheAttributes;
         }
 
         /**
@@ -296,14 +178,132 @@ public class AbstractDiskCacheUnitTest
             //System.out.println( "processUpdate: " + cacheElement );
             map.put( cacheElement.getKey(), cacheElement );
         }
+    }
 
-        /**
-         * @return null
-         */
-        @Override
-        public AuxiliaryCacheAttributes getAuxiliaryCacheAttributes()
-        {
-            return diskCacheAttributes;
-        }
+    /**
+     * Verify that alive is set to false..
+     * <p>
+     * @throws IOException
+     */
+    @Test
+    public void testDispose()
+        throws IOException
+    {
+        // SETUP
+        final String cacheName = "testDispose";
+        final IDiskCacheAttributes diskCacheAttributes = new IndexedDiskCacheAttributes();
+        diskCacheAttributes.setCacheName( cacheName );
+
+        final AbstractDiskCacheTestInstance<String, String> diskCache = new AbstractDiskCacheTestInstance<>( diskCacheAttributes );
+
+        final String key = "myKey";
+        final String value = "myValue";
+        final IElementAttributes elementAttributes = new ElementAttributes();
+        final ICacheElement<String, String> cacheElement = new CacheElement<>( cacheName, key, value, elementAttributes );
+
+        diskCache.update( cacheElement );
+
+        // DO WORK
+        diskCache.dispose();
+
+        // VERIFY
+        assertFalse( "disk cache should not be alive.", diskCache.isAlive() );
+        assertEquals( "Status should be disposed", CacheStatus.DISPOSED, diskCache.getStatus() );
+    }
+
+    /**
+     * Verify that removeAll is allowed.
+     * <p>
+     * @throws IOException
+     */
+    @Test
+    public void testRemoveAll_allowed()
+        throws IOException
+    {
+        // SETUP
+        final IDiskCacheAttributes diskCacheAttributes = new IndexedDiskCacheAttributes();
+        diskCacheAttributes.setAllowRemoveAll( true );
+
+        final AbstractDiskCacheTestInstance<String, String> diskCache = new AbstractDiskCacheTestInstance<>( diskCacheAttributes );
+
+        final String cacheName = "testRemoveAll_allowed";
+        final String key = "myKey";
+        final String value = "myValue";
+        final IElementAttributes elementAttributes = new ElementAttributes();
+        final ICacheElement<String, String> cacheElement = new CacheElement<>( cacheName, key, value, elementAttributes );
+
+        diskCache.update( cacheElement );
+
+        // DO WORK
+        diskCache.removeAll();
+
+        // VERIFY
+        assertNull( "Item should not be in the map.", diskCache.get( key ) );
+    }
+
+    /**
+     * Verify that removeAll is prohibited.
+     * <p>
+     * @throws IOException
+     */
+    @Test
+    public void testRemoveAll_notAllowed()
+        throws IOException
+    {
+        // SETUP
+        final StringWriter stringWriter = new StringWriter();
+        TestLogConfigurationUtil.configureLogger( stringWriter, AbstractDiskCache.class.getName() );
+
+        final IDiskCacheAttributes diskCacheAttributes = new IndexedDiskCacheAttributes();
+        diskCacheAttributes.setAllowRemoveAll( false );
+
+        final AbstractDiskCacheTestInstance<String, String> diskCache = new AbstractDiskCacheTestInstance<>( diskCacheAttributes );
+
+        final String cacheName = "testRemoveAll_notAllowed";
+        final String key = "myKey";
+        final String value = "myValue";
+        final IElementAttributes elementAttributes = new ElementAttributes();
+        final ICacheElement<String, String> cacheElement = new CacheElement<>( cacheName, key, value, elementAttributes );
+
+        diskCache.update( cacheElement );
+
+        // DO WORK
+        diskCache.removeAll();
+        final String result = stringWriter.toString();
+
+        // VERIFY
+        assertTrue( "Should say not allowed.", result.indexOf( "set to false" ) != -1 );
+        assertNotNull( "Item should be in the map.", diskCache.get( key ) );
+    }
+
+    /**
+     * Verify that update and get work.
+     * <p>
+     * @throws IOException
+     */
+    @Test
+    public void testUpdateGet_allowed()
+        throws IOException
+    {
+        // SETUP
+        final String cacheName = "testUpdateGet_allowed";
+        final IDiskCacheAttributes diskCacheAttributes = new IndexedDiskCacheAttributes();
+        diskCacheAttributes.setCacheName( cacheName );
+
+        final AbstractDiskCacheTestInstance<String, String> diskCache = new AbstractDiskCacheTestInstance<>( diskCacheAttributes );
+
+        final String key = "myKey";
+        final String value = "myValue";
+        final IElementAttributes elementAttributes = new ElementAttributes();
+        final ICacheElement<String, String> cacheElement = new CacheElement<>( cacheName, key, value, elementAttributes );
+
+        diskCache.update( cacheElement );
+
+        // DO WORK
+        final ICacheElement<String, String> result = diskCache.get( key );
+
+        // VERIFY
+        //System.out.println( diskCache.getStats() );
+        assertNotNull( "Item should be in the map.", result );
     }
 }

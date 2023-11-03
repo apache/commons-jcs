@@ -190,155 +190,14 @@ public class UDPDiscoveryService
     }
 
     /**
-     * @see org.apache.commons.jcs3.engine.behavior.IRequireScheduler#setScheduledExecutorService(java.util.concurrent.ScheduledExecutorService)
-     */
-    @Override
-    public void setScheduledExecutorService(final ScheduledExecutorService scheduledExecutor)
-    {
-        this.broadcastTaskFuture = scheduledExecutor.scheduleAtFixedRate(
-                this::serviceRequestBroadcast, 0, 15, TimeUnit.SECONDS);
-
-        /** removes things that have been idle for too long */
-        // I'm going to use this as both, but it could happen
-        // that something could hang around twice the time using this as the
-        // delay and the idle time.
-        this.cleanupTaskFuture = scheduledExecutor.scheduleAtFixedRate(
-                this::cleanup, 0,
-                getUdpDiscoveryAttributes().getMaxIdleTimeSec(), TimeUnit.SECONDS);
-    }
-
-    /**
-     * This goes through the list of services and removes those that we haven't heard from in longer
-     * than the max idle time.
-     *
-     * @since 3.1
-     */
-    protected void cleanup()
-    {
-        final long now = System.currentTimeMillis();
-
-        // the listeners need to be notified.
-        getDiscoveredServices().stream()
-            .filter(service -> {
-                if (now - service.getLastHearFromTime() > getUdpDiscoveryAttributes().getMaxIdleTimeSec() * 1000)
-                {
-                    log.info( "Removing service, since we haven't heard from it in "
-                            + "{0} seconds. service = {1}",
-                            getUdpDiscoveryAttributes().getMaxIdleTimeSec(), service );
-                    return true;
-                }
-
-                return false;
-            })
-            // remove the bad ones
-            // call this so the listeners get notified
-            .forEach(this::removeDiscoveredService);
-    }
-
-    /**
-     * Initial request that the other caches let it know their addresses.
-     *
-     * @since 3.1
-     */
-    public void initiateBroadcast()
-    {
-        log.debug( "Creating sender for discoveryAddress = [{0}] and "
-                + "discoveryPort = [{1}] myHostName = [{2}] and port = [{3}]",
-                () -> getUdpDiscoveryAttributes().getUdpDiscoveryAddr(),
-                () -> getUdpDiscoveryAttributes().getUdpDiscoveryPort(),
-                () -> getUdpDiscoveryAttributes().getServiceAddress(),
-                () -> getUdpDiscoveryAttributes().getServicePort() );
-
-        try (UDPDiscoverySender sender = new UDPDiscoverySender(
-                getUdpDiscoveryAttributes(), getSerializer()))
-        {
-            sender.requestBroadcast();
-
-            log.debug( "Sent a request broadcast to the group" );
-        }
-        catch ( final IOException e )
-        {
-            log.error( "Problem sending a Request Broadcast", e );
-        }
-    }
-
-    /**
-     * Send a passive broadcast in response to a request broadcast. Never send a request for a
-     * request. We can respond to our own requests, since a request broadcast is not intended as a
-     * connection request. We might want to only send messages, so we would send a request, but
-     * never a passive broadcast.
-     */
-    protected void serviceRequestBroadcast()
-    {
-        // create this connection each time.
-        // more robust
-        try (UDPDiscoverySender sender = new UDPDiscoverySender(
-                getUdpDiscoveryAttributes(), getSerializer()))
-        {
-            sender.passiveBroadcast(
-                    getUdpDiscoveryAttributes().getServiceAddress(),
-                    getUdpDiscoveryAttributes().getServicePort(),
-                    this.getCacheNames() );
-
-            log.debug( "Called sender to issue a passive broadcast" );
-        }
-        catch ( final IOException e )
-        {
-            log.error( "Problem calling the UDP Discovery Sender, address [{0}] "
-                    + "port [{1}]",
-                    getUdpDiscoveryAttributes().getUdpDiscoveryAddr(),
-                    getUdpDiscoveryAttributes().getUdpDiscoveryPort(), e );
-        }
-    }
-
-    /**
-     * Issues a remove broadcast to the others.
-     *
-     * @since 3.1
-     */
-    protected void shutdownBroadcast()
-    {
-        // create this connection each time.
-        // more robust
-        try (UDPDiscoverySender sender = new UDPDiscoverySender(
-                getUdpDiscoveryAttributes(), getSerializer()))
-        {
-            sender.removeBroadcast(
-                    getUdpDiscoveryAttributes().getServiceAddress(),
-                    getUdpDiscoveryAttributes().getServicePort(),
-                    this.getCacheNames() );
-
-            log.debug( "Called sender to issue a remove broadcast in shutdown." );
-        }
-        catch ( final IOException e )
-        {
-            log.error( "Problem calling the UDP Discovery Sender", e );
-        }
-    }
-
-    /**
-     * Adds a region to the list that is participating in discovery.
+     * Adds a listener.
      * <p>
-     * @param cacheName
+     * @param listener
+     * @return true if it wasn't already in the set
      */
-    public void addParticipatingCacheName( final String cacheName )
+    public boolean addDiscoveryListener( final IDiscoveryListener listener )
     {
-        cacheNames.add( cacheName );
-    }
-
-    /**
-     * Removes the discovered service from the list and calls the discovery listener.
-     * <p>
-     * @param service
-     */
-    public void removeDiscoveredService( final DiscoveredService service )
-    {
-        if (discoveredServices.remove(service.hashCode()) != null)
-        {
-            log.info( "Removing {0}", service );
-        }
-
-        getDiscoveryListeners().forEach(listener -> listener.removeDiscoveredService(service));
+        return getDiscoveryListeners().add( listener );
     }
 
     /**
@@ -380,6 +239,44 @@ public class UDPDiscoveryService
     }
 
     /**
+     * Adds a region to the list that is participating in discovery.
+     * <p>
+     * @param cacheName
+     */
+    public void addParticipatingCacheName( final String cacheName )
+    {
+        cacheNames.add( cacheName );
+    }
+
+    /**
+     * This goes through the list of services and removes those that we haven't heard from in longer
+     * than the max idle time.
+     *
+     * @since 3.1
+     */
+    protected void cleanup()
+    {
+        final long now = System.currentTimeMillis();
+
+        // the listeners need to be notified.
+        getDiscoveredServices().stream()
+            .filter(service -> {
+                if (now - service.getLastHearFromTime() > getUdpDiscoveryAttributes().getMaxIdleTimeSec() * 1000)
+                {
+                    log.info( "Removing service, since we haven't heard from it in "
+                            + "{0} seconds. service = {1}",
+                            getUdpDiscoveryAttributes().getMaxIdleTimeSec(), service );
+                    return true;
+                }
+
+                return false;
+            })
+            // remove the bad ones
+            // call this so the listeners get notified
+            .forEach(this::removeDiscoveredService);
+    }
+
+    /**
      * Gets all the cache names we have facades for.
      * <p>
      * @return ArrayList
@@ -390,19 +287,27 @@ public class UDPDiscoveryService
     }
 
     /**
-     * @param attr The UDPDiscoveryAttributes to set.
+     * @return the discoveryListeners
      */
-    public void setUdpDiscoveryAttributes( final UDPDiscoveryAttributes attr )
+    public Set<IDiscoveryListener> getCopyOfDiscoveryListeners()
     {
-        this.udpDiscoveryAttributes = attr;
+        return new HashSet<>(getDiscoveryListeners());
     }
 
     /**
-     * @return Returns the lca.
+     * @return Returns the discoveredServices.
      */
-    public UDPDiscoveryAttributes getUdpDiscoveryAttributes()
+    public Set<DiscoveredService> getDiscoveredServices()
     {
-        return this.udpDiscoveryAttributes;
+        return new HashSet<>(discoveredServices.values());
+    }
+
+    /**
+     * @return the discoveryListeners
+     */
+    private Set<IDiscoveryListener> getDiscoveryListeners()
+    {
+        return discoveryListeners;
     }
 
     /**
@@ -417,14 +322,119 @@ public class UDPDiscoveryService
     }
 
     /**
-     * Start necessary receiver thread
+     * @return Returns the lca.
      */
-    public void startup()
+    public UDPDiscoveryAttributes getUdpDiscoveryAttributes()
     {
-        udpReceiverThread = new Thread(receiver);
-        udpReceiverThread.setDaemon(true);
-        // udpReceiverThread.setName( t.getName() + "--UDPReceiver" );
-        udpReceiverThread.start();
+        return this.udpDiscoveryAttributes;
+    }
+
+    /**
+     * Initial request that the other caches let it know their addresses.
+     *
+     * @since 3.1
+     */
+    public void initiateBroadcast()
+    {
+        log.debug( "Creating sender for discoveryAddress = [{0}] and "
+                + "discoveryPort = [{1}] myHostName = [{2}] and port = [{3}]",
+                () -> getUdpDiscoveryAttributes().getUdpDiscoveryAddr(),
+                () -> getUdpDiscoveryAttributes().getUdpDiscoveryPort(),
+                () -> getUdpDiscoveryAttributes().getServiceAddress(),
+                () -> getUdpDiscoveryAttributes().getServicePort() );
+
+        try (UDPDiscoverySender sender = new UDPDiscoverySender(
+                getUdpDiscoveryAttributes(), getSerializer()))
+        {
+            sender.requestBroadcast();
+
+            log.debug( "Sent a request broadcast to the group" );
+        }
+        catch ( final IOException e )
+        {
+            log.error( "Problem sending a Request Broadcast", e );
+        }
+    }
+
+    /**
+     * Removes the discovered service from the list and calls the discovery listener.
+     * <p>
+     * @param service
+     */
+    public void removeDiscoveredService( final DiscoveredService service )
+    {
+        if (discoveredServices.remove(service.hashCode()) != null)
+        {
+            log.info( "Removing {0}", service );
+        }
+
+        getDiscoveryListeners().forEach(listener -> listener.removeDiscoveredService(service));
+    }
+
+    /**
+     * Removes a listener.
+     * <p>
+     * @param listener
+     * @return true if it was in the set
+     */
+    public boolean removeDiscoveryListener( final IDiscoveryListener listener )
+    {
+        return getDiscoveryListeners().remove( listener );
+    }
+
+    /**
+     * Send a passive broadcast in response to a request broadcast. Never send a request for a
+     * request. We can respond to our own requests, since a request broadcast is not intended as a
+     * connection request. We might want to only send messages, so we would send a request, but
+     * never a passive broadcast.
+     */
+    protected void serviceRequestBroadcast()
+    {
+        // create this connection each time.
+        // more robust
+        try (UDPDiscoverySender sender = new UDPDiscoverySender(
+                getUdpDiscoveryAttributes(), getSerializer()))
+        {
+            sender.passiveBroadcast(
+                    getUdpDiscoveryAttributes().getServiceAddress(),
+                    getUdpDiscoveryAttributes().getServicePort(),
+                    this.getCacheNames() );
+
+            log.debug( "Called sender to issue a passive broadcast" );
+        }
+        catch ( final IOException e )
+        {
+            log.error( "Problem calling the UDP Discovery Sender, address [{0}] "
+                    + "port [{1}]",
+                    getUdpDiscoveryAttributes().getUdpDiscoveryAddr(),
+                    getUdpDiscoveryAttributes().getUdpDiscoveryPort(), e );
+        }
+    }
+
+    /**
+     * @see org.apache.commons.jcs3.engine.behavior.IRequireScheduler#setScheduledExecutorService(java.util.concurrent.ScheduledExecutorService)
+     */
+    @Override
+    public void setScheduledExecutorService(final ScheduledExecutorService scheduledExecutor)
+    {
+        this.broadcastTaskFuture = scheduledExecutor.scheduleAtFixedRate(
+                this::serviceRequestBroadcast, 0, 15, TimeUnit.SECONDS);
+
+        /** removes things that have been idle for too long */
+        // I'm going to use this as both, but it could happen
+        // that something could hang around twice the time using this as the
+        // delay and the idle time.
+        this.cleanupTaskFuture = scheduledExecutor.scheduleAtFixedRate(
+                this::cleanup, 0,
+                getUdpDiscoveryAttributes().getMaxIdleTimeSec(), TimeUnit.SECONDS);
+    }
+
+    /**
+     * @param attr The UDPDiscoveryAttributes to set.
+     */
+    public void setUdpDiscoveryAttributes( final UDPDiscoveryAttributes attr )
+    {
+        this.udpDiscoveryAttributes = attr;
     }
 
     /**
@@ -463,48 +473,38 @@ public class UDPDiscoveryService
     }
 
     /**
-     * @return Returns the discoveredServices.
+     * Issues a remove broadcast to the others.
+     *
+     * @since 3.1
      */
-    public Set<DiscoveredService> getDiscoveredServices()
+    protected void shutdownBroadcast()
     {
-        return new HashSet<>(discoveredServices.values());
+        // create this connection each time.
+        // more robust
+        try (UDPDiscoverySender sender = new UDPDiscoverySender(
+                getUdpDiscoveryAttributes(), getSerializer()))
+        {
+            sender.removeBroadcast(
+                    getUdpDiscoveryAttributes().getServiceAddress(),
+                    getUdpDiscoveryAttributes().getServicePort(),
+                    this.getCacheNames() );
+
+            log.debug( "Called sender to issue a remove broadcast in shutdown." );
+        }
+        catch ( final IOException e )
+        {
+            log.error( "Problem calling the UDP Discovery Sender", e );
+        }
     }
 
     /**
-     * @return the discoveryListeners
+     * Start necessary receiver thread
      */
-    private Set<IDiscoveryListener> getDiscoveryListeners()
+    public void startup()
     {
-        return discoveryListeners;
-    }
-
-    /**
-     * @return the discoveryListeners
-     */
-    public Set<IDiscoveryListener> getCopyOfDiscoveryListeners()
-    {
-        return new HashSet<>(getDiscoveryListeners());
-    }
-
-    /**
-     * Adds a listener.
-     * <p>
-     * @param listener
-     * @return true if it wasn't already in the set
-     */
-    public boolean addDiscoveryListener( final IDiscoveryListener listener )
-    {
-        return getDiscoveryListeners().add( listener );
-    }
-
-    /**
-     * Removes a listener.
-     * <p>
-     * @param listener
-     * @return true if it was in the set
-     */
-    public boolean removeDiscoveryListener( final IDiscoveryListener listener )
-    {
-        return getDiscoveryListeners().remove( listener );
+        udpReceiverThread = new Thread(receiver);
+        udpReceiverThread.setDaemon(true);
+        // udpReceiverThread.setName( t.getName() + "--UDPReceiver" );
+        udpReceiverThread.start();
     }
 }

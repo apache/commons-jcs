@@ -37,7 +37,31 @@ import org.apache.commons.jcs3.jcache.JCSCache;
 // don't use a proxy, reflection is too slow here :(
 public class ClassLoaderAwareCache<K, V> implements Cache<K, V>
 {
+    @SuppressWarnings("unchecked")
+    public static <K extends Serializable, V extends Serializable> JCSCache<K, V> getDelegate(final Cache<?, ?> cache)
+    {
+        if (JCSCache.class.isInstance(cache))
+        {
+            return (JCSCache<K, V>) cache;
+        }
+        return ((ClassLoaderAwareCache<K, V>) cache).delegate;
+    }
+    public static <K extends Serializable, V extends Serializable> Cache<K, V> wrap(final ClassLoader loader, final JCSCache<K, V> delegate)
+    {
+        ClassLoader dontWrapLoader = ClassLoaderAwareCache.class.getClassLoader();
+        while (dontWrapLoader != null)
+        {
+            if (loader == dontWrapLoader)
+            {
+                return delegate;
+            }
+            dontWrapLoader = dontWrapLoader.getParent();
+        }
+        return new ClassLoaderAwareCache<>(loader, delegate);
+    }
+
     private final ClassLoader loader;
+
     private final JCSCache<K, V> delegate;
 
     public ClassLoaderAwareCache(final ClassLoader loader, final JCSCache<K, V> delegate)
@@ -51,6 +75,76 @@ public class ClassLoaderAwareCache<K, V> implements Cache<K, V>
         final ClassLoader tccl = thread.getContextClassLoader();
         thread.setContextClassLoader(loader);
         return tccl;
+    }
+
+    @Override
+    public void clear()
+    {
+        final Thread thread = Thread.currentThread();
+        final ClassLoader loader = before(thread);
+        try
+        {
+            delegate.clear();
+        }
+        finally
+        {
+            thread.setContextClassLoader(loader);
+        }
+    }
+
+    @Override
+    public void close()
+    {
+        final Thread thread = Thread.currentThread();
+        final ClassLoader loader = before(thread);
+        try
+        {
+            delegate.close();
+        }
+        finally
+        {
+            thread.setContextClassLoader(loader);
+        }
+    }
+
+    @Override
+    public boolean containsKey(final K key)
+    {
+        final Thread thread = Thread.currentThread();
+        final ClassLoader loader = before(thread);
+        try
+        {
+            return delegate.containsKey(key);
+        }
+        finally
+        {
+            thread.setContextClassLoader(loader);
+        }
+    }
+
+    @Override
+    public void deregisterCacheEntryListener(final CacheEntryListenerConfiguration<K, V> cacheEntryListenerConfiguration)
+    {
+        final Thread thread = Thread.currentThread();
+        final ClassLoader loader = before(thread);
+        try
+        {
+            delegate.deregisterCacheEntryListener(cacheEntryListenerConfiguration);
+        }
+        finally
+        {
+            thread.setContextClassLoader(loader);
+        }
+    }
+
+    @Override
+    public boolean equals(final Object obj)
+    {
+        if (ClassLoaderAwareCache.class.isInstance(obj))
+        {
+            return delegate.equals(ClassLoaderAwareCache.class.cast(obj).delegate);
+        }
+        return super.equals(obj);
     }
 
     @Override
@@ -84,13 +178,154 @@ public class ClassLoaderAwareCache<K, V> implements Cache<K, V>
     }
 
     @Override
-    public boolean containsKey(final K key)
+    public V getAndPut(final K key, final V value)
     {
         final Thread thread = Thread.currentThread();
         final ClassLoader loader = before(thread);
         try
         {
-            return delegate.containsKey(key);
+            return delegate.getAndPut(key, value);
+        }
+        finally
+        {
+            thread.setContextClassLoader(loader);
+        }
+    }
+
+    @Override
+    public V getAndRemove(final K key)
+    {
+        final Thread thread = Thread.currentThread();
+        final ClassLoader loader = before(thread);
+        try
+        {
+            return delegate.getAndRemove(key);
+        }
+        finally
+        {
+            thread.setContextClassLoader(loader);
+        }
+    }
+
+    @Override
+    public V getAndReplace(final K key, final V value)
+    {
+        final Thread thread = Thread.currentThread();
+        final ClassLoader loader = before(thread);
+        try
+        {
+            return delegate.getAndReplace(key, value);
+        }
+        finally
+        {
+            thread.setContextClassLoader(loader);
+        }
+    }
+
+    @Override
+    public CacheManager getCacheManager()
+    {
+        final Thread thread = Thread.currentThread();
+        final ClassLoader loader = before(thread);
+        try
+        {
+            return delegate.getCacheManager();
+        }
+        finally
+        {
+            thread.setContextClassLoader(loader);
+        }
+    }
+
+    @Override
+    public <C extends Configuration<K, V>> C getConfiguration(final Class<C> clazz)
+    {
+        final Thread thread = Thread.currentThread();
+        final ClassLoader loader = before(thread);
+        try
+        {
+            return delegate.getConfiguration(clazz);
+        }
+        finally
+        {
+            thread.setContextClassLoader(loader);
+        }
+    }
+
+    @Override
+    public String getName()
+    {
+        final Thread thread = Thread.currentThread();
+        final ClassLoader loader = before(thread);
+        try
+        {
+            return delegate.getName();
+        }
+        finally
+        {
+            thread.setContextClassLoader(loader);
+        }
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return delegate.hashCode();
+    }
+
+    @Override
+    public <T> T invoke(final K key, final EntryProcessor<K, V, T> entryProcessor, final Object... arguments) throws EntryProcessorException
+    {
+        final Thread thread = Thread.currentThread();
+        final ClassLoader loader = before(thread);
+        try
+        {
+            return delegate.invoke(key, entryProcessor, arguments);
+        }
+        finally
+        {
+            thread.setContextClassLoader(loader);
+        }
+    }
+
+    @Override
+    public <T> Map<K, EntryProcessorResult<T>> invokeAll(final Set<? extends K> keys, final EntryProcessor<K, V, T> entryProcessor, final Object... arguments)
+    {
+        final Thread thread = Thread.currentThread();
+        final ClassLoader loader = before(thread);
+        try
+        {
+            return delegate.invokeAll(keys, entryProcessor, arguments);
+        }
+        finally
+        {
+            thread.setContextClassLoader(loader);
+        }
+    }
+
+    @Override
+    public boolean isClosed()
+    {
+        final Thread thread = Thread.currentThread();
+        final ClassLoader loader = before(thread);
+        try
+        {
+            return delegate.isClosed();
+        }
+        finally
+        {
+            thread.setContextClassLoader(loader);
+        }
+    }
+
+    @Override
+    public Iterator<Entry<K, V>> iterator()
+    {
+        final Thread thread = Thread.currentThread();
+        final ClassLoader loader = before(thread);
+        try
+        {
+            return delegate.iterator();
         }
         finally
         {
@@ -129,21 +364,6 @@ public class ClassLoaderAwareCache<K, V> implements Cache<K, V>
     }
 
     @Override
-    public V getAndPut(final K key, final V value)
-    {
-        final Thread thread = Thread.currentThread();
-        final ClassLoader loader = before(thread);
-        try
-        {
-            return delegate.getAndPut(key, value);
-        }
-        finally
-        {
-            thread.setContextClassLoader(loader);
-        }
-    }
-
-    @Override
     public void putAll(final Map<? extends K, ? extends V> map)
     {
         final Thread thread = Thread.currentThread();
@@ -166,6 +386,21 @@ public class ClassLoaderAwareCache<K, V> implements Cache<K, V>
         try
         {
             return delegate.putIfAbsent(key, value);
+        }
+        finally
+        {
+            thread.setContextClassLoader(loader);
+        }
+    }
+
+    @Override
+    public void registerCacheEntryListener(final CacheEntryListenerConfiguration<K, V> cacheEntryListenerConfiguration)
+    {
+        final Thread thread = Thread.currentThread();
+        final ClassLoader loader = before(thread);
+        try
+        {
+            delegate.registerCacheEntryListener(cacheEntryListenerConfiguration);
         }
         finally
         {
@@ -204,58 +439,13 @@ public class ClassLoaderAwareCache<K, V> implements Cache<K, V>
     }
 
     @Override
-    public V getAndRemove(final K key)
+    public void removeAll()
     {
         final Thread thread = Thread.currentThread();
         final ClassLoader loader = before(thread);
         try
         {
-            return delegate.getAndRemove(key);
-        }
-        finally
-        {
-            thread.setContextClassLoader(loader);
-        }
-    }
-
-    @Override
-    public boolean replace(final K key, final V oldValue, final V newValue)
-    {
-        final Thread thread = Thread.currentThread();
-        final ClassLoader loader = before(thread);
-        try
-        {
-            return delegate.replace(key, oldValue, newValue);
-        }
-        finally
-        {
-            thread.setContextClassLoader(loader);
-        }
-    }
-
-    @Override
-    public boolean replace(final K key, final V value)
-    {
-        final Thread thread = Thread.currentThread();
-        final ClassLoader loader = before(thread);
-        try
-        {
-            return delegate.replace(key, value);
-        }
-        finally
-        {
-            thread.setContextClassLoader(loader);
-        }
-    }
-
-    @Override
-    public V getAndReplace(final K key, final V value)
-    {
-        final Thread thread = Thread.currentThread();
-        final ClassLoader loader = before(thread);
-        try
-        {
-            return delegate.getAndReplace(key, value);
+            delegate.removeAll();
         }
         finally
         {
@@ -279,13 +469,13 @@ public class ClassLoaderAwareCache<K, V> implements Cache<K, V>
     }
 
     @Override
-    public void removeAll()
+    public boolean replace(final K key, final V value)
     {
         final Thread thread = Thread.currentThread();
         final ClassLoader loader = before(thread);
         try
         {
-            delegate.removeAll();
+            return delegate.replace(key, value);
         }
         finally
         {
@@ -294,118 +484,13 @@ public class ClassLoaderAwareCache<K, V> implements Cache<K, V>
     }
 
     @Override
-    public void clear()
+    public boolean replace(final K key, final V oldValue, final V newValue)
     {
         final Thread thread = Thread.currentThread();
         final ClassLoader loader = before(thread);
         try
         {
-            delegate.clear();
-        }
-        finally
-        {
-            thread.setContextClassLoader(loader);
-        }
-    }
-
-    @Override
-    public <C extends Configuration<K, V>> C getConfiguration(final Class<C> clazz)
-    {
-        final Thread thread = Thread.currentThread();
-        final ClassLoader loader = before(thread);
-        try
-        {
-            return delegate.getConfiguration(clazz);
-        }
-        finally
-        {
-            thread.setContextClassLoader(loader);
-        }
-    }
-
-    @Override
-    public <T> T invoke(final K key, final EntryProcessor<K, V, T> entryProcessor, final Object... arguments) throws EntryProcessorException
-    {
-        final Thread thread = Thread.currentThread();
-        final ClassLoader loader = before(thread);
-        try
-        {
-            return delegate.invoke(key, entryProcessor, arguments);
-        }
-        finally
-        {
-            thread.setContextClassLoader(loader);
-        }
-    }
-
-    @Override
-    public <T> Map<K, EntryProcessorResult<T>> invokeAll(final Set<? extends K> keys, final EntryProcessor<K, V, T> entryProcessor, final Object... arguments)
-    {
-        final Thread thread = Thread.currentThread();
-        final ClassLoader loader = before(thread);
-        try
-        {
-            return delegate.invokeAll(keys, entryProcessor, arguments);
-        }
-        finally
-        {
-            thread.setContextClassLoader(loader);
-        }
-    }
-
-    @Override
-    public String getName()
-    {
-        final Thread thread = Thread.currentThread();
-        final ClassLoader loader = before(thread);
-        try
-        {
-            return delegate.getName();
-        }
-        finally
-        {
-            thread.setContextClassLoader(loader);
-        }
-    }
-
-    @Override
-    public CacheManager getCacheManager()
-    {
-        final Thread thread = Thread.currentThread();
-        final ClassLoader loader = before(thread);
-        try
-        {
-            return delegate.getCacheManager();
-        }
-        finally
-        {
-            thread.setContextClassLoader(loader);
-        }
-    }
-
-    @Override
-    public void close()
-    {
-        final Thread thread = Thread.currentThread();
-        final ClassLoader loader = before(thread);
-        try
-        {
-            delegate.close();
-        }
-        finally
-        {
-            thread.setContextClassLoader(loader);
-        }
-    }
-
-    @Override
-    public boolean isClosed()
-    {
-        final Thread thread = Thread.currentThread();
-        final ClassLoader loader = before(thread);
-        try
-        {
-            return delegate.isClosed();
+            return delegate.replace(key, oldValue, newValue);
         }
         finally
         {
@@ -426,90 +511,5 @@ public class ClassLoaderAwareCache<K, V> implements Cache<K, V>
         {
             thread.setContextClassLoader(loader);
         }
-    }
-
-    @Override
-    public void registerCacheEntryListener(final CacheEntryListenerConfiguration<K, V> cacheEntryListenerConfiguration)
-    {
-        final Thread thread = Thread.currentThread();
-        final ClassLoader loader = before(thread);
-        try
-        {
-            delegate.registerCacheEntryListener(cacheEntryListenerConfiguration);
-        }
-        finally
-        {
-            thread.setContextClassLoader(loader);
-        }
-    }
-
-    @Override
-    public void deregisterCacheEntryListener(final CacheEntryListenerConfiguration<K, V> cacheEntryListenerConfiguration)
-    {
-        final Thread thread = Thread.currentThread();
-        final ClassLoader loader = before(thread);
-        try
-        {
-            delegate.deregisterCacheEntryListener(cacheEntryListenerConfiguration);
-        }
-        finally
-        {
-            thread.setContextClassLoader(loader);
-        }
-    }
-
-    @Override
-    public Iterator<Entry<K, V>> iterator()
-    {
-        final Thread thread = Thread.currentThread();
-        final ClassLoader loader = before(thread);
-        try
-        {
-            return delegate.iterator();
-        }
-        finally
-        {
-            thread.setContextClassLoader(loader);
-        }
-    }
-
-    @Override
-    public boolean equals(final Object obj)
-    {
-        if (ClassLoaderAwareCache.class.isInstance(obj))
-        {
-            return delegate.equals(ClassLoaderAwareCache.class.cast(obj).delegate);
-        }
-        return super.equals(obj);
-    }
-
-    @Override
-    public int hashCode()
-    {
-        return delegate.hashCode();
-    }
-
-    public static <K extends Serializable, V extends Serializable> Cache<K, V> wrap(final ClassLoader loader, final JCSCache<K, V> delegate)
-    {
-        ClassLoader dontWrapLoader = ClassLoaderAwareCache.class.getClassLoader();
-        while (dontWrapLoader != null)
-        {
-            if (loader == dontWrapLoader)
-            {
-                return delegate;
-            }
-            dontWrapLoader = dontWrapLoader.getParent();
-        }
-        return new ClassLoaderAwareCache<>(loader, delegate);
-    }
-
-    @SuppressWarnings("unchecked")
-    public static <K extends Serializable, V extends Serializable> JCSCache<K, V> getDelegate(final Cache<?, ?> cache)
-    {
-        if (JCSCache.class.isInstance(cache))
-        {
-            return (JCSCache<K, V>) cache;
-        }
-        return ((ClassLoaderAwareCache<K, V>) cache).delegate;
     }
 }

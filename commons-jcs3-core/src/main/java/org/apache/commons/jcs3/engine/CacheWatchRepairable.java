@@ -50,27 +50,22 @@ public class CacheWatchRepairable
         new ConcurrentHashMap<>();
 
     /**
-     * Replaces the underlying cache watch service and re-attaches all existing listeners to the new
-     * cache watch.
+     * Adds a feature to the CacheListener attribute of the CacheWatchRepairable object
      * <p>
-     * @param cacheWatch The new cacheWatch value
+     * @param obj The feature to be added to the CacheListener attribute
+     * @throws IOException
      */
-    public void setCacheWatch( final ICacheObserver cacheWatch )
+    @Override
+    public <K, V> void addCacheListener( final ICacheListener<K, V> obj )
+        throws IOException
     {
-        this.cacheWatch = cacheWatch;
-        cacheMap.forEach((cacheName, value) -> value.forEach(listener -> {
-                try
-                {
-                    log.info( "Adding listener to cache watch. ICacheListener = "
-                            + "{0} | ICacheObserver = {1}", listener, cacheWatch );
-                    cacheWatch.addCacheListener( cacheName, listener );
-                }
-                catch ( final IOException ex )
-                {
-                    log.error( "Problem adding listener. ICacheListener = {0} | "
-                            + "ICacheObserver = {1}", listener, cacheWatch, ex );
-                }
-        }));
+        // Record the added cache listener locally, regardless of whether the
+        // remote add-listener operation succeeds or fails.
+        cacheMap.values().forEach(set -> set.add(obj));
+
+        log.info( "Adding listener to cache watch. ICacheListener = {0} | "
+                + "ICacheObserver = {1}", obj, cacheWatch );
+        cacheWatch.addCacheListener( obj );
     }
 
     /**
@@ -95,22 +90,22 @@ public class CacheWatchRepairable
     }
 
     /**
-     * Adds a feature to the CacheListener attribute of the CacheWatchRepairable object
-     * <p>
-     * @param obj The feature to be added to the CacheListener attribute
+     * @param obj
      * @throws IOException
      */
     @Override
-    public <K, V> void addCacheListener( final ICacheListener<K, V> obj )
+    public <K, V> void removeCacheListener( final ICacheListener<K, V> obj )
         throws IOException
     {
-        // Record the added cache listener locally, regardless of whether the
-        // remote add-listener operation succeeds or fails.
-        cacheMap.values().forEach(set -> set.add(obj));
+        log.info( "removeCacheListener, ICacheListener [{0}]", obj );
 
-        log.info( "Adding listener to cache watch. ICacheListener = {0} | "
-                + "ICacheObserver = {1}", obj, cacheWatch );
-        cacheWatch.addCacheListener( obj );
+        // Record the removal locally, regardless of whether the remote
+        // remove-listener operation succeeds or fails.
+        cacheMap.values().forEach(set -> {
+            log.debug("Before removing [{0}] the listenerSet = {1}", obj, set);
+            set.remove( obj );
+        });
+        cacheWatch.removeCacheListener( obj );
     }
 
     /**
@@ -136,21 +131,26 @@ public class CacheWatchRepairable
     }
 
     /**
-     * @param obj
-     * @throws IOException
+     * Replaces the underlying cache watch service and re-attaches all existing listeners to the new
+     * cache watch.
+     * <p>
+     * @param cacheWatch The new cacheWatch value
      */
-    @Override
-    public <K, V> void removeCacheListener( final ICacheListener<K, V> obj )
-        throws IOException
+    public void setCacheWatch( final ICacheObserver cacheWatch )
     {
-        log.info( "removeCacheListener, ICacheListener [{0}]", obj );
-
-        // Record the removal locally, regardless of whether the remote
-        // remove-listener operation succeeds or fails.
-        cacheMap.values().forEach(set -> {
-            log.debug("Before removing [{0}] the listenerSet = {1}", obj, set);
-            set.remove( obj );
-        });
-        cacheWatch.removeCacheListener( obj );
+        this.cacheWatch = cacheWatch;
+        cacheMap.forEach((cacheName, value) -> value.forEach(listener -> {
+                try
+                {
+                    log.info( "Adding listener to cache watch. ICacheListener = "
+                            + "{0} | ICacheObserver = {1}", listener, cacheWatch );
+                    cacheWatch.addCacheListener( cacheName, listener );
+                }
+                catch ( final IOException ex )
+                {
+                    log.error( "Problem adding listener. ICacheListener = {0} | "
+                            + "ICacheObserver = {1}", listener, cacheWatch, ex );
+                }
+        }));
     }
 }

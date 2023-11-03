@@ -56,67 +56,26 @@ public class RemoteCacheUnitTest
     }
 
     /**
-     * Verify that the remote service update method is called. The remote cache serializes the object
-     * first.
+     * Verify that there is no problem if there is no listener.
      * <p>
      * @throws Exception
      */
     @Test
-    public void testUpdate()
+    public void testDispose_nullListener()
         throws Exception
     {
         // SETUP
-        final long listenerId = 123;
-        listener.setListenerId( listenerId );
+        final RemoteCache<String, String> remoteCache = new RemoteCache<>( cattr, service, null, monitor );
 
-        final RemoteCache<String, String> remoteCache = new RemoteCache<>( cattr, service, listener, monitor );
-
-        final String cacheName = "testUpdate";
+        final MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
+        remoteCache.setCacheEventLogger( cacheEventLogger );
 
         // DO WORK
-        final ICacheElement<String, String> element = new CacheElement<>( cacheName, "key", "value" );
-        remoteCache.update( element );
+        remoteCache.dispose( );
 
         // VERIFY
-        assertTrue( "The element should be in the serialized wrapper.",
-                    service.lastUpdate instanceof ICacheElementSerialized );
-        final ICacheElement<String, String> result = SerializationConversionUtil
-            .getDeSerializedCacheElement( (ICacheElementSerialized<String, String>) service.lastUpdate, remoteCache
-                .getElementSerializer() );
-        assertEquals( "Wrong element updated.", element.getVal(), result.getVal() );
-        assertEquals( "Wrong listener id.", Long.valueOf( listenerId ), service.updateRequestIdList.get( 0 ) );
-    }
-
-    /**
-     * Verify that when we call fix events queued in the zombie are propagated to the new service.
-     * <p>
-     * @throws Exception
-     */
-    @Test
-    public void testUpdateZombieThenFix()
-        throws Exception
-    {
-        // SETUP
-        final ZombieCacheServiceNonLocal<String, String> zombie = new ZombieCacheServiceNonLocal<>( 10 );
-
-        // set the zombie
-        final RemoteCache<String, String> remoteCache = new RemoteCache<>( cattr, zombie, listener, monitor );
-
-        final String cacheName = "testUpdate";
-
-        // DO WORK
-        final ICacheElement<String, String> element = new CacheElement<>( cacheName, "key", "value" );
-        remoteCache.update( element );
-        // set the new service, this should call propagate
-        remoteCache.fixCache( service );
-
-        // VERIFY
-        assertTrue( "The element should be in the serialized warapper.",
-                    service.lastUpdate instanceof ICacheElementSerialized );
-        final ICacheElement<String, String> result = SerializationConversionUtil
-            .getDeSerializedCacheElement( (ICacheElementSerialized<String, String>) service.lastUpdate, remoteCache
-                .getElementSerializer() );
-        assertEquals( "Wrong element updated.", element.getVal(), result.getVal() );
+        assertEquals( "Start should have been called.", 1, cacheEventLogger.startICacheEventCalls );
+        assertEquals( "End should have been called.", 1, cacheEventLogger.endICacheEventCalls );
     }
 
     /**
@@ -125,7 +84,7 @@ public class RemoteCacheUnitTest
      * @throws Exception
      */
     @Test
-    public void testUpdate_simple()
+    public void testDispose_simple()
         throws Exception
     {
         final RemoteCache<String, String> remoteCache = new RemoteCache<>( cattr, service, listener, monitor );
@@ -133,10 +92,8 @@ public class RemoteCacheUnitTest
         final MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
         remoteCache.setCacheEventLogger( cacheEventLogger );
 
-        final ICacheElement<String, String> item = new CacheElement<>( "region", "key", "value" );
-
         // DO WORK
-        remoteCache.update( item );
+        remoteCache.dispose( );
 
         // VERIFY
         assertEquals( "Start should have been called.", 1, cacheEventLogger.startICacheEventCalls );
@@ -161,6 +118,32 @@ public class RemoteCacheUnitTest
         remoteCache.get( "key" );
 
         // VERIFY
+        assertEquals( "Start should have been called.", 1, cacheEventLogger.startICacheEventCalls );
+        assertEquals( "End should have been called.", 1, cacheEventLogger.endICacheEventCalls );
+    }
+
+    /**
+     * Verify event log calls.
+     * <p>
+     * @throws Exception
+     */
+    @Test
+    public void testGetMatching_simple()
+        throws Exception
+    {
+        // SETUP
+        final String pattern = "adsfasdfasd.?";
+
+        final RemoteCache<String, String> remoteCache = new RemoteCache<>( cattr, service, listener, monitor );
+
+        final MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
+        remoteCache.setCacheEventLogger( cacheEventLogger );
+
+        // DO WORK
+        final Map<String, ICacheElement<String, String>> result = remoteCache.getMatching( pattern );
+
+        // VERIFY
+        assertNotNull( "Should have a map", result );
         assertEquals( "Start should have been called.", 1, cacheEventLogger.startICacheEventCalls );
         assertEquals( "End should have been called.", 1, cacheEventLogger.endICacheEventCalls );
     }
@@ -232,29 +215,35 @@ public class RemoteCacheUnitTest
     }
 
     /**
-     * Verify event log calls.
+     * Verify that the remote service update method is called. The remote cache serializes the object
+     * first.
      * <p>
      * @throws Exception
      */
     @Test
-    public void testGetMatching_simple()
+    public void testUpdate()
         throws Exception
     {
         // SETUP
-        final String pattern = "adsfasdfasd.?";
+        final long listenerId = 123;
+        listener.setListenerId( listenerId );
 
         final RemoteCache<String, String> remoteCache = new RemoteCache<>( cattr, service, listener, monitor );
 
-        final MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
-        remoteCache.setCacheEventLogger( cacheEventLogger );
+        final String cacheName = "testUpdate";
 
         // DO WORK
-        final Map<String, ICacheElement<String, String>> result = remoteCache.getMatching( pattern );
+        final ICacheElement<String, String> element = new CacheElement<>( cacheName, "key", "value" );
+        remoteCache.update( element );
 
         // VERIFY
-        assertNotNull( "Should have a map", result );
-        assertEquals( "Start should have been called.", 1, cacheEventLogger.startICacheEventCalls );
-        assertEquals( "End should have been called.", 1, cacheEventLogger.endICacheEventCalls );
+        assertTrue( "The element should be in the serialized wrapper.",
+                    service.lastUpdate instanceof ICacheElementSerialized );
+        final ICacheElement<String, String> result = SerializationConversionUtil
+            .getDeSerializedCacheElement( (ICacheElementSerialized<String, String>) service.lastUpdate, remoteCache
+                .getElementSerializer() );
+        assertEquals( "Wrong element updated.", element.getVal(), result.getVal() );
+        assertEquals( "Wrong listener id.", Long.valueOf( listenerId ), service.updateRequestIdList.get( 0 ) );
     }
 
     /**
@@ -263,7 +252,7 @@ public class RemoteCacheUnitTest
      * @throws Exception
      */
     @Test
-    public void testDispose_simple()
+    public void testUpdate_simple()
         throws Exception
     {
         final RemoteCache<String, String> remoteCache = new RemoteCache<>( cattr, service, listener, monitor );
@@ -271,8 +260,10 @@ public class RemoteCacheUnitTest
         final MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
         remoteCache.setCacheEventLogger( cacheEventLogger );
 
+        final ICacheElement<String, String> item = new CacheElement<>( "region", "key", "value" );
+
         // DO WORK
-        remoteCache.dispose( );
+        remoteCache.update( item );
 
         // VERIFY
         assertEquals( "Start should have been called.", 1, cacheEventLogger.startICacheEventCalls );
@@ -280,25 +271,34 @@ public class RemoteCacheUnitTest
     }
 
     /**
-     * Verify that there is no problem if there is no listener.
+     * Verify that when we call fix events queued in the zombie are propagated to the new service.
      * <p>
      * @throws Exception
      */
     @Test
-    public void testDispose_nullListener()
+    public void testUpdateZombieThenFix()
         throws Exception
     {
         // SETUP
-        final RemoteCache<String, String> remoteCache = new RemoteCache<>( cattr, service, null, monitor );
+        final ZombieCacheServiceNonLocal<String, String> zombie = new ZombieCacheServiceNonLocal<>( 10 );
 
-        final MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
-        remoteCache.setCacheEventLogger( cacheEventLogger );
+        // set the zombie
+        final RemoteCache<String, String> remoteCache = new RemoteCache<>( cattr, zombie, listener, monitor );
+
+        final String cacheName = "testUpdate";
 
         // DO WORK
-        remoteCache.dispose( );
+        final ICacheElement<String, String> element = new CacheElement<>( cacheName, "key", "value" );
+        remoteCache.update( element );
+        // set the new service, this should call propagate
+        remoteCache.fixCache( service );
 
         // VERIFY
-        assertEquals( "Start should have been called.", 1, cacheEventLogger.startICacheEventCalls );
-        assertEquals( "End should have been called.", 1, cacheEventLogger.endICacheEventCalls );
+        assertTrue( "The element should be in the serialized warapper.",
+                    service.lastUpdate instanceof ICacheElementSerialized );
+        final ICacheElement<String, String> result = SerializationConversionUtil
+            .getDeSerializedCacheElement( (ICacheElementSerialized<String, String>) service.lastUpdate, remoteCache
+                .getElementSerializer() );
+        assertEquals( "Wrong element updated.", element.getVal(), result.getVal() );
     }
 }

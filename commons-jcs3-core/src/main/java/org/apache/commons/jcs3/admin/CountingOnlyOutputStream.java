@@ -32,6 +32,16 @@ public class CountingOnlyOutputStream
     private int count; // TODO should this be long?
 
     /**
+     * The number of bytes that have passed through this stream.
+     * <p>
+     * @return int
+     */
+    public int getCount()
+    {
+        return this.count;
+    }
+
+    /**
      * count as we write.
      * <p>
      * @param b
@@ -70,15 +80,5 @@ public class CountingOnlyOutputStream
         throws IOException
     {
         this.count++;
-    }
-
-    /**
-     * The number of bytes that have passed through this stream.
-     * <p>
-     * @return int
-     */
-    public int getCount()
-    {
-        return this.count;
     }
 }

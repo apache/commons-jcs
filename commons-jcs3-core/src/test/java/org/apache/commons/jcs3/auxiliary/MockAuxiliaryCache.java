@@ -44,11 +44,10 @@ public class MockAuxiliaryCache<K, V>
     public int getMatchingCallCount;
 
     /**
-     * @param ce
      * @throws IOException
      */
     @Override
-    public void update( final ICacheElement<K, V> ce )
+    public void dispose()
         throws IOException
     {
         // TODO Auto-generated method stub
@@ -65,6 +64,51 @@ public class MockAuxiliaryCache<K, V>
         throws IOException
     {
         // TODO Auto-generated method stub
+        return null;
+    }
+
+    /**
+     * @return Returns the AuxiliaryCacheAttributes.
+     */
+    @Override
+    public AuxiliaryCacheAttributes getAuxiliaryCacheAttributes()
+    {
+        return null;
+    }
+
+    /**
+     * @return null
+     */
+    @Override
+    public String getCacheName()
+    {
+        return null;
+    }
+
+    /**
+     * @return cacheType
+     */
+    @Override
+    public CacheType getCacheType()
+    {
+        return cacheType;
+    }
+
+    /** @return null */
+    @Override
+    public String getEventLoggingExtraInfo()
+    {
+        return null;
+    }
+
+    /**
+     * Return the keys in this cache.
+     * <p>
+     * @see org.apache.commons.jcs3.auxiliary.disk.AbstractDiskCache#getKeySet()
+     */
+    @Override
+    public Set<K> getKeySet() throws IOException
+    {
         return null;
     }
 
@@ -95,6 +139,43 @@ public class MockAuxiliaryCache<K, V>
     }
 
     /**
+     * @return int
+     */
+    @Override
+    public int getSize()
+    {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    /**
+     * @return null
+     */
+    @Override
+    public IStats getStatistics()
+    {
+        return null;
+    }
+
+    /**
+     * @return null
+     */
+    @Override
+    public String getStats()
+    {
+        return null;
+    }
+
+    /**
+     * @return int
+     */
+    @Override
+    public CacheStatus getStatus()
+    {
+        return status;
+    }
+
+    /**
      * @param key
      * @return boolean
      * @throws IOException
@@ -119,95 +200,14 @@ public class MockAuxiliaryCache<K, V>
     }
 
     /**
+     * @param ce
      * @throws IOException
      */
     @Override
-    public void dispose()
+    public void update( final ICacheElement<K, V> ce )
         throws IOException
     {
         // TODO Auto-generated method stub
 
-    }
-
-    /**
-     * @return int
-     */
-    @Override
-    public int getSize()
-    {
-        // TODO Auto-generated method stub
-        return 0;
-    }
-
-    /**
-     * @return int
-     */
-    @Override
-    public CacheStatus getStatus()
-    {
-        return status;
-    }
-
-    /**
-     * @return null
-     */
-    @Override
-    public String getCacheName()
-    {
-        return null;
-    }
-
-    /**
-     * Return the keys in this cache.
-     * <p>
-     * @see org.apache.commons.jcs3.auxiliary.disk.AbstractDiskCache#getKeySet()
-     */
-    @Override
-    public Set<K> getKeySet() throws IOException
-    {
-        return null;
-    }
-
-    /**
-     * @return null
-     */
-    @Override
-    public IStats getStatistics()
-    {
-        return null;
-    }
-
-    /**
-     * @return null
-     */
-    @Override
-    public String getStats()
-    {
-        return null;
-    }
-
-    /**
-     * @return cacheType
-     */
-    @Override
-    public CacheType getCacheType()
-    {
-        return cacheType;
-    }
-
-    /**
-     * @return Returns the AuxiliaryCacheAttributes.
-     */
-    @Override
-    public AuxiliaryCacheAttributes getAuxiliaryCacheAttributes()
-    {
-        return null;
-    }
-
-    /** @return null */
-    @Override
-    public String getEventLoggingExtraInfo()
-    {
-        return null;
     }
 }

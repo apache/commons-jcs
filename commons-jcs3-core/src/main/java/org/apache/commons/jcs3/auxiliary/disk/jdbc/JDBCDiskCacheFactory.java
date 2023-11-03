@@ -49,6 +49,12 @@ public class JDBCDiskCacheFactory
     /** The logger */
     private static final Log log = LogManager.getLog( JDBCDiskCacheFactory.class );
 
+    /** props prefix */
+    protected static final String POOL_CONFIGURATION_PREFIX = "jcs.jdbcconnectionpool.";
+
+    /** .attributes */
+    protected static final String ATTRIBUTE_PREFIX = ".attributes";
+
     /**
      * A map of TableState objects to table names. Each cache has a table state object, which is
      * used to determine if any long processes such as deletes or optimizations are running.
@@ -66,12 +72,6 @@ public class JDBCDiskCacheFactory
 
     /** Pool name to DataSourceFactories */
     private ConcurrentMap<String, DataSourceFactory> dsFactories;
-
-    /** props prefix */
-    protected static final String POOL_CONFIGURATION_PREFIX = "jcs.jdbcconnectionpool.";
-
-    /** .attributes */
-    protected static final String ATTRIBUTE_PREFIX = ".attributes";
 
     /**
      * This factory method should create an instance of the jdbc cache.
@@ -104,15 +104,30 @@ public class JDBCDiskCacheFactory
     }
 
     /**
-     * Initialize this factory
+     * If UseDiskShrinker is true then we will create a shrinker daemon if necessary.
+     * <p>
+     * @param cattr
+     * @param raf
      */
-    @Override
-    public void initialize()
+    protected void createShrinkerWhenNeeded( final JDBCDiskCacheAttributes cattr, final JDBCDiskCache<?, ?> raf )
     {
-        super.initialize();
-        this.tableStates = new ConcurrentHashMap<>();
-        this.shrinkerThreadMap = new ConcurrentHashMap<>();
-        this.dsFactories = new ConcurrentHashMap<>();
+        // add cache to shrinker.
+        if ( cattr.isUseDiskShrinker() )
+        {
+            final ScheduledExecutorService shrinkerService = getScheduledExecutorService();
+            final ShrinkerThread shrinkerThread = shrinkerThreadMap.computeIfAbsent(cattr.getTableName(), key -> {
+                final ShrinkerThread newShrinkerThread = new ShrinkerThread();
+
+                final long intervalMillis = Math.max( 999, cattr.getShrinkerIntervalSeconds() * 1000 );
+                log.info( "Setting the shrinker to run every [{0}] ms. for table [{1}]",
+                        intervalMillis, key );
+                shrinkerService.scheduleAtFixedRate(newShrinkerThread, 0, intervalMillis, TimeUnit.MILLISECONDS);
+
+                return newShrinkerThread;
+            });
+
+            shrinkerThread.addDiskCacheToShrinkList( raf );
+        }
     }
 
     /**
@@ -138,63 +153,6 @@ public class JDBCDiskCacheFactory
         this.dsFactories.clear();
         this.shrinkerThreadMap.clear();
         super.dispose();
-    }
-
-    /**
-     * Gets a table state for a given table name
-     *
-     * @param tableName
-     * @return a cached instance of the table state
-     */
-    protected TableState getTableState(final String tableName)
-    {
-        return tableStates.computeIfAbsent(tableName, TableState::new);
-    }
-
-    /**
-	 * @see org.apache.commons.jcs3.engine.behavior.IRequireScheduler#setScheduledExecutorService(java.util.concurrent.ScheduledExecutorService)
-	 */
-	@Override
-	public void setScheduledExecutorService(final ScheduledExecutorService scheduledExecutor)
-	{
-		this.scheduler = scheduledExecutor;
-	}
-
-	/**
-     * Gets the scheduler service
-     *
-     * @return the scheduler
-     */
-    protected ScheduledExecutorService getScheduledExecutorService()
-    {
-        return scheduler;
-    }
-
-    /**
-     * If UseDiskShrinker is true then we will create a shrinker daemon if necessary.
-     * <p>
-     * @param cattr
-     * @param raf
-     */
-    protected void createShrinkerWhenNeeded( final JDBCDiskCacheAttributes cattr, final JDBCDiskCache<?, ?> raf )
-    {
-        // add cache to shrinker.
-        if ( cattr.isUseDiskShrinker() )
-        {
-            final ScheduledExecutorService shrinkerService = getScheduledExecutorService();
-            final ShrinkerThread shrinkerThread = shrinkerThreadMap.computeIfAbsent(cattr.getTableName(), key -> {
-                final ShrinkerThread newShrinkerThread = new ShrinkerThread();
-
-                final long intervalMillis = Math.max( 999, cattr.getShrinkerIntervalSeconds() * 1000 );
-                log.info( "Setting the shrinker to run every [{0}] ms. for table [{1}]",
-                        intervalMillis, key );
-                shrinkerService.scheduleAtFixedRate(newShrinkerThread, 0, intervalMillis, TimeUnit.MILLISECONDS);
-
-                return newShrinkerThread;
-            });
-
-            shrinkerThread.addDiskCacheToShrinkList( raf );
-        }
     }
 
     /**
@@ -259,4 +217,46 @@ public class JDBCDiskCacheFactory
     	    return newDsFactory;
     	});
     }
+
+    /**
+     * Gets the scheduler service
+     *
+     * @return the scheduler
+     */
+    protected ScheduledExecutorService getScheduledExecutorService()
+    {
+        return scheduler;
+    }
+
+	/**
+     * Gets a table state for a given table name
+     *
+     * @param tableName
+     * @return a cached instance of the table state
+     */
+    protected TableState getTableState(final String tableName)
+    {
+        return tableStates.computeIfAbsent(tableName, TableState::new);
+    }
+
+    /**
+     * Initialize this factory
+     */
+    @Override
+    public void initialize()
+    {
+        super.initialize();
+        this.tableStates = new ConcurrentHashMap<>();
+        this.shrinkerThreadMap = new ConcurrentHashMap<>();
+        this.dsFactories = new ConcurrentHashMap<>();
+    }
+
+    /**
+	 * @see org.apache.commons.jcs3.engine.behavior.IRequireScheduler#setScheduledExecutorService(java.util.concurrent.ScheduledExecutorService)
+	 */
+	@Override
+	public void setScheduledExecutorService(final ScheduledExecutorService scheduledExecutor)
+	{
+		this.scheduler = scheduledExecutor;
+	}
 }

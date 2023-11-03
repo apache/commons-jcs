@@ -44,48 +44,63 @@ import org.junit.Test;
 /** Unit tests for the data source factories */
 public class JDBCDataSourceFactoryUnitTest
 {
-    /**
-     * Verify that we can configure the object based on the props.
-     * @throws SQLException
-     */
-    @Test
-    public void testConfigureDataSourceFactory_Simple() throws SQLException
+    /* For JNDI mocking */
+    public static class MockInitialContextFactory implements InitialContextFactory
     {
-        // SETUP
-        final String poolName = "testConfigurePoolAccessAttributes_Simple";
+        private static final Context context;
 
-        final String url = "adfads";
-        final String userName = "zvzvz";
-        final String password = "qewrrewq";
-        final int maxActive = 10;
-        final String driverClassName = "org.hsqldb.jdbcDriver";
+        static
+        {
+            try
+            {
+                context = new InitialContext(true)
+                {
+                    final Map<String, Object> bindings = new HashMap<>();
 
-        final Properties props = new Properties();
-        final String prefix = JDBCDiskCacheFactory.POOL_CONFIGURATION_PREFIX
-    		+ poolName
-            + JDBCDiskCacheFactory.ATTRIBUTE_PREFIX;
-        props.put( prefix + ".url", url );
-        props.put( prefix + ".userName", userName );
-        props.put( prefix + ".password", password );
-        props.put( prefix + ".maxActive", String.valueOf( maxActive ) );
-        props.put( prefix + ".driverClassName", driverClassName );
+                    @Override
+                    public void bind(final String name, final Object obj) throws NamingException
+                    {
+                        bindings.put(name, obj);
+                    }
 
-        final JDBCDiskCacheFactory factory = new JDBCDiskCacheFactory();
-        factory.initialize();
+                    @Override
+                    public Hashtable<?, ?> getEnvironment() throws NamingException
+                    {
+                        return new Hashtable<>();
+                    }
 
-        final JDBCDiskCacheAttributes cattr = new JDBCDiskCacheAttributes();
-        cattr.setConnectionPoolName( poolName );
+                    @Override
+                    public Object lookup(final String name) throws NamingException
+                    {
+                        return bindings.get(name);
+                    }
+                };
+            }
+            catch (final NamingException e)
+            {
+            	// can't happen.
+                throw new IllegalStateException(e);
+            }
+        }
 
-        // DO WORK
-        final DataSourceFactory result = factory.getDataSourceFactory( cattr, props );
-        assertTrue("Should be a shared pool data source factory", result instanceof SharedPoolDataSourceFactory);
+        public static void bind(final String name, final Object obj)
+        {
+            try
+            {
+                context.bind(name, obj);
+            }
+            catch (final NamingException e)
+            {
+            	// can't happen.
+                throw new IllegalArgumentException(e);
+            }
+        }
 
-        final SharedPoolDataSource spds = (SharedPoolDataSource) result.getDataSource();
-        assertNotNull( "Should have a data source class", spds );
-
-        // VERIFY
-        assertEquals( "Wrong pool name", poolName, spds.getDescription() );
-        assertEquals( "Wrong maxActive value", maxActive, spds.getMaxTotal() );
+        @Override
+		public Context getInitialContext(final Hashtable<?, ?> environment) throws NamingException
+        {
+            return context;
+        }
     }
 
     /**
@@ -151,63 +166,48 @@ public class JDBCDataSourceFactoryUnitTest
         assertTrue("Should be a JNDI data source factory", result instanceof JndiDataSourceFactory);
     }
 
-    /* For JNDI mocking */
-    public static class MockInitialContextFactory implements InitialContextFactory
+    /**
+     * Verify that we can configure the object based on the props.
+     * @throws SQLException
+     */
+    @Test
+    public void testConfigureDataSourceFactory_Simple() throws SQLException
     {
-        private static final Context context;
+        // SETUP
+        final String poolName = "testConfigurePoolAccessAttributes_Simple";
 
-        static
-        {
-            try
-            {
-                context = new InitialContext(true)
-                {
-                    final Map<String, Object> bindings = new HashMap<>();
+        final String url = "adfads";
+        final String userName = "zvzvz";
+        final String password = "qewrrewq";
+        final int maxActive = 10;
+        final String driverClassName = "org.hsqldb.jdbcDriver";
 
-                    @Override
-                    public void bind(final String name, final Object obj) throws NamingException
-                    {
-                        bindings.put(name, obj);
-                    }
+        final Properties props = new Properties();
+        final String prefix = JDBCDiskCacheFactory.POOL_CONFIGURATION_PREFIX
+    		+ poolName
+            + JDBCDiskCacheFactory.ATTRIBUTE_PREFIX;
+        props.put( prefix + ".url", url );
+        props.put( prefix + ".userName", userName );
+        props.put( prefix + ".password", password );
+        props.put( prefix + ".maxActive", String.valueOf( maxActive ) );
+        props.put( prefix + ".driverClassName", driverClassName );
 
-                    @Override
-                    public Object lookup(final String name) throws NamingException
-                    {
-                        return bindings.get(name);
-                    }
+        final JDBCDiskCacheFactory factory = new JDBCDiskCacheFactory();
+        factory.initialize();
 
-                    @Override
-                    public Hashtable<?, ?> getEnvironment() throws NamingException
-                    {
-                        return new Hashtable<>();
-                    }
-                };
-            }
-            catch (final NamingException e)
-            {
-            	// can't happen.
-                throw new IllegalStateException(e);
-            }
-        }
+        final JDBCDiskCacheAttributes cattr = new JDBCDiskCacheAttributes();
+        cattr.setConnectionPoolName( poolName );
 
-        @Override
-		public Context getInitialContext(final Hashtable<?, ?> environment) throws NamingException
-        {
-            return context;
-        }
+        // DO WORK
+        final DataSourceFactory result = factory.getDataSourceFactory( cattr, props );
+        assertTrue("Should be a shared pool data source factory", result instanceof SharedPoolDataSourceFactory);
 
-        public static void bind(final String name, final Object obj)
-        {
-            try
-            {
-                context.bind(name, obj);
-            }
-            catch (final NamingException e)
-            {
-            	// can't happen.
-                throw new IllegalArgumentException(e);
-            }
-        }
+        final SharedPoolDataSource spds = (SharedPoolDataSource) result.getDataSource();
+        assertNotNull( "Should have a data source class", spds );
+
+        // VERIFY
+        assertEquals( "Wrong pool name", poolName, spds.getDescription() );
+        assertEquals( "Wrong maxActive value", maxActive, spds.getMaxTotal() );
     }
 }
 

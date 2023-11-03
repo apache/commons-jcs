@@ -29,16 +29,16 @@ import org.junit.Test;
 public class CachingProviderTest
 {
     @Test
-    public void testFindProvider()
-    {
-        assertNotNull(Caching.getCachingProvider());
-    }
-
-    @Test
     public void testCreateCacheMgr()
     {
         final CachingProvider cachingProvider = Caching.getCachingProvider();
         assertNotNull(cachingProvider.getCacheManager());
         cachingProvider.close();
+    }
+
+    @Test
+    public void testFindProvider()
+    {
+        assertNotNull(Caching.getCachingProvider());
     }
 }

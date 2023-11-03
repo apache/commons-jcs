@@ -67,35 +67,11 @@ public class JCSListener<K, V> implements Closeable
         create = CacheEntryCreatedListener.class.isInstance(delegate);
     }
 
-    public void onRemoved(final List<CacheEntryEvent<? extends K, ? extends V>> events) throws CacheEntryListenerException
+    @Override
+    public void close()
     {
-        if (remove)
-        {
-            CacheEntryRemovedListener.class.cast(delegate).onRemoved(filter(events));
-        }
-    }
-
-    public void onExpired(final List<CacheEntryEvent<? extends K, ? extends V>> events) throws CacheEntryListenerException
-    {
-        if (expire)
-        {
-            CacheEntryExpiredListener.class.cast(delegate).onExpired(filter(events));
-        }
-    }
-
-    public void onUpdated(final List<CacheEntryEvent<? extends K, ? extends V>> events) throws CacheEntryListenerException
-    {
-        if (update)
-        {
-            CacheEntryUpdatedListener.class.cast(delegate).onUpdated(filter(events));
-        }
-    }
-
-    public void onCreated(final List<CacheEntryEvent<? extends K, ? extends V>> events) throws CacheEntryListenerException
-    {
-        if (create)
-        {
-            CacheEntryCreatedListener.class.cast(delegate).onCreated(filter(events));
+        if (Closeable.class.isInstance(delegate)) {
+            Closeable.class.cast(delegate);
         }
     }
 
@@ -118,11 +94,35 @@ public class JCSListener<K, V> implements Closeable
         return filtered;
     }
 
-    @Override
-    public void close()
+    public void onCreated(final List<CacheEntryEvent<? extends K, ? extends V>> events) throws CacheEntryListenerException
     {
-        if (Closeable.class.isInstance(delegate)) {
-            Closeable.class.cast(delegate);
+        if (create)
+        {
+            CacheEntryCreatedListener.class.cast(delegate).onCreated(filter(events));
+        }
+    }
+
+    public void onExpired(final List<CacheEntryEvent<? extends K, ? extends V>> events) throws CacheEntryListenerException
+    {
+        if (expire)
+        {
+            CacheEntryExpiredListener.class.cast(delegate).onExpired(filter(events));
+        }
+    }
+
+    public void onRemoved(final List<CacheEntryEvent<? extends K, ? extends V>> events) throws CacheEntryListenerException
+    {
+        if (remove)
+        {
+            CacheEntryRemovedListener.class.cast(delegate).onRemoved(filter(events));
+        }
+    }
+
+    public void onUpdated(final List<CacheEntryEvent<? extends K, ? extends V>> events) throws CacheEntryListenerException
+    {
+        if (update)
+        {
+            CacheEntryUpdatedListener.class.cast(delegate).onUpdated(filter(events));
         }
     }
 }
