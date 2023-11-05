@@ -21,7 +21,7 @@ package org.apache.commons.jcs3.jcache.lang;
 
 public interface Subsitutor
 {
-    class Helper {
+    final class Helper {
         public static final Subsitutor INSTANCE;
         static {
             Subsitutor value = null;
