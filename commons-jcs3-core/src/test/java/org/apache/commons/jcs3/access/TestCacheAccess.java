@@ -120,7 +120,7 @@ public class TestCacheAccess
     /** cache instance to use in testing */
     private GroupCacheAccess<String, String> group_cache_control;
 
-    /** Construct and initialize the cachecontrol based on the config file. */
+    /** Constructs and initialize the cachecontrol based on the config file. */
     public TestCacheAccess()
     {
         this( "testCache1" );

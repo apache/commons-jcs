@@ -97,7 +97,7 @@ public final class PoolConfiguration
     }
 
     /**
-     * Construct a completely configured instance.
+     * Constructs a completely configured instance.
      * <p>
      * @param useBoundary
      * @param boundarySize

@@ -31,7 +31,7 @@ public class Log4j2LogAdapter implements Log
     private final Logger logger;
 
     /**
-     * Construct a Log4j Logger wrapper
+     * Constructs a Log4j Logger wrapper
      *
      * @param logger the log4j Logger
      */

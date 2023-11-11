@@ -259,7 +259,7 @@ public abstract class AbstractDiskCache<K, V>
     private final ReentrantReadWriteLock removeAllLock = new ReentrantReadWriteLock();
 
     /**
-     * Construct the abstract disk cache, create event queues and purgatory. Child classes should
+     * Constructs the abstract disk cache, create event queues and purgatory. Child classes should
      * set the alive flag to true after they are initialized.
      *
      * @param attr

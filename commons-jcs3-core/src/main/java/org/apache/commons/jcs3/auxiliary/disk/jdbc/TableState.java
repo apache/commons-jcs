@@ -52,7 +52,7 @@ public class TableState
     private int state = FREE;
 
     /**
-     * Construct a usable table state.
+     * Constructs a usable table state.
      * <p>
      * @param tableName
      */

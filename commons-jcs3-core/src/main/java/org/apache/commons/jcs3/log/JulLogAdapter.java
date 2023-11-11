@@ -42,7 +42,7 @@ public class JulLogAdapter implements Log
     private final Logger logger;
 
     /**
-     * Construct a JUL Logger wrapper
+     * Constructs a JUL Logger wrapper
      *
      * @param logger the JUL Logger
      */
