@@ -60,7 +60,7 @@
       <property name="option" value="alone" />
     </module>
     <module name="LineLength">
-      <property name="max" value="132" />
+      <property name="max" value="160" />
     </module>
     <module name="MethodLength">
       <property name="max" value="175" />
@@ -171,7 +171,12 @@
       <property name="ordered" value="true"/>
       <property name="separated" value="true"/>
     </module>
-
   </module>
-
+  <!-- @author tags are deprecated -->
+  <module name="RegexpSingleline">
+    <property name="format" value="^\s+\*\s+@author\s" />
+    <property name="message" value="Deprecated @author tag" />
+    <property name="fileExtensions" value="java" />
+    <property name="severity" value="warning" />
+  </module>
 </module>
