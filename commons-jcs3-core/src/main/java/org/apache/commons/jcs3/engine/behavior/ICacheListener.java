@@ -25,10 +25,28 @@ import java.io.IOException;
  * Used to receive a cache event notification.
  * <p>
  * Note: objects which implement this interface are local listeners to cache changes, whereas
- * objects which implement IRmiCacheListener are remote listeners to cache changes.
+ * objects which implement IRemoteCacheListener are remote listeners to cache changes.
  */
 public interface ICacheListener<K, V>
 {
+    /**
+     * Gets the listenerId attribute of the ICacheListener object
+     * <p>
+     * @return The listenerId value
+     * @throws IOException
+     */
+    long getListenerId()
+        throws IOException;
+
+    /**
+     * Notifies the subscribers for freeing up the named cache.
+     * <p>
+     * @param cacheName
+     * @throws IOException
+     */
+    void handleDispose( String cacheName )
+        throws IOException;
+
     /**
      * Notifies the subscribers for a cache entry update.
      * <p>
@@ -58,29 +76,11 @@ public interface ICacheListener<K, V>
         throws IOException;
 
     /**
-     * Notifies the subscribers for freeing up the named cache.
-     * <p>
-     * @param cacheName
-     * @throws IOException
-     */
-    void handleDispose( String cacheName )
-        throws IOException;
-
-    /**
      * sets unique identifier of listener home
      * <p>
      * @param id The new listenerId value
      * @throws IOException
      */
     void setListenerId( long id )
-        throws IOException;
-
-    /**
-     * Gets the listenerId attribute of the ICacheListener object
-     * <p>
-     * @return The listenerId value
-     * @throws IOException
-     */
-    long getListenerId()
         throws IOException;
 }

@@ -46,21 +46,9 @@ public interface AuxiliaryCacheFactory
             throws Exception;
 
     /**
-     * Initialize this factory
-     */
-    default void initialize() { /* empty */ }
-
-    /**
      * Dispose of this factory, clean up shared resources
      */
     default void dispose()  { /* empty */ }
-
-    /**
-     * Sets the name attribute of the AuxiliaryCacheFactory object
-     *
-     * @param s The new name value
-     */
-    void setName( String s );
 
     /**
      * Gets the name attribute of the AuxiliaryCacheFactory object
@@ -68,4 +56,16 @@ public interface AuxiliaryCacheFactory
      * @return The name value
      */
     String getName();
+
+    /**
+     * Initialize this factory
+     */
+    default void initialize() { /* empty */ }
+
+    /**
+     * Sets the name attribute of the AuxiliaryCacheFactory object
+     *
+     * @param s The new name value
+     */
+    void setName( String s );
 }

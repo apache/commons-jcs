@@ -78,11 +78,11 @@ public class TimeoutConfigurableRMISocketFactory
     }
 
     /**
-     * @param readTimeout the readTimeout to set
+     * @return the openTimeout
      */
-    public void setReadTimeout( final int readTimeout )
+    public int getOpenTimeout()
     {
-        this.readTimeout = readTimeout;
+        return openTimeout;
     }
 
     /**
@@ -102,10 +102,10 @@ public class TimeoutConfigurableRMISocketFactory
     }
 
     /**
-     * @return the openTimeout
+     * @param readTimeout the readTimeout to set
      */
-    public int getOpenTimeout()
+    public void setReadTimeout( final int readTimeout )
     {
-        return openTimeout;
+        this.readTimeout = readTimeout;
     }
 }

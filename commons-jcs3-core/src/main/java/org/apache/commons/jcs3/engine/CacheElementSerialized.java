@@ -65,6 +65,25 @@ public class CacheElementSerialized<K, V>
     }
 
     /**
+     * @param obj other object
+     * @return true if this object key equals the key of obj
+     */
+    @Override
+    public boolean equals(final Object obj)
+    {
+        if (this == obj)
+        {
+            return true;
+        }
+        if (!(obj instanceof CacheElementSerialized))
+        {
+            return false;
+        }
+        final CacheElementSerialized<?,?> other = (CacheElementSerialized<?,?>) obj;
+        return Objects.equals(getKey(), other.getKey());
+    }
+
+    /**
      * Gets the cacheName attribute of the CacheElement object
      * <p>
      * @return The cacheName value
@@ -76,6 +95,24 @@ public class CacheElementSerialized<K, V>
     }
 
     /**
+     * Gets the IElementAttributes attribute of the CacheElement object
+     * <p>
+     * @return The IElementAttributes value, never null
+     */
+    @Override
+    public IElementAttributes getElementAttributes()
+    {
+        // create default attributes if they are null
+        // this shouldn't happen, but could if a corrupt
+        // object was sent over the wire.
+        if ( this.attr == null )
+        {
+            this.attr = new ElementAttributes();
+        }
+        return this.attr;
+    }
+
+    /**
      * Gets the key attribute of the CacheElement object
      * <p>
      * @return The key value
@@ -84,6 +121,13 @@ public class CacheElementSerialized<K, V>
     public K getKey()
     {
         return this.key;
+    }
+
+    /** @return byte[] */
+    @Override
+    public byte[] getSerializedValue()
+    {
+        return this.serializedValue;
     }
 
     /**
@@ -107,50 +151,6 @@ public class CacheElementSerialized<K, V>
     public void setElementAttributes( final IElementAttributes attr )
     {
         this.attr = attr;
-    }
-
-    /**
-     * Gets the IElementAttributes attribute of the CacheElement object
-     * <p>
-     * @return The IElementAttributes value, never null
-     */
-    @Override
-    public IElementAttributes getElementAttributes()
-    {
-        // create default attributes if they are null
-        // this shouldn't happen, but could if a corrupt
-        // object was sent over the wire.
-        if ( this.attr == null )
-        {
-            this.attr = new ElementAttributes();
-        }
-        return this.attr;
-    }
-
-    /** @return byte[] */
-    @Override
-    public byte[] getSerializedValue()
-    {
-        return this.serializedValue;
-    }
-
-    /**
-     * @param obj other object
-     * @return true if this object key equals the key of obj
-     */
-    @Override
-    public boolean equals(final Object obj)
-    {
-        if (this == obj)
-        {
-            return true;
-        }
-        if (!(obj instanceof CacheElementSerialized))
-        {
-            return false;
-        }
-        final CacheElementSerialized<?,?> other = (CacheElementSerialized<?,?>) obj;
-        return Objects.equals(getKey(), other.getKey());
     }
 
     /**

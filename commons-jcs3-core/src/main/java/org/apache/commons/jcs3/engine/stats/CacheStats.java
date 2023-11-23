@@ -43,6 +43,15 @@ public class CacheStats
     private List<IStats> auxStats;
 
     /**
+     * @return IStats[]
+     */
+    @Override
+    public List<IStats> getAuxiliaryCacheStats()
+    {
+        return auxStats;
+    }
+
+    /**
      * Stats are for a region, though auxiliary data may be for more.
      * <p>
      * @return The region name
@@ -54,6 +63,15 @@ public class CacheStats
     }
 
     /**
+     * @param stats
+     */
+    @Override
+    public void setAuxiliaryCacheStats( final List<IStats> stats )
+    {
+        auxStats = stats;
+    }
+
+    /**
      * Stats are for a region, though auxiliary data may be for more.
      * <p>
      * @param name - The region name
@@ -62,24 +80,6 @@ public class CacheStats
     public void setRegionName( final String name )
     {
         regionName = name;
-    }
-
-    /**
-     * @return IStats[]
-     */
-    @Override
-    public List<IStats> getAuxiliaryCacheStats()
-    {
-        return auxStats;
-    }
-
-    /**
-     * @param stats
-     */
-    @Override
-    public void setAuxiliaryCacheStats( final List<IStats> stats )
-    {
-        auxStats = stats;
     }
 
     /**

@@ -107,6 +107,35 @@ public class RemoteHttpCacheDispatcher
     }
 
     /**
+     * Called after the execute call on the client.
+     * <p>
+     * @param request http request
+     * @param httpState result of execution
+     *
+     * @throws IOException
+     */
+    @Override
+    protected void postProcessWebserviceCall( final HttpUriRequest request, final HttpResponse httpState )
+        throws IOException
+    {
+        // do nothing. Child can override.
+    }
+
+    /**
+     * Called before the execute call on the client.
+     * <p>
+     * @param requestBuilder http method request builder
+     *
+     * @throws IOException
+     */
+    @Override
+    protected void preProcessWebserviceCall( final RequestBuilder requestBuilder )
+        throws IOException
+    {
+        // do nothing. Child can override.
+    }
+
+    /**
      * Process single request
      *
      * @param requestAsByteArray request body
@@ -162,34 +191,5 @@ public class RemoteHttpCacheDispatcher
         builder.setEntity(new ByteArrayEntity( requestAsByteArray ));
         final HttpResponse httpResponse = doWebserviceCall( builder );
         return EntityUtils.toByteArray( httpResponse.getEntity() );
-    }
-
-    /**
-     * Called before the execute call on the client.
-     * <p>
-     * @param requestBuilder http method request builder
-     *
-     * @throws IOException
-     */
-    @Override
-    protected void preProcessWebserviceCall( final RequestBuilder requestBuilder )
-        throws IOException
-    {
-        // do nothing. Child can override.
-    }
-
-    /**
-     * Called after the execute call on the client.
-     * <p>
-     * @param request http request
-     * @param httpState result of execution
-     *
-     * @throws IOException
-     */
-    @Override
-    protected void postProcessWebserviceCall( final HttpUriRequest request, final HttpResponse httpState )
-        throws IOException
-    {
-        // do nothing. Child can override.
     }
 }

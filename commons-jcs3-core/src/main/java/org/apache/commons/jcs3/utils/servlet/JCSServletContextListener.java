@@ -47,17 +47,6 @@ public class JCSServletContextListener
     private static final Log log = LogManager.getLog( JCSServletContextListener.class );
 
     /**
-     * This does nothing. We don't want to initialize the cache here.
-     * <p>
-     * @see javax.servlet.ServletContextListener#contextInitialized(javax.servlet.ServletContextEvent)
-     */
-    @Override
-    public void contextInitialized( final ServletContextEvent arg0 )
-    {
-        log.debug( "contextInitialized" );
-    }
-
-    /**
      * Shutdown JCS.
      * <p>
      * @see javax.servlet.ServletContextListener#contextDestroyed(javax.servlet.ServletContextEvent)
@@ -68,5 +57,16 @@ public class JCSServletContextListener
         log.debug( "contextDestroyed, shutting down JCS." );
 
         JCS.shutdown();
+    }
+
+    /**
+     * This does nothing. We don't want to initialize the cache here.
+     * <p>
+     * @see javax.servlet.ServletContextListener#contextInitialized(javax.servlet.ServletContextEvent)
+     */
+    @Override
+    public void contextInitialized( final ServletContextEvent arg0 )
+    {
+        log.debug( "contextInitialized" );
     }
 }

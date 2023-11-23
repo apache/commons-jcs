@@ -32,13 +32,6 @@ import org.apache.commons.jcs3.engine.stats.behavior.IStats;
 public interface IMemoryCache<K, V>
 {
     /**
-     * Initialize the memory cache
-     * <p>
-     * @param cache The cache (region) this memory store is attached to.
-     */
-    void initialize( CompositeCache<K, V> cache );
-
-    /**
      * Destroy the memory cache
      * <p>
      * @throws IOException
@@ -47,7 +40,81 @@ public interface IMemoryCache<K, V>
         throws IOException;
 
     /**
-     * Get the number of elements contained in the memory store
+     * This instructs the memory cache to remove the <i>numberToFree</i>
+     * according to its eviction policy. For example, the LRUMemoryCache will
+     * remove the <i>numberToFree</i> least recently used items. These will be
+     * spooled to disk if a disk auxiliary is available.
+     * <p>
+     * @param numberToFree
+     * @return the number that were removed. if you ask to free 5, but there are
+     *         only 3, you will get 3.
+     * @throws IOException
+     */
+    int freeElements( int numberToFree )
+        throws IOException;
+
+    /**
+     * Gets an item from the cache
+     * <p>
+     * @param key
+     *            Description of the Parameter
+     * @return Description of the Return Value
+     * @throws IOException
+     *                Description of the Exception
+     */
+    ICacheElement<K, V> get( K key )
+        throws IOException;
+
+    /**
+     * Returns the CacheAttributes for the region.
+     * <p>
+     * @return The cacheAttributes value
+     */
+    ICompositeCacheAttributes getCacheAttributes();
+
+    /**
+     * Gets the cache hub / region that uses the MemoryCache.
+     * <p>
+     * @return The cache value
+     */
+    CompositeCache<K, V> getCompositeCache();
+
+    /**
+     * Gets a set of the keys for all elements in the memory cache.
+     * <p>
+     * @return a set of the key type
+     * TODO This should probably be done in chunks with a range passed in. This
+     *       will be a problem if someone puts a 1,000,000 or so items in a
+     *       region.
+     */
+    Set<K> getKeySet();
+
+    /**
+     * Gets multiple items from the cache based on the given set of keys.
+     * <p>
+     * @param keys
+     * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map
+     * if there is no data in cache for any of these keys
+     * @throws IOException
+     */
+    Map<K, ICacheElement<K, V>> getMultiple( Set<K> keys )
+        throws IOException;
+
+    /**
+     * Gets an item from the cache without effecting its order or last access
+     * time
+     * <p>
+     * @param key
+     *            Description of the Parameter
+     * @return The quiet value
+     * @throws IOException
+     *                Description of the Exception
+     */
+    ICacheElement<K, V> getQuiet( K key )
+        throws IOException;
+
+    /**
+     * Gets the number of elements contained in the memory store
      * <p>
      * @return Element count
      */
@@ -61,14 +128,11 @@ public interface IMemoryCache<K, V>
     IStats getStatistics();
 
     /**
-     * Get a set of the keys for all elements in the memory cache.
+     * Initialize the memory cache
      * <p>
-     * @return a set of the key type
-     * TODO This should probably be done in chunks with a range passed in. This
-     *       will be a problem if someone puts a 1,000,000 or so items in a
-     *       region.
+     * @param cache The cache (region) this memory store is attached to.
      */
-    Set<K> getKeySet();
+    void initialize( CompositeCache<K, V> cache );
 
     /**
      * Removes an item from the cache
@@ -92,65 +156,12 @@ public interface IMemoryCache<K, V>
         throws IOException;
 
     /**
-     * This instructs the memory cache to remove the <i>numberToFree</i>
-     * according to its eviction policy. For example, the LRUMemoryCache will
-     * remove the <i>numberToFree</i> least recently used items. These will be
-     * spooled to disk if a disk auxiliary is available.
+     * Sets the CacheAttributes of the region.
      * <p>
-     * @param numberToFree
-     * @return the number that were removed. if you ask to free 5, but there are
-     *         only 3, you will get 3.
-     * @throws IOException
+     * @param cattr
+     *            The new cacheAttributes value
      */
-    int freeElements( int numberToFree )
-        throws IOException;
-
-    /**
-     * Get an item from the cache
-     * <p>
-     * @param key
-     *            Description of the Parameter
-     * @return Description of the Return Value
-     * @throws IOException
-     *                Description of the Exception
-     */
-    ICacheElement<K, V> get( K key )
-        throws IOException;
-
-    /**
-     * Gets multiple items from the cache based on the given set of keys.
-     * <p>
-     * @param keys
-     * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map
-     * if there is no data in cache for any of these keys
-     * @throws IOException
-     */
-    Map<K, ICacheElement<K, V>> getMultiple( Set<K> keys )
-        throws IOException;
-
-    /**
-     * Get an item from the cache without effecting its order or last access
-     * time
-     * <p>
-     * @param key
-     *            Description of the Parameter
-     * @return The quiet value
-     * @throws IOException
-     *                Description of the Exception
-     */
-    ICacheElement<K, V> getQuiet( K key )
-        throws IOException;
-
-    /**
-     * Spools the item contained in the provided element to disk
-     * <p>
-     * @param ce
-     *            Description of the Parameter
-     * @throws IOException
-     *                Description of the Exception
-     */
-    void waterfal( ICacheElement<K, V> ce ) // FIXME: Correct typo before 4.0, see JCS-222
-        throws IOException;
+    void setCacheAttributes( ICompositeCacheAttributes cattr );
 
     /**
      * Puts an item to the cache.
@@ -164,24 +175,13 @@ public interface IMemoryCache<K, V>
         throws IOException;
 
     /**
-     * Returns the CacheAttributes for the region.
+     * Spools the item contained in the provided element to disk
      * <p>
-     * @return The cacheAttributes value
+     * @param ce
+     *            Description of the Parameter
+     * @throws IOException
+     *                Description of the Exception
      */
-    ICompositeCacheAttributes getCacheAttributes();
-
-    /**
-     * Sets the CacheAttributes of the region.
-     * <p>
-     * @param cattr
-     *            The new cacheAttributes value
-     */
-    void setCacheAttributes( ICompositeCacheAttributes cattr );
-
-    /**
-     * Gets the cache hub / region that uses the MemoryCache.
-     * <p>
-     * @return The cache value
-     */
-    CompositeCache<K, V> getCompositeCache();
+    void waterfal( ICacheElement<K, V> ce ) // FIXME: Correct typo before 4.0, see JCS-222
+        throws IOException;
 }

@@ -39,6 +39,9 @@ import org.apache.http.impl.client.HttpClientBuilder;
  */
 public abstract class AbstractHttpClient
 {
+    /** The Logger. */
+    private static final Log log = LogManager.getLog( AbstractHttpClient.class );
+
     /** The client */
     private final HttpClient httpClient;
 
@@ -47,9 +50,6 @@ public abstract class AbstractHttpClient
 
     /** Configuration settings. */
     private final RemoteHttpCacheAttributes remoteHttpCacheAttributes;
-
-    /** The Logger. */
-    private static final Log log = LogManager.getLog( AbstractHttpClient.class );
 
     /**
      * Sets the default Properties File and Heading, and creates the HttpClient and connection
@@ -124,14 +124,12 @@ public abstract class AbstractHttpClient
     }
 
     /**
-     * Called before the execute call on the client.
-     * <p>
-     * @param requestBuilder http method request builder
-     *
-     * @throws IOException
+     * @return the remoteHttpCacheAttributes
      */
-    protected abstract void preProcessWebserviceCall( RequestBuilder requestBuilder )
-        throws IOException;
+    protected RemoteHttpCacheAttributes getRemoteHttpCacheAttributes()
+    {
+        return remoteHttpCacheAttributes;
+    }
 
     /**
      * Called after the execute call on the client.
@@ -145,10 +143,12 @@ public abstract class AbstractHttpClient
         throws IOException;
 
     /**
-     * @return the remoteHttpCacheAttributes
+     * Called before the execute call on the client.
+     * <p>
+     * @param requestBuilder http method request builder
+     *
+     * @throws IOException
      */
-    protected RemoteHttpCacheAttributes getRemoteHttpCacheAttributes()
-    {
-        return remoteHttpCacheAttributes;
-    }
+    protected abstract void preProcessWebserviceCall( RequestBuilder requestBuilder )
+        throws IOException;
 }

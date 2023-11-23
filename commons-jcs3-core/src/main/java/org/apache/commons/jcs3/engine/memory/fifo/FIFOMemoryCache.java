@@ -32,6 +32,17 @@ public class FIFOMemoryCache<K, V>
     extends AbstractDoubleLinkedListMemoryCache<K, V>
 {
     /**
+     * Does nothing.
+     * <p>
+     * @param me
+     */
+    @Override
+    protected void adjustListForGet( final MemoryElementDescriptor<K, V> me )
+    {
+        // DO NOTHING
+    }
+
+    /**
      * Puts an item to the cache. Removes any pre-existing entries of the same key from the linked
      * list and adds this one first.
      * <p>
@@ -44,16 +55,5 @@ public class FIFOMemoryCache<K, V>
         throws IOException
     {
         return addFirst( ce );
-    }
-
-    /**
-     * Does nothing.
-     * <p>
-     * @param me
-     */
-    @Override
-    protected void adjustListForGet( final MemoryElementDescriptor<K, V> me )
-    {
-        // DO NOTHING
     }
 }

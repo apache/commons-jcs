@@ -29,6 +29,16 @@ public interface ILateralCacheListener<K, V>
     extends ICacheListener<K, V>
 {
     /**
+     * Dispose this listener
+     */
+    void dispose();
+
+    /**
+     * @return Returns the cacheMgr.
+     */
+    ICompositeCacheManager getCacheManager();
+
+    /**
      * Initialize this listener
      */
     void init();
@@ -38,14 +48,4 @@ public interface ILateralCacheListener<K, V>
      *            The cacheMgr to set.
      */
     void setCacheManager( ICompositeCacheManager cacheMgr );
-
-    /**
-     * @return Returns the cacheMgr.
-     */
-    ICompositeCacheManager getCacheManager();
-
-    /**
-     * Dispose this listener
-     */
-    void dispose();
 }

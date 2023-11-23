@@ -33,6 +33,12 @@ public class IndexedDiskCacheAttributes
     /** default value */
     private static final int DEFAULT_maxKeySize = 5000;
 
+    /** Should we optimize on shutdown. */
+    public static final boolean DEFAULT_OPTIMIZE_ON_SHUTDOWN = true;
+
+    /** Should we clear the disk on startup. */
+    public static final boolean DEFAULT_CLEAR_DISK_ON_STARTUP = false;
+
     /** -1 means no limit. */
     private int maxKeySize = DEFAULT_maxKeySize;
 
@@ -40,13 +46,7 @@ public class IndexedDiskCacheAttributes
     private int optimizeAtRemoveCount = -1;
 
     /** Should we optimize on shutdown. */
-    public static final boolean DEFAULT_OPTIMIZE_ON_SHUTDOWN = true;
-
-    /** Should we optimize on shutdown. */
     private boolean optimizeOnShutdown = DEFAULT_OPTIMIZE_ON_SHUTDOWN;
-
-    /** Should we clear the disk on startup. */
-    public static final boolean DEFAULT_CLEAR_DISK_ON_STARTUP = false;
 
     /** Should we clear the disk on startup. If true the contents of disk are cleared. */
     private boolean clearDiskOnStartup = DEFAULT_CLEAR_DISK_ON_STARTUP;
@@ -69,16 +69,6 @@ public class IndexedDiskCacheAttributes
     }
 
     /**
-     * Sets the maxKeySize attribute of the DiskCacheAttributes object
-     * <p>
-     * @param maxKeySize The new maxKeySize value
-     */
-    public void setMaxKeySize( final int maxKeySize )
-    {
-        this.maxKeySize = maxKeySize;
-    }
-
-    /**
      * Gets the optimizeAtRemoveCount attribute of the DiskCacheAttributes object
      * <p>
      * @return The optimizeAtRemoveCount value
@@ -89,22 +79,11 @@ public class IndexedDiskCacheAttributes
     }
 
     /**
-     * Sets the optimizeAtRemoveCount attribute of the DiskCacheAttributes object This number
-     * determines how often the disk cache should run real time optimizations.
-     * <p>
-     * @param cnt The new optimizeAtRemoveCount value
+     * @return the clearDiskOnStartup
      */
-    public void setOptimizeAtRemoveCount( final int cnt )
+    public boolean isClearDiskOnStartup()
     {
-        this.optimizeAtRemoveCount = cnt;
-    }
-
-    /**
-     * @param optimizeOnShutdown The optimizeOnShutdown to set.
-     */
-    public void setOptimizeOnShutdown( final boolean optimizeOnShutdown )
-    {
-        this.optimizeOnShutdown = optimizeOnShutdown;
+        return clearDiskOnStartup;
     }
 
     /**
@@ -124,11 +103,32 @@ public class IndexedDiskCacheAttributes
     }
 
     /**
-     * @return the clearDiskOnStartup
+     * Sets the maxKeySize attribute of the DiskCacheAttributes object
+     * <p>
+     * @param maxKeySize The new maxKeySize value
      */
-    public boolean isClearDiskOnStartup()
+    public void setMaxKeySize( final int maxKeySize )
     {
-        return clearDiskOnStartup;
+        this.maxKeySize = maxKeySize;
+    }
+
+    /**
+     * Sets the optimizeAtRemoveCount attribute of the DiskCacheAttributes object This number
+     * determines how often the disk cache should run real time optimizations.
+     * <p>
+     * @param cnt The new optimizeAtRemoveCount value
+     */
+    public void setOptimizeAtRemoveCount( final int cnt )
+    {
+        this.optimizeAtRemoveCount = cnt;
+    }
+
+    /**
+     * @param optimizeOnShutdown The optimizeOnShutdown to set.
+     */
+    public void setOptimizeOnShutdown( final boolean optimizeOnShutdown )
+    {
+        this.optimizeOnShutdown = optimizeOnShutdown;
     }
 
     /**

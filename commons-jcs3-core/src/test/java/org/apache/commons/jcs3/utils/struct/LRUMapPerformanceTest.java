@@ -50,21 +50,6 @@ public class LRUMapPerformanceTest
     int tries = 100000;
 
     /**
-     * A unit test for JUnit
-     *
-     * @throws Exception
-     *                Description of the Exception
-     */
-    @Test
-    public void testSimpleLoad()
-        throws Exception
-    {
-        doWork();
-        assertTrue( this.ratioPut < targetPut );
-        assertTrue( this.ratioGet < targetGet );
-    }
-
-    /**
      *
      */
     public void doWork()
@@ -171,5 +156,20 @@ public class LRUMapPerformanceTest
         ratioGet = Float.intBitsToFloat( (int) getAvJCS ) / Float.intBitsToFloat( (int) getAvHashtable );
         System.out.println( name + " gets took " + ratioGet + " times the " + cache2Name + ", the goal is <" + targetGet
             + "x" );
+    }
+
+    /**
+     * A unit test for JUnit
+     *
+     * @throws Exception
+     *                Description of the Exception
+     */
+    @Test
+    public void testSimpleLoad()
+        throws Exception
+    {
+        doWork();
+        assertTrue( this.ratioPut < targetPut );
+        assertTrue( this.ratioGet < targetGet );
     }
 }

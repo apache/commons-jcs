@@ -52,37 +52,6 @@ public class JDBCDiskCacheShrinkUnitTest
     }
 
     /**
-     * Test the basic JDBC disk cache functionality with a hsql backing. Verify that items
-     * configured to expire after 1 second actually expire.
-     * <p>
-     * @throws Exception
-     */
-    @Test
-    public void testExpireInBackground()
-        throws Exception
-    {
-        final String regionExpire = "expire1Second";
-        final int items = 200;
-
-        final CacheAccess<String, String> jcsExpire = JCS.getInstance( regionExpire );
-
-        // Add items to cache
-        for ( int i = 0; i < items; i++ )
-        {
-            jcsExpire.put( i + ":key", regionExpire + " data " + i );
-        }
-
-        // the shrinker is supposed to run every second
-        SleepUtil.sleepAtLeast( 3000 );
-
-        // Test that all items have been removed from the cache
-        for ( int i = 0; i < items; i++ )
-        {
-            assertNull( "Removed key should be null: " + i + ":key", jcsExpire.get( i + ":key" ) );
-        }
-    }
-
-    /**
      * Verify that those not scheduled to expire do not expire.
      * <p>
      * @throws CacheException
@@ -166,6 +135,37 @@ public class JDBCDiskCacheShrinkUnitTest
         for ( int i = 0; i < items; i++ )
         {
             assertNull( "Removed key should be null: " + i + ":key", jcs.get( i + ":key" ) );
+        }
+    }
+
+    /**
+     * Test the basic JDBC disk cache functionality with a hsql backing. Verify that items
+     * configured to expire after 1 second actually expire.
+     * <p>
+     * @throws Exception
+     */
+    @Test
+    public void testExpireInBackground()
+        throws Exception
+    {
+        final String regionExpire = "expire1Second";
+        final int items = 200;
+
+        final CacheAccess<String, String> jcsExpire = JCS.getInstance( regionExpire );
+
+        // Add items to cache
+        for ( int i = 0; i < items; i++ )
+        {
+            jcsExpire.put( i + ":key", regionExpire + " data " + i );
+        }
+
+        // the shrinker is supposed to run every second
+        SleepUtil.sleepAtLeast( 3000 );
+
+        // Test that all items have been removed from the cache
+        for ( int i = 0; i < items; i++ )
+        {
+            assertNull( "Removed key should be null: " + i + ":key", jcsExpire.get( i + ":key" ) );
         }
     }
 }

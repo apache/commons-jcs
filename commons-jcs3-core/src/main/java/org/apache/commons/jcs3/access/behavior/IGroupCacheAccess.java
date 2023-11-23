@@ -42,6 +42,21 @@ public interface IGroupCacheAccess<K, V>
     V getFromGroup( K name, String group );
 
     /**
+     * Gets the set of keys of objects currently in the group
+     * <p>
+     * @param group
+     * @return the set of group keys.
+     */
+    Set<K> getGroupKeys( String group );
+
+    /**
+     * Invalidates a group
+     * <p>
+     * @param group
+     */
+    void invalidateGroup( String group );
+
+    /**
      * Puts an item in the cache associated with this group.
      * <p>
      * @param key
@@ -71,19 +86,4 @@ public interface IGroupCacheAccess<K, V>
      * @param group
      */
     void removeFromGroup( K name, String group );
-
-    /**
-     * Gets the set of keys of objects currently in the group
-     * <p>
-     * @param group
-     * @return the set of group keys.
-     */
-    Set<K> getGroupKeys( String group );
-
-    /**
-     * Invalidates a group
-     * <p>
-     * @param group
-     */
-    void invalidateGroup( String group );
 }

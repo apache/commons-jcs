@@ -52,56 +52,300 @@ import javax.interceptor.InvocationContext;
 @ApplicationScoped
 public class CDIJCacheHelper
 {
-    private static final Logger LOGGER = Logger.getLogger(CDIJCacheHelper.class.getName());
-    private static final boolean CLOSE_CACHE = !Boolean.getBoolean("org.apache.commons.jcs3.jcache.cdi.skip-close");
+    private static final class MethodKey
+    {
+        private final Class<?> base;
+        private final Method delegate;
+        private final int hash;
 
-    private volatile CacheResolverFactoryImpl defaultCacheResolverFactory; // lazy to not create any cache if not needed
-    private final CacheKeyGeneratorImpl defaultCacheKeyGenerator = new CacheKeyGeneratorImpl();
-
-    private final Collection<CreationalContext<?>> toRelease = new ArrayList<>();
-    private final ConcurrentMap<MethodKey, MethodMeta> methods = new ConcurrentHashMap<>();
-
-    @Inject
-    private BeanManager beanManager;
-
-    @PreDestroy
-    private void release() {
-        if (CLOSE_CACHE && defaultCacheResolverFactory != null)
+        private MethodKey(final Class<?> base, final Method delegate)
         {
-            defaultCacheResolverFactory.release();
+            this.base = base; // we need a class to ensure inheritance don't fall in the same key
+            this.delegate = delegate;
+            this.hash = 31 * delegate.hashCode() + (base == null ? 0 : base.hashCode());
         }
-        for (final CreationalContext<?> cc : toRelease)
+
+        @Override
+        public boolean equals(final Object o)
         {
-            try
+            if (this == o)
             {
-                cc.release();
+                return true;
             }
-            catch (final RuntimeException re)
+            if (o == null || getClass() != o.getClass())
             {
-                LOGGER.warning(re.getMessage());
+                return false;
             }
+            final MethodKey classKey = MethodKey.class.cast(o);
+            return delegate.equals(classKey.delegate) &&
+                (base == null && classKey.base == null || base != null && base.equals(classKey.base));
+        }
+
+        @Override
+        public int hashCode()
+        {
+            return hash;
+        }
+    }
+    // TODO: split it in 5?
+    public static class MethodMeta
+    {
+        private final Class<?>[] parameterTypes;
+        private final List<Set<Annotation>> parameterAnnotations;
+        private final Set<Annotation> annotations;
+        private final Integer[] keysIndices;
+        private final Integer valueIndex;
+        private final Integer[] parameterIndices;
+
+        private final String cacheResultCacheName;
+        private final CacheResolverFactory cacheResultResolverFactory;
+        private final CacheKeyGenerator cacheResultKeyGenerator;
+        private final CacheResult cacheResult;
+
+        private final String cachePutCacheName;
+        private final CacheResolverFactory cachePutResolverFactory;
+        private final CacheKeyGenerator cachePutKeyGenerator;
+        private final boolean cachePutAfter;
+        private final CachePut cachePut;
+
+        private final String cacheRemoveCacheName;
+        private final CacheResolverFactory cacheRemoveResolverFactory;
+        private final CacheKeyGenerator cacheRemoveKeyGenerator;
+        private final boolean cacheRemoveAfter;
+        private final CacheRemove cacheRemove;
+
+        private final String cacheRemoveAllCacheName;
+        private final CacheResolverFactory cacheRemoveAllResolverFactory;
+        private final boolean cacheRemoveAllAfter;
+        private final CacheRemoveAll cacheRemoveAll;
+
+        public MethodMeta(final Class<?>[] parameterTypes, final List<Set<Annotation>> parameterAnnotations, final Set<Annotation>
+                annotations, final Integer[] keysIndices, final Integer valueIndex, final Integer[] parameterIndices, final String
+                cacheResultCacheName, final CacheResolverFactory cacheResultResolverFactory, final CacheKeyGenerator
+                cacheResultKeyGenerator, final CacheResult cacheResult, final String cachePutCacheName, final CacheResolverFactory
+                cachePutResolverFactory, final CacheKeyGenerator cachePutKeyGenerator, final boolean cachePutAfter, final CachePut cachePut, final String
+                cacheRemoveCacheName, final CacheResolverFactory cacheRemoveResolverFactory, final CacheKeyGenerator
+                cacheRemoveKeyGenerator, final boolean cacheRemoveAfter, final CacheRemove cacheRemove, final String cacheRemoveAllCacheName,
+                          final CacheResolverFactory cacheRemoveAllResolverFactory, final boolean
+                                  cacheRemoveAllAfter, final CacheRemoveAll cacheRemoveAll)
+        {
+            this.parameterTypes = parameterTypes;
+            this.parameterAnnotations = parameterAnnotations;
+            this.annotations = annotations;
+            this.keysIndices = keysIndices;
+            this.valueIndex = valueIndex;
+            this.parameterIndices = parameterIndices;
+            this.cacheResultCacheName = cacheResultCacheName;
+            this.cacheResultResolverFactory = cacheResultResolverFactory;
+            this.cacheResultKeyGenerator = cacheResultKeyGenerator;
+            this.cacheResult = cacheResult;
+            this.cachePutCacheName = cachePutCacheName;
+            this.cachePutResolverFactory = cachePutResolverFactory;
+            this.cachePutKeyGenerator = cachePutKeyGenerator;
+            this.cachePutAfter = cachePutAfter;
+            this.cachePut = cachePut;
+            this.cacheRemoveCacheName = cacheRemoveCacheName;
+            this.cacheRemoveResolverFactory = cacheRemoveResolverFactory;
+            this.cacheRemoveKeyGenerator = cacheRemoveKeyGenerator;
+            this.cacheRemoveAfter = cacheRemoveAfter;
+            this.cacheRemove = cacheRemove;
+            this.cacheRemoveAllCacheName = cacheRemoveAllCacheName;
+            this.cacheRemoveAllResolverFactory = cacheRemoveAllResolverFactory;
+            this.cacheRemoveAllAfter = cacheRemoveAllAfter;
+            this.cacheRemoveAll = cacheRemoveAll;
+        }
+
+        public Set<Annotation> getAnnotations()
+        {
+            return annotations;
+        }
+
+        public CachePut getCachePut()
+        {
+            return cachePut;
+        }
+
+        public String getCachePutCacheName()
+        {
+            return cachePutCacheName;
+        }
+
+        public CacheKeyGenerator getCachePutKeyGenerator()
+        {
+            return cachePutKeyGenerator;
+        }
+
+        public CacheResolverFactory getCachePutResolverFactory()
+        {
+            return cachePutResolverFactory;
+        }
+
+        public CacheRemove getCacheRemove()
+        {
+            return cacheRemove;
+        }
+
+        public CacheRemoveAll getCacheRemoveAll()
+        {
+            return cacheRemoveAll;
+        }
+
+        public String getCacheRemoveAllCacheName()
+        {
+            return cacheRemoveAllCacheName;
+        }
+
+        public CacheResolverFactory getCacheRemoveAllResolverFactory()
+        {
+            return cacheRemoveAllResolverFactory;
+        }
+
+        public String getCacheRemoveCacheName()
+        {
+            return cacheRemoveCacheName;
+        }
+
+        public CacheKeyGenerator getCacheRemoveKeyGenerator()
+        {
+            return cacheRemoveKeyGenerator;
+        }
+
+        public CacheResolverFactory getCacheRemoveResolverFactory()
+        {
+            return cacheRemoveResolverFactory;
+        }
+
+        public CacheResult getCacheResult() {
+            return cacheResult;
+        }
+
+        public String getCacheResultCacheName()
+        {
+            return cacheResultCacheName;
+        }
+
+        public CacheKeyGenerator getCacheResultKeyGenerator()
+        {
+            return cacheResultKeyGenerator;
+        }
+
+        public CacheResolverFactory getCacheResultResolverFactory()
+        {
+            return cacheResultResolverFactory;
+        }
+
+        public Integer[] getKeysIndices()
+        {
+            return keysIndices;
+        }
+
+        public List<Set<Annotation>> getParameterAnnotations()
+        {
+            return parameterAnnotations;
+        }
+
+        public Integer[] getParameterIndices()
+        {
+            return parameterIndices;
+        }
+
+        public Class<?>[] getParameterTypes()
+        {
+            return parameterTypes;
+        }
+
+        public Integer getValueIndex()
+        {
+            return valueIndex;
+        }
+
+        public Integer getValuesIndex()
+        {
+            return valueIndex;
+        }
+
+        public boolean isCachePutAfter()
+        {
+            return cachePutAfter;
+        }
+
+        public boolean isCacheRemoveAfter()
+        {
+            return cacheRemoveAfter;
+        }
+
+        public boolean isCacheRemoveAllAfter()
+        {
+            return cacheRemoveAllAfter;
         }
     }
 
-    public MethodMeta findMeta(final InvocationContext ic)
+    private static final Logger LOGGER = Logger.getLogger(CDIJCacheHelper.class.getName());
+    private static final boolean CLOSE_CACHE = !Boolean.getBoolean("org.apache.commons.jcs3.jcache.cdi.skip-close");
+
+    private static String defaultName(final Method method, final CacheDefaults defaults, final String cacheName)
     {
-        final Method mtd = ic.getMethod();
-        final Class<?> refType = findKeyType(ic.getTarget());
-        final MethodKey key = new MethodKey(refType, mtd);
-        MethodMeta methodMeta = methods.get(key);
-        if (methodMeta == null)
+        if (!cacheName.isEmpty())
         {
-            synchronized (this)
+            return cacheName;
+        }
+        if (defaults != null)
+        {
+            final String name = defaults.cacheName();
+            if (!name.isEmpty())
             {
-                methodMeta = methods.get(key);
-                if (methodMeta == null)
-                {
-                    methodMeta = createMeta(ic);
-                    methods.put(key, methodMeta);
-                }
+                return name;
             }
         }
-        return methodMeta;
+
+        final StringBuilder name = new StringBuilder(method.getDeclaringClass().getName());
+        name.append(".");
+        name.append(method.getName());
+        name.append("(");
+        final Class<?>[] parameterTypes = method.getParameterTypes();
+        for (int pIdx = 0; pIdx < parameterTypes.length; pIdx++)
+        {
+            name.append(parameterTypes[pIdx].getName());
+            if ((pIdx + 1) < parameterTypes.length)
+            {
+                name.append(",");
+            }
+        }
+        name.append(")");
+        return name.toString();
+    }
+    private static CacheDefaults extractDefaults(final Class<?> type)
+    {
+        CacheDefaults annotation = null;
+        Class<?> clazz = type;
+        while (clazz != null && clazz != Object.class)
+        {
+            annotation = clazz.getAnnotation(CacheDefaults.class);
+            if (annotation != null)
+            {
+                break;
+            }
+            clazz = clazz.getSuperclass();
+        }
+        return annotation;
+    }
+
+    private static CacheDefaults findDefaults(final Class<?> targetType, final Method method)
+    {
+        if (Proxy.isProxyClass(targetType)) // target doesn't hold annotations
+        {
+            final Class<?> api = method.getDeclaringClass();
+            for (final Class<?> type : targetType
+                                         .getInterfaces())
+            {
+                if (!api.isAssignableFrom(type))
+                {
+                    continue;
+                }
+                return extractDefaults(type);
+            }
+        }
+        return extractDefaults(targetType);
     }
 
     private static Class<?> findKeyType(final Object target)
@@ -111,6 +355,134 @@ public class CDIJCacheHelper
             return null;
         }
         return target.getClass();
+    }
+
+    private static Integer[] getKeyParameters(final List<Set<Annotation>> annotations)
+    {
+        final Collection<Integer> list = new ArrayList<>();
+        int idx = 0;
+        for (final Set<Annotation> set : annotations)
+        {
+            for (final Annotation a : set)
+            {
+                if (a.annotationType() == CacheKey.class)
+                {
+                    list.add(idx);
+                }
+            }
+            idx++;
+        }
+        if (list.isEmpty())
+        {
+            for (int i = 0; i < annotations.size(); i++)
+            {
+                list.add(i);
+            }
+        }
+        return list.toArray(new Integer[0]);
+    }
+
+    private static Integer getValueParameter(final List<Set<Annotation>> annotations)
+    {
+        final int idx = 0;
+        for (final Set<Annotation> set : annotations)
+        {
+            for (final Annotation a : set)
+            {
+                if (a.annotationType() == CacheValue.class)
+                {
+                    return idx;
+                }
+            }
+        }
+        return -1;
+    }
+
+    private static Integer[] keyParameterIndexes(final Method method)
+    {
+        final List<Integer> keys = new LinkedList<>();
+        final Annotation[][] parameterAnnotations = method.getParameterAnnotations();
+
+        // first check if keys are specified explicitly
+        for (int i = 0; i < method.getParameterTypes().length; i++)
+        {
+            final Annotation[] annotations = parameterAnnotations[i];
+            for (final Annotation a : annotations)
+            {
+                if (a.annotationType().equals(CacheKey.class))
+                {
+                    keys.add(i);
+                    break;
+                }
+            }
+        }
+
+        // if not then use all parameters but value ones
+        if (keys.isEmpty())
+        {
+            for (int i = 0; i < method.getParameterTypes().length; i++)
+            {
+                final Annotation[] annotations = parameterAnnotations[i];
+                boolean value = false;
+                for (final Annotation a : annotations)
+                {
+                    if (a.annotationType().equals(CacheValue.class))
+                    {
+                        value = true;
+                        break;
+                    }
+                }
+                if (!value) {
+                    keys.add(i);
+                }
+            }
+        }
+        return keys.toArray(new Integer[0]);
+    }
+
+    private volatile CacheResolverFactoryImpl defaultCacheResolverFactory; // lazy to not create any cache if not needed
+
+    private final CacheKeyGeneratorImpl defaultCacheKeyGenerator = new CacheKeyGeneratorImpl();
+
+    private final Collection<CreationalContext<?>> toRelease = new ArrayList<>();
+
+    private final ConcurrentMap<MethodKey, MethodMeta> methods = new ConcurrentHashMap<>();
+
+    @Inject
+    private BeanManager beanManager;
+
+    private CacheKeyGenerator cacheKeyGeneratorFor(final CacheDefaults defaults, final Class<? extends CacheKeyGenerator> cacheKeyGenerator)
+    {
+        if (!CacheKeyGenerator.class.equals(cacheKeyGenerator))
+        {
+            return instance(cacheKeyGenerator);
+        }
+        if (defaults != null)
+        {
+            final Class<? extends CacheKeyGenerator> defaultCacheKeyGenerator = defaults.cacheKeyGenerator();
+            if (!CacheKeyGenerator.class.equals(defaultCacheKeyGenerator))
+            {
+                return instance(defaultCacheKeyGenerator);
+            }
+        }
+        return defaultCacheKeyGenerator;
+    }
+
+    private CacheResolverFactory cacheResolverFactoryFor(final CacheDefaults defaults, final Class<? extends CacheResolverFactory> cacheResolverFactory)
+    {
+        if (!CacheResolverFactory.class.equals(cacheResolverFactory))
+        {
+            return instance(cacheResolverFactory);
+        }
+        if (defaults != null)
+        {
+            final Class<? extends CacheResolverFactory> defaultCacheResolverFactory = defaults.cacheResolverFactory();
+            if (!CacheResolverFactory.class.equals(defaultCacheResolverFactory))
+            {
+                return instance(defaultCacheResolverFactory);
+            }
+        }
+        return defaultCacheResolverFactory();
     }
 
     // it is unlikely we have all annotations but for now we have a single meta model
@@ -183,168 +555,39 @@ public class CDIJCacheHelper
                 cacheRemoveAll);
     }
 
-    private static Integer[] getKeyParameters(final List<Set<Annotation>> annotations)
+    private CacheResolverFactoryImpl defaultCacheResolverFactory()
     {
-        final Collection<Integer> list = new ArrayList<>();
-        int idx = 0;
-        for (final Set<Annotation> set : annotations)
-        {
-            for (final Annotation a : set)
-            {
-                if (a.annotationType() == CacheKey.class)
-                {
-                    list.add(idx);
-                }
-            }
-            idx++;
+        if (defaultCacheResolverFactory != null) {
+            return defaultCacheResolverFactory;
         }
-        if (list.isEmpty())
-        {
-            for (int i = 0; i < annotations.size(); i++)
-            {
-                list.add(i);
+        synchronized (this) {
+            if (defaultCacheResolverFactory != null) {
+                return defaultCacheResolverFactory;
             }
+            defaultCacheResolverFactory = new CacheResolverFactoryImpl();
         }
-        return list.toArray(new Integer[0]);
+        return defaultCacheResolverFactory;
     }
 
-    private static Integer getValueParameter(final List<Set<Annotation>> annotations)
+    public MethodMeta findMeta(final InvocationContext ic)
     {
-        final int idx = 0;
-        for (final Set<Annotation> set : annotations)
+        final Method mtd = ic.getMethod();
+        final Class<?> refType = findKeyType(ic.getTarget());
+        final MethodKey key = new MethodKey(refType, mtd);
+        MethodMeta methodMeta = methods.get(key);
+        if (methodMeta == null)
         {
-            for (final Annotation a : set)
+            synchronized (this)
             {
-                if (a.annotationType() == CacheValue.class)
+                methodMeta = methods.get(key);
+                if (methodMeta == null)
                 {
-                    return idx;
+                    methodMeta = createMeta(ic);
+                    methods.put(key, methodMeta);
                 }
             }
         }
-        return -1;
-    }
-
-    private static String defaultName(final Method method, final CacheDefaults defaults, final String cacheName)
-    {
-        if (!cacheName.isEmpty())
-        {
-            return cacheName;
-        }
-        if (defaults != null)
-        {
-            final String name = defaults.cacheName();
-            if (!name.isEmpty())
-            {
-                return name;
-            }
-        }
-
-        final StringBuilder name = new StringBuilder(method.getDeclaringClass().getName());
-        name.append(".");
-        name.append(method.getName());
-        name.append("(");
-        final Class<?>[] parameterTypes = method.getParameterTypes();
-        for (int pIdx = 0; pIdx < parameterTypes.length; pIdx++)
-        {
-            name.append(parameterTypes[pIdx].getName());
-            if ((pIdx + 1) < parameterTypes.length)
-            {
-                name.append(",");
-            }
-        }
-        name.append(")");
-        return name.toString();
-    }
-
-    private static CacheDefaults findDefaults(final Class<?> targetType, final Method method)
-    {
-        if (Proxy.isProxyClass(targetType)) // target doesn't hold annotations
-        {
-            final Class<?> api = method.getDeclaringClass();
-            for (final Class<?> type : targetType
-                                         .getInterfaces())
-            {
-                if (!api.isAssignableFrom(type))
-                {
-                    continue;
-                }
-                return extractDefaults(type);
-            }
-        }
-        return extractDefaults(targetType);
-    }
-
-    private static CacheDefaults extractDefaults(final Class<?> type)
-    {
-        CacheDefaults annotation = null;
-        Class<?> clazz = type;
-        while (clazz != null && clazz != Object.class)
-        {
-            annotation = clazz.getAnnotation(CacheDefaults.class);
-            if (annotation != null)
-            {
-                break;
-            }
-            clazz = clazz.getSuperclass();
-        }
-        return annotation;
-    }
-
-    public boolean isIncluded(final Class<?> aClass, final Class<?>[] in, final Class<?>[] out)
-    {
-        if (in.length == 0 && out.length == 0)
-        {
-            return false;
-        }
-        for (final Class<?> potentialIn : in)
-        {
-            if (potentialIn.isAssignableFrom(aClass))
-            {
-                for (final Class<?> potentialOut : out)
-                {
-                    if (potentialOut.isAssignableFrom(aClass))
-                    {
-                        return false;
-                    }
-                }
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private CacheKeyGenerator cacheKeyGeneratorFor(final CacheDefaults defaults, final Class<? extends CacheKeyGenerator> cacheKeyGenerator)
-    {
-        if (!CacheKeyGenerator.class.equals(cacheKeyGenerator))
-        {
-            return instance(cacheKeyGenerator);
-        }
-        if (defaults != null)
-        {
-            final Class<? extends CacheKeyGenerator> defaultCacheKeyGenerator = defaults.cacheKeyGenerator();
-            if (!CacheKeyGenerator.class.equals(defaultCacheKeyGenerator))
-            {
-                return instance(defaultCacheKeyGenerator);
-            }
-        }
-        return defaultCacheKeyGenerator;
-    }
-
-    private CacheResolverFactory cacheResolverFactoryFor(final CacheDefaults defaults, final Class<? extends CacheResolverFactory> cacheResolverFactory)
-    {
-        if (!CacheResolverFactory.class.equals(cacheResolverFactory))
-        {
-            return instance(cacheResolverFactory);
-        }
-        if (defaults != null)
-        {
-            final Class<? extends CacheResolverFactory> defaultCacheResolverFactory = defaults.cacheResolverFactory();
-            if (!CacheResolverFactory.class.equals(defaultCacheResolverFactory))
-            {
-                return instance(defaultCacheResolverFactory);
-            }
-        }
-        return defaultCacheResolverFactory();
+        return methodMeta;
     }
 
     @SuppressWarnings("unchecked")
@@ -383,288 +626,45 @@ public class CDIJCacheHelper
         }
     }
 
-    private CacheResolverFactoryImpl defaultCacheResolverFactory()
+    public boolean isIncluded(final Class<?> aClass, final Class<?>[] in, final Class<?>[] out)
     {
-        if (defaultCacheResolverFactory != null) {
-            return defaultCacheResolverFactory;
-        }
-        synchronized (this) {
-            if (defaultCacheResolverFactory != null) {
-                return defaultCacheResolverFactory;
-            }
-            defaultCacheResolverFactory = new CacheResolverFactoryImpl();
-        }
-        return defaultCacheResolverFactory;
-    }
-
-    private static Integer[] keyParameterIndexes(final Method method)
-    {
-        final List<Integer> keys = new LinkedList<>();
-        final Annotation[][] parameterAnnotations = method.getParameterAnnotations();
-
-        // first check if keys are specified explicitly
-        for (int i = 0; i < method.getParameterTypes().length; i++)
+        if (in.length == 0 && out.length == 0)
         {
-            final Annotation[] annotations = parameterAnnotations[i];
-            for (final Annotation a : annotations)
-            {
-                if (a.annotationType().equals(CacheKey.class))
-                {
-                    keys.add(i);
-                    break;
-                }
-            }
+            return false;
         }
-
-        // if not then use all parameters but value ones
-        if (keys.isEmpty())
+        for (final Class<?> potentialIn : in)
         {
-            for (int i = 0; i < method.getParameterTypes().length; i++)
+            if (potentialIn.isAssignableFrom(aClass))
             {
-                final Annotation[] annotations = parameterAnnotations[i];
-                boolean value = false;
-                for (final Annotation a : annotations)
+                for (final Class<?> potentialOut : out)
                 {
-                    if (a.annotationType().equals(CacheValue.class))
+                    if (potentialOut.isAssignableFrom(aClass))
                     {
-                        value = true;
-                        break;
+                        return false;
                     }
                 }
-                if (!value) {
-                    keys.add(i);
-                }
-            }
-        }
-        return keys.toArray(new Integer[0]);
-    }
-
-    private static final class MethodKey
-    {
-        private final Class<?> base;
-        private final Method delegate;
-        private final int hash;
-
-        private MethodKey(final Class<?> base, final Method delegate)
-        {
-            this.base = base; // we need a class to ensure inheritance don't fall in the same key
-            this.delegate = delegate;
-            this.hash = 31 * delegate.hashCode() + (base == null ? 0 : base.hashCode());
-        }
-
-        @Override
-        public boolean equals(final Object o)
-        {
-            if (this == o)
-            {
                 return true;
             }
-            if (o == null || getClass() != o.getClass())
-            {
-                return false;
-            }
-            final MethodKey classKey = MethodKey.class.cast(o);
-            return delegate.equals(classKey.delegate) &&
-                (base == null && classKey.base == null || base != null && base.equals(classKey.base));
         }
-
-        @Override
-        public int hashCode()
-        {
-            return hash;
-        }
+        return false;
     }
 
-    // TODO: split it in 5?
-    public static class MethodMeta
-    {
-        private final Class<?>[] parameterTypes;
-        private final List<Set<Annotation>> parameterAnnotations;
-        private final Set<Annotation> annotations;
-        private final Integer[] keysIndices;
-        private final Integer valueIndex;
-        private final Integer[] parameterIndices;
-
-        private final String cacheResultCacheName;
-        private final CacheResolverFactory cacheResultResolverFactory;
-        private final CacheKeyGenerator cacheResultKeyGenerator;
-        private final CacheResult cacheResult;
-
-        private final String cachePutCacheName;
-        private final CacheResolverFactory cachePutResolverFactory;
-        private final CacheKeyGenerator cachePutKeyGenerator;
-        private final boolean cachePutAfter;
-        private final CachePut cachePut;
-
-        private final String cacheRemoveCacheName;
-        private final CacheResolverFactory cacheRemoveResolverFactory;
-        private final CacheKeyGenerator cacheRemoveKeyGenerator;
-        private final boolean cacheRemoveAfter;
-        private final CacheRemove cacheRemove;
-
-        private final String cacheRemoveAllCacheName;
-        private final CacheResolverFactory cacheRemoveAllResolverFactory;
-        private final boolean cacheRemoveAllAfter;
-        private final CacheRemoveAll cacheRemoveAll;
-
-        public MethodMeta(final Class<?>[] parameterTypes, final List<Set<Annotation>> parameterAnnotations, final Set<Annotation>
-                annotations, final Integer[] keysIndices, final Integer valueIndex, final Integer[] parameterIndices, final String
-                cacheResultCacheName, final CacheResolverFactory cacheResultResolverFactory, final CacheKeyGenerator
-                cacheResultKeyGenerator, final CacheResult cacheResult, final String cachePutCacheName, final CacheResolverFactory
-                cachePutResolverFactory, final CacheKeyGenerator cachePutKeyGenerator, final boolean cachePutAfter, final CachePut cachePut, final String
-                cacheRemoveCacheName, final CacheResolverFactory cacheRemoveResolverFactory, final CacheKeyGenerator
-                cacheRemoveKeyGenerator, final boolean cacheRemoveAfter, final CacheRemove cacheRemove, final String cacheRemoveAllCacheName,
-                          final CacheResolverFactory cacheRemoveAllResolverFactory, final boolean
-                                  cacheRemoveAllAfter, final CacheRemoveAll cacheRemoveAll)
+    @PreDestroy
+    private void release() {
+        if (CLOSE_CACHE && defaultCacheResolverFactory != null)
         {
-            this.parameterTypes = parameterTypes;
-            this.parameterAnnotations = parameterAnnotations;
-            this.annotations = annotations;
-            this.keysIndices = keysIndices;
-            this.valueIndex = valueIndex;
-            this.parameterIndices = parameterIndices;
-            this.cacheResultCacheName = cacheResultCacheName;
-            this.cacheResultResolverFactory = cacheResultResolverFactory;
-            this.cacheResultKeyGenerator = cacheResultKeyGenerator;
-            this.cacheResult = cacheResult;
-            this.cachePutCacheName = cachePutCacheName;
-            this.cachePutResolverFactory = cachePutResolverFactory;
-            this.cachePutKeyGenerator = cachePutKeyGenerator;
-            this.cachePutAfter = cachePutAfter;
-            this.cachePut = cachePut;
-            this.cacheRemoveCacheName = cacheRemoveCacheName;
-            this.cacheRemoveResolverFactory = cacheRemoveResolverFactory;
-            this.cacheRemoveKeyGenerator = cacheRemoveKeyGenerator;
-            this.cacheRemoveAfter = cacheRemoveAfter;
-            this.cacheRemove = cacheRemove;
-            this.cacheRemoveAllCacheName = cacheRemoveAllCacheName;
-            this.cacheRemoveAllResolverFactory = cacheRemoveAllResolverFactory;
-            this.cacheRemoveAllAfter = cacheRemoveAllAfter;
-            this.cacheRemoveAll = cacheRemoveAll;
+            defaultCacheResolverFactory.release();
         }
-
-        public boolean isCacheRemoveAfter()
+        for (final CreationalContext<?> cc : toRelease)
         {
-            return cacheRemoveAfter;
-        }
-
-        public boolean isCachePutAfter()
-        {
-            return cachePutAfter;
-        }
-
-        public Class<?>[] getParameterTypes()
-        {
-            return parameterTypes;
-        }
-
-        public List<Set<Annotation>> getParameterAnnotations()
-        {
-            return parameterAnnotations;
-        }
-
-        public String getCacheResultCacheName()
-        {
-            return cacheResultCacheName;
-        }
-
-        public CacheResolverFactory getCacheResultResolverFactory()
-        {
-            return cacheResultResolverFactory;
-        }
-
-        public CacheKeyGenerator getCacheResultKeyGenerator()
-        {
-            return cacheResultKeyGenerator;
-        }
-
-        public CacheResult getCacheResult() {
-            return cacheResult;
-        }
-
-        public Integer[] getParameterIndices()
-        {
-            return parameterIndices;
-        }
-
-        public Set<Annotation> getAnnotations()
-        {
-            return annotations;
-        }
-
-        public Integer[] getKeysIndices()
-        {
-            return keysIndices;
-        }
-
-        public Integer getValuesIndex()
-        {
-            return valueIndex;
-        }
-
-        public Integer getValueIndex()
-        {
-            return valueIndex;
-        }
-
-        public String getCachePutCacheName()
-        {
-            return cachePutCacheName;
-        }
-
-        public CacheResolverFactory getCachePutResolverFactory()
-        {
-            return cachePutResolverFactory;
-        }
-
-        public CacheKeyGenerator getCachePutKeyGenerator()
-        {
-            return cachePutKeyGenerator;
-        }
-
-        public CachePut getCachePut()
-        {
-            return cachePut;
-        }
-
-        public String getCacheRemoveCacheName()
-        {
-            return cacheRemoveCacheName;
-        }
-
-        public CacheResolverFactory getCacheRemoveResolverFactory()
-        {
-            return cacheRemoveResolverFactory;
-        }
-
-        public CacheKeyGenerator getCacheRemoveKeyGenerator()
-        {
-            return cacheRemoveKeyGenerator;
-        }
-
-        public CacheRemove getCacheRemove()
-        {
-            return cacheRemove;
-        }
-
-        public String getCacheRemoveAllCacheName()
-        {
-            return cacheRemoveAllCacheName;
-        }
-
-        public CacheResolverFactory getCacheRemoveAllResolverFactory()
-        {
-            return cacheRemoveAllResolverFactory;
-        }
-
-        public boolean isCacheRemoveAllAfter()
-        {
-            return cacheRemoveAllAfter;
-        }
-
-        public CacheRemoveAll getCacheRemoveAll()
-        {
-            return cacheRemoveAll;
+            try
+            {
+                cc.release();
+            }
+            catch (final RuntimeException re)
+            {
+                LOGGER.warning(re.getMessage());
+            }
         }
     }
 }

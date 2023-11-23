@@ -77,23 +77,19 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K, V>
         }
     }
 
-    /**
-     * Put an element in the cache.
-     * <p>
-     * @param ce
-     * @throws IOException
-     */
+    /** Adds a dispose request to the remote cache. */
     @Override
-    public void update( final ICacheElement<K, V> ce )
-        throws IOException
+    public void dispose()
     {
-        log.debug("updating through cache facade, noWaits.length = {0}", noWaits::size);
-
-        for (final RemoteCacheNoWait<K, V> nw : noWaits)
-        {
-            nw.update( ce );
-        }
+        noWaits.forEach(RemoteCacheNoWait::dispose);
     }
+
+    /**
+     * Begin the failover process if this is a local cache. Clustered remote caches do not failover.
+     * <p>
+     * @param rcnw The no wait in error.
+     */
+    protected abstract void failover( RemoteCacheNoWait<K, V> rcnw );
 
     /**
      * Synchronously reads from the remote cache.
@@ -110,6 +106,69 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K, V>
         }
 
         return null;
+    }
+
+    /**
+     * @return Returns the AuxiliaryCacheAttributes.
+     */
+    @Override
+    public IRemoteCacheAttributes getAuxiliaryCacheAttributes()
+    {
+        return this.remoteCacheAttributes;
+    }
+
+    /**
+     * Gets the cacheName attribute of the RemoteCacheNoWaitFacade object.
+     * <p>
+     * @return The cacheName value
+     */
+    @Override
+    public String getCacheName()
+    {
+        return remoteCacheAttributes.getCacheName();
+    }
+
+    /**
+     * Gets the cacheType attribute of the RemoteCacheNoWaitFacade object.
+     * <p>
+     * @return The cacheType value
+     */
+    @Override
+    public CacheType getCacheType()
+    {
+        return CacheType.REMOTE_CACHE;
+    }
+
+    /**
+     * This typically returns end point info .
+     * <p>
+     * @return the name
+     */
+    @Override
+    public String getEventLoggingExtraInfo()
+    {
+        return "Remote Cache No Wait Facade";
+    }
+
+    /**
+     * Return the keys in this cache.
+     * <p>
+     * @see org.apache.commons.jcs3.auxiliary.AuxiliaryCache#getKeySet()
+     */
+    @Override
+    public Set<K> getKeySet() throws IOException
+    {
+        final HashSet<K> allKeys = new HashSet<>();
+        for (final RemoteCacheNoWait<K, V> nw : noWaits)
+        {
+            final Set<K> keys = nw.getKeySet();
+            if(keys != null)
+            {
+                allKeys.addAll( keys );
+            }
+        }
+
+        return allKeys;
     }
 
     /**
@@ -153,24 +212,78 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K, V>
     }
 
     /**
-     * Return the keys in this cache.
+     * Gets the primary server from the list of failovers
+     *
+     * @return a no wait
+     */
+    public RemoteCacheNoWait<K, V> getPrimaryServer()
+    {
+        return noWaits.get(0);
+    }
+
+    /**
+     * No remote invocation.
      * <p>
-     * @see org.apache.commons.jcs3.auxiliary.AuxiliaryCache#getKeySet()
+     * @return The size value
      */
     @Override
-    public Set<K> getKeySet() throws IOException
+    public int getSize()
     {
-        final HashSet<K> allKeys = new HashSet<>();
-        for (final RemoteCacheNoWait<K, V> nw : noWaits)
+        return 0;
+        // cache.getSize();
+    }
+
+    /**
+     * @return statistics about the cache region
+     */
+    @Override
+    public IStats getStatistics()
+    {
+        final IStats stats = new Stats();
+        stats.setTypeName( "Remote Cache No Wait Facade" );
+
+        final ArrayList<IStatElement<?>> elems = new ArrayList<>();
+
+        if ( noWaits != null )
         {
-            final Set<K> keys = nw.getKeySet();
-            if(keys != null)
-            {
-                allKeys.addAll( keys );
-            }
+            elems.add(new StatElement<>( "Number of No Waits", Integer.valueOf(noWaits.size()) ) );
+
+            // get the stats from the super too
+            elems.addAll(noWaits.stream()
+                .flatMap(rcnw -> rcnw.getStatistics().getStatElements().stream())
+                .collect(Collectors.toList()));
         }
 
-        return allKeys;
+        stats.setStatElements( elems );
+
+        return stats;
+    }
+
+    /**
+     * getStats
+     * @return String
+     */
+    @Override
+    public String getStats()
+    {
+        return getStatistics().toString();
+    }
+
+    /**
+     * Gets the status attribute of the RemoteCacheNoWaitFacade object
+     * <p>
+     * Return ALIVE if any are alive.
+     * <p>
+     * @return The status value
+     */
+    @Override
+    public CacheStatus getStatus()
+    {
+        return noWaits.stream()
+                .map(RemoteCacheNoWait::getStatus)
+                .filter(status -> status == CacheStatus.ALIVE)
+                .findFirst()
+                .orElse(CacheStatus.DISPOSED);
     }
 
     /**
@@ -202,62 +315,14 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K, V>
         }
     }
 
-    /** Adds a dispose request to the remote cache. */
-    @Override
-    public void dispose()
-    {
-        noWaits.forEach(RemoteCacheNoWait::dispose);
-    }
-
     /**
-     * No remote invocation.
-     * <p>
-     * @return The size value
+     * restore the primary server in the list of failovers
+     *
      */
-    @Override
-    public int getSize()
+    public void restorePrimaryServer(final RemoteCacheNoWait<K, V> rcnw)
     {
-        return 0;
-        // cache.getSize();
-    }
-
-    /**
-     * Gets the cacheType attribute of the RemoteCacheNoWaitFacade object.
-     * <p>
-     * @return The cacheType value
-     */
-    @Override
-    public CacheType getCacheType()
-    {
-        return CacheType.REMOTE_CACHE;
-    }
-
-    /**
-     * Gets the cacheName attribute of the RemoteCacheNoWaitFacade object.
-     * <p>
-     * @return The cacheName value
-     */
-    @Override
-    public String getCacheName()
-    {
-        return remoteCacheAttributes.getCacheName();
-    }
-
-    /**
-     * Gets the status attribute of the RemoteCacheNoWaitFacade object
-     * <p>
-     * Return ALIVE if any are alive.
-     * <p>
-     * @return The status value
-     */
-    @Override
-    public CacheStatus getStatus()
-    {
-        return noWaits.stream()
-                .map(RemoteCacheNoWait::getStatus)
-                .filter(status -> status == CacheStatus.ALIVE)
-                .findFirst()
-                .orElse(CacheStatus.DISPOSED);
+        noWaits.clear();
+        noWaits.add(rcnw);
     }
 
     /**
@@ -273,85 +338,20 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K, V>
     }
 
     /**
-     * Begin the failover process if this is a local cache. Clustered remote caches do not failover.
+     * Put an element in the cache.
      * <p>
-     * @param rcnw The no wait in error.
-     */
-    protected abstract void failover( RemoteCacheNoWait<K, V> rcnw );
-
-    /**
-     * Get the primary server from the list of failovers
-     *
-     * @return a no wait
-     */
-    public RemoteCacheNoWait<K, V> getPrimaryServer()
-    {
-        return noWaits.get(0);
-    }
-
-    /**
-     * restore the primary server in the list of failovers
-     *
-     */
-    public void restorePrimaryServer(final RemoteCacheNoWait<K, V> rcnw)
-    {
-        noWaits.clear();
-        noWaits.add(rcnw);
-    }
-
-    /**
-     * @return Returns the AuxiliaryCacheAttributes.
+     * @param ce
+     * @throws IOException
      */
     @Override
-    public IRemoteCacheAttributes getAuxiliaryCacheAttributes()
+    public void update( final ICacheElement<K, V> ce )
+        throws IOException
     {
-        return this.remoteCacheAttributes;
-    }
+        log.debug("updating through cache facade, noWaits.length = {0}", noWaits::size);
 
-    /**
-     * getStats
-     * @return String
-     */
-    @Override
-    public String getStats()
-    {
-        return getStatistics().toString();
-    }
-
-    /**
-     * @return statistics about the cache region
-     */
-    @Override
-    public IStats getStatistics()
-    {
-        final IStats stats = new Stats();
-        stats.setTypeName( "Remote Cache No Wait Facade" );
-
-        final ArrayList<IStatElement<?>> elems = new ArrayList<>();
-
-        if ( noWaits != null )
+        for (final RemoteCacheNoWait<K, V> nw : noWaits)
         {
-            elems.add(new StatElement<>( "Number of No Waits", Integer.valueOf(noWaits.size()) ) );
-
-            // get the stats from the super too
-            elems.addAll(noWaits.stream()
-                .flatMap(rcnw -> rcnw.getStatistics().getStatElements().stream())
-                .collect(Collectors.toList()));
+            nw.update( ce );
         }
-
-        stats.setStatElements( elems );
-
-        return stats;
-    }
-
-    /**
-     * This typically returns end point info .
-     * <p>
-     * @return the name
-     */
-    @Override
-    public String getEventLoggingExtraInfo()
-    {
-        return "Remote Cache No Wait Facade";
     }
 }

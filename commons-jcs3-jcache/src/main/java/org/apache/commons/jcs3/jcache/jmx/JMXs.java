@@ -28,9 +28,13 @@ public class JMXs
 {
     private static final MBeanServer SERVER = findMBeanServer();
 
-    public static MBeanServer server()
+    private static MBeanServer findMBeanServer()
     {
-        return SERVER;
+        if (System.getProperty("javax.management.builder.initial") != null)
+        {
+            return MBeanServerFactory.createMBeanServer();
+        }
+        return ManagementFactory.getPlatformMBeanServer();
     }
 
     public static void register(final ObjectName on, final Object bean)
@@ -48,6 +52,11 @@ public class JMXs
         }
     }
 
+    public static MBeanServer server()
+    {
+        return SERVER;
+    }
+
     public static void unregister(final ObjectName on)
     {
         if (SERVER.isRegistered(on))
@@ -61,15 +70,6 @@ public class JMXs
                 // no-op
             }
         }
-    }
-
-    private static MBeanServer findMBeanServer()
-    {
-        if (System.getProperty("javax.management.builder.initial") != null)
-        {
-            return MBeanServerFactory.createMBeanServer();
-        }
-        return ManagementFactory.getPlatformMBeanServer();
     }
 
     private JMXs()

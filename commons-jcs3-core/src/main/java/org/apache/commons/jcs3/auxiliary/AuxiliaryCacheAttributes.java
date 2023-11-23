@@ -31,11 +31,9 @@ public interface AuxiliaryCacheAttributes
     extends Serializable, Cloneable
 {
     /**
-     * Sets the name of the cache, referenced by the appropriate manager.
-     * <p>
-     * @param s The new cacheName value
+     * Clone object
      */
-    void setCacheName( String s );
+    AuxiliaryCacheAttributes clone();
 
     /**
      * Gets the cacheName attribute of the AuxiliaryCacheAttributes object
@@ -43,40 +41,6 @@ public interface AuxiliaryCacheAttributes
      * @return The cacheName value
      */
     String getCacheName();
-
-    /**
-     * Name known by configurator
-     * <p>
-     * @param s The new name value
-     */
-    void setName( String s );
-
-    /**
-     * Gets the name attribute of the AuxiliaryCacheAttributes object
-     * <p>
-     * @return The name value
-     */
-    String getName();
-
-    /**
-     * SINGLE is the default. If you choose POOLED, the value of EventQueuePoolName will be used
-     * <p>
-     * @param s SINGLE or POOLED
-     */
-    void setEventQueueType( ICacheEventQueue.QueueType s );
-
-    /**
-     * @return SINGLE or POOLED
-     */
-    ICacheEventQueue.QueueType getEventQueueType();
-
-    /**
-     * If you choose a POOLED event queue type, the value of EventQueuePoolName will be used. This
-     * is ignored if the pool type is SINGLE
-     * <p>
-     * @param s SINGLE or POOLED
-     */
-    void setEventQueuePoolName( String s );
 
     /**
      * Sets the pool name to use. If a pool is not found by this name, the thread pool manager will
@@ -87,7 +51,43 @@ public interface AuxiliaryCacheAttributes
     String getEventQueuePoolName();
 
     /**
-     * Clone object
+     * @return SINGLE or POOLED
      */
-    AuxiliaryCacheAttributes clone();
+    ICacheEventQueue.QueueType getEventQueueType();
+
+    /**
+     * Gets the name attribute of the AuxiliaryCacheAttributes object
+     * <p>
+     * @return The name value
+     */
+    String getName();
+
+    /**
+     * Sets the name of the cache, referenced by the appropriate manager.
+     * <p>
+     * @param s The new cacheName value
+     */
+    void setCacheName( String s );
+
+    /**
+     * If you choose a POOLED event queue type, the value of EventQueuePoolName will be used. This
+     * is ignored if the pool type is SINGLE
+     * <p>
+     * @param s SINGLE or POOLED
+     */
+    void setEventQueuePoolName( String s );
+
+    /**
+     * SINGLE is the default. If you choose POOLED, the value of EventQueuePoolName will be used
+     * <p>
+     * @param s SINGLE or POOLED
+     */
+    void setEventQueueType( ICacheEventQueue.QueueType s );
+
+    /**
+     * Name known by configurator
+     * <p>
+     * @param s The new name value
+     */
+    void setName( String s );
 }

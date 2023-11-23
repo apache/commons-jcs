@@ -79,6 +79,41 @@ public class JCSAdminBean implements JCSJMXBean
 	}
 
 	/**
+     * Builds up data on every region.
+     * <p>
+     * TODO we need a most light weight method that does not count bytes. The byte counting can
+     *       really swamp a server.
+     * @return List of CacheRegionInfo objects
+     */
+    @Override
+    public List<CacheRegionInfo> buildCacheInfo()
+    {
+        final TreeSet<String> cacheNames = new TreeSet<>(cacheHub.getCacheNames());
+
+        final LinkedList<CacheRegionInfo> cacheInfo = new LinkedList<>();
+
+        for (final String cacheName : cacheNames)
+        {
+            final CompositeCache<?, ?> cache = cacheHub.getCache( cacheName );
+
+            final CacheRegionInfo regionInfo = new CacheRegionInfo(
+                    cache.getCacheName(),
+                    cache.getSize(),
+                    cache.getStatus().toString(),
+                    cache.getStats(),
+                    cache.getHitCountRam(),
+                    cache.getHitCountAux(),
+                    cache.getMissCountNotFound(),
+                    cache.getMissCountExpired(),
+                    getByteCount( cache ));
+
+            cacheInfo.add( regionInfo );
+        }
+
+        return cacheInfo;
+    }
+
+    /**
      * Builds up info about each element in a region.
      * <p>
      * @param cacheName
@@ -121,56 +156,78 @@ public class JCSAdminBean implements JCSJMXBean
         return records;
     }
 
-    /**
-     * Builds up data on every region.
+
+	/**
+     * Clears all regions in the cache.
      * <p>
-     * TODO we need a most light weight method that does not count bytes. The byte counting can
-     *       really swamp a server.
-     * @return List of CacheRegionInfo objects
+     * If this class is running within a remote cache server, clears all regions via the <code>RemoteCacheServer</code>
+     * API, so that removes will be broadcast to client machines. Otherwise clears all regions in the cache directly via
+     * the usual cache API.
      */
     @Override
-    public List<CacheRegionInfo> buildCacheInfo()
+    public void clearAllRegions() throws IOException
     {
-        final TreeSet<String> cacheNames = new TreeSet<>(cacheHub.getCacheNames());
+        final RemoteCacheServer<?, ?> remoteCacheServer = RemoteCacheServerFactory.getRemoteCacheServer();
 
-        final LinkedList<CacheRegionInfo> cacheInfo = new LinkedList<>();
-
-        for (final String cacheName : cacheNames)
+        if (remoteCacheServer == null)
         {
-            final CompositeCache<?, ?> cache = cacheHub.getCache( cacheName );
-
-            final CacheRegionInfo regionInfo = new CacheRegionInfo(
-                    cache.getCacheName(),
-                    cache.getSize(),
-                    cache.getStatus().toString(),
-                    cache.getStats(),
-                    cache.getHitCountRam(),
-                    cache.getHitCountAux(),
-                    cache.getMissCountNotFound(),
-                    cache.getMissCountExpired(),
-                    getByteCount( cache ));
-
-            cacheInfo.add( regionInfo );
+            // Not running in a remote cache server.
+            // Remove objects from the cache directly, as no need to broadcast removes to client machines...
+            for (final String name : cacheHub.getCacheNames())
+            {
+                cacheHub.getCache(name).removeAll();
+            }
         }
-
-        return cacheInfo;
+        else
+        {
+            // Running in a remote cache server.
+            // Remove objects via the RemoteCacheServer API, so that removes will be broadcast to client machines...
+            // Call remoteCacheServer.removeAll(String) for each cacheName...
+            for (final String name : cacheHub.getCacheNames())
+            {
+                remoteCacheServer.removeAll(name);
+            }
+        }
     }
 
-
 	/**
-     * Tries to estimate how much data is in a region. This is expensive. If there are any non serializable objects in
-     * the region or an error occurs, suppresses exceptions and returns 0.
+     * Clears a particular cache region.
      * <p>
-     *
-     * @return int The size of the region in bytes.
+     * If this class is running within a remote cache server, clears the region via the <code>RemoteCacheServer</code>
+     * API, so that removes will be broadcast to client machines. Otherwise clears the region directly via the usual
+     * cache API.
      */
-	@Override
-    public long getByteCount(final String cacheName)
-	{
-		return getByteCount(cacheHub.getCache(cacheName));
-	}
+    @Override
+    public void clearRegion(final String cacheName) throws IOException
+    {
+        if (cacheName == null)
+        {
+            throw new IllegalArgumentException("The cache name specified was null.");
+        }
+        if (RemoteCacheServerFactory.getRemoteCacheServer() == null)
+        {
+            // Not running in a remote cache server.
+            // Remove objects from the cache directly, as no need to broadcast removes to client machines...
+            cacheHub.getCache(cacheName).removeAll();
+        }
+        else
+        {
+            // Running in a remote cache server.
+            // Remove objects via the RemoteCacheServer API, so that removes will be broadcast to client machines...
+            try
+            {
+                // Call remoteCacheServer.removeAll(String)...
+                final RemoteCacheServer<?, ?> remoteCacheServer = RemoteCacheServerFactory.getRemoteCacheServer();
+                remoteCacheServer.removeAll(cacheName);
+            }
+            catch (final IOException e)
+            {
+                throw new IllegalStateException("Failed to remove all elements from cache region [" + cacheName + "]: " + e, e);
+            }
+        }
+    }
 
-	/**
+    /**
      * Tries to estimate how much data is in a region. This is expensive. If there are any non serializable objects in
      * the region or an error occurs, suppresses exceptions and returns 0.
      * <p>
@@ -243,74 +300,17 @@ public class JCSAdminBean implements JCSJMXBean
     }
 
     /**
-     * Clears all regions in the cache.
+     * Tries to estimate how much data is in a region. This is expensive. If there are any non serializable objects in
+     * the region or an error occurs, suppresses exceptions and returns 0.
      * <p>
-     * If this class is running within a remote cache server, clears all regions via the <code>RemoteCacheServer</code>
-     * API, so that removes will be broadcast to client machines. Otherwise clears all regions in the cache directly via
-     * the usual cache API.
+     *
+     * @return int The size of the region in bytes.
      */
-    @Override
-    public void clearAllRegions() throws IOException
-    {
-        final RemoteCacheServer<?, ?> remoteCacheServer = RemoteCacheServerFactory.getRemoteCacheServer();
-
-        if (remoteCacheServer == null)
-        {
-            // Not running in a remote cache server.
-            // Remove objects from the cache directly, as no need to broadcast removes to client machines...
-            for (final String name : cacheHub.getCacheNames())
-            {
-                cacheHub.getCache(name).removeAll();
-            }
-        }
-        else
-        {
-            // Running in a remote cache server.
-            // Remove objects via the RemoteCacheServer API, so that removes will be broadcast to client machines...
-            // Call remoteCacheServer.removeAll(String) for each cacheName...
-            for (final String name : cacheHub.getCacheNames())
-            {
-                remoteCacheServer.removeAll(name);
-            }
-        }
-    }
-
-    /**
-     * Clears a particular cache region.
-     * <p>
-     * If this class is running within a remote cache server, clears the region via the <code>RemoteCacheServer</code>
-     * API, so that removes will be broadcast to client machines. Otherwise clears the region directly via the usual
-     * cache API.
-     */
-    @Override
-    public void clearRegion(final String cacheName) throws IOException
-    {
-        if (cacheName == null)
-        {
-            throw new IllegalArgumentException("The cache name specified was null.");
-        }
-        if (RemoteCacheServerFactory.getRemoteCacheServer() == null)
-        {
-            // Not running in a remote cache server.
-            // Remove objects from the cache directly, as no need to broadcast removes to client machines...
-            cacheHub.getCache(cacheName).removeAll();
-        }
-        else
-        {
-            // Running in a remote cache server.
-            // Remove objects via the RemoteCacheServer API, so that removes will be broadcast to client machines...
-            try
-            {
-                // Call remoteCacheServer.removeAll(String)...
-                final RemoteCacheServer<?, ?> remoteCacheServer = RemoteCacheServerFactory.getRemoteCacheServer();
-                remoteCacheServer.removeAll(cacheName);
-            }
-            catch (final IOException e)
-            {
-                throw new IllegalStateException("Failed to remove all elements from cache region [" + cacheName + "]: " + e, e);
-            }
-        }
-    }
+	@Override
+    public long getByteCount(final String cacheName)
+	{
+		return getByteCount(cacheHub.getCache(cacheName));
+	}
 
     /**
      * Removes a particular item from a particular region.

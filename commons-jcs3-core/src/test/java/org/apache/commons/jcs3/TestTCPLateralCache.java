@@ -42,6 +42,52 @@ public class TestTCPLateralCache
     private static final int items = 200;
 
     /**
+     * Adds items to cache, gets them, and removes them. The item count is more
+     * than the size of the memory cache, so items should spool to disk.
+     *
+     * @param region
+     *            Name of the region to access
+     *
+     * @throws Exception
+     *                If an error occurs
+     */
+    public static void runTestForRegion( final String region )
+        throws Exception
+    {
+        final CacheAccess<String, String> jcs = JCS.getInstance( region );
+
+        // Add items to cache
+
+        for ( int i = 0; i < items; i++ )
+        {
+            jcs.put( i + ":key", region + " data " + i );
+        }
+
+        // Test that all items are in cache
+
+        for ( int i = 0; i < items; i++ )
+        {
+            final String value = jcs.get( i + ":key" );
+
+            assertEquals( region + " data " + i, value );
+        }
+
+        // Remove all the items
+
+        for ( int i = 0; i < items; i++ )
+        {
+            jcs.remove( i + ":key" );
+        }
+
+        // Verify removal
+
+        for ( int i = 0; i < items; i++ )
+        {
+            assertNull( "Removed key should be null: " + i + ":key", jcs.get( i + ":key" ) );
+        }
+    }
+
+    /**
      * A unit test suite for JUnit
      *
      * @return The test suite
@@ -86,51 +132,5 @@ public class TestTCPLateralCache
     public void setUp()
     {
         JCS.setConfigFilename( "/TestTCPLateralCache.ccf" );
-    }
-
-    /**
-     * Adds items to cache, gets them, and removes them. The item count is more
-     * than the size of the memory cache, so items should spool to disk.
-     *
-     * @param region
-     *            Name of the region to access
-     *
-     * @throws Exception
-     *                If an error occurs
-     */
-    public static void runTestForRegion( final String region )
-        throws Exception
-    {
-        final CacheAccess<String, String> jcs = JCS.getInstance( region );
-
-        // Add items to cache
-
-        for ( int i = 0; i < items; i++ )
-        {
-            jcs.put( i + ":key", region + " data " + i );
-        }
-
-        // Test that all items are in cache
-
-        for ( int i = 0; i < items; i++ )
-        {
-            final String value = jcs.get( i + ":key" );
-
-            assertEquals( region + " data " + i, value );
-        }
-
-        // Remove all the items
-
-        for ( int i = 0; i < items; i++ )
-        {
-            jcs.remove( i + ":key" );
-        }
-
-        // Verify removal
-
-        for ( int i = 0; i < items; i++ )
-        {
-            assertNull( "Removed key should be null: " + i + ":key", jcs.get( i + ":key" ) );
-        }
     }
 }

@@ -35,43 +35,6 @@ public class JCSCachingProvider implements CachingProvider
     private final ConcurrentMap<ClassLoader, ConcurrentMap<URI, CacheManager>> cacheManagersByLoader = new ConcurrentHashMap<>();
 
     @Override
-    public CacheManager getCacheManager(final URI inUri, final ClassLoader inClassLoader, final Properties properties)
-    {
-        final URI uri = inUri != null ? inUri : getDefaultURI();
-        final ClassLoader classLoader = inClassLoader != null ? inClassLoader : getDefaultClassLoader();
-
-        ConcurrentMap<URI, CacheManager> managers = cacheManagersByLoader.get(classLoader);
-        if (managers == null)
-        {
-            managers = new ConcurrentHashMap<>();
-            final ConcurrentMap<URI, CacheManager> existingManagers = cacheManagersByLoader.putIfAbsent(classLoader, managers);
-            if (existingManagers != null)
-            {
-                managers = existingManagers;
-            }
-        }
-
-        CacheManager mgr = managers.get(uri);
-        if (mgr == null)
-        {
-            mgr = new JCSCachingManager(this, uri, classLoader, properties);
-            final CacheManager existing = managers.putIfAbsent(uri, mgr);
-            if (existing != null)
-            {
-                mgr = existing;
-            }
-        }
-
-        return mgr;
-    }
-
-    @Override
-    public URI getDefaultURI()
-    {
-        return DEFAULT_URI;
-    }
-
-    @Override
     public void close()
     {
         for (final Map<URI, CacheManager> v : cacheManagersByLoader.values())
@@ -114,21 +77,46 @@ public class JCSCachingProvider implements CachingProvider
     }
 
     @Override
-    public CacheManager getCacheManager(final URI uri, final ClassLoader classLoader)
-    {
-        return getCacheManager(uri, classLoader, getDefaultProperties());
-    }
-
-    @Override
     public CacheManager getCacheManager()
     {
         return getCacheManager(getDefaultURI(), getDefaultClassLoader());
     }
 
     @Override
-    public boolean isSupported(final OptionalFeature optionalFeature)
+    public CacheManager getCacheManager(final URI uri, final ClassLoader classLoader)
     {
-        return optionalFeature == OptionalFeature.STORE_BY_REFERENCE;
+        return getCacheManager(uri, classLoader, getDefaultProperties());
+    }
+
+    @Override
+    public CacheManager getCacheManager(final URI inUri, final ClassLoader inClassLoader, final Properties properties)
+    {
+        final URI uri = inUri != null ? inUri : getDefaultURI();
+        final ClassLoader classLoader = inClassLoader != null ? inClassLoader : getDefaultClassLoader();
+
+        ConcurrentMap<URI, CacheManager> managers = cacheManagersByLoader.get(classLoader);
+        if (managers == null)
+        {
+            managers = new ConcurrentHashMap<>();
+            final ConcurrentMap<URI, CacheManager> existingManagers = cacheManagersByLoader.putIfAbsent(classLoader, managers);
+            if (existingManagers != null)
+            {
+                managers = existingManagers;
+            }
+        }
+
+        CacheManager mgr = managers.get(uri);
+        if (mgr == null)
+        {
+            mgr = new JCSCachingManager(this, uri, classLoader, properties);
+            final CacheManager existing = managers.putIfAbsent(uri, mgr);
+            if (existing != null)
+            {
+                mgr = existing;
+            }
+        }
+
+        return mgr;
     }
 
     @Override
@@ -141,6 +129,18 @@ public class JCSCachingProvider implements CachingProvider
     public Properties getDefaultProperties()
     {
         return new Properties();
+    }
+
+    @Override
+    public URI getDefaultURI()
+    {
+        return DEFAULT_URI;
+    }
+
+    @Override
+    public boolean isSupported(final OptionalFeature optionalFeature)
+    {
+        return optionalFeature == OptionalFeature.STORE_BY_REFERENCE;
     }
 
     void remove(final CacheManager mgr)

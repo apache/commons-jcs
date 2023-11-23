@@ -61,6 +61,33 @@ public class RemoteHttpCacheService<K, V>
     }
 
     /**
+     * This is called by the event log.
+     * <p>
+     * @param requesterId
+     * @return requesterId + ""
+     */
+    @Override
+    protected String getExtraInfoForRequesterId( final long requesterId )
+    {
+        return requesterId + "";
+    }
+
+    /**
+     * Processes a shutdown request.
+     * <p>
+     * @param cacheName
+     * @param requesterId
+     * @throws IOException
+     */
+    @Override
+    public void processDispose( final String cacheName, final long requesterId )
+        throws IOException
+    {
+        final CompositeCache<K, V> cache = getCacheManager().getCache( cacheName );
+        cache.dispose();
+    }
+
+    /**
      * Processes a get request.
      * <p>
      * If isAllowClusterGet is enabled we will treat this as a normal request or non-remote origins.
@@ -92,32 +119,6 @@ public class RemoteHttpCacheService<K, V>
      * origination.
      * <p>
      * @param cacheName
-     * @param keys
-     * @param requesterId
-     * @return Map
-     * @throws IOException
-     */
-    @Override
-    public Map<K, ICacheElement<K, V>> processGetMultiple( final String cacheName, final Set<K> keys, final long requesterId )
-        throws IOException
-    {
-        final CompositeCache<K, V> cache = getCacheManager().getCache( cacheName );
-
-        final boolean keepLocal = !remoteHttpCacheServerAttributes.isAllowClusterGet();
-        if ( keepLocal )
-        {
-            return cache.localGetMultiple( keys );
-        }
-        return cache.getMultiple( keys );
-    }
-
-    /**
-     * Processes a get request.
-     * <p>
-     * If isAllowClusterGet is enabled we will treat this as a normal request of non-remote
-     * origination.
-     * <p>
-     * @param cacheName
      * @param pattern
      * @param requesterId
      * @return Map
@@ -138,30 +139,29 @@ public class RemoteHttpCacheService<K, V>
     }
 
     /**
-     * Processes an update request.
+     * Processes a get request.
      * <p>
-     * If isLocalClusterConsistency is enabled we will treat this as a normal request of non-remote
+     * If isAllowClusterGet is enabled we will treat this as a normal request of non-remote
      * origination.
      * <p>
-     * @param item
+     * @param cacheName
+     * @param keys
      * @param requesterId
+     * @return Map
      * @throws IOException
      */
     @Override
-    public void processUpdate( final ICacheElement<K, V> item, final long requesterId )
+    public Map<K, ICacheElement<K, V>> processGetMultiple( final String cacheName, final Set<K> keys, final long requesterId )
         throws IOException
     {
-        final CompositeCache<K, V> cache = getCacheManager().getCache( item.getCacheName() );
+        final CompositeCache<K, V> cache = getCacheManager().getCache( cacheName );
 
-        final boolean keepLocal = !remoteHttpCacheServerAttributes.isLocalClusterConsistency();
+        final boolean keepLocal = !remoteHttpCacheServerAttributes.isAllowClusterGet();
         if ( keepLocal )
         {
-            cache.localUpdate( item );
+            return cache.localGetMultiple( keys );
         }
-        else
-        {
-            cache.update( item );
-        }
+        return cache.getMultiple( keys );
     }
 
     /**
@@ -220,18 +220,30 @@ public class RemoteHttpCacheService<K, V>
     }
 
     /**
-     * Processes a shutdown request.
+     * Processes an update request.
      * <p>
-     * @param cacheName
+     * If isLocalClusterConsistency is enabled we will treat this as a normal request of non-remote
+     * origination.
+     * <p>
+     * @param item
      * @param requesterId
      * @throws IOException
      */
     @Override
-    public void processDispose( final String cacheName, final long requesterId )
+    public void processUpdate( final ICacheElement<K, V> item, final long requesterId )
         throws IOException
     {
-        final CompositeCache<K, V> cache = getCacheManager().getCache( cacheName );
-        cache.dispose();
+        final CompositeCache<K, V> cache = getCacheManager().getCache( item.getCacheName() );
+
+        final boolean keepLocal = !remoteHttpCacheServerAttributes.isLocalClusterConsistency();
+        if ( keepLocal )
+        {
+            cache.localUpdate( item );
+        }
+        else
+        {
+            cache.update( item );
+        }
     }
 
     /**
@@ -244,17 +256,5 @@ public class RemoteHttpCacheService<K, V>
         throws IOException
     {
         //nothing.
-    }
-
-    /**
-     * This is called by the event log.
-     * <p>
-     * @param requesterId
-     * @return requesterId + ""
-     */
-    @Override
-    protected String getExtraInfoForRequesterId( final long requesterId )
-    {
-        return requesterId + "";
     }
 }

@@ -52,15 +52,6 @@ public class TestTCPLateralUnitTest
 {
     private final MockCompositeCacheManager cacheMgr = new MockCompositeCacheManager();
 
-    /**
-     * Test setup
-     */
-    @Before
-    public void setUp()
-    {
-        JCS.setConfigFilename( "/TestTCPLateralCache.ccf" );
-    }
-
     private <K,V> CompositeCache<K, V> createCache(int port)
     {
         final TCPLateralCacheAttributes lattr = new TCPLateralCacheAttributes();
@@ -91,29 +82,12 @@ public class TestTCPLateralUnitTest
     }
 
     /**
-     * Make sure we can send a bunch to the listener. This would be better if we could plugin a Mock
-     * CacheManger. The listener will instantiate it on its own. We have to configure one before
-     * that.
-     * <p>
-     * @throws Exception
+     * Test setup
      */
-    @Test
-    public void testSimpleSend()
-        throws Exception
+    @Before
+    public void setUp()
     {
-    	simpleSend(new StandardSerializer(), 8111);
-    }
-
-    /**
-     * @throws Exception
-     */
-    @Test
-    public void testSimpleEncryptedSend()
-            throws Exception
-    {
-    	EncryptingSerializer serializer = new EncryptingSerializer();
-    	serializer.setPreSharedKey("my_key");
-    	simpleSend(serializer, 8112);
+        JCS.setConfigFilename( "/TestTCPLateralCache.ccf" );
     }
 
     private void simpleSend(final IElementSerializer serializer, final int port ) throws IOException
@@ -151,93 +125,6 @@ public class TestTCPLateralUnitTest
 
         // VERIFY
         assertEquals( "Should have received " + numMes + " by now.", numMes, listener.getPutCnt() );
-    }
-
-    /**
-     * @throws Exception
-     */
-    @Test
-    public void testReceive()
-        throws Exception
-    {
-        // VERIFY
-        createCache(1101);
-
-        final LateralTCPService<String, String> service = createService(1102, 1101, 123456);
-
-        // DO WORK
-        final int cnt = 100;
-        for ( int i = 0; i < cnt; i++ )
-        {
-            final ICacheElement<String, String> element = new CacheElement<>( "test", "key" + i, "value1" );
-            service.update( element );
-        }
-
-        SleepUtil.sleepAtLeast( 1000 );
-
-        // VERIFY
-        assertEquals( "Didn't get the correct number", cnt, cacheMgr.getCache().getUpdateCount() );
-    }
-
-    /**
-     * Send objects with the same key but different values.
-     * <p>
-     * @throws Exception
-     */
-    @Test
-    public void testSameKeyDifferentObject()
-        throws Exception
-    {
-        // SETUP
-        final CompositeCache<String, String> cache = createCache(1103);
-
-        // setup a service to talk to the listener started above.
-        final LateralTCPService<String, String> service = createService(1104, 1103, 123456);
-
-        // DO WORK
-        final ICacheElement<String, String> element = new CacheElement<>( "test", "key", "value1" );
-        service.update( element );
-
-        SleepUtil.sleepAtLeast( 300 );
-
-        final ICacheElement<String, String> element2 = new CacheElement<>( "test", "key", "value2" );
-        service.update( element2 );
-
-        SleepUtil.sleepAtLeast( 1000 );
-
-        // VERIFY
-        final ICacheElement<String, String> cacheElement = cache.get( "key" );
-        assertEquals( "Didn't get the correct object "+ cacheElement, element2.getVal(), cacheElement.getVal() );
-    }
-
-    /**
-     * Send objects with the same key but different values.
-     * <p>
-     * @throws Exception
-     */
-    @Test
-    public void testSameKeyObjectDifferentValueObject()
-        throws Exception
-    {
-        final CompositeCache<String, String> cache = createCache(1105);
-
-        final LateralTCPService<String, String> service = createService(1106, 1105, 123456);
-
-        // DO WORK
-        final String key = "key";
-        final ICacheElement<String, String> element = new CacheElement<>( "test", key, "value1" );
-        service.update( element );
-
-        SleepUtil.sleepAtLeast( 300 );
-
-        final ICacheElement<String, String> element2 = new CacheElement<>( "test", key, "value2" );
-        service.update( element2 );
-
-        SleepUtil.sleepAtLeast( 1000 );
-
-        // VERIFY
-        final ICacheElement<String, String> cacheElement = cache.get( "key" );
-        assertEquals( "Didn't get the correct object: " + cacheElement , element2.getVal(), cacheElement.getVal() );
     }
 
     /**
@@ -337,5 +224,118 @@ public class TestTCPLateralUnitTest
         // VERIFY
         assertNotNull( "Result should not be null.", result );
         assertEquals( "Wrong number returned 1:", numToInsertPrefix1, result.size() );
+    }
+
+    /**
+     * @throws Exception
+     */
+    @Test
+    public void testReceive()
+        throws Exception
+    {
+        // VERIFY
+        createCache(1101);
+
+        final LateralTCPService<String, String> service = createService(1102, 1101, 123456);
+
+        // DO WORK
+        final int cnt = 100;
+        for ( int i = 0; i < cnt; i++ )
+        {
+            final ICacheElement<String, String> element = new CacheElement<>( "test", "key" + i, "value1" );
+            service.update( element );
+        }
+
+        SleepUtil.sleepAtLeast( 1000 );
+
+        // VERIFY
+        assertEquals( "Didn't get the correct number", cnt, cacheMgr.getCache().getUpdateCount() );
+    }
+
+    /**
+     * Send objects with the same key but different values.
+     * <p>
+     * @throws Exception
+     */
+    @Test
+    public void testSameKeyDifferentObject()
+        throws Exception
+    {
+        // SETUP
+        final CompositeCache<String, String> cache = createCache(1103);
+
+        // setup a service to talk to the listener started above.
+        final LateralTCPService<String, String> service = createService(1104, 1103, 123456);
+
+        // DO WORK
+        final ICacheElement<String, String> element = new CacheElement<>( "test", "key", "value1" );
+        service.update( element );
+
+        SleepUtil.sleepAtLeast( 300 );
+
+        final ICacheElement<String, String> element2 = new CacheElement<>( "test", "key", "value2" );
+        service.update( element2 );
+
+        SleepUtil.sleepAtLeast( 1000 );
+
+        // VERIFY
+        final ICacheElement<String, String> cacheElement = cache.get( "key" );
+        assertEquals( "Didn't get the correct object "+ cacheElement, element2.getVal(), cacheElement.getVal() );
+    }
+
+    /**
+     * Send objects with the same key but different values.
+     * <p>
+     * @throws Exception
+     */
+    @Test
+    public void testSameKeyObjectDifferentValueObject()
+        throws Exception
+    {
+        final CompositeCache<String, String> cache = createCache(1105);
+
+        final LateralTCPService<String, String> service = createService(1106, 1105, 123456);
+
+        // DO WORK
+        final String key = "key";
+        final ICacheElement<String, String> element = new CacheElement<>( "test", key, "value1" );
+        service.update( element );
+
+        SleepUtil.sleepAtLeast( 300 );
+
+        final ICacheElement<String, String> element2 = new CacheElement<>( "test", key, "value2" );
+        service.update( element2 );
+
+        SleepUtil.sleepAtLeast( 1000 );
+
+        // VERIFY
+        final ICacheElement<String, String> cacheElement = cache.get( "key" );
+        assertEquals( "Didn't get the correct object: " + cacheElement , element2.getVal(), cacheElement.getVal() );
+    }
+
+    /**
+     * @throws Exception
+     */
+    @Test
+    public void testSimpleEncryptedSend()
+            throws Exception
+    {
+    	EncryptingSerializer serializer = new EncryptingSerializer();
+    	serializer.setPreSharedKey("my_key");
+    	simpleSend(serializer, 8112);
+    }
+
+    /**
+     * Make sure we can send a bunch to the listener. This would be better if we could plugin a Mock
+     * CacheManger. The listener will instantiate it on its own. We have to configure one before
+     * that.
+     * <p>
+     * @throws Exception
+     */
+    @Test
+    public void testSimpleSend()
+        throws Exception
+    {
+    	simpleSend(new StandardSerializer(), 8111);
     }
 }

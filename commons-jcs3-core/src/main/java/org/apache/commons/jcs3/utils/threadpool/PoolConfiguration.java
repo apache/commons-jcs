@@ -25,6 +25,20 @@ package org.apache.commons.jcs3.utils.threadpool;
 public final class PoolConfiguration
     implements Cloneable
 {
+    public enum WhenBlockedPolicy {
+        /** abort when queue is full and max threads is reached. */
+        ABORT,
+
+        /** run in current thread when queue is full and max threads is reached. */
+        RUN,
+
+        /** discard oldest when queue is full and max threads is reached. */
+        DISCARDOLDEST,
+
+        /** silently discard submitted job when queue is full and max threads is reached. */
+        DISCARD
+    }
+
     /**
      * DEFAULT SETTINGS
      */
@@ -66,44 +80,11 @@ public final class PoolConfiguration
     /** How long idle threads above the minimum should be kept alive. */
     private int keepAliveTime = DEFAULT_KEEPALIVE_TIME;
 
-    public enum WhenBlockedPolicy {
-        /** abort when queue is full and max threads is reached. */
-        ABORT,
-
-        /** block when queue is full and max threads is reached. */
-        BLOCK,
-
-        /** run in current thread when queue is full and max threads is reached. */
-        RUN,
-
-        /** wait when queue is full and max threads is reached. */
-        WAIT,
-
-        /** discard oldest when queue is full and max threads is reached. */
-        DISCARDOLDEST
-    }
-
     /** should be ABORT, BLOCK, RUN, WAIT, DISCARDOLDEST, */
     private WhenBlockedPolicy whenBlockedPolicy = DEFAULT_WHEN_BLOCKED_POLICY;
 
     /** The number of threads to create on startup */
     private int startUpSize = DEFAULT_MINIMUM_POOL_SIZE;
-
-    /**
-     * @param useBoundary The useBoundary to set.
-     */
-    public void setUseBoundary( final boolean useBoundary )
-    {
-        this.useBoundary = useBoundary;
-    }
-
-    /**
-     * @return Returns the useBoundary.
-     */
-    public boolean isUseBoundary()
-    {
-        return useBoundary;
-    }
 
     /**
      * Default
@@ -116,7 +97,7 @@ public final class PoolConfiguration
     }
 
     /**
-     * Construct a completely configured instance.
+     * Constructs a completely configured instance.
      * <p>
      * @param useBoundary
      * @param boundarySize
@@ -139,11 +120,15 @@ public final class PoolConfiguration
     }
 
     /**
-     * @param boundarySize The boundarySize to set.
+     * Copies the instance variables to another instance.
+     * <p>
+     * @return PoolConfiguration
      */
-    public void setBoundarySize( final int boundarySize )
+    @Override
+    public PoolConfiguration clone()
     {
-        this.boundarySize = boundarySize;
+        return new PoolConfiguration( isUseBoundary(), boundarySize, maximumPoolSize, minimumPoolSize, keepAliveTime,
+                                      getWhenBlockedPolicy(), startUpSize );
     }
 
     /**
@@ -155,11 +140,11 @@ public final class PoolConfiguration
     }
 
     /**
-     * @param maximumPoolSize The maximumPoolSize to set.
+     * @return Returns the keepAliveTime.
      */
-    public void setMaximumPoolSize( final int maximumPoolSize )
+    public int getKeepAliveTime()
     {
-        this.maximumPoolSize = maximumPoolSize;
+        return keepAliveTime;
     }
 
     /**
@@ -171,19 +156,43 @@ public final class PoolConfiguration
     }
 
     /**
-     * @param minimumPoolSize The minimumPoolSize to set.
-     */
-    public void setMinimumPoolSize( final int minimumPoolSize )
-    {
-        this.minimumPoolSize = minimumPoolSize;
-    }
-
-    /**
      * @return Returns the minimumPoolSize.
      */
     public int getMinimumPoolSize()
     {
         return minimumPoolSize;
+    }
+
+    /**
+     * @return Returns the startUpSize.
+     */
+    public int getStartUpSize()
+    {
+        return startUpSize;
+    }
+
+    /**
+     * @return Returns the whenBlockedPolicy.
+     */
+    public WhenBlockedPolicy getWhenBlockedPolicy()
+    {
+        return whenBlockedPolicy;
+    }
+
+    /**
+     * @return Returns the useBoundary.
+     */
+    public boolean isUseBoundary()
+    {
+        return useBoundary;
+    }
+
+    /**
+     * @param boundarySize The boundarySize to set.
+     */
+    public void setBoundarySize( final int boundarySize )
+    {
+        this.boundarySize = boundarySize;
     }
 
     /**
@@ -195,11 +204,35 @@ public final class PoolConfiguration
     }
 
     /**
-     * @return Returns the keepAliveTime.
+     * @param maximumPoolSize The maximumPoolSize to set.
      */
-    public int getKeepAliveTime()
+    public void setMaximumPoolSize( final int maximumPoolSize )
     {
-        return keepAliveTime;
+        this.maximumPoolSize = maximumPoolSize;
+    }
+
+    /**
+     * @param minimumPoolSize The minimumPoolSize to set.
+     */
+    public void setMinimumPoolSize( final int minimumPoolSize )
+    {
+        this.minimumPoolSize = minimumPoolSize;
+    }
+
+    /**
+     * @param startUpSize The startUpSize to set.
+     */
+    public void setStartUpSize( final int startUpSize )
+    {
+        this.startUpSize = startUpSize;
+    }
+
+    /**
+     * @param useBoundary The useBoundary to set.
+     */
+    public void setUseBoundary( final boolean useBoundary )
+    {
+        this.useBoundary = useBoundary;
     }
 
     /**
@@ -236,30 +269,6 @@ public final class PoolConfiguration
     }
 
     /**
-     * @return Returns the whenBlockedPolicy.
-     */
-    public WhenBlockedPolicy getWhenBlockedPolicy()
-    {
-        return whenBlockedPolicy;
-    }
-
-    /**
-     * @param startUpSize The startUpSize to set.
-     */
-    public void setStartUpSize( final int startUpSize )
-    {
-        this.startUpSize = startUpSize;
-    }
-
-    /**
-     * @return Returns the startUpSize.
-     */
-    public int getStartUpSize()
-    {
-        return startUpSize;
-    }
-
-    /**
      * To string for debugging purposes.
      * @return String
      */
@@ -275,17 +284,5 @@ public final class PoolConfiguration
         buf.append( "whenBlockedPolicy = [" + getWhenBlockedPolicy() + "] " );
         buf.append( "startUpSize = [" + startUpSize + "]" );
         return buf.toString();
-    }
-
-    /**
-     * Copies the instance variables to another instance.
-     * <p>
-     * @return PoolConfiguration
-     */
-    @Override
-    public PoolConfiguration clone()
-    {
-        return new PoolConfiguration( isUseBoundary(), boundarySize, maximumPoolSize, minimumPoolSize, keepAliveTime,
-                                      getWhenBlockedPolicy(), startUpSize );
     }
 }

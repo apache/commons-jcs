@@ -45,29 +45,6 @@ import org.junit.Test;
  */
 public class JDBCDiskCacheUnitTest
 {
-    /** Test setup */
-    @Before
-    public void setUp()
-    {
-        JCS.setConfigFilename( "/TestJDBCDiskCache.ccf" );
-    }
-
-    /**
-     * Test the basic JDBC disk cache functionality with a hsql backing.
-     * @throws Exception
-     */
-    @Test
-    public void testSimpleJDBCPutGetWithHSQL()
-        throws Exception
-    {
-        try (Connection con = HsqlSetupUtil.getTestDatabaseConnection(new Properties(), "cache_hsql_db"))
-        {
-            HsqlSetupUtil.setupTable(con, "JCS_STORE2");
-        }
-
-        runTestForRegion( "testCache1", 200 );
-    }
-
     /**
      * Adds items to cache, gets them, and removes them. The item count is more than the size of the
      * memory cache, so items should spool to disk.
@@ -125,6 +102,13 @@ public class JDBCDiskCacheUnitTest
         }
     }
 
+    /** Test setup */
+    @Before
+    public void setUp()
+    {
+        JCS.setConfigFilename( "/TestJDBCDiskCache.ccf" );
+    }
+
     /**
      * Verfiy that it uses the pool access manager config.
      * <p>
@@ -173,5 +157,21 @@ public class JDBCDiskCacheUnitTest
         final Connection cConn = result.getDataSource().getConnection();
         HsqlSetupUtil.setupTable( cConn, cattr.getTableName());
 
+    }
+
+    /**
+     * Test the basic JDBC disk cache functionality with a hsql backing.
+     * @throws Exception
+     */
+    @Test
+    public void testSimpleJDBCPutGetWithHSQL()
+        throws Exception
+    {
+        try (Connection con = HsqlSetupUtil.getTestDatabaseConnection(new Properties(), "cache_hsql_db"))
+        {
+            HsqlSetupUtil.setupTable(con, "JCS_STORE2");
+        }
+
+        runTestForRegion( "testCache1", 200 );
     }
 }

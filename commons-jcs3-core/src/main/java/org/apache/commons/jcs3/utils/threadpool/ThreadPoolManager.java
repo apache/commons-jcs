@@ -58,14 +58,16 @@ import org.apache.commons.jcs3.utils.config.PropertySetter;
  */
 public class ThreadPoolManager
 {
+    /**
+     * The ThreadPoolManager instance (holder pattern)
+     */
+    private static final class ThreadPoolManagerHolder
+    {
+        static final ThreadPoolManager INSTANCE = new ThreadPoolManager();
+    }
+
     /** The logger */
     private static final Log log = LogManager.getLog( ThreadPoolManager.class );
-
-    /** The default config, created using property defaults if present, else those above. */
-    private PoolConfiguration defaultConfig;
-
-    /** The default scheduler config, created using property defaults if present, else those above. */
-    private PoolConfiguration defaultSchedulerConfig;
 
     /** the root property name */
     private static final String PROP_NAME_ROOT = "thread_pool";
@@ -79,25 +81,98 @@ public class ThreadPoolManager
     /** default scheduler property file name */
     private static final String DEFAULT_PROP_NAME_SCHEDULER_ROOT = "scheduler_pool.default";
 
+    /**
+         * You can specify the properties to be used to configure the thread pool. Setting this post
+         * initialization will have no effect.
+         */
+        private static volatile Properties props;
+
    /**
-     * You can specify the properties to be used to configure the thread pool. Setting this post
-     * initialization will have no effect.
+ * Dispose of the instance of the ThreadPoolManger and shut down all thread pools
+ */
+public static void dispose()
+{
+    for ( final Iterator<Map.Entry<String, ExecutorService>> i =
+            getInstance().pools.entrySet().iterator(); i.hasNext(); )
+    {
+        final Map.Entry<String, ExecutorService> entry = i.next();
+        try
+        {
+            entry.getValue().shutdownNow();
+        }
+        catch (final Throwable t)
+        {
+            log.warn("Failed to close pool {0}", entry.getKey(), t);
+        }
+        i.remove();
+    }
+
+    for ( final Iterator<Map.Entry<String, ScheduledExecutorService>> i =
+            getInstance().schedulerPools.entrySet().iterator(); i.hasNext(); )
+    {
+        final Map.Entry<String, ScheduledExecutorService> entry = i.next();
+        try
+        {
+            entry.getValue().shutdownNow();
+        }
+        catch (final Throwable t)
+        {
+            log.warn("Failed to close pool {0}", entry.getKey(), t);
+        }
+        i.remove();
+    }
+}
+
+    /**
+     * Returns a configured instance of the ThreadPoolManger To specify a configuration file or
+     * Properties object to use call the appropriate setter prior to calling getInstance.
+     * <p>
+     * @return The single instance of the ThreadPoolManager
      */
-    private static volatile Properties props;
+    public static ThreadPoolManager getInstance()
+    {
+        return ThreadPoolManagerHolder.INSTANCE;
+    }
+
+    /**
+     * Configures the PoolConfiguration settings.
+     * <p>
+     * @param root the configuration key prefix
+     * @param defaultPoolConfiguration the default configuration
+     * @return PoolConfiguration
+     */
+    private static PoolConfiguration loadConfig( final String root, final PoolConfiguration defaultPoolConfiguration )
+    {
+        final PoolConfiguration config = defaultPoolConfiguration.clone();
+        PropertySetter.setProperties( config, props, root + "." );
+
+        log.debug( "{0} PoolConfiguration = {1}", root, config );
+
+        return config;
+    }
+
+    /**
+     * This will be used if it is not null on initialization. Setting this post initialization will
+     * have no effect.
+     * <p>
+     * @param props The props to set.
+     */
+    public static void setProps( final Properties props )
+    {
+        ThreadPoolManager.props = props;
+    }
+
+    /** The default config, created using property defaults if present, else those above. */
+    private PoolConfiguration defaultConfig;
+
+    /** The default scheduler config, created using property defaults if present, else those above. */
+    private PoolConfiguration defaultSchedulerConfig;
 
     /** Map of names to pools. */
     private final ConcurrentHashMap<String, ExecutorService> pools;
 
     /** Map of names to scheduler pools. */
     private final ConcurrentHashMap<String, ScheduledExecutorService> schedulerPools;
-
-    /**
-     * The ThreadPoolManager instance (holder pattern)
-     */
-    private static final class ThreadPoolManagerHolder
-    {
-        static final ThreadPoolManager INSTANCE = new ThreadPoolManager();
-    }
 
     /**
      * No instances please. This is a singleton.
@@ -107,6 +182,24 @@ public class ThreadPoolManager
         this.pools = new ConcurrentHashMap<>();
         this.schedulerPools = new ConcurrentHashMap<>();
         configure();
+    }
+
+    /**
+     * Initialize the ThreadPoolManager and create all the pools defined in the configuration.
+     */
+    private void configure()
+    {
+        log.debug( "Initializing ThreadPoolManager" );
+
+        if ( props == null )
+        {
+            log.warn( "No configuration settings found. Using hardcoded default values for all pools." );
+            props = new Properties();
+        }
+
+        // set initial default and then override if new settings are available
+        defaultConfig = loadConfig( DEFAULT_PROP_NAME_ROOT, new PoolConfiguration() );
+        defaultSchedulerConfig = loadConfig( DEFAULT_PROP_NAME_SCHEDULER_ROOT, new PoolConfiguration() );
     }
 
     /**
@@ -162,14 +255,12 @@ public class ThreadPoolManager
                 pool.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
                 break;
 
-            case WAIT:
-                throw new UnsupportedOperationException("POLICY_WAIT no longer supported");
-
             case DISCARDOLDEST:
                 pool.setRejectedExecutionHandler(new ThreadPoolExecutor.DiscardOldestPolicy());
                 break;
 
-            default:
+            case DISCARD:
+                pool.setRejectedExecutionHandler(new ThreadPoolExecutor.DiscardPolicy());
                 break;
         }
 
@@ -195,53 +286,6 @@ public class ThreadPoolManager
     }
 
     /**
-     * Returns a configured instance of the ThreadPoolManger To specify a configuration file or
-     * Properties object to use call the appropriate setter prior to calling getInstance.
-     * <p>
-     * @return The single instance of the ThreadPoolManager
-     */
-    public static ThreadPoolManager getInstance()
-    {
-        return ThreadPoolManagerHolder.INSTANCE;
-    }
-
-    /**
-     * Dispose of the instance of the ThreadPoolManger and shut down all thread pools
-     */
-    public static void dispose()
-    {
-        for ( final Iterator<Map.Entry<String, ExecutorService>> i =
-                getInstance().pools.entrySet().iterator(); i.hasNext(); )
-        {
-            final Map.Entry<String, ExecutorService> entry = i.next();
-            try
-            {
-                entry.getValue().shutdownNow();
-            }
-            catch (final Throwable t)
-            {
-                log.warn("Failed to close pool {0}", entry.getKey(), t);
-            }
-            i.remove();
-        }
-
-        for ( final Iterator<Map.Entry<String, ScheduledExecutorService>> i =
-                getInstance().schedulerPools.entrySet().iterator(); i.hasNext(); )
-        {
-            final Map.Entry<String, ScheduledExecutorService> entry = i.next();
-            try
-            {
-                entry.getValue().shutdownNow();
-            }
-            catch (final Throwable t)
-            {
-                log.warn("Failed to close pool {0}", entry.getKey(), t);
-            }
-            i.remove();
-        }
-    }
-
-    /**
      * Returns an executor service by name. If a service by this name does not exist in the configuration file or
      * properties, one will be created using the default values.
      * <p>
@@ -257,6 +301,16 @@ public class ThreadPoolManager
             final PoolConfiguration config = loadConfig( PROP_NAME_ROOT + "." + key, defaultConfig );
             return createPool( config, "JCS-ThreadPoolManager-" + key + "-" );
     	});
+    }
+
+    /**
+     * Returns the names of all configured pools.
+     * <p>
+     * @return ArrayList of string names
+     */
+    protected Set<String> getPoolNames()
+    {
+        return pools.keySet();
     }
 
     /**
@@ -276,61 +330,5 @@ public class ThreadPoolManager
                     defaultSchedulerConfig );
             return createSchedulerPool( config, "JCS-ThreadPoolManager-" + key + "-", Thread.NORM_PRIORITY );
     	});
-    }
-
-    /**
-     * Returns the names of all configured pools.
-     * <p>
-     * @return ArrayList of string names
-     */
-    protected Set<String> getPoolNames()
-    {
-        return pools.keySet();
-    }
-
-    /**
-     * This will be used if it is not null on initialization. Setting this post initialization will
-     * have no effect.
-     * <p>
-     * @param props The props to set.
-     */
-    public static void setProps( final Properties props )
-    {
-        ThreadPoolManager.props = props;
-    }
-
-    /**
-     * Initialize the ThreadPoolManager and create all the pools defined in the configuration.
-     */
-    private void configure()
-    {
-        log.debug( "Initializing ThreadPoolManager" );
-
-        if ( props == null )
-        {
-            log.warn( "No configuration settings found. Using hardcoded default values for all pools." );
-            props = new Properties();
-        }
-
-        // set initial default and then override if new settings are available
-        defaultConfig = loadConfig( DEFAULT_PROP_NAME_ROOT, new PoolConfiguration() );
-        defaultSchedulerConfig = loadConfig( DEFAULT_PROP_NAME_SCHEDULER_ROOT, new PoolConfiguration() );
-    }
-
-    /**
-     * Configures the PoolConfiguration settings.
-     * <p>
-     * @param root the configuration key prefix
-     * @param defaultPoolConfiguration the default configuration
-     * @return PoolConfiguration
-     */
-    private static PoolConfiguration loadConfig( final String root, final PoolConfiguration defaultPoolConfiguration )
-    {
-        final PoolConfiguration config = defaultPoolConfiguration.clone();
-        PropertySetter.setProperties( config, props, root + "." );
-
-        log.debug( "{0} PoolConfiguration = {1}", root, config );
-
-        return config;
     }
 }

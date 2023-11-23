@@ -34,22 +34,6 @@ public class CacheEventQueueFactory<K, V>
     private static final Log log = LogManager.getLog( CacheEventQueueFactory.class );
 
     /**
-     * The most commonly used factory method.
-     * <p>
-     * @param listener
-     * @param listenerId
-     * @param cacheName
-     * @param threadPoolName
-     * @param poolType - SINGLE, POOLED
-     * @return ICacheEventQueue
-     */
-    public ICacheEventQueue<K, V> createCacheEventQueue( final ICacheListener<K, V> listener, final long listenerId, final String cacheName,
-                                                   final String threadPoolName, final ICacheEventQueue.QueueType poolType )
-    {
-        return createCacheEventQueue( listener, listenerId, cacheName, 10, 500, threadPoolName, poolType );
-    }
-
-    /**
      * Fully configured event queue.
      * <p>
      * @param listener
@@ -79,5 +63,21 @@ public class CacheEventQueueFactory<K, V>
         }
 
         return eventQueue;
+    }
+
+    /**
+     * The most commonly used factory method.
+     * <p>
+     * @param listener
+     * @param listenerId
+     * @param cacheName
+     * @param threadPoolName
+     * @param poolType - SINGLE, POOLED
+     * @return ICacheEventQueue
+     */
+    public ICacheEventQueue<K, V> createCacheEventQueue( final ICacheListener<K, V> listener, final long listenerId, final String cacheName,
+                                                   final String threadPoolName, final ICacheEventQueue.QueueType poolType )
+    {
+        return createCacheEventQueue( listener, listenerId, cacheName, 10, 500, threadPoolName, poolType );
     }
 }

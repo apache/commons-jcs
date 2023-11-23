@@ -44,11 +44,19 @@ public class RemoteCacheResponse<T>
     private T payload;
 
     /**
-     * @param success the success to set
+     * @return the errorMessage
      */
-    public void setSuccess( final boolean success )
+    public String getErrorMessage()
     {
-        this.success = success;
+        return errorMessage;
+    }
+
+    /**
+     * @return the payload
+     */
+    public T getPayload()
+    {
+        return payload;
     }
 
     /**
@@ -68,14 +76,6 @@ public class RemoteCacheResponse<T>
     }
 
     /**
-     * @return the errorMessage
-     */
-    public String getErrorMessage()
-    {
-        return errorMessage;
-    }
-
-    /**
      * @param payload the payload to set
      */
     public void setPayload( final T payload )
@@ -84,11 +84,11 @@ public class RemoteCacheResponse<T>
     }
 
     /**
-     * @return the payload
+     * @param success the success to set
      */
-    public T getPayload()
+    public void setSuccess( final boolean success )
     {
-        return payload;
+        this.success = success;
     }
 
     /** @return string */

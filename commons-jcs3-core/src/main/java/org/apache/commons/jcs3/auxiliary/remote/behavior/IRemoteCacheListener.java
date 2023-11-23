@@ -23,42 +23,34 @@ import java.io.IOException;
 import java.rmi.Remote;
 
 import org.apache.commons.jcs3.auxiliary.remote.server.behavior.RemoteType;
+import org.apache.commons.jcs3.engine.behavior.ICacheElement;
 import org.apache.commons.jcs3.engine.behavior.ICacheListener;
 
 /**
  * Listens for remote cache event notification ( rmi callback ).
+ * The methods of the base interface are re-declared here because of a fix
+ * in Java 8u241 and above. See https://bugs.openjdk.org/browse/JDK-8237213
+ * for an explanation.
  */
 public interface IRemoteCacheListener<K, V>
     extends ICacheListener<K, V>, Remote
 {
     /**
-     * Get the id to be used by this manager.
+     * De-Registers itself.
      * <p>
-     * @return long
+     * @throws IOException
+     */
+    void dispose()
+        throws IOException;
+
+    /**
+     * Gets the listenerId attribute of the ICacheListener object
+     * <p>
+     * @return The listenerId value
      * @throws IOException
      */
     @Override
     long getListenerId()
-        throws IOException;
-
-    /**
-     * Set the id to be used by this manager. The remote cache server identifies clients by this id.
-     * The value will be set by the server through the remote cache listener.
-     * <p>
-     * @param id
-     * @throws IOException
-     */
-    @Override
-    void setListenerId( long id )
-        throws IOException;
-
-    /**
-     * Gets the remoteType attribute of the IRemoteCacheListener object
-     * <p>
-     * @return The remoteType value
-     * @throws IOException
-     */
-    RemoteType getRemoteType()
         throws IOException;
 
     /**
@@ -72,10 +64,62 @@ public interface IRemoteCacheListener<K, V>
         throws IOException;
 
     /**
-     * Deregistered itself.
+     * Gets the remoteType attribute of the IRemoteCacheListener object
      * <p>
+     * @return The remoteType value
      * @throws IOException
      */
-    void dispose()
+    RemoteType getRemoteType()
+        throws IOException;
+
+    /**
+     * Notifies the subscribers for freeing up the named cache.
+     * <p>
+     * @param cacheName
+     * @throws IOException
+     */
+    @Override
+    void handleDispose( String cacheName )
+        throws IOException;
+
+    /**
+     * Notifies the subscribers for a cache entry update.
+     * <p>
+     * @param item
+     * @throws IOException
+     */
+    @Override
+    void handlePut( ICacheElement<K, V> item )
+        throws IOException;
+
+    /**
+     * Notifies the subscribers for a cache entry removal.
+     * <p>
+     * @param cacheName
+     * @param key
+     * @throws IOException
+     */
+    @Override
+    void handleRemove( String cacheName, K key )
+        throws IOException;
+
+    /**
+     * Notifies the subscribers for a cache remove-all.
+     * <p>
+     * @param cacheName
+     * @throws IOException
+     */
+    @Override
+    void handleRemoveAll( String cacheName )
+        throws IOException;
+
+    /**
+     * sets unique identifier of listener home
+     * <p>
+     * @param id The new listenerId value
+     * @throws IOException
+     */
+    @Override
+    void setListenerId( long id )
         throws IOException;
 }

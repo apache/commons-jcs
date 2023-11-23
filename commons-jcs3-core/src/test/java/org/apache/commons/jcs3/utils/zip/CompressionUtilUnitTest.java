@@ -30,24 +30,6 @@ import java.util.zip.GZIPOutputStream;
 /** Unit tests for the compression util */
 public class CompressionUtilUnitTest
 {
-    /** Test method for decompressByteArray. */
-    public final void testDecompressByteArray_failure()
-    {
-        try
-        {
-            // DO WORK
-            CompressionUtil.decompressByteArray( null );
-
-            // VERIFY
-            fail( "excepted an IllegalArgumentException" );
-        }
-        catch ( final IllegalArgumentException exception )
-        {
-            // expected
-            return;
-        }
-    }
-
     /**
      * Test method for decompressByteArray.
      * <p>
@@ -94,5 +76,23 @@ public class CompressionUtilUnitTest
         final String result = new String( output );
         assertNotNull( "decompressed output stream shouldn't have been null ", output );
         assertEquals( text, result );
+    }
+
+    /** Test method for decompressByteArray. */
+    public final void testDecompressByteArray_failure()
+    {
+        try
+        {
+            // DO WORK
+            CompressionUtil.decompressByteArray( null );
+
+            // VERIFY
+            fail( "excepted an IllegalArgumentException" );
+        }
+        catch ( final IllegalArgumentException exception )
+        {
+            // expected
+            return;
+        }
     }
 }

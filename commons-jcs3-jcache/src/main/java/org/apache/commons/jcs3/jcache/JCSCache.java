@@ -70,6 +70,29 @@ import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
 // TODO: configure serializer
 public class JCSCache<K, V> implements Cache<K, V>
 {
+    private static void close(final Object potentiallyCloseable)
+    {
+        if (Closeable.class.isInstance(potentiallyCloseable))
+        {
+            Closeable.class.cast(potentiallyCloseable);
+        }
+    }
+    private static boolean isNotZero(final Duration duration)
+    {
+        return duration == null || !duration.isZero();
+    }
+    private static String property(final Properties properties, final String cacheName, final String name, final String defaultValue)
+    {
+        return properties.getProperty(cacheName + "." + name, properties.getProperty(name, defaultValue));
+    }
+    private static <T> T throwEntryProcessorException(final Exception ex)
+    {
+        if (EntryProcessorException.class.isInstance(ex))
+        {
+            throw EntryProcessorException.class.cast(ex);
+        }
+        throw new EntryProcessorException(ex);
+    }
     private final ExpiryAwareCache<K, V> delegate;
     private final JCSCachingManager manager;
     private final JCSConfiguration<K, V> config;
@@ -80,11 +103,15 @@ public class JCSCache<K, V> implements Cache<K, V>
     private final ObjectName cacheStatsObjectName;
     private final String name;
     private volatile boolean closed;
-    private final Map<CacheEntryListenerConfiguration<K, V>, JCSListener<K, V>> listeners = new ConcurrentHashMap<>();
-    private final Statistics statistics = new Statistics();
-    private final ExecutorService pool;
-    private final IElementSerializer serializer; // using json/xml should work as well -> don't force Serializable
 
+
+    private final Map<CacheEntryListenerConfiguration<K, V>, JCSListener<K, V>> listeners = new ConcurrentHashMap<>();
+
+    private final Statistics statistics = new Statistics();
+
+    private final ExecutorService pool;
+
+    private final IElementSerializer serializer; // using json/xml should work as well -> don't force Serializable
 
     @SuppressWarnings("unchecked")
     public JCSCache(final ClassLoader classLoader, final JCSCachingManager mgr,
@@ -180,11 +207,6 @@ public class JCSCache<K, V> implements Cache<K, V>
         }
     }
 
-    private static String property(final Properties properties, final String cacheName, final String name, final String defaultValue)
-    {
-        return properties.getProperty(cacheName + "." + name, properties.getProperty(name, defaultValue));
-    }
-
     private void assertNotClosed()
     {
         if (isClosed())
@@ -194,12 +216,158 @@ public class JCSCache<K, V> implements Cache<K, V>
     }
 
     @Override
-    public V get(final K key)
+    public void clear()
+    {
+        assertNotClosed();
+        try
+        {
+            delegate.removeAll();
+        }
+        catch (final IOException e)
+        {
+            throw new CacheException(e);
+        }
+    }
+
+    @Override
+    public synchronized void close()
+    {
+        if (isClosed())
+        {
+            return;
+        }
+
+        for (final Runnable task : pool.shutdownNow()) {
+            task.run();
+        }
+
+        manager.release(getName());
+        closed = true;
+        close(loader);
+        close(writer);
+        close(expiryPolicy);
+        for (final JCSListener<K, V> listener : listeners.values())
+        {
+            close(listener);
+        }
+        listeners.clear();
+        JMXs.unregister(cacheConfigObjectName);
+        JMXs.unregister(cacheStatsObjectName);
+        try
+        {
+            delegate.removeAll();
+        }
+        catch (final IOException e)
+        {
+            throw new CacheException(e);
+        }
+    }
+
+    @Override
+    public boolean containsKey(final K key)
     {
         assertNotClosed();
         assertNotNull(key, "key");
-        final long getStart = Times.now(false);
-        return doGetControllingExpiry(getStart, key, true, false, false, true);
+        return delegate.get(key) != null;
+    }
+
+    @Override
+    public void deregisterCacheEntryListener(final CacheEntryListenerConfiguration<K, V> cacheEntryListenerConfiguration)
+    {
+        assertNotClosed();
+        listeners.remove(cacheEntryListenerConfiguration);
+        config.removeListener(cacheEntryListenerConfiguration);
+    }
+
+    public void disableManagement()
+    {
+        config.managementDisabled();
+        JMXs.unregister(cacheConfigObjectName);
+    }
+
+    public void disableStatistics()
+    {
+        config.statisticsDisabled();
+        statistics.setActive(false);
+        JMXs.unregister(cacheStatsObjectName);
+    }
+
+    private V doGetControllingExpiry(final long getStart, final K key, final boolean updateAcess, final boolean forceDoLoad, final boolean skipLoad,
+            final boolean propagateLoadException)
+    {
+        final boolean statisticsEnabled = config.isStatisticsEnabled();
+        final ICacheElement<K, V> elt = delegate.get(key);
+        V v = elt != null ? elt.getVal() : null;
+        if (v == null && (config.isReadThrough() || forceDoLoad))
+        {
+            if (!skipLoad)
+            {
+                v = doLoad(key, false, propagateLoadException);
+            }
+        }
+        else if (statisticsEnabled)
+        {
+            if (v != null)
+            {
+                statistics.increaseHits(1);
+            }
+            else
+            {
+                statistics.increaseMisses(1);
+            }
+        }
+
+        if (updateAcess && elt != null)
+        {
+            final Duration expiryForAccess = expiryPolicy.getExpiryForAccess();
+            if (!isNotZero(expiryForAccess))
+            {
+                forceExpires(key);
+            }
+            else if (expiryForAccess != null && (!elt.getElementAttributes().getIsEternal() || !expiryForAccess.isEternal()))
+            {
+                try
+                {
+                    delegate.update(updateElement(key, elt.getVal(), expiryForAccess, elt.getElementAttributes()));
+                }
+                catch (final IOException e)
+                {
+                    throw new CacheException(e);
+                }
+            }
+        }
+        if (statisticsEnabled && v != null)
+        {
+            statistics.addGetTime(Times.now(false) - getStart);
+        }
+        return v;
+    }
+
+    private <T> T doInvoke(final TempStateCacheView<K, V> view, final K key, final EntryProcessor<K, V, T> entryProcessor,
+            final Object... arguments)
+    {
+        assertNotClosed();
+        assertNotNull(entryProcessor, "entryProcessor");
+        assertNotNull(key, "key");
+        try
+        {
+            if (config.isStatisticsEnabled())
+            {
+                if (containsKey(key))
+                {
+                    statistics.increaseHits(1);
+                }
+                else
+                {
+                    statistics.increaseMisses(1);
+                }
+            }
+            return entryProcessor.process(new JCSMutableEntry<>(view, key), arguments);
+        }
+        catch (final Exception ex)
+        {
+            return throwEntryProcessorException(ex);
+        }
     }
 
     private V doLoad(final K key, final boolean update, final boolean propagateLoadException)
@@ -240,38 +408,70 @@ public class JCSCache<K, V> implements Cache<K, V>
         return v;
     }
 
-    private ICacheElement<K, V> updateElement(final K key, final V v, final Duration duration, final IElementAttributes attrs)
+    private void doLoadAll(final Set<? extends K> keys, final boolean replaceExistingValues, final CompletionListener completionListener)
     {
-        final ICacheElement<K, V> element = new CacheElement<>(name, key, v);
-        if (duration != null)
+        try
         {
-            attrs.setTimeFactorForMilliseconds(1);
-            final boolean eternal = duration.isEternal();
-            attrs.setIsEternal(eternal);
-            if (!eternal)
+            final long now = Times.now(false);
+            for (final K k : keys)
             {
-                attrs.setLastAccessTimeNow();
+                if (replaceExistingValues)
+                {
+                    doLoad(k, containsKey(k), completionListener != null);
+                    continue;
+                }
+                if (containsKey(k))
+                {
+                    continue;
+                }
+                doGetControllingExpiry(now, k, true, true, false, completionListener != null);
             }
-            // MaxLife = -1 to use IdleTime excepted if jcache.ccf asked for something else
         }
-        element.setElementAttributes(attrs);
-        return element;
+        catch (final RuntimeException e)
+        {
+            if (completionListener != null)
+            {
+                completionListener.onException(e);
+                return;
+            }
+        }
+        if (completionListener != null)
+        {
+            completionListener.onCompletion();
+        }
     }
 
-    private void touch(final K key, final ICacheElement<K, V> element)
+    public void enableManagement()
     {
-        if (config.isStoreByValue())
+        config.managementEnabled();
+        JMXs.register(cacheConfigObjectName, new JCSCacheMXBean<>(this));
+    }
+
+    public void enableStatistics()
+    {
+        config.statisticsEnabled();
+        statistics.setActive(true);
+        JMXs.register(cacheStatsObjectName, new JCSCacheStatisticsMXBean(statistics));
+    }
+
+    private void forceExpires(final K cacheKey)
+    {
+        final ICacheElement<K, V> elt = delegate.get(cacheKey);
+        delegate.remove(cacheKey);
+        for (final JCSListener<K, V> listener : listeners.values())
         {
-            final K copy = copy(serializer, manager.getClassLoader(), key);
-            try
-            {
-                delegate.update(new CacheElement<>(name, copy, element.getVal(), element.getElementAttributes()));
-            }
-            catch (final IOException e)
-            {
-                throw new CacheException(e);
-            }
+            listener.onExpired(Collections.singletonList(new JCSCacheEntryEvent<>(this,
+                    EventType.REMOVED, null, cacheKey, elt.getVal())));
         }
+    }
+
+    @Override
+    public V get(final K key)
+    {
+        assertNotClosed();
+        assertNotNull(key, "key");
+        final long getStart = Times.now(false);
+        return doGetControllingExpiry(getStart, key, true, false, false, true);
     }
 
     @Override
@@ -316,11 +516,169 @@ public class JCSCache<K, V> implements Cache<K, V>
     }
 
     @Override
-    public boolean containsKey(final K key)
+    public V getAndPut(final K key, final V value)
     {
         assertNotClosed();
         assertNotNull(key, "key");
-        return delegate.get(key) != null;
+        assertNotNull(value, "value");
+        final long getStart = Times.now(false);
+        final V v = doGetControllingExpiry(getStart, key, false, false, true, false);
+        put(key, value);
+        return v;
+    }
+
+    @Override
+    public V getAndRemove(final K key)
+    {
+        assertNotClosed();
+        assertNotNull(key, "key");
+        final long getStart = Times.now(false);
+        final V v = doGetControllingExpiry(getStart, key, false, false, true, false);
+        remove(key);
+        return v;
+    }
+
+    @Override
+    public V getAndReplace(final K key, final V value)
+    {
+        assertNotClosed();
+        assertNotNull(key, "key");
+        assertNotNull(value, "value");
+
+        final boolean statisticsEnabled = config.isStatisticsEnabled();
+
+        final ICacheElement<K, V> elt = delegate.get(key);
+        if (elt != null)
+        {
+            V oldValue = elt.getVal();
+            if (oldValue == null && config.isReadThrough())
+            {
+                oldValue = doLoad(key, false, false);
+            }
+            else if (statisticsEnabled)
+            {
+                statistics.increaseHits(1);
+            }
+            put(key, value);
+            return oldValue;
+        }
+        if (statisticsEnabled)
+        {
+            statistics.increaseMisses(1);
+        }
+        return null;
+    }
+
+    @Override
+    public CacheManager getCacheManager()
+    {
+        assertNotClosed();
+        return manager;
+    }
+
+    @Override
+    public <C2 extends Configuration<K, V>> C2 getConfiguration(final Class<C2> clazz)
+    {
+        assertNotClosed();
+        return clazz.cast(config);
+    }
+
+    @Override
+    public String getName()
+    {
+        assertNotClosed();
+        return name;
+    }
+
+    public Statistics getStatistics()
+    {
+        return statistics;
+    }
+
+    @Override
+    public <T> T invoke(final K key, final EntryProcessor<K, V, T> entryProcessor, final Object... arguments) throws EntryProcessorException
+    {
+        final TempStateCacheView<K, V> view = new TempStateCacheView<>(this);
+        final T t = doInvoke(view, key, entryProcessor, arguments);
+        view.merge();
+        return t;
+    }
+
+    @Override
+    public <T> Map<K, EntryProcessorResult<T>> invokeAll(final Set<? extends K> keys, final EntryProcessor<K, V, T> entryProcessor,
+            final Object... arguments)
+    {
+        assertNotClosed();
+        assertNotNull(entryProcessor, "entryProcessor");
+        final Map<K, EntryProcessorResult<T>> results = new HashMap<>();
+        for (final K k : keys)
+        {
+            try
+            {
+                final T invoke = invoke(k, entryProcessor, arguments);
+                if (invoke != null)
+                {
+                    results.put(k, () -> invoke);
+                }
+            }
+            catch (final Exception e)
+            {
+                results.put(k, () -> throwEntryProcessorException(e));
+            }
+        }
+        return results;
+    }
+
+    @Override
+    public boolean isClosed()
+    {
+        return closed;
+    }
+
+    @Override
+    public Iterator<Entry<K, V>> iterator()
+    {
+        assertNotClosed();
+        final Iterator<K> keys = new HashSet<>(delegate.getKeySet()).iterator();
+        return new Iterator<>()
+        {
+            private K lastKey;
+
+            @Override
+            public boolean hasNext()
+            {
+                return keys.hasNext();
+            }
+
+            @Override
+            public Entry<K, V> next()
+            {
+                lastKey = keys.next();
+                return new JCSEntry<>(lastKey, get(lastKey));
+            }
+
+            @Override
+            public void remove()
+            {
+                if (isClosed() || lastKey == null)
+                {
+                    throw new IllegalStateException(isClosed() ? "cache closed" : "call next() before remove()");
+                }
+                JCSCache.this.remove(lastKey);
+            }
+        };
+    }
+
+    @Override
+    public void loadAll(final Set<? extends K> keys, final boolean replaceExistingValues, final CompletionListener completionListener)
+    {
+        assertNotClosed();
+        assertNotNull(keys, "keys");
+        for (final K k : keys)
+        {
+            assertNotNull(k, "a key");
+        }
+        pool.submit(() -> doLoadAll(keys, replaceExistingValues, completionListener));
     }
 
     @Override
@@ -407,34 +765,6 @@ public class JCSCache<K, V> implements Cache<K, V>
         }
     }
 
-    private static boolean isNotZero(final Duration duration)
-    {
-        return duration == null || !duration.isZero();
-    }
-
-    private void forceExpires(final K cacheKey)
-    {
-        final ICacheElement<K, V> elt = delegate.get(cacheKey);
-        delegate.remove(cacheKey);
-        for (final JCSListener<K, V> listener : listeners.values())
-        {
-            listener.onExpired(Collections.singletonList(new JCSCacheEntryEvent<>(this,
-                    EventType.REMOVED, null, cacheKey, elt.getVal())));
-        }
-    }
-
-    @Override
-    public V getAndPut(final K key, final V value)
-    {
-        assertNotClosed();
-        assertNotNull(key, "key");
-        assertNotNull(value, "value");
-        final long getStart = Times.now(false);
-        final V v = doGetControllingExpiry(getStart, key, false, false, true, false);
-        put(key, value);
-        return v;
-    }
-
     @Override
     public void putAll(final Map<? extends K, ? extends V> map)
     {
@@ -456,6 +786,18 @@ public class JCSCache<K, V> implements Cache<K, V>
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void registerCacheEntryListener(final CacheEntryListenerConfiguration<K, V> cacheEntryListenerConfiguration)
+    {
+        assertNotClosed();
+        if (listeners.containsKey(cacheEntryListenerConfiguration))
+        {
+            throw new IllegalArgumentException(cacheEntryListenerConfiguration + " already registered");
+        }
+        listeners.put(cacheEntryListenerConfiguration, new JCSListener<>(cacheEntryListenerConfiguration));
+        config.addListener(cacheEntryListenerConfiguration);
     }
 
     @Override
@@ -509,65 +851,47 @@ public class JCSCache<K, V> implements Cache<K, V>
     }
 
     @Override
-    public V getAndRemove(final K key)
+    public void removeAll()
+    {
+        assertNotClosed();
+        for (final K k : delegate.getKeySet())
+        {
+            remove(k);
+        }
+    }
+
+    @Override
+    public void removeAll(final Set<? extends K> keys)
+    {
+        assertNotClosed();
+        assertNotNull(keys, "keys");
+        for (final K k : keys)
+        {
+            remove(k);
+        }
+    }
+
+    @Override
+    public boolean replace(final K key, final V value)
     {
         assertNotClosed();
         assertNotNull(key, "key");
-        final long getStart = Times.now(false);
-        final V v = doGetControllingExpiry(getStart, key, false, false, true, false);
-        remove(key);
-        return v;
-    }
-
-    private V doGetControllingExpiry(final long getStart, final K key, final boolean updateAcess, final boolean forceDoLoad, final boolean skipLoad,
-            final boolean propagateLoadException)
-    {
+        assertNotNull(value, "value");
         final boolean statisticsEnabled = config.isStatisticsEnabled();
-        final ICacheElement<K, V> elt = delegate.get(key);
-        V v = elt != null ? elt.getVal() : null;
-        if (v == null && (config.isReadThrough() || forceDoLoad))
+        if (containsKey(key))
         {
-            if (!skipLoad)
-            {
-                v = doLoad(key, false, propagateLoadException);
-            }
-        }
-        else if (statisticsEnabled)
-        {
-            if (v != null)
+            if (statisticsEnabled)
             {
                 statistics.increaseHits(1);
             }
-            else
-            {
-                statistics.increaseMisses(1);
-            }
+            put(key, value);
+            return true;
         }
-
-        if (updateAcess && elt != null)
+        if (statisticsEnabled)
         {
-            final Duration expiryForAccess = expiryPolicy.getExpiryForAccess();
-            if (!isNotZero(expiryForAccess))
-            {
-                forceExpires(key);
-            }
-            else if (expiryForAccess != null && (!elt.getElementAttributes().getIsEternal() || !expiryForAccess.isEternal()))
-            {
-                try
-                {
-                    delegate.update(updateElement(key, elt.getVal(), expiryForAccess, elt.getElementAttributes()));
-                }
-                catch (final IOException e)
-                {
-                    throw new CacheException(e);
-                }
-            }
+            statistics.increaseMisses(1);
         }
-        if (statisticsEnabled && v != null)
-        {
-            statistics.addGetTime(Times.now(false) - getStart);
-        }
-        return v;
+        return false;
     }
 
     @Override
@@ -618,331 +942,20 @@ public class JCSCache<K, V> implements Cache<K, V>
         return false;
     }
 
-    @Override
-    public boolean replace(final K key, final V value)
+    private void touch(final K key, final ICacheElement<K, V> element)
     {
-        assertNotClosed();
-        assertNotNull(key, "key");
-        assertNotNull(value, "value");
-        final boolean statisticsEnabled = config.isStatisticsEnabled();
-        if (containsKey(key))
+        if (config.isStoreByValue())
         {
-            if (statisticsEnabled)
-            {
-                statistics.increaseHits(1);
-            }
-            put(key, value);
-            return true;
-        }
-        if (statisticsEnabled)
-        {
-            statistics.increaseMisses(1);
-        }
-        return false;
-    }
-
-    @Override
-    public V getAndReplace(final K key, final V value)
-    {
-        assertNotClosed();
-        assertNotNull(key, "key");
-        assertNotNull(value, "value");
-
-        final boolean statisticsEnabled = config.isStatisticsEnabled();
-
-        final ICacheElement<K, V> elt = delegate.get(key);
-        if (elt != null)
-        {
-            V oldValue = elt.getVal();
-            if (oldValue == null && config.isReadThrough())
-            {
-                oldValue = doLoad(key, false, false);
-            }
-            else if (statisticsEnabled)
-            {
-                statistics.increaseHits(1);
-            }
-            put(key, value);
-            return oldValue;
-        }
-        if (statisticsEnabled)
-        {
-            statistics.increaseMisses(1);
-        }
-        return null;
-    }
-
-    @Override
-    public void removeAll(final Set<? extends K> keys)
-    {
-        assertNotClosed();
-        assertNotNull(keys, "keys");
-        for (final K k : keys)
-        {
-            remove(k);
-        }
-    }
-
-    @Override
-    public void removeAll()
-    {
-        assertNotClosed();
-        for (final K k : delegate.getKeySet())
-        {
-            remove(k);
-        }
-    }
-
-    @Override
-    public void clear()
-    {
-        assertNotClosed();
-        try
-        {
-            delegate.removeAll();
-        }
-        catch (final IOException e)
-        {
-            throw new CacheException(e);
-        }
-    }
-
-    @Override
-    public <C2 extends Configuration<K, V>> C2 getConfiguration(final Class<C2> clazz)
-    {
-        assertNotClosed();
-        return clazz.cast(config);
-    }
-
-    @Override
-    public void loadAll(final Set<? extends K> keys, final boolean replaceExistingValues, final CompletionListener completionListener)
-    {
-        assertNotClosed();
-        assertNotNull(keys, "keys");
-        for (final K k : keys)
-        {
-            assertNotNull(k, "a key");
-        }
-        pool.submit(() -> doLoadAll(keys, replaceExistingValues, completionListener));
-    }
-
-    private void doLoadAll(final Set<? extends K> keys, final boolean replaceExistingValues, final CompletionListener completionListener)
-    {
-        try
-        {
-            final long now = Times.now(false);
-            for (final K k : keys)
-            {
-                if (replaceExistingValues)
-                {
-                    doLoad(k, containsKey(k), completionListener != null);
-                    continue;
-                }
-                if (containsKey(k))
-                {
-                    continue;
-                }
-                doGetControllingExpiry(now, k, true, true, false, completionListener != null);
-            }
-        }
-        catch (final RuntimeException e)
-        {
-            if (completionListener != null)
-            {
-                completionListener.onException(e);
-                return;
-            }
-        }
-        if (completionListener != null)
-        {
-            completionListener.onCompletion();
-        }
-    }
-
-    @Override
-    public <T> T invoke(final K key, final EntryProcessor<K, V, T> entryProcessor, final Object... arguments) throws EntryProcessorException
-    {
-        final TempStateCacheView<K, V> view = new TempStateCacheView<>(this);
-        final T t = doInvoke(view, key, entryProcessor, arguments);
-        view.merge();
-        return t;
-    }
-
-    private <T> T doInvoke(final TempStateCacheView<K, V> view, final K key, final EntryProcessor<K, V, T> entryProcessor,
-            final Object... arguments)
-    {
-        assertNotClosed();
-        assertNotNull(entryProcessor, "entryProcessor");
-        assertNotNull(key, "key");
-        try
-        {
-            if (config.isStatisticsEnabled())
-            {
-                if (containsKey(key))
-                {
-                    statistics.increaseHits(1);
-                }
-                else
-                {
-                    statistics.increaseMisses(1);
-                }
-            }
-            return entryProcessor.process(new JCSMutableEntry<>(view, key), arguments);
-        }
-        catch (final Exception ex)
-        {
-            return throwEntryProcessorException(ex);
-        }
-    }
-
-    private static <T> T throwEntryProcessorException(final Exception ex)
-    {
-        if (EntryProcessorException.class.isInstance(ex))
-        {
-            throw EntryProcessorException.class.cast(ex);
-        }
-        throw new EntryProcessorException(ex);
-    }
-
-    @Override
-    public <T> Map<K, EntryProcessorResult<T>> invokeAll(final Set<? extends K> keys, final EntryProcessor<K, V, T> entryProcessor,
-            final Object... arguments)
-    {
-        assertNotClosed();
-        assertNotNull(entryProcessor, "entryProcessor");
-        final Map<K, EntryProcessorResult<T>> results = new HashMap<>();
-        for (final K k : keys)
-        {
+            final K copy = copy(serializer, manager.getClassLoader(), key);
             try
             {
-                final T invoke = invoke(k, entryProcessor, arguments);
-                if (invoke != null)
-                {
-                    results.put(k, () -> invoke);
-                }
+                delegate.update(new CacheElement<>(name, copy, element.getVal(), element.getElementAttributes()));
             }
-            catch (final Exception e)
+            catch (final IOException e)
             {
-                results.put(k, () -> throwEntryProcessorException(e));
+                throw new CacheException(e);
             }
         }
-        return results;
-    }
-
-    @Override
-    public void registerCacheEntryListener(final CacheEntryListenerConfiguration<K, V> cacheEntryListenerConfiguration)
-    {
-        assertNotClosed();
-        if (listeners.containsKey(cacheEntryListenerConfiguration))
-        {
-            throw new IllegalArgumentException(cacheEntryListenerConfiguration + " already registered");
-        }
-        listeners.put(cacheEntryListenerConfiguration, new JCSListener<>(cacheEntryListenerConfiguration));
-        config.addListener(cacheEntryListenerConfiguration);
-    }
-
-    @Override
-    public void deregisterCacheEntryListener(final CacheEntryListenerConfiguration<K, V> cacheEntryListenerConfiguration)
-    {
-        assertNotClosed();
-        listeners.remove(cacheEntryListenerConfiguration);
-        config.removeListener(cacheEntryListenerConfiguration);
-    }
-
-    @Override
-    public Iterator<Entry<K, V>> iterator()
-    {
-        assertNotClosed();
-        final Iterator<K> keys = new HashSet<>(delegate.getKeySet()).iterator();
-        return new Iterator<>()
-        {
-            private K lastKey;
-
-            @Override
-            public boolean hasNext()
-            {
-                return keys.hasNext();
-            }
-
-            @Override
-            public Entry<K, V> next()
-            {
-                lastKey = keys.next();
-                return new JCSEntry<>(lastKey, get(lastKey));
-            }
-
-            @Override
-            public void remove()
-            {
-                if (isClosed() || lastKey == null)
-                {
-                    throw new IllegalStateException(isClosed() ? "cache closed" : "call next() before remove()");
-                }
-                JCSCache.this.remove(lastKey);
-            }
-        };
-    }
-
-    @Override
-    public String getName()
-    {
-        assertNotClosed();
-        return name;
-    }
-
-    @Override
-    public CacheManager getCacheManager()
-    {
-        assertNotClosed();
-        return manager;
-    }
-
-    @Override
-    public synchronized void close()
-    {
-        if (isClosed())
-        {
-            return;
-        }
-
-        for (final Runnable task : pool.shutdownNow()) {
-            task.run();
-        }
-
-        manager.release(getName());
-        closed = true;
-        close(loader);
-        close(writer);
-        close(expiryPolicy);
-        for (final JCSListener<K, V> listener : listeners.values())
-        {
-            close(listener);
-        }
-        listeners.clear();
-        JMXs.unregister(cacheConfigObjectName);
-        JMXs.unregister(cacheStatsObjectName);
-        try
-        {
-            delegate.removeAll();
-        }
-        catch (final IOException e)
-        {
-            throw new CacheException(e);
-        }
-    }
-
-    private static void close(final Object potentiallyCloseable)
-    {
-        if (Closeable.class.isInstance(potentiallyCloseable))
-        {
-            Closeable.class.cast(potentiallyCloseable);
-        }
-    }
-
-    @Override
-    public boolean isClosed()
-    {
-        return closed;
     }
 
     @Override
@@ -960,34 +973,21 @@ public class JCSCache<K, V> implements Cache<K, V>
         throw new IllegalArgumentException(clazz.getName() + " not supported in unwrap");
     }
 
-    public Statistics getStatistics()
+    private ICacheElement<K, V> updateElement(final K key, final V v, final Duration duration, final IElementAttributes attrs)
     {
-        return statistics;
-    }
-
-    public void enableManagement()
-    {
-        config.managementEnabled();
-        JMXs.register(cacheConfigObjectName, new JCSCacheMXBean<>(this));
-    }
-
-    public void disableManagement()
-    {
-        config.managementDisabled();
-        JMXs.unregister(cacheConfigObjectName);
-    }
-
-    public void enableStatistics()
-    {
-        config.statisticsEnabled();
-        statistics.setActive(true);
-        JMXs.register(cacheStatsObjectName, new JCSCacheStatisticsMXBean(statistics));
-    }
-
-    public void disableStatistics()
-    {
-        config.statisticsDisabled();
-        statistics.setActive(false);
-        JMXs.unregister(cacheStatsObjectName);
+        final ICacheElement<K, V> element = new CacheElement<>(name, key, v);
+        if (duration != null)
+        {
+            attrs.setTimeFactorForMilliseconds(1);
+            final boolean eternal = duration.isEternal();
+            attrs.setIsEternal(eternal);
+            if (!eternal)
+            {
+                attrs.setLastAccessTimeNow();
+            }
+            // MaxLife = -1 to use IdleTime excepted if jcache.ccf asked for something else
+        }
+        element.setElementAttributes(attrs);
+        return element;
     }
 }

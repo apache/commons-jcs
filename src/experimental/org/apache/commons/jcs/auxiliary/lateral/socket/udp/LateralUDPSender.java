@@ -211,7 +211,7 @@ public class LateralUDPSender
 /**
  * Description of the Class
  */
-class MyByteArrayOutputStream extends ByteArrayOutputStream
+final class MyByteArrayOutputStream extends ByteArrayOutputStream
 {
 
     /**

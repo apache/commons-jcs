@@ -58,21 +58,6 @@ public class RemoteHttpCacheServletUnitTest
         servlet.destroy();
     }
 
-    /** Verify that we balk and return an error. */
-    @Test
-    public void testProcessRequest_null()
-    {
-        final RemoteCacheRequest<Serializable, Serializable> request = null;
-
-        // DO WORK
-        final RemoteCacheResponse<Object> result = servlet.processRequest( request );
-
-        // VERIFY
-        assertNotNull( "Should have a result.", result );
-        assertTrue( "Should have 'The request is null' in the errorMessage", result.getErrorMessage().indexOf( "The request is null" ) != -1 );
-        assertTrue( "Should have 'The request is null' in the toString", result.toString().indexOf( "The request is null" ) != -1 );
-    }
-
     /** Verify that the service is called. */
     @Test
     public void testProcessRequest_Get()
@@ -127,22 +112,19 @@ public class RemoteHttpCacheServletUnitTest
 
     }
 
-    /** Verify that the service is called. */
+    /** Verify that we balk and return an error. */
     @Test
-    public void testProcessRequest_Update()
+    public void testProcessRequest_null()
     {
-        final String cacheName = "test";
-        final String key = "key";
-        final long requesterId = 2;
-        final CacheElement<Serializable, Serializable> element = new CacheElement<>( cacheName, key, null );
-        final RemoteCacheRequest<Serializable, Serializable> request = RemoteCacheRequestFactory.createUpdateRequest( element, requesterId );
+        final RemoteCacheRequest<Serializable, Serializable> request = null;
 
         // DO WORK
         final RemoteCacheResponse<Object> result = servlet.processRequest( request );
 
         // VERIFY
         assertNotNull( "Should have a result.", result );
-        assertEquals( "Wrong object.", element, remoteHttpCacheService.lastUpdate );
+        assertTrue( "Should have 'The request is null' in the errorMessage", result.getErrorMessage().indexOf( "The request is null" ) != -1 );
+        assertTrue( "Should have 'The request is null' in the toString", result.toString().indexOf( "The request is null" ) != -1 );
     }
 
     /** Verify that the service is called. */
@@ -176,5 +158,23 @@ public class RemoteHttpCacheServletUnitTest
         // VERIFY
         assertNotNull( "Should have a result.", result );
         assertEquals( "Wrong cacheName.", cacheName, remoteHttpCacheService.lastRemoveAllCacheName );
+    }
+
+    /** Verify that the service is called. */
+    @Test
+    public void testProcessRequest_Update()
+    {
+        final String cacheName = "test";
+        final String key = "key";
+        final long requesterId = 2;
+        final CacheElement<Serializable, Serializable> element = new CacheElement<>( cacheName, key, null );
+        final RemoteCacheRequest<Serializable, Serializable> request = RemoteCacheRequestFactory.createUpdateRequest( element, requesterId );
+
+        // DO WORK
+        final RemoteCacheResponse<Object> result = servlet.processRequest( request );
+
+        // VERIFY
+        assertNotNull( "Should have a result.", result );
+        assertEquals( "Wrong object.", element, remoteHttpCacheService.lastUpdate );
     }
 }

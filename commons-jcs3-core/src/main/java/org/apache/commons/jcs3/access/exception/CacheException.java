@@ -37,15 +37,6 @@ public class CacheException
 
     /**
      * Constructor for the CacheException object
-     * @param nested a nested exception
-     */
-    public CacheException( final Throwable nested )
-    {
-        super(nested);
-    }
-
-    /**
-     * Constructor for the CacheException object
      * @param message the exception message
      */
     public CacheException( final String message )
@@ -61,5 +52,14 @@ public class CacheException
     public CacheException(final String message, final Throwable nested)
     {
         super(message, nested);
+    }
+
+    /**
+     * Constructor for the CacheException object
+     * @param nested a nested exception
+     */
+    public CacheException( final Throwable nested )
+    {
+        super(nested);
     }
 }

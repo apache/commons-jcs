@@ -49,48 +49,13 @@ public class CacheEvent<K>
     private K key;
 
     /**
-     * @param source the source to set
+     * The time at which this object was created.
+     * <p>
+     * @return the createTime
      */
-    @Override
-	public void setSource( final String source )
+    public long getCreateTime()
     {
-        this.source = source;
-    }
-
-    /**
-     * @return the source
-     */
-    @Override
-	public String getSource()
-    {
-        return source;
-    }
-
-    /**
-     * @param region the region to set
-     */
-    @Override
-	public void setRegion( final String region )
-    {
-        this.region = region;
-    }
-
-    /**
-     * @return the region
-     */
-    @Override
-	public String getRegion()
-    {
-        return region;
-    }
-
-    /**
-     * @param eventName the eventName to set
-     */
-    @Override
-	public void setEventName( final String eventName )
-    {
-        this.eventName = eventName;
+        return createTime;
     }
 
     /**
@@ -103,12 +68,12 @@ public class CacheEvent<K>
     }
 
     /**
-     * @param optionalDetails the optionalDetails to set
+     * @return the key
      */
     @Override
-	public void setOptionalDetails( final String optionalDetails )
+	public K getKey()
     {
-        this.optionalDetails = optionalDetails;
+        return key;
     }
 
     /**
@@ -121,6 +86,33 @@ public class CacheEvent<K>
     }
 
     /**
+     * @return the region
+     */
+    @Override
+	public String getRegion()
+    {
+        return region;
+    }
+
+    /**
+     * @return the source
+     */
+    @Override
+	public String getSource()
+    {
+        return source;
+    }
+
+    /**
+     * @param eventName the eventName to set
+     */
+    @Override
+	public void setEventName( final String eventName )
+    {
+        this.eventName = eventName;
+    }
+
+    /**
      * @param key the key to set
      */
     @Override
@@ -130,22 +122,30 @@ public class CacheEvent<K>
     }
 
     /**
-     * @return the key
+     * @param optionalDetails the optionalDetails to set
      */
     @Override
-	public K getKey()
+	public void setOptionalDetails( final String optionalDetails )
     {
-        return key;
+        this.optionalDetails = optionalDetails;
     }
 
     /**
-     * The time at which this object was created.
-     * <p>
-     * @return the createTime
+     * @param region the region to set
      */
-    public long getCreateTime()
+    @Override
+	public void setRegion( final String region )
     {
-        return createTime;
+        this.region = region;
+    }
+
+    /**
+     * @param source the source to set
+     */
+    @Override
+	public void setSource( final String source )
+    {
+        this.source = source;
     }
 
     /**

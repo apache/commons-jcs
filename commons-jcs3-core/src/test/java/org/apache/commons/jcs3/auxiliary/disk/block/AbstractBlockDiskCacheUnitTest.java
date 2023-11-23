@@ -41,67 +41,109 @@ import org.junit.Test;
 
 /** Unit tests for the Block Disk Cache */
 public abstract class AbstractBlockDiskCacheUnitTest{
-    public abstract BlockDiskCacheAttributes getCacheAttributes();
-
-    @Test
-    public void testPutGetMatching_SmallWait() throws Exception
+    /** Holder for a string and byte array. */
+    static class X implements Serializable
     {
-        // SETUP
-        final int items = 200;
+        /** ignore */
+        private static final long serialVersionUID = 1L;
 
-        final String cacheName = "testPutGetMatching_SmallWait";
-        final BlockDiskCacheAttributes cattr = getCacheAttributes();
-        cattr.setCacheName(cacheName);
-        cattr.setMaxKeySize(100);
-        cattr.setDiskPath("target/test-sandbox/BlockDiskCacheUnitTest");
-        final BlockDiskCache<String, String> diskCache = new BlockDiskCache<>(cattr);
+        /** Test string */
+        String string;
 
-        // DO WORK
-        for (int i = 0; i < items; i++)
-        {
-            diskCache.update(new CacheElement<>(cacheName, i + ":key", cacheName + " data " + i));
-        }
-        Thread.sleep(500);
-
-        final Map<String, ICacheElement<String, String>> matchingResults = diskCache.getMatching("1.8.+");
-
-        // VERIFY
-        assertEquals("Wrong number returned", 10, matchingResults.size());
-        // System.out.println( "matchingResults.keySet() " + matchingResults.keySet() );
-        // System.out.println( "\nAFTER TEST \n" + diskCache.getStats() );
+        /*** test byte array. */
+        byte[] bytes;
     }
 
+    public abstract BlockDiskCacheAttributes getCacheAttributes();
+
     /**
-     * Test the basic get matching. With no wait this will all come from purgatory.
+     * Internal method used for group functionality.
      * <p>
      *
-     * @throws Exception
+     * @param cacheName
+     * @param group
+     * @param name
+     * @return GroupAttrName
      */
-    @Test
-    public void testPutGetMatching_NoWait() throws Exception
+    private GroupAttrName<String> getGroupAttrName(final String cacheName, final String group, final String name)
     {
-        // SETUP
-        final int items = 200;
+        final GroupId gid = new GroupId(cacheName, group);
+        return new GroupAttrName<>(gid, name);
+    }
 
-        final String cacheName = "testPutGetMatching_NoWait";
+    public void oneLoadFromDisk() throws Exception
+    {
+        // initialize object to be stored
+        final X before = new X();
+        String string = "IÒtÎrn‚tiÙn‡lizÊti¯n";
+        final StringBuilder sb = new StringBuilder();
+        sb.append(string);
+        for (int i = 0; i < 4; i++)
+        {
+            sb.append(sb.toString()); // big string
+        }
+        string = sb.toString();
+        before.string = string;
+        before.bytes = string.getBytes(StandardCharsets.UTF_8);
+
+        // initialize cache
+        final String cacheName = "testLoadFromDisk";
         final BlockDiskCacheAttributes cattr = getCacheAttributes();
         cattr.setCacheName(cacheName);
         cattr.setMaxKeySize(100);
+        cattr.setBlockSizeBytes(500);
         cattr.setDiskPath("target/test-sandbox/BlockDiskCacheUnitTest");
-        final BlockDiskCache<String, String> diskCache = new BlockDiskCache<>(cattr);
+        BlockDiskCache<String, X> diskCache = new BlockDiskCache<>(cattr);
 
         // DO WORK
-        for (int i = 0; i < items; i++)
+        for (int i = 0; i < 50; i++)
         {
-            diskCache.update(new CacheElement<>(cacheName, i + ":key", cacheName + " data " + i));
+            diskCache.update(new CacheElement<>(cacheName, "x" + i, before));
         }
-
-        final Map<String, ICacheElement<String, String>> matchingResults = diskCache.getMatching("1.8.+");
+        diskCache.dispose();
 
         // VERIFY
-        assertEquals("Wrong number returned", 10, matchingResults.size());
-        // System.out.println( "matchingResults.keySet() " + matchingResults.keySet() );
-        // System.out.println( "\nAFTER TEST \n" + diskCache.getStats() );
+        diskCache = new BlockDiskCache<>(cattr);
+
+        for (int i = 0; i < 50; i++)
+        {
+            final ICacheElement<String, X> afterElement = diskCache.get("x" + i);
+            assertNotNull("Missing element from cache. Cache size: " + diskCache.getSize() + " element: x" + i, afterElement);
+            final X after = (afterElement.getVal());
+
+            assertNotNull(after);
+            assertEquals("wrong string after retrieval", string, after.string);
+            assertEquals("wrong bytes after retrieval", string, new String(after.bytes, StandardCharsets.UTF_8));
+        }
+
+        diskCache.dispose();
+    }
+
+    @Test
+    public void testAppendToDisk() throws Exception
+    {
+        final String cacheName = "testAppendToDisk";
+        final BlockDiskCacheAttributes cattr = getCacheAttributes();
+        cattr.setCacheName(cacheName);
+        cattr.setMaxKeySize(100);
+        cattr.setBlockSizeBytes(500);
+        cattr.setDiskPath("target/test-sandbox/BlockDiskCacheUnitTest");
+        BlockDiskCache<String, X> diskCache = new BlockDiskCache<>(cattr);
+        diskCache.removeAll();
+        final X value1 = new X();
+        value1.string = "1234567890";
+        final X value2 = new X();
+        value2.string = "0987654321";
+        diskCache.update(new CacheElement<>(cacheName, "1", value1));
+        diskCache.dispose();
+        diskCache = new BlockDiskCache<>(cattr);
+        diskCache.update(new CacheElement<>(cacheName, "2", value2));
+        diskCache.dispose();
+        diskCache = new BlockDiskCache<>(cattr);
+        assertTrue(diskCache.verifyDisk());
+        assertEquals(2, diskCache.getKeySet().size());
+        assertEquals(value1.string, diskCache.get("1").getVal().string);
+        assertEquals(value2.string, diskCache.get("2").getVal().string);
     }
 
     /**
@@ -155,6 +197,15 @@ public abstract class AbstractBlockDiskCacheUnitTest{
         blockDisk.close();
     }
 
+    @Test
+    public void testLoadFromDisk() throws Exception
+    {
+        for (int i = 0; i < 20; i++)
+        { // usually after 2 time it fails
+            oneLoadFromDisk();
+        }
+    }
+
     /**
      * Verify that the block disk cache can handle a big string.
      * <p>
@@ -198,306 +249,65 @@ public abstract class AbstractBlockDiskCacheUnitTest{
     }
 
     /**
-     * Verify that the block disk cache can handle utf encoded strings.
+     * Test the basic get matching. With no wait this will all come from purgatory.
      * <p>
      *
      * @throws Exception
      */
     @Test
-    public void testUTF8String() throws Exception
+    public void testPutGetMatching_NoWait() throws Exception
     {
-        String string = "IÒtÎrn‚tiÙn‡lizÊti¯n";
-        final StringBuilder sb = new StringBuilder();
-        sb.append(string);
-        for (int i = 0; i < 4; i++)
-        {
-            sb.append(sb.toString()); // big string
-        }
-        string = sb.toString();
+        // SETUP
+        final int items = 200;
 
-        // System.out.println( "The string contains " + string.length() + " characters" );
-
-        final String cacheName = "testUTF8String";
-
+        final String cacheName = "testPutGetMatching_NoWait";
         final BlockDiskCacheAttributes cattr = getCacheAttributes();
         cattr.setCacheName(cacheName);
         cattr.setMaxKeySize(100);
-        cattr.setBlockSizeBytes(200);
         cattr.setDiskPath("target/test-sandbox/BlockDiskCacheUnitTest");
         final BlockDiskCache<String, String> diskCache = new BlockDiskCache<>(cattr);
 
         // DO WORK
-        diskCache.update(new CacheElement<>(cacheName, "x", string));
+        for (int i = 0; i < items; i++)
+        {
+            diskCache.update(new CacheElement<>(cacheName, i + ":key", cacheName + " data " + i));
+        }
+
+        final Map<String, ICacheElement<String, String>> matchingResults = diskCache.getMatching("1.8.+");
 
         // VERIFY
-        assertNotNull(diskCache.get("x"));
-        Thread.sleep(1000);
-        final ICacheElement<String, String> afterElement = diskCache.get("x");
-        assertNotNull(afterElement);
-        // System.out.println( "afterElement = " + afterElement );
-        final String after = afterElement.getVal();
-
-        assertNotNull(after);
-        assertEquals("wrong string after retrieval", string, after);
+        assertEquals("Wrong number returned", 10, matchingResults.size());
+        // System.out.println( "matchingResults.keySet() " + matchingResults.keySet() );
+        // System.out.println( "\nAFTER TEST \n" + diskCache.getStats() );
     }
 
-    /**
-     * Verify that the block disk cache can handle utf encoded strings.
-     * <p>
-     *
-     * @throws Exception
-     */
     @Test
-    public void testUTF8ByteArray() throws Exception
+    public void testPutGetMatching_SmallWait() throws Exception
     {
-        String string = "IÒtÎrn‚tiÙn‡lizÊti¯n";
-        final StringBuilder sb = new StringBuilder();
-        sb.append(string);
-        for (int i = 0; i < 4; i++)
-        {
-            sb.append(sb.toString()); // big string
-        }
-        string = sb.toString();
-        // System.out.println( "The string contains " + string.length() + " characters" );
-        final byte[] bytes = string.getBytes(StandardCharsets.UTF_8);
+        // SETUP
+        final int items = 200;
 
-        final String cacheName = "testUTF8ByteArray";
-
+        final String cacheName = "testPutGetMatching_SmallWait";
         final BlockDiskCacheAttributes cattr = getCacheAttributes();
         cattr.setCacheName(cacheName);
         cattr.setMaxKeySize(100);
-        cattr.setBlockSizeBytes(200);
         cattr.setDiskPath("target/test-sandbox/BlockDiskCacheUnitTest");
-        final BlockDiskCache<String, byte[]> diskCache = new BlockDiskCache<>(cattr);
+        final BlockDiskCache<String, String> diskCache = new BlockDiskCache<>(cattr);
 
         // DO WORK
-        diskCache.update(new CacheElement<>(cacheName, "x", bytes));
+        for (int i = 0; i < items; i++)
+        {
+            diskCache.update(new CacheElement<>(cacheName, i + ":key", cacheName + " data " + i));
+        }
+        Thread.sleep(500);
+
+        final Map<String, ICacheElement<String, String>> matchingResults = diskCache.getMatching("1.8.+");
 
         // VERIFY
-        assertNotNull(diskCache.get("x"));
-        Thread.sleep(1000);
-        final ICacheElement<String, byte[]> afterElement = diskCache.get("x");
-        assertNotNull(afterElement);
-        // System.out.println( "afterElement = " + afterElement );
-        final byte[] after = afterElement.getVal();
-
-        assertNotNull(after);
-        assertEquals("wrong bytes after retrieval", bytes.length, after.length);
-        // assertEquals( "wrong bytes after retrieval", bytes, after );
-        // assertEquals( "wrong bytes after retrieval", string, new String( after, StandardCharsets.UTF_8 ) );
-
+        assertEquals("Wrong number returned", 10, matchingResults.size());
+        // System.out.println( "matchingResults.keySet() " + matchingResults.keySet() );
+        // System.out.println( "\nAFTER TEST \n" + diskCache.getStats() );
     }
-
-    /**
-     * Verify that the block disk cache can handle utf encoded strings.
-     * <p>
-     *
-     * @throws Exception
-     */
-    @Test
-    public void testUTF8StringAndBytes() throws Exception
-    {
-        final X before = new X();
-        String string = "IÒtÎrn‚tiÙn‡lizÊti¯n";
-        final StringBuilder sb = new StringBuilder();
-        sb.append(string);
-        for (int i = 0; i < 4; i++)
-        {
-            sb.append(sb.toString()); // big string
-        }
-        string = sb.toString();
-        // System.out.println( "The string contains " + string.length() + " characters" );
-        before.string = string;
-        before.bytes = string.getBytes(StandardCharsets.UTF_8);
-
-        final String cacheName = "testUTF8StringAndBytes";
-
-        final BlockDiskCacheAttributes cattr = getCacheAttributes();
-        cattr.setCacheName(cacheName);
-        cattr.setMaxKeySize(100);
-        cattr.setBlockSizeBytes(500);
-        cattr.setDiskPath("target/test-sandbox/BlockDiskCacheUnitTest");
-        final BlockDiskCache<String, X> diskCache = new BlockDiskCache<>(cattr);
-
-        // DO WORK
-        diskCache.update(new CacheElement<>(cacheName, "x", before));
-
-        // VERIFY
-        assertNotNull(diskCache.get("x"));
-        Thread.sleep(1000);
-        final ICacheElement<String, X> afterElement = diskCache.get("x");
-        // System.out.println( "afterElement = " + afterElement );
-        final X after = (afterElement.getVal());
-
-        assertNotNull(after);
-        assertEquals("wrong string after retrieval", string, after.string);
-        assertEquals("wrong bytes after retrieval", string, new String(after.bytes, StandardCharsets.UTF_8));
-
-    }
-
-    @Test
-    public void testLoadFromDisk() throws Exception
-    {
-        for (int i = 0; i < 20; i++)
-        { // usually after 2 time it fails
-            oneLoadFromDisk();
-        }
-    }
-
-    @Test
-    public void testAppendToDisk() throws Exception
-    {
-        final String cacheName = "testAppendToDisk";
-        final BlockDiskCacheAttributes cattr = getCacheAttributes();
-        cattr.setCacheName(cacheName);
-        cattr.setMaxKeySize(100);
-        cattr.setBlockSizeBytes(500);
-        cattr.setDiskPath("target/test-sandbox/BlockDiskCacheUnitTest");
-        BlockDiskCache<String, X> diskCache = new BlockDiskCache<>(cattr);
-        diskCache.removeAll();
-        final X value1 = new X();
-        value1.string = "1234567890";
-        final X value2 = new X();
-        value2.string = "0987654321";
-        diskCache.update(new CacheElement<>(cacheName, "1", value1));
-        diskCache.dispose();
-        diskCache = new BlockDiskCache<>(cattr);
-        diskCache.update(new CacheElement<>(cacheName, "2", value2));
-        diskCache.dispose();
-        diskCache = new BlockDiskCache<>(cattr);
-        assertTrue(diskCache.verifyDisk());
-        assertEquals(2, diskCache.getKeySet().size());
-        assertEquals(value1.string, diskCache.get("1").getVal().string);
-        assertEquals(value2.string, diskCache.get("2").getVal().string);
-    }
-
-    public void oneLoadFromDisk() throws Exception
-    {
-        // initialize object to be stored
-        final X before = new X();
-        String string = "IÒtÎrn‚tiÙn‡lizÊti¯n";
-        final StringBuilder sb = new StringBuilder();
-        sb.append(string);
-        for (int i = 0; i < 4; i++)
-        {
-            sb.append(sb.toString()); // big string
-        }
-        string = sb.toString();
-        before.string = string;
-        before.bytes = string.getBytes(StandardCharsets.UTF_8);
-
-        // initialize cache
-        final String cacheName = "testLoadFromDisk";
-        final BlockDiskCacheAttributes cattr = getCacheAttributes();
-        cattr.setCacheName(cacheName);
-        cattr.setMaxKeySize(100);
-        cattr.setBlockSizeBytes(500);
-        cattr.setDiskPath("target/test-sandbox/BlockDiskCacheUnitTest");
-        BlockDiskCache<String, X> diskCache = new BlockDiskCache<>(cattr);
-
-        // DO WORK
-        for (int i = 0; i < 50; i++)
-        {
-            diskCache.update(new CacheElement<>(cacheName, "x" + i, before));
-        }
-        diskCache.dispose();
-
-        // VERIFY
-        diskCache = new BlockDiskCache<>(cattr);
-
-        for (int i = 0; i < 50; i++)
-        {
-            final ICacheElement<String, X> afterElement = diskCache.get("x" + i);
-            assertNotNull("Missing element from cache. Cache size: " + diskCache.getSize() + " element: x" + i, afterElement);
-            final X after = (afterElement.getVal());
-
-            assertNotNull(after);
-            assertEquals("wrong string after retrieval", string, after.string);
-            assertEquals("wrong bytes after retrieval", string, new String(after.bytes, StandardCharsets.UTF_8));
-        }
-
-        diskCache.dispose();
-    }
-
-    /**
-     * Add some items to the disk cache and then remove them one by one.
-     *
-     * @throws IOException
-     */
-    @Test
-    public void testRemoveItems() throws IOException
-    {
-        final BlockDiskCacheAttributes cattr = getCacheAttributes();
-        cattr.setCacheName("testRemoveItems");
-        cattr.setMaxKeySize(100);
-        cattr.setDiskPath("target/test-sandbox/BlockDiskCacheUnitTest");
-        final BlockDiskCache<String, String> disk = new BlockDiskCache<>(cattr);
-
-        disk.processRemoveAll();
-
-        final int cnt = 25;
-        for (int i = 0; i < cnt; i++)
-        {
-            final IElementAttributes eAttr = new ElementAttributes();
-            eAttr.setIsSpool(true);
-            final ICacheElement<String, String> element = new CacheElement<>("testRemoveItems", "key:" + i, "data:" + i);
-            element.setElementAttributes(eAttr);
-            disk.processUpdate(element);
-        }
-
-        // remove each
-        for (int i = 0; i < cnt; i++)
-        {
-            disk.remove("key:" + i);
-            final ICacheElement<String, String> element = disk.processGet("key:" + i);
-            assertNull("Should not have received an element.", element);
-        }
-    }
-
-    /**
-     * Add some items to the disk cache and then remove them one by one.
-     * <p>
-     *
-     * @throws IOException
-     */
-    @Test
-    public void testRemove_PartialKey() throws IOException
-    {
-        final BlockDiskCacheAttributes cattr = getCacheAttributes();
-        cattr.setCacheName("testRemove_PartialKey");
-        cattr.setMaxKeySize(100);
-        cattr.setDiskPath("target/test-sandbox/BlockDiskCacheUnitTest");
-        final BlockDiskCache<String, String> disk = new BlockDiskCache<>(cattr);
-
-        disk.processRemoveAll();
-
-        final int cnt = 25;
-        for (int i = 0; i < cnt; i++)
-        {
-            final IElementAttributes eAttr = new ElementAttributes();
-            eAttr.setIsSpool(true);
-            final ICacheElement<String, String> element = new CacheElement<>("testRemove_PartialKey", i + ":key", "data:"
-                + i);
-            element.setElementAttributes(eAttr);
-            disk.processUpdate(element);
-        }
-
-        // verify each
-        for (int i = 0; i < cnt; i++)
-        {
-            final ICacheElement<String, String> element = disk.processGet(i + ":key");
-            assertNotNull("Shoulds have received an element.", element);
-        }
-
-        // remove each
-        for (int i = 0; i < cnt; i++)
-        {
-            disk.remove(i + ":");
-            final ICacheElement<String, String> element = disk.processGet(i + ":key");
-            assertNull("Should not have received an element.", element);
-        }
-    }
-
 
     /**
      * Verify that group members are removed if we call remove with a group.
@@ -557,30 +367,220 @@ public abstract class AbstractBlockDiskCacheUnitTest{
     }
 
     /**
-     * Internal method used for group functionality.
+     * Add some items to the disk cache and then remove them one by one.
      * <p>
      *
-     * @param cacheName
-     * @param group
-     * @param name
-     * @return GroupAttrName
+     * @throws IOException
      */
-    private GroupAttrName<String> getGroupAttrName(final String cacheName, final String group, final String name)
+    @Test
+    public void testRemove_PartialKey() throws IOException
     {
-        final GroupId gid = new GroupId(cacheName, group);
-        return new GroupAttrName<>(gid, name);
+        final BlockDiskCacheAttributes cattr = getCacheAttributes();
+        cattr.setCacheName("testRemove_PartialKey");
+        cattr.setMaxKeySize(100);
+        cattr.setDiskPath("target/test-sandbox/BlockDiskCacheUnitTest");
+        final BlockDiskCache<String, String> disk = new BlockDiskCache<>(cattr);
+
+        disk.processRemoveAll();
+
+        final int cnt = 25;
+        for (int i = 0; i < cnt; i++)
+        {
+            final IElementAttributes eAttr = new ElementAttributes();
+            eAttr.setIsSpool(true);
+            final ICacheElement<String, String> element = new CacheElement<>("testRemove_PartialKey", i + ":key", "data:"
+                + i);
+            element.setElementAttributes(eAttr);
+            disk.processUpdate(element);
+        }
+
+        // verify each
+        for (int i = 0; i < cnt; i++)
+        {
+            final ICacheElement<String, String> element = disk.processGet(i + ":key");
+            assertNotNull("Shoulds have received an element.", element);
+        }
+
+        // remove each
+        for (int i = 0; i < cnt; i++)
+        {
+            disk.remove(i + ":");
+            final ICacheElement<String, String> element = disk.processGet(i + ":key");
+            assertNull("Should not have received an element.", element);
+        }
     }
 
-    /** Holder for a string and byte array. */
-    static class X implements Serializable
+    /**
+     * Add some items to the disk cache and then remove them one by one.
+     *
+     * @throws IOException
+     */
+    @Test
+    public void testRemoveItems() throws IOException
     {
-        /** ignore */
-        private static final long serialVersionUID = 1L;
+        final BlockDiskCacheAttributes cattr = getCacheAttributes();
+        cattr.setCacheName("testRemoveItems");
+        cattr.setMaxKeySize(100);
+        cattr.setDiskPath("target/test-sandbox/BlockDiskCacheUnitTest");
+        final BlockDiskCache<String, String> disk = new BlockDiskCache<>(cattr);
 
-        /** Test string */
-        String string;
+        disk.processRemoveAll();
 
-        /*** test byte array. */
-        byte[] bytes;
+        final int cnt = 25;
+        for (int i = 0; i < cnt; i++)
+        {
+            final IElementAttributes eAttr = new ElementAttributes();
+            eAttr.setIsSpool(true);
+            final ICacheElement<String, String> element = new CacheElement<>("testRemoveItems", "key:" + i, "data:" + i);
+            element.setElementAttributes(eAttr);
+            disk.processUpdate(element);
+        }
+
+        // remove each
+        for (int i = 0; i < cnt; i++)
+        {
+            disk.remove("key:" + i);
+            final ICacheElement<String, String> element = disk.processGet("key:" + i);
+            assertNull("Should not have received an element.", element);
+        }
+    }
+
+
+    /**
+     * Verify that the block disk cache can handle utf encoded strings.
+     * <p>
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testUTF8ByteArray() throws Exception
+    {
+        String string = "IÒtÎrn‚tiÙn‡lizÊti¯n";
+        final StringBuilder sb = new StringBuilder();
+        sb.append(string);
+        for (int i = 0; i < 4; i++)
+        {
+            sb.append(sb.toString()); // big string
+        }
+        string = sb.toString();
+        // System.out.println( "The string contains " + string.length() + " characters" );
+        final byte[] bytes = string.getBytes(StandardCharsets.UTF_8);
+
+        final String cacheName = "testUTF8ByteArray";
+
+        final BlockDiskCacheAttributes cattr = getCacheAttributes();
+        cattr.setCacheName(cacheName);
+        cattr.setMaxKeySize(100);
+        cattr.setBlockSizeBytes(200);
+        cattr.setDiskPath("target/test-sandbox/BlockDiskCacheUnitTest");
+        final BlockDiskCache<String, byte[]> diskCache = new BlockDiskCache<>(cattr);
+
+        // DO WORK
+        diskCache.update(new CacheElement<>(cacheName, "x", bytes));
+
+        // VERIFY
+        assertNotNull(diskCache.get("x"));
+        Thread.sleep(1000);
+        final ICacheElement<String, byte[]> afterElement = diskCache.get("x");
+        assertNotNull(afterElement);
+        // System.out.println( "afterElement = " + afterElement );
+        final byte[] after = afterElement.getVal();
+
+        assertNotNull(after);
+        assertEquals("wrong bytes after retrieval", bytes.length, after.length);
+        // assertEquals( "wrong bytes after retrieval", bytes, after );
+        // assertEquals( "wrong bytes after retrieval", string, new String( after, StandardCharsets.UTF_8 ) );
+
+    }
+
+    /**
+     * Verify that the block disk cache can handle utf encoded strings.
+     * <p>
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testUTF8String() throws Exception
+    {
+        String string = "IÒtÎrn‚tiÙn‡lizÊti¯n";
+        final StringBuilder sb = new StringBuilder();
+        sb.append(string);
+        for (int i = 0; i < 4; i++)
+        {
+            sb.append(sb.toString()); // big string
+        }
+        string = sb.toString();
+
+        // System.out.println( "The string contains " + string.length() + " characters" );
+
+        final String cacheName = "testUTF8String";
+
+        final BlockDiskCacheAttributes cattr = getCacheAttributes();
+        cattr.setCacheName(cacheName);
+        cattr.setMaxKeySize(100);
+        cattr.setBlockSizeBytes(200);
+        cattr.setDiskPath("target/test-sandbox/BlockDiskCacheUnitTest");
+        final BlockDiskCache<String, String> diskCache = new BlockDiskCache<>(cattr);
+
+        // DO WORK
+        diskCache.update(new CacheElement<>(cacheName, "x", string));
+
+        // VERIFY
+        assertNotNull(diskCache.get("x"));
+        Thread.sleep(1000);
+        final ICacheElement<String, String> afterElement = diskCache.get("x");
+        assertNotNull(afterElement);
+        // System.out.println( "afterElement = " + afterElement );
+        final String after = afterElement.getVal();
+
+        assertNotNull(after);
+        assertEquals("wrong string after retrieval", string, after);
+    }
+
+    /**
+     * Verify that the block disk cache can handle utf encoded strings.
+     * <p>
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testUTF8StringAndBytes() throws Exception
+    {
+        final X before = new X();
+        String string = "IÒtÎrn‚tiÙn‡lizÊti¯n";
+        final StringBuilder sb = new StringBuilder();
+        sb.append(string);
+        for (int i = 0; i < 4; i++)
+        {
+            sb.append(sb.toString()); // big string
+        }
+        string = sb.toString();
+        // System.out.println( "The string contains " + string.length() + " characters" );
+        before.string = string;
+        before.bytes = string.getBytes(StandardCharsets.UTF_8);
+
+        final String cacheName = "testUTF8StringAndBytes";
+
+        final BlockDiskCacheAttributes cattr = getCacheAttributes();
+        cattr.setCacheName(cacheName);
+        cattr.setMaxKeySize(100);
+        cattr.setBlockSizeBytes(500);
+        cattr.setDiskPath("target/test-sandbox/BlockDiskCacheUnitTest");
+        final BlockDiskCache<String, X> diskCache = new BlockDiskCache<>(cattr);
+
+        // DO WORK
+        diskCache.update(new CacheElement<>(cacheName, "x", before));
+
+        // VERIFY
+        assertNotNull(diskCache.get("x"));
+        Thread.sleep(1000);
+        final ICacheElement<String, X> afterElement = diskCache.get("x");
+        // System.out.println( "afterElement = " + afterElement );
+        final X after = (afterElement.getVal());
+
+        assertNotNull(after);
+        assertEquals("wrong string after retrieval", string, after.string);
+        assertEquals("wrong bytes after retrieval", string, new String(after.bytes, StandardCharsets.UTF_8));
+
     }
 }

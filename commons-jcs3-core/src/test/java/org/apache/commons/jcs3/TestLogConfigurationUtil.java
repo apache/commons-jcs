@@ -30,22 +30,6 @@ import org.apache.commons.jcs3.log.LogManager;
 /** Utility for testing log messages. */
 public class TestLogConfigurationUtil
 {
-    /**
-     * Configures a logger for the given name. This allows us to check the log output.
-     * <p>
-     * @param stringWriter string writer
-     * @param loggerName logger name
-     */
-    public static void configureLogger( final StringWriter stringWriter, final String loggerName )
-    {
-        LogManager.setLogSystem("jul");
-        java.util.logging.LogManager.getLogManager().reset();
-        final Logger rootLogger = java.util.logging.LogManager.getLogManager().getLogger("");
-
-        rootLogger.addHandler(new MockLogHandler(stringWriter));
-        rootLogger.setLevel(Level.FINE);
-    }
-
     private static final class MockLogHandler extends Handler
     {
         private final StringWriter writer;
@@ -53,6 +37,17 @@ public class TestLogConfigurationUtil
         public MockLogHandler(final StringWriter writer)
         {
             this.writer = writer;
+        }
+
+        @Override
+        public void close() throws SecurityException
+        {
+        }
+
+        @Override
+        public void flush()
+        {
+            writer.flush();
         }
 
         @Override
@@ -69,16 +64,21 @@ public class TestLogConfigurationUtil
               .append('\n');
             writer.append(sb.toString());
         }
+    }
 
-        @Override
-        public void flush()
-        {
-            writer.flush();
-        }
+    /**
+     * Configures a logger for the given name. This allows us to check the log output.
+     * <p>
+     * @param stringWriter string writer
+     * @param loggerName logger name
+     */
+    public static void configureLogger( final StringWriter stringWriter, final String loggerName )
+    {
+        LogManager.setLogSystem("jul");
+        java.util.logging.LogManager.getLogManager().reset();
+        final Logger rootLogger = java.util.logging.LogManager.getLogManager().getLogger("");
 
-        @Override
-        public void close() throws SecurityException
-        {
-        }
+        rootLogger.addHandler(new MockLogHandler(stringWriter));
+        rootLogger.setLevel(Level.FINE);
     }
 }

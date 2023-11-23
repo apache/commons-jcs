@@ -66,13 +66,6 @@ public interface ICacheEventLogger
             String eventName, String optionalDetails, T key );
 
     /**
-     * Logs an event.
-     * <p>
-     * @param event - the event created in createICacheEvent
-     */
-    <T> void logICacheEvent( ICacheEvent<T> event );
-
-    /**
      * Logs an event. These are internal application events that do not correspond to ICache calls.
      * <p>
      * @param source - e.g. RemoteCacheServer
@@ -89,4 +82,11 @@ public interface ICacheEventLogger
      * @param errorMessage - any error message
      */
     void logError( String source, String eventName, String errorMessage );
+
+    /**
+     * Logs an event.
+     * <p>
+     * @param event - the event created in createICacheEvent
+     */
+    <T> void logICacheEvent( ICacheEvent<T> event );
 }

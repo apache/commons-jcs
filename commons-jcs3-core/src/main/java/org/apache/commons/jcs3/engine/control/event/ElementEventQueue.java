@@ -61,20 +61,6 @@ public class ElementEventQueue
     }
 
     /**
-     * Dispose queue
-     */
-    @Override
-    public void dispose()
-    {
-        if (destroyed.compareAndSet(false, true))
-        {
-            // Pool will be shut down by the ThreadPoolManager
-            // queueProcessor.shutdownNow();
-            log.info( "Element event queue destroyed: {0}", this );
-        }
-    }
-
-    /**
      * Adds an ElementEvent to be handled
      * @param hand The IElementEventHandler
      * @param event The IElementEventHandler IElementEvent event
@@ -94,6 +80,20 @@ public class ElementEventQueue
         else
         {
             queueProcessor.execute(() -> hand.handleElementEvent(event));
+        }
+    }
+
+    /**
+     * Dispose queue
+     */
+    @Override
+    public void dispose()
+    {
+        if (destroyed.compareAndSet(false, true))
+        {
+            // Pool will be shut down by the ThreadPoolManager
+            // queueProcessor.shutdownNow();
+            log.info( "Element event queue destroyed: {0}", this );
         }
     }
 }

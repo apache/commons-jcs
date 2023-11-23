@@ -79,31 +79,137 @@ public abstract class AbstractMemoryCache<K, V>
     protected AtomicLong putCnt;
 
     /**
-     * For post reflection creation initialization
-     * <p>
-     * @param hub
-     */
-    @Override
-    public void initialize( final CompositeCache<K, V> hub )
-    {
-        hitCnt = new AtomicLong();
-        missCnt = new AtomicLong();
-        putCnt = new AtomicLong();
-
-        this.cacheAttributes = hub.getCacheAttributes();
-        this.chunkSize = cacheAttributes.getSpoolChunkSize();
-        this.cache = hub;
-
-        this.map = createMap();
-    }
-
-    /**
      * Children must implement this method. A FIFO implementation may use a tree map. An LRU might
      * use a hashtable. The map returned should be threadsafe.
      * <p>
      * @return a threadsafe Map
      */
     public abstract Map<K, MemoryElementDescriptor<K, V>> createMap();
+
+    /**
+     * Prepares for shutdown. Reset statistics
+     * <p>
+     * @throws IOException
+     */
+    @Override
+    public void dispose()
+        throws IOException
+    {
+        removeAll();
+        hitCnt.set(0);
+        missCnt.set(0);
+        putCnt.set(0);
+        log.info( "Memory Cache dispose called." );
+    }
+
+    // ---------------------------------------------------------- debug method
+    /**
+     * Dump the cache map for debugging.
+     */
+    public void dumpMap()
+    {
+        if (log.isTraceEnabled())
+        {
+            log.trace("dumpingMap");
+            map.forEach((key, value) ->
+            log.trace("dumpMap> key={0}, val={1}", key, key, value.getCacheElement().getVal()));
+        }
+    }
+
+    /**
+     * Gets an item from the cache.
+     * <p>
+     *
+     * @param key Identifies item to find
+     * @return ICacheElement&lt;K, V&gt; if found, else null
+     * @throws IOException
+     */
+    @Override
+    public ICacheElement<K, V> get(final K key) throws IOException
+    {
+        ICacheElement<K, V> ce = null;
+
+        log.debug("{0}: getting item for key {1}", this::getCacheName,
+                () -> key);
+
+        final MemoryElementDescriptor<K, V> me = map.get(key);
+
+        if (me != null)
+        {
+            hitCnt.incrementAndGet();
+            ce = me.getCacheElement();
+
+            lock.lock();
+            try
+            {
+                lockedGetElement(me);
+            }
+            finally
+            {
+                lock.unlock();
+            }
+
+            log.debug("{0}: MemoryCache hit for {1}", this::getCacheName,
+                    () -> key);
+        }
+        else
+        {
+            missCnt.incrementAndGet();
+
+            log.debug("{0}: MemoryCache miss for {1}", this::getCacheName,
+                    () -> key);
+        }
+
+        return ce;
+    }
+
+    /**
+     * Returns the CacheAttributes.
+     * <p>
+     * @return The CacheAttributes value
+     */
+    @Override
+    public ICompositeCacheAttributes getCacheAttributes()
+    {
+        return this.cacheAttributes;
+    }
+
+    /**
+     * Returns the cache (aka "region") name.
+     * <p>
+     * @return The cacheName value
+     */
+    public String getCacheName()
+    {
+        final String attributeCacheName = this.cacheAttributes.getCacheName();
+        if(attributeCacheName != null)
+        {
+            return attributeCacheName;
+        }
+        return cache.getCacheName();
+    }
+
+    /**
+     * Gets the cache hub / region that the MemoryCache is used by
+     * <p>
+     * @return The cache value
+     */
+    @Override
+    public CompositeCache<K, V> getCompositeCache()
+    {
+        return this.cache;
+    }
+
+    /**
+     * Gets a set of the keys for all elements in the memory cache
+     *
+     * @return a set of keys
+     */
+    @Override
+    public Set<K> getKeySet()
+    {
+        return new LinkedHashSet<>(map.keySet());
+    }
 
     /**
      * Gets multiple items from the cache based on the given set of keys.
@@ -140,7 +246,7 @@ public abstract class AbstractMemoryCache<K, V>
     }
 
     /**
-     * Get an item from the cache without affecting its last access time or position. Not all memory
+     * Gets an item from the cache without affecting its last access time or position. Not all memory
      * cache implementations can get quietly.
      * <p>
      * @param key Identifies item to find
@@ -171,55 +277,14 @@ public abstract class AbstractMemoryCache<K, V>
     }
 
     /**
-     * Puts an item to the cache.
+     * Returns the current cache size.
      * <p>
-     * @param ce Description of the Parameter
-     * @throws IOException Description of the Exception
+     * @return The size value
      */
     @Override
-    public abstract void update( ICacheElement<K, V> ce )
-        throws IOException;
-
-    /**
-     * Removes all cached items from the cache.
-     * <p>
-     * @throws IOException
-     */
-    @Override
-    public void removeAll() throws IOException
+    public int getSize()
     {
-        lock.lock();
-        try
-        {
-            lockedRemoveAll();
-            map.clear();
-        }
-        finally
-        {
-            lock.unlock();
-        }
-    }
-
-    /**
-     * Removes all cached items from the cache control structures.
-     * (guarded by the lock)
-     */
-    protected abstract void lockedRemoveAll();
-
-    /**
-     * Prepares for shutdown. Reset statistics
-     * <p>
-     * @throws IOException
-     */
-    @Override
-    public void dispose()
-        throws IOException
-    {
-        removeAll();
-        hitCnt.set(0);
-        missCnt.set(0);
-        putCnt.set(0);
-        log.info( "Memory Cache dispose called." );
+        return this.map.size();
     }
 
     /**
@@ -243,87 +308,112 @@ public abstract class AbstractMemoryCache<K, V>
     }
 
     /**
-     * Returns the current cache size.
+     * For post reflection creation initialization
      * <p>
-     * @return The size value
+     * @param hub
      */
     @Override
-    public int getSize()
+    public void initialize( final CompositeCache<K, V> hub )
     {
-        return this.map.size();
+        hitCnt = new AtomicLong();
+        missCnt = new AtomicLong();
+        putCnt = new AtomicLong();
+
+        this.cacheAttributes = hub.getCacheAttributes();
+        this.chunkSize = cacheAttributes.getSpoolChunkSize();
+        this.cache = hub;
+
+        this.map = createMap();
     }
 
     /**
-     * Returns the cache (aka "region") name.
-     * <p>
-     * @return The cacheName value
+     * Update control structures after get
+     * (guarded by the lock)
+     *
+     * @param me the memory element descriptor
      */
-    public String getCacheName()
+    protected abstract void lockedGetElement(MemoryElementDescriptor<K, V> me);
+
+    /**
+     * Removes all cached items from the cache control structures.
+     * (guarded by the lock)
+     */
+    protected abstract void lockedRemoveAll();
+
+    /**
+     * Remove element from control structure
+     * (guarded by the lock)
+     *
+     * @param me the memory element descriptor
+     */
+    protected abstract void lockedRemoveElement(MemoryElementDescriptor<K, V> me);
+
+    /**
+     * Removes an item from the cache. This method handles hierarchical removal. If the key is a
+     * String and ends with the CacheConstants.NAME_COMPONENT_DELIMITER, then all items with keys
+     * starting with the argument String will be removed.
+     * <p>
+     *
+     * @param key
+     * @return true if the removal was successful
+     * @throws IOException
+     */
+    @Override
+    public boolean remove(final K key) throws IOException
     {
-        final String attributeCacheName = this.cacheAttributes.getCacheName();
-        if(attributeCacheName != null)
+        log.debug("removing item for key: {0}", key);
+
+        boolean removed = false;
+
+        // handle partial removal
+        if (key instanceof String && ((String) key).endsWith(ICache.NAME_COMPONENT_DELIMITER))
         {
-            return attributeCacheName;
+            removed = removeByHierarchy(key);
         }
-        return cache.getCacheName();
-    }
-
-    /**
-     * Puts an item to the cache.
-     * <p>
-     * @param ce the item
-     */
-    @Override
-    public void waterfal( final ICacheElement<K, V> ce )
-    {
-        this.cache.spoolToDisk( ce );
-    }
-
-    // ---------------------------------------------------------- debug method
-    /**
-     * Dump the cache map for debugging.
-     */
-    public void dumpMap()
-    {
-        if (log.isTraceEnabled())
+        else if (key instanceof GroupAttrName && ((GroupAttrName<?>) key).attrName == null)
         {
-            log.trace("dumpingMap");
-            map.forEach((key, value) ->
-            log.trace("dumpMap> key={0}, val={1}", key, key, value.getCacheElement().getVal()));
+            removed = removeByGroup(key);
         }
+        else
+        {
+            // remove single item.
+            lock.lock();
+            try
+            {
+                final MemoryElementDescriptor<K, V> me = map.remove(key);
+                if (me != null)
+                {
+                    lockedRemoveElement(me);
+                    removed = true;
+                }
+            }
+            finally
+            {
+                lock.unlock();
+            }
+        }
+
+        return removed;
     }
 
     /**
-     * Returns the CacheAttributes.
+     * Removes all cached items from the cache.
      * <p>
-     * @return The CacheAttributes value
+     * @throws IOException
      */
     @Override
-    public ICompositeCacheAttributes getCacheAttributes()
+    public void removeAll() throws IOException
     {
-        return this.cacheAttributes;
-    }
-
-    /**
-     * Sets the CacheAttributes.
-     * <p>
-     * @param cattr The new CacheAttributes value
-     */
-    @Override
-    public void setCacheAttributes( final ICompositeCacheAttributes cattr )
-    {
-        this.cacheAttributes = cattr;
-    }
-
-    /**
-     * Gets the cache hub / region that the MemoryCache is used by
-     * <p>
-     * @return The cache value
-     */
-    @Override
-    public CompositeCache<K, V> getCompositeCache()
-    {
-        return this.cache;
+        lock.lock();
+        try
+        {
+            lockedRemoveAll();
+            map.clear();
+        }
+        finally
+        {
+            lock.unlock();
+        }
     }
 
     /**
@@ -390,124 +480,34 @@ public abstract class AbstractMemoryCache<K, V>
     }
 
     /**
-     * Remove element from control structure
-     * (guarded by the lock)
-     *
-     * @param me the memory element descriptor
-     */
-    protected abstract void lockedRemoveElement(MemoryElementDescriptor<K, V> me);
-
-    /**
-     * Removes an item from the cache. This method handles hierarchical removal. If the key is a
-     * String and ends with the CacheConstants.NAME_COMPONENT_DELIMITER, then all items with keys
-     * starting with the argument String will be removed.
+     * Sets the CacheAttributes.
      * <p>
-     *
-     * @param key
-     * @return true if the removal was successful
-     * @throws IOException
+     * @param cattr The new CacheAttributes value
      */
     @Override
-    public boolean remove(final K key) throws IOException
+    public void setCacheAttributes( final ICompositeCacheAttributes cattr )
     {
-        log.debug("removing item for key: {0}", key);
-
-        boolean removed = false;
-
-        // handle partial removal
-        if (key instanceof String && ((String) key).endsWith(ICache.NAME_COMPONENT_DELIMITER))
-        {
-            removed = removeByHierarchy(key);
-        }
-        else if (key instanceof GroupAttrName && ((GroupAttrName<?>) key).attrName == null)
-        {
-            removed = removeByGroup(key);
-        }
-        else
-        {
-            // remove single item.
-            lock.lock();
-            try
-            {
-                final MemoryElementDescriptor<K, V> me = map.remove(key);
-                if (me != null)
-                {
-                    lockedRemoveElement(me);
-                    removed = true;
-                }
-            }
-            finally
-            {
-                lock.unlock();
-            }
-        }
-
-        return removed;
+        this.cacheAttributes = cattr;
     }
 
     /**
-     * Get a set of the keys for all elements in the memory cache
-     *
-     * @return a set of keys
-     */
-    @Override
-    public Set<K> getKeySet()
-    {
-        return new LinkedHashSet<>(map.keySet());
-    }
-
-    /**
-     * Get an item from the cache.
+     * Puts an item to the cache.
      * <p>
-     *
-     * @param key Identifies item to find
-     * @return ICacheElement&lt;K, V&gt; if found, else null
-     * @throws IOException
+     * @param ce Description of the Parameter
+     * @throws IOException Description of the Exception
      */
     @Override
-    public ICacheElement<K, V> get(final K key) throws IOException
-    {
-        ICacheElement<K, V> ce = null;
-
-        log.debug("{0}: getting item for key {1}", this::getCacheName,
-                () -> key);
-
-        final MemoryElementDescriptor<K, V> me = map.get(key);
-
-        if (me != null)
-        {
-            hitCnt.incrementAndGet();
-            ce = me.getCacheElement();
-
-            lock.lock();
-            try
-            {
-                lockedGetElement(me);
-            }
-            finally
-            {
-                lock.unlock();
-            }
-
-            log.debug("{0}: MemoryCache hit for {1}", this::getCacheName,
-                    () -> key);
-        }
-        else
-        {
-            missCnt.incrementAndGet();
-
-            log.debug("{0}: MemoryCache miss for {1}", this::getCacheName,
-                    () -> key);
-        }
-
-        return ce;
-    }
+    public abstract void update( ICacheElement<K, V> ce )
+        throws IOException;
 
     /**
-     * Update control structures after get
-     * (guarded by the lock)
-     *
-     * @param me the memory element descriptor
+     * Puts an item to the cache.
+     * <p>
+     * @param ce the item
      */
-    protected abstract void lockedGetElement(MemoryElementDescriptor<K, V> me);
+    @Override
+    public void waterfal( final ICacheElement<K, V> ce )
+    {
+        this.cache.spoolToDisk( ce );
+    }
 }

@@ -58,6 +58,42 @@ public class LateralTCPCacheFactory
     /** The logger */
     private static final Log log = LogManager.getLog( LateralTCPCacheFactory.class );
 
+    /**
+     * Makes sure a listener gets created. It will get monitored as soon as it
+     * is used.
+     * <p>
+     * This should be called by create cache.
+     * <p>
+     * @param attr  ITCPLateralCacheAttributes
+     * @param cacheMgr the composite cache manager
+     * @param serializer the serializer to use when receiving
+     *
+     * @return the listener if created, else null
+     */
+    private static <K, V> ILateralCacheListener<K, V> createListener( final ITCPLateralCacheAttributes attr,
+            final ICompositeCacheManager cacheMgr, final IElementSerializer elementSerializer )
+    {
+        ILateralCacheListener<K, V> listener = null;
+
+        // don't create a listener if we are not receiving.
+        if ( attr.isReceive() )
+        {
+            log.info( "Getting listener for {0}", attr );
+
+            // make a listener. if one doesn't exist
+            listener = LateralTCPListener.getInstance( attr, cacheMgr, elementSerializer );
+
+            // register for shutdown notification
+            cacheMgr.registerShutdownObserver( (IShutdownObserver) listener );
+        }
+        else
+        {
+            log.debug( "Not creating a listener since we are not receiving." );
+        }
+
+        return listener;
+    }
+
     /** Address to service map. */
     private ConcurrentHashMap<String, ICacheServiceNonLocal<?, ?>> csnlInstances;
 
@@ -72,6 +108,49 @@ public class LateralTCPCacheFactory
      * service if failed to connect.
      */
     private CacheWatchRepairable lateralWatch;
+
+    /**
+     * Adds the lateral cache listener to the underlying cache-watch service.
+     * <p>
+     * @param cacheName The feature to be added to the LateralCacheListener attribute
+     * @param listener The feature to be added to the LateralCacheListener attribute
+     * @throws IOException
+     */
+    private <K, V> void addLateralCacheListener( final String cacheName, final ILateralCacheListener<K, V> listener )
+        throws IOException
+    {
+        synchronized ( this.lateralWatch )
+        {
+            lateralWatch.addCacheListener( cacheName, listener );
+        }
+    }
+
+    /**
+     * Add listener for receivers
+     * <p>
+     * @param iaca cache configuration attributes
+     * @param cacheMgr the composite cache manager
+     * @param serializer the serializer to use when receiving
+     */
+    private void addListenerIfNeeded( final ITCPLateralCacheAttributes iaca, final ICompositeCacheManager cacheMgr, final IElementSerializer elementSerializer )
+    {
+        // don't create a listener if we are not receiving.
+        if ( iaca.isReceive() )
+        {
+            try
+            {
+                addLateralCacheListener(iaca.getCacheName(), createListener(iaca, cacheMgr, elementSerializer));
+            }
+            catch ( final IOException ioe )
+            {
+                log.error("Problem creating lateral listener", ioe);
+            }
+        }
+        else
+        {
+            log.debug( "Not creating a listener since we are not receiving." );
+        }
+    }
 
     /**
      * Creates a TCP lateral.
@@ -157,21 +236,44 @@ public class LateralTCPCacheFactory
     }
 
     /**
-     * Initialize this factory
+     * Creates the discovery service. Only creates this for tcp laterals right now.
+     * <p>
+     * @param lac ITCPLateralCacheAttributes
+     * @param lcnwf the lateral facade
+     * @param cacheMgr a reference to the global cache manager
+     * @param cacheEventLogger Reference to the cache event logger for auxiliary cache creation
+     * @param elementSerializer Reference to the cache element serializer for auxiliary cache
      */
-    @Override
-    public void initialize()
+    private synchronized <K, V> void createDiscoveryService(
+            final ITCPLateralCacheAttributes lac,
+            final LateralCacheNoWaitFacade<K, V> lcnwf,
+            final ICompositeCacheManager cacheMgr,
+            final ICacheEventLogger cacheEventLogger,
+            final IElementSerializer elementSerializer )
     {
-        this.csnlInstances = new ConcurrentHashMap<>();
-        this.lTCPDLInstances = new ConcurrentHashMap<>();
+        UDPDiscoveryService discovery = null;
 
-        // Create the monitoring daemon thread
-        this.monitor = new LateralCacheMonitor(this);
-        this.monitor.setDaemon( true );
-        this.monitor.start();
+        // create the UDP discovery for the TCP lateral
+        if ( lac.isUdpDiscoveryEnabled() )
+        {
+            // One can be used for all regions
+            final LateralTCPDiscoveryListener discoveryListener =
+                    getDiscoveryListener(lac, cacheMgr, cacheEventLogger, elementSerializer);
+            discoveryListener.addNoWaitFacade( lac.getCacheName(), lcnwf );
 
-        this.lateralWatch = new CacheWatchRepairable();
-        this.lateralWatch.setCacheWatch( new ZombieCacheWatch() );
+            // need a factory for this so it doesn't
+            // get dereferenced, also we don't want one for every region.
+            discovery = UDPDiscoveryManager.getInstance().getService(
+                    lac.getUdpDiscoveryAddr(), lac.getUdpDiscoveryPort(),
+                    lac.getTcpListenerHost(), lac.getTcpListenerPort(), lac.getUdpTTL(),
+                    cacheMgr, elementSerializer);
+
+            discovery.addParticipatingCacheName( lac.getCacheName() );
+            discovery.addDiscoveryListener( discoveryListener );
+
+            log.info( "Registered TCP lateral cache [{0}] with UDPDiscoveryService.",
+                    lac::getCacheName);
+        }
     }
 
     /**
@@ -272,17 +374,6 @@ public class LateralTCPCacheFactory
     }
 
     /**
-     * Add cache instance to monitor
-     *
-     * @param cache the cache instance
-     * @since 3.1
-     */
-    public void monitorCache(final LateralCacheNoWait<?, ?> cache)
-    {
-        monitor.addCache(cache);
-    }
-
-    /**
      * Gets the instance attribute of the LateralCacheTCPListener class.
      * <p>
      * @param ilca ITCPLateralCacheAttributes
@@ -308,122 +399,31 @@ public class LateralTCPCacheFactory
     }
 
     /**
-     * Add listener for receivers
-     * <p>
-     * @param iaca cache configuration attributes
-     * @param cacheMgr the composite cache manager
-     * @param serializer the serializer to use when receiving
+     * Initialize this factory
      */
-    private void addListenerIfNeeded( final ITCPLateralCacheAttributes iaca, final ICompositeCacheManager cacheMgr, final IElementSerializer elementSerializer )
+    @Override
+    public void initialize()
     {
-        // don't create a listener if we are not receiving.
-        if ( iaca.isReceive() )
-        {
-            try
-            {
-                addLateralCacheListener(iaca.getCacheName(), createListener(iaca, cacheMgr, elementSerializer));
-            }
-            catch ( final IOException ioe )
-            {
-                log.error("Problem creating lateral listener", ioe);
-            }
-        }
-        else
-        {
-            log.debug( "Not creating a listener since we are not receiving." );
-        }
+        this.csnlInstances = new ConcurrentHashMap<>();
+        this.lTCPDLInstances = new ConcurrentHashMap<>();
+
+        // Create the monitoring daemon thread
+        this.monitor = new LateralCacheMonitor(this);
+        this.monitor.setDaemon( true );
+        this.monitor.start();
+
+        this.lateralWatch = new CacheWatchRepairable();
+        this.lateralWatch.setCacheWatch( new ZombieCacheWatch() );
     }
 
     /**
-     * Adds the lateral cache listener to the underlying cache-watch service.
-     * <p>
-     * @param cacheName The feature to be added to the LateralCacheListener attribute
-     * @param listener The feature to be added to the LateralCacheListener attribute
-     * @throws IOException
-     */
-    private <K, V> void addLateralCacheListener( final String cacheName, final ILateralCacheListener<K, V> listener )
-        throws IOException
-    {
-        synchronized ( this.lateralWatch )
-        {
-            lateralWatch.addCacheListener( cacheName, listener );
-        }
-    }
-
-    /**
-     * Makes sure a listener gets created. It will get monitored as soon as it
-     * is used.
-     * <p>
-     * This should be called by create cache.
-     * <p>
-     * @param attr  ITCPLateralCacheAttributes
-     * @param cacheMgr the composite cache manager
-     * @param serializer the serializer to use when receiving
+     * Add cache instance to monitor
      *
-     * @return the listener if created, else null
+     * @param cache the cache instance
+     * @since 3.1
      */
-    private static <K, V> ILateralCacheListener<K, V> createListener( final ITCPLateralCacheAttributes attr,
-            final ICompositeCacheManager cacheMgr, final IElementSerializer elementSerializer )
+    public void monitorCache(final LateralCacheNoWait<?, ?> cache)
     {
-        ILateralCacheListener<K, V> listener = null;
-
-        // don't create a listener if we are not receiving.
-        if ( attr.isReceive() )
-        {
-            log.info( "Getting listener for {0}", attr );
-
-            // make a listener. if one doesn't exist
-            listener = LateralTCPListener.getInstance( attr, cacheMgr, elementSerializer );
-
-            // register for shutdown notification
-            cacheMgr.registerShutdownObserver( (IShutdownObserver) listener );
-        }
-        else
-        {
-            log.debug( "Not creating a listener since we are not receiving." );
-        }
-
-        return listener;
-    }
-
-    /**
-     * Creates the discovery service. Only creates this for tcp laterals right now.
-     * <p>
-     * @param lac ITCPLateralCacheAttributes
-     * @param lcnwf the lateral facade
-     * @param cacheMgr a reference to the global cache manager
-     * @param cacheEventLogger Reference to the cache event logger for auxiliary cache creation
-     * @param elementSerializer Reference to the cache element serializer for auxiliary cache
-     */
-    private synchronized <K, V> void createDiscoveryService(
-            final ITCPLateralCacheAttributes lac,
-            final LateralCacheNoWaitFacade<K, V> lcnwf,
-            final ICompositeCacheManager cacheMgr,
-            final ICacheEventLogger cacheEventLogger,
-            final IElementSerializer elementSerializer )
-    {
-        UDPDiscoveryService discovery = null;
-
-        // create the UDP discovery for the TCP lateral
-        if ( lac.isUdpDiscoveryEnabled() )
-        {
-            // One can be used for all regions
-            final LateralTCPDiscoveryListener discoveryListener =
-                    getDiscoveryListener(lac, cacheMgr, cacheEventLogger, elementSerializer);
-            discoveryListener.addNoWaitFacade( lac.getCacheName(), lcnwf );
-
-            // need a factory for this so it doesn't
-            // get dereferenced, also we don't want one for every region.
-            discovery = UDPDiscoveryManager.getInstance().getService(
-                    lac.getUdpDiscoveryAddr(), lac.getUdpDiscoveryPort(),
-                    lac.getTcpListenerHost(), lac.getTcpListenerPort(), lac.getUdpTTL(),
-                    cacheMgr, elementSerializer);
-
-            discovery.addParticipatingCacheName( lac.getCacheName() );
-            discovery.addDiscoveryListener( discoveryListener );
-
-            log.info( "Registered TCP lateral cache [{0}] with UDPDiscoveryService.",
-                    lac::getCacheName);
-        }
+        monitor.addCache(cache);
     }
 }

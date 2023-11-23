@@ -29,13 +29,19 @@ public class NoWriter<K, V> implements CacheWriter<K, V>
     public static final NoWriter<?, ?> INSTANCE = new NoWriter<>();
 
     @Override
-    public void write(final Cache.Entry<? extends K, ? extends V> entry) throws CacheWriterException
+    public void delete(final Object key) throws CacheWriterException
     {
         // no-op
     }
 
     @Override
-    public void delete(final Object key) throws CacheWriterException
+    public void deleteAll(final Collection<?> keys) throws CacheWriterException
+    {
+        keys.forEach(this::delete);
+    }
+
+    @Override
+    public void write(final Cache.Entry<? extends K, ? extends V> entry) throws CacheWriterException
     {
         // no-op
     }
@@ -44,11 +50,5 @@ public class NoWriter<K, V> implements CacheWriter<K, V>
     public void writeAll(final Collection<Cache.Entry<? extends K, ? extends V>> entries) throws CacheWriterException
     {
         entries.forEach(this::write);
-    }
-
-    @Override
-    public void deleteAll(final Collection<?> keys) throws CacheWriterException
-    {
-        keys.forEach(this::delete);
     }
 }

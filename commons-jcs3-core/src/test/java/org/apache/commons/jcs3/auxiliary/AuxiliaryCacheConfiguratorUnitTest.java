@@ -36,6 +36,31 @@ import org.junit.Test;
 public class AuxiliaryCacheConfiguratorUnitTest
 {
     /**
+     * Verify that we can parse the event logger.
+     */
+    @Test
+    public void testParseCacheEventLogger_Normal()
+    {
+        // SETUP
+        final String auxPrefix = "jcs.auxiliary." + "MYAux";
+        final String testPropertyValue = "This is the value";
+        final String className = MockCacheEventLogger.class.getName();
+
+        final Properties props = new Properties();
+        props.put( auxPrefix + AuxiliaryCacheConfigurator.CACHE_EVENT_LOGGER_PREFIX, className );
+        props.put( auxPrefix + AuxiliaryCacheConfigurator.CACHE_EVENT_LOGGER_PREFIX
+            + AuxiliaryCacheConfigurator.ATTRIBUTE_PREFIX + ".testProperty", testPropertyValue );
+
+        // DO WORK
+        final MockCacheEventLogger result = (MockCacheEventLogger) AuxiliaryCacheConfigurator
+            .parseCacheEventLogger( props, auxPrefix );
+
+        // VERIFY
+        assertNotNull( "Should have a logger.", result );
+        assertEquals( "Property should be set.", testPropertyValue, result.getTestProperty() );
+    }
+
+    /**
      * Verify that we don't get an error.
      */
     @Test
@@ -67,31 +92,6 @@ public class AuxiliaryCacheConfiguratorUnitTest
 
         // VERIFY
         assertNull( "Should not have a logger.", result );
-    }
-
-    /**
-     * Verify that we can parse the event logger.
-     */
-    @Test
-    public void testParseCacheEventLogger_Normal()
-    {
-        // SETUP
-        final String auxPrefix = "jcs.auxiliary." + "MYAux";
-        final String testPropertyValue = "This is the value";
-        final String className = MockCacheEventLogger.class.getName();
-
-        final Properties props = new Properties();
-        props.put( auxPrefix + AuxiliaryCacheConfigurator.CACHE_EVENT_LOGGER_PREFIX, className );
-        props.put( auxPrefix + AuxiliaryCacheConfigurator.CACHE_EVENT_LOGGER_PREFIX
-            + AuxiliaryCacheConfigurator.ATTRIBUTE_PREFIX + ".testProperty", testPropertyValue );
-
-        // DO WORK
-        final MockCacheEventLogger result = (MockCacheEventLogger) AuxiliaryCacheConfigurator
-            .parseCacheEventLogger( props, auxPrefix );
-
-        // VERIFY
-        assertNotNull( "Should have a logger.", result );
-        assertEquals( "Property should be set.", testPropertyValue, result.getTestProperty() );
     }
 
     /**

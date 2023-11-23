@@ -32,12 +32,6 @@ import org.junit.Test;
  */
 public class BlockDiskCacheRandomConcurrentTestUtil
 {
-    @Test
-    public void test()
-    {
-
-    }
-
     /**
      * Randomly adds items to cache, gets them, and removes them. The range
      * count is more than the size of the memory cache, so items should spool to
@@ -77,5 +71,11 @@ public class BlockDiskCacheRandomConcurrentTestUtil
     public void setUp()
     {
         JCS.setConfigFilename( "/TestBlockDiskCacheCon.ccf" );
+    }
+
+    @Test
+    public void test()
+    {
+
     }
 }

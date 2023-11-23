@@ -32,7 +32,7 @@
       </p>
       <subsection name="Minimum Java Requirements">
         <p>
-          JCS 3.x requires Java 8 to run. It was tested successfully with JDK 14.
+          JCS 3.x requires Java 8 or above to run. It was tested successfully with JDK 14.
         </p>
       </subsection>
       <subsection name="Package Names and Maven Coordinates">

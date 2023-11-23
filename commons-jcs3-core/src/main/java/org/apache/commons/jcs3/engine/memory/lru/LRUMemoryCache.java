@@ -40,6 +40,17 @@ public class LRUMemoryCache<K, V>
     extends AbstractDoubleLinkedListMemoryCache<K, V>
 {
     /**
+     * Makes the item the first in the list.
+     * <p>
+     * @param me
+     */
+    @Override
+    protected void adjustListForGet( final MemoryElementDescriptor<K, V> me )
+    {
+        list.makeFirst( me );
+    }
+
+    /**
      * Puts an item to the cache. Removes any pre-existing entries of the same key from the linked
      * list and adds this one first.
      * <p>
@@ -52,16 +63,5 @@ public class LRUMemoryCache<K, V>
         throws IOException
     {
         return addFirst( ce );
-    }
-
-    /**
-     * Makes the item the first in the list.
-     * <p>
-     * @param me
-     */
-    @Override
-    protected void adjustListForGet( final MemoryElementDescriptor<K, V> me )
-    {
-        list.makeFirst( me );
     }
 }

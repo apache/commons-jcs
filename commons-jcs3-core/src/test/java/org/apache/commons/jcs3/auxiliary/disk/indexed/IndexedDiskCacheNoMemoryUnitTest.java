@@ -49,49 +49,6 @@ public class IndexedDiskCacheNoMemoryUnitTest
     private static final int items = 2000;
 
     /**
-     * A unit test suite for JUnit
-     * <p>
-     * @return The test suite
-     */
-    public static Test suite()
-    {
-        JCS.setConfigFilename( "/TestDiskCacheNoMemory.ccf" );
-        final ActiveTestSuite suite = new ActiveTestSuite();
-
-        suite.addTest(new TestCase("testIndexedDiskCache1")
-        {
-            @Override
-            public void runTest()
-                throws Exception
-            {
-                runTestForRegion( "indexedRegion1" );
-            }
-        });
-
-        suite.addTest(new TestCase("testIndexedDiskCache2")
-        {
-            @Override
-            public void runTest()
-                throws Exception
-            {
-                runTestForRegion( "indexedRegion2" );
-            }
-        });
-
-        suite.addTest(new TestCase("testIndexedDiskCache3")
-        {
-            @Override
-            public void runTest()
-                throws Exception
-            {
-                runTestForRegion( "indexedRegion3" );
-            }
-        });
-
-        return suite;
-    }
-
-    /**
      * Adds items to cache, gets them, and removes them. The item count is more
      * than the size of the memory cache, so items should spool to disk.
      *
@@ -151,5 +108,48 @@ public class IndexedDiskCacheNoMemoryUnitTest
 
         // dump the stats to the report
 //        System.out.println( jcs.getStats() );
+    }
+
+    /**
+     * A unit test suite for JUnit
+     * <p>
+     * @return The test suite
+     */
+    public static Test suite()
+    {
+        JCS.setConfigFilename( "/TestDiskCacheNoMemory.ccf" );
+        final ActiveTestSuite suite = new ActiveTestSuite();
+
+        suite.addTest(new TestCase("testIndexedDiskCache1")
+        {
+            @Override
+            public void runTest()
+                throws Exception
+            {
+                runTestForRegion( "indexedRegion1" );
+            }
+        });
+
+        suite.addTest(new TestCase("testIndexedDiskCache2")
+        {
+            @Override
+            public void runTest()
+                throws Exception
+            {
+                runTestForRegion( "indexedRegion2" );
+            }
+        });
+
+        suite.addTest(new TestCase("testIndexedDiskCache3")
+        {
+            @Override
+            public void runTest()
+                throws Exception
+            {
+                runTestForRegion( "indexedRegion3" );
+            }
+        });
+
+        return suite;
     }
 }

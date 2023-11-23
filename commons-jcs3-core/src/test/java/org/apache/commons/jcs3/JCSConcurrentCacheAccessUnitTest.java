@@ -35,46 +35,6 @@ import org.junit.Test;
  * Test Case for JCS-73, modeled after the Groovy code by Alexander Kleymenov
  */
 public class JCSConcurrentCacheAccessUnitTest{
-    private final static int THREADS = 20;
-    private final static int LOOPS = 10000;
-
-    /**
-     * the cache instance
-     */
-    protected GroupCacheAccess<Integer, String> cache;
-
-    /**
-     * the group name
-     */
-    protected String group = "group";
-
-    /**
-     * the error count
-     */
-    protected AtomicInteger errcount;
-
-    /**
-     * Collect all value mismatches
-     */
-    protected List<String> valueMismatchList;
-
-    @Before
-    public void setUp() throws Exception
-	{
-        JCS.setConfigFilename( "/TestJCS-73.ccf" );
-        cache = JCS.getGroupCacheInstance( "cache" );
-        errcount = new AtomicInteger(0);
-        valueMismatchList = new CopyOnWriteArrayList<>();
-	}
-
-    @After
-    public void tearDown()
-        throws Exception
-    {
-        cache.clear();
-        cache.dispose();
-    }
-
     /**
      * Worker thread
      */
@@ -146,6 +106,46 @@ public class JCSConcurrentCacheAccessUnitTest{
 			}
 
 		}
+    }
+    private final static int THREADS = 20;
+
+    private final static int LOOPS = 10000;
+
+    /**
+     * the cache instance
+     */
+    protected GroupCacheAccess<Integer, String> cache;
+
+    /**
+     * the group name
+     */
+    protected String group = "group";
+
+    /**
+     * the error count
+     */
+    protected AtomicInteger errcount;
+
+    /**
+     * Collect all value mismatches
+     */
+    protected List<String> valueMismatchList;
+
+    @Before
+    public void setUp() throws Exception
+	{
+        JCS.setConfigFilename( "/TestJCS-73.ccf" );
+        cache = JCS.getGroupCacheInstance( "cache" );
+        errcount = new AtomicInteger(0);
+        valueMismatchList = new CopyOnWriteArrayList<>();
+	}
+
+    @After
+    public void tearDown()
+        throws Exception
+    {
+        cache.clear();
+        cache.dispose();
     }
 
 	/**

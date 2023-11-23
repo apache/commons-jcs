@@ -64,6 +64,23 @@ public class RemoteHttpCache<K, V>
     }
 
     /**
+     * @return url of service
+     */
+    @Override
+    public String getEventLoggingExtraInfo()
+    {
+        return null;
+    }
+
+    /**
+     * @return the remoteHttpCacheAttributes
+     */
+    public RemoteHttpCacheAttributes getRemoteHttpCacheAttributes()
+    {
+        return remoteHttpCacheAttributes;
+    }
+
+    /**
      * Nothing right now. This should setup a zombie and initiate recovery.
      * <p>
      * @param ex
@@ -92,22 +109,5 @@ public class RemoteHttpCache<K, V>
             throw (IOException) ex;
         }
         throw new IOException( ex.getMessage() );
-    }
-
-    /**
-     * @return url of service
-     */
-    @Override
-    public String getEventLoggingExtraInfo()
-    {
-        return null;
-    }
-
-    /**
-     * @return the remoteHttpCacheAttributes
-     */
-    public RemoteHttpCacheAttributes getRemoteHttpCacheAttributes()
-    {
-        return remoteHttpCacheAttributes;
     }
 }

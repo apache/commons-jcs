@@ -30,22 +30,6 @@ public class CountingStreamUnitTest
 {
 
     /**
-     * Write a single byte and verify the count.
-     *
-     * @throws Exception
-     */
-    @Test
-    public void testSingleByte() throws Exception
-    {
-        final CountingOnlyOutputStream out = new CountingOnlyOutputStream();
-        out.write( 1 );
-        assertEquals( "Wrong number of bytes written.", 1, out.getCount() );
-        out.write( 1 );
-        assertEquals( "Wrong number of bytes written.", 2, out.getCount() );
-        out.close();
-    }
-
-    /**
      * This should count the size of the array.
      *
      * @throws Exception
@@ -73,6 +57,22 @@ public class CountingStreamUnitTest
         final int len = 3;
         out.write( array, 0, len );
         assertEquals( "Wrong number of bytes written.", len, out.getCount() );
+        out.close();
+    }
+
+    /**
+     * Write a single byte and verify the count.
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testSingleByte() throws Exception
+    {
+        final CountingOnlyOutputStream out = new CountingOnlyOutputStream();
+        out.write( 1 );
+        assertEquals( "Wrong number of bytes written.", 1, out.getCount() );
+        out.write( 1 );
+        assertEquals( "Wrong number of bytes written.", 2, out.getCount() );
         out.close();
     }
 }

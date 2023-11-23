@@ -48,14 +48,14 @@ public class RemoteCacheNoWaitFacade<K, V>
     /** log instance */
     private static final Log log = LogManager.getLog( RemoteCacheNoWaitFacade.class );
 
+    /** Time in ms to sleep between failover attempts */
+    private static final long idlePeriod = 20000L;
+
     /** Provide factory instance to RemoteCacheFailoverRunner */
     private final RemoteCacheFactory cacheFactory;
 
     /** Attempt to restore primary connection (switched off for testing) */
     protected boolean attemptRestorePrimary = true;
-
-    /** Time in ms to sleep between failover attempts */
-    private static final long idlePeriod = 20000L;
 
     /**
      * Constructs with the given remote cache, and fires events to any listeners.
@@ -74,38 +74,6 @@ public class RemoteCacheNoWaitFacade<K, V>
     {
         super( noWaits, rca, cacheEventLogger, elementSerializer );
         this.cacheFactory = cacheFactory;
-    }
-
-    /**
-     * Begin the failover process if this is a local cache. Clustered remote caches do not failover.
-     * <p>
-     * @param rcnw The no wait in error.
-     */
-    @Override
-    protected void failover( final RemoteCacheNoWait<K, V> rcnw )
-    {
-        log.debug( "in failover for {0}", rcnw );
-
-        if ( getAuxiliaryCacheAttributes().getRemoteType() == RemoteType.LOCAL )
-        {
-            if ( rcnw.getStatus() == CacheStatus.ERROR )
-            {
-                // start failover, primary recovery process
-                final Thread runner = new Thread(this::connectAndRestore);
-                runner.setDaemon( true );
-                runner.start();
-
-                if ( getCacheEventLogger() != null )
-                {
-                    getCacheEventLogger().logApplicationEvent( "RemoteCacheNoWaitFacade", "InitiatedFailover",
-                                                               rcnw + " was in error." );
-                }
-            }
-            else
-            {
-                log.info( "The noWait is not in error" );
-            }
-        }
     }
 
     /**
@@ -271,6 +239,38 @@ public class RemoteCacheNoWaitFacade<K, V>
             else
             {
                 log.info( "Failover index is > 0, meaning we are connected to a failover server." );
+            }
+        }
+    }
+
+    /**
+     * Begin the failover process if this is a local cache. Clustered remote caches do not failover.
+     * <p>
+     * @param rcnw The no wait in error.
+     */
+    @Override
+    protected void failover( final RemoteCacheNoWait<K, V> rcnw )
+    {
+        log.debug( "in failover for {0}", rcnw );
+
+        if ( getAuxiliaryCacheAttributes().getRemoteType() == RemoteType.LOCAL )
+        {
+            if ( rcnw.getStatus() == CacheStatus.ERROR )
+            {
+                // start failover, primary recovery process
+                final Thread runner = new Thread(this::connectAndRestore);
+                runner.setDaemon( true );
+                runner.start();
+
+                if ( getCacheEventLogger() != null )
+                {
+                    getCacheEventLogger().logApplicationEvent( "RemoteCacheNoWaitFacade", "InitiatedFailover",
+                                                               rcnw + " was in error." );
+                }
+            }
+            else
+            {
+                log.info( "The noWait is not in error" );
             }
         }
     }

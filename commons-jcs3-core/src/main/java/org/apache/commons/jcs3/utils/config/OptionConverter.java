@@ -46,11 +46,6 @@ public class OptionConverter
     /** System property delimter end length */
     private static final int DELIM_STOP_LEN = 1;
 
-    /** No instances please. */
-    private OptionConverter()
-    {
-    }
-
     /**
      * Combines two arrays.
      * @param l
@@ -126,146 +121,6 @@ public class OptionConverter
     }
 
     /**
-     * Very similar to <code>System.getProperty</code> except that the {@link SecurityException} is
-     * hidden.
-     * @param key The key to search for.
-     * @param def The default value to return.
-     * @return the string value of the system property, or the default value if there is no property
-     *         with that key.
-     * @since 1.1
-     */
-
-    public static String getSystemProperty( final String key, final String def )
-    {
-        try
-        {
-            return System.getProperty( key, def );
-        }
-        catch ( final Throwable e )
-        {
-            // MS-Java throws com.ms.security.SecurityExceptionEx
-            log.debug( "Was not allowed to read system property \"{0}\".", key );
-            return def;
-        }
-    }
-
-    /**
-     * Creates an object for the className value of the key.
-     *
-     * @param props
-     * @param key
-     * @param defaultValue
-     * @return Object that was created
-     */
-    public static <T> T instantiateByKey( final Properties props, final String key, final T defaultValue )
-    {
-
-        // Get the value of the property in string form
-        final String className = findAndSubst( key, props );
-        if ( className == null )
-        {
-            log.trace( "Could not find value for key {0}", key );
-            return defaultValue;
-        }
-        // Trim className to avoid trailing spaces that cause problems.
-        return OptionConverter.instantiateByClassName( className.trim(), defaultValue );
-    }
-
-    /**
-     * If <code>value</code> is "true", then {@code true} is returned. If <code>value</code> is
-     * "false", then {@code true} is returned. Otherwise, <code>default</code> is returned.
-     *
-     * Case of value is unimportant.
-     * @param value
-     * @param defaultValue
-     * @return Object
-     */
-    public static boolean toBoolean( final String value, final boolean defaultValue )
-    {
-        if ( value == null )
-        {
-            return defaultValue;
-        }
-        final String trimmedVal = value.trim();
-        if ( "true".equalsIgnoreCase( trimmedVal ) )
-        {
-            return true;
-        }
-        if ( "false".equalsIgnoreCase( trimmedVal ) )
-        {
-            return false;
-        }
-        return defaultValue;
-    }
-
-    /**
-     * Converts to int.
-     *
-     * @param value
-     * @param defaultValue
-     * @return int
-     */
-    public static int toInt( final String value, final int defaultValue )
-    {
-        if ( value != null )
-        {
-            final String s = value.trim();
-            try
-            {
-                return Integer.parseInt(s);
-            }
-            catch ( final NumberFormatException e )
-            {
-                log.error( "[{0}] is not in proper int form.", s, e );
-            }
-        }
-        return defaultValue;
-    }
-
-    /**
-     * @param value
-     * @param defaultValue
-     * @return long
-     */
-    public static long toFileSize( final String value, final long defaultValue )
-    {
-        if ( value == null )
-        {
-            return defaultValue;
-        }
-
-        String s = value.trim().toUpperCase();
-        long multiplier = 1;
-        int index;
-
-        if ( ( index = s.indexOf( "KB" ) ) != -1 )
-        {
-            multiplier = 1024;
-            s = s.substring( 0, index );
-        }
-        else if ( ( index = s.indexOf( "MB" ) ) != -1 )
-        {
-            multiplier = 1024 * 1024;
-            s = s.substring( 0, index );
-        }
-        else if ( ( index = s.indexOf( "GB" ) ) != -1 )
-        {
-            multiplier = 1024 * 1024 * 1024;
-            s = s.substring( 0, index );
-        }
-        try
-        {
-            return Long.parseLong(s) * multiplier;
-        }
-        catch ( final NumberFormatException e )
-        {
-            log.error( "[{0}] is not in proper int form.", s);
-            log.error( "[{0}] not in expected format", value, e );
-        }
-        return defaultValue;
-    }
-
-    /**
      * Find the value corresponding to <code>key</code> in <code>props</code>. Then perform variable
      * substitution on the found value.
      *
@@ -290,6 +145,30 @@ public class OptionConverter
         {
             log.error( "Bad option value [{0}]", value, e );
             return value;
+        }
+    }
+
+    /**
+     * Very similar to <code>System.getProperty</code> except that the {@link SecurityException} is
+     * hidden.
+     * @param key The key to search for.
+     * @param def The default value to return.
+     * @return the string value of the system property, or the default value if there is no property
+     *         with that key.
+     * @since 1.1
+     */
+
+    public static String getSystemProperty( final String key, final String def )
+    {
+        try
+        {
+            return System.getProperty( key, def );
+        }
+        catch ( final Throwable e )
+        {
+            // MS-Java throws com.ms.security.SecurityExceptionEx
+            log.debug( "Was not allowed to read system property \"{0}\".", key );
+            return def;
         }
     }
 
@@ -332,6 +211,28 @@ public class OptionConverter
             }
         }
         return defaultValue;
+    }
+
+    /**
+     * Creates an object for the className value of the key.
+     *
+     * @param props
+     * @param key
+     * @param defaultValue
+     * @return Object that was created
+     */
+    public static <T> T instantiateByKey( final Properties props, final String key, final T defaultValue )
+    {
+
+        // Get the value of the property in string form
+        final String className = findAndSubst( key, props );
+        if ( className == null )
+        {
+            log.trace( "Could not find value for key {0}", key );
+            return defaultValue;
+        }
+        // Trim className to avoid trailing spaces that cause problems.
+        return OptionConverter.instantiateByClassName( className.trim(), defaultValue );
     }
 
     /**
@@ -416,5 +317,104 @@ public class OptionConverter
             }
             i = k + DELIM_STOP_LEN;
         }
+    }
+
+    /**
+     * If <code>value</code> is "true", then {@code true} is returned. If <code>value</code> is
+     * "false", then {@code true} is returned. Otherwise, <code>default</code> is returned.
+     *
+     * Case of value is unimportant.
+     * @param value
+     * @param defaultValue
+     * @return Object
+     */
+    public static boolean toBoolean( final String value, final boolean defaultValue )
+    {
+        if ( value == null )
+        {
+            return defaultValue;
+        }
+        final String trimmedVal = value.trim();
+        if ( "true".equalsIgnoreCase( trimmedVal ) )
+        {
+            return true;
+        }
+        if ( "false".equalsIgnoreCase( trimmedVal ) )
+        {
+            return false;
+        }
+        return defaultValue;
+    }
+
+    /**
+     * @param value
+     * @param defaultValue
+     * @return long
+     */
+    public static long toFileSize( final String value, final long defaultValue )
+    {
+        if ( value == null )
+        {
+            return defaultValue;
+        }
+
+        String s = value.trim().toUpperCase();
+        long multiplier = 1;
+        int index;
+
+        if ( ( index = s.indexOf( "KB" ) ) != -1 )
+        {
+            multiplier = 1024;
+            s = s.substring( 0, index );
+        }
+        else if ( ( index = s.indexOf( "MB" ) ) != -1 )
+        {
+            multiplier = 1024 * 1024;
+            s = s.substring( 0, index );
+        }
+        else if ( ( index = s.indexOf( "GB" ) ) != -1 )
+        {
+            multiplier = 1024 * 1024 * 1024;
+            s = s.substring( 0, index );
+        }
+        try
+        {
+            return Long.parseLong(s) * multiplier;
+        }
+        catch ( final NumberFormatException e )
+        {
+            log.error( "[{0}] is not in proper int form.", s);
+            log.error( "[{0}] not in expected format", value, e );
+        }
+        return defaultValue;
+    }
+
+    /**
+     * Converts to int.
+     *
+     * @param value
+     * @param defaultValue
+     * @return int
+     */
+    public static int toInt( final String value, final int defaultValue )
+    {
+        if ( value != null )
+        {
+            final String s = value.trim();
+            try
+            {
+                return Integer.parseInt(s);
+            }
+            catch ( final NumberFormatException e )
+            {
+                log.error( "[{0}] is not in proper int form.", s, e );
+            }
+        }
+        return defaultValue;
+    }
+
+    /** No instances please. */
+    private OptionConverter()
+    {
     }
 }

@@ -43,6 +43,13 @@ public interface ICacheElement<K, V>
     String getCacheName();
 
     /**
+     * Gets the attributes attribute of the ICacheElement&lt;K, V&gt; object
+     *
+     * @return The attributes value
+     */
+    IElementAttributes getElementAttributes();
+
+    /**
      * Gets the key attribute of the ICacheElement&lt;K, V&gt; object
      *
      * @return The key value
@@ -55,13 +62,6 @@ public interface ICacheElement<K, V>
      * @return The val value
      */
     V getVal();
-
-    /**
-     * Gets the attributes attribute of the ICacheElement&lt;K, V&gt; object
-     *
-     * @return The attributes value
-     */
-    IElementAttributes getElementAttributes();
 
     /**
      * Sets the attributes attribute of the ICacheElement&lt;K, V&gt; object

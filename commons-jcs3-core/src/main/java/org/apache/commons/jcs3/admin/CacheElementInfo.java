@@ -63,27 +63,28 @@ public class CacheElementInfo
 	}
 
 	/**
-     * @return a string representation of the key
-     */
-    public String getKey()
-    {
-        return this.key;
-    }
-
-    /**
-     * @return true if the item does not expire
-     */
-    public boolean isEternal()
-    {
-        return this.eternal;
-    }
-
-    /**
      * @return the time the object was created
      */
     public String getCreateTime()
     {
         return this.createTime;
+    }
+
+    /**
+     * Ignored if isEternal
+     * @return how many seconds until this object expires.
+     */
+    public long getExpiresInSeconds()
+    {
+        return this.expiresInSeconds;
+    }
+
+    /**
+     * @return a string representation of the key
+     */
+    public String getKey()
+    {
+        return this.key;
     }
 
     /**
@@ -96,12 +97,11 @@ public class CacheElementInfo
     }
 
     /**
-     * Ignored if isEternal
-     * @return how many seconds until this object expires.
+     * @return true if the item does not expire
      */
-    public long getExpiresInSeconds()
+    public boolean isEternal()
     {
-        return this.expiresInSeconds;
+        return this.eternal;
     }
 
     /**

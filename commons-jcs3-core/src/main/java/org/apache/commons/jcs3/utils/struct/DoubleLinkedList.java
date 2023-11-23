@@ -29,11 +29,11 @@ import org.apache.commons.jcs3.log.LogManager;
 @SuppressWarnings({ "unchecked", "rawtypes" }) // Don't know how to resolve this with generics
 public class DoubleLinkedList<T extends DoubleLinkedListNode>
 {
-    /** record size to avoid having to iterate */
-    private int size;
-
     /** The logger */
     private static final Log log = LogManager.getLog( DoubleLinkedList.class );
+
+    /** record size to avoid having to iterate */
+    private int size;
 
     /** LRU double linked list head node */
     private T first;
@@ -46,27 +46,6 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
      */
     public DoubleLinkedList()
     {
-    }
-
-    /**
-     * Adds a new node to the end of the link list.
-     * <p>
-     * @param me The feature to be added to the Last
-     */
-    public synchronized void addLast(final T me)
-    {
-        if ( first == null )
-        {
-            // empty list.
-            first = me;
-        }
-        else
-        {
-            last.next = me;
-            me.prev = last;
-        }
-        last = me;
-        size++;
     }
 
     /**
@@ -91,14 +70,40 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
     }
 
     /**
-     * Returns the last node from the link list, if there are any nodes.
+     * Adds a new node to the end of the link list.
      * <p>
-     * @return The last node.
+     * @param me The feature to be added to the Last
      */
-    public synchronized T getLast()
+    public synchronized void addLast(final T me)
     {
-        log.debug( "returning last node" );
-        return last;
+        if ( first == null )
+        {
+            // empty list.
+            first = me;
+        }
+        else
+        {
+            last.next = me;
+            me.prev = last;
+        }
+        last = me;
+        size++;
+    }
+
+    // ///////////////////////////////////////////////////////////////////
+    /**
+     * Dump the cache entries from first to list for debugging.
+     */
+    public synchronized void debugDumpEntries()
+    {
+        if ( log.isDebugEnabled() )
+        {
+            log.debug( "dumping Entries" );
+            for (T me = first; me != null; me = (T) me.next)
+            {
+                log.debug( "dump Entries> payload= \"{0}\"", me.getPayload() );
+            }
+        }
     }
 
     /**
@@ -110,6 +115,17 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
     {
         log.debug( "returning first node" );
         return first;
+    }
+
+    /**
+     * Returns the last node from the link list, if there are any nodes.
+     * <p>
+     * @return The last node.
+     */
+    public synchronized T getLast()
+    {
+        log.debug( "returning last node" );
+        return last;
     }
 
     /**
@@ -177,24 +193,6 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
     }
 
     /**
-     * Remove all of the elements from the linked list implementation.
-     */
-    public synchronized void removeAll()
-    {
-        for (T me = first; me != null; )
-        {
-            if ( me.prev != null )
-            {
-                me.prev = null;
-            }
-            me = (T) me.next;
-        }
-        first = last = null;
-        // make sure this will work, could be add while this is happening.
-        size = 0;
-    }
-
-    /**
      * Removes the specified node from the link list.
      * <p>
      * @param me Description of the Parameter
@@ -246,6 +244,24 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
     }
 
     /**
+     * Remove all of the elements from the linked list implementation.
+     */
+    public synchronized void removeAll()
+    {
+        for (T me = first; me != null; )
+        {
+            if ( me.prev != null )
+            {
+                me.prev = null;
+            }
+            me = (T) me.next;
+        }
+        first = last = null;
+        // make sure this will work, could be add while this is happening.
+        size = 0;
+    }
+
+    /**
      * Removes the specified node from the link list.
      * <p>
      * @return The last node if there was one to remove.
@@ -269,21 +285,5 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
     public synchronized int size()
     {
         return size;
-    }
-
-    // ///////////////////////////////////////////////////////////////////
-    /**
-     * Dump the cache entries from first to list for debugging.
-     */
-    public synchronized void debugDumpEntries()
-    {
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "dumping Entries" );
-            for (T me = first; me != null; me = (T) me.next)
-            {
-                log.debug( "dump Entries> payload= \"{0}\"", me.getPayload() );
-            }
-        }
     }
 }

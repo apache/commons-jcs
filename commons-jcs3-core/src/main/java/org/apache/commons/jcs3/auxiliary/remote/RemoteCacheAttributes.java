@@ -81,17 +81,6 @@ public class RemoteCacheAttributes
     }
 
     /**
-     * Sets the failoverIndex attribute of the RemoteCacheAttributes object.
-     * <p>
-     * @param p The new failoverIndex value
-     */
-    @Override
-    public void setFailoverIndex( final int p )
-    {
-        this.failoverIndex = p;
-    }
-
-    /**
      * Gets the failovers attribute of the RemoteCacheAttributes object.
      * <p>
      * @return The failovers value
@@ -100,17 +89,6 @@ public class RemoteCacheAttributes
     public List<RemoteLocation> getFailovers()
     {
         return this.failovers;
-    }
-
-    /**
-     * Sets the failovers attribute of the RemoteCacheAttributes object.
-     * <p>
-     * @param failovers The new failovers value
-     */
-    @Override
-    public void setFailovers( final List<RemoteLocation> failovers )
-    {
-        this.failovers = failovers;
     }
 
     /**
@@ -125,14 +103,12 @@ public class RemoteCacheAttributes
     }
 
     /**
-     * Sets the failoverServers attribute of the RemoteCacheAttributes object.
-     * <p>
-     * @param s The new failoverServers value
+     * @return getTimeoutMillis
      */
     @Override
-    public void setFailoverServers( final String s )
+    public int getGetTimeoutMillis()
     {
-        this.failoverServers = s;
+        return getTimeoutMillis;
     }
 
     /**
@@ -147,16 +123,6 @@ public class RemoteCacheAttributes
     }
 
     /**
-     * Sets the localPort attribute of the RemoteCacheAttributes object
-     * @param p The new localPort value
-     */
-    @Override
-    public void setLocalPort( final int p )
-    {
-        this.localPort = p;
-    }
-
-    /**
      * @return the name of the pool
      */
     @Override
@@ -166,42 +132,15 @@ public class RemoteCacheAttributes
     }
 
     /**
-     * @param name
-     */
-    @Override
-    public void setThreadPoolName( final String name )
-    {
-        threadPoolName = name;
-    }
-
-    /**
-     * @return getTimeoutMillis
-     */
-    @Override
-    public int getGetTimeoutMillis()
-    {
-        return getTimeoutMillis;
-    }
-
-    /**
-     * @param millis
-     */
-    @Override
-    public void setGetTimeoutMillis( final int millis )
-    {
-        getTimeoutMillis = millis;
-    }
-
-    /**
-     * By default this option is true. If you set it to false, you will not receive updates or
-     * removes from the remote server.
+     * The number of elements the zombie queue will hold. This queue is used to store events if we
+     * loose our connection with the server.
      * <p>
-     * @param receive
+     * @return Returns the zombieQueueMaxSize.
      */
     @Override
-    public void setReceive( final boolean receive )
+    public int getZombieQueueMaxSize()
     {
-        this.receive = receive;
+        return zombieQueueMaxSize;
     }
 
     /**
@@ -222,6 +161,79 @@ public class RemoteCacheAttributes
     }
 
     /**
+     * Sets the failoverIndex attribute of the RemoteCacheAttributes object.
+     * <p>
+     * @param p The new failoverIndex value
+     */
+    @Override
+    public void setFailoverIndex( final int p )
+    {
+        this.failoverIndex = p;
+    }
+
+    /**
+     * Sets the failovers attribute of the RemoteCacheAttributes object.
+     * <p>
+     * @param failovers The new failovers value
+     */
+    @Override
+    public void setFailovers( final List<RemoteLocation> failovers )
+    {
+        this.failovers = failovers;
+    }
+
+    /**
+     * Sets the failoverServers attribute of the RemoteCacheAttributes object.
+     * <p>
+     * @param s The new failoverServers value
+     */
+    @Override
+    public void setFailoverServers( final String s )
+    {
+        this.failoverServers = s;
+    }
+
+    /**
+     * @param millis
+     */
+    @Override
+    public void setGetTimeoutMillis( final int millis )
+    {
+        getTimeoutMillis = millis;
+    }
+
+    /**
+     * Sets the localPort attribute of the RemoteCacheAttributes object
+     * @param p The new localPort value
+     */
+    @Override
+    public void setLocalPort( final int p )
+    {
+        this.localPort = p;
+    }
+
+    /**
+     * By default this option is true. If you set it to false, you will not receive updates or
+     * removes from the remote server.
+     * <p>
+     * @param receive
+     */
+    @Override
+    public void setReceive( final boolean receive )
+    {
+        this.receive = receive;
+    }
+
+    /**
+     * @param name
+     */
+    @Override
+    public void setThreadPoolName( final String name )
+    {
+        threadPoolName = name;
+    }
+
+    /**
      * The number of elements the zombie queue will hold. This queue is used to store events if we
      * loose our connection with the server.
      * <p>
@@ -231,18 +243,6 @@ public class RemoteCacheAttributes
     public void setZombieQueueMaxSize( final int zombieQueueMaxSize )
     {
         this.zombieQueueMaxSize = zombieQueueMaxSize;
-    }
-
-    /**
-     * The number of elements the zombie queue will hold. This queue is used to store events if we
-     * loose our connection with the server.
-     * <p>
-     * @return Returns the zombieQueueMaxSize.
-     */
-    @Override
-    public int getZombieQueueMaxSize()
-    {
-        return zombieQueueMaxSize;
     }
 
     /**

@@ -77,19 +77,12 @@ public abstract class AbstractRemoteCacheListener<K, V>
     }
 
     /**
-     * Let the remote cache set a listener_id. Since there is only one listener for all the regions
-     * and every region gets registered? the id shouldn't be set if it isn't zero. If it is we
-     * assume that it is a reconnect.
-     * <p>
-     * @param id The new listenerId value
-     * @throws IOException
+     * Gets the cacheManager attribute of the RemoteCacheListener object. This is one of the few
+     * places that force the cache to be a singleton.
      */
-    @Override
-    public void setListenerId( final long id )
-        throws IOException
+    protected ICompositeCacheManager getCacheManager()
     {
-        listenerId = id;
-        log.info( "set listenerId = [{0}]", id );
+        return cacheMgr;
     }
 
     /**
@@ -109,6 +102,30 @@ public abstract class AbstractRemoteCacheListener<K, V>
     }
 
     /**
+     * This is for debugging. It allows the remote server to log the address of clients.
+     * <p>
+     * @return String
+     * @throws IOException
+     */
+    @Override
+    public synchronized String getLocalHostAddress()
+        throws IOException
+    {
+        if ( localHostName == null )
+        {
+            try
+            {
+                localHostName = HostNameUtil.getLocalHostAddress();
+            }
+            catch ( final UnknownHostException uhe )
+            {
+                localHostName = "unknown";
+            }
+        }
+        return localHostName;
+    }
+
+    /**
      * Gets the remoteType attribute of the RemoteCacheListener object
      * <p>
      * @return The remoteType value
@@ -120,6 +137,21 @@ public abstract class AbstractRemoteCacheListener<K, V>
     {
         log.debug( "getRemoteType = [{0}]", irca::getRemoteType);
         return irca.getRemoteType();
+    }
+
+    /**
+     * @param cacheName
+     * @throws IOException
+     */
+    @Override
+    public void handleDispose( final String cacheName )
+        throws IOException
+    {
+        log.debug( "handleDispose> cacheName={0}", cacheName );
+        // TODO consider what to do here, we really don't want to
+        // dispose, we just want to disconnect.
+        // just allow the cache to go into error recovery mode.
+        // getCacheManager().freeCache( cacheName, true );
     }
 
     /**
@@ -202,51 +234,19 @@ public abstract class AbstractRemoteCacheListener<K, V>
     }
 
     /**
-     * @param cacheName
-     * @throws IOException
-     */
-    @Override
-    public void handleDispose( final String cacheName )
-        throws IOException
-    {
-        log.debug( "handleDispose> cacheName={0}", cacheName );
-        // TODO consider what to do here, we really don't want to
-        // dispose, we just want to disconnect.
-        // just allow the cache to go into error recovery mode.
-        // getCacheManager().freeCache( cacheName, true );
-    }
-
-    /**
-     * Gets the cacheManager attribute of the RemoteCacheListener object. This is one of the few
-     * places that force the cache to be a singleton.
-     */
-    protected ICompositeCacheManager getCacheManager()
-    {
-        return cacheMgr;
-    }
-
-    /**
-     * This is for debugging. It allows the remote server to log the address of clients.
+     * Let the remote cache set a listener_id. Since there is only one listener for all the regions
+     * and every region gets registered? the id shouldn't be set if it isn't zero. If it is we
+     * assume that it is a reconnect.
      * <p>
-     * @return String
+     * @param id The new listenerId value
      * @throws IOException
      */
     @Override
-    public synchronized String getLocalHostAddress()
+    public void setListenerId( final long id )
         throws IOException
     {
-        if ( localHostName == null )
-        {
-            try
-            {
-                localHostName = HostNameUtil.getLocalHostAddress();
-            }
-            catch ( final UnknownHostException uhe )
-            {
-                localHostName = "unknown";
-            }
-        }
-        return localHostName;
+        listenerId = id;
+        log.info( "set listenerId = [{0}]", id );
     }
 
     /**

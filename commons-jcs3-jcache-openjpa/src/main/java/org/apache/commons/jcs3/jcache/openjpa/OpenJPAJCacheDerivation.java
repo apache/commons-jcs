@@ -33,18 +33,6 @@ public class OpenJPAJCacheDerivation extends AbstractProductDerivation
     private static final String JCACHE_NAME = "jcache";
 
     @Override
-    public boolean beforeConfigurationLoad(final Configuration conf)
-    {
-        if (OpenJPAConfiguration.class.isInstance(conf)) {
-            final OpenJPAConfigurationImpl oconf = OpenJPAConfigurationImpl.class.cast(conf);
-            oconf.dataCacheManagerPlugin.setAlias(JCACHE_NAME, OpenJPAJCacheDataCacheManager.class.getName());
-            oconf.dataCachePlugin.setAlias(JCACHE_NAME, OpenJPAJCacheDataCache.class.getName());
-            oconf.queryCachePlugin.setAlias(JCACHE_NAME, OpenJPAJCacheQueryCache.class.getName());
-        }
-        return super.beforeConfigurationLoad(conf);
-    }
-
-    @Override
     public boolean beforeConfigurationConstruct(final ConfigurationProvider cp)
     {
         final Map<?, ?> props = cp.getProperties();
@@ -65,6 +53,18 @@ public class OpenJPAJCacheDerivation extends AbstractProductDerivation
             }
         }
         return super.beforeConfigurationConstruct(cp);
+    }
+
+    @Override
+    public boolean beforeConfigurationLoad(final Configuration conf)
+    {
+        if (OpenJPAConfiguration.class.isInstance(conf)) {
+            final OpenJPAConfigurationImpl oconf = OpenJPAConfigurationImpl.class.cast(conf);
+            oconf.dataCacheManagerPlugin.setAlias(JCACHE_NAME, OpenJPAJCacheDataCacheManager.class.getName());
+            oconf.dataCachePlugin.setAlias(JCACHE_NAME, OpenJPAJCacheDataCache.class.getName());
+            oconf.queryCachePlugin.setAlias(JCACHE_NAME, OpenJPAJCacheQueryCache.class.getName());
+        }
+        return super.beforeConfigurationLoad(conf);
     }
 
     @Override

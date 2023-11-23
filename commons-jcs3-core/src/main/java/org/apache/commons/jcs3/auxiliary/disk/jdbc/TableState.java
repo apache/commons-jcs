@@ -33,9 +33,6 @@ public class TableState
     /** Don't change. */
     private static final long serialVersionUID = -6625081552084964885L;
 
-    /** Name of the table whose state this reflects. */
-    private String tableName;
-
     /**
      * The table is free. It can be accessed and no potentially table locking
      * jobs are running.
@@ -48,11 +45,14 @@ public class TableState
     /** A table locking optimization is running. */
     public static final int OPTIMIZATION_RUNNING = 2;
 
+    /** Name of the table whose state this reflects. */
+    private String tableName;
+
     /** we might want to add error */
     private int state = FREE;
 
     /**
-     * Construct a usable table state.
+     * Constructs a usable table state.
      * <p>
      * @param tableName
      */
@@ -62,12 +62,11 @@ public class TableState
     }
 
     /**
-     * @param tableName
-     *            The tableName to set.
+     * @return Returns the state.
      */
-    public void setTableName( final String tableName )
+    public int getState()
     {
-        this.tableName = tableName;
+        return state;
     }
 
     /**
@@ -88,11 +87,12 @@ public class TableState
     }
 
     /**
-     * @return Returns the state.
+     * @param tableName
+     *            The tableName to set.
      */
-    public int getState()
+    public void setTableName( final String tableName )
     {
-        return state;
+        this.tableName = tableName;
     }
 
     /**

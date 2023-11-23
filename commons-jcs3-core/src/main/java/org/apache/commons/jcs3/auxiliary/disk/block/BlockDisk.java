@@ -152,71 +152,86 @@ public class BlockDisk implements AutoCloseable
     }
 
     /**
-     * This writes an object to disk and returns the blocks it was stored in.
+     * Calculates the file offset for a particular block.
      * <p>
-     * The program flow is as follows:
-     * <ol>
-     * <li>Serialize the object.</li>
-     * <li>Determine the number of blocks needed.</li>
-     * <li>Look for free blocks in the emptyBlock list.</li>
-     * <li>If there were not enough in the empty list. Take the nextBlock and increment it.</li>
-     * <li>If the data will not fit in one block, create sub arrays.</li>
-     * <li>Write the subarrays to disk.</li>
-     * <li>If the process fails we should decrement the block count if we took from it.</li>
-     * </ol>
-     * @param object
-     * @return the blocks we used.
-     * @throws IOException
+     * @param block number
+     * @return the byte offset for this block in the file as a long
+     * @since 2.0
      */
-    protected <T> int[] write(final T object)
-        throws IOException
+    protected long calculateByteOffsetForBlockAsLong(final int block)
     {
-        // serialize the object
-        final byte[] data = elementSerializer.serialize(object);
+        return (long) block * blockSizeBytes;
+    }
 
-        log.debug("write, total pre-chunking data.length = {0}", data.length);
+    /**
+     * The number of blocks needed.
+     * <p>
+     * @param data
+     * @return the number of blocks needed to store the byte array
+     */
+    protected int calculateTheNumberOfBlocksNeeded(final byte[] data)
+    {
+        final int dataLength = data.length;
 
-        this.putBytes.addAndGet(data.length);
-        this.putCount.incrementAndGet();
+        final int oneBlock = blockSizeBytes - HEADER_SIZE_BYTES;
 
-        // figure out how many blocks we need.
-        final int numBlocksNeeded = calculateTheNumberOfBlocksNeeded(data);
-
-        log.debug("numBlocksNeeded = {0}", numBlocksNeeded);
-
-        // allocate blocks
-        final int[] blocks = allocateBlocks(numBlocksNeeded);
-
-        int offset = 0;
-        final int maxChunkSize = blockSizeBytes - HEADER_SIZE_BYTES;
-        final ByteBuffer headerBuffer = ByteBuffer.allocate(HEADER_SIZE_BYTES);
-        final ByteBuffer dataBuffer = ByteBuffer.wrap(data);
-
-        for (int i = 0; i < numBlocksNeeded; i++)
+        // takes care of 0 = HEADER_SIZE_BYTES + blockSizeBytes
+        if (dataLength <= oneBlock)
         {
-            headerBuffer.clear();
-            final int length = Math.min(maxChunkSize, data.length - offset);
-            headerBuffer.putInt(length);
-            headerBuffer.flip();
-
-            dataBuffer.position(offset).limit(offset + length);
-            final ByteBuffer slice = dataBuffer.slice();
-
-            final long position = calculateByteOffsetForBlockAsLong(blocks[i]);
-            // write the header
-            int written = fc.write(headerBuffer, position);
-            assert written == HEADER_SIZE_BYTES;
-
-            //write the data
-            written = fc.write(slice, position + HEADER_SIZE_BYTES);
-            assert written == length;
-
-            offset += length;
+            return 1;
         }
 
-        //fc.force(false);
+        int dividend = dataLength / oneBlock;
 
-        return blocks;
+        if (dataLength % oneBlock != 0)
+        {
+            dividend++;
+        }
+        return dividend;
+    }
+
+    /**
+     * Closes the file.
+     * <p>
+     * @throws IOException
+     */
+    @Override
+    public void close()
+        throws IOException
+    {
+        this.numberOfBlocks.set(0);
+        this.emptyBlocks.clear();
+        fc.close();
+    }
+
+    /**
+     * Add these blocks to the emptyBlock list.
+     * <p>
+     * @param blocksToFree
+     */
+    protected void freeBlocks(final int[] blocksToFree)
+    {
+        if (blocksToFree != null)
+        {
+            for (short i = 0; i < blocksToFree.length; i++)
+            {
+                emptyBlocks.offer(Integer.valueOf(blocksToFree[i]));
+            }
+        }
+    }
+
+    /**
+     * @return Returns the average size of the an element inserted.
+     */
+    protected long getAveragePutSizeBytes()
+    {
+        final long count = this.putCount.get();
+
+        if (count == 0)
+        {
+            return 0;
+        }
+        return this.putBytes.get() / count;
     }
 
     /**
@@ -254,6 +269,52 @@ public class BlockDisk implements AutoCloseable
         }
 
         return chunks;
+    }
+
+    /**
+     * @return Returns the blockSizeBytes.
+     */
+    protected int getBlockSizeBytes()
+    {
+        return blockSizeBytes;
+    }
+
+    /**
+     * @return Returns the number of empty blocks.
+     */
+    protected int getEmptyBlocks()
+    {
+        return this.emptyBlocks.size();
+    }
+
+    /**
+     * This is used for debugging.
+     * <p>
+     * @return the file path.
+     */
+    protected String getFilePath()
+    {
+        return filepath;
+    }
+
+    /**
+     * @return Returns the numberOfBlocks.
+     */
+    protected int getNumberOfBlocks()
+    {
+        return numberOfBlocks.get();
+    }
+
+    /**
+     * Returns the file length.
+     * <p>
+     * @return the size of the file.
+     * @throws IOException
+     */
+    protected long length()
+        throws IOException
+    {
+        return fc.size();
     }
 
     /**
@@ -343,87 +404,6 @@ public class BlockDisk implements AutoCloseable
     }
 
     /**
-     * Add these blocks to the emptyBlock list.
-     * <p>
-     * @param blocksToFree
-     */
-    protected void freeBlocks(final int[] blocksToFree)
-    {
-        if (blocksToFree != null)
-        {
-            for (short i = 0; i < blocksToFree.length; i++)
-            {
-                emptyBlocks.offer(Integer.valueOf(blocksToFree[i]));
-            }
-        }
-    }
-
-    /**
-     * Calculates the file offset for a particular block.
-     * <p>
-     * @param block number
-     * @return the byte offset for this block in the file as a long
-     * @since 2.0
-     */
-    protected long calculateByteOffsetForBlockAsLong(final int block)
-    {
-        return (long) block * blockSizeBytes;
-    }
-
-    /**
-     * The number of blocks needed.
-     * <p>
-     * @param data
-     * @return the number of blocks needed to store the byte array
-     */
-    protected int calculateTheNumberOfBlocksNeeded(final byte[] data)
-    {
-        final int dataLength = data.length;
-
-        final int oneBlock = blockSizeBytes - HEADER_SIZE_BYTES;
-
-        // takes care of 0 = HEADER_SIZE_BYTES + blockSizeBytes
-        if (dataLength <= oneBlock)
-        {
-            return 1;
-        }
-
-        int dividend = dataLength / oneBlock;
-
-        if (dataLength % oneBlock != 0)
-        {
-            dividend++;
-        }
-        return dividend;
-    }
-
-    /**
-     * Returns the file length.
-     * <p>
-     * @return the size of the file.
-     * @throws IOException
-     */
-    protected long length()
-        throws IOException
-    {
-        return fc.size();
-    }
-
-    /**
-     * Closes the file.
-     * <p>
-     * @throws IOException
-     */
-    @Override
-    public void close()
-        throws IOException
-    {
-        this.numberOfBlocks.set(0);
-        this.emptyBlocks.clear();
-        fc.close();
-    }
-
-    /**
      * Resets the file.
      * <p>
      * @throws IOException
@@ -435,44 +415,6 @@ public class BlockDisk implements AutoCloseable
         this.emptyBlocks.clear();
         fc.truncate(0);
         fc.force(true);
-    }
-
-    /**
-     * @return Returns the numberOfBlocks.
-     */
-    protected int getNumberOfBlocks()
-    {
-        return numberOfBlocks.get();
-    }
-
-    /**
-     * @return Returns the blockSizeBytes.
-     */
-    protected int getBlockSizeBytes()
-    {
-        return blockSizeBytes;
-    }
-
-    /**
-     * @return Returns the average size of the an element inserted.
-     */
-    protected long getAveragePutSizeBytes()
-    {
-        final long count = this.putCount.get();
-
-        if (count == 0)
-        {
-            return 0;
-        }
-        return this.putBytes.get() / count;
-    }
-
-    /**
-     * @return Returns the number of empty blocks.
-     */
-    protected int getEmptyBlocks()
-    {
-        return this.emptyBlocks.size();
     }
 
     /**
@@ -504,12 +446,70 @@ public class BlockDisk implements AutoCloseable
     }
 
     /**
-     * This is used for debugging.
+     * This writes an object to disk and returns the blocks it was stored in.
      * <p>
-     * @return the file path.
+     * The program flow is as follows:
+     * <ol>
+     * <li>Serialize the object.</li>
+     * <li>Determine the number of blocks needed.</li>
+     * <li>Look for free blocks in the emptyBlock list.</li>
+     * <li>If there were not enough in the empty list. Take the nextBlock and increment it.</li>
+     * <li>If the data will not fit in one block, create sub arrays.</li>
+     * <li>Write the subarrays to disk.</li>
+     * <li>If the process fails we should decrement the block count if we took from it.</li>
+     * </ol>
+     * @param object
+     * @return the blocks we used.
+     * @throws IOException
      */
-    protected String getFilePath()
+    protected <T> int[] write(final T object)
+        throws IOException
     {
-        return filepath;
+        // serialize the object
+        final byte[] data = elementSerializer.serialize(object);
+
+        log.debug("write, total pre-chunking data.length = {0}", data.length);
+
+        this.putBytes.addAndGet(data.length);
+        this.putCount.incrementAndGet();
+
+        // figure out how many blocks we need.
+        final int numBlocksNeeded = calculateTheNumberOfBlocksNeeded(data);
+
+        log.debug("numBlocksNeeded = {0}", numBlocksNeeded);
+
+        // allocate blocks
+        final int[] blocks = allocateBlocks(numBlocksNeeded);
+
+        int offset = 0;
+        final int maxChunkSize = blockSizeBytes - HEADER_SIZE_BYTES;
+        final ByteBuffer headerBuffer = ByteBuffer.allocate(HEADER_SIZE_BYTES);
+        final ByteBuffer dataBuffer = ByteBuffer.wrap(data);
+
+        for (int i = 0; i < numBlocksNeeded; i++)
+        {
+            headerBuffer.clear();
+            final int length = Math.min(maxChunkSize, data.length - offset);
+            headerBuffer.putInt(length);
+            headerBuffer.flip();
+
+            dataBuffer.position(offset).limit(offset + length);
+            final ByteBuffer slice = dataBuffer.slice();
+
+            final long position = calculateByteOffsetForBlockAsLong(blocks[i]);
+            // write the header
+            int written = fc.write(headerBuffer, position);
+            assert written == HEADER_SIZE_BYTES;
+
+            //write the data
+            written = fc.write(slice, position + HEADER_SIZE_BYTES);
+            assert written == length;
+
+            offset += length;
+        }
+
+        //fc.force(false);
+
+        return blocks;
     }
 }

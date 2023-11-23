@@ -65,26 +65,25 @@ public class SoftReferenceMemoryCache<K, V> extends AbstractMemoryCache<K, V>
     private LinkedBlockingQueue<ICacheElement<K, V>> strongReferences;
 
     /**
-     * For post reflection creation initialization
-     * <p>
-     * @param hub
-     */
-    @Override
-    public synchronized void initialize( final CompositeCache<K, V> hub )
-    {
-        super.initialize( hub );
-        strongReferences = new LinkedBlockingQueue<>();
-        log.info( "initialized Soft Reference Memory Cache for {0}",
-                this::getCacheName );
-    }
-
-    /**
      * @see org.apache.commons.jcs3.engine.memory.AbstractMemoryCache#createMap()
      */
     @Override
     public ConcurrentMap<K, MemoryElementDescriptor<K, V>> createMap()
     {
         return new ConcurrentHashMap<>();
+    }
+
+    /**
+     * This can't be implemented.
+     * <p>
+     * @param numberToFree
+     * @return 0
+     * @throws IOException
+     */
+    @Override
+    public int freeElements(final int numberToFree) throws IOException
+    {
+        return 0;
     }
 
     /**
@@ -144,6 +143,20 @@ public class SoftReferenceMemoryCache<K, V> extends AbstractMemoryCache<K, V>
     }
 
     /**
+     * For post reflection creation initialization
+     * <p>
+     * @param hub
+     */
+    @Override
+    public synchronized void initialize( final CompositeCache<K, V> hub )
+    {
+        super.initialize( hub );
+        strongReferences = new LinkedBlockingQueue<>();
+        log.info( "initialized Soft Reference Memory Cache for {0}",
+                this::getCacheName );
+    }
+
+    /**
      * Update control structures after get
      * (guarded by the lock)
      *
@@ -161,6 +174,16 @@ public class SoftReferenceMemoryCache<K, V> extends AbstractMemoryCache<K, V>
     }
 
     /**
+     * Removes all cached items from the cache control structures.
+     * (guarded by the lock)
+     */
+    @Override
+    protected void lockedRemoveAll()
+    {
+        strongReferences.clear();
+    }
+
+    /**
      * Remove element from control structure
      * (guarded by the lock)
      *
@@ -173,13 +196,19 @@ public class SoftReferenceMemoryCache<K, V> extends AbstractMemoryCache<K, V>
     }
 
     /**
-     * Removes all cached items from the cache control structures.
-     * (guarded by the lock)
+     * Trim the number of strong references to equal or below the number given
+     * by the maxObjects parameter.
      */
-    @Override
-    protected void lockedRemoveAll()
+    private void trimStrongReferences()
     {
-        strongReferences.clear();
+        final int max = getCacheAttributes().getMaxObjects();
+        final int startsize = strongReferences.size();
+
+        for (int cursize = startsize; cursize > max; cursize--)
+        {
+            final ICacheElement<K, V> ce = strongReferences.poll();
+            waterfal(ce);
+        }
     }
 
     /**
@@ -206,34 +235,5 @@ public class SoftReferenceMemoryCache<K, V> extends AbstractMemoryCache<K, V>
         {
             lock.unlock();
         }
-    }
-
-    /**
-     * Trim the number of strong references to equal or below the number given
-     * by the maxObjects parameter.
-     */
-    private void trimStrongReferences()
-    {
-        final int max = getCacheAttributes().getMaxObjects();
-        final int startsize = strongReferences.size();
-
-        for (int cursize = startsize; cursize > max; cursize--)
-        {
-            final ICacheElement<K, V> ce = strongReferences.poll();
-            waterfal(ce);
-        }
-    }
-
-    /**
-     * This can't be implemented.
-     * <p>
-     * @param numberToFree
-     * @return 0
-     * @throws IOException
-     */
-    @Override
-    public int freeElements(final int numberToFree) throws IOException
-    {
-        return 0;
     }
 }

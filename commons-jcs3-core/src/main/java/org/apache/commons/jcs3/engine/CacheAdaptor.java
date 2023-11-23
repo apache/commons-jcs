@@ -39,17 +39,13 @@ public class CacheAdaptor<K, V>
     private long listenerId;
 
     /**
-     * Sets the listenerId attribute of the CacheAdaptor object
+     * Constructor for the CacheAdaptor object
      * <p>
-     * @param id
-     *            The new listenerId value
-     * @throws IOException
+     * @param cache
      */
-    @Override
-    public void setListenerId( final long id )
-        throws IOException
+    public CacheAdaptor( final ICache<K, V> cache )
     {
-        this.listenerId = id;
+        this.cache = cache;
     }
 
     /**
@@ -66,13 +62,16 @@ public class CacheAdaptor<K, V>
     }
 
     /**
-     * Constructor for the CacheAdaptor object
+     * Shutdown call.
      * <p>
-     * @param cache
+     * @param cacheName
+     * @throws IOException
      */
-    public CacheAdaptor( final ICache<K, V> cache )
+    @Override
+    public void handleDispose( final String cacheName )
+        throws IOException
     {
-        this.cache = cache;
+        cache.dispose();
     }
 
     /**
@@ -123,15 +122,16 @@ public class CacheAdaptor<K, V>
     }
 
     /**
-     * Shutdown call.
+     * Sets the listenerId attribute of the CacheAdaptor object
      * <p>
-     * @param cacheName
+     * @param id
+     *            The new listenerId value
      * @throws IOException
      */
     @Override
-    public void handleDispose( final String cacheName )
+    public void setListenerId( final long id )
         throws IOException
     {
-        cache.dispose();
+        this.listenerId = id;
     }
 }

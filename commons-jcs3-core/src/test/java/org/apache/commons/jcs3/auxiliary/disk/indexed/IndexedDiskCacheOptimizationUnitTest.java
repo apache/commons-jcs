@@ -33,7 +33,7 @@ import org.junit.Test;
 public class IndexedDiskCacheOptimizationUnitTest
 {
     /**
-     * Set the optimize at remove count to 10. Add 20. Check the file size. Remove 10. Check the
+     * Sets the optimize at remove count to 10. Add 20. Check the file size. Remove 10. Check the
      * times optimized. Check the file size.
      * @throws Exception
      */

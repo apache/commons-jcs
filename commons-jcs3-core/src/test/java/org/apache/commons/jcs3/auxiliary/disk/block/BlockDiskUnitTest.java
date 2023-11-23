@@ -41,6 +41,19 @@ public class BlockDiskUnitTest
     private BlockDisk disk;
 
     /**
+     * Used to get the size for byte arrays that will take up the number of blocks specified.
+     * <p>
+     * @param blockSize
+     * @param numBlocks
+     * @return num bytes.
+     */
+    private int getBytesForBlocksOfByteArrays( final int blockSize, final int numBlocks )
+    {
+        // byte arrays encur some bytes of serialization overhead.
+        return blockSize * numBlocks - ( numBlocks * BlockDisk.HEADER_SIZE_BYTES ) - ( numBlocks * 14 );
+    }
+
+    /**
      * Creates the base directory
      */
     @Before
@@ -69,6 +82,84 @@ public class BlockDiskUnitTest
     public void tearDown() throws Exception
     {
         disk.close();
+    }
+
+    /**
+     * Verify that it says we need two blocks if the total size will fit.
+     * <p>
+     * @throws Exception
+     */
+    @Test
+    public void testCalculateBlocksNeededDouble()
+        throws Exception
+    {
+        // SETUP
+        setUpBlockDisk("testCalculateBlocksNeededDouble");
+
+        // DO WORK
+        final int result = disk.calculateTheNumberOfBlocksNeeded( new byte[disk.getBlockSizeBytes() * 2
+            - ( 2 * BlockDisk.HEADER_SIZE_BYTES )]);
+
+        // Verify
+        assertEquals( "Wrong number of blocks", 2, result );
+    }
+
+    @Test
+    public void testJCS156() throws Exception
+    {
+        // SETUP
+        setUpBlockDisk("testJCS156", 4096);
+        final long offset = disk.calculateByteOffsetForBlockAsLong(Integer.MAX_VALUE);
+        assertTrue("Must not wrap round", offset > 0);
+        assertEquals(Integer.MAX_VALUE * 4096L, offset);
+    }
+
+    /**
+     * Test writing an element that takes 128 blocks.  There was a byte in a for loop that limited the number to 127.  I fixed this.
+     * <p>
+     * @throws Exception
+     */
+    @Test
+    public void testWrite_128BlockElement()
+        throws Exception
+    {
+        // SETUP
+        final int numBlocks = 128;
+
+        setUpBlockDisk("testWrite_128BlockElement");
+
+        // DO WORK
+        // byte arrays encur 27 bytes of serialization overhead.
+        final int bytes = getBytesForBlocksOfByteArrays( disk.getBlockSizeBytes(), numBlocks );
+        final int[] blocks = disk.write( new byte[bytes]);
+
+        // VERIFY
+        assertEquals( "Wrong number of blocks recorded.", numBlocks, disk.getNumberOfBlocks() );
+        assertEquals( "Wrong number of blocks returned.", numBlocks, blocks.length );
+        assertEquals( "Wrong block returned.", 0, blocks[0]);
+    }
+
+    /**
+     * Test writing an element that takes two blocks.
+     * <p>
+     * @throws Exception
+     */
+    @Test
+    public void testWrite_DoubleBlockElement()
+        throws Exception
+    {
+        // SETUP
+        setUpBlockDisk("testWriteDoubleBlockElement");
+
+        // DO WORK
+        // byte arrays encur 27 bytes of serialization overhead.
+        final int bytes = getBytesForBlocksOfByteArrays( disk.getBlockSizeBytes(), 2 );
+        final int[] blocks = disk.write( new byte[bytes]);
+
+        // VERIFY
+        assertEquals( "Wrong number of blocks recorded.", 2, disk.getNumberOfBlocks() );
+        assertEquals( "Wrong number of blocks returned.", 2, blocks.length );
+        assertEquals( "Wrong block returned.", 0, blocks[0]);
     }
 
     /**
@@ -115,28 +206,6 @@ public class BlockDiskUnitTest
     }
 
     /**
-     * Test writing and reading an element within a single block size.
-     * <p>
-     * @throws Exception
-     */
-    @Test
-    public void testWriteAndRead_SingleBlockElement()
-        throws Exception
-    {
-        // SETUP
-        setUpBlockDisk("testWriteAndRead_SingleBlockElement");
-
-        // DO WORK
-        final int bytes = 1 * 1024;
-        final int[] blocks = disk.write( new byte[bytes]);
-
-        final byte[] result = (byte[]) disk.read( blocks );
-
-        // VERIFY
-        assertEquals( "Wrong item retured.", new byte[bytes].length, result.length );
-    }
-
-    /**
      * Test writing two elements that each fit within a single block size.
      * <p>
      * @throws Exception
@@ -162,71 +231,81 @@ public class BlockDiskUnitTest
     }
 
     /**
-     * Verify that it says we need two blocks if the total size will fit.
+     * Verify that the block disk can handle a big string.
      * <p>
      * @throws Exception
      */
     @Test
-    public void testCalculateBlocksNeededDouble()
+    public void testWriteAndRead_BigString()
         throws Exception
     {
         // SETUP
-        setUpBlockDisk("testCalculateBlocksNeededDouble");
+        setUpBlockDisk("testWriteAndRead_BigString", 4096); //1024
+
+        String string = "This is my big string ABCDEFGH";
+        final StringBuilder sb = new StringBuilder();
+        sb.append( string );
+        for ( int i = 0; i < 8; i++ )
+        {
+            sb.append( " " + i + sb.toString() ); // big string
+        }
+        string = sb.toString();
 
         // DO WORK
-        final int result = disk.calculateTheNumberOfBlocksNeeded( new byte[disk.getBlockSizeBytes() * 2
-            - ( 2 * BlockDisk.HEADER_SIZE_BYTES )]);
+        final int[] blocks = disk.write( string );
+        final String result = (String) disk.read( blocks );
 
-        // Verify
-        assertEquals( "Wrong number of blocks", 2, result );
+        // VERIFY
+//        System.out.println( string );
+//        System.out.println( result );
+//        System.out.println( disk );
+        assertEquals( "Wrong item retured.", string, result );
     }
 
     /**
-     * Test writing an element that takes two blocks.
+     * Verify that the block disk can handle a big string.
      * <p>
      * @throws Exception
      */
     @Test
-    public void testWrite_DoubleBlockElement()
+    public void testWriteAndRead_BigString2()
         throws Exception
     {
         // SETUP
-        setUpBlockDisk("testWriteDoubleBlockElement");
+        setUpBlockDisk("testWriteAndRead_BigString", 47); //4096;//1024
+
+        String string = "abcdefghijklmnopqrstuvwxyz1234567890";
+        string += string;
+        string += string;
 
         // DO WORK
-        // byte arrays encur 27 bytes of serialization overhead.
-        final int bytes = getBytesForBlocksOfByteArrays( disk.getBlockSizeBytes(), 2 );
-        final int[] blocks = disk.write( new byte[bytes]);
+        final int[] blocks = disk.write( string );
+        final String result = (String) disk.read( blocks );
 
         // VERIFY
-        assertEquals( "Wrong number of blocks recorded.", 2, disk.getNumberOfBlocks() );
-        assertEquals( "Wrong number of blocks returned.", 2, blocks.length );
-        assertEquals( "Wrong block returned.", 0, blocks[0]);
+        assertEquals( "Wrong item retured.", string, result );
     }
 
     /**
-     * Test writing an element that takes 128 blocks.  There was a byte in a for loop that limited the number to 127.  I fixed this.
+     * Test writing and reading an element within a single block size.
      * <p>
      * @throws Exception
      */
     @Test
-    public void testWrite_128BlockElement()
+    public void testWriteAndRead_SingleBlockElement()
         throws Exception
     {
         // SETUP
-        final int numBlocks = 128;
-
-        setUpBlockDisk("testWrite_128BlockElement");
+        setUpBlockDisk("testWriteAndRead_SingleBlockElement");
 
         // DO WORK
-        // byte arrays encur 27 bytes of serialization overhead.
-        final int bytes = getBytesForBlocksOfByteArrays( disk.getBlockSizeBytes(), numBlocks );
+        final int bytes = 1 * 1024;
         final int[] blocks = disk.write( new byte[bytes]);
 
+        final byte[] result = (byte[]) disk.read( blocks );
+
         // VERIFY
-        assertEquals( "Wrong number of blocks recorded.", numBlocks, disk.getNumberOfBlocks() );
-        assertEquals( "Wrong number of blocks returned.", numBlocks, blocks.length );
-        assertEquals( "Wrong block returned.", 0, blocks[0]);
+        assertEquals( "Wrong item retured.", new byte[bytes].length, result.length );
     }
 
     /**
@@ -292,84 +371,5 @@ public class BlockDiskUnitTest
             }
         }
         assertEquals( "Wrong number of elements. "+disk, numBlocksPerElement * numElements, disk.getNumberOfBlocks() );
-    }
-
-    /**
-     * Used to get the size for byte arrays that will take up the number of blocks specified.
-     * <p>
-     * @param blockSize
-     * @param numBlocks
-     * @return num bytes.
-     */
-    private int getBytesForBlocksOfByteArrays( final int blockSize, final int numBlocks )
-    {
-        // byte arrays encur some bytes of serialization overhead.
-        return blockSize * numBlocks - ( numBlocks * BlockDisk.HEADER_SIZE_BYTES ) - ( numBlocks * 14 );
-    }
-
-    /**
-     * Verify that the block disk can handle a big string.
-     * <p>
-     * @throws Exception
-     */
-    @Test
-    public void testWriteAndRead_BigString()
-        throws Exception
-    {
-        // SETUP
-        setUpBlockDisk("testWriteAndRead_BigString", 4096); //1024
-
-        String string = "This is my big string ABCDEFGH";
-        final StringBuilder sb = new StringBuilder();
-        sb.append( string );
-        for ( int i = 0; i < 8; i++ )
-        {
-            sb.append( " " + i + sb.toString() ); // big string
-        }
-        string = sb.toString();
-
-        // DO WORK
-        final int[] blocks = disk.write( string );
-        final String result = (String) disk.read( blocks );
-
-        // VERIFY
-//        System.out.println( string );
-//        System.out.println( result );
-//        System.out.println( disk );
-        assertEquals( "Wrong item retured.", string, result );
-    }
-
-    /**
-     * Verify that the block disk can handle a big string.
-     * <p>
-     * @throws Exception
-     */
-    @Test
-    public void testWriteAndRead_BigString2()
-        throws Exception
-    {
-        // SETUP
-        setUpBlockDisk("testWriteAndRead_BigString", 47); //4096;//1024
-
-        String string = "abcdefghijklmnopqrstuvwxyz1234567890";
-        string += string;
-        string += string;
-
-        // DO WORK
-        final int[] blocks = disk.write( string );
-        final String result = (String) disk.read( blocks );
-
-        // VERIFY
-        assertEquals( "Wrong item retured.", string, result );
-    }
-
-    @Test
-    public void testJCS156() throws Exception
-    {
-        // SETUP
-        setUpBlockDisk("testJCS156", 4096);
-        final long offset = disk.calculateByteOffsetForBlockAsLong(Integer.MAX_VALUE);
-        assertTrue("Must not wrap round", offset > 0);
-        assertEquals(Integer.MAX_VALUE * 4096L, offset);
     }
 }

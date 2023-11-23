@@ -49,6 +49,20 @@ public abstract class PropertyLoader
     private static final String SUFFIX_PROPERTIES = ".properties";
 
     /**
+     * A convenience overload of {@link #loadProperties(String, ClassLoader)}
+     * that uses the current thread's context classloader. A better strategy
+     * would be to use techniques shown in
+     * http://www.javaworld.com/javaworld/javaqa/2003-06/01-qa-0606-load.html
+     * <p>
+     * @param name
+     * @return Properties
+     */
+    public static Properties loadProperties( final String name )
+    {
+        return loadProperties( name, Thread.currentThread().getContextClassLoader() );
+    }
+
+    /**
      * Looks up a resource named 'name' in the classpath. The resource must map
      * to a file with .ccf extention. The name is assumed to be absolute and can
      * use either "/" or "." for package segment separation with an optional
@@ -133,20 +147,6 @@ public abstract class PropertyLoader
         }
 
         return result;
-    }
-
-    /**
-     * A convenience overload of {@link #loadProperties(String, ClassLoader)}
-     * that uses the current thread's context classloader. A better strategy
-     * would be to use techniques shown in
-     * http://www.javaworld.com/javaworld/javaqa/2003-06/01-qa-0606-load.html
-     * <p>
-     * @param name
-     * @return Properties
-     */
-    public static Properties loadProperties( final String name )
-    {
-        return loadProperties( name, Thread.currentThread().getContextClassLoader() );
     }
 
     /**

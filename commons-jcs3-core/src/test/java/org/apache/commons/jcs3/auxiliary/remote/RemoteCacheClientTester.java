@@ -44,6 +44,58 @@ import org.apache.commons.jcs3.engine.behavior.ICacheService;
 public class RemoteCacheClientTester
     implements IRemoteCacheListener<String, String>, IRemoteCacheConstants, Remote
 {
+    /** Description of the Field */
+    protected static long listenerId;
+
+    /*
+     * public void handleRelease() throws IOException { p("handleRelease>"); }
+     */
+    /**
+     * The main program for the RemoteCacheClientTest class
+     * @param args The command line arguments
+     * @throws Exception
+     */
+    public static void main( final String[] args )
+        throws Exception
+    {
+        int count = 0;
+        boolean read = false;
+        boolean write = false;
+        boolean delete = false;
+
+        for (final String arg : args) {
+            if ( arg.startsWith( "-" ) )
+            {
+                if ( !read )
+                {
+                    read = arg.indexOf( "r" ) != -1;
+                }
+                if ( !write )
+                {
+                    write = arg.indexOf( "w" ) != -1;
+                }
+                if ( !delete )
+                {
+                    delete = arg.indexOf( "d" ) != -1;
+                }
+            }
+            else
+            {
+                count = Integer.parseInt( arg );
+            }
+        }
+        new RemoteCacheClientTester( count, write, read, delete );
+    }
+
+    /**
+     * Helper for output, this is an user run test class
+     * @param s
+     */
+    private static void p( final String s )
+    {
+        System.out.println( s );
+    }
+
     /** the observer */
     protected ICacheObserver watch;
 
@@ -58,21 +110,6 @@ public class RemoteCacheClientTester
 
     /** call count */
     final int count;
-
-    /** Description of the Field */
-    protected static long listenerId;
-
-    /**
-     * Gets the remoteType attribute of the RemoteCacheClientTest object
-     * @return The remoteType value
-     * @throws IOException
-     */
-    @Override
-    public RemoteType getRemoteType()
-        throws IOException
-    {
-        return RemoteType.LOCAL;
-    }
 
     /**
      * Constructor for the RemoteCacheClientTest object
@@ -199,6 +236,63 @@ public class RemoteCacheClientTester
     }
 
     /**
+     * @throws IOException
+     */
+    @Override
+    public void dispose()
+        throws IOException
+    {
+        // TODO Auto-generated method stub
+    }
+
+    /**
+     * Gets the listenerId attribute of the RemoteCacheClientTest object
+     * @return The listenerId value
+     * @throws IOException
+     */
+    @Override
+    public long getListenerId()
+        throws IOException
+    {
+        return listenerId;
+    }
+
+    /**
+     * @return null
+     * @throws IOException
+     */
+    @Override
+    public String getLocalHostAddress()
+        throws IOException
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    /**
+     * Gets the remoteType attribute of the RemoteCacheClientTest object
+     * @return The remoteType value
+     * @throws IOException
+     */
+    @Override
+    public RemoteType getRemoteType()
+        throws IOException
+    {
+        return RemoteType.LOCAL;
+    }
+
+    /**
+     * @param cacheName
+     * @throws IOException
+     */
+    @Override
+    public void handleDispose( final String cacheName )
+        throws IOException
+    {
+        p( "handleDispose> cacheName=" + cacheName );
+    }
+
+    /**
      * @param cb
      * @throws IOException
      */
@@ -233,57 +327,6 @@ public class RemoteCacheClientTester
     }
 
     /**
-     * @param cacheName
-     * @throws IOException
-     */
-    @Override
-    public void handleDispose( final String cacheName )
-        throws IOException
-    {
-        p( "handleDispose> cacheName=" + cacheName );
-    }
-
-    /*
-     * public void handleRelease() throws IOException { p("handleRelease>"); }
-     */
-    /**
-     * The main program for the RemoteCacheClientTest class
-     * @param args The command line arguments
-     * @throws Exception
-     */
-    public static void main( final String[] args )
-        throws Exception
-    {
-        int count = 0;
-        boolean read = false;
-        boolean write = false;
-        boolean delete = false;
-
-        for (final String arg : args) {
-            if ( arg.startsWith( "-" ) )
-            {
-                if ( !read )
-                {
-                    read = arg.indexOf( "r" ) != -1;
-                }
-                if ( !write )
-                {
-                    write = arg.indexOf( "w" ) != -1;
-                }
-                if ( !delete )
-                {
-                    delete = arg.indexOf( "d" ) != -1;
-                }
-            }
-            else
-            {
-                count = Integer.parseInt( arg );
-            }
-        }
-        new RemoteCacheClientTester( count, write, read, delete );
-    }
-
-    /**
      * Sets the listenerId attribute of the RemoteCacheClientTest object
      * @param id The new listenerId value
      * @throws IOException
@@ -294,48 +337,5 @@ public class RemoteCacheClientTester
     {
         listenerId = id;
         p( "listenerId = " + id );
-    }
-
-    /**
-     * Gets the listenerId attribute of the RemoteCacheClientTest object
-     * @return The listenerId value
-     * @throws IOException
-     */
-    @Override
-    public long getListenerId()
-        throws IOException
-    {
-        return listenerId;
-    }
-
-    /**
-     * Helper for output, this is an user run test class
-     * @param s
-     */
-    private static void p( final String s )
-    {
-        System.out.println( s );
-    }
-
-    /**
-     * @return null
-     * @throws IOException
-     */
-    @Override
-    public String getLocalHostAddress()
-        throws IOException
-    {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    /**
-     * @throws IOException
-     */
-    @Override
-    public void dispose()
-        throws IOException
-    {
-        // TODO Auto-generated method stub
     }
 }

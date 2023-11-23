@@ -54,9 +54,39 @@ public class CacheProviderBean implements Bean<CachingProvider>, PassivationCapa
     }
 
     @Override
-    public Set<Type> getTypes()
+    public CachingProvider create(final CreationalContext<CachingProvider> cacheManagerCreationalContext)
     {
-        return types;
+        return provider;
+    }
+
+    @Override
+    public void destroy(final CachingProvider cacheProvider, final CreationalContext<CachingProvider> cacheManagerCreationalContext)
+    {
+        provider.close();
+    }
+
+    @Override
+    public Class<?> getBeanClass()
+    {
+        return CachingProvider.class;
+    }
+
+    @Override
+    public String getId()
+    {
+        return id;
+    }
+
+    @Override
+    public Set<InjectionPoint> getInjectionPoints()
+    {
+        return emptySet();
+    }
+
+    @Override
+    public String getName()
+    {
+        return null;
     }
 
     @Override
@@ -72,33 +102,15 @@ public class CacheProviderBean implements Bean<CachingProvider>, PassivationCapa
     }
 
     @Override
-    public String getName()
-    {
-        return null;
-    }
-
-    @Override
-    public boolean isNullable()
-    {
-        return false;
-    }
-
-    @Override
-    public Set<InjectionPoint> getInjectionPoints()
-    {
-        return emptySet();
-    }
-
-    @Override
-    public Class<?> getBeanClass()
-    {
-        return CachingProvider.class;
-    }
-
-    @Override
     public Set<Class<? extends Annotation>> getStereotypes()
     {
         return emptySet();
+    }
+
+    @Override
+    public Set<Type> getTypes()
+    {
+        return types;
     }
 
     @Override
@@ -108,20 +120,8 @@ public class CacheProviderBean implements Bean<CachingProvider>, PassivationCapa
     }
 
     @Override
-    public CachingProvider create(final CreationalContext<CachingProvider> cacheManagerCreationalContext)
+    public boolean isNullable()
     {
-        return provider;
-    }
-
-    @Override
-    public void destroy(final CachingProvider cacheProvider, final CreationalContext<CachingProvider> cacheManagerCreationalContext)
-    {
-        provider.close();
-    }
-
-    @Override
-    public String getId()
-    {
-        return id;
+        return false;
     }
 }

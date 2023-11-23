@@ -37,122 +37,6 @@ import org.apache.commons.jcs3.log.LogManager;
 public class LHMLRUMemoryCache<K, V>
     extends AbstractMemoryCache<K, V>
 {
-    /** The Logger. */
-    private static final Log log = LogManager.getLog( LRUMemoryCache.class );
-
-    /**
-     * For post reflection creation initialization
-     * <p>
-     * @param hub
-     */
-    @Override
-    public void initialize( final CompositeCache<K, V> hub )
-    {
-        super.initialize( hub );
-        log.info( "initialized LHMLRUMemoryCache for {0}", this::getCacheName );
-    }
-
-    /**
-     * Returns a synchronized LHMSpooler
-     * <p>
-     * @return Collections.synchronizedMap( new LHMSpooler() )
-     */
-    @Override
-    public Map<K, MemoryElementDescriptor<K, V>> createMap()
-    {
-        return Collections.synchronizedMap( new LHMSpooler() );
-    }
-
-    /**
-     * Puts an item to the cache.
-     * <p>
-     * @param ce Description of the Parameter
-     * @throws IOException
-     */
-    @Override
-    public void update( final ICacheElement<K, V> ce )
-        throws IOException
-    {
-        putCnt.incrementAndGet();
-        map.put( ce.getKey(), new MemoryElementDescriptor<>(ce) );
-    }
-
-    /**
-     * Update control structures after get
-     * (guarded by the lock)
-     *
-     * @param me the memory element descriptor
-     */
-    @Override
-    protected void lockedGetElement(final MemoryElementDescriptor<K, V> me)
-    {
-        // empty
-    }
-
-    /**
-     * Remove element from control structure
-     * (guarded by the lock)
-     *
-     * @param me the memory element descriptor
-     */
-    @Override
-    protected void lockedRemoveElement(final MemoryElementDescriptor<K, V> me)
-    {
-        // empty
-    }
-
-    /**
-     * Removes all cached items from the cache control structures.
-     * (guarded by the lock)
-     */
-    @Override
-    protected void lockedRemoveAll()
-    {
-        // empty
-    }
-
-    /**
-     * This returns semi-structured information on the memory cache, such as the size, put count,
-     * hit count, and miss count.
-     * <p>
-     * @return IStats
-     */
-    @Override
-    public IStats getStatistics()
-    {
-        final IStats stats = super.getStatistics();
-        stats.setTypeName( "LHMLRU Memory Cache" );
-
-        return stats;
-    }
-
-    // ---------------------------------------------------------- debug methods
-
-    /**
-     * Dump the cache entries from first to last for debugging.
-     */
-    public void dumpCacheEntries()
-    {
-        dumpMap();
-    }
-
-    /**
-     * This can't be implemented.
-     * <p>
-     * @param numberToFree
-     * @return 0
-     * @throws IOException
-     */
-    @Override
-    public int freeElements( final int numberToFree )
-        throws IOException
-    {
-        // can't be implemented using the LHM
-        return 0;
-    }
-
-    // ---------------------------------------------------------- extended map
-
     /**
      * Implementation of removeEldestEntry in LinkedHashMap
      */
@@ -195,5 +79,121 @@ public class LHMLRUMemoryCache<K, V>
             log.debug( "LHMLRU size: {0}", () -> map.size() );
             return true;
         }
+    }
+
+    /** The Logger. */
+    private static final Log log = LogManager.getLog( LRUMemoryCache.class );
+
+    /**
+     * Returns a synchronized LHMSpooler
+     * <p>
+     * @return Collections.synchronizedMap( new LHMSpooler() )
+     */
+    @Override
+    public Map<K, MemoryElementDescriptor<K, V>> createMap()
+    {
+        return Collections.synchronizedMap( new LHMSpooler() );
+    }
+
+    /**
+     * Dump the cache entries from first to last for debugging.
+     */
+    public void dumpCacheEntries()
+    {
+        dumpMap();
+    }
+
+    /**
+     * This can't be implemented.
+     * <p>
+     * @param numberToFree
+     * @return 0
+     * @throws IOException
+     */
+    @Override
+    public int freeElements( final int numberToFree )
+        throws IOException
+    {
+        // can't be implemented using the LHM
+        return 0;
+    }
+
+    /**
+     * This returns semi-structured information on the memory cache, such as the size, put count,
+     * hit count, and miss count.
+     * <p>
+     * @return IStats
+     */
+    @Override
+    public IStats getStatistics()
+    {
+        final IStats stats = super.getStatistics();
+        stats.setTypeName( "LHMLRU Memory Cache" );
+
+        return stats;
+    }
+
+    /**
+     * For post reflection creation initialization
+     * <p>
+     * @param hub
+     */
+    @Override
+    public void initialize( final CompositeCache<K, V> hub )
+    {
+        super.initialize( hub );
+        log.info( "initialized LHMLRUMemoryCache for {0}", this::getCacheName );
+    }
+
+    /**
+     * Update control structures after get
+     * (guarded by the lock)
+     *
+     * @param me the memory element descriptor
+     */
+    @Override
+    protected void lockedGetElement(final MemoryElementDescriptor<K, V> me)
+    {
+        // empty
+    }
+
+    // ---------------------------------------------------------- debug methods
+
+    /**
+     * Removes all cached items from the cache control structures.
+     * (guarded by the lock)
+     */
+    @Override
+    protected void lockedRemoveAll()
+    {
+        // empty
+    }
+
+    /**
+     * Remove element from control structure
+     * (guarded by the lock)
+     *
+     * @param me the memory element descriptor
+     */
+    @Override
+    protected void lockedRemoveElement(final MemoryElementDescriptor<K, V> me)
+    {
+        // empty
+    }
+
+    // ---------------------------------------------------------- extended map
+
+    /**
+     * Puts an item to the cache.
+     * <p>
+     * @param ce Description of the Parameter
+     * @throws IOException
+     */
+    @Override
+    public void update( final ICacheElement<K, V> ce )
+        throws IOException
+    {
+        putCnt.incrementAndGet();
+        map.put( ce.getKey(), new MemoryElementDescriptor<>(ce) );
     }
 }

@@ -28,6 +28,11 @@ public interface ICacheStats
     extends IStats
 {
     /**
+     * @return IStats[]
+     */
+    List<IStats> getAuxiliaryCacheStats();
+
+    /**
      * Stats are for a region, though auxiliary data may be for more.
      * <p>
      * @return The region name
@@ -35,17 +40,12 @@ public interface ICacheStats
     String getRegionName();
 
     /**
-     * @param name
-     */
-    void setRegionName( String name );
-
-    /**
-     * @return IStats[]
-     */
-    List<IStats> getAuxiliaryCacheStats();
-
-    /**
      * @param stats
      */
     void setAuxiliaryCacheStats( List<IStats> stats );
+
+    /**
+     * @param name
+     */
+    void setRegionName( String name );
 }

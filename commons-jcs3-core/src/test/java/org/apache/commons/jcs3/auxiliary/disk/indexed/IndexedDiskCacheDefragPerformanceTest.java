@@ -32,6 +32,36 @@ import org.junit.Test;
  */
 public class IndexedDiskCacheDefragPerformanceTest
 {
+    /**
+     * Resembles a cached image.
+     */
+    private static final class Tile
+        implements Serializable
+    {
+        /** Don't change */
+        private static final long serialVersionUID = 1L;
+
+        /**
+         * Key
+         */
+        public Integer id;
+
+        /**
+         * Byte size
+         */
+        public byte[] imageBytes;
+
+        /**
+         * @param id
+         * @param imageBytes
+         */
+        public Tile( final Integer id, final byte[] imageBytes )
+        {
+            this.id = id;
+            this.imageBytes = imageBytes;
+        }
+    }
+
     /** For readability */
     private static final String LOG_DIVIDER = "---------------------------";
 
@@ -51,20 +81,17 @@ public class IndexedDiskCacheDefragPerformanceTest
     private static final DecimalFormat format = new DecimalFormat( "#,###" );
 
     /**
-     * @throws Exception
+     * Logs the memory usage.
      */
-    @Test
-    public void testRealTimeOptimization()
-        throws Exception
+    private static void logMemoryUsage()
     {
+        final long byte2MB = 1024 * 1024;
+        final long total = rt.totalMemory() / byte2MB;
+        final long free = rt.freeMemory() / byte2MB;
+        final long used = total - free;
         System.out.println( LOG_DIVIDER );
-        System.out.println( "JCS DEFRAG PERFORMANCE TESTS" );
-        System.out.println( LOG_DIVIDER );
-        logMemoryUsage();
-        IndexedDiskCacheDefragPerformanceTest.runRealTimeOptimizationTest();
-        logMemoryUsage();
-
-        System.out.println( LOG_DIVIDER );
+        System.out.println( "Memory:" + " Used:" + format.format( used ) + "MB" + " Free:" + format.format( free )
+            + "MB" + " Total:" + format.format( total ) + "MB" );
     }
 
     /**
@@ -119,46 +146,19 @@ public class IndexedDiskCacheDefragPerformanceTest
     }
 
     /**
-     * Logs the memory usage.
+     * @throws Exception
      */
-    private static void logMemoryUsage()
+    @Test
+    public void testRealTimeOptimization()
+        throws Exception
     {
-        final long byte2MB = 1024 * 1024;
-        final long total = rt.totalMemory() / byte2MB;
-        final long free = rt.freeMemory() / byte2MB;
-        final long used = total - free;
         System.out.println( LOG_DIVIDER );
-        System.out.println( "Memory:" + " Used:" + format.format( used ) + "MB" + " Free:" + format.format( free )
-            + "MB" + " Total:" + format.format( total ) + "MB" );
-    }
+        System.out.println( "JCS DEFRAG PERFORMANCE TESTS" );
+        System.out.println( LOG_DIVIDER );
+        logMemoryUsage();
+        IndexedDiskCacheDefragPerformanceTest.runRealTimeOptimizationTest();
+        logMemoryUsage();
 
-    /**
-     * Resembles a cached image.
-     */
-    private static final class Tile
-        implements Serializable
-    {
-        /** Don't change */
-        private static final long serialVersionUID = 1L;
-
-        /**
-         * Key
-         */
-        public Integer id;
-
-        /**
-         * Byte size
-         */
-        public byte[] imageBytes;
-
-        /**
-         * @param id
-         * @param imageBytes
-         */
-        public Tile( final Integer id, final byte[] imageBytes )
-        {
-            this.id = id;
-            this.imageBytes = imageBytes;
-        }
+        System.out.println( LOG_DIVIDER );
     }
 }

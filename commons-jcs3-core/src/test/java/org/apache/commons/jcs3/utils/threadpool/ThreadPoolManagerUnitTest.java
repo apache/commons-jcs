@@ -52,22 +52,7 @@ public class ThreadPoolManagerUnitTest
     }
 
     /**
-     * Make sure it can load a certain configuration
-     */
-    @Test
-    public void testSpecialConfig()
-    {
-        final Properties props = PropertyLoader.loadProperties( "thread_pool.properties" );
-        ThreadPoolManager.setProps( props );
-        final ThreadPoolManager mgr = ThreadPoolManager.getInstance();
-        assertNotNull( mgr );
-
-        final ExecutorService pool = mgr.getExecutorService( "aborttest" );
-        assertNotNull( pool );
-    }
-
-    /**
-     * Get a couple pools by name and then see if they are in the list.
+     * Gets a couple pools by name and then see if they are in the list.
      *
      */
     @Test
@@ -85,5 +70,20 @@ public class ThreadPoolManagerUnitTest
         final Set<String> names = mgr.getPoolNames();
         assertTrue( "Should have name in list.", names.contains( poolName1 ) );
         assertTrue( "Should have name in list.", names.contains( poolName2 ) );
+    }
+
+    /**
+     * Make sure it can load a certain configuration
+     */
+    @Test
+    public void testSpecialConfig()
+    {
+        final Properties props = PropertyLoader.loadProperties( "thread_pool.properties" );
+        ThreadPoolManager.setProps( props );
+        final ThreadPoolManager mgr = ThreadPoolManager.getInstance();
+        assertNotNull( mgr );
+
+        final ExecutorService pool = mgr.getExecutorService( "aborttest" );
+        assertNotNull( pool );
     }
 }

@@ -41,6 +41,83 @@ import org.apache.commons.jcs3.engine.behavior.ICacheElement;
 public class IndexedDiskCacheSameRegionConcurrentUnitTest
 {
     /**
+     * Adds items to cache, gets them, and removes them. The item count is more
+     * than the size of the memory cache, so items should spool to disk.
+     *
+     * @param region
+     *            Name of the region to access
+     * @param start
+     * @param end
+     *
+     * @throws Exception
+     *                If an error occurs
+     */
+    public static void runTestForRegion( final String region, final int start, final int end )
+        throws Exception
+    {
+        final CacheAccess<String, String> jcs = JCS.getInstance( region );
+
+        // Add items to cache
+
+        for ( int i = start; i < end; i++ )
+        {
+            jcs.put( i + ":key", region + " data " + i );
+        }
+
+        // Test that all items are in cache
+
+        for ( int i = start; i < end; i++ )
+        {
+            final String key = i + ":key";
+            final String value = jcs.get( key );
+
+            assertEquals( "Wrong value for key [" + key + "]", region + " data " + i, value );
+        }
+
+        // Test that getElements returns all the expected values
+        final Set<String> keys = new HashSet<>();
+        for ( int i = start; i < end; i++ )
+        {
+            keys.add( i + ":key" );
+        }
+
+        final Map<String, ICacheElement<String, String>> elements = jcs.getCacheElements( keys );
+        for ( int i = start; i < end; i++ )
+        {
+            final ICacheElement<String, String> element = elements.get( i + ":key" );
+            assertNotNull( "element " + i + ":key is missing", element );
+            assertEquals( "value " + i + ":key", region + " data " + i, element.getVal() );
+        }
+
+        // you can't remove in one thread and expect them to be in another //
+        //          Remove all the items
+        //
+        //          for ( int i = start; i < end; i++ ) { jcs.remove( i + ":key" ); } //
+        //          Verify removal
+        //
+        //          for ( int i = start; i < end; i++ ) { assertNull( "Removed key
+        //          should be null: " + i + ":key", jcs.get( i + ":key" ) ); }
+    }
+
+    // /**
+    // * Tests the region which uses the indexed disk cache
+    // */
+    // public void testIndexedDiskCache()
+    // throws Exception
+    // {
+    // runTestForRegion( "indexedRegion" );
+    // }
+    //
+    // /**
+    // * Tests the region which uses the indexed disk cache
+    // */
+    // public void testIndexedDiskCache2()
+    // throws Exception
+    // {
+    // runTestForRegion( "indexedRegion2" );
+    // }
+
+    /**
      * A unit test suite for JUnit
      *
      * @return The test suite
@@ -101,82 +178,5 @@ public class IndexedDiskCacheSameRegionConcurrentUnitTest
         });
 
         return suite;
-    }
-
-    // /**
-    // * Tests the region which uses the indexed disk cache
-    // */
-    // public void testIndexedDiskCache()
-    // throws Exception
-    // {
-    // runTestForRegion( "indexedRegion" );
-    // }
-    //
-    // /**
-    // * Tests the region which uses the indexed disk cache
-    // */
-    // public void testIndexedDiskCache2()
-    // throws Exception
-    // {
-    // runTestForRegion( "indexedRegion2" );
-    // }
-
-    /**
-     * Adds items to cache, gets them, and removes them. The item count is more
-     * than the size of the memory cache, so items should spool to disk.
-     *
-     * @param region
-     *            Name of the region to access
-     * @param start
-     * @param end
-     *
-     * @throws Exception
-     *                If an error occurs
-     */
-    public static void runTestForRegion( final String region, final int start, final int end )
-        throws Exception
-    {
-        final CacheAccess<String, String> jcs = JCS.getInstance( region );
-
-        // Add items to cache
-
-        for ( int i = start; i < end; i++ )
-        {
-            jcs.put( i + ":key", region + " data " + i );
-        }
-
-        // Test that all items are in cache
-
-        for ( int i = start; i < end; i++ )
-        {
-            final String key = i + ":key";
-            final String value = jcs.get( key );
-
-            assertEquals( "Wrong value for key [" + key + "]", region + " data " + i, value );
-        }
-
-        // Test that getElements returns all the expected values
-        final Set<String> keys = new HashSet<>();
-        for ( int i = start; i < end; i++ )
-        {
-            keys.add( i + ":key" );
-        }
-
-        final Map<String, ICacheElement<String, String>> elements = jcs.getCacheElements( keys );
-        for ( int i = start; i < end; i++ )
-        {
-            final ICacheElement<String, String> element = elements.get( i + ":key" );
-            assertNotNull( "element " + i + ":key is missing", element );
-            assertEquals( "value " + i + ":key", region + " data " + i, element.getVal() );
-        }
-
-        // you can't remove in one thread and expect them to be in another //
-        //          Remove all the items
-        //
-        //          for ( int i = start; i < end; i++ ) { jcs.remove( i + ":key" ); } //
-        //          Verify removal
-        //
-        //          for ( int i = start; i < end; i++ ) { assertNull( "Removed key
-        //          should be null: " + i + ":key", jcs.get( i + ":key" ) ); }
     }
 }

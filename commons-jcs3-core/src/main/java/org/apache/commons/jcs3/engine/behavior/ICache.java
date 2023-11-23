@@ -40,12 +40,10 @@ public interface ICache<K, V>
     String NAME_COMPONENT_DELIMITER = ":";
 
     /**
-     * Puts an item to the cache.
-     *
-     * @param element
+     * Prepares for shutdown.
      * @throws IOException
      */
-    void update( ICacheElement<K, V> element )
+    void dispose()
         throws IOException;
 
     /**
@@ -59,14 +57,11 @@ public interface ICache<K, V>
         throws IOException;
 
     /**
-     * Gets multiple items from the cache based on the given set of keys.
+     * Returns the cache name.
      *
-     * @param keys
-     * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no data in cache for any of these keys
-     * @throws IOException
+     * @return usually the region name.
      */
-    Map<K, ICacheElement<K, V>> getMultiple(Set<K> keys)
-        throws IOException;
+    String getCacheName();
 
     /**
      * Gets items from the cache matching the given pattern.  Items from memory will replace those from remote sources.
@@ -81,6 +76,37 @@ public interface ICache<K, V>
      */
     Map<K, ICacheElement<K, V>> getMatching(String pattern)
         throws IOException;
+
+    /**
+     * Gets multiple items from the cache based on the given set of keys.
+     *
+     * @param keys
+     * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no data in cache for any of these keys
+     * @throws IOException
+     */
+    Map<K, ICacheElement<K, V>> getMultiple(Set<K> keys)
+        throws IOException;
+
+    /**
+     * Returns the current cache size in number of elements.
+     *
+     * @return number of elements
+     */
+    int getSize();
+
+    /**
+     * Returns the cache stats.
+     *
+     * @return String of important historical information.
+     */
+    String getStats();
+
+    /**
+     * Returns the cache status.
+     *
+     * @return Alive or Error
+     */
+    CacheStatus getStatus();
 
     /**
      * Removes an item from the cache.
@@ -101,44 +127,18 @@ public interface ICache<K, V>
         throws IOException;
 
     /**
-     * Prepares for shutdown.
-     * @throws IOException
-     */
-    void dispose()
-        throws IOException;
-
-    /**
-     * Returns the current cache size in number of elements.
-     *
-     * @return number of elements
-     */
-    int getSize();
-
-    /**
-     * Returns the cache status.
-     *
-     * @return Alive or Error
-     */
-    CacheStatus getStatus();
-
-    /**
-     * Returns the cache stats.
-     *
-     * @return String of important historical information.
-     */
-    String getStats();
-
-    /**
-     * Returns the cache name.
-     *
-     * @return usually the region name.
-     */
-    String getCacheName();
-
-    /**
      * Sets the key matcher used by get matching.
      *
      * @param keyMatcher
      */
     void setKeyMatcher( IKeyMatcher<K> keyMatcher );
+
+    /**
+     * Puts an item to the cache.
+     *
+     * @param element
+     * @throws IOException
+     */
+    void update( ICacheElement<K, V> element )
+        throws IOException;
 }

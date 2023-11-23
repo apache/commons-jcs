@@ -86,6 +86,14 @@ public class CacheRegionInfo
 	}
 
 	/**
+     * @return total byte count
+     */
+    public long getByteCount()
+    {
+        return this.byteCount;
+    }
+
+	/**
 	 * @return the cacheName
 	 */
 	public String getCacheName()
@@ -101,14 +109,6 @@ public class CacheRegionInfo
 		return this.cacheSize;
 	}
 
-	/**
-     * @return a status string
-     */
-    public String getCacheStatus()
-    {
-        return this.cacheStatus;
-    }
-
     /**
      * Return the statistics for the region.
      * <p>
@@ -120,12 +120,12 @@ public class CacheRegionInfo
     }
 
     /**
-	 * @return the hitCountRam
-	 */
-	public long getHitCountRam()
-	{
-		return hitCountRam;
-	}
+     * @return a status string
+     */
+    public String getCacheStatus()
+    {
+        return this.cacheStatus;
+    }
 
 	/**
 	 * @return the hitCountAux
@@ -136,11 +136,11 @@ public class CacheRegionInfo
 	}
 
 	/**
-	 * @return the missCountNotFound
+	 * @return the hitCountRam
 	 */
-	public long getMissCountNotFound()
+	public long getHitCountRam()
 	{
-		return missCountNotFound;
+		return hitCountRam;
 	}
 
 	/**
@@ -152,12 +152,12 @@ public class CacheRegionInfo
 	}
 
 	/**
-     * @return total byte count
-     */
-    public long getByteCount()
-    {
-        return this.byteCount;
-    }
+	 * @return the missCountNotFound
+	 */
+	public long getMissCountNotFound()
+	{
+		return missCountNotFound;
+	}
 
     /**
      * @return string info on the region

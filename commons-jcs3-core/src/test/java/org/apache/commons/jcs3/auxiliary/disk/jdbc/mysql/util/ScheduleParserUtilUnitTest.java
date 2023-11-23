@@ -34,6 +34,44 @@ public class ScheduleParserUtilUnitTest
 {
 
     /**
+     * Verify that we get an exception for a schedule that has a non numeric item.
+     */
+    @Test
+    public void testGetDatesMalformedNan()
+    {
+        try
+        {
+            final String schedule = "12:34:56,03:51:00,aa:12:12";
+            ScheduleParser.createDatesForSchedule( schedule );
+
+            fail( "Should have thrown an exception for a malformed date" );
+        }
+        catch ( final ParseException e )
+        {
+            // expected
+        }
+    }
+
+    /**
+     * Verify that we get an exception for a single bad date in a list.
+     */
+    @Test
+    public void testGetDatesMalformedNoColon()
+    {
+        try
+        {
+            final String schedule = "12:34:56,03:51:00,123234";
+            ScheduleParser.createDatesForSchedule( schedule );
+
+            fail( "Should have thrown an exception for a malformed date" );
+        }
+        catch ( final ParseException e )
+        {
+            // expected
+        }
+    }
+
+    /**
      * Verify that we get an exception and not a null pointer for null input.
      */
     @Test
@@ -50,7 +88,6 @@ public class ScheduleParserUtilUnitTest
             // expected
         }
     }
-
     /**
      * Verify that we get an exception and not a null pointer for null input.
      */
@@ -74,19 +111,6 @@ public class ScheduleParserUtilUnitTest
      * @throws ParseException
      */
     @Test
-    public void testGetsDatesSingle()
-        throws ParseException
-    {
-        final String schedule = "12:34:56";
-        final Date[] dates = ScheduleParser.createDatesForSchedule( schedule );
-
-        assertEquals( "Wrong number of dates returned.", 1, dates.length );
-    }
-    /**
-     * Verify that we get one date for one date.
-     * @throws ParseException
-     */
-    @Test
     public void testGetsDatesMultiple()
         throws ParseException
     {
@@ -95,41 +119,17 @@ public class ScheduleParserUtilUnitTest
         //System.out.println( dates );
         assertEquals( "Wrong number of dates returned.", 3, dates.length );
     }
-
     /**
-     * Verify that we get an exception for a single bad date in a list.
+     * Verify that we get one date for one date.
+     * @throws ParseException
      */
     @Test
-    public void testGetDatesMalformedNoColon()
+    public void testGetsDatesSingle()
+        throws ParseException
     {
-        try
-        {
-            final String schedule = "12:34:56,03:51:00,123234";
-            ScheduleParser.createDatesForSchedule( schedule );
+        final String schedule = "12:34:56";
+        final Date[] dates = ScheduleParser.createDatesForSchedule( schedule );
 
-            fail( "Should have thrown an exception for a malformed date" );
-        }
-        catch ( final ParseException e )
-        {
-            // expected
-        }
-    }
-    /**
-     * Verify that we get an exception for a schedule that has a non numeric item.
-     */
-    @Test
-    public void testGetDatesMalformedNan()
-    {
-        try
-        {
-            final String schedule = "12:34:56,03:51:00,aa:12:12";
-            ScheduleParser.createDatesForSchedule( schedule );
-
-            fail( "Should have thrown an exception for a malformed date" );
-        }
-        catch ( final ParseException e )
-        {
-            // expected
-        }
+        assertEquals( "Wrong number of dates returned.", 1, dates.length );
     }
 }

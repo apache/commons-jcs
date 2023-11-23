@@ -52,6 +52,203 @@ import org.junit.Test;
  */
 public class CompositeCacheDiskUsageUnitTest
 {
+    /**
+     * Used to test the disk cache functionality.
+     */
+    public static class MockAuxCache<K, V>
+        extends AbstractAuxiliaryCache<K, V>
+    {
+        /** The last item passed to update. */
+        public ICacheElement<K, V> lastUpdatedItem;
+
+        /** The number of times update was called. */
+        public int updateCount;
+
+        /** The type that should be returned from getCacheType. */
+        public CacheType cacheType = CacheType.DISK_CACHE;
+
+        /** @throws IOException */
+        @Override
+        public void dispose()
+            throws IOException
+        {
+            // noop
+        }
+
+        /**
+         * @param key
+         * @return ICacheElement
+         * @throws IOException
+         */
+        @Override
+        public ICacheElement<K, V> get( final K key )
+            throws IOException
+        {
+            return null;
+        }
+
+        /**
+         * @return Returns the AuxiliaryCacheAttributes.
+         */
+        @Override
+        public AuxiliaryCacheAttributes getAuxiliaryCacheAttributes()
+        {
+            return null;
+        }
+
+        /** @return null */
+        @Override
+        public String getCacheName()
+        {
+            return null;
+        }
+
+        /**
+         * Returns the setup cache type. This allows you to use this mock as multiple cache types.
+         * <p>
+         * @see org.apache.commons.jcs3.engine.behavior.ICacheType#getCacheType()
+         * @return cacheType
+         */
+        @Override
+        public CacheType getCacheType()
+        {
+            return cacheType;
+        }
+
+        /** @return null */
+        @Override
+        public String getEventLoggingExtraInfo()
+        {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+        /**
+         * @return null
+         * @throws IOException
+         */
+        @Override
+        public Set<K> getKeySet( )
+            throws IOException
+        {
+            return null;
+        }
+
+        /**
+         * @param pattern
+         * @return Collections.EMPTY_MAP;
+         * @throws IOException
+         */
+        @Override
+        public Map<K, ICacheElement<K, V>> getMatching(final String pattern)
+            throws IOException
+        {
+            return Collections.emptyMap();
+        }
+
+        /**
+         * Gets multiple items from the cache based on the given set of keys.
+         * <p>
+         * @param keys
+         * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is
+         *         no data in cache for any of these keys
+         */
+        @Override
+        public Map<K, ICacheElement<K, V>> getMultiple(final Set<K> keys)
+        {
+            return new HashMap<>();
+        }
+
+        /** @return 0 */
+        @Override
+        public int getSize()
+        {
+            return 0;
+        }
+
+        /** @return null */
+        @Override
+        public IStats getStatistics()
+        {
+            return null;
+        }
+
+        /** @return null */
+        @Override
+        public String getStats()
+        {
+            return null;
+        }
+
+        /** @return 0 */
+        @Override
+        public CacheStatus getStatus()
+        {
+            return CacheStatus.ALIVE;
+        }
+
+        /**
+         * @param key
+         * @return false
+         * @throws IOException
+         */
+        @Override
+        public boolean remove( final K key )
+            throws IOException
+        {
+            return false;
+        }
+
+        /** @throws IOException */
+        @Override
+        public void removeAll()
+            throws IOException
+        {
+            // noop
+        }
+
+        /** Resets counters and catchers. */
+        public void reset()
+        {
+            updateCount = 0;
+            lastUpdatedItem = null;
+        }
+
+        /**
+         * @param cacheEventLogger
+         */
+        @Override
+        public void setCacheEventLogger( final ICacheEventLogger cacheEventLogger )
+        {
+            // TODO Auto-generated method stub
+
+        }
+
+        /**
+         * @param elementSerializer
+         */
+        @Override
+        public void setElementSerializer( final IElementSerializer elementSerializer )
+        {
+            // TODO Auto-generated method stub
+
+        }
+
+        /**
+         * @param ce
+         * @throws IOException
+         */
+        @Override
+        public void update( final ICacheElement<K, V> ce )
+            throws IOException
+        {
+            lastUpdatedItem = ce;
+            updateCount++;
+        }
+
+
+    }
+
     private static final String CACHE_NAME = "testSpoolAllowed";
 
     /**
@@ -61,34 +258,6 @@ public class CompositeCacheDiskUsageUnitTest
     public void setUp()
     {
         JCS.setConfigFilename( "/TestDiskCacheUsagePattern.ccf" );
-    }
-
-    /**
-     * Verify that the swap region is set to the correct pattern.
-     * <p>
-     * @throws CacheException
-     */
-    @Test
-    public void testSwapConfig()
-        throws CacheException
-    {
-        final CacheAccess<String, String> swap = JCS.getInstance( "Swap" );
-        assertEquals( ICompositeCacheAttributes.DiskUsagePattern.SWAP, swap.getCacheAttributes()
-            .getDiskUsagePattern() );
-    }
-
-    /**
-     * Verify that the swap region is set to the correct pattern.
-     * <p>
-     * @throws CacheException
-     */
-    @Test
-    public void testUpdateConfig()
-        throws CacheException
-    {
-        final CacheAccess<String, String> swap = JCS.getInstance( "Update" );
-        assertEquals( ICompositeCacheAttributes.DiskUsagePattern.UPDATE, swap.getCacheAttributes()
-            .getDiskUsagePattern() );
     }
 
     /**
@@ -148,6 +317,20 @@ public class CompositeCacheDiskUsageUnitTest
 
         // VERIFY
         assertEquals( "Wrong number of calls to the disk cache update.", 0, mock.updateCount );
+    }
+
+    /**
+     * Verify that the swap region is set to the correct pattern.
+     * <p>
+     * @throws CacheException
+     */
+    @Test
+    public void testSwapConfig()
+        throws CacheException
+    {
+        final CacheAccess<String, String> swap = JCS.getInstance( "Swap" );
+        assertEquals( ICompositeCacheAttributes.DiskUsagePattern.SWAP, swap.getCacheAttributes()
+            .getDiskUsagePattern() );
     }
 
     /**
@@ -222,41 +405,6 @@ public class CompositeCacheDiskUsageUnitTest
     }
 
     /**
-     * Setup a disk cache. Configure the disk usage pattern to SWAP. Call updateAuxiliaries. Verify
-     * that the item is not put to disk.
-     * <p>
-     * This tests that the items are not put to disk on a normal put when the usage pattern is set
-     * to SWAP.
-     * <p>
-     * @throws IOException
-     */
-    @Test
-    public void testUpdateNotAllowed()
-        throws IOException
-    {
-        // SETUP
-        final ICompositeCacheAttributes cattr = new CompositeCacheAttributes();
-        cattr.setCacheName(CACHE_NAME);
-        cattr.setDiskUsagePattern( ICompositeCacheAttributes.DiskUsagePattern.SWAP );
-
-        final IElementAttributes attr = new ElementAttributes();
-
-        final CompositeCache<String, String> cache = new CompositeCache<>( cattr, attr );
-
-        final MockAuxCache<String, String> mock = new MockAuxCache<>();
-        mock.cacheType = CacheType.DISK_CACHE;
-        cache.setAuxCaches(Arrays.asList(mock));
-
-        final ICacheElement<String, String> inputElement = new CacheElement<>( CACHE_NAME, "key", "value" );
-
-        // DO WORK
-        cache.updateAuxiliaries( inputElement, true );
-
-        // VERIFY
-        assertEquals( "Wrong number of calls to the disk cache update.", 0, mock.updateCount );
-    }
-
-    /**
      * Setup a disk cache. Configure the disk usage pattern to UPDATE. Call updateAuxiliaries.
      * Verify that the item is put to disk.
      * <p>
@@ -298,200 +446,52 @@ public class CompositeCacheDiskUsageUnitTest
     }
 
     /**
-     * Used to test the disk cache functionality.
+     * Verify that the swap region is set to the correct pattern.
+     * <p>
+     * @throws CacheException
      */
-    public static class MockAuxCache<K, V>
-        extends AbstractAuxiliaryCache<K, V>
+    @Test
+    public void testUpdateConfig()
+        throws CacheException
     {
-        /** The last item passed to update. */
-        public ICacheElement<K, V> lastUpdatedItem;
+        final CacheAccess<String, String> swap = JCS.getInstance( "Update" );
+        assertEquals( ICompositeCacheAttributes.DiskUsagePattern.UPDATE, swap.getCacheAttributes()
+            .getDiskUsagePattern() );
+    }
 
-        /** The number of times update was called. */
-        public int updateCount;
+    /**
+     * Setup a disk cache. Configure the disk usage pattern to SWAP. Call updateAuxiliaries. Verify
+     * that the item is not put to disk.
+     * <p>
+     * This tests that the items are not put to disk on a normal put when the usage pattern is set
+     * to SWAP.
+     * <p>
+     * @throws IOException
+     */
+    @Test
+    public void testUpdateNotAllowed()
+        throws IOException
+    {
+        // SETUP
+        final ICompositeCacheAttributes cattr = new CompositeCacheAttributes();
+        cattr.setCacheName(CACHE_NAME);
+        cattr.setDiskUsagePattern( ICompositeCacheAttributes.DiskUsagePattern.SWAP );
 
-        /** The type that should be returned from getCacheType. */
-        public CacheType cacheType = CacheType.DISK_CACHE;
+        final IElementAttributes attr = new ElementAttributes();
 
-        /** Resets counters and catchers. */
-        public void reset()
-        {
-            updateCount = 0;
-            lastUpdatedItem = null;
-        }
+        final CompositeCache<String, String> cache = new CompositeCache<>( cattr, attr );
 
-        /**
-         * @param ce
-         * @throws IOException
-         */
-        @Override
-        public void update( final ICacheElement<K, V> ce )
-            throws IOException
-        {
-            lastUpdatedItem = ce;
-            updateCount++;
-        }
+        final MockAuxCache<String, String> mock = new MockAuxCache<>();
+        mock.cacheType = CacheType.DISK_CACHE;
+        cache.setAuxCaches(Arrays.asList(mock));
 
-        /**
-         * @param key
-         * @return ICacheElement
-         * @throws IOException
-         */
-        @Override
-        public ICacheElement<K, V> get( final K key )
-            throws IOException
-        {
-            return null;
-        }
+        final ICacheElement<String, String> inputElement = new CacheElement<>( CACHE_NAME, "key", "value" );
 
-        /**
-         * Gets multiple items from the cache based on the given set of keys.
-         * <p>
-         * @param keys
-         * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is
-         *         no data in cache for any of these keys
-         */
-        @Override
-        public Map<K, ICacheElement<K, V>> getMultiple(final Set<K> keys)
-        {
-            return new HashMap<>();
-        }
+        // DO WORK
+        cache.updateAuxiliaries( inputElement, true );
 
-        /**
-         * @param key
-         * @return false
-         * @throws IOException
-         */
-        @Override
-        public boolean remove( final K key )
-            throws IOException
-        {
-            return false;
-        }
-
-        /** @throws IOException */
-        @Override
-        public void removeAll()
-            throws IOException
-        {
-            // noop
-        }
-
-        /** @throws IOException */
-        @Override
-        public void dispose()
-            throws IOException
-        {
-            // noop
-        }
-
-        /** @return 0 */
-        @Override
-        public int getSize()
-        {
-            return 0;
-        }
-
-        /** @return 0 */
-        @Override
-        public CacheStatus getStatus()
-        {
-            return CacheStatus.ALIVE;
-        }
-
-        /** @return null */
-        @Override
-        public String getCacheName()
-        {
-            return null;
-        }
-
-        /**
-         * @return null
-         * @throws IOException
-         */
-        @Override
-        public Set<K> getKeySet( )
-            throws IOException
-        {
-            return null;
-        }
-
-        /** @return null */
-        @Override
-        public IStats getStatistics()
-        {
-            return null;
-        }
-
-        /** @return null */
-        @Override
-        public String getStats()
-        {
-            return null;
-        }
-
-        /**
-         * Returns the setup cache type. This allows you to use this mock as multiple cache types.
-         * <p>
-         * @see org.apache.commons.jcs3.engine.behavior.ICacheType#getCacheType()
-         * @return cacheType
-         */
-        @Override
-        public CacheType getCacheType()
-        {
-            return cacheType;
-        }
-
-        /**
-         * @return Returns the AuxiliaryCacheAttributes.
-         */
-        @Override
-        public AuxiliaryCacheAttributes getAuxiliaryCacheAttributes()
-        {
-            return null;
-        }
-
-        /**
-         * @param cacheEventLogger
-         */
-        @Override
-        public void setCacheEventLogger( final ICacheEventLogger cacheEventLogger )
-        {
-            // TODO Auto-generated method stub
-
-        }
-
-        /**
-         * @param elementSerializer
-         */
-        @Override
-        public void setElementSerializer( final IElementSerializer elementSerializer )
-        {
-            // TODO Auto-generated method stub
-
-        }
-
-        /** @return null */
-        @Override
-        public String getEventLoggingExtraInfo()
-        {
-            // TODO Auto-generated method stub
-            return null;
-        }
-
-        /**
-         * @param pattern
-         * @return Collections.EMPTY_MAP;
-         * @throws IOException
-         */
-        @Override
-        public Map<K, ICacheElement<K, V>> getMatching(final String pattern)
-            throws IOException
-        {
-            return Collections.emptyMap();
-        }
-
-
+        // VERIFY
+        assertEquals( "Wrong number of calls to the disk cache update.", 0, mock.updateCount );
     }
 
 }

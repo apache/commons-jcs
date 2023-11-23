@@ -90,20 +90,38 @@ public class LateralTCPDiscoveryListenerUnitTest
     }
 
     /**
-     * Add a no wait facade.
+     * Add a no wait to a known facade.
      */
     @Test
-    public void testAddNoWaitFacade_NotInList()
+    public void testAddDiscoveredService_FacadeInList_NoWaitNot()
     {
         // SETUP
-        final String cacheName = "testAddNoWaitFacade_NotInList";
-        final LateralCacheNoWaitFacade<String, String> facade = setupFacade(cacheName);
+        final String cacheName = "testAddDiscoveredService_FacadeInList_NoWaitNot";
+        final ArrayList<String> cacheNames = new ArrayList<>();
+        cacheNames.add( cacheName );
 
-        // DO WORK
+        final DiscoveredService service = new DiscoveredService();
+        service.setCacheNames( cacheNames );
+        service.setServiceAddress( "localhost" );
+        service.setServicePort( 9999 );
+
+        final ITCPLateralCacheAttributes lca = new TCPLateralCacheAttributes();
+        // used as identifying key by factory
+        lca.setTcpServer( service.getServiceAddress() + ":" + service.getServicePort() );
+        lca.setCacheName(cacheName);
+        final LateralCacheNoWait<String, String> noWait = factory.createCacheNoWait(lca, cacheEventLogger, elementSerializer);
+        // this is the normal process, the discovery service expects it there
+        cacheMgr.addAuxiliaryCache(factory.getName(), cacheName, noWait);
+        cacheMgr.registryFacPut(factory);
+
+        final LateralCacheNoWaitFacade<String, String> facade = setupFacade(cacheName);
         listener.addNoWaitFacade( cacheName, facade );
 
+        // DO WORK
+        listener.addDiscoveredService( service );
+
         // VERIFY
-        assertTrue( "Should have the facade.", listener.containsNoWaitFacade( cacheName ) );
+        assertTrue( "Should have no wait.", listener.containsNoWait( cacheName, noWait ) );
     }
 
     /**
@@ -144,61 +162,20 @@ public class LateralTCPDiscoveryListenerUnitTest
     }
 
     /**
-     * Remove a no wait from an unknown facade.
+     * Add a no wait facade.
      */
     @Test
-    public void testRemoveNoWait_FacadeNotInList()
+    public void testAddNoWaitFacade_NotInList()
     {
         // SETUP
-        final String cacheName = "testRemoveNoWaitFacade_FacadeNotInList";
-        final LateralCacheNoWait<String, String> noWait = setupNoWait(cacheName);
+        final String cacheName = "testAddNoWaitFacade_NotInList";
+        final LateralCacheNoWaitFacade<String, String> facade = setupFacade(cacheName);
 
         // DO WORK
-        final boolean result = listener.removeNoWait( noWait );
-
-        // VERIFY
-        assertFalse( "Should not have removed the no wait.", result );
-    }
-
-    /**
-     * Remove a no wait from a known facade.
-     */
-    @Test
-    public void testRemoveNoWait_FacadeInList_NoWaitNot()
-    {
-        // SETUP
-        final String cacheName = "testAddNoWaitFacade_FacadeInList";
-        final LateralCacheNoWaitFacade<String, String> facade = setupFacade(cacheName);
         listener.addNoWaitFacade( cacheName, facade );
 
-        final LateralCacheNoWait<String, String> noWait = setupNoWait(cacheName);
-
-        // DO WORK
-        final boolean result = listener.removeNoWait( noWait );
-
         // VERIFY
-        assertFalse( "Should not have removed the no wait.", result );
-    }
-
-    /**
-     * Remove a no wait from a known facade.
-     */
-    @Test
-    public void testRemoveNoWait_FacadeInList_NoWaitIs()
-    {
-        // SETUP
-        final String cacheName = "testRemoveNoWaitFacade_FacadeInListNoWaitIs";
-        final LateralCacheNoWaitFacade<String, String> facade = setupFacade(cacheName);
-        listener.addNoWaitFacade( cacheName, facade );
-
-        final LateralCacheNoWait<String, String> noWait = setupNoWait(cacheName);
-        listener.addNoWait( noWait );
-
-        // DO WORK
-        final boolean result = listener.removeNoWait( noWait );
-
-        // VERIFY
-        assertTrue( "Should have removed the no wait.", result );
+        assertTrue( "Should have the facade.", listener.containsNoWaitFacade( cacheName ) );
     }
 
     /**
@@ -219,41 +196,6 @@ public class LateralTCPDiscoveryListenerUnitTest
 
         // VERIFY
         assertFalse( "No waits should be empty.", noWait.containsNoWait(""));
-    }
-
-    /**
-     * Add a no wait to a known facade.
-     */
-    @Test
-    public void testAddDiscoveredService_FacadeInList_NoWaitNot()
-    {
-        // SETUP
-        final String cacheName = "testAddDiscoveredService_FacadeInList_NoWaitNot";
-        final ArrayList<String> cacheNames = new ArrayList<>();
-        cacheNames.add( cacheName );
-
-        final DiscoveredService service = new DiscoveredService();
-        service.setCacheNames( cacheNames );
-        service.setServiceAddress( "localhost" );
-        service.setServicePort( 9999 );
-
-        final ITCPLateralCacheAttributes lca = new TCPLateralCacheAttributes();
-        // used as identifying key by factory
-        lca.setTcpServer( service.getServiceAddress() + ":" + service.getServicePort() );
-        lca.setCacheName(cacheName);
-        final LateralCacheNoWait<String, String> noWait = factory.createCacheNoWait(lca, cacheEventLogger, elementSerializer);
-        // this is the normal process, the discovery service expects it there
-        cacheMgr.addAuxiliaryCache(factory.getName(), cacheName, noWait);
-        cacheMgr.registryFacPut(factory);
-
-        final LateralCacheNoWaitFacade<String, String> facade = setupFacade(cacheName);
-        listener.addNoWaitFacade( cacheName, facade );
-
-        // DO WORK
-        listener.addDiscoveredService( service );
-
-        // VERIFY
-        assertTrue( "Should have no wait.", listener.containsNoWait( cacheName, noWait ) );
     }
 
     /**
@@ -291,5 +233,63 @@ public class LateralTCPDiscoveryListenerUnitTest
 
         // VERIFY
         assertFalse( "Should not have no wait.", listener.containsNoWait( cacheName, noWait ) );
+    }
+
+    /**
+     * Remove a no wait from a known facade.
+     */
+    @Test
+    public void testRemoveNoWait_FacadeInList_NoWaitIs()
+    {
+        // SETUP
+        final String cacheName = "testRemoveNoWaitFacade_FacadeInListNoWaitIs";
+        final LateralCacheNoWaitFacade<String, String> facade = setupFacade(cacheName);
+        listener.addNoWaitFacade( cacheName, facade );
+
+        final LateralCacheNoWait<String, String> noWait = setupNoWait(cacheName);
+        listener.addNoWait( noWait );
+
+        // DO WORK
+        final boolean result = listener.removeNoWait( noWait );
+
+        // VERIFY
+        assertTrue( "Should have removed the no wait.", result );
+    }
+
+    /**
+     * Remove a no wait from a known facade.
+     */
+    @Test
+    public void testRemoveNoWait_FacadeInList_NoWaitNot()
+    {
+        // SETUP
+        final String cacheName = "testAddNoWaitFacade_FacadeInList";
+        final LateralCacheNoWaitFacade<String, String> facade = setupFacade(cacheName);
+        listener.addNoWaitFacade( cacheName, facade );
+
+        final LateralCacheNoWait<String, String> noWait = setupNoWait(cacheName);
+
+        // DO WORK
+        final boolean result = listener.removeNoWait( noWait );
+
+        // VERIFY
+        assertFalse( "Should not have removed the no wait.", result );
+    }
+
+    /**
+     * Remove a no wait from an unknown facade.
+     */
+    @Test
+    public void testRemoveNoWait_FacadeNotInList()
+    {
+        // SETUP
+        final String cacheName = "testRemoveNoWaitFacade_FacadeNotInList";
+        final LateralCacheNoWait<String, String> noWait = setupNoWait(cacheName);
+
+        // DO WORK
+        final boolean result = listener.removeNoWait( noWait );
+
+        // VERIFY
+        assertFalse( "Should not have removed the no wait.", result );
     }
 }

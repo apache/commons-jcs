@@ -62,457 +62,6 @@ import org.apache.commons.jcs3.utils.struct.LRUMap;
 public abstract class AbstractDiskCache<K, V>
     extends AbstractAuxiliaryCacheEventLogging<K, V>
 {
-    /** The logger */
-    private static final Log log = LogManager.getLog( AbstractDiskCache.class );
-
-    /** Generic disk cache attributes */
-    private final IDiskCacheAttributes diskCacheAttributes;
-
-    /**
-     * Map where elements are stored between being added to this cache and actually spooled to disk.
-     * This allows puts to the disk cache to return quickly, and the more expensive operation of
-     * serializing the elements to persistent storage queued for later.
-     *
-     * If the elements are pulled into the memory cache while the are still in purgatory, writing to
-     * disk can be canceled.
-     */
-    private Map<K, PurgatoryElement<K, V>> purgatory;
-
-    /**
-     * The CacheEventQueue where changes will be queued for asynchronous updating of the persistent
-     * storage.
-     */
-    private final ICacheEventQueue<K, V> cacheEventQueue;
-
-    /**
-     * Indicates whether the cache is 'alive': initialized, but not yet disposed. Child classes must
-     * set this to true.
-     */
-    private final AtomicBoolean alive = new AtomicBoolean();
-
-    /** Every cache will have a name, subclasses must set this when they are initialized. */
-    private final String cacheName;
-
-    /** DEBUG: Keeps a count of the number of purgatory hits for debug messages */
-    private int purgHits;
-
-    /**
-     * We lock here, so that we cannot get an update after a remove all. an individual removal locks
-     * the item.
-     */
-    private final ReentrantReadWriteLock removeAllLock = new ReentrantReadWriteLock();
-
-    // ----------------------------------------------------------- constructors
-
-    /**
-     * Construct the abstract disk cache, create event queues and purgatory. Child classes should
-     * set the alive flag to true after they are initialized.
-     *
-     * @param attr
-     */
-    protected AbstractDiskCache( final IDiskCacheAttributes attr )
-    {
-        this.diskCacheAttributes = attr;
-        this.cacheName = attr.getCacheName();
-
-        // create queue
-        final CacheEventQueueFactory<K, V> fact = new CacheEventQueueFactory<>();
-        this.cacheEventQueue = fact.createCacheEventQueue(
-                new MyCacheListener(), CacheInfo.listenerId, cacheName,
-                   diskCacheAttributes.getEventQueuePoolName(),
-                   diskCacheAttributes.getEventQueueType() );
-
-        // create purgatory
-        initPurgatory();
-    }
-
-    /**
-     * @return true if the cache is alive
-     */
-    public boolean isAlive()
-    {
-        return alive.get();
-    }
-
-    /**
-     * @param alive set the alive status
-     */
-    public void setAlive(final boolean alive)
-    {
-        this.alive.set(alive);
-    }
-
-    /**
-     * Purgatory size of -1 means to use a HashMap with no size limit. Anything greater will use an
-     * LRU map of some sort.
-     *
-     * TODO Currently setting this to 0 will cause nothing to be put to disk, since it will assume
-     *       that if an item is not in purgatory, then it must have been plucked. We should make 0
-     *       work, a way to not use purgatory.
-     */
-    private void initPurgatory()
-    {
-        // we need this so we can stop the updates from happening after a
-        // remove all
-        removeAllLock.writeLock().lock();
-
-        try
-        {
-            synchronized (this)
-            {
-                if ( diskCacheAttributes.getMaxPurgatorySize() >= 0 )
-                {
-                    purgatory = Collections.synchronizedMap(
-                            new LRUMap<>( diskCacheAttributes.getMaxPurgatorySize()));
-                }
-                else
-                {
-                    purgatory = new ConcurrentHashMap<>();
-                }
-            }
-        }
-        finally
-        {
-            removeAllLock.writeLock().unlock();
-        }
-    }
-
-    // ------------------------------------------------------- interface ICache
-
-    /**
-     * Adds the provided element to the cache. Element will be added to purgatory, and then queued
-     * for later writing to the serialized storage mechanism.
-     *
-     * An update results in a put event being created. The put event will call the handlePut method
-     * defined here. The handlePut method calls the implemented doPut on the child.
-     *
-     * @param cacheElement
-     * @throws IOException
-     * @see org.apache.commons.jcs3.engine.behavior.ICache#update
-     */
-    @Override
-    public final void update( final ICacheElement<K, V> cacheElement )
-        throws IOException
-    {
-        log.debug( "Putting element in purgatory, cacheName: {0}, key: {1}",
-                () -> cacheName, cacheElement::getKey);
-
-        try
-        {
-            // Wrap the CacheElement in a PurgatoryElement
-            final PurgatoryElement<K, V> pe = new PurgatoryElement<>( cacheElement );
-
-            // Indicates the element is eligible to be spooled to disk,
-            // this will remain true unless the item is pulled back into
-            // memory.
-            pe.setSpoolable( true );
-
-            // Add the element to purgatory
-            purgatory.put( pe.getKey(), pe );
-
-            // Queue element for serialization
-            cacheEventQueue.addPutEvent( pe );
-        }
-        catch ( final IOException ex )
-        {
-            log.error( "Problem adding put event to queue.", ex );
-            cacheEventQueue.destroy();
-        }
-    }
-
-    /**
-     * Check to see if the item is in purgatory. If so, return it. If not, check to see if we have
-     * it on disk.
-     *
-     * @param key
-     * @return ICacheElement&lt;K, V&gt; or null
-     * @see AuxiliaryCache#get
-     */
-    @Override
-    public final ICacheElement<K, V> get( final K key )
-    {
-        // If not alive, always return null.
-        if (!alive.get())
-        {
-            log.debug( "get was called, but the disk cache is not alive." );
-            return null;
-        }
-
-        PurgatoryElement<K, V> pe = purgatory.get( key );
-
-        // If the element was found in purgatory
-        if ( pe != null )
-        {
-            purgHits++;
-
-            if ( purgHits % 100 == 0 )
-            {
-                log.debug( "Purgatory hits = {0}", purgHits );
-            }
-
-            // Since the element will go back to the memory cache, we could set
-            // spoolable to false, which will prevent the queue listener from
-            // serializing the element. This would not match the disk cache
-            // behavior and the behavior of other auxiliaries. Gets never remove
-            // items from auxiliaries.
-            // Beyond consistency, the items should stay in purgatory and get
-            // spooled since the mem cache may be set to 0. If an item is
-            // active, it will keep getting put into purgatory and removed. The
-            // CompositeCache now does not put an item to memory from disk if
-            // the size is 0.
-            // Do not set spoolable to false. Just let it go to disk. This
-            // will allow the memory size = 0 setting to work well.
-
-            log.debug( "Found element in purgatory, cacheName: {0}, key: {1}",
-                    cacheName, key );
-
-            return pe.getCacheElement();
-        }
-
-        // If we reach this point, element was not found in purgatory, so get
-        // it from the cache.
-        try
-        {
-            return doGet( key );
-        }
-        catch (final IOException e)
-        {
-            log.error( e );
-            cacheEventQueue.destroy();
-        }
-
-        return null;
-    }
-
-    /**
-     * Gets items from the cache matching the given pattern. Items from memory will replace those
-     * from remote sources.
-     *
-     * This only works with string keys. It's too expensive to do a toString on every key.
-     *
-     * Auxiliaries will do their best to handle simple expressions. For instance, the JDBC disk
-     * cache will convert * to % and . to _
-     *
-     * @param pattern
-     * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
-     *         data matching the pattern.
-     * @throws IOException
-     */
-    @Override
-    public Map<K, ICacheElement<K, V>> getMatching( final String pattern )
-        throws IOException
-    {
-        // this avoids locking purgatory, but it uses more memory
-        Set<K> keyArray = new HashSet<>(purgatory.keySet());
-
-        final Set<K> matchingKeys = getKeyMatcher().getMatchingKeysFromArray(pattern, keyArray);
-
-        // call getMultiple with the set
-        final Map<K, ICacheElement<K, V>> result = processGetMultiple( matchingKeys );
-
-        // Get the keys from disk
-        final Map<K, ICacheElement<K, V>> diskMatches = doGetMatching( pattern );
-
-        result.putAll( diskMatches );
-
-        return result;
-    }
-
-    /**
-     * The keys in the cache.
-     *
-     * @see org.apache.commons.jcs3.auxiliary.AuxiliaryCache#getKeySet()
-     */
-    @Override
-    public abstract Set<K> getKeySet() throws IOException;
-
-    /**
-     * Removes are not queued. A call to remove is immediate.
-     *
-     * @param key
-     * @return whether the item was present to be removed.
-     * @throws IOException
-     * @see org.apache.commons.jcs3.engine.behavior.ICache#remove
-     */
-    @Override
-    public final boolean remove( final K key )
-        throws IOException
-    {
-        // I'm getting the object, so I can lock on the element
-        // Remove element from purgatory if it is there
-        PurgatoryElement<K, V> pe = purgatory.remove( key );
-        boolean present;
-
-        if ( pe != null )
-        {
-            synchronized ( pe.getCacheElement() )
-            {
-                // no way to remove from queue, just make sure it doesn't get on
-                // disk and then removed right afterwards
-                pe.setSpoolable( false );
-
-                // Remove from persistent store immediately
-                present = doRemove( key );
-            }
-        }
-        else
-        {
-            // Remove from persistent store immediately
-            present = doRemove( key );
-        }
-
-        return present;
-    }
-
-    /**
-     * @throws IOException
-     * @see org.apache.commons.jcs3.engine.behavior.ICache#removeAll
-     */
-    @Override
-    public final void removeAll()
-        throws IOException
-    {
-        if ( this.diskCacheAttributes.isAllowRemoveAll() )
-        {
-            // Replace purgatory with a new empty hashtable
-            initPurgatory();
-
-            // Remove all from persistent store immediately
-            doRemoveAll();
-        }
-        else
-        {
-            log.info( "RemoveAll was requested but the request was not "
-                    + "fulfilled: allowRemoveAll is set to false." );
-        }
-    }
-
-    /**
-     * Adds a dispose request to the disk cache.
-     *
-     * Disposal proceeds in several steps.
-     * <ol>
-     * <li>Prior to this call the Composite cache dumped the memory into the disk cache. If it is
-     * large then we need to wait for the event queue to finish.</li>
-     * <li>Wait until the event queue is empty of until the configured ShutdownSpoolTimeLimit is
-     * reached.</li>
-     * <li>Call doDispose on the concrete impl.</li>
-     * </ol>
-     * @throws IOException
-     */
-    @Override
-    public final void dispose()
-        throws IOException
-    {
-        // wait up to 60 seconds for dispose and then quit if not done.
-        long shutdownSpoolTime = this.diskCacheAttributes.getShutdownSpoolTimeLimit() * 1000L;
-
-        while (!cacheEventQueue.isEmpty() && shutdownSpoolTime > 0)
-        {
-            try
-            {
-                Thread.sleep(100);
-                shutdownSpoolTime -= 100;
-            }
-            catch ( final InterruptedException e )
-            {
-                break;
-            }
-        }
-
-        if (shutdownSpoolTime <= 0)
-        {
-            log.info( "No longer waiting for event queue to finish: {0}",
-                    cacheEventQueue::getStatistics);
-        }
-
-        log.info( "In dispose, destroying event queue." );
-        // This stops the processor thread.
-        cacheEventQueue.destroy();
-
-        // Invoke any implementation specific disposal code
-        // need to handle the disposal first.
-        doDispose();
-
-        alive.set(false);
-    }
-
-    /**
-     * @return the region name.
-     * @see ICache#getCacheName
-     */
-    @Override
-    public String getCacheName()
-    {
-        return cacheName;
-    }
-
-    /**
-     * Gets basic stats for the abstract disk cache.
-     *
-     * @return String
-     */
-    @Override
-    public String getStats()
-    {
-        return getStatistics().toString();
-    }
-
-    /**
-     * Returns semi-structured data.
-     *
-     * @see org.apache.commons.jcs3.auxiliary.AuxiliaryCache#getStatistics()
-     */
-    @Override
-    public IStats getStatistics()
-    {
-        final IStats stats = new Stats();
-        stats.setTypeName( "Abstract Disk Cache" );
-
-        final ArrayList<IStatElement<?>> elems = new ArrayList<>();
-
-        elems.add(new StatElement<>( "Purgatory Hits", Integer.valueOf(purgHits) ) );
-        elems.add(new StatElement<>( "Purgatory Size", Integer.valueOf(purgatory.size()) ) );
-
-        // get the stats from the event queue too
-        final IStats eqStats = this.cacheEventQueue.getStatistics();
-        elems.addAll(eqStats.getStatElements());
-
-        stats.setStatElements( elems );
-
-        return stats;
-    }
-
-    /**
-     * @return the status -- alive or disposed from CacheConstants
-     * @see ICache#getStatus
-     */
-    @Override
-    public CacheStatus getStatus()
-    {
-        return alive.get() ? CacheStatus.ALIVE : CacheStatus.DISPOSED;
-    }
-
-    /**
-     * Size cannot be determined without knowledge of the cache implementation, so subclasses will
-     * need to implement this method.
-     *
-     * @return the number of items.
-     * @see ICache#getSize
-     */
-    @Override
-    public abstract int getSize();
-
-    /**
-     * @see org.apache.commons.jcs3.engine.behavior.ICacheType#getCacheType
-     * @return Always returns DISK_CACHE since subclasses should all be of that type.
-     */
-    @Override
-    public CacheType getCacheType()
-    {
-        return CacheType.DISK_CACHE;
-    }
-
     /**
      * Cache that implements the CacheListener interface, and calls appropriate methods in its
      * parent class.
@@ -536,15 +85,18 @@ public abstract class AbstractDiskCache<K, V>
         }
 
         /**
-         * @param id
+         * @param cacheName
          * @throws IOException
-         * @see ICacheListener#setListenerId
+         * @see ICacheListener#handleDispose
          */
         @Override
-        public void setListenerId( final long id )
+        public void handleDispose( final String cacheName )
             throws IOException
         {
-            this.listenerId = id;
+            if (alive.get())
+            {
+                doDispose();
+            }
         }
 
         /**
@@ -652,31 +204,131 @@ public abstract class AbstractDiskCache<K, V>
         }
 
         /**
-         * @param cacheName
+         * @param id
          * @throws IOException
-         * @see ICacheListener#handleDispose
+         * @see ICacheListener#setListenerId
          */
         @Override
-        public void handleDispose( final String cacheName )
+        public void setListenerId( final long id )
             throws IOException
         {
-            if (alive.get())
-            {
-                doDispose();
-            }
+            this.listenerId = id;
         }
     }
 
-    /**
-     * Before the event logging layer, the subclasses implemented the do* methods. Now the do*
-     * methods call the *WithEventLogging method on the super. The *WithEventLogging methods call
-     * the abstract process* methods. The children implement the process methods.
-     *
-     * For example, doGet calls getWithEventLogging, which calls processGet
-     */
+    /** The logger */
+    private static final Log log = LogManager.getLog( AbstractDiskCache.class );
+
+    /** Generic disk cache attributes */
+    private final IDiskCacheAttributes diskCacheAttributes;
 
     /**
-     * Get a value from the persistent store.
+     * Map where elements are stored between being added to this cache and actually spooled to disk.
+     * This allows puts to the disk cache to return quickly, and the more expensive operation of
+     * serializing the elements to persistent storage queued for later.
+     *
+     * If the elements are pulled into the memory cache while the are still in purgatory, writing to
+     * disk can be canceled.
+     */
+    private Map<K, PurgatoryElement<K, V>> purgatory;
+
+    /**
+     * The CacheEventQueue where changes will be queued for asynchronous updating of the persistent
+     * storage.
+     */
+    private final ICacheEventQueue<K, V> cacheEventQueue;
+
+    /**
+     * Indicates whether the cache is 'alive': initialized, but not yet disposed. Child classes must
+     * set this to true.
+     */
+    private final AtomicBoolean alive = new AtomicBoolean();
+
+    /** Every cache will have a name, subclasses must set this when they are initialized. */
+    private final String cacheName;
+
+    /** DEBUG: Keeps a count of the number of purgatory hits for debug messages */
+    private int purgHits;
+
+    // ----------------------------------------------------------- constructors
+
+    /**
+     * We lock here, so that we cannot get an update after a remove all. an individual removal locks
+     * the item.
+     */
+    private final ReentrantReadWriteLock removeAllLock = new ReentrantReadWriteLock();
+
+    /**
+     * Constructs the abstract disk cache, create event queues and purgatory. Child classes should
+     * set the alive flag to true after they are initialized.
+     *
+     * @param attr
+     */
+    protected AbstractDiskCache( final IDiskCacheAttributes attr )
+    {
+        this.diskCacheAttributes = attr;
+        this.cacheName = attr.getCacheName();
+
+        // create queue
+        final CacheEventQueueFactory<K, V> fact = new CacheEventQueueFactory<>();
+        this.cacheEventQueue = fact.createCacheEventQueue(
+                new MyCacheListener(), CacheInfo.listenerId, cacheName,
+                   diskCacheAttributes.getEventQueuePoolName(),
+                   diskCacheAttributes.getEventQueueType() );
+
+        // create purgatory
+        initPurgatory();
+    }
+
+    /**
+     * Adds a dispose request to the disk cache.
+     *
+     * Disposal proceeds in several steps.
+     * <ol>
+     * <li>Prior to this call the Composite cache dumped the memory into the disk cache. If it is
+     * large then we need to wait for the event queue to finish.</li>
+     * <li>Wait until the event queue is empty of until the configured ShutdownSpoolTimeLimit is
+     * reached.</li>
+     * <li>Call doDispose on the concrete impl.</li>
+     * </ol>
+     * @throws IOException
+     */
+    @Override
+    public final void dispose()
+        throws IOException
+    {
+        log.info( "In dispose, destroying event queue." );
+
+        // wait for dispose and then quit if not done.
+        cacheEventQueue.destroy(this.diskCacheAttributes.getShutdownSpoolTimeLimit());
+
+        // Invoke any implementation specific disposal code
+        // need to handle the disposal first.
+        doDispose();
+
+        alive.set(false);
+    }
+
+    /**
+     * Dispose of the persistent store. Note that disposal of purgatory and setting alive to false
+     * does NOT need to be done by this method.
+     *
+     * Before the event logging layer, the subclasses implemented the do* methods. Now the do*
+     * methods call the *EventLogging method on the super. The *WithEventLogging methods call the
+     * abstract process* methods. The children implement the process methods.
+     *
+     * @throws IOException
+     */
+    protected final void doDispose()
+        throws IOException
+    {
+        super.disposeWithEventLogging();
+    }
+
+    // ------------------------------------------------------- interface ICache
+
+    /**
+     * Gets a value from the persistent store.
      *
      * Before the event logging layer, the subclasses implemented the do* methods. Now the do*
      * methods call the *EventLogging method on the super. The *WithEventLogging methods call the
@@ -693,7 +345,7 @@ public abstract class AbstractDiskCache<K, V>
     }
 
     /**
-     * Get a value from the persistent store.
+     * Gets a value from the persistent store.
      *
      * Before the event logging layer, the subclasses implemented the do* methods. Now the do*
      * methods call the *EventLogging method on the super. The *WithEventLogging methods call the
@@ -707,22 +359,6 @@ public abstract class AbstractDiskCache<K, V>
         throws IOException
     {
         return super.getMatchingWithEventLogging( pattern );
-    }
-
-    /**
-     * Add a cache element to the persistent store.
-     *
-     * Before the event logging layer, the subclasses implemented the do* methods. Now the do*
-     * methods call the *EventLogging method on the super. The *WithEventLogging methods call the
-     * abstract process* methods. The children implement the process methods.
-     *
-     * @param cacheElement
-     * @throws IOException
-     */
-    protected final void doUpdate( final ICacheElement<K, V> cacheElement )
-        throws IOException
-    {
-        super.updateWithEventLogging( cacheElement );
     }
 
     /**
@@ -758,20 +394,111 @@ public abstract class AbstractDiskCache<K, V>
     }
 
     /**
-     * Dispose of the persistent store. Note that disposal of purgatory and setting alive to false
-     * does NOT need to be done by this method.
+     * Add a cache element to the persistent store.
      *
      * Before the event logging layer, the subclasses implemented the do* methods. Now the do*
      * methods call the *EventLogging method on the super. The *WithEventLogging methods call the
      * abstract process* methods. The children implement the process methods.
      *
+     * @param cacheElement
      * @throws IOException
      */
-    protected final void doDispose()
+    protected final void doUpdate( final ICacheElement<K, V> cacheElement )
         throws IOException
     {
-        super.disposeWithEventLogging();
+        super.updateWithEventLogging( cacheElement );
     }
+
+    /**
+     * Check to see if the item is in purgatory. If so, return it. If not, check to see if we have
+     * it on disk.
+     *
+     * @param key
+     * @return ICacheElement&lt;K, V&gt; or null
+     * @see AuxiliaryCache#get
+     */
+    @Override
+    public final ICacheElement<K, V> get( final K key )
+    {
+        // If not alive, always return null.
+        if (!alive.get())
+        {
+            log.debug( "get was called, but the disk cache is not alive." );
+            return null;
+        }
+
+        PurgatoryElement<K, V> pe = purgatory.get( key );
+
+        // If the element was found in purgatory
+        if ( pe != null )
+        {
+            purgHits++;
+
+            if ( purgHits % 100 == 0 )
+            {
+                log.debug( "Purgatory hits = {0}", purgHits );
+            }
+
+            // Since the element will go back to the memory cache, we could set
+            // spoolable to false, which will prevent the queue listener from
+            // serializing the element. This would not match the disk cache
+            // behavior and the behavior of other auxiliaries. Gets never remove
+            // items from auxiliaries.
+            // Beyond consistency, the items should stay in purgatory and get
+            // spooled since the mem cache may be set to 0. If an item is
+            // active, it will keep getting put into purgatory and removed. The
+            // CompositeCache now does not put an item to memory from disk if
+            // the size is 0.
+            // Do not set spoolable to false. Just let it go to disk. This
+            // will allow the memory size = 0 setting to work well.
+
+            log.debug( "Found element in purgatory, cacheName: {0}, key: {1}",
+                    cacheName, key );
+
+            return pe.getCacheElement();
+        }
+
+        // If we reach this point, element was not found in purgatory, so get
+        // it from the cache.
+        try
+        {
+            return doGet( key );
+        }
+        catch (final IOException e)
+        {
+            log.error( e );
+            cacheEventQueue.destroy();
+        }
+
+        return null;
+    }
+
+    /**
+     * @return the region name.
+     * @see ICache#getCacheName
+     */
+    @Override
+    public String getCacheName()
+    {
+        return cacheName;
+    }
+
+    /**
+     * @see org.apache.commons.jcs3.engine.behavior.ICacheType#getCacheType
+     * @return Always returns DISK_CACHE since subclasses should all be of that type.
+     */
+    @Override
+    public CacheType getCacheType()
+    {
+        return CacheType.DISK_CACHE;
+    }
+
+    /**
+     * This is used by the event logging.
+     *
+     * @return the location of the disk, either path or ip.
+     */
+    protected abstract String getDiskLocation();
 
     /**
      * Gets the extra info for the event log.
@@ -785,9 +512,261 @@ public abstract class AbstractDiskCache<K, V>
     }
 
     /**
-     * This is used by the event logging.
+     * The keys in the cache.
      *
-     * @return the location of the disk, either path or ip.
+     * @see org.apache.commons.jcs3.auxiliary.AuxiliaryCache#getKeySet()
      */
-    protected abstract String getDiskLocation();
+    @Override
+    public abstract Set<K> getKeySet() throws IOException;
+
+    /**
+     * Gets items from the cache matching the given pattern. Items from memory will replace those
+     * from remote sources.
+     *
+     * This only works with string keys. It's too expensive to do a toString on every key.
+     *
+     * Auxiliaries will do their best to handle simple expressions. For instance, the JDBC disk
+     * cache will convert * to % and . to _
+     *
+     * @param pattern
+     * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
+     *         data matching the pattern.
+     * @throws IOException
+     */
+    @Override
+    public Map<K, ICacheElement<K, V>> getMatching( final String pattern )
+        throws IOException
+    {
+        // this avoids locking purgatory, but it uses more memory
+        Set<K> keyArray = new HashSet<>(purgatory.keySet());
+
+        final Set<K> matchingKeys = getKeyMatcher().getMatchingKeysFromArray(pattern, keyArray);
+
+        // call getMultiple with the set
+        final Map<K, ICacheElement<K, V>> result = processGetMultiple( matchingKeys );
+
+        // Get the keys from disk
+        final Map<K, ICacheElement<K, V>> diskMatches = doGetMatching( pattern );
+
+        result.putAll( diskMatches );
+
+        return result;
+    }
+
+    /**
+     * Size cannot be determined without knowledge of the cache implementation, so subclasses will
+     * need to implement this method.
+     *
+     * @return the number of items.
+     * @see ICache#getSize
+     */
+    @Override
+    public abstract int getSize();
+
+    /**
+     * Returns semi-structured data.
+     *
+     * @see org.apache.commons.jcs3.auxiliary.AuxiliaryCache#getStatistics()
+     */
+    @Override
+    public IStats getStatistics()
+    {
+        final IStats stats = new Stats();
+        stats.setTypeName( "Abstract Disk Cache" );
+
+        final ArrayList<IStatElement<?>> elems = new ArrayList<>();
+
+        elems.add(new StatElement<>( "Purgatory Hits", Integer.valueOf(purgHits) ) );
+        elems.add(new StatElement<>( "Purgatory Size", Integer.valueOf(purgatory.size()) ) );
+
+        // get the stats from the event queue too
+        final IStats eqStats = this.cacheEventQueue.getStatistics();
+        elems.addAll(eqStats.getStatElements());
+
+        stats.setStatElements( elems );
+
+        return stats;
+    }
+
+    /**
+     * Before the event logging layer, the subclasses implemented the do* methods. Now the do*
+     * methods call the *WithEventLogging method on the super. The *WithEventLogging methods call
+     * the abstract process* methods. The children implement the process methods.
+     *
+     * For example, doGet calls getWithEventLogging, which calls processGet
+     */
+
+    /**
+     * Gets basic stats for the abstract disk cache.
+     *
+     * @return String
+     */
+    @Override
+    public String getStats()
+    {
+        return getStatistics().toString();
+    }
+
+    /**
+     * @return the status -- alive or disposed from CacheConstants
+     * @see ICache#getStatus
+     */
+    @Override
+    public CacheStatus getStatus()
+    {
+        return alive.get() ? CacheStatus.ALIVE : CacheStatus.DISPOSED;
+    }
+
+    /**
+     * Purgatory size of -1 means to use a HashMap with no size limit. Anything greater will use an
+     * LRU map of some sort.
+     *
+     * TODO Currently setting this to 0 will cause nothing to be put to disk, since it will assume
+     *       that if an item is not in purgatory, then it must have been plucked. We should make 0
+     *       work, a way to not use purgatory.
+     */
+    private void initPurgatory()
+    {
+        // we need this so we can stop the updates from happening after a
+        // remove all
+        removeAllLock.writeLock().lock();
+
+        try
+        {
+            synchronized (this)
+            {
+                if ( diskCacheAttributes.getMaxPurgatorySize() >= 0 )
+                {
+                    purgatory = Collections.synchronizedMap(
+                            new LRUMap<>( diskCacheAttributes.getMaxPurgatorySize()));
+                }
+                else
+                {
+                    purgatory = new ConcurrentHashMap<>();
+                }
+            }
+        }
+        finally
+        {
+            removeAllLock.writeLock().unlock();
+        }
+    }
+
+    /**
+     * @return true if the cache is alive
+     */
+    public boolean isAlive()
+    {
+        return alive.get();
+    }
+
+    /**
+     * Removes are not queued. A call to remove is immediate.
+     *
+     * @param key
+     * @return whether the item was present to be removed.
+     * @throws IOException
+     * @see org.apache.commons.jcs3.engine.behavior.ICache#remove
+     */
+    @Override
+    public final boolean remove( final K key )
+        throws IOException
+    {
+        // I'm getting the object, so I can lock on the element
+        // Remove element from purgatory if it is there
+        PurgatoryElement<K, V> pe = purgatory.remove( key );
+        boolean present;
+
+        if ( pe != null )
+        {
+            synchronized ( pe.getCacheElement() )
+            {
+                // no way to remove from queue, just make sure it doesn't get on
+                // disk and then removed right afterwards
+                pe.setSpoolable( false );
+
+                // Remove from persistent store immediately
+                present = doRemove( key );
+            }
+        }
+        else
+        {
+            // Remove from persistent store immediately
+            present = doRemove( key );
+        }
+
+        return present;
+    }
+
+    /**
+     * @throws IOException
+     * @see org.apache.commons.jcs3.engine.behavior.ICache#removeAll
+     */
+    @Override
+    public final void removeAll()
+        throws IOException
+    {
+        if ( this.diskCacheAttributes.isAllowRemoveAll() )
+        {
+            // Replace purgatory with a new empty hashtable
+            initPurgatory();
+
+            // Remove all from persistent store immediately
+            doRemoveAll();
+        }
+        else
+        {
+            log.info( "RemoveAll was requested but the request was not "
+                    + "fulfilled: allowRemoveAll is set to false." );
+        }
+    }
+
+    /**
+     * @param alive set the alive status
+     */
+    public void setAlive(final boolean alive)
+    {
+        this.alive.set(alive);
+    }
+
+    /**
+     * Adds the provided element to the cache. Element will be added to purgatory, and then queued
+     * for later writing to the serialized storage mechanism.
+     *
+     * An update results in a put event being created. The put event will call the handlePut method
+     * defined here. The handlePut method calls the implemented doPut on the child.
+     *
+     * @param cacheElement
+     * @throws IOException
+     * @see org.apache.commons.jcs3.engine.behavior.ICache#update
+     */
+    @Override
+    public final void update( final ICacheElement<K, V> cacheElement )
+        throws IOException
+    {
+        log.debug( "Putting element in purgatory, cacheName: {0}, key: {1}",
+                () -> cacheName, cacheElement::getKey);
+
+        try
+        {
+            // Wrap the CacheElement in a PurgatoryElement
+            final PurgatoryElement<K, V> pe = new PurgatoryElement<>( cacheElement );
+
+            // Indicates the element is eligible to be spooled to disk,
+            // this will remain true unless the item is pulled back into
+            // memory.
+            pe.setSpoolable( true );
+
+            // Add the element to purgatory
+            purgatory.put( pe.getKey(), pe );
+
+            // Queue element for serialization
+            cacheEventQueue.addPutEvent( pe );
+        }
+        catch ( final IOException ex )
+        {
+            log.error( "Problem adding put event to queue.", ex );
+            cacheEventQueue.destroy();
+        }
+    }
 }

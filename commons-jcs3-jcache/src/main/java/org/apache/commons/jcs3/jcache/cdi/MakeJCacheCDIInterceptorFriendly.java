@@ -52,10 +52,136 @@ import javax.enterprise.util.AnnotationLiteral;
 // to get class model and this way allow to add cache annotation on the fly - == avoid java pure reflection to get metadata
 public class MakeJCacheCDIInterceptorFriendly implements Extension
 {
+    public static class HelperBean implements Bean<CDIJCacheHelper>, PassivationCapable {
+        private final AnnotatedType<CDIJCacheHelper> at;
+        private final InjectionTarget<CDIJCacheHelper> it;
+        private final HashSet<Annotation> qualifiers;
+        private final String id;
+
+        public HelperBean(final AnnotatedType<CDIJCacheHelper> annotatedType,
+                          final InjectionTarget<CDIJCacheHelper> injectionTarget,
+                          final String id) {
+            this.at = annotatedType;
+            this.it = injectionTarget;
+            this.id =  "JCS#CDIHelper#" + id;
+
+            this.qualifiers = new HashSet<>();
+            this.qualifiers.add(new AnnotationLiteral<Default>() {
+
+                /**
+                 *
+                 */
+                private static final long serialVersionUID = 3314657767813459983L;});
+            this.qualifiers.add(new AnnotationLiteral<Any>() {
+
+                /**
+                 *
+                 */
+                private static final long serialVersionUID = 7419841275942488170L;});
+        }
+
+        @Override
+        public CDIJCacheHelper create(final CreationalContext<CDIJCacheHelper> context) {
+            final CDIJCacheHelper produce = it.produce(context);
+            it.inject(produce, context);
+            it.postConstruct(produce);
+            return produce;
+        }
+
+        @Override
+        public void destroy(final CDIJCacheHelper instance, final CreationalContext<CDIJCacheHelper> context) {
+            it.preDestroy(instance);
+            it.dispose(instance);
+            context.release();
+        }
+
+        @Override
+        public Class<?> getBeanClass() {
+            return at.getJavaClass();
+        }
+
+        @Override
+        public String getId() {
+            return id;
+        }
+
+        @Override
+        public Set<InjectionPoint> getInjectionPoints() {
+            return it.getInjectionPoints();
+        }
+
+        @Override
+        public String getName() {
+            return null;
+        }
+
+        @Override
+        public Set<Annotation> getQualifiers() {
+            return qualifiers;
+        }
+
+        @Override
+        public Class<? extends Annotation> getScope() {
+            return ApplicationScoped.class;
+        }
+
+        @Override
+        public Set<Class<? extends Annotation>> getStereotypes() {
+            return Collections.emptySet();
+        }
+
+        @Override
+        public Set<Type> getTypes() {
+            return at.getTypeClosure();
+        }
+
+        @Override
+        public boolean isAlternative() {
+            return false;
+        }
+
+        @Override
+        public boolean isNullable() {
+            return false;
+        }
+    }
     private static final AtomicInteger id = new AtomicInteger();
+
     private static final boolean USE_ID = !Boolean.getBoolean("org.apache.commons.jcs3.cdi.skip-id");
 
+    // TODO: make it better for ear+cluster case with CDI 1.0
+    private static String findIdSuffix() {
+        // big disadvantage is all deployments of a cluster needs to be in the exact same order but it works with ears
+        if (USE_ID) {
+            return "lib" + id.incrementAndGet();
+        }
+        return "default";
+    }
+
     private boolean needHelper = true;
+
+    protected void addHelper(final @Observes AfterBeanDiscovery afterBeanDiscovery,
+                             final BeanManager bm)
+    {
+        if (!needHelper) {
+            return;
+        }
+        /* CDI >= 1.1 only. Actually we shouldn't go here with CDI 1.1 since we defined the annotated type for the helper
+        final AnnotatedType<CDIJCacheHelper> annotatedType = bm.createAnnotatedType(CDIJCacheHelper.class);
+        final BeanAttributes<CDIJCacheHelper> beanAttributes = bm.createBeanAttributes(annotatedType);
+        final InjectionTarget<CDIJCacheHelper> injectionTarget = bm.createInjectionTarget(annotatedType);
+        final Bean<CDIJCacheHelper> bean = bm.createBean(beanAttributes, CDIJCacheHelper.class, new InjectionTargetFactory<CDIJCacheHelper>() {
+            @Override
+            public InjectionTarget<CDIJCacheHelper> createInjectionTarget(Bean<CDIJCacheHelper> bean) {
+                return injectionTarget;
+            }
+        });
+        */
+        final AnnotatedType<CDIJCacheHelper> annotatedType = bm.createAnnotatedType(CDIJCacheHelper.class);
+        final InjectionTarget<CDIJCacheHelper> injectionTarget = bm.createInjectionTarget(annotatedType);
+        final HelperBean bean = new HelperBean(annotatedType, injectionTarget, findIdSuffix());
+        afterBeanDiscovery.addBean(bean);
+    }
 
     protected void discoverInterceptorBindings(final @Observes BeforeBeanDiscovery beforeBeanDiscoveryEvent,
                                                final BeanManager bm)
@@ -88,136 +214,10 @@ public class MakeJCacheCDIInterceptorFriendly implements Extension
         }
     }
 
-    protected void addHelper(final @Observes AfterBeanDiscovery afterBeanDiscovery,
-                             final BeanManager bm)
-    {
-        if (!needHelper) {
-            return;
-        }
-        /* CDI >= 1.1 only. Actually we shouldn't go here with CDI 1.1 since we defined the annotated type for the helper
-        final AnnotatedType<CDIJCacheHelper> annotatedType = bm.createAnnotatedType(CDIJCacheHelper.class);
-        final BeanAttributes<CDIJCacheHelper> beanAttributes = bm.createBeanAttributes(annotatedType);
-        final InjectionTarget<CDIJCacheHelper> injectionTarget = bm.createInjectionTarget(annotatedType);
-        final Bean<CDIJCacheHelper> bean = bm.createBean(beanAttributes, CDIJCacheHelper.class, new InjectionTargetFactory<CDIJCacheHelper>() {
-            @Override
-            public InjectionTarget<CDIJCacheHelper> createInjectionTarget(Bean<CDIJCacheHelper> bean) {
-                return injectionTarget;
-            }
-        });
-        */
-        final AnnotatedType<CDIJCacheHelper> annotatedType = bm.createAnnotatedType(CDIJCacheHelper.class);
-        final InjectionTarget<CDIJCacheHelper> injectionTarget = bm.createInjectionTarget(annotatedType);
-        final HelperBean bean = new HelperBean(annotatedType, injectionTarget, findIdSuffix());
-        afterBeanDiscovery.addBean(bean);
-    }
-
     protected void vetoScannedCDIJCacheHelperQualifiers(final @Observes ProcessAnnotatedType<CDIJCacheHelper> pat) {
         if (!needHelper) { // already seen, shouldn't really happen, just a protection
             pat.veto();
         }
         needHelper = false;
-    }
-
-    // TODO: make it better for ear+cluster case with CDI 1.0
-    private static String findIdSuffix() {
-        // big disadvantage is all deployments of a cluster needs to be in the exact same order but it works with ears
-        if (USE_ID) {
-            return "lib" + id.incrementAndGet();
-        }
-        return "default";
-    }
-
-    public static class HelperBean implements Bean<CDIJCacheHelper>, PassivationCapable {
-        private final AnnotatedType<CDIJCacheHelper> at;
-        private final InjectionTarget<CDIJCacheHelper> it;
-        private final HashSet<Annotation> qualifiers;
-        private final String id;
-
-        public HelperBean(final AnnotatedType<CDIJCacheHelper> annotatedType,
-                          final InjectionTarget<CDIJCacheHelper> injectionTarget,
-                          final String id) {
-            this.at = annotatedType;
-            this.it = injectionTarget;
-            this.id =  "JCS#CDIHelper#" + id;
-
-            this.qualifiers = new HashSet<>();
-            this.qualifiers.add(new AnnotationLiteral<Default>() {
-
-                /**
-                 *
-                 */
-                private static final long serialVersionUID = 3314657767813459983L;});
-            this.qualifiers.add(new AnnotationLiteral<Any>() {
-
-                /**
-                 *
-                 */
-                private static final long serialVersionUID = 7419841275942488170L;});
-        }
-
-        @Override
-        public Set<InjectionPoint> getInjectionPoints() {
-            return it.getInjectionPoints();
-        }
-
-        @Override
-        public Class<?> getBeanClass() {
-            return at.getJavaClass();
-        }
-
-        @Override
-        public boolean isNullable() {
-            return false;
-        }
-
-        @Override
-        public Set<Type> getTypes() {
-            return at.getTypeClosure();
-        }
-
-        @Override
-        public Set<Annotation> getQualifiers() {
-            return qualifiers;
-        }
-
-        @Override
-        public Class<? extends Annotation> getScope() {
-            return ApplicationScoped.class;
-        }
-
-        @Override
-        public String getName() {
-            return null;
-        }
-
-        @Override
-        public Set<Class<? extends Annotation>> getStereotypes() {
-            return Collections.emptySet();
-        }
-
-        @Override
-        public boolean isAlternative() {
-            return false;
-        }
-
-        @Override
-        public CDIJCacheHelper create(final CreationalContext<CDIJCacheHelper> context) {
-            final CDIJCacheHelper produce = it.produce(context);
-            it.inject(produce, context);
-            it.postConstruct(produce);
-            return produce;
-        }
-
-        @Override
-        public void destroy(final CDIJCacheHelper instance, final CreationalContext<CDIJCacheHelper> context) {
-            it.preDestroy(instance);
-            it.dispose(instance);
-            context.release();
-        }
-
-        @Override
-        public String getId() {
-            return id;
-        }
     }
 }

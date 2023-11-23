@@ -35,11 +35,11 @@ public class IndexedDisk implements AutoCloseable
     /** The size of the header that indicates the amount of data stored in an occupied block. */
     public static final byte HEADER_SIZE_BYTES = 4;
 
-    /** The serializer. */
-    private final IElementSerializer elementSerializer;
-
     /** The logger */
     private static final Log log = LogManager.getLog(IndexedDisk.class);
+
+    /** The serializer. */
+    private final IElementSerializer elementSerializer;
 
     /** The path to the log directory. */
     private final String filepath;
@@ -63,6 +63,98 @@ public class IndexedDisk implements AutoCloseable
                 StandardOpenOption.CREATE,
                 StandardOpenOption.READ,
                 StandardOpenOption.WRITE);
+    }
+
+    /**
+     * Closes the raf.
+     * <p>
+     * @throws IOException
+     */
+    @Override
+    public void close()
+        throws IOException
+    {
+        fc.close();
+    }
+
+    /**
+     * This is used for debugging.
+     * <p>
+     * @return the file path.
+     */
+    protected String getFilePath()
+    {
+        return filepath;
+    }
+
+    /**
+     * Tests if the length is 0.
+     * @return true if the if the length is 0.
+     * @throws IOException If an I/O error occurs.
+     * @since 3.1
+     */
+    protected boolean isEmpty() throws IOException
+    {
+        return length() == 0;
+    }
+
+    /**
+     * Returns the raf length.
+     *
+     * @return the length of the file.
+     * @throws IOException If an I/O error occurs.
+     */
+    protected long length()
+        throws IOException
+    {
+        return fc.size();
+    }
+
+    /**
+     * Moves the data stored from one position to another. The descriptor's position is updated.
+     * <p>
+     * @param ded
+     * @param newPosition
+     * @throws IOException
+     */
+    protected void move(final IndexedDiskElementDescriptor ded, final long newPosition)
+        throws IOException
+    {
+        final ByteBuffer datalength = ByteBuffer.allocate(HEADER_SIZE_BYTES);
+        fc.read(datalength, ded.pos);
+        datalength.flip();
+        final int length = datalength.getInt();
+
+        if (length != ded.len)
+        {
+            throw new IOException("Mismatched memory and disk length (" + length + ") for " + ded);
+        }
+
+        // TODO: more checks?
+
+        long readPos = ded.pos;
+        long writePos = newPosition;
+
+        // header len + data len
+        int remaining = HEADER_SIZE_BYTES + length;
+        final ByteBuffer buffer = ByteBuffer.allocate(16384);
+
+        while (remaining > 0)
+        {
+            // chunk it
+            final int chunkSize = Math.min(remaining, buffer.capacity());
+            buffer.limit(chunkSize);
+            fc.read(buffer, readPos);
+            buffer.flip();
+            fc.write(buffer, writePos);
+            buffer.clear();
+
+            writePos += chunkSize;
+            readPos += chunkSize;
+            remaining -= chunkSize;
+        }
+
+        ded.pos = newPosition;
     }
 
     /**
@@ -119,50 +211,29 @@ public class IndexedDisk implements AutoCloseable
     }
 
     /**
-     * Moves the data stored from one position to another. The descriptor's position is updated.
+     * Sets the raf to empty.
      * <p>
-     * @param ded
-     * @param newPosition
      * @throws IOException
      */
-    protected void move(final IndexedDiskElementDescriptor ded, final long newPosition)
+    protected synchronized void reset()
         throws IOException
     {
-        final ByteBuffer datalength = ByteBuffer.allocate(HEADER_SIZE_BYTES);
-        fc.read(datalength, ded.pos);
-        datalength.flip();
-        final int length = datalength.getInt();
+        log.debug("Resetting Indexed File [{0}]", filepath);
+        fc.truncate(0);
+        fc.force(true);
+    }
 
-        if (length != ded.len)
-        {
-            throw new IOException("Mismatched memory and disk length (" + length + ") for " + ded);
-        }
-
-        // TODO: more checks?
-
-        long readPos = ded.pos;
-        long writePos = newPosition;
-
-        // header len + data len
-        int remaining = HEADER_SIZE_BYTES + length;
-        final ByteBuffer buffer = ByteBuffer.allocate(16384);
-
-        while (remaining > 0)
-        {
-            // chunk it
-            final int chunkSize = Math.min(remaining, buffer.capacity());
-            buffer.limit(chunkSize);
-            fc.read(buffer, readPos);
-            buffer.flip();
-            fc.write(buffer, writePos);
-            buffer.clear();
-
-            writePos += chunkSize;
-            readPos += chunkSize;
-            remaining -= chunkSize;
-        }
-
-        ded.pos = newPosition;
+    /**
+     * Truncates the file to a given length.
+     * <p>
+     * @param length the new length of the file
+     * @throws IOException
+     */
+    protected void truncate(final long length)
+        throws IOException
+    {
+        log.info("Truncating file [{0}] to {1}", filepath, length);
+        fc.truncate(length);
     }
 
     /**
@@ -215,76 +286,5 @@ public class IndexedDisk implements AutoCloseable
     {
         final byte[] data = elementSerializer.serialize(obj);
         write(new IndexedDiskElementDescriptor(pos, data.length), data);
-    }
-
-    /**
-     * Returns the raf length.
-     *
-     * @return the length of the file.
-     * @throws IOException If an I/O error occurs.
-     */
-    protected long length()
-        throws IOException
-    {
-        return fc.size();
-    }
-
-    /**
-     * Closes the raf.
-     * <p>
-     * @throws IOException
-     */
-    @Override
-    public void close()
-        throws IOException
-    {
-        fc.close();
-    }
-
-    /**
-     * Sets the raf to empty.
-     * <p>
-     * @throws IOException
-     */
-    protected synchronized void reset()
-        throws IOException
-    {
-        log.debug("Resetting Indexed File [{0}]", filepath);
-        fc.truncate(0);
-        fc.force(true);
-    }
-
-    /**
-     * Truncates the file to a given length.
-     * <p>
-     * @param length the new length of the file
-     * @throws IOException
-     */
-    protected void truncate(final long length)
-        throws IOException
-    {
-        log.info("Truncating file [{0}] to {1}", filepath, length);
-        fc.truncate(length);
-    }
-
-    /**
-     * This is used for debugging.
-     * <p>
-     * @return the file path.
-     */
-    protected String getFilePath()
-    {
-        return filepath;
-    }
-
-    /**
-     * Tests if the length is 0.
-     * @return true if the if the length is 0.
-     * @throws IOException If an I/O error occurs.
-     * @since 3.1
-     */
-    protected boolean isEmpty() throws IOException
-    {
-        return length() == 0;
     }
 }

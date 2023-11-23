@@ -39,17 +39,6 @@ import java.util.concurrent.TimeoutException;
 public interface IElementSerializer
 {
     /**
-     * Turns an object into a byte array.
-     *
-     * @param <T> the type of the object
-     * @param obj the object to serialize
-     * @return byte[] a byte array containing the serialized object
-     * @throws IOException if serialization fails
-     */
-    <T> byte[] serialize( T obj )
-        throws IOException;
-
-    /**
      * Turns a byte array into an object.
      *
      * @param bytes data bytes
@@ -62,94 +51,62 @@ public interface IElementSerializer
         throws IOException, ClassNotFoundException;
 
     /**
-     * Convenience method to write serialized object into a stream.
-     * The stream data will be prepended with a four-byte length prefix.
-     *
-     * @param <T> the type of the object
-     * @param obj the object to serialize
-     * @param os the output stream
-     * @return the number of bytes written
-     * @throws IOException if serialization or writing fails
-     * @since 3.1
-     */
-    default <T> int serializeTo(T obj, OutputStream os)
-        throws IOException
-    {
-        final byte[] serialized = serialize(obj);
-        final ByteBuffer buffer = ByteBuffer.allocate(4 + serialized.length);
-        buffer.putInt(serialized.length);
-        buffer.put(serialized);
-        buffer.flip();
-
-        os.write(buffer.array());
-        return buffer.capacity();
-    }
-
-    /**
-     * Convenience method to write serialized object into a channel.
-     * The stream data will be prepended with a four-byte length prefix.
-     *
-     * @param <T> the type of the object
-     * @param obj the object to serialize
-     * @param oc the output channel
-     * @return the number of bytes written
-     * @throws IOException if serialization or writing fails
-     * @since 3.1
-     */
-    default <T> int serializeTo(T obj, WritableByteChannel oc)
-        throws IOException
-    {
-        final byte[] serialized = serialize(obj);
-        final ByteBuffer buffer = ByteBuffer.allocate(4 + serialized.length);
-        buffer.putInt(serialized.length);
-        buffer.put(serialized);
-        buffer.flip();
-
-        int count = 0;
-        while (buffer.hasRemaining())
-        {
-            count += oc.write(buffer);
-        }
-        return count;
-    }
-
-    /**
-     * Convenience method to write serialized object into an
+     * Convenience method to read serialized object from an
      * asynchronous channel.
-     * The stream data will be prepended with a four-byte length prefix.
+     * The method expects to find a four-byte length prefix in the
+     * stream data.
      *
      * @param <T> the type of the object
-     * @param obj the object to serialize
-     * @param oc the output channel
-     * @param writeTimeoutMs the write timeout im milliseconds
-     * @return the number of bytes written
-     * @throws IOException if serialization or writing fails
+     * @param ic the input channel
+     * @param readTimeoutMs the read timeout in milliseconds
+     * @param loader class loader to use
+     * @throws IOException if serialization or reading fails
+     * @throws ClassNotFoundException thrown if we don't know the object.
      * @since 3.1
      */
-    default <T> int serializeTo(T obj, AsynchronousByteChannel oc, int writeTimeoutMs)
-        throws IOException
+    default <T> T deSerializeFrom(AsynchronousByteChannel ic, int readTimeoutMs, ClassLoader loader)
+        throws IOException, ClassNotFoundException
     {
-        final byte[] serialized = serialize(obj);
-        final ByteBuffer buffer = ByteBuffer.allocate(4 + serialized.length);
-        buffer.putInt(serialized.length);
-        buffer.put(serialized);
-        buffer.flip();
+        final ByteBuffer bufferSize = ByteBuffer.allocate(4);
+        Future<Integer> readFuture = ic.read(bufferSize);
 
-        int count = 0;
-        while (buffer.hasRemaining())
+        try
         {
-            Future<Integer> bytesWritten = oc.write(buffer);
+            int read = readFuture.get(readTimeoutMs, TimeUnit.MILLISECONDS);
+            if (read < 0)
+            {
+                throw new EOFException("End of stream reached (length)");
+            }
+            assert read == bufferSize.capacity();
+        }
+        catch (InterruptedException | ExecutionException | TimeoutException e)
+        {
+            throw new IOException("Read timeout exceeded (length)" + readTimeoutMs, e);
+        }
+
+        bufferSize.flip();
+
+        final ByteBuffer serialized = ByteBuffer.allocate(bufferSize.getInt());
+        while (serialized.remaining() > 0)
+        {
+            readFuture = ic.read(serialized);
             try
             {
-                count += bytesWritten.get(writeTimeoutMs, TimeUnit.MILLISECONDS);
+                int read = readFuture.get(readTimeoutMs, TimeUnit.MILLISECONDS);
+                if (read < 0)
+                {
+                    throw new EOFException("End of stream reached (object)");
+                }
             }
             catch (InterruptedException | ExecutionException | TimeoutException e)
             {
-                throw new IOException("Write timeout exceeded " + writeTimeoutMs, e);
+                throw new IOException("Read timeout exceeded (object)" + readTimeoutMs, e);
             }
         }
 
-        return count;
+        serialized.flip();
+
+        return deSerialize(serialized.array(), loader);
     }
 
     /**
@@ -222,61 +179,104 @@ public interface IElementSerializer
     }
 
     /**
-     * Convenience method to read serialized object from an
-     * asynchronous channel.
-     * The method expects to find a four-byte length prefix in the
-     * stream data.
+     * Turns an object into a byte array.
      *
      * @param <T> the type of the object
-     * @param ic the input channel
-     * @param readTimeoutMs the read timeout in milliseconds
-     * @param loader class loader to use
-     * @throws IOException if serialization or reading fails
-     * @throws ClassNotFoundException thrown if we don't know the object.
+     * @param obj the object to serialize
+     * @return byte[] a byte array containing the serialized object
+     * @throws IOException if serialization fails
+     */
+    <T> byte[] serialize( T obj )
+        throws IOException;
+
+    /**
+     * Convenience method to write serialized object into an
+     * asynchronous channel.
+     * The stream data will be prepended with a four-byte length prefix.
+     *
+     * @param <T> the type of the object
+     * @param obj the object to serialize
+     * @param oc the output channel
+     * @param writeTimeoutMs the write timeout im milliseconds
+     * @return the number of bytes written
+     * @throws IOException if serialization or writing fails
      * @since 3.1
      */
-    default <T> T deSerializeFrom(AsynchronousByteChannel ic, int readTimeoutMs, ClassLoader loader)
-        throws IOException, ClassNotFoundException
+    default <T> int serializeTo(T obj, AsynchronousByteChannel oc, int writeTimeoutMs)
+        throws IOException
     {
-        final ByteBuffer bufferSize = ByteBuffer.allocate(4);
-        Future<Integer> readFuture = ic.read(bufferSize);
+        final byte[] serialized = serialize(obj);
+        final ByteBuffer buffer = ByteBuffer.allocate(4 + serialized.length);
+        buffer.putInt(serialized.length);
+        buffer.put(serialized);
+        buffer.flip();
 
-        try
+        int count = 0;
+        while (buffer.hasRemaining())
         {
-            int read = readFuture.get(readTimeoutMs, TimeUnit.MILLISECONDS);
-            if (read < 0)
-            {
-                throw new EOFException("End of stream reached (length)");
-            }
-            assert read == bufferSize.capacity();
-        }
-        catch (InterruptedException | ExecutionException | TimeoutException e)
-        {
-            throw new IOException("Read timeout exceeded (length)" + readTimeoutMs, e);
-        }
-
-        bufferSize.flip();
-
-        final ByteBuffer serialized = ByteBuffer.allocate(bufferSize.getInt());
-        while (serialized.remaining() > 0)
-        {
-            readFuture = ic.read(serialized);
+            Future<Integer> bytesWritten = oc.write(buffer);
             try
             {
-                int read = readFuture.get(readTimeoutMs, TimeUnit.MILLISECONDS);
-                if (read < 0)
-                {
-                    throw new EOFException("End of stream reached (object)");
-                }
+                count += bytesWritten.get(writeTimeoutMs, TimeUnit.MILLISECONDS);
             }
             catch (InterruptedException | ExecutionException | TimeoutException e)
             {
-                throw new IOException("Read timeout exceeded (object)" + readTimeoutMs, e);
+                throw new IOException("Write timeout exceeded " + writeTimeoutMs, e);
             }
         }
 
-        serialized.flip();
+        return count;
+    }
 
-        return deSerialize(serialized.array(), loader);
+    /**
+     * Convenience method to write serialized object into a stream.
+     * The stream data will be prepended with a four-byte length prefix.
+     *
+     * @param <T> the type of the object
+     * @param obj the object to serialize
+     * @param os the output stream
+     * @return the number of bytes written
+     * @throws IOException if serialization or writing fails
+     * @since 3.1
+     */
+    default <T> int serializeTo(T obj, OutputStream os)
+        throws IOException
+    {
+        final byte[] serialized = serialize(obj);
+        final ByteBuffer buffer = ByteBuffer.allocate(4 + serialized.length);
+        buffer.putInt(serialized.length);
+        buffer.put(serialized);
+        buffer.flip();
+
+        os.write(buffer.array());
+        return buffer.capacity();
+    }
+
+    /**
+     * Convenience method to write serialized object into a channel.
+     * The stream data will be prepended with a four-byte length prefix.
+     *
+     * @param <T> the type of the object
+     * @param obj the object to serialize
+     * @param oc the output channel
+     * @return the number of bytes written
+     * @throws IOException if serialization or writing fails
+     * @since 3.1
+     */
+    default <T> int serializeTo(T obj, WritableByteChannel oc)
+        throws IOException
+    {
+        final byte[] serialized = serialize(obj);
+        final ByteBuffer buffer = ByteBuffer.allocate(4 + serialized.length);
+        buffer.putInt(serialized.length);
+        buffer.put(serialized);
+        buffer.flip();
+
+        int count = 0;
+        while (buffer.hasRemaining())
+        {
+            count += oc.write(buffer);
+        }
+        return count;
     }
 }

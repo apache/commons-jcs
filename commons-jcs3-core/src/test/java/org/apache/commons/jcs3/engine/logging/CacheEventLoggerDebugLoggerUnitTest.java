@@ -33,39 +33,6 @@ public class CacheEventLoggerDebugLoggerUnitTest
 
     /** verify that we can log */
     @Test
-    public void testLogICacheEvent_normal()
-    {
-        // SETUP
-        final String logCategoryName = "testLogEvent_normal";
-
-        final String source = "mySource";
-        final String region = "my region";
-        final String eventName = "MyEventName";
-        final String optionalDetails = "SomeExtraData";
-        final String key = "my key";
-
-        final StringWriter stringWriter = new StringWriter();
-        TestLogConfigurationUtil.configureLogger( stringWriter, logCategoryName );
-
-        final CacheEventLoggerDebugLogger logger = new CacheEventLoggerDebugLogger();
-        logger.setLogCategoryName( logCategoryName );
-
-        final ICacheEvent<String> event = logger.createICacheEvent( source, region, eventName, optionalDetails, key );
-
-        // DO WORK
-        logger.logICacheEvent( event );
-
-        // VERIFY
-        final String result = stringWriter.toString();
-        assertTrue( "An event with the source should have been logged:" + result, result.indexOf( source ) != -1 );
-        assertTrue( "An event with the region should have been logged:" + result, result.indexOf( region ) != -1 );
-        assertTrue( "An event with the event name should have been logged:" + result, result.indexOf( eventName ) != -1 );
-        assertTrue( "An event with the optionalDetails should have been logged:" + result, result.indexOf( optionalDetails ) != -1 );
-        assertTrue( "An event with the key should have been logged:" + result, result.indexOf( key ) != -1 );
-    }
-
-    /** verify that we can log */
-    @Test
     public void testLogApplicationEvent_normal()
     {
         // SETUP
@@ -116,5 +83,38 @@ public class CacheEventLoggerDebugLoggerUnitTest
         assertTrue( "An event with the source should have been logged:" + result, result.indexOf( source ) != -1 );
         assertTrue( "An event with the event name should have been logged:" + result, result.indexOf( eventName ) != -1 );
         assertTrue( "An event with the errorMessage should have been logged:" + result, result.indexOf( errorMessage ) != -1 );
+    }
+
+    /** verify that we can log */
+    @Test
+    public void testLogICacheEvent_normal()
+    {
+        // SETUP
+        final String logCategoryName = "testLogEvent_normal";
+
+        final String source = "mySource";
+        final String region = "my region";
+        final String eventName = "MyEventName";
+        final String optionalDetails = "SomeExtraData";
+        final String key = "my key";
+
+        final StringWriter stringWriter = new StringWriter();
+        TestLogConfigurationUtil.configureLogger( stringWriter, logCategoryName );
+
+        final CacheEventLoggerDebugLogger logger = new CacheEventLoggerDebugLogger();
+        logger.setLogCategoryName( logCategoryName );
+
+        final ICacheEvent<String> event = logger.createICacheEvent( source, region, eventName, optionalDetails, key );
+
+        // DO WORK
+        logger.logICacheEvent( event );
+
+        // VERIFY
+        final String result = stringWriter.toString();
+        assertTrue( "An event with the source should have been logged:" + result, result.indexOf( source ) != -1 );
+        assertTrue( "An event with the region should have been logged:" + result, result.indexOf( region ) != -1 );
+        assertTrue( "An event with the event name should have been logged:" + result, result.indexOf( eventName ) != -1 );
+        assertTrue( "An event with the optionalDetails should have been logged:" + result, result.indexOf( optionalDetails ) != -1 );
+        assertTrue( "An event with the key should have been logged:" + result, result.indexOf( key ) != -1 );
     }
 }

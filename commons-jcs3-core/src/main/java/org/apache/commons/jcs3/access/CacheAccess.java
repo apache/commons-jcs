@@ -100,6 +100,75 @@ public class CacheAccess<K, V>
     }
 
     /**
+     * This method returns the ICacheElement&lt;K, V&gt; wrapper which provides access to element info and other
+     * attributes.
+     * <p>
+     * This returns a reference to the wrapper. Any modifications will be reflected in the cache. No
+     * defensive copy is made.
+     * <p>
+     * This method is most useful if you want to determine things such as the how long the element
+     * has been in the cache.
+     * <p>
+     * The last access time in the ElementAttributes should be current.
+     * <p>
+     * @param name Key the Serializable is stored as
+     * @return The ICacheElement&lt;K, V&gt; if the object is found or null
+     */
+    @Override
+    public ICacheElement<K, V> getCacheElement( final K name )
+    {
+        return this.getCacheControl().get( name );
+    }
+
+    /**
+     * Gets multiple elements from the cache based on a set of cache keys.
+     * <p>
+     * This method returns the ICacheElement&lt;K, V&gt; wrapper which provides access to element info and other
+     * attributes.
+     * <p>
+     * This returns a reference to the wrapper. Any modifications will be reflected in the cache. No
+     * defensive copy is made.
+     * <p>
+     * This method is most useful if you want to determine things such as the how long the element
+     * has been in the cache.
+     * <p>
+     * The last access time in the ElementAttributes should be current.
+     * <p>
+     * @param names set of Serializable cache keys
+     * @return a map of K key to ICacheElement&lt;K, V&gt; element, or empty map if none of the keys are present
+     */
+    @Override
+    public Map<K, ICacheElement<K, V>> getCacheElements( final Set<K> names )
+    {
+        return this.getCacheControl().getMultiple( names );
+    }
+
+    /**
+     * GetElementAttributes will return an attribute object describing the current attributes
+     * associated with the object name. The name object must override the Object.equals and
+     * Object.hashCode methods.
+     * <p>
+     * @param name Key of object to get attributes for
+     * @return Attributes for the object, null if object not in cache
+     */
+    @Override
+    public IElementAttributes getElementAttributes( final K name ) throws CacheException
+    {
+        IElementAttributes attr = null;
+
+        try
+        {
+            attr = this.getCacheControl().getElementAttributes( name );
+        }
+        catch ( final IOException ioe )
+        {
+            throw new CacheException("Failure getting element attributes", ioe);
+        }
+
+        return attr;
+    }
+
+    /**
      * Retrieve matching objects from the cache region this instance provides access to.
      * <p>
      * @param pattern - a key pattern for the objects stored
@@ -130,51 +199,7 @@ public class CacheAccess<K, V>
     }
 
     /**
-     * This method returns the ICacheElement&lt;K, V&gt; wrapper which provides access to element info and other
-     * attributes.
-     * <p>
-     * This returns a reference to the wrapper. Any modifications will be reflected in the cache. No
-     * defensive copy is made.
-     * <p>
-     * This method is most useful if you want to determine things such as the how long the element
-     * has been in the cache.
-     * <p>
-     * The last access time in the ElementAttributes should be current.
-     * <p>
-     * @param name Key the Serializable is stored as
-     * @return The ICacheElement&lt;K, V&gt; if the object is found or null
-     */
-    @Override
-    public ICacheElement<K, V> getCacheElement( final K name )
-    {
-        return this.getCacheControl().get( name );
-    }
-
-    /**
-     * Get multiple elements from the cache based on a set of cache keys.
-     * <p>
-     * This method returns the ICacheElement&lt;K, V&gt; wrapper which provides access to element info and other
-     * attributes.
-     * <p>
-     * This returns a reference to the wrapper. Any modifications will be reflected in the cache. No
-     * defensive copy is made.
-     * <p>
-     * This method is most useful if you want to determine things such as the how long the element
-     * has been in the cache.
-     * <p>
-     * The last access time in the ElementAttributes should be current.
-     * <p>
-     * @param names set of Serializable cache keys
-     * @return a map of K key to ICacheElement&lt;K, V&gt; element, or empty map if none of the keys are present
-     */
-    @Override
-    public Map<K, ICacheElement<K, V>> getCacheElements( final Set<K> names )
-    {
-        return this.getCacheControl().getMultiple( names );
-    }
-
-    /**
-     * Get multiple elements from the cache based on a set of cache keys.
+     * Gets multiple elements from the cache based on a set of cache keys.
      * <p>
      * This method returns the ICacheElement&lt;K, V&gt; wrapper which provides access to element info and other
      * attributes.
@@ -194,27 +219,6 @@ public class CacheAccess<K, V>
     public Map<K, ICacheElement<K, V>> getMatchingCacheElements( final String pattern )
     {
         return this.getCacheControl().getMatching( pattern );
-    }
-
-    /**
-     * Place a new object in the cache, associated with key name. If there is currently an object
-     * associated with name in the region an ObjectExistsException is thrown. Names are scoped to a
-     * region so they must be unique within the region they are placed.
-     * <p>
-     * @param key Key object will be stored with
-     * @param value Object to store
-     * @throws CacheException and ObjectExistsException is thrown if the item is already in the
-     *                cache.
-     */
-    @Override
-    public void putSafe( final K key, final V value )
-    {
-        if ( this.getCacheControl().get( key ) != null )
-        {
-            throw new ObjectExistsException( "putSafe failed.  Object exists in the cache for key [" + key
-                + "].  Remove first or use a non-safe put to override the value." );
-        }
-        put( key, value );
     }
 
     /**
@@ -270,6 +274,27 @@ public class CacheAccess<K, V>
     }
 
     /**
+     * Place a new object in the cache, associated with key name. If there is currently an object
+     * associated with name in the region an ObjectExistsException is thrown. Names are scoped to a
+     * region so they must be unique within the region they are placed.
+     * <p>
+     * @param key Key object will be stored with
+     * @param value Object to store
+     * @throws CacheException and ObjectExistsException is thrown if the item is already in the
+     *                cache.
+     */
+    @Override
+    public void putSafe( final K key, final V value )
+    {
+        if ( this.getCacheControl().get( key ) != null )
+        {
+            throw new ObjectExistsException( "putSafe failed.  Object exists in the cache for key [" + key
+                + "].  Remove first or use a non-safe put to override the value." );
+        }
+        put( key, value );
+    }
+
+    /**
      * Removes a single item by name.
      * <p>
      * @param name the name of the item to remove.
@@ -304,30 +329,5 @@ public class CacheAccess<K, V>
         // Another reason to call put is to force the changes to be distributed.
 
         put( element.getKey(), element.getVal(), attr );
-    }
-
-    /**
-     * GetElementAttributes will return an attribute object describing the current attributes
-     * associated with the object name. The name object must override the Object.equals and
-     * Object.hashCode methods.
-     * <p>
-     * @param name Key of object to get attributes for
-     * @return Attributes for the object, null if object not in cache
-     */
-    @Override
-    public IElementAttributes getElementAttributes( final K name ) throws CacheException
-    {
-        IElementAttributes attr = null;
-
-        try
-        {
-            attr = this.getCacheControl().getElementAttributes( name );
-        }
-        catch ( final IOException ioe )
-        {
-            throw new CacheException("Failure getting element attributes", ioe);
-        }
-
-        return attr;
     }
 }

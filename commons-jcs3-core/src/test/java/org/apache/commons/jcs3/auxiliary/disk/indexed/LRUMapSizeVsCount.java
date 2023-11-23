@@ -50,21 +50,6 @@ public class LRUMapSizeVsCount
     int tries = 100000;
 
     /**
-     * A unit test for JUnit
-     *
-     * @throws Exception
-     *                Description of the Exception
-     */
-    @Test
-    public void testSimpleLoad()
-        throws Exception
-    {
-        doWork();
-        assertTrue( this.ratioPut < targetPut );
-        assertTrue( this.ratioGet < targetGet );
-    }
-
-    /**
      *
      */
     public void doWork()
@@ -200,5 +185,20 @@ public class LRUMapSizeVsCount
         ratioPut = (minTimeSizeGet * 1.0) / minTimeCountGet;
         System.out.println( cache2Name.trim() + " puts took " + ratioPut + " times the " + cacheName.trim() + ", the goal is <" + targetGet
             + "x" );
+    }
+
+    /**
+     * A unit test for JUnit
+     *
+     * @throws Exception
+     *                Description of the Exception
+     */
+    @Test
+    public void testSimpleLoad()
+        throws Exception
+    {
+        doWork();
+        assertTrue( this.ratioPut < targetPut );
+        assertTrue( this.ratioGet < targetGet );
     }
 }

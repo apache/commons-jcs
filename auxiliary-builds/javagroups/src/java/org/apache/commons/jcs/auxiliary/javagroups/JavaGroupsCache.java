@@ -279,7 +279,7 @@ public class JavaGroupsCache
     // --------------------------------------------------- interface ICacheType
 
     /**
-     * Get the cache type (always Lateral).
+     * Gets the cache type (always Lateral).
      *
      * @return Always returns ICacheType.LATERAL_CACHE
      */

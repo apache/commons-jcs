@@ -39,10 +39,17 @@ public class OpenJPAJCacheDataCache extends AbstractDataCache
     private OpenJPAJCacheDataCacheManager manager;
 
     @Override
-    public void initialize(final DataCacheManager manager)
+    protected void clearInternal()
     {
-        super.initialize(manager);
-        this.manager = OpenJPAJCacheDataCacheManager.class.cast(manager);
+        final CacheManager cacheManager = manager.getCacheManager();
+        for (final String cacheName : cacheManager.getCacheNames())
+        {
+            if (!cacheName.startsWith(OPENJPA_PREFIX))
+            {
+                continue;
+            }
+            cacheManager.getCache(cacheName).clear();
+        }
     }
 
     @Override
@@ -84,25 +91,23 @@ public class OpenJPAJCacheDataCache extends AbstractDataCache
     }
 
     @Override
+    public void initialize(final DataCacheManager manager)
+    {
+        super.initialize(manager);
+        this.manager = OpenJPAJCacheDataCacheManager.class.cast(manager);
+    }
+
+    @Override
+    protected boolean pinInternal(final Object oid)
+    {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     protected DataCachePCData putInternal(final Object oid, final DataCachePCData pc)
     {
         manager.getOrCreateCache(OPENJPA_PREFIX, pc.getType().getName()).put(oid, pc);
         return pc;
-    }
-
-    @Override
-    protected DataCachePCData removeInternal(final Object oid)
-    {
-        if (OpenJPAId.class.isInstance(oid))
-        {
-            final Object remove = manager.getOrCreateCache(OPENJPA_PREFIX, OpenJPAId.class.cast(oid).getType().getName()).getAndRemove(oid);
-            if (remove == null)
-            {
-                return null;
-            }
-            return DataCachePCData.class.cast(remove);
-        }
-        return null;
     }
 
     @Override
@@ -121,23 +126,18 @@ public class OpenJPAJCacheDataCache extends AbstractDataCache
     }
 
     @Override
-    protected void clearInternal()
+    protected DataCachePCData removeInternal(final Object oid)
     {
-        final CacheManager cacheManager = manager.getCacheManager();
-        for (final String cacheName : cacheManager.getCacheNames())
+        if (OpenJPAId.class.isInstance(oid))
         {
-            if (!cacheName.startsWith(OPENJPA_PREFIX))
+            final Object remove = manager.getOrCreateCache(OPENJPA_PREFIX, OpenJPAId.class.cast(oid).getType().getName()).getAndRemove(oid);
+            if (remove == null)
             {
-                continue;
+                return null;
             }
-            cacheManager.getCache(cacheName).clear();
+            return DataCachePCData.class.cast(remove);
         }
-    }
-
-    @Override
-    protected boolean pinInternal(final Object oid)
-    {
-        throw new UnsupportedOperationException();
+        return null;
     }
 
     @Override

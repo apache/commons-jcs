@@ -40,6 +40,50 @@ import org.apache.commons.jcs3.engine.behavior.ICacheElement;
 public class BlockDiskCacheSameRegionConcurrentUnitTest
 {
     /**
+     * Adds items to cache, gets them, and removes them. The item count is more than the size of the
+     * memory cache, so items should spool to disk.
+     * @param region Name of the region to access
+     * @param start
+     * @param end
+     * @throws Exception If an error occurs
+     */
+    public static void runTestForRegion( final String region, final int start, final int end )
+        throws Exception
+    {
+        final CacheAccess<String, String> jcs = JCS.getInstance( region );
+
+        // Add items to cache
+        for ( int i = start; i < end; i++ )
+        {
+            jcs.put( i + ":key", region + " data " + i + "-" + region );
+        }
+
+        // Test that all items are in cache
+        for ( int i = start; i < end; i++ )
+        {
+            final String key = i + ":key";
+            final String value = jcs.get( key );
+
+            assertEquals( "Wrong value for key [" + key + "]", region + " data " + i + "-" + region, value );
+        }
+
+        // Test that getElements returns all the expected values
+        final Set<String> keys = new HashSet<>();
+        for ( int i = start; i < end; i++ )
+        {
+            keys.add( i + ":key" );
+        }
+
+        final Map<String, ICacheElement<String, String>> elements = jcs.getCacheElements( keys );
+        for ( int i = start; i < end; i++ )
+        {
+            final ICacheElement<String, String> element = elements.get( i + ":key" );
+            assertNotNull( "element " + i + ":key is missing", element );
+            assertEquals( "value " + i + ":key", region + " data " + i + "-" + region, element.getVal() );
+        }
+    }
+
+    /**
      * A unit test suite for JUnit
      * @return The test suite
      */
@@ -89,49 +133,5 @@ public class BlockDiskCacheSameRegionConcurrentUnitTest
         });
 
         return suite;
-    }
-
-    /**
-     * Adds items to cache, gets them, and removes them. The item count is more than the size of the
-     * memory cache, so items should spool to disk.
-     * @param region Name of the region to access
-     * @param start
-     * @param end
-     * @throws Exception If an error occurs
-     */
-    public static void runTestForRegion( final String region, final int start, final int end )
-        throws Exception
-    {
-        final CacheAccess<String, String> jcs = JCS.getInstance( region );
-
-        // Add items to cache
-        for ( int i = start; i < end; i++ )
-        {
-            jcs.put( i + ":key", region + " data " + i + "-" + region );
-        }
-
-        // Test that all items are in cache
-        for ( int i = start; i < end; i++ )
-        {
-            final String key = i + ":key";
-            final String value = jcs.get( key );
-
-            assertEquals( "Wrong value for key [" + key + "]", region + " data " + i + "-" + region, value );
-        }
-
-        // Test that getElements returns all the expected values
-        final Set<String> keys = new HashSet<>();
-        for ( int i = start; i < end; i++ )
-        {
-            keys.add( i + ":key" );
-        }
-
-        final Map<String, ICacheElement<String, String>> elements = jcs.getCacheElements( keys );
-        for ( int i = start; i < end; i++ )
-        {
-            final ICacheElement<String, String> element = elements.get( i + ":key" );
-            assertNotNull( "element " + i + ":key is missing", element );
-            assertEquals( "value " + i + ":key", region + " data " + i + "-" + region, element.getVal() );
-        }
     }
 }

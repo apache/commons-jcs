@@ -36,6 +36,26 @@ public final class RemoteLocation
     /** Pattern for parsing server:port */
     private static final Pattern SERVER_COLON_PORT = Pattern.compile("(\\S+)\\s*:\\s*(\\d+)");
 
+    /**
+     * Parse remote server and port from the string representation server:port and store them in
+     * a RemoteLocation object
+     *
+     * @param server the input string
+     * @return the remote location object
+     */
+    public static RemoteLocation parseServerAndPort(final String server)
+    {
+        final Matcher match = SERVER_COLON_PORT.matcher(server);
+
+        if (match.find() && match.groupCount() == 2)
+        {
+            return new RemoteLocation( match.group(1), Integer.parseInt( match.group(2) ) );
+        }
+        log.error("Invalid server descriptor: {0}", server);
+
+        return null;
+    }
+
     /** Host name */
     private final String host;
 
@@ -52,22 +72,6 @@ public final class RemoteLocation
     {
         this.host = host;
         this.port = port;
-    }
-
-    /**
-     * @return the host
-     */
-    public String getHost()
-    {
-        return host;
-    }
-
-    /**
-     * @return the port
-     */
-    public int getPort()
-    {
-        return port;
     }
 
     /**
@@ -94,6 +98,22 @@ public final class RemoteLocation
     }
 
     /**
+     * @return the host
+     */
+    public String getHost()
+    {
+        return host;
+    }
+
+    /**
+     * @return the port
+     */
+    public int getPort()
+    {
+        return port;
+    }
+
+    /**
      * @return int
      */
     @Override
@@ -116,25 +136,5 @@ public final class RemoteLocation
         sb.append(':').append(this.port);
 
         return sb.toString();
-    }
-
-    /**
-     * Parse remote server and port from the string representation server:port and store them in
-     * a RemoteLocation object
-     *
-     * @param server the input string
-     * @return the remote location object
-     */
-    public static RemoteLocation parseServerAndPort(final String server)
-    {
-        final Matcher match = SERVER_COLON_PORT.matcher(server);
-
-        if (match.find() && match.groupCount() == 2)
-        {
-            return new RemoteLocation( match.group(1), Integer.parseInt( match.group(2) ) );
-        }
-        log.error("Invalid server descriptor: {0}", server);
-
-        return null;
     }
 }

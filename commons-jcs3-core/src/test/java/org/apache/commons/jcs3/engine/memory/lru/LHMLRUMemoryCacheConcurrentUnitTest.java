@@ -69,37 +69,6 @@ public class LHMLRUMemoryCacheConcurrentUnitTest
     private static final int items = 200;
 
     /**
-     * A unit test suite for JUnit
-     * <p>
-     * @return The test suite
-     */
-    public static Test suite()
-    {
-        final ActiveTestSuite suite = new ActiveTestSuite();
-
-        suite.addTest(new TestCase("testLHMLRUMemoryCache" )
-        {
-            @Override
-            public void runTest()
-                throws Exception
-            {
-                runTestForRegion( "indexedRegion1" );
-            }
-        });
-
-        return suite;
-    }
-
-    /**
-     * Test setup
-     */
-    @Before
-    public void setUp()
-    {
-        //JCS.setConfigFilename( "/TestLHMLRUCache.ccf" );
-    }
-
-    /**
      * Adds items to cache, gets them, and removes them. The item count is more
      * than the size of the memory cache, so items should be dumped.
      * <p>
@@ -173,6 +142,37 @@ public class LHMLRUMemoryCacheConcurrentUnitTest
         {
             assertNull( "Removed key should be null: " + i + ":key", lru.get( i + ":key" ) );
         }
+    }
+
+    /**
+     * A unit test suite for JUnit
+     * <p>
+     * @return The test suite
+     */
+    public static Test suite()
+    {
+        final ActiveTestSuite suite = new ActiveTestSuite();
+
+        suite.addTest(new TestCase("testLHMLRUMemoryCache" )
+        {
+            @Override
+            public void runTest()
+                throws Exception
+            {
+                runTestForRegion( "indexedRegion1" );
+            }
+        });
+
+        return suite;
+    }
+
+    /**
+     * Test setup
+     */
+    @Before
+    public void setUp()
+    {
+        //JCS.setConfigFilename( "/TestLHMLRUCache.ccf" );
     }
 
 }

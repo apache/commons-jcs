@@ -75,20 +75,6 @@ public class MessageFormatter
         }
     }
 
-    /**
-     * Returns the formatted message.
-     *
-     * @return the formatted message.
-     */
-    public String getFormattedMessage()
-    {
-        if (formattedMessage == null)
-        {
-            formattedMessage = formatMessage(messagePattern, parameters);
-        }
-        return formattedMessage;
-    }
-
     protected String formatMessage(final String msgPattern, final Object... args)
     {
         try
@@ -102,10 +88,18 @@ public class MessageFormatter
         }
     }
 
-    @Override
-    public String toString()
+    /**
+     * Returns the formatted message.
+     *
+     * @return the formatted message.
+     */
+    public String getFormattedMessage()
     {
-        return getFormattedMessage();
+        if (formattedMessage == null)
+        {
+            formattedMessage = formatMessage(messagePattern, parameters);
+        }
+        return formattedMessage;
     }
 
     /**
@@ -126,5 +120,11 @@ public class MessageFormatter
     public boolean hasThrowable()
     {
         return throwable != null;
+    }
+
+    @Override
+    public String toString()
+    {
+        return getFormattedMessage();
     }
 }

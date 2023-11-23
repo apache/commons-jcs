@@ -79,20 +79,58 @@ public abstract class AbstractCacheAccess<K, V>
     }
 
     /**
-     * This method is does not reset the attributes for items already in the cache. It could
-     * potentially do this for items in memory, and maybe on disk (which would be slow) but not
-     * remote items. Rather than have unpredictable behavior, this method just sets the default
-     * attributes. Items subsequently put into the cache will use these defaults if they do not
-     * specify specific attributes.
+     * Dispose this region. Flushes objects to and closes auxiliary caches. This is a shutdown
+     * command!
      * <p>
-     * @param attr the default attributes.
-     * @throws CacheException if something goes wrong.
+     * To simply remove all elements from the region use clear().
      */
     @Override
-    public void setDefaultElementAttributes( final IElementAttributes attr )
+    public void dispose()
+    {
+        this.getCacheControl().dispose();
+    }
+
+    /**
+     * This instructs the memory cache to remove the <i>numberToFree</i> according to its eviction
+     * policy. For example, the LRUMemoryCache will remove the <i>numberToFree</i> least recently
+     * used items. These will be spooled to disk if a disk auxiliary is available.
+     * <p>
+     * @param numberToFree
+     * @return the number that were removed. if you ask to free 5, but there are only 3, you will
+     *         get 3.
+     * @throws CacheException
+     */
+    @Override
+    public int freeMemoryElements( final int numberToFree )
         throws CacheException
     {
-        this.getCacheControl().setElementAttributes( attr );
+        int numFreed = -1;
+        try
+        {
+            numFreed = this.getCacheControl().getMemoryCache().freeElements( numberToFree );
+        }
+        catch ( final IOException ioe )
+        {
+            final String message = "Failure freeing memory elements.";
+            throw new CacheException( message, ioe );
+        }
+        return numFreed;
+    }
+
+    /**
+     * Gets the ICompositeCacheAttributes of the cache region.
+     * <p>
+     * @return ICompositeCacheAttributes, the controllers config info, defined in the top section of
+     *         a region definition.
+     */
+    @Override
+    public ICompositeCacheAttributes getCacheAttributes()
+    {
+        return this.getCacheControl().getCacheAttributes();
+    }
+
+    public CompositeCache<K, V> getCacheControl() {
+        return cacheControl;
     }
 
     /**
@@ -135,30 +173,6 @@ public abstract class AbstractCacheAccess<K, V>
     }
 
     /**
-     * Dispose this region. Flushes objects to and closes auxiliary caches. This is a shutdown
-     * command!
-     * <p>
-     * To simply remove all elements from the region use clear().
-     */
-    @Override
-    public void dispose()
-    {
-        this.getCacheControl().dispose();
-    }
-
-    /**
-     * Gets the ICompositeCacheAttributes of the cache region.
-     * <p>
-     * @return ICompositeCacheAttributes, the controllers config info, defined in the top section of
-     *         a region definition.
-     */
-    @Override
-    public ICompositeCacheAttributes getCacheAttributes()
-    {
-        return this.getCacheControl().getCacheAttributes();
-    }
-
-    /**
      * Sets the ICompositeCacheAttributes of the cache region.
      * <p>
      * @param cattr The new ICompositeCacheAttribute value
@@ -170,34 +184,20 @@ public abstract class AbstractCacheAccess<K, V>
     }
 
     /**
-     * This instructs the memory cache to remove the <i>numberToFree</i> according to its eviction
-     * policy. For example, the LRUMemoryCache will remove the <i>numberToFree</i> least recently
-     * used items. These will be spooled to disk if a disk auxiliary is available.
+     * This method is does not reset the attributes for items already in the cache. It could
+     * potentially do this for items in memory, and maybe on disk (which would be slow) but not
+     * remote items. Rather than have unpredictable behavior, this method just sets the default
+     * attributes. Items subsequently put into the cache will use these defaults if they do not
+     * specify specific attributes.
      * <p>
-     * @param numberToFree
-     * @return the number that were removed. if you ask to free 5, but there are only 3, you will
-     *         get 3.
-     * @throws CacheException
+     * @param attr the default attributes.
+     * @throws CacheException if something goes wrong.
      */
     @Override
-    public int freeMemoryElements( final int numberToFree )
+    public void setDefaultElementAttributes( final IElementAttributes attr )
         throws CacheException
     {
-        int numFreed = -1;
-        try
-        {
-            numFreed = this.getCacheControl().getMemoryCache().freeElements( numberToFree );
-        }
-        catch ( final IOException ioe )
-        {
-            final String message = "Failure freeing memory elements.";
-            throw new CacheException( message, ioe );
-        }
-        return numFreed;
-    }
-
-    public CompositeCache<K, V> getCacheControl() {
-        return cacheControl;
+        this.getCacheControl().setElementAttributes( attr );
     }
 
 }

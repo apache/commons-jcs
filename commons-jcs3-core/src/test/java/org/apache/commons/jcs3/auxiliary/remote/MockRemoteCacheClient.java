@@ -70,6 +70,15 @@ public class MockRemoteCacheClient<K, V>
     public RemoteCacheAttributes attributes = new RemoteCacheAttributes();
 
     /**
+     * Prepares for shutdown.
+     */
+    @Override
+    public void dispose()
+    {
+        // do nothing
+    }
+
+    /**
      * Stores the last argument as fixed.
      */
     @Override
@@ -80,12 +89,60 @@ public class MockRemoteCacheClient<K, V>
     }
 
     /**
-     * @return long
+     * Looks in the getSetupMap for a value.
      */
     @Override
-    public long getListenerId()
+    public ICacheElement<K, V> get( final K key )
     {
-        return 0;
+        log.info( "get [" + key + "]" );
+        return getSetupMap.get( key );
+    }
+
+    /**
+     * Returns the setup attributes. By default they are not null.
+     */
+    @Override
+    public AuxiliaryCacheAttributes getAuxiliaryCacheAttributes()
+    {
+        return attributes;
+    }
+
+    /**
+     * Returns the cache name.
+     * <p>
+     * @return usually the region name.
+     */
+    @Override
+    public String getCacheName()
+    {
+        return null;
+    }
+
+    /** @return 0 */
+    @Override
+    public CacheType getCacheType()
+    {
+        return CacheType.REMOTE_CACHE;
+    }
+
+    /**
+     * Nothing important
+     * <p>
+     * @return null
+     */
+    @Override
+    public String getEventLoggingExtraInfo()
+    {
+        return null;
+    }
+
+    /**
+     * @return null
+     */
+    @Override
+    public Set<K> getKeySet( )
+    {
+        return null;
     }
 
     /**
@@ -98,22 +155,24 @@ public class MockRemoteCacheClient<K, V>
     }
 
     /**
-     * Adds the argument to the updatedList.
+     * @return long
      */
     @Override
-    public void update( final ICacheElement<K, V> ce )
+    public long getListenerId()
     {
-        updateList.add( ce );
+        return 0;
     }
 
     /**
-     * Looks in the getSetupMap for a value.
+     * @param pattern
+     * @return Map
+     * @throws IOException
      */
     @Override
-    public ICacheElement<K, V> get( final K key )
+    public Map<K, ICacheElement<K, V>> getMatching(final String pattern)
+        throws IOException
     {
-        log.info( "get [" + key + "]" );
-        return getSetupMap.get( key );
+        return new HashMap<>();
     }
 
     /**
@@ -128,6 +187,46 @@ public class MockRemoteCacheClient<K, V>
     {
         log.info( "get [" + keys + "]" );
         return getMultipleSetupMap.get( keys );
+    }
+
+    /**
+     * Returns the current cache size in number of elements.
+     * <p>
+     * @return number of elements
+     */
+    @Override
+    public int getSize()
+    {
+        return 0;
+    }
+
+    /**
+     * @return null
+     */
+    @Override
+    public IStats getStatistics()
+    {
+        return null;
+    }
+
+    /**
+     * Returns the cache stats.
+     * <p>
+     * @return String of important historical information.
+     */
+    @Override
+    public String getStats()
+    {
+        return null;
+    }
+
+    /**
+     * Returns the status setup variable.
+     */
+    @Override
+    public CacheStatus getStatus()
+    {
+        return status;
     }
 
     /**
@@ -150,110 +249,11 @@ public class MockRemoteCacheClient<K, V>
     }
 
     /**
-     * Prepares for shutdown.
+     * Adds the argument to the updatedList.
      */
     @Override
-    public void dispose()
+    public void update( final ICacheElement<K, V> ce )
     {
-        // do nothing
-    }
-
-    /**
-     * Returns the current cache size in number of elements.
-     * <p>
-     * @return number of elements
-     */
-    @Override
-    public int getSize()
-    {
-        return 0;
-    }
-
-    /**
-     * Returns the status setup variable.
-     */
-    @Override
-    public CacheStatus getStatus()
-    {
-        return status;
-    }
-
-    /**
-     * Returns the cache name.
-     * <p>
-     * @return usually the region name.
-     */
-    @Override
-    public String getCacheName()
-    {
-        return null;
-    }
-
-    /**
-     * @return null
-     */
-    @Override
-    public Set<K> getKeySet( )
-    {
-        return null;
-    }
-
-    /**
-     * @return null
-     */
-    @Override
-    public IStats getStatistics()
-    {
-        return null;
-    }
-
-    /**
-     * Returns the setup attributes. By default they are not null.
-     */
-    @Override
-    public AuxiliaryCacheAttributes getAuxiliaryCacheAttributes()
-    {
-        return attributes;
-    }
-
-    /**
-     * Returns the cache stats.
-     * <p>
-     * @return String of important historical information.
-     */
-    @Override
-    public String getStats()
-    {
-        return null;
-    }
-
-    /** @return 0 */
-    @Override
-    public CacheType getCacheType()
-    {
-        return CacheType.REMOTE_CACHE;
-    }
-
-    /**
-     * @param pattern
-     * @return Map
-     * @throws IOException
-     */
-    @Override
-    public Map<K, ICacheElement<K, V>> getMatching(final String pattern)
-        throws IOException
-    {
-        return new HashMap<>();
-    }
-
-    /**
-     * Nothing important
-     * <p>
-     * @return null
-     */
-    @Override
-    public String getEventLoggingExtraInfo()
-    {
-        return null;
+        updateList.add( ce );
     }
 }

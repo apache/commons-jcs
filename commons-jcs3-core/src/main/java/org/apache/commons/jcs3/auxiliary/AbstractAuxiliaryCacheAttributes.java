@@ -43,12 +43,19 @@ public abstract class AbstractAuxiliaryCacheAttributes
     private String eventQueuePoolName;
 
     /**
-     * @param name
+     * @see Object#clone()
      */
     @Override
-    public void setCacheName( final String name )
+    public AbstractAuxiliaryCacheAttributes clone()
     {
-        this.cacheName = name;
+        try
+        {
+            return (AbstractAuxiliaryCacheAttributes) super.clone();
+        }
+        catch (final CloneNotSupportedException e)
+        {
+            throw new IllegalStateException("Clone not supported. This should never happen.", e);
+        }
     }
 
     /**
@@ -60,60 +67,6 @@ public abstract class AbstractAuxiliaryCacheAttributes
     public String getCacheName()
     {
         return this.cacheName;
-    }
-
-    /**
-     * This is the name of the auxiliary in configuration file.
-     * <p>
-     * @see org.apache.commons.jcs3.auxiliary.AuxiliaryCacheAttributes#setName(String)
-     */
-    @Override
-    public void setName( final String s )
-    {
-        this.name = s;
-    }
-
-    /**
-     * Gets the name attribute of the AuxiliaryCacheAttributes object
-     * <p>
-     * @return The name value
-     */
-    @Override
-    public String getName()
-    {
-        return this.name;
-    }
-
-    /**
-     * SINGLE is the default. If you choose POOLED, the value of EventQueuePoolName will be used
-     * <p>
-     * @param queueType SINGLE or POOLED
-     */
-    @Override
-    public void setEventQueueType( final ICacheEventQueue.QueueType queueType )
-    {
-        this.eventQueueType = queueType;
-    }
-
-    /**
-     * @return SINGLE or POOLED
-     */
-    @Override
-    public ICacheEventQueue.QueueType getEventQueueType()
-    {
-        return eventQueueType;
-    }
-
-    /**
-     * If you choose a POOLED event queue type, the value of EventQueuePoolName will be used. This
-     * is ignored if the pool type is SINGLE
-     * <p>
-     * @param s SINGLE or POOLED
-     */
-    @Override
-    public void setEventQueuePoolName( final String s )
-    {
-        eventQueuePoolName = s;
     }
 
     /**
@@ -129,18 +82,65 @@ public abstract class AbstractAuxiliaryCacheAttributes
     }
 
     /**
-     * @see Object#clone()
+     * @return SINGLE or POOLED
      */
     @Override
-    public AbstractAuxiliaryCacheAttributes clone()
+    public ICacheEventQueue.QueueType getEventQueueType()
     {
-        try
-        {
-            return (AbstractAuxiliaryCacheAttributes) super.clone();
-        }
-        catch (final CloneNotSupportedException e)
-        {
-            throw new IllegalStateException("Clone not supported. This should never happen.", e);
-        }
+        return eventQueueType;
+    }
+
+    /**
+     * Gets the name attribute of the AuxiliaryCacheAttributes object
+     * <p>
+     * @return The name value
+     */
+    @Override
+    public String getName()
+    {
+        return this.name;
+    }
+
+    /**
+     * @param name
+     */
+    @Override
+    public void setCacheName( final String name )
+    {
+        this.cacheName = name;
+    }
+
+    /**
+     * If you choose a POOLED event queue type, the value of EventQueuePoolName will be used. This
+     * is ignored if the pool type is SINGLE
+     * <p>
+     * @param s SINGLE or POOLED
+     */
+    @Override
+    public void setEventQueuePoolName( final String s )
+    {
+        eventQueuePoolName = s;
+    }
+
+    /**
+     * SINGLE is the default. If you choose POOLED, the value of EventQueuePoolName will be used
+     * <p>
+     * @param queueType SINGLE or POOLED
+     */
+    @Override
+    public void setEventQueueType( final ICacheEventQueue.QueueType queueType )
+    {
+        this.eventQueueType = queueType;
+    }
+
+    /**
+     * This is the name of the auxiliary in configuration file.
+     * <p>
+     * @see org.apache.commons.jcs3.auxiliary.AuxiliaryCacheAttributes#setName(String)
+     */
+    @Override
+    public void setName( final String s )
+    {
+        this.name = s;
     }
 }

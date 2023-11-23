@@ -46,121 +46,6 @@ import org.junit.Test;
 public class CacheAccessUnitTest
 {
     /**
-     * Verify that we get an object exists exception if the item is in the cache.
-     * @throws Exception
-     */
-    @Test
-    public void testPutSafe()
-        throws Exception
-    {
-        final CacheAccess<String, String> access = JCS.getInstance( "test" );
-        assertNotNull( "We should have an access class", access );
-
-        final String key = "mykey";
-        final String value = "myvalue";
-
-        access.put( key, value );
-
-        final String returnedValue1 = access.get( key );
-        assertEquals( "Wrong value returned.", value, returnedValue1 );
-
-        try
-        {
-            access.putSafe( key, "someothervalue" );
-            fail( "We should have received an exception since this key is already in the cache." );
-        }
-        catch ( final CacheException e )
-        {
-            assertTrue( "Wrong type of exception.", e instanceof ObjectExistsException );
-            assertTrue( "Should have the key in the error message.", e.getMessage().indexOf( "[" + key + "]" ) != -1 );
-        }
-
-        final String returnedValue2 = access.get( key );
-        assertEquals( "Wrong value returned.  Should still be the original.", value, returnedValue2 );
-    }
-
-    /**
-     * Try to put a null key and verify that we get an exception.
-     * @throws Exception
-     */
-    @Test
-    public void testPutNullKey()
-        throws Exception
-    {
-        final CacheAccess<String, String> access = JCS.getInstance( "test" );
-        assertNotNull( "We should have an access class", access );
-
-        final String key = null;
-        final String value = "myvalue";
-
-        try
-        {
-            access.put( key, value );
-            fail( "Should not have been able to put a null key." );
-        }
-        catch ( final CacheException e )
-        {
-            assertTrue( "Should have the word null in the error message.", e.getMessage().indexOf( "null" ) != -1 );
-        }
-    }
-
-    /**
-     * Try to put a null value and verify that we get an exception.
-     * @throws Exception
-     */
-    @Test
-    public void testPutNullValue()
-        throws Exception
-    {
-        final CacheAccess<String, String> access = JCS.getInstance( "test" );
-        assertNotNull( "We should have an access class", access );
-
-        final String key = "myKey";
-        final String value = null;
-
-        try
-        {
-            access.put( key, value );
-            fail( "Should not have been able to put a null object." );
-        }
-        catch ( final CacheException e )
-        {
-            assertTrue( "Should have the word null in the error message.", e.getMessage().indexOf( "null" ) != -1 );
-        }
-    }
-
-    /**
-     * Verify that elements that go in the region after this call take the new attributes.
-     * @throws Exception
-     */
-    @Test
-    public void testSetDefaultElementAttributes()
-        throws Exception
-    {
-        final CacheAccess<String, String> access = JCS.getInstance( "test" );
-        assertNotNull( "We should have an access class", access );
-
-        final long maxLife = 9876;
-        final IElementAttributes attr = new ElementAttributes();
-        attr.setMaxLife(maxLife);
-
-        access.setDefaultElementAttributes( attr );
-
-        assertEquals( "Wrong element attributes.", attr.getMaxLife(), access.getDefaultElementAttributes()
-            .getMaxLife() );
-
-        final String key = "mykey";
-        final String value = "myvalue";
-
-        access.put( key, value );
-
-        final ICacheElement<String, String> element = access.getCacheElement( key );
-
-        assertEquals( "Wrong max life.  Should have the new value.", maxLife, element.getElementAttributes()
-            .getMaxLife() );
-    }
-
-    /**
      * Verify that getCacheElements returns the elements requested based on the key.
      * @throws Exception
      */
@@ -208,63 +93,6 @@ public class CacheAccessUnitTest
         final String suppliedValue2 = access.get(keyFour);
         assertNotNull( "value four", suppliedValue2);
         assertEquals( "value four", suppliedValue1, suppliedValue2);
-    }
-
-    /**
-     * Verify that we can get a region using the define region method.
-     * @throws Exception
-     */
-    @Test
-    public void testRegionDefiniton()
-        throws Exception
-    {
-        final CacheAccess<String, String> access = JCS.getInstance( "test" );
-        assertNotNull( "We should have an access class", access );
-    }
-
-    /**
-     * Verify that we can get a region using the define region method with cache attributes.
-     * @throws Exception
-     */
-    @Test
-    public void testRegionDefinitonWithAttributes()
-        throws Exception
-    {
-        final ICompositeCacheAttributes ca = new CompositeCacheAttributes();
-
-        final long maxIdleTime = 8765;
-        ca.setMaxMemoryIdleTimeSeconds( maxIdleTime );
-
-        final CacheAccess<String, String> access = JCS.getInstance( "testRegionDefinitonWithAttributes", ca );
-        assertNotNull( "We should have an access class", access );
-
-        final ICompositeCacheAttributes ca2 = access.getCacheAttributes();
-        assertEquals( "Wrong idle time setting.", ca.getMaxMemoryIdleTimeSeconds(), ca2.getMaxMemoryIdleTimeSeconds() );
-    }
-
-    /**
-     * Verify that we can get a region using the define region method with cache attributes and
-     * element attributes.
-     * @throws Exception
-     */
-    @Test
-    public void testRegionDefinitonWithBothAttributes()
-        throws Exception
-    {
-        final ICompositeCacheAttributes ca = new CompositeCacheAttributes();
-
-        final long maxIdleTime = 8765;
-        ca.setMaxMemoryIdleTimeSeconds( maxIdleTime );
-
-        final long maxLife = 9876;
-        final IElementAttributes attr = new ElementAttributes();
-        attr.setMaxLife(maxLife);
-
-        final CacheAccess<String, String> access = JCS.getInstance( "testRegionDefinitonWithAttributes", ca, attr );
-        assertNotNull( "We should have an access class", access );
-
-        final ICompositeCacheAttributes ca2 = access.getCacheAttributes();
-        assertEquals( "Wrong idle time setting.", ca.getMaxMemoryIdleTimeSeconds(), ca2.getMaxMemoryIdleTimeSeconds() );
     }
 
     /**
@@ -375,5 +203,177 @@ public class CacheAccessUnitTest
             final Object value = entry.getValue();
             assertTrue( "Should be a cache element.", value instanceof ICacheElement );
         }
+    }
+
+    /**
+     * Try to put a null key and verify that we get an exception.
+     * @throws Exception
+     */
+    @Test
+    public void testPutNullKey()
+        throws Exception
+    {
+        final CacheAccess<String, String> access = JCS.getInstance( "test" );
+        assertNotNull( "We should have an access class", access );
+
+        final String key = null;
+        final String value = "myvalue";
+
+        try
+        {
+            access.put( key, value );
+            fail( "Should not have been able to put a null key." );
+        }
+        catch ( final CacheException e )
+        {
+            assertTrue( "Should have the word null in the error message.", e.getMessage().indexOf( "null" ) != -1 );
+        }
+    }
+
+    /**
+     * Try to put a null value and verify that we get an exception.
+     * @throws Exception
+     */
+    @Test
+    public void testPutNullValue()
+        throws Exception
+    {
+        final CacheAccess<String, String> access = JCS.getInstance( "test" );
+        assertNotNull( "We should have an access class", access );
+
+        final String key = "myKey";
+        final String value = null;
+
+        try
+        {
+            access.put( key, value );
+            fail( "Should not have been able to put a null object." );
+        }
+        catch ( final CacheException e )
+        {
+            assertTrue( "Should have the word null in the error message.", e.getMessage().indexOf( "null" ) != -1 );
+        }
+    }
+
+    /**
+     * Verify that we get an object exists exception if the item is in the cache.
+     * @throws Exception
+     */
+    @Test
+    public void testPutSafe()
+        throws Exception
+    {
+        final CacheAccess<String, String> access = JCS.getInstance( "test" );
+        assertNotNull( "We should have an access class", access );
+
+        final String key = "mykey";
+        final String value = "myvalue";
+
+        access.put( key, value );
+
+        final String returnedValue1 = access.get( key );
+        assertEquals( "Wrong value returned.", value, returnedValue1 );
+
+        try
+        {
+            access.putSafe( key, "someothervalue" );
+            fail( "We should have received an exception since this key is already in the cache." );
+        }
+        catch ( final CacheException e )
+        {
+            assertTrue( "Wrong type of exception.", e instanceof ObjectExistsException );
+            assertTrue( "Should have the key in the error message.", e.getMessage().indexOf( "[" + key + "]" ) != -1 );
+        }
+
+        final String returnedValue2 = access.get( key );
+        assertEquals( "Wrong value returned.  Should still be the original.", value, returnedValue2 );
+    }
+
+    /**
+     * Verify that we can get a region using the define region method.
+     * @throws Exception
+     */
+    @Test
+    public void testRegionDefiniton()
+        throws Exception
+    {
+        final CacheAccess<String, String> access = JCS.getInstance( "test" );
+        assertNotNull( "We should have an access class", access );
+    }
+
+    /**
+     * Verify that we can get a region using the define region method with cache attributes.
+     * @throws Exception
+     */
+    @Test
+    public void testRegionDefinitonWithAttributes()
+        throws Exception
+    {
+        final ICompositeCacheAttributes ca = new CompositeCacheAttributes();
+
+        final long maxIdleTime = 8765;
+        ca.setMaxMemoryIdleTimeSeconds( maxIdleTime );
+
+        final CacheAccess<String, String> access = JCS.getInstance( "testRegionDefinitonWithAttributes", ca );
+        assertNotNull( "We should have an access class", access );
+
+        final ICompositeCacheAttributes ca2 = access.getCacheAttributes();
+        assertEquals( "Wrong idle time setting.", ca.getMaxMemoryIdleTimeSeconds(), ca2.getMaxMemoryIdleTimeSeconds() );
+    }
+
+    /**
+     * Verify that we can get a region using the define region method with cache attributes and
+     * element attributes.
+     * @throws Exception
+     */
+    @Test
+    public void testRegionDefinitonWithBothAttributes()
+        throws Exception
+    {
+        final ICompositeCacheAttributes ca = new CompositeCacheAttributes();
+
+        final long maxIdleTime = 8765;
+        ca.setMaxMemoryIdleTimeSeconds( maxIdleTime );
+
+        final long maxLife = 9876;
+        final IElementAttributes attr = new ElementAttributes();
+        attr.setMaxLife(maxLife);
+
+        final CacheAccess<String, String> access = JCS.getInstance( "testRegionDefinitonWithAttributes", ca, attr );
+        assertNotNull( "We should have an access class", access );
+
+        final ICompositeCacheAttributes ca2 = access.getCacheAttributes();
+        assertEquals( "Wrong idle time setting.", ca.getMaxMemoryIdleTimeSeconds(), ca2.getMaxMemoryIdleTimeSeconds() );
+    }
+
+    /**
+     * Verify that elements that go in the region after this call take the new attributes.
+     * @throws Exception
+     */
+    @Test
+    public void testSetDefaultElementAttributes()
+        throws Exception
+    {
+        final CacheAccess<String, String> access = JCS.getInstance( "test" );
+        assertNotNull( "We should have an access class", access );
+
+        final long maxLife = 9876;
+        final IElementAttributes attr = new ElementAttributes();
+        attr.setMaxLife(maxLife);
+
+        access.setDefaultElementAttributes( attr );
+
+        assertEquals( "Wrong element attributes.", attr.getMaxLife(), access.getDefaultElementAttributes()
+            .getMaxLife() );
+
+        final String key = "mykey";
+        final String value = "myvalue";
+
+        access.put( key, value );
+
+        final ICacheElement<String, String> element = access.getCacheElement( key );
+
+        assertEquals( "Wrong max life.  Should have the new value.", maxLife, element.getElementAttributes()
+            .getMaxLife() );
     }
 }

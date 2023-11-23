@@ -63,7 +63,27 @@ public class UDPDiscoverySenderEncryptedUnitTest
 
 
     /**
-     * Set up the receiver. Maybe better to just code sockets here? Set up the sender for sending
+     * Wait for multicast message for 3 seconds
+     *
+     * @return the object message or null if nothing received within 3 seconds
+     */
+    private UDPDiscoveryMessage getMessage() {
+    	ExecutorService executor = Executors.newCachedThreadPool();
+        Callable<Object> task = () -> receiver.waitForMessage();
+        Future<Object> future = executor.submit(task);
+        try {
+        	Object obj = future.get(3, TimeUnit.SECONDS);
+
+        	assertTrue( "unexpected crap received", obj instanceof UDPDiscoveryMessage );
+
+            return (UDPDiscoveryMessage) obj;
+        } catch (InterruptedException | ExecutionException | TimeoutException ex) {
+        	return null;
+        }
+    }
+
+    /**
+     * Sets up the receiver. Maybe better to just code sockets here? Set up the sender for sending
      * the message.
      * <p>
      * @throws Exception on error
@@ -161,25 +181,5 @@ public class UDPDiscoverySenderEncryptedUnitTest
         assertEquals( "wrong message type", BroadcastType.REQUEST, msg.getMessageType() );
 
 
-    }
-
-    /**
-     * Wait for multicast message for 3 seconds
-     *
-     * @return the object message or null if nothing received within 3 seconds
-     */
-    private UDPDiscoveryMessage getMessage() {
-    	ExecutorService executor = Executors.newCachedThreadPool();
-        Callable<Object> task = () -> receiver.waitForMessage();
-        Future<Object> future = executor.submit(task);
-        try {
-        	Object obj = future.get(3, TimeUnit.SECONDS);
-
-        	assertTrue( "unexpected crap received", obj instanceof UDPDiscoveryMessage );
-
-            return (UDPDiscoveryMessage) obj;
-        } catch (InterruptedException | ExecutionException | TimeoutException ex) {
-        	return null;
-        }
     }
 }

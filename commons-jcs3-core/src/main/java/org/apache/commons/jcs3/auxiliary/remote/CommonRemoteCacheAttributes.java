@@ -64,47 +64,36 @@ public class CommonRemoteCacheAttributes
     }
 
     /**
-     * Gets the remoteTypeName attribute of the RemoteCacheAttributes object.
+     * Gets the clusterServers attribute of the RemoteCacheAttributes object.
      * <p>
-     * @return The remoteTypeName value
+     * @return The clusterServers value
      */
     @Override
-    public String getRemoteTypeName()
+    public String getClusterServers()
     {
-        return remoteType != null ? remoteType.toString() : RemoteType.LOCAL.toString();
+        return this.clusterServers;
     }
 
     /**
-     * Sets the remoteTypeName attribute of the RemoteCacheAttributes object.
+     * Gets the getOnly attribute of the RemoteCacheAttributes object.
      * <p>
-     * @param s The new remoteTypeName value
+     * @return The getOnly value
      */
     @Override
-    public void setRemoteTypeName( final String s )
+    public boolean getGetOnly()
     {
-        this.remoteType = RemoteType.valueOf(s);
+        return this.getOnly;
     }
 
     /**
-     * Gets the remoteType attribute of the RemoteCacheAttributes object.
+     * Gets the location attribute of the RemoteCacheAttributes object.
      * <p>
-     * @return The remoteType value
+     * @return The remote location value
      */
     @Override
-    public RemoteType getRemoteType()
+    public RemoteLocation getRemoteLocation()
     {
-        return remoteType;
-    }
-
-    /**
-     * Sets the remoteType attribute of the RemoteCacheAttributes object.
-     * <p>
-     * @param p The new remoteType value
-     */
-    @Override
-    public void setRemoteType( final RemoteType p )
-    {
-        this.remoteType = p;
+        return this.location;
     }
 
     /**
@@ -119,14 +108,88 @@ public class CommonRemoteCacheAttributes
     }
 
     /**
-     * Sets the remoteServiceName attribute of the RemoteCacheAttributes object.
+     * Gets the remoteType attribute of the RemoteCacheAttributes object.
      * <p>
-     * @param s The new remoteServiceName value
+     * @return The remoteType value
      */
     @Override
-    public void setRemoteServiceName( final String s )
+    public RemoteType getRemoteType()
     {
-        this.remoteServiceName = s;
+        return remoteType;
+    }
+
+    /**
+     * Gets the remoteTypeName attribute of the RemoteCacheAttributes object.
+     * <p>
+     * @return The remoteTypeName value
+     */
+    @Override
+    public String getRemoteTypeName()
+    {
+        return remoteType != null ? remoteType.toString() : RemoteType.LOCAL.toString();
+    }
+
+    /**
+     * Gets the removeUponRemotePut attribute of the RemoteCacheAttributes object.
+     * <p>
+     * @return The removeUponRemotePut value
+     */
+    @Override
+    public boolean getRemoveUponRemotePut()
+    {
+        return this.removeUponRemotePut;
+    }
+
+    /**
+     * @return Returns the rmiSocketFactoryTimeoutMillis.
+     */
+    @Override
+    public int getRmiSocketFactoryTimeoutMillis()
+    {
+        return rmiSocketFactoryTimeoutMillis;
+    }
+
+    /**
+     * Should cluster updates be propagated to the locals.
+     * <p>
+     * @return The localClusterConsistency value
+     */
+    @Override
+    public boolean isLocalClusterConsistency()
+    {
+        return localClusterConsistency;
+    }
+
+    /**
+     * Sets the clusterServers attribute of the RemoteCacheAttributes object.
+     * <p>
+     * @param s The new clusterServers value
+     */
+    @Override
+    public void setClusterServers( final String s )
+    {
+        this.clusterServers = s;
+    }
+
+    /**
+     * Sets the getOnly attribute of the RemoteCacheAttributes object
+     * @param r The new getOnly value
+     */
+    @Override
+    public void setGetOnly( final boolean r )
+    {
+        this.getOnly = r;
+    }
+
+    /**
+     * Should cluster updates be propagated to the locals.
+     * <p>
+     * @param r The new localClusterConsistency value
+     */
+    @Override
+    public void setLocalClusterConsistency( final boolean r )
+    {
+        this.localClusterConsistency = r;
     }
 
     /**
@@ -153,47 +216,36 @@ public class CommonRemoteCacheAttributes
     }
 
     /**
-     * Gets the location attribute of the RemoteCacheAttributes object.
+     * Sets the remoteServiceName attribute of the RemoteCacheAttributes object.
      * <p>
-     * @return The remote location value
+     * @param s The new remoteServiceName value
      */
     @Override
-    public RemoteLocation getRemoteLocation()
+    public void setRemoteServiceName( final String s )
     {
-        return this.location;
+        this.remoteServiceName = s;
     }
 
     /**
-     * Gets the clusterServers attribute of the RemoteCacheAttributes object.
+     * Sets the remoteType attribute of the RemoteCacheAttributes object.
      * <p>
-     * @return The clusterServers value
+     * @param p The new remoteType value
      */
     @Override
-    public String getClusterServers()
+    public void setRemoteType( final RemoteType p )
     {
-        return this.clusterServers;
+        this.remoteType = p;
     }
 
     /**
-     * Sets the clusterServers attribute of the RemoteCacheAttributes object.
+     * Sets the remoteTypeName attribute of the RemoteCacheAttributes object.
      * <p>
-     * @param s The new clusterServers value
+     * @param s The new remoteTypeName value
      */
     @Override
-    public void setClusterServers( final String s )
+    public void setRemoteTypeName( final String s )
     {
-        this.clusterServers = s;
-    }
-
-    /**
-     * Gets the removeUponRemotePut attribute of the RemoteCacheAttributes object.
-     * <p>
-     * @return The removeUponRemotePut value
-     */
-    @Override
-    public boolean getRemoveUponRemotePut()
-    {
-        return this.removeUponRemotePut;
+        this.remoteType = RemoteType.valueOf(s);
     }
 
     /**
@@ -208,64 +260,12 @@ public class CommonRemoteCacheAttributes
     }
 
     /**
-     * Gets the getOnly attribute of the RemoteCacheAttributes object.
-     * <p>
-     * @return The getOnly value
-     */
-    @Override
-    public boolean getGetOnly()
-    {
-        return this.getOnly;
-    }
-
-    /**
-     * Sets the getOnly attribute of the RemoteCacheAttributes object
-     * @param r The new getOnly value
-     */
-    @Override
-    public void setGetOnly( final boolean r )
-    {
-        this.getOnly = r;
-    }
-
-    /**
-     * Should cluster updates be propagated to the locals.
-     * <p>
-     * @return The localClusterConsistency value
-     */
-    @Override
-    public boolean isLocalClusterConsistency()
-    {
-        return localClusterConsistency;
-    }
-
-    /**
-     * Should cluster updates be propagated to the locals.
-     * <p>
-     * @param r The new localClusterConsistency value
-     */
-    @Override
-    public void setLocalClusterConsistency( final boolean r )
-    {
-        this.localClusterConsistency = r;
-    }
-
-    /**
      * @param rmiSocketFactoryTimeoutMillis The rmiSocketFactoryTimeoutMillis to set.
      */
     @Override
     public void setRmiSocketFactoryTimeoutMillis( final int rmiSocketFactoryTimeoutMillis )
     {
         this.rmiSocketFactoryTimeoutMillis = rmiSocketFactoryTimeoutMillis;
-    }
-
-    /**
-     * @return Returns the rmiSocketFactoryTimeoutMillis.
-     */
-    @Override
-    public int getRmiSocketFactoryTimeoutMillis()
-    {
-        return rmiSocketFactoryTimeoutMillis;
     }
 
     /**

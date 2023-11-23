@@ -89,6 +89,17 @@ public class LateralElementDescriptor<K, V>
     }
 
     /**
+     * Return operation requested by the client
+     *
+     * @return the command
+     * @since 3.1
+     */
+    public LateralCommand getCommand()
+    {
+        return command;
+    }
+
+    /**
      * Return payload
      *
      * @return the ce
@@ -108,17 +119,6 @@ public class LateralElementDescriptor<K, V>
     public long getRequesterId()
     {
         return requesterId;
-    }
-
-    /**
-     * Return operation requested by the client
-     *
-     * @return the command
-     * @since 3.1
-     */
-    public LateralCommand getCommand()
-    {
-        return command;
     }
 
     /**

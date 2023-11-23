@@ -53,27 +53,26 @@ public class PurgatoryElement<K, V>
     }
 
     /**
-     * Gets the spoolable property.
-     *
-     * @return The spoolable value
+     * @param obj other object
+     * @return true if this object key equals the key of obj
      */
-    public boolean isSpoolable()
+    @Override
+    public boolean equals(final Object obj)
     {
-        return spoolable;
+        if (this == obj)
+        {
+            return true;
+        }
+        if (!(obj instanceof PurgatoryElement))
+        {
+            return false;
+        }
+        final PurgatoryElement<?,?> other = (PurgatoryElement<?,?>) obj;
+        return Objects.equals(getKey(), other.getKey());
     }
 
     /**
-     * Sets the spoolable property.
-     *
-     * @param spoolable The new spoolable value
-     */
-    public void setSpoolable( final boolean spoolable )
-    {
-        this.spoolable = spoolable;
-    }
-
-    /**
-     * Get the wrapped cache element.
+     * Gets the wrapped cache element.
      *
      * @return ICacheElement
      */
@@ -81,8 +80,6 @@ public class PurgatoryElement<K, V>
     {
         return cacheElement;
     }
-
-    // ------------------------------------------------ interface ICacheElement
 
     /**
      * @return cacheElement.getCacheName();
@@ -92,6 +89,18 @@ public class PurgatoryElement<K, V>
     public String getCacheName()
     {
         return cacheElement.getCacheName();
+    }
+
+    // ------------------------------------------------ interface ICacheElement
+
+    /**
+     * @return cacheElement.getElementAttributes();
+     * @see ICacheElement#getElementAttributes
+     */
+    @Override
+    public IElementAttributes getElementAttributes()
+    {
+        return cacheElement.getElementAttributes();
     }
 
     /**
@@ -115,13 +124,22 @@ public class PurgatoryElement<K, V>
     }
 
     /**
-     * @return cacheElement.getElementAttributes();
-     * @see ICacheElement#getElementAttributes
+     * @return a hash of the key only
      */
     @Override
-    public IElementAttributes getElementAttributes()
+    public int hashCode()
     {
-        return cacheElement.getElementAttributes();
+        return getKey().hashCode();
+    }
+
+    /**
+     * Gets the spoolable property.
+     *
+     * @return The spoolable value
+     */
+    public boolean isSpoolable()
+    {
+        return spoolable;
     }
 
     /**
@@ -135,31 +153,13 @@ public class PurgatoryElement<K, V>
     }
 
     /**
-     * @param obj other object
-     * @return true if this object key equals the key of obj
+     * Sets the spoolable property.
+     *
+     * @param spoolable The new spoolable value
      */
-    @Override
-    public boolean equals(final Object obj)
+    public void setSpoolable( final boolean spoolable )
     {
-        if (this == obj)
-        {
-            return true;
-        }
-        if (!(obj instanceof PurgatoryElement))
-        {
-            return false;
-        }
-        final PurgatoryElement<?,?> other = (PurgatoryElement<?,?>) obj;
-        return Objects.equals(getKey(), other.getKey());
-    }
-
-    /**
-     * @return a hash of the key only
-     */
-    @Override
-    public int hashCode()
-    {
-        return getKey().hashCode();
+        this.spoolable = spoolable;
     }
 
 

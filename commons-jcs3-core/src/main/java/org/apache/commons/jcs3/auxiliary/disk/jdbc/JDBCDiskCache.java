@@ -125,37 +125,249 @@ public class JDBCDiskCache<K, V>
     }
 
     /**
-     * Inserts or updates. By default it will try to insert. If the item exists we will get an
-     * error. It will then update. This behavior is configurable. The cache can be configured to
-     * check before inserting.
-     * <p>
-     * @param ce
+     * @param pattern
+     * @return String to use in the like query.
      */
-    @Override
-    protected void processUpdate( final ICacheElement<K, V> ce )
+    public String constructLikeParameterFromPattern( final String pattern )
     {
-    	updateCount.incrementAndGet();
+        String likePattern = pattern.replace( ".+", "%" );
+        likePattern = likePattern.replace( ".", "_" );
 
-        log.debug( "updating, ce = {0}", ce );
+        log.debug( "pattern = [{0}]", likePattern );
+
+        return likePattern;
+    }
+
+    /**
+     * Removed the expired. (now - create time) &gt; max life seconds * 1000
+     * <p>
+     * @return the number deleted
+     */
+    protected int deleteExpired()
+    {
+        int deleted = 0;
 
         try (Connection con = getDataSource().getConnection())
         {
-            log.debug( "Putting [{0}] on disk.", ce::getKey);
+            // The shrinker thread might kick in before the table is created
+            // So check if the table exists first
+            final DatabaseMetaData dmd = con.getMetaData();
+            final ResultSet result = dmd.getTables(null, null,
+                    getJdbcDiskCacheAttributes().getTableName(), null);
 
-            try
+            if (result.next())
             {
-                final byte[] element = getElementSerializer().serialize( ce );
-                insertOrUpdate( ce, con, element );
+                getTableState().setState( TableState.DELETE_RUNNING );
+                final long now = System.currentTimeMillis() / 1000;
+
+                final String sql = String.format("delete from %s where IS_ETERNAL = ? and REGION = ?"
+                        + " and ? > SYSTEM_EXPIRE_TIME_SECONDS", getJdbcDiskCacheAttributes().getTableName());
+
+                try (PreparedStatement psDelete = con.prepareStatement( sql ))
+                {
+                    psDelete.setString( 1, "F" );
+                    psDelete.setString( 2, this.getCacheName() );
+                    psDelete.setLong( 3, now );
+
+                    setAlive(true);
+
+                    deleted = psDelete.executeUpdate();
+                }
+                catch ( final SQLException e )
+                {
+                    log.error( "Problem creating statement.", e );
+                    setAlive(false);
+                }
+
+                logApplicationEvent( getAuxiliaryCacheAttributes().getName(), "deleteExpired",
+                                     "Deleted expired elements.  URL: " + getDiskLocation() );
             }
-            catch ( final IOException e )
+            else
             {
-                log.error( "Could not serialize element", e );
+                log.warn( "Trying to shrink non-existing table [{0}]",
+                        getJdbcDiskCacheAttributes().getTableName() );
             }
         }
         catch ( final SQLException e )
         {
-            log.error( "Problem getting connection.", e );
+            logError( getAuxiliaryCacheAttributes().getName(), "deleteExpired",
+                    e.getMessage() + " URL: " + getDiskLocation() );
+            log.error( "Problem removing expired elements from the table.", e );
+            reset();
         }
+        finally
+        {
+            getTableState().setState( TableState.FREE );
+        }
+
+        return deleted;
+    }
+
+    /**
+     * Does an element exist for this key?
+     * <p>
+     * @param ce the cache element
+     * @param con a database connection
+     * @return boolean
+     */
+    protected boolean doesElementExist( final ICacheElement<K, V> ce, final Connection con )
+    {
+        boolean exists = false;
+        // don't select the element, since we want this to be fast.
+        final String sqlS = String.format("select CACHE_KEY from %s where REGION = ? and CACHE_KEY = ?",
+                getJdbcDiskCacheAttributes().getTableName());
+
+        try (PreparedStatement psSelect = con.prepareStatement( sqlS ))
+        {
+            psSelect.setString( 1, this.getCacheName() );
+            psSelect.setString( 2, (String) ce.getKey() );
+
+            try (ResultSet rs = psSelect.executeQuery())
+            {
+                exists = rs.next();
+            }
+
+            log.debug( "[{0}] existing status is {1}", ce.getKey(), exists );
+        }
+        catch ( final SQLException e )
+        {
+            log.error( "Problem looking for item before insert.", e );
+        }
+
+        return exists;
+    }
+
+    /**
+     * @return Returns the AuxiliaryCacheAttributes.
+     */
+    @Override
+    public AuxiliaryCacheAttributes getAuxiliaryCacheAttributes()
+    {
+        return this.getJdbcDiskCacheAttributes();
+    }
+
+    /**
+     * Public so managers can access it.
+     * @return the dsFactory
+     * @throws SQLException if getting a data source fails
+     */
+    public DataSource getDataSource() throws SQLException
+    {
+        return dsFactory.getDataSource();
+    }
+
+    /**
+     * This is used by the event logging.
+     * <p>
+     * @return the location of the disk, either path or ip.
+     */
+    @Override
+    protected String getDiskLocation()
+    {
+        return this.jdbcDiskCacheAttributes.getUrl();
+    }
+
+    /**
+     * @return Returns the jdbcDiskCacheAttributes.
+     */
+    protected JDBCDiskCacheAttributes getJdbcDiskCacheAttributes()
+    {
+        return jdbcDiskCacheAttributes;
+    }
+
+    /**
+     * Return the keys in this cache.
+     * <p>
+     * @see org.apache.commons.jcs3.auxiliary.disk.AbstractDiskCache#getKeySet()
+     */
+    @Override
+    public Set<K> getKeySet() throws IOException
+    {
+        throw new UnsupportedOperationException( "Groups not implemented." );
+        // return null;
+    }
+
+    /**
+     * Returns the current cache size. Just does a count(*) for the region.
+     * <p>
+     * @return The size value
+     */
+    @Override
+    public int getSize()
+    {
+        int size = 0;
+
+        // region, key
+        final String selectString = String.format("select count(*) from %s where REGION = ?",
+                getJdbcDiskCacheAttributes().getTableName());
+
+        try (Connection con = getDataSource().getConnection())
+        {
+            try (PreparedStatement psSelect = con.prepareStatement( selectString ))
+            {
+                psSelect.setString( 1, this.getCacheName() );
+
+                try (ResultSet rs = psSelect.executeQuery())
+                {
+                    if ( rs.next() )
+                    {
+                        size = rs.getInt( 1 );
+                    }
+                }
+            }
+        }
+        catch ( final SQLException e )
+        {
+            log.error( "Problem getting size.", e );
+        }
+
+        return size;
+    }
+
+    /**
+     * Extends the parent stats.
+     * <p>
+     * @return IStats
+     */
+    @Override
+    public IStats getStatistics()
+    {
+        final IStats stats = super.getStatistics();
+        stats.setTypeName( "JDBC/Abstract Disk Cache" );
+
+        final List<IStatElement<?>> elems = stats.getStatElements();
+
+        elems.add(new StatElement<>( "Update Count", updateCount ) );
+        elems.add(new StatElement<>( "Get Count", getCount ) );
+        elems.add(new StatElement<>( "Get Matching Count", getMatchingCount ) );
+        elems.add(new StatElement<>( "DB URL", getJdbcDiskCacheAttributes().getUrl()) );
+
+        stats.setStatElements( elems );
+
+        return stats;
+    }
+
+    /**
+     * Returns the name of the table.
+     * <p>
+     * @return the table name or UNDEFINED
+     */
+    protected String getTableName()
+    {
+        String name = "UNDEFINED";
+        if ( this.getJdbcDiskCacheAttributes() != null )
+        {
+            name = this.getJdbcDiskCacheAttributes().getTableName();
+        }
+        return name;
+    }
+
+    /**
+     * @return Returns the tableState.
+     */
+    public TableState getTableState()
+    {
+        return tableState;
     }
 
     /**
@@ -247,78 +459,24 @@ public class JDBCDiskCache<K, V>
         return exists;
     }
 
-    /**
-     * This updates a row in the database.
-     * <p>
-     * @param ce
-     * @param con
-     * @param element
-     */
-    private void updateRow( final ICacheElement<K, V> ce, final Connection con, final byte[] element )
+    /** Shuts down the pool */
+    @Override
+    public void processDispose()
     {
-        final String sqlU = String.format("""
-        	update %s\
-        	 set ELEMENT  = ?, CREATE_TIME = ?, UPDATE_TIME_SECONDS = ?,\s\
-        	 SYSTEM_EXPIRE_TIME_SECONDS = ?\s\
-        	 where CACHE_KEY = ? and REGION = ?""", getJdbcDiskCacheAttributes().getTableName());
+        final ICacheEvent<K> cacheEvent = createICacheEvent( getCacheName(), null, ICacheEventLogger.DISPOSE_EVENT );
 
-        try (PreparedStatement psUpdate = con.prepareStatement( sqlU ))
+        try
         {
-            psUpdate.setBytes( 1, element );
-
-            final Timestamp createTime = new Timestamp( ce.getElementAttributes().getCreateTime() );
-            psUpdate.setTimestamp( 2, createTime );
-
-            final long now = System.currentTimeMillis() / 1000;
-            psUpdate.setLong( 3, now );
-
-            final long expireTime = now + ce.getElementAttributes().getMaxLife();
-            psUpdate.setLong( 4, expireTime );
-
-            psUpdate.setString( 5, (String) ce.getKey() );
-            psUpdate.setString( 6, this.getCacheName() );
-            psUpdate.execute();
-
-            log.debug( "ran update {0}", sqlU );
+        	dsFactory.close();
         }
         catch ( final SQLException e )
         {
-            log.error( "Error executing update sql [{0}]", sqlU, e );
+            log.error( "Problem shutting down.", e );
         }
-    }
-
-    /**
-     * Does an element exist for this key?
-     * <p>
-     * @param ce the cache element
-     * @param con a database connection
-     * @return boolean
-     */
-    protected boolean doesElementExist( final ICacheElement<K, V> ce, final Connection con )
-    {
-        boolean exists = false;
-        // don't select the element, since we want this to be fast.
-        final String sqlS = String.format("select CACHE_KEY from %s where REGION = ? and CACHE_KEY = ?",
-                getJdbcDiskCacheAttributes().getTableName());
-
-        try (PreparedStatement psSelect = con.prepareStatement( sqlS ))
+        finally
         {
-            psSelect.setString( 1, this.getCacheName() );
-            psSelect.setString( 2, (String) ce.getKey() );
-
-            try (ResultSet rs = psSelect.executeQuery())
-            {
-                exists = rs.next();
-            }
-
-            log.debug( "[{0}] existing status is {1}", ce.getKey(), exists );
+            logICacheEvent( cacheEvent );
         }
-        catch ( final SQLException e )
-        {
-            log.error( "Problem looking for item before insert.", e );
-        }
-
-        return exists;
     }
 
     /**
@@ -450,20 +608,6 @@ public class JDBCDiskCache<K, V>
     }
 
     /**
-     * @param pattern
-     * @return String to use in the like query.
-     */
-    public String constructLikeParameterFromPattern( final String pattern )
-    {
-        String likePattern = pattern.replace( ".+", "%" );
-        likePattern = likePattern.replace( ".", "_" );
-
-        log.debug( "pattern = [{0}]", likePattern );
-
-        return likePattern;
-    }
-
-    /**
      * Returns true if the removal was successful; or false if there is nothing to remove. Current
      * implementation always results in a disk orphan.
      * <p>
@@ -556,68 +700,37 @@ public class JDBCDiskCache<K, V>
     }
 
     /**
-     * Removed the expired. (now - create time) &gt; max life seconds * 1000
+     * Inserts or updates. By default it will try to insert. If the item exists we will get an
+     * error. It will then update. This behavior is configurable. The cache can be configured to
+     * check before inserting.
      * <p>
-     * @return the number deleted
+     * @param ce
      */
-    protected int deleteExpired()
+    @Override
+    protected void processUpdate( final ICacheElement<K, V> ce )
     {
-        int deleted = 0;
+    	updateCount.incrementAndGet();
+
+        log.debug( "updating, ce = {0}", ce );
 
         try (Connection con = getDataSource().getConnection())
         {
-            // The shrinker thread might kick in before the table is created
-            // So check if the table exists first
-            final DatabaseMetaData dmd = con.getMetaData();
-            final ResultSet result = dmd.getTables(null, null,
-                    getJdbcDiskCacheAttributes().getTableName(), null);
+            log.debug( "Putting [{0}] on disk.", ce::getKey);
 
-            if (result.next())
+            try
             {
-                getTableState().setState( TableState.DELETE_RUNNING );
-                final long now = System.currentTimeMillis() / 1000;
-
-                final String sql = String.format("delete from %s where IS_ETERNAL = ? and REGION = ?"
-                        + " and ? > SYSTEM_EXPIRE_TIME_SECONDS", getJdbcDiskCacheAttributes().getTableName());
-
-                try (PreparedStatement psDelete = con.prepareStatement( sql ))
-                {
-                    psDelete.setString( 1, "F" );
-                    psDelete.setString( 2, this.getCacheName() );
-                    psDelete.setLong( 3, now );
-
-                    setAlive(true);
-
-                    deleted = psDelete.executeUpdate();
-                }
-                catch ( final SQLException e )
-                {
-                    log.error( "Problem creating statement.", e );
-                    setAlive(false);
-                }
-
-                logApplicationEvent( getAuxiliaryCacheAttributes().getName(), "deleteExpired",
-                                     "Deleted expired elements.  URL: " + getDiskLocation() );
+                final byte[] element = getElementSerializer().serialize( ce );
+                insertOrUpdate( ce, con, element );
             }
-            else
+            catch ( final IOException e )
             {
-                log.warn( "Trying to shrink non-existing table [{0}]",
-                        getJdbcDiskCacheAttributes().getTableName() );
+                log.error( "Could not serialize element", e );
             }
         }
         catch ( final SQLException e )
         {
-            logError( getAuxiliaryCacheAttributes().getName(), "deleteExpired",
-                    e.getMessage() + " URL: " + getDiskLocation() );
-            log.error( "Problem removing expired elements from the table.", e );
-            reset();
+            log.error( "Problem getting connection.", e );
         }
-        finally
-        {
-            getTableState().setState( TableState.FREE );
-        }
-
-        return deleted;
     }
 
     /**
@@ -626,75 +739,6 @@ public class JDBCDiskCache<K, V>
     public void reset()
     {
         // nothing
-    }
-
-    /** Shuts down the pool */
-    @Override
-    public void processDispose()
-    {
-        final ICacheEvent<K> cacheEvent = createICacheEvent( getCacheName(), null, ICacheEventLogger.DISPOSE_EVENT );
-
-        try
-        {
-        	dsFactory.close();
-        }
-        catch ( final SQLException e )
-        {
-            log.error( "Problem shutting down.", e );
-        }
-        finally
-        {
-            logICacheEvent( cacheEvent );
-        }
-    }
-
-    /**
-     * Returns the current cache size. Just does a count(*) for the region.
-     * <p>
-     * @return The size value
-     */
-    @Override
-    public int getSize()
-    {
-        int size = 0;
-
-        // region, key
-        final String selectString = String.format("select count(*) from %s where REGION = ?",
-                getJdbcDiskCacheAttributes().getTableName());
-
-        try (Connection con = getDataSource().getConnection())
-        {
-            try (PreparedStatement psSelect = con.prepareStatement( selectString ))
-            {
-                psSelect.setString( 1, this.getCacheName() );
-
-                try (ResultSet rs = psSelect.executeQuery())
-                {
-                    if ( rs.next() )
-                    {
-                        size = rs.getInt( 1 );
-                    }
-                }
-            }
-        }
-        catch ( final SQLException e )
-        {
-            log.error( "Problem getting size.", e );
-        }
-
-        return size;
-    }
-
-    /**
-     * Return the keys in this cache.
-     * <p>
-     * @see org.apache.commons.jcs3.auxiliary.disk.AbstractDiskCache#getKeySet()
-     */
-    @Override
-    public Set<K> getKeySet() throws IOException
-    {
-        throw new UnsupportedOperationException( "Groups not implemented." );
-        // return null;
     }
 
     /**
@@ -706,95 +750,11 @@ public class JDBCDiskCache<K, V>
     }
 
     /**
-     * @return Returns the jdbcDiskCacheAttributes.
-     */
-    protected JDBCDiskCacheAttributes getJdbcDiskCacheAttributes()
-    {
-        return jdbcDiskCacheAttributes;
-    }
-
-    /**
-     * @return Returns the AuxiliaryCacheAttributes.
-     */
-    @Override
-    public AuxiliaryCacheAttributes getAuxiliaryCacheAttributes()
-    {
-        return this.getJdbcDiskCacheAttributes();
-    }
-
-    /**
-     * Extends the parent stats.
-     * <p>
-     * @return IStats
-     */
-    @Override
-    public IStats getStatistics()
-    {
-        final IStats stats = super.getStatistics();
-        stats.setTypeName( "JDBC/Abstract Disk Cache" );
-
-        final List<IStatElement<?>> elems = stats.getStatElements();
-
-        elems.add(new StatElement<>( "Update Count", updateCount ) );
-        elems.add(new StatElement<>( "Get Count", getCount ) );
-        elems.add(new StatElement<>( "Get Matching Count", getMatchingCount ) );
-        elems.add(new StatElement<>( "DB URL", getJdbcDiskCacheAttributes().getUrl()) );
-
-        stats.setStatElements( elems );
-
-        return stats;
-    }
-
-    /**
-     * Returns the name of the table.
-     * <p>
-     * @return the table name or UNDEFINED
-     */
-    protected String getTableName()
-    {
-        String name = "UNDEFINED";
-        if ( this.getJdbcDiskCacheAttributes() != null )
-        {
-            name = this.getJdbcDiskCacheAttributes().getTableName();
-        }
-        return name;
-    }
-
-    /**
      * @param tableState The tableState to set.
      */
     public void setTableState( final TableState tableState )
     {
         this.tableState = tableState;
-    }
-
-    /**
-     * @return Returns the tableState.
-     */
-    public TableState getTableState()
-    {
-        return tableState;
-    }
-
-    /**
-     * This is used by the event logging.
-     * <p>
-     * @return the location of the disk, either path or ip.
-     */
-    @Override
-    protected String getDiskLocation()
-    {
-        return this.jdbcDiskCacheAttributes.getUrl();
-    }
-
-    /**
-     * Public so managers can access it.
-     * @return the dsFactory
-     * @throws SQLException if getting a data source fails
-     */
-    public DataSource getDataSource() throws SQLException
-    {
-        return dsFactory.getDataSource();
     }
 
     /**
@@ -806,5 +766,45 @@ public class JDBCDiskCache<K, V>
     public String toString()
     {
         return this.getStats();
+    }
+
+    /**
+     * This updates a row in the database.
+     * <p>
+     * @param ce
+     * @param con
+     * @param element
+     */
+    private void updateRow( final ICacheElement<K, V> ce, final Connection con, final byte[] element )
+    {
+        final String sqlU = String.format("""
+        	update %s\
+        	 set ELEMENT  = ?, CREATE_TIME = ?, UPDATE_TIME_SECONDS = ?,\s\
+        	 SYSTEM_EXPIRE_TIME_SECONDS = ?\s\
+        	 where CACHE_KEY = ? and REGION = ?""", getJdbcDiskCacheAttributes().getTableName());
+
+        try (PreparedStatement psUpdate = con.prepareStatement( sqlU ))
+        {
+            psUpdate.setBytes( 1, element );
+
+            final Timestamp createTime = new Timestamp( ce.getElementAttributes().getCreateTime() );
+            psUpdate.setTimestamp( 2, createTime );
+
+            final long now = System.currentTimeMillis() / 1000;
+            psUpdate.setLong( 3, now );
+
+            final long expireTime = now + ce.getElementAttributes().getMaxLife();
+            psUpdate.setLong( 4, expireTime );
+
+            psUpdate.setString( 5, (String) ce.getKey() );
+            psUpdate.setString( 6, this.getCacheName() );
+            psUpdate.execute();
+
+            log.debug( "ran update {0}", sqlU );
+        }
+        catch ( final SQLException e )
+        {
+            log.error( "Error executing update sql [{0}]", sqlU, e );
+        }
     }
 }

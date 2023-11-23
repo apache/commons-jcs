@@ -57,6 +57,23 @@ public class LateralCacheNoWaitFacadeUnitTest
      * Verify that we can remove an item.
      */
     @Test
+    public void testAdd_InList()
+    {
+        final LateralCacheNoWait<String, String> noWait = new LateralCacheNoWait<>( cache );
+
+        // DO WORK
+        facade.addNoWait( noWait );
+        facade.addNoWait( noWait );
+
+        // VERIFY
+        assertTrue( "Should be in the list.", facade.containsNoWait( noWait ) );
+        assertEquals( "Should only have 1", 1, facade.getNoWaitSize() );
+    }
+
+    /**
+     * Verify that we can remove an item.
+     */
+    @Test
     public void testAddThenRemoveNoWait_InList()
     {
         LateralCacheNoWait<String, String> noWait = new LateralCacheNoWait<>( cache );
@@ -102,23 +119,6 @@ public class LateralCacheNoWaitFacadeUnitTest
         assertEquals( "Should only have 1", 1, facade.getNoWaitSize() );
         assertFalse( "Should not be in the list. ", facade.containsNoWait( noWait ) );
         assertTrue( "Should be in the list.", facade.containsNoWait( noWait2 ) );
-    }
-
-    /**
-     * Verify that we can remove an item.
-     */
-    @Test
-    public void testAdd_InList()
-    {
-        final LateralCacheNoWait<String, String> noWait = new LateralCacheNoWait<>( cache );
-
-        // DO WORK
-        facade.addNoWait( noWait );
-        facade.addNoWait( noWait );
-
-        // VERIFY
-        assertTrue( "Should be in the list.", facade.containsNoWait( noWait ) );
-        assertEquals( "Should only have 1", 1, facade.getNoWaitSize() );
     }
 
     /**

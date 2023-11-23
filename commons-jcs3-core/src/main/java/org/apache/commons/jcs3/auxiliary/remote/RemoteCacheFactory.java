@@ -147,6 +147,32 @@ public class RemoteCacheFactory
     // end createCache
 
     /**
+	 * @see org.apache.commons.jcs3.auxiliary.AbstractAuxiliaryCacheFactory#dispose()
+	 */
+	@Override
+	public void dispose()
+	{
+		managers.values().forEach(RemoteCacheManager::release);
+		managers.clear();
+
+        if (monitor != null)
+        {
+            monitor.notifyShutdown();
+            try
+            {
+                monitor.join(5000);
+            }
+            catch (final InterruptedException e)
+            {
+                // swallow
+            }
+            monitor = null;
+        }
+
+		super.dispose();
+	}
+
+    /**
      * Returns an instance of RemoteCacheManager for the given connection parameters.
      * <p>
      * Host and Port uniquely identify a manager instance.
@@ -166,7 +192,7 @@ public class RemoteCacheFactory
         return managers.get(rca.getRemoteLocation());
     }
 
-    /**
+	/**
      * Returns an instance of RemoteCacheManager for the given connection parameters.
      * <p>
      * Host and Port uniquely identify a manager instance.
@@ -213,31 +239,5 @@ public class RemoteCacheFactory
 
         monitor = new RemoteCacheMonitor();
         monitor.setDaemon(true);
-	}
-
-	/**
-	 * @see org.apache.commons.jcs3.auxiliary.AbstractAuxiliaryCacheFactory#dispose()
-	 */
-	@Override
-	public void dispose()
-	{
-		managers.values().forEach(RemoteCacheManager::release);
-		managers.clear();
-
-        if (monitor != null)
-        {
-            monitor.notifyShutdown();
-            try
-            {
-                monitor.join(5000);
-            }
-            catch (final InterruptedException e)
-            {
-                // swallow
-            }
-            monitor = null;
-        }
-
-		super.dispose();
 	}
 }

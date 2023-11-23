@@ -38,6 +38,20 @@ public class MockRMISocketFactory
     private String testStringProperty;
 
     /**
+     * @param port
+     * @return ServerSocket
+     * @throws IOException
+     */
+    @Override
+    public ServerSocket createServerSocket( final int port )
+        throws IOException
+    {
+//        System.out.println( "Creating server socket" );
+
+        return new ServerSocket( port );
+    }
+
+    /**
      * @param host
      * @param port
      * @return Socket
@@ -57,17 +71,11 @@ public class MockRMISocketFactory
     }
 
     /**
-     * @param port
-     * @return ServerSocket
-     * @throws IOException
+     * @return the testStringProperty
      */
-    @Override
-    public ServerSocket createServerSocket( final int port )
-        throws IOException
+    public String getTestStringProperty()
     {
-//        System.out.println( "Creating server socket" );
-
-        return new ServerSocket( port );
+        return testStringProperty;
     }
 
     /**
@@ -76,13 +84,5 @@ public class MockRMISocketFactory
     public void setTestStringProperty( final String testStringProperty )
     {
         this.testStringProperty = testStringProperty;
-    }
-
-    /**
-     * @return the testStringProperty
-     */
-    public String getTestStringProperty()
-    {
-        return testStringProperty;
     }
 }

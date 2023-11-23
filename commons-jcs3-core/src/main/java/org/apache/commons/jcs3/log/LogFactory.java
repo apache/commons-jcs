@@ -28,18 +28,6 @@ public interface LogFactory
     String ROOT_LOGGER_NAME = "";
 
     /**
-     * Return the name of the Log subsystem managed by this factory
-     *
-     * @return the name of the log subsystem
-     */
-    String getName();
-
-    /**
-     * Shutdown the logging system if the logging system supports it.
-     */
-    void shutdown();
-
-    /**
      * Returns a Log using the fully qualified name of the Class as the Log
      * name.
      *
@@ -61,4 +49,16 @@ public interface LogFactory
      *             if {@code name} is {@code null}
      */
     Log getLog(final String name);
+
+    /**
+     * Return the name of the Log subsystem managed by this factory
+     *
+     * @return the name of the log subsystem
+     */
+    String getName();
+
+    /**
+     * Shutdown the logging system if the logging system supports it.
+     */
+    void shutdown();
 }

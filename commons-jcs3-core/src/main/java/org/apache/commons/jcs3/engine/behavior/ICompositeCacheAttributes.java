@@ -40,17 +40,29 @@ public interface ICompositeCacheAttributes
     }
 
     /**
-     * SetMaxObjects is used to set the attribute to determine the maximum
-     * number of objects allowed in the memory cache. If the max number of
-     * objects or the cache size is set, the default for the one not set is
-     * ignored. If both are set, both are used to determine the capacity of the
-     * cache, i.e., object will be removed from the cache if either limit is
-     * reached. TODO: move to MemoryCache config file.
-     * <p>
-     * @param size
-     *            The new maxObjects value
+     * Clone object
      */
-    void setMaxObjects( int size );
+    ICompositeCacheAttributes clone();
+
+    /**
+     * Gets the cacheName attribute of the ICompositeCacheAttributes object
+     * <p>
+     * @return The cacheName value
+     */
+    String getCacheName();
+
+    /**
+     * @return Returns the diskUsagePattern.
+     */
+    DiskUsagePattern getDiskUsagePattern();
+
+    /**
+     * If UseMemoryShrinker is true the memory cache should auto-expire elements
+     * to reclaim space.
+     * <p>
+     * @return The MaxMemoryIdleTimeSeconds value
+     */
+    long getMaxMemoryIdleTimeSeconds();
 
     /**
      * Gets the maxObjects attribute of the ICompositeCacheAttributes object
@@ -60,12 +72,35 @@ public interface ICompositeCacheAttributes
     int getMaxObjects();
 
     /**
-     * Sets the useDisk attribute of the ICompositeCacheAttributes object
+     * If UseMemoryShrinker is true the memory cache should auto-expire elements
+     * to reclaim space. This gets the maximum number of items to spool per run.
      * <p>
-     * @param useDisk
-     *            The new useDisk value
+     * @return The maxSpoolPerRun value
      */
-    void setUseDisk( boolean useDisk );
+    int getMaxSpoolPerRun();
+
+    /**
+     * Gets the memoryCacheName attribute of the ICompositeCacheAttributes
+     * object
+     * <p>
+     * @return The memoryCacheName value
+     */
+    String getMemoryCacheName();
+
+    /**
+     * If UseMemoryShrinker is true the memory cache should auto-expire elements
+     * to reclaim space. This gets the shrinker interval.
+     * <p>
+     * @return The ShrinkerIntervalSeconds value
+     */
+    long getShrinkerIntervalSeconds();
+
+    /**
+     * Number to send to disk at time when memory is full.
+     * <p>
+     * @return int
+     */
+    int getSpoolChunkSize();
 
     /**
      * Gets the useDisk attribute of the ICompositeCacheAttributes object
@@ -75,14 +110,6 @@ public interface ICompositeCacheAttributes
     boolean isUseDisk();
 
     /**
-     * set whether the cache should use a lateral cache
-     * <p>
-     * @param d
-     *            The new useLateral value
-     */
-    void setUseLateral( boolean d );
-
-    /**
      * Gets the useLateral attribute of the ICompositeCacheAttributes object
      * <p>
      * @return The useLateral value
@@ -90,12 +117,11 @@ public interface ICompositeCacheAttributes
     boolean isUseLateral();
 
     /**
-     * Sets whether the cache is remote enabled
+     * Whether the memory cache should perform background memory shrinkage.
      * <p>
-     * @param isRemote
-     *            The new useRemote value
+     * @return The UseMemoryShrinker value
      */
-    void setUseRemote( boolean isRemote );
+    boolean isUseMemoryShrinker();
 
     /**
      * returns whether the cache is remote enabled
@@ -111,96 +137,6 @@ public interface ICompositeCacheAttributes
      *            The new cacheName value
      */
     void setCacheName( String s );
-
-    /**
-     * Gets the cacheName attribute of the ICompositeCacheAttributes object
-     * <p>
-     * @return The cacheName value
-     */
-    String getCacheName();
-
-    /**
-     * Sets the name of the MemoryCache, referenced by the appropriate manager.
-     * TODO: create a separate memory cache attribute class.
-     * <p>
-     * @param s
-     *            The new memoryCacheName value
-     */
-    void setMemoryCacheName( String s );
-
-    /**
-     * Gets the memoryCacheName attribute of the ICompositeCacheAttributes
-     * object
-     * <p>
-     * @return The memoryCacheName value
-     */
-    String getMemoryCacheName();
-
-    /**
-     * Whether the memory cache should perform background memory shrinkage.
-     * <p>
-     * @param useShrinker
-     *            The new UseMemoryShrinker value
-     */
-    void setUseMemoryShrinker( boolean useShrinker );
-
-    /**
-     * Whether the memory cache should perform background memory shrinkage.
-     * <p>
-     * @return The UseMemoryShrinker value
-     */
-    boolean isUseMemoryShrinker();
-
-    /**
-     * If UseMemoryShrinker is true the memory cache should auto-expire elements
-     * to reclaim space.
-     * <p>
-     * @param seconds
-     *            The new MaxMemoryIdleTimeSeconds value
-     */
-    void setMaxMemoryIdleTimeSeconds( long seconds );
-
-    /**
-     * If UseMemoryShrinker is true the memory cache should auto-expire elements
-     * to reclaim space.
-     * <p>
-     * @return The MaxMemoryIdleTimeSeconds value
-     */
-    long getMaxMemoryIdleTimeSeconds();
-
-    /**
-     * If UseMemoryShrinker is true the memory cache should auto-expire elements
-     * to reclaim space. This sets the shrinker interval.
-     * <p>
-     * @param seconds
-     *            The new ShrinkerIntervalSeconds value
-     */
-    void setShrinkerIntervalSeconds( long seconds );
-
-    /**
-     * If UseMemoryShrinker is true the memory cache should auto-expire elements
-     * to reclaim space. This gets the shrinker interval.
-     * <p>
-     * @return The ShrinkerIntervalSeconds value
-     */
-    long getShrinkerIntervalSeconds();
-
-    /**
-     * If UseMemoryShrinker is true the memory cache should auto-expire elements
-     * to reclaim space. This sets the maximum number of items to spool per run.
-     * <p>
-     * @param maxSpoolPerRun
-     *            The new maxSpoolPerRun value
-     */
-    void setMaxSpoolPerRun( int maxSpoolPerRun );
-
-    /**
-     * If UseMemoryShrinker is true the memory cache should auto-expire elements
-     * to reclaim space. This gets the maximum number of items to spool per run.
-     * <p>
-     * @return The maxSpoolPerRun value
-     */
-    int getMaxSpoolPerRun();
 
     /**
      * By default this is SWAP_ONLY.
@@ -219,16 +155,53 @@ public interface ICompositeCacheAttributes
     void setDiskUsagePatternName( String diskUsagePatternName );
 
     /**
-     * @return Returns the diskUsagePattern.
+     * If UseMemoryShrinker is true the memory cache should auto-expire elements
+     * to reclaim space.
+     * <p>
+     * @param seconds
+     *            The new MaxMemoryIdleTimeSeconds value
      */
-    DiskUsagePattern getDiskUsagePattern();
+    void setMaxMemoryIdleTimeSeconds( long seconds );
 
     /**
-     * Number to send to disk at time when memory is full.
+     * SetMaxObjects is used to set the attribute to determine the maximum
+     * number of objects allowed in the memory cache. If the max number of
+     * objects or the cache size is set, the default for the one not set is
+     * ignored. If both are set, both are used to determine the capacity of the
+     * cache, i.e., object will be removed from the cache if either limit is
+     * reached. TODO: move to MemoryCache config file.
      * <p>
-     * @return int
+     * @param size
+     *            The new maxObjects value
      */
-    int getSpoolChunkSize();
+    void setMaxObjects( int size );
+
+    /**
+     * If UseMemoryShrinker is true the memory cache should auto-expire elements
+     * to reclaim space. This sets the maximum number of items to spool per run.
+     * <p>
+     * @param maxSpoolPerRun
+     *            The new maxSpoolPerRun value
+     */
+    void setMaxSpoolPerRun( int maxSpoolPerRun );
+
+    /**
+     * Sets the name of the MemoryCache, referenced by the appropriate manager.
+     * TODO: create a separate memory cache attribute class.
+     * <p>
+     * @param s
+     *            The new memoryCacheName value
+     */
+    void setMemoryCacheName( String s );
+
+    /**
+     * If UseMemoryShrinker is true the memory cache should auto-expire elements
+     * to reclaim space. This sets the shrinker interval.
+     * <p>
+     * @param seconds
+     *            The new ShrinkerIntervalSeconds value
+     */
+    void setShrinkerIntervalSeconds( long seconds );
 
     /**
      * Number to send to disk at a time.
@@ -238,7 +211,34 @@ public interface ICompositeCacheAttributes
     void setSpoolChunkSize( int spoolChunkSize );
 
     /**
-     * Clone object
+     * Sets the useDisk attribute of the ICompositeCacheAttributes object
+     * <p>
+     * @param useDisk
+     *            The new useDisk value
      */
-    ICompositeCacheAttributes clone();
+    void setUseDisk( boolean useDisk );
+
+    /**
+     * set whether the cache should use a lateral cache
+     * <p>
+     * @param d
+     *            The new useLateral value
+     */
+    void setUseLateral( boolean d );
+
+    /**
+     * Whether the memory cache should perform background memory shrinkage.
+     * <p>
+     * @param useShrinker
+     *            The new UseMemoryShrinker value
+     */
+    void setUseMemoryShrinker( boolean useShrinker );
+
+    /**
+     * Sets whether the cache is remote enabled
+     * <p>
+     * @param isRemote
+     *            The new useRemote value
+     */
+    void setUseRemote( boolean isRemote );
 }

@@ -30,6 +30,12 @@ public abstract class CacheLoaderAdapter<K, V> implements CacheLoader<K, V>, Fac
     private static final long serialVersionUID = -2683385801194322067L;
 
     @Override
+    public CacheLoader<K, V> create()
+    {
+        return this;
+    }
+
+    @Override
     public Map<K, V> loadAll(final Iterable<? extends K> keys) throws CacheLoaderException
     {
         final Map<K, V> result = new HashMap<>();
@@ -42,11 +48,5 @@ public abstract class CacheLoaderAdapter<K, V> implements CacheLoader<K, V>, Fac
             }
         }
         return result;
-    }
-
-    @Override
-    public CacheLoader<K, V> create()
-    {
-        return this;
     }
 }

@@ -30,38 +30,17 @@ public class CacheInvocationContextImpl<A extends Annotation> extends CacheMetho
 {
     private static final Object[] EMPTY_ARGS = {};
 
+    private static CacheInvocationParameterImpl newCacheInvocationParameterImpl(final Class<?> type, final Object arg,
+                                                                         final Set<Annotation> annotations, final int i) {
+        return new CacheInvocationParameterImpl(type, arg, annotations, i);
+    }
+
     private CacheInvocationParameter[] parameters;
 
     public CacheInvocationContextImpl(final InvocationContext delegate, final A cacheAnnotation, final String cacheName,
                                       final CDIJCacheHelper.MethodMeta meta)
     {
         super(delegate, cacheAnnotation, cacheName, meta);
-    }
-
-    @Override
-    public Object getTarget()
-    {
-        return delegate.getTarget();
-    }
-
-    @Override
-    public CacheInvocationParameter[] getAllParameters()
-    {
-        if (parameters == null)
-        {
-            parameters = doGetAllParameters(null);
-        }
-        return parameters;
-    }
-
-    @Override
-    public <T> T unwrap(final Class<T> cls)
-    {
-        if (cls.isAssignableFrom(getClass()))
-        {
-            return cls.cast(this);
-        }
-        throw new IllegalArgumentException(cls.getName());
     }
 
     protected CacheInvocationParameter[] doGetAllParameters(final Integer[] indexes)
@@ -90,8 +69,29 @@ public class CacheInvocationContextImpl<A extends Annotation> extends CacheMetho
         return parametersAsArray;
     }
 
-    private static CacheInvocationParameterImpl newCacheInvocationParameterImpl(final Class<?> type, final Object arg,
-                                                                         final Set<Annotation> annotations, final int i) {
-        return new CacheInvocationParameterImpl(type, arg, annotations, i);
+    @Override
+    public CacheInvocationParameter[] getAllParameters()
+    {
+        if (parameters == null)
+        {
+            parameters = doGetAllParameters(null);
+        }
+        return parameters;
+    }
+
+    @Override
+    public Object getTarget()
+    {
+        return delegate.getTarget();
+    }
+
+    @Override
+    public <T> T unwrap(final Class<T> cls)
+    {
+        if (cls.isAssignableFrom(getClass()))
+        {
+            return cls.cast(this);
+        }
+        throw new IllegalArgumentException(cls.getName());
     }
 }

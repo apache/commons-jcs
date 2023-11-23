@@ -38,12 +38,12 @@ import org.junit.Test;
 public class RemoteHttpCacheClientUnitTest
 {
     /**
-     * Verify get functionality
+     * Verify dispose functionality
      * <p>
      * @throws IOException
      */
     @Test
-    public void testGet_nullFromDispatcher()
+    public void testDispose_normal()
         throws IOException
     {
         // SETUP
@@ -54,16 +54,12 @@ public class RemoteHttpCacheClientUnitTest
         client.setRemoteDispatcher( mockDispatcher );
 
         final String cacheName = "test";
-        final String key = "key";
-
-        mockDispatcher.setupRemoteCacheResponse = null;
 
         // DO WORK
-        final ICacheElement<String, String> result = client.get( cacheName, key );
+        client.dispose( cacheName );
 
         // VERIFY
-        assertNull( "Wrong result.", result );
-        assertEquals( "Wrong type.", RemoteRequestType.GET, mockDispatcher.lastRemoteCacheRequest
+        assertEquals( "Wrong type.", RemoteRequestType.DISPOSE, mockDispatcher.lastRemoteCacheRequest
             .getRequestType() );
     }
 
@@ -98,6 +94,36 @@ public class RemoteHttpCacheClientUnitTest
 
         // VERIFY
         assertEquals( "Wrong result.", expected, result );
+        assertEquals( "Wrong type.", RemoteRequestType.GET, mockDispatcher.lastRemoteCacheRequest
+            .getRequestType() );
+    }
+
+    /**
+     * Verify get functionality
+     * <p>
+     * @throws IOException
+     */
+    @Test
+    public void testGet_nullFromDispatcher()
+        throws IOException
+    {
+        // SETUP
+        final RemoteHttpCacheAttributes attributes = new RemoteHttpCacheAttributes();
+        final RemoteHttpCacheClient<String, String> client = new RemoteHttpCacheClient<>( attributes );
+
+        final MockRemoteCacheDispatcher mockDispatcher = new MockRemoteCacheDispatcher();
+        client.setRemoteDispatcher( mockDispatcher );
+
+        final String cacheName = "test";
+        final String key = "key";
+
+        mockDispatcher.setupRemoteCacheResponse = null;
+
+        // DO WORK
+        final ICacheElement<String, String> result = client.get( cacheName, key );
+
+        // VERIFY
+        assertNull( "Wrong result.", result );
         assertEquals( "Wrong type.", RemoteRequestType.GET, mockDispatcher.lastRemoteCacheRequest
             .getRequestType() );
     }
@@ -254,32 +280,6 @@ public class RemoteHttpCacheClientUnitTest
 
         // VERIFY
         assertEquals( "Wrong type.", RemoteRequestType.UPDATE, mockDispatcher.lastRemoteCacheRequest
-            .getRequestType() );
-    }
-
-    /**
-     * Verify dispose functionality
-     * <p>
-     * @throws IOException
-     */
-    @Test
-    public void testDispose_normal()
-        throws IOException
-    {
-        // SETUP
-        final RemoteHttpCacheAttributes attributes = new RemoteHttpCacheAttributes();
-        final RemoteHttpCacheClient<String, String> client = new RemoteHttpCacheClient<>( attributes );
-
-        final MockRemoteCacheDispatcher mockDispatcher = new MockRemoteCacheDispatcher();
-        client.setRemoteDispatcher( mockDispatcher );
-
-        final String cacheName = "test";
-
-        // DO WORK
-        client.dispose( cacheName );
-
-        // VERIFY
-        assertEquals( "Wrong type.", RemoteRequestType.DISPOSE, mockDispatcher.lastRemoteCacheRequest
             .getRequestType() );
     }
 }

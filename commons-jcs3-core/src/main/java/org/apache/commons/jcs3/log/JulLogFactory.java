@@ -25,26 +25,6 @@ import java.util.logging.Logger;
 public class JulLogFactory implements LogFactory
 {
     /**
-     * Return the name of the Log subsystem managed by this factory
-     *
-     * @return the name of the log subsystem
-     */
-    @Override
-    public String getName()
-    {
-        return "jul";
-    }
-
-    /**
-     * Shutdown the logging system if the logging system supports it.
-     */
-    @Override
-    public void shutdown()
-    {
-        // do nothing
-    }
-
-    /**
      * Returns a Log using the fully qualified name of the Class as the Log
      * name.
      *
@@ -72,5 +52,25 @@ public class JulLogFactory implements LogFactory
     {
         final Logger logger = Logger.getLogger(name);
         return new JulLogAdapter(logger);
+    }
+
+    /**
+     * Return the name of the Log subsystem managed by this factory
+     *
+     * @return the name of the log subsystem
+     */
+    @Override
+    public String getName()
+    {
+        return "jul";
+    }
+
+    /**
+     * Shutdown the logging system if the logging system supports it.
+     */
+    @Override
+    public void shutdown()
+    {
+        // do nothing
     }
 }

@@ -43,12 +43,10 @@ public interface IDiskCacheAttributes
     int MAX_PURGATORY_SIZE_DEFAULT = 5000;
 
     /**
-     * Sets the diskPath attribute of the IJISPCacheAttributes object
-     * <p>
-     * @param path
-     *            The new diskPath value
+     *
+     * @return active DiskLimitType
      */
-    void setDiskPath( String path );
+    DiskLimitType getDiskLimitType();
 
     /**
      * Gets the diskPath attribute of the attributes object
@@ -65,33 +63,12 @@ public interface IDiskCacheAttributes
     int getMaxPurgatorySize();
 
     /**
-     * Sets the maxPurgatorySize attribute of the DiskCacheAttributes object
-     * <p>
-     * @param maxPurgatorySize
-     *            The new maxPurgatorySize value
-     */
-    void setMaxPurgatorySize( int maxPurgatorySize );
-
-    /**
-     * Get the amount of time in seconds we will wait for elements to move to
+     * Gets the amount of time in seconds we will wait for elements to move to
      * disk during shutdown for a particular region.
      * <p>
      * @return the time in seconds.
      */
     int getShutdownSpoolTimeLimit();
-
-    /**
-     * Sets the amount of time in seconds we will wait for elements to move to
-     * disk during shutdown for a particular region.
-     * <p>
-     * This is how long we give the event queue to empty.
-     * <p>
-     * The default is 60 seconds.
-     * <p>
-     * @param shutdownSpoolTimeLimit
-     *            the time in seconds
-     */
-    void setShutdownSpoolTimeLimit( int shutdownSpoolTimeLimit );
 
     /**
      * If this is true then remove all is not prohibited.
@@ -124,8 +101,31 @@ public interface IDiskCacheAttributes
     void setDiskLimitTypeName(String diskLimitTypeName);
 
     /**
-     *
-     * @return active DiskLimitType
+     * Sets the diskPath attribute of the IJISPCacheAttributes object
+     * <p>
+     * @param path
+     *            The new diskPath value
      */
-    DiskLimitType getDiskLimitType();
+    void setDiskPath( String path );
+
+    /**
+     * Sets the maxPurgatorySize attribute of the DiskCacheAttributes object
+     * <p>
+     * @param maxPurgatorySize
+     *            The new maxPurgatorySize value
+     */
+    void setMaxPurgatorySize( int maxPurgatorySize );
+
+    /**
+     * Sets the amount of time in seconds we will wait for elements to move to
+     * disk during shutdown for a particular region.
+     * <p>
+     * This is how long we give the event queue to empty.
+     * <p>
+     * The default is 60 seconds.
+     * <p>
+     * @param shutdownSpoolTimeLimit
+     *            the time in seconds
+     */
+    void setShutdownSpoolTimeLimit( int shutdownSpoolTimeLimit );
 }

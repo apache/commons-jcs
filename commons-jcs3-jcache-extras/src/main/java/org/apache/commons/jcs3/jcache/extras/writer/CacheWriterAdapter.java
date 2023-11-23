@@ -30,12 +30,9 @@ public abstract class CacheWriterAdapter<K, V> implements CacheWriter<K, V>, Fac
     private static final long serialVersionUID = -2784825625311754333L;
 
     @Override
-    public void writeAll(final Collection<Cache.Entry<? extends K, ? extends V>> entries) throws CacheWriterException
+    public CacheWriter<K, V> create()
     {
-        for (final Cache.Entry<? extends K, ? extends V> entry : entries)
-        {
-            write(entry);
-        }
+        return this;
     }
 
     @Override
@@ -48,8 +45,11 @@ public abstract class CacheWriterAdapter<K, V> implements CacheWriter<K, V>, Fac
     }
 
     @Override
-    public CacheWriter<K, V> create()
+    public void writeAll(final Collection<Cache.Entry<? extends K, ? extends V>> entries) throws CacheWriterException
     {
-        return this;
+        for (final Cache.Entry<? extends K, ? extends V> entry : entries)
+        {
+            write(entry);
+        }
     }
 }

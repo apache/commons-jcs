@@ -47,6 +47,22 @@ public class MySQLDiskCacheFactory
     private static final Log log = LogManager.getLog( MySQLDiskCacheFactory.class );
 
     /**
+     * This calls the optimizers' optimize table method. This is used by the timer.
+     */
+    private static void optimizeTable(final MySQLTableOptimizer optimizer)
+    {
+        if ( optimizer != null )
+        {
+            final boolean success = optimizer.optimizeTable();
+            log.info( "Optimization success status [{0}]", success );
+        }
+        else
+        {
+            log.warn( "OptimizerRunner: The optimizer is null. Could not optimize table." );
+        }
+    }
+
+    /**
      * This factory method should create an instance of the mysqlcache.
      * <p>
      * @param rawAttr specific cache configuration attributes
@@ -76,6 +92,24 @@ public class MySQLDiskCacheFactory
 
         return cache;
 
+    }
+
+    /**
+     * This takes in a single time and schedules the optimizer to be called at that time every day.
+     * <p>
+     * @param startTime -- HH:MM:SS format
+     * @param optimizer
+     */
+    protected void scheduleOptimization( final Date startTime, final MySQLTableOptimizer optimizer )
+    {
+        log.info( "startTime [{0}] for optimizer {1}", startTime, optimizer );
+
+        final Date now = new Date();
+        final long initialDelay = startTime.getTime() - now.getTime();
+
+        // have the daemon execute the optimization
+        getScheduledExecutorService().scheduleAtFixedRate(() -> optimizeTable(optimizer),
+                initialDelay, 86400L, TimeUnit.SECONDS );
     }
 
     /**
@@ -116,40 +150,6 @@ public class MySQLDiskCacheFactory
                 log.info( "Optimization is not configured for table [{0}]",
                         attributes.getTableName());
             }
-        }
-    }
-
-    /**
-     * This takes in a single time and schedules the optimizer to be called at that time every day.
-     * <p>
-     * @param startTime -- HH:MM:SS format
-     * @param optimizer
-     */
-    protected void scheduleOptimization( final Date startTime, final MySQLTableOptimizer optimizer )
-    {
-        log.info( "startTime [{0}] for optimizer {1}", startTime, optimizer );
-
-        final Date now = new Date();
-        final long initialDelay = startTime.getTime() - now.getTime();
-
-        // have the daemon execute the optimization
-        getScheduledExecutorService().scheduleAtFixedRate(() -> optimizeTable(optimizer),
-                initialDelay, 86400L, TimeUnit.SECONDS );
-    }
-
-    /**
-     * This calls the optimizers' optimize table method. This is used by the timer.
-     */
-    private static void optimizeTable(final MySQLTableOptimizer optimizer)
-    {
-        if ( optimizer != null )
-        {
-            final boolean success = optimizer.optimizeTable();
-            log.info( "Optimization success status [{0}]", success );
-        }
-        else
-        {
-            log.warn( "OptimizerRunner: The optimizer is null. Could not optimize table." );
         }
     }
 }

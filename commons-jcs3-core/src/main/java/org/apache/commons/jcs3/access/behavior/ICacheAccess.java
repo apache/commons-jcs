@@ -52,6 +52,53 @@ public interface ICacheAccess<K, V>
     V get(K name, Supplier<V> supplier);
 
     /**
+     * This method returns the ICacheElement&lt;K, V&gt; wrapper which provides access to element info and other
+     * attributes.
+     * <p>
+     * This returns a reference to the wrapper. Any modifications will be reflected in the cache. No
+     * defensive copy is made.
+     * <p>
+     * This method is most useful if you want to determine things such as the how long the element
+     * has been in the cache.
+     * <p>
+     * The last access time in the ElementAttributes should be current.
+     * <p>
+     * @param name Key the object is stored as
+     * @return The ICacheElement&lt;K, V&gt; if the object is found or null
+     */
+    ICacheElement<K, V> getCacheElement(K name);
+
+    /**
+     * Gets multiple elements from the cache based on a set of cache keys.
+     * <p>
+     * This method returns the ICacheElement&lt;K, V&gt; wrapper which provides access to element info and other
+     * attributes.
+     * <p>
+     * This returns a reference to the wrapper. Any modifications will be reflected in the cache. No
+     * defensive copy is made.
+     * <p>
+     * This method is most useful if you want to determine things such as the how long the element
+     * has been in the cache.
+     * <p>
+     * The last access time in the ElementAttributes should be current.
+     * <p>
+     * @param names set of Object cache keys
+     * @return a map of Object key to ICacheElement&lt;K, V&gt; element, or empty map if none of the keys are
+     *         present
+     */
+    Map<K, ICacheElement<K, V>> getCacheElements(Set<K> names);
+
+    /**
+     * Gets the elementAttributes attribute of the ICacheAccess object
+     * <p>
+     * @param name
+     * @return The elementAttributes value
+     * @throws CacheException
+     */
+    IElementAttributes getElementAttributes(K name)
+        throws CacheException;
+
+    /**
      * Retrieve matching objects from the cache region this instance provides access to.
      * <p>
      * @param pattern - a key pattern for the objects stored
@@ -60,14 +107,24 @@ public interface ICacheAccess<K, V>
     Map<K, V> getMatching(String pattern);
 
     /**
-     * Puts in cache if an item does not exist with the name in that region.
+     * Gets multiple elements from the cache based on a set of cache keys.
      * <p>
-     * @param name
-     * @param obj
-     * @throws CacheException
+     * This method returns the ICacheElement&lt;K, V&gt; wrapper which provides access to element info and other
+     * attributes.
+     * <p>
+     * This returns a reference to the wrapper. Any modifications will be reflected in the cache. No
+     * defensive copy is made.
+     * <p>
+     * This method is most useful if you want to determine things such as the how long the element
+     * has been in the cache.
+     * <p>
+     * The last access time in the ElementAttributes should be current.
+     * <p>
+     * @param pattern key search pattern
+     * @return a map of Object key to ICacheElement&lt;K, V&gt; element, or empty map if no keys match the
+     *         pattern
      */
-    void putSafe(K name, V obj)
-        throws CacheException;
+    Map<K, ICacheElement<K, V>> getMatchingCacheElements(String pattern);
 
     /**
      * Puts and/or overrides an element with the name in that region.
@@ -91,61 +148,14 @@ public interface ICacheAccess<K, V>
         throws CacheException;
 
     /**
-     * This method returns the ICacheElement&lt;K, V&gt; wrapper which provides access to element info and other
-     * attributes.
+     * Puts in cache if an item does not exist with the name in that region.
      * <p>
-     * This returns a reference to the wrapper. Any modifications will be reflected in the cache. No
-     * defensive copy is made.
-     * <p>
-     * This method is most useful if you want to determine things such as the how long the element
-     * has been in the cache.
-     * <p>
-     * The last access time in the ElementAttributes should be current.
-     * <p>
-     * @param name Key the object is stored as
-     * @return The ICacheElement&lt;K, V&gt; if the object is found or null
+     * @param name
+     * @param obj
+     * @throws CacheException
      */
-    ICacheElement<K, V> getCacheElement(K name);
-
-    /**
-     * Get multiple elements from the cache based on a set of cache keys.
-     * <p>
-     * This method returns the ICacheElement&lt;K, V&gt; wrapper which provides access to element info and other
-     * attributes.
-     * <p>
-     * This returns a reference to the wrapper. Any modifications will be reflected in the cache. No
-     * defensive copy is made.
-     * <p>
-     * This method is most useful if you want to determine things such as the how long the element
-     * has been in the cache.
-     * <p>
-     * The last access time in the ElementAttributes should be current.
-     * <p>
-     * @param names set of Object cache keys
-     * @return a map of Object key to ICacheElement&lt;K, V&gt; element, or empty map if none of the keys are
-     *         present
-     */
-    Map<K, ICacheElement<K, V>> getCacheElements(Set<K> names);
-
-    /**
-     * Get multiple elements from the cache based on a set of cache keys.
-     * <p>
-     * This method returns the ICacheElement&lt;K, V&gt; wrapper which provides access to element info and other
-     * attributes.
-     * <p>
-     * This returns a reference to the wrapper. Any modifications will be reflected in the cache. No
-     * defensive copy is made.
-     * <p>
-     * This method is most useful if you want to determine things such as the how long the element
-     * has been in the cache.
-     * <p>
-     * The last access time in the ElementAttributes should be current.
-     * <p>
-     * @param pattern key search pattern
-     * @return a map of Object key to ICacheElement&lt;K, V&gt; element, or empty map if no keys match the
-     *         pattern
-     */
-    Map<K, ICacheElement<K, V>> getMatchingCacheElements(String pattern);
+    void putSafe(K name, V obj)
+        throws CacheException;
 
     /**
      * Remove an object for this key if one exists, else do nothing.
@@ -164,15 +174,5 @@ public interface ICacheAccess<K, V>
      * @throws CacheException
      */
     void resetElementAttributes(K name, IElementAttributes attributes)
-        throws CacheException;
-
-    /**
-     * Gets the elementAttributes attribute of the ICacheAccess object
-     * <p>
-     * @param name
-     * @return The elementAttributes value
-     * @throws CacheException
-     */
-    IElementAttributes getElementAttributes(K name)
         throws CacheException;
 }

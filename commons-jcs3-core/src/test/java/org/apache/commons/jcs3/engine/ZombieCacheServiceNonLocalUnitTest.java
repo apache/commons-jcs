@@ -31,6 +31,55 @@ import org.junit.Test;
 public class ZombieCacheServiceNonLocalUnitTest
 {
     /**
+     * Verify that a removeAll event gets added and then is sent to the service passed to propagate.
+     * <p>
+     * @throws Exception
+     */
+    @Test
+    public void testRemoveAllThenWalk()
+        throws Exception
+    {
+        // SETUP
+        final MockCacheServiceNonLocal<String, String> service = new MockCacheServiceNonLocal<>();
+
+        final ZombieCacheServiceNonLocal<String, String> zombie = new ZombieCacheServiceNonLocal<>( 10 );
+
+        final String cacheName = "testRemoveThenWalk";
+
+        // DO WORK
+        zombie.removeAll( cacheName, 123L );
+        zombie.propagateEvents( service );
+
+        // VERIFY
+        assertEquals( "Updated element is not as expected.", cacheName, service.lastRemoveAllCacheName );
+    }
+
+    /**
+     * Verify that a remove event gets added and then is sent to the service passed to propagate.
+     * <p>
+     * @throws Exception
+     */
+    @Test
+    public void testRemoveThenWalk()
+        throws Exception
+    {
+        // SETUP
+        final MockCacheServiceNonLocal<String, String> service = new MockCacheServiceNonLocal<>();
+
+        final ZombieCacheServiceNonLocal<String, String> zombie = new ZombieCacheServiceNonLocal<>( 10 );
+
+        final String cacheName = "testRemoveThenWalk";
+        final String key = "myKey";
+
+        // DO WORK
+        zombie.remove( cacheName, key, 123L );
+        zombie.propagateEvents( service );
+
+        // VERIFY
+        assertEquals( "Updated element is not as expected.", key, service.lastRemoveKey );
+    }
+
+    /**
      * Verify that an update event gets added and then is sent to the service passed to propagate.
      * <p>
      * @throws Exception
@@ -78,54 +127,5 @@ public class ZombieCacheServiceNonLocalUnitTest
 
         // VERIFY
         assertNull( "Nothing should have been put to the service.", service.lastUpdate );
-    }
-
-    /**
-     * Verify that a remove event gets added and then is sent to the service passed to propagate.
-     * <p>
-     * @throws Exception
-     */
-    @Test
-    public void testRemoveThenWalk()
-        throws Exception
-    {
-        // SETUP
-        final MockCacheServiceNonLocal<String, String> service = new MockCacheServiceNonLocal<>();
-
-        final ZombieCacheServiceNonLocal<String, String> zombie = new ZombieCacheServiceNonLocal<>( 10 );
-
-        final String cacheName = "testRemoveThenWalk";
-        final String key = "myKey";
-
-        // DO WORK
-        zombie.remove( cacheName, key, 123L );
-        zombie.propagateEvents( service );
-
-        // VERIFY
-        assertEquals( "Updated element is not as expected.", key, service.lastRemoveKey );
-    }
-
-    /**
-     * Verify that a removeAll event gets added and then is sent to the service passed to propagate.
-     * <p>
-     * @throws Exception
-     */
-    @Test
-    public void testRemoveAllThenWalk()
-        throws Exception
-    {
-        // SETUP
-        final MockCacheServiceNonLocal<String, String> service = new MockCacheServiceNonLocal<>();
-
-        final ZombieCacheServiceNonLocal<String, String> zombie = new ZombieCacheServiceNonLocal<>( 10 );
-
-        final String cacheName = "testRemoveThenWalk";
-
-        // DO WORK
-        zombie.removeAll( cacheName, 123L );
-        zombie.propagateEvents( service );
-
-        // VERIFY
-        assertEquals( "Updated element is not as expected.", cacheName, service.lastRemoveAllCacheName );
     }
 }

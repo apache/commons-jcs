@@ -39,18 +39,6 @@ public class JCSMutableEntry<K, V> implements MutableEntry<K, V>
     }
 
     @Override
-    public void remove()
-    {
-        cache.remove(key);
-    }
-
-    @Override
-    public void setValue(final V value)
-    {
-        cache.put(key, value);
-    }
-
-    @Override
     public K getKey()
     {
         return key;
@@ -60,6 +48,18 @@ public class JCSMutableEntry<K, V> implements MutableEntry<K, V>
     public V getValue()
     {
         return cache.get(key);
+    }
+
+    @Override
+    public void remove()
+    {
+        cache.remove(key);
+    }
+
+    @Override
+    public void setValue(final V value)
+    {
+        cache.put(key, value);
     }
 
     @Override

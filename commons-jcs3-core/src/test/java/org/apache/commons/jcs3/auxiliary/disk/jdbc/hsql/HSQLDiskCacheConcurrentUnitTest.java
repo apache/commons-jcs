@@ -48,57 +48,6 @@ public class HSQLDiskCacheConcurrentUnitTest
     private static final int items = 100;
 
     /**
-     * A unit test suite for JUnit. Uses ActiveTestSuite to run multiple tests concurrently.
-     * <p>
-     * @return The test suite
-     */
-    public static Test suite()
-    {
-        final ActiveTestSuite suite = new ActiveTestSuite();
-
-        suite.addTest(new TestCase("testHSQLDiskCache1" )
-        {
-            @Override
-            public void runTest()
-                throws Exception
-            {
-                runTestForRegion( "indexedRegion1" );
-            }
-        });
-
-        suite.addTest(new TestCase("testHSQLDiskCache2" )
-        {
-            @Override
-            public void runTest()
-                throws Exception
-            {
-                runTestForRegion( "indexedRegion2" );
-            }
-        });
-
-        suite.addTest(new TestCase("testHSQLDiskCache3" )
-        {
-            @Override
-            public void runTest()
-                throws Exception
-            {
-                runTestForRegion( "indexedRegion3" );
-            }
-        });
-
-        return suite;
-    }
-
-    /**
-     * Test setup
-     */
-    @Before
-    public void setUp()
-    {
-        JCS.setConfigFilename( "/TestHSQLDiskCacheConcurrent.ccf" );
-    }
-
-    /**
      * Adds items to cache, gets them, and removes them. The item count is more than the size of the
      * memory cache, so items should spool to disk.
      * <p>
@@ -150,5 +99,56 @@ public class HSQLDiskCacheConcurrentUnitTest
         {
             assertNull( "Removed key should be null: " + i + ":key", jcs.get( i + ":key" ) );
         }
+    }
+
+    /**
+     * A unit test suite for JUnit. Uses ActiveTestSuite to run multiple tests concurrently.
+     * <p>
+     * @return The test suite
+     */
+    public static Test suite()
+    {
+        final ActiveTestSuite suite = new ActiveTestSuite();
+
+        suite.addTest(new TestCase("testHSQLDiskCache1" )
+        {
+            @Override
+            public void runTest()
+                throws Exception
+            {
+                runTestForRegion( "indexedRegion1" );
+            }
+        });
+
+        suite.addTest(new TestCase("testHSQLDiskCache2" )
+        {
+            @Override
+            public void runTest()
+                throws Exception
+            {
+                runTestForRegion( "indexedRegion2" );
+            }
+        });
+
+        suite.addTest(new TestCase("testHSQLDiskCache3" )
+        {
+            @Override
+            public void runTest()
+                throws Exception
+            {
+                runTestForRegion( "indexedRegion3" );
+            }
+        });
+
+        return suite;
+    }
+
+    /**
+     * Test setup
+     */
+    @Before
+    public void setUp()
+    {
+        JCS.setConfigFilename( "/TestHSQLDiskCacheConcurrent.ccf" );
     }
 }

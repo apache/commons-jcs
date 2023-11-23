@@ -54,9 +54,39 @@ public class CacheManagerBean implements Bean<CacheManager>, PassivationCapable
     }
 
     @Override
-    public Set<Type> getTypes()
+    public CacheManager create(final CreationalContext<CacheManager> cacheManagerCreationalContext)
     {
-        return types;
+        return manager;
+    }
+
+    @Override
+    public void destroy(final CacheManager cacheManager, final CreationalContext<CacheManager> cacheManagerCreationalContext)
+    {
+        manager.close();
+    }
+
+    @Override
+    public Class<?> getBeanClass()
+    {
+        return CacheManager.class;
+    }
+
+    @Override
+    public String getId()
+    {
+        return id;
+    }
+
+    @Override
+    public Set<InjectionPoint> getInjectionPoints()
+    {
+        return emptySet();
+    }
+
+    @Override
+    public String getName()
+    {
+        return null;
     }
 
     @Override
@@ -72,33 +102,15 @@ public class CacheManagerBean implements Bean<CacheManager>, PassivationCapable
     }
 
     @Override
-    public String getName()
-    {
-        return null;
-    }
-
-    @Override
-    public boolean isNullable()
-    {
-        return false;
-    }
-
-    @Override
-    public Set<InjectionPoint> getInjectionPoints()
-    {
-        return emptySet();
-    }
-
-    @Override
-    public Class<?> getBeanClass()
-    {
-        return CacheManager.class;
-    }
-
-    @Override
     public Set<Class<? extends Annotation>> getStereotypes()
     {
         return emptySet();
+    }
+
+    @Override
+    public Set<Type> getTypes()
+    {
+        return types;
     }
 
     @Override
@@ -108,20 +120,8 @@ public class CacheManagerBean implements Bean<CacheManager>, PassivationCapable
     }
 
     @Override
-    public CacheManager create(final CreationalContext<CacheManager> cacheManagerCreationalContext)
+    public boolean isNullable()
     {
-        return manager;
-    }
-
-    @Override
-    public void destroy(final CacheManager cacheManager, final CreationalContext<CacheManager> cacheManagerCreationalContext)
-    {
-        manager.close();
-    }
-
-    @Override
-    public String getId()
-    {
-        return id;
+        return false;
     }
 }

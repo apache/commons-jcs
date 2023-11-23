@@ -35,13 +35,20 @@ public class StandardSerializerUnitTest
      * @throws Exception
      */
     @Test
-    public void testSimpleBackAndForth()
+    public void testBigStringBackAndForth()
         throws Exception
     {
         // SETUP
         final StandardSerializer serializer = new StandardSerializer();
 
-        final String before = "adsfdsafdsafdsafdsafdsafdsafdsagfdsafdsafdsfdsafdsafsa333 31231";
+        final String string = "This is my big string ABCDEFGH";
+        final StringBuilder sb = new StringBuilder();
+        sb.append( string );
+        for ( int i = 0; i < 4; i++ )
+        {
+            sb.append( " " + i + sb.toString() ); // big string
+        }
+        final String before = sb.toString();
 
         // DO WORK
         final String after = (String) serializer.deSerialize( serializer.serialize( before ), null );
@@ -81,20 +88,13 @@ public class StandardSerializerUnitTest
      * @throws Exception
      */
     @Test
-    public void testBigStringBackAndForth()
+    public void testSimpleBackAndForth()
         throws Exception
     {
         // SETUP
         final StandardSerializer serializer = new StandardSerializer();
 
-        final String string = "This is my big string ABCDEFGH";
-        final StringBuilder sb = new StringBuilder();
-        sb.append( string );
-        for ( int i = 0; i < 4; i++ )
-        {
-            sb.append( " " + i + sb.toString() ); // big string
-        }
-        final String before = sb.toString();
+        final String before = "adsfdsafdsafdsafdsafdsafdsafdsagfdsafdsafdsfdsafdsafsa333 31231";
 
         // DO WORK
         final String after = (String) serializer.deSerialize( serializer.serialize( before ), null );

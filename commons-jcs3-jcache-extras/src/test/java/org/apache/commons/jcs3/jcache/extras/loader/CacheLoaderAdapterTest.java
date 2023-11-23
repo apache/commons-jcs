@@ -54,7 +54,7 @@ public class CacheLoaderAdapterTest
     private Cache<String, String> cache;
 
     @Test
-    public void checkLoadAll()
+    public void testCheckLoadAll()
     {
         assertFalse(cache.iterator().hasNext());
         assertEquals("foo", cache.get("foo"));

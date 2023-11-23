@@ -38,46 +38,36 @@ public abstract class AbstractAuxiliaryCacheEventLogging<K, V>
     extends AbstractAuxiliaryCache<K, V>
 {
     /**
-     * Puts an item into the cache.
+     * Synchronously dispose the remote cache; if failed, replace the remote handle with a zombie.
      *
-     * @param cacheElement
      * @throws IOException
      */
     @Override
-    public void update( final ICacheElement<K, V> cacheElement )
+    public void dispose()
         throws IOException
     {
-        updateWithEventLogging( cacheElement );
+        disposeWithEventLogging();
     }
 
     /**
-     * Puts an item into the cache. Wrapped in logging.
+     * Synchronously dispose the remote cache; if failed, replace the remote handle with a zombie.
+     * Wraps the removeAll in event logs.
      *
-     * @param cacheElement
      * @throws IOException
      */
-    protected final void updateWithEventLogging( final ICacheElement<K, V> cacheElement )
+    protected final void disposeWithEventLogging()
         throws IOException
     {
-        final ICacheEvent<K> cacheEvent = createICacheEvent( cacheElement, ICacheEventLogger.UPDATE_EVENT );
+        final ICacheEvent<String> cacheEvent = createICacheEvent( getCacheName(), "none", ICacheEventLogger.DISPOSE_EVENT );
         try
         {
-            processUpdate( cacheElement );
+            processDispose();
         }
         finally
         {
             logICacheEvent( cacheEvent );
         }
     }
-
-    /**
-     * Implementation of put.
-     *
-     * @param cacheElement
-     * @throws IOException
-     */
-    protected abstract void processUpdate( ICacheElement<K, V> cacheElement )
-        throws IOException;
 
     /**
      * Gets the item from the cache.
@@ -91,75 +81,6 @@ public abstract class AbstractAuxiliaryCacheEventLogging<K, V>
         throws IOException
     {
         return getWithEventLogging( key );
-    }
-
-    /**
-     * Gets the item from the cache. Wrapped in logging.
-     *
-     * @param key
-     * @return ICacheElement, a wrapper around the key, value, and attributes
-     * @throws IOException
-     */
-    protected final ICacheElement<K, V> getWithEventLogging( final K key )
-        throws IOException
-    {
-        final ICacheEvent<K> cacheEvent = createICacheEvent( getCacheName(), key, ICacheEventLogger.GET_EVENT );
-        try
-        {
-            return processGet( key );
-        }
-        finally
-        {
-            logICacheEvent( cacheEvent );
-        }
-    }
-
-    /**
-     * Implementation of get.
-     *
-     * @param key
-     * @return ICacheElement, a wrapper around the key, value, and attributes
-     * @throws IOException
-     */
-    protected abstract ICacheElement<K, V> processGet( K key )
-        throws IOException;
-
-    /**
-     * Gets multiple items from the cache based on the given set of keys.
-     *
-     * @param keys
-     * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
-     *         data in cache for any of these keys
-     * @throws IOException
-     */
-    @Override
-    public Map<K, ICacheElement<K, V>> getMultiple(final Set<K> keys)
-        throws IOException
-    {
-        return getMultipleWithEventLogging( keys );
-    }
-
-    /**
-     * Gets multiple items from the cache based on the given set of keys.
-     *
-     * @param keys
-     * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
-     *         data in cache for any of these keys
-     * @throws IOException
-     */
-    protected final Map<K, ICacheElement<K, V>> getMultipleWithEventLogging(final Set<K> keys )
-        throws IOException
-    {
-        final ICacheEvent<Serializable> cacheEvent = createICacheEvent( getCacheName(), (Serializable) keys,
-                                                    ICacheEventLogger.GETMULTIPLE_EVENT );
-        try
-        {
-            return processGetMultiple( keys );
-        }
-        finally
-        {
-            logICacheEvent( cacheEvent );
-        }
     }
 
     /**
@@ -206,6 +127,83 @@ public abstract class AbstractAuxiliaryCacheEventLogging<K, V>
     }
 
     /**
+     * Gets multiple items from the cache based on the given set of keys.
+     *
+     * @param keys
+     * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
+     *         data in cache for any of these keys
+     * @throws IOException
+     */
+    @Override
+    public Map<K, ICacheElement<K, V>> getMultiple(final Set<K> keys)
+        throws IOException
+    {
+        return getMultipleWithEventLogging( keys );
+    }
+
+    /**
+     * Gets multiple items from the cache based on the given set of keys.
+     *
+     * @param keys
+     * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
+     *         data in cache for any of these keys
+     * @throws IOException
+     */
+    protected final Map<K, ICacheElement<K, V>> getMultipleWithEventLogging(final Set<K> keys )
+        throws IOException
+    {
+        final ICacheEvent<Serializable> cacheEvent = createICacheEvent( getCacheName(), (Serializable) keys,
+                                                    ICacheEventLogger.GETMULTIPLE_EVENT );
+        try
+        {
+            return processGetMultiple( keys );
+        }
+        finally
+        {
+            logICacheEvent( cacheEvent );
+        }
+    }
+
+    /**
+     * Gets the item from the cache. Wrapped in logging.
+     *
+     * @param key
+     * @return ICacheElement, a wrapper around the key, value, and attributes
+     * @throws IOException
+     */
+    protected final ICacheElement<K, V> getWithEventLogging( final K key )
+        throws IOException
+    {
+        final ICacheEvent<K> cacheEvent = createICacheEvent( getCacheName(), key, ICacheEventLogger.GET_EVENT );
+        try
+        {
+            return processGet( key );
+        }
+        finally
+        {
+            logICacheEvent( cacheEvent );
+        }
+    }
+
+    /**
+     * Specific implementation of dispose.
+     *
+     * @throws IOException
+     */
+    protected abstract void processDispose()
+        throws IOException;
+
+    /**
+     * Implementation of get.
+     *
+     * @param key
+     * @return ICacheElement, a wrapper around the key, value, and attributes
+     * @throws IOException
+     */
+    protected abstract ICacheElement<K, V> processGet( K key )
+        throws IOException;
+
+    /**
      * Implementation of getMatching.
      *
      * @param pattern
@@ -214,6 +212,33 @@ public abstract class AbstractAuxiliaryCacheEventLogging<K, V>
      * @throws IOException
      */
     protected abstract Map<K, ICacheElement<K, V>> processGetMatching( String pattern )
+        throws IOException;
+
+    /**
+     * Specific implementation of remove.
+     *
+     * @param key
+     * @return boolean, whether or not the item was removed
+     * @throws IOException
+     */
+    protected abstract boolean processRemove( K key )
+        throws IOException;
+
+    /**
+     * Specific implementation of removeAll.
+     *
+     * @throws IOException
+     */
+    protected abstract void processRemoveAll()
+        throws IOException;
+
+    /**
+     * Implementation of put.
+     *
+     * @param cacheElement
+     * @throws IOException
+     */
+    protected abstract void processUpdate( ICacheElement<K, V> cacheElement )
         throws IOException;
 
     /**
@@ -229,37 +254,6 @@ public abstract class AbstractAuxiliaryCacheEventLogging<K, V>
     {
         return removeWithEventLogging( key );
     }
-
-    /**
-     * Removes the item from the cache. Wraps the remove in event logs.
-     *
-     * @param key
-     * @return boolean, whether or not the item was removed
-     * @throws IOException
-     */
-    protected final boolean removeWithEventLogging( final K key )
-        throws IOException
-    {
-        final ICacheEvent<K> cacheEvent = createICacheEvent( getCacheName(), key, ICacheEventLogger.REMOVE_EVENT );
-        try
-        {
-            return processRemove( key );
-        }
-        finally
-        {
-            logICacheEvent( cacheEvent );
-        }
-    }
-
-    /**
-     * Specific implementation of remove.
-     *
-     * @param key
-     * @return boolean, whether or not the item was removed
-     * @throws IOException
-     */
-    protected abstract boolean processRemove( K key )
-        throws IOException;
 
     /**
      * Removes all from the region. Wraps the removeAll in event logs.
@@ -293,38 +287,19 @@ public abstract class AbstractAuxiliaryCacheEventLogging<K, V>
     }
 
     /**
-     * Specific implementation of removeAll.
+     * Removes the item from the cache. Wraps the remove in event logs.
      *
+     * @param key
+     * @return boolean, whether or not the item was removed
      * @throws IOException
      */
-    protected abstract void processRemoveAll()
-        throws IOException;
-
-    /**
-     * Synchronously dispose the remote cache; if failed, replace the remote handle with a zombie.
-     *
-     * @throws IOException
-     */
-    @Override
-    public void dispose()
+    protected final boolean removeWithEventLogging( final K key )
         throws IOException
     {
-        disposeWithEventLogging();
-    }
-
-    /**
-     * Synchronously dispose the remote cache; if failed, replace the remote handle with a zombie.
-     * Wraps the removeAll in event logs.
-     *
-     * @throws IOException
-     */
-    protected final void disposeWithEventLogging()
-        throws IOException
-    {
-        final ICacheEvent<String> cacheEvent = createICacheEvent( getCacheName(), "none", ICacheEventLogger.DISPOSE_EVENT );
+        final ICacheEvent<K> cacheEvent = createICacheEvent( getCacheName(), key, ICacheEventLogger.REMOVE_EVENT );
         try
         {
-            processDispose();
+            return processRemove( key );
         }
         finally
         {
@@ -333,10 +308,35 @@ public abstract class AbstractAuxiliaryCacheEventLogging<K, V>
     }
 
     /**
-     * Specific implementation of dispose.
+     * Puts an item into the cache.
      *
+     * @param cacheElement
      * @throws IOException
      */
-    protected abstract void processDispose()
-        throws IOException;
+    @Override
+    public void update( final ICacheElement<K, V> cacheElement )
+        throws IOException
+    {
+        updateWithEventLogging( cacheElement );
+    }
+
+    /**
+     * Puts an item into the cache. Wrapped in logging.
+     *
+     * @param cacheElement
+     * @throws IOException
+     */
+    protected final void updateWithEventLogging( final ICacheElement<K, V> cacheElement )
+        throws IOException
+    {
+        final ICacheEvent<K> cacheEvent = createICacheEvent( cacheElement, ICacheEventLogger.UPDATE_EVENT );
+        try
+        {
+            processUpdate( cacheElement );
+        }
+        finally
+        {
+            logICacheEvent( cacheEvent );
+        }
+    }
 }

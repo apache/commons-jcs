@@ -35,6 +35,20 @@ public class HugeQuantityBlockDiskCacheLoadTest
 {
 
     /**
+     * Measure memory used by the VM.
+     * @return long
+     * @throws InterruptedException
+     */
+    protected long measureMemoryUse()
+        throws InterruptedException
+    {
+        System.gc();
+        Thread.sleep( 3000 );
+        System.gc();
+        return Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+    }
+
+    /**
      * Test setup
      */
     @Before
@@ -119,19 +133,5 @@ public class HugeQuantityBlockDiskCacheLoadTest
             final long endMemory = measureMemoryUse();
             System.out.println( "End: " + endMemory + " diff = " + ( endMemory - initialMemory ) );
         }
-    }
-
-    /**
-     * Measure memory used by the VM.
-     * @return long
-     * @throws InterruptedException
-     */
-    protected long measureMemoryUse()
-        throws InterruptedException
-    {
-        System.gc();
-        Thread.sleep( 3000 );
-        System.gc();
-        return Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
     }
 }

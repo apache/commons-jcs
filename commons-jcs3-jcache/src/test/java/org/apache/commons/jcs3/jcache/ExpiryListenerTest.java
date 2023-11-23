@@ -44,8 +44,25 @@ import org.junit.Test;
 
 public class ExpiryListenerTest {
 
+    private static final class CacheEntryExpiredListenerImpl implements CacheEntryExpiredListener<String, String>, Serializable {
+        /**
+         *
+         */
+        private static final long serialVersionUID = -5070377769541346377L;
+        private final Collection<CacheEntryEvent<? extends String, ? extends String>> events =
+                new ArrayList<>();
+
+        @Override
+        public void onExpired(final Iterable<CacheEntryEvent<? extends String, ? extends String>> cacheEntryEvents)
+                throws CacheEntryListenerException {
+            for (final CacheEntryEvent<? extends String, ? extends String> cacheEntryEvent : cacheEntryEvents) {
+                events.add(cacheEntryEvent);
+            }
+        }
+    }
+
     @Test
-    public void listener() throws InterruptedException {
+    public void testListener() throws InterruptedException {
         final CachingProvider cachingProvider = Caching.getCachingProvider();
         final CacheManager cacheManager = cachingProvider.getCacheManager();
         final CacheEntryExpiredListenerImpl listener = new CacheEntryExpiredListenerImpl();
@@ -63,22 +80,5 @@ public class ExpiryListenerTest {
         assertFalse(cache.containsKey("foo"));
         cachingProvider.close();
         assertEquals(1, listener.events.size());
-    }
-
-    private static final class CacheEntryExpiredListenerImpl implements CacheEntryExpiredListener<String, String>, Serializable {
-        /**
-         *
-         */
-        private static final long serialVersionUID = -5070377769541346377L;
-        private final Collection<CacheEntryEvent<? extends String, ? extends String>> events =
-                new ArrayList<>();
-
-        @Override
-        public void onExpired(final Iterable<CacheEntryEvent<? extends String, ? extends String>> cacheEntryEvents)
-                throws CacheEntryListenerException {
-            for (final CacheEntryEvent<? extends String, ? extends String> cacheEntryEvent : cacheEntryEvents) {
-                events.add(cacheEntryEvent);
-            }
-        }
     }
 }

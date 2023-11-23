@@ -51,267 +51,6 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
     /** thread-safe double linked list for lru */
     protected DoubleLinkedList<MemoryElementDescriptor<K, V>> list; // TODO privatise
 
-    /**
-     * For post reflection creation initialization.
-     * <p>
-     *
-     * @param hub
-     */
-    @Override
-    public void initialize(final CompositeCache<K, V> hub)
-    {
-        super.initialize(hub);
-        list = new DoubleLinkedList<>();
-        log.info("initialized MemoryCache for {0}", this::getCacheName);
-    }
-
-    /**
-     * This is called by super initialize.
-     *
-     * NOTE: should return a thread safe map
-     *
-     * <p>
-     *
-     * @return new ConcurrentHashMap()
-     */
-    @Override
-    public ConcurrentMap<K, MemoryElementDescriptor<K, V>> createMap()
-    {
-        return new ConcurrentHashMap<>();
-    }
-
-    /**
-     * Calls the abstract method updateList.
-     * <p>
-     * If the max size is reached, an element will be put to disk.
-     * <p>
-     *
-     * @param ce
-     *            The cache element, or entry wrapper
-     * @throws IOException
-     */
-    @Override
-    public final void update(final ICacheElement<K, V> ce) throws IOException
-    {
-        putCnt.incrementAndGet();
-
-        lock.lock();
-        try
-        {
-            final MemoryElementDescriptor<K, V> newNode = adjustListForUpdate(ce);
-
-            // this should be synchronized if we were not using a ConcurrentHashMap
-            final K key = newNode.getCacheElement().getKey();
-            final MemoryElementDescriptor<K, V> oldNode = map.put(key, newNode);
-
-            // If the node was the same as an existing node, remove it.
-            if (oldNode != null && key.equals(oldNode.getCacheElement().getKey()))
-            {
-                list.remove(oldNode);
-            }
-        }
-        finally
-        {
-            lock.unlock();
-        }
-
-        // If we are over the max spool some
-        spoolIfNeeded();
-    }
-
-    /**
-     * Children implement this to control the cache expiration algorithm
-     * <p>
-     *
-     * @param ce
-     * @return MemoryElementDescriptor the new node
-     * @throws IOException
-     */
-    protected abstract MemoryElementDescriptor<K, V> adjustListForUpdate(ICacheElement<K, V> ce) throws IOException;
-
-    /**
-     * If the max size has been reached, spool.
-     * <p>
-     *
-     * @throws Error
-     */
-    private void spoolIfNeeded() throws Error
-    {
-        final int size = map.size();
-        // If the element limit is reached, we need to spool
-
-        if (size <= this.getCacheAttributes().getMaxObjects())
-        {
-            return;
-        }
-
-        log.debug("In memory limit reached, spooling");
-
-        // Write the last 'chunkSize' items to disk.
-        final int chunkSizeCorrected = Math.min(size, chunkSize);
-
-        log.debug("About to spool to disk cache, map size: {0}, max objects: {1}, "
-                + "maximum items to spool: {2}", () -> size,
-                this.getCacheAttributes()::getMaxObjects,
-                () -> chunkSizeCorrected);
-
-        // The spool will put them in a disk event queue, so there is no
-        // need to pre-queue the queuing. This would be a bit wasteful
-        // and wouldn't save much time in this synchronous call.
-        lock.lock();
-
-        try
-        {
-            freeElements(chunkSizeCorrected);
-
-            // If this is out of the sync block it can detect a mismatch
-            // where there is none.
-            if (log.isDebugEnabled() && map.size() != list.size())
-            {
-                log.debug("update: After spool, size mismatch: map.size() = {0}, "
-                        + "linked list size = {1}", map.size(), list.size());
-            }
-        }
-        finally
-        {
-            lock.unlock();
-        }
-
-        log.debug("update: After spool map size: {0} linked list size = {1}",
-                () -> map.size(), () -> list.size());
-    }
-
-    /**
-     * This instructs the memory cache to remove the <i>numberToFree</i> according to its eviction
-     * policy. For example, the LRUMemoryCache will remove the <i>numberToFree</i> least recently
-     * used items. These will be spooled to disk if a disk auxiliary is available.
-     * <p>
-     *
-     * @param numberToFree
-     * @return the number that were removed. if you ask to free 5, but there are only 3, you will
-     *         get 3.
-     */
-    @Override
-    public int freeElements(final int numberToFree)
-    {
-        int freed = 0;
-
-        lock.lock();
-
-        try
-        {
-            for (; freed < numberToFree; freed++)
-            {
-                final ICacheElement<K, V> element = spoolLastElement();
-                if (element == null)
-                {
-                    break;
-                }
-            }
-        }
-        finally
-        {
-            lock.unlock();
-        }
-
-        return freed;
-    }
-
-    /**
-     * This spools the last element in the LRU, if one exists.
-     * The method is called guarded by the lock
-     * <p>
-     *
-     * @return ICacheElement&lt;K, V&gt; if there was a last element, else null.
-     * @throws Error
-     */
-    private ICacheElement<K, V> spoolLastElement() throws Error
-    {
-        ICacheElement<K, V> toSpool = null;
-
-        final MemoryElementDescriptor<K, V> last = list.getLast();
-        if (last != null)
-        {
-            toSpool = last.getCacheElement();
-            if (toSpool == null)
-            {
-                throw new Error("update: last.ce is null!");
-            }
-            getCompositeCache().spoolToDisk(toSpool);
-            if (map.remove(toSpool.getKey()) == null)
-            {
-                log.warn("update: remove failed for key: {0}", toSpool.getKey());
-
-                if (log.isTraceEnabled())
-                {
-                    verifyCache();
-                }
-            }
-
-            list.remove(last);
-        }
-
-        return toSpool;
-    }
-
-    /**
-     * @see org.apache.commons.jcs3.engine.memory.AbstractMemoryCache#get(Object)
-     */
-    @Override
-    public ICacheElement<K, V> get(final K key) throws IOException
-    {
-        final ICacheElement<K, V> ce = super.get(key);
-
-        if (log.isTraceEnabled())
-        {
-            verifyCache();
-        }
-
-        return ce;
-    }
-
-    /**
-     * Adjust the list as needed for a get. This allows children to control the algorithm
-     * <p>
-     *
-     * @param me
-     */
-    protected abstract void adjustListForGet(MemoryElementDescriptor<K, V> me);
-
-    /**
-     * Update control structures after get
-     * (guarded by the lock)
-     *
-     * @param me the memory element descriptor
-     */
-    @Override
-    protected void lockedGetElement(final MemoryElementDescriptor<K, V> me)
-    {
-        adjustListForGet(me);
-    }
-
-    /**
-     * Remove element from control structure
-     * (guarded by the lock)
-     *
-     * @param me the memory element descriptor
-     */
-    @Override
-    protected void lockedRemoveElement(final MemoryElementDescriptor<K, V> me)
-    {
-        list.remove(me);
-    }
-
-    /**
-     * Removes all cached items from the cache control structures.
-     * (guarded by the lock)
-     */
-    @Override
-    protected void lockedRemoveAll()
-    {
-        list.removeAll();
-    }
-
     // --------------------------- internal methods (linked list implementation)
     /**
      * Adds a new node to the start of the link list.
@@ -367,7 +106,38 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
         }
     }
 
-    // ---------------------------------------------------------- debug methods
+    /**
+     * Adjust the list as needed for a get. This allows children to control the algorithm
+     * <p>
+     *
+     * @param me
+     */
+    protected abstract void adjustListForGet(MemoryElementDescriptor<K, V> me);
+
+    /**
+     * Children implement this to control the cache expiration algorithm
+     * <p>
+     *
+     * @param ce
+     * @return MemoryElementDescriptor the new node
+     * @throws IOException
+     */
+    protected abstract MemoryElementDescriptor<K, V> adjustListForUpdate(ICacheElement<K, V> ce) throws IOException;
+
+    /**
+     * This is called by super initialize.
+     *
+     * NOTE: should return a thread safe map
+     *
+     * <p>
+     *
+     * @return new ConcurrentHashMap()
+     */
+    @Override
+    public ConcurrentMap<K, MemoryElementDescriptor<K, V>> createMap()
+    {
+        return new ConcurrentHashMap<>();
+    }
 
     /**
      * Dump the cache entries from first to list for debugging.
@@ -380,6 +150,256 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
             log.trace("dumpCacheEntries> key={0}, val={1}",
                     me.getCacheElement().getKey(), me.getCacheElement().getVal());
         }
+    }
+
+    /**
+     * This instructs the memory cache to remove the <i>numberToFree</i> according to its eviction
+     * policy. For example, the LRUMemoryCache will remove the <i>numberToFree</i> least recently
+     * used items. These will be spooled to disk if a disk auxiliary is available.
+     * <p>
+     *
+     * @param numberToFree
+     * @return the number that were removed. if you ask to free 5, but there are only 3, you will
+     *         get 3.
+     */
+    @Override
+    public int freeElements(final int numberToFree)
+    {
+        int freed = 0;
+
+        lock.lock();
+
+        try
+        {
+            for (; freed < numberToFree; freed++)
+            {
+                final ICacheElement<K, V> element = spoolLastElement();
+                if (element == null)
+                {
+                    break;
+                }
+            }
+        }
+        finally
+        {
+            lock.unlock();
+        }
+
+        return freed;
+    }
+
+    /**
+     * @see org.apache.commons.jcs3.engine.memory.AbstractMemoryCache#get(Object)
+     */
+    @Override
+    public ICacheElement<K, V> get(final K key) throws IOException
+    {
+        final ICacheElement<K, V> ce = super.get(key);
+
+        if (log.isTraceEnabled())
+        {
+            verifyCache();
+        }
+
+        return ce;
+    }
+
+    /**
+     * This returns semi-structured information on the memory cache, such as the size, put count,
+     * hit count, and miss count.
+     * <p>
+     *
+     * @see org.apache.commons.jcs3.engine.memory.behavior.IMemoryCache#getStatistics()
+     */
+    @Override
+    public IStats getStatistics()
+    {
+        final IStats stats = super.getStatistics();
+        stats.setTypeName( /* add algorithm name */"Memory Cache");
+
+        final List<IStatElement<?>> elems = stats.getStatElements();
+
+        elems.add(new StatElement<>("List Size", Integer.valueOf(list.size())));
+
+        return stats;
+    }
+
+    /**
+     * For post reflection creation initialization.
+     * <p>
+     *
+     * @param hub
+     */
+    @Override
+    public void initialize(final CompositeCache<K, V> hub)
+    {
+        super.initialize(hub);
+        list = new DoubleLinkedList<>();
+        log.info("initialized MemoryCache for {0}", this::getCacheName);
+    }
+
+    /**
+     * Update control structures after get
+     * (guarded by the lock)
+     *
+     * @param me the memory element descriptor
+     */
+    @Override
+    protected void lockedGetElement(final MemoryElementDescriptor<K, V> me)
+    {
+        adjustListForGet(me);
+    }
+
+    /**
+     * Removes all cached items from the cache control structures.
+     * (guarded by the lock)
+     */
+    @Override
+    protected void lockedRemoveAll()
+    {
+        list.removeAll();
+    }
+
+    /**
+     * Remove element from control structure
+     * (guarded by the lock)
+     *
+     * @param me the memory element descriptor
+     */
+    @Override
+    protected void lockedRemoveElement(final MemoryElementDescriptor<K, V> me)
+    {
+        list.remove(me);
+    }
+
+    /**
+     * If the max size has been reached, spool.
+     * <p>
+     *
+     * @throws Error
+     */
+    private void spoolIfNeeded() throws Error
+    {
+        final int size = map.size();
+        // If the element limit is reached, we need to spool
+
+        if (size <= this.getCacheAttributes().getMaxObjects())
+        {
+            return;
+        }
+
+        log.debug("In memory limit reached, spooling");
+
+        // Write the last 'chunkSize' items to disk.
+        final int chunkSizeCorrected = Math.min(size, chunkSize);
+
+        log.debug("About to spool to disk cache, map size: {0}, max objects: {1}, "
+                + "maximum items to spool: {2}", () -> size,
+                this.getCacheAttributes()::getMaxObjects,
+                () -> chunkSizeCorrected);
+
+        // The spool will put them in a disk event queue, so there is no
+        // need to pre-queue the queuing. This would be a bit wasteful
+        // and wouldn't save much time in this synchronous call.
+        lock.lock();
+
+        try
+        {
+            freeElements(chunkSizeCorrected);
+
+            // If this is out of the sync block it can detect a mismatch
+            // where there is none.
+            if (log.isDebugEnabled() && map.size() != list.size())
+            {
+                log.debug("update: After spool, size mismatch: map.size() = {0}, "
+                        + "linked list size = {1}", map.size(), list.size());
+            }
+        }
+        finally
+        {
+            lock.unlock();
+        }
+
+        log.debug("update: After spool map size: {0} linked list size = {1}",
+                () -> map.size(), () -> list.size());
+    }
+
+    // ---------------------------------------------------------- debug methods
+
+    /**
+     * This spools the last element in the LRU, if one exists.
+     * The method is called guarded by the lock
+     * <p>
+     *
+     * @return ICacheElement&lt;K, V&gt; if there was a last element, else null.
+     * @throws Error
+     */
+    private ICacheElement<K, V> spoolLastElement() throws Error
+    {
+        ICacheElement<K, V> toSpool = null;
+
+        final MemoryElementDescriptor<K, V> last = list.getLast();
+        if (last != null)
+        {
+            toSpool = last.getCacheElement();
+            if (toSpool == null)
+            {
+                throw new Error("update: last.ce is null!");
+            }
+            getCompositeCache().spoolToDisk(toSpool);
+            if (map.remove(toSpool.getKey()) == null)
+            {
+                log.warn("update: remove failed for key: {0}", toSpool.getKey());
+
+                if (log.isTraceEnabled())
+                {
+                    verifyCache();
+                }
+            }
+
+            list.remove(last);
+        }
+
+        return toSpool;
+    }
+
+    /**
+     * Calls the abstract method updateList.
+     * <p>
+     * If the max size is reached, an element will be put to disk.
+     * <p>
+     *
+     * @param ce
+     *            The cache element, or entry wrapper
+     * @throws IOException
+     */
+    @Override
+    public final void update(final ICacheElement<K, V> ce) throws IOException
+    {
+        putCnt.incrementAndGet();
+
+        lock.lock();
+        try
+        {
+            final MemoryElementDescriptor<K, V> newNode = adjustListForUpdate(ce);
+
+            // this should be synchronized if we were not using a ConcurrentHashMap
+            final K key = newNode.getCacheElement().getKey();
+            final MemoryElementDescriptor<K, V> oldNode = map.put(key, newNode);
+
+            // If the node was the same as an existing node, remove it.
+            if (oldNode != null && key.equals(oldNode.getCacheElement().getKey()))
+            {
+                list.remove(oldNode);
+            }
+        }
+        finally
+        {
+            lock.unlock();
+        }
+
+        // If we are over the max spool some
+        spoolIfNeeded();
     }
 
     /**
@@ -486,25 +506,5 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
             log.error("verifycache(key)[{0}], couldn't find key! : {1}",
                     getCacheName(), key);
         }
-    }
-
-    /**
-     * This returns semi-structured information on the memory cache, such as the size, put count,
-     * hit count, and miss count.
-     * <p>
-     *
-     * @see org.apache.commons.jcs3.engine.memory.behavior.IMemoryCache#getStatistics()
-     */
-    @Override
-    public IStats getStatistics()
-    {
-        final IStats stats = super.getStatistics();
-        stats.setTypeName( /* add algorithm name */"Memory Cache");
-
-        final List<IStatElement<?>> elems = stats.getStatElements();
-
-        elems.add(new StatElement<>("List Size", Integer.valueOf(list.size())));
-
-        return stats;
     }
 }

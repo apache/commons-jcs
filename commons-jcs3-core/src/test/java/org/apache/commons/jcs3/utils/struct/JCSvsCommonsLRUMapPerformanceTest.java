@@ -49,28 +49,6 @@ public class JCSvsCommonsLRUMapPerformanceTest
     int tries = 100000;
 
     /**
-     * A unit test for JUnit
-     *
-     * @throws Exception
-     *                Description of the Exception
-     */
-    @Test
-    public void testSimpleLoad()
-        throws Exception
-    {
-        final Log log = LogManager.getLog( LRUMap.class );
-        if ( log.isDebugEnabled() )
-        {
-            System.out.println( "The log level must be at info or above for the a performance test." );
-            return;
-        }
-
-        doWork();
-        assertTrue( this.ratioPut < target );
-        assertTrue( this.ratioGet < target );
-    }
-
-    /**
      *
      */
     public void doWork()
@@ -175,5 +153,27 @@ public class JCSvsCommonsLRUMapPerformanceTest
         ratioGet = Float.intBitsToFloat( (int) getAvJCS ) / Float.intBitsToFloat( (int) getAvHashtable );
         System.out.println( name + " gets took " + ratioGet + " times the " + cache2Name + ", the goal is <" + target
             + "x" );
+    }
+
+    /**
+     * A unit test for JUnit
+     *
+     * @throws Exception
+     *                Description of the Exception
+     */
+    @Test
+    public void testSimpleLoad()
+        throws Exception
+    {
+        final Log log = LogManager.getLog( LRUMap.class );
+        if ( log.isDebugEnabled() )
+        {
+            System.out.println( "The log level must be at info or above for the a performance test." );
+            return;
+        }
+
+        doWork();
+        assertTrue( this.ratioPut < target );
+        assertTrue( this.ratioGet < target );
     }
 }

@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.jcs3.engine.behavior.ICacheListener;
 import org.apache.commons.jcs3.engine.stats.StatElement;
@@ -72,29 +73,6 @@ public class PooledCacheEventQueue<K, V>
     }
 
     /**
-     * Initializes the queue.
-     * <p>
-     * @param listener
-     * @param listenerId
-     * @param cacheName
-     * @param maxFailure
-     * @param waitBeforeRetry
-     * @param threadPoolName
-     */
-    protected void initialize( final ICacheListener<K, V> listener, final long listenerId, final String cacheName, final int maxFailure,
-                            final int waitBeforeRetry, final String threadPoolName )
-    {
-        super.initialize(listener, listenerId, cacheName, maxFailure, waitBeforeRetry);
-
-        pool = createPool(threadPoolName);
-
-        if (pool instanceof ThreadPoolExecutor)
-        {
-        	queue = ((ThreadPoolExecutor) pool).getQueue();
-        }
-    }
-
-    /**
      * Create the thread pool.
      * <p>
      * @param threadPoolName
@@ -108,6 +86,38 @@ public class PooledCacheEventQueue<K, V>
     }
 
     /**
+     * Destroy the queue
+     *
+     * @param waitSeconds number of seconds to wait for the queue to drain
+     */
+    @Override
+    public synchronized void destroy(int waitSeconds)
+    {
+        if ( isWorking() )
+        {
+            setWorking(false);
+            pool.shutdown();
+
+            if (waitSeconds > 0)
+            {
+                try
+                {
+                    if (!pool.awaitTermination(waitSeconds, TimeUnit.SECONDS))
+                    {
+                        log.info( "No longer waiting for event queue to finish: {0}",
+                                this::getStatistics);
+                    }
+                }
+                catch (InterruptedException e)
+                {
+                    // ignore
+                }
+            }
+            log.info( "Cache event queue destroyed: {0}", this );
+        }
+    }
+
+    /**
      * @return the queue type
      */
     @Override
@@ -115,30 +125,6 @@ public class PooledCacheEventQueue<K, V>
     {
         /** The type of queue -- there are pooled and single */
         return QueueType.POOLED;
-    }
-
-    /**
-     * Destroy the queue. Interrupt all threads.
-     */
-    @Override
-    public synchronized void destroy()
-    {
-        if ( isWorking() )
-        {
-            setWorking(false);
-            log.info( "Cache event queue destroyed: {0}", this );
-        }
-    }
-
-    /**
-     * Adds an event to the queue.
-     * <p>
-     * @param event
-     */
-    @Override
-    protected void put( final AbstractCacheEvent event )
-    {
-        pool.execute( event );
     }
 
     /**
@@ -167,6 +153,29 @@ public class PooledCacheEventQueue<K, V>
     }
 
     /**
+     * Initializes the queue.
+     * <p>
+     * @param listener
+     * @param listenerId
+     * @param cacheName
+     * @param maxFailure
+     * @param waitBeforeRetry
+     * @param threadPoolName
+     */
+    protected void initialize( final ICacheListener<K, V> listener, final long listenerId, final String cacheName, final int maxFailure,
+                            final int waitBeforeRetry, final String threadPoolName )
+    {
+        super.initialize(listener, listenerId, cacheName, maxFailure, waitBeforeRetry);
+
+        pool = createPool(threadPoolName);
+
+        if (pool instanceof ThreadPoolExecutor)
+        {
+        	queue = ((ThreadPoolExecutor) pool).getQueue();
+        }
+    }
+
+    /**
      * If the Queue is using a bounded channel we can determine the size. If it is zero or we can't
      * determine the size, we return true.
      * <p>
@@ -176,6 +185,17 @@ public class PooledCacheEventQueue<K, V>
     public boolean isEmpty()
     {
         return size() == 0;
+    }
+
+    /**
+     * Adds an event to the queue.
+     * <p>
+     * @param event
+     */
+    @Override
+    protected void put( final AbstractCacheEvent<?> event )
+    {
+        pool.execute( event );
     }
 
     /**

@@ -91,17 +91,6 @@ public abstract class AbstractLRUMap<K, V>
 
 
     /**
-     * This simply returns the number of elements in the map.
-     * <p>
-     * @see java.util.Map#size()
-     */
-    @Override
-    public int size()
-    {
-        return map.size();
-    }
-
-    /**
      * This removes all the items. It clears the map and the double linked list.
      * <p>
      * @see java.util.Map#clear()
@@ -119,17 +108,6 @@ public abstract class AbstractLRUMap<K, V>
         {
             lock.unlock();
         }
-    }
-
-    /**
-     * Returns true if the map is empty.
-     * <p>
-     * @see java.util.Map#isEmpty()
-     */
-    @Override
-    public boolean isEmpty()
-    {
-        return map.isEmpty();
     }
 
     /**
@@ -155,25 +133,57 @@ public abstract class AbstractLRUMap<K, V>
     }
 
     /**
-     * @return map.values();
+     * Dump the cache entries from first to list for debugging.
      */
-    @Override
-    public Collection<V> values()
+    @SuppressWarnings("unchecked") // No generics for public fields
+    public void dumpCacheEntries()
     {
-        return map.values().stream()
-                .map(LRUElementDescriptor::getPayload)
-                .collect(Collectors.toList());
+        if (log.isTraceEnabled())
+        {
+            log.trace("dumpingCacheEntries");
+            for (LRUElementDescriptor<K, V> me = list.getFirst(); me != null; me = (LRUElementDescriptor<K, V>) me.next)
+            {
+                log.trace("dumpCacheEntries> key={0}, val={1}", me.getKey(), me.getPayload());
+            }
+        }
     }
 
     /**
-     * @param source
+     * Dump the cache map for debugging.
+     */
+    public void dumpMap()
+    {
+        if (log.isTraceEnabled())
+        {
+            log.trace("dumpingMap");
+            map.forEach((key, value) -> log.trace("dumpMap> key={0}, val={1}", key, value.getPayload()));
+        }
+    }
+
+    /**
+     * This returns a set of entries. Our LRUMapEntry is used since the value stored in the
+     * underlying map is a node in the double linked list. We wouldn't want to return this to the
+     * client, so we construct a new entry with the payload of the node.
+     * <p>
+     * TODO we should return out own set wrapper, so we can avoid the extra object creation if it
+     * isn't necessary.
+     * <p>
+     * @see java.util.Map#entrySet()
      */
     @Override
-    public void putAll( final Map<? extends K, ? extends V> source )
+    public Set<Map.Entry<K, V>> entrySet()
     {
-        if ( source != null )
+        lock.lock();
+        try
         {
-            source.forEach(this::put);
+            return map.entrySet().stream()
+                    .map(entry -> new AbstractMap.SimpleEntry<>(
+                            entry.getKey(), entry.getValue().getPayload()))
+                    .collect(Collectors.toSet());
+        }
+        finally
+        {
+            lock.unlock();
         }
     }
 
@@ -246,32 +256,59 @@ public abstract class AbstractLRUMap<K, V>
     }
 
     /**
-     * @param key
-     * @return Object removed
+     * @return IStats
+     */
+    public IStats getStatistics()
+    {
+        final IStats stats = new Stats();
+        stats.setTypeName( "LRUMap" );
+
+        final ArrayList<IStatElement<?>> elems = new ArrayList<>();
+
+        elems.add(new StatElement<>( "List Size", Integer.valueOf(list.size()) ) );
+        elems.add(new StatElement<>( "Map Size", Integer.valueOf(map.size()) ) );
+        elems.add(new StatElement<>( "Put Count", Long.valueOf(putCnt) ) );
+        elems.add(new StatElement<>( "Hit Count", Long.valueOf(hitCnt) ) );
+        elems.add(new StatElement<>( "Miss Count", Long.valueOf(missCnt) ) );
+
+        stats.setStatElements( elems );
+
+        return stats;
+    }
+
+    /**
+     * Returns true if the map is empty.
+     * <p>
+     * @see java.util.Map#isEmpty()
      */
     @Override
-    public V remove( final Object key )
+    public boolean isEmpty()
     {
-        log.debug( "removing item for key: {0}", key );
+        return map.isEmpty();
+    }
 
-        // remove single item.
-        lock.lock();
-        try
-        {
-            final LRUElementDescriptor<K, V> me = map.remove(key);
+    /**
+     * @return map.keySet();
+     */
+    @Override
+    public Set<K> keySet()
+    {
+        return map.values().stream()
+                .map(LRUElementDescriptor::getKey)
+                .collect(Collectors.toSet());
+    }
 
-            if (me != null)
-            {
-                list.remove(me);
-                return me.getPayload();
-            }
-        }
-        finally
-        {
-            lock.unlock();
-        }
-
-        return null;
+    /**
+     * This is called when an item is removed from the LRU. We just log some information.
+     * <p>
+     * Children can implement this method for special behavior.
+     * @param key
+     * @param value
+     */
+    protected void processRemovedLRU(final K key, final V value )
+    {
+        log.debug( "Removing key: [{0}] from LRUMap store, value = [{1}]", key, value );
+        log.debug( "LRUMap store size: \"{0}\".", this.size() );
     }
 
     /**
@@ -353,34 +390,69 @@ public abstract class AbstractLRUMap<K, V>
         return null;
     }
 
-    protected abstract boolean shouldRemove();
-
     /**
-     * Dump the cache entries from first to list for debugging.
+     * @param source
      */
-    @SuppressWarnings("unchecked") // No generics for public fields
-    public void dumpCacheEntries()
+    @Override
+    public void putAll( final Map<? extends K, ? extends V> source )
     {
-        if (log.isTraceEnabled())
+        if ( source != null )
         {
-            log.trace("dumpingCacheEntries");
-            for (LRUElementDescriptor<K, V> me = list.getFirst(); me != null; me = (LRUElementDescriptor<K, V>) me.next)
-            {
-                log.trace("dumpCacheEntries> key={0}, val={1}", me.getKey(), me.getPayload());
-            }
+            source.forEach(this::put);
         }
     }
 
     /**
-     * Dump the cache map for debugging.
+     * @param key
+     * @return Object removed
      */
-    public void dumpMap()
+    @Override
+    public V remove( final Object key )
     {
-        if (log.isTraceEnabled())
+        log.debug( "removing item for key: {0}", key );
+
+        // remove single item.
+        lock.lock();
+        try
         {
-            log.trace("dumpingMap");
-            map.forEach((key, value) -> log.trace("dumpMap> key={0}, val={1}", key, value.getPayload()));
+            final LRUElementDescriptor<K, V> me = map.remove(key);
+
+            if (me != null)
+            {
+                list.remove(me);
+                return me.getPayload();
+            }
         }
+        finally
+        {
+            lock.unlock();
+        }
+
+        return null;
+    }
+
+    protected abstract boolean shouldRemove();
+
+    /**
+     * This simply returns the number of elements in the map.
+     * <p>
+     * @see java.util.Map#size()
+     */
+    @Override
+    public int size()
+    {
+        return map.size();
+    }
+
+    /**
+     * @return map.values();
+     */
+    @Override
+    public Collection<V> values()
+    {
+        return map.values().stream()
+                .map(LRUElementDescriptor::getPayload)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -460,77 +532,5 @@ public abstract class AbstractLRUMap<K, V>
                 return false;
             })
             .findFirst();
-    }
-
-    /**
-     * This is called when an item is removed from the LRU. We just log some information.
-     * <p>
-     * Children can implement this method for special behavior.
-     * @param key
-     * @param value
-     */
-    protected void processRemovedLRU(final K key, final V value )
-    {
-        log.debug( "Removing key: [{0}] from LRUMap store, value = [{1}]", key, value );
-        log.debug( "LRUMap store size: \"{0}\".", this.size() );
-    }
-
-    /**
-     * @return IStats
-     */
-    public IStats getStatistics()
-    {
-        final IStats stats = new Stats();
-        stats.setTypeName( "LRUMap" );
-
-        final ArrayList<IStatElement<?>> elems = new ArrayList<>();
-
-        elems.add(new StatElement<>( "List Size", Integer.valueOf(list.size()) ) );
-        elems.add(new StatElement<>( "Map Size", Integer.valueOf(map.size()) ) );
-        elems.add(new StatElement<>( "Put Count", Long.valueOf(putCnt) ) );
-        elems.add(new StatElement<>( "Hit Count", Long.valueOf(hitCnt) ) );
-        elems.add(new StatElement<>( "Miss Count", Long.valueOf(missCnt) ) );
-
-        stats.setStatElements( elems );
-
-        return stats;
-    }
-
-    /**
-     * This returns a set of entries. Our LRUMapEntry is used since the value stored in the
-     * underlying map is a node in the double linked list. We wouldn't want to return this to the
-     * client, so we construct a new entry with the payload of the node.
-     * <p>
-     * TODO we should return out own set wrapper, so we can avoid the extra object creation if it
-     * isn't necessary.
-     * <p>
-     * @see java.util.Map#entrySet()
-     */
-    @Override
-    public Set<Map.Entry<K, V>> entrySet()
-    {
-        lock.lock();
-        try
-        {
-            return map.entrySet().stream()
-                    .map(entry -> new AbstractMap.SimpleEntry<>(
-                            entry.getKey(), entry.getValue().getPayload()))
-                    .collect(Collectors.toSet());
-        }
-        finally
-        {
-            lock.unlock();
-        }
-    }
-
-    /**
-     * @return map.keySet();
-     */
-    @Override
-    public Set<K> keySet()
-    {
-        return map.values().stream()
-                .map(LRUElementDescriptor::getKey)
-                .collect(Collectors.toSet());
     }
 }

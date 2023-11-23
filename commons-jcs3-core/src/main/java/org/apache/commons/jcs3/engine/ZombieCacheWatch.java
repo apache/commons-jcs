@@ -32,6 +32,17 @@ public class ZombieCacheWatch
     /**
      * Adds a feature to the CacheListener attribute of the ZombieCacheWatch object
      * <p>
+     * @param obj The feature to be added to the CacheListener attribute
+     */
+    @Override
+    public <K, V> void addCacheListener( final ICacheListener<K, V> obj )
+    {
+        // empty
+    }
+
+    /**
+     * Adds a feature to the CacheListener attribute of the ZombieCacheWatch object
+     * <p>
      * @param cacheName The feature to be added to the CacheListener attribute
      * @param obj The feature to be added to the CacheListener attribute
      */
@@ -42,12 +53,10 @@ public class ZombieCacheWatch
     }
 
     /**
-     * Adds a feature to the CacheListener attribute of the ZombieCacheWatch object
-     * <p>
-     * @param obj The feature to be added to the CacheListener attribute
+     * @param obj
      */
     @Override
-    public <K, V> void addCacheListener( final ICacheListener<K, V> obj )
+    public <K, V> void removeCacheListener( final ICacheListener<K, V> obj )
     {
         // empty
     }
@@ -58,15 +67,6 @@ public class ZombieCacheWatch
      */
     @Override
     public <K, V> void removeCacheListener( final String cacheName, final ICacheListener<K, V> obj )
-    {
-        // empty
-    }
-
-    /**
-     * @param obj
-     */
-    @Override
-    public <K, V> void removeCacheListener( final ICacheListener<K, V> obj )
     {
         // empty
     }

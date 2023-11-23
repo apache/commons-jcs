@@ -39,18 +39,6 @@ public class CacheInvocationParameterImpl implements CacheInvocationParameter
     }
 
     @Override
-    public Class<?> getRawType()
-    {
-        return type;
-    }
-
-    @Override
-    public Object getValue()
-    {
-        return value;
-    }
-
-    @Override
     public Set<Annotation> getAnnotations()
     {
         return annotations;
@@ -60,5 +48,17 @@ public class CacheInvocationParameterImpl implements CacheInvocationParameter
     public int getParameterPosition()
     {
         return position;
+    }
+
+    @Override
+    public Class<?> getRawType()
+    {
+        return type;
+    }
+
+    @Override
+    public Object getValue()
+    {
+        return value;
     }
 }

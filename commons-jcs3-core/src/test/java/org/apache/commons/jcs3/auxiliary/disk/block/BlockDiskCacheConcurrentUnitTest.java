@@ -49,74 +49,6 @@ public class BlockDiskCacheConcurrentUnitTest
     private static final int items = 200;
 
     /**
-     * A unit test suite for JUnit
-     *
-     * @return The test suite
-     * @throws Exception
-     */
-    public static Test suite()
-        throws Exception
-    {
-        final ActiveTestSuite suite = new ActiveTestSuite();
-
-        JCS.setConfigFilename( "/TestBlockDiskCache.ccf" );
-        JCS.getInstance( "indexedRegion1" ).clear();
-        JCS.getInstance( "indexedRegion2" ).clear();
-        JCS.getInstance( "indexedRegion3" ).clear();
-
-        suite.addTest(new TestCase("testBlockDiskCache1" )
-        {
-            @Override
-            public void runTest()
-                throws Exception
-            {
-                runTestForRegion( "indexedRegion1" );
-            }
-        });
-
-        suite.addTest(new TestCase("testBlockDiskCache2" )
-        {
-            @Override
-            public void runTest()
-                throws Exception
-            {
-                runTestForRegion( "indexedRegion2" );
-            }
-        });
-
-        suite.addTest(new TestCase("testBlockDiskCache3" )
-        {
-            @Override
-            public void runTest()
-                throws Exception
-            {
-                runTestForRegion( "indexedRegion3" );
-            }
-        });
-
-        suite.addTest(new TestCase("testBlockDiskCache4" )
-        {
-            @Override
-            public void runTest()
-                throws Exception
-            {
-                runTestForRegionInRange( "indexedRegion3", 300, 600 );
-            }
-        });
-
-        return suite;
-    }
-
-    /**
-     * Test setup
-     */
-    @Before
-    public void setUp()
-    {
-        JCS.setConfigFilename( "/TestBlockDiskCache.ccf" );
-    }
-
-    /**
      * Adds items to cache, gets them, and removes them. The item count is more
      * than the size of the memory cache, so items should spool to disk.
      *
@@ -236,5 +168,73 @@ public class BlockDiskCacheConcurrentUnitTest
             assertNull( "Removed key should be null: " + i + ":key " + "\n stats " + jcs.getStats(), jcs.get( i
                 + ":key" ) );
         }
+    }
+
+    /**
+     * A unit test suite for JUnit
+     *
+     * @return The test suite
+     * @throws Exception
+     */
+    public static Test suite()
+        throws Exception
+    {
+        final ActiveTestSuite suite = new ActiveTestSuite();
+
+        JCS.setConfigFilename( "/TestBlockDiskCache.ccf" );
+        JCS.getInstance( "indexedRegion1" ).clear();
+        JCS.getInstance( "indexedRegion2" ).clear();
+        JCS.getInstance( "indexedRegion3" ).clear();
+
+        suite.addTest(new TestCase("testBlockDiskCache1" )
+        {
+            @Override
+            public void runTest()
+                throws Exception
+            {
+                runTestForRegion( "indexedRegion1" );
+            }
+        });
+
+        suite.addTest(new TestCase("testBlockDiskCache2" )
+        {
+            @Override
+            public void runTest()
+                throws Exception
+            {
+                runTestForRegion( "indexedRegion2" );
+            }
+        });
+
+        suite.addTest(new TestCase("testBlockDiskCache3" )
+        {
+            @Override
+            public void runTest()
+                throws Exception
+            {
+                runTestForRegion( "indexedRegion3" );
+            }
+        });
+
+        suite.addTest(new TestCase("testBlockDiskCache4" )
+        {
+            @Override
+            public void runTest()
+                throws Exception
+            {
+                runTestForRegionInRange( "indexedRegion3", 300, 600 );
+            }
+        });
+
+        return suite;
+    }
+
+    /**
+     * Test setup
+     */
+    @Before
+    public void setUp()
+    {
+        JCS.setConfigFilename( "/TestBlockDiskCache.ccf" );
     }
 }

@@ -32,15 +32,6 @@ import java.util.ServiceLoader;
 public class LogManager
 {
     /**
-     * The name of log subsystem
-     */
-    private static String logSystem;
-
-    /** Log systems currently known */
-    public static final String LOGSYSTEM_JAVA_UTIL_LOGGING = "jul";
-    public static final String LOGSYSTEM_LOG4J2 = "log4j2";
-
-    /**
      * The SPI LogFactory
      */
     private static final class LogFactoryHolder
@@ -104,37 +95,13 @@ public class LogManager
     }
 
     /**
-     * Set the log system. Must be called before getLog is called
-     *
-     * @param logSystem the logSystem to set
+     * The name of log subsystem
      */
-    public static void setLogSystem(final String logSystem)
-    {
-        LogManager.logSystem = logSystem;
-    }
+    private static String logSystem;
+    /** Log systems currently known */
+    public static final String LOGSYSTEM_JAVA_UTIL_LOGGING = "jul";
 
-    /**
-     * Return the LogFactory
-     */
-    private static LogFactory getLogFactory()
-    {
-        return LogFactoryHolder.INSTANCE;
-    }
-
-    /**
-     * Prevents instantiation
-     */
-    protected LogManager()
-    {
-    }
-
-    /**
-     * Shutdown the logging system if the logging system supports it.
-     */
-    public static void shutdown()
-    {
-        getLogFactory().shutdown();
-    }
+    public static final String LOGSYSTEM_LOG4J2 = "log4j2";
 
     /**
      * Returns a Log using the fully qualified name of the Class as the Log
@@ -166,6 +133,14 @@ public class LogManager
     }
 
     /**
+     * Return the LogFactory
+     */
+    private static LogFactory getLogFactory()
+    {
+        return LogFactoryHolder.INSTANCE;
+    }
+
+    /**
      * Returns the root logger.
      *
      * @return the root logger, named {@link LogFactory#ROOT_LOGGER_NAME}.
@@ -173,5 +148,30 @@ public class LogManager
     public static Log getRootLogger()
     {
         return getLog(LogFactory.ROOT_LOGGER_NAME);
+    }
+
+    /**
+     * Sets the log system. Must be called before getLog is called
+     *
+     * @param logSystem the logSystem to set
+     */
+    public static void setLogSystem(final String logSystem)
+    {
+        LogManager.logSystem = logSystem;
+    }
+
+    /**
+     * Shutdown the logging system if the logging system supports it.
+     */
+    public static void shutdown()
+    {
+        getLogFactory().shutdown();
+    }
+
+    /**
+     * Prevents instantiation
+     */
+    protected LogManager()
+    {
     }
 }

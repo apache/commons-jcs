@@ -30,20 +30,44 @@ public class BlockDiskCacheAttributes
     /** Don't change */
     private static final long serialVersionUID = 6568840097657265989L;
 
-    /** The size per block in bytes. */
-    private int blockSizeBytes;
-
     /** Maximum number of keys to be kept in memory */
     private static final int DEFAULT_MAX_KEY_SIZE = 5000;
-
-    /** -1 means no limit. */
-    private int maxKeySize = DEFAULT_MAX_KEY_SIZE;
 
     /** How often should we persist the keys. */
     private static final long DEFAULT_KEY_PERSISTENCE_INTERVAL_SECONDS = 5 * 60;
 
+    /** The size per block in bytes. */
+    private int blockSizeBytes;
+
+    /** -1 means no limit. */
+    private int maxKeySize = DEFAULT_MAX_KEY_SIZE;
+
     /** The keys will be persisted at this interval.  -1 mean never. */
     private long keyPersistenceIntervalSeconds = DEFAULT_KEY_PERSISTENCE_INTERVAL_SECONDS;
+
+    /**
+     * @return Returns the blockSizeBytes.
+     */
+    public int getBlockSizeBytes()
+    {
+        return blockSizeBytes;
+    }
+
+    /**
+     * @return Returns the keyPersistenceIntervalSeconds.
+     */
+    public long getKeyPersistenceIntervalSeconds()
+    {
+        return keyPersistenceIntervalSeconds;
+    }
+
+    /**
+     * @return Returns the maxKeySize.
+     */
+    public int getMaxKeySize()
+    {
+        return maxKeySize;
+    }
 
     /**
      * The size of the blocks. All blocks are the same size.
@@ -56,30 +80,6 @@ public class BlockDiskCacheAttributes
     }
 
     /**
-     * @return Returns the blockSizeBytes.
-     */
-    public int getBlockSizeBytes()
-    {
-        return blockSizeBytes;
-    }
-
-    /**
-     * @param maxKeySize The maxKeySize to set.
-     */
-    public void setMaxKeySize( final int maxKeySize )
-    {
-        this.maxKeySize = maxKeySize;
-    }
-
-    /**
-     * @return Returns the maxKeySize.
-     */
-    public int getMaxKeySize()
-    {
-        return maxKeySize;
-    }
-
-    /**
      * @param keyPersistenceIntervalSeconds The keyPersistenceIntervalSeconds to set.
      */
     public void setKeyPersistenceIntervalSeconds( final long keyPersistenceIntervalSeconds )
@@ -88,11 +88,11 @@ public class BlockDiskCacheAttributes
     }
 
     /**
-     * @return Returns the keyPersistenceIntervalSeconds.
+     * @param maxKeySize The maxKeySize to set.
      */
-    public long getKeyPersistenceIntervalSeconds()
+    public void setMaxKeySize( final int maxKeySize )
     {
-        return keyPersistenceIntervalSeconds;
+        this.maxKeySize = maxKeySize;
     }
 
     /**

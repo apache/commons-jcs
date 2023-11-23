@@ -31,6 +31,11 @@ public class MySQLDiskCacheAttributes
     private static final long serialVersionUID = -6535808344813320061L;
 
     /**
+     * If true, we will balk, that is return null during optimization rather than block.
+     */
+    public static final boolean DEFAULT_BALK_DURING_OPTIMIZATION = true;
+
+    /**
      * For now this is a simple comma delimited list of HH:MM:SS times to optimize
      * the table. If none is supplied, then no optimizations will be performed.
      * <p>
@@ -43,23 +48,10 @@ public class MySQLDiskCacheAttributes
 
     /**
      * If true, we will balk, that is return null during optimization rather than block.
-     */
-    public static final boolean DEFAULT_BALK_DURING_OPTIMIZATION = true;
-
-    /**
-     * If true, we will balk, that is return null during optimization rather than block.
      * <p>
      * <a href="http://en.wikipedia.org/wiki/Balking_pattern">Balking</a>
      */
     private boolean balkDuringOptimization = DEFAULT_BALK_DURING_OPTIMIZATION;
-
-    /**
-     * @param optimizationSchedule The optimizationSchedule to set.
-     */
-    public void setOptimizationSchedule( final String optimizationSchedule )
-    {
-        this.optimizationSchedule = optimizationSchedule;
-    }
 
     /**
      * @return Returns the optimizationSchedule.
@@ -67,6 +59,16 @@ public class MySQLDiskCacheAttributes
     public String getOptimizationSchedule()
     {
         return optimizationSchedule;
+    }
+
+    /**
+     * Should we return null while optimizing the table.
+     * <p>
+     * @return Returns the balkDuringOptimization.
+     */
+    public boolean isBalkDuringOptimization()
+    {
+        return balkDuringOptimization;
     }
 
     /**
@@ -78,13 +80,11 @@ public class MySQLDiskCacheAttributes
     }
 
     /**
-     * Should we return null while optimizing the table.
-     * <p>
-     * @return Returns the balkDuringOptimization.
+     * @param optimizationSchedule The optimizationSchedule to set.
      */
-    public boolean isBalkDuringOptimization()
+    public void setOptimizationSchedule( final String optimizationSchedule )
     {
-        return balkDuringOptimization;
+        this.optimizationSchedule = optimizationSchedule;
     }
 
     /**

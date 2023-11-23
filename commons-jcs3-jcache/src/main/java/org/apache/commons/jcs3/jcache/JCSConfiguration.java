@@ -107,46 +107,9 @@ public class JCSConfiguration<K, V> implements CompleteConfiguration<K, V>
         }
     }
 
-    @Override
-    public Class<K> getKeyType()
+    public synchronized void addListener(final CacheEntryListenerConfiguration<K, V> cacheEntryListenerConfiguration)
     {
-        return keyType == null ? (Class<K>) Object.class : keyType;
-    }
-
-    @Override
-    public Class<V> getValueType()
-    {
-        return valueType == null ? (Class<V>) Object.class : valueType;
-    }
-
-    @Override
-    public boolean isStoreByValue()
-    {
-        return storeByValue;
-    }
-
-    @Override
-    public boolean isReadThrough()
-    {
-        return readThrough;
-    }
-
-    @Override
-    public boolean isWriteThrough()
-    {
-        return writeThrough;
-    }
-
-    @Override
-    public boolean isStatisticsEnabled()
-    {
-        return statisticsEnabled;
-    }
-
-    @Override
-    public boolean isManagementEnabled()
-    {
-        return managementEnabled;
+        cacheEntryListenerConfigurations.add(cacheEntryListenerConfiguration);
     }
 
     @Override
@@ -173,19 +136,51 @@ public class JCSConfiguration<K, V> implements CompleteConfiguration<K, V>
         return expiryPolicyFactory;
     }
 
-    public synchronized void addListener(final CacheEntryListenerConfiguration<K, V> cacheEntryListenerConfiguration)
+    @Override
+    public Class<K> getKeyType()
     {
-        cacheEntryListenerConfigurations.add(cacheEntryListenerConfiguration);
+        return keyType == null ? (Class<K>) Object.class : keyType;
     }
 
-    public synchronized void removeListener(final CacheEntryListenerConfiguration<K, V> cacheEntryListenerConfiguration)
+    @Override
+    public Class<V> getValueType()
     {
-        cacheEntryListenerConfigurations.remove(cacheEntryListenerConfiguration);
+        return valueType == null ? (Class<V>) Object.class : valueType;
     }
 
-    public void statisticsEnabled()
+    @Override
+    public boolean isManagementEnabled()
     {
-        statisticsEnabled = true;
+        return managementEnabled;
+    }
+
+    @Override
+    public boolean isReadThrough()
+    {
+        return readThrough;
+    }
+
+    @Override
+    public boolean isStatisticsEnabled()
+    {
+        return statisticsEnabled;
+    }
+
+    @Override
+    public boolean isStoreByValue()
+    {
+        return storeByValue;
+    }
+
+    @Override
+    public boolean isWriteThrough()
+    {
+        return writeThrough;
+    }
+
+    public void managementDisabled()
+    {
+        managementEnabled = false;
     }
 
     public void managementEnabled()
@@ -193,13 +188,18 @@ public class JCSConfiguration<K, V> implements CompleteConfiguration<K, V>
         managementEnabled = true;
     }
 
+    public synchronized void removeListener(final CacheEntryListenerConfiguration<K, V> cacheEntryListenerConfiguration)
+    {
+        cacheEntryListenerConfigurations.remove(cacheEntryListenerConfiguration);
+    }
+
     public void statisticsDisabled()
     {
         statisticsEnabled = false;
     }
 
-    public void managementDisabled()
+    public void statisticsEnabled()
     {
-        managementEnabled = false;
+        statisticsEnabled = true;
     }
 }

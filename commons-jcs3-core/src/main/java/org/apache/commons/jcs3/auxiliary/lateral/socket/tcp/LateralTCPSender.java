@@ -102,6 +102,20 @@ public class LateralTCPSender
     }
 
     /**
+     * Closes connection used by all LateralTCPSenders for this lateral connection. Dispose request
+     * should come into the facade and be sent to all lateral cache services. The lateral cache
+     * service will then call this method.
+     * <p>
+     * @throws IOException
+     */
+    public void dispose()
+        throws IOException
+    {
+        log.info( "Dispose called" );
+        client.close();
+    }
+
+    /**
      * Creates a connection to a TCP server.
      * <p>
      * @param host
@@ -207,19 +221,5 @@ public class LateralTCPSender
         }
 
         return response;
-    }
-
-    /**
-     * Closes connection used by all LateralTCPSenders for this lateral connection. Dispose request
-     * should come into the facade and be sent to all lateral cache services. The lateral cache
-     * service will then call this method.
-     * <p>
-     * @throws IOException
-     */
-    public void dispose()
-        throws IOException
-    {
-        log.info( "Dispose called" );
-        client.close();
     }
 }

@@ -53,6 +53,32 @@ public class TempStateCacheView<K, V> implements Cache<K, V>
     }
 
     @Override
+    public void clear()
+    {
+        clear = true;
+        put.clear();
+        remove.clear();
+    }
+
+    @Override
+    public void close()
+    {
+        cache.close();
+    }
+
+    @Override
+    public boolean containsKey(final K key)
+    {
+        return !ignoreKey(key) && (put.containsKey(key) || cache.containsKey(key));
+    }
+
+    @Override
+    public void deregisterCacheEntryListener(final CacheEntryListenerConfiguration<K, V> cacheEntryListenerConfiguration)
+    {
+        cache.deregisterCacheEntryListener(cacheEntryListenerConfiguration);
+    }
+
+    @Override
     public V get(final K key)
     {
         if (ignoreKey(key))
@@ -83,11 +109,6 @@ public class TempStateCacheView<K, V> implements Cache<K, V>
         return cache.get(key);
     }
 
-    private boolean ignoreKey(final K key)
-    {
-        return removeAll || clear || remove.contains(key);
-    }
-
     @Override
     public Map<K, V> getAll(final Set<? extends K> keys)
     {
@@ -113,15 +134,109 @@ public class TempStateCacheView<K, V> implements Cache<K, V>
     }
 
     @Override
-    public boolean containsKey(final K key)
+    public V getAndPut(final K key, final V value)
     {
-        return !ignoreKey(key) && (put.containsKey(key) || cache.containsKey(key));
+        final V v = get(key);
+        put(key, value);
+        return v;
+    }
+
+    @Override
+    public V getAndRemove(final K key)
+    {
+        final V v = get(key);
+        remove.add(key);
+        put.remove(key);
+        return v;
+    }
+
+    @Override
+    public V getAndReplace(final K key, final V value)
+    {
+        if (containsKey(key))
+        {
+            final V oldValue = get(key);
+            put(key, value);
+            return oldValue;
+        }
+        return null;
+    }
+
+    @Override
+    public CacheManager getCacheManager()
+    {
+        return cache.getCacheManager();
+    }
+
+    @Override
+    public <C extends Configuration<K, V>> C getConfiguration(final Class<C> clazz)
+    {
+        return cache.getConfiguration(clazz);
+    }
+
+    @Override
+    public String getName()
+    {
+        return cache.getName();
+    }
+
+    private boolean ignoreKey(final K key)
+    {
+        return removeAll || clear || remove.contains(key);
+    }
+
+    @Override
+    public <T> T invoke(final K key, final EntryProcessor<K, V, T> entryProcessor, final Object... arguments) throws EntryProcessorException
+    {
+        return cache.invoke(key, entryProcessor, arguments);
+    }
+
+    @Override
+    public <T> Map<K, EntryProcessorResult<T>> invokeAll(final Set<? extends K> keys, final EntryProcessor<K, V, T> entryProcessor,
+            final Object... arguments)
+    {
+        return cache.invokeAll(keys, entryProcessor, arguments);
+    }
+
+    @Override
+    public boolean isClosed()
+    {
+        return cache.isClosed();
+    }
+
+    @Override
+    public Iterator<Entry<K, V>> iterator()
+    {
+        return cache.iterator();
     }
 
     @Override
     public void loadAll(final Set<? extends K> keys, final boolean replaceExistingValues, final CompletionListener completionListener)
     {
         cache.loadAll(keys, replaceExistingValues, completionListener);
+    }
+
+    public void merge()
+    {
+        if (removeAll)
+        {
+            cache.removeAll();
+        }
+        if (clear)
+        {
+            cache.clear();
+        }
+
+        for (final Map.Entry<K, V> entry : put.entrySet())
+        {
+            cache.put(entry.getKey(), entry.getValue());
+        }
+        put.clear();
+        for (final K entry : remove)
+        {
+            cache.remove(entry);
+        }
+        remove.clear();
     }
 
     @Override
@@ -131,14 +246,6 @@ public class TempStateCacheView<K, V> implements Cache<K, V>
         assertNotNull(value, "value");
         put.put(key, value);
         remove.remove(key);
-    }
-
-    @Override
-    public V getAndPut(final K key, final V value)
-    {
-        final V v = get(key);
-        put(key, value);
-        return v;
     }
 
     @Override
@@ -161,6 +268,12 @@ public class TempStateCacheView<K, V> implements Cache<K, V>
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void registerCacheEntryListener(final CacheEntryListenerConfiguration<K, V> cacheEntryListenerConfiguration)
+    {
+        cache.registerCacheEntryListener(cacheEntryListenerConfiguration);
     }
 
     @Override
@@ -192,23 +305,21 @@ public class TempStateCacheView<K, V> implements Cache<K, V>
     }
 
     @Override
-    public V getAndRemove(final K key)
+    public void removeAll()
     {
-        final V v = get(key);
-        remove.add(key);
-        put.remove(key);
-        return v;
+        removeAll = true;
+        put.clear();
+        remove.clear();
     }
 
     @Override
-    public boolean replace(final K key, final V oldValue, final V newValue)
+    public void removeAll(final Set<? extends K> keys)
     {
-        if (oldValue.equals(get(key)))
+        remove.addAll(keys);
+        for (final K k : keys)
         {
-            put(key, newValue);
-            return true;
+            put.remove(k);
         }
-        return false;
     }
 
     @Override
@@ -223,130 +334,19 @@ public class TempStateCacheView<K, V> implements Cache<K, V>
     }
 
     @Override
-    public V getAndReplace(final K key, final V value)
+    public boolean replace(final K key, final V oldValue, final V newValue)
     {
-        if (containsKey(key))
+        if (oldValue.equals(get(key)))
         {
-            final V oldValue = get(key);
-            put(key, value);
-            return oldValue;
+            put(key, newValue);
+            return true;
         }
-        return null;
-    }
-
-    @Override
-    public void removeAll(final Set<? extends K> keys)
-    {
-        remove.addAll(keys);
-        for (final K k : keys)
-        {
-            put.remove(k);
-        }
-    }
-
-    @Override
-    public void removeAll()
-    {
-        removeAll = true;
-        put.clear();
-        remove.clear();
-    }
-
-    @Override
-    public void clear()
-    {
-        clear = true;
-        put.clear();
-        remove.clear();
-    }
-
-    @Override
-    public <C extends Configuration<K, V>> C getConfiguration(final Class<C> clazz)
-    {
-        return cache.getConfiguration(clazz);
-    }
-
-    @Override
-    public <T> T invoke(final K key, final EntryProcessor<K, V, T> entryProcessor, final Object... arguments) throws EntryProcessorException
-    {
-        return cache.invoke(key, entryProcessor, arguments);
-    }
-
-    @Override
-    public <T> Map<K, EntryProcessorResult<T>> invokeAll(final Set<? extends K> keys, final EntryProcessor<K, V, T> entryProcessor,
-            final Object... arguments)
-    {
-        return cache.invokeAll(keys, entryProcessor, arguments);
-    }
-
-    @Override
-    public String getName()
-    {
-        return cache.getName();
-    }
-
-    @Override
-    public CacheManager getCacheManager()
-    {
-        return cache.getCacheManager();
-    }
-
-    @Override
-    public void close()
-    {
-        cache.close();
-    }
-
-    @Override
-    public boolean isClosed()
-    {
-        return cache.isClosed();
+        return false;
     }
 
     @Override
     public <T> T unwrap(final Class<T> clazz)
     {
         return cache.unwrap(clazz);
-    }
-
-    @Override
-    public void registerCacheEntryListener(final CacheEntryListenerConfiguration<K, V> cacheEntryListenerConfiguration)
-    {
-        cache.registerCacheEntryListener(cacheEntryListenerConfiguration);
-    }
-
-    @Override
-    public void deregisterCacheEntryListener(final CacheEntryListenerConfiguration<K, V> cacheEntryListenerConfiguration)
-    {
-        cache.deregisterCacheEntryListener(cacheEntryListenerConfiguration);
-    }
-
-    @Override
-    public Iterator<Entry<K, V>> iterator()
-    {
-        return cache.iterator();
-    }
-
-    public void merge()
-    {
-        if (removeAll)
-        {
-            cache.removeAll();
-        }
-        if (clear)
-        {
-            cache.clear();
-        }
-
-        for (final Map.Entry<K, V> entry : put.entrySet())
-        {
-            cache.put(entry.getKey(), entry.getValue());
-        }
-        put.clear();
-        for (final K entry : remove)
-        {
-            cache.remove(entry);
-        }
-        remove.clear();
     }
 }

@@ -42,84 +42,6 @@ import org.junit.Test;
 public class CompositeCacheUnitTest
 {
     /**
-     * Verify that the freeMemoryElements method on the memory cache is called on shutdown if there
-     * is a disk cache.
-     * <p>
-     * @throws IOException
-     */
-    @Test
-    public void testShutdownMemoryFlush()
-        throws IOException
-    {
-        // SETUP
-        final String cacheName = "testCacheName";
-        final String mockMemoryCacheClassName = "org.apache.commons.jcs3.engine.memory.MockMemoryCache";
-        final ICompositeCacheAttributes cattr = new CompositeCacheAttributes();
-        cattr.setMemoryCacheName( mockMemoryCacheClassName );
-
-        final IElementAttributes attr = new ElementAttributes();
-
-        final CompositeCache<String, Integer> cache = new CompositeCache<>( cattr, attr );
-
-        final MockAuxiliaryCache<String, Integer> diskMock = new MockAuxiliaryCache<>();
-        diskMock.cacheType = CacheType.DISK_CACHE;
-        cache.setAuxCaches(Arrays.asList(diskMock));
-
-        // DO WORK
-        final int numToInsert = 10;
-        for ( int i = 0; i < numToInsert; i++ )
-        {
-            final ICacheElement<String, Integer> element = new CacheElement<>( cacheName, String.valueOf( i ), Integer.valueOf( i ) );
-            cache.update( element, false );
-        }
-
-        cache.dispose();
-
-        // VERIFY
-        final MockMemoryCache<String, Integer> memoryCache = (MockMemoryCache<String, Integer>) cache.getMemoryCache();
-        assertEquals( "Wrong number freed.", numToInsert, memoryCache.lastNumberOfFreedElements );
-    }
-
-    /**
-     * Verify that the freeMemoryElements method on the memory cache is NOT called on shutdown if
-     * there is NOT a disk cache.
-     * <p>
-     * @throws IOException
-     */
-    @Test
-    public void testShutdownMemoryFlush_noDisk()
-        throws IOException
-    {
-        // SETUP
-        final String cacheName = "testCacheName";
-        final String mockMemoryCacheClassName = "org.apache.commons.jcs3.engine.memory.MockMemoryCache";
-        final ICompositeCacheAttributes cattr = new CompositeCacheAttributes();
-        cattr.setMemoryCacheName( mockMemoryCacheClassName );
-
-        final IElementAttributes attr = new ElementAttributes();
-
-        final CompositeCache<String, Integer> cache = new CompositeCache<>( cattr, attr );
-
-        final MockAuxiliaryCache<String, Integer> diskMock = new MockAuxiliaryCache<>();
-        diskMock.cacheType = CacheType.REMOTE_CACHE;
-        cache.setAuxCaches(Arrays.asList(diskMock));
-
-        // DO WORK
-        final int numToInsert = 10;
-        for ( int i = 0; i < numToInsert; i++ )
-        {
-            final ICacheElement<String, Integer> element = new CacheElement<>( cacheName, String.valueOf( i ), Integer.valueOf( i ) );
-            cache.update( element, false );
-        }
-
-        cache.dispose();
-
-        // VERIFY
-        final MockMemoryCache<String, Integer> memoryCache = (MockMemoryCache<String, Integer>) cache.getMemoryCache();
-        assertEquals( "Wrong number freed.", 0, memoryCache.lastNumberOfFreedElements );
-    }
-
-    /**
      * Verify we can get some matching elements..
      * <p>
      * @throws IOException
@@ -235,5 +157,83 @@ public class CompositeCacheUnitTest
 
         // VERIFY
         assertEquals( "Wrong number of calls", 1, diskMock.getMatchingCallCount );
+    }
+
+    /**
+     * Verify that the freeMemoryElements method on the memory cache is called on shutdown if there
+     * is a disk cache.
+     * <p>
+     * @throws IOException
+     */
+    @Test
+    public void testShutdownMemoryFlush()
+        throws IOException
+    {
+        // SETUP
+        final String cacheName = "testCacheName";
+        final String mockMemoryCacheClassName = "org.apache.commons.jcs3.engine.memory.MockMemoryCache";
+        final ICompositeCacheAttributes cattr = new CompositeCacheAttributes();
+        cattr.setMemoryCacheName( mockMemoryCacheClassName );
+
+        final IElementAttributes attr = new ElementAttributes();
+
+        final CompositeCache<String, Integer> cache = new CompositeCache<>( cattr, attr );
+
+        final MockAuxiliaryCache<String, Integer> diskMock = new MockAuxiliaryCache<>();
+        diskMock.cacheType = CacheType.DISK_CACHE;
+        cache.setAuxCaches(Arrays.asList(diskMock));
+
+        // DO WORK
+        final int numToInsert = 10;
+        for ( int i = 0; i < numToInsert; i++ )
+        {
+            final ICacheElement<String, Integer> element = new CacheElement<>( cacheName, String.valueOf( i ), Integer.valueOf( i ) );
+            cache.update( element, false );
+        }
+
+        cache.dispose();
+
+        // VERIFY
+        final MockMemoryCache<String, Integer> memoryCache = (MockMemoryCache<String, Integer>) cache.getMemoryCache();
+        assertEquals( "Wrong number freed.", numToInsert, memoryCache.lastNumberOfFreedElements );
+    }
+
+    /**
+     * Verify that the freeMemoryElements method on the memory cache is NOT called on shutdown if
+     * there is NOT a disk cache.
+     * <p>
+     * @throws IOException
+     */
+    @Test
+    public void testShutdownMemoryFlush_noDisk()
+        throws IOException
+    {
+        // SETUP
+        final String cacheName = "testCacheName";
+        final String mockMemoryCacheClassName = "org.apache.commons.jcs3.engine.memory.MockMemoryCache";
+        final ICompositeCacheAttributes cattr = new CompositeCacheAttributes();
+        cattr.setMemoryCacheName( mockMemoryCacheClassName );
+
+        final IElementAttributes attr = new ElementAttributes();
+
+        final CompositeCache<String, Integer> cache = new CompositeCache<>( cattr, attr );
+
+        final MockAuxiliaryCache<String, Integer> diskMock = new MockAuxiliaryCache<>();
+        diskMock.cacheType = CacheType.REMOTE_CACHE;
+        cache.setAuxCaches(Arrays.asList(diskMock));
+
+        // DO WORK
+        final int numToInsert = 10;
+        for ( int i = 0; i < numToInsert; i++ )
+        {
+            final ICacheElement<String, Integer> element = new CacheElement<>( cacheName, String.valueOf( i ), Integer.valueOf( i ) );
+            cache.update( element, false );
+        }
+
+        cache.dispose();
+
+        // VERIFY
+        final MockMemoryCache<String, Integer> memoryCache = (MockMemoryCache<String, Integer>) cache.getMemoryCache();
+        assertEquals( "Wrong number freed.", 0, memoryCache.lastNumberOfFreedElements );
     }
 }

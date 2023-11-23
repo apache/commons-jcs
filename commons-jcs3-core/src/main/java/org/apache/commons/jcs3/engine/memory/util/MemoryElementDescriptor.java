@@ -42,7 +42,7 @@ public class MemoryElementDescriptor<K, V>
     }
 
     /**
-     * Get the cache element
+     * Gets the cache element
      *
      * @return the ce
      */

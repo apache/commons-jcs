@@ -26,7 +26,13 @@ import java.lang.reflect.Proxy;
 
 public class ExceptionWrapperHandler<T> implements InvocationHandler
 {
+    public static <T> T newProxy(final ClassLoader loader, final T delegate, final Class<? extends RuntimeException> exceptionType,
+            final Class<T> apis)
+    {
+        return (T) Proxy.newProxyInstance(loader, new Class<?>[] { apis }, new ExceptionWrapperHandler<>(delegate, exceptionType));
+    }
     private final T delegate;
+
     private final Constructor<? extends RuntimeException> wrapper;
 
     public ExceptionWrapperHandler(final T delegate, final Class<? extends RuntimeException> exceptionType)
@@ -67,11 +73,5 @@ public class ExceptionWrapperHandler<T> implements InvocationHandler
             }
             throw e;
         }
-    }
-
-    public static <T> T newProxy(final ClassLoader loader, final T delegate, final Class<? extends RuntimeException> exceptionType,
-            final Class<T> apis)
-    {
-        return (T) Proxy.newProxyInstance(loader, new Class<?>[] { apis }, new ExceptionWrapperHandler<>(delegate, exceptionType));
     }
 }

@@ -30,26 +30,6 @@ public class Log4j2Factory implements LogFactory
     private final MessageFactory messageFactory = new MessageFormatMessageFactory();
 
     /**
-     * Return the name of the Log subsystem managed by this factory
-     *
-     * @return the name of the log subsystem
-     */
-    @Override
-    public String getName()
-    {
-        return "log4j2";
-    }
-
-    /**
-     * Shutdown the logging system if the logging system supports it.
-     */
-    @Override
-    public void shutdown()
-    {
-        org.apache.logging.log4j.LogManager.shutdown();
-    }
-
-    /**
      * Returns a Log using the fully qualified name of the Class as the Log
      * name.
      *
@@ -84,5 +64,25 @@ public class Log4j2Factory implements LogFactory
     {
         final Logger logger = org.apache.logging.log4j.LogManager.getLogger(name, messageFactory);
         return new Log4j2LogAdapter(logger);
+    }
+
+    /**
+     * Return the name of the Log subsystem managed by this factory
+     *
+     * @return the name of the log subsystem
+     */
+    @Override
+    public String getName()
+    {
+        return "log4j2";
+    }
+
+    /**
+     * Shutdown the logging system if the logging system supports it.
+     */
+    @Override
+    public void shutdown()
+    {
+        org.apache.logging.log4j.LogManager.shutdown();
     }
 }

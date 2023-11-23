@@ -41,13 +41,6 @@ public class OpenJPAJCacheQueryCache extends AbstractQueryCache
     private OpenJPAJCacheDataCacheManager manager;
 
     @Override
-    public void initialize(final DataCacheManager manager)
-    {
-        super.initialize(manager);
-        this.manager = OpenJPAJCacheDataCacheManager.class.cast(manager);
-    }
-
-    @Override
     protected void clearInternal()
     {
         final CacheManager cacheManager = manager.getCacheManager();
@@ -62,6 +55,19 @@ public class OpenJPAJCacheQueryCache extends AbstractQueryCache
     }
 
     @Override
+    protected QueryResult getInternal(final QueryKey qk)
+    {
+        return QueryResult.class.cast(queryCache().get(qk));
+    }
+
+    @Override
+    public void initialize(final DataCacheManager manager)
+    {
+        super.initialize(manager);
+        this.manager = OpenJPAJCacheDataCacheManager.class.cast(manager);
+    }
+
+    @Override
     protected Collection<QueryKey> keySet()
     {
         final Collection<QueryKey> keys = new LinkedList<>();
@@ -73,14 +79,9 @@ public class OpenJPAJCacheQueryCache extends AbstractQueryCache
     }
 
     @Override
-    protected QueryResult getInternal(final QueryKey qk)
+    protected boolean pinInternal(final QueryKey qk)
     {
-        return QueryResult.class.cast(queryCache().get(qk));
-    }
-
-    private Cache<Object, Object> queryCache()
-    {
-        return manager.getOrCreateCache(OPENJPA_PREFIX, QUERY_CACHE_NAME);
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -88,6 +89,11 @@ public class OpenJPAJCacheQueryCache extends AbstractQueryCache
     {
         queryCache().put(qk, oids);
         return oids;
+    }
+
+    private Cache<Object, Object> queryCache()
+    {
+        return manager.getOrCreateCache(OPENJPA_PREFIX, QUERY_CACHE_NAME);
     }
 
     @Override
@@ -99,12 +105,6 @@ public class OpenJPAJCacheQueryCache extends AbstractQueryCache
             return null;
         }
         return QueryResult.class.cast(remove);
-    }
-
-    @Override
-    protected boolean pinInternal(final QueryKey qk)
-    {
-        throw new UnsupportedOperationException();
     }
 
     @Override

@@ -47,15 +47,15 @@ public class CompositeCacheWriterTest
         private static final long serialVersionUID = -5802177697962311794L;
 
         @Override
-        public void write(final Cache.Entry<? extends String, ? extends String> entry) throws CacheWriterException
-        {
-            copy1.put(entry.getKey(), entry.getValue());
-        }
-
-        @Override
         public void delete(final Object key) throws CacheWriterException
         {
             copy1.remove(key);
+        }
+
+        @Override
+        public void write(final Cache.Entry<? extends String, ? extends String> entry) throws CacheWriterException
+        {
+            copy1.put(entry.getKey(), entry.getValue());
         }
     };
     private final CacheWriterAdapter<String, String> writer2 = new CacheWriterAdapter<>()
@@ -63,15 +63,15 @@ public class CompositeCacheWriterTest
         private static final long serialVersionUID = 3495295030098159027L;
 
         @Override
-        public void write(final Cache.Entry<? extends String, ? extends String> entry) throws CacheWriterException
-        {
-            copy2.put(entry.getKey(), entry.getValue());
-        }
-
-        @Override
         public void delete(final Object key) throws CacheWriterException
         {
             copy2.remove(key);
+        }
+
+        @Override
+        public void write(final Cache.Entry<? extends String, ? extends String> entry) throws CacheWriterException
+        {
+            copy2.put(entry.getKey(), entry.getValue());
         }
     };
     private final Configuration<?, ?> config = new MutableConfiguration<String, String>()
@@ -81,7 +81,7 @@ public class CompositeCacheWriterTest
     private Cache<String, String> cache;
 
     @Test
-    public void checkComposite()
+    public void testCheckComposite()
     {
         cache.put("a", "b");
         assertEquals("b", copy1.get("a"));

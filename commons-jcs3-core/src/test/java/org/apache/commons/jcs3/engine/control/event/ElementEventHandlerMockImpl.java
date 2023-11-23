@@ -30,11 +30,11 @@ import org.apache.commons.jcs3.log.LogManager;
 public class ElementEventHandlerMockImpl
     implements IElementEventHandler
 {
-    /** Times called. */
-    private int callCount;
-
     /** The logger */
     private static final Log log = LogManager.getLog( ElementEventHandlerMockImpl.class );
+
+    /** Times called. */
+    private int callCount;
 
     /** ELEMENT_EVENT_SPOOLED_DISK_AVAILABLE */
     private int spoolCount;
@@ -50,6 +50,54 @@ public class ElementEventHandlerMockImpl
 
     /** ELEMENT_EVENT_EXCEEDED_IDLETIME_BACKGROUND */
     private int exceededIdleTimeBackgroundCount;
+
+    /**
+     * @return Returns the callCount.
+     */
+    public int getCallCount()
+    {
+        return callCount;
+    }
+
+    /**
+     * @return Returns the exceededIdleTimeBackground.
+     */
+    public int getExceededIdleTimeBackgroundCount()
+    {
+        return exceededIdleTimeBackgroundCount;
+    }
+
+    /**
+     * @return Returns the exceededMaxLifeBackground.
+     */
+    public int getExceededMaxLifeBackgroundCount()
+    {
+        return exceededMaxLifeBackgroundCount;
+    }
+
+    /**
+     * @return Returns the spoolCount.
+     */
+    public int getSpoolCount()
+    {
+        return spoolCount;
+    }
+
+    /**
+     * @return Returns the spoolNoDiskCount.
+     */
+    public int getSpoolNoDiskCount()
+    {
+        return spoolNoDiskCount;
+    }
+
+    /**
+     * @return Returns the spoolNotAllowedCount.
+     */
+    public int getSpoolNotAllowedCount()
+    {
+        return spoolNotAllowedCount;
+    }
 
     /**
      * @param event
@@ -88,83 +136,11 @@ public class ElementEventHandlerMockImpl
     }
 
     /**
-     * @param spoolCount The spoolCount to set.
-     */
-    public void setSpoolCount( final int spoolCount )
-    {
-        this.spoolCount = spoolCount;
-    }
-
-    /**
-     * @return Returns the spoolCount.
-     */
-    public int getSpoolCount()
-    {
-        return spoolCount;
-    }
-
-    /**
-     * @param spoolNotAllowedCount The spoolNotAllowedCount to set.
-     */
-    public void setSpoolNotAllowedCount( final int spoolNotAllowedCount )
-    {
-        this.spoolNotAllowedCount = spoolNotAllowedCount;
-    }
-
-    /**
-     * @return Returns the spoolNotAllowedCount.
-     */
-    public int getSpoolNotAllowedCount()
-    {
-        return spoolNotAllowedCount;
-    }
-
-    /**
-     * @param spoolNoDiskCount The spoolNoDiskCount to set.
-     */
-    public void setSpoolNoDiskCount( final int spoolNoDiskCount )
-    {
-        this.spoolNoDiskCount = spoolNoDiskCount;
-    }
-
-    /**
-     * @return Returns the spoolNoDiskCount.
-     */
-    public int getSpoolNoDiskCount()
-    {
-        return spoolNoDiskCount;
-    }
-
-    /**
-     * @param exceededMaxLifeBackground The exceededMaxLifeBackground to set.
-     */
-    public void setExceededMaxLifeBackgroundCount( final int exceededMaxLifeBackground )
-    {
-        this.exceededMaxLifeBackgroundCount = exceededMaxLifeBackground;
-    }
-
-    /**
-     * @return Returns the exceededMaxLifeBackground.
-     */
-    public int getExceededMaxLifeBackgroundCount()
-    {
-        return exceededMaxLifeBackgroundCount;
-    }
-
-    /**
      * @param callCount The callCount to set.
      */
     public void setCallCount( final int callCount )
     {
         this.callCount = callCount;
-    }
-
-    /**
-     * @return Returns the callCount.
-     */
-    public int getCallCount()
-    {
-        return callCount;
     }
 
     /**
@@ -176,10 +152,34 @@ public class ElementEventHandlerMockImpl
     }
 
     /**
-     * @return Returns the exceededIdleTimeBackground.
+     * @param exceededMaxLifeBackground The exceededMaxLifeBackground to set.
      */
-    public int getExceededIdleTimeBackgroundCount()
+    public void setExceededMaxLifeBackgroundCount( final int exceededMaxLifeBackground )
     {
-        return exceededIdleTimeBackgroundCount;
+        this.exceededMaxLifeBackgroundCount = exceededMaxLifeBackground;
+    }
+
+    /**
+     * @param spoolCount The spoolCount to set.
+     */
+    public void setSpoolCount( final int spoolCount )
+    {
+        this.spoolCount = spoolCount;
+    }
+
+    /**
+     * @param spoolNoDiskCount The spoolNoDiskCount to set.
+     */
+    public void setSpoolNoDiskCount( final int spoolNoDiskCount )
+    {
+        this.spoolNoDiskCount = spoolNoDiskCount;
+    }
+
+    /**
+     * @param spoolNotAllowedCount The spoolNotAllowedCount to set.
+     */
+    public void setSpoolNotAllowedCount( final int spoolNotAllowedCount )
+    {
+        this.spoolNotAllowedCount = spoolNotAllowedCount;
     }
 }

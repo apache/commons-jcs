@@ -50,26 +50,26 @@ public class IndexedDiskElementDescriptor
     }
 
     /**
-     * @return debug string
+     * Compares based on length, then on pos descending.
+     * <p>
+     * @param o Object
+     * @return int
      */
     @Override
-    public String toString()
+    public int compareTo( final IndexedDiskElementDescriptor o )
     {
-        final StringBuilder buf = new StringBuilder();
-        buf.append( "[DED: " );
-        buf.append( " pos = " + pos );
-        buf.append( " len = " + len );
-        buf.append( "]" );
-        return buf.toString();
-    }
+        if ( o == null )
+        {
+            return 1;
+        }
 
-    /**
-     * @see Object#hashCode()
-     */
-    @Override
-    public int hashCode()
-    {
-        return Long.valueOf(this.pos).hashCode() ^ Integer.valueOf(len).hashCode();
+        int lenCompare = Integer.compare(len, o.len);
+        if (lenCompare == 0)
+        {
+            return Long.compare(o.pos, pos);
+        }
+
+        return lenCompare;
     }
 
     /**
@@ -92,25 +92,25 @@ public class IndexedDiskElementDescriptor
     }
 
     /**
-     * Compares based on length, then on pos descending.
-     * <p>
-     * @param o Object
-     * @return int
+     * @see Object#hashCode()
      */
     @Override
-    public int compareTo( final IndexedDiskElementDescriptor o )
+    public int hashCode()
     {
-        if ( o == null )
-        {
-            return 1;
-        }
+        return Long.valueOf(this.pos).hashCode() ^ Integer.valueOf(len).hashCode();
+    }
 
-        int lenCompare = Integer.compare(len, o.len);
-        if (lenCompare == 0)
-        {
-            return Long.compare(o.pos, pos);
-        }
-
-        return lenCompare;
+    /**
+     * @return debug string
+     */
+    @Override
+    public String toString()
+    {
+        final StringBuilder buf = new StringBuilder();
+        buf.append( "[DED: " );
+        buf.append( " pos = " + pos );
+        buf.append( " len = " + len );
+        buf.append( "]" );
+        return buf.toString();
     }
 }

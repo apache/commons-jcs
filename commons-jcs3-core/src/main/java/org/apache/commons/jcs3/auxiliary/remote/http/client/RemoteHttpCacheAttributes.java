@@ -31,6 +31,9 @@ public class RemoteHttpCacheAttributes
     /** http version to use. */
     private static final String DEFAULT_HTTP_VERSION = "1.1";
 
+    /** The default class name for the client.  */
+    public static final String DEFAULT_REMOTE_HTTP_CLIENT_CLASS_NAME = RemoteHttpCacheClient.class.getName();
+
     /** The max connections allowed per host */
     private int maxConnectionsPerHost = 100;
 
@@ -55,50 +58,15 @@ public class RemoteHttpCacheAttributes
     /** The complete URL to the service. */
     private String url;
 
-    /** The default class name for the client.  */
-    public static final String DEFAULT_REMOTE_HTTP_CLIENT_CLASS_NAME = RemoteHttpCacheClient.class.getName();
-
     /** This allows users to inject their own client implementation. */
     private String remoteHttpClientClassName = DEFAULT_REMOTE_HTTP_CLIENT_CLASS_NAME;
 
     /**
-     * @param maxConnectionsPerHost the maxConnectionsPerHost to set
+     * @return the connectionTimeoutMillis
      */
-    public void setMaxConnectionsPerHost( final int maxConnectionsPerHost )
+    public int getConnectionTimeoutMillis()
     {
-        this.maxConnectionsPerHost = maxConnectionsPerHost;
-    }
-
-    /**
-     * @return the maxConnectionsPerHost
-     */
-    public int getMaxConnectionsPerHost()
-    {
-        return maxConnectionsPerHost;
-    }
-
-    /**
-     * @param socketTimeoutMillis the socketTimeoutMillis to set
-     */
-    public void setSocketTimeoutMillis( final int socketTimeoutMillis )
-    {
-        this.socketTimeoutMillis = socketTimeoutMillis;
-    }
-
-    /**
-     * @return the socketTimeoutMillis
-     */
-    public int getSocketTimeoutMillis()
-    {
-        return socketTimeoutMillis;
-    }
-
-    /**
-     * @param httpVersion the httpVersion to set
-     */
-    public void setHttpVersion( final String httpVersion )
-    {
-        this.httpVersion = httpVersion;
+        return connectionTimeoutMillis;
     }
 
     /**
@@ -110,75 +78,27 @@ public class RemoteHttpCacheAttributes
     }
 
     /**
-     * @param connectionTimeoutMillis the connectionTimeoutMillis to set
+     * @return the maxConnectionsPerHost
      */
-    public void setConnectionTimeoutMillis( final int connectionTimeoutMillis )
+    public int getMaxConnectionsPerHost()
     {
-        this.connectionTimeoutMillis = connectionTimeoutMillis;
+        return maxConnectionsPerHost;
     }
 
     /**
-     * @return the connectionTimeoutMillis
+     * @return the remoteHttpClientClassName
      */
-    public int getConnectionTimeoutMillis()
+    public String getRemoteHttpClientClassName()
     {
-        return connectionTimeoutMillis;
+        return remoteHttpClientClassName;
     }
 
     /**
-     * @param includeCacheNameInURL the includeCacheNameInURL to set
+     * @return the socketTimeoutMillis
      */
-    public void setIncludeCacheNameAsParameter( final boolean includeCacheNameInURL )
+    public int getSocketTimeoutMillis()
     {
-        this.includeCacheNameAsParameter = includeCacheNameInURL;
-    }
-
-    /**
-     * @return the includeCacheNameInURL
-     */
-    public boolean isIncludeCacheNameAsParameter()
-    {
-        return includeCacheNameAsParameter;
-    }
-
-    /**
-     * @param includeKeysAndPatternsInURL the includeKeysAndPatternsInURL to set
-     */
-    public void setIncludeKeysAndPatternsAsParameter( final boolean includeKeysAndPatternsInURL )
-    {
-        this.includeKeysAndPatternsAsParameter = includeKeysAndPatternsInURL;
-    }
-
-    /**
-     * @return the includeKeysAndPatternsInURL
-     */
-    public boolean isIncludeKeysAndPatternsAsParameter()
-    {
-        return includeKeysAndPatternsAsParameter;
-    }
-
-    /**
-     * @param includeRequestTypeasAsParameter the includeRequestTypeasAsParameter to set
-     */
-    public void setIncludeRequestTypeasAsParameter( final boolean includeRequestTypeasAsParameter )
-    {
-        this.includeRequestTypeasAsParameter = includeRequestTypeasAsParameter;
-    }
-
-    /**
-     * @return the includeRequestTypeasAsParameter
-     */
-    public boolean isIncludeRequestTypeasAsParameter()
-    {
-        return includeRequestTypeasAsParameter;
-    }
-
-    /**
-     * @param url the url to set
-     */
-    public void setUrl( final String url )
-    {
-        this.url = url;
+        return socketTimeoutMillis;
     }
 
     /**
@@ -190,6 +110,78 @@ public class RemoteHttpCacheAttributes
     }
 
     /**
+     * @return the includeCacheNameInURL
+     */
+    public boolean isIncludeCacheNameAsParameter()
+    {
+        return includeCacheNameAsParameter;
+    }
+
+    /**
+     * @return the includeKeysAndPatternsInURL
+     */
+    public boolean isIncludeKeysAndPatternsAsParameter()
+    {
+        return includeKeysAndPatternsAsParameter;
+    }
+
+    /**
+     * @return the includeRequestTypeasAsParameter
+     */
+    public boolean isIncludeRequestTypeasAsParameter()
+    {
+        return includeRequestTypeasAsParameter;
+    }
+
+    /**
+     * @param connectionTimeoutMillis the connectionTimeoutMillis to set
+     */
+    public void setConnectionTimeoutMillis( final int connectionTimeoutMillis )
+    {
+        this.connectionTimeoutMillis = connectionTimeoutMillis;
+    }
+
+    /**
+     * @param httpVersion the httpVersion to set
+     */
+    public void setHttpVersion( final String httpVersion )
+    {
+        this.httpVersion = httpVersion;
+    }
+
+    /**
+     * @param includeCacheNameInURL the includeCacheNameInURL to set
+     */
+    public void setIncludeCacheNameAsParameter( final boolean includeCacheNameInURL )
+    {
+        this.includeCacheNameAsParameter = includeCacheNameInURL;
+    }
+
+    /**
+     * @param includeKeysAndPatternsInURL the includeKeysAndPatternsInURL to set
+     */
+    public void setIncludeKeysAndPatternsAsParameter( final boolean includeKeysAndPatternsInURL )
+    {
+        this.includeKeysAndPatternsAsParameter = includeKeysAndPatternsInURL;
+    }
+
+    /**
+     * @param includeRequestTypeasAsParameter the includeRequestTypeasAsParameter to set
+     */
+    public void setIncludeRequestTypeasAsParameter( final boolean includeRequestTypeasAsParameter )
+    {
+        this.includeRequestTypeasAsParameter = includeRequestTypeasAsParameter;
+    }
+
+    /**
+     * @param maxConnectionsPerHost the maxConnectionsPerHost to set
+     */
+    public void setMaxConnectionsPerHost( final int maxConnectionsPerHost )
+    {
+        this.maxConnectionsPerHost = maxConnectionsPerHost;
+    }
+
+    /**
      * @param remoteHttpClientClassName the remoteHttpClientClassName to set
      */
     public void setRemoteHttpClientClassName( final String remoteHttpClientClassName )
@@ -198,11 +190,19 @@ public class RemoteHttpCacheAttributes
     }
 
     /**
-     * @return the remoteHttpClientClassName
+     * @param socketTimeoutMillis the socketTimeoutMillis to set
      */
-    public String getRemoteHttpClientClassName()
+    public void setSocketTimeoutMillis( final int socketTimeoutMillis )
     {
-        return remoteHttpClientClassName;
+        this.socketTimeoutMillis = socketTimeoutMillis;
+    }
+
+    /**
+     * @param url the url to set
+     */
+    public void setUrl( final String url )
+    {
+        this.url = url;
     }
 
     /**

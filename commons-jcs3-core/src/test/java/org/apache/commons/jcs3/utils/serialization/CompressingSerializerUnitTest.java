@@ -59,44 +59,6 @@ public class CompressingSerializerUnitTest
     }
 
     /**
-     * Test simple back and forth with a string.
-     * <p>
-     * ))&lt;=&gt;((
-     * <p>
-     * @throws Exception on error
-     */
-    @Test
-    public void testSimpleBackAndForth()
-        throws Exception
-    {
-        // DO WORK
-        final String before = "adsfdsafdsafdsafdsafdsafdsafdsagfdsafdsafdsfdsafdsafsa333 31231";
-        final String after = (String) serializer.deSerialize( serializer.serialize( before ), null );
-
-        // VERIFY
-        assertEquals( "Before and after should be the same.", before, after );
-    }
-
-    /**
-     * Test serialization with a null object. Verify that we don't get an error.
-     * <p>
-     * @throws Exception on error
-     */
-    @Test
-    public void testSerialize_NullInput()
-        throws Exception
-    {
-        final String before = null;
-
-        // DO WORK
-        final byte[] serialized = serializer.serialize( before );
-        final String after = (String) serializer.deSerialize( serialized, null );
-
-        // VERIFY
-        assertNull( "Should have nothing. after =" + after, after );
-    }
-
-    /**
      * Verify that the compressed is smaller.
      * <p>
      * @throws Exception on error
@@ -120,5 +82,43 @@ public class CompressingSerializerUnitTest
         // VERIFY
         assertTrue( "Compressed should be smaller. compressed size = " + compressed.length + "nonCompressed size = "
             + nonCompressed.length, compressed.length < nonCompressed.length );
+    }
+
+    /**
+     * Test serialization with a null object. Verify that we don't get an error.
+     * <p>
+     * @throws Exception on error
+     */
+    @Test
+    public void testSerialize_NullInput()
+        throws Exception
+    {
+        final String before = null;
+
+        // DO WORK
+        final byte[] serialized = serializer.serialize( before );
+        final String after = (String) serializer.deSerialize( serialized, null );
+
+        // VERIFY
+        assertNull( "Should have nothing. after =" + after, after );
+    }
+
+    /**
+     * Test simple back and forth with a string.
+     * <p>
+     * ))&lt;=&gt;((
+     * <p>
+     * @throws Exception on error
+     */
+    @Test
+    public void testSimpleBackAndForth()
+        throws Exception
+    {
+        // DO WORK
+        final String before = "adsfdsafdsafdsafdsafdsafdsafdsagfdsafdsafdsfdsafdsafsa333 31231";
+        final String after = (String) serializer.deSerialize( serializer.serialize( before ), null );
+
+        // VERIFY
+        assertEquals( "Before and after should be the same.", before, after );
     }
 }

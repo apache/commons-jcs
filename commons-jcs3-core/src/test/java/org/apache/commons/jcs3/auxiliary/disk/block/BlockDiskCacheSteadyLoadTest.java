@@ -43,6 +43,20 @@ public class BlockDiskCacheSteadyLoadTest
     private static final DecimalFormat format = new DecimalFormat( "#,###" );
 
     /**
+     * Logs the memory usage.
+     */
+    private static void logMemoryUsage()
+    {
+        final long byte2MB = 1024 * 1024;
+        final long total = rt.totalMemory() / byte2MB;
+        final long free = rt.freeMemory() / byte2MB;
+        final long used = total - free;
+        System.out.println( LOG_DIVIDER );
+        System.out.println( "Memory:" + " Used:" + format.format( used ) + "MB" + " Free:" + format.format( free )
+            + "MB" + " Total:" + format.format( total ) + "MB" );
+    }
+
+    /**
      * Insert 2000 wait 1 second, repeat. Average 1000 / sec.
      *
      * @throws Exception
@@ -140,19 +154,5 @@ public class BlockDiskCacheSteadyLoadTest
         System.gc();
 //        System.out.println( jcs.getStats() );
         logMemoryUsage();
-    }
-
-    /**
-     * Logs the memory usage.
-     */
-    private static void logMemoryUsage()
-    {
-        final long byte2MB = 1024 * 1024;
-        final long total = rt.totalMemory() / byte2MB;
-        final long free = rt.freeMemory() / byte2MB;
-        final long used = total - free;
-        System.out.println( LOG_DIVIDER );
-        System.out.println( "Memory:" + " Used:" + format.format( used ) + "MB" + " Free:" + format.format( free )
-            + "MB" + " Total:" + format.format( total ) + "MB" );
     }
 }

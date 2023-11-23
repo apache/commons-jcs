@@ -42,31 +42,6 @@ import org.junit.Test;
 public class MySQLDiskCacheHsqlBackedUnitTest
 {
     /**
-     * Test setup
-     * @throws Exception
-     */
-    @Before
-    public void setUp() throws Exception
-    {
-        JCS.setConfigFilename( "/TestMySQLDiskCache.ccf" );
-        try (Connection con = HsqlSetupUtil.getTestDatabaseConnection(new Properties(), getClass().getSimpleName()))
-        {
-            HsqlSetupUtil.setupTable(con, "JCS_STORE_MYSQL");
-        }
-    }
-
-    /**
-     * Test the basic JDBC disk cache functionality with a hsql backing.
-     * @throws Exception
-     */
-    @Test
-    public void testSimpleJDBCPutGetWithHSQL()
-        throws Exception
-    {
-        runTestForRegion( "testCache1", 200 );
-    }
-
-    /**
      * Adds items to cache, gets them, and removes them. The item count is more than the size of the
      * memory cache, so items should spool to disk.
      * <p>
@@ -124,6 +99,20 @@ public class MySQLDiskCacheHsqlBackedUnitTest
     }
 
     /**
+     * Test setup
+     * @throws Exception
+     */
+    @Before
+    public void setUp() throws Exception
+    {
+        JCS.setConfigFilename( "/TestMySQLDiskCache.ccf" );
+        try (Connection con = HsqlSetupUtil.getTestDatabaseConnection(new Properties(), getClass().getSimpleName()))
+        {
+            HsqlSetupUtil.setupTable(con, "JCS_STORE_MYSQL");
+        }
+    }
+
+    /**
      * Test the basic JDBC disk cache functionality with a hsql backing.
      * <p>
      * @throws Exception
@@ -149,5 +138,16 @@ public class MySQLDiskCacheHsqlBackedUnitTest
         // VERIFY
         assertEquals( "Wrong number returned", 10, matchingResults.size() );
 //        System.out.println( "matchingResults.keySet() " + matchingResults.keySet() );
+    }
+
+    /**
+     * Test the basic JDBC disk cache functionality with a hsql backing.
+     * @throws Exception
+     */
+    @Test
+    public void testSimpleJDBCPutGetWithHSQL()
+        throws Exception
+    {
+        runTestForRegion( "testCache1", 200 );
     }
 }

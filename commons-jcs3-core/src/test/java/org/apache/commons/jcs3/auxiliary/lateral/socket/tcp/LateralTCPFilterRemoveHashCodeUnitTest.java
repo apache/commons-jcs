@@ -46,24 +46,14 @@ public class LateralTCPFilterRemoveHashCodeUnitTest
     private static final int serverPort = 2001;
 
     /**
-     * Test setup
+     * @param s String to print
      */
-    @Before
-    public void setUp()
+    public static void p( final String s )
     {
-        System.setProperty( "jcs.auxiliary.LTCP.attributes.TcpServers", "localhost:" + serverPort );
-        JCS.setConfigFilename( "/TestTCPLateralRemoveFilter.ccf" );
-    }
-
-    /**
-     *
-     * @throws Exception
-     */
-    @Test
-    public void test()
-        throws Exception
-    {
-        runTestForRegion( "region1", 200, 1 );
+        if ( isSysOut )
+        {
+            System.out.println( s );
+        }
     }
 
     /**
@@ -178,13 +168,23 @@ public class LateralTCPFilterRemoveHashCodeUnitTest
     }
 
     /**
-     * @param s String to print
+     * Test setup
      */
-    public static void p( final String s )
+    @Before
+    public void setUp()
     {
-        if ( isSysOut )
-        {
-            System.out.println( s );
-        }
+        System.setProperty( "jcs.auxiliary.LTCP.attributes.TcpServers", "localhost:" + serverPort );
+        JCS.setConfigFilename( "/TestTCPLateralRemoveFilter.ccf" );
+    }
+
+    /**
+     *
+     * @throws Exception
+     */
+    @Test
+    public void test()
+        throws Exception
+    {
+        runTestForRegion( "region1", 200, 1 );
     }
 }

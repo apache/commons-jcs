@@ -35,7 +35,7 @@ import org.junit.Test;
 public class ImmediateExpiryTest
 {
     @Test
-    public void immediate()
+    public void testImmediate()
     {
         final CachingProvider cachingProvider = Caching.getCachingProvider();
         final CacheManager cacheManager = cachingProvider.getCacheManager();

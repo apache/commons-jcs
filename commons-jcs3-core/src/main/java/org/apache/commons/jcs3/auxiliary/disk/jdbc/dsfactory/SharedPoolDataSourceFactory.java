@@ -41,66 +41,6 @@ public class SharedPoolDataSourceFactory implements DataSourceFactory
     /** The log. */
     private static final Log log = LogManager.getLog(SharedPoolDataSourceFactory.class);
 
-    /** The name of the factory. */
-    private String name;
-
-    /** The wrapped <code>DataSource</code>. */
-    private SharedPoolDataSource ds;
-
-    /**
-     * @return the name of the factory.
-     */
-    @Override
-	public String getName()
-    {
-    	return name;
-    }
-
-    /**
-     * @see org.apache.commons.jcs3.auxiliary.disk.jdbc.dsfactory.DataSourceFactory#getDataSource()
-     */
-    @Override
-    public DataSource getDataSource()
-    {
-        return ds;
-    }
-
-    /**
-     * @see org.apache.commons.jcs3.auxiliary.disk.jdbc.dsfactory.DataSourceFactory#initialize(JDBCDiskCacheAttributes)
-     */
-    @Override
-	public void initialize(final JDBCDiskCacheAttributes config) throws SQLException
-    {
-    	this.name = config.getConnectionPoolName();
-        final ConnectionPoolDataSource cpds = initCPDS(config);
-        final SharedPoolDataSource dataSource = new SharedPoolDataSource();
-        initJdbc2Pool(dataSource, config);
-        dataSource.setConnectionPoolDataSource(cpds);
-        dataSource.setMaxTotal(config.getMaxTotal());
-        this.ds = dataSource;
-    }
-
-    /**
-     * Closes the pool associated with this factory and releases it.
-     * @throws SQLException if the pool cannot be closed properly
-     */
-    @Override
-	public void close() throws SQLException
-    {
-        try
-        {
-            if (ds != null)
-            {
-                ds.close();
-            }
-        }
-        catch (final Exception e)
-        {
-        	throw new SQLException("Exception caught closing data source", e);
-        }
-        ds = null;
-    }
-
     /**
      * Initializes the ConnectionPoolDataSource.
      *
@@ -145,5 +85,65 @@ public class SharedPoolDataSourceFactory implements DataSourceFactory
         log.debug("Starting initJdbc2Pool");
 
         dataSource.setDescription(config.getConnectionPoolName());
+    }
+
+    /** The name of the factory. */
+    private String name;
+
+    /** The wrapped <code>DataSource</code>. */
+    private SharedPoolDataSource ds;
+
+    /**
+     * Closes the pool associated with this factory and releases it.
+     * @throws SQLException if the pool cannot be closed properly
+     */
+    @Override
+	public void close() throws SQLException
+    {
+        try
+        {
+            if (ds != null)
+            {
+                ds.close();
+            }
+        }
+        catch (final Exception e)
+        {
+        	throw new SQLException("Exception caught closing data source", e);
+        }
+        ds = null;
+    }
+
+    /**
+     * @see org.apache.commons.jcs3.auxiliary.disk.jdbc.dsfactory.DataSourceFactory#getDataSource()
+     */
+    @Override
+    public DataSource getDataSource()
+    {
+        return ds;
+    }
+
+    /**
+     * @return the name of the factory.
+     */
+    @Override
+	public String getName()
+    {
+    	return name;
+    }
+
+    /**
+     * @see org.apache.commons.jcs3.auxiliary.disk.jdbc.dsfactory.DataSourceFactory#initialize(JDBCDiskCacheAttributes)
+     */
+    @Override
+	public void initialize(final JDBCDiskCacheAttributes config) throws SQLException
+    {
+    	this.name = config.getConnectionPoolName();
+        final ConnectionPoolDataSource cpds = initCPDS(config);
+        final SharedPoolDataSource dataSource = new SharedPoolDataSource();
+        initJdbc2Pool(dataSource, config);
+        dataSource.setConnectionPoolDataSource(cpds);
+        dataSource.setMaxTotal(config.getMaxTotal());
+        this.ds = dataSource;
     }
 }

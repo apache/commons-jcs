@@ -28,9 +28,6 @@ import java.util.ArrayList;
 public class UDPDiscoveryMessage
     implements Serializable
 {
-    /** Don't change */
-    private static final long serialVersionUID = -5332377899560951793L;
-
     public enum BroadcastType
     {
         /**
@@ -50,6 +47,9 @@ public class UDPDiscoveryMessage
         REMOVE
     }
 
+    /** Don't change */
+    private static final long serialVersionUID = -5332377899560951793L;
+
     /** The message type */
     private BroadcastType messageType = BroadcastType.PASSIVE;
 
@@ -66,27 +66,11 @@ public class UDPDiscoveryMessage
     private ArrayList<String> cacheNames = new ArrayList<>();
 
     /**
-     * @param port The port to set.
+     * @return Returns the cacheNames.
      */
-    public void setPort( final int port )
+    public ArrayList<String> getCacheNames()
     {
-        this.port = port;
-    }
-
-    /**
-     * @return Returns the port.
-     */
-    public int getPort()
-    {
-        return port;
-    }
-
-    /**
-     * @param host The host to set.
-     */
-    public void setHost( final String host )
-    {
-        this.host = host;
+        return cacheNames;
     }
 
     /**
@@ -98,11 +82,19 @@ public class UDPDiscoveryMessage
     }
 
     /**
-     * @param requesterId The requesterId to set.
+     * @return Returns the messageType.
      */
-    public void setRequesterId( final long requesterId )
+    public BroadcastType getMessageType()
     {
-        this.requesterId = requesterId;
+        return messageType;
+    }
+
+    /**
+     * @return Returns the port.
+     */
+    public int getPort()
+    {
+        return port;
     }
 
     /**
@@ -114,22 +106,6 @@ public class UDPDiscoveryMessage
     }
 
     /**
-     * @param messageType The messageType to set.
-     */
-    public void setMessageType( final BroadcastType messageType )
-    {
-        this.messageType = messageType;
-    }
-
-    /**
-     * @return Returns the messageType.
-     */
-    public BroadcastType getMessageType()
-    {
-        return messageType;
-    }
-
-    /**
      * @param cacheNames The cacheNames to set.
      */
     public void setCacheNames( final ArrayList<String> cacheNames )
@@ -138,11 +114,35 @@ public class UDPDiscoveryMessage
     }
 
     /**
-     * @return Returns the cacheNames.
+     * @param host The host to set.
      */
-    public ArrayList<String> getCacheNames()
+    public void setHost( final String host )
     {
-        return cacheNames;
+        this.host = host;
+    }
+
+    /**
+     * @param messageType The messageType to set.
+     */
+    public void setMessageType( final BroadcastType messageType )
+    {
+        this.messageType = messageType;
+    }
+
+    /**
+     * @param port The port to set.
+     */
+    public void setPort( final int port )
+    {
+        this.port = port;
+    }
+
+    /**
+     * @param requesterId The requesterId to set.
+     */
+    public void setRequesterId( final long requesterId )
+    {
+        this.requesterId = requesterId;
     }
 
     /**

@@ -56,6 +56,14 @@ public class MockElementSerializer
     }
 
     /**
+     * @return testProperty
+     */
+    public String getTestProperty()
+    {
+        return testProperty;
+    }
+
+    /**
      * @param obj
      * @return byte[]
      * @throws IOException
@@ -75,13 +83,5 @@ public class MockElementSerializer
     public void setTestProperty( final String testProperty )
     {
         this.testProperty = testProperty;
-    }
-
-    /**
-     * @return testProperty
-     */
-    public String getTestProperty()
-    {
-        return testProperty;
     }
 }

@@ -32,6 +32,9 @@ public class RemoteCacheServerAttributes
     /** Don't change */
     private static final long serialVersionUID = -2741662082869155365L;
 
+    /** Should we try to keep the registry alive */
+    private final static boolean DEFAULT_USE_REGISTRY_KEEP_ALIVE = true;
+
     /** port the server will listen to */
     private int servicePort;
 
@@ -42,9 +45,6 @@ public class RemoteCacheServerAttributes
     private String configFileName = "";
 
     /** Should we try to keep the registry alive */
-    private final static boolean DEFAULT_USE_REGISTRY_KEEP_ALIVE = true;
-
-    /** Should we try to keep the registry alive */
     private boolean useRegistryKeepAlive = DEFAULT_USE_REGISTRY_KEEP_ALIVE;
 
     /** The delay between runs */
@@ -53,50 +53,6 @@ public class RemoteCacheServerAttributes
     /** Default constructor for the RemoteCacheAttributes object */
     public RemoteCacheServerAttributes()
     {
-    }
-
-    /**
-     * Gets the localPort attribute of the RemoteCacheAttributes object
-     * <p>
-     * @return The localPort value
-     */
-    @Override
-    public int getServicePort()
-    {
-        return this.servicePort;
-    }
-
-    /**
-     * Sets the localPort attribute of the RemoteCacheAttributes object
-     * <p>
-     * @param p The new localPort value
-     */
-    @Override
-    public void setServicePort( final int p )
-    {
-        this.servicePort = p;
-    }
-
-    /**
-     * Should gets from non-cluster clients be allowed to get from other remote auxiliaries.
-     * <p>
-     * @return The localClusterConsistency value
-     */
-    @Override
-    public boolean isAllowClusterGet()
-    {
-        return allowClusterGet;
-    }
-
-    /**
-     * Should we try to get from other cluster servers if we don't find the items locally.
-     * <p>
-     * @param r The new localClusterConsistency value
-     */
-    @Override
-    public void setAllowClusterGet( final boolean r )
-    {
-        allowClusterGet = r;
     }
 
     /**
@@ -111,25 +67,34 @@ public class RemoteCacheServerAttributes
     }
 
     /**
-     * Sets the ConfigFileName attribute of the IRemoteCacheAttributes object
-     * <p>
-     * @param s The new clusterServers value
+     * @return the registryKeepAliveDelayMillis
      */
     @Override
-    public void setConfigFileName( final String s )
+    public long getRegistryKeepAliveDelayMillis()
     {
-        configFileName = s;
+        return registryKeepAliveDelayMillis;
     }
 
     /**
-     * Should we try to keep the registry alive
+     * Gets the localPort attribute of the RemoteCacheAttributes object
      * <p>
-     * @param useRegistryKeepAlive the useRegistryKeepAlive to set
+     * @return The localPort value
      */
     @Override
-    public void setUseRegistryKeepAlive( final boolean useRegistryKeepAlive )
+    public int getServicePort()
     {
-        this.useRegistryKeepAlive = useRegistryKeepAlive;
+        return this.servicePort;
+    }
+
+    /**
+     * Should gets from non-cluster clients be allowed to get from other remote auxiliaries.
+     * <p>
+     * @return The localClusterConsistency value
+     */
+    @Override
+    public boolean isAllowClusterGet()
+    {
+        return allowClusterGet;
     }
 
     /**
@@ -144,6 +109,28 @@ public class RemoteCacheServerAttributes
     }
 
     /**
+     * Should we try to get from other cluster servers if we don't find the items locally.
+     * <p>
+     * @param r The new localClusterConsistency value
+     */
+    @Override
+    public void setAllowClusterGet( final boolean r )
+    {
+        allowClusterGet = r;
+    }
+
+    /**
+     * Sets the ConfigFileName attribute of the IRemoteCacheAttributes object
+     * <p>
+     * @param s The new clusterServers value
+     */
+    @Override
+    public void setConfigFileName( final String s )
+    {
+        configFileName = s;
+    }
+
+    /**
      * @param registryKeepAliveDelayMillis the registryKeepAliveDelayMillis to set
      */
     @Override
@@ -153,12 +140,25 @@ public class RemoteCacheServerAttributes
     }
 
     /**
-     * @return the registryKeepAliveDelayMillis
+     * Sets the localPort attribute of the RemoteCacheAttributes object
+     * <p>
+     * @param p The new localPort value
      */
     @Override
-    public long getRegistryKeepAliveDelayMillis()
+    public void setServicePort( final int p )
     {
-        return registryKeepAliveDelayMillis;
+        this.servicePort = p;
+    }
+
+    /**
+     * Should we try to keep the registry alive
+     * <p>
+     * @param useRegistryKeepAlive the useRegistryKeepAlive to set
+     */
+    @Override
+    public void setUseRegistryKeepAlive( final boolean useRegistryKeepAlive )
+    {
+        this.useRegistryKeepAlive = useRegistryKeepAlive;
     }
 
     /**

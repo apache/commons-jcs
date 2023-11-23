@@ -54,22 +54,6 @@ public class RemoteHttpCacheMonitor extends AbstractAuxiliaryCacheMonitor
     }
 
     /**
-     * Notifies the cache monitor that an error occurred, and kicks off the error recovery process.
-     * <p>
-     * @param remoteCache
-     */
-    public void notifyError( final RemoteHttpCache<?, ?> remoteCache )
-    {
-        if ( log.isInfoEnabled() )
-        {
-            log.info( "Notified of an error. " + remoteCache );
-        }
-
-        remoteHttpCaches.put( remoteCache, remoteCache );
-        notifyError();
-    }
-
-    /**
      * Clean up all resources before shutdown
      */
     @Override
@@ -132,5 +116,21 @@ public class RemoteHttpCacheMonitor extends AbstractAuxiliaryCacheMonitor
                 log.error( ex );
             }
         }
+    }
+
+    /**
+     * Notifies the cache monitor that an error occurred, and kicks off the error recovery process.
+     * <p>
+     * @param remoteCache
+     */
+    public void notifyError( final RemoteHttpCache<?, ?> remoteCache )
+    {
+        if ( log.isInfoEnabled() )
+        {
+            log.info( "Notified of an error. " + remoteCache );
+        }
+
+        remoteHttpCaches.put( remoteCache, remoteCache );
+        notifyError();
     }
 }

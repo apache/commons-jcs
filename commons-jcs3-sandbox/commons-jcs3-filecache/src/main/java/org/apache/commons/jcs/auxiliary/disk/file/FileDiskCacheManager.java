@@ -100,7 +100,7 @@ public class FileDiskCacheManager
     }
 
     /**
-     * Get an DiskFileCache for the supplied attributes. Will provide an existing cache for the name
+     * Gets an DiskFileCache for the supplied attributes. Will provide an existing cache for the name
      * attribute if one has been created, or will create a new cache.
      * <p>
      * @param cacheAttributes Attributes the cache should have.

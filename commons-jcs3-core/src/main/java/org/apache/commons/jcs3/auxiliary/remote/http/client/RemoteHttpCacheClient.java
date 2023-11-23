@@ -68,18 +68,26 @@ public class RemoteHttpCacheClient<K, V>
     }
 
     /**
-     * The provides an extension point. If you want to extend this and use a special dispatcher,
-     * here is the place to do it.
+     * Frees the specified cache.
      * <p>
-     * @param attributes
+     * @param cacheName
+     * @throws IOException
      */
     @Override
-    public void initialize( final RemoteHttpCacheAttributes attributes )
+    public void dispose( final String cacheName )
+        throws IOException
     {
-        setRemoteDispatcher( new RemoteHttpCacheDispatcher( attributes ) );
+        if ( !isInitialized() )
+        {
+            final String message = "The Remote Http Client is not initialized.  Cannot process request.";
+            log.warn( message );
+            throw new IOException( message );
+        }
 
-        log.info( "Created remote Dispatcher. {0}", this::getRemoteDispatcher);
-        setInitialized( true );
+        final RemoteCacheRequest<K, V> remoteHttpCacheRequest =
+            RemoteCacheRequestFactory.createDisposeRequest( cacheName, 0 );
+
+        getRemoteDispatcher().dispatchRequest( remoteHttpCacheRequest );
     }
 
     /**
@@ -130,6 +138,35 @@ public class RemoteHttpCacheClient<K, V>
         }
 
         return null;
+    }
+
+    /**
+     * Return the keys in this cache.
+     * <p>
+     * @param cacheName the name of the cache
+     * @see org.apache.commons.jcs3.auxiliary.AuxiliaryCache#getKeySet()
+     */
+    @Override
+    public Set<K> getKeySet( final String cacheName ) throws IOException
+    {
+        if ( !isInitialized() )
+        {
+            final String message = "The Remote Http Client is not initialized.  Cannot process request.";
+            log.warn( message );
+            throw new IOException( message );
+        }
+
+        final RemoteCacheRequest<String, String> remoteHttpCacheRequest =
+            RemoteCacheRequestFactory.createGetKeySetRequest(cacheName, 0 );
+
+        final RemoteCacheResponse<Set<K>> remoteHttpCacheResponse = getRemoteDispatcher().dispatchRequest( remoteHttpCacheRequest );
+
+        if ( remoteHttpCacheResponse != null && remoteHttpCacheResponse.getPayload() != null )
+        {
+            return remoteHttpCacheResponse.getPayload();
+        }
+
+        return Collections.emptySet();
     }
 
     /**
@@ -229,6 +266,86 @@ public class RemoteHttpCacheClient<K, V>
     }
 
     /**
+     * @return the remoteDispatcher
+     */
+    public IRemoteCacheDispatcher getRemoteDispatcher()
+    {
+        return remoteDispatcher;
+    }
+
+    /**
+     * @return the remoteHttpCacheAttributes
+     */
+    public RemoteHttpCacheAttributes getRemoteHttpCacheAttributes()
+    {
+        return remoteHttpCacheAttributes;
+    }
+
+    /**
+     * The provides an extension point. If you want to extend this and use a special dispatcher,
+     * here is the place to do it.
+     * <p>
+     * @param attributes
+     */
+    @Override
+    public void initialize( final RemoteHttpCacheAttributes attributes )
+    {
+        setRemoteDispatcher( new RemoteHttpCacheDispatcher( attributes ) );
+
+        log.info( "Created remote Dispatcher. {0}", this::getRemoteDispatcher);
+        setInitialized( true );
+    }
+
+    /**
+     * Make and alive request.
+     * <p>
+     * @return true if we make a successful alive request.
+     * @throws IOException
+     */
+    @Override
+    public boolean isAlive()
+        throws IOException
+    {
+        if ( !isInitialized() )
+        {
+            final String message = "The Remote Http Client is not initialized.  Cannot process request.";
+            log.warn( message );
+            throw new IOException( message );
+        }
+
+        final RemoteCacheRequest<K, V> remoteHttpCacheRequest = RemoteCacheRequestFactory.createAliveCheckRequest( 0 );
+        final RemoteCacheResponse<String> remoteHttpCacheResponse =
+            getRemoteDispatcher().dispatchRequest( remoteHttpCacheRequest );
+
+        if ( remoteHttpCacheResponse != null )
+        {
+            return remoteHttpCacheResponse.isSuccess();
+        }
+
+        return false;
+    }
+
+    /**
+     * @return the initialized
+     */
+    protected boolean isInitialized()
+    {
+        return initialized;
+    }
+
+    /**
+     * Frees the specified cache.
+     * <p>
+     * @throws IOException
+     */
+    @Override
+    public void release()
+        throws IOException
+    {
+        // noop
+    }
+
+    /**
      * Removes the given key from the specified cache.
      * <p>
      * @param cacheName
@@ -305,6 +422,30 @@ public class RemoteHttpCacheClient<K, V>
     }
 
     /**
+     * @param initialized the initialized to set
+     */
+    protected void setInitialized( final boolean initialized )
+    {
+        this.initialized = initialized;
+    }
+
+    /**
+     * @param remoteDispatcher the remoteDispatcher to set
+     */
+    public void setRemoteDispatcher( final IRemoteCacheDispatcher remoteDispatcher )
+    {
+        this.remoteDispatcher = remoteDispatcher;
+    }
+
+    /**
+     * @param remoteHttpCacheAttributes the remoteHttpCacheAttributes to set
+     */
+    public void setRemoteHttpCacheAttributes( final RemoteHttpCacheAttributes remoteHttpCacheAttributes )
+    {
+        this.remoteHttpCacheAttributes = remoteHttpCacheAttributes;
+    }
+
+    /**
      * Puts a cache item to the cache.
      * <p>
      * @param item
@@ -339,146 +480,5 @@ public class RemoteHttpCacheClient<K, V>
             RemoteCacheRequestFactory.createUpdateRequest( cacheElement, requesterId );
 
         getRemoteDispatcher().dispatchRequest( remoteHttpCacheRequest );
-    }
-
-    /**
-     * Frees the specified cache.
-     * <p>
-     * @param cacheName
-     * @throws IOException
-     */
-    @Override
-    public void dispose( final String cacheName )
-        throws IOException
-    {
-        if ( !isInitialized() )
-        {
-            final String message = "The Remote Http Client is not initialized.  Cannot process request.";
-            log.warn( message );
-            throw new IOException( message );
-        }
-
-        final RemoteCacheRequest<K, V> remoteHttpCacheRequest =
-            RemoteCacheRequestFactory.createDisposeRequest( cacheName, 0 );
-
-        getRemoteDispatcher().dispatchRequest( remoteHttpCacheRequest );
-    }
-
-    /**
-     * Frees the specified cache.
-     * <p>
-     * @throws IOException
-     */
-    @Override
-    public void release()
-        throws IOException
-    {
-        // noop
-    }
-
-    /**
-     * Return the keys in this cache.
-     * <p>
-     * @param cacheName the name of the cache
-     * @see org.apache.commons.jcs3.auxiliary.AuxiliaryCache#getKeySet()
-     */
-    @Override
-    public Set<K> getKeySet( final String cacheName ) throws IOException
-    {
-        if ( !isInitialized() )
-        {
-            final String message = "The Remote Http Client is not initialized.  Cannot process request.";
-            log.warn( message );
-            throw new IOException( message );
-        }
-
-        final RemoteCacheRequest<String, String> remoteHttpCacheRequest =
-            RemoteCacheRequestFactory.createGetKeySetRequest(cacheName, 0 );
-
-        final RemoteCacheResponse<Set<K>> remoteHttpCacheResponse = getRemoteDispatcher().dispatchRequest( remoteHttpCacheRequest );
-
-        if ( remoteHttpCacheResponse != null && remoteHttpCacheResponse.getPayload() != null )
-        {
-            return remoteHttpCacheResponse.getPayload();
-        }
-
-        return Collections.emptySet();
-    }
-
-    /**
-     * Make and alive request.
-     * <p>
-     * @return true if we make a successful alive request.
-     * @throws IOException
-     */
-    @Override
-    public boolean isAlive()
-        throws IOException
-    {
-        if ( !isInitialized() )
-        {
-            final String message = "The Remote Http Client is not initialized.  Cannot process request.";
-            log.warn( message );
-            throw new IOException( message );
-        }
-
-        final RemoteCacheRequest<K, V> remoteHttpCacheRequest = RemoteCacheRequestFactory.createAliveCheckRequest( 0 );
-        final RemoteCacheResponse<String> remoteHttpCacheResponse =
-            getRemoteDispatcher().dispatchRequest( remoteHttpCacheRequest );
-
-        if ( remoteHttpCacheResponse != null )
-        {
-            return remoteHttpCacheResponse.isSuccess();
-        }
-
-        return false;
-    }
-
-    /**
-     * @param remoteDispatcher the remoteDispatcher to set
-     */
-    public void setRemoteDispatcher( final IRemoteCacheDispatcher remoteDispatcher )
-    {
-        this.remoteDispatcher = remoteDispatcher;
-    }
-
-    /**
-     * @return the remoteDispatcher
-     */
-    public IRemoteCacheDispatcher getRemoteDispatcher()
-    {
-        return remoteDispatcher;
-    }
-
-    /**
-     * @param remoteHttpCacheAttributes the remoteHttpCacheAttributes to set
-     */
-    public void setRemoteHttpCacheAttributes( final RemoteHttpCacheAttributes remoteHttpCacheAttributes )
-    {
-        this.remoteHttpCacheAttributes = remoteHttpCacheAttributes;
-    }
-
-    /**
-     * @return the remoteHttpCacheAttributes
-     */
-    public RemoteHttpCacheAttributes getRemoteHttpCacheAttributes()
-    {
-        return remoteHttpCacheAttributes;
-    }
-
-    /**
-     * @param initialized the initialized to set
-     */
-    protected void setInitialized( final boolean initialized )
-    {
-        this.initialized = initialized;
-    }
-
-    /**
-     * @return the initialized
-     */
-    protected boolean isInitialized()
-    {
-        return initialized;
     }
 }

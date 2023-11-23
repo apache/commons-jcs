@@ -81,182 +81,31 @@ public class CompositeCacheConfigurator
     public static final String KEY_MATCHER_PREFIX = ".keymatcher";
 
     /**
+     * Any property values will be replaced with system property values that match the key.
+     * <p>
+     * @param props
+     */
+    protected static void overrideWithSystemProperties( final Properties props )
+    {
+        // override any setting with values from the system properties.
+        final Properties sysProps = System.getProperties();
+        for (final String key : sysProps.stringPropertyNames())
+        {
+            if ( key.startsWith( SYSTEM_PROPERTY_KEY_PREFIX ) )
+            {
+                log.info( "Using system property [[{0}] [{1}]]", () -> key,
+                        () -> sysProps.getProperty( key ) );
+                props.setProperty( key, sysProps.getProperty( key ) );
+            }
+        }
+    }
+
+    /**
      * Constructor for the CompositeCacheConfigurator object
      */
     public CompositeCacheConfigurator()
     {
         // empty
-    }
-
-    /**
-     * Create caches used internally. System status gives them creation priority.
-     *<p>
-     * @param props Configuration properties
-     * @param ccm Cache hub
-     */
-    protected void parseSystemRegions( final Properties props, final CompositeCacheManager ccm )
-    {
-        for (final String key : props.stringPropertyNames() )
-        {
-            if ( key.startsWith( SYSTEM_REGION_PREFIX ) && key.indexOf( "attributes" ) == -1 )
-            {
-                final String regionName = key.substring( SYSTEM_REGION_PREFIX.length() );
-                final String auxiliaries = OptionConverter.findAndSubst( key, props );
-                final ICache<?, ?> cache;
-                synchronized ( regionName )
-                {
-                    cache = parseRegion( props, ccm, regionName, auxiliaries, null, SYSTEM_REGION_PREFIX );
-                }
-                ccm.addCache( regionName, cache );
-            }
-        }
-    }
-
-    /**
-     * Parse region elements.
-     *<p>
-     * @param props Configuration properties
-     * @param ccm Cache hub
-     */
-    protected void parseRegions( final Properties props, final CompositeCacheManager ccm )
-    {
-        final List<String> regionNames = new ArrayList<>();
-
-        for (final String key : props.stringPropertyNames() )
-        {
-            if ( key.startsWith( REGION_PREFIX ) && key.indexOf( "attributes" ) == -1 )
-            {
-                final String regionName = key.substring( REGION_PREFIX.length() );
-                regionNames.add( regionName );
-                final String auxiliaries = OptionConverter.findAndSubst( key, props );
-                final ICache<?, ?> cache;
-                synchronized ( regionName )
-                {
-                    cache = parseRegion( props, ccm, regionName, auxiliaries );
-                }
-                ccm.addCache( regionName, cache );
-            }
-        }
-
-        log.info( "Parsed regions {0}", regionNames );
-    }
-
-    /**
-     * Create cache region.
-     *<p>
-     * @param props Configuration properties
-     * @param ccm Cache hub
-     * @param regName Name of the cache region
-     * @param auxiliaries Comma separated list of auxiliaries
-     *
-     * @return CompositeCache
-     */
-    protected <K, V> CompositeCache<K, V> parseRegion(
-            final Properties props, final CompositeCacheManager ccm, final String regName, final String auxiliaries )
-    {
-        return parseRegion( props, ccm, regName, auxiliaries, null, REGION_PREFIX );
-    }
-
-    /**
-     * Get all the properties for a region and configure its cache.
-     * <p>
-     * This method tells the other parse method the name of the region prefix.
-     *<p>
-     * @param props Configuration properties
-     * @param ccm Cache hub
-     * @param regName Name of the cache region
-     * @param auxiliaries Comma separated list of auxiliaries
-     * @param cca Cache configuration
-     *
-     * @return CompositeCache
-     */
-    protected <K, V> CompositeCache<K, V> parseRegion(
-            final Properties props, final CompositeCacheManager ccm, final String regName, final String auxiliaries,
-            final ICompositeCacheAttributes cca )
-    {
-        return parseRegion( props, ccm, regName, auxiliaries, cca, REGION_PREFIX );
-    }
-
-    /**
-     * Get all the properties for a region and configure its cache.
-     *<p>
-     * @param props Configuration properties
-     * @param ccm Cache hub
-     * @param regName Name of the cache region
-     * @param auxiliaries Comma separated list of auxiliaries
-     * @param cca Cache configuration
-     * @param regionPrefix Prefix for the region
-     *
-     * @return CompositeCache
-     */
-    protected <K, V> CompositeCache<K, V> parseRegion(
-            final Properties props, final CompositeCacheManager ccm, final String regName, final String auxiliaries,
-            final ICompositeCacheAttributes cca, final String regionPrefix )
-    {
-        // First, create or get the cache and element attributes, and create
-        // the cache.
-        final IElementAttributes ea = parseElementAttributes( props, regName,
-                ccm.getDefaultElementAttributes(), regionPrefix );
-
-        final ICompositeCacheAttributes instantiationCca = cca == null
-                ? parseCompositeCacheAttributes(props, regName, ccm.getDefaultCacheAttributes(), regionPrefix)
-                : cca;
-        final CompositeCache<K, V> cache = newCache(instantiationCca, ea);
-
-        // Inject cache manager
-        cache.setCompositeCacheManager(ccm);
-
-        // Inject scheduler service
-        cache.setScheduledExecutorService(ccm.getScheduledExecutorService());
-
-        // Inject element event queue
-        cache.setElementEventQueue(ccm.getElementEventQueue());
-
-        if (auxiliaries != null)
-        {
-            // Next, create the auxiliaries for the new cache
-            final List<AuxiliaryCache<K, V>> auxList = new ArrayList<>();
-
-            log.debug( "Parsing region name \"{0}\", value \"{1}\"", regName, auxiliaries );
-
-            String[] auxNames = auxiliaries.split("\\s*,\\s*");
-
-            // just to be on the safe side...
-            if (auxNames.length == 0)
-            {
-                return null;
-            }
-
-            for (String auxName : auxNames)
-            {
-                if (auxName.isEmpty())
-                {
-                    log.warn( "Skipping empty auxiliary name" );
-                    continue;
-                }
-
-                log.debug( "Parsing auxiliary named \"{0}\".", auxName );
-
-                AuxiliaryCache<K, V> auxCache = parseAuxiliary( props, ccm, auxName, regName );
-
-                if ( auxCache != null )
-                {
-                    if (auxCache instanceof IRequireScheduler)
-                    {
-                        ((IRequireScheduler) auxCache).setScheduledExecutorService(
-                                ccm.getScheduledExecutorService());
-                    }
-
-                    auxList.add( auxCache );
-                }
-            }
-
-            // Associate the auxiliaries with the cache
-            cache.setAuxCaches(auxList);
-        }
-
-        // Return the new cache
-        return cache;
     }
 
     protected <K, V> CompositeCache<K, V> newCache(
@@ -266,103 +115,7 @@ public class CompositeCacheConfigurator
     }
 
     /**
-     * Get an ICompositeCacheAttributes for the listed region.
-     *<p>
-     * @param props Configuration properties
-     * @param regName the region name
-     * @param defaultCCAttr the default cache attributes
-     *
-     * @return ICompositeCacheAttributes
-     */
-    protected ICompositeCacheAttributes parseCompositeCacheAttributes( final Properties props,
-            final String regName, final ICompositeCacheAttributes defaultCCAttr )
-    {
-        return parseCompositeCacheAttributes( props, regName, defaultCCAttr, REGION_PREFIX );
-    }
-
-    /**
-     * Get the main attributes for a region.
-     *<p>
-     * @param props Configuration properties
-     * @param regName the region name
-     * @param defaultCCAttr the default cache attributes
-     * @param regionPrefix the region prefix
-     *
-     * @return ICompositeCacheAttributes
-     */
-    protected ICompositeCacheAttributes parseCompositeCacheAttributes( final Properties props,
-            final String regName, final ICompositeCacheAttributes defaultCCAttr, final String regionPrefix )
-    {
-        ICompositeCacheAttributes ccAttr;
-
-        final String attrName = regionPrefix + regName + CACHE_ATTRIBUTE_PREFIX;
-
-        // auxFactory was not previously initialized.
-        // String prefix = regionPrefix + regName + ATTRIBUTE_PREFIX;
-        ccAttr = OptionConverter.instantiateByKey( props, attrName, null );
-
-        if ( ccAttr == null )
-        {
-            log.info( "No special CompositeCacheAttributes class defined for "
-                    + "key [{0}], using default class.", attrName );
-
-            ccAttr = defaultCCAttr;
-        }
-
-        log.debug( "Parsing options for \"{0}\"", attrName );
-
-        PropertySetter.setProperties( ccAttr, props, attrName + "." );
-        ccAttr.setCacheName( regName );
-
-        log.debug( "End of parsing for \"{0}\"", attrName );
-
-        // GET CACHE FROM FACTORY WITH ATTRIBUTES
-        ccAttr.setCacheName( regName );
-        return ccAttr;
-    }
-
-    /**
-     * Create the element attributes from the properties object for a cache region.
-     *<p>
-     * @param props Configuration properties
-     * @param regName the region name
-     * @param defaultEAttr the default element attributes
-     * @param regionPrefix the region prefix
-     *
-     * @return IElementAttributes
-     */
-    protected IElementAttributes parseElementAttributes( final Properties props, final String regName,
-            final IElementAttributes defaultEAttr, final String regionPrefix )
-    {
-        IElementAttributes eAttr;
-
-        final String attrName = regionPrefix + regName + CompositeCacheConfigurator.ELEMENT_ATTRIBUTE_PREFIX;
-
-        // auxFactory was not previously initialized.
-        // String prefix = regionPrefix + regName + ATTRIBUTE_PREFIX;
-        eAttr = OptionConverter.instantiateByKey( props, attrName, null );
-        if ( eAttr == null )
-        {
-            log.info( "No special ElementAttribute class defined for key [{0}], "
-                    + "using default class.", attrName );
-
-            eAttr = defaultEAttr;
-        }
-
-        log.debug( "Parsing options for \"{0}\"", attrName );
-
-        PropertySetter.setProperties( eAttr, props, attrName + "." );
-        // eAttr.setCacheName( regName );
-
-        log.debug( "End of parsing for \"{0}\"", attrName );
-
-        // GET CACHE FROM FACTORY WITH ATTRIBUTES
-        // eAttr.setCacheName( regName );
-        return eAttr;
-    }
-
-    /**
-     * Get an aux cache for the listed aux for a region.
+     * Gets an aux cache for the listed aux for a region.
      *<p>
      * @param props the configuration properties
      * @param ccm Cache hub
@@ -468,23 +221,99 @@ public class CompositeCacheConfigurator
     }
 
     /**
-     * Any property values will be replaced with system property values that match the key.
-     * <p>
-     * @param props
+     * Gets an ICompositeCacheAttributes for the listed region.
+     *<p>
+     * @param props Configuration properties
+     * @param regName the region name
+     * @param defaultCCAttr the default cache attributes
+     *
+     * @return ICompositeCacheAttributes
      */
-    protected static void overrideWithSystemProperties( final Properties props )
+    protected ICompositeCacheAttributes parseCompositeCacheAttributes( final Properties props,
+            final String regName, final ICompositeCacheAttributes defaultCCAttr )
     {
-        // override any setting with values from the system properties.
-        final Properties sysProps = System.getProperties();
-        for (final String key : sysProps.stringPropertyNames())
+        return parseCompositeCacheAttributes( props, regName, defaultCCAttr, REGION_PREFIX );
+    }
+
+    /**
+     * Gets the main attributes for a region.
+     *<p>
+     * @param props Configuration properties
+     * @param regName the region name
+     * @param defaultCCAttr the default cache attributes
+     * @param regionPrefix the region prefix
+     *
+     * @return ICompositeCacheAttributes
+     */
+    protected ICompositeCacheAttributes parseCompositeCacheAttributes( final Properties props,
+            final String regName, final ICompositeCacheAttributes defaultCCAttr, final String regionPrefix )
+    {
+        ICompositeCacheAttributes ccAttr;
+
+        final String attrName = regionPrefix + regName + CACHE_ATTRIBUTE_PREFIX;
+
+        // auxFactory was not previously initialized.
+        // String prefix = regionPrefix + regName + ATTRIBUTE_PREFIX;
+        ccAttr = OptionConverter.instantiateByKey( props, attrName, null );
+
+        if ( ccAttr == null )
         {
-            if ( key.startsWith( SYSTEM_PROPERTY_KEY_PREFIX ) )
-            {
-                log.info( "Using system property [[{0}] [{1}]]", () -> key,
-                        () -> sysProps.getProperty( key ) );
-                props.setProperty( key, sysProps.getProperty( key ) );
-            }
+            log.info( "No special CompositeCacheAttributes class defined for "
+                    + "key [{0}], using default class.", attrName );
+
+            ccAttr = defaultCCAttr;
         }
+
+        log.debug( "Parsing options for \"{0}\"", attrName );
+
+        PropertySetter.setProperties( ccAttr, props, attrName + "." );
+        ccAttr.setCacheName( regName );
+
+        log.debug( "End of parsing for \"{0}\"", attrName );
+
+        // GET CACHE FROM FACTORY WITH ATTRIBUTES
+        ccAttr.setCacheName( regName );
+        return ccAttr;
+    }
+
+    /**
+     * Create the element attributes from the properties object for a cache region.
+     *<p>
+     * @param props Configuration properties
+     * @param regName the region name
+     * @param defaultEAttr the default element attributes
+     * @param regionPrefix the region prefix
+     *
+     * @return IElementAttributes
+     */
+    protected IElementAttributes parseElementAttributes( final Properties props, final String regName,
+            final IElementAttributes defaultEAttr, final String regionPrefix )
+    {
+        IElementAttributes eAttr;
+
+        final String attrName = regionPrefix + regName + CompositeCacheConfigurator.ELEMENT_ATTRIBUTE_PREFIX;
+
+        // auxFactory was not previously initialized.
+        // String prefix = regionPrefix + regName + ATTRIBUTE_PREFIX;
+        eAttr = OptionConverter.instantiateByKey( props, attrName, null );
+        if ( eAttr == null )
+        {
+            log.info( "No special ElementAttribute class defined for key [{0}], "
+                    + "using default class.", attrName );
+
+            eAttr = defaultEAttr;
+        }
+
+        log.debug( "Parsing options for \"{0}\"", attrName );
+
+        PropertySetter.setProperties( eAttr, props, attrName + "." );
+        // eAttr.setCacheName( regName );
+
+        log.debug( "End of parsing for \"{0}\"", attrName );
+
+        // GET CACHE FROM FACTORY WITH ATTRIBUTES
+        // eAttr.setCacheName( regName );
+        return eAttr;
     }
 
     /**
@@ -513,5 +342,176 @@ public class CompositeCacheConfigurator
             log.info( "Using standard key matcher [{0}] for auxiliary [{1}]", keyMatcher, auxPrefix );
         }
         return keyMatcher;
+    }
+
+    /**
+     * Create cache region.
+     *<p>
+     * @param props Configuration properties
+     * @param ccm Cache hub
+     * @param regName Name of the cache region
+     * @param auxiliaries Comma separated list of auxiliaries
+     *
+     * @return CompositeCache
+     */
+    protected <K, V> CompositeCache<K, V> parseRegion(
+            final Properties props, final CompositeCacheManager ccm, final String regName, final String auxiliaries )
+    {
+        return parseRegion( props, ccm, regName, auxiliaries, null, REGION_PREFIX );
+    }
+
+    /**
+     * Gets all the properties for a region and configure its cache.
+     * <p>
+     * This method tells the other parse method the name of the region prefix.
+     *<p>
+     * @param props Configuration properties
+     * @param ccm Cache hub
+     * @param regName Name of the cache region
+     * @param auxiliaries Comma separated list of auxiliaries
+     * @param cca Cache configuration
+     *
+     * @return CompositeCache
+     */
+    protected <K, V> CompositeCache<K, V> parseRegion(
+            final Properties props, final CompositeCacheManager ccm, final String regName, final String auxiliaries,
+            final ICompositeCacheAttributes cca )
+    {
+        return parseRegion( props, ccm, regName, auxiliaries, cca, REGION_PREFIX );
+    }
+
+    /**
+     * Gets all the properties for a region and configure its cache.
+     *<p>
+     * @param props Configuration properties
+     * @param ccm Cache hub
+     * @param regName Name of the cache region
+     * @param auxiliaries Comma separated list of auxiliaries
+     * @param cca Cache configuration
+     * @param regionPrefix Prefix for the region
+     *
+     * @return CompositeCache
+     */
+    protected <K, V> CompositeCache<K, V> parseRegion(
+            final Properties props, final CompositeCacheManager ccm, final String regName, final String auxiliaries,
+            final ICompositeCacheAttributes cca, final String regionPrefix )
+    {
+        // First, create or get the cache and element attributes, and create
+        // the cache.
+        final IElementAttributes ea = parseElementAttributes( props, regName,
+                ccm.getDefaultElementAttributes(), regionPrefix );
+
+        final ICompositeCacheAttributes instantiationCca = cca == null
+                ? parseCompositeCacheAttributes(props, regName, ccm.getDefaultCacheAttributes(), regionPrefix)
+                : cca;
+        final CompositeCache<K, V> cache = newCache(instantiationCca, ea);
+
+        // Inject cache manager
+        cache.setCompositeCacheManager(ccm);
+
+        // Inject scheduler service
+        cache.setScheduledExecutorService(ccm.getScheduledExecutorService());
+
+        // Inject element event queue
+        cache.setElementEventQueue(ccm.getElementEventQueue());
+
+        if (auxiliaries != null)
+        {
+            // Next, create the auxiliaries for the new cache
+            final List<AuxiliaryCache<K, V>> auxList = new ArrayList<>();
+
+            log.debug( "Parsing region name \"{0}\", value \"{1}\"", regName, auxiliaries );
+
+            String[] auxNames = auxiliaries.split("\\s*,\\s*");
+
+            // just to be on the safe side...
+            if (auxNames.length == 0)
+            {
+                return null;
+            }
+
+            for (String auxName : auxNames)
+            {
+                if (auxName.isEmpty())
+                {
+                    log.warn( "Skipping empty auxiliary name" );
+                    continue;
+                }
+
+                log.debug( "Parsing auxiliary named \"{0}\".", auxName );
+
+                AuxiliaryCache<K, V> auxCache = parseAuxiliary( props, ccm, auxName, regName );
+
+                if ( auxCache != null )
+                {
+                    if (auxCache instanceof IRequireScheduler)
+                    {
+                        ((IRequireScheduler) auxCache).setScheduledExecutorService(
+                                ccm.getScheduledExecutorService());
+                    }
+
+                    auxList.add( auxCache );
+                }
+            }
+
+            // Associate the auxiliaries with the cache
+            cache.setAuxCaches(auxList);
+        }
+
+        // Return the new cache
+        return cache;
+    }
+
+    /**
+     * Parse region elements.
+     *<p>
+     * @param props Configuration properties
+     * @param ccm Cache hub
+     */
+    protected void parseRegions( final Properties props, final CompositeCacheManager ccm )
+    {
+        final List<String> regionNames = new ArrayList<>();
+
+        for (final String key : props.stringPropertyNames() )
+        {
+            if ( key.startsWith( REGION_PREFIX ) && key.indexOf( "attributes" ) == -1 )
+            {
+                final String regionName = key.substring( REGION_PREFIX.length() );
+                regionNames.add( regionName );
+                final String auxiliaries = OptionConverter.findAndSubst( key, props );
+                final ICache<?, ?> cache;
+                synchronized ( regionName )
+                {
+                    cache = parseRegion( props, ccm, regionName, auxiliaries );
+                }
+                ccm.addCache( regionName, cache );
+            }
+        }
+
+        log.info( "Parsed regions {0}", regionNames );
+    }
+
+    /**
+     * Create caches used internally. System status gives them creation priority.
+     *<p>
+     * @param props Configuration properties
+     * @param ccm Cache hub
+     */
+    protected void parseSystemRegions( final Properties props, final CompositeCacheManager ccm )
+    {
+        for (final String key : props.stringPropertyNames() )
+        {
+            if ( key.startsWith( SYSTEM_REGION_PREFIX ) && key.indexOf( "attributes" ) == -1 )
+            {
+                final String regionName = key.substring( SYSTEM_REGION_PREFIX.length() );
+                final String auxiliaries = OptionConverter.findAndSubst( key, props );
+                final ICache<?, ?> cache;
+                synchronized ( regionName )
+                {
+                    cache = parseRegion( props, ccm, regionName, auxiliaries, null, SYSTEM_REGION_PREFIX );
+                }
+                ccm.addCache( regionName, cache );
+            }
+        }
     }
 }

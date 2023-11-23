@@ -34,7 +34,7 @@ import org.junit.Test;
 public class EnsureCDIIsTestedWhenTCKsRunTest
 {
     @Test
-    public void checkOWBProvider()
+    public void testCheckOWBProvider()
     {
         try {
             final Iterator<BeanProvider> iterator = ServiceLoader.load(BeanProvider.class).iterator();

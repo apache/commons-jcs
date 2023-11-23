@@ -21,9 +21,7 @@ package org.apache.commons.jcs3.jcache.lang;
 
 public interface Subsitutor
 {
-    String substitute(String value);
-
-    class Helper {
+    final class Helper {
         public static final Subsitutor INSTANCE;
         static {
             Subsitutor value = null;
@@ -49,4 +47,6 @@ public interface Subsitutor
             INSTANCE = value;
         }
     }
+
+    String substitute(String value);
 }

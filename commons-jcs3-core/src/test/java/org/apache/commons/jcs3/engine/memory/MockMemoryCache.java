@@ -51,16 +51,6 @@ public class MockMemoryCache<K, V>
     public int lastNumberOfFreedElements;
 
     /**
-     * Does nothing
-     * @param cache
-     */
-    @Override
-    public void initialize( final CompositeCache<K, V> cache )
-    {
-        // nothing
-    }
-
-    /**
      * Destroy the memory cache
      * <p>
      * @throws IOException
@@ -72,48 +62,17 @@ public class MockMemoryCache<K, V>
         // nothing
     }
 
-    /** @return size */
-    @Override
-    public int getSize()
-    {
-        return map.size();
-    }
-
-    /** @return stats */
-    @Override
-    public IStats getStatistics()
-    {
-        return null;
-    }
-
     /**
-     * @return map.keySet().toArray( */
-    @Override
-    public Set<K> getKeySet()
-    {
-        return new LinkedHashSet<>(map.keySet());
-    }
-
-    /**
-     * @param key
-     * @return map.remove( key ) != null
+     * @param numberToFree
+     * @return 0
      * @throws IOException
      */
     @Override
-    public boolean remove( final K key )
+    public int freeElements( final int numberToFree )
         throws IOException
     {
-        return map.remove( key ) != null;
-    }
-
-    /**
-     * @throws IOException
-     */
-    @Override
-    public void removeAll()
-        throws IOException
-    {
-        map.clear();
+        lastNumberOfFreedElements = numberToFree;
+        return 0;
     }
 
     /**
@@ -126,6 +85,47 @@ public class MockMemoryCache<K, V>
         throws IOException
     {
         return map.get( key );
+    }
+
+    /**
+     * @return ICompositeCacheAttributes
+     */
+    @Override
+    public ICompositeCacheAttributes getCacheAttributes()
+    {
+        return cacheAttr;
+    }
+
+    /** @return null */
+    @Override
+    public CompositeCache<K, V> getCompositeCache()
+    {
+        return null;
+    }
+
+    /**
+     * @param group
+     * @return null
+     */
+    public Set<K> getGroupKeys( final String group )
+    {
+        return null;
+    }
+
+    /**
+     * @return null
+     */
+    public Set<String> getGroupNames()
+    {
+        return null;
+    }
+
+    /**
+     * @return map.keySet().toArray( */
+    @Override
+    public Set<K> getKeySet()
+    {
+        return new LinkedHashSet<>(map.keySet());
     }
 
     /**
@@ -171,15 +171,59 @@ public class MockMemoryCache<K, V>
         return map.get( key );
     }
 
+    /** @return size */
+    @Override
+    public int getSize()
+    {
+        return map.size();
+    }
+
+    /** @return stats */
+    @Override
+    public IStats getStatistics()
+    {
+        return null;
+    }
+
     /**
-     * @param ce
+     * Does nothing
+     * @param cache
+     */
+    @Override
+    public void initialize( final CompositeCache<K, V> cache )
+    {
+        // nothing
+    }
+
+    /**
+     * @param key
+     * @return map.remove( key ) != null
      * @throws IOException
      */
     @Override
-    public void waterfal( final ICacheElement<K, V> ce )
+    public boolean remove( final K key )
         throws IOException
     {
-        waterfallCallCount++;
+        return map.remove( key ) != null;
+    }
+
+    /**
+     * @throws IOException
+     */
+    @Override
+    public void removeAll()
+        throws IOException
+    {
+        map.clear();
+    }
+
+    /**
+     * @param cattr
+     */
+    @Override
+    public void setCacheAttributes( final ICompositeCacheAttributes cattr )
+    {
+        this.cacheAttr = cattr;
     }
 
     /**
@@ -197,57 +241,13 @@ public class MockMemoryCache<K, V>
     }
 
     /**
-     * @return ICompositeCacheAttributes
-     */
-    @Override
-    public ICompositeCacheAttributes getCacheAttributes()
-    {
-        return cacheAttr;
-    }
-
-    /**
-     * @param cattr
-     */
-    @Override
-    public void setCacheAttributes( final ICompositeCacheAttributes cattr )
-    {
-        this.cacheAttr = cattr;
-    }
-
-    /** @return null */
-    @Override
-    public CompositeCache<K, V> getCompositeCache()
-    {
-        return null;
-    }
-
-    /**
-     * @param group
-     * @return null
-     */
-    public Set<K> getGroupKeys( final String group )
-    {
-        return null;
-    }
-
-    /**
-     * @return null
-     */
-    public Set<String> getGroupNames()
-    {
-        return null;
-    }
-
-    /**
-     * @param numberToFree
-     * @return 0
+     * @param ce
      * @throws IOException
      */
     @Override
-    public int freeElements( final int numberToFree )
+    public void waterfal( final ICacheElement<K, V> ce )
         throws IOException
     {
-        lastNumberOfFreedElements = numberToFree;
-        return 0;
+        waterfallCallCount++;
     }
 }

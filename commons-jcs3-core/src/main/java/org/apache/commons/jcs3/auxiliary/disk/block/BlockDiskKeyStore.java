@@ -212,6 +212,9 @@ public class BlockDiskKeyStore<K>
     /** The logger */
     private static final Log log = LogManager.getLog(BlockDiskKeyStore.class);
 
+    /** The key file signature for new-style key files */
+    private final static int KEY_FILE_SIGNATURE = 0x6A63734B; // "jcsK"
+
     /** Attributes governing the behavior of the block disk cache. */
     private final BlockDiskCacheAttributes blockDiskCacheAttributes;
 
@@ -220,9 +223,6 @@ public class BlockDiskKeyStore<K>
 
     /** The file where we persist the keys */
     private final File keyFile;
-
-    /** The key file signature for new-style key files */
-    private final static int KEY_FILE_SIGNATURE = 0x6A63734B; // "jcsK"
 
     /** The name to prefix log messages with. */
     protected final String logCacheName;
@@ -249,7 +249,7 @@ public class BlockDiskKeyStore<K>
     private final IElementSerializer serializer;
 
     /**
-     * Set the configuration options.
+     * Sets the configuration options.
      * <p>
      *
      * @param cacheAttributes

@@ -50,56 +50,6 @@ public abstract class JCS
     private static CompositeCacheManager cacheMgr;
 
     /**
-     * Set the file name that the cache manager will be initialized with. Only matters before the
-     * instance is initialized.
-     *
-     * @param configFileName
-     */
-    public static void setConfigFilename( final String configFileName )
-    {
-        JCS.configFileName = configFileName;
-    }
-
-    /**
-     * Set the properties that the cache manager will be initialized with. Only
-     * matters before the instance is initialized.
-     *
-     * @param configProps
-     */
-    public static void setConfigProperties( final Properties configProps )
-    {
-        JCS.configProps = configProps;
-    }
-
-    /**
-     * Set the log system. Must be called before getInstance is called
-     * Predefined Log systems are {@link LogManager#LOGSYSTEM_JAVA_UTIL_LOGGING}
-     * and {@link LogManager#LOGSYSTEM_LOG4J2}
-     *
-     * @param logSystem the logSystem to set
-     */
-    public static void setLogSystem(final String logSystem)
-    {
-        LogManager.setLogSystem(logSystem);
-    }
-
-    /**
-     * Shut down the cache manager and set the instance to null
-     */
-    public static void shutdown()
-    {
-        synchronized ( JCS.class )
-        {
-            if ( cacheMgr != null && cacheMgr.isInitialized())
-            {
-            	cacheMgr.shutDown();
-            }
-
-            cacheMgr = null;
-        }
-    }
-
-    /**
      * Helper method which checks to make sure the cacheMgr class field is set, and if not requests
      * an instance from CacheManagerFactory.
      *
@@ -132,7 +82,52 @@ public abstract class JCS
     }
 
     /**
-     * Get a CacheAccess which accesses the provided region.
+     * Gets a GroupCacheAccess which accesses the provided region.
+     * <p>
+     * @param region Region that return GroupCacheAccess will provide access to
+     * @return A GroupCacheAccess which provides access to a given region.
+     * @throws CacheException
+     */
+    public static <K, V> GroupCacheAccess<K, V> getGroupCacheInstance( final String region )
+        throws CacheException
+    {
+        final CompositeCache<GroupAttrName<K>, V> cache = getCacheManager().getCache( region );
+        return new GroupCacheAccess<>( cache );
+    }
+
+    /**
+     * Gets a GroupCacheAccess which accesses the provided region.
+     * <p>
+     * @param region Region that return GroupCacheAccess will provide access to
+     * @param icca CacheAttributes for region
+     * @return A GroupCacheAccess which provides access to a given region.
+     * @throws CacheException
+     */
+    public static <K, V> GroupCacheAccess<K, V> getGroupCacheInstance( final String region, final ICompositeCacheAttributes icca )
+        throws CacheException
+    {
+        final CompositeCache<GroupAttrName<K>, V> cache = getCacheManager().getCache( region, icca );
+        return new GroupCacheAccess<>( cache );
+    }
+
+    /**
+     * Gets a GroupCacheAccess which accesses the provided region.
+     * <p>
+     * @param region Region that return CacheAccess will provide access to
+     * @param icca CacheAttributes for region
+     * @param eattr ElementAttributes for the region
+     * @return A GroupCacheAccess which provides access to a given region.
+     * @throws CacheException
+     */
+    public static <K, V> GroupCacheAccess<K, V> getGroupCacheInstance( final String region, final ICompositeCacheAttributes icca,  final IElementAttributes eattr )
+        throws CacheException
+    {
+        final CompositeCache<GroupAttrName<K>, V> cache = getCacheManager().getCache( region, icca, eattr );
+        return new GroupCacheAccess<>( cache );
+    }
+
+    /**
+     * Gets a CacheAccess which accesses the provided region.
      * <p>
      * @param region Region that return CacheAccess will provide access to
      * @return A CacheAccess which provides access to a given region.
@@ -146,7 +141,7 @@ public abstract class JCS
     }
 
     /**
-     * Get a CacheAccess which accesses the provided region.
+     * Gets a CacheAccess which accesses the provided region.
      * <p>
      * @param region Region that return CacheAccess will provide access to
      * @param icca CacheAttributes for region
@@ -161,7 +156,7 @@ public abstract class JCS
     }
 
     /**
-     * Get a CacheAccess which accesses the provided region.
+     * Gets a CacheAccess which accesses the provided region.
      * <p>
      * @param region Region that return CacheAccess will provide access to
      * @param icca CacheAttributes for region
@@ -177,47 +172,52 @@ public abstract class JCS
     }
 
     /**
-     * Get a GroupCacheAccess which accesses the provided region.
-     * <p>
-     * @param region Region that return GroupCacheAccess will provide access to
-     * @return A GroupCacheAccess which provides access to a given region.
-     * @throws CacheException
+     * Sets the file name that the cache manager will be initialized with. Only matters before the
+     * instance is initialized.
+     *
+     * @param configFileName
      */
-    public static <K, V> GroupCacheAccess<K, V> getGroupCacheInstance( final String region )
-        throws CacheException
+    public static void setConfigFilename( final String configFileName )
     {
-        final CompositeCache<GroupAttrName<K>, V> cache = getCacheManager().getCache( region );
-        return new GroupCacheAccess<>( cache );
+        JCS.configFileName = configFileName;
     }
 
     /**
-     * Get a GroupCacheAccess which accesses the provided region.
-     * <p>
-     * @param region Region that return GroupCacheAccess will provide access to
-     * @param icca CacheAttributes for region
-     * @return A GroupCacheAccess which provides access to a given region.
-     * @throws CacheException
+     * Sets the properties that the cache manager will be initialized with. Only
+     * matters before the instance is initialized.
+     *
+     * @param configProps
      */
-    public static <K, V> GroupCacheAccess<K, V> getGroupCacheInstance( final String region, final ICompositeCacheAttributes icca )
-        throws CacheException
+    public static void setConfigProperties( final Properties configProps )
     {
-        final CompositeCache<GroupAttrName<K>, V> cache = getCacheManager().getCache( region, icca );
-        return new GroupCacheAccess<>( cache );
+        JCS.configProps = configProps;
     }
 
     /**
-     * Get a GroupCacheAccess which accesses the provided region.
-     * <p>
-     * @param region Region that return CacheAccess will provide access to
-     * @param icca CacheAttributes for region
-     * @param eattr ElementAttributes for the region
-     * @return A GroupCacheAccess which provides access to a given region.
-     * @throws CacheException
+     * Sets the log system. Must be called before getInstance is called
+     * Predefined Log systems are {@link LogManager#LOGSYSTEM_JAVA_UTIL_LOGGING}
+     * and {@link LogManager#LOGSYSTEM_LOG4J2}
+     *
+     * @param logSystem the logSystem to set
      */
-    public static <K, V> GroupCacheAccess<K, V> getGroupCacheInstance( final String region, final ICompositeCacheAttributes icca,  final IElementAttributes eattr )
-        throws CacheException
+    public static void setLogSystem(final String logSystem)
     {
-        final CompositeCache<GroupAttrName<K>, V> cache = getCacheManager().getCache( region, icca, eattr );
-        return new GroupCacheAccess<>( cache );
+        LogManager.setLogSystem(logSystem);
+    }
+
+    /**
+     * Shut down the cache manager and set the instance to null
+     */
+    public static void shutdown()
+    {
+        synchronized ( JCS.class )
+        {
+            if ( cacheMgr != null && cacheMgr.isInitialized())
+            {
+            	cacheMgr.shutDown();
+            }
+
+            cacheMgr = null;
+        }
     }
 }

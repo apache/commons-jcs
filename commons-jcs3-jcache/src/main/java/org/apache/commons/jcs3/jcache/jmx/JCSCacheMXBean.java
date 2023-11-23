@@ -32,14 +32,14 @@ public class JCSCacheMXBean<K, V> implements CacheMXBean
         this.delegate = delegate;
     }
 
-    private Configuration<K, V> config()
-    {
-        return delegate.getConfiguration(Configuration.class);
-    }
-
     private CompleteConfiguration<K, V> completeConfig()
     {
         return delegate.getConfiguration(CompleteConfiguration.class);
+    }
+
+    private Configuration<K, V> config()
+    {
+        return delegate.getConfiguration(Configuration.class);
     }
 
     @Override
@@ -52,6 +52,19 @@ public class JCSCacheMXBean<K, V> implements CacheMXBean
     public String getValueType()
     {
         return config().getValueType().getName();
+    }
+
+    @Override
+    public boolean isManagementEnabled()
+    {
+        try
+        {
+            return completeConfig().isManagementEnabled();
+        }
+        catch (final Exception e)
+        {
+            return false;
+        }
     }
 
     @Override
@@ -68,11 +81,11 @@ public class JCSCacheMXBean<K, V> implements CacheMXBean
     }
 
     @Override
-    public boolean isWriteThrough()
+    public boolean isStatisticsEnabled()
     {
         try
         {
-            return completeConfig().isWriteThrough();
+            return completeConfig().isStatisticsEnabled();
         }
         catch (final Exception e)
         {
@@ -87,24 +100,11 @@ public class JCSCacheMXBean<K, V> implements CacheMXBean
     }
 
     @Override
-    public boolean isStatisticsEnabled()
+    public boolean isWriteThrough()
     {
         try
         {
-            return completeConfig().isStatisticsEnabled();
-        }
-        catch (final Exception e)
-        {
-            return false;
-        }
-    }
-
-    @Override
-    public boolean isManagementEnabled()
-    {
-        try
-        {
-            return completeConfig().isManagementEnabled();
+            return completeConfig().isWriteThrough();
         }
         catch (final Exception e)
         {

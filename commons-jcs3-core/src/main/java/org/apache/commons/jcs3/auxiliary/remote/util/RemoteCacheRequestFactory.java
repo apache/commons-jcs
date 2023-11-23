@@ -37,36 +37,41 @@ public class RemoteCacheRequestFactory
     private static final Log log = LogManager.getLog( RemoteCacheRequestFactory.class );
 
     /**
-     * Create generic request
-     * @param cacheName cache name
-     * @param requestType type of request
-     * @param requesterId id of requester
-     * @return the request
-     */
-    private static <K, V> RemoteCacheRequest<K, V> createRequest(final String cacheName, final RemoteRequestType requestType, final long requesterId)
-    {
-        final RemoteCacheRequest<K, V> request = new RemoteCacheRequest<>();
-        request.setCacheName( cacheName );
-        request.setRequestType( requestType );
-        request.setRequesterId( requesterId );
-
-        log.debug( "Created: {0}", request );
-
-        return request;
-    }
-
-    /**
-     * Creates a get Request.
+     * Creates an alive check Request.
      * <p>
-     * @param cacheName
-     * @param key
      * @param requesterId
      * @return RemoteHttpCacheRequest
      */
-    public static <K, V> RemoteCacheRequest<K, V> createGetRequest( final String cacheName, final K key, final long requesterId )
+    public static <K, V> RemoteCacheRequest<K, V> createAliveCheckRequest( final long requesterId )
     {
-        final RemoteCacheRequest<K, V> request = createRequest(cacheName, RemoteRequestType.GET, requesterId);
-        request.setKey( key );
+
+        return createRequest(null, RemoteRequestType.ALIVE_CHECK, requesterId);
+    }
+
+    /**
+     * Creates a dispose Request.
+     * <p>
+     * @param cacheName
+     * @param requesterId
+     * @return RemoteHttpCacheRequest
+     */
+    public static <K, V> RemoteCacheRequest<K, V> createDisposeRequest( final String cacheName, final long requesterId )
+    {
+
+        return createRequest(cacheName, RemoteRequestType.DISPOSE, requesterId);
+    }
+
+    /**
+     * Creates a GetKeySet Request.
+     * <p>
+     * @param cacheName
+     * @param requesterId
+     * @return RemoteHttpCacheRequest
+     */
+    public static RemoteCacheRequest<String, String> createGetKeySetRequest( final String cacheName, final long requesterId )
+    {
+        final RemoteCacheRequest<String, String> request = createRequest(cacheName, RemoteRequestType.GET_KEYSET, requesterId);
+        request.setKey( cacheName );
 
         return request;
     }
@@ -104,32 +109,17 @@ public class RemoteCacheRequestFactory
     }
 
     /**
-     * Creates a remove Request.
+     * Creates a get Request.
      * <p>
      * @param cacheName
      * @param key
      * @param requesterId
      * @return RemoteHttpCacheRequest
      */
-    public static <K, V> RemoteCacheRequest<K, V> createRemoveRequest( final String cacheName, final K key, final long requesterId )
+    public static <K, V> RemoteCacheRequest<K, V> createGetRequest( final String cacheName, final K key, final long requesterId )
     {
-        final RemoteCacheRequest<K, V> request = createRequest(cacheName, RemoteRequestType.REMOVE, requesterId);
+        final RemoteCacheRequest<K, V> request = createRequest(cacheName, RemoteRequestType.GET, requesterId);
         request.setKey( key );
-
-        return request;
-    }
-
-    /**
-     * Creates a GetKeySet Request.
-     * <p>
-     * @param cacheName
-     * @param requesterId
-     * @return RemoteHttpCacheRequest
-     */
-    public static RemoteCacheRequest<String, String> createGetKeySetRequest( final String cacheName, final long requesterId )
-    {
-        final RemoteCacheRequest<String, String> request = createRequest(cacheName, RemoteRequestType.GET_KEYSET, requesterId);
-        request.setKey( cacheName );
 
         return request;
     }
@@ -148,16 +138,38 @@ public class RemoteCacheRequestFactory
     }
 
     /**
-     * Creates a dispose Request.
+     * Creates a remove Request.
      * <p>
      * @param cacheName
+     * @param key
      * @param requesterId
      * @return RemoteHttpCacheRequest
      */
-    public static <K, V> RemoteCacheRequest<K, V> createDisposeRequest( final String cacheName, final long requesterId )
+    public static <K, V> RemoteCacheRequest<K, V> createRemoveRequest( final String cacheName, final K key, final long requesterId )
     {
+        final RemoteCacheRequest<K, V> request = createRequest(cacheName, RemoteRequestType.REMOVE, requesterId);
+        request.setKey( key );
 
-        return createRequest(cacheName, RemoteRequestType.DISPOSE, requesterId);
+        return request;
+    }
+
+    /**
+     * Create generic request
+     * @param cacheName cache name
+     * @param requestType type of request
+     * @param requesterId id of requester
+     * @return the request
+     */
+    private static <K, V> RemoteCacheRequest<K, V> createRequest(final String cacheName, final RemoteRequestType requestType, final long requesterId)
+    {
+        final RemoteCacheRequest<K, V> request = new RemoteCacheRequest<>();
+        request.setCacheName( cacheName );
+        request.setRequestType( requestType );
+        request.setRequesterId( requesterId );
+
+        log.debug( "Created: {0}", request );
+
+        return request;
     }
 
     /**
@@ -182,17 +194,5 @@ public class RemoteCacheRequestFactory
         }
 
         return request;
-    }
-
-    /**
-     * Creates an alive check Request.
-     * <p>
-     * @param requesterId
-     * @return RemoteHttpCacheRequest
-     */
-    public static <K, V> RemoteCacheRequest<K, V> createAliveCheckRequest( final long requesterId )
-    {
-
-        return createRequest(null, RemoteRequestType.ALIVE_CHECK, requesterId);
     }
 }

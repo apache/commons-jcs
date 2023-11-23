@@ -36,11 +36,11 @@ public class LRUMapUnitTest
 {
 
     /**
-     * Put up to the size limit and then make sure they are all there.
+     * Add items to the map and then test to see that they come back in the entry set.
      *
      */
     @Test
-    public void testPutWithSizeLimit()
+    public void testGetEntrySet()
     {
         final int size = 10;
         final Map<String, String> cache = new LRUMap<>( size );
@@ -50,11 +50,29 @@ public class LRUMapUnitTest
             cache.put( "key:" + i, "data:" + i );
         }
 
-        for ( int i = 0; i < size; i++ )
+        final Set<Entry<String, String>> entries = cache.entrySet();
+        assertEquals( "Set contains the wrong number of items.", size, entries.size() );
+
+        // check minimal correctness
+        for (final Entry<String, String> data : entries)
         {
-            final String data = cache.get( "key:" + i );
-            assertEquals( "Data is wrong.", "data:" + i, data );
+            assertTrue( "Data is wrong.", data.getValue().indexOf( "data:") != -1  );
         }
+    }
+
+    /**
+     * Put and then remove.  Make sure the element is returned.
+     *
+     */
+    @Test
+    public void testPutAndRemove()
+    {
+        final int size = 10;
+        final Map<String, String> cache = new LRUMap<>( size );
+
+        cache.put( "key:" + 1, "data:" + 1 );
+        final String data = cache.remove( "key:" + 1 );
+        assertEquals( "Data is wrong.", "data:" + 1, data );
     }
 
     /**
@@ -80,19 +98,27 @@ public class LRUMapUnitTest
     }
 
     /**
-     * Put and then remove.  Make sure the element is returned.
+     * Put up to the size limit and then make sure they are all there.
      *
      */
     @Test
-    public void testPutAndRemove()
+    public void testPutWithSizeLimit()
     {
         final int size = 10;
         final Map<String, String> cache = new LRUMap<>( size );
 
-        cache.put( "key:" + 1, "data:" + 1 );
-        final String data = cache.remove( "key:" + 1 );
-        assertEquals( "Data is wrong.", "data:" + 1, data );
+        for ( int i = 0; i < size; i++ )
+        {
+            cache.put( "key:" + i, "data:" + i );
+        }
+
+        for ( int i = 0; i < size; i++ )
+        {
+            final String data = cache.get( "key:" + i );
+            assertEquals( "Data is wrong.", "data:" + i, data );
+        }
     }
+
 
     /**
      * Call remove on an empty map
@@ -106,32 +132,6 @@ public class LRUMapUnitTest
 
         final Object returned = cache.remove( "key:" + 1 );
         assertNull( "Shouldn't hvae anything.", returned );
-    }
-
-
-    /**
-     * Add items to the map and then test to see that they come back in the entry set.
-     *
-     */
-    @Test
-    public void testGetEntrySet()
-    {
-        final int size = 10;
-        final Map<String, String> cache = new LRUMap<>( size );
-
-        for ( int i = 0; i < size; i++ )
-        {
-            cache.put( "key:" + i, "data:" + i );
-        }
-
-        final Set<Entry<String, String>> entries = cache.entrySet();
-        assertEquals( "Set contains the wrong number of items.", size, entries.size() );
-
-        // check minimal correctness
-        for (final Entry<String, String> data : entries)
-        {
-            assertTrue( "Data is wrong.", data.getValue().indexOf( "data:") != -1  );
-        }
     }
 
 

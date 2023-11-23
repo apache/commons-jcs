@@ -40,31 +40,6 @@ import org.junit.Test;
  */
 public class JDBCDiskCacheSharedPoolUnitTest
 {
-    /** Test setup
-     * @throws Exception
-     */
-    @Before
-    public void setUp() throws Exception
-    {
-        JCS.setConfigFilename( "/TestJDBCDiskCacheSharedPool.ccf" );
-        try (Connection con = HsqlSetupUtil.getTestDatabaseConnection(new Properties(), "cache_hsql_db_sharedpool"))
-        {
-            HsqlSetupUtil.setupTable(con, "JCS_STORE_0");
-            HsqlSetupUtil.setupTable(con, "JCS_STORE_1");
-        }
-    }
-
-    /**
-     * Test the basic JDBC disk cache functionality with a hsql backing.
-     * @throws Exception
-     */
-    @Test
-    public void testSimpleJDBCPutGetWithHSQL()
-        throws Exception
-    {
-        runTestForRegion( "testCache1", 200 );
-    }
-
     /**
      * Adds items to cache, gets them, and removes them. The item count is more than the size of the
      * memory cache, so items should spool to disk.
@@ -123,5 +98,30 @@ public class JDBCDiskCacheSharedPoolUnitTest
         {
             assertNull( "Removed key should be null: " + i + ":key", jcs.get( i + ":key" ) );
         }
+    }
+
+    /** Test setup
+     * @throws Exception
+     */
+    @Before
+    public void setUp() throws Exception
+    {
+        JCS.setConfigFilename( "/TestJDBCDiskCacheSharedPool.ccf" );
+        try (Connection con = HsqlSetupUtil.getTestDatabaseConnection(new Properties(), "cache_hsql_db_sharedpool"))
+        {
+            HsqlSetupUtil.setupTable(con, "JCS_STORE_0");
+            HsqlSetupUtil.setupTable(con, "JCS_STORE_1");
+        }
+    }
+
+    /**
+     * Test the basic JDBC disk cache functionality with a hsql backing.
+     * @throws Exception
+     */
+    @Test
+    public void testSimpleJDBCPutGetWithHSQL()
+        throws Exception
+    {
+        runTestForRegion( "testCache1", 200 );
     }
 }
