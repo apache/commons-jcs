@@ -39,7 +39,7 @@ import org.apache.commons.jcs3.utils.config.PropertySetter;
 /**
  * This manages threadpools for an application
  * <p>
- * It is a singleton since threads need to be managed vm wide.
+ * It is a singleton since threads need to be managed JVM wide.
  * </p>
  * <p>
  * This manager forces you to use a bounded queue. By default it uses the current thread for
