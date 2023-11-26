@@ -54,7 +54,6 @@ import org.apache.commons.jcs3.utils.net.HostNameUtil;
         &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
     &lt;/servlet&gt;
 
-
     &lt;servlet-mapping&gt;
         &lt;servlet-name&gt;JCSRemoteCacheStartupServlet&lt;/servlet-name&gt;
         &lt;url-pattern&gt;/jcs&lt;/url-pattern&gt;

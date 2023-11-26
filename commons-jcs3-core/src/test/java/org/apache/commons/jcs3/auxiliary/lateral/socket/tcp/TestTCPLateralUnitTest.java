@@ -103,7 +103,6 @@ public class TestTCPLateralUnitTest
 
         final ICompositeCacheManager cacheMgr = CompositeCacheManager.getInstance();
 
-
         // start the listener
         final LateralTCPListener<String, String> listener = LateralTCPListener.getInstance( lac, cacheMgr, serializer );
 

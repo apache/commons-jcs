@@ -48,7 +48,6 @@ public class LateralUDPSender
 
     private ILateralCacheAttributes ilca;
 
-
     /**
      * Constructor for the LateralUDPSender object
      *
@@ -79,7 +78,6 @@ public class LateralUDPSender
 
         m_multicastPort = lca.getUdpMulticastPort();
     }
-
 
     /** Description of the Method */
     public void send( LateralElementDescriptor led )
@@ -121,14 +119,12 @@ public class LateralUDPSender
         send( led );
     }
 
-
     /** Description of the Method */
     public void remove( String cacheName, K key )
         throws IOException
     {
         remove( cacheName, key, LateralCacheInfo.listenerId );
     }
-
 
     /** Description of the Method */
     public void remove( String cacheName, K key, long requesterId )
@@ -141,14 +137,12 @@ public class LateralUDPSender
         send( led );
     }
 
-
     /** Description of the Method */
     public void release()
         throws IOException
     {
         // nothing needs to be done
     }
-
 
     /** Description of the Method */
     public void dispose( String cache )
@@ -157,14 +151,12 @@ public class LateralUDPSender
         // nothing needs to be done
     }
 
-
     /** Description of the Method */
     public void removeAll( String cacheName )
         throws IOException
     {
         removeAll( cacheName, LateralCacheInfo.listenerId );
     }
-
 
     /** Description of the Method */
     public void removeAll( String cacheName, long requesterId )
@@ -176,7 +168,6 @@ public class LateralUDPSender
         led.command = led.REMOVEALL;
         send( led );
     }
-
 
     /** Description of the Method */
     public static void main( String args[] )

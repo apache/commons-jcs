@@ -61,7 +61,6 @@ public class IndexedDiskCacheOptimizationUnitTest
             disk.processUpdate( element );
         }
 
-
         Thread.sleep( 1000 );
         final long sizeBeforeRemove = disk.getDataFileSize();
         // System.out.println( "file sizeBeforeRemove " + sizeBeforeRemove );

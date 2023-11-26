@@ -21,7 +21,6 @@ package org.apache.commons.jcs3.admin;
 
 import java.beans.ConstructorProperties;
 
-
 /**
  * Stores info on a cache element for the template
  */

@@ -84,7 +84,6 @@ public class RemoteHttpCacheFactoryUnitTest
         final RemoteHttpCacheFactory factory = new RemoteHttpCacheFactory();
         assertNotNull( "Should have a factory.", factory );
 
-
         // DO WORK
         final AuxiliaryCache<String, String> result = factory.createCache(cattr, cacheMgr, cacheEventLogger, elementSerializer);
 

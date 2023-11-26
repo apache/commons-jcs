@@ -19,7 +19,6 @@ package org.apache.commons.jcs.yajcache.core;
  * under the License.
  */
 
-
 import junit.framework.TestCase;
 
 import org.apache.commons.jcs.yajcache.lang.annotation.CopyRightApache;

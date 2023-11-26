@@ -177,7 +177,6 @@ public class JDBCDiskCacheFactory
             poolName = cattr.getConnectionPoolName();
         }
 
-
     	return this.dsFactories.computeIfAbsent(poolName, key -> {
     	    final DataSourceFactory newDsFactory;
             JDBCDiskCacheAttributes dsConfig;

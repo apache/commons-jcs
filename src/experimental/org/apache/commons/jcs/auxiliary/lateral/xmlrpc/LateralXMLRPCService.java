@@ -282,7 +282,6 @@ public class LateralXMLRPCService
         // Empty
     }
 
-
     /**
      * @param cacheName
      * @param obj

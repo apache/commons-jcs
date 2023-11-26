@@ -37,8 +37,6 @@ package org.apache.commons.jcs3.engine;
  * under the License.
  */
 
-
-
 /**
  * Allow test access to set last access time without exposing public method
  */

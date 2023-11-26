@@ -32,7 +32,6 @@ public class CompressingSerializer extends StandardSerializer
     /** Wrapped serializer */
     private final IElementSerializer serializer;
 
-
     /**
      * Default constructor
      */

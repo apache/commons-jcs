@@ -119,7 +119,6 @@ public class LRUMapUnitTest
         }
     }
 
-
     /**
      * Call remove on an empty map
      *
@@ -133,6 +132,5 @@ public class LRUMapUnitTest
         final Object returned = cache.remove( "key:" + 1 );
         assertNull( "Shouldn't hvae anything.", returned );
     }
-
 
 }

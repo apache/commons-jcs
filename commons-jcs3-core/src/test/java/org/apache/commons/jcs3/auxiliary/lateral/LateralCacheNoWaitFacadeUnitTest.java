@@ -48,7 +48,6 @@ public class LateralCacheNoWaitFacadeUnitTest
         cattr.setCacheName( "testCache1" );
         cattr.setTcpServer("localhost:7890");
 
-
         facade = new LateralCacheNoWaitFacade<>( null, noWaits, cattr );
         cache = new LateralCache<>(cattr, new ZombieCacheServiceNonLocal<>(), null);
     }

@@ -95,7 +95,6 @@ public class IndexedDiskCacheKeyStoreUnitTest
         }
     }
 
-
     /**
      * Add some keys, store them, load them from disk, then check to see that we
      * can get the items.

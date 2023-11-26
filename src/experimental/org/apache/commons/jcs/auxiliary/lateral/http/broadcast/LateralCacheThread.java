@@ -70,7 +70,6 @@ public class LateralCacheThread extends Thread
         this.servers = servers;
     }
 
-
     /** Main processing method for the LateralCacheThread object */
     public void run()
     {
@@ -185,7 +184,6 @@ public class LateralCacheThread extends Thread
         }
         // end catch
     }
-
 
     /** Description of the Method */
     public String read( URLConnection connection )

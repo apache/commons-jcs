@@ -89,7 +89,6 @@ public abstract class AbstractLRUMap<K, V>
         map = new ConcurrentHashMap<>();
     }
 
-
     /**
      * This removes all the items. It clears the map and the double linked list.
      * <p>

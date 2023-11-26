@@ -51,7 +51,6 @@ public class LateralCacheXMLRPCListener implements ILateralCacheXMLRPCListener, 
     private ILateralCacheAttributes ilca;
     private boolean inited;
 
-
     /**
      * Only need one since it does work for all regions, just reference by
      * multiple region names.
@@ -62,7 +61,6 @@ public class LateralCacheXMLRPCListener implements ILateralCacheXMLRPCListener, 
     {
         this.ilca = ilca;
     }
-
 
     /** Description of the Method */
     public void init()
@@ -84,7 +82,6 @@ public class LateralCacheXMLRPCListener implements ILateralCacheXMLRPCListener, 
         inited = true;
     }
 
-
     /**
      * let the lateral cache set a listener_id. Since there is only one
      * listerenr for all the regions and every region gets registered? the id
@@ -102,7 +99,6 @@ public class LateralCacheXMLRPCListener implements ILateralCacheXMLRPCListener, 
             log.debug( "set listenerId = " + id );
         }
     }
-
 
     /**
      * Gets the listenerId attribute of the LateralCacheXMLRPCListener object
@@ -123,7 +119,6 @@ public class LateralCacheXMLRPCListener implements ILateralCacheXMLRPCListener, 
         }
         return LateralCacheInfo.listenerId;
     }
-
 
     /**
      * Gets the instance attribute of the LateralCacheXMLRPCListener class
@@ -153,7 +148,6 @@ public class LateralCacheXMLRPCListener implements ILateralCacheXMLRPCListener, 
         return ins;
     }
 
-
     //////////////////////////// implements the ILateralCacheListener interface. //////////////
     /** */
     public void handlePut( ICacheElement<K, V> cb )
@@ -167,7 +161,6 @@ public class LateralCacheXMLRPCListener implements ILateralCacheXMLRPCListener, 
         cacheMgr.getCache( cb.getCacheName() ).localUpdate( cb );
     }
 
-
     /** Description of the Method */
     public void handleRemove( String cacheName, K key )
         throws IOException
@@ -180,7 +173,6 @@ public class LateralCacheXMLRPCListener implements ILateralCacheXMLRPCListener, 
         getCacheManager();
         cacheMgr.getCache( cacheName ).localRemove( key );
     }
-
 
     /** Description of the Method */
     public void handleRemoveAll( String cacheName )
@@ -218,7 +210,6 @@ public class LateralCacheXMLRPCListener implements ILateralCacheXMLRPCListener, 
         CompositeCacheManager cm = ( CompositeCacheManager ) cacheMgr;
         cm.freeCache( cacheName, true );
     }
-
 
     // override for new funcitonality
     /**

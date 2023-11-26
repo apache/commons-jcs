@@ -153,7 +153,6 @@ public class JDBCDiskCacheUnitTest
         assertNotNull( "Should have a data source factory class", result );
         assertEquals( "wrong name", poolName, result.getName() );
 
-
         final Connection cConn = result.getDataSource().getConnection();
         HsqlSetupUtil.setupTable( cConn, cattr.getTableName());
 

@@ -21,7 +21,6 @@ package org.apache.commons.jcs3.auxiliary.disk.indexed;
 
 import java.io.Serializable;
 
-
 /**
  * Used to dump out a Disk cache from disk for debugging. This is meant to be
  * run as a command line utility for

@@ -93,7 +93,6 @@ public class LateralXMLRPCReceiverConnection implements XmlRpcHandler, IXMLRPCCo
         return executeImpl( led );
     }
 
-
     /**
      * Main processing method for the LateralXMLRPCReceiverConnection object
      *
@@ -166,7 +165,6 @@ public class LateralXMLRPCReceiverConnection implements XmlRpcHandler, IXMLRPCCo
 
         return obj;
     }
-
 
     /**
      * Send back the object if found.

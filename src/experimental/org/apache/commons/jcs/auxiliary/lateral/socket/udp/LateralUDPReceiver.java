@@ -47,7 +47,6 @@ public class LateralUDPReceiver implements Runnable
 
     ILateralCacheListener ilcl;
 
-
     /**
      * Constructor for the LateralUDPReceiver object
      *
@@ -61,7 +60,6 @@ public class LateralUDPReceiver implements Runnable
         this( lca.getUdpMulticastAddr(), lca.getUdpMulticastPort() );
         this.ilcl = ilcl;
     }
-
 
     /**
      * Constructor for the LateralUDPReceiver object
@@ -88,7 +86,6 @@ public class LateralUDPReceiver implements Runnable
             //throw e ;//new CacheException( "Could not bind to multicast address " + multicastAddressString + ":" + multicastPort, e);
         }
     }
-
 
     /**
      * Highly unreliable. If it is processing one message while another comes in
@@ -119,7 +116,6 @@ public class LateralUDPReceiver implements Runnable
         }
         return obj;
     }
-
 
     /** Main processing method for the LateralUDPReceiver object */
     public void run()

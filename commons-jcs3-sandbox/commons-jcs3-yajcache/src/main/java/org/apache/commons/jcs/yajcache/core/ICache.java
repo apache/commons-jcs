@@ -23,7 +23,6 @@ import org.apache.commons.jcs.yajcache.lang.annotation.*;
 
 import java.util.Map;
 
-
 /**
  * Interface of a Cache.
  */

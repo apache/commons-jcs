@@ -18,7 +18,6 @@
  */
 package org.apache.commons.jcs3.jcache.thread;
 
-
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 

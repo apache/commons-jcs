@@ -156,7 +156,6 @@ public class JCSAdminBean implements JCSJMXBean
         return records;
     }
 
-
 	/**
      * Clears all regions in the cache.
      * <p>

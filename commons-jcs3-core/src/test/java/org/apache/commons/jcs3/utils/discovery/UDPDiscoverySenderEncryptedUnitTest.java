@@ -61,7 +61,6 @@ public class UDPDiscoverySenderEncryptedUnitTest
     /** sender instance for tests */
     private UDPDiscoverySender sender;
 
-
     /**
      * Wait for multicast message for 3 seconds
      *
@@ -179,7 +178,6 @@ public class UDPDiscoverySenderEncryptedUnitTest
         final UDPDiscoveryMessage msg = getMessage();
         assertNotNull("message not received", msg);
         assertEquals( "wrong message type", BroadcastType.REQUEST, msg.getMessageType() );
-
 
     }
 }

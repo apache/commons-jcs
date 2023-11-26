@@ -162,7 +162,6 @@ public class PurgatoryElement<K, V>
         this.spoolable = spoolable;
     }
 
-
     /**
      * @return debug string
      */

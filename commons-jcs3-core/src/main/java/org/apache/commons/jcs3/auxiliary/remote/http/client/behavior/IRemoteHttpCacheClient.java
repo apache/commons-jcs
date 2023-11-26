@@ -24,7 +24,6 @@ import java.io.IOException;
 import org.apache.commons.jcs3.auxiliary.remote.http.client.RemoteHttpCacheAttributes;
 import org.apache.commons.jcs3.engine.behavior.ICacheServiceNonLocal;
 
-
 /**
  * It's not entirely clear that this interface is needed. I simply wanted the initialization method.
  * This could be added to the ICacheSerice method.

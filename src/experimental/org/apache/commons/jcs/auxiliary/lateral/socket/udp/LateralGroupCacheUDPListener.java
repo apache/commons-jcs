@@ -75,7 +75,6 @@ public class LateralGroupCacheUDPListener
         return ins;
     }
 
-
     // just need to put new logic for remove( key, int ) into groupcache
     // or have the existing double arg method call the single arg method which is
     // overridden in the group cache.
@@ -105,7 +104,6 @@ public class LateralGroupCacheUDPListener
                  */
                 cacheMgr.getCache( cb.getCacheName() ).localUpdate( cb );
 
-
             }
             catch ( Exception ioe )
             {
@@ -114,7 +112,6 @@ public class LateralGroupCacheUDPListener
         }
         super.handlePut( cb );
     }
-
 
     // override for new funcitonality
     // lazy init is too slow, find a better way

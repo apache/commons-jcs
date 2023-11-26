@@ -129,7 +129,6 @@ public class BlockDiskCacheSteadyLoadTest
                 }
             }
 
-
             Thread.sleep( pauseBetweenRuns );
             if ( runCount % 100 == 0 )
             {

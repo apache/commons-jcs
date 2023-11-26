@@ -43,7 +43,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-
 /**
  * Cache implemented using {@link KeyedSoftReference} and {@link ConcurrentHashMap}.
  */

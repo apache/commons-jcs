@@ -21,7 +21,6 @@ package org.apache.commons.jcs3.engine.behavior;
 
 import java.util.concurrent.ScheduledExecutorService;
 
-
 /**
  * Marker interface for providers of the central ScheduledExecutorService
  */

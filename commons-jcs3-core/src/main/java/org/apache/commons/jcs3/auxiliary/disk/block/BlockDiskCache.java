@@ -376,7 +376,6 @@ public class BlockDiskCache<K, V>
 		return removed;
 	}
 
-
 	/**
      * Dispose of the disk cache in a background thread. Joins against this thread to put a cap on
      * the disposal time.
@@ -423,7 +422,6 @@ public class BlockDiskCache<K, V>
         log.debug("{0}: Trying to get from disk: {1}", logCacheName, key );
 
         ICacheElement<K, V> object = null;
-
 
         try
         {

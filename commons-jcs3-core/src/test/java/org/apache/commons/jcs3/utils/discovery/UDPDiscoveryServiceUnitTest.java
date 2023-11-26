@@ -116,7 +116,6 @@ public class UDPDiscoveryServiceUnitTest
         discoveredService.setServicePort( 1000 );
         discoveredService.setLastHearFromTime( 100 );
 
-
         final DiscoveredService discoveredService2 = new DiscoveredService();
         discoveredService2.setServiceAddress( host );
         discoveredService2.setCacheNames( sameCacheNames );

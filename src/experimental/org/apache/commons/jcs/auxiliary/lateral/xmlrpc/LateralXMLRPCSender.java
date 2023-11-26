@@ -63,7 +63,6 @@ public class LateralXMLRPCSender implements IXMLRPCConstants
      */
     private static final int openTimeOut = 5000;
 
-
     /**
      * Constructor for the LateralXMLRPCSender object
      *
@@ -80,7 +79,6 @@ public class LateralXMLRPCSender implements IXMLRPCConstants
         init( h2, po );
         this.ilca = lca;
     }
-
 
     /**
      * Description of the Method
@@ -142,7 +140,6 @@ public class LateralXMLRPCSender implements IXMLRPCConstants
         }
     }
 
-
     /**
      * Sends commands to the lateral cache listener.
      *
@@ -184,7 +181,6 @@ public class LateralXMLRPCSender implements IXMLRPCConstants
         }
 
     }
-
 
     /**
      * Sends commands to the lateral cache listener and gets a response. I'm
@@ -270,7 +266,6 @@ public class LateralXMLRPCSender implements IXMLRPCConstants
         send( led );
     }
 
-
     /**
      * Description of the Method
      *
@@ -283,7 +278,6 @@ public class LateralXMLRPCSender implements IXMLRPCConstants
     {
         remove( cacheName, key, LateralCacheInfo.listenerId );
     }
-
 
     /**
      * Description of the Method
@@ -303,7 +297,6 @@ public class LateralXMLRPCSender implements IXMLRPCConstants
         send( led );
     }
 
-
     /**
      * Description of the Method
      *
@@ -314,7 +307,6 @@ public class LateralXMLRPCSender implements IXMLRPCConstants
     {
         // nothing needs to be done
     }
-
 
     /**
      * Closes connection used by all LateralXMLRPCSenders for this lateral
@@ -333,7 +325,6 @@ public class LateralXMLRPCSender implements IXMLRPCConstants
         //xmlrpc.
     }
 
-
     /**
      * Description of the Method
      *
@@ -345,7 +336,6 @@ public class LateralXMLRPCSender implements IXMLRPCConstants
     {
         removeAll( cacheName, LateralCacheInfo.listenerId );
     }
-
 
     /**
      * Description of the Method
@@ -363,7 +353,6 @@ public class LateralXMLRPCSender implements IXMLRPCConstants
         led.command = led.REMOVEALL;
         send( led );
     }
-
 
     /**
      * Description of the Method

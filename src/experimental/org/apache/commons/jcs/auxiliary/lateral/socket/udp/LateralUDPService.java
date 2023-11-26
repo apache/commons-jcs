@@ -79,7 +79,6 @@ public class LateralUDPService implements ICacheServiceNonLocal, ILateralCacheOb
         update( item, LateralCacheInfo.listenerId );
     }
 
-
     /** Description of the Method */
     public void update( ICacheElement<K, V> item, long requesterId )
         throws IOException
@@ -90,14 +89,12 @@ public class LateralUDPService implements ICacheServiceNonLocal, ILateralCacheOb
         sender.send( led );
     }
 
-
     /** Description of the Method */
     public void remove( String cacheName, K key )
         throws IOException
     {
         remove( cacheName, key, LateralCacheInfo.listenerId );
     }
-
 
     /** Description of the Method */
     public void remove( String cacheName, K key, long requesterId )
@@ -110,14 +107,12 @@ public class LateralUDPService implements ICacheServiceNonLocal, ILateralCacheOb
         sender.send( led );
     }
 
-
     /** Description of the Method */
     public void release()
         throws IOException
     {
         // nothing needs to be done
     }
-
 
     /** Description of the Method */
     public void dispose( String cache )
@@ -127,7 +122,6 @@ public class LateralUDPService implements ICacheServiceNonLocal, ILateralCacheOb
         // nothing needs to be done
     }
 
-
     /** Description of the Method */
     public Serializable get( String cache )
         throws IOException
@@ -136,7 +130,6 @@ public class LateralUDPService implements ICacheServiceNonLocal, ILateralCacheOb
         // nothing needs to be done
     }
 
-
     /** Description of the Method */
     public ICacheElement<K, V> get( String cache, Serializable att )
         throws IOException
@@ -144,7 +137,6 @@ public class LateralUDPService implements ICacheServiceNonLocal, ILateralCacheOb
         return null;
         // nothing needs to be done
     }
-
 
     /** Description of the Method */
     public Serializable get( String cache, Serializable att, boolean container )
@@ -174,7 +166,6 @@ public class LateralUDPService implements ICacheServiceNonLocal, ILateralCacheOb
         removeAll( cacheName, LateralCacheInfo.listenerId );
     }
 
-
     /** Description of the Method */
     public void removeAll( String cacheName, long requesterId )
         throws IOException
@@ -185,7 +176,6 @@ public class LateralUDPService implements ICacheServiceNonLocal, ILateralCacheOb
         led.command = led.REMOVEALL;
         sender.send( led );
     }
-
 
     /** Description of the Method */
     public static void main( String args[] )
@@ -215,7 +205,6 @@ public class LateralUDPService implements ICacheServiceNonLocal, ILateralCacheOb
         }
     }
 
-
     // ILateralCacheObserver methods, do nothing here since
     // the connection is not registered, the udp service is
     // is not registered.
@@ -229,7 +218,6 @@ public class LateralUDPService implements ICacheServiceNonLocal, ILateralCacheOb
     public void addCacheListener( String cacheName, ICacheListener obj )
         throws IOException { }
 
-
     /**
      * Adds a feature to the CacheListener attribute of the LateralUDPService
      * object
@@ -239,11 +227,9 @@ public class LateralUDPService implements ICacheServiceNonLocal, ILateralCacheOb
     public void addCacheListener( ICacheListener obj )
         throws IOException { }
 
-
     /** Description of the Method */
     public void removeCacheListener( String cacheName, ICacheListener obj )
         throws IOException { }
-
 
     /** Description of the Method */
     public void removeCacheListener( ICacheListener obj )

@@ -43,7 +43,6 @@ public class LateralXMLRPCReceiver implements IXMLRPCConstants
      */
     private static final int sTimeOut = 0;
 
-
     /**
      * Main processing method for the LateralXMLRPCReceiver object
      */
@@ -95,7 +94,6 @@ public class LateralXMLRPCReceiver implements IXMLRPCConstants
             e.printStackTrace();
         }
     }
-
 
     /**
      * Constructor for the LateralXMLRPCReceiver object

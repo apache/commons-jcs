@@ -411,7 +411,6 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
         }
     }
 
-
     /**
      * Synchronously get from the remote cache; if failed, replace the remote handle with a zombie.
      * <p>

@@ -60,7 +60,6 @@ public class LateralCacheUnicaster
         log.debug( "In LateralCacheUnicaster2, " + Thread.currentThread().getName() );
     }
 
-
     /**
      * Called when this object is first loaded in the thread pool. Important:
      * all workers in a pool must be of the same type, otherwise the mechanism
@@ -72,7 +71,6 @@ public class LateralCacheUnicaster
     {
         return null;
     }
-
 
     /**
      * Sends a ICacheItem to the target server. This method will be executed in

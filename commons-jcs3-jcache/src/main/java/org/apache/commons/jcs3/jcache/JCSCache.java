@@ -104,7 +104,6 @@ public class JCSCache<K, V> implements Cache<K, V>
     private final String name;
     private volatile boolean closed;
 
-
     private final Map<CacheEntryListenerConfiguration<K, V>, JCSListener<K, V>> listeners = new ConcurrentHashMap<>();
 
     private final Statistics statistics = new Statistics();

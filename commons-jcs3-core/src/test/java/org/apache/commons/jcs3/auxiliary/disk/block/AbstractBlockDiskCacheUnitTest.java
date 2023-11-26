@@ -445,7 +445,6 @@ public abstract class AbstractBlockDiskCacheUnitTest{
         }
     }
 
-
     /**
      * Verify that the block disk cache can handle utf encoded strings.
      * <p>

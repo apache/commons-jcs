@@ -246,7 +246,6 @@ public class CompositeCacheDiskUsageUnitTest
             updateCount++;
         }
 
-
     }
 
     private static final String CACHE_NAME = "testSpoolAllowed";

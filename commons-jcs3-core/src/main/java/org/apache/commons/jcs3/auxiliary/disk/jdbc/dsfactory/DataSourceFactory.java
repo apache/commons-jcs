@@ -25,7 +25,6 @@ import javax.sql.DataSource;
 
 import org.apache.commons.jcs3.auxiliary.disk.jdbc.JDBCDiskCacheAttributes;
 
-
 /**
  * A factory that returns a DataSource.
  * Borrowed from Apache DB Torque

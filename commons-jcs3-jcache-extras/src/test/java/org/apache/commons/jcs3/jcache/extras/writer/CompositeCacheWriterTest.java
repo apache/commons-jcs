@@ -38,7 +38,6 @@ public class CompositeCacheWriterTest
     @Rule
     public final InternalCacheRule rule = new InternalCacheRule(this);
 
-
     private final Map<String, String> copy1 = new HashMap<>();
     private final Map<String, String> copy2 = new HashMap<>();
 

@@ -314,7 +314,6 @@ public abstract class AbstractCacheEventQueue<K, V>
         return listenerId;
     }
 
-
     /**
      * Returns the time to wait for events before killing the background thread.
      * <p>

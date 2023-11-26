@@ -21,7 +21,6 @@ package org.apache.commons.jcs3.auxiliary.remote.behavior;
 
 import org.apache.commons.jcs3.engine.behavior.ICacheServiceNonLocal;
 
-
 /**
  * This holds constants that are used by the remote cache.
  */

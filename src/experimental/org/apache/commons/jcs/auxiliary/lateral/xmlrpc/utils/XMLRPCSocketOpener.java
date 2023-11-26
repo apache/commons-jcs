@@ -25,7 +25,6 @@ import org.apache.xmlrpc.XmlRpcClientLite;
 
 import java.io.IOException;
 
-
 /**
  * Socket openere that will timeout on the initial connect rather than block
  * forever. Technique from core java II.
@@ -35,7 +34,6 @@ public class XMLRPCSocketOpener implements Runnable
 
     private static final Log log =
         LogFactory.getLog( XMLRPCSocketOpener.class );
-
 
     private String host;
     private int port;
@@ -59,7 +57,6 @@ public class XMLRPCSocketOpener implements Runnable
         return opener.getSocket();
     }
 
-
     /**
      * Constructor for the SocketOpener object
      *
@@ -72,7 +69,6 @@ public class XMLRPCSocketOpener implements Runnable
         this.host = host;
         this.port = port;
     }
-
 
     /** Main processing method for the SocketOpener object */
     public void run()

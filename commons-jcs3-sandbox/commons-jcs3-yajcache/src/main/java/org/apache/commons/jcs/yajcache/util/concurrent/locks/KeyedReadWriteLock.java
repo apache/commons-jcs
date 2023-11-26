@@ -32,7 +32,6 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-
 /**
  * Factory for key specific ReadWriteLock.
  * Unused locks are automatically garbage collected.

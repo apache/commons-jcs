@@ -51,7 +51,6 @@ public class LateralCacheUDPListener implements ILateralCacheListener, Serializa
     private ILateralCacheAttributes ilca;
     private boolean inited;
 
-
     /**
      * Only need one since it does work for all regions, just reference by
      * multiple region names.
@@ -59,7 +58,6 @@ public class LateralCacheUDPListener implements ILateralCacheListener, Serializa
      * @param ilca
      */
     protected LateralCacheUDPListener( ILateralCacheAttributes ilca ) { }
-
 
     /** Description of the Method */
     public void init()
@@ -80,7 +78,6 @@ public class LateralCacheUDPListener implements ILateralCacheListener, Serializa
 
     }
 
-
     /**
      * let the lateral cache set a listener_id. Since there is only one
      * listerenr for all the regions and every region gets registered? the id
@@ -98,7 +95,6 @@ public class LateralCacheUDPListener implements ILateralCacheListener, Serializa
             log.debug( "set listenerId = " + id );
         }
     }
-
 
     /**
      * Gets the listenerId attribute of the LateralCacheUDPListener object
@@ -119,7 +115,6 @@ public class LateralCacheUDPListener implements ILateralCacheListener, Serializa
         }
         return LateralCacheInfo.listenerId;
     }
-
 
     /**
      * Gets the instance attribute of the LateralCacheUDPListener class
@@ -149,7 +144,6 @@ public class LateralCacheUDPListener implements ILateralCacheListener, Serializa
         return ins;
     }
 
-
     //////////////////////////// implements the ILateralCacheListener interface. //////////////
     /** */
     public void handlePut( ICacheElement<K, V> cb )
@@ -162,7 +156,6 @@ public class LateralCacheUDPListener implements ILateralCacheListener, Serializa
         getCacheManager();
         cacheMgr.getCache( cb.getCacheName() ).localUpdate( cb );
     }
-
 
     /** Description of the Method */
     public void handleRemove( String cacheName, K key )
@@ -179,7 +172,6 @@ public class LateralCacheUDPListener implements ILateralCacheListener, Serializa
          cacheMgr.getCache( cacheName ).localRemove( key );
     }
 
-
     /** Description of the Method */
     public void handleRemoveAll( String cacheName )
         throws IOException
@@ -193,7 +185,6 @@ public class LateralCacheUDPListener implements ILateralCacheListener, Serializa
         cache.removeAll();
     }
 
-
     /** Description of the Method */
     public void handleDispose( String cacheName )
         throws IOException
@@ -205,7 +196,6 @@ public class LateralCacheUDPListener implements ILateralCacheListener, Serializa
         CompositeCacheManager cm = ( CompositeCacheManager ) cacheMgr;
         cm.freeCache( cacheName, true );
     }
-
 
     // override for new funcitonality
     /**

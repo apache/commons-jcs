@@ -46,7 +46,6 @@ public class LateralGroupCacheXMLRPCListener
         log.debug( "creating LateralGroupCacheXMLRPCListener" );
     }
 
-
     /**
      * Gets the instance attribute of the LateralGroupCacheXMLRPCListener class
      *
@@ -74,7 +73,6 @@ public class LateralGroupCacheXMLRPCListener
         }
         return ins;
     }
-
 
     // override for new funcitonality
     // lazy init is too slow, find a better way

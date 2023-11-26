@@ -72,7 +72,6 @@ public class CacheResultInterceptor implements Serializable
                 return result;
             }
 
-
             if (!cacheResult.exceptionCacheName().isEmpty())
             {
                 exceptionCache = cacheResolverFactory.getExceptionCacheResolver(context).resolveCache(context);

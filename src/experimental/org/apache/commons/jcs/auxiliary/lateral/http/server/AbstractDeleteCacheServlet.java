@@ -48,7 +48,6 @@ public abstract class AbstractDeleteCacheServlet
     protected CompositeCacheManager cacheMgr;
     private BasicHttpAuthenticator authenticator;
 
-
     /** Description of the Method */
     public void init( ServletConfig config )
         throws ServletException
@@ -57,7 +56,6 @@ public abstract class AbstractDeleteCacheServlet
         authenticator = new BasicHttpAuthenticator( "jcs" );
         super.init( config );
     }
-
 
     /** Description of the Method */
     public void service( HttpServletRequest req, HttpServletResponse res )
