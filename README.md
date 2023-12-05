@@ -55,7 +55,7 @@ Documentation
 
 More information can be found on the [Apache Commons JCS homepage](https://commons.apache.org/proper/commons-jcs).
 The [Javadoc](https://commons.apache.org/proper/commons-jcs/apidocs) can be browsed.
-Questions related to the usage of Apache Commons JCS should be posted to the [user mailing list][ml].
+Questions related to the usage of Apache Commons JCS should be posted to the [user mailing list](https://commons.apache.org/mail-lists.html).
 
 Where can I get the latest release?
 -----------------------------------
