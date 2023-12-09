@@ -261,7 +261,7 @@ public class OptionConverter
      *
      * will set <code>s</code> to "Value of inexistentKey is []"
      * <p>
-     * An {@link java.lang.IllegalArgumentException}is thrown if <code>val</code> contains a start
+     * An {@link IllegalArgumentException}is thrown if <code>val</code> contains a start
      * delimiter "${" which is not balanced by a stop delimiter "}".
      * </p>
      * <p>
