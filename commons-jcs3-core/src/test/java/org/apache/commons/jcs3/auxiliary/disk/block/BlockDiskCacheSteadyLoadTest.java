@@ -36,7 +36,7 @@ public class BlockDiskCacheSteadyLoadTest
     /** String for separating log entries. */
     private static final String LOG_DIVIDER = "---------------------------";
 
-    /** the runtime. */
+    /** The runtime. */
     private static final Runtime rt = Runtime.getRuntime();
 
     /** The decimal format to use int he logs. */

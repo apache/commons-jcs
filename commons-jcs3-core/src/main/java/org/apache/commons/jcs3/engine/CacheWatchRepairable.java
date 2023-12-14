@@ -42,7 +42,7 @@ public class CacheWatchRepairable
     /** The logger */
     private static final Log log = LogManager.getLog( CacheWatchRepairable.class );
 
-    /** the underlying ICacheObserver. */
+    /** The underlying ICacheObserver. */
     private ICacheObserver cacheWatch;
 
     /** Map of cache regions. */

@@ -62,7 +62,7 @@ public class PartitionedCacheAccess<K, V>
     extends AbstractPropertyContainer
     implements ICacheAccess<K, V>
 {
-    /** the logger. */
+    /** The logger. */
     private static final Log log = LogManager.getLog( PartitionedCacheAccess.class );
 
     /** The number of partitions. */

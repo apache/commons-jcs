@@ -63,7 +63,7 @@ public class UDPDiscoveryService
     /** thread that listens for messages */
     private Thread udpReceiverThread;
 
-    /** the runnable that the receiver thread runs */
+    /** The runnable that the receiver thread runs */
     private UDPDiscoveryReceiver receiver;
 
     /** attributes */

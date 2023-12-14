@@ -41,10 +41,10 @@ import org.junit.Test;
 /** Test for the listener that observers UDP discovery events. */
 public class LateralTCPDiscoveryListenerUnitTest
 {
-    /** the listener */
+    /** The listener */
     private LateralTCPDiscoveryListener listener;
 
-    /** the cache factory */
+    /** The cache factory */
     private LateralTCPCacheFactory factory;
 
     /** The cache manager. */

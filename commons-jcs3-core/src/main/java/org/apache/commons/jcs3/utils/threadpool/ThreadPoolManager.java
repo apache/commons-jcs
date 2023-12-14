@@ -69,13 +69,13 @@ public class ThreadPoolManager
     /** The logger */
     private static final Log log = LogManager.getLog( ThreadPoolManager.class );
 
-    /** the root property name */
+    /** The root property name */
     private static final String PROP_NAME_ROOT = "thread_pool";
 
     /** default property file name */
     private static final String DEFAULT_PROP_NAME_ROOT = "thread_pool.default";
 
-    /** the scheduler root property name */
+    /** The scheduler root property name */
     private static final String PROP_NAME_SCHEDULER_ROOT = "scheduler_pool";
 
     /** default scheduler property file name */

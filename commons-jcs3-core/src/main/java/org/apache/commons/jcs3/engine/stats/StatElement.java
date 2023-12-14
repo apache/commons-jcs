@@ -33,7 +33,7 @@ public class StatElement<V>
     /** name of the stat */
     private String name;
 
-    /** the data */
+    /** The data */
     private V data;
 
     /**

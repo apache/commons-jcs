@@ -35,7 +35,7 @@ public class GroupId
     /** Description of the Field */
     public final String groupName;
 
-    /** the name of the region. */
+    /** The name of the region. */
     public final String cacheName;
 
     /**

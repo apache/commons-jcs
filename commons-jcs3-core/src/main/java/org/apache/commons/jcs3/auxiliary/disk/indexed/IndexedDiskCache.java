@@ -276,7 +276,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
     /** How many items were there on startup. */
     private int startupSize;
 
-    /** the number of bytes free on disk. */
+    /** The number of bytes free on disk. */
     private final AtomicLong bytesFree = new AtomicLong();
 
     /** mode we are working on (size or count limited **/

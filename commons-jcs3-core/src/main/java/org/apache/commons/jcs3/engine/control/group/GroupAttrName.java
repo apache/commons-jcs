@@ -34,7 +34,7 @@ public class GroupAttrName<T>
     /** Description of the Field */
     public final GroupId groupId;
 
-    /** the name of the attribute */
+    /** The name of the attribute */
     public final T attrName;
 
     /**

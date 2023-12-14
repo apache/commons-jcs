@@ -96,10 +96,10 @@ public class RemoteCacheClientTester
         System.out.println( s );
     }
 
-    /** the observer */
+    /** The observer */
     protected ICacheObserver watch;
 
-    /** the service */
+    /** The service */
     protected ICacheService<String, String> cache;
 
     /** The registry host name. */
