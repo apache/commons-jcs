@@ -21,14 +21,14 @@ package org.apache.commons.jcs3.auxiliary.remote.http.client;
 
 import org.apache.commons.jcs3.auxiliary.remote.RemoteCacheAttributes;
 
-/** Http client specific settings. */
+/** HTTP client specific settings. */
 public class RemoteHttpCacheAttributes
     extends RemoteCacheAttributes
 {
     /** Don't change. */
     private static final long serialVersionUID = -5944327125140505212L;
 
-    /** Http version to use. */
+    /** HTTP version to use. */
     private static final String DEFAULT_HTTP_VERSION = "1.1";
 
     /** The default class name for the client.  */
@@ -43,7 +43,7 @@ public class RemoteHttpCacheAttributes
     /** The socket connections timeout */
     private int connectionTimeoutMillis = 5000;
 
-    /** Http version to use. */
+    /** HTTP version to use. */
     private String httpVersion = DEFAULT_HTTP_VERSION;
 
     /** The cache name will be included on the parameters */
