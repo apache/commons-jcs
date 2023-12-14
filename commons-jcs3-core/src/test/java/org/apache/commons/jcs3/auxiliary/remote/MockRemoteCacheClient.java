@@ -44,7 +44,7 @@ public class MockRemoteCacheClient<K, V>
     extends AbstractAuxiliaryCache<K, V>
     implements IRemoteCacheClient<K, V>
 {
-    /** log instance */
+    /** Log instance */
     private static final Log log = LogManager.getLog( MockRemoteCacheClient.class );
 
     /** List of ICacheElement&lt;K, V&gt; objects passed into update. */
@@ -53,7 +53,7 @@ public class MockRemoteCacheClient<K, V>
     /** List of key objects passed into remove. */
     public List<K> removeList = new LinkedList<>();
 
-    /** status to return. */
+    /** Status to return. */
     public CacheStatus status = CacheStatus.ALIVE;
 
     /** Can setup values to return from get. values must be ICacheElement&lt;K, V&gt; */

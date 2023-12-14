@@ -39,10 +39,10 @@ import org.apache.commons.jcs3.log.LogManager;
 public class MySQLDiskCache<K, V>
 	extends JDBCDiskCache<K, V>
 {
-    /** local logger */
+    /** Local logger */
     private static final Log log = LogManager.getLog( MySQLDiskCache.class );
 
-    /** config attributes */
+    /** Config attributes */
     private final MySQLDiskCacheAttributes mySQLDiskCacheAttributes;
 
     /**

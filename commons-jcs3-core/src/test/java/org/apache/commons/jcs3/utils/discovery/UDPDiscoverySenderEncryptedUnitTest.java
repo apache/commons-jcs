@@ -43,22 +43,22 @@ import org.junit.Test;
  */
 public class UDPDiscoverySenderEncryptedUnitTest
 {
-    /** multicast address to send/receive on */
+    /** Multicast address to send/receive on */
     private static final String ADDRESS = "228.4.5.9";
 
-    /** multicast address to send/receive on */
+    /** Multicast address to send/receive on */
     private static final int PORT = 5556;
 
-    /** imaginary host address for sending */
+    /** Imaginary host address for sending */
     private static final String SENDING_HOST = "imaginary host address";
 
-    /** imaginary port for sending */
+    /** Imaginary port for sending */
     private static final int SENDING_PORT = 1;
 
-    /** receiver instance for tests */
+    /** Receiver instance for tests */
     private UDPDiscoveryReceiver receiver;
 
-    /** sender instance for tests */
+    /** Sender instance for tests */
     private UDPDiscoverySender sender;
 
     /**

@@ -48,7 +48,7 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
     /** The logger. */
     private static final Log log = LogManager.getLog(AbstractDoubleLinkedListMemoryCache.class);
 
-    /** thread-safe double linked list for lru */
+    /** Thread-safe double linked list for lru */
     protected DoubleLinkedList<MemoryElementDescriptor<K, V>> list; // TODO privatise
 
     // --------------------------- internal methods (linked list implementation)

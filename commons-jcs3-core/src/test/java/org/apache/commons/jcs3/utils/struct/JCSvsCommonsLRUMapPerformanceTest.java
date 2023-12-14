@@ -33,19 +33,19 @@ import org.junit.Test;
  */
 public class JCSvsCommonsLRUMapPerformanceTest
 {
-    /** jcs / commons */
+    /** Jcs / commons */
     float ratioPut;
 
-    /** jcs / commons */
+    /** Jcs / commons */
     float ratioGet;
 
-    /** goal */
+    /** Goal */
     float target = 1.0f;
 
-    /** loops */
+    /** Loops */
     int loops = 20;
 
-    /** number to test with */
+    /** Number to test with */
     int tries = 100000;
 
     /**

@@ -72,13 +72,13 @@ public class ThreadPoolManager
     /** The root property name */
     private static final String PROP_NAME_ROOT = "thread_pool";
 
-    /** default property file name */
+    /** Default property file name */
     private static final String DEFAULT_PROP_NAME_ROOT = "thread_pool.default";
 
     /** The scheduler root property name */
     private static final String PROP_NAME_SCHEDULER_ROOT = "scheduler_pool";
 
-    /** default scheduler property file name */
+    /** Default scheduler property file name */
     private static final String DEFAULT_PROP_NAME_SCHEDULER_ROOT = "scheduler_pool.default";
 
     /**

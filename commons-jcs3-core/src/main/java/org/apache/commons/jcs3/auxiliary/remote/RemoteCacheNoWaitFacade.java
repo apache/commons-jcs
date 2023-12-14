@@ -45,7 +45,7 @@ import org.apache.commons.jcs3.log.LogManager;
 public class RemoteCacheNoWaitFacade<K, V>
     extends AbstractRemoteCacheNoWaitFacade<K, V>
 {
-    /** log instance */
+    /** Log instance */
     private static final Log log = LogManager.getLog( RemoteCacheNoWaitFacade.class );
 
     /** Time in ms to sleep between failover attempts */

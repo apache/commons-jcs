@@ -39,7 +39,7 @@ public final class CacheInfo
     /** By default this is the hash code of the VMID */
     public static final long listenerId = vmid.hashCode();
 
-    /** shouldn't be instantiated */
+    /** Shouldn't be instantiated */
     private CacheInfo()
     {
     }

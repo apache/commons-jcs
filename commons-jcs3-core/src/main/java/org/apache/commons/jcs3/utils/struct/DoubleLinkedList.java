@@ -32,7 +32,7 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
     /** The logger */
     private static final Log log = LogManager.getLog( DoubleLinkedList.class );
 
-    /** record size to avoid having to iterate */
+    /** Record size to avoid having to iterate */
     private int size;
 
     /** LRU double linked list head node */

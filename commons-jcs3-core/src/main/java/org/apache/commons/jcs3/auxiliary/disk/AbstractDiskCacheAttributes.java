@@ -40,13 +40,13 @@ public abstract class AbstractDiskCacheAttributes extends AbstractAuxiliaryCache
     /** Default amount of time to allow for key persistence on shutdown */
     private static final int DEFAULT_shutdownSpoolTimeLimit = 60;
 
-    /** path to disk */
+    /** Path to disk */
     private File diskPath;
 
-    /** if this is false, we will not execute remove all */
+    /** If this is false, we will not execute remove all */
     private boolean allowRemoveAll = true;
 
-    /** default to 5000 */
+    /** Default to 5000 */
     private int maxPurgatorySize = MAX_PURGATORY_SIZE_DEFAULT;
 
     /**

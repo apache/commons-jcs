@@ -27,7 +27,7 @@ package org.apache.commons.jcs3.utils.struct;
  */
 public class LRUMap<K, V> extends AbstractLRUMap<K, V>
 {
-    /** if the max is less than 0, there is no limit! */
+    /** If the max is less than 0, there is no limit! */
     private int maxObjects = -1;
 
     public LRUMap()

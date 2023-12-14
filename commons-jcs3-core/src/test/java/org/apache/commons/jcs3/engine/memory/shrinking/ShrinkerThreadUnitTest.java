@@ -43,7 +43,7 @@ import org.junit.Test;
  */
 public class ShrinkerThreadUnitTest
 {
-    /** verify the check for removal
+    /** Verify the check for removal
      * <p>
      * @throws IOException */
     @Test
@@ -79,7 +79,7 @@ public class ShrinkerThreadUnitTest
         assertTrue( "Item should have expired.", result );
     }
 
-    /** verify the check for removal
+    /** Verify the check for removal
      * <p>
      * @throws IOException */
     @Test
@@ -116,7 +116,7 @@ public class ShrinkerThreadUnitTest
         assertTrue( "Item should have expired.", result );
     }
 
-    /** verify the check for removal
+    /** Verify the check for removal
      * <p>
      * @throws IOException */
     @Test
@@ -152,7 +152,7 @@ public class ShrinkerThreadUnitTest
         assertFalse( "Item should not have expired.", result );
     }
 
-    /** verify the check for removal
+    /** Verify the check for removal
      * <p>
      * @throws IOException */
     @Test

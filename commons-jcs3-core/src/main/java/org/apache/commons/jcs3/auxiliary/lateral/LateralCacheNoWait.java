@@ -64,13 +64,13 @@ public class LateralCacheNoWait<K, V>
     /** The event queue */
     private ICacheEventQueue<K, V> eventQueue;
 
-    /** times get called */
+    /** Times get called */
     private int getCount;
 
-    /** times remove called */
+    /** Times remove called */
     private int removeCount;
 
-    /** times put called */
+    /** Times put called */
     private int putCount;
 
     /**

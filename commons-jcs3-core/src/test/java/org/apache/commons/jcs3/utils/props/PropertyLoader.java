@@ -39,13 +39,13 @@ import java.util.Properties;
  */
 public abstract class PropertyLoader
 {
-    /** throw an error if we can load the file */
+    /** Throw an error if we can load the file */
     private static final boolean THROW_ON_LOAD_FAILURE = true;
 
     /** File suffix. */
     private static final String SUFFIX = ".ccf";
 
-    /** property suffix */
+    /** Property suffix */
     private static final String SUFFIX_PROPERTIES = ".properties";
 
     /**

@@ -29,7 +29,7 @@ import org.junit.Test;
 /** Unit tests for the double linked list. */
 public class DoubleLinkedListDumpUnitTest
 {
-    /** verify that the entries are dumped. */
+    /** Verify that the entries are dumped. */
     @Test
     public void testDumpEntries_DebugTrue()
     {

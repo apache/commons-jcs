@@ -66,7 +66,7 @@ import org.apache.commons.jcs3.log.LogManager;
 public class RemoteCacheNoWait<K, V>
     extends AbstractAuxiliaryCache<K, V>
 {
-    /** log instance */
+    /** Log instance */
     private static final Log log = LogManager.getLog( RemoteCacheNoWait.class );
 
     /** The remote cache client */
@@ -75,19 +75,19 @@ public class RemoteCacheNoWait<K, V>
     /** Event queue for queuing up calls like put and remove. */
     private ICacheEventQueue<K, V> cacheEventQueue;
 
-    /** how many times get has been called. */
+    /** How many times get has been called. */
     private int getCount;
 
-    /** how many times getMatching has been called. */
+    /** How many times getMatching has been called. */
     private int getMatchingCount;
 
-    /** how many times getMultiple has been called. */
+    /** How many times getMultiple has been called. */
     private int getMultipleCount;
 
-    /** how many times remove has been called. */
+    /** How many times remove has been called. */
     private int removeCount;
 
-    /** how many times put has been called. */
+    /** How many times put has been called. */
     private int putCount;
 
     /**

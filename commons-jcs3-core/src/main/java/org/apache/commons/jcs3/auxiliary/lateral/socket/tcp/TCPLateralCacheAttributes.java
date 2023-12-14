@@ -33,37 +33,37 @@ public class TCPLateralCacheAttributes
     /** Don't change. */
     private static final long serialVersionUID = 1077889204513905220L;
 
-    /** default */
+    /** Default */
     private static final String DEFAULT_UDP_DISCOVERY_ADDRESS = "228.5.6.7";
 
-    /** default */
+    /** Default */
     private static final int DEFAULT_UDP_DISCOVERY_PORT = 6789;
 
-    /** default */
+    /** Default */
     private static final boolean DEFAULT_UDP_DISCOVERY_ENABLED = true;
 
-    /** default */
+    /** Default */
     private static final boolean DEFAULT_ALLOW_GET = true;
 
-    /** default */
+    /** Default */
     private static final boolean DEFAULT_ALLOW_PUT = true;
 
-    /** default */
+    /** Default */
     private static final boolean DEFAULT_ISSUE_REMOVE_FOR_PUT = false;
 
-    /** default */
+    /** Default */
     private static final boolean DEFAULT_FILTER_REMOVE_BY_HASH_CODE = true;
 
-    /** default - Only block for 1 second before timing out on a read.*/
+    /** Default - Only block for 1 second before timing out on a read.*/
     private static final int DEFAULT_SOCKET_TIME_OUT = 1000;
 
-    /** default - Only block for 2 seconds before timing out on startup.*/
+    /** Default - Only block for 2 seconds before timing out on startup.*/
     private static final int DEFAULT_OPEN_TIMEOUT = 2000;
 
     /** TCP -------------------------------------------- */
     private String tcpServers = "";
 
-    /** used to identify the service that this manager will be operating on */
+    /** Used to identify the service that this manager will be operating on */
     private String tcpServer = "";
 
     /** The port */
@@ -72,28 +72,28 @@ public class TCPLateralCacheAttributes
     /** The host */
     private String tcpListenerHost = "";
 
-    /** udp discovery for tcp server */
+    /** Udp discovery for tcp server */
     private String udpDiscoveryAddr = DEFAULT_UDP_DISCOVERY_ADDRESS;
 
-    /** discovery port */
+    /** Discovery port */
     private int udpDiscoveryPort = DEFAULT_UDP_DISCOVERY_PORT;
 
-    /** discovery switch */
+    /** Discovery switch */
     private boolean udpDiscoveryEnabled = DEFAULT_UDP_DISCOVERY_ENABLED;
 
-    /** udp datagram TTL */
+    /** Udp datagram TTL */
     private int udpTTL;
 
-    /** can we put */
+    /** Can we put */
     private boolean allowPut = DEFAULT_ALLOW_GET;
 
-    /** can we go laterally for a get */
+    /** Can we go laterally for a get */
     private boolean allowGet = DEFAULT_ALLOW_PUT;
 
-    /** call remove when there is a put */
+    /** Call remove when there is a put */
     private boolean issueRemoveOnPut = DEFAULT_ISSUE_REMOVE_FOR_PUT;
 
-    /** don't remove it the hash code is the same */
+    /** Don't remove it the hash code is the same */
     private boolean filterRemoveByHashCode = DEFAULT_FILTER_REMOVE_BY_HASH_CODE;
 
     /** Only block for socketTimeOut seconds before timing out on a read.  */

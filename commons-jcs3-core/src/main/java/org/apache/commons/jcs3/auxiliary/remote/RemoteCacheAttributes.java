@@ -40,19 +40,19 @@ public class RemoteCacheAttributes
      */
     private String failoverServers = "";
 
-    /** callback */
+    /** Callback */
     private int localPort;
 
-    /** what failover server we are connected to. */
+    /** What failover server we are connected to. */
     private int failoverIndex;
 
     /** List of failover server addresses */
     private List<RemoteLocation> failovers;
 
-    /** default name is remote_cache_client */
+    /** Default name is remote_cache_client */
     private String threadPoolName = "remote_cache_client";
 
-    /** must be greater than 0 for a pool to be used. */
+    /** Must be greater than 0 for a pool to be used. */
     private int getTimeoutMillis = -1;
 
     /**

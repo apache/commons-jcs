@@ -24,7 +24,7 @@ package org.apache.commons.jcs3.utils.timing;
  */
 public class ElapsedTimer
 {
-    /** display suffix describing the unit of measure. */
+    /** Display suffix describing the unit of measure. */
     private static final String SUFFIX = "ms.";
 
     /**

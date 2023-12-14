@@ -33,19 +33,19 @@ import org.apache.commons.jcs3.engine.logging.behavior.ICacheEventLogger;
 public class MockCacheEventLogger
     implements ICacheEventLogger
 {
-    /** times called */
+    /** Times called */
     public int applicationEventCalls;
 
-    /** times called */
+    /** Times called */
     public int startICacheEventCalls;
 
-    /** times called */
+    /** Times called */
     public int endICacheEventCalls;
 
-    /** times called */
+    /** Times called */
     public int errorEventCalls;
 
-    /** list of messages */
+    /** List of messages */
     public List<String> errorMessages = new ArrayList<>();
 
     /**

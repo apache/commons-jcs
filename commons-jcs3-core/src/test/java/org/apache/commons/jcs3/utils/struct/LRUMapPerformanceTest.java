@@ -37,16 +37,16 @@ public class LRUMapPerformanceTest
     /** The ratio after the test */
     float ratioGet;
 
-    /** put jcs / commons ratio */
+    /** Put jcs / commons ratio */
     float targetPut = 1.2f;
 
-    /** get jcs / commons ratio */
+    /** Get jcs / commons ratio */
     float targetGet = .5f;
 
     /** Time to loop */
     int loops = 20;
 
-    /** items to put and get per loop */
+    /** Items to put and get per loop */
     int tries = 100000;
 
     /**

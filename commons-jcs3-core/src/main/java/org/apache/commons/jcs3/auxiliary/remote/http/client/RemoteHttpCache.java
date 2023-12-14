@@ -37,7 +37,7 @@ public class RemoteHttpCache<K, V>
     /** The logger. */
     private static final Log log = LogManager.getLog( RemoteHttpCache.class );
 
-    /** for error notifications */
+    /** For error notifications */
     private final RemoteHttpCacheMonitor monitor;
 
     /** Keep the child copy here for the restore process. */

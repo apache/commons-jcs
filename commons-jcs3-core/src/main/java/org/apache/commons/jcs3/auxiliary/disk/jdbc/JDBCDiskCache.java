@@ -82,7 +82,7 @@ public class JDBCDiskCache<K, V>
     /** The local logger. */
     private static final Log log = LogManager.getLog( JDBCDiskCache.class );
 
-    /** configuration */
+    /** Configuration */
     private JDBCDiskCacheAttributes jdbcDiskCacheAttributes;
 
     /** # of times update was called */
@@ -94,10 +94,10 @@ public class JDBCDiskCache<K, V>
     /** # of times getMatching was called */
     private final AtomicInteger getMatchingCount = new AtomicInteger(0);
 
-    /** db connection pool */
+    /** Db connection pool */
     private final DataSourceFactory dsFactory;
 
-    /** tracks optimization */
+    /** Tracks optimization */
     private TableState tableState;
 
     /**

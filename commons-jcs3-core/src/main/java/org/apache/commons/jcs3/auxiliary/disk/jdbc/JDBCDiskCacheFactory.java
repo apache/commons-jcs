@@ -49,7 +49,7 @@ public class JDBCDiskCacheFactory
     /** The logger */
     private static final Log log = LogManager.getLog( JDBCDiskCacheFactory.class );
 
-    /** props prefix */
+    /** Props prefix */
     protected static final String POOL_CONFIGURATION_PREFIX = "jcs.jdbcconnectionpool.";
 
     /** .attributes */

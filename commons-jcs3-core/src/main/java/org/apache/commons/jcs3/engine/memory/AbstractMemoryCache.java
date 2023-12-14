@@ -69,13 +69,13 @@ public abstract class AbstractMemoryCache<K, V>
     /** Map where items are stored by key.  This is created by the concrete child class. */
     protected Map<K, MemoryElementDescriptor<K, V>> map;// TODO privatise
 
-    /** number of hits */
+    /** Number of hits */
     protected AtomicLong hitCnt;
 
-    /** number of misses */
+    /** Number of misses */
     protected AtomicLong missCnt;
 
-    /** number of puts */
+    /** Number of puts */
     protected AtomicLong putCnt;
 
     /**

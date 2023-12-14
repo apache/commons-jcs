@@ -37,19 +37,19 @@ import org.junit.Test;
  */
 public class JCSvsHashtablePerformanceTest
 {
-    /** jcs / hashtable */
+    /** Jcs / hashtable */
     float ratioPut;
 
-    /** jcs / hashtable */
+    /** Jcs / hashtable */
     float ratioGet;
 
-    /** ration goal */
+    /** Ration goal */
     float target = 3.50f;
 
     /** Times to run the test */
     int loops = 20;
 
-    /** how many puts and gets to run */
+    /** How many puts and gets to run */
     int tries = 50000;
 
     /**

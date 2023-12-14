@@ -58,22 +58,22 @@ public abstract class AbstractLRUMap<K, V>
     /** The logger */
     private static final Log log = LogManager.getLog( AbstractLRUMap.class );
 
-    /** double linked list for lru */
+    /** Double linked list for lru */
     private final DoubleLinkedList<LRUElementDescriptor<K, V>> list;
 
     /** Map where items are stored by key. */
     private final Map<K, LRUElementDescriptor<K, V>> map;
 
-    /** lock to keep map and list synchronous */
+    /** Lock to keep map and list synchronous */
     private final Lock lock = new ReentrantLock();
 
-    /** stats */
+    /** Stats */
     private long hitCnt;
 
-    /** stats */
+    /** Stats */
     private long missCnt;
 
-    /** stats */
+    /** Stats */
     private long putCnt;
 
     /**

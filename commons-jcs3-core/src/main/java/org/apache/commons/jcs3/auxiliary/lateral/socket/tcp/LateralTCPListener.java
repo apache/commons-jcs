@@ -102,13 +102,13 @@ public class LateralTCPListener<K, V>
      */
     private final IElementSerializer serializer;
 
-    /** put count */
+    /** Put count */
     private int putCnt;
 
-    /** remove count */
+    /** Remove count */
     private int removeCnt;
 
-    /** get count */
+    /** Get count */
     private int getCnt;
 
     /**
@@ -117,10 +117,10 @@ public class LateralTCPListener<K, V>
      */
     private long listenerId = CacheInfo.listenerId;
 
-    /** is this shut down? */
+    /** Is this shut down? */
     private final AtomicBoolean shutdown = new AtomicBoolean();
 
-    /** is this terminated? */
+    /** Is this terminated? */
     private final AtomicBoolean terminated = new AtomicBoolean();
 
     /**

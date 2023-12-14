@@ -37,16 +37,16 @@ public class LRUMapSizeVsCount
     /** The ratio after the test */
     double ratioGet;
 
-    /** put size / count  ratio */
+    /** Put size / count  ratio */
     float targetPut = 1.2f;
 
-    /** get size / count ratio */
+    /** Get size / count ratio */
     float targetGet = 1.2f;
 
     /** Time to loop */
     int loops = 20;
 
-    /** items to put and get per loop */
+    /** Items to put and get per loop */
     int tries = 100000;
 
     /**

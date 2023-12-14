@@ -28,16 +28,16 @@ import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
 public class MockElementSerializer
     implements IElementSerializer
 {
-    /** test property */
+    /** Test property */
     private String testProperty;
 
     /** What's used in the background */
     private final StandardSerializer serializer = new StandardSerializer();
 
-    /** times out was called */
+    /** Times out was called */
     public int deSerializeCount;
 
-    /** times in was called */
+    /** Times in was called */
     public int serializeCount;
 
     /**

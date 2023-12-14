@@ -65,19 +65,19 @@ public class IndexedDiskCacheDefragPerformanceTest
     /** For readability */
     private static final String LOG_DIVIDER = "---------------------------";
 
-    /** total to test with */
+    /** Total to test with */
     private static final int TOTAL_ELEMENTS = 30000;
 
-    /** time to wait */
+    /** Time to wait */
     private static final long SLEEP_TIME_DISK = 8000;
 
-    /** how often to log */
+    /** How often to log */
     private static final int LOG_INCREMENT = 5000;
 
-    /** for getting memory usage */
+    /** For getting memory usage */
     private static final Runtime rt = Runtime.getRuntime();
 
-    /** for displaying memory usage */
+    /** For displaying memory usage */
     private static final DecimalFormat format = new DecimalFormat( "#,###" );
 
     /**

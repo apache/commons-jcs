@@ -54,7 +54,7 @@ public class AbstractDiskCacheUnitTest
         /** Internal map */
         protected Map<K, ICacheElement<K, V>> map = new HashMap<>();
 
-        /** used by the abstract aux class */
+        /** Used by the abstract aux class */
         protected IDiskCacheAttributes diskCacheAttributes;
 
         /**

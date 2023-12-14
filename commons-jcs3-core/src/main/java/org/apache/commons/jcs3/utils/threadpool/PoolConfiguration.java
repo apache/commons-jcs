@@ -26,16 +26,16 @@ public final class PoolConfiguration
     implements Cloneable
 {
     public enum WhenBlockedPolicy {
-        /** abort when queue is full and max threads is reached. */
+        /** Abort when queue is full and max threads is reached. */
         ABORT,
 
-        /** run in current thread when queue is full and max threads is reached. */
+        /** Run in current thread when queue is full and max threads is reached. */
         RUN,
 
-        /** discard oldest when queue is full and max threads is reached. */
+        /** Discard oldest when queue is full and max threads is reached. */
         DISCARDOLDEST,
 
-        /** silently discard submitted job when queue is full and max threads is reached. */
+        /** Silently discard submitted job when queue is full and max threads is reached. */
         DISCARD
     }
 
@@ -68,7 +68,7 @@ public final class PoolConfiguration
     /** If the queue is bounded, how big can it get */
     private int boundarySize = DEFAULT_BOUNDARY_SIZE;
 
-    /** only has meaning if a boundary is used */
+    /** Only has meaning if a boundary is used */
     private int maximumPoolSize = DEFAULT_MAXIMUM_POOL_SIZE;
 
     /**
@@ -80,7 +80,7 @@ public final class PoolConfiguration
     /** How long idle threads above the minimum should be kept alive. */
     private int keepAliveTime = DEFAULT_KEEPALIVE_TIME;
 
-    /** should be ABORT, BLOCK, RUN, WAIT, DISCARDOLDEST, */
+    /** Should be ABORT, BLOCK, RUN, WAIT, DISCARDOLDEST, */
     private WhenBlockedPolicy whenBlockedPolicy = DEFAULT_WHEN_BLOCKED_POLICY;
 
     /** The number of threads to create on startup */

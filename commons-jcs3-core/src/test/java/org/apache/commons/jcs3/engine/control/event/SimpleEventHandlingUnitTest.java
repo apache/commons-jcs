@@ -44,19 +44,19 @@ public class SimpleEventHandlingUnitTest
     public static class MyEventHandler
         implements IElementEventHandler
     {
-        /** times spool called */
+        /** Times spool called */
         private int spoolCount;
 
-        /** times spool not allowed */
+        /** Times spool not allowed */
         private int spoolNotAllowedCount;
 
-        /** times spool without disk */
+        /** Times spool without disk */
         private int spoolNoDiskCount;
 
-        /** times exceeded maxlife */
+        /** Times exceeded maxlife */
         private int exceededMaxlifeCount;
 
-        /** times exceeded idle time */
+        /** Times exceeded idle time */
         private int exceededIdletimeCount;
 
         /**

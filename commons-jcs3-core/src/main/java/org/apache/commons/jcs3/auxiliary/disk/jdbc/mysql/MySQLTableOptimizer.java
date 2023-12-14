@@ -50,7 +50,7 @@ public class MySQLTableOptimizer
     /** The name of the table. */
     private String tableName;
 
-    /** optimizing, etc. */
+    /** Optimizing, etc. */
     private final TableState tableState;
 
     /**

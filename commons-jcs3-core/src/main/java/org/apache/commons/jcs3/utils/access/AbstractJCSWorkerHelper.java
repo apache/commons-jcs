@@ -27,7 +27,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public abstract class AbstractJCSWorkerHelper<V> implements JCSWorkerHelper<V>
 {
-    /** finished flag. Can't we use wait notify? */
+    /** Finished flag. Can't we use wait notify? */
     private final AtomicBoolean finished = new AtomicBoolean(false);
 
     /**

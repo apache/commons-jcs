@@ -30,7 +30,7 @@ public class StatElement<V>
     /** Don't change */
     private static final long serialVersionUID = -2982373725267618092L;
 
-    /** name of the stat */
+    /** Name of the stat */
     private String name;
 
     /** The data */

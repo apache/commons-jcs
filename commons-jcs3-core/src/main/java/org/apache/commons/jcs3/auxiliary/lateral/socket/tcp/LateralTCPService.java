@@ -46,7 +46,7 @@ public class LateralTCPService<K, V>
     /** The logger. */
     private static final Log log = LogManager.getLog( LateralTCPService.class );
 
-    /** special configuration */
+    /** Special configuration */
     private final boolean allowPut;
     private final boolean allowGet;
     private final boolean issueRemoveOnPut;
@@ -54,7 +54,7 @@ public class LateralTCPService<K, V>
     /** Sends to another lateral. */
     private final LateralTCPSender sender;
 
-    /** use the vmid by default */
+    /** Use the vmid by default */
     private long listenerId = CacheInfo.listenerId;
 
     /**

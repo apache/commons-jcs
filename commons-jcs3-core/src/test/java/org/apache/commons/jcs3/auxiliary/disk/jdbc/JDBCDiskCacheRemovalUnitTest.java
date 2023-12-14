@@ -33,7 +33,7 @@ import org.junit.Test;
 /** Tests for the removal functionality. */
 public class JDBCDiskCacheRemovalUnitTest
 {
-    /** db name -- set in system props */
+    /** Db name -- set in system props */
     private final String databaseName = "JCS_STORE_REMOVAL";
 
     /**

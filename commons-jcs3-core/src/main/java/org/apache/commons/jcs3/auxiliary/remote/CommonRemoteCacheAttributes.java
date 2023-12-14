@@ -37,7 +37,7 @@ public class CommonRemoteCacheAttributes
     /** The service name */
     private String remoteServiceName = IRemoteCacheConstants.REMOTE_CACHE_SERVICE_VAL;
 
-    /** server host and port */
+    /** Server host and port */
     private RemoteLocation location;
 
     /** Cluster chain */
@@ -55,7 +55,7 @@ public class CommonRemoteCacheAttributes
     /** Should we put and get from the clusters. */
     private boolean localClusterConsistency;
 
-    /** read and connect timeout */
+    /** Read and connect timeout */
     private int rmiSocketFactoryTimeoutMillis = DEFAULT_RMI_SOCKET_FACTORY_TIMEOUT_MILLIS;
 
     /** Default constructor for the RemoteCacheAttributes object */

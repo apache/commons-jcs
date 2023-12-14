@@ -55,13 +55,13 @@ public class CompositeCacheConfigurator
     /** The prefix of relevant system properties */
     protected static final String SYSTEM_PROPERTY_KEY_PREFIX = "jcs";
 
-    /** normal region prefix */
+    /** Normal region prefix */
     protected static final String REGION_PREFIX = "jcs.region.";
 
-    /** system region prefix. might not be used */
+    /** System region prefix. might not be used */
     protected static final String SYSTEM_REGION_PREFIX = "jcs.system.";
 
-    /** auxiliary prefix */
+    /** Auxiliary prefix */
     protected static final String AUXILIARY_PREFIX = "jcs.auxiliary.";
 
     /** .attributes */

@@ -29,7 +29,7 @@ import org.junit.Test;
 /** Manual tester for a JCS instance configured to use the http client. */
 public class RemoteHttpCacheManualTester
 {
-    /** number to use for the test */
+    /** Number to use for the test */
     private static final int items = 100;
 
     /**

@@ -28,25 +28,25 @@ package org.apache.commons.jcs3.utils.discovery;
 public final class UDPDiscoveryAttributes
     implements Cloneable
 {
-    /** default udp discovery address */
+    /** Default udp discovery address */
     private static final String DEFAULT_UDP_DISCOVERY_ADDRESS = "228.4.5.6";
 
-    /** default udp discovery port */
+    /** Default udp discovery port */
     private static final int DEFAULT_UDP_DISCOVERY_PORT = 5678;
 
-    /** default delay between sending passive broadcasts */
+    /** Default delay between sending passive broadcasts */
     private static final int DEFAULT_SEND_DELAY_SEC = 60;
 
-    /** default amount of time before we remove services that we haven't heard from */
+    /** Default amount of time before we remove services that we haven't heard from */
     private static final int DEFAULT_MAX_IDLE_TIME_SEC = 180;
 
-    /** service name */
+    /** Service name */
     private String serviceName;
 
-    /** service address */
+    /** Service address */
     private String serviceAddress;
 
-    /** service port */
+    /** Service port */
     private int servicePort;
 
     /**
@@ -54,22 +54,22 @@ public final class UDPDiscoveryAttributes
      */
     private boolean isDark;
 
-    /** udp discovery address */
+    /** Udp discovery address */
     private String udpDiscoveryAddr = DEFAULT_UDP_DISCOVERY_ADDRESS;
 
-    /** udp discovery network interface */
+    /** Udp discovery network interface */
     private String udpDiscoveryInterface;
 
-    /** udp discovery port */
+    /** Udp discovery port */
     private int udpDiscoveryPort = DEFAULT_UDP_DISCOVERY_PORT;
 
-    /** udp datagram TTL */
+    /** Udp datagram TTL */
     private int udpTTL;
 
-    /** delay between sending passive broadcasts */
+    /** Delay between sending passive broadcasts */
     private int sendDelaySec = DEFAULT_SEND_DELAY_SEC;
 
-    /** amount of time before we remove services that we haven't heard from */
+    /** Amount of time before we remove services that we haven't heard from */
     private int maxIdleTimeSec = DEFAULT_MAX_IDLE_TIME_SEC;
 
     /** @return a clone of this object */

@@ -30,13 +30,13 @@ public abstract class AbstractAuxiliaryCacheAttributes
     /** Don't change */
     private static final long serialVersionUID = -6594609334959187673L;
 
-    /** cacheName */
+    /** CacheName */
     private String cacheName;
 
-    /** name */
+    /** Name */
     private String name;
 
-    /** eventQueueType -- pooled, or single threaded */
+    /** EventQueueType -- pooled, or single threaded */
     private ICacheEventQueue.QueueType eventQueueType;
 
     /** Named when pooled */

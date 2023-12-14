@@ -54,7 +54,7 @@ public class LateralTCPSender
     /** The client connection with the server. */
     private AsynchronousSocketChannel client;
 
-    /** how many messages sent */
+    /** How many messages sent */
     private int sendCnt;
 
     /** Use to synchronize multiple threads that may be trying to get. */

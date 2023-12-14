@@ -42,7 +42,7 @@ public class CacheEvent<K>
     /** The event name: update, get, remove, etc. */
     private String eventName;
 
-    /** disk location, ip, etc. */
+    /** Disk location, ip, etc. */
     private String optionalDetails;
 
     /** The key that was put or retrieved. */

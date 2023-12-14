@@ -219,7 +219,7 @@ public abstract class AbstractCacheEventQueue<K, V>
     /** The logger. */
     private static final Log log = LogManager.getLog( AbstractCacheEventQueue.class );
 
-    /** default */
+    /** Default */
     protected static final int DEFAULT_WAIT_TO_DIE_MILLIS = 10000;
 
     /**
@@ -243,7 +243,7 @@ public abstract class AbstractCacheEventQueue<K, V>
     /** Maximum number of failures before we buy the farm. */
     private int maxFailure;
 
-    /** in milliseconds */
+    /** In milliseconds */
     private int waitBeforeRetry;
 
     /**

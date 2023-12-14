@@ -31,19 +31,19 @@ import org.junit.Test;
  */
 public class LRUvsMRUPerformanceTest
 {
-    /** ration we want */
+    /** Ration we want */
     float ratioPut;
 
-    /** ration we want */
+    /** Ration we want */
     float ratioGet;
 
-    /** ration we want */
+    /** Ration we want */
     float target = 1.20f;
 
-    /** times to run */
+    /** Times to run */
     int loops = 20;
 
-    /** item per run */
+    /** Item per run */
     int tries = 10000;
 
     /**

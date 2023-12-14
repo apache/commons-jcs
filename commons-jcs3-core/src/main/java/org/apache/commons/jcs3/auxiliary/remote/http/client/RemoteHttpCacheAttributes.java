@@ -28,7 +28,7 @@ public class RemoteHttpCacheAttributes
     /** Don't change. */
     private static final long serialVersionUID = -5944327125140505212L;
 
-    /** http version to use. */
+    /** Http version to use. */
     private static final String DEFAULT_HTTP_VERSION = "1.1";
 
     /** The default class name for the client.  */
@@ -43,16 +43,16 @@ public class RemoteHttpCacheAttributes
     /** The socket connections timeout */
     private int connectionTimeoutMillis = 5000;
 
-    /** http version to use. */
+    /** Http version to use. */
     private String httpVersion = DEFAULT_HTTP_VERSION;
 
     /** The cache name will be included on the parameters */
     private boolean includeCacheNameAsParameter = true;
 
-    /** keys and patterns will be included in the parameters */
+    /** Keys and patterns will be included in the parameters */
     private boolean includeKeysAndPatternsAsParameter = true;
 
-    /** keys and patterns will be included in the parameters */
+    /** Keys and patterns will be included in the parameters */
     private boolean includeRequestTypeasAsParameter = true;
 
     /** The complete URL to the service. */

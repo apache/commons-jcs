@@ -53,7 +53,7 @@ public class UDPDiscoveryMessage
     /** The message type */
     private BroadcastType messageType = BroadcastType.PASSIVE;
 
-    /** udp port */
+    /** Udp port */
     private int port = 6789;
 
     /** UDP host */

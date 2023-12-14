@@ -72,10 +72,10 @@ public class RemoteCacheStartupServlet
     /** The default port to start the registry on. */
     private static final int DEFAULT_REGISTRY_PORT = 1101;
 
-    /** properties file name */
+    /** Properties file name */
     private static final String DEFAULT_PROPS_FILE_NAME = "/cache.ccf";
 
-    /** properties file name, must set prior to calling get instance */
+    /** Properties file name, must set prior to calling get instance */
     private String propsFileName = DEFAULT_PROPS_FILE_NAME;
 
     /** Configuration properties */

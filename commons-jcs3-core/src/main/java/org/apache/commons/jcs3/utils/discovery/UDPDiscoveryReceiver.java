@@ -72,7 +72,7 @@ public class UDPDiscoveryReceiver
     /** The processor */
     private final ExecutorService pooledExecutor;
 
-    /** number of messages received. For debugging and testing. */
+    /** Number of messages received. For debugging and testing. */
     private final AtomicInteger cnt = new AtomicInteger(0);
 
     /** Service to get cache names and handle request broadcasts */

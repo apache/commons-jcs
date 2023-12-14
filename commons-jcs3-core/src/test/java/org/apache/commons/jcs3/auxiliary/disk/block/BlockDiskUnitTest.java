@@ -36,7 +36,7 @@ import org.junit.Test;
  */
 public class BlockDiskUnitTest
 {
-    /** data file. */
+    /** Data file. */
     private File rafDir;
     private BlockDisk disk;
 

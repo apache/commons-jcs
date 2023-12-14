@@ -78,7 +78,7 @@ public class RemoteCacheServer<K, V>
     /** For serialization. Don't change. */
     private static final long serialVersionUID = -8072345435941473116L;
 
-    /** log instance */
+    /** Log instance */
     private static final Log log = LogManager.getLog( RemoteCacheServer.class );
 
     /** The interval at which we will log updates. */
@@ -120,17 +120,17 @@ public class RemoteCacheServer<K, V>
     private final transient ConcurrentMap<String, CacheListeners<K, V>> cacheListenersMap =
         new ConcurrentHashMap<>();
 
-    /** maps cluster listeners to regions. */
+    /** Maps cluster listeners to regions. */
     private final transient ConcurrentMap<String, CacheListeners<K, V>> clusterListenersMap =
         new ConcurrentHashMap<>();
 
     /** The central hub */
     private transient CompositeCacheManager cacheManager;
 
-    /** relates listener id with a type */
+    /** Relates listener id with a type */
     private final ConcurrentMap<Long, RemoteType> idTypeMap = new ConcurrentHashMap<>();
 
-    /** relates listener id with an ip address */
+    /** Relates listener id with an ip address */
     private final ConcurrentMap<Long, String> idIPMap = new ConcurrentHashMap<>();
 
     /** Used to get the next listener id. */

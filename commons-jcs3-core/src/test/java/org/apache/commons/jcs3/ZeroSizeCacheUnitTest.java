@@ -29,7 +29,7 @@ import org.junit.Test;
  */
 public class ZeroSizeCacheUnitTest
 {
-    /** number to get each loop */
+    /** Number to get each loop */
     private static final int items = 20000;
 
     /**

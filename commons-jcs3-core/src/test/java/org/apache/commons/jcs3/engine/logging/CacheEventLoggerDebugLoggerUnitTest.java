@@ -31,7 +31,7 @@ import org.junit.Test;
 public class CacheEventLoggerDebugLoggerUnitTest
 {
 
-    /** verify that we can log */
+    /** Verify that we can log */
     @Test
     public void testLogApplicationEvent_normal()
     {
@@ -58,7 +58,7 @@ public class CacheEventLoggerDebugLoggerUnitTest
         assertTrue( "An event with the optionalDetails should have been logged:" + result, result.indexOf( optionalDetails ) != -1 );
     }
 
-    /** verify that we can log */
+    /** Verify that we can log */
     @Test
     public void testLogError_normal()
     {
@@ -85,7 +85,7 @@ public class CacheEventLoggerDebugLoggerUnitTest
         assertTrue( "An event with the errorMessage should have been logged:" + result, result.indexOf( errorMessage ) != -1 );
     }
 
-    /** verify that we can log */
+    /** Verify that we can log */
     @Test
     public void testLogICacheEvent_normal()
     {

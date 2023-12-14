@@ -129,13 +129,13 @@ public class EventQueueConcurrentLoadTest
     /** The mock listener */
     private static CacheListenerImpl<String, String> listen;
 
-    /** max failure setting */
+    /** Max failure setting */
     private static final int maxFailure = 3;
 
-    /** time to wait before retrying on failure. */
+    /** Time to wait before retrying on failure. */
     private static final int waitBeforeRetry = 100;
 
-    /** very small idle time */
+    /** Very small idle time */
     private static final int idleTime = 2;
 
     /**

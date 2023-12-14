@@ -34,40 +34,40 @@ public class CompositeCacheAttributes
     /** Don't change */
     private static final long serialVersionUID = 6754049978134196787L;
 
-    /** default lateral switch */
+    /** Default lateral switch */
     private static final boolean DEFAULT_USE_LATERAL = true;
 
-    /** default remote switch */
+    /** Default remote switch */
     private static final boolean DEFAULT_USE_REMOTE = true;
 
-    /** default disk switch */
+    /** Default disk switch */
     private static final boolean DEFAULT_USE_DISK = true;
 
-    /** default shrinker setting */
+    /** Default shrinker setting */
     private static final boolean DEFAULT_USE_SHRINKER = false;
 
-    /** default max objects value */
+    /** Default max objects value */
     private static final int DEFAULT_MAX_OBJECTS = 100;
 
-    /** default */
+    /** Default */
     private static final int DEFAULT_MAX_MEMORY_IDLE_TIME_SECONDS = 60 * 120;
 
-    /** default interval to run the shrinker */
+    /** Default interval to run the shrinker */
     private static final int DEFAULT_SHRINKER_INTERVAL_SECONDS = 30;
 
-    /** default */
+    /** Default */
     private static final int DEFAULT_MAX_SPOOL_PER_RUN = -1;
 
-    /** default */
+    /** Default */
     private static final String DEFAULT_MEMORY_CACHE_NAME = "org.apache.commons.jcs3.engine.memory.lru.LRUMemoryCache";
 
     /** Default number to send to disk at a time when memory fills. */
     private static final int DEFAULT_CHUNK_SIZE = 2;
 
-    /** allow lateral caches */
+    /** Allow lateral caches */
     private boolean useLateral = DEFAULT_USE_LATERAL;
 
-    /** allow remote caches */
+    /** Allow remote caches */
     private boolean useRemote = DEFAULT_USE_REMOTE;
 
     /** Whether we should use a disk cache if it is configured. */
@@ -79,10 +79,10 @@ public class CompositeCacheAttributes
     /** The maximum objects that the memory cache will be allowed to hold. */
     private int maxObjs = DEFAULT_MAX_OBJECTS;
 
-    /** maxMemoryIdleTimeSeconds */
+    /** MaxMemoryIdleTimeSeconds */
     private long maxMemoryIdleTimeSeconds = DEFAULT_MAX_MEMORY_IDLE_TIME_SECONDS;
 
-    /** shrinkerIntervalSeconds */
+    /** ShrinkerIntervalSeconds */
     private long shrinkerIntervalSeconds = DEFAULT_SHRINKER_INTERVAL_SECONDS;
 
     /** The maximum number the shrinker will spool to disk per run. */

@@ -30,7 +30,7 @@ public class IndexedDiskCacheAttributes
     /** Don't change. */
     private static final long serialVersionUID = -2190863599358782950L;
 
-    /** default value */
+    /** Default value */
     private static final int DEFAULT_maxKeySize = 5000;
 
     /** Should we optimize on shutdown. */
@@ -42,7 +42,7 @@ public class IndexedDiskCacheAttributes
     /** -1 means no limit. */
     private int maxKeySize = DEFAULT_maxKeySize;
 
-    /** default to -1, i.e., don't optimize until shutdown */
+    /** Default to -1, i.e., don't optimize until shutdown */
     private int optimizeAtRemoveCount = -1;
 
     /** Should we optimize on shutdown. */

@@ -33,16 +33,16 @@ public class DiscoveredService
     /** For serialization. Don't change. */
     private static final long serialVersionUID = -7810164772089509751L;
 
-    /** region names */
+    /** Region names */
     private ArrayList<String> cacheNames;
 
-    /** service address */
+    /** Service address */
     private String serviceAddress;
 
-    /** service port */
+    /** Service port */
     private int servicePort;
 
-    /** last time we heard from this service? */
+    /** Last time we heard from this service? */
     private long lastHearFromTime;
 
     /**

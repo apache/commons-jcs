@@ -76,7 +76,7 @@ import org.apache.commons.jcs3.log.LogManager;
 public class CompositeCache<K, V>
     implements ICache<K, V>, IRequireScheduler
 {
-    /** log instance */
+    /** Log instance */
     private static final Log log = LogManager.getLog(CompositeCache.class);
 
     /**
@@ -88,7 +88,7 @@ public class CompositeCache<K, V>
     /** Auxiliary caches. */
     private CopyOnWriteArrayList<AuxiliaryCache<K, V>> auxCaches = new CopyOnWriteArrayList<>();
 
-    /** is this alive? */
+    /** Is this alive? */
     private final AtomicBoolean alive;
 
     /** Region Elemental Attributes, default. */

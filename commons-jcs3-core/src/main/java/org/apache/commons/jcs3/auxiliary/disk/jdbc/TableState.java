@@ -48,7 +48,7 @@ public class TableState
     /** Name of the table whose state this reflects. */
     private String tableName;
 
-    /** we might want to add error */
+    /** We might want to add error */
     private int state = FREE;
 
     /**

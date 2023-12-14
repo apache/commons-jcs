@@ -28,7 +28,7 @@ import java.io.OutputStream;
 public class CountingOnlyOutputStream
     extends OutputStream
 {
-    /** number of bytes passed through */
+    /** Number of bytes passed through */
     private int count; // TODO should this be long?
 
     /**

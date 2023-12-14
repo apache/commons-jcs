@@ -46,10 +46,10 @@ public class RemoteCache<K, V>
     /** The logger. */
     private static final Log log = LogManager.getLog( RemoteCache.class );
 
-    /** for error notifications */
+    /** For error notifications */
     private final RemoteCacheMonitor monitor;
 
-    /** back link for failover initiation */
+    /** Back link for failover initiation */
     private AbstractRemoteCacheNoWaitFacade<K, V> facade;
 
     /**

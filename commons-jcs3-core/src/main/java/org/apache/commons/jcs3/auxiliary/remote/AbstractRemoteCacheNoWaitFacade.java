@@ -45,13 +45,13 @@ import org.apache.commons.jcs3.log.LogManager;
 public abstract class AbstractRemoteCacheNoWaitFacade<K, V>
     extends AbstractAuxiliaryCache<K, V>
 {
-    /** log instance */
+    /** Log instance */
     private static final Log log = LogManager.getLog( AbstractRemoteCacheNoWaitFacade.class );
 
     /** The connection to a remote server, or a zombie. */
     protected List<RemoteCacheNoWait<K, V>> noWaits;
 
-    /** holds failover and cluster information */
+    /** Holds failover and cluster information */
     private final IRemoteCacheAttributes remoteCacheAttributes;
 
     /**

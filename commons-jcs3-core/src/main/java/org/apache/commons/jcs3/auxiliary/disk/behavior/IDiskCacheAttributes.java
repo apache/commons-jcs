@@ -30,9 +30,9 @@ public interface IDiskCacheAttributes
     extends AuxiliaryCacheAttributes
 {
     enum DiskLimitType {
-        /** limit elements by count (default) */
+        /** Limit elements by count (default) */
         COUNT,
-        /** limit elements by their size */
+        /** Limit elements by their size */
         SIZE
     }
     /**

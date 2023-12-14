@@ -28,7 +28,7 @@ import org.apache.commons.jcs3.engine.logging.behavior.ICacheEventLogger;
 public class MockCacheEventLogger
     implements ICacheEventLogger
 {
-    /** test property */
+    /** Test property */
     private String testProperty;
 
     /**

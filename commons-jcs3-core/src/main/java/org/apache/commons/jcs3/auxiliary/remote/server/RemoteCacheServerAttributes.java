@@ -35,7 +35,7 @@ public class RemoteCacheServerAttributes
     /** Should we try to keep the registry alive */
     private final static boolean DEFAULT_USE_REGISTRY_KEEP_ALIVE = true;
 
-    /** port the server will listen to */
+    /** Port the server will listen to */
     private int servicePort;
 
     /** Can a cluster remote get from other remotes */

@@ -26,7 +26,7 @@ import org.junit.Test;
 /** Unit tests for the double linked list. */
 public class DoubleLinkedListUnitTest
 {
-    /** verify that the last is added when the list is empty. */
+    /** Verify that the last is added when the list is empty. */
     @Test
     public void testAddLast_Empty()
     {
@@ -43,7 +43,7 @@ public class DoubleLinkedListUnitTest
         assertEquals( "Wrong last", node1, list.getLast() );
     }
 
-    /** verify that the last is added when the list is empty. */
+    /** Verify that the last is added when the list is empty. */
     @Test
     public void testAddLast_NotEmpty()
     {
@@ -64,7 +64,7 @@ public class DoubleLinkedListUnitTest
         assertEquals( "Wrong last", node2, list.getLast() );
     }
 
-    /** verify that it's added last. */
+    /** Verify that it's added last. */
     @Test
     public void testMakeLast_wasAlone()
     {
@@ -85,7 +85,7 @@ public class DoubleLinkedListUnitTest
         assertEquals( "Wrong first", node1, list.getFirst() );
     }
 
-    /** verify that it's added last. */
+    /** Verify that it's added last. */
     @Test
     public void testMakeLast_wasFirst()
     {
@@ -110,7 +110,7 @@ public class DoubleLinkedListUnitTest
         assertEquals( "Wrong first", node2, list.getFirst() );
     }
 
-    /** verify that it's added last. */
+    /** Verify that it's added last. */
     @Test
     public void testMakeLast_wasInMiddle()
     {
@@ -139,7 +139,7 @@ public class DoubleLinkedListUnitTest
         assertEquals( "Wrong first", node3, list.getFirst() );
     }
 
-    /** verify that it's added last. */
+    /** Verify that it's added last. */
     @Test
     public void testMakeLast_wasLast()
     {

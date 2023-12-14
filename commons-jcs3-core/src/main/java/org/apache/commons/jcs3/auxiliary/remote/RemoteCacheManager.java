@@ -80,7 +80,7 @@ public class RemoteCacheManager
     /** The service found through lookup */
     private final String registry;
 
-    /** can it be restored */
+    /** Can it be restored */
     private boolean canFix = true;
 
     /**

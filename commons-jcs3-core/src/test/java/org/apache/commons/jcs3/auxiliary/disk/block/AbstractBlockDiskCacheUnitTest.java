@@ -44,7 +44,7 @@ public abstract class AbstractBlockDiskCacheUnitTest{
     /** Holder for a string and byte array. */
     static class X implements Serializable
     {
-        /** ignore */
+        /** Ignore */
         private static final long serialVersionUID = 1L;
 
         /** Test string */

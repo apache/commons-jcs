@@ -53,7 +53,7 @@ public class UDPDiscoveryManager
     /** Known services */
     private final ConcurrentMap<String, UDPDiscoveryService> services = new ConcurrentHashMap<>();
 
-    /** private for singleton */
+    /** Private for singleton */
     private UDPDiscoveryManager()
     {
         // noopt

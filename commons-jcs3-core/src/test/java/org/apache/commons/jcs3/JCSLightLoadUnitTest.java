@@ -31,7 +31,7 @@ import org.junit.Test;
  */
 public class JCSLightLoadUnitTest
 {
-    /** number to use for the test */
+    /** Number to use for the test */
     private static final int items = 20000;
 
     /**

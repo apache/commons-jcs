@@ -46,13 +46,13 @@ public class LateralCache<K, V>
     /** The logger. */
     private static final Log log = LogManager.getLog( LateralCache.class );
 
-    /** generalize this, use another interface */
+    /** Generalize this, use another interface */
     private final ILateralCacheAttributes lateralCacheAttributes;
 
     /** The region name */
     final String cacheName;
 
-    /** either http, socket.udp, or socket.tcp can set in config */
+    /** Either http, socket.udp, or socket.tcp can set in config */
     private ICacheServiceNonLocal<K, V> lateralCacheService;
 
     /** Monitors the connection. */

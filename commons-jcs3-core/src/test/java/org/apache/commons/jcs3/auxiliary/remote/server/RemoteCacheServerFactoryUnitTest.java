@@ -32,7 +32,7 @@ import org.junit.Test;
 /** Unit tests for the factory */
 public class RemoteCacheServerFactoryUnitTest
 {
-    /** verify that we get the timeout value */
+    /** Verify that we get the timeout value */
     @Test
     public void testConfigureObjectSpecificCustomFactory_withProperty()
     {
@@ -50,7 +50,7 @@ public class RemoteCacheServerFactoryUnitTest
         assertEquals( "Wrong testValue", testValue, ((MockRMISocketFactory)result).getTestStringProperty() );
     }
 
-    /** verify that we get the timeout value */
+    /** Verify that we get the timeout value */
     @Test
     public void testConfigureObjectSpecificCustomFactory_withProperty_TimeoutConfigurableRMIScoketFactory()
     {
@@ -71,7 +71,7 @@ public class RemoteCacheServerFactoryUnitTest
         assertEquals( "Wrong readTimeout", openTimeout, ((TimeoutConfigurableRMISocketFactory)result).getOpenTimeout() );
     }
 
-    /** verify that we get the startRegistry value */
+    /** Verify that we get the startRegistry value */
     @Test
     public void testConfigureRemoteCacheServerAttributes_allowClusterGetPresent()
     {
@@ -87,7 +87,7 @@ public class RemoteCacheServerFactoryUnitTest
         assertEquals( "Wrong allowClusterGet", allowClusterGet, result.isAllowClusterGet() );
     }
 
-    /** verify that we get the timeout value */
+    /** Verify that we get the timeout value */
     @Test
     public void testConfigureRemoteCacheServerAttributes_eventQueuePoolName()
     {
@@ -103,7 +103,7 @@ public class RemoteCacheServerFactoryUnitTest
         assertEquals( "Wrong eventQueuePoolName", eventQueuePoolName, result.getEventQueuePoolName() );
     }
 
-    /** verify that we get the startRegistry value */
+    /** Verify that we get the startRegistry value */
     @Test
     public void testConfigureRemoteCacheServerAttributes_localClusterConsistencyPresent()
     {
@@ -119,7 +119,7 @@ public class RemoteCacheServerFactoryUnitTest
         assertEquals( "Wrong localClusterConsistency", localClusterConsistency, result.isLocalClusterConsistency() );
     }
 
-    /** verify that we get the registryKeepAliveDelayMillis value */
+    /** Verify that we get the registryKeepAliveDelayMillis value */
     @Test
     public void testConfigureRemoteCacheServerAttributes_registryKeepAliveDelayMillisPresent()
     {
@@ -135,7 +135,7 @@ public class RemoteCacheServerFactoryUnitTest
         assertEquals( "Wrong registryKeepAliveDelayMillis", registryKeepAliveDelayMillis, result.getRegistryKeepAliveDelayMillis() );
     }
 
-    /** verify that we get the registryKeepAliveDelayMillis value */
+    /** Verify that we get the registryKeepAliveDelayMillis value */
     @Test
     public void testConfigureRemoteCacheServerAttributes_rmiSocketFactoryTimeoutMillisPresent()
     {
@@ -151,7 +151,7 @@ public class RemoteCacheServerFactoryUnitTest
         assertEquals( "Wrong rmiSocketFactoryTimeoutMillis", rmiSocketFactoryTimeoutMillis, result.getRmiSocketFactoryTimeoutMillis() );
     }
 
-    /** verify that we get the timeout value */
+    /** Verify that we get the timeout value */
     @Test
     public void testConfigureRemoteCacheServerAttributes_timeoutNotPresent()
     {
@@ -165,7 +165,7 @@ public class RemoteCacheServerFactoryUnitTest
         assertEquals( "Wrong timeout", ICommonRemoteCacheAttributes.DEFAULT_RMI_SOCKET_FACTORY_TIMEOUT_MILLIS, result.getRmiSocketFactoryTimeoutMillis() );
     }
 
-    /** verify that we get the useRegistryKeepAlive value */
+    /** Verify that we get the useRegistryKeepAlive value */
     @Test
     public void testConfigureRemoteCacheServerAttributes_useRegistryKeepAlivePresent()
     {

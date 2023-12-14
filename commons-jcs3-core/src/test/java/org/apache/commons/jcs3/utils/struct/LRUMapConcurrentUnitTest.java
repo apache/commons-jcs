@@ -34,7 +34,7 @@ import org.junit.Test;
  */
 public class LRUMapConcurrentUnitTest
 {
-    /** number to test with */
+    /** Number to test with */
     private static final int items = 20000;
 
     /**

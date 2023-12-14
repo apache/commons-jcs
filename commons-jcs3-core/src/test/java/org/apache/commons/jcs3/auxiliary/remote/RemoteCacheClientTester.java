@@ -108,7 +108,7 @@ public class RemoteCacheClientTester
     /** The registry port number. */
     final int port;
 
-    /** call count */
+    /** Call count */
     final int count;
 
     /**

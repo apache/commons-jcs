@@ -30,7 +30,7 @@ public class JDBCDiskCacheAttributes
     /** Don't change */
     private static final long serialVersionUID = -6535808344813320062L;
 
-    /** default */
+    /** Default */
     private static final String DEFAULT_TABLE_NAME = "JCS_STORE";
 
     /** This is the default limit on the maximum number of active connections. */

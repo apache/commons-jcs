@@ -35,7 +35,7 @@ public class ElementEvent<T>
     /** Don't change */
     private static final long serialVersionUID = -5364117411457467056L;
 
-    /** default event code */
+    /** Default event code */
     private ElementEventType elementEvent = ElementEventType.EXCEEDED_MAXLIFE_BACKGROUND;
 
     /**

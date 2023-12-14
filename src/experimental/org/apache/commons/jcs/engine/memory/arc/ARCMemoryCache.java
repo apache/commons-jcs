@@ -64,16 +64,16 @@ public class ARCMemoryCache
 
     private DoubleLinkedList B2 = new DoubleLinkedList();
 
-    /** id of list T1 */
+    /** Id of list T1 */
     protected static final int _T1_ = 1;
 
-    /** id of list T2 */
+    /** Id of list T2 */
     protected static final int _T2_ = 2;
 
-    /** id of list B1 */
+    /** Id of list B1 */
     protected static final int _B1_ = 3;
 
-    /** id of list B2 */
+    /** Id of list B2 */
     protected static final int _B2_ = 4;
 
     // ideal size of T1

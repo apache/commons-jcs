@@ -85,7 +85,7 @@ public class CompositeCacheManager
     /** This is the name of the config file that we will look for by default. */
     private static final String DEFAULT_CONFIG = "/cache.ccf";
 
-    /** default region prefix */
+    /** Default region prefix */
     private static final String DEFAULT_REGION = "jcs.default";
 
     /** Should we use system property substitutions. */

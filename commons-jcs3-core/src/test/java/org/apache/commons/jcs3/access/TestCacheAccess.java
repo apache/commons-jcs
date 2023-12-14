@@ -41,10 +41,10 @@ import org.apache.commons.jcs3.log.LogManager;
  */
 public class TestCacheAccess
 {
-    /** log instance */
+    /** Log instance */
     private static final Log log = LogManager.getLog( TestCacheAccess.class );
 
-    /** do we use system.out.println to print out debug data? */
+    /** Do we use system.out.println to print out debug data? */
     private static boolean isSysOut;
 
     /**
@@ -114,10 +114,10 @@ public class TestCacheAccess
         }
     }
 
-    /** cache instance to use in testing */
+    /** Cache instance to use in testing */
     private CacheAccess<String, String> cache_control;
 
-    /** cache instance to use in testing */
+    /** Cache instance to use in testing */
     private GroupCacheAccess<String, String> group_cache_control;
 
     /** Constructs and initialize the cachecontrol based on the config file. */

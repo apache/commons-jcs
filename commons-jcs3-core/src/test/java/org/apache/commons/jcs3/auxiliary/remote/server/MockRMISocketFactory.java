@@ -34,7 +34,7 @@ public class MockRMISocketFactory
     /** Don't change */
     private static final long serialVersionUID = 1056199478581218676L;
 
-    /** for testing automatic property configuration. */
+    /** For testing automatic property configuration. */
     private String testStringProperty;
 
     /**

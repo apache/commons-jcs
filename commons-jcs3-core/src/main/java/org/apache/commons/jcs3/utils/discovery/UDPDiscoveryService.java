@@ -60,19 +60,19 @@ public class UDPDiscoveryService
     /** The logger */
     private static final Log log = LogManager.getLog( UDPDiscoveryService.class );
 
-    /** thread that listens for messages */
+    /** Thread that listens for messages */
     private Thread udpReceiverThread;
 
     /** The runnable that the receiver thread runs */
     private UDPDiscoveryReceiver receiver;
 
-    /** attributes */
+    /** Attributes */
     private UDPDiscoveryAttributes udpDiscoveryAttributes;
 
     /** Used to serialize messages */
     private final IElementSerializer serializer;
 
-    /** is this shut down? */
+    /** Is this shut down? */
     private final AtomicBoolean shutdown = new AtomicBoolean(false);
 
     /** This is a set of services that have been discovered. */
@@ -420,7 +420,7 @@ public class UDPDiscoveryService
         this.broadcastTaskFuture = scheduledExecutor.scheduleAtFixedRate(
                 this::serviceRequestBroadcast, 0, 15, TimeUnit.SECONDS);
 
-        /** removes things that have been idle for too long */
+        /** Removes things that have been idle for too long */
         // I'm going to use this as both, but it could happen
         // that something could hang around twice the time using this as the
         // delay and the idle time.

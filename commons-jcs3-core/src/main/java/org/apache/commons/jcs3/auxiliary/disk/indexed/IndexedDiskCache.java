@@ -246,7 +246,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
     /** Should we optimize on shutdown. */
     private boolean isShutdownOptimizationEnabled = true;
 
-    /** are we currently optimizing the files */
+    /** Are we currently optimizing the files */
     private boolean isOptimizing;
 
     /** The number of times the file has been optimized. */
@@ -255,13 +255,13 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
     /** The thread optimizing the file. */
     private volatile Thread currentOptimizationThread;
 
-    /** used for counting the number of requests */
+    /** Used for counting the number of requests */
     private int removeCount;
 
     /** Should we queue puts. True when optimizing. We write the queue post optimization. */
     private boolean queueInput;
 
-    /** list where puts made during optimization are made */
+    /** List where puts made during optimization are made */
     private final ConcurrentSkipListSet<IndexedDiskElementDescriptor> queuedPutList;
 
     /** RECYCLE BIN -- array of empty spots */
@@ -279,10 +279,10 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
     /** The number of bytes free on disk. */
     private final AtomicLong bytesFree = new AtomicLong();
 
-    /** mode we are working on (size or count limited **/
+    /** Mode we are working on (size or count limited **/
     private DiskLimitType diskLimitType = DiskLimitType.COUNT;
 
-    /** simple stat */
+    /** Simple stat */
     private final AtomicInteger hitCount = new AtomicInteger(0);
 
     /**

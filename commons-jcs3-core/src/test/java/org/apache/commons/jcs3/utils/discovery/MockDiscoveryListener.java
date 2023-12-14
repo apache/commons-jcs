@@ -28,7 +28,7 @@ import org.apache.commons.jcs3.utils.discovery.behavior.IDiscoveryListener;
 public class MockDiscoveryListener
     implements IDiscoveryListener
 {
-    /** discovered services. */
+    /** Discovered services. */
     public List<DiscoveredService> discoveredServices = new ArrayList<>();
 
     /**

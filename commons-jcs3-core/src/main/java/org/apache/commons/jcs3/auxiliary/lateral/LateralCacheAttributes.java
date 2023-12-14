@@ -35,25 +35,25 @@ public class LateralCacheAttributes
     /** Default receive setting */
     private static final boolean DEFAULT_RECEIVE = true;
 
-    /** indicates the lateral type, this needs to change */
+    /** Indicates the lateral type, this needs to change */
     private Type transmissionType = Type.UDP;
 
     /** The http servers */
     private String httpServers;
 
-    /** used to identify the service that this manager will be operating on */
+    /** Used to identify the service that this manager will be operating on */
     private String httpServer = "";
 
-    /** this needs to change */
+    /** This needs to change */
     private String udpMulticastAddr = "228.5.6.7";
 
-    /** this needs to change */
+    /** This needs to change */
     private int udpMulticastPort = 6789;
 
-    /** this needs to change */
+    /** This needs to change */
     private int httpListenerPort = 8080;
 
-    /** disables gets from laterals */
+    /** Disables gets from laterals */
     private boolean putOnlyMode = true;
 
     /**
