@@ -33,7 +33,7 @@ import javax.enterprise.inject.spi.ProcessBean;
 // add default CacheProvider and CacheManager
 public class ExtraJCacheExtension implements Extension
 {
-    private static final boolean ACTIVATED = "true".equals(System.getProperty("org.apache.jcs.extra.cdi", "true"));
+    private static final boolean ACTIVATED = Boolean.parseBoolean(System.getProperty("org.apache.jcs.extra.cdi", "true"));
 
     private boolean cacheManagerFound;
     private boolean cacheProviderFound;

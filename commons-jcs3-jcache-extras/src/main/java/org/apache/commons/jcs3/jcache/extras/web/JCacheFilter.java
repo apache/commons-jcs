@@ -308,8 +308,8 @@ public class JCacheFilter implements Filter
         {
             final MutableConfiguration<PageKey, Page> configuration = new MutableConfiguration<PageKey, Page>()
                     .setStoreByValue(false);
-            configuration.setReadThrough("true".equals(properties.getProperty("read-through", "false")));
-            configuration.setWriteThrough("true".equals(properties.getProperty("write-through", "false")));
+            configuration.setReadThrough(Boolean.parseBoolean(properties.getProperty("read-through", "false")));
+            configuration.setWriteThrough(Boolean.parseBoolean(properties.getProperty("write-through", "false")));
             if (configuration.isReadThrough())
             {
                 configuration.setCacheLoaderFactory(new FactoryBuilder.ClassFactory<>(properties.getProperty("cache-loader-factory")));
@@ -323,8 +323,8 @@ public class JCacheFilter implements Filter
             {
                 configuration.setExpiryPolicyFactory(new FactoryBuilder.ClassFactory<>(expiryPolicy));
             }
-            configuration.setManagementEnabled("true".equals(properties.getProperty("management-enabled", "false")));
-            configuration.setStatisticsEnabled("true".equals(properties.getProperty("statistics-enabled", "false")));
+            configuration.setManagementEnabled(Boolean.parseBoolean(properties.getProperty("management-enabled", "false")));
+            configuration.setStatisticsEnabled(Boolean.parseBoolean(properties.getProperty("statistics-enabled", "false")));
             cache = manager.createCache(cacheName, configuration);
         }
     }

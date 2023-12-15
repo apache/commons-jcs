@@ -64,10 +64,10 @@ public class OpenJPAJCacheDataCacheManager extends DataCacheManagerImpl
         {
             final Properties properties = cacheManager.getProperties();
             final MutableConfiguration<Object, Object> configuration = new MutableConfiguration<>()
-                    .setStoreByValue("true".equalsIgnoreCase(properties.getProperty("jcache.store-by-value", "false")));
+                    .setStoreByValue(Boolean.parseBoolean(properties.getProperty("jcache.store-by-value", "false")));
 
-            configuration.setReadThrough("true".equals(properties.getProperty("jcache.read-through", "false")));
-            configuration.setWriteThrough("true".equals(properties.getProperty("jcache.write-through", "false")));
+            configuration.setReadThrough(Boolean.parseBoolean(properties.getProperty("jcache.read-through", "false")));
+            configuration.setWriteThrough(Boolean.parseBoolean(properties.getProperty("jcache.write-through", "false")));
             if (configuration.isReadThrough())
             {
                 configuration.setCacheLoaderFactory(new FactoryBuilder.ClassFactory<>(properties.getProperty("jcache.cache-loader-factory")));
@@ -85,8 +85,8 @@ public class OpenJPAJCacheDataCacheManager extends DataCacheManagerImpl
             {
                 configuration.setExpiryPolicyFactory(new FactoryBuilder.SingletonFactory<>(new CreatedExpiryPolicy(Duration.FIVE_MINUTES)));
             }
-            configuration.setManagementEnabled("true".equals(properties.getProperty("jcache.management-enabled", "false")));
-            configuration.setStatisticsEnabled("true".equals(properties.getProperty("jcache.statistics-enabled", "false")));
+            configuration.setManagementEnabled(Boolean.parseBoolean(properties.getProperty("jcache.management-enabled", "false")));
+            configuration.setStatisticsEnabled(Boolean.parseBoolean(properties.getProperty("jcache.statistics-enabled", "false")));
 
             cache = cacheManager.createCache(internalName, configuration);
         }
