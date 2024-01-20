@@ -78,7 +78,7 @@ public class HostNameUtil
      * interfaces, but the JDK <code>InetAddress.getLocalHost</code> method does not specify the
      * algorithm used to select the address returned under such circumstances, and will often return
      * the loopback address, which is not valid for network communication. Details <a
-     * href="http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4665037">here</a>.
+     * href="https://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4665037">here</a>.
      * <p>
      * This method will scan all IP addresses on all network interfaces on the host machine to
      * determine the IP address most likely to be the machine's LAN address. If the machine has
@@ -91,7 +91,7 @@ public class HostNameUtil
      * fall back to calling and returning the result of JDK method
      * <code>InetAddress.getLocalHost</code>.
      * <p>
-     * <a href="http://issues.apache.org/jira/browse/JCS-40">JIR ISSUE JCS-40</a>
+     * <a href="https://issues.apache.org/jira/browse/JCS-40">JIR ISSUE JCS-40</a>
      * <p>
      * @return InetAddress
      * @throws UnknownHostException If the LAN address of the machine cannot be found.

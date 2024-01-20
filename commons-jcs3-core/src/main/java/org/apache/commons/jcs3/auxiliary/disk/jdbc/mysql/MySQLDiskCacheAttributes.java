@@ -49,7 +49,7 @@ public class MySQLDiskCacheAttributes
     /**
      * If true, we will balk, that is return null during optimization rather than block.
      * <p>
-     * <a href="http://en.wikipedia.org/wiki/Balking_pattern">Balking</a>
+     * <a href="https://en.wikipedia.org/wiki/Balking_pattern">Balking</a>
      */
     private boolean balkDuringOptimization = DEFAULT_BALK_DURING_OPTIMIZATION;
 
