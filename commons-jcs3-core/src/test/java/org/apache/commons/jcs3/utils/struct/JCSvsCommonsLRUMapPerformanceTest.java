@@ -49,7 +49,6 @@ public class JCSvsCommonsLRUMapPerformanceTest
     int tries = 100000;
 
     /**
-     *
      */
     public void doWork()
     {

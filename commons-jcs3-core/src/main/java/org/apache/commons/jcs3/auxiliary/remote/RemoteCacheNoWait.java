@@ -256,7 +256,6 @@ public class RemoteCacheNoWait<K, V>
      * @param pattern
      * @return Map
      * @throws IOException
-     *
      */
     @Override
     public Map<K, ICacheElement<K, V>> getMatching( final String pattern )

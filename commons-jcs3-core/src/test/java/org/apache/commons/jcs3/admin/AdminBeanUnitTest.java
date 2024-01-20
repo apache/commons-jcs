@@ -89,7 +89,6 @@ public class AdminBeanUnitTest
      * Create a test region and then verify that we get it from the list.
      *
      * @throws Exception
-     *
      */
     @Test
     public void testGetRegionInfo()

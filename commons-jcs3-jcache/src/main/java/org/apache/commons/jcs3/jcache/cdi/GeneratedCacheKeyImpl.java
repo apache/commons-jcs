@@ -25,7 +25,6 @@ import javax.cache.annotation.GeneratedCacheKey;
 public class GeneratedCacheKeyImpl implements GeneratedCacheKey
 {
     /**
-     *
      */
     private static final long serialVersionUID = -5081690220034319047L;
     private final Object[] params;

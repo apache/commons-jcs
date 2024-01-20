@@ -35,7 +35,6 @@ public class JCSWorkerUnitTest
      * Just verify that the worker will go to the cache before asking the helper.
      *
      * @throws Exception
-     *
      */
     @Test
     public void testSimpleGet()

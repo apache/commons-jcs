@@ -162,7 +162,6 @@ public class LateralCacheServletReciever
     /**
      * Make sure we have a cache manager. This should have happened in the init
      * method.
-     *
      */
     protected synchronized void ensureCacheManager()
     {

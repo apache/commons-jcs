@@ -33,7 +33,6 @@ public interface IShutdownObserver
 {
     /**
      * Tells the observer that the observable has received a shutdown command.
-     *
      */
     void shutdown();
 }

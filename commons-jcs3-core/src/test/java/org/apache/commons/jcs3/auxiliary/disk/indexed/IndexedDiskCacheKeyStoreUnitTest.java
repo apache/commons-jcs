@@ -41,7 +41,6 @@ public class IndexedDiskCacheKeyStoreUnitTest
      * We should also compare the data file sizes. . . .
      *
      * @throws Exception
-     *
      */
     @Test
     public void testOptiimize()
@@ -100,7 +99,6 @@ public class IndexedDiskCacheKeyStoreUnitTest
      * can get the items.
      *
      * @throws Exception
-     *
      */
     @Test
     public void testStoreKeys()

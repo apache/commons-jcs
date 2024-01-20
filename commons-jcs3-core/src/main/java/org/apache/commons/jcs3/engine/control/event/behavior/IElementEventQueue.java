@@ -41,7 +41,6 @@ public interface IElementEventQueue
 
     /**
      * Destroy the event queue
-     *
      */
     void dispose();
 }

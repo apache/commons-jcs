@@ -38,7 +38,6 @@ public class SystemPropertyUnitTest
      * Verify that we use a system property for a ${FOO} string in a value.
      *
      * @throws Exception
-     *
      */
     @Test
     public void test1SystemPropertyInValueDelimiter()
@@ -65,7 +64,6 @@ public class SystemPropertyUnitTest
      * property. The default value should be used, if one exists.
      *
      * @throws Exception
-     *
      */
     @Test
     public void test2SystemPropertyMissingInValueDelimeter()

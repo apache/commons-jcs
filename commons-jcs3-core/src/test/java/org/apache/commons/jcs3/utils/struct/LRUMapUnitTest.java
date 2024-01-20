@@ -37,7 +37,6 @@ public class LRUMapUnitTest
 
     /**
      * Add items to the map and then test to see that they come back in the entry set.
-     *
      */
     @Test
     public void testGetEntrySet()
@@ -62,7 +61,6 @@ public class LRUMapUnitTest
 
     /**
      * Put and then remove.  Make sure the element is returned.
-     *
      */
     @Test
     public void testPutAndRemove()
@@ -77,7 +75,6 @@ public class LRUMapUnitTest
 
     /**
      * Put into the lru with no limit and then make sure they are all there.
-     *
      */
     @Test
     public void testPutWithNoSizeLimit()
@@ -99,7 +96,6 @@ public class LRUMapUnitTest
 
     /**
      * Put up to the size limit and then make sure they are all there.
-     *
      */
     @Test
     public void testPutWithSizeLimit()
@@ -121,7 +117,6 @@ public class LRUMapUnitTest
 
     /**
      * Call remove on an empty map
-     *
      */
     @Test
     public void testRemoveEmpty()

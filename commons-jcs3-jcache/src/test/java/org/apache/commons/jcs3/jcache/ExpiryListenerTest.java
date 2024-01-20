@@ -46,7 +46,6 @@ public class ExpiryListenerTest {
 
     private static final class CacheEntryExpiredListenerImpl implements CacheEntryExpiredListener<String, String>, Serializable {
         /**
-         *
          */
         private static final long serialVersionUID = -5070377769541346377L;
         private final Collection<CacheEntryEvent<? extends String, ? extends String>> events =

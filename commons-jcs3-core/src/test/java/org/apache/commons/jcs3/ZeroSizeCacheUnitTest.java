@@ -48,7 +48,6 @@ public class ZeroSizeCacheUnitTest
      * Verify that a 0 size cache does not result in errors. You should be able
      * to disable a region this way.
      * @throws Exception
-     *
      */
     @Test
     public void testPutGetRemove()

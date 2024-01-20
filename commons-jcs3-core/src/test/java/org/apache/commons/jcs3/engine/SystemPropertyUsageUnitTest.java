@@ -63,7 +63,6 @@ public class SystemPropertyUsageUnitTest
 	/**
      * Verify that the system properties are used.
      * @throws Exception
-     *
      */
     @Test
     public void testSystemPropertyUsage()
@@ -84,7 +83,6 @@ public class SystemPropertyUsageUnitTest
      * Verify that the system properties are not used is specified.
      *
      * @throws Exception
-     *
      */
     @Test
     public void testSystemPropertyUsage_inactive()

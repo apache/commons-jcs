@@ -53,7 +53,6 @@ public class JCSvsHashtablePerformanceTest
     int tries = 50000;
 
     /**
-     *
      */
     public void doWork()
     {

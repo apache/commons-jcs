@@ -45,7 +45,6 @@ public class MockElementSerializer
      * @return Object
      * @throws IOException
      * @throws ClassNotFoundException
-     *
      */
     @Override
     public <T> T deSerialize( final byte[] bytes, final ClassLoader loader )
@@ -67,7 +66,6 @@ public class MockElementSerializer
      * @param obj
      * @return byte[]
      * @throws IOException
-     *
      */
     @Override
     public <T> byte[] serialize( final T obj )

@@ -53,7 +53,6 @@ public class ThreadPoolManagerUnitTest
 
     /**
      * Gets a couple pools by name and then see if they are in the list.
-     *
      */
     @Test
     public void testGetPoolNames()

@@ -317,7 +317,6 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K, V>
 
     /**
      * restore the primary server in the list of failovers
-     *
      */
     public void restorePrimaryServer(final RemoteCacheNoWait<K, V> rcnw)
     {

@@ -50,7 +50,6 @@ public class LRUMapSizeVsCount
     int tries = 100000;
 
     /**
-     *
      */
     public void doWork()
     {

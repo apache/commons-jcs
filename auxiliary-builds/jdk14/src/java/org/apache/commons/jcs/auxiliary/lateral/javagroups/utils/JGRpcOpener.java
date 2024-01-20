@@ -80,7 +80,6 @@ public class JGRpcOpener
      * @param ilcl
      * @param ilca
      * @param groupName
-     *
      */
     public JGRpcOpener( ILateralCacheJGListener ilcl, ILateralCacheAttributes ilca, String groupName )
     {
