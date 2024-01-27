@@ -28,6 +28,7 @@ import org.apache.commons.jcs3.engine.logging.behavior.ICacheEventLogger;
  * specific language governing permissions and limitations
  * under the License.
  */
+
 /**
  * Test RemoteCache factory that skips actual connection attempt
  */
