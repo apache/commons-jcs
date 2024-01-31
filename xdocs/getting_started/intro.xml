@@ -77,19 +77,16 @@
 
         <section name="STEP 2: Download JCS">
             <p>
-                Download the latest version of JCS. The latest JCS
-                builds are located
-                <a
-                    href="http://www.apache.org/dist/commons/jcs/">
-                    HERE
+                Download the latest version of JCS from the
+                <a href="https://commons.apache.org/proper/commons-jcs/download_jcs.cgi">
+                    JCS download area
                 </a>
             </p>
             <p>
-                If you would like to build JCS yourself, check it out
-                from Subversion and build it as you would any other
-                project built by Maven. The location of the
-                repository is documented in the project info pages that
-                are linked via the left nav.
+                If you would like to build JCS yourself, check it out from
+                <a href="https://commons.apache.org/proper/commons-jcs/scm.html">SCM</a>
+                and build it as you would any other
+                project built by Maven.
             </p>
         </section>
 
