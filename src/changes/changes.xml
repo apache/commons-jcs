@@ -22,6 +22,8 @@
 	</properties>
 	<body>
         <release version="3.2.1" date="TBD">
+            <!-- ADD -->
+            <action type="add" dev="ggregory" due-to="Gary Gregory">Add Maven property project.build.outputTimestamp for build reproducibility.</action>
             <!-- REMOVE -->
             <action dev="tv" type="remove">
                Remove all deprecated code
