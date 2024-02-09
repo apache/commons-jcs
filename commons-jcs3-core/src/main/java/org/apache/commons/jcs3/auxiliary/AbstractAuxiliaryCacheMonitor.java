@@ -63,7 +63,7 @@ public abstract class AbstractAuxiliaryCacheMonitor extends Thread
     /**
      * shutdown flag
      */
-    private final AtomicBoolean shutdown = new AtomicBoolean(false);
+    private final AtomicBoolean shutdown = new AtomicBoolean();
 
     /** Synchronization helper lock */
     private final Lock lock = new ReentrantLock();

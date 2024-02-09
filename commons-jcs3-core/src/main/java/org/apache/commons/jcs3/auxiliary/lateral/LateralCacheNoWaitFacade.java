@@ -71,7 +71,7 @@ public class LateralCacheNoWaitFacade<K, V>
     private final ILateralCacheAttributes lateralCacheAttributes;
 
     /** Disposed state of this facade */
-    private final AtomicBoolean disposed = new AtomicBoolean(false);
+    private final AtomicBoolean disposed = new AtomicBoolean();
 
     /**
      * Constructs with the given lateral cache, and fires events to any listeners.

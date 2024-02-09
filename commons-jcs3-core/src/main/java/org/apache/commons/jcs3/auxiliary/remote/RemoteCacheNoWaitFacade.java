@@ -117,7 +117,7 @@ public class RemoteCacheNoWaitFacade<K, V>
             return;
         }
 
-        final AtomicBoolean allright = new AtomicBoolean(false);
+        final AtomicBoolean allright = new AtomicBoolean();
 
         do
         {

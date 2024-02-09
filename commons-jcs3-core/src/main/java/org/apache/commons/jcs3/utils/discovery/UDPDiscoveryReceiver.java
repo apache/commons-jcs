@@ -82,7 +82,7 @@ public class UDPDiscoveryReceiver
     private IElementSerializer serializer;
 
     /** Is it shutdown. */
-    private final AtomicBoolean shutdown = new AtomicBoolean(false);
+    private final AtomicBoolean shutdown = new AtomicBoolean();
 
     private final ArrayBlockingQueue<UDPDiscoveryMessage> msgQueue =
             new ArrayBlockingQueue<>(maxPoolSize);

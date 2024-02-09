@@ -63,7 +63,7 @@ public class RemoteCacheListener<K, V>
                                 final IElementSerializer elementSerializer )
     {
         super( irca, cacheMgr, elementSerializer );
-        disposed = new AtomicBoolean(false);
+        disposed = new AtomicBoolean();
 
         // Export this remote object to make it available to receive incoming
         // calls.

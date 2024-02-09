@@ -44,7 +44,7 @@ public class ElementEventQueue
     private static final Log log = LogManager.getLog( ElementEventQueue.class );
 
     /** Shutdown or not */
-    private final AtomicBoolean destroyed = new AtomicBoolean(false);
+    private final AtomicBoolean destroyed = new AtomicBoolean();
 
     /** The worker thread pool. */
     private final ExecutorService queueProcessor;

@@ -73,7 +73,7 @@ public class UDPDiscoveryService
     private final IElementSerializer serializer;
 
     /** Is this shut down? */
-    private final AtomicBoolean shutdown = new AtomicBoolean(false);
+    private final AtomicBoolean shutdown = new AtomicBoolean();
 
     /** This is a set of services that have been discovered. */
     private final ConcurrentMap<Integer, DiscoveredService> discoveredServices =
