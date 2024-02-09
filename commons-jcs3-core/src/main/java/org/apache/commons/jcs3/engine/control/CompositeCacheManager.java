@@ -179,7 +179,7 @@ public class CompositeCacheManager
     private final ConcurrentMap<String, ICache<?, ?>> caches = new ConcurrentHashMap<>();
 
     /** Number of clients accessing this cache manager */
-    private final AtomicInteger clients = new AtomicInteger(0);
+    private final AtomicInteger clients = new AtomicInteger();
 
     /** Default cache attributes for this cache manager */
     private ICompositeCacheAttributes defaultCacheAttr = new CompositeCacheAttributes();

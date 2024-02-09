@@ -37,13 +37,13 @@ import org.apache.commons.logging.LogFactory;
 public enum CacheFileDAO {
     inst;
 
-    private AtomicInteger countWriteIOException = new AtomicInteger(0);
-    private AtomicInteger countWriteCloseException = new AtomicInteger(0);
-    private AtomicInteger countReadIOException = new AtomicInteger(0);
-    private AtomicInteger countReadCloseException = new AtomicInteger(0);
-    private AtomicInteger countCorruptMinLength = new AtomicInteger(0);
-    private AtomicInteger countCorruptLength = new AtomicInteger(0);
-    private AtomicInteger countCorruptInvalid = new AtomicInteger(0);
+    private AtomicInteger countWriteIOException = new AtomicInteger();
+    private AtomicInteger countWriteCloseException = new AtomicInteger();
+    private AtomicInteger countReadIOException = new AtomicInteger();
+    private AtomicInteger countReadCloseException = new AtomicInteger();
+    private AtomicInteger countCorruptMinLength = new AtomicInteger();
+    private AtomicInteger countCorruptLength = new AtomicInteger();
+    private AtomicInteger countCorruptInvalid = new AtomicInteger();
 
     private Log log = LogFactory.getLog(this.getClass());
 

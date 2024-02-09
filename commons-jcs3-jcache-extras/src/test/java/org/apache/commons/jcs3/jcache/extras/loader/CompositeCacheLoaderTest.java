@@ -36,7 +36,7 @@ public class CompositeCacheLoaderTest
     @Rule
     public final InternalCacheRule rule = new InternalCacheRule(this);
 
-    private final AtomicInteger count = new AtomicInteger(0);
+    private final AtomicInteger count = new AtomicInteger();
 
     private final CacheLoaderAdapter<String, String> loader1 = new CacheLoaderAdapter<>()
     {

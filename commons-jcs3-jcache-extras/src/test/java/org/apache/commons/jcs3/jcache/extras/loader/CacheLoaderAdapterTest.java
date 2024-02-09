@@ -39,7 +39,7 @@ public class CacheLoaderAdapterTest
     @Rule
     public final InternalCacheRule rule = new InternalCacheRule(this);
 
-    private final AtomicInteger count = new AtomicInteger(0);
+    private final AtomicInteger count = new AtomicInteger();
     private final Configuration<?, ?> config = new MutableConfiguration<String, String>().setStoreByValue(false).setReadThrough(true).setCacheLoaderFactory(new CacheLoaderAdapter<String, String>()
     {
         private static final long serialVersionUID = 5824701188219321027L;

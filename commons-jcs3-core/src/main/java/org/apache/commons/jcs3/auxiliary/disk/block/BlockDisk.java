@@ -56,7 +56,7 @@ public class BlockDisk implements AutoCloseable
      * the total number of blocks that have been used. If there are no free, we will use this to
      * calculate the position of the next block.
      */
-    private final AtomicInteger numberOfBlocks = new AtomicInteger(0);
+    private final AtomicInteger numberOfBlocks = new AtomicInteger();
 
     /** Empty blocks that can be reused. */
     private final ConcurrentLinkedQueue<Integer> emptyBlocks = new ConcurrentLinkedQueue<>();

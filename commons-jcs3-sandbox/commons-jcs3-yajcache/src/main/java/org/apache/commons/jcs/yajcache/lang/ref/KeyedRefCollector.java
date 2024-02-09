@@ -42,7 +42,7 @@ public class KeyedRefCollector<K> implements Runnable {
     private Log log = debug ? LogFactory.getLog(this.getClass()) : null;
     private final @NonNullable ReferenceQueue q;
     private final @NonNullable ConcurrentMap<K, ? extends IKey<K>> synMap;
-    private final AtomicInteger count = new AtomicInteger(0);
+    private final AtomicInteger count = new AtomicInteger();
     /**
      * Constructs with a given reference queue and concurrent map.
      */

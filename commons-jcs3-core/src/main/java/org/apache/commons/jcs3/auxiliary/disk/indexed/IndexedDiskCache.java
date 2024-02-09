@@ -123,7 +123,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
         public LRUMapSizeLimited(final int maxKeySize)
         {
             this.maxSize = maxKeySize;
-            this.contentSize = new AtomicInteger(0);
+            this.contentSize = new AtomicInteger();
         }
 
         // keep the content size in kB, so 2^31 kB is reasonable value
@@ -283,7 +283,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
     private DiskLimitType diskLimitType = DiskLimitType.COUNT;
 
     /** Simple stat */
-    private final AtomicInteger hitCount = new AtomicInteger(0);
+    private final AtomicInteger hitCount = new AtomicInteger();
 
     /**
      * Use this lock to synchronize reads and writes to the underlying storage mechanism.

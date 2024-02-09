@@ -40,15 +40,15 @@ public enum CacheManager {
     inst;
 
     private static final boolean debug = true;
-    private AtomicInteger countGetCache = new AtomicInteger(0);
+    private AtomicInteger countGetCache = new AtomicInteger();
 
-    private AtomicInteger countCreateCache = new AtomicInteger(0);
-    private AtomicInteger countCreateCacheRace = new AtomicInteger(0);
-    private AtomicInteger countCreateFileCache = new AtomicInteger(0);
-    private AtomicInteger countCreateFileCacheRace = new AtomicInteger(0);
+    private AtomicInteger countCreateCache = new AtomicInteger();
+    private AtomicInteger countCreateCacheRace = new AtomicInteger();
+    private AtomicInteger countCreateFileCache = new AtomicInteger();
+    private AtomicInteger countCreateFileCacheRace = new AtomicInteger();
 
-    private AtomicInteger countRemoveCache = new AtomicInteger(0);
-    private AtomicInteger countRemoveFileCache = new AtomicInteger(0);
+    private AtomicInteger countRemoveCache = new AtomicInteger();
+    private AtomicInteger countRemoveFileCache = new AtomicInteger();
 
     // Cache name to Cache mapping.
     private final ConcurrentMap<String,ICache<?>> map =

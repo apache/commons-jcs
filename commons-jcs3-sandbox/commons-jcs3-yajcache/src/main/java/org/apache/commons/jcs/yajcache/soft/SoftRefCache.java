@@ -58,13 +58,13 @@ public class SoftRefCache<V> implements ICache<V> {
     private final @NonNullable KeyedRefCollector<String> collector;
     private @NonNullable PerCacheConfig config;
 
-    private AtomicInteger countGet = new AtomicInteger(0);
-    private AtomicInteger countGetHitMemory = new AtomicInteger(0);
-    private AtomicInteger countGetMiss = new AtomicInteger(0);
-    private AtomicInteger countGetEmptyRef = new AtomicInteger(0);
+    private AtomicInteger countGet = new AtomicInteger();
+    private AtomicInteger countGetHitMemory = new AtomicInteger();
+    private AtomicInteger countGetMiss = new AtomicInteger();
+    private AtomicInteger countGetEmptyRef = new AtomicInteger();
 
-    private AtomicInteger countPut = new AtomicInteger(0);
-    private AtomicInteger countRemove = new AtomicInteger(0);
+    private AtomicInteger countPut = new AtomicInteger();
+    private AtomicInteger countRemove = new AtomicInteger();
     /** Returns the cache name. */
     public @NonNullable String getName() {
         return this.name;

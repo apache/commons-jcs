@@ -49,14 +49,14 @@ public class KeyedReadWriteLock<K> implements IKeyedReadWriteLock<K> {
     private final @NonNullable KeyedRefCollector<K> collector =
             new KeyedRefCollector<K>(refQ, rwlMap);
 
-    private final AtomicInteger countRWLockCreate = new AtomicInteger(0);
-    private final AtomicInteger countReadLock = new AtomicInteger(0);
-    private final AtomicInteger countWriteLock = new AtomicInteger(0);
+    private final AtomicInteger countRWLockCreate = new AtomicInteger();
+    private final AtomicInteger countReadLock = new AtomicInteger();
+    private final AtomicInteger countWriteLock = new AtomicInteger();
 
-    private final AtomicInteger countKeyHit = new AtomicInteger(0);
-    private final AtomicInteger countLockRefEmpty = new AtomicInteger(0);
-    private final AtomicInteger countLockNew = new AtomicInteger(0);
-    private final AtomicInteger countLockExist = new AtomicInteger(0);
+    private final AtomicInteger countKeyHit = new AtomicInteger();
+    private final AtomicInteger countLockRefEmpty = new AtomicInteger();
+    private final AtomicInteger countLockNew = new AtomicInteger();
+    private final AtomicInteger countLockExist = new AtomicInteger();
 
     public KeyedReadWriteLock() {
         this.rwlClass = ReentrantReadWriteLock.class;

@@ -86,13 +86,13 @@ public class JDBCDiskCache<K, V>
     private JDBCDiskCacheAttributes jdbcDiskCacheAttributes;
 
     /** # of times update was called */
-    private final AtomicInteger updateCount = new AtomicInteger(0);
+    private final AtomicInteger updateCount = new AtomicInteger();
 
     /** # of times get was called */
-    private final AtomicInteger getCount = new AtomicInteger(0);
+    private final AtomicInteger getCount = new AtomicInteger();
 
     /** # of times getMatching was called */
-    private final AtomicInteger getMatchingCount = new AtomicInteger(0);
+    private final AtomicInteger getMatchingCount = new AtomicInteger();
 
     /** Db connection pool */
     private final DataSourceFactory dsFactory;

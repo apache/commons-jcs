@@ -119,7 +119,7 @@ public class BlockDiskKeyStore<K>
         public LRUMapSizeLimited(final int maxSize)
         {
             this.maxSize = maxSize;
-            this.contentSize = new AtomicInteger(0);
+            this.contentSize = new AtomicInteger();
         }
 
         // keep the content size in kB, so 2^31 kB is reasonable value

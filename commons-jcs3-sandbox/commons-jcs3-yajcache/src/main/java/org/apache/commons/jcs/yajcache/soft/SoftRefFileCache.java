@@ -76,26 +76,26 @@ public class SoftRefFileCache<V> implements ICache<V>
     private final @NonNullable CacheChangeSupport<V> cacheChangeSupport =
             new CacheChangeSupport<V>(this);
 
-    private AtomicInteger countGet = new AtomicInteger(0);
+    private AtomicInteger countGet = new AtomicInteger();
 
-    private AtomicInteger countGetHitMemory = new AtomicInteger(0);
-    private AtomicInteger countGetHitFile = new AtomicInteger(0);
+    private AtomicInteger countGetHitMemory = new AtomicInteger();
+    private AtomicInteger countGetHitFile = new AtomicInteger();
 
-    private AtomicInteger countGetMissMemory = new AtomicInteger(0);
-    private AtomicInteger countGetMiss = new AtomicInteger(0);
-    private AtomicInteger countGetCorruptedFile = new AtomicInteger(0);
-    private AtomicInteger countGetEmptyRef = new AtomicInteger(0);
+    private AtomicInteger countGetMissMemory = new AtomicInteger();
+    private AtomicInteger countGetMiss = new AtomicInteger();
+    private AtomicInteger countGetCorruptedFile = new AtomicInteger();
+    private AtomicInteger countGetEmptyRef = new AtomicInteger();
 
-    private AtomicInteger countPut = new AtomicInteger(0);
-    private AtomicInteger countPutClearRef = new AtomicInteger(0);
-    private AtomicInteger countPutMissMemory = new AtomicInteger(0);
-    private AtomicInteger countPutNewMemoryValue = new AtomicInteger(0);
-    private AtomicInteger countPutNewFileValue = new AtomicInteger(0);
-    private AtomicInteger countPutSerializable = new AtomicInteger(0);
-    private AtomicInteger countPutReadFile = new AtomicInteger(0);
-    private AtomicInteger countPutWriteFile = new AtomicInteger(0);
+    private AtomicInteger countPut = new AtomicInteger();
+    private AtomicInteger countPutClearRef = new AtomicInteger();
+    private AtomicInteger countPutMissMemory = new AtomicInteger();
+    private AtomicInteger countPutNewMemoryValue = new AtomicInteger();
+    private AtomicInteger countPutNewFileValue = new AtomicInteger();
+    private AtomicInteger countPutSerializable = new AtomicInteger();
+    private AtomicInteger countPutReadFile = new AtomicInteger();
+    private AtomicInteger countPutWriteFile = new AtomicInteger();
 
-    private AtomicInteger countRemove = new AtomicInteger(0);
+    private AtomicInteger countRemove = new AtomicInteger();
 
     public @NonNullable String getName() {
         return this.name;

@@ -136,7 +136,7 @@ public class JCSConcurrentCacheAccessUnitTest{
 	{
         JCS.setConfigFilename( "/TestJCS-73.ccf" );
         cache = JCS.getGroupCacheInstance( "cache" );
-        errcount = new AtomicInteger(0);
+        errcount = new AtomicInteger();
         valueMismatchList = new CopyOnWriteArrayList<>();
 	}
 
