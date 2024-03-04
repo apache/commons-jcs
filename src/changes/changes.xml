@@ -51,7 +51,7 @@
                Migrate all tests to JUnit 4
             </action>
             <action type="update" dev="ggregory" due-to="Gary Gregory">
-               Bump org.apache.commons:commons-dbcp2 from 2.9.0 to 2.11.0.
+               Bump org.apache.commons:commons-dbcp2 from 2.9.0 to 2.12.0.
             </action>
             <action type="update" dev="ggregory" due-to="Gary Gregory">
                Bump commons-io from 2.13.0 to 2.15.1 #11.
