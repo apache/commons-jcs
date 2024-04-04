@@ -203,7 +203,7 @@
   </contributors>
 
   <build>
-    <defaultGoal>clean apache-rat:check package javadoc:javadoc</defaultGoal>
+    <defaultGoal>clean apache-rat:check verify javadoc:javadoc</defaultGoal>
     <pluginManagement>
       <plugins>
         <!-- Re-enable standard copying of N&L files from apache parent -->
@@ -307,7 +307,7 @@
       <dependency>
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-dbcp2</artifactId>
-        <version>2.9.0</version>
+        <version>2.12.0</version>
         <optional>true</optional>
       </dependency>
 
@@ -363,8 +363,8 @@
 
       <dependency>
         <groupId>javax.servlet</groupId>
-        <artifactId>servlet-api</artifactId>
-        <version>2.5</version>
+        <artifactId>javax.servlet-api</artifactId>
+        <version>3.1.0</version>
         <optional>true</optional>
       </dependency>
 
@@ -446,7 +446,7 @@
         <artifactId>maven-pmd-plugin</artifactId>
         <version>${commons.pmd.version}</version>
         <configuration>
-          <targetJdk>1.8</targetJdk>
+          <targetJdk>${maven.compiler.target}</targetJdk>
         </configuration>
       </plugin>
       <plugin>
@@ -553,8 +553,6 @@
     <commons.release.version>3.2.1</commons.release.version>
     <commons.release.name>commons-jcs3-dist-3.2.1</commons.release.name>
     <commons.release.desc>(Java 8+)</commons.release.desc>
-    <commons.releaseManagerName>tv</commons.releaseManagerName>
-    <commons.releaseManagerKey>88817402</commons.releaseManagerKey>
     <commons.release.isDistModule>false</commons.release.isDistModule>
     <commons.distSvnStagingUrl>scm:svn:https://dist.apache.org/repos/dist/dev/commons/${commons.componentid}</commons.distSvnStagingUrl>
     <!-- The RC version used in the staging repository URL. -->
@@ -573,7 +571,9 @@
 
     <jsr107.api.version>1.0.1</jsr107.api.version>
     <commons.collections.version>4.4</commons.collections.version>
-    <commons.text.version>1.10.0</commons.text.version>
+    <commons.text.version>1.11.0</commons.text.version>
+    <commons.lang.version>3.13.0</commons.lang.version>
+    <commons.log4j.version>2.23.1</commons.log4j.version>
 
     <test.type>Unit</test.type>
     <doclint>none</doclint>

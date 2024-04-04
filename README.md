@@ -47,7 +47,7 @@ Apache Commons JCS
 [![GitHub Actions Status](https://github.com/apache/commons-jcs/workflows/Java%20CI/badge.svg)](https://github.com/apache/commons-jcs/actions)
 [![Coverage Status](https://coveralls.io/repos/apache/commons-jcs/badge.svg)](https://coveralls.io/r/apache/commons-jcs)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-jcs3/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-jcs3/)
-[![Javadocs](https://javadoc.io/badge/org.apache.commons/commons-jcs3/3.2.svg)](https://javadoc.io/doc/org.apache.commons/commons-jcs3/3.2)
+[![Javadocs](https://javadoc.io/badge/org.apache.commons/commons-jcs3/3.2.1.svg)](https://javadoc.io/doc/org.apache.commons/commons-jcs3/3.2.1)
 
 Apache Commons JCS is a distributed, versatile caching system.
 
@@ -68,7 +68,7 @@ Alternatively you can pull it from the central Maven repositories:
 <dependency>
   <groupId>org.apache.commons</groupId>
   <artifactId>commons-jcs3</artifactId>
-  <version>3.2</version>
+  <version>3.2.1</version>
 </dependency>
 ```
 

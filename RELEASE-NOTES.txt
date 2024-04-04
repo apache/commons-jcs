@@ -16,13 +16,13 @@ limitations under the License.
 
 
                         Apache Commons JCS
-                        Version 3.2
+                        Version 3.2.1
                         Release Notes
 
 
 INTRODUCTION:
 
-This document contains the release notes for the 3.2 version of Apache Commons JCS.
+This document contains the release notes for the 3.2.1 version of Apache Commons JCS.
 Commons JCS is a distributed caching system written in Java. It is intend to speed up 
 applications by providing a means to manage cached data of various dynamic natures.
 
@@ -38,22 +38,9 @@ Apache Commons JCS is a distributed, versatile caching system.
 Changes in this version include:
 
 Fixed Bugs:
-o JCS-234:  Fix OSGi manifest Thanks to Chris Lake.
-o JCS-232:  Handle ServiceConfigurationError when using a different logging framework Thanks to Jeremy Long.
-o JCS-231:  Fix Lateral TCP cache recovery loop for empty TCP servers Thanks to Andrea Vettori.
-o JCS-230:  UDPDiscoveryReceiver with EncryptingSerializer fails #88. Thanks to Dorota Oeknigk-Urbanska.
-o JCS-229:  LateralTCPListener class uses always StandardSerializer #89. Thanks to Dorota Oeknigk-Urbanska.
-
-Changes:
-o           Bump actions/cache from 2.1.7 to 3.0.9 #86, #111. Thanks to Dependabot, Gary Gregory.
-o           Bump actions/checkout from 2 to 3.0.2 #93. Thanks to Dependabot, Gary Gregory.
-o           Bump actions/setup-java from 2 to 3.5.1. Thanks to Gary Gregory.
-o           Bump commons-parent from 52 to 58 #90, #130, #154. Thanks to Dependabot.
-o           Bump log4j-api from 2.17.1 to 2.20.0 #85, #100, #107, #145. Thanks to Dependabot.
-o           Bump log4j-core from 2.17.1 to 2.20.0 #87, #99, #108, #144. Thanks to Dependabot.
-o           Bump commons-text from 1.9 to 1.10.0 #110. Thanks to Dependabot.
-o           Bump commons-io from 2.11.0 to 2.12.0. Thanks to Gary Gregory.
-
+o           Fix java.rmi.RemoteException: Method is not Remote in IRemoteCacheListener.
+            This is caused by a fix for JDK issue JDK-8230967 in various JDKs such as 8u241, 
+            11.0.6 and probably others.
 
 Historical list of changes: http://commons.apache.org/proper/commons-jcs/changes-report.html
 
