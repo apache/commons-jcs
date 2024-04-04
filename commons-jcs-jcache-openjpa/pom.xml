@@ -21,19 +21,19 @@
   <parent>
     <artifactId>commons-jcs3</artifactId>
     <groupId>org.apache.commons</groupId>
-    <version>3.2.1</version>
+    <version>3.2.2-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>commons-jcs3-jcache-openjpa</artifactId>
-  <version>3.2.1</version>
+  <version>3.2.2-SNAPSHOT</version>
   <name>Apache Commons JCS :: JCache OpenJPA</name>
 
   <scm>
     <connection>scm:git:http://gitbox.apache.org/repos/asf/commons-jcs.git</connection>
     <developerConnection>scm:git:https://gitbox.apache.org/repos/asf/commons-jcs.git</developerConnection>
     <url>https://gitbox.apache.org/repos/asf?p=commons-jcs.git</url>
-    <tag>commons-jcs3-3.2.1-rc1</tag>
+    <tag>commons-jcs3-3.2-rc1</tag>
   </scm>
 
   <dependencies>
@@ -78,6 +78,6 @@
   </dependencies>
 
   <properties>
-    <project.build.outputTimestamp>2024-04-04T12:43:37Z</project.build.outputTimestamp>
+    <project.build.outputTimestamp>2024-04-04T12:47:24Z</project.build.outputTimestamp>
   </properties>
 </project>
