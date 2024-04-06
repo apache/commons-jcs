@@ -237,6 +237,7 @@ public class UDPDiscoveryReceiver
                     }
 
                     SelectionKey key = i.next();
+                    i.remove();
 
                     if (!key.isValid())
                     {
@@ -294,8 +295,6 @@ public class UDPDiscoveryReceiver
                         {
                             log.error( "Error receiving multicast packet", e );
                         }
-
-                        i.remove();
                     }
                 }
             } // end while

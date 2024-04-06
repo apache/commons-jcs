@@ -537,6 +537,7 @@ public class LateralTCPListener<K, V>
                     }
 
                     SelectionKey key = i.next();
+                    i.remove();
 
                     if (!key.isValid())
                     {
@@ -563,8 +564,6 @@ public class LateralTCPListener<K, V>
                     {
                         handleClient(key);
                     }
-
-                    i.remove();
                 }
             }
 
