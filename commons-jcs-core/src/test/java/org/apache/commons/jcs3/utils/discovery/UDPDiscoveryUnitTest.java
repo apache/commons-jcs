@@ -21,6 +21,7 @@ package org.apache.commons.jcs3.utils.discovery;
 
 import java.util.ArrayList;
 
+import org.apache.commons.jcs3.utils.net.HostNameUtil;
 import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
 import org.apache.commons.jcs3.utils.timing.SleepUtil;
 
@@ -39,6 +40,11 @@ public class UDPDiscoveryUnitTest
     public void testSimpleUDPDiscoveryIPv4()
         throws Exception
     {
+        if (HostNameUtil.getMulticastNetworkInterface() == null)
+        {
+            System.out.println("This machine does not support multicast");
+            return;
+        }
         simpleUDPDiscovery("228.5.6.7");
     }
 
@@ -49,6 +55,11 @@ public class UDPDiscoveryUnitTest
     public void testSimpleUDPDiscoveryIPv6()
         throws Exception
     {
+        if (HostNameUtil.getMulticastNetworkInterface() == null)
+        {
+            System.out.println("This machine does not support multicast");
+            return;
+        }
         simpleUDPDiscovery("FF02::5678");
     }
 

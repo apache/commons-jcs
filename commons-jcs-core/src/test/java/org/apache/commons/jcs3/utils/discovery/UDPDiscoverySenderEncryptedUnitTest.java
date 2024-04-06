@@ -30,6 +30,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import org.apache.commons.jcs3.utils.discovery.UDPDiscoveryMessage.BroadcastType;
+import org.apache.commons.jcs3.utils.net.HostNameUtil;
 import org.apache.commons.jcs3.utils.serialization.EncryptingSerializer;
 
 import junit.framework.TestCase;
@@ -57,7 +58,6 @@ public class UDPDiscoverySenderEncryptedUnitTest
 
     /** sender instance for tests */
     private UDPDiscoverySender sender;
-    
 
     /**
      * Set up the receiver. Maybe better to just code sockets here? Set up the sender for sending
@@ -73,7 +73,7 @@ public class UDPDiscoverySenderEncryptedUnitTest
 
         EncryptingSerializer serializer = new EncryptingSerializer();
         serializer.setPreSharedKey("my_key");
-        
+
         receiver = new UDPDiscoveryReceiver( null, null, ADDRESS, PORT );
         receiver.setSerializer(serializer);
         final Thread t = new Thread( receiver );
@@ -104,6 +104,12 @@ public class UDPDiscoverySenderEncryptedUnitTest
     public void testPassiveBroadcast()
         throws Exception
     {
+        if (HostNameUtil.getMulticastNetworkInterface() == null)
+        {
+            System.out.println("This machine does not support multicast");
+            return;
+        }
+
         // SETUP
         final ArrayList<String> cacheNames = new ArrayList<>();
 
@@ -126,6 +132,12 @@ public class UDPDiscoverySenderEncryptedUnitTest
     public void testRemoveBroadcast()
         throws Exception
     {
+        if (HostNameUtil.getMulticastNetworkInterface() == null)
+        {
+            System.out.println("This machine does not support multicast");
+            return;
+        }
+
         // SETUP
         final ArrayList<String> cacheNames = new ArrayList<>();
 
@@ -148,6 +160,12 @@ public class UDPDiscoverySenderEncryptedUnitTest
     public void testRequestBroadcast()
         throws Exception
     {
+        if (HostNameUtil.getMulticastNetworkInterface() == null)
+        {
+            System.out.println("This machine does not support multicast");
+            return;
+        }
+
         // DO WORK
         sender.requestBroadcast();
 
@@ -157,25 +175,26 @@ public class UDPDiscoverySenderEncryptedUnitTest
         assertNotNull("message not received", msg);
         assertEquals( "wrong message type", BroadcastType.REQUEST, msg.getMessageType() );
 
-        
+
     }
-    
+
     /**
      * Wait for multicast message for 3 seconds
-     * 
+     *
      * @return the object message or null if nothing received within 3 seconds
      */
     private UDPDiscoveryMessage getMessage() {
     	ExecutorService executor = Executors.newCachedThreadPool();
         Callable<Object> task = new Callable<Object>() {
-           public Object call() throws IOException {
+           @Override
+        public Object call() throws IOException {
               return receiver.waitForMessage();
            }
         };
         Future<Object> future = executor.submit(task);
         try {
         	Object obj = future.get(3, TimeUnit.SECONDS);
- 
+
         	assertTrue( "unexpected crap received", obj instanceof UDPDiscoveryMessage );
 
             return (UDPDiscoveryMessage) obj;

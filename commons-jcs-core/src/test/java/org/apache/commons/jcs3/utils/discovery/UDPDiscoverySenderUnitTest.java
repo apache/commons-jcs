@@ -1,10 +1,5 @@
 package org.apache.commons.jcs3.utils.discovery;
 
-import java.util.ArrayList;
-
-import org.apache.commons.jcs3.utils.discovery.UDPDiscoveryMessage.BroadcastType;
-import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -23,6 +18,20 @@ import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
  * specific language governing permissions and limitations
  * under the License.
  */
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+import org.apache.commons.jcs3.utils.discovery.UDPDiscoveryMessage.BroadcastType;
+import org.apache.commons.jcs3.utils.net.HostNameUtil;
+import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
 
 import junit.framework.TestCase;
 
@@ -92,6 +101,12 @@ public class UDPDiscoverySenderUnitTest
     public void testPassiveBroadcast()
         throws Exception
     {
+        if (HostNameUtil.getMulticastNetworkInterface() == null)
+        {
+            System.out.println("This machine does not support multicast");
+            return;
+        }
+
         // SETUP
         final ArrayList<String> cacheNames = new ArrayList<>();
 
@@ -100,11 +115,8 @@ public class UDPDiscoverySenderUnitTest
 
         // VERIFY
         // grab the sent message
-        final Object obj = receiver.waitForMessage() ;
-
-        assertTrue( "unexpected crap received", obj instanceof UDPDiscoveryMessage );
-
-        final UDPDiscoveryMessage msg = (UDPDiscoveryMessage) obj;
+        final UDPDiscoveryMessage msg = getMessage();
+        assertNotNull("message not received", msg);
         // disabled test because of JCS-89
         // assertEquals( "wrong host", SENDING_HOST, msg.getHost() );
         assertEquals( "wrong port", SENDING_PORT, msg.getPort() );
@@ -119,6 +131,12 @@ public class UDPDiscoverySenderUnitTest
     public void testRemoveBroadcast()
         throws Exception
     {
+        if (HostNameUtil.getMulticastNetworkInterface() == null)
+        {
+            System.out.println("This machine does not support multicast");
+            return;
+        }
+
         // SETUP
         final ArrayList<String> cacheNames = new ArrayList<>();
 
@@ -127,11 +145,8 @@ public class UDPDiscoverySenderUnitTest
 
         // VERIFY
         // grab the sent message
-        final Object obj = receiver.waitForMessage();
-
-        assertTrue( "unexpected crap received", obj instanceof UDPDiscoveryMessage );
-
-        final UDPDiscoveryMessage msg = (UDPDiscoveryMessage) obj;
+        final UDPDiscoveryMessage msg = getMessage();
+        assertNotNull("message not received", msg);
         // disabled test because of JCS-89
         // assertEquals( "wrong host", SENDING_HOST, msg.getHost() );
         assertEquals( "wrong port", SENDING_PORT, msg.getPort() );
@@ -146,16 +161,44 @@ public class UDPDiscoverySenderUnitTest
     public void testRequestBroadcast()
         throws Exception
     {
+        if (HostNameUtil.getMulticastNetworkInterface() == null)
+        {
+            System.out.println("This machine does not support multicast");
+            return;
+        }
+
         // DO WORK
         sender.requestBroadcast();
 
         // VERIFY
         // grab the sent message
-        final Object obj = receiver.waitForMessage();
-
-        assertTrue( "unexpected crap received", obj instanceof UDPDiscoveryMessage );
-
-        final UDPDiscoveryMessage msg = (UDPDiscoveryMessage) obj;
+        final UDPDiscoveryMessage msg = getMessage();
+        assertNotNull("message not received", msg);
         assertEquals( "wrong message type", BroadcastType.REQUEST, msg.getMessageType() );
+    }
+
+    /**
+     * Wait for multicast message for 3 seconds
+     *
+     * @return the object message or null if nothing received within 3 seconds
+     */
+    private UDPDiscoveryMessage getMessage() {
+        ExecutorService executor = Executors.newCachedThreadPool();
+        Callable<Object> task = new Callable<Object>() {
+           @Override
+        public Object call() throws IOException {
+              return receiver.waitForMessage();
+           }
+        };
+        Future<Object> future = executor.submit(task);
+        try {
+            Object obj = future.get(3, TimeUnit.SECONDS);
+
+            assertTrue( "unexpected crap received", obj instanceof UDPDiscoveryMessage );
+
+            return (UDPDiscoveryMessage) obj;
+        } catch (InterruptedException | ExecutionException | TimeoutException ex) {
+            return null;
+        }
     }
 }
