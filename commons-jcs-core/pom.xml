@@ -139,11 +139,6 @@
             <includes>
               <include>**/*UnitTest.java</include>
             </includes>
-            <excludes>
-              <!-- Fails in Jenkins -->
-              <exclude>**/UDPDiscoveryUnitTest.java</exclude>
-              <exclude>**/UDPDiscoverySenderUnitTest.java</exclude>
-            </excludes>
           </configuration>
         </plugin>
         <plugin>
