@@ -58,5 +58,5 @@ jobs:
       run: mvn --show-version --batch-mode --no-transfer-progress -DtrimStackTrace=false
     - name: Check tests can be re-run
       # No need to test on all OS/Java combinations
-      if: ${{ matrix.java == '17' && runner.os == 'Ubuntu' }}
+      if: ${{ matrix.java == '17' && matrix.os == 'ubuntu-latest' }}
       run: mvn test
