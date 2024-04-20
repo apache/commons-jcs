@@ -26,7 +26,7 @@
 
   <artifactId>commons-jcs3</artifactId>
   <packaging>pom</packaging>
-  <version>3.2.1</version>
+  <version>3.2.2-SNAPSHOT</version>
 
   <!--
    * Build with -PjcacheTck to run the JSR-107 TCK
@@ -580,7 +580,7 @@
     <doclint>none</doclint>
     <hamcrest.version>2.2</hamcrest.version>
     
-    <project.build.outputTimestamp>2024-04-20T09:29:01Z</project.build.outputTimestamp>
+    <project.build.outputTimestamp>2024-04-20T09:38:17Z</project.build.outputTimestamp>
   </properties>
 
 </project>
