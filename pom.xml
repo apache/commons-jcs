@@ -26,7 +26,7 @@
 
   <artifactId>commons-jcs3</artifactId>
   <packaging>pom</packaging>
-  <version>3.2.2-SNAPSHOT</version>
+  <version>3.2.1-SNAPSHOT</version>
 
   <!--
    * Build with -PjcacheTck to run the JSR-107 TCK
@@ -54,7 +54,6 @@
     <connection>scm:git:http://gitbox.apache.org/repos/asf/commons-jcs.git</connection>
     <developerConnection>scm:git:https://gitbox.apache.org/repos/asf/commons-jcs.git</developerConnection>
     <url>https://gitbox.apache.org/repos/asf?p=commons-jcs.git</url>
-    <tag>commons-jcs3-3.2-rc1</tag>
   </scm>
 
   <mailingLists>
@@ -557,7 +556,7 @@
     <commons.distSvnStagingUrl>scm:svn:https://dist.apache.org/repos/dist/dev/commons/${commons.componentid}</commons.distSvnStagingUrl>
     <!-- The RC version used in the staging repository URL. -->
     <commons.bc.version>3.2</commons.bc.version>
-    <commons.rc.version>rc1</commons.rc.version>
+    <commons.rc.version>rc2</commons.rc.version>
     <commons.jira.id>JCS</commons.jira.id>
     <commons.site.path>commons-jcs</commons.site.path>
     <commons.scmPubUrl>
