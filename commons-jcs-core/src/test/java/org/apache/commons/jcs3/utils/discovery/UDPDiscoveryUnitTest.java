@@ -1,8 +1,5 @@
 package org.apache.commons.jcs3.utils.discovery;
 
-import java.io.IOException;
-import java.net.NetworkInterface;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -22,6 +19,7 @@ import java.net.NetworkInterface;
  * under the License.
  */
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import org.apache.commons.jcs3.utils.net.HostNameUtil;
@@ -38,10 +36,10 @@ public class UDPDiscoveryUnitTest
 {
     /**
      * <p>
-     * @throws Exception
+     * @throws IOException
      */
     public void testSimpleUDPDiscoveryIPv4()
-        throws Exception
+        throws IOException
     {
         if (HostNameUtil.getMulticastNetworkInterface() == null)
         {
@@ -53,13 +51,12 @@ public class UDPDiscoveryUnitTest
 
     /**
      * <p>
-     * @throws Exception
+     * @throws IOException
      */
     public void testSimpleUDPDiscoveryIPv6()
-        throws Exception
+        throws IOException
     {
-        NetworkInterface multicast = HostNameUtil.getMulticastNetworkInterface();
-        if (multicast == null)
+        if (HostNameUtil.getMulticastNetworkInterface() == null)
         {
             System.out.println("This machine does not support multicast");
             return;
@@ -70,10 +67,10 @@ public class UDPDiscoveryUnitTest
 
     /**
      * <p>
-     * @throws Exception
+     * @throws IOException
      */
     private void simpleUDPDiscovery(String discoveryAddress)
-        throws Exception
+        throws IOException
     {
         final UDPDiscoveryAttributes attributes = new UDPDiscoveryAttributes();
         attributes.setUdpDiscoveryAddr(discoveryAddress);
