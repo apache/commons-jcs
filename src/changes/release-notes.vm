@@ -50,6 +50,10 @@ For the advice on upgrading from 2.x to 3.x, see the following page:
 
     ${project.url}UpgradingFrom2x.html
 
+NOTE: Some JCS tests require a working multicast setup. If you get test failures from tests 
+starting with UDPDiscovery*, make sure that your network supports multicast (most VPNs do not,
+for example).
+
 $introduction.replaceAll("(?<!\015)\012", "
 ").replaceAll("(?m)^ +","")
 
