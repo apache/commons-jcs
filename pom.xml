@@ -573,7 +573,8 @@
     <commons.text.version>1.11.0</commons.text.version>
     <commons.lang.version>3.13.0</commons.lang.version>
     <commons.log4j.version>2.23.1</commons.log4j.version>
-
+    <commons.build-plugin.version>1.14.0</commons.build-plugin.version>
+    
     <test.type>Unit</test.type>
     <doclint>none</doclint>
     <hamcrest.version>2.2</hamcrest.version>

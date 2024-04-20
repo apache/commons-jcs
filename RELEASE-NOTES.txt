@@ -33,14 +33,23 @@ For the advice on upgrading from 2.x to 3.x, see the following page:
 
     http://commons.apache.org/proper/commons-jcs/UpgradingFrom2x.html
 
-Apache Commons JCS is a distributed, versatile caching system.
+NOTE: Some JCS tests require a working multicast setup. If you get test failures from tests 
+starting with UDPDiscovery*, make sure that your network supports multicast (most VPNs do not,
+for example).
+
+JDK bug fix release
 
 Changes in this version include:
+
 
 Fixed Bugs:
 o           Fix java.rmi.RemoteException: Method is not Remote in IRemoteCacheListener.
             This is caused by a fix for JDK issue JDK-8230967 in various JDKs such as 8u241, 
             11.0.6 and probably others.
+
+Changes:
+o           Update dependency openjpa to 3.2.2 to get rid of private transient dependencies
+
 
 Historical list of changes: http://commons.apache.org/proper/commons-jcs/changes-report.html
 
