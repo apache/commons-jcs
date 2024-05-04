@@ -272,7 +272,7 @@ public class BlockDiskUnitTest
         throws Exception
     {
         // SETUP
-        setUpBlockDisk("testWriteAndRead_BigString", 47); //4096;//1024
+        setUpBlockDisk("testWriteAndRead_BigString", 47); //4096; //1024
 
         String string = "abcdefghijklmnopqrstuvwxyz1234567890";
         string += string;

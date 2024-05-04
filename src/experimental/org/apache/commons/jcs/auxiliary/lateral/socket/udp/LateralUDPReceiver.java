@@ -83,7 +83,7 @@ public class LateralUDPReceiver implements Runnable
         {
             log.error( e );
             log.debug( "Could not bind to multicast address " + multicastAddressString + ":" + multicastPort );
-            //throw e ;//new CacheException( "Could not bind to multicast address " + multicastAddressString + ":" + multicastPort, e);
+            //throw e ; //new CacheException( "Could not bind to multicast address " + multicastAddressString + ":" + multicastPort, e);
         }
     }
 

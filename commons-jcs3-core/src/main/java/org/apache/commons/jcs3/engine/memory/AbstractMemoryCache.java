@@ -67,7 +67,7 @@ public abstract class AbstractMemoryCache<K, V>
     protected final Lock lock = new ReentrantLock();
 
     /** Map where items are stored by key.  This is created by the concrete child class. */
-    protected Map<K, MemoryElementDescriptor<K, V>> map;// TODO privatise
+    protected Map<K, MemoryElementDescriptor<K, V>> map; // TODO privatise
 
     /** Number of hits */
     protected AtomicLong hitCnt;

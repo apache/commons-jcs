@@ -67,7 +67,7 @@ public class LateralTCPConcurrentRandomTestUtil
     public static void runTestForRegion( final String region, final int range, final int numOps, final int testNum )
         throws Exception
     {
-        final boolean show = true;//false;
+        final boolean show = true; //false;
 
         final CacheAccess<String, String> cache = JCS.getInstance( region );
 

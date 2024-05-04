@@ -136,7 +136,7 @@ public class SerializationConversionUtilUnitTest
         final String key = "key";
         final String value = "value fdsadf dsafdsa fdsaf dsafdsaf dsafdsaf dsaf dsaf dsaf dsafa dsaf dsaf dsafdsaf";
 
-        final IElementSerializer elementSerializer = null;// new StandardSerializer();
+        final IElementSerializer elementSerializer = null; // new StandardSerializer();
 
         final IElementAttributes attr = new ElementAttributes();
         attr.setMaxLife(34);

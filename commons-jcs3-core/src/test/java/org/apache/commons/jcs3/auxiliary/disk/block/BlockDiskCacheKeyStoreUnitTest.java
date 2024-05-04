@@ -141,7 +141,7 @@ public class BlockDiskCacheKeyStoreUnitTest
         // Random random = new Random( 89 );
         for (int i = 0; i < numElements; i++)
         {
-            final int blocks = i;// random.nextInt( 10 );
+            final int blocks = i; // random.nextInt( 10 );
 
             // fill with reasonable data to make verify() happy
             final int[] block1 = new int[blocks];
