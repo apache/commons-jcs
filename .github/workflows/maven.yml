@@ -55,7 +55,7 @@ jobs:
         distribution: 'temurin'
         java-version: ${{ matrix.java }}
     - name: Build with Maven
-      run: mvn --show-version --batch-mode --no-transfer-progress -DtrimStackTrace=false
+      rrun: mvn --errors --show-version--batch-mode --no-transfer-progress -DtrimStackTrace=false
     - name: Check tests can be re-run
       # No need to test on all OS/Java combinations
       if: ${{ matrix.java == '17' }}
