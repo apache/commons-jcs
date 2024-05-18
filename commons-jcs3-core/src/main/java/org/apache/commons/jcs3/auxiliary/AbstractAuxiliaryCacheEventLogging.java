@@ -194,7 +194,7 @@ public abstract class AbstractAuxiliaryCacheEventLogging<K, V>
         throws IOException;
 
     /**
-     * Implementation of get.
+     * Implements get.
      *
      * @param key
      * @return ICacheElement, a wrapper around the key, value, and attributes
@@ -204,7 +204,7 @@ public abstract class AbstractAuxiliaryCacheEventLogging<K, V>
         throws IOException;
 
     /**
-     * Implementation of getMatching.
+     * Implements getMatching.
      *
      * @param pattern
      * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
@@ -233,7 +233,7 @@ public abstract class AbstractAuxiliaryCacheEventLogging<K, V>
         throws IOException;
 
     /**
-     * Implementation of put.
+     * Implements put.
      *
      * @param cacheElement
      * @throws IOException

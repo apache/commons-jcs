@@ -32,13 +32,13 @@ import org.apache.commons.jcs3.log.Log;
 import org.apache.commons.jcs3.log.LogManager;
 
 /**
- * This is a test memory manager using the jdk1.4 LinkedHashMap.
+ * This is a test memory manager using the stock {@link LinkedHashMap}.
  */
 public class LHMLRUMemoryCache<K, V>
     extends AbstractMemoryCache<K, V>
 {
     /**
-     * Implementation of removeEldestEntry in LinkedHashMap
+     * Implements removeEldestEntry from {@link LinkedHashMap}.
      */
     protected class LHMSpooler
         extends java.util.LinkedHashMap<K, MemoryElementDescriptor<K, V>>
