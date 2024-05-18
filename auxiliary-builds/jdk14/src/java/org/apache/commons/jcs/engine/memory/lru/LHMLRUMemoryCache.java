@@ -276,7 +276,7 @@ public class LHMLRUMemoryCache
   // ---------------------------------------------------------- extended map
 
   /**
-   * Implementation of removeEldestEntry in LinkedHashMap
+   * Implements removeEldestEntry from {@link LinkedHashMap}.
    */
   public class LHMSpooler
       extends java.util.LinkedHashMap

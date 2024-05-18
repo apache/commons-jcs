@@ -25,7 +25,7 @@ import org.apache.commons.jcs3.engine.behavior.ICacheElement;
 import org.apache.commons.jcs3.engine.behavior.IElementAttributes;
 
 /**
- * Implementation of cache elements in purgatory.
+ * Implements cache elements in purgatory.
  *
  * Elements are stored in purgatory when they are spooled to the auxiliary cache, but have not yet
  * been written to disk.
