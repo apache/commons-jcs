@@ -33,9 +33,9 @@ For the advice on upgrading from 2.x to 3.x, see the following page:
 
     http://commons.apache.org/proper/commons-jcs/UpgradingFrom2x.html
 
-NOTE: Some JCS tests require a working multicast setup. If you get test failures from tests 
-starting with UDPDiscovery*, make sure that your network supports multicast (most VPNs do not,
-for example).
+NOTE: Some JCS tests require a working multicast setup. They are disabled by default.
+If you are sure that your network configuration supports multicast (most VPNs do not,
+for example), you may enable the additional tests with "-P testWithMulticast".
 
 JDK bug fix release
 

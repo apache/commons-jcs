@@ -21,7 +21,7 @@
 		<author email="dev@commons.apache.org">Apache Commons Developers</author>
 	</properties>
 	<body>
-        <release version="3.2.1" date="2024-04-20" description="JDK bug fix release">
+        <release version="3.2.1" date="2024-05-27" description="JDK bug fix release">
             <action dev="tv" type="fix">
                Fix java.rmi.RemoteException: Method is not Remote in IRemoteCacheListener.
                This is caused by a fix for JDK issue JDK-8230967 in various JDKs such as 8u241, 
