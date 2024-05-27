@@ -22,12 +22,12 @@
   <parent>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-jcs3</artifactId>
-    <version>3.2.1-SNAPSHOT</version>
+    <version>3.2.1</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
   <artifactId>commons-jcs3-core</artifactId>
-  <version>3.2.1-SNAPSHOT</version>
+  <version>3.2.1</version>
   <packaging>jar</packaging>
 
   <name>Apache Commons JCS :: Core</name>
@@ -36,7 +36,8 @@
     <connection>scm:git:http://gitbox.apache.org/repos/asf/commons-jcs.git</connection>
     <developerConnection>scm:git:https://gitbox.apache.org/repos/asf/commons-jcs.git</developerConnection>
     <url>https://gitbox.apache.org/repos/asf?p=commons-jcs.git</url>
-    </scm>
+      <tag>commons-jcs3-3.2.1-rc3</tag>
+  </scm>
 
   <properties>
      <!-- generate report even if there are binary incompatible changes -->
@@ -49,7 +50,7 @@
          org.apache.http.*;resolution:=optional,
          org.apache.logging.log4j.*;resolution:=optional
      </commons.osgi.import>
-     <project.build.outputTimestamp>2024-04-20T09:38:17Z</project.build.outputTimestamp>
+     <project.build.outputTimestamp>2024-05-27T17:37:13Z</project.build.outputTimestamp>
   </properties>
 
   <dependencies>
