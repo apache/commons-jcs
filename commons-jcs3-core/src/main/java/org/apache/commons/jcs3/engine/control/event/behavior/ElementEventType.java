@@ -27,7 +27,7 @@ public enum ElementEventType
     /** Background expiration */
     EXCEEDED_MAXLIFE_BACKGROUND,
 
-    /*** Expiration discovered on request */
+    /** Expiration discovered on request */
     EXCEEDED_MAXLIFE_ONREQUEST,
 
     /** Background expiration */
