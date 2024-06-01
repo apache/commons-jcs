@@ -50,7 +50,7 @@ public abstract class AbstractBlockDiskCacheUnitTest{
         /** Test string */
         String string;
 
-        /*** test byte array. */
+        /** test byte array. */
         byte[] bytes;
     }
 
