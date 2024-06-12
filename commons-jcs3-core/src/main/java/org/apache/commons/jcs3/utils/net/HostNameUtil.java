@@ -198,10 +198,20 @@ public class HostNameUtil
         while (networkInterfaces.hasMoreElements())
         {
             final NetworkInterface networkInterface = networkInterfaces.nextElement();
+            if (!networkInterface.supportsMulticast())
+            {
+                log.trace("found network interface [{0}]: no multicast support", networkInterface::getDisplayName);
+                continue;
+            }
             final Enumeration<InetAddress> addressesFromNetworkInterface = networkInterface.getInetAddresses();
             while (addressesFromNetworkInterface.hasMoreElements())
             {
                 final InetAddress inetAddress = addressesFromNetworkInterface.nextElement();
+                log.trace("found network interface [{0}]: address: {1}, site local: {2}, any local {3}, link local {4}, loopback {5}, multicast {6}",
+                        networkInterface::getDisplayName, inetAddress::getHostAddress, inetAddress::isSiteLocalAddress,
+                        inetAddress::isAnyLocalAddress, inetAddress::isLinkLocalAddress, inetAddress::isLoopbackAddress,
+                        inetAddress::isMulticastAddress);
+
                 if (inetAddress.isSiteLocalAddress()
                         && !inetAddress.isAnyLocalAddress()
                         && !inetAddress.isLinkLocalAddress()
