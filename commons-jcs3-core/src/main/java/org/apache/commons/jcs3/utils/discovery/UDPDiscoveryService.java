@@ -172,10 +172,11 @@ public class UDPDiscoveryService
             }
 
             // todo need some kind of recovery here.
-            receiver = new UDPDiscoveryReceiver( this,
+            receiver = new UDPDiscoveryReceiver( this::processMessage,
                     getUdpDiscoveryAttributes().getUdpDiscoveryInterface(),
                     multicastAddress,
                     getUdpDiscoveryAttributes().getUdpDiscoveryPort() );
+            receiver.setSerializer(serializer);
         }
         catch ( final IOException e )
         {
@@ -383,12 +384,39 @@ public class UDPDiscoveryService
     }
 
     /**
+     * Process the incoming message.
+     */
+    protected void processMessage(UDPDiscoveryMessage message)
+    {
+        final DiscoveredService discoveredService = new DiscoveredService(message);
+
+        switch (message.getMessageType())
+        {
+            case REMOVE:
+                log.debug( "Removing service from set {0}", discoveredService );
+                removeDiscoveredService( discoveredService );
+                break;
+            case REQUEST:
+                // if this is a request message, have the service handle it and
+                // return
+                log.debug( "Message is a Request Broadcast, will have the service handle it." );
+                serviceRequestBroadcast();
+                break;
+            case PASSIVE:
+            default:
+                log.debug( "Adding or updating service to set {0}", discoveredService );
+                addOrUpdateService( discoveredService );
+                break;
+        }
+    }
+
+    /**
      * Send a passive broadcast in response to a request broadcast. Never send a request for a
      * request. We can respond to our own requests, since a request broadcast is not intended as a
      * connection request. We might want to only send messages, so we would send a request, but
      * never a passive broadcast.
      */
-    protected void serviceRequestBroadcast()
+    private void serviceRequestBroadcast()
     {
         // create this connection each time.
         // more robust
@@ -477,7 +505,7 @@ public class UDPDiscoveryService
      *
      * @since 3.1
      */
-    protected void shutdownBroadcast()
+    private void shutdownBroadcast()
     {
         // create this connection each time.
         // more robust
