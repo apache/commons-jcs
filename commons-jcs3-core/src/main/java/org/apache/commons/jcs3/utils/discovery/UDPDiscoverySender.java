@@ -233,12 +233,24 @@ public class UDPDiscoverySender implements AutoCloseable
     public void requestBroadcast()
         throws IOException
     {
+        requestBroadcast(CacheInfo.listenerId);
+    }
+
+    /**
+     * This allows you to set the sender id. This is mainly for testing.
+     * <p>
+     * @param listenerId listener ID
+     * @throws IOException on error
+     */
+    protected void requestBroadcast(final long listenerId)
+        throws IOException
+    {
         log.debug( "sending requestBroadcast" );
 
         final UDPDiscoveryMessage message = new UDPDiscoveryMessage();
         message.setHost(multicastAddress.getHostAddress());
         message.setPort(multicastPort);
-        message.setRequesterId( CacheInfo.listenerId );
+        message.setRequesterId( listenerId );
         message.setMessageType( BroadcastType.REQUEST );
         send( message );
     }
