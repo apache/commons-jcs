@@ -150,8 +150,8 @@ public class RemoteCacheServerFactory
      * Tries to lookup the server. If unsuccessful it will rebind the server using the factory
      * rebind method.
      *
-     * @param registryHost - Hostname of the registry
-     * @param registryPort - the port on which to start the registry
+     * @param registryHost   Hostname of the registry
+     * @param registryPort   the port on which to start the registry
      * @param cacheEventLogger the event logger for error messages
      * @since 3.1
      */

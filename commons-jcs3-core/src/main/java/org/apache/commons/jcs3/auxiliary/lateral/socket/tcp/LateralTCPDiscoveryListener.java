@@ -216,8 +216,8 @@ public class LateralTCPDiscoveryListener
      * This adds nowaits to a facade for the region name. If the region has no facade, then it is
      * not configured to use the lateral cache, and no facade will be created.
      * <p>
-     * @param cacheName - the region name
-     * @param facade - facade (for region) =&gt; multiple lateral clients.
+     * @param cacheName   the region name
+     * @param facade   facade (for region) =&gt; multiple lateral clients.
      * @return true if the facade was not already registered.
      */
     public boolean addNoWaitFacade( final String cacheName, final LateralCacheNoWaitFacade<?, ?> facade )
@@ -234,8 +234,8 @@ public class LateralTCPDiscoveryListener
     /**
      * Allows us to see if the facade is present and if it has the no wait.
      * <p>
-     * @param cacheName - facades are for a region
-     * @param noWait - is this no wait in the facade
+     * @param cacheName   facades are for a region
+     * @param noWait   is this no wait in the facade
      * @return do we contain the no wait. true if so
      */
     public <K, V> boolean containsNoWait( final String cacheName, final LateralCacheNoWait<K, V> noWait )
@@ -256,7 +256,7 @@ public class LateralTCPDiscoveryListener
     /**
      * Allows us to see if the facade is present.
      * <p>
-     * @param cacheName - facades are for a region
+     * @param cacheName   facades are for a region
      * @return do we contain the no wait. true if so
      */
     public boolean containsNoWaitFacade( final String cacheName )

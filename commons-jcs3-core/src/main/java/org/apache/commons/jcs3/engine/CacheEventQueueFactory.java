@@ -72,7 +72,7 @@ public class CacheEventQueueFactory<K, V>
      * @param listenerId
      * @param cacheName
      * @param threadPoolName
-     * @param poolType - SINGLE, POOLED
+     * @param poolType   SINGLE, POOLED
      * @return ICacheEventQueue
      */
     public ICacheEventQueue<K, V> createCacheEventQueue( final ICacheListener<K, V> listener, final long listenerId, final String cacheName,

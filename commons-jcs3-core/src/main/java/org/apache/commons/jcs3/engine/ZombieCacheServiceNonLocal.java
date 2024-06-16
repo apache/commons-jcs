@@ -158,9 +158,9 @@ public class ZombieCacheServiceNonLocal<K, V>
     /**
      * Does nothing. Gets are synchronous and cannot be added to a queue.
      * <p>
-     * @param cacheName - region name
-     * @param key - item key
-     * @param requesterId - identifies the caller.
+     * @param cacheName   region name
+     * @param key   item key
+     * @param requesterId   identifies the caller.
      * @return null
      * @throws IOException
      */
@@ -175,7 +175,7 @@ public class ZombieCacheServiceNonLocal<K, V>
     /**
      * Does nothing.
      * <p>
-     * @param cacheName - region name
+     * @param cacheName   region name
      * @return empty set
      */
     @Override
@@ -201,9 +201,9 @@ public class ZombieCacheServiceNonLocal<K, V>
     }
 
     /**
-     * @param cacheName - region name
-     * @param keys - item key
-     * @param requesterId - identity of the caller
+     * @param cacheName   region name
+     * @param keys   item key
+     * @param requesterId   identity of the caller
      * @return an empty map. zombies have no internal data
      */
     @Override
@@ -267,9 +267,9 @@ public class ZombieCacheServiceNonLocal<K, V>
     /**
      * Adds a removeAll event to the queue if the maxSize is greater than 0;
      * <p>
-     * @param cacheName - region name
-     * @param key - item key
-     * @param listenerId - identifies the caller.
+     * @param cacheName   region name
+     * @param key   item key
+     * @param listenerId   identifies the caller.
      */
     @Override
     public void remove( final String cacheName, final K key, final long listenerId )
@@ -285,8 +285,8 @@ public class ZombieCacheServiceNonLocal<K, V>
     /**
      * Adds a removeAll event to the queue if the maxSize is greater than 0;
      * <p>
-     * @param cacheName - name of the region
-     * @param listenerId - identifies the caller.
+     * @param cacheName   name of the region
+     * @param listenerId   identifies the caller.
      */
     @Override
     public void removeAll( final String cacheName, final long listenerId )
@@ -303,7 +303,7 @@ public class ZombieCacheServiceNonLocal<K, V>
      * Adds an update event to the queue if the maxSize is greater than 0;
      * <p>
      * @param item ICacheElement
-     * @param listenerId - identifies the caller.
+     * @param listenerId   identifies the caller.
      */
     @Override
     public void update( final ICacheElement<K, V> item, final long listenerId )

@@ -291,7 +291,7 @@ public class CompositeCacheManager
      * with the argument: -Djcs.auxiliary.LTCP.attributes.TcpListenerPort=1111
      * </p>
      * @param props
-     * @param useSystemProperties -- if true, values starting with jcs will be put into the props
+     * @param useSystemProperties    if true, values starting with jcs will be put into the props
      *            file prior to configuring the cache.
      */
     public void configure( final Properties props, final boolean useSystemProperties )
@@ -310,9 +310,9 @@ public class CompositeCacheManager
      * with the argument: -Djcs.auxiliary.LTCP.attributes.TcpListenerPort=1111
      * </p>
      * @param props
-     * @param useSystemProperties -- if true, values starting with jcs will be put into the props
+     * @param useSystemProperties    if true, values starting with jcs will be put into the props
      *            file prior to configuring the cache.
-     * @param forceReconfiguration - if the manager is already configured, we will try again. This
+     * @param forceReconfiguration   if the manager is already configured, we will try again. This
      *            may not work properly.
      */
     public synchronized void configure( final Properties props, final boolean useSystemProperties, final boolean forceReconfiguration )

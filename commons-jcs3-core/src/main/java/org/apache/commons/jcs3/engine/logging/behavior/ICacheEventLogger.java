@@ -55,11 +55,11 @@ public interface ICacheEventLogger
     /**
      * Creates an event.
      * <p>
-     * @param source - e.g. RemoteCacheServer
-     * @param region - the name of the region
-     * @param eventName - e.g. update, get, put, remove
-     * @param optionalDetails - any extra message
-     * @param key - the cache key
+     * @param source   e.g. RemoteCacheServer
+     * @param region   the name of the region
+     * @param eventName   e.g. update, get, put, remove
+     * @param optionalDetails   any extra message
+     * @param key   the cache key
      * @return ICacheEvent
      */
     <T> ICacheEvent<T> createICacheEvent( String source, String region,
@@ -68,25 +68,25 @@ public interface ICacheEventLogger
     /**
      * Logs an event. These are internal application events that do not correspond to ICache calls.
      * <p>
-     * @param source - e.g. RemoteCacheServer
-     * @param eventName - e.g. update, get, put, remove
-     * @param optionalDetails - any extra message
+     * @param source   e.g. RemoteCacheServer
+     * @param eventName   e.g. update, get, put, remove
+     * @param optionalDetails   any extra message
      */
     void logApplicationEvent( String source, String eventName, String optionalDetails );
 
     /**
      * Logs an error.
      * <p>
-     * @param source - e.g. RemoteCacheServer
-     * @param eventName - e.g. update, get, put, remove
-     * @param errorMessage - any error message
+     * @param source   e.g. RemoteCacheServer
+     * @param eventName   e.g. update, get, put, remove
+     * @param errorMessage   any error message
      */
     void logError( String source, String eventName, String errorMessage );
 
     /**
      * Logs an event.
      * <p>
-     * @param event - the event created in createICacheEvent
+     * @param event   the event created in createICacheEvent
      */
     <T> void logICacheEvent( ICacheEvent<T> event );
 }

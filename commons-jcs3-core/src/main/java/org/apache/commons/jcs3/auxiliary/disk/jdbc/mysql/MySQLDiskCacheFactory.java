@@ -97,7 +97,7 @@ public class MySQLDiskCacheFactory
     /**
      * This takes in a single time and schedules the optimizer to be called at that time every day.
      * <p>
-     * @param startTime -- HH:MM:SS format
+     * @param startTime    HH:MM:SS format
      * @param optimizer
      */
     protected void scheduleOptimization( final Date startTime, final MySQLTableOptimizer optimizer )

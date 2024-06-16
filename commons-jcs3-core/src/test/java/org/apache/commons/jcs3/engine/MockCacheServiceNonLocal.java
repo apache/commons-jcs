@@ -84,7 +84,7 @@ public class MockCacheServiceNonLocal<K, V>
     /**
      * @param cacheName
      * @param key
-     * @param requesterId - identity of requester
+     * @param requesterId   identity of requester
      * @return null
      */
     @Override
@@ -148,7 +148,7 @@ public class MockCacheServiceNonLocal<K, V>
     /**
      * @param cacheName
      * @param keys
-     * @param requesterId - identity of requester
+     * @param requesterId   identity of requester
      * @return empty map
      */
     @Override
@@ -183,7 +183,7 @@ public class MockCacheServiceNonLocal<K, V>
      * <p>
      * @param cacheName
      * @param key
-     * @param requesterId - identity of requester
+     * @param requesterId   identity of requester
      */
     @Override
     public void remove( final String cacheName, final K key, final long requesterId )
@@ -205,8 +205,8 @@ public class MockCacheServiceNonLocal<K, V>
     /**
      * Sets the lastRemoveAllCacheName to the cacheName.
      * <p>
-     * @param cacheName - region name
-     * @param requesterId - identity of requester
+     * @param cacheName   region name
+     * @param requesterId   identity of requester
      * @throws IOException
      */
     @Override
@@ -231,7 +231,7 @@ public class MockCacheServiceNonLocal<K, V>
      * Sets the last update item.
      * <p>
      * @param item
-     * @param requesterId - identity of requester
+     * @param requesterId   identity of requester
      */
     @Override
     public void update( final ICacheElement<K, V> item, final long requesterId )

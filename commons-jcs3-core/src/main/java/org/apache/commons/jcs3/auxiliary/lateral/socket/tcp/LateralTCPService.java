@@ -195,7 +195,7 @@ public class LateralTCPService<K, V>
      * <p>
      * @param cacheName
      * @param pattern
-     * @param requesterId - our identity
+     * @param requesterId   our identity
      * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
      *         data in cache matching the pattern.
      * @throws IOException

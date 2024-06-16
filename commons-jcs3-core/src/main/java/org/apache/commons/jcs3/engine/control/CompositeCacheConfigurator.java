@@ -320,7 +320,7 @@ public class CompositeCacheConfigurator
      * Creates a custom key matcher if one is defined.  Else, it uses the default.
      * <p>
      * @param props
-     * @param auxPrefix - For example, AUXILIARY_PREFIX + auxName
+     * @param auxPrefix   For example, AUXILIARY_PREFIX + auxName
      * @return IKeyMatcher
      */
     protected <K> IKeyMatcher<K> parseKeyMatcher( final Properties props, final String auxPrefix )

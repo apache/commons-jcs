@@ -101,7 +101,7 @@ public interface ICacheAccess<K, V>
     /**
      * Retrieve matching objects from the cache region this instance provides access to.
      * <p>
-     * @param pattern - a key pattern for the objects stored
+     * @param pattern   a key pattern for the objects stored
      * @return A map of key to values. These are stripped from the wrapper.
      */
     Map<K, V> getMatching(String pattern);
