@@ -21,7 +21,14 @@ package org.apache.commons.jcs3.utils.serialization;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThrows;
 
+import java.io.IOException;
+import java.io.InvalidClassException;
+
+import org.apache.commons.collections4.bag.HashBag;
+import org.apache.commons.jcs3.io.ObjectInputStreamClassLoaderAware;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -29,6 +36,23 @@ import org.junit.Test;
  */
 public class StandardSerializerUnitTest
 {
+    private StandardSerializer serializer;
+    
+    /**
+     * Test setup
+     * <p>
+     * @throws Exception
+     */
+    @Before
+    public void setUp()
+        throws Exception
+    {
+	// Override filter expression for ObjectInputFilter
+        System.setProperty(ObjectInputStreamClassLoaderAware.SYSTEM_PROPERTY_SERIALIZATION_FILTER, 
+            "!org.apache.commons.collections4.**");
+        this.serializer = new StandardSerializer();
+    }
+
     /**
      * Test simple back and forth with a string.
      *<p>
@@ -38,9 +62,6 @@ public class StandardSerializerUnitTest
     public void testBigStringBackAndForth()
         throws Exception
     {
-        // SETUP
-        final StandardSerializer serializer = new StandardSerializer();
-
         final String string = "This is my big string ABCDEFGH";
         final StringBuilder sb = new StringBuilder();
         sb.append( string );
@@ -66,9 +87,6 @@ public class StandardSerializerUnitTest
     public void testNullInput()
         throws Exception
     {
-        // SETUP
-        final StandardSerializer serializer = new StandardSerializer();
-
         final String before = null;
 
         // DO WORK
@@ -91,9 +109,6 @@ public class StandardSerializerUnitTest
     public void testSimpleBackAndForth()
         throws Exception
     {
-        // SETUP
-        final StandardSerializer serializer = new StandardSerializer();
-
         final String before = "adsfdsafdsafdsafdsafdsafdsafdsagfdsafdsafdsfdsafdsafsa333 31231";
 
         // DO WORK
@@ -101,5 +116,20 @@ public class StandardSerializerUnitTest
 
         // VERIFY
         assertEquals( "Before and after should be the same.", before, after );
+    }
+    
+    /**
+     * Verify that we can filter classes to be deserialized
+     *<p>
+     * @throws IOException
+     */
+    @Test
+    public void testDeserializationFilter()
+        throws IOException
+    {
+        // DO WORK
+        final byte[] serialized = serializer.serialize( new HashBag<String>() ); // forbidden class
+
+        assertThrows(InvalidClassException.class, () -> serializer.deSerialize( serialized, null ));
     }
 }

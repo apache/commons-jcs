@@ -1,9 +1,5 @@
 package org.apache.commons.jcs3.utils.discovery;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -23,16 +19,16 @@ import static org.junit.Assert.assertTrue;
  * under the License.
  */
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assume.assumeNotNull;
+
 import java.util.ArrayList;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 import org.apache.commons.jcs3.utils.discovery.UDPDiscoveryMessage.BroadcastType;
+import org.apache.commons.jcs3.utils.net.HostNameUtil;
 import org.apache.commons.jcs3.utils.serialization.EncryptingSerializer;
 import org.junit.After;
 import org.junit.Before;
@@ -61,25 +57,8 @@ public class UDPDiscoverySenderEncryptedUnitTest
     /** Sender instance for tests */
     private UDPDiscoverySender sender;
 
-    /**
-     * Wait for multicast message for 3 seconds
-     *
-     * @return the object message or null if nothing received within 3 seconds
-     */
-    private UDPDiscoveryMessage getMessage() {
-    	ExecutorService executor = Executors.newCachedThreadPool();
-        Callable<Object> task = () -> receiver.waitForMessage();
-        Future<Object> future = executor.submit(task);
-        try {
-        	Object obj = future.get(3, TimeUnit.SECONDS);
-
-        	assertTrue( "unexpected crap received", obj instanceof UDPDiscoveryMessage );
-
-            return (UDPDiscoveryMessage) obj;
-        } catch (InterruptedException | ExecutionException | TimeoutException ex) {
-        	return null;
-        }
-    }
+    /** Delayed message */
+    private CompletableFuture<UDPDiscoveryMessage> futureMsg;
 
     /**
      * Sets up the receiver. Maybe better to just code sockets here? Set up the sender for sending
@@ -91,10 +70,15 @@ public class UDPDiscoverySenderEncryptedUnitTest
     public void setUp()
         throws Exception
     {
+        assumeNotNull("This machine does not support multicast", HostNameUtil.getMulticastNetworkInterface());
+
         EncryptingSerializer serializer = new EncryptingSerializer();
         serializer.setPreSharedKey("my_key");
 
-        receiver = new UDPDiscoveryReceiver( null, null, ADDRESS, PORT );
+        futureMsg = new CompletableFuture<>();
+        receiver = new UDPDiscoveryReceiver( msg -> {
+            futureMsg.complete(msg);
+        }, null, ADDRESS, PORT );
         receiver.setSerializer(serializer);
         final Thread t = new Thread( receiver );
         t.start();
@@ -111,8 +95,14 @@ public class UDPDiscoverySenderEncryptedUnitTest
     public void tearDown()
         throws Exception
     {
-        receiver.shutdown();
-        sender.close();
+        if (receiver != null)
+        {
+            receiver.shutdown();
+        }
+        if (sender != null)
+        {
+            sender.close();
+        }
     }
 
     /**
@@ -126,13 +116,13 @@ public class UDPDiscoverySenderEncryptedUnitTest
     {
         // SETUP
         final ArrayList<String> cacheNames = new ArrayList<>();
+        cacheNames.add("testCache");
 
         // DO WORK
         sender.passiveBroadcast( SENDING_HOST, SENDING_PORT, cacheNames, 1L );
 
         // VERIFY
-        // grab the sent message
-        final UDPDiscoveryMessage msg = getMessage();
+        UDPDiscoveryMessage msg = futureMsg.get(3, TimeUnit.SECONDS);
         assertNotNull("message not received", msg);
         assertEquals( "wrong port", SENDING_PORT, msg.getPort() );
         assertEquals( "wrong message type", BroadcastType.PASSIVE, msg.getMessageType() );
@@ -149,13 +139,13 @@ public class UDPDiscoverySenderEncryptedUnitTest
     {
         // SETUP
         final ArrayList<String> cacheNames = new ArrayList<>();
+        cacheNames.add("testCache");
 
         // DO WORK
         sender.removeBroadcast( SENDING_HOST, SENDING_PORT, cacheNames, 1L );
 
         // VERIFY
-        // grab the sent message
-        final UDPDiscoveryMessage msg = getMessage();
+        UDPDiscoveryMessage msg = futureMsg.get(3, TimeUnit.SECONDS);
         assertNotNull("message not received", msg);
         assertEquals( "wrong port", SENDING_PORT, msg.getPort() );
         assertEquals( "wrong message type", BroadcastType.REMOVE, msg.getMessageType() );
@@ -171,13 +161,11 @@ public class UDPDiscoverySenderEncryptedUnitTest
         throws Exception
     {
         // DO WORK
-        sender.requestBroadcast();
+        sender.requestBroadcast(1L);
 
         // VERIFY
-        // grab the sent message
-        final UDPDiscoveryMessage msg = getMessage();
+        UDPDiscoveryMessage msg = futureMsg.get(3, TimeUnit.SECONDS);
         assertNotNull("message not received", msg);
         assertEquals( "wrong message type", BroadcastType.REQUEST, msg.getMessageType() );
-
     }
 }

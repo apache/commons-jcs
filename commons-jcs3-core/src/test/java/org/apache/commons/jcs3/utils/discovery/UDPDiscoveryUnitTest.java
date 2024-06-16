@@ -1,6 +1,7 @@
 package org.apache.commons.jcs3.utils.discovery;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assume.assumeNotNull;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -23,6 +24,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 
+import org.apache.commons.jcs3.utils.net.HostNameUtil;
 import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
 import org.apache.commons.jcs3.utils.timing.SleepUtil;
 import org.junit.Test;
@@ -54,10 +56,11 @@ public class UDPDiscoveryUnitTest
         service.addDiscoveryListener( discoveryListener );
 
         // create a receiver with the service
-        final UDPDiscoveryReceiver receiver = new UDPDiscoveryReceiver( service,
+        final UDPDiscoveryReceiver receiver = new UDPDiscoveryReceiver( service::processMessage,
                 null,
                 attributes.getUdpDiscoveryAddr(),
                 attributes.getUdpDiscoveryPort() );
+        receiver.setSerializer(service.getSerializer());
         final Thread t = new Thread( receiver );
         t.start();
 
@@ -103,6 +106,8 @@ public class UDPDiscoveryUnitTest
     public void testSimpleUDPDiscoveryIPv4()
         throws Exception
     {
+        assumeNotNull("This machine does not support multicast", HostNameUtil.getMulticastNetworkInterface());
+
         simpleUDPDiscovery("228.5.6.7");
     }
 
@@ -114,6 +119,8 @@ public class UDPDiscoveryUnitTest
     public void testSimpleUDPDiscoveryIPv6()
         throws Exception
     {
+        assumeNotNull("This machine does not support multicast", HostNameUtil.getMulticastNetworkInterface());
+
         simpleUDPDiscovery("FF02::5678");
     }
 }

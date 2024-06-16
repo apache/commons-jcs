@@ -40,7 +40,7 @@ jobs:
       fail-fast: false
         
     steps:
-    - uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29 # v4.1.6
+    - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
       with:
         persist-credentials: false
     - uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
@@ -55,7 +55,7 @@ jobs:
         distribution: 'temurin'
         java-version: ${{ matrix.java }}
     - name: Build with Maven
-      rrun: mvn --errors --show-version--batch-mode --no-transfer-progress -DtrimStackTrace=false
+      run: mvn --errors --show-version --batch-mode --no-transfer-progress -DtrimStackTrace=false
     - name: Check tests can be re-run
       # No need to test on all OS/Java combinations
       if: ${{ matrix.java == '17' }}

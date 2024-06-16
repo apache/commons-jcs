@@ -21,25 +21,33 @@
 		<author email="dev@commons.apache.org">Apache Commons Developers</author>
 	</properties>
 	<body>
-        <release version="3.2.1" date="TBD">
+        <release version="4.0.0" date="YYYY-MM-DD">
             <!-- ADD -->
-            <action type="add" dev="ggregory" due-to="Gary Gregory">Add Maven property project.build.outputTimestamp for build reproducibility.</action>
+            <action type="add" dev="ggregory" due-to="Gary Gregory">
+               Add Maven property project.build.outputTimestamp for build reproducibility.
+            </action>
             <!-- REMOVE -->
             <action dev="tv" type="remove">
-               Remove all deprecated code
+               Remove all deprecated code.
             </action>
             <!-- UPDATE -->
             <action dev="tv" type="update">
-               Update dependency servlet-api 2.5 to javax.servlet-api 3.1.0
+               Replace system properties to limit class deserialization 
+               jcs.serialization.class.blacklist and jcs.serialization.class.whitelist with 
+               jcs.serialization.class.filter and use the syntax of Object>InputFilter from Java9
+               Document the behavior, add a test.
             </action>
             <action dev="tv" type="update">
-               Update dependency openwebbeans-impl 1.7.6 to 2.0.27
+               Update dependency servlet-api 2.5 to javax.servlet-api 3.1.0.
             </action>
             <action dev="tv" type="update">
-               Update dependency cache-tests 1.0.1 to 1.1.1
+               Update dependency openwebbeans-impl 1.7.6 to 2.0.27.
             </action>
             <action dev="tv" type="update">
-               Update Tomcat libraries 7.0.22 to 9.0.79
+               Update dependency cache-tests 1.0.1 to 1.1.1.
+            </action>
+            <action dev="tv" type="update">
+               Update Tomcat libraries 7.0.22 to 9.0.79.
             </action>
             <action dev="tv" type="update">
                Bump Java to 17.
@@ -57,7 +65,7 @@
                Bump commons-io from 2.13.0 to 2.15.1 #11.
             </action>
             <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">
-               Bump org.apache.commons:commons-parent from 59 to 67 #222.
+               Bump org.apache.commons:commons-parent from 59 to 71 #222, #258.
             </action>
             <action type="update" dev="ggregory" due-to="Gary Gregory">
                Bump commons-text from 1.10.0 to 1.11.0.
@@ -69,6 +77,24 @@
                Bump org.apache.logging.log4j:log4j-api from 2.21.1 to 2.23.1 #191, #197.
             </action>
             <action type="update" dev="ggregory" due-to="Dependabot">Bump org.apache.tomcat:tomcat-catalina from 9.0.79 to 9.0.83 in /commons-jcs3-jcache-extras.</action>
+            <action type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">Bump commons-logging:commons-logging from 1.3.0 to 1.3.2 #253.</action>
+            <action type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">Bump org.apache.commons:commons-text from 1.11.0 to 1.12.0 #254.</action> 
+        </release>
+        <release version="3.2.1" date="2024-05-27" description="JDK bug fix release">
+            <action dev="tv" type="fix">
+               Fix java.rmi.RemoteException: Method is not Remote in IRemoteCacheListener.
+               This is caused by a fix for JDK issue JDK-8230967 in various JDKs such as 8u241, 
+               11.0.6 and probably others.
+               <fixes issue="JCS-237" />
+               <fixes issue="JCS-238" />
+               <fixes issue="JCS-239" />
+               <fixes issue="JCS-240" />
+               <dueto name="Murali Thirugnanam" />
+               <dueto name="Greg Parmiter" />
+            </action>
+            <action dev="tv" type="update">
+               Update dependency openjpa to 3.2.2 to get rid of private transient dependencies
+            </action>
         </release>
         <release version="3.2" date="2023-08-22">
             <action dev="tv" type="fix" issue="JCS-234" due-to="Chris Lake">

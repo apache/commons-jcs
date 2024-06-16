@@ -1,5 +1,6 @@
 package org.apache.commons.jcs3.log;
 
+import java.util.Objects;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -390,7 +391,7 @@ public class JulLogAdapter implements Log
             else
             {
                 logger.logp(level, logger.getName(), "",
-                        message == null ? null : message.toString());
+                        Objects.toString(message, null));
             }
         }
     }

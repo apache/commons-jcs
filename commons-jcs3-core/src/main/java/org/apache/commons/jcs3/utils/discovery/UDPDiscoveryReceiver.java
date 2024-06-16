@@ -32,17 +32,19 @@ import java.nio.channels.MembershipKey;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.util.Iterator;
-import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
 
 import org.apache.commons.jcs3.engine.CacheInfo;
 import org.apache.commons.jcs3.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs3.engine.behavior.IShutdownObserver;
 import org.apache.commons.jcs3.log.Log;
 import org.apache.commons.jcs3.log.LogManager;
+import org.apache.commons.jcs3.utils.discovery.UDPDiscoveryMessage.BroadcastType;
 import org.apache.commons.jcs3.utils.net.HostNameUtil;
+import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
 import org.apache.commons.jcs3.utils.threadpool.PoolConfiguration;
 import org.apache.commons.jcs3.utils.threadpool.PoolConfiguration.WhenBlockedPolicy;
 import org.apache.commons.jcs3.utils.threadpool.ThreadPoolManager;
@@ -76,16 +78,13 @@ public class UDPDiscoveryReceiver
     private final AtomicInteger cnt = new AtomicInteger();
 
     /** Service to get cache names and handle request broadcasts */
-    private final UDPDiscoveryService service;
+    private Consumer<UDPDiscoveryMessage> service;
 
     /** Serializer */
-    private IElementSerializer serializer;
+    private IElementSerializer serializer = new StandardSerializer();
 
     /** Is it shutdown. */
     private final AtomicBoolean shutdown = new AtomicBoolean();
-
-    private final ArrayBlockingQueue<UDPDiscoveryMessage> msgQueue =
-            new ArrayBlockingQueue<>(maxPoolSize);
 
     /**
      * Constructor for the UDPDiscoveryReceiver object.
@@ -95,19 +94,15 @@ public class UDPDiscoveryReceiver
      * @param multicastAddress
      * @param multicastPort
      * @throws IOException
-     * @since 3.1
+     * @since 4.0
      */
-    public UDPDiscoveryReceiver( final UDPDiscoveryService service,
+    public UDPDiscoveryReceiver( final Consumer<UDPDiscoveryMessage> service,
             final String multicastInterfaceString,
             final InetAddress multicastAddress,
             final int multicastPort )
         throws IOException
     {
-        this.service = service;
-        if (service != null)
-        {
-            this.serializer = service.getSerializer();
-        }
+        setService(service);
 
         // create a small thread pool to handle a barrage
         this.pooledExecutor = ThreadPoolManager.getInstance().createPool(
@@ -130,7 +125,7 @@ public class UDPDiscoveryReceiver
      * @param multicastPort
      * @throws IOException
      */
-    public UDPDiscoveryReceiver( final UDPDiscoveryService service,
+    public UDPDiscoveryReceiver( final Consumer<UDPDiscoveryMessage> service,
             final String multicastInterfaceString,
             final String multicastAddressString,
             final int multicastPort )
@@ -215,41 +210,16 @@ public class UDPDiscoveryReceiver
             log.debug( "Process message sent from another" );
             log.debug( "Message = {0}", message );
 
-            if ( message.getHost() == null || message.getCacheNames() == null || message.getCacheNames().isEmpty() )
+            if (message.getHost() == null ||
+                message.getMessageType() != BroadcastType.REQUEST &&
+                (message.getCacheNames() == null || message.getCacheNames().isEmpty()) )
             {
                 log.debug( "Ignoring invalid message: {0}", message );
             }
             else
             {
-                processMessage(message);
+                service.accept(message);
             }
-        }
-    }
-
-    /**
-     * Process the incoming message.
-     */
-    private void processMessage(UDPDiscoveryMessage message)
-    {
-        final DiscoveredService discoveredService = new DiscoveredService(message);
-
-        switch (message.getMessageType())
-        {
-            case REMOVE:
-                log.debug( "Removing service from set {0}", discoveredService );
-                service.removeDiscoveredService( discoveredService );
-                break;
-            case REQUEST:
-                // if this is a request message, have the service handle it and
-                // return
-                log.debug( "Message is a Request Broadcast, will have the service handle it." );
-                service.serviceRequestBroadcast();
-                break;
-            case PASSIVE:
-            default:
-                log.debug( "Adding or updating service to set {0}", discoveredService );
-                service.addOrUpdateService( discoveredService );
-                break;
         }
     }
 
@@ -277,6 +247,7 @@ public class UDPDiscoveryReceiver
                     }
 
                     SelectionKey key = i.next();
+                    i.remove();
 
                     if (!key.isValid())
                     {
@@ -313,19 +284,6 @@ public class UDPDiscoveryReceiver
                                 log.debug( "Read object from address [{0}], object=[{1}]",
                                         sourceAddress, obj );
 
-                                // Just to keep the functionality of the test waitForMessage method
-                                synchronized (msgQueue)
-                                {
-                                    // Check if queue full already?
-                                    if (msgQueue.remainingCapacity() == 0)
-                                    {
-                                        // remove oldest element from queue
-                                        msgQueue.remove();
-                                    }
-
-                                    msgQueue.add(msg);
-                                }
-
                                 pooledExecutor.execute(() -> handleMessage(msg));
                                 log.debug( "Passed handler to executor." );
                             }
@@ -334,8 +292,6 @@ public class UDPDiscoveryReceiver
                         {
                             log.error( "Error receiving multicast packet", e );
                         }
-
-                        i.remove();
                     }
                 }
             } // end while
@@ -355,7 +311,7 @@ public class UDPDiscoveryReceiver
     }
 
     /**
-     * For testing
+     * Set the serializer implementation
      *
      * @param serializer the serializer to set
      * @since 3.1
@@ -363,6 +319,17 @@ public class UDPDiscoveryReceiver
     protected void setSerializer(IElementSerializer serializer)
     {
         this.serializer = serializer;
+    }
+
+    /**
+     * Set the service implementation
+     *
+     * @param service the service to set
+     * @since 4.0
+     */
+    protected void setService(Consumer<UDPDiscoveryMessage> service)
+    {
+        this.service = service;
     }
 
     /** Shuts down the socket. */
@@ -381,25 +348,6 @@ public class UDPDiscoveryReceiver
             {
                 log.error( "Problem closing socket" );
             }
-        }
-    }
-
-    /**
-     * Wait for multicast message (used for testing)
-     *
-     * @return the object message
-     * @throws IOException
-     */
-    protected Object waitForMessage()
-        throws IOException
-    {
-        try
-        {
-            return msgQueue.take();
-        }
-        catch (InterruptedException e)
-        {
-            throw new IOException("Interrupted waiting for message", e);
         }
     }
 }

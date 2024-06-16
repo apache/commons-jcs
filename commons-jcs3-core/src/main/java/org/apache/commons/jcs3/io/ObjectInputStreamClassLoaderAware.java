@@ -20,63 +20,40 @@ package org.apache.commons.jcs3.io;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputFilter;
 import java.io.ObjectInputStream;
 import java.io.ObjectStreamClass;
 import java.lang.reflect.Proxy;
 
-public class ObjectInputStreamClassLoaderAware extends ObjectInputStream {
-    private static final class BlacklistClassResolver {
-        private static final BlacklistClassResolver DEFAULT = new BlacklistClassResolver(
-            toArray(System.getProperty(
-                "jcs.serialization.class.blacklist",
-                "org.codehaus.groovy.runtime.,org.apache.commons.collections.functors.,org.apache.xalan")),
-            toArray(System.getProperty("jcs.serialization.class.whitelist")));
+/**
+ * ObjectInputStream implementation that allows to specify a class loader for deserializing 
+ * objects
+ * 
+ * The class also evaluates the system property <code>jcs.serialization.class.filter</code>
+ * to define a list of classes that are allowed to be de-serialized. The filter value
+ * is directly fed into {@link java.io.ObjectInputFilter.Config#createFilter(String)}
+ * See the syntax documentation there.
+ */
+public class ObjectInputStreamClassLoaderAware extends ObjectInputStream 
+{
+    public static final String SYSTEM_PROPERTY_SERIALIZATION_FILTER = "jcs.serialization.class.filter";
 
-        private static boolean contains(final String[] list, final String name) {
-            if (list != null) {
-                for (final String white : list) {
-                    if (name.startsWith(white)) {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
-        private static String[] toArray(final String property) {
-            return property == null ? null : property.split(" *, *");
-        }
-
-        private final String[] blacklist;
-
-        private final String[] whitelist;
-
-        protected BlacklistClassResolver(final String[] blacklist, final String[] whitelist) {
-            this.whitelist = whitelist;
-            this.blacklist = blacklist;
-        }
-
-        public final String check(final String name) {
-            if (isBlacklisted(name)) {
-                throw new SecurityException(name + " is not whitelisted as deserialisable, prevented before loading.");
-            }
-            return name;
-        }
-
-        protected boolean isBlacklisted(final String name) {
-            return whitelist != null && !contains(whitelist, name) || contains(blacklist, name);
-        }
-    }
+    private static final String filter = System.getProperty(
+	SYSTEM_PROPERTY_SERIALIZATION_FILTER,
+        "!org.codehaus.groovy.runtime.**;!org.apache.commons.collections.functors.**;!org.apache.xalan*");
 
     private final ClassLoader classLoader;
 
-    public ObjectInputStreamClassLoaderAware(final InputStream in, final ClassLoader classLoader) throws IOException {
+    public ObjectInputStreamClassLoaderAware(final InputStream in, final ClassLoader classLoader) throws IOException 
+    {
         super(in);
+        setObjectInputFilter(ObjectInputFilter.Config.createFilter(filter));
         this.classLoader = classLoader != null ? classLoader : Thread.currentThread().getContextClassLoader();
     }
 
     @Override
     protected Class<?> resolveClass(final ObjectStreamClass desc) throws ClassNotFoundException {
-        return Class.forName(BlacklistClassResolver.DEFAULT.check(desc.getName()), false, classLoader);
+        return Class.forName(desc.getName(), false, classLoader);
     }
 
     @Override

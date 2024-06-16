@@ -65,21 +65,6 @@ public class MySQLDiskCache<K, V>
     }
 
     /**
-     * @param pattern
-     * @return String to use in the like query.
-     */
-    @Override
-    public String constructLikeParameterFromPattern( final String pattern )
-    {
-        String likePattern = pattern.replace( ".+", "%" );
-        likePattern = likePattern.replace( ".", "_" );
-
-        log.debug( "pattern = [{0}]", likePattern );
-
-        return likePattern;
-    }
-
-    /**
      * Removed the expired. (now - create time) &gt; max life seconds * 1000
      * <p>
      * If we are currently optimizing, then this method will balk and do nothing.

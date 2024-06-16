@@ -31,6 +31,24 @@
 			<p> This document describes the built-in serializers and their 
                 configuration.</p>
 		</section>
+		<section name="Standard Serializer">
+			<p> The <code>StandardSerializer</code> uses the JDK default 
+			    serialization methods. Key and value classes must be 
+			    <code>Serializable</code> for this to work.</p>
+			<p> De-serialization of objects out of untrusted data is a common
+			    source for vulnerabilities in code. JCS implements an 
+			    <code>ObjectInputFilter</code> to address this problem. The filter
+			    for classes and packages allowed for de-serialization can be 
+			    configured with a system property:</p>
+            <source>
+                <![CDATA[
+# default
+-Djcs.serialization.class.filter='!org.codehaus.groovy.runtime.**;!org.apache.commons.collections.functors.**;!org.apache.xalan*'
+                ]]>
+            </source>
+			<p> The syntax for the filter expression is documented in the JavaDoc
+                of <a href="https://docs.oracle.com/javase/9/docs/api/java/io/ObjectInputFilter.Config.html#createFilter-java.lang.String-">java.io.ObjectInputFilter.Config#createFilter</a>.</p>
+		</section>
         <section name="Compressing Serializer">
             <p> The <code>CompressingSerializer</code> gzips the bytes
                 after serializing the cache object the default way. For reading, 

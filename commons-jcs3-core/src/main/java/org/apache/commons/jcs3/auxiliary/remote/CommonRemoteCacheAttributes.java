@@ -1,5 +1,7 @@
 package org.apache.commons.jcs3.auxiliary.remote;
 
+import java.util.Objects;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -126,7 +128,7 @@ public class CommonRemoteCacheAttributes
     @Override
     public String getRemoteTypeName()
     {
-        return remoteType != null ? remoteType.toString() : RemoteType.LOCAL.toString();
+        return Objects.toString(remoteType, RemoteType.LOCAL.toString());
     }
 
     /**
