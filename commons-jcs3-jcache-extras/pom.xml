@@ -97,6 +97,6 @@
   <properties>
     <commons.module.name>org.apache.commons.jcs3.jcache.extras</commons.module.name>
     <project.build.outputTimestamp>2022-01-01T00:00:00Z</project.build.outputTimestamp>
-    <tomcat.version>9.0.86</tomcat.version>
+    <tomcat.version>9.0.90</tomcat.version>
   </properties>
 </project>
