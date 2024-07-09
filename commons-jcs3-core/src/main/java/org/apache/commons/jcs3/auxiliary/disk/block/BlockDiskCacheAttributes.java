@@ -105,12 +105,12 @@ public class BlockDiskCacheAttributes
     {
         final StringBuilder str = new StringBuilder();
         str.append( "\nBlockDiskAttributes " );
-        str.append( "\n DiskPath [" + this.getDiskPath() + "]" );
-        str.append( "\n MaxKeySize [" + this.getMaxKeySize() + "]" );
-        str.append( "\n MaxPurgatorySize [" + this.getMaxPurgatorySize() + "]" );
-        str.append( "\n BlockSizeBytes [" + this.getBlockSizeBytes() + "]" );
-        str.append( "\n KeyPersistenceIntervalSeconds [" + this.getKeyPersistenceIntervalSeconds() + "]" );
-        str.append( "\n DiskLimitType [" + this.getDiskLimitType() + "]" );
+        str.append( "\n DiskPath [" + getDiskPath() + "]" );
+        str.append( "\n MaxKeySize [" + getMaxKeySize() + "]" );
+        str.append( "\n MaxPurgatorySize [" + getMaxPurgatorySize() + "]" );
+        str.append( "\n BlockSizeBytes [" + getBlockSizeBytes() + "]" );
+        str.append( "\n KeyPersistenceIntervalSeconds [" + getKeyPersistenceIntervalSeconds() + "]" );
+        str.append( "\n DiskLimitType [" + getDiskLimitType() + "]" );
         return str.toString();
     }
 }

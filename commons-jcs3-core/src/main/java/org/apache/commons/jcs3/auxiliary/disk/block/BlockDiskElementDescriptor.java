@@ -48,7 +48,6 @@ public class BlockDiskElementDescriptor<K>
      */
     public BlockDiskElementDescriptor()
     {
-        super();
     }
 
     /**
@@ -59,9 +58,8 @@ public class BlockDiskElementDescriptor<K>
      *
      * @since 3.1
      */
-    public BlockDiskElementDescriptor(K key, int[] blocks)
+    public BlockDiskElementDescriptor(final K key, final int[] blocks)
     {
-        super();
         this.key = key;
         this.blocks = blocks;
     }
