@@ -52,7 +52,7 @@ public enum CacheFileContentType {
      * from the given byte value.
      */
 
-    public static @NonNullable CacheFileContentType fromByte(byte b) {
+    public static @NonNullable CacheFileContentType fromByte(final byte b) {
         switch(b) {
             case 0:
                 return JAVA_SERIALIZATION;
@@ -62,7 +62,7 @@ public enum CacheFileContentType {
                 throw new IllegalArgumentException("Unsupported b="+b);
         }
     }
-    public byte[] serialize(Object obj) {
+    public byte[] serialize(final Object obj) {
         switch(this) {
             case JAVA_SERIALIZATION:
                 return SerializationUtils.serialize((Serializable)obj);
@@ -72,7 +72,7 @@ public enum CacheFileContentType {
                 throw new AssertionError(this);
         }
     }
-    public Object deserialize(byte[] ba) {
+    public Object deserialize(final byte[] ba) {
         switch(this) {
             case JAVA_SERIALIZATION:
                 return SerializationUtils.deserialize(ba);
