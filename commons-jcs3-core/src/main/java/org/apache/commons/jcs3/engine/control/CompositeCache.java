@@ -662,7 +662,7 @@ public class CompositeCache<K, V>
     {
         final Map<K, ICacheElement<K, V>> elements = new HashMap<>();
 
-        for (ListIterator<AuxiliaryCache<K, V>> i = auxCaches.listIterator(auxCaches.size()); i.hasPrevious();)
+        for (final ListIterator<AuxiliaryCache<K, V>> i = auxCaches.listIterator(auxCaches.size()); i.hasPrevious();)
         {
             final AuxiliaryCache<K, V> aux = i.previous();
 
@@ -1031,7 +1031,7 @@ public class CompositeCache<K, V>
 
                 final long timeFactorForMilliseconds = attributes.getTimeFactorForMilliseconds();
 
-                if (maxLifeSeconds != -1 && (timestamp - createTime) > (maxLifeSeconds * timeFactorForMilliseconds))
+                if (maxLifeSeconds != -1 && timestamp - createTime > maxLifeSeconds * timeFactorForMilliseconds)
                 {
                     log.debug("Exceeded maxLife: {0}", element::getKey);
 
@@ -1354,7 +1354,7 @@ public class CompositeCache<K, V>
                         {
                             aux.update(ce);
                         }
-                        catch (IOException e)
+                        catch (final IOException e)
                         {
                             log.warn("Failure saving element {0} to aux {1}.", ce, aux, e);
                         }
