@@ -35,28 +35,28 @@ public enum CacheType {
     SOFT_REFERENCE_FILE_SAFE;
 
     /** Instantiates and returns a new instance of cache of the current type. */
-    <V> ICache<V> createCache(String name, @NonNullable Class<V> valueType)
+    <V> ICache<V> createCache(final String name, @NonNullable final Class<V> valueType)
     {
         switch(this) {
             case SOFT_REFERENCE:
-                return new SoftRefCache<V>(name, valueType);
+                return new SoftRefCache<>(name, valueType);
             case SOFT_REFERENCE_SAFE:
-                return new SafeCacheWrapper<V>(new SoftRefCache<V>(name, valueType));
+                return new SafeCacheWrapper<>(new SoftRefCache<>(name, valueType));
             case SOFT_REFERENCE_FILE:
-                return new SoftRefFileCache<V>(name, valueType);
+                return new SoftRefFileCache<>(name, valueType);
             case SOFT_REFERENCE_FILE_SAFE:
-                return new SafeCacheWrapper<V>(new SoftRefFileCache<V>(name, valueType));
+                return new SafeCacheWrapper<>(new SoftRefFileCache<>(name, valueType));
         }
         throw new AssertionError(this);
     }
     /** Instantiates and returns a new instance of safe cache of the current type. */
-    <V> ICacheSafe<V> createSafeCache(String name, @NonNullable Class<V> valueType)
+    <V> ICacheSafe<V> createSafeCache(final String name, @NonNullable final Class<V> valueType)
     {
         switch(this) {
             case SOFT_REFERENCE_SAFE:
-                return new SafeCacheWrapper<V>(new SoftRefCache<V>(name, valueType));
+                return new SafeCacheWrapper<>(new SoftRefCache<>(name, valueType));
             case SOFT_REFERENCE_FILE_SAFE:
-                return new SafeCacheWrapper<V>(new SoftRefFileCache<V>(name, valueType));
+                return new SafeCacheWrapper<>(new SoftRefFileCache<>(name, valueType));
         }
         throw new UnsupportedOperationException("");
     }
@@ -65,7 +65,7 @@ public enum CacheType {
      * cache of the current cache type;
      * false otherwise.
      */
-    public boolean isAsssignableFrom(CacheType from) {
+    public boolean isAsssignableFrom(final CacheType from) {
         switch(this) {
             case SOFT_REFERENCE:
                 return true;
