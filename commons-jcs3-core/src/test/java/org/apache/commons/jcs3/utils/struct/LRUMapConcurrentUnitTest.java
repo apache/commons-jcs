@@ -186,8 +186,8 @@ public class LRUMapConcurrentUnitTest
 
         //since we got them backwards the total should be at the end.
         // add one confirm that total is gone.
-        map.put( ( total ) + ":key", "data" + ( total ) );
-        assertNull( map.get( ( total - 1 ) + ":key" ) );
+        map.put( total + ":key", "data" + total );
+        assertNull( map.get( total - 1 + ":key" ) );
     }
 
     /**
@@ -213,7 +213,7 @@ public class LRUMapConcurrentUnitTest
         }
 
         // get the total to total *2 items out, these should be found.
-        for ( int i = ( total * 2 ) - 1; i >= total; i-- )
+        for ( int i = total * 2 - 1; i >= total; i-- )
         {
             final String res = map.get( i + ":key" );
             assertNotNull( "[" + i + ":key] should not be null", res );

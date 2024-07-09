@@ -159,14 +159,14 @@ public class LRUMapSizeVsCount
         System.out.println( "\n" );
         System.out.println( "Put average for " + cacheName +  " = " + putAvCount );
         System.out.println( "Put average for " + cache2Name + " = " + putAvSize );
-        ratioPut = (putAvSize *1.0) / putAvCount;
+        ratioPut = putAvSize *1.0 / putAvCount;
         System.out.println( cache2Name.trim() + " puts took " + ratioPut + " times the " + cacheName.trim() + ", the goal is <" + targetPut
             + "x" );
 
         System.out.println( "\n" );
         System.out.println( "Put minimum for " + cacheName +  " = " + minTimeCountPut );
         System.out.println( "Put minimum for " + cache2Name + " = " + minTimeSizePut );
-        ratioPut = (minTimeSizePut * 1.0) / minTimeCountPut;
+        ratioPut = minTimeSizePut * 1.0 / minTimeCountPut;
         System.out.println( cache2Name.trim() + " puts took " + ratioPut + " times the " + cacheName.trim() + ", the goal is <" + targetPut
             + "x" );
 
@@ -174,14 +174,14 @@ public class LRUMapSizeVsCount
         System.out.println( "Get average for " + cacheName + " = " + getAvCount );
         System.out.println( "Get average for " + cache2Name + " = " + getAvSize );
         ratioGet = Float.intBitsToFloat( (int) getAvCount ) / Float.intBitsToFloat( (int) getAvSize );
-        ratioGet = (getAvSize * 1.0) / getAvCount;
+        ratioGet = getAvSize * 1.0 / getAvCount;
         System.out.println( cache2Name.trim() + " gets took " + ratioGet + " times the " + cacheName.trim() + ", the goal is <" + targetGet
             + "x" );
 
         System.out.println( "\n" );
         System.out.println( "Get minimum for " + cacheName +  " = " + minTimeCountGet );
         System.out.println( "Get minimum for " + cache2Name + " = " + minTimeSizeGet );
-        ratioPut = (minTimeSizeGet * 1.0) / minTimeCountGet;
+        ratioPut = minTimeSizeGet * 1.0 / minTimeCountGet;
         System.out.println( cache2Name.trim() + " puts took " + ratioPut + " times the " + cacheName.trim() + ", the goal is <" + targetGet
             + "x" );
     }
