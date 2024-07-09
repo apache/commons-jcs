@@ -294,11 +294,11 @@ public class CompositeCacheAttributes
             final String name = diskUsagePatternName.toUpperCase().trim();
             if ( name.startsWith( "SWAP" ) )
             {
-                this.setDiskUsagePattern( DiskUsagePattern.SWAP );
+                setDiskUsagePattern( DiskUsagePattern.SWAP );
             }
             else if ( name.startsWith( "UPDATE" ) )
             {
-                this.setDiskUsagePattern( DiskUsagePattern.UPDATE );
+                setDiskUsagePattern( DiskUsagePattern.UPDATE );
             }
         }
     }
