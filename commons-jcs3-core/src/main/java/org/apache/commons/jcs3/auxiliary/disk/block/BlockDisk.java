@@ -433,7 +433,7 @@ public class BlockDisk implements AutoCloseable
         buf.append("\n  Put Bytes [" + this.putBytes + "]");
         buf.append("\n  Put Count [" + this.putCount + "]");
         buf.append("\n  Average Size [" + getAveragePutSizeBytes() + "]");
-        buf.append("\n  Empty Blocks [" + this.getEmptyBlocks() + "]");
+        buf.append("\n  Empty Blocks [" + getEmptyBlocks() + "]");
         try
         {
             buf.append("\n  Length [" + length() + "]");
