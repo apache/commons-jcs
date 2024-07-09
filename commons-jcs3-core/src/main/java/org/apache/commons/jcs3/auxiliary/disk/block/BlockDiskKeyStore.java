@@ -199,7 +199,7 @@ public class BlockDiskKeyStore<K>
         @Override
         protected boolean shouldRemove()
         {
-            return maxSize > 0 && contentSize.get() > maxSize && this.size() > 1;
+            return maxSize > 0 && contentSize.get() > maxSize && size() > 1;
         }
 
         // keep the content size in kB, so 2^31 kB is reasonable value
@@ -419,7 +419,7 @@ public class BlockDiskKeyStore<K>
                                 keys.put(descriptor.getKey(), descriptor.getBlocks());
                             }
                         }
-                        catch (EOFException e)
+                        catch (final EOFException e)
                         {
                             break;
                         }
@@ -529,7 +529,7 @@ public class BlockDiskKeyStore<K>
                 }
 
                 // Write signature to distinguish old format from new one
-                ByteBuffer signature = ByteBuffer.allocate(4);
+                final ByteBuffer signature = ByteBuffer.allocate(4);
                 signature.putInt(KEY_FILE_SIGNATURE).flip();
                 bc.write(signature);
 
@@ -577,7 +577,7 @@ public class BlockDiskKeyStore<K>
         {
             for (final int block : e.getValue())
             {
-                Set<K> keys = blockAllocationMap.computeIfAbsent(block, s -> new HashSet<>());
+                final Set<K> keys = blockAllocationMap.computeIfAbsent(block, s -> new HashSet<>());
                 if (!keys.isEmpty() && !log.isTraceEnabled())
                 {
                     // keys are not null, and no debug - fail fast
