@@ -315,7 +315,7 @@ public class ElementAttributes
     {
         final long now = System.currentTimeMillis();
         final long timeFactorForMilliseconds = getTimeFactorForMilliseconds();
-        return ( this.getCreateTime() + this.getMaxLife() * timeFactorForMilliseconds - now ) / 1000;
+        return ( getCreateTime() + getMaxLife() * timeFactorForMilliseconds - now ) / 1000;
     }
 
     /**
@@ -447,10 +447,10 @@ public class ElementAttributes
         dump.append( ", IS_SPOOL = " ).append( IS_SPOOL );
         dump.append( ", IS_REMOTE = " ).append( IS_REMOTE );
         dump.append( ", IS_ETERNAL = " ).append( IS_ETERNAL );
-        dump.append( ", MaxLifeSeconds = " ).append( this.getMaxLife() );
-        dump.append( ", IdleTime = " ).append( this.getIdleTime() );
-        dump.append( ", CreateTime = " ).append( this.getCreateTime() );
-        dump.append( ", LastAccessTime = " ).append( this.getLastAccessTime() );
+        dump.append( ", MaxLifeSeconds = " ).append( getMaxLife() );
+        dump.append( ", IdleTime = " ).append( getIdleTime() );
+        dump.append( ", CreateTime = " ).append( getCreateTime() );
+        dump.append( ", LastAccessTime = " ).append( getLastAccessTime() );
         dump.append( ", getTimeToLiveSeconds() = " ).append( String.valueOf( getTimeToLiveSeconds() ) );
         dump.append( ", createTime = " ).append( String.valueOf( createTime ) ).append( " ]" );
 
