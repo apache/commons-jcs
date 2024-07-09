@@ -56,7 +56,7 @@ public class FIFOMemoryCacheUnitTest
         cache.initialize( new CompositeCache<>( attributes, new ElementAttributes() ) );
 
         // DO WORK
-        for ( int i = 0; i < (maxObjects * 2); i++ )
+        for ( int i = 0; i < maxObjects * 2; i++ )
         {
             final CacheElement<String, String> element = new CacheElement<>( cacheName, "key" + i, "value" + i );
             cache.update( element );
