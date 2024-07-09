@@ -427,7 +427,7 @@ public abstract class AbstractDiskCache<K, V>
             return null;
         }
 
-        PurgatoryElement<K, V> pe = purgatory.get( key );
+        final PurgatoryElement<K, V> pe = purgatory.get( key );
 
         // If the element was found in purgatory
         if ( pe != null )
@@ -538,7 +538,7 @@ public abstract class AbstractDiskCache<K, V>
         throws IOException
     {
         // this avoids locking purgatory, but it uses more memory
-        Set<K> keyArray = new HashSet<>(purgatory.keySet());
+        final Set<K> keyArray = new HashSet<>(purgatory.keySet());
 
         final Set<K> matchingKeys = getKeyMatcher().getMatchingKeysFromArray(pattern, keyArray);
 
@@ -674,7 +674,7 @@ public abstract class AbstractDiskCache<K, V>
     {
         // I'm getting the object, so I can lock on the element
         // Remove element from purgatory if it is there
-        PurgatoryElement<K, V> pe = purgatory.remove( key );
+        final PurgatoryElement<K, V> pe = purgatory.remove( key );
         boolean present;
 
         if ( pe != null )
