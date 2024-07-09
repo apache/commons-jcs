@@ -120,14 +120,14 @@ public abstract class AbstractCacheEventQueue<K, V>
     // /////////////////////////// Inner classes /////////////////////////////
     protected interface IOExConsumer<T>
     {
-        static <T> Consumer<T> unchecked(IOExConsumer<T> consumer)
+        static <T> Consumer<T> unchecked(final IOExConsumer<T> consumer)
         {
             return t -> {
                 try
                 {
                     consumer.accept(t);
                 }
-                catch (IOException e)
+                catch (final IOException e)
                 {
                     throw new RuntimeException(e);
                 }
@@ -372,7 +372,7 @@ public abstract class AbstractCacheEventQueue<K, V>
      * <p>
      * @throws IOException
      */
-    private void remove(K key) throws IOException
+    private void remove(final K key) throws IOException
     {
         listener.handleRemove( cacheName, key );
     }
