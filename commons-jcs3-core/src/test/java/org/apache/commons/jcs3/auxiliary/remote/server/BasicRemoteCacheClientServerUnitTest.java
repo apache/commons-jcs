@@ -94,7 +94,7 @@ public class BasicRemoteCacheClientServerUnitTest extends Assert
                         System.out.println("Found: "+ inetAddr +
                                 " isLoopback: " + loopbackAddress +
                                 " isSiteLocal: " + siteLocalAddress +
-                                ((!loopbackAddress && siteLocalAddress) ? " *" : ""));
+                                (!loopbackAddress && siteLocalAddress ? " *" : ""));
                     }
                 }
             }
