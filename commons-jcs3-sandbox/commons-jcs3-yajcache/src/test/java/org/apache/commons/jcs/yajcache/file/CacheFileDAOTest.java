@@ -35,7 +35,7 @@ import org.apache.commons.logging.LogFactory;
 @CopyRightApache
 @TestOnly
 public class CacheFileDAOTest extends TestCase {
-    private Log log = LogFactory.getLog(this.getClass());
+    private final Log log = LogFactory.getLog(this.getClass());
 
     public void test() {
         log.debug("testing cache directory "
@@ -46,17 +46,17 @@ public class CacheFileDAOTest extends TestCase {
         assertTrue(CacheFileUtils.inst.mkCacheDirs("testCache"));
 
         log.debug("test writeCacheItem");
-        byte[] ba1 = {1, 2, 3, 4};
+        final byte[] ba1 = {1, 2, 3, 4};
         CacheFileDAO.inst.writeCacheItem("testCache",
                 CacheFileContentType.JAVA_SERIALIZATION, "key1", ba1);
-        byte[] ba2 = {'a', 'b', 'c', 'd'};
+        final byte[] ba2 = {'a', 'b', 'c', 'd'};
         CacheFileDAO.inst.writeCacheItem("testCache",
                 CacheFileContentType.XML_ENCODER, "key2", ba2);
 
         log.debug("test readCacheItem");
-        byte[] ba1r = CacheFileDAO.inst.readCacheItem("testCache", "key1").getContent();
+        final byte[] ba1r = CacheFileDAO.inst.readCacheItem("testCache", "key1").getContent();
         assertTrue(Arrays.equals(ba1, ba1r));
-        byte[] ba2r = (byte[]) CacheFileDAO.inst.readCacheItem("testCache", "key2").getContent();
+        final byte[] ba2r = (byte[]) CacheFileDAO.inst.readCacheItem("testCache", "key2").getContent();
         assertTrue(Arrays.equals(ba2, ba2r));
 
         log.debug("test removeCacheItem");
@@ -70,13 +70,13 @@ public class CacheFileDAOTest extends TestCase {
 
         log.debug("test readCacheItem missing content");
         CacheFileContent cfc = CacheFileDAO.inst.readCacheItem("testCacheCorrupt", "keyx");
-        byte[] ba = cfc == null ? null : cfc.getContent();
+        final byte[] ba = cfc == null ? null : cfc.getContent();
         assertTrue(ba == null);
 
         log.debug("test readCacheItem with corrupted hash code");
-        File file = CacheFileUtils.inst.getCacheFile("testCacheCorrupt", "keyy");
+        final File file = CacheFileUtils.inst.getCacheFile("testCacheCorrupt", "keyy");
         RandomAccessFile raf = new RandomAccessFile(file, "rw");
-        byte[] ba2 = {1, 2, 3, 4};
+        final byte[] ba2 = {1, 2, 3, 4};
         cfc = CacheFileContent.getInstance(CacheFileContentType.JAVA_SERIALIZATION, ba2);
         cfc.setContentHashCode(0);
         cfc.write(raf);

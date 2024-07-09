@@ -37,15 +37,15 @@ import org.apache.commons.logging.LogFactory;
 public enum CacheFileDAO {
     inst;
 
-    private AtomicInteger countWriteIOException = new AtomicInteger();
-    private AtomicInteger countWriteCloseException = new AtomicInteger();
-    private AtomicInteger countReadIOException = new AtomicInteger();
-    private AtomicInteger countReadCloseException = new AtomicInteger();
-    private AtomicInteger countCorruptMinLength = new AtomicInteger();
-    private AtomicInteger countCorruptLength = new AtomicInteger();
-    private AtomicInteger countCorruptInvalid = new AtomicInteger();
+    private final AtomicInteger countWriteIOException = new AtomicInteger();
+    private final AtomicInteger countWriteCloseException = new AtomicInteger();
+    private final AtomicInteger countReadIOException = new AtomicInteger();
+    private final AtomicInteger countReadCloseException = new AtomicInteger();
+    private final AtomicInteger countCorruptMinLength = new AtomicInteger();
+    private final AtomicInteger countCorruptLength = new AtomicInteger();
+    private final AtomicInteger countCorruptInvalid = new AtomicInteger();
 
-    private Log log = LogFactory.getLog(this.getClass());
+    private final Log log = LogFactory.getLog(this.getClass());
 
     /**
      * Writes the specified cache item into the file system.
@@ -53,10 +53,10 @@ public enum CacheFileDAO {
      * @return true if successful; false otherwise.
      */
     public boolean writeCacheItem(
-            @NonNullable String cacheName, @NonNullable CacheFileContentType type,
-            @NonNullable String key, @NonNullable byte[] val)
+            @NonNullable final String cacheName, @NonNullable final CacheFileContentType type,
+            @NonNullable final String key, @NonNullable final byte[] val)
     {
-        File file = CacheFileUtils.inst.getCacheFile(cacheName, key);
+        final File file = CacheFileUtils.inst.getCacheFile(cacheName, key);
         RandomAccessFile raf = null;
         try {
             file.delete();
@@ -64,14 +64,14 @@ public enum CacheFileDAO {
             raf = new RandomAccessFile(file, "rw");
             CacheFileContent.getInstance(type, val).write(raf);
             return true;
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             countWriteIOException.incrementAndGet();
             log.error("", ex);
         } finally {
             if (raf != null) {
                 try {
                     raf.close();
-                } catch (Exception ex) {
+                } catch (final Exception ex) {
                     countWriteCloseException.incrementAndGet();
                     log.error("", ex);
                 }
@@ -86,12 +86,13 @@ public enum CacheFileDAO {
      * or null if it doesn't exist;
      * or CacheFileContent.CORRUPTED if file is corrupted.
      */
-    public CacheFileContent readCacheItem(@NonNullable String cacheName, @NonNullable String key)
+    public CacheFileContent readCacheItem(@NonNullable final String cacheName, @NonNullable final String key)
     {
-        File file = CacheFileUtils.inst.getCacheFile(cacheName, key);
+        final File file = CacheFileUtils.inst.getCacheFile(cacheName, key);
 
-        if (!file.exists())
+        if (!file.exists()) {
             return null;
+        }
         final long fileSize = file.length();
 
         if (fileSize <= CacheFileContent.MIN_FILE_LENGTH) {
@@ -103,7 +104,7 @@ public enum CacheFileDAO {
         RandomAccessFile raf = null;
         try {
             raf = new RandomAccessFile(file, "r");
-            CacheFileContent cfc = CacheFileContent.getInstance(raf);
+            final CacheFileContent cfc = CacheFileContent.getInstance(raf);
 
             if (cfc.isValid()) {
                 final int contentLength = (int)fileSize - CacheFileContent.MIN_FILE_LENGTH;
@@ -123,17 +124,14 @@ public enum CacheFileDAO {
                 return CacheFileContent.CORRUPTED;
             }
             return cfc;
-        } catch (IOException ex) {
-            countReadIOException.incrementAndGet();
-            log.warn(ex.getClass().getName(), ex);
-        } catch (org.apache.commons.lang3.SerializationException ex) {
+        } catch (final IOException | org.apache.commons.lang3.SerializationException ex) {
             countReadIOException.incrementAndGet();
             log.warn(ex.getClass().getName(), ex);
        } finally {
             if (raf != null) {
                 try {
                     raf.close();
-                } catch (Exception ex) {
+                } catch (final Exception ex) {
                     countReadCloseException.incrementAndGet();
                     log.error("", ex);
                 }
@@ -146,9 +144,9 @@ public enum CacheFileDAO {
      *
      * @return true if successful; false otherwise.
      */
-    public boolean removeCacheItem(@NonNullable String cacheName, @NonNullable String key)
+    public boolean removeCacheItem(@NonNullable final String cacheName, @NonNullable final String key)
     {
-        File file = CacheFileUtils.inst.getCacheFile(cacheName, key);
+        final File file = CacheFileUtils.inst.getCacheFile(cacheName, key);
         return file.delete();
     }
 

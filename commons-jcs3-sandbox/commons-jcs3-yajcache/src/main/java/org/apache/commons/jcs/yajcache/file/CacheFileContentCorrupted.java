@@ -33,7 +33,7 @@ public class CacheFileContentCorrupted extends CacheFileContent {
 
     private CacheFileContentCorrupted() {}
 
-    @Override void write(@NonNullable RandomAccessFile raf) throws IOException
+    @Override void write(@NonNullable final RandomAccessFile raf) throws IOException
     {
     }
 
@@ -41,28 +41,28 @@ public class CacheFileContentCorrupted extends CacheFileContent {
         return null;
     }
 
-    @Override public void setContent(byte[] content) {
+    @Override public void setContent(final byte[] content) {
     }
 
     @Override public byte getContentType() {
         return 0;
     }
 
-    @Override public void setContentType(byte contentType) {
+    @Override public void setContentType(final byte contentType) {
     }
 
     @Override public int getContentLength() {
         return 0;
     }
 
-    @Override void setContentLength(int contentLength) {
+    @Override void setContentLength(final int contentLength) {
     }
 
     @Override public int getContentHashCode() {
         return 0;
     }
 
-    @Override void setContentHashCode(int contentHashCode) {
+    @Override void setContentHashCode(final int contentHashCode) {
     }
     @Override public boolean isValid() {
         return false;
