@@ -35,40 +35,43 @@ import java.io.ByteArrayOutputStream;
 public enum BeanUtils {
     inst;
     private static final boolean debug = false;
-    private Log log = debug ? LogFactory.getLog(this.getClass()) : null;
+    private final Log log = debug ? LogFactory.getLog(this.getClass()) : null;
 
-    public <B> B cloneDeep(B bean) {
+    public <B> B cloneDeep(final B bean) {
         if (bean == null
-        ||  ClassUtils.inst.isImmutable(bean))
+        ||  ClassUtils.inst.isImmutable(bean)) {
             return bean;
-        return (B)this.fromXmlByteArray(this.toXmlByteArray(bean));
+        }
+        return (B)fromXmlByteArray(toXmlByteArray(bean));
     }
-    public <B> B cloneShallow(B bean) {
+    public <B> B cloneShallow(final B bean) {
         if (bean == null
-        ||  ClassUtils.inst.isImmutable(bean))
+        ||  ClassUtils.inst.isImmutable(bean)) {
             return bean;
+        }
         try {
             return (B)org.apache.commons.beanutils.BeanUtils.cloneBean(bean);
-        } catch (Exception ex) {
+        } catch (final Exception ex) {
             LogFactory.getLog(this.getClass()).error("", ex);
             throw new RuntimeException(ex);
         }
     }
     @TODO("Replace XMLEncoder with something fast.  Maybe XStream ?")
-    public @NonNullable byte[] toXmlByteArray(@NonNullable Object bean) {
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        XMLEncoder out = new XMLEncoder(bos);
+    public @NonNullable byte[] toXmlByteArray(@NonNullable final Object bean) {
+        final ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        final XMLEncoder out = new XMLEncoder(bos);
         out.writeObject(bean);
         out.close();
         return bos.toByteArray();
     }
     @TODO("Replace XMLDecoder with something fast.  Maybe XStream ?")
-    public @NonNullable Object fromXmlByteArray(@NonNullable byte[] bytes) {
-        if (debug)
+    public @NonNullable Object fromXmlByteArray(@NonNullable final byte[] bytes) {
+        if (debug) {
             log.debug(new String(bytes));
-        ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
-        XMLDecoder in = new XMLDecoder(bis);
-        Object toBean = in.readObject();
+        }
+        final ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
+        final XMLDecoder in = new XMLDecoder(bis);
+        final Object toBean = in.readObject();
         in.close();
         return toBean;
     }
