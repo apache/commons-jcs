@@ -34,15 +34,15 @@ public enum CollectionUtils {
     // http://www.artima.com/forums/flat.jsp?forum=106&thread=79394
 
     public <K,V> ConcurrentHashMap<K,V> newConcurrentHashMap() {
-        return new ConcurrentHashMap<K,V>();
+        return new ConcurrentHashMap<>();
     }
-    public <K,V> ConcurrentHashMap<K,V> newConcurrentHashMap(int initialCapacity)
+    public <K,V> ConcurrentHashMap<K,V> newConcurrentHashMap(final int initialCapacity)
     {
-        return new ConcurrentHashMap<K,V>(initialCapacity);
+        return new ConcurrentHashMap<>(initialCapacity);
     }
     public <K,V> ConcurrentHashMap<K,V> newConcurrentHashMap(
-            int initialCapacity, float loadFactor, int concurrencyLevel)
+            final int initialCapacity, final float loadFactor, final int concurrencyLevel)
     {
-        return new ConcurrentHashMap<K,V>(initialCapacity);
+        return new ConcurrentHashMap<>(initialCapacity);
     }
 }
