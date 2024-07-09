@@ -221,7 +221,7 @@ public class CacheTest
     {
         final CachingProvider cachingProvider = Caching.getCachingProvider();
         final CacheManager cacheManager = cachingProvider.getCacheManager();
-        cacheManager.createCache("default", new CompleteConfiguration<Object, Object>()
+        cacheManager.createCache("default", new CompleteConfiguration<>()
         {
             /**
              */
