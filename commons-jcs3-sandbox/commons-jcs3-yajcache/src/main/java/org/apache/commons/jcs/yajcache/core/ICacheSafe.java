@@ -36,8 +36,7 @@ public interface ICacheSafe<V> extends ICache<V> {
         value=ThreadSafetyType.SAFE,
         note="The return value is guaranteed to be thread-safe"
             + " only if the return value type is Serializable."
-    )
-    public V getCopy(@NonNullable String key);
+    ) V getCopy(@NonNullable String key);
     /**
      * If the cache value is Serializable, puts a deep clone copy of
      * the given value to the cache.  Else, the behavior is the same as put.
@@ -46,8 +45,7 @@ public interface ICacheSafe<V> extends ICache<V> {
         value=ThreadSafetyType.SAFE,
         note="The given value is guaranteed to be thread-safe"
             + " only if the value type is Serializable."
-    )
-    public V putCopy(@NonNullable String key, @NonNullable V value);
+    ) V putCopy(@NonNullable String key, @NonNullable V value);
     /**
      * If the cache value is Serializable, puts the deep clone copies of
      * the given values to the cache.  Else, the behavior is the same as putAll.
@@ -57,8 +55,7 @@ public interface ICacheSafe<V> extends ICache<V> {
         caveat="The thread-safetyness of the given map cannot be guaranteed.",
         note="The given values in the map is guaranteed to be thread-safe"
             + " only if the value type is Serializable."
-    )
-    public void putAllCopies(@NonNullable Map<? extends String, ? extends V> map);
+    ) void putAllCopies(@NonNullable Map<? extends String, ? extends V> map);
     /**
      * Treats the cache value as a Java Bean and returns a deep clone copy of
      * the cached value.
@@ -67,8 +64,7 @@ public interface ICacheSafe<V> extends ICache<V> {
         value=ThreadSafetyType.SAFE,
         note="The return value is guaranteed to be thread-safe"
             + " only if the return value is a Java Bean."
-    )
-    public V getBeanCopy(@NonNullable String key);
+    ) V getBeanCopy(@NonNullable String key);
     /**
      * Treats the cache value as a Java Bean and puts a deep clone copy of
      * the given value to the cache.
@@ -77,8 +73,7 @@ public interface ICacheSafe<V> extends ICache<V> {
         value=ThreadSafetyType.SAFE,
         note="The given value is guaranteed to be thread-safe"
             + " only if the value is a Java Bean."
-    )
-    public V putBeanCopy(@NonNullable String key, @NonNullable V value);
+    ) V putBeanCopy(@NonNullable String key, @NonNullable V value);
     /**
      * Treats the cache value as a Java Bean and puts the deep clone copies of
      * the given values to the cache.
@@ -89,8 +84,7 @@ public interface ICacheSafe<V> extends ICache<V> {
              + " by this interface.",
         note="The given values in the map is guaranteed to be thread-safe"
            + " only if the values are Java Beans."
-    )
-    public void putAllBeanCopies(@NonNullable Map<? extends String, ? extends V> map);
+    ) void putAllBeanCopies(@NonNullable Map<? extends String, ? extends V> map);
     /**
      * Treats the cache value as a Java Bean and returns a shallow clone copy of
      * the cached value.
@@ -101,8 +95,7 @@ public interface ICacheSafe<V> extends ICache<V> {
             + " be garanteed by this interface.",
         note="The return value is guaranteed to be thread-safe"
             + " only if the return value is a JavaBean."
-    )
-    public V getBeanClone(@NonNullable String key);
+    ) V getBeanClone(@NonNullable String key);
     /**
      * Treats the cache value as a Java Bean and puts a shallow clone copy of
      * the given value to the cache.
@@ -113,8 +106,7 @@ public interface ICacheSafe<V> extends ICache<V> {
             + " be garanteed by this interface.",
         note="The given value is guaranteed to be thread-safe"
             + " only if the value is a Java Bean."
-    )
-    public V putBeanClone(@NonNullable String key, @NonNullable V value);
+    ) V putBeanClone(@NonNullable String key, @NonNullable V value);
     /**
      * Treats the cache value as a Java Bean and puts the shallow clone copies of
      * the given values to the cache.
@@ -127,6 +119,5 @@ public interface ICacheSafe<V> extends ICache<V> {
              + " in the map cannot be garanteed.",
         note="The given values in the map is guaranteed to be thread-safe"
            + " only if the values are Java Beans."
-    )
-    public void putAllBeanClones(@NonNullable Map<? extends String, ? extends V> map);
+    ) void putAllBeanClones(@NonNullable Map<? extends String, ? extends V> map);
 }

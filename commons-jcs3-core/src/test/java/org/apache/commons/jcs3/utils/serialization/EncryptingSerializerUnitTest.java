@@ -70,7 +70,7 @@ public class EncryptingSerializerUnitTest
     {
         // DO WORK
         final String before = "adsfdsafdsafdsafdsafdsafdsafdsagfdsafdsafdsfdsafdsafsa333 31231";
-        byte[] serialized = serializer.serialize(before);
+        final byte[] serialized = serializer.serialize(before);
         serializer.setPreSharedKey("another_key");
 
         assertThrows(IOException.class, () -> serializer.deSerialize(serialized, null));

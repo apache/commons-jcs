@@ -31,14 +31,14 @@ import org.apache.commons.logging.LogFactory;
 @CopyRightApache
 @TestOnly
 public class FileContentTypeTest extends TestCase {
-    private Log log = LogFactory.getLog(this.getClass());
+    private final Log log = LogFactory.getLog(this.getClass());
     /**
      * Test of toByte method, of class org.apache.commons.jcs.yajcache.config.FileContentType.
      */
     public void test() {
         log.debug("test toByte");
-        Byte bJavaSerialization = CacheFileContentType.JAVA_SERIALIZATION.toByte();
-        Byte bXmlEncoder = CacheFileContentType.XML_ENCODER.toByte();
+        final Byte bJavaSerialization = CacheFileContentType.JAVA_SERIALIZATION.toByte();
+        final Byte bXmlEncoder = CacheFileContentType.XML_ENCODER.toByte();
         assertFalse(bJavaSerialization == bXmlEncoder);
         log.debug("test fromByte");
         assertTrue(CacheFileContentType.JAVA_SERIALIZATION == CacheFileContentType.fromByte(bJavaSerialization));
@@ -47,7 +47,7 @@ public class FileContentTypeTest extends TestCase {
         try {
             CacheFileContentType.fromByte((byte)99);
             assert false;
-        } catch (IllegalArgumentException ex) {
+        } catch (final IllegalArgumentException ex) {
         }
     }
 }

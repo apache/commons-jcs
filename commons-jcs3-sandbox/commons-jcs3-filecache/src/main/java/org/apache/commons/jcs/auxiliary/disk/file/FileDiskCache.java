@@ -43,7 +43,6 @@ import java.io.OutputStream;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.jcs.utils.timing.SleepUtil;
 import org.apache.commons.jcs3.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.commons.jcs3.auxiliary.disk.AbstractDiskCache;
 import org.apache.commons.jcs3.engine.behavior.ICacheElement;
@@ -80,7 +79,7 @@ public class FileDiskCache<K, V>
      * <p>
      * @param cacheAttributes
      */
-    public FileDiskCache( FileDiskCacheAttributes cacheAttributes )
+    public FileDiskCache( final FileDiskCacheAttributes cacheAttributes )
     {
         this( cacheAttributes, null );
     }
@@ -92,7 +91,7 @@ public class FileDiskCache<K, V>
      * @param cattr
      * @param elementSerializer used if supplied, the super's super will not set a null
      */
-    public FileDiskCache( FileDiskCacheAttributes cattr, IElementSerializer elementSerializer )
+    public FileDiskCache( final FileDiskCacheAttributes cattr, final IElementSerializer elementSerializer )
     {
         super( cattr );
         setElementSerializer( elementSerializer );
@@ -107,11 +106,11 @@ public class FileDiskCache<K, V>
      * @param cattr
      * @return does the directory exist.
      */
-    private boolean initializeFileSystem( FileDiskCacheAttributes cattr )
+    private boolean initializeFileSystem( final FileDiskCacheAttributes cattr )
     {
         // TODO, we might need to make this configurable
         this.setDirectory( new File( cattr.getDiskPath(), cattr.getCacheName() ) );
-        boolean createdDirectories = getDirectory().mkdirs();
+        final boolean createdDirectories = getDirectory().mkdirs();
         if ( log.isInfoEnabled() )
         {
             log.info( logCacheName + "Cache file root directory: " + getDirectory() );
@@ -119,7 +118,7 @@ public class FileDiskCache<K, V>
         }
 
         // TODO consider throwing.
-        boolean exists = getDirectory().exists();
+        final boolean exists = getDirectory().exists();
         if ( !exists )
         {
             log.error( "Could not initialize File Disk Cache.  The root directory does not exist." );
@@ -136,13 +135,13 @@ public class FileDiskCache<K, V>
      * @param key
      * @return the file for the key
      */
-    protected <KK> File file( KK key )
+    protected <KK> File file( final KK key )
     {
-        StringBuilder fileNameBuffer = new StringBuilder();
+        final StringBuilder fileNameBuffer = new StringBuilder();
 
         // add key as file name in a file system safe way
-        String keys = key.toString();
-        int l = keys.length();
+        final String keys = key.toString();
+        final int l = keys.length();
         for ( int i = 0; i < l; i++ )
         {
             char c = keys.charAt( i );
@@ -152,7 +151,7 @@ public class FileDiskCache<K, V>
             }
             fileNameBuffer.append( c );
         }
-        String fileName = fileNameBuffer.toString();
+        final String fileName = fileNameBuffer.toString();
 
         if ( log.isDebugEnabled() )
         {
@@ -213,7 +212,7 @@ public class FileDiskCache<K, V>
     protected synchronized void processDispose()
         throws IOException
     {
-        ICacheEvent<String> cacheEvent = createICacheEvent( getCacheName(), "none", ICacheEventLogger.DISPOSE_EVENT );
+        final ICacheEvent<String> cacheEvent = createICacheEvent( getCacheName(), "none", ICacheEventLogger.DISPOSE_EVENT );
         try
         {
             if ( !isAlive() )
@@ -245,10 +244,10 @@ public class FileDiskCache<K, V>
      * @throws IOException
      */
     @Override
-    protected ICacheElement<K, V> processGet( K key )
+    protected ICacheElement<K, V> processGet( final K key )
         throws IOException
     {
-        File file = file( key );
+        final File file = file( key );
 
         if ( !file.exists() )
         {
@@ -266,9 +265,9 @@ public class FileDiskCache<K, V>
         {
             fis = new FileInputStream( file );
 
-            long length = file.length();
+            final long length = file.length();
             // Create the byte array to hold the data
-            byte[] bytes = new byte[(int) length];
+            final byte[] bytes = new byte[(int) length];
 
             int offset = 0;
             int numRead = 0;
@@ -296,11 +295,7 @@ public class FileDiskCache<K, V>
                 element = null;
             }
         }
-        catch ( IOException e )
-        {
-            log.error( logCacheName + "Failure getting element, key: [" + key + "]", e );
-        }
-        catch ( ClassNotFoundException e )
+        catch ( IOException | ClassNotFoundException e )
         {
             log.error( logCacheName + "Failure getting element, key: [" + key + "]", e );
         }
@@ -323,7 +318,7 @@ public class FileDiskCache<K, V>
      * @throws IOException
      */
     @Override
-    protected Map<K, ICacheElement<K, V>> processGetMatching( String pattern )
+    protected Map<K, ICacheElement<K, V>> processGetMatching( final String pattern )
         throws IOException
     {
         // TODO get a list of file and return those with matching keys.
@@ -339,7 +334,7 @@ public class FileDiskCache<K, V>
      * @throws IOException
      */
     @Override
-    protected boolean processRemove( K key )
+    protected boolean processRemove( final K key )
         throws IOException
     {
         return _processRemove(key);
@@ -352,10 +347,10 @@ public class FileDiskCache<K, V>
      * @return true if the item was removed
      * @throws IOException
      */
-    private <T> boolean _processRemove( T key )
+    private <T> boolean _processRemove( final T key )
         throws IOException
     {
-        File file = file( key );
+        final File file = file( key );
         if ( log.isDebugEnabled() )
         {
             log.debug( logCacheName + "Removing file " + file );
@@ -375,10 +370,9 @@ public class FileDiskCache<K, V>
     protected void processRemoveAll()
         throws IOException
     {
-        String[] fileNames = getDirectory().list();
-        for ( int i = 0; i < fileNames.length; i++ )
-        {
-            _processRemove( fileNames[i] );
+        final String[] fileNames = getDirectory().list();
+        for (final String fileName : fileNames) {
+            _processRemove( fileName );
         }
     }
 
@@ -390,22 +384,22 @@ public class FileDiskCache<K, V>
      * @throws IOException
      */
     @Override
-    protected void processUpdate( ICacheElement<K, V> element )
+    protected void processUpdate( final ICacheElement<K, V> element )
         throws IOException
     {
         removeIfLimitIsSetAndReached();
 
-        File file = file( element.getKey() );
+        final File file = file( element.getKey() );
 
         File tmp = null;
         OutputStream os = null;
         try
         {
-            byte[] bytes = getElementSerializer().serialize( element );
+            final byte[] bytes = getElementSerializer().serialize( element );
 
             tmp = File.createTempFile( "JCS_DiskFileCache", null, getDirectory() );
 
-            FileOutputStream fos = new FileOutputStream( tmp );
+            final FileOutputStream fos = new FileOutputStream( tmp );
             os = new BufferedOutputStream( fos );
 
             if ( bytes != null )
@@ -418,13 +412,13 @@ public class FileDiskCache<K, V>
                 os.close();
             }
             deleteWithRetry( file );
-            boolean result = tmp.renameTo( file );
+            final boolean result = tmp.renameTo( file );
             if ( log.isDebugEnabled() )
             {
                 log.debug( logCacheName + "Renamed to: " + file + " Result: " + result);
             }
         }
-        catch ( IOException e )
+        catch ( final IOException e )
         {
             log.error( logCacheName + "Failure updating element, key: [" + element.getKey() + "]", e );
         }
@@ -446,37 +440,33 @@ public class FileDiskCache<K, V>
      */
     private void removeIfLimitIsSetAndReached()
     {
-        if ( diskFileCacheAttributes.getMaxNumberOfFiles() > 0 )
+        // TODO we might want to synchronize this block.
+        if ( (diskFileCacheAttributes.getMaxNumberOfFiles() > 0) && (getSize() >= diskFileCacheAttributes.getMaxNumberOfFiles()) )
         {
-            // TODO we might want to synchronize this block.
-            if ( getSize() >= diskFileCacheAttributes.getMaxNumberOfFiles() )
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( logCacheName + "Max reached, removing least recently modified" );
+            }
+
+            long oldestLastModified = System.currentTimeMillis();
+            File theLeastRecentlyModified = null;
+            final String[] fileNames = getDirectory().list();
+            for (final String fileName : fileNames) {
+                final File file = file( fileName );
+                final long lastModified = file.lastModified();
+                if ( lastModified < oldestLastModified )
+                {
+                    oldestLastModified = lastModified;
+                    theLeastRecentlyModified = file;
+                }
+            }
+            if ( theLeastRecentlyModified != null )
             {
                 if ( log.isDebugEnabled() )
                 {
-                    log.debug( logCacheName + "Max reached, removing least recently modified" );
+                    log.debug( logCacheName + "Least recently modified: " + theLeastRecentlyModified );
                 }
-
-                long oldestLastModified = System.currentTimeMillis();
-                File theLeastRecentlyModified = null;
-                String[] fileNames = getDirectory().list();
-                for ( int i = 0; i < fileNames.length; i++ )
-                {
-                    File file = file( fileNames[i] );
-                    long lastModified = file.lastModified();
-                    if ( lastModified < oldestLastModified )
-                    {
-                        oldestLastModified = lastModified;
-                        theLeastRecentlyModified = file;
-                    }
-                }
-                if ( theLeastRecentlyModified != null )
-                {
-                    if ( log.isDebugEnabled() )
-                    {
-                        log.debug( logCacheName + "Least recently modified: " + theLeastRecentlyModified );
-                    }
-                    deleteWithRetry( theLeastRecentlyModified );
-                }
+                deleteWithRetry( theLeastRecentlyModified );
             }
         }
     }
@@ -488,14 +478,14 @@ public class FileDiskCache<K, V>
      * @param file
      * @return true if the file does not exist or if it was removed
      */
-    private boolean deleteWithRetry( File file )
+    private boolean deleteWithRetry( final File file )
     {
         boolean success = file.delete();
 
         // TODO: The following should be identical to success == false, but it isn't
         if ( file.exists() )
         {
-            int maxRetries = diskFileCacheAttributes.getMaxRetriesOnDelete();
+            final int maxRetries = diskFileCacheAttributes.getMaxRetriesOnDelete();
             for ( int i = 0; i < maxRetries && !success; i++ )
             {
                 SleepUtil.sleepAtLeast( 5 );
@@ -519,12 +509,12 @@ public class FileDiskCache<K, V>
      * @param file to touch
      * @return was it successful
      */
-    private boolean touchWithRetry( File file )
+    private boolean touchWithRetry( final File file )
     {
         boolean success = file.setLastModified( System.currentTimeMillis() );
         if ( !success )
         {
-            int maxRetries = diskFileCacheAttributes.getMaxRetriesOnTouch();
+            final int maxRetries = diskFileCacheAttributes.getMaxRetriesOnTouch();
             if ( file.exists() )
             {
                 for ( int i = 0; i < maxRetries && !success; i++ )
@@ -546,7 +536,7 @@ public class FileDiskCache<K, V>
      * <p>
      * @param s the stream
      */
-    private void silentClose( InputStream s )
+    private void silentClose( final InputStream s )
     {
         if ( s != null )
         {
@@ -554,7 +544,7 @@ public class FileDiskCache<K, V>
             {
                 s.close();
             }
-            catch ( IOException e )
+            catch ( final IOException e )
             {
                 log.error( logCacheName + "Failure closing stream", e );
             }
@@ -566,7 +556,7 @@ public class FileDiskCache<K, V>
      * <p>
      * @param s the stream
      */
-    private void silentClose( OutputStream s )
+    private void silentClose( final OutputStream s )
     {
         if ( s != null )
         {
@@ -574,7 +564,7 @@ public class FileDiskCache<K, V>
             {
                 s.close();
             }
-            catch ( IOException e )
+            catch ( final IOException e )
             {
                 log.error( logCacheName + "Failure closing stream", e );
             }
@@ -584,7 +574,7 @@ public class FileDiskCache<K, V>
     /**
      * @param directory the directory to set
      */
-    protected void setDirectory( File directory )
+    protected void setDirectory( final File directory )
     {
         this.directory = directory;
     }

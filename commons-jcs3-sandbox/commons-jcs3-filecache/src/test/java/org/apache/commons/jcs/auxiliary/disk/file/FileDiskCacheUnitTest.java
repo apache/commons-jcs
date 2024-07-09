@@ -41,14 +41,14 @@ public class FileDiskCacheUnitTest
         throws Exception
     {
         // SETUP
-        String cacheName = "testInitialization_Normal";
-        FileDiskCacheAttributes cattr = new FileDiskCacheAttributes();
+        final String cacheName = "testInitialization_Normal";
+        final FileDiskCacheAttributes cattr = new FileDiskCacheAttributes();
         cattr.setCacheName( cacheName );
         cattr.setDiskPath( "target/test-sandbox/DiskFileCacheUnitTest" );
 
         // DO WORK
-        FileDiskCache<String, String> diskCache = new FileDiskCache<String, String>( cattr );
-        File directory = diskCache.getDirectory();
+        final FileDiskCache<String, String> diskCache = new FileDiskCache<>( cattr );
+        final File directory = diskCache.getDirectory();
 
         // VERIFY
         assertNotNull( "Should have a directory", directory );
@@ -69,11 +69,11 @@ public class FileDiskCacheUnitTest
         throws Exception
     {
         // SETUP
-        String cacheName = "testDispose_Normal";
-        FileDiskCacheAttributes cattr = new FileDiskCacheAttributes();
+        final String cacheName = "testDispose_Normal";
+        final FileDiskCacheAttributes cattr = new FileDiskCacheAttributes();
         cattr.setCacheName( cacheName );
         cattr.setDiskPath( "target/test-sandbox/DiskFileCacheUnitTest" );
-        FileDiskCache<String, String> diskCache = new FileDiskCache<String, String>( cattr );
+        final FileDiskCache<String, String> diskCache = new FileDiskCache<>( cattr );
 
         // DO WORK
         diskCache.dispose();
@@ -93,14 +93,14 @@ public class FileDiskCacheUnitTest
         throws Exception
     {
         // SETUP
-        String cacheName = "testInitialization_JunkFileName";
-        FileDiskCacheAttributes cattr = new FileDiskCacheAttributes();
+        final String cacheName = "testInitialization_JunkFileName";
+        final FileDiskCacheAttributes cattr = new FileDiskCacheAttributes();
         cattr.setCacheName( cacheName );
         cattr.setDiskPath( "target/test-sandbox/DiskFileCacheUnitTest%$&*#@" );
 
         // DO WORK
-        FileDiskCache<String, String> diskCache = new FileDiskCache<String, String>( cattr );
-        File directory = diskCache.getDirectory();
+        final FileDiskCache<String, String> diskCache = new FileDiskCache<>( cattr );
+        final File directory = diskCache.getDirectory();
 
         // VERIFY
         assertNotNull( "Should have a directory", directory );
@@ -117,16 +117,16 @@ public class FileDiskCacheUnitTest
         throws Exception
     {
         // SETUP
-        String cacheName = "testGetSize_Empty";
-        FileDiskCacheAttributes cattr = new FileDiskCacheAttributes();
+        final String cacheName = "testGetSize_Empty";
+        final FileDiskCacheAttributes cattr = new FileDiskCacheAttributes();
         cattr.setCacheName( cacheName );
         cattr.setDiskPath( "target/test-sandbox/DiskFileCacheUnitTest" );
-        FileDiskCache<String, String> diskCache = new FileDiskCache<String, String>( cattr );
+        final FileDiskCache<String, String> diskCache = new FileDiskCache<>( cattr );
 
         diskCache.removeAll();
 
         // DO WORK
-        int result = diskCache.getSize();
+        final int result = diskCache.getSize();
 
         // VERIFY
         assertEquals( "Should be empty.", 0, result );
@@ -141,18 +141,18 @@ public class FileDiskCacheUnitTest
         throws Exception
     {
         // SETUP
-        String cacheName = "testGetSize_OneItem";
-        FileDiskCacheAttributes cattr = new FileDiskCacheAttributes();
+        final String cacheName = "testGetSize_OneItem";
+        final FileDiskCacheAttributes cattr = new FileDiskCacheAttributes();
         cattr.setCacheName( cacheName );
         cattr.setDiskPath( "target/test-sandbox/DiskFileCacheUnitTest" );
-        FileDiskCache<String, String> diskCache = new FileDiskCache<String, String>( cattr );
+        final FileDiskCache<String, String> diskCache = new FileDiskCache<>( cattr );
 
         diskCache.removeAll();
-        diskCache.update( new CacheElement<String, String>( cacheName, "key1", "Data" ) );
+        diskCache.update( new CacheElement<>( cacheName, "key1", "Data" ) );
         SleepUtil.sleepAtLeast( 100 );
 
         // DO WORK
-        int result = diskCache.getSize();
+        final int result = diskCache.getSize();
 
         // VERIFY
         assertEquals( "Should not be empty.", 1, result );
@@ -167,19 +167,19 @@ public class FileDiskCacheUnitTest
         throws Exception
     {
         // SETUP
-        String cacheName = "testRemoveAll_OneItem";
-        FileDiskCacheAttributes cattr = new FileDiskCacheAttributes();
+        final String cacheName = "testRemoveAll_OneItem";
+        final FileDiskCacheAttributes cattr = new FileDiskCacheAttributes();
         cattr.setCacheName( cacheName );
         cattr.setDiskPath( "target/test-sandbox/DiskFileCacheUnitTest" );
-        FileDiskCache<String, String> diskCache = new FileDiskCache<String, String>( cattr );
+        final FileDiskCache<String, String> diskCache = new FileDiskCache<>( cattr );
 
-        diskCache.update( new CacheElement<String, String>( cacheName, "key1", "Data" ) );
+        diskCache.update( new CacheElement<>( cacheName, "key1", "Data" ) );
         SleepUtil.sleepAtLeast( 100 );
 
         // DO WORK
         diskCache.removeAll();
         SleepUtil.sleepAtLeast( 100 );
-        int result = diskCache.getSize();
+        final int result = diskCache.getSize();
 
         // VERIFY
         assertEquals( "Should be empty.", 0, result );
@@ -194,14 +194,14 @@ public class FileDiskCacheUnitTest
         throws Exception
     {
         // SETUP
-        String cacheName = "testGet_Empty";
-        FileDiskCacheAttributes cattr = new FileDiskCacheAttributes();
+        final String cacheName = "testGet_Empty";
+        final FileDiskCacheAttributes cattr = new FileDiskCacheAttributes();
         cattr.setCacheName( cacheName );
         cattr.setDiskPath( "target/test-sandbox/DiskFileCacheUnitTest" );
-        FileDiskCache<String, String> diskCache = new FileDiskCache<String, String>( cattr );
+        final FileDiskCache<String, String> diskCache = new FileDiskCache<>( cattr );
 
         // DO WORK
-        ICacheElement<String, String> result = diskCache.get( "key" );
+        final ICacheElement<String, String> result = diskCache.get( "key" );
 
         // VERIFY
         assertNull( "Should be null.", result );
@@ -216,17 +216,17 @@ public class FileDiskCacheUnitTest
         throws Exception
     {
         // SETUP
-        String cacheName = "testGet_Empty";
-        FileDiskCacheAttributes cattr = new FileDiskCacheAttributes();
+        final String cacheName = "testGet_Empty";
+        final FileDiskCacheAttributes cattr = new FileDiskCacheAttributes();
         cattr.setCacheName( cacheName );
         cattr.setDiskPath( "target/test-sandbox/DiskFileCacheUnitTest" );
-        FileDiskCache<String, String> diskCache = new FileDiskCache<String, String>( cattr );
+        final FileDiskCache<String, String> diskCache = new FileDiskCache<>( cattr );
 
-        diskCache.update( new CacheElement<String, String>( cacheName, "key1", "Data" ) );
+        diskCache.update( new CacheElement<>( cacheName, "key1", "Data" ) );
         SleepUtil.sleepAtLeast( 100 );
 
         // DO WORK
-        ICacheElement<String, String> result = diskCache.get( "key1" );
+        final ICacheElement<String, String> result = diskCache.get( "key1" );
 
         // VERIFY
         assertNotNull( "Should NOT be null.", result );
@@ -241,17 +241,17 @@ public class FileDiskCacheUnitTest
         throws Exception
     {
         // SETUP
-        int maxNumberOfFiles = 10;
-        String cacheName = "testRemoveIfLimitIsSetAndReached_NotReached";
-        FileDiskCacheAttributes cattr = new FileDiskCacheAttributes();
+        final int maxNumberOfFiles = 10;
+        final String cacheName = "testRemoveIfLimitIsSetAndReached_NotReached";
+        final FileDiskCacheAttributes cattr = new FileDiskCacheAttributes();
         cattr.setCacheName( cacheName );
         cattr.setDiskPath( "target/test-sandbox/DiskFileCacheUnitTest" );
         cattr.setMaxNumberOfFiles( maxNumberOfFiles );
-        FileDiskCache<String, String> diskCache = new FileDiskCache<String, String>( cattr );
+        final FileDiskCache<String, String> diskCache = new FileDiskCache<>( cattr );
 
         for ( int i = 0; i < maxNumberOfFiles; i++ )
         {
-            diskCache.update( new CacheElement<String, String>( cacheName, "key" + i, "Data" ) );
+            diskCache.update( new CacheElement<>( cacheName, "key" + i, "Data" ) );
         }
         SleepUtil.sleepAtLeast( 100 );
 
@@ -260,7 +260,7 @@ public class FileDiskCacheUnitTest
         for ( int i = 0; i < maxNumberOfFiles; i++ )
         {
             final String key = "key" + i;
-            ICacheElement<String, String> result = diskCache.get( key );
+            final ICacheElement<String, String> result = diskCache.get( key );
 //            System.out.println("Entry "+ key+ " null? " + (result==null));
             if (result != null) {
                 stillCached++;
@@ -280,17 +280,17 @@ public class FileDiskCacheUnitTest
         throws Exception
     {
         // SETUP
-        int maxNumberOfFiles = 10;
-        String cacheName = "testRemoveIfLimitIsSetAndReached_Reached";
-        FileDiskCacheAttributes cattr = new FileDiskCacheAttributes();
+        final int maxNumberOfFiles = 10;
+        final String cacheName = "testRemoveIfLimitIsSetAndReached_Reached";
+        final FileDiskCacheAttributes cattr = new FileDiskCacheAttributes();
         cattr.setCacheName( cacheName );
         cattr.setDiskPath( "target/test-sandbox/DiskFileCacheUnitTest" );
         cattr.setMaxNumberOfFiles( maxNumberOfFiles );
-        FileDiskCache<String, String> diskCache = new FileDiskCache<String, String>( cattr );
+        final FileDiskCache<String, String> diskCache = new FileDiskCache<>( cattr );
 
         for ( int i = 0; i <= maxNumberOfFiles; i++ )
         {
-            diskCache.update( new CacheElement<String, String>( cacheName, "key" + i, "Data" ) );
+            diskCache.update( new CacheElement<>( cacheName, "key" + i, "Data" ) );
         }
         SleepUtil.sleepAtLeast( 500 );
 
@@ -299,7 +299,7 @@ public class FileDiskCacheUnitTest
         for ( int i = 0; i <= maxNumberOfFiles; i++ )
         {
             final String key = "key" + i;
-            ICacheElement<String, String> result = diskCache.get( key );
+            final ICacheElement<String, String> result = diskCache.get( key );
 //            System.out.println("Entry "+ key+ " null? " + (result==null));
             if (result != null) {
                 stillCached++;
@@ -320,19 +320,19 @@ public class FileDiskCacheUnitTest
         throws Exception
     {
         // SETUP
-        int maxNumberOfFiles = 10;
-        String cacheName = "testRemoveIfLimitIsSetAndReached_Reached_TouchTrue";
-        FileDiskCacheAttributes cattr = new FileDiskCacheAttributes();
+        final int maxNumberOfFiles = 10;
+        final String cacheName = "testRemoveIfLimitIsSetAndReached_Reached_TouchTrue";
+        final FileDiskCacheAttributes cattr = new FileDiskCacheAttributes();
         cattr.setCacheName( cacheName );
         cattr.setDiskPath( "target/test-sandbox/DiskFileCacheUnitTest" );
         cattr.setMaxNumberOfFiles( maxNumberOfFiles );
         cattr.setTouchOnGet( true );
-        FileDiskCache<String, String> diskCache = new FileDiskCache<String, String>( cattr );
+        final FileDiskCache<String, String> diskCache = new FileDiskCache<>( cattr );
         diskCache.removeAll();
 
         for ( int i = 0; i < maxNumberOfFiles; i++ )
         {
-            diskCache.update( new CacheElement<String, String>( cacheName, "key" + i, "Data" ) );
+            diskCache.update( new CacheElement<>( cacheName, "key" + i, "Data" ) );
         }
         SleepUtil.sleepAtLeast( 100 );
 
@@ -341,18 +341,18 @@ public class FileDiskCacheUnitTest
             // tv: The Mac file system has 1 sec resolution, so this is the minimum value
             // to make this test work.
             SleepUtil.sleepAtLeast( 501 );
-            ICacheElement<String, String> ice = diskCache.get( "key" + i );
+            final ICacheElement<String, String> ice = diskCache.get( "key" + i );
             assertNotNull("Value of key" + i + " should not be null", ice);
         }
 
         SleepUtil.sleepAtLeast( 100 );
 
         // This will push it over.  number 9, the youngest, but LRU item should be removed
-        diskCache.update( new CacheElement<String, String>( cacheName, "key" + maxNumberOfFiles, "Data" ) );
+        diskCache.update( new CacheElement<>( cacheName, "key" + maxNumberOfFiles, "Data" ) );
         SleepUtil.sleepAtLeast( 501 );
 
         // DO WORK
-        ICacheElement<String, String> result = diskCache.get( "key9" );
+        final ICacheElement<String, String> result = diskCache.get( "key9" );
 
         // VERIFY
         assertNull( "Should be null.", result );
@@ -368,19 +368,19 @@ public class FileDiskCacheUnitTest
         throws Exception
     {
         // SETUP
-        int maxNumberOfFiles = 10;
-        String cacheName = "testRemoveIfLimitIsSetAndReached_Reached_TouchTrue";
-        FileDiskCacheAttributes cattr = new FileDiskCacheAttributes();
+        final int maxNumberOfFiles = 10;
+        final String cacheName = "testRemoveIfLimitIsSetAndReached_Reached_TouchTrue";
+        final FileDiskCacheAttributes cattr = new FileDiskCacheAttributes();
         cattr.setCacheName( cacheName );
         cattr.setDiskPath( "target/test-sandbox/DiskFileCacheUnitTest" );
         cattr.setMaxNumberOfFiles( maxNumberOfFiles );
         cattr.setTouchOnGet( false );
-        FileDiskCache<String, String> diskCache = new FileDiskCache<String, String>( cattr );
+        final FileDiskCache<String, String> diskCache = new FileDiskCache<>( cattr );
         diskCache.removeAll();
 
         for ( int i = 0; i < maxNumberOfFiles; i++ )
         {
-            diskCache.update( new CacheElement<String, String>( cacheName, "key" + i, "Data" ) );
+            diskCache.update( new CacheElement<>( cacheName, "key" + i, "Data" ) );
             if (i == 0 ){
                 SleepUtil.sleepAtLeast( 1001 ); // ensure the first file is seen as older
             }
@@ -395,11 +395,11 @@ public class FileDiskCacheUnitTest
         SleepUtil.sleepAtLeast( 100 );
 
         // This will push it over.  number 0, the oldest should be removed
-        diskCache.update( new CacheElement<String, String>( cacheName, "key" + maxNumberOfFiles, "Data" ) );
+        diskCache.update( new CacheElement<>( cacheName, "key" + maxNumberOfFiles, "Data" ) );
         SleepUtil.sleepAtLeast( 100 );
 
         // DO WORK
-        ICacheElement<String, String> result = diskCache.get( "key0" );
+        final ICacheElement<String, String> result = diskCache.get( "key0" );
 
         // VERIFY
         assertNull( "Should be null.", result );
@@ -414,16 +414,16 @@ public class FileDiskCacheUnitTest
         throws Exception
     {
         // SETUP
-        String cacheName = "testFile";
-        FileDiskCacheAttributes cattr = new FileDiskCacheAttributes();
+        final String cacheName = "testFile";
+        final FileDiskCacheAttributes cattr = new FileDiskCacheAttributes();
         cattr.setCacheName( cacheName );
         cattr.setDiskPath( "target/test-sandbox/DiskFileCacheUnitTest" );
-        FileDiskCache<String, String> diskCache = new FileDiskCache<String, String>( cattr );
+        final FileDiskCache<String, String> diskCache = new FileDiskCache<>( cattr );
 
-        String key = "simplestring";
+        final String key = "simplestring";
 
         // DO WORK
-        File result = diskCache.file( key );
+        final File result = diskCache.file( key );
 
         // VERIFY
         assertEquals( "Wrong string.", key, result.getName() );
@@ -438,16 +438,16 @@ public class FileDiskCacheUnitTest
         throws Exception
     {
         // SETUP
-        String cacheName = "testFile";
-        FileDiskCacheAttributes cattr = new FileDiskCacheAttributes();
+        final String cacheName = "testFile";
+        final FileDiskCacheAttributes cattr = new FileDiskCacheAttributes();
         cattr.setCacheName( cacheName );
         cattr.setDiskPath( "target/test-sandbox/DiskFileCacheUnitTest" );
-        FileDiskCache<String, String> diskCache = new FileDiskCache<String, String>( cattr );
+        final FileDiskCache<String, String> diskCache = new FileDiskCache<>( cattr );
 
-        String key = "simple string";
+        final String key = "simple string";
 
         // DO WORK
-        File result = diskCache.file( key );
+        final File result = diskCache.file( key );
 
         // VERIFY
         assertEquals( "Wrong string.", "simple_string", result.getName() );
@@ -462,16 +462,16 @@ public class FileDiskCacheUnitTest
         throws Exception
     {
         // SETUP
-        String cacheName = "testFile";
-        FileDiskCacheAttributes cattr = new FileDiskCacheAttributes();
+        final String cacheName = "testFile";
+        final FileDiskCacheAttributes cattr = new FileDiskCacheAttributes();
         cattr.setCacheName( cacheName );
         cattr.setDiskPath( "target/test-sandbox/DiskFileCacheUnitTest" );
-        FileDiskCache<String, String> diskCache = new FileDiskCache<String, String>( cattr );
+        final FileDiskCache<String, String> diskCache = new FileDiskCache<>( cattr );
 
-        String key = "simple%string";
+        final String key = "simple%string";
 
         // DO WORK
-        File result = diskCache.file( key );
+        final File result = diskCache.file( key );
 
         // VERIFY
         assertEquals( "Wrong string.", "simple_string", result.getName() );
@@ -486,17 +486,17 @@ public class FileDiskCacheUnitTest
         throws Exception
     {
         // SETUP
-        String cacheName = "testFile";
-        FileDiskCacheAttributes cattr = new FileDiskCacheAttributes();
+        final String cacheName = "testFile";
+        final FileDiskCacheAttributes cattr = new FileDiskCacheAttributes();
         cattr.setCacheName( cacheName );
         cattr.setDiskPath( "target/test-sandbox/DiskFileCacheUnitTest" );
-        FileDiskCache<String, String> diskCache = new FileDiskCache<String, String>( cattr );
+        final FileDiskCache<String, String> diskCache = new FileDiskCache<>( cattr );
 
-        String key = "simple%string";
-        File firstResult = diskCache.file( key );
+        final String key = "simple%string";
+        final File firstResult = diskCache.file( key );
 
         // DO WORK
-        File result = diskCache.file( firstResult.getName() );
+        final File result = diskCache.file( firstResult.getName() );
 
         // VERIFY
         assertEquals( "Wrong string.", "simple_string", result.getName() );
@@ -511,19 +511,19 @@ public class FileDiskCacheUnitTest
         throws Exception
     {
         // SETUP
-        String cacheName = "testRemove_OneItem";
-        FileDiskCacheAttributes cattr = new FileDiskCacheAttributes();
+        final String cacheName = "testRemove_OneItem";
+        final FileDiskCacheAttributes cattr = new FileDiskCacheAttributes();
         cattr.setCacheName( cacheName );
         cattr.setDiskPath( "target/test-sandbox/DiskFileCacheUnitTest" );
-        FileDiskCache<String, String> diskCache = new FileDiskCache<String, String>( cattr );
+        final FileDiskCache<String, String> diskCache = new FileDiskCache<>( cattr );
 
-        diskCache.update( new CacheElement<String, String>( cacheName, "key1", "Data" ) );
+        diskCache.update( new CacheElement<>( cacheName, "key1", "Data" ) );
         SleepUtil.sleepAtLeast( 100 );
 
         // DO WORK
         diskCache.remove( "key1" );
         SleepUtil.sleepAtLeast( 100 );
-        int result = diskCache.getSize();
+        final int result = diskCache.getSize();
 
         // VERIFY
         assertEquals( "Should be empty.", 0, result );
@@ -538,14 +538,14 @@ public class FileDiskCacheUnitTest
         throws Exception
     {
         // SETUP
-        String cacheName = "testPutGet_BigString";
-        FileDiskCacheAttributes cattr = new FileDiskCacheAttributes();
+        final String cacheName = "testPutGet_BigString";
+        final FileDiskCacheAttributes cattr = new FileDiskCacheAttributes();
         cattr.setCacheName( cacheName );
         cattr.setDiskPath( "target/test-sandbox/DiskFileCacheUnitTest" );
-        FileDiskCache<String, String> diskCache = new FileDiskCache<String, String>( cattr );
+        final FileDiskCache<String, String> diskCache = new FileDiskCache<>( cattr );
 
         String string = "This is my big string ABCDEFGH";
-        StringBuilder sb = new StringBuilder();
+        final StringBuilder sb = new StringBuilder();
         sb.append( string );
         for ( int i = 0; i < 4; i++ )
         {
@@ -554,13 +554,13 @@ public class FileDiskCacheUnitTest
         string = sb.toString();
 
         // DO WORK
-        diskCache.update( new CacheElement<String, String>( cacheName, "x", string ) );
+        diskCache.update( new CacheElement<>( cacheName, "x", string ) );
         SleepUtil.sleepAtLeast( 300 );
 
         // VERIFY
-        ICacheElement<String, String> afterElement = diskCache.get( "x" );
+        final ICacheElement<String, String> afterElement = diskCache.get( "x" );
         assertNotNull( afterElement );
-        String after = afterElement.getVal();
+        final String after = afterElement.getVal();
 
         assertNotNull( "afterElement = " + afterElement, after );
         assertEquals( "wrong string after retrieval", string, after );

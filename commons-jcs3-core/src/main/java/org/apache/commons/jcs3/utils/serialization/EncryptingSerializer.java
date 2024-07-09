@@ -84,7 +84,7 @@ public class EncryptingSerializer extends StandardSerializer
      * @param serializer
      *            the wrapped serializer
      */
-    public EncryptingSerializer(IElementSerializer serializer)
+    public EncryptingSerializer(final IElementSerializer serializer)
     {
         this.serializer = serializer;
 
@@ -93,39 +93,39 @@ public class EncryptingSerializer extends StandardSerializer
             this.secureRandom = new SecureRandom();
             this.secretKeyFactory = SecretKeyFactory.getInstance(DEFAULT_SECRET_KEY_ALGORITHM);
         }
-        catch (NoSuchAlgorithmException e)
+        catch (final NoSuchAlgorithmException e)
         {
             throw new IllegalStateException("Could not set up encryption tools", e);
         }
     }
 
-    private SecretKey createSecretKey(String password, byte[] salt) throws InvalidKeySpecException
+    private SecretKey createSecretKey(final String password, final byte[] salt) throws InvalidKeySpecException
     {
         /* Derive the key, given password and salt. */
-        PBEKeySpec spec = new PBEKeySpec(password.toCharArray(), salt,
+        final PBEKeySpec spec = new PBEKeySpec(password.toCharArray(), salt,
                 KEYHASH_ITERATION_COUNT, KEY_LENGTH);
-        SecretKey tmp = secretKeyFactory.generateSecret(spec);
+        final SecretKey tmp = secretKeyFactory.generateSecret(spec);
         return new SecretKeySpec(tmp.getEncoded(), "AES");
     }
 
-    private byte[] decrypt(byte[] source) throws IOException
+    private byte[] decrypt(final byte[] source) throws IOException
     {
         try
         {
             // split data in initial vector, salt and encrypted data
-            ByteBuffer wrapped = ByteBuffer.wrap(source);
+            final ByteBuffer wrapped = ByteBuffer.wrap(source);
 
-            byte[] iv = new byte[IV_LENGTH];
+            final byte[] iv = new byte[IV_LENGTH];
             wrapped.get(iv);
 
-            byte[] salt = new byte[SALT_LENGTH];
+            final byte[] salt = new byte[SALT_LENGTH];
             wrapped.get(salt);
 
-            byte[] encrypted = new byte[wrapped.remaining()];
+            final byte[] encrypted = new byte[wrapped.remaining()];
             wrapped.get(encrypted);
 
-            SecretKey secretKey = createSecretKey(psk, salt);
-            Cipher cipher = Cipher.getInstance(cipherTransformation);
+            final SecretKey secretKey = createSecretKey(psk, salt);
+            final Cipher cipher = Cipher.getInstance(cipherTransformation);
 
             if (cipher.getAlgorithm().startsWith("AES/GCM"))
             {
@@ -169,15 +169,15 @@ public class EncryptingSerializer extends StandardSerializer
         return serializer.deSerialize(deccrypted, loader);
     }
 
-    private byte[] encrypt(byte[] source) throws IOException
+    private byte[] encrypt(final byte[] source) throws IOException
     {
         try
         {
-            byte[] salt = getRandomBytes(SALT_LENGTH);
-            byte[] iv = getRandomBytes(IV_LENGTH);
+            final byte[] salt = getRandomBytes(SALT_LENGTH);
+            final byte[] iv = getRandomBytes(IV_LENGTH);
 
-            SecretKey secretKey = createSecretKey(psk, salt);
-            Cipher cipher = Cipher.getInstance(cipherTransformation);
+            final SecretKey secretKey = createSecretKey(psk, salt);
+            final Cipher cipher = Cipher.getInstance(cipherTransformation);
             if (cipher.getAlgorithm().startsWith("AES/GCM"))
             {
                 cipher.init(Cipher.ENCRYPT_MODE, secretKey, new GCMParameterSpec(TAG_LENGTH, iv));
@@ -187,7 +187,7 @@ public class EncryptingSerializer extends StandardSerializer
                 cipher.init(Cipher.ENCRYPT_MODE, secretKey);
             }
 
-            byte[] encrypted = cipher.doFinal(source);
+            final byte[] encrypted = cipher.doFinal(source);
 
             // join initial vector, salt and encrypted data for later decryption
             return ByteBuffer.allocate(IV_LENGTH + SALT_LENGTH + encrypted.length)
@@ -204,9 +204,9 @@ public class EncryptingSerializer extends StandardSerializer
         }
     }
 
-    private byte[] getRandomBytes(int length)
+    private byte[] getRandomBytes(final int length)
     {
-        byte[] bytes = new byte[length];
+        final byte[] bytes = new byte[length];
         secureRandom.nextBytes(bytes);
 
         return bytes;
@@ -233,7 +233,7 @@ public class EncryptingSerializer extends StandardSerializer
      *
      * @param transformation the transformation
      */
-    public void setAesCipherTransformation(String transformation)
+    public void setAesCipherTransformation(final String transformation)
     {
         this.cipherTransformation = transformation;
     }
@@ -243,7 +243,7 @@ public class EncryptingSerializer extends StandardSerializer
      *
      * @param psk the key
      */
-    public void setPreSharedKey(String psk)
+    public void setPreSharedKey(final String psk)
     {
         this.psk = psk;
     }

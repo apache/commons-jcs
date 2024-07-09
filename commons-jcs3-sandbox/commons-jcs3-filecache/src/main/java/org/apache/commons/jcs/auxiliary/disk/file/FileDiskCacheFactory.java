@@ -50,10 +50,10 @@ public class FileDiskCacheFactory
      */
     @Override
     public <K, V> FileDiskCache<K, V> createCache(
-            AuxiliaryCacheAttributes attr, ICompositeCacheManager cacheMgr,
-           ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer )
+            final AuxiliaryCacheAttributes attr, final ICompositeCacheManager cacheMgr,
+           final ICacheEventLogger cacheEventLogger, final IElementSerializer elementSerializer )
     {
-        FileDiskCacheAttributes idfca = (FileDiskCacheAttributes) attr;
+        final FileDiskCacheAttributes idfca = (FileDiskCacheAttributes) attr;
         if ( log.isDebugEnabled() )
         {
             log.debug( "Creating DiskFileCache for attributes = " + idfca );
@@ -89,7 +89,7 @@ public class FileDiskCacheFactory
      * @param name The new name value
      */
     @Override
-    public void setName( String name )
+    public void setName( final String name )
     {
         this.name = name;
     }

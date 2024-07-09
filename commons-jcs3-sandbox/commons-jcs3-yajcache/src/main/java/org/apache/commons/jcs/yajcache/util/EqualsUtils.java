@@ -31,45 +31,57 @@ public enum EqualsUtils {
      * when they are arrays.
      * Returns false otherwise.
      */
-    public boolean equals(Object lhs, Object rhs) {
-        if (lhs == rhs)
+    public boolean equals(final Object lhs, final Object rhs) {
+        if (lhs == rhs) {
             return true;
-        if (lhs == null || rhs == null)
+        }
+        if (lhs == null || rhs == null) {
             return false;
-        Class lClass = lhs.getClass();
-        Class rClass = rhs.getClass();
+        }
+        final Class lClass = lhs.getClass();
+        final Class rClass = rhs.getClass();
 
         if (lClass.isArray()
         &&  rClass.isArray())
         {
-            Class lCompType = lClass.getComponentType();
-            Class rCompType = rClass.getComponentType();
+            final Class lCompType = lClass.getComponentType();
+            final Class rCompType = rClass.getComponentType();
 
             if (lCompType.isPrimitive()) {
                 if (rCompType.isPrimitive()) {
-                    if (lCompType != rCompType)
+                    if (lCompType != rCompType) {
                         return false;
-                    if (lCompType == int.class)
+                    }
+                    if (lCompType == int.class) {
                         return Arrays.equals((int[])lhs, (int[])rhs);
-                    if (lCompType == boolean.class)
+                    }
+                    if (lCompType == boolean.class) {
                         return Arrays.equals((boolean[])lhs, (boolean[])rhs);
-                    if (lCompType == byte.class)
+                    }
+                    if (lCompType == byte.class) {
                         return Arrays.equals((byte[])lhs, (byte[])rhs);
-                    if (lCompType == char.class)
+                    }
+                    if (lCompType == char.class) {
                         return Arrays.equals((char[])lhs, (char[])rhs);
-                    if (lCompType == double.class)
+                    }
+                    if (lCompType == double.class) {
                         return Arrays.equals((double[])lhs, (double[])rhs);
-                    if (lCompType == float.class)
+                    }
+                    if (lCompType == float.class) {
                         return Arrays.equals((float[])lhs, (float[])rhs);
-                    if (lCompType == long.class)
+                    }
+                    if (lCompType == long.class) {
                         return Arrays.equals((long[])lhs, (long[])rhs);
-                    if (lCompType == short.class)
+                    }
+                    if (lCompType == short.class) {
                         return Arrays.equals((short[])lhs, (short[])rhs);
+                    }
                 }
                 return false;
             }
-            if (rCompType.isPrimitive())
+            if (rCompType.isPrimitive()) {
                 return false;
+            }
             return Arrays.equals((Object[])lhs, (Object[])rhs);
         }
         return lhs.equals(rhs);

@@ -27,6 +27,6 @@ import java.util.concurrent.locks.Lock;
  */
 @CopyRightApache
 public interface IKeyedReadWriteLock<K> {
-    public Lock readLock(K key);
-    public Lock writeLock(K key);
+    Lock readLock(K key);
+    Lock writeLock(K key);
 }

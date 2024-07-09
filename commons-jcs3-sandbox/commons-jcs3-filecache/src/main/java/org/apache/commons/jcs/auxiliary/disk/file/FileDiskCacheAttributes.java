@@ -58,7 +58,7 @@ public class FileDiskCacheAttributes
     /**
      * @param maxNumberOfFiles the maxNumberOfFiles to set
      */
-    public void setMaxNumberOfFiles( int maxNumberOfFiles )
+    public void setMaxNumberOfFiles( final int maxNumberOfFiles )
     {
         this.maxNumberOfFiles = maxNumberOfFiles;
     }
@@ -74,7 +74,7 @@ public class FileDiskCacheAttributes
     /**
      * @param maxRetriesOnDelete the maxRetriesOnDelete to set
      */
-    public void setMaxRetriesOnDelete( int maxRetriesOnDelete )
+    public void setMaxRetriesOnDelete( final int maxRetriesOnDelete )
     {
         this.maxRetriesOnDelete = maxRetriesOnDelete;
     }
@@ -90,7 +90,7 @@ public class FileDiskCacheAttributes
     /**
      * @param touchOnGet the touchOnGet to set
      */
-    public void setTouchOnGet( boolean touchOnGet )
+    public void setTouchOnGet( final boolean touchOnGet )
     {
         this.touchOnGet = touchOnGet;
     }
@@ -106,7 +106,7 @@ public class FileDiskCacheAttributes
     /**
      * @param maxRetriesOnTouch the maxRetriesOnTouch to set
      */
-    public void setMaxRetriesOnTouch( int maxRetriesOnTouch )
+    public void setMaxRetriesOnTouch( final int maxRetriesOnTouch )
     {
         this.maxRetriesOnTouch = maxRetriesOnTouch;
     }
@@ -127,7 +127,7 @@ public class FileDiskCacheAttributes
     @Override
     public String toString()
     {
-        StringBuilder str = new StringBuilder();
+        final StringBuilder str = new StringBuilder();
         str.append( "DiskFileCacheAttributes " );
         str.append( "\n diskPath = " + super.getDiskPath() );
         str.append( "\n maxNumberOfFiles   = " + getMaxNumberOfFiles() );

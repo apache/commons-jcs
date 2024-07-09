@@ -193,7 +193,7 @@ public class EventQueueConcurrentLoadTest
         // this becomes less accurate with each test. It should never fail. If
         // it does things are very off.
         assertTrue( "The put count [" + listen.putCount + "] is below the expected minimum threshold ["
-            + expectedPutCount + "]", listen.putCount.get() >= ( expectedPutCount - 1 ) );
+            + expectedPutCount + "]", listen.putCount.get() >= expectedPutCount - 1 );
 
     }
 
@@ -225,7 +225,7 @@ public class EventQueueConcurrentLoadTest
         // this becomes less accurate with each test. It should never fail. If
         // it does things are very off.
         assertTrue( "The put count [" + listen.putCount + "] is below the expected minimum threshold ["
-            + expectedPutCount + "]", listen.putCount.get() >= ( expectedPutCount - 1 ) );
+            + expectedPutCount + "]", listen.putCount.get() >= expectedPutCount - 1 );
 
     }
 

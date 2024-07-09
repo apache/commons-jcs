@@ -116,7 +116,7 @@ public class HostNameUtil
     public static List<InetAddress> getLocalHostLANAddresses()
         throws UnknownHostException
     {
-        List<InetAddress> addresses = new ArrayList<>();
+        final List<InetAddress> addresses = new ArrayList<>();
 
         try
         {

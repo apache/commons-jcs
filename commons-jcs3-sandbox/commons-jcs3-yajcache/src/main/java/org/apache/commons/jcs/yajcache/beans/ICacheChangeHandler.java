@@ -26,15 +26,15 @@ import org.apache.commons.jcs.yajcache.lang.annotation.*;
  */
 @CopyRightApache
 public interface ICacheChangeHandler<V> {
-    public boolean handlePut(@NonNullable String cacheName,
+    boolean handlePut(@NonNullable String cacheName,
             @NonNullable String key, @NonNullable V value);
-    public boolean handlePutCopy(@NonNullable String cacheName,
+    boolean handlePutCopy(@NonNullable String cacheName,
             @NonNullable String key, @NonNullable V value);
-    public boolean handlePutBeanCopy(@NonNullable String cacheName,
+    boolean handlePutBeanCopy(@NonNullable String cacheName,
             @NonNullable String key, @NonNullable V value);
-    public boolean handlePutBeanClone(@NonNullable String cacheName,
+    boolean handlePutBeanClone(@NonNullable String cacheName,
             @NonNullable String key, @NonNullable V value);
-    public boolean handleRemove(
+    boolean handleRemove(
             @NonNullable String cacheName, @NonNullable String key);
-    public boolean handleClear(@NonNullable String cacheName);
+    boolean handleClear(@NonNullable String cacheName);
 }

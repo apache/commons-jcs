@@ -88,7 +88,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
         {
             addToRecycleBin(value);
             log.debug("{0}: Removing key: [{1}] from key store.", logCacheName, key);
-            log.debug("{0}: Key store size: [{1}].", logCacheName, this.size());
+            log.debug("{0}: Key store size: [{1}].", logCacheName, size());
 
             doOptimizeRealTime();
         }
@@ -151,7 +151,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
             addToRecycleBin(value);
 
             log.debug("{0}: Removing key: [{1}] from key store.", logCacheName, key);
-            log.debug("{0}: Key store size: [{1}].", logCacheName, this.size());
+            log.debug("{0}: Key store size: [{1}].", logCacheName, size());
 
             doOptimizeRealTime();
         }
@@ -203,7 +203,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
         @Override
         protected boolean shouldRemove()
         {
-            return maxSize > 0 && contentSize.get() > maxSize && !this.isEmpty();
+            return maxSize > 0 && contentSize.get() > maxSize && !isEmpty();
         }
 
         // keep the content size in kB, so 2^31 kB is reasonable value

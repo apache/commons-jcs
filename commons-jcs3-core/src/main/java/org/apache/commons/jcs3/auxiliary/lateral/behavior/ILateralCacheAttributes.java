@@ -46,7 +46,7 @@ public interface ILateralCacheAttributes
 
         private final String typeName;
 
-        Type(String typeName)
+        Type(final String typeName)
         {
             this.typeName = typeName;
         }

@@ -62,8 +62,8 @@ public class GroupCacheAccess<K, V>
     @Override
     public V getFromGroup( final K name, final String group )
     {
-        final ICacheElement<GroupAttrName<K>, V> element = this.getCacheControl().get( getGroupAttrName( group, name ) );
-        return ( element != null ) ? element.getVal() : null;
+        final ICacheElement<GroupAttrName<K>, V> element = getCacheControl().get( getGroupAttrName( group, name ) );
+        return element != null ? element.getVal() : null;
     }
 
     /**
@@ -75,7 +75,7 @@ public class GroupCacheAccess<K, V>
      */
     private GroupAttrName<K> getGroupAttrName( final String group, final K name )
     {
-        final GroupId gid = new GroupId( this.getCacheControl().getCacheName(), group );
+        final GroupId gid = new GroupId( getCacheControl().getCacheName(), group );
         return new GroupAttrName<>( gid, name );
     }
 
@@ -88,9 +88,9 @@ public class GroupCacheAccess<K, V>
     @Override
     public Set<K> getGroupKeys( final String group )
     {
-        final GroupId groupId = new GroupId( this.getCacheControl().getCacheName(), group );
+        final GroupId groupId = new GroupId( getCacheControl().getCacheName(), group );
 
-        return this.getCacheControl().getKeySet()
+        return getCacheControl().getKeySet()
                 .stream()
                 .filter(gan -> gan.groupId.equals(groupId))
                 .map(gan -> gan.attrName)
@@ -104,7 +104,7 @@ public class GroupCacheAccess<K, V>
      */
     public Set<String> getGroupNames()
     {
-        return this.getCacheControl().getKeySet()
+        return getCacheControl().getKeySet()
                 .stream()
                 .map(gan -> gan.groupId.groupName)
                 .collect(Collectors.toSet());
@@ -119,7 +119,7 @@ public class GroupCacheAccess<K, V>
     @Override
     public void invalidateGroup( final String group )
     {
-        this.getCacheControl().remove(getGroupAttrName(group, null));
+        getCacheControl().remove(getGroupAttrName(group, null));
     }
 
     /**
@@ -177,12 +177,12 @@ public class GroupCacheAccess<K, V>
         {
             final GroupAttrName<K> key = getGroupAttrName( groupName, name );
             final CacheElement<GroupAttrName<K>, V> ce =
-                new CacheElement<>( this.getCacheControl().getCacheName(), key, value );
+                new CacheElement<>( getCacheControl().getCacheName(), key, value );
 
-            final IElementAttributes attributes = (attr == null) ? this.getCacheControl().getElementAttributes() : attr;
+            final IElementAttributes attributes = attr == null ? getCacheControl().getElementAttributes() : attr;
             ce.setElementAttributes( attributes );
 
-            this.getCacheControl().update( ce );
+            getCacheControl().update( ce );
         }
         catch ( final IOException e )
         {
@@ -201,6 +201,6 @@ public class GroupCacheAccess<K, V>
     public void removeFromGroup( final K name, final String group )
     {
         final GroupAttrName<K> key = getGroupAttrName( group, name );
-        this.getCacheControl().remove( key );
+        getCacheControl().remove( key );
     }
 }

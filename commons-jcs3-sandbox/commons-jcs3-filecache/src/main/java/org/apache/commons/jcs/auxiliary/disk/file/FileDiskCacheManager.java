@@ -55,7 +55,7 @@ public class FileDiskCacheManager
 
     /** Each region has an entry here. */
     private final ConcurrentMap<String, FileDiskCache<?, ?>> caches =
-        new ConcurrentHashMap<String, FileDiskCache<?, ?>>();
+        new ConcurrentHashMap<>();
 
     /** Lock cache initialization */
     private final Lock lock = new ReentrantLock();
@@ -76,8 +76,8 @@ public class FileDiskCacheManager
      * @param cacheEventLogger
      * @param elementSerializer
      */
-    protected FileDiskCacheManager( FileDiskCacheAttributes defaultCacheAttributes, ICacheEventLogger cacheEventLogger,
-                                  IElementSerializer elementSerializer )
+    protected FileDiskCacheManager( final FileDiskCacheAttributes defaultCacheAttributes, final ICacheEventLogger cacheEventLogger,
+                                  final IElementSerializer elementSerializer )
     {
         this.defaultCacheAttributes = defaultCacheAttributes;
         this.elementSerializer = elementSerializer;
@@ -90,9 +90,9 @@ public class FileDiskCacheManager
      * @param cacheName Name that will be used when creating attributes.
      * @return A cache.
      */
-    public <K, V> FileDiskCache<K, V> getCache( String cacheName )
+    public <K, V> FileDiskCache<K, V> getCache( final String cacheName )
     {
-        FileDiskCacheAttributes cacheAttributes = (FileDiskCacheAttributes) defaultCacheAttributes.clone();
+        final FileDiskCacheAttributes cacheAttributes = (FileDiskCacheAttributes) defaultCacheAttributes.clone();
 
         cacheAttributes.setCacheName( cacheName );
 
@@ -107,11 +107,11 @@ public class FileDiskCacheManager
      * @return A cache, either from the existing set or newly created.
      */
     @SuppressWarnings("unchecked") // Need to cast because of common map for all caches
-    public <K, V> FileDiskCache<K, V> getCache( FileDiskCacheAttributes cacheAttributes )
+    public <K, V> FileDiskCache<K, V> getCache( final FileDiskCacheAttributes cacheAttributes )
     {
         FileDiskCache<K, V> cache = null;
 
-        String cacheName = cacheAttributes.getCacheName();
+        final String cacheName = cacheAttributes.getCacheName();
 
         log.debug( "Getting cache named: " + cacheName );
 
@@ -131,7 +131,7 @@ public class FileDiskCacheManager
                 // attributes
                 if ( cache == null )
                 {
-                    cache = new FileDiskCache<K, V>( cacheAttributes, elementSerializer );
+                    cache = new FileDiskCache<>( cacheAttributes, elementSerializer );
                     cache.setCacheEventLogger( eventLogger );
                     caches.put( cacheName, cache );
                 }

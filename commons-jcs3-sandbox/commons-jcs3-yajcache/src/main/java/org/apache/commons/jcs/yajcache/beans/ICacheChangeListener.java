@@ -19,7 +19,6 @@ package org.apache.commons.jcs.yajcache.beans;
  * under the License.
  */
 
-import org.apache.commons.jcs.yajcache.beans.CacheChangeEvent;
 import org.apache.commons.jcs.yajcache.lang.annotation.*;
 
 /**
@@ -27,5 +26,5 @@ import org.apache.commons.jcs.yajcache.lang.annotation.*;
  */
 @CopyRightApache
 public interface ICacheChangeListener<V> extends java.util.EventListener {
-    public void cacheChange(@NonNullable CacheChangeEvent<V> evt);
+    void cacheChange(@NonNullable CacheChangeEvent<V> evt);
 }

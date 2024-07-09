@@ -31,19 +31,18 @@ import java.util.Map;
 public interface ICache<V> extends Map<String,V> {
     /** Returns the cache name. */
     @ThreadSafety(ThreadSafetyType.IMMUTABLE)
-    public @NonNullable String getName();
+    @NonNullable String getName();
     /** Returns the value type of the cached items. */
     @ThreadSafety(ThreadSafetyType.IMMUTABLE)
-    public @NonNullable Class<V> getValueType();
+    @NonNullable Class<V> getValueType();
     /** Returns the value cached for the specified key. */
     @ThreadSafety(
         value=ThreadSafetyType.SAFE,
         caveat="This method itself is thread-safe.  However,"
              + " the thread-safetyness of the return value cannot be guaranteed"
              + " by this interface."
-    )
-    public V get(String key);
+    ) V get(String key);
     /** Returns the cache type. */
     @ThreadSafety(ThreadSafetyType.IMMUTABLE)
-    public @NonNullable CacheType getCacheType();
+    @NonNullable CacheType getCacheType();
 }

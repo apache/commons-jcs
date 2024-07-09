@@ -35,19 +35,19 @@ public class FileDiskCacheFactoryUnitTest
     public void testCreateCache_Normal()
     {
         // SETUP
-        String cacheName = "testCreateCache_Normal";
-        FileDiskCacheAttributes cattr = new FileDiskCacheAttributes();
+        final String cacheName = "testCreateCache_Normal";
+        final FileDiskCacheAttributes cattr = new FileDiskCacheAttributes();
         cattr.setCacheName( cacheName );
         cattr.setDiskPath( "target/test-sandbox/FileDiskCacheFactoryUnitTest" );
 
-        ICompositeCacheManager cacheMgr = new MockCompositeCacheManager();
-        ICacheEventLogger cacheEventLogger = new MockCacheEventLogger();
-        IElementSerializer elementSerializer = new MockElementSerializer();
+        final ICompositeCacheManager cacheMgr = new MockCompositeCacheManager();
+        final ICacheEventLogger cacheEventLogger = new MockCacheEventLogger();
+        final IElementSerializer elementSerializer = new MockElementSerializer();
 
-        FileDiskCacheFactory factory = new FileDiskCacheFactory();
+        final FileDiskCacheFactory factory = new FileDiskCacheFactory();
 
         // DO WORK
-        FileDiskCache<String, String> result = factory.createCache( cattr, cacheMgr, cacheEventLogger,
+        final FileDiskCache<String, String> result = factory.createCache( cattr, cacheMgr, cacheEventLogger,
                                                                     elementSerializer );
 
         // VERIFY

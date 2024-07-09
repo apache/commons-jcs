@@ -32,7 +32,7 @@ public final class HsqlSetupUtil
     private static final class HSQLDiskCacheFactoryHelper extends HSQLDiskCacheFactory
     {
         @Override
-        protected synchronized void setupTable(Connection cConn, String tableName) throws SQLException
+        protected synchronized void setupTable(final Connection cConn, final String tableName) throws SQLException
         {
             super.setupTable(cConn, tableName);
         }

@@ -64,7 +64,7 @@ public interface IElementSerializer
      * @throws ClassNotFoundException thrown if we don't know the object.
      * @since 3.1
      */
-    default <T> T deSerializeFrom(AsynchronousByteChannel ic, int readTimeoutMs, ClassLoader loader)
+    default <T> T deSerializeFrom(final AsynchronousByteChannel ic, final int readTimeoutMs, final ClassLoader loader)
         throws IOException, ClassNotFoundException
     {
         final ByteBuffer bufferSize = ByteBuffer.allocate(4);
@@ -72,7 +72,7 @@ public interface IElementSerializer
 
         try
         {
-            int read = readFuture.get(readTimeoutMs, TimeUnit.MILLISECONDS);
+            final int read = readFuture.get(readTimeoutMs, TimeUnit.MILLISECONDS);
             if (read < 0)
             {
                 throw new EOFException("End of stream reached (length)");
@@ -92,7 +92,7 @@ public interface IElementSerializer
             readFuture = ic.read(serialized);
             try
             {
-                int read = readFuture.get(readTimeoutMs, TimeUnit.MILLISECONDS);
+                final int read = readFuture.get(readTimeoutMs, TimeUnit.MILLISECONDS);
                 if (read < 0)
                 {
                     throw new EOFException("End of stream reached (object)");
@@ -121,7 +121,7 @@ public interface IElementSerializer
      * @throws ClassNotFoundException thrown if we don't know the object.
      * @since 3.1
      */
-    default <T> T deSerializeFrom(InputStream is, ClassLoader loader)
+    default <T> T deSerializeFrom(final InputStream is, final ClassLoader loader)
         throws IOException, ClassNotFoundException
     {
         final byte[] bufferSize = new byte[4];
@@ -131,9 +131,9 @@ public interface IElementSerializer
             throw new EOFException("End of stream reached");
         }
         assert read == bufferSize.length;
-        ByteBuffer size = ByteBuffer.wrap(bufferSize);
+        final ByteBuffer size = ByteBuffer.wrap(bufferSize);
 
-        byte[] serialized = new byte[size.getInt()];
+        final byte[] serialized = new byte[size.getInt()];
         read = is.read(serialized);
         assert read == serialized.length;
 
@@ -152,7 +152,7 @@ public interface IElementSerializer
      * @throws ClassNotFoundException thrown if we don't know the object.
      * @since 3.1
      */
-    default <T> T deSerializeFrom(ReadableByteChannel ic, ClassLoader loader)
+    default <T> T deSerializeFrom(final ReadableByteChannel ic, final ClassLoader loader)
         throws IOException, ClassNotFoundException
     {
         final ByteBuffer bufferSize = ByteBuffer.allocate(4);
@@ -202,7 +202,7 @@ public interface IElementSerializer
      * @throws IOException if serialization or writing fails
      * @since 3.1
      */
-    default <T> int serializeTo(T obj, AsynchronousByteChannel oc, int writeTimeoutMs)
+    default <T> int serializeTo(final T obj, final AsynchronousByteChannel oc, final int writeTimeoutMs)
         throws IOException
     {
         final byte[] serialized = serialize(obj);
@@ -214,7 +214,7 @@ public interface IElementSerializer
         int count = 0;
         while (buffer.hasRemaining())
         {
-            Future<Integer> bytesWritten = oc.write(buffer);
+            final Future<Integer> bytesWritten = oc.write(buffer);
             try
             {
                 count += bytesWritten.get(writeTimeoutMs, TimeUnit.MILLISECONDS);
@@ -239,7 +239,7 @@ public interface IElementSerializer
      * @throws IOException if serialization or writing fails
      * @since 3.1
      */
-    default <T> int serializeTo(T obj, OutputStream os)
+    default <T> int serializeTo(final T obj, final OutputStream os)
         throws IOException
     {
         final byte[] serialized = serialize(obj);
@@ -263,7 +263,7 @@ public interface IElementSerializer
      * @throws IOException if serialization or writing fails
      * @since 3.1
      */
-    default <T> int serializeTo(T obj, WritableByteChannel oc)
+    default <T> int serializeTo(final T obj, final WritableByteChannel oc)
         throws IOException
     {
         final byte[] serialized = serialize(obj);
