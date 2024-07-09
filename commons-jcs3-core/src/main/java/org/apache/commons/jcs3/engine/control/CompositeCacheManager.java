@@ -527,7 +527,7 @@ public class CompositeCacheManager
         return (CompositeCache<K, V>) caches.computeIfAbsent(cattr.getCacheName(),
                 cacheName -> {
             final CompositeCacheConfigurator configurator = newConfigurator();
-            return configurator.parseRegion( this.getConfigurationProperties(), this, cacheName,
+            return configurator.parseRegion( getConfigurationProperties(), this, cacheName,
                                               this.defaultAuxValues, cattr );
         });
     }
