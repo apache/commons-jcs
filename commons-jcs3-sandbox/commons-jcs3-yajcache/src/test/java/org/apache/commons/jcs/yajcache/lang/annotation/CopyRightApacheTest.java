@@ -29,7 +29,7 @@ import org.apache.commons.logging.LogFactory;
 @CopyRightApache
 @TestOnly
 public class CopyRightApacheTest extends TestCase {
-    private Log log = LogFactory.getLog(this.getClass());
+    private final Log log = LogFactory.getLog(this.getClass());
 
     public void test() {
         log.debug(this.getClass().getAnnotation(CopyRightApache.class));
