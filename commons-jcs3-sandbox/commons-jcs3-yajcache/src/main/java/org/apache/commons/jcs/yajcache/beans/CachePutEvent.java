@@ -28,8 +28,8 @@ public class CachePutEvent<V> extends CacheChangeEvent<V> {
     private final @NonNullable String key;
     private final @NonNullable V value;
 
-    public CachePutEvent(@NonNullable ICache<V> cache,
-            @NonNullable String key, @NonNullable V value)
+    public CachePutEvent(@NonNullable final ICache<V> cache,
+            @NonNullable final String key, @NonNullable final V value)
     {
         super(cache);
         this.key = key;
@@ -43,7 +43,7 @@ public class CachePutEvent<V> extends CacheChangeEvent<V> {
     }
 
     @Override
-    public boolean dispatch(@NonNullable ICacheChangeHandler<V> handler) {
+    public boolean dispatch(@NonNullable final ICacheChangeHandler<V> handler) {
         return handler.handlePut(
                 super.getCache().getName(), this.key, this.value);
     }
