@@ -73,7 +73,7 @@ public class LateralTCPDiscoveryListenerUnitTest
 
     private LateralCacheNoWaitFacade<String, String> setupFacade(final String cacheName)
     {
-        List<LateralCacheNoWait<String, String>> noWaits = new ArrayList<>();
+        final List<LateralCacheNoWait<String, String>> noWaits = new ArrayList<>();
         final ITCPLateralCacheAttributes cattr = new TCPLateralCacheAttributes();
         cattr.setCacheName( cacheName );
 

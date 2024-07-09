@@ -392,7 +392,7 @@ public class LateralTCPCacheFactory
         return lTCPDLInstances.computeIfAbsent(key, key1 -> {
             log.info("Created new discovery listener for cacheName {0} and request {1}",
                     ilca.getCacheName(), key1);
-            return new LateralTCPDiscoveryListener( this.getName(),
+            return new LateralTCPDiscoveryListener( getName(),
                     (CompositeCacheManager) cacheManager,
                     cacheEventLogger, elementSerializer);
         });

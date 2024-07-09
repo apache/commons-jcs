@@ -242,7 +242,7 @@ public class LateralTCPListener<K, V>
                 log.debug( "receiving LateralElementDescriptor from another led = {0}",
                         led );
 
-                Object obj = handleElement(led);
+                final Object obj = handleElement(led);
                 if (obj != null)
                 {
                     serializer.serializeTo(obj, socketChannel);
@@ -256,7 +256,7 @@ public class LateralTCPListener<K, V>
             {
                 socketChannel.close();
             }
-            catch (IOException e1)
+            catch (final IOException e1)
             {
                 log.error("Error while closing connection", e );
             }
@@ -527,20 +527,20 @@ public class LateralTCPListener<K, V>
             // Check to see if we've been asked to exit, and exit
             while (!terminated.get())
             {
-                int activeKeys = selector.select(acceptTimeOut);
+                final int activeKeys = selector.select(acceptTimeOut);
                 if (activeKeys == 0)
                 {
                     continue;
                 }
 
-                for (Iterator<SelectionKey> i = selector.selectedKeys().iterator(); i.hasNext();)
+                for (final Iterator<SelectionKey> i = selector.selectedKeys().iterator(); i.hasNext();)
                 {
                     if (terminated.get())
                     {
                         break;
                     }
 
-                    SelectionKey key = i.next();
+                    final SelectionKey key = i.next();
 
                     if (!key.isValid())
                     {
@@ -549,8 +549,8 @@ public class LateralTCPListener<K, V>
 
                     if (key.isAcceptable())
                     {
-                        ServerSocketChannel server = (ServerSocketChannel) key.channel();
-                        SocketChannel client = server.accept();
+                        final ServerSocketChannel server = (ServerSocketChannel) key.channel();
+                        final SocketChannel client = server.accept();
                         if (client == null)
                         {
                             //may happen in non-blocking mode
@@ -580,7 +580,7 @@ public class LateralTCPListener<K, V>
                 {
                     key.channel().close();
                 }
-                catch (IOException e)
+                catch (final IOException e)
                 {
                     log.warn("Problem closing channel", e);
                 }
@@ -596,7 +596,7 @@ public class LateralTCPListener<K, V>
             {
                 serverSocket.close();
             }
-            catch (IOException e)
+            catch (final IOException e)
             {
                 log.error( "Exception closing TCP listener", e );
             }

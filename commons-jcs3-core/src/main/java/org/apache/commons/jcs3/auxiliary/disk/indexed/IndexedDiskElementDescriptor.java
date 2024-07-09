@@ -63,7 +63,7 @@ public class IndexedDiskElementDescriptor
             return 1;
         }
 
-        int lenCompare = Integer.compare(len, o.len);
+        final int lenCompare = Integer.compare(len, o.len);
         if (lenCompare == 0)
         {
             return Long.compare(o.pos, pos);

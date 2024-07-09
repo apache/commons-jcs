@@ -130,8 +130,8 @@ public class LateralTCPSender
         try
         {
             client = AsynchronousSocketChannel.open();
-            InetSocketAddress hostAddress = new InetSocketAddress(host, port);
-            Future<Void> future = client.connect(hostAddress);
+            final InetSocketAddress hostAddress = new InetSocketAddress(host, port);
+            final Future<Void> future = client.connect(hostAddress);
 
             future.get(this.socketOpenTimeOut, TimeUnit.MILLISECONDS);
         }

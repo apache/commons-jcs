@@ -85,11 +85,11 @@ public class RemoteHttpCacheServerAttributes
     {
         final StringBuilder buf = new StringBuilder();
         buf.append( "\nRemoteHttpCacheServiceAttributes" );
-        buf.append( "\n cacheName = [" + this.getCacheName() + "]" );
-        buf.append( "\n allowClusterGet = [" + this.isAllowClusterGet() + "]" );
-        buf.append( "\n localClusterConsistency = [" + this.isLocalClusterConsistency() + "]" );
-        buf.append( "\n eventQueueType = [" + this.getEventQueueType() + "]" );
-        buf.append( "\n eventQueuePoolName = [" + this.getEventQueuePoolName() + "]" );
+        buf.append( "\n cacheName = [" + getCacheName() + "]" );
+        buf.append( "\n allowClusterGet = [" + isAllowClusterGet() + "]" );
+        buf.append( "\n localClusterConsistency = [" + isLocalClusterConsistency() + "]" );
+        buf.append( "\n eventQueueType = [" + getEventQueueType() + "]" );
+        buf.append( "\n eventQueuePoolName = [" + getEventQueuePoolName() + "]" );
         return buf.toString();
     }
 }

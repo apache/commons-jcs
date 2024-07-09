@@ -73,9 +73,9 @@ public class LateralCacheMonitor extends AbstractAuxiliaryCacheMonitor
         this.caches.put(cache.getCacheName(), (LateralCacheNoWait<Object, Object>)cache);
 
         // if not yet started, go ahead
-        if (this.getState() == Thread.State.NEW)
+        if (getState() == Thread.State.NEW)
         {
-            this.start();
+            start();
         }
     }
 

@@ -83,8 +83,8 @@ public class LateralCacheNoWait<K, V>
     {
         this.cache = cache;
         this.identityKey = cache.getCacheName();
-        this.setCacheEventLogger(cache.getCacheEventLogger());
-        this.setElementSerializer(cache.getElementSerializer());
+        setCacheEventLogger(cache.getCacheEventLogger());
+        setElementSerializer(cache.getElementSerializer());
 
         log.debug( "Constructing LateralCacheNoWait, LateralCache = [{0}]", cache );
 
@@ -420,7 +420,7 @@ public class LateralCacheNoWait<K, V>
      * @param identityKey the identityKey to set
      * @since 3.1
      */
-    public void setIdentityKey(String identityKey)
+    public void setIdentityKey(final String identityKey)
     {
         this.identityKey = identityKey;
     }

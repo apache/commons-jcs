@@ -18,7 +18,6 @@ package org.apache.commons.jcs3.log;
  */
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
@@ -54,21 +53,18 @@ public class LogManager
             }
 
             // Store errors that may occur until log system is available
-            List<ServiceConfigurationError> errors = new ArrayList<>();
-            Iterator<LogFactory> itr = factories.iterator();
+            final List<ServiceConfigurationError> errors = new ArrayList<>();
             LogFactory factory = null;
-            while (itr.hasNext())
-            {
+            for (final LogFactory instance : factories) {
                 try
                 {
-                    LogFactory instance = itr.next();
                     if (logSystem.equalsIgnoreCase(instance.getName()))
                     {
                         factory = instance;
                         break;
                     }
                 }
-                catch (ServiceConfigurationError e)
+                catch (final ServiceConfigurationError e)
                 {
                     errors.add(e);
                 }
@@ -77,9 +73,9 @@ public class LogManager
             {
                 if (!errors.isEmpty())
                 {
-                    Log log = factory.getLog(LogFactoryHolder.class);
+                    final Log log = factory.getLog(LogFactoryHolder.class);
 
-                    for (ServiceConfigurationError error : errors)
+                    for (final ServiceConfigurationError error : errors)
                     {
                         log.debug("Error loading LogFactory", error);
                     }

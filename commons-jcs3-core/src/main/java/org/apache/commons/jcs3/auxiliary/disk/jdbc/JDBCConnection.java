@@ -33,17 +33,17 @@ public class JDBCConnection implements AutoCloseable
     private boolean committed;
 
     /** Save state of auto-commit */
-    private boolean autoCommit;
+    private final boolean autoCommit;
 
     /** The wrapped connection instance */
-    private Connection connection;
+    private final Connection connection;
 
     /**
      * Constructor
      * @param con Connection object
      * @throws SQLException if a database error occurs
      */
-    public JDBCConnection(Connection con) throws SQLException
+    public JDBCConnection(final Connection con) throws SQLException
     {
         this.committed = false;
         this.autoCommit = con.getAutoCommit();
@@ -54,7 +54,7 @@ public class JDBCConnection implements AutoCloseable
     /**
      * @see java.sql.Connection#prepareStatement(java.lang.String)
      */
-    public PreparedStatement prepareStatement(String sql) throws SQLException
+    public PreparedStatement prepareStatement(final String sql) throws SQLException
     {
         return connection.prepareStatement(sql);
     }

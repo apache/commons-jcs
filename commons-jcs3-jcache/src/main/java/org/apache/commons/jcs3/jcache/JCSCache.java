@@ -754,13 +754,9 @@ public class JCSCache<K, V> implements Cache<K, V>
                 statistics.increasePuts(1);
                 statistics.addPutTime(System.currentTimeMillis() - start);
             }
-        }
-        else
+        } else if (!created)
         {
-            if (!created)
-            {
-                forceExpires(key);
-            }
+            forceExpires(key);
         }
     }
 

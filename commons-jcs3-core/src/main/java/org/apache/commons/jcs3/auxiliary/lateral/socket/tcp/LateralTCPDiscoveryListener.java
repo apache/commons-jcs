@@ -139,10 +139,10 @@ public class LateralTCPDiscoveryListener
                             (ITCPLateralCacheAttributes) facade.getAuxiliaryCacheAttributes().clone();
                     lca.setTcpServer(serverAndPort);
 
-                    LateralTCPCacheFactory factory =
+                    final LateralTCPCacheFactory factory =
                             (LateralTCPCacheFactory) cacheManager.registryFacGet(factoryName);
 
-                    LateralCacheNoWait<?, ?> noWait =
+                    final LateralCacheNoWait<?, ?> noWait =
                             factory.createCacheNoWait(lca, cacheEventLogger, elementSerializer);
                     factory.monitorCache(noWait);
 

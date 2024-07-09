@@ -39,7 +39,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @CopyRightApache
 public class KeyedRefCollector<K> implements Runnable {
     private static final boolean debug = true;
-    private Log log = debug ? LogFactory.getLog(this.getClass()) : null;
+    private final Log log = debug ? LogFactory.getLog(this.getClass()) : null;
     private final @NonNullable ReferenceQueue q;
     private final @NonNullable ConcurrentMap<K, ? extends IKey<K>> synMap;
     private final AtomicInteger count = new AtomicInteger();
@@ -47,8 +47,8 @@ public class KeyedRefCollector<K> implements Runnable {
      * Constructs with a given reference queue and concurrent map.
      */
     public KeyedRefCollector(
-            @NonNullable ReferenceQueue<?> q,
-            @NonNullable ConcurrentMap<K, ? extends IKey<K>> synMap)
+            @NonNullable final ReferenceQueue<?> q,
+            @NonNullable final ConcurrentMap<K, ? extends IKey<K>> synMap)
     {
         this.q = q;
         this.synMap = synMap;
@@ -56,16 +56,18 @@ public class KeyedRefCollector<K> implements Runnable {
     /**
      * Executes one cycle of stale entries removal.
      */
+    @Override
     public void run() {
         Reference ref;
 
         while ((ref = this.q.poll()) != null) {
-            IKey keyedRef = (IKey)ref;
+            final IKey keyedRef = (IKey)ref;
             // remove unused lock;  may fail but that's fine.
             synMap.remove(keyedRef.getKey(), ref);
             // referent should have been cleared by GC.
-            if (debug)
+            if (debug) {
                 this.count.incrementAndGet();
+            }
         }
     }
     public int getCount() {

@@ -170,7 +170,7 @@ public class InMemoryResponse extends HttpServletResponseWrapper implements Seri
             }
 
             @Override
-            public void setWriteListener(WriteListener writeListener) {
+            public void setWriteListener(final WriteListener writeListener) {
                 // TODO Auto-generated method stub
 
             }

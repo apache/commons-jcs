@@ -68,7 +68,7 @@ public class LateralElementDescriptor<K, V>
      * @param command operation requested by the client
      * @since 3.1
      */
-    public LateralElementDescriptor( final ICacheElement<K, V> ce, LateralCommand command)
+    public LateralElementDescriptor( final ICacheElement<K, V> ce, final LateralCommand command)
     {
         this(ce);
         this.command = command;
@@ -82,7 +82,7 @@ public class LateralElementDescriptor<K, V>
      * @param requesterId id of the source of the request
      * @since 3.1
      */
-    public LateralElementDescriptor( final ICacheElement<K, V> ce, LateralCommand command, long requesterId)
+    public LateralElementDescriptor( final ICacheElement<K, V> ce, final LateralCommand command, final long requesterId)
     {
         this(ce, command);
         this.requesterId = requesterId;

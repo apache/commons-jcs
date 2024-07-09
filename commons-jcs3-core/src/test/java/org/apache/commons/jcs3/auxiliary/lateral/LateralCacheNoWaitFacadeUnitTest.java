@@ -43,8 +43,8 @@ public class LateralCacheNoWaitFacadeUnitTest
     public void setUp() throws Exception
     {
         // SETUP
-        List<LateralCacheNoWait<String, String>> noWaits = new ArrayList<>();
-        TCPLateralCacheAttributes cattr = new TCPLateralCacheAttributes();
+        final List<LateralCacheNoWait<String, String>> noWaits = new ArrayList<>();
+        final TCPLateralCacheAttributes cattr = new TCPLateralCacheAttributes();
         cattr.setCacheName( "testCache1" );
         cattr.setTcpServer("localhost:7890");
 
@@ -75,7 +75,7 @@ public class LateralCacheNoWaitFacadeUnitTest
     @Test
     public void testAddThenRemoveNoWait_InList()
     {
-        LateralCacheNoWait<String, String> noWait = new LateralCacheNoWait<>( cache );
+        final LateralCacheNoWait<String, String> noWait = new LateralCacheNoWait<>( cache );
 
         // DO WORK
         facade.addNoWait( noWait );

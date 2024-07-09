@@ -196,7 +196,7 @@ public class JDBCDiskCache<K, V>
                 try (PreparedStatement psDelete = con.prepareStatement( sql ))
                 {
                     psDelete.setString( 1, "F" );
-                    psDelete.setString( 2, this.getCacheName() );
+                    psDelete.setString( 2, getCacheName() );
                     psDelete.setLong( 3, now );
 
                     setAlive(true);
@@ -247,7 +247,7 @@ public class JDBCDiskCache<K, V>
 
         try (PreparedStatement psSelect = con.prepareStatement( sqlS ))
         {
-            psSelect.setString( 1, this.getCacheName() );
+            psSelect.setString( 1, getCacheName() );
             psSelect.setString( 2, (String) ce.getKey() );
 
             try (ResultSet rs = psSelect.executeQuery())
@@ -340,7 +340,7 @@ public class JDBCDiskCache<K, V>
         {
             try (PreparedStatement psSelect = con.prepareStatement( selectString ))
             {
-                psSelect.setString( 1, this.getCacheName() );
+                psSelect.setString( 1, getCacheName() );
 
                 try (ResultSet rs = psSelect.executeQuery())
                 {
@@ -457,7 +457,7 @@ public class JDBCDiskCache<K, V>
         try (PreparedStatement psInsert = con.prepareStatement( sqlI ))
         {
             psInsert.setString( 1, ce.getKey().toString() );
-            psInsert.setString( 2, this.getCacheName() );
+            psInsert.setString( 2, getCacheName() );
             psInsert.setBytes( 3, element );
             psInsert.setLong( 4, ce.getElementAttributes().getMaxLife() );
             psInsert.setString( 5, ce.getElementAttributes().getIsEternal() ? "T" : "F" );
@@ -519,7 +519,7 @@ public class JDBCDiskCache<K, V>
             psUpdate.setLong( 4, expireTime );
 
             psUpdate.setString( 5, (String) ce.getKey() );
-            psUpdate.setString( 6, this.getCacheName() );
+            psUpdate.setString( 6, getCacheName() );
             psUpdate.execute();
 
             log.debug( "ran update {0}", sqlU );
@@ -578,7 +578,7 @@ public class JDBCDiskCache<K, V>
         {
             try (PreparedStatement psSelect = con.prepareStatement( selectString ))
             {
-                psSelect.setString( 1, this.getCacheName() );
+                psSelect.setString( 1, getCacheName() );
                 psSelect.setString( 2, key.toString() );
 
                 try (ResultSet rs = psSelect.executeQuery())
@@ -644,7 +644,7 @@ public class JDBCDiskCache<K, V>
         {
             try (PreparedStatement psSelect = con.prepareStatement( selectString ))
             {
-                psSelect.setString( 1, this.getCacheName() );
+                psSelect.setString( 1, getCacheName() );
                 psSelect.setString( 2, constructLikeParameterFromPattern( pattern ) );
 
                 try (ResultSet rs = psSelect.executeQuery())
@@ -697,12 +697,12 @@ public class JDBCDiskCache<K, V>
 
         try (JDBCConnection con = getConnection())
         {
-            boolean partial = key.toString().endsWith(ICache.NAME_COMPONENT_DELIMITER);
-            String sql = partial ? sqlPartial : sqlSingle;
+            final boolean partial = key.toString().endsWith(ICache.NAME_COMPONENT_DELIMITER);
+            final String sql = partial ? sqlPartial : sqlSingle;
 
             try (PreparedStatement psSelect = con.prepareStatement(sql))
             {
-                psSelect.setString( 1, this.getCacheName() );
+                psSelect.setString( 1, getCacheName() );
                 if ( partial )
                 {
                     psSelect.setString( 2, key.toString() + "%" );
@@ -747,7 +747,7 @@ public class JDBCDiskCache<K, V>
             {
                 try (PreparedStatement psDelete = con.prepareStatement( sql ))
                 {
-                    psDelete.setString( 1, this.getCacheName() );
+                    psDelete.setString( 1, getCacheName() );
                     setAlive(true);
                     psDelete.executeUpdate();
                 }
@@ -824,6 +824,6 @@ public class JDBCDiskCache<K, V>
     @Override
     public String toString()
     {
-        return this.getStats();
+        return getStats();
     }
 }

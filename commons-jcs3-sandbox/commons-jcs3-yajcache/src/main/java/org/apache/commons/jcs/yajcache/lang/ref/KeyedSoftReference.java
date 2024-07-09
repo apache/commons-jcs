@@ -42,7 +42,7 @@ public class KeyedSoftReference<K,T> extends SoftReference<T>
      * @param key the embedded key of the new soft reference
      * @param referent object the new soft reference will refer to
      */
-    public KeyedSoftReference(@NonNullable @Immutable K key, T referent)
+    public KeyedSoftReference(@NonNullable @Immutable final K key, final T referent)
     {
 	super(referent);
         this.key = key;
@@ -56,12 +56,13 @@ public class KeyedSoftReference<K,T> extends SoftReference<T>
      * @param q the queue with which the reference is to be registered,
      *          or {@code null} if registration is not required
      */
-    public KeyedSoftReference(@NonNullable @Immutable K key, T referent,
-            ReferenceQueue<? super T> q)
+    public KeyedSoftReference(@NonNullable @Immutable final K key, final T referent,
+            final ReferenceQueue<? super T> q)
     {
         super(referent, q);
         this.key = key;
     }
+    @Override
     @Implements(IKey.class)
     public @NonNullable @Immutable K getKey() {
         return this.key;

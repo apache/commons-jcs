@@ -48,6 +48,6 @@ public class LRUMap<K, V> extends AbstractLRUMap<K, V>
     @Override
     public boolean shouldRemove()
     {
-        return maxObjects > 0 && this.size() > maxObjects;
+        return maxObjects > 0 && size() > maxObjects;
     }
 }

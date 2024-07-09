@@ -300,7 +300,7 @@ public class LateralCache<K, V>
     protected Map<K, ICacheElement<K, V>> processGetMatching( final String pattern )
         throws IOException
     {
-        Map<K, ICacheElement<K, V>> map = Collections.emptyMap();
+        final Map<K, ICacheElement<K, V>> map = Collections.emptyMap();
 
         if ( !this.lateralCacheAttributes.getPutOnlyMode() )
         {
