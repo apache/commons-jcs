@@ -59,7 +59,7 @@ public class DiscoveredService
      * @param message incoming message
      * @since 3.1
      */
-    public DiscoveredService(UDPDiscoveryMessage message)
+    public DiscoveredService(final UDPDiscoveryMessage message)
     {
         setServiceAddress( message.getHost() );
         setCacheNames( message.getCacheNames() );
@@ -84,7 +84,7 @@ public class DiscoveredService
 		{
 			return true;
 		}
-		if ((otherArg == null) || !(otherArg instanceof DiscoveredService))
+		if (otherArg == null || !(otherArg instanceof DiscoveredService))
 		{
 			return false;
 		}
