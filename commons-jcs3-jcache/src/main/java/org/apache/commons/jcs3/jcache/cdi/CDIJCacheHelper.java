@@ -306,7 +306,7 @@ public class CDIJCacheHelper
         for (int pIdx = 0; pIdx < parameterTypes.length; pIdx++)
         {
             name.append(parameterTypes[pIdx].getName());
-            if ((pIdx + 1) < parameterTypes.length)
+            if (pIdx + 1 < parameterTypes.length)
             {
                 name.append(",");
             }
