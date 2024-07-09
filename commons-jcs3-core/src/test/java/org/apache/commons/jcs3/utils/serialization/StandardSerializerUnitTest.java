@@ -37,7 +37,7 @@ import org.junit.Test;
 public class StandardSerializerUnitTest
 {
     private StandardSerializer serializer;
-    
+
     /**
      * Test setup
      * <p>
@@ -48,7 +48,7 @@ public class StandardSerializerUnitTest
         throws Exception
     {
 	// Override filter expression for ObjectInputFilter
-        System.setProperty(ObjectInputStreamClassLoaderAware.SYSTEM_PROPERTY_SERIALIZATION_FILTER, 
+        System.setProperty(ObjectInputStreamClassLoaderAware.SYSTEM_PROPERTY_SERIALIZATION_FILTER,
             "!org.apache.commons.collections4.**");
         this.serializer = new StandardSerializer();
     }
@@ -117,7 +117,7 @@ public class StandardSerializerUnitTest
         // VERIFY
         assertEquals( "Before and after should be the same.", before, after );
     }
-    
+
     /**
      * Verify that we can filter classes to be deserialized
      *<p>

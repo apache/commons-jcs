@@ -105,9 +105,9 @@ public class RemoteCache<K, V>
     protected String getIPAddressForService()
     {
         String ipAddress = "(null)";
-        if (this.getRemoteCacheAttributes().getRemoteLocation() != null)
+        if (getRemoteCacheAttributes().getRemoteLocation() != null)
         {
-            ipAddress = this.getRemoteCacheAttributes().getRemoteLocation().toString();
+            ipAddress = getRemoteCacheAttributes().getRemoteLocation().toString();
         }
         return ipAddress;
     }
@@ -124,7 +124,7 @@ public class RemoteCache<K, V>
         final ArrayList<IStatElement<?>> elems = new ArrayList<>();
 
         elems.add(new StatElement<>( "Remote Host:Port", getIPAddressForService() ) );
-        elems.add(new StatElement<>( "Remote Type", this.getRemoteCacheAttributes().getRemoteTypeName() ) );
+        elems.add(new StatElement<>( "Remote Type", getRemoteCacheAttributes().getRemoteTypeName() ) );
 
 //      if ( this.getRemoteCacheAttributes().getRemoteType() == RemoteType.CLUSTER )
 //      {

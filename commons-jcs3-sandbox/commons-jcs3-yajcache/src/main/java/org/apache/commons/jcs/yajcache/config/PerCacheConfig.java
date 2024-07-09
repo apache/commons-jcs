@@ -29,8 +29,8 @@ import org.apache.commons.jcs.yajcache.lang.annotation.*;
 public class PerCacheConfig {
     private boolean isCacheFileEnabled = true;
 
-    public boolean setCacheFileEnabled(boolean isCacheFileEnabled) {
-        boolean ret = this.isCacheFileEnabled;
+    public boolean setCacheFileEnabled(final boolean isCacheFileEnabled) {
+        final boolean ret = this.isCacheFileEnabled;
         this.isCacheFileEnabled = isCacheFileEnabled;
         return ret;
     }

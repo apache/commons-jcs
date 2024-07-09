@@ -26,15 +26,15 @@ import java.io.ObjectStreamClass;
 import java.lang.reflect.Proxy;
 
 /**
- * ObjectInputStream implementation that allows to specify a class loader for deserializing 
+ * ObjectInputStream implementation that allows to specify a class loader for deserializing
  * objects
- * 
+ *
  * The class also evaluates the system property <code>jcs.serialization.class.filter</code>
  * to define a list of classes that are allowed to be de-serialized. The filter value
  * is directly fed into {@link java.io.ObjectInputFilter.Config#createFilter(String)}
  * See the syntax documentation there.
  */
-public class ObjectInputStreamClassLoaderAware extends ObjectInputStream 
+public class ObjectInputStreamClassLoaderAware extends ObjectInputStream
 {
     public static final String SYSTEM_PROPERTY_SERIALIZATION_FILTER = "jcs.serialization.class.filter";
 
@@ -44,7 +44,7 @@ public class ObjectInputStreamClassLoaderAware extends ObjectInputStream
 
     private final ClassLoader classLoader;
 
-    public ObjectInputStreamClassLoaderAware(final InputStream in, final ClassLoader classLoader) throws IOException 
+    public ObjectInputStreamClassLoaderAware(final InputStream in, final ClassLoader classLoader) throws IOException
     {
         super(in);
         setObjectInputFilter(ObjectInputFilter.Config.createFilter(filter));

@@ -77,13 +77,13 @@ public final class UDPDiscoveryAttributes
     public UDPDiscoveryAttributes clone()
     {
         final UDPDiscoveryAttributes attributes = new UDPDiscoveryAttributes();
-        attributes.setSendDelaySec( this.getSendDelaySec() );
-        attributes.setMaxIdleTimeSec( this.getMaxIdleTimeSec() );
-        attributes.setServiceName( this.getServiceName() );
-        attributes.setServicePort( this.getServicePort() );
-        attributes.setUdpDiscoveryAddr( this.getUdpDiscoveryAddr() );
-        attributes.setUdpDiscoveryPort( this.getUdpDiscoveryPort() );
-        attributes.setDark( this.isDark() );
+        attributes.setSendDelaySec( getSendDelaySec() );
+        attributes.setMaxIdleTimeSec( getMaxIdleTimeSec() );
+        attributes.setServiceName( getServiceName() );
+        attributes.setServicePort( getServicePort() );
+        attributes.setUdpDiscoveryAddr( getUdpDiscoveryAddr() );
+        attributes.setUdpDiscoveryPort( getUdpDiscoveryPort() );
+        attributes.setDark( isDark() );
         return attributes;
     }
 

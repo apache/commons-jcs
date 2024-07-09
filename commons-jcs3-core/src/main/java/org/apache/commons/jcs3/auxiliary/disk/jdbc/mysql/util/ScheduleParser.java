@@ -48,7 +48,7 @@ public class ScheduleParser
         final String[] timeStrings = schedule.split("\\s*,\\s*");
         final Date[] dates = new Date[timeStrings.length];
         int cnt = 0;
-        for (String time : timeStrings)
+        for (final String time : timeStrings)
         {
             dates[cnt++] = getDateForSchedule(time);
         }

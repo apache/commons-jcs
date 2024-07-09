@@ -38,7 +38,7 @@ public class UDPDiscoveryUnitTest
      * <p>
      * @throws Exception
      */
-    private void simpleUDPDiscovery(String discoveryAddress)
+    private void simpleUDPDiscovery(final String discoveryAddress)
         throws Exception
     {
         final UDPDiscoveryAttributes attributes = new UDPDiscoveryAttributes();

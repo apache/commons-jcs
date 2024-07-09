@@ -52,7 +52,7 @@ public class TestTCPLateralUnitTest
 {
     private final MockCompositeCacheManager cacheMgr = new MockCompositeCacheManager();
 
-    private <K,V> CompositeCache<K, V> createCache(int port)
+    private <K,V> CompositeCache<K, V> createCache(final int port)
     {
         final TCPLateralCacheAttributes lattr = new TCPLateralCacheAttributes();
         lattr.setTcpListenerPort(port);
@@ -68,7 +68,7 @@ public class TestTCPLateralUnitTest
         return cache;
     }
 
-    private <K, V> LateralTCPService<K, V> createService(int listenerPort, int serverPort, long listenerId) throws IOException
+    private <K, V> LateralTCPService<K, V> createService(final int listenerPort, final int serverPort, final long listenerId) throws IOException
     {
         final TCPLateralCacheAttributes lattr2 = new TCPLateralCacheAttributes();
         lattr2.setTcpListenerPort(listenerPort);
@@ -319,7 +319,7 @@ public class TestTCPLateralUnitTest
     public void testSimpleEncryptedSend()
             throws Exception
     {
-    	EncryptingSerializer serializer = new EncryptingSerializer();
+    	final EncryptingSerializer serializer = new EncryptingSerializer();
     	serializer.setPreSharedKey("my_key");
     	simpleSend(serializer, 8112);
     }

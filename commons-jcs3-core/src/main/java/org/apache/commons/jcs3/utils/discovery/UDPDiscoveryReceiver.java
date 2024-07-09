@@ -198,7 +198,7 @@ public class UDPDiscoveryReceiver
     /**
      * Separate thread run when a command comes into the UDPDiscoveryReceiver.
      */
-    private void handleMessage(UDPDiscoveryMessage message)
+    private void handleMessage(final UDPDiscoveryMessage message)
     {
         // consider comparing ports here instead.
         if ( message.getRequesterId() == CacheInfo.listenerId )
@@ -233,20 +233,20 @@ public class UDPDiscoveryReceiver
 
             while (!shutdown.get())
             {
-                int activeKeys = selector.select();
+                final int activeKeys = selector.select();
                 if (activeKeys == 0)
                 {
                     continue;
                 }
 
-                for (Iterator<SelectionKey> i = selector.selectedKeys().iterator(); i.hasNext();)
+                for (final Iterator<SelectionKey> i = selector.selectedKeys().iterator(); i.hasNext();)
                 {
                     if (shutdown.get())
                     {
                         break;
                     }
 
-                    SelectionKey key = i.next();
+                    final SelectionKey key = i.next();
                     i.remove();
 
                     if (!key.isValid())
@@ -259,19 +259,19 @@ public class UDPDiscoveryReceiver
                         cnt.incrementAndGet();
                         log.debug( "{0} messages received.", this::getCnt );
 
-                        DatagramChannel mc = (DatagramChannel) key.channel();
+                        final DatagramChannel mc = (DatagramChannel) key.channel();
 
-                        ByteBuffer byteBuffer = ByteBuffer.allocate(65536);
-                        InetSocketAddress sourceAddress =
+                        final ByteBuffer byteBuffer = ByteBuffer.allocate(65536);
+                        final InetSocketAddress sourceAddress =
                                 (InetSocketAddress) mc.receive(byteBuffer);
                         byteBuffer.flip();
 
                         try
                         {
                             log.debug("Received packet from address [{0}]", sourceAddress);
-                            byte[] bytes = new byte[byteBuffer.limit()];
+                            final byte[] bytes = new byte[byteBuffer.limit()];
                             byteBuffer.get(bytes);
-                            Object obj = serializer.deSerialize(bytes, null);
+                            final Object obj = serializer.deSerialize(bytes, null);
 
                             if (obj instanceof UDPDiscoveryMessage)
                             {
@@ -316,7 +316,7 @@ public class UDPDiscoveryReceiver
      * @param serializer the serializer to set
      * @since 3.1
      */
-    protected void setSerializer(IElementSerializer serializer)
+    protected void setSerializer(final IElementSerializer serializer)
     {
         this.serializer = serializer;
     }
@@ -327,7 +327,7 @@ public class UDPDiscoveryReceiver
      * @param service the service to set
      * @since 4.0
      */
-    protected void setService(Consumer<UDPDiscoveryMessage> service)
+    protected void setService(final Consumer<UDPDiscoveryMessage> service)
     {
         this.service = service;
     }

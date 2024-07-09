@@ -58,9 +58,9 @@ public class RemoteCacheMonitor extends AbstractAuxiliaryCacheMonitor
         this.managers.put(manager, manager);
 
         // if not yet started, go ahead
-        if (this.getState() == Thread.State.NEW)
+        if (getState() == Thread.State.NEW)
         {
-            this.start();
+            start();
         }
     }
 

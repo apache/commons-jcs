@@ -72,7 +72,7 @@ public class UDPDiscoverySenderEncryptedUnitTest
     {
         assumeNotNull("This machine does not support multicast", HostNameUtil.getMulticastNetworkInterface());
 
-        EncryptingSerializer serializer = new EncryptingSerializer();
+        final EncryptingSerializer serializer = new EncryptingSerializer();
         serializer.setPreSharedKey("my_key");
 
         futureMsg = new CompletableFuture<>();
@@ -122,7 +122,7 @@ public class UDPDiscoverySenderEncryptedUnitTest
         sender.passiveBroadcast( SENDING_HOST, SENDING_PORT, cacheNames, 1L );
 
         // VERIFY
-        UDPDiscoveryMessage msg = futureMsg.get(3, TimeUnit.SECONDS);
+        final UDPDiscoveryMessage msg = futureMsg.get(3, TimeUnit.SECONDS);
         assertNotNull("message not received", msg);
         assertEquals( "wrong port", SENDING_PORT, msg.getPort() );
         assertEquals( "wrong message type", BroadcastType.PASSIVE, msg.getMessageType() );
@@ -145,7 +145,7 @@ public class UDPDiscoverySenderEncryptedUnitTest
         sender.removeBroadcast( SENDING_HOST, SENDING_PORT, cacheNames, 1L );
 
         // VERIFY
-        UDPDiscoveryMessage msg = futureMsg.get(3, TimeUnit.SECONDS);
+        final UDPDiscoveryMessage msg = futureMsg.get(3, TimeUnit.SECONDS);
         assertNotNull("message not received", msg);
         assertEquals( "wrong port", SENDING_PORT, msg.getPort() );
         assertEquals( "wrong message type", BroadcastType.REMOVE, msg.getMessageType() );
@@ -164,7 +164,7 @@ public class UDPDiscoverySenderEncryptedUnitTest
         sender.requestBroadcast(1L);
 
         // VERIFY
-        UDPDiscoveryMessage msg = futureMsg.get(3, TimeUnit.SECONDS);
+        final UDPDiscoveryMessage msg = futureMsg.get(3, TimeUnit.SECONDS);
         assertNotNull("message not received", msg);
         assertEquals( "wrong message type", BroadcastType.REQUEST, msg.getMessageType() );
     }

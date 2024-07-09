@@ -76,7 +76,7 @@ public class MySQLDiskCache<K, V>
     @Override
     protected int deleteExpired()
     {
-        if (this.getTableState().getState() == TableState.OPTIMIZATION_RUNNING &&
+        if (getTableState().getState() == TableState.OPTIMIZATION_RUNNING &&
             this.mySQLDiskCacheAttributes.isBalkDuringOptimization())
         {
             return -1;
@@ -94,7 +94,7 @@ public class MySQLDiskCache<K, V>
     @Override
     protected ICacheElement<K, V> processGet( final K key )
     {
-        if (this.getTableState().getState() == TableState.OPTIMIZATION_RUNNING &&
+        if (getTableState().getState() == TableState.OPTIMIZATION_RUNNING &&
             this.mySQLDiskCacheAttributes.isBalkDuringOptimization())
         {
             return null;
@@ -112,7 +112,7 @@ public class MySQLDiskCache<K, V>
     @Override
     protected Map<K, ICacheElement<K, V>> processGetMatching( final String pattern )
     {
-        if (this.getTableState().getState() == TableState.OPTIMIZATION_RUNNING &&
+        if (getTableState().getState() == TableState.OPTIMIZATION_RUNNING &&
             this.mySQLDiskCacheAttributes.isBalkDuringOptimization())
         {
             return null;
@@ -129,7 +129,7 @@ public class MySQLDiskCache<K, V>
     @Override
     protected void processUpdate( final ICacheElement<K, V> element )
     {
-        if (this.getTableState().getState() == TableState.OPTIMIZATION_RUNNING &&
+        if (getTableState().getState() == TableState.OPTIMIZATION_RUNNING &&
             this.mySQLDiskCacheAttributes.isBalkDuringOptimization())
         {
             return;

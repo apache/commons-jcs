@@ -211,7 +211,7 @@ public class RemoteUtils
 
         if (null == is) // not found in class path
         {
-            Path propPath = Paths.get(propFile);
+            final Path propPath = Paths.get(propFile);
             if (Files.exists(propPath))
             {
                 // file found

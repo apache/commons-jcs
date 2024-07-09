@@ -821,7 +821,7 @@ public class RemoteCacheServer<K, V>
         // not thread safe, but it doesn't have to be 100% accurate
         puts++;
 
-        if ( log.isInfoEnabled() && (puts % logInterval == 0) )
+        if ( log.isInfoEnabled() && puts % logInterval == 0 )
         {
             log.info( "puts = {0}", puts );
         }

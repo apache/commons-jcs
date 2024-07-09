@@ -50,107 +50,120 @@ import java.util.concurrent.atomic.AtomicInteger;
 @TODO("Annotate the thread-safetyness of the methods")
 public class SoftRefCache<V> implements ICache<V> {
     private static final boolean debug = true;
-    private Log log = debug ? LogFactory.getLog(this.getClass()) : null;
-    private final @NonNullable ReferenceQueue<V> refq = new ReferenceQueue<V>();
+    private final Log log = debug ? LogFactory.getLog(this.getClass()) : null;
+    private final @NonNullable ReferenceQueue<V> refq = new ReferenceQueue<>();
     private final @NonNullable String name;
     private final @NonNullable Class<V> valueType;
     private final @NonNullable ConcurrentMap<String,KeyedSoftReference<String,V>> map;
     private final @NonNullable KeyedRefCollector<String> collector;
     private @NonNullable PerCacheConfig config;
 
-    private AtomicInteger countGet = new AtomicInteger();
-    private AtomicInteger countGetHitMemory = new AtomicInteger();
-    private AtomicInteger countGetMiss = new AtomicInteger();
-    private AtomicInteger countGetEmptyRef = new AtomicInteger();
+    private final AtomicInteger countGet = new AtomicInteger();
+    private final AtomicInteger countGetHitMemory = new AtomicInteger();
+    private final AtomicInteger countGetMiss = new AtomicInteger();
+    private final AtomicInteger countGetEmptyRef = new AtomicInteger();
 
-    private AtomicInteger countPut = new AtomicInteger();
-    private AtomicInteger countRemove = new AtomicInteger();
+    private final AtomicInteger countPut = new AtomicInteger();
+    private final AtomicInteger countRemove = new AtomicInteger();
     /** Returns the cache name. */
+    @Override
     public @NonNullable String getName() {
         return this.name;
     }
     /** Returns the value type of the cache. */
+    @Override
     public @NonNullable Class<V> getValueType() {
         return this.valueType;
     }
-    public SoftRefCache(@NonNullable String name, @NonNullable Class<V> valueType,
-            int initialCapacity, float loadFactor, int concurrencyLevel)
+    public SoftRefCache(@NonNullable final String name, @NonNullable final Class<V> valueType,
+            final int initialCapacity, final float loadFactor, final int concurrencyLevel)
     {
         this.map = CollectionUtils.inst.newConcurrentHashMap(initialCapacity, loadFactor, concurrencyLevel);
-        this.collector = new KeyedRefCollector<String>(refq, map);
+        this.collector = new KeyedRefCollector<>(refq, map);
         this.name = name;
         this.valueType = valueType;
     }
     public SoftRefCache(
-            @NonNullable String name,
-            @NonNullable Class<V> valueType,
-            int initialCapacity)
+            @NonNullable final String name,
+            @NonNullable final Class<V> valueType,
+            final int initialCapacity)
     {
         this.map = CollectionUtils.inst.newConcurrentHashMap(initialCapacity);
-        this.collector = new KeyedRefCollector<String>(refq, map);
+        this.collector = new KeyedRefCollector<>(refq, map);
         this.name = name;
         this.valueType = valueType;
     }
     public SoftRefCache(
-            @NonNullable String name,
-            @NonNullable Class<V> valueType)
+            @NonNullable final String name,
+            @NonNullable final Class<V> valueType)
     {
         this.map = CollectionUtils.inst.newConcurrentHashMap();
-        this.collector = new KeyedRefCollector<String>(refq, map);
+        this.collector = new KeyedRefCollector<>(refq, map);
         this.name = name;
         this.valueType = valueType;
     }
 
+    @Override
     public boolean isEmpty() {
         this.collector.run();
         return map.isEmpty();
     }
 
+    @Override
     public int size() {
         this.collector.run();
         return map.size();
     }
 
-    public V get(@NonNullable String key) {
-        if (debug)
+    @Override
+    public V get(@NonNullable final String key) {
+        if (debug) {
             this.countGet.incrementAndGet();
+        }
         this.collector.run();
-        KeyedSoftReference<String,V> ref = map.get(key);
+        final KeyedSoftReference<String,V> ref = map.get(key);
 
         if (ref == null) {
-            if (debug)
+            if (debug) {
                 this.countGetMiss.incrementAndGet();
+            }
             return null;
         }
-        V val = ref.get();
+        final V val = ref.get();
 
         if (val == null) {
             // Rarely gets here, if ever.
             // already garbage collected.  So try to clean up the key.
-            if (debug)
+            if (debug) {
                 this.countGetEmptyRef.incrementAndGet();
+            }
             this.map.remove(key,  ref);
         }
         // cache value exists.
         // try to refresh the soft reference.
-        if (debug)
+        if (debug) {
             this.countGetHitMemory.incrementAndGet();
+        }
         return val;
     }
 
-    public V get(@NonNullable Object key) {
+    @Override
+    public V get(@NonNullable final Object key) {
         return key == null ? null : this.get(key.toString());
     }
-    public V put(@NonNullable String key, @NonNullable V value) {
-        if (debug)
+    @Override
+    public V put(@NonNullable final String key, @NonNullable final V value) {
+        if (debug) {
             this.countPut.incrementAndGet();
+        }
         this.collector.run();
-        KeyedSoftReference<String,V> oldRef =
-                map.put(key, new KeyedSoftReference<String,V>(key, value, refq));
+        final KeyedSoftReference<String,V> oldRef =
+                map.put(key, new KeyedSoftReference<>(key, value, refq));
 
-        if (oldRef == null)
+        if (oldRef == null) {
             return null;
-        V ret = oldRef.get();
+        }
+        final V ret = oldRef.get();
         oldRef.clear();
 
         if (!EqualsUtils.inst.equals(value, ret)) {
@@ -164,60 +177,69 @@ public class SoftRefCache<V> implements ICache<V> {
         value="Queue up a flush event for the key.",
         details="This is useful for synchronizing caches in a cluster environment."
     )
-    private void publishFlushKey(@NonNullable String key) {
+    private void publishFlushKey(@NonNullable final String key) {
     }
 
-    public void putAll(@NonNullable Map<? extends String, ? extends V> map) {
-        for (final Map.Entry<? extends String, ? extends V> e : map.entrySet())
+    @Override
+    public void putAll(@NonNullable final Map<? extends String, ? extends V> map) {
+        for (final Map.Entry<? extends String, ? extends V> e : map.entrySet()) {
             this.put(e.getKey(), e.getValue());
+        }
     }
-    public V remove(@NonNullable String key) {
-        if (debug)
+    public V remove(@NonNullable final String key) {
+        if (debug) {
             this.countRemove.incrementAndGet();
+        }
         this.collector.run();
-        KeyedSoftReference<String,V> oldRef = map.remove(key);
+        final KeyedSoftReference<String,V> oldRef = map.remove(key);
 
-        if (oldRef == null)
+        if (oldRef == null) {
             return null;
+        }
         this.publishFlushKey(key);
-        V ret = oldRef.get();
+        final V ret = oldRef.get();
         oldRef.clear();
         return ret;
     }
-    public V remove(@NonNullable Object key) {
+    @Override
+    public V remove(@NonNullable final Object key) {
         return key == null ? null : this.remove(key.toString());
     }
+    @Override
     public void clear() {
         this.collector.run();
         map.clear();
     }
+    @Override
     public @NonNullable Set<String> keySet() {
         this.collector.run();
         return map.keySet();
     }
+    @Override
     public @NonNullable Set<Map.Entry<String,V>> entrySet() {
         this.collector.run();
-        Set<Map.Entry<String,KeyedSoftReference<String,V>>> fromSet = map.entrySet();
-        Set<Map.Entry<String,V>> toSet = new HashSet<Map.Entry<String,V>>();
+        final Set<Map.Entry<String,KeyedSoftReference<String,V>>> fromSet = map.entrySet();
+        final Set<Map.Entry<String,V>> toSet = new HashSet<>();
 
         for (final Map.Entry<String,KeyedSoftReference<String,V>> item : fromSet) {
-            KeyedSoftReference<String,V> ref = item.getValue();
-            V val = ref.get();
+            final KeyedSoftReference<String,V> ref = item.getValue();
+            final V val = ref.get();
 
             if (val != null) {
-                Map.Entry<String,V> e = new CacheEntry<V>(item.getKey(), val);
+                final Map.Entry<String,V> e = new CacheEntry<>(item.getKey(), val);
                 toSet.add(e);
             }
         }
         return toSet;
     }
+    @Override
     public @NonNullable Collection<V> values() {
         this.collector.run();
-        Collection<KeyedSoftReference<String,V>> fromSet = map.values();
-        List<V> toCol = new ArrayList<V>(fromSet.size());
+        final Collection<KeyedSoftReference<String,V>> fromSet = map.values();
+        final List<V> toCol = new ArrayList<>(fromSet.size());
 
         for (final KeyedSoftReference<String,V> ref : fromSet) {
-            V val = ref.get();
+            final V val = ref.get();
 
             if (val != null) {
                 toCol.add(val);
@@ -225,20 +247,24 @@ public class SoftRefCache<V> implements ICache<V> {
         }
         return toCol;
     }
-    public boolean containsKey(@NonNullable Object key) {
-        if (key == null)
+    @Override
+    public boolean containsKey(@NonNullable final Object key) {
+        if (key == null) {
             return false;
+        }
         return this.get(key.toString()) != null;
     }
-    public boolean containsValue(@NonNullable Object value) {
+    @Override
+    public boolean containsValue(@NonNullable final Object value) {
         this.collector.run();
-        Collection<KeyedSoftReference<String,V>> fromSet = map.values();
+        final Collection<KeyedSoftReference<String,V>> fromSet = map.values();
 
         for (final KeyedSoftReference<String,V> ref : fromSet) {
-            V val = ref.get();
+            final V val = ref.get();
 
-            if (EqualsUtils.inst.equals(value, val))
+            if (EqualsUtils.inst.equals(value, val)) {
                 return true;
+            }
         }
         return false;
     }
@@ -251,9 +277,10 @@ public class SoftRefCache<V> implements ICache<V> {
         return config;
     }
 
-    void setConfig(@NonNullable PerCacheConfig config) {
+    void setConfig(@NonNullable final PerCacheConfig config) {
         this.config = config;
     }
+    @Override
     @Implements(ICache.class)
     public CacheType getCacheType() {
         return CacheType.SOFT_REFERENCE;

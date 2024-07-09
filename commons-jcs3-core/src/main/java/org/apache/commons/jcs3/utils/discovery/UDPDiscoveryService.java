@@ -98,14 +98,14 @@ public class UDPDiscoveryService
      * @param serializer the serializer to use to send and receive messages
      * @since 3.1
      */
-    public UDPDiscoveryService(final UDPDiscoveryAttributes attributes, IElementSerializer serializer)
+    public UDPDiscoveryService(final UDPDiscoveryAttributes attributes, final IElementSerializer serializer)
     {
         this.udpDiscoveryAttributes = attributes.clone();
         this.serializer = serializer;
 
         try
         {
-            InetAddress multicastAddress = InetAddress.getByName(
+            final InetAddress multicastAddress = InetAddress.getByName(
                     getUdpDiscoveryAttributes().getUdpDiscoveryAddr());
 
             // Set service address if still empty
@@ -128,7 +128,7 @@ public class UDPDiscoveryService
                 {
                     InetAddress serviceAddress = null;
 
-                    for (Enumeration<InetAddress> addresses = serviceInterface.getInetAddresses();
+                    for (final Enumeration<InetAddress> addresses = serviceInterface.getInetAddresses();
                             addresses.hasMoreElements();)
                     {
                         serviceAddress = addresses.nextElement();
@@ -143,17 +143,13 @@ public class UDPDiscoveryService
                                 // if Multicast uses IPv6, try to publish our IPv6 address
                                 break;
                             }
-                        }
-                        else
+                        } else if (serviceAddress instanceof Inet4Address &&
+                            !serviceAddress.isLoopbackAddress() &&
+                            !serviceAddress.isMulticastAddress() &&
+                            serviceAddress.isSiteLocalAddress())
                         {
-                            if (serviceAddress instanceof Inet4Address &&
-                                !serviceAddress.isLoopbackAddress() &&
-                                !serviceAddress.isMulticastAddress() &&
-                                serviceAddress.isSiteLocalAddress())
-                            {
-                                // if Multicast uses IPv4, try to publish our IPv4 address
-                                break;
-                            }
+                            // if Multicast uses IPv4, try to publish our IPv4 address
+                            break;
                         }
                     }
 
@@ -386,7 +382,7 @@ public class UDPDiscoveryService
     /**
      * Process the incoming message.
      */
-    protected void processMessage(UDPDiscoveryMessage message)
+    protected void processMessage(final UDPDiscoveryMessage message)
     {
         final DiscoveredService discoveredService = new DiscoveredService(message);
 
@@ -426,7 +422,7 @@ public class UDPDiscoveryService
             sender.passiveBroadcast(
                     getUdpDiscoveryAttributes().getServiceAddress(),
                     getUdpDiscoveryAttributes().getServicePort(),
-                    this.getCacheNames() );
+                    getCacheNames() );
 
             log.debug( "Called sender to issue a passive broadcast" );
         }
@@ -515,7 +511,7 @@ public class UDPDiscoveryService
             sender.removeBroadcast(
                     getUdpDiscoveryAttributes().getServiceAddress(),
                     getUdpDiscoveryAttributes().getServicePort(),
-                    this.getCacheNames() );
+                    getCacheNames() );
 
             log.debug( "Called sender to issue a remove broadcast in shutdown." );
         }

@@ -92,11 +92,11 @@ public class ShrinkerThread
             if ( i.hasNext() )
             {
                 log.info( "Pausing for [{0}] ms before shrinking the next region.",
-                        this.getPauseBetweenRegionCallsMillis() );
+                        getPauseBetweenRegionCallsMillis() );
 
                 try
                 {
-                    Thread.sleep( this.getPauseBetweenRegionCallsMillis() );
+                    Thread.sleep( getPauseBetweenRegionCallsMillis() );
                 }
                 catch ( final InterruptedException e )
                 {

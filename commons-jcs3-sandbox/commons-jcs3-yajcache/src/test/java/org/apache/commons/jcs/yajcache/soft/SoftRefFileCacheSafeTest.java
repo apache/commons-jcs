@@ -34,10 +34,10 @@ import org.apache.commons.logging.LogFactory;
 @CopyRightApache
 @TestOnly
 public class SoftRefFileCacheSafeTest extends TestCase {
-    private Log log = LogFactory.getLog(this.getClass());
+    private final Log log = LogFactory.getLog(this.getClass());
 
     public void testSoftRefCache() throws Exception {
-        ICacheSafe<byte[]> c = CacheManager.inst.getSafeCache(
+        final ICacheSafe<byte[]> c = CacheManager.inst.getSafeCache(
                 "bytesCache", byte[].class, CacheType.SOFT_REFERENCE_FILE_SAFE);
         for (int h=0; h < 10; h++) {
             for (int i=h*10, max=i+10; i < max; i++) {

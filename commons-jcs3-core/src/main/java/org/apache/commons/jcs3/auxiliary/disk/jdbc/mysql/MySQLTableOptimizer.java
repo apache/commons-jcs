@@ -165,14 +165,14 @@ public class MySQLTableOptimizer
         try
         {
             tableState.setState( TableState.OPTIMIZATION_RUNNING );
-            log.info( "Optimizing table [{0}]", this.getTableName());
+            log.info( "Optimizing table [{0}]", getTableName());
 
             try (Connection con = dataSource.getConnection())
             {
                 // TEST
                 try (Statement sStatement = con.createStatement())
                 {
-                    try (ResultSet rs = sStatement.executeQuery( "optimize table " + this.getTableName() ))
+                    try (ResultSet rs = sStatement.executeQuery( "optimize table " + getTableName() ))
                     {
                         // first row is error, then status
                         // if there is only one row in the result set, everything
@@ -204,12 +204,12 @@ public class MySQLTableOptimizer
                     // log the table status
                     final String statusString = getTableStatus( sStatement );
                     log.info( "Table status after optimizing table [{0}]: {1}",
-                            this.getTableName(), statusString );
+                            getTableName(), statusString );
                 }
                 catch ( final SQLException e )
                 {
                     log.error( "Problem optimizing table [{0}]",
-                            this.getTableName(), e );
+                            getTableName(), e );
                     return false;
                 }
             }
@@ -246,7 +246,7 @@ public class MySQLTableOptimizer
 
         // if( message != null && message.indexOf( ) )
         final StringBuilder repairString = new StringBuilder();
-        try (ResultSet repairResult = sStatement.executeQuery( "repair table " + this.getTableName()))
+        try (ResultSet repairResult = sStatement.executeQuery( "repair table " + getTableName()))
         {
             final int numColumns = repairResult.getMetaData().getColumnCount();
             while ( repairResult.next() )

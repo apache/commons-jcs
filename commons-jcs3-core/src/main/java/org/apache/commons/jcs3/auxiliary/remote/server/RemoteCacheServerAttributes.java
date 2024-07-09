@@ -168,14 +168,14 @@ public class RemoteCacheServerAttributes
     public String toString()
     {
         final StringBuilder buf = new StringBuilder(super.toString());
-        buf.append( "\n servicePort = [" + this.getServicePort() + "]" );
-        buf.append( "\n allowClusterGet = [" + this.isAllowClusterGet() + "]" );
-        buf.append( "\n configFileName = [" + this.getConfigFileName() + "]" );
-        buf.append( "\n rmiSocketFactoryTimeoutMillis = [" + this.getRmiSocketFactoryTimeoutMillis() + "]" );
-        buf.append( "\n useRegistryKeepAlive = [" + this.isUseRegistryKeepAlive() + "]" );
-        buf.append( "\n registryKeepAliveDelayMillis = [" + this.getRegistryKeepAliveDelayMillis() + "]" );
-        buf.append( "\n eventQueueType = [" + this.getEventQueueType() + "]" );
-        buf.append( "\n eventQueuePoolName = [" + this.getEventQueuePoolName() + "]" );
+        buf.append( "\n servicePort = [" + getServicePort() + "]" );
+        buf.append( "\n allowClusterGet = [" + isAllowClusterGet() + "]" );
+        buf.append( "\n configFileName = [" + getConfigFileName() + "]" );
+        buf.append( "\n rmiSocketFactoryTimeoutMillis = [" + getRmiSocketFactoryTimeoutMillis() + "]" );
+        buf.append( "\n useRegistryKeepAlive = [" + isUseRegistryKeepAlive() + "]" );
+        buf.append( "\n registryKeepAliveDelayMillis = [" + getRegistryKeepAliveDelayMillis() + "]" );
+        buf.append( "\n eventQueueType = [" + getEventQueueType() + "]" );
+        buf.append( "\n eventQueuePoolName = [" + getEventQueuePoolName() + "]" );
         return buf.toString();
     }
 }

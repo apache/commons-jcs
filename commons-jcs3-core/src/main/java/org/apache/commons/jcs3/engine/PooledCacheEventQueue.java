@@ -82,7 +82,7 @@ public class PooledCacheEventQueue<K, V>
     {
         // this will share the same pool with other event queues by default.
         return ThreadPoolManager.getInstance().getExecutorService(
-                (threadPoolName == null) ? "cache_event_queue" : threadPoolName );
+                threadPoolName == null ? "cache_event_queue" : threadPoolName );
     }
 
     /**
@@ -91,7 +91,7 @@ public class PooledCacheEventQueue<K, V>
      * @param waitSeconds number of seconds to wait for the queue to drain
      */
     @Override
-    public synchronized void destroy(int waitSeconds)
+    public synchronized void destroy(final int waitSeconds)
     {
         if ( isWorking() )
         {
@@ -108,7 +108,7 @@ public class PooledCacheEventQueue<K, V>
                                 this::getStatistics);
                     }
                 }
-                catch (InterruptedException e)
+                catch (final InterruptedException e)
                 {
                     // ignore
                 }

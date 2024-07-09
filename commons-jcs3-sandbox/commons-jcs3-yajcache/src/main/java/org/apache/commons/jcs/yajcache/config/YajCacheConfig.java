@@ -41,7 +41,7 @@ public enum YajCacheConfig {
     public @NonNullable File getCacheDir() {
         return cacheDir;
     }
-    void setCacheDir(File cacheDir) {
+    void setCacheDir(final File cacheDir) {
         this.cacheDir = cacheDir;
         this.cacheDir.mkdirs();
     }

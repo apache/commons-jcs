@@ -104,13 +104,9 @@ public class TestCacheAccess
         if ( isSysOut )
         {
             System.out.println( s );
-        }
-        else
+        } else if ( log.isDebugEnabled() )
         {
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( s );
-            }
+            log.debug( s );
         }
     }
 
@@ -259,17 +255,18 @@ public class TestCacheAccess
         {
             tcnt++;
             final String t = (String) toke.nextElement();
-            if ( tcnt == 2 )
-            {
+            switch (tcnt) {
+            case 2:
                 num = Integer.parseInt( t.trim() );
-            }
-            else if ( tcnt == 3 )
-            {
+                break;
+            case 3:
                 group = t.trim();
-            }
-            else if ( tcnt == 4 )
-            {
+                break;
+            case 4:
                 show = Boolean.parseBoolean(t);
+                break;
+            default:
+                break;
             }
         }
 
@@ -315,17 +312,18 @@ public class TestCacheAccess
         {
             tcnt++;
             final String t = (String) toke.nextElement();
-            if ( tcnt == 2 )
-            {
+            switch (tcnt) {
+            case 2:
                 key = t.trim();
-            }
-            else if ( tcnt == 3 )
-            {
+                break;
+            case 3:
                 group = t.trim();
-            }
-            else if ( tcnt == 4 )
-            {
+                break;
+            case 4:
                 show = Boolean.parseBoolean(t);
+                break;
+            default:
+                break;
             }
         }
 
@@ -581,17 +579,18 @@ public class TestCacheAccess
         {
             tcnt++;
             final String t = (String) toke.nextElement();
-            if ( tcnt == 2 )
-            {
+            switch (tcnt) {
+            case 2:
                 rangeS = t.trim();
-            }
-            else if ( tcnt == 3 )
-            {
+                break;
+            case 3:
                 numOpsS = t.trim();
-            }
-            else if ( tcnt == 4 )
-            {
+                break;
+            case 4:
                 show = Boolean.parseBoolean(t);
+                break;
+            default:
+                break;
             }
         }
 

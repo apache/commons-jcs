@@ -44,7 +44,7 @@ public class SafeCacheWrapper<V> implements ICacheSafe<V>
      * Constructs a safe cache by wrapping an underlying cache.
      * @param cache underlying cache.
      */
-    public SafeCacheWrapper(@NonNullable ICache<V> cache)
+    public SafeCacheWrapper(@NonNullable final ICache<V> cache)
     {
         this.cache = cache;
 
@@ -62,94 +62,123 @@ public class SafeCacheWrapper<V> implements ICacheSafe<V>
 
     // ICache implementation by delegating to the underlying cache.
 
+    @Override
     public String getName() {
         return this.cache.getName();
     }
+    @Override
     public Class<V> getValueType() {
         return this.cache.getValueType();
     }
-    public V get(String key) {
+    @Override
+    public V get(final String key) {
         return this.cache.get(key);
     }
+    @Override
     public int size() {
         return this.cache.size();
     }
+    @Override
     public boolean isEmpty() {
         return this.cache.isEmpty();
     }
-    public boolean containsKey(Object key) {
+    @Override
+    public boolean containsKey(final Object key) {
         return this.cache.containsKey(key);
     }
-    public boolean containsValue(Object value) {
+    @Override
+    public boolean containsValue(final Object value) {
         return this.cache.containsValue(value);
     }
-    public V get(Object key) {
+    @Override
+    public V get(final Object key) {
         return this.cache.get(key);
     }
-    public V put(String key, V value) {
+    @Override
+    public V put(final String key, final V value) {
         return this.cache.put(key, value);
     }
-    public V remove(Object key) {
+    @Override
+    public V remove(final Object key) {
         return this.cache.remove(key);
     }
+    @Override
     public void clear() {
         this.cache.clear();
     }
+    @Override
     public Set<String> keySet() {
         return this.cache.keySet();
     }
+    @Override
     public Collection<V> values() {
         return this.cache.values();
     }
+    @Override
     public Set<Map.Entry<String, V>> entrySet() {
         return this.cache.entrySet();
     }
 
     // ICacheSafe implementation
 
-    public V getCopy(@NonNullable String key) {
-        V val = this.cache.get(key);
+    @Override
+    public V getCopy(@NonNullable final String key) {
+        final V val = this.cache.get(key);
         return this.dup(val);
     }
-    public V putCopy(@NonNullable String key, @NonNullable V value) {
+    @Override
+    public V putCopy(@NonNullable final String key, @NonNullable final V value) {
         return this.cache.put(key, this.dup(value));
     }
-    public void putAll(@NonNullable Map<? extends String, ? extends V> map) {
-        for (final Map.Entry<? extends String, ? extends V> e : map.entrySet())
+    @Override
+    public void putAll(@NonNullable final Map<? extends String, ? extends V> map) {
+        for (final Map.Entry<? extends String, ? extends V> e : map.entrySet()) {
             this.cache.put(e.getKey(), e.getValue());
+        }
     }
-    public void putAllCopies(@NonNullable Map<? extends String, ? extends V> map) {
-        for (final Map.Entry<? extends String, ? extends V> e : map.entrySet())
+    @Override
+    public void putAllCopies(@NonNullable final Map<? extends String, ? extends V> map) {
+        for (final Map.Entry<? extends String, ? extends V> e : map.entrySet()) {
             this.cache.put(e.getKey(), this.dup(e.getValue()));
+        }
     }
-    public V getBeanCopy(@NonNullable String key) {
-        V val = this.cache.get(key);
+    @Override
+    public V getBeanCopy(@NonNullable final String key) {
+        final V val = this.cache.get(key);
         return BeanUtils.inst.cloneDeep(val);
     }
-    public V putBeanCopy(@NonNullable String key, @NonNullable V value) {
+    @Override
+    public V putBeanCopy(@NonNullable final String key, @NonNullable final V value) {
         return this.cache.put(key, BeanUtils.inst.cloneDeep(value));
     }
-    public void putAllBeanCopies(@NonNullable Map<? extends String, ? extends V> map) {
-        for (final Map.Entry<? extends String, ? extends V> e : map.entrySet())
+    @Override
+    public void putAllBeanCopies(@NonNullable final Map<? extends String, ? extends V> map) {
+        for (final Map.Entry<? extends String, ? extends V> e : map.entrySet()) {
             this.cache.put(e.getKey(), BeanUtils.inst.cloneDeep(e.getValue()));
+        }
     }
-    public V getBeanClone(@NonNullable String key) {
-        V val = this.cache.get(key);
+    @Override
+    public V getBeanClone(@NonNullable final String key) {
+        final V val = this.cache.get(key);
         return BeanUtils.inst.cloneShallow(val);
     }
-    public V putBeanClone(@NonNullable String key, @NonNullable V value) {
+    @Override
+    public V putBeanClone(@NonNullable final String key, @NonNullable final V value) {
         return this.cache.put(key, BeanUtils.inst.cloneShallow(value));
     }
-    public void putAllBeanClones(@NonNullable Map<? extends String, ? extends V> map) {
-        for (final Map.Entry<? extends String, ? extends V> e : map.entrySet())
+    @Override
+    public void putAllBeanClones(@NonNullable final Map<? extends String, ? extends V> map) {
+        for (final Map.Entry<? extends String, ? extends V> e : map.entrySet()) {
             this.cache.put(e.getKey(), BeanUtils.inst.cloneShallow(e.getValue()));
+        }
     }
-    private V dup(V val) {
+    private V dup(final V val) {
         if (val instanceof Serializable) {
             return (V)SerializeUtils.inst.dup((Serializable)val);
         }
         return val;
     }
+    @Override
     @Implements(ICache.class)
     public CacheType getCacheType() {
         return this.cacheType;

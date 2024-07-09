@@ -153,7 +153,7 @@ public class RemoteHttpCacheServlet
     {
         // not thread safe, but it doesn't have to be accurate
         serviceCalls++;
-        if ( log.isInfoEnabled() && (serviceCalls % logInterval == 0) )
+        if ( log.isInfoEnabled() && serviceCalls % logInterval == 0 )
         {
             log.info( "serviceCalls = {0}", serviceCalls );
         }

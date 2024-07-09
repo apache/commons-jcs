@@ -81,7 +81,7 @@ public class RemoteCacheNoWaitFacadeUnitTest
         assertEquals("Should have two failovers.", 2, cattr.getFailovers().size());
         assertEquals("Should have two managers.", 2, factory.managers.size());
         assertEquals("Should have primary server.", 0, cattr.getFailoverIndex());
-        RemoteCacheNoWait<String, String> primary = facade.getPrimaryServer();
+        final RemoteCacheNoWait<String, String> primary = facade.getPrimaryServer();
         assertEquals("Should be ALIVE", CacheStatus.ALIVE, primary.getStatus());
 
         // Make primary unusable

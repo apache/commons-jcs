@@ -320,18 +320,14 @@ public class RemoteCacheManager
         if ( cache != null )
         {
         	removeListenerFromCache(cache);
+        } else if ( cattr.isReceive() )
+        {
+            log.warn( "Trying to deregister Cache Listener that was never registered." );
         }
         else
         {
-            if ( cattr.isReceive() )
-            {
-                log.warn( "Trying to deregister Cache Listener that was never registered." );
-            }
-            else
-            {
-                log.debug( "Since the remote cache is configured to not receive, "
-                    + "there is no listener to deregister." );
-            }
+            log.debug( "Since the remote cache is configured to not receive, "
+                + "there is no listener to deregister." );
         }
     }
 }

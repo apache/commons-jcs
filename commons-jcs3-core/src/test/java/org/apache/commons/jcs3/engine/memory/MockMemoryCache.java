@@ -21,7 +21,6 @@ package org.apache.commons.jcs3.engine.memory;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
@@ -141,12 +140,7 @@ public class MockMemoryCache<K, V>
 
         if ( keys != null && !keys.isEmpty() )
         {
-            final Iterator<K> iterator = keys.iterator();
-
-            while ( iterator.hasNext() )
-            {
-                final K key = iterator.next();
-
+            for (K key : keys) {
                 final ICacheElement<K, V> element = get( key );
 
                 if ( element != null )

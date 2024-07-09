@@ -37,13 +37,15 @@ public class TestSerializable implements Serializable {
     public TestSerializable() {
     }
     /** Creates a new instance of TestSerializable */
-    public TestSerializable(String name) {
+    public TestSerializable(final String name) {
         this.name = name;
     }
+    @Override
     public int hashCode() {
         return this.name == null ? 0 : this.name.hashCode();
     }
-    public boolean equals(Object obj) {
+    @Override
+    public boolean equals(final Object obj) {
         return EqualsBuilder.reflectionEquals(this, obj);
     }
 
@@ -51,7 +53,7 @@ public class TestSerializable implements Serializable {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 }

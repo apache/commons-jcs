@@ -136,7 +136,7 @@ public class MySQLDiskCacheFactory
                     // can´t be null, otherwise ScheduleParser.createDatesForSchedule will throw ParseException
                     final Date[] dates = ScheduleParser.createDatesForSchedule( attributes.getOptimizationSchedule() );
                     for (final Date date : dates) {
-                        this.scheduleOptimization( date, optimizer );
+                        scheduleOptimization( date, optimizer );
                     }
                 }
                 catch ( final ParseException e )

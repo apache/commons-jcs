@@ -91,7 +91,7 @@ public class RemoteCacheFactory
                 if (failoverList != null && !failoverList.isEmpty())
                 {
                     final String[] failoverServers = failoverList.split("\\s*,\\s*");
-                    for (String server : failoverServers)
+                    for (final String server : failoverServers)
                     {
                         final RemoteLocation location = RemoteLocation.parseServerAndPort(server);
 
@@ -121,7 +121,7 @@ public class RemoteCacheFactory
             case CLUSTER:
                 // REGISTER LISTENERS FOR EACH SYSTEM CLUSTERED CACHEs
                 final String[] clusterServers = rca.getClusterServers().split("\\s*,\\s*");
-                for (String server: clusterServers)
+                for (final String server: clusterServers)
                 {
                     if (server.isEmpty())
                     {
@@ -220,7 +220,7 @@ public class RemoteCacheFactory
 
         return managers.computeIfAbsent(rca.getRemoteLocation(), key -> {
 
-            RemoteCacheManager manager = new RemoteCacheManager(rca, cacheMgr, monitor, cacheEventLogger, elementSerializer);
+            final RemoteCacheManager manager = new RemoteCacheManager(rca, cacheMgr, monitor, cacheEventLogger, elementSerializer);
             monitor.addManager(manager);
 
             return manager;

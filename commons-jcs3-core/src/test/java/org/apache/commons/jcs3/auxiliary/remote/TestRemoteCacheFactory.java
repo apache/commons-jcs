@@ -36,8 +36,8 @@ public class TestRemoteCacheFactory extends RemoteCacheFactory
     // Mock
     public class TestRemoteCacheManager extends RemoteCacheManager
     {
-        protected TestRemoteCacheManager(IRemoteCacheAttributes cattr, ICompositeCacheManager cacheMgr, RemoteCacheMonitor monitor, ICacheEventLogger cacheEventLogger,
-                IElementSerializer elementSerializer)
+        protected TestRemoteCacheManager(final IRemoteCacheAttributes cattr, final ICompositeCacheManager cacheMgr, final RemoteCacheMonitor monitor, final ICacheEventLogger cacheEventLogger,
+                final IElementSerializer elementSerializer)
         {
             super(cattr, cacheMgr, monitor, cacheEventLogger, elementSerializer);
         }
@@ -49,7 +49,7 @@ public class TestRemoteCacheFactory extends RemoteCacheFactory
         }
 
         @Override
-        public void removeRemoteCacheListener(IRemoteCacheAttributes cattr) throws IOException
+        public void removeRemoteCacheListener(final IRemoteCacheAttributes cattr) throws IOException
         {
             // Skip
         }

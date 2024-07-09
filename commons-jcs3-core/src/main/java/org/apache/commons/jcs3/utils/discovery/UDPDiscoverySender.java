@@ -69,7 +69,7 @@ public class UDPDiscoverySender implements AutoCloseable
      * @since 3.1
      */
     public UDPDiscoverySender(final String mcastInterface, final String host,
-            final int port, final int udpTTL, IElementSerializer serializer)
+            final int port, final int udpTTL, final IElementSerializer serializer)
         throws IOException
     {
         try

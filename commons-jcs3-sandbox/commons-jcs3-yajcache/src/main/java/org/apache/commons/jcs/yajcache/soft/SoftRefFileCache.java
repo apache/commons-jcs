@@ -63,77 +63,80 @@ import java.util.concurrent.locks.Lock;
 public class SoftRefFileCache<V> implements ICache<V>
 {
     private static final boolean debug = true;
-    private Log log = debug ? LogFactory.getLog(this.getClass()) : null;
-    private final @NonNullable ReferenceQueue<V> refq = new ReferenceQueue<V>();
+    private final Log log = debug ? LogFactory.getLog(this.getClass()) : null;
+    private final @NonNullable ReferenceQueue<V> refq = new ReferenceQueue<>();
     private final @NonNullable String name;
     private final @NonNullable Class<V> valueType;
     private final @NonNullable ConcurrentMap<String,KeyedSoftReference<String,V>> map;
     private PerCacheConfig config;
 
     private final @NonNullable KeyedRefCollector<String> collector;
-    private final IKeyedReadWriteLock<String> keyedRWLock = new KeyedReadWriteLock<String>();
+    private final IKeyedReadWriteLock<String> keyedRWLock = new KeyedReadWriteLock<>();
 
     private final @NonNullable CacheChangeSupport<V> cacheChangeSupport =
-            new CacheChangeSupport<V>(this);
+            new CacheChangeSupport<>(this);
 
-    private AtomicInteger countGet = new AtomicInteger();
+    private final AtomicInteger countGet = new AtomicInteger();
 
-    private AtomicInteger countGetHitMemory = new AtomicInteger();
-    private AtomicInteger countGetHitFile = new AtomicInteger();
+    private final AtomicInteger countGetHitMemory = new AtomicInteger();
+    private final AtomicInteger countGetHitFile = new AtomicInteger();
 
-    private AtomicInteger countGetMissMemory = new AtomicInteger();
-    private AtomicInteger countGetMiss = new AtomicInteger();
-    private AtomicInteger countGetCorruptedFile = new AtomicInteger();
-    private AtomicInteger countGetEmptyRef = new AtomicInteger();
+    private final AtomicInteger countGetMissMemory = new AtomicInteger();
+    private final AtomicInteger countGetMiss = new AtomicInteger();
+    private final AtomicInteger countGetCorruptedFile = new AtomicInteger();
+    private final AtomicInteger countGetEmptyRef = new AtomicInteger();
 
-    private AtomicInteger countPut = new AtomicInteger();
-    private AtomicInteger countPutClearRef = new AtomicInteger();
-    private AtomicInteger countPutMissMemory = new AtomicInteger();
-    private AtomicInteger countPutNewMemoryValue = new AtomicInteger();
-    private AtomicInteger countPutNewFileValue = new AtomicInteger();
-    private AtomicInteger countPutSerializable = new AtomicInteger();
-    private AtomicInteger countPutReadFile = new AtomicInteger();
-    private AtomicInteger countPutWriteFile = new AtomicInteger();
+    private final AtomicInteger countPut = new AtomicInteger();
+    private final AtomicInteger countPutClearRef = new AtomicInteger();
+    private final AtomicInteger countPutMissMemory = new AtomicInteger();
+    private final AtomicInteger countPutNewMemoryValue = new AtomicInteger();
+    private final AtomicInteger countPutNewFileValue = new AtomicInteger();
+    private final AtomicInteger countPutSerializable = new AtomicInteger();
+    private final AtomicInteger countPutReadFile = new AtomicInteger();
+    private final AtomicInteger countPutWriteFile = new AtomicInteger();
 
-    private AtomicInteger countRemove = new AtomicInteger();
+    private final AtomicInteger countRemove = new AtomicInteger();
 
+    @Override
     public @NonNullable String getName() {
         return this.name;
     }
+    @Override
     public @NonNullable Class<V> getValueType() {
         return this.valueType;
     }
     public SoftRefFileCache(
-            @NonNullable String name, @NonNullable Class<V> valueType,
-            int initialCapacity, float loadFactor, int concurrencyLevel)
+            @NonNullable final String name, @NonNullable final Class<V> valueType,
+            final int initialCapacity, final float loadFactor, final int concurrencyLevel)
     {
         this.map = CollectionUtils.inst.newConcurrentHashMap(initialCapacity, loadFactor, concurrencyLevel);
-        this.collector = new KeyedRefCollector<String>(refq, map);
+        this.collector = new KeyedRefCollector<>(refq, map);
         this.name = name;
         this.valueType = valueType;
         CacheFileUtils.inst.mkCacheDirs(this.name);
     }
     public SoftRefFileCache(
-            @NonNullable String name, @NonNullable Class<V> valueType,
-            int initialCapacity)
+            @NonNullable final String name, @NonNullable final Class<V> valueType,
+            final int initialCapacity)
     {
         this.map = CollectionUtils.inst.newConcurrentHashMap(initialCapacity);
-        this.collector = new KeyedRefCollector<String>(refq, map);
+        this.collector = new KeyedRefCollector<>(refq, map);
         this.name = name;
         this.valueType = valueType;
         CacheFileUtils.inst.mkCacheDirs(this.name);
     }
 
-    public SoftRefFileCache(@NonNullable String name,
-            @NonNullable Class<V> valueType)
+    public SoftRefFileCache(@NonNullable final String name,
+            @NonNullable final Class<V> valueType)
     {
         this.map = CollectionUtils.inst.newConcurrentHashMap();
-        this.collector = new KeyedRefCollector<String>(refq, map);
+        this.collector = new KeyedRefCollector<>(refq, map);
         this.name = name;
         this.valueType = valueType;
         CacheFileUtils.inst.mkCacheDirs(this.name);
     }
     /** Only an approximation. */
+    @Override
     public boolean isEmpty() {
         return this.isMemoryCacheEmpty() && this.isCacheDirEmpty();
     }
@@ -142,7 +145,7 @@ public class SoftRefFileCache<V> implements ICache<V>
         return this.map.isEmpty();
     }
     public boolean isCacheDirEmpty() {
-        Lock cacheLock = CacheManager.inst.readLock(this);
+        final Lock cacheLock = CacheManager.inst.readLock(this);
         cacheLock.lock();
         try {
             return CacheFileUtils.inst.isCacheDirEmpty(this.name);
@@ -150,6 +153,7 @@ public class SoftRefFileCache<V> implements ICache<V>
             cacheLock.unlock();
         }
     }
+    @Override
     public int size() {
         return Math.max(this.getMemoryCacheSize(), this.getCacheDirSize());
     }
@@ -158,7 +162,7 @@ public class SoftRefFileCache<V> implements ICache<V>
         return this.map.size();
     }
     public int getCacheDirSize() {
-        Lock cacheLock = CacheManager.inst.readLock(this);
+        final Lock cacheLock = CacheManager.inst.readLock(this);
         cacheLock.lock();
         try {
             return CacheFileUtils.inst.getCacheDirSize(this.name);
@@ -170,14 +174,16 @@ public class SoftRefFileCache<V> implements ICache<V>
     // @tothink: SoftReference.get() doesn't seem to be thread-safe.
     // But do we really want to synchronize upon invoking get() ?
     // It's not thread-safe, but what's the worst consequence ?
-    public V get(@NonNullable String key) {
+    @Override
+    public V get(@NonNullable final String key) {
         collector.run();
-        if (debug)
+        if (debug) {
             this.countGet.incrementAndGet();
-        Lock cacheLock = CacheManager.inst.readLock(this);
+        }
+        final Lock cacheLock = CacheManager.inst.readLock(this);
         cacheLock.lock();
         try {
-            Lock lock = this.keyedRWLock.readLock(key);
+            final Lock lock = this.keyedRWLock.readLock(key);
             lock.lock();
             try {
                 return doGet(key);
@@ -188,21 +194,18 @@ public class SoftRefFileCache<V> implements ICache<V>
             cacheLock.unlock();
         }
     }
-    private V doGet(String key) {
-        KeyedSoftReference<String,V> ref = map.get(key);
+    private V doGet(final String key) {
+        final KeyedSoftReference<String,V> ref = map.get(key);
         V val = null;
 
         if (ref != null) {
             val = ref.get();
 
-            if (debug) {
-                if (val == null)
-                    this.countGetEmptyRef.incrementAndGet();
+            if (debug && (val == null)) {
+                this.countGetEmptyRef.incrementAndGet();
             }
-        }
-        else {
-            if (debug)
-                this.countGetMissMemory.incrementAndGet();
+        } else if (debug) {
+            this.countGetMissMemory.incrementAndGet();
         }
         if (val == null) {
             // Not in memory.
@@ -211,34 +214,35 @@ public class SoftRefFileCache<V> implements ICache<V>
                 // GC'd.  So try to clean up the key/ref pair.
                 this.map.remove(key,  ref);
             }
-            CacheFileContent cfc = CacheFileDAO.inst.readCacheItem(this.name, key);
+            final CacheFileContent cfc = CacheFileDAO.inst.readCacheItem(this.name, key);
 
             if (cfc == null) {
                 // Not in file system.
-                if (debug)
+                if (debug) {
                     this.countGetMiss.incrementAndGet();
+                }
                 return null;
             }
             // Found in file system.
-            if (debug)
+            if (debug) {
                 this.countGetHitFile.incrementAndGet();
+            }
             val = (V)cfc.deserialize();
 
             if (val == null) {
                 // Corrupted file.  Try remove it from file system.
-                if (debug)
+                if (debug) {
                     this.countGetCorruptedFile.incrementAndGet();
+                }
                 // Don't think I need to put a read lock on the cache for removal.
                 CacheFileDAO.inst.removeCacheItem(this.name, key);
                 return null;
             }
             // Resurrect item back to memory.
             map.putIfAbsent(key,
-                    new KeyedSoftReference<String,V>(key, val, refq));
-        }
-        else {
-            if (debug)
-                this.countGetHitMemory.incrementAndGet();
+                    new KeyedSoftReference<>(key, val, refq));
+        } else if (debug) {
+            this.countGetHitMemory.incrementAndGet();
         }
         // cache value exists.
         return val;
@@ -283,18 +287,21 @@ public class SoftRefFileCache<V> implements ICache<V>
     //        return;
     //    }
 
-    public V get(@NonNullable Object key) {
+    @Override
+    public V get(@NonNullable final Object key) {
         return this.get(key.toString());
     }
-    public V put(@NonNullable String key, @NonNullable V value) {
+    @Override
+    public V put(@NonNullable final String key, @NonNullable final V value) {
         this.collector.run();
 
-        if (debug)
+        if (debug) {
             this.countPut.incrementAndGet();
-        Lock cacheLock = CacheManager.inst.readLock(this);
+        }
+        final Lock cacheLock = CacheManager.inst.readLock(this);
         cacheLock.lock();
         try {
-            Lock lock = this.keyedRWLock.writeLock(key);
+            final Lock lock = this.keyedRWLock.writeLock(key);
             lock.lock();
             try {
                 return doPut(key, value);
@@ -305,31 +312,35 @@ public class SoftRefFileCache<V> implements ICache<V>
             cacheLock.unlock();
         }
     }
-    private V doPut(@NonNullable String key, @NonNullable V value) {
-        KeyedSoftReference<String,V> oldRef =
-                map.put(key, new KeyedSoftReference<String,V>(key, value, refq));
+    private V doPut(@NonNullable final String key, @NonNullable final V value) {
+        final KeyedSoftReference<String,V> oldRef =
+                map.put(key, new KeyedSoftReference<>(key, value, refq));
         V ret = null;
 
         if (oldRef != null) {
             ret = oldRef.get();
             oldRef.clear();
 
-            if (debug)
+            if (debug) {
                 this.countPutClearRef.incrementAndGet();
+            }
         }
         if (ret == null) {
             // Not in memory.
-            if (debug)
+            if (debug) {
                 this.countPutMissMemory.incrementAndGet();
+            }
             if (value instanceof Serializable) {
                 // Try the file system.
-                if (debug)
+                if (debug) {
                     this.countPutSerializable.incrementAndGet();
-                CacheFileContent cfc = CacheFileDAO.inst.readCacheItem(this.name, key);
+                }
+                final CacheFileContent cfc = CacheFileDAO.inst.readCacheItem(this.name, key);
 
                 if (cfc != null) {
-                    if (debug)
+                    if (debug) {
                         this.countPutReadFile.incrementAndGet();
+                    }
                     ret = (V)cfc.deserialize();
                 }
                 if (!EqualsUtils.inst.equals(value, ret)) {
@@ -339,7 +350,7 @@ public class SoftRefFileCache<V> implements ICache<V>
                         this.countPutNewFileValue.incrementAndGet();
                         this.countPutWriteFile.incrementAndGet();
                     }
-                    byte[] ba = SerializationUtils.serialize((Serializable)value);
+                    final byte[] ba = SerializationUtils.serialize((Serializable)value);
                     CacheFileDAO.inst.writeCacheItem(
                         this.name, CacheFileContentType.JAVA_SERIALIZATION, key, ba);
                 }
@@ -349,8 +360,9 @@ public class SoftRefFileCache<V> implements ICache<V>
         // ret must be non-null.
         // Found in memory
         if (!EqualsUtils.inst.equals(value, ret)) {
-            if (debug)
+            if (debug) {
                 this.countPutNewMemoryValue.incrementAndGet();
+            }
             // Different value being put to memory.
             if (value instanceof Serializable) {
                 // Persist to file system.
@@ -358,7 +370,7 @@ public class SoftRefFileCache<V> implements ICache<V>
                     this.countPutSerializable.incrementAndGet();
                     this.countPutWriteFile.incrementAndGet();
                 }
-                byte[] ba = SerializationUtils.serialize((Serializable)value);
+                final byte[] ba = SerializationUtils.serialize((Serializable)value);
                 CacheFileDAO.inst.writeCacheItem(
                     this.name, CacheFileContentType.JAVA_SERIALIZATION, key, ba);
             }
@@ -370,22 +382,25 @@ public class SoftRefFileCache<V> implements ICache<V>
         value="Queue up a flush beans for the key.",
         details="This is useful for synchronizing caches in a cluster environment."
     )
-    private void publishFlushKey(@NonNullable String key) {
+    private void publishFlushKey(@NonNullable final String key) {
     }
 
-    public void putAll(@NonNullable Map<? extends String, ? extends V> map) {
-        for (final Map.Entry<? extends String, ? extends V> e : map.entrySet())
+    @Override
+    public void putAll(@NonNullable final Map<? extends String, ? extends V> map) {
+        for (final Map.Entry<? extends String, ? extends V> e : map.entrySet()) {
             this.put(e.getKey(), e.getValue());
+        }
     }
-    public V remove(@NonNullable String key) {
+    public V remove(@NonNullable final String key) {
         this.collector.run();
 
-        if (debug)
+        if (debug) {
             this.countRemove.incrementAndGet();
-        Lock cacheLock = CacheManager.inst.readLock(this);
+        }
+        final Lock cacheLock = CacheManager.inst.readLock(this);
         cacheLock.lock();
         try {
-            Lock lock = this.keyedRWLock.writeLock(key);
+            final Lock lock = this.keyedRWLock.writeLock(key);
             lock.lock();
             try {
                 return doRemove(key);
@@ -396,8 +411,8 @@ public class SoftRefFileCache<V> implements ICache<V>
             cacheLock.unlock();
         }
     }
-    private V doRemove(@NonNullable String key) {
-        KeyedSoftReference<String,V> oldRef = map.remove(key);
+    private V doRemove(@NonNullable final String key) {
+        final KeyedSoftReference<String,V> oldRef = map.remove(key);
         V ret = null;
 
         if (oldRef != null) {
@@ -408,7 +423,7 @@ public class SoftRefFileCache<V> implements ICache<V>
         if (ret == null) {
             // not exist or no longer exist in memory;
             // so check the file system.
-            CacheFileContent cfc = CacheFileDAO.inst.readCacheItem(this.name, key);
+            final CacheFileContent cfc = CacheFileDAO.inst.readCacheItem(this.name, key);
 
             if (cfc == null) {
                 // not exist in file system.
@@ -424,57 +439,64 @@ public class SoftRefFileCache<V> implements ICache<V>
         CacheFileDAO.inst.removeCacheItem(this.name, key);
         return ret;
     }
-    public V remove(@NonNullable Object key) {
+    @Override
+    public V remove(@NonNullable final Object key) {
         return key == null ? null : this.remove(key.toString());
     }
+    @Override
     public void clear() {
-        for (String key : this.map.keySet())
+        for (final String key : this.map.keySet()) {
             this.remove(key);
+        }
     }
+    @Override
     public @NonNullable Set<String> keySet() {
-        Set<String> kset = map.keySet();
+        final Set<String> kset = map.keySet();
         String[] list = null;
-        Lock cacheLock = CacheManager.inst.readLock(this);
+        final Lock cacheLock = CacheManager.inst.readLock(this);
         cacheLock.lock();
         try {
             list = CacheFileUtils.inst.getCacheDirList(this.name);
         } finally {
             cacheLock.unlock();
         }
-        if (list != null)
+        if (list != null) {
             kset.addAll(Arrays.asList(list));
+        }
         return kset;
     }
+    @Override
     @UnsupportedOperation
     public Set<Map.Entry<String,V>> entrySet() {
         throw new UnsupportedOperationException("Only memoryEntrySet and keySet are supported.");
     }
     public @NonNullable Set<Map.Entry<String,V>> memoryEntrySet() {
 //        this.collector.run();
-        Set<Map.Entry<String,KeyedSoftReference<String,V>>> fromSet = map.entrySet();
-        Set<Map.Entry<String,V>> toSet = new HashSet<Map.Entry<String,V>>();
+        final Set<Map.Entry<String,KeyedSoftReference<String,V>>> fromSet = map.entrySet();
+        final Set<Map.Entry<String,V>> toSet = new HashSet<>();
 
         for (final Map.Entry<String, KeyedSoftReference<String,V>> item : fromSet) {
-            KeyedSoftReference<String,V> ref = item.getValue();
-            V val = ref.get();
+            final KeyedSoftReference<String,V> ref = item.getValue();
+            final V val = ref.get();
 
             if (val != null) {
-                Map.Entry<String,V> e = new CacheEntry<V>(item.getKey(), val);
+                final Map.Entry<String,V> e = new CacheEntry<>(item.getKey(), val);
                 toSet.add(e);
             }
         }
         return toSet;
     }
+    @Override
     @UnsupportedOperation
     public @NonNullable Collection<V> values() {
         throw new UnsupportedOperationException("Only memoryValues and keySet are supported.");
     }
     public @NonNullable Collection<V> memoryValues() {
-        Collection<KeyedSoftReference<String,V>> fromSet = map.values();
-        List<V> toCol = new ArrayList<V>(fromSet.size());
+        final Collection<KeyedSoftReference<String,V>> fromSet = map.values();
+        final List<V> toCol = new ArrayList<>(fromSet.size());
 
         for (final KeyedSoftReference<String,V> ref : fromSet) {
-            V val = ref.get();
+            final V val = ref.get();
 
             if (val != null) {
                 toCol.add(val);
@@ -482,21 +504,24 @@ public class SoftRefFileCache<V> implements ICache<V>
         }
         return toCol;
     }
-    public boolean containsKey(@NonNullable Object key) {
+    @Override
+    public boolean containsKey(@NonNullable final Object key) {
         return this.get(key.toString()) != null;
     }
+    @Override
     @UnsupportedOperation
-    public boolean containsValue(@NonNullable Object value) {
+    public boolean containsValue(@NonNullable final Object value) {
         throw new UnsupportedOperationException("Only memoryContainsValue is supported.");
     }
-    public boolean memoryContainsValue(@NonNullable Object value) {
-        Collection<KeyedSoftReference<String,V>> fromSet = map.values();
+    public boolean memoryContainsValue(@NonNullable final Object value) {
+        final Collection<KeyedSoftReference<String,V>> fromSet = map.values();
 
         for (final KeyedSoftReference<String,V> ref : fromSet) {
-            V val = ref.get();
+            final V val = ref.get();
 
-            if (EqualsUtils.inst.equals(value, val))
+            if (EqualsUtils.inst.equals(value, val)) {
                 return true;
+            }
         }
         return false;
     }
@@ -504,11 +529,11 @@ public class SoftRefFileCache<V> implements ICache<V>
 //    public int getCollectorCount() {
 //        return this.collector.getCount();
 //    }
-    public void addCacheChangeListener(@NonNullable ICacheChangeListener<V> listener)
+    public void addCacheChangeListener(@NonNullable final ICacheChangeListener<V> listener)
     {
         this.cacheChangeSupport.addCacheChangeListener(listener);
     }
-    public void removeCacheChangeListener(@NonNullable ICacheChangeListener<V> listener)
+    public void removeCacheChangeListener(@NonNullable final ICacheChangeListener<V> listener)
     {
         this.cacheChangeSupport.removeCacheChangeListener(listener);
     }
@@ -517,9 +542,10 @@ public class SoftRefFileCache<V> implements ICache<V>
         return config;
     }
 
-    public void setConfig(PerCacheConfig config) {
+    public void setConfig(final PerCacheConfig config) {
         this.config = config;
     }
+    @Override
     @Implements(ICache.class)
     public CacheType getCacheType() {
         return CacheType.SOFT_REFERENCE_FILE;

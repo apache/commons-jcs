@@ -103,7 +103,7 @@ public abstract class PropertyLoader
             throw new IllegalArgumentException( "null input: name" );
         }
 
-        final ClassLoader classLoader = ( loader == null ) ? ClassLoader.getSystemClassLoader() : loader;
+        final ClassLoader classLoader = loader == null ? ClassLoader.getSystemClassLoader() : loader;
 
         String fileName = name.startsWith( "/" ) ? name.substring( 1 ) : name;
 

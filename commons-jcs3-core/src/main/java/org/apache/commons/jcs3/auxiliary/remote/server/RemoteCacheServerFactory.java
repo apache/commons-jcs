@@ -155,9 +155,9 @@ public class RemoteCacheServerFactory
      * @param cacheEventLogger the event logger for error messages
      * @since 3.1
      */
-    protected static void keepAlive(String registryHost, int registryPort, ICacheEventLogger cacheEventLogger)
+    protected static void keepAlive(final String registryHost, final int registryPort, final ICacheEventLogger cacheEventLogger)
     {
-        String namingURL = RemoteUtils.getNamingURL(registryHost, registryPort, serviceName);
+        final String namingURL = RemoteUtils.getNamingURL(registryHost, registryPort, serviceName);
         log.debug( "looking up server {0}", namingURL );
 
         try
@@ -422,7 +422,7 @@ public class RemoteCacheServerFactory
      * @param props
      * @throws IOException
      */
-    public static void startup( String host, final int port, final Properties props)
+    public static void startup( final String host, final int port, final Properties props)
         throws IOException
     {
         if ( remoteCacheServer != null )

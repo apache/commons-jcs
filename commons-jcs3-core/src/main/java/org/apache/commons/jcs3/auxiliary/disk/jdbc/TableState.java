@@ -58,7 +58,7 @@ public class TableState
      */
     public TableState( final String tableName )
     {
-        this.setTableName( tableName );
+        setTableName( tableName );
     }
 
     /**

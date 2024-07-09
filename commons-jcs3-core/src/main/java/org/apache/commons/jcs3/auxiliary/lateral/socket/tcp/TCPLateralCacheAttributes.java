@@ -429,6 +429,6 @@ public class TCPLateralCacheAttributes
     @Override
     public String toString()
     {
-        return this.getTcpServer() + ":" + this.getTcpListenerPort();
+        return getTcpServer() + ":" + getTcpListenerPort();
     }
 }
