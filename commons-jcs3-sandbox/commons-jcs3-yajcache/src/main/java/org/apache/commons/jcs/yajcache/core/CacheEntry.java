@@ -32,21 +32,24 @@ public class CacheEntry<V> implements Map.Entry<String,V> {
     private @NonNullable final String key;
     private @NonNullable V value;
     /** Creates a new instance of CacheEntry */
-    public CacheEntry(@NonNullable String key, @NonNullable V val) {
+    public CacheEntry(@NonNullable final String key, @NonNullable final V val) {
         this.key = key;
         this.value = val;
     }
 
+    @Override
     public @NonNullable String getKey() {
         return key;
     }
 
+    @Override
     public @NonNullable V getValue() {
         return value;
     }
 
-    public V setValue(@NonNullable V val) {
-        V ret = this.value;
+    @Override
+    public V setValue(@NonNullable final V val) {
+        final V ret = this.value;
         this.value = val;
         return ret;
     }

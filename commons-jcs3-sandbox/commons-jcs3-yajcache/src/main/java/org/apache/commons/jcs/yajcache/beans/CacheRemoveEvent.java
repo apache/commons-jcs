@@ -27,8 +27,8 @@ import org.apache.commons.jcs.yajcache.lang.annotation.*;
 public class CacheRemoveEvent<V> extends CacheChangeEvent<V> {
     private final @NonNullable String key;
 
-    public CacheRemoveEvent(@NonNullable ICache<V> cache,
-            @NonNullable String key)
+    public CacheRemoveEvent(@NonNullable final ICache<V> cache,
+            @NonNullable final String key)
     {
         super(cache);
         this.key = key;
@@ -37,7 +37,7 @@ public class CacheRemoveEvent<V> extends CacheChangeEvent<V> {
         return key;
     }
     @Override
-    public boolean dispatch(@NonNullable ICacheChangeHandler<V> handler) {
+    public boolean dispatch(@NonNullable final ICacheChangeHandler<V> handler) {
         return handler.handleRemove(super.getCache().getName(), this.key);
     }
 }

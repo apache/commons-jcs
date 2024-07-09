@@ -26,7 +26,7 @@ import org.apache.commons.jcs.yajcache.lang.annotation.*;
 @CopyRightApache
 public abstract class CacheChangeEvent<V> extends java.util.EventObject {
     /** Creates a new instance of CacheEvent */
-    protected CacheChangeEvent(@NonNullable ICache<V> cache) {
+    protected CacheChangeEvent(@NonNullable final ICache<V> cache) {
         super(cache);
     }
     /** Returns the cache which is the source of the events. */

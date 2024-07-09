@@ -25,13 +25,13 @@ import org.apache.commons.jcs.yajcache.lang.annotation.*;
  */
 @CopyRightApache
 public class CachePutCopyEvent<V> extends CachePutEvent<V> {
-    public CachePutCopyEvent(@NonNullable ICache<V> cache,
-            @NonNullable String key, @NonNullable V val)
+    public CachePutCopyEvent(@NonNullable final ICache<V> cache,
+            @NonNullable final String key, @NonNullable final V val)
     {
         super(cache, key, val);
     }
     @Override
-    public boolean dispatch(@NonNullable ICacheChangeHandler<V> handler) {
+    public boolean dispatch(@NonNullable final ICacheChangeHandler<V> handler) {
         return handler.handlePutCopy(
                 super.getCache().getName(), super.getKey(), super.getValue());
     }

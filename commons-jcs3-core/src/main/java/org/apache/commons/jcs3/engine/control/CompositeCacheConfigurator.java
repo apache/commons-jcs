@@ -422,7 +422,7 @@ public class CompositeCacheConfigurator
 
             log.debug( "Parsing region name \"{0}\", value \"{1}\"", regName, auxiliaries );
 
-            String[] auxNames = auxiliaries.split("\\s*,\\s*");
+            final String[] auxNames = auxiliaries.split("\\s*,\\s*");
 
             // just to be on the safe side...
             if (auxNames.length == 0)
@@ -430,7 +430,7 @@ public class CompositeCacheConfigurator
                 return null;
             }
 
-            for (String auxName : auxNames)
+            for (final String auxName : auxNames)
             {
                 if (auxName.isEmpty())
                 {
@@ -440,7 +440,7 @@ public class CompositeCacheConfigurator
 
                 log.debug( "Parsing auxiliary named \"{0}\".", auxName );
 
-                AuxiliaryCache<K, V> auxCache = parseAuxiliary( props, ccm, auxName, regName );
+                final AuxiliaryCache<K, V> auxCache = parseAuxiliary( props, ccm, auxName, regName );
 
                 if ( auxCache != null )
                 {

@@ -31,7 +31,7 @@ import org.apache.commons.logging.LogFactory;
 @CopyRightApache
 @TestOnly
 public class CacheManagerTest extends TestCase {
-    private Log log = LogFactory.getLog(this.getClass());
+    private final Log log = LogFactory.getLog(this.getClass());
 
     public void testGetCache() {
         CacheManager.inst.getCache("myCache", String.class);
@@ -63,13 +63,13 @@ public class CacheManagerTest extends TestCase {
         assertTrue(null == c.get("2"));
         assertTrue(null == c.get("1"));
         log.debug("Test getCache and getValueType");
-        ICache c1 = CacheManager.inst.getCache("myCache");
+        final ICache c1 = CacheManager.inst.getCache("myCache");
         assertTrue(c1.getValueType() == String.class);
         log.debug("Test checking of cache value type");
         try {
-            ICache<Integer> c2 = CacheManager.inst.getCache("myCache", Integer.class);
+            final ICache<Integer> c2 = CacheManager.inst.getCache("myCache", Integer.class);
             assert false : "Bug: Cache for string cannot be used for Integer";
-        } catch (ClassCastException ex) {
+        } catch (final ClassCastException ex) {
             // should go here.
         }
         log.debug(CacheManager.inst);
@@ -77,18 +77,18 @@ public class CacheManagerTest extends TestCase {
 
     public void testGetCacheRaceCondition() {
         log.debug("Test simulation of race condition in creating cache");
-        ICache intCache = CacheManager.inst.testCreateCacheRaceCondition(
+        final ICache intCache = CacheManager.inst.testCreateCacheRaceCondition(
                 "race", Integer.class, CacheType.SOFT_REFERENCE);
-        ICache intCache1 = CacheManager.inst.testCreateCacheRaceCondition(
+        final ICache intCache1 = CacheManager.inst.testCreateCacheRaceCondition(
                 "race", Integer.class, CacheType.SOFT_REFERENCE);
         log.debug("Test simulation of the worst case scenario: "
                 + "race condition in creating cache AND class cast exception");
         try {
-            ICache<Double> doubleCache =
+            final ICache<Double> doubleCache =
                     CacheManager.inst.testCreateCacheRaceCondition(
                     "race", Double.class, CacheType.SOFT_REFERENCE);
             assert false : "Bug: Cache for Integer cannot be used for Double";
-        } catch (ClassCastException ex) {
+        } catch (final ClassCastException ex) {
             // should go here.
         }
         assertTrue(intCache == intCache1);
@@ -97,15 +97,15 @@ public class CacheManagerTest extends TestCase {
 
     public void testRemoveCache() {
         log.debug("Test remove cache");
-        ICache<Integer> intCache = CacheManager.inst.getCache("race", Integer.class);
+        final ICache<Integer> intCache = CacheManager.inst.getCache("race", Integer.class);
         intCache.put("1", 1);
         assertEquals(intCache.size(), 1);
         assertEquals(intCache, CacheManager.inst.removeCache("race"));
         assertEquals(intCache.size(), 0);
-        ICache intCache1 = CacheManager.inst.getCache("race", Integer.class);
+        final ICache intCache1 = CacheManager.inst.getCache("race", Integer.class);
         assertFalse(intCache == intCache1);
         CacheManager.inst.removeCache("race");
-        ICache<Double> doubleCache = CacheManager.inst.testCreateCacheRaceCondition(
+        final ICache<Double> doubleCache = CacheManager.inst.testCreateCacheRaceCondition(
                     "race", Double.class, CacheType.SOFT_REFERENCE);
         doubleCache.put("double", 1.234);
         assertEquals(1.234, doubleCache.get("double"));

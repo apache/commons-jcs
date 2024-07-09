@@ -46,7 +46,7 @@ public class CompressingSerializer extends StandardSerializer
      * @param serializer the wrapped serializer
      * @since 3.1
      */
-    public CompressingSerializer(IElementSerializer serializer)
+    public CompressingSerializer(final IElementSerializer serializer)
     {
         this.serializer = serializer;
     }

@@ -58,8 +58,8 @@ public class CacheFileContent {
      * and content.
      */
     private CacheFileContent(
-            @NonNullable CacheFileContentType contentType,
-            @NonNullable byte[] content)
+            @NonNullable final CacheFileContentType contentType,
+            @NonNullable final byte[] content)
     {
         this.contentType = contentType.toByte();
         this.content = content;
@@ -69,7 +69,7 @@ public class CacheFileContent {
     /**
      * Write the current cache file content to the given random access file.
      */
-    void write(@NonNullable RandomAccessFile raf) throws IOException {
+    void write(@NonNullable final RandomAccessFile raf) throws IOException {
         // File content type.
         raf.writeByte(this.contentType);
         // Byte array length.
@@ -84,7 +84,7 @@ public class CacheFileContent {
         return content;
     }
 
-    public void setContent(byte[] content) {
+    public void setContent(final byte[] content) {
         this.content = content == null ? new byte[0] : content;
     }
 
@@ -92,7 +92,7 @@ public class CacheFileContent {
         return contentType;
     }
 
-    public void setContentType(byte contentType) {
+    public void setContentType(final byte contentType) {
         this.contentType = contentType;
     }
 
@@ -100,7 +100,7 @@ public class CacheFileContent {
         return contentLength;
     }
 
-    void setContentLength(int contentLength) {
+    void setContentLength(final int contentLength) {
         this.contentLength = contentLength;
     }
 
@@ -108,7 +108,7 @@ public class CacheFileContent {
         return contentHashCode;
     }
 
-    void setContentHashCode(int contentHashCode) {
+    void setContentHashCode(final int contentHashCode) {
         this.contentHashCode = contentHashCode;
     }
     /**
@@ -116,7 +116,7 @@ public class CacheFileContent {
      * the content.
      */
     public boolean isValid() {
-        int hash = Arrays.hashCode(this.content);
+        final int hash = Arrays.hashCode(this.content);
         return hash == this.contentHashCode;
     }
     /**
@@ -125,8 +125,8 @@ public class CacheFileContent {
      */
     @NonNullable
     static CacheFileContent getInstance(
-            @NonNullable CacheFileContentType contentType,
-            @NonNullable byte[] content)
+            @NonNullable final CacheFileContentType contentType,
+            @NonNullable final byte[] content)
         throws IOException
     {
         return new CacheFileContent(contentType, content);
@@ -135,15 +135,15 @@ public class CacheFileContent {
      * Returns an instance of CacheFileContent from the given random access file;
      */
     @NonNullable
-    static CacheFileContent getInstance(@NonNullable RandomAccessFile raf)
+    static CacheFileContent getInstance(@NonNullable final RandomAccessFile raf)
         throws IOException
     {
-        CacheFileContent cfc = new CacheFileContent();
+        final CacheFileContent cfc = new CacheFileContent();
         cfc.setContentType(raf.readByte());
         final int len = raf.readInt();
         cfc.setContentLength(len);
         cfc.setContentHashCode(raf.readInt());
-        byte[] ba = new byte[len];
+        final byte[] ba = new byte[len];
         // Byte array.
         raf.readFully(ba);
         cfc.setContent(ba);

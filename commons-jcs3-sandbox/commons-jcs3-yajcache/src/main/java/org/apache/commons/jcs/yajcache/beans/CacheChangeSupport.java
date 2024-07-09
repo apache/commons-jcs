@@ -19,10 +19,6 @@ package org.apache.commons.jcs.yajcache.beans;
  * under the License.
  */
 
-import org.apache.commons.jcs.yajcache.beans.CacheChangeEvent;
-import org.apache.commons.jcs.yajcache.beans.CacheClearEvent;
-import org.apache.commons.jcs.yajcache.beans.CachePutEvent;
-import org.apache.commons.jcs.yajcache.beans.CacheRemoveEvent;
 import org.apache.commons.jcs.yajcache.core.ICache;
 import org.apache.commons.jcs.yajcache.lang.annotation.*;
 
@@ -34,18 +30,18 @@ import java.util.concurrent.CopyOnWriteArrayList;
 @CopyRightApache
 public class CacheChangeSupport<V> {
     private final @NonNullable List<ICacheChangeListener<V>> listeners
-            = new CopyOnWriteArrayList<ICacheChangeListener<V>>();
+            = new CopyOnWriteArrayList<>();
 
-    private ICache<V> cache;
+    private final ICache<V> cache;
 
-    public CacheChangeSupport(@NonNullable ICache<V> cache) {
+    public CacheChangeSupport(@NonNullable final ICache<V> cache) {
         this.cache = cache;
     }
-    public void addCacheChangeListener(@NonNullable ICacheChangeListener<V> listener)
+    public void addCacheChangeListener(@NonNullable final ICacheChangeListener<V> listener)
     {
         listeners.add(listener);
     }
-    public void removeCacheChangeListener(@NonNullable ICacheChangeListener<V> listener)
+    public void removeCacheChangeListener(@NonNullable final ICacheChangeListener<V> listener)
     {
         listeners.remove(listener);
     }
@@ -53,22 +49,22 @@ public class CacheChangeSupport<V> {
     {
         return listeners;
     }
-    public void fireCacheChange(@NonNullable CacheChangeEvent<V> evt)
+    public void fireCacheChange(@NonNullable final CacheChangeEvent<V> evt)
     {
-        for (ICacheChangeListener<V> listener : this.listeners) {
+        for (final ICacheChangeListener<V> listener : this.listeners) {
             listener.cacheChange(evt);
         }
     }
-    public void fireCachePut(@NonNullable String key, @NonNullable V value)
+    public void fireCachePut(@NonNullable final String key, @NonNullable final V value)
     {
-        this.fireCacheChange(new CachePutEvent<V>(this.cache, key, value));
+        this.fireCacheChange(new CachePutEvent<>(this.cache, key, value));
     }
-    public void fireCacheRemove(@NonNullable String key)
+    public void fireCacheRemove(@NonNullable final String key)
     {
-        this.fireCacheChange(new CacheRemoveEvent<V>(this.cache, key));
+        this.fireCacheChange(new CacheRemoveEvent<>(this.cache, key));
     }
     public void fireCacheClear()
     {
-        this.fireCacheChange(new CacheClearEvent<V>(this.cache));
+        this.fireCacheChange(new CacheClearEvent<>(this.cache));
     }
 }

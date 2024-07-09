@@ -25,12 +25,12 @@ import org.apache.commons.jcs.yajcache.lang.annotation.*;
  */
 @CopyRightApache
 public class CacheClearEvent<V> extends CacheChangeEvent<V> {
-    public CacheClearEvent(@NonNullable ICache<V> cache)
+    public CacheClearEvent(@NonNullable final ICache<V> cache)
     {
         super(cache);
     }
     @Override
-    public boolean dispatch(@NonNullable ICacheChangeHandler<V> handler) {
+    public boolean dispatch(@NonNullable final ICacheChangeHandler<V> handler) {
         return handler.handleClear(super.getCache().getName());
     }
 }

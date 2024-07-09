@@ -578,7 +578,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
 
                 // convert so we don't have to know about the object on the
                 // other end.
-                ICacheElementSerialized<K, V> serialized = SerializationConversionUtil.getSerializedCacheElement( ce, super.getElementSerializer() );
+                final ICacheElementSerialized<K, V> serialized = SerializationConversionUtil.getSerializedCacheElement( ce, super.getElementSerializer() );
 
                 remoteCacheService.update( serialized, getListenerId() );
             }
