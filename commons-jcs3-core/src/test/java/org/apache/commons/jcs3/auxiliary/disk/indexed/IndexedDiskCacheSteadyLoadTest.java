@@ -78,7 +78,7 @@ public class IndexedDiskCacheSteadyLoadTest
         final int runs = 1000;
         final int upperKB = 50;
 
-        final CacheAccess<String, DiskTestObject> jcs = JCS.getInstance( ( numPerRun / 2 ) + "aSecond" );
+        final CacheAccess<String, DiskTestObject> jcs = JCS.getInstance( numPerRun / 2 + "aSecond" );
 
         final ElapsedTimer timer = new ElapsedTimer();
         final int numToGet = numPerRun * ( runs / 10 );
@@ -107,7 +107,7 @@ public class IndexedDiskCacheSteadyLoadTest
             {
                 // 1/2 upper to upperKB-4 KB
                 final int kiloBytes = Math.max( upperKB / 2, random.nextInt( upperKB ) );
-                final int bytes = ( kiloBytes ) * 1024;
+                final int bytes = kiloBytes * 1024;
                 totalSize += bytes;
                 totalPut++;
                 final DiskTestObject object = new DiskTestObject( Integer.valueOf( i ), new byte[bytes]);
@@ -117,7 +117,7 @@ public class IndexedDiskCacheSteadyLoadTest
             // remove half of those inserted the previous run
             if ( runCount > 1 )
             {
-                for ( int j = ( ( totalPut - numPerRun ) - ( numPerRun / 2 ) ); j < ( totalPut - numPerRun ); j++ )
+                for ( int j = totalPut - numPerRun - numPerRun / 2; j < totalPut - numPerRun; j++ )
                 {
                     jcs.remove( String.valueOf( j ) );
                 }
@@ -128,7 +128,7 @@ public class IndexedDiskCacheSteadyLoadTest
             {
                 System.out.println( LOG_DIVIDER );
                 System.out.println( "Elapsed " + timer.getElapsedTimeString() );
-                System.out.println( "Run count: " + runCount + " Average size: " + ( totalSize / totalPut ) + "\n"
+                System.out.println( "Run count: " + runCount + " Average size: " + totalSize / totalPut + "\n"
                     + jcs.getStats() );
                 logMemoryUsage();
             }
