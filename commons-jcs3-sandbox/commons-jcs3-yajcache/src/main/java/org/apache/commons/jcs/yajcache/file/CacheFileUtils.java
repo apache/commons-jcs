@@ -40,62 +40,66 @@ public enum CacheFileUtils {
      *
      * @return true if succesfull; false otherwise.
      */
-    public boolean mkCacheDirs(@NonNullable String cacheName) {
-        File dir = this.getCacheDir(cacheName);
+    public boolean mkCacheDirs(@NonNullable final String cacheName) {
+        final File dir = getCacheDir(cacheName);
         return dir.mkdirs();
     }
     /**
      * Removes the file directory for the specified cache,
      * including all files under the directory.
      */
-    public boolean rmCacheDir(@NonNullable String cacheName) {
-        File dir = this.getCacheDir(cacheName);
+    public boolean rmCacheDir(@NonNullable final String cacheName) {
+        final File dir = getCacheDir(cacheName);
 
-        if (!dir.exists())
+        if (!dir.exists()) {
             return true;
-        for (File f : dir.listFiles()) {
+        }
+        for (final File f : dir.listFiles()) {
             f.delete();
         }
         return dir.delete();
     }
-    public boolean isCacheDirEmpty(@NonNullable String cacheName) {
-        File dir = this.getCacheDir(cacheName);
+    public boolean isCacheDirEmpty(@NonNullable final String cacheName) {
+        final File dir = getCacheDir(cacheName);
 
-        if (!dir.exists())
+        if (!dir.exists()) {
             return true;
-        String[] list = dir.list();
+        }
+        final String[] list = dir.list();
         return list == null || list.length == 0;
     }
-    public int getCacheDirSize(@NonNullable String cacheName) {
-        File dir = this.getCacheDir(cacheName);
+    public int getCacheDirSize(@NonNullable final String cacheName) {
+        final File dir = getCacheDir(cacheName);
 
-        if (!dir.exists())
+        if (!dir.exists()) {
             return 0;
-        String[] list = dir.list();
+        }
+        final String[] list = dir.list();
         return list == null ? 0 : list.length;
     }
-    public String[] getCacheDirList(@NonNullable String cacheName)
+    public String[] getCacheDirList(@NonNullable final String cacheName)
     {
-        File dir = this.getCacheDir(cacheName);
+        final File dir = getCacheDir(cacheName);
 
-        if (!dir.exists())
+        if (!dir.exists()) {
             return null;
+        }
         return dir.list();
     }
     /**
      * Returns the file directory for the specified cache.
      */
-    @NonNullable File getCacheDir(@NonNullable String cacheName) {
+    @NonNullable File getCacheDir(@NonNullable final String cacheName) {
         return new File(YajCacheConfig.inst.getCacheDir(), cacheName);
     }
     /**
      * Returns the cache file for the specified cache item.
      */
     @NonNullable File getCacheFile(
-            @NonNullable String cacheName,
-            @NonNullable String key)
+            @NonNullable final String cacheName,
+            @NonNullable final String key)
     {
-        File dir = this.getCacheDir(cacheName);
+        final File dir = getCacheDir(cacheName);
         return new File(dir, key);
     }
 }
