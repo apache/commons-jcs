@@ -153,8 +153,8 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
     }
 
     /**
-     * This instructs the memory cache to remove the <i>numberToFree</i> according to its eviction
-     * policy. For example, the LRUMemoryCache will remove the <i>numberToFree</i> least recently
+     * This instructs the memory cache to remove the <em>numberToFree</em> according to its eviction
+     * policy. For example, the LRUMemoryCache will remove the <em>numberToFree</em> least recently
      * used items. These will be spooled to disk if a disk auxiliary is available.
      * <p>
      *

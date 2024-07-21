@@ -40,9 +40,9 @@ public interface IMemoryCache<K, V>
         throws IOException;
 
     /**
-     * This instructs the memory cache to remove the <i>numberToFree</i>
+     * This instructs the memory cache to remove the <em>numberToFree</em>
      * according to its eviction policy. For example, the LRUMemoryCache will
-     * remove the <i>numberToFree</i> least recently used items. These will be
+     * remove the <em>numberToFree</em> least recently used items. These will be
      * spooled to disk if a disk auxiliary is available.
      * <p>
      * @param numberToFree
