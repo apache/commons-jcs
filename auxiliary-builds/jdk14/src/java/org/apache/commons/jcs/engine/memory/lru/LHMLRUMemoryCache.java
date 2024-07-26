@@ -235,8 +235,6 @@ public class LHMLRUMemoryCache
     }
   }
 
-  // ---------------------------------------------------------- debug methods
-
   /**
    * Dump the cache map for debugging.
    */
@@ -272,8 +270,6 @@ public class LHMLRUMemoryCache
     size = map.size();
     return size;
   }
-
-  // ---------------------------------------------------------- extended map
 
   /**
    * Implements removeEldestEntry from {@link LinkedHashMap}.

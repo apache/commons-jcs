@@ -250,8 +250,6 @@ public abstract class AbstractDiskCache<K, V>
     /** DEBUG: Keeps a count of the number of purgatory hits for debug messages */
     private int purgHits;
 
-    // ----------------------------------------------------------- constructors
-
     /**
      * We lock here, so that we cannot get an update after a remove all. an individual removal locks
      * the item.
@@ -324,8 +322,6 @@ public abstract class AbstractDiskCache<K, V>
     {
         super.disposeWithEventLogging();
     }
-
-    // ------------------------------------------------------- interface ICache
 
     /**
      * Gets a value from the persistent store.

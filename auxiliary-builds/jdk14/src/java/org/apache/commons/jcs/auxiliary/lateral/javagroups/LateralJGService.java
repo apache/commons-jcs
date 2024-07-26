@@ -76,8 +76,6 @@ public class LateralJGService
         }
     }
 
-    // -------------------------------------------------------- Service Methods
-
     /**
      * @param item
      * @throws IOException

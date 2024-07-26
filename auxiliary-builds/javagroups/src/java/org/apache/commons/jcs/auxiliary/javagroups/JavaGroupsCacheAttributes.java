@@ -82,8 +82,6 @@ public class JavaGroupsCacheAttributes implements AuxiliaryCacheAttributes
         this.getFromPeers = getFromPeers;
     }
 
-    // ----------------------------------------------- AuxiliaryCacheAttributes
-
     /**
      * Accessor for cacheName property.
      */

@@ -50,8 +50,6 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
 
     /** Thread-safe double linked list for lru */
     protected DoubleLinkedList<MemoryElementDescriptor<K, V>> list; // TODO privatise
-
-    // --------------------------- internal methods (linked list implementation)
     /**
      * Adds a new node to the start of the link list.
      * <p>
@@ -323,8 +321,6 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
         log.debug("update: After spool map size: {0} linked list size = {1}",
                 () -> map.size(), () -> list.size());
     }
-
-    // ---------------------------------------------------------- debug methods
 
     /**
      * This spools the last element in the LRU, if one exists.

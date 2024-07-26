@@ -101,8 +101,6 @@ public abstract class AbstractMemoryCache<K, V>
         putCnt.set(0);
         log.info( "Memory Cache dispose called." );
     }
-
-    // ---------------------------------------------------------- debug method
     /**
      * Dump the cache map for debugging.
      */

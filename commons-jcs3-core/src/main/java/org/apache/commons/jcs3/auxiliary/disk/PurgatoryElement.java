@@ -91,8 +91,6 @@ public class PurgatoryElement<K, V>
         return cacheElement.getCacheName();
     }
 
-    // ------------------------------------------------ interface ICacheElement
-
     /**
      * @return cacheElement.getElementAttributes();
      * @see ICacheElement#getElementAttributes

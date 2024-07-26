@@ -80,8 +80,6 @@ public class LateralXMLRPCService
         }
     }
 
-    // -------------------------------------------------------- Service Methods
-
     /**
      * @param item
      * @throws IOException

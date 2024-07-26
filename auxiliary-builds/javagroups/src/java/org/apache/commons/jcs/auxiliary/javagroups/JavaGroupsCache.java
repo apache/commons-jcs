@@ -128,8 +128,6 @@ public class JavaGroupsCache
         }
     }
 
-    // ----------------------------------------------- interface AuxiliaryCache
-
     /**
      * Sends the provided element to all peers (connected to the same channel
      * and region name).
@@ -276,8 +274,6 @@ public class JavaGroupsCache
         return null;
     }
 
-    // --------------------------------------------------- interface ICacheType
-
     /**
      * Gets the cache type (always Lateral).
      *
@@ -287,8 +283,6 @@ public class JavaGroupsCache
     {
         return ICacheType.LATERAL_CACHE;
     }
-
-    // ----------------------------------------------- interface RequestHandler
 
     /**
      * Handles a message from a peer. The message should contain a Request,
@@ -342,8 +336,6 @@ public class JavaGroupsCache
         return null;
     }
 
-    // ------------------------------------------- interface MembershipListener
-
     public void viewAccepted( View view )
     {
         log.info( "View Changed: " + String.valueOf( view ) );
@@ -352,8 +344,6 @@ public class JavaGroupsCache
     public void suspect( Address suspectedAddress ) { }
 
     public void block() { }
-
-    // ---------------------------------------------------------- inner classes
 
     /**
      * Object for messages, wraps the command type (update, remove, or remove

@@ -157,8 +157,6 @@ public class LHMLRUMemoryCache<K, V>
         // empty
     }
 
-    // ---------------------------------------------------------- debug methods
-
     /**
      * Removes all cached items from the cache control structures.
      * (guarded by the lock)
@@ -180,8 +178,6 @@ public class LHMLRUMemoryCache<K, V>
     {
         // empty
     }
-
-    // ---------------------------------------------------------- extended map
 
     /**
      * Puts an item to the cache.
