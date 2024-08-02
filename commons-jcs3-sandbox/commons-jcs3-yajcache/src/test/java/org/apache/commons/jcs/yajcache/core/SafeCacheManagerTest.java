@@ -67,7 +67,7 @@ public class SafeCacheManagerTest extends TestCase {
         log.debug("Test checking of cache value type");
         try {
             final ICacheSafe<Integer> c2 = CacheManager.inst.getSafeCache("myCache", Integer.class);
-            assert false : "Bug: Cache for string cannot be used for Integer.";
+            fail("Expected ClassCastException");
         } catch (final ClassCastException ex) {
             // should go here.
         }
@@ -85,7 +85,7 @@ public class SafeCacheManagerTest extends TestCase {
         try {
             final ICache doubleCache = CacheManager.inst.testCreateCacheRaceCondition(
                     "race", Double.class, CacheType.SOFT_REFERENCE_SAFE);
-            assert false : "Bug: Cache for Integer cannot be used for Double.";
+            fail("Expected ClassCastException");
         } catch (final ClassCastException ex) {
             // should go here.
         }
@@ -174,7 +174,7 @@ public class SafeCacheManagerTest extends TestCase {
         log.debug("Test checking of cache value type");
         try {
             final ICacheSafe<Integer> c2 = CacheManager.inst.getSafeCache("myCache", Integer.class);
-            assert false : "Bug: Cache for string cannot be used for Integer.";
+            fail("Bug: Cache for string cannot be used for Integer.");
         } catch (final ClassCastException ex) {
             // should go here.
         }

@@ -46,7 +46,7 @@ public class FileContentTypeTest extends TestCase {
         log.debug("test fromByte with unknown type");
         try {
             CacheFileContentType.fromByte((byte)99);
-            assert false;
+            fail("Expected IllegalArgumentException");
         } catch (final IllegalArgumentException ex) {
         }
     }
