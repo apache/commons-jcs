@@ -22,6 +22,10 @@
 	</properties>
 	<body>
         <release version="4.0.0" date="YYYY-MM-DD">
+            <!-- FIX -->
+            <action type="fix" dev="ggregory" due-to="ammannmi">
+               Fix put time in JCSCache.put(K, V) #276.
+            </action>
             <!-- ADD -->
             <action type="add" dev="ggregory" due-to="Gary Gregory">
                Add Maven property project.build.outputTimestamp for build reproducibility.
