@@ -752,7 +752,7 @@ public class JCSCache<K, V> implements Cache<K, V>
             if (statisticsEnabled)
             {
                 statistics.increasePuts(1);
-                statistics.addPutTime(System.currentTimeMillis() - start);
+                statistics.addPutTime(Times.now(false) - start);
             }
         } else if (!created)
         {
