@@ -21,7 +21,7 @@
 		<author email="dev@commons.apache.org">Apache Commons Developers</author>
 	</properties>
 	<body>
-        <release version="4.0.0" date="YYYY-MM-DD">
+        <release version="3.3.0" date="YYYY-MM-DD">
             <!-- FIX -->
             <action type="fix" dev="ggregory" due-to="ammannmi">
                Fix put time in JCSCache.put(K, V) #276.
