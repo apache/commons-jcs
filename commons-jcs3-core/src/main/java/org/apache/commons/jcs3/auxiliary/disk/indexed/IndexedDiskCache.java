@@ -386,8 +386,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
     }
 
     /**
-     * To subtract you can pass in false for add..
-     * <p>
+     * To subtract you can pass in false for add.
      *
      * @param ded
      * @param add

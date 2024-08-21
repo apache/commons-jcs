@@ -348,7 +348,7 @@ public abstract class AbstractDiskCache<K, V>
      * abstract process* methods. The children implement the process methods.
      *
      * @param pattern Used to match keys.
-     * @return A map of matches..
+     * @return A map of matches.
      * @throws IOException
      */
     protected final Map<K, ICacheElement<K, V>> doGetMatching( final String pattern )
