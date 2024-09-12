@@ -75,7 +75,7 @@ public class BlockDiskCacheSteadyLoadTest
         final int runs = 1000;
         final int upperKB = 50;
 
-        final CacheAccess<String, DiskTestObject> jcs = JCS.getInstance( ( numPerRun / 2 ) + "aSecond" );
+        final CacheAccess<String, DiskTestObject> jcs = JCS.getInstance( numPerRun / 2 + "aSecond" );
 
 //        ElapsedTimer timer = new ElapsedTimer();
         final int numToGet = numPerRun * ( runs / 10 );
@@ -104,7 +104,7 @@ public class BlockDiskCacheSteadyLoadTest
             {
                 // 1/2 upper to upperKB-4 KB
                 final int kiloBytes = Math.max( upperKB / 2, random.nextInt( upperKB ) );
-                final int bytes = ( kiloBytes ) * 1024;
+                final int bytes = kiloBytes * 1024;
 //                totalSize += bytes;
                 totalPut++;
                 final DiskTestObject object = new DiskTestObject( Integer.valueOf( i ), new byte[bytes]);
@@ -114,7 +114,7 @@ public class BlockDiskCacheSteadyLoadTest
             // get half of those inserted the previous run
             if ( runCount > 1 )
             {
-                for ( int j = ( ( totalPut - numPerRun ) - ( numPerRun / 2 ) ); j < ( totalPut - numPerRun ); j++ )
+                for ( int j = totalPut - numPerRun - numPerRun / 2; j < totalPut - numPerRun; j++ )
                 {
                     jcs.get( String.valueOf( j ) );
                 }
@@ -123,7 +123,7 @@ public class BlockDiskCacheSteadyLoadTest
             // remove half of those inserted the previous run
             if ( runCount > 1 )
             {
-                for ( int j = ( ( totalPut - numPerRun ) - ( numPerRun / 2 ) ); j < ( totalPut - numPerRun ); j++ )
+                for ( int j = totalPut - numPerRun - numPerRun / 2; j < totalPut - numPerRun; j++ )
                 {
                     jcs.remove( String.valueOf( j ) );
                 }
