@@ -154,7 +154,7 @@ public class JDBCDiskCacheUnitTest
         assertEquals( "wrong name", poolName, result.getName() );
 
         // Disable this test: it's not clear what it is trying to check. Also it causes an Error when re-running tests:
-        // JDBCDiskCacheUnitTest.testInitializePoolAccess_withPoolName:157 » SQL Table already exists: 
+        // JDBCDiskCacheUnitTest.testInitializePoolAccess_withPoolName:157 » SQL Table already exists:
         //     JCSTESTTABLE_INITIALIZEPOOLACCESS in statement [CREATE CACHED TABLE JCSTESTTABLE_InitializePoolAccess]
         // final Connection cConn = result.getDataSource().getConnection();
         // HsqlSetupUtil.setupTable( cConn, cattr.getTableName());
