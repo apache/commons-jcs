@@ -50,7 +50,7 @@ public class BlockDiskUnitTest
     private int getBytesForBlocksOfByteArrays( final int blockSize, final int numBlocks )
     {
         // byte arrays encur some bytes of serialization overhead.
-        return blockSize * numBlocks - ( numBlocks * BlockDisk.HEADER_SIZE_BYTES ) - ( numBlocks * 14 );
+        return blockSize * numBlocks - numBlocks * BlockDisk.HEADER_SIZE_BYTES - numBlocks * 14;
     }
 
     /**
@@ -98,7 +98,7 @@ public class BlockDiskUnitTest
 
         // DO WORK
         final int result = disk.calculateTheNumberOfBlocksNeeded( new byte[disk.getBlockSizeBytes() * 2
-            - ( 2 * BlockDisk.HEADER_SIZE_BYTES )]);
+            - 2 * BlockDisk.HEADER_SIZE_BYTES]);
 
         // Verify
         assertEquals( "Wrong number of blocks", 2, result );
