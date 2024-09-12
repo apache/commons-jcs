@@ -116,12 +116,12 @@ public class IndexedDiskCacheDefragPerformanceTest
 
             jcs.put( tile.id, tile );
 
-            if ( ( i != 0 ) && ( 0 == ( i % 100 ) ) )
+            if ( i != 0 && 0 == i % 100 )
             {
                 jcs.get( Integer.valueOf( random.nextInt( i ) ) );
             }
 
-            if ( 0 == ( i % LOG_INCREMENT ) )
+            if ( 0 == i % LOG_INCREMENT )
             {
                 System.out.print( i + ", " );
                 Thread.sleep( SLEEP_TIME_DISK );
