@@ -201,7 +201,7 @@ public class SoftRefFileCache<V> implements ICache<V>
         if (ref != null) {
             val = ref.get();
 
-            if (debug && (val == null)) {
+            if (debug && val == null) {
                 this.countGetEmptyRef.incrementAndGet();
             }
         } else if (debug) {
