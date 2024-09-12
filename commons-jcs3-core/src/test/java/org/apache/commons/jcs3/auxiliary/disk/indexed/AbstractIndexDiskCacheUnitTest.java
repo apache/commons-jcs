@@ -186,7 +186,7 @@ public abstract class AbstractIndexDiskCacheUnitTest{
         for (int i = 0; i < numDescriptors; i++)
         {
             final IndexedDiskElementDescriptor descriptor = new IndexedDiskElementDescriptor(pos, i * 2);
-            pos = pos + (i * 2) + IndexedDisk.HEADER_SIZE_BYTES;
+            pos = pos + i * 2 + IndexedDisk.HEADER_SIZE_BYTES;
             sortedDescriptors.add(descriptor);
         }
 
@@ -216,7 +216,7 @@ public abstract class AbstractIndexDiskCacheUnitTest{
         {
             final IndexedDiskElementDescriptor descriptor = new IndexedDiskElementDescriptor(pos, i * 2);
             // don't add the header + IndexedDisk.RECORD_HEADER;
-            pos = pos + (i * 2);
+            pos = pos + i * 2;
             sortedDescriptors.add(descriptor);
         }
 
