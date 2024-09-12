@@ -140,7 +140,7 @@ public class MockMemoryCache<K, V>
 
         if ( keys != null && !keys.isEmpty() )
         {
-            for (K key : keys) {
+            for (final K key : keys) {
                 final ICacheElement<K, V> element = get( key );
 
                 if ( element != null )
