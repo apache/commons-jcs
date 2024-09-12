@@ -441,7 +441,7 @@ public class FileDiskCache<K, V>
     private void removeIfLimitIsSetAndReached()
     {
         // TODO we might want to synchronize this block.
-        if ( (diskFileCacheAttributes.getMaxNumberOfFiles() > 0) && (getSize() >= diskFileCacheAttributes.getMaxNumberOfFiles()) )
+        if ( diskFileCacheAttributes.getMaxNumberOfFiles() > 0 && getSize() >= diskFileCacheAttributes.getMaxNumberOfFiles() )
         {
             if ( log.isDebugEnabled() )
             {
