@@ -37,29 +37,28 @@ public enum SerializeUtils {
      * @return a duplicate of the given Serializable object,
      * short-cutting the deep clone process if possible.
      */
-    public <V extends Serializable> V dup(V obj) {
+    public <V extends Serializable> V dup(final V obj) {
         Class k = null;
 
         if (obj == null
-        ||  ClassUtils.inst.isImmutable(k=obj.getClass()))
+        ||  ClassUtils.inst.isImmutable(k=obj.getClass())) {
             return obj;
-        Class t = k.getComponentType();
+        }
+        final Class t = k.getComponentType();
 
-        if (t != null) {
-            // an array.
-            if (ClassUtils.inst.isImmutable(t))
-            {
-                // array elements are immutable.
-                // short cut via shallow clone.
-                return this.cloneArray(obj);
-            }
+        // an array.
+        if ((t != null) && ClassUtils.inst.isImmutable(t))
+        {
+            // array elements are immutable.
+            // short cut via shallow clone.
+            return this.cloneArray(obj);
         }
         // deep clone.
         return (V)SerializationUtils.clone(obj);
     }
-    private @NonNullable <A> A cloneArray(@NonNullable A a) {
-        int len = Array.getLength(a);
-	Object result = Array.newInstance(a.getClass().getComponentType(), len);
+    private @NonNullable <A> A cloneArray(@NonNullable final A a) {
+        final int len = Array.getLength(a);
+	final Object result = Array.newInstance(a.getClass().getComponentType(), len);
         System.arraycopy(a, 0, result, 0, len);
         return (A)result;
     }
