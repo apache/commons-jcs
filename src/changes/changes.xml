@@ -72,10 +72,10 @@
                Bump commons-text from 1.10.0 to 1.11.0.
             </action>
             <action type="update" dev="ggregory" due-to="Dependabot">
-               Bump org.apache.logging.log4j:log4j-core from 2.21.1 to 2.23.1 #190, #198, #216, #223, #229.
+               Bump org.apache.logging.log4j:log4j-core from 2.21.1 to 2.24.0 #190, #198, #216, #223, #229, #284.
             </action>
             <action type="update" dev="ggregory" due-to="Dependabot">
-               Bump org.apache.logging.log4j:log4j-api from 2.21.1 to 2.23.1 #191, #197.
+               Bump org.apache.logging.log4j:log4j-api from 2.21.1 to 2.24.0 #191, #197, #284.
             </action>
             <action type="update" dev="ggregory" due-to="Dependabot">Bump org.apache.tomcat:tomcat-catalina from 9.0.79 to 9.0.83 in /commons-jcs3-jcache-extras.</action>
             <action type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">Bump commons-logging:commons-logging from 1.3.0 to 1.3.4 #253, #262, #278.</action>
