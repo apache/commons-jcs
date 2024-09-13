@@ -57,9 +57,6 @@
                Bump Java to 17.
             </action>
             <action dev="tv" type="update">
-               From this release on we require Java 17.
-            </action>
-            <action dev="tv" type="update">
                Migrate all tests to JUnit 4.
             </action>
             <action type="update" dev="ggregory" due-to="Gary Gregory">
