@@ -818,7 +818,7 @@ public class JDBCDiskCache<K, V>
 
     /**
      * For debugging.
-     * <p>
+     *
      * @return this.getStats();
      */
     @Override
