@@ -25,7 +25,7 @@ import org.apache.commons.jcs3.engine.CacheStatus;
 import org.apache.commons.jcs3.engine.CompositeCacheAttributes;
 import org.junit.Test;
 
-/** Unit tests for the composite cache manager */
+/** Tests for the composite cache manager */
 public class CompositeCacheManagerTest
 {
 

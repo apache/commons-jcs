@@ -32,7 +32,7 @@ import org.apache.commons.jcs3.auxiliary.MockAuxiliaryCacheFactory;
 import org.apache.commons.jcs3.engine.logging.MockCacheEventLogger;
 import org.junit.Test;
 
-/** Unit tests for the configurator. */
+/** Tests for the configurator. */
 public class CompositeCacheConfiguratorUnitTest
 {
     /**

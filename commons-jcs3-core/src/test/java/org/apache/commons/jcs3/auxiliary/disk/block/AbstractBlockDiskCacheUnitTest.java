@@ -39,7 +39,7 @@ import org.apache.commons.jcs3.engine.control.group.GroupId;
 import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
 import org.junit.Test;
 
-/** Unit tests for the Block Disk Cache */
+/** Tests for the Block Disk Cache */
 public abstract class AbstractBlockDiskCacheUnitTest{
     /** Holder for a string and byte array. */
     static class X implements Serializable

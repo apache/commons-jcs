@@ -23,7 +23,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-/** Unit tests for the double linked list. */
+/** Tests for the double linked list. */
 public class DoubleLinkedListUnitTest
 {
     /** Verify that the last is added when the list is empty. */

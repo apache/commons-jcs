@@ -32,7 +32,7 @@ import org.apache.commons.jcs3.engine.logging.MockCacheEventLogger;
 import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
 import org.junit.Test;
 
-/** Unit tests for the auxiliary cache configurator. */
+/** Tests for the auxiliary cache configurator. */
 public class AuxiliaryCacheConfiguratorUnitTest
 {
     /**

@@ -30,7 +30,7 @@ import org.apache.commons.jcs3.engine.control.MockCompositeCacheManager;
 import org.apache.commons.jcs3.engine.logging.behavior.ICacheEventLogger;
 import org.junit.Test;
 
-/** Unit tests for the manager. */
+/** Tests for the manager. */
 public class RemoteHttpCacheFactoryUnitTest
 {
     /** Verify that we get the default. */

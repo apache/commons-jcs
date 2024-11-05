@@ -31,7 +31,7 @@ import org.apache.commons.jcs3.auxiliary.remote.value.RemoteRequestType;
 import org.apache.commons.jcs3.engine.CacheElement;
 import org.junit.Test;
 
-/** Unit tests for the request creator. */
+/** Tests for the request creator. */
 public class RemoteCacheRequestFactoryUnitTest
 {
     /** Simple test */

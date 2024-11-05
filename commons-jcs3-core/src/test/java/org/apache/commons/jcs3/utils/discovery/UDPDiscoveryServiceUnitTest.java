@@ -29,7 +29,7 @@ import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
 import org.junit.Before;
 import org.junit.Test;
 
-/** Unit tests for the service. */
+/** Tests for the service. */
 public class UDPDiscoveryServiceUnitTest
 {
     private final static String host = "228.5.6.7";

@@ -27,7 +27,7 @@ import org.apache.commons.jcs3.TestLogConfigurationUtil;
 import org.apache.commons.jcs3.engine.logging.behavior.ICacheEvent;
 import org.junit.Test;
 
-/** Unit tests for the debug implementation */
+/** Tests for the debug implementation */
 public class CacheEventLoggerDebugLoggerUnitTest
 {
 

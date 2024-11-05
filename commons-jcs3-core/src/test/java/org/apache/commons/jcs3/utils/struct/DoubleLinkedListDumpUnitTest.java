@@ -26,7 +26,7 @@ import java.io.StringWriter;
 import org.apache.commons.jcs3.TestLogConfigurationUtil;
 import org.junit.Test;
 
-/** Unit tests for the double linked list. */
+/** Tests for the double linked list. */
 public class DoubleLinkedListDumpUnitTest
 {
     /** Verify that the entries are dumped. */

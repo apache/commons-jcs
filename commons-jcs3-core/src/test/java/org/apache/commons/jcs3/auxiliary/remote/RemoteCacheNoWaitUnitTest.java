@@ -34,7 +34,7 @@ import org.apache.commons.jcs3.utils.timing.SleepUtil;
 import org.junit.Test;
 
 /**
- * Unit tests for the remote cache no wait. The no wait manages a queue on top of the client.
+ * Tests for the remote cache no wait. The no wait manages a queue on top of the client.
  */
 public class RemoteCacheNoWaitUnitTest
 {

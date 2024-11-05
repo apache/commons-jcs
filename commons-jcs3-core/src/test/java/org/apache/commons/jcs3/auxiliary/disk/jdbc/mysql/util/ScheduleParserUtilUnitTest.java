@@ -28,7 +28,7 @@ import java.util.Date;
 import org.junit.Test;
 
 /**
- * Unit tests for the schedule parser.
+ * Tests for the schedule parser.
  */
 public class ScheduleParserUtilUnitTest
 {

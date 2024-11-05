@@ -29,7 +29,7 @@ import org.apache.commons.jcs3.auxiliary.remote.behavior.ICommonRemoteCacheAttri
 import org.apache.commons.jcs3.auxiliary.remote.behavior.IRemoteCacheConstants;
 import org.junit.Test;
 
-/** Unit tests for the factory */
+/** Tests for the factory */
 public class RemoteCacheServerFactoryUnitTest
 {
     /** Verify that we get the timeout value */

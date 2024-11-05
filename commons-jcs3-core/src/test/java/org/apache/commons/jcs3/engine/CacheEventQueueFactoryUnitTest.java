@@ -29,7 +29,7 @@ import org.apache.commons.jcs3.engine.behavior.ICacheEventQueue.QueueType;
 import org.apache.commons.jcs3.engine.behavior.ICacheListener;
 import org.junit.Test;
 
-/** Unit tests for the CacheEventQueueFactory */
+/** Tests for the CacheEventQueueFactory */
 public class CacheEventQueueFactoryUnitTest
 {
     /** Test create */

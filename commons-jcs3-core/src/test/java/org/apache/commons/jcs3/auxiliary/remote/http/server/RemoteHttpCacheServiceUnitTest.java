@@ -28,7 +28,7 @@ import org.apache.commons.jcs3.engine.CacheElement;
 import org.apache.commons.jcs3.engine.control.MockCompositeCacheManager;
 import org.junit.Test;
 
-/** Unit tests for the service. */
+/** Tests for the service. */
 public class RemoteHttpCacheServiceUnitTest
 {
     /**

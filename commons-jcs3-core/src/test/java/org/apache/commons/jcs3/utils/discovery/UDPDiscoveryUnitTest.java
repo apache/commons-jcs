@@ -30,7 +30,7 @@ import org.apache.commons.jcs3.utils.timing.SleepUtil;
 import org.junit.Test;
 
 /**
- * Unit tests for discovery
+ * Tests for discovery
  */
 public class UDPDiscoveryUnitTest
 {

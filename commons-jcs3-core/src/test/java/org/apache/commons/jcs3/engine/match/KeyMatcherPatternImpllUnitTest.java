@@ -26,7 +26,7 @@ import java.util.Set;
 
 import org.junit.Test;
 
-/** Unit tests for the key matcher. */
+/** Tests for the key matcher. */
 public class KeyMatcherPatternImpllUnitTest
 {
     /**

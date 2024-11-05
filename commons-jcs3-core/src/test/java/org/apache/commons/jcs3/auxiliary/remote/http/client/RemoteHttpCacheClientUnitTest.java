@@ -34,7 +34,7 @@ import org.apache.commons.jcs3.engine.CacheElement;
 import org.apache.commons.jcs3.engine.behavior.ICacheElement;
 import org.junit.Test;
 
-/** Unit tests for the client. */
+/** Tests for the client. */
 public class RemoteHttpCacheClientUnitTest
 {
     /**

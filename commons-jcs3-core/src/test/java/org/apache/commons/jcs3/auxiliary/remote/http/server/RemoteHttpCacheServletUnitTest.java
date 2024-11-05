@@ -36,7 +36,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-/** Unit tests for the servlet. */
+/** Tests for the servlet. */
 public class RemoteHttpCacheServletUnitTest
 {
     private RemoteHttpCacheServlet servlet;

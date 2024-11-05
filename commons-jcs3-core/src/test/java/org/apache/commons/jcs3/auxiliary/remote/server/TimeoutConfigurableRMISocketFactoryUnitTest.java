@@ -25,7 +25,7 @@ import java.net.Socket;
 
 import org.junit.Test;
 
-/** Unit tests for the custom factory */
+/** Tests for the custom factory */
 public class TimeoutConfigurableRMISocketFactoryUnitTest
 {
     /**

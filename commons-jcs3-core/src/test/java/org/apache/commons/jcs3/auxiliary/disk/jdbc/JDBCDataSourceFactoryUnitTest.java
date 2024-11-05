@@ -41,7 +41,7 @@ import org.apache.commons.jcs3.auxiliary.disk.jdbc.dsfactory.JndiDataSourceFacto
 import org.apache.commons.jcs3.auxiliary.disk.jdbc.dsfactory.SharedPoolDataSourceFactory;
 import org.junit.Test;
 
-/** Unit tests for the data source factories */
+/** Tests for the data source factories */
 public class JDBCDataSourceFactoryUnitTest
 {
     /* For JNDI mocking */
