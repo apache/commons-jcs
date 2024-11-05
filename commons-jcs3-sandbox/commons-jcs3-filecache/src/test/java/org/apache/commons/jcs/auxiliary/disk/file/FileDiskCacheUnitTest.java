@@ -28,7 +28,7 @@ import org.apache.commons.jcs3.engine.CacheStatus;
 import org.apache.commons.jcs3.engine.behavior.ICacheElement;
 import org.apache.commons.jcs3.utils.timing.SleepUtil;
 
-/** Unit tests for the disk file cache. */
+/** Tests for the disk file cache. */
 public class FileDiskCacheUnitTest
     extends TestCase
 {
