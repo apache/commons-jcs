@@ -19,22 +19,22 @@ package org.apache.commons.jcs3.auxiliary.disk;
  * under the License.
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.commons.jcs3.engine.CacheElement;
 import org.apache.commons.jcs3.engine.ElementAttributes;
 import org.apache.commons.jcs3.engine.behavior.ICacheElement;
 import org.apache.commons.jcs3.engine.behavior.IElementAttributes;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /** Simple unit tests for the Purgatory Element. */
-public class PurgatoryElementUnitTest
+class PurgatoryElementUnitTest
 {
     /** Verify basic data */
     @Test
-    public void testElementAttributes_normal()
+    void testElementAttributes_normal()
     {
         // SETUP
         final String cacheName = "myCacheName";
@@ -50,12 +50,12 @@ public class PurgatoryElementUnitTest
         final IElementAttributes result = cacheElement.getElementAttributes();
 
         // VERIFY
-        assertEquals( "Should have set the attributes on the element", elementAttributes, result );
+        assertEquals( elementAttributes, result, "Should have set the attributes on the element" );
     }
 
     /** Verify basic data */
     @Test
-    public void testSpoolable_normal()
+    void testSpoolable_normal()
     {
         // SETUP
         final String cacheName = "myCacheName";
@@ -70,12 +70,12 @@ public class PurgatoryElementUnitTest
         final boolean result = purgatoryElement.isSpoolable();
 
         // VERIFY
-        assertFalse( "Should not be spoolable.", result );
+        assertFalse( result, "Should not be spoolable." );
     }
 
     /** Verify basic data */
     @Test
-    public void testToString_normal()
+    void testToString_normal()
     {
         // SETUP
         final String cacheName = "myCacheName";
@@ -89,8 +89,8 @@ public class PurgatoryElementUnitTest
         final String result = purgatoryElement.toString();
 
         // VERIFY
-        assertTrue( "Should have the cacheName.", result.indexOf( cacheName ) != -1 );
-        assertTrue( "Should have the key.", result.indexOf( key ) != -1 );
-        assertTrue( "Should have the value.", result.indexOf( value ) != -1 );
+        assertTrue( result.indexOf( cacheName ) != -1, "Should have the cacheName." );
+        assertTrue( result.indexOf( key ) != -1, "Should have the key." );
+        assertTrue( result.indexOf( value ) != -1, "Should have the value." );
     }
 }

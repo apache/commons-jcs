@@ -1,10 +1,5 @@
 package org.apache.commons.jcs3.jcache;
 
-import static org.junit.Assert.assertNotNull;
-
-import javax.cache.Caching;
-import javax.cache.spi.CachingProvider;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -24,12 +19,17 @@ import javax.cache.spi.CachingProvider;
  * under the License.
  */
 
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class CachingProviderTest
+import javax.cache.Caching;
+import javax.cache.spi.CachingProvider;
+
+import org.junit.jupiter.api.Test;
+
+class CachingProviderTest
 {
     @Test
-    public void testCreateCacheMgr()
+    void testCreateCacheMgr()
     {
         final CachingProvider cachingProvider = Caching.getCachingProvider();
         assertNotNull(cachingProvider.getCacheManager());
@@ -37,7 +37,7 @@ public class CachingProviderTest
     }
 
     @Test
-    public void testFindProvider()
+    void testFindProvider()
     {
         assertNotNull(Caching.getCachingProvider());
     }

@@ -19,11 +19,11 @@ package org.apache.commons.jcs3.engine.memory.shrinking;
  * under the License.
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 
@@ -36,18 +36,19 @@ import org.apache.commons.jcs3.engine.control.CompositeCache;
 import org.apache.commons.jcs3.engine.control.event.ElementEventHandlerMockImpl;
 import org.apache.commons.jcs3.engine.control.event.behavior.ElementEventType;
 import org.apache.commons.jcs3.engine.memory.MockMemoryCache;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * This tests the functionality of the shrinker thread.
  */
-public class ShrinkerThreadUnitTest
+class ShrinkerThreadUnitTest
 {
     /** Verify the check for removal
      * <p>
      * @throws IOException */
     @Test
-    public void testCheckForRemoval_Expired() throws IOException
+    void testCheckForRemoval_Expired()
+        throws IOException
     {
         // SETUP
         final CompositeCacheAttributes cacheAttr = new CompositeCacheAttributes();
@@ -76,14 +77,15 @@ public class ShrinkerThreadUnitTest
                 ElementEventType.EXCEEDED_IDLETIME_BACKGROUND );
 
         // VERIFY
-        assertTrue( "Item should have expired.", result );
+        assertTrue( result, "Item should have expired." );
     }
 
     /** Verify the check for removal
      * <p>
      * @throws IOException */
     @Test
-    public void testCheckForRemoval_IdleTooLong() throws IOException
+    void testCheckForRemoval_IdleTooLong()
+        throws IOException
     {
         // SETUP
         final CompositeCacheAttributes cacheAttr = new CompositeCacheAttributes();
@@ -113,14 +115,15 @@ public class ShrinkerThreadUnitTest
                 ElementEventType.EXCEEDED_IDLETIME_BACKGROUND );
 
         // VERIFY
-        assertTrue( "Item should have expired.", result );
+        assertTrue( result, "Item should have expired." );
     }
 
     /** Verify the check for removal
      * <p>
      * @throws IOException */
     @Test
-    public void testCheckForRemoval_NotExpired() throws IOException
+    void testCheckForRemoval_NotExpired()
+        throws IOException
     {
         // SETUP
         final CompositeCacheAttributes cacheAttr = new CompositeCacheAttributes();
@@ -149,14 +152,15 @@ public class ShrinkerThreadUnitTest
                 ElementEventType.EXCEEDED_IDLETIME_BACKGROUND );
 
         // VERIFY
-        assertFalse( "Item should not have expired.", result );
+        assertFalse( result, "Item should not have expired." );
     }
 
     /** Verify the check for removal
      * <p>
      * @throws IOException */
     @Test
-    public void testCheckForRemoval_NotIdleTooLong() throws IOException
+    void testCheckForRemoval_NotIdleTooLong()
+        throws IOException
     {
         // SETUP
         final CompositeCacheAttributes cacheAttr = new CompositeCacheAttributes();
@@ -186,7 +190,7 @@ public class ShrinkerThreadUnitTest
                 ElementEventType.EXCEEDED_IDLETIME_BACKGROUND );
 
         // VERIFY
-        assertFalse( "Item should not have expired.", result );
+        assertFalse( result, "Item should not have expired." );
     }
 
     /**
@@ -196,7 +200,7 @@ public class ShrinkerThreadUnitTest
      * @throws Exception
      */
     @Test
-    public void testSimpleShrink()
+    void testSimpleShrink()
         throws Exception
     {
         // SETUP
@@ -221,7 +225,7 @@ public class ShrinkerThreadUnitTest
         memory.update( element );
 
         final ICacheElement<String, String> returnedElement1 = memory.get( key );
-        assertNotNull( "We should have received an element", returnedElement1 );
+        assertNotNull( returnedElement1, "We should have received an element" );
 
         // set this to 2 seconds ago.
         ElementAttributesUtils.setLastAccessTime( elementAttr,  System.currentTimeMillis() - 2000 );
@@ -234,8 +238,8 @@ public class ShrinkerThreadUnitTest
 
         // VERIFY
         final ICacheElement<String, String> returnedElement2 = memory.get( key );
-        assertTrue( "Waterfall should have been called.", memory.waterfallCallCount > 0 );
-        assertNull( "We not should have received an element.  It should have been spooled.", returnedElement2 );
+        assertTrue( memory.waterfallCallCount > 0, "Waterfall should have been called." );
+        assertNull( returnedElement2, "We not should have received an element.  It should have been spooled." );
     }
 
     /**
@@ -244,7 +248,7 @@ public class ShrinkerThreadUnitTest
      * @throws Exception
      */
     @Test
-    public void testSimpleShrinkMultiple()
+    void testSimpleShrinkMultiple()
         throws Exception
     {
         // SETUP
@@ -271,7 +275,7 @@ public class ShrinkerThreadUnitTest
             memory.update( element );
 
             final ICacheElement<String, String> returnedElement1 = memory.get( key );
-            assertNotNull( "We should have received an element", returnedElement1 );
+            assertNotNull( returnedElement1, "We should have received an element" );
 
             // set this to 2 seconds ago.
             ElementAttributesUtils.setLastAccessTime( elementAttr,  System.currentTimeMillis() - 2000 );
@@ -283,8 +287,8 @@ public class ShrinkerThreadUnitTest
 
         // VERIFY
         Thread.sleep( 500 );
-        assertEquals( "Waterfall called the wrong number of times.", 3, memory.waterfallCallCount );
-        assertEquals( "Wrong number of elements remain.", 7, memory.getSize() );
+        assertEquals( 3, memory.waterfallCallCount, "Waterfall called the wrong number of times." );
+        assertEquals( 7, memory.getSize(), "Wrong number of elements remain." );
     }
 
     /**
@@ -295,7 +299,7 @@ public class ShrinkerThreadUnitTest
      * @throws Exception
      */
     @Test
-    public void testSimpleShrinkMultipleWithEventHandler()
+    void testSimpleShrinkMultipleWithEventHandler()
         throws Exception
     {
         // SETUP
@@ -325,7 +329,7 @@ public class ShrinkerThreadUnitTest
             memory.update( element );
 
             final ICacheElement<String, String> returnedElement1 = memory.get( key );
-            assertNotNull( "We should have received an element", returnedElement1 );
+            assertNotNull( returnedElement1, "We should have received an element" );
 
             // set this to 2 seconds ago.
             ElementAttributesUtils.setLastAccessTime( elementAttr,  System.currentTimeMillis() - 2000 );
@@ -337,10 +341,10 @@ public class ShrinkerThreadUnitTest
 
         // VERIFY
         Thread.sleep( 500 );
-        assertEquals( "Waterfall called the wrong number of times.", 3, memory.waterfallCallCount );
+        assertEquals( 3, memory.waterfallCallCount, "Waterfall called the wrong number of times." );
         // the shrinker delegates the composite cache on the memory cache to put the
         // event on the queue.  This make it hard to test.  TODO we need to change this to make it easier to verify.
         //assertEquals( "Event handler ExceededIdleTimeBackground called the wrong number of times.", 3, handler.getExceededIdleTimeBackgroundCount() );
-        assertEquals( "Wrong number of elements remain.", 7, memory.getSize() );
+        assertEquals( 7, memory.getSize(), "Wrong number of elements remain." );
     }
 }

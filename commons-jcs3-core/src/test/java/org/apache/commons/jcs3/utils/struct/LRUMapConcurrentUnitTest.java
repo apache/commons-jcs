@@ -19,30 +19,28 @@ package org.apache.commons.jcs3.utils.struct;
  * under the License.
  */
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.Iterator;
 
-import junit.extensions.ActiveTestSuite;
-import junit.framework.TestCase;
-
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests the LRUMap
  */
-public class LRUMapConcurrentUnitTest
+class LRUMapConcurrentUnitTest
 {
-    /** Number to test with */
+
+    // Number to test with
     private static final int items = 20000;
 
     /**
      * Just make sure that we can put and get concurrently
      *
-     * @param map
-     * @param items
-     * @throws Exception
+     * @param map LRUMap instance
+     * @param items Number of items to test with
+     * @throws Exception If an error occurs
      */
     public static void runConcurrentPutGetTests( final LRUMap<String, String> map, final int items )
         throws Exception
@@ -55,18 +53,18 @@ public class LRUMapConcurrentUnitTest
         for ( int i = items - 1; i >= 0; i-- )
         {
             final String res = map.get( i + ":key" );
-            assertNotNull( "[" + i + ":key] should not be null", res );
+            assertNotNull( res, "[" + i + ":key] should not be null" );
         }
     }
 
     /**
      * Put, get, and remove from a range. This should occur at a range that is
      * not touched by other tests.
-     * <p>
-     * @param map
-     * @param start
-     * @param end
-     * @throws Exception
+     *
+     * @param map LRUMap instance
+     * @param start Start index of the range
+     * @param end End index of the range
+     * @throws Exception If an error occurs
      */
     public static void runConcurrentRangeTests( final LRUMap<String, String> map, final int start, final int end )
         throws Exception
@@ -79,93 +77,22 @@ public class LRUMapConcurrentUnitTest
         for ( int i = end - 1; i >= start; i-- )
         {
             final String res = map.get( i + ":key" );
-            assertNotNull( "[" + i + ":key] should not be null", res );
+            assertNotNull( res, "[" + i + ":key] should not be null" );
         }
 
-        // test removal
+        // Test removal
         map.remove( start + ":key" );
         assertNull( map.get( start + ":key" ) );
     }
 
-    /**
-     * A unit test suite for JUnit
-     * <p>
-     * @return The test suite
-     */
-    public static junit.framework.Test suite()
-    {
-        // run the basic tests
-        final ActiveTestSuite suite = new ActiveTestSuite();
-
-        // run concurrent tests
-        final LRUMap<String, String> map = new LRUMap<>( 2000 );
-        suite.addTest(new TestCase("conc1" )
-        {
-            @Override
-            public void runTest()
-                throws Exception
-            {
-                runConcurrentPutGetTests( map, 2000 );
-            }
-        });
-        suite.addTest(new TestCase("conc2" )
-        {
-            @Override
-            public void runTest()
-                throws Exception
-            {
-                runConcurrentPutGetTests( map, 2000 );
-            }
-        });
-        suite.addTest(new TestCase("conc3" )
-        {
-            @Override
-            public void runTest()
-                throws Exception
-            {
-                runConcurrentPutGetTests( map, 2000 );
-            }
-        });
-
-        // run more concurrent tests
-        final int max2 = 20000;
-        final LRUMap<String, String> map2 = new LRUMap<>( max2 );
-        suite.addTest(new TestCase("concB1" )
-        {
-            @Override
-            public void runTest()
-                throws Exception
-            {
-                runConcurrentRangeTests( map2, 10000, max2 );
-            }
-        });
-        suite.addTest(new TestCase("concB1" )
-        {
-            @Override
-            public void runTest()
-                throws Exception
-            {
-                runConcurrentRangeTests( map2, 0, 9999 );
-            }
-        });
-
-        return suite;
-    }
-
-    /**
-     * Just make sure that the LRU functions in he most simple case.
-     *
-     * @throws Exception
-     *                Description of the Exception
-     */
     @Test
-    public void testLRURemoval()
+    void testLRURemoval()
         throws Exception
     {
         final int total = 10;
         final LRUMap<String, String> map = new LRUMap<>( total );
 
-        // put the max in
+        // Put the max in
         for ( int i = 0; i < total; i++ )
         {
             map.put( i + ":key", "data" + i );
@@ -177,59 +104,48 @@ public class LRUMapConcurrentUnitTest
             assertNotNull( it.next() );
         }
 
-        // get the max out backwards
+        // Get the max out backwards
         for ( int i = total - 1; i >= 0; i-- )
         {
             final String res = map.get( i + ":key" );
-            assertNotNull( "[" + i + ":key] should not be null", res );
+            assertNotNull( res, "[" + i + ":key] should not be null" );
         }
 
-        //since we got them backwards the total should be at the end.
-        // add one confirm that total is gone.
+        // Since we got them backwards the total should be at the end.
+        // Add one and confirm that total is gone.
         map.put( total + ":key", "data" + total );
         assertNull( map.get( total - 1 + ":key" ) );
     }
 
-    /**
-     * @throws Exception
-     */
     @Test
-    public void testLRURemovalAgain()
+    void testLRURemovalAgain()
         throws Exception
     {
         final int total = 10000;
         final LRUMap<String, String> map = new LRUMap<>( total );
 
-        // put the max in
+        // Put the max in
         for ( int i = 0; i < total * 2; i++ )
         {
             map.put( i + ":key", "data" + i );
         }
 
-        // get the total number, these should be null
+        // Get the total number, these should be null
         for ( int i = total - 1; i >= 0; i-- )
         {
             assertNull( map.get( i + ":key" ) );
         }
 
-        // get the total to total *2 items out, these should be found.
+        // Get the total to total *2 items out, these should be found.
         for ( int i = total * 2 - 1; i >= total; i-- )
         {
             final String res = map.get( i + ":key" );
-            assertNotNull( "[" + i + ":key] should not be null", res );
+            assertNotNull( res, "[" + i + ":key] should not be null" );
         }
-
-//        System.out.println( map.getStatistics() );
     }
 
-    /**
-     * Just test that we can put, get and remove as expected.
-     * <p>
-     * @throws Exception
-     *                Description of the Exception
-     */
     @Test
-    public void testSimpleLoad()
+    void testSimpleLoad()
         throws Exception
     {
         final LRUMap<String, String> map = new LRUMap<>( items );
@@ -242,11 +158,32 @@ public class LRUMapConcurrentUnitTest
         for ( int i = items - 1; i >= 0; i-- )
         {
             final String res = map.get( i + ":key" );
-            assertNotNull( "[" + i + ":key] should not be null", res );
+            assertNotNull( res, "[" + i + ":key] should not be null" );
         }
 
-        // test removal
+        // Test removal
         map.remove( "300:key" );
         assertNull( map.get( "300:key" ) );
+    }
+
+    @Test
+    void testConcurrentPutGet()
+        throws Exception
+    {
+        final LRUMap<String, String> map = new LRUMap<>( 2000 );
+
+        // Run concurrent put/get tests
+        runConcurrentPutGetTests( map, 2000 );
+    }
+
+    @Test
+    void testConcurrentRange()
+        throws Exception
+    {
+        final LRUMap<String, String> map = new LRUMap<>( 20000 );
+
+        // Run concurrent range tests
+        runConcurrentRangeTests( map, 10000, 20000 );
+        runConcurrentRangeTests( map, 0, 10000 );
     }
 }

@@ -19,25 +19,25 @@ package org.apache.commons.jcs3.auxiliary.disk.jdbc.mysql.util;
  * under the License.
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.text.ParseException;
 import java.util.Date;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for the schedule parser.
  */
-public class ScheduleParserUtilUnitTest
+class ScheduleParserUtilUnitTest
 {
 
     /**
      * Verify that we get an exception for a schedule that has a non numeric item.
      */
     @Test
-    public void testGetDatesMalformedNan()
+    void testGetDatesMalformedNan()
     {
         try
         {
@@ -56,7 +56,7 @@ public class ScheduleParserUtilUnitTest
      * Verify that we get an exception for a single bad date in a list.
      */
     @Test
-    public void testGetDatesMalformedNoColon()
+    void testGetDatesMalformedNoColon()
     {
         try
         {
@@ -75,7 +75,7 @@ public class ScheduleParserUtilUnitTest
      * Verify that we get an exception and not a null pointer for null input.
      */
     @Test
-    public void testGetDatesWithNullInput()
+    void testGetDatesWithNullInput()
     {
         try
         {
@@ -88,11 +88,12 @@ public class ScheduleParserUtilUnitTest
             // expected
         }
     }
+
     /**
      * Verify that we get an exception and not a null pointer for null input.
      */
     @Test
-    public void testGetDateWithNullInput()
+    void testGetDateWithNullInput()
     {
         try
         {
@@ -111,25 +112,26 @@ public class ScheduleParserUtilUnitTest
      * @throws ParseException
      */
     @Test
-    public void testGetsDatesMultiple()
+    void testGetsDatesMultiple()
         throws ParseException
     {
         final String schedule = "12:34:56,03:51:00,12:34:12";
         final Date[] dates = ScheduleParser.createDatesForSchedule( schedule );
         //System.out.println( dates );
-        assertEquals( "Wrong number of dates returned.", 3, dates.length );
+        assertEquals( 3, dates.length, "Wrong number of dates returned." );
     }
+
     /**
      * Verify that we get one date for one date.
      * @throws ParseException
      */
     @Test
-    public void testGetsDatesSingle()
+    void testGetsDatesSingle()
         throws ParseException
     {
         final String schedule = "12:34:56";
         final Date[] dates = ScheduleParser.createDatesForSchedule( schedule );
 
-        assertEquals( "Wrong number of dates returned.", 1, dates.length );
+        assertEquals( 1, dates.length, "Wrong number of dates returned." );
     }
 }

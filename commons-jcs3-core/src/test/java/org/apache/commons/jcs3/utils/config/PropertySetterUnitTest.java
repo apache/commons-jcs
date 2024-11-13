@@ -18,41 +18,42 @@ package org.apache.commons.jcs3.utils.config;
  * specific language governing permissions and limitations
  * under the License.
  */
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 
 import java.io.File;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test property settings
  */
-public class PropertySetterUnitTest
+class PropertySetterUnitTest
 {
     enum EnumTest { ONE, TWO, THREE }
 
     @Test
-    public void testConvertArg()
+    void testConvertArg()
     {
         final PropertySetter ps = new PropertySetter(this);
         final Object s = ps.convertArg("test", String.class);
-        assertEquals("Should be a string", "test", s);
+        assertEquals( "test", s, "Should be a string" );
 
         final Object i = ps.convertArg("1", Integer.TYPE);
-        assertEquals("Should be an integer", Integer.valueOf(1), i);
+        assertEquals( Integer.valueOf( 1 ), i, "Should be an integer" );
 
         final Object l = ps.convertArg("1", Long.TYPE);
-        assertEquals("Should be a long", Long.valueOf(1), l);
+        assertEquals( Long.valueOf( 1 ), l, "Should be a long" );
 
         final Object b = ps.convertArg("true", Boolean.TYPE);
-        assertEquals("Should be a boolean", Boolean.TRUE, b);
+        assertEquals( Boolean.TRUE, b, "Should be a boolean" );
 
         final Object e = ps.convertArg("TWO", EnumTest.class);
-        assertEquals("Should be an enum", EnumTest.TWO, e);
+        assertEquals( EnumTest.TWO, e, "Should be an enum" );
 
         final Object f = ps.convertArg("test.conf", File.class);
-        assertTrue("Should be a file", f instanceof File);
+        assertInstanceOf( File.class, f, "Should be a file" );
     }
 
 }

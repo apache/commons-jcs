@@ -1,8 +1,5 @@
 package org.apache.commons.jcs3.jcache.cdi;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -22,6 +19,9 @@ import static org.junit.Assert.fail;
  * under the License.
  */
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -31,9 +31,9 @@ import javax.cache.annotation.CacheDefaults;
 import javax.cache.annotation.CacheResult;
 import javax.interceptor.InvocationContext;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class CDIJCacheHelperTest
+class CDIJCacheHelperTest
 {
     @CacheDefaults(cacheName = "child")
     public interface MyChild1 extends MyParent
@@ -110,7 +110,7 @@ public class CDIJCacheHelperTest
     }
 
     @Test
-    public void testProxyCacheDefaults()
+    void testProxyCacheDefaults()
     {
         final CDIJCacheHelper helper = new CDIJCacheHelper();
 

@@ -1,12 +1,5 @@
 package org.apache.commons.jcs3.access;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -26,6 +19,14 @@ import static org.junit.Assert.fail;
  * under the License.
  */
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -38,24 +39,24 @@ import org.apache.commons.jcs3.engine.ElementAttributes;
 import org.apache.commons.jcs3.engine.behavior.ICacheElement;
 import org.apache.commons.jcs3.engine.behavior.ICompositeCacheAttributes;
 import org.apache.commons.jcs3.engine.behavior.IElementAttributes;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests the methods of the cache access class.
  */
-public class CacheAccessUnitTest
+class CacheAccessUnitTest
 {
     /**
      * Verify that getCacheElements returns the elements requested based on the key.
      * @throws Exception
      */
     @Test
-    public void testGetCacheElements()
+    void testGetCacheElements()
         throws Exception
     {
         //SETUP
         final CacheAccess<String, String> access = JCS.getInstance( "test" );
-        assertNotNull( "We should have an access class", access );
+        assertNotNull( access, "We should have an access class" );
 
         final String keyOne = "mykeyone";
         final String keyTwo = "mykeytwo";
@@ -78,21 +79,21 @@ public class CacheAccessUnitTest
         final Map<String, ICacheElement<String, String>> result = access.getCacheElements( input );
 
         //VERIFY
-        assertEquals( "map size", 2, result.size() );
+        assertEquals( 2, result.size(), "map size" );
         final ICacheElement<String, String> elementOne = result.get( keyOne );
-        assertEquals( "value one", keyOne, elementOne.getKey() );
-        assertEquals( "value one", valueOne, elementOne.getVal() );
+        assertEquals( keyOne, elementOne.getKey(), "value one" );
+        assertEquals( valueOne, elementOne.getVal(), "value one" );
         final ICacheElement<String, String> elementTwo = result.get( keyTwo );
-        assertEquals( "value two", keyTwo, elementTwo.getKey() );
-        assertEquals( "value two", valueTwo, elementTwo.getVal() );
+        assertEquals( keyTwo, elementTwo.getKey(), "value two" );
+        assertEquals( valueTwo, elementTwo.getVal(), "value two" );
 
         assertNull(access.get(keyFour));
         final String suppliedValue1 = access.get(keyFour, () -> valueFour);
-        assertNotNull( "value four", suppliedValue1);
-        assertEquals( "value four", valueFour, suppliedValue1);
+        assertNotNull( suppliedValue1, "value four" );
+        assertEquals( valueFour, suppliedValue1, "value four" );
         final String suppliedValue2 = access.get(keyFour);
-        assertNotNull( "value four", suppliedValue2);
-        assertEquals( "value four", suppliedValue1, suppliedValue2);
+        assertNotNull( suppliedValue2, "value four" );
+        assertEquals( suppliedValue1, suppliedValue2, "value four" );
     }
 
     /**
@@ -101,7 +102,7 @@ public class CacheAccessUnitTest
      * @throws Exception
      */
     @Test
-    public void testGetMatching_Normal()
+    void testGetMatching_Normal()
         throws Exception
     {
         // SETUP
@@ -138,15 +139,15 @@ public class CacheAccessUnitTest
         final Map<String, Integer> result2 = access.getMatching( keyprefix2 + "\\S+" );
 
         // VERIFY
-        assertEquals( "Wrong number returned 1:", numToInsertPrefix1, result1.size() );
-        assertEquals( "Wrong number returned 2:", numToInsertPrefix2, result2.size() );
+        assertEquals( numToInsertPrefix1, result1.size(), "Wrong number returned 1:" );
+        assertEquals( numToInsertPrefix2, result2.size(), "Wrong number returned 2:" );
         //System.out.println( result1 );
 
         // verify that the elements are unwrapped
         for (final Map.Entry<String, Integer> entry : result1.entrySet())
         {
             final Object value = entry.getValue();
-            assertFalse( "Should not be a cache element.", value instanceof ICacheElement );
+            assertFalse( value instanceof ICacheElement, "Should not be a cache element." );
         }
     }
 
@@ -156,7 +157,7 @@ public class CacheAccessUnitTest
      * @throws Exception
      */
     @Test
-    public void testGetMatchingElements_Normal()
+    void testGetMatchingElements_Normal()
         throws Exception
     {
         // SETUP
@@ -193,15 +194,15 @@ public class CacheAccessUnitTest
         final Map<String, ICacheElement<String, Integer>> result2 = access.getMatchingCacheElements( keyprefix2 + ".+" );
 
         // VERIFY
-        assertEquals( "Wrong number returned 1:", numToInsertPrefix1, result1.size() );
-        assertEquals( "Wrong number returned 2:", numToInsertPrefix2, result2.size() );
+        assertEquals( numToInsertPrefix1, result1.size(), "Wrong number returned 1:" );
+        assertEquals( numToInsertPrefix2, result2.size(), "Wrong number returned 2:" );
         //System.out.println( result1 );
 
         // verify that the elements are wrapped
         for (final Map.Entry<String, ICacheElement<String, Integer>> entry : result1.entrySet())
         {
             final Object value = entry.getValue();
-            assertTrue( "Should be a cache element.", value instanceof ICacheElement );
+            assertInstanceOf( ICacheElement.class, value, "Should be a cache element." );
         }
     }
 
@@ -210,11 +211,11 @@ public class CacheAccessUnitTest
      * @throws Exception
      */
     @Test
-    public void testPutNullKey()
+    void testPutNullKey()
         throws Exception
     {
         final CacheAccess<String, String> access = JCS.getInstance( "test" );
-        assertNotNull( "We should have an access class", access );
+        assertNotNull( access, "We should have an access class" );
 
         final String key = null;
         final String value = "myvalue";
@@ -226,7 +227,7 @@ public class CacheAccessUnitTest
         }
         catch ( final CacheException e )
         {
-            assertTrue( "Should have the word null in the error message.", e.getMessage().indexOf( "null" ) != -1 );
+            assertTrue( e.getMessage().indexOf( "null" ) != -1, "Should have the word null in the error message." );
         }
     }
 
@@ -235,11 +236,11 @@ public class CacheAccessUnitTest
      * @throws Exception
      */
     @Test
-    public void testPutNullValue()
+    void testPutNullValue()
         throws Exception
     {
         final CacheAccess<String, String> access = JCS.getInstance( "test" );
-        assertNotNull( "We should have an access class", access );
+        assertNotNull( access, "We should have an access class" );
 
         final String key = "myKey";
         final String value = null;
@@ -251,7 +252,7 @@ public class CacheAccessUnitTest
         }
         catch ( final CacheException e )
         {
-            assertTrue( "Should have the word null in the error message.", e.getMessage().indexOf( "null" ) != -1 );
+            assertTrue( e.getMessage().indexOf( "null" ) != -1, "Should have the word null in the error message." );
         }
     }
 
@@ -260,11 +261,11 @@ public class CacheAccessUnitTest
      * @throws Exception
      */
     @Test
-    public void testPutSafe()
+    void testPutSafe()
         throws Exception
     {
         final CacheAccess<String, String> access = JCS.getInstance( "test" );
-        assertNotNull( "We should have an access class", access );
+        assertNotNull( access, "We should have an access class" );
 
         final String key = "mykey";
         final String value = "myvalue";
@@ -272,7 +273,7 @@ public class CacheAccessUnitTest
         access.put( key, value );
 
         final String returnedValue1 = access.get( key );
-        assertEquals( "Wrong value returned.", value, returnedValue1 );
+        assertEquals( value, returnedValue1, "Wrong value returned." );
 
         try
         {
@@ -281,12 +282,12 @@ public class CacheAccessUnitTest
         }
         catch ( final CacheException e )
         {
-            assertTrue( "Wrong type of exception.", e instanceof ObjectExistsException );
-            assertTrue( "Should have the key in the error message.", e.getMessage().indexOf( "[" + key + "]" ) != -1 );
+            assertInstanceOf( ObjectExistsException.class, e, "Wrong type of exception." );
+            assertTrue( e.getMessage().indexOf( "[" + key + "]" ) != -1, "Should have the key in the error message." );
         }
 
         final String returnedValue2 = access.get( key );
-        assertEquals( "Wrong value returned.  Should still be the original.", value, returnedValue2 );
+        assertEquals( value, returnedValue2, "Wrong value returned.  Should still be the original." );
     }
 
     /**
@@ -294,11 +295,11 @@ public class CacheAccessUnitTest
      * @throws Exception
      */
     @Test
-    public void testRegionDefiniton()
+    void testRegionDefiniton()
         throws Exception
     {
         final CacheAccess<String, String> access = JCS.getInstance( "test" );
-        assertNotNull( "We should have an access class", access );
+        assertNotNull( access, "We should have an access class" );
     }
 
     /**
@@ -306,7 +307,7 @@ public class CacheAccessUnitTest
      * @throws Exception
      */
     @Test
-    public void testRegionDefinitonWithAttributes()
+    void testRegionDefinitonWithAttributes()
         throws Exception
     {
         final ICompositeCacheAttributes ca = new CompositeCacheAttributes();
@@ -315,10 +316,10 @@ public class CacheAccessUnitTest
         ca.setMaxMemoryIdleTimeSeconds( maxIdleTime );
 
         final CacheAccess<String, String> access = JCS.getInstance( "testRegionDefinitonWithAttributes", ca );
-        assertNotNull( "We should have an access class", access );
+        assertNotNull( access, "We should have an access class" );
 
         final ICompositeCacheAttributes ca2 = access.getCacheAttributes();
-        assertEquals( "Wrong idle time setting.", ca.getMaxMemoryIdleTimeSeconds(), ca2.getMaxMemoryIdleTimeSeconds() );
+        assertEquals( ca.getMaxMemoryIdleTimeSeconds(), ca2.getMaxMemoryIdleTimeSeconds(), "Wrong idle time setting." );
     }
 
     /**
@@ -327,7 +328,7 @@ public class CacheAccessUnitTest
      * @throws Exception
      */
     @Test
-    public void testRegionDefinitonWithBothAttributes()
+    void testRegionDefinitonWithBothAttributes()
         throws Exception
     {
         final ICompositeCacheAttributes ca = new CompositeCacheAttributes();
@@ -340,10 +341,10 @@ public class CacheAccessUnitTest
         attr.setMaxLife(maxLife);
 
         final CacheAccess<String, String> access = JCS.getInstance( "testRegionDefinitonWithAttributes", ca, attr );
-        assertNotNull( "We should have an access class", access );
+        assertNotNull( access, "We should have an access class" );
 
         final ICompositeCacheAttributes ca2 = access.getCacheAttributes();
-        assertEquals( "Wrong idle time setting.", ca.getMaxMemoryIdleTimeSeconds(), ca2.getMaxMemoryIdleTimeSeconds() );
+        assertEquals( ca.getMaxMemoryIdleTimeSeconds(), ca2.getMaxMemoryIdleTimeSeconds(), "Wrong idle time setting." );
     }
 
     /**
@@ -351,11 +352,11 @@ public class CacheAccessUnitTest
      * @throws Exception
      */
     @Test
-    public void testSetDefaultElementAttributes()
+    void testSetDefaultElementAttributes()
         throws Exception
     {
         final CacheAccess<String, String> access = JCS.getInstance( "test" );
-        assertNotNull( "We should have an access class", access );
+        assertNotNull( access, "We should have an access class" );
 
         final long maxLife = 9876;
         final IElementAttributes attr = new ElementAttributes();
@@ -363,8 +364,8 @@ public class CacheAccessUnitTest
 
         access.setDefaultElementAttributes( attr );
 
-        assertEquals( "Wrong element attributes.", attr.getMaxLife(), access.getDefaultElementAttributes()
-            .getMaxLife() );
+        assertEquals( attr.getMaxLife(), access.getDefaultElementAttributes()
+            .getMaxLife(), "Wrong element attributes." );
 
         final String key = "mykey";
         final String value = "myvalue";
@@ -373,7 +374,7 @@ public class CacheAccessUnitTest
 
         final ICacheElement<String, String> element = access.getCacheElement( key );
 
-        assertEquals( "Wrong max life.  Should have the new value.", maxLife, element.getElementAttributes()
-            .getMaxLife() );
+        assertEquals( maxLife, element.getElementAttributes()
+            .getMaxLife(), "Wrong max life.  Should have the new value." );
     }
 }

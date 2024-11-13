@@ -19,20 +19,42 @@ package org.apache.commons.jcs3.access;
  * under the License.
  */
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.apache.commons.jcs3.JCS;
 import org.apache.commons.jcs3.engine.control.CompositeCacheManager;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
-import org.junit.runners.MethodSorters;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 
 /**
  * This test is for the system property usage in configuration values.
  */
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class SystemPropertyUnitTest
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+class SystemPropertyUnitTest
 {
+
+    /**
+     * Set up configuration file before each test.
+     */
+    @BeforeEach
+    void setUp()
+    {
+        JCS.setConfigFilename( "/TestSystemProperties.ccf" );
+    }
+
+    /**
+     * Clear system properties after each test to prevent interference between tests.
+     */
+    @AfterEach
+    void tearDown()
+    {
+        System.clearProperty( "MY_SYSTEM_PROPERTY_DISK_DIR" );
+        System.clearProperty( "MY_SYSTEM_PROPERTY_MAX_SIZE" );
+    }
 
     /**
      * Verify that we use a system property for a ${FOO} string in a value.
@@ -40,47 +62,36 @@ public class SystemPropertyUnitTest
      * @throws Exception
      */
     @Test
-    public void test1SystemPropertyInValueDelimiter()
+    @Order(1)
+    void testSystemPropertyInValueDelimiter()
         throws Exception
     {
-
         final int maxMemory = 1234;
-        System.getProperties().setProperty( "MY_SYSTEM_PROPERTY_DISK_DIR", "system_set" );
-        System.getProperties().setProperty( "MY_SYSTEM_PROPERTY_MAX_SIZE", String.valueOf( maxMemory ) );
-
-        JCS.setConfigFilename( "/TestSystemProperties.ccf" );
+        System.setProperty( "MY_SYSTEM_PROPERTY_DISK_DIR", "system_set" );
+        System.setProperty( "MY_SYSTEM_PROPERTY_MAX_SIZE", String.valueOf( maxMemory ) );
 
         final CacheAccess<String, String> cache = JCS.getInstance( "test1" );
-        assertEquals( "We should have used the system property for the memory size", maxMemory, cache
-            .getCacheAttributes().getMaxObjects() );
-
-        System.clearProperty("MY_SYSTEM_PROPERTY_DISK_DIR");
-        System.clearProperty("MY_SYSTEM_PROPERTY_MAX_SIZE");
+        assertEquals( maxMemory, cache.getCacheAttributes().getMaxObjects(),
+                      "We should have used the system property for the memory size" );
     }
 
     /**
-     * Verify that we use a system property for a ${FOO} string in a value. We
-     * define a propety in the cache.ccf file, but we do not have it as a system
-     * property. The default value should be used, if one exists.
+     * Verify that we use a default value when the system property is missing.
      *
      * @throws Exception
      */
     @Test
-    public void test2SystemPropertyMissingInValueDelimeter()
+    @Order(2)
+    void testSystemPropertyMissingInValueDelimiter()
         throws Exception
     {
-        System.getProperties().setProperty( "MY_SYSTEM_PROPERTY_DISK_DIR", "system_set" );
+        System.setProperty( "MY_SYSTEM_PROPERTY_DISK_DIR", "system_set" );
 
         final CompositeCacheManager mgr = CompositeCacheManager.getUnconfiguredInstance();
         mgr.configure( "/TestSystemProperties.ccf" );
 
         final CacheAccess<String, String> cache = JCS.getInstance( "missing" );
-        // TODO check against the actual default def
-        assertEquals( "We should have used the default property for the memory size", 100, cache.getCacheAttributes()
-            .getMaxObjects() );
-
-        System.clearProperty("MY_SYSTEM_PROPERTY_DISK_DIR");
-
+        assertEquals( 100, cache.getCacheAttributes().getMaxObjects(),
+                      "We should have used the default property for the memory size" );
     }
-
 }

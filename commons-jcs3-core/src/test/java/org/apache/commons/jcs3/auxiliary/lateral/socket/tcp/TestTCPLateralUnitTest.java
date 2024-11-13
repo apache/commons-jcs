@@ -1,8 +1,5 @@
 package org.apache.commons.jcs3.auxiliary.lateral.socket.tcp;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -21,6 +18,9 @@ import static org.junit.Assert.assertNotNull;
  * specific language governing permissions and limitations
  * under the License.
  */
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.io.IOException;
 import java.util.Map;
@@ -42,13 +42,13 @@ import org.apache.commons.jcs3.engine.control.group.GroupId;
 import org.apache.commons.jcs3.utils.serialization.EncryptingSerializer;
 import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
 import org.apache.commons.jcs3.utils.timing.SleepUtil;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Basic unit tests for the sending and receiving portions of the lateral cache.
  */
-public class TestTCPLateralUnitTest
+class TestTCPLateralUnitTest
 {
     private final MockCompositeCacheManager cacheMgr = new MockCompositeCacheManager();
 
@@ -84,8 +84,8 @@ public class TestTCPLateralUnitTest
     /**
      * Test setup
      */
-    @Before
-    public void setUp()
+    @BeforeEach
+    void setUp()
     {
         JCS.setConfigFilename( "/TestTCPLateralCache.ccf" );
     }
@@ -123,7 +123,7 @@ public class TestTCPLateralUnitTest
         SleepUtil.sleepAtLeast( numMes * 4 ); // this may need to be adjusted ...
 
         // VERIFY
-        assertEquals( "Should have received " + numMes + " by now.", numMes, listener.getPutCnt() );
+        assertEquals( numMes, listener.getPutCnt(), "Should have received " + numMes + " by now." );
     }
 
     /**
@@ -133,7 +133,7 @@ public class TestTCPLateralUnitTest
      * @throws Exception
      */
     @Test
-    public void testGet_SendAndReceived()
+    void testGet_SendAndReceived()
         throws Exception
     {
         // SETUP
@@ -152,8 +152,8 @@ public class TestTCPLateralUnitTest
         final ICacheElement<String, String> result = service.get( "test", "key" );
 
         // VERIFY
-        assertNotNull( "Result should not be null.", result );
-        assertEquals( "Didn't get the correct object", element.getVal(), result.getVal() );
+        assertNotNull( result, "Result should not be null." );
+        assertEquals( element.getVal(), result.getVal(), "Didn't get the correct object" );
     }
 
     /**
@@ -163,7 +163,8 @@ public class TestTCPLateralUnitTest
      * @throws Exception
      */
     @Test
-    public void testGetGroupKeys_SendAndReceived()  throws Exception
+    void testGetGroupKeys_SendAndReceived()
+        throws Exception
     {
         // SETUP
         final CompositeCache<GroupAttrName<String>, String> cache = createCache(1150);
@@ -185,8 +186,8 @@ public class TestTCPLateralUnitTest
        // SleepUtil.sleepAtLeast( 5000000 );
 
         // VERIFY
-        assertNotNull( "Result should not be null.", result );
-        assertEquals( "Didn't get the correct object", "key", result.iterator().next().attrName );
+        assertNotNull( result, "Result should not be null." );
+        assertEquals( "key", result.iterator().next().attrName, "Didn't get the correct object" );
     }
 
     /**
@@ -196,7 +197,7 @@ public class TestTCPLateralUnitTest
      * @throws Exception
      */
     @Test
-    public void testGetMatching_WithData()
+    void testGetMatching_WithData()
         throws Exception
     {
         // SETUP
@@ -221,15 +222,15 @@ public class TestTCPLateralUnitTest
         final Map<String, ICacheElement<String, Integer>> result = service.getMatching( "test", keyprefix1 + ".+" );
 
         // VERIFY
-        assertNotNull( "Result should not be null.", result );
-        assertEquals( "Wrong number returned 1:", numToInsertPrefix1, result.size() );
+        assertNotNull( result, "Result should not be null." );
+        assertEquals( numToInsertPrefix1, result.size(), "Wrong number returned 1:" );
     }
 
     /**
      * @throws Exception
      */
     @Test
-    public void testReceive()
+    void testReceive()
         throws Exception
     {
         // VERIFY
@@ -248,7 +249,7 @@ public class TestTCPLateralUnitTest
         SleepUtil.sleepAtLeast( 1000 );
 
         // VERIFY
-        assertEquals( "Didn't get the correct number", cnt, cacheMgr.getCache().getUpdateCount() );
+        assertEquals( cnt, cacheMgr.getCache().getUpdateCount(), "Didn't get the correct number" );
     }
 
     /**
@@ -257,7 +258,7 @@ public class TestTCPLateralUnitTest
      * @throws Exception
      */
     @Test
-    public void testSameKeyDifferentObject()
+    void testSameKeyDifferentObject()
         throws Exception
     {
         // SETUP
@@ -279,7 +280,7 @@ public class TestTCPLateralUnitTest
 
         // VERIFY
         final ICacheElement<String, String> cacheElement = cache.get( "key" );
-        assertEquals( "Didn't get the correct object "+ cacheElement, element2.getVal(), cacheElement.getVal() );
+        assertEquals( element2.getVal(), cacheElement.getVal(), "Didn't get the correct object " + cacheElement );
     }
 
     /**
@@ -288,7 +289,7 @@ public class TestTCPLateralUnitTest
      * @throws Exception
      */
     @Test
-    public void testSameKeyObjectDifferentValueObject()
+    void testSameKeyObjectDifferentValueObject()
         throws Exception
     {
         final CompositeCache<String, String> cache = createCache(1105);
@@ -309,15 +310,15 @@ public class TestTCPLateralUnitTest
 
         // VERIFY
         final ICacheElement<String, String> cacheElement = cache.get( "key" );
-        assertEquals( "Didn't get the correct object: " + cacheElement , element2.getVal(), cacheElement.getVal() );
+        assertEquals( element2.getVal(), cacheElement.getVal(), "Didn't get the correct object: " + cacheElement );
     }
 
     /**
      * @throws Exception
      */
     @Test
-    public void testSimpleEncryptedSend()
-            throws Exception
+    void testSimpleEncryptedSend()
+        throws Exception
     {
     	final EncryptingSerializer serializer = new EncryptingSerializer();
     	serializer.setPreSharedKey("my_key");
@@ -332,7 +333,7 @@ public class TestTCPLateralUnitTest
      * @throws Exception
      */
     @Test
-    public void testSimpleSend()
+    void testSimpleSend()
         throws Exception
     {
     	simpleSend(new StandardSerializer(), 8111);

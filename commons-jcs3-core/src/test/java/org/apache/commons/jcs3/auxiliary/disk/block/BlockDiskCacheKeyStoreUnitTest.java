@@ -19,17 +19,17 @@ package org.apache.commons.jcs3.auxiliary.disk.block;
  * under the License.
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.apache.commons.jcs3.auxiliary.disk.behavior.IDiskCacheAttributes.DiskLimitType;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for the keyStore.
  */
-public class BlockDiskCacheKeyStoreUnitTest
+class BlockDiskCacheKeyStoreUnitTest
 {
     /** Directory name */
     private final String rootDirName = "target/test-sandbox/block";
@@ -48,16 +48,16 @@ public class BlockDiskCacheKeyStoreUnitTest
         // System.out.println( "testPutKeys " + keyStore );
 
         // VERIFY
-        assertEquals("Wrong number of keys", numElements, keyStore.size());
+        assertEquals( numElements, keyStore.size(), "Wrong number of keys" );
         for (int i = 0; i < numElements; i++)
         {
             final int[] result = keyStore.get(String.valueOf(i));
-            assertEquals("Wrong array returned.", i, result.length);
+            assertEquals( i, result.length, "Wrong array returned." );
         }
     }
 
     @Test
-    public void testObjectLargerThanMaxSize()
+    void testObjectLargerThanMaxSize()
     {
         final BlockDiskCacheAttributes attributes = new BlockDiskCacheAttributes();
         attributes.setCacheName("testObjectLargerThanMaxSize");
@@ -82,8 +82,8 @@ public class BlockDiskCacheKeyStoreUnitTest
      * @throws Exception
      */
     @Test
-    public void testPutKeys()
-            throws Exception
+    void testPutKeys()
+        throws Exception
     {
         // SETUP
         final BlockDiskCacheAttributes attributes = new BlockDiskCacheAttributes();
@@ -96,8 +96,8 @@ public class BlockDiskCacheKeyStoreUnitTest
     }
 
     @Test
-    public void testPutKeysSize()
-            throws Exception
+    void testPutKeysSize()
+        throws Exception
     {
         // SETUP
         final BlockDiskCacheAttributes attributes = new BlockDiskCacheAttributes();
@@ -118,8 +118,8 @@ public class BlockDiskCacheKeyStoreUnitTest
      * @throws Exception
      */
     @Test
-    public void testSaveLoadKeys()
-            throws Exception
+    void testSaveLoadKeys()
+        throws Exception
     {
         // SETUP
         final BlockDiskCacheAttributes attributes = new BlockDiskCacheAttributes();
@@ -157,30 +157,30 @@ public class BlockDiskCacheKeyStoreUnitTest
         // System.out.println( "testSaveLoadKeys " + keyStore );
 
         // VERIFY
-        assertEquals("Wrong number of keys", numElements, keyStore.size());
+        assertEquals( numElements, keyStore.size(), "Wrong number of keys" );
 
         // DO WORK
         keyStore.saveKeys();
         keyStore.clearMemoryMap();
 
         // VERIFY
-        assertEquals("Wrong number of keys after clearing memory", 0, keyStore.size());
+        assertEquals( 0, keyStore.size(), "Wrong number of keys after clearing memory" );
 
         // DO WORK
         keyStore.loadKeys();
 
         // VERIFY
-        assertEquals("Wrong number of keys after loading", numElements, keyStore.size());
+        assertEquals( numElements, keyStore.size(), "Wrong number of keys after loading" );
         for (int i = 0; i < numElements; i++)
         {
             final int[] result = keyStore.get(String.valueOf(i));
-            assertEquals("Wrong array returned.", i, result.length);
+            assertEquals( i, result.length, "Wrong array returned." );
         }
     }
 
     @Test
-    public void testSaveLoadKeysSize()
-            throws Exception
+    void testSaveLoadKeysSize()
+        throws Exception
     {
         // SETUP
         final BlockDiskCacheAttributes attributes = new BlockDiskCacheAttributes();

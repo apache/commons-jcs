@@ -18,7 +18,7 @@
  */
 package org.apache.commons.jcs3.jcache.extras.web;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,10 +39,10 @@ import org.apache.catalina.startup.Tomcat;
 import org.apache.commons.io.IOUtils;
 import org.apache.tomcat.util.descriptor.web.FilterDef;
 import org.apache.tomcat.util.descriptor.web.FilterMap;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
-public class JCacheFilterTest
+class JCacheFilterTest
 {
     public static class Empty extends HttpServlet {
         private static final long serialVersionUID = 4131092201964167043L;
@@ -68,8 +68,9 @@ public class JCacheFilterTest
 
     private static File docBase;
 
-    @BeforeClass
-    public static void createEmptyDir() {
+    @BeforeAll
+    static void createEmptyDir()
+    {
         docBase = new File("target/missing/");
         docBase.mkdirs();
         docBase.deleteOnExit();
@@ -95,7 +96,8 @@ public class JCacheFilterTest
     }
 
     @Test
-    public void testFilter() throws Exception
+    void testFilter()
+        throws Exception
     {
         Hello.COUNTER.set(0);
         final Tomcat tomcat = new Tomcat();
@@ -121,7 +123,8 @@ public class JCacheFilterTest
     }
 
     @Test
-    public void testFilterNoOutput() throws Exception
+    void testFilterNoOutput()
+        throws Exception
     {
         Empty.COUNTER.set(0);
         final Tomcat tomcat = new Tomcat();

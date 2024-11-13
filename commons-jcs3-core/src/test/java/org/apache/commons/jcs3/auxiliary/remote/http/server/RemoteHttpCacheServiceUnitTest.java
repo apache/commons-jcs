@@ -19,17 +19,17 @@ package org.apache.commons.jcs3.auxiliary.remote.http.server;
  * under the License.
  */
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.HashSet;
 
 import org.apache.commons.jcs3.auxiliary.MockCacheEventLogger;
 import org.apache.commons.jcs3.engine.CacheElement;
 import org.apache.commons.jcs3.engine.control.MockCompositeCacheManager;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /** Tests for the service. */
-public class RemoteHttpCacheServiceUnitTest
+class RemoteHttpCacheServiceUnitTest
 {
     /**
      * Verify event log calls.
@@ -37,7 +37,7 @@ public class RemoteHttpCacheServiceUnitTest
      * @throws Exception
      */
     @Test
-    public void testGet_simple()
+    void testGet_simple()
         throws Exception
     {
         // SETUP
@@ -52,8 +52,8 @@ public class RemoteHttpCacheServiceUnitTest
         server.get( "region", "key" );
 
         // VERIFY
-        assertEquals( "Start should have been called.", 1, cacheEventLogger.startICacheEventCalls );
-        assertEquals( "End should have been called.", 1, cacheEventLogger.endICacheEventCalls );
+        assertEquals( 1, cacheEventLogger.startICacheEventCalls, "Start should have been called." );
+        assertEquals( 1, cacheEventLogger.endICacheEventCalls, "End should have been called." );
     }
 
     /**
@@ -62,7 +62,7 @@ public class RemoteHttpCacheServiceUnitTest
      * @throws Exception
      */
     @Test
-    public void testGetMatching_simple()
+    void testGetMatching_simple()
         throws Exception
     {
         // SETUP
@@ -77,8 +77,8 @@ public class RemoteHttpCacheServiceUnitTest
         server.getMatching( "region", "pattern", 0 );
 
         // VERIFY
-        assertEquals( "Start should have been called.", 1, cacheEventLogger.startICacheEventCalls );
-        assertEquals( "End should have been called.", 1, cacheEventLogger.endICacheEventCalls );
+        assertEquals( 1, cacheEventLogger.startICacheEventCalls, "Start should have been called." );
+        assertEquals( 1, cacheEventLogger.endICacheEventCalls, "End should have been called." );
     }
 
     /**
@@ -87,7 +87,7 @@ public class RemoteHttpCacheServiceUnitTest
      * @throws Exception
      */
     @Test
-    public void testGetMultiple_simple()
+    void testGetMultiple_simple()
         throws Exception
     {
         // SETUP
@@ -102,8 +102,8 @@ public class RemoteHttpCacheServiceUnitTest
         server.getMultiple( "region", new HashSet<>() );
 
         // VERIFY
-        assertEquals( "Start should have been called.", 1, cacheEventLogger.startICacheEventCalls );
-        assertEquals( "End should have been called.", 1, cacheEventLogger.endICacheEventCalls );
+        assertEquals( 1, cacheEventLogger.startICacheEventCalls, "Start should have been called." );
+        assertEquals( 1, cacheEventLogger.endICacheEventCalls, "End should have been called." );
     }
 
     /**
@@ -112,7 +112,7 @@ public class RemoteHttpCacheServiceUnitTest
      * @throws Exception
      */
     @Test
-    public void testRemove_simple()
+    void testRemove_simple()
         throws Exception
     {
         // SETUP
@@ -127,8 +127,8 @@ public class RemoteHttpCacheServiceUnitTest
         server.remove( "region", "key" );
 
         // VERIFY
-        assertEquals( "Start should have been called.", 1, cacheEventLogger.startICacheEventCalls );
-        assertEquals( "End should have been called.", 1, cacheEventLogger.endICacheEventCalls );
+        assertEquals( 1, cacheEventLogger.startICacheEventCalls, "Start should have been called." );
+        assertEquals( 1, cacheEventLogger.endICacheEventCalls, "End should have been called." );
     }
 
     /**
@@ -137,7 +137,7 @@ public class RemoteHttpCacheServiceUnitTest
      * @throws Exception
      */
     @Test
-    public void testRemoveAll_simple()
+    void testRemoveAll_simple()
         throws Exception
     {
         // SETUP
@@ -152,8 +152,8 @@ public class RemoteHttpCacheServiceUnitTest
         server.removeAll( "region" );
 
         // VERIFY
-        assertEquals( "Start should have been called.", 1, cacheEventLogger.startICacheEventCalls );
-        assertEquals( "End should have been called.", 1, cacheEventLogger.endICacheEventCalls );
+        assertEquals( 1, cacheEventLogger.startICacheEventCalls, "Start should have been called." );
+        assertEquals( 1, cacheEventLogger.endICacheEventCalls, "End should have been called." );
     }
 
     /**
@@ -162,7 +162,7 @@ public class RemoteHttpCacheServiceUnitTest
      * @throws Exception
      */
     @Test
-    public void testUpdate_simple()
+    void testUpdate_simple()
         throws Exception
     {
         // SETUP
@@ -182,7 +182,7 @@ public class RemoteHttpCacheServiceUnitTest
         server.update( element, requesterId );
 
         // VERIFY
-        assertEquals( "Start should have been called.", 1, cacheEventLogger.startICacheEventCalls );
-        assertEquals( "End should have been called.", 1, cacheEventLogger.endICacheEventCalls );
+        assertEquals( 1, cacheEventLogger.startICacheEventCalls, "Start should have been called." );
+        assertEquals( 1, cacheEventLogger.endICacheEventCalls, "End should have been called." );
     }
 }

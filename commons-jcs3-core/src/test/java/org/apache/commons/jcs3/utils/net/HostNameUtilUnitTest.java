@@ -19,14 +19,14 @@ package org.apache.commons.jcs3.utils.net;
  * under the License.
  */
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.net.UnknownHostException;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /** Tests for the host name util. */
-public class HostNameUtilUnitTest
+class HostNameUtilUnitTest
 {
     /**
      * It's nearly impossible to unit test the getLocalHostLANAddress method.
@@ -34,13 +34,14 @@ public class HostNameUtilUnitTest
      * @throws UnknownHostException
      */
     @Test
-    public void testGetLocalHostAddress_Simple() throws UnknownHostException
+    void testGetLocalHostAddress_Simple()
+        throws UnknownHostException
     {
         // DO WORK
         final String result = HostNameUtil.getLocalHostAddress();
 
         // VERIFY
         //System.out.print( result );
-        assertNotNull( "Should have a host address.", result );
+        assertNotNull( result, "Should have a host address." );
     }
 }

@@ -19,19 +19,19 @@ package org.apache.commons.jcs3.auxiliary.disk.block;
  * under the License.
  */
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.apache.commons.jcs3.JCS;
 import org.apache.commons.jcs3.access.CacheAccess;
 import org.apache.commons.jcs3.utils.timing.ElapsedTimer;
 import org.apache.commons.jcs3.utils.timing.SleepUtil;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Put a few hundred thousand entries in the block disk cache.
  */
-public class HugeQuantityBlockDiskCacheLoadTest
+class HugeQuantityBlockDiskCacheLoadTest
 {
 
     /**
@@ -51,8 +51,8 @@ public class HugeQuantityBlockDiskCacheLoadTest
     /**
      * Test setup
      */
-    @Before
-    public void setUp()
+    @BeforeEach
+    void setUp()
     {
         JCS.setConfigFilename( "/TestBlockDiskCacheHuge.ccf" );
     }
@@ -64,7 +64,7 @@ public class HugeQuantityBlockDiskCacheLoadTest
      * @throws Exception If an error occurs
      */
     @Test
-    public void testLargeNumberOfItems()
+    void testLargeNumberOfItems()
         throws Exception
     {
         final int items = 300000;
@@ -119,7 +119,7 @@ public class HugeQuantityBlockDiskCacheLoadTest
                     //System.out.print(  "\033[r" );
                     System.out.println( i + " " );
                 }
-                assertEquals( "Wrong value returned.", region + " data " + i, value );
+                assertEquals( region + " data " + i, value, "Wrong value returned." );
             }
             final long aftetGet = measureMemoryUse();
             System.out.println( "After get: " + aftetGet + " diff = " + ( aftetGet - initialMemory ) );

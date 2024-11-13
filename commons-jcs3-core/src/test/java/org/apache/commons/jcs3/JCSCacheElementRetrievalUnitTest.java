@@ -19,23 +19,23 @@ package org.apache.commons.jcs3;
  * under the License.
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.commons.jcs3.access.CacheAccess;
 import org.apache.commons.jcs3.engine.behavior.ICacheElement;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  */
-public class JCSCacheElementRetrievalUnitTest
+class JCSCacheElementRetrievalUnitTest
 {
     /**
      *
      * @throws Exception
      */
     @Test
-    public void testSimpleElementRetrieval()
+    void testSimpleElementRetrieval()
         throws Exception
     {
         final CacheAccess<String, String> jcs = JCS.getInstance( "testCache1" );
@@ -44,10 +44,10 @@ public class JCSCacheElementRetrievalUnitTest
 
         final long now = System.currentTimeMillis();
         final ICacheElement<String, String> elem = jcs.getCacheElement( "test_key" );
-        assertEquals( "Name wasn't right", "testCache1", elem.getCacheName() );
+        assertEquals( "testCache1", elem.getCacheName(), "Name wasn't right" );
 
         final long diff = now - elem.getElementAttributes().getCreateTime();
-        assertTrue( "Create time should have been at or after the call", diff >= 0 );
+        assertTrue( diff >= 0, "Create time should have been at or after the call" );
 
     }
 }

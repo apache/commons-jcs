@@ -19,21 +19,21 @@ package org.apache.commons.jcs3.engine.logging;
  * under the License.
  */
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.StringWriter;
 
 import org.apache.commons.jcs3.TestLogConfigurationUtil;
 import org.apache.commons.jcs3.engine.logging.behavior.ICacheEvent;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /** Tests for the debug implementation */
-public class CacheEventLoggerDebugLoggerUnitTest
+class CacheEventLoggerDebugLoggerUnitTest
 {
 
     /** Verify that we can log */
     @Test
-    public void testLogApplicationEvent_normal()
+    void testLogApplicationEvent_normal()
     {
         // SETUP
         final String logCategoryName = "testLogApplicationEvent_normal";
@@ -53,14 +53,16 @@ public class CacheEventLoggerDebugLoggerUnitTest
 
         // VERIFY
         final String result = stringWriter.toString();
-        assertTrue( "An event with the source should have been logged:" + result, result.indexOf( source ) != -1 );
-        assertTrue( "An event with the event name should have been logged:" + result, result.indexOf( eventName ) != -1 );
-        assertTrue( "An event with the optionalDetails should have been logged:" + result, result.indexOf( optionalDetails ) != -1 );
+        assertTrue( result.indexOf( source ) != -1, "An event with the source should have been logged:" + result );
+        assertTrue( result.indexOf( eventName ) != -1,
+                    "An event with the event name should have been logged:" + result );
+        assertTrue( result.indexOf( optionalDetails ) != -1,
+                    "An event with the optionalDetails should have been logged:" + result );
     }
 
     /** Verify that we can log */
     @Test
-    public void testLogError_normal()
+    void testLogError_normal()
     {
         // SETUP
         final String logCategoryName = "testLogApplicationEvent_normal";
@@ -80,14 +82,16 @@ public class CacheEventLoggerDebugLoggerUnitTest
 
         // VERIFY
         final String result = stringWriter.toString();
-        assertTrue( "An event with the source should have been logged:" + result, result.indexOf( source ) != -1 );
-        assertTrue( "An event with the event name should have been logged:" + result, result.indexOf( eventName ) != -1 );
-        assertTrue( "An event with the errorMessage should have been logged:" + result, result.indexOf( errorMessage ) != -1 );
+        assertTrue( result.indexOf( source ) != -1, "An event with the source should have been logged:" + result );
+        assertTrue( result.indexOf( eventName ) != -1,
+                    "An event with the event name should have been logged:" + result );
+        assertTrue( result.indexOf( errorMessage ) != -1,
+                    "An event with the errorMessage should have been logged:" + result );
     }
 
     /** Verify that we can log */
     @Test
-    public void testLogICacheEvent_normal()
+    void testLogICacheEvent_normal()
     {
         // SETUP
         final String logCategoryName = "testLogEvent_normal";
@@ -111,10 +115,12 @@ public class CacheEventLoggerDebugLoggerUnitTest
 
         // VERIFY
         final String result = stringWriter.toString();
-        assertTrue( "An event with the source should have been logged:" + result, result.indexOf( source ) != -1 );
-        assertTrue( "An event with the region should have been logged:" + result, result.indexOf( region ) != -1 );
-        assertTrue( "An event with the event name should have been logged:" + result, result.indexOf( eventName ) != -1 );
-        assertTrue( "An event with the optionalDetails should have been logged:" + result, result.indexOf( optionalDetails ) != -1 );
-        assertTrue( "An event with the key should have been logged:" + result, result.indexOf( key ) != -1 );
+        assertTrue( result.indexOf( source ) != -1, "An event with the source should have been logged:" + result );
+        assertTrue( result.indexOf( region ) != -1, "An event with the region should have been logged:" + result );
+        assertTrue( result.indexOf( eventName ) != -1,
+                    "An event with the event name should have been logged:" + result );
+        assertTrue( result.indexOf( optionalDetails ) != -1,
+                    "An event with the optionalDetails should have been logged:" + result );
+        assertTrue( result.indexOf( key ) != -1, "An event with the key should have been logged:" + result );
     }
 }

@@ -18,8 +18,8 @@
  */
 package org.apache.commons.jcs3.jcache.extras.writer;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,15 +29,13 @@ import javax.cache.configuration.Configuration;
 import javax.cache.configuration.MutableConfiguration;
 import javax.cache.integration.CacheWriterException;
 
-import org.apache.commons.jcs3.jcache.extras.InternalCacheRule;
-import org.junit.Rule;
-import org.junit.Test;
+import org.apache.commons.jcs3.jcache.extras.InternalCacheExtension;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
+@ExtendWith(InternalCacheExtension.class)
 public class CompositeCacheWriterTest
 {
-    @Rule
-    public final InternalCacheRule rule = new InternalCacheRule(this);
-
     private final Map<String, String> copy1 = new HashMap<>();
     private final Map<String, String> copy2 = new HashMap<>();
 
@@ -80,7 +78,7 @@ public class CompositeCacheWriterTest
     private Cache<String, String> cache;
 
     @Test
-    public void testCheckComposite()
+    void testCheckComposite()
     {
         cache.put("a", "b");
         assertEquals("b", copy1.get("a"));

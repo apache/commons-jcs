@@ -19,9 +19,9 @@ package org.apache.commons.jcs3.auxiliary.disk.jdbc.mysql;
  * under the License.
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.sql.Connection;
 import java.util.HashSet;
@@ -33,8 +33,8 @@ import org.apache.commons.jcs3.JCS;
 import org.apache.commons.jcs3.access.CacheAccess;
 import org.apache.commons.jcs3.auxiliary.disk.jdbc.HsqlSetupUtil;
 import org.apache.commons.jcs3.engine.behavior.ICacheElement;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Runs basic tests for the JDBC disk cache.
@@ -67,7 +67,7 @@ public class MySQLDiskCacheHsqlBackedUnitTest
         {
             final String value = jcs.get( i + ":key" );
 
-            assertEquals( "key = [" + i + ":key] value = [" + value + "]", region + " data " + i, value );
+            assertEquals( region + " data " + i, value, "key = [" + i + ":key] value = [" + value + "]" );
         }
 
         // Test that getElements returns all the expected values
@@ -81,8 +81,8 @@ public class MySQLDiskCacheHsqlBackedUnitTest
         for ( int i = 0; i < items; i++ )
         {
             final ICacheElement<String, String> element = elements.get( i + ":key" );
-            assertNotNull( "element " + i + ":key is missing", element );
-            assertEquals( "value " + i + ":key", region + " data " + i, element.getVal() );
+            assertNotNull( element, "element " + i + ":key is missing" );
+            assertEquals( region + " data " + i, element.getVal(), "value " + i + ":key" );
         }
 
         // Remove all the items
@@ -94,7 +94,7 @@ public class MySQLDiskCacheHsqlBackedUnitTest
         // Verify removal
         for ( int i = 0; i < items; i++ )
         {
-            assertNull( "Removed key should be null: " + i + ":key", jcs.get( i + ":key" ) );
+            assertNull( jcs.get( i + ":key" ), "Removed key should be null: " + i + ":key" );
         }
     }
 
@@ -102,8 +102,9 @@ public class MySQLDiskCacheHsqlBackedUnitTest
      * Test setup
      * @throws Exception
      */
-    @Before
-    public void setUp() throws Exception
+    @BeforeEach
+    void setUp()
+        throws Exception
     {
         JCS.setConfigFilename( "/TestMySQLDiskCache.ccf" );
         try (Connection con = HsqlSetupUtil.getTestDatabaseConnection(new Properties(), getClass().getSimpleName()))
@@ -118,7 +119,7 @@ public class MySQLDiskCacheHsqlBackedUnitTest
      * @throws Exception
      */
     @Test
-    public void testPutGetMatchingWithHSQL()
+    void testPutGetMatchingWithHSQL()
         throws Exception
     {
         // SETUP
@@ -136,7 +137,7 @@ public class MySQLDiskCacheHsqlBackedUnitTest
         final Map<String, ICacheElement<String, String>> matchingResults = jcs.getMatchingCacheElements( "1.8.+" );
 
         // VERIFY
-        assertEquals( "Wrong number returned", 10, matchingResults.size() );
+        assertEquals( 10, matchingResults.size(), "Wrong number returned" );
 //        System.out.println( "matchingResults.keySet() " + matchingResults.keySet() );
     }
 
@@ -145,7 +146,7 @@ public class MySQLDiskCacheHsqlBackedUnitTest
      * @throws Exception
      */
     @Test
-    public void testSimpleJDBCPutGetWithHSQL()
+    void testSimpleJDBCPutGetWithHSQL()
         throws Exception
     {
         runTestForRegion( "testCache1", 200 );

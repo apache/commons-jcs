@@ -19,24 +19,25 @@ package org.apache.commons.jcs3.utils.serialization;
  * under the License.
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.IOException;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests the encrypting serializer.
  */
-public class EncryptingSerializerUnitTest
+class EncryptingSerializerUnitTest
 {
     private EncryptingSerializer serializer;
 
-    @Before
-    public void setUp() throws Exception
+    @BeforeEach
+    void setUp()
+        throws Exception
     {
         this.serializer = new EncryptingSerializer();
         this.serializer.setPreSharedKey("my_secret_key");
@@ -49,14 +50,14 @@ public class EncryptingSerializerUnitTest
      * @throws IOException
      */
     @Test
-    public void testDeserialize_NullInput()
+    void testDeserialize_NullInput()
         throws IOException, ClassNotFoundException
     {
         // DO WORK
         final Object result = serializer.deSerialize( null, null );
 
         // VERIFY
-        assertNull( "Should have nothing.", result );
+        assertNull( result, "Should have nothing." );
     }
 
     /**
@@ -65,7 +66,7 @@ public class EncryptingSerializerUnitTest
      * @throws Exception on error
      */
     @Test
-    public void testDifferentKey()
+    void testDifferentKey()
         throws Exception
     {
         // DO WORK
@@ -84,7 +85,7 @@ public class EncryptingSerializerUnitTest
      * @throws Exception on error
      */
     @Test
-    public void testGCMBackAndForth()
+    void testGCMBackAndForth()
         throws Exception
     {
         this.serializer.setAesCipherTransformation("AES/GCM/NoPadding");
@@ -94,7 +95,7 @@ public class EncryptingSerializerUnitTest
         final String after = serializer.deSerialize( serializer.serialize( before ), null );
 
         // VERIFY
-        assertEquals( "Before and after should be the same.", before, after );
+        assertEquals( before, after, "Before and after should be the same." );
     }
 
     /**
@@ -103,7 +104,7 @@ public class EncryptingSerializerUnitTest
      * @throws Exception on error
      */
     @Test
-    public void testSerialize_NullInput()
+    void testSerialize_NullInput()
         throws Exception
     {
         final String before = null;
@@ -113,7 +114,7 @@ public class EncryptingSerializerUnitTest
         final String after = (String) serializer.deSerialize( serialized, null );
 
         // VERIFY
-        assertNull( "Should have nothing. after =" + after, after );
+        assertNull( after, "Should have nothing. after =" + after );
     }
 
     /**
@@ -124,7 +125,7 @@ public class EncryptingSerializerUnitTest
      * @throws Exception on error
      */
     @Test
-    public void testSimpleBackAndForth()
+    void testSimpleBackAndForth()
         throws Exception
     {
         // DO WORK
@@ -132,6 +133,6 @@ public class EncryptingSerializerUnitTest
         final String after = serializer.deSerialize( serializer.serialize( before ), null );
 
         // VERIFY
-        assertEquals( "Before and after should be the same.", before, after );
+        assertEquals( before, after, "Before and after should be the same." );
     }
 }

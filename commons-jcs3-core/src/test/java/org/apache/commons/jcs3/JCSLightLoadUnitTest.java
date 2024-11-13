@@ -1,8 +1,5 @@
 package org.apache.commons.jcs3;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -22,14 +19,17 @@ import static org.junit.Assert.assertNull;
  * under the License.
  */
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import org.apache.commons.jcs3.access.CacheAccess;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Runs a few thousand queries.
  */
-public class JCSLightLoadUnitTest
+class JCSLightLoadUnitTest
 {
     /** Number to use for the test */
     private static final int items = 20000;
@@ -38,8 +38,8 @@ public class JCSLightLoadUnitTest
      * Test setup
      * @throws Exception
      */
-    @Before
-    public void setUp()
+    @BeforeEach
+    void setUp()
         throws Exception
     {
         JCS.setConfigFilename( "/TestSimpleLoad.ccf" );
@@ -50,7 +50,7 @@ public class JCSLightLoadUnitTest
      * @throws Exception Description of the Exception
      */
     @Test
-    public void testSimpleLoad()
+    void testSimpleLoad()
         throws Exception
     {
         final CacheAccess<String, String> jcs = JCS.getInstance( "testCache1" );
@@ -63,7 +63,7 @@ public class JCSLightLoadUnitTest
         for ( int i = items-1; i > 0; i-- )
         {
             final String res = jcs.get( i + ":key" );
-            assertNotNull( "[" + i + ":key] should not be null", res );
+            assertNotNull( res, "[" + i + ":key] should not be null" );
         }
 
         // test removal

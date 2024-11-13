@@ -1,11 +1,5 @@
 package org.apache.commons.jcs3.auxiliary.disk;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -25,6 +19,12 @@ import static org.junit.Assert.assertTrue;
  * under the License.
  */
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Collections;
@@ -42,10 +42,10 @@ import org.apache.commons.jcs3.engine.CacheStatus;
 import org.apache.commons.jcs3.engine.ElementAttributes;
 import org.apache.commons.jcs3.engine.behavior.ICacheElement;
 import org.apache.commons.jcs3.engine.behavior.IElementAttributes;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /** Tests for the abstract disk cache. It's largely tested by actual instances. */
-public class AbstractDiskCacheUnitTest
+class AbstractDiskCacheUnitTest
 {
     /** Concrete, testable instance. */
     protected static class AbstractDiskCacheTestInstance<K, V>
@@ -186,7 +186,7 @@ public class AbstractDiskCacheUnitTest
      * @throws IOException
      */
     @Test
-    public void testDispose()
+    void testDispose()
         throws IOException
     {
         // SETUP
@@ -207,8 +207,8 @@ public class AbstractDiskCacheUnitTest
         diskCache.dispose();
 
         // VERIFY
-        assertFalse( "disk cache should not be alive.", diskCache.isAlive() );
-        assertEquals( "Status should be disposed", CacheStatus.DISPOSED, diskCache.getStatus() );
+        assertFalse( diskCache.isAlive(), "disk cache should not be alive." );
+        assertEquals( CacheStatus.DISPOSED, diskCache.getStatus(), "Status should be disposed" );
     }
 
     /**
@@ -217,7 +217,7 @@ public class AbstractDiskCacheUnitTest
      * @throws IOException
      */
     @Test
-    public void testRemoveAll_allowed()
+    void testRemoveAll_allowed()
         throws IOException
     {
         // SETUP
@@ -238,7 +238,7 @@ public class AbstractDiskCacheUnitTest
         diskCache.removeAll();
 
         // VERIFY
-        assertNull( "Item should not be in the map.", diskCache.get( key ) );
+        assertNull( diskCache.get( key ), "Item should not be in the map." );
     }
 
     /**
@@ -247,7 +247,7 @@ public class AbstractDiskCacheUnitTest
      * @throws IOException
      */
     @Test
-    public void testRemoveAll_notAllowed()
+    void testRemoveAll_notAllowed()
         throws IOException
     {
         // SETUP
@@ -272,8 +272,8 @@ public class AbstractDiskCacheUnitTest
         final String result = stringWriter.toString();
 
         // VERIFY
-        assertTrue( "Should say not allowed.", result.indexOf( "set to false" ) != -1 );
-        assertNotNull( "Item should be in the map.", diskCache.get( key ) );
+        assertTrue( result.indexOf( "set to false" ) != -1, "Should say not allowed." );
+        assertNotNull( diskCache.get( key ), "Item should be in the map." );
     }
 
     /**
@@ -282,7 +282,7 @@ public class AbstractDiskCacheUnitTest
      * @throws IOException
      */
     @Test
-    public void testUpdateGet_allowed()
+    void testUpdateGet_allowed()
         throws IOException
     {
         // SETUP
@@ -304,6 +304,6 @@ public class AbstractDiskCacheUnitTest
 
         // VERIFY
         //System.out.println( diskCache.getStats() );
-        assertNotNull( "Item should be in the map.", result );
+        assertNotNull( result, "Item should be in the map." );
     }
 }

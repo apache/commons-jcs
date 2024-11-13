@@ -19,16 +19,20 @@ package org.apache.commons.jcs3.log;
  * under the License.
  */
 
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class LogManagerNoLogSystemUnitTest
+import org.junit.jupiter.api.Test;
+
+class LogManagerNoLogSystemUnitTest
 {
-    @Test(expected = ExceptionInInitializerError.class)
-    public void testLogFactoryNonExistingLogSystem()
+    @Test
+    void testLogFactoryNonExistingLogSystem()
     {
-        // Set non-existing log system
-        LogManager.setLogSystem("test-logging");
+        assertThrows( ExceptionInInitializerError.class, () -> {
+            // Set non-existing log system
+            LogManager.setLogSystem( "test-logging" );
 
-        LogManager.getLog(getClass());
+            LogManager.getLog( getClass() );
+        } );
     }
 }

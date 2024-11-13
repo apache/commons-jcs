@@ -19,17 +19,17 @@ package org.apache.commons.jcs3.auxiliary.disk.indexed;
  * under the License.
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.IOException;
 
 import org.apache.commons.jcs3.auxiliary.disk.behavior.IDiskCacheAttributes.DiskLimitType;
 import org.apache.commons.jcs3.engine.CacheElement;
 import org.apache.commons.jcs3.engine.behavior.ICacheElement;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class IndexDiskCacheCountUnitTest extends AbstractIndexDiskCacheUnitTest
 {
@@ -43,8 +43,8 @@ public class IndexDiskCacheCountUnitTest extends AbstractIndexDiskCacheUnitTest
 	}
 
     @Test
-    public void testRecycleBin()
-		        throws IOException
+    void testRecycleBin()
+        throws IOException
     {
         final IndexedDiskCacheAttributes cattr = getCacheAttributes();
         cattr.setCacheName( "testRemoveItems" );
@@ -98,13 +98,13 @@ public class IndexDiskCacheCountUnitTest extends AbstractIndexDiskCacheUnitTest
                 final String expectedValue = expect[i];
                 if ( expectedValue == null )
                 {
-                    assertNull( "Expected a null element", element );
+                    assertNull( element, "Expected a null element" );
                 }
                 else
                 {
-                    assertNotNull( "The element for key [" + "key:" + test[i] + "] should not be null. i = " + i,
-                                   element );
-                    assertEquals( "Elements contents do not match expected", element.getVal(), expectedValue );
+                    assertNotNull( element,
+                                   "The element for key [" + "key:" + test[i] + "] should not be null. i = " + i );
+                    assertEquals( element.getVal(), expectedValue, "Elements contents do not match expected" );
                 }
             }
         }

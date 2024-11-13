@@ -19,14 +19,14 @@ package org.apache.commons.jcs3.log;
  * under the License.
  */
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class LogManagerUnitTest
+class LogManagerUnitTest
 {
     @Test
-    public void testLogFactoryDefault()
+    void testLogFactoryDefault()
     {
         // Set default log system
         LogManager.setLogSystem(LogManager.LOGSYSTEM_JAVA_UTIL_LOGGING);

@@ -19,8 +19,8 @@ package org.apache.commons.jcs3;
  * under the License.
  */
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.apache.commons.jcs3.access.CacheAccess;
 
@@ -51,7 +51,7 @@ public class RemovalTestUtil
             final String res = jcs.get( i + ":key" );
             if ( check )
             {
-                assertNotNull( "[" + i + ":key] should not be null", res );
+                assertNotNull( res, "[" + i + ":key] should not be null" );
             }
         }
     }
@@ -79,7 +79,7 @@ public class RemovalTestUtil
         for ( int i = end; i >= start; i-- )
         {
             final String res = jcs.get( i + ":key" );
-            assertNotNull( "[" + i + ":key] should not be null", res );
+            assertNotNull( res, "[" + i + ":key] should not be null" );
         }
     }
 
@@ -106,7 +106,7 @@ public class RemovalTestUtil
         for ( int i = end; i >= start; i-- )
         {
             final String res = jcs.get( i + ":key" );
-            assertNotNull( "[" + i + ":key] should not be null", res );
+            assertNotNull( res, "[" + i + ":key] should not be null" );
         }
 
         for ( int i = start; i < end; i++ )

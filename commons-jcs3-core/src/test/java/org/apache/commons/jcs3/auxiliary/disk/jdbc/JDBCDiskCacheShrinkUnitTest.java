@@ -1,5 +1,18 @@
 package org.apache.commons.jcs3.auxiliary.disk.jdbc;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
+import java.sql.Connection;
+import java.util.Properties;
+
+import org.apache.commons.jcs3.JCS;
+import org.apache.commons.jcs3.access.CacheAccess;
+import org.apache.commons.jcs3.access.exception.CacheException;
+import org.apache.commons.jcs3.utils.timing.SleepUtil;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -19,30 +32,18 @@ package org.apache.commons.jcs3.auxiliary.disk.jdbc;
  * under the License.
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-
-import java.sql.Connection;
-import java.util.Properties;
-
-import org.apache.commons.jcs3.JCS;
-import org.apache.commons.jcs3.access.CacheAccess;
-import org.apache.commons.jcs3.access.exception.CacheException;
-import org.apache.commons.jcs3.utils.timing.SleepUtil;
-import org.junit.Before;
-import org.junit.Test;
-
 /**
  * Runs basic tests for the JDBC disk cache.
  */
-public class JDBCDiskCacheShrinkUnitTest
+class JDBCDiskCacheShrinkUnitTest
 {
     /**
      * Test setup
      * @throws Exception
      */
-    @Before
-    public void setUp() throws Exception
+    @BeforeEach
+    void setUp()
+        throws Exception
     {
         JCS.setConfigFilename( "/TestJDBCDiskCacheShrink.ccf" );
         try (Connection con = HsqlSetupUtil.getTestDatabaseConnection(new Properties(), getClass().getSimpleName()))
@@ -58,7 +59,7 @@ public class JDBCDiskCacheShrinkUnitTest
      * @throws InterruptedException
      */
     @Test
-    public void testDidNotExpire()
+    void testDidNotExpire()
         throws CacheException, InterruptedException
     {
         final String region = "expire100Second";
@@ -79,7 +80,7 @@ public class JDBCDiskCacheShrinkUnitTest
         {
             final String value = jcs.get( i + ":key" );
 
-            assertEquals( "key = [" + i + ":key] value = [" + value + "]", region + " data " + i, value );
+            assertEquals( region + " data " + i, value, "key = [" + i + ":key] value = [" + value + "]" );
         }
 
         // Remove all the items
@@ -91,7 +92,7 @@ public class JDBCDiskCacheShrinkUnitTest
         // Verify removal
         for ( int i = 0; i < items; i++ )
         {
-            assertNull( "Removed key should be null: " + i + ":key", jcs.get( i + ":key" ) );
+            assertNull( jcs.get( i + ":key" ), "Removed key should be null: " + i + ":key" );
         }
     }
 
@@ -101,7 +102,7 @@ public class JDBCDiskCacheShrinkUnitTest
      * @throws InterruptedException
      */
     @Test
-    public void testDidNotExpireEternal()
+    void testDidNotExpireEternal()
         throws CacheException, InterruptedException
     {
         final String region = "eternal";
@@ -122,7 +123,7 @@ public class JDBCDiskCacheShrinkUnitTest
         {
             final String value = jcs.get( i + ":key" );
 
-            assertEquals( "key = [" + i + ":key] value = [" + value + "]", region + " data " + i, value );
+            assertEquals( region + " data " + i, value, "key = [" + i + ":key] value = [" + value + "]" );
         }
 
         // Remove all the items
@@ -134,7 +135,7 @@ public class JDBCDiskCacheShrinkUnitTest
         // Verify removal
         for ( int i = 0; i < items; i++ )
         {
-            assertNull( "Removed key should be null: " + i + ":key", jcs.get( i + ":key" ) );
+            assertNull( jcs.get( i + ":key" ), "Removed key should be null: " + i + ":key" );
         }
     }
 
@@ -145,7 +146,7 @@ public class JDBCDiskCacheShrinkUnitTest
      * @throws Exception
      */
     @Test
-    public void testExpireInBackground()
+    void testExpireInBackground()
         throws Exception
     {
         final String regionExpire = "expire1Second";
@@ -165,7 +166,7 @@ public class JDBCDiskCacheShrinkUnitTest
         // Test that all items have been removed from the cache
         for ( int i = 0; i < items; i++ )
         {
-            assertNull( "Removed key should be null: " + i + ":key", jcsExpire.get( i + ":key" ) );
+            assertNull( jcsExpire.get( i + ":key" ), "Removed key should be null: " + i + ":key" );
         }
     }
 }

@@ -19,8 +19,8 @@
 package org.apache.commons.jcs3.jcache.extras.loader;
 
 import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.util.HashSet;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -30,15 +30,13 @@ import javax.cache.configuration.Configuration;
 import javax.cache.configuration.MutableConfiguration;
 import javax.cache.integration.CacheLoaderException;
 
-import org.apache.commons.jcs3.jcache.extras.InternalCacheRule;
-import org.junit.Rule;
-import org.junit.Test;
+import org.apache.commons.jcs3.jcache.extras.InternalCacheExtension;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
+@ExtendWith(InternalCacheExtension.class)
 public class CacheLoaderAdapterTest
 {
-    @Rule
-    public final InternalCacheRule rule = new InternalCacheRule(this);
-
     private final AtomicInteger count = new AtomicInteger();
     private final Configuration<?, ?> config = new MutableConfiguration<String, String>().setStoreByValue(false).setReadThrough(true).setCacheLoaderFactory(new CacheLoaderAdapter<String, String>()
     {
@@ -54,7 +52,7 @@ public class CacheLoaderAdapterTest
     private Cache<String, String> cache;
 
     @Test
-    public void testCheckLoadAll()
+    void testCheckLoadAll()
     {
         assertFalse(cache.iterator().hasNext());
         assertEquals("foo", cache.get("foo"));

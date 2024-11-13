@@ -20,9 +20,9 @@ package org.apache.commons.jcs3.jcache.openjpa;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Map;
 import java.util.Properties;
@@ -40,9 +40,9 @@ import org.apache.openjpa.conf.OpenJPAConfiguration;
 import org.apache.openjpa.datacache.QueryKey;
 import org.apache.openjpa.persistence.JPAFacadeHelper;
 import org.apache.openjpa.persistence.OpenJPAEntityManagerFactorySPI;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class OpenJPAJCacheDataCacheTest
+class OpenJPAJCacheDataCacheTest
 {
     @Entity
     public static class MyEntity
@@ -85,7 +85,7 @@ public class OpenJPAJCacheDataCacheTest
     }};
 
     @Test
-    public void testEntity()
+    void testEntity()
     {
         final EntityManagerFactory emf = Persistence.createEntityManagerFactory("test-jcache", props);
         final OpenJPAConfiguration conf = OpenJPAEntityManagerFactorySPI.class.cast(emf).getConfiguration();
@@ -108,7 +108,7 @@ public class OpenJPAJCacheDataCacheTest
     }
 
     @Test
-    public void testQuery()
+    void testQuery()
     {
         final EntityManagerFactory emf = Persistence.createEntityManagerFactory("test-jcache", props);
         final OpenJPAConfiguration conf = OpenJPAEntityManagerFactorySPI.class.cast(emf).getConfiguration();

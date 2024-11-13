@@ -19,15 +19,15 @@ package org.apache.commons.jcs3;
  * under the License.
  */
 
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.apache.commons.jcs3.access.CacheAccess;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  */
-public class ZeroSizeCacheUnitTest
+class ZeroSizeCacheUnitTest
 {
     /** Number to get each loop */
     private static final int items = 20000;
@@ -37,8 +37,8 @@ public class ZeroSizeCacheUnitTest
      * <p>
      * @throws Exception
      */
-    @Before
-    public void setUp()
+    @BeforeEach
+    void setUp()
         throws Exception
     {
         JCS.setConfigFilename( "/TestZeroSizeCache.ccf" );
@@ -50,7 +50,7 @@ public class ZeroSizeCacheUnitTest
      * @throws Exception
      */
     @Test
-    public void testPutGetRemove()
+    void testPutGetRemove()
         throws Exception
     {
         final CacheAccess<String, String> jcs = JCS.getInstance( "testCache1" );
@@ -64,7 +64,7 @@ public class ZeroSizeCacheUnitTest
         for ( int i = items; i >= 0; i-- )
         {
             final String res = jcs.get( i + ":key" );
-            assertNull( "[" + i + ":key] should be null", res );
+            assertNull( res, "[" + i + ":key] should be null" );
         }
 
         // test removal, should be no exceptions
@@ -82,7 +82,7 @@ public class ZeroSizeCacheUnitTest
         for ( int i = items; i >= 0; i-- )
         {
             final String res = jcs.get( i + ":key" );
-            assertNull( "[" + i + ":key] should be null", res );
+            assertNull( res, "[" + i + ":key] should be null" );
         }
     }
 }

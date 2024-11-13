@@ -19,9 +19,9 @@
 package org.apache.commons.jcs3.jcache.extras.writer;
 
 import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -32,15 +32,13 @@ import javax.cache.configuration.Configuration;
 import javax.cache.configuration.MutableConfiguration;
 import javax.cache.integration.CacheWriterException;
 
-import org.apache.commons.jcs3.jcache.extras.InternalCacheRule;
-import org.junit.Rule;
-import org.junit.Test;
+import org.apache.commons.jcs3.jcache.extras.InternalCacheExtension;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
+@ExtendWith(InternalCacheExtension.class)
 public class CacheWriterAdapterTest
 {
-    @Rule
-    public final InternalCacheRule rule = new InternalCacheRule(this);
-
     private final Map<String, String> copy = new HashMap<>();
     private final Configuration<?, ?> config = new MutableConfiguration<String, String>()
             .setStoreByValue(false).setReadThrough(true)
@@ -63,7 +61,7 @@ public class CacheWriterAdapterTest
     private Cache<String, String> cache;
 
     @Test
-    public void testCheckWriteAllAndDeleteAll()
+    void testCheckWriteAllAndDeleteAll()
     {
         assertTrue(copy.isEmpty());
         assertFalse(cache.iterator().hasNext());

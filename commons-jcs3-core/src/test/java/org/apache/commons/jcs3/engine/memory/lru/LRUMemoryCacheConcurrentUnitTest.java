@@ -19,44 +19,36 @@ package org.apache.commons.jcs3.engine.memory.lru;
  * under the License.
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import junit.extensions.ActiveTestSuite;
-import junit.framework.Test;
-import junit.framework.TestCase;
-
 import org.apache.commons.jcs3.engine.CacheElement;
 import org.apache.commons.jcs3.engine.behavior.ICacheElement;
 import org.apache.commons.jcs3.engine.control.CompositeCache;
 import org.apache.commons.jcs3.engine.control.CompositeCacheManager;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test which exercises the LRUMemory cache. This one uses three different
  * regions for three threads.
  */
-public class LRUMemoryCacheConcurrentUnitTest
+class LRUMemoryCacheConcurrentUnitTest
 {
-    /**
-     * Number of items to cache, twice the configured maxObjects for the memory
-     * cache regions.
-     */
+
+    // Number of items to cache, twice the configured maxObjects for the memory cache regions.
     private static final int items = 200;
 
     /**
      * Adds items to cache, gets them, and removes them. The item count is more
      * than the size of the memory cache, so items should be dumped.
-     * <p>
-     * @param region
-     *            Name of the region to access
-     * @throws Exception
-     *                If an error occurs
+     * @param region Name of the region to access
+     * @throws Exception If an error occurs
      */
     public static void runTestForRegion( final String region )
         throws Exception
@@ -69,10 +61,10 @@ public class LRUMemoryCacheConcurrentUnitTest
         lru.initialize( cache );
 
         // Add items to cache
-
         for ( int i = 0; i < items; i++ )
         {
-            final ICacheElement<String, String> ice = new CacheElement<>( cache.getCacheName(), i + ":key", region + " data " + i );
+            final ICacheElement<String, String> ice = new CacheElement<>( cache.getCacheName(), i + ":key",
+                                                                          region + " data " + i );
             ice.setElementAttributes( cache.getElementAttributes() );
             lru.update( ice );
         }
@@ -80,7 +72,7 @@ public class LRUMemoryCacheConcurrentUnitTest
         // Test that initial items have been purged
         for ( int i = 0; i < 100; i++ )
         {
-            assertNull( "Should not have " + i + ":key", lru.get( i + ":key" ) );
+            assertNull( lru.get( i + ":key" ), "Should not have " + i + ":key" );
         }
 
         // Test that last items are in cache
@@ -100,13 +92,13 @@ public class LRUMemoryCacheConcurrentUnitTest
         final Map<String, ICacheElement<String, String>> elements = lru.getMultiple( keys );
         for ( int i = 0; i < 100; i++ )
         {
-            assertNull( "Should not have " + i + ":key", elements.get( i + ":key" ) );
+            assertNull( elements.get( i + ":key" ), "Should not have " + i + ":key" );
         }
         for ( int i = 100; i < items; i++ )
         {
             final ICacheElement<String, String> element = elements.get( i + ":key" );
-            assertNotNull( "element " + i + ":key is missing", element );
-            assertEquals( "value " + i + ":key", region + " data " + i, element.getVal() );
+            assertNotNull( element, "element " + i + ":key is missing" );
+            assertEquals( region + " data " + i, element.getVal(), "value " + i + ":key" );
         }
 
         // Remove all the items
@@ -118,38 +110,27 @@ public class LRUMemoryCacheConcurrentUnitTest
         // Verify removal
         for ( int i = 0; i < items; i++ )
         {
-            assertNull( "Removed key should be null: " + i + ":key", lru.get( i + ":key" ) );
+            assertNull( lru.get( i + ":key" ), "Removed key should be null: " + i + ":key" );
         }
-    }
-
-    /**
-     * A unit test suite for JUnit
-     * <p>
-     * @return The test suite
-     */
-    public static Test suite()
-    {
-        final ActiveTestSuite suite = new ActiveTestSuite();
-
-        suite.addTest(new TestCase("testLRUMemoryCache" )
-        {
-            @Override
-            public void runTest()
-                throws Exception
-            {
-                runTestForRegion( "testRegion1" );
-            }
-        });
-
-        return suite;
     }
 
     /**
      * Test setup
      */
-    @Before
-    public void setUp()
+    @BeforeEach
+    void setUp()
     {
-        //JCS.setConfigFilename( "/TestDiskCache.ccf" );
+        // Any setup logic can go here, e.g., configuring caches
+        // JCS.setConfigFilename("/TestDiskCache.ccf");
+    }
+
+    /**
+     * Run test for region 'testRegion1'
+     */
+    @Test
+    void testLRUMemoryCache()
+        throws Exception
+    {
+        runTestForRegion( "testRegion1" );
     }
 }

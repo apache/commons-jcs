@@ -1,7 +1,5 @@
 package org.apache.commons.jcs3;
 
-import static org.junit.Assert.assertEquals;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -21,17 +19,19 @@ import static org.junit.Assert.assertEquals;
  * under the License.
  */
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Random;
 
 import org.apache.commons.jcs3.access.CacheAccess;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Simple test for the JCS class.
  */
-public class JCSUnitTest
+class JCSUnitTest
 {
     /** A random for key generation. */
     Random random = new Random();
@@ -76,7 +76,7 @@ public class JCSUnitTest
      * @throws Exception
      */
     @Test
-    public void testJCS()
+    void testJCS()
         throws Exception
     {
         final CacheAccess<String, LinkedList<HashMap<String, String>>> jcs = JCS.getInstance( "testCache1" );

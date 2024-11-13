@@ -19,7 +19,7 @@ package org.apache.commons.jcs3.engine.control;
  * under the License.
  */
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -44,13 +44,13 @@ import org.apache.commons.jcs3.engine.behavior.IElementAttributes;
 import org.apache.commons.jcs3.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs3.engine.logging.behavior.ICacheEventLogger;
 import org.apache.commons.jcs3.engine.stats.behavior.IStats;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests of the disk usage settings for the CompositeCache.
  */
-public class CompositeCacheDiskUsageUnitTest
+class CompositeCacheDiskUsageUnitTest
 {
     /**
      * Used to test the disk cache functionality.
@@ -253,8 +253,8 @@ public class CompositeCacheDiskUsageUnitTest
     /**
      * Test setup
      */
-    @Before
-    public void setUp()
+    @BeforeEach
+    void setUp()
     {
         JCS.setConfigFilename( "/TestDiskCacheUsagePattern.ccf" );
     }
@@ -264,7 +264,7 @@ public class CompositeCacheDiskUsageUnitTest
      * item is put to disk.
      */
     @Test
-    public void testSpoolAllowed()
+    void testSpoolAllowed()
     {
         // SETUP
         final ICompositeCacheAttributes cattr = new CompositeCacheAttributes();
@@ -285,8 +285,8 @@ public class CompositeCacheDiskUsageUnitTest
         cache.spoolToDisk( inputElement );
 
         // VERIFY
-        assertEquals( "Wrong number of calls to the disk cache update.", 1, mock.updateCount );
-        assertEquals( "Wrong element updated.", inputElement, mock.lastUpdatedItem );
+        assertEquals( 1, mock.updateCount, "Wrong number of calls to the disk cache update." );
+        assertEquals( inputElement, mock.lastUpdatedItem, "Wrong element updated." );
     }
 
     /**
@@ -294,7 +294,7 @@ public class CompositeCacheDiskUsageUnitTest
      * item is not put to disk.
      */
     @Test
-    public void testSpoolNotAllowed()
+    void testSpoolNotAllowed()
     {
         // SETUP
         final ICompositeCacheAttributes cattr = new CompositeCacheAttributes();
@@ -315,7 +315,7 @@ public class CompositeCacheDiskUsageUnitTest
         cache.spoolToDisk( inputElement );
 
         // VERIFY
-        assertEquals( "Wrong number of calls to the disk cache update.", 0, mock.updateCount );
+        assertEquals( 0, mock.updateCount, "Wrong number of calls to the disk cache update." );
     }
 
     /**
@@ -324,7 +324,7 @@ public class CompositeCacheDiskUsageUnitTest
      * @throws CacheException
      */
     @Test
-    public void testSwapConfig()
+    void testSwapConfig()
         throws CacheException
     {
         final CacheAccess<String, String> swap = JCS.getInstance( "Swap" );
@@ -341,7 +341,7 @@ public class CompositeCacheDiskUsageUnitTest
      * @throws IOException
      */
     @Test
-    public void testUpdateAllowed()
+    void testUpdateAllowed()
         throws IOException
     {
         // SETUP
@@ -363,8 +363,8 @@ public class CompositeCacheDiskUsageUnitTest
         cache.updateAuxiliaries( inputElement, true );
 
         // VERIFY
-        assertEquals( "Wrong number of calls to the disk cache update.", 1, mock.updateCount );
-        assertEquals( "Wrong element updated.", inputElement, mock.lastUpdatedItem );
+        assertEquals( 1, mock.updateCount, "Wrong number of calls to the disk cache update." );
+        assertEquals( inputElement, mock.lastUpdatedItem, "Wrong element updated." );
     }
 
     /**
@@ -377,7 +377,7 @@ public class CompositeCacheDiskUsageUnitTest
      * @throws IOException
      */
     @Test
-    public void testUpdateAllowed_localFalse()
+    void testUpdateAllowed_localFalse()
         throws IOException
     {
         // SETUP
@@ -399,8 +399,8 @@ public class CompositeCacheDiskUsageUnitTest
         cache.updateAuxiliaries( inputElement, false );
 
         // VERIFY
-        assertEquals( "Wrong number of calls to the disk cache update.", 1, mock.updateCount );
-        assertEquals( "Wrong element updated.", inputElement, mock.lastUpdatedItem );
+        assertEquals( 1, mock.updateCount, "Wrong number of calls to the disk cache update." );
+        assertEquals( inputElement, mock.lastUpdatedItem, "Wrong element updated." );
     }
 
     /**
@@ -412,7 +412,7 @@ public class CompositeCacheDiskUsageUnitTest
      * @throws IOException
      */
     @Test
-    public void testUpdateAllowed_withOtherCaches()
+    void testUpdateAllowed_withOtherCaches()
         throws IOException
     {
         // SETUP
@@ -437,11 +437,11 @@ public class CompositeCacheDiskUsageUnitTest
         cache.updateAuxiliaries( inputElement, false );
 
         // VERIFY
-        assertEquals( "Wrong number of calls to the disk cache update.", 1, mock.updateCount );
-        assertEquals( "Wrong element updated.", inputElement, mock.lastUpdatedItem );
+        assertEquals( 1, mock.updateCount, "Wrong number of calls to the disk cache update." );
+        assertEquals( inputElement, mock.lastUpdatedItem, "Wrong element updated." );
 
-        assertEquals( "Wrong number of calls to the lateral cache update.", 1, mockLateral.updateCount );
-        assertEquals( "Wrong element updated with lateral.", inputElement, mockLateral.lastUpdatedItem );
+        assertEquals( 1, mockLateral.updateCount, "Wrong number of calls to the lateral cache update." );
+        assertEquals( inputElement, mockLateral.lastUpdatedItem, "Wrong element updated with lateral." );
     }
 
     /**
@@ -450,7 +450,7 @@ public class CompositeCacheDiskUsageUnitTest
      * @throws CacheException
      */
     @Test
-    public void testUpdateConfig()
+    void testUpdateConfig()
         throws CacheException
     {
         final CacheAccess<String, String> swap = JCS.getInstance( "Update" );
@@ -468,7 +468,7 @@ public class CompositeCacheDiskUsageUnitTest
      * @throws IOException
      */
     @Test
-    public void testUpdateNotAllowed()
+    void testUpdateNotAllowed()
         throws IOException
     {
         // SETUP
@@ -490,7 +490,7 @@ public class CompositeCacheDiskUsageUnitTest
         cache.updateAuxiliaries( inputElement, true );
 
         // VERIFY
-        assertEquals( "Wrong number of calls to the disk cache update.", 0, mock.updateCount );
+        assertEquals( 0, mock.updateCount, "Wrong number of calls to the disk cache update." );
     }
 
 }

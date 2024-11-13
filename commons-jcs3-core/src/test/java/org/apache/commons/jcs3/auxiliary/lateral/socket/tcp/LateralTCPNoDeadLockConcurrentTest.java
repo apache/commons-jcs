@@ -19,13 +19,10 @@ package org.apache.commons.jcs3.auxiliary.lateral.socket.tcp;
  * under the License.
  */
 
-import junit.extensions.ActiveTestSuite;
-import junit.framework.Test;
-import junit.framework.TestCase;
-
 import org.apache.commons.jcs3.JCS;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test which exercises the tcp lateral cache. Runs two threads against the
@@ -33,85 +30,58 @@ import org.junit.Before;
  */
 public class LateralTCPNoDeadLockConcurrentTest
 {
+
     /**
-     * A unit test suite for JUnit
-     *
-     * @return The test suite
+     * Setup method for JUnit 5, executed before each test.
      */
-    public static Test suite()
+    @BeforeEach
+    void setUp()
     {
         System.setProperty( "jcs.auxiliary.LTCP.attributes.PutOnlyMode", "false" );
-
-        final ActiveTestSuite suite = new ActiveTestSuite();
-
-        suite.addTest(new TestCase("testLateralTCPCache1" )
-        {
-            @Override
-            public void runTest()
-                throws Exception
-            {
-                LateralTCPConcurrentRandomTestUtil.runTestForRegion( "region1", 1, 200, 1 );
-            }
-        });
-
-        suite.addTest(new TestCase("testLateralTCPCache2" )
-        {
-            @Override
-            public void runTest()
-                throws Exception
-            {
-                LateralTCPConcurrentRandomTestUtil.runTestForRegion( "region2", 10000, 12000, 2 );
-            }
-        });
-
-        suite.addTest(new TestCase("testLateralTCPCache3" )
-        {
-            @Override
-            public void runTest()
-                throws Exception
-            {
-                LateralTCPConcurrentRandomTestUtil.runTestForRegion( "region3", 10000, 12000, 3 );
-            }
-        });
-
-        suite.addTest(new TestCase("testLateralTCPCache4" )
-        {
-            @Override
-            public void runTest()
-                throws Exception
-            {
-                LateralTCPConcurrentRandomTestUtil.runTestForRegion( "region3", 10000, 13000, 4 );
-            }
-        });
-
-        suite.addTest(new TestCase("testLateralTCPCache5" )
-        {
-            @Override
-            public void runTest()
-                throws Exception
-            {
-                LateralTCPConcurrentRandomTestUtil.runTestForRegion( "region4", 10000, 11000, 5 );
-            }
-        });
-
-        return suite;
-    }
-
-    /**
-     * Test setup
-     */
-    @Before
-    public void setUp()
-    {
         JCS.setConfigFilename( "/TestTCPLateralCacheConcurrent.ccf" );
     }
 
     /**
-     * Test tearDown. Dispose of the cache.
+     * Test tearDown. Dispose of the cache after each test.
      */
-    @After
-    public void tearDown()
+    @AfterEach
+    void tearDown()
     {
         JCS.shutdown();
+    }
+
+    @Test
+    void testLateralTCPCache1()
+        throws Exception
+    {
+        LateralTCPConcurrentRandomTestUtil.runTestForRegion( "region1", 1, 200, 1 );
+    }
+
+    @Test
+    void testLateralTCPCache2()
+        throws Exception
+    {
+        LateralTCPConcurrentRandomTestUtil.runTestForRegion( "region2", 10000, 12000, 2 );
+    }
+
+    @Test
+    void testLateralTCPCache3()
+        throws Exception
+    {
+        LateralTCPConcurrentRandomTestUtil.runTestForRegion( "region3", 10000, 12000, 3 );
+    }
+
+    @Test
+    void testLateralTCPCache4()
+        throws Exception
+    {
+        LateralTCPConcurrentRandomTestUtil.runTestForRegion( "region3", 10000, 13000, 4 );
+    }
+
+    @Test
+    void testLateralTCPCache5()
+        throws Exception
+    {
+        LateralTCPConcurrentRandomTestUtil.runTestForRegion( "region4", 10000, 11000, 5 );
     }
 }

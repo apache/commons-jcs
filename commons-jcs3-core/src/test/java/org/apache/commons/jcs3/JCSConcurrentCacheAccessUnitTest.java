@@ -1,7 +1,5 @@
 package org.apache.commons.jcs3;
 
-import static org.junit.Assert.assertEquals;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -21,20 +19,23 @@ import static org.junit.Assert.assertEquals;
  * under the License.
  */
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.jcs3.access.GroupCacheAccess;
 import org.apache.commons.jcs3.access.exception.CacheException;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test Case for JCS-73, modeled after the Groovy code by Alexander Kleymenov
  */
-public class JCSConcurrentCacheAccessUnitTest{
+class JCSConcurrentCacheAccessUnitTest
+{
     /**
      * Worker thread
      */
@@ -131,8 +132,9 @@ public class JCSConcurrentCacheAccessUnitTest{
      */
     protected List<String> valueMismatchList;
 
-    @Before
-    public void setUp() throws Exception
+    @BeforeEach
+    void setUp()
+        throws Exception
 	{
         JCS.setConfigFilename( "/TestJCS-73.ccf" );
         cache = JCS.getGroupCacheInstance( "cache" );
@@ -140,20 +142,20 @@ public class JCSConcurrentCacheAccessUnitTest{
         valueMismatchList = new CopyOnWriteArrayList<>();
 	}
 
-    @After
-    public void tearDown()
+    @AfterEach
+    void tearDown()
         throws Exception
     {
         cache.clear();
         cache.dispose();
     }
 
-	/**
+    /**
      *
      * @throws Exception
      */
     @Test
-    public void testConcurrentAccess()
+    void testConcurrentAccess()
         throws Exception
     {
     	final Worker[] worker = new Worker[THREADS];
@@ -169,12 +171,12 @@ public class JCSConcurrentCacheAccessUnitTest{
         	worker[i].join();
         }
 
-        assertEquals("Error count should be 0",  0, errcount.intValue());
+        assertEquals( 0, errcount.intValue(), "Error count should be 0" );
         for (final String msg : valueMismatchList)
         {
             System.out.println(msg);
         }
-        assertEquals("Value mismatch count should be 0",  0, valueMismatchList.size());
+        assertEquals( 0, valueMismatchList.size(), "Value mismatch count should be 0" );
     }
 
 }

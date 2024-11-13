@@ -19,10 +19,10 @@ package org.apache.commons.jcs3.auxiliary.disk.block;
  * under the License.
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,7 +37,7 @@ import org.apache.commons.jcs3.engine.behavior.IElementAttributes;
 import org.apache.commons.jcs3.engine.control.group.GroupAttrName;
 import org.apache.commons.jcs3.engine.control.group.GroupId;
 import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /** Tests for the Block Disk Cache */
 public abstract class AbstractBlockDiskCacheUnitTest{
@@ -108,12 +108,13 @@ public abstract class AbstractBlockDiskCacheUnitTest{
         for (int i = 0; i < 50; i++)
         {
             final ICacheElement<String, X> afterElement = diskCache.get("x" + i);
-            assertNotNull("Missing element from cache. Cache size: " + diskCache.getSize() + " element: x" + i, afterElement);
+            assertNotNull( afterElement,
+                           "Missing element from cache. Cache size: " + diskCache.getSize() + " element: x" + i );
             final X after = afterElement.getVal();
 
             assertNotNull(after);
-            assertEquals("wrong string after retrieval", string, after.string);
-            assertEquals("wrong bytes after retrieval", string, new String(after.bytes, StandardCharsets.UTF_8));
+            assertEquals( string, after.string, "wrong string after retrieval" );
+            assertEquals( string, new String( after.bytes, StandardCharsets.UTF_8 ), "wrong bytes after retrieval" );
         }
 
         diskCache.dispose();
@@ -193,7 +194,7 @@ public abstract class AbstractBlockDiskCacheUnitTest{
 
         final Serializable result = elementSerializer.deSerialize(resultData, null);
         // System.out.println( result );
-        assertEquals("wrong string after retrieval", string, result);
+        assertEquals( string, result, "wrong string after retrieval" );
         blockDisk.close();
     }
 
@@ -245,7 +246,7 @@ public abstract class AbstractBlockDiskCacheUnitTest{
         final String after = afterElement.getVal();
 
         assertNotNull(after);
-        assertEquals("wrong string after retrieval", string, after);
+        assertEquals( string, after, "wrong string after retrieval" );
     }
 
     /**
@@ -276,7 +277,7 @@ public abstract class AbstractBlockDiskCacheUnitTest{
         final Map<String, ICacheElement<String, String>> matchingResults = diskCache.getMatching("1.8.+");
 
         // VERIFY
-        assertEquals("Wrong number returned", 10, matchingResults.size());
+        assertEquals( 10, matchingResults.size(), "Wrong number returned" );
         // System.out.println( "matchingResults.keySet() " + matchingResults.keySet() );
         // System.out.println( "\nAFTER TEST \n" + diskCache.getStats() );
     }
@@ -304,7 +305,7 @@ public abstract class AbstractBlockDiskCacheUnitTest{
         final Map<String, ICacheElement<String, String>> matchingResults = diskCache.getMatching("1.8.+");
 
         // VERIFY
-        assertEquals("Wrong number returned", 10, matchingResults.size());
+        assertEquals( 10, matchingResults.size(), "Wrong number returned" );
         // System.out.println( "matchingResults.keySet() " + matchingResults.keySet() );
         // System.out.println( "\nAFTER TEST \n" + diskCache.getStats() );
     }
@@ -348,7 +349,7 @@ public abstract class AbstractBlockDiskCacheUnitTest{
         {
             final GroupAttrName<String> groupAttrName = getGroupAttrName(cacheName, groupName, i + ":key");
             final ICacheElement<GroupAttrName<String>, String> element = disk.processGet(groupAttrName);
-            assertNotNull("Should have received an element.", element);
+            assertNotNull( element, "Should have received an element." );
         }
 
         // DO WORK
@@ -361,7 +362,7 @@ public abstract class AbstractBlockDiskCacheUnitTest{
             final ICacheElement<GroupAttrName<String>, String> element = disk.processGet(groupAttrName);
 
             // VERIFY
-            assertNull("Should not have received an element.", element);
+            assertNull( element, "Should not have received an element." );
         }
 
     }
@@ -398,7 +399,7 @@ public abstract class AbstractBlockDiskCacheUnitTest{
         for (int i = 0; i < cnt; i++)
         {
             final ICacheElement<String, String> element = disk.processGet(i + ":key");
-            assertNotNull("Shoulds have received an element.", element);
+            assertNotNull( element, "Shoulds have received an element." );
         }
 
         // remove each
@@ -406,7 +407,7 @@ public abstract class AbstractBlockDiskCacheUnitTest{
         {
             disk.remove(i + ":");
             final ICacheElement<String, String> element = disk.processGet(i + ":key");
-            assertNull("Should not have received an element.", element);
+            assertNull( element, "Should not have received an element." );
         }
     }
 
@@ -441,7 +442,7 @@ public abstract class AbstractBlockDiskCacheUnitTest{
         {
             disk.remove("key:" + i);
             final ICacheElement<String, String> element = disk.processGet("key:" + i);
-            assertNull("Should not have received an element.", element);
+            assertNull( element, "Should not have received an element." );
         }
     }
 
@@ -486,7 +487,7 @@ public abstract class AbstractBlockDiskCacheUnitTest{
         final byte[] after = afterElement.getVal();
 
         assertNotNull(after);
-        assertEquals("wrong bytes after retrieval", bytes.length, after.length);
+        assertEquals( bytes.length, after.length, "wrong bytes after retrieval" );
         // assertEquals( "wrong bytes after retrieval", bytes, after );
         // assertEquals( "wrong bytes after retrieval", string, new String( after, StandardCharsets.UTF_8 ) );
 
@@ -533,7 +534,7 @@ public abstract class AbstractBlockDiskCacheUnitTest{
         final String after = afterElement.getVal();
 
         assertNotNull(after);
-        assertEquals("wrong string after retrieval", string, after);
+        assertEquals( string, after, "wrong string after retrieval" );
     }
 
     /**
@@ -578,8 +579,8 @@ public abstract class AbstractBlockDiskCacheUnitTest{
         final X after = afterElement.getVal();
 
         assertNotNull(after);
-        assertEquals("wrong string after retrieval", string, after.string);
-        assertEquals("wrong bytes after retrieval", string, new String(after.bytes, StandardCharsets.UTF_8));
+        assertEquals( string, after.string, "wrong string after retrieval" );
+        assertEquals( string, new String( after.bytes, StandardCharsets.UTF_8 ), "wrong bytes after retrieval" );
 
     }
 }

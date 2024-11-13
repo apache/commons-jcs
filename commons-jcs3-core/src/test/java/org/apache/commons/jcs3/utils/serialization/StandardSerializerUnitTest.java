@@ -19,22 +19,22 @@ package org.apache.commons.jcs3.utils.serialization;
  * under the License.
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.IOException;
 import java.io.InvalidClassException;
 
 import org.apache.commons.collections4.bag.HashBag;
 import org.apache.commons.jcs3.io.ObjectInputStreamClassLoaderAware;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests the standard serializer.
  */
-public class StandardSerializerUnitTest
+class StandardSerializerUnitTest
 {
     private StandardSerializer serializer;
 
@@ -43,8 +43,8 @@ public class StandardSerializerUnitTest
      * <p>
      * @throws Exception
      */
-    @Before
-    public void setUp()
+    @BeforeEach
+    void setUp()
         throws Exception
     {
 	// Override filter expression for ObjectInputFilter
@@ -59,7 +59,7 @@ public class StandardSerializerUnitTest
      * @throws Exception
      */
     @Test
-    public void testBigStringBackAndForth()
+    void testBigStringBackAndForth()
         throws Exception
     {
         final String string = "This is my big string ABCDEFGH";
@@ -75,7 +75,7 @@ public class StandardSerializerUnitTest
         final String after = (String) serializer.deSerialize( serializer.serialize( before ), null );
 
         // VERIFY
-        assertEquals( "Before and after should be the same.", before, after );
+        assertEquals( before, after, "Before and after should be the same." );
     }
 
     /**
@@ -84,7 +84,7 @@ public class StandardSerializerUnitTest
      * @throws Exception
      */
     @Test
-    public void testNullInput()
+    void testNullInput()
         throws Exception
     {
         final String before = null;
@@ -97,7 +97,7 @@ public class StandardSerializerUnitTest
         //System.out.println( "testNullInput " + after );
 
         // VERIFY
-        assertNull( "Should have nothing.", after );
+        assertNull( after, "Should have nothing." );
     }
 
     /**
@@ -106,7 +106,7 @@ public class StandardSerializerUnitTest
      * @throws Exception
      */
     @Test
-    public void testSimpleBackAndForth()
+    void testSimpleBackAndForth()
         throws Exception
     {
         final String before = "adsfdsafdsafdsafdsafdsafdsafdsagfdsafdsafdsfdsafdsafsa333 31231";
@@ -115,7 +115,7 @@ public class StandardSerializerUnitTest
         final String after = (String) serializer.deSerialize( serializer.serialize( before ), null );
 
         // VERIFY
-        assertEquals( "Before and after should be the same.", before, after );
+        assertEquals( before, after, "Before and after should be the same." );
     }
 
     /**
@@ -124,7 +124,7 @@ public class StandardSerializerUnitTest
      * @throws IOException
      */
     @Test
-    public void testDeserializationFilter()
+    void testDeserializationFilter()
         throws IOException
     {
         // DO WORK

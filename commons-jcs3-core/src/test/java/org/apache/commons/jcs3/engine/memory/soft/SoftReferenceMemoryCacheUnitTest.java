@@ -1,10 +1,5 @@
 package org.apache.commons.jcs3.engine.memory.soft;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -24,6 +19,11 @@ import static org.junit.Assert.assertTrue;
  * under the License.
  */
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -35,18 +35,18 @@ import org.apache.commons.jcs3.engine.CacheElement;
 import org.apache.commons.jcs3.engine.behavior.ICacheElement;
 import org.apache.commons.jcs3.engine.control.CompositeCache;
 import org.apache.commons.jcs3.engine.control.CompositeCacheManager;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for the test Soft reference implementation.
  */
-public class SoftReferenceMemoryCacheUnitTest
+class SoftReferenceMemoryCacheUnitTest
 {
     /** Test setup */
-    @Before
-    public void setUp()
+    @BeforeEach
+    void setUp()
     {
         JCS.setConfigFilename( "/TestSoftReferenceCache.ccf" );
     }
@@ -54,8 +54,9 @@ public class SoftReferenceMemoryCacheUnitTest
     /**
      * @see junit.framework.TestCase#tearDown()
      */
-    @After
-    public void tearDown() throws Exception
+    @AfterEach
+    void tearDown()
+        throws Exception
     {
         JCS.shutdown();
     }
@@ -66,7 +67,7 @@ public class SoftReferenceMemoryCacheUnitTest
      * @throws CacheException
      */
     @Test
-    public void testClearThroughHub()
+    void testClearThroughHub()
         throws CacheException
     {
         final CacheAccess<String, String> cache = JCS.getInstance( "testPutGetThroughHub" );
@@ -85,7 +86,7 @@ public class SoftReferenceMemoryCacheUnitTest
         for ( int i = max; i >= 0; i-- )
         {
             final String value = cache.get( i + ":key" );
-            assertNull( "Should not have value for key [" + i + ":key" + "] in the cache.", value );
+            assertNull( value, "Should not have value for key [" + i + ":key" + "] in the cache." );
         }
     }
 
@@ -96,7 +97,7 @@ public class SoftReferenceMemoryCacheUnitTest
      * @throws Exception
      */
     @Test
-    public void testGetKeyArray()
+    void testGetKeyArray()
         throws Exception
     {
         final CompositeCacheManager cacheMgr = CompositeCacheManager.getUnconfiguredInstance();
@@ -118,7 +119,7 @@ public class SoftReferenceMemoryCacheUnitTest
 
         final Set<String> keys = srmc.getKeySet();
 
-        assertEquals( "Wrong number of keys.", items, keys.size() );
+        assertEquals( items, keys.size(), "Wrong number of keys." );
     }
 
     /**
@@ -128,13 +129,13 @@ public class SoftReferenceMemoryCacheUnitTest
      * @throws CacheException
      */
     @Test
-    public void testLoadFromCCF()
+    void testLoadFromCCF()
         throws CacheException
     {
         final CacheAccess<String, String> cache = JCS.getInstance( "testPutGet" );
         final String memoryCacheName = cache.getCacheAttributes().getMemoryCacheName();
-        assertTrue( "Cache name should have SoftReference in it.",
-                memoryCacheName.indexOf( "SoftReferenceMemoryCache" ) != -1 );
+        assertTrue( memoryCacheName.indexOf( "SoftReferenceMemoryCache" ) != -1,
+                    "Cache name should have SoftReference in it." );
     }
 
     /**
@@ -143,7 +144,7 @@ public class SoftReferenceMemoryCacheUnitTest
      * @throws CacheException
      */
     @Test
-    public void testPutGetThroughHub()
+    void testPutGetThroughHub()
         throws CacheException
     {
         final CacheAccess<String, String> cache = JCS.getInstance( "testPutGetThroughHub" );
@@ -174,8 +175,8 @@ public class SoftReferenceMemoryCacheUnitTest
         for ( int i = 0; i < items; i++ )
         {
             final ICacheElement<String, String> element = elements.get( i + ":key" );
-            assertNotNull( "element " + i + ":key is missing", element );
-            assertEquals( "value " + i + ":key", "myregion" + " data " + i, element.getVal() );
+            assertNotNull( element, "element " + i + ":key is missing" );
+            assertEquals( "myregion" + " data " + i, element.getVal(), "value " + i + ":key" );
         }
 
         // System.out.println(cache.getStats());
@@ -187,7 +188,7 @@ public class SoftReferenceMemoryCacheUnitTest
      * @throws CacheException
      */
     @Test
-    public void testPutRemoveThroughHub()
+    void testPutRemoveThroughHub()
         throws CacheException
     {
         final CacheAccess<String, String> cache = JCS.getInstance( "testPutGetThroughHub" );
@@ -209,7 +210,7 @@ public class SoftReferenceMemoryCacheUnitTest
         for ( int i = max; i >= 0; i-- )
         {
             final String value = cache.get( i + ":key" );
-            assertNull( "Should not have value for key [" + i + ":key" + "] in the cache.", value );
+            assertNull( value, "Should not have value for key [" + i + ":key" + "] in the cache." );
         }
     }
 
@@ -219,7 +220,7 @@ public class SoftReferenceMemoryCacheUnitTest
      * @throws CacheException
      */
     @Test
-    public void testRemovePartialThroughHub()
+    void testRemovePartialThroughHub()
         throws CacheException
     {
         final CacheAccess<String, String> cache = JCS.getInstance( "testGetStatsThroughHub" );
@@ -248,9 +249,9 @@ public class SoftReferenceMemoryCacheUnitTest
 
         for ( int i = 0; i < items; i++ )
         {
-            assertNull( "Should have been removed by partial loop.", cache.get( root + ":" + i + ":key" ) );
+            assertNull( cache.get( root + ":" + i + ":key" ), "Should have been removed by partial loop." );
         }
 
-        assertNotNull( "Other item should be in the cache.", cache.get( "test" ) );
+        assertNotNull( cache.get( "test" ), "Other item should be in the cache." );
     }
 }

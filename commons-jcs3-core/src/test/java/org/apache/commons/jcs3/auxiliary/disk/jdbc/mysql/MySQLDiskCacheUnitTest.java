@@ -19,13 +19,13 @@ package org.apache.commons.jcs3.auxiliary.disk.jdbc.mysql;
  * under the License.
  */
 
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.sql.SQLException;
 
 import org.apache.commons.jcs3.auxiliary.disk.jdbc.TableState;
 import org.apache.commons.jcs3.auxiliary.disk.jdbc.dsfactory.SharedPoolDataSourceFactory;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Simple tests for the MySQLDisk Cache.
@@ -33,7 +33,7 @@ import org.junit.Test;
  * We will probably need to setup an hsql behind this, to test some of the pass through methods.
  * </p>
  */
-public class MySQLDiskCacheUnitTest
+class MySQLDiskCacheUnitTest
 {
     /**
      * Verify that we simply return null on get if an optimization is in
@@ -45,7 +45,8 @@ public class MySQLDiskCacheUnitTest
      * @throws SQLException
      */
     @Test
-    public void testBalkOnGet() throws SQLException
+    void testBalkOnGet()
+        throws SQLException
     {
         // SETUP
         final MySQLDiskCacheAttributes attributes = new MySQLDiskCacheAttributes();
@@ -66,6 +67,6 @@ public class MySQLDiskCacheUnitTest
         final Object result = cache.processGet( "myKey" );
 
         // VERIFY
-        assertNull( "The result should be null", result );
+        assertNull( result, "The result should be null" );
     }
 }

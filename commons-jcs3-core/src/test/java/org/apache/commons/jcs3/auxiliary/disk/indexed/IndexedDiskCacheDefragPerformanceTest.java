@@ -25,12 +25,12 @@ import java.util.Random;
 
 import org.apache.commons.jcs3.JCS;
 import org.apache.commons.jcs3.access.CacheAccess;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * This is for manually testing the defrag process.
  */
-public class IndexedDiskCacheDefragPerformanceTest
+class IndexedDiskCacheDefragPerformanceTest
 {
     /**
      * Resembles a cached image.
@@ -149,7 +149,7 @@ public class IndexedDiskCacheDefragPerformanceTest
      * @throws Exception
      */
     @Test
-    public void testRealTimeOptimization()
+    void testRealTimeOptimization()
         throws Exception
     {
         System.out.println( LOG_DIVIDER );
