@@ -26,13 +26,13 @@ import org.apache.commons.jcs3.JCS;
 import org.apache.commons.jcs3.access.CacheAccess;
 import org.apache.commons.jcs3.auxiliary.disk.DiskTestObject;
 import org.apache.commons.jcs3.utils.timing.ElapsedTimer;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * This allows you to put thousands of large objects into the disk cache and to force removes to
  * trigger optimizations along the way.
  */
-public class IndexedDiskCacheSteadyLoadTest
+class IndexedDiskCacheSteadyLoadTest
 {
     /** For display */
     private static final String LOG_DIVIDER = "---------------------------";
@@ -63,7 +63,7 @@ public class IndexedDiskCacheSteadyLoadTest
      * @throws Exception
      */
     @Test
-    public void testRunSteadyLoadTest()
+    void testRunSteadyLoadTest()
         throws Exception
     {
         JCS.setConfigFilename( "/TestDiskCacheSteadyLoad.ccf" );

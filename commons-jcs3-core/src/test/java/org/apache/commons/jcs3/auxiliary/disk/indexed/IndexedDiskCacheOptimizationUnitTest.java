@@ -1,5 +1,13 @@
 package org.apache.commons.jcs3.auxiliary.disk.indexed;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.apache.commons.jcs3.auxiliary.disk.DiskTestObject;
+import org.apache.commons.jcs3.engine.behavior.ICacheElement;
+import org.apache.commons.jcs3.utils.timing.SleepUtil;
+import org.junit.jupiter.api.Test;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -19,18 +27,10 @@ package org.apache.commons.jcs3.auxiliary.disk.indexed;
  * under the License.
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import org.apache.commons.jcs3.auxiliary.disk.DiskTestObject;
-import org.apache.commons.jcs3.engine.behavior.ICacheElement;
-import org.apache.commons.jcs3.utils.timing.SleepUtil;
-import org.junit.Test;
-
 /**
  * Tests for the optimization routine.
  */
-public class IndexedDiskCacheOptimizationUnitTest
+class IndexedDiskCacheOptimizationUnitTest
 {
     /**
      * Sets the optimize at remove count to 10. Add 20. Check the file size. Remove 10. Check the
@@ -38,7 +38,7 @@ public class IndexedDiskCacheOptimizationUnitTest
      * @throws Exception
      */
     @Test
-    public void testBasicOptimization()
+    void testBasicOptimization()
         throws Exception
     {
         // SETUP
@@ -85,9 +85,8 @@ public class IndexedDiskCacheOptimizationUnitTest
             SleepUtil.sleepAtLeast( 2000 );
         }
 
-        assertTrue( "The post optimization size should be smaller."
-                +"sizeAfterRemove=" + sizeAfterRemove + " sizeBeforeRemove= " +sizeBeforeRemove
-                , sizeAfterRemove < sizeBeforeRemove );
-        assertEquals( "The file size is not as expected size.", expectedSizeAfterRemove, sizeAfterRemove );
+        assertTrue( sizeAfterRemove < sizeBeforeRemove, "The post optimization size should be smaller."
+            + "sizeAfterRemove=" + sizeAfterRemove + " sizeBeforeRemove= " + sizeBeforeRemove );
+        assertEquals( expectedSizeAfterRemove, sizeAfterRemove, "The file size is not as expected size." );
     }
 }

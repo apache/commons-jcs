@@ -19,22 +19,22 @@ package org.apache.commons.jcs3.engine;
  * under the License.
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.commons.jcs3.auxiliary.remote.MockRemoteCacheListener;
 import org.apache.commons.jcs3.engine.behavior.ICacheEventQueue;
 import org.apache.commons.jcs3.engine.behavior.ICacheEventQueue.QueueType;
 import org.apache.commons.jcs3.engine.behavior.ICacheListener;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /** Tests for the CacheEventQueueFactory */
-public class CacheEventQueueFactoryUnitTest
+class CacheEventQueueFactoryUnitTest
 {
     /** Test create */
     @Test
-    public void testCreateCacheEventQueue_Pooled()
+    void testCreateCacheEventQueue_Pooled()
     {
         // SETUP
         final QueueType eventQueueType = QueueType.POOLED;
@@ -47,13 +47,13 @@ public class CacheEventQueueFactoryUnitTest
         final ICacheEventQueue<String, String> result = factory.createCacheEventQueue( listener, listenerId, "cacheName", "threadPoolName", eventQueueType );
 
         // VERIFY
-        assertNotNull( "Should have a result", result );
-        assertTrue( "Wrong type", result.getQueueType() == QueueType.POOLED );
+        assertNotNull( result, "Should have a result" );
+        assertTrue( result.getQueueType() == QueueType.POOLED, "Wrong type" );
     }
 
     /** Test create */
     @Test
-    public void testCreateCacheEventQueue_Single()
+    void testCreateCacheEventQueue_Single()
     {
         // SETUP
         final QueueType eventQueueType = QueueType.SINGLE;
@@ -66,7 +66,7 @@ public class CacheEventQueueFactoryUnitTest
         final ICacheEventQueue<String, String> result = factory.createCacheEventQueue( listener, listenerId, "cacheName", "threadPoolName", eventQueueType );
 
         // VERIFY
-        assertNotNull( "Should have a result", result );
-        assertEquals( "Wrong type", QueueType.SINGLE, result.getQueueType() );
+        assertNotNull( result, "Should have a result" );
+        assertEquals( QueueType.SINGLE, result.getQueueType(), "Wrong type" );
     }
 }

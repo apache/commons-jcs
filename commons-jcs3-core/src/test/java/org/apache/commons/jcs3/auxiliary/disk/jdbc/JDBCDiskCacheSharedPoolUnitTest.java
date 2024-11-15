@@ -19,9 +19,9 @@ package org.apache.commons.jcs3.auxiliary.disk.jdbc;
  * under the License.
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.sql.Connection;
 import java.util.HashSet;
@@ -32,8 +32,8 @@ import java.util.Set;
 import org.apache.commons.jcs3.JCS;
 import org.apache.commons.jcs3.access.CacheAccess;
 import org.apache.commons.jcs3.engine.behavior.ICacheElement;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Runs basic tests for the JDBC disk cache using a shared connection pool.
@@ -69,7 +69,7 @@ public class JDBCDiskCacheSharedPoolUnitTest
         {
             final String value = jcs.get( i + ":key" );
 
-            assertEquals( "key = [" + i + ":key] value = [" + value + "]", region + " data " + i, value );
+            assertEquals( region + " data " + i, value, "key = [" + i + ":key] value = [" + value + "]" );
         }
 
         // Test that getElements returns all the expected values
@@ -83,8 +83,8 @@ public class JDBCDiskCacheSharedPoolUnitTest
         for ( int i = 0; i < items; i++ )
         {
             final ICacheElement<String, String> element = elements.get( i + ":key" );
-            assertNotNull( "element " + i + ":key is missing", element );
-            assertEquals( "value " + i + ":key", region + " data " + i, element.getVal() );
+            assertNotNull( element, "element " + i + ":key is missing" );
+            assertEquals( region + " data " + i, element.getVal(), "value " + i + ":key" );
         }
 
         // Remove all the items
@@ -96,15 +96,16 @@ public class JDBCDiskCacheSharedPoolUnitTest
         // Verify removal
         for ( int i = 0; i < items; i++ )
         {
-            assertNull( "Removed key should be null: " + i + ":key", jcs.get( i + ":key" ) );
+            assertNull( jcs.get( i + ":key" ), "Removed key should be null: " + i + ":key" );
         }
     }
 
     /** Test setup
      * @throws Exception
      */
-    @Before
-    public void setUp() throws Exception
+    @BeforeEach
+    void setUp()
+        throws Exception
     {
         JCS.setConfigFilename( "/TestJDBCDiskCacheSharedPool.ccf" );
         try (Connection con = HsqlSetupUtil.getTestDatabaseConnection(new Properties(), "cache_hsql_db_sharedpool"))
@@ -119,7 +120,7 @@ public class JDBCDiskCacheSharedPoolUnitTest
      * @throws Exception
      */
     @Test
-    public void testSimpleJDBCPutGetWithHSQL()
+    void testSimpleJDBCPutGetWithHSQL()
         throws Exception
     {
         runTestForRegion( "testCache1", 200 );

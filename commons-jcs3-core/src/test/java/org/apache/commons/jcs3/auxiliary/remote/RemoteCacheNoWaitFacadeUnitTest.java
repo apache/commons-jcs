@@ -19,10 +19,10 @@ package org.apache.commons.jcs3.auxiliary.remote;
  * under the License.
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,18 +30,18 @@ import java.util.List;
 import org.apache.commons.jcs3.auxiliary.AuxiliaryCache;
 import org.apache.commons.jcs3.auxiliary.remote.behavior.IRemoteCacheAttributes;
 import org.apache.commons.jcs3.engine.CacheStatus;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for RemoteCacheNoWaitFacade.
  */
-public class RemoteCacheNoWaitFacadeUnitTest
+class RemoteCacheNoWaitFacadeUnitTest
 {
     /**
      * Verify that we can add an item.
      */
     @Test
-    public void testAddNoWait_InList()
+    void testAddNoWait_InList()
     {
         // SETUP
         final List<RemoteCacheNoWait<String, String>> noWaits = new ArrayList<>();
@@ -55,16 +55,17 @@ public class RemoteCacheNoWaitFacadeUnitTest
         final RemoteCacheNoWaitFacade<String, String> facade = new RemoteCacheNoWaitFacade<>(noWaits, cattr, null, null, null );
 
         // VERIFY
-        assertEquals( "Should have one entry.", 1, facade.noWaits.size() );
-        assertTrue( "Should be in the list.", facade.noWaits.contains( noWait ) );
-        assertSame( "Should have same facade.", facade, ((RemoteCache<String, String>)facade.noWaits.get(0).getRemoteCache()).getFacade() );
+        assertEquals( 1, facade.noWaits.size(), "Should have one entry." );
+        assertTrue( facade.noWaits.contains( noWait ), "Should be in the list." );
+        assertSame( facade, ( (RemoteCache<String, String>) facade.noWaits.get( 0 ).getRemoteCache() ).getFacade(),
+                    "Should have same facade." );
     }
 
     /**
      * Verify that failover works
      */
     @Test
-    public void testFailover()
+    void testFailover()
     {
         // SETUP
         final IRemoteCacheAttributes cattr = new RemoteCacheAttributes();
@@ -78,23 +79,23 @@ public class RemoteCacheNoWaitFacadeUnitTest
         final AuxiliaryCache<String, String> cache = factory.createCache(cattr, null, null, null);
         final RemoteCacheNoWaitFacade<String, String> facade =
                 (RemoteCacheNoWaitFacade<String, String>) cache;
-        assertEquals("Should have two failovers.", 2, cattr.getFailovers().size());
-        assertEquals("Should have two managers.", 2, factory.managers.size());
-        assertEquals("Should have primary server.", 0, cattr.getFailoverIndex());
+        assertEquals( 2, cattr.getFailovers().size(), "Should have two failovers." );
+        assertEquals( 2, factory.managers.size(), "Should have two managers." );
+        assertEquals( 0, cattr.getFailoverIndex(), "Should have primary server." );
         final RemoteCacheNoWait<String, String> primary = facade.getPrimaryServer();
-        assertEquals("Should be ALIVE", CacheStatus.ALIVE, primary.getStatus());
+        assertEquals( CacheStatus.ALIVE, primary.getStatus(), "Should be ALIVE" );
 
         // Make primary unusable
         facade.getPrimaryServer().getCacheEventQueue().destroy();
-        assertEquals("Should be ERROR", CacheStatus.ERROR, primary.getStatus());
+        assertEquals( CacheStatus.ERROR, primary.getStatus(), "Should be ERROR" );
         facade.attemptRestorePrimary = false;
         facade.connectAndRestore();
 
         // VERIFY
-        assertEquals("Should have two failovers.", 2, cattr.getFailovers().size());
-        assertEquals("Should have two managers.", 2, factory.managers.size());
-        assertEquals("Should have switched to secondary server.", 1, cattr.getFailoverIndex());
-        assertNotSame("Should have diferent primary now", primary, facade.getPrimaryServer());
-        assertEquals("Should be ALIVE", CacheStatus.ALIVE, facade.getPrimaryServer().getStatus());
+        assertEquals( 2, cattr.getFailovers().size(), "Should have two failovers." );
+        assertEquals( 2, factory.managers.size(), "Should have two managers." );
+        assertEquals( 1, cattr.getFailoverIndex(), "Should have switched to secondary server." );
+        assertNotSame( primary, facade.getPrimaryServer(), "Should have diferent primary now" );
+        assertEquals( CacheStatus.ALIVE, facade.getPrimaryServer().getStatus(), "Should be ALIVE" );
     }
 }

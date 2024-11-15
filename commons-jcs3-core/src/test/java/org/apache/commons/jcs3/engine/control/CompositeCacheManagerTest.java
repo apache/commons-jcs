@@ -19,21 +19,21 @@ package org.apache.commons.jcs3.engine.control;
  * under the License.
  */
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.apache.commons.jcs3.engine.CacheStatus;
 import org.apache.commons.jcs3.engine.CompositeCacheAttributes;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /** Tests for the composite cache manager */
-public class CompositeCacheManagerTest
+class CompositeCacheManagerTest
 {
 
     /**
      * Verify that calling release, when there are active clients, the caches are correctly disposed or not.
      */
     @Test
-    public void testRelease()
+    void testRelease()
     {
         // See JCS-184
         // create the manager
@@ -47,9 +47,9 @@ public class CompositeCacheManagerTest
         // won't release as there are still clients. Only disposed when release() is called by
         // the last client
         manager.release();
-        assertEquals("The cache was disposed during release!", CacheStatus.ALIVE, cache.getStatus());
+        assertEquals( CacheStatus.ALIVE, cache.getStatus(), "The cache was disposed during release!" );
         manager.release();
-        assertEquals("The cache was NOT disposed during release!", CacheStatus.DISPOSED, cache.getStatus());
+        assertEquals( CacheStatus.DISPOSED, cache.getStatus(), "The cache was NOT disposed during release!" );
     }
 
 }

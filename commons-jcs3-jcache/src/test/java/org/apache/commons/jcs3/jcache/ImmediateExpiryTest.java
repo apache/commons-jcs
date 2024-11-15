@@ -19,7 +19,7 @@
 
 package org.apache.commons.jcs3.jcache;
 
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import javax.cache.Cache;
 import javax.cache.CacheManager;
@@ -30,12 +30,12 @@ import javax.cache.expiry.CreatedExpiryPolicy;
 import javax.cache.expiry.Duration;
 import javax.cache.spi.CachingProvider;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class ImmediateExpiryTest
+class ImmediateExpiryTest
 {
     @Test
-    public void testImmediate()
+    void testImmediate()
     {
         final CachingProvider cachingProvider = Caching.getCachingProvider();
         final CacheManager cacheManager = cachingProvider.getCacheManager();

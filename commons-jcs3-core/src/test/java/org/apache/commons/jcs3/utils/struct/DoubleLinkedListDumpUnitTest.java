@@ -19,19 +19,19 @@ package org.apache.commons.jcs3.utils.struct;
  * under the License.
  */
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.StringWriter;
 
 import org.apache.commons.jcs3.TestLogConfigurationUtil;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /** Tests for the double linked list. */
-public class DoubleLinkedListDumpUnitTest
+class DoubleLinkedListDumpUnitTest
 {
     /** Verify that the entries are dumped. */
     @Test
-    public void testDumpEntries_DebugTrue()
+    void testDumpEntries_DebugTrue()
     {
         // SETUP
         final StringWriter stringWriter = new StringWriter();
@@ -53,7 +53,7 @@ public class DoubleLinkedListDumpUnitTest
         final String result = stringWriter.toString();
 
         // VERIFY
-        assertTrue( "Missing node in log dump", result.indexOf( payload1 ) != -1 );
-        assertTrue( "Missing node in log dump", result.indexOf( payload2 ) != -1 );
+        assertTrue( result.indexOf( payload1 ) != -1, "Missing node in log dump" );
+        assertTrue( result.indexOf( payload2 ) != -1, "Missing node in log dump" );
     }
 }

@@ -24,7 +24,7 @@ import org.apache.commons.jcs3.access.CacheAccess;
 import org.apache.commons.jcs3.engine.memory.lru.LRUMemoryCache;
 import org.apache.commons.jcs3.log.Log;
 import org.apache.commons.jcs3.log.LogManager;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests the performance difference between the LRU and the MRU. There should be very little.
@@ -158,7 +158,7 @@ public class LRUvsMRUPerformanceTest
      * @throws Exception Description of the Exception
      */
     @Test
-    public void testSimpleLoad()
+    void testSimpleLoad()
         throws Exception
     {
         final Log log1 = LogManager.getLog( LRUMemoryCache.class );

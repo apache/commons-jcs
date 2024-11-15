@@ -19,18 +19,18 @@ package org.apache.commons.jcs3.auxiliary.remote;
  * under the License.
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.apache.commons.jcs3.engine.CacheElement;
 import org.apache.commons.jcs3.engine.ZombieCacheServiceNonLocal;
 import org.apache.commons.jcs3.engine.behavior.ICacheElement;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for the zombie remote cache service.
  */
-public class ZombieRemoteCacheServiceUnitTest
+class ZombieRemoteCacheServiceUnitTest
 {
     /**
      * Verify that a removeAll event gets added and then is sent to the service passed to propagate.
@@ -38,7 +38,7 @@ public class ZombieRemoteCacheServiceUnitTest
      * @throws Exception
      */
     @Test
-    public void testRemoveAllThenWalk()
+    void testRemoveAllThenWalk()
         throws Exception
     {
         // SETUP
@@ -53,7 +53,7 @@ public class ZombieRemoteCacheServiceUnitTest
         zombie.propagateEvents( service );
 
         // VERIFY
-        assertEquals( "Updated element is not as expected.", cacheName, service.lastRemoveAllCacheName);
+        assertEquals( cacheName, service.lastRemoveAllCacheName, "Updated element is not as expected." );
     }
 
     /**
@@ -62,7 +62,7 @@ public class ZombieRemoteCacheServiceUnitTest
      * @throws Exception
      */
     @Test
-    public void testRemoveThenWalk()
+    void testRemoveThenWalk()
         throws Exception
     {
         // SETUP
@@ -78,7 +78,7 @@ public class ZombieRemoteCacheServiceUnitTest
         zombie.propagateEvents( service );
 
         // VERIFY
-        assertEquals( "Updated element is not as expected.", key, service.lastRemoveKey );
+        assertEquals( key, service.lastRemoveKey, "Updated element is not as expected." );
     }
 
     /**
@@ -87,7 +87,7 @@ public class ZombieRemoteCacheServiceUnitTest
      * @throws Exception
      */
     @Test
-    public void testUpdateThenWalk()
+    void testUpdateThenWalk()
         throws Exception
     {
         // SETUP
@@ -103,7 +103,7 @@ public class ZombieRemoteCacheServiceUnitTest
         zombie.propagateEvents( service );
 
         // VERIFY
-        assertEquals( "Updated element is not as expected.", element, service.lastUpdate );
+        assertEquals( element, service.lastUpdate, "Updated element is not as expected." );
     }
 
     /**
@@ -112,7 +112,7 @@ public class ZombieRemoteCacheServiceUnitTest
      * @throws Exception
      */
     @Test
-    public void testUpdateThenWalk_zeroSize()
+    void testUpdateThenWalk_zeroSize()
         throws Exception
     {
         // SETUP
@@ -128,6 +128,6 @@ public class ZombieRemoteCacheServiceUnitTest
         zombie.propagateEvents( service );
 
         // VERIFY
-        assertNull( "Nothing should have been put to the service.", service.lastUpdate );
+        assertNull( service.lastUpdate, "Nothing should have been put to the service." );
     }
 }

@@ -1,8 +1,5 @@
 package org.apache.commons.jcs3;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -22,12 +19,10 @@ import static org.junit.Assert.assertNull;
  * under the License.
  */
 
-import junit.extensions.ActiveTestSuite;
-import junit.framework.Test;
-import junit.framework.TestCase;
-
 import org.apache.commons.jcs3.access.CacheAccess;
-import org.junit.Before;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test which exercises the indexed disk cache. This one uses three different
@@ -35,6 +30,7 @@ import org.junit.Before;
  */
 public class TestTCPLateralCache
 {
+
     /**
      * Number of items to cache, twice the configured maxObjects for the memory
      * cache regions.
@@ -57,80 +53,61 @@ public class TestTCPLateralCache
         final CacheAccess<String, String> jcs = JCS.getInstance( region );
 
         // Add items to cache
-
         for ( int i = 0; i < items; i++ )
         {
             jcs.put( i + ":key", region + " data " + i );
         }
 
         // Test that all items are in cache
-
         for ( int i = 0; i < items; i++ )
         {
             final String value = jcs.get( i + ":key" );
-
-            assertEquals( region + " data " + i, value );
+            Assertions.assertEquals( region + " data " + i, value,
+                                     "Cache did not return expected value for key: " + i + ":key" );
         }
 
         // Remove all the items
-
         for ( int i = 0; i < items; i++ )
         {
             jcs.remove( i + ":key" );
         }
 
         // Verify removal
-
         for ( int i = 0; i < items; i++ )
         {
-            assertNull( "Removed key should be null: " + i + ":key", jcs.get( i + ":key" ) );
+            Assertions.assertNull( jcs.get( i + ":key" ), "Removed key should be null: " + i + ":key" );
         }
-    }
-
-    /**
-     * A unit test suite for JUnit
-     *
-     * @return The test suite
-     */
-    public static Test suite()
-    {
-        final ActiveTestSuite suite = new ActiveTestSuite();
-
-        suite.addTest(new TestCase("testTcpRegion1_no_receiver" )
-        {
-            @Override
-            public void runTest()
-                throws Exception
-            {
-                runTestForRegion( "testTcpRegion1" );
-            }
-        });
-
-        //        suite.addTest(new TestCase("testIndexedDiskCache2" )
-        //        {
-        //            public void runTest() throws Exception
-        //            {
-        //                runTestForRegion( "indexedRegion2" );
-        //            }
-        //        });
-        //
-        //        suite.addTest(new TestCase("testIndexedDiskCache3" )
-        //        {
-        //            public void runTest() throws Exception
-        //            {
-        //                runTestForRegion( "indexedRegion3" );
-        //            }
-        //        });
-
-        return suite;
     }
 
     /**
      * Test setup
      */
-    @Before
-    public void setUp()
+    @BeforeEach
+    void setUp()
     {
         JCS.setConfigFilename( "/TestTCPLateralCache.ccf" );
     }
+
+    /**
+     * Test for TCP region without a receiver.
+     */
+    @Test
+    void testTcpRegion1_noReceiver()
+        throws Exception
+    {
+        runTestForRegion( "testTcpRegion1" );
+    }
+
+    // Uncomment the following tests if more regions are needed.
+    /*
+    @Test
+    void testIndexedDiskCache2() throws Exception {
+        runTestForRegion("indexedRegion2");
+    }
+
+    @Test
+    void testIndexedDiskCache3() throws Exception {
+        runTestForRegion("indexedRegion3");
+    }
+    */
 }

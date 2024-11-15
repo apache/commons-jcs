@@ -19,22 +19,22 @@ package org.apache.commons.jcs3.auxiliary.disk.block;
  * under the License.
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Random;
 
 import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test for the disk access layer of the Block Disk Cache.
  */
-public class BlockDiskUnitTest
+class BlockDiskUnitTest
 {
     /** Data file. */
     private File rafDir;
@@ -56,8 +56,9 @@ public class BlockDiskUnitTest
     /**
      * Creates the base directory
      */
-    @Before
-    public void setUp() throws Exception
+    @BeforeEach
+    void setUp()
+        throws Exception
     {
         final String rootDirName = "target/test-sandbox/block";
         this.rafDir = new File( rootDirName );
@@ -78,8 +79,9 @@ public class BlockDiskUnitTest
         this.disk = new BlockDisk(file, blockSize, new StandardSerializer());
     }
 
-    @After
-    public void tearDown() throws Exception
+    @AfterEach
+    void tearDown()
+        throws Exception
     {
         disk.close();
     }
@@ -90,7 +92,7 @@ public class BlockDiskUnitTest
      * @throws Exception
      */
     @Test
-    public void testCalculateBlocksNeededDouble()
+    void testCalculateBlocksNeededDouble()
         throws Exception
     {
         // SETUP
@@ -101,16 +103,17 @@ public class BlockDiskUnitTest
             - 2 * BlockDisk.HEADER_SIZE_BYTES]);
 
         // Verify
-        assertEquals( "Wrong number of blocks", 2, result );
+        assertEquals( 2, result, "Wrong number of blocks" );
     }
 
     @Test
-    public void testJCS156() throws Exception
+    void testJCS156()
+        throws Exception
     {
         // SETUP
         setUpBlockDisk("testJCS156", 4096);
         final long offset = disk.calculateByteOffsetForBlockAsLong(Integer.MAX_VALUE);
-        assertTrue("Must not wrap round", offset > 0);
+        assertTrue( offset > 0, "Must not wrap round" );
         assertEquals(Integer.MAX_VALUE * 4096L, offset);
     }
 
@@ -120,7 +123,7 @@ public class BlockDiskUnitTest
      * @throws Exception
      */
     @Test
-    public void testWrite_128BlockElement()
+    void testWrite_128BlockElement()
         throws Exception
     {
         // SETUP
@@ -134,9 +137,9 @@ public class BlockDiskUnitTest
         final int[] blocks = disk.write( new byte[bytes]);
 
         // VERIFY
-        assertEquals( "Wrong number of blocks recorded.", numBlocks, disk.getNumberOfBlocks() );
-        assertEquals( "Wrong number of blocks returned.", numBlocks, blocks.length );
-        assertEquals( "Wrong block returned.", 0, blocks[0]);
+        assertEquals( numBlocks, disk.getNumberOfBlocks(), "Wrong number of blocks recorded." );
+        assertEquals( numBlocks, blocks.length, "Wrong number of blocks returned." );
+        assertEquals( 0, blocks[0], "Wrong block returned." );
     }
 
     /**
@@ -145,7 +148,7 @@ public class BlockDiskUnitTest
      * @throws Exception
      */
     @Test
-    public void testWrite_DoubleBlockElement()
+    void testWrite_DoubleBlockElement()
         throws Exception
     {
         // SETUP
@@ -157,9 +160,9 @@ public class BlockDiskUnitTest
         final int[] blocks = disk.write( new byte[bytes]);
 
         // VERIFY
-        assertEquals( "Wrong number of blocks recorded.", 2, disk.getNumberOfBlocks() );
-        assertEquals( "Wrong number of blocks returned.", 2, blocks.length );
-        assertEquals( "Wrong block returned.", 0, blocks[0]);
+        assertEquals( 2, disk.getNumberOfBlocks(), "Wrong number of blocks recorded." );
+        assertEquals( 2, blocks.length, "Wrong number of blocks returned." );
+        assertEquals( 0, blocks[0], "Wrong block returned." );
     }
 
     /**
@@ -168,7 +171,7 @@ public class BlockDiskUnitTest
      * @throws Exception
      */
     @Test
-    public void testWrite_NullBlockElement()
+    void testWrite_NullBlockElement()
         throws Exception
     {
         // SETUP
@@ -178,9 +181,9 @@ public class BlockDiskUnitTest
         final int[] blocks = disk.write( null );
 
         // VERIFY
-        assertEquals( "Wrong number of blocks recorded.", 1, disk.getNumberOfBlocks() );
-        assertEquals( "Wrong number of blocks returned.", 1, blocks.length );
-        assertEquals( "Wrong block returned.", 0, blocks[0]);
+        assertEquals( 1, disk.getNumberOfBlocks(), "Wrong number of blocks recorded." );
+        assertEquals( 1, blocks.length, "Wrong number of blocks returned." );
+        assertEquals( 0, blocks[0], "Wrong block returned." );
     }
 
     /**
@@ -189,7 +192,7 @@ public class BlockDiskUnitTest
      * @throws Exception
      */
     @Test
-    public void testWrite_SingleBlockElement()
+    void testWrite_SingleBlockElement()
         throws Exception
     {
         // SETUP
@@ -200,9 +203,9 @@ public class BlockDiskUnitTest
         final int[] blocks = disk.write( new byte[bytes]);
 
         // VERIFY
-        assertEquals( "Wrong number of blocks recorded.", 1, disk.getNumberOfBlocks() );
-        assertEquals( "Wrong number of blocks returned.", 1, blocks.length );
-        assertEquals( "Wrong block returned.", 0, blocks[0]);
+        assertEquals( 1, disk.getNumberOfBlocks(), "Wrong number of blocks recorded." );
+        assertEquals( 1, blocks.length, "Wrong number of blocks returned." );
+        assertEquals( 0, blocks[0], "Wrong block returned." );
     }
 
     /**
@@ -211,7 +214,7 @@ public class BlockDiskUnitTest
      * @throws Exception
      */
     @Test
-    public void testWrite_TwoSingleBlockElements()
+    void testWrite_TwoSingleBlockElements()
         throws Exception
     {
         // SETUP
@@ -223,11 +226,11 @@ public class BlockDiskUnitTest
         final int[] blocks2 = disk.write( new byte[bytes]);
 
         // VERIFY
-        assertEquals( "Wrong number of blocks recorded.", 2, disk.getNumberOfBlocks() );
-        assertEquals( "Wrong number of blocks returned.", 1, blocks1.length );
-        assertEquals( "Wrong block returned.", 0, blocks1[0]);
-        assertEquals( "Wrong number of blocks returned.", 1, blocks2.length );
-        assertEquals( "Wrong block returned.", 1, blocks2[0]);
+        assertEquals( 2, disk.getNumberOfBlocks(), "Wrong number of blocks recorded." );
+        assertEquals( 1, blocks1.length, "Wrong number of blocks returned." );
+        assertEquals( 0, blocks1[0], "Wrong block returned." );
+        assertEquals( 1, blocks2.length, "Wrong number of blocks returned." );
+        assertEquals( 1, blocks2[0], "Wrong block returned." );
     }
 
     /**
@@ -236,7 +239,7 @@ public class BlockDiskUnitTest
      * @throws Exception
      */
     @Test
-    public void testWriteAndRead_BigString()
+    void testWriteAndRead_BigString()
         throws Exception
     {
         // SETUP
@@ -259,7 +262,7 @@ public class BlockDiskUnitTest
 //        System.out.println( string );
 //        System.out.println( result );
 //        System.out.println( disk );
-        assertEquals( "Wrong item retured.", string, result );
+        assertEquals( string, result, "Wrong item retured." );
     }
 
     /**
@@ -268,7 +271,7 @@ public class BlockDiskUnitTest
      * @throws Exception
      */
     @Test
-    public void testWriteAndRead_BigString2()
+    void testWriteAndRead_BigString2()
         throws Exception
     {
         // SETUP
@@ -283,7 +286,7 @@ public class BlockDiskUnitTest
         final String result = (String) disk.read( blocks );
 
         // VERIFY
-        assertEquals( "Wrong item retured.", string, result );
+        assertEquals( string, result, "Wrong item retured." );
     }
 
     /**
@@ -292,7 +295,7 @@ public class BlockDiskUnitTest
      * @throws Exception
      */
     @Test
-    public void testWriteAndRead_SingleBlockElement()
+    void testWriteAndRead_SingleBlockElement()
         throws Exception
     {
         // SETUP
@@ -305,7 +308,7 @@ public class BlockDiskUnitTest
         final byte[] result = (byte[]) disk.read( blocks );
 
         // VERIFY
-        assertEquals( "Wrong item retured.", new byte[bytes].length, result.length );
+        assertEquals( new byte[bytes].length, result.length, "Wrong item retured." );
     }
 
     /**
@@ -314,7 +317,7 @@ public class BlockDiskUnitTest
      * @throws Exception
      */
     @Test
-    public void testWriteAndReadMultipleMultiBlockElement()
+    void testWriteAndReadMultipleMultiBlockElement()
         throws Exception
     {
         // SETUP
@@ -331,8 +334,8 @@ public class BlockDiskUnitTest
             final byte[] result = (byte[]) disk.read( blocks );
 
             // VERIFY
-            assertEquals( "Wrong item retured.", new byte[bytes].length, result.length );
-            assertEquals( "Wrong number of blocks returned.", numBlocksPerElement, blocks.length );
+            assertEquals( new byte[bytes].length, result.length, "Wrong item retured." );
+            assertEquals( numBlocksPerElement, blocks.length, "Wrong number of blocks returned." );
         }
     }
 
@@ -342,7 +345,7 @@ public class BlockDiskUnitTest
      * @throws Exception
      */
     @Test
-    public void testWriteAndReadMultipleMultiBlockElement_setSize()
+    void testWriteAndReadMultipleMultiBlockElement_setSize()
         throws Exception
     {
         // SETUP
@@ -362,14 +365,15 @@ public class BlockDiskUnitTest
             final byte[] result = (byte[]) disk.read( blocks );
 
             // VERIFY
-            assertEquals( "Wrong item length retured.", src.length, result.length );
-            assertEquals( "Wrong number of blocks returned.", numBlocksPerElement, blocks.length );
+            assertEquals( src.length, result.length, "Wrong item length retured." );
+            assertEquals( numBlocksPerElement, blocks.length, "Wrong number of blocks returned." );
 
             // We check the array contents, too, to ensure we read back what we wrote out
             for (int j = 0 ; j < src.length ; j++) {
-                assertEquals( "Mismatch at offset " + j + " in attempt # " + (i + 1), src[j], result[j]);
+                assertEquals( src[j], result[j], "Mismatch at offset " + j + " in attempt # " + ( i + 1 ) );
             }
         }
-        assertEquals( "Wrong number of elements. "+disk, numBlocksPerElement * numElements, disk.getNumberOfBlocks() );
+        assertEquals( numBlocksPerElement * numElements, disk.getNumberOfBlocks(),
+                      "Wrong number of elements. " + disk );
     }
 }

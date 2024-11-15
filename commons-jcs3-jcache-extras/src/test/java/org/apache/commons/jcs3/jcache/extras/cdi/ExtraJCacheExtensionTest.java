@@ -18,7 +18,7 @@
  */
 package org.apache.commons.jcs3.jcache.extras.cdi;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import javax.cache.CacheManager;
 import javax.cache.spi.CachingProvider;
@@ -28,12 +28,12 @@ import org.apache.webbeans.config.WebBeansContext;
 import org.apache.webbeans.container.BeanManagerImpl;
 import org.apache.webbeans.inject.OWBInjector;
 import org.apache.webbeans.spi.ContainerLifecycle;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class ExtraJCacheExtensionTest
+class ExtraJCacheExtensionTest
 {
     public static class BeanWithInjections {
         @Inject
@@ -56,8 +56,8 @@ public class ExtraJCacheExtensionTest
 
     private static ContainerLifecycle lifecycle;
 
-    @BeforeClass
-    public static void startContainer()
+    @BeforeAll
+    static void startContainer()
     {
         final WebBeansContext webBeansContext = WebBeansContext.currentInstance();
         lifecycle = webBeansContext.getService(ContainerLifecycle.class);
@@ -65,8 +65,8 @@ public class ExtraJCacheExtensionTest
         bm = webBeansContext.getBeanManagerImpl();
     }
 
-    @AfterClass
-    public static void stopContainer()
+    @AfterAll
+    static void stopContainer()
     {
         lifecycle.stopApplication(null);
     }
@@ -74,20 +74,21 @@ public class ExtraJCacheExtensionTest
     @Inject
     private BeanWithInjections bean;
 
-    @Before
-    public void inject() throws Exception
+    @BeforeEach
+    void inject()
+        throws Exception
     {
         OWBInjector.inject(bm, this, bm.createCreationalContext(null));
     }
 
     @Test
-    public void testDefaultCacheManager()
+    void testDefaultCacheManager()
     {
         assertNotNull(bean.getMgr());
     }
 
     @Test
-    public void testDefaultCacheProvider()
+    void testDefaultCacheProvider()
     {
         assertNotNull(bean.getProvider());
     }

@@ -19,21 +19,21 @@ package org.apache.commons.jcs3.engine.match;
  * under the License.
  */
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /** Tests for the key matcher. */
-public class KeyMatcherPatternImpllUnitTest
+class KeyMatcherPatternImpllUnitTest
 {
     /**
      * Verify that the matching method works.
      */
     @Test
-    public void testGetMatchingKeysFromArray_AllMatch()
+    void testGetMatchingKeysFromArray_AllMatch()
     {
         // SETUP
         final int numToInsertPrefix1 = 10;
@@ -53,14 +53,14 @@ public class KeyMatcherPatternImpllUnitTest
         final Set<String> result1 = keyMatcher.getMatchingKeysFromArray( keyprefix1 + ".", keyArray );
 
         // VERIFY
-        assertEquals( "Wrong number returned 1: " + result1, numToInsertPrefix1, result1.size() );
+        assertEquals( numToInsertPrefix1, result1.size(), "Wrong number returned 1: " + result1 );
     }
 
     /**
      * Verify that the matching method works.
      */
     @Test
-    public void testGetMatchingKeysFromArray_AllMatchFirstNull()
+    void testGetMatchingKeysFromArray_AllMatchFirstNull()
     {
         // SETUP
         final int numToInsertPrefix1 = 10;
@@ -80,14 +80,14 @@ public class KeyMatcherPatternImpllUnitTest
         final Set<String> result1 = keyMatcher.getMatchingKeysFromArray( keyprefix1 + "\\S+", keyArray );
 
         // VERIFY
-        assertEquals( "Wrong number returned 1: " + result1, numToInsertPrefix1, result1.size() );
+        assertEquals( numToInsertPrefix1, result1.size(), "Wrong number returned 1: " + result1 );
     }
 
     /**
      * Verify that the matching method works.
      */
     @Test
-    public void testGetMatchingKeysFromArray_TwoTypes()
+    void testGetMatchingKeysFromArray_TwoTypes()
     {
         // SETUP
         final int numToInsertPrefix1 = 10;
@@ -116,7 +116,7 @@ public class KeyMatcherPatternImpllUnitTest
         final Set<String> result2 = keyMatcher.getMatchingKeysFromArray( keyprefix2 + ".+", keyArray );
 
         // VERIFY
-        assertEquals( "Wrong number returned 1: " + result1, numToInsertPrefix1, result1.size() );
-        assertEquals( "Wrong number returned 2: " + result2, numToInsertPrefix2, result2.size() );
+        assertEquals( numToInsertPrefix1, result1.size(), "Wrong number returned 1: " + result1 );
+        assertEquals( numToInsertPrefix2, result2.size(), "Wrong number returned 2: " + result2 );
     }
 }

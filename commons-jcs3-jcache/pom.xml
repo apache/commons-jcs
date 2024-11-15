@@ -64,11 +64,6 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.junit.vintage</groupId>
-      <artifactId>junit-vintage-engine</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
       <groupId>org.hamcrest</groupId>
       <artifactId>hamcrest</artifactId>
       <scope>test</scope>
@@ -117,7 +112,7 @@
       </plugin>
     </plugins>
   </build>
-  
+
   <properties>
     <commons.module.name>org.apache.commons.jcs3.jcache</commons.module.name>
     <project.build.outputTimestamp>2022-01-01T00:00:00Z</project.build.outputTimestamp>

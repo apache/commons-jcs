@@ -19,27 +19,27 @@ package org.apache.commons.jcs3.utils.struct;
  * under the License.
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Basic unit tests for the LRUMap
  */
-public class LRUMapUnitTest
+class LRUMapUnitTest
 {
 
     /**
      * Add items to the map and then test to see that they come back in the entry set.
      */
     @Test
-    public void testGetEntrySet()
+    void testGetEntrySet()
     {
         final int size = 10;
         final Map<String, String> cache = new LRUMap<>( size );
@@ -50,12 +50,12 @@ public class LRUMapUnitTest
         }
 
         final Set<Entry<String, String>> entries = cache.entrySet();
-        assertEquals( "Set contains the wrong number of items.", size, entries.size() );
+        assertEquals( size, entries.size(), "Set contains the wrong number of items." );
 
         // check minimal correctness
         for (final Entry<String, String> data : entries)
         {
-            assertTrue( "Data is wrong.", data.getValue().indexOf( "data:") != -1  );
+            assertTrue( data.getValue().indexOf( "data:" ) != -1, "Data is wrong." );
         }
     }
 
@@ -63,21 +63,21 @@ public class LRUMapUnitTest
      * Put and then remove.  Make sure the element is returned.
      */
     @Test
-    public void testPutAndRemove()
+    void testPutAndRemove()
     {
         final int size = 10;
         final Map<String, String> cache = new LRUMap<>( size );
 
         cache.put( "key:" + 1, "data:" + 1 );
         final String data = cache.remove( "key:" + 1 );
-        assertEquals( "Data is wrong.", "data:" + 1, data );
+        assertEquals( "data:" + 1, data, "Data is wrong." );
     }
 
     /**
      * Put into the lru with no limit and then make sure they are all there.
      */
     @Test
-    public void testPutWithNoSizeLimit()
+    void testPutWithNoSizeLimit()
     {
         final int size = 10;
         final Map<String, String> cache = new LRUMap<>( );
@@ -90,7 +90,7 @@ public class LRUMapUnitTest
         for ( int i = 0; i < size; i++ )
         {
             final String data = cache.get( "key:" + i );
-            assertEquals( "Data is wrong.", "data:" + i, data );
+            assertEquals( "data:" + i, data, "Data is wrong." );
         }
     }
 
@@ -98,7 +98,7 @@ public class LRUMapUnitTest
      * Put up to the size limit and then make sure they are all there.
      */
     @Test
-    public void testPutWithSizeLimit()
+    void testPutWithSizeLimit()
     {
         final int size = 10;
         final Map<String, String> cache = new LRUMap<>( size );
@@ -111,7 +111,7 @@ public class LRUMapUnitTest
         for ( int i = 0; i < size; i++ )
         {
             final String data = cache.get( "key:" + i );
-            assertEquals( "Data is wrong.", "data:" + i, data );
+            assertEquals( "data:" + i, data, "Data is wrong." );
         }
     }
 
@@ -119,13 +119,13 @@ public class LRUMapUnitTest
      * Call remove on an empty map
      */
     @Test
-    public void testRemoveEmpty()
+    void testRemoveEmpty()
     {
         final int size = 10;
         final Map<String, String> cache = new LRUMap<>( size );
 
         final Object returned = cache.remove( "key:" + 1 );
-        assertNull( "Shouldn't hvae anything.", returned );
+        assertNull( returned, "Shouldn't hvae anything." );
     }
 
 }

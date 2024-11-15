@@ -19,17 +19,17 @@ package org.apache.commons.jcs3.auxiliary.disk.indexed;
  * under the License.
  */
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.apache.commons.jcs3.JCS;
 import org.apache.commons.jcs3.access.CacheAccess;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Put a few hundred thousand entries in the disk cache.
  */
-public class HugeQuantityIndDiskCacheLoadTest
+class HugeQuantityIndDiskCacheLoadTest
 {
     /**
      * Measure memory used by the VM.
@@ -47,8 +47,8 @@ public class HugeQuantityIndDiskCacheLoadTest
     }
 
     /** Test setup.  */
-    @Before
-    public void setUp()
+    @BeforeEach
+    void setUp()
     {
         JCS.setConfigFilename( "/TestDiskCacheHuge.ccf" );
     }
@@ -60,7 +60,7 @@ public class HugeQuantityIndDiskCacheLoadTest
      * @throws Exception If an error occurs
      */
     @Test
-    public void testLargeNumberOfItems()
+    void testLargeNumberOfItems()
         throws Exception
     {
         final int items = 300000;

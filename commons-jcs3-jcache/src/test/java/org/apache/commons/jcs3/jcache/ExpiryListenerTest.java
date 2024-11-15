@@ -19,8 +19,8 @@
 
 package org.apache.commons.jcs3.jcache;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -40,9 +40,10 @@ import javax.cache.expiry.CreatedExpiryPolicy;
 import javax.cache.expiry.Duration;
 import javax.cache.spi.CachingProvider;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class ExpiryListenerTest {
+class ExpiryListenerTest
+{
 
     private static final class CacheEntryExpiredListenerImpl implements CacheEntryExpiredListener<String, String>, Serializable {
         /**
@@ -61,7 +62,9 @@ public class ExpiryListenerTest {
     }
 
     @Test
-    public void testListener() throws InterruptedException {
+    void testListener()
+        throws InterruptedException
+    {
         final CachingProvider cachingProvider = Caching.getCachingProvider();
         final CacheManager cacheManager = cachingProvider.getCacheManager();
         final CacheEntryExpiredListenerImpl listener = new CacheEntryExpiredListenerImpl();

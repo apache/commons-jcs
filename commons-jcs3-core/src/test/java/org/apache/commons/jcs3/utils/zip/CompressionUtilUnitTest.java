@@ -19,9 +19,9 @@ package org.apache.commons.jcs3.utils.zip;
  * under the License.
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -47,7 +47,7 @@ public class CompressionUtilUnitTest
 
         // VERIFY
         final String result = new String( output );
-        assertNotNull( "decompressed output stream shouldn't have been null ", output );
+        assertNotNull( output, "decompressed output stream shouldn't have been null " );
         assertEquals( text, result );
     }
 
@@ -74,7 +74,7 @@ public class CompressionUtilUnitTest
 
         // VERIFY
         final String result = new String( output );
-        assertNotNull( "decompressed output stream shouldn't have been null ", output );
+        assertNotNull( output, "decompressed output stream shouldn't have been null " );
         assertEquals( text, result );
     }
 

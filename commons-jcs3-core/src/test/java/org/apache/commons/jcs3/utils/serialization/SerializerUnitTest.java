@@ -19,33 +19,34 @@ package org.apache.commons.jcs3.utils.serialization;
  * under the License.
  */
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.apache.commons.jcs3.JCS;
 import org.apache.commons.jcs3.access.CacheAccess;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Verify that serializer functionality works.
  */
-public class SerializerUnitTest
+class SerializerUnitTest
 {
     /**
      * Test setup
      * <p>
      * @throws Exception
      */
-    @Before
-    public void setUp()
+    @BeforeEach
+    void setUp()
         throws Exception
     {
         JCS.setConfigFilename( "/TestElementSerializer.ccf" );
     }
 
-    @After
-    public void tearDown() throws Exception
+    @AfterEach
+    void tearDown()
+        throws Exception
     {
         JCS.shutdown();
     }
@@ -56,7 +57,7 @@ public class SerializerUnitTest
      * @throws Exception
      */
     @Test
-    public void testReadWrite()
+    void testReadWrite()
         throws Exception
     {
         final int count = 500; // 100 fit in memory
@@ -71,7 +72,7 @@ public class SerializerUnitTest
         for ( int i = 0; i < count; i++ )
         {
             final String res = jcs1.get( "key:" + i );
-            assertNotNull( "[key:" + i + "] should not be null, " + jcs1.getStats(), res );
+            assertNotNull( res, "[key:" + i + "] should not be null, " + jcs1.getStats() );
         }
 
         // EncryptingSerializer
@@ -85,7 +86,7 @@ public class SerializerUnitTest
         for ( int i = 0; i < count; i++ )
         {
             final String res = jcs2.get( "key:" + i );
-            assertNotNull( "[key:" + i + "] should not be null, " + jcs2.getStats(), res );
+            assertNotNull( res, "[key:" + i + "] should not be null, " + jcs2.getStats() );
         }
 
         JCS.shutdown();
@@ -97,7 +98,7 @@ public class SerializerUnitTest
         for ( int i = 0; i < count; i++ )
         {
             final String res = jcs3.get( "key:" + i );
-            assertNotNull( "[key:" + i + "] should not be null, " + jcs3.getStats(), res );
+            assertNotNull( res, "[key:" + i + "] should not be null, " + jcs3.getStats() );
         }
     }
 }

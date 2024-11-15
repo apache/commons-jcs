@@ -1,13 +1,5 @@
 package org.apache.commons.jcs3.auxiliary.disk.jdbc.hsql;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -27,14 +19,19 @@ import java.util.Set;
  * under the License.
  */
 
-import junit.extensions.ActiveTestSuite;
-import junit.framework.Test;
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.jcs3.JCS;
 import org.apache.commons.jcs3.access.CacheAccess;
 import org.apache.commons.jcs3.engine.behavior.ICacheElement;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test which exercises the indexed disk cache. This one uses three different regions for thre
@@ -42,17 +39,26 @@ import org.junit.Before;
  */
 public class HSQLDiskCacheConcurrentUnitTest
 {
+
     /**
      * Number of items to cache, twice the configured maxObjects for the memory cache regions.
      */
     private static final int items = 100;
 
     /**
-     * Adds items to cache, gets them, and removes them. The item count is more than the size of the
-     * memory cache, so items should spool to disk.
-     * <p>
-     * @param region Name of the region to access
-     * @throws Exception If an error occurs
+     * Setup method for JUnit 5, executed before each test.
+     */
+    @BeforeEach
+    void setUp()
+    {
+        JCS.setConfigFilename( "/TestHSQLDiskCacheConcurrent.ccf" );
+    }
+
+    /**
+     * Runs the test for a given cache region.
+     *
+     * @param region The region name for the cache
+     * @throws Exception If an error occurs during cache access
      */
     public static void runTestForRegion( final String region )
         throws Exception
@@ -69,11 +75,10 @@ public class HSQLDiskCacheConcurrentUnitTest
         for ( int i = 0; i < items; i++ )
         {
             final String value = jcs.get( i + ":key" );
-
-            assertEquals( "key = [" + i + ":key] value = [" + value + "]", region + " data " + i, value );
+            assertEquals( region + " data " + i, value, "key = [" + i + ":key] value = [" + value + "]" );
         }
 
-        // Test that getElements returns all the expected values
+        // Verify that getElements returns all expected values
         final Set<String> keys = new HashSet<>();
         for ( int i = 0; i < items; i++ )
         {
@@ -84,8 +89,8 @@ public class HSQLDiskCacheConcurrentUnitTest
         for ( int i = 0; i < items; i++ )
         {
             final ICacheElement<String, String> element = elements.get( i + ":key" );
-            assertNotNull( "element " + i + ":key is missing", element );
-            assertEquals( "value " + i + ":key", region + " data " + i, element.getVal() );
+            assertNotNull( element, "element " + i + ":key is missing" );
+            assertEquals( region + " data " + i, element.getVal(), "value " + i + ":key" );
         }
 
         // Remove all the items
@@ -97,58 +102,28 @@ public class HSQLDiskCacheConcurrentUnitTest
         // Verify removal
         for ( int i = 0; i < items; i++ )
         {
-            assertNull( "Removed key should be null: " + i + ":key", jcs.get( i + ":key" ) );
+            assertNull( jcs.get( i + ":key" ), "Removed key should be null: " + i + ":key" );
         }
     }
 
-    /**
-     * A unit test suite for JUnit. Uses ActiveTestSuite to run multiple tests concurrently.
-     * <p>
-     * @return The test suite
-     */
-    public static Test suite()
+    @Test
+    void testHSQLDiskCache1()
+        throws Exception
     {
-        final ActiveTestSuite suite = new ActiveTestSuite();
-
-        suite.addTest(new TestCase("testHSQLDiskCache1" )
-        {
-            @Override
-            public void runTest()
-                throws Exception
-            {
-                runTestForRegion( "indexedRegion1" );
-            }
-        });
-
-        suite.addTest(new TestCase("testHSQLDiskCache2" )
-        {
-            @Override
-            public void runTest()
-                throws Exception
-            {
-                runTestForRegion( "indexedRegion2" );
-            }
-        });
-
-        suite.addTest(new TestCase("testHSQLDiskCache3" )
-        {
-            @Override
-            public void runTest()
-                throws Exception
-            {
-                runTestForRegion( "indexedRegion3" );
-            }
-        });
-
-        return suite;
+        runTestForRegion( "indexedRegion1" );
     }
 
-    /**
-     * Test setup
-     */
-    @Before
-    public void setUp()
+    @Test
+    void testHSQLDiskCache2()
+        throws Exception
     {
-        JCS.setConfigFilename( "/TestHSQLDiskCacheConcurrent.ccf" );
+        runTestForRegion( "indexedRegion2" );
+    }
+
+    @Test
+    void testHSQLDiskCache3()
+        throws Exception
+    {
+        runTestForRegion( "indexedRegion3" );
     }
 }

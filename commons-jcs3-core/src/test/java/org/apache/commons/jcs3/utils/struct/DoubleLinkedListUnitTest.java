@@ -19,16 +19,16 @@ package org.apache.commons.jcs3.utils.struct;
  * under the License.
  */
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /** Tests for the double linked list. */
-public class DoubleLinkedListUnitTest
+class DoubleLinkedListUnitTest
 {
     /** Verify that the last is added when the list is empty. */
     @Test
-    public void testAddLast_Empty()
+    void testAddLast_Empty()
     {
         // SETUP
         final DoubleLinkedList<DoubleLinkedListNode<String>> list = new DoubleLinkedList<>();
@@ -40,12 +40,12 @@ public class DoubleLinkedListUnitTest
         list.addLast( node1 );
 
         // VERIFY
-        assertEquals( "Wrong last", node1, list.getLast() );
+        assertEquals( node1, list.getLast(), "Wrong last" );
     }
 
     /** Verify that the last is added when the list is empty. */
     @Test
-    public void testAddLast_NotEmpty()
+    void testAddLast_NotEmpty()
     {
         // SETUP
         final DoubleLinkedList<DoubleLinkedListNode<String>> list = new DoubleLinkedList<>();
@@ -61,12 +61,12 @@ public class DoubleLinkedListUnitTest
         list.addLast( node2 );
 
         // VERIFY
-        assertEquals( "Wrong last", node2, list.getLast() );
+        assertEquals( node2, list.getLast(), "Wrong last" );
     }
 
     /** Verify that it's added last. */
     @Test
-    public void testMakeLast_wasAlone()
+    void testMakeLast_wasAlone()
     {
         // SETUP
         final DoubleLinkedList<DoubleLinkedListNode<String>> list = new DoubleLinkedList<>();
@@ -80,14 +80,14 @@ public class DoubleLinkedListUnitTest
         list.makeLast( node1 );
 
         // VERIFY
-        assertEquals( "Wrong size", 1, list.size() );
-        assertEquals( "Wrong last", node1, list.getLast() );
-        assertEquals( "Wrong first", node1, list.getFirst() );
+        assertEquals( 1, list.size(), "Wrong size" );
+        assertEquals( node1, list.getLast(), "Wrong last" );
+        assertEquals( node1, list.getFirst(), "Wrong first" );
     }
 
     /** Verify that it's added last. */
     @Test
-    public void testMakeLast_wasFirst()
+    void testMakeLast_wasFirst()
     {
         // SETUP
         final DoubleLinkedList<DoubleLinkedListNode<String>> list = new DoubleLinkedList<>();
@@ -105,14 +105,14 @@ public class DoubleLinkedListUnitTest
         list.makeLast( node1 );
 
         // VERIFY
-        assertEquals( "Wrong size", 2, list.size() );
-        assertEquals( "Wrong last", node1, list.getLast() );
-        assertEquals( "Wrong first", node2, list.getFirst() );
+        assertEquals( 2, list.size(), "Wrong size" );
+        assertEquals( node1, list.getLast(), "Wrong last" );
+        assertEquals( node2, list.getFirst(), "Wrong first" );
     }
 
     /** Verify that it's added last. */
     @Test
-    public void testMakeLast_wasInMiddle()
+    void testMakeLast_wasInMiddle()
     {
         // SETUP
         final DoubleLinkedList<DoubleLinkedListNode<String>> list = new DoubleLinkedList<>();
@@ -134,14 +134,14 @@ public class DoubleLinkedListUnitTest
         list.makeLast( node1 );
 
         // VERIFY
-        assertEquals( "Wrong size", 3, list.size() );
-        assertEquals( "Wrong last", node1, list.getLast() );
-        assertEquals( "Wrong first", node3, list.getFirst() );
+        assertEquals( 3, list.size(), "Wrong size" );
+        assertEquals( node1, list.getLast(), "Wrong last" );
+        assertEquals( node3, list.getFirst(), "Wrong first" );
     }
 
     /** Verify that it's added last. */
     @Test
-    public void testMakeLast_wasLast()
+    void testMakeLast_wasLast()
     {
         // SETUP
         final DoubleLinkedList<DoubleLinkedListNode<String>> list = new DoubleLinkedList<>();
@@ -159,8 +159,8 @@ public class DoubleLinkedListUnitTest
         list.makeLast( node1 );
 
         // VERIFY
-        assertEquals( "Wrong size", 2, list.size() );
-        assertEquals( "Wrong last", node1, list.getLast() );
-        assertEquals( "Wrong first", node2, list.getFirst() );
+        assertEquals( 2, list.size(), "Wrong size" );
+        assertEquals( node1, list.getLast(), "Wrong last" );
+        assertEquals( node2, list.getFirst(), "Wrong first" );
     }
 }

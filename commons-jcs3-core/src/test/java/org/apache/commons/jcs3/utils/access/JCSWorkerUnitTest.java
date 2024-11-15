@@ -19,14 +19,14 @@ package org.apache.commons.jcs3.utils.access;
  * under the License.
  */
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test cases for the JCS worker.
  */
-public class JCSWorkerUnitTest
+class JCSWorkerUnitTest
 {
 
     /**
@@ -37,7 +37,7 @@ public class JCSWorkerUnitTest
      * @throws Exception
      */
     @Test
-    public void testSimpleGet()
+    void testSimpleGet()
         throws Exception
     {
         final JCSWorker<String, Long> cachingWorker = new JCSWorker<>( "example region" );
@@ -57,11 +57,11 @@ public class JCSWorkerUnitTest
         final String key = "abc";
 
         final Long result = cachingWorker.getResult( key, helper );
-        assertEquals( "Called the wrong number of times", Long.valueOf( 1 ), result );
+        assertEquals( Long.valueOf( 1 ), result, "Called the wrong number of times" );
 
         // should get it from the cache.
         final Long result2 = cachingWorker.getResult( key, helper );
-        assertEquals( "Called the wrong number of times", Long.valueOf( 1 ), result2 );
+        assertEquals( Long.valueOf( 1 ), result2, "Called the wrong number of times" );
     }
 
 }

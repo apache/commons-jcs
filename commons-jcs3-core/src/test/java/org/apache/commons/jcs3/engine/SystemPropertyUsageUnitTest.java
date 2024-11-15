@@ -19,7 +19,7 @@ package org.apache.commons.jcs3.engine;
  * under the License.
  */
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Properties;
 
@@ -27,30 +27,32 @@ import org.apache.commons.jcs3.JCS;
 import org.apache.commons.jcs3.access.CacheAccess;
 import org.apache.commons.jcs3.engine.control.CompositeCacheManager;
 import org.apache.commons.jcs3.utils.props.PropertyLoader;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Verify that system properties can override.
  */
-public class SystemPropertyUsageUnitTest
+class SystemPropertyUsageUnitTest
 {
     private static final String JCS_DEFAULT_CACHEATTRIBUTES_MAX_OBJECTS = "jcs.default.cacheattributes.MaxObjects";
     private static final int testValue = 6789;
 
     private CompositeCacheManager manager;
 
-    @Before
-    public void setUp() throws Exception
+    @BeforeEach
+    void setUp()
+        throws Exception
     {
        //First shut down any previously running manager.
        manager = CompositeCacheManager.getInstance();
        manager.shutDown();
     }
 
-    @After
-    public void tearDown() throws Exception
+    @AfterEach
+    void tearDown()
+        throws Exception
 	{
 		if (manager != null)
 		{
@@ -60,12 +62,12 @@ public class SystemPropertyUsageUnitTest
         System.clearProperty(JCS_DEFAULT_CACHEATTRIBUTES_MAX_OBJECTS);
 	}
 
-	/**
+    /**
      * Verify that the system properties are used.
      * @throws Exception
      */
     @Test
-    public void testSystemPropertyUsage()
+    void testSystemPropertyUsage()
         throws Exception
     {
         System.setProperty( JCS_DEFAULT_CACHEATTRIBUTES_MAX_OBJECTS, String.valueOf(testValue) );
@@ -76,7 +78,7 @@ public class SystemPropertyUsageUnitTest
 
         manager = CompositeCacheManager.getInstance();
 
-        assertEquals( "System property value is not reflected.", testValue, jcs.getCacheAttributes().getMaxObjects());
+        assertEquals( testValue, jcs.getCacheAttributes().getMaxObjects(), "System property value is not reflected." );
     }
 
     /**
@@ -85,7 +87,7 @@ public class SystemPropertyUsageUnitTest
      * @throws Exception
      */
     @Test
-    public void testSystemPropertyUsage_inactive()
+    void testSystemPropertyUsage_inactive()
         throws Exception
     {
         System.setProperty( JCS_DEFAULT_CACHEATTRIBUTES_MAX_OBJECTS, String.valueOf(testValue) );
@@ -98,8 +100,8 @@ public class SystemPropertyUsageUnitTest
 
         final CacheAccess<String, String> jcs = JCS.getInstance( "someCacheNotInFile" );
 
-        assertEquals( "System property value should not be reflected",
-                      Integer.parseInt( props.getProperty( JCS_DEFAULT_CACHEATTRIBUTES_MAX_OBJECTS ) ),
-                      jcs.getCacheAttributes().getMaxObjects());
+        assertEquals( Integer.parseInt( props.getProperty( JCS_DEFAULT_CACHEATTRIBUTES_MAX_OBJECTS ) ),
+                      jcs.getCacheAttributes().getMaxObjects(),
+                      "System property value should not be reflected" );
     }
 }

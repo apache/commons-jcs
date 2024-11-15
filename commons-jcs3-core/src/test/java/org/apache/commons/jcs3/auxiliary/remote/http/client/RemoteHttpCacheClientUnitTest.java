@@ -19,8 +19,8 @@ package org.apache.commons.jcs3.auxiliary.remote.http.client;
  * under the License.
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -32,10 +32,10 @@ import org.apache.commons.jcs3.auxiliary.remote.value.RemoteCacheResponse;
 import org.apache.commons.jcs3.auxiliary.remote.value.RemoteRequestType;
 import org.apache.commons.jcs3.engine.CacheElement;
 import org.apache.commons.jcs3.engine.behavior.ICacheElement;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /** Tests for the client. */
-public class RemoteHttpCacheClientUnitTest
+class RemoteHttpCacheClientUnitTest
 {
     /**
      * Verify dispose functionality
@@ -43,7 +43,7 @@ public class RemoteHttpCacheClientUnitTest
      * @throws IOException
      */
     @Test
-    public void testDispose_normal()
+    void testDispose_normal()
         throws IOException
     {
         // SETUP
@@ -59,8 +59,8 @@ public class RemoteHttpCacheClientUnitTest
         client.dispose( cacheName );
 
         // VERIFY
-        assertEquals( "Wrong type.", RemoteRequestType.DISPOSE, mockDispatcher.lastRemoteCacheRequest
-            .getRequestType() );
+        assertEquals( RemoteRequestType.DISPOSE, mockDispatcher.lastRemoteCacheRequest
+            .getRequestType(), "Wrong type." );
     }
 
     /**
@@ -69,7 +69,7 @@ public class RemoteHttpCacheClientUnitTest
      * @throws IOException
      */
     @Test
-    public void testGet_normal()
+    void testGet_normal()
         throws IOException
     {
         // SETUP
@@ -93,9 +93,9 @@ public class RemoteHttpCacheClientUnitTest
         final ICacheElement<String, String> result = client.get( cacheName, key );
 
         // VERIFY
-        assertEquals( "Wrong result.", expected, result );
-        assertEquals( "Wrong type.", RemoteRequestType.GET, mockDispatcher.lastRemoteCacheRequest
-            .getRequestType() );
+        assertEquals( expected, result, "Wrong result." );
+        assertEquals( RemoteRequestType.GET, mockDispatcher.lastRemoteCacheRequest
+            .getRequestType(), "Wrong type." );
     }
 
     /**
@@ -104,7 +104,7 @@ public class RemoteHttpCacheClientUnitTest
      * @throws IOException
      */
     @Test
-    public void testGet_nullFromDispatcher()
+    void testGet_nullFromDispatcher()
         throws IOException
     {
         // SETUP
@@ -123,9 +123,9 @@ public class RemoteHttpCacheClientUnitTest
         final ICacheElement<String, String> result = client.get( cacheName, key );
 
         // VERIFY
-        assertNull( "Wrong result.", result );
-        assertEquals( "Wrong type.", RemoteRequestType.GET, mockDispatcher.lastRemoteCacheRequest
-            .getRequestType() );
+        assertNull( result, "Wrong result." );
+        assertEquals( RemoteRequestType.GET, mockDispatcher.lastRemoteCacheRequest
+            .getRequestType(), "Wrong type." );
     }
 
     /**
@@ -134,7 +134,7 @@ public class RemoteHttpCacheClientUnitTest
      * @throws IOException
      */
     @Test
-    public void testGetMatching_normal()
+    void testGetMatching_normal()
         throws IOException
     {
         // SETUP
@@ -160,9 +160,10 @@ public class RemoteHttpCacheClientUnitTest
         final Map<String, ICacheElement<String, String>> result = client.getMatching( cacheName, pattern );
 
         // VERIFY
-        assertEquals( "Wrong result.", expected, result.get( "key" ) );
-        assertEquals( "Wrong type.", RemoteRequestType.GET_MATCHING,
-                      mockDispatcher.lastRemoteCacheRequest.getRequestType() );
+        assertEquals( expected, result.get( "key" ), "Wrong result." );
+        assertEquals( RemoteRequestType.GET_MATCHING,
+                      mockDispatcher.lastRemoteCacheRequest.getRequestType(),
+                      "Wrong type." );
     }
 
     /**
@@ -171,7 +172,7 @@ public class RemoteHttpCacheClientUnitTest
      * @throws IOException
      */
     @Test
-    public void testGetMultiple_normal()
+    void testGetMultiple_normal()
         throws IOException
     {
         // SETUP
@@ -197,9 +198,10 @@ public class RemoteHttpCacheClientUnitTest
         final Map<String, ICacheElement<String, String>> result = client.getMultiple( cacheName, keys );
 
         // VERIFY
-        assertEquals( "Wrong result.", expected, result.get( "key" ) );
-        assertEquals( "Wrong type.", RemoteRequestType.GET_MULTIPLE,
-                      mockDispatcher.lastRemoteCacheRequest.getRequestType() );
+        assertEquals( expected, result.get( "key" ), "Wrong result." );
+        assertEquals( RemoteRequestType.GET_MULTIPLE,
+                      mockDispatcher.lastRemoteCacheRequest.getRequestType(),
+                      "Wrong type." );
     }
 
     /**
@@ -208,7 +210,7 @@ public class RemoteHttpCacheClientUnitTest
      * @throws IOException
      */
     @Test
-    public void testRemove_normal()
+    void testRemove_normal()
         throws IOException
     {
         // SETUP
@@ -225,8 +227,8 @@ public class RemoteHttpCacheClientUnitTest
         client.remove( cacheName, key );
 
         // VERIFY
-        assertEquals( "Wrong type.", RemoteRequestType.REMOVE, mockDispatcher.lastRemoteCacheRequest
-            .getRequestType() );
+        assertEquals( RemoteRequestType.REMOVE, mockDispatcher.lastRemoteCacheRequest
+            .getRequestType(), "Wrong type." );
     }
 
     /**
@@ -235,7 +237,7 @@ public class RemoteHttpCacheClientUnitTest
      * @throws IOException
      */
     @Test
-    public void testRemoveAll_normal()
+    void testRemoveAll_normal()
         throws IOException
     {
         // SETUP
@@ -251,8 +253,8 @@ public class RemoteHttpCacheClientUnitTest
         client.removeAll( cacheName );
 
         // VERIFY
-        assertEquals( "Wrong type.", RemoteRequestType.REMOVE_ALL, mockDispatcher.lastRemoteCacheRequest
-            .getRequestType() );
+        assertEquals( RemoteRequestType.REMOVE_ALL, mockDispatcher.lastRemoteCacheRequest
+            .getRequestType(), "Wrong type." );
     }
 
     /**
@@ -261,7 +263,7 @@ public class RemoteHttpCacheClientUnitTest
      * @throws IOException
      */
     @Test
-    public void testUpdate_normal()
+    void testUpdate_normal()
         throws IOException
     {
         // SETUP
@@ -279,7 +281,7 @@ public class RemoteHttpCacheClientUnitTest
         client.update( element );
 
         // VERIFY
-        assertEquals( "Wrong type.", RemoteRequestType.UPDATE, mockDispatcher.lastRemoteCacheRequest
-            .getRequestType() );
+        assertEquals( RemoteRequestType.UPDATE, mockDispatcher.lastRemoteCacheRequest
+            .getRequestType(), "Wrong type." );
     }
 }

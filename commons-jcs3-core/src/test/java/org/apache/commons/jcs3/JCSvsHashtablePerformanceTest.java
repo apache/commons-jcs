@@ -1,7 +1,5 @@
 package org.apache.commons.jcs3;
 
-import static org.junit.Assert.assertTrue;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -21,13 +19,15 @@ import static org.junit.Assert.assertTrue;
  * under the License.
  */
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.Hashtable;
 
 import org.apache.commons.jcs3.access.CacheAccess;
 import org.apache.commons.jcs3.engine.memory.lru.LRUMemoryCache;
 import org.apache.commons.jcs3.log.Log;
 import org.apache.commons.jcs3.log.LogManager;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * This test ensures that basic memory operations are with a specified order of magnitude of the
@@ -158,7 +158,7 @@ public class JCSvsHashtablePerformanceTest
      * @throws Exception Description of the Exception
      */
     @Test
-    public void testSimpleLoad()
+    void testSimpleLoad()
         throws Exception
     {
         final Log log1 = LogManager.getLog( LRUMemoryCache.class );

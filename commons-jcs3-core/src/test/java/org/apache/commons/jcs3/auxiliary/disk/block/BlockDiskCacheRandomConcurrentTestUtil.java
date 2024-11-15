@@ -19,13 +19,13 @@ package org.apache.commons.jcs3.auxiliary.disk.block;
  * under the License.
  */
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.apache.commons.jcs3.JCS;
 import org.apache.commons.jcs3.access.CacheAccess;
 import org.apache.commons.jcs3.access.TestCacheAccess;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * This is used by other tests to generate a random load on the disk cache.
@@ -67,14 +67,14 @@ public class BlockDiskCacheRandomConcurrentTestUtil
     /**
      * Test setup
      */
-    @Before
-    public void setUp()
+    @BeforeEach
+    void setUp()
     {
         JCS.setConfigFilename( "/TestBlockDiskCacheCon.ccf" );
     }
 
     @Test
-    public void test()
+    void test()
     {
 
     }

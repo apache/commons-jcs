@@ -19,11 +19,11 @@ package org.apache.commons.jcs3.utils.struct;
  * under the License.
  */
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Map;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * This ensures that the jcs version of the LRU map is as fast as the commons
@@ -164,7 +164,7 @@ public class LRUMapPerformanceTest
      *                Description of the Exception
      */
     @Test
-    public void testSimpleLoad()
+    void testSimpleLoad()
         throws Exception
     {
         doWork();

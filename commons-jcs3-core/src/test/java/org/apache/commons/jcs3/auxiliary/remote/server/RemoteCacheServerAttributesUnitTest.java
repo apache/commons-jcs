@@ -19,49 +19,49 @@ package org.apache.commons.jcs3.auxiliary.remote.server;
  * under the License.
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.apache.commons.jcs3.auxiliary.remote.server.behavior.RemoteType;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for the remote cache server attributes.
  */
-public class RemoteCacheServerAttributesUnitTest
+class RemoteCacheServerAttributesUnitTest
 {
 
     /**
      * Verify that the type is set correctly and that the correct name is returned for the type.
      */
     @Test
-    public void testSetRemoteTypeName_cluster()
+    void testSetRemoteTypeName_cluster()
     {
         final RemoteCacheServerAttributes attributes = new RemoteCacheServerAttributes();
         attributes.setRemoteTypeName( "CLUSTER" );
-        assertEquals( "Wrong type.", RemoteType.CLUSTER, attributes.getRemoteType() );
-        assertEquals( "Wrong name", "CLUSTER", attributes.getRemoteTypeName() );
+        assertEquals( RemoteType.CLUSTER, attributes.getRemoteType(), "Wrong type." );
+        assertEquals( "CLUSTER", attributes.getRemoteTypeName(), "Wrong name" );
     }
 
     /**
      * Verify that the type is set correctly and that the correct name is returned for the type.
      */
     @Test
-    public void testSetRemoteTypeName_local()
+    void testSetRemoteTypeName_local()
     {
         final RemoteCacheServerAttributes attributes = new RemoteCacheServerAttributes();
         attributes.setRemoteTypeName( "LOCAL" );
-        assertEquals( "Wrong type.", RemoteType.LOCAL, attributes.getRemoteType() );
-        assertEquals( "Wrong name", "LOCAL", attributes.getRemoteTypeName() );
+        assertEquals( RemoteType.LOCAL, attributes.getRemoteType(), "Wrong type." );
+        assertEquals( "LOCAL", attributes.getRemoteTypeName(), "Wrong name" );
     }
 
     /**
      * Verify that we get a string, even if not attributes are set.
      */
     @Test
-    public void testToString()
+    void testToString()
     {
         final RemoteCacheServerAttributes attributes = new RemoteCacheServerAttributes();
-        assertNotNull( "Should have a string.", attributes.toString() );
+        assertNotNull( attributes.toString(), "Should have a string." );
     }
 }

@@ -1,9 +1,5 @@
 package org.apache.commons.jcs3.auxiliary.remote;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -23,14 +19,18 @@ import static org.junit.Assert.assertNull;
  * under the License.
  */
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import java.rmi.registry.Registry;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Simple tests for remote utils. It is difficult to verify most of the things is does.
  */
-public class RemoteUtilsUnitTest
+class RemoteUtilsUnitTest
 {
     /**
      * Call create registry.
@@ -39,14 +39,14 @@ public class RemoteUtilsUnitTest
      * </p>
      */
     @Test
-    public void testCreateRegistry()
+    void testCreateRegistry()
     {
         final Registry registry = RemoteUtils.createRegistry( 1102 );
-        assertNotNull("Registry should not be null", registry);
+        assertNotNull( registry, "Registry should not be null" );
     }
 
     @Test
-    public void testGetNamingURL()
+    void testGetNamingURL()
     {
         assertEquals("//host:1/servicename", RemoteUtils.getNamingURL("host",1,"servicename"));
         assertEquals("//127.0.0.1:2/servicename", RemoteUtils.getNamingURL("127.0.0.1",2,"servicename"));
@@ -54,7 +54,7 @@ public class RemoteUtilsUnitTest
     }
 
     @Test
-    public void testParseServerAndPort()
+    void testParseServerAndPort()
     {
         RemoteLocation loc = RemoteLocation.parseServerAndPort("server1:1234");
         assertEquals("server1", loc.getHost());

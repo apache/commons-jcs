@@ -19,10 +19,10 @@ package org.apache.commons.jcs3.auxiliary.lateral.socket.tcp;
  * under the License.
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Random;
 
@@ -32,8 +32,8 @@ import org.apache.commons.jcs3.auxiliary.lateral.LateralCacheAttributes;
 import org.apache.commons.jcs3.engine.CacheElement;
 import org.apache.commons.jcs3.engine.behavior.ICacheElement;
 import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests the issue remove on put fuctionality.
@@ -129,7 +129,7 @@ public class LateralTCPIssueRemoveOnPutUnitTest
         final String data = "testData" + testNum;
         jcs.put( key, data );
         final String value = jcs.get( key );
-        assertEquals( "Couldn't put normally.", data, value );
+        assertEquals( data, value, "Couldn't put normally." );
 
         // make sure the items we can find are in the correct region.
         for ( int i = 1; i < numOps; i++ )
@@ -138,7 +138,7 @@ public class LateralTCPIssueRemoveOnPutUnitTest
             final String dataL = jcs.get( keyL );
             if ( dataL != null )
             {
-                assertTrue( "Incorrect region detected.", dataL.startsWith( region ) );
+                assertTrue( dataL.startsWith( region ), "Incorrect region detected." );
             }
 
         }
@@ -147,15 +147,15 @@ public class LateralTCPIssueRemoveOnPutUnitTest
 
         final Object testObj = cache.get( keyToBeRemovedOnPut );
         p( "runTestForRegion, test object = " + testObj );
-        assertNull( "The test object should have been removed by a put.", testObj );
+        assertNull( testObj, "The test object should have been removed by a put." );
 
     }
 
     /**
      * Test setup
      */
-    @Before
-    public void setUp()
+    @BeforeEach
+    void setUp()
     {
         System.setProperty( "jcs.auxiliary.LTCP.attributes.TcpServers", "localhost:" + serverPort );
         JCS.setConfigFilename( "/TestTCPLateralIssueRemoveCache.ccf" );
@@ -165,7 +165,7 @@ public class LateralTCPIssueRemoveOnPutUnitTest
      * @throws Exception
      */
     @Test
-    public void testPutLocalPutRemoteGetBusyVerifyRemoved()
+    void testPutLocalPutRemoteGetBusyVerifyRemoved()
         throws Exception
     {
         runTestForRegion( "region1", 1, 200, 1 );
@@ -178,7 +178,7 @@ public class LateralTCPIssueRemoveOnPutUnitTest
      * @throws Exception
      */
     @Test
-    public void testStandardPut()
+    void testStandardPut()
         throws Exception
     {
         final String region = "region1";
@@ -212,6 +212,6 @@ public class LateralTCPIssueRemoveOnPutUnitTest
 
         final Object testObj = cache.get( keyToBeRemovedOnPut );
         p( "testStandardPut, test object = " + testObj );
-        assertNotNull( "The test object should not have been removed by a put.", testObj );
+        assertNotNull( testObj, "The test object should not have been removed by a put." );
     }
 }

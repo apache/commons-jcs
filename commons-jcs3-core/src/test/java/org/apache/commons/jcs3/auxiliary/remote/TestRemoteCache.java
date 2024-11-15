@@ -32,9 +32,9 @@ import org.apache.commons.jcs3.engine.control.MockCompositeCacheManager;
 import org.apache.commons.jcs3.engine.control.MockElementSerializer;
 import org.apache.commons.jcs3.log.Log;
 import org.apache.commons.jcs3.log.LogManager;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 /**
  */
@@ -65,8 +65,8 @@ public class TestRemoteCache
     /**
      * Test setup
      */
-    @Before
-    public void setUp()
+    @BeforeEach
+    void setUp()
     {
         JCS.setConfigFilename( "/TestRemoteClient.ccf" );
     }
@@ -75,7 +75,7 @@ public class TestRemoteCache
      * @throws Exception
      */
     @Test
-    public void testService()
+    void testService()
         throws Exception
     {
 
@@ -119,8 +119,8 @@ public class TestRemoteCache
      * @throws Exception
      */
     @Test
-    @Ignore
-    public void testSimpleSend()
+    @Disabled
+    void testSimpleSend()
         throws Exception
     {
         log.info( "testSimpleSend" );

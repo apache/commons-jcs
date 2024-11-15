@@ -19,9 +19,9 @@ package org.apache.commons.jcs3.utils.discovery;
  * under the License.
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assume.assumeNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import java.util.ArrayList;
 import java.util.concurrent.CompletableFuture;
@@ -30,14 +30,14 @@ import java.util.concurrent.TimeUnit;
 import org.apache.commons.jcs3.utils.discovery.UDPDiscoveryMessage.BroadcastType;
 import org.apache.commons.jcs3.utils.net.HostNameUtil;
 import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for the sender.
  */
-public class UDPDiscoverySenderUnitTest
+class UDPDiscoverySenderUnitTest
 {
     /** Multicast address to send/receive on */
     private static final String ADDRESS = "228.4.5.9";
@@ -66,16 +66,15 @@ public class UDPDiscoverySenderUnitTest
      * <p>
      * @throws Exception on error
      */
-    @Before
-    public void setUp()
+    @BeforeEach
+    void setUp()
         throws Exception
     {
-        assumeNotNull("This machine does not support multicast", HostNameUtil.getMulticastNetworkInterface());
+        assumeTrue( HostNameUtil.getMulticastNetworkInterface() != null, "This machine does not support multicast" );
 
         futureMsg = new CompletableFuture<>();
-        receiver = new UDPDiscoveryReceiver( msg -> {
-            futureMsg.complete(msg);
-        }, null, ADDRESS, PORT );
+        receiver = new UDPDiscoveryReceiver( msg ->
+                                                 futureMsg.complete( msg ), null, ADDRESS, PORT );
         receiver.setSerializer(new StandardSerializer());
         final Thread t = new Thread( receiver );
         t.start();
@@ -88,8 +87,8 @@ public class UDPDiscoverySenderUnitTest
      * <p>
      * @throws Exception on error
      */
-    @After
-    public void tearDown()
+    @AfterEach
+    void tearDown()
         throws Exception
     {
         if (receiver != null)
@@ -108,7 +107,7 @@ public class UDPDiscoverySenderUnitTest
      * @throws Exception on error
      */
     @Test
-    public void testPassiveBroadcast()
+    void testPassiveBroadcast()
         throws Exception
     {
         // SETUP
@@ -120,9 +119,9 @@ public class UDPDiscoverySenderUnitTest
 
         // VERIFY
         final UDPDiscoveryMessage msg = futureMsg.get(3, TimeUnit.SECONDS);
-        assertNotNull("message not received", msg);
-        assertEquals( "wrong port", SENDING_PORT, msg.getPort() );
-        assertEquals( "wrong message type", BroadcastType.PASSIVE, msg.getMessageType() );
+        assertNotNull( msg, "message not received" );
+        assertEquals( SENDING_PORT, msg.getPort(), "wrong port" );
+        assertEquals( BroadcastType.PASSIVE, msg.getMessageType(), "wrong message type" );
     }
 
     /**
@@ -131,7 +130,7 @@ public class UDPDiscoverySenderUnitTest
      * @throws Exception on error
      */
     @Test
-    public void testRemoveBroadcast()
+    void testRemoveBroadcast()
         throws Exception
     {
         // SETUP
@@ -143,9 +142,9 @@ public class UDPDiscoverySenderUnitTest
 
         // VERIFY
         final UDPDiscoveryMessage msg = futureMsg.get(3, TimeUnit.SECONDS);
-        assertNotNull("message not received", msg);
-        assertEquals( "wrong port", SENDING_PORT, msg.getPort() );
-        assertEquals( "wrong message type", BroadcastType.REMOVE, msg.getMessageType() );
+        assertNotNull( msg, "message not received" );
+        assertEquals( SENDING_PORT, msg.getPort(), "wrong port" );
+        assertEquals( BroadcastType.REMOVE, msg.getMessageType(), "wrong message type" );
     }
 
     /**
@@ -154,7 +153,7 @@ public class UDPDiscoverySenderUnitTest
      * @throws Exception on error
      */
     @Test
-    public void testRequestBroadcast()
+    void testRequestBroadcast()
         throws Exception
     {
         // DO WORK
@@ -162,7 +161,7 @@ public class UDPDiscoverySenderUnitTest
 
         // VERIFY
         final UDPDiscoveryMessage msg = futureMsg.get(3, TimeUnit.SECONDS);
-        assertNotNull("message not received", msg);
-        assertEquals( "wrong message type", BroadcastType.REQUEST, msg.getMessageType() );
+        assertNotNull( msg, "message not received" );
+        assertEquals( BroadcastType.REQUEST, msg.getMessageType(), "wrong message type" );
     }
 }
