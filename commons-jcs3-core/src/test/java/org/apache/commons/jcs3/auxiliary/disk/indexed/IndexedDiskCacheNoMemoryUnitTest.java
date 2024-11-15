@@ -19,21 +19,19 @@ package org.apache.commons.jcs3.auxiliary.disk.indexed;
  * under the License.
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import junit.extensions.ActiveTestSuite;
-import junit.framework.Test;
-import junit.framework.TestCase;
-
 import org.apache.commons.jcs3.JCS;
 import org.apache.commons.jcs3.access.CacheAccess;
 import org.apache.commons.jcs3.engine.behavior.ICacheElement;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test which exercises the indexed disk cache. This one uses three different
@@ -42,21 +40,20 @@ import org.apache.commons.jcs3.engine.behavior.ICacheElement;
  */
 public class IndexedDiskCacheNoMemoryUnitTest
 {
-    /**
-     * Number of items to cache; the configured maxObjects for the memory cache
-     * regions is 0.
-     */
+
     private static final int items = 2000;
 
     /**
-     * Adds items to cache, gets them, and removes them. The item count is more
-     * than the size of the memory cache, so items should spool to disk.
-     *
-     * @param region
-     *            Name of the region to access
-     *
-     * @throws Exception
-     *                If an error occurs
+     * Configure JCS cache settings before each test
+     */
+    @BeforeEach
+    void setUp()
+    {
+        JCS.setConfigFilename( "/TestDiskCacheNoMemory.ccf" );
+    }
+
+    /**
+     * Utility method to test caching, retrieving, and removal for a given cache region.
      */
     protected static void runTestForRegion( final String region )
         throws Exception
@@ -64,22 +61,19 @@ public class IndexedDiskCacheNoMemoryUnitTest
         final CacheAccess<String, String> jcs = JCS.getInstance( region );
 
         // Add items to cache
-
         for ( int i = 0; i < items; i++ )
         {
             jcs.put( i + ":key", region + " data " + i );
         }
 
         // Test that all items are in cache
-
         for ( int i = 0; i < items; i++ )
         {
             final String value = jcs.get( i + ":key" );
-
             assertEquals( region + " data " + i, value );
         }
 
-        // Test that getElements returns all the expected values
+        // Verify getElements returns all expected values
         final Set<String> keys = new HashSet<>();
         for ( int i = 0; i < items; i++ )
         {
@@ -90,8 +84,8 @@ public class IndexedDiskCacheNoMemoryUnitTest
         for ( int i = 0; i < items; i++ )
         {
             final ICacheElement<String, String> element = elements.get( i + ":key" );
-            assertNotNull( "element " + i + ":key is missing", element );
-            assertEquals( "value " + i + ":key", region + " data " + i, element.getVal() );
+            assertNotNull( element, "element " + i + ":key is missing" );
+            assertEquals( region + " data " + i, element.getVal(), "value " + i + ":key" );
         }
 
         // Remove all the items
@@ -103,53 +97,31 @@ public class IndexedDiskCacheNoMemoryUnitTest
         // Verify removal
         for ( int i = 0; i < items; i++ )
         {
-            assertNull( "Removed key should be null: " + i + ":key" + "\n stats " + jcs.getStats(), jcs.get( i + ":key" ) );
+            assertNull( jcs.get( i + ":key" ),
+                        "Removed key should be null: " + i + ":key" + "\n stats " + jcs.getStats() );
         }
-
-        // dump the stats to the report
-//        System.out.println( jcs.getStats() );
     }
 
-    /**
-     * A unit test suite for JUnit
-     * <p>
-     * @return The test suite
-     */
-    public static Test suite()
+    // Individual test methods for each region based on original suite's test cases
+
+    @Test
+    void testIndexedDiskCache1()
+        throws Exception
     {
-        JCS.setConfigFilename( "/TestDiskCacheNoMemory.ccf" );
-        final ActiveTestSuite suite = new ActiveTestSuite();
+        runTestForRegion( "indexedRegion1" );
+    }
 
-        suite.addTest(new TestCase("testIndexedDiskCache1")
-        {
-            @Override
-            public void runTest()
-                throws Exception
-            {
-                runTestForRegion( "indexedRegion1" );
-            }
-        });
+    @Test
+    void testIndexedDiskCache2()
+        throws Exception
+    {
+        runTestForRegion( "indexedRegion2" );
+    }
 
-        suite.addTest(new TestCase("testIndexedDiskCache2")
-        {
-            @Override
-            public void runTest()
-                throws Exception
-            {
-                runTestForRegion( "indexedRegion2" );
-            }
-        });
-
-        suite.addTest(new TestCase("testIndexedDiskCache3")
-        {
-            @Override
-            public void runTest()
-                throws Exception
-            {
-                runTestForRegion( "indexedRegion3" );
-            }
-        });
-
-        return suite;
+    @Test
+    void testIndexedDiskCache3()
+        throws Exception
+    {
+        runTestForRegion( "indexedRegion3" );
     }
 }

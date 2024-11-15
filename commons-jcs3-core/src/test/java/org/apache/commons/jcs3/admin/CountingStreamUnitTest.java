@@ -19,14 +19,14 @@ package org.apache.commons.jcs3.admin;
  * under the License.
  */
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for the counting only output stream.
  */
-public class CountingStreamUnitTest
+class CountingStreamUnitTest
 {
 
     /**
@@ -35,12 +35,13 @@ public class CountingStreamUnitTest
      * @throws Exception
      */
     @Test
-    public void testByteArray() throws Exception
+    void testByteArray()
+        throws Exception
     {
         final CountingOnlyOutputStream out = new CountingOnlyOutputStream();
         final byte[] array = {1,2,3,4,5};
         out.write( array );
-        assertEquals( "Wrong number of bytes written.", array.length, out.getCount() );
+        assertEquals( array.length, out.getCount(), "Wrong number of bytes written." );
         out.close();
     }
 
@@ -50,13 +51,14 @@ public class CountingStreamUnitTest
      * @throws Exception
      */
     @Test
-    public void testByteArrayLenCount() throws Exception
+    void testByteArrayLenCount()
+        throws Exception
     {
         final CountingOnlyOutputStream out = new CountingOnlyOutputStream();
         final byte[] array = {1,2,3,4,5};
         final int len = 3;
         out.write( array, 0, len );
-        assertEquals( "Wrong number of bytes written.", len, out.getCount() );
+        assertEquals( len, out.getCount(), "Wrong number of bytes written." );
         out.close();
     }
 
@@ -66,13 +68,14 @@ public class CountingStreamUnitTest
      * @throws Exception
      */
     @Test
-    public void testSingleByte() throws Exception
+    void testSingleByte()
+        throws Exception
     {
         final CountingOnlyOutputStream out = new CountingOnlyOutputStream();
         out.write( 1 );
-        assertEquals( "Wrong number of bytes written.", 1, out.getCount() );
+        assertEquals( 1, out.getCount(), "Wrong number of bytes written." );
         out.write( 1 );
-        assertEquals( "Wrong number of bytes written.", 2, out.getCount() );
+        assertEquals( 2, out.getCount(), "Wrong number of bytes written." );
         out.close();
     }
 }

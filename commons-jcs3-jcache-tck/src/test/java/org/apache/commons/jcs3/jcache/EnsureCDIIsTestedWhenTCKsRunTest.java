@@ -20,21 +20,21 @@ package org.apache.commons.jcs3.jcache;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Iterator;
 import java.util.ServiceLoader;
 
 import javax.cache.annotation.BeanProvider;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 // useless test but without it we are not sure
 // CDI TCKs passed
-public class EnsureCDIIsTestedWhenTCKsRunTest
+class EnsureCDIIsTestedWhenTCKsRunTest
 {
     @Test
-    public void testCheckOWBProvider()
+    void testCheckOWBProvider()
     {
         try {
             final Iterator<BeanProvider> iterator = ServiceLoader.load(BeanProvider.class).iterator();

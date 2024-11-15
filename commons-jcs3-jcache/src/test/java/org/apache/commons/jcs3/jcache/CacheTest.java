@@ -1,8 +1,27 @@
 package org.apache.commons.jcs3.jcache;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -29,31 +48,13 @@ import javax.cache.integration.CacheLoaderException;
 import javax.cache.integration.CacheWriter;
 import javax.cache.spi.CachingProvider;
 
-/*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- */
+import org.junit.jupiter.api.Test;
 
-import org.junit.Test;
-
-public class CacheTest
+class CacheTest
 {
     @Test
-    public void testAccessExpiry() throws InterruptedException
+    void testAccessExpiry()
+        throws InterruptedException
     {
         final CachingProvider cachingProvider = Caching.getCachingProvider();
         final CacheManager cacheManager = cachingProvider.getCacheManager(cachingProvider.getDefaultURI(),
@@ -76,7 +77,7 @@ public class CacheTest
             cache.put(1, 2);
             for (int i = 0; i < 3; i++) { // we update the last access to force the idle time and lastaccess to be synced
                 Thread.sleep(250);
-                assertTrue("iteration: " + Integer.toString(i), cache.containsKey(1));
+                assertTrue( cache.containsKey( 1 ), "iteration: " + Integer.toString( i ) );
             }
             assertTrue(cache.containsKey(1));
             Thread.sleep(650);
@@ -88,7 +89,7 @@ public class CacheTest
     }
 
     @Test
-    public void testGetPut()
+    void testGetPut()
     {
         final CachingProvider cachingProvider = Caching.getCachingProvider();
         final CacheManager cacheManager = cachingProvider.getCacheManager();
@@ -103,7 +104,7 @@ public class CacheTest
     }
 
     @Test
-    public void testListeners()
+    void testListeners()
     {
         final CachingProvider cachingProvider = Caching.getCachingProvider();
         final CacheManager cacheManager = cachingProvider.getCacheManager();
@@ -217,7 +218,7 @@ public class CacheTest
     }
 
     @Test
-    public void testLoader()
+    void testLoader()
     {
         final CachingProvider cachingProvider = Caching.getCachingProvider();
         final CacheManager cacheManager = cachingProvider.getCacheManager();

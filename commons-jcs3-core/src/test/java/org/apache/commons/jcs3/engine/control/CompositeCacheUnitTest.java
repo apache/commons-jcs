@@ -19,7 +19,7 @@ package org.apache.commons.jcs3.engine.control;
  * under the License.
  */
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -34,12 +34,12 @@ import org.apache.commons.jcs3.engine.behavior.ICacheType.CacheType;
 import org.apache.commons.jcs3.engine.behavior.ICompositeCacheAttributes;
 import org.apache.commons.jcs3.engine.behavior.IElementAttributes;
 import org.apache.commons.jcs3.engine.memory.MockMemoryCache;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests that directly engage the composite cache.
  */
-public class CompositeCacheUnitTest
+class CompositeCacheUnitTest
 {
     /**
      * Verify we can get some matching elements..
@@ -47,7 +47,7 @@ public class CompositeCacheUnitTest
      * @throws IOException
      */
     @Test
-    public void testGetMatching_Normal()
+    void testGetMatching_Normal()
         throws IOException
     {
         // SETUP
@@ -89,8 +89,8 @@ public class CompositeCacheUnitTest
         final Map<?, ?> result2 = cache.getMatching( keyprefix2 + "\\S+" );
 
         // VERIFY
-        assertEquals( "Wrong number returned 1:", numToInsertPrefix1, result1.size() );
-        assertEquals( "Wrong number returned 2:", numToInsertPrefix2, result2.size() );
+        assertEquals( numToInsertPrefix1, result1.size(), "Wrong number returned 1:" );
+        assertEquals( numToInsertPrefix2, result2.size(), "Wrong number returned 2:" );
     }
 
     /**
@@ -99,7 +99,7 @@ public class CompositeCacheUnitTest
      * @throws IOException
      */
     @Test
-    public void testGetMatching_NotOnDisk()
+    void testGetMatching_NotOnDisk()
         throws IOException
     {
         // SETUP
@@ -123,7 +123,7 @@ public class CompositeCacheUnitTest
         cache.getMatching( "junk" );
 
         // VERIFY
-        assertEquals( "Wrong number of calls", 1, diskMock.getMatchingCallCount );
+        assertEquals( 1, diskMock.getMatchingCallCount, "Wrong number of calls" );
     }
 
     /**
@@ -132,7 +132,7 @@ public class CompositeCacheUnitTest
      * @throws IOException
      */
     @Test
-    public void testGetMatching_NotOnRemote()
+    void testGetMatching_NotOnRemote()
         throws IOException
     {
         // SETUP
@@ -156,7 +156,7 @@ public class CompositeCacheUnitTest
         cache.getMatching( "junk" );
 
         // VERIFY
-        assertEquals( "Wrong number of calls", 1, diskMock.getMatchingCallCount );
+        assertEquals( 1, diskMock.getMatchingCallCount, "Wrong number of calls" );
     }
 
     /**
@@ -166,7 +166,7 @@ public class CompositeCacheUnitTest
      * @throws IOException
      */
     @Test
-    public void testShutdownMemoryFlush()
+    void testShutdownMemoryFlush()
         throws IOException
     {
         // SETUP
@@ -195,7 +195,7 @@ public class CompositeCacheUnitTest
 
         // VERIFY
         final MockMemoryCache<String, Integer> memoryCache = (MockMemoryCache<String, Integer>) cache.getMemoryCache();
-        assertEquals( "Wrong number freed.", numToInsert, memoryCache.lastNumberOfFreedElements );
+        assertEquals( numToInsert, memoryCache.lastNumberOfFreedElements, "Wrong number freed." );
     }
 
     /**
@@ -205,7 +205,7 @@ public class CompositeCacheUnitTest
      * @throws IOException
      */
     @Test
-    public void testShutdownMemoryFlush_noDisk()
+    void testShutdownMemoryFlush_noDisk()
         throws IOException
     {
         // SETUP
@@ -234,6 +234,6 @@ public class CompositeCacheUnitTest
 
         // VERIFY
         final MockMemoryCache<String, Integer> memoryCache = (MockMemoryCache<String, Integer>) cache.getMemoryCache();
-        assertEquals( "Wrong number freed.", 0, memoryCache.lastNumberOfFreedElements );
+        assertEquals( 0, memoryCache.lastNumberOfFreedElements, "Wrong number freed." );
     }
 }

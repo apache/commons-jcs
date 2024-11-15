@@ -1,9 +1,5 @@
 package org.apache.commons.jcs3.auxiliary.remote;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -23,6 +19,10 @@ import static org.junit.Assert.assertTrue;
  * under the License.
  */
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import java.util.HashSet;
 import java.util.Map;
 
@@ -33,21 +33,22 @@ import org.apache.commons.jcs3.engine.ZombieCacheServiceNonLocal;
 import org.apache.commons.jcs3.engine.behavior.ICacheElement;
 import org.apache.commons.jcs3.engine.behavior.ICacheElementSerialized;
 import org.apache.commons.jcs3.utils.serialization.SerializationConversionUtil;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit Tests for the Remote Cache.
  */
-public class RemoteCacheUnitTest
+class RemoteCacheUnitTest
 {
     private IRemoteCacheAttributes cattr;
     private MockRemoteCacheService<String, String> service;
     private MockRemoteCacheListener<String, String> listener;
     private RemoteCacheMonitor monitor;
 
-    @Before
-    public void setUp() throws Exception
+    @BeforeEach
+    void setUp()
+        throws Exception
     {
         cattr = new RemoteCacheAttributes();
         service = new MockRemoteCacheService<>();
@@ -61,7 +62,7 @@ public class RemoteCacheUnitTest
      * @throws Exception
      */
     @Test
-    public void testDispose_nullListener()
+    void testDispose_nullListener()
         throws Exception
     {
         // SETUP
@@ -74,8 +75,8 @@ public class RemoteCacheUnitTest
         remoteCache.dispose( );
 
         // VERIFY
-        assertEquals( "Start should have been called.", 1, cacheEventLogger.startICacheEventCalls );
-        assertEquals( "End should have been called.", 1, cacheEventLogger.endICacheEventCalls );
+        assertEquals( 1, cacheEventLogger.startICacheEventCalls, "Start should have been called." );
+        assertEquals( 1, cacheEventLogger.endICacheEventCalls, "End should have been called." );
     }
 
     /**
@@ -84,7 +85,7 @@ public class RemoteCacheUnitTest
      * @throws Exception
      */
     @Test
-    public void testDispose_simple()
+    void testDispose_simple()
         throws Exception
     {
         final RemoteCache<String, String> remoteCache = new RemoteCache<>( cattr, service, listener, monitor );
@@ -96,8 +97,8 @@ public class RemoteCacheUnitTest
         remoteCache.dispose( );
 
         // VERIFY
-        assertEquals( "Start should have been called.", 1, cacheEventLogger.startICacheEventCalls );
-        assertEquals( "End should have been called.", 1, cacheEventLogger.endICacheEventCalls );
+        assertEquals( 1, cacheEventLogger.startICacheEventCalls, "Start should have been called." );
+        assertEquals( 1, cacheEventLogger.endICacheEventCalls, "End should have been called." );
     }
 
     /**
@@ -106,7 +107,7 @@ public class RemoteCacheUnitTest
      * @throws Exception
      */
     @Test
-    public void testGet_simple()
+    void testGet_simple()
         throws Exception
     {
         final RemoteCache<String, String> remoteCache = new RemoteCache<>( cattr, service, listener, monitor );
@@ -118,8 +119,8 @@ public class RemoteCacheUnitTest
         remoteCache.get( "key" );
 
         // VERIFY
-        assertEquals( "Start should have been called.", 1, cacheEventLogger.startICacheEventCalls );
-        assertEquals( "End should have been called.", 1, cacheEventLogger.endICacheEventCalls );
+        assertEquals( 1, cacheEventLogger.startICacheEventCalls, "Start should have been called." );
+        assertEquals( 1, cacheEventLogger.endICacheEventCalls, "End should have been called." );
     }
 
     /**
@@ -128,7 +129,7 @@ public class RemoteCacheUnitTest
      * @throws Exception
      */
     @Test
-    public void testGetMatching_simple()
+    void testGetMatching_simple()
         throws Exception
     {
         // SETUP
@@ -143,9 +144,9 @@ public class RemoteCacheUnitTest
         final Map<String, ICacheElement<String, String>> result = remoteCache.getMatching( pattern );
 
         // VERIFY
-        assertNotNull( "Should have a map", result );
-        assertEquals( "Start should have been called.", 1, cacheEventLogger.startICacheEventCalls );
-        assertEquals( "End should have been called.", 1, cacheEventLogger.endICacheEventCalls );
+        assertNotNull( result, "Should have a map" );
+        assertEquals( 1, cacheEventLogger.startICacheEventCalls, "Start should have been called." );
+        assertEquals( 1, cacheEventLogger.endICacheEventCalls, "End should have been called." );
     }
 
     /**
@@ -154,7 +155,7 @@ public class RemoteCacheUnitTest
      * @throws Exception
      */
     @Test
-    public void testGetMultiple_simple()
+    void testGetMultiple_simple()
         throws Exception
     {
         final RemoteCache<String, String> remoteCache = new RemoteCache<>( cattr, service, listener, monitor );
@@ -166,8 +167,8 @@ public class RemoteCacheUnitTest
         remoteCache.getMultiple( new HashSet<>() );
 
         // VERIFY
-        assertEquals( "Start should have been called.", 1, cacheEventLogger.startICacheEventCalls );
-        assertEquals( "End should have been called.", 1, cacheEventLogger.endICacheEventCalls );
+        assertEquals( 1, cacheEventLogger.startICacheEventCalls, "Start should have been called." );
+        assertEquals( 1, cacheEventLogger.endICacheEventCalls, "End should have been called." );
     }
 
     /**
@@ -176,7 +177,7 @@ public class RemoteCacheUnitTest
      * @throws Exception
      */
     @Test
-    public void testRemove_simple()
+    void testRemove_simple()
         throws Exception
     {
         final RemoteCache<String, String> remoteCache = new RemoteCache<>( cattr, service, listener, monitor );
@@ -188,8 +189,8 @@ public class RemoteCacheUnitTest
         remoteCache.remove( "key" );
 
         // VERIFY
-        assertEquals( "Start should have been called.", 1, cacheEventLogger.startICacheEventCalls );
-        assertEquals( "End should have been called.", 1, cacheEventLogger.endICacheEventCalls );
+        assertEquals( 1, cacheEventLogger.startICacheEventCalls, "Start should have been called." );
+        assertEquals( 1, cacheEventLogger.endICacheEventCalls, "End should have been called." );
     }
 
     /**
@@ -198,7 +199,7 @@ public class RemoteCacheUnitTest
      * @throws Exception
      */
     @Test
-    public void testRemoveAll_simple()
+    void testRemoveAll_simple()
         throws Exception
     {
         final RemoteCache<String, String> remoteCache = new RemoteCache<>( cattr, service, listener, monitor );
@@ -210,8 +211,8 @@ public class RemoteCacheUnitTest
         remoteCache.remove( "key" );
 
         // VERIFY
-        assertEquals( "Start should have been called.", 1, cacheEventLogger.startICacheEventCalls );
-        assertEquals( "End should have been called.", 1, cacheEventLogger.endICacheEventCalls );
+        assertEquals( 1, cacheEventLogger.startICacheEventCalls, "Start should have been called." );
+        assertEquals( 1, cacheEventLogger.endICacheEventCalls, "End should have been called." );
     }
 
     /**
@@ -221,7 +222,7 @@ public class RemoteCacheUnitTest
      * @throws Exception
      */
     @Test
-    public void testUpdate()
+    void testUpdate()
         throws Exception
     {
         // SETUP
@@ -237,13 +238,13 @@ public class RemoteCacheUnitTest
         remoteCache.update( element );
 
         // VERIFY
-        assertTrue( "The element should be in the serialized wrapper.",
-                    service.lastUpdate instanceof ICacheElementSerialized );
+        assertInstanceOf( ICacheElementSerialized.class, service.lastUpdate,
+                          "The element should be in the serialized wrapper." );
         final ICacheElement<String, String> result = SerializationConversionUtil
             .getDeSerializedCacheElement( (ICacheElementSerialized<String, String>) service.lastUpdate, remoteCache
                 .getElementSerializer() );
-        assertEquals( "Wrong element updated.", element.getVal(), result.getVal() );
-        assertEquals( "Wrong listener id.", Long.valueOf( listenerId ), service.updateRequestIdList.get( 0 ) );
+        assertEquals( element.getVal(), result.getVal(), "Wrong element updated." );
+        assertEquals( Long.valueOf( listenerId ), service.updateRequestIdList.get( 0 ), "Wrong listener id." );
     }
 
     /**
@@ -252,7 +253,7 @@ public class RemoteCacheUnitTest
      * @throws Exception
      */
     @Test
-    public void testUpdate_simple()
+    void testUpdate_simple()
         throws Exception
     {
         final RemoteCache<String, String> remoteCache = new RemoteCache<>( cattr, service, listener, monitor );
@@ -266,8 +267,8 @@ public class RemoteCacheUnitTest
         remoteCache.update( item );
 
         // VERIFY
-        assertEquals( "Start should have been called.", 1, cacheEventLogger.startICacheEventCalls );
-        assertEquals( "End should have been called.", 1, cacheEventLogger.endICacheEventCalls );
+        assertEquals( 1, cacheEventLogger.startICacheEventCalls, "Start should have been called." );
+        assertEquals( 1, cacheEventLogger.endICacheEventCalls, "End should have been called." );
     }
 
     /**
@@ -276,7 +277,7 @@ public class RemoteCacheUnitTest
      * @throws Exception
      */
     @Test
-    public void testUpdateZombieThenFix()
+    void testUpdateZombieThenFix()
         throws Exception
     {
         // SETUP
@@ -294,11 +295,11 @@ public class RemoteCacheUnitTest
         remoteCache.fixCache( service );
 
         // VERIFY
-        assertTrue( "The element should be in the serialized warapper.",
-                    service.lastUpdate instanceof ICacheElementSerialized );
+        assertInstanceOf( ICacheElementSerialized.class, service.lastUpdate,
+                          "The element should be in the serialized warapper." );
         final ICacheElement<String, String> result = SerializationConversionUtil
             .getDeSerializedCacheElement( (ICacheElementSerialized<String, String>) service.lastUpdate, remoteCache
                 .getElementSerializer() );
-        assertEquals( "Wrong element updated.", element.getVal(), result.getVal() );
+        assertEquals( element.getVal(), result.getVal(), "Wrong element updated." );
     }
 }

@@ -1,8 +1,5 @@
 package org.apache.commons.jcs3;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -22,14 +19,17 @@ import static org.junit.Assert.assertNull;
  * under the License.
  */
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import org.apache.commons.jcs3.access.CacheAccess;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Verify that basic removal functionality works.
  */
-public class JCSRemovalSimpleConcurrentTest
+class JCSRemovalSimpleConcurrentTest
 {
     private CacheAccess<String, String> jcs;
 
@@ -38,8 +38,8 @@ public class JCSRemovalSimpleConcurrentTest
      * <p>
      * @throws Exception
      */
-    @Before
-    public void setUp()
+    @BeforeEach
+    void setUp()
         throws Exception
     {
         JCS.setConfigFilename( "/TestRemoval.ccf" );
@@ -52,7 +52,7 @@ public class JCSRemovalSimpleConcurrentTest
      * @throws Exception
      */
     @Test
-    public void testClear()
+    void testClear()
         throws Exception
     {
 
@@ -66,7 +66,7 @@ public class JCSRemovalSimpleConcurrentTest
         for ( int i = count; i >= 0; i-- )
         {
             final String res = jcs.get( i + ":key" );
-            assertNotNull( "[" + i + ":key] should not be null", res );
+            assertNotNull( res, "[" + i + ":key] should not be null" );
         }
         jcs.clear();
 
@@ -75,7 +75,7 @@ public class JCSRemovalSimpleConcurrentTest
             final String res = jcs.get( i + ":key" );
             if ( res != null )
             {
-                assertNull( "[" + i + ":key] should be null after remvoeall" + jcs.getStats(), res );
+                assertNull( res, "[" + i + ":key] should be null after remvoeall" + jcs.getStats() );
             }
         }
     }
@@ -86,7 +86,7 @@ public class JCSRemovalSimpleConcurrentTest
      * @throws Exception
      */
     @Test
-    public void testClearRepeatedlyWithoutError()
+    void testClearRepeatedlyWithoutError()
         throws Exception
     {
         final int count = 500;
@@ -101,7 +101,7 @@ public class JCSRemovalSimpleConcurrentTest
         for ( int i = count; i >= 0; i-- )
         {
             final String res = jcs.get( i + ":key" );
-            assertNotNull( "[" + i + ":key] should not be null", res );
+            assertNotNull( res, "[" + i + ":key] should not be null" );
         }
 
         for ( int i = count; i >= 0; i-- )
@@ -111,7 +111,7 @@ public class JCSRemovalSimpleConcurrentTest
             final String res = jcs.get( i + ":key" );
             if ( res != null )
             {
-                assertNull( "[" + i + ":key] should be null after remvoeall" + jcs.getStats(), res );
+                assertNull( res, "[" + i + ":key] should be null after remvoeall" + jcs.getStats() );
             }
         }
     }
@@ -122,7 +122,7 @@ public class JCSRemovalSimpleConcurrentTest
      * @throws Exception
      */
     @Test
-    public void testSingleDepthRemoval()
+    void testSingleDepthRemoval()
         throws Exception
     {
 
@@ -136,7 +136,7 @@ public class JCSRemovalSimpleConcurrentTest
         for ( int i = count; i >= 0; i-- )
         {
             final String res = jcs.get( i + ":key" );
-            assertNotNull( "[" + i + ":key] should not be null", res );
+            assertNotNull( res, "[" + i + ":key] should not be null" );
         }
 
         for ( int i = 0; i < count; i++ )
@@ -152,7 +152,7 @@ public class JCSRemovalSimpleConcurrentTest
      * @throws Exception
      */
     @Test
-    public void testTwoDeepRemoval()
+    void testTwoDeepRemoval()
         throws Exception
     {
         final int count = 500;
@@ -165,13 +165,13 @@ public class JCSRemovalSimpleConcurrentTest
         for ( int i = count; i >= 0; i-- )
         {
             final String res = jcs.get( "key:" + i + ":anotherpart" );
-            assertNotNull( "[key:" + i + ":anotherpart] should not be null, " + jcs.getStats(), res );
+            assertNotNull( res, "[key:" + i + ":anotherpart] should not be null, " + jcs.getStats() );
         }
 
         for ( int i = 0; i < count; i++ )
         {
             jcs.remove( "key:" + i + ":" );
-            assertNull( jcs.getStats(), jcs.get( "key:" + i + ":anotherpart" ) );
+            assertNull( jcs.get( "key:" + i + ":anotherpart" ), jcs.getStats() );
         }
 
     }

@@ -1,9 +1,5 @@
 package org.apache.commons.jcs3;
 
-import junit.extensions.ActiveTestSuite;
-import junit.framework.Test;
-import junit.framework.TestCase;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -23,115 +19,78 @@ import junit.framework.TestCase;
  * under the License.
  */
 
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 
 /**
  * Test which exercises the hierarchical removal when the cache is active.
  */
-public class ConcurrentRemovalLoadTest
+@Execution(ExecutionMode.CONCURRENT)
+class ConcurrentRemovalLoadTest
 {
-    /**
-     * A unit test suite for JUnit. This verifies that we can remove hierarchically while the region
-     * is active.
-     * @return The test suite
-     */
-    public static Test suite()
-    {
-        final ActiveTestSuite suite = new ActiveTestSuite();
 
-        suite.addTest(new TestCase("testRemoveCache1" )
-        {
-            @Override
-            public void runTest()
-                throws Exception
-            {
-                RemovalTestUtil.runTestPutThenRemoveCategorical( 0, 200 );
-            }
-        });
-
-        suite.addTest(new TestCase("testPutCache1" )
-        {
-            @Override
-            public void runTest()
-                throws Exception
-            {
-                RemovalTestUtil.runPutInRange( 300, 400 );
-            }
-        });
-
-        suite.addTest(new TestCase("testPutCache2" )
-        {
-            @Override
-            public void runTest()
-                throws Exception
-            {
-                RemovalTestUtil.runPutInRange( 401, 600 );
-            }
-        });
-
-        // stomp on previous put
-        suite.addTest(new TestCase("testPutCache3" )
-        {
-            @Override
-            public void runTest()
-                throws Exception
-            {
-                RemovalTestUtil.runPutInRange( 401, 600 );
-            }
-        });
-
-        suite.addTest(new TestCase("testRemoveCache1" )
-        {
-            @Override
-            public void runTest()
-                throws Exception
-            {
-                RemovalTestUtil.runTestPutThenRemoveCategorical( 601, 700 );
-            }
-        });
-
-        suite.addTest(new TestCase("testRemoveCache1" )
-        {
-            @Override
-            public void runTest()
-                throws Exception
-            {
-                RemovalTestUtil.runTestPutThenRemoveCategorical( 701, 800 );
-            }
-        });
-
-        suite.addTest(new TestCase("testRemoveCache1" )
-        {
-            @Override
-            public void runTest()
-                throws Exception
-            {
-                RemovalTestUtil.runTestPutThenRemoveCategorical( 901, 1000 );
-            }
-        });
-
-        suite.addTest(new TestCase("testPutCache2" )
-        {
-            // verify that there are no errors with concurrent gets.
-            @Override
-            public void runTest()
-                throws Exception
-            {
-                RemovalTestUtil.runGetInRange( 0, 1000, false );
-            }
-        });
-        return suite;
-    }
-
-    /**
-     * Test setup
-     * <p>
-     * @throws Exception
-     */
-    @Before
-    public void setUp()
-        throws Exception
+    @BeforeEach
+    void setUp()
     {
         JCS.setConfigFilename( "/TestRemoval.ccf" );
+    }
+
+    @Test
+    void testRemoveCache1_FirstRange()
+        throws Exception
+    {
+        RemovalTestUtil.runTestPutThenRemoveCategorical( 0, 200 );
+    }
+
+    @Test
+    void testPutCache1()
+        throws Exception
+    {
+        RemovalTestUtil.runPutInRange( 300, 400 );
+    }
+
+    @Test
+    void testPutCache2_FirstRange()
+        throws Exception
+    {
+        RemovalTestUtil.runPutInRange( 401, 600 );
+    }
+
+    @Test
+    void testPutCache3_StompPreviousPut()
+        throws Exception
+    {
+        RemovalTestUtil.runPutInRange( 401, 600 );
+    }
+
+    @Test
+    void testRemoveCache1_SecondRange()
+        throws Exception
+    {
+        RemovalTestUtil.runTestPutThenRemoveCategorical( 601, 700 );
+    }
+
+    @Test
+    void testRemoveCache1_ThirdRange()
+        throws Exception
+    {
+        RemovalTestUtil.runTestPutThenRemoveCategorical( 701, 800 );
+    }
+
+    @Test
+    void testRemoveCache1_FourthRange()
+        throws Exception
+    {
+        RemovalTestUtil.runTestPutThenRemoveCategorical( 901, 1000 );
+    }
+
+    @Test
+    void testPutCache2_WithConcurrentGets()
+        throws Exception
+    {
+        // verify that there are no errors with concurrent gets
+        RemovalTestUtil.runGetInRange( 0, 1000, false );
     }
 }

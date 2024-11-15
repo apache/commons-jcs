@@ -1,10 +1,5 @@
 package org.apache.commons.jcs3;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -24,6 +19,11 @@ import static org.junit.Assert.assertTrue;
  * under the License.
  */
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,16 +33,16 @@ import org.apache.commons.jcs3.engine.stats.behavior.IStatElement;
 import org.apache.commons.jcs3.engine.stats.behavior.IStats;
 import org.apache.commons.jcs3.log.Log;
 import org.apache.commons.jcs3.log.LogManager;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * This is based on a test that was posted to the user's list:
  * <p>
  * http://www.opensubscriber.com/message/jcs-users@jakarta.apache.org/2435965.html
  */
-public class JCSThrashTest
+class JCSThrashTest
 {
     /**
      * A runnable, that can throw an exception.
@@ -164,8 +164,8 @@ public class JCSThrashTest
      * Sets up the test
      * @throws Exception
      */
-    @Before
-    public void setUp()
+    @BeforeEach
+    void setUp()
         throws Exception
     {
         JCS.setConfigFilename( "/TestThrash.ccf" );
@@ -175,8 +175,8 @@ public class JCSThrashTest
     /**
      * @throws Exception
      */
-    @After
-    public void tearDown()
+    @AfterEach
+    void tearDown()
         throws Exception
     {
         jcs.clear();
@@ -189,7 +189,7 @@ public class JCSThrashTest
      * @throws Exception
      */
     @Test
-    public void testForMemoryLeaks()
+    void testForMemoryLeaks()
         throws Exception
     {
         final long differenceMemoryCache = thrashCache();
@@ -204,7 +204,7 @@ public class JCSThrashTest
      * @throws Exception
      */
     @Test
-    public void testPut()
+    void testPut()
         throws Exception
     {
         final String value = "value";
@@ -229,7 +229,7 @@ public class JCSThrashTest
      * @throws Exception
      */
     @Test
-    public void testRemove()
+    void testRemove()
         throws Exception
     {
         jcs.put( "key1", "value1" );

@@ -19,10 +19,10 @@ package org.apache.commons.jcs3.utils.serialization;
  * under the License.
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.IOException;
 
@@ -32,12 +32,12 @@ import org.apache.commons.jcs3.engine.behavior.ICacheElement;
 import org.apache.commons.jcs3.engine.behavior.ICacheElementSerialized;
 import org.apache.commons.jcs3.engine.behavior.IElementAttributes;
 import org.apache.commons.jcs3.engine.behavior.IElementSerializer;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests the serialization conversion util.
  */
-public class SerializationConversionUtilUnitTest
+class SerializationConversionUtilUnitTest
 {
     /**
      * Verify that we can go back and forth with the simplest of objects.
@@ -45,7 +45,7 @@ public class SerializationConversionUtilUnitTest
      * @throws Exception
      */
     @Test
-    public void testAccidentalDoubleConversion()
+    void testAccidentalDoubleConversion()
         throws Exception
     {
         // SETUP
@@ -68,19 +68,19 @@ public class SerializationConversionUtilUnitTest
             SerializationConversionUtil.getSerializedCacheElement( alreadySerialized, elementSerializer );
 
         // VERIFY
-        assertNotNull( "Should have a serialized object.", serialized );
+        assertNotNull( serialized, "Should have a serialized object." );
 
         // DO WORK
         final ICacheElement<String, String> after =
             SerializationConversionUtil.getDeSerializedCacheElement( serialized, elementSerializer );
 
         // VERIFY
-        assertNotNull( "Should have a deserialized object.", after );
-        assertEquals( "Values should be the same.", before.getVal(), after.getVal() );
-        assertEquals( "Attributes should be the same.", before.getElementAttributes().getMaxLife(), after
-            .getElementAttributes().getMaxLife() );
-        assertEquals( "Keys should be the same.", before.getKey(), after.getKey() );
-        assertEquals( "Cache name should be the same.", before.getCacheName(), after.getCacheName() );
+        assertNotNull( after, "Should have a deserialized object." );
+        assertEquals( before.getVal(), after.getVal(), "Values should be the same." );
+        assertEquals( before.getElementAttributes().getMaxLife(), after
+            .getElementAttributes().getMaxLife(), "Attributes should be the same." );
+        assertEquals( before.getKey(), after.getKey(), "Keys should be the same." );
+        assertEquals( before.getCacheName(), after.getCacheName(), "Cache name should be the same." );
     }
 
     /**
@@ -89,7 +89,7 @@ public class SerializationConversionUtilUnitTest
      * @throws Exception
      */
     @Test
-    public void testgGetDeSerializedCacheElement_null()
+    void testgGetDeSerializedCacheElement_null()
         throws Exception
     {
         // SETUP
@@ -101,7 +101,7 @@ public class SerializationConversionUtilUnitTest
             SerializationConversionUtil.getDeSerializedCacheElement( before, elementSerializer );
 
         // VERIFY
-        assertNull( "Should get null for null", result );
+        assertNull( result, "Should get null for null" );
     }
 
     /**
@@ -110,7 +110,7 @@ public class SerializationConversionUtilUnitTest
      * @throws IOException
      */
     @Test
-    public void testgGetSerializedCacheElement_null()
+    void testgGetSerializedCacheElement_null()
         throws IOException
     {
         // SETUP
@@ -122,14 +122,14 @@ public class SerializationConversionUtilUnitTest
             SerializationConversionUtil.getSerializedCacheElement( before, elementSerializer );
 
         // VERIFY
-        assertNull( "Should get null for null", result );
+        assertNull( result, "Should get null for null" );
     }
 
     /**
      * Verify that we get an IOException for a null serializer.
      */
     @Test
-    public void testNullSerializerConversion()
+    void testNullSerializerConversion()
     {
         // SETUP
         final String cacheName = "testName";
@@ -164,7 +164,7 @@ public class SerializationConversionUtilUnitTest
      * @throws Exception
      */
     @Test
-    public void testSimpleConversion()
+    void testSimpleConversion()
         throws Exception
     {
         // SETUP
@@ -185,18 +185,18 @@ public class SerializationConversionUtilUnitTest
             SerializationConversionUtil.getSerializedCacheElement( before, elementSerializer );
 
         // VERIFY
-        assertNotNull( "Should have a serialized object.", serialized );
+        assertNotNull( serialized, "Should have a serialized object." );
 
         // DO WORK
         final ICacheElement<String, String> after =
             SerializationConversionUtil.getDeSerializedCacheElement( serialized, elementSerializer );
 
         // VERIFY
-        assertNotNull( "Should have a deserialized object.", after );
-        assertEquals( "Values should be the same.", before.getVal(), after.getVal() );
-        assertEquals( "Attributes should be the same.", before.getElementAttributes().getMaxLife(), after
-            .getElementAttributes().getMaxLife() );
-        assertEquals( "Keys should be the same.", before.getKey(), after.getKey() );
-        assertEquals( "Cache name should be the same.", before.getCacheName(), after.getCacheName() );
+        assertNotNull( after, "Should have a deserialized object." );
+        assertEquals( before.getVal(), after.getVal(), "Values should be the same." );
+        assertEquals( before.getElementAttributes().getMaxLife(), after
+            .getElementAttributes().getMaxLife(), "Attributes should be the same." );
+        assertEquals( before.getKey(), after.getKey(), "Keys should be the same." );
+        assertEquals( before.getCacheName(), after.getCacheName(), "Cache name should be the same." );
     }
 }

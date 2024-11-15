@@ -19,11 +19,11 @@ package org.apache.commons.jcs3.auxiliary.disk.indexed;
  * under the License.
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -42,7 +42,7 @@ import org.apache.commons.jcs3.engine.behavior.IElementAttributes;
 import org.apache.commons.jcs3.engine.control.group.GroupAttrName;
 import org.apache.commons.jcs3.engine.control.group.GroupId;
 import org.apache.commons.jcs3.utils.timing.SleepUtil;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for common functionality.
@@ -100,8 +100,9 @@ public abstract class AbstractIndexDiskCacheUnitTest{
         for (int i = 0; i < 50; i++)
         {
             final ICacheElement<String, String> afterElement = diskCache.get("x" + i);
-            assertNotNull("Missing element from cache. Cache size: " + diskCache.getSize() + " element: x" + i, afterElement);
-            assertEquals("wrong string after retrieval", string, afterElement.getVal());
+            assertNotNull( afterElement,
+                           "Missing element from cache. Cache size: " + diskCache.getSize() + " element: x" + i );
+            assertEquals( string, afterElement.getVal(), "wrong string after retrieval" );
         }
     }
 
@@ -154,7 +155,7 @@ public abstract class AbstractIndexDiskCacheUnitTest{
 
         // System.out.println( "testBytesFreeSize stats " + disk.getStats() );
 
-        assertEquals("Wrong bytes free size" + disk.getStats(), expectedSize, resultSize);
+        assertEquals( expectedSize, resultSize, "Wrong bytes free size" + disk.getStats() );
 
         // add half as many as we removed. These should all use spots in the recycle bin.
         final int numberToAdd = numberToRemove / 2;
@@ -165,7 +166,7 @@ public abstract class AbstractIndexDiskCacheUnitTest{
 
         final long expectedSize2 = DiskTestObjectUtil.totalSize(elements, numberToAdd);
         final long resultSize2 = disk.getBytesFree();
-        assertEquals("Wrong bytes free size" + disk.getStats(), expectedSize2, resultSize2);
+        assertEquals( expectedSize2, resultSize2, "Wrong bytes free size" + disk.getStats() );
     }
 
     /**
@@ -194,7 +195,7 @@ public abstract class AbstractIndexDiskCacheUnitTest{
         final boolean result = disk.checkForDedOverlaps(sortedDescriptors);
 
         // VERIFY
-        assertTrue("There should be no overlap. it should be ok", result);
+        assertTrue( result, "There should be no overlap. it should be ok" );
     }
 
     /**
@@ -224,7 +225,7 @@ public abstract class AbstractIndexDiskCacheUnitTest{
         final boolean result = disk.checkForDedOverlaps(sortedDescriptors);
 
         // VERIFY
-        assertFalse("There should be overlaps. it should be not ok", result);
+        assertFalse( result, "There should be overlaps. it should be not ok" );
     }
 
     /**
@@ -261,7 +262,7 @@ public abstract class AbstractIndexDiskCacheUnitTest{
 
         // System.out.println( "testFileSize stats " + disk.getStats() );
 
-        assertEquals("Wrong file size", expectedSize, resultSize);
+        assertEquals( expectedSize, resultSize, "Wrong file size" );
     }
 
     /**
@@ -288,8 +289,8 @@ public abstract class AbstractIndexDiskCacheUnitTest{
         diskCache.get("key");
 
         // VERIFY
-        assertEquals("Start should have been called.", 1, cacheEventLogger.startICacheEventCalls);
-        assertEquals("End should have been called.", 1, cacheEventLogger.endICacheEventCalls);
+        assertEquals( 1, cacheEventLogger.startICacheEventCalls, "Start should have been called." );
+        assertEquals( 1, cacheEventLogger.endICacheEventCalls, "End should have been called." );
     }
 
     /**
@@ -320,8 +321,8 @@ public abstract class AbstractIndexDiskCacheUnitTest{
 
         // VERIFY
         // 1 for get multiple and 1 for get.
-        assertEquals("Start should have been called.", 2, cacheEventLogger.startICacheEventCalls);
-        assertEquals("End should have been called.", 2, cacheEventLogger.endICacheEventCalls);
+        assertEquals( 2, cacheEventLogger.startICacheEventCalls, "Start should have been called." );
+        assertEquals( 2, cacheEventLogger.endICacheEventCalls, "End should have been called." );
     }
 
     @Test
@@ -365,11 +366,11 @@ public abstract class AbstractIndexDiskCacheUnitTest{
         final ICacheElement<String, String> result = diskCache.processGet(key);
 
         // VERIFY
-        assertNotNull("Should have a result", result);
+        assertNotNull( result, "Should have a result" );
         final long fileSize2 = diskCache.getDataFileSize();
-        assertTrue("File should be greater.", fileSize1 < fileSize2);
+        assertTrue( fileSize1 < fileSize2, "File should be greater." );
         final int binSize = diskCache.getRecyleBinSize();
-        assertEquals("Should be one in the bin.", 1, binSize);
+        assertEquals( 1, binSize, "Should be one in the bin." );
     }
 
     /**
@@ -403,11 +404,11 @@ public abstract class AbstractIndexDiskCacheUnitTest{
         final ICacheElement<String, String> result = diskCache.processGet(key);
 
         // VERIFY
-        assertNotNull("Should have a result", result);
+        assertNotNull( result, "Should have a result" );
         final long fileSize2 = diskCache.getDataFileSize();
-        assertEquals("File should be the same", fileSize1, fileSize2);
+        assertEquals( fileSize1, fileSize2, "File should be the same" );
         final int binSize = diskCache.getRecyleBinSize();
-        assertEquals("Should be nothing in the bin.", 0, binSize);
+        assertEquals( 0, binSize, "Should be nothing in the bin." );
     }
 
     /**
@@ -442,11 +443,11 @@ public abstract class AbstractIndexDiskCacheUnitTest{
         final ICacheElement<String, String> result = diskCache.processGet(key);
 
         // VERIFY
-        assertNotNull("Should have a result", result);
+        assertNotNull( result, "Should have a result" );
         final long fileSize2 = diskCache.getDataFileSize();
-        assertEquals("File should be the same", fileSize1, fileSize2);
+        assertEquals( fileSize1, fileSize2, "File should be the same" );
         final int binSize = diskCache.getRecyleBinSize();
-        assertEquals("Should be nothing in the bin.", 0, binSize);
+        assertEquals( 0, binSize, "Should be nothing in the bin." );
     }
 
     /**
@@ -475,9 +476,9 @@ public abstract class AbstractIndexDiskCacheUnitTest{
         final ICacheElement<String, String> result = diskCache.processGet(key);
 
         // VERIFY
-        assertNotNull("Should have a result", result);
+        assertNotNull( result, "Should have a result" );
         final long fileSize = diskCache.getDataFileSize();
-        assertTrue("File should be greater than 0", fileSize > 0);
+        assertTrue( fileSize > 0, "File should be greater than 0" );
     }
 
     /**
@@ -508,7 +509,7 @@ public abstract class AbstractIndexDiskCacheUnitTest{
         final Map<String, ICacheElement<String, String>> matchingResults = diskCache.getMatching("1.8.+");
 
         // VERIFY
-        assertEquals("Wrong number returned", 10, matchingResults.size());
+        assertEquals( 10, matchingResults.size(), "Wrong number returned" );
         // System.out.println( "matchingResults.keySet() " + matchingResults.keySet() );
         // System.out.println( "\nAFTER TEST \n" + diskCache.getStats() );
     }
@@ -542,7 +543,7 @@ public abstract class AbstractIndexDiskCacheUnitTest{
         final Map<String, ICacheElement<String, String>> matchingResults = diskCache.getMatching("1.8.+");
 
         // VERIFY
-        assertEquals("Wrong number returned", 10, matchingResults.size());
+        assertEquals( 10, matchingResults.size(), "Wrong number returned" );
         // System.out.println( "matchingResults.keySet() " + matchingResults.keySet() );
         // System.out.println( "\nAFTER TEST \n" + diskCache.getStats() );
     }
@@ -588,7 +589,7 @@ public abstract class AbstractIndexDiskCacheUnitTest{
         }
 
         // verify that the recycle bin has the correct amount.
-        assertEquals("The recycle bin should have the number removed.", numberToRemove, disk.getRecyleBinSize());
+        assertEquals( numberToRemove, disk.getRecyleBinSize(), "The recycle bin should have the number removed." );
     }
 
     /**
@@ -635,7 +636,7 @@ public abstract class AbstractIndexDiskCacheUnitTest{
         }
 
         // verify that the recycle bin has the correct amount.
-        assertEquals("The recycle bin should have the number removed.", numberToRemove, disk.getRecyleBinSize());
+        assertEquals( numberToRemove, disk.getRecyleBinSize(), "The recycle bin should have the number removed." );
 
         // add half as many as we removed. These should all use spots in the recycle bin.
         final int numberToAdd = numberToRemove / 2;
@@ -645,7 +646,8 @@ public abstract class AbstractIndexDiskCacheUnitTest{
         }
 
         // verify that we used the correct number of spots
-        assertEquals("The recycle bin should have the number removed." + disk.getStats(), numberToAdd, disk.getRecyleCount());
+        assertEquals( numberToAdd, disk.getRecyleCount(),
+                      "The recycle bin should have the number removed." + disk.getStats() );
     }
 
     /**
@@ -672,8 +674,8 @@ public abstract class AbstractIndexDiskCacheUnitTest{
         diskCache.remove("key");
 
         // VERIFY
-        assertEquals("Start should have been called.", 1, cacheEventLogger.startICacheEventCalls);
-        assertEquals("End should have been called.", 1, cacheEventLogger.endICacheEventCalls);
+        assertEquals( 1, cacheEventLogger.startICacheEventCalls, "Start should have been called." );
+        assertEquals( 1, cacheEventLogger.endICacheEventCalls, "End should have been called." );
     }
 
     /**
@@ -715,7 +717,7 @@ public abstract class AbstractIndexDiskCacheUnitTest{
         {
             final GroupAttrName<String> groupAttrName = getGroupAttrName(cacheName, groupName, i + ":key");
             final ICacheElement<GroupAttrName<String>, String> element = disk.processGet(groupAttrName);
-            assertNotNull("Should have received an element.", element);
+            assertNotNull( element, "Should have received an element." );
         }
 
         // DO WORK
@@ -728,7 +730,7 @@ public abstract class AbstractIndexDiskCacheUnitTest{
             final ICacheElement<GroupAttrName<String>, String> element = disk.processGet(groupAttrName);
 
             // VERIFY
-            assertNull("Should not have received an element.", element);
+            assertNull( element, "Should not have received an element." );
         }
 
     }
@@ -765,7 +767,7 @@ public abstract class AbstractIndexDiskCacheUnitTest{
         for (int i = 0; i < cnt; i++)
         {
             final ICacheElement<String, String> element = disk.processGet(i + ":key");
-            assertNotNull("Shoulds have received an element.", element);
+            assertNotNull( element, "Shoulds have received an element." );
         }
 
         // remove each
@@ -773,10 +775,11 @@ public abstract class AbstractIndexDiskCacheUnitTest{
         {
             disk.remove(i + ":");
             final ICacheElement<String, String> element = disk.processGet(i + ":key");
-            assertNull("Should not have received an element.", element);
+            assertNull( element, "Should not have received an element." );
         }
         // https://issues.apache.org/jira/browse/JCS-67
-        assertEquals("Recylenbin should not have more elements than we removed. Check for JCS-67", cnt, disk.getRecyleBinSize());
+        assertEquals( cnt, disk.getRecyleBinSize(),
+                      "Recylenbin should not have more elements than we removed. Check for JCS-67" );
     }
 
     /**
@@ -803,8 +806,8 @@ public abstract class AbstractIndexDiskCacheUnitTest{
         diskCache.remove("key");
 
         // VERIFY
-        assertEquals("Start should have been called.", 1, cacheEventLogger.startICacheEventCalls);
-        assertEquals("End should have been called.", 1, cacheEventLogger.endICacheEventCalls);
+        assertEquals( 1, cacheEventLogger.startICacheEventCalls, "Start should have been called." );
+        assertEquals( 1, cacheEventLogger.endICacheEventCalls, "End should have been called." );
     }
 
     /**
@@ -838,7 +841,7 @@ public abstract class AbstractIndexDiskCacheUnitTest{
         {
             disk.remove("key:" + i);
             final ICacheElement<String, String> element = disk.processGet("key:" + i);
-            assertNull("Should not have received an element.", element);
+            assertNull( element, "Should not have received an element." );
         }
     }
 
@@ -871,8 +874,8 @@ public abstract class AbstractIndexDiskCacheUnitTest{
         for (int i = 0; i < cnt; i++)
         {
             final ICacheElement<String, String> element = disk.processGet("key:" + i);
-            assertNotNull("Should have received an element.", element);
-            assertEquals("Element is wrong.", "data:" + i, element.getVal());
+            assertNotNull( element, "Should have received an element." );
+            assertEquals( "data:" + i, element.getVal(), "Element is wrong." );
         }
 
         // Test that getMultiple returns all the expected values
@@ -886,8 +889,8 @@ public abstract class AbstractIndexDiskCacheUnitTest{
         for (int i = 0; i < cnt; i++)
         {
             final ICacheElement<String, String> element = elements.get("key:" + i);
-            assertNotNull("element " + i + ":key is missing", element);
-            assertEquals("value key:" + i, "data:" + i, element.getVal());
+            assertNotNull( element, "element " + i + ":key is missing" );
+            assertEquals( "data:" + i, element.getVal(), "value key:" + i );
         }
         // System.out.println( disk.getStats() );
     }
@@ -920,8 +923,8 @@ public abstract class AbstractIndexDiskCacheUnitTest{
         SleepUtil.sleepAtLeast(200);
 
         // VERIFY
-        assertEquals("Start should have been called.", 1, cacheEventLogger.startICacheEventCalls);
-        assertEquals("End should have been called.", 1, cacheEventLogger.endICacheEventCalls);
+        assertEquals( 1, cacheEventLogger.startICacheEventCalls, "Start should have been called." );
+        assertEquals( 1, cacheEventLogger.endICacheEventCalls, "End should have been called." );
     }
 
     /**
@@ -964,7 +967,7 @@ public abstract class AbstractIndexDiskCacheUnitTest{
         final byte[] after = afterElement.getVal();
 
         assertNotNull(after);
-        assertEquals("wrong bytes after retrieval", string, new String(after, StandardCharsets.UTF_8));
+        assertEquals( string, new String( after, StandardCharsets.UTF_8 ), "wrong bytes after retrieval" );
     }
 
     /**
@@ -1007,6 +1010,6 @@ public abstract class AbstractIndexDiskCacheUnitTest{
         final String after = afterElement.getVal();
 
         assertNotNull(after);
-        assertEquals("wrong string after retrieval", string, after);
+        assertEquals( string, after, "wrong string after retrieval" );
     }
 }

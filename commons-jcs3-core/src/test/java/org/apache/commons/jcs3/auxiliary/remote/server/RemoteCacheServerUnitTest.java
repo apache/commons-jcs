@@ -19,8 +19,8 @@ package org.apache.commons.jcs3.auxiliary.remote.server;
  * under the License.
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -35,23 +35,24 @@ import org.apache.commons.jcs3.auxiliary.remote.server.behavior.RemoteType;
 import org.apache.commons.jcs3.engine.CacheElement;
 import org.apache.commons.jcs3.engine.behavior.ICacheElement;
 import org.apache.commons.jcs3.utils.timing.SleepUtil;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Since the server does not know that it is a server, it is easy to unit test. The factory does all
  * the rmi work.
  */
-public class RemoteCacheServerUnitTest
+class RemoteCacheServerUnitTest
 {
     private static final String expectedIp1 = "adfasdf";
     private static final String expectedIp2 = "adsfadsafaf";
 
     private RemoteCacheServer<String, String> server;
 
-    @Before
-    public void setUp() throws Exception
+    @BeforeEach
+    void setUp()
+        throws Exception
     {
         final IRemoteCacheServerAttributes rcsa = new RemoteCacheServerAttributes();
         rcsa.setConfigFileName( "/TestRemoteCacheServer.ccf" );
@@ -59,8 +60,9 @@ public class RemoteCacheServerUnitTest
         this.server = new RemoteCacheServer<>( rcsa, config );
     }
 
-    @After
-    public void tearDown() throws Exception
+    @AfterEach
+    void tearDown()
+        throws Exception
     {
         this.server.shutdown();
     }
@@ -73,7 +75,7 @@ public class RemoteCacheServerUnitTest
      * @throws Exception
      */
     @Test
-    public void testAddListener_ToAllThenRemove()
+    void testAddListener_ToAllThenRemove()
         throws Exception
     {
         final MockRemoteCacheListener<String, String> mockListener1 = new MockRemoteCacheListener<>();
@@ -86,13 +88,13 @@ public class RemoteCacheServerUnitTest
         server.addCacheListener( cacheName, mockListener2 );
 
         // VERIFY
-        assertEquals( "Wrong number of listeners.", 2, server.getCacheListeners( cacheName ).eventQMap.size() );
-        assertEquals( "Wrong listener id.", 1, mockListener1.getListenerId() );
-        assertEquals( "Wrong listener id.", 2, mockListener2.getListenerId() );
+        assertEquals( 2, server.getCacheListeners( cacheName ).eventQMap.size(), "Wrong number of listeners." );
+        assertEquals( 1, mockListener1.getListenerId(), "Wrong listener id." );
+        assertEquals( 2, mockListener2.getListenerId(), "Wrong listener id." );
 
         // DO WORK
         server.removeCacheListener( cacheName, mockListener1.getListenerId() );
-        assertEquals( "Wrong number of listeners.", 1, server.getCacheListeners( cacheName ).eventQMap.size() );
+        assertEquals( 1, server.getCacheListeners( cacheName ).eventQMap.size(), "Wrong number of listeners." );
     }
 
     /**
@@ -103,7 +105,7 @@ public class RemoteCacheServerUnitTest
      * @throws Exception
      */
     @Test
-    public void testAddListener_ToAllThenRemove_clusterType()
+    void testAddListener_ToAllThenRemove_clusterType()
         throws Exception
     {
         final MockRemoteCacheListener<String, String> mockListener1 = new MockRemoteCacheListener<>();
@@ -118,15 +120,15 @@ public class RemoteCacheServerUnitTest
         server.addCacheListener( cacheName, mockListener2 );
 
         // VERIFY
-        assertEquals( "Wrong number of listeners.", 0, server.getCacheListeners( cacheName ).eventQMap.size() );
-        assertEquals( "Wrong number of listeners.", 2, server.getClusterListeners( cacheName ).eventQMap.size() );
-        assertEquals( "Wrong listener id.", 1, mockListener1.getListenerId() );
-        assertEquals( "Wrong listener id.", 2, mockListener2.getListenerId() );
+        assertEquals( 0, server.getCacheListeners( cacheName ).eventQMap.size(), "Wrong number of listeners." );
+        assertEquals( 2, server.getClusterListeners( cacheName ).eventQMap.size(), "Wrong number of listeners." );
+        assertEquals( 1, mockListener1.getListenerId(), "Wrong listener id." );
+        assertEquals( 2, mockListener2.getListenerId(), "Wrong listener id." );
 
         // DO WORK
         server.removeCacheListener( cacheName, mockListener1.getListenerId() );
-        assertEquals( "Wrong number of listeners.", 1, server.getClusterListeners( cacheName ).eventQMap.size() );
-        assertNull( "Should be no entry in the ip map.", server.getExtraInfoForRequesterId( 1 ) );
+        assertEquals( 1, server.getClusterListeners( cacheName ).eventQMap.size(), "Wrong number of listeners." );
+        assertNull( server.getExtraInfoForRequesterId( 1 ), "Should be no entry in the ip map." );
     }
 
     // TODO: This test only works if preconfigured remote caches exist. Need to fix.
@@ -163,7 +165,7 @@ public class RemoteCacheServerUnitTest
      * @throws Exception
      */
     @Test
-    public void testAddListenerToCache_CLUSTERtype()
+    void testAddListenerToCache_CLUSTERtype()
         throws Exception
     {
         final MockRemoteCacheListener<String, String> mockListener1 = new MockRemoteCacheListener<>();
@@ -180,10 +182,10 @@ public class RemoteCacheServerUnitTest
         server.addCacheListener( cacheName, mockListener2 );
 
         // VERIFY
-        assertEquals( "Wrong listener id.", 1, mockListener1.getListenerId() );
-        assertEquals( "Wrong listener id.", 2, mockListener2.getListenerId() );
-        assertEquals( "Wrong ip.", expectedIp1, server.getExtraInfoForRequesterId( 1 ) );
-        assertEquals( "Wrong ip.", expectedIp2, server.getExtraInfoForRequesterId( 2 ) );
+        assertEquals( 1, mockListener1.getListenerId(), "Wrong listener id." );
+        assertEquals( 2, mockListener2.getListenerId(), "Wrong listener id." );
+        assertEquals( expectedIp1, server.getExtraInfoForRequesterId( 1 ), "Wrong ip." );
+        assertEquals( expectedIp2, server.getExtraInfoForRequesterId( 2 ), "Wrong ip." );
     }
 
     /**
@@ -193,7 +195,7 @@ public class RemoteCacheServerUnitTest
      * @throws Exception
      */
     @Test
-    public void testAddListenerToCache_LOCALtype()
+    void testAddListenerToCache_LOCALtype()
         throws Exception
     {
         final MockRemoteCacheListener<String, String> mockListener1 = new MockRemoteCacheListener<>();
@@ -210,10 +212,10 @@ public class RemoteCacheServerUnitTest
         server.addCacheListener( cacheName, mockListener2 );
 
         // VERIFY
-        assertEquals( "Wrong listener id.", 1, mockListener1.getListenerId() );
-        assertEquals( "Wrong listener id.", 2, mockListener2.getListenerId() );
-        assertEquals( "Wrong ip.", expectedIp1, server.getExtraInfoForRequesterId( 1 ) );
-        assertEquals( "Wrong ip.", expectedIp2, server.getExtraInfoForRequesterId( 2 ) );
+        assertEquals( 1, mockListener1.getListenerId(), "Wrong listener id." );
+        assertEquals( 2, mockListener2.getListenerId(), "Wrong listener id." );
+        assertEquals( expectedIp1, server.getExtraInfoForRequesterId( 1 ), "Wrong ip." );
+        assertEquals( expectedIp2, server.getExtraInfoForRequesterId( 2 ), "Wrong ip." );
     }
 
     /**
@@ -222,7 +224,7 @@ public class RemoteCacheServerUnitTest
      * @throws Exception
      */
     @Test
-    public void testGet_simple()
+    void testGet_simple()
         throws Exception
     {
         final MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
@@ -232,8 +234,8 @@ public class RemoteCacheServerUnitTest
         server.get( "region", "key" );
 
         // VERIFY
-        assertEquals( "Start should have been called.", 1, cacheEventLogger.startICacheEventCalls );
-        assertEquals( "End should have been called.", 1, cacheEventLogger.endICacheEventCalls );
+        assertEquals( 1, cacheEventLogger.startICacheEventCalls, "Start should have been called." );
+        assertEquals( 1, cacheEventLogger.endICacheEventCalls, "End should have been called." );
     }
 
     /**
@@ -242,7 +244,7 @@ public class RemoteCacheServerUnitTest
      * @throws Exception
      */
     @Test
-    public void testGetMatching_simple()
+    void testGetMatching_simple()
         throws Exception
     {
         final MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
@@ -252,8 +254,8 @@ public class RemoteCacheServerUnitTest
         server.getMatching( "region", "pattern", 0 );
 
         // VERIFY
-        assertEquals( "Start should have been called.", 1, cacheEventLogger.startICacheEventCalls );
-        assertEquals( "End should have been called.", 1, cacheEventLogger.endICacheEventCalls );
+        assertEquals( 1, cacheEventLogger.startICacheEventCalls, "Start should have been called." );
+        assertEquals( 1, cacheEventLogger.endICacheEventCalls, "End should have been called." );
     }
 
     /**
@@ -262,7 +264,7 @@ public class RemoteCacheServerUnitTest
      * @throws Exception
      */
     @Test
-    public void testGetMultiple_simple()
+    void testGetMultiple_simple()
         throws Exception
     {
         final MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
@@ -272,8 +274,8 @@ public class RemoteCacheServerUnitTest
         server.getMultiple( "region", new HashSet<>() );
 
         // VERIFY
-        assertEquals( "Start should have been called.", 1, cacheEventLogger.startICacheEventCalls );
-        assertEquals( "End should have been called.", 1, cacheEventLogger.endICacheEventCalls );
+        assertEquals( 1, cacheEventLogger.startICacheEventCalls, "Start should have been called." );
+        assertEquals( 1, cacheEventLogger.endICacheEventCalls, "End should have been called." );
     }
 
     /**
@@ -282,7 +284,7 @@ public class RemoteCacheServerUnitTest
      * @throws Exception
      */
     @Test
-    public void testRemove_simple()
+    void testRemove_simple()
         throws Exception
     {
         final MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
@@ -292,8 +294,8 @@ public class RemoteCacheServerUnitTest
         server.remove( "region", "key" );
 
         // VERIFY
-        assertEquals( "Start should have been called.", 1, cacheEventLogger.startICacheEventCalls );
-        assertEquals( "End should have been called.", 1, cacheEventLogger.endICacheEventCalls );
+        assertEquals( 1, cacheEventLogger.startICacheEventCalls, "Start should have been called." );
+        assertEquals( 1, cacheEventLogger.endICacheEventCalls, "End should have been called." );
     }
 
     /**
@@ -302,7 +304,7 @@ public class RemoteCacheServerUnitTest
      * @throws Exception
      */
     @Test
-    public void testRemoveAll_simple()
+    void testRemoveAll_simple()
         throws Exception
     {
         final MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
@@ -312,8 +314,8 @@ public class RemoteCacheServerUnitTest
         server.removeAll( "region" );
 
         // VERIFY
-        assertEquals( "Start should have been called.", 1, cacheEventLogger.startICacheEventCalls );
-        assertEquals( "End should have been called.", 1, cacheEventLogger.endICacheEventCalls );
+        assertEquals( 1, cacheEventLogger.startICacheEventCalls, "Start should have been called." );
+        assertEquals( 1, cacheEventLogger.endICacheEventCalls, "End should have been called." );
     }
 
     /**
@@ -322,7 +324,7 @@ public class RemoteCacheServerUnitTest
      * @throws Exception
      */
     @Test
-    public void testSimpleRegisterListenerAndPut()
+    void testSimpleRegisterListenerAndPut()
         throws Exception
     {
         final IRemoteCacheServerAttributes rcsa = new RemoteCacheServerAttributes();
@@ -351,10 +353,10 @@ public class RemoteCacheServerUnitTest
         Thread.sleep( 100 );
 
         // VERIFY
-        assertEquals( "Wrong number of items put to listener.", numToPut, mockListener.putItems.size() );
+        assertEquals( numToPut, mockListener.putItems.size(), "Wrong number of items put to listener." );
         for ( int i = 0; i < numToPut; i++ )
         {
-            assertEquals( "Wrong item.", inputItems.get( i ), mockListener.putItems.get( i ) );
+            assertEquals( inputItems.get( i ), mockListener.putItems.get( i ), "Wrong item." );
         }
 
         server.shutdown();
@@ -368,7 +370,7 @@ public class RemoteCacheServerUnitTest
      * @throws Exception
      */
     @Test
-    public void testSimpleRegisterListenerAndPut_FromClusterWithLCC()
+    void testSimpleRegisterListenerAndPut_FromClusterWithLCC()
         throws Exception
     {
         // SETUP
@@ -407,10 +409,10 @@ public class RemoteCacheServerUnitTest
         SleepUtil.sleepAtLeast( 200 );
 
         // VERIFY
-        assertEquals( "Wrong number of items put to listener.", numToPut, localListener.putItems.size() );
+        assertEquals( numToPut, localListener.putItems.size(), "Wrong number of items put to listener." );
         for ( int i = 0; i < numToPut; i++ )
         {
-            assertEquals( "Wrong item.", inputItems.get( i ), localListener.putItems.get( i ) );
+            assertEquals( inputItems.get( i ), localListener.putItems.get( i ), "Wrong item." );
         }
 
         server.shutdown();
@@ -422,7 +424,7 @@ public class RemoteCacheServerUnitTest
      * @throws Exception
      */
     @Test
-    public void testSimpleRegisterListenerAndRemove()
+    void testSimpleRegisterListenerAndRemove()
         throws Exception
     {
         final MockRemoteCacheListener<String, String> mockListener = new MockRemoteCacheListener<>();
@@ -444,10 +446,10 @@ public class RemoteCacheServerUnitTest
         Thread.sleep( 100 );
 
         // VERIFY
-        assertEquals( "Wrong number of items removed from listener.", numToPut, mockListener.removedKeys.size() );
+        assertEquals( numToPut, mockListener.removedKeys.size(), "Wrong number of items removed from listener." );
         for ( int i = 0; i < numToPut; i++ )
         {
-            assertEquals( "Wrong key.", String.valueOf( i ), mockListener.removedKeys.get( i ) );
+            assertEquals( String.valueOf( i ), mockListener.removedKeys.get( i ), "Wrong key." );
         }
     }
 
@@ -457,7 +459,7 @@ public class RemoteCacheServerUnitTest
      * @throws Exception
      */
     @Test
-    public void testUpdate_simple()
+    void testUpdate_simple()
         throws Exception
     {
         final MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
@@ -469,7 +471,7 @@ public class RemoteCacheServerUnitTest
         server.update( item );
 
         // VERIFY
-        assertEquals( "Start should have been called.", 1, cacheEventLogger.startICacheEventCalls );
-        assertEquals( "End should have been called.", 1, cacheEventLogger.endICacheEventCalls );
+        assertEquals( 1, cacheEventLogger.startICacheEventCalls, "Start should have been called." );
+        assertEquals( 1, cacheEventLogger.endICacheEventCalls, "End should have been called." );
     }
 }

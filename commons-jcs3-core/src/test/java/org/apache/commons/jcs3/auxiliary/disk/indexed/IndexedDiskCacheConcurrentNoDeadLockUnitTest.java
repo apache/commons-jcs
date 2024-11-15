@@ -19,13 +19,10 @@ package org.apache.commons.jcs3.auxiliary.disk.indexed;
  * under the License.
  */
 
-import junit.extensions.ActiveTestSuite;
-import junit.framework.Test;
-import junit.framework.TestCase;
-
 import org.apache.commons.jcs3.JCS;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test which exercises the indexed disk cache. Runs three threads against the
@@ -33,83 +30,53 @@ import org.junit.Before;
  */
 public class IndexedDiskCacheConcurrentNoDeadLockUnitTest
 {
-    /**
-     * A unit test suite for JUnit
-     *
-     * @return The test suite
-     */
-    public static Test suite()
+
+    @BeforeEach
+    void setUp()
     {
-        final ActiveTestSuite suite = new ActiveTestSuite();
-
-        suite.addTest(new TestCase("testIndexedDiskCache1" )
-        {
-            @Override
-            public void runTest()
-                throws Exception
-            {
-                IndexedDiskCacheRandomConcurrentTestUtil.runTestForRegion( "indexedRegion4", 1, 200, 1 );
-            }
-        });
-
-        suite.addTest(new TestCase("testIndexedDiskCache2" )
-        {
-            @Override
-            public void runTest()
-                throws Exception
-            {
-                IndexedDiskCacheRandomConcurrentTestUtil.runTestForRegion( "indexedRegion4", 10000, 50000, 2 );
-            }
-        });
-
-        suite.addTest(new TestCase("testIndexedDiskCache3" )
-        {
-            @Override
-            public void runTest()
-                throws Exception
-            {
-                IndexedDiskCacheRandomConcurrentTestUtil.runTestForRegion( "indexedRegion4", 10000, 50000, 3 );
-            }
-        });
-
-        suite.addTest(new TestCase("testIndexedDiskCache4" )
-        {
-            @Override
-            public void runTest()
-                throws Exception
-            {
-                IndexedDiskCacheRandomConcurrentTestUtil.runTestForRegion( "indexedRegion4", 10000, 50000, 4 );
-            }
-        });
-
-        suite.addTest(new TestCase("testIndexedDiskCache5" )
-        {
-            @Override
-            public void runTest()
-                throws Exception
-            {
-                IndexedDiskCacheRandomConcurrentTestUtil.runTestForRegion( "indexedRegion4", 10000, 50000, 5 );
-            }
-        });
-
-        return suite;
-    }
-
-    /**
-     * Test setup
-     */
-    @Before
-    public void setUp()
-    {
+        // Set the configuration file for the cache
         JCS.setConfigFilename( "/TestDiskCacheCon.ccf" );
     }
 
-    /**
-     * Test tearDown. Dispose of the cache.
-     */
-    @After
-    public void tearDown()
+    @AfterEach
+    void tearDown()
     {
+        // Dispose of the cache after each test
         JCS.shutdown();
+    }
+
+    @Test
+    void testIndexedDiskCache1()
+        throws Exception
+    {
+        IndexedDiskCacheRandomConcurrentTestUtil.runTestForRegion( "indexedRegion4", 1, 200, 1 );
+    }
+
+    @Test
+    void testIndexedDiskCache2()
+        throws Exception
+    {
+        IndexedDiskCacheRandomConcurrentTestUtil.runTestForRegion( "indexedRegion4", 10000, 50000, 2 );
+    }
+
+    @Test
+    void testIndexedDiskCache3()
+        throws Exception
+    {
+        IndexedDiskCacheRandomConcurrentTestUtil.runTestForRegion( "indexedRegion4", 10000, 50000, 3 );
+    }
+
+    @Test
+    void testIndexedDiskCache4()
+        throws Exception
+    {
+        IndexedDiskCacheRandomConcurrentTestUtil.runTestForRegion( "indexedRegion4", 10000, 50000, 4 );
+    }
+
+    @Test
+    void testIndexedDiskCache5()
+        throws Exception
+    {
+        IndexedDiskCacheRandomConcurrentTestUtil.runTestForRegion( "indexedRegion4", 10000, 50000, 5 );
     }
 }

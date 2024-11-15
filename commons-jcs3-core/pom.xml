@@ -95,11 +95,6 @@
       <artifactId>junit-jupiter</artifactId>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>org.junit.vintage</groupId>
-      <artifactId>junit-vintage-engine</artifactId>
-      <scope>test</scope>
-    </dependency>
 
     <!-- Exclude for now -->
     <!-- dependency>
@@ -171,7 +166,7 @@
                 <java.security.manager>true</java.security.manager>
                 <java.security.policy>${basedir}/src/test/conf/cache.policy</java.security.policy>
                 <java.util.logging.config.file>${basedir}/src/test/test-conf/logging.properties</java.util.logging.config.file>
-              </systemPropertyVariables>              
+              </systemPropertyVariables>
             </configuration>
           </execution>
         </executions>
@@ -189,7 +184,7 @@
       </plugin>
     </plugins>
   </build>
-  
+
   <profiles>
     <profile>
       <id>testWithLog4j2</id>
@@ -216,7 +211,7 @@
                   <systemPropertyVariables>
                     <jcs.logSystem>log4j2</jcs.logSystem>
                     <log4j.configurationFile>src/test/test-conf/log4j2-test.xml</log4j.configurationFile>
-                  </systemPropertyVariables>              
+                  </systemPropertyVariables>
                 </configuration>
               </execution>
             </executions>
@@ -249,7 +244,7 @@
                     <java.security.manager>true</java.security.manager>
                     <java.security.policy>${basedir}/src/test/conf/cache.policy</java.security.policy>
                     <java.util.logging.config.file>${basedir}/src/test/test-conf/logging.properties</java.util.logging.config.file>
-                  </systemPropertyVariables>              
+                  </systemPropertyVariables>
                 </configuration>
               </execution>
             </executions>

@@ -19,33 +19,34 @@ package org.apache.commons.jcs3.auxiliary.disk.block;
  * under the License.
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import junit.extensions.ActiveTestSuite;
-import junit.framework.Test;
-import junit.framework.TestCase;
-
 import org.apache.commons.jcs3.JCS;
 import org.apache.commons.jcs3.access.CacheAccess;
 import org.apache.commons.jcs3.engine.behavior.ICacheElement;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test which exercises the block disk cache. Runs four threads against the same region.
  */
 public class BlockDiskCacheSameRegionConcurrentUnitTest
 {
+
+    @BeforeEach
+    void setUp()
+    {
+        // Set the configuration file
+        JCS.setConfigFilename( "/TestBlockDiskCacheCon.ccf" );
+    }
+
     /**
-     * Adds items to cache, gets them, and removes them. The item count is more than the size of the
-     * memory cache, so items should spool to disk.
-     * @param region Name of the region to access
-     * @param start
-     * @param end
-     * @throws Exception If an error occurs
+     * Helper method to test cache operations within a specific range in the region.
      */
     public static void runTestForRegion( final String region, final int start, final int end )
         throws Exception
@@ -64,7 +65,7 @@ public class BlockDiskCacheSameRegionConcurrentUnitTest
             final String key = i + ":key";
             final String value = jcs.get( key );
 
-            assertEquals( "Wrong value for key [" + key + "]", region + " data " + i + "-" + region, value );
+            assertEquals( region + " data " + i + "-" + region, value, "Wrong value for key [" + key + "]" );
         }
 
         // Test that getElements returns all the expected values
@@ -78,60 +79,36 @@ public class BlockDiskCacheSameRegionConcurrentUnitTest
         for ( int i = start; i < end; i++ )
         {
             final ICacheElement<String, String> element = elements.get( i + ":key" );
-            assertNotNull( "element " + i + ":key is missing", element );
-            assertEquals( "value " + i + ":key", region + " data " + i + "-" + region, element.getVal() );
+            assertNotNull( element, "element " + i + ":key is missing" );
+            assertEquals( region + " data " + i + "-" + region, element.getVal(), "value " + i + ":key" );
         }
     }
 
-    /**
-     * A unit test suite for JUnit
-     * @return The test suite
-     */
-    public static Test suite()
+    @Test
+    void testBlockDiskCache1()
+        throws Exception
     {
-        JCS.setConfigFilename( "/TestBlockDiskCacheCon.ccf" );
-        final ActiveTestSuite suite = new ActiveTestSuite();
+        runTestForRegion( "blockRegion4", 0, 200 );
+    }
 
-        suite.addTest(new TestCase("testBlockDiskCache1" )
-        {
-            @Override
-            public void runTest()
-                throws Exception
-            {
-                runTestForRegion( "blockRegion4", 0, 200 );
-            }
-        });
+    @Test
+    void testBlockDiskCache2()
+        throws Exception
+    {
+        runTestForRegion( "blockRegion4", 1000, 1200 );
+    }
 
-        suite.addTest(new TestCase("testBlockDiskCache2" )
-        {
-            @Override
-            public void runTest()
-                throws Exception
-            {
-                runTestForRegion( "blockRegion4", 1000, 1200 );
-            }
-        });
+    @Test
+    void testBlockDiskCache3()
+        throws Exception
+    {
+        runTestForRegion( "blockRegion4", 2000, 2200 );
+    }
 
-        suite.addTest(new TestCase("testBlockDiskCache3" )
-        {
-            @Override
-            public void runTest()
-                throws Exception
-            {
-                runTestForRegion( "blockRegion4", 2000, 2200 );
-            }
-        });
-
-        suite.addTest(new TestCase("testBlockDiskCache4" )
-        {
-            @Override
-            public void runTest()
-                throws Exception
-            {
-                runTestForRegion( "blockRegion4", 2200, 5200 );
-            }
-        });
-
-        return suite;
+    @Test
+    void testBlockDiskCache4()
+        throws Exception
+    {
+        runTestForRegion( "blockRegion4", 2200, 5200 );
     }
 }

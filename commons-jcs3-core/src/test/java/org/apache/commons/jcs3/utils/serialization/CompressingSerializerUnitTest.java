@@ -19,24 +19,25 @@ package org.apache.commons.jcs3.utils.serialization;
  * under the License.
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests the compressing serializer.
  */
-public class CompressingSerializerUnitTest
+class CompressingSerializerUnitTest
 {
     private CompressingSerializer serializer;
 
-    @Before
-    public void setUp() throws Exception
+    @BeforeEach
+    void setUp()
+        throws Exception
     {
         this.serializer = new CompressingSerializer();
     }
@@ -48,14 +49,14 @@ public class CompressingSerializerUnitTest
      * @throws IOException
      */
     @Test
-    public void testDeserialize_NullInput()
+    void testDeserialize_NullInput()
         throws IOException, ClassNotFoundException
     {
         // DO WORK
         final Object result = serializer.deSerialize( null, null );
 
         // VERIFY
-        assertNull( "Should have nothing.", result );
+        assertNull( result, "Should have nothing." );
     }
 
     /**
@@ -64,7 +65,7 @@ public class CompressingSerializerUnitTest
      * @throws Exception on error
      */
     @Test
-    public void testSerialize_CompareCompressedAndUncompressed()
+    void testSerialize_CompareCompressedAndUncompressed()
         throws Exception
     {
         // I hate for loops.
@@ -80,8 +81,9 @@ public class CompressingSerializerUnitTest
         final byte[] nonCompressed = new StandardSerializer().serialize( before );
 
         // VERIFY
-        assertTrue( "Compressed should be smaller. compressed size = " + compressed.length + "nonCompressed size = "
-            + nonCompressed.length, compressed.length < nonCompressed.length );
+        assertTrue( compressed.length < nonCompressed.length,
+                    "Compressed should be smaller. compressed size = " + compressed.length + "nonCompressed size = "
+                        + nonCompressed.length );
     }
 
     /**
@@ -90,7 +92,7 @@ public class CompressingSerializerUnitTest
      * @throws Exception on error
      */
     @Test
-    public void testSerialize_NullInput()
+    void testSerialize_NullInput()
         throws Exception
     {
         final String before = null;
@@ -100,7 +102,7 @@ public class CompressingSerializerUnitTest
         final String after = (String) serializer.deSerialize( serialized, null );
 
         // VERIFY
-        assertNull( "Should have nothing. after =" + after, after );
+        assertNull( after, "Should have nothing. after =" + after );
     }
 
     /**
@@ -111,7 +113,7 @@ public class CompressingSerializerUnitTest
      * @throws Exception on error
      */
     @Test
-    public void testSimpleBackAndForth()
+    void testSimpleBackAndForth()
         throws Exception
     {
         // DO WORK
@@ -119,6 +121,6 @@ public class CompressingSerializerUnitTest
         final String after = (String) serializer.deSerialize( serializer.serialize( before ), null );
 
         // VERIFY
-        assertEquals( "Before and after should be the same.", before, after );
+        assertEquals( before, after, "Before and after should be the same." );
     }
 }

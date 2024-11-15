@@ -19,16 +19,16 @@ package org.apache.commons.jcs3.engine.control;
  * under the License.
  */
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.commons.jcs3.JCS;
 import org.apache.commons.jcs3.access.CacheAccess;
 import org.apache.commons.jcs3.engine.stats.behavior.ICacheStats;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  */
-public class CacheManagerStatsUnitTest
+class CacheManagerStatsUnitTest
 {
 
     /**
@@ -37,7 +37,8 @@ public class CacheManagerStatsUnitTest
      * @throws Exception
      */
     @Test
-    public void testSimpleGetStats() throws Exception
+    void testSimpleGetStats()
+        throws Exception
     {
         final CacheAccess<String, String> cache = JCS.getInstance( "testCache1" );
 
@@ -55,9 +56,9 @@ public class CacheManagerStatsUnitTest
 
 //        System.out.println( statsString );
 
-        assertTrue( "Should have the cacheName in here.", statsString.indexOf("testCache1") != -1 );
-        assertTrue( "Should have the HitCountRam in here.", statsString.indexOf("HitCountRam") != -1 );
-        assertTrue( "Should have the 4 in here.", statsString.indexOf("4") != -1 );
+        assertTrue( statsString.indexOf( "testCache1" ) != -1, "Should have the cacheName in here." );
+        assertTrue( statsString.indexOf( "HitCountRam" ) != -1, "Should have the HitCountRam in here." );
+        assertTrue( statsString.indexOf( "4" ) != -1, "Should have the 4 in here." );
 
         final ICacheStats[] stats = mgr.getStatistics();
         final int statsLen = stats.length;

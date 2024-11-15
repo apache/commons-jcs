@@ -19,10 +19,10 @@ package org.apache.commons.jcs3.engine.control.event;
  * under the License.
  */
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.commons.jcs3.JCS;
 import org.apache.commons.jcs3.access.CacheAccess;
@@ -30,13 +30,13 @@ import org.apache.commons.jcs3.engine.ElementAttributes;
 import org.apache.commons.jcs3.engine.behavior.IElementAttributes;
 import org.apache.commons.jcs3.engine.control.event.behavior.IElementEvent;
 import org.apache.commons.jcs3.engine.control.event.behavior.IElementEventHandler;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * This test suite verifies that the basic ElementEvent are called as they should be.
  */
-public class SimpleEventHandlingUnitTest
+class SimpleEventHandlingUnitTest
 {
     /**
      * Simple event counter used to verify test results.
@@ -150,8 +150,8 @@ public class SimpleEventHandlingUnitTest
     /**
      * Test setup with expected configuration parameters.
      */
-    @Before
-    public void setUp()
+    @BeforeEach
+    void setUp()
     {
         JCS.setConfigFilename( "/TestSimpleEventHandling.ccf" );
         this.meh = new MyEventHandler();
@@ -162,7 +162,7 @@ public class SimpleEventHandlingUnitTest
      * @throws Exception
      */
     @Test
-    public void testElementAttributesCreationTime()
+    void testElementAttributesCreationTime()
         throws Exception
     {
     	final ElementAttributes elem1 = new ElementAttributes();
@@ -173,7 +173,7 @@ public class SimpleEventHandlingUnitTest
     	final IElementAttributes elem2 = elem1.clone();
     	final long ctime2 = elem2.getCreateTime();
 
-    	assertFalse("Creation times should be different", ctime1 == ctime2);
+        assertFalse( ctime1 == ctime2, "Creation times should be different" );
     }
 
     /**
@@ -181,7 +181,7 @@ public class SimpleEventHandlingUnitTest
      * @throws Exception
      */
     @Test
-    public void testExceededIdletimeOnrequestEvent()
+    void testExceededIdletimeOnrequestEvent()
         throws Exception
     {
         final CacheAccess<String, String> jcs = JCS.getInstance( "Idletime" );
@@ -200,7 +200,7 @@ public class SimpleEventHandlingUnitTest
         for ( int i = 0; i < 200; i++ )
         {
             final String value = jcs.get( i + ":key");
-            assertNotNull("Item should not be null for key " + i + ":key", value);
+            assertNotNull( value, "Item should not be null for key " + i + ":key" );
         }
 
         // wait a bit for the items to expire
@@ -209,15 +209,16 @@ public class SimpleEventHandlingUnitTest
         for ( int i = 0; i < 200; i++ )
         {
             final String value = jcs.get( i + ":key");
-            assertNull("Item should be null for key " + i + ":key, but is " + value, value);
+            assertNull( value, "Item should be null for key " + i + ":key, but is " + value );
         }
 
         // wait a bit for it to finish
         Thread.sleep( 100 );
 
         // test to see if the count is right
-        assertTrue( "The number of ELEMENT_EVENT_EXCEEDED_IDLETIME_ONREQUEST events [" + meh.getExceededIdletimeCount()
-            + "] does not equal the number expected.", meh.getExceededIdletimeCount() >= 200 );
+        assertTrue( meh.getExceededIdletimeCount() >= 200,
+                    "The number of ELEMENT_EVENT_EXCEEDED_IDLETIME_ONREQUEST events [" + meh.getExceededIdletimeCount()
+                        + "] does not equal the number expected." );
     }
 
     /**
@@ -225,7 +226,7 @@ public class SimpleEventHandlingUnitTest
      * @throws Exception
      */
     @Test
-    public void testExceededMaxlifeOnrequestEvent()
+    void testExceededMaxlifeOnrequestEvent()
         throws Exception
     {
         final CacheAccess<String, String> jcs = JCS.getInstance( "Maxlife" );
@@ -246,15 +247,16 @@ public class SimpleEventHandlingUnitTest
         for ( int i = 0; i < 200; i++ )
         {
             final String value = jcs.get( i + ":key");
-            assertNull("Item should be null for key " + i + ":key, but is " + value, value);
+            assertNull( value, "Item should be null for key " + i + ":key, but is " + value );
         }
 
         // wait a bit for it to finish
         Thread.sleep( 100 );
 
         // test to see if the count is right
-        assertTrue( "The number of ELEMENT_EVENT_EXCEEDED_MAXLIFE_ONREQUEST events [" + meh.getExceededMaxlifeCount()
-            + "] does not equal the number expected.", meh.getExceededMaxlifeCount() >= 200 );
+        assertTrue( meh.getExceededMaxlifeCount() >= 200,
+                    "The number of ELEMENT_EVENT_EXCEEDED_MAXLIFE_ONREQUEST events [" + meh.getExceededMaxlifeCount()
+                        + "] does not equal the number expected." );
     }
 
     /**
@@ -263,7 +265,7 @@ public class SimpleEventHandlingUnitTest
      * @throws Exception Description of the Exception
      */
     @Test
-    public void testSpoolEvent()
+    void testSpoolEvent()
         throws Exception
     {
         final CacheAccess<String, String> jcs = JCS.getInstance( "WithDisk" );
@@ -283,8 +285,9 @@ public class SimpleEventHandlingUnitTest
 
         // VERIFY
         // test to see if the count is right
-        assertTrue( "The number of ELEMENT_EVENT_SPOOLED_DISK_AVAILABLE events [" + meh.getSpoolCount()
-            + "] does not equal the number expected [" + items + "]", meh.getSpoolCount() >= items );
+        assertTrue( meh.getSpoolCount() >= items,
+                    "The number of ELEMENT_EVENT_SPOOLED_DISK_AVAILABLE events [" + meh.getSpoolCount()
+                        + "] does not equal the number expected [" + items + "]" );
     }
 
     /**
@@ -293,7 +296,7 @@ public class SimpleEventHandlingUnitTest
      * @throws Exception
      */
     @Test
-    public void testSpoolNoDiskEvent()
+    void testSpoolNoDiskEvent()
         throws Exception
     {
         final CacheAccess<String, String> jcs = JCS.getInstance( "NoDisk" );
@@ -313,8 +316,9 @@ public class SimpleEventHandlingUnitTest
         Thread.sleep( items / 20 );
 
         // test to see if the count is right
-        assertTrue( "The number of ELEMENT_EVENT_SPOOLED_DISK_NOT_AVAILABLE events  [" + meh.getSpoolNoDiskCount()
-            + "] does not equal the number expected.", meh.getSpoolNoDiskCount() >= items );
+        assertTrue( meh.getSpoolNoDiskCount() >= items,
+                    "The number of ELEMENT_EVENT_SPOOLED_DISK_NOT_AVAILABLE events  [" + meh.getSpoolNoDiskCount()
+                        + "] does not equal the number expected." );
 
     }
 
@@ -323,7 +327,7 @@ public class SimpleEventHandlingUnitTest
      * @throws Exception
      */
     @Test
-    public void testSpoolNotAllowedEvent()
+    void testSpoolNotAllowedEvent()
         throws Exception
     {
         final CacheAccess<String, String> jcs = JCS.getInstance( "DiskButNotAllowed" );
@@ -342,8 +346,9 @@ public class SimpleEventHandlingUnitTest
         Thread.sleep( items / 20 );
 
         // test to see if the count is right
-        assertTrue( "The number of ELEMENT_EVENT_SPOOLED_NOT_ALLOWED events [" + meh.getSpoolNotAllowedCount()
-            + "] does not equal the number expected.", meh.getSpoolNotAllowedCount() >= items );
+        assertTrue( meh.getSpoolNotAllowedCount() >= items,
+                    "The number of ELEMENT_EVENT_SPOOLED_NOT_ALLOWED events [" + meh.getSpoolNotAllowedCount()
+                        + "] does not equal the number expected." );
 
     }
 
@@ -352,7 +357,7 @@ public class SimpleEventHandlingUnitTest
      * @throws Exception
      */
     @Test
-    public void testSpoolNotAllowedEventOnItem()
+    void testSpoolNotAllowedEventOnItem()
         throws Exception
     {
         final CacheAccess<String, String> jcs = JCS.getInstance( "DiskButNotAllowed" );
@@ -373,8 +378,9 @@ public class SimpleEventHandlingUnitTest
         Thread.sleep( items / 20 );
 
         // test to see if the count is right
-        assertTrue( "The number of ELEMENT_EVENT_SPOOLED_NOT_ALLOWED events [" + meh.getSpoolNotAllowedCount()
-            + "] does not equal the number expected.", meh.getSpoolNotAllowedCount() >= items );
+        assertTrue( meh.getSpoolNotAllowedCount() >= items,
+                    "The number of ELEMENT_EVENT_SPOOLED_NOT_ALLOWED events [" + meh.getSpoolNotAllowedCount()
+                        + "] does not equal the number expected." );
 
     }
 

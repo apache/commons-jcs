@@ -1,8 +1,5 @@
 package org.apache.commons.jcs3.utils.discovery;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assume.assumeNotNull;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -22,17 +19,20 @@ import static org.junit.Assume.assumeNotNull;
  * under the License.
  */
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
+
 import java.util.ArrayList;
 
 import org.apache.commons.jcs3.utils.net.HostNameUtil;
 import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
 import org.apache.commons.jcs3.utils.timing.SleepUtil;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for discovery
  */
-public class UDPDiscoveryUnitTest
+class UDPDiscoveryUnitTest
 {
     /**
      * <p>
@@ -93,8 +93,8 @@ public class UDPDiscoveryUnitTest
             //System.out.println( "Receiver count = " + receiver.getCnt() );
 
             // request braodcasts change things.
-            assertTrue( "Receiver count [" + receiver.getCnt() + "] should be the at least the number sent [" + cnt + "].",
-                        cnt <= receiver.getCnt() );
+            assertTrue( cnt <= receiver.getCnt(),
+                        "Receiver count [" + receiver.getCnt() + "] should be the at least the number sent [" + cnt + "]." );
         }
     }
 
@@ -103,10 +103,10 @@ public class UDPDiscoveryUnitTest
      * @throws Exception
      */
     @Test
-    public void testSimpleUDPDiscoveryIPv4()
+    void testSimpleUDPDiscoveryIPv4()
         throws Exception
     {
-        assumeNotNull("This machine does not support multicast", HostNameUtil.getMulticastNetworkInterface());
+        assumeTrue( HostNameUtil.getMulticastNetworkInterface() != null, "This machine does not support multicast" );
 
         simpleUDPDiscovery("228.5.6.7");
     }
@@ -116,10 +116,10 @@ public class UDPDiscoveryUnitTest
      * @throws Exception
      */
     @Test
-    public void testSimpleUDPDiscoveryIPv6()
+    void testSimpleUDPDiscoveryIPv6()
         throws Exception
     {
-        assumeNotNull("This machine does not support multicast", HostNameUtil.getMulticastNetworkInterface());
+        assumeTrue( HostNameUtil.getMulticastNetworkInterface() != null, "This machine does not support multicast" );
 
         simpleUDPDiscovery("FF02::5678");
     }

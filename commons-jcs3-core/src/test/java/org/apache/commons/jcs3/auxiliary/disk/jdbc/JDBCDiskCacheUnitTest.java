@@ -19,9 +19,9 @@ package org.apache.commons.jcs3.auxiliary.disk.jdbc;
  * under the License.
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.sql.Connection;
 import java.util.HashSet;
@@ -37,8 +37,8 @@ import org.apache.commons.jcs3.engine.behavior.ICacheElement;
 import org.apache.commons.jcs3.engine.control.MockCompositeCacheManager;
 import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
 import org.apache.commons.jcs3.utils.threadpool.DaemonThreadFactory;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Runs basic tests for the JDBC disk cache.
@@ -71,7 +71,7 @@ public class JDBCDiskCacheUnitTest
         {
             final String value = jcs.get( i + ":key" );
 
-            assertEquals( "key = [" + i + ":key] value = [" + value + "]", region + " data " + i, value );
+            assertEquals( region + " data " + i, value, "key = [" + i + ":key] value = [" + value + "]" );
         }
 
         // Test that getElements returns all the expected values
@@ -85,8 +85,8 @@ public class JDBCDiskCacheUnitTest
         for ( int i = 0; i < items; i++ )
         {
             final ICacheElement<String, String> element = elements.get( i + ":key" );
-            assertNotNull( "element " + i + ":key is missing", element );
-            assertEquals( "value " + i + ":key", region + " data " + i, element.getVal() );
+            assertNotNull( element, "element " + i + ":key is missing" );
+            assertEquals( region + " data " + i, element.getVal(), "value " + i + ":key" );
         }
 
         // Remove all the items
@@ -98,13 +98,13 @@ public class JDBCDiskCacheUnitTest
         // Verify removal
         for ( int i = 0; i < items; i++ )
         {
-            assertNull( "Removed key should be null: " + i + ":key", jcs.get( i + ":key" ) );
+            assertNull( jcs.get( i + ":key" ), "Removed key should be null: " + i + ":key" );
         }
     }
 
     /** Test setup */
-    @Before
-    public void setUp()
+    @BeforeEach
+    void setUp()
     {
         JCS.setConfigFilename( "/TestJDBCDiskCache.ccf" );
     }
@@ -115,7 +115,7 @@ public class JDBCDiskCacheUnitTest
      * @throws Exception
      */
     @Test
-    public void testInitializePoolAccess_withPoolName()
+    void testInitializePoolAccess_withPoolName()
         throws Exception
     {
         // SETUP
@@ -144,14 +144,14 @@ public class JDBCDiskCacheUnitTest
         	new DaemonThreadFactory("JCS-JDBCDiskCacheManager-", Thread.MIN_PRIORITY)));
 
         final JDBCDiskCache<String, String> diskCache = dcFactory.createCache( cattr, compositeCacheManager, null, new StandardSerializer() );
-        assertNotNull( "Should have a cache instance", diskCache );
+        assertNotNull( diskCache, "Should have a cache instance" );
 
         // DO WORK
         final DataSourceFactory result = dcFactory.getDataSourceFactory(cattr, props);
 
         // VERIFY
-        assertNotNull( "Should have a data source factory class", result );
-        assertEquals( "wrong name", poolName, result.getName() );
+        assertNotNull( result, "Should have a data source factory class" );
+        assertEquals( poolName, result.getName(), "wrong name" );
 
         // Disable this test: it's not clear what it is trying to check. Also it causes an Error when re-running tests:
         // JDBCDiskCacheUnitTest.testInitializePoolAccess_withPoolName:157 » SQL Table already exists:
@@ -166,7 +166,7 @@ public class JDBCDiskCacheUnitTest
      * @throws Exception
      */
     @Test
-    public void testSimpleJDBCPutGetWithHSQL()
+    void testSimpleJDBCPutGetWithHSQL()
         throws Exception
     {
         try (Connection con = HsqlSetupUtil.getTestDatabaseConnection(new Properties(), "cache_hsql_db"))

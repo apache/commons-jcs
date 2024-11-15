@@ -19,9 +19,9 @@ package org.apache.commons.jcs3.auxiliary.disk.jdbc.hsql;
  * under the License.
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -31,19 +31,19 @@ import org.apache.commons.jcs3.JCS;
 import org.apache.commons.jcs3.access.CacheAccess;
 import org.apache.commons.jcs3.access.exception.CacheException;
 import org.apache.commons.jcs3.engine.behavior.ICacheElement;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test which exercises the HSQL cache.
  */
-public class HSQLDiskCacheUnitTest
+class HSQLDiskCacheUnitTest
 {
     /**
      * Test setup
      */
-    @Before
-    public void setUp()
+    @BeforeEach
+    void setUp()
     {
         JCS.setConfigFilename( "/TestHSQLDiskCache.ccf" );
     }
@@ -55,7 +55,7 @@ public class HSQLDiskCacheUnitTest
      * @throws Exception If an error occurs
      */
     @Test
-    public void testBasicPutRemove()
+    void testBasicPutRemove()
         throws Exception
     {
         final int items = 20;
@@ -74,7 +74,7 @@ public class HSQLDiskCacheUnitTest
         for ( int i = 0; i < items; i++ )
         {
             final String value = jcs.get( i + ":key" );
-            assertEquals( "key = [" + i + ":key] value = [" + value + "]", region + " data " + i, value );
+            assertEquals( region + " data " + i, value, "key = [" + i + ":key] value = [" + value + "]" );
         }
 
         // Test that getElements returns all the expected values
@@ -88,8 +88,8 @@ public class HSQLDiskCacheUnitTest
         for ( int i = 0; i < items; i++ )
         {
             final ICacheElement<String, String> element = elements.get( i + ":key" );
-            assertNotNull( "element " + i + ":key is missing", element );
-            assertEquals( "value " + i + ":key", region + " data " + i, element.getVal() );
+            assertNotNull( element, "element " + i + ":key is missing" );
+            assertEquals( region + " data " + i, element.getVal(), "value " + i + ":key" );
         }
 
         // Remove all the items
@@ -101,7 +101,7 @@ public class HSQLDiskCacheUnitTest
         // Verify removal
         for ( int i = 0; i < items; i++ )
         {
-            assertNull( "Removed key should be null: " + i + ":key", jcs.get( i + ":key" ) );
+            assertNull( jcs.get( i + ":key" ), "Removed key should be null: " + i + ":key" );
         }
     }
 
@@ -112,7 +112,7 @@ public class HSQLDiskCacheUnitTest
      * @throws InterruptedException
      */
     @Test
-    public void testRemoveAll()
+    void testRemoveAll()
         throws CacheException, InterruptedException
     {
         final String region = "removeAllAllowed";
@@ -140,7 +140,7 @@ public class HSQLDiskCacheUnitTest
         for ( int i = 0; i < items; i++ )
         {
             final String value = jcs.get( i + ":key" );
-            assertNull( "value should be null key = [" + i + ":key] value = [" + value + "]", value );
+            assertNull( value, "value should be null key = [" + i + ":key] value = [" + value + "]" );
         }
     }
 
@@ -151,7 +151,7 @@ public class HSQLDiskCacheUnitTest
      * @throws InterruptedException
      */
     @Test
-    public void testRemoveAllProhibition()
+    void testRemoveAllProhibition()
         throws CacheException, InterruptedException
     {
         final String region = "noRemoveAll";
@@ -173,7 +173,7 @@ public class HSQLDiskCacheUnitTest
         for ( int i = 0; i < items; i++ )
         {
             final String value = jcs.get( i + ":key" );
-            assertEquals( "key = [" + i + ":key] value = [" + value + "]", region + " data " + i, value );
+            assertEquals( region + " data " + i, value, "key = [" + i + ":key] value = [" + value + "]" );
         }
     }
 }

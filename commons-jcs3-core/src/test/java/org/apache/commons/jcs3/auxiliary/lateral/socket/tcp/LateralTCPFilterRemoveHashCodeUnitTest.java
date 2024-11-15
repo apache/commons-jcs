@@ -19,10 +19,10 @@ package org.apache.commons.jcs3.auxiliary.lateral.socket.tcp;
  * under the License.
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.Serializable;
 
@@ -32,8 +32,8 @@ import org.apache.commons.jcs3.auxiliary.lateral.LateralCacheAttributes;
 import org.apache.commons.jcs3.engine.CacheElement;
 import org.apache.commons.jcs3.engine.behavior.ICacheElement;
 import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  */
@@ -137,7 +137,7 @@ public class LateralTCPFilterRemoveHashCodeUnitTest
         final String data = "testData" + testNum;
         jcs.put( key, data );
         final String value = jcs.get( key );
-        assertEquals( "Couldn't put normally.", data, value );
+        assertEquals( data, value, "Couldn't put normally." );
 
         // make sure the items we can find are in the correct region.
         for ( int i = 1; i < numOps; i++ )
@@ -146,7 +146,7 @@ public class LateralTCPFilterRemoveHashCodeUnitTest
             final String dataL = jcs.get( keyL );
             if ( dataL != null )
             {
-                assertTrue( "Incorrect region detected.", dataL.startsWith( region ) );
+                assertTrue( dataL.startsWith( region ), "Incorrect region detected." );
             }
 
         }
@@ -155,7 +155,7 @@ public class LateralTCPFilterRemoveHashCodeUnitTest
 
         final Object testObj1 = cache.get( keyToBeRemovedOnPut );
         p( "test object1 = " + testObj1 );
-        assertNull( "The test object should have been remvoed by a put.", testObj1 );
+        assertNull( testObj1, "The test object should have been remvoed by a put." );
 
         final Object testObj2 = cache.get( keyToNotBeRemovedOnPut );
         p( "test object2 = " + testObj2 + " hashCode = " );
@@ -163,15 +163,15 @@ public class LateralTCPFilterRemoveHashCodeUnitTest
         {
             p( "test2 hashCode = " + +testObj2.hashCode() );
         }
-        assertNotNull( "This should not have been removed, since the hascode were the same.", testObj2 );
+        assertNotNull( testObj2, "This should not have been removed, since the hascode were the same." );
 
     }
 
     /**
      * Test setup
      */
-    @Before
-    public void setUp()
+    @BeforeEach
+    void setUp()
     {
         System.setProperty( "jcs.auxiliary.LTCP.attributes.TcpServers", "localhost:" + serverPort );
         JCS.setConfigFilename( "/TestTCPLateralRemoveFilter.ccf" );
@@ -182,7 +182,7 @@ public class LateralTCPFilterRemoveHashCodeUnitTest
      * @throws Exception
      */
     @Test
-    public void test()
+    void test()
         throws Exception
     {
         runTestForRegion( "region1", 200, 1 );

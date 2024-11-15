@@ -19,8 +19,8 @@ package org.apache.commons.jcs3.engine.memory.fifo;
  * under the License.
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.io.IOException;
 
@@ -29,10 +29,10 @@ import org.apache.commons.jcs3.engine.CompositeCacheAttributes;
 import org.apache.commons.jcs3.engine.ElementAttributes;
 import org.apache.commons.jcs3.engine.behavior.ICompositeCacheAttributes;
 import org.apache.commons.jcs3.engine.control.CompositeCache;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /** Tests for the fifo implementation. */
-public class FIFOMemoryCacheUnitTest
+class FIFOMemoryCacheUnitTest
 {
     /**
      * Verify that the oldest inserted item is removed
@@ -40,7 +40,7 @@ public class FIFOMemoryCacheUnitTest
      * @throws IOException
      */
     @Test
-    public void testExpirationPolicy_doubleOver()
+    void testExpirationPolicy_doubleOver()
         throws IOException
     {
         // SETUP
@@ -63,10 +63,10 @@ public class FIFOMemoryCacheUnitTest
         }
 
         // VERIFY
-        assertEquals( "Should have max elements", maxObjects, cache.getSize() );
+        assertEquals( maxObjects, cache.getSize(), "Should have max elements" );
         for ( int i = maxObjects * 2 - 1; i > maxObjects; i-- )
         {
-            assertNotNull( "Should have elemnt " + i, cache.get( "key" + i ) );
+            assertNotNull( cache.get( "key" + i ), "Should have elemnt " + i );
         }
     }
 
@@ -76,7 +76,7 @@ public class FIFOMemoryCacheUnitTest
      * @throws IOException
      */
     @Test
-    public void testExpirationPolicy_oneExtra()
+    void testExpirationPolicy_oneExtra()
         throws IOException
     {
         // SETUP
@@ -103,12 +103,12 @@ public class FIFOMemoryCacheUnitTest
         cache.update( oneMoreElement );
 
         // VERIFY
-        assertEquals( "Should have max elements", maxObjects, cache.getSize() );
+        assertEquals( maxObjects, cache.getSize(), "Should have max elements" );
         System.out.println(cache.getKeySet());
         for ( int i = maxObjects - 1; i > 1; i-- )
         {
-            assertNotNull( "Should have element " + i, cache.get( "key" + i ) );
+            assertNotNull( cache.get( "key" + i ), "Should have element " + i );
         }
-        assertNotNull( "Should have oneMoreElement", cache.get( "onemore" ) );
+        assertNotNull( cache.get( "onemore" ), "Should have oneMoreElement" );
     }
 }

@@ -19,9 +19,9 @@ package org.apache.commons.jcs3.auxiliary.disk.jdbc;
  * under the License.
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -39,10 +39,10 @@ import org.apache.commons.dbcp2.datasources.SharedPoolDataSource;
 import org.apache.commons.jcs3.auxiliary.disk.jdbc.dsfactory.DataSourceFactory;
 import org.apache.commons.jcs3.auxiliary.disk.jdbc.dsfactory.JndiDataSourceFactory;
 import org.apache.commons.jcs3.auxiliary.disk.jdbc.dsfactory.SharedPoolDataSourceFactory;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /** Tests for the data source factories */
-public class JDBCDataSourceFactoryUnitTest
+class JDBCDataSourceFactoryUnitTest
 {
     /* For JNDI mocking */
     public static class MockInitialContextFactory implements InitialContextFactory
@@ -108,7 +108,8 @@ public class JDBCDataSourceFactoryUnitTest
      * @throws SQLException
      */
     @Test
-    public void testConfigureDataSourceFactory_Attributes() throws SQLException
+    void testConfigureDataSourceFactory_Attributes()
+        throws SQLException
     {
         // SETUP
         final String url = "adfads";
@@ -129,13 +130,13 @@ public class JDBCDataSourceFactoryUnitTest
 
         // DO WORK
         final DataSourceFactory result = factory.getDataSourceFactory( cattr, null );
-        assertTrue("Should be a shared pool data source factory", result instanceof SharedPoolDataSourceFactory);
+        assertInstanceOf( SharedPoolDataSourceFactory.class, result, "Should be a shared pool data source factory" );
 
         final SharedPoolDataSource spds = (SharedPoolDataSource) result.getDataSource();
-        assertNotNull( "Should have a data source class", spds );
+        assertNotNull( spds, "Should have a data source class" );
 
         // VERIFY
-        assertEquals( "Wrong maxActive value", maxActive, spds.getMaxTotal() );
+        assertEquals( maxActive, spds.getMaxTotal(), "Wrong maxActive value" );
     }
 
     /**
@@ -143,7 +144,8 @@ public class JDBCDataSourceFactoryUnitTest
      * @throws SQLException
      */
     @Test
-    public void testConfigureDataSourceFactory_JNDI() throws SQLException
+    void testConfigureDataSourceFactory_JNDI()
+        throws SQLException
     {
         // SETUP
         final String jndiPath = "java:comp/env/jdbc/MyDB";
@@ -163,7 +165,7 @@ public class JDBCDataSourceFactoryUnitTest
 
         // DO WORK
         final DataSourceFactory result = factory.getDataSourceFactory( cattr, null );
-        assertTrue("Should be a JNDI data source factory", result instanceof JndiDataSourceFactory);
+        assertInstanceOf( JndiDataSourceFactory.class, result, "Should be a JNDI data source factory" );
     }
 
     /**
@@ -171,7 +173,8 @@ public class JDBCDataSourceFactoryUnitTest
      * @throws SQLException
      */
     @Test
-    public void testConfigureDataSourceFactory_Simple() throws SQLException
+    void testConfigureDataSourceFactory_Simple()
+        throws SQLException
     {
         // SETUP
         final String poolName = "testConfigurePoolAccessAttributes_Simple";
@@ -200,14 +203,14 @@ public class JDBCDataSourceFactoryUnitTest
 
         // DO WORK
         final DataSourceFactory result = factory.getDataSourceFactory( cattr, props );
-        assertTrue("Should be a shared pool data source factory", result instanceof SharedPoolDataSourceFactory);
+        assertInstanceOf( SharedPoolDataSourceFactory.class, result, "Should be a shared pool data source factory" );
 
         final SharedPoolDataSource spds = (SharedPoolDataSource) result.getDataSource();
-        assertNotNull( "Should have a data source class", spds );
+        assertNotNull( spds, "Should have a data source class" );
 
         // VERIFY
-        assertEquals( "Wrong pool name", poolName, spds.getDescription() );
-        assertEquals( "Wrong maxActive value", maxActive, spds.getMaxTotal() );
+        assertEquals( poolName, spds.getDescription(), "Wrong pool name" );
+        assertEquals( maxActive, spds.getMaxTotal(), "Wrong maxActive value" );
     }
 }
 

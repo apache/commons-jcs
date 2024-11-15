@@ -1,8 +1,5 @@
 package org.apache.commons.jcs3.utils.threadpool;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -22,25 +19,28 @@ import static org.junit.Assert.assertTrue;
  * under the License.
  */
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 
 import org.apache.commons.jcs3.utils.props.PropertyLoader;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Verify that the manager can create pools as intended by the default and
  * specified file names.
  */
-public class ThreadPoolManagerUnitTest
+class ThreadPoolManagerUnitTest
 {
 
     /**
      * Make sure it can load a default cache.ccf file
      */
     @Test
-    public void testDefaultConfig()
+    void testDefaultConfig()
     {
         final Properties props = PropertyLoader.loadProperties( "thread_pool.properties" );
         ThreadPoolManager.setProps( props );
@@ -55,7 +55,7 @@ public class ThreadPoolManagerUnitTest
      * Gets a couple pools by name and then see if they are in the list.
      */
     @Test
-    public void testGetPoolNames()
+    void testGetPoolNames()
     {
         final ThreadPoolManager mgr = ThreadPoolManager.getInstance();
         assertNotNull( mgr );
@@ -67,15 +67,15 @@ public class ThreadPoolManagerUnitTest
         mgr.getExecutorService( poolName2 );
 
         final Set<String> names = mgr.getPoolNames();
-        assertTrue( "Should have name in list.", names.contains( poolName1 ) );
-        assertTrue( "Should have name in list.", names.contains( poolName2 ) );
+        assertTrue( names.contains( poolName1 ), "Should have name in list." );
+        assertTrue( names.contains( poolName2 ), "Should have name in list." );
     }
 
     /**
      * Make sure it can load a certain configuration
      */
     @Test
-    public void testSpecialConfig()
+    void testSpecialConfig()
     {
         final Properties props = PropertyLoader.loadProperties( "thread_pool.properties" );
         ThreadPoolManager.setProps( props );

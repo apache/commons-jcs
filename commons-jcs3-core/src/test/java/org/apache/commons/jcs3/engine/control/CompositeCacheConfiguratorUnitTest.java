@@ -19,8 +19,8 @@ package org.apache.commons.jcs3.engine.control;
  * under the License.
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.Properties;
 
@@ -30,16 +30,16 @@ import org.apache.commons.jcs3.auxiliary.MockAuxiliaryCache;
 import org.apache.commons.jcs3.auxiliary.MockAuxiliaryCacheAttributes;
 import org.apache.commons.jcs3.auxiliary.MockAuxiliaryCacheFactory;
 import org.apache.commons.jcs3.engine.logging.MockCacheEventLogger;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /** Tests for the configurator. */
-public class CompositeCacheConfiguratorUnitTest
+class CompositeCacheConfiguratorUnitTest
 {
     /**
      * Verify that we can parse the event logger correctly
      */
     @Test
-    public void testParseAuxiliary_CacheEventLogger_Normal()
+    void testParseAuxiliary_CacheEventLogger_Normal()
     {
         // SETUP
         final String regionName = "MyRegion";
@@ -65,15 +65,15 @@ public class CompositeCacheConfiguratorUnitTest
         final MockAuxiliaryCache<String, String> result = (MockAuxiliaryCache<String, String>)aux;
 
         // VERIFY
-        assertNotNull( "Should have an auxcache.", result );
-        assertNotNull( "Should have an event logger.", result.getCacheEventLogger() );
+        assertNotNull( result, "Should have an auxcache." );
+        assertNotNull( result.getCacheEventLogger(), "Should have an event logger." );
     }
 
     /**
      * Verify that we can parse the spool chunk size
      */
     @Test
-    public void testParseSpoolChunkSize_Normal()
+    void testParseSpoolChunkSize_Normal()
     {
         // SETUP
         final String regionName = "MyRegion";
@@ -90,6 +90,6 @@ public class CompositeCacheConfiguratorUnitTest
 
         // VERIFY
         final CompositeCache<String, String> cache = manager.getCache( regionName );
-        assertEquals( "Wrong chunkSize", cache.getCacheAttributes().getSpoolChunkSize(), chunkSize );
+        assertEquals( cache.getCacheAttributes().getSpoolChunkSize(), chunkSize, "Wrong chunkSize" );
     }
 }

@@ -19,8 +19,9 @@ package org.apache.commons.jcs3.auxiliary.remote.http.client;
  * under the License.
  */
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.commons.jcs3.auxiliary.AuxiliaryCache;
 import org.apache.commons.jcs3.auxiliary.remote.http.client.behavior.IRemoteHttpCacheClient;
@@ -28,14 +29,15 @@ import org.apache.commons.jcs3.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs3.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs3.engine.control.MockCompositeCacheManager;
 import org.apache.commons.jcs3.engine.logging.behavior.ICacheEventLogger;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /** Tests for the manager. */
-public class RemoteHttpCacheFactoryUnitTest
+class RemoteHttpCacheFactoryUnitTest
 {
     /** Verify that we get the default. */
     @Test
-    public void testCreateRemoteHttpCacheClient_Bad()
+    void testCreateRemoteHttpCacheClient_Bad()
     {
         // SETUP
         final String remoteHttpClientClassName = "junk";
@@ -48,14 +50,14 @@ public class RemoteHttpCacheFactoryUnitTest
         final IRemoteHttpCacheClient<String, String> result = factory.createRemoteHttpCacheClientForAttributes( cattr );
 
         // VEIFY
-        assertNotNull( "Should have a cache.", result );
-        assertTrue( "Wrong default.", result instanceof RemoteHttpCacheClient );
-        assertTrue( "Should be initialized", ((RemoteHttpCacheClient<String, String>)result).isInitialized() );
+        Assertions.assertNotNull( result, "Should have a cache." );
+        assertInstanceOf( RemoteHttpCacheClient.class, result, "Wrong default." );
+        assertTrue( ( (RemoteHttpCacheClient<String, String>) result ).isInitialized(), "Should be initialized" );
     }
 
     /** Verify that we get the default. */
     @Test
-    public void testCreateRemoteHttpCacheClient_default()
+    void testCreateRemoteHttpCacheClient_default()
     {
         // SETUP
         final RemoteHttpCacheAttributes cattr = new RemoteHttpCacheAttributes();
@@ -65,29 +67,29 @@ public class RemoteHttpCacheFactoryUnitTest
         final IRemoteHttpCacheClient<String, String> result = factory.createRemoteHttpCacheClientForAttributes( cattr );
 
         // VEIFY
-        assertNotNull( "Should have a cache.", result );
-        assertTrue( "Wrong default.", result instanceof RemoteHttpCacheClient );
+        assertNotNull( result, "Should have a cache." );
+        assertInstanceOf( RemoteHttpCacheClient.class, result, "Wrong default." );
     }
 
     /** Verify that we get a cache no wait. */
     @Test
-    public void testGetCache_normal()
+    void testGetCache_normal()
     {
         // SETUP
         final ICompositeCacheManager cacheMgr = new MockCompositeCacheManager();
-        assertNotNull( "Should have a manager.", cacheMgr );
+        assertNotNull( cacheMgr, "Should have a manager." );
         final ICacheEventLogger cacheEventLogger = null;
         final IElementSerializer elementSerializer = null;
 
         final RemoteHttpCacheAttributes cattr = new RemoteHttpCacheAttributes();
-        assertNotNull( "Should have attributes.", cattr );
+        assertNotNull( cattr, "Should have attributes." );
         final RemoteHttpCacheFactory factory = new RemoteHttpCacheFactory();
-        assertNotNull( "Should have a factory.", factory );
+        assertNotNull( factory, "Should have a factory." );
 
         // DO WORK
         final AuxiliaryCache<String, String> result = factory.createCache(cattr, cacheMgr, cacheEventLogger, elementSerializer);
 
         // VERIFY
-        assertNotNull( "Should have a cache.", result );
+        assertNotNull( result, "Should have a cache." );
     }
 }

@@ -19,8 +19,8 @@ package org.apache.commons.jcs3.auxiliary.remote;
  * under the License.
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -31,12 +31,12 @@ import org.apache.commons.jcs3.engine.CacheElement;
 import org.apache.commons.jcs3.engine.CacheStatus;
 import org.apache.commons.jcs3.engine.behavior.ICacheElement;
 import org.apache.commons.jcs3.utils.timing.SleepUtil;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for the remote cache no wait. The no wait manages a queue on top of the client.
  */
-public class RemoteCacheNoWaitUnitTest
+class RemoteCacheNoWaitUnitTest
 {
     /**
      * Simply verify that the serviced supplied to fix is passed onto the client. Verify that the
@@ -45,7 +45,7 @@ public class RemoteCacheNoWaitUnitTest
      * @throws Exception
      */
     @Test
-    public void testFixCache()
+    void testFixCache()
         throws Exception
     {
         // SETUP
@@ -68,7 +68,7 @@ public class RemoteCacheNoWaitUnitTest
         SleepUtil.sleepAtLeast( 10 );
 
         // VERIFY
-        assertEquals( "Wrong status", service, client.fixed );
+        assertEquals( service, client.fixed, "Wrong status" );
     }
 
     /**
@@ -77,7 +77,7 @@ public class RemoteCacheNoWaitUnitTest
      * @throws Exception
      */
     @Test
-    public void testGet()
+    void testGet()
         throws Exception
     {
         // SETUP
@@ -91,7 +91,7 @@ public class RemoteCacheNoWaitUnitTest
         final ICacheElement<String, String> result = noWait.get( "key" );
 
         // VERIFY
-        assertEquals( "Wrong element", input, result );
+        assertEquals( input, result, "Wrong element" );
     }
 
     /**
@@ -100,7 +100,7 @@ public class RemoteCacheNoWaitUnitTest
      * @throws Exception
      */
     @Test
-    public void testGetMultiple()
+    void testGetMultiple()
         throws Exception
     {
         // SETUP
@@ -120,7 +120,7 @@ public class RemoteCacheNoWaitUnitTest
         final Map<String, ICacheElement<String, String>> result = noWait.getMultiple( keys );
 
         // VERIFY
-        assertEquals( "elements map", inputMap, result );
+        assertEquals( inputMap, result, "elements map" );
     }
 
     /**
@@ -129,7 +129,7 @@ public class RemoteCacheNoWaitUnitTest
      * @throws Exception
      */
     @Test
-    public void testGetStats()
+    void testGetStats()
         throws Exception
     {
         // SETUP
@@ -141,7 +141,7 @@ public class RemoteCacheNoWaitUnitTest
         final String result = noWait.getStats();
 
         // VERIFY
-        assertTrue( "Status should contain 'ALIVE'", result.indexOf( "ALIVE" ) != -1 );
+        assertTrue( result.indexOf( "ALIVE" ) != -1, "Status should contain 'ALIVE'" );
     }
 
     /**
@@ -150,7 +150,7 @@ public class RemoteCacheNoWaitUnitTest
      * @throws Exception
      */
     @Test
-    public void testGetStatus_error()
+    void testGetStatus_error()
         throws Exception
     {
         // SETUP
@@ -162,7 +162,7 @@ public class RemoteCacheNoWaitUnitTest
         final CacheStatus result = noWait.getStatus();
 
         // VERIFY
-        assertEquals( "Wrong status", CacheStatus.ERROR, result );
+        assertEquals( CacheStatus.ERROR, result, "Wrong status" );
     }
 
     /**
@@ -171,7 +171,7 @@ public class RemoteCacheNoWaitUnitTest
      * @throws Exception
      */
     @Test
-    public void testRemove()
+    void testRemove()
         throws Exception
     {
         // SETUP
@@ -186,8 +186,8 @@ public class RemoteCacheNoWaitUnitTest
         SleepUtil.sleepAtLeast( 10 );
 
         // VERIFY
-        assertEquals( "Wrong number updated.", 1, client.removeList.size() );
-        assertEquals( "Wrong key", input, client.removeList.get( 0 ) );
+        assertEquals( 1, client.removeList.size(), "Wrong number updated." );
+        assertEquals( input, client.removeList.get( 0 ), "Wrong key" );
     }
 
     /**
@@ -196,7 +196,7 @@ public class RemoteCacheNoWaitUnitTest
      * @throws Exception
      */
     @Test
-    public void testUpdate()
+    void testUpdate()
         throws Exception
     {
         // SETUP
@@ -211,7 +211,7 @@ public class RemoteCacheNoWaitUnitTest
         // VERIFY
         SleepUtil.sleepAtLeast( 10 );
 
-        assertEquals( "Wrong number updated.", 1, client.updateList.size() );
-        assertEquals( "Wrong element", element, client.updateList.get( 0 ) );
+        assertEquals( 1, client.updateList.size(), "Wrong number updated." );
+        assertEquals( element, client.updateList.get( 0 ), "Wrong element" );
     }
 }

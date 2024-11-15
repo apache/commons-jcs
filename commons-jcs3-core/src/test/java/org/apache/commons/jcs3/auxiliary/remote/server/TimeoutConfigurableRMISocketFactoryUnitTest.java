@@ -23,10 +23,10 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /** Tests for the custom factory */
-public class TimeoutConfigurableRMISocketFactoryUnitTest
+class TimeoutConfigurableRMISocketFactoryUnitTest
 {
     /**
      * Simple test to see that we can create a server socket and connect.
@@ -34,7 +34,8 @@ public class TimeoutConfigurableRMISocketFactoryUnitTest
      * @throws IOException
      */
     @Test
-    public void testCreateAndConnect() throws IOException
+    void testCreateAndConnect()
+        throws IOException
     {
         // SETUP
         final int port = 3455;

@@ -19,10 +19,10 @@ package org.apache.commons.jcs3.auxiliary;
  * under the License.
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.Properties;
 
@@ -30,16 +30,16 @@ import org.apache.commons.jcs3.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs3.engine.control.MockElementSerializer;
 import org.apache.commons.jcs3.engine.logging.MockCacheEventLogger;
 import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /** Tests for the auxiliary cache configurator. */
-public class AuxiliaryCacheConfiguratorUnitTest
+class AuxiliaryCacheConfiguratorUnitTest
 {
     /**
      * Verify that we can parse the event logger.
      */
     @Test
-    public void testParseCacheEventLogger_Normal()
+    void testParseCacheEventLogger_Normal()
     {
         // SETUP
         final String auxPrefix = "jcs.auxiliary." + "MYAux";
@@ -56,15 +56,15 @@ public class AuxiliaryCacheConfiguratorUnitTest
             .parseCacheEventLogger( props, auxPrefix );
 
         // VERIFY
-        assertNotNull( "Should have a logger.", result );
-        assertEquals( "Property should be set.", testPropertyValue, result.getTestProperty() );
+        assertNotNull( result, "Should have a logger." );
+        assertEquals( testPropertyValue, result.getTestProperty(), "Property should be set." );
     }
 
     /**
      * Verify that we don't get an error.
      */
     @Test
-    public void testParseCacheEventLogger_Null()
+    void testParseCacheEventLogger_Null()
     {
         // SETUP
         final Properties props = new Properties();
@@ -74,14 +74,14 @@ public class AuxiliaryCacheConfiguratorUnitTest
                                                                                                                "junk" );
 
         // VERIFY
-        assertNull( "Should not have a logger.", result );
+        assertNull( result, "Should not have a logger." );
     }
 
     /**
      * Verify that we don't get an error.
      */
     @Test
-    public void testParseCacheEventLogger_NullName()
+    void testParseCacheEventLogger_NullName()
     {
         // SETUP
         final Properties props = new Properties();
@@ -91,14 +91,14 @@ public class AuxiliaryCacheConfiguratorUnitTest
                                                                                                                null );
 
         // VERIFY
-        assertNull( "Should not have a logger.", result );
+        assertNull( result, "Should not have a logger." );
     }
 
     /**
      * Verify that we can parse the ElementSerializer.
      */
     @Test
-    public void testParseElementSerializer_Normal()
+    void testParseElementSerializer_Normal()
     {
         // SETUP
         final String auxPrefix = "jcs.auxiliary." + "MYAux";
@@ -115,15 +115,15 @@ public class AuxiliaryCacheConfiguratorUnitTest
             .parseElementSerializer( props, auxPrefix );
 
         // VERIFY
-        assertNotNull( "Should have a Serializer.", result );
-        assertEquals( "Property should be set.", testPropertyValue, result.getTestProperty() );
+        assertNotNull( result, "Should have a Serializer." );
+        assertEquals( testPropertyValue, result.getTestProperty(), "Property should be set." );
     }
 
     /**
      * Verify that we can parse the ElementSerializer.
      */
     @Test
-    public void testParseElementSerializer_Null()
+    void testParseElementSerializer_Null()
     {
         // SETUP
         final Properties props = new Properties();
@@ -133,6 +133,6 @@ public class AuxiliaryCacheConfiguratorUnitTest
             .parseElementSerializer( props, "junk" );
 
         // VERIFY
-        assertTrue( "Should have the default Serializer.", result instanceof StandardSerializer );
+        assertInstanceOf( StandardSerializer.class, result, "Should have the default Serializer." );
     }
 }

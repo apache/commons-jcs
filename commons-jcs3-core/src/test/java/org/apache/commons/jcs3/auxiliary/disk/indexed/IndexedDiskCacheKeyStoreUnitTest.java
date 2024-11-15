@@ -1,5 +1,15 @@
 package org.apache.commons.jcs3.auxiliary.disk.indexed;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.apache.commons.jcs3.engine.CacheElement;
+import org.apache.commons.jcs3.engine.ElementAttributes;
+import org.apache.commons.jcs3.engine.behavior.ICacheElement;
+import org.apache.commons.jcs3.engine.behavior.IElementAttributes;
+import org.junit.jupiter.api.Test;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -19,20 +29,10 @@ package org.apache.commons.jcs3.auxiliary.disk.indexed;
  * under the License.
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-import org.apache.commons.jcs3.engine.CacheElement;
-import org.apache.commons.jcs3.engine.ElementAttributes;
-import org.apache.commons.jcs3.engine.behavior.ICacheElement;
-import org.apache.commons.jcs3.engine.behavior.IElementAttributes;
-import org.junit.Test;
-
 /**
  * Test store and load keys.
  */
-public class IndexedDiskCacheKeyStoreUnitTest
+class IndexedDiskCacheKeyStoreUnitTest
 {
 
     /**
@@ -43,7 +43,7 @@ public class IndexedDiskCacheKeyStoreUnitTest
      * @throws Exception
      */
     @Test
-    public void testOptiimize()
+    void testOptiimize()
         throws Exception
     {
         final IndexedDiskCacheAttributes cattr = new IndexedDiskCacheAttributes();
@@ -73,8 +73,8 @@ public class IndexedDiskCacheKeyStoreUnitTest
         disk.processUpdate( elementSetup );
 
         final ICacheElement<String, String> elementRet = disk.processGet( "key:" + "A" );
-        assertNotNull( "postsave, Should have received an element.", elementRet );
-        assertEquals( "postsave, element is wrong.", "data:" + "A", elementRet.getVal() );
+        assertNotNull( elementRet, "postsave, Should have received an element." );
+        assertEquals( "data:" + "A", elementRet.getVal(), "postsave, element is wrong." );
 
         disk.remove( "key:" + "A" );
 
@@ -83,14 +83,15 @@ public class IndexedDiskCacheKeyStoreUnitTest
         disk.optimizeFile(); //deoptimizeRealTime();
         final long postSize = disk.getDataFileSize();
 
-        assertTrue( "Should be smaller. postsize="+postSize+" preSize="+preSize, postSize < preSize );
-        assertEquals( "Should be the same size after optimization as before add and remove.", preAddRemoveSize, postSize );
+        assertTrue( postSize < preSize, "Should be smaller. postsize=" + postSize + " preSize=" + preSize );
+        assertEquals( preAddRemoveSize, postSize,
+                      "Should be the same size after optimization as before add and remove." );
 
         for ( int i = 0; i < cnt; i++ )
         {
             final ICacheElement<String, String> element = disk.processGet( "key:" + i );
-            assertNotNull( "postsave, Should have received an element.", element );
-            assertEquals( "postsave, element is wrong.", "data:" + i, element.getVal() );
+            assertNotNull( element, "postsave, Should have received an element." );
+            assertEquals( "data:" + i, element.getVal(), "postsave, element is wrong." );
         }
     }
 
@@ -101,7 +102,7 @@ public class IndexedDiskCacheKeyStoreUnitTest
      * @throws Exception
      */
     @Test
-    public void testStoreKeys()
+    void testStoreKeys()
         throws Exception
     {
         final IndexedDiskCacheAttributes cattr = new IndexedDiskCacheAttributes();
@@ -125,21 +126,21 @@ public class IndexedDiskCacheKeyStoreUnitTest
         for ( int i = 0; i < cnt; i++ )
         {
             final ICacheElement<String, String> element = disk.processGet( "key:" + i );
-            assertNotNull( "presave, Should have received an element.", element );
-            assertEquals( "presave, element is wrong.", "data:" + i, element.getVal() );
+            assertNotNull( element, "presave, Should have received an element." );
+            assertEquals( "data:" + i, element.getVal(), "presave, element is wrong." );
         }
 
         disk.saveKeys();
 
         disk.loadKeys();
 
-        assertEquals( "The disk is the wrong size.", cnt, disk.getSize() );
+        assertEquals( cnt, disk.getSize(), "The disk is the wrong size." );
 
         for ( int i = 0; i < cnt; i++ )
         {
             final ICacheElement<String, String> element = disk.processGet( "key:" + i );
-            assertNotNull( "postsave, Should have received an element.", element );
-            assertEquals( "postsave, element is wrong.", "data:" + i, element.getVal() );
+            assertNotNull( element, "postsave, Should have received an element." );
+            assertEquals( "data:" + i, element.getVal(), "postsave, element is wrong." );
         }
 
         disk.dump();

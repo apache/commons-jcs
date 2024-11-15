@@ -18,9 +18,9 @@
  */
 package org.apache.commons.jcs3.jcache;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import javax.cache.Cache;
 import javax.cache.CacheManager;
@@ -28,9 +28,9 @@ import javax.cache.Caching;
 import javax.cache.configuration.MutableConfiguration;
 import javax.cache.spi.CachingProvider;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class NotSerializableTest
+class NotSerializableTest
 {
     public static class NotSerializableAndImHappyWithIt {
         private final String name;
@@ -42,7 +42,7 @@ public class NotSerializableTest
     }
 
     @Test
-    public void testRun()
+    void testRun()
     {
         final CachingProvider cachingProvider = Caching.getCachingProvider();
         final CacheManager cacheManager = cachingProvider.getCacheManager();

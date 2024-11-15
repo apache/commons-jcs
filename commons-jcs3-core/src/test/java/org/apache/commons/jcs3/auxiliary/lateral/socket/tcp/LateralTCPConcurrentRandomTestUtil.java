@@ -19,8 +19,8 @@ package org.apache.commons.jcs3.auxiliary.lateral.socket.tcp;
  * under the License.
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Random;
 
@@ -149,7 +149,7 @@ public class LateralTCPConcurrentRandomTestUtil
         final String data = "testData" + testNum;
         jcs.put( key, data );
         final String value = jcs.get( key );
-        assertEquals( "Couldn't put normally.", data, value );
+        assertEquals( data, value, "Couldn't put normally." );
 
         // make sure the items we can find are in the correct region.
         for ( int i = 1; i < numOps; i++ )
@@ -158,7 +158,7 @@ public class LateralTCPConcurrentRandomTestUtil
             final String dataL = jcs.get( keyL );
             if ( dataL != null )
             {
-                assertTrue( "Incorrect region detected.", dataL.startsWith( region ) );
+                assertTrue( dataL.startsWith( region ), "Incorrect region detected." );
             }
 
         }

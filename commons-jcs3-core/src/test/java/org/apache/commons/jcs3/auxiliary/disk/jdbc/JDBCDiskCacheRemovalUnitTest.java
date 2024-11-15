@@ -19,19 +19,19 @@ package org.apache.commons.jcs3.auxiliary.disk.jdbc;
  * under the License.
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.sql.Connection;
 import java.util.Properties;
 
 import org.apache.commons.jcs3.JCS;
 import org.apache.commons.jcs3.access.CacheAccess;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /** Tests for the removal functionality. */
-public class JDBCDiskCacheRemovalUnitTest
+class JDBCDiskCacheRemovalUnitTest
 {
     /** Db name -- set in system props */
     private final String databaseName = "JCS_STORE_REMOVAL";
@@ -40,8 +40,9 @@ public class JDBCDiskCacheRemovalUnitTest
      * Test setup
      * @throws Exception
      */
-    @Before
-    public void setUp() throws Exception
+    @BeforeEach
+    void setUp()
+        throws Exception
     {
         System.setProperty( "DATABASE_NAME", databaseName );
         JCS.setConfigFilename( "/TestJDBCDiskCacheRemoval.ccf" );
@@ -58,7 +59,7 @@ public class JDBCDiskCacheRemovalUnitTest
      * @throws Exception
      */
     @Test
-    public void testPartialKeyRemoval_Good()
+    void testPartialKeyRemoval_Good()
         throws Exception
     {
         // SETUP
@@ -75,11 +76,11 @@ public class JDBCDiskCacheRemovalUnitTest
 
         // VERIFY
         final String resultBeforeRemove = jcs.get( keyPart1 + ":" + keyPart2 );
-        assertEquals( "Wrong result", data, resultBeforeRemove );
+        assertEquals( data, resultBeforeRemove, "Wrong result" );
 
         jcs.remove( keyPart1 + ":" );
         final String resultAfterRemove = jcs.get( keyPart1 + ":" + keyPart2 );
-        assertNull( "Should not have a result after removal.", resultAfterRemove );
+        assertNull( resultAfterRemove, "Should not have a result after removal." );
 
 //        System.out.println( jcs.getStats() );
     }

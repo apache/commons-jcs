@@ -18,7 +18,7 @@
  */
 package org.apache.commons.jcs3.jcache.extras.loader;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -27,15 +27,13 @@ import javax.cache.configuration.Configuration;
 import javax.cache.configuration.MutableConfiguration;
 import javax.cache.integration.CacheLoaderException;
 
-import org.apache.commons.jcs3.jcache.extras.InternalCacheRule;
-import org.junit.Rule;
-import org.junit.Test;
+import org.apache.commons.jcs3.jcache.extras.InternalCacheExtension;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
+@ExtendWith(InternalCacheExtension.class)
 public class CompositeCacheLoaderTest
 {
-    @Rule
-    public final InternalCacheRule rule = new InternalCacheRule(this);
-
     private final AtomicInteger count = new AtomicInteger();
 
     private final CacheLoaderAdapter<String, String> loader1 = new CacheLoaderAdapter<>()
@@ -67,7 +65,7 @@ public class CompositeCacheLoaderTest
     private Cache<String, String> cache;
 
     @Test
-    public void testCheckComposite()
+    void testCheckComposite()
     {
         cache.get("foo");
         assertEquals(2, count.get());
