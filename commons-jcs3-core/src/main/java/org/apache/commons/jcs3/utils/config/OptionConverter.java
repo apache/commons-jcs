@@ -235,7 +235,7 @@ public class OptionConverter
      * Perform variable substitution in string <code>val</code> from the values of keys found in the
      * system properties.
      *
-     * The variable substitution delimiters are <b>${ </b> and <b>} </b>.
+     * The variable substitution delimiters are <strong>${ </strong> and <strong>} </strong>.
      *
      * For example, if the System properties contains "key=value", then the call
      *
@@ -260,15 +260,11 @@ public class OptionConverter
      * An {@link IllegalArgumentException}is thrown if <code>val</code> contains a start
      * delimiter "${" which is not balanced by a stop delimiter "}".
      * </p>
-     * <p>
-     * <b>Author </b> Avy Sharell
-     * </p>
      * @param val The string on which variable substitution is performed.
      * @param props
      * @return String
      * @throws IllegalArgumentException if <code>val</code> is malformed.
      */
-
     public static String substVars( final String val, final Properties props )
         throws IllegalArgumentException
     {
