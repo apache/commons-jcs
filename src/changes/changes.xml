@@ -66,7 +66,7 @@
                Bump org.apache.commons:commons-dbcp2 from 2.9.0 to 2.12.0.
             </action>
             <action type="update" dev="ggregory" due-to="Gary Gregory">
-               Bump commons-io from 2.13.0 to 2.17.0 #11, #287.
+               Bump commons-io from 2.13.0 to 2.18.0 #11, #287, #312.
             </action>
             <action type="update" dev="ggregory" due-to="Gary Gregory">
                Bump commons-text from 1.10.0 to 1.11.0.
