@@ -556,7 +556,7 @@
     <commons.collections.version>4.4</commons.collections.version>
     <commons.text.version>1.12.0</commons.text.version>
     <commons.lang.version>3.13.0</commons.lang.version>
-    <commons.log4j.version>2.24.1</commons.log4j.version>
+    <commons.log4j.version>2.24.2</commons.log4j.version>
 
     <test.type>Unit</test.type>
     <doclint>none</doclint>
