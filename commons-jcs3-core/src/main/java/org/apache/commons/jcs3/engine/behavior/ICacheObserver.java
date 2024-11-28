@@ -66,7 +66,6 @@ public interface ICacheObserver extends Remote
     /**
      * Unsubscribes from the specified cache.
      * @param cacheName
-     *
      * @param obj
      *            existing subscriber.
      * @throws IOException

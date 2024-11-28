@@ -74,7 +74,6 @@ public class TestRemoteCacheFactory extends RemoteCacheFactory
      * Host and Port uniquely identify a manager instance.
      * <p>
      * @param cattr
-     *
      * @return The instance value or null if no such manager exists
      */
     @Override
@@ -101,7 +100,6 @@ public class TestRemoteCacheFactory extends RemoteCacheFactory
      * @param cacheMgr the cache manager
      * @param cacheEventLogger the event logger
      * @param elementSerializer the serializer to use for sending and receiving
-     *
      * @return The instance value, never null
      */
     @Override

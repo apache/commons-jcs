@@ -55,7 +55,6 @@ public class BlockDiskElementDescriptor<K>
      *
      * @param key the key
      * @param blocks the data
-     *
      * @since 3.1
      */
     public BlockDiskElementDescriptor(final K key, final int[] blocks)

@@ -72,7 +72,6 @@ public class UDPDiscoveryManager
      * @param updTTL
      * @param cacheMgr
      * @param serializer
-     *
      * @return UDPDiscoveryService
      * @since 3.1
      */

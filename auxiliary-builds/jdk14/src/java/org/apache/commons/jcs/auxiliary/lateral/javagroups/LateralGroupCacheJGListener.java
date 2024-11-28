@@ -48,7 +48,6 @@ public class LateralGroupCacheJGListener
     /**
      * Gets the instance attribute of the LateralGroupCacheJGListener class
      * @param ilca
-     *
      * @return The instance value
      */
     public static ILateralCacheListener getInstance( ILateralCacheAttributes ilca )

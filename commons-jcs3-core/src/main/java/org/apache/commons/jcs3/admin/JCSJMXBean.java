@@ -84,7 +84,6 @@ public interface JCSJMXBean
      *
      * @param cacheName
      * @param key
-     *
      * @throws IOException
      */
     void removeItem(String cacheName, String key) throws IOException;

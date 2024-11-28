@@ -69,7 +69,6 @@ public class JGSocketOpener
      * Constructor for the SocketOpener object
      * @param lca
      * @param groupName
-     *
      * @param host
      * @param port
      */

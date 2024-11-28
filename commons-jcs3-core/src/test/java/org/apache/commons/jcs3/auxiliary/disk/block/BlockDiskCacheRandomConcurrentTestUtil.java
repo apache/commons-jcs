@@ -42,7 +42,6 @@ public class BlockDiskCacheRandomConcurrentTestUtil
      * @param range
      * @param numOps
      * @param testNum
-     *
      * @throws Exception
      *                If an error occurs
      */

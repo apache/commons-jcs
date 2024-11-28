@@ -107,7 +107,6 @@ public abstract class AbstractHttpClient
      * Execute the web service call
      * <p>
      * @param builder builder for the post request
-     *
      * @return the call response
      *
      * @throws IOException on i/o error
@@ -136,7 +135,6 @@ public abstract class AbstractHttpClient
      * <p>
      * @param request http request
      * @param httpState result of execution
-     *
      * @throws IOException
      */
     protected abstract void postProcessWebserviceCall( HttpUriRequest request, HttpResponse httpState )
@@ -146,7 +144,6 @@ public abstract class AbstractHttpClient
      * Called before the execute call on the client.
      * <p>
      * @param requestBuilder http method request builder
-     *
      * @throws IOException
      */
     protected abstract void preProcessWebserviceCall( RequestBuilder requestBuilder )

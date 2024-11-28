@@ -45,7 +45,6 @@ public final class HsqlSetupUtil
      *
      * @param testProperties test database properties
      * @param testDBName name of the test database
-     *
      * @return a connection to the database
      *
      * @throws Exception
@@ -71,7 +70,6 @@ public final class HsqlSetupUtil
      * <p>
      * @param cConn
      * @param tableName
-     *
      * @throws SQLException if database problems occur
      */
     public static void setupTable( final Connection cConn, final String tableName ) throws SQLException

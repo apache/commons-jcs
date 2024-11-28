@@ -226,7 +226,6 @@ public class CompositeCacheConfigurator
      * @param props Configuration properties
      * @param regName the region name
      * @param defaultCCAttr the default cache attributes
-     *
      * @return ICompositeCacheAttributes
      */
     protected ICompositeCacheAttributes parseCompositeCacheAttributes( final Properties props,
@@ -242,7 +241,6 @@ public class CompositeCacheConfigurator
      * @param regName the region name
      * @param defaultCCAttr the default cache attributes
      * @param regionPrefix the region prefix
-     *
      * @return ICompositeCacheAttributes
      */
     protected ICompositeCacheAttributes parseCompositeCacheAttributes( final Properties props,
@@ -283,7 +281,6 @@ public class CompositeCacheConfigurator
      * @param regName the region name
      * @param defaultEAttr the default element attributes
      * @param regionPrefix the region prefix
-     *
      * @return IElementAttributes
      */
     protected IElementAttributes parseElementAttributes( final Properties props, final String regName,
@@ -351,7 +348,6 @@ public class CompositeCacheConfigurator
      * @param ccm Cache hub
      * @param regName Name of the cache region
      * @param auxiliaries Comma separated list of auxiliaries
-     *
      * @return CompositeCache
      */
     protected <K, V> CompositeCache<K, V> parseRegion(
@@ -370,7 +366,6 @@ public class CompositeCacheConfigurator
      * @param regName Name of the cache region
      * @param auxiliaries Comma separated list of auxiliaries
      * @param cca Cache configuration
-     *
      * @return CompositeCache
      */
     protected <K, V> CompositeCache<K, V> parseRegion(
@@ -389,7 +384,6 @@ public class CompositeCacheConfigurator
      * @param auxiliaries Comma separated list of auxiliaries
      * @param cca Cache configuration
      * @param regionPrefix Prefix for the region
-     *
      * @return CompositeCache
      */
     protected <K, V> CompositeCache<K, V> parseRegion(

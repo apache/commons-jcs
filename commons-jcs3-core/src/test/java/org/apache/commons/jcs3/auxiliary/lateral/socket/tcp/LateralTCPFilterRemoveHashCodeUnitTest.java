@@ -64,7 +64,6 @@ public class LateralTCPFilterRemoveHashCodeUnitTest
      *            Name of the region to access
      * @param numOps
      * @param testNum
-     *
      * @throws Exception
      *                If an error occurs
      */

@@ -103,7 +103,6 @@ public class RemoteCacheServer<K, V>
      * <p>
      * @param prop the configuration object.
      * @return The cache hub configured with this configuration.
-     *
      * @throws CacheException if the configuration cannot be loaded
      */
     private static CompositeCacheManager createCacheManager( final Properties prop ) throws CacheException

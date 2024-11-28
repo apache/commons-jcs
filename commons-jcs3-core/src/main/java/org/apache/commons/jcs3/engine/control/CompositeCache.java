@@ -576,7 +576,6 @@ public class CompositeCache<K, V>
      * Gets a set of the keys for all elements in the cache
      * <p>
      * @param localOnly true if only memory keys are requested
-     *
      * @return A set of the key type
      */
     public Set<K> getKeySet(final boolean localOnly)
@@ -996,7 +995,6 @@ public class CompositeCache<K, V>
      * Determine if the element is expired based on the values of the element attributes
      *
      * @param element the element
-     *
      * @return true if the element is expired
      */
     public boolean isExpired(final ICacheElement<K, V> element)
@@ -1013,7 +1011,6 @@ public class CompositeCache<K, V>
      * @param timestamp the timestamp to compare to
      * @param eventMaxlife the event to fire in case the max life time is exceeded
      * @param eventIdle the event to fire in case the idle time is exceeded
-     *
      * @return true if the element is expired
      */
     public boolean isExpired(final ICacheElement<K, V> element, final long timestamp,

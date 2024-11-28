@@ -67,7 +67,6 @@ public class LateralTCPCacheFactory
      * @param attr  ITCPLateralCacheAttributes
      * @param cacheMgr the composite cache manager
      * @param serializer the serializer to use when receiving
-     *
      * @return the listener if created, else null
      */
     private static <K, V> ILateralCacheListener<K, V> createListener( final ITCPLateralCacheAttributes attr,
@@ -321,7 +320,6 @@ public class LateralTCPCacheFactory
      * @param <V> cache value type
      * @param lca configuration for the creation of a new service instance
      * @param elementSerializer the serializer to use when sending or receiving
-     *
      * @return ICacheServiceNonLocal&lt;K, V&gt;
      * @since 3.1
      */
@@ -380,7 +378,6 @@ public class LateralTCPCacheFactory
      * @param cacheManager a reference to the global cache manager
      * @param cacheEventLogger Reference to the cache event logger for auxiliary cache creation
      * @param elementSerializer Reference to the cache element serializer for auxiliary cache
-     *
      * @return The instance value
      */
     private LateralTCPDiscoveryListener getDiscoveryListener(final ITCPLateralCacheAttributes ilca,

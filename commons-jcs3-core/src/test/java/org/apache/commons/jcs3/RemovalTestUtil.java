@@ -89,7 +89,6 @@ public class RemovalTestUtil
      *
      * @param start
      * @param end
-     *
      * @throws Exception
      *                Description of the Exception
      */

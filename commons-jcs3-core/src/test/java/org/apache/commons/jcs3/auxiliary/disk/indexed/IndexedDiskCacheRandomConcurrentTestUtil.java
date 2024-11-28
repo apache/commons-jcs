@@ -40,7 +40,6 @@ public class IndexedDiskCacheRandomConcurrentTestUtil
      * @param range
      * @param numOps
      * @param testNum
-     *
      * @throws Exception
      *                If an error occurs
      */

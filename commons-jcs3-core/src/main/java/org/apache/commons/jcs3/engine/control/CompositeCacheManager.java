@@ -484,7 +484,6 @@ public class CompositeCacheManager
      *
      * @param auxName the auxiliary name
      * @param cacheName the region name
-     *
      * @return the cache instance
      */
     @Override

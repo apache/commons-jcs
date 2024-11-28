@@ -111,7 +111,6 @@ public class RemoteHttpCacheDispatcher
      * <p>
      * @param request http request
      * @param httpState result of execution
-     *
      * @throws IOException
      */
     @Override
@@ -125,7 +124,6 @@ public class RemoteHttpCacheDispatcher
      * Called before the execute call on the client.
      * <p>
      * @param requestBuilder http method request builder
-     *
      * @throws IOException
      */
     @Override
@@ -141,7 +139,6 @@ public class RemoteHttpCacheDispatcher
      * @param requestAsByteArray request body
      * @param remoteCacheRequest the cache request
      * @param url target url
-     *
      * @return byte[] - the response
      *
      * @throws IOException
