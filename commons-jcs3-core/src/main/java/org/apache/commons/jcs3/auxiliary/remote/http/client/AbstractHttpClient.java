@@ -108,7 +108,6 @@ public abstract class AbstractHttpClient
      * <p>
      * @param builder builder for the post request
      * @return the call response
-     *
      * @throws IOException on i/o error
      */
     protected final HttpResponse doWebserviceCall( final RequestBuilder builder )

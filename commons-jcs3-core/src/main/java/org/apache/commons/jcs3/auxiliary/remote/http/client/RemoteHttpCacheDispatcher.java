@@ -140,7 +140,6 @@ public class RemoteHttpCacheDispatcher
      * @param remoteCacheRequest the cache request
      * @param url target url
      * @return byte[] - the response
-     *
      * @throws IOException
      * @throws HttpException
      */

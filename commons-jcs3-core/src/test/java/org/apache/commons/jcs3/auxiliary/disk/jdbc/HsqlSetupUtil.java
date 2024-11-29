@@ -46,7 +46,6 @@ public final class HsqlSetupUtil
      * @param testProperties test database properties
      * @param testDBName name of the test database
      * @return a connection to the database
-     *
      * @throws Exception
      */
     public static Connection getTestDatabaseConnection(final Properties testProperties, final String testDBName)
