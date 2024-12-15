@@ -21,6 +21,7 @@ package org.apache.commons.jcs3.engine.memory.lru;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.apache.commons.jcs3.engine.behavior.ICacheElement;
