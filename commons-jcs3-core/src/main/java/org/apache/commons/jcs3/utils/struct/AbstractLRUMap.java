@@ -92,7 +92,7 @@ public abstract class AbstractLRUMap<K, V>
     /**
      * This removes all the items. It clears the map and the double linked list.
      * <p>
-     * @see java.util.Map#clear()
+     * @see Map#clear()
      */
     @Override
     public void clear()
@@ -112,7 +112,7 @@ public abstract class AbstractLRUMap<K, V>
     /**
      * Returns true if the map contains an element for the supplied key.
      * <p>
-     * @see java.util.Map#containsKey(Object)
+     * @see Map#containsKey(Object)
      */
     @Override
     public boolean containsKey( final Object key )
@@ -123,7 +123,7 @@ public abstract class AbstractLRUMap<K, V>
     /**
      * This is an expensive operation that determines if the object supplied is mapped to any key.
      * <p>
-     * @see java.util.Map#containsValue(Object)
+     * @see Map#containsValue(Object)
      */
     @Override
     public boolean containsValue( final Object value )
@@ -167,7 +167,7 @@ public abstract class AbstractLRUMap<K, V>
      * TODO we should return out own set wrapper, so we can avoid the extra object creation if it
      * isn't necessary.
      * <p>
-     * @see java.util.Map#entrySet()
+     * @see Map#entrySet()
      */
     @Override
     public Set<Map.Entry<K, V>> entrySet()
@@ -278,7 +278,7 @@ public abstract class AbstractLRUMap<K, V>
     /**
      * Returns true if the map is empty.
      * <p>
-     * @see java.util.Map#isEmpty()
+     * @see Map#isEmpty()
      */
     @Override
     public boolean isEmpty()
@@ -435,7 +435,7 @@ public abstract class AbstractLRUMap<K, V>
     /**
      * This simply returns the number of elements in the map.
      * <p>
-     * @see java.util.Map#size()
+     * @see Map#size()
      */
     @Override
     public int size()
