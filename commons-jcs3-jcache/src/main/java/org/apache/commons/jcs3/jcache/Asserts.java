@@ -1,5 +1,7 @@
 package org.apache.commons.jcs3.jcache;
 
+import java.util.Objects;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -23,10 +25,7 @@ public class Asserts
 {
     public static void assertNotNull(final Object value, final String name)
     {
-        if (value == null)
-        {
-            throw new NullPointerException(name + " is null");
-        }
+        Objects.requireNonNull(name, () -> name + " is null");
     }
 
     private Asserts()
