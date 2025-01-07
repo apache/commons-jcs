@@ -77,6 +77,7 @@
             <action type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">Bump org.apache.commons:commons-lang3 from 3.14.0 to 3.17.0 #265, #271, #281.</action>
             <action type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">Update from JUnit 4 to JUnit 5 Vintage.</action>
             <action type="update" dev="ggregory" due-to="Gary Gregory">Bump org.apache.commons:commons-collections4 from 4.4 to 4.5.0-M3.</action>
+            <action type="update" dev="ggregory" due-to="Gary Gregory">Bump commons-beanutils:commons-beanutils from 1.9.4 to 1.10.0.</action> 
         </release>
         <release version="3.2.1" date="2024-05-27" description="JDK bug fix release">
             <action dev="tv" type="fix">
