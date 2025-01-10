@@ -13,9 +13,9 @@
 		the specific language governing permissions and limitations under the
 		License.
 	-->
-<document xmlns="http://maven.apache.org/changes/1.0.0"
+<document xmlns="http://maven.apache.org/changes/2.0.0"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-          xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
+          xsi:schemaLocation="http://maven.apache.org/changes/2.0.0 https://maven.apache.org/xsd/changes-2.0.0.xsd">
 	<properties>
 		<title>JCS Change Log</title>
 		<author email="dev@commons.apache.org">Apache Commons Developers</author>
@@ -36,7 +36,7 @@
             </action>
             <!-- UPDATE -->
             <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">
-               Bump org.apache.commons:commons-parent from 59 to 78 #222, #258, #277, #280, #286, #292, #296, #302.
+               Bump org.apache.commons:commons-parent from 59 to 79 #222, #258, #277, #280, #286, #292, #296, #302.
             </action>
             <action dev="tv" type="update">
                Replace system properties to limit class deserialization 
@@ -80,16 +80,10 @@
             <action type="update" dev="ggregory" due-to="Gary Gregory">Bump commons-beanutils:commons-beanutils from 1.9.4 to 1.10.0.</action> 
         </release>
         <release version="3.2.1" date="2024-05-27" description="JDK bug fix release">
-            <action dev="tv" type="fix">
+            <action dev="tv" type="fix" fixed-issues="JCS-237, JCS-238, JCS-239, JCS-240" due-to="Murali Thirugnanam, Greg Parmiter">
                Fix java.rmi.RemoteException: Method is not Remote in IRemoteCacheListener.
                This is caused by a fix for JDK issue JDK-8230967 in various JDKs such as 8u241, 
                11.0.6 and probably others.
-               <fixes issue="JCS-237" />
-               <fixes issue="JCS-238" />
-               <fixes issue="JCS-239" />
-               <fixes issue="JCS-240" />
-               <dueto name="Murali Thirugnanam" />
-               <dueto name="Greg Parmiter" />
             </action>
             <action dev="tv" type="update">
                Update dependency openjpa to 3.2.2 to get rid of private transient dependencies
