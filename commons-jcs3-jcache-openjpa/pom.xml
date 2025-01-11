@@ -82,6 +82,7 @@
 
   <properties>
     <commons.module.name>org.apache.commons.jcs3.jcache.openjpa</commons.module.name>
+    <!-- project.build.outputTimestamp is managed by Maven plugins, see https://maven.apache.org/guides/mini/guide-reproducible-builds.html -->
     <project.build.outputTimestamp>2022-01-01T00:00:00Z</project.build.outputTimestamp>
   </properties>
 </project>
