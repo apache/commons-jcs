@@ -18,9 +18,8 @@
  */
 package org.apache.commons.jcs3.jcache.openjpa;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -99,8 +98,8 @@ class OpenJPAJCacheDataCacheTest
         em.getTransaction().commit();
         assertNotNull(conf.getDataCacheManagerInstance().getDataCache("default"));
 
-        assertThat(conf.getDataCacheManagerInstance(), instanceOf(OpenJPAJCacheDataCacheManager.class));
-        assertThat(conf.getDataCacheManagerInstance().getDataCache("default"), instanceOf(OpenJPAJCacheDataCache.class));
+        assertInstanceOf(OpenJPAJCacheDataCacheManager.class, conf.getDataCacheManagerInstance());
+        assertInstanceOf(OpenJPAJCacheDataCache.class, conf.getDataCacheManagerInstance().getDataCache("default"));
         assertTrue(conf.getDataCacheManagerInstance().getDataCache("default").contains(JPAFacadeHelper.toOpenJPAObjectId(conf.getMetaDataRepositoryInstance().getCachedMetaData(MyEntity.class), entity.getId())));
 
         em.close();
@@ -124,8 +123,8 @@ class OpenJPAJCacheDataCacheTest
         assertEquals(1, query.setParameter("id", entity.getId()).getResultList().size());
         assertNotNull(conf.getDataCacheManagerInstance().getDataCache("default"));
 
-        assertThat(conf.getDataCacheManagerInstance(), instanceOf(OpenJPAJCacheDataCacheManager.class));
-        assertThat(conf.getDataCacheManagerInstance().getDataCache("default"), instanceOf(OpenJPAJCacheDataCache.class));
+        assertInstanceOf(OpenJPAJCacheDataCacheManager.class, conf.getDataCacheManagerInstance());
+        assertInstanceOf(OpenJPAJCacheDataCache.class, conf.getDataCacheManagerInstance().getDataCache("default"));
         assertTrue(conf.getDataCacheManagerInstance().getDataCache("default").contains(JPAFacadeHelper.toOpenJPAObjectId(conf.getMetaDataRepositoryInstance().getCachedMetaData(MyEntity.class), entity.getId())));
 
         final Map<Object, Object> args = Map.of("id", entity.getId());

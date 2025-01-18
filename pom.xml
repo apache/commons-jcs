@@ -334,12 +334,6 @@
 
       <!--  Test dependencies -->
       <dependency>
-        <groupId>org.hamcrest</groupId>
-        <artifactId>hamcrest</artifactId>
-        <version>${hamcrest.version}</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
         <groupId>org.junit.jupiter</groupId>
         <artifactId>junit-jupiter</artifactId>
         <version>${commons.junit.version}</version>
@@ -560,7 +554,6 @@
 
     <test.type>Unit</test.type>
     <doclint>none</doclint>
-    <hamcrest.version>3.0</hamcrest.version>
     <!-- project.build.outputTimestamp is managed by Maven plugins, see https://maven.apache.org/guides/mini/guide-reproducible-builds.html -->
     <project.build.outputTimestamp>2022-01-01T00:00:00Z</project.build.outputTimestamp>
   </properties>

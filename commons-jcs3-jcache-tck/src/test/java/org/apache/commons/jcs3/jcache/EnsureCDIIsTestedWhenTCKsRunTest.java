@@ -18,8 +18,7 @@
  */
 package org.apache.commons.jcs3.jcache;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Iterator;
@@ -39,7 +38,7 @@ class EnsureCDIIsTestedWhenTCKsRunTest
         try {
             final Iterator<BeanProvider> iterator = ServiceLoader.load(BeanProvider.class).iterator();
             assertTrue(iterator.hasNext());
-            assertThat(iterator.next(), instanceOf(OWBBeanProvider.class));
+            assertInstanceOf(OWBBeanProvider.class, iterator.next());
         } catch (final java.lang.UnsupportedClassVersionError e) {
             System.err.println("Ignoring checkOWBProvider test failure on " + System.getProperty("java.version"));
         }
