@@ -49,13 +49,13 @@ public class CacheElementSerialized<K, V>
 
     /**
      * Constructs a usable wrapper.
-     * <p>
-     * @param cacheNameArg
-     * @param keyArg
-     * @param serializedValueArg
-     * @param elementAttributesArg
+     *
+     * @param cacheName         The name of the cache region. This is a namespace.
+     * @param key               This is the cache key by which the value can be referenced.
+     * @param serializedValue   The serialized value.
+     * @param elementAttributes These attributes hold information about the element and what it is allowed to do.
      */
-    public CacheElementSerialized( final String cacheName, final K key, final byte[] serializedValue,
+    public CacheElementSerialized(final String cacheName, final K key, final byte[] serializedValue,
                                    final IElementAttributes elementAttributes)
     {
         this.cacheName = cacheName;
