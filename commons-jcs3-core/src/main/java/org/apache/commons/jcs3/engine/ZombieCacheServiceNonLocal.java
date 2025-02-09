@@ -109,7 +109,7 @@ public class ZombieCacheServiceNonLocal<K, V>
     /**
      * Base of the other events.
      */
-    protected static abstract class ZombieEvent
+    protected abstract static class ZombieEvent
     {
         /** The name of the region. */
         String cacheName;

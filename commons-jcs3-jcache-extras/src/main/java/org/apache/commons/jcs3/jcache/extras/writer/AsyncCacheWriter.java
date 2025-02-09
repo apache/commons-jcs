@@ -57,7 +57,7 @@ public class AsyncCacheWriter<K, V> implements CacheWriter<K, V>, Closeable, Fac
         }
     }
 
-    private static abstract class ExceptionProtectionRunnable implements Runnable
+    private abstract static class ExceptionProtectionRunnable implements Runnable
     {
         protected abstract void doRun();
 
