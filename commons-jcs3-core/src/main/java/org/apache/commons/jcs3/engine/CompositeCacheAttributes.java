@@ -137,7 +137,7 @@ public class CompositeCacheAttributes
     }
 
     /**
-     * @return Returns the diskUsagePattern.
+     * @return the diskUsagePattern.
      */
     @Override
     public DiskUsagePattern getDiskUsagePattern()

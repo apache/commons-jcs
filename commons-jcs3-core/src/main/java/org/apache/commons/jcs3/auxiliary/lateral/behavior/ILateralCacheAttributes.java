@@ -118,7 +118,7 @@ public interface ILateralCacheAttributes
      * The number of elements the zombie queue will hold. This queue is used to store events if we
      * loose our connection with the server.
      * <p>
-     * @return Returns the zombieQueueMaxSize.
+     * @return the zombieQueueMaxSize.
      */
     int getZombieQueueMaxSize();
 

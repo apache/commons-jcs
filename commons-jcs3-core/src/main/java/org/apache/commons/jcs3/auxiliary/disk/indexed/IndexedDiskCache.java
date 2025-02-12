@@ -722,7 +722,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
     }
 
     /**
-     * @return Returns the AuxiliaryCacheAttributes.
+     * @return the AuxiliaryCacheAttributes.
      */
     @Override
     public AuxiliaryCacheAttributes getAuxiliaryCacheAttributes()
@@ -888,7 +888,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
      * This is exposed for testing.
      * <p>
      *
-     * @return Returns the timesOptimized.
+     * @return the timesOptimized.
      */
     protected int getTimesOptimized()
     {

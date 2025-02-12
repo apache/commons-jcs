@@ -138,7 +138,7 @@ public class LateralCacheAttributes
      * The number of elements the zombie queue will hold. This queue is used to store events if we
      * loose our connection with the server.
      * <p>
-     * @return Returns the zombieQueueMaxSize.
+     * @return the zombieQueueMaxSize.
      */
     @Override
     public int getZombieQueueMaxSize()
@@ -147,7 +147,7 @@ public class LateralCacheAttributes
     }
 
     /**
-     * @return Returns the receive.
+     * @return the receive.
      */
     @Override
     public boolean isReceive()

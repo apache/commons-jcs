@@ -88,7 +88,7 @@ public final class UDPDiscoveryAttributes
     }
 
     /**
-     * @return Returns the maxIdleTimeSec.
+     * @return the maxIdleTimeSec.
      */
     public int getMaxIdleTimeSec()
     {
@@ -96,7 +96,7 @@ public final class UDPDiscoveryAttributes
     }
 
     /**
-     * @return Returns the sendDelaySec.
+     * @return the sendDelaySec.
      */
     public int getSendDelaySec()
     {
@@ -104,7 +104,7 @@ public final class UDPDiscoveryAttributes
     }
 
     /**
-     * @return Returns the serviceAddress.
+     * @return the serviceAddress.
      */
     public String getServiceAddress()
     {
@@ -112,7 +112,7 @@ public final class UDPDiscoveryAttributes
     }
 
     /**
-     * @return Returns the serviceName.
+     * @return the serviceName.
      */
     public String getServiceName()
     {
@@ -120,7 +120,7 @@ public final class UDPDiscoveryAttributes
     }
 
     /**
-     * @return Returns the servicePort.
+     * @return the servicePort.
      */
     public int getServicePort()
     {
@@ -128,7 +128,7 @@ public final class UDPDiscoveryAttributes
     }
 
     /**
-     * @return Returns the udpDiscoveryAddr.
+     * @return the udpDiscoveryAddr.
      */
     public String getUdpDiscoveryAddr()
     {
@@ -136,7 +136,7 @@ public final class UDPDiscoveryAttributes
     }
 
     /**
-     * @return Returns the udpDiscoveryInterface.
+     * @return the udpDiscoveryInterface.
      */
     public String getUdpDiscoveryInterface()
     {
@@ -144,7 +144,7 @@ public final class UDPDiscoveryAttributes
     }
 
     /**
-     * @return Returns the udpDiscoveryPort.
+     * @return the udpDiscoveryPort.
      */
     public int getUdpDiscoveryPort()
     {
@@ -152,7 +152,7 @@ public final class UDPDiscoveryAttributes
     }
 
     /**
-     * @return Returns the udpTTL.
+     * @return the udpTTL.
      */
     public int getUdpTTL()
     {
@@ -160,7 +160,7 @@ public final class UDPDiscoveryAttributes
     }
 
     /**
-     * @return Returns the isDark.
+     * @return the isDark.
      */
     public boolean isDark()
     {

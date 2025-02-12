@@ -167,7 +167,7 @@ public class TCPLateralCacheAttributes
     /**
      * The address to broadcast to if UDPDiscovery is enabled.
      * <p>
-     * @return Returns the udpDiscoveryAddr.
+     * @return the udpDiscoveryAddr.
      */
     @Override
     public String getUdpDiscoveryAddr()
@@ -178,7 +178,7 @@ public class TCPLateralCacheAttributes
     /**
      * The port to use if UDPDiscovery is enabled.
      * <p>
-     * @return Returns the udpDiscoveryPort.
+     * @return the udpDiscoveryPort.
      */
     @Override
     public int getUdpDiscoveryPort()
@@ -189,7 +189,7 @@ public class TCPLateralCacheAttributes
     /**
      * The time-to-live for the UDP multicast packets
      * <p>
-     * @return Returns the udpTTL.
+     * @return the udpTTL.
      * @since 3.1
      */
     @Override
@@ -251,7 +251,7 @@ public class TCPLateralCacheAttributes
     /**
      * Whether or not TCP laterals can try to find each other by multicast communication.
      * <p>
-     * @return Returns the udpDiscoveryEnabled.
+     * @return the udpDiscoveryEnabled.
      */
     @Override
     public boolean isUdpDiscoveryEnabled()

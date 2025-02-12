@@ -821,7 +821,7 @@ public class PartitionedCacheAccess<K, V>
     }
 
     /**
-     * @return Returns the numberOfPartitions.
+     * @return the numberOfPartitions.
      */
     protected int getNumberOfPartitions()
     {
@@ -837,7 +837,7 @@ public class PartitionedCacheAccess<K, V>
     }
 
     /**
-     * @return Returns the partitionRegionNamePrefix.
+     * @return the partitionRegionNamePrefix.
      */
     protected String getPartitionRegionNamePrefix()
     {
@@ -853,7 +853,7 @@ public class PartitionedCacheAccess<K, V>
     }
 
     /**
-     * @return Returns the partitions.
+     * @return the partitions.
      */
     protected ICacheAccess<K, V>[] getPartitions()
     {

@@ -766,7 +766,7 @@ public class ARCMemoryCache
     /**
      * At the start this will be 1/2 the max.
      * <p>
-     * @return Returns the target_T1.
+     * @return the target_T1.
      */
     protected int getTarget_T1()
     {

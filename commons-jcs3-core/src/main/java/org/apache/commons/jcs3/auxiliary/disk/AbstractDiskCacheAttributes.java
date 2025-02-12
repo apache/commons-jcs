@@ -102,7 +102,7 @@ public abstract class AbstractDiskCacheAttributes extends AbstractAuxiliaryCache
     }
 
     /**
-     * @return Returns the allowRemoveAll.
+     * @return the allowRemoveAll.
      */
     @Override
     public boolean isAllowRemoveAll()

@@ -266,7 +266,7 @@ public class JDBCDiskCache<K, V>
     }
 
     /**
-     * @return Returns the AuxiliaryCacheAttributes.
+     * @return the AuxiliaryCacheAttributes.
      */
     @Override
     public AuxiliaryCacheAttributes getAuxiliaryCacheAttributes()
@@ -296,7 +296,7 @@ public class JDBCDiskCache<K, V>
     }
 
     /**
-     * @return Returns the jdbcDiskCacheAttributes.
+     * @return the jdbcDiskCacheAttributes.
      */
     protected JDBCDiskCacheAttributes getJdbcDiskCacheAttributes()
     {
@@ -394,7 +394,7 @@ public class JDBCDiskCache<K, V>
     }
 
     /**
-     * @return Returns the tableState.
+     * @return the tableState.
      */
     public TableState getTableState()
     {

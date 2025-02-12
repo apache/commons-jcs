@@ -110,7 +110,7 @@ public class ShrinkerThread
      * How long should we wait between calls to deleteExpired when we are iterating through the list
      * of regions.
      * <p>
-     * @return Returns the pauseBetweenRegionCallsMillis.
+     * @return the pauseBetweenRegionCallsMillis.
      */
     public long getPauseBetweenRegionCallsMillis()
     {

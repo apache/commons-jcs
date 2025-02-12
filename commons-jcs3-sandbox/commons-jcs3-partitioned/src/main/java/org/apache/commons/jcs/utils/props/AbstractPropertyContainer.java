@@ -125,7 +125,7 @@ public abstract class AbstractPropertyContainer
         throws ConfigurationException;
 
     /**
-     * @return Returns the properties.
+     * @return the properties.
      */
     public synchronized Properties getProperties()
     {
@@ -141,7 +141,7 @@ public abstract class AbstractPropertyContainer
     }
 
     /**
-     * @return Returns the propertiesHeading.
+     * @return the propertiesHeading.
      */
     public synchronized String getPropertiesHeading()
     {
@@ -157,7 +157,7 @@ public abstract class AbstractPropertyContainer
     }
 
     /**
-     * @return Returns the propertiesFactory.
+     * @return the propertiesFactory.
      */
     public PropertiesFactory getPropertiesFactory()
     {
@@ -173,7 +173,7 @@ public abstract class AbstractPropertyContainer
     }
 
     /**
-     * @return Returns the propertiesGroup.
+     * @return the propertiesGroup.
      */
     public String getPropertiesGroup()
     {

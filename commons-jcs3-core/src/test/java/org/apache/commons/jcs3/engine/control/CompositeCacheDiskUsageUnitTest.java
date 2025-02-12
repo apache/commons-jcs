@@ -88,7 +88,7 @@ class CompositeCacheDiskUsageUnitTest
         }
 
         /**
-         * @return Returns the AuxiliaryCacheAttributes.
+         * @return the AuxiliaryCacheAttributes.
          */
         @Override
         public AuxiliaryCacheAttributes getAuxiliaryCacheAttributes()

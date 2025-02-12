@@ -87,7 +87,7 @@ public class IndexedDiskCacheAttributes
     }
 
     /**
-     * @return Returns the optimizeOnShutdown.
+     * @return the optimizeOnShutdown.
      */
     public boolean isOptimizeOnShutdown()
     {

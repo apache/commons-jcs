@@ -52,7 +52,7 @@ public interface ICompositeCacheAttributes
     String getCacheName();
 
     /**
-     * @return Returns the diskUsagePattern.
+     * @return the diskUsagePattern.
      */
     DiskUsagePattern getDiskUsagePattern();
 

@@ -54,7 +54,7 @@ public class MySQLDiskCacheAttributes
     private boolean balkDuringOptimization = DEFAULT_BALK_DURING_OPTIMIZATION;
 
     /**
-     * @return Returns the optimizationSchedule.
+     * @return the optimizationSchedule.
      */
     public String getOptimizationSchedule()
     {
@@ -64,7 +64,7 @@ public class MySQLDiskCacheAttributes
     /**
      * Should we return null while optimizing the table.
      * <p>
-     * @return Returns the balkDuringOptimization.
+     * @return the balkDuringOptimization.
      */
     public boolean isBalkDuringOptimization()
     {

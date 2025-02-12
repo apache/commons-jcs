@@ -292,7 +292,7 @@ public class UDPDiscoveryService
     }
 
     /**
-     * @return Returns the discoveredServices.
+     * @return the discoveredServices.
      */
     public Set<DiscoveredService> getDiscoveredServices()
     {
@@ -319,7 +319,7 @@ public class UDPDiscoveryService
     }
 
     /**
-     * @return Returns the lca.
+     * @return the lca.
      */
     public UDPDiscoveryAttributes getUdpDiscoveryAttributes()
     {

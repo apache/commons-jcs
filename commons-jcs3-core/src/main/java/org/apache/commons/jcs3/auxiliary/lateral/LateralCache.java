@@ -107,7 +107,7 @@ public class LateralCache<K, V>
     }
 
     /**
-     * @return Returns the AuxiliaryCacheAttributes.
+     * @return the AuxiliaryCacheAttributes.
      */
     @Override
     public ILateralCacheAttributes getAuxiliaryCacheAttributes()

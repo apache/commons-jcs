@@ -76,7 +76,7 @@ class SimpleEventHandlingUnitTest
         }
 
         /**
-         * @return Returns the spoolCount.
+         * @return the spoolCount.
          */
         protected int getSpoolCount()
         {
@@ -84,7 +84,7 @@ class SimpleEventHandlingUnitTest
         }
 
         /**
-         * @return Returns the spoolNoDiskCount.
+         * @return the spoolNoDiskCount.
          */
         protected int getSpoolNoDiskCount()
         {
@@ -92,7 +92,7 @@ class SimpleEventHandlingUnitTest
         }
 
         /**
-         * @return Returns the spoolNotAllowedCount.
+         * @return the spoolNotAllowedCount.
          */
         protected int getSpoolNotAllowedCount()
         {

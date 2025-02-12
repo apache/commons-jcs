@@ -62,7 +62,7 @@ public class TableState
     }
 
     /**
-     * @return Returns the state.
+     * @return the state.
      */
     public int getState()
     {
@@ -70,7 +70,7 @@ public class TableState
     }
 
     /**
-     * @return Returns the tableName.
+     * @return the tableName.
      */
     public String getTableName()
     {

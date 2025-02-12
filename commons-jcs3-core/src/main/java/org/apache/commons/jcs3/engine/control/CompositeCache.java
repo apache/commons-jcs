@@ -949,7 +949,7 @@ public class CompositeCache<K, V>
     }
 
     /**
-     * @return Returns the updateCount.
+     * @return the updateCount.
      */
     public long getUpdateCount()
     {

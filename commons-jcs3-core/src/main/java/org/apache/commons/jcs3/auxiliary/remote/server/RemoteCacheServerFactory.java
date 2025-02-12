@@ -130,7 +130,7 @@ public class RemoteCacheServerFactory
      * <p>
      * A remote cache is either a local cache or a cluster cache.
      * </p>
-     * @return Returns the remoteCacheServer.
+     * @return the remoteCacheServer.
      */
     @SuppressWarnings("unchecked") // Need cast to specific RemoteCacheServer
     public static <K, V> RemoteCacheServer<K, V> getRemoteCacheServer()

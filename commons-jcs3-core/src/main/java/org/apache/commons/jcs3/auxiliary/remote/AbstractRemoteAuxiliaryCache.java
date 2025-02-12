@@ -158,7 +158,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
     }
 
     /**
-     * @return Returns the AuxiliaryCacheAttributes.
+     * @return the AuxiliaryCacheAttributes.
      */
     @Override
     public AuxiliaryCacheAttributes getAuxiliaryCacheAttributes()

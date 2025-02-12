@@ -53,7 +53,7 @@ public class MockCompositeCacheManager
     }
 
     /**
-     * @return Returns the cache.
+     * @return the cache.
      */
     public CompositeCache<?, ?> getCache()
     {
@@ -62,7 +62,7 @@ public class MockCompositeCacheManager
 
     /**
      * @param cacheName
-     * @return Returns a CompositeCache
+     * @return a CompositeCache
      */
     @Override
     @SuppressWarnings("unchecked")

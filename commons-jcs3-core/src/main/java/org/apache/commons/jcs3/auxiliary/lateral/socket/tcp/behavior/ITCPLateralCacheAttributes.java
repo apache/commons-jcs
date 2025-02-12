@@ -70,21 +70,21 @@ public interface ITCPLateralCacheAttributes
     /**
      * The address to broadcast to if UDPDiscovery is enabled.
      * <p>
-     * @return Returns the udpDiscoveryAddr.
+     * @return the udpDiscoveryAddr.
      */
     String getUdpDiscoveryAddr();
 
     /**
      * The port to use if UDPDiscovery is enabled.
      * <p>
-     * @return Returns the udpDiscoveryPort.
+     * @return the udpDiscoveryPort.
      */
     int getUdpDiscoveryPort();
 
     /**
      * The time-to-live for the UDP multicast packets
      * <p>
-     * @return Returns the udpTTL.
+     * @return the udpTTL.
      * @since 3.1
      */
     int getUdpTTL();
@@ -128,7 +128,7 @@ public interface ITCPLateralCacheAttributes
      * Whether or not TCP laterals can try to find each other by multicast
      * communication.
      * <p>
-     * @return Returns the udpDiscoveryEnabled.
+     * @return the udpDiscoveryEnabled.
      */
     boolean isUdpDiscoveryEnabled();
 

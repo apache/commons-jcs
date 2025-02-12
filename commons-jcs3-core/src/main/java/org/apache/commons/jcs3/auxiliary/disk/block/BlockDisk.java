@@ -221,7 +221,7 @@ public class BlockDisk implements AutoCloseable
     }
 
     /**
-     * @return Returns the average size of the an element inserted.
+     * @return the average size of the an element inserted.
      */
     protected long getAveragePutSizeBytes()
     {
@@ -272,7 +272,7 @@ public class BlockDisk implements AutoCloseable
     }
 
     /**
-     * @return Returns the blockSizeBytes.
+     * @return the blockSizeBytes.
      */
     protected int getBlockSizeBytes()
     {
@@ -280,7 +280,7 @@ public class BlockDisk implements AutoCloseable
     }
 
     /**
-     * @return Returns the number of empty blocks.
+     * @return the number of empty blocks.
      */
     protected int getEmptyBlocks()
     {
@@ -298,7 +298,7 @@ public class BlockDisk implements AutoCloseable
     }
 
     /**
-     * @return Returns the numberOfBlocks.
+     * @return the numberOfBlocks.
      */
     protected int getNumberOfBlocks()
     {

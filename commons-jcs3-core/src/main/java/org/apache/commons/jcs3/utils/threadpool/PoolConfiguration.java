@@ -132,7 +132,7 @@ public final class PoolConfiguration
     }
 
     /**
-     * @return Returns the boundarySize.
+     * @return the boundarySize.
      */
     public int getBoundarySize()
     {
@@ -140,7 +140,7 @@ public final class PoolConfiguration
     }
 
     /**
-     * @return Returns the keepAliveTime.
+     * @return the keepAliveTime.
      */
     public int getKeepAliveTime()
     {
@@ -148,7 +148,7 @@ public final class PoolConfiguration
     }
 
     /**
-     * @return Returns the maximumPoolSize.
+     * @return the maximumPoolSize.
      */
     public int getMaximumPoolSize()
     {
@@ -156,7 +156,7 @@ public final class PoolConfiguration
     }
 
     /**
-     * @return Returns the minimumPoolSize.
+     * @return the minimumPoolSize.
      */
     public int getMinimumPoolSize()
     {
@@ -164,7 +164,7 @@ public final class PoolConfiguration
     }
 
     /**
-     * @return Returns the startUpSize.
+     * @return the startUpSize.
      */
     public int getStartUpSize()
     {
@@ -172,7 +172,7 @@ public final class PoolConfiguration
     }
 
     /**
-     * @return Returns the whenBlockedPolicy.
+     * @return the whenBlockedPolicy.
      */
     public WhenBlockedPolicy getWhenBlockedPolicy()
     {
@@ -180,7 +180,7 @@ public final class PoolConfiguration
     }
 
     /**
-     * @return Returns the useBoundary.
+     * @return the useBoundary.
      */
     public boolean isUseBoundary()
     {

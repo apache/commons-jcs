@@ -167,7 +167,7 @@ public class LateralTCPService<K, V>
     }
 
     /**
-     * @return Returns the listernId.
+     * @return the listernId.
      */
     protected long getListenerId()
     {

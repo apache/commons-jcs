@@ -69,7 +69,7 @@ public class MySQLTableOptimizer
     }
 
     /**
-     * @return Returns the tableName.
+     * @return the tableName.
      */
     public String getTableName()
     {

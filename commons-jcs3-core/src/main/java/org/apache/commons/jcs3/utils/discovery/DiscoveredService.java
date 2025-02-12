@@ -105,7 +105,7 @@ public class DiscoveredService
     }
 
     /**
-     * @return Returns the lastHearFromTime.
+     * @return the lastHearFromTime.
      */
     public long getLastHearFromTime()
     {
@@ -113,7 +113,7 @@ public class DiscoveredService
     }
 
     /**
-     * @return Returns the serviceAddress.
+     * @return the serviceAddress.
      */
     public String getServiceAddress()
     {
@@ -121,7 +121,7 @@ public class DiscoveredService
     }
 
     /**
-     * @return Returns the servicePort.
+     * @return the servicePort.
      */
     public int getServicePort()
     {
