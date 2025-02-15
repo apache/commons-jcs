@@ -140,7 +140,7 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K, V>
     }
 
     /**
-     * This typically returns end point info .
+     * This typically returns end point info.
      * <p>
      * @return the name
      */

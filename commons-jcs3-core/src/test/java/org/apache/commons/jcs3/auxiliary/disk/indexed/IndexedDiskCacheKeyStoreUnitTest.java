@@ -38,7 +38,7 @@ class IndexedDiskCacheKeyStoreUnitTest
     /**
      * Add some elements, remove 1, call optimize, verify that the removed isn't present.
      *
-     * We should also compare the data file sizes. . . .
+     * We should also compare the data file sizes.
      *
      * @throws Exception
      */

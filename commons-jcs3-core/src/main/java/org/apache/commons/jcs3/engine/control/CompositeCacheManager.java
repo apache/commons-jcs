@@ -512,7 +512,7 @@ public class CompositeCacheManager
      * <p>
      * Overriding the default elemental attributes will require changing the way the attributes are
      * assigned to elements. Get cache creates a cache with defaults if none are specified. We might
-     * want to create separate method for creating/getting. . .
+     * want to create separate method for creating/getting.
      * </p>
      * @param cattr
      * @param attr
