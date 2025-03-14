@@ -44,7 +44,7 @@ public class BlockDisk implements AutoCloseable
 
     /** The size of the header that indicates the amount of data stored in an occupied block. */
     public static final byte HEADER_SIZE_BYTES = 4;
-    // N.B. 4 bytes is the size used for ByteBuffer.putInt(int value) and ByteBuffer.getInt()
+    // 4 bytes is the size used for ByteBuffer.putInt(int value) and ByteBuffer.getInt()
 
     /** Defaults to 4kb */
     private static final int DEFAULT_BLOCK_SIZE_BYTES = 4 * 1024;
