@@ -23,8 +23,12 @@
 	<body>
         <release version="3.3.0" date="YYYY-MM-DD">
             <!-- FIX -->
-            <action type="fix" dev="ggregory" due-to="ammannmi">Fix put time in JCSCache.put(K, V) #276.</action>
-            <action type="fix" dev="ggregory" due-to="Gary Gregory">Remove -nouses directive from maven-bundle-plugin. OSGi package imports now state 'uses' definitions for package imports, this doesn't affect JPMS (from org.apache.commons:commons-parent:80).</action>
+            <action type="fix" dev="ggregory" due-to="ammannmi">
+               Fix put time in JCSCache.put(K, V) #276.
+            </action>
+            <action type="fix" dev="ggregory" due-to="Gary Gregory">
+               Remove -nouses directive from maven-bundle-plugin. OSGi package imports now state 'uses' definitions for package imports, this doesn't affect JPMS (from org.apache.commons:commons-parent:80).
+            </action>
             <!-- ADD -->
             <action type="add" dev="ggregory" due-to="Gary Gregory">
                Add Maven property project.build.outputTimestamp for build reproducibility.
@@ -34,6 +38,9 @@
                Remove all deprecated code.
             </action>
             <!-- UPDATE -->
+            <action dev="tv" type="update" issue="JCS-241">
+               Use System.Logger from Java9, remove own logging abstraction, remove dependency on log4j2
+            </action>
             <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">
                Bump org.apache.commons:commons-parent from 59 to 81 #222, #258, #277, #280, #286, #292, #296, #302.
             </action>
