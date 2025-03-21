@@ -28,7 +28,6 @@ import java.lang.reflect.Method;
 import java.util.Properties;
 
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 
 /**
  * This class is based on the log4j class org.apache.log4j.config.PropertySetter that was made by
@@ -54,7 +53,7 @@ import org.apache.commons.jcs3.log.LogManager;
 public class PropertySetter
 {
     /** Logger */
-    private static final Log log = LogManager.getLog( PropertySetter.class );
+    private static final Log log = Log.getLog( PropertySetter.class );
 
     /**
      * Sets the properties of an object passed as a parameter in one go. The <code>properties</code>

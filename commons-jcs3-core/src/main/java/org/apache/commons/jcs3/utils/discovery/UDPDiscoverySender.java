@@ -29,7 +29,6 @@ import java.util.ArrayList;
 import org.apache.commons.jcs3.engine.CacheInfo;
 import org.apache.commons.jcs3.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 import org.apache.commons.jcs3.utils.discovery.UDPDiscoveryMessage.BroadcastType;
 import org.apache.commons.jcs3.utils.net.HostNameUtil;
 
@@ -39,7 +38,7 @@ import org.apache.commons.jcs3.utils.net.HostNameUtil;
 public class UDPDiscoverySender implements AutoCloseable
 {
     /** The logger. */
-    private static final Log log = LogManager.getLog( UDPDiscoverySender.class );
+    private static final Log log = Log.getLog( UDPDiscoverySender.class );
 
     /** The socket */
     private final MulticastSocket localSocket;

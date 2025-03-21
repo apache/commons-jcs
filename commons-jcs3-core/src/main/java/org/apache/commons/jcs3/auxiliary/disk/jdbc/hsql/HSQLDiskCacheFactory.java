@@ -35,7 +35,6 @@ import org.apache.commons.jcs3.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs3.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs3.engine.logging.behavior.ICacheEventLogger;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 
 /**
  * This factory should create hsql disk caches.
@@ -44,7 +43,7 @@ public class HSQLDiskCacheFactory
     extends JDBCDiskCacheFactory
 {
     /** The logger */
-    private static final Log log = LogManager.getLog( HSQLDiskCacheFactory.class );
+    private static final Log log = Log.getLog( HSQLDiskCacheFactory.class );
 
     /**
      * This factory method should create an instance of the hsqlcache.

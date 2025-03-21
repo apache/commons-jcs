@@ -32,7 +32,6 @@ import org.apache.commons.jcs3.engine.stats.StatElement;
 import org.apache.commons.jcs3.engine.stats.behavior.IStatElement;
 import org.apache.commons.jcs3.engine.stats.behavior.IStats;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 import org.apache.commons.jcs3.utils.struct.DoubleLinkedList;
 
 /**
@@ -46,7 +45,7 @@ import org.apache.commons.jcs3.utils.struct.DoubleLinkedList;
 public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends AbstractMemoryCache<K, V>
 {
     /** The logger. */
-    private static final Log log = LogManager.getLog(AbstractDoubleLinkedListMemoryCache.class);
+    private static final Log log = Log.getLog(AbstractDoubleLinkedListMemoryCache.class);
 
     /** Thread-safe double linked list for lru */
     protected DoubleLinkedList<MemoryElementDescriptor<K, V>> list; // TODO privatise

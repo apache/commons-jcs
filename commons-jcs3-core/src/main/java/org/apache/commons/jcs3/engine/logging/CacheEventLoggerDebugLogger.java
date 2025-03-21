@@ -22,7 +22,6 @@ package org.apache.commons.jcs3.engine.logging;
 import org.apache.commons.jcs3.engine.logging.behavior.ICacheEvent;
 import org.apache.commons.jcs3.engine.logging.behavior.ICacheEventLogger;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 
 /**
  * This implementation simple logs to a logger at debug level, for all events. It's mainly
@@ -35,7 +34,7 @@ public class CacheEventLoggerDebugLogger
     private String logCategoryName = CacheEventLoggerDebugLogger.class.getName();
 
     /** The logger. This is recreated on set logCategoryName */
-    private Log log = LogManager.getLog( logCategoryName );
+    private Log log = Log.getLog( logCategoryName );
 
     /**
      * @param source
@@ -98,7 +97,7 @@ public class CacheEventLoggerDebugLogger
         if ( logCategoryName != null && !logCategoryName.equals( this.logCategoryName ) )
         {
             this.logCategoryName = logCategoryName;
-            log = LogManager.getLog( logCategoryName );
+            log = Log.getLog( logCategoryName );
         }
     }
 }

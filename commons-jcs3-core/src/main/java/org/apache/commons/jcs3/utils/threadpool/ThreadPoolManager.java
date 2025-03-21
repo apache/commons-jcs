@@ -33,7 +33,6 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 import org.apache.commons.jcs3.utils.config.PropertySetter;
 
 /**
@@ -67,7 +66,7 @@ public class ThreadPoolManager
     }
 
     /** The logger */
-    private static final Log log = LogManager.getLog( ThreadPoolManager.class );
+    private static final Log log = Log.getLog( ThreadPoolManager.class );
 
     /** The root property name */
     private static final String PROP_NAME_ROOT = "thread_pool";

@@ -41,7 +41,6 @@ import org.apache.commons.jcs3.engine.CacheInfo;
 import org.apache.commons.jcs3.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs3.engine.behavior.IShutdownObserver;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 import org.apache.commons.jcs3.utils.discovery.UDPDiscoveryMessage.BroadcastType;
 import org.apache.commons.jcs3.utils.net.HostNameUtil;
 import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
@@ -54,7 +53,7 @@ public class UDPDiscoveryReceiver
     implements Runnable, IShutdownObserver
 {
     /** The log factory */
-    private static final Log log = LogManager.getLog( UDPDiscoveryReceiver.class );
+    private static final Log log = Log.getLog( UDPDiscoveryReceiver.class );
 
     /**
      * TODO: Consider using the threadpool manager to get this thread pool. For now place a tight

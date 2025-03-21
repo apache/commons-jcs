@@ -35,7 +35,6 @@ import org.apache.commons.jcs3.engine.behavior.IZombie;
 import org.apache.commons.jcs3.engine.stats.Stats;
 import org.apache.commons.jcs3.engine.stats.behavior.IStats;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 
 /**
  * Lateral distributor. Returns null on get by default. Net search not implemented.
@@ -44,7 +43,7 @@ public class LateralCache<K, V>
     extends AbstractAuxiliaryCacheEventLogging<K, V>
 {
     /** The logger. */
-    private static final Log log = LogManager.getLog( LateralCache.class );
+    private static final Log log = Log.getLog( LateralCache.class );
 
     /** Generalize this, use another interface */
     private final ILateralCacheAttributes lateralCacheAttributes;

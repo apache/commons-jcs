@@ -41,7 +41,6 @@ import org.apache.commons.jcs3.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs3.engine.behavior.IRequireScheduler;
 import org.apache.commons.jcs3.engine.behavior.IShutdownObserver;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 import org.apache.commons.jcs3.utils.discovery.behavior.IDiscoveryListener;
 import org.apache.commons.jcs3.utils.net.HostNameUtil;
 
@@ -58,7 +57,7 @@ public class UDPDiscoveryService
     implements IShutdownObserver, IRequireScheduler
 {
     /** The logger */
-    private static final Log log = LogManager.getLog( UDPDiscoveryService.class );
+    private static final Log log = Log.getLog( UDPDiscoveryService.class );
 
     /** Thread that listens for messages */
     private Thread udpReceiverThread;

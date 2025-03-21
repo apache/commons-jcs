@@ -35,7 +35,6 @@ import org.apache.commons.jcs3.engine.stats.Stats;
 import org.apache.commons.jcs3.engine.stats.behavior.IStatElement;
 import org.apache.commons.jcs3.engine.stats.behavior.IStats;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 
 /**
  * This is a simple LRUMap. It implements most of the map methods. It is not recommended that you
@@ -56,7 +55,7 @@ public abstract class AbstractLRUMap<K, V>
     implements Map<K, V>
 {
     /** The logger */
-    private static final Log log = LogManager.getLog( AbstractLRUMap.class );
+    private static final Log log = Log.getLog( AbstractLRUMap.class );
 
     /** Double linked list for lru */
     private final DoubleLinkedList<LRUElementDescriptor<K, V>> list;

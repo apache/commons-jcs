@@ -45,7 +45,6 @@ import org.apache.commons.jcs3.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs3.engine.control.CompositeCacheManager;
 import org.apache.commons.jcs3.engine.logging.behavior.ICacheEventLogger;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 import org.apache.commons.jcs3.utils.config.PropertySetter;
 import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
 
@@ -60,7 +59,7 @@ public class RemoteHttpCacheServlet
     private static final long serialVersionUID = 8752849397531933346L;
 
     /** The Logger. */
-    private static final Log log = LogManager.getLog( RemoteHttpCacheServlet.class );
+    private static final Log log = Log.getLog( RemoteHttpCacheServlet.class );
 
     /** The cache manager */
     private static CompositeCacheManager cacheMgr;

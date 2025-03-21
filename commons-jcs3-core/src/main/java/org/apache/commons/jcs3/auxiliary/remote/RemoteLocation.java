@@ -4,7 +4,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -31,7 +30,7 @@ import org.apache.commons.jcs3.log.LogManager;
 public final class RemoteLocation
 {
     /** The logger. */
-    private static final Log log = LogManager.getLog( RemoteLocation.class );
+    private static final Log log = Log.getLog( RemoteLocation.class );
 
     /** Pattern for parsing server:port */
     private static final Pattern SERVER_COLON_PORT = Pattern.compile("(\\S+)\\s*:\\s*(\\d+)");

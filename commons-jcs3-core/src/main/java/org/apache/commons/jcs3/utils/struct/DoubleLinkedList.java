@@ -20,7 +20,6 @@ package org.apache.commons.jcs3.utils.struct;
  */
 
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 
 /**
  * This is a generic thread safe double linked list. It's very simple and all the operations are so
@@ -30,7 +29,7 @@ import org.apache.commons.jcs3.log.LogManager;
 public class DoubleLinkedList<T extends DoubleLinkedListNode>
 {
     /** The logger */
-    private static final Log log = LogManager.getLog( DoubleLinkedList.class );
+    private static final Log log = Log.getLog( DoubleLinkedList.class );
 
     /** Record size to avoid having to iterate */
     private int size;

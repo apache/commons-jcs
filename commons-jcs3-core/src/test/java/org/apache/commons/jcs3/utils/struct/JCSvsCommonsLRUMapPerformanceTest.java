@@ -24,7 +24,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.Map;
 
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -164,7 +163,7 @@ public class JCSvsCommonsLRUMapPerformanceTest
     void testSimpleLoad()
         throws Exception
     {
-        final Log log = LogManager.getLog( LRUMap.class );
+        final Log log = Log.getLog( LRUMap.class );
         if ( log.isDebugEnabled() )
         {
             System.out.println( "The log level must be at info or above for the a performance test." );

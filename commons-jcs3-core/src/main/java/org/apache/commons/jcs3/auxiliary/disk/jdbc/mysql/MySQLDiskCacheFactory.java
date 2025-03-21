@@ -35,7 +35,6 @@ import org.apache.commons.jcs3.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs3.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs3.engine.logging.behavior.ICacheEventLogger;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 
 /**
  * This factory should create mysql disk caches.
@@ -44,7 +43,7 @@ public class MySQLDiskCacheFactory
     extends JDBCDiskCacheFactory
 {
     /** The logger */
-    private static final Log log = LogManager.getLog( MySQLDiskCacheFactory.class );
+    private static final Log log = Log.getLog( MySQLDiskCacheFactory.class );
 
     /**
      * This calls the optimizers' optimize table method. This is used by the timer.

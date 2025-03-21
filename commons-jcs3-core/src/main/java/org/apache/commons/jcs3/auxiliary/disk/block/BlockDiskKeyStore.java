@@ -41,7 +41,6 @@ import org.apache.commons.jcs3.auxiliary.disk.behavior.IDiskCacheAttributes.Disk
 import org.apache.commons.jcs3.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs3.io.ObjectInputStreamClassLoaderAware;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
 import org.apache.commons.jcs3.utils.struct.AbstractLRUMap;
 import org.apache.commons.jcs3.utils.struct.LRUMap;
@@ -210,7 +209,7 @@ public class BlockDiskKeyStore<K>
     }
 
     /** The logger */
-    private static final Log log = LogManager.getLog(BlockDiskKeyStore.class);
+    private static final Log log = Log.getLog(BlockDiskKeyStore.class);
 
     /** The key file signature for new-style key files */
     private final static int KEY_FILE_SIGNATURE = 0x6A63734B; // "jcsK"

@@ -32,7 +32,6 @@ import org.apache.commons.jcs3.engine.stats.Stats;
 import org.apache.commons.jcs3.engine.stats.behavior.IStatElement;
 import org.apache.commons.jcs3.engine.stats.behavior.IStats;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 
 /**
  * Client proxy for an RMI remote cache.
@@ -44,7 +43,7 @@ public class RemoteCache<K, V>
     extends AbstractRemoteAuxiliaryCache<K, V>
 {
     /** The logger. */
-    private static final Log log = LogManager.getLog( RemoteCache.class );
+    private static final Log log = Log.getLog( RemoteCache.class );
 
     /** For error notifications */
     private final RemoteCacheMonitor monitor;

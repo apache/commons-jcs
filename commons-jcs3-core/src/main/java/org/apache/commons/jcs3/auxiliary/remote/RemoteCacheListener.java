@@ -29,7 +29,6 @@ import org.apache.commons.jcs3.auxiliary.remote.behavior.IRemoteCacheConstants;
 import org.apache.commons.jcs3.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs3.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 
 /**
  * Registered with RemoteCache server. The server updates the local caches via this listener. Each
@@ -43,7 +42,7 @@ public class RemoteCacheListener<K, V>
     implements IRemoteCacheConstants
 {
     /** The logger */
-    private static final Log log = LogManager.getLog( RemoteCacheListener.class );
+    private static final Log log = Log.getLog( RemoteCacheListener.class );
 
     /** Has this client been shutdown. */
     private final AtomicBoolean disposed;

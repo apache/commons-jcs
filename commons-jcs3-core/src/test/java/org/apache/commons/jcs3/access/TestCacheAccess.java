@@ -33,7 +33,6 @@ import org.apache.commons.jcs3.engine.ElementAttributes;
 import org.apache.commons.jcs3.engine.behavior.IElementAttributes;
 import org.apache.commons.jcs3.engine.control.event.ElementEventHandlerMockImpl;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 
 /**
  * Allows the user to run common cache commands from the command line for a test cache. This also
@@ -42,7 +41,7 @@ import org.apache.commons.jcs3.log.LogManager;
 public class TestCacheAccess
 {
     /** Log instance */
-    private static final Log log = LogManager.getLog( TestCacheAccess.class );
+    private static final Log log = Log.getLog( TestCacheAccess.class );
 
     /** Do we use system.out.println to print out debug data? */
     private static boolean isSysOut;

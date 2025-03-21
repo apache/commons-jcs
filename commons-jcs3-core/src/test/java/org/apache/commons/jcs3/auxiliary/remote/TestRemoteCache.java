@@ -31,7 +31,6 @@ import org.apache.commons.jcs3.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs3.engine.control.MockCompositeCacheManager;
 import org.apache.commons.jcs3.engine.control.MockElementSerializer;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -41,7 +40,7 @@ import org.junit.jupiter.api.Test;
 public class TestRemoteCache
 {
     /** The logger */
-    private static final Log log = LogManager.getLog( TestRemoteCache.class );
+    private static final Log log = Log.getLog( TestRemoteCache.class );
 
     /**
      * Start the cache.

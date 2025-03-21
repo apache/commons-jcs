@@ -28,7 +28,6 @@ import javax.sql.DataSource;
 
 import org.apache.commons.jcs3.auxiliary.disk.jdbc.TableState;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 import org.apache.commons.jcs3.utils.timing.ElapsedTimer;
 
 /**
@@ -42,7 +41,7 @@ import org.apache.commons.jcs3.utils.timing.ElapsedTimer;
 public class MySQLTableOptimizer
 {
     /** The logger */
-    private static final Log log = LogManager.getLog( MySQLTableOptimizer.class );
+    private static final Log log = Log.getLog( MySQLTableOptimizer.class );
 
     /** The data source */
     private final DataSource dataSource;

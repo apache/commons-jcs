@@ -1,5 +1,7 @@
 package org.apache.commons.jcs3.log;
 
+import java.lang.System.Logger;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements. See the NOTICE file distributed with
@@ -24,7 +26,7 @@ import java.util.function.Supplier;
  * All logging operations, except configuration, are done through this interface.
  *
  * <p>
- * The canonical way to obtain a Logger for a class is through {@link LogManager#getLog(String)}}.
+ * The canonical way to obtain a Logger for a class is through {@link Log#getLog(String)}}.
  * Typically, each class should get its own Log named after its fully qualified class name
  * </p>
  *
@@ -37,6 +39,11 @@ import java.util.function.Supplier;
  */
 public interface Log
 {
+    /**
+     * The name of the root Log.
+     */
+    String ROOT_LOGGER_NAME = "";
+
     /**
      * Logs a message object with the DEBUG level.
      *
@@ -338,4 +345,44 @@ public interface Log
      * @param t the exception to log, including its stack trace.
      */
     void warn(String message, Throwable t);
+
+    /**
+     * Returns the root logger.
+     *
+     * @return the root logger, named {@link ROOT_LOGGER_NAME}.
+     */
+    static Log getRootLogger()
+    {
+        return getLog(ROOT_LOGGER_NAME);
+    }
+
+    /**
+     * Returns a Log with the specified name.
+     *
+     * @param name
+     *            The logger name.
+     * @return The Log.
+     * @throws UnsupportedOperationException
+     *             if {@code name} is {@code null}
+     */
+    static Log getLog(final String name)
+    {
+        final Logger logger = System.getLogger(name);
+        return new SystemLogAdapter(logger);
+    }
+
+    /**
+     * Returns a Log using the fully qualified name of the Class as the Log
+     * name.
+     *
+     * @param clazz
+     *            The Class whose name should be used as the Log name.
+     * @return The Log.
+     * @throws UnsupportedOperationException
+     *             if {@code clazz} is {@code null}
+     */
+    static Log getLog(final Class<?> clazz)
+    {
+        return Log.getLog(clazz.getName());
+    }
 }

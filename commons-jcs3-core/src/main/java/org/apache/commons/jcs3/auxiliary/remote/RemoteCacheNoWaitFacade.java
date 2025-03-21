@@ -32,7 +32,6 @@ import org.apache.commons.jcs3.engine.behavior.ICache;
 import org.apache.commons.jcs3.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs3.engine.logging.behavior.ICacheEventLogger;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 
 /**
  * Used to provide access to multiple services under nowait protection. Factory should construct
@@ -46,7 +45,7 @@ public class RemoteCacheNoWaitFacade<K, V>
     extends AbstractRemoteCacheNoWaitFacade<K, V>
 {
     /** Log instance */
-    private static final Log log = LogManager.getLog( RemoteCacheNoWaitFacade.class );
+    private static final Log log = Log.getLog( RemoteCacheNoWaitFacade.class );
 
     /** Time in ms to sleep between failover attempts */
     private static final long idlePeriod = 20000L;

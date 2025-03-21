@@ -28,7 +28,6 @@ import org.apache.commons.jcs3.engine.behavior.ICacheElement;
 import org.apache.commons.jcs3.engine.behavior.ICacheService;
 import org.apache.commons.jcs3.engine.behavior.IZombie;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 
 /**
  * Zombie adapter for any cache service. Balks at every call.
@@ -37,7 +36,7 @@ public class ZombieCacheService<K, V>
     implements ICacheService<K, V>, IZombie
 {
     /** The logger. */
-    private static final Log log = LogManager.getLog( ZombieCacheService.class );
+    private static final Log log = Log.getLog( ZombieCacheService.class );
 
     /**
      * @param cacheName

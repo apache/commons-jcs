@@ -25,7 +25,6 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 
 /**
  * Used to monitor and repair any failed connection for the lateral cache service. By default the
@@ -53,7 +52,7 @@ public abstract class AbstractAuxiliaryCacheMonitor extends Thread
     }
 
     /** The logger */
-    protected final Log log = LogManager.getLog( this.getClass() );
+    protected final Log log = Log.getLog( this.getClass() );
 
     /**
      * Must make sure AbstractAuxiliaryCacheMonitor is started before any error can be detected!

@@ -30,7 +30,6 @@ import org.apache.commons.jcs3.engine.memory.AbstractMemoryCache;
 import org.apache.commons.jcs3.engine.memory.util.MemoryElementDescriptor;
 import org.apache.commons.jcs3.engine.stats.behavior.IStats;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 
 /**
  * This is a test memory manager using the stock {@link LinkedHashMap}.
@@ -83,7 +82,7 @@ public class LHMLRUMemoryCache<K, V>
     }
 
     /** The Logger. */
-    private static final Log log = LogManager.getLog( LRUMemoryCache.class );
+    private static final Log log = Log.getLog( LRUMemoryCache.class );
 
     /**
      * Returns a synchronized LHMSpooler

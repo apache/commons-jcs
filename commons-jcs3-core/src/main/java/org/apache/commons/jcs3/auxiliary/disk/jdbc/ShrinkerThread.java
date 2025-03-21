@@ -23,7 +23,6 @@ import java.util.Iterator;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 import org.apache.commons.jcs3.utils.timing.ElapsedTimer;
 
 /**
@@ -34,7 +33,7 @@ public class ShrinkerThread
     implements Runnable
 {
     /** The logger. */
-    private static final Log log = LogManager.getLog( ShrinkerThread.class );
+    private static final Log log = Log.getLog( ShrinkerThread.class );
 
     /** Default time period to use. */
     private static final long DEFAULT_PAUSE_BETWEEN_REGION_CALLS_MILLIS = 5000;

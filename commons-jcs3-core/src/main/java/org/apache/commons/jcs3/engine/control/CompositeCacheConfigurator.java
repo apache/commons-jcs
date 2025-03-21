@@ -36,7 +36,6 @@ import org.apache.commons.jcs3.engine.logging.behavior.ICacheEventLogger;
 import org.apache.commons.jcs3.engine.match.KeyMatcherPatternImpl;
 import org.apache.commons.jcs3.engine.match.behavior.IKeyMatcher;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 import org.apache.commons.jcs3.utils.config.OptionConverter;
 import org.apache.commons.jcs3.utils.config.PropertySetter;
 
@@ -50,7 +49,7 @@ import org.apache.commons.jcs3.utils.config.PropertySetter;
 public class CompositeCacheConfigurator
 {
     /** The logger */
-    private static final Log log = LogManager.getLog( CompositeCacheConfigurator.class );
+    private static final Log log = Log.getLog( CompositeCacheConfigurator.class );
 
     /** The prefix of relevant system properties */
     protected static final String SYSTEM_PROPERTY_KEY_PREFIX = "jcs";

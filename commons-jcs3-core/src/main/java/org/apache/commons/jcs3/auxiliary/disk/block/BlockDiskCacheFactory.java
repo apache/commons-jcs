@@ -25,7 +25,6 @@ import org.apache.commons.jcs3.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs3.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs3.engine.logging.behavior.ICacheEventLogger;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 
 /**
  * Creates disk cache instances.
@@ -34,7 +33,7 @@ public class BlockDiskCacheFactory
     extends AbstractAuxiliaryCacheFactory
 {
     /** The logger */
-    private static final Log log = LogManager.getLog( BlockDiskCacheFactory.class );
+    private static final Log log = Log.getLog( BlockDiskCacheFactory.class );
 
     /**
      * Create an instance of the BlockDiskCache.

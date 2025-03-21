@@ -45,7 +45,6 @@ import java.util.Enumeration;
 import java.util.List;
 
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 
 /**
  * Simple utility for getting the local host name.
@@ -53,7 +52,7 @@ import org.apache.commons.jcs3.log.LogManager;
 public class HostNameUtil
 {
     /** The logger. */
-    private static final Log log = LogManager.getLog( HostNameUtil.class );
+    private static final Log log = Log.getLog( HostNameUtil.class );
 
     /**
      * Gets the address for the local machine.

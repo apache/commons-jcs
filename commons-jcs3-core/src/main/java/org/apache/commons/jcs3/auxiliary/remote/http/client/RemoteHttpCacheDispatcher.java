@@ -27,7 +27,6 @@ import org.apache.commons.jcs3.auxiliary.remote.behavior.IRemoteCacheDispatcher;
 import org.apache.commons.jcs3.auxiliary.remote.value.RemoteCacheRequest;
 import org.apache.commons.jcs3.auxiliary.remote.value.RemoteCacheResponse;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
 import org.apache.http.HttpException;
 import org.apache.http.HttpResponse;
@@ -54,7 +53,7 @@ public class RemoteHttpCacheDispatcher
     private static final String PARAMETER_CACHE_NAME = "CacheName";
 
     /** The Logger. */
-    private static final Log log = LogManager.getLog( RemoteHttpCacheDispatcher.class );
+    private static final Log log = Log.getLog( RemoteHttpCacheDispatcher.class );
 
     /** This needs to be standard, since the other side is standard */
     private final StandardSerializer serializer = new StandardSerializer();

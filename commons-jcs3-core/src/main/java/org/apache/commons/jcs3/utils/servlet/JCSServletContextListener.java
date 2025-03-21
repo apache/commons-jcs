@@ -24,7 +24,6 @@ import javax.servlet.ServletContextListener;
 
 import org.apache.commons.jcs3.JCS;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 
 /**
  * If you add this to the context listeners section of your web.xml file, this will shutdown JCS
@@ -44,7 +43,7 @@ public class JCSServletContextListener
     implements ServletContextListener
 {
     /** The logger */
-    private static final Log log = LogManager.getLog( JCSServletContextListener.class );
+    private static final Log log = Log.getLog( JCSServletContextListener.class );
 
     /**
      * Shutdown JCS.

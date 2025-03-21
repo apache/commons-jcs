@@ -28,13 +28,12 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.Inflater;
 
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 
 /** Compress / Decompress. */
 public final class CompressionUtil
 {
     /** The logger */
-    private static final Log log = LogManager.getLog( CompressionUtil.class );
+    private static final Log log = Log.getLog( CompressionUtil.class );
 
     /**
      * Compress the byte array passed

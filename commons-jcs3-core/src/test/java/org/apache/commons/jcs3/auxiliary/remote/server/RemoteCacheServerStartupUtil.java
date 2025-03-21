@@ -25,7 +25,6 @@ import java.util.Properties;
 
 import org.apache.commons.jcs3.auxiliary.remote.RemoteUtils;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 import org.apache.commons.jcs3.utils.net.HostNameUtil;
 
 /**
@@ -34,7 +33,7 @@ import org.apache.commons.jcs3.utils.net.HostNameUtil;
 public class RemoteCacheServerStartupUtil
 {
     /** The logger */
-    private static final Log log = LogManager.getLog( RemoteCacheServerStartupUtil.class );
+    private static final Log log = Log.getLog( RemoteCacheServerStartupUtil.class );
 
     /** Registry to use in the test. */
     private static final int DEFAULT_REGISTRY_PORT = 1101;

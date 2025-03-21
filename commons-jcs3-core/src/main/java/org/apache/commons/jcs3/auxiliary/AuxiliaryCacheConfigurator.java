@@ -24,7 +24,6 @@ import java.util.Properties;
 import org.apache.commons.jcs3.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs3.engine.logging.behavior.ICacheEventLogger;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 import org.apache.commons.jcs3.utils.config.OptionConverter;
 import org.apache.commons.jcs3.utils.config.PropertySetter;
 import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
@@ -36,7 +35,7 @@ import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
 public class AuxiliaryCacheConfigurator
 {
     /** The logger. */
-    private static final Log log = LogManager.getLog( AuxiliaryCacheConfigurator.class );
+    private static final Log log = Log.getLog( AuxiliaryCacheConfigurator.class );
 
     /** .attributes */
     public static final String ATTRIBUTE_PREFIX = ".attributes";

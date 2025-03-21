@@ -27,7 +27,6 @@ import org.apache.commons.jcs3.engine.behavior.ICacheElement;
 import org.apache.commons.jcs3.engine.behavior.ICacheElementSerialized;
 import org.apache.commons.jcs3.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 
 /**
  * This uses a supplied Serializer to convert to and from cache elements.
@@ -35,7 +34,7 @@ import org.apache.commons.jcs3.log.LogManager;
 public class SerializationConversionUtil
 {
     /** The logger */
-    private static final Log log = LogManager.getLog( SerializationConversionUtil.class );
+    private static final Log log = Log.getLog( SerializationConversionUtil.class );
 
     /**
      * This returns a wrapper that has a de-serialized version of the value

@@ -32,14 +32,13 @@ import org.apache.commons.jcs3.auxiliary.remote.value.RemoteCacheRequest;
 import org.apache.commons.jcs3.auxiliary.remote.value.RemoteCacheResponse;
 import org.apache.commons.jcs3.engine.behavior.ICacheElement;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 
 /** This is the service used by the remote http auxiliary cache. */
 public class RemoteHttpCacheClient<K, V>
     implements IRemoteHttpCacheClient<K, V>
 {
     /** The Logger. */
-    private static final Log log = LogManager.getLog( RemoteHttpCacheClient.class );
+    private static final Log log = Log.getLog( RemoteHttpCacheClient.class );
 
     /** The internal client. */
     private IRemoteCacheDispatcher remoteDispatcher;

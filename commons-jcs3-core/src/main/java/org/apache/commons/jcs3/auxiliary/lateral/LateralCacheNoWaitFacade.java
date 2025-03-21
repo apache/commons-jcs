@@ -42,7 +42,6 @@ import org.apache.commons.jcs3.engine.stats.Stats;
 import org.apache.commons.jcs3.engine.stats.behavior.IStatElement;
 import org.apache.commons.jcs3.engine.stats.behavior.IStats;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 
 /**
  * Used to provide access to multiple services under nowait protection. Composite factory should
@@ -54,7 +53,7 @@ public class LateralCacheNoWaitFacade<K, V>
     extends AbstractAuxiliaryCache<K, V>
 {
     /** The logger */
-    private static final Log log = LogManager.getLog( LateralCacheNoWaitFacade.class );
+    private static final Log log = Log.getLog( LateralCacheNoWaitFacade.class );
 
     /**
      * The queuing facade to the client.

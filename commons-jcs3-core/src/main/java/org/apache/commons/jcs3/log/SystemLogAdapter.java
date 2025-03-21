@@ -1,9 +1,9 @@
 package org.apache.commons.jcs3.log;
 
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 import java.util.Objects;
 import java.util.function.Supplier;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -23,31 +23,19 @@ import java.util.logging.Logger;
  */
 
 /**
- * This is a wrapper around the <code>java.util.logging.Logger</code> implementing our own
+ * This is a wrapper around the <code>java.lang.System.Logger</code> implementing our own
  * <code>Log</code> interface.
- * <p>
- * This is the mapping of the log levels
- * </p>
- * <pre>
- * Java Level   Log Level
- * SEVERE       FATAL
- * SEVERE       ERROR
- * WARNING      WARN
- * INFO         INFO
- * FINE         DEBUG
- * FINER        TRACE
- * </pre>
  */
-public class JulLogAdapter implements Log
+public class SystemLogAdapter implements Log
 {
     private final Logger logger;
 
     /**
-     * Constructs a JUL Logger wrapper
+     * Constructs a System Logger wrapper
      *
-     * @param logger the JUL Logger
+     * @param logger the System Logger
      */
-    public JulLogAdapter(final Logger logger)
+    public SystemLogAdapter(final Logger logger)
     {
         this.logger = logger;
     }
@@ -60,7 +48,7 @@ public class JulLogAdapter implements Log
     @Override
     public void debug(final Object message)
     {
-        log(Level.FINE, message);
+        log(Level.DEBUG, message);
     }
 
     /**
@@ -71,7 +59,7 @@ public class JulLogAdapter implements Log
     @Override
     public void debug(final String message)
     {
-        log(Level.FINE, message);
+        log(Level.DEBUG, message);
     }
 
     /**
@@ -83,7 +71,7 @@ public class JulLogAdapter implements Log
     @Override
     public void debug(final String message, final Object... params)
     {
-        log(Level.FINE, message, params);
+        log(Level.DEBUG, message, params);
     }
 
     /**
@@ -97,7 +85,7 @@ public class JulLogAdapter implements Log
     @Override
     public void debug(final String message, final Supplier<?>... paramSuppliers)
     {
-        log(Level.FINE, message, paramSuppliers);
+        log(Level.DEBUG, message, paramSuppliers);
     }
 
     /**
@@ -110,7 +98,7 @@ public class JulLogAdapter implements Log
     @Override
     public void debug(final String message, final Throwable t)
     {
-        log(Level.FINE, message, t);
+        log(Level.DEBUG, message, t);
     }
 
     /**
@@ -121,7 +109,7 @@ public class JulLogAdapter implements Log
     @Override
     public void error(final Object message)
     {
-        log(Level.SEVERE, message);
+        log(Level.ERROR, message);
     }
 
     /**
@@ -132,7 +120,7 @@ public class JulLogAdapter implements Log
     @Override
     public void error(final String message)
     {
-        log(Level.SEVERE, message);
+        log(Level.ERROR, message);
     }
 
     /**
@@ -144,7 +132,7 @@ public class JulLogAdapter implements Log
     @Override
     public void error(final String message, final Object... params)
     {
-        log(Level.SEVERE, message, params);
+        log(Level.ERROR, message, params);
     }
 
     /**
@@ -159,7 +147,7 @@ public class JulLogAdapter implements Log
     @Override
     public void error(final String message, final Supplier<?>... paramSuppliers)
     {
-        log(Level.SEVERE, message, paramSuppliers);
+        log(Level.ERROR, message, paramSuppliers);
     }
 
     /**
@@ -172,7 +160,7 @@ public class JulLogAdapter implements Log
     @Override
     public void error(final String message, final Throwable t)
     {
-        log(Level.SEVERE, message, t);
+        log(Level.ERROR, message, t);
     }
 
     /**
@@ -183,7 +171,7 @@ public class JulLogAdapter implements Log
     @Override
     public void fatal(final Object message)
     {
-        log(Level.SEVERE, message);
+        log(Level.ERROR, message);
     }
 
     /**
@@ -194,7 +182,7 @@ public class JulLogAdapter implements Log
     @Override
     public void fatal(final String message)
     {
-        log(Level.SEVERE, message);
+        log(Level.ERROR, message);
     }
 
     /**
@@ -206,7 +194,7 @@ public class JulLogAdapter implements Log
     @Override
     public void fatal(final String message, final Object... params)
     {
-        log(Level.SEVERE, message, params);
+        log(Level.ERROR, message, params);
     }
 
     /**
@@ -220,7 +208,7 @@ public class JulLogAdapter implements Log
     @Override
     public void fatal(final String message, final Supplier<?>... paramSuppliers)
     {
-        log(Level.SEVERE, message, paramSuppliers);
+        log(Level.ERROR, message, paramSuppliers);
     }
 
     /**
@@ -233,7 +221,7 @@ public class JulLogAdapter implements Log
     @Override
     public void fatal(final String message, final Throwable t)
     {
-        log(Level.SEVERE, message, t);
+        log(Level.ERROR, message, t);
     }
 
     /**
@@ -317,7 +305,7 @@ public class JulLogAdapter implements Log
     @Override
     public boolean isDebugEnabled()
     {
-        return logger.isLoggable(Level.FINE);
+        return logger.isLoggable(Level.DEBUG);
     }
 
     /**
@@ -329,7 +317,7 @@ public class JulLogAdapter implements Log
     @Override
     public boolean isErrorEnabled()
     {
-        return logger.isLoggable(Level.SEVERE);
+        return logger.isLoggable(Level.ERROR);
     }
 
     /**
@@ -341,7 +329,7 @@ public class JulLogAdapter implements Log
     @Override
     public boolean isFatalEnabled()
     {
-        return logger.isLoggable(Level.SEVERE);
+        return logger.isLoggable(Level.ERROR);
     }
 
     /**
@@ -365,7 +353,7 @@ public class JulLogAdapter implements Log
     @Override
     public boolean isTraceEnabled()
     {
-        return logger.isLoggable(Level.FINER);
+        return logger.isLoggable(Level.TRACE);
     }
 
     /**
@@ -386,12 +374,11 @@ public class JulLogAdapter implements Log
         {
             if (message instanceof Throwable)
             {
-                logger.logp(level, logger.getName(), "", "Exception:", (Throwable) message);
+                logger.log(level, "Exception:", message);
             }
             else
             {
-                logger.logp(level, logger.getName(), "",
-                        Objects.toString(message, null));
+                logger.log(level, Objects.toString(message, null));
             }
         }
     }
@@ -400,7 +387,7 @@ public class JulLogAdapter implements Log
     {
         if (logger.isLoggable(level))
         {
-            logger.logp(level, logger.getName(), "", message);
+            logger.log(level, message);
         }
     }
 
@@ -411,13 +398,12 @@ public class JulLogAdapter implements Log
             final MessageFormatter formatter = new MessageFormatter(message, params);
             if (formatter.hasThrowable())
             {
-                logger.logp(level, logger.getName(), "",
-                        formatter.getFormattedMessage(), formatter.getThrowable());
+                logger.log(level, formatter.getFormattedMessage(),
+                        formatter.getThrowable());
             }
             else
             {
-                logger.logp(level, logger.getName(), "",
-                        formatter.getFormattedMessage());
+                logger.log(level, formatter.getFormattedMessage());
             }
         }
     }
@@ -429,13 +415,12 @@ public class JulLogAdapter implements Log
             final MessageFormatter formatter = new MessageFormatter(message, paramSuppliers);
             if (formatter.hasThrowable())
             {
-                logger.logp(level, logger.getName(), "",
-                        formatter.getFormattedMessage(), formatter.getThrowable());
+                logger.log(level, formatter.getFormattedMessage(),
+                        formatter.getThrowable());
             }
             else
             {
-                logger.logp(level, logger.getName(), "",
-                        formatter.getFormattedMessage());
+                logger.log(level, formatter.getFormattedMessage());
             }
         }
     }
@@ -444,7 +429,7 @@ public class JulLogAdapter implements Log
     {
         if (logger.isLoggable(level))
         {
-            logger.logp(level, logger.getName(), "", message, t);
+            logger.log(level, message, t);
         }
     }
 
@@ -456,7 +441,7 @@ public class JulLogAdapter implements Log
     @Override
     public void trace(final Object message)
     {
-        log(Level.FINER, message);
+        log(Level.TRACE, message);
     }
 
     /**
@@ -467,7 +452,7 @@ public class JulLogAdapter implements Log
     @Override
     public void trace(final String message)
     {
-        log(Level.FINER, message);
+        log(Level.TRACE, message);
     }
 
     /**
@@ -479,7 +464,7 @@ public class JulLogAdapter implements Log
     @Override
     public void trace(final String message, final Object... params)
     {
-        log(Level.FINER, message, params);
+        log(Level.TRACE, message, params);
     }
 
     /**
@@ -493,7 +478,7 @@ public class JulLogAdapter implements Log
     @Override
     public void trace(final String message, final Supplier<?>... paramSuppliers)
     {
-        log(Level.FINER, message, paramSuppliers);
+        log(Level.TRACE, message, paramSuppliers);
     }
 
     /**
@@ -507,7 +492,7 @@ public class JulLogAdapter implements Log
     @Override
     public void trace(final String message, final Throwable t)
     {
-        log(Level.FINER, message, t);
+        log(Level.TRACE, message, t);
     }
 
     /**

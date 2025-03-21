@@ -550,7 +550,6 @@
     <commons.collections.version>4.5.0-M3</commons.collections.version>
     <commons.text.version>1.13.0</commons.text.version>
     <commons.lang.version>3.17.0</commons.lang.version>
-    <commons.log4j.version>2.24.3</commons.log4j.version>
 
     <test.type>Unit</test.type>
     <doclint>none</doclint>

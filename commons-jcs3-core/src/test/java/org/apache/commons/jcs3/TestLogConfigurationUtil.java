@@ -6,8 +6,6 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
-import org.apache.commons.jcs3.log.LogManager;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -74,7 +72,6 @@ public class TestLogConfigurationUtil
      */
     public static void configureLogger( final StringWriter stringWriter, final String loggerName )
     {
-        LogManager.setLogSystem("jul");
         java.util.logging.LogManager.getLogManager().reset();
         final Logger rootLogger = java.util.logging.LogManager.getLogManager().getLogger("");
 

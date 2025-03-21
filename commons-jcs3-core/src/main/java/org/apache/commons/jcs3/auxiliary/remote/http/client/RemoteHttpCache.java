@@ -26,7 +26,6 @@ import org.apache.commons.jcs3.auxiliary.remote.behavior.IRemoteCacheListener;
 import org.apache.commons.jcs3.engine.ZombieCacheServiceNonLocal;
 import org.apache.commons.jcs3.engine.behavior.ICacheServiceNonLocal;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 
 /**
  * This uses an http client as the service.
@@ -35,7 +34,7 @@ public class RemoteHttpCache<K, V>
     extends AbstractRemoteAuxiliaryCache<K, V>
 {
     /** The logger. */
-    private static final Log log = LogManager.getLog( RemoteHttpCache.class );
+    private static final Log log = Log.getLog( RemoteHttpCache.class );
 
     /** For error notifications */
     private final RemoteHttpCacheMonitor monitor;

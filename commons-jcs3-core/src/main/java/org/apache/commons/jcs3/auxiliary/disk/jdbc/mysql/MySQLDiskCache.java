@@ -27,7 +27,6 @@ import org.apache.commons.jcs3.auxiliary.disk.jdbc.TableState;
 import org.apache.commons.jcs3.auxiliary.disk.jdbc.dsfactory.DataSourceFactory;
 import org.apache.commons.jcs3.engine.behavior.ICacheElement;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 
 /**
  * The MySQLDiskCache extends the core JDBCDiskCache.
@@ -40,7 +39,7 @@ public class MySQLDiskCache<K, V>
 	extends JDBCDiskCache<K, V>
 {
     /** Local logger */
-    private static final Log log = LogManager.getLog( MySQLDiskCache.class );
+    private static final Log log = Log.getLog( MySQLDiskCache.class );
 
     /** Config attributes */
     private final MySQLDiskCacheAttributes mySQLDiskCacheAttributes;

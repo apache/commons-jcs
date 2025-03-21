@@ -44,7 +44,6 @@ import org.apache.commons.jcs3.engine.stats.StatElement;
 import org.apache.commons.jcs3.engine.stats.behavior.IStatElement;
 import org.apache.commons.jcs3.engine.stats.behavior.IStats;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 
 /**
  * This is the jdbc disk cache plugin.
@@ -79,7 +78,7 @@ public class JDBCDiskCache<K, V>
     extends AbstractDiskCache<K, V>
 {
     /** The local logger. */
-    private static final Log log = LogManager.getLog( JDBCDiskCache.class );
+    private static final Log log = Log.getLog( JDBCDiskCache.class );
 
     /** Configuration */
     private JDBCDiskCacheAttributes jdbcDiskCacheAttributes;

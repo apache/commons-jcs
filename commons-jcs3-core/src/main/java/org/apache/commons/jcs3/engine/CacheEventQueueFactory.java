@@ -22,7 +22,6 @@ package org.apache.commons.jcs3.engine;
 import org.apache.commons.jcs3.engine.behavior.ICacheEventQueue;
 import org.apache.commons.jcs3.engine.behavior.ICacheListener;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 
 /**
  * This class hands out event Queues. This allows us to change the implementation more easily. You
@@ -31,7 +30,7 @@ import org.apache.commons.jcs3.log.LogManager;
 public class CacheEventQueueFactory<K, V>
 {
     /** The logger. */
-    private static final Log log = LogManager.getLog( CacheEventQueueFactory.class );
+    private static final Log log = Log.getLog( CacheEventQueueFactory.class );
 
     /**
      * Fully configured event queue.

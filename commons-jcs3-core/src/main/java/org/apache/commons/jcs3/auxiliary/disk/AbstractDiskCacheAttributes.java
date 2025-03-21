@@ -24,7 +24,6 @@ import java.io.File;
 import org.apache.commons.jcs3.auxiliary.AbstractAuxiliaryCacheAttributes;
 import org.apache.commons.jcs3.auxiliary.disk.behavior.IDiskCacheAttributes;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 
 /**
  * This has common attributes that any conceivable disk cache would need.
@@ -35,7 +34,7 @@ public abstract class AbstractDiskCacheAttributes extends AbstractAuxiliaryCache
     private static final long serialVersionUID = 8306631920391711229L;
 
     /** The logger */
-    private static final Log log = LogManager.getLog(AbstractDiskCacheAttributes.class);
+    private static final Log log = Log.getLog(AbstractDiskCacheAttributes.class);
 
     /** Default amount of time to allow for key persistence on shutdown */
     private static final int DEFAULT_shutdownSpoolTimeLimit = 60;

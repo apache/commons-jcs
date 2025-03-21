@@ -30,7 +30,6 @@ import javax.sql.DataSource;
 
 import org.apache.commons.jcs3.auxiliary.disk.jdbc.JDBCDiskCacheAttributes;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 
 /**
  * A factory that looks up the DataSource from JNDI.  It is also able
@@ -45,7 +44,7 @@ import org.apache.commons.jcs3.log.LogManager;
 public class JndiDataSourceFactory implements DataSourceFactory
 {
     /** The log. */
-    private static final Log log = LogManager.getLog(JndiDataSourceFactory.class);
+    private static final Log log = Log.getLog(JndiDataSourceFactory.class);
 
     /**
      *

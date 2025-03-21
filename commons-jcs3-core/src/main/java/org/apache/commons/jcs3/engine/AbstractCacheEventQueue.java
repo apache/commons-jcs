@@ -27,7 +27,6 @@ import org.apache.commons.jcs3.engine.behavior.ICacheElement;
 import org.apache.commons.jcs3.engine.behavior.ICacheEventQueue;
 import org.apache.commons.jcs3.engine.behavior.ICacheListener;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 
 /**
  * An abstract base class to the different implementations
@@ -217,7 +216,7 @@ public abstract class AbstractCacheEventQueue<K, V>
     }
 
     /** The logger. */
-    private static final Log log = LogManager.getLog( AbstractCacheEventQueue.class );
+    private static final Log log = Log.getLog( AbstractCacheEventQueue.class );
 
     /** Default */
     protected static final int DEFAULT_WAIT_TO_DIE_MILLIS = 10000;

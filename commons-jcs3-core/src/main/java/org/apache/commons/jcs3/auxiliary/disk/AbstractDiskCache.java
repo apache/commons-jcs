@@ -44,7 +44,6 @@ import org.apache.commons.jcs3.engine.stats.Stats;
 import org.apache.commons.jcs3.engine.stats.behavior.IStatElement;
 import org.apache.commons.jcs3.engine.stats.behavior.IStats;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 import org.apache.commons.jcs3.utils.struct.LRUMap;
 
 /**
@@ -217,7 +216,7 @@ public abstract class AbstractDiskCache<K, V>
     }
 
     /** The logger */
-    private static final Log log = LogManager.getLog( AbstractDiskCache.class );
+    private static final Log log = Log.getLog( AbstractDiskCache.class );
 
     /** Generic disk cache attributes */
     private final IDiskCacheAttributes diskCacheAttributes;

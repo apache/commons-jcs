@@ -27,7 +27,6 @@ import org.apache.commons.jcs3.access.CacheAccess;
 import org.apache.commons.jcs3.access.GroupCacheAccess;
 import org.apache.commons.jcs3.access.exception.CacheException;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 
 /**
  * Utility class to encapsulate doing a piece of work, and caching the results
@@ -93,7 +92,7 @@ import org.apache.commons.jcs3.log.LogManager;
 public class JCSWorker<K, V>
 {
     /** The logger */
-    private static final Log logger = LogManager.getLog( JCSWorker.class );
+    private static final Log logger = Log.getLog( JCSWorker.class );
 
     /** The cache we are working with */
     private final CacheAccess<K, V> cache;

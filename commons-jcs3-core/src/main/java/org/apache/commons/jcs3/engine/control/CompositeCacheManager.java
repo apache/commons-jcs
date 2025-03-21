@@ -58,7 +58,6 @@ import org.apache.commons.jcs3.engine.control.event.behavior.IElementEventQueue;
 import org.apache.commons.jcs3.engine.stats.CacheStats;
 import org.apache.commons.jcs3.engine.stats.behavior.ICacheStats;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 import org.apache.commons.jcs3.utils.config.OptionConverter;
 import org.apache.commons.jcs3.utils.threadpool.DaemonThreadFactory;
 import org.apache.commons.jcs3.utils.threadpool.ThreadPoolManager;
@@ -77,7 +76,7 @@ public class CompositeCacheManager
     implements IRemoteCacheConstants, ICompositeCacheManager, IProvideScheduler
 {
     /** The logger */
-    private static final Log log = LogManager.getLog( CompositeCacheManager.class );
+    private static final Log log = Log.getLog( CompositeCacheManager.class );
 
     /** JMX object name */
     public static final String JMX_OBJECT_NAME = "org.apache.commons.jcs3:type=JCSAdminBean";

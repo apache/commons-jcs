@@ -39,14 +39,13 @@ import org.apache.commons.jcs3.engine.stats.Stats;
 import org.apache.commons.jcs3.engine.stats.behavior.IStatElement;
 import org.apache.commons.jcs3.engine.stats.behavior.IStats;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 
 /** An abstract base for the No Wait Facade.  Different implementations will failover differently. */
 public abstract class AbstractRemoteCacheNoWaitFacade<K, V>
     extends AbstractAuxiliaryCache<K, V>
 {
     /** Log instance */
-    private static final Log log = LogManager.getLog( AbstractRemoteCacheNoWaitFacade.class );
+    private static final Log log = Log.getLog( AbstractRemoteCacheNoWaitFacade.class );
 
     /** The connection to a remote server, or a zombie. */
     protected List<RemoteCacheNoWait<K, V>> noWaits;

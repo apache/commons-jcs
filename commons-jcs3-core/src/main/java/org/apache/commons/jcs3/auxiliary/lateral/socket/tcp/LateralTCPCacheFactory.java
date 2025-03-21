@@ -41,7 +41,6 @@ import org.apache.commons.jcs3.engine.behavior.IShutdownObserver;
 import org.apache.commons.jcs3.engine.control.CompositeCacheManager;
 import org.apache.commons.jcs3.engine.logging.behavior.ICacheEventLogger;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 import org.apache.commons.jcs3.utils.discovery.UDPDiscoveryManager;
 import org.apache.commons.jcs3.utils.discovery.UDPDiscoveryService;
 
@@ -56,7 +55,7 @@ public class LateralTCPCacheFactory
     extends AbstractAuxiliaryCacheFactory
 {
     /** The logger */
-    private static final Log log = LogManager.getLog( LateralTCPCacheFactory.class );
+    private static final Log log = Log.getLog( LateralTCPCacheFactory.class );
 
     /**
      * Makes sure a listener gets created. It will get monitored as soon as it

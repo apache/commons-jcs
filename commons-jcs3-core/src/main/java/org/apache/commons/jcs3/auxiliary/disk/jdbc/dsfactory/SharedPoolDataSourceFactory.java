@@ -29,7 +29,6 @@ import org.apache.commons.dbcp2.datasources.InstanceKeyDataSource;
 import org.apache.commons.dbcp2.datasources.SharedPoolDataSource;
 import org.apache.commons.jcs3.auxiliary.disk.jdbc.JDBCDiskCacheAttributes;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 
 /**
  * A factory that looks up the DataSource using the JDBC2 pool methods.
@@ -39,7 +38,7 @@ import org.apache.commons.jcs3.log.LogManager;
 public class SharedPoolDataSourceFactory implements DataSourceFactory
 {
     /** The log. */
-    private static final Log log = LogManager.getLog(SharedPoolDataSourceFactory.class);
+    private static final Log log = Log.getLog(SharedPoolDataSourceFactory.class);
 
     /**
      * Initializes the ConnectionPoolDataSource.

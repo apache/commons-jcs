@@ -32,7 +32,6 @@ import org.apache.commons.jcs3.access.CacheAccess;
 import org.apache.commons.jcs3.engine.stats.behavior.IStatElement;
 import org.apache.commons.jcs3.engine.stats.behavior.IStats;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -58,7 +57,7 @@ class JCSThrashTest
     }
 
     /** The logger. */
-    private static final Log LOG = LogManager.getLog( JCSThrashTest.class.getName() );
+    private static final Log LOG = Log.getLog( JCSThrashTest.class.getName() );
 
     /**
      * the cache instance

@@ -50,7 +50,6 @@ import org.apache.commons.jcs3.engine.stats.Stats;
 import org.apache.commons.jcs3.engine.stats.behavior.IStatElement;
 import org.apache.commons.jcs3.engine.stats.behavior.IStats;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 import org.apache.commons.jcs3.utils.struct.AbstractLRUMap;
 import org.apache.commons.jcs3.utils.struct.LRUMap;
 import org.apache.commons.jcs3.utils.timing.ElapsedTimer;
@@ -214,7 +213,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
     }
 
     /** The logger */
-    private static final Log log = LogManager.getLog(IndexedDiskCache.class);
+    private static final Log log = Log.getLog(IndexedDiskCache.class);
 
     /** Cache name used in log messages */
     protected final String logCacheName;

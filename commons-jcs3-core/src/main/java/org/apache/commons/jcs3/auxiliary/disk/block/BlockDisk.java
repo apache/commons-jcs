@@ -30,7 +30,6 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import org.apache.commons.jcs3.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
 
 /**
@@ -40,7 +39,7 @@ import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
 public class BlockDisk implements AutoCloseable
 {
     /** The logger */
-    private static final Log log = LogManager.getLog(BlockDisk.class);
+    private static final Log log = Log.getLog(BlockDisk.class);
 
     /** The size of the header that indicates the amount of data stored in an occupied block. */
     public static final byte HEADER_SIZE_BYTES = 4;

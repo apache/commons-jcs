@@ -51,7 +51,6 @@ import org.apache.commons.jcs3.engine.logging.CacheEvent;
 import org.apache.commons.jcs3.engine.logging.behavior.ICacheEvent;
 import org.apache.commons.jcs3.engine.logging.behavior.ICacheEventLogger;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 import org.apache.commons.jcs3.utils.timing.ElapsedTimer;
 
 /**
@@ -79,7 +78,7 @@ public class RemoteCacheServer<K, V>
     private static final long serialVersionUID = -8072345435941473116L;
 
     /** Log instance */
-    private static final Log log = LogManager.getLog( RemoteCacheServer.class );
+    private static final Log log = Log.getLog( RemoteCacheServer.class );
 
     /** The interval at which we will log updates. */
     private static final int logInterval = 100;

@@ -30,7 +30,6 @@ import org.apache.commons.jcs3.engine.behavior.ICacheElementSerialized;
 import org.apache.commons.jcs3.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs3.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 import org.apache.commons.jcs3.utils.net.HostNameUtil;
 import org.apache.commons.jcs3.utils.serialization.SerializationConversionUtil;
 
@@ -39,7 +38,7 @@ public abstract class AbstractRemoteCacheListener<K, V>
     implements IRemoteCacheListener<K, V>
 {
     /** The logger */
-    private static final Log log = LogManager.getLog( AbstractRemoteCacheListener.class );
+    private static final Log log = Log.getLog( AbstractRemoteCacheListener.class );
 
     /** The cached name of the local host. The remote server gets this for logging purposes. */
     private static String localHostName;

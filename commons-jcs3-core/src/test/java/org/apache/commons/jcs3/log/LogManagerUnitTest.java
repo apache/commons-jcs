@@ -28,9 +28,6 @@ class LogManagerUnitTest
     @Test
     void testLogFactoryDefault()
     {
-        // Set default log system
-        LogManager.setLogSystem(LogManager.LOGSYSTEM_JAVA_UTIL_LOGGING);
-
-        assertNotNull(LogManager.getLog(getClass()));
+        assertNotNull(Log.getLog(getClass()));
     }
 }

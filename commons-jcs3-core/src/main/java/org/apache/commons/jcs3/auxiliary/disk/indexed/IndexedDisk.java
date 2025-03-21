@@ -27,7 +27,6 @@ import java.nio.file.StandardOpenOption;
 
 import org.apache.commons.jcs3.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 
 /** Provides thread safe access to the underlying random access file. */
 public class IndexedDisk implements AutoCloseable
@@ -36,7 +35,7 @@ public class IndexedDisk implements AutoCloseable
     public static final byte HEADER_SIZE_BYTES = 4;
 
     /** The logger */
-    private static final Log log = LogManager.getLog(IndexedDisk.class);
+    private static final Log log = Log.getLog(IndexedDisk.class);
 
     /** The serializer. */
     private final IElementSerializer elementSerializer;

@@ -26,7 +26,6 @@ import org.apache.commons.jcs3.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs3.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs3.engine.behavior.IProvideScheduler;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 
 /**
  * This manages UDPDiscovery Services. We should end up with one service per Lateral Cache Manager
@@ -35,7 +34,7 @@ import org.apache.commons.jcs3.log.LogManager;
 public class UDPDiscoveryManager
 {
     /** The logger */
-    private static final Log log = LogManager.getLog( UDPDiscoveryManager.class );
+    private static final Log log = Log.getLog( UDPDiscoveryManager.class );
 
     /** Singleton instance */
     private static final UDPDiscoveryManager INSTANCE = new UDPDiscoveryManager();

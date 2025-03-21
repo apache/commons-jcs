@@ -65,7 +65,6 @@ import org.apache.commons.jcs3.engine.stats.StatElement;
 import org.apache.commons.jcs3.engine.stats.behavior.ICacheStats;
 import org.apache.commons.jcs3.engine.stats.behavior.IStats;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 
 /**
  * This is the primary hub for a single cache/region. It controls the flow of items through the
@@ -77,7 +76,7 @@ public class CompositeCache<K, V>
     implements ICache<K, V>, IRequireScheduler
 {
     /** Log instance */
-    private static final Log log = LogManager.getLog(CompositeCache.class);
+    private static final Log log = Log.getLog(CompositeCache.class);
 
     /**
      * EventQueue for handling element events. Lazy initialized. One for each region. To be more efficient, the manager

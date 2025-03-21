@@ -49,7 +49,6 @@ import org.apache.commons.jcs3.engine.stats.Stats;
 import org.apache.commons.jcs3.engine.stats.behavior.IStatElement;
 import org.apache.commons.jcs3.engine.stats.behavior.IStats;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 import org.apache.commons.jcs3.utils.serialization.SerializationConversionUtil;
 import org.apache.commons.jcs3.utils.threadpool.ThreadPoolManager;
 
@@ -59,7 +58,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
     implements IRemoteCacheClient<K, V>
 {
     /** The logger. */
-    private static final Log log = LogManager.getLog( AbstractRemoteAuxiliaryCache.class );
+    private static final Log log = Log.getLog( AbstractRemoteAuxiliaryCache.class );
 
     /**
      * This does the work. In an RMI instances, it will be a remote reference. In an http remote

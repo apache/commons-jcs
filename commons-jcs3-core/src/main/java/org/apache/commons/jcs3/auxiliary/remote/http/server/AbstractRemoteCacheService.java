@@ -32,7 +32,6 @@ import org.apache.commons.jcs3.engine.logging.CacheEvent;
 import org.apache.commons.jcs3.engine.logging.behavior.ICacheEvent;
 import org.apache.commons.jcs3.engine.logging.behavior.ICacheEventLogger;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 
 /**
  * This class contains common methods for remote cache services. Eventually I hope to extract out
@@ -45,7 +44,7 @@ public abstract class AbstractRemoteCacheService<K, V>
     private final static int logInterval = 100;
 
     /** Log instance */
-    private static final Log log = LogManager.getLog( AbstractRemoteCacheService.class );
+    private static final Log log = Log.getLog( AbstractRemoteCacheService.class );
 
     /** An optional event logger */
     private transient ICacheEventLogger cacheEventLogger;

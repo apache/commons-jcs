@@ -36,7 +36,6 @@ import org.apache.commons.jcs3.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs3.engine.behavior.IRequireScheduler;
 import org.apache.commons.jcs3.engine.logging.behavior.ICacheEventLogger;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 import org.apache.commons.jcs3.utils.config.PropertySetter;
 
 /**
@@ -47,7 +46,7 @@ public class JDBCDiskCacheFactory
     implements IRequireScheduler
 {
     /** The logger */
-    private static final Log log = LogManager.getLog( JDBCDiskCacheFactory.class );
+    private static final Log log = Log.getLog( JDBCDiskCacheFactory.class );
 
     /** Props prefix */
     protected static final String POOL_CONFIGURATION_PREFIX = "jcs.jdbcconnectionpool.";

@@ -23,7 +23,6 @@ import org.apache.commons.jcs3.engine.control.event.behavior.ElementEventType;
 import org.apache.commons.jcs3.engine.control.event.behavior.IElementEvent;
 import org.apache.commons.jcs3.engine.control.event.behavior.IElementEventHandler;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 
 /**
  */
@@ -31,7 +30,7 @@ public class ElementEventHandlerMockImpl
     implements IElementEventHandler
 {
     /** The logger */
-    private static final Log log = LogManager.getLog( ElementEventHandlerMockImpl.class );
+    private static final Log log = Log.getLog( ElementEventHandlerMockImpl.class );
 
     /** Times called. */
     private int callCount;

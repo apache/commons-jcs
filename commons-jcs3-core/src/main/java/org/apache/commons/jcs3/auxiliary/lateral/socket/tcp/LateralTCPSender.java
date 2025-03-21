@@ -33,7 +33,6 @@ import org.apache.commons.jcs3.auxiliary.lateral.LateralElementDescriptor;
 import org.apache.commons.jcs3.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttributes;
 import org.apache.commons.jcs3.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 
 /**
  * This class is based on the log4j SocketAppender class. I'm using a different repair structure, so
@@ -42,7 +41,7 @@ import org.apache.commons.jcs3.log.LogManager;
 public class LateralTCPSender
 {
     /** The logger */
-    private static final Log log = LogManager.getLog( LateralTCPSender.class );
+    private static final Log log = Log.getLog( LateralTCPSender.class );
 
     /** Config */
     private final int socketOpenTimeOut;

@@ -31,7 +31,6 @@ import org.apache.commons.jcs3.engine.stats.Stats;
 import org.apache.commons.jcs3.engine.stats.behavior.IStatElement;
 import org.apache.commons.jcs3.engine.stats.behavior.IStats;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 import org.apache.commons.jcs3.utils.threadpool.ThreadPoolManager;
 
 /**
@@ -48,7 +47,7 @@ public class PooledCacheEventQueue<K, V>
     extends AbstractCacheEventQueue<K, V>
 {
     /** The logger. */
-    private static final Log log = LogManager.getLog( PooledCacheEventQueue.class );
+    private static final Log log = Log.getLog( PooledCacheEventQueue.class );
 
     /** The Thread Pool to execute events with. */
     protected ExecutorService pool;

@@ -22,7 +22,6 @@ package org.apache.commons.jcs3.utils.config;
 import java.util.Properties;
 
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 
 /**
  * This class is based on the log4j class org.apache.log4j.helpers.OptionConverter that was made by
@@ -32,7 +31,7 @@ import org.apache.commons.jcs3.log.LogManager;
 public class OptionConverter
 {
     /** The logger */
-    private static final Log log = LogManager.getLog( OptionConverter.class );
+    private static final Log log = Log.getLog( OptionConverter.class );
 
     /** System property delimter */
     private static final String DELIM_START = "${";

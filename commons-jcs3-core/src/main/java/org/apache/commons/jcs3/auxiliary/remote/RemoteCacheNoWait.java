@@ -41,7 +41,6 @@ import org.apache.commons.jcs3.engine.stats.Stats;
 import org.apache.commons.jcs3.engine.stats.behavior.IStatElement;
 import org.apache.commons.jcs3.engine.stats.behavior.IStats;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 
 /**
  * The RemoteCacheNoWait wraps the RemoteCacheClient. The client holds a handle on the
@@ -67,7 +66,7 @@ public class RemoteCacheNoWait<K, V>
     extends AbstractAuxiliaryCache<K, V>
 {
     /** Log instance */
-    private static final Log log = LogManager.getLog( RemoteCacheNoWait.class );
+    private static final Log log = Log.getLog( RemoteCacheNoWait.class );
 
     /** The remote cache client */
     private final IRemoteCacheClient<K, V> remoteCacheClient;

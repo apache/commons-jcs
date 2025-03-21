@@ -34,7 +34,6 @@ import org.apache.commons.jcs3.engine.behavior.ICacheElement;
 import org.apache.commons.jcs3.engine.behavior.ICacheServiceNonLocal;
 import org.apache.commons.jcs3.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 
 /**
  * A lateral cache service implementation. Does not implement getGroupKey
@@ -44,7 +43,7 @@ public class LateralTCPService<K, V>
     implements ICacheServiceNonLocal<K, V>
 {
     /** The logger. */
-    private static final Log log = LogManager.getLog( LateralTCPService.class );
+    private static final Log log = Log.getLog( LateralTCPService.class );
 
     /** Special configuration */
     private final boolean allowPut;

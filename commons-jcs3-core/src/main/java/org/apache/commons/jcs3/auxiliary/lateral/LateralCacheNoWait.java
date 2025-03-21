@@ -43,7 +43,6 @@ import org.apache.commons.jcs3.engine.stats.Stats;
 import org.apache.commons.jcs3.engine.stats.behavior.IStatElement;
 import org.apache.commons.jcs3.engine.stats.behavior.IStats;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 
 /**
  * Used to queue up update requests to the underlying cache. These requests will be processed in
@@ -53,7 +52,7 @@ public class LateralCacheNoWait<K, V>
     extends AbstractAuxiliaryCache<K, V>
 {
     /** The logger. */
-    private static final Log log = LogManager.getLog( LateralCacheNoWait.class );
+    private static final Log log = Log.getLog( LateralCacheNoWait.class );
 
     /** The cache */
     private final LateralCache<K, V> cache;

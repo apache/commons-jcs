@@ -29,7 +29,6 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import org.apache.commons.jcs3.engine.behavior.ICacheListener;
 import org.apache.commons.jcs3.engine.behavior.ICacheObserver;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 
 /**
  * Intercepts the requests to the underlying ICacheObserver object so that the listeners can be
@@ -40,7 +39,7 @@ public class CacheWatchRepairable
     implements ICacheObserver
 {
     /** The logger */
-    private static final Log log = LogManager.getLog( CacheWatchRepairable.class );
+    private static final Log log = Log.getLog( CacheWatchRepairable.class );
 
     /** The underlying ICacheObserver. */
     private ICacheObserver cacheWatch;

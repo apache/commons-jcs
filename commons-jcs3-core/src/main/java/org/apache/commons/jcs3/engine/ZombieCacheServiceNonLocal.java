@@ -29,7 +29,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import org.apache.commons.jcs3.engine.behavior.ICacheElement;
 import org.apache.commons.jcs3.engine.behavior.ICacheServiceNonLocal;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 import org.apache.commons.jcs3.utils.timing.ElapsedTimer;
 
 /**
@@ -119,7 +118,7 @@ public class ZombieCacheServiceNonLocal<K, V>
     }
 
     /** The logger */
-    private static final Log log = LogManager.getLog( ZombieCacheServiceNonLocal.class );
+    private static final Log log = Log.getLog( ZombieCacheServiceNonLocal.class );
 
     /** How big can the queue grow. */
     private int maxQueueSize;

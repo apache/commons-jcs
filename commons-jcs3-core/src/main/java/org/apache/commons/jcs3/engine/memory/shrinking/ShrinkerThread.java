@@ -27,7 +27,6 @@ import org.apache.commons.jcs3.engine.control.CompositeCache;
 import org.apache.commons.jcs3.engine.control.event.behavior.ElementEventType;
 import org.apache.commons.jcs3.engine.memory.behavior.IMemoryCache;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 
 /**
  * A background memory shrinker. Memory problems and concurrent modification exception caused by
@@ -37,7 +36,7 @@ public class ShrinkerThread<K, V>
     implements Runnable
 {
     /** The logger */
-    private static final Log log = LogManager.getLog( ShrinkerThread.class );
+    private static final Log log = Log.getLog( ShrinkerThread.class );
 
     /** The CompositeCache instance which this shrinker is watching */
     private final CompositeCache<K, V> cache;

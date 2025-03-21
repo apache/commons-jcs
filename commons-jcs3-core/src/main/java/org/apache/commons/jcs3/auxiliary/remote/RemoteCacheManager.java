@@ -37,7 +37,6 @@ import org.apache.commons.jcs3.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs3.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs3.engine.logging.behavior.ICacheEventLogger;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 
 /**
  * An instance of RemoteCacheManager corresponds to one remote connection of a specific host and
@@ -50,7 +49,7 @@ import org.apache.commons.jcs3.log.LogManager;
 public class RemoteCacheManager
 {
     /** The logger */
-    private static final Log log = LogManager.getLog( RemoteCacheManager.class );
+    private static final Log log = Log.getLog( RemoteCacheManager.class );
 
     /** Contains instances of RemoteCacheNoWait managed by a RemoteCacheManager instance. */
     private final ConcurrentMap<String, RemoteCacheNoWait<?, ?>> caches =

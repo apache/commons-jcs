@@ -31,7 +31,6 @@ import org.apache.commons.jcs3.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs3.engine.control.CompositeCacheManager;
 import org.apache.commons.jcs3.engine.logging.behavior.ICacheEventLogger;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 import org.apache.commons.jcs3.utils.discovery.DiscoveredService;
 import org.apache.commons.jcs3.utils.discovery.behavior.IDiscoveryListener;
 
@@ -44,7 +43,7 @@ public class LateralTCPDiscoveryListener
     implements IDiscoveryListener
 {
     /** The log factory */
-    private static final Log log = LogManager.getLog( LateralTCPDiscoveryListener.class );
+    private static final Log log = Log.getLog( LateralTCPDiscoveryListener.class );
 
     /**
      * Map of no wait facades. these are used to determine which regions are locally configured to

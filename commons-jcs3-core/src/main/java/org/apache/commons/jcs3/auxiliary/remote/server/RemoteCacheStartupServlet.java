@@ -37,7 +37,6 @@ import org.apache.commons.jcs3.access.exception.CacheException;
 import org.apache.commons.jcs3.auxiliary.remote.RemoteUtils;
 import org.apache.commons.jcs3.engine.control.CompositeCacheManager;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 import org.apache.commons.jcs3.utils.net.HostNameUtil;
 
 /**
@@ -67,7 +66,7 @@ public class RemoteCacheStartupServlet
     private static final long serialVersionUID = 1L;
 
     /** The logger */
-    private static final Log log = LogManager.getLog(RemoteCacheStartupServlet.class);
+    private static final Log log = Log.getLog(RemoteCacheStartupServlet.class);
 
     /** The default port to start the registry on. */
     private static final int DEFAULT_REGISTRY_PORT = 1101;

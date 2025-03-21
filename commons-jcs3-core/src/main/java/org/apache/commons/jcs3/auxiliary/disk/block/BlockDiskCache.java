@@ -46,7 +46,6 @@ import org.apache.commons.jcs3.engine.stats.Stats;
 import org.apache.commons.jcs3.engine.stats.behavior.IStatElement;
 import org.apache.commons.jcs3.engine.stats.behavior.IStats;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
 
 /**
@@ -57,7 +56,7 @@ public class BlockDiskCache<K, V>
     implements IRequireScheduler
 {
     /** The logger. */
-    private static final Log log = LogManager.getLog( BlockDiskCache.class );
+    private static final Log log = Log.getLog( BlockDiskCache.class );
 
     /** The name to prefix all log messages with. */
     private final String logCacheName;

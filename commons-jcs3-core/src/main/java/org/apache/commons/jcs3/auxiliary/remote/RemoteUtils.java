@@ -35,7 +35,6 @@ import java.rmi.server.RMISocketFactory;
 import java.util.Properties;
 
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 
 /**
  * This class provides some basic utilities for doing things such as starting
@@ -44,7 +43,7 @@ import org.apache.commons.jcs3.log.LogManager;
 public class RemoteUtils
 {
     /** The logger. */
-    private static final Log log = LogManager.getLog(RemoteUtils.class);
+    private static final Log log = Log.getLog(RemoteUtils.class);
 
     /**
      * Configure a custom socket factory to set the timeout value. This sets the

@@ -44,7 +44,6 @@ import org.apache.commons.jcs3.engine.stats.Stats;
 import org.apache.commons.jcs3.engine.stats.behavior.IStatElement;
 import org.apache.commons.jcs3.engine.stats.behavior.IStats;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 
 /**
  * This base includes some common code for memory caches.
@@ -53,7 +52,7 @@ public abstract class AbstractMemoryCache<K, V>
     implements IMemoryCache<K, V>
 {
     /** Log instance */
-    private static final Log log = LogManager.getLog( AbstractMemoryCache.class );
+    private static final Log log = Log.getLog( AbstractMemoryCache.class );
 
     /** Cache Attributes.  Regions settings. */
     private ICompositeCacheAttributes cacheAttributes;

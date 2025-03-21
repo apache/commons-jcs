@@ -25,7 +25,6 @@ import org.apache.commons.jcs3.auxiliary.remote.value.RemoteCacheRequest;
 import org.apache.commons.jcs3.auxiliary.remote.value.RemoteRequestType;
 import org.apache.commons.jcs3.engine.behavior.ICacheElement;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 
 /**
  * This creates request objects. You could write your own client and use the objects from this
@@ -34,7 +33,7 @@ import org.apache.commons.jcs3.log.LogManager;
 public class RemoteCacheRequestFactory
 {
     /** The Logger. */
-    private static final Log log = LogManager.getLog( RemoteCacheRequestFactory.class );
+    private static final Log log = Log.getLog( RemoteCacheRequestFactory.class );
 
     /**
      * Creates an alive check Request.

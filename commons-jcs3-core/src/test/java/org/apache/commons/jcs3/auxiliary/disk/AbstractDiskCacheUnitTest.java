@@ -270,6 +270,7 @@ class AbstractDiskCacheUnitTest
         // DO WORK
         diskCache.removeAll();
         final String result = stringWriter.toString();
+        System.out.println(result);
 
         // VERIFY
         assertTrue( result.indexOf( "set to false" ) != -1, "Should say not allowed." );

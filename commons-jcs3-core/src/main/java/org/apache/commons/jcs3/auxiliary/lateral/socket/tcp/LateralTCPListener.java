@@ -42,7 +42,6 @@ import org.apache.commons.jcs3.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs3.engine.behavior.IShutdownObserver;
 import org.apache.commons.jcs3.engine.control.CompositeCache;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 
 /**
  * Listens for connections from other TCP lateral caches and handles them. The initialization method
@@ -53,7 +52,7 @@ public class LateralTCPListener<K, V>
     implements ILateralCacheListener<K, V>, IShutdownObserver
 {
     /** The logger */
-    private static final Log log = LogManager.getLog( LateralTCPListener.class );
+    private static final Log log = Log.getLog( LateralTCPListener.class );
 
     /** How long the server will block on an accept(). 0 is infinite. */
     private static final int acceptTimeOut = 1000;

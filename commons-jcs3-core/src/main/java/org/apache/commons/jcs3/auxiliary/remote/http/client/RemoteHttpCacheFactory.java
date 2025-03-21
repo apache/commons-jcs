@@ -30,7 +30,6 @@ import org.apache.commons.jcs3.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs3.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs3.engine.logging.behavior.ICacheEventLogger;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 import org.apache.commons.jcs3.utils.config.OptionConverter;
 
 /**
@@ -43,7 +42,7 @@ public class RemoteHttpCacheFactory
     extends AbstractAuxiliaryCacheFactory
 {
     /** The logger */
-    private static final Log log = LogManager.getLog( RemoteHttpCacheFactory.class );
+    private static final Log log = Log.getLog( RemoteHttpCacheFactory.class );
 
     /** Monitor thread instance */
     private RemoteHttpCacheMonitor monitor;

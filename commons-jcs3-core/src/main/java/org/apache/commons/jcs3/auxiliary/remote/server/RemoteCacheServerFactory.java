@@ -41,7 +41,6 @@ import org.apache.commons.jcs3.auxiliary.remote.behavior.IRemoteCacheConstants;
 import org.apache.commons.jcs3.engine.behavior.ICacheServiceAdmin;
 import org.apache.commons.jcs3.engine.logging.behavior.ICacheEventLogger;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 import org.apache.commons.jcs3.utils.config.OptionConverter;
 import org.apache.commons.jcs3.utils.config.PropertySetter;
 import org.apache.commons.jcs3.utils.threadpool.DaemonThreadFactory;
@@ -54,7 +53,7 @@ public class RemoteCacheServerFactory
     implements IRemoteCacheConstants
 {
     /** The logger */
-    private static final Log log = LogManager.getLog( RemoteCacheServerFactory.class );
+    private static final Log log = Log.getLog( RemoteCacheServerFactory.class );
 
     /** The single instance of the RemoteCacheServer object. */
     private static RemoteCacheServer<?, ?> remoteCacheServer;

@@ -27,7 +27,6 @@ import org.apache.commons.jcs3.engine.control.event.behavior.IElementEvent;
 import org.apache.commons.jcs3.engine.control.event.behavior.IElementEventHandler;
 import org.apache.commons.jcs3.engine.control.event.behavior.IElementEventQueue;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 import org.apache.commons.jcs3.utils.threadpool.PoolConfiguration;
 import org.apache.commons.jcs3.utils.threadpool.PoolConfiguration.WhenBlockedPolicy;
 import org.apache.commons.jcs3.utils.threadpool.ThreadPoolManager;
@@ -41,7 +40,7 @@ public class ElementEventQueue
     private static final String THREAD_PREFIX = "JCS-ElementEventQueue-";
 
     /** The logger */
-    private static final Log log = LogManager.getLog( ElementEventQueue.class );
+    private static final Log log = Log.getLog( ElementEventQueue.class );
 
     /** Shutdown or not */
     private final AtomicBoolean destroyed = new AtomicBoolean();

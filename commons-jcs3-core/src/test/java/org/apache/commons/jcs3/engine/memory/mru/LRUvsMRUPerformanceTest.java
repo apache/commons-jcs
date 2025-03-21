@@ -23,7 +23,6 @@ import org.apache.commons.jcs3.JCS;
 import org.apache.commons.jcs3.access.CacheAccess;
 import org.apache.commons.jcs3.engine.memory.lru.LRUMemoryCache;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -161,13 +160,13 @@ public class LRUvsMRUPerformanceTest
     void testSimpleLoad()
         throws Exception
     {
-        final Log log1 = LogManager.getLog( LRUMemoryCache.class );
+        final Log log1 = Log.getLog( LRUMemoryCache.class );
         if ( log1.isDebugEnabled() )
         {
             System.out.println( "The log level must be at info or above for the a performance test." );
             return;
         }
-        final Log log2 = LogManager.getLog( MRUMemoryCache.class );
+        final Log log2 = Log.getLog( MRUMemoryCache.class );
         if ( log2.isDebugEnabled() )
         {
             System.out.println( "The log level must be at info or above for the a performance test." );

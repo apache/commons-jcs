@@ -39,7 +39,6 @@ import org.apache.commons.jcs3.engine.stats.StatElement;
 import org.apache.commons.jcs3.engine.stats.behavior.IStatElement;
 import org.apache.commons.jcs3.engine.stats.behavior.IStats;
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 
 /**
  * A JCS IMemoryCache that has {@link SoftReference} to all its values.
@@ -53,7 +52,7 @@ import org.apache.commons.jcs3.log.LogManager;
 public class SoftReferenceMemoryCache<K, V> extends AbstractMemoryCache<K, V>
 {
     /** The logger. */
-    private static final Log log = LogManager.getLog(SoftReferenceMemoryCache.class);
+    private static final Log log = Log.getLog(SoftReferenceMemoryCache.class);
 
     /**
      * Strong references to the maxObjects number of newest objects.

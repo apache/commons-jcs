@@ -22,7 +22,6 @@ package org.apache.commons.jcs3.auxiliary.remote.http.client;
 import java.io.IOException;
 
 import org.apache.commons.jcs3.log.Log;
-import org.apache.commons.jcs3.log.LogManager;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
 import org.apache.http.client.HttpClient;
@@ -40,7 +39,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 public abstract class AbstractHttpClient
 {
     /** The Logger. */
-    private static final Log log = LogManager.getLog( AbstractHttpClient.class );
+    private static final Log log = Log.getLog( AbstractHttpClient.class );
 
     /** The client */
     private final HttpClient httpClient;
