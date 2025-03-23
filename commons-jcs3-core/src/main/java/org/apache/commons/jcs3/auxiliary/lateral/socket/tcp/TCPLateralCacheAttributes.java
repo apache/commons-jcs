@@ -122,7 +122,7 @@ public class TCPLateralCacheAttributes
 
     /**
      * Gets the tcpListenerHost attribute of the ILateralCacheAttributes object
-     * <p>
+     *
      * @return The tcpListenerHost value
      */
     @Override
@@ -133,7 +133,7 @@ public class TCPLateralCacheAttributes
 
     /**
      * Gets the tcpListenerPort attribute of the ILateralCacheAttributes object
-     * <p>
+     *
      * @return The tcpListenerPort value
      */
     @Override
@@ -144,7 +144,7 @@ public class TCPLateralCacheAttributes
 
     /**
      * Gets the tcpServer attribute of the ILateralCacheAttributes object
-     * <p>
+     *
      * @return The tcpServer value
      */
     @Override
@@ -155,7 +155,7 @@ public class TCPLateralCacheAttributes
 
     /**
      * Gets the tcpServers attribute of the ILateralCacheAttributes object
-     * <p>
+     *
      * @return The tcpServers value
      */
     @Override
@@ -166,7 +166,7 @@ public class TCPLateralCacheAttributes
 
     /**
      * The address to broadcast to if UDPDiscovery is enabled.
-     * <p>
+     *
      * @return the udpDiscoveryAddr.
      */
     @Override
@@ -177,7 +177,7 @@ public class TCPLateralCacheAttributes
 
     /**
      * The port to use if UDPDiscovery is enabled.
-     * <p>
+     *
      * @return the udpDiscoveryPort.
      */
     @Override
@@ -188,7 +188,7 @@ public class TCPLateralCacheAttributes
 
     /**
      * The time-to-live for the UDP multicast packets
-     * <p>
+     *
      * @return the udpTTL.
      * @since 3.1
      */
@@ -200,7 +200,7 @@ public class TCPLateralCacheAttributes
 
     /**
      * Is the lateral allowed to try and get from other laterals.
-     * <p>
+     *
      * @return true if the lateral will try to get
      */
     @Override
@@ -211,7 +211,7 @@ public class TCPLateralCacheAttributes
 
     /**
      * Is the lateral allowed to put objects to other laterals.
-     * <p>
+     *
      * @return true if puts are allowed
      */
     @Override
@@ -226,7 +226,7 @@ public class TCPLateralCacheAttributes
      * then it will compare the hash code. if they are the same, it will not remove. This isn't
      * perfect since different objects can have the same hash code, but it is unlikely of objects of
      * the same type.
-     * <p>
+     *
      * @return boolean
      */
     @Override
@@ -239,7 +239,7 @@ public class TCPLateralCacheAttributes
      * Should the client send a remove command rather than a put when update is called. This is a
      * client option, not a receiver option. This allows you to prevent the lateral from serializing
      * objects.
-     * <p>
+     *
      * @return true if updates will result in a remove command being sent.
      */
     @Override
@@ -249,8 +249,8 @@ public class TCPLateralCacheAttributes
     }
 
     /**
-     * Whether or not TCP laterals can try to find each other by multicast communication.
-     * <p>
+     * Tests whether or not TCP laterals can try to find each other by multicast communication.
+     *
      * @return the udpDiscoveryEnabled.
      */
     @Override
@@ -274,7 +274,7 @@ public class TCPLateralCacheAttributes
 
     /**
      * Is the lateral allowed to put objects to other laterals.
-     * <p>
+     *
      * @param allowPut
      */
     @Override
@@ -289,7 +289,7 @@ public class TCPLateralCacheAttributes
      * then it will compare the hash code. if they are the same, it will not remove. This isn't
      * perfect since different objects can have the same hash code, but it is unlikely of objects of
      * the same type.
-     * <p>
+     *
      * @param filter
      */
     @Override
@@ -302,7 +302,7 @@ public class TCPLateralCacheAttributes
      * Should the client send a remove command rather than a put when update is called. This is a
      * client option, not a receiver option. This allows you to prevent the lateral from serializing
      * objects.
-     * <p>
+     *
      * @param issueRemoveOnPut
      */
     @Override
@@ -331,7 +331,7 @@ public class TCPLateralCacheAttributes
 
     /**
      * Sets the tcpListenerHost attribute of the ILateralCacheAttributes object
-     * <p>
+     *
      * @param val
      *            The new tcpListenerHost value
      */
@@ -343,7 +343,7 @@ public class TCPLateralCacheAttributes
 
     /**
      * Sets the tcpListenerPort attribute of the ILateralCacheAttributes object
-     * <p>
+     *
      * @param val The new tcpListenerPort value
      */
     @Override
@@ -354,7 +354,7 @@ public class TCPLateralCacheAttributes
 
     /**
      * Sets the tcpServer attribute of the ILateralCacheAttributes object
-     * <p>
+     *
      * @param val The new tcpServer value
      */
     @Override

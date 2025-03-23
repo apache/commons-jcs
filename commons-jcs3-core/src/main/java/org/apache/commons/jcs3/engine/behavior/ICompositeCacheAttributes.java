@@ -117,7 +117,7 @@ public interface ICompositeCacheAttributes
     boolean isUseLateral();
 
     /**
-     * Whether the memory cache should perform background memory shrinkage.
+     * Tests whether the memory cache should perform background memory shrinkage.
      * <p>
      * @return The UseMemoryShrinker value
      */
@@ -219,7 +219,7 @@ public interface ICompositeCacheAttributes
     void setUseDisk( boolean useDisk );
 
     /**
-     * set whether the cache should use a lateral cache
+     * Sets whether the cache should use a lateral cache
      * <p>
      * @param d
      *            The new useLateral value
@@ -227,7 +227,7 @@ public interface ICompositeCacheAttributes
     void setUseLateral( boolean d );
 
     /**
-     * Whether the memory cache should perform background memory shrinkage.
+     * Sets whether the memory cache should perform background memory shrinkage.
      * <p>
      * @param useShrinker
      *            The new UseMemoryShrinker value

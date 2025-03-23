@@ -125,7 +125,7 @@ public interface ITCPLateralCacheAttributes
     boolean isIssueRemoveOnPut();
 
     /**
-     * Whether or not TCP laterals can try to find each other by multicast
+     * Tests whether or not TCP laterals can try to find each other by multicast
      * communication.
      * <p>
      * @return the udpDiscoveryEnabled.

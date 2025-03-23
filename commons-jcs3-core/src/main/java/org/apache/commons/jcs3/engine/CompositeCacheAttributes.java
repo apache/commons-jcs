@@ -127,7 +127,7 @@ public class CompositeCacheAttributes
 
     /**
      * Gets the cacheName attribute of the CompositeCacheAttributes object
-     * <p>
+     *
      * @return The cacheName value
      */
     @Override
@@ -147,7 +147,7 @@ public class CompositeCacheAttributes
 
     /**
      * If UseMemoryShrinker is true the memory cache should auto-expire elements to reclaim space.
-     * <p>
+     *
      * @return The MaxMemoryIdleTimeSeconds value
      */
     @Override
@@ -158,7 +158,7 @@ public class CompositeCacheAttributes
 
     /**
      * Gets the maxObjects attribute of the CompositeCacheAttributes object
-     * <p>
+     *
      * @return The maxObjects value
      */
     @Override
@@ -170,7 +170,7 @@ public class CompositeCacheAttributes
     /**
      * If UseMemoryShrinker is true the memory cache should auto-expire elements to reclaim space.
      * This gets the maximum number of items to spool per run.
-     * <p>
+     *
      * @return The maxSpoolPerRun value
      */
     @Override
@@ -181,7 +181,7 @@ public class CompositeCacheAttributes
 
     /**
      * Gets the memoryCacheName attribute of the CompositeCacheAttributes object
-     * <p>
+     *
      * @return The memoryCacheName value
      */
     @Override
@@ -193,7 +193,7 @@ public class CompositeCacheAttributes
     /**
      * If UseMemoryShrinker is true the memory cache should auto-expire elements to reclaim space.
      * This gets the shrinker interval.
-     * <p>
+     *
      * @return The ShrinkerIntervalSeconds value
      */
     @Override
@@ -204,7 +204,7 @@ public class CompositeCacheAttributes
 
     /**
      * Number to send to disk at the time when memory is full.
-     * <p>
+     *
      * @return int
      */
     @Override
@@ -215,7 +215,7 @@ public class CompositeCacheAttributes
 
     /**
      * Gets the useDisk attribute of the CompositeCacheAttributes object
-     * <p>
+     *
      * @return The useDisk value
      */
     @Override
@@ -226,7 +226,7 @@ public class CompositeCacheAttributes
 
     /**
      * Gets the useLateral attribute of the CompositeCacheAttributes object
-     * <p>
+     *
      * @return The useLateral value
      */
     @Override
@@ -236,8 +236,8 @@ public class CompositeCacheAttributes
     }
 
     /**
-     * Whether the memory cache should perform background memory shrinkage.
-     * <p>
+     * Tests whether the memory cache should perform background memory shrinkage.
+     *
      * @return The UseMemoryShrinker value
      */
     @Override
@@ -248,7 +248,7 @@ public class CompositeCacheAttributes
 
     /**
      * Gets the useRemote attribute of the CompositeCacheAttributes object
-     * <p>
+     *
      * @return The useRemote value
      */
     @Override
@@ -259,7 +259,7 @@ public class CompositeCacheAttributes
 
     /**
      * Sets the cacheName attribute of the CompositeCacheAttributes object
-     * <p>
+     *
      * @param s The new cacheName value
      */
     @Override
@@ -270,7 +270,7 @@ public class CompositeCacheAttributes
 
     /**
      * By default this is SWAP_ONLY.
-     * <p>
+     *
      * @param diskUsagePattern The diskUsagePattern to set.
      */
     @Override
@@ -283,7 +283,7 @@ public class CompositeCacheAttributes
      * Translates the name to the disk usage pattern short value.
      * <p>
      * The allowed values are SWAP and UPDATE.
-     * <p>
+     *
      * @param diskUsagePatternName The diskUsagePattern to set.
      */
     @Override
@@ -305,7 +305,7 @@ public class CompositeCacheAttributes
 
     /**
      * If UseMemoryShrinker is true the memory cache should auto-expire elements to reclaim space.
-     * <p>
+     *
      * @param seconds The new MaxMemoryIdleTimeSeconds value
      */
     @Override
@@ -316,7 +316,7 @@ public class CompositeCacheAttributes
 
     /**
      * Sets the maxObjects attribute of the CompositeCacheAttributes object
-     * <p>
+     *
      * @param maxObjs The new maxObjects value
      */
     @Override
@@ -330,7 +330,7 @@ public class CompositeCacheAttributes
      * This sets the maximum number of items to spool per run.
      * <p>
      * If the value is -1, then there is no limit to the number of items to be spooled.
-     * <p>
+     *
      * @param maxSpoolPerRun The new maxSpoolPerRun value
      */
     @Override
@@ -341,7 +341,7 @@ public class CompositeCacheAttributes
 
     /**
      * Sets the memoryCacheName attribute of the CompositeCacheAttributes object
-     * <p>
+     *
      * @param s The new memoryCacheName value
      */
     @Override
@@ -353,7 +353,7 @@ public class CompositeCacheAttributes
     /**
      * If UseMemoryShrinker is true the memory cache should auto-expire elements to reclaim space.
      * This sets the shrinker interval.
-     * <p>
+     *
      * @param seconds The new ShrinkerIntervalSeconds value
      */
     @Override
@@ -364,7 +364,7 @@ public class CompositeCacheAttributes
 
     /**
      * Number to send to disk at a time.
-     * <p>
+     *
      * @param spoolChunkSize
      */
     @Override
@@ -375,7 +375,7 @@ public class CompositeCacheAttributes
 
     /**
      * Sets the useDisk attribute of the CompositeCacheAttributes object
-     * <p>
+     *
      * @param useDisk The new useDisk value
      */
     @Override
@@ -386,7 +386,7 @@ public class CompositeCacheAttributes
 
     /**
      * Sets the useLateral attribute of the CompositeCacheAttributes object
-     * <p>
+     *
      * @param b The new useLateral value
      */
     @Override
@@ -396,8 +396,8 @@ public class CompositeCacheAttributes
     }
 
     /**
-     * Whether the memory cache should perform background memory shrinkage.
-     * <p>
+     * Sets whether the memory cache should perform background memory shrinkage.
+     *
      * @param useShrinker The new UseMemoryShrinker value
      */
     @Override
@@ -408,7 +408,7 @@ public class CompositeCacheAttributes
 
     /**
      * Sets the useRemote attribute of the CompositeCacheAttributes object
-     * <p>
+     *
      * @param useRemote The new useRemote value
      */
     @Override
@@ -419,7 +419,7 @@ public class CompositeCacheAttributes
 
     /**
      * Dumps the core attributes.
-     * <p>
+     *
      * @return For debugging.
      */
     @Override
