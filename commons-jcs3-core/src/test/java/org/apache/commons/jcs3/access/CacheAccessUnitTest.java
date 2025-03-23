@@ -98,7 +98,7 @@ class CacheAccessUnitTest
 
     /**
      * Verify we can get some matching elements..
-     * <p>
+     *
      * @throws Exception
      */
     @Test
@@ -153,7 +153,7 @@ class CacheAccessUnitTest
 
     /**
      * Verify we can get some matching elements..
-     * <p>
+     *
      * @throws Exception
      */
     @Test

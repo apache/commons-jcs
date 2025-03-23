@@ -37,7 +37,7 @@ public final class CompressionUtil
 
     /**
      * Compress the byte array passed
-     * <p>
+     *
      * @param input byte array
      * @return compressed byte array
      * @throws IOException thrown if we can't close the output stream
@@ -50,7 +50,7 @@ public final class CompressionUtil
 
     /**
      * Compress the byte array passed
-     * <p>
+     *
      * @param input byte array
      * @param bufferLength buffer length
      * @return compressed byte array
@@ -91,7 +91,7 @@ public final class CompressionUtil
 
     /**
      * Decompress the byte array passed using a default buffer length of 1024.
-     * <p>
+     *
      * @param input compressed byte array webservice response
      * @return uncompressed byte array
      */
@@ -102,7 +102,7 @@ public final class CompressionUtil
 
     /**
      * Decompress the byte array passed
-     * <p>
+     *
      * @param input compressed byte array webservice response
      * @param bufferLength buffer length
      * @return uncompressed byte array
@@ -154,7 +154,7 @@ public final class CompressionUtil
 
     /**
      * decompress a gzip byte array, using a default buffer length of 1024
-     * <p>
+     *
      * @param compressedByteArray gzip-compressed byte array
      * @return decompressed byte array
      * @throws IOException thrown if there was a failure to construct the GzipInputStream
@@ -167,7 +167,7 @@ public final class CompressionUtil
 
     /**
      * decompress a gzip byte array, using a default buffer length of 1024
-     * <p>
+     *
      * @param compressedByteArray gzip-compressed byte array
      * @param bufferlength size of the buffer in bytes
      * @return decompressed byte array

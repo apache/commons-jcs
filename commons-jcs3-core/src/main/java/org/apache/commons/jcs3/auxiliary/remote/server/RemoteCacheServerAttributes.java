@@ -57,7 +57,7 @@ public class RemoteCacheServerAttributes
 
     /**
      * Gets the ConfigFileName attribute of the IRemoteCacheAttributes object
-     * <p>
+     *
      * @return The clusterServers value
      */
     @Override
@@ -77,7 +77,7 @@ public class RemoteCacheServerAttributes
 
     /**
      * Gets the localPort attribute of the RemoteCacheAttributes object
-     * <p>
+     *
      * @return The localPort value
      */
     @Override
@@ -88,7 +88,7 @@ public class RemoteCacheServerAttributes
 
     /**
      * Should gets from non-cluster clients be allowed to get from other remote auxiliaries.
-     * <p>
+     *
      * @return The localClusterConsistency value
      */
     @Override
@@ -99,7 +99,7 @@ public class RemoteCacheServerAttributes
 
     /**
      * Should we try to keep the registry alive
-     * <p>
+     *
      * @return the useRegistryKeepAlive
      */
     @Override
@@ -110,7 +110,7 @@ public class RemoteCacheServerAttributes
 
     /**
      * Should we try to get from other cluster servers if we don't find the items locally.
-     * <p>
+     *
      * @param r The new localClusterConsistency value
      */
     @Override
@@ -121,7 +121,7 @@ public class RemoteCacheServerAttributes
 
     /**
      * Sets the ConfigFileName attribute of the IRemoteCacheAttributes object
-     * <p>
+     *
      * @param s The new clusterServers value
      */
     @Override
@@ -141,7 +141,7 @@ public class RemoteCacheServerAttributes
 
     /**
      * Sets the localPort attribute of the RemoteCacheAttributes object
-     * <p>
+     *
      * @param p The new localPort value
      */
     @Override
@@ -152,7 +152,7 @@ public class RemoteCacheServerAttributes
 
     /**
      * Should we try to keep the registry alive
-     * <p>
+     *
      * @param useRegistryKeepAlive the useRegistryKeepAlive to set
      */
     @Override

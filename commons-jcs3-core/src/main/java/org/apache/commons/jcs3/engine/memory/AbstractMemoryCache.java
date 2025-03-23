@@ -80,14 +80,14 @@ public abstract class AbstractMemoryCache<K, V>
     /**
      * Children must implement this method. A FIFO implementation may use a tree map. An LRU might
      * use a hashtable. The map returned should be threadsafe.
-     * <p>
+     *
      * @return a threadsafe Map
      */
     public abstract Map<K, MemoryElementDescriptor<K, V>> createMap();
 
     /**
      * Prepares for shutdown. Reset statistics
-     * <p>
+     *
      * @throws IOException
      */
     @Override
@@ -162,7 +162,7 @@ public abstract class AbstractMemoryCache<K, V>
 
     /**
      * Returns the CacheAttributes.
-     * <p>
+     *
      * @return The CacheAttributes value
      */
     @Override
@@ -173,7 +173,7 @@ public abstract class AbstractMemoryCache<K, V>
 
     /**
      * Returns the cache (aka "region") name.
-     * <p>
+     *
      * @return The cacheName value
      */
     public String getCacheName()
@@ -188,7 +188,7 @@ public abstract class AbstractMemoryCache<K, V>
 
     /**
      * Gets the cache hub / region that the MemoryCache is used by
-     * <p>
+     *
      * @return The cache value
      */
     @Override
@@ -210,7 +210,7 @@ public abstract class AbstractMemoryCache<K, V>
 
     /**
      * Gets multiple items from the cache based on the given set of keys.
-     * <p>
+     *
      * @param keys
      * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
      *         data in cache for any of these keys
@@ -245,7 +245,7 @@ public abstract class AbstractMemoryCache<K, V>
     /**
      * Gets an item from the cache without affecting its last access time or position. Not all memory
      * cache implementations can get quietly.
-     * <p>
+     *
      * @param key Identifies item to find
      * @return Element matching key if found, or null
      * @throws IOException
@@ -275,7 +275,7 @@ public abstract class AbstractMemoryCache<K, V>
 
     /**
      * Returns the current cache size.
-     * <p>
+     *
      * @return The size value
      */
     @Override
@@ -306,7 +306,7 @@ public abstract class AbstractMemoryCache<K, V>
 
     /**
      * For post reflection creation initialization
-     * <p>
+     *
      * @param hub
      */
     @Override
@@ -395,7 +395,7 @@ public abstract class AbstractMemoryCache<K, V>
 
     /**
      * Removes all cached items from the cache.
-     * <p>
+     *
      * @throws IOException
      */
     @Override
@@ -478,7 +478,7 @@ public abstract class AbstractMemoryCache<K, V>
 
     /**
      * Sets the CacheAttributes.
-     * <p>
+     *
      * @param cattr The new CacheAttributes value
      */
     @Override
@@ -489,7 +489,7 @@ public abstract class AbstractMemoryCache<K, V>
 
     /**
      * Puts an item to the cache.
-     * <p>
+     *
      * @param ce Description of the Parameter
      * @throws IOException Description of the Exception
      */
@@ -499,7 +499,7 @@ public abstract class AbstractMemoryCache<K, V>
 
     /**
      * Puts an item to the cache.
-     * <p>
+     *
      * @param ce the item
      */
     @Override

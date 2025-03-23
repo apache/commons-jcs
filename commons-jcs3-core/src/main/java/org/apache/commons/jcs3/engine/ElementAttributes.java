@@ -98,7 +98,7 @@ public class ElementAttributes
 
     /**
      * Constructor for the IElementAttributes object
-     * <p>
+     *
      * @param attr
      */
     protected ElementAttributes( final ElementAttributes attr )
@@ -126,7 +126,7 @@ public class ElementAttributes
      * <p>
      * The alternative would be to register handlers for each event. Or maybe The handler interface
      * should have a method to return whether it cares about certain events.
-     * <p>
+     *
      * @param eventHandler The ElementEventHandler to be added to the list.
      */
     @Override
@@ -145,7 +145,7 @@ public class ElementAttributes
      * <p>
      * This add the references to the local list. Subsequent changes in the caller's list will not
      * be reflected.
-     * <p>
+     *
      * @param eventHandlers List of IElementEventHandler objects
      */
     @Override
@@ -197,7 +197,7 @@ public class ElementAttributes
 
     /**
      * Gets the elementEventHandlers. Returns null if none exist. Makes checking easy.
-     * <p>
+     *
      * @return The elementEventHandlers List of IElementEventHandler objects
      */
     @Override
@@ -208,7 +208,7 @@ public class ElementAttributes
 
     /**
      * Gets the idleTime attribute of the IAttributes object.
-     * <p>
+     *
      * @return The idleTime value
      */
     @Override
@@ -219,7 +219,7 @@ public class ElementAttributes
 
     /**
      * You can turn off expiration by setting this to true. The max life value will be ignored.
-     * <p>
+     *
      * @return true if the item cannot expire.
      */
     @Override
@@ -264,7 +264,7 @@ public class ElementAttributes
 
     /**
      * Gets the LastAccess attribute of the IAttributes object.
-     * <p>
+     *
      * @return The LastAccess value.
      */
     @Override
@@ -289,7 +289,7 @@ public class ElementAttributes
 
     /**
      * Gets the size attribute of the IAttributes object
-     * <p>
+     *
      * @return The size value
      */
     @Override
@@ -344,7 +344,7 @@ public class ElementAttributes
      * Sets the isEternal attribute of the ElementAttributes object. True means that the item should
      * never expire. If can still be removed if it is the least recently used, and you are using the
      * LRUMemory cache. it just will not be filtered for expiration by the cache hub.
-     * <p>
+     *
      * @param val The new isEternal value
      */
     @Override
@@ -406,7 +406,7 @@ public class ElementAttributes
 
     /**
      * Sets the maxLife attribute of the IAttributes object.
-     * <p>
+     *
      * @param mls The new MaxLifeSeconds value
      */
     @Override
@@ -418,7 +418,7 @@ public class ElementAttributes
     /**
      * Size in bytes. This is not used except in the admin pages. It will be 0 by default
      * and is only updated when the element is serialized.
-     * <p>
+     *
      * @param size The new size value
      */
     @Override
@@ -435,7 +435,7 @@ public class ElementAttributes
 
     /**
      * For logging and debugging the element IElementAttributes.
-     * <p>
+     *
      * @return String info about the values.
      */
     @Override

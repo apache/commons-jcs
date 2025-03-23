@@ -78,7 +78,7 @@ public class RemoteHttpCacheServlet
 
     /**
      * Tries to get the event logger.
-     * <p>
+     *
      * @param props
      * @return ICacheEventLogger
      */
@@ -93,7 +93,7 @@ public class RemoteHttpCacheServlet
      * Configure.
      * <p>
      * jcs.remotehttpcache.serverattributes.ATTRIBUTENAME=ATTRIBUTEVALUE
-     * <p>
+     *
      * @param prop
      * @return RemoteCacheServerAttributesconfigureRemoteCacheServerAttributes
      */
@@ -110,7 +110,7 @@ public class RemoteHttpCacheServlet
 
     /**
      * Configures the attributes and the event logger and constructs a service.
-     * <p>
+     *
      * @param cacheManager
      * @return RemoteHttpCacheService
      */
@@ -136,7 +136,7 @@ public class RemoteHttpCacheServlet
 
     /**
      * Gets servlet information
-     * <p>
+     *
      * @return basic info
      */
     @Override
@@ -186,7 +186,7 @@ public class RemoteHttpCacheServlet
 
     /**
      * Processes the request. It will call the appropriate method on the service
-     * <p>
+     *
      * @param request
      * @return RemoteHttpCacheResponse, never null
      */
@@ -268,7 +268,7 @@ public class RemoteHttpCacheServlet
 
     /**
      * Read the request from the input stream.
-     * <p>
+     *
      * @param request
      * @return RemoteHttpCacheRequest
      */
@@ -291,7 +291,7 @@ public class RemoteHttpCacheServlet
 
     /**
      * Reads the response from the stream and then closes it.
-     * <p>
+     *
      * @param inputStream
      * @return RemoteHttpCacheRequest
      * @throws IOException
@@ -305,7 +305,7 @@ public class RemoteHttpCacheServlet
 
     /**
      * Read the request, call the processor, write the response.
-     * <p>
+     *
      * @param request
      * @param response
      * @throws ServletException
@@ -334,7 +334,7 @@ public class RemoteHttpCacheServlet
 
     /**
      * Write the response to the output stream.
-     * <p>
+     *
      * @param response
      * @param cacheResponse
      */

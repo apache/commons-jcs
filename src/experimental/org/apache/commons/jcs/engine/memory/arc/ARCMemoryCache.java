@@ -40,7 +40,7 @@ import java.util.ArrayList;
  * hybrid LFU / LRU that adapts to user behavior.
  * <p>
  * See the ARC method for more detail on how the algorithm works.
- * <p>
+ *
  * @see http://www.almaden.ibm.com/StorageSystems/autonomic_storage/ARC/index.shtml
  * @see http://www.almaden.ibm.com/cs/people/dmodha/ARC.pdf
  */
@@ -121,7 +121,7 @@ public class ARCMemoryCache
 
     /**
      * For post reflection creation initialization
-     * <p>
+     *
      * @param hub
      */
     public synchronized void initialize( CompositeCache hub )
@@ -196,7 +196,7 @@ public class ARCMemoryCache
      * element was last used, or when it was deleted and from where. We first
      * look for the item in the map, if we find it, we go looking for it in the
      * lists.
-     * <p>
+     *
      * @param ce
      *            ICacheElement
      * @param isGet
@@ -341,7 +341,7 @@ public class ARCMemoryCache
 
     /**
      * Move to T2 if the item was found in T1.
-     * <p>
+     *
      * @param temp
      */
     protected void handleFoundInT1( ElementDescriptor temp )
@@ -368,7 +368,7 @@ public class ARCMemoryCache
 
     /**
      * If it was found in T2, we move it to the top of the T2 list.
-     * <p>
+     *
      * @param temp
      */
     protected void handleFoundInT2( ElementDescriptor temp )
@@ -384,7 +384,7 @@ public class ARCMemoryCache
 
     /**
      * B1 hit: favor recency
-     * <p>
+     *
      * @param ce
      * @param isGet
      * @param temp
@@ -432,7 +432,7 @@ public class ARCMemoryCache
 
     /**
      * B2 hit: favor frequency
-     * <p>
+     *
      * @param ce
      * @param isGet
      * @param temp
@@ -481,7 +481,7 @@ public class ARCMemoryCache
 
     /**
      * Prints the stats every 10000 or so operations.
-     * <p>
+     *
      * @param ce
      * @param isGet
      */
@@ -507,7 +507,7 @@ public class ARCMemoryCache
      * object that stores the key so that subsequent gets and puts can help
      * train the cache. Items are spooled if there is a disk cache at this
      * point.
-     * <p>
+     *
      * @param orig
      *            ElementDescriptor
      */
@@ -765,7 +765,7 @@ public class ARCMemoryCache
 
     /**
      * At the start this will be 1/2 the max.
-     * <p>
+     *
      * @return the target_T1.
      */
     protected int getTarget_T1()

@@ -86,7 +86,7 @@ public class RemoteCacheManager
      * Constructs an instance to with the given remote connection parameters. If the connection
      * cannot be made, "zombie" services will be temporarily used until a successful re-connection
      * is made by the monitoring daemon.
-     * <p>
+     *
      * @param cattr cache attributes
      * @param cacheMgr the cache hub
      * @param monitor the cache monitor thread for error notifications
@@ -120,7 +120,7 @@ public class RemoteCacheManager
 
     /**
      * Adds the remote cache listener to the underlying cache-watch service.
-     * <p>
+     *
      * @param cattr The feature to be added to the RemoteCacheListener attribute
      * @param listener The feature to be added to the RemoteCacheListener attribute
      * @throws IOException
@@ -147,7 +147,7 @@ public class RemoteCacheManager
     /**
      * Returns true if the connection to the remote host can be
      * successfully re-established.
-     * <p>
+     *
      * @return true if we found a failover server
      */
     public boolean canFixCaches()
@@ -199,7 +199,7 @@ public class RemoteCacheManager
      * <p>
      * If the client is configured to register a listener, this call results on a listener being
      * created if one isn't already registered with the remote cache for this region.
-     * <p>
+     *
      * @param cattr
      * @return The cache value
      */
@@ -308,7 +308,7 @@ public class RemoteCacheManager
      * region. The failover runner will call this method to de-register. We do not want to deregister
      * all listeners to a remote server, in case a failover is a primary of another region. Having
      * one regions failover act as another servers primary is not currently supported.
-     * <p>
+     *
      * @param cattr
      * @throws IOException
      */

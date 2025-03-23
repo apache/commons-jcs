@@ -40,7 +40,7 @@ class StandardSerializerUnitTest
 
     /**
      * Test setup
-     * <p>
+     *
      * @throws Exception
      */
     @BeforeEach
@@ -55,7 +55,7 @@ class StandardSerializerUnitTest
 
     /**
      * Test simple back and forth with a string.
-     *<p>
+     *
      * @throws Exception
      */
     @Test
@@ -80,7 +80,7 @@ class StandardSerializerUnitTest
 
     /**
      * Test serialization with a null object. Verify that we don't get an error.
-     *<p>
+     *
      * @throws Exception
      */
     @Test
@@ -102,7 +102,7 @@ class StandardSerializerUnitTest
 
     /**
      * Test simple back and forth with a string.
-     *<p>
+     *
      * @throws Exception
      */
     @Test
@@ -120,7 +120,7 @@ class StandardSerializerUnitTest
 
     /**
      * Verify that we can filter classes to be deserialized
-     *<p>
+     *
      * @throws IOException
      */
     @Test

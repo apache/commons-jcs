@@ -41,7 +41,7 @@ class SerializationConversionUtilUnitTest
 {
     /**
      * Verify that we can go back and forth with the simplest of objects.
-     *<p>
+     *
      * @throws Exception
      */
     @Test
@@ -85,7 +85,7 @@ class SerializationConversionUtilUnitTest
 
     /**
      * Verify null for null.
-     * <p>
+     *
      * @throws Exception
      */
     @Test
@@ -106,7 +106,7 @@ class SerializationConversionUtilUnitTest
 
     /**
      * Verify null for null.
-     * <p>
+     *
      * @throws IOException
      */
     @Test
@@ -160,7 +160,7 @@ class SerializationConversionUtilUnitTest
 
     /**
      * Verify that we can go back and forth with the simplest of objects.
-     * <p>
+     *
      * @throws Exception
      */
     @Test

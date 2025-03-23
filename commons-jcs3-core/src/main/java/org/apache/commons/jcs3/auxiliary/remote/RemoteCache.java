@@ -56,7 +56,7 @@ public class RemoteCache<K, V>
      * One of these exists for each region. This also holds a reference to a listener. The same
      * listener is used for all regions for one remote server. Holding a reference to the listener
      * allows this object to know the listener id assigned by the remote cache.
-     * <p>
+     *
      * @param cattr the cache configuration
      * @param remote the remote cache server handle
      * @param listener a listener
@@ -75,7 +75,7 @@ public class RemoteCache<K, V>
 
     /**
      * Gets the extra info for the event log.
-     * <p>
+     *
      * @return disk location
      */
     @Override
@@ -98,7 +98,7 @@ public class RemoteCache<K, V>
      * IP address for the service, if one is stored.
      * <p>
      * Protected for testing.
-     * <p>
+     *
      * @return String
      */
     protected String getIPAddressForService()
@@ -142,7 +142,7 @@ public class RemoteCache<K, V>
     /**
      * Handles exception by disabling the remote cache service before re-throwing the exception in
      * the form of an IOException.
-     * <p>
+     *
      * @param ex
      * @param msg
      * @param eventName
@@ -197,7 +197,7 @@ public class RemoteCache<K, V>
 
     /**
      * Debugging info.
-     * <p>
+     *
      * @return basic info about the RemoteCache
      */
     @Override

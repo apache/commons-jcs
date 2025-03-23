@@ -35,7 +35,7 @@ public class InvalidGroupException
 
     /**
      * Constructor for the InvalidGroupException object
-     * <p>
+     *
      * @param message
      */
     public InvalidGroupException( final String message )

@@ -33,7 +33,7 @@ public class ConfigurationException
 
     /**
      * Constructor for the ConfigurationException object.
-     * <p>
+     *
      * @param message
      */
     public ConfigurationException( final String message )

@@ -54,7 +54,7 @@ public class CacheAccess<K, V>
 {
     /**
      * Constructor for the CacheAccess object.
-     * <p>
+     *
      * @param cacheControl The cache which the created instance accesses
      */
     public CacheAccess( final CompositeCache<K, V> cacheControl )
@@ -64,7 +64,7 @@ public class CacheAccess<K, V>
 
     /**
      * Retrieve an object from the cache region this instance provides access to.
-     * <p>
+     *
      * @param name Key the object is stored as
      * @return The object if found or null
      */
@@ -80,7 +80,7 @@ public class CacheAccess<K, V>
      * Retrieve an object from the cache region this instance provides access to.
      * If the object cannot be found in the cache, it will be retrieved by
      * calling the supplier and subsequently storing it in the cache.
-     * <p>
+     *
      * @param name
      * @param supplier supplier to be called if the value is not found
      * @return Object.
@@ -110,7 +110,7 @@ public class CacheAccess<K, V>
      * has been in the cache.
      * <p>
      * The last access time in the ElementAttributes should be current.
-     * <p>
+     *
      * @param name Key the Serializable is stored as
      * @return The ICacheElement&lt;K, V&gt; if the object is found or null
      */
@@ -133,7 +133,7 @@ public class CacheAccess<K, V>
      * has been in the cache.
      * <p>
      * The last access time in the ElementAttributes should be current.
-     * <p>
+     *
      * @param names set of Serializable cache keys
      * @return a map of K key to ICacheElement&lt;K, V&gt; element, or empty map if none of the keys are present
      */
@@ -147,7 +147,7 @@ public class CacheAccess<K, V>
      * GetElementAttributes will return an attribute object describing the current attributes
      * associated with the object name. The name object must override the Object.equals and
      * Object.hashCode methods.
-     * <p>
+     *
      * @param name Key of object to get attributes for
      * @return Attributes for the object, null if object not in cache
      */
@@ -170,7 +170,7 @@ public class CacheAccess<K, V>
 
     /**
      * Retrieve matching objects from the cache region this instance provides access to.
-     * <p>
+     *
      * @param pattern   a key pattern for the objects stored
      * @return A map of key to values.  These are stripped from the wrapper.
      */
@@ -211,7 +211,7 @@ public class CacheAccess<K, V>
      * has been in the cache.
      * <p>
      * The last access time in the ElementAttributes should be current.
-     * <p>
+     *
      * @param pattern key search pattern
      * @return a map of K key to ICacheElement&lt;K, V&gt; element, or empty map if no keys match the pattern
      */
@@ -240,7 +240,7 @@ public class CacheAccess<K, V>
      * Constructs a cache element with these attributes, and puts it into the cache.
      * <p>
      * If the key or the value is null, and InvalidArgumentException is thrown.
-     * <p>
+     *
      * @see org.apache.commons.jcs3.access.behavior.ICacheAccess#put(Object, Object, IElementAttributes)
      */
     @Override
@@ -277,7 +277,7 @@ public class CacheAccess<K, V>
      * Place a new object in the cache, associated with key name. If there is currently an object
      * associated with name in the region an ObjectExistsException is thrown. Names are scoped to a
      * region so they must be unique within the region they are placed.
-     * <p>
+     *
      * @param key Key object will be stored with
      * @param value Object to store
      * @throws CacheException and ObjectExistsException is thrown if the item is already in the
@@ -296,7 +296,7 @@ public class CacheAccess<K, V>
 
     /**
      * Removes a single item by name.
-     * <p>
+     *
      * @param name the name of the item to remove.
      */
     @Override
@@ -308,7 +308,7 @@ public class CacheAccess<K, V>
     /**
      * Reset attributes for a particular element in the cache. NOTE: this method is currently not
      * implemented.
-     * <p>
+     *
      * @param name Key of object to reset attributes for
      * @param attr New attributes for the object
      * @throws InvalidHandleException if the item does not exist.

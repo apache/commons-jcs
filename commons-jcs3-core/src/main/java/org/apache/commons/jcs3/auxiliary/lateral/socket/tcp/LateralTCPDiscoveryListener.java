@@ -73,7 +73,7 @@ public class LateralTCPDiscoveryListener
 
     /**
      * This plugs into the udp discovery system. It will receive add and remove events.
-     * <p>
+     *
      * @param factoryName the name of the related cache factory
      * @param cacheManager the global cache manager
      * @param cacheEventLogger Reference to the cache event logger for auxiliary cache creation
@@ -105,7 +105,7 @@ public class LateralTCPDiscoveryListener
      * Right now, I'm afraid that the region will get puts if another instance has the region
      * configured to use the lateral and our address is configured. This might be a bug, but it
      * shouldn't happen with discovery.
-     * <p>
+     *
      * @param service
      */
     @Override
@@ -165,7 +165,7 @@ public class LateralTCPDiscoveryListener
      * <p>
      * Each region has a facade. The facade contains a list of end points--the other tcp lateral
      * services.
-     * <p>
+     *
      * @param noWait
      * @return true if we found the no wait and added it. False if the no wait was not present or if
      *         we already had it.
@@ -184,7 +184,7 @@ public class LateralTCPDiscoveryListener
     /**
      * When a broadcast is received from the UDP Discovery receiver, for each cacheName in the
      * message, the add no wait will be called here.
-     * <p>
+     *
      * @param noWait the no wait
      * @param facade the related facade
      * @return true if we found the no wait and added it. False if the no wait was not present or if
@@ -214,7 +214,7 @@ public class LateralTCPDiscoveryListener
      * <p>
      * This adds nowaits to a facade for the region name. If the region has no facade, then it is
      * not configured to use the lateral cache, and no facade will be created.
-     * <p>
+     *
      * @param cacheName   the region name
      * @param facade   facade (for region) =&gt; multiple lateral clients.
      * @return true if the facade was not already registered.
@@ -232,7 +232,7 @@ public class LateralTCPDiscoveryListener
 
     /**
      * Allows us to see if the facade is present and if it has the no wait.
-     * <p>
+     *
      * @param cacheName   facades are for a region
      * @param noWait   is this no wait in the facade
      * @return do we contain the no wait. true if so
@@ -254,7 +254,7 @@ public class LateralTCPDiscoveryListener
 
     /**
      * Allows us to see if the facade is present.
-     * <p>
+     *
      * @param cacheName   facades are for a region
      * @return do we contain the no wait. true if so
      */
@@ -268,7 +268,7 @@ public class LateralTCPDiscoveryListener
      * <p>
      * We need to tell the manager that this instance is bad, so it will reconnect the sender if it
      * comes back.
-     * <p>
+     *
      * @param service
      */
     @Override
@@ -304,7 +304,7 @@ public class LateralTCPDiscoveryListener
     /**
      * Look up the facade for the name. If it doesn't exist, then the region is not configured for
      * use with the lateral cache. If it is present, remove the item from the no wait list.
-     * <p>
+     *
      * @param noWait
      * @return true if we found the no wait and removed it. False if the no wait was not present.
      */
@@ -321,7 +321,7 @@ public class LateralTCPDiscoveryListener
 
     /**
      * Remove the item from the no wait list.
-     * <p>
+     *
      * @param facade
      * @param cacheName
      * @param tcpServer

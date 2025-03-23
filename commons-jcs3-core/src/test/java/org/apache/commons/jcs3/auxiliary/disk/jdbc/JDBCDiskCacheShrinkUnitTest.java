@@ -54,7 +54,7 @@ class JDBCDiskCacheShrinkUnitTest
 
     /**
      * Verify that those not scheduled to expire do not expire.
-     * <p>
+     *
      * @throws CacheException
      * @throws InterruptedException
      */
@@ -142,7 +142,7 @@ class JDBCDiskCacheShrinkUnitTest
     /**
      * Test the basic JDBC disk cache functionality with a hsql backing. Verify that items
      * configured to expire after 1 second actually expire.
-     * <p>
+     *
      * @throws Exception
      */
     @Test

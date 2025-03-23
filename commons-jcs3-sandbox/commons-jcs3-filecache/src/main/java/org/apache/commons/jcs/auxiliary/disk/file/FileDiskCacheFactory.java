@@ -41,7 +41,7 @@ public class FileDiskCacheFactory
      * Creates a manager if we don't have one, and then uses the manager to create the cache. The
      * same factory will be called multiple times by the composite cache to create a cache for each
      * region.
-     * <p>
+     *
      * @param attr config
      * @param cacheMgr the manager to use if needed
      * @param cacheEventLogger the event logger
@@ -74,7 +74,7 @@ public class FileDiskCacheFactory
 
     /**
      * Gets the name attribute of the DiskCacheFactory object
-     * <p>
+     *
      * @return The name value
      */
     @Override
@@ -85,7 +85,7 @@ public class FileDiskCacheFactory
 
     /**
      * Sets the name attribute of the DiskCacheFactory object
-     * <p>
+     *
      * @param name The new name value
      */
     @Override

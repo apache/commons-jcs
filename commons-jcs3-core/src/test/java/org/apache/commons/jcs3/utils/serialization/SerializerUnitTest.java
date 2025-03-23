@@ -34,7 +34,7 @@ class SerializerUnitTest
 {
     /**
      * Test setup
-     * <p>
+     *
      * @throws Exception
      */
     @BeforeEach
@@ -53,7 +53,7 @@ class SerializerUnitTest
 
     /**
      * Verify that object reading and writing works
-     * <p>
+     *
      * @throws Exception
      */
     @Test

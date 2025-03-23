@@ -108,7 +108,7 @@ public class MockRemoteCacheClient<K, V>
 
     /**
      * Returns the cache name.
-     * <p>
+     *
      * @return usually the region name.
      */
     @Override
@@ -126,7 +126,7 @@ public class MockRemoteCacheClient<K, V>
 
     /**
      * Nothing important
-     * <p>
+     *
      * @return null
      */
     @Override
@@ -176,7 +176,7 @@ public class MockRemoteCacheClient<K, V>
 
     /**
      * Gets multiple items from the cache based on the given set of keys.
-     * <p>
+     *
      * @param keys
      * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
      *         data in cache for any of these keys
@@ -190,7 +190,7 @@ public class MockRemoteCacheClient<K, V>
 
     /**
      * Returns the current cache size in number of elements.
-     * <p>
+     *
      * @return number of elements
      */
     @Override
@@ -210,7 +210,7 @@ public class MockRemoteCacheClient<K, V>
 
     /**
      * Returns the cache stats.
-     * <p>
+     *
      * @return String of important historical information.
      */
     @Override

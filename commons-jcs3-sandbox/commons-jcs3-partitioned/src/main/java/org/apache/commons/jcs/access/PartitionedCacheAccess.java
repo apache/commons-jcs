@@ -89,7 +89,7 @@ public class PartitionedCacheAccess<K, V>
 
     /**
      * Puts the value into the appropriate cache partition.
-     * <p>
+     *
      * @param key key
      * @param object object
      * @throws CacheException on configuration problem
@@ -123,7 +123,7 @@ public class PartitionedCacheAccess<K, V>
 
     /**
      * Puts in cache if an item does not exist with the name in that region.
-     * <p>
+     *
      * @param key
      * @param object
      * @throws CacheException
@@ -148,7 +148,7 @@ public class PartitionedCacheAccess<K, V>
 
     /**
      * Puts the value into the appropriate cache partition.
-     * <p>
+     *
      * @param key key
      * @param object object
      * @param attr
@@ -184,7 +184,7 @@ public class PartitionedCacheAccess<K, V>
 
     /**
      * Gets the object for the key from the desired partition.
-     * <p>
+     *
      * @param key key
      * @return result, null if not found.
      */
@@ -211,7 +211,7 @@ public class PartitionedCacheAccess<K, V>
      * Retrieve an object from the cache region this instance provides access to.
      * If the object cannot be found in the cache, it will be retrieved by
      * calling the supplier and subsequently storing it in the cache.
-     * <p>
+     *
      * @param name
      * @param supplier supplier to be called if the value is not found
      * @return Object.
@@ -232,7 +232,7 @@ public class PartitionedCacheAccess<K, V>
 
     /**
      * Gets the ICacheElement&lt;K, V&gt; (the wrapped object) for the key from the desired partition.
-     * <p>
+     *
      * @param key key
      * @return result, null if not found.
      */
@@ -257,7 +257,7 @@ public class PartitionedCacheAccess<K, V>
 
     /**
      * This is a getMultiple. We try to group the keys so that we make as few calls as needed.
-     * <p>
+     *
      * @param names
      * @return Map of keys to ICacheElement
      */
@@ -304,7 +304,7 @@ public class PartitionedCacheAccess<K, V>
      * <p>
      * If this interface took an object, we could use the hash code to determine the partition. Then
      * we could use the toString for the pattern.
-     * <p>
+     *
      * @param pattern
      * @return HashMap key to value
      */
@@ -333,7 +333,7 @@ public class PartitionedCacheAccess<K, V>
 
     /**
      * This is tricky. Do we need to get from all the partitions?
-     * <p>
+     *
      * @param pattern
      * @return HashMap key to ICacheElement
      */
@@ -361,7 +361,7 @@ public class PartitionedCacheAccess<K, V>
 
     /**
      * Removes the item from the appropriate partition.
-     * <p>
+     *
      * @param key
      * @throws CacheException
      */
@@ -394,7 +394,7 @@ public class PartitionedCacheAccess<K, V>
 
     /**
      * Calls free on each partition.
-     * <p>
+     *
      * @param numberToFree
      * @return number removed
      * @throws CacheException
@@ -458,7 +458,7 @@ public class PartitionedCacheAccess<K, V>
 
     /**
      * This is no more efficient than simply getting the cache element.
-     * <p>
+     *
      * @param key
      * @return IElementAttributes
      * @throws CacheException
@@ -486,7 +486,7 @@ public class PartitionedCacheAccess<K, V>
     /**
      * Resets the attributes for this item. This has the same effect as an update, in most cases.
      * None of the auxiliaries are optimized to do this more efficiently than a simply update.
-     * <p>
+     *
      * @param key
      * @param attributes
      * @throws CacheException
@@ -513,7 +513,7 @@ public class PartitionedCacheAccess<K, V>
 
     /**
      * Sets the attributes on all the partitions.
-     * <p>
+     *
      * @param cattr
      */
     @Override
@@ -532,7 +532,7 @@ public class PartitionedCacheAccess<K, V>
 
     /**
      * Removes all of the elements from a region.
-     * <p>
+     *
      * @throws CacheException
      */
     @Override
@@ -556,7 +556,7 @@ public class PartitionedCacheAccess<K, V>
      * remote items. Rather than have unpredictable behavior, this method just sets the default
      * attributes. Items subsequently put into the cache will use these defaults if they do not
      * specify specific attributes.
-     * <p>
+     *
      * @param attr the default attributes.
      * @throws CacheException if something goes wrong.
      */
@@ -579,7 +579,7 @@ public class PartitionedCacheAccess<K, V>
      * This returns the ICacheStats object with information on this region and its auxiliaries.
      * <p>
      * This data can be formatted as needed.
-     * <p>
+     *
      * @return ICacheStats
      */
     @Override
@@ -646,7 +646,7 @@ public class PartitionedCacheAccess<K, V>
      * TODO we could md5 it or get the hash code.
      * <p>
      * We determine the partition by taking the mod of the number of partitions.
-     * <p>
+     *
      * @param key key
      * @return the partition number.
      */
@@ -668,7 +668,7 @@ public class PartitionedCacheAccess<K, V>
 
     /**
      * This can be overridden for special purposes.
-     * <p>
+     *
      * @param key key
      * @return long
      */
@@ -691,7 +691,7 @@ public class PartitionedCacheAccess<K, V>
 
     /**
      * Initialize if we haven't already.
-     * <p>
+     *
      * @throws ConfigurationException on configuration problem
      */
     protected synchronized boolean ensureInit()
@@ -714,7 +714,7 @@ public class PartitionedCacheAccess<K, V>
 
     /**
      * Use the partition prefix and the number of partitions to get JCS regions.
-     * <p>
+     *
      * @throws ConfigurationException on configuration problem
      */
     protected synchronized void initialize()
@@ -779,7 +779,7 @@ public class PartitionedCacheAccess<K, V>
 
     /**
      * Checks the system properties before the properties.
-     * <p>
+     *
      * @param propertyName name
      * @param required is it required?
      * @return the property value if one is found

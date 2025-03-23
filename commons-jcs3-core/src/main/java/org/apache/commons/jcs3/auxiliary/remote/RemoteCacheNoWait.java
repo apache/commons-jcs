@@ -92,7 +92,7 @@ public class RemoteCacheNoWait<K, V>
     /**
      * Constructs with the given remote cache, and fires up an event queue for asynchronous
      * processing.
-     * <p>
+     *
      * @param cache
      */
     public RemoteCacheNoWait( final IRemoteCacheClient<K, V> cache )
@@ -139,7 +139,7 @@ public class RemoteCacheNoWait<K, V>
     /**
      * Replaces the remote cache service handle with the given handle and reset the event queue by
      * starting up a new instance.
-     * <p>
+     *
      * @param remote
      */
     public void fixCache( final ICacheServiceNonLocal<?, ?> remote )
@@ -150,7 +150,7 @@ public class RemoteCacheNoWait<K, V>
 
     /**
      * Synchronously reads from the remote cache.
-     * <p>
+     *
      * @param key
      * @return element from the remote cache, or null if not present
      * @throws IOException
@@ -199,7 +199,7 @@ public class RemoteCacheNoWait<K, V>
 
     /**
      * This is for testing only. It allows you to take a look at the event queue.
-     * <p>
+     *
      * @return ICacheEventQueue
      */
     protected ICacheEventQueue<K, V> getCacheEventQueue()
@@ -209,7 +209,7 @@ public class RemoteCacheNoWait<K, V>
 
     /**
      * Gets the cacheName attribute of the RemoteCacheNoWait object
-     * <p>
+     *
      * @return The cacheName value
      */
     @Override
@@ -220,7 +220,7 @@ public class RemoteCacheNoWait<K, V>
 
     /**
      * No remote invocation.
-     * <p>
+     *
      * @return The cacheType value
      */
     @Override
@@ -231,7 +231,7 @@ public class RemoteCacheNoWait<K, V>
 
     /**
      * this won't be called since we don't do ICache logging here.
-     * <p>
+     *
      * @return String
      */
     @Override
@@ -242,7 +242,7 @@ public class RemoteCacheNoWait<K, V>
 
     /**
      * Return the keys in this cache.
-     * <p>
+     *
      * @see org.apache.commons.jcs3.auxiliary.AuxiliaryCache#getKeySet()
      */
     @Override
@@ -292,7 +292,7 @@ public class RemoteCacheNoWait<K, V>
     /**
      * Gets multiple items from the cache based on the given set of keys. Sends the getMultiple
      * request on to the server rather than looping through the requested keys.
-     * <p>
+     *
      * @param keys
      * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
      *         data in cache for any of these keys
@@ -333,7 +333,7 @@ public class RemoteCacheNoWait<K, V>
 
     /**
      * This is temporary. It allows the manager to get the lister.
-     * <p>
+     *
      * @return the instance of the remote cache client used by this object
      */
     protected IRemoteCacheClient<K, V> getRemoteCache()
@@ -343,7 +343,7 @@ public class RemoteCacheNoWait<K, V>
 
     /**
      * No remote invocation.
-     * <p>
+     *
      * @return The size value
      */
     @Override
@@ -389,7 +389,7 @@ public class RemoteCacheNoWait<K, V>
 
     /**
      * Returns the statistics in String form.
-     * <p>
+     *
      * @return String
      */
     @Override
@@ -401,7 +401,7 @@ public class RemoteCacheNoWait<K, V>
     /**
      * Returns the async cache status. An error status indicates either the remote connection is not
      * available, or the asyn queue has been unexpectedly destroyed. No remote invocation.
-     * <p>
+     *
      * @return The status value
      */
     @Override
@@ -412,7 +412,7 @@ public class RemoteCacheNoWait<K, V>
 
     /**
      * Adds a remove request to the remote cache.
-     * <p>
+     *
      * @param key
      * @return if this was successful
      * @throws IOException
@@ -437,7 +437,7 @@ public class RemoteCacheNoWait<K, V>
 
     /**
      * Adds a removeAll request to the remote cache.
-     * <p>
+     *
      * @throws IOException
      */
     @Override
@@ -480,7 +480,7 @@ public class RemoteCacheNoWait<K, V>
 
     /**
      * Returns the stats and the cache.toString().
-     * <p>
+     *
      * @see Object#toString()
      */
     @Override
@@ -491,7 +491,7 @@ public class RemoteCacheNoWait<K, V>
 
     /**
      * Adds a put event to the queue.
-     * <p>
+     *
      * @param element
      * @throws IOException
      */

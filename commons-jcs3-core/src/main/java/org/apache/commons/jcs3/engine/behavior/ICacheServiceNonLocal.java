@@ -38,7 +38,7 @@ public interface ICacheServiceNonLocal<K, V>
      * Returns a cache bean from the specified cache; or null if the key does not exist.
      * <p>
      * Adding the requester id, allows the cache to determine the source of the get.
-     * <p>
+     *
      * @param cacheName
      * @param key
      * @param requesterId
@@ -50,7 +50,7 @@ public interface ICacheServiceNonLocal<K, V>
 
     /**
      * Gets a set of the keys for all elements in the cache.
-     * <p>
+     *
      * @param cacheName the name of the cache
      * @return a set of the key type
      * TODO This should probably be done in chunks with a range passed in. This
@@ -61,7 +61,7 @@ public interface ICacheServiceNonLocal<K, V>
 
     /**
      * Gets multiple items from the cache matching the pattern.
-     * <p>
+     *
      * @param cacheName
      * @param pattern
      * @param requesterId
@@ -74,7 +74,7 @@ public interface ICacheServiceNonLocal<K, V>
 
     /**
      * Gets multiple items from the cache based on the given set of keys.
-     * <p>
+     *
      * @param cacheName
      * @param keys
      * @param requesterId
@@ -87,7 +87,7 @@ public interface ICacheServiceNonLocal<K, V>
 
     /**
      * Removes the given key from the specified cache.
-     * <p>
+     *
      * @param cacheName
      * @param key
      * @param requesterId
@@ -98,7 +98,7 @@ public interface ICacheServiceNonLocal<K, V>
 
     /**
      * Remove all keys from the specified cache.
-     * <p>
+     *
      * @param cacheName
      * @param requesterId
      * @throws IOException
@@ -108,7 +108,7 @@ public interface ICacheServiceNonLocal<K, V>
 
     /**
      * Puts a cache item to the cache.
-     * <p>
+     *
      * @param item
      * @param requesterId
      * @throws IOException

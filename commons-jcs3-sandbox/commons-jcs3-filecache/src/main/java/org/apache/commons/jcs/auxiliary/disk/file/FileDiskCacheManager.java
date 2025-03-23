@@ -71,7 +71,7 @@ public class FileDiskCacheManager
 
     /**
      * Constructor for the DiskFileCacheManager object
-     * <p>
+     *
      * @param defaultCacheAttributes Default attributes for caches managed by the instance.
      * @param cacheEventLogger
      * @param elementSerializer
@@ -86,7 +86,7 @@ public class FileDiskCacheManager
 
     /**
      * Gets an DiskFileCache for the supplied name using the default attributes.
-     * <p>
+     *
      * @param cacheName Name that will be used when creating attributes.
      * @return A cache.
      */
@@ -102,7 +102,7 @@ public class FileDiskCacheManager
     /**
      * Gets an DiskFileCache for the supplied attributes. Will provide an existing cache for the name
      * attribute if one has been created, or will create a new cache.
-     * <p>
+     *
      * @param cacheAttributes Attributes the cache should have.
      * @return A cache, either from the existing set or newly created.
      */

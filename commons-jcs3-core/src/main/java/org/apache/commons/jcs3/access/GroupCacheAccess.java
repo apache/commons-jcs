@@ -42,7 +42,7 @@ public class GroupCacheAccess<K, V>
 {
     /**
      * Constructor for the GroupCacheAccess object
-     * <p>
+     *
      * @param cacheControl
      */
     public GroupCacheAccess( final CompositeCache<GroupAttrName<K>, V> cacheControl )
@@ -52,7 +52,7 @@ public class GroupCacheAccess<K, V>
 
     /**
      * Gets an item out of the cache that is in a specified group.
-     * <p>
+     *
      * @param name
      *            The key name.
      * @param group
@@ -68,7 +68,7 @@ public class GroupCacheAccess<K, V>
 
     /**
      * Internal method used for group functionality.
-     * <p>
+     *
      * @param group
      * @param name
      * @return GroupAttrName
@@ -81,7 +81,7 @@ public class GroupCacheAccess<K, V>
 
     /**
      * Gets the set of keys of objects currently in the group.
-     * <p>
+     *
      * @param group
      * @return A Set of keys.
      */
@@ -99,7 +99,7 @@ public class GroupCacheAccess<K, V>
 
     /**
      * Gets the set of group names in the cache
-     * <p>
+     *
      * @return A Set of group names.
      */
     public Set<String> getGroupNames()
@@ -112,7 +112,7 @@ public class GroupCacheAccess<K, V>
 
     /**
      * Invalidates a group: remove all the group members
-     * <p>
+     *
      * @param group
      *            The name of the group to invalidate
      */
@@ -126,7 +126,7 @@ public class GroupCacheAccess<K, V>
      * Allows the user to put an object into a group within a particular cache
      * region. This method sets the object's attributes to the default for the
      * region.
-     * <p>
+     *
      * @param name
      *            The key name.
      * @param groupName
@@ -146,7 +146,7 @@ public class GroupCacheAccess<K, V>
      * Allows the user to put an object into a group within a particular cache
      * region. This method allows the object's attributes to be individually
      * specified.
-     * <p>
+     *
      * @param name
      *            The key name.
      * @param groupName

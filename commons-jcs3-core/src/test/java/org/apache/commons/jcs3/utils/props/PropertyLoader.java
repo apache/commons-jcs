@@ -53,7 +53,7 @@ public abstract class PropertyLoader
      * that uses the current thread's context classloader. A better strategy
      * would be to use techniques shown in
      * http://www.javaworld.com/javaworld/javaqa/2003-06/01-qa-0606-load.html
-     * <p>
+     *
      * @param name
      * @return Properties
      */

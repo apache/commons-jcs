@@ -63,7 +63,7 @@ class SoftReferenceMemoryCacheUnitTest
 
     /**
      * put the max and clear. verify that no elements remain.
-     * <p>
+     *
      * @throws CacheException
      */
     @Test
@@ -93,7 +93,7 @@ class SoftReferenceMemoryCacheUnitTest
     /**
      * Put half the max and clear. get the key array and verify that it has the correct number of
      * items.
-     * <p>
+     *
      * @throws Exception
      */
     @Test
@@ -125,7 +125,7 @@ class SoftReferenceMemoryCacheUnitTest
     /**
      * Verify that the cache gets used by a non-defined region when it is set as the default in the
      * default region.
-     * <p>
+     *
      * @throws CacheException
      */
     @Test
@@ -140,7 +140,7 @@ class SoftReferenceMemoryCacheUnitTest
 
     /**
      * put twice as many as the max.  verify that all are in the cache.
-     * <p>
+     *
      * @throws CacheException
      */
     @Test
@@ -184,7 +184,7 @@ class SoftReferenceMemoryCacheUnitTest
 
     /**
      * put the max and remove each. verify that they are all null.
-     * <p>
+     *
      * @throws CacheException
      */
     @Test
@@ -216,7 +216,7 @@ class SoftReferenceMemoryCacheUnitTest
 
     /**
      * Add a few keys with the delimiter. Remove them.
-     * <p>
+     *
      * @throws CacheException
      */
     @Test

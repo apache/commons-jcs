@@ -63,7 +63,7 @@ public class LateralTCPListener<K, V>
 
     /**
      * Gets the instance attribute of the LateralCacheTCPListener class.
-     * <p>
+     *
      * @param ilca ITCPLateralCacheAttributes
      * @param cacheMgr
      * @param serializer the serializer to use when receiving
@@ -124,7 +124,7 @@ public class LateralTCPListener<K, V>
 
     /**
      * Only need one since it does work for all regions, just reference by multiple region names.
-     * <p>
+     *
      * @param ilca
      * @param serializer the serializer to use when receiving
      */
@@ -149,7 +149,7 @@ public class LateralTCPListener<K, V>
      * <p>
      * Normally this is set by the factory. If it wasn't set the listener defaults to the expected
      * singleton behavior of the cache manager.
-     * <p>
+     *
      * @param name
      * @return CompositeCache
      */
@@ -177,7 +177,7 @@ public class LateralTCPListener<K, V>
 
     /**
      * Gets the listenerId attribute of the LateralCacheTCPListener object
-     * <p>
+     *
      * @return The listenerId value
      * @throws IOException
      */
@@ -190,7 +190,7 @@ public class LateralTCPListener<K, V>
 
     /**
      * This is roughly the number of updates the lateral has received.
-     * <p>
+     *
      * @return the putCnt.
      */
     public int getPutCnt()
@@ -268,7 +268,7 @@ public class LateralTCPListener<K, V>
 
     /**
      * This marks this instance as terminated.
-     * <p>
+     *
      * @see org.apache.commons.jcs3.engine.behavior.ICacheListener#handleDispose(String)
      */
     @Override
@@ -285,7 +285,7 @@ public class LateralTCPListener<K, V>
     /**
      * This calls the appropriate method, based on the command sent in the Lateral element
      * descriptor.
-     * <p>
+     *
      * @param led the lateral element
      * @return a possible response
      * @throws IOException
@@ -350,7 +350,7 @@ public class LateralTCPListener<K, V>
 
     /**
      * Gets the cache that was injected by the lateral factory. Calls get on the cache.
-     * <p>
+     *
      * @param cacheName
      * @param key
      * @return a ICacheElement
@@ -374,7 +374,7 @@ public class LateralTCPListener<K, V>
 
     /**
      * Gets the cache that was injected by the lateral factory. Calls getKeySet on the cache.
-     * <p>
+     *
      * @param cacheName the name of the cache
      * @return a set of keys
      * @throws IOException
@@ -386,7 +386,7 @@ public class LateralTCPListener<K, V>
 
     /**
      * Gets the cache that was injected by the lateral factory. Calls get on the cache.
-     * <p>
+     *
      * @param cacheName the name of the cache
      * @param pattern the matching pattern
      * @return Map
@@ -411,7 +411,7 @@ public class LateralTCPListener<K, V>
     /**
      * Increments the put count. Gets the cache that was injected by the lateral factory. Calls put
      * on the cache.
-     * <p>
+     *
      * @see org.apache.commons.jcs3.engine.behavior.ICacheListener#handlePut(org.apache.commons.jcs3.engine.behavior.ICacheElement)
      */
     @Override
@@ -435,7 +435,7 @@ public class LateralTCPListener<K, V>
     /**
      * Increments the remove count. Gets the cache that was injected by the lateral factory. Calls
      * remove on the cache.
-     * <p>
+     *
      * @see org.apache.commons.jcs3.engine.behavior.ICacheListener#handleRemove(String,
      *      Object)
      */
@@ -456,7 +456,7 @@ public class LateralTCPListener<K, V>
 
     /**
      * Gets the cache that was injected by the lateral factory. Calls removeAll on the cache.
-     * <p>
+     *
      * @see org.apache.commons.jcs3.engine.behavior.ICacheListener#handleRemoveAll(String)
      */
     @Override
@@ -622,7 +622,7 @@ public class LateralTCPListener<K, V>
      * to. It needs to be non static, for unit tests.
      * <p>
      * The service will use the value it sets in all send requests to the sender.
-     * <p>
+     *
      * @param id The new listenerId value
      * @throws IOException
      */

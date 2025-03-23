@@ -51,7 +51,7 @@ class HSQLDiskCacheUnitTest
     /**
      * Adds items to cache, gets them, and removes them. The item count is more than the size of the
      * memory cache, so items should spool to disk.
-     * <p>
+     *
      * @throws Exception If an error occurs
      */
     @Test
@@ -107,7 +107,7 @@ class HSQLDiskCacheUnitTest
 
     /**
      * Verify that remove all work son a region where it is not prohibited.
-     * <p>
+     *
      * @throws CacheException
      * @throws InterruptedException
      */
@@ -146,7 +146,7 @@ class HSQLDiskCacheUnitTest
 
     /**
      * Verify that remove all does not work on a region where it is prohibited.
-     * <p>
+     *
      * @throws CacheException
      * @throws InterruptedException
      */

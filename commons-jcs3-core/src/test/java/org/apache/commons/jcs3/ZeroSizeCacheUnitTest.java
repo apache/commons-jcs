@@ -34,7 +34,7 @@ class ZeroSizeCacheUnitTest
 
     /**
      * Test setup
-     * <p>
+     *
      * @throws Exception
      */
     @BeforeEach

@@ -105,7 +105,7 @@ class CompositeCacheDiskUsageUnitTest
 
         /**
          * Returns the setup cache type. This allows you to use this mock as multiple cache types.
-         * <p>
+         *
          * @see org.apache.commons.jcs3.engine.behavior.ICacheType#getCacheType()
          * @return cacheType
          */
@@ -148,7 +148,7 @@ class CompositeCacheDiskUsageUnitTest
 
         /**
          * Gets multiple items from the cache based on the given set of keys.
-         * <p>
+         *
          * @param keys
          * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is
          *         no data in cache for any of these keys
@@ -320,7 +320,7 @@ class CompositeCacheDiskUsageUnitTest
 
     /**
      * Verify that the swap region is set to the correct pattern.
-     * <p>
+     *
      * @throws CacheException
      */
     @Test
@@ -373,7 +373,7 @@ class CompositeCacheDiskUsageUnitTest
      * <p>
      * This tests that the items are put to disk on a normal put when the usage pattern is set
      * appropriately. The local setting should have no impact on whether the item goes to disk.
-     * <p>
+     *
      * @throws IOException
      */
     @Test
@@ -446,7 +446,7 @@ class CompositeCacheDiskUsageUnitTest
 
     /**
      * Verify that the swap region is set to the correct pattern.
-     * <p>
+     *
      * @throws CacheException
      */
     @Test
@@ -464,7 +464,7 @@ class CompositeCacheDiskUsageUnitTest
      * <p>
      * This tests that the items are not put to disk on a normal put when the usage pattern is set
      * to SWAP.
-     * <p>
+     *
      * @throws IOException
      */
     @Test

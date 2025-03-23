@@ -74,7 +74,7 @@ public class LateralCacheNoWaitFacade<K, V>
 
     /**
      * Constructs with the given lateral cache, and fires events to any listeners.
-     * <p>
+     *
      * @param listener the cache listener
      * @param noWaits the list of noWaits
      * @param cattr the configuration
@@ -93,7 +93,7 @@ public class LateralCacheNoWaitFacade<K, V>
 
     /**
      * Adds a no wait to the list if it isn't already in the list.
-     * <p>
+     *
      * @param noWait
      * @return true if it wasn't already contained
      */
@@ -118,7 +118,7 @@ public class LateralCacheNoWaitFacade<K, V>
 
     /**
      * Tells you if the no wait is in the list or not.
-     * <p>
+     *
      * @param noWait
      * @return true if the noWait is in the list.
      */
@@ -130,7 +130,7 @@ public class LateralCacheNoWaitFacade<K, V>
     /**
      * Tells you if the no wait is in the list or not by checking for its
      * identifying key
-     * <p>
+     *
      * @param tcpServer the identifying key
      * @return true if the noWait is in the list.
      * @since 3.1
@@ -159,7 +159,7 @@ public class LateralCacheNoWaitFacade<K, V>
 
     /**
      * Synchronously reads from the lateral cache.
-     * <p>
+     *
      * @param key
      * @return ICacheElement
      */
@@ -184,7 +184,7 @@ public class LateralCacheNoWaitFacade<K, V>
 
     /**
      * Gets the cacheName attribute of the LateralCacheNoWaitFacade object.
-     * <p>
+     *
      * @return The cacheName value
      */
     @Override
@@ -195,7 +195,7 @@ public class LateralCacheNoWaitFacade<K, V>
 
     /**
      * Gets the cacheType attribute of the LateralCacheNoWaitFacade object.
-     * <p>
+     *
      * @return The cacheType value
      */
     @Override
@@ -206,7 +206,7 @@ public class LateralCacheNoWaitFacade<K, V>
 
     /**
      * this won't be called since we don't do ICache logging here.
-     * <p>
+     *
      * @return String
      */
     @Override
@@ -217,7 +217,7 @@ public class LateralCacheNoWaitFacade<K, V>
 
     /**
      * Return the keys in this cache.
-     * <p>
+     *
      * @see org.apache.commons.jcs3.auxiliary.AuxiliaryCache#getKeySet()
      */
     @Override
@@ -238,7 +238,7 @@ public class LateralCacheNoWaitFacade<K, V>
     /**
      * Synchronously reads from the lateral cache. Get a response from each! This will be slow.
      * Merge them.
-     * <p>
+     *
      * @param pattern
      * @return ICacheElement
      */
@@ -254,7 +254,7 @@ public class LateralCacheNoWaitFacade<K, V>
 
     /**
      * Gets multiple items from the cache based on the given set of keys.
-     * <p>
+     *
      * @param keys
      * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
      *         data in cache for any of these keys
@@ -373,7 +373,7 @@ public class LateralCacheNoWaitFacade<K, V>
 
     /**
      * Adds a remove request to the lateral cache.
-     * <p>
+     *
      * @param key
      * @return always false.
      */
@@ -395,7 +395,7 @@ public class LateralCacheNoWaitFacade<K, V>
 
     /**
      * Removes a no wait from the list if it is already there.
-     * <p>
+     *
      * @param noWait
      * @return true if it was already in the array
      */
@@ -412,7 +412,7 @@ public class LateralCacheNoWaitFacade<K, V>
     /**
      * Removes a no wait from the list if it is already there by its
      * identifying key
-     * <p>
+     *
      * @param tcpServer the identifying key.
      * @return true if it was already in the array
      * @since 3.1

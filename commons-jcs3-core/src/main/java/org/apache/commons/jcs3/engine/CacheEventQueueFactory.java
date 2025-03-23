@@ -34,7 +34,7 @@ public class CacheEventQueueFactory<K, V>
 
     /**
      * Fully configured event queue.
-     * <p>
+     *
      * @param listener
      * @param listenerId
      * @param cacheName
@@ -66,7 +66,7 @@ public class CacheEventQueueFactory<K, V>
 
     /**
      * The most commonly used factory method.
-     * <p>
+     *
      * @param listener
      * @param listenerId
      * @param cacheName

@@ -35,7 +35,7 @@ import org.junit.jupiter.api.Test;
 class UDPDiscoveryUnitTest
 {
     /**
-     * <p>
+     *
      * @throws Exception
      */
     private void simpleUDPDiscovery(final String discoveryAddress)
@@ -99,7 +99,7 @@ class UDPDiscoveryUnitTest
     }
 
     /**
-     * <p>
+     *
      * @throws Exception
      */
     @Test
@@ -112,7 +112,7 @@ class UDPDiscoveryUnitTest
     }
 
     /**
-     * <p>
+     *
      * @throws Exception
      */
     @Test

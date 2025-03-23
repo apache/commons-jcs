@@ -58,7 +58,7 @@ public class RemoteCacheNoWaitFacade<K, V>
 
     /**
      * Constructs with the given remote cache, and fires events to any listeners.
-     * <p>
+     *
      * @param noWaits
      * @param rca
      * @param cacheEventLogger
@@ -244,7 +244,7 @@ public class RemoteCacheNoWaitFacade<K, V>
 
     /**
      * Begin the failover process if this is a local cache. Clustered remote caches do not failover.
-     * <p>
+     *
      * @param rcnw The no wait in error.
      */
     @Override

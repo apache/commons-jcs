@@ -34,7 +34,7 @@ public interface ICacheStats
 
     /**
      * Stats are for a region, though auxiliary data may be for more.
-     * <p>
+     *
      * @return The region name
      */
     String getRegionName();

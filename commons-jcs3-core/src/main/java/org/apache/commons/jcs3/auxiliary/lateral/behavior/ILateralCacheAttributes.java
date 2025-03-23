@@ -69,21 +69,21 @@ public interface ILateralCacheAttributes
 
     /**
      * Gets the httpListenerPort attribute of the ILateralCacheAttributes object
-     * <p>
+     *
      * @return The httpListenerPort value
      */
     int getHttpListenerPort();
 
     /**
      * Gets the httpServer attribute of the ILateralCacheAttributes object
-     * <p>
+     *
      * @return The httpServer value
      */
     String getHttpServer();
 
     /**
      * Gets the httpSrvers attribute of the LateralCacheAttributes object
-     * <p>
+     *
      * @return The httpServers value
      */
     String getHttpServers();
@@ -95,21 +95,21 @@ public interface ILateralCacheAttributes
 
     /**
      * Gets the transmissionType attribute of the ILateralCacheAttributes object
-     * <p>
+     *
      * @return The transmissionType value
      */
     Type getTransmissionType();
 
     /**
      * Gets the udpMulticastAddr attribute of the ILateralCacheAttributes object
-     * <p>
+     *
      * @return The udpMulticastAddr value
      */
     String getUdpMulticastAddr();
 
     /**
      * Gets the udpMulticastPort attribute of the ILateralCacheAttributes object
-     * <p>
+     *
      * @return The udpMulticastPort value
      */
     int getUdpMulticastPort();
@@ -117,7 +117,7 @@ public interface ILateralCacheAttributes
     /**
      * The number of elements the zombie queue will hold. This queue is used to store events if we
      * loose our connection with the server.
-     * <p>
+     *
      * @return the zombieQueueMaxSize.
      */
     int getZombieQueueMaxSize();
@@ -131,28 +131,28 @@ public interface ILateralCacheAttributes
      * It is possible if two laterals are misconfigured that lateral A may have a region R1 that is
      * not configured for the lateral but another is. And if cache B has region R1 configured for
      * lateral distribution, A will get messages for R1 but not send them.
-     * <p>
+     *
      * @return true if we should have a listener connection
      */
     boolean isReceive();
 
     /**
      * Sets the httpListenerPort attribute of the ILateralCacheAttributes object
-     * <p>
+     *
      * @param val The new tcpListenerPort value
      */
     void setHttpListenerPort( int val );
 
     /**
      * Sets the httpServer attribute of the ILateralCacheAttributes object
-     * <p>
+     *
      * @param val The new httpServer value
      */
     void setHttpServer( String val );
 
     /**
      * Sets the httpServers attribute of the LateralCacheAttributes object
-     * <p>
+     *
      * @param val The new httpServers value
      */
     void setHttpServers( String val );
@@ -161,7 +161,7 @@ public interface ILateralCacheAttributes
      * Sets the putOnlyMode attribute of the ILateralCacheAttributes. When this is true the lateral
      * cache will only issue put and remove order and will not try to retrieve elements from other
      * lateral caches.
-     * <p>
+     *
      * @param val The new transmissionTypeName value
      */
     void setPutOnlyMode( boolean val );
@@ -173,21 +173,21 @@ public interface ILateralCacheAttributes
 
     /**
      * Sets the transmissionType attribute of the ILateralCacheAttributes object
-     * <p>
+     *
      * @param val The new transmissionType value
      */
     void setTransmissionType( Type val );
 
     /**
      * Sets the udpMulticastAddr attribute of the ILateralCacheAttributes object
-     * <p>
+     *
      * @param val The new udpMulticastAddr value
      */
     void setUdpMulticastAddr( String val );
 
     /**
      * Sets the udpMulticastPort attribute of the ILateralCacheAttributes object
-     * <p>
+     *
      * @param val The new udpMulticastPort value
      */
     void setUdpMulticastPort( int val );
@@ -195,7 +195,7 @@ public interface ILateralCacheAttributes
     /**
      * The number of elements the zombie queue will hold. This queue is used to store events if we
      * loose our connection with the server.
-     * <p>
+     *
      * @param zombieQueueMaxSize The zombieQueueMaxSize to set.
      */
     void setZombieQueueMaxSize( int zombieQueueMaxSize );

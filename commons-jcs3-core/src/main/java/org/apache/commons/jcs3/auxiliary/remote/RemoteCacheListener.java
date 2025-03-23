@@ -52,7 +52,7 @@ public class RemoteCacheListener<K, V>
      * <p>
      * The constructor exports this object, making it available to receive incoming calls. The
      * callback port is anonymous unless a local port value was specified in the configuration.
-     * <p>
+     *
      * @param irca cache configuration
      * @param cacheMgr the cache hub
      * @param elementSerializer a custom serializer
@@ -79,7 +79,7 @@ public class RemoteCacheListener<K, V>
 
     /**
      * Deregister itself.
-     * <p>
+     *
      * @throws IOException
      */
     @Override
@@ -103,7 +103,7 @@ public class RemoteCacheListener<K, V>
 
     /**
      * For easier debugging.
-     * <p>
+     *
      * @return Basic info on this listener.
      */
     @Override

@@ -45,7 +45,7 @@ class RemoteCacheListenerUnitTest
      * Create a RemoteCacheListener with a mock cache manager.  Set remove on put to false.
      * Create a serialized element.  Call put on the listener.
      * Verify that the deserialized element is in the cache.
-     * <p>
+     *
      * @throws Exception
      */
     @Test
@@ -89,7 +89,7 @@ class RemoteCacheListenerUnitTest
      * Create a RemoteCacheListener with a mock cache manager.  Set remove on put to true.
      * Create a serialized element.  Call put on the listener.
      * Verify that the deserialized element is not in the cache.
-     * <p>
+     *
      * @throws Exception
      */
     @Test

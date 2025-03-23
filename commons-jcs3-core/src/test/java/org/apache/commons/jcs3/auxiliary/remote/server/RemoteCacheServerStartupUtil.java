@@ -40,7 +40,7 @@ public class RemoteCacheServerStartupUtil
 
     /**
      * Starts the registry on port "registry.port"
-     * <p>
+     *
      * @param propsFileName
      * @return RemoteCacheServer
      */

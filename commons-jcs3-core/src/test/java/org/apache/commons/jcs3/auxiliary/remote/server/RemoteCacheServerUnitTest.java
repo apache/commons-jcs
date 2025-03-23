@@ -71,7 +71,7 @@ class RemoteCacheServerUnitTest
      * Add a listener. Pass the id of 0, verify that the server sets a new listener id. Do another
      * and verify that the second gets an id of 2. Call remove Listener and verify that it is
      * removed.
-     * <p>
+     *
      * @throws Exception
      */
     @Test
@@ -101,7 +101,7 @@ class RemoteCacheServerUnitTest
      * Add a listener. Pass the id of 0, verify that the server sets a new listener id. Do another
      * and verify that the second gets an id of 2. Call remove Listener and verify that it is
      * removed.
-     * <p>
+     *
      * @throws Exception
      */
     @Test
@@ -161,7 +161,7 @@ class RemoteCacheServerUnitTest
     /**
      * Add a listener. Pass the id of 0, verify that the server sets a new listener id. Do another
      * and verify that the second gets an id of 2.
-     * <p>
+     *
      * @throws Exception
      */
     @Test
@@ -191,7 +191,7 @@ class RemoteCacheServerUnitTest
     /**
      * Add a listener. Pass the id of 0, verify that the server sets a new listener id. Do another
      * and verify that the second gets an id of 2.
-     * <p>
+     *
      * @throws Exception
      */
     @Test
@@ -220,7 +220,7 @@ class RemoteCacheServerUnitTest
 
     /**
      * Verify event log calls.
-     * <p>
+     *
      * @throws Exception
      */
     @Test
@@ -240,7 +240,7 @@ class RemoteCacheServerUnitTest
 
     /**
      * Verify event log calls.
-     * <p>
+     *
      * @throws Exception
      */
     @Test
@@ -260,7 +260,7 @@ class RemoteCacheServerUnitTest
 
     /**
      * Verify event log calls.
-     * <p>
+     *
      * @throws Exception
      */
     @Test
@@ -280,7 +280,7 @@ class RemoteCacheServerUnitTest
 
     /**
      * Verify event log calls.
-     * <p>
+     *
      * @throws Exception
      */
     @Test
@@ -300,7 +300,7 @@ class RemoteCacheServerUnitTest
 
     /**
      * Verify event log calls.
-     * <p>
+     *
      * @throws Exception
      */
     @Test
@@ -366,7 +366,7 @@ class RemoteCacheServerUnitTest
      * Register a listener and then verify that it is called when we put using a different listener
      * id. The updates should come from a cluster listener and local cluster consistency should be
      * true.
-     * <p>
+     *
      * @throws Exception
      */
     @Test
@@ -455,7 +455,7 @@ class RemoteCacheServerUnitTest
 
     /**
      * Verify event log calls.
-     * <p>
+     *
      * @throws Exception
      */
     @Test

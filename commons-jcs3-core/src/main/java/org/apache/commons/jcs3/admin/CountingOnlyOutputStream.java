@@ -33,7 +33,7 @@ public class CountingOnlyOutputStream
 
     /**
      * The number of bytes that have passed through this stream.
-     * <p>
+     *
      * @return int
      */
     public int getCount()
@@ -43,7 +43,7 @@ public class CountingOnlyOutputStream
 
     /**
      * count as we write.
-     * <p>
+     *
      * @param b
      * @throws IOException
      */
@@ -56,7 +56,7 @@ public class CountingOnlyOutputStream
 
     /**
      * count as we write.
-     * <p>
+     *
      * @param b
      * @param off
      * @param len
@@ -71,7 +71,7 @@ public class CountingOnlyOutputStream
 
     /**
      * count as we write.
-     * <p>
+     *
      * @param b
      * @throws IOException
      */

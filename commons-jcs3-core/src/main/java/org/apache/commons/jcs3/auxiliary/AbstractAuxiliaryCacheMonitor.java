@@ -40,7 +40,7 @@ public abstract class AbstractAuxiliaryCacheMonitor extends Thread
 
     /**
      * Configures the idle period between repairs.
-     * <p>
+     *
      * @param idlePeriod The new idlePeriod value
      */
     public static void setIdlePeriod( final long idlePeriod )

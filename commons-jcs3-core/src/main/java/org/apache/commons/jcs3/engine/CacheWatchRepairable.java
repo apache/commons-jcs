@@ -50,7 +50,7 @@ public class CacheWatchRepairable
 
     /**
      * Adds a feature to the CacheListener attribute of the CacheWatchRepairable object
-     * <p>
+     *
      * @param obj The feature to be added to the CacheListener attribute
      * @throws IOException
      */
@@ -69,7 +69,7 @@ public class CacheWatchRepairable
 
     /**
      * Adds a feature to the CacheListener attribute of the CacheWatchRepairable object
-     * <p>
+     *
      * @param cacheName The feature to be added to the CacheListener attribute
      * @param obj The feature to be added to the CacheListener attribute
      * @throws IOException
@@ -109,7 +109,7 @@ public class CacheWatchRepairable
 
     /**
      * Tell the server to release us.
-     * <p>
+     *
      * @param cacheName
      * @param obj
      * @throws IOException
@@ -132,7 +132,7 @@ public class CacheWatchRepairable
     /**
      * Replaces the underlying cache watch service and re-attaches all existing listeners to the new
      * cache watch.
-     * <p>
+     *
      * @param cacheWatch The new cacheWatch value
      */
     public void setCacheWatch( final ICacheObserver cacheWatch )

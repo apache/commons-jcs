@@ -46,7 +46,7 @@ public class RemoteHttpCacheService<K, V>
 
     /**
      * Create a process with a cache manager.
-     * <p>
+     *
      * @param cacheManager
      * @param remoteHttpCacheServerAttributes
      * @param cacheEventLogger
@@ -62,7 +62,7 @@ public class RemoteHttpCacheService<K, V>
 
     /**
      * This is called by the event log.
-     * <p>
+     *
      * @param requesterId
      * @return requesterId + ""
      */
@@ -74,7 +74,7 @@ public class RemoteHttpCacheService<K, V>
 
     /**
      * Processes a shutdown request.
-     * <p>
+     *
      * @param cacheName
      * @param requesterId
      * @throws IOException
@@ -91,7 +91,7 @@ public class RemoteHttpCacheService<K, V>
      * Processes a get request.
      * <p>
      * If isAllowClusterGet is enabled we will treat this as a normal request or non-remote origins.
-     * <p>
+     *
      * @param cacheName
      * @param key
      * @param requesterId
@@ -117,7 +117,7 @@ public class RemoteHttpCacheService<K, V>
      * <p>
      * If isAllowClusterGet is enabled we will treat this as a normal request of non-remote
      * origination.
-     * <p>
+     *
      * @param cacheName
      * @param pattern
      * @param requesterId
@@ -143,7 +143,7 @@ public class RemoteHttpCacheService<K, V>
      * <p>
      * If isAllowClusterGet is enabled we will treat this as a normal request of non-remote
      * origination.
-     * <p>
+     *
      * @param cacheName
      * @param keys
      * @param requesterId
@@ -169,7 +169,7 @@ public class RemoteHttpCacheService<K, V>
      * <p>
      * If isLocalClusterConsistency is enabled we will treat this as a normal request of non-remote
      * origination.
-     * <p>
+     *
      * @param cacheName
      * @param key
      * @param requesterId
@@ -197,7 +197,7 @@ public class RemoteHttpCacheService<K, V>
      * <p>
      * If isLocalClusterConsistency is enabled we will treat this as a normal request of non-remote
      * origination.
-     * <p>
+     *
      * @param cacheName
      * @param requesterId
      * @throws IOException
@@ -224,7 +224,7 @@ public class RemoteHttpCacheService<K, V>
      * <p>
      * If isLocalClusterConsistency is enabled we will treat this as a normal request of non-remote
      * origination.
-     * <p>
+     *
      * @param item
      * @param requesterId
      * @throws IOException
@@ -248,7 +248,7 @@ public class RemoteHttpCacheService<K, V>
 
     /**
      * This general method should be deprecated.
-     * <p>
+     *
      * @throws IOException
      */
     @Override

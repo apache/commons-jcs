@@ -81,7 +81,7 @@ public class MockCompositeCacheManager
 
     /**
      * This is exposed so other manager can get access to the props.
-     * <p>
+     *
      * @return the configurationProperties
      */
     @Override
@@ -116,7 +116,7 @@ public class MockCompositeCacheManager
 
 	/**
      * This is exposed so other manager can get access to the props.
-     * <p>
+     *
      * @param props
      */
     public void setConfigurationProperties( final Properties props )

@@ -35,7 +35,7 @@ public class ElapsedTimer
     /**
      * Gets the time elapsed between the start time and now. The start time is reset to now.
      * Subsequent calls will get the time between then and now.
-     * <p>
+     *
      * @return the elapsed time
      */
     public long getElapsedTime()
@@ -48,7 +48,7 @@ public class ElapsedTimer
 
     /**
      * Returns the elapsed time with the display suffix.
-     * <p>
+     *
      * @return formatted elapsed Time
      */
     public String getElapsedTimeString()

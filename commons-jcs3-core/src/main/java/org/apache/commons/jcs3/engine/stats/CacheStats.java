@@ -53,7 +53,7 @@ public class CacheStats
 
     /**
      * Stats are for a region, though auxiliary data may be for more.
-     * <p>
+     *
      * @return The region name
      */
     @Override
@@ -73,7 +73,7 @@ public class CacheStats
 
     /**
      * Stats are for a region, though auxiliary data may be for more.
-     * <p>
+     *
      * @param name   The region name
      */
     @Override

@@ -83,7 +83,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
 
     /**
      * Creates the base.
-     * <p>
+     *
      * @param cattr
      * @param remote
      * @param listener
@@ -119,7 +119,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
     /**
      * Replaces the current remote cache service handle with the given handle. If the current remote
      * is a Zombie, then it propagates any events that are queued to the restored service.
-     * <p>
+     *
      * @param restoredRemote ICacheServiceNonLocal -- the remote server or proxy to the remote server
      */
     @Override
@@ -167,7 +167,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
 
     /**
      * Gets the cacheName attribute of the RemoteCache object.
-     * <p>
+     *
      * @return The cacheName value
      */
     @Override
@@ -188,7 +188,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
 
     /**
      * Return the keys in this cache.
-     * <p>
+     *
      * @see org.apache.commons.jcs3.auxiliary.AuxiliaryCache#getKeySet()
      */
     @Override
@@ -201,7 +201,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
     /**
      * Allows other member of this package to access the listener. This is mainly needed for
      * deregistering a listener.
-     * <p>
+     *
      * @return IRemoteCacheListener, the listener for this remote server
      */
     @Override
@@ -212,7 +212,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
 
     /**
      * Gets the listenerId attribute of the RemoteCacheListener object
-     * <p>
+     *
      * @return The listenerId value
      */
     @Override
@@ -305,7 +305,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
 
     /**
      * Gets the stats attribute of the RemoteCache object.
-     * <p>
+     *
      * @return The stats value
      */
     @Override
@@ -316,7 +316,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
 
     /**
      * Returns the cache status. An error status indicates the remote connection is not available.
-     * <p>
+     *
      * @return The status value
      */
     @Override
@@ -327,7 +327,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
 
     /**
      * This allows gets to timeout in case of remote server machine shutdown.
-     * <p>
+     *
      * @param key
      * @return ICacheElement
      * @throws IOException
@@ -377,7 +377,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
 
     /**
      * Custom exception handling some children.  This should be used to initiate failover.
-     * <p>
+     *
      * @param ex
      * @param msg
      * @param eventName
@@ -388,7 +388,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
 
     /**
      * Synchronously dispose the remote cache; if failed, replace the remote handle with a zombie.
-     * <p>
+     *
      * @throws IOException
      */
     @Override
@@ -418,7 +418,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
      * If we are a cluster client, we need to leave the Element in its serialized form. Cluster
      * clients cannot deserialize objects. Cluster clients get ICacheElementSerialized objects from
      * other remote servers.
-     * <p>
+     *
      * @param key
      * @return ICacheElement, a wrapper around the key, value, and attributes
      * @throws IOException
@@ -458,7 +458,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
 
     /**
      * Calls get matching on the server. Each entry in the result is unwrapped.
-     * <p>
+     *
      * @param pattern
      * @return Map
      * @throws IOException
@@ -509,7 +509,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
     /**
      * Synchronously remove from the remote cache; if failed, replace the remote handle with a
      * zombie.
-     * <p>
+     *
      * @param key
      * @return boolean, whether or not the item was removed
      * @throws IOException
@@ -537,7 +537,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
     /**
      * Synchronously removeAll from the remote cache; if failed, replace the remote handle with a
      * zombie.
-     * <p>
+     *
      * @throws IOException
      */
     @Override
@@ -561,7 +561,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
      * Serializes the object and then calls update on the remote server with the byte array. The
      * byte array is wrapped in a ICacheElementSerialized. This allows the remote server to operate
      * without any knowledge of caches classes.
-     * <p>
+     *
      * @param ce
      * @throws IOException
      */
@@ -598,7 +598,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
      * let the remote cache set a listener_id. Since there is only one listener for all the regions
      * and every region gets registered? the id shouldn't be set if it isn't zero. If it is we
      * assume that it is a reconnect.
-     * <p>
+     *
      * @param id The new listenerId value
      */
     public void setListenerId( final long id )

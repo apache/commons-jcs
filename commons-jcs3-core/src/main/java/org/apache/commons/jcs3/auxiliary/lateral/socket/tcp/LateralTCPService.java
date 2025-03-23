@@ -58,7 +58,7 @@ public class LateralTCPService<K, V>
 
     /**
      * Constructor for the LateralTCPService object
-     * <p>
+     *
      * @param lca ITCPLateralCacheAttributes the configuration object
      * @param serializer the serializer to use when sending
      * @throws IOException
@@ -89,7 +89,7 @@ public class LateralTCPService<K, V>
 
     /**
      * Will close the connection.
-     * <p>
+     *
      * @param cacheName
      * @throws IOException
      */
@@ -115,7 +115,7 @@ public class LateralTCPService<K, V>
 
     /**
      * If get is allowed, we will issues a get request.
-     * <p>
+     *
      * @param cacheName
      * @param key
      * @param requesterId
@@ -144,7 +144,7 @@ public class LateralTCPService<K, V>
 
     /**
      * Return the keys in this cache.
-     * <p>
+     *
      * @param cacheName the name of the cache region
      * @see org.apache.commons.jcs3.auxiliary.AuxiliaryCache#getKeySet()
      */
@@ -175,7 +175,7 @@ public class LateralTCPService<K, V>
 
     /**
      * If allow get is true, we will issue a getmatching query.
-     * <p>
+     *
      * @param cacheName
      * @param pattern
      * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
@@ -191,7 +191,7 @@ public class LateralTCPService<K, V>
 
     /**
      * If allow get is true, we will issue a getmatching query.
-     * <p>
+     *
      * @param cacheName
      * @param pattern
      * @param requesterId   our identity
@@ -224,7 +224,7 @@ public class LateralTCPService<K, V>
 
     /**
      * Gets multiple items from the cache based on the given set of keys.
-     * <p>
+     *
      * @param cacheName
      * @param keys
      * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
@@ -242,7 +242,7 @@ public class LateralTCPService<K, V>
      * This issues a separate get for each item.
      * <p>
      * TODO We should change this. It should issue one request.
-     * <p>
+     *
      * @param cacheName
      * @param keys
      * @param requesterId
@@ -273,7 +273,7 @@ public class LateralTCPService<K, V>
 
     /**
      * Does nothing.
-     * <p>
+     *
      * @throws IOException
      */
     @Override
@@ -285,7 +285,7 @@ public class LateralTCPService<K, V>
 
     /**
      * Uses the default listener id and calls the next remove method.
-     * <p>
+     *
      * @see org.apache.commons.jcs3.engine.behavior.ICacheService#remove(String, Object)
      */
     @Override
@@ -297,7 +297,7 @@ public class LateralTCPService<K, V>
 
     /**
      * Wraps the key in a LateralElementDescriptor.
-     * <p>
+     *
      * @see org.apache.commons.jcs3.engine.behavior.ICacheServiceNonLocal#remove(String, Object, long)
      */
     @Override
@@ -359,7 +359,7 @@ public class LateralTCPService<K, V>
      * If put is allowed, we will issue a put. If issue put on remove is configured, we will issue a
      * remove. Either way, we create a lateral element descriptor, which is essentially a JCS TCP
      * packet. It describes what operation the receiver should take when it gets the packet.
-     * <p>
+     *
      * @see org.apache.commons.jcs3.engine.behavior.ICacheServiceNonLocal#update(org.apache.commons.jcs3.engine.behavior.ICacheElement,
      *      long)
      */

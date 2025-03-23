@@ -45,7 +45,7 @@ class EncryptingSerializerUnitTest
 
     /**
      * Verify that we don't get any errors for null input.
-     * <p>
+     *
      * @throws ClassNotFoundException
      * @throws IOException
      */
@@ -62,7 +62,7 @@ class EncryptingSerializerUnitTest
 
     /**
      * Test different key.
-     * <p>
+     *
      * @throws Exception on error
      */
     @Test
@@ -81,7 +81,7 @@ class EncryptingSerializerUnitTest
      * Test simple back and forth with a string.
      * <p>
      * ))&lt;=&gt;((
-     * <p>
+     *
      * @throws Exception on error
      */
     @Test
@@ -100,7 +100,7 @@ class EncryptingSerializerUnitTest
 
     /**
      * Test serialization with a null object. Verify that we don't get an error.
-     * <p>
+     *
      * @throws Exception on error
      */
     @Test
@@ -121,7 +121,7 @@ class EncryptingSerializerUnitTest
      * Test simple back and forth with a string.
      * <p>
      * ))&lt;=&gt;((
-     * <p>
+     *
      * @throws Exception on error
      */
     @Test

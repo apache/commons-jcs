@@ -31,7 +31,7 @@ public interface ICacheListener<K, V>
 {
     /**
      * Gets the listenerId attribute of the ICacheListener object
-     * <p>
+     *
      * @return The listenerId value
      * @throws IOException
      */
@@ -40,7 +40,7 @@ public interface ICacheListener<K, V>
 
     /**
      * Notifies the subscribers for freeing up the named cache.
-     * <p>
+     *
      * @param cacheName
      * @throws IOException
      */
@@ -49,7 +49,7 @@ public interface ICacheListener<K, V>
 
     /**
      * Notifies the subscribers for a cache entry update.
-     * <p>
+     *
      * @param item
      * @throws IOException
      */
@@ -58,7 +58,7 @@ public interface ICacheListener<K, V>
 
     /**
      * Notifies the subscribers for a cache entry removal.
-     * <p>
+     *
      * @param cacheName
      * @param key
      * @throws IOException
@@ -68,7 +68,7 @@ public interface ICacheListener<K, V>
 
     /**
      * Notifies the subscribers for a cache remove-all.
-     * <p>
+     *
      * @param cacheName
      * @throws IOException
      */
@@ -77,7 +77,7 @@ public interface ICacheListener<K, V>
 
     /**
      * sets unique identifier of listener home
-     * <p>
+     *
      * @param id The new listenerId value
      * @throws IOException
      */

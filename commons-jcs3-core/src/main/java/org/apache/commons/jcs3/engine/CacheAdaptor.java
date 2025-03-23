@@ -40,7 +40,7 @@ public class CacheAdaptor<K, V>
 
     /**
      * Constructor for the CacheAdaptor object
-     * <p>
+     *
      * @param cache
      */
     public CacheAdaptor( final ICache<K, V> cache )
@@ -50,7 +50,7 @@ public class CacheAdaptor<K, V>
 
     /**
      * Gets the listenerId attribute of the CacheAdaptor object
-     * <p>
+     *
      * @return The listenerId value
      * @throws IOException
      */
@@ -63,7 +63,7 @@ public class CacheAdaptor<K, V>
 
     /**
      * Shutdown call.
-     * <p>
+     *
      * @param cacheName
      * @throws IOException
      */
@@ -76,7 +76,7 @@ public class CacheAdaptor<K, V>
 
     /**
      * Puts an item into the cache.
-     * <p>
+     *
      * @param item
      * @throws IOException
      */
@@ -96,7 +96,7 @@ public class CacheAdaptor<K, V>
 
     /**
      * Removes an item.
-     * <p>
+     *
      * @param cacheName
      * @param key
      * @throws IOException
@@ -110,7 +110,7 @@ public class CacheAdaptor<K, V>
 
     /**
      * Clears the region.
-     * <p>
+     *
      * @param cacheName
      * @throws IOException
      */
@@ -123,7 +123,7 @@ public class CacheAdaptor<K, V>
 
     /**
      * Sets the listenerId attribute of the CacheAdaptor object
-     * <p>
+     *
      * @param id
      *            The new listenerId value
      * @throws IOException

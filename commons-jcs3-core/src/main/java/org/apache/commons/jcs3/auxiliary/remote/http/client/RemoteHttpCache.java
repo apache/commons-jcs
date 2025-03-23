@@ -47,7 +47,7 @@ public class RemoteHttpCache<K, V>
      * One of these exists for each region. This also holds a reference to a listener. The same
      * listener is used for all regions for one remote server. Holding a reference to the listener
      * allows this object to know the listener id assigned by the remote cache.
-     * <p>
+     *
      * @param remoteHttpCacheAttributes
      * @param remote
      * @param listener
@@ -81,7 +81,7 @@ public class RemoteHttpCache<K, V>
 
     /**
      * Nothing right now. This should setup a zombie and initiate recovery.
-     * <p>
+     *
      * @param ex
      * @param msg
      * @param eventName

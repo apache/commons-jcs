@@ -44,7 +44,7 @@ public class MySQLDiskCacheHsqlBackedUnitTest
     /**
      * Adds items to cache, gets them, and removes them. The item count is more than the size of the
      * memory cache, so items should spool to disk.
-     * <p>
+     *
      * @param region Name of the region to access
      * @param items
      * @throws Exception If an error occurs
@@ -115,7 +115,7 @@ public class MySQLDiskCacheHsqlBackedUnitTest
 
     /**
      * Test the basic JDBC disk cache functionality with a hsql backing.
-     * <p>
+     *
      * @throws Exception
      */
     @Test

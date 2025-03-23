@@ -51,7 +51,7 @@ public class MockMemoryCache<K, V>
 
     /**
      * Destroy the memory cache
-     * <p>
+     *
      * @throws IOException
      */
     @Override

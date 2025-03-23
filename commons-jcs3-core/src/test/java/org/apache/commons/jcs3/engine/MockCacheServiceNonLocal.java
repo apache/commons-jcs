@@ -62,7 +62,7 @@ public class MockCacheServiceNonLocal<K, V>
 
     /**
      * Do nothing.
-     * <p>
+     *
      * @param cacheName
      */
     @Override
@@ -106,7 +106,7 @@ public class MockCacheServiceNonLocal<K, V>
 
     /**
      * Returns an empty map. Zombies have no internal data.
-     * <p>
+     *
      * @param cacheName
      * @param pattern
      * @return an empty map
@@ -168,7 +168,7 @@ public class MockCacheServiceNonLocal<K, V>
 
     /**
      * Sets the last remove key.
-     * <p>
+     *
      * @param cacheName
      * @param key
      */
@@ -180,7 +180,7 @@ public class MockCacheServiceNonLocal<K, V>
 
     /**
      * Sets the last remove key.
-     * <p>
+     *
      * @param cacheName
      * @param key
      * @param requesterId   identity of requester
@@ -193,7 +193,7 @@ public class MockCacheServiceNonLocal<K, V>
 
     /**
      * Sets the last remove all cache name.
-     * <p>
+     *
      * @param cacheName
      */
     @Override
@@ -204,7 +204,7 @@ public class MockCacheServiceNonLocal<K, V>
 
     /**
      * Sets the lastRemoveAllCacheName to the cacheName.
-     * <p>
+     *
      * @param cacheName   region name
      * @param requesterId   identity of requester
      * @throws IOException
@@ -218,7 +218,7 @@ public class MockCacheServiceNonLocal<K, V>
 
     /**
      * Sets the last update item.
-     * <p>
+     *
      * @param item
      */
     @Override
@@ -229,7 +229,7 @@ public class MockCacheServiceNonLocal<K, V>
 
     /**
      * Sets the last update item.
-     * <p>
+     *
      * @param item
      * @param requesterId   identity of requester
      */

@@ -39,7 +39,7 @@ public class IndexedDiskElementDescriptor
 
     /**
      * Constructs a usable disk element descriptor.
-     * <p>
+     *
      * @param pos
      * @param len
      */
@@ -51,7 +51,7 @@ public class IndexedDiskElementDescriptor
 
     /**
      * Compares based on length, then on pos descending.
-     * <p>
+     *
      * @param o Object
      * @return int
      */

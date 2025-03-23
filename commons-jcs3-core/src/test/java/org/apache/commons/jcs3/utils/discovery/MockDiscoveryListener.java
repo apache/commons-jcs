@@ -33,7 +33,7 @@ public class MockDiscoveryListener
 
     /**
      * Adds the entry to a list. I'm not using a set. I want to see if we get dupes.
-     * <p>
+     *
      * @param service
      */
     @Override
@@ -44,7 +44,7 @@ public class MockDiscoveryListener
 
     /**
      * Removes it from the list.
-     * <p>
+     *
      * @param service
      */
     @Override

@@ -49,7 +49,7 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
 
     /**
      * Adds a new node to the start of the link list.
-     * <p>
+     *
      * @param me The feature to be added to the First
      */
     public synchronized void addFirst(final T me)
@@ -70,7 +70,7 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
 
     /**
      * Adds a new node to the end of the link list.
-     * <p>
+     *
      * @param me The feature to be added to the Last
      */
     public synchronized void addLast(final T me)
@@ -107,7 +107,7 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
 
     /**
      * Removes the specified node from the link list.
-     * <p>
+     *
      * @return DoubleLinkedListNode, the first node.
      */
     public synchronized T getFirst()
@@ -118,7 +118,7 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
 
     /**
      * Returns the last node from the link list, if there are any nodes.
-     * <p>
+     *
      * @return The last node.
      */
     public synchronized T getLast()
@@ -129,7 +129,7 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
 
     /**
      * Moves an existing node to the start of the link list.
-     * <p>
+     *
      * @param ln The node to set as the head.
      */
     public synchronized void makeFirst(final T ln)
@@ -161,7 +161,7 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
 
     /**
      * Moves an existing node to the end of the link list.
-     * <p>
+     *
      * @param ln The node to set as the head.
      */
     public synchronized void makeLast(final T ln)
@@ -193,7 +193,7 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
 
     /**
      * Removes the specified node from the link list.
-     * <p>
+     *
      * @param me Description of the Parameter
      * @return true if an element was removed.
      */
@@ -262,7 +262,7 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
 
     /**
      * Removes the specified node from the link list.
-     * <p>
+     *
      * @return The last node if there was one to remove.
      */
     public synchronized T removeLast()
@@ -278,7 +278,7 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
 
     /**
      * Returns the size of the list.
-     * <p>
+     *
      * @return int
      */
     public synchronized int size()

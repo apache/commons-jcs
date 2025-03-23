@@ -263,7 +263,7 @@ public class TCPLateralCacheAttributes
      * Is the lateral allowed to try and get from other laterals.
      * <p>
      * This replaces the old putOnlyMode
-     * <p>
+     *
      * @param allowGet
      */
     @Override
@@ -365,7 +365,7 @@ public class TCPLateralCacheAttributes
 
     /**
      * Sets the tcpServers attribute of the ILateralCacheAttributes object
-     * <p>
+     *
      * @param val The new tcpServers value
      */
     @Override
@@ -376,7 +376,7 @@ public class TCPLateralCacheAttributes
 
     /**
      * Sets the address to broadcast to if UDPDiscovery is enabled.
-     * <p>
+     *
      * @param udpDiscoveryAddr The udpDiscoveryAddr to set.
      */
     @Override
@@ -388,7 +388,7 @@ public class TCPLateralCacheAttributes
     /**
      * Can setup UDP Discovery. This only works for TCp laterals right now. It allows TCP laterals
      * to find each other by broadcasting to a multicast port.
-     * <p>
+     *
      * @param udpDiscoveryEnabled The udpDiscoveryEnabled to set.
      */
     @Override
@@ -399,7 +399,7 @@ public class TCPLateralCacheAttributes
 
     /**
      * Sets the port to use if UDPDiscovery is enabled.
-     * <p>
+     *
      * @param udpDiscoveryPort The udpDiscoveryPort to set.
      */
     @Override
@@ -410,7 +410,7 @@ public class TCPLateralCacheAttributes
 
     /**
      * Sets the time-to-live for the UDP multicast packet
-     * <p>
+     *
      * @param udpTTL The udpTTL to set.
      * @since 3.1
      */
@@ -423,7 +423,7 @@ public class TCPLateralCacheAttributes
     /**
      * Used to key the instance TODO create another method for this and use toString for debugging
      * only.
-     * <p>
+     *
      * @return String
      */
     @Override

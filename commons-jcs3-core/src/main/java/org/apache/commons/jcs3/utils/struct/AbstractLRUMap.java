@@ -90,7 +90,7 @@ public abstract class AbstractLRUMap<K, V>
 
     /**
      * This removes all the items. It clears the map and the double linked list.
-     * <p>
+     *
      * @see Map#clear()
      */
     @Override
@@ -110,7 +110,7 @@ public abstract class AbstractLRUMap<K, V>
 
     /**
      * Returns true if the map contains an element for the supplied key.
-     * <p>
+     *
      * @see Map#containsKey(Object)
      */
     @Override
@@ -121,7 +121,7 @@ public abstract class AbstractLRUMap<K, V>
 
     /**
      * This is an expensive operation that determines if the object supplied is mapped to any key.
-     * <p>
+     *
      * @see Map#containsValue(Object)
      */
     @Override
@@ -165,7 +165,7 @@ public abstract class AbstractLRUMap<K, V>
      * <p>
      * TODO we should return out own set wrapper, so we can avoid the extra object creation if it
      * isn't necessary.
-     * <p>
+     *
      * @see Map#entrySet()
      */
     @Override
@@ -227,7 +227,7 @@ public abstract class AbstractLRUMap<K, V>
      * This gets an element out of the map without adjusting it's position in the LRU. In other
      * words, this does not count as being used. If the element is the last item in the list, it
      * will still be the last time in the list.
-     * <p>
+     *
      * @param key
      * @return Object
      */
@@ -276,7 +276,7 @@ public abstract class AbstractLRUMap<K, V>
 
     /**
      * Returns true if the map is empty.
-     * <p>
+     *
      * @see Map#isEmpty()
      */
     @Override
@@ -433,7 +433,7 @@ public abstract class AbstractLRUMap<K, V>
 
     /**
      * This simply returns the number of elements in the map.
-     * <p>
+     *
      * @see Map#size()
      */
     @Override

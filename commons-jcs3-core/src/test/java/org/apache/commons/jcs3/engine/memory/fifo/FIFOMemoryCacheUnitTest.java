@@ -36,7 +36,7 @@ class FIFOMemoryCacheUnitTest
 {
     /**
      * Verify that the oldest inserted item is removed
-     * <p>
+     *
      * @throws IOException
      */
     @Test
@@ -72,7 +72,7 @@ class FIFOMemoryCacheUnitTest
 
     /**
      * Verify that the oldest inserted item is removed
-     * <p>
+     *
      * @throws IOException
      */
     @Test

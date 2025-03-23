@@ -130,7 +130,7 @@ public class CompositeCache<K, V>
 
     /**
      * Constructor for the Cache object
-     * <p>
+     *
      * @param cattr The cache attribute
      * @param attr The default element attributes
      */
@@ -155,7 +155,7 @@ public class CompositeCache<K, V>
     /**
      * Copies the item to memory if the memory size is greater than 0. Only spool if the memory
      * cache size is greater than 0, else the item will immediately get put into purgatory.
-     * <p>
+     *
      * @param element
      * @throws IOException
      */
@@ -176,7 +176,7 @@ public class CompositeCache<K, V>
      * Create the MemoryCache based on the config parameters.
      * TODO: consider making this an auxiliary, despite its close tie to the CacheHub.
      * TODO: might want to create a memory cache config file separate from that of the hub -- ICompositeCacheAttributes
-     * <p>
+     *
      * @param cattr
      */
     private void createMemoryCache(final ICompositeCacheAttributes cattr)
@@ -220,7 +220,7 @@ public class CompositeCache<K, V>
      * Invoked only by CacheManager. This method disposes of the auxiliaries one by one. For the
      * disk cache, the items in memory are freed, meaning that they will be sent through the
      * overflow channel to disk. After the auxiliaries are disposed, the memory cache is disposed.
-     * <p>
+     *
      * @param fromRemote
      */
     public void dispose(final boolean fromRemote)
@@ -322,7 +322,7 @@ public class CompositeCache<K, V>
 
     /**
      * Gets an item from the cache.
-     * <p>
+     *
      * @param key
      * @return element from the cache, or null if not present
      * @see org.apache.commons.jcs3.engine.behavior.ICache#get(Object)
@@ -339,7 +339,7 @@ public class CompositeCache<K, V>
      * <p>
      * Do not try to go remote or laterally for this get if it is localOnly. Otherwise try to go
      * remote or lateral if such an auxiliary is configured for this region.
-     * <p>
+     *
      * @param key
      * @param localOnly
      * @return ICacheElement
@@ -457,7 +457,7 @@ public class CompositeCache<K, V>
 
     /**
      * Gets the list of auxiliary caches for this region.
-     * <p>
+     *
      * @return a list of auxiliary caches, may be empty, never null
      * @since 3.1
      */
@@ -468,7 +468,7 @@ public class CompositeCache<K, V>
 
     /**
      * Gets the ICompositeCacheAttributes attribute of the Cache object.
-     * <p>
+     *
      * @return The ICompositeCacheAttributes value
      */
     public ICompositeCacheAttributes getCacheAttributes()
@@ -478,7 +478,7 @@ public class CompositeCache<K, V>
 
     /**
      * Gets the cacheName attribute of the Cache object. This is also known as the region name.
-     * <p>
+     *
      * @return The cacheName value
      */
     @Override
@@ -489,7 +489,7 @@ public class CompositeCache<K, V>
 
     /**
      * Gets the cacheType attribute of the Cache object.
-     * <p>
+     *
      * @return The cacheType value
      */
     @Override
@@ -501,7 +501,7 @@ public class CompositeCache<K, V>
     /**
      * Gets the default element attribute of the Cache object This returns a copy. It does not
      * return a reference to the attributes.
-     * <p>
+     *
      * @return The attributes value
      */
     public IElementAttributes getElementAttributes()
@@ -515,7 +515,7 @@ public class CompositeCache<K, V>
 
     /**
      * Gets the elementAttributes attribute of the Cache object.
-     * <p>
+     *
      * @param key
      * @return The elementAttributes value
      * @throws CacheException
@@ -543,7 +543,7 @@ public class CompositeCache<K, V>
 
     /**
      * Number of times a requested item was found in the memory cache.
-     * <p>
+     *
      * @return number of hits in memory
      */
     public long getHitCountRam()
@@ -553,7 +553,7 @@ public class CompositeCache<K, V>
 
     /**
      * Returns the key matcher used by get matching.
-     * <p>
+     *
      * @return keyMatcher
      */
     public IKeyMatcher<K> getKeyMatcher()
@@ -563,7 +563,7 @@ public class CompositeCache<K, V>
 
     /**
      * Gets a set of the keys for all elements in the cache
-     * <p>
+     *
      * @return A set of the key type
      */
     public Set<K> getKeySet()
@@ -573,7 +573,7 @@ public class CompositeCache<K, V>
 
     /**
      * Gets a set of the keys for all elements in the cache
-     * <p>
+     *
      * @param localOnly true if only memory keys are requested
      * @return A set of the key type
      */
@@ -596,7 +596,7 @@ public class CompositeCache<K, V>
 
     /**
      * Build a map of all the matching elements in all of the auxiliaries and memory.
-     * <p>
+     *
      * @param pattern
      * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
      *         data in cache for any matching keys
@@ -614,7 +614,7 @@ public class CompositeCache<K, V>
      * <p>
      * Do not try to go remote or laterally for this get if it is localOnly. Otherwise try to go
      * remote or lateral if such an auxiliary is configured for this region.
-     * <p>
+     *
      * @param pattern
      * @param localOnly
      * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
@@ -648,7 +648,7 @@ public class CompositeCache<K, V>
      * <p>
      * Moves in reverse order of definition. This will allow you to override those that are from the
      * remote with those on disk.
-     * <p>
+     *
      * @param pattern
      * @param localOnly
      * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
@@ -696,7 +696,7 @@ public class CompositeCache<K, V>
     /**
      * Gets the key array from the memcache. Builds a set of matches. Calls getMultiple with the
      * set. Returns a map: key -&gt; result.
-     * <p>
+     *
      * @param pattern
      * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
      *         data in cache for any matching keys
@@ -716,7 +716,7 @@ public class CompositeCache<K, V>
 
     /**
      * Access to the memory cache for instrumentation.
-     * <p>
+     *
      * @return the MemoryCache implementation
      */
     public IMemoryCache<K, V> getMemoryCache()
@@ -744,7 +744,7 @@ public class CompositeCache<K, V>
 
     /**
      * Gets multiple items from the cache based on the given set of keys.
-     * <p>
+     *
      * @param keys
      * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
      *         data in cache for any of these keys
@@ -762,7 +762,7 @@ public class CompositeCache<K, V>
      * <p>
      * Do not try to go remote or laterally for this get if it is localOnly. Otherwise try to go
      * remote or lateral if such an auxiliary is configured for this region.
-     * <p>
+     *
      * @param keys
      * @param localOnly
      * @return ICacheElement
@@ -804,7 +804,7 @@ public class CompositeCache<K, V>
 
     /**
      * If local invocation look in aux caches, even if not local look in disk auxiliaries.
-     * <p>
+     *
      * @param keys
      * @param localOnly
      * @return the elements found in the auxiliary caches
@@ -855,7 +855,7 @@ public class CompositeCache<K, V>
 
     /**
      * Gets items for the keys in the set. Returns a map: key -> result.
-     * <p>
+     *
      * @param keys
      * @return the elements found in the memory cache
      * @throws IOException
@@ -887,7 +887,7 @@ public class CompositeCache<K, V>
     /**
      * Gets the size attribute of the Cache object. This return the number of elements, not the byte
      * size.
-     * <p>
+     *
      * @return The size value
      */
     @Override
@@ -898,7 +898,7 @@ public class CompositeCache<K, V>
 
     /**
      * This returns data gathered for this region and all the auxiliaries it currently uses.
-     * <p>
+     *
      * @return Statistics and Info on the Region.
      */
     public ICacheStats getStatistics()
@@ -927,7 +927,7 @@ public class CompositeCache<K, V>
 
     /**
      * Gets stats for debugging.
-     * <p>
+     *
      * @return String
      */
     @Override
@@ -938,7 +938,7 @@ public class CompositeCache<K, V>
 
     /**
      * Gets the status attribute of the Cache object.
-     * <p>
+     *
      * @return The status value
      */
     @Override
@@ -960,7 +960,7 @@ public class CompositeCache<K, V>
      * <p>
      * This does not call handle directly; instead the handler and the event are put into a queue.
      * This prevents the event handling from blocking normal cache operations.
-     * <p>
+     *
      * @param element the item
      * @param eventType the event type
      */
@@ -1061,7 +1061,7 @@ public class CompositeCache<K, V>
 
     /**
      * Do not try to go remote or laterally for this get.
-     * <p>
+     *
      * @param key
      * @return ICacheElement
      */
@@ -1073,7 +1073,7 @@ public class CompositeCache<K, V>
     /**
      * Build a map of all the matching elements in all of the auxiliaries and memory. Do not try to
      * go remote or laterally for this data.
-     * <p>
+     *
      * @param pattern
      * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
      *         data in cache for any matching keys
@@ -1086,7 +1086,7 @@ public class CompositeCache<K, V>
     /**
      * Gets multiple items from the cache based on the given set of keys. Do not try to go remote or
      * laterally for this data.
-     * <p>
+     *
      * @param keys
      * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
      *         data in cache for any of these keys
@@ -1098,7 +1098,7 @@ public class CompositeCache<K, V>
 
     /**
      * Do not propagate removeall laterally or remotely.
-     * <p>
+     *
      * @param key
      * @return true if the item was already in the cache.
      */
@@ -1109,7 +1109,7 @@ public class CompositeCache<K, V>
 
     /**
      * Will not pass the remove message remotely.
-     * <p>
+     *
      * @throws IOException
      */
     public void localRemoveAll()
@@ -1120,7 +1120,7 @@ public class CompositeCache<K, V>
 
     /**
      * Standard update method.
-     * <p>
+     *
      * @param ce
      * @throws IOException
      */
@@ -1132,7 +1132,7 @@ public class CompositeCache<K, V>
 
     /**
      * Remove expired elements retrieved from an auxiliary. Update memory with good items.
-     * <p>
+     *
      * @param aux the auxiliary cache instance
      * @param elementsFromAuxiliary
      * @throws IOException
@@ -1180,7 +1180,7 @@ public class CompositeCache<K, V>
 
     /**
      * Returns a set of keys that were not found.
-     * <p>
+     *
      * @param keys
      * @param foundElements
      * @return the original set of cache keys, minus any cache keys present in the map keys of the
@@ -1196,7 +1196,7 @@ public class CompositeCache<K, V>
 
     /**
      * Removes an item from the cache.
-     * <p>
+     *
      * @param key
      * @return true is it was removed
      * @see org.apache.commons.jcs3.engine.behavior.ICache#remove(Object)
@@ -1219,7 +1219,7 @@ public class CompositeCache<K, V>
      * propagated then they would go out of synch. The same could happen for multiple remotes. If
      * this looks necessary we will need to build in an identifier to specify the source of a
      * removal.
-     * <p>
+     *
      * @param key
      * @param localOnly
      * @return true if the item was in the cache, else false
@@ -1278,7 +1278,7 @@ public class CompositeCache<K, V>
     /**
      * Clears the region. This command will be sent to all auxiliaries. Some auxiliaries, such as
      * the JDBC disk cache, can be configured to not honor removeAll requests.
-     * <p>
+     *
      * @see org.apache.commons.jcs3.engine.behavior.ICache#removeAll()
      */
     @Override
@@ -1290,7 +1290,7 @@ public class CompositeCache<K, V>
 
     /**
      * Removes all cached items.
-     * <p>
+     *
      * @param localOnly must pass in false to get remote and lateral aux's updated. This prevents
      *            looping.
      * @throws IOException
@@ -1363,7 +1363,7 @@ public class CompositeCache<K, V>
     /**
      * This sets the list of auxiliary caches for this region.
      * It filters out null caches
-     * <p>
+     *
      * @param auxCaches
      * @since 3.1
      */
@@ -1376,7 +1376,7 @@ public class CompositeCache<K, V>
 
     /**
      * Sets the ICompositeCacheAttributes attribute of the Cache object.
-     * <p>
+     *
      * @param cattr The new ICompositeCacheAttributes value
      */
     public void setCacheAttributes(final ICompositeCacheAttributes cattr)
@@ -1398,7 +1398,7 @@ public class CompositeCache<K, V>
 
     /**
      * Sets the default element attribute of the Cache object.
-     * <p>
+     *
      * @param attr
      */
     public void setElementAttributes(final IElementAttributes attr)
@@ -1418,7 +1418,7 @@ public class CompositeCache<K, V>
 
     /**
      * Sets the key matcher used by get matching.
-     * <p>
+     *
      * @param keyMatcher
      */
     @Override
@@ -1455,7 +1455,7 @@ public class CompositeCache<K, V>
      * <p>
      * If JCS is not configured to use the disk as a swap, that is if the
      * CompositeCacheAttribute diskUsagePattern is not SWAP_ONLY, then the item will not be spooled.
-     * <p>
+     *
      * @param ce The CacheElement
      */
     public void spoolToDisk(final ICacheElement<K, V> ce)
@@ -1511,7 +1511,7 @@ public class CompositeCache<K, V>
 
     /**
      * This returns the stats.
-     * <p>
+     *
      * @return getStats()
      */
     @Override
@@ -1522,7 +1522,7 @@ public class CompositeCache<K, V>
 
     /**
      * Standard update method.
-     * <p>
+     *
      * @param ce
      * @throws IOException
      */
@@ -1536,7 +1536,7 @@ public class CompositeCache<K, V>
     /**
      * Put an item into the cache. If it is localOnly, then do no notify remote or lateral
      * auxiliaries.
-     * <p>
+     *
      * @param cacheElement the ICacheElement&lt;K, V&gt;
      * @param localOnly Whether the operation should be restricted to local auxiliaries.
      * @throws IOException
@@ -1577,7 +1577,7 @@ public class CompositeCache<K, V>
      * This is called by update(cacheElement, localOnly) after it updates the memory cache.
      * <p>
      * This is protected to make it testable.
-     * <p>
+     *
      * @param cacheElement
      * @param localOnly
      * @throws IOException

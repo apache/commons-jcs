@@ -72,7 +72,7 @@ public class TestRemoteCacheFactory extends RemoteCacheFactory
      * Returns an instance of RemoteCacheManager for the given connection parameters.
      * <p>
      * Host and Port uniquely identify a manager instance.
-     * <p>
+     *
      * @param cattr
      * @return The instance value or null if no such manager exists
      */
@@ -95,7 +95,7 @@ public class TestRemoteCacheFactory extends RemoteCacheFactory
      * <p>
      * If the connection cannot be established, zombie objects will be used for future recovery
      * purposes.
-     * <p>
+     *
      * @param cattr the cache configuration object
      * @param cacheMgr the cache manager
      * @param cacheEventLogger the event logger

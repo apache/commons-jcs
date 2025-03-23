@@ -56,7 +56,7 @@ public class HostNameUtil
 
     /**
      * Gets the address for the local machine.
-     * <p>
+     *
      * @return InetAddress.getLocalHost().getHostAddress()
      * @throws UnknownHostException
      */
@@ -91,7 +91,7 @@ public class HostNameUtil
      * <code>InetAddress.getLocalHost</code>.
      * <p>
      * <a href="https://issues.apache.org/jira/browse/JCS-40">JIR ISSUE JCS-40</a>
-     * <p>
+     *
      * @return InetAddress
      * @throws UnknownHostException If the LAN address of the machine cannot be found.
      * @since 3.1
@@ -108,7 +108,7 @@ public class HostNameUtil
      * <p>
      * This method will scan all IP addresses on all network interfaces on the host machine to
      * determine the IP addresses most likely to be the machine's LAN addresses.
-     * <p>
+     *
      * @return List<InetAddress>
      * @throws UnknownHostException If the LAN address of the machine cannot be found.
      */

@@ -187,7 +187,7 @@ public class UDPDiscoveryService
 
     /**
      * Adds a listener.
-     * <p>
+     *
      * @param listener
      * @return true if it wasn't already in the set
      */
@@ -198,7 +198,7 @@ public class UDPDiscoveryService
 
     /**
      * Add a service to the list. Update the held copy if we already know about it.
-     * <p>
+     *
      * @param discoveredService discovered service
      */
     protected void addOrUpdateService( final DiscoveredService discoveredService )
@@ -236,7 +236,7 @@ public class UDPDiscoveryService
 
     /**
      * Adds a region to the list that is participating in discovery.
-     * <p>
+     *
      * @param cacheName
      */
     public void addParticipatingCacheName( final String cacheName )
@@ -274,7 +274,7 @@ public class UDPDiscoveryService
 
     /**
      * Gets all the cache names we have facades for.
-     * <p>
+     *
      * @return ArrayList
      */
     protected ArrayList<String> getCacheNames()
@@ -354,7 +354,7 @@ public class UDPDiscoveryService
 
     /**
      * Removes the discovered service from the list and calls the discovery listener.
-     * <p>
+     *
      * @param service
      */
     public void removeDiscoveredService( final DiscoveredService service )
@@ -369,7 +369,7 @@ public class UDPDiscoveryService
 
     /**
      * Removes a listener.
-     * <p>
+     *
      * @param listener
      * @return true if it was in the set
      */

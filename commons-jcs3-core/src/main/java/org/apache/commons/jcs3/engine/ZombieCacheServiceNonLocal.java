@@ -136,7 +136,7 @@ public class ZombieCacheServiceNonLocal<K, V>
 
     /**
      * Sets the maximum number of items that will be allowed on the queue.
-     * <p>
+     *
      * @param maxQueueSize
      */
     public ZombieCacheServiceNonLocal( final int maxQueueSize )
@@ -156,7 +156,7 @@ public class ZombieCacheServiceNonLocal<K, V>
 
     /**
      * Does nothing. Gets are synchronous and cannot be added to a queue.
-     * <p>
+     *
      * @param cacheName   region name
      * @param key   item key
      * @param requesterId   identifies the caller.
@@ -173,7 +173,7 @@ public class ZombieCacheServiceNonLocal<K, V>
 
     /**
      * Does nothing.
-     * <p>
+     *
      * @param cacheName   region name
      * @return empty set
      */
@@ -185,7 +185,7 @@ public class ZombieCacheServiceNonLocal<K, V>
 
     /**
      * Does nothing.
-     * <p>
+     *
      * @param cacheName
      * @param pattern
      * @param requesterId
@@ -213,7 +213,7 @@ public class ZombieCacheServiceNonLocal<K, V>
 
     /**
      * Gets the number of items on the queue.
-     * <p>
+     *
      * @return size of the queue.
      */
     public int getQueueSize()
@@ -223,7 +223,7 @@ public class ZombieCacheServiceNonLocal<K, V>
 
     /**
      * Walk the queue, calling the service for each queue operation.
-     * <p>
+     *
      * @param service
      * @throws Exception
      */
@@ -265,7 +265,7 @@ public class ZombieCacheServiceNonLocal<K, V>
 
     /**
      * Adds a removeAll event to the queue if the maxSize is greater than 0;
-     * <p>
+     *
      * @param cacheName   region name
      * @param key   item key
      * @param listenerId   identifies the caller.
@@ -283,7 +283,7 @@ public class ZombieCacheServiceNonLocal<K, V>
 
     /**
      * Adds a removeAll event to the queue if the maxSize is greater than 0;
-     * <p>
+     *
      * @param cacheName   name of the region
      * @param listenerId   identifies the caller.
      */
@@ -300,7 +300,7 @@ public class ZombieCacheServiceNonLocal<K, V>
 
     /**
      * Adds an update event to the queue if the maxSize is greater than 0;
-     * <p>
+     *
      * @param item ICacheElement
      * @param listenerId   identifies the caller.
      */

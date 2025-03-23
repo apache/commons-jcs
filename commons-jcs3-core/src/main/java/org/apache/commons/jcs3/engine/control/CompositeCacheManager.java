@@ -111,7 +111,7 @@ public class CompositeCacheManager
      * Gets the CacheHub instance. For backward compatibility, if this creates the instance it will
      * attempt to configure it with the default configuration. If you want to configure from your
      * own source, use {@link #getUnconfiguredInstance}and then call {@link #configure}
-     * <p>
+     *
      * @return CompositeCacheManager
      * @throws CacheException if the configuration cannot be loaded
      */
@@ -557,7 +557,7 @@ public class CompositeCacheManager
 
     /**
      * Gets the cache attribute of the CacheHub object
-     * <p>
+     *
      * @param cacheName
      * @param cattr
      * @param attr

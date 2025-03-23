@@ -37,7 +37,7 @@ public interface AuxiliaryCacheAttributes
 
     /**
      * Gets the cacheName attribute of the AuxiliaryCacheAttributes object
-     * <p>
+     *
      * @return The cacheName value
      */
     String getCacheName();
@@ -45,7 +45,7 @@ public interface AuxiliaryCacheAttributes
     /**
      * Sets the pool name to use. If a pool is not found by this name, the thread pool manager will
      * return a default configuration.
-     * <p>
+     *
      * @return name of thread pool to use for this auxiliary
      */
     String getEventQueuePoolName();
@@ -57,14 +57,14 @@ public interface AuxiliaryCacheAttributes
 
     /**
      * Gets the name attribute of the AuxiliaryCacheAttributes object
-     * <p>
+     *
      * @return The name value
      */
     String getName();
 
     /**
      * Sets the name of the cache, referenced by the appropriate manager.
-     * <p>
+     *
      * @param s The new cacheName value
      */
     void setCacheName( String s );
@@ -72,21 +72,21 @@ public interface AuxiliaryCacheAttributes
     /**
      * If you choose a POOLED event queue type, the value of EventQueuePoolName will be used. This
      * is ignored if the pool type is SINGLE
-     * <p>
+     *
      * @param s SINGLE or POOLED
      */
     void setEventQueuePoolName( String s );
 
     /**
      * SINGLE is the default. If you choose POOLED, the value of EventQueuePoolName will be used
-     * <p>
+     *
      * @param s SINGLE or POOLED
      */
     void setEventQueueType( ICacheEventQueue.QueueType s );
 
     /**
      * Name known by configurator
-     * <p>
+     *
      * @param s The new name value
      */
     void setName( String s );

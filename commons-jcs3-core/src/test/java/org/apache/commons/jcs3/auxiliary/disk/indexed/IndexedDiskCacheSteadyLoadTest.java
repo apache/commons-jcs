@@ -59,7 +59,7 @@ class IndexedDiskCacheSteadyLoadTest
 
     /**
      * Insert 2000 wait 1 second, repeat. Average 1000 / sec.
-     * <p>
+     *
      * @throws Exception
      */
     @Test

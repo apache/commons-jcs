@@ -74,7 +74,7 @@ public class JDBCDiskCacheFactory
 
     /**
      * This factory method should create an instance of the jdbc cache.
-     * <p>
+     *
      * @param rawAttr specific cache configuration attributes
      * @param compositeCacheManager the global cache manager
      * @param cacheEventLogger a specific logger for cache events
@@ -104,7 +104,7 @@ public class JDBCDiskCacheFactory
 
     /**
      * If UseDiskShrinker is true then we will create a shrinker daemon if necessary.
-     * <p>
+     *
      * @param cattr
      * @param raf
      */
@@ -156,7 +156,7 @@ public class JDBCDiskCacheFactory
 
     /**
      * manages the DataSourceFactories.
-     * <p>
+     *
      * @param cattr the cache configuration
      * @param configProps the configuration properties object
      * @return a DataSourceFactory

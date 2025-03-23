@@ -103,7 +103,7 @@ public class MockAuxiliaryCache<K, V>
 
     /**
      * Return the keys in this cache.
-     * <p>
+     *
      * @see org.apache.commons.jcs3.auxiliary.disk.AbstractDiskCache#getKeySet()
      */
     @Override
@@ -127,7 +127,7 @@ public class MockAuxiliaryCache<K, V>
 
     /**
      * Gets multiple items from the cache based on the given set of keys.
-     * <p>
+     *
      * @param keys
      * @return a map of K key to ICacheElement&lt;String, String&gt; element, or an empty map if there is no
      *         data in cache for any of these keys

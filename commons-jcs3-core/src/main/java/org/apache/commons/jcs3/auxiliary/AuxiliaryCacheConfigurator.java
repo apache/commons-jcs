@@ -56,7 +56,7 @@ public class AuxiliaryCacheConfigurator
 
     /**
      * Parses the event logger config, if there is any for the auxiliary.
-     * <p>
+     *
      * @param props
      * @param auxPrefix   For example, AUXILIARY_PREFIX + auxName
      * @return cacheEventLogger
@@ -83,7 +83,7 @@ public class AuxiliaryCacheConfigurator
 
     /**
      * Parses the element config, if there is any for the auxiliary.
-     * <p>
+     *
      * @param props
      * @param auxPrefix   For example, AUXILIARY_PREFIX + auxName
      * @return cacheEventLogger

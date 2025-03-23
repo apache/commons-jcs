@@ -43,7 +43,7 @@ public class JDBCDiskCacheSharedPoolUnitTest
     /**
      * Adds items to cache, gets them, and removes them. The item count is more than the size of the
      * memory cache, so items should spool to disk.
-     * <p>
+     *
      * @param region Name of the region to access
      * @param items
      * @throws Exception If an error occurs

@@ -53,7 +53,7 @@ public class TableState
 
     /**
      * Constructs a usable table state.
-     * <p>
+     *
      * @param tableName
      */
     public TableState( final String tableName )
@@ -97,7 +97,7 @@ public class TableState
 
     /**
      * Write out the values for debugging purposes.
-     * <p>
+     *
      * @return String
      */
     @Override

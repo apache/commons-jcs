@@ -76,7 +76,7 @@ public class FileDiskCache<K, V>
 
     /**
      * Constructor for the DiskCache object.
-     * <p>
+     *
      * @param cacheAttributes
      */
     public FileDiskCache( final FileDiskCacheAttributes cacheAttributes )
@@ -87,7 +87,7 @@ public class FileDiskCache<K, V>
     /**
      * Constructor for the DiskCache object. Will be marked alive if the directory cannot be
      * created.
-     * <p>
+     *
      * @param cattr
      * @param elementSerializer used if supplied, the super's super will not set a null
      */
@@ -102,7 +102,7 @@ public class FileDiskCache<K, V>
 
     /**
      * Tries to create the root directory if it does not already exist.
-     * <p>
+     *
      * @param cattr
      * @return does the directory exist.
      */
@@ -131,7 +131,7 @@ public class FileDiskCache<K, V>
      * idempotent.
      * <p>
      * Protected for testing.
-     * <p>
+     *
      * @param key
      * @return the file for the key
      */
@@ -163,7 +163,7 @@ public class FileDiskCache<K, V>
 
     /**
      * Return the keys in this cache.
-     * <p>
+     *
      * @see org.apache.commons.jcs.auxiliary.disk.AbstractDiskCache#getKeySet()
      */
     @Override
@@ -205,7 +205,7 @@ public class FileDiskCache<K, V>
 
     /**
      * Sets alive to false.
-     * <p>
+     *
      * @throws IOException
      */
     @Override
@@ -238,7 +238,7 @@ public class FileDiskCache<K, V>
 
     /**
      * Looks for a file matching the key. If it exists, reads the file.
-     * <p>
+     *
      * @param key
      * @return ICacheElement
      * @throws IOException
@@ -328,7 +328,7 @@ public class FileDiskCache<K, V>
 
     /**
      * Removes the file.
-     * <p>
+     *
      * @param key
      * @return true if the item was removed
      * @throws IOException
@@ -342,7 +342,7 @@ public class FileDiskCache<K, V>
 
     /**
      * Removes the file.
-     * <p>
+     *
      * @param key
      * @return true if the item was removed
      * @throws IOException
@@ -363,7 +363,7 @@ public class FileDiskCache<K, V>
      * <p>
      * Assumes that this is the only region in the directory. We could add a region prefix to the
      * files and only delete those, but the region should create a directory.
-     * <p>
+     *
      * @throws IOException
      */
     @Override
@@ -379,7 +379,7 @@ public class FileDiskCache<K, V>
     /**
      * We create a temp file with the new contents, remove the old if it exists, and then rename the
      * temp.
-     * <p>
+     *
      * @param element
      * @throws IOException
      */
@@ -474,7 +474,7 @@ public class FileDiskCache<K, V>
     /**
      * Tries to delete a file. If it fails, it tries several more times, pausing a few ms. each
      * time.
-     * <p>
+     *
      * @param file
      * @return true if the file does not exist or if it was removed
      */
@@ -505,7 +505,7 @@ public class FileDiskCache<K, V>
 
     /**
      * Tries to set the last access time to now.
-     * <p>
+     *
      * @param file to touch
      * @return was it successful
      */
@@ -533,7 +533,7 @@ public class FileDiskCache<K, V>
 
     /**
      * Closes a stream and swallows errors.
-     * <p>
+     *
      * @param s the stream
      */
     private void silentClose( final InputStream s )
@@ -553,7 +553,7 @@ public class FileDiskCache<K, V>
 
     /**
      * Closes a stream and swallows errors.
-     * <p>
+     *
      * @param s the stream
      */
     private void silentClose( final OutputStream s )

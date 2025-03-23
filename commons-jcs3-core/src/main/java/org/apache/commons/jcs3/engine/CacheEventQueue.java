@@ -34,7 +34,7 @@ public class CacheEventQueue<K, V>
 {
     /**
      * Constructs with the specified listener and the cache name.
-     * <p>
+     *
      * @param listener
      * @param listenerId
      * @param cacheName
@@ -46,7 +46,7 @@ public class CacheEventQueue<K, V>
 
     /**
      * Constructor for the CacheEventQueue object
-     * <p>
+     *
      * @param listener
      * @param listenerId
      * @param cacheName
@@ -61,7 +61,7 @@ public class CacheEventQueue<K, V>
 
     /**
      * Create the thread pool.
-     * <p>
+     *
      * @param threadPoolName
      * @since 3.1
      */
@@ -76,7 +76,7 @@ public class CacheEventQueue<K, V>
 
     /**
      * What type of queue is this.
-     * <p>
+     *
      * @return queueType
      */
     @Override

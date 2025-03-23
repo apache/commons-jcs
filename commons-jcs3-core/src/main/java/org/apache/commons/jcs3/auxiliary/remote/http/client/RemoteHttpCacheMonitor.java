@@ -120,7 +120,7 @@ public class RemoteHttpCacheMonitor extends AbstractAuxiliaryCacheMonitor
 
     /**
      * Notifies the cache monitor that an error occurred, and kicks off the error recovery process.
-     * <p>
+     *
      * @param remoteCache
      */
     public void notifyError( final RemoteHttpCache<?, ?> remoteCache )

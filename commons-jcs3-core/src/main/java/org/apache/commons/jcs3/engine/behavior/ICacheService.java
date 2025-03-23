@@ -36,7 +36,7 @@ public interface ICacheService<K, V>
 {
     /**
      * Frees the specified cache.
-     * <p>
+     *
      * @param cacheName
      * @throws IOException
      */
@@ -45,7 +45,7 @@ public interface ICacheService<K, V>
 
     /**
      * Returns a cache bean from the specified cache; or null if the key does not exist.
-     * <p>
+     *
      * @param cacheName
      * @param key
      * @return the ICacheElement&lt;K, V&gt; or null if not found
@@ -57,7 +57,7 @@ public interface ICacheService<K, V>
 
     /**
      * Gets multiple items from the cache matching the pattern.
-     * <p>
+     *
      * @param cacheName
      * @param pattern
      * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
@@ -69,7 +69,7 @@ public interface ICacheService<K, V>
 
     /**
      * Gets multiple items from the cache based on the given set of keys.
-     * <p>
+     *
      * @param cacheName
      * @param keys
      * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
@@ -89,7 +89,7 @@ public interface ICacheService<K, V>
 
     /**
      * Removes the given key from the specified cache.
-     * <p>
+     *
      * @param cacheName
      * @param key
      * @throws IOException
@@ -107,7 +107,7 @@ public interface ICacheService<K, V>
 
     /**
      * Puts a cache item to the cache.
-     * <p>
+     *
      * @param item
      * @throws ObjectExistsException
      * @throws IOException

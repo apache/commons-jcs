@@ -63,7 +63,7 @@ class UDPDiscoverySenderEncryptedUnitTest
     /**
      * Sets up the receiver. Maybe better to just code sockets here? Set up the sender for sending
      * the message.
-     * <p>
+     *
      * @throws Exception on error
      */
     @BeforeEach
@@ -87,7 +87,7 @@ class UDPDiscoverySenderEncryptedUnitTest
 
     /**
      * Kill off the sender and receiver.
-     * <p>
+     *
      * @throws Exception on error
      */
     @AfterEach
@@ -106,7 +106,7 @@ class UDPDiscoverySenderEncryptedUnitTest
 
     /**
      * Test sending a live messages.
-     * <p>
+     *
      * @throws Exception on error
      */
     @Test
@@ -129,7 +129,7 @@ class UDPDiscoverySenderEncryptedUnitTest
 
     /**
      * Test sending a remove broadcast.
-     * <p>
+     *
      * @throws Exception on error
      */
     @Test
@@ -152,7 +152,7 @@ class UDPDiscoverySenderEncryptedUnitTest
 
     /**
      * Test sending a request broadcast.
-     * <p>
+     *
      * @throws Exception on error
      */
     @Test

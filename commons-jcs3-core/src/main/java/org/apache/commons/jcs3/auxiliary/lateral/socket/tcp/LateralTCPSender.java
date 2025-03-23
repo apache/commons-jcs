@@ -61,7 +61,7 @@ public class LateralTCPSender
 
     /**
      * Constructor for the LateralTCPSender object.
-     * <p>
+     *
      * @param lca the configuration object
      * @param serializer the serializer to use when sending
      * @throws IOException
@@ -104,7 +104,7 @@ public class LateralTCPSender
      * Closes connection used by all LateralTCPSenders for this lateral connection. Dispose request
      * should come into the facade and be sent to all lateral cache services. The lateral cache
      * service will then call this method.
-     * <p>
+     *
      * @throws IOException
      */
     public void dispose()
@@ -116,7 +116,7 @@ public class LateralTCPSender
 
     /**
      * Creates a connection to a TCP server.
-     * <p>
+     *
      * @param host
      * @param port
      * @throws IOException
@@ -142,7 +142,7 @@ public class LateralTCPSender
 
     /**
      * Sends commands to the lateral cache listener.
-     * <p>
+     *
      * @param led
      * @throws IOException
      */
@@ -178,7 +178,7 @@ public class LateralTCPSender
      * get into a pretty bad blocking situation here. This needs work. I just wanted to get some
      * form of get working. However, get is not recommended for performance reasons. If you have 10
      * laterals, then you have to make 10 failed gets to find out none of the caches have the item.
-     * <p>
+     *
      * @param led
      * @return ICacheElement
      * @throws IOException

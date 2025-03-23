@@ -57,7 +57,7 @@ public class LHMLRUMemoryCache<K, V>
 
         /**
          * Remove eldest. Automatically called by LinkedHashMap.
-         * <p>
+         *
          * @param eldest
          * @return true if removed
          */
@@ -86,7 +86,7 @@ public class LHMLRUMemoryCache<K, V>
 
     /**
      * Returns a synchronized LHMSpooler
-     * <p>
+     *
      * @return Collections.synchronizedMap( new LHMSpooler() )
      */
     @Override
@@ -105,7 +105,7 @@ public class LHMLRUMemoryCache<K, V>
 
     /**
      * This can't be implemented.
-     * <p>
+     *
      * @param numberToFree
      * @return 0
      * @throws IOException
@@ -121,7 +121,7 @@ public class LHMLRUMemoryCache<K, V>
     /**
      * This returns semi-structured information on the memory cache, such as the size, put count,
      * hit count, and miss count.
-     * <p>
+     *
      * @return IStats
      */
     @Override
@@ -135,7 +135,7 @@ public class LHMLRUMemoryCache<K, V>
 
     /**
      * For post reflection creation initialization
-     * <p>
+     *
      * @param hub
      */
     @Override
@@ -181,7 +181,7 @@ public class LHMLRUMemoryCache<K, V>
 
     /**
      * Puts an item to the cache.
-     * <p>
+     *
      * @param ce Description of the Parameter
      * @throws IOException
      */

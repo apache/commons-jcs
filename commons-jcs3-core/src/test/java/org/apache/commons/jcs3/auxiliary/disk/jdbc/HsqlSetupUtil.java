@@ -66,7 +66,7 @@ public final class HsqlSetupUtil
 
     /**
      * Sets up a table for cache testing
-     * <p>
+     *
      * @param cConn
      * @param tableName
      * @throws SQLException if database problems occur

@@ -54,7 +54,7 @@ public interface ICacheEventLogger
     //String ENQUEUE_EVENT = "enqueue";
     /**
      * Creates an event.
-     * <p>
+     *
      * @param source   e.g. RemoteCacheServer
      * @param region   the name of the region
      * @param eventName   e.g. update, get, put, remove
@@ -67,7 +67,7 @@ public interface ICacheEventLogger
 
     /**
      * Logs an event. These are internal application events that do not correspond to ICache calls.
-     * <p>
+     *
      * @param source   e.g. RemoteCacheServer
      * @param eventName   e.g. update, get, put, remove
      * @param optionalDetails   any extra message
@@ -76,7 +76,7 @@ public interface ICacheEventLogger
 
     /**
      * Logs an error.
-     * <p>
+     *
      * @param source   e.g. RemoteCacheServer
      * @param eventName   e.g. update, get, put, remove
      * @param errorMessage   any error message
@@ -85,7 +85,7 @@ public interface ICacheEventLogger
 
     /**
      * Logs an event.
-     * <p>
+     *
      * @param event   the event created in createICacheEvent
      */
     <T> void logICacheEvent( ICacheEvent<T> event );

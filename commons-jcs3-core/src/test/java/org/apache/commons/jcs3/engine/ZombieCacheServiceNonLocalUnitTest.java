@@ -32,7 +32,7 @@ class ZombieCacheServiceNonLocalUnitTest
 {
     /**
      * Verify that a removeAll event gets added and then is sent to the service passed to propagate.
-     * <p>
+     *
      * @throws Exception
      */
     @Test
@@ -56,7 +56,7 @@ class ZombieCacheServiceNonLocalUnitTest
 
     /**
      * Verify that a remove event gets added and then is sent to the service passed to propagate.
-     * <p>
+     *
      * @throws Exception
      */
     @Test
@@ -81,7 +81,7 @@ class ZombieCacheServiceNonLocalUnitTest
 
     /**
      * Verify that an update event gets added and then is sent to the service passed to propagate.
-     * <p>
+     *
      * @throws Exception
      */
     @Test
@@ -106,7 +106,7 @@ class ZombieCacheServiceNonLocalUnitTest
 
     /**
      * Verify that nothing is added if the max is set to 0.
-     * <p>
+     *
      * @throws Exception
      */
     @Test

@@ -137,7 +137,7 @@ public class LateralCacheAttributes
     /**
      * The number of elements the zombie queue will hold. This queue is used to store events if we
      * loose our connection with the server.
-     * <p>
+     *
      * @return the zombieQueueMaxSize.
      */
     @Override
@@ -167,7 +167,7 @@ public class LateralCacheAttributes
 
     /**
      * Sets the httpServer attribute of the LateralCacheAttributes object
-     * <P>
+     *
      * @param val The new httpServer value
      */
     @Override
@@ -240,7 +240,7 @@ public class LateralCacheAttributes
     /**
      * The number of elements the zombie queue will hold. This queue is used to store events if we
      * loose our connection with the server.
-     * <p>
+     *
      * @param zombieQueueMaxSize The zombieQueueMaxSize to set.
      */
     @Override

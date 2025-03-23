@@ -57,7 +57,7 @@ public class RemoteHttpCacheClient<K, V>
 
     /**
      * Constructs a client.
-     * <p>
+     *
      * @param attributes
      */
     public RemoteHttpCacheClient( final RemoteHttpCacheAttributes attributes )
@@ -68,7 +68,7 @@ public class RemoteHttpCacheClient<K, V>
 
     /**
      * Frees the specified cache.
-     * <p>
+     *
      * @param cacheName
      * @throws IOException
      */
@@ -91,7 +91,7 @@ public class RemoteHttpCacheClient<K, V>
 
     /**
      * Create a request, process, extract the payload.
-     * <p>
+     *
      * @param cacheName
      * @param key
      * @return ICacheElement
@@ -106,7 +106,7 @@ public class RemoteHttpCacheClient<K, V>
 
     /**
      * Create a request, process, extract the payload.
-     * <p>
+     *
      * @param cacheName
      * @param key
      * @param requesterId
@@ -141,7 +141,7 @@ public class RemoteHttpCacheClient<K, V>
 
     /**
      * Return the keys in this cache.
-     * <p>
+     *
      * @param cacheName the name of the cache
      * @see org.apache.commons.jcs3.auxiliary.AuxiliaryCache#getKeySet()
      */
@@ -170,7 +170,7 @@ public class RemoteHttpCacheClient<K, V>
 
     /**
      * Gets multiple items from the cache matching the pattern.
-     * <p>
+     *
      * @param cacheName
      * @param pattern
      * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
@@ -186,7 +186,7 @@ public class RemoteHttpCacheClient<K, V>
 
     /**
      * Gets multiple items from the cache matching the pattern.
-     * <p>
+     *
      * @param cacheName
      * @param pattern
      * @param requesterId
@@ -218,7 +218,7 @@ public class RemoteHttpCacheClient<K, V>
 
     /**
      * Gets multiple items from the cache based on the given set of keys.
-     * <p>
+     *
      * @param cacheName
      * @param keys
      * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
@@ -234,7 +234,7 @@ public class RemoteHttpCacheClient<K, V>
 
     /**
      * Gets multiple items from the cache based on the given set of keys.
-     * <p>
+     *
      * @param cacheName
      * @param keys
      * @param requesterId
@@ -283,7 +283,7 @@ public class RemoteHttpCacheClient<K, V>
     /**
      * The provides an extension point. If you want to extend this and use a special dispatcher,
      * here is the place to do it.
-     * <p>
+     *
      * @param attributes
      */
     @Override
@@ -297,7 +297,7 @@ public class RemoteHttpCacheClient<K, V>
 
     /**
      * Make and alive request.
-     * <p>
+     *
      * @return true if we make a successful alive request.
      * @throws IOException
      */
@@ -334,7 +334,7 @@ public class RemoteHttpCacheClient<K, V>
 
     /**
      * Frees the specified cache.
-     * <p>
+     *
      * @throws IOException
      */
     @Override
@@ -346,7 +346,7 @@ public class RemoteHttpCacheClient<K, V>
 
     /**
      * Removes the given key from the specified cache.
-     * <p>
+     *
      * @param cacheName
      * @param key
      * @throws IOException
@@ -360,7 +360,7 @@ public class RemoteHttpCacheClient<K, V>
 
     /**
      * Removes the given key from the specified cache.
-     * <p>
+     *
      * @param cacheName
      * @param key
      * @param requesterId
@@ -385,7 +385,7 @@ public class RemoteHttpCacheClient<K, V>
 
     /**
      * Remove all keys from the specified cache.
-     * <p>
+     *
      * @param cacheName
      * @throws IOException
      */
@@ -398,7 +398,7 @@ public class RemoteHttpCacheClient<K, V>
 
     /**
      * Remove all keys from the specified cache.
-     * <p>
+     *
      * @param cacheName
      * @param requesterId
      * @throws IOException
@@ -446,7 +446,7 @@ public class RemoteHttpCacheClient<K, V>
 
     /**
      * Puts a cache item to the cache.
-     * <p>
+     *
      * @param item
      * @throws IOException
      */
@@ -459,7 +459,7 @@ public class RemoteHttpCacheClient<K, V>
 
     /**
      * Puts a cache item to the cache.
-     * <p>
+     *
      * @param cacheElement
      * @param requesterId
      * @throws IOException

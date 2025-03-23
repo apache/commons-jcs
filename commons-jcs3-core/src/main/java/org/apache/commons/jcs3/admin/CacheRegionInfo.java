@@ -109,7 +109,7 @@ public class CacheRegionInfo
 
     /**
      * Return the statistics for the region.
-     * <p>
+     *
      * @return String
      */
     public String getCacheStatistics()

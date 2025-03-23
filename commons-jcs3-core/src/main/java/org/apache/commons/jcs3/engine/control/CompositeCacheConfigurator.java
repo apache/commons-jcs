@@ -81,7 +81,7 @@ public class CompositeCacheConfigurator
 
     /**
      * Any property values will be replaced with system property values that match the key.
-     * <p>
+     *
      * @param props
      */
     protected static void overrideWithSystemProperties( final Properties props )
@@ -115,7 +115,7 @@ public class CompositeCacheConfigurator
 
     /**
      * Gets an aux cache for the listed aux for a region.
-     *<p>
+     *
      * @param props the configuration properties
      * @param ccm Cache hub
      * @param auxName the name of the auxiliary cache
@@ -221,7 +221,7 @@ public class CompositeCacheConfigurator
 
     /**
      * Gets an ICompositeCacheAttributes for the listed region.
-     *<p>
+     *
      * @param props Configuration properties
      * @param regName the region name
      * @param defaultCCAttr the default cache attributes
@@ -235,7 +235,7 @@ public class CompositeCacheConfigurator
 
     /**
      * Gets the main attributes for a region.
-     *<p>
+     *
      * @param props Configuration properties
      * @param regName the region name
      * @param defaultCCAttr the default cache attributes
@@ -275,7 +275,7 @@ public class CompositeCacheConfigurator
 
     /**
      * Create the element attributes from the properties object for a cache region.
-     *<p>
+     *
      * @param props Configuration properties
      * @param regName the region name
      * @param defaultEAttr the default element attributes
@@ -314,7 +314,7 @@ public class CompositeCacheConfigurator
 
     /**
      * Creates a custom key matcher if one is defined.  Else, it uses the default.
-     * <p>
+     *
      * @param props
      * @param auxPrefix   For example, AUXILIARY_PREFIX + auxName
      * @return IKeyMatcher
@@ -342,7 +342,7 @@ public class CompositeCacheConfigurator
 
     /**
      * Create cache region.
-     *<p>
+     *
      * @param props Configuration properties
      * @param ccm Cache hub
      * @param regName Name of the cache region
@@ -359,7 +359,7 @@ public class CompositeCacheConfigurator
      * Gets all the properties for a region and configure its cache.
      * <p>
      * This method tells the other parse method the name of the region prefix.
-     *<p>
+     *
      * @param props Configuration properties
      * @param ccm Cache hub
      * @param regName Name of the cache region
@@ -376,7 +376,7 @@ public class CompositeCacheConfigurator
 
     /**
      * Gets all the properties for a region and configure its cache.
-     *<p>
+     *
      * @param props Configuration properties
      * @param ccm Cache hub
      * @param regName Name of the cache region
@@ -457,7 +457,7 @@ public class CompositeCacheConfigurator
 
     /**
      * Parse region elements.
-     *<p>
+     *
      * @param props Configuration properties
      * @param ccm Cache hub
      */
@@ -486,7 +486,7 @@ public class CompositeCacheConfigurator
 
     /**
      * Create caches used internally. System status gives them creation priority.
-     *<p>
+     *
      * @param props Configuration properties
      * @param ccm Cache hub
      */

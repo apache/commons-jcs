@@ -129,7 +129,7 @@ class TestTCPLateralUnitTest
     /**
      * Create a listener. Add an element to the listeners cache. Setup a service. Try to get from
      * the service.
-     * <p>
+     *
      * @throws Exception
      */
     @Test
@@ -159,7 +159,7 @@ class TestTCPLateralUnitTest
     /**
      * Create a listener. Add an element to the listeners cache. Setup a service. Try to get keys from
      * the service.
-     * <p>
+     *
      * @throws Exception
      */
     @Test
@@ -193,7 +193,7 @@ class TestTCPLateralUnitTest
     /**
      * Create a listener. Add an element to the listeners cache. Setup a service. Try to get from
      * the service.
-     * <p>
+     *
      * @throws Exception
      */
     @Test
@@ -254,7 +254,7 @@ class TestTCPLateralUnitTest
 
     /**
      * Send objects with the same key but different values.
-     * <p>
+     *
      * @throws Exception
      */
     @Test
@@ -285,7 +285,7 @@ class TestTCPLateralUnitTest
 
     /**
      * Send objects with the same key but different values.
-     * <p>
+     *
      * @throws Exception
      */
     @Test
@@ -329,7 +329,7 @@ class TestTCPLateralUnitTest
      * Make sure we can send a bunch to the listener. This would be better if we could plugin a Mock
      * CacheManger. The listener will instantiate it on its own. We have to configure one before
      * that.
-     * <p>
+     *
      * @throws Exception
      */
     @Test

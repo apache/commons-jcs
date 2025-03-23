@@ -69,7 +69,7 @@ public class RemoteCacheServerFactory
 
     /**
      * Tries to get the event logger.
-     * <p>
+     *
      * @param props configuration properties
      * @return ICacheEventLogger, may be null
      */
@@ -82,7 +82,7 @@ public class RemoteCacheServerFactory
     /**
      * This configures an object specific custom factory. This will be configured for just this
      * object in the registry. This can be null.
-     * <p>
+     *
      * @param props
      * @return RMISocketFactory
      */
@@ -109,7 +109,7 @@ public class RemoteCacheServerFactory
      * Configure.
      * <p>
      * jcs.remotecache.serverattributes.ATTRIBUTENAME=ATTRIBUTEVALUE
-     * <p>
+     *
      * @param prop
      * @return RemoteCacheServerAttributesconfigureRemoteCacheServerAttributes
      */
@@ -247,7 +247,7 @@ public class RemoteCacheServerFactory
      * binds it to the registry.
      * <p>
      * A remote cache is either a local cache or a cluster cache.
-     * <p>
+     *
      * @param args The command line arguments
      * @throws Exception
      */
@@ -326,7 +326,7 @@ public class RemoteCacheServerFactory
     /**
      * Registers the server with the registry. I broke this off because we might want to have code
      * that will restart a dead registry. It will need to rebind the server.
-     * <p>
+     *
      * @param serviceName the name of the service
      * @param server the server object to bind
      * @throws RemoteException
@@ -359,7 +359,7 @@ public class RemoteCacheServerFactory
 
     /**
      * Unbinds the remote server.
-     * <p>
+     *
      * @param host
      * @param port
      * @throws IOException
@@ -414,7 +414,7 @@ public class RemoteCacheServerFactory
      * and port.
      * <p>
      * A remote cache is either a local cache or a cluster cache.
-     * <p>
+     *
      * @param host
      * @param port
      * @param props

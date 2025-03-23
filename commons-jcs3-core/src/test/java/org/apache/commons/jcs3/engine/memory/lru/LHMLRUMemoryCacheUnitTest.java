@@ -52,7 +52,7 @@ class LHMLRUMemoryCacheUnitTest
 
     /**
      * put the max and clear. verify that no elements remain.
-     * <p>
+     *
      * @throws CacheException
      */
     @Test
@@ -82,7 +82,7 @@ class LHMLRUMemoryCacheUnitTest
     /**
      * Put half the max and clear. get the key array and verify that it has the correct number of
      * items.
-     * <p>
+     *
      * @throws Exception
      */
     @Test
@@ -113,7 +113,7 @@ class LHMLRUMemoryCacheUnitTest
 
     /**
      * Gets stats.
-     * <p>
+     *
      * @throws CacheException
      */
     @Test
@@ -141,7 +141,7 @@ class LHMLRUMemoryCacheUnitTest
     /**
      * Verify that the mru gets used by a non-defined region when it is set as the default in the
      * default region.
-     * <p>
+     *
      * @throws CacheException
      */
     @Test
@@ -155,7 +155,7 @@ class LHMLRUMemoryCacheUnitTest
 
     /**
      * put twice as many as the max.  verify that the second half is in the cache.
-     * <p>
+     *
      * @throws CacheException
      */
     @Test
@@ -210,7 +210,7 @@ class LHMLRUMemoryCacheUnitTest
 
     /**
      * Put twice as many as the max, twice. verify that the second half is in the cache.
-     * <p>
+     *
      * @throws CacheException
      */
     @Test
@@ -251,7 +251,7 @@ class LHMLRUMemoryCacheUnitTest
 
     /**
      * put the max and remove each. verify that they are all null.
-     * <p>
+     *
      * @throws CacheException
      */
     @Test
@@ -283,7 +283,7 @@ class LHMLRUMemoryCacheUnitTest
 
     /**
      * Add a few keys with the delimiter. Remove them.
-     * <p>
+     *
      * @throws CacheException
      */
     @Test

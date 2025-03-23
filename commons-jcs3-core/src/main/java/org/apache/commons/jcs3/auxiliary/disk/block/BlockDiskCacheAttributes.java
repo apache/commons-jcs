@@ -71,7 +71,7 @@ public class BlockDiskCacheAttributes
 
     /**
      * The size of the blocks. All blocks are the same size.
-     * <p>
+     *
      * @param blockSizeBytes The blockSizeBytes to set.
      */
     public void setBlockSizeBytes( final int blockSizeBytes )
@@ -97,7 +97,7 @@ public class BlockDiskCacheAttributes
 
     /**
      * Write out the values for debugging purposes.
-     * <p>
+     *
      * @return String
      */
     @Override

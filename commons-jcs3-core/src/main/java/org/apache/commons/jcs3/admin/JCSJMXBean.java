@@ -41,7 +41,7 @@ public interface JCSJMXBean
 
     /**
      * Builds up info about each element in a region.
-     * <p>
+     *
      * @param cacheName
      * @return List of CacheElementInfo objects
      * @throws IOException

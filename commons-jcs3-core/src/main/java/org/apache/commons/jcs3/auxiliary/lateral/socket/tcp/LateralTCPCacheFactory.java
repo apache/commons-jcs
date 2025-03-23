@@ -62,7 +62,7 @@ public class LateralTCPCacheFactory
      * is used.
      * <p>
      * This should be called by create cache.
-     * <p>
+     *
      * @param attr  ITCPLateralCacheAttributes
      * @param cacheMgr the composite cache manager
      * @param serializer the serializer to use when receiving
@@ -109,7 +109,7 @@ public class LateralTCPCacheFactory
 
     /**
      * Adds the lateral cache listener to the underlying cache-watch service.
-     * <p>
+     *
      * @param cacheName The feature to be added to the LateralCacheListener attribute
      * @param listener The feature to be added to the LateralCacheListener attribute
      * @throws IOException
@@ -125,7 +125,7 @@ public class LateralTCPCacheFactory
 
     /**
      * Add listener for receivers
-     * <p>
+     *
      * @param iaca cache configuration attributes
      * @param cacheMgr the composite cache manager
      * @param serializer the serializer to use when receiving
@@ -152,7 +152,7 @@ public class LateralTCPCacheFactory
 
     /**
      * Creates a TCP lateral.
-     * <p>
+     *
      * @param <K> cache key type
      * @param <V> cache value type
      * @param iaca the cache configuration object
@@ -235,7 +235,7 @@ public class LateralTCPCacheFactory
 
     /**
      * Creates the discovery service. Only creates this for tcp laterals right now.
-     * <p>
+     *
      * @param lac ITCPLateralCacheAttributes
      * @param lcnwf the lateral facade
      * @param cacheMgr a reference to the global cache manager
@@ -314,7 +314,7 @@ public class LateralTCPCacheFactory
 
     /**
      * Returns an instance of the cache service.
-     * <p>
+     *
      * @param <K> cache key type
      * @param <V> cache value type
      * @param lca configuration for the creation of a new service instance
@@ -372,7 +372,7 @@ public class LateralTCPCacheFactory
 
     /**
      * Gets the instance attribute of the LateralCacheTCPListener class.
-     * <p>
+     *
      * @param ilca ITCPLateralCacheAttributes
      * @param cacheManager a reference to the global cache manager
      * @param cacheEventLogger Reference to the cache event logger for auxiliary cache creation

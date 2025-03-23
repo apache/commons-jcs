@@ -44,7 +44,7 @@ import org.junit.jupiter.api.Test;
 class ShrinkerThreadUnitTest
 {
     /** Verify the check for removal
-     * <p>
+     *
      * @throws IOException */
     @Test
     void testCheckForRemoval_Expired()
@@ -81,7 +81,7 @@ class ShrinkerThreadUnitTest
     }
 
     /** Verify the check for removal
-     * <p>
+     *
      * @throws IOException */
     @Test
     void testCheckForRemoval_IdleTooLong()
@@ -119,7 +119,7 @@ class ShrinkerThreadUnitTest
     }
 
     /** Verify the check for removal
-     * <p>
+     *
      * @throws IOException */
     @Test
     void testCheckForRemoval_NotExpired()
@@ -156,7 +156,7 @@ class ShrinkerThreadUnitTest
     }
 
     /** Verify the check for removal
-     * <p>
+     *
      * @throws IOException */
     @Test
     void testCheckForRemoval_NotIdleTooLong()
@@ -196,7 +196,7 @@ class ShrinkerThreadUnitTest
     /**
      * Setup cache attributes in mock. Create the shrinker with the mock. Add some elements into the
      * mock memory cache see that they get spooled.
-     * <p>
+     *
      * @throws Exception
      */
     @Test
@@ -244,7 +244,7 @@ class ShrinkerThreadUnitTest
 
     /**
      * Add 10 to the memory cache. Set the spool per run limit to 3.
-     * <p>
+     *
      * @throws Exception
      */
     @Test
@@ -295,7 +295,7 @@ class ShrinkerThreadUnitTest
      * Add a mock event handler to the items. Verify that it gets called.
      * <p>
      * This is only testing the spooled background event
-     * <p>
+     *
      * @throws Exception
      */
     @Test

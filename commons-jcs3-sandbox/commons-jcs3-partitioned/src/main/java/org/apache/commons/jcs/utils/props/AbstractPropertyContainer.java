@@ -60,7 +60,7 @@ public abstract class AbstractPropertyContainer
      * <p>
      * Synchronized mutators so multiple threads cannot cause problems. We wouldn't want the
      * properties heading to get changed as we were processing the properties.
-     * <p>
+     *
      * @throws ConfigurationException on configuration failure
      */
     public synchronized void ensureProperties()
@@ -77,7 +77,7 @@ public abstract class AbstractPropertyContainer
      * This is primarily intended for reinitialization.
      * <p>
      * If the properties object is null, when you call ensureProperties initialize will be called.
-     * <p>
+     *
      * @throws ConfigurationException on configuration failure
      */
     public synchronized void initializeProperties()
@@ -90,7 +90,7 @@ public abstract class AbstractPropertyContainer
 
     /**
      * This loads the properties regardless of whether or not they have already been loaded.
-     * <p>
+     *
      * @throws ConfigurationException on configuration failure
      */
     private void loadProperties()
@@ -118,7 +118,7 @@ public abstract class AbstractPropertyContainer
 
     /**
      * Sets fields for properties, and verifies that all necessary properties are there.
-     * <p>
+     *
      * @throws ConfigurationException on configuration failure
      */
     protected abstract void handleProperties()

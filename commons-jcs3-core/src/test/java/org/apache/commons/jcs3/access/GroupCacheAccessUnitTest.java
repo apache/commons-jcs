@@ -38,7 +38,7 @@ class GroupCacheAccessUnitTest
 {
     /**
      * Verify we can use the group cache.
-     * <p>
+     *
      * @throws Exception
      */
     @Test

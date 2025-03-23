@@ -28,7 +28,7 @@ public interface PropertiesFactory
 {
     /**
      * Fetches a set of properties for the specified group.
-     * <p>
+     *
      * @param groupName the group to pull properties from.
      * @return a properties object.
      */

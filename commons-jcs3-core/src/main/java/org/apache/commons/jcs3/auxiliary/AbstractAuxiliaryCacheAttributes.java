@@ -60,7 +60,7 @@ public abstract class AbstractAuxiliaryCacheAttributes
 
     /**
      * Gets the cacheName attribute of the AuxiliaryCacheAttributes object
-     * <p>
+     *
      * @return The cacheName value
      */
     @Override
@@ -72,7 +72,7 @@ public abstract class AbstractAuxiliaryCacheAttributes
     /**
      * Sets the pool name to use. If a pool is not found by this name, the thread pool manager will
      * return a default configuration.
-     * <p>
+     *
      * @return name of thread pool to use for this auxiliary
      */
     @Override
@@ -92,7 +92,7 @@ public abstract class AbstractAuxiliaryCacheAttributes
 
     /**
      * Gets the name attribute of the AuxiliaryCacheAttributes object
-     * <p>
+     *
      * @return The name value
      */
     @Override
@@ -113,7 +113,7 @@ public abstract class AbstractAuxiliaryCacheAttributes
     /**
      * If you choose a POOLED event queue type, the value of EventQueuePoolName will be used. This
      * is ignored if the pool type is SINGLE
-     * <p>
+     *
      * @param s SINGLE or POOLED
      */
     @Override
@@ -124,7 +124,7 @@ public abstract class AbstractAuxiliaryCacheAttributes
 
     /**
      * SINGLE is the default. If you choose POOLED, the value of EventQueuePoolName will be used
-     * <p>
+     *
      * @param queueType SINGLE or POOLED
      */
     @Override
@@ -135,7 +135,7 @@ public abstract class AbstractAuxiliaryCacheAttributes
 
     /**
      * This is the name of the auxiliary in configuration file.
-     * <p>
+     *
      * @see org.apache.commons.jcs3.auxiliary.AuxiliaryCacheAttributes#setName(String)
      */
     @Override

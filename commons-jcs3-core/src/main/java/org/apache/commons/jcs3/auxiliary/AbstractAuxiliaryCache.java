@@ -50,7 +50,7 @@ public abstract class AbstractAuxiliaryCache<K, V>
 
     /**
      * Logs an event if an event logger is configured.
-     * <p>
+     *
      * @param item
      * @param eventName
      * @return ICacheEvent
@@ -75,7 +75,7 @@ public abstract class AbstractAuxiliaryCache<K, V>
 
     /**
      * Logs an event if an event logger is configured.
-     * <p>
+     *
      * @param regionName
      * @param key
      * @param eventName
@@ -105,7 +105,7 @@ public abstract class AbstractAuxiliaryCache<K, V>
 
     /**
      * Allows it to be injected.
-     * <p>
+     *
      * @return cacheEventLogger
      */
     public ICacheEventLogger getCacheEventLogger()
@@ -115,7 +115,7 @@ public abstract class AbstractAuxiliaryCache<K, V>
 
     /**
      * Allows it to be injected.
-     * <p>
+     *
      * @return elementSerializer
      */
     public IElementSerializer getElementSerializer()
@@ -125,14 +125,14 @@ public abstract class AbstractAuxiliaryCache<K, V>
 
     /**
      * Gets the extra info for the event log.
-     * <p>
+     *
      * @return IP, or disk location, etc.
      */
     public abstract String getEventLoggingExtraInfo();
 
     /**
      * Returns the key matcher used by get matching.
-     * <p>
+     *
      * @return keyMatcher
      */
     public IKeyMatcher<K> getKeyMatcher()
@@ -142,7 +142,7 @@ public abstract class AbstractAuxiliaryCache<K, V>
 
     /**
      * Logs an event if an event logger is configured.
-     * <p>
+     *
      * @param source
      * @param eventName
      * @param optionalDetails
@@ -157,7 +157,7 @@ public abstract class AbstractAuxiliaryCache<K, V>
 
     /**
      * Logs an event if an event logger is configured.
-     * <p>
+     *
      * @param source
      * @param eventName
      * @param errorMessage
@@ -172,7 +172,7 @@ public abstract class AbstractAuxiliaryCache<K, V>
 
     /**
      * Logs an event if an event logger is configured.
-     * <p>
+     *
      * @param cacheEvent
      */
     protected <T> void logICacheEvent( final ICacheEvent<T> cacheEvent )
@@ -216,7 +216,7 @@ public abstract class AbstractAuxiliaryCache<K, V>
 
     /**
      * Allows it to be injected.
-     * <p>
+     *
      * @param cacheEventLogger
      */
     @Override
@@ -230,7 +230,7 @@ public abstract class AbstractAuxiliaryCache<K, V>
      * serializer.
      * <p>
      * Does not allow you to set it to null.
-     * <p>
+     *
      * @param elementSerializer
      */
     @Override
@@ -244,7 +244,7 @@ public abstract class AbstractAuxiliaryCache<K, V>
 
     /**
      * Sets the key matcher used by get matching.
-     * <p>
+     *
      * @param keyMatcher
      */
     @Override

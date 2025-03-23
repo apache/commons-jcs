@@ -125,7 +125,7 @@ public static void dispose()
     /**
      * Returns a configured instance of the ThreadPoolManger To specify a configuration file or
      * Properties object to use call the appropriate setter prior to calling getInstance.
-     * <p>
+     *
      * @return The single instance of the ThreadPoolManager
      */
     public static ThreadPoolManager getInstance()
@@ -135,7 +135,7 @@ public static void dispose()
 
     /**
      * Configures the PoolConfiguration settings.
-     * <p>
+     *
      * @param root the configuration key prefix
      * @param defaultPoolConfiguration the default configuration
      * @return PoolConfiguration
@@ -153,7 +153,7 @@ public static void dispose()
     /**
      * This will be used if it is not null on initialization. Setting this post initialization will
      * have no effect.
-     * <p>
+     *
      * @param props The props to set.
      */
     public static void setProps( final Properties props )
@@ -203,7 +203,7 @@ public static void dispose()
 
     /**
      * Creates a pool based on the configuration info.
-     * <p>
+     *
      * @param config the pool configuration
      * @param threadNamePrefix prefix for the thread names of the pool
      * @return A ThreadPool wrapper
@@ -215,7 +215,7 @@ public static void dispose()
 
     /**
      * Creates a pool based on the configuration info.
-     * <p>
+     *
      * @param config the pool configuration
      * @param threadNamePrefix prefix for the thread names of the pool
      * @param threadPriority the priority of the created threads
@@ -270,7 +270,7 @@ public static void dispose()
 
     /**
      * Creates a scheduler pool based on the configuration info.
-     * <p>
+     *
      * @param config the pool configuration
      * @param threadNamePrefix prefix for the thread names of the pool
      * @param threadPriority the priority of the created threads
@@ -289,7 +289,7 @@ public static void dispose()
      * properties, one will be created using the default values.
      * <p>
      * Services are lazily created.
-     * <p>
+     *
      * @param name
      * @return The executor service configured for the name.
      */
@@ -304,7 +304,7 @@ public static void dispose()
 
     /**
      * Returns the names of all configured pools.
-     * <p>
+     *
      * @return ArrayList of string names
      */
     protected Set<String> getPoolNames()
@@ -317,7 +317,7 @@ public static void dispose()
      * properties, one will be created using the default values.
      * <p>
      * Pools are lazily created.
-     * <p>
+     *
      * @param name
      * @return The scheduler pool configured for the name.
      */

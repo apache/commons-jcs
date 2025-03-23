@@ -63,7 +63,7 @@ public class MySQLDiskCacheFactory
 
     /**
      * This factory method should create an instance of the mysqlcache.
-     * <p>
+     *
      * @param rawAttr specific cache configuration attributes
      * @param compositeCacheManager the global cache manager
      * @param cacheEventLogger a specific logger for cache events
@@ -95,7 +95,7 @@ public class MySQLDiskCacheFactory
 
     /**
      * This takes in a single time and schedules the optimizer to be called at that time every day.
-     * <p>
+     *
      * @param startTime    HH:MM:SS format
      * @param optimizer
      */
@@ -113,7 +113,7 @@ public class MySQLDiskCacheFactory
 
     /**
      * For each time in the optimization schedule, this calls schedule Optimization.
-     * <p>
+     *
      * @param attributes configuration properties.
      * @param tableState for noting optimization in progress, etc.
      * @param ds the DataSource

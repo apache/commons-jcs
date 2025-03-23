@@ -51,7 +51,7 @@ public abstract class AbstractCacheAccess<K, V>
 
     /**
      * Constructor for the CacheAccess object.
-     * <p>
+     *
      * @param cacheControl The cache which the created instance accesses
      */
     protected AbstractCacheAccess( final CompositeCache<K, V> cacheControl )
@@ -61,7 +61,7 @@ public abstract class AbstractCacheAccess<K, V>
 
     /**
      * Removes all of the elements from a region.
-     * <p>
+     *
      * @throws CacheException
      */
     @Override
@@ -94,7 +94,7 @@ public abstract class AbstractCacheAccess<K, V>
      * This instructs the memory cache to remove the <em>numberToFree</em> according to its eviction
      * policy. For example, the LRUMemoryCache will remove the <em>numberToFree</em> least recently
      * used items. These will be spooled to disk if a disk auxiliary is available.
-     * <p>
+     *
      * @param numberToFree
      * @return the number that were removed. if you ask to free 5, but there are only 3, you will
      *         get 3.
@@ -119,7 +119,7 @@ public abstract class AbstractCacheAccess<K, V>
 
     /**
      * Gets the ICompositeCacheAttributes of the cache region.
-     * <p>
+     *
      * @return ICompositeCacheAttributes, the controllers config info, defined in the top section of
      *         a region definition.
      */
@@ -139,7 +139,7 @@ public abstract class AbstractCacheAccess<K, V>
      * <p>
      * Each time an element is added to the cache without element attributes, the default element
      * attributes are cloned.
-     * <p>
+     *
      * @return the default element attributes used by this region.
      * @throws CacheException
      */
@@ -154,7 +154,7 @@ public abstract class AbstractCacheAccess<K, V>
      * This returns the ICacheStats object with information on this region and its auxiliaries.
      * <p>
      * This data can be formatted as needed.
-     * <p>
+     *
      * @return ICacheStats
      */
     @Override
@@ -174,7 +174,7 @@ public abstract class AbstractCacheAccess<K, V>
 
     /**
      * Sets the ICompositeCacheAttributes of the cache region.
-     * <p>
+     *
      * @param cattr The new ICompositeCacheAttribute value
      */
     @Override
@@ -189,7 +189,7 @@ public abstract class AbstractCacheAccess<K, V>
      * remote items. Rather than have unpredictable behavior, this method just sets the default
      * attributes. Items subsequently put into the cache will use these defaults if they do not
      * specify specific attributes.
-     * <p>
+     *
      * @param attr the default attributes.
      * @throws CacheException if something goes wrong.
      */

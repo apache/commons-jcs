@@ -36,7 +36,7 @@ public class MockRemoteCacheDispatcher
     public RemoteCacheResponse<?> setupRemoteCacheResponse;
 
     /** Records the last and returns setupRemoteCacheResponse.
-     * <p>
+     *
      * @param remoteCacheRequest
      * @return RemoteCacheResponse
      * @throws IOException

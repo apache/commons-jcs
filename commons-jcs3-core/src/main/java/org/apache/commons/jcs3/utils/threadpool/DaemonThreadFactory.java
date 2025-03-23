@@ -55,7 +55,7 @@ public class DaemonThreadFactory
 
     /**
      * Sets the thread to daemon.
-     * <p>
+     *
      * @param runner
      * @return a daemon thread
      */

@@ -53,7 +53,7 @@ public class RemoteHttpCacheFactory
      * <p>
      * The failover runner will get a cache from the manager. When the primary is restored it will
      * tell the manager for the failover to deregister the listener.
-     * <p>
+     *
      * @param iaca
      * @param cacheMgr
      * @param cacheEventLogger

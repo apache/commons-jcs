@@ -32,7 +32,7 @@ public class IndexedDiskDumper
      * <p>
      * Creates a disk cache and then calls dump, which write out the contents to
      * a debug log.
-     * <p>
+     *
      * @param args
      *            The command line arguments
      */

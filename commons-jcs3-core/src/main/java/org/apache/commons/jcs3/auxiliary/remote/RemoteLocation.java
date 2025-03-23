@@ -63,7 +63,7 @@ public final class RemoteLocation
 
     /**
      * Constructor for the Location object
-     * <p>
+     *
      * @param host
      * @param port
      */

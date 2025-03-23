@@ -36,7 +36,7 @@ public class InvalidArgumentException
 
     /**
      * Constructor for the InvalidArgumentException object.
-     * <p>
+     *
      * @param message
      */
     public InvalidArgumentException( final String message )

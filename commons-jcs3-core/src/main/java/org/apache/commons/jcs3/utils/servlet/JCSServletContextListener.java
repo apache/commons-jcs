@@ -47,7 +47,7 @@ public class JCSServletContextListener
 
     /**
      * Shutdown JCS.
-     * <p>
+     *
      * @see javax.servlet.ServletContextListener#contextDestroyed(javax.servlet.ServletContextEvent)
      */
     @Override
@@ -60,7 +60,7 @@ public class JCSServletContextListener
 
     /**
      * This does nothing. We don't want to initialize the cache here.
-     * <p>
+     *
      * @see javax.servlet.ServletContextListener#contextInitialized(javax.servlet.ServletContextEvent)
      */
     @Override

@@ -108,7 +108,7 @@ public interface IElementAttributes extends Serializable, Cloneable
 
     /**
      * Gets the LastAccess attribute of the IAttributes object.
-     * <p>
+     *
      * @return The LastAccess value.
      */
     long getLastAccessTime();
@@ -125,7 +125,7 @@ public interface IElementAttributes extends Serializable, Cloneable
 
     /**
      * Gets the size attribute of the IAttributes object
-     * <p>
+     *
      * @return The size value
      */
     int getSize();
@@ -187,7 +187,7 @@ public interface IElementAttributes extends Serializable, Cloneable
 
     /**
      * Sets the maxLife attribute of the IAttributes object.
-     * <p>
+     *
      * @param mls The new MaxLifeSeconds value
      */
     void setMaxLife(long mls);
@@ -195,7 +195,7 @@ public interface IElementAttributes extends Serializable, Cloneable
     /**
      * Size in bytes. This is not used except in the admin pages. It will be 0 by default
      * and is only updated when the element is serialized.
-     * <p>
+     *
      * @param size The new size value
      */
     void setSize( int size );

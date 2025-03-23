@@ -149,7 +149,7 @@ public class EncryptingSerializer extends StandardSerializer
     /**
      * Uses default de-serialization to turn a byte array into an object. Decrypts the value
      * first. All exceptions are converted into IOExceptions.
-     * <p>
+     *
      * @param data data bytes
      * @param loader class loader to use
      * @return Object
@@ -214,7 +214,7 @@ public class EncryptingSerializer extends StandardSerializer
 
     /**
      * Serializes an object using default serialization. Encrypts the byte array.
-     * <p>
+     *
      * @param obj object
      * @return byte[]
      * @throws IOException on i/o problem

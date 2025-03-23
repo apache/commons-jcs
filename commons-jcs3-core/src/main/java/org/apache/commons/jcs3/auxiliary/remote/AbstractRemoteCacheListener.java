@@ -63,7 +63,7 @@ public abstract class AbstractRemoteCacheListener<K, V>
      * <p>
      * The constructor exports this object, making it available to receive incoming calls. The
      * callback port is anonymous unless a local port value was specified in the configuration.
-     * <p>
+     *
      * @param irca cache configuration
      * @param cacheMgr the cache hub
      * @param elementSerializer a custom serializer
@@ -87,7 +87,7 @@ public abstract class AbstractRemoteCacheListener<K, V>
     /**
      * Gets the listenerId attribute of the RemoteCacheListener object. This is stored in the
      * object. The RemoteCache object contains a reference to the listener and get the id this way.
-     * <p>
+     *
      * @return The listenerId value
      * @throws IOException
      */
@@ -102,7 +102,7 @@ public abstract class AbstractRemoteCacheListener<K, V>
 
     /**
      * This is for debugging. It allows the remote server to log the address of clients.
-     * <p>
+     *
      * @return String
      * @throws IOException
      */
@@ -126,7 +126,7 @@ public abstract class AbstractRemoteCacheListener<K, V>
 
     /**
      * Gets the remoteType attribute of the RemoteCacheListener object
-     * <p>
+     *
      * @return The remoteType value
      * @throws IOException
      */
@@ -203,7 +203,7 @@ public abstract class AbstractRemoteCacheListener<K, V>
 
     /**
      * Calls localRemove on the CompositeCache.
-     * <p>
+     *
      * @param cacheName
      * @param key
      * @throws IOException
@@ -219,7 +219,7 @@ public abstract class AbstractRemoteCacheListener<K, V>
 
     /**
      * Calls localRemoveAll on the CompositeCache.
-     * <p>
+     *
      * @param cacheName
      * @throws IOException
      */
@@ -236,7 +236,7 @@ public abstract class AbstractRemoteCacheListener<K, V>
      * Let the remote cache set a listener_id. Since there is only one listener for all the regions
      * and every region gets registered? the id shouldn't be set if it isn't zero. If it is we
      * assume that it is a reconnect.
-     * <p>
+     *
      * @param id The new listenerId value
      * @throws IOException
      */
@@ -250,7 +250,7 @@ public abstract class AbstractRemoteCacheListener<K, V>
 
     /**
      * For easier debugging.
-     * <p>
+     *
      * @return Basic info on this listener.
      */
     @Override

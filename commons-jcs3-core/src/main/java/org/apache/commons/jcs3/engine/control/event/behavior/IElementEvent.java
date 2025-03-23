@@ -30,7 +30,7 @@ public interface IElementEvent<T>
     /**
      * Gets the elementEvent attribute of the IElementEvent object. This code is Contained in the
      * IElememtEventConstants class.
-     *<p>
+     *
      * @return The elementEvent value
      */
     ElementEventType getElementEvent();

@@ -32,7 +32,7 @@ public class ScheduleParser
     /**
      * For each date time that is separated by a comma in the
      * OptimizationSchedule, create a date and add it to an array of dates.
-     * <p>
+     *
      * @param schedule
      * @return Date[]
      * @throws ParseException
@@ -58,7 +58,7 @@ public class ScheduleParser
     /**
      * For a single string it creates a date that is the next time this hh:mm:ss
      * combo will be seen.
-     * <p>
+     *
      * @param startTime
      * @return Date
      * @throws ParseException

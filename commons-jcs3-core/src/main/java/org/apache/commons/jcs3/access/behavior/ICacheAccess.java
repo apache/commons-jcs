@@ -35,7 +35,7 @@ public interface ICacheAccess<K, V>
 {
     /**
      * Basic get method.
-     * <p>
+     *
      * @param name
      * @return Object or null if not found.
      */
@@ -44,7 +44,7 @@ public interface ICacheAccess<K, V>
     /**
      * Basic get method. If the object cannot be found in the cache, it will be
      * retrieved by calling the supplier and subsequently storing it in the cache.
-     * <p>
+     *
      * @param name
      * @param supplier supplier to be called if the value is not found
      * @return Object.
@@ -62,7 +62,7 @@ public interface ICacheAccess<K, V>
      * has been in the cache.
      * <p>
      * The last access time in the ElementAttributes should be current.
-     * <p>
+     *
      * @param name Key the object is stored as
      * @return The ICacheElement&lt;K, V&gt; if the object is found or null
      */
@@ -81,7 +81,7 @@ public interface ICacheAccess<K, V>
      * has been in the cache.
      * <p>
      * The last access time in the ElementAttributes should be current.
-     * <p>
+     *
      * @param names set of Object cache keys
      * @return a map of Object key to ICacheElement&lt;K, V&gt; element, or empty map if none of the keys are
      *         present
@@ -90,7 +90,7 @@ public interface ICacheAccess<K, V>
 
     /**
      * Gets the elementAttributes attribute of the ICacheAccess object
-     * <p>
+     *
      * @param name
      * @return The elementAttributes value
      * @throws CacheException
@@ -100,7 +100,7 @@ public interface ICacheAccess<K, V>
 
     /**
      * Retrieve matching objects from the cache region this instance provides access to.
-     * <p>
+     *
      * @param pattern   a key pattern for the objects stored
      * @return A map of key to values. These are stripped from the wrapper.
      */
@@ -119,7 +119,7 @@ public interface ICacheAccess<K, V>
      * has been in the cache.
      * <p>
      * The last access time in the ElementAttributes should be current.
-     * <p>
+     *
      * @param pattern key search pattern
      * @return a map of Object key to ICacheElement&lt;K, V&gt; element, or empty map if no keys match the
      *         pattern
@@ -128,7 +128,7 @@ public interface ICacheAccess<K, V>
 
     /**
      * Puts and/or overrides an element with the name in that region.
-     * <p>
+     *
      * @param name
      * @param obj
      * @throws CacheException
@@ -138,7 +138,7 @@ public interface ICacheAccess<K, V>
 
     /**
      * Description of the Method
-     * <p>
+     *
      * @param name
      * @param obj
      * @param attr
@@ -149,7 +149,7 @@ public interface ICacheAccess<K, V>
 
     /**
      * Puts in cache if an item does not exist with the name in that region.
-     * <p>
+     *
      * @param name
      * @param obj
      * @throws CacheException
@@ -159,7 +159,7 @@ public interface ICacheAccess<K, V>
 
     /**
      * Remove an object for this key if one exists, else do nothing.
-     * <p>
+     *
      * @param name
      * @throws CacheException
      */
@@ -168,7 +168,7 @@ public interface ICacheAccess<K, V>
 
     /**
      * Reset the attributes on the object matching this key name.
-     * <p>
+     *
      * @param name
      * @param attributes
      * @throws CacheException

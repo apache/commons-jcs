@@ -63,7 +63,7 @@ public class MySQLDiskCacheAttributes
 
     /**
      * Should we return null while optimizing the table.
-     * <p>
+     *
      * @return the balkDuringOptimization.
      */
     public boolean isBalkDuringOptimization()
@@ -89,7 +89,7 @@ public class MySQLDiskCacheAttributes
 
     /**
      * For debugging.
-     * <p>
+     *
      * @return debug string
      */
     @Override

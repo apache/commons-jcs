@@ -28,21 +28,21 @@ public interface IStatElement<V> extends Serializable
 {
     /**
      * Gets the data, for example, for hit count you would get a value for some number.
-     * <p>
+     *
      * @return data
      */
     V getData();
 
     /**
      * Gets the name of the stat element, for example, HitCount
-     * <p>
+     *
      * @return the stat element name
      */
     String getName();
 
     /**
      * Sets the data for this element.
-     * <p>
+     *
      * @param data
      */
     void setData( V data );

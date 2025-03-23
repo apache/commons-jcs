@@ -143,7 +143,7 @@ public abstract class AbstractCacheEventQueue<K, V>
     {
         /**
          * Constructor for the PutEvent object.
-         * <p>
+         *
          * @param ice a cache element
          */
         PutEvent( final ICacheElement<K, V> ice )
@@ -153,7 +153,7 @@ public abstract class AbstractCacheEventQueue<K, V>
 
         /**
          * For debugging.
-         * <p>
+         *
          * @return Info on the key and value.
          */
         @Override
@@ -178,7 +178,7 @@ public abstract class AbstractCacheEventQueue<K, V>
 
         /**
          * For debugging.
-         * <p>
+         *
          * @return The name of the event.
          */
         @Override
@@ -195,7 +195,7 @@ public abstract class AbstractCacheEventQueue<K, V>
     {
         /**
          * Constructor for the RemoveEvent object
-         * <p>
+         *
          * @param key
          */
         RemoveEvent( final K key )
@@ -205,7 +205,7 @@ public abstract class AbstractCacheEventQueue<K, V>
 
         /**
          * For debugging.
-         * <p>
+         *
          * @return Info on the key to remove.
          */
         @Override
@@ -263,7 +263,7 @@ public abstract class AbstractCacheEventQueue<K, V>
     /**
      * This adds a put event to the queue. When it is processed, the element will be put to the
      * listener.
-     * <p>
+     *
      * @param ce The feature to be added to the PutEvent attribute
      * @throws IOException
      */
@@ -286,7 +286,7 @@ public abstract class AbstractCacheEventQueue<K, V>
     /**
      * This adds a remove event to the queue. When processed the listener's remove method will be
      * called for the key.
-     * <p>
+     *
      * @param key The feature to be added to the RemoveEvent attribute
      * @throws IOException
      */
@@ -315,7 +315,7 @@ public abstract class AbstractCacheEventQueue<K, V>
 
     /**
      * Returns the time to wait for events before killing the background thread.
-     * <p>
+     *
      * @return int
      */
     public int getWaitToDieMillis()
@@ -325,7 +325,7 @@ public abstract class AbstractCacheEventQueue<K, V>
 
     /**
      * Initializes the queue.
-     * <p>
+     *
      * @param listener
      * @param listenerId
      * @param cacheName
@@ -360,7 +360,7 @@ public abstract class AbstractCacheEventQueue<K, V>
 
     /**
      * Adds an event to the queue.
-     * <p>
+     *
      * @param event
      */
     protected abstract void put( AbstractCacheEvent<?> event );
@@ -368,7 +368,7 @@ public abstract class AbstractCacheEventQueue<K, V>
     /**
      * Call remove on the listener.
      * Helper method to allow method reference in RemoveEvent
-     * <p>
+     *
      * @throws IOException
      */
     private void remove(final K key) throws IOException
@@ -378,7 +378,7 @@ public abstract class AbstractCacheEventQueue<K, V>
 
     /**
      * Sets the time to wait for events before killing the background thread.
-     * <p>
+     *
      * @param wtdm the ms for the q to sit idle.
      */
     public void setWaitToDieMillis( final int wtdm )
@@ -389,7 +389,7 @@ public abstract class AbstractCacheEventQueue<K, V>
     /**
      * This means that the queue is functional. If we reached the max number of failures, the queue
      * is marked as non functional and will never work again.
-     * <p>
+     *
      * @param b
      */
     public void setWorking( final boolean b )
@@ -399,7 +399,7 @@ public abstract class AbstractCacheEventQueue<K, V>
 
     /**
      * Creates a brief string identifying the listener and the region.
-     * <p>
+     *
      * @return String debugging info.
      */
     @Override

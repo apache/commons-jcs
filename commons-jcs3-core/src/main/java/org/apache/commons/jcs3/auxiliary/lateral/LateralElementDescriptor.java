@@ -53,7 +53,7 @@ public class LateralElementDescriptor<K, V>
 
     /**
      * Constructor for the LateralElementDescriptor object
-     * <p>
+     *
      * @param ce ICacheElement&lt;K, V&gt; payload
      */
     public LateralElementDescriptor( final ICacheElement<K, V> ce )
@@ -63,7 +63,7 @@ public class LateralElementDescriptor<K, V>
 
     /**
      * Constructor for the LateralElementDescriptor object
-     * <p>
+     *
      * @param ce ICacheElement&lt;K, V&gt; payload
      * @param command operation requested by the client
      * @since 3.1
@@ -76,7 +76,7 @@ public class LateralElementDescriptor<K, V>
 
     /**
      * Constructor for the LateralElementDescriptor object
-     * <p>
+     *
      * @param ce ICacheElement&lt;K, V&gt; payload
      * @param command operation requested by the client
      * @param requesterId id of the source of the request

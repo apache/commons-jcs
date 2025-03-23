@@ -73,7 +73,7 @@ public class DiscoveredService
      * We can't use cache names as part of the equals unless we manually only use the address and
      * port in a contains check. So that we can use normal set functionality, I've kept the cache
      * names out.
-     * <p>
+     *
      * @param otherArg other
      * @return equality based on the address/port
      */

@@ -27,7 +27,7 @@ public interface IKeyMatcher<K> extends Serializable
 {
     /**
      * Creates a pattern and find matches on the array.
-     * <p>
+     *
      * @param pattern
      * @param keyArray
      * @return Set of the matching keys

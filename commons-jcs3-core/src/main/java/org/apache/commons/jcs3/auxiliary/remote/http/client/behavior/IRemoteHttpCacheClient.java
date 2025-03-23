@@ -34,14 +34,14 @@ public interface IRemoteHttpCacheClient<K, V>
     /**
      * The provides an extension point. If you want to extend this and use a special dispatcher,
      * here is the place to do it.
-     * <p>
+     *
      * @param attributes
      */
     void initialize( RemoteHttpCacheAttributes attributes );
 
     /**
      * Make and alive request.
-     * <p>
+     *
      * @return true if we make a successful alive request.
      * @throws IOException
      */

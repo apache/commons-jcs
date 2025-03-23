@@ -41,7 +41,7 @@ class RemoteCacheNoWaitUnitTest
     /**
      * Simply verify that the serviced supplied to fix is passed onto the client. Verify that the
      * original event queue is destroyed. A new event queue willbe plugged in on fix.
-     * <p>
+     *
      * @throws Exception
      */
     @Test
@@ -73,7 +73,7 @@ class RemoteCacheNoWaitUnitTest
 
     /**
      * Simply verify that the client get is called from the no wait.
-     * <p>
+     *
      * @throws Exception
      */
     @Test
@@ -96,7 +96,7 @@ class RemoteCacheNoWaitUnitTest
 
     /**
      * Simply verify that the client getMultiple is called from the no wait.
-     * <p>
+     *
      * @throws Exception
      */
     @Test
@@ -125,7 +125,7 @@ class RemoteCacheNoWaitUnitTest
 
     /**
      * Simply verify that the client status is returned in the stats.
-     * <p>
+     *
      * @throws Exception
      */
     @Test
@@ -146,7 +146,7 @@ class RemoteCacheNoWaitUnitTest
 
     /**
      * Simply verify that we get a status of error if the cache is in error..
-     * <p>
+     *
      * @throws Exception
      */
     @Test
@@ -167,7 +167,7 @@ class RemoteCacheNoWaitUnitTest
 
     /**
      * Simply verify that the client gets updated via the no wait.
-     * <p>
+     *
      * @throws Exception
      */
     @Test
@@ -192,7 +192,7 @@ class RemoteCacheNoWaitUnitTest
 
     /**
      * Simply verify that the client gets updated via the no wait.
-     * <p>
+     *
      * @throws Exception
      */
     @Test

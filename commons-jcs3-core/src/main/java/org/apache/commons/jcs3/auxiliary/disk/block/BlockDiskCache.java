@@ -86,7 +86,7 @@ public class BlockDiskCache<K, V>
 
     /**
      * Constructs the BlockDisk after setting up the root directory.
-     * <p>
+     *
      * @param cacheAttributes
      */
     public BlockDiskCache( final BlockDiskCacheAttributes cacheAttributes )
@@ -96,7 +96,7 @@ public class BlockDiskCache<K, V>
 
     /**
      * Constructs the BlockDisk after setting up the root directory.
-     * <p>
+     *
      * @param cacheAttributes
      * @param elementSerializer used if supplied, the super's super will not set a null
      */
@@ -194,7 +194,7 @@ public class BlockDiskCache<K, V>
 
     /**
      * Add these blocks to the emptyBlock list.
-     * <p>
+     *
      * @param blocksToFree
      */
     protected void freeBlocks( final int[] blocksToFree )
@@ -204,7 +204,7 @@ public class BlockDiskCache<K, V>
 
     /**
      * Returns the attributes.
-     * <p>
+     *
      * @see org.apache.commons.jcs3.auxiliary.AuxiliaryCache#getAuxiliaryCacheAttributes()
      */
     @Override
@@ -215,7 +215,7 @@ public class BlockDiskCache<K, V>
 
     /**
      * This is used by the event logging.
-     * <p>
+     *
      * @return the location of the disk, either path or ip.
      */
     @Override
@@ -226,7 +226,7 @@ public class BlockDiskCache<K, V>
 
     /**
      * Return the keys in this cache.
-     * <p>
+     *
      * @see org.apache.commons.jcs3.auxiliary.disk.AbstractDiskCache#getKeySet()
      */
     @Override
@@ -262,7 +262,7 @@ public class BlockDiskCache<K, V>
 
     /**
      * Returns info about the disk cache.
-     * <p>
+     *
      * @see org.apache.commons.jcs3.auxiliary.AuxiliaryCache#getStatistics()
      */
     @Override
@@ -450,7 +450,7 @@ public class BlockDiskCache<K, V>
 
     /**
      * Gets matching items from the cache.
-     * <p>
+     *
      * @param pattern
      * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
      *         data in cache matching keys
@@ -484,7 +484,7 @@ public class BlockDiskCache<K, V>
     /**
      * Returns true if the removal was successful; or false if there is nothing to remove. Current
      * implementation always result in a disk orphan.
-     * <p>
+     *
      * @param key
      * @return true if removed anything
      * @see org.apache.commons.jcs3.auxiliary.disk.AbstractDiskCache#remove(Object)
@@ -538,7 +538,7 @@ public class BlockDiskCache<K, V>
 
     /**
      * Resets the keyfile, the disk file, and the memory key map.
-     * <p>
+     *
      * @see org.apache.commons.jcs3.auxiliary.disk.AbstractDiskCache#removeAll()
      */
     @Override
@@ -653,7 +653,7 @@ public class BlockDiskCache<K, V>
     /**
      * We need to verify that the file on disk uses the same block size and that the file is the
      * proper size.
-     * <p>
+     *
      * @return true if it looks ok
      */
     protected boolean verifyDisk()

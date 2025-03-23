@@ -123,7 +123,7 @@ public class JDBCDiskCache<K, V>
     /**
      * Constructs a JDBC Disk Cache for the provided cache attributes. The table state object is
      * used to mark deletions.
-     * <p>
+     *
      * @param cattr the configuration object for this cache
      * @param dsFactory the DataSourceFactory for this cache
      * @param tableState an object to track table operations
@@ -171,7 +171,7 @@ public class JDBCDiskCache<K, V>
 
     /**
      * Removed the expired. (now - create time) &gt; max life seconds * 1000
-     * <p>
+     *
      * @return the number deleted
      */
     protected int deleteExpired()
@@ -233,7 +233,7 @@ public class JDBCDiskCache<K, V>
 
     /**
      * Does an element exist for this key?
-     * <p>
+     *
      * @param ce the cache element
      * @param con a database connection
      * @return boolean
@@ -285,7 +285,7 @@ public class JDBCDiskCache<K, V>
 
     /**
      * This is used by the event logging.
-     * <p>
+     *
      * @return the location of the disk, either path or ip.
      */
     @Override
@@ -312,7 +312,7 @@ public class JDBCDiskCache<K, V>
 
     /**
      * Return the keys in this cache.
-     * <p>
+     *
      * @see org.apache.commons.jcs3.auxiliary.disk.AbstractDiskCache#getKeySet()
      */
     @Override
@@ -324,7 +324,7 @@ public class JDBCDiskCache<K, V>
 
     /**
      * Returns the current cache size. Just does a count(*) for the region.
-     * <p>
+     *
      * @return The size value
      */
     @Override
@@ -360,7 +360,7 @@ public class JDBCDiskCache<K, V>
 
     /**
      * Extends the parent stats.
-     * <p>
+     *
      * @return IStats
      */
     @Override
@@ -383,7 +383,7 @@ public class JDBCDiskCache<K, V>
 
     /**
      * Returns the name of the table.
-     * <p>
+     *
      * @return the table name or UNDEFINED
      */
     protected String getTableName()
@@ -412,7 +412,7 @@ public class JDBCDiskCache<K, V>
      * If test before insert it true, we check to see if the element exists. If the element exists
      * we will update. Otherwise, we try inserting.  If this fails because the item exists, we will
      * update.
-     * <p>
+     *
      * @param ce
      * @param con
      * @param element
@@ -442,7 +442,7 @@ public class JDBCDiskCache<K, V>
 
     /**
      * This inserts a new row in the database.
-     * <p>
+     *
      * @param ce
      * @param con
      * @param element
@@ -495,7 +495,7 @@ public class JDBCDiskCache<K, V>
 
     /**
      * This updates a row in the database.
-     * <p>
+     *
      * @param ce
      * @param con
      * @param element
@@ -551,7 +551,7 @@ public class JDBCDiskCache<K, V>
 
     /**
      * Queries the database for the value. If it gets a result, the value is deserialized.
-     * <p>
+     *
      * @param key
      * @return ICacheElement
      * @see org.apache.commons.jcs3.auxiliary.disk.AbstractDiskCache#get(Object)
@@ -618,7 +618,7 @@ public class JDBCDiskCache<K, V>
     /**
      * This will run a like query. It will try to construct a usable query but different
      * implementations will be needed to adjust the syntax.
-     * <p>
+     *
      * @param pattern
      * @return key,value map
      */
@@ -682,7 +682,7 @@ public class JDBCDiskCache<K, V>
     /**
      * Returns true if the removal was successful; or false if there is nothing to remove. Current
      * implementation always results in a disk orphan.
-     * <p>
+     *
      * @param key
      * @return boolean
      */
@@ -775,7 +775,7 @@ public class JDBCDiskCache<K, V>
      * Inserts or updates. By default it will try to insert. If the item exists we will get an
      * error. It will then update. This behavior is configurable. The cache can be configured to
      * check before inserting.
-     * <p>
+     *
      * @param ce
      */
     @Override

@@ -33,7 +33,7 @@ public class FIFOMemoryCache<K, V>
 {
     /**
      * Does nothing.
-     * <p>
+     *
      * @param me
      */
     @Override
@@ -45,7 +45,7 @@ public class FIFOMemoryCache<K, V>
     /**
      * Puts an item to the cache. Removes any pre-existing entries of the same key from the linked
      * list and adds this one first.
-     * <p>
+     *
      * @param ce The cache element, or entry wrapper
      * @return MemoryElementDescriptor the new node
      * @throws IOException

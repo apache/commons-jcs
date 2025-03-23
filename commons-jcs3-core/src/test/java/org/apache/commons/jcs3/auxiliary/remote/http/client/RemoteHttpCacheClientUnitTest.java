@@ -39,7 +39,7 @@ class RemoteHttpCacheClientUnitTest
 {
     /**
      * Verify dispose functionality
-     * <p>
+     *
      * @throws IOException
      */
     @Test
@@ -65,7 +65,7 @@ class RemoteHttpCacheClientUnitTest
 
     /**
      * Verify get functionality
-     * <p>
+     *
      * @throws IOException
      */
     @Test
@@ -100,7 +100,7 @@ class RemoteHttpCacheClientUnitTest
 
     /**
      * Verify get functionality
-     * <p>
+     *
      * @throws IOException
      */
     @Test
@@ -130,7 +130,7 @@ class RemoteHttpCacheClientUnitTest
 
     /**
      * Verify get functionality
-     * <p>
+     *
      * @throws IOException
      */
     @Test
@@ -168,7 +168,7 @@ class RemoteHttpCacheClientUnitTest
 
     /**
      * Verify get functionality
-     * <p>
+     *
      * @throws IOException
      */
     @Test
@@ -206,7 +206,7 @@ class RemoteHttpCacheClientUnitTest
 
     /**
      * Verify remove functionality
-     * <p>
+     *
      * @throws IOException
      */
     @Test
@@ -233,7 +233,7 @@ class RemoteHttpCacheClientUnitTest
 
     /**
      * Verify removeall functionality
-     * <p>
+     *
      * @throws IOException
      */
     @Test
@@ -259,7 +259,7 @@ class RemoteHttpCacheClientUnitTest
 
     /**
      * Verify update functionality
-     * <p>
+     *
      * @throws IOException
      */
     @Test

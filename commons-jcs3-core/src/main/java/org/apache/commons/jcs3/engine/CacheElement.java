@@ -50,7 +50,7 @@ public class CacheElement<K, V>
 
     /**
      * Constructor for the CacheElement object
-     * <p>
+     *
      * @param cacheName
      * @param key
      * @param val
@@ -64,7 +64,7 @@ public class CacheElement<K, V>
 
     /**
      * Constructor for the CacheElement object
-     * <p>
+     *
      * @param cacheName
      * @param key
      * @param val
@@ -97,7 +97,7 @@ public class CacheElement<K, V>
 
     /**
      * Gets the cacheName attribute of the CacheElement object
-     * <p>
+     *
      * @return The cacheName value
      */
     @Override
@@ -108,7 +108,7 @@ public class CacheElement<K, V>
 
     /**
      * Gets the IElementAttributes attribute of the CacheElement object
-     * <p>
+     *
      * @return The IElementAttributes value, never null
      */
     @Override
@@ -126,7 +126,7 @@ public class CacheElement<K, V>
 
     /**
      * Gets the key attribute of the CacheElement object
-     * <p>
+     *
      * @return The key value
      */
     @Override
@@ -137,7 +137,7 @@ public class CacheElement<K, V>
 
     /**
      * Gets the val attribute of the CacheElement object
-     * <p>
+     *
      * @return The val value
      */
     @Override
@@ -157,7 +157,7 @@ public class CacheElement<K, V>
 
     /**
      * Sets the attributes attribute of the CacheElement object
-     * <p>
+     *
      * @param attr
      *            The new IElementAttributes value
      */
@@ -169,7 +169,7 @@ public class CacheElement<K, V>
 
     /**
      * For debugging only.
-     * <p>
+     *
      * @return String representation
      */
     @Override

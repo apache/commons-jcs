@@ -74,7 +74,7 @@ public class SoftReferenceMemoryCache<K, V> extends AbstractMemoryCache<K, V>
 
     /**
      * This can't be implemented.
-     * <p>
+     *
      * @param numberToFree
      * @return 0
      * @throws IOException
@@ -106,7 +106,7 @@ public class SoftReferenceMemoryCache<K, V> extends AbstractMemoryCache<K, V>
 
     /**
      * Returns the current cache size.
-     * <p>
+     *
      * @return The size value
      */
     @Override
@@ -143,7 +143,7 @@ public class SoftReferenceMemoryCache<K, V> extends AbstractMemoryCache<K, V>
 
     /**
      * For post reflection creation initialization
-     * <p>
+     *
      * @param hub
      */
     @Override
@@ -212,7 +212,7 @@ public class SoftReferenceMemoryCache<K, V> extends AbstractMemoryCache<K, V>
 
     /**
      * Puts an item to the cache.
-     * <p>
+     *
      * @param ce Description of the Parameter
      * @throws IOException Description of the Exception
      */

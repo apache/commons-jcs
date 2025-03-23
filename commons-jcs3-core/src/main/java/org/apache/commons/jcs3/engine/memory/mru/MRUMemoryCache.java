@@ -34,7 +34,7 @@ public class MRUMemoryCache<K, V>
 {
     /**
      * Makes the item the last in the list.
-     * <p>
+     *
      * @param me
      */
     @Override
@@ -48,7 +48,7 @@ public class MRUMemoryCache<K, V>
      * <p>
      * It's not clear if the put operation should be different. Perhaps this should remove the oldest
      * if full, and then put.
-     * <p>
+     *
      * @param ce
      * @return MemoryElementDescriptor the new node
      * @throws IOException

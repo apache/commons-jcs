@@ -30,7 +30,7 @@ class HostNameUtilUnitTest
 {
     /**
      * It's nearly impossible to unit test the getLocalHostLANAddress method.
-     * <p>
+     *
      * @throws UnknownHostException
      */
     @Test

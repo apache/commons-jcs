@@ -35,7 +35,7 @@ public interface IRemoteCacheDispatcher
     /**
      * All requests will go through this method. The dispatcher implementation will send the request
      * remotely.
-     * <p>
+     *
      * @param remoteCacheRequest
      * @return RemoteCacheResponse
      * @throws IOException

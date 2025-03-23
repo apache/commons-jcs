@@ -79,7 +79,7 @@ public class ARCMemoryCacheUnitTest
     /**
      * Put half the max, get the key array, and verify that it has the correct
      * number of items.
-     * <p>
+     *
      * @throws Exception
      */
     public void testGetKeyArray()
@@ -111,7 +111,7 @@ public class ARCMemoryCacheUnitTest
 
     /**
      * Put half the max and then get the first element.  It should now be in t2.
-     * <p>
+     *
      * @throws Exception
      */
     public void testHitInT1BelowMax()
@@ -146,7 +146,7 @@ public class ARCMemoryCacheUnitTest
 
     /**
      * Put half the max and then get the first element. then get it again.  ti shoudl be in t2
-     * <p>
+     *
      * @throws Exception
      */
     public void testHitInT1ThenT2BelowMax()
@@ -181,7 +181,7 @@ public class ARCMemoryCacheUnitTest
 
     /**
      * Put half the max and then get the first element.  It should now be in t2.
-     * <p>
+     *
      * @throws Exception
      */
     public void testHitInT1AtMax()
@@ -216,7 +216,7 @@ public class ARCMemoryCacheUnitTest
 
     /**
      * Put half the max and then get the first element.  It should now be in t2.
-     * <p>
+     *
      * @throws Exception
      */
     public void SKIPtestHitInT1OverMax()
@@ -251,7 +251,7 @@ public class ARCMemoryCacheUnitTest
 
     /**
      * Put half the max and then get the first element.  It should now be in t2.
-     * <p>
+     *
      * @throws Exception
      */
     public void testPutInT1ToMax()

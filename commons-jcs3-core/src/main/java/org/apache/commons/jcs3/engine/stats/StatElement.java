@@ -50,7 +50,7 @@ public class StatElement<V>
 
     /**
      * Gets the data, for example, for hit count you would get a value for some number.
-     * <p>
+     *
      * @return data
      */
     @Override
@@ -61,7 +61,7 @@ public class StatElement<V>
 
     /**
      * Gets the name of the stat element, for example, HitCount
-     * <p>
+     *
      * @return the stat element name
      */
     @Override
@@ -72,7 +72,7 @@ public class StatElement<V>
 
     /**
      * Sets the data for this element.
-     * <p>
+     *
      * @param data
      */
     @Override

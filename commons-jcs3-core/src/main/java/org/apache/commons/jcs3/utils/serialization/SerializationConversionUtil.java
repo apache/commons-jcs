@@ -39,7 +39,7 @@ public class SerializationConversionUtil
     /**
      * This returns a wrapper that has a de-serialized version of the value
      * instead of the serialized value.
-     * <p>
+     *
      * @param serialized
      * @param elementSerializer
      *            the serializer to be used.
@@ -80,7 +80,7 @@ public class SerializationConversionUtil
     /**
      * This returns a wrapper that has a serialized version of the value instead
      * of the value.
-     * <p>
+     *
      * @param element
      * @param elementSerializer
      *            the serializer to be used.

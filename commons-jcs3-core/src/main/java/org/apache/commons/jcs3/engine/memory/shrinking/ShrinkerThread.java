@@ -52,7 +52,7 @@ public class ShrinkerThread<K, V>
 
     /**
      * Constructor for the ShrinkerThread object.
-     * <p>
+     *
      * @param cache The MemoryCache which the new shrinker should watch.
      */
     public ShrinkerThread( final CompositeCache<K, V> cache )

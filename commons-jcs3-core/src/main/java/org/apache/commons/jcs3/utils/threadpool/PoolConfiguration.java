@@ -98,7 +98,7 @@ public final class PoolConfiguration
 
     /**
      * Constructs a completely configured instance.
-     * <p>
+     *
      * @param useBoundary
      * @param boundarySize
      * @param maximumPoolSize
@@ -121,7 +121,7 @@ public final class PoolConfiguration
 
     /**
      * Copies the instance variables to another instance.
-     * <p>
+     *
      * @return PoolConfiguration
      */
     @Override

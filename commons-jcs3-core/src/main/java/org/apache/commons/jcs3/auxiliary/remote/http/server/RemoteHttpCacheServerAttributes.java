@@ -39,7 +39,7 @@ public class RemoteHttpCacheServerAttributes
 
     /**
      * Should gets from non-cluster clients be allowed to get from other remote auxiliaries.
-     * <p>
+     *
      * @return The localClusterConsistency value
      */
     public boolean isAllowClusterGet()
@@ -49,7 +49,7 @@ public class RemoteHttpCacheServerAttributes
 
     /**
      * Should cluster updates be propagated to the locals
-     * <p>
+     *
      * @return The localClusterConsistency value
      */
     public boolean isLocalClusterConsistency()
@@ -59,7 +59,7 @@ public class RemoteHttpCacheServerAttributes
 
     /**
      * Should we try to get from other cluster servers if we don't find the items locally.
-     * <p>
+     *
      * @param r The new localClusterConsistency value
      */
     public void setAllowClusterGet( final boolean r )
@@ -69,7 +69,7 @@ public class RemoteHttpCacheServerAttributes
 
     /**
      * Should cluster updates be propagated to the locals
-     * <p>
+     *
      * @param r The new localClusterConsistency value
      */
     public void setLocalClusterConsistency( final boolean r )

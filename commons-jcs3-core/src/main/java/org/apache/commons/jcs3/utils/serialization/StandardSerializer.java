@@ -37,7 +37,7 @@ public class StandardSerializer
     /**
      * Uses default de-serialization to turn a byte array into an object. All exceptions are
      * converted into IOExceptions.
-     * <p>
+     *
      * @param data data bytes
      * @param loader class loader to use
      * @return Object
@@ -60,7 +60,7 @@ public class StandardSerializer
 
     /**
      * Serializes an object using default serialization.
-     * <p>
+     *
      * @param obj
      * @return byte[]
      * @throws IOException

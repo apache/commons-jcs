@@ -66,7 +66,7 @@ public class TestLogConfigurationUtil
 
     /**
      * Configures a logger for the given name. This allows us to check the log output.
-     * <p>
+     *
      * @param stringWriter string writer
      * @param loggerName logger name
      */

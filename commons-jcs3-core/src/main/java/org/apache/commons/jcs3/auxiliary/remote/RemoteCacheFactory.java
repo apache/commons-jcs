@@ -54,7 +54,7 @@ public class RemoteCacheFactory
      * <p>
      * The failover runner will get a cache from the manager. When the primary is restored it will
      * tell the manager for the failover to deregister the listener.
-     * <p>
+     *
      * @param iaca
      * @param cacheMgr
      * @param cacheEventLogger
@@ -176,7 +176,7 @@ public class RemoteCacheFactory
      * Returns an instance of RemoteCacheManager for the given connection parameters.
      * <p>
      * Host and Port uniquely identify a manager instance.
-     * <p>
+     *
      * @param cattr
      * @return The instance value or null if no such manager exists
      */
@@ -198,7 +198,7 @@ public class RemoteCacheFactory
      * <p>
      * If the connection cannot be established, zombie objects will be used for future recovery
      * purposes.
-     * <p>
+     *
      * @param cattr the cache configuration object
      * @param cacheMgr the cache manager
      * @param cacheEventLogger the event logger

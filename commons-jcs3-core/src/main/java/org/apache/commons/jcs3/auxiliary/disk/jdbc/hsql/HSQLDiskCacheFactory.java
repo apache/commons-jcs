@@ -47,7 +47,7 @@ public class HSQLDiskCacheFactory
 
     /**
      * This factory method should create an instance of the hsqlcache.
-     * <p>
+     *
      * @param rawAttr
      * @param compositeCacheManager
      * @param cacheEventLogger
@@ -74,7 +74,7 @@ public class HSQLDiskCacheFactory
 
     /**
      * Creates the table if it doesn't exist
-     * <p>
+     *
      * @param ds Data Source
      * @param attributes Cache region configuration
      * @throws SQLException
@@ -91,7 +91,7 @@ public class HSQLDiskCacheFactory
 
     /**
      * SETUP TABLE FOR CACHE
-     * <p>
+     *
      * @param cConn
      * @param tableName
      */

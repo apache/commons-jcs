@@ -75,7 +75,7 @@ public class LateralCacheNoWait<K, V>
     /**
      * Constructs with the given lateral cache, and fires up an event queue for asynchronous
      * processing.
-     * <p>
+     *
      * @param cache
      */
     public LateralCacheNoWait( final LateralCache<K, V> cache )
@@ -123,7 +123,7 @@ public class LateralCacheNoWait<K, V>
     /**
      * Replaces the lateral cache service handle with the given handle and reset the queue by
      * starting up a new instance.
-     * <p>
+     *
      * @param lateral
      */
     public void fixCache( final ICacheServiceNonLocal<K, V> lateral )
@@ -134,7 +134,7 @@ public class LateralCacheNoWait<K, V>
 
     /**
      * Synchronously reads from the lateral cache.
-     * <p>
+     *
      * @param key
      * @return ICacheElement&lt;K, V&gt; if found, else null
      */
@@ -180,7 +180,7 @@ public class LateralCacheNoWait<K, V>
 
     /**
      * Gets the cacheName attribute of the LateralCacheNoWait object
-     * <p>
+     *
      * @return The cacheName value
      */
     @Override
@@ -191,7 +191,7 @@ public class LateralCacheNoWait<K, V>
 
     /**
      * No lateral invocation.
-     * <p>
+     *
      * @return The cacheType value
      */
     @Override
@@ -202,7 +202,7 @@ public class LateralCacheNoWait<K, V>
 
     /**
      * this won't be called since we don't do ICache logging here.
-     * <p>
+     *
      * @return String
      */
     @Override
@@ -224,7 +224,7 @@ public class LateralCacheNoWait<K, V>
 
     /**
      * Return the keys in this cache.
-     * <p>
+     *
      * @see org.apache.commons.jcs3.auxiliary.AuxiliaryCache#getKeySet()
      */
     @Override
@@ -244,7 +244,7 @@ public class LateralCacheNoWait<K, V>
 
     /**
      * Synchronously reads from the lateral cache.
-     * <p>
+     *
      * @param pattern
      * @return ICacheElement&lt;K, V&gt; if found, else empty
      */
@@ -281,7 +281,7 @@ public class LateralCacheNoWait<K, V>
 
     /**
      * Gets multiple items from the cache based on the given set of keys.
-     * <p>
+     *
      * @param keys
      * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
      *         data in cache for any of these keys
@@ -306,7 +306,7 @@ public class LateralCacheNoWait<K, V>
 
     /**
      * No lateral invocation.
-     * <p>
+     *
      * @return The size value
      */
     @Override
@@ -351,7 +351,7 @@ public class LateralCacheNoWait<K, V>
     /**
      * Returns the async cache status. An error status indicates either the lateral connection is not
      * available, or the asyn queue has been unexpectedly destroyed. No lateral invocation.
-     * <p>
+     *
      * @return The status value
      */
     @Override
@@ -362,7 +362,7 @@ public class LateralCacheNoWait<K, V>
 
     /**
      * Adds a remove request to the lateral cache.
-     * <p>
+     *
      * @param key
      * @return always false
      */

@@ -65,7 +65,7 @@ public class BlockDiskElementDescriptor<K>
 
     /**
      * This holds the block numbers. An item my be dispersed between multiple blocks.
-     * <p>
+     *
      * @return the blocks.
      */
     public int[] getBlocks()
@@ -114,7 +114,7 @@ public class BlockDiskElementDescriptor<K>
 
     /**
      * For debugging.
-     * <p>
+     *
      * @return Info on the descriptor.
      */
     @Override

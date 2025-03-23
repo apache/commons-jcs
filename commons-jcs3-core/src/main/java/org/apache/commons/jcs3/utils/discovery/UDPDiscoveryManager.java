@@ -41,7 +41,7 @@ public class UDPDiscoveryManager
 
     /**
      * Singleton
-     * <p>
+     *
      * @return UDPDiscoveryManager
      */
     public static UDPDiscoveryManager getInstance()
@@ -63,7 +63,7 @@ public class UDPDiscoveryManager
      * <p>
      * We need to key this using the listener port too.
      * TODO think of making one discovery service work for multiple types of clients.
-     * <p>
+     *
      * @param discoveryAddress
      * @param discoveryPort
      * @param serviceAddress

@@ -70,7 +70,7 @@ public class RemoteHttpCacheDispatcher
      * All requests will go through this method.
      * <p>
      * TODO consider taking in a URL instead of using the one in the configuration.
-     * <p>
+     *
      * @param remoteCacheRequest
      * @return RemoteCacheResponse
      * @throws IOException
@@ -107,7 +107,7 @@ public class RemoteHttpCacheDispatcher
 
     /**
      * Called after the execute call on the client.
-     * <p>
+     *
      * @param request http request
      * @param httpState result of execution
      * @throws IOException
@@ -121,7 +121,7 @@ public class RemoteHttpCacheDispatcher
 
     /**
      * Called before the execute call on the client.
-     * <p>
+     *
      * @param requestBuilder http method request builder
      * @throws IOException
      */

@@ -39,14 +39,14 @@ public interface AuxiliaryCache<K, V>
     /**
      * This returns the generic attributes for an auxiliary cache. Most implementations will cast
      * this to a more specific type.
-     * <p>
+     *
      * @return the attributes for the auxiliary cache
      */
     AuxiliaryCacheAttributes getAuxiliaryCacheAttributes();
 
     /**
      * Gets a set of the keys for all elements in the auxiliary cache.
-     * <p>
+     *
      * @return a set of the key type
      * TODO This should probably be done in chunks with a range passed in. This
      *       will be a problem if someone puts a 1,000,000 or so items in a
@@ -62,7 +62,7 @@ public interface AuxiliaryCache<K, V>
 
     /**
      * Every Auxiliary must allow for the use of an event logger.
-     * <p>
+     *
      * @param cacheEventLogger
      */
     void setCacheEventLogger( ICacheEventLogger cacheEventLogger );
@@ -70,7 +70,7 @@ public interface AuxiliaryCache<K, V>
     /**
      * Allows you to inject a custom serializer. A good example would be a compressing standard
      * serializer.
-     * <p>
+     *
      * @param elementSerializer
      */
     void setElementSerializer( IElementSerializer elementSerializer );

@@ -33,7 +33,7 @@ class HugeQuantityIndDiskCacheLoadTest
 {
     /**
      * Measure memory used by the VM.
-     * <p>
+     *
      * @return memory used
      * @throws InterruptedException
      */
@@ -56,7 +56,7 @@ class HugeQuantityIndDiskCacheLoadTest
     /**
      * Adds items to cache, gets them, and removes them. The item count is more than the size of the
      * memory cache, so items should spool to disk.
-     * <p>
+     *
      * @throws Exception If an error occurs
      */
     @Test

@@ -30,7 +30,7 @@ public interface IRemoteCacheServerAttributes
 {
     /**
      * Gets the ConfigFileName attribute of the IRemoteCacheAttributes object.
-     * <p>
+     *
      * @return The configuration file name
      */
     String getConfigFileName();
@@ -42,7 +42,7 @@ public interface IRemoteCacheServerAttributes
 
     /**
      * Gets the localPort attribute of the IRemoteCacheAttributes object.
-     * <p>
+     *
      * @return The localPort value
      */
     int getServicePort();
@@ -54,21 +54,21 @@ public interface IRemoteCacheServerAttributes
      * remote update. The local update stays local. Normal updates, removes,
      * etc, stay local when they come from a client. If this is set to true,
      * then they can go remote.
-     * <p>
+     *
      * @return The localClusterConsistency value
      */
     boolean isAllowClusterGet();
 
     /**
      * Should we try to keep the registry alive
-     * <p>
+     *
      * @return the useRegistryKeepAlive
      */
     boolean isUseRegistryKeepAlive();
 
     /**
      * Should cluster updates be propagated to the locals.
-     * <p>
+     *
      * @param r
      *            The new localClusterConsistency value
      */
@@ -76,7 +76,7 @@ public interface IRemoteCacheServerAttributes
 
     /**
      * Sets the ConfigFileName attribute of the IRemoteCacheAttributes object.
-     * <p>
+     *
      * @param s
      *            The new configuration file name
      */
@@ -89,7 +89,7 @@ public interface IRemoteCacheServerAttributes
 
     /**
      * Sets the localPort attribute of the IRemoteCacheAttributes object.
-     * <p>
+     *
      * @param p
      *            The new localPort value
      */
@@ -97,7 +97,7 @@ public interface IRemoteCacheServerAttributes
 
     /**
      * Should we try to keep the registry alive
-     * <p>
+     *
      * @param useRegistryKeepAlive the useRegistryKeepAlive to set
      */
     void setUseRegistryKeepAlive( boolean useRegistryKeepAlive );

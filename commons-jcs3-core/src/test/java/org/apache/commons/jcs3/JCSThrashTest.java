@@ -93,7 +93,7 @@ class JCSThrashTest
 
     /**
      * Measure memory used by the VM.
-     * <p>
+     *
      * @return bytes
      * @throws InterruptedException
      */
@@ -108,7 +108,7 @@ class JCSThrashTest
 
     /**
      * Runs a set of threads, for a fixed amount of time.
-     * <p>
+     *
      * @param executables
      * @throws Exception
      */

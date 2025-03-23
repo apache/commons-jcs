@@ -40,7 +40,7 @@ public class ElementEvent<T>
 
     /**
      * Constructor for the ElementEvent object
-     * <p>
+     *
      * @param source The Cache Element
      * @param elementEvent The event id defined in the enum class.
      */
@@ -52,7 +52,7 @@ public class ElementEvent<T>
 
     /**
      * Gets the elementEvent attribute of the ElementEvent object
-     * <p>
+     *
      * @return The elementEvent value. The List of values is defined in ElementEventType.
      */
     @Override

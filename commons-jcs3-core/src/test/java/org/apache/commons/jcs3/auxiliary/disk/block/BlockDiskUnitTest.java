@@ -42,7 +42,7 @@ class BlockDiskUnitTest
 
     /**
      * Used to get the size for byte arrays that will take up the number of blocks specified.
-     * <p>
+     *
      * @param blockSize
      * @param numBlocks
      * @return num bytes.
@@ -88,7 +88,7 @@ class BlockDiskUnitTest
 
     /**
      * Verify that it says we need two blocks if the total size will fit.
-     * <p>
+     *
      * @throws Exception
      */
     @Test
@@ -119,7 +119,7 @@ class BlockDiskUnitTest
 
     /**
      * Test writing an element that takes 128 blocks.  There was a byte in a for loop that limited the number to 127.  I fixed this.
-     * <p>
+     *
      * @throws Exception
      */
     @Test
@@ -144,7 +144,7 @@ class BlockDiskUnitTest
 
     /**
      * Test writing an element that takes two blocks.
-     * <p>
+     *
      * @throws Exception
      */
     @Test
@@ -167,7 +167,7 @@ class BlockDiskUnitTest
 
     /**
      * Test writing a null object within a single block size.
-     * <p>
+     *
      * @throws Exception
      */
     @Test
@@ -188,7 +188,7 @@ class BlockDiskUnitTest
 
     /**
      * Test writing an element within a single block size.
-     * <p>
+     *
      * @throws Exception
      */
     @Test
@@ -210,7 +210,7 @@ class BlockDiskUnitTest
 
     /**
      * Test writing two elements that each fit within a single block size.
-     * <p>
+     *
      * @throws Exception
      */
     @Test
@@ -235,7 +235,7 @@ class BlockDiskUnitTest
 
     /**
      * Verify that the block disk can handle a big string.
-     * <p>
+     *
      * @throws Exception
      */
     @Test
@@ -267,7 +267,7 @@ class BlockDiskUnitTest
 
     /**
      * Verify that the block disk can handle a big string.
-     * <p>
+     *
      * @throws Exception
      */
     @Test
@@ -291,7 +291,7 @@ class BlockDiskUnitTest
 
     /**
      * Test writing and reading an element within a single block size.
-     * <p>
+     *
      * @throws Exception
      */
     @Test
@@ -313,7 +313,7 @@ class BlockDiskUnitTest
 
     /**
      * Test writing and reading elements that do not fit within a single block.
-     * <p>
+     *
      * @throws Exception
      */
     @Test
@@ -341,7 +341,7 @@ class BlockDiskUnitTest
 
     /**
      * Test writing and reading elements that do not fit within a single block.
-     * <p>
+     *
      * @throws Exception
      */
     @Test

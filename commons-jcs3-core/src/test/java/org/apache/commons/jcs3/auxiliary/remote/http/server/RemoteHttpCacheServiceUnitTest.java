@@ -33,7 +33,7 @@ class RemoteHttpCacheServiceUnitTest
 {
     /**
      * Verify event log calls.
-     * <p>
+     *
      * @throws Exception
      */
     @Test
@@ -58,7 +58,7 @@ class RemoteHttpCacheServiceUnitTest
 
     /**
      * Verify event log calls.
-     * <p>
+     *
      * @throws Exception
      */
     @Test
@@ -83,7 +83,7 @@ class RemoteHttpCacheServiceUnitTest
 
     /**
      * Verify event log calls.
-     * <p>
+     *
      * @throws Exception
      */
     @Test
@@ -108,7 +108,7 @@ class RemoteHttpCacheServiceUnitTest
 
     /**
      * Verify event log calls.
-     * <p>
+     *
      * @throws Exception
      */
     @Test
@@ -133,7 +133,7 @@ class RemoteHttpCacheServiceUnitTest
 
     /**
      * Verify event log calls.
-     * <p>
+     *
      * @throws Exception
      */
     @Test
@@ -158,7 +158,7 @@ class RemoteHttpCacheServiceUnitTest
 
     /**
      * Verify event log calls.
-     * <p>
+     *
      * @throws Exception
      */
     @Test

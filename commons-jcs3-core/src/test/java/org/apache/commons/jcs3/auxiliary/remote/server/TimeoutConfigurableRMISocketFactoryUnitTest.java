@@ -30,7 +30,7 @@ class TimeoutConfigurableRMISocketFactoryUnitTest
 {
     /**
      * Simple test to see that we can create a server socket and connect.
-     * <p>
+     *
      * @throws IOException
      */
     @Test

@@ -82,7 +82,7 @@ public abstract class JCS
 
     /**
      * Gets a GroupCacheAccess which accesses the provided region.
-     * <p>
+     *
      * @param region Region that return GroupCacheAccess will provide access to
      * @return A GroupCacheAccess which provides access to a given region.
      * @throws CacheException
@@ -96,7 +96,7 @@ public abstract class JCS
 
     /**
      * Gets a GroupCacheAccess which accesses the provided region.
-     * <p>
+     *
      * @param region Region that return GroupCacheAccess will provide access to
      * @param icca CacheAttributes for region
      * @return A GroupCacheAccess which provides access to a given region.
@@ -111,7 +111,7 @@ public abstract class JCS
 
     /**
      * Gets a GroupCacheAccess which accesses the provided region.
-     * <p>
+     *
      * @param region Region that return CacheAccess will provide access to
      * @param icca CacheAttributes for region
      * @param eattr ElementAttributes for the region
@@ -127,7 +127,7 @@ public abstract class JCS
 
     /**
      * Gets a CacheAccess which accesses the provided region.
-     * <p>
+     *
      * @param region Region that return CacheAccess will provide access to
      * @return A CacheAccess which provides access to a given region.
      * @throws CacheException
@@ -141,7 +141,7 @@ public abstract class JCS
 
     /**
      * Gets a CacheAccess which accesses the provided region.
-     * <p>
+     *
      * @param region Region that return CacheAccess will provide access to
      * @param icca CacheAttributes for region
      * @return A CacheAccess which provides access to a given region.
@@ -156,7 +156,7 @@ public abstract class JCS
 
     /**
      * Gets a CacheAccess which accesses the provided region.
-     * <p>
+     *
      * @param region Region that return CacheAccess will provide access to
      * @param icca CacheAttributes for region
      * @param eattr ElementAttributes for the region

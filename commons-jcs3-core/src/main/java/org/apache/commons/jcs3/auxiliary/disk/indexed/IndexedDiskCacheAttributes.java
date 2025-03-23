@@ -60,7 +60,7 @@ public class IndexedDiskCacheAttributes
 
     /**
      * Gets the maxKeySize attribute of the DiskCacheAttributes object
-     * <p>
+     *
      * @return The maxKeySize value
      */
     public int getMaxKeySize()
@@ -70,7 +70,7 @@ public class IndexedDiskCacheAttributes
 
     /**
      * Gets the optimizeAtRemoveCount attribute of the DiskCacheAttributes object
-     * <p>
+     *
      * @return The optimizeAtRemoveCount value
      */
     public int getOptimizeAtRemoveCount()
@@ -104,7 +104,7 @@ public class IndexedDiskCacheAttributes
 
     /**
      * Sets the maxKeySize attribute of the DiskCacheAttributes object
-     * <p>
+     *
      * @param maxKeySize The new maxKeySize value
      */
     public void setMaxKeySize( final int maxKeySize )
@@ -115,7 +115,7 @@ public class IndexedDiskCacheAttributes
     /**
      * Sets the optimizeAtRemoveCount attribute of the DiskCacheAttributes object This number
      * determines how often the disk cache should run real time optimizations.
-     * <p>
+     *
      * @param cnt The new optimizeAtRemoveCount value
      */
     public void setOptimizeAtRemoveCount( final int cnt )
@@ -133,7 +133,7 @@ public class IndexedDiskCacheAttributes
 
     /**
      * Write out the values for debugging purposes.
-     * <p>
+     *
      * @return String
      */
     @Override

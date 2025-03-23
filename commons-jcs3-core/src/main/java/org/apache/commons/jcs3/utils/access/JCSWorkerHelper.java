@@ -33,7 +33,7 @@ public interface JCSWorkerHelper<V>
     /**
      * The method to implement to do the work that should be cached. JCSWorker
      * will call this itself! You should not call this directly.
-     * <p>
+     *
      * @return The result of doing the work to be cached.
      * @throws Exception
      *             If anything goes wrong while doing the work, an Exception
@@ -44,14 +44,14 @@ public interface JCSWorkerHelper<V>
     /**
      * Tells us whether or not the work has been completed. This will be called
      * automatically by JCSWorker. You should not call it yourself.
-     * <p>
+     *
      * @return True if the work has already been done, otherwise false.
      */
     boolean isFinished();
 
     /**
      * Sets whether or not the work has been done.
-     * <p>
+     *
      * @param isFinished
      *            True if the work has already been done, otherwise false.
      */

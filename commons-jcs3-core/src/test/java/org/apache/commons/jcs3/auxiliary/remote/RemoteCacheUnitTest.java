@@ -58,7 +58,7 @@ class RemoteCacheUnitTest
 
     /**
      * Verify that there is no problem if there is no listener.
-     * <p>
+     *
      * @throws Exception
      */
     @Test
@@ -81,7 +81,7 @@ class RemoteCacheUnitTest
 
     /**
      * Verify event log calls.
-     * <p>
+     *
      * @throws Exception
      */
     @Test
@@ -103,7 +103,7 @@ class RemoteCacheUnitTest
 
     /**
      * Verify event log calls.
-     * <p>
+     *
      * @throws Exception
      */
     @Test
@@ -125,7 +125,7 @@ class RemoteCacheUnitTest
 
     /**
      * Verify event log calls.
-     * <p>
+     *
      * @throws Exception
      */
     @Test
@@ -151,7 +151,7 @@ class RemoteCacheUnitTest
 
     /**
      * Verify event log calls.
-     * <p>
+     *
      * @throws Exception
      */
     @Test
@@ -173,7 +173,7 @@ class RemoteCacheUnitTest
 
     /**
      * Verify event log calls.
-     * <p>
+     *
      * @throws Exception
      */
     @Test
@@ -195,7 +195,7 @@ class RemoteCacheUnitTest
 
     /**
      * Verify event log calls.
-     * <p>
+     *
      * @throws Exception
      */
     @Test
@@ -218,7 +218,7 @@ class RemoteCacheUnitTest
     /**
      * Verify that the remote service update method is called. The remote cache serializes the object
      * first.
-     * <p>
+     *
      * @throws Exception
      */
     @Test
@@ -249,7 +249,7 @@ class RemoteCacheUnitTest
 
     /**
      * Verify event log calls.
-     * <p>
+     *
      * @throws Exception
      */
     @Test
@@ -273,7 +273,7 @@ class RemoteCacheUnitTest
 
     /**
      * Verify that when we call fix events queued in the zombie are propagated to the new service.
-     * <p>
+     *
      * @throws Exception
      */
     @Test

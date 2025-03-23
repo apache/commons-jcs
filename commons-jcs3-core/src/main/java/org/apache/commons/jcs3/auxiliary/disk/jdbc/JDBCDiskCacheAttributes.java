@@ -272,7 +272,7 @@ public class JDBCDiskCacheAttributes
     /**
      * If this is true then the disk cache will check to see if the item already exists in the
      * database. If it is false, it will try to insert. If the insert fails it will try to update.
-     * <p>
+     *
      * @param testBeforeInsert The testBeforeInsert to set.
      */
     public void setTestBeforeInsert( final boolean testBeforeInsert )
@@ -306,7 +306,7 @@ public class JDBCDiskCacheAttributes
 
     /**
      * For debugging.
-     * <p>
+     *
      * @return debug string with most of the properties.
      */
     @Override

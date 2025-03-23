@@ -60,7 +60,7 @@ public abstract class AbstractRemoteCacheService<K, V>
 
     /**
      * Creates the super with the needed items.
-     * <p>
+     *
      * @param cacheManager
      * @param cacheEventLogger
      */
@@ -72,7 +72,7 @@ public abstract class AbstractRemoteCacheService<K, V>
 
     /**
      * Logs an event if an event logger is configured.
-     * <p>
+     *
      * @param item
      * @param requesterId
      * @param eventName
@@ -91,7 +91,7 @@ public abstract class AbstractRemoteCacheService<K, V>
 
     /**
      * Logs an event if an event logger is configured.
-     * <p>
+     *
      * @param cacheName
      * @param key
      * @param requesterId
@@ -110,7 +110,7 @@ public abstract class AbstractRemoteCacheService<K, V>
 
     /**
      * Frees the specified remote cache.
-     * <p>
+     *
      * @param cacheName
      * @throws IOException
      */
@@ -123,7 +123,7 @@ public abstract class AbstractRemoteCacheService<K, V>
 
     /**
      * Frees the specified remote cache.
-     * <p>
+     *
      * @param cacheName
      * @param requesterId
      * @throws IOException
@@ -145,7 +145,7 @@ public abstract class AbstractRemoteCacheService<K, V>
     /**
      * Returns a cache value from the specified remote cache; or null if the cache or key does not
      * exist.
-     * <p>
+     *
      * @param cacheName
      * @param key
      * @return ICacheElement
@@ -164,7 +164,7 @@ public abstract class AbstractRemoteCacheService<K, V>
      * Adding the requestor id, allows the cache to determine the source of the get.
      * <p>
      * The internal processing is wrapped in event logging calls.
-     * <p>
+     *
      * @param cacheName
      * @param key
      * @param requesterId
@@ -208,7 +208,7 @@ public abstract class AbstractRemoteCacheService<K, V>
      * Ip address for the client, if one is stored.
      * <p>
      * Protected for testing.
-     * <p>
+     *
      * @param requesterId
      * @return String
      */
@@ -216,7 +216,7 @@ public abstract class AbstractRemoteCacheService<K, V>
 
     /**
      * Return the keys in this cache.
-     * <p>
+     *
      * @see org.apache.commons.jcs3.auxiliary.AuxiliaryCache#getKeySet()
      */
     @Override
@@ -227,7 +227,7 @@ public abstract class AbstractRemoteCacheService<K, V>
 
     /**
      * Gets all matching items.
-     * <p>
+     *
      * @param cacheName
      * @param pattern
      * @return Map of keys and wrapped objects
@@ -242,7 +242,7 @@ public abstract class AbstractRemoteCacheService<K, V>
 
     /**
      * Retrieves all matching keys.
-     * <p>
+     *
      * @param cacheName
      * @param pattern
      * @param requesterId
@@ -267,7 +267,7 @@ public abstract class AbstractRemoteCacheService<K, V>
 
     /**
      * Gets multiple items from the cache based on the given set of keys.
-     * <p>
+     *
      * @param cacheName
      * @param keys
      * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
@@ -285,7 +285,7 @@ public abstract class AbstractRemoteCacheService<K, V>
      * Gets multiple items from the cache based on the given set of keys.
      * <p>
      * The internal processing is wrapped in event logging calls.
-     * <p>
+     *
      * @param cacheName
      * @param keys
      * @param requesterId
@@ -311,7 +311,7 @@ public abstract class AbstractRemoteCacheService<K, V>
 
     /**
      * Gets the stats attribute of the RemoteCacheServer object.
-     * <p>
+     *
      * @return The stats value
      * @throws IOException
      */
@@ -323,7 +323,7 @@ public abstract class AbstractRemoteCacheService<K, V>
 
     /**
      * Logs an event if an event logger is configured.
-     * <p>
+     *
      * @param source
      * @param eventName
      * @param optionalDetails
@@ -338,7 +338,7 @@ public abstract class AbstractRemoteCacheService<K, V>
 
     /**
      * Logs an event if an event logger is configured.
-     * <p>
+     *
      * @param cacheEvent
      */
     protected <T> void logICacheEvent( final ICacheEvent<T> cacheEvent )
@@ -351,7 +351,7 @@ public abstract class AbstractRemoteCacheService<K, V>
 
     /**
      * Log some details.
-     * <p>
+     *
      * @param item
      */
     private void logUpdateInfo( final ICacheElement<K, V> item )
@@ -382,7 +382,7 @@ public abstract class AbstractRemoteCacheService<K, V>
      * Returns a cache bean from the specified cache; or null if the key does not exist.
      * <p>
      * Adding the requestor id, allows the cache to determine the source of the get.
-     * <p>
+     *
      * @param cacheName
      * @param key
      * @param requesterId
@@ -394,7 +394,7 @@ public abstract class AbstractRemoteCacheService<K, V>
 
     /**
      * Gets the set of keys of objects currently in the cache.
-     * <p>
+     *
      * @param cacheName
      * @return Set
      */
@@ -407,7 +407,7 @@ public abstract class AbstractRemoteCacheService<K, V>
 
     /**
      * Retrieves all matching keys.
-     * <p>
+     *
      * @param cacheName
      * @param pattern
      * @param requesterId
@@ -419,7 +419,7 @@ public abstract class AbstractRemoteCacheService<K, V>
 
     /**
      * Gets multiple items from the cache based on the given set of keys.
-     * <p>
+     *
      * @param cacheName
      * @param keys
      * @param requesterId
@@ -432,7 +432,7 @@ public abstract class AbstractRemoteCacheService<K, V>
 
     /**
      * Remove the key from the cache region and don't tell the source listener about it.
-     * <p>
+     *
      * @param cacheName
      * @param key
      * @param requesterId
@@ -443,7 +443,7 @@ public abstract class AbstractRemoteCacheService<K, V>
 
     /**
      * Remove all keys from the specified remote cache.
-     * <p>
+     *
      * @param cacheName
      * @param requesterId
      * @throws IOException
@@ -453,7 +453,7 @@ public abstract class AbstractRemoteCacheService<K, V>
 
     /**
      * The internal processing is wrapped in event logging calls.
-     * <p>
+     *
      * @param item
      * @param requesterId
      * @throws IOException
@@ -463,7 +463,7 @@ public abstract class AbstractRemoteCacheService<K, V>
 
     /**
      * Removes the given key from the specified remote cache. Defaults the listener id to 0.
-     * <p>
+     *
      * @param cacheName
      * @param key
      * @throws IOException
@@ -479,7 +479,7 @@ public abstract class AbstractRemoteCacheService<K, V>
      * Remove the key from the cache region and don't tell the source listener about it.
      * <p>
      * The internal processing is wrapped in event logging calls.
-     * <p>
+     *
      * @param cacheName
      * @param key
      * @param requesterId
@@ -502,7 +502,7 @@ public abstract class AbstractRemoteCacheService<K, V>
 
     /**
      * Remove all keys from the specified remote cache.
-     * <p>
+     *
      * @param cacheName
      * @throws IOException
      */
@@ -517,7 +517,7 @@ public abstract class AbstractRemoteCacheService<K, V>
      * Remove all keys from the specified remote cache.
      * <p>
      * The internal processing is wrapped in event logging calls.
-     * <p>
+     *
      * @param cacheName
      * @param requesterId
      * @throws IOException
@@ -539,7 +539,7 @@ public abstract class AbstractRemoteCacheService<K, V>
 
     /**
      * Allows it to be injected.
-     * <p>
+     *
      * @param cacheEventLogger
      */
     public void setCacheEventLogger( final ICacheEventLogger cacheEventLogger )
@@ -576,7 +576,7 @@ public abstract class AbstractRemoteCacheService<K, V>
 
     /**
      * The internal processing is wrapped in event logging calls.
-     * <p>
+     *
      * @param item
      * @param requesterId
      * @throws IOException

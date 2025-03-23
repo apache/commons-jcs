@@ -35,7 +35,7 @@ class JCSRemovalSimpleConcurrentTest
 
     /**
      * Test setup
-     * <p>
+     *
      * @throws Exception
      */
     @BeforeEach
@@ -48,7 +48,7 @@ class JCSRemovalSimpleConcurrentTest
 
     /**
      * Verify that clear removes everyting as it should.
-     * <p>
+     *
      * @throws Exception
      */
     @Test
@@ -148,7 +148,7 @@ class JCSRemovalSimpleConcurrentTest
 
     /**
      * Verify that 2 level deep hierchical removal works.
-     * <p>
+     *
      * @throws Exception
      */
     @Test

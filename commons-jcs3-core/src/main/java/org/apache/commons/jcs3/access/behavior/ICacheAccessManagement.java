@@ -31,7 +31,7 @@ public interface ICacheAccessManagement
 {
     /**
      * Removes all of the elements from a region.
-     * <p>
+     *
      * @throws CacheException
      */
     void clear() throws CacheException;
@@ -48,7 +48,7 @@ public interface ICacheAccessManagement
      * This instructs the memory cache to remove the <em>numberToFree</em> according to its eviction
      * policy. For example, the LRUMemoryCache will remove the <em>numberToFree</em> least recently
      * used items. These will be spooled to disk if a disk auxiliary is available.
-     * <p>
+     *
      * @param numberToFree
      * @return the number that were removed. if you ask to free 5, but there are only 3, you will
      *         get 3.
@@ -59,7 +59,7 @@ public interface ICacheAccessManagement
 
     /**
      * Gets the ICompositeCacheAttributes of the cache region
-     * <p>
+     *
      * @return ICompositeCacheAttributes
      */
     ICompositeCacheAttributes getCacheAttributes();
@@ -69,7 +69,7 @@ public interface ICacheAccessManagement
      * associated with the object name. If no name parameter is available, the attributes for the
      * region will be returned. The name object must override the Object.equals and Object.hashCode
      * methods.
-     * <p>
+     *
      * @return The elementAttributes value
      * @throws CacheException
      */
@@ -80,7 +80,7 @@ public interface ICacheAccessManagement
      * This returns the ICacheStats object with information on this region and its auxiliaries.
      * <p>
      * This data can be formatted as needed.
-     * <p>
+     *
      * @return ICacheStats
      */
     ICacheStats getStatistics();
@@ -92,7 +92,7 @@ public interface ICacheAccessManagement
 
     /**
      * Sets the ICompositeCacheAttributes of the cache region
-     * <p>
+     *
      * @param cattr The new ICompositeCacheAttribute value
      */
     void setCacheAttributes( ICompositeCacheAttributes cattr );
@@ -103,7 +103,7 @@ public interface ICacheAccessManagement
      * remote items. Rather than have unpredictable behavior, this method just sets the default
      * attributes. Items subsequently put into the cache will use these defaults if they do not
      * specify specific attributes.
-     * <p>
+     *
      * @param attr the default attributes.
      * @throws CacheException if something goes wrong.
      */

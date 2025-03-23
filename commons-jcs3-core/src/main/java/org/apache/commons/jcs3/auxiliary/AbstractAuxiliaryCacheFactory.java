@@ -30,7 +30,7 @@ public abstract class AbstractAuxiliaryCacheFactory
 
     /**
      * Gets the name attribute of the DiskCacheFactory object
-     * <p>
+     *
      * @return The name value
      */
     @Override
@@ -41,7 +41,7 @@ public abstract class AbstractAuxiliaryCacheFactory
 
     /**
      * Sets the name attribute of the DiskCacheFactory object
-     * <p>
+     *
      * @param name The new name value
      */
     @Override

@@ -67,7 +67,7 @@ public class CommonRemoteCacheAttributes
 
     /**
      * Gets the clusterServers attribute of the RemoteCacheAttributes object.
-     * <p>
+     *
      * @return The clusterServers value
      */
     @Override
@@ -78,7 +78,7 @@ public class CommonRemoteCacheAttributes
 
     /**
      * Gets the getOnly attribute of the RemoteCacheAttributes object.
-     * <p>
+     *
      * @return The getOnly value
      */
     @Override
@@ -89,7 +89,7 @@ public class CommonRemoteCacheAttributes
 
     /**
      * Gets the location attribute of the RemoteCacheAttributes object.
-     * <p>
+     *
      * @return The remote location value
      */
     @Override
@@ -100,7 +100,7 @@ public class CommonRemoteCacheAttributes
 
     /**
      * Gets the remoteServiceName attribute of the RemoteCacheAttributes object.
-     * <p>
+     *
      * @return The remoteServiceName value
      */
     @Override
@@ -111,7 +111,7 @@ public class CommonRemoteCacheAttributes
 
     /**
      * Gets the remoteType attribute of the RemoteCacheAttributes object.
-     * <p>
+     *
      * @return The remoteType value
      */
     @Override
@@ -122,7 +122,7 @@ public class CommonRemoteCacheAttributes
 
     /**
      * Gets the remoteTypeName attribute of the RemoteCacheAttributes object.
-     * <p>
+     *
      * @return The remoteTypeName value
      */
     @Override
@@ -133,7 +133,7 @@ public class CommonRemoteCacheAttributes
 
     /**
      * Gets the removeUponRemotePut attribute of the RemoteCacheAttributes object.
-     * <p>
+     *
      * @return The removeUponRemotePut value
      */
     @Override
@@ -153,7 +153,7 @@ public class CommonRemoteCacheAttributes
 
     /**
      * Should cluster updates be propagated to the locals.
-     * <p>
+     *
      * @return The localClusterConsistency value
      */
     @Override
@@ -164,7 +164,7 @@ public class CommonRemoteCacheAttributes
 
     /**
      * Sets the clusterServers attribute of the RemoteCacheAttributes object.
-     * <p>
+     *
      * @param s The new clusterServers value
      */
     @Override
@@ -185,7 +185,7 @@ public class CommonRemoteCacheAttributes
 
     /**
      * Should cluster updates be propagated to the locals.
-     * <p>
+     *
      * @param r The new localClusterConsistency value
      */
     @Override
@@ -196,7 +196,7 @@ public class CommonRemoteCacheAttributes
 
     /**
      * Sets the location attribute of the RemoteCacheAttributes object.
-     * <p>
+     *
      * @param location The new location value
      */
     @Override
@@ -207,7 +207,7 @@ public class CommonRemoteCacheAttributes
 
     /**
      * Sets the location attribute of the RemoteCacheAttributes object.
-     * <p>
+     *
      * @param host The new remoteHost value
      * @param port The new remotePort value
      */
@@ -219,7 +219,7 @@ public class CommonRemoteCacheAttributes
 
     /**
      * Sets the remoteServiceName attribute of the RemoteCacheAttributes object.
-     * <p>
+     *
      * @param s The new remoteServiceName value
      */
     @Override
@@ -230,7 +230,7 @@ public class CommonRemoteCacheAttributes
 
     /**
      * Sets the remoteType attribute of the RemoteCacheAttributes object.
-     * <p>
+     *
      * @param p The new remoteType value
      */
     @Override
@@ -241,7 +241,7 @@ public class CommonRemoteCacheAttributes
 
     /**
      * Sets the remoteTypeName attribute of the RemoteCacheAttributes object.
-     * <p>
+     *
      * @param s The new remoteTypeName value
      */
     @Override
@@ -252,7 +252,7 @@ public class CommonRemoteCacheAttributes
 
     /**
      * Sets the removeUponRemotePut attribute of the RemoteCacheAttributes object.
-     * <p>
+     *
      * @param r The new removeUponRemotePut value
      */
     @Override

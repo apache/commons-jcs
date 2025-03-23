@@ -50,14 +50,14 @@ public interface IDiskCacheAttributes
 
     /**
      * Gets the diskPath attribute of the attributes object
-     * <p>
+     *
      * @return The diskPath value
      */
     File getDiskPath();
 
     /**
      * Gets the maxKeySize attribute of the DiskCacheAttributes object
-     * <p>
+     *
      * @return The maxPurgatorySize value
      */
     int getMaxPurgatorySize();
@@ -65,14 +65,14 @@ public interface IDiskCacheAttributes
     /**
      * Gets the amount of time in seconds we will wait for elements to move to
      * disk during shutdown for a particular region.
-     * <p>
+     *
      * @return the time in seconds.
      */
     int getShutdownSpoolTimeLimit();
 
     /**
      * If this is true then remove all is not prohibited.
-     * <p>
+     *
      * @return boolean
      */
     boolean isAllowRemoveAll();
@@ -81,7 +81,7 @@ public interface IDiskCacheAttributes
      * If this is false, then remove all requests will not be honored.
      * <p>
      * This provides a safety mechanism for the persistent store.
-     * <p>
+     *
      * @param allowRemoveAll
      */
     void setAllowRemoveAll( boolean allowRemoveAll );
@@ -102,7 +102,7 @@ public interface IDiskCacheAttributes
 
     /**
      * Sets the diskPath attribute of the IJISPCacheAttributes object
-     * <p>
+     *
      * @param path
      *            The new diskPath value
      */
@@ -110,7 +110,7 @@ public interface IDiskCacheAttributes
 
     /**
      * Sets the maxPurgatorySize attribute of the DiskCacheAttributes object
-     * <p>
+     *
      * @param maxPurgatorySize
      *            The new maxPurgatorySize value
      */
@@ -123,7 +123,7 @@ public interface IDiskCacheAttributes
      * This is how long we give the event queue to empty.
      * <p>
      * The default is 60 seconds.
-     * <p>
+     *
      * @param shutdownSpoolTimeLimit
      *            the time in seconds
      */

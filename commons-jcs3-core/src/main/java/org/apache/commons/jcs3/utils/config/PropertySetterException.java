@@ -37,7 +37,7 @@ public class PropertySetterException
 
     /**
      * Constructor for the PropertySetterException object
-     * <p>
+     *
      * @param msg
      */
     public PropertySetterException( final String msg )
@@ -48,7 +48,7 @@ public class PropertySetterException
 
     /**
      * Constructor for the PropertySetterException object
-     * <p>
+     *
      * @param rootCause
      */
     public PropertySetterException( final Throwable rootCause )
@@ -58,7 +58,7 @@ public class PropertySetterException
 
     /**
      * Returns descriptive text on the cause of this exception.
-     * <p>
+     *
      * @return The message value
      */
     @Override

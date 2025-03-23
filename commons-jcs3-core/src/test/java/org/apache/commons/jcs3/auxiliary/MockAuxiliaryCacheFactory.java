@@ -32,7 +32,7 @@ public class MockAuxiliaryCacheFactory
 
     /**
      * Creates a mock aux.
-     * <p>
+     *
      * @param attr
      * @param cacheMgr
      * @param cacheEventLogger

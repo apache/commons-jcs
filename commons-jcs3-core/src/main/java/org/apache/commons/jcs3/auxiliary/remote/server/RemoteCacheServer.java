@@ -85,7 +85,7 @@ public class RemoteCacheServer<K, V>
 
     /**
      * Removes dead event queues. Should clean out deregistered listeners.
-     * <p>
+     *
      * @param eventQMap
      */
     private static <KK, VV> void cleanupEventQMap( final Map<Long, ICacheEventQueue<KK, VV>> eventQMap )
@@ -99,7 +99,7 @@ public class RemoteCacheServer<K, V>
 
     /**
      * Subclass can override this method to create the specific cache manager.
-     * <p>
+     *
      * @param prop the configuration object.
      * @return The cache hub configured with this configuration.
      * @throws CacheException if the configuration cannot be loaded
@@ -144,7 +144,7 @@ public class RemoteCacheServer<K, V>
     /**
      * Constructor for the RemoteCacheServer object. This initializes the server with the values
      * from the properties object.
-     * <p>
+     *
      * @param rcsa
      * @param config cache hub configuration
      * @throws RemoteException
@@ -160,7 +160,7 @@ public class RemoteCacheServer<K, V>
     /**
      * Constructor for the RemoteCacheServer object. This initializes the server with the values
      * from the properties object.
-     * <p>
+     *
      * @param rcsa
      * @param config cache hub configuration
      * @param customRMISocketFactory
@@ -176,7 +176,7 @@ public class RemoteCacheServer<K, V>
 
     /**
      * Subscribes to all remote caches.
-     * <p>
+     *
      * @param listener The feature to be added to the CacheListener attribute
      * @throws IOException
      */
@@ -197,7 +197,7 @@ public class RemoteCacheServer<K, V>
      * <p>
      * If the client id is 0, then the remote cache server will increment it's local count and
      * assign an id to the client.
-     * <p>
+     *
      * @param cacheName the specified remote cache.
      * @param listener object to notify for cache changes. must be synchronized since there are
      *            remote calls involved.
@@ -296,7 +296,7 @@ public class RemoteCacheServer<K, V>
 
     /**
      * Logs an event if an event logger is configured.
-     * <p>
+     *
      * @param item
      * @param requesterId
      * @param eventName
@@ -315,7 +315,7 @@ public class RemoteCacheServer<K, V>
 
     /**
      * Logs an event if an event logger is configured.
-     * <p>
+     *
      * @param cacheName
      * @param key
      * @param requesterId
@@ -334,7 +334,7 @@ public class RemoteCacheServer<K, V>
 
     /**
      * Frees the specified remote cache.
-     * <p>
+     *
      * @param cacheName
      * @throws IOException
      */
@@ -347,7 +347,7 @@ public class RemoteCacheServer<K, V>
 
     /**
      * Frees the specified remote cache.
-     * <p>
+     *
      * @param cacheName
      * @param requesterId
      * @throws IOException
@@ -369,7 +369,7 @@ public class RemoteCacheServer<K, V>
     /**
      * Returns a cache value from the specified remote cache; or null if the cache or key does not
      * exist.
-     * <p>
+     *
      * @param cacheName
      * @param key
      * @return ICacheElement
@@ -388,7 +388,7 @@ public class RemoteCacheServer<K, V>
      * Adding the requestor id, allows the cache to determine the source of the get.
      * <p>
      * The internal processing is wrapped in event logging calls.
-     * <p>
+     *
      * @param cacheName
      * @param key
      * @param requesterId
@@ -415,7 +415,7 @@ public class RemoteCacheServer<K, V>
     /**
      * Returns the cache listener for the specified cache. Creates the cache and the cache
      * descriptor if they do not already exist.
-     * <p>
+     *
      * @param cacheName
      * @return The cacheListeners value
      */
@@ -449,7 +449,7 @@ public class RemoteCacheServer<K, V>
      * <p>
      * Basically, this makes sure that a request from a particular local cache, identified by its
      * listener id, does not result in a call to that same listener.
-     * <p>
+     *
      * @param cacheListeners
      * @param requesterId
      * @return The eventQList value
@@ -468,7 +468,7 @@ public class RemoteCacheServer<K, V>
      * Ip address for the client, if one is stored.
      * <p>
      * Protected for testing.
-     * <p>
+     *
      * @param requesterId
      * @return String
      */
@@ -479,7 +479,7 @@ public class RemoteCacheServer<K, V>
 
     /**
      * Gets the item from the associated cache listeners.
-     * <p>
+     *
      * @param key
      * @param fromCluster
      * @param cacheDesc
@@ -531,7 +531,7 @@ public class RemoteCacheServer<K, V>
 
     /**
      * Return the keys in the cache.
-     * <p>
+     *
      * @param cacheName the name of the cache region
      * @see org.apache.commons.jcs3.auxiliary.AuxiliaryCache#getKeySet()
      */
@@ -543,7 +543,7 @@ public class RemoteCacheServer<K, V>
 
     /**
      * Gets all matching items.
-     * <p>
+     *
      * @param cacheName
      * @param pattern
      * @return Map of keys and wrapped objects
@@ -558,7 +558,7 @@ public class RemoteCacheServer<K, V>
 
     /**
      * Retrieves all matching keys.
-     * <p>
+     *
      * @param cacheName
      * @param pattern
      * @param requesterId
@@ -583,7 +583,7 @@ public class RemoteCacheServer<K, V>
 
     /**
      * Gets the item from the associated cache listeners.
-     * <p>
+     *
      * @param pattern
      * @param fromCluster
      * @param cacheDesc
@@ -622,7 +622,7 @@ public class RemoteCacheServer<K, V>
 
     /**
      * Gets multiple items from the cache based on the given set of keys.
-     * <p>
+     *
      * @param cacheName
      * @param keys
      * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
@@ -640,7 +640,7 @@ public class RemoteCacheServer<K, V>
      * Gets multiple items from the cache based on the given set of keys.
      * <p>
      * The internal processing is wrapped in event logging calls.
-     * <p>
+     *
      * @param cacheName
      * @param keys
      * @param requesterId
@@ -666,7 +666,7 @@ public class RemoteCacheServer<K, V>
 
     /**
      * Gets the items from the associated cache listeners.
-     * <p>
+     *
      * @param keys
      * @param elements
      * @param fromCluster
@@ -720,7 +720,7 @@ public class RemoteCacheServer<K, V>
 
     /**
      * How many put events have we received.
-     * <p>
+     *
      * @return puts
      */
     // Currently only intended for use by unit tests
@@ -731,7 +731,7 @@ public class RemoteCacheServer<K, V>
 
     /**
      * Gets the stats attribute of the RemoteCacheServer object.
-     * <p>
+     *
      * @return The stats value
      * @throws IOException
      */
@@ -744,7 +744,7 @@ public class RemoteCacheServer<K, V>
 
     /**
      * Initialize the RMI Cache Server from a properties object.
-     * <p>
+     *
      * @param prop the configuration properties
      * @throws RemoteException if the configuration of the cache manager instance fails
      */
@@ -771,7 +771,7 @@ public class RemoteCacheServer<K, V>
      * Since a non-receiving remote cache client will not register a listener, it will not have a
      * listener id assigned from the server. As such the remote server cannot determine if it is a
      * cluster or a normal client. It will assume that it is a normal client.
-     * <p>
+     *
      * @param requesterId
      * @return true is from a cluster.
      */
@@ -783,7 +783,7 @@ public class RemoteCacheServer<K, V>
 
     /**
      * Logs an event if an event logger is configured.
-     * <p>
+     *
      * @param source
      * @param eventName
      * @param optionalDetails
@@ -798,7 +798,7 @@ public class RemoteCacheServer<K, V>
 
     /**
      * Logs an event if an event logger is configured.
-     * <p>
+     *
      * @param cacheEvent
      */
     protected <T> void logICacheEvent( final ICacheEvent<T> cacheEvent )
@@ -811,7 +811,7 @@ public class RemoteCacheServer<K, V>
 
     /**
      * Log some details.
-     * <p>
+     *
      * @param item
      */
     private void logUpdateInfo( final ICacheElement<K, V> item )
@@ -830,7 +830,7 @@ public class RemoteCacheServer<K, V>
 
     /**
      * Returns the next generated listener id [0,255].
-     * <p>
+     *
      * @return the listener id of a client. This should be unique for this server.
      */
     private long nextListenerId()
@@ -892,7 +892,7 @@ public class RemoteCacheServer<K, V>
      * Returns a cache bean from the specified cache; or null if the key does not exist.
      * <p>
      * Adding the requester id, allows the cache to determine the source of the get.
-     * <p>
+     *
      * @param cacheName
      * @param key
      * @param requesterId
@@ -912,7 +912,7 @@ public class RemoteCacheServer<K, V>
 
     /**
      * Gets the set of keys of objects currently in the cache.
-     * <p>
+     *
      * @param cacheName
      * @return Set
      */
@@ -931,7 +931,7 @@ public class RemoteCacheServer<K, V>
 
     /**
      * Retrieves all matching keys.
-     * <p>
+     *
      * @param cacheName
      * @param pattern
      * @param requesterId
@@ -965,7 +965,7 @@ public class RemoteCacheServer<K, V>
 
     /**
      * Gets multiple items from the cache based on the given set of keys.
-     * <p>
+     *
      * @param cacheName
      * @param keys
      * @param requesterId
@@ -985,7 +985,7 @@ public class RemoteCacheServer<K, V>
 
     /**
      * Remove the key from the cache region and don't tell the source listener about it.
-     * <p>
+     *
      * @param cacheName
      * @param key
      * @param requesterId
@@ -1042,7 +1042,7 @@ public class RemoteCacheServer<K, V>
 
     /**
      * Remove all keys from the specified remote cache.
-     * <p>
+     *
      * @param cacheName
      * @param requesterId
      * @throws IOException
@@ -1107,7 +1107,7 @@ public class RemoteCacheServer<K, V>
      * Since currently a cluster will not try to get from other cluster servers, you can scale a bit
      * with a cluster configuration. Puts and removes will be broadcasted to all clients, but the
      * get load on a remote server can be reduced.
-     * <p>
+     *
      * @param item
      * @param requesterId
      */
@@ -1198,7 +1198,7 @@ public class RemoteCacheServer<K, V>
      * <li>have a different listener id than the originating host;</li>
      * <li>are currently subscribed to the related cache.</li>
      * </ol>
-     * <p>
+     *
      * @param item
      * @throws IOException
      */
@@ -1210,7 +1210,7 @@ public class RemoteCacheServer<K, V>
 
     /**
      * Frees all remote caches.
-     * <p>
+     *
      * @throws IOException
      */
     @Override
@@ -1231,7 +1231,7 @@ public class RemoteCacheServer<K, V>
 
     /**
      * Removes the given key from the specified remote cache. Defaults the listener id to 0.
-     * <p>
+     *
      * @param cacheName
      * @param key
      * @throws IOException
@@ -1247,7 +1247,7 @@ public class RemoteCacheServer<K, V>
      * Remove the key from the cache region and don't tell the source listener about it.
      * <p>
      * The internal processing is wrapped in event logging calls.
-     * <p>
+     *
      * @param cacheName
      * @param key
      * @param requesterId
@@ -1270,7 +1270,7 @@ public class RemoteCacheServer<K, V>
 
     /**
      * Remove all keys from the specified remote cache.
-     * <p>
+     *
      * @param cacheName
      * @throws IOException
      */
@@ -1285,7 +1285,7 @@ public class RemoteCacheServer<K, V>
      * Remove all keys from the specified remote cache.
      * <p>
      * The internal processing is wrapped in event logging calls.
-     * <p>
+     *
      * @param cacheName
      * @param requesterId
      * @throws IOException
@@ -1307,7 +1307,7 @@ public class RemoteCacheServer<K, V>
 
     /**
      * Unsubscribes from all remote caches.
-     * <p>
+     *
      * @param listener
      * @throws IOException
      */
@@ -1326,7 +1326,7 @@ public class RemoteCacheServer<K, V>
     /**
      * Unsubscribe this listener from this region. If the listener is registered, it will be removed
      * from the event queue map list.
-     * <p>
+     *
      * @param cacheName
      * @param listener
      * @throws IOException
@@ -1341,7 +1341,7 @@ public class RemoteCacheServer<K, V>
     /**
      * Unsubscribe this listener from this region. If the listener is registered, it will be removed
      * from the event queue map list.
-     * <p>
+     *
      * @param cacheName
      * @param listenerId
      */
@@ -1390,7 +1390,7 @@ public class RemoteCacheServer<K, V>
 
     /**
      * Allows it to be injected.
-     * <p>
+     *
      * @param cacheEventLogger
      */
     public void setCacheEventLogger( final ICacheEventLogger cacheEventLogger )
@@ -1400,7 +1400,7 @@ public class RemoteCacheServer<K, V>
 
     /**
      * Shuts down the remote server.
-     * <p>
+     *
      * @throws IOException
      */
     @Override
@@ -1413,7 +1413,7 @@ public class RemoteCacheServer<K, V>
     /**
      * Shuts down a server at a particular host and port. Then it calls shutdown on the cache
      * itself.
-     * <p>
+     *
      * @param host
      * @param port
      * @throws IOException
@@ -1467,7 +1467,7 @@ public class RemoteCacheServer<K, V>
 
     /**
      * The internal processing is wrapped in event logging calls.
-     * <p>
+     *
      * @param item
      * @param requesterId
      * @throws IOException

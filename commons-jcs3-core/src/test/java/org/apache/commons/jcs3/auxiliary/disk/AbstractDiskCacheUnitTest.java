@@ -59,7 +59,7 @@ class AbstractDiskCacheUnitTest
 
         /**
          * Creates the disk cache.
-         * <p>
+         *
          * @param attr
          */
         public AbstractDiskCacheTestInstance( final IDiskCacheAttributes attr )
@@ -80,7 +80,7 @@ class AbstractDiskCacheUnitTest
 
         /**
          * The location on disk
-         * <p>
+         *
          * @return "memory"
          */
         @Override
@@ -91,7 +91,7 @@ class AbstractDiskCacheUnitTest
 
         /**
          * Return the keys in this cache.
-         * <p>
+         *
          * @see org.apache.commons.jcs3.auxiliary.disk.AbstractDiskCache#getKeySet()
          */
         @Override
@@ -182,7 +182,7 @@ class AbstractDiskCacheUnitTest
 
     /**
      * Verify that alive is set to false..
-     * <p>
+     *
      * @throws IOException
      */
     @Test
@@ -213,7 +213,7 @@ class AbstractDiskCacheUnitTest
 
     /**
      * Verify that removeAll is allowed.
-     * <p>
+     *
      * @throws IOException
      */
     @Test
@@ -243,7 +243,7 @@ class AbstractDiskCacheUnitTest
 
     /**
      * Verify that removeAll is prohibited.
-     * <p>
+     *
      * @throws IOException
      */
     @Test
@@ -279,7 +279,7 @@ class AbstractDiskCacheUnitTest
 
     /**
      * Verify that update and get work.
-     * <p>
+     *
      * @throws IOException
      */
     @Test

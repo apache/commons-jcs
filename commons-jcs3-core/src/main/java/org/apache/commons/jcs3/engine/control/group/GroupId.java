@@ -40,7 +40,7 @@ public class GroupId
 
     /**
      * Constructor for the GroupId object
-     * <p>
+     *
      * @param cacheName
      * @param groupName
      */

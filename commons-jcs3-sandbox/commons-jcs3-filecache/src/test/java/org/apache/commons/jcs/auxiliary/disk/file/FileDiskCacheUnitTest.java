@@ -34,7 +34,7 @@ public class FileDiskCacheUnitTest
 {
     /**
      * Verify initialization.
-     * <p>
+     *
      * @throws Exception
      */
     public void testInitialization_Normal()
@@ -62,7 +62,7 @@ public class FileDiskCacheUnitTest
 
     /**
      * Verify dispose.
-     * <p>
+     *
      * @throws Exception
      */
     public void testDispose_Normal()
@@ -84,7 +84,7 @@ public class FileDiskCacheUnitTest
 
     /**
      * Verify initialization.
-     * <p>
+     *
      * @throws Exception
      *
      * tv: Don't know why this is supposed to fail. Under MacOSX this directory name works fine.
@@ -110,7 +110,7 @@ public class FileDiskCacheUnitTest
 
     /**
      * Verify getSize.
-     * <p>
+     *
      * @throws Exception
      */
     public void testGetSize_Empty()
@@ -134,7 +134,7 @@ public class FileDiskCacheUnitTest
 
     /**
      * Verify getSize.
-     * <p>
+     *
      * @throws Exception
      */
     public void testGetSize_OneItem()
@@ -160,7 +160,7 @@ public class FileDiskCacheUnitTest
 
     /**
      * Verify remove all.
-     * <p>
+     *
      * @throws Exception
      */
     public void testRemoveAll_OneItem()
@@ -187,7 +187,7 @@ public class FileDiskCacheUnitTest
 
     /**
      * Verify get.
-     * <p>
+     *
      * @throws Exception
      */
     public void testGet_Empty()
@@ -209,7 +209,7 @@ public class FileDiskCacheUnitTest
 
     /**
      * Verify get.
-     * <p>
+     *
      * @throws Exception
      */
     public void testGet_Exists()
@@ -234,7 +234,7 @@ public class FileDiskCacheUnitTest
 
     /**
      * Verify RemoveIfLimitIsSetAndReached.
-     * <p>
+     *
      * @throws Exception
      */
     public void testRemoveIfLimitIsSetAndReached_NotReached()
@@ -273,7 +273,7 @@ public class FileDiskCacheUnitTest
 
     /**
      * Verify RemoveIfLimitIsSetAndReached.
-     * <p>
+     *
      * @throws Exception
      */
     public void testRemoveIfLimitIsSetAndReached_Reached()
@@ -313,7 +313,7 @@ public class FileDiskCacheUnitTest
     /**
      * Verify RemoveIfLimitIsSetAndReached. Since touch on get is true, the LRU and not the oldest
      * shoudl be removed.
-     * <p>
+     *
      * @throws Exception
      */
     public void testRemoveIfLimitIsSetAndReached_Reached_TouchTrue()
@@ -361,7 +361,7 @@ public class FileDiskCacheUnitTest
     /**
      * Verify RemoveIfLimitIsSetAndReached. Since touch on get is false, the oldest
      * should be removed.
-     * <p>
+     *
      * @throws Exception
      */
     public void testRemoveIfLimitIsSetAndReached_Reached_TouchFalse()
@@ -407,7 +407,7 @@ public class FileDiskCacheUnitTest
 
     /**
      * Verify file.
-     * <p>
+     *
      * @throws Exception
      */
     public void testFile_NoSPecialCharacters()
@@ -431,7 +431,7 @@ public class FileDiskCacheUnitTest
 
     /**
      * Verify file.
-     * <p>
+     *
      * @throws Exception
      */
     public void testFile_Space()
@@ -455,7 +455,7 @@ public class FileDiskCacheUnitTest
 
     /**
      * Verify file.
-     * <p>
+     *
      * @throws Exception
      */
     public void testFile_SpecialCharacter()
@@ -479,7 +479,7 @@ public class FileDiskCacheUnitTest
 
     /**
      * Verify idempotence.
-     * <p>
+     *
      * @throws Exception
      */
     public void testFile_WithFile()
@@ -504,7 +504,7 @@ public class FileDiskCacheUnitTest
 
     /**
      * Verify remove.
-     * <p>
+     *
      * @throws Exception
      */
     public void testRemove_OneItem()
@@ -531,7 +531,7 @@ public class FileDiskCacheUnitTest
 
     /**
      * Verify that the disk file cache can handle a big string.
-     * <p>
+     *
      * @throws Exception
      */
     public void testPutGet_BigString()

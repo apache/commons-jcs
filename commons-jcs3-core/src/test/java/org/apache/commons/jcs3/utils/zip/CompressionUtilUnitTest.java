@@ -32,7 +32,7 @@ public class CompressionUtilUnitTest
 {
     /**
      * Test method for decompressByteArray.
-     * <p>
+     *
      * @throws IOException
      */
     public final void testCompressDecompressByteArray_success()
@@ -53,7 +53,7 @@ public class CompressionUtilUnitTest
 
     /**
      * Test method for decompressByteArray.
-     * <p>
+     *
      * @throws IOException
      */
     public final void testCompressDecompressGzipByteArray_success()

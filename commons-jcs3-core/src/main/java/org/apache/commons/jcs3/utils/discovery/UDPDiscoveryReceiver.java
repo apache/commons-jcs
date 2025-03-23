@@ -87,7 +87,7 @@ public class UDPDiscoveryReceiver
 
     /**
      * Constructor for the UDPDiscoveryReceiver object.
-     * <p>
+     *
      * @param service
      * @param multicastInterfaceString
      * @param multicastAddress
@@ -117,7 +117,7 @@ public class UDPDiscoveryReceiver
      * Constructor for the UDPDiscoveryReceiver object.
      * <p>
      * We determine our own host using InetAddress
-     *<p>
+     *
      * @param service
      * @param multicastInterfaceString
      * @param multicastAddressString
@@ -137,7 +137,7 @@ public class UDPDiscoveryReceiver
 
     /**
      * Creates the socket for this class.
-     * <p>
+     *
      * @param multicastInterfaceString
      * @param multicastAddress
      * @param multicastPort

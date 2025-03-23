@@ -54,7 +54,7 @@ public class MySQLTableOptimizer
 
     /**
      * This constructs an optimizer with the disk can properties.
-     * <p>
+     *
      * @param attributes
      * @param tableState We mark the table status as optimizing when this is happening.
      * @param dataSource access to the database
@@ -77,7 +77,7 @@ public class MySQLTableOptimizer
 
     /**
      * This calls show table status and returns the result as a String.
-     * <p>
+     *
      * @param sStatement
      * @return String
      * @throws SQLException
@@ -233,7 +233,7 @@ public class MySQLTableOptimizer
      * <p>
      * It looks for "OK" in response. If it find "OK" as a message in any result set row, it returns
      * true. Otherwise we assume that the repair failed.
-     * <p>
+     *
      * @param sStatement
      * @return true if successful
      * @throws SQLException

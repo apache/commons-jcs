@@ -58,7 +58,7 @@ public class PropertySetter
     /**
      * Sets the properties of an object passed as a parameter in one go. The <code>properties</code>
      * are parsed relative to a <code>prefix</code>.
-     * <p>
+     *
      * @param obj The object to configure.
      * @param properties A java.util.Properties containing keys and values.
      * @param prefix Only keys having the specified prefix will be set.
@@ -174,7 +174,7 @@ public class PropertySetter
 
     /**
      * Sets the properties for the object that match the <code>prefix</code> passed as parameter.
-     * <p>
+     *
      * @param properties The new properties value
      * @param prefix The new properties value
      */

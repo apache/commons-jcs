@@ -37,7 +37,7 @@ public class InvalidHandleException
 
     /**
      * Constructor for the InvalidHandleException object.
-     * <p>
+     *
      * @param message
      */
     public InvalidHandleException( final String message )

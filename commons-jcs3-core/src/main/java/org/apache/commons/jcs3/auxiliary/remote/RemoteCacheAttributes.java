@@ -71,7 +71,7 @@ public class RemoteCacheAttributes
 
     /**
      * Gets the failoverIndex attribute of the RemoteCacheAttributes object.
-     * <p>
+     *
      * @return The failoverIndex value
      */
     @Override
@@ -82,7 +82,7 @@ public class RemoteCacheAttributes
 
     /**
      * Gets the failovers attribute of the RemoteCacheAttributes object.
-     * <p>
+     *
      * @return The failovers value
      */
     @Override
@@ -93,7 +93,7 @@ public class RemoteCacheAttributes
 
     /**
      * Gets the failoverServers attribute of the RemoteCacheAttributes object.
-     * <p>
+     *
      * @return The failoverServers value
      */
     @Override
@@ -113,7 +113,7 @@ public class RemoteCacheAttributes
 
     /**
      * Gets the localPort attribute of the RemoteCacheAttributes object.
-     * <p>
+     *
      * @return The localPort value
      */
     @Override
@@ -134,7 +134,7 @@ public class RemoteCacheAttributes
     /**
      * The number of elements the zombie queue will hold. This queue is used to store events if we
      * loose our connection with the server.
-     * <p>
+     *
      * @return the zombieQueueMaxSize.
      */
     @Override
@@ -162,7 +162,7 @@ public class RemoteCacheAttributes
 
     /**
      * Sets the failoverIndex attribute of the RemoteCacheAttributes object.
-     * <p>
+     *
      * @param p The new failoverIndex value
      */
     @Override
@@ -173,7 +173,7 @@ public class RemoteCacheAttributes
 
     /**
      * Sets the failovers attribute of the RemoteCacheAttributes object.
-     * <p>
+     *
      * @param failovers The new failovers value
      */
     @Override
@@ -184,7 +184,7 @@ public class RemoteCacheAttributes
 
     /**
      * Sets the failoverServers attribute of the RemoteCacheAttributes object.
-     * <p>
+     *
      * @param s The new failoverServers value
      */
     @Override
@@ -215,7 +215,7 @@ public class RemoteCacheAttributes
     /**
      * By default this option is true. If you set it to false, you will not receive updates or
      * removes from the remote server.
-     * <p>
+     *
      * @param receive
      */
     @Override
@@ -236,7 +236,7 @@ public class RemoteCacheAttributes
     /**
      * The number of elements the zombie queue will hold. This queue is used to store events if we
      * loose our connection with the server.
-     * <p>
+     *
      * @param zombieQueueMaxSize The zombieQueueMaxSize to set.
      */
     @Override

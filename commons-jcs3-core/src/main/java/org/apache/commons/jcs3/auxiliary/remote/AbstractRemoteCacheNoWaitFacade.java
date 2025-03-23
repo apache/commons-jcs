@@ -55,7 +55,7 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K, V>
 
     /**
      * Constructs with the given remote cache, and fires events to any listeners.
-     * <p>
+     *
      * @param noWaits
      * @param rca
      * @param cacheEventLogger
@@ -85,14 +85,14 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K, V>
 
     /**
      * Begin the failover process if this is a local cache. Clustered remote caches do not failover.
-     * <p>
+     *
      * @param rcnw The no wait in error.
      */
     protected abstract void failover( RemoteCacheNoWait<K, V> rcnw );
 
     /**
      * Synchronously reads from the remote cache.
-     * <p>
+     *
      * @param key
      * @return Either an ICacheElement&lt;K, V&gt; or null if it is not found.
      */
@@ -118,7 +118,7 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K, V>
 
     /**
      * Gets the cacheName attribute of the RemoteCacheNoWaitFacade object.
-     * <p>
+     *
      * @return The cacheName value
      */
     @Override
@@ -129,7 +129,7 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K, V>
 
     /**
      * Gets the cacheType attribute of the RemoteCacheNoWaitFacade object.
-     * <p>
+     *
      * @return The cacheType value
      */
     @Override
@@ -140,7 +140,7 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K, V>
 
     /**
      * This typically returns end point info.
-     * <p>
+     *
      * @return the name
      */
     @Override
@@ -151,7 +151,7 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K, V>
 
     /**
      * Return the keys in this cache.
-     * <p>
+     *
      * @see org.apache.commons.jcs3.auxiliary.AuxiliaryCache#getKeySet()
      */
     @Override
@@ -172,7 +172,7 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K, V>
 
     /**
      * Synchronously read from the remote cache.
-     * <p>
+     *
      * @param pattern
      * @return map
      * @throws IOException
@@ -191,7 +191,7 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K, V>
 
     /**
      * Gets multiple items from the cache based on the given set of keys.
-     * <p>
+     *
      * @param keys
      * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
      *         data in cache for any of these keys
@@ -222,7 +222,7 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K, V>
 
     /**
      * No remote invocation.
-     * <p>
+     *
      * @return The size value
      */
     @Override
@@ -272,7 +272,7 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K, V>
      * Gets the status attribute of the RemoteCacheNoWaitFacade object
      * <p>
      * Return ALIVE if any are alive.
-     * <p>
+     *
      * @return The status value
      */
     @Override
@@ -287,7 +287,7 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K, V>
 
     /**
      * Adds a remove request to the remote cache.
-     * <p>
+     *
      * @param key
      * @return whether or not it was removed, right now it return false.
      */
@@ -325,7 +325,7 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K, V>
 
     /**
      * String form of some of the configuration information for the remote cache.
-     * <p>
+     *
      * @return Some info for logging.
      */
     @Override
@@ -337,7 +337,7 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K, V>
 
     /**
      * Put an element in the cache.
-     * <p>
+     *
      * @param ce
      * @throws IOException
      */

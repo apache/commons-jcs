@@ -40,7 +40,7 @@ public interface ICacheType
 
     /**
      * Returns the cache type.
-     * <p>
+     *
      * @return The cacheType value
      */
     CacheType getCacheType();

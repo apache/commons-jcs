@@ -33,7 +33,7 @@ public interface IGroupCacheAccess<K, V>
 {
     /**
      * Gets the g attribute of the IGroupCacheAccess object
-     * <p>
+     *
      * @param name
      * @param group
      *            the name of the group to associate this with.
@@ -43,7 +43,7 @@ public interface IGroupCacheAccess<K, V>
 
     /**
      * Gets the set of keys of objects currently in the group
-     * <p>
+     *
      * @param group
      * @return the set of group keys.
      */
@@ -51,14 +51,14 @@ public interface IGroupCacheAccess<K, V>
 
     /**
      * Invalidates a group
-     * <p>
+     *
      * @param group
      */
     void invalidateGroup( String group );
 
     /**
      * Puts an item in the cache associated with this group.
-     * <p>
+     *
      * @param key
      * @param group
      * @param obj
@@ -69,7 +69,7 @@ public interface IGroupCacheAccess<K, V>
 
     /**
      * Put in the cache associated with this group using these attributes.
-     * <p>
+     *
      * @param key
      * @param group
      * @param obj
@@ -81,7 +81,7 @@ public interface IGroupCacheAccess<K, V>
 
     /**
      * Remove the item from this group in this region by this name.
-     * <p>
+     *
      * @param name
      * @param group
      */

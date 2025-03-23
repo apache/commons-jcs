@@ -58,7 +58,7 @@ public class ShrinkerThread
 
     /**
      * Adds a JDBC disk cache to the set of disk cache to shrink.
-     * <p>
+     *
      * @param diskCache
      */
     public void addDiskCacheToShrinkList( final JDBCDiskCache<?, ?> diskCache )
@@ -108,7 +108,7 @@ public class ShrinkerThread
     /**
      * How long should we wait between calls to deleteExpired when we are iterating through the list
      * of regions.
-     * <p>
+     *
      * @return the pauseBetweenRegionCallsMillis.
      */
     public long getPauseBetweenRegionCallsMillis()
@@ -135,7 +135,7 @@ public class ShrinkerThread
     /**
      * How long should we wait between calls to deleteExpired when we are iterating through the list
      * of regions.
-     * <p>
+     *
      * @param pauseBetweenRegionCallsMillis The pauseBetweenRegionCallsMillis to set.
      */
     public void setPauseBetweenRegionCallsMillis( final long pauseBetweenRegionCallsMillis )

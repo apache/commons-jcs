@@ -47,7 +47,7 @@ public class MySQLDiskCache<K, V>
     /**
      * Delegates to the super and makes use of the MySQL specific parameters used for scheduled
      * optimization.
-     * <p>
+     *
      * @param attributes the configuration object for this cache
      * @param dsFactory the DataSourceFactory for this cache
      * @param tableState an object to track table operations
@@ -69,7 +69,7 @@ public class MySQLDiskCache<K, V>
      * If we are currently optimizing, then this method will balk and do nothing.
      * <p>
      * TODO consider blocking and trying again.
-     * <p>
+     *
      * @return the number deleted
      */
     @Override
@@ -86,7 +86,7 @@ public class MySQLDiskCache<K, V>
     /**
      * This delegates to the generic JDBC disk cache. If we are currently optimizing, then this
      * method will balk and return null.
-     * <p>
+     *
      * @param key Key to locate value for.
      * @return An object matching key, or null.
      */
@@ -104,7 +104,7 @@ public class MySQLDiskCache<K, V>
     /**
      * This delegates to the generic JDBC disk cache. If we are currently optimizing, then this
      * method will balk and return null.
-     * <p>
+     *
      * @param pattern used for like query.
      * @return An object matching key, or null.
      */
@@ -122,7 +122,7 @@ public class MySQLDiskCache<K, V>
     /**
      * This delegates to the generic JDBC disk cache. If we are currently optimizing, then this
      * method will balk and do nothing.
-     * <p>
+     *
      * @param element
      */
     @Override

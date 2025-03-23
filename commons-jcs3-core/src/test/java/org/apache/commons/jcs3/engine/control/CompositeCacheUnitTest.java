@@ -43,7 +43,7 @@ class CompositeCacheUnitTest
 {
     /**
      * Verify we can get some matching elements..
-     * <p>
+     *
      * @throws IOException
      */
     @Test
@@ -95,7 +95,7 @@ class CompositeCacheUnitTest
 
     /**
      * Verify we try a disk aux on a getMatching call.
-     * <p>
+     *
      * @throws IOException
      */
     @Test
@@ -128,7 +128,7 @@ class CompositeCacheUnitTest
 
     /**
      * Verify we try a remote  aux on a getMatching call.
-     * <p>
+     *
      * @throws IOException
      */
     @Test
@@ -162,7 +162,7 @@ class CompositeCacheUnitTest
     /**
      * Verify that the freeMemoryElements method on the memory cache is called on shutdown if there
      * is a disk cache.
-     * <p>
+     *
      * @throws IOException
      */
     @Test
@@ -201,7 +201,7 @@ class CompositeCacheUnitTest
     /**
      * Verify that the freeMemoryElements method on the memory cache is NOT called on shutdown if
      * there is NOT a disk cache.
-     * <p>
+     *
      * @throws IOException
      */
     @Test

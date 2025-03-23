@@ -37,7 +37,7 @@ public class IndexedDiskCacheFactory
 
     /**
      * Create an instance of an IndexedDiskCache.
-     * <p>
+     *
      * @param iaca cache attributes of this cache instance
      * @param cacheMgr This allows auxiliaries to reference the manager without assuming that it is
      *            a singleton. This will allow JCS to be a non-singleton. Also, it makes it easier to

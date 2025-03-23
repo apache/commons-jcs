@@ -35,7 +35,7 @@ public interface IRemoteCacheClient<K, V>
     /**
      * Replaces the current remote cache service handle with the given handle. If the current remote
      * is a Zombie, the propagate the events that may be queued to the restored service.
-     * <p>
+     *
      * @param remote ICacheServiceNonLocal -- the remote server or proxy to the remote server
      */
     void fixCache( ICacheServiceNonLocal<?, ?> remote );
@@ -43,7 +43,7 @@ public interface IRemoteCacheClient<K, V>
     /**
      * This returns the listener associated with this remote cache. TODO we should try to get this
      * out of the interface.
-     * <p>
+     *
      * @return IRemoteCacheListener
      */
     IRemoteCacheListener<K, V> getListener();
@@ -53,7 +53,7 @@ public interface IRemoteCacheClient<K, V>
      * <p>
      * All requests to the remote cache must include a listener id. This allows the server to avoid
      * sending updates the listener associated with this client.
-     * <p>
+     *
      * @return The listenerId value
      */
     long getListenerId();

@@ -48,7 +48,7 @@ public class IndexedDisk implements AutoCloseable
 
     /**
      * Constructor for the Disk object
-     * <p>
+     *
      * @param file
      * @param elementSerializer
      * @throws IOException
@@ -66,7 +66,7 @@ public class IndexedDisk implements AutoCloseable
 
     /**
      * Closes the raf.
-     * <p>
+     *
      * @throws IOException
      */
     @Override
@@ -78,7 +78,7 @@ public class IndexedDisk implements AutoCloseable
 
     /**
      * This is used for debugging.
-     * <p>
+     *
      * @return the file path.
      */
     protected String getFilePath()
@@ -111,7 +111,7 @@ public class IndexedDisk implements AutoCloseable
 
     /**
      * Moves the data stored from one position to another. The descriptor's position is updated.
-     * <p>
+     *
      * @param ded
      * @param newPosition
      * @throws IOException
@@ -161,7 +161,7 @@ public class IndexedDisk implements AutoCloseable
      * <p>
      * The first four bytes of the record should tell us how long it is. The data is read into a byte
      * array and then an object is constructed from the byte array.
-     * <p>
+     *
      * @return Serializable
      * @param ded
      * @throws IOException
@@ -211,7 +211,7 @@ public class IndexedDisk implements AutoCloseable
 
     /**
      * Sets the raf to empty.
-     * <p>
+     *
      * @throws IOException
      */
     protected synchronized void reset()
@@ -224,7 +224,7 @@ public class IndexedDisk implements AutoCloseable
 
     /**
      * Truncates the file to a given length.
-     * <p>
+     *
      * @param length the new length of the file
      * @throws IOException
      */
@@ -237,7 +237,7 @@ public class IndexedDisk implements AutoCloseable
 
     /**
      * Writes the given byte array to the Disk at the specified position.
-     * <p>
+     *
      * @param data
      * @param ded
      * @return true if we wrote successfully

@@ -59,7 +59,7 @@ public class LateralCache<K, V>
 
     /**
      * Constructor for the LateralCache object
-     * <p>
+     *
      * @param cattr
      * @param lateral
      * @param monitor
@@ -74,7 +74,7 @@ public class LateralCache<K, V>
 
     /**
      * Replaces the current remote cache service handle with the given handle.
-     * <p>
+     *
      * @param restoredLateral
      */
     public void fixCache( final ICacheServiceNonLocal<K, V> restoredLateral )
@@ -116,7 +116,7 @@ public class LateralCache<K, V>
 
     /**
      * Gets the cacheName attribute of the LateralCache object
-     * <p>
+     *
      * @return The cacheName value
      */
     @Override
@@ -127,7 +127,7 @@ public class LateralCache<K, V>
 
     /**
      * Gets the cacheType attribute of the LateralCache object
-     * <p>
+     *
      * @return The cacheType value
      */
     @Override
@@ -147,7 +147,7 @@ public class LateralCache<K, V>
 
     /**
      * Return the keys in this cache.
-     * <p>
+     *
      * @see org.apache.commons.jcs3.auxiliary.AuxiliaryCache#getKeySet()
      */
     @Override
@@ -167,7 +167,7 @@ public class LateralCache<K, V>
 
     /**
      * Returns the current cache size.
-     * <p>
+     *
      * @return The size value
      */
     @Override
@@ -178,7 +178,7 @@ public class LateralCache<K, V>
 
     /**
      * The NoWait on top does not call out to here yet.
-     * <p>
+     *
      * @return almost nothing
      */
     @Override
@@ -191,7 +191,7 @@ public class LateralCache<K, V>
 
     /**
      * getStats
-     * <p>
+     *
      * @return String
      */
     @Override
@@ -202,7 +202,7 @@ public class LateralCache<K, V>
 
     /**
      * Returns the cache status.
-     * <p>
+     *
      * @return The status value
      */
     @Override
@@ -213,7 +213,7 @@ public class LateralCache<K, V>
 
     /**
      * Not yet sure what to do here.
-     * <p>
+     *
      * @param ex
      * @param msg
      * @throws IOException
@@ -239,7 +239,7 @@ public class LateralCache<K, V>
 
     /**
      * Synchronously dispose the cache. Not sure we want this.
-     * <p>
+     *
      * @throws IOException
      */
     @Override
@@ -262,7 +262,7 @@ public class LateralCache<K, V>
 
     /**
      * The performance costs are too great. It is not recommended that you enable lateral gets.
-     * <p>
+     *
      * @param key
      * @return ICacheElement&lt;K, V&gt; or null
      * @throws IOException
@@ -320,7 +320,7 @@ public class LateralCache<K, V>
     /**
      * Synchronously remove from the remote cache; if failed, replace the remote handle with a
      * zombie.
-     * <p>
+     *
      * @param key
      * @return false always
      * @throws IOException
@@ -345,7 +345,7 @@ public class LateralCache<K, V>
     /**
      * Synchronously removeAll from the remote cache; if failed, replace the remote handle with a
      * zombie.
-     * <p>
+     *
      * @throws IOException
      */
     @Override
@@ -364,7 +364,7 @@ public class LateralCache<K, V>
 
     /**
      * Update lateral.
-     * <p>
+     *
      * @param ce
      * @throws IOException
      */

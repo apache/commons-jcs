@@ -50,7 +50,7 @@ public class CacheEvent<K>
 
     /**
      * The time at which this object was created.
-     * <p>
+     *
      * @return the createTime
      */
     public long getCreateTime()

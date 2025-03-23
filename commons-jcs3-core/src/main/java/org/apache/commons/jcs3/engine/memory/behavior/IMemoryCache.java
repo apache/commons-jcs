@@ -33,7 +33,7 @@ public interface IMemoryCache<K, V>
 {
     /**
      * Destroy the memory cache
-     * <p>
+     *
      * @throws IOException
      */
     void dispose()
@@ -44,7 +44,7 @@ public interface IMemoryCache<K, V>
      * according to its eviction policy. For example, the LRUMemoryCache will
      * remove the <em>numberToFree</em> least recently used items. These will be
      * spooled to disk if a disk auxiliary is available.
-     * <p>
+     *
      * @param numberToFree
      * @return the number that were removed. if you ask to free 5, but there are
      *         only 3, you will get 3.
@@ -55,7 +55,7 @@ public interface IMemoryCache<K, V>
 
     /**
      * Gets an item from the cache
-     * <p>
+     *
      * @param key
      *            Description of the Parameter
      * @return Description of the Return Value
@@ -67,21 +67,21 @@ public interface IMemoryCache<K, V>
 
     /**
      * Returns the CacheAttributes for the region.
-     * <p>
+     *
      * @return The cacheAttributes value
      */
     ICompositeCacheAttributes getCacheAttributes();
 
     /**
      * Gets the cache hub / region that uses the MemoryCache.
-     * <p>
+     *
      * @return The cache value
      */
     CompositeCache<K, V> getCompositeCache();
 
     /**
      * Gets a set of the keys for all elements in the memory cache.
-     * <p>
+     *
      * @return a set of the key type
      * TODO This should probably be done in chunks with a range passed in. This
      *       will be a problem if someone puts a 1,000,000 or so items in a
@@ -91,7 +91,7 @@ public interface IMemoryCache<K, V>
 
     /**
      * Gets multiple items from the cache based on the given set of keys.
-     * <p>
+     *
      * @param keys
      * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map
      * if there is no data in cache for any of these keys
@@ -103,7 +103,7 @@ public interface IMemoryCache<K, V>
     /**
      * Gets an item from the cache without effecting its order or last access
      * time
-     * <p>
+     *
      * @param key
      *            Description of the Parameter
      * @return The quiet value
@@ -115,28 +115,28 @@ public interface IMemoryCache<K, V>
 
     /**
      * Gets the number of elements contained in the memory store
-     * <p>
+     *
      * @return Element count
      */
     int getSize();
 
     /**
      * Returns the historical and statistical data for a region's memory cache.
-     * <p>
+     *
      * @return Statistics and Info for the Memory Cache.
      */
     IStats getStatistics();
 
     /**
      * Initialize the memory cache
-     * <p>
+     *
      * @param cache The cache (region) this memory store is attached to.
      */
     void initialize( CompositeCache<K, V> cache );
 
     /**
      * Removes an item from the cache
-     * <p>
+     *
      * @param key
      *            Identifies item to be removed
      * @return Description of the Return Value
@@ -148,7 +148,7 @@ public interface IMemoryCache<K, V>
 
     /**
      * Removes all cached items from the cache.
-     * <p>
+     *
      * @throws IOException
      *                Description of the Exception
      */
@@ -157,7 +157,7 @@ public interface IMemoryCache<K, V>
 
     /**
      * Sets the CacheAttributes of the region.
-     * <p>
+     *
      * @param cattr
      *            The new cacheAttributes value
      */
@@ -165,7 +165,7 @@ public interface IMemoryCache<K, V>
 
     /**
      * Puts an item to the cache.
-     * <p>
+     *
      * @param ce
      *            Description of the Parameter
      * @throws IOException
@@ -176,7 +176,7 @@ public interface IMemoryCache<K, V>
 
     /**
      * Spools the item contained in the provided element to disk
-     * <p>
+     *
      * @param ce
      *            Description of the Parameter
      * @throws IOException

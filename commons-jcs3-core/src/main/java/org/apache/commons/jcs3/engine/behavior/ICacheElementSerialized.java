@@ -34,7 +34,7 @@ public interface ICacheElementSerialized<K, V>
     /**
      * Gets the value attribute of the ICacheElementSerialized object. This is the value the client
      * cached serialized by some mechanism.
-     *<p>
+     *
      * @return The serialized value
      */
     byte[] getSerializedValue();

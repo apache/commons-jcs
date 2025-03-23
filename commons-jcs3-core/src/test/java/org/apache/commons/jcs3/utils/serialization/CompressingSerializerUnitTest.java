@@ -44,7 +44,7 @@ class CompressingSerializerUnitTest
 
     /**
      * Verify that we don't get any erorrs for null input.
-     * <p>
+     *
      * @throws ClassNotFoundException
      * @throws IOException
      */
@@ -61,7 +61,7 @@ class CompressingSerializerUnitTest
 
     /**
      * Verify that the compressed is smaller.
-     * <p>
+     *
      * @throws Exception on error
      */
     @Test
@@ -88,7 +88,7 @@ class CompressingSerializerUnitTest
 
     /**
      * Test serialization with a null object. Verify that we don't get an error.
-     * <p>
+     *
      * @throws Exception on error
      */
     @Test
@@ -109,7 +109,7 @@ class CompressingSerializerUnitTest
      * Test simple back and forth with a string.
      * <p>
      * ))&lt;=&gt;((
-     * <p>
+     *
      * @throws Exception on error
      */
     @Test

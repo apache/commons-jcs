@@ -36,7 +36,7 @@ public class BlockDiskCacheRandomConcurrentTestUtil
      * Randomly adds items to cache, gets them, and removes them. The range
      * count is more than the size of the memory cache, so items should spool to
      * disk.
-     * <p>
+     *
      * @param region
      *            Name of the region to access
      * @param range

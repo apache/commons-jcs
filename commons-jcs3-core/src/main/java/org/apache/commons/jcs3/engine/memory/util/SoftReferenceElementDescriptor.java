@@ -37,7 +37,7 @@ public class SoftReferenceElementDescriptor<K, V>
 
     /**
      * Constructs a usable MemoryElementDescriptor.
-     * <p>
+     *
      * @param ce
      */
     public SoftReferenceElementDescriptor( final ICacheElement<K, V> ce )

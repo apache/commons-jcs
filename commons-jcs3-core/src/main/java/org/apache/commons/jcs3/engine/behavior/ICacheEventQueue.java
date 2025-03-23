@@ -41,7 +41,7 @@ public interface ICacheEventQueue<K, V>
     /**
      * Adds a feature to the DisposeEvent attribute of the ICacheEventQueue
      * object
-     * <p>
+     *
      * @throws IOException
      */
     void addDisposeEvent()
@@ -49,7 +49,7 @@ public interface ICacheEventQueue<K, V>
 
     /**
      * Adds a feature to the PutEvent attribute of the ICacheEventQueue object
-     * <p>
+     *
      * @param ce
      *            The feature to be added to the PutEvent attribute
      * @throws IOException
@@ -60,7 +60,7 @@ public interface ICacheEventQueue<K, V>
     /**
      * Adds a feature to the RemoveAllEvent attribute of the ICacheEventQueue
      * object
-     * <p>
+     *
      * @throws IOException
      */
     void addRemoveAllEvent()
@@ -69,7 +69,7 @@ public interface ICacheEventQueue<K, V>
     /**
      * Adds a feature to the RemoveEvent attribute of the ICacheEventQueue
      * object
-     * <p>
+     *
      * @param key
      *            The feature to be added to the RemoveEvent attribute
      * @throws IOException
@@ -101,28 +101,28 @@ public interface ICacheEventQueue<K, V>
 
     /**
      * Return the type of event queue we are using, either single or pooled.
-     * <p>
+     *
      * @return the queue type: single or pooled
      */
     QueueType getQueueType();
 
     /**
      * Returns the historical and statistical data for an event queue cache.
-     * <p>
+     *
      * @return IStats
      */
     IStats getStatistics();
 
     /**
      * Are there elements in the queue.
-     * <p>
+     *
      * @return true if there are still elements in the queue.
      */
     boolean isEmpty();
 
     /**
      * A Queue is working unless it has reached its max failure count.
-     * <p>
+     *
      * @return boolean
      */
     boolean isWorking();
@@ -130,7 +130,7 @@ public interface ICacheEventQueue<K, V>
     /**
      * Returns the number of elements in the queue. If the queue cannot
      * determine the size accurately it will return 0.
-     * <p>
+     *
      * @return number of items in the queue.
      */
     int size();

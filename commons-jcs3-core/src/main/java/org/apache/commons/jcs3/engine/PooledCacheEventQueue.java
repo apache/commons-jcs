@@ -57,7 +57,7 @@ public class PooledCacheEventQueue<K, V>
 
     /**
      * Constructor for the CacheEventQueue object
-     * <p>
+     *
      * @param listener
      * @param listenerId
      * @param cacheName
@@ -73,7 +73,7 @@ public class PooledCacheEventQueue<K, V>
 
     /**
      * Create the thread pool.
-     * <p>
+     *
      * @param threadPoolName
      * @since 3.1
      */
@@ -153,7 +153,7 @@ public class PooledCacheEventQueue<K, V>
 
     /**
      * Initializes the queue.
-     * <p>
+     *
      * @param listener
      * @param listenerId
      * @param cacheName
@@ -177,7 +177,7 @@ public class PooledCacheEventQueue<K, V>
     /**
      * If the Queue is using a bounded channel we can determine the size. If it is zero or we can't
      * determine the size, we return true.
-     * <p>
+     *
      * @return whether or not there are items in the queue
      */
     @Override
@@ -188,7 +188,7 @@ public class PooledCacheEventQueue<K, V>
 
     /**
      * Adds an event to the queue.
-     * <p>
+     *
      * @param event
      */
     @Override
@@ -200,7 +200,7 @@ public class PooledCacheEventQueue<K, V>
     /**
      * Returns the number of elements in the queue. If the queue cannot determine the size
      * accurately it will return 0.
-     * <p>
+     *
      * @return number of items in the queue.
      */
     @Override

@@ -77,7 +77,7 @@ public class BlockDisk implements AutoCloseable
 
     /**
      * Constructor for the Disk object
-     * <p>
+     *
      * @param file
      * @param elementSerializer
      * @throws IOException
@@ -90,7 +90,7 @@ public class BlockDisk implements AutoCloseable
 
     /**
      * Creates the file and set the block size in bytes.
-     * <p>
+     *
      * @param file
      * @param blockSizeBytes
      * @throws IOException
@@ -103,7 +103,7 @@ public class BlockDisk implements AutoCloseable
 
     /**
      * Creates the file and set the block size in bytes.
-     * <p>
+     *
      * @param file
      * @param blockSizeBytes
      * @param elementSerializer
@@ -152,7 +152,7 @@ public class BlockDisk implements AutoCloseable
 
     /**
      * Calculates the file offset for a particular block.
-     * <p>
+     *
      * @param block number
      * @return the byte offset for this block in the file as a long
      * @since 2.0
@@ -164,7 +164,7 @@ public class BlockDisk implements AutoCloseable
 
     /**
      * The number of blocks needed.
-     * <p>
+     *
      * @param data
      * @return the number of blocks needed to store the byte array
      */
@@ -191,7 +191,7 @@ public class BlockDisk implements AutoCloseable
 
     /**
      * Closes the file.
-     * <p>
+     *
      * @throws IOException
      */
     @Override
@@ -205,7 +205,7 @@ public class BlockDisk implements AutoCloseable
 
     /**
      * Add these blocks to the emptyBlock list.
-     * <p>
+     *
      * @param blocksToFree
      */
     protected void freeBlocks(final int[] blocksToFree)
@@ -235,7 +235,7 @@ public class BlockDisk implements AutoCloseable
 
     /**
      * Return the amount to put in each block. Fill them all the way, minus the header.
-     * <p>
+     *
      * @param complete
      * @param numBlocksNeeded
      * @return byte[][]
@@ -288,7 +288,7 @@ public class BlockDisk implements AutoCloseable
 
     /**
      * This is used for debugging.
-     * <p>
+     *
      * @return the file path.
      */
     protected String getFilePath()
@@ -306,7 +306,7 @@ public class BlockDisk implements AutoCloseable
 
     /**
      * Returns the file length.
-     * <p>
+     *
      * @return the size of the file.
      * @throws IOException
      */
@@ -318,7 +318,7 @@ public class BlockDisk implements AutoCloseable
 
     /**
      * Reads an object that is located in the specified blocks.
-     * <p>
+     *
      * @param blockNumbers
      * @return the object instance
      * @throws IOException
@@ -356,7 +356,7 @@ public class BlockDisk implements AutoCloseable
      * <p>
      * The first four bytes of the record should tell us how long it is. The data is read into a
      * byte array and then an object is constructed from the byte array.
-     * <p>
+     *
      * @return byte[]
      * @param block
      * @throws IOException
@@ -404,7 +404,7 @@ public class BlockDisk implements AutoCloseable
 
     /**
      * Resets the file.
-     * <p>
+     *
      * @throws IOException
      */
     protected synchronized void reset()
@@ -418,7 +418,7 @@ public class BlockDisk implements AutoCloseable
 
     /**
      * For debugging only.
-     * <p>
+     *
      * @return String with details.
      */
     @Override

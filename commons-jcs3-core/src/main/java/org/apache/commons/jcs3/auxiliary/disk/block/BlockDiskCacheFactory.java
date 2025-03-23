@@ -37,7 +37,7 @@ public class BlockDiskCacheFactory
 
     /**
      * Create an instance of the BlockDiskCache.
-     * <p>
+     *
      * @param iaca the cache attributes for this cache
      * @param cacheMgr This allows auxiliaries to reference the manager without assuming that it is
      *            a singleton. This will allow JCS to be a non-singleton. Also, it makes it easier

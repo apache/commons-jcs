@@ -37,7 +37,7 @@ public interface IRemoteCacheListener<K, V>
 {
     /**
      * De-Registers itself.
-     * <p>
+     *
      * @throws IOException
      */
     void dispose()
@@ -45,7 +45,7 @@ public interface IRemoteCacheListener<K, V>
 
     /**
      * Gets the listenerId attribute of the ICacheListener object
-     * <p>
+     *
      * @return The listenerId value
      * @throws IOException
      */
@@ -56,7 +56,7 @@ public interface IRemoteCacheListener<K, V>
     /**
      * This is for debugging. It allows the remote cache server to log the address of any listeners
      * that register.
-     * <p>
+     *
      * @return the local host address.
      * @throws IOException
      */
@@ -65,7 +65,7 @@ public interface IRemoteCacheListener<K, V>
 
     /**
      * Gets the remoteType attribute of the IRemoteCacheListener object
-     * <p>
+     *
      * @return The remoteType value
      * @throws IOException
      */
@@ -74,7 +74,7 @@ public interface IRemoteCacheListener<K, V>
 
     /**
      * Notifies the subscribers for freeing up the named cache.
-     * <p>
+     *
      * @param cacheName
      * @throws IOException
      */
@@ -84,7 +84,7 @@ public interface IRemoteCacheListener<K, V>
 
     /**
      * Notifies the subscribers for a cache entry update.
-     * <p>
+     *
      * @param item
      * @throws IOException
      */
@@ -94,7 +94,7 @@ public interface IRemoteCacheListener<K, V>
 
     /**
      * Notifies the subscribers for a cache entry removal.
-     * <p>
+     *
      * @param cacheName
      * @param key
      * @throws IOException
@@ -105,7 +105,7 @@ public interface IRemoteCacheListener<K, V>
 
     /**
      * Notifies the subscribers for a cache remove-all.
-     * <p>
+     *
      * @param cacheName
      * @throws IOException
      */
@@ -115,7 +115,7 @@ public interface IRemoteCacheListener<K, V>
 
     /**
      * sets unique identifier of listener home
-     * <p>
+     *
      * @param id The new listenerId value
      * @throws IOException
      */

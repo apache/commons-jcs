@@ -33,7 +33,7 @@ public class MemoryElementDescriptor<K, V>
 
     /**
      * Constructs a usable MemoryElementDescriptor.
-     * <p>
+     *
      * @param ce
      */
     public MemoryElementDescriptor( final ICacheElement<K, V> ce )

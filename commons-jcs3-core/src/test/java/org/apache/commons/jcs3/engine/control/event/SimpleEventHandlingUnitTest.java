@@ -261,7 +261,7 @@ class SimpleEventHandlingUnitTest
 
     /**
      * Verify that the spooled event is called as expected.
-     * <p>
+     *
      * @throws Exception Description of the Exception
      */
     @Test
@@ -292,7 +292,7 @@ class SimpleEventHandlingUnitTest
 
     /**
      * Test overflow with no disk configured for the region.
-     * <p>
+     *
      * @throws Exception
      */
     @Test

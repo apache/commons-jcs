@@ -54,7 +54,7 @@ public class CompressingSerializer extends StandardSerializer
     /**
      * Uses default de-serialization to turn a byte array into an object. Decompresses the value
      * first. All exceptions are converted into IOExceptions.
-     * <p>
+     *
      * @param data data bytes
      * @param loader class loader to use
      * @return Object
@@ -76,7 +76,7 @@ public class CompressingSerializer extends StandardSerializer
 
     /**
      * Serializes an object using default serialization. Compresses the byte array.
-     * <p>
+     *
      * @param obj object
      * @return byte[]
      * @throws IOException on i/o problem

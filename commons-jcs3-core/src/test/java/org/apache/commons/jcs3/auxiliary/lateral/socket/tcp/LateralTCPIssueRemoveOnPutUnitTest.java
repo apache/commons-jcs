@@ -60,7 +60,7 @@ public class LateralTCPIssueRemoveOnPutUnitTest
     /**
      * This tests issues tons of puts. It also check to see that a key that was put in was removed
      * by the clients remove command.
-     * <p>
+     *
      * @param region Name of the region to access
      * @param range
      * @param numOps
@@ -174,7 +174,7 @@ public class LateralTCPIssueRemoveOnPutUnitTest
     /**
      * Verify that a standard put works. Get the cache configured from a file. Create a tcp service
      * to talk to that cache. Put via the service. Verify that the cache got the data.
-     * <p>
+     *
      * @throws Exception
      */
     @Test

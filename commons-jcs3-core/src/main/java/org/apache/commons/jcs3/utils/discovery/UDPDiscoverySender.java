@@ -58,7 +58,7 @@ public class UDPDiscoverySender implements AutoCloseable
      * This sender can be used to send multiple messages.
      * <p>
      * When you are done sending, you should destroy the socket sender.
-     * <p>
+     *
      * @param mcastInterface the Multicast interface name to use, if null, try to autodetect
      * @param host
      * @param port
@@ -118,7 +118,7 @@ public class UDPDiscoverySender implements AutoCloseable
      * This sender can be used to send multiple messages.
      * <p>
      * When you are done sending, you should destroy the socket sender.
-     * <p>
+     *
      * @param udpDiscoveryAttributes configuration object
      * @param serializer the Serializer to use when sending messages
      * @throws IOException
@@ -163,7 +163,7 @@ public class UDPDiscoverySender implements AutoCloseable
 
     /**
      * This allows you to set the sender id. This is mainly for testing.
-     * <p>
+     *
      * @param host
      * @param port
      * @param cacheNames names of the cache regions
@@ -188,7 +188,7 @@ public class UDPDiscoverySender implements AutoCloseable
      * This sends a message broadcasting our that the host and port is no longer available.
      * <p>
      * It uses the vmid as the requesterID
-     * <p>
+     *
      * @param host host
      * @param port port
      * @param cacheNames names of the cache regions
@@ -202,7 +202,7 @@ public class UDPDiscoverySender implements AutoCloseable
 
     /**
      * This allows you to set the sender id. This is mainly for testing.
-     * <p>
+     *
      * @param host host
      * @param port port
      * @param cacheNames names of the cache regions
@@ -226,7 +226,7 @@ public class UDPDiscoverySender implements AutoCloseable
     /**
      * Ask other to broadcast their info the multicast address. If a lateral is non receiving it
      * can use this. This is also called on startup so we can get info.
-     * <p>
+     *
      * @throws IOException
      */
     public void requestBroadcast()
@@ -237,7 +237,7 @@ public class UDPDiscoverySender implements AutoCloseable
 
     /**
      * This allows you to set the sender id. This is mainly for testing.
-     * <p>
+     *
      * @param listenerId listener ID
      * @throws IOException on error
      */
@@ -256,7 +256,7 @@ public class UDPDiscoverySender implements AutoCloseable
 
     /**
      * Send messages.
-     * <p>
+     *
      * @param message
      * @throws IOException
      */
