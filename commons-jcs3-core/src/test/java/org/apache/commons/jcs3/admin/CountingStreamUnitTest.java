@@ -63,7 +63,7 @@ class CountingStreamUnitTest
     }
 
     /**
-     * Write a single byte and verify the count.
+     * Writes a single byte and verify the count.
      *
      * @throws Exception
      */

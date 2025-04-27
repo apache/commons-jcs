@@ -120,9 +120,9 @@ public class FileDiskCacheAttributes
     }
 
     /**
-     * Write out the values for debugging purposes.
+     * Converts this instance to a String for debugging purposes.
      *
-     * @return String
+     * @return This instance to a String for debugging purposes.
      */
     @Override
     public String toString()
