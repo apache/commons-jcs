@@ -267,7 +267,7 @@ public class RemoteHttpCacheServlet
     }
 
     /**
-     * Read the request from the input stream.
+     * Reads the request from the input stream.
      *
      * @param request
      * @return RemoteHttpCacheRequest
@@ -304,7 +304,7 @@ public class RemoteHttpCacheServlet
     }
 
     /**
-     * Read the request, call the processor, write the response.
+     * Reads the request, call the processor, write the response.
      *
      * @param request
      * @param response
