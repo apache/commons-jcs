@@ -333,7 +333,7 @@ public class RemoteHttpCacheServlet
     }
 
     /**
-     * Write the response to the output stream.
+     * Writes the response to the output stream.
      *
      * @param response
      * @param cacheResponse
