@@ -38,45 +38,23 @@
                Remove all deprecated code.
             </action>
             <!-- UPDATE -->
-            <action dev="tv" type="update" issue="JCS-241">
-               Use System.Logger from Java9, remove own logging abstraction, remove dependency on log4j2
-            </action>
-            <action dev="tv" type="update" due-to="Gary Gregory, strangelookingnerd">
-               Migrate tests to JUnit5 #309
-            </action>
-            <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">
-               Bump org.apache.commons:commons-parent from 59 to 81 #222, #258, #277, #280, #286, #292, #296, #302.
-            </action>
             <action dev="tv" type="update">
                Replace system properties to limit class deserialization 
                jcs.serialization.class.blacklist and jcs.serialization.class.whitelist with 
                jcs.serialization.class.filter and use the syntax of Object>InputFilter from Java9
                Document the behavior, add a test.
             </action>
-            <action dev="tv" type="update">
-               Update dependency servlet-api 2.5 to javax.servlet-api 3.1.0.
-            </action>
-            <action dev="tv" type="update">
-               Update dependency openwebbeans-impl 1.7.6 to 2.0.27.
-            </action>
-            <action dev="tv" type="update">
-               Update dependency cache-tests 1.0.1 to 1.1.1.
-            </action>
-            <action dev="tv" type="update">
-               Update Tomcat libraries 7.0.22 to 9.0.79.
-            </action>
-            <action dev="tv" type="update">
-               Bump Java to 17.
-            </action>
-            <action dev="tv" type="update">
-               Migrate all tests to JUnit 4.
-            </action>
-            <action type="update" dev="ggregory" due-to="Gary Gregory">
-               Bump org.apache.commons:commons-dbcp2 from 2.9.0 to 2.13.0 #316.
-            </action>
-            <action type="update" dev="ggregory" due-to="Gary Gregory">
-               Bump commons-io from 2.13.0 to 2.18.0 #11, #287, #312.
-            </action>
+            <action dev="tv" type="update" issue="JCS-241">Use System.Logger from Java9, remove own logging abstraction, remove dependency on log4j2</action>
+            <action dev="tv" type="update" due-to="Gary Gregory, strangelookingnerd">Migrate tests to JUnit5 #309</action>
+            <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump org.apache.commons:commons-parent from 59 to 81 #222, #258, #277, #280, #286, #292, #296, #302.</action>
+            <action dev="tv" type="update">Update dependency servlet-api 2.5 to javax.servlet-api 3.1.0.</action>
+            <action dev="tv" type="update">Update dependency openwebbeans-impl 1.7.6 to 2.0.27.</action>
+            <action dev="tv" type="update">Update dependency cache-tests 1.0.1 to 1.1.1.</action>
+            <action dev="tv" type="update">Update Tomcat libraries 7.0.22 to 9.0.79.</action>
+            <action dev="tv" type="update">Bump Java to 17.</action>
+            <action dev="tv" type="update">Migrate all tests to JUnit 4.</action>
+            <action type="update" dev="ggregory" due-to="Gary Gregory">Bump org.apache.commons:commons-dbcp2 from 2.9.0 to 2.13.0 #316.</action>
+            <action type="update" dev="ggregory" due-to="Gary Gregory">Bump commons-io from 2.13.0 to 2.18.0 #11, #287, #312.</action>
             <action type="update" dev="ggregory" due-to="Dependabot">Bump org.apache.logging.log4j:log4j-core from 2.21.1 to 2.24.2 #190, #198, #216, #223, #229, #284, #313.</action>
             <action type="update" dev="ggregory" due-to="Dependabot">Bump org.apache.logging.log4j:log4j-api from 2.21.1 to 2.24.2 #191, #197, #284, #293, #313.</action>
             <action type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">Bump org.apache.tomcat:tomcat-catalina from 9.0.79 to 9.0.104 in /commons-jcs3-jcache-extras #322, #351.</action>
