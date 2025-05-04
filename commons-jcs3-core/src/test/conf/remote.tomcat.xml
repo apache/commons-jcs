@@ -69,7 +69,7 @@
 	 Custom Output:
 
 	 "Custom" means "normal looking".  "Non-custom" means
-	 "surrounded with funny xml tags".  In preparation for
+	 "surrounded with funny XML tags".  In preparation for
 	 possibly disposing of "custom" altogether, now the default is
 	 'custom="yes"' (i.e. no tags)
 
@@ -201,7 +201,7 @@
             className="org.apache.tomcat.request.AccessInterceptor"
             debug="0" />
 
-        <!-- Check permissions using the simple xml file. You can
+        <!-- Check permissions using the simple XML file. You can
              plug more advanced authentication modules.
           -->
         <RequestInterceptor
