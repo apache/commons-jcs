@@ -557,7 +557,7 @@ public class RemoteCacheServer<K, V>
     }
 
     /**
-     * Retrieves all matching keys.
+     * Gets all matching keys.
      *
      * @param cacheName
      * @param pattern

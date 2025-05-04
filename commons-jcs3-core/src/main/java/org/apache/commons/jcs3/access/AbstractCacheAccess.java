@@ -134,7 +134,7 @@ public abstract class AbstractCacheAccess<K, V>
     }
 
     /**
-     * Retrieves A COPY OF the default element attributes used by this region. This does not provide
+     * Gets a copy of  the default element attributes used by this region. This does not provide
      * a reference to the element attributes.
      * <p>
      * Each time an element is added to the cache without element attributes, the default element

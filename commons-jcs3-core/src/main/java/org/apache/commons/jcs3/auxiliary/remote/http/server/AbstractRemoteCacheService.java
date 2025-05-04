@@ -241,7 +241,7 @@ public abstract class AbstractRemoteCacheService<K, V>
     }
 
     /**
-     * Retrieves all matching keys.
+     * Gets all matching keys.
      *
      * @param cacheName
      * @param pattern
