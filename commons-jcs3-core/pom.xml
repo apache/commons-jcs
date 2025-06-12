@@ -39,14 +39,14 @@
   </scm>
 
   <properties>
-     <commons.bc.version>3.1</commons.bc.version>
+     <commons.bc.version>3.2</commons.bc.version>
      <commons.module.name>org.apache.commons.jcs3.core</commons.module.name>
      <!-- generate report even if there are binary incompatible changes -->
      <commons.japicmp.breakBuildOnBinaryIncompatibleModifications>false</commons.japicmp.breakBuildOnBinaryIncompatibleModifications>
-     <commons.japicmp.ignoreMissingClasses>false</commons.japicmp.ignoreMissingClasses>
+     <commons.japicmp.ignoreMissingClasses>true</commons.japicmp.ignoreMissingClasses>
      <japicmp.skip>false</japicmp.skip>
      <commons.osgi.import>
-         javax.servlet.*;resolution:=optional,
+         jakarta.servlet.*;resolution:=optional,
          org.apache.commons.dbcp2.*;resolution:=optional,
          org.apache.http.*;resolution:=optional
      </commons.osgi.import>
