@@ -47,7 +47,7 @@ class RemoteHttpCacheServletUnitTest
         throws Exception
     {
         servlet = new RemoteHttpCacheServlet();
-        servlet.init(null);
+        servlet.init();
 
         remoteHttpCacheService = new MockRemoteCacheService<>();
         servlet.setRemoteCacheService( remoteHttpCacheService );

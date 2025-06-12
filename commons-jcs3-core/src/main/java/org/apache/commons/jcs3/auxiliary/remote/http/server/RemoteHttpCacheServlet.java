@@ -42,7 +42,6 @@ import org.apache.commons.jcs3.log.Log;
 import org.apache.commons.jcs3.utils.config.PropertySetter;
 import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
 
-import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -163,11 +162,10 @@ public class RemoteHttpCacheServlet
      * <p>
      * This provides an easy extension point. Simply extend this servlet and override the init
      * method to change the way the properties are loaded.
-     * @param config
      * @throws ServletException
      */
     @Override
-    public void init( final ServletConfig config )
+    public void init()
         throws ServletException
     {
         try
@@ -181,7 +179,7 @@ public class RemoteHttpCacheServlet
 
         remoteCacheService = createRemoteHttpCacheService( cacheMgr );
 
-        super.init( config );
+        super.init();
     }
 
     /**
