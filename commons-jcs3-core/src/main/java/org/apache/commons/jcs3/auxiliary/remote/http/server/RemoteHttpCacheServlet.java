@@ -28,12 +28,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.jcs3.access.exception.CacheException;
 import org.apache.commons.jcs3.auxiliary.AuxiliaryCacheConfigurator;
 import org.apache.commons.jcs3.auxiliary.remote.http.behavior.IRemoteHttpCacheConstants;
@@ -47,6 +41,12 @@ import org.apache.commons.jcs3.engine.logging.behavior.ICacheEventLogger;
 import org.apache.commons.jcs3.log.Log;
 import org.apache.commons.jcs3.utils.config.PropertySetter;
 import org.apache.commons.jcs3.utils.serialization.StandardSerializer;
+
+import jakarta.servlet.ServletConfig;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * This servlet simply reads and writes objects. The requests are packaged in a general wrapper. The

@@ -19,11 +19,11 @@ package org.apache.commons.jcs3.utils.servlet;
  * under the License.
  */
 
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-
 import org.apache.commons.jcs3.JCS;
 import org.apache.commons.jcs3.log.Log;
+
+import jakarta.servlet.ServletContextEvent;
+import jakarta.servlet.ServletContextListener;
 
 /**
  * If you add this to the context listeners section of your web.xml file, this will shutdown JCS
