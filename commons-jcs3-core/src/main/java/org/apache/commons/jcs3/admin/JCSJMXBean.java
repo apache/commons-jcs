@@ -33,7 +33,7 @@ public interface JCSJMXBean
     /**
      * Builds up data on every region.
      * <p>
-     * TODO we need a most light weight method that does not count bytes. The byte counting can
+     * TODO we need a most lightweight method that does not count bytes. The byte counting can
      *       really swamp a server.
      * @return List of CacheRegionInfo objects
      */
