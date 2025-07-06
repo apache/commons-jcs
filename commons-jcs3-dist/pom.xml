@@ -31,7 +31,7 @@
   <description>Creates the Apache Commons JCS multimodule distribution.</description>
 
   <scm>
-    <connection>scm:git:http://gitbox.apache.org/repos/asf/commons-jcs.git</connection>
+    <connection>scm:git:https://gitbox.apache.org/repos/asf/commons-jcs.git</connection>
     <developerConnection>scm:git:https://gitbox.apache.org/repos/asf/commons-jcs.git</developerConnection>
     <url>https://gitbox.apache.org/repos/asf?p=commons-jcs.git</url>
   </scm>
