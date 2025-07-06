@@ -55,7 +55,10 @@
     <developerConnection>scm:git:https://gitbox.apache.org/repos/asf/commons-jcs.git</developerConnection>
     <url>https://gitbox.apache.org/repos/asf?p=commons-jcs.git</url>
   </scm>
-
+  <ciManagement>
+    <system>GitHub</system>
+    <url>https://github.com/apache/commons-jcs/actions</url>
+  </ciManagement>
   <mailingLists>
     <mailingList>
       <name>Jakarta JCS User List Archive</name>
