@@ -77,7 +77,7 @@ class SoftReferenceMemoryCacheUnitTest
 
         for ( int i = 0; i < items; i++ )
         {
-            cache.put( i + ":key", "myregion" + " data " + i );
+            cache.put( i + ":key", "myregion data " + i );
         }
 
         cache.clear();
@@ -86,7 +86,7 @@ class SoftReferenceMemoryCacheUnitTest
         for ( int i = max; i >= 0; i-- )
         {
             final String value = cache.get( i + ":key" );
-            assertNull( value, "Should not have value for key [" + i + ":key" + "] in the cache." );
+            assertNull( value, "Should not have value for key [" + i + ":key] in the cache." );
         }
     }
 
@@ -154,14 +154,14 @@ class SoftReferenceMemoryCacheUnitTest
 
         for ( int i = 0; i < items; i++ )
         {
-            cache.put( i + ":key", "myregion" + " data " + i );
+            cache.put( i + ":key", "myregion data " + i );
         }
 
         // Test that all items are in cache
         for ( int i = 0; i < items; i++ )
         {
             final String value = cache.get( i + ":key" );
-            assertEquals( "myregion" + " data " + i, value );
+            assertEquals( "myregion data " + i, value );
         }
 
         // Test that getMultiple returns all the items remaining in cache and none of the missing ones
@@ -176,7 +176,7 @@ class SoftReferenceMemoryCacheUnitTest
         {
             final ICacheElement<String, String> element = elements.get( i + ":key" );
             assertNotNull( element, "element " + i + ":key is missing" );
-            assertEquals( "myregion" + " data " + i, element.getVal(), "value " + i + ":key" );
+            assertEquals( "myregion data " + i, element.getVal(), "value " + i + ":key" );
         }
 
         // System.out.println(cache.getStats());
@@ -198,7 +198,7 @@ class SoftReferenceMemoryCacheUnitTest
 
         for ( int i = 0; i < items; i++ )
         {
-            cache.put( i + ":key", "myregion" + " data " + i );
+            cache.put( i + ":key", "myregion data " + i );
         }
 
         for ( int i = 0; i < items; i++ )
@@ -210,7 +210,7 @@ class SoftReferenceMemoryCacheUnitTest
         for ( int i = max; i >= 0; i-- )
         {
             final String value = cache.get( i + ":key" );
-            assertNull( value, "Should not have value for key [" + i + ":key" + "] in the cache." );
+            assertNull( value, "Should not have value for key [" + i + ":key] in the cache." );
         }
     }
 
@@ -234,14 +234,14 @@ class SoftReferenceMemoryCacheUnitTest
 
         for ( int i = 0; i < items; i++ )
         {
-            cache.put( root + ":" + i + ":key", "myregion" + " data " + i );
+            cache.put( root + ":" + i + ":key", "myregion data " + i );
         }
 
         // Test that last items are in cache
         for ( int i = 0; i < items; i++ )
         {
             final String value = cache.get( root + ":" + i + ":key" );
-            assertEquals( "myregion" + " data " + i, value );
+            assertEquals( "myregion data " + i, value );
         }
 
         // remove partial

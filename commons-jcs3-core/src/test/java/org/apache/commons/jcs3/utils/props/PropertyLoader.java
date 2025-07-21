@@ -143,7 +143,7 @@ public abstract class PropertyLoader
 
         if ( THROW_ON_LOAD_FAILURE && result == null )
         {
-            throw new IllegalArgumentException( "could not load [" + fileName + "]" + " as " + "a classloader resource" );
+            throw new IllegalArgumentException( "could not load [" + fileName + "] as a classloader resource" );
         }
 
         return result;

@@ -62,13 +62,13 @@ public class IndexDiskCacheCountUnitTest extends AbstractIndexDiskCacheUnitTest
         for ( int i = 0; i < 6; i++ )
         {
             final ICacheElement<String, String> element = new CacheElement<>( "testRecycleBin", "key:" + test[i], test[i]);
-            //System.out.println( "About to add " + "key:" + test[i] + " i = " + i );
+            //System.out.println( "About to add key:" + test[i] + " i = " + i );
             disk.processUpdate( element );
         }
 
         for ( int i = 3; i < 5; i++ )
         {
-            //System.out.println( "About to remove " + "key:" + test[i] + " i = " + i );
+            //System.out.println( "About to remove key:" + test[i] + " i = " + i );
             disk.remove( "key:" + test[i]);
         }
 
@@ -77,7 +77,7 @@ public class IndexDiskCacheCountUnitTest extends AbstractIndexDiskCacheUnitTest
         for ( int i = 7; i < 9; i++ )
         {
             final ICacheElement<String, String> element = new CacheElement<>( "testRecycleBin", "key:" + test[i], test[i]);
-            //System.out.println( "About to add " + "key:" + test[i] + " i = " + i );
+            //System.out.println( "About to add key:" + test[i] + " i = " + i );
             disk.processUpdate( element );
         }
 
@@ -92,7 +92,7 @@ public class IndexDiskCacheCountUnitTest extends AbstractIndexDiskCacheUnitTest
                 }
                 else
                 {
-                    //System.out.println( "null --" + "key:" + test[i]);
+                    //System.out.println( "null --key:" + test[i]);
                 }
 
                 final String expectedValue = expect[i];
@@ -103,7 +103,7 @@ public class IndexDiskCacheCountUnitTest extends AbstractIndexDiskCacheUnitTest
                 else
                 {
                     assertNotNull( element,
-                                   "The element for key [" + "key:" + test[i] + "] should not be null. i = " + i );
+                                   "The element for key [key:" + test[i] + "] should not be null. i = " + i );
                     assertEquals( element.getVal(), expectedValue, "Elements contents do not match expected" );
                 }
             }

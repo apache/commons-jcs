@@ -55,14 +55,14 @@ public class ARCMemoryCacheUnitTest
 
         for ( int i = 0; i < items; i++ )
         {
-            cache.put( i + ":key", "myregion" + " data " + i );
+            cache.put( i + ":key", "myregion data " + i );
         }
 
         // Test that first items are not in the cache
         for ( int i = max; i >= 0; i-- )
         {
             String value = (String) cache.get( i + ":key" );
-            assertNull( "Should not have value for key [" + i + ":key" + "] in the cache.", value );
+            assertNull( "Should not have value for key [" + i + ":key] in the cache.", value );
         }
 
         // Test that last items are in cache
@@ -70,7 +70,7 @@ public class ARCMemoryCacheUnitTest
         for ( int i = max + 2; i < items; i++ )
         {
             String value = (String) cache.get( i + ":key" );
-            assertEquals( "myregion" + " data " + i, value );
+            assertEquals( "myregion data " + i, value );
         }
 
         System.out.println( cache.getStats() ); // TODO replace noise with an assertion

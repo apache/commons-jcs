@@ -68,15 +68,15 @@ class IndexedDiskCacheKeyStoreUnitTest
 
         final IElementAttributes eAttr = new ElementAttributes();
         eAttr.setIsSpool( true );
-        final ICacheElement<String, String> elementSetup = new CacheElement<>( cattr.getCacheName(), "key:" + "A", "data:" + "A" );
+        final ICacheElement<String, String> elementSetup = new CacheElement<>( cattr.getCacheName(), "key:A", "data:A" );
         elementSetup.setElementAttributes( eAttr );
         disk.processUpdate( elementSetup );
 
-        final ICacheElement<String, String> elementRet = disk.processGet( "key:" + "A" );
+        final ICacheElement<String, String> elementRet = disk.processGet( "key:A" );
         assertNotNull( elementRet, "postsave, Should have received an element." );
-        assertEquals( "data:" + "A", elementRet.getVal(), "postsave, element is wrong." );
+        assertEquals( "data:A", elementRet.getVal(), "postsave, element is wrong." );
 
-        disk.remove( "key:" + "A" );
+        disk.remove( "key:A" );
 
         final long preSize = disk.getDataFileSize();
         // synchronous versoin

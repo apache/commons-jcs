@@ -42,7 +42,7 @@ class AuxiliaryCacheConfiguratorUnitTest
     void testParseCacheEventLogger_Normal()
     {
         // SETUP
-        final String auxPrefix = "jcs.auxiliary." + "MYAux";
+        final String auxPrefix = "jcs.auxiliary.MYAux";
         final String testPropertyValue = "This is the value";
         final String className = MockCacheEventLogger.class.getName();
 
@@ -101,7 +101,7 @@ class AuxiliaryCacheConfiguratorUnitTest
     void testParseElementSerializer_Normal()
     {
         // SETUP
-        final String auxPrefix = "jcs.auxiliary." + "MYAux";
+        final String auxPrefix = "jcs.auxiliary.MYAux";
         final String testPropertyValue = "This is the value";
         final String className = MockElementSerializer.class.getName();
 

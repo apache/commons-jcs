@@ -257,7 +257,7 @@ public class JCSCachingManager implements CacheManager
             valueType != null && !config.getValueType().isAssignableFrom(valueType))
         {
             throw new IllegalArgumentException("this cache is <" + config.getKeyType().getName() + ", " + config.getValueType().getName()
-                    + "> " + " and not <" + keyType.getName() + ", " + valueType.getName() + ">");
+                    + ">  and not <" + keyType.getName() + ", " + valueType.getName() + ">");
         }
         return cache;
     }

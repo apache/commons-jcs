@@ -90,8 +90,8 @@ class IndexedDiskCacheDefragPerformanceTest
         final long free = rt.freeMemory() / byte2MB;
         final long used = total - free;
         System.out.println( LOG_DIVIDER );
-        System.out.println( "Memory:" + " Used:" + format.format( used ) + "MB" + " Free:" + format.format( free )
-            + "MB" + " Total:" + format.format( total ) + "MB" );
+        System.out.println( "Memory: Used:" + format.format( used ) + "MB Free:" + format.format( free )
+            + "MB Total:" + format.format( total ) + "MB" );
     }
 
     /**
