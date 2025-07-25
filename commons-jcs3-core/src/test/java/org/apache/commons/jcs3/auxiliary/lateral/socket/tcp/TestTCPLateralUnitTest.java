@@ -27,10 +27,13 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.jcs3.JCS;
+import org.apache.commons.jcs3.auxiliary.AbstractAuxiliaryCacheMonitor;
 import org.apache.commons.jcs3.auxiliary.lateral.LateralCacheAttributes;
+import org.apache.commons.jcs3.auxiliary.lateral.LateralCacheNoWait;
 import org.apache.commons.jcs3.auxiliary.lateral.LateralCommand;
 import org.apache.commons.jcs3.auxiliary.lateral.LateralElementDescriptor;
 import org.apache.commons.jcs3.engine.CacheElement;
+import org.apache.commons.jcs3.engine.CacheStatus;
 import org.apache.commons.jcs3.engine.behavior.ICacheElement;
 import org.apache.commons.jcs3.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs3.engine.behavior.IElementSerializer;
@@ -314,6 +317,55 @@ class TestTCPLateralUnitTest
     }
 
     /**
+     * Test that the cache has an error status after failing to connect to a TCP server.
+     */
+    @Test
+    void testCacheErrorStatusTcpConnectionFail()
+    {
+        final TCPLateralCacheAttributes lattr = new TCPLateralCacheAttributes();
+        lattr.setCacheName("test");
+        lattr.setTransmissionType(LateralCacheAttributes.Type.TCP);
+        lattr.setTcpServer("localhost:1109");
+        LateralTCPCacheFactory factory = new LateralTCPCacheFactory();
+        factory.initialize();
+
+        LateralCacheNoWait<String, String> lateralNoWait = factory.createCacheNoWait(lattr, null, new StandardSerializer());
+
+        assertEquals(CacheStatus.ERROR, lateralNoWait.getStatus());
+    }
+
+    /**
+     * Test that the cache monitor can fix a cache that is in error state after failing to connect to a TCP server.
+     *
+     * @throws Exception
+     */
+    @Test
+    void testCacheRecoveryUsingMonitor() throws Exception
+    {
+        final TCPLateralCacheAttributes lattr = new TCPLateralCacheAttributes();
+        lattr.setCacheName("test");
+        lattr.setTransmissionType(LateralCacheAttributes.Type.TCP);
+        lattr.setTcpServer("localhost:1110");
+        LateralTCPCacheFactory factory = new LateralTCPCacheFactory();
+        factory.initialize();
+
+        // reduce the monitor idle period between 'fix' attempts for testing purposes
+        MyCacheMonitor.setIdle(500L);
+        LateralCacheNoWait<String, String> lateralNoWait = factory.createCacheNoWait(lattr, null, new StandardSerializer());
+
+        // start a TCP server for the cache to connect to
+        createCache(1110);
+        // adding the cache to the monitor releases the monitor 'fix' thread
+        factory.monitorCache(lateralNoWait);
+
+        Thread.sleep(2000L);
+
+        // verify that the monitor has fixed the cache
+        assertEquals(CacheStatus.ALIVE, lateralNoWait.getStatus());
+    }
+
+
+    /**
      * @throws Exception
      */
     @Test
@@ -337,5 +389,26 @@ class TestTCPLateralUnitTest
         throws Exception
     {
     	simpleSend(new StandardSerializer(), 8111);
+    }
+
+    // used to reduce the monitor idle period between 'fix' attempts for testing purposes
+    private static class MyCacheMonitor extends AbstractAuxiliaryCacheMonitor {
+        public static void setIdle(long idlePeriod) {
+            AbstractAuxiliaryCacheMonitor.idlePeriod = idlePeriod;
+        }
+
+        public MyCacheMonitor() {
+            super("test");
+        }
+
+        @Override
+        protected void dispose() {
+            // nothing to dispose
+        }
+
+        @Override
+        protected void doWork() {
+            // nothing to do
+        }
     }
 }
