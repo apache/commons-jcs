@@ -72,6 +72,19 @@ public class LateralCacheMonitor extends AbstractAuxiliaryCacheMonitor
     {
         this.caches.put(cache.getCacheName(), (LateralCacheNoWait<Object, Object>)cache);
 
+        // Fix a cache where an exception occurred before it was added to this monitor.
+        // For instance, where a cache failed to connect to lateral TCP server.
+        if (cache.getStatus() == CacheStatus.ERROR) {
+            if (getState() == Thread.State.NEW)
+            {
+                // no need to signal trigger if monitor hasn't started
+                allright.compareAndSet(true, false);
+            }
+            else {
+                notifyError();
+            }
+        }
+
         // if not yet started, go ahead
         if (getState() == Thread.State.NEW)
         {
