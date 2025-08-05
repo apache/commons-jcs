@@ -100,7 +100,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
     public class LRUMapSizeLimited extends AbstractLRUMap<K, IndexedDiskElementDescriptor>
     {
         /**
-         * <code>tag</code> tells us which map we are working on.
+         * {@code tag} tells us which map we are working on.
          */
         public static final String TAG = "orig";
 

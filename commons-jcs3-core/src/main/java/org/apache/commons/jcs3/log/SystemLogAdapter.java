@@ -23,8 +23,8 @@ import java.util.function.Supplier;
  */
 
 /**
- * This is a wrapper around the <code>java.lang.System.Logger</code> implementing our own
- * <code>Log</code> interface.
+ * This is a wrapper around the {@code java.lang.System.Logger} implementing our own
+ * {@code Log} interface.
  */
 public class SystemLogAdapter implements Log
 {
@@ -90,7 +90,7 @@ public class SystemLogAdapter implements Log
 
     /**
      * Logs a message at the DEBUG level including the stack trace of the {@link Throwable}
-     * <code>t</code> passed as parameter.
+     * {@code t} passed as parameter.
      *
      * @param message the message to log.
      * @param t the exception to log, including its stack trace.
@@ -152,7 +152,7 @@ public class SystemLogAdapter implements Log
 
     /**
      * Logs a message at the ERROR level including the stack trace of the {@link Throwable}
-     * <code>t</code> passed as parameter.
+     * {@code t} passed as parameter.
      *
      * @param message the message object to log.
      * @param t the exception to log, including its stack trace.
@@ -213,7 +213,7 @@ public class SystemLogAdapter implements Log
 
     /**
      * Logs a message at the FATAL level including the stack trace of the {@link Throwable}
-     * <code>t</code> passed as parameter.
+     * {@code t} passed as parameter.
      *
      * @param message the message object to log.
      * @param t the exception to log, including its stack trace.
@@ -285,7 +285,7 @@ public class SystemLogAdapter implements Log
 
     /**
      * Logs a message at the INFO level including the stack trace of the {@link Throwable}
-     * <code>t</code> passed as parameter.
+     * {@code t} passed as parameter.
      *
      * @param message the message object to log.
      * @param t the exception to log, including its stack trace.
@@ -483,7 +483,7 @@ public class SystemLogAdapter implements Log
 
     /**
      * Logs a message at the TRACE level including the stack trace of the {@link Throwable}
-     * <code>t</code> passed as parameter.
+     * {@code t} passed as parameter.
      *
      * @param message the message object to log.
      * @param t the exception to log, including its stack trace.
@@ -545,7 +545,7 @@ public class SystemLogAdapter implements Log
 
     /**
      * Logs a message at the WARN level including the stack trace of the {@link Throwable}
-     * <code>t</code> passed as parameter.
+     * {@code t} passed as parameter.
      *
      * @param message the message object to log.
      * @param t the exception to log, including its stack trace.

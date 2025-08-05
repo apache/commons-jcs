@@ -43,7 +43,7 @@ public class JGSocketOpener
     private String groupName;
 
     /**
-     * Constructor for the <code>SocketOpener</code> object.
+     * Constructor for the {@code SocketOpener} object.
      * @param lca
      * @param timeOut
      * @param groupName
@@ -80,7 +80,7 @@ public class JGSocketOpener
     }
 
     /**
-     * Main processing method for the <code>SocketOpener</code> object.
+     * Main processing method for the {@code SocketOpener} object.
      */
     public void run()
     {
@@ -112,7 +112,7 @@ public class JGSocketOpener
     }
 
     /**
-     * Gets the socket attribute of the <code>SocketOpener</code> object.
+     * Gets the socket attribute of the {@code SocketOpener} object.
      */
     public Channel getSocket()
     {

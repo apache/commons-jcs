@@ -116,7 +116,7 @@ public class OptionConverter
     }
 
     /**
-     * Find the value corresponding to <code>key</code> in <code>props</code>. Then perform variable
+     * Find the value corresponding to {@code key} in {@code props}. Then perform variable
      * substitution on the found value.
      *
      * @param key
@@ -144,7 +144,7 @@ public class OptionConverter
     }
 
     /**
-     * Very similar to <code>System.getProperty</code> except that the {@link SecurityException} is
+     * Very similar to {@code System.getProperty} except that the {@link SecurityException} is
      * hidden.
      * @param key The key to search for.
      * @param def The default value to return.
@@ -168,9 +168,9 @@ public class OptionConverter
     }
 
     /**
-     * Instantiate an object given a class name. Check that the <code>className</code> is a subclass
-     * of <code>superClass</code>. If that test fails or the object could not be instantiated, then
-     * <code>defaultValue</code> is returned.
+     * Instantiate an object given a class name. Check that the {@code className} is a subclass
+     * of {@code superClass}. If that test fails or the object could not be instantiated, then
+     * {@code defaultValue} is returned.
      *
      * @param className The fully qualified class name of the object to instantiate.
      * @param defaultValue The object to return in case of non-fulfillment
@@ -231,7 +231,7 @@ public class OptionConverter
     }
 
     /**
-     * Perform variable substitution in string <code>val</code> from the values of keys found in the
+     * Perform variable substitution in string {@code val} from the values of keys found in the
      * system properties.
      *
      * The variable substitution delimiters are <strong>${ </strong> and <strong>} </strong>.
@@ -242,9 +242,9 @@ public class OptionConverter
      * String s = OptionConverter.substituteVars( &quot;Value of key is ${key}.&quot; );
      * </pre>
      *
-     * will set the variable <code>s</code> to "Value of key is value.".
+     * will set the variable {@code s} to "Value of key is value.".
      *
-     * If no value could be found for the specified key, then the <code>props</code> parameter is
+     * If no value could be found for the specified key, then the {@code props} parameter is
      * searched, if the value could not be found there, then substitution defaults to the empty
      * string.
      *
@@ -254,15 +254,15 @@ public class OptionConverter
      * String s = OptionConverter.subsVars( &quot;Value of inexistentKey is [${inexistentKey}]&quot; );
      * </pre>
      *
-     * will set <code>s</code> to "Value of inexistentKey is []"
+     * will set {@code s} to "Value of inexistentKey is []"
      * <p>
-     * An {@link IllegalArgumentException}is thrown if <code>val</code> contains a start
+     * An {@link IllegalArgumentException}is thrown if {@code val} contains a start
      * delimiter "${" which is not balanced by a stop delimiter "}".
      * </p>
      * @param val The string on which variable substitution is performed.
      * @param props
      * @return String
-     * @throws IllegalArgumentException if <code>val</code> is malformed.
+     * @throws IllegalArgumentException if {@code val} is malformed.
      */
     public static String substVars( final String val, final Properties props )
         throws IllegalArgumentException
@@ -311,8 +311,8 @@ public class OptionConverter
     }
 
     /**
-     * If <code>value</code> is "true", then {@code true} is returned. If <code>value</code> is
-     * "false", then {@code true} is returned. Otherwise, <code>default</code> is returned.
+     * If {@code value} is "true", then {@code true} is returned. If {@code value} is
+     * "false", then {@code true} is returned. Otherwise, {@code default} is returned.
      *
      * Case of value is unimportant.
      * @param value

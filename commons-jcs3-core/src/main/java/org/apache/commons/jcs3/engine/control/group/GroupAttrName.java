@@ -55,7 +55,7 @@ public class GroupAttrName<T>
 
     /**
      * Tests object equality.
-     * @param obj The <code>GroupAttrName</code> instance to test.
+     * @param obj The {@code GroupAttrName} instance to test.
      * @return Whether equal.
      */
     @Override

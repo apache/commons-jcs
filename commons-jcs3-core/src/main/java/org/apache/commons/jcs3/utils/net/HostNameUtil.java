@@ -68,13 +68,13 @@ public class HostNameUtil
     }
 
     /**
-     * Returns an <code>InetAddress</code> object encapsulating what is most likely the machine's
+     * Returns an {@code InetAddress} object encapsulating what is most likely the machine's
      * LAN IP address.
      * <p>
      * This method is intended for use as a replacement of JDK method
-     * <code>InetAddress.getLocalHost</code>, because that method is ambiguous on Linux systems.
+     * {@code InetAddress.getLocalHost}, because that method is ambiguous on Linux systems.
      * Linux systems enumerate the loopback network interface the same way as regular LAN network
-     * interfaces, but the JDK <code>InetAddress.getLocalHost</code> method does not specify the
+     * interfaces, but the JDK {@code InetAddress.getLocalHost} method does not specify the
      * algorithm used to select the address returned under such circumstances, and will often return
      * the loopback address, which is not valid for network communication. Details <a
      * href="https://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4665037">here</a>.
@@ -88,7 +88,7 @@ public class HostNameUtil
      * <p>
      * If this method cannot find a non-loopback address using this selection algorithm, it will
      * fall back to calling and returning the result of JDK method
-     * <code>InetAddress.getLocalHost</code>.
+     * {@code InetAddress.getLocalHost}.
      * <p>
      * <a href="https://issues.apache.org/jira/browse/JCS-40">JIR ISSUE JCS-40</a>
      *
@@ -103,7 +103,7 @@ public class HostNameUtil
     }
 
     /**
-     * Returns all <code>InetAddress</code> objects encapsulating what are most likely the machine's
+     * Returns all {@code InetAddress} objects encapsulating what are most likely the machine's
      * LAN IP addresses.
      * <p>
      * This method will scan all IP addresses on all network interfaces on the host machine to

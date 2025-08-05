@@ -51,7 +51,7 @@ public interface JCSJMXBean
     /**
      * Clears all regions in the cache.
      * <p>
-     * If this class is running within a remote cache server, clears all regions via the <code>RemoteCacheServer</code>
+     * If this class is running within a remote cache server, clears all regions via the {@code RemoteCacheServer}
      * API, so that removes will be broadcast to client machines. Otherwise clears all regions in the cache directly via
      * the usual cache API.
      */
@@ -60,7 +60,7 @@ public interface JCSJMXBean
     /**
      * Clears a particular cache region.
      * <p>
-     * If this class is running within a remote cache server, clears the region via the <code>RemoteCacheServer</code>
+     * If this class is running within a remote cache server, clears the region via the {@code RemoteCacheServer}
      * API, so that removes will be broadcast to client machines. Otherwise clears the region directly via the usual
      * cache API.
      */
@@ -78,7 +78,7 @@ public interface JCSJMXBean
     /**
      * Removes a particular item from a particular region.
      * <p>
-     * If this class is running within a remote cache server, removes the item via the <code>RemoteCacheServer</code>
+     * If this class is running within a remote cache server, removes the item via the {@code RemoteCacheServer}
      * API, so that removes will be broadcast to client machines. Otherwise clears the region directly via the usual
      * cache API.
      *
