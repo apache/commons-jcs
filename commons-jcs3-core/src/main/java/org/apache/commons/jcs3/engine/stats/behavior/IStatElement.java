@@ -39,16 +39,4 @@ public interface IStatElement<V> extends Serializable
      * @return the stat element name
      */
     String getName();
-
-    /**
-     * Sets the data for this element.
-     *
-     * @param data
-     */
-    void setData( V data );
-
-    /**
-     * @param name
-     */
-    void setName( String name );
 }

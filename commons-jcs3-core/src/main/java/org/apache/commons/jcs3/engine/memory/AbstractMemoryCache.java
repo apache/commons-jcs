@@ -367,7 +367,7 @@ public abstract class AbstractMemoryCache<K, V>
         {
             removed = removeByHierarchy(key);
         }
-        else if (key instanceof GroupAttrName && ((GroupAttrName<?>) key).attrName == null)
+        else if (key instanceof GroupAttrName && ((GroupAttrName<?>) key).attrName() == null)
         {
             removed = removeByGroup(key);
         }
@@ -420,13 +420,13 @@ public abstract class AbstractMemoryCache<K, V>
      */
     protected boolean removeByGroup(final K key)
     {
-        final GroupId groupId = ((GroupAttrName<?>) key).groupId;
+        final GroupId groupId = ((GroupAttrName<?>) key).groupId();
 
         // remove all keys of the same group hierarchy.
         return map.entrySet().removeIf(entry -> {
             final K k = entry.getKey();
 
-            if (k instanceof GroupAttrName && ((GroupAttrName<?>) k).groupId.equals(groupId))
+            if (k instanceof GroupAttrName && ((GroupAttrName<?>) k).groupId().equals(groupId))
             {
                 lock.lock();
                 try

@@ -187,7 +187,7 @@ class TestTCPLateralUnitTest
 
         // VERIFY
         assertNotNull( result, "Result should not be null." );
-        assertEquals( "key", result.iterator().next().attrName, "Didn't get the correct object" );
+        assertEquals( "key", result.iterator().next().attrName(), "Didn't get the correct object" );
     }
 
     /**

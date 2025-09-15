@@ -20,24 +20,14 @@ package org.apache.commons.jcs3.engine.control.group;
  */
 
 import java.io.Serializable;
-import java.util.Objects;
 
 /**
  * Used to avoid name conflict when group cache items are mixed with non-group cache items in the
  * same cache.
  */
-public class GroupId
+public record GroupId(String cacheName, String groupName)
     implements Serializable
 {
-    /** Don't change. */
-    private static final long serialVersionUID = 4626368486444860133L;
-
-    /** Description of the Field */
-    public final String groupName;
-
-    /** The name of the region. */
-    public final String cacheName;
-
     /**
      * Constructor for the GroupId object
      *
@@ -57,30 +47,6 @@ public class GroupId
         {
             throw new IllegalArgumentException( "groupName must not be null." );
         }
-    }
-
-    /**
-     * @param obj
-     * @return cacheName.equals( g.cacheName ) &amp;&amp;groupName.equals( g.groupName );
-     */
-    @Override
-    public boolean equals( final Object obj )
-    {
-        if (!(obj instanceof GroupId))
-        {
-            return false;
-        }
-        final GroupId g = (GroupId) obj;
-        return cacheName.equals( g.cacheName ) && groupName.equals( g.groupName );
-    }
-
-    /**
-     * @return Objects.hash(cacheName, groupName);
-     */
-    @Override
-    public int hashCode()
-    {
-        return Objects.hash(cacheName, groupName);
     }
 
     /**
