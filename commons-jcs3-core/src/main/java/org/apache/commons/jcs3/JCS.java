@@ -56,28 +56,31 @@ public abstract class JCS
      */
     private static CompositeCacheManager getCacheManager() throws CacheException
     {
-        synchronized ( JCS.class )
+        if ( cacheMgr == null || !cacheMgr.isInitialized())
         {
-            if ( cacheMgr == null || !cacheMgr.isInitialized())
+            synchronized ( JCS.class )
             {
-                if ( configProps != null )
+                if ( cacheMgr == null || !cacheMgr.isInitialized())
                 {
-                    cacheMgr = CompositeCacheManager.getUnconfiguredInstance();
-                    cacheMgr.configure( configProps );
-                }
-                else if ( configFileName != null )
-                {
-                    cacheMgr = CompositeCacheManager.getUnconfiguredInstance();
-                    cacheMgr.configure( configFileName );
-                }
-                else
-                {
-                    cacheMgr = CompositeCacheManager.getInstance();
+                    if ( configProps != null )
+                    {
+                        cacheMgr = CompositeCacheManager.getUnconfiguredInstance();
+                        cacheMgr.configure( configProps );
+                    }
+                    else if ( configFileName != null )
+                    {
+                        cacheMgr = CompositeCacheManager.getUnconfiguredInstance();
+                        cacheMgr.configure( configFileName );
+                    }
+                    else
+                    {
+                        cacheMgr = CompositeCacheManager.getInstance();
+                    }
                 }
             }
-
-            return cacheMgr;
         }
+
+        return cacheMgr;
     }
 
     /**
