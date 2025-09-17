@@ -19,7 +19,6 @@
 package org.apache.commons.jcs3.jcache.extras.web;
 
 import static java.util.Collections.list;
-import static javax.servlet.http.HttpServletResponse.SC_OK;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
@@ -40,15 +39,16 @@ import javax.cache.Caching;
 import javax.cache.configuration.FactoryBuilder;
 import javax.cache.configuration.MutableConfiguration;
 import javax.cache.spi.CachingProvider;
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+
+import jakarta.servlet.Filter;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.FilterConfig;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 public class JCacheFilter implements Filter
 {
@@ -149,6 +149,7 @@ public class JCacheFilter implements Filter
             this.gzip = gzip;
         }
     }
+
     private static void checkResponse(final ServletResponse servletResponse)
     {
         if (servletResponse.isCommitted()) {
@@ -223,7 +224,7 @@ public class JCacheFilter implements Filter
             cache.put(key, page);
         }
 
-        if (page.status == SC_OK) {
+        if (page.status == HttpServletResponse.SC_OK) {
             checkResponse(httpServletResponse);
 
             if (gzip)
