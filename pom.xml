@@ -21,7 +21,7 @@
   <parent>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-parent</artifactId>
-    <version>84</version>
+    <version>87</version>
   </parent>
 
   <artifactId>commons-jcs3</artifactId>
@@ -51,11 +51,14 @@
   </issueManagement>
 
   <scm>
-    <connection>scm:git:http://gitbox.apache.org/repos/asf/commons-jcs.git</connection>
+    <connection>scm:git:https://gitbox.apache.org/repos/asf/commons-jcs.git</connection>
     <developerConnection>scm:git:https://gitbox.apache.org/repos/asf/commons-jcs.git</developerConnection>
     <url>https://gitbox.apache.org/repos/asf?p=commons-jcs.git</url>
   </scm>
-
+  <ciManagement>
+    <system>GitHub</system>
+    <url>https://github.com/apache/commons-jcs/actions</url>
+  </ciManagement>
   <mailingLists>
     <mailingList>
       <name>Jakarta JCS User List Archive</name>
@@ -548,8 +551,8 @@
 
     <jsr107.api.version>1.0.1</jsr107.api.version>
     <commons.collections.version>4.5.0</commons.collections.version>
-    <commons.text.version>1.13.1</commons.text.version>
-    <commons.lang.version>3.17.0</commons.lang.version>
+    <commons.text.version>1.14.0</commons.text.version>
+    <commons.lang.version>3.18.0</commons.lang.version>
 
     <test.type>Unit</test.type>
     <doclint>none</doclint>

@@ -58,7 +58,7 @@ public interface DataSourceFactory
         throws SQLException;
 
     /**
-     * @return the <code>DataSource</code> configured by the factory.
+     * @return the {@code DataSource} configured by the factory.
      * @throws SQLException if the source can't be returned
      */
     DataSource getDataSource() throws SQLException;

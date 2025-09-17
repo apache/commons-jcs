@@ -188,9 +188,9 @@ public class JCSCache<K, V> implements Cache<K, V>
         try
         {
             cacheConfigObjectName = new ObjectName("javax.cache:type=CacheConfiguration,"
-                    + "CacheManager=" + mgrStr + "," + "Cache=" + cacheStr);
+                    + "CacheManager=" + mgrStr + ",Cache=" + cacheStr);
             cacheStatsObjectName = new ObjectName("javax.cache:type=CacheStatistics,"
-                    + "CacheManager=" + mgrStr + "," + "Cache=" + cacheStr);
+                    + "CacheManager=" + mgrStr + ",Cache=" + cacheStr);
         }
         catch (final Exception e)
         {

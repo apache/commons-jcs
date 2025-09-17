@@ -45,7 +45,7 @@ public class SharedPoolDataSourceFactory implements DataSourceFactory
      *
      * @param config where to read the settings from
      * @throws SQLException if a property set fails
-     * @return a configured <code>ConnectionPoolDataSource</code>
+     * @return a configured {@code ConnectionPoolDataSource}
      */
     private static ConnectionPoolDataSource initCPDS(final JDBCDiskCacheAttributes config)
         throws SQLException
@@ -88,7 +88,7 @@ public class SharedPoolDataSourceFactory implements DataSourceFactory
     /** The name of the factory. */
     private String name;
 
-    /** The wrapped <code>DataSource</code>. */
+    /** The wrapped {@code DataSource}. */
     private SharedPoolDataSource ds;
 
     /**

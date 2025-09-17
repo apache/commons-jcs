@@ -54,14 +54,14 @@ public class CacheElementInfo
     public CacheElementInfo(final String key, final boolean eternal, final String createTime,
 			final long maxLifeSeconds, final long expiresInSeconds)
     {
-		this.key = key;
-		this.eternal = eternal;
-		this.createTime = createTime;
-		this.maxLifeSeconds = maxLifeSeconds;
-		this.expiresInSeconds = expiresInSeconds;
-	}
+	this.key = key;
+	this.eternal = eternal;
+	this.createTime = createTime;
+	this.maxLifeSeconds = maxLifeSeconds;
+	this.expiresInSeconds = expiresInSeconds;
+    }
 
-	/**
+    /**
      * @return the time the object was created
      */
     public String getCreateTime()

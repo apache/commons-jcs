@@ -39,7 +39,7 @@ class EnsureCDIIsTestedWhenTCKsRunTest
             final Iterator<BeanProvider> iterator = ServiceLoader.load(BeanProvider.class).iterator();
             assertTrue(iterator.hasNext());
             assertInstanceOf(OWBBeanProvider.class, iterator.next());
-        } catch (final java.lang.UnsupportedClassVersionError e) {
+        } catch (final UnsupportedClassVersionError e) {
             System.err.println("Ignoring checkOWBProvider test failure on " + System.getProperty("java.version"));
         }
     }

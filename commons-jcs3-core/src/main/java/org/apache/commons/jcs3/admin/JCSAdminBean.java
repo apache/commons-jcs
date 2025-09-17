@@ -81,7 +81,7 @@ public class JCSAdminBean implements JCSJMXBean
 	/**
      * Builds up data on every region.
      * <p>
-     * TODO we need a most light weight method that does not count bytes. The byte counting can
+     * TODO we need a most lightweight method that does not count bytes. The byte counting can
      *       really swamp a server.
      * @return List of CacheRegionInfo objects
      */
@@ -159,7 +159,7 @@ public class JCSAdminBean implements JCSJMXBean
 	/**
      * Clears all regions in the cache.
      * <p>
-     * If this class is running within a remote cache server, clears all regions via the <code>RemoteCacheServer</code>
+     * If this class is running within a remote cache server, clears all regions via the {@code RemoteCacheServer}
      * API, so that removes will be broadcast to client machines. Otherwise clears all regions in the cache directly via
      * the usual cache API.
      */
@@ -192,7 +192,7 @@ public class JCSAdminBean implements JCSJMXBean
 	/**
      * Clears a particular cache region.
      * <p>
-     * If this class is running within a remote cache server, clears the region via the <code>RemoteCacheServer</code>
+     * If this class is running within a remote cache server, clears the region via the {@code RemoteCacheServer}
      * API, so that removes will be broadcast to client machines. Otherwise clears the region directly via the usual
      * cache API.
      */
@@ -314,7 +314,7 @@ public class JCSAdminBean implements JCSJMXBean
     /**
      * Removes a particular item from a particular region.
      * <p>
-     * If this class is running within a remote cache server, removes the item via the <code>RemoteCacheServer</code>
+     * If this class is running within a remote cache server, removes the item via the {@code RemoteCacheServer}
      * API, so that removes will be broadcast to client machines. Otherwise clears the region directly via the usual
      * cache API.
      *

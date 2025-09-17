@@ -92,8 +92,8 @@ public class GroupCacheAccess<K, V>
 
         return getCacheControl().getKeySet()
                 .stream()
-                .filter(gan -> gan.groupId.equals(groupId))
-                .map(gan -> gan.attrName)
+                .filter(gan -> gan.groupId().equals(groupId))
+                .map(gan -> gan.attrName())
                 .collect(Collectors.toSet());
     }
 
@@ -106,7 +106,7 @@ public class GroupCacheAccess<K, V>
     {
         return getCacheControl().getKeySet()
                 .stream()
-                .map(gan -> gan.groupId.groupName)
+                .map(gan -> gan.groupId().groupName())
                 .collect(Collectors.toSet());
     }
 

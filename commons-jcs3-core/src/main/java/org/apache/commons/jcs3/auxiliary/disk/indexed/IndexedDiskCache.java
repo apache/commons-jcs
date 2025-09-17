@@ -100,7 +100,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
     public class LRUMapSizeLimited extends AbstractLRUMap<K, IndexedDiskElementDescriptor>
     {
         /**
-         * <code>tag</code> tells us which map we are working on.
+         * {@code tag} tells us which map we are working on.
          */
         public static final String TAG = "orig";
 
@@ -1140,7 +1140,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
         // remove all keys of the same name hierarchy.
         for (final K k : keyHash.keySet())
         {
-            if (k instanceof GroupAttrName && ((GroupAttrName<?>) k).groupId.equals(key))
+            if (k instanceof GroupAttrName && ((GroupAttrName<?>) k).groupId().equals(key))
             {
                 itemsToRemove.add(k);
             }
@@ -1363,9 +1363,9 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
             {
                 removed = performPartialKeyRemoval((String) key);
             }
-            else if (key instanceof GroupAttrName && ((GroupAttrName<?>) key).attrName == null)
+            else if (key instanceof GroupAttrName && ((GroupAttrName<?>) key).attrName() == null)
             {
-                removed = performGroupRemoval(((GroupAttrName<?>) key).groupId);
+                removed = performGroupRemoval(((GroupAttrName<?>) key).groupId());
             }
             else
             {

@@ -51,8 +51,8 @@ import org.apache.commons.jcs3.utils.config.PropertySetter;
  * If set, the Properties object will take precedence.
  * </p>
  * <p>
- * If a value is not set for a particular pool, the hard coded defaults in <code>PoolConfiguration</code> will be used.
- * You can configure default settings by specifying <code>thread_pool.default</code> in the properties, ie "cache.ccf"
+ * If a value is not set for a particular pool, the hard coded defaults in {@code PoolConfiguration} will be used.
+ * You can configure default settings by specifying {@code thread_pool.default} in the properties, ie "cache.ccf"
  * </p>
  */
 public class ThreadPoolManager

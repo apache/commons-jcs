@@ -29,7 +29,7 @@ import java.lang.reflect.Proxy;
  * ObjectInputStream implementation that allows to specify a class loader for deserializing
  * objects
  *
- * The class also evaluates the system property <code>jcs.serialization.class.filter</code>
+ * The class also evaluates the system property {@code jcs.serialization.class.filter}
  * to define a list of classes that are allowed to be de-serialized. The filter value
  * is directly fed into {@link java.io.ObjectInputFilter.Config#createFilter(String)}
  * See the syntax documentation there.

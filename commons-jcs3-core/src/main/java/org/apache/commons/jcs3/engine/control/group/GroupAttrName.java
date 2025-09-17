@@ -25,18 +25,9 @@ import java.util.Objects;
 /**
  * Description of the Class
  */
-public class GroupAttrName<T>
+public record GroupAttrName<T>(GroupId groupId, T attrName)
     implements Serializable
 {
-    /** Don't change */
-    private static final long serialVersionUID = 1586079686300744198L;
-
-    /** Description of the Field */
-    public final GroupId groupId;
-
-    /** The name of the attribute */
-    public final T attrName;
-
     /**
      * Constructor for the GroupAttrName object
      * @param groupId
@@ -51,37 +42,6 @@ public class GroupAttrName<T>
         {
             throw new IllegalArgumentException( "groupId must not be null." );
         }
-    }
-
-    /**
-     * Tests object equality.
-     * @param obj The <code>GroupAttrName</code> instance to test.
-     * @return Whether equal.
-     */
-    @Override
-    public boolean equals( final Object obj )
-    {
-        if (!(obj instanceof GroupAttrName))
-        {
-            return false;
-        }
-        final GroupAttrName<?> to = (GroupAttrName<?>) obj;
-
-        if (groupId.equals( to.groupId ))
-        {
-            return Objects.equals(attrName, to.attrName);
-        }
-
-        return false;
-    }
-
-    /**
-     * @return A hash code based on the hash code of @ #groupid} and {@link #attrName}.
-     */
-    @Override
-    public int hashCode()
-    {
-        return Objects.hash(groupId, attrName);
     }
 
     /**

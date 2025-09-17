@@ -58,7 +58,7 @@ public class BlockDiskKeyStore<K>
     public class LRUMapCountLimited extends LRUMap<K, int[]>
     {
         /**
-         * <code>tag</code> tells us which map we are working on.
+         * {@code tag} tells us which map we are working on.
          */
         public final static String TAG = "orig-lru-count";
 
@@ -95,7 +95,7 @@ public class BlockDiskKeyStore<K>
     public class LRUMapSizeLimited extends AbstractLRUMap<K, int[]>
     {
         /**
-         * <code>tag</code> tells us which map we are working on.
+         * {@code tag} tells us which map we are working on.
          */
         public final static String TAG = "orig-lru-size";
 

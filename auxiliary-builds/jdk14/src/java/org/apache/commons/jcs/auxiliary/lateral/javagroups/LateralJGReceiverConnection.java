@@ -82,7 +82,7 @@ public class LateralJGReceiverConnection
                 {
                     if ( log.isDebugEnabled() )
                     {
-                        log.debug( "receiving LateralElementDescriptor from another, led = " + ", led = " + led
+                        log.debug( "receiving LateralElementDescriptor from another, led = , led = " + led
                             + ", led.command = " + led.command + ", led.ce = " + led.ce + ", ilcl = " + ilcl );
                     }
                     if ( led.command == LateralElementDescriptor.UPDATE )

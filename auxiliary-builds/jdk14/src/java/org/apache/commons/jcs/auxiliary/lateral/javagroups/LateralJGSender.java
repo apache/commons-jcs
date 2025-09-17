@@ -168,7 +168,7 @@ public class LateralJGSender
 
                 disp = holder.getDispatcher();
                 Object[] args = { led.ce.getCacheName(), led.ce.getKey() };
-                String[] sigs = { java.lang.String.class.getName(), java.io.Serializable.class.getName() };
+                String[] sigs = { String.class.getName(), java.io.Serializable.class.getName() };
                 MethodCall meth = new MethodCall( "handleGet", args, sigs );
                 RspList rsp_list = disp.callRemoteMethods( null, meth, GroupRequest.GET_ALL, 1000 );
 

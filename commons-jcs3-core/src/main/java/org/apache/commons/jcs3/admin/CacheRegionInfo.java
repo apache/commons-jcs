@@ -56,34 +56,34 @@ public class CacheRegionInfo
     /**
      * Parameterized constructor
      *
-	 * @param cacheName The name of the cache region
-	 * @param cacheSize The size of the cache region
-	 * @param cacheStatus The status of the cache region
-	 * @param cacheStatistics The statistics of the cache region
-	 * @param hitCountRam The number of memory hits in the cache region
-	 * @param hitCountAux The number of auxiliary hits in the cache region
-	 * @param missCountNotFound The number of misses in the cache region because the items were not found
-	 * @param missCountExpired The number of misses in the cache region because the items were expired
-	 * @param byteCount The number of bytes counted so far, will be a total of all items
-	 */
+     * @param cacheName The name of the cache region
+     * @param cacheSize The size of the cache region
+     * @param cacheStatus The status of the cache region
+     * @param cacheStatistics The statistics of the cache region
+     * @param hitCountRam The number of memory hits in the cache region
+     * @param hitCountAux The number of auxiliary hits in the cache region
+     * @param missCountNotFound The number of misses in the cache region because the items were not found
+     * @param missCountExpired The number of misses in the cache region because the items were expired
+     * @param byteCount The number of bytes counted so far, will be a total of all items
+     */
     @ConstructorProperties({"cacheName", "cacheSize", "cacheStatus", "cacheStatistics",
-    	"hitCountRam", "hitCountAux", "missCountNotFound", "missCountExpired", "byteCount"})
-	public CacheRegionInfo(final String cacheName, final int cacheSize, final String cacheStatus,
-			final String cacheStatistics, final long hitCountRam, final long hitCountAux,
-			final long missCountNotFound, final long missCountExpired, final long byteCount)
-	{
-		this.cacheName = cacheName;
-		this.cacheSize = cacheSize;
-		this.cacheStatus = cacheStatus;
-		this.cacheStatistics = cacheStatistics;
-		this.hitCountRam = hitCountRam;
-		this.hitCountAux = hitCountAux;
-		this.missCountNotFound = missCountNotFound;
-		this.missCountExpired = missCountExpired;
-		this.byteCount = byteCount;
-	}
+        "hitCountRam", "hitCountAux", "missCountNotFound", "missCountExpired", "byteCount"})
+    public CacheRegionInfo(final String cacheName, final int cacheSize, final String cacheStatus,
+            final String cacheStatistics, final long hitCountRam, final long hitCountAux,
+            final long missCountNotFound, final long missCountExpired, final long byteCount)
+    {
+        this.cacheName = cacheName;
+        this.cacheSize = cacheSize;
+        this.cacheStatus = cacheStatus;
+        this.cacheStatistics = cacheStatistics;
+        this.hitCountRam = hitCountRam;
+        this.hitCountAux = hitCountAux;
+        this.missCountNotFound = missCountNotFound;
+        this.missCountExpired = missCountExpired;
+        this.byteCount = byteCount;
+    }
 
-	/**
+    /**
      * @return total byte count
      */
     public long getByteCount()
@@ -91,21 +91,21 @@ public class CacheRegionInfo
         return this.byteCount;
     }
 
-	/**
-	 * @return the cacheName
-	 */
-	public String getCacheName()
-	{
-		return this.cacheName;
-	}
+    /**
+     * @return the cacheName
+     */
+    public String getCacheName()
+    {
+        return this.cacheName;
+    }
 
-	/**
-	 * @return the cacheSize
-	 */
-	public int getCacheSize()
-	{
-		return this.cacheSize;
-	}
+    /**
+     * @return the cacheSize
+     */
+    public int getCacheSize()
+    {
+        return this.cacheSize;
+    }
 
     /**
      * Return the statistics for the region.
@@ -125,37 +125,37 @@ public class CacheRegionInfo
         return this.cacheStatus;
     }
 
-	/**
-	 * @return the hitCountAux
-	 */
-	public long getHitCountAux()
-	{
-		return hitCountAux;
-	}
+    /**
+     * @return the hitCountAux
+     */
+    public long getHitCountAux()
+    {
+        return hitCountAux;
+    }
 
-	/**
-	 * @return the hitCountRam
-	 */
-	public long getHitCountRam()
-	{
-		return hitCountRam;
-	}
+    /**
+     * @return the hitCountRam
+     */
+    public long getHitCountRam()
+    {
+        return hitCountRam;
+    }
 
-	/**
-	 * @return the missCountExpired
-	 */
-	public long getMissCountExpired()
-	{
-		return missCountExpired;
-	}
+    /**
+     * @return the missCountExpired
+     */
+    public long getMissCountExpired()
+    {
+        return missCountExpired;
+    }
 
-	/**
-	 * @return the missCountNotFound
-	 */
-	public long getMissCountNotFound()
-	{
-		return missCountNotFound;
-	}
+    /**
+     * @return the missCountNotFound
+     */
+    public long getMissCountNotFound()
+    {
+        return missCountNotFound;
+    }
 
     /**
      * @return string info on the region

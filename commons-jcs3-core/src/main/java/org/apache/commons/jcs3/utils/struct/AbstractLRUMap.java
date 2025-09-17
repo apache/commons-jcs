@@ -481,10 +481,10 @@ public abstract class AbstractLRUMap<K, V>
                 if ( key instanceof GroupAttrName )
                 {
                     final GroupAttrName<?> name = (GroupAttrName<?>) key;
-                    log.error( "GroupID hashCode={0}", name.groupId.hashCode() );
-                    log.error( "GroupID.class={0}", name.groupId.getClass() );
-                    log.error( "AttrName hashCode={0}", name.attrName.hashCode() );
-                    log.error( "AttrName.class={0}", name.attrName.getClass() );
+                    log.error( "GroupID hashCode={0}", name.groupId().hashCode() );
+                    log.error( "GroupID.class={0}", name.groupId().getClass() );
+                    log.error( "AttrName hashCode={0}", name.attrName().hashCode() );
+                    log.error( "AttrName.class={0}", name.attrName().getClass() );
                 }
                 dumpMap();
             }

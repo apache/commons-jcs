@@ -321,7 +321,7 @@ public class BlockDiskCache<K, V>
         // remove all keys of the same name group.
         final List<K> itemsToRemove = keyStore.keySet()
                 .stream()
-                .filter(k -> k instanceof GroupAttrName && ((GroupAttrName<?>) k).groupId.equals(key))
+                .filter(k -> k instanceof GroupAttrName && ((GroupAttrName<?>) k).groupId().equals(key))
                 .collect(Collectors.toList());
 
         // remove matches.
@@ -509,9 +509,9 @@ public class BlockDiskCache<K, V>
             {
                 removed = performPartialKeyRemoval((String) key);
             }
-            else if (key instanceof GroupAttrName && ((GroupAttrName<?>) key).attrName == null)
+            else if (key instanceof GroupAttrName && ((GroupAttrName<?>) key).attrName() == null)
             {
-                removed = performGroupRemoval(((GroupAttrName<?>) key).groupId);
+                removed = performGroupRemoval(((GroupAttrName<?>) key).groupId());
             }
             else
             {

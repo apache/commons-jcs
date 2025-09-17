@@ -44,9 +44,9 @@
                jcs.serialization.class.filter and use the syntax of Object>InputFilter from Java9
                Document the behavior, add a test.
             </action>
+            <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump org.apache.commons:commons-parent from 59 to 87 #222, #258, #277, #280, #286, #292, #296, #302, #352.</action>
             <action dev="tv" type="update" issue="JCS-241">Use System.Logger from Java9, remove own logging abstraction, remove dependency on log4j2</action>
             <action dev="tv" type="update" due-to="Gary Gregory, strangelookingnerd">Migrate tests to JUnit5 #309</action>
-            <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump org.apache.commons:commons-parent from 59 to 84 #222, #258, #277, #280, #286, #292, #296, #302, #352.</action>
             <action dev="tv" type="update">Update dependency servlet-api 2.5 to javax.servlet-api 3.1.0.</action>
             <action dev="tv" type="update">Update dependency openwebbeans-impl 1.7.6 to 2.0.27.</action>
             <action dev="tv" type="update">Update dependency cache-tests 1.0.1 to 1.1.1.</action>
@@ -57,15 +57,15 @@
             <action type="update" dev="ggregory" due-to="Gary Gregory">Bump commons-io from 2.13.0 to 2.18.0 #11, #287, #312.</action>
             <action type="update" dev="ggregory" due-to="Dependabot">Bump org.apache.logging.log4j:log4j-core from 2.21.1 to 2.24.2 #190, #198, #216, #223, #229, #284, #313.</action>
             <action type="update" dev="ggregory" due-to="Dependabot">Bump org.apache.logging.log4j:log4j-api from 2.21.1 to 2.24.2 #191, #197, #284, #293, #313.</action>
-            <action type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">Bump org.apache.tomcat:tomcat-catalina from 9.0.79 to 9.0.105 in /commons-jcs3-jcache-extras #322, #351, #358.</action>
-            <action type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">Bump org.apache.tomcat:tomcat-coyote from 9.0.99 to 9.0.104 in /commons-jcs3-jcache-extras #350.</action>
+            <action type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">Bump org.apache.tomcat:tomcat-catalina from 9.0.79 to 9.0.106 in /commons-jcs3-jcache-extras #322, #351, #358, #362, #365.</action>
+            <action type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">Bump org.apache.tomcat:tomcat-coyote from 9.0.99 to 9.0.107 in /commons-jcs3-jcache-extras #350, #366.</action>
             <action type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">Bump commons-logging:commons-logging from 1.3.0 to 1.3.5 #253, #262, #278.</action>
-            <action type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">Bump org.apache.commons:commons-text from 1.11.0 to 1.13.1 #254, #321.</action> 
-            <action type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">Bump org.apache.commons:commons-lang3 from 3.14.0 to 3.17.0 #265, #271, #281.</action>
+            <action type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">Bump org.apache.commons:commons-text from 1.11.0 to 1.14.0 #254, #321.</action> 
+            <action type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">Bump org.apache.commons:commons-lang3 from 3.14.0 to 3.18.0 #265, #271, #281, #364.</action>
             <action type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">Update from JUnit 4 to JUnit 5 Vintage.</action>
             <action type="update" dev="ggregory" due-to="Gary Gregory">Bump org.apache.commons:commons-collections4 from 4.4 to 4.5.0.</action>
             <action type="update" dev="ggregory" due-to="Gary Gregory">Bump commons-beanutils:commons-beanutils from 1.9.4 to 1.11.0.</action>
-            <action type="update" dev="ggregory" due-to="Gary Gregory">Bump commons-io:commons-io from 2.18.0 to 2.19.0.</action>
+            <action type="update" dev="ggregory" due-to="Gary Gregory">Bump commons-io:commons-io from 2.18.0 to 2.20.0.</action>
         </release>
         <release version="3.2.1" date="2024-05-27" description="JDK bug fix release">
             <action dev="tv" type="fix" fixed-issues="JCS-237, JCS-238, JCS-239, JCS-240" due-to="Murali Thirugnanam, Greg Parmiter">

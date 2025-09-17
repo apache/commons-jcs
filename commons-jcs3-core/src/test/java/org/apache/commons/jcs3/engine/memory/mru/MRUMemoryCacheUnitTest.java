@@ -66,7 +66,7 @@ class MRUMemoryCacheUnitTest
 
         for ( int i = 0; i < items; i++ )
         {
-            cache.put( i + ":key", "myregion" + " data " + i );
+            cache.put( i + ":key", "myregion data " + i );
         }
 
         cache.clear();
@@ -75,7 +75,7 @@ class MRUMemoryCacheUnitTest
         for ( int i = max; i >= 0; i-- )
         {
             final String value = cache.get( i + ":key" );
-            assertNull( value, "Should not have value for key [" + i + ":key" + "] in the cache." );
+            assertNull( value, "Should not have value for key [" + i + ":key] in the cache." );
         }
     }
 
@@ -127,7 +127,7 @@ class MRUMemoryCacheUnitTest
 
         for ( int i = 0; i < items; i++ )
         {
-            cache.put( i + ":key", "myregion" + " data " + i );
+            cache.put( i + ":key", "myregion data " + i );
         }
 
         final String stats = cache.getStats();
@@ -169,14 +169,14 @@ class MRUMemoryCacheUnitTest
 
         for ( int i = 0; i < items; i++ )
         {
-            cache.put( i + ":key", "myregion" + " data " + i );
+            cache.put( i + ":key", "myregion data " + i );
         }
 
         // Test that first items are not in the cache
         for ( int i = max -1; i >= 0; i-- )
         {
             final String value = cache.get( i + ":key" );
-            assertNull( value, "Should not have value for key [" + i + ":key" + "] in the cache." + cache.getStats() );
+            assertNull( value, "Should not have value for key [" + i + ":key] in the cache." + cache.getStats() );
         }
 
         // Test that last items are in cache
@@ -184,7 +184,7 @@ class MRUMemoryCacheUnitTest
         for ( int i = max + 2; i < items; i++ )
         {
             final String value = cache.get( i + ":key" );
-            assertEquals( "myregion" + " data " + i, value );
+            assertEquals( "myregion data " + i, value );
         }
 
         // Test that getMultiple returns all the items remaining in cache and none of the missing ones
@@ -198,13 +198,13 @@ class MRUMemoryCacheUnitTest
         for ( int i = max-1; i >= 0; i-- )
         {
             assertNull( elements.get( i + ":key" ),
-                        "Should not have value for key [" + i + ":key" + "] in the cache." + cache.getStats() );
+                        "Should not have value for key [" + i + ":key] in the cache." + cache.getStats() );
         }
         for ( int i = max + 2; i < items; i++ )
         {
             final ICacheElement<String, String> element = elements.get( i + ":key" );
             assertNotNull( element, "element " + i + ":key is missing" );
-            assertEquals( "myregion" + " data " + i, element.getVal(), "value " + i + ":key" );
+            assertEquals( "myregion data " + i, element.getVal(), "value " + i + ":key" );
         }
     }
 
@@ -224,19 +224,19 @@ class MRUMemoryCacheUnitTest
 
         for ( int i = 0; i < items; i++ )
         {
-            cache.put( i + ":key", "myregion" + " data " + i );
+            cache.put( i + ":key", "myregion data " + i );
         }
 
         for ( int i = 0; i < items; i++ )
         {
-            cache.put( i + ":key", "myregion" + " data " + i );
+            cache.put( i + ":key", "myregion data " + i );
         }
 
         // Test that first items are not in the cache
         for ( int i = max-1; i >= 0; i-- )
         {
             final String value = cache.get( i + ":key" );
-            assertNull( value, "Should not have value for key [" + i + ":key" + "] in the cache." );
+            assertNull( value, "Should not have value for key [" + i + ":key] in the cache." );
         }
 
         // Test that last items are in cache
@@ -244,7 +244,7 @@ class MRUMemoryCacheUnitTest
         for ( int i = max + 2; i < items; i++ )
         {
             final String value = cache.get( i + ":key" );
-            assertEquals( "myregion" + " data " + i, value );
+            assertEquals( "myregion data " + i, value );
         }
 
     }
@@ -265,7 +265,7 @@ class MRUMemoryCacheUnitTest
 
         for ( int i = 0; i < items; i++ )
         {
-            cache.put( i + ":key", "myregion" + " data " + i );
+            cache.put( i + ":key", "myregion data " + i );
         }
 
         for ( int i = 0; i < items; i++ )
@@ -277,7 +277,7 @@ class MRUMemoryCacheUnitTest
         for ( int i = max; i >= 0; i-- )
         {
             final String value = cache.get( i + ":key" );
-            assertNull( value, "Should not have value for key [" + i + ":key" + "] in the cache." );
+            assertNull( value, "Should not have value for key [" + i + ":key] in the cache." );
         }
     }
 
@@ -301,14 +301,14 @@ class MRUMemoryCacheUnitTest
 
         for ( int i = 0; i < items; i++ )
         {
-            cache.put( root + ":" + i + ":key", "myregion" + " data " + i );
+            cache.put( root + ":" + i + ":key", "myregion data " + i );
         }
 
         // Test that last items are in cache
         for ( int i = 0; i < items; i++ )
         {
             final String value = cache.get( root + ":" + i + ":key" );
-            assertEquals( "myregion" + " data " + i, value );
+            assertEquals( "myregion data " + i, value );
         }
 
         // remove partial

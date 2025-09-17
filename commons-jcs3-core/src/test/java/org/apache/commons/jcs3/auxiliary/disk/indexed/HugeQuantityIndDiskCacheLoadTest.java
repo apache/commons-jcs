@@ -109,7 +109,7 @@ class HugeQuantityIndDiskCacheLoadTest
             // // Verify removal
             // for ( int i = 0; i < items; i++ )
             // {
-            // assertNull( "Removed key should be null: " + i + ":key" + "\n
+            // assertNull( "Removed key should be null: " + i + ":key\n
             // stats " + jcs.getStats(), jcs.get( i + ":key" ) );
             // }
 

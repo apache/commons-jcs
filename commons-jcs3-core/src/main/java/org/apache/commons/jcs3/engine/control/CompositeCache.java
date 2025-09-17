@@ -1553,7 +1553,7 @@ public class CompositeCache<K, V>
         }
         if (cacheElement.getKey() instanceof GroupId)
         {
-            throw new IllegalArgumentException("key cannot be a GroupId " + " for a put operation");
+            throw new IllegalArgumentException("key cannot be a GroupId for a put operation");
         }
 
         log.debug("Updating memory cache {0}", cacheElement::getKey);

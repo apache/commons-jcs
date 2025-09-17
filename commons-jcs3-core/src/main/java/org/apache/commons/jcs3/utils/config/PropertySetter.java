@@ -56,8 +56,8 @@ public class PropertySetter
     private static final Log log = Log.getLog( PropertySetter.class );
 
     /**
-     * Sets the properties of an object passed as a parameter in one go. The <code>properties</code>
-     * are parsed relative to a <code>prefix</code>.
+     * Sets the properties of an object passed as a parameter in one go. The {@code properties}
+     * are parsed relative to a {@code prefix}.
      *
      * @param obj The object to configure.
      * @param properties A java.util.Properties containing keys and values.
@@ -85,7 +85,7 @@ public class PropertySetter
     }
 
     /**
-     * Convert <code>val</code> a String parameter to an object of a given type.
+     * Convert {@code val} a String parameter to an object of a given type.
      * @param val
      * @param type
      * @return Object
@@ -173,7 +173,7 @@ public class PropertySetter
     }
 
     /**
-     * Sets the properties for the object that match the <code>prefix</code> passed as parameter.
+     * Sets the properties for the object that match the {@code prefix} passed as parameter.
      *
      * @param properties The new properties value
      * @param prefix The new properties value
