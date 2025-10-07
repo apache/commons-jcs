@@ -40,7 +40,7 @@ import java.util.StringTokenizer;
  *
  * This can no longer create TCP laterals
  *
- * @deprecated use the new TYPE specific lateral factories.
+ * @deprecated Use the new TYPE specific lateral factories.
  */
 @Deprecated
 public class LateralCacheFactory
