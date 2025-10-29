@@ -39,7 +39,7 @@ import java.util.ArrayList;
  * restored via these managers. The facade provides a front to the composite
  * cache so the implmenetation is transparent.
  *
- * @deprecated use the new TYPE specific lateral factories.
+ * @deprecated Use the new TYPE specific lateral factories.
  */
 @Deprecated
 public class LateralJGCacheFactory
