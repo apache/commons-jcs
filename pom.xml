@@ -33,7 +33,7 @@
   -->
 
   <name>Apache Commons JCS</name>
-  <url>http://commons.apache.org/proper/commons-jcs/</url>
+  <url>https://commons.apache.org/proper/commons-jcs/</url>
   <description>Apache Commons JCS is a distributed, versatile caching system.</description>
   <inceptionYear>2002</inceptionYear>
 
@@ -41,7 +41,7 @@
   <distributionManagement>
       <site>
           <id>commons.jcs.apache.org</id>
-          <url>http://commons.apache.org/proper/commons-jcs/</url>
+          <url>https://commons.apache.org/proper/commons-jcs/</url>
       </site>
   </distributionManagement>
 
