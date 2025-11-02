@@ -80,17 +80,17 @@
     <dependency>
       <id>xmlrpc</id>
       <version>1.2-b1</version>
-      <url>http://xml.apache.org/xmlrpc/</url>
+      <url>https://xml.apache.org/xmlrpc/</url>
     </dependency>
     <dependency>
       <id>xerces:xercesImpl</id>
       <version>2.6.2</version>
-      <url>http://xml.apache.org/xerces2-j/</url>
+      <url>https://xml.apache.org/xerces2-j/</url>
     </dependency>
     <dependency>
       <id>xml-apis</id>
       <version>2.0.2</version>
-      <url>http://xml.apache.org/commons/</url>
+      <url>https://xml.apache.org/commons/</url>
     </dependency>
     <dependency>
       <id>struts</id>
