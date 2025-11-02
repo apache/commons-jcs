@@ -148,7 +148,7 @@
 			<answer>
 				<p>
 					You first need to install
-					<a href="http://maven.apache.org/">Maven</a>
+					<a href="https://maven.apache.org/">Maven</a>
 					After installing run
 					"mvn test" which compiles and tests the entire package.
 					To build a jar run "mvn package".

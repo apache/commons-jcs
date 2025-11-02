@@ -34,7 +34,7 @@ import java.util.Properties;
  * The original source is from:
  * <p>
  * @author (C) <a
- *         href="http://www.javaworld.com/columns/jw-qna-index.shtml">Vlad
+ *         href="https://www.javaworld.com/columns/jw-qna-index.shtml">Vlad
  *         Roubtsov </a>, 2003
  */
 public abstract class PropertyLoader

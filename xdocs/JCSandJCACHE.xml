@@ -41,7 +41,7 @@
     <section name="JCS and JCACHE (JSR-107)">
       <p>
         The JCS is an attempt to build a system close to JCACHE , <a
-            href="http://jcp.org/jsr/detail/107.jsp">JSR-107</a>, a
+            href="https://jcp.org/jsr/detail/107.jsp">JSR-107</a>, a
         description of the caching system used in Oracle9i.  JCS grew
         out of my work over the past two years to build an enterprise
         level caching system.  Though it is replete with good ideas,
