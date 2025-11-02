@@ -91,10 +91,10 @@
       <post>user@commons.apache.org</post>
       <archive>https://mail-archives.apache.org/mod_mbox/commons-user/</archive>
       <otherArchives>
-        <otherArchive>http://markmail.org/list/org.apache.commons.users/</otherArchive>
-        <otherArchive>http://old.nabble.com/Commons---User-f319.html</otherArchive>
+        <otherArchive>https://markmail.org/list/org.apache.commons.users/</otherArchive>
+        <otherArchive>https://old.nabble.com/Commons---User-f319.html</otherArchive>
         <otherArchive>https://www.mail-archive.com/user@commons.apache.org/</otherArchive>
-        <otherArchive>http://news.gmane.org/gmane.comp.jakarta.commons.user</otherArchive>
+        <otherArchive>https://news.gmane.org/gmane.comp.jakarta.commons.user</otherArchive>
       </otherArchives>
     </mailingList>
     <mailingList>
@@ -104,10 +104,10 @@
       <post>dev@commons.apache.org</post>
       <archive>https://mail-archives.apache.org/mod_mbox/commons-dev/</archive>
       <otherArchives>
-        <otherArchive>http://markmail.org/list/org.apache.commons.dev/</otherArchive>
-        <otherArchive>http://old.nabble.com/Commons---Dev-f317.html</otherArchive>
+        <otherArchive>https://markmail.org/list/org.apache.commons.dev/</otherArchive>
+        <otherArchive>https://old.nabble.com/Commons---Dev-f317.html</otherArchive>
         <otherArchive>https://www.mail-archive.com/dev@commons.apache.org/</otherArchive>
-        <otherArchive>http://news.gmane.org/gmane.comp.jakarta.commons.devel</otherArchive>
+        <otherArchive>https://news.gmane.org/gmane.comp.jakarta.commons.devel</otherArchive>
       </otherArchives>
     </mailingList>
     <mailingList>
@@ -116,8 +116,8 @@
       <unsubscribe>issues-unsubscribe@commons.apache.org</unsubscribe>
       <archive>https://mail-archives.apache.org/mod_mbox/commons-issues/</archive>
       <otherArchives>
-        <otherArchive>http://markmail.org/list/org.apache.commons.issues/</otherArchive>
-        <otherArchive>http://old.nabble.com/Commons---Issues-f25499.html</otherArchive>
+        <otherArchive>https://markmail.org/list/org.apache.commons.issues/</otherArchive>
+        <otherArchive>https://old.nabble.com/Commons---Issues-f25499.html</otherArchive>
         <otherArchive>https://www.mail-archive.com/issues@commons.apache.org/</otherArchive>
       </otherArchives>
     </mailingList>
@@ -127,7 +127,7 @@
       <unsubscribe>commits-unsubscribe@commons.apache.org</unsubscribe>
       <archive>https://mail-archives.apache.org/mod_mbox/commons-commits/</archive>
       <otherArchives>
-        <otherArchive>http://markmail.org/list/org.apache.commons.commits/</otherArchive>
+        <otherArchive>https://markmail.org/list/org.apache.commons.commits/</otherArchive>
         <otherArchive>https://www.mail-archive.com/commits@commons.apache.org/</otherArchive>
       </otherArchives>
     </mailingList>
@@ -137,10 +137,10 @@
       <unsubscribe>announce-unsubscribe@apache.org</unsubscribe>
       <archive>https://mail-archives.apache.org/mod_mbox/www-announce/</archive>
       <otherArchives>
-        <otherArchive>http://markmail.org/list/org.apache.announce/</otherArchive>
-        <otherArchive>http://old.nabble.com/Apache-News-and-Announce-f109.html</otherArchive>
+        <otherArchive>https://markmail.org/list/org.apache.announce/</otherArchive>
+        <otherArchive>https://old.nabble.com/Apache-News-and-Announce-f109.html</otherArchive>
         <otherArchive>https://www.mail-archive.com/announce@apache.org/</otherArchive>
-        <otherArchive>http://news.gmane.org/gmane.comp.apache.announce</otherArchive>
+        <otherArchive>https://news.gmane.org/gmane.comp.apache.announce</otherArchive>
       </otherArchives>
     </mailingList>
   </mailingLists>
