@@ -44,7 +44,7 @@
                jcs.serialization.class.filter and use the syntax of Object>InputFilter from Java9
                Document the behavior, add a test.
             </action>
-            <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump org.apache.commons:commons-parent from 59 to 91 #222, #258, #277, #280, #286, #292, #296, #302, #352, #305.</action>
+            <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump org.apache.commons:commons-parent from 59 to 92 #222, #258, #277, #280, #286, #292, #296, #302, #352, #305, #403.</action>
             <action dev="tv" type="update" issue="JCS-241">Use System.Logger from Java9, remove own logging abstraction, remove dependency on log4j2</action>
             <action dev="tv" type="update" due-to="Gary Gregory, strangelookingnerd">Migrate tests to JUnit5 #309</action>
             <action dev="tv" type="update">Update dependency servlet-api 2.5 to javax.servlet-api 3.1.0.</action>
