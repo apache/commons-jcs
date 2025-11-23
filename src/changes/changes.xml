@@ -29,6 +29,7 @@
             <action type="fix" dev="ggregory" due-to="Gary Gregory">
                Remove -nouses directive from maven-bundle-plugin. OSGi package imports now state 'uses' definitions for package imports, this doesn't affect JPMS (from org.apache.commons:commons-parent:80).
             </action>
+            <action type="fix" dev="ggregory" due-to="Gary Gregory">Fix Apache RAT plugin console warnings.</action>
             <!-- ADD -->
             <action type="add" dev="ggregory" due-to="Gary Gregory">
                Add Maven property project.build.outputTimestamp for build reproducibility.

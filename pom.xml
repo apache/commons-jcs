@@ -244,19 +244,19 @@
             <excludes combine.children="merge">
             so that the child pom entries replace the parent entries
           -->
-          <excludes combine.children="append">
-            <exclude>.java-version</exclude>
-            <exclude>**/zipcodes.txt</exclude>
-            <exclude>**/.gitignore</exclude>
-            <exclude>**/derby.log</exclude>
-            <exclude>**/META-INF/services/javax.*</exclude>
+          <inputExcludes combine.children="append">
+            <inputExclude>.java-version</inputExclude>
+            <inputExclude>**/zipcodes.txt</inputExclude>
+            <inputExclude>**/.gitignore</inputExclude>
+            <inputExclude>**/derby.log</inputExclude>
+            <inputExclude>**/META-INF/services/javax.*</inputExclude>
             <!-- Exclude Eclipse local files and folders -->
-            <exclude>**/.settings/**</exclude>
-            <exclude>**/.project</exclude>
-            <exclude>**/.classpath</exclude>
+            <inputExclude>**/.settings/**</inputExclude>
+            <inputExclude>**/.project</inputExclude>
+            <inputExclude>**/.classpath</inputExclude>
             <!-- Exclude build directory -->
-            <exclude>**/target/**</exclude>
-          </excludes>
+            <inputExclude>**/target/**</inputExclude>
+          </inputExcludes>
         </configuration>
       </plugin>
       <plugin>
@@ -445,19 +445,19 @@
             <excludes combine.children="merge">
             so that the child pom entries replace the parent entries
           -->
-          <excludes combine.children="append">
-            <exclude>.java-version</exclude>
-            <exclude>**/zipcodes.txt</exclude>
-            <exclude>**/.gitignore</exclude>
-            <exclude>**/derby.log</exclude>
-            <exclude>**/META-INF/services/javax.*</exclude>
+          <inputExcludes combine.children="append">
+            <inputExclude>.java-version</inputExclude>
+            <inputExclude>**/zipcodes.txt</inputExclude>
+            <inputExclude>**/.gitignore</inputExclude>
+            <inputExclude>**/derby.log</inputExclude>
+            <inputExclude>**/META-INF/services/javax.*</inputExclude>
             <!-- Exclude Eclipse local files and folders -->
-            <exclude>**/.settings/**</exclude>
-            <exclude>**/.project</exclude>
-            <exclude>**/.classpath</exclude>
+            <inputExclude>**/.settings/**</inputExclude>
+            <inputExclude>**/.project</inputExclude>
+            <inputExclude>**/.classpath</inputExclude>
             <!-- Exclude build directory -->
-            <exclude>**/target/**</exclude>
-          </excludes>
+            <inputExclude>**/target/**</inputExclude>
+          </inputExcludes>
         </configuration>
       </plugin>
     </plugins>

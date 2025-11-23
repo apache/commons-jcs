@@ -132,9 +132,9 @@
           <artifactId>apache-rat-plugin</artifactId>
           <version>${commons.rat.version}</version>
           <configuration>
-            <excludes combine.children="append">
-              <exclude>**/zipcodes.txt</exclude>
-            </excludes>
+            <inputExcludes combine.children="append">
+              <inputExclude>**/zipcodes.txt</inputExclude>
+            </inputExcludes>
           </configuration>
         </plugin>
       </plugins>
