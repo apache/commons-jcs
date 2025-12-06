@@ -5,3 +5,7 @@ target
 .settings
 .java-version
 .idea/
+
+# NetBeans files
+nb-configuration.xml
+nbactions.xml
