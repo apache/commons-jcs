@@ -34,7 +34,7 @@ import org.apache.commons.jcs3.log.Log;
  * Anders Kristensen
  * <p>
  * General purpose Object property setter. Clients repeatedly invokes {@link #setProperty
- * setProperty(name,value)} in order to invoke setters on the Object specified in the constructor.
+ * setProperty(name, value)} in order to invoke setters on the Object specified in the constructor.
  * This class relies on the JavaBeans {@link Introspector}to analyze the given Object Class using
  * reflection.
  * <p>
