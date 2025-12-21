@@ -280,6 +280,13 @@
   <dependencyManagement>
     <dependencies>
       <dependency>
+        <groupId>org.apache.logging.log4j</groupId>
+        <artifactId>log4j-bom</artifactId>
+        <version>${commons.log4j.version}</version>
+        <scope>import</scope>
+        <type>pom</type>
+      </dependency>
+      <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>commons-jcs3-core</artifactId>
         <version>${project.version}</version>
@@ -528,5 +535,6 @@
     <doclint>none</doclint>
     <!-- project.build.outputTimestamp is managed by Maven plugins, see https://maven.apache.org/guides/mini/guide-reproducible-builds.html -->
     <project.build.outputTimestamp>2022-01-01T00:00:00Z</project.build.outputTimestamp>
+    <commons.log4j.version>2.25.3</commons.log4j.version>
   </properties>
 </project>
