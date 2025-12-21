@@ -27,16 +27,13 @@
   <artifactId>commons-jcs3</artifactId>
   <packaging>pom</packaging>
   <version>3.3.0-SNAPSHOT</version>
-
   <!--
    * Build with -PjcacheTck to run the JSR-107 TCK
   -->
-
   <name>Apache Commons JCS</name>
   <url>https://commons.apache.org/proper/commons-jcs/</url>
   <description>Apache Commons JCS is a distributed, versatile caching system.</description>
   <inceptionYear>2002</inceptionYear>
-
   <!-- Required for staging to work -->
   <distributionManagement>
       <site>
@@ -44,11 +41,9 @@
           <url>https://commons.apache.org/proper/commons-jcs/</url>
       </site>
   </distributionManagement>
-
   <issueManagement>
     <url>https://issues.apache.org/jira/browse/JCS</url>
   </issueManagement>
-
   <scm>
     <connection>scm:git:https://gitbox.apache.org/repos/asf/commons-jcs.git</connection>
     <developerConnection>scm:git:https://gitbox.apache.org/repos/asf/commons-jcs.git</developerConnection>
@@ -143,7 +138,6 @@
       </otherArchives>
     </mailingList>
   </mailingLists>
-
   <modules>
     <module>commons-jcs3-core</module>
     <module>commons-jcs3-jcache</module>
@@ -152,7 +146,6 @@
     <module>commons-jcs3-jcache-openjpa</module>
     <module>commons-jcs3-dist</module>
   </modules>
-
   <developers>
     <developer>
       <id>asmuts</id>
@@ -191,7 +184,6 @@
       <organization />
     </developer>
   </developers>
-
   <contributors>
     <contributor>
       <name>Scott Eade</name>
@@ -202,7 +194,6 @@
       <email>mstevens@etla.org</email>
     </contributor>
   </contributors>
-
   <build>
     <defaultGoal>clean apache-rat:check verify javadoc:javadoc</defaultGoal>
     <pluginManagement>
@@ -216,7 +207,6 @@
         </plugin>
       </plugins>
     </pluginManagement>
-
     <plugins>
       <!-- Disable copying of N&L files from commons parent -->
       <plugin>
@@ -287,16 +277,13 @@
       </plugin>
     </plugins>
   </build>
-
   <dependencyManagement>
     <dependencies>
-
       <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>commons-jcs3-core</artifactId>
         <version>${project.version}</version>
       </dependency>
-
       <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>commons-jcs3-core</artifactId>
@@ -304,13 +291,11 @@
         <type>test-jar</type>
         <scope>test</scope>
       </dependency>
-
       <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>commons-jcs3-jcache</artifactId>
         <version>${project.version}</version>
       </dependency>
-
       <!--  JDBC DISK CACHE -->
       <dependency>
         <groupId>org.apache.commons</groupId>
@@ -318,14 +303,12 @@
         <version>2.14.0</version>
         <optional>true</optional>
       </dependency>
-
       <dependency>
         <groupId>hsqldb</groupId>
         <artifactId>hsqldb</artifactId>
         <version>1.8.0.10</version>
         <optional>true</optional>
       </dependency>
-
       <!--  For comparative performance tests only -->
       <dependency>
         <groupId>org.apache.commons</groupId>
@@ -333,7 +316,6 @@
         <version>${commons.collections.version}</version>
         <scope>test</scope>
       </dependency>
-
       <!--  Test dependencies -->
       <dependency>
         <groupId>org.junit.jupiter</groupId>
@@ -348,21 +330,18 @@
         <version>3.4.1.Final</version>
         <optional>true</optional>
       </dependency -->
-
       <dependency>
         <groupId>org.apache.httpcomponents</groupId>
         <artifactId>httpclient</artifactId>
         <version>4.5.14</version>
         <optional>true</optional>
       </dependency>
-
       <dependency>
         <groupId>jakarta.servlet</groupId>
         <artifactId>jakarta.servlet-api</artifactId>
         <version>6.1.0</version>
         <optional>true</optional>
       </dependency>
-
       <dependency>
         <groupId>jakarta.platform</groupId>
         <artifactId>jakarta.jakartaee-api</artifactId>
@@ -416,10 +395,8 @@
         <version>1.1.1</version>
         <scope>test</scope>
       </dependency>
-
     </dependencies>
   </dependencyManagement>
-
   <reporting>
     <plugins>
       <plugin>
@@ -462,7 +439,6 @@
       </plugin>
     </plugins>
   </reporting>
-
   <profiles>
     <profile>
       <id>sandbox</id>
@@ -520,15 +496,12 @@
       </build>
     </profile>
   </profiles>
-
   <properties>
-
     <!-- Default configuration for compiler source and target JVM -->
     <maven.compiler.sourceEncoding>UTF-8</maven.compiler.sourceEncoding>
     <maven.compiler.source>17</maven.compiler.source>
     <maven.compiler.target>17</maven.compiler.target>
     <commons.compiler.release>17</commons.compiler.release>
-
     <commons.componentid>jcs</commons.componentid>
     <commons.osgi.symbolicName>org.apache.commons.${project.artifactId}</commons.osgi.symbolicName>
     <commons.module.name>org.apache.commons.jcs3</commons.module.name>
@@ -547,16 +520,13 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <commons.encoding>UTF-8</commons.encoding>
-
     <jsr107.api.version>1.0.1</jsr107.api.version>
     <commons.collections.version>4.5.0</commons.collections.version>
     <commons.text.version>1.15.0</commons.text.version>
     <commons.lang.version>3.20.0</commons.lang.version>
-
     <test.type>Unit</test.type>
     <doclint>none</doclint>
     <!-- project.build.outputTimestamp is managed by Maven plugins, see https://maven.apache.org/guides/mini/guide-reproducible-builds.html -->
     <project.build.outputTimestamp>2022-01-01T00:00:00Z</project.build.outputTimestamp>
   </properties>
-
 </project>
