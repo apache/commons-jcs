@@ -71,7 +71,7 @@ public abstract class AbstractAuxiliaryCacheMonitor extends Thread
     private final Condition trigger = lock.newCondition();
 
     /**
-     * Constructor
+     * Constructs a new instance.
      *
      * @param name the thread name
      */

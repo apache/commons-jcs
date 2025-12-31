@@ -54,7 +54,7 @@ public class DiscoveredService
     }
 
     /**
-     * Constructor
+     * Constructs a new instance.
      *
      * @param message incoming message
      * @since 3.1

@@ -91,7 +91,7 @@ public class UDPDiscoveryService
     private ScheduledFuture<?> cleanupTaskFuture;
 
     /**
-     * Constructor
+     * Constructs a new instance.
      *
      * @param attributes settings of service
      * @param serializer the serializer to use to send and receive messages

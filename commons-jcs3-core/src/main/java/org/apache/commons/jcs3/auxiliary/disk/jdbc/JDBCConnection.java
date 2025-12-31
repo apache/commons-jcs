@@ -39,7 +39,7 @@ public class JDBCConnection implements AutoCloseable
     private final Connection connection;
 
     /**
-     * Constructor
+     * Constructs a new instance.
      * @param con Connection object
      * @throws SQLException if a database error occurs
      */

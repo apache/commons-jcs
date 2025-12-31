@@ -51,7 +51,7 @@ public class BlockDiskElementDescriptor<K>
     }
 
     /**
-     * Constructor
+     * Constructs a new instance.
      *
      * @param key the key
      * @param blocks the data

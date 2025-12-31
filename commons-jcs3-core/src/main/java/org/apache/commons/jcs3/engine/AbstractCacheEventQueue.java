@@ -43,7 +43,7 @@ public abstract class AbstractCacheEventQueue<K, V>
         private final IOExConsumer<T> eventRun;
 
         /**
-         * Constructor
+         * Constructs a new instance.
          *
          * @param eventData data of the event
          * @param eventRun operation to apply on the event

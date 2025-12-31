@@ -32,7 +32,7 @@ public class DaemonThreadFactory
     private int threadPriority = Thread.NORM_PRIORITY;
 
     /**
-     * Constructor
+     * Constructs a new instance.
      *
      * @param prefix thread name prefix
      */
@@ -42,7 +42,7 @@ public class DaemonThreadFactory
     }
 
     /**
-     * Constructor
+     * Constructs a new instance.
      *
      * @param prefix thread name prefix
      * @param threadPriority set thread priority
