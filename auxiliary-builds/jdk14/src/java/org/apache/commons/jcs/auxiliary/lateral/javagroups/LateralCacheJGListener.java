@@ -163,8 +163,6 @@ public class LateralCacheJGListener
         return ins;
     }
 
-    //////////////////////////// implements the ILateralCacheListener
-    // interface. //////////////
     /**
      * @param element
      * @param cb

@@ -408,7 +408,6 @@ public class RemoteCacheServerFactory
         }
     }
 
-    // ///////////////////// Startup/shutdown methods. //////////////////
     /**
      * Starts up the remote cache server on this JVM, and binds it to the registry on the given host
      * and port.
