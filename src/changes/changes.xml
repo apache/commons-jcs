@@ -34,6 +34,9 @@
             <action type="add" dev="ggregory" due-to="Gary Gregory">
                Add Maven property project.build.outputTimestamp for build reproducibility.
             </action>
+            <action dev="tv" type="add">
+               Add module-info.java for JCS core
+            </action>
             <!-- REMOVE -->
             <action dev="tv" type="remove">
                Remove all deprecated code.
