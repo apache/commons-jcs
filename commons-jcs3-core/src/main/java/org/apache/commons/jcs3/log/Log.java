@@ -32,7 +32,7 @@ import java.util.function.Supplier;
  *
  * <pre>
  * public class MyClass {
- *     private static final Log log = LogManager.getLog(MyClass.class);
+ *     private static final Log log = Log.getLog(MyClass.class);
  *     // ...
  * }
  * </pre>
