@@ -23,8 +23,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.apache.commons.jcs3.JCS;
 import org.apache.commons.jcs3.access.CacheAccess;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -37,18 +37,75 @@ class SerializerUnitTest
      *
      * @throws Exception
      */
-    @BeforeEach
-    void setUp()
+    @BeforeAll
+    public static void setUp()
         throws Exception
     {
         JCS.setConfigFilename( "/TestElementSerializer.ccf" );
     }
 
-    @AfterEach
-    void tearDown()
+    @AfterAll
+    public static void tearDown()
         throws Exception
     {
         JCS.shutdown();
+    }
+
+    /**
+     * Verify that object reading and writing with CompressingSerializer works
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testReadWriteCompressingSerializer()
+        throws Exception
+    {
+        // CompressingSerializer
+        final CacheAccess<String, String> jcs = JCS.getInstance( "blockRegion1" );
+
+        testReadWrite(jcs);
+    }
+
+    /**
+     * Verify that object reading and writing with EncryptingSerializer works
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testReadWriteEncryptingSerializer()
+        throws Exception
+    {
+        // EncryptingSerializer
+        final CacheAccess<String, String> jcs1 = JCS.getInstance( "blockRegion2" );
+
+        testReadWrite(jcs1);
+
+        JCS.shutdown();
+
+        // Re-init
+        // EncryptingSerializer
+        final CacheAccess<String, String> jcs2 = JCS.getInstance( "blockRegion2" );
+
+        for ( int i = 0; i < 500; i++ )
+        {
+            final String res = jcs2.get( "key:" + i );
+            assertNotNull( res, "[key:" + i + "] should not be null, " + jcs2.getStats() );
+        }
+    }
+
+    /**
+     * Verify that object reading and writing with JSONSerializer works
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testReadWriteJSONSerializer()
+        throws Exception
+    {
+        // JSONSerializer
+        final CacheAccess<String, String> jcs = JCS.getInstance( "blockRegion3" );
+
+        testReadWrite(jcs);
     }
 
     /**
@@ -56,49 +113,20 @@ class SerializerUnitTest
      *
      * @throws Exception
      */
-    @Test
-    void testReadWrite()
+    private void testReadWrite(CacheAccess<String, String> jcs)
         throws Exception
     {
         final int count = 500; // 100 fit in memory
-        // CompressingSerializer
-        final CacheAccess<String, String> jcs1 = JCS.getInstance( "blockRegion1" );
 
         for ( int i = 0; i < count; i++ )
         {
-            jcs1.put( "key:" + i, "data" + i );
+            jcs.put( "key:" + i, "data" + i );
         }
 
         for ( int i = 0; i < count; i++ )
         {
-            final String res = jcs1.get( "key:" + i );
-            assertNotNull( res, "[key:" + i + "] should not be null, " + jcs1.getStats() );
-        }
-
-        // EncryptingSerializer
-        final CacheAccess<String, String> jcs2 = JCS.getInstance( "blockRegion2" );
-
-        for ( int i = 0; i < count; i++ )
-        {
-            jcs2.put( "key:" + i, "data" + i );
-        }
-
-        for ( int i = 0; i < count; i++ )
-        {
-            final String res = jcs2.get( "key:" + i );
-            assertNotNull( res, "[key:" + i + "] should not be null, " + jcs2.getStats() );
-        }
-
-        JCS.shutdown();
-
-        // Re-init
-        // EncryptingSerializer
-        final CacheAccess<String, String> jcs3 = JCS.getInstance( "blockRegion2" );
-
-        for ( int i = 0; i < count; i++ )
-        {
-            final String res = jcs3.get( "key:" + i );
-            assertNotNull( res, "[key:" + i + "] should not be null, " + jcs3.getStats() );
+            final String res = jcs.get( "key:" + i );
+            assertNotNull( res, "[key:" + i + "] should not be null, " + jcs.getStats() );
         }
     }
 }

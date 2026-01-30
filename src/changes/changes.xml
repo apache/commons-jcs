@@ -37,6 +37,9 @@
             <action dev="tv" type="add">
                Add module-info.java for JCS core
             </action>
+            <action dev="tv" type="add">
+               Add optional JSON serializer/deserializer based on Jackson
+            </action>
             <!-- REMOVE -->
             <action dev="tv" type="remove">
                Remove all deprecated code.

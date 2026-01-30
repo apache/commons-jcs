@@ -41,6 +41,11 @@ jcs.region.blockRegion2.cacheattributes=org.apache.commons.jcs3.engine.Composite
 jcs.region.blockRegion2.cacheattributes.MaxObjects=100
 jcs.region.blockRegion2.cacheattributes.MemoryCacheName=org.apache.commons.jcs3.engine.memory.lru.LRUMemoryCache
 
+jcs.region.blockRegion3=blockDiskCache3
+jcs.region.blockRegion3.cacheattributes=org.apache.commons.jcs3.engine.CompositeCacheAttributes
+jcs.region.blockRegion3.cacheattributes.MaxObjects=100
+jcs.region.blockRegion3.cacheattributes.MemoryCacheName=org.apache.commons.jcs3.engine.memory.lru.LRUMemoryCache
+
 # #### AUXILIARY CACHES
 
 # Block Disk Cache
@@ -58,6 +63,13 @@ jcs.auxiliary.blockDiskCache2.attributes.EventQueueType=POOLED
 jcs.auxiliary.blockDiskCache2.serializer=org.apache.commons.jcs3.utils.serialization.EncryptingSerializer
 jcs.auxiliary.blockDiskCache2.serializer.attributes.preSharedKey=my_secret
 jcs.auxiliary.blockDiskCache2.serializer.attributes.aesCipherTransformation=AES/GCM/NoPadding
+
+# Block Disk Cache
+jcs.auxiliary.blockDiskCache3=org.apache.commons.jcs3.auxiliary.disk.block.BlockDiskCacheFactory
+jcs.auxiliary.blockDiskCache3.attributes=org.apache.commons.jcs3.auxiliary.disk.block.BlockDiskCacheAttributes
+jcs.auxiliary.blockDiskCache3.attributes.DiskPath=target/test-sandbox/block-disk-cache3
+jcs.auxiliary.blockDiskCache3.attributes.EventQueueType=POOLED
+jcs.auxiliary.blockDiskCache3.serializer=org.apache.commons.jcs3.utils.serialization.JSONSerializer
 
 # Default Cache Event Queue thread pool config, used by auxiliaries
 thread_pool.cache_event_queue.useBoundary=false

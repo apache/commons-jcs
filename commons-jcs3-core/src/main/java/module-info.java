@@ -93,14 +93,14 @@ module org.apache.commons.jcs3.core {
 
     // Java platform modules - required
     requires java.base;
-    requires java.rmi;
-    requires java.sql;
     requires java.management;
-    requires java.naming;
     requires java.desktop;
+    requires transitive java.rmi;
+    requires transitive java.sql;
+    requires transitive java.naming;
 
     // Optional dependencies for remote HTTP caching
-    requires static jakarta.servlet;
+    requires transitive jakarta.servlet;
 
     // Optional dependencies for JDBC disk cache
     requires static org.apache.commons.dbcp2;
@@ -108,6 +108,11 @@ module org.apache.commons.jcs3.core {
     // Optional dependencies for remote HTTP caching
     requires static org.apache.httpcomponents.httpclient;
     requires static org.apache.httpcomponents.httpcore;
+
+    // Optional dependencies for remote HTTP caching
+    requires static com.fasterxml.jackson.databind;
+    opens org.apache.commons.jcs3.utils.serialization to com.fasterxml.jackson.databind;
+    opens org.apache.commons.jcs3.engine to com.fasterxml.jackson.databind;
 
     // Uses and provides clauses
     uses org.apache.commons.jcs3.auxiliary.AuxiliaryCacheFactory;
