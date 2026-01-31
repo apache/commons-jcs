@@ -22,7 +22,6 @@ package org.apache.commons.jcs3.utils.serialization;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-import java.nio.charset.StandardCharsets;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -65,7 +64,7 @@ class JSONSerializerUnitTest
 
         // DO WORK
         byte[] serialized = serializer.serialize(before);
-        System.out.println(new String(serialized, StandardCharsets.UTF_8));
+        // System.out.println(new String(serialized, StandardCharsets.UTF_8));
         final Person after = serializer.deSerialize(serialized, null);
 
         // VERIFY
@@ -134,7 +133,7 @@ class JSONSerializerUnitTest
 
         // DO WORK
         byte[] serialized = serializer.serialize(before);
-        System.out.println(new String(serialized, StandardCharsets.UTF_8));
+        // System.out.println(new String(serialized, StandardCharsets.UTF_8));
         final String after = serializer.deSerialize(serialized, null);
 
         // VERIFY
