@@ -100,17 +100,17 @@ module org.apache.commons.jcs4.core {
     requires transitive java.naming;
 
     // Optional dependencies for remote HTTP caching
-    requires transitive jakarta.servlet;
+    requires static jakarta.servlet;
 
     // Optional dependencies for JDBC disk cache
-    requires transitive org.apache.commons.dbcp2;
+    requires static org.apache.commons.dbcp2;
 
     // Optional dependencies for remote HTTP caching
-    requires transitive org.apache.httpcomponents.httpclient;
-    requires transitive org.apache.httpcomponents.httpcore;
+    requires static org.apache.httpcomponents.httpclient;
+    requires static org.apache.httpcomponents.httpcore;
 
     // Optional dependencies for JSON serializer
-    requires transitive com.fasterxml.jackson.databind;
+    requires static com.fasterxml.jackson.databind;
     opens org.apache.commons.jcs4.utils.serialization to com.fasterxml.jackson.databind;
     opens org.apache.commons.jcs4.engine to com.fasterxml.jackson.databind;
 
