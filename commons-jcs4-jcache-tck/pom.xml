@@ -1,0 +1,224 @@
+<?xml version="1.0"?>
+<!--
+
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+       https://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.apache.commons</groupId>
+    <artifactId>commons-jcs4</artifactId>
+    <version>4.0.0-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+
+  <!--
+
+  to run from an IDE a JMX test add:
+    -Dorg.jsr107.tck.management.agentId=MBeanServerJCS -Djavax.management.builder.initial=org.apache.commons.jcs4.jcache.jmx.ConfigurableMBeanServerIdBuilder
+  -->
+
+  <artifactId>commons-jcs4-jcache-tck</artifactId>
+
+  <name>Apache Commons JCS :: JCache TCK</name>
+
+  <scm>
+    <connection>scm:git:https://gitbox.apache.org/repos/asf/commons-jcs.git</connection>
+    <developerConnection>scm:git:https://gitbox.apache.org/repos/asf/commons-jcs.git</developerConnection>
+    <url>https://gitbox.apache.org/repos/asf?p=commons-jcs.git</url>
+  </scm>
+
+  <properties>
+
+    <implementation-groupId>${project.groupId}</implementation-groupId>
+    <implementation-artifactId>commons-jcs4</implementation-artifactId>
+    <implementation-version>${project.version}</implementation-version>
+
+    <CacheManagerImpl>org.apache.commons.jcs4.jcache.JCSCachingManager</CacheManagerImpl>
+    <CacheImpl>org.apache.commons.jcs4.jcache.JCSCache</CacheImpl>
+    <CacheEntryImpl>org.apache.commons.jcs4.jcache.JCSEntry</CacheEntryImpl>
+
+    <javax.management.builder.initial>org.apache.commons.jcs4.jcache.jmx.ConfigurableMBeanServerIdBuilder</javax.management.builder.initial>
+    <org.jsr107.tck.management.agentId>MBeanServerJCS</org.jsr107.tck.management.agentId>
+
+    <domain-lib-dir>${project.build.directory}/domainlib</domain-lib-dir>
+    <domain-jar>domain.jar</domain-jar>
+    <!-- project.build.outputTimestamp is managed by Maven plugins, see https://maven.apache.org/guides/mini/guide-reproducible-builds.html -->
+    <project.build.outputTimestamp>2022-01-01T00:00:00Z</project.build.outputTimestamp>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>commons-jcs4-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>commons-jcs4-jcache</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>javax.cache</groupId>
+      <artifactId>test-domain</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>javax.cache</groupId>
+      <artifactId>app-domain</artifactId>
+    </dependency>
+
+	<dependency>
+      <groupId>javax.cache</groupId>
+      <artifactId>cache-api</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>javax.cache</groupId>
+      <artifactId>cache-tests</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>javax.cache</groupId>
+      <artifactId>cache-tests</artifactId>
+      <classifier>tests</classifier>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>jakarta.platform</groupId>
+      <artifactId>jakarta.jakartaee-api</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.openwebbeans</groupId>
+      <artifactId>openwebbeans-impl</artifactId>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <testResources>
+      <testResource>
+        <directory>src/test/resources</directory>
+        <filtering>true</filtering>
+      </testResource>
+    </testResources>
+
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <configuration>
+          <skipSource>true</skipSource>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <profiles>
+    <profile>
+      <id>jcacheTck</id>
+      <activation>
+        <property>
+          <name>jcache.tck</name>
+          <value>true</value>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>copy-cache-tests</id>
+                <phase>generate-test-resources</phase>
+                <goals>
+                  <goal>unpack-dependencies</goal>
+                </goals>
+                <configuration>
+                  <outputDirectory>${project.build.testOutputDirectory}</outputDirectory>
+                  <includeArtifactIds>cache-tests</includeArtifactIds>
+                  <includeScope>test</includeScope>
+                  <excludes>**/unwrap.properties</excludes>
+                </configuration>
+              </execution>
+              <execution>
+                <id>copy-domain</id>
+                <phase>generate-test-resources</phase>
+                <goals>
+                  <goal>copy</goal>
+                </goals>
+                <configuration>
+                  <artifactItems>
+                    <artifactItem>
+                      <groupId>javax.cache</groupId>
+                      <artifactId>app-domain</artifactId>
+                      <version>${jsr107.api.version}</version>
+                      <outputDirectory>${domain-lib-dir}</outputDirectory>
+                      <destFileName>${domain-jar}</destFileName>
+                    </artifactItem>
+                  </artifactItems>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <version>2.17</version>
+            <configuration>
+              <systemPropertyVariables>
+                <domainJar>${domain-lib-dir}/${domain-jar}</domainJar>
+                <javax.management.builder.initial>${javax.management.builder.initial}</javax.management.builder.initial>
+                <org.jsr107.tck.management.agentId>${org.jsr107.tck.management.agentId}</org.jsr107.tck.management.agentId>
+                <javax.cache.CacheManager>${CacheManagerImpl}</javax.cache.CacheManager>
+                <javax.cache.Cache>${CacheImpl}</javax.cache.Cache>
+                <javax.cache.Cache.Entry>${CacheEntryImpl}</javax.cache.Cache.Entry>
+                <javax.cache.annotation.CacheInvocationContext>${CacheInvocationContextImpl}</javax.cache.annotation.CacheInvocationContext>
+              </systemPropertyVariables>
+            </configuration>
+          </plugin>
+
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+</project>
+

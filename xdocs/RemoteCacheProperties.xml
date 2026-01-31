@@ -150,8 +150,8 @@
 				<source>
 					<![CDATA[
 # This remote client does not receive
-jcs.auxiliary.RC=org.apache.commons.jcs3.auxiliary.remote.RemoteCacheFactory
-jcs.auxiliary.RC.attributes=org.apache.commons.jcs3.auxiliary.remote.RemoteCacheAttributes
+jcs.auxiliary.RC=org.apache.commons.jcs4.auxiliary.remote.RemoteCacheFactory
+jcs.auxiliary.RC.attributes=org.apache.commons.jcs4.auxiliary.remote.RemoteCacheAttributes
 jcs.auxiliary.RC.attributes.FailoverServers=localhost:1101,localhost:1102
 jcs.auxiliary.RC.attributes.LocalPort=1201
 jcs.auxiliary.RC.attributes.RemoveUponRemotePut=false

@@ -1,0 +1,81 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+# Cache configuration for the 'TestDiskCache' test. The memory cache has a
+# a maximum of 100 objects, so objects should get pushed into the disk cache
+
+jcs.default=blockDiskCache
+jcs.default.cacheattributes=org.apache.commons.jcs4.engine.CompositeCacheAttributes
+jcs.default.cacheattributes.MaxObjects=100
+jcs.default.cacheattributes.MemoryCacheName=org.apache.commons.jcs4.engine.memory.lru.LRUMemoryCache
+
+# SYSTEM GROUP ID CACHE
+jcs.system.groupIdCache=blockDiskCache
+jcs.system.groupIdCache.cacheattributes=org.apache.commons.jcs4.engine.CompositeCacheAttributes
+jcs.system.groupIdCache.cacheattributes.MaxObjects=10000
+jcs.system.groupIdCache.cacheattributes.MemoryCacheName=org.apache.commons.jcs4.engine.memory.lru.LRUMemoryCache
+
+
+# #### CACHE REGIONS FOR TEST
+
+jcs.region.blockRegion1=blockDiskCache
+jcs.region.blockRegion1.cacheattributes=org.apache.commons.jcs4.engine.CompositeCacheAttributes
+jcs.region.blockRegion1.cacheattributes.MaxObjects=100
+jcs.region.blockRegion1.cacheattributes.MemoryCacheName=org.apache.commons.jcs4.engine.memory.lru.LRUMemoryCache
+
+jcs.region.blockRegion2=blockDiskCache2
+jcs.region.blockRegion2.cacheattributes=org.apache.commons.jcs4.engine.CompositeCacheAttributes
+jcs.region.blockRegion2.cacheattributes.MaxObjects=100
+jcs.region.blockRegion2.cacheattributes.MemoryCacheName=org.apache.commons.jcs4.engine.memory.lru.LRUMemoryCache
+
+jcs.region.blockRegion3=blockDiskCache3
+jcs.region.blockRegion3.cacheattributes=org.apache.commons.jcs4.engine.CompositeCacheAttributes
+jcs.region.blockRegion3.cacheattributes.MaxObjects=100
+jcs.region.blockRegion3.cacheattributes.MemoryCacheName=org.apache.commons.jcs4.engine.memory.lru.LRUMemoryCache
+
+# #### AUXILIARY CACHES
+
+# Block Disk Cache
+jcs.auxiliary.blockDiskCache=org.apache.commons.jcs4.auxiliary.disk.block.BlockDiskCacheFactory
+jcs.auxiliary.blockDiskCache.attributes=org.apache.commons.jcs4.auxiliary.disk.block.BlockDiskCacheAttributes
+jcs.auxiliary.blockDiskCache.attributes.DiskPath=target/test-sandbox/block-disk-cache
+jcs.auxiliary.blockDiskCache.serializer=org.apache.commons.jcs4.utils.serialization.CompressingSerializer
+
+
+# Block Disk Cache
+jcs.auxiliary.blockDiskCache2=org.apache.commons.jcs4.auxiliary.disk.block.BlockDiskCacheFactory
+jcs.auxiliary.blockDiskCache2.attributes=org.apache.commons.jcs4.auxiliary.disk.block.BlockDiskCacheAttributes
+jcs.auxiliary.blockDiskCache2.attributes.DiskPath=target/test-sandbox/block-disk-cache2
+jcs.auxiliary.blockDiskCache2.attributes.EventQueueType=POOLED
+jcs.auxiliary.blockDiskCache2.serializer=org.apache.commons.jcs4.utils.serialization.EncryptingSerializer
+jcs.auxiliary.blockDiskCache2.serializer.attributes.preSharedKey=my_secret
+jcs.auxiliary.blockDiskCache2.serializer.attributes.aesCipherTransformation=AES/GCM/NoPadding
+
+# Block Disk Cache
+jcs.auxiliary.blockDiskCache3=org.apache.commons.jcs4.auxiliary.disk.block.BlockDiskCacheFactory
+jcs.auxiliary.blockDiskCache3.attributes=org.apache.commons.jcs4.auxiliary.disk.block.BlockDiskCacheAttributes
+jcs.auxiliary.blockDiskCache3.attributes.DiskPath=target/test-sandbox/block-disk-cache3
+jcs.auxiliary.blockDiskCache3.attributes.EventQueueType=POOLED
+jcs.auxiliary.blockDiskCache3.serializer=org.apache.commons.jcs4.utils.serialization.JSONSerializer
+
+# Default Cache Event Queue thread pool config, used by auxiliaries
+thread_pool.cache_event_queue.useBoundary=false
+#thread_pool.cache_event_queue.boundarySize=2000
+thread_pool.cache_event_queue.maximumPoolSize=10
+thread_pool.cache_event_queue.minimumPoolSize=5
+thread_pool.cache_event_queue.keepAliveTime=3500
+thread_pool.cache_event_queue.whenBlockedPolicy=RUN
+thread_pool.cache_event_queue.startUpSize=5

@@ -45,8 +45,8 @@
 
         <source><![CDATA[
 # Lateral JavaGroups Distribution
-jcs.auxiliary.LJG=org.apache.commons.jcs3.auxiliary.lateral.LateralCacheFactory
-jcs.auxiliary.LJG.attributes=org.apache.commons.jcs3.auxiliary.lateral.LateralCacheAttributes
+jcs.auxiliary.LJG=org.apache.commons.jcs4.auxiliary.lateral.LateralCacheFactory
+jcs.auxiliary.LJG.attributes=org.apache.commons.jcs4.auxiliary.lateral.LateralCacheAttributes
 jcs.auxiliary.LJG.attributes.TransmissionTypeName=JAVAGROUPS
 jcs.auxiliary.LJG.attributes.PutOnlyMode=true
 jcs.auxiliary.LJG.attributes.JGChannelProperties=UDP(mcast_addr=224.0.0.100;mcast_port=7501):PING:FD:STABLE:NAKACK:UNICAST:FRAG:FLUSH:GMS:QUEUE

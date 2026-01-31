@@ -24,9 +24,9 @@
     <version>96</version>
   </parent>
 
-  <artifactId>commons-jcs3</artifactId>
+  <artifactId>commons-jcs4</artifactId>
   <packaging>pom</packaging>
-  <version>3.3.0-SNAPSHOT</version>
+  <version>4.0.0-SNAPSHOT</version>
   <!--
    * Build with -PjcacheTck to run the JSR-107 TCK
   -->
@@ -139,12 +139,12 @@
     </mailingList>
   </mailingLists>
   <modules>
-    <module>commons-jcs3-core</module>
-    <module>commons-jcs3-jcache</module>
-    <module>commons-jcs3-jcache-tck</module>
-    <module>commons-jcs3-jcache-extras</module>
-    <module>commons-jcs3-jcache-openjpa</module>
-    <module>commons-jcs3-dist</module>
+    <module>commons-jcs4-core</module>
+    <module>commons-jcs4-jcache</module>
+    <module>commons-jcs4-jcache-tck</module>
+    <module>commons-jcs4-jcache-extras</module>
+    <module>commons-jcs4-jcache-openjpa</module>
+    <module>commons-jcs4-dist</module>
   </modules>
   <developers>
     <developer>
@@ -288,19 +288,19 @@
       </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>commons-jcs3-core</artifactId>
+        <artifactId>commons-jcs4-core</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>commons-jcs3-core</artifactId>
+        <artifactId>commons-jcs4-core</artifactId>
         <version>${project.version}</version>
         <type>test-jar</type>
         <scope>test</scope>
       </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>commons-jcs3-jcache</artifactId>
+        <artifactId>commons-jcs4-jcache</artifactId>
         <version>${project.version}</version>
       </dependency>
       <!--  JDBC DISK CACHE -->
@@ -450,7 +450,7 @@
     <profile>
       <id>sandbox</id>
       <modules>
-        <module>commons-jcs3-sandbox</module>
+        <module>commons-jcs4-sandbox</module>
       </modules>
     </profile>
     <profile>
@@ -511,9 +511,9 @@
     <commons.compiler.release>17</commons.compiler.release>
     <commons.componentid>jcs</commons.componentid>
     <commons.osgi.symbolicName>org.apache.commons.${project.artifactId}</commons.osgi.symbolicName>
-    <commons.module.name>org.apache.commons.jcs3</commons.module.name>
-    <commons.release.version>3.3.0</commons.release.version>
-    <commons.release.name>commons-jcs3-dist-3.3.0</commons.release.name>
+    <commons.module.name>org.apache.commons.jcs4</commons.module.name>
+    <commons.release.version>4.0.0</commons.release.version>
+    <commons.release.name>commons-jcs4-dist-${commons.release.version}</commons.release.name>
     <commons.release.desc>(Java 17+)</commons.release.desc>
     <!-- The RC version used in the staging repository URL. -->
     <commons.bc.version>3.2.1</commons.bc.version>
