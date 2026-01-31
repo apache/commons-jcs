@@ -109,7 +109,7 @@ module org.apache.commons.jcs3.core {
     requires static org.apache.httpcomponents.httpclient;
     requires static org.apache.httpcomponents.httpcore;
 
-    // Optional dependencies for remote HTTP caching
+    // Optional dependencies for JSON serializer
     requires static com.fasterxml.jackson.databind;
     opens org.apache.commons.jcs3.utils.serialization to com.fasterxml.jackson.databind;
     opens org.apache.commons.jcs3.engine to com.fasterxml.jackson.databind;
