@@ -9,7 +9,7 @@ package org.apache.commons.jcs4.admin;
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
  *
- *   https://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
@@ -19,144 +19,38 @@ package org.apache.commons.jcs4.admin;
  * under the License.
  */
 
-import java.beans.ConstructorProperties;
-
 /**
  * Stores info on a cache region for the template
  */
-public class CacheRegionInfo
-{
+public record CacheRegionInfo(
     /** The name of the cache region */
-    private final String cacheName;
+    String cacheName,
 
     /** The size of the cache region */
-    private final int cacheSize;
+    int cacheSize,
 
     /** The status of the cache region */
-    private final String cacheStatus;
+    String cacheStatus,
 
     /** The statistics of the cache region */
-    private final String cacheStatistics;
+    String cacheStatistics,
 
     /** The number of memory hits in the cache region */
-    private final long hitCountRam;
+    long hitCountRam,
 
     /** The number of auxiliary hits in the cache region */
-    private final long hitCountAux;
+    long hitCountAux,
 
     /** The number of misses in the cache region because the items were not found */
-    private final long missCountNotFound;
+    long missCountNotFound,
 
     /** The number of misses in the cache region because the items were expired */
-    private final long missCountExpired;
+    long missCountExpired,
 
     /** The number of bytes counted so far, will be a total of all items */
-    private final long byteCount;
-
-    /**
-     * Parameterized constructor
-     *
-     * @param cacheName The name of the cache region
-     * @param cacheSize The size of the cache region
-     * @param cacheStatus The status of the cache region
-     * @param cacheStatistics The statistics of the cache region
-     * @param hitCountRam The number of memory hits in the cache region
-     * @param hitCountAux The number of auxiliary hits in the cache region
-     * @param missCountNotFound The number of misses in the cache region because the items were not found
-     * @param missCountExpired The number of misses in the cache region because the items were expired
-     * @param byteCount The number of bytes counted so far, will be a total of all items
-     */
-    @ConstructorProperties({"cacheName", "cacheSize", "cacheStatus", "cacheStatistics",
-        "hitCountRam", "hitCountAux", "missCountNotFound", "missCountExpired", "byteCount"})
-    public CacheRegionInfo(final String cacheName, final int cacheSize, final String cacheStatus,
-            final String cacheStatistics, final long hitCountRam, final long hitCountAux,
-            final long missCountNotFound, final long missCountExpired, final long byteCount)
-    {
-        this.cacheName = cacheName;
-        this.cacheSize = cacheSize;
-        this.cacheStatus = cacheStatus;
-        this.cacheStatistics = cacheStatistics;
-        this.hitCountRam = hitCountRam;
-        this.hitCountAux = hitCountAux;
-        this.missCountNotFound = missCountNotFound;
-        this.missCountExpired = missCountExpired;
-        this.byteCount = byteCount;
-    }
-
-    /**
-     * @return total byte count
-     */
-    public long getByteCount()
-    {
-        return this.byteCount;
-    }
-
-    /**
-     * @return the cacheName
-     */
-    public String getCacheName()
-    {
-        return this.cacheName;
-    }
-
-    /**
-     * @return the cacheSize
-     */
-    public int getCacheSize()
-    {
-        return this.cacheSize;
-    }
-
-    /**
-     * Return the statistics for the region.
-     *
-     * @return String
-     */
-    public String getCacheStatistics()
-    {
-        return this.cacheStatistics;
-    }
-
-    /**
-     * @return a status string
-     */
-    public String getCacheStatus()
-    {
-        return this.cacheStatus;
-    }
-
-    /**
-     * @return the hitCountAux
-     */
-    public long getHitCountAux()
-    {
-        return hitCountAux;
-    }
-
-    /**
-     * @return the hitCountRam
-     */
-    public long getHitCountRam()
-    {
-        return hitCountRam;
-    }
-
-    /**
-     * @return the missCountExpired
-     */
-    public long getMissCountExpired()
-    {
-        return missCountExpired;
-    }
-
-    /**
-     * @return the missCountNotFound
-     */
-    public long getMissCountNotFound()
-    {
-        return missCountNotFound;
-    }
-
+    long byteCount
+)
+{
     /**
      * @return string info on the region
      */
@@ -164,13 +58,13 @@ public class CacheRegionInfo
     public String toString()
     {
         final StringBuilder buf = new StringBuilder();
-        buf.append( "\nCacheRegionInfo " );
-        if ( cacheName != null )
+        buf.append("\nCacheRegionInfo ");
+        if (cacheName() != null)
         {
-            buf.append( "\n CacheName [" + cacheName + "]" );
-            buf.append( "\n Status [" + cacheStatus + "]" );
+            buf.append("\n CacheName [" + cacheName() + "]");
+            buf.append("\n Status [" + cacheStatus() + "]");
         }
-        buf.append( "\n ByteCount [" + getByteCount() + "]" );
+        buf.append("\n ByteCount [" + byteCount() + "]");
 
         return buf.toString();
     }

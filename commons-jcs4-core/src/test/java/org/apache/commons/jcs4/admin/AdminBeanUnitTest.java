@@ -82,7 +82,7 @@ class AdminBeanUnitTest
         assertEquals( 1, elements.size(), "Wrong number of elements in the region." );
 
         final CacheElementInfo elementInfo = elements.get(0);
-        assertEquals( key, elementInfo.getKey(), "Wrong key." + elementInfo );
+        assertEquals( key, elementInfo.key(), "Wrong key." + elementInfo );
     }
 
     /**
@@ -108,13 +108,13 @@ class AdminBeanUnitTest
         for (final CacheRegionInfo info : regions)
         {
 
-            if ( info.getCacheName().equals( regionName ) )
+            if ( info.cacheName().equals( regionName ) )
             {
                 foundRegion = true;
 
-                assertTrue( info.getByteCount() > 5, "Byte count should be greater than 5." );
+                assertTrue( info.byteCount() > 5, "Byte count should be greater than 5." );
 
-                assertNotNull( info.getCacheStatistics(), "Should have stats." );
+                assertNotNull( info.cacheStatistics(), "Should have stats." );
             }
         }
 
@@ -146,7 +146,7 @@ class AdminBeanUnitTest
         assertEquals( 1, elements.size(), "Wrong number of elements in the region." );
 
         final CacheElementInfo elementInfo = elements.get(0);
-        assertEquals( key, elementInfo.getKey(), "Wrong key." );
+        assertEquals( key, elementInfo.key(), "Wrong key." );
 
         admin.removeItem( regionName, key );
 

@@ -22,7 +22,7 @@
 <%@page import="org.apache.commons.jcs4.access.CacheAccess" %>
 <%@page import="org.apache.commons.jcs4.admin.CacheElementInfo" %>
 <%@page import="org.apache.commons.jcs4.admin.CacheRegionInfo" %>
-<%@page import="org.apache.commons.jcs4.engine.ICacheElement" %>
+<%@page import="org.apache.commons.jcs4.engine.behavior.ICacheElement" %>
 
 <jsp:useBean id="jcsBean" scope="request" class="org.apache.commons.jcs4.admin.JCSAdminBean" />
 
@@ -215,14 +215,14 @@
         {
 %>
   <tr>
-    <td><%=element.getKey()%></td>
-    <td><%=element.isEternal()%></td>
-    <td><%=element.getCreateTime()%></td>
-    <td><%=element.getMaxLifeSeconds()%></td>
-    <td><%=element.getExpiresInSeconds()%></td>
+    <td><%=element.key()%></td>
+    <td><%=element.eternal()%></td>
+    <td><%=element.createTime()%></td>
+    <td><%=element.maxLifeSeconds()%></td>
+    <td><%=element.expiresInSeconds()%></td>
     <td>
-      <a href="?action=item&cacheName=<%=cacheName%>&key=<%=element.getKey()%>"> View </a>
-      | <a href="?action=remove&cacheName=<%=cacheName%>&key=<%=element.getKey()%>"> Remove </a>
+      <a href="?action=item&cacheName=<%=cacheName%>&key=<%=element.key()%>"> View </a>
+      | <a href="?action=remove&cacheName=<%=cacheName%>&key=<%=element.key()%>"> Remove </a>
     </td>
   </tr>
 <%
@@ -259,7 +259,7 @@ which empties the entire cache.
         for (CacheRegionInfo record : records)
         {
 %>
-    <option value="<%=record.getCacheName()%>"><%=record.getCacheName()%></option>
+    <option value="<%=record.cacheName()%>"><%=record.cacheName()%></option>
 <%
         }
 %>
@@ -283,18 +283,18 @@ which empties the entire cache.
         {
 %>
   <tr>
-    <td><%=record.getCacheName()%></td>
-    <td><%=record.getCacheSize()%></td>
-    <td><%=record.getByteCount()%></td>
-    <td><%=record.getCacheStatus()%></td>
-    <td><%=record.getHitCountRam()%></td>
-    <td><%=record.getHitCountAux()%></td>
-    <td><%=record.getMissCountNotFound()%></td>
-    <td><%=record.getMissCountExpired()%></td>
+    <td><%=record.cacheName()%></td>
+    <td><%=record.cacheSize()%></td>
+    <td><%=record.byteCount()%></td>
+    <td><%=record.cacheStatus()%></td>
+    <td><%=record.hitCountRam()%></td>
+    <td><%=record.hitCountAux()%></td>
+    <td><%=record.missCountNotFound()%></td>
+    <td><%=record.missCountExpired()%></td>
     <td>
-      <a href="?action=regionSummary&cacheName=<%=record.getCacheName()%>">Summary</a>
-      | <a href="?action=detail&cacheName=<%=record.getCacheName()%>">Detail</a>
-      | <a href="javascript:decision('Clicking OK will remove all the data from the region [<%=record.getCacheName()%>]!','?action=clearRegion&cacheName=<%=record.getCacheName()%>')">Clear</a>
+      <a href="?action=regionSummary&cacheName=<%=record.cacheName()%>">Summary</a>
+      | <a href="?action=detail&cacheName=<%=record.cacheName()%>">Detail</a>
+      | <a href="javascript:decision('Clicking OK will remove all the data from the region [<%=record.cacheName()%>]!','?action=clearRegion&cacheName=<%=record.cacheName()%>')">Clear</a>
     </td>
   </tr>
 <%
