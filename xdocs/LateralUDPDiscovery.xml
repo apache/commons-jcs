@@ -88,7 +88,7 @@ jcs.auxiliary.LTCP.attributes.UdpTTL=4
         </p>
         <p>
           If the network interface is not specified, JCS tries to detect a 
-          suitable interface. The selected interface is logged on INFO level.
+          suitable interface. The selected interface is logged at INFO level.
           Search for the message "Using network interface" in your log file.
         </p>
         <source><![CDATA[

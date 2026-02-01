@@ -108,5 +108,31 @@ jcs.auxiliary.blockDiskCache2.serializer.attributes.aesCipherTransformation=AES/
                 the ones with good randomness (given that your environment generates entropy fast 
                 enough, we saw problems with Linux).</p>
         </section>
+        <section name="JSON Serializer">
+            <p> The <code>JSONSerializer</code> serializes the cache object to a UTF-8-encoded
+                JSON string. The Java class name information for de-serialization is preserved 
+                in a separate <code>className</code> field. This serializer can be used to 
+                exchange data between different platforms or when text representations are 
+                required.</p>
+
+            <p> Note that for this to work properly, you need to open your data objects packages 
+                to Jackson DataBind in your <code>module-info.java</code>:</p>
+            <source>
+                <![CDATA[
+opens your.package to com.fasterxml.jackson.databind;                
+                ]]>
+            </source>
+                
+            <p> The configuration for a typical application looks like this:</p>
+            <source>
+                <![CDATA[
+# Block Disk Cache
+jcs.auxiliary.blockDiskCache3=org.apache.commons.jcs4.auxiliary.disk.block.BlockDiskCacheFactory
+jcs.auxiliary.blockDiskCache3.attributes=org.apache.commons.jcs4.auxiliary.disk.block.BlockDiskCacheAttributes
+jcs.auxiliary.blockDiskCache3.attributes.DiskPath=target/test-sandbox/block-disk-cache3
+jcs.auxiliary.blockDiskCache3.serializer=org.apache.commons.jcs4.utils.serialization.JSONSerializer
+                ]]>
+            </source>
+        </section>
 	</body>
 </document>

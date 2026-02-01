@@ -62,13 +62,6 @@
 					</tr>
 
 					<tr>
-						<td>database</td>
-						<td>This is appended to the url.</td>
-						<td>N</td>
-						<td></td>
-					</tr>
-
-					<tr>
 						<td>driverClassName</td>
 						<td>
 							The class name of the driver to talk to your
@@ -182,7 +175,6 @@ jcs.auxiliary.JDBC.attributes=org.apache.commons.jcs4.auxiliary.disk.jdbc.JDBCDi
 jcs.auxiliary.JDBC.attributes.userName=sa
 jcs.auxiliary.JDBC.attributes.password=
 jcs.auxiliary.JDBC.attributes.url=jdbc:hsqldb:
-jcs.auxiliary.JDBC.attributes.database=target/cache_hsql_db
 jcs.auxiliary.JDBC.attributes.driverClassName=org.hsqldb.jdbcDriver
 jcs.auxiliary.JDBC.attributes.tableName=JCS_STORE2
 jcs.auxiliary.JDBC.attributes.testBeforeInsert=false
