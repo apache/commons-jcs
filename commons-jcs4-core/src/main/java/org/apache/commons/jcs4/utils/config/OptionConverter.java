@@ -183,26 +183,20 @@ public class OptionConverter
         {
             try
             {
-                final Class<?> classObj = Class.forName( className );
-                final Object o = classObj.getDeclaredConstructor().newInstance();
+                @SuppressWarnings("unchecked") // CCE catched
+                final Class<T> classObj = (Class<T>) Class.forName( className );
+                return classObj.getDeclaredConstructor().newInstance();
 
-                try
-                {
-                    @SuppressWarnings("unchecked") // CCE catched
-                    final
-                    T t = (T) o;
-                    return t;
-                }
-                catch (final ClassCastException e)
-                {
-                    log.error( "A \"{0}\" object is not assignable to the "
-                            + "generic variable.", className );
-                    return defaultValue;
-                }
             }
-            catch (final Exception e )
+            catch (final ClassCastException e)
             {
-                log.error( "Could not instantiate class [{0}]", className, e );
+                log.error( "A \"{0}\" object is not assignable to the "
+                        + "generic variable.", className );
+                return defaultValue;
+            }
+            catch (final Exception e)
+            {
+                log.error("Could not instantiate class [{0}]", className, e);
             }
         }
         return defaultValue;

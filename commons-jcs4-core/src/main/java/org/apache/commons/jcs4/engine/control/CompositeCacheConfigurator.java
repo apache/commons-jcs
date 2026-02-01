@@ -162,8 +162,7 @@ public class CompositeCacheConfigurator
             if ( auxAttr == null )
             {
                 // auxFactory was not previously initialized.
-                final String prefix = AUXILIARY_PREFIX + auxName + ATTRIBUTE_PREFIX;
-                auxAttr = OptionConverter.instantiateByKey( props, prefix, null );
+                auxAttr = OptionConverter.instantiateByKey( props, attrName, null );
                 if ( auxAttr == null )
                 {
                     log.error( "Could not instantiate auxAttr named \"{0}\"", attrName );

@@ -70,21 +70,6 @@ public interface AuxiliaryCacheAttributes
     void setCacheName( String s );
 
     /**
-     * If you choose a POOLED event queue type, the value of EventQueuePoolName will be used. This
-     * is ignored if the pool type is SINGLE
-     *
-     * @param s SINGLE or POOLED
-     */
-    void setEventQueuePoolName( String s );
-
-    /**
-     * SINGLE is the default. If you choose POOLED, the value of EventQueuePoolName will be used
-     *
-     * @param s SINGLE or POOLED
-     */
-    void setEventQueueType( ICacheEventQueue.QueueType s );
-
-    /**
      * Name known by configurator
      *
      * @param s The new name value

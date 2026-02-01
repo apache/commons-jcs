@@ -116,7 +116,6 @@ public abstract class AbstractAuxiliaryCacheAttributes
      *
      * @param s SINGLE or POOLED
      */
-    @Override
     public void setEventQueuePoolName( final String s )
     {
         eventQueuePoolName = s;
@@ -127,7 +126,6 @@ public abstract class AbstractAuxiliaryCacheAttributes
      *
      * @param queueType SINGLE or POOLED
      */
-    @Override
     public void setEventQueueType( final ICacheEventQueue.QueueType queueType )
     {
         this.eventQueueType = queueType;

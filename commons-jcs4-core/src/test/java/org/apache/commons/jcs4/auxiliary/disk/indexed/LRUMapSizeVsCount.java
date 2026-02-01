@@ -74,7 +74,6 @@ public class LRUMapSizeVsCount
         try
         {
         	final IndexedDiskCacheAttributes cattr = new IndexedDiskCacheAttributes();
-        	cattr.setName("junit");
         	cattr.setCacheName("junit");
         	cattr.setDiskPath(".");
         	final IndexedDiskCache<String, String> idc = new IndexedDiskCache<>(cattr);
