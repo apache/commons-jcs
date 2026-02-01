@@ -236,7 +236,6 @@
           -->
           <inputExcludes combine.children="append">
             <inputExclude>.java-version</inputExclude>
-            <inputExclude>**/zipcodes.txt</inputExclude>
             <inputExclude>**/.gitignore</inputExclude>
             <inputExclude>**/derby.log</inputExclude>
             <inputExclude>**/META-INF/services/javax.*</inputExclude>

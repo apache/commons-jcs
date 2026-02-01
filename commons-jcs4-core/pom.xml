@@ -85,14 +85,6 @@
       <scope>test</scope>
     </dependency>
 
-    <!-- Exclude for now -->
-    <!-- dependency>
-      <groupId>org.jgroups</groupId>
-      <artifactId>jgroups</artifactId>
-      <version>3.4.1.Final</version>
-      <optional>true</optional>
-    </dependency -->
-
     <dependency>
       <groupId>org.apache.httpcomponents</groupId>
       <artifactId>httpclient</artifactId>
@@ -139,11 +131,6 @@
           <groupId>org.apache.rat</groupId>
           <artifactId>apache-rat-plugin</artifactId>
           <version>${commons.rat.version}</version>
-          <configuration>
-            <inputExcludes combine.children="append">
-              <inputExclude>**/zipcodes.txt</inputExclude>
-            </inputExcludes>
-          </configuration>
         </plugin>
       </plugins>
     </pluginManagement>
