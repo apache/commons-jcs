@@ -157,30 +157,6 @@ public interface IElementAttributes extends Serializable, Cloneable
     void setIsEternal( boolean val );
 
     /**
-     * Sets the isLateral attribute of the IElementAttributes object
-     * <p>
-     * By default this is true.
-     * @param val The new isLateral value
-     */
-    void setIsLateral( boolean val );
-
-    /**
-     * Sets the isRemote attribute of the IElementAttributes object.
-     * <p>
-     * By default this is true.
-     * @param val The new isRemote value
-     */
-    void setIsRemote( boolean val );
-
-    /**
-     * Sets the isSpool attribute of the IElementAttributes object
-     * <p>
-     * By default this is true.
-     * @param val The new isSpool value
-     */
-    void setIsSpool( boolean val );
-
-    /**
      * Sets the LastAccessTime as now of the IElementAttributes object
      */
     void setLastAccessTimeNow();

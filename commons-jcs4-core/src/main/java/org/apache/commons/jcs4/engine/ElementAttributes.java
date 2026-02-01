@@ -334,7 +334,6 @@ public class ElementAttributes
      * removed on retrieval, or removed actively if the memory shrinker is turned on.
      * @param idle The new idleTime value
      */
-    @Override
     public void setIdleTime( final long idle )
     {
         this.maxIdleTime = idle;
@@ -347,7 +346,6 @@ public class ElementAttributes
      *
      * @param val The new isEternal value
      */
-    @Override
     public void setIsEternal( final boolean val )
     {
         this.IS_ETERNAL = val;
@@ -359,7 +357,6 @@ public class ElementAttributes
      * By default this is true.
      * @param val The new isLateral value
      */
-    @Override
     public void setIsLateral( final boolean val )
     {
         this.IS_LATERAL = val;
@@ -369,7 +366,6 @@ public class ElementAttributes
      * Sets the isRemote attribute of the ElementAttributes object
      * @param val The new isRemote value
      */
-    @Override
     public void setIsRemote( final boolean val )
     {
         this.IS_REMOTE = val;
@@ -381,7 +377,6 @@ public class ElementAttributes
      * By default this is true.
      * @param val The new isSpool value
      */
-    @Override
     public void setIsSpool( final boolean val )
     {
         this.IS_SPOOL = val;
@@ -409,7 +404,6 @@ public class ElementAttributes
      *
      * @param mls The new MaxLifeSeconds value
      */
-    @Override
     public void setMaxLife(final long mls)
     {
         this.maxLife = mls;
@@ -421,13 +415,11 @@ public class ElementAttributes
      *
      * @param size The new size value
      */
-    @Override
     public void setSize( final int size )
     {
         this.size = size;
     }
 
-    @Override
     public void setTimeFactorForMilliseconds(final long factor)
     {
         this.timeFactor = factor;

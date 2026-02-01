@@ -68,7 +68,7 @@ class RemoteCacheNoWaitFacadeUnitTest
     void testFailover()
     {
         // SETUP
-        final IRemoteCacheAttributes cattr = new RemoteCacheAttributes();
+        final RemoteCacheAttributes cattr = new RemoteCacheAttributes();
         cattr.setCacheName("testCache1");
         cattr.setFailoverServers("localhost:1101,localhost:1102");
         cattr.setReceive(false);

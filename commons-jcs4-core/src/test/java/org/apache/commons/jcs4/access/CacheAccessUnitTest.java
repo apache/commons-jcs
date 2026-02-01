@@ -38,7 +38,6 @@ import org.apache.commons.jcs4.engine.CompositeCacheAttributes;
 import org.apache.commons.jcs4.engine.ElementAttributes;
 import org.apache.commons.jcs4.engine.behavior.ICacheElement;
 import org.apache.commons.jcs4.engine.behavior.ICompositeCacheAttributes;
-import org.apache.commons.jcs4.engine.behavior.IElementAttributes;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -110,12 +109,12 @@ class CacheAccessUnitTest
         final String keyprefix1 = "MyPrefix1";
         final String keyprefix2 = "MyPrefix2";
         final String memoryCacheClassName = "org.apache.commons.jcs4.engine.memory.lru.LRUMemoryCache";
-        final ICompositeCacheAttributes cattr = new CompositeCacheAttributes();
+        final CompositeCacheAttributes cattr = new CompositeCacheAttributes();
         cattr.setMemoryCacheName( memoryCacheClassName );
         cattr.setMaxObjects( maxMemorySize );
 
         final long maxLife = 9876;
-        final IElementAttributes attr = new ElementAttributes();
+        final ElementAttributes attr = new ElementAttributes();
         attr.setMaxLife(maxLife);
 
         final CacheAccess<String, Integer> access = JCS.getInstance( "testGetMatching_Normal", cattr, attr );
@@ -165,12 +164,12 @@ class CacheAccessUnitTest
         final String keyprefix1 = "MyPrefix1";
         final String keyprefix2 = "MyPrefix2";
         final String memoryCacheClassName = "org.apache.commons.jcs4.engine.memory.lru.LRUMemoryCache";
-        final ICompositeCacheAttributes cattr = new CompositeCacheAttributes();
+        final CompositeCacheAttributes cattr = new CompositeCacheAttributes();
         cattr.setMemoryCacheName( memoryCacheClassName );
         cattr.setMaxObjects( maxMemorySize );
 
         final long maxLife = 9876;
-        final IElementAttributes attr = new ElementAttributes();
+        final ElementAttributes attr = new ElementAttributes();
         attr.setMaxLife(maxLife);
 
         final CacheAccess<String, Integer> access = JCS.getInstance( "testGetMatching_Normal", cattr, attr );
@@ -310,7 +309,7 @@ class CacheAccessUnitTest
     void testRegionDefinitonWithAttributes()
         throws Exception
     {
-        final ICompositeCacheAttributes ca = new CompositeCacheAttributes();
+        final CompositeCacheAttributes ca = new CompositeCacheAttributes();
 
         final long maxIdleTime = 8765;
         ca.setMaxMemoryIdleTimeSeconds( maxIdleTime );
@@ -331,13 +330,13 @@ class CacheAccessUnitTest
     void testRegionDefinitonWithBothAttributes()
         throws Exception
     {
-        final ICompositeCacheAttributes ca = new CompositeCacheAttributes();
+        final CompositeCacheAttributes ca = new CompositeCacheAttributes();
 
         final long maxIdleTime = 8765;
         ca.setMaxMemoryIdleTimeSeconds( maxIdleTime );
 
         final long maxLife = 9876;
-        final IElementAttributes attr = new ElementAttributes();
+        final ElementAttributes attr = new ElementAttributes();
         attr.setMaxLife(maxLife);
 
         final CacheAccess<String, String> access = JCS.getInstance( "testRegionDefinitonWithAttributes", ca, attr );
@@ -359,7 +358,7 @@ class CacheAccessUnitTest
         assertNotNull( access, "We should have an access class" );
 
         final long maxLife = 9876;
-        final IElementAttributes attr = new ElementAttributes();
+        final ElementAttributes attr = new ElementAttributes();
         attr.setMaxLife(maxLife);
 
         access.setDefaultElementAttributes( attr );

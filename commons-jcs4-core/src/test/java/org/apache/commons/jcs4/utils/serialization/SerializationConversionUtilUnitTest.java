@@ -30,7 +30,6 @@ import org.apache.commons.jcs4.engine.CacheElement;
 import org.apache.commons.jcs4.engine.ElementAttributes;
 import org.apache.commons.jcs4.engine.behavior.ICacheElement;
 import org.apache.commons.jcs4.engine.behavior.ICacheElementSerialized;
-import org.apache.commons.jcs4.engine.behavior.IElementAttributes;
 import org.apache.commons.jcs4.engine.behavior.IElementSerializer;
 import org.junit.jupiter.api.Test;
 
@@ -55,7 +54,7 @@ class SerializationConversionUtilUnitTest
 
         final IElementSerializer elementSerializer = new StandardSerializer();
 
-        final IElementAttributes attr = new ElementAttributes();
+        final ElementAttributes attr = new ElementAttributes();
         attr.setMaxLife(34);
 
         final ICacheElement<String, String> before = new CacheElement<>( cacheName, key, value );
@@ -138,7 +137,7 @@ class SerializationConversionUtilUnitTest
 
         final IElementSerializer elementSerializer = null; // new StandardSerializer();
 
-        final IElementAttributes attr = new ElementAttributes();
+        final ElementAttributes attr = new ElementAttributes();
         attr.setMaxLife(34);
 
         final ICacheElement<String, String> before = new CacheElement<>( cacheName, key, value );
@@ -174,7 +173,7 @@ class SerializationConversionUtilUnitTest
 
         final IElementSerializer elementSerializer = new StandardSerializer();
 
-        final IElementAttributes attr = new ElementAttributes();
+        final ElementAttributes attr = new ElementAttributes();
         attr.setMaxLife(34);
 
         final ICacheElement<String, String> before = new CacheElement<>( cacheName, key, value );

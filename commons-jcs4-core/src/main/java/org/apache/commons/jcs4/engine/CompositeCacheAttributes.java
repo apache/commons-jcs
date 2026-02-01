@@ -37,9 +37,6 @@ public class CompositeCacheAttributes
     /** Default lateral switch */
     private static final boolean DEFAULT_USE_LATERAL = true;
 
-    /** Default remote switch */
-    private static final boolean DEFAULT_USE_REMOTE = true;
-
     /** Default disk switch */
     private static final boolean DEFAULT_USE_DISK = true;
 
@@ -66,9 +63,6 @@ public class CompositeCacheAttributes
 
     /** Allow lateral caches */
     private boolean useLateral = DEFAULT_USE_LATERAL;
-
-    /** Allow remote caches */
-    private boolean useRemote = DEFAULT_USE_REMOTE;
 
     /** Whether we should use a disk cache if it is configured. */
     private boolean useDisk = DEFAULT_USE_DISK;
@@ -247,17 +241,6 @@ public class CompositeCacheAttributes
     }
 
     /**
-     * Gets the useRemote attribute of the CompositeCacheAttributes object
-     *
-     * @return The useRemote value
-     */
-    @Override
-    public boolean isUseRemote()
-    {
-        return this.useRemote;
-    }
-
-    /**
      * Sets the cacheName attribute of the CompositeCacheAttributes object
      *
      * @param s The new cacheName value
@@ -273,7 +256,6 @@ public class CompositeCacheAttributes
      *
      * @param diskUsagePattern The diskUsagePattern to set.
      */
-    @Override
     public void setDiskUsagePattern( final DiskUsagePattern diskUsagePattern )
     {
         this.diskUsagePattern = diskUsagePattern;
@@ -286,7 +268,6 @@ public class CompositeCacheAttributes
      *
      * @param diskUsagePatternName The diskUsagePattern to set.
      */
-    @Override
     public void setDiskUsagePatternName( final String diskUsagePatternName )
     {
         if ( diskUsagePatternName != null )
@@ -308,7 +289,6 @@ public class CompositeCacheAttributes
      *
      * @param seconds The new MaxMemoryIdleTimeSeconds value
      */
-    @Override
     public void setMaxMemoryIdleTimeSeconds( final long seconds )
     {
         this.maxMemoryIdleTimeSeconds = seconds;
@@ -319,7 +299,6 @@ public class CompositeCacheAttributes
      *
      * @param maxObjs The new maxObjects value
      */
-    @Override
     public void setMaxObjects( final int maxObjs )
     {
         this.maxObjs = maxObjs;
@@ -333,7 +312,6 @@ public class CompositeCacheAttributes
      *
      * @param maxSpoolPerRun The new maxSpoolPerRun value
      */
-    @Override
     public void setMaxSpoolPerRun( final int maxSpoolPerRun )
     {
         this.maxSpoolPerRun = maxSpoolPerRun;
@@ -344,7 +322,6 @@ public class CompositeCacheAttributes
      *
      * @param s The new memoryCacheName value
      */
-    @Override
     public void setMemoryCacheName( final String s )
     {
         this.memoryCacheName = s;
@@ -356,7 +333,6 @@ public class CompositeCacheAttributes
      *
      * @param seconds The new ShrinkerIntervalSeconds value
      */
-    @Override
     public void setShrinkerIntervalSeconds( final long seconds )
     {
         this.shrinkerIntervalSeconds = seconds;
@@ -367,7 +343,6 @@ public class CompositeCacheAttributes
      *
      * @param spoolChunkSize
      */
-    @Override
     public void setSpoolChunkSize( final int spoolChunkSize )
     {
         this.spoolChunkSize = spoolChunkSize;
@@ -378,7 +353,6 @@ public class CompositeCacheAttributes
      *
      * @param useDisk The new useDisk value
      */
-    @Override
     public void setUseDisk( final boolean useDisk )
     {
         this.useDisk = useDisk;
@@ -389,7 +363,6 @@ public class CompositeCacheAttributes
      *
      * @param b The new useLateral value
      */
-    @Override
     public void setUseLateral( final boolean b )
     {
         this.useLateral = b;
@@ -400,21 +373,9 @@ public class CompositeCacheAttributes
      *
      * @param useShrinker The new UseMemoryShrinker value
      */
-    @Override
     public void setUseMemoryShrinker( final boolean useShrinker )
     {
         this.useMemoryShrinker = useShrinker;
-    }
-
-    /**
-     * Sets the useRemote attribute of the CompositeCacheAttributes object
-     *
-     * @param useRemote The new useRemote value
-     */
-    @Override
-    public void setUseRemote( final boolean useRemote )
-    {
-        this.useRemote = useRemote;
     }
 
     /**
@@ -429,7 +390,6 @@ public class CompositeCacheAttributes
 
         dump.append( "[ " );
         dump.append( "useLateral = " ).append( useLateral );
-        dump.append( ", useRemote = " ).append( useRemote );
         dump.append( ", useDisk = " ).append( useDisk );
         dump.append( ", maxObjs = " ).append( maxObjs );
         dump.append( ", maxSpoolPerRun = " ).append( maxSpoolPerRun );

@@ -65,40 +65,4 @@ public interface IRemoteCacheServerAttributes
      * @return the useRegistryKeepAlive
      */
     boolean isUseRegistryKeepAlive();
-
-    /**
-     * Should cluster updates be propagated to the locals.
-     *
-     * @param r
-     *            The new localClusterConsistency value
-     */
-    void setAllowClusterGet( boolean r );
-
-    /**
-     * Sets the ConfigFileName attribute of the IRemoteCacheAttributes object.
-     *
-     * @param s
-     *            The new configuration file name
-     */
-    void setConfigFileName( String s );
-
-    /**
-     * @param registryKeepAliveDelayMillis the registryKeepAliveDelayMillis to set
-     */
-    void setRegistryKeepAliveDelayMillis( long registryKeepAliveDelayMillis );
-
-    /**
-     * Sets the localPort attribute of the IRemoteCacheAttributes object.
-     *
-     * @param p
-     *            The new localPort value
-     */
-    void setServicePort( int p );
-
-    /**
-     * Should we try to keep the registry alive
-     *
-     * @param useRegistryKeepAlive the useRegistryKeepAlive to set
-     */
-    void setUseRegistryKeepAlive( boolean useRegistryKeepAlive );
 }

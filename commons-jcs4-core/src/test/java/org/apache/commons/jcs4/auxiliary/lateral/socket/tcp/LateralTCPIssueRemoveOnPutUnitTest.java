@@ -28,7 +28,6 @@ import java.util.Random;
 
 import org.apache.commons.jcs4.JCS;
 import org.apache.commons.jcs4.access.CacheAccess;
-import org.apache.commons.jcs4.auxiliary.lateral.LateralCacheAttributes;
 import org.apache.commons.jcs4.engine.CacheElement;
 import org.apache.commons.jcs4.engine.behavior.ICacheElement;
 import org.apache.commons.jcs4.utils.serialization.StandardSerializer;
@@ -76,7 +75,6 @@ public class LateralTCPIssueRemoveOnPutUnitTest
 
         final TCPLateralCacheAttributes lattr2 = new TCPLateralCacheAttributes();
         lattr2.setTcpListenerPort( 1102 );
-        lattr2.setTransmissionType(LateralCacheAttributes.Type.TCP);
         lattr2.setTcpServer( "localhost:" + serverPort );
         lattr2.setIssueRemoveOnPut( true );
         // should still try to remove
@@ -189,7 +187,6 @@ public class LateralTCPIssueRemoveOnPutUnitTest
 
         final TCPLateralCacheAttributes lattr2 = new TCPLateralCacheAttributes();
         lattr2.setTcpListenerPort( 1102 );
-        lattr2.setTransmissionType(LateralCacheAttributes.Type.TCP);
         lattr2.setTcpServer( "localhost:" + serverPort );
         lattr2.setIssueRemoveOnPut( false );
         // should still try to remove

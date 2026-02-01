@@ -165,7 +165,6 @@ public class RemoteCacheAttributes
      *
      * @param p The new failoverIndex value
      */
-    @Override
     public void setFailoverIndex( final int p )
     {
         this.failoverIndex = p;
@@ -176,7 +175,6 @@ public class RemoteCacheAttributes
      *
      * @param failovers The new failovers value
      */
-    @Override
     public void setFailovers( final List<RemoteLocation> failovers )
     {
         this.failovers = failovers;
@@ -187,7 +185,6 @@ public class RemoteCacheAttributes
      *
      * @param s The new failoverServers value
      */
-    @Override
     public void setFailoverServers( final String s )
     {
         this.failoverServers = s;
@@ -196,7 +193,6 @@ public class RemoteCacheAttributes
     /**
      * @param millis
      */
-    @Override
     public void setGetTimeoutMillis( final int millis )
     {
         getTimeoutMillis = millis;
@@ -206,7 +202,6 @@ public class RemoteCacheAttributes
      * Sets the localPort attribute of the RemoteCacheAttributes object
      * @param p The new localPort value
      */
-    @Override
     public void setLocalPort( final int p )
     {
         this.localPort = p;
@@ -218,7 +213,6 @@ public class RemoteCacheAttributes
      *
      * @param receive
      */
-    @Override
     public void setReceive( final boolean receive )
     {
         this.receive = receive;
@@ -227,7 +221,6 @@ public class RemoteCacheAttributes
     /**
      * @param name
      */
-    @Override
     public void setThreadPoolName( final String name )
     {
         threadPoolName = name;
@@ -239,7 +232,6 @@ public class RemoteCacheAttributes
      *
      * @param zombieQueueMaxSize The zombieQueueMaxSize to set.
      */
-    @Override
     public void setZombieQueueMaxSize( final int zombieQueueMaxSize )
     {
         this.zombieQueueMaxSize = zombieQueueMaxSize;

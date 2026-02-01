@@ -23,14 +23,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-import org.apache.commons.jcs4.auxiliary.remote.behavior.IRemoteCacheAttributes;
 import org.apache.commons.jcs4.engine.CacheElementSerialized;
 import org.apache.commons.jcs4.engine.ElementAttributes;
 import org.apache.commons.jcs4.engine.behavior.ICache;
 import org.apache.commons.jcs4.engine.behavior.ICacheElement;
 import org.apache.commons.jcs4.engine.behavior.ICacheElementSerialized;
 import org.apache.commons.jcs4.engine.behavior.ICompositeCacheManager;
-import org.apache.commons.jcs4.engine.behavior.IElementAttributes;
 import org.apache.commons.jcs4.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs4.engine.control.MockCompositeCacheManager;
 import org.apache.commons.jcs4.utils.serialization.StandardSerializer;
@@ -53,7 +51,7 @@ class RemoteCacheListenerUnitTest
         throws Exception
     {
         // SETUP
-        final IRemoteCacheAttributes irca = new RemoteCacheAttributes();
+        final RemoteCacheAttributes irca = new RemoteCacheAttributes();
         irca.setRemoveUponRemotePut( false );
         final ICompositeCacheManager cacheMgr = new MockCompositeCacheManager();
         final RemoteCacheListener<String, String> listener = new RemoteCacheListener<>( irca, cacheMgr, new StandardSerializer() );
@@ -61,7 +59,7 @@ class RemoteCacheListenerUnitTest
         final String cacheName = "testName";
         final String key = "key";
         final String value = "value fdsadf dsafdsa fdsaf dsafdsaf dsafdsaf dsaf dsaf dsaf dsafa dsaf dsaf dsafdsaf";
-        final IElementAttributes attr = new ElementAttributes();
+        final ElementAttributes attr = new ElementAttributes();
         attr.setMaxLife(34);
 
         final IElementSerializer elementSerializer = new StandardSerializer();
@@ -97,7 +95,7 @@ class RemoteCacheListenerUnitTest
         throws Exception
     {
         // SETUP
-        final IRemoteCacheAttributes irca = new RemoteCacheAttributes();
+        final RemoteCacheAttributes irca = new RemoteCacheAttributes();
         irca.setRemoveUponRemotePut( true );
         final ICompositeCacheManager cacheMgr = new MockCompositeCacheManager();
         final RemoteCacheListener<String, String> listener = new RemoteCacheListener<>( irca, cacheMgr, new StandardSerializer() );
@@ -105,7 +103,7 @@ class RemoteCacheListenerUnitTest
         final String cacheName = "testName";
         final String key = "key";
         final String value = "value fdsadf dsafdsa fdsaf dsafdsaf dsafdsaf dsaf dsaf dsaf dsafa dsaf dsaf dsafdsaf";
-        final IElementAttributes attr = new ElementAttributes();
+        final ElementAttributes attr = new ElementAttributes();
         attr.setMaxLife(34);
 
         final IElementSerializer elementSerializer = new StandardSerializer();

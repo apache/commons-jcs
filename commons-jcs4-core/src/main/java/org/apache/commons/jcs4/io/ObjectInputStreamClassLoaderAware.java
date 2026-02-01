@@ -52,20 +52,26 @@ public class ObjectInputStreamClassLoaderAware extends ObjectInputStream
     }
 
     @Override
-    protected Class<?> resolveClass(final ObjectStreamClass desc) throws ClassNotFoundException {
+    protected Class<?> resolveClass(final ObjectStreamClass desc) throws ClassNotFoundException
+    {
         return Class.forName(desc.getName(), false, classLoader);
     }
 
     @Override
-    protected Class<?> resolveProxyClass(final String[] interfaces) throws IOException, ClassNotFoundException {
+    protected Class<?> resolveProxyClass(final String[] interfaces) throws IOException, ClassNotFoundException
+    {
         final Class<?>[] cinterfaces = new Class[interfaces.length];
-        for (int i = 0; i < interfaces.length; i++) {
+        for (int i = 0; i < interfaces.length; i++)
+        {
             cinterfaces[i] = Class.forName(interfaces[i], false, classLoader);
         }
 
-        try {
+        try
+        {
             return Proxy.getProxyClass(classLoader, cinterfaces);
-        } catch (final IllegalArgumentException e) {
+        }
+        catch (final IllegalArgumentException e)
+        {
             throw new ClassNotFoundException(null, e);
         }
     }

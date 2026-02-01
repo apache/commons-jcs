@@ -266,7 +266,6 @@ public class TCPLateralCacheAttributes
      *
      * @param allowGet
      */
-    @Override
     public void setAllowGet( final boolean allowGet )
     {
         this.allowGet = allowGet;
@@ -277,7 +276,6 @@ public class TCPLateralCacheAttributes
      *
      * @param allowPut
      */
-    @Override
     public void setAllowPut( final boolean allowPut )
     {
         this.allowPut = allowPut;
@@ -292,7 +290,6 @@ public class TCPLateralCacheAttributes
      *
      * @param filter
      */
-    @Override
     public void setFilterRemoveByHashCode( final boolean filter )
     {
         this.filterRemoveByHashCode = filter;
@@ -305,7 +302,6 @@ public class TCPLateralCacheAttributes
      *
      * @param issueRemoveOnPut
      */
-    @Override
     public void setIssueRemoveOnPut( final boolean issueRemoveOnPut )
     {
         this.issueRemoveOnPut = issueRemoveOnPut;
@@ -314,7 +310,6 @@ public class TCPLateralCacheAttributes
     /**
      * @param openTimeOut the openTimeOut to set
      */
-    @Override
     public void setOpenTimeOut( final int openTimeOut )
     {
         this.openTimeOut = openTimeOut;
@@ -323,7 +318,6 @@ public class TCPLateralCacheAttributes
     /**
      * @param socketTimeOut the socketTimeOut to set
      */
-    @Override
     public void setSocketTimeOut( final int socketTimeOut )
     {
         this.socketTimeOut = socketTimeOut;
@@ -335,7 +329,6 @@ public class TCPLateralCacheAttributes
      * @param val
      *            The new tcpListenerHost value
      */
-    @Override
     public void setTcpListenerHost( final String val )
     {
         this.tcpListenerHost = val;
@@ -346,7 +339,6 @@ public class TCPLateralCacheAttributes
      *
      * @param val The new tcpListenerPort value
      */
-    @Override
     public void setTcpListenerPort( final int val )
     {
         this.tcpListenerPort = val;
@@ -357,7 +349,6 @@ public class TCPLateralCacheAttributes
      *
      * @param val The new tcpServer value
      */
-    @Override
     public void setTcpServer( final String val )
     {
         this.tcpServer = val;
@@ -368,7 +359,6 @@ public class TCPLateralCacheAttributes
      *
      * @param val The new tcpServers value
      */
-    @Override
     public void setTcpServers( final String val )
     {
         this.tcpServers = val;
@@ -379,7 +369,6 @@ public class TCPLateralCacheAttributes
      *
      * @param udpDiscoveryAddr The udpDiscoveryAddr to set.
      */
-    @Override
     public void setUdpDiscoveryAddr( final String udpDiscoveryAddr )
     {
         this.udpDiscoveryAddr = udpDiscoveryAddr;
@@ -391,7 +380,6 @@ public class TCPLateralCacheAttributes
      *
      * @param udpDiscoveryEnabled The udpDiscoveryEnabled to set.
      */
-    @Override
     public void setUdpDiscoveryEnabled( final boolean udpDiscoveryEnabled )
     {
         this.udpDiscoveryEnabled = udpDiscoveryEnabled;
@@ -402,7 +390,6 @@ public class TCPLateralCacheAttributes
      *
      * @param udpDiscoveryPort The udpDiscoveryPort to set.
      */
-    @Override
     public void setUdpDiscoveryPort( final int udpDiscoveryPort )
     {
         this.udpDiscoveryPort = udpDiscoveryPort;
@@ -414,7 +401,6 @@ public class TCPLateralCacheAttributes
      * @param udpTTL The udpTTL to set.
      * @since 3.1
      */
-    @Override
     public void setUdpTTL( final int udpTTL )
     {
         this.udpTTL = udpTTL;

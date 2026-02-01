@@ -267,7 +267,7 @@ class CompositeCacheDiskUsageUnitTest
     void testSpoolAllowed()
     {
         // SETUP
-        final ICompositeCacheAttributes cattr = new CompositeCacheAttributes();
+        final CompositeCacheAttributes cattr = new CompositeCacheAttributes();
         cattr.setCacheName(CACHE_NAME);
         cattr.setDiskUsagePattern( ICompositeCacheAttributes.DiskUsagePattern.SWAP );
 
@@ -297,7 +297,7 @@ class CompositeCacheDiskUsageUnitTest
     void testSpoolNotAllowed()
     {
         // SETUP
-        final ICompositeCacheAttributes cattr = new CompositeCacheAttributes();
+        final CompositeCacheAttributes cattr = new CompositeCacheAttributes();
         cattr.setCacheName(CACHE_NAME);
         cattr.setDiskUsagePattern( ICompositeCacheAttributes.DiskUsagePattern.UPDATE );
 
@@ -345,7 +345,7 @@ class CompositeCacheDiskUsageUnitTest
         throws IOException
     {
         // SETUP
-        final ICompositeCacheAttributes cattr = new CompositeCacheAttributes();
+        final CompositeCacheAttributes cattr = new CompositeCacheAttributes();
         cattr.setCacheName(CACHE_NAME);
         cattr.setDiskUsagePattern( ICompositeCacheAttributes.DiskUsagePattern.UPDATE );
 
@@ -381,7 +381,7 @@ class CompositeCacheDiskUsageUnitTest
         throws IOException
     {
         // SETUP
-        final ICompositeCacheAttributes cattr = new CompositeCacheAttributes();
+        final CompositeCacheAttributes cattr = new CompositeCacheAttributes();
         cattr.setCacheName(CACHE_NAME);
         cattr.setDiskUsagePattern( ICompositeCacheAttributes.DiskUsagePattern.UPDATE );
 
@@ -416,7 +416,7 @@ class CompositeCacheDiskUsageUnitTest
         throws IOException
     {
         // SETUP
-        final ICompositeCacheAttributes cattr = new CompositeCacheAttributes();
+        final CompositeCacheAttributes cattr = new CompositeCacheAttributes();
         cattr.setCacheName(CACHE_NAME);
         cattr.setDiskUsagePattern( ICompositeCacheAttributes.DiskUsagePattern.UPDATE );
 
@@ -472,7 +472,7 @@ class CompositeCacheDiskUsageUnitTest
         throws IOException
     {
         // SETUP
-        final ICompositeCacheAttributes cattr = new CompositeCacheAttributes();
+        final CompositeCacheAttributes cattr = new CompositeCacheAttributes();
         cattr.setCacheName(CACHE_NAME);
         cattr.setDiskUsagePattern( ICompositeCacheAttributes.DiskUsagePattern.SWAP );
 

@@ -28,7 +28,6 @@ import java.util.List;
 import org.apache.commons.jcs4.auxiliary.lateral.LateralCache;
 import org.apache.commons.jcs4.auxiliary.lateral.LateralCacheNoWait;
 import org.apache.commons.jcs4.auxiliary.lateral.LateralCacheNoWaitFacade;
-import org.apache.commons.jcs4.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttributes;
 import org.apache.commons.jcs4.engine.ZombieCacheServiceNonLocal;
 import org.apache.commons.jcs4.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs4.engine.control.CompositeCacheManager;
@@ -75,7 +74,7 @@ class LateralTCPDiscoveryListenerUnitTest
     private LateralCacheNoWaitFacade<String, String> setupFacade(final String cacheName)
     {
         final List<LateralCacheNoWait<String, String>> noWaits = new ArrayList<>();
-        final ITCPLateralCacheAttributes cattr = new TCPLateralCacheAttributes();
+        final TCPLateralCacheAttributes cattr = new TCPLateralCacheAttributes();
         cattr.setCacheName( cacheName );
 
         return new LateralCacheNoWaitFacade<>( null, noWaits, cattr );
@@ -83,7 +82,7 @@ class LateralTCPDiscoveryListenerUnitTest
 
     private LateralCacheNoWait<String, String> setupNoWait(final String cacheName)
     {
-        final ITCPLateralCacheAttributes cattr = new TCPLateralCacheAttributes();
+        final TCPLateralCacheAttributes cattr = new TCPLateralCacheAttributes();
         cattr.setCacheName( cacheName );
 
         final LateralCache<String, String> cache = new LateralCache<>(cattr, new ZombieCacheServiceNonLocal<>(), null);
@@ -106,7 +105,7 @@ class LateralTCPDiscoveryListenerUnitTest
         service.setServiceAddress( "localhost" );
         service.setServicePort( 9999 );
 
-        final ITCPLateralCacheAttributes lca = new TCPLateralCacheAttributes();
+        final TCPLateralCacheAttributes lca = new TCPLateralCacheAttributes();
         // used as identifying key by factory
         lca.setTcpServer( service.getServiceAddress() + ":" + service.getServicePort() );
         lca.setCacheName(cacheName);
@@ -188,7 +187,7 @@ class LateralTCPDiscoveryListenerUnitTest
         // SETUP
         final String cacheName = "testEmptyNoWaits";
 
-        final ITCPLateralCacheAttributes lca = new TCPLateralCacheAttributes();
+        final TCPLateralCacheAttributes lca = new TCPLateralCacheAttributes();
         lca.setTcpServers(""); // default
         lca.setTcpListenerPort(1120);
         lca.setCacheName(cacheName);
@@ -216,7 +215,7 @@ class LateralTCPDiscoveryListenerUnitTest
         service.setServiceAddress( "localhost" );
         service.setServicePort( 9999 );
 
-        final ITCPLateralCacheAttributes lca = new TCPLateralCacheAttributes();
+        final TCPLateralCacheAttributes lca = new TCPLateralCacheAttributes();
         // used as identifying key by factory
         lca.setTcpServer( service.getServiceAddress() + ":" + service.getServicePort() );
         lca.setCacheName(cacheName);

@@ -98,7 +98,7 @@ public class RemoteCacheNoWaitFacade<K, V>
      */
     protected void connectAndRestore()
     {
-        final IRemoteCacheAttributes rca0 = getAuxiliaryCacheAttributes();
+        final RemoteCacheAttributes rca0 = getAuxiliaryCacheAttributes();
         // Each RemoteCacheManager corresponds to one remote connection.
         final List<RemoteLocation> failovers = rca0.getFailovers();
         // we should probably check to see if there are any failovers,
@@ -286,7 +286,7 @@ public class RemoteCacheNoWaitFacade<K, V>
      */
     private boolean restorePrimary()
     {
-        final IRemoteCacheAttributes rca0 = getAuxiliaryCacheAttributes();
+        final RemoteCacheAttributes rca0 = getAuxiliaryCacheAttributes();
         // try to move back to the primary
         final RemoteLocation server = rca0.getFailovers().get(0);
 

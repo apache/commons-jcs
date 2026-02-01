@@ -51,9 +51,6 @@ public class JDBCDiskCacheAttributes
     /** URL for the db */
     private String url;
 
-    /** The name of the database. */
-    private String database = "";
-
     /** The driver */
     private String driverClassName;
 
@@ -98,14 +95,6 @@ public class JDBCDiskCacheAttributes
     public String getConnectionPoolName()
     {
         return connectionPoolName;
-    }
-
-    /**
-     * @return the database.
-     */
-    public String getDatabase()
-    {
-        return database;
     }
 
     /**
@@ -202,15 +191,6 @@ public class JDBCDiskCacheAttributes
     public void setConnectionPoolName( final String connectionPoolName )
     {
         this.connectionPoolName = connectionPoolName;
-    }
-
-	/**
-     * This is appended to the url.
-     * @param database The database to set.
-     */
-    public void setDatabase( final String database )
-    {
-        this.database = database;
     }
 
     /**
@@ -316,7 +296,6 @@ public class JDBCDiskCacheAttributes
         buf.append( "\nJDBCCacheAttributes" );
         buf.append( "\n UserName [" + getUserName() + "]" );
         buf.append( "\n Url [" + getUrl() + "]" );
-        buf.append( "\n Database [" + getDatabase() + "]" );
         buf.append( "\n DriverClassName [" + getDriverClassName() + "]" );
         buf.append( "\n TableName [" + getTableName() + "]" );
         buf.append( "\n TestBeforeInsert [" + isTestBeforeInsert() + "]" );

@@ -113,19 +113,16 @@ public abstract class AbstractDiskCacheAttributes extends AbstractAuxiliaryCache
      * @param allowRemoveAll
      *            The allowRemoveAll to set.
      */
-    @Override
     public void setAllowRemoveAll(final boolean allowRemoveAll)
     {
         this.allowRemoveAll = allowRemoveAll;
     }
 
-    @Override
     public void setDiskLimitType(final DiskLimitType diskLimitType)
     {
         this.diskLimitType = diskLimitType;
     }
 
-    @Override
     public void setDiskLimitTypeName(final String diskLimitTypeName)
     {
         if (diskLimitTypeName != null)
@@ -163,7 +160,6 @@ public abstract class AbstractDiskCacheAttributes extends AbstractAuxiliaryCache
      * @param path
      *            The new diskPath value
      */
-    @Override
     public void setDiskPath(final String path)
     {
         setDiskPath(new File(path));
@@ -176,7 +172,6 @@ public abstract class AbstractDiskCacheAttributes extends AbstractAuxiliaryCache
      * @param maxPurgatorySize
      *            The new maxPurgatorySize value
      */
-    @Override
     public void setMaxPurgatorySize(final int maxPurgatorySize)
     {
         this.maxPurgatorySize = maxPurgatorySize;
@@ -194,7 +189,6 @@ public abstract class AbstractDiskCacheAttributes extends AbstractAuxiliaryCache
      * @param shutdownSpoolTimeLimit
      *            the time in seconds
      */
-    @Override
     public void setShutdownSpoolTimeLimit(final int shutdownSpoolTimeLimit)
     {
         this.shutdownSpoolTimeLimit = shutdownSpoolTimeLimit;

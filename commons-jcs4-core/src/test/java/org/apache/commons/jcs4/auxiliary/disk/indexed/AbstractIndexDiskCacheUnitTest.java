@@ -38,7 +38,6 @@ import org.apache.commons.jcs4.auxiliary.disk.DiskTestObject;
 import org.apache.commons.jcs4.engine.CacheElement;
 import org.apache.commons.jcs4.engine.ElementAttributes;
 import org.apache.commons.jcs4.engine.behavior.ICacheElement;
-import org.apache.commons.jcs4.engine.behavior.IElementAttributes;
 import org.apache.commons.jcs4.engine.control.group.GroupAttrName;
 import org.apache.commons.jcs4.engine.control.group.GroupId;
 import org.apache.commons.jcs4.utils.timing.SleepUtil;
@@ -705,7 +704,7 @@ public abstract class AbstractIndexDiskCacheUnitTest{
             final CacheElement<GroupAttrName<String>, String> element = new CacheElement<>(cacheName,
                 groupAttrName, "data:" + i);
 
-            final IElementAttributes eAttr = new ElementAttributes();
+            final ElementAttributes eAttr = new ElementAttributes();
             eAttr.setIsSpool(true);
             element.setElementAttributes(eAttr);
 
@@ -755,7 +754,7 @@ public abstract class AbstractIndexDiskCacheUnitTest{
         final int cnt = 25;
         for (int i = 0; i < cnt; i++)
         {
-            final IElementAttributes eAttr = new ElementAttributes();
+            final ElementAttributes eAttr = new ElementAttributes();
             eAttr.setIsSpool(true);
             final ICacheElement<String, String> element = new CacheElement<>("testRemove_PartialKey", i + ":key", "data:"
                 + i);
@@ -829,7 +828,7 @@ public abstract class AbstractIndexDiskCacheUnitTest{
         final int cnt = 25;
         for (int i = 0; i < cnt; i++)
         {
-            final IElementAttributes eAttr = new ElementAttributes();
+            final ElementAttributes eAttr = new ElementAttributes();
             eAttr.setIsSpool(true);
             final ICacheElement<String, String> element = new CacheElement<>("testRemoveItems", "key:" + i, "data:" + i);
             element.setElementAttributes(eAttr);
@@ -864,7 +863,7 @@ public abstract class AbstractIndexDiskCacheUnitTest{
         final int cnt = 999;
         for (int i = 0; i < cnt; i++)
         {
-            final IElementAttributes eAttr = new ElementAttributes();
+            final ElementAttributes eAttr = new ElementAttributes();
             eAttr.setIsSpool(true);
             final ICacheElement<String, String> element = new CacheElement<>("testSimplePutAndGet", "key:" + i, "data:" + i);
             element.setElementAttributes(eAttr);

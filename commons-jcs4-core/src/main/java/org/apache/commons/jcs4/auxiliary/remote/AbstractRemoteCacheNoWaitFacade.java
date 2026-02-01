@@ -51,7 +51,7 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K, V>
     protected List<RemoteCacheNoWait<K, V>> noWaits;
 
     /** Holds failover and cluster information */
-    private final IRemoteCacheAttributes remoteCacheAttributes;
+    private final RemoteCacheAttributes remoteCacheAttributes;
 
     /**
      * Constructs with the given remote cache, and fires events to any listeners.
@@ -65,7 +65,7 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K, V>
                                     final ICacheEventLogger cacheEventLogger, final IElementSerializer elementSerializer )
     {
         log.debug( "CONSTRUCTING NO WAIT FACADE" );
-        this.remoteCacheAttributes = rca;
+        this.remoteCacheAttributes = (RemoteCacheAttributes)rca;
         setCacheEventLogger( cacheEventLogger );
         setElementSerializer( elementSerializer );
         this.noWaits = new ArrayList<>(noWaits);
@@ -111,7 +111,7 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K, V>
      * @return the AuxiliaryCacheAttributes.
      */
     @Override
-    public IRemoteCacheAttributes getAuxiliaryCacheAttributes()
+    public RemoteCacheAttributes getAuxiliaryCacheAttributes()
     {
         return this.remoteCacheAttributes;
     }

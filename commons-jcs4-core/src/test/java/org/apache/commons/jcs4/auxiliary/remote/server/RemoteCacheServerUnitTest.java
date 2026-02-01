@@ -30,7 +30,6 @@ import java.util.Properties;
 import org.apache.commons.jcs4.auxiliary.MockCacheEventLogger;
 import org.apache.commons.jcs4.auxiliary.remote.MockRemoteCacheListener;
 import org.apache.commons.jcs4.auxiliary.remote.RemoteUtils;
-import org.apache.commons.jcs4.auxiliary.remote.server.behavior.IRemoteCacheServerAttributes;
 import org.apache.commons.jcs4.auxiliary.remote.server.behavior.RemoteType;
 import org.apache.commons.jcs4.engine.CacheElement;
 import org.apache.commons.jcs4.engine.behavior.ICacheElement;
@@ -54,7 +53,7 @@ class RemoteCacheServerUnitTest
     void setUp()
         throws Exception
     {
-        final IRemoteCacheServerAttributes rcsa = new RemoteCacheServerAttributes();
+        final RemoteCacheServerAttributes rcsa = new RemoteCacheServerAttributes();
         rcsa.setConfigFileName( "/TestRemoteCacheServer.ccf" );
         final Properties config = RemoteUtils.loadProps(rcsa.getConfigFileName());
         this.server = new RemoteCacheServer<>( rcsa, config );
@@ -327,7 +326,7 @@ class RemoteCacheServerUnitTest
     void testSimpleRegisterListenerAndPut()
         throws Exception
     {
-        final IRemoteCacheServerAttributes rcsa = new RemoteCacheServerAttributes();
+        final RemoteCacheServerAttributes rcsa = new RemoteCacheServerAttributes();
         rcsa.setConfigFileName( "/TestRemoteCacheServer.ccf" );
 
         final Properties config = RemoteUtils.loadProps(rcsa.getConfigFileName());
@@ -374,7 +373,7 @@ class RemoteCacheServerUnitTest
         throws Exception
     {
         // SETUP
-        final IRemoteCacheServerAttributes rcsa = new RemoteCacheServerAttributes();
+        final RemoteCacheServerAttributes rcsa = new RemoteCacheServerAttributes();
         rcsa.setLocalClusterConsistency( true );
         rcsa.setConfigFileName( "/TestRemoteCacheServer.ccf" );
         final Properties config = RemoteUtils.loadProps(rcsa.getConfigFileName());

@@ -31,7 +31,6 @@ import org.apache.commons.jcs4.engine.CompositeCacheAttributes;
 import org.apache.commons.jcs4.engine.ElementAttributes;
 import org.apache.commons.jcs4.engine.behavior.ICacheElement;
 import org.apache.commons.jcs4.engine.behavior.ICacheType.CacheType;
-import org.apache.commons.jcs4.engine.behavior.ICompositeCacheAttributes;
 import org.apache.commons.jcs4.engine.behavior.IElementAttributes;
 import org.apache.commons.jcs4.engine.memory.MockMemoryCache;
 import org.junit.jupiter.api.Test;
@@ -56,7 +55,7 @@ class CompositeCacheUnitTest
         final String keyprefix2 = "MyPrefix2";
         final String cacheName = "testGetMatching_Normal";
         final String memoryCacheClassName = "org.apache.commons.jcs4.engine.memory.lru.LRUMemoryCache";
-        final ICompositeCacheAttributes cattr = new CompositeCacheAttributes();
+        final CompositeCacheAttributes cattr = new CompositeCacheAttributes();
         cattr.setMemoryCacheName( memoryCacheClassName );
         cattr.setMaxObjects( maxMemorySize );
 
@@ -106,7 +105,7 @@ class CompositeCacheUnitTest
         final int maxMemorySize = 0;
         final String cacheName = "testGetMatching_NotOnDisk";
         final String memoryCacheClassName = "org.apache.commons.jcs4.engine.memory.lru.LRUMemoryCache";
-        final ICompositeCacheAttributes cattr = new CompositeCacheAttributes();
+        final CompositeCacheAttributes cattr = new CompositeCacheAttributes();
         cattr.setCacheName(cacheName);
         cattr.setMemoryCacheName( memoryCacheClassName );
         cattr.setMaxObjects( maxMemorySize );
@@ -139,7 +138,7 @@ class CompositeCacheUnitTest
         final int maxMemorySize = 0;
         final String cacheName = "testGetMatching_NotOnDisk";
         final String memoryCacheClassName = "org.apache.commons.jcs4.engine.memory.lru.LRUMemoryCache";
-        final ICompositeCacheAttributes cattr = new CompositeCacheAttributes();
+        final CompositeCacheAttributes cattr = new CompositeCacheAttributes();
         cattr.setCacheName(cacheName);
         cattr.setMemoryCacheName( memoryCacheClassName );
         cattr.setMaxObjects( maxMemorySize );
@@ -172,7 +171,7 @@ class CompositeCacheUnitTest
         // SETUP
         final String cacheName = "testCacheName";
         final String mockMemoryCacheClassName = "org.apache.commons.jcs4.engine.memory.MockMemoryCache";
-        final ICompositeCacheAttributes cattr = new CompositeCacheAttributes();
+        final CompositeCacheAttributes cattr = new CompositeCacheAttributes();
         cattr.setMemoryCacheName( mockMemoryCacheClassName );
 
         final IElementAttributes attr = new ElementAttributes();
@@ -211,7 +210,7 @@ class CompositeCacheUnitTest
         // SETUP
         final String cacheName = "testCacheName";
         final String mockMemoryCacheClassName = "org.apache.commons.jcs4.engine.memory.MockMemoryCache";
-        final ICompositeCacheAttributes cattr = new CompositeCacheAttributes();
+        final CompositeCacheAttributes cattr = new CompositeCacheAttributes();
         cattr.setMemoryCacheName( mockMemoryCacheClassName );
 
         final IElementAttributes attr = new ElementAttributes();

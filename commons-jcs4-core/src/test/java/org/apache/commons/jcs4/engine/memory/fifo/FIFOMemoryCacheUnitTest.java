@@ -27,7 +27,6 @@ import java.io.IOException;
 import org.apache.commons.jcs4.engine.CacheElement;
 import org.apache.commons.jcs4.engine.CompositeCacheAttributes;
 import org.apache.commons.jcs4.engine.ElementAttributes;
-import org.apache.commons.jcs4.engine.behavior.ICompositeCacheAttributes;
 import org.apache.commons.jcs4.engine.control.CompositeCache;
 import org.junit.jupiter.api.Test;
 
@@ -47,7 +46,7 @@ class FIFOMemoryCacheUnitTest
         final int maxObjects = 10;
         final String cacheName = "testExpirationPolicy_oneExtra";
 
-        final ICompositeCacheAttributes attributes = new CompositeCacheAttributes();
+        final CompositeCacheAttributes attributes = new CompositeCacheAttributes();
         attributes.setCacheName(cacheName);
         attributes.setMaxObjects( maxObjects );
         attributes.setSpoolChunkSize( 1 );
@@ -83,7 +82,7 @@ class FIFOMemoryCacheUnitTest
         final int maxObjects = 10;
         final String cacheName = "testExpirationPolicy_oneExtra";
 
-        final ICompositeCacheAttributes attributes = new CompositeCacheAttributes();
+        final CompositeCacheAttributes attributes = new CompositeCacheAttributes();
         attributes.setCacheName(cacheName);
         attributes.setMaxObjects( maxObjects );
         attributes.setSpoolChunkSize( 1 );

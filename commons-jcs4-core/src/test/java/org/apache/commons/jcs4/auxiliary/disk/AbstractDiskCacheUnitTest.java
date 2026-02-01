@@ -221,7 +221,7 @@ class AbstractDiskCacheUnitTest
         throws IOException
     {
         // SETUP
-        final IDiskCacheAttributes diskCacheAttributes = new IndexedDiskCacheAttributes();
+        final IndexedDiskCacheAttributes diskCacheAttributes = new IndexedDiskCacheAttributes();
         diskCacheAttributes.setAllowRemoveAll( true );
 
         final AbstractDiskCacheTestInstance<String, String> diskCache = new AbstractDiskCacheTestInstance<>( diskCacheAttributes );
@@ -254,7 +254,7 @@ class AbstractDiskCacheUnitTest
         final StringWriter stringWriter = new StringWriter();
         TestLogConfigurationUtil.configureLogger( stringWriter, AbstractDiskCache.class.getName() );
 
-        final IDiskCacheAttributes diskCacheAttributes = new IndexedDiskCacheAttributes();
+        final IndexedDiskCacheAttributes diskCacheAttributes = new IndexedDiskCacheAttributes();
         diskCacheAttributes.setAllowRemoveAll( false );
 
         final AbstractDiskCacheTestInstance<String, String> diskCache = new AbstractDiskCacheTestInstance<>( diskCacheAttributes );

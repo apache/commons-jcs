@@ -100,7 +100,7 @@ module org.apache.commons.jcs4.core {
     requires transitive java.naming;
 
     // Optional dependencies for remote HTTP caching
-    requires static jakarta.servlet;
+    requires static transitive jakarta.servlet;
 
     // Optional dependencies for JDBC disk cache
     requires static org.apache.commons.dbcp2;

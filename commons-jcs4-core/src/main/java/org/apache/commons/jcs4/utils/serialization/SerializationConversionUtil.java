@@ -105,7 +105,8 @@ public class SerializationConversionUtil
         }
         else
         {
-            if ( elementSerializer == null ) {
+            if ( elementSerializer == null )
+            {
                 // we could just use the default.
                 throw new IOException( "Could not serialize object. The ElementSerializer is null." );
             }

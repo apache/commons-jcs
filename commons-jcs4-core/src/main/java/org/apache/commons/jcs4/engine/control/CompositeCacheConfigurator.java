@@ -267,9 +267,6 @@ public class CompositeCacheConfigurator
         ccAttr.setCacheName( regName );
 
         log.debug( "End of parsing for \"{0}\"", attrName );
-
-        // GET CACHE FROM FACTORY WITH ATTRIBUTES
-        ccAttr.setCacheName( regName );
         return ccAttr;
     }
 

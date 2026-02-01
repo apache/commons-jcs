@@ -720,7 +720,7 @@ public class JCSCache<K, V> implements Cache<K, V>
                         element.getElementAttributes().setIdleTime(duration.getTimeUnit().toMillis(duration.getDurationAmount()));
                     }
                     else
-                        {
+                    {
                         element.getElementAttributes().setMaxLife(duration.getTimeUnit().toMillis(duration.getDurationAmount()));
                     }
                 }

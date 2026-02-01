@@ -27,7 +27,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.jcs4.JCS;
-import org.apache.commons.jcs4.auxiliary.lateral.LateralCacheAttributes;
 import org.apache.commons.jcs4.auxiliary.lateral.LateralCommand;
 import org.apache.commons.jcs4.auxiliary.lateral.LateralElementDescriptor;
 import org.apache.commons.jcs4.engine.CacheElement;
@@ -56,7 +55,6 @@ class TestTCPLateralUnitTest
     {
         final TCPLateralCacheAttributes lattr = new TCPLateralCacheAttributes();
         lattr.setTcpListenerPort(port);
-        lattr.setTransmissionType(LateralCacheAttributes.Type.TCP);
 
         final CompositeCache<K, V> cache = cacheMgr.getCache( "test" );
 
@@ -72,7 +70,6 @@ class TestTCPLateralUnitTest
     {
         final TCPLateralCacheAttributes lattr2 = new TCPLateralCacheAttributes();
         lattr2.setTcpListenerPort(listenerPort);
-        lattr2.setTransmissionType(LateralCacheAttributes.Type.TCP);
         lattr2.setTcpServer("localhost:" + serverPort);
 
         final LateralTCPService<K, V> service = new LateralTCPService<>(lattr2,  new StandardSerializer());
@@ -97,7 +94,6 @@ class TestTCPLateralUnitTest
         JCS.getInstance( "test" );
 
         final TCPLateralCacheAttributes lac = new TCPLateralCacheAttributes();
-        lac.setTransmissionType(LateralCacheAttributes.Type.TCP);
         lac.setTcpServer( "localhost:" + port );
         lac.setTcpListenerPort( port );
 

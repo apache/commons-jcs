@@ -7,7 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.apache.commons.jcs4.engine.CacheElement;
 import org.apache.commons.jcs4.engine.ElementAttributes;
 import org.apache.commons.jcs4.engine.behavior.ICacheElement;
-import org.apache.commons.jcs4.engine.behavior.IElementAttributes;
 import org.junit.jupiter.api.Test;
 
 /*
@@ -57,7 +56,7 @@ class IndexedDiskCacheKeyStoreUnitTest
         final int cnt = 25;
         for ( int i = 0; i < cnt; i++ )
         {
-            final IElementAttributes eAttr = new ElementAttributes();
+            final ElementAttributes eAttr = new ElementAttributes();
             eAttr.setIsSpool( true );
             final ICacheElement<String, String> element = new CacheElement<>( cattr.getCacheName(), "key:" + i, "data:" + i );
             element.setElementAttributes( eAttr );
@@ -66,7 +65,7 @@ class IndexedDiskCacheKeyStoreUnitTest
 
         final long preAddRemoveSize = disk.getDataFileSize();
 
-        final IElementAttributes eAttr = new ElementAttributes();
+        final ElementAttributes eAttr = new ElementAttributes();
         eAttr.setIsSpool( true );
         final ICacheElement<String, String> elementSetup = new CacheElement<>( cattr.getCacheName(), "key:A", "data:A" );
         elementSetup.setElementAttributes( eAttr );
@@ -116,7 +115,7 @@ class IndexedDiskCacheKeyStoreUnitTest
         final int cnt = 25;
         for ( int i = 0; i < cnt; i++ )
         {
-            final IElementAttributes eAttr = new ElementAttributes();
+            final ElementAttributes eAttr = new ElementAttributes();
             eAttr.setIsSpool( true );
             final ICacheElement<String, String> element = new CacheElement<>( cattr.getCacheName(), "key:" + i, "data:" + i );
             element.setElementAttributes( eAttr );

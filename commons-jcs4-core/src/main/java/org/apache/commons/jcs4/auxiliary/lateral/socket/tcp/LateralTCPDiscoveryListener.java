@@ -26,7 +26,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.commons.jcs4.auxiliary.lateral.LateralCacheNoWait;
 import org.apache.commons.jcs4.auxiliary.lateral.LateralCacheNoWaitFacade;
-import org.apache.commons.jcs4.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttributes;
 import org.apache.commons.jcs4.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs4.engine.control.CompositeCacheManager;
 import org.apache.commons.jcs4.engine.logging.behavior.ICacheEventLogger;
@@ -134,8 +133,8 @@ public class LateralTCPDiscoveryListener
                         continue;
                     }
 
-                    final ITCPLateralCacheAttributes lca =
-                            (ITCPLateralCacheAttributes) facade.getAuxiliaryCacheAttributes().clone();
+                    final TCPLateralCacheAttributes lca =
+                            (TCPLateralCacheAttributes) facade.getAuxiliaryCacheAttributes().clone();
                     lca.setTcpServer(serverAndPort);
 
                     final LateralTCPCacheFactory factory =

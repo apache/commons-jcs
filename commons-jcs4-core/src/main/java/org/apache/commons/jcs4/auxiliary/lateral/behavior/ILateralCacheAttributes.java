@@ -30,37 +30,6 @@ import org.apache.commons.jcs4.auxiliary.AuxiliaryCacheAttributes;
 public interface ILateralCacheAttributes
     extends AuxiliaryCacheAttributes
 {
-    enum Type
-    {
-        /** HTTP type */
-        HTTP("HTTP"), // 1
-
-        /** UDP type */
-        UDP("UDP"), // 2
-
-        /** TCP type */
-        TCP("TCP"), // 3
-
-        /** XMLRPC type */
-        XMLRPC("XMLRPC"); // 4
-
-        private final String typeName;
-
-        Type(final String typeName)
-        {
-            this.typeName = typeName;
-        }
-
-        /**
-         * @since 3.1
-         */
-        @Override
-        public String toString()
-        {
-            return typeName;
-        }
-    }
-
     /**
      * The number of elements the zombie queue will hold. This queue is used to store events if we
      * loose our connection with the server.
@@ -68,37 +37,9 @@ public interface ILateralCacheAttributes
     int DEFAULT_ZOMBIE_QUEUE_MAX_SIZE = 1000;
 
     /**
-     * Gets the httpListenerPort attribute of the ILateralCacheAttributes object
-     *
-     * @return The httpListenerPort value
-     */
-    int getHttpListenerPort();
-
-    /**
-     * Gets the httpServer attribute of the ILateralCacheAttributes object
-     *
-     * @return The httpServer value
-     */
-    String getHttpServer();
-
-    /**
-     * Gets the httpSrvers attribute of the LateralCacheAttributes object
-     *
-     * @return The httpServers value
-     */
-    String getHttpServers();
-
-    /**
      * @return The outgoingOnlyMode value. Stops gets from going remote.
      */
     boolean getPutOnlyMode();
-
-    /**
-     * Gets the transmissionType attribute of the ILateralCacheAttributes object
-     *
-     * @return The transmissionType value
-     */
-    Type getTransmissionType();
 
     /**
      * Gets the udpMulticastAddr attribute of the ILateralCacheAttributes object
@@ -135,68 +76,4 @@ public interface ILateralCacheAttributes
      * @return true if we should have a listener connection
      */
     boolean isReceive();
-
-    /**
-     * Sets the httpListenerPort attribute of the ILateralCacheAttributes object
-     *
-     * @param val The new tcpListenerPort value
-     */
-    void setHttpListenerPort( int val );
-
-    /**
-     * Sets the httpServer attribute of the ILateralCacheAttributes object
-     *
-     * @param val The new httpServer value
-     */
-    void setHttpServer( String val );
-
-    /**
-     * Sets the httpServers attribute of the LateralCacheAttributes object
-     *
-     * @param val The new httpServers value
-     */
-    void setHttpServers( String val );
-
-    /**
-     * Sets the putOnlyMode attribute of the ILateralCacheAttributes. When this is true the lateral
-     * cache will only issue put and remove order and will not try to retrieve elements from other
-     * lateral caches.
-     *
-     * @param val The new transmissionTypeName value
-     */
-    void setPutOnlyMode( boolean val );
-
-    /**
-     * @param receive The receive to set.
-     */
-    void setReceive( boolean receive );
-
-    /**
-     * Sets the transmissionType attribute of the ILateralCacheAttributes object
-     *
-     * @param val The new transmissionType value
-     */
-    void setTransmissionType( Type val );
-
-    /**
-     * Sets the udpMulticastAddr attribute of the ILateralCacheAttributes object
-     *
-     * @param val The new udpMulticastAddr value
-     */
-    void setUdpMulticastAddr( String val );
-
-    /**
-     * Sets the udpMulticastPort attribute of the ILateralCacheAttributes object
-     *
-     * @param val The new udpMulticastPort value
-     */
-    void setUdpMulticastPort( int val );
-
-    /**
-     * The number of elements the zombie queue will hold. This queue is used to store events if we
-     * loose our connection with the server.
-     *
-     * @param zombieQueueMaxSize The zombieQueueMaxSize to set.
-     */
-    void setZombieQueueMaxSize( int zombieQueueMaxSize );
 }

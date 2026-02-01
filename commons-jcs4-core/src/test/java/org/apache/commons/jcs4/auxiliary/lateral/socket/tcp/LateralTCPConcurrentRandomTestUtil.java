@@ -26,7 +26,6 @@ import java.util.Random;
 
 import org.apache.commons.jcs4.JCS;
 import org.apache.commons.jcs4.access.CacheAccess;
-import org.apache.commons.jcs4.auxiliary.lateral.LateralCacheAttributes;
 import org.apache.commons.jcs4.engine.CacheElement;
 import org.apache.commons.jcs4.engine.behavior.ICacheElement;
 import org.apache.commons.jcs4.utils.serialization.StandardSerializer;
@@ -72,7 +71,6 @@ public class LateralTCPConcurrentRandomTestUtil
 
         final TCPLateralCacheAttributes lattr2 = new TCPLateralCacheAttributes();
         lattr2.setTcpListenerPort( 1103 );
-        lattr2.setTransmissionType(LateralCacheAttributes.Type.TCP);
         lattr2.setTcpServer( "localhost:1102" );
 
         // this service will put and remove using the lateral to
