@@ -80,9 +80,9 @@ class JCSThrashTest
             {
                 for ( final IStatElement<?> statElement : statElements )
                 {
-                    if ( listSize.equals( statElement.getName() ) )
+                    if ( listSize.equals( statElement.name() ) )
                     {
-                        result = statElement.getData().toString();
+                        result = statElement.data().toString();
                         break;
                     }
                 }

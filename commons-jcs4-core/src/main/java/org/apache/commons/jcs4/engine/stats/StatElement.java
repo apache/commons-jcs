@@ -28,28 +28,6 @@ public record StatElement<V>(String name, V data)
     implements IStatElement<V>
 {
     /**
-     * Gets the data, for example, for hit count you would get a value for some number.
-     *
-     * @return data
-     */
-    @Override
-    public V getData()
-    {
-        return data;
-    }
-
-    /**
-     * Gets the name of the stat element, for example, HitCount
-     *
-     * @return the stat element name
-     */
-    @Override
-    public String getName()
-    {
-        return name;
-    }
-
-    /**
      * @return a readable string.
      */
     @Override
