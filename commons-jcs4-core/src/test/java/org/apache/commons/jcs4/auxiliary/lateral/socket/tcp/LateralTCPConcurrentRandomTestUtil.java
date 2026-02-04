@@ -69,7 +69,7 @@ public class LateralTCPConcurrentRandomTestUtil
 
         final CacheAccess<String, String> cache = JCS.getInstance( region );
 
-        final TCPLateralCacheAttributes lattr2 = new TCPLateralCacheAttributes();
+        final LateralTCPCacheAttributes lattr2 = new LateralTCPCacheAttributes();
         lattr2.setTcpListenerPort( 1103 );
         lattr2.setTcpServer( "localhost:1102" );
 

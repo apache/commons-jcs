@@ -1,4 +1,4 @@
-package org.apache.commons.jcs4.auxiliary.lateral;
+package org.apache.commons.jcs4.auxiliary.lateral.socket.tcp;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -26,31 +26,30 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.jcs4.auxiliary.lateral.socket.tcp.TCPLateralCacheAttributes;
 import org.apache.commons.jcs4.engine.ZombieCacheServiceNonLocal;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
- * Tests for LateralCacheNoWaitFacade.
+ * Tests for LateralTCPCacheNoWaitFacade.
  */
 class LateralCacheNoWaitFacadeUnitTest
 {
-    private LateralCacheNoWaitFacade<String, String> facade;
-    private LateralCache<String, String> cache;
+    private LateralTCPCacheNoWaitFacade<String, String> facade;
+    private LateralTCPCache<String, String> cache;
 
     @BeforeEach
     void setUp()
         throws Exception
     {
         // SETUP
-        final List<LateralCacheNoWait<String, String>> noWaits = new ArrayList<>();
-        final TCPLateralCacheAttributes cattr = new TCPLateralCacheAttributes();
+        final List<LateralTCPCacheNoWait<String, String>> noWaits = new ArrayList<>();
+        final LateralTCPCacheAttributes cattr = new LateralTCPCacheAttributes();
         cattr.setCacheName( "testCache1" );
         cattr.setTcpServer("localhost:7890");
 
-        facade = new LateralCacheNoWaitFacade<>( null, noWaits, cattr );
-        cache = new LateralCache<>(cattr, new ZombieCacheServiceNonLocal<>(), null);
+        facade = new LateralTCPCacheNoWaitFacade<>( null, noWaits, cattr );
+        cache = new LateralTCPCache<>(cattr, new ZombieCacheServiceNonLocal<>(), null);
     }
 
     /**
@@ -59,7 +58,7 @@ class LateralCacheNoWaitFacadeUnitTest
     @Test
     void testAdd_InList()
     {
-        final LateralCacheNoWait<String, String> noWait = new LateralCacheNoWait<>( cache );
+        final LateralTCPCacheNoWait<String, String> noWait = new LateralTCPCacheNoWait<>( cache );
 
         // DO WORK
         facade.addNoWait( noWait );
@@ -76,7 +75,7 @@ class LateralCacheNoWaitFacadeUnitTest
     @Test
     void testAddThenRemoveNoWait_InList()
     {
-        final LateralCacheNoWait<String, String> noWait = new LateralCacheNoWait<>( cache );
+        final LateralTCPCacheNoWait<String, String> noWait = new LateralTCPCacheNoWait<>( cache );
 
         // DO WORK
         facade.addNoWait( noWait );
@@ -98,9 +97,9 @@ class LateralCacheNoWaitFacadeUnitTest
     @Test
     void testAddThenRemoveNoWait_InListSize2()
     {
-        final LateralCacheNoWait<String, String> noWait = new LateralCacheNoWait<>( cache );
+        final LateralTCPCacheNoWait<String, String> noWait = new LateralTCPCacheNoWait<>( cache );
         noWait.setIdentityKey("1234");
-        final LateralCacheNoWait<String, String> noWait2 = new LateralCacheNoWait<>( cache );
+        final LateralTCPCacheNoWait<String, String> noWait2 = new LateralTCPCacheNoWait<>( cache );
         noWait2.setIdentityKey("2345");
 
         // DO WORK
@@ -127,7 +126,7 @@ class LateralCacheNoWaitFacadeUnitTest
     @Test
     void testAddThenRemoveNoWait_NotInList()
     {
-        final LateralCacheNoWait<String, String> noWait = new LateralCacheNoWait<>( cache );
+        final LateralTCPCacheNoWait<String, String> noWait = new LateralTCPCacheNoWait<>( cache );
 
         // DO WORK
         facade.removeNoWait( noWait );

@@ -41,11 +41,12 @@ class UDPDiscoveryUnitTest
     private void simpleUDPDiscovery(final String discoveryAddress)
         throws Exception
     {
-        final UDPDiscoveryAttributes attributes = new UDPDiscoveryAttributes();
-        attributes.setUdpDiscoveryAddr(discoveryAddress);
-        attributes.setUdpDiscoveryPort(6789);
-        attributes.setServicePort(1000);
-        attributes.setUdpTTL(4); /* datagram TTL */
+        final UDPDiscoveryAttributes attributes = new UDPDiscoveryAttributes(
+                1000,
+                discoveryAddress,
+                6789,
+                4 /* datagram TTL */
+                );
 
         // create the service
         final UDPDiscoveryService service = new UDPDiscoveryService(attributes, new StandardSerializer());
@@ -58,8 +59,8 @@ class UDPDiscoveryUnitTest
         // create a receiver with the service
         final UDPDiscoveryReceiver receiver = new UDPDiscoveryReceiver( service::processMessage,
                 null,
-                attributes.getUdpDiscoveryAddr(),
-                attributes.getUdpDiscoveryPort() );
+                attributes.udpDiscoveryAddr(),
+                attributes.udpDiscoveryPort() );
         receiver.setSerializer(service.getSerializer());
         final Thread t = new Thread( receiver );
         t.start();

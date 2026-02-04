@@ -1,4 +1,4 @@
-package org.apache.commons.jcs4.auxiliary.lateral;
+package org.apache.commons.jcs4.auxiliary.lateral.socket.tcp;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -30,7 +30,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.jcs4.auxiliary.AbstractAuxiliaryCache;
-import org.apache.commons.jcs4.auxiliary.lateral.behavior.ILateralCacheAttributes;
+import org.apache.commons.jcs4.auxiliary.lateral.socket.tcp.behavior.ILateralTCPCacheAttributes;
 import org.apache.commons.jcs4.engine.CacheAdaptor;
 import org.apache.commons.jcs4.engine.CacheEventQueueFactory;
 import org.apache.commons.jcs4.engine.CacheInfo;
@@ -48,14 +48,14 @@ import org.apache.commons.jcs4.log.Log;
  * Used to queue up update requests to the underlying cache. These requests will be processed in
  * their order of arrival via the cache event queue processor.
  */
-public class LateralCacheNoWait<K, V>
+public class LateralTCPCacheNoWait<K, V>
     extends AbstractAuxiliaryCache<K, V>
 {
     /** The logger. */
-    private static final Log log = Log.getLog( LateralCacheNoWait.class );
+    private static final Log log = Log.getLog( LateralTCPCacheNoWait.class );
 
     /** The cache */
-    private final LateralCache<K, V> cache;
+    private final LateralTCPCache<K, V> cache;
 
     /** Identify this object */
     private String identityKey;
@@ -78,14 +78,14 @@ public class LateralCacheNoWait<K, V>
      *
      * @param cache
      */
-    public LateralCacheNoWait( final LateralCache<K, V> cache )
+    public LateralTCPCacheNoWait( final LateralTCPCache<K, V> cache )
     {
         this.cache = cache;
         this.identityKey = cache.getCacheName();
         setCacheEventLogger(cache.getCacheEventLogger());
         setElementSerializer(cache.getElementSerializer());
 
-        log.debug( "Constructing LateralCacheNoWait, LateralCache = [{0}]", cache );
+        log.debug( "Constructing LateralTCPCacheNoWait, LateralTCPCache = [{0}]", cache );
 
         final CacheEventQueueFactory<K, V> fact = new CacheEventQueueFactory<>();
         this.eventQueue = fact.createCacheEventQueue( new CacheAdaptor<>( cache ),
@@ -173,13 +173,13 @@ public class LateralCacheNoWait<K, V>
      * @return the AuxiliaryCacheAttributes.
      */
     @Override
-    public ILateralCacheAttributes getAuxiliaryCacheAttributes()
+    public ILateralTCPCacheAttributes getAuxiliaryCacheAttributes()
     {
         return cache.getAuxiliaryCacheAttributes();
     }
 
     /**
-     * Gets the cacheName attribute of the LateralCacheNoWait object
+     * Gets the cacheName attribute of the LateralTCPCacheNoWait object
      *
      * @return The cacheName value
      */
@@ -431,7 +431,7 @@ public class LateralCacheNoWait<K, V>
     public String toString()
     {
         final StringBuilder buf = new StringBuilder();
-        buf.append( " LateralCacheNoWait " );
+        buf.append( " LateralTCPCacheNoWait " );
         buf.append( " Status = " + this.getStatus() );
         buf.append( " cache = [" + cache.toString() + "]" );
         return buf.toString();

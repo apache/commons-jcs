@@ -34,7 +34,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.commons.jcs4.auxiliary.lateral.LateralElementDescriptor;
 import org.apache.commons.jcs4.auxiliary.lateral.behavior.ILateralCacheListener;
-import org.apache.commons.jcs4.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttributes;
+import org.apache.commons.jcs4.auxiliary.lateral.socket.tcp.behavior.ILateralTCPCacheAttributes;
 import org.apache.commons.jcs4.engine.CacheInfo;
 import org.apache.commons.jcs4.engine.behavior.ICacheElement;
 import org.apache.commons.jcs4.engine.behavior.ICompositeCacheManager;
@@ -64,14 +64,14 @@ public class LateralTCPListener<K, V>
     /**
      * Gets the instance attribute of the LateralCacheTCPListener class.
      *
-     * @param ilca ITCPLateralCacheAttributes
+     * @param ilca ILateralTCPCacheAttributes
      * @param cacheMgr
      * @param serializer the serializer to use when receiving
      * @return The instance value
      */
     @SuppressWarnings("unchecked") // Need to cast because of common map for all instances
     public static <K, V> LateralTCPListener<K, V>
-        getInstance( final ITCPLateralCacheAttributes ilca, final ICompositeCacheManager cacheMgr, final IElementSerializer serializer )
+        getInstance( final ILateralTCPCacheAttributes ilca, final ICompositeCacheManager cacheMgr, final IElementSerializer serializer )
     {
         return (LateralTCPListener<K, V>) instances.computeIfAbsent(
                 String.valueOf( ilca.getTcpListenerPort() ),
@@ -91,7 +91,7 @@ public class LateralTCPListener<K, V>
     private transient ICompositeCacheManager cacheManager;
 
     /** Configuration attributes */
-    private ITCPLateralCacheAttributes tcpLateralCacheAttributes;
+    private ILateralTCPCacheAttributes tcpLateralCacheAttributes;
 
     /** The listener thread */
     private Thread listenerThread;
@@ -128,7 +128,7 @@ public class LateralTCPListener<K, V>
      * @param ilca
      * @param serializer the serializer to use when receiving
      */
-    protected LateralTCPListener( final ITCPLateralCacheAttributes ilca, final IElementSerializer serializer )
+    protected LateralTCPListener( final ILateralTCPCacheAttributes ilca, final IElementSerializer serializer )
     {
         this.setTcpLateralCacheAttributes( ilca );
         this.serializer = serializer;
@@ -209,7 +209,7 @@ public class LateralTCPListener<K, V>
     /**
      * @return the tcpLateralCacheAttributes.
      */
-    public ITCPLateralCacheAttributes getTcpLateralCacheAttributes()
+    public ILateralTCPCacheAttributes getTcpLateralCacheAttributes()
     {
         return tcpLateralCacheAttributes;
     }
@@ -637,7 +637,7 @@ public class LateralTCPListener<K, V>
     /**
      * @param tcpLateralCacheAttributes The tcpLateralCacheAttributes to set.
      */
-    public void setTcpLateralCacheAttributes( final ITCPLateralCacheAttributes tcpLateralCacheAttributes )
+    public void setTcpLateralCacheAttributes( final ILateralTCPCacheAttributes tcpLateralCacheAttributes )
     {
         this.tcpLateralCacheAttributes = tcpLateralCacheAttributes;
     }

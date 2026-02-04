@@ -73,7 +73,7 @@ public class LateralTCPFilterRemoveHashCodeUnitTest
 
         Thread.sleep( 100 );
 
-        final TCPLateralCacheAttributes lattr2 = new TCPLateralCacheAttributes();
+        final LateralTCPCacheAttributes lattr2 = new LateralTCPCacheAttributes();
         lattr2.setTcpListenerPort( 1102 );
         lattr2.setTcpServer( "localhost:" + serverPort );
         lattr2.setIssueRemoveOnPut( true );

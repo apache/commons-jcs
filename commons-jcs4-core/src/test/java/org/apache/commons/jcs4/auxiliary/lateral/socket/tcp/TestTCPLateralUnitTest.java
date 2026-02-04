@@ -53,7 +53,7 @@ class TestTCPLateralUnitTest
 
     private <K,V> CompositeCache<K, V> createCache(final int port)
     {
-        final TCPLateralCacheAttributes lattr = new TCPLateralCacheAttributes();
+        final LateralTCPCacheAttributes lattr = new LateralTCPCacheAttributes();
         lattr.setTcpListenerPort(port);
 
         final CompositeCache<K, V> cache = cacheMgr.getCache( "test" );
@@ -68,7 +68,7 @@ class TestTCPLateralUnitTest
 
     private <K, V> LateralTCPService<K, V> createService(final int listenerPort, final int serverPort, final long listenerId) throws IOException
     {
-        final TCPLateralCacheAttributes lattr2 = new TCPLateralCacheAttributes();
+        final LateralTCPCacheAttributes lattr2 = new LateralTCPCacheAttributes();
         lattr2.setTcpListenerPort(listenerPort);
         lattr2.setTcpServer("localhost:" + serverPort);
 
@@ -93,7 +93,7 @@ class TestTCPLateralUnitTest
         // force initialization
         JCS.getInstance( "test" );
 
-        final TCPLateralCacheAttributes lac = new TCPLateralCacheAttributes();
+        final LateralTCPCacheAttributes lac = new LateralTCPCacheAttributes();
         lac.setTcpServer( "localhost:" + port );
         lac.setTcpListenerPort( port );
 

@@ -1,4 +1,4 @@
-package org.apache.commons.jcs4.auxiliary.lateral;
+package org.apache.commons.jcs4.auxiliary.lateral.socket.tcp;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -33,8 +33,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 import org.apache.commons.jcs4.auxiliary.AbstractAuxiliaryCache;
-import org.apache.commons.jcs4.auxiliary.lateral.behavior.ILateralCacheAttributes;
 import org.apache.commons.jcs4.auxiliary.lateral.behavior.ILateralCacheListener;
+import org.apache.commons.jcs4.auxiliary.lateral.socket.tcp.behavior.ILateralTCPCacheAttributes;
 import org.apache.commons.jcs4.engine.CacheStatus;
 import org.apache.commons.jcs4.engine.behavior.ICacheElement;
 import org.apache.commons.jcs4.engine.stats.StatElement;
@@ -45,20 +45,20 @@ import org.apache.commons.jcs4.log.Log;
 
 /**
  * Used to provide access to multiple services under nowait protection. Composite factory should
- * construct LateralCacheNoWaitFacade to give to the composite cache out of caches it constructs
+ * construct LateralTCPCacheNoWaitFacade to give to the composite cache out of caches it constructs
  * from the varies manager to lateral services. Perhaps the lateralcache factory should be able to
  * do this.
  */
-public class LateralCacheNoWaitFacade<K, V>
+public class LateralTCPCacheNoWaitFacade<K, V>
     extends AbstractAuxiliaryCache<K, V>
 {
     /** The logger */
-    private static final Log log = Log.getLog( LateralCacheNoWaitFacade.class );
+    private static final Log log = Log.getLog( LateralTCPCacheNoWaitFacade.class );
 
     /**
      * The queuing facade to the client.
      */
-    private final ConcurrentHashMap<String, LateralCacheNoWait<K, V>> noWaitMap;
+    private final ConcurrentHashMap<String, LateralTCPCacheNoWait<K, V>> noWaitMap;
 
     /** The region name */
     private final String cacheName;
@@ -67,7 +67,7 @@ public class LateralCacheNoWaitFacade<K, V>
     private ILateralCacheListener<K, V> listener;
 
     /** User configurable attributes. */
-    private final ILateralCacheAttributes lateralCacheAttributes;
+    private final ILateralTCPCacheAttributes lateralCacheAttributes;
 
     /** Disposed state of this facade */
     private final AtomicBoolean disposed = new AtomicBoolean();
@@ -80,8 +80,8 @@ public class LateralCacheNoWaitFacade<K, V>
      * @param cattr the configuration
      * @since 3.1
      */
-    public LateralCacheNoWaitFacade(final ILateralCacheListener<K, V> listener,
-            final List<LateralCacheNoWait<K, V>> noWaits, final ILateralCacheAttributes cattr )
+    public LateralTCPCacheNoWaitFacade(final ILateralCacheListener<K, V> listener,
+            final List<LateralTCPCacheNoWait<K, V>> noWaits, final ILateralTCPCacheAttributes cattr )
     {
         log.debug( "CONSTRUCTING NO WAIT FACADE" );
         this.listener = listener;
@@ -97,14 +97,14 @@ public class LateralCacheNoWaitFacade<K, V>
      * @param noWait
      * @return true if it wasn't already contained
      */
-    public synchronized boolean addNoWait( final LateralCacheNoWait<K, V> noWait )
+    public synchronized boolean addNoWait( final LateralTCPCacheNoWait<K, V> noWait )
     {
         if ( noWait == null )
         {
             return false;
         }
 
-        final LateralCacheNoWait<K,V> added =
+        final LateralTCPCacheNoWait<K,V> added =
                 noWaitMap.putIfAbsent(noWait.getIdentityKey(), noWait);
 
         if (added != null)
@@ -122,7 +122,7 @@ public class LateralCacheNoWaitFacade<K, V>
      * @param noWait
      * @return true if the noWait is in the list.
      */
-    public boolean containsNoWait( final LateralCacheNoWait<K, V> noWait )
+    public boolean containsNoWait( final LateralTCPCacheNoWait<K, V> noWait )
     {
         return containsNoWait(noWait.getIdentityKey());
     }
@@ -152,7 +152,7 @@ public class LateralCacheNoWaitFacade<K, V>
                 listener = null;
             }
 
-            noWaitMap.values().forEach(LateralCacheNoWait::dispose);
+            noWaitMap.values().forEach(LateralTCPCacheNoWait::dispose);
             noWaitMap.clear();
         }
     }
@@ -177,13 +177,13 @@ public class LateralCacheNoWaitFacade<K, V>
      * @return the AuxiliaryCacheAttributes.
      */
     @Override
-    public ILateralCacheAttributes getAuxiliaryCacheAttributes()
+    public ILateralTCPCacheAttributes getAuxiliaryCacheAttributes()
     {
         return this.lateralCacheAttributes;
     }
 
     /**
-     * Gets the cacheName attribute of the LateralCacheNoWaitFacade object.
+     * Gets the cacheName attribute of the LateralTCPCacheNoWaitFacade object.
      *
      * @return The cacheName value
      */
@@ -194,7 +194,7 @@ public class LateralCacheNoWaitFacade<K, V>
     }
 
     /**
-     * Gets the cacheType attribute of the LateralCacheNoWaitFacade object.
+     * Gets the cacheType attribute of the LateralTCPCacheNoWaitFacade object.
      *
      * @return The cacheType value
      */
@@ -224,7 +224,7 @@ public class LateralCacheNoWaitFacade<K, V>
     public Set<K> getKeySet() throws IOException
     {
         final HashSet<K> allKeys = new HashSet<>();
-        for (final LateralCacheNoWait<K, V> nw : noWaitMap.values())
+        for (final LateralTCPCacheNoWait<K, V> nw : noWaitMap.values())
         {
             final Set<K> keys = nw.getKeySet();
             if (keys != null)
@@ -335,7 +335,7 @@ public class LateralCacheNoWaitFacade<K, V>
     }
 
     /**
-     * Gets the status attribute of the LateralCacheNoWaitFacade object
+     * Gets the status attribute of the LateralTCPCacheNoWaitFacade object
      * @return The status value
      */
     @Override
@@ -352,7 +352,7 @@ public class LateralCacheNoWaitFacade<K, V>
         }
 
         final List<CacheStatus> statii = noWaitMap.values().stream()
-                .map(LateralCacheNoWait::getStatus)
+                .map(LateralTCPCacheNoWait::getStatus)
                 .collect(Collectors.toList());
 
         // It's alive if ANY of its nowaits is alive
@@ -390,7 +390,7 @@ public class LateralCacheNoWaitFacade<K, V>
     @Override
     public void removeAll()
     {
-        noWaitMap.values().forEach(LateralCacheNoWait::removeAll);
+        noWaitMap.values().forEach(LateralTCPCacheNoWait::removeAll);
     }
 
     /**
@@ -399,7 +399,7 @@ public class LateralCacheNoWaitFacade<K, V>
      * @param noWait
      * @return true if it was already in the array
      */
-    public synchronized boolean removeNoWait( final LateralCacheNoWait<K, V> noWait )
+    public synchronized boolean removeNoWait( final LateralTCPCacheNoWait<K, V> noWait )
     {
         if (noWait == null)
         {
@@ -424,7 +424,7 @@ public class LateralCacheNoWaitFacade<K, V>
             return false;
         }
 
-        final LateralCacheNoWait<K,V> contained = noWaitMap.remove(tcpServer);
+        final LateralTCPCacheNoWait<K,V> contained = noWaitMap.remove(tcpServer);
 
         if (contained != null)
         {
@@ -435,12 +435,12 @@ public class LateralCacheNoWaitFacade<K, V>
     }
 
     /**
-     * @return "LateralCacheNoWaitFacade: " + cacheName;
+     * @return "LateralTCPCacheNoWaitFacade: " + cacheName;
      */
     @Override
     public String toString()
     {
-        return "LateralCacheNoWaitFacade: " + cacheName;
+        return "LateralTCPCacheNoWaitFacade: " + cacheName;
     }
 
     /**
@@ -455,7 +455,7 @@ public class LateralCacheNoWaitFacade<K, V>
         log.debug("updating through lateral cache facade, noWaits.length = {0}",
                 noWaitMap::size);
 
-        for (final LateralCacheNoWait<K, V> nw : noWaitMap.values())
+        for (final LateralTCPCacheNoWait<K, V> nw : noWaitMap.values())
         {
             nw.update( ce );
         }

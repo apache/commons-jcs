@@ -27,7 +27,7 @@ import java.util.Set;
 
 import org.apache.commons.jcs4.auxiliary.lateral.LateralCommand;
 import org.apache.commons.jcs4.auxiliary.lateral.LateralElementDescriptor;
-import org.apache.commons.jcs4.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttributes;
+import org.apache.commons.jcs4.auxiliary.lateral.socket.tcp.behavior.ILateralTCPCacheAttributes;
 import org.apache.commons.jcs4.engine.CacheElement;
 import org.apache.commons.jcs4.engine.CacheInfo;
 import org.apache.commons.jcs4.engine.behavior.ICacheElement;
@@ -59,12 +59,12 @@ public class LateralTCPService<K, V>
     /**
      * Constructor for the LateralTCPService object
      *
-     * @param lca ITCPLateralCacheAttributes the configuration object
+     * @param lca ILateralTCPCacheAttributes the configuration object
      * @param serializer the serializer to use when sending
      * @throws IOException
      * @since 3.1
      */
-    public LateralTCPService( final ITCPLateralCacheAttributes lca, final IElementSerializer serializer )
+    public LateralTCPService( final ILateralTCPCacheAttributes lca, final IElementSerializer serializer )
         throws IOException
     {
         this.allowGet = lca.isAllowGet();

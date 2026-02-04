@@ -69,7 +69,7 @@ jcs.region.testCache2.elementattributes.IsRemote=true
 
 # Lateral TCp with UDP discovery enabled
 jcs.auxiliary.LTCP=org.apache.commons.jcs4.auxiliary.lateral.socket.tcp.LateralTCPCacheFactory
-jcs.auxiliary.LTCP.attributes=org.apache.commons.jcs4.auxiliary.lateral.socket.tcp.TCPLateralCacheAttributes
+jcs.auxiliary.LTCP.attributes=org.apache.commons.jcs4.auxiliary.lateral.socket.tcp.LateralTCPCacheAttributes
 jcs.auxiliary.LTCP.attributes.TcpServers=
 jcs.auxiliary.LTCP.attributes.TcpListenerPort=1111
 jcs.auxiliary.LTCP.attributes.AllowGet=false
@@ -80,7 +80,7 @@ jcs.auxiliary.LTCP.attributes.UdpDiscoveryEnabled=true
 
 # Lateral TCP with UDP discovery disabled
 jcs.auxiliary.LTCP2=org.apache.commons.jcs4.auxiliary.lateral.socket.tcp.LateralTCPCacheFactory
-jcs.auxiliary.LTCP2.attributes=org.apache.commons.jcs4.auxiliary.lateral.socket.tcp.TCPLateralCacheAttributes
+jcs.auxiliary.LTCP2.attributes=org.apache.commons.jcs4.auxiliary.lateral.socket.tcp.LateralTCPCacheAttributes
 jcs.auxiliary.LTCP2.attributes.TcpServers=
 jcs.auxiliary.LTCP2.attributes.TcpListenerPort=1110
 jcs.auxiliary.LTCP2.attributes.AllowGet=false

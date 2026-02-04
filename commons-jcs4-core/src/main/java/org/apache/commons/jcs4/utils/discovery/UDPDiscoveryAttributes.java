@@ -22,11 +22,31 @@ package org.apache.commons.jcs4.utils.discovery;
 /**
  * Configuration properties for UDP discover service.
  * <p>
- * The service will allow out applications to find each other.
+ * The service will allow applications to find each other.
  * </p>
  */
-public final class UDPDiscoveryAttributes
-    implements Cloneable
+public record UDPDiscoveryAttributes(
+        /** Service address */
+        String serviceAddress,
+
+        /** Service port */
+        int servicePort,
+
+        /** Udp discovery address */
+        String udpDiscoveryAddr,
+
+        /** Udp discovery network interface */
+        String udpDiscoveryInterface,
+
+        /** Udp discovery port */
+        int udpDiscoveryPort,
+
+        /** Udp datagram TTL */
+        int udpTTL,
+
+        /** Amount of time before we remove services that we haven't heard from */
+        int maxIdleTimeSec
+)
 {
     /** Default udp discovery address */
     private static final String DEFAULT_UDP_DISCOVERY_ADDRESS = "228.4.5.6";
@@ -37,149 +57,62 @@ public final class UDPDiscoveryAttributes
     /** Default amount of time before we remove services that we haven't heard from */
     private static final int DEFAULT_MAX_IDLE_TIME_SEC = 180;
 
-    /** Service address */
-    private String serviceAddress;
+    private static final UDPDiscoveryAttributes DEFAULT = new UDPDiscoveryAttributes(
+            null,
+            -1,
+            DEFAULT_UDP_DISCOVERY_ADDRESS,
+            null,
+            DEFAULT_UDP_DISCOVERY_PORT,
+            0,
+            DEFAULT_MAX_IDLE_TIME_SEC
+            );
 
-    /** Service port */
-    private int servicePort;
-
-    /** Udp discovery address */
-    private String udpDiscoveryAddr = DEFAULT_UDP_DISCOVERY_ADDRESS;
-
-    /** Udp discovery network interface */
-    private String udpDiscoveryInterface;
-
-    /** Udp discovery port */
-    private int udpDiscoveryPort = DEFAULT_UDP_DISCOVERY_PORT;
-
-    /** Udp datagram TTL */
-    private int udpTTL;
-
-    /** Amount of time before we remove services that we haven't heard from */
-    private int maxIdleTimeSec = DEFAULT_MAX_IDLE_TIME_SEC;
-
-    /** @return a clone of this object */
-    @Override
-    public UDPDiscoveryAttributes clone()
+    /**
+     * @return an object containing the default settings
+     */
+    public static UDPDiscoveryAttributes defaults()
     {
-        final UDPDiscoveryAttributes attributes = new UDPDiscoveryAttributes();
-        attributes.setMaxIdleTimeSec( getMaxIdleTimeSec() );
-        attributes.setServicePort( getServicePort() );
-        attributes.setUdpDiscoveryAddr( getUdpDiscoveryAddr() );
-        attributes.setUdpDiscoveryPort( getUdpDiscoveryPort() );
-        return attributes;
+        return DEFAULT;
     }
 
     /**
-     * @return the maxIdleTimeSec.
+     * Constructor with necessary fields only
+     *
+     * @param servicePort
+     * @param udpDiscoveryAddr
+     * @param udpDiscoveryPort
+     * @param udpTTL
      */
-    public int getMaxIdleTimeSec()
+    public UDPDiscoveryAttributes(int servicePort, String udpDiscoveryAddr, int udpDiscoveryPort,
+        int udpTTL)
     {
-        return maxIdleTimeSec;
+        this(defaults().serviceAddress(),
+            servicePort,
+            udpDiscoveryAddr,
+            defaults().udpDiscoveryInterface(),
+            udpDiscoveryPort,
+            udpTTL,
+            defaults().maxIdleTimeSec()
+            );
     }
 
     /**
-     * @return the serviceAddress.
+     * Get a new record with the given serviceAddress
+     *
+     * @param serviceAddress new serviceAddress
+     * @return new record with the given serviceAddress
      */
-    public String getServiceAddress()
+    public UDPDiscoveryAttributes withServiceAddress(String serviceAddress)
     {
-        return serviceAddress;
-    }
-
-    /**
-     * @return the servicePort.
-     */
-    public int getServicePort()
-    {
-        return servicePort;
-    }
-
-    /**
-     * @return the udpDiscoveryAddr.
-     */
-    public String getUdpDiscoveryAddr()
-    {
-        return udpDiscoveryAddr;
-    }
-
-    /**
-     * @return the udpDiscoveryInterface.
-     */
-    public String getUdpDiscoveryInterface()
-    {
-        return udpDiscoveryInterface;
-    }
-
-    /**
-     * @return the udpDiscoveryPort.
-     */
-    public int getUdpDiscoveryPort()
-    {
-        return udpDiscoveryPort;
-    }
-
-    /**
-     * @return the udpTTL.
-     */
-    public int getUdpTTL()
-    {
-        return udpTTL;
-    }
-
-    /**
-     * @param maxIdleTimeSec The maxIdleTimeSec to set.
-     */
-    public void setMaxIdleTimeSec( final int maxIdleTimeSec )
-    {
-        this.maxIdleTimeSec = maxIdleTimeSec;
-    }
-
-    /**
-     * @param serviceAddress The serviceAddress to set.
-     */
-    public void setServiceAddress( final String serviceAddress )
-    {
-        this.serviceAddress = serviceAddress;
-    }
-
-    /**
-     * @param servicePort The servicePort to set.
-     */
-    public void setServicePort( final int servicePort )
-    {
-        this.servicePort = servicePort;
-    }
-
-    /**
-     * @param udpDiscoveryAddr The udpDiscoveryAddr to set.
-     */
-    public void setUdpDiscoveryAddr( final String udpDiscoveryAddr )
-    {
-        this.udpDiscoveryAddr = udpDiscoveryAddr;
-    }
-
-    /**
-     * @param udpDiscoveryInterface The udpDiscoveryInterface to set.
-     */
-    public void setUdpDiscoveryInterface( final String udpDiscoveryInterface )
-    {
-        this.udpDiscoveryInterface = udpDiscoveryInterface;
-    }
-
-    /**
-     * @param udpDiscoveryPort The udpDiscoveryPort to set.
-     */
-    public void setUdpDiscoveryPort( final int udpDiscoveryPort )
-    {
-        this.udpDiscoveryPort = udpDiscoveryPort;
-    }
-
-    /**
-     * @param udpTTL The udpTTL to set.
-     */
-    public void setUdpTTL( final int udpTTL )
-    {
-        this.udpTTL = udpTTL;
+        return new UDPDiscoveryAttributes(
+                serviceAddress,
+                servicePort(),
+                udpDiscoveryAddr(),
+                udpDiscoveryInterface(),
+                udpDiscoveryPort(),
+                udpTTL(),
+                maxIdleTimeSec()
+                );
     }
 
     /**
@@ -189,12 +122,12 @@ public final class UDPDiscoveryAttributes
     public String toString()
     {
         final StringBuilder buf = new StringBuilder();
-        buf.append( "\n UDPDiscoveryAttributes" );
-        buf.append( "\n ServiceAddress = [" + getServiceAddress() + "]" );
-        buf.append( "\n ServicePort = [" + getServicePort() + "]" );
-        buf.append( "\n UdpDiscoveryAddr = [" + getUdpDiscoveryAddr() + "]" );
-        buf.append( "\n UdpDiscoveryPort = [" + getUdpDiscoveryPort() + "]" );
-        buf.append( "\n MaxIdleTimeSec = [" + getMaxIdleTimeSec() + "]" );
+        buf.append("\n UDPDiscoveryAttributes");
+        buf.append("\n ServiceAddress = [").append(serviceAddress()).append("]");
+        buf.append("\n ServicePort = [").append(servicePort()).append("]");
+        buf.append("\n UdpDiscovery = [").append(udpDiscoveryAddr()).append("]");
+        buf.append("\n UdpDiscoveryPort = [").append(udpDiscoveryPort()).append("]");
+        buf.append("\n MaxIdleTimeSec = [").append(maxIdleTimeSec()).append("]");
         return buf.toString();
     }
 }

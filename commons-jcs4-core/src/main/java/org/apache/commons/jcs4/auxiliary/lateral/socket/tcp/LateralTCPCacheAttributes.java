@@ -19,16 +19,16 @@ package org.apache.commons.jcs4.auxiliary.lateral.socket.tcp;
  * under the License.
  */
 
-import org.apache.commons.jcs4.auxiliary.lateral.LateralCacheAttributes;
-import org.apache.commons.jcs4.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttributes;
+import org.apache.commons.jcs4.auxiliary.AbstractAuxiliaryCacheAttributes;
+import org.apache.commons.jcs4.auxiliary.lateral.socket.tcp.behavior.ILateralTCPCacheAttributes;
 
 /**
  * This interface defines functions that are particular to the TCP Lateral Cache plugin. It extends
  * the generic LateralCacheAttributes interface which in turn extends the AuxiliaryCache interface.
  */
-public class TCPLateralCacheAttributes
-    extends LateralCacheAttributes
-    implements ITCPLateralCacheAttributes
+public class LateralTCPCacheAttributes
+    extends AbstractAuxiliaryCacheAttributes
+    implements ILateralTCPCacheAttributes
 {
     /** Don't change. */
     private static final long serialVersionUID = 1077889204513905220L;
@@ -75,6 +75,9 @@ public class TCPLateralCacheAttributes
     /** Udp discovery for tcp server */
     private String udpDiscoveryAddr = DEFAULT_UDP_DISCOVERY_ADDRESS;
 
+    /** Udp discovery network interface */
+    private String udpDiscoveryInterface = null;
+
     /** Discovery port */
     private int udpDiscoveryPort = DEFAULT_UDP_DISCOVERY_PORT;
 
@@ -101,6 +104,22 @@ public class TCPLateralCacheAttributes
 
     /** Only block for openTimeOut seconds before timing out on startup. */
     private int openTimeOut = DEFAULT_OPEN_TIMEOUT;
+
+
+    /** Default receive setting */
+    private static final boolean DEFAULT_RECEIVE = true;
+
+    /** Disables gets from laterals */
+    private boolean putOnlyMode = true;
+
+    /**
+     * do we receive and broadcast or only broadcast this is useful when you don't want to get any
+     * notifications
+     */
+    private boolean receive = DEFAULT_RECEIVE;
+
+    /** If the primary fails, we will queue items before reconnect.  This limits the number of items that can be queued. */
+    private int zombieQueueMaxSize = DEFAULT_ZOMBIE_QUEUE_MAX_SIZE;
 
     /**
      * @return the openTimeOut
@@ -176,6 +195,17 @@ public class TCPLateralCacheAttributes
     }
 
     /**
+     * The UDP discovery network interface if UDPDiscovery is enabled.
+     *
+     * @return the udpDiscoveryInterface.
+     */
+    @Override
+    public String getUdpDiscoveryInterface()
+    {
+        return this.udpDiscoveryInterface;
+    }
+
+   /**
      * The port to use if UDPDiscovery is enabled.
      *
      * @return the udpDiscoveryPort.
@@ -375,7 +405,7 @@ public class TCPLateralCacheAttributes
     }
 
     /**
-     * Can setup UDP Discovery. This only works for TCp laterals right now. It allows TCP laterals
+     * Can setup UDP Discovery. This only works for TCP laterals right now. It allows TCP laterals
      * to find each other by broadcasting to a multicast port.
      *
      * @param udpDiscoveryEnabled The udpDiscoveryEnabled to set.
@@ -383,6 +413,16 @@ public class TCPLateralCacheAttributes
     public void setUdpDiscoveryEnabled( final boolean udpDiscoveryEnabled )
     {
         this.udpDiscoveryEnabled = udpDiscoveryEnabled;
+    }
+
+    /**
+     * Sets the UDP discovery network interface if UDPDiscovery is enabled.
+     *
+     * @param udpDiscoveryInterface the udpDiscoveryInterface to set (symbolic name)
+     */
+    public void setUdpDiscoveryInterface(String udpDiscoveryInterface)
+    {
+        this.udpDiscoveryInterface = udpDiscoveryInterface;
     }
 
     /**
@@ -404,6 +444,66 @@ public class TCPLateralCacheAttributes
     public void setUdpTTL( final int udpTTL )
     {
         this.udpTTL = udpTTL;
+    }
+
+    /**
+     * @return The outgoingOnlyMode value. Stops gets from going remote.
+     */
+    @Override
+    public boolean getPutOnlyMode()
+    {
+        return putOnlyMode;
+    }
+
+    /**
+     * The number of elements the zombie queue will hold. This queue is used to store events if we
+     * loose our connection with the server.
+     *
+     * @return the zombieQueueMaxSize.
+     */
+    @Override
+    public int getZombieQueueMaxSize()
+    {
+        return zombieQueueMaxSize;
+    }
+
+    /**
+     * @return the receive.
+     */
+    @Override
+    public boolean isReceive()
+    {
+        return receive;
+    }
+
+    /**
+     * Sets the outgoingOnlyMode attribute of the ILateralCacheAttributes. When this is true the
+     * lateral cache will only issue put and remove order and will not try to retrieve elements from
+     * other lateral caches.
+     * @param val The new transmissionTypeName value
+     */
+    public void setPutOnlyMode( final boolean val )
+    {
+        this.putOnlyMode = val;
+    }
+
+    /**
+     * @param receive The receive to set.
+     */
+    public void setReceive( final boolean receive )
+    {
+        this.receive = receive;
+    }
+
+    /**
+     * The number of elements the zombie queue will hold. This queue is used to store events if we
+     * loose our connection with the server.
+     *
+     * @param zombieQueueMaxSize The zombieQueueMaxSize to set.
+     */
+    public void setZombieQueueMaxSize( final int zombieQueueMaxSize )
+    {
+        this.zombieQueueMaxSize = zombieQueueMaxSize;
     }
 
     /**

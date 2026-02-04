@@ -43,10 +43,12 @@ class UDPDiscoveryServiceUnitTest
         throws Exception
     {
         // SETUP
-        final UDPDiscoveryAttributes attributes = new UDPDiscoveryAttributes();
-        attributes.setUdpDiscoveryAddr( host );
-        attributes.setUdpDiscoveryPort( port );
-        attributes.setServicePort( 1000 );
+        final UDPDiscoveryAttributes attributes = new UDPDiscoveryAttributes(
+                1000,
+                host,
+                port,
+                UDPDiscoveryAttributes.defaults().udpTTL()
+                );
 
         // create the service
         service = new UDPDiscoveryService(attributes, new StandardSerializer());

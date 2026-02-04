@@ -107,6 +107,13 @@
 						<td>N</td>
 						<td>228.5.6.7</td>
 					</tr>
+                    <tr>
+                        <td>UdpDiscoveryInterface</td>
+                        <td> The network interface the UDP discovery process should 
+                            use for broadcasts, for example en0.</td>
+                        <td>N</td>
+                        <td>null</td>
+                    </tr>
 					<tr>
 						<td>UdpDiscoveryPort</td>
 						<td> The port the UDP discovery process should send messages to.

@@ -30,7 +30,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.commons.jcs4.auxiliary.lateral.LateralElementDescriptor;
-import org.apache.commons.jcs4.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttributes;
+import org.apache.commons.jcs4.auxiliary.lateral.socket.tcp.behavior.ILateralTCPCacheAttributes;
 import org.apache.commons.jcs4.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs4.log.Log;
 
@@ -67,7 +67,7 @@ public class LateralTCPSender
      * @throws IOException
      * @since 3.1
      */
-    public LateralTCPSender( final ITCPLateralCacheAttributes lca, final IElementSerializer serializer )
+    public LateralTCPSender( final ILateralTCPCacheAttributes lca, final IElementSerializer serializer )
         throws IOException
     {
         this.socketOpenTimeOut = lca.getOpenTimeOut();

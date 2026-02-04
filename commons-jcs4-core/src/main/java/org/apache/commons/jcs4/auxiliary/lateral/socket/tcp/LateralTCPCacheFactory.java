@@ -25,12 +25,9 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.jcs4.auxiliary.AbstractAuxiliaryCacheFactory;
 import org.apache.commons.jcs4.auxiliary.AuxiliaryCacheAttributes;
-import org.apache.commons.jcs4.auxiliary.lateral.LateralCache;
 import org.apache.commons.jcs4.auxiliary.lateral.LateralCacheMonitor;
-import org.apache.commons.jcs4.auxiliary.lateral.LateralCacheNoWait;
-import org.apache.commons.jcs4.auxiliary.lateral.LateralCacheNoWaitFacade;
 import org.apache.commons.jcs4.auxiliary.lateral.behavior.ILateralCacheListener;
-import org.apache.commons.jcs4.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttributes;
+import org.apache.commons.jcs4.auxiliary.lateral.socket.tcp.behavior.ILateralTCPCacheAttributes;
 import org.apache.commons.jcs4.engine.CacheWatchRepairable;
 import org.apache.commons.jcs4.engine.ZombieCacheServiceNonLocal;
 import org.apache.commons.jcs4.engine.ZombieCacheWatch;
@@ -41,11 +38,12 @@ import org.apache.commons.jcs4.engine.behavior.IShutdownObserver;
 import org.apache.commons.jcs4.engine.control.CompositeCacheManager;
 import org.apache.commons.jcs4.engine.logging.behavior.ICacheEventLogger;
 import org.apache.commons.jcs4.log.Log;
+import org.apache.commons.jcs4.utils.discovery.UDPDiscoveryAttributes;
 import org.apache.commons.jcs4.utils.discovery.UDPDiscoveryManager;
 import org.apache.commons.jcs4.utils.discovery.UDPDiscoveryService;
 
 /**
- * Constructs a LateralCacheNoWaitFacade for the given configuration. Each lateral service / local
+ * Constructs a LateralTCPCacheNoWaitFacade for the given configuration. Each lateral service / local
  * relationship is managed by one manager. This manager can have multiple caches. The remote
  * relationships are consolidated and restored via these managers.
  * <p>
@@ -63,12 +61,12 @@ public class LateralTCPCacheFactory
      * <p>
      * This should be called by create cache.
      *
-     * @param attr  ITCPLateralCacheAttributes
+     * @param attr  ILateralTCPCacheAttributes
      * @param cacheMgr the composite cache manager
      * @param serializer the serializer to use when receiving
      * @return the listener if created, else null
      */
-    private static <K, V> ILateralCacheListener<K, V> createListener( final ITCPLateralCacheAttributes attr,
+    private static <K, V> ILateralCacheListener<K, V> createListener( final ILateralTCPCacheAttributes attr,
             final ICompositeCacheManager cacheMgr, final IElementSerializer elementSerializer )
     {
         ILateralCacheListener<K, V> listener = null;
@@ -130,7 +128,7 @@ public class LateralTCPCacheFactory
      * @param cacheMgr the composite cache manager
      * @param serializer the serializer to use when receiving
      */
-    private void addListenerIfNeeded( final ITCPLateralCacheAttributes iaca, final ICompositeCacheManager cacheMgr, final IElementSerializer elementSerializer )
+    private void addListenerIfNeeded( final ILateralTCPCacheAttributes iaca, final ICompositeCacheManager cacheMgr, final IElementSerializer elementSerializer )
     {
         // don't create a listener if we are not receiving.
         if ( iaca.isReceive() )
@@ -159,15 +157,15 @@ public class LateralTCPCacheFactory
      * @param cacheMgr the cache manager
      * @param cacheEventLogger the event logger
      * @param elementSerializer the serializer to use when sending or receiving
-     * @return a LateralCacheNoWaitFacade
+     * @return a LateralTCPCacheNoWaitFacade
      */
     @Override
-    public <K, V> LateralCacheNoWaitFacade<K, V> createCache(
+    public <K, V> LateralTCPCacheNoWaitFacade<K, V> createCache(
             final AuxiliaryCacheAttributes iaca, final ICompositeCacheManager cacheMgr,
            final ICacheEventLogger cacheEventLogger, final IElementSerializer elementSerializer )
     {
-        final ITCPLateralCacheAttributes lac = (ITCPLateralCacheAttributes) iaca;
-        final ArrayList<LateralCacheNoWait<K, V>> noWaits = new ArrayList<>();
+        final ILateralTCPCacheAttributes lac = (ILateralTCPCacheAttributes) iaca;
+        final ArrayList<LateralTCPCacheNoWait<K, V>> noWaits = new ArrayList<>();
 
         // pairs up the tcp servers and set the tcpServer value and
         // get the manager and then get the cache
@@ -180,10 +178,10 @@ public class LateralTCPCacheFactory
             for (final String server : servers)
             {
                 log.debug( "tcp server = {0}", server );
-                final TCPLateralCacheAttributes lacClone = (TCPLateralCacheAttributes) lac.clone();
+                final LateralTCPCacheAttributes lacClone = (LateralTCPCacheAttributes) lac.clone();
                 lacClone.setTcpServer( server );
 
-                final LateralCacheNoWait<K, V> lateralNoWait = createCacheNoWait(lacClone, cacheEventLogger, elementSerializer);
+                final LateralTCPCacheNoWait<K, V> lateralNoWait = createCacheNoWait(lacClone, cacheEventLogger, elementSerializer);
 
                 addListenerIfNeeded( lacClone, cacheMgr, elementSerializer );
                 monitorCache(lateralNoWait);
@@ -194,8 +192,8 @@ public class LateralTCPCacheFactory
         final ILateralCacheListener<K, V> listener = createListener( lac, cacheMgr, elementSerializer );
 
         // create the no wait facade.
-        final LateralCacheNoWaitFacade<K, V> lcnwf =
-            new LateralCacheNoWaitFacade<>(listener, noWaits, lac);
+        final LateralTCPCacheNoWaitFacade<K, V> lcnwf =
+            new LateralTCPCacheNoWaitFacade<>(listener, noWaits, lac);
 
         // create udp discovery if available.
         createDiscoveryService( lac, lcnwf, cacheMgr, cacheEventLogger, elementSerializer );
@@ -204,30 +202,30 @@ public class LateralTCPCacheFactory
     }
 
     /**
-     * Create a LateralCacheNoWait for the server configured in lca
+     * Create a LateralTCPCacheNoWait for the server configured in lca
      *
      * @param <K> cache key type
      * @param <V> cache value type
      * @param lca the cache configuration object
      * @param cacheEventLogger the event logger
      * @param elementSerializer the serializer to use when sending or receiving
-     * @return a LateralCacheNoWait
+     * @return a LateralTCPCacheNoWait
      */
-    public <K, V> LateralCacheNoWait<K, V> createCacheNoWait( final ITCPLateralCacheAttributes lca,
+    public <K, V> LateralTCPCacheNoWait<K, V> createCacheNoWait( final ILateralTCPCacheAttributes lca,
             final ICacheEventLogger cacheEventLogger, final IElementSerializer elementSerializer )
     {
         final ICacheServiceNonLocal<K, V> lateralService = getCSNLInstance(lca, elementSerializer);
 
-        final LateralCache<K, V> cache = new LateralCache<>( lca, lateralService, this.monitor );
+        final LateralTCPCache<K, V> cache = new LateralTCPCache<>( lca, lateralService, this.monitor );
         cache.setCacheEventLogger( cacheEventLogger );
         cache.setElementSerializer( elementSerializer );
 
         log.debug( "Created cache for noWait, cache [{0}]", cache );
 
-        final LateralCacheNoWait<K, V> lateralNoWait = new LateralCacheNoWait<>( cache );
+        final LateralTCPCacheNoWait<K, V> lateralNoWait = new LateralTCPCacheNoWait<>( cache );
         lateralNoWait.setIdentityKey(lca.getTcpServer());
 
-        log.info( "Created LateralCacheNoWait for [{0}] LateralCacheNoWait = [{1}]",
+        log.info( "Created LateralTCPCacheNoWait for [{0}] LateralTCPCacheNoWait = [{1}]",
                 lca, lateralNoWait );
 
         return lateralNoWait;
@@ -236,15 +234,15 @@ public class LateralTCPCacheFactory
     /**
      * Creates the discovery service. Only creates this for tcp laterals right now.
      *
-     * @param lac ITCPLateralCacheAttributes
+     * @param lac ILateralTCPCacheAttributes
      * @param lcnwf the lateral facade
      * @param cacheMgr a reference to the global cache manager
      * @param cacheEventLogger Reference to the cache event logger for auxiliary cache creation
      * @param elementSerializer Reference to the cache element serializer for auxiliary cache
      */
     private synchronized <K, V> void createDiscoveryService(
-            final ITCPLateralCacheAttributes lac,
-            final LateralCacheNoWaitFacade<K, V> lcnwf,
+            final ILateralTCPCacheAttributes lac,
+            final LateralTCPCacheNoWaitFacade<K, V> lcnwf,
             final ICompositeCacheManager cacheMgr,
             final ICacheEventLogger cacheEventLogger,
             final IElementSerializer elementSerializer )
@@ -261,10 +259,13 @@ public class LateralTCPCacheFactory
 
             // need a factory for this so it doesn't
             // get dereferenced, also we don't want one for every region.
-            discovery = UDPDiscoveryManager.getInstance().getService(
-                    lac.getUdpDiscoveryAddr(), lac.getUdpDiscoveryPort(),
-                    lac.getTcpListenerHost(), lac.getTcpListenerPort(), lac.getUdpTTL(),
-                    cacheMgr, elementSerializer);
+            final UDPDiscoveryAttributes udpAttributes = new UDPDiscoveryAttributes(
+                    lac.getTcpListenerHost(), lac.getTcpListenerPort(), lac.getUdpDiscoveryAddr(),
+                    lac.getUdpDiscoveryInterface(), lac.getUdpDiscoveryPort(), lac.getUdpTTL(),
+                    UDPDiscoveryAttributes.defaults().maxIdleTimeSec());
+
+            discovery = UDPDiscoveryManager.getInstance().getService(udpAttributes, cacheMgr,
+                    elementSerializer);
 
             discovery.addParticipatingCacheName( lac.getCacheName() );
             discovery.addDiscoveryListener( discoveryListener );
@@ -324,7 +325,7 @@ public class LateralTCPCacheFactory
      */
     // Need to cast because of common map for all cache services
     @SuppressWarnings("unchecked")
-    public <K, V> ICacheServiceNonLocal<K, V> getCSNLInstance(final ITCPLateralCacheAttributes lca,
+    public <K, V> ICacheServiceNonLocal<K, V> getCSNLInstance(final ILateralTCPCacheAttributes lca,
             final IElementSerializer elementSerializer)
     {
         final String key = lca.getTcpServer();
@@ -373,13 +374,13 @@ public class LateralTCPCacheFactory
     /**
      * Gets the instance attribute of the LateralCacheTCPListener class.
      *
-     * @param ilca ITCPLateralCacheAttributes
+     * @param ilca ILateralTCPCacheAttributes
      * @param cacheManager a reference to the global cache manager
      * @param cacheEventLogger Reference to the cache event logger for auxiliary cache creation
      * @param elementSerializer Reference to the cache element serializer for auxiliary cache
      * @return The instance value
      */
-    private LateralTCPDiscoveryListener getDiscoveryListener(final ITCPLateralCacheAttributes ilca,
+    private LateralTCPDiscoveryListener getDiscoveryListener(final ILateralTCPCacheAttributes ilca,
             final ICompositeCacheManager cacheManager, final ICacheEventLogger cacheEventLogger,
             final IElementSerializer elementSerializer)
     {
@@ -418,7 +419,7 @@ public class LateralTCPCacheFactory
      * @param cache the cache instance
      * @since 3.1
      */
-    public void monitorCache(final LateralCacheNoWait<?, ?> cache)
+    public void monitorCache(final LateralTCPCacheNoWait<?, ?> cache)
     {
         monitor.addCache(cache);
     }

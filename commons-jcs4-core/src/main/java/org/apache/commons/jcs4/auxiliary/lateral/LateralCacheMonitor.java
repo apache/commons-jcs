@@ -22,8 +22,9 @@ package org.apache.commons.jcs4.auxiliary.lateral;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.jcs4.auxiliary.AbstractAuxiliaryCacheMonitor;
+import org.apache.commons.jcs4.auxiliary.lateral.socket.tcp.LateralTCPCacheNoWait;
 import org.apache.commons.jcs4.auxiliary.lateral.socket.tcp.LateralTCPCacheFactory;
-import org.apache.commons.jcs4.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttributes;
+import org.apache.commons.jcs4.auxiliary.lateral.socket.tcp.behavior.ILateralTCPCacheAttributes;
 import org.apache.commons.jcs4.engine.CacheStatus;
 import org.apache.commons.jcs4.engine.ZombieCacheServiceNonLocal;
 import org.apache.commons.jcs4.engine.behavior.ICacheServiceNonLocal;
@@ -40,7 +41,7 @@ public class LateralCacheMonitor extends AbstractAuxiliaryCacheMonitor
     /**
      * Map of caches to monitor
      */
-    private final ConcurrentHashMap<String, LateralCacheNoWait<Object, Object>> caches;
+    private final ConcurrentHashMap<String, LateralTCPCacheNoWait<Object, Object>> caches;
 
     /**
      * Reference to the factory
@@ -68,9 +69,9 @@ public class LateralCacheMonitor extends AbstractAuxiliaryCacheMonitor
      * @param cache the cache
      */
     @SuppressWarnings("unchecked") // common map for all caches
-    public void addCache(final LateralCacheNoWait<?, ?> cache)
+    public void addCache(final LateralTCPCacheNoWait<?, ?> cache)
     {
-        this.caches.put(cache.getCacheName(), (LateralCacheNoWait<Object, Object>)cache);
+        this.caches.put(cache.getCacheName(), (LateralTCPCacheNoWait<Object, Object>)cache);
 
         // if not yet started, go ahead
         if (getState() == Thread.State.NEW)
@@ -101,10 +102,10 @@ public class LateralCacheMonitor extends AbstractAuxiliaryCacheMonitor
 
             if (cache.getStatus() == CacheStatus.ERROR)
             {
-                log.info( "Found LateralCacheNoWait in error, " + cacheName );
+                log.info( "Found LateralTCPCacheNoWait in error, " + cacheName );
 
-                final ITCPLateralCacheAttributes lca =
-                        (ITCPLateralCacheAttributes) cache.getAuxiliaryCacheAttributes();
+                final ILateralTCPCacheAttributes lca =
+                        (ILateralTCPCacheAttributes) cache.getAuxiliaryCacheAttributes();
 
                 // Get service instance
                 final ICacheServiceNonLocal<Object, Object> cacheService =

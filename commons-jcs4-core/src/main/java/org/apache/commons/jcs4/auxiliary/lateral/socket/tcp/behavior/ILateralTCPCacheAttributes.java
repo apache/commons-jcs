@@ -19,16 +19,22 @@ package org.apache.commons.jcs4.auxiliary.lateral.socket.tcp.behavior;
  * under the License.
  */
 
-import org.apache.commons.jcs4.auxiliary.lateral.behavior.ILateralCacheAttributes;
+import org.apache.commons.jcs4.auxiliary.AuxiliaryCacheAttributes;
 
 /**
  * This interface defines functions that are particular to the TCP Lateral Cache
  * plugin. It extends the generic LateralCacheAttributes interface which in turn
  * extends the AuxiliaryCache interface.
  */
-public interface ITCPLateralCacheAttributes
-    extends ILateralCacheAttributes
+public interface ILateralTCPCacheAttributes
+    extends AuxiliaryCacheAttributes
 {
+    /**
+     * The number of elements the zombie queue will hold. This queue is used to store events if we
+     * loose our connection with the server.
+     */
+    int DEFAULT_ZOMBIE_QUEUE_MAX_SIZE = 1000;
+
     /**
      * @return the openTimeOut
      */
@@ -73,6 +79,13 @@ public interface ITCPLateralCacheAttributes
      * @return the udpDiscoveryAddr.
      */
     String getUdpDiscoveryAddr();
+
+    /**
+     * The UDP discovery network interface if UDPDiscovery is enabled.
+     *
+     * @return the udpDiscoveryInterface.
+     */
+    String getUdpDiscoveryInterface();
 
     /**
      * The port to use if UDPDiscovery is enabled.
@@ -131,4 +144,31 @@ public interface ITCPLateralCacheAttributes
      * @return the udpDiscoveryEnabled.
      */
     boolean isUdpDiscoveryEnabled();
+
+    /**
+     * @return The outgoingOnlyMode value. Stops gets from going remote.
+     */
+    boolean getPutOnlyMode();
+
+    /**
+     * The number of elements the zombie queue will hold. This queue is used to store events if we
+     * loose our connection with the server.
+     *
+     * @return the zombieQueueMaxSize.
+     */
+    int getZombieQueueMaxSize();
+
+    /**
+     * Should a listener be created. By default this is true.
+     * <p>
+     * If this is false the lateral will connect to others but it will not create a listener to
+     * receive.
+     * <p>
+     * It is possible if two laterals are misconfigured that lateral A may have a region R1 that is
+     * not configured for the lateral but another is. And if cache B has region R1 configured for
+     * lateral distribution, A will get messages for R1 but not send them.
+     *
+     * @return true if we should have a listener connection
+     */
+    boolean isReceive();
 }

@@ -24,8 +24,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.apache.commons.jcs4.auxiliary.lateral.LateralCacheNoWait;
-import org.apache.commons.jcs4.auxiliary.lateral.LateralCacheNoWaitFacade;
 import org.apache.commons.jcs4.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs4.engine.control.CompositeCacheManager;
 import org.apache.commons.jcs4.engine.logging.behavior.ICacheEventLogger;
@@ -48,7 +46,7 @@ public class LateralTCPDiscoveryListener
      * Map of no wait facades. these are used to determine which regions are locally configured to
      * use laterals.
      */
-    private final ConcurrentMap<String, LateralCacheNoWaitFacade<?, ?>> facades =
+    private final ConcurrentMap<String, LateralTCPCacheNoWaitFacade<?, ?>> facades =
         new ConcurrentHashMap<>();
 
     /**
@@ -121,7 +119,7 @@ public class LateralTCPDiscoveryListener
             // for each region get the cache
             for (final String cacheName : regions)
             {
-                final LateralCacheNoWaitFacade<?, ?> facade = facades.get(cacheName);
+                final LateralTCPCacheNoWaitFacade<?, ?> facade = facades.get(cacheName);
                 log.debug( "Got cache facade {0}", facade );
 
                 // add this to the nowaits for this cachename
@@ -133,14 +131,14 @@ public class LateralTCPDiscoveryListener
                         continue;
                     }
 
-                    final TCPLateralCacheAttributes lca =
-                            (TCPLateralCacheAttributes) facade.getAuxiliaryCacheAttributes().clone();
+                    final LateralTCPCacheAttributes lca =
+                            (LateralTCPCacheAttributes) facade.getAuxiliaryCacheAttributes().clone();
                     lca.setTcpServer(serverAndPort);
 
                     final LateralTCPCacheFactory factory =
                             (LateralTCPCacheFactory) cacheManager.registryFacGet(factoryName);
 
-                    final LateralCacheNoWait<?, ?> noWait =
+                    final LateralTCPCacheNoWait<?, ?> noWait =
                             factory.createCacheNoWait(lca, cacheEventLogger, elementSerializer);
                     factory.monitorCache(noWait);
 
@@ -169,12 +167,12 @@ public class LateralTCPDiscoveryListener
      * @return true if we found the no wait and added it. False if the no wait was not present or if
      *         we already had it.
      */
-    protected <K, V> boolean addNoWait( final LateralCacheNoWait<K, V> noWait )
+    protected <K, V> boolean addNoWait( final LateralTCPCacheNoWait<K, V> noWait )
     {
         @SuppressWarnings("unchecked") // Need to cast because of common map for all facades
         final
-        LateralCacheNoWaitFacade<K, V> facade =
-            (LateralCacheNoWaitFacade<K, V>)facades.get( noWait.getCacheName() );
+        LateralTCPCacheNoWaitFacade<K, V> facade =
+            (LateralTCPCacheNoWaitFacade<K, V>)facades.get( noWait.getCacheName() );
         log.debug( "addNoWait > Got facade for {0} = {1}", noWait.getCacheName(), facade );
 
         return addNoWait(noWait, facade);
@@ -190,8 +188,8 @@ public class LateralTCPDiscoveryListener
      *         we already had it.
      * @since 3.1
      */
-    protected <K, V> boolean addNoWait(final LateralCacheNoWait<K, V> noWait,
-            final LateralCacheNoWaitFacade<K, V> facade)
+    protected <K, V> boolean addNoWait(final LateralTCPCacheNoWait<K, V> noWait,
+            final LateralTCPCacheNoWaitFacade<K, V> facade)
     {
         if ( facade != null )
         {
@@ -218,7 +216,7 @@ public class LateralTCPDiscoveryListener
      * @param facade   facade (for region) =&gt; multiple lateral clients.
      * @return true if the facade was not already registered.
      */
-    public boolean addNoWaitFacade( final String cacheName, final LateralCacheNoWaitFacade<?, ?> facade )
+    public boolean addNoWaitFacade( final String cacheName, final LateralTCPCacheNoWaitFacade<?, ?> facade )
     {
         final boolean isNew = !containsNoWaitFacade( cacheName );
 
@@ -236,12 +234,12 @@ public class LateralTCPDiscoveryListener
      * @param noWait   is this no wait in the facade
      * @return do we contain the no wait. true if so
      */
-    public <K, V> boolean containsNoWait( final String cacheName, final LateralCacheNoWait<K, V> noWait )
+    public <K, V> boolean containsNoWait( final String cacheName, final LateralTCPCacheNoWait<K, V> noWait )
     {
         @SuppressWarnings("unchecked") // Need to cast because of common map for all facades
         final
-        LateralCacheNoWaitFacade<K, V> facade =
-            (LateralCacheNoWaitFacade<K, V>)facades.get( noWait.getCacheName() );
+        LateralTCPCacheNoWaitFacade<K, V> facade =
+            (LateralTCPCacheNoWaitFacade<K, V>)facades.get( noWait.getCacheName() );
 
         if ( facade == null )
         {
@@ -284,7 +282,7 @@ public class LateralTCPDiscoveryListener
             // for each region get the cache
             for (final String cacheName : regions)
             {
-                final LateralCacheNoWaitFacade<?, ?> facade = facades.get(cacheName);
+                final LateralTCPCacheNoWaitFacade<?, ?> facade = facades.get(cacheName);
                 log.debug( "Got cache facade {0}", facade );
 
                 // remove this from the nowaits for this cachename
@@ -307,12 +305,12 @@ public class LateralTCPDiscoveryListener
      * @param noWait
      * @return true if we found the no wait and removed it. False if the no wait was not present.
      */
-    protected <K, V> boolean removeNoWait( final LateralCacheNoWait<K, V> noWait )
+    protected <K, V> boolean removeNoWait( final LateralTCPCacheNoWait<K, V> noWait )
     {
         @SuppressWarnings("unchecked") // Need to cast because of common map for all facades
         final
-        LateralCacheNoWaitFacade<K, V> facade =
-            (LateralCacheNoWaitFacade<K, V>)facades.get( noWait.getCacheName() );
+        LateralTCPCacheNoWaitFacade<K, V> facade =
+            (LateralTCPCacheNoWaitFacade<K, V>)facades.get( noWait.getCacheName() );
         log.debug( "removeNoWait > Got facade for {0} = {1}", noWait.getCacheName(), facade);
 
         return removeNoWait(facade, noWait.getCacheName(), noWait.getIdentityKey());
@@ -327,7 +325,7 @@ public class LateralTCPDiscoveryListener
      * @return true if we found the no wait and removed it. False if the no wait was not present.
      * @since 3.1
      */
-    protected <K, V> boolean removeNoWait(final LateralCacheNoWaitFacade<K, V> facade,
+    protected <K, V> boolean removeNoWait(final LateralTCPCacheNoWaitFacade<K, V> facade,
             final String cacheName, final String tcpServer)
     {
         if ( facade != null )

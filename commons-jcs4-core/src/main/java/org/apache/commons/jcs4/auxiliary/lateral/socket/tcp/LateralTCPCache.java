@@ -1,4 +1,4 @@
-package org.apache.commons.jcs4.auxiliary.lateral;
+package org.apache.commons.jcs4.auxiliary.lateral.socket.tcp;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -25,7 +25,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.jcs4.auxiliary.AbstractAuxiliaryCacheEventLogging;
-import org.apache.commons.jcs4.auxiliary.lateral.behavior.ILateralCacheAttributes;
+import org.apache.commons.jcs4.auxiliary.lateral.LateralCacheMonitor;
+import org.apache.commons.jcs4.auxiliary.lateral.socket.tcp.behavior.ILateralTCPCacheAttributes;
 import org.apache.commons.jcs4.engine.CacheInfo;
 import org.apache.commons.jcs4.engine.CacheStatus;
 import org.apache.commons.jcs4.engine.ZombieCacheServiceNonLocal;
@@ -39,14 +40,14 @@ import org.apache.commons.jcs4.log.Log;
 /**
  * Lateral distributor. Returns null on get by default. Net search not implemented.
  */
-public class LateralCache<K, V>
+public class LateralTCPCache<K, V>
     extends AbstractAuxiliaryCacheEventLogging<K, V>
 {
     /** The logger. */
-    private static final Log log = Log.getLog( LateralCache.class );
+    private static final Log log = Log.getLog( LateralTCPCache.class );
 
     /** Generalize this, use another interface */
-    private final ILateralCacheAttributes lateralCacheAttributes;
+    private final ILateralTCPCacheAttributes lateralCacheAttributes;
 
     /** The region name */
     final String cacheName;
@@ -58,13 +59,13 @@ public class LateralCache<K, V>
     private final LateralCacheMonitor monitor;
 
     /**
-     * Constructor for the LateralCache object
+     * Constructor for the LateralTCPCache object
      *
      * @param cattr
      * @param lateral
      * @param monitor
      */
-    public LateralCache( final ILateralCacheAttributes cattr, final ICacheServiceNonLocal<K, V> lateral, final LateralCacheMonitor monitor )
+    public LateralTCPCache( final ILateralTCPCacheAttributes cattr, final ICacheServiceNonLocal<K, V> lateral, final LateralCacheMonitor monitor )
     {
         this.cacheName = cattr.getCacheName();
         this.lateralCacheAttributes = cattr;
@@ -109,13 +110,13 @@ public class LateralCache<K, V>
      * @return the AuxiliaryCacheAttributes.
      */
     @Override
-    public ILateralCacheAttributes getAuxiliaryCacheAttributes()
+    public ILateralTCPCacheAttributes getAuxiliaryCacheAttributes()
     {
         return lateralCacheAttributes;
     }
 
     /**
-     * Gets the cacheName attribute of the LateralCache object
+     * Gets the cacheName attribute of the LateralTCPCache object
      *
      * @return The cacheName value
      */
@@ -126,7 +127,7 @@ public class LateralCache<K, V>
     }
 
     /**
-     * Gets the cacheType attribute of the LateralCache object
+     * Gets the cacheType attribute of the LateralTCPCache object
      *
      * @return The cacheType value
      */
@@ -185,7 +186,7 @@ public class LateralCache<K, V>
     public IStats getStatistics()
     {
         final IStats stats = new Stats();
-        stats.setTypeName( "LateralCache" );
+        stats.setTypeName( "LateralTCPCache" );
         return stats;
     }
 
@@ -394,7 +395,7 @@ public class LateralCache<K, V>
     public String toString()
     {
         final StringBuilder buf = new StringBuilder();
-        buf.append( "\n LateralCache " );
+        buf.append( "\n LateralTCPCache " );
         buf.append( "\n Cache Name [" + lateralCacheAttributes.getCacheName() + "]" );
         buf.append( "\n cattr =  [" + lateralCacheAttributes + "]" );
         return buf.toString();

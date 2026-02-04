@@ -127,10 +127,10 @@ public class UDPDiscoverySender implements AutoCloseable
     public UDPDiscoverySender(final UDPDiscoveryAttributes udpDiscoveryAttributes, final IElementSerializer serializer)
         throws IOException
     {
-        this(udpDiscoveryAttributes.getUdpDiscoveryInterface(),
-            udpDiscoveryAttributes.getUdpDiscoveryAddr(),
-            udpDiscoveryAttributes.getUdpDiscoveryPort(),
-            udpDiscoveryAttributes.getUdpTTL(),
+        this(udpDiscoveryAttributes.udpDiscoveryInterface(),
+            udpDiscoveryAttributes.udpDiscoveryAddr(),
+            udpDiscoveryAttributes.udpDiscoveryPort(),
+            udpDiscoveryAttributes.udpTTL(),
             serializer);
     }
 

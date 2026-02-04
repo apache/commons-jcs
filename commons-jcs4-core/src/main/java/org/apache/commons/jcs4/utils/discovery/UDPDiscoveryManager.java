@@ -64,31 +64,21 @@ public class UDPDiscoveryManager
      * We need to key this using the listener port too.
      * TODO think of making one discovery service work for multiple types of clients.
      *
-     * @param discoveryAddress
-     * @param discoveryPort
-     * @param serviceAddress
-     * @param servicePort
-     * @param updTTL
-     * @param cacheMgr
-     * @param serializer
+     * @param attributes configuration object
+     * @param cacheMgr the Cache Hub
+     * @param serializer the Serializer for UDP packets
      * @return UDPDiscoveryService
-     * @since 3.1
+     * @since 4.0
      */
-    public UDPDiscoveryService getService( final String discoveryAddress, final int discoveryPort,
-            final String serviceAddress, final int servicePort, final int updTTL,
+    public UDPDiscoveryService getService(UDPDiscoveryAttributes attributes,
             final ICompositeCacheManager cacheMgr, final IElementSerializer serializer )
     {
-        final String key = String.join(":", discoveryAddress, String.valueOf(discoveryPort), String.valueOf(servicePort));
+        final String key = String.join(":", attributes.udpDiscoveryAddr(),
+                String.valueOf(attributes.udpDiscoveryPort()),
+                String.valueOf(attributes.servicePort()));
 
         final UDPDiscoveryService service = services.computeIfAbsent(key, k -> {
             log.info( "Creating service for address:port:servicePort [{0}]", key );
-
-            final UDPDiscoveryAttributes attributes = new UDPDiscoveryAttributes();
-            attributes.setUdpDiscoveryAddr(discoveryAddress);
-            attributes.setUdpDiscoveryPort(discoveryPort);
-            attributes.setServiceAddress(serviceAddress);
-            attributes.setServicePort(servicePort);
-            attributes.setUdpTTL(updTTL);
 
             final UDPDiscoveryService newService = new UDPDiscoveryService(attributes, serializer);
 
