@@ -121,6 +121,13 @@ jcs.default.cacheattributes=org.apache.commons.jcs4.engine.CompositeCacheAttribu
                </tr>
             </table>
          </p>
+         <p>
+           The documentation in the code always stated that region configurations inherit 
+           values from the default region settings. This, however, was never implemented.
+           Note that the behavior has been fixed in JCS 4.0.0. This may have implications
+           for your existing configurations. On the other hand, it makes the configuration
+           much shorter.
+         </p>
       </subsection>
     </section>
   </body>

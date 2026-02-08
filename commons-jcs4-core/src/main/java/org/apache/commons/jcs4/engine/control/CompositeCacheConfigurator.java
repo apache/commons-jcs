@@ -250,15 +250,21 @@ public class CompositeCacheConfigurator
         Class<? extends ICompositeCacheAttributes> attributeClass = OptionConverter.findClassByKey(props, prefix);
         if (attributeClass == null)
         {
-            log.debug("Using default composite cache attributes class for region \"{0}\"", regName);
-            attributeClass = CompositeCacheAttributes.class;
+            if (defaultCCAttr != null)
+            {
+                attributeClass = defaultCCAttr.getClass();
+            }
+            else
+            {
+                attributeClass = CompositeCacheAttributes.class;
+            }
+            log.debug("Using default composite cache attributes class for region \"{0}\": {1}",
+                    regName, attributeClass.getName());
         }
 
         log.debug("Parsing options for \"{0}\"", prefix);
 
-        ICompositeCacheAttributes ccAttr = ConfigurationBuilder.create(attributeClass,
-                // FIXME: This is probably a bug, but SystemPropertyUnitTest relies on it.
-                /* defaultCCAttr */ CompositeCacheAttributes.defaults())
+        ICompositeCacheAttributes ccAttr = ConfigurationBuilder.create(attributeClass, defaultCCAttr)
                 .fromProperties(props, prefix)
                 .build()
                 .withCacheName( regName );

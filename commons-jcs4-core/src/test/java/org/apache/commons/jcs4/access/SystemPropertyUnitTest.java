@@ -22,7 +22,6 @@ package org.apache.commons.jcs4.access;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.apache.commons.jcs4.JCS;
-import org.apache.commons.jcs4.engine.control.CompositeCacheManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer;
@@ -52,6 +51,7 @@ class SystemPropertyUnitTest
     @AfterEach
     void tearDown()
     {
+        JCS.shutdown();
         System.clearProperty( "MY_SYSTEM_PROPERTY_DISK_DIR" );
         System.clearProperty( "MY_SYSTEM_PROPERTY_MAX_SIZE" );
     }
@@ -86,9 +86,6 @@ class SystemPropertyUnitTest
         throws Exception
     {
         System.setProperty( "MY_SYSTEM_PROPERTY_DISK_DIR", "system_set" );
-
-        final CompositeCacheManager mgr = CompositeCacheManager.getUnconfiguredInstance();
-        mgr.configure( "/TestSystemProperties.ccf" );
 
         final CacheAccess<String, String> cache = JCS.getInstance( "missing" );
         assertEquals( 100, cache.getCacheAttributes().maxObjects(),

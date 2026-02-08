@@ -28,13 +28,14 @@
 		<section name="Cache Region Configuration">
 
 			<p>
-				The following properties apply to any cache region. They
-				can be specified as default values and specified on a
-				region by region basis. There are three types of
-				settings: auxiliary, cache, and element. The cache
-				settings define the memory management for the region.
-				The element settings define default element behavior
-				within the region.
+				The following properties apply to any cache region. They can be specified as 
+                default values and specified on a region by region basis. If a region is not 
+                explicitly defined in the cache configuration then it inherits the cache 
+                default settings. Every region specified in the cache configuration inherits 
+                the cache default settings, so only changed attributes need to be specified.
+                There are three types of settings: auxiliary, cache, and element. The cache
+				settings define the memory management for the region. The element settings 
+                define default element behavior within the region.
 			</p>
 
 			<subsection name="Region (Auxiliary) Properties">
@@ -67,6 +68,14 @@
 						<th>Required</th>
 						<th>Default Value</th>
 					</tr>
+                    <tr>
+                        <td></td>
+                        <td>
+                            The class that implements the Composite Cache Attributes record.
+                        </td>
+                        <td>N</td>
+                        <td>org.apache.commons.jcs4.engine.CompositeCacheAttributes</td>
+                    </tr>
 					<tr>
 						<td>MaxObjects</td>
 						<td>
@@ -76,8 +85,8 @@
 							cache. By default JCS uses the LRU memory
 							cache.
 						</td>
-						<td>Y</td>
-						<td>n/a</td>
+						<td>N</td>
+						<td>100</td>
 					</tr>
 					<tr>
 						<td>MemoryCacheName</td>
@@ -94,9 +103,7 @@
 							and an adaptive replacement algorithm.
 						</td>
 						<td>N</td>
-						<td>
-							org.apache.commons.jcs4.engine.memory.lru.LRUMemoryCache
-						</td>
+						<td>org.apache.commons.jcs4.engine.memory.lru.LRUMemoryCache</td>
 					</tr>
 					<tr>
 						<td>UseMemoryShrinker</td>
@@ -244,21 +251,14 @@ jcs.default.elementattributes.IsSpool=true
 jcs.default.elementattributes.IsRemote=true
 jcs.default.elementattributes.IsLateral=true
 
-# optional region "testCache1" specific configuration settings
+# optional region "testCache1" specific configuration settings (only those that differ from default)
 jcs.region.testCache1=
-jcs.region.testCache1.cacheattributes=org.apache.commons.jcs4.engine.CompositeCacheAttributes
 jcs.region.testCache1.cacheattributes.MaxObjects=123456
-jcs.region.testCache1.cacheattributes.MemoryCacheName=org.apache.commons.jcs4.engine.memory.lru.LRUMemoryCache
-jcs.region.testCache1.cacheattributes.UseMemoryShrinker=true
 jcs.region.testCache1.cacheattributes.ShrinkerIntervalSeconds=30
 jcs.region.testCache1.cacheattributes.MaxMemoryIdleTimeSeconds=300
 jcs.region.testCache1.cacheattributes.MaxSpoolPerRun=100
 jcs.region.testCache1.elementattributes=org.apache.commons.jcs4.engine.ElementAttributes
-jcs.region.testCache1.elementattributes.IsEternal=false
 jcs.region.testCache1.elementattributes.MaxLife=60000
-jcs.region.testCache1.elementattributes.IsSpool=true
-jcs.region.testCache1.elementattributes.IsLateral=true
-jcs.region.testCache1.elementattributes.IsRemote=true
         ]]>
 				</source>
 			</subsection>
