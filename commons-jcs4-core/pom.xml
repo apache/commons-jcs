@@ -146,8 +146,6 @@
                 <include>**/*UnitTest.java, !UDPDiscovery*</include>
               </includes>
               <systemPropertyVariables>
-                <java.security.manager>true</java.security.manager>
-                <java.security.policy>${basedir}/src/test/conf/cache.policy</java.security.policy>
                 <java.util.logging.config.file>${basedir}/src/test/test-conf/logging.properties</java.util.logging.config.file>
               </systemPropertyVariables>
             </configuration>
@@ -191,8 +189,6 @@
                     <include>**/UDPDiscovery*.java</include>
                   </includes>
                   <systemPropertyVariables>
-                    <java.security.manager>true</java.security.manager>
-                    <java.security.policy>${basedir}/src/test/conf/cache.policy</java.security.policy>
                     <java.util.logging.config.file>${basedir}/src/test/test-conf/logging.properties</java.util.logging.config.file>
                   </systemPropertyVariables>
                 </configuration>
