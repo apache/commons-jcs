@@ -89,7 +89,6 @@ thread_pool.disk_cache_event_queue.startUpSize=10
 				<source>
 					<![CDATA[
 jcs.default=JDBC_0
-jcs.default.cacheattributes.MaxObjects=100
 jcs.default.cacheattributes.UseMemoryShrinker=false
 jcs.default.cacheattributes.MaxMemoryIdleTimeSeconds=3600
 jcs.default.cacheattributes.ShrinkerIntervalSeconds=60
@@ -157,7 +156,6 @@ thread_pool.disk_cache_event_queue.startUpSize=10
                 <source>
                     <![CDATA[
 jcs.default=JDBC_0
-jcs.default.cacheattributes.MaxObjects=100
 jcs.default.cacheattributes.UseMemoryShrinker=false
 jcs.default.cacheattributes.MaxMemoryIdleTimeSeconds=3600
 jcs.default.cacheattributes.ShrinkerIntervalSeconds=60

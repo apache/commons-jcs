@@ -201,7 +201,6 @@ jcs.auxiliary.DC.attributes.OptimizeAtRemoveCount=30000
 ##############################################################
 ##### Default Region Configuration
 jcs.default=DC
-jcs.default.cacheattributes.MaxObjects=100
 
 ##############################################################
 ##### CACHE REGIONS

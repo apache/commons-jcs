@@ -45,8 +45,6 @@
 # DEFAULT CACHE REGION
 
 jcs.default=
-jcs.default.cacheattributes=
-    org.apache.commons.jcs4.engine.CompositeCacheAttributes
 jcs.default.cacheattributes.MaxObjects=1000
 jcs.default.cacheattributes.MemoryCacheName=
     org.apache.commons.jcs4.engine.memory.lru.LRUMemoryCache
@@ -88,11 +86,7 @@ jcs.default=DC
         </p>
         <source><![CDATA[
 jcs.region.testCache1=DC
-jcs.region.testCache1.cacheattributes=
-    org.apache.commons.jcs4.engine.CompositeCacheAttributes
 jcs.region.testCache1.cacheattributes.MaxObjects=1000
-jcs.region.testCache1.cacheattributes.MemoryCacheName=
-    org.apache.commons.jcs4.engine.memory.lru.LRUMemoryCache
 jcs.region.testCache1.cacheattributes.UseMemoryShrinker=true
 jcs.region.testCache1.cacheattributes.MaxMemoryIdleTimeSeconds=3600
 jcs.region.testCache1.cacheattributes.ShrinkerIntervalSeconds=60
@@ -147,20 +141,12 @@ jcs.region.testCache1=DC,LTCP
 # DEFAULT CACHE REGION
 
 jcs.default=DC,LTCP
-jcs.default.cacheattributes=
-    org.apache.commons.jcs4.engine.CompositeCacheAttributes
 jcs.default.cacheattributes.MaxObjects=1000
-jcs.default.cacheattributes.MemoryCacheName=
-    org.apache.commons.jcs4.engine.memory.lru.LRUMemoryCache
 
 # PRE-DEFINED CACHE REGIONS
 
 jcs.region.testCache1=DC,LTCP
-jcs.region.testCache1.cacheattributes=
-    org.apache.commons.jcs4.engine.CompositeCacheAttributes
 jcs.region.testCache1.cacheattributes.MaxObjects=1000
-jcs.region.testCache1.cacheattributes.MemoryCacheName=
-    org.apache.commons.jcs4.engine.memory.lru.LRUMemoryCache
 jcs.region.testCache1.cacheattributes.UseMemoryShrinker=true
 jcs.region.testCache1.cacheattributes.MaxMemoryIdleTimeSeconds=3600
 jcs.region.testCache1.cacheattributes.ShrinkerIntervalSeconds=60

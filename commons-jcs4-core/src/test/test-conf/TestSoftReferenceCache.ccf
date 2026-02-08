@@ -17,7 +17,6 @@
 # JCS Config for unit testing
 
 jcs.default=
-jcs.default.cacheattributes.MaxObjects=100
 jcs.default.cacheattributes.MemoryCacheName=org.apache.commons.jcs4.engine.memory.soft.SoftReferenceMemoryCache
 jcs.default.cacheattributes.UseMemoryShrinker=false
 jcs.default.cacheattributes.MaxMemoryIdleTimeSeconds=3600

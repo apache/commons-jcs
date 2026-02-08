@@ -18,7 +18,6 @@
 
 # DEFAULT CACHE REGION
 jcs.default=DC
-jcs.default.cacheattributes.MaxObjects=100
 jcs.default.cacheattributes.DiskUsagePattern=UPDATE
 
 
