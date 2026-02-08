@@ -18,25 +18,17 @@
 # a maximum of 100 objects, so objects should get pushed into the disk cache
 
 jcs.default=HSQL
-jcs.default.cacheattributes=org.apache.commons.jcs4.engine.CompositeCacheAttributes
 jcs.default.cacheattributes.MaxObjects=0
-jcs.default.cacheattributes.MemoryCacheName=org.apache.commons.jcs4.engine.memory.lru.LRUMemoryCache
 jcs.default.cacheattributes.UseMemoryShrinker=false
 jcs.default.cacheattributes.MaxMemoryIdleTimeSeconds=3600
 jcs.default.cacheattributes.ShrinkerIntervalSeconds=60
-jcs.default.elementattributes=org.apache.commons.jcs4.engine.ElementAttributes
 jcs.default.elementattributes.IsEternal=false
 jcs.default.elementattributes.MaxLife=700
 jcs.default.elementattributes.MaxIdleTime=1800
-jcs.default.elementattributes.IsSpool=true
-jcs.default.elementattributes.IsRemote=true
-jcs.default.elementattributes.IsLateral=true
 
 
 jcs.region.noRemoveAll=HSQL_NORA
-jcs.region.noRemoveAll.cacheattributes=org.apache.commons.jcs4.engine.CompositeCacheAttributes
 jcs.region.noRemoveAll.cacheattributes.MaxObjects=0
-jcs.region.noRemoveAll.cacheattributes.MemoryCacheName=org.apache.commons.jcs4.engine.memory.lru.LRUMemoryCache
 
 
 

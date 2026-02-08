@@ -18,9 +18,7 @@
 
 # DEFAULT CACHE REGION
 jcs.default=DC
-jcs.default.cacheattributes=org.apache.commons.jcs4.engine.CompositeCacheAttributes
 jcs.default.cacheattributes.MaxObjects=100
-jcs.default.cacheattributes.MemoryCacheName=org.apache.commons.jcs4.engine.memory.lru.LRUMemoryCache
 cs.default.cacheattributes.DiskUsagePatterName=UPDATE
 
 # AVAILABLE AUXILIARY CACHES

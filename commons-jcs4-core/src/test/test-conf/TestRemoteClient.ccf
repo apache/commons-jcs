@@ -18,19 +18,13 @@
 # ################# DEFAULT CACHE REGION  #####################
 # sets the default aux value for any non configured caches
 jcs.default=RC
-jcs.default.cacheattributes=org.apache.commons.jcs4.engine.CompositeCacheAttributes
 jcs.default.cacheattributes.MaxObjects=200001
-jcs.default.cacheattributes.MemoryCacheName=org.apache.commons.jcs4.engine.memory.lru.LRUMemoryCache
 jcs.default.cacheattributes.UseMemoryShrinker=true
 jcs.default.cacheattributes.MaxMemoryIdleTimeSeconds=3600
 jcs.default.cacheattributes.ShrinkerIntervalSeconds=60
-jcs.default.elementattributes=org.apache.commons.jcs4.engine.ElementAttributes
 jcs.default.elementattributes.IsEternal=false
 jcs.default.elementattributes.MaxLife=700
 jcs.default.elementattributes.MaxIdleTime=1800
-jcs.default.elementattributes.IsSpool=true
-jcs.default.elementattributes.IsRemote=true
-jcs.default.elementattributes.IsLateral=true
 
 
 jcs.auxiliary.RC=org.apache.commons.jcs4.auxiliary.remote.RemoteCacheFactory

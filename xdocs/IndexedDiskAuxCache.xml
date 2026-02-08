@@ -201,16 +201,12 @@ jcs.auxiliary.DC.attributes.OptimizeAtRemoveCount=30000
 ##############################################################
 ##### Default Region Configuration
 jcs.default=DC
-jcs.default.cacheattributes=org.apache.commons.jcs4.engine.CompositeCacheAttributes
 jcs.default.cacheattributes.MaxObjects=100
-jcs.default.cacheattributes.MemoryCacheName=org.apache.commons.jcs4.engine.memory.lru.LRUMemoryCache
 
 ##############################################################
 ##### CACHE REGIONS
 jcs.region.myRegion1=DC
-jcs.region.myRegion1.cacheattributes=org.apache.commons.jcs4.engine.CompositeCacheAttributes
 jcs.region.myRegion1.cacheattributes.MaxObjects=1000
-jcs.region.myRegion1.cacheattributes.MemoryCacheName=org.apache.commons.jcs4.engine.memory.lru.LRUMemoryCache
 
 ##############################################################
 ##### AUXILIARY CACHES
@@ -249,19 +245,13 @@ jcs.auxiliary.DC.attributes.DiskLimitType=COUNT
 ################## DEFAULT CACHE REGION  #####################
 # sets the default aux value for any non configured caches
 jcs.default=DC2
-jcs.default.cacheattributes=org.apache.commons.jcs4.engine.CompositeCacheAttributes
 jcs.default.cacheattributes.MaxObjects=200001
-jcs.default.cacheattributes.MemoryCacheName=org.apache.commons.jcs4.engine.memory.lru.LRUMemoryCache
 jcs.default.cacheattributes.UseMemoryShrinker=false
 jcs.default.cacheattributes.MaxMemoryIdleTimeSeconds=3600
 jcs.default.cacheattributes.ShrinkerIntervalSeconds=60
-jcs.default.elementattributes=org.apache.commons.jcs4.engine.ElementAttributes
 jcs.default.elementattributes.IsEternal=false
 jcs.default.elementattributes.MaxLife=700
 jcs.default.elementattributes.MaxIdleTime=1800
-jcs.default.elementattributes.IsSpool=true
-jcs.default.elementattributes.IsRemote=true
-jcs.default.elementattributes.IsLateral=true
 
 ##############################################################
 ################## AUXILIARY CACHES AVAILABLE ################

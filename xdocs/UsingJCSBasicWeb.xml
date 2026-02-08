@@ -370,9 +370,6 @@ jcs.default.cacheattributes.MemoryCacheName=
 jcs.default.elementattributes.IsEternal=false
 jcs.default.elementattributes.MaxLife=3600
 jcs.default.elementattributes.MaxIdleTime=1800
-jcs.default.elementattributes.IsSpool=true
-jcs.default.elementattributes.IsRemote=true
-jcs.default.elementattributes.IsLateral=true
 
 
 # CACHE REGIONS AVAILABLE

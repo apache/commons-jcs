@@ -17,21 +17,15 @@
 # JCS Config for unit testing
 
 jcs.default=
-jcs.default.cacheattributes=org.apache.commons.jcs4.engine.CompositeCacheAttributes
 jcs.default.cacheattributes.MaxObjects=100
 jcs.default.cacheattributes.MemoryCacheName=org.apache.commons.jcs4.engine.memory.soft.SoftReferenceMemoryCache
 jcs.default.cacheattributes.UseMemoryShrinker=false
 jcs.default.cacheattributes.MaxMemoryIdleTimeSeconds=3600
-jcs.default.elementattributes=org.apache.commons.jcs4.engine.ElementAttributes
 jcs.default.elementattributes.IsEternal=false
 jcs.default.elementattributes.MaxLife=600
 jcs.default.elementattributes.MaxIdleTime=1800
-jcs.default.elementattributes.IsSpool=true
-jcs.default.elementattributes.IsRemote=true
-jcs.default.elementattributes.IsLateral=true
 
 # Region defined that uses the Soft Reference
 jcs.region.srDefined=
-jcs.region.srDefined.cacheattributes=org.apache.commons.jcs4.engine.CompositeCacheAttributes
 jcs.region.srDefined.cacheattributes.MaxObjects=100000
 jcs.region.srDefined.cacheattributes.MemoryCacheName=org.apache.commons.jcs4.engine.memory.soft.SoftReferenceMemoryCache

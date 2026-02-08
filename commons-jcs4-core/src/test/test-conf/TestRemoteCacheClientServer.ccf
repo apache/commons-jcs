@@ -30,9 +30,7 @@ jcs.remotecache.serverattributes.LocalClusterConsistency=true
 # #############################################################
 # ################# DEFAULT CACHE REGION  #####################
 jcs.default=
-jcs.default.cacheattributes=org.apache.commons.jcs4.engine.CompositeCacheAttributes
 jcs.default.cacheattributes.MaxObjects=1000
-jcs.default.cacheattributes.MemoryCacheName=org.apache.commons.jcs4.engine.memory.lru.LRUMemoryCache
 
 
 # #############################################################

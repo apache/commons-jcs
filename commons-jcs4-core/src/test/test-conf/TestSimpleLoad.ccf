@@ -17,12 +17,8 @@
 # JCS Config for unit testing, just a simple memory only cache
 
 jcs.default=
-jcs.default.cacheattributes=org.apache.commons.jcs4.engine.CompositeCacheAttributes
 jcs.default.cacheattributes.MaxObjects=1000
-jcs.default.cacheattributes.MemoryCacheName=org.apache.commons.jcs4.engine.memory.lru.LRUMemoryCache
 
 jcs.region.testCache1=
-jcs.region.testCache1.cacheattributes=org.apache.commons.jcs4.engine.CompositeCacheAttributes
 jcs.region.testCache1.cacheattributes.MaxObjects=20001
-jcs.region.testCache1.cacheattributes.MemoryCacheName=org.apache.commons.jcs4.engine.memory.lru.LRUMemoryCache
 

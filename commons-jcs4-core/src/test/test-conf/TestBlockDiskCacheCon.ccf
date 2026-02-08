@@ -18,33 +18,19 @@
 # a maximum of 100 objects, so objects should get pushed into the disk cache
 
 jcs.default=blockDiskCache
-jcs.default.cacheattributes=org.apache.commons.jcs4.engine.CompositeCacheAttributes
 jcs.default.cacheattributes.MaxObjects=100
-jcs.default.cacheattributes.MemoryCacheName=org.apache.commons.jcs4.engine.memory.lru.LRUMemoryCache
 
 
 
 # #### CACHE REGIONS FOR TEST
 
 jcs.region.blockRegion1=blockDiskCache
-jcs.region.blockRegion1.cacheattributes=org.apache.commons.jcs4.engine.CompositeCacheAttributes
-jcs.region.blockRegion1.cacheattributes.MaxObjects=100
-jcs.region.blockRegion1.cacheattributes.MemoryCacheName=org.apache.commons.jcs4.engine.memory.lru.LRUMemoryCache
 
 jcs.region.blockRegion2=blockDiskCache
-jcs.region.blockRegion2.cacheattributes=org.apache.commons.jcs4.engine.CompositeCacheAttributes
-jcs.region.blockRegion2.cacheattributes.MaxObjects=100
-jcs.region.blockRegion2.cacheattributes.MemoryCacheName=org.apache.commons.jcs4.engine.memory.lru.LRUMemoryCache
 
 jcs.region.blockRegion3=blockDiskCache
-jcs.region.blockRegion3.cacheattributes=org.apache.commons.jcs4.engine.CompositeCacheAttributes
-jcs.region.blockRegion3.cacheattributes.MaxObjects=100
-jcs.region.blockRegion3.cacheattributes.MemoryCacheName=org.apache.commons.jcs4.engine.memory.lru.LRUMemoryCache
 
 jcs.region.blockRegion4=blockDiskCache
-jcs.region.blockRegion4.cacheattributes=org.apache.commons.jcs4.engine.CompositeCacheAttributes
-jcs.region.blockRegion4.cacheattributes.MaxObjects=100
-jcs.region.blockRegion4.cacheattributes.MemoryCacheName=org.apache.commons.jcs4.engine.memory.lru.LRUMemoryCache
 
 
 # #### AUXILIARY CACHES

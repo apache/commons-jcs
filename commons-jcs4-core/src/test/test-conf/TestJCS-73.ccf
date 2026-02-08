@@ -17,17 +17,13 @@
 # Cache configuration for the 'JCSConcurrentCacheAccessUnitTest' test.
 
 jcs.default=CACHE
-jcs.default.cacheattributes=org.apache.commons.jcs4.engine.CompositeCacheAttributes
 jcs.default.cacheattributes.MaxObjects=-1
-jcs.default.cacheattributes.MemoryCacheName=org.apache.commons.jcs4.engine.memory.lru.LRUMemoryCache
 jcs.default.cacheattributes.DiskUsagePattern=UPDATE
 jcs.default.cacheattributes.UseMemoryShrinker=true
 jcs.default.cacheattributes.MaxMemoryIdleTimeSeconds=10
 jcs.default.cacheattributes.ShrinkerIntervalSeconds=10
-jcs.default.elementattributes=org.apache.commons.jcs4.engine.ElementAttributes
 jcs.default.elementattributes.IsRemote=false
 jcs.default.elementattributes.IsLateral=false
-jcs.default.elementattributes.IsSpool=true
 jcs.default.elementattributes.IsEternal=true
 
 jcs.auxiliary.CACHE=org.apache.commons.jcs4.auxiliary.disk.indexed.IndexedDiskCacheFactory

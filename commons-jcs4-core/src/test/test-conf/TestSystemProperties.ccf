@@ -18,15 +18,11 @@
 # a maximum of 100 objects, so objects should get pushed into the disk cache
 
 jcs.default=indexedDiskCache
-jcs.default.cacheattributes=org.apache.commons.jcs4.engine.CompositeCacheAttributes
 jcs.default.cacheattributes.MaxObjects=${MY_SYSTEM_PROPERTY_MAX_SIZE}
-jcs.default.cacheattributes.MemoryCacheName=org.apache.commons.jcs4.engine.memory.lru.LRUMemoryCache
 
 
 jcs.region.missing=
-jcs.region.missing.cacheattributes=org.apache.commons.jcs4.engine.CompositeCacheAttributes
 jcs.region.missing.cacheattributes.MaxObjects=${NO_SUCH_PROPERTY}
-jcs.region.missing.cacheattributes.MemoryCacheName=org.apache.commons.jcs4.engine.memory.lru.LRUMemoryCache
 
 
 # #### AUXILIARY CACHES

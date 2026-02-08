@@ -18,6 +18,5 @@
 # a maximum of 100 objects, so objects should get pushed into the disk cache
 
 jcs.default=
-jcs.default.cacheattributes=org.apache.commons.jcs4.engine.CompositeCacheAttributes
 jcs.default.cacheattributes.MaxObjects=100
 jcs.default.cacheattributes.MemoryCacheName=org.apache.commons.jcs4.engine.memory.lru.LHMLRUMemoryCache
