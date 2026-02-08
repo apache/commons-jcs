@@ -61,11 +61,10 @@ class ShrinkerThreadUnitTest
         final String key = "key";
         final String value = "value";
 
-        final ICacheElement<String, String> element = new CacheElement<>( "testRegion", key, value );
-        final ElementAttributes elementAttr = new ElementAttributes();
-        elementAttr.setIsEternal( false );
-        elementAttr.setMaxLife(1);
-        element.setElementAttributes( elementAttr );
+        final ICacheElement<String, String> element = new CacheElement<>( "testRegion", key, value,
+                new ElementAttributes()
+                .withIsEternal(false)
+                .withMaxLife(1));
 
         long now = System.currentTimeMillis();
         // add two seconds
@@ -98,12 +97,11 @@ class ShrinkerThreadUnitTest
         final String key = "key";
         final String value = "value";
 
-        final ICacheElement<String, String> element = new CacheElement<>( "testRegion", key, value );
-        final ElementAttributes elementAttr = new ElementAttributes();
-        elementAttr.setIsEternal( false );
-        elementAttr.setMaxLife(100);
-        elementAttr.setIdleTime(1);
-        element.setElementAttributes( elementAttr );
+        final ICacheElement<String, String> element = new CacheElement<>( "testRegion", key, value,
+                new ElementAttributes()
+                .withIsEternal(false)
+                .withMaxLife(100)
+                .withMaxIdleTime(1));
 
         long now = System.currentTimeMillis();
         // add two seconds
@@ -136,11 +134,10 @@ class ShrinkerThreadUnitTest
         final String key = "key";
         final String value = "value";
 
-        final ICacheElement<String, String> element = new CacheElement<>( "testRegion", key, value );
-        final ElementAttributes elementAttr = new ElementAttributes();
-        elementAttr.setIsEternal( false );
-        elementAttr.setMaxLife(1);
-        element.setElementAttributes( elementAttr );
+        final ICacheElement<String, String> element = new CacheElement<>( "testRegion", key, value,
+                new ElementAttributes()
+                .withIsEternal(false)
+                .withMaxLife(1));
 
         long now = System.currentTimeMillis();
         // subtract two seconds
@@ -173,12 +170,11 @@ class ShrinkerThreadUnitTest
         final String key = "key";
         final String value = "value";
 
-        final ICacheElement<String, String> element = new CacheElement<>( "testRegion", key, value );
-        final ElementAttributes elementAttr = new ElementAttributes();
-        elementAttr.setIsEternal( false );
-        elementAttr.setMaxLife(100);
-        elementAttr.setIdleTime(1);
-        element.setElementAttributes( elementAttr );
+        final ICacheElement<String, String> element = new CacheElement<>( "testRegion", key, value,
+                new ElementAttributes()
+                .withIsEternal(false)
+                .withMaxLife(100)
+                .withMaxIdleTime(1));
 
         long now = System.currentTimeMillis();
         // subtract two seconds
@@ -218,9 +214,9 @@ class ShrinkerThreadUnitTest
 
         final ICacheElement<String, String> element = new CacheElement<>( "testRegion", key, value );
 
-        final ElementAttributes elementAttr = new ElementAttributes();
-        elementAttr.setIsEternal( false );
-        elementAttr.setMaxLife(1);
+        final ElementAttributes elementAttr = new ElementAttributes()
+                .withIsEternal(false)
+                .withMaxLife(1);
         element.setElementAttributes( elementAttr );
         memory.update( element );
 
@@ -268,9 +264,9 @@ class ShrinkerThreadUnitTest
 
             final ICacheElement<String, String> element = new CacheElement<>( "testRegion", key, value );
 
-            final ElementAttributes elementAttr = new ElementAttributes();
-            elementAttr.setIsEternal( false );
-            elementAttr.setMaxLife(1);
+            final ElementAttributes elementAttr = new ElementAttributes()
+                    .withIsEternal(false)
+                    .withMaxLife(1);
             element.setElementAttributes( elementAttr );
             memory.update( element );
 
@@ -321,10 +317,10 @@ class ShrinkerThreadUnitTest
 
             final ICacheElement<String, String> element = new CacheElement<>( "testRegion", key, value );
 
-            final ElementAttributes elementAttr = new ElementAttributes();
+            final ElementAttributes elementAttr = new ElementAttributes()
+                    .withIsEternal(false)
+                    .withMaxLife(1);
             elementAttr.addElementEventHandler( handler );
-            elementAttr.setIsEternal( false );
-            elementAttr.setMaxLife(1);
             element.setElementAttributes( elementAttr );
             memory.update( element );
 

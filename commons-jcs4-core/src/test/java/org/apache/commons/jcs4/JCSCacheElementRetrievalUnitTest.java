@@ -46,7 +46,7 @@ class JCSCacheElementRetrievalUnitTest
         final ICacheElement<String, String> elem = jcs.getCacheElement( "test_key" );
         assertEquals( "testCache1", elem.getCacheName(), "Name wasn't right" );
 
-        final long diff = now - elem.getElementAttributes().getCreateTime();
+        final long diff = now - elem.getElementAttributes().createTime();
         assertTrue( diff >= 0, "Create time should have been at or after the call" );
 
     }

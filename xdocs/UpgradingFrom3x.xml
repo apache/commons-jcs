@@ -115,15 +115,20 @@ jcs.default.cacheattributes=org.apache.commons.jcs4.engine.CompositeCacheAttribu
                    <th>New Property Name</th>
                </tr>
                <tr>
-                   <td>Region configuration (CompositeCacheAttributes)</td>
+                   <td>Region configuration (cacheattributes)</td>
                    <td>DiskUsagePatternName</td>
                    <td>DiskUsagePattern</td>
+               </tr>
+               <tr>
+                   <td>Element configuration (elementattributes)</td>
+                   <td>IdleTime</td>
+                   <td>MaxIdleTime</td>
                </tr>
             </table>
          </p>
          <p>
-           The documentation in the code always stated that region configurations inherit 
-           values from the default region settings. This, however, was never implemented.
+           The documentation in the code always stated that region and element configurations 
+           inherit values from the default region attributes. This, however, was never implemented.
            Note that the behavior has been fixed in JCS 4.0.0. This may have implications
            for your existing configurations. On the other hand, it makes the configuration
            much shorter.

@@ -55,7 +55,7 @@ jcs.region.Idletime.cacheattributes.MaxObjects=200
 jcs.region.Idletime.cacheattributes.MemoryCacheName=org.apache.commons.jcs4.engine.memory.lru.LRUMemoryCache
 jcs.region.Idletime.elementattributes.IsEternal=false
 jcs.region.Idletime.elementattributes.MaxLife=300
-jcs.region.Idletime.elementattributes.IdleTime=1
+jcs.region.Idletime.elementattributes.MaxIdleTime=1
 
 # #### AUXILIARY CACHES
 # Indexed Disk Cache

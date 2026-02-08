@@ -30,7 +30,7 @@ import org.apache.commons.jcs4.engine.control.event.behavior.IElementEventHandle
  * element attributes object. It is used to track the life of the object as well as to restrict its
  * behavior. By default, elements get a clone of the region's attributes.
  */
-public interface IElementAttributes extends Serializable, Cloneable
+public interface IElementAttributes extends Serializable
 {
     /**
      * Adds a ElementEventHandler. Handler's can be registered for multiple events. A registered
@@ -46,9 +46,13 @@ public interface IElementAttributes extends Serializable, Cloneable
     void addElementEventHandlers( List<IElementEventHandler> eventHandlers );
 
     /**
-     * Clone object
+     * Gets the elementEventHandlers.
+     * <p>
+     * Event handlers are transient. The only events defined are in memory events. All handlers are
+     * lost if the item goes to disk.
+     * @return The elementEventHandlers value, null if there are none
      */
-    IElementAttributes clone();
+    ArrayList<IElementEventHandler> elementEventHandlers();
 
     /**
      * Gets the createTime attribute of the IAttributes object.
@@ -59,28 +63,19 @@ public interface IElementAttributes extends Serializable, Cloneable
      * Putting an item in the cache overrides any existing items.
      * @return The createTime value
      */
-    long getCreateTime();
-
-    /**
-     * Gets the elementEventHandlers.
-     * <p>
-     * Event handlers are transient. The only events defined are in memory events. All handlers are
-     * lost if the item goes to disk.
-     * @return The elementEventHandlers value, null if there are none
-     */
-    ArrayList<IElementEventHandler> getElementEventHandlers();
+    long createTime();
 
     /**
      * Gets the idleTime attribute of the IAttributes object
      * @return The idleTime value
      */
-    long getIdleTime();
+    long maxIdleTime();
 
     /**
      * This turns off expiration if it is true.
      * @return The IsEternal value
      */
-    boolean getIsEternal();
+    boolean isEternal();
 
     /**
      * Is this item laterally distributable. Can it be sent to auxiliaries of type lateral.
@@ -88,7 +83,7 @@ public interface IElementAttributes extends Serializable, Cloneable
      * By default this is true.
      * @return The isLateral value
      */
-    boolean getIsLateral();
+    boolean isLateral();
 
     /**
      * Can this item be sent to the remote cache.
@@ -96,7 +91,7 @@ public interface IElementAttributes extends Serializable, Cloneable
      * By default this is true.
      * @return The isRemote value
      */
-    boolean getIsRemote();
+    boolean isRemote();
 
     /**
      * Can this item be spooled to disk
@@ -104,14 +99,14 @@ public interface IElementAttributes extends Serializable, Cloneable
      * By default this is true.
      * @return The spoolable value
      */
-    boolean getIsSpool();
+    boolean isSpool();
 
     /**
      * Gets the LastAccess attribute of the IAttributes object.
      *
      * @return The LastAccess value.
      */
-    long getLastAccessTime();
+    long lastAccessTime();
 
     /**
      * Sets the maxLife attribute of the IAttributes object. How many seconds it can live after
@@ -121,60 +116,23 @@ public interface IElementAttributes extends Serializable, Cloneable
      * removed on retrieval, or removed actively if the memory shrinker is turned on.
      * @return The MaxLifeSeconds value
      */
-    long getMaxLife();
+    long maxLife();
 
     /**
      * Gets the size attribute of the IAttributes object
      *
      * @return The size value
      */
-    int getSize();
-
-    long getTimeFactorForMilliseconds();
+    int size();
 
     /**
-     * Gets the time left to live of the IAttributes object.
-     * <p>
-     * This is the (max life + create time) - current time.
-     * @return The TimeToLiveSeconds value
+     * Get the time factor to convert durations to milliseconds
+     * @return The time factor to convert durations to milliseconds
      */
-    long getTimeToLiveSeconds();
-
-    /**
-     * Sets the idleTime attribute of the IAttributes object. This is the maximum time the item can
-     * be idle in the cache, that is not accessed.
-     * <p>
-     * If this is exceeded the element will not be returned, instead it will be removed. It will be
-     * removed on retrieval, or removed actively if the memory shrinker is turned on.
-     * @param idle The new idleTime value
-     */
-    void setIdleTime( long idle );
-
-    /**
-     * Sets the isEternal attribute of the IElementAttributes object
-     * @param val The new isEternal value
-     */
-    void setIsEternal( boolean val );
+    long timeFactorForMilliseconds();
 
     /**
      * Sets the LastAccessTime as now of the IElementAttributes object
      */
     void setLastAccessTimeNow();
-
-    /**
-     * Sets the maxLife attribute of the IAttributes object.
-     *
-     * @param mls The new MaxLifeSeconds value
-     */
-    void setMaxLife(long mls);
-
-    /**
-     * Size in bytes. This is not used except in the admin pages. It will be 0 by default
-     * and is only updated when the element is serialized.
-     *
-     * @param size The new size value
-     */
-    void setSize( int size );
-
-    void setTimeFactorForMilliseconds(long factor);
 }

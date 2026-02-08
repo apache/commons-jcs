@@ -369,7 +369,7 @@ jcs.default.cacheattributes.MemoryCacheName=
     org.apache.commons.jcs4.engine.memory.lru.LRUMemoryCache
 jcs.default.elementattributes.IsEternal=false
 jcs.default.elementattributes.MaxLife=3600
-jcs.default.elementattributes.IdleTime=1800
+jcs.default.elementattributes.MaxIdleTime=1800
 jcs.default.elementattributes.IsSpool=true
 jcs.default.elementattributes.IsRemote=true
 jcs.default.elementattributes.IsLateral=true
@@ -386,7 +386,7 @@ jcs.region.bookCache.cacheattributes.MemoryCacheName=
     org.apache.commons.jcs4.engine.memory.lru.LRUMemoryCache
 jcs.region.bookCache.elementattributes.IsEternal=false
 jcs.region.bookCache.elementattributes.MaxLife=7200
-jcs.region.bookCache.elementattributes.IdleTime=1800
+jcs.region.bookCache.elementattributes.MaxIdleTime=1800
 jcs.region.bookCache.elementattributes.IsSpool=true
 jcs.region.bookCache.elementattributes.IsRemote=true
 jcs.region.bookCache.elementattributes.IsLateral=true

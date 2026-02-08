@@ -43,6 +43,7 @@ import org.apache.commons.jcs4.access.exception.CacheException;
 import org.apache.commons.jcs4.access.exception.ObjectNotFoundException;
 import org.apache.commons.jcs4.auxiliary.AuxiliaryCache;
 import org.apache.commons.jcs4.engine.CacheStatus;
+import org.apache.commons.jcs4.engine.ElementAttributes;
 import org.apache.commons.jcs4.engine.behavior.ICache;
 import org.apache.commons.jcs4.engine.behavior.ICacheElement;
 import org.apache.commons.jcs4.engine.behavior.ICompositeCacheAttributes;
@@ -508,7 +509,7 @@ public class CompositeCache<K, V>
     {
         if (attr != null)
         {
-            return attr.clone();
+            return new ElementAttributes(attr);
         }
         return null;
     }
@@ -966,7 +967,7 @@ public class CompositeCache<K, V>
      */
     public void handleElementEvent(final ICacheElement<K, V> element, final ElementEventType eventType)
     {
-        final ArrayList<IElementEventHandler> eventHandlers = element.getElementAttributes().getElementEventHandlers();
+        final ArrayList<IElementEventHandler> eventHandlers = element.getElementAttributes().elementEventHandlers();
         if (eventHandlers != null)
         {
             log.debug("Element Handlers are registered.  Create event type {0}", eventType);
@@ -1019,13 +1020,12 @@ public class CompositeCache<K, V>
         {
             final IElementAttributes attributes = element.getElementAttributes();
 
-            if (!attributes.getIsEternal())
+            if (!attributes.isEternal())
             {
                 // Remove if maxLifeSeconds exceeded
-                final long maxLifeSeconds = attributes.getMaxLife();
-                final long createTime = attributes.getCreateTime();
-
-                final long timeFactorForMilliseconds = attributes.getTimeFactorForMilliseconds();
+                final long maxLifeSeconds = attributes.maxLife();
+                final long createTime = attributes.createTime();
+                final long timeFactorForMilliseconds = attributes.timeFactorForMilliseconds();
 
                 if (maxLifeSeconds != -1 && timestamp - createTime > maxLifeSeconds * timeFactorForMilliseconds)
                 {
@@ -1034,8 +1034,8 @@ public class CompositeCache<K, V>
                     handleElementEvent(element, eventMaxlife);
                     return true;
                 }
-                final long idleTime = attributes.getIdleTime();
-                final long lastAccessTime = attributes.getLastAccessTime();
+                final long idleTime = attributes.maxIdleTime();
+                final long lastAccessTime = attributes.lastAccessTime();
 
                 // Remove if maxIdleTime exceeded
                 // If you have a 0 size memory cache, then the last access will
@@ -1461,7 +1461,7 @@ public class CompositeCache<K, V>
     public void spoolToDisk(final ICacheElement<K, V> ce)
     {
         // if the item is not spoolable, return
-        if (!ce.getElementAttributes().getIsSpool())
+        if (!ce.getElementAttributes().isSpool())
         {
             // there is an event defined for this.
             handleElementEvent(ce, ElementEventType.SPOOLED_NOT_ALLOWED);
@@ -1613,9 +1613,9 @@ public class CompositeCache<K, V>
                 // SEND TO REMOTE STORE
                 case REMOTE_CACHE:
                     log.debug("ce.getElementAttributes().getIsRemote() = {0}",
-                        cacheElement.getElementAttributes()::getIsRemote);
+                        cacheElement.getElementAttributes()::isRemote);
 
-                    if (cacheElement.getElementAttributes().getIsRemote() && !localOnly)
+                    if (cacheElement.getElementAttributes().isRemote() && !localOnly)
                     {
                         try
                         {
@@ -1637,7 +1637,7 @@ public class CompositeCache<K, V>
                     // lateral can't do the checking since it is dependent on the
                     // cache region restrictions
                     log.debug("lateralcache in aux list: cattr {0}", cacheAttr::useLateral);
-                    if (cacheAttr.useLateral() && cacheElement.getElementAttributes().getIsLateral() && !localOnly)
+                    if (cacheAttr.useLateral() && cacheElement.getElementAttributes().isLateral() && !localOnly)
                     {
                         // DISTRIBUTE LATERALLY
                         // Currently always multicast even if the value is
@@ -1652,7 +1652,7 @@ public class CompositeCache<K, V>
                     log.debug("diskcache in aux list: cattr {0}", cacheAttr::useDisk);
                     if (cacheAttr.useDisk()
                         && cacheAttr.diskUsagePattern() == DiskUsagePattern.UPDATE
-                        && cacheElement.getElementAttributes().getIsSpool())
+                        && cacheElement.getElementAttributes().isSpool())
                     {
                         aux.update(cacheElement);
                         log.debug("updated disk cache for {0}", cacheElement::getKey);

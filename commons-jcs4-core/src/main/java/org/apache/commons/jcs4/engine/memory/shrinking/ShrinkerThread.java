@@ -133,7 +133,7 @@ public class ShrinkerThread<K, V>
 
                 // If the element is not eternal, check if it should be
                 // removed and remove it if so.
-                if ( !attributes.getIsEternal() )
+                if ( !attributes.isEternal() )
                 {
                     remove = cache.isExpired( cacheElement, now,
                             ElementEventType.EXCEEDED_MAXLIFE_BACKGROUND,
@@ -152,7 +152,7 @@ public class ShrinkerThread<K, V>
                 {
                     if ( !spoolLimit || spoolCount < this.maxSpoolPerRun )
                     {
-                        final long lastAccessTime = attributes.getLastAccessTime();
+                        final long lastAccessTime = attributes.lastAccessTime();
 
                         if ( lastAccessTime + maxMemoryIdleTime < now )
                         {

@@ -21,103 +21,261 @@ package org.apache.commons.jcs4.engine;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 import org.apache.commons.jcs4.engine.behavior.IElementAttributes;
 import org.apache.commons.jcs4.engine.control.event.behavior.IElementEventHandler;
 
 /**
- * This it the element attribute descriptor class. Each element in the cache has an ElementAttribute
+ * This it the element attribute descriptor class. Each element in the cache has an ElementAttributes
  * object associated with it. An ElementAttributes object can be associated with an element in 3
  * ways:
  * <ol>
  * <li>When the item is put into the cache, you can associate an element attributes object.</li>
- * <li>If not attributes object is include when the element is put into the cache, then the default
+ * <li>If no attributes object is specified when the element is put into the cache, then the default
  * attributes for the region will be used.</li>
  * <li>The element attributes can be reset. This effectively results in a retrieval followed by a
  * put. Hence, this is the same as 1.</li>
  * </ol>
  */
-public class ElementAttributes
-    implements IElementAttributes
+public record ElementAttributes(
+        /** Can this item be flushed to disk */
+        boolean isSpool,
+
+        /** Is this item laterally distributable */
+        boolean isLateral,
+
+        /** Can this item be sent to the remote cache */
+        boolean isRemote,
+
+        /**
+         * You can turn off expiration by setting this to true. This causes the cache to bypass both max
+         * life and idle time expiration.
+         */
+        boolean isEternal,
+
+        /** Max life seconds */
+        long maxLife,
+
+        /**
+         * The maximum time an entry can be idle. Setting this to -1 causes the idle time check to be
+         * ignored.
+         */
+        long maxIdleTime,
+
+        /** The byte size of the field. Must be manually set. */
+        int size,
+
+        /** The creation time. This is used to enforce the max life. */
+        long createTime,
+
+        /** The last access time. This is used to enforce the max idle time. */
+        AtomicLong atomicLastAccessTime,
+
+        /** The time factor to convert durations to milliseconds */
+        long timeFactorForMilliseconds,
+
+        /**
+         * The list of Event handlers to use. This is transient, since the event handlers cannot usually
+         * be serialized. This means that you cannot attach a post serialization event to an item.
+         * <p>
+         * TODO we need to check that when an item is passed to a non-local cache that if the local
+         * cache had a copy with event handlers, that those handlers are used.
+         */
+        ArrayList<IElementEventHandler> elementEventHandlers
+) implements IElementAttributes
 {
     /** Don't change. */
     private static final long serialVersionUID = 7814990748035017441L;
 
-    /** Can this item be flushed to disk */
-    private boolean IS_SPOOL = true;
+    /** Default */
+    private static final boolean DEFAULT_IS_SPOOL = true;
+    /** Default */
+    private static final boolean DEFAULT_IS_LATERAL = true;
+    /** Default */
+    private static final boolean DEFAULT_IS_REMOTE = true;
+    /** Default */
+    private static final boolean DEFAULT_IS_ETERNAL = true;
+    /** Default */
+    private static final long DEFAULT_MAX_LIFE = -1;
+    /** Default */
+    private static final long DEFAULT_MAX_IDLE_TIME = -1;
+    /** Default */
+    private static final long DEFAULT_TIME_FACTOR = 1000;
 
-    /** Is this item laterally distributable */
-    private boolean IS_LATERAL = true;
-
-    /** Can this item be sent to the remote cache */
-    private boolean IS_REMOTE = true;
-
-    /**
-     * You can turn off expiration by setting this to true. This causes the cache to bypass both max
-     * life and idle time expiration.
-     */
-    private boolean IS_ETERNAL = true;
-
-    /** Max life seconds */
-    private long maxLife = -1;
-
-    /**
-     * The maximum time an entry can be idle. Setting this to -1 causes the idle time check to be
-     * ignored.
-     */
-    private long maxIdleTime = -1;
-
-    /** The byte size of the field. Must be manually set. */
-    private int size;
-
-    /** The creation time. This is used to enforce the max life. */
-    private long createTime;
-
-    /** The last access time. This is used to enforce the max idel time. */
-    private long lastAccessTime;
+    /** Record with all defaults set */
+    private static final ElementAttributes DEFAULT = new ElementAttributes(
+            DEFAULT_IS_SPOOL,
+            DEFAULT_IS_LATERAL,
+            DEFAULT_IS_REMOTE,
+            DEFAULT_IS_ETERNAL,
+            DEFAULT_MAX_LIFE,
+            DEFAULT_MAX_IDLE_TIME,
+            0,
+            0,
+            new AtomicLong(),
+            DEFAULT_TIME_FACTOR,
+            new ArrayList<>());
 
     /**
-     * The list of Event handlers to use. This is transient, since the event handlers cannot usually
-     * be serialized. This means that you cannot attach a post serialization event to an item.
-     * <p>
-     * TODO we need to check that when an item is passed to a non-local cache that if the local
-     * cache had a copy with event handlers, that those handlers are used.
+     * @return an object containing the default settings
      */
-    private transient ArrayList<IElementEventHandler> eventHandlers;
-
-    private long timeFactor = 1000;
-
-    /**
-     * Constructor for the IElementAttributes object
-     */
-    public ElementAttributes()
+    public static ElementAttributes defaults()
     {
-        this.createTime = System.currentTimeMillis();
-        this.lastAccessTime = this.createTime;
+        return DEFAULT;
     }
 
     /**
-     * Constructor for the IElementAttributes object
-     *
-     * @param attr
+     * Constructor for the ElementAttributes object
      */
-    protected ElementAttributes( final ElementAttributes attr )
+    public ElementAttributes()
     {
-        IS_ETERNAL = attr.IS_ETERNAL;
+        this(defaults());
+        this.atomicLastAccessTime.set(createTime());
+    }
 
-        // waterfall onto disk, for pure disk set memory to 0
-        IS_SPOOL = attr.IS_SPOOL;
+    /**
+     * Copy constructor for the ElementAttributes object
+     */
+    public ElementAttributes(IElementAttributes from)
+    {
+        this(from.isSpool(),
+             from.isLateral(),
+             from.isRemote(),
+             from.isEternal(),
+             from.maxLife(),
+             from.maxIdleTime(),
+             from.size(),
+             System.currentTimeMillis(),
+             new AtomicLong(from.lastAccessTime()),
+             from.timeFactorForMilliseconds(),
+             new ArrayList<>(from.elementEventHandlers()));
+    }
 
-        // lateral
-        IS_LATERAL = attr.IS_LATERAL;
+    /**
+     * Constructor for the ElementAttributes object
+     */
+    public ElementAttributes(
+            boolean isSpool,
+            boolean isLateral,
+            boolean isRemote,
+            boolean isEternal,
+            long maxLife,
+            long maxIdleTime,
+            long timeFactorForMilliseconds
+          )
+    {
+        this(isSpool, isLateral, isRemote, isEternal, maxLife, maxIdleTime, 0,
+                System.currentTimeMillis(), new AtomicLong(), timeFactorForMilliseconds,
+                new ArrayList<>());
 
-        // central rmi store
-        IS_REMOTE = attr.IS_REMOTE;
+        this.atomicLastAccessTime.set(createTime());
+    }
 
-        maxLife = attr.maxLife;
-        // time-to-live
-        maxIdleTime = attr.maxIdleTime;
-        size = attr.size;
+    /**
+     * Sets the isSpool attribute of the ElementAttributes object
+     * @param val The new isSpool value
+     */
+    public ElementAttributes withIsSpool( boolean val )
+    {
+        return new ElementAttributes(
+                val,
+                isLateral(),
+                isRemote(),
+                isEternal(),
+                maxLife(),
+                maxIdleTime(),
+                size(),
+                System.currentTimeMillis(),
+                new AtomicLong(lastAccessTime()),
+                timeFactorForMilliseconds(),
+                new ArrayList<>(elementEventHandlers()));
+    }
+
+    /**
+     * Sets the isEternal attribute of the ElementAttributes object
+     * @param val The new isEternal value
+     */
+    public ElementAttributes withIsEternal( boolean val )
+    {
+        return new ElementAttributes(
+                isSpool(),
+                isLateral(),
+                isRemote(),
+                val,
+                maxLife(),
+                maxIdleTime(),
+                size(),
+                System.currentTimeMillis(),
+                new AtomicLong(lastAccessTime()),
+                timeFactorForMilliseconds(),
+                new ArrayList<>(elementEventHandlers()));
+    }
+
+    /**
+     * Sets the maxLife attribute of the ElementAttributes object.
+     *
+     * @param mls The new MaxLifeSeconds value
+     */
+    public ElementAttributes withMaxLife(long mls)
+    {
+        return new ElementAttributes(
+                isSpool(),
+                isLateral(),
+                isRemote(),
+                isEternal(),
+                mls,
+                maxIdleTime(),
+                size(),
+                System.currentTimeMillis(),
+                new AtomicLong(lastAccessTime()),
+                timeFactorForMilliseconds(),
+                new ArrayList<>(elementEventHandlers()));
+    }
+
+    /**
+     * Sets the idleTime attribute of the ElementAttributes object. This is the maximum time the item can
+     * be idle in the cache, that is not accessed.
+     * <p>
+     * If this is exceeded the element will not be returned, instead it will be removed. It will be
+     * removed on retrieval, or removed actively if the memory shrinker is turned on.
+     * @param idle The new idleTime value
+     */
+    public ElementAttributes withMaxIdleTime(long idle)
+    {
+        return new ElementAttributes(
+                isSpool(),
+                isLateral(),
+                isRemote(),
+                isEternal(),
+                maxLife(),
+                idle,
+                size(),
+                System.currentTimeMillis(),
+                new AtomicLong(lastAccessTime()),
+                timeFactorForMilliseconds(),
+                new ArrayList<>(elementEventHandlers()));
+    }
+
+    /**
+     * Sets the size attribute of the ElementAttributes object.
+     *
+     * @param size The new size value
+     */
+    public ElementAttributes withSize(int size)
+    {
+        return new ElementAttributes(
+                isSpool(),
+                isLateral(),
+                isRemote(),
+                isEternal(),
+                maxLife(),
+                maxIdleTime(),
+                size,
+                System.currentTimeMillis(),
+                new AtomicLong(lastAccessTime()),
+                timeFactorForMilliseconds(),
+                new ArrayList<>(elementEventHandlers()));
     }
 
     /**
@@ -132,12 +290,7 @@ public class ElementAttributes
     @Override
     public void addElementEventHandler( final IElementEventHandler eventHandler )
     {
-        // lazy here, no concurrency problems expected
-        if ( this.eventHandlers == null )
-        {
-            this.eventHandlers = new ArrayList<>();
-        }
-        this.eventHandlers.add( eventHandler );
+        this.elementEventHandlers.add( eventHandler );
     }
 
     /**
@@ -163,231 +316,14 @@ public class ElementAttributes
     }
 
     /**
-     * @see Object#clone()
-     */
-    @Override
-    public IElementAttributes clone()
-    {
-        try
-        {
-        	final ElementAttributes c = (ElementAttributes) super.clone();
-        	c.setCreateTime();
-            return c;
-        }
-        catch (final CloneNotSupportedException e)
-        {
-            throw new IllegalStateException("Clone not supported. This should never happen.", e);
-        }
-    }
-
-    /**
-     * Gets the createTime attribute of the IAttributes object.
-     * <p>
-     * This should be the current time in milliseconds returned by the sysutem call when the element
-     * is put in the cache.
-     * <p>
-     * Putting an item in the cache overrides any existing items.
-     * @return The createTime value
-     */
-    @Override
-    public long getCreateTime()
-    {
-        return createTime;
-    }
-
-    /**
-     * Gets the elementEventHandlers. Returns null if none exist. Makes checking easy.
-     *
-     * @return The elementEventHandlers List of IElementEventHandler objects
-     */
-    @Override
-    public ArrayList<IElementEventHandler> getElementEventHandlers()
-    {
-        return this.eventHandlers;
-    }
-
-    /**
-     * Gets the idleTime attribute of the IAttributes object.
-     *
-     * @return The idleTime value
-     */
-    @Override
-    public long getIdleTime()
-    {
-        return this.maxIdleTime;
-    }
-
-    /**
-     * You can turn off expiration by setting this to true. The max life value will be ignored.
-     *
-     * @return true if the item cannot expire.
-     */
-    @Override
-    public boolean getIsEternal()
-    {
-        return this.IS_ETERNAL;
-    }
-
-    /**
-     * Is this item laterally distributable. Can it be sent to auxiliaries of type lateral.
-     * <p>
-     * By default this is true.
-     * @return The isLateral value
-     */
-    @Override
-    public boolean getIsLateral()
-    {
-        return this.IS_LATERAL;
-    }
-
-    /**
-     * Can this item be sent to the remote cache
-     * @return true if the item can be sent to a remote auxiliary
-     */
-    @Override
-    public boolean getIsRemote()
-    {
-        return this.IS_REMOTE;
-    }
-
-    /**
-     * Can this item be spooled to disk
-     * <p>
-     * By default this is true.
-     * @return The spoolable value
-     */
-    @Override
-    public boolean getIsSpool()
-    {
-        return this.IS_SPOOL;
-    }
-
-    /**
      * Gets the LastAccess attribute of the IAttributes object.
      *
      * @return The LastAccess value.
      */
     @Override
-    public long getLastAccessTime()
+    public long lastAccessTime()
     {
-        return this.lastAccessTime;
-    }
-
-    /**
-     * Sets the maxLife attribute of the IAttributes object. How many seconds it can live after
-     * creation.
-     * <p>
-     * If this is exceeded the element will not be returned, instead it will be removed. It will be
-     * removed on retrieval, or removed actively if the memory shrinker is turned on.
-     * @return The MaxLifeSeconds value
-     */
-    @Override
-    public long getMaxLife()
-    {
-        return this.maxLife;
-    }
-
-    /**
-     * Gets the size attribute of the IAttributes object
-     *
-     * @return The size value
-     */
-    @Override
-    public int getSize()
-    {
-        return size;
-    }
-
-    @Override
-    public long getTimeFactorForMilliseconds()
-    {
-        return timeFactor;
-    }
-
-    /**
-     * Gets the time left to live of the IAttributes object.
-     * <p>
-     * This is the (max life + create time) - current time.
-     * @return The TimeToLiveSeconds value
-     */
-    @Override
-    public long getTimeToLiveSeconds()
-    {
-        final long now = System.currentTimeMillis();
-        final long timeFactorForMilliseconds = getTimeFactorForMilliseconds();
-        return ( getCreateTime() + getMaxLife() * timeFactorForMilliseconds - now ) / 1000;
-    }
-
-    /**
-     * Sets the createTime attribute of the IElementAttributes object
-     */
-    public void setCreateTime()
-    {
-        createTime = System.currentTimeMillis();
-    }
-
-    /**
-     * Sets the idleTime attribute of the IAttributes object. This is the maximum time the item can
-     * be idle in the cache, that is not accessed.
-     * <p>
-     * If this is exceeded the element will not be returned, instead it will be removed. It will be
-     * removed on retrieval, or removed actively if the memory shrinker is turned on.
-     * @param idle The new idleTime value
-     */
-    public void setIdleTime( final long idle )
-    {
-        this.maxIdleTime = idle;
-    }
-
-    /**
-     * Sets the isEternal attribute of the ElementAttributes object. True means that the item should
-     * never expire. If can still be removed if it is the least recently used, and you are using the
-     * LRUMemory cache. it just will not be filtered for expiration by the cache hub.
-     *
-     * @param val The new isEternal value
-     */
-    public void setIsEternal( final boolean val )
-    {
-        this.IS_ETERNAL = val;
-    }
-
-    /**
-     * Sets the isLateral attribute of the IElementAttributes object
-     * <p>
-     * By default this is true.
-     * @param val The new isLateral value
-     */
-    public void setIsLateral( final boolean val )
-    {
-        this.IS_LATERAL = val;
-    }
-
-    /**
-     * Sets the isRemote attribute of the ElementAttributes object
-     * @param val The new isRemote value
-     */
-    public void setIsRemote( final boolean val )
-    {
-        this.IS_REMOTE = val;
-    }
-
-    /**
-     * Sets the isSpool attribute of the IElementAttributes object
-     * <p>
-     * By default this is true.
-     * @param val The new isSpool value
-     */
-    public void setIsSpool( final boolean val )
-    {
-        this.IS_SPOOL = val;
-    }
-
-    /**
-     * only for use from test code
-     */
-    public void setLastAccessTime(final long time)
-    {
-        this.lastAccessTime = time;
+        return atomicLastAccessTime().get();
     }
 
     /**
@@ -396,33 +332,19 @@ public class ElementAttributes
     @Override
     public void setLastAccessTimeNow()
     {
-        this.lastAccessTime = System.currentTimeMillis();
+        this.atomicLastAccessTime.set(System.currentTimeMillis());
     }
 
     /**
-     * Sets the maxLife attribute of the IAttributes object.
-     *
-     * @param mls The new MaxLifeSeconds value
+     * Gets the time left to live of the IElementAttributes object.
+     * <p>
+     * This is the (max life + create time) - current time.
+     * @return The TimeToLiveSeconds value
      */
-    public void setMaxLife(final long mls)
+    private long getTimeToLiveSeconds()
     {
-        this.maxLife = mls;
-    }
-
-    /**
-     * Size in bytes. This is not used except in the admin pages. It will be 0 by default
-     * and is only updated when the element is serialized.
-     *
-     * @param size The new size value
-     */
-    public void setSize( final int size )
-    {
-        this.size = size;
-    }
-
-    public void setTimeFactorForMilliseconds(final long factor)
-    {
-        this.timeFactor = factor;
+        final long now = System.currentTimeMillis();
+        return ( createTime() + maxLife() * timeFactorForMilliseconds() - now ) / 1000;
     }
 
     /**
@@ -435,16 +357,16 @@ public class ElementAttributes
     {
         final StringBuilder dump = new StringBuilder();
 
-        dump.append( "[ IS_LATERAL = " ).append( IS_LATERAL );
-        dump.append( ", IS_SPOOL = " ).append( IS_SPOOL );
-        dump.append( ", IS_REMOTE = " ).append( IS_REMOTE );
-        dump.append( ", IS_ETERNAL = " ).append( IS_ETERNAL );
-        dump.append( ", MaxLifeSeconds = " ).append( getMaxLife() );
-        dump.append( ", IdleTime = " ).append( getIdleTime() );
-        dump.append( ", CreateTime = " ).append( getCreateTime() );
-        dump.append( ", LastAccessTime = " ).append( getLastAccessTime() );
-        dump.append( ", getTimeToLiveSeconds() = " ).append( String.valueOf( getTimeToLiveSeconds() ) );
-        dump.append( ", createTime = " ).append( String.valueOf( createTime ) ).append( " ]" );
+        dump.append( "[ isLateral = " ).append( isLateral() );
+        dump.append( ", isSpool = " ).append( isSpool() );
+        dump.append( ", isRemote = " ).append( isRemote() );
+        dump.append( ", isEternal = " ).append( isEternal() );
+        dump.append( ", MaxLifeSeconds = " ).append( maxLife() );
+        dump.append( ", MaxIdleTime = " ).append( maxIdleTime() );
+        dump.append( ", CreateTime = " ).append( createTime() );
+        dump.append( ", LastAccessTime = " ).append( lastAccessTime() );
+        dump.append( ", getTimeToLiveSeconds() = " ).append(getTimeToLiveSeconds());
+        dump.append( " ]" );
 
         return dump.toString();
     }

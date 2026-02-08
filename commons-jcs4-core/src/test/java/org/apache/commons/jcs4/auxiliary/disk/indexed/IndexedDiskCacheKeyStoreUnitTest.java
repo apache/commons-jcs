@@ -56,8 +56,8 @@ class IndexedDiskCacheKeyStoreUnitTest
         final int cnt = 25;
         for ( int i = 0; i < cnt; i++ )
         {
-            final ElementAttributes eAttr = new ElementAttributes();
-            eAttr.setIsSpool( true );
+            final ElementAttributes eAttr = ElementAttributes.defaults()
+                    .withIsSpool(true);
             final ICacheElement<String, String> element = new CacheElement<>( cattr.getCacheName(), "key:" + i, "data:" + i );
             element.setElementAttributes( eAttr );
             disk.processUpdate( element );
@@ -65,8 +65,8 @@ class IndexedDiskCacheKeyStoreUnitTest
 
         final long preAddRemoveSize = disk.getDataFileSize();
 
-        final ElementAttributes eAttr = new ElementAttributes();
-        eAttr.setIsSpool( true );
+        final ElementAttributes eAttr = ElementAttributes.defaults()
+                .withIsSpool(true);
         final ICacheElement<String, String> elementSetup = new CacheElement<>( cattr.getCacheName(), "key:A", "data:A" );
         elementSetup.setElementAttributes( eAttr );
         disk.processUpdate( elementSetup );
@@ -115,8 +115,8 @@ class IndexedDiskCacheKeyStoreUnitTest
         final int cnt = 25;
         for ( int i = 0; i < cnt; i++ )
         {
-            final ElementAttributes eAttr = new ElementAttributes();
-            eAttr.setIsSpool( true );
+            final ElementAttributes eAttr = ElementAttributes.defaults()
+                    .withIsSpool(true);
             final ICacheElement<String, String> element = new CacheElement<>( cattr.getCacheName(), "key:" + i, "data:" + i );
             element.setElementAttributes( eAttr );
             disk.processUpdate( element );

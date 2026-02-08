@@ -166,12 +166,12 @@ class SimpleEventHandlingUnitTest
         throws Exception
     {
     	final ElementAttributes elem1 = new ElementAttributes();
-    	final long ctime1 = elem1.getCreateTime();
+    	final long ctime1 = elem1.createTime();
 
     	Thread.sleep(10);
 
-    	final IElementAttributes elem2 = elem1.clone();
-    	final long ctime2 = elem2.getCreateTime();
+    	final IElementAttributes elem2 = new ElementAttributes(elem1);
+    	final long ctime2 = elem2.createTime();
 
         assertFalse( ctime1 == ctime2, "Creation times should be different" );
     }
@@ -204,7 +204,7 @@ class SimpleEventHandlingUnitTest
         }
 
         // wait a bit for the items to expire
-        Thread.sleep(attributes.getIdleTime() * 1000 + 100);
+        Thread.sleep(attributes.maxIdleTime() * 1000 + 100);
 
         for ( int i = 0; i < 200; i++ )
         {
@@ -242,7 +242,7 @@ class SimpleEventHandlingUnitTest
         }
 
         // wait a bit for the items to expire
-        Thread.sleep(attributes.getMaxLife() * 1000 + 100);
+        Thread.sleep(attributes.maxLife() * 1000 + 100);
 
         for ( int i = 0; i < 200; i++ )
         {

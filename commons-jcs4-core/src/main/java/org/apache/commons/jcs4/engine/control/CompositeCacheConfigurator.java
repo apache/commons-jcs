@@ -28,6 +28,7 @@ import org.apache.commons.jcs4.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.commons.jcs4.auxiliary.AuxiliaryCacheConfigurator;
 import org.apache.commons.jcs4.auxiliary.AuxiliaryCacheFactory;
 import org.apache.commons.jcs4.engine.CompositeCacheAttributes;
+import org.apache.commons.jcs4.engine.ElementAttributes;
 import org.apache.commons.jcs4.engine.behavior.ICache;
 import org.apache.commons.jcs4.engine.behavior.ICompositeCacheAttributes;
 import org.apache.commons.jcs4.engine.behavior.IElementAttributes;
@@ -285,30 +286,29 @@ public class CompositeCacheConfigurator
     protected IElementAttributes parseElementAttributes( final Properties props, final String regName,
             final IElementAttributes defaultEAttr, final String regionPrefix )
     {
-        IElementAttributes eAttr;
-
-        final String attrName = regionPrefix + regName + CompositeCacheConfigurator.ELEMENT_ATTRIBUTE_PREFIX;
-
-        // auxFactory was not previously initialized.
-        // String prefix = regionPrefix + regName + ATTRIBUTE_PREFIX;
-        eAttr = OptionConverter.instantiateByKey( props, attrName, null );
-        if ( eAttr == null )
+        final String prefix = regionPrefix + regName + ELEMENT_ATTRIBUTE_PREFIX;
+        Class<? extends IElementAttributes> elementClass = OptionConverter.findClassByKey(props, prefix);
+        if (elementClass == null)
         {
-            log.info( "No special ElementAttribute class defined for key [{0}], "
-                    + "using default class.", attrName );
-
-            eAttr = defaultEAttr;
+            if (defaultEAttr != null)
+            {
+                elementClass = defaultEAttr.getClass();
+            }
+            else
+            {
+                elementClass = ElementAttributes.class;
+            }
+            log.debug("Using default element attributes class for region \"{0}\": {1}",
+                    regName, elementClass.getName());
         }
 
-        log.debug( "Parsing options for \"{0}\"", attrName );
+        log.debug( "Parsing options for \"{0}\"", prefix );
 
-        PropertySetter.setProperties( eAttr, props, attrName + "." );
-        // eAttr.setCacheName( regName );
+        IElementAttributes eAttr = ConfigurationBuilder.create(elementClass, defaultEAttr)
+                .fromProperties(props, prefix)
+                .build();
 
-        log.debug( "End of parsing for \"{0}\"", attrName );
-
-        // GET CACHE FROM FACTORY WITH ATTRIBUTES
-        // eAttr.setCacheName( regName );
+        log.debug( "End of parsing for \"{0}\"", prefix );
         return eAttr;
     }
 

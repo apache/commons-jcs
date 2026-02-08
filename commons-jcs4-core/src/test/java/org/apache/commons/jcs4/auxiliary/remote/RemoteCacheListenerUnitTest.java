@@ -59,8 +59,8 @@ class RemoteCacheListenerUnitTest
         final String cacheName = "testName";
         final String key = "key";
         final String value = "value fdsadf dsafdsa fdsaf dsafdsaf dsafdsaf dsaf dsaf dsaf dsafa dsaf dsaf dsafdsaf";
-        final ElementAttributes attr = new ElementAttributes();
-        attr.setMaxLife(34);
+        final ElementAttributes attr = ElementAttributes.defaults()
+                .withMaxLife(34);
 
         final IElementSerializer elementSerializer = new StandardSerializer();
 
@@ -77,8 +77,8 @@ class RemoteCacheListenerUnitTest
 
         assertNotNull( after, "Should have a deserialized object." );
         assertEquals( value, after.getVal(), "Values should be the same." );
-        assertEquals( attr.getMaxLife(), after
-            .getElementAttributes().getMaxLife(), "Attributes should be the same." );
+        assertEquals( attr.maxLife(), after
+            .getElementAttributes().maxLife(), "Attributes should be the same." );
         assertEquals( key, after.getKey(), "Keys should be the same." );
         assertEquals( cacheName, after.getCacheName(), "Cache name should be the same." );
     }
@@ -103,8 +103,8 @@ class RemoteCacheListenerUnitTest
         final String cacheName = "testName";
         final String key = "key";
         final String value = "value fdsadf dsafdsa fdsaf dsafdsaf dsafdsaf dsaf dsaf dsaf dsafa dsaf dsaf dsafdsaf";
-        final ElementAttributes attr = new ElementAttributes();
-        attr.setMaxLife(34);
+        final ElementAttributes attr = ElementAttributes.defaults()
+                .withMaxLife(34);
 
         final IElementSerializer elementSerializer = new StandardSerializer();
 

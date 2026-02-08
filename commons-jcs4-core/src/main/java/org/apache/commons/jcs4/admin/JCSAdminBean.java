@@ -140,15 +140,14 @@ public class JCSAdminBean implements JCSJMXBean
         for (final Map.Entry<String, ?> key : keys.entrySet())
         {
             final ICacheElement<?, ?> element = cache.getMemoryCache().getQuiet( key.getValue() );
-
             final IElementAttributes attributes = element.getElementAttributes();
 
             final CacheElementInfo elementInfo = new CacheElementInfo(
             		key.getKey(),
-            		attributes.getIsEternal(),
-            		format.format(new Date(attributes.getCreateTime())),
-            		attributes.getMaxLife(),
-            		(now - attributes.getCreateTime() - attributes.getMaxLife() * 1000 ) / -1000);
+            		attributes.isEternal(),
+            		format.format(new Date(attributes.createTime())),
+            		attributes.maxLife(),
+            		(now - attributes.createTime() - attributes.maxLife() * 1000 ) / -1000);
 
             records.add( elementInfo );
         }

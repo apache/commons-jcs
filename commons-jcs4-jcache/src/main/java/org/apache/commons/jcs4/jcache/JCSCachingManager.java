@@ -87,7 +87,7 @@ public class JCSCachingManager implements CacheManager
     	jcs.default.elementattributes=org.apache.commons.jcs4.engine.ElementAttributes
     	jcs.default.elementattributes.IsEternal=false
     	jcs.default.elementattributes.MaxLife=700
-    	jcs.default.elementattributes.IdleTime=1800
+    	jcs.default.elementattributes.MaxIdleTime=1800
     	jcs.default.elementattributes.IsSpool=true
     	jcs.default.elementattributes.IsRemote=true
     	jcs.default.elementattributes.IsLateral=true

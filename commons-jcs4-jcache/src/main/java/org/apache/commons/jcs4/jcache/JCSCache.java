@@ -323,7 +323,7 @@ public class JCSCache<K, V> implements Cache<K, V>
             {
                 forceExpires(key);
             }
-            else if (expiryForAccess != null && (!elt.getElementAttributes().getIsEternal() || !expiryForAccess.isEternal()))
+            else if (expiryForAccess != null && (!elt.getElementAttributes().isEternal() || !expiryForAccess.isEternal()))
             {
                 try
                 {
@@ -388,11 +388,7 @@ public class JCSCache<K, V> implements Cache<K, V>
             final Duration duration = update ? expiryPolicy.getExpiryForUpdate() : expiryPolicy.getExpiryForCreation();
             if (isNotZero(duration))
             {
-                final IElementAttributes clone = delegate.getElementAttributes().clone();
-                if (ElementAttributes.class.isInstance(clone))
-                {
-                    ElementAttributes.class.cast(clone).setCreateTime();
-                }
+                final IElementAttributes clone = new ElementAttributes(delegate.getElementAttributes());
                 final ICacheElement<K, V> element = updateElement(key, v, duration, clone);
                 try
                 {
@@ -703,27 +699,31 @@ public class JCSCache<K, V> implements Cache<K, V>
             final K jcsKey = storeByValue ? copy(serializer, manager.getClassLoader(), key) : key;
             final ICacheElement<K, V> element = updateElement( // reuse it to create basic structure
                     jcsKey, value, created ? null : duration,
-                    oldElt != null ? oldElt.getElementAttributes() : delegate.getElementAttributes().clone());
+                    oldElt != null ? oldElt.getElementAttributes() : new ElementAttributes(delegate.getElementAttributes()));
             if (created && duration != null) { // set maxLife
-                final IElementAttributes copy = element.getElementAttributes();
-                copy.setTimeFactorForMilliseconds(1);
+                final long timeFactorForMilliseconds = 1;
                 final boolean eternal = duration.isEternal();
-                copy.setIsEternal(eternal);
-                if (ElementAttributes.class.isInstance(copy)) {
-                    ElementAttributes.class.cast(copy).setCreateTime();
-                }
+                long maxIdleTime = element.getElementAttributes().maxIdleTime();
+                long maxLife = element.getElementAttributes().maxLife();
                 if (!eternal)
                 {
-                    copy.setIsEternal(false);
                     if (duration == expiryPolicy.getExpiryForAccess())
                     {
-                        element.getElementAttributes().setIdleTime(duration.getTimeUnit().toMillis(duration.getDurationAmount()));
+                        maxIdleTime = duration.getTimeUnit().toMillis(duration.getDurationAmount());
                     }
                     else
                     {
-                        element.getElementAttributes().setMaxLife(duration.getTimeUnit().toMillis(duration.getDurationAmount()));
+                        maxLife = duration.getTimeUnit().toMillis(duration.getDurationAmount());
                     }
                 }
+                IElementAttributes copy = new ElementAttributes(
+                        element.getElementAttributes().isSpool(),
+                        element.getElementAttributes().isLateral(),
+                        element.getElementAttributes().isRemote(),
+                        eternal,
+                        maxLife,
+                        maxIdleTime,
+                        timeFactorForMilliseconds);
                 element.setElementAttributes(copy);
             }
             writer.write(new JCSEntry<>(jcsKey, value));
@@ -917,7 +917,7 @@ public class JCSCache<K, V> implements Cache<K, V>
             if (value != null)
             {
                 final Duration expiryForAccess = expiryPolicy.getExpiryForAccess();
-                if (expiryForAccess != null && (!elt.getElementAttributes().getIsEternal() || !expiryForAccess.isEternal()))
+                if (expiryForAccess != null && (!elt.getElementAttributes().isEternal() || !expiryForAccess.isEternal()))
                 {
                     try
                     {
@@ -970,19 +970,21 @@ public class JCSCache<K, V> implements Cache<K, V>
 
     private ICacheElement<K, V> updateElement(final K key, final V v, final Duration duration, final IElementAttributes attrs)
     {
-        final ICacheElement<K, V> element = new CacheElement<>(name, key, v);
+        final ICacheElement<K, V> element = new CacheElement<>(name, key, v, attrs);
         if (duration != null)
         {
-            attrs.setTimeFactorForMilliseconds(1);
             final boolean eternal = duration.isEternal();
-            attrs.setIsEternal(eternal);
-            if (!eternal)
-            {
-                attrs.setLastAccessTimeNow();
-            }
             // MaxLife = -1 to use IdleTime excepted if jcache.ccf asked for something else
+            IElementAttributes copy = new ElementAttributes(
+                    attrs.isSpool(),
+                    attrs.isLateral(),
+                    attrs.isRemote(),
+                    eternal,
+                    attrs.maxLife(),
+                    attrs.maxIdleTime(),
+                    1);
+            element.setElementAttributes(copy);
         }
-        element.setElementAttributes(attrs);
         return element;
     }
 }
