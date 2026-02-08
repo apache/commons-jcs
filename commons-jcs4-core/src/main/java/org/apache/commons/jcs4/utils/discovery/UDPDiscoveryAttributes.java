@@ -57,6 +57,7 @@ public record UDPDiscoveryAttributes(
     /** Default amount of time before we remove services that we haven't heard from */
     private static final int DEFAULT_MAX_IDLE_TIME_SEC = 180;
 
+    /** Record with all defaults set */
     private static final UDPDiscoveryAttributes DEFAULT = new UDPDiscoveryAttributes(
             null,
             -1,

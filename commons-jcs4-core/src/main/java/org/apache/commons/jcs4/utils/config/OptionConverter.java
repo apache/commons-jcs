@@ -168,6 +168,40 @@ public class OptionConverter
     }
 
     /**
+     * Get the class object given a class name.
+     *
+     * @param props the Properties class
+     * @param key the key of the Class name in the Properties object
+     *
+     * @return Class object
+     */
+    public static <T> Class<T> findClassByKey(final Properties props, final String key)
+    {
+        final String className = findAndSubst( key, props );
+        if (className != null && !className.isBlank())
+        {
+            try
+            {
+                @SuppressWarnings("unchecked") // CCE caught
+                final Class<T> classObj = (Class<T>) Class.forName( className.trim() );
+                return classObj;
+
+            }
+            catch (final ClassCastException e)
+            {
+                log.error( "A \"{0}\" object is not assignable to the "
+                        + "generic variable.", className );
+            }
+            catch (final Exception e)
+            {
+                log.error("Could not instantiate class [{0}]", className, e);
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Instantiate an object given a class name. Check that the {@code className} is a subclass
      * of {@code superClass}. If that test fails or the object could not be instantiated, then
      * {@code defaultValue} is returned.
@@ -176,7 +210,6 @@ public class OptionConverter
      * @param defaultValue The object to return in case of non-fulfillment
      * @return instantiated object
      */
-
     public static <T> T instantiateByClassName( final String className, final T defaultValue )
     {
         if ( className != null )

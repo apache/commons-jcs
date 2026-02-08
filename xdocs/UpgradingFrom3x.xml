@@ -103,6 +103,25 @@ jcs.default.cacheattributes=org.apache.commons.jcs4.engine.CompositeCacheAttribu
            Please note that several internals structures are not exported.
          </p>
       </subsection>
+      <subsection name="Changed Configuration Keys">
+        <p>
+           JCS 4.0.0 tries to pull some long-standing configuration inconsistencies straight.
+           The following configuration keys have been renamed or removed:
+
+           <table>
+               <tr>
+                   <th>Attribute Type</th>
+                   <th>Old Property Name</th>
+                   <th>New Property Name</th>
+               </tr>
+               <tr>
+                   <td>Region configuration (CompositeCacheAttributes)</td>
+                   <td>DiskUsagePatternName</td>
+                   <td>DiskUsagePattern</td>
+               </tr>
+            </table>
+         </p>
+      </subsection>
     </section>
   </body>
 </document>

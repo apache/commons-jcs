@@ -200,7 +200,7 @@ public class SoftReferenceMemoryCache<K, V> extends AbstractMemoryCache<K, V>
      */
     private void trimStrongReferences()
     {
-        final int max = getCacheAttributes().getMaxObjects();
+        final int max = getCacheAttributes().maxObjects();
         final int startsize = strongReferences.size();
 
         for (int cursize = startsize; cursize > max; cursize--)

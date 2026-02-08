@@ -136,7 +136,7 @@
 						<td>30</td>
 					</tr>
 					<tr>
-						<td>DiskUsagePatternName</td>
+						<td>DiskUsagePattern</td>
 						<td>
 							SWAP is the default. Under the swap pattern,
 							data is only put to disk when the max memory

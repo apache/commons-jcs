@@ -47,12 +47,12 @@ import org.apache.commons.jcs4.auxiliary.remote.behavior.IRemoteCacheConstants;
 import org.apache.commons.jcs4.engine.CompositeCacheAttributes;
 import org.apache.commons.jcs4.engine.ElementAttributes;
 import org.apache.commons.jcs4.engine.behavior.ICache;
+import org.apache.commons.jcs4.engine.behavior.ICacheType.CacheType;
 import org.apache.commons.jcs4.engine.behavior.ICompositeCacheAttributes;
 import org.apache.commons.jcs4.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs4.engine.behavior.IElementAttributes;
 import org.apache.commons.jcs4.engine.behavior.IProvideScheduler;
 import org.apache.commons.jcs4.engine.behavior.IShutdownObserver;
-import org.apache.commons.jcs4.engine.behavior.ICacheType.CacheType;
 import org.apache.commons.jcs4.engine.control.event.ElementEventQueue;
 import org.apache.commons.jcs4.engine.control.event.behavior.IElementEventQueue;
 import org.apache.commons.jcs4.engine.stats.CacheStats;
@@ -181,7 +181,7 @@ public class CompositeCacheManager
     private final AtomicInteger clients = new AtomicInteger();
 
     /** Default cache attributes for this cache manager */
-    private ICompositeCacheAttributes defaultCacheAttr = new CompositeCacheAttributes();
+    private ICompositeCacheAttributes defaultCacheAttr = CompositeCacheAttributes.defaults();
 
     /** Default element attributes for this cache manager */
     private IElementAttributes defaultElementAttr = new ElementAttributes();
@@ -405,7 +405,7 @@ public class CompositeCacheManager
 
         // set default cache attr
         this.defaultCacheAttr = configurator.parseCompositeCacheAttributes( properties, "",
-                new CompositeCacheAttributes(), DEFAULT_REGION );
+                CompositeCacheAttributes.defaults(), DEFAULT_REGION );
 
         log.info( "setting defaultCompositeCacheAttributes to {0}", this.defaultCacheAttr );
 
@@ -522,7 +522,7 @@ public class CompositeCacheManager
     {
         log.debug( "attr = {0}", attr );
 
-        return (CompositeCache<K, V>) caches.computeIfAbsent(cattr.getCacheName(),
+        return (CompositeCache<K, V>) caches.computeIfAbsent(cattr.cacheName(),
                 cacheName -> {
             final CompositeCacheConfigurator configurator = newConfigurator();
             return configurator.parseRegion( getConfigurationProperties(), this, cacheName,
@@ -551,8 +551,7 @@ public class CompositeCacheManager
      */
     public <K, V> CompositeCache<K, V> getCache( final String cacheName, final ICompositeCacheAttributes cattr )
     {
-        cattr.setCacheName( cacheName );
-        return getCache( cattr, getDefaultElementAttributes() );
+        return getCache( cattr.withCacheName(cacheName), getDefaultElementAttributes() );
     }
 
     /**
@@ -565,8 +564,7 @@ public class CompositeCacheManager
      */
     public <K, V> CompositeCache<K, V>  getCache( final String cacheName, final ICompositeCacheAttributes cattr, final IElementAttributes attr )
     {
-        cattr.setCacheName( cacheName );
-        return getCache( cattr, attr );
+        return getCache( cattr.withCacheName(cacheName), attr );
     }
 
     /**
@@ -605,7 +603,7 @@ public class CompositeCacheManager
      */
     public ICompositeCacheAttributes getDefaultCacheAttributes()
     {
-        return this.defaultCacheAttr.clone();
+        return this.defaultCacheAttr;
     }
 
     /**

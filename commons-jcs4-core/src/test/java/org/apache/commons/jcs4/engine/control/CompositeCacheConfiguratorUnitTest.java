@@ -90,6 +90,6 @@ class CompositeCacheConfiguratorUnitTest
 
         // VERIFY
         final CompositeCache<String, String> cache = manager.getCache( regionName );
-        assertEquals( cache.getCacheAttributes().getSpoolChunkSize(), chunkSize, "Wrong chunkSize" );
+        assertEquals( cache.getCacheAttributes().spoolChunkSize(), chunkSize, "Wrong chunkSize" );
     }
 }

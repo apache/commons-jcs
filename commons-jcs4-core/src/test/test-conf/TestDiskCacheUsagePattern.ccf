@@ -28,13 +28,13 @@ jcs.region.Swap=indexedDiskCache
 jcs.region.Swap.cacheattributes=org.apache.commons.jcs4.engine.CompositeCacheAttributes
 jcs.region.Swap.cacheattributes.MaxObjects=100
 jcs.region.Swap.cacheattributes.MemoryCacheName=org.apache.commons.jcs4.engine.memory.lru.LRUMemoryCache
-jcs.region.Swap.cacheattributes.DiskUsagePatternName=SWAP
+jcs.region.Swap.cacheattributes.DiskUsagePattern=SWAP
 
 jcs.region.Update=indexedDiskCache
 jcs.region.Update.cacheattributes=org.apache.commons.jcs4.engine.CompositeCacheAttributes
 jcs.region.Update.cacheattributes.MaxObjects=100
 jcs.region.Update.cacheattributes.MemoryCacheName=org.apache.commons.jcs4.engine.memory.lru.LRUMemoryCache
-jcs.region.Update.cacheattributes.DiskUsagePatternName=UPDATE
+jcs.region.Update.cacheattributes.DiskUsagePattern=UPDATE
 
 
 # #### AUXILIARY CACHES

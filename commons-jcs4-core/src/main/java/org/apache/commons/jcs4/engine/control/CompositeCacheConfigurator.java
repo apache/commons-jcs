@@ -27,6 +27,7 @@ import org.apache.commons.jcs4.auxiliary.AuxiliaryCache;
 import org.apache.commons.jcs4.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.commons.jcs4.auxiliary.AuxiliaryCacheConfigurator;
 import org.apache.commons.jcs4.auxiliary.AuxiliaryCacheFactory;
+import org.apache.commons.jcs4.engine.CompositeCacheAttributes;
 import org.apache.commons.jcs4.engine.behavior.ICache;
 import org.apache.commons.jcs4.engine.behavior.ICompositeCacheAttributes;
 import org.apache.commons.jcs4.engine.behavior.IElementAttributes;
@@ -36,6 +37,7 @@ import org.apache.commons.jcs4.engine.logging.behavior.ICacheEventLogger;
 import org.apache.commons.jcs4.engine.match.KeyMatcherPatternImpl;
 import org.apache.commons.jcs4.engine.match.behavior.IKeyMatcher;
 import org.apache.commons.jcs4.log.Log;
+import org.apache.commons.jcs4.utils.config.ConfigurationBuilder;
 import org.apache.commons.jcs4.utils.config.OptionConverter;
 import org.apache.commons.jcs4.utils.config.PropertySetter;
 
@@ -244,28 +246,24 @@ public class CompositeCacheConfigurator
     protected ICompositeCacheAttributes parseCompositeCacheAttributes( final Properties props,
             final String regName, final ICompositeCacheAttributes defaultCCAttr, final String regionPrefix )
     {
-        ICompositeCacheAttributes ccAttr;
-
-        final String attrName = regionPrefix + regName + CACHE_ATTRIBUTE_PREFIX;
-
-        // auxFactory was not previously initialized.
-        // String prefix = regionPrefix + regName + ATTRIBUTE_PREFIX;
-        ccAttr = OptionConverter.instantiateByKey( props, attrName, null );
-
-        if ( ccAttr == null )
+        final String prefix = regionPrefix + regName + CACHE_ATTRIBUTE_PREFIX;
+        Class<? extends ICompositeCacheAttributes> attributeClass = OptionConverter.findClassByKey(props, prefix);
+        if (attributeClass == null)
         {
-            log.info( "No special CompositeCacheAttributes class defined for "
-                    + "key [{0}], using default class.", attrName );
-
-            ccAttr = defaultCCAttr;
+            log.debug("Using default composite cache attributes class for region \"{0}\"", regName);
+            attributeClass = CompositeCacheAttributes.class;
         }
 
-        log.debug( "Parsing options for \"{0}\"", attrName );
+        log.debug("Parsing options for \"{0}\"", prefix);
 
-        PropertySetter.setProperties( ccAttr, props, attrName + "." );
-        ccAttr.setCacheName( regName );
+        ICompositeCacheAttributes ccAttr = ConfigurationBuilder.create(attributeClass,
+                // FIXME: This is probably a bug, but SystemPropertyUnitTest relies on it.
+                /* defaultCCAttr */ CompositeCacheAttributes.defaults())
+                .fromProperties(props, prefix)
+                .build()
+                .withCacheName( regName );
 
-        log.debug( "End of parsing for \"{0}\"", attrName );
+        log.debug("End of parsing for \"{0}\"", prefix);
         return ccAttr;
     }
 

@@ -109,9 +109,9 @@ class CacheAccessUnitTest
         final String keyprefix1 = "MyPrefix1";
         final String keyprefix2 = "MyPrefix2";
         final String memoryCacheClassName = "org.apache.commons.jcs4.engine.memory.lru.LRUMemoryCache";
-        final CompositeCacheAttributes cattr = new CompositeCacheAttributes();
-        cattr.setMemoryCacheName( memoryCacheClassName );
-        cattr.setMaxObjects( maxMemorySize );
+        final CompositeCacheAttributes cattr = CompositeCacheAttributes.defaults()
+                .withMemoryCacheName( memoryCacheClassName )
+                .withMaxObjects(maxMemorySize);
 
         final long maxLife = 9876;
         final ElementAttributes attr = new ElementAttributes();
@@ -164,9 +164,9 @@ class CacheAccessUnitTest
         final String keyprefix1 = "MyPrefix1";
         final String keyprefix2 = "MyPrefix2";
         final String memoryCacheClassName = "org.apache.commons.jcs4.engine.memory.lru.LRUMemoryCache";
-        final CompositeCacheAttributes cattr = new CompositeCacheAttributes();
-        cattr.setMemoryCacheName( memoryCacheClassName );
-        cattr.setMaxObjects( maxMemorySize );
+        final CompositeCacheAttributes cattr = CompositeCacheAttributes.defaults()
+                .withMemoryCacheName( memoryCacheClassName )
+                .withMaxObjects(maxMemorySize);
 
         final long maxLife = 9876;
         final ElementAttributes attr = new ElementAttributes();
@@ -309,16 +309,15 @@ class CacheAccessUnitTest
     void testRegionDefinitonWithAttributes()
         throws Exception
     {
-        final CompositeCacheAttributes ca = new CompositeCacheAttributes();
-
         final long maxIdleTime = 8765;
-        ca.setMaxMemoryIdleTimeSeconds( maxIdleTime );
+        final CompositeCacheAttributes ca = CompositeCacheAttributes.defaults()
+                .withMaxMemoryIdleTimeSeconds(maxIdleTime);
 
         final CacheAccess<String, String> access = JCS.getInstance( "testRegionDefinitonWithAttributes", ca );
         assertNotNull( access, "We should have an access class" );
 
         final ICompositeCacheAttributes ca2 = access.getCacheAttributes();
-        assertEquals( ca.getMaxMemoryIdleTimeSeconds(), ca2.getMaxMemoryIdleTimeSeconds(), "Wrong idle time setting." );
+        assertEquals( ca.maxMemoryIdleTimeSeconds(), ca2.maxMemoryIdleTimeSeconds(), "Wrong idle time setting." );
     }
 
     /**
@@ -330,10 +329,9 @@ class CacheAccessUnitTest
     void testRegionDefinitonWithBothAttributes()
         throws Exception
     {
-        final CompositeCacheAttributes ca = new CompositeCacheAttributes();
-
         final long maxIdleTime = 8765;
-        ca.setMaxMemoryIdleTimeSeconds( maxIdleTime );
+        final CompositeCacheAttributes ca = CompositeCacheAttributes.defaults()
+                .withMaxMemoryIdleTimeSeconds(maxIdleTime);
 
         final long maxLife = 9876;
         final ElementAttributes attr = new ElementAttributes();
@@ -343,7 +341,7 @@ class CacheAccessUnitTest
         assertNotNull( access, "We should have an access class" );
 
         final ICompositeCacheAttributes ca2 = access.getCacheAttributes();
-        assertEquals( ca.getMaxMemoryIdleTimeSeconds(), ca2.getMaxMemoryIdleTimeSeconds(), "Wrong idle time setting." );
+        assertEquals( ca.maxMemoryIdleTimeSeconds(), ca2.maxMemoryIdleTimeSeconds(), "Wrong idle time setting." );
     }
 
     /**

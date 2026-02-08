@@ -59,7 +59,7 @@ public class ShrinkerThread<K, V>
     {
         this.cache = cache;
 
-        final long maxMemoryIdleTimeSeconds = cache.getCacheAttributes().getMaxMemoryIdleTimeSeconds();
+        final long maxMemoryIdleTimeSeconds = cache.getCacheAttributes().maxMemoryIdleTimeSeconds();
 
         if ( maxMemoryIdleTimeSeconds < 0 )
         {
@@ -70,7 +70,7 @@ public class ShrinkerThread<K, V>
             this.maxMemoryIdleTime = maxMemoryIdleTimeSeconds * 1000;
         }
 
-        this.maxSpoolPerRun = cache.getCacheAttributes().getMaxSpoolPerRun();
+        this.maxSpoolPerRun = cache.getCacheAttributes().maxSpoolPerRun();
         if ( this.maxSpoolPerRun != -1 )
         {
             this.spoolLimit = true;

@@ -61,7 +61,7 @@ class LHMLRUMemoryCacheUnitTest
     {
         final CacheAccess<String, String> cache = JCS.getInstance( "testClearThroughHub" );
 
-        final int max = cache.getCacheAttributes().getMaxObjects();
+        final int max = cache.getCacheAttributes().maxObjects();
         final int items = max * 2;
 
         for ( int i = 0; i < items; i++ )
@@ -96,7 +96,7 @@ class LHMLRUMemoryCacheUnitTest
         final LHMLRUMemoryCache<String, String> mru = new LHMLRUMemoryCache<>();
         mru.initialize( cache );
 
-        final int max = cache.getCacheAttributes().getMaxObjects();
+        final int max = cache.getCacheAttributes().maxObjects();
         final int items = max / 2;
 
         for ( int i = 0; i < items; i++ )
@@ -122,7 +122,7 @@ class LHMLRUMemoryCacheUnitTest
     {
         final CacheAccess<String, String> cache = JCS.getInstance( "testGetStatsThroughHub" );
 
-        final int max = cache.getCacheAttributes().getMaxObjects();
+        final int max = cache.getCacheAttributes().maxObjects();
         final int items = max * 2;
 
         for ( int i = 0; i < items; i++ )
@@ -149,7 +149,7 @@ class LHMLRUMemoryCacheUnitTest
         throws CacheException
     {
         final CacheAccess<String, String> cache = JCS.getInstance( "testLoadFromCCF" );
-        final String memoryCacheName = cache.getCacheAttributes().getMemoryCacheName();
+        final String memoryCacheName = cache.getCacheAttributes().memoryCacheName();
         assertTrue( memoryCacheName.indexOf( "LHMLRUMemoryCache" ) != -1, "Cache name should have LHMLRU in it." );
     }
 
@@ -164,7 +164,7 @@ class LHMLRUMemoryCacheUnitTest
     {
         final CacheAccess<String, String> cache = JCS.getInstance( "testPutGetThroughHub" );
 
-        final int max = cache.getCacheAttributes().getMaxObjects();
+        final int max = cache.getCacheAttributes().maxObjects();
         final int items = max * 2;
 
         for ( int i = 0; i < items; i++ )
@@ -219,7 +219,7 @@ class LHMLRUMemoryCacheUnitTest
     {
         final CacheAccess<String, String> cache = JCS.getInstance( "testPutGetThroughHubTwice" );
 
-        final int max = cache.getCacheAttributes().getMaxObjects();
+        final int max = cache.getCacheAttributes().maxObjects();
         final int items = max * 2;
 
         for ( int i = 0; i < items; i++ )
@@ -260,7 +260,7 @@ class LHMLRUMemoryCacheUnitTest
     {
         final CacheAccess<String, String> cache = JCS.getInstance( "testPutRemoveThroughHub" );
 
-        final int max = cache.getCacheAttributes().getMaxObjects();
+        final int max = cache.getCacheAttributes().maxObjects();
         final int items = max * 2;
 
         for ( int i = 0; i < items; i++ )
@@ -292,7 +292,7 @@ class LHMLRUMemoryCacheUnitTest
     {
         final CacheAccess<String, String> cache = JCS.getInstance( "testRemovePartialThroughHub" );
 
-        final int max = cache.getCacheAttributes().getMaxObjects();
+        final int max = cache.getCacheAttributes().maxObjects();
         final int items = max / 2;
 
         cache.put( "test", "data" );

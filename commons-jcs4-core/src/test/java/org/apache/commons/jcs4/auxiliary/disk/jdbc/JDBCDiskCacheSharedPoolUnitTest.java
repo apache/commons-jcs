@@ -68,7 +68,6 @@ public class JDBCDiskCacheSharedPoolUnitTest
         for ( int i = 0; i < items; i++ )
         {
             final String value = jcs.get( i + ":key" );
-
             assertEquals( region + " data " + i, value, "key = [" + i + ":key] value = [" + value + "]" );
         }
 

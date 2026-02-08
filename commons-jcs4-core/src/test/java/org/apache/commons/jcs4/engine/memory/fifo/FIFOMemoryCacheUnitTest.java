@@ -46,10 +46,10 @@ class FIFOMemoryCacheUnitTest
         final int maxObjects = 10;
         final String cacheName = "testExpirationPolicy_oneExtra";
 
-        final CompositeCacheAttributes attributes = new CompositeCacheAttributes();
-        attributes.setCacheName(cacheName);
-        attributes.setMaxObjects( maxObjects );
-        attributes.setSpoolChunkSize( 1 );
+        final CompositeCacheAttributes attributes = CompositeCacheAttributes.defaults()
+                .withCacheName(cacheName)
+                .withMaxObjects(maxObjects)
+                .withSpoolChunkSize(1);
 
         final FIFOMemoryCache<String, String> cache = new FIFOMemoryCache<>();
         cache.initialize( new CompositeCache<>( attributes, new ElementAttributes() ) );
@@ -82,10 +82,10 @@ class FIFOMemoryCacheUnitTest
         final int maxObjects = 10;
         final String cacheName = "testExpirationPolicy_oneExtra";
 
-        final CompositeCacheAttributes attributes = new CompositeCacheAttributes();
-        attributes.setCacheName(cacheName);
-        attributes.setMaxObjects( maxObjects );
-        attributes.setSpoolChunkSize( 1 );
+        final CompositeCacheAttributes attributes = CompositeCacheAttributes.defaults()
+                .withCacheName(cacheName)
+                .withMaxObjects(maxObjects)
+                .withSpoolChunkSize(1);
 
         final FIFOMemoryCache<String, String> cache = new FIFOMemoryCache<>();
         cache.initialize( new CompositeCache<>( attributes, new ElementAttributes() ) );

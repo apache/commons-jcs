@@ -72,7 +72,7 @@ class SoftReferenceMemoryCacheUnitTest
     {
         final CacheAccess<String, String> cache = JCS.getInstance( "testPutGetThroughHub" );
 
-        final int max = cache.getCacheAttributes().getMaxObjects();
+        final int max = cache.getCacheAttributes().maxObjects();
         final int items = max * 2;
 
         for ( int i = 0; i < items; i++ )
@@ -107,7 +107,7 @@ class SoftReferenceMemoryCacheUnitTest
         final SoftReferenceMemoryCache<String, String> srmc = new SoftReferenceMemoryCache<>();
         srmc.initialize( cache );
 
-        final int max = cache.getCacheAttributes().getMaxObjects();
+        final int max = cache.getCacheAttributes().maxObjects();
         final int items = max / 2;
 
         for ( int i = 0; i < items; i++ )
@@ -133,7 +133,7 @@ class SoftReferenceMemoryCacheUnitTest
         throws CacheException
     {
         final CacheAccess<String, String> cache = JCS.getInstance( "testPutGet" );
-        final String memoryCacheName = cache.getCacheAttributes().getMemoryCacheName();
+        final String memoryCacheName = cache.getCacheAttributes().memoryCacheName();
         assertTrue( memoryCacheName.indexOf( "SoftReferenceMemoryCache" ) != -1,
                     "Cache name should have SoftReference in it." );
     }
@@ -149,7 +149,7 @@ class SoftReferenceMemoryCacheUnitTest
     {
         final CacheAccess<String, String> cache = JCS.getInstance( "testPutGetThroughHub" );
 
-        final int max = cache.getCacheAttributes().getMaxObjects();
+        final int max = cache.getCacheAttributes().maxObjects();
         final int items = max * 2;
 
         for ( int i = 0; i < items; i++ )
@@ -193,7 +193,7 @@ class SoftReferenceMemoryCacheUnitTest
     {
         final CacheAccess<String, String> cache = JCS.getInstance( "testPutGetThroughHub" );
 
-        final int max = cache.getCacheAttributes().getMaxObjects();
+        final int max = cache.getCacheAttributes().maxObjects();
         final int items = max * 2;
 
         for ( int i = 0; i < items; i++ )
@@ -225,7 +225,7 @@ class SoftReferenceMemoryCacheUnitTest
     {
         final CacheAccess<String, String> cache = JCS.getInstance( "testGetStatsThroughHub" );
 
-        final int max = cache.getCacheAttributes().getMaxObjects();
+        final int max = cache.getCacheAttributes().maxObjects();
         final int items = max / 2;
 
         cache.put( "test", "data" );

@@ -28,11 +28,46 @@ import org.apache.commons.jcs4.engine.behavior.ICompositeCacheAttributes;
  * If all the default attributes are not defined in the default region definition in the cache.ccf,
  * the hard coded defaults will be used.
  */
-public class CompositeCacheAttributes
-    implements ICompositeCacheAttributes
+public record CompositeCacheAttributes(
+        /** The name of this cache region. */
+        String cacheName,
+
+        /** The maximum objects that the memory cache will be allowed to hold. */
+        int maxObjects,
+
+        /** Allow lateral caches */
+        boolean useLateral,
+
+        /** Whether we should use a disk cache if it is configured. */
+        boolean useDisk,
+
+        /** Whether or not we should run the memory shrinker thread. */
+        boolean useMemoryShrinker,
+
+        /** ShrinkerIntervalSeconds */
+        long shrinkerIntervalSeconds,
+
+        /** The maximum number the shrinker will spool to disk per run. */
+        int maxSpoolPerRun,
+
+        /** MaxMemoryIdleTimeSeconds */
+        long maxMemoryIdleTimeSeconds,
+
+        /** The name of the memory cache implementation class. */
+        String memoryCacheName,
+
+        /** Set via DISK_USAGE_PATTERN_NAME */
+        DiskUsagePattern diskUsagePattern,
+
+        /** How many to spool to disk at a time. */
+        int spoolChunkSize
+) implements ICompositeCacheAttributes
 {
     /** Don't change */
     private static final long serialVersionUID = 6754049978134196787L;
+
+    /** Default max objects value */
+    private static final int DEFAULT_MAX_OBJECTS = 100;
 
     /** Default lateral switch */
     private static final boolean DEFAULT_USE_LATERAL = true;
@@ -43,12 +78,6 @@ public class CompositeCacheAttributes
     /** Default shrinker setting */
     private static final boolean DEFAULT_USE_SHRINKER = false;
 
-    /** Default max objects value */
-    private static final int DEFAULT_MAX_OBJECTS = 100;
-
-    /** Default */
-    private static final int DEFAULT_MAX_MEMORY_IDLE_TIME_SECONDS = 60 * 120;
-
     /** Default interval to run the shrinker */
     private static final int DEFAULT_SHRINKER_INTERVAL_SECONDS = 30;
 
@@ -56,326 +85,177 @@ public class CompositeCacheAttributes
     private static final int DEFAULT_MAX_SPOOL_PER_RUN = -1;
 
     /** Default */
+    private static final int DEFAULT_MAX_MEMORY_IDLE_TIME_SECONDS = 60 * 120;
+
+    /** Default */
     private static final String DEFAULT_MEMORY_CACHE_NAME = "org.apache.commons.jcs4.engine.memory.lru.LRUMemoryCache";
 
     /** Default number to send to disk at a time when memory fills. */
     private static final int DEFAULT_CHUNK_SIZE = 2;
 
-    /** Allow lateral caches */
-    private boolean useLateral = DEFAULT_USE_LATERAL;
-
-    /** Whether we should use a disk cache if it is configured. */
-    private boolean useDisk = DEFAULT_USE_DISK;
-
-    /** Whether or not we should run the memory shrinker thread. */
-    private boolean useMemoryShrinker = DEFAULT_USE_SHRINKER;
-
-    /** The maximum objects that the memory cache will be allowed to hold. */
-    private int maxObjs = DEFAULT_MAX_OBJECTS;
-
-    /** MaxMemoryIdleTimeSeconds */
-    private long maxMemoryIdleTimeSeconds = DEFAULT_MAX_MEMORY_IDLE_TIME_SECONDS;
-
-    /** ShrinkerIntervalSeconds */
-    private long shrinkerIntervalSeconds = DEFAULT_SHRINKER_INTERVAL_SECONDS;
-
-    /** The maximum number the shrinker will spool to disk per run. */
-    private int maxSpoolPerRun = DEFAULT_MAX_SPOOL_PER_RUN;
-
-    /** The name of this cache region. */
-    private String cacheName;
-
-    /** The name of the memory cache implementation class. */
-    private String memoryCacheName;
-
-    /** Set via DISK_USAGE_PATTERN_NAME */
-    private DiskUsagePattern diskUsagePattern = DiskUsagePattern.SWAP;
-
-    /** How many to spool to disk at a time. */
-    private int spoolChunkSize = DEFAULT_CHUNK_SIZE;
+    /** Record with all defaults set */
+    private static final CompositeCacheAttributes DEFAULT = new CompositeCacheAttributes(
+            null,
+            DEFAULT_MAX_OBJECTS,
+            DEFAULT_USE_LATERAL,
+            DEFAULT_USE_DISK,
+            DEFAULT_USE_SHRINKER,
+            DEFAULT_SHRINKER_INTERVAL_SECONDS,
+            DEFAULT_MAX_SPOOL_PER_RUN,
+            DEFAULT_MAX_MEMORY_IDLE_TIME_SECONDS,
+            DEFAULT_MEMORY_CACHE_NAME,
+            DiskUsagePattern.SWAP,
+            DEFAULT_CHUNK_SIZE
+          );
 
     /**
-     * Constructor for the CompositeCacheAttributes object
+     * @return an object containing the default settings
      */
-    public CompositeCacheAttributes()
+    public static CompositeCacheAttributes defaults()
     {
-        // set this as the default so the configuration is a bit simpler
-        memoryCacheName = DEFAULT_MEMORY_CACHE_NAME;
+        return DEFAULT;
     }
 
     /**
-     * @see Object#clone()
+     * Sets the name of the cache, referenced by the appropriate manager.
+     *
+     * @param s
+     *            The new cacheName value
      */
     @Override
-    public ICompositeCacheAttributes clone()
+    public CompositeCacheAttributes withCacheName(String s)
     {
-        try
-        {
-            return (ICompositeCacheAttributes)super.clone();
-        }
-        catch (final CloneNotSupportedException e)
-        {
-            throw new IllegalStateException("Clone not supported. This should never happen.", e);
-        }
+        return new CompositeCacheAttributes(s,
+                maxObjects(),
+                useLateral(),
+                useDisk(),
+                useMemoryShrinker(),
+                shrinkerIntervalSeconds(),
+                maxSpoolPerRun(),
+                maxMemoryIdleTimeSeconds(),
+                memoryCacheName(),
+                diskUsagePattern(),
+                spoolChunkSize());
     }
 
     /**
-     * Gets the cacheName attribute of the CompositeCacheAttributes object
+     * Sets the size of the cache.
      *
-     * @return The cacheName value
+     * @param maxObjects the new maxObjects value
      */
-    @Override
-    public String getCacheName()
+    public CompositeCacheAttributes withMaxObjects(int maxObjects)
     {
-        return this.cacheName;
+        return new CompositeCacheAttributes(cacheName(),
+                maxObjects,
+                useLateral(),
+                useDisk(),
+                useMemoryShrinker(),
+                shrinkerIntervalSeconds(),
+                maxSpoolPerRun(),
+                maxMemoryIdleTimeSeconds(),
+                memoryCacheName(),
+                diskUsagePattern(),
+                spoolChunkSize());
     }
 
     /**
-     * @return the diskUsagePattern.
-     */
-    @Override
-    public DiskUsagePattern getDiskUsagePattern()
-    {
-        return diskUsagePattern;
-    }
-
-    /**
-     * If UseMemoryShrinker is true the memory cache should auto-expire elements to reclaim space.
+     * Sets the maximum number of elements to spool per shrinker run.
      *
-     * @return The MaxMemoryIdleTimeSeconds value
+     * @param maxSpoolPerRun the new maxSpoolPerRun value
      */
-    @Override
-    public long getMaxMemoryIdleTimeSeconds()
+    public CompositeCacheAttributes withMaxSpoolPerRun(int maxSpoolPerRun)
     {
-        return this.maxMemoryIdleTimeSeconds;
+        return new CompositeCacheAttributes(cacheName(),
+                maxObjects(),
+                useLateral(),
+                useDisk(),
+                useMemoryShrinker(),
+                shrinkerIntervalSeconds(),
+                maxSpoolPerRun,
+                maxMemoryIdleTimeSeconds(),
+                memoryCacheName(),
+                diskUsagePattern(),
+                spoolChunkSize());
     }
 
     /**
-     * Gets the maxObjects attribute of the CompositeCacheAttributes object
+     * Sets the maximum memory idle-time in seconds of the cache.
      *
-     * @return The maxObjects value
+     * @param maxMemoryIdleTimeSeconds the new maxMemoryIdleTimeSeconds value
      */
-    @Override
-    public int getMaxObjects()
+    public CompositeCacheAttributes withMaxMemoryIdleTimeSeconds(long maxMemoryIdleTimeSeconds)
     {
-        return this.maxObjs;
+        return new CompositeCacheAttributes(cacheName(),
+                maxObjects(),
+                useLateral(),
+                useDisk(),
+                useMemoryShrinker(),
+                shrinkerIntervalSeconds(),
+                maxSpoolPerRun(),
+                maxMemoryIdleTimeSeconds,
+                memoryCacheName(),
+                diskUsagePattern(),
+                spoolChunkSize());
     }
 
     /**
-     * If UseMemoryShrinker is true the memory cache should auto-expire elements to reclaim space.
-     * This gets the maximum number of items to spool per run.
+     * Sets the memory cache name of the cache.
      *
-     * @return The maxSpoolPerRun value
+     * @param memoryCacheName the new memoryCacheName value
      */
-    @Override
-    public int getMaxSpoolPerRun()
+    public CompositeCacheAttributes withMemoryCacheName(String memoryCacheName)
     {
-        return this.maxSpoolPerRun;
+        return new CompositeCacheAttributes(cacheName(),
+                maxObjects(),
+                useLateral(),
+                useDisk(),
+                useMemoryShrinker(),
+                shrinkerIntervalSeconds(),
+                maxSpoolPerRun(),
+                maxMemoryIdleTimeSeconds(),
+                memoryCacheName,
+                diskUsagePattern(),
+                spoolChunkSize());
     }
 
     /**
-     * Gets the memoryCacheName attribute of the CompositeCacheAttributes object
+     * Sets the disk usage pattern of the cache.
      *
-     * @return The memoryCacheName value
+     * @param diskUsagePattern the new diskUsagePattern value
      */
-    @Override
-    public String getMemoryCacheName()
+    public CompositeCacheAttributes withDiskUsagePattern(DiskUsagePattern diskUsagePattern)
     {
-        return this.memoryCacheName;
+        return new CompositeCacheAttributes(cacheName(),
+                maxObjects(),
+                useLateral(),
+                useDisk(),
+                useMemoryShrinker(),
+                shrinkerIntervalSeconds(),
+                maxSpoolPerRun(),
+                maxMemoryIdleTimeSeconds(),
+                memoryCacheName(),
+                diskUsagePattern,
+                spoolChunkSize());
     }
 
     /**
-     * If UseMemoryShrinker is true the memory cache should auto-expire elements to reclaim space.
-     * This gets the shrinker interval.
+     * Sets the spool chunk size of the cache.
      *
-     * @return The ShrinkerIntervalSeconds value
+     * @param spoolChunkSize the new spoolChunkSize value
      */
-    @Override
-    public long getShrinkerIntervalSeconds()
+    public CompositeCacheAttributes withSpoolChunkSize(int spoolChunkSize)
     {
-        return this.shrinkerIntervalSeconds;
-    }
-
-    /**
-     * Number to send to disk at the time when memory is full.
-     *
-     * @return int
-     */
-    @Override
-    public int getSpoolChunkSize()
-    {
-        return spoolChunkSize;
-    }
-
-    /**
-     * Gets the useDisk attribute of the CompositeCacheAttributes object
-     *
-     * @return The useDisk value
-     */
-    @Override
-    public boolean isUseDisk()
-    {
-        return useDisk;
-    }
-
-    /**
-     * Gets the useLateral attribute of the CompositeCacheAttributes object
-     *
-     * @return The useLateral value
-     */
-    @Override
-    public boolean isUseLateral()
-    {
-        return this.useLateral;
-    }
-
-    /**
-     * Tests whether the memory cache should perform background memory shrinkage.
-     *
-     * @return The UseMemoryShrinker value
-     */
-    @Override
-    public boolean isUseMemoryShrinker()
-    {
-        return this.useMemoryShrinker;
-    }
-
-    /**
-     * Sets the cacheName attribute of the CompositeCacheAttributes object
-     *
-     * @param s The new cacheName value
-     */
-    @Override
-    public void setCacheName( final String s )
-    {
-        this.cacheName = s;
-    }
-
-    /**
-     * By default this is SWAP_ONLY.
-     *
-     * @param diskUsagePattern The diskUsagePattern to set.
-     */
-    public void setDiskUsagePattern( final DiskUsagePattern diskUsagePattern )
-    {
-        this.diskUsagePattern = diskUsagePattern;
-    }
-
-    /**
-     * Translates the name to the disk usage pattern short value.
-     * <p>
-     * The allowed values are SWAP and UPDATE.
-     *
-     * @param diskUsagePatternName The diskUsagePattern to set.
-     */
-    public void setDiskUsagePatternName( final String diskUsagePatternName )
-    {
-        if ( diskUsagePatternName != null )
-        {
-            final String name = diskUsagePatternName.toUpperCase().trim();
-            if ( name.startsWith( "SWAP" ) )
-            {
-                setDiskUsagePattern( DiskUsagePattern.SWAP );
-            }
-            else if ( name.startsWith( "UPDATE" ) )
-            {
-                setDiskUsagePattern( DiskUsagePattern.UPDATE );
-            }
-        }
-    }
-
-    /**
-     * If UseMemoryShrinker is true the memory cache should auto-expire elements to reclaim space.
-     *
-     * @param seconds The new MaxMemoryIdleTimeSeconds value
-     */
-    public void setMaxMemoryIdleTimeSeconds( final long seconds )
-    {
-        this.maxMemoryIdleTimeSeconds = seconds;
-    }
-
-    /**
-     * Sets the maxObjects attribute of the CompositeCacheAttributes object
-     *
-     * @param maxObjs The new maxObjects value
-     */
-    public void setMaxObjects( final int maxObjs )
-    {
-        this.maxObjs = maxObjs;
-    }
-
-    /**
-     * If UseMemoryShrinker is true the memory cache should auto-expire elements to reclaim space.
-     * This sets the maximum number of items to spool per run.
-     * <p>
-     * If the value is -1, then there is no limit to the number of items to be spooled.
-     *
-     * @param maxSpoolPerRun The new maxSpoolPerRun value
-     */
-    public void setMaxSpoolPerRun( final int maxSpoolPerRun )
-    {
-        this.maxSpoolPerRun = maxSpoolPerRun;
-    }
-
-    /**
-     * Sets the memoryCacheName attribute of the CompositeCacheAttributes object
-     *
-     * @param s The new memoryCacheName value
-     */
-    public void setMemoryCacheName( final String s )
-    {
-        this.memoryCacheName = s;
-    }
-
-    /**
-     * If UseMemoryShrinker is true the memory cache should auto-expire elements to reclaim space.
-     * This sets the shrinker interval.
-     *
-     * @param seconds The new ShrinkerIntervalSeconds value
-     */
-    public void setShrinkerIntervalSeconds( final long seconds )
-    {
-        this.shrinkerIntervalSeconds = seconds;
-    }
-
-    /**
-     * Number to send to disk at a time.
-     *
-     * @param spoolChunkSize
-     */
-    public void setSpoolChunkSize( final int spoolChunkSize )
-    {
-        this.spoolChunkSize = spoolChunkSize;
-    }
-
-    /**
-     * Sets the useDisk attribute of the CompositeCacheAttributes object
-     *
-     * @param useDisk The new useDisk value
-     */
-    public void setUseDisk( final boolean useDisk )
-    {
-        this.useDisk = useDisk;
-    }
-
-    /**
-     * Sets the useLateral attribute of the CompositeCacheAttributes object
-     *
-     * @param b The new useLateral value
-     */
-    public void setUseLateral( final boolean b )
-    {
-        this.useLateral = b;
-    }
-
-    /**
-     * Sets whether the memory cache should perform background memory shrinkage.
-     *
-     * @param useShrinker The new UseMemoryShrinker value
-     */
-    public void setUseMemoryShrinker( final boolean useShrinker )
-    {
-        this.useMemoryShrinker = useShrinker;
+        return new CompositeCacheAttributes(cacheName(),
+                maxObjects(),
+                useLateral(),
+                useDisk(),
+                useMemoryShrinker(),
+                shrinkerIntervalSeconds(),
+                maxSpoolPerRun(),
+                maxMemoryIdleTimeSeconds(),
+                memoryCacheName(),
+                diskUsagePattern(),
+                spoolChunkSize);
     }
 
     /**
@@ -391,7 +271,7 @@ public class CompositeCacheAttributes
         dump.append( "[ " );
         dump.append( "useLateral = " ).append( useLateral );
         dump.append( ", useDisk = " ).append( useDisk );
-        dump.append( ", maxObjs = " ).append( maxObjs );
+        dump.append( ", maxObjs = " ).append( maxObjects );
         dump.append( ", maxSpoolPerRun = " ).append( maxSpoolPerRun );
         dump.append( ", diskUsagePattern = " ).append( diskUsagePattern );
         dump.append( ", spoolChunkSize = " ).append( spoolChunkSize );

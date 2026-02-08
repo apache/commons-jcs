@@ -178,7 +178,7 @@ public abstract class AbstractMemoryCache<K, V>
      */
     public String getCacheName()
     {
-        final String attributeCacheName = this.cacheAttributes.getCacheName();
+        final String attributeCacheName = this.cacheAttributes.cacheName();
         if(attributeCacheName != null)
         {
             return attributeCacheName;
@@ -317,7 +317,7 @@ public abstract class AbstractMemoryCache<K, V>
         putCnt = new AtomicLong();
 
         this.cacheAttributes = hub.getCacheAttributes();
-        this.chunkSize = cacheAttributes.getSpoolChunkSize();
+        this.chunkSize = cacheAttributes.spoolChunkSize();
         this.cache = hub;
 
         this.map = createMap();

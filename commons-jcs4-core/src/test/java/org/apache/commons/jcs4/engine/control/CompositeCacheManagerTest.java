@@ -39,7 +39,7 @@ class CompositeCacheManagerTest
         // create the manager
         final CompositeCacheManager manager = CompositeCacheManager.getInstance();
         // add a simple cache
-        final CompositeCacheAttributes cacheAttributes = new CompositeCacheAttributes();
+        final CompositeCacheAttributes cacheAttributes = CompositeCacheAttributes.defaults();
         final CompositeCache<String, String> cache = new CompositeCache<>(cacheAttributes, /* attr */ null);
         manager.addCache("simple_cache", cache);
         // add a client to the cache

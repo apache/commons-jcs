@@ -78,7 +78,7 @@ class SystemPropertyUsageUnitTest
 
         manager = CompositeCacheManager.getInstance();
 
-        assertEquals( testValue, jcs.getCacheAttributes().getMaxObjects(), "System property value is not reflected." );
+        assertEquals( testValue, jcs.getCacheAttributes().maxObjects(), "System property value is not reflected." );
     }
 
     /**
@@ -101,7 +101,7 @@ class SystemPropertyUsageUnitTest
         final CacheAccess<String, String> jcs = JCS.getInstance( "someCacheNotInFile" );
 
         assertEquals( Integer.parseInt( props.getProperty( JCS_DEFAULT_CACHEATTRIBUTES_MAX_OBJECTS ) ),
-                      jcs.getCacheAttributes().getMaxObjects(),
+                      jcs.getCacheAttributes().maxObjects(),
                       "System property value should not be reflected" );
     }
 }
