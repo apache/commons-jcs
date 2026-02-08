@@ -271,7 +271,7 @@ public record CompositeCacheAttributes(
         dump.append( "[ " );
         dump.append( "useLateral = " ).append( useLateral );
         dump.append( ", useDisk = " ).append( useDisk );
-        dump.append( ", maxObjs = " ).append( maxObjects );
+        dump.append( ", maxObjects = " ).append( maxObjects );
         dump.append( ", maxSpoolPerRun = " ).append( maxSpoolPerRun );
         dump.append( ", diskUsagePattern = " ).append( diskUsagePattern );
         dump.append( ", spoolChunkSize = " ).append( spoolChunkSize );
