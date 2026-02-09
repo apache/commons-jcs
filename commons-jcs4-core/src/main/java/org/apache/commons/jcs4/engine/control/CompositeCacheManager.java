@@ -613,7 +613,7 @@ public class CompositeCacheManager
      */
     public IElementAttributes getDefaultElementAttributes()
     {
-        return new ElementAttributes(this.defaultElementAttr);
+        return this.defaultElementAttr;
     }
 
     /**

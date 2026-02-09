@@ -43,7 +43,6 @@ import org.apache.commons.jcs4.access.exception.CacheException;
 import org.apache.commons.jcs4.access.exception.ObjectNotFoundException;
 import org.apache.commons.jcs4.auxiliary.AuxiliaryCache;
 import org.apache.commons.jcs4.engine.CacheStatus;
-import org.apache.commons.jcs4.engine.ElementAttributes;
 import org.apache.commons.jcs4.engine.behavior.ICache;
 import org.apache.commons.jcs4.engine.behavior.ICacheElement;
 import org.apache.commons.jcs4.engine.behavior.ICompositeCacheAttributes;
@@ -500,18 +499,13 @@ public class CompositeCache<K, V>
     }
 
     /**
-     * Gets the default element attribute of the Cache object This returns a copy. It does not
-     * return a reference to the attributes.
+     * Gets the default element attribute of the Cache object.
      *
      * @return The attributes value
      */
     public IElementAttributes getElementAttributes()
     {
-        if (attr != null)
-        {
-            return new ElementAttributes(attr);
-        }
-        return null;
+        return attr;
     }
 
     /**
