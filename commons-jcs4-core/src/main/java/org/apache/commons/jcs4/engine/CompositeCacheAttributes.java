@@ -119,8 +119,7 @@ public record CompositeCacheAttributes(
     /**
      * Sets the name of the cache, referenced by the appropriate manager.
      *
-     * @param s
-     *            The new cacheName value
+     * @param s The new cacheName value
      */
     @Override
     public CompositeCacheAttributes withCacheName(String s)
@@ -136,126 +135,6 @@ public record CompositeCacheAttributes(
                 memoryCacheName(),
                 diskUsagePattern(),
                 spoolChunkSize());
-    }
-
-    /**
-     * Sets the size of the cache.
-     *
-     * @param maxObjects the new maxObjects value
-     */
-    public CompositeCacheAttributes withMaxObjects(int maxObjects)
-    {
-        return new CompositeCacheAttributes(cacheName(),
-                maxObjects,
-                useLateral(),
-                useDisk(),
-                useMemoryShrinker(),
-                shrinkerIntervalSeconds(),
-                maxSpoolPerRun(),
-                maxMemoryIdleTimeSeconds(),
-                memoryCacheName(),
-                diskUsagePattern(),
-                spoolChunkSize());
-    }
-
-    /**
-     * Sets the maximum number of elements to spool per shrinker run.
-     *
-     * @param maxSpoolPerRun the new maxSpoolPerRun value
-     */
-    public CompositeCacheAttributes withMaxSpoolPerRun(int maxSpoolPerRun)
-    {
-        return new CompositeCacheAttributes(cacheName(),
-                maxObjects(),
-                useLateral(),
-                useDisk(),
-                useMemoryShrinker(),
-                shrinkerIntervalSeconds(),
-                maxSpoolPerRun,
-                maxMemoryIdleTimeSeconds(),
-                memoryCacheName(),
-                diskUsagePattern(),
-                spoolChunkSize());
-    }
-
-    /**
-     * Sets the maximum memory idle-time in seconds of the cache.
-     *
-     * @param maxMemoryIdleTimeSeconds the new maxMemoryIdleTimeSeconds value
-     */
-    public CompositeCacheAttributes withMaxMemoryIdleTimeSeconds(long maxMemoryIdleTimeSeconds)
-    {
-        return new CompositeCacheAttributes(cacheName(),
-                maxObjects(),
-                useLateral(),
-                useDisk(),
-                useMemoryShrinker(),
-                shrinkerIntervalSeconds(),
-                maxSpoolPerRun(),
-                maxMemoryIdleTimeSeconds,
-                memoryCacheName(),
-                diskUsagePattern(),
-                spoolChunkSize());
-    }
-
-    /**
-     * Sets the memory cache name of the cache.
-     *
-     * @param memoryCacheName the new memoryCacheName value
-     */
-    public CompositeCacheAttributes withMemoryCacheName(String memoryCacheName)
-    {
-        return new CompositeCacheAttributes(cacheName(),
-                maxObjects(),
-                useLateral(),
-                useDisk(),
-                useMemoryShrinker(),
-                shrinkerIntervalSeconds(),
-                maxSpoolPerRun(),
-                maxMemoryIdleTimeSeconds(),
-                memoryCacheName,
-                diskUsagePattern(),
-                spoolChunkSize());
-    }
-
-    /**
-     * Sets the disk usage pattern of the cache.
-     *
-     * @param diskUsagePattern the new diskUsagePattern value
-     */
-    public CompositeCacheAttributes withDiskUsagePattern(DiskUsagePattern diskUsagePattern)
-    {
-        return new CompositeCacheAttributes(cacheName(),
-                maxObjects(),
-                useLateral(),
-                useDisk(),
-                useMemoryShrinker(),
-                shrinkerIntervalSeconds(),
-                maxSpoolPerRun(),
-                maxMemoryIdleTimeSeconds(),
-                memoryCacheName(),
-                diskUsagePattern,
-                spoolChunkSize());
-    }
-
-    /**
-     * Sets the spool chunk size of the cache.
-     *
-     * @param spoolChunkSize the new spoolChunkSize value
-     */
-    public CompositeCacheAttributes withSpoolChunkSize(int spoolChunkSize)
-    {
-        return new CompositeCacheAttributes(cacheName(),
-                maxObjects(),
-                useLateral(),
-                useDisk(),
-                useMemoryShrinker(),
-                shrinkerIntervalSeconds(),
-                maxSpoolPerRun(),
-                maxMemoryIdleTimeSeconds(),
-                memoryCacheName(),
-                diskUsagePattern(),
-                spoolChunkSize);
     }
 
     /**

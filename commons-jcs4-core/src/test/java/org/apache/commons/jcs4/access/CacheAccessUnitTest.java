@@ -36,6 +36,8 @@ import org.apache.commons.jcs4.access.exception.CacheException;
 import org.apache.commons.jcs4.access.exception.ObjectExistsException;
 import org.apache.commons.jcs4.engine.CompositeCacheAttributes;
 import org.apache.commons.jcs4.engine.ElementAttributes;
+import org.apache.commons.jcs4.engine.TestCompositeCacheAttributes;
+import org.apache.commons.jcs4.engine.TestElementAttributes;
 import org.apache.commons.jcs4.engine.behavior.ICacheElement;
 import org.apache.commons.jcs4.engine.behavior.ICompositeCacheAttributes;
 import org.junit.jupiter.api.Test;
@@ -109,13 +111,11 @@ class CacheAccessUnitTest
         final String keyprefix1 = "MyPrefix1";
         final String keyprefix2 = "MyPrefix2";
         final String memoryCacheClassName = "org.apache.commons.jcs4.engine.memory.lru.LRUMemoryCache";
-        final CompositeCacheAttributes cattr = CompositeCacheAttributes.defaults()
-                .withMemoryCacheName( memoryCacheClassName )
-                .withMaxObjects(maxMemorySize);
+        final CompositeCacheAttributes cattr = TestCompositeCacheAttributes
+                .withMemoryCacheNameAndMaxObjects(memoryCacheClassName, maxMemorySize);
 
         final long maxLife = 9876;
-        final ElementAttributes attr = ElementAttributes.defaults()
-                .withMaxLife(maxLife);
+        final ElementAttributes attr = TestElementAttributes.withEternalFalseAndMaxLife(maxLife);
 
         final CacheAccess<String, Integer> access = JCS.getInstance( "testGetMatching_Normal", cattr, attr );
 
@@ -164,13 +164,11 @@ class CacheAccessUnitTest
         final String keyprefix1 = "MyPrefix1";
         final String keyprefix2 = "MyPrefix2";
         final String memoryCacheClassName = "org.apache.commons.jcs4.engine.memory.lru.LRUMemoryCache";
-        final CompositeCacheAttributes cattr = CompositeCacheAttributes.defaults()
-                .withMemoryCacheName( memoryCacheClassName )
-                .withMaxObjects(maxMemorySize);
+        final CompositeCacheAttributes cattr = TestCompositeCacheAttributes
+                .withMemoryCacheNameAndMaxObjects(memoryCacheClassName, maxMemorySize);
 
         final long maxLife = 9876;
-        final ElementAttributes attr = ElementAttributes.defaults()
-                .withMaxLife(maxLife);
+        final ElementAttributes attr = TestElementAttributes.withEternalFalseAndMaxLife(maxLife);
 
         final CacheAccess<String, Integer> access = JCS.getInstance( "testGetMatching_Normal", cattr, attr );
 
@@ -310,7 +308,7 @@ class CacheAccessUnitTest
         throws Exception
     {
         final long maxIdleTime = 8765;
-        final CompositeCacheAttributes ca = CompositeCacheAttributes.defaults()
+        final CompositeCacheAttributes ca = TestCompositeCacheAttributes
                 .withMaxMemoryIdleTimeSeconds(maxIdleTime);
 
         final CacheAccess<String, String> access = JCS.getInstance( "testRegionDefinitonWithAttributes", ca );
@@ -330,12 +328,11 @@ class CacheAccessUnitTest
         throws Exception
     {
         final long maxIdleTime = 8765;
-        final CompositeCacheAttributes ca = CompositeCacheAttributes.defaults()
+        final CompositeCacheAttributes ca = TestCompositeCacheAttributes
                 .withMaxMemoryIdleTimeSeconds(maxIdleTime);
 
         final long maxLife = 9876;
-        final ElementAttributes attr = ElementAttributes.defaults()
-                .withMaxLife(maxLife);
+        final ElementAttributes attr = TestElementAttributes.withEternalFalseAndMaxLife(maxLife);
 
         final CacheAccess<String, String> access = JCS.getInstance( "testRegionDefinitonWithAttributes", ca, attr );
         assertNotNull( access, "We should have an access class" );
@@ -356,8 +353,7 @@ class CacheAccessUnitTest
         assertNotNull( access, "We should have an access class" );
 
         final long maxLife = 9876;
-        final ElementAttributes attr = ElementAttributes.defaults()
-                .withMaxLife(maxLife);
+        final ElementAttributes attr = TestElementAttributes.withEternalFalseAndMaxLife(maxLife);
 
         access.setDefaultElementAttributes( attr );
 

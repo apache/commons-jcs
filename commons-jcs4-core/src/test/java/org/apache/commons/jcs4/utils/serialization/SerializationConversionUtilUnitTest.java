@@ -28,6 +28,7 @@ import java.io.IOException;
 
 import org.apache.commons.jcs4.engine.CacheElement;
 import org.apache.commons.jcs4.engine.ElementAttributes;
+import org.apache.commons.jcs4.engine.TestElementAttributes;
 import org.apache.commons.jcs4.engine.behavior.ICacheElement;
 import org.apache.commons.jcs4.engine.behavior.ICacheElementSerialized;
 import org.apache.commons.jcs4.engine.behavior.IElementSerializer;
@@ -53,9 +54,7 @@ class SerializationConversionUtilUnitTest
         final String value = "value fdsadf dsafdsa fdsaf dsafdsaf dsafdsaf dsaf dsaf dsaf dsafa dsaf dsaf dsafdsaf";
 
         final IElementSerializer elementSerializer = new StandardSerializer();
-
-        final ElementAttributes attr = ElementAttributes.defaults()
-                .withMaxLife(34);
+        final ElementAttributes attr = TestElementAttributes.withEternalFalseAndMaxLife(34);
 
         final ICacheElement<String, String> before = new CacheElement<>( cacheName, key, value );
         before.setElementAttributes( attr );
@@ -136,9 +135,7 @@ class SerializationConversionUtilUnitTest
         final String value = "value fdsadf dsafdsa fdsaf dsafdsaf dsafdsaf dsaf dsaf dsaf dsafa dsaf dsaf dsafdsaf";
 
         final IElementSerializer elementSerializer = null; // new StandardSerializer();
-
-        final ElementAttributes attr = ElementAttributes.defaults()
-                .withMaxLife(34);
+        final ElementAttributes attr = TestElementAttributes.withEternalFalseAndMaxLife(34);
 
         final ICacheElement<String, String> before = new CacheElement<>( cacheName, key, value );
         before.setElementAttributes( attr );
@@ -172,9 +169,7 @@ class SerializationConversionUtilUnitTest
         final String value = "value fdsadf dsafdsa fdsaf dsafdsaf dsafdsaf dsaf dsaf dsaf dsafa dsaf dsaf dsafdsaf";
 
         final IElementSerializer elementSerializer = new StandardSerializer();
-
-        final ElementAttributes attr = ElementAttributes.defaults()
-                .withMaxLife(34);
+        final ElementAttributes attr = TestElementAttributes.withEternalFalseAndMaxLife(34);
 
         final ICacheElement<String, String> before = new CacheElement<>( cacheName, key, value );
         before.setElementAttributes( attr );

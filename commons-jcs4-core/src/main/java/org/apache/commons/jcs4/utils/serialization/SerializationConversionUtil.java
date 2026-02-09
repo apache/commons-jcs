@@ -23,10 +23,8 @@ import java.io.IOException;
 
 import org.apache.commons.jcs4.engine.CacheElement;
 import org.apache.commons.jcs4.engine.CacheElementSerialized;
-import org.apache.commons.jcs4.engine.ElementAttributes;
 import org.apache.commons.jcs4.engine.behavior.ICacheElement;
 import org.apache.commons.jcs4.engine.behavior.ICacheElementSerialized;
-import org.apache.commons.jcs4.engine.behavior.IElementAttributes;
 import org.apache.commons.jcs4.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs4.log.Log;
 
@@ -115,11 +113,6 @@ public class SerializationConversionUtil
             try
             {
                 serializedValue = elementSerializer.serialize(element.getVal());
-
-                // update size in bytes
-                IElementAttributes copy = new ElementAttributes(element.getElementAttributes())
-                        .withSize(serializedValue.length);
-                element.setElementAttributes(copy);
             }
             catch ( final IOException e )
             {

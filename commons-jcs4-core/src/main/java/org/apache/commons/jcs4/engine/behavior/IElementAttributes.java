@@ -21,7 +21,6 @@ package org.apache.commons.jcs4.engine.behavior;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 
 import org.apache.commons.jcs4.engine.control.event.behavior.IElementEventHandler;
 
@@ -38,12 +37,6 @@ public interface IElementAttributes extends Serializable
      * @param eventHandler The feature to be added to the ElementEventHandler
      */
     void addElementEventHandler( IElementEventHandler eventHandler );
-
-    /**
-     * Sets the eventHandlers of the IElementAttributes object
-     * @param eventHandlers value
-     */
-    void addElementEventHandlers( List<IElementEventHandler> eventHandlers );
 
     /**
      * Gets the elementEventHandlers.
@@ -117,13 +110,6 @@ public interface IElementAttributes extends Serializable
      * @return The MaxLifeSeconds value
      */
     long maxLife();
-
-    /**
-     * Gets the size attribute of the IAttributes object
-     *
-     * @return The size value
-     */
-    int size();
 
     /**
      * Get the time factor to convert durations to milliseconds

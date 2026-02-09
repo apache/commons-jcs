@@ -37,6 +37,7 @@ import org.apache.commons.jcs4.engine.CacheElement;
 import org.apache.commons.jcs4.engine.CacheStatus;
 import org.apache.commons.jcs4.engine.CompositeCacheAttributes;
 import org.apache.commons.jcs4.engine.ElementAttributes;
+import org.apache.commons.jcs4.engine.TestCompositeCacheAttributes;
 import org.apache.commons.jcs4.engine.behavior.ICacheElement;
 import org.apache.commons.jcs4.engine.behavior.ICacheType.CacheType;
 import org.apache.commons.jcs4.engine.behavior.ICompositeCacheAttributes;
@@ -262,9 +263,9 @@ class CompositeCacheDiskUsageUnitTest
     void testSpoolAllowed()
     {
         // SETUP
-        final CompositeCacheAttributes cattr = CompositeCacheAttributes.defaults()
-                .withCacheName(CACHE_NAME)
-                .withDiskUsagePattern(ICompositeCacheAttributes.DiskUsagePattern.SWAP);
+        final CompositeCacheAttributes cattr = TestCompositeCacheAttributes
+                .withDiskUsagePattern(ICompositeCacheAttributes.DiskUsagePattern.SWAP)
+                .withCacheName(CACHE_NAME);
 
         final IElementAttributes attr = new ElementAttributes();
 
@@ -292,9 +293,9 @@ class CompositeCacheDiskUsageUnitTest
     void testSpoolNotAllowed()
     {
         // SETUP
-        final CompositeCacheAttributes cattr = CompositeCacheAttributes.defaults()
-                .withCacheName(CACHE_NAME)
-                .withDiskUsagePattern(ICompositeCacheAttributes.DiskUsagePattern.UPDATE);
+        final CompositeCacheAttributes cattr = TestCompositeCacheAttributes
+                .withDiskUsagePattern(ICompositeCacheAttributes.DiskUsagePattern.UPDATE)
+                .withCacheName(CACHE_NAME);
 
         final IElementAttributes attr = new ElementAttributes();
 
@@ -340,9 +341,9 @@ class CompositeCacheDiskUsageUnitTest
         throws IOException
     {
         // SETUP
-        final CompositeCacheAttributes cattr = CompositeCacheAttributes.defaults()
-                .withCacheName(CACHE_NAME)
-                .withDiskUsagePattern(ICompositeCacheAttributes.DiskUsagePattern.UPDATE);
+        final CompositeCacheAttributes cattr = TestCompositeCacheAttributes
+                .withDiskUsagePattern(ICompositeCacheAttributes.DiskUsagePattern.UPDATE)
+                .withCacheName(CACHE_NAME);
 
         final IElementAttributes attr = new ElementAttributes();
 
@@ -376,9 +377,9 @@ class CompositeCacheDiskUsageUnitTest
         throws IOException
     {
         // SETUP
-        final CompositeCacheAttributes cattr = CompositeCacheAttributes.defaults()
-                .withCacheName(CACHE_NAME)
-                .withDiskUsagePattern(ICompositeCacheAttributes.DiskUsagePattern.UPDATE);
+        final CompositeCacheAttributes cattr = TestCompositeCacheAttributes
+                .withDiskUsagePattern(ICompositeCacheAttributes.DiskUsagePattern.UPDATE)
+                .withCacheName(CACHE_NAME);
 
         final IElementAttributes attr = new ElementAttributes();
 
@@ -411,9 +412,9 @@ class CompositeCacheDiskUsageUnitTest
         throws IOException
     {
         // SETUP
-        final CompositeCacheAttributes cattr = CompositeCacheAttributes.defaults()
-                .withCacheName(CACHE_NAME)
-                .withDiskUsagePattern(ICompositeCacheAttributes.DiskUsagePattern.UPDATE);
+        final CompositeCacheAttributes cattr = TestCompositeCacheAttributes
+                .withDiskUsagePattern(ICompositeCacheAttributes.DiskUsagePattern.UPDATE)
+                .withCacheName(CACHE_NAME);
 
         final IElementAttributes attr = new ElementAttributes();
 
@@ -467,9 +468,9 @@ class CompositeCacheDiskUsageUnitTest
         throws IOException
     {
         // SETUP
-        final CompositeCacheAttributes cattr = CompositeCacheAttributes.defaults()
-                .withCacheName(CACHE_NAME)
-                .withDiskUsagePattern(ICompositeCacheAttributes.DiskUsagePattern.SWAP);
+        final CompositeCacheAttributes cattr = TestCompositeCacheAttributes
+                .withDiskUsagePattern(ICompositeCacheAttributes.DiskUsagePattern.SWAP)
+                .withCacheName(CACHE_NAME);
 
         final IElementAttributes attr = new ElementAttributes();
 

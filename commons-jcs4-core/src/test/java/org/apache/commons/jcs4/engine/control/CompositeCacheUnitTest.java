@@ -29,6 +29,7 @@ import org.apache.commons.jcs4.auxiliary.MockAuxiliaryCache;
 import org.apache.commons.jcs4.engine.CacheElement;
 import org.apache.commons.jcs4.engine.CompositeCacheAttributes;
 import org.apache.commons.jcs4.engine.ElementAttributes;
+import org.apache.commons.jcs4.engine.TestCompositeCacheAttributes;
 import org.apache.commons.jcs4.engine.behavior.ICacheElement;
 import org.apache.commons.jcs4.engine.behavior.ICacheType.CacheType;
 import org.apache.commons.jcs4.engine.behavior.IElementAttributes;
@@ -55,12 +56,10 @@ class CompositeCacheUnitTest
         final String keyprefix2 = "MyPrefix2";
         final String cacheName = "testGetMatching_Normal";
         final String memoryCacheClassName = "org.apache.commons.jcs4.engine.memory.lru.LRUMemoryCache";
-        final CompositeCacheAttributes cattr = CompositeCacheAttributes.defaults()
-                .withMemoryCacheName(memoryCacheClassName)
-                .withMaxObjects(maxMemorySize);
+        final CompositeCacheAttributes cattr = TestCompositeCacheAttributes
+                .withMemoryCacheNameAndMaxObjects(memoryCacheClassName, maxMemorySize);
 
         final IElementAttributes attr = new ElementAttributes();
-
         final CompositeCache<String, Integer> cache = new CompositeCache<>( cattr, attr );
 
         final MockAuxiliaryCache<String, Integer> diskMock = new MockAuxiliaryCache<>();
@@ -105,10 +104,9 @@ class CompositeCacheUnitTest
         final int maxMemorySize = 0;
         final String cacheName = "testGetMatching_NotOnDisk";
         final String memoryCacheClassName = "org.apache.commons.jcs4.engine.memory.lru.LRUMemoryCache";
-        final CompositeCacheAttributes cattr = CompositeCacheAttributes.defaults()
-                .withCacheName(cacheName)
-                .withMemoryCacheName(memoryCacheClassName)
-                .withMaxObjects(maxMemorySize);
+        final CompositeCacheAttributes cattr = TestCompositeCacheAttributes
+                .withMemoryCacheNameAndMaxObjects(memoryCacheClassName, maxMemorySize)
+                .withCacheName(cacheName);
 
         final IElementAttributes attr = new ElementAttributes();
 
@@ -138,10 +136,9 @@ class CompositeCacheUnitTest
         final int maxMemorySize = 0;
         final String cacheName = "testGetMatching_NotOnDisk";
         final String memoryCacheClassName = "org.apache.commons.jcs4.engine.memory.lru.LRUMemoryCache";
-        final CompositeCacheAttributes cattr = CompositeCacheAttributes.defaults()
-                .withCacheName(cacheName)
-                .withMemoryCacheName(memoryCacheClassName)
-                .withMaxObjects(maxMemorySize);
+        final CompositeCacheAttributes cattr = TestCompositeCacheAttributes
+                .withMemoryCacheNameAndMaxObjects(memoryCacheClassName, maxMemorySize)
+                .withCacheName(cacheName);
 
         final IElementAttributes attr = new ElementAttributes();
 
@@ -171,11 +168,10 @@ class CompositeCacheUnitTest
         // SETUP
         final String cacheName = "testCacheName";
         final String mockMemoryCacheClassName = "org.apache.commons.jcs4.engine.memory.MockMemoryCache";
-        final CompositeCacheAttributes cattr = CompositeCacheAttributes.defaults()
-                .withMemoryCacheName(mockMemoryCacheClassName);
+        final CompositeCacheAttributes cattr = TestCompositeCacheAttributes
+                .withMemoryCacheNameAndMaxObjects(mockMemoryCacheClassName, 100);
 
         final IElementAttributes attr = new ElementAttributes();
-
         final CompositeCache<String, Integer> cache = new CompositeCache<>( cattr, attr );
 
         final MockAuxiliaryCache<String, Integer> diskMock = new MockAuxiliaryCache<>();
@@ -210,11 +206,10 @@ class CompositeCacheUnitTest
         // SETUP
         final String cacheName = "testCacheName";
         final String mockMemoryCacheClassName = "org.apache.commons.jcs4.engine.memory.MockMemoryCache";
-        final CompositeCacheAttributes cattr = CompositeCacheAttributes.defaults()
-                .withMemoryCacheName(mockMemoryCacheClassName);
+        final CompositeCacheAttributes cattr = TestCompositeCacheAttributes
+                .withMemoryCacheNameAndMaxObjects(mockMemoryCacheClassName, 100);
 
         final IElementAttributes attr = new ElementAttributes();
-
         final CompositeCache<String, Integer> cache = new CompositeCache<>( cattr, attr );
 
         final MockAuxiliaryCache<String, Integer> diskMock = new MockAuxiliaryCache<>();

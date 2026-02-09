@@ -20,7 +20,6 @@ package org.apache.commons.jcs4.engine;
  */
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.apache.commons.jcs4.engine.behavior.IElementAttributes;
@@ -62,9 +61,6 @@ public record ElementAttributes(
          * ignored.
          */
         long maxIdleTime,
-
-        /** The byte size of the field. Must be manually set. */
-        int size,
 
         /** The creation time. This is used to enforce the max life. */
         long createTime,
@@ -112,7 +108,6 @@ public record ElementAttributes(
             DEFAULT_MAX_LIFE,
             DEFAULT_MAX_IDLE_TIME,
             0,
-            0,
             new AtomicLong(),
             DEFAULT_TIME_FACTOR,
             new ArrayList<>());
@@ -145,7 +140,6 @@ public record ElementAttributes(
              from.isEternal(),
              from.maxLife(),
              from.maxIdleTime(),
-             from.size(),
              System.currentTimeMillis(),
              new AtomicLong(from.lastAccessTime()),
              from.timeFactorForMilliseconds(),
@@ -165,117 +159,11 @@ public record ElementAttributes(
             long timeFactorForMilliseconds
           )
     {
-        this(isSpool, isLateral, isRemote, isEternal, maxLife, maxIdleTime, 0,
+        this(isSpool, isLateral, isRemote, isEternal, maxLife, maxIdleTime,
                 System.currentTimeMillis(), new AtomicLong(), timeFactorForMilliseconds,
                 new ArrayList<>());
 
         this.atomicLastAccessTime.set(createTime());
-    }
-
-    /**
-     * Sets the isSpool attribute of the ElementAttributes object
-     * @param val The new isSpool value
-     */
-    public ElementAttributes withIsSpool( boolean val )
-    {
-        return new ElementAttributes(
-                val,
-                isLateral(),
-                isRemote(),
-                isEternal(),
-                maxLife(),
-                maxIdleTime(),
-                size(),
-                System.currentTimeMillis(),
-                new AtomicLong(lastAccessTime()),
-                timeFactorForMilliseconds(),
-                new ArrayList<>(elementEventHandlers()));
-    }
-
-    /**
-     * Sets the isEternal attribute of the ElementAttributes object
-     * @param val The new isEternal value
-     */
-    public ElementAttributes withIsEternal( boolean val )
-    {
-        return new ElementAttributes(
-                isSpool(),
-                isLateral(),
-                isRemote(),
-                val,
-                maxLife(),
-                maxIdleTime(),
-                size(),
-                System.currentTimeMillis(),
-                new AtomicLong(lastAccessTime()),
-                timeFactorForMilliseconds(),
-                new ArrayList<>(elementEventHandlers()));
-    }
-
-    /**
-     * Sets the maxLife attribute of the ElementAttributes object.
-     *
-     * @param mls The new MaxLifeSeconds value
-     */
-    public ElementAttributes withMaxLife(long mls)
-    {
-        return new ElementAttributes(
-                isSpool(),
-                isLateral(),
-                isRemote(),
-                isEternal(),
-                mls,
-                maxIdleTime(),
-                size(),
-                System.currentTimeMillis(),
-                new AtomicLong(lastAccessTime()),
-                timeFactorForMilliseconds(),
-                new ArrayList<>(elementEventHandlers()));
-    }
-
-    /**
-     * Sets the idleTime attribute of the ElementAttributes object. This is the maximum time the item can
-     * be idle in the cache, that is not accessed.
-     * <p>
-     * If this is exceeded the element will not be returned, instead it will be removed. It will be
-     * removed on retrieval, or removed actively if the memory shrinker is turned on.
-     * @param idle The new idleTime value
-     */
-    public ElementAttributes withMaxIdleTime(long idle)
-    {
-        return new ElementAttributes(
-                isSpool(),
-                isLateral(),
-                isRemote(),
-                isEternal(),
-                maxLife(),
-                idle,
-                size(),
-                System.currentTimeMillis(),
-                new AtomicLong(lastAccessTime()),
-                timeFactorForMilliseconds(),
-                new ArrayList<>(elementEventHandlers()));
-    }
-
-    /**
-     * Sets the size attribute of the ElementAttributes object.
-     *
-     * @param size The new size value
-     */
-    public ElementAttributes withSize(int size)
-    {
-        return new ElementAttributes(
-                isSpool(),
-                isLateral(),
-                isRemote(),
-                isEternal(),
-                maxLife(),
-                maxIdleTime(),
-                size,
-                System.currentTimeMillis(),
-                new AtomicLong(lastAccessTime()),
-                timeFactorForMilliseconds(),
-                new ArrayList<>(elementEventHandlers()));
     }
 
     /**
@@ -291,28 +179,6 @@ public record ElementAttributes(
     public void addElementEventHandler( final IElementEventHandler eventHandler )
     {
         this.elementEventHandlers.add( eventHandler );
-    }
-
-    /**
-     * Sets the eventHandlers of the IElementAttributes object.
-     * <p>
-     * This add the references to the local list. Subsequent changes in the caller's list will not
-     * be reflected.
-     *
-     * @param eventHandlers List of IElementEventHandler objects
-     */
-    @Override
-    public void addElementEventHandlers( final List<IElementEventHandler> eventHandlers )
-    {
-        if ( eventHandlers == null )
-        {
-            return;
-        }
-
-        for (final IElementEventHandler handler : eventHandlers)
-        {
-            addElementEventHandler(handler);
-        }
     }
 
     /**

@@ -336,8 +336,7 @@ public abstract class AbstractBlockDiskCacheUnitTest{
             final CacheElement<GroupAttrName<String>, String> element = new CacheElement<>(cacheName,
                 groupAttrName, "data:" + i);
 
-            final ElementAttributes eAttr = ElementAttributes.defaults()
-                    .withIsSpool(true);
+            final ElementAttributes eAttr = ElementAttributes.defaults();
             element.setElementAttributes(eAttr);
 
             disk.processUpdate(element);
@@ -386,8 +385,7 @@ public abstract class AbstractBlockDiskCacheUnitTest{
         final int cnt = 25;
         for (int i = 0; i < cnt; i++)
         {
-            final ElementAttributes eAttr = ElementAttributes.defaults()
-                    .withIsSpool(true);
+            final ElementAttributes eAttr = ElementAttributes.defaults();
             final ICacheElement<String, String> element = new CacheElement<>("testRemove_PartialKey", i + ":key", "data:"
                 + i);
             element.setElementAttributes(eAttr);
@@ -429,8 +427,7 @@ public abstract class AbstractBlockDiskCacheUnitTest{
         final int cnt = 25;
         for (int i = 0; i < cnt; i++)
         {
-            final ElementAttributes eAttr = ElementAttributes.defaults()
-                    .withIsSpool(true);
+            final ElementAttributes eAttr = ElementAttributes.defaults();
             final ICacheElement<String, String> element = new CacheElement<>("testRemoveItems", "key:" + i, "data:" + i);
             element.setElementAttributes(eAttr);
             disk.processUpdate(element);
