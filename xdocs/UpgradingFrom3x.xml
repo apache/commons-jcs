@@ -131,7 +131,7 @@ jcs.default.cacheattributes=org.apache.commons.jcs4.engine.CompositeCacheAttribu
            inherit values from the default region attributes. This, however, was never implemented.
            Note that the behavior has been fixed in JCS 4.0.0. This may have implications
            for your existing configurations. On the other hand, it makes the configuration
-           much shorter.
+           much shorter. See the examples in <code>src/test/test-conf</code>.
          </p>
          <p>
            The configuration holder objects (the classes that end in "Attributes") are now
