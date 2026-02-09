@@ -28,15 +28,15 @@ public interface IElementEvent<T>
     extends Serializable
 {
     /**
-     * Gets the elementEvent attribute of the IElementEvent object. This code is Contained in the
-     * IElememtEventConstants class.
+     * Gets the elementEvent attribute of the IElementEvent object. This code is contained in the
+     * ElementEventType class.
      *
-     * @return The elementEvent value
+     * @return The elementEventType value
      */
-    ElementEventType getElementEvent();
+    ElementEventType elementEventType();
 
     /**
      * @return the source of the event.
      */
-    T getSource();
+    T source();
 }

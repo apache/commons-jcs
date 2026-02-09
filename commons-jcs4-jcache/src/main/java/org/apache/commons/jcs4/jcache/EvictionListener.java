@@ -33,7 +33,7 @@ public class EvictionListener implements IElementEventHandler
     @Override
     public <T> void handleElementEvent(final IElementEvent<T> event)
     {
-        switch (event.getElementEvent())
+        switch (event.elementEventType())
         {
             case EXCEEDED_MAXLIFE_BACKGROUND:
             case EXCEEDED_MAXLIFE_ONREQUEST:

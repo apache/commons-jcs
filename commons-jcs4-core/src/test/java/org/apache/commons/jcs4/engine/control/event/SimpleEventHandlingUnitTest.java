@@ -108,7 +108,7 @@ class SimpleEventHandlingUnitTest
             //System.out.println( "Handling Event of Type " +
             // event.getElementEvent() );
 
-            switch (event.getElementEvent())
+            switch (event.elementEventType())
             {
                 case SPOOLED_DISK_AVAILABLE:
                 //System.out.println( "Handling Event of Type

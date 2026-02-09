@@ -108,27 +108,27 @@ public class ElementEventHandlerMockImpl
 
         if ( log.isDebugEnabled() )
         {
-            log.debug( "HANDLER -- HANDLER -- HANDLER -- ---EVENT CODE = " + event.getElementEvent() );
-            log.debug( "/n/n EVENT CODE = " + event.getElementEvent() + " ***************************" );
+            log.debug( "HANDLER -- HANDLER -- HANDLER -- ---EVENT CODE = " + event.elementEventType() );
+            log.debug( "/n/n EVENT CODE = " + event.elementEventType() + " ***************************" );
         }
 
-        if ( event.getElementEvent() == ElementEventType.SPOOLED_DISK_AVAILABLE )
+        if ( event.elementEventType() == ElementEventType.SPOOLED_DISK_AVAILABLE )
         {
             setSpoolCount( getSpoolCount() + 1 );
         }
-        else if ( event.getElementEvent() == ElementEventType.SPOOLED_NOT_ALLOWED )
+        else if ( event.elementEventType() == ElementEventType.SPOOLED_NOT_ALLOWED )
         {
             setSpoolNotAllowedCount( getSpoolNotAllowedCount() + 1 );
         }
-        else if ( event.getElementEvent() == ElementEventType.SPOOLED_DISK_NOT_AVAILABLE )
+        else if ( event.elementEventType() == ElementEventType.SPOOLED_DISK_NOT_AVAILABLE )
         {
             setSpoolNoDiskCount( getSpoolNoDiskCount() + 1 );
         }
-        else if ( event.getElementEvent() == ElementEventType.EXCEEDED_MAXLIFE_BACKGROUND )
+        else if ( event.elementEventType() == ElementEventType.EXCEEDED_MAXLIFE_BACKGROUND )
         {
             setExceededMaxLifeBackgroundCount( getExceededMaxLifeBackgroundCount() + 1 );
         }
-        else if ( event.getElementEvent() == ElementEventType.EXCEEDED_IDLETIME_BACKGROUND )
+        else if ( event.elementEventType() == ElementEventType.EXCEEDED_IDLETIME_BACKGROUND )
         {
             setExceededIdleTimeBackgroundCount( getExceededIdleTimeBackgroundCount() + 1 );
         }
