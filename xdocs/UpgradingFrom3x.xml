@@ -103,7 +103,7 @@ jcs.default.cacheattributes=org.apache.commons.jcs4.engine.CompositeCacheAttribu
            Please note that several internals structures are not exported.
          </p>
       </subsection>
-      <subsection name="Changed Configuration Keys">
+      <subsection name="Changed Configuration Behavior">
         <p>
            JCS 4.0.0 tries to pull some long-standing configuration inconsistencies straight.
            The following configuration keys have been renamed or removed:
@@ -132,6 +132,11 @@ jcs.default.cacheattributes=org.apache.commons.jcs4.engine.CompositeCacheAttribu
            Note that the behavior has been fixed in JCS 4.0.0. This may have implications
            for your existing configurations. On the other hand, it makes the configuration
            much shorter.
+         </p>
+         <p>
+           The configuration holder objects (the classes that end in "Attributes") are now
+           implemented as Java records and - as such - are largely immutable. This makes them much 
+           more robust against side-effects in concurrent environments.
          </p>
       </subsection>
     </section>
