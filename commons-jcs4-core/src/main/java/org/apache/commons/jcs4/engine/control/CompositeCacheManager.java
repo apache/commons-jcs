@@ -43,7 +43,6 @@ import org.apache.commons.jcs4.admin.JCSAdminBean;
 import org.apache.commons.jcs4.auxiliary.AuxiliaryCache;
 import org.apache.commons.jcs4.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.commons.jcs4.auxiliary.AuxiliaryCacheFactory;
-import org.apache.commons.jcs4.auxiliary.remote.behavior.IRemoteCacheConstants;
 import org.apache.commons.jcs4.engine.CompositeCacheAttributes;
 import org.apache.commons.jcs4.engine.ElementAttributes;
 import org.apache.commons.jcs4.engine.behavior.ICache;
@@ -73,7 +72,7 @@ import org.apache.commons.jcs4.utils.timing.ElapsedTimer;
  * </p>
  */
 public class CompositeCacheManager
-    implements IRemoteCacheConstants, ICompositeCacheManager, IProvideScheduler
+    implements ICompositeCacheManager, IProvideScheduler
 {
     /** The logger */
     private static final Log log = Log.getLog( CompositeCacheManager.class );

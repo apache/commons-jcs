@@ -29,7 +29,7 @@ import org.apache.commons.jcs4.auxiliary.remote.server.behavior.RemoteType;
 /**
  * Attributes common to remote cache client and server.
  */
-public class CommonRemoteCacheAttributes
+public abstract class CommonRemoteCacheAttributes
     extends AbstractAuxiliaryCacheAttributes
     implements ICommonRemoteCacheAttributes
 {
@@ -59,11 +59,6 @@ public class CommonRemoteCacheAttributes
 
     /** Read and connect timeout */
     private int rmiSocketFactoryTimeoutMillis = DEFAULT_RMI_SOCKET_FACTORY_TIMEOUT_MILLIS;
-
-    /** Default constructor for the RemoteCacheAttributes object */
-    public CommonRemoteCacheAttributes()
-    {
-    }
 
     /**
      * Gets the clusterServers attribute of the RemoteCacheAttributes object.
@@ -267,16 +262,16 @@ public class CommonRemoteCacheAttributes
     public String toString()
     {
         final StringBuilder buf = new StringBuilder();
-        buf.append( "\n RemoteCacheAttributes " );
+        buf.append( "\n RemoteCacheAttributes ");
         if (this.location != null)
         {
-            buf.append( "\n remoteHost = [" + this.location.getHost() + "]" );
-            buf.append( "\n remotePort = [" + this.location.getPort() + "]" );
+            buf.append( "\n remoteHost = [").append(this.location.getHost()).append("]");
+            buf.append( "\n remotePort = [").append(this.location.getPort()).append("]");
         }
-        buf.append( "\n cacheName = [" + getCacheName() + "]" );
-        buf.append( "\n remoteType = [" + remoteType + "]" );
-        buf.append( "\n removeUponRemotePut = [" + this.removeUponRemotePut + "]" );
-        buf.append( "\n getOnly = [" + getOnly + "]" );
+        buf.append( "\n cacheName = [").append(getCacheName()).append("]");
+        buf.append( "\n remoteType = [").append(remoteType).append("]");
+        buf.append( "\n removeUponRemotePut = [").append(this.removeUponRemotePut).append("]");
+        buf.append( "\n getOnly = [").append(getOnly).append("]");
         return buf.toString();
     }
 }
