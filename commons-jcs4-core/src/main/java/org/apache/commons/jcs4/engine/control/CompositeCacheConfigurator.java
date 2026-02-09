@@ -180,7 +180,6 @@ public class CompositeCacheConfigurator
             log.debug( "Parsing options for \"{0}\"", attrName );
 
             PropertySetter.setProperties( auxAttr, props, attrName + "." );
-            auxAttr.setCacheName( regName );
 
             log.debug( "End of parsing for \"{0}\"", attrName );
 
