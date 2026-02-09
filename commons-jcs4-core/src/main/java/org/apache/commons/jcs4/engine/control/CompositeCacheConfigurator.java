@@ -341,21 +341,6 @@ public class CompositeCacheConfigurator
     }
 
     /**
-     * Create cache region.
-     *
-     * @param props Configuration properties
-     * @param ccm Cache hub
-     * @param regName Name of the cache region
-     * @param auxiliaries Comma separated list of auxiliaries
-     * @return CompositeCache
-     */
-    protected <K, V> CompositeCache<K, V> parseRegion(
-            final Properties props, final CompositeCacheManager ccm, final String regName, final String auxiliaries )
-    {
-        return parseRegion( props, ccm, regName, auxiliaries, null, REGION_PREFIX );
-    }
-
-    /**
      * Gets all the properties for a region and configure its cache.
      * <p>
      * This method tells the other parse method the name of the region prefix.
@@ -475,7 +460,9 @@ public class CompositeCacheConfigurator
                 final ICache<?, ?> cache;
                 synchronized ( regionName )
                 {
-                    cache = parseRegion( props, ccm, regionName, auxiliaries );
+                    ICompositeCacheAttributes cattr = parseCompositeCacheAttributes(props, regionName,
+                            ccm.getDefaultCacheAttributes());
+                    cache = parseRegion(props, ccm, regionName, auxiliaries, cattr);
                 }
                 ccm.addCache( regionName, cache );
             }
@@ -501,7 +488,9 @@ public class CompositeCacheConfigurator
                 final ICache<?, ?> cache;
                 synchronized ( regionName )
                 {
-                    cache = parseRegion( props, ccm, regionName, auxiliaries, null, SYSTEM_REGION_PREFIX );
+                    ICompositeCacheAttributes cattr = parseCompositeCacheAttributes(props, regionName,
+                            ccm.getDefaultCacheAttributes(), SYSTEM_REGION_PREFIX);
+                    cache = parseRegion( props, ccm, regionName, auxiliaries, cattr, SYSTEM_REGION_PREFIX );
                 }
                 ccm.addCache( regionName, cache );
             }
