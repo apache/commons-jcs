@@ -250,6 +250,17 @@ public class JDBCDiskCacheFactory
     }
 
     /**
+     * Gets the class implementing the extended AuxiliaryCacheAttributes for this factory
+     *
+     * @return The class value
+     */
+    @Override
+    public Class<JDBCDiskCacheAttributes> getAttributeClass()
+    {
+        return JDBCDiskCacheAttributes.class;
+    }
+
+    /**
 	 * @see org.apache.commons.jcs4.engine.behavior.IRequireScheduler#setScheduledExecutorService(java.util.concurrent.ScheduledExecutorService)
 	 */
 	@Override

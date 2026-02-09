@@ -58,4 +58,15 @@ public class IndexedDiskCacheFactory
 
         return cache;
     }
+
+    /**
+     * Gets the class implementing the extended AuxiliaryCacheAttributes for this factory
+     *
+     * @return The class value
+     */
+    @Override
+    public Class<IndexedDiskCacheAttributes> getAttributeClass()
+    {
+        return IndexedDiskCacheAttributes.class;
+    }
 }

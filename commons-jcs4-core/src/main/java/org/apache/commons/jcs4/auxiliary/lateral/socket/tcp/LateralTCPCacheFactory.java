@@ -164,7 +164,7 @@ public class LateralTCPCacheFactory
             final AuxiliaryCacheAttributes iaca, final ICompositeCacheManager cacheMgr,
            final ICacheEventLogger cacheEventLogger, final IElementSerializer elementSerializer )
     {
-        final ILateralTCPCacheAttributes lac = (ILateralTCPCacheAttributes) iaca;
+        final LateralTCPCacheAttributes lac = (LateralTCPCacheAttributes) iaca;
         final ArrayList<LateralTCPCacheNoWait<K, V>> noWaits = new ArrayList<>();
 
         // pairs up the tcp servers and set the tcpServer value and
@@ -411,6 +411,17 @@ public class LateralTCPCacheFactory
 
         this.lateralWatch = new CacheWatchRepairable();
         this.lateralWatch.setCacheWatch( new ZombieCacheWatch() );
+    }
+
+    /**
+     * Gets the class implementing the extended AuxiliaryCacheAttributes for this factory
+     *
+     * @return The class value
+     */
+    @Override
+    public Class<LateralTCPCacheAttributes> getAttributeClass()
+    {
+        return LateralTCPCacheAttributes.class;
     }
 
     /**

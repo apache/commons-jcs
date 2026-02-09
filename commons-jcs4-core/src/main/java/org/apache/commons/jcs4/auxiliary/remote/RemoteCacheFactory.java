@@ -238,4 +238,15 @@ public class RemoteCacheFactory
         monitor = new RemoteCacheMonitor();
         monitor.setDaemon(true);
 	}
+
+    /**
+     * Gets the class implementing the extended AuxiliaryCacheAttributes for this factory
+     *
+     * @return The class value
+     */
+    @Override
+    public Class<RemoteCacheAttributes> getAttributeClass()
+    {
+        return RemoteCacheAttributes.class;
+    }
 }

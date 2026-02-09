@@ -68,4 +68,11 @@ public interface AuxiliaryCacheFactory
      * @param s The new name value
      */
     void setName( String s );
+
+    /**
+     * Gets the class implementing the extended AuxiliaryCacheAttributes for this factory
+     *
+     * @return The class value
+     */
+    Class<? extends AuxiliaryCacheAttributes> getAttributeClass();
 }

@@ -58,4 +58,15 @@ public class BlockDiskCacheFactory
 
         return cache;
     }
+
+    /**
+     * Gets the class implementing the extended AuxiliaryCacheAttributes for this factory
+     *
+     * @return The class value
+     */
+    @Override
+    public Class<BlockDiskCacheAttributes> getAttributeClass()
+    {
+        return BlockDiskCacheAttributes.class;
+    }
 }

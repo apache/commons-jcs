@@ -67,4 +67,15 @@ public class MockAuxiliaryCacheFactory
     {
         this.name = s;
     }
+
+    /**
+     * Gets the class implementing the extended AuxiliaryCacheAttributes for this factory
+     *
+     * @return The class value
+     */
+    @Override
+    public Class<MockAuxiliaryCacheAttributes> getAttributeClass()
+    {
+        return MockAuxiliaryCacheAttributes.class;
+    }
 }
