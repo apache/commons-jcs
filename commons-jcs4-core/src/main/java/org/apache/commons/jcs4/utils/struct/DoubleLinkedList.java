@@ -22,8 +22,31 @@ package org.apache.commons.jcs4.utils.struct;
 import org.apache.commons.jcs4.log.Log;
 
 /**
- * This is a generic thread safe double linked list. It's very simple and all the operations are so
- * quick that course grained synchronization is more than acceptable.
+ * This is a generic double linked list. Thread safety is NOT provided by this class.
+ * <p>
+ * <b>THREAD SAFETY REQUIREMENT:</b> This class must be guarded by external synchronization
+ * in calling code. All operations assume the caller holds appropriate locks
+ * (e.g., ReentrantLock in {@link org.apache.commons.jcs4.engine.memory.AbstractDoubleLinkedListMemoryCache}).
+ * <p>
+ * This design eliminates double-locking problems when used with external locks and provides
+ * O(1) performance for node repositioning operations.
+ * <p>
+ * <b>Example Usage:</b>
+ * <pre>
+ * Lock lock = new java.util.concurrent.locks.ReentrantLock();
+ * DoubleLinkedList&lt;MyNode&gt; list = new DoubleLinkedList&lt;&gt;();
+ *
+ * // Caller must acquire lock before accessing
+ * lock.lock();
+ * try {
+ *     list.addFirst(node);  // SAFE because lock is held
+ * } finally {
+ *     lock.unlock();
+ * }
+ * </pre>
+ *
+ * @see java.util.concurrent.locks.ReentrantLock
+ * @see org.apache.commons.jcs4.engine.memory.AbstractDoubleLinkedListMemoryCache
  */
 @SuppressWarnings({ "unchecked", "rawtypes" }) // Don't know how to resolve this with generics
 public class DoubleLinkedList<T extends DoubleLinkedListNode>
@@ -41,18 +64,11 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
     private T last;
 
     /**
-     * Default constructor.
-     */
-    public DoubleLinkedList()
-    {
-    }
-
-    /**
      * Adds a new node to the start of the link list.
      *
-     * @param me The feature to be added to the First
+     * @param me The node to be added to the front
      */
-    public synchronized void addFirst(final T me)
+    public void addFirst(final T me)
     {
         if ( last == null )
         {
@@ -71,9 +87,9 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
     /**
      * Adds a new node to the end of the link list.
      *
-     * @param me The feature to be added to the Last
+     * @param me The node to be added to the end
      */
-    public synchronized void addLast(final T me)
+    public void addLast(final T me)
     {
         if ( first == null )
         {
@@ -93,7 +109,7 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
     /**
      * Dump the cache entries from first to list for debugging.
      */
-    public synchronized void debugDumpEntries()
+    protected void debugDumpEntries()
     {
         if ( log.isDebugEnabled() )
         {
@@ -110,7 +126,7 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
      *
      * @return DoubleLinkedListNode, the first node.
      */
-    public synchronized T getFirst()
+    public T getFirst()
     {
         log.debug( "returning first node" );
         return first;
@@ -121,18 +137,18 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
      *
      * @return The last node.
      */
-    public synchronized T getLast()
+    public T getLast()
     {
         log.debug( "returning last node" );
         return last;
     }
 
     /**
-     * Moves an existing node to the start of the link list.
+     * Moves an existing node to the start of the linked list.
      *
      * @param ln The node to set as the head.
      */
-    public synchronized void makeFirst(final T ln)
+    public void makeFirst(final T ln)
     {
         if ( ln.prev == null )
         {
@@ -160,11 +176,11 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
     }
 
     /**
-     * Moves an existing node to the end of the link list.
+     * Moves an existing node to the end of the linked list.
      *
-     * @param ln The node to set as the head.
+     * @param ln The node to set as the tail.
      */
-    public synchronized void makeLast(final T ln)
+    public void makeLast(final T ln)
     {
         if ( ln.next == null )
         {
@@ -197,7 +213,7 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
      * @param me Description of the Parameter
      * @return true if an element was removed.
      */
-    public synchronized boolean remove(final T me)
+    public boolean remove(final T me)
     {
         log.debug( "removing node" );
 
@@ -245,7 +261,7 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
     /**
      * Remove all of the elements from the linked list implementation.
      */
-    public synchronized void removeAll()
+    public void removeAll()
     {
         for (T me = first; me != null; )
         {
@@ -256,7 +272,6 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
             me = (T) me.next;
         }
         first = last = null;
-        // make sure this will work, could be add while this is happening.
         size = 0;
     }
 
@@ -265,7 +280,7 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
      *
      * @return The last node if there was one to remove.
      */
-    public synchronized T removeLast()
+    public T removeLast()
     {
         log.debug( "removing last node" );
         final T temp = last;
@@ -281,7 +296,7 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
      *
      * @return int
      */
-    public synchronized int size()
+    public int size()
     {
         return size;
     }
