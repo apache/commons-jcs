@@ -20,7 +20,6 @@ package org.apache.commons.jcs4.utils.struct;
  */
 
 import java.util.AbstractMap;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
@@ -30,9 +29,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 import org.apache.commons.jcs4.engine.control.group.GroupAttrName;
-import org.apache.commons.jcs4.engine.stats.StatElement;
 import org.apache.commons.jcs4.engine.stats.Stats;
-import org.apache.commons.jcs4.engine.stats.behavior.IStatElement;
 import org.apache.commons.jcs4.engine.stats.behavior.IStats;
 import org.apache.commons.jcs4.log.Log;
 
@@ -134,7 +131,7 @@ public abstract class AbstractLRUMap<K, V>
      * Dump the cache entries from first to list for debugging.
      */
     @SuppressWarnings("unchecked") // No generics for public fields
-    public void dumpCacheEntries()
+    private void dumpCacheEntries()
     {
         if (log.isTraceEnabled())
         {
@@ -149,7 +146,7 @@ public abstract class AbstractLRUMap<K, V>
     /**
      * Dump the cache map for debugging.
      */
-    public void dumpMap()
+    private void dumpMap()
     {
         if (log.isTraceEnabled())
         {
@@ -196,27 +193,35 @@ public abstract class AbstractLRUMap<K, V>
 
         log.debug( "getting item  for key {0}", key );
 
-        final LRUElementDescriptor<K, V> me = map.get( key );
+        lock.lock();
+        try
+        {
+            final LRUElementDescriptor<K, V> me = map.get( key );
 
-        if ( me == null )
-        {
-            missCnt++;
-            retVal = null;
-        }
-        else
-        {
-            hitCnt++;
-            retVal = me.getPayload();
-            list.makeFirst( me );
-        }
+            if ( me == null )
+            {
+                missCnt++;
+                retVal = null;
+            }
+            else
+            {
+                hitCnt++;
+                retVal = me.getPayload();
+                list.makeFirst( me );
+            }
 
-        if ( me == null )
-        {
-            log.debug( "LRUMap miss for {0}", key );
+            if ( me == null )
+            {
+                log.debug( "LRUMap miss for {0}", key );
+            }
+            else
+            {
+                log.debug( "LRUMap hit for {0}", key );
+            }
         }
-        else
+        finally
         {
-            log.debug( "LRUMap hit for {0}", key );
+            lock.unlock();
         }
 
         // verifyCache();
@@ -258,18 +263,12 @@ public abstract class AbstractLRUMap<K, V>
      */
     public IStats getStatistics()
     {
-        final IStats stats = new Stats();
-        stats.setTypeName( "LRUMap" );
-
-        final ArrayList<IStatElement<?>> elems = new ArrayList<>();
-
-        elems.add(new StatElement<>( "List Size", Integer.valueOf(list.size()) ) );
-        elems.add(new StatElement<>( "Map Size", Integer.valueOf(map.size()) ) );
-        elems.add(new StatElement<>( "Put Count", Long.valueOf(putCnt) ) );
-        elems.add(new StatElement<>( "Hit Count", Long.valueOf(hitCnt) ) );
-        elems.add(new StatElement<>( "Miss Count", Long.valueOf(missCnt) ) );
-
-        stats.setStatElements( elems );
+        final IStats stats = new Stats("LRUMap");
+        stats.addStatElement("List Size", Integer.valueOf(list.size()));
+        stats.addStatElement("Map Size", Integer.valueOf(map.size()));
+        stats.addStatElement("Put Count", Long.valueOf(putCnt));
+        stats.addStatElement("Hit Count", Long.valueOf(hitCnt));
+        stats.addStatElement("Miss Count", Long.valueOf(missCnt));
 
         return stats;
     }
@@ -353,7 +352,8 @@ public abstract class AbstractLRUMap<K, V>
                 try
                 {
                     final LRUElementDescriptor<K, V> last = list.getLast();
-                    if (last == null) {
+                    if (last == null)
+                    {
                         verifyCache();
                         throw new Error("update: last is null!");
                     }
@@ -454,6 +454,7 @@ public abstract class AbstractLRUMap<K, V>
     }
 
     /**
+     * Test method
      * Checks to see if all the items that should be in the cache are. Checks consistency between
      * List and map.
      */

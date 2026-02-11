@@ -20,7 +20,7 @@ package org.apache.commons.jcs4.utils.struct;
  */
 
 /**
- *         Simple LRUMap implementation that keeps the number of the objects below or equal maxObjects
+ * Simple LRUMap implementation that keeps the number of the objects below or equal maxObjects
  *
  * @param <K>
  * @param <V>
@@ -28,25 +28,27 @@ package org.apache.commons.jcs4.utils.struct;
 public class LRUMap<K, V> extends AbstractLRUMap<K, V>
 {
     /** If the max is less than 0, there is no limit! */
-    private int maxObjects = -1;
+    private final int maxObjects;
 
+    /**
+     * Default constructor
+     */
     public LRUMap()
     {
+        this(-1);
     }
 
     /**
-     *
-     * @param maxObjects
-     *            maximum number to keep in the map
+     * @param maxObjects maximum number to keep in the map
      */
     public LRUMap(final int maxObjects)
     {
-        this();
+        super();
         this.maxObjects = maxObjects;
     }
 
     @Override
-    public boolean shouldRemove()
+    protected boolean shouldRemove()
     {
         return maxObjects > 0 && size() > maxObjects;
     }
