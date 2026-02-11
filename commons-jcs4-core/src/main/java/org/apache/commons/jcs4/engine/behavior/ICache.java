@@ -25,6 +25,7 @@ import java.util.Set;
 
 import org.apache.commons.jcs4.engine.CacheStatus;
 import org.apache.commons.jcs4.engine.match.behavior.IKeyMatcher;
+import org.apache.commons.jcs4.engine.stats.behavior.IStats;
 
 /**
  * This is the top level interface for all cache like structures. It defines the methods used
@@ -99,7 +100,7 @@ public interface ICache<K, V>
      *
      * @return String of important historical information.
      */
-    String getStats();
+    IStats getStatistics();
 
     /**
      * Returns the cache status.

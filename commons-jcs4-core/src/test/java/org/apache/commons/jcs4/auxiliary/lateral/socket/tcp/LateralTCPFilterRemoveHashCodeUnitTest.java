@@ -124,7 +124,7 @@ public class LateralTCPFilterRemoveHashCodeUnitTest
          * ":data" + i + " junk asdfffffffadfasdfasf " + kn + ":" + n );
          * service.update( element ); if ( show ) { p( "put " + key ); }
          *
-         * if ( i % 100 == 0 ) { System.out.println( cache.getStats() ); }
+         * if ( i % 100 == 0 ) { System.out.println( cache.getStatistics() ); }
          *  } p( "Finished cycle of " + numOps ); } catch ( Exception e ) { p(
          * e.toString() ); e.printStackTrace( System.out ); throw e; }
          */

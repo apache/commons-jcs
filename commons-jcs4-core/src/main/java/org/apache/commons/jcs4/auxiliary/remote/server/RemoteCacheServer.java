@@ -50,6 +50,7 @@ import org.apache.commons.jcs4.engine.control.CompositeCacheManager;
 import org.apache.commons.jcs4.engine.logging.CacheEvent;
 import org.apache.commons.jcs4.engine.logging.behavior.ICacheEvent;
 import org.apache.commons.jcs4.engine.logging.behavior.ICacheEventLogger;
+import org.apache.commons.jcs4.engine.stats.behavior.ICacheStats;
 import org.apache.commons.jcs4.log.Log;
 import org.apache.commons.jcs4.utils.timing.ElapsedTimer;
 
@@ -730,16 +731,16 @@ public class RemoteCacheServer<K, V>
     }
 
     /**
-     * Gets the stats attribute of the RemoteCacheServer object.
+     * Gets the statistics of the ICacheServiceAdmin object
      *
-     * @return The stats value
+     * @return The statistics values as an array
      * @throws IOException
      */
     @Override
-    public String getStats()
+    public ICacheStats[] getStatistics()
         throws IOException
     {
-        return cacheManager.getStats();
+        return cacheManager.getStatistics();
     }
 
     /**

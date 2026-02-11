@@ -152,9 +152,9 @@ public abstract class AbstractIndexDiskCacheUnitTest{
         final long expectedSize = DiskTestObjectUtil.totalSize(elements, numberToRemove);
         final long resultSize = disk.getBytesFree();
 
-        // System.out.println( "testBytesFreeSize stats " + disk.getStats() );
+        // System.out.println( "testBytesFreeSize stats " + disk.getStatistics() );
 
-        assertEquals( expectedSize, resultSize, "Wrong bytes free size" + disk.getStats() );
+        assertEquals( expectedSize, resultSize, "Wrong bytes free size" + disk.getStatistics() );
 
         // add half as many as we removed. These should all use spots in the recycle bin.
         final int numberToAdd = numberToRemove / 2;
@@ -165,7 +165,7 @@ public abstract class AbstractIndexDiskCacheUnitTest{
 
         final long expectedSize2 = DiskTestObjectUtil.totalSize(elements, numberToAdd);
         final long resultSize2 = disk.getBytesFree();
-        assertEquals( expectedSize2, resultSize2, "Wrong bytes free size" + disk.getStats() );
+        assertEquals( expectedSize2, resultSize2, "Wrong bytes free size" + disk.getStatistics() );
     }
 
     /**
@@ -259,7 +259,7 @@ public abstract class AbstractIndexDiskCacheUnitTest{
         final long expectedSize = DiskTestObjectUtil.totalSize(elements, numberToInsert);
         final long resultSize = disk.getDataFileSize();
 
-        // System.out.println( "testFileSize stats " + disk.getStats() );
+        // System.out.println( "testFileSize stats " + disk.getStatistics() );
 
         assertEquals( expectedSize, resultSize, "Wrong file size" );
     }
@@ -510,7 +510,7 @@ public abstract class AbstractIndexDiskCacheUnitTest{
         // VERIFY
         assertEquals( 10, matchingResults.size(), "Wrong number returned" );
         // System.out.println( "matchingResults.keySet() " + matchingResults.keySet() );
-        // System.out.println( "\nAFTER TEST \n" + diskCache.getStats() );
+        // System.out.println( "\nAFTER TEST \n" + diskCache.getStatistics() );
     }
 
     /**
@@ -544,7 +544,7 @@ public abstract class AbstractIndexDiskCacheUnitTest{
         // VERIFY
         assertEquals( 10, matchingResults.size(), "Wrong number returned" );
         // System.out.println( "matchingResults.keySet() " + matchingResults.keySet() );
-        // System.out.println( "\nAFTER TEST \n" + diskCache.getStats() );
+        // System.out.println( "\nAFTER TEST \n" + diskCache.getStatistics() );
     }
 
     /**
@@ -646,7 +646,7 @@ public abstract class AbstractIndexDiskCacheUnitTest{
 
         // verify that we used the correct number of spots
         assertEquals( numberToAdd, disk.getRecyleCount(),
-                      "The recycle bin should have the number removed." + disk.getStats() );
+                      "The recycle bin should have the number removed." + disk.getStatistics() );
     }
 
     /**
@@ -887,7 +887,7 @@ public abstract class AbstractIndexDiskCacheUnitTest{
             assertNotNull( element, "element " + i + ":key is missing" );
             assertEquals( "data:" + i, element.getVal(), "value key:" + i );
         }
-        // System.out.println( disk.getStats() );
+        // System.out.println( disk.getStatistics() );
     }
 
     /**

@@ -158,15 +158,6 @@ public class MockAuxiliaryCache<K, V>
     }
 
     /**
-     * @return null
-     */
-    @Override
-    public String getStats()
-    {
-        return null;
-    }
-
-    /**
      * @return int
      */
     @Override

@@ -304,7 +304,7 @@ class AbstractDiskCacheUnitTest
         final ICacheElement<String, String> result = diskCache.get( key );
 
         // VERIFY
-        //System.out.println( diskCache.getStats() );
+        //System.out.println( diskCache.getStatistics() );
         assertNotNull( result, "Item should be in the map." );
     }
 }

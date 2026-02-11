@@ -369,7 +369,7 @@ class BlockDiskUnitTest
             assertEquals( numBlocksPerElement, blocks.length, "Wrong number of blocks returned." );
 
             // We check the array contents, too, to ensure we read back what we wrote out
-            for (int j = 0 ; j < src.length ; j++) {
+            for (int j = 0; j < src.length; j++) {
                 assertEquals( src[j], result[j], "Mismatch at offset " + j + " in attempt # " + ( i + 1 ) );
             }
         }

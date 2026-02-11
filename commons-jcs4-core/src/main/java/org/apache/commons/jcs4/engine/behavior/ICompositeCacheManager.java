@@ -23,6 +23,7 @@ import java.util.Properties;
 
 import org.apache.commons.jcs4.auxiliary.AuxiliaryCache;
 import org.apache.commons.jcs4.engine.control.CompositeCache;
+import org.apache.commons.jcs4.engine.stats.behavior.ICacheStats;
 
 /**
  * I need the interface so I can plug in mock managers for testing.
@@ -54,9 +55,9 @@ public interface ICompositeCacheManager extends IShutdownObservable
     Properties getConfigurationProperties();
 
     /**
-     * Gets stats for debugging.
+     * This returns data gathered for all regions and all the auxiliaries they currently uses.
      *
-     * @return String
+     * @return ICacheStats[]
      */
-    String getStats();
+    ICacheStats[] getStatistics();
 }

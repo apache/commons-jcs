@@ -189,7 +189,7 @@
 <p><a href="?">All Regions</a></p>
 <%
         CacheAccess<?, ?> cache = JCS.getInstance(cacheName);
-        String stats = cache.getStats();
+        String stats = cache.getStatistics().toString();
 %>
 <h2>Statistics for region [<%=cacheName%>]</h2>
 <pre>
@@ -229,7 +229,7 @@
         }
 
         CacheAccess<?, ?> cache = JCS.getInstance(cacheName);
-        String stats = cache.getStats();
+        String stats = cache.getStatistics().toString();
 %>
 </table>
 <h2>Statistics for region [<%=cacheName%>]</h2>
@@ -286,7 +286,7 @@ which empties the entire cache.
     <td><%=record.cacheName()%></td>
     <td><%=record.cacheSize()%></td>
     <td><%=record.byteCount()%></td>
-    <td><%=record.cacheStatus()%></td>
+    <td><%=record.cacheStatus().toString()%></td>
     <td><%=record.hitCountRam()%></td>
     <td><%=record.hitCountAux()%></td>
     <td><%=record.missCountNotFound()%></td>

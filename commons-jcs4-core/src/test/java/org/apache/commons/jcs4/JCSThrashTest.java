@@ -217,7 +217,7 @@ class JCSThrashTest
         jcs.put( key, value );
 
         // Get the element
-        LOG.info( "jcs.getStats(): " + jcs.getStatistics() );
+        LOG.info( "jcs.getStatistics(): " + jcs.getStatistics() );
         assertEquals( 1, getListSize() );
         assertNotNull( jcs.get( key ) );
         assertEquals( value, jcs.get( key ) );

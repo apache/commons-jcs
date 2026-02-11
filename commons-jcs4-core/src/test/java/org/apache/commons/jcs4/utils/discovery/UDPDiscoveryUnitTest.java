@@ -82,7 +82,7 @@ class UDPDiscoveryUnitTest
             // send max messages
             final int max = 10;
             int cnt = 0;
-            for ( ; cnt < max; cnt++ )
+            for (; cnt < max; cnt++ )
             {
                 sender.passiveBroadcast( "localhost", 1111, cacheNames, 1 );
                 SleepUtil.sleepAtLeast( 20 );

@@ -33,6 +33,7 @@ import org.apache.commons.jcs4.auxiliary.remote.behavior.IRemoteCacheListener;
 import org.apache.commons.jcs4.engine.CacheStatus;
 import org.apache.commons.jcs4.engine.behavior.ICacheElement;
 import org.apache.commons.jcs4.engine.behavior.ICacheServiceNonLocal;
+import org.apache.commons.jcs4.engine.stats.Stats;
 import org.apache.commons.jcs4.engine.stats.behavior.IStats;
 import org.apache.commons.jcs4.log.Log;
 
@@ -205,18 +206,7 @@ public class MockRemoteCacheClient<K, V>
     @Override
     public IStats getStatistics()
     {
-        return null;
-    }
-
-    /**
-     * Returns the cache stats.
-     *
-     * @return String of important historical information.
-     */
-    @Override
-    public String getStats()
-    {
-        return null;
+        return new Stats("");
     }
 
     /**

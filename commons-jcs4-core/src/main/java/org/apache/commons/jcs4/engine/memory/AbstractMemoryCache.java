@@ -20,7 +20,6 @@ package org.apache.commons.jcs4.engine.memory;
  */
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -39,9 +38,7 @@ import org.apache.commons.jcs4.engine.control.group.GroupAttrName;
 import org.apache.commons.jcs4.engine.control.group.GroupId;
 import org.apache.commons.jcs4.engine.memory.behavior.IMemoryCache;
 import org.apache.commons.jcs4.engine.memory.util.MemoryElementDescriptor;
-import org.apache.commons.jcs4.engine.stats.StatElement;
 import org.apache.commons.jcs4.engine.stats.Stats;
-import org.apache.commons.jcs4.engine.stats.behavior.IStatElement;
 import org.apache.commons.jcs4.engine.stats.behavior.IStats;
 import org.apache.commons.jcs4.log.Log;
 
@@ -103,13 +100,13 @@ public abstract class AbstractMemoryCache<K, V>
     /**
      * Dump the cache map for debugging.
      */
-    public void dumpMap()
+    protected void dumpMap()
     {
         if (log.isTraceEnabled())
         {
             log.trace("dumpingMap");
             map.forEach((key, value) ->
-            log.trace("dumpMap> key={0}, val={1}", key, key, value.getCacheElement().getVal()));
+                log.trace("dumpMap> key={0}, val={1}", key, value.getCacheElement().getVal()));
         }
     }
 
@@ -290,16 +287,12 @@ public abstract class AbstractMemoryCache<K, V>
     @Override
     public IStats getStatistics()
     {
-        final IStats stats = new Stats();
-        stats.setTypeName( "Abstract Memory Cache" );
+        final IStats stats = new Stats("Abstract Memory Cache");
 
-        final ArrayList<IStatElement<?>> elems = new ArrayList<>();
-        stats.setStatElements(elems);
-
-        elems.add(new StatElement<>("Put Count", putCnt));
-        elems.add(new StatElement<>("Hit Count", hitCnt));
-        elems.add(new StatElement<>("Miss Count", missCnt));
-        elems.add(new StatElement<>( "Map Size", Integer.valueOf(getSize()) ) );
+        stats.addStatElement("Put Count", putCnt);
+        stats.addStatElement("Hit Count", hitCnt);
+        stats.addStatElement("Miss Count", missCnt);
+        stats.addStatElement("Map Size", Integer.valueOf(getSize()));
 
         return stats;
     }

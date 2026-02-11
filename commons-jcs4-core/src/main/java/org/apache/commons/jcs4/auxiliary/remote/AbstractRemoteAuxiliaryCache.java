@@ -20,7 +20,6 @@ package org.apache.commons.jcs4.auxiliary.remote;
  */
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -44,9 +43,7 @@ import org.apache.commons.jcs4.engine.behavior.ICacheElementSerialized;
 import org.apache.commons.jcs4.engine.behavior.ICacheServiceNonLocal;
 import org.apache.commons.jcs4.engine.behavior.IZombie;
 import org.apache.commons.jcs4.engine.logging.behavior.ICacheEventLogger;
-import org.apache.commons.jcs4.engine.stats.StatElement;
 import org.apache.commons.jcs4.engine.stats.Stats;
-import org.apache.commons.jcs4.engine.stats.behavior.IStatElement;
 import org.apache.commons.jcs4.engine.stats.behavior.IStats;
 import org.apache.commons.jcs4.log.Log;
 import org.apache.commons.jcs4.utils.serialization.SerializationConversionUtil;
@@ -273,45 +270,28 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
     @Override
     public IStats getStatistics()
     {
-        final IStats stats = new Stats();
-        stats.setTypeName( "AbstractRemoteAuxiliaryCache" );
+        final IStats stats = new Stats("AbstractRemoteAuxiliaryCache");
 
-        final ArrayList<IStatElement<?>> elems = new ArrayList<>();
-
-        elems.add(new StatElement<>( "Remote Type", this.getRemoteCacheAttributes().getRemoteTypeName() ) );
+        stats.addStatElement("Remote Type", this.getRemoteCacheAttributes().getRemoteTypeName() );
 
 //      if ( this.getRemoteCacheAttributes().getRemoteType() == RemoteType.CLUSTER )
 //      {
 //          // something cluster specific
 //      }
 
-        elems.add(new StatElement<>( "UsePoolForGet", Boolean.valueOf(usePoolForGet) ) );
+        stats.addStatElement("UsePoolForGet", Boolean.valueOf(usePoolForGet) );
 
         if ( pool != null )
         {
-            elems.add(new StatElement<>( "Pool", pool ) );
+            stats.addStatElement("Pool", pool );
         }
 
-        if ( getRemoteCacheService() instanceof ZombieCacheServiceNonLocal )
+        if (getRemoteCacheService() instanceof ZombieCacheServiceNonLocal zombie)
         {
-            elems.add(new StatElement<>( "Zombie Queue Size",
-                    Integer.valueOf(( (ZombieCacheServiceNonLocal<K, V>) getRemoteCacheService() ).getQueueSize()) ) );
+            stats.addStatElement("Zombie Queue Size", Integer.valueOf(zombie.getQueueSize()));
         }
-
-        stats.setStatElements( elems );
 
         return stats;
-    }
-
-    /**
-     * Gets the stats attribute of the RemoteCache object.
-     *
-     * @return The stats value
-     */
-    @Override
-    public String getStats()
-    {
-        return getStatistics().toString();
     }
 
     /**

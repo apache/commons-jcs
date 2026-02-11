@@ -21,7 +21,6 @@ package org.apache.commons.jcs4.auxiliary.remote;
 
 import java.io.IOException;
 import java.rmi.UnmarshalException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,9 +35,7 @@ import org.apache.commons.jcs4.engine.CacheStatus;
 import org.apache.commons.jcs4.engine.behavior.ICacheElement;
 import org.apache.commons.jcs4.engine.behavior.ICacheEventQueue;
 import org.apache.commons.jcs4.engine.behavior.ICacheServiceNonLocal;
-import org.apache.commons.jcs4.engine.stats.StatElement;
 import org.apache.commons.jcs4.engine.stats.Stats;
-import org.apache.commons.jcs4.engine.stats.behavior.IStatElement;
 import org.apache.commons.jcs4.engine.stats.behavior.IStats;
 import org.apache.commons.jcs4.log.Log;
 
@@ -358,44 +355,28 @@ public class RemoteCacheNoWait<K, V>
     @Override
     public IStats getStatistics()
     {
-        final IStats stats = new Stats();
-        stats.setTypeName( "Remote Cache No Wait" );
+        final IStats stats = new Stats("Remote Cache No Wait");
 
-        final ArrayList<IStatElement<?>> elems = new ArrayList<>();
-
-        elems.add(new StatElement<>( "Status", getStatus() ) );
+        stats.addStatElement("Status", getStatus());
 
         // get the stats from the cache queue too
         final IStats cStats = this.remoteCacheClient.getStatistics();
         if ( cStats != null )
         {
-            elems.addAll(cStats.getStatElements());
+            stats.addStatElements(cStats.getStatElements());
         }
 
         // get the stats from the event queue too
         final IStats eqStats = this.cacheEventQueue.getStatistics();
-        elems.addAll(eqStats.getStatElements());
+        stats.addStatElements(eqStats.getStatElements());
 
-        elems.add(new StatElement<>( "Get Count", Integer.valueOf(this.getCount) ) );
-        elems.add(new StatElement<>( "GetMatching Count", Integer.valueOf(this.getMatchingCount) ) );
-        elems.add(new StatElement<>( "GetMultiple Count", Integer.valueOf(this.getMultipleCount) ) );
-        elems.add(new StatElement<>( "Remove Count", Integer.valueOf(this.removeCount) ) );
-        elems.add(new StatElement<>( "Put Count", Integer.valueOf(this.putCount) ) );
-
-        stats.setStatElements( elems );
+        stats.addStatElement("Get Count", Integer.valueOf(this.getCount) );
+        stats.addStatElement("GetMatching Count", Integer.valueOf(this.getMatchingCount) );
+        stats.addStatElement("GetMultiple Count", Integer.valueOf(this.getMultipleCount) );
+        stats.addStatElement("Remove Count", Integer.valueOf(this.removeCount) );
+        stats.addStatElement("Put Count", Integer.valueOf(this.putCount) );
 
         return stats;
-    }
-
-    /**
-     * Returns the statistics in String form.
-     *
-     * @return String
-     */
-    @Override
-    public String getStats()
-    {
-        return getStatistics().toString();
     }
 
     /**
@@ -486,7 +467,7 @@ public class RemoteCacheNoWait<K, V>
     @Override
     public String toString()
     {
-        return getStats() + "\n" + remoteCacheClient.toString();
+        return getStatistics() + "\n" + remoteCacheClient.toString();
     }
 
     /**

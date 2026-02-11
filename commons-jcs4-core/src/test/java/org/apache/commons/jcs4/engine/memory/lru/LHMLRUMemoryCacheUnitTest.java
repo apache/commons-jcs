@@ -130,7 +130,7 @@ class LHMLRUMemoryCacheUnitTest
             cache.put( i + ":key", "myregion data " + i );
         }
 
-        final String stats = cache.getStats();
+        final String stats = cache.getStatistics().toString();
 
         //System.out.println( stats );
 
@@ -176,7 +176,7 @@ class LHMLRUMemoryCacheUnitTest
         for ( int i = max -1; i >= 0; i-- )
         {
             final String value = cache.get( i + ":key" );
-            assertNull( value, "Should not have value for key [" + i + ":key] in the cache." + cache.getStats() );
+            assertNull( value, "Should not have value for key [" + i + ":key] in the cache." + cache.getStatistics() );
         }
 
         // Test that last items are in cache
@@ -198,7 +198,7 @@ class LHMLRUMemoryCacheUnitTest
         for ( int i = max-1; i >= 0; i-- )
         {
             assertNull( elements.get( i + ":key" ),
-                        "Should not have value for key [" + i + ":key] in the cache." + cache.getStats() );
+                        "Should not have value for key [" + i + ":key] in the cache." + cache.getStatistics() );
         }
         for ( int i = max + 2; i < items; i++ )
         {

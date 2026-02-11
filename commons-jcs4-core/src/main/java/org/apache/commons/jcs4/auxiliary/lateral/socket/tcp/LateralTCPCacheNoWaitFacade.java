@@ -20,7 +20,6 @@ package org.apache.commons.jcs4.auxiliary.lateral.socket.tcp;
  */
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -37,9 +36,7 @@ import org.apache.commons.jcs4.auxiliary.lateral.behavior.ILateralCacheListener;
 import org.apache.commons.jcs4.auxiliary.lateral.socket.tcp.behavior.ILateralTCPCacheAttributes;
 import org.apache.commons.jcs4.engine.CacheStatus;
 import org.apache.commons.jcs4.engine.behavior.ICacheElement;
-import org.apache.commons.jcs4.engine.stats.StatElement;
 import org.apache.commons.jcs4.engine.stats.Stats;
-import org.apache.commons.jcs4.engine.stats.behavior.IStatElement;
 import org.apache.commons.jcs4.engine.stats.behavior.IStats;
 import org.apache.commons.jcs4.log.Log;
 
@@ -305,33 +302,18 @@ public class LateralTCPCacheNoWaitFacade<K, V>
     @Override
     public IStats getStatistics()
     {
-        final IStats stats = new Stats();
-        stats.setTypeName( "Lateral Cache No Wait Facade" );
-
-        final ArrayList<IStatElement<?>> elems = new ArrayList<>();
+        final IStats stats = new Stats("Lateral Cache No Wait Facade");
 
         if (noWaitMap != null)
         {
-            elems.add(new StatElement<>("Number of No Waits", Integer.valueOf(noWaitMap.size())));
+            stats.addStatElement("Number of No Waits", Integer.valueOf(noWaitMap.size()));
 
-            elems.addAll(noWaitMap.values().stream()
+            stats.addStatElements(noWaitMap.values().stream()
                     .flatMap(lcnw -> lcnw.getStatistics().getStatElements().stream())
                     .collect(Collectors.toList()));
         }
 
-        stats.setStatElements( elems );
-
         return stats;
-    }
-
-    /**
-     * getStats
-     * @return String
-     */
-    @Override
-    public String getStats()
-    {
-        return getStatistics().toString();
     }
 
     /**

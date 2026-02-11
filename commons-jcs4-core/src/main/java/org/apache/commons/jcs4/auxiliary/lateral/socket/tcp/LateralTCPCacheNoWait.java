@@ -21,7 +21,6 @@ package org.apache.commons.jcs4.auxiliary.lateral.socket.tcp;
 
 import java.io.IOException;
 import java.rmi.UnmarshalException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -38,9 +37,7 @@ import org.apache.commons.jcs4.engine.CacheStatus;
 import org.apache.commons.jcs4.engine.behavior.ICacheElement;
 import org.apache.commons.jcs4.engine.behavior.ICacheEventQueue;
 import org.apache.commons.jcs4.engine.behavior.ICacheServiceNonLocal;
-import org.apache.commons.jcs4.engine.stats.StatElement;
 import org.apache.commons.jcs4.engine.stats.Stats;
-import org.apache.commons.jcs4.engine.stats.behavior.IStatElement;
 import org.apache.commons.jcs4.engine.stats.behavior.IStats;
 import org.apache.commons.jcs4.log.Log;
 
@@ -321,31 +318,18 @@ public class LateralTCPCacheNoWait<K, V>
     @Override
     public IStats getStatistics()
     {
-        final IStats stats = new Stats();
-        stats.setTypeName( "Lateral Cache No Wait" );
+        final IStats stats = new Stats("Lateral Cache No Wait");
 
         // get the stats from the event queue too
         final IStats eqStats = this.eventQueue.getStatistics();
-        final ArrayList<IStatElement<?>> elems = new ArrayList<>(eqStats.getStatElements());
+        stats.addStatElements(eqStats.getStatElements());
 
-        elems.add(new StatElement<>( "Get Count", Integer.valueOf(this.getCount) ) );
-        elems.add(new StatElement<>( "Remove Count", Integer.valueOf(this.removeCount) ) );
-        elems.add(new StatElement<>( "Put Count", Integer.valueOf(this.putCount) ) );
-        elems.add(new StatElement<>( "Attributes", cache.getAuxiliaryCacheAttributes() ) );
-
-        stats.setStatElements( elems );
+        stats.addStatElement("Get Count", Integer.valueOf(this.getCount));
+        stats.addStatElement("Remove Count", Integer.valueOf(this.removeCount));
+        stats.addStatElement("Put Count", Integer.valueOf(this.putCount));
+        stats.addStatElement("Attributes", cache.getAuxiliaryCacheAttributes());
 
         return stats;
-    }
-
-    /**
-     * getStats
-     * @return String
-     */
-    @Override
-    public String getStats()
-    {
-        return getStatistics().toString();
     }
 
     /**

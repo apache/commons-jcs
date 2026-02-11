@@ -44,5 +44,4 @@ public interface ICacheType
      * @return The cacheType value
      */
     CacheType getCacheType();
-
 }

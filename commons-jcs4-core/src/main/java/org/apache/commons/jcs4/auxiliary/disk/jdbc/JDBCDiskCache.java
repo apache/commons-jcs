@@ -26,7 +26,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -40,8 +39,6 @@ import org.apache.commons.jcs4.engine.behavior.ICache;
 import org.apache.commons.jcs4.engine.behavior.ICacheElement;
 import org.apache.commons.jcs4.engine.logging.behavior.ICacheEvent;
 import org.apache.commons.jcs4.engine.logging.behavior.ICacheEventLogger;
-import org.apache.commons.jcs4.engine.stats.StatElement;
-import org.apache.commons.jcs4.engine.stats.behavior.IStatElement;
 import org.apache.commons.jcs4.engine.stats.behavior.IStats;
 import org.apache.commons.jcs4.log.Log;
 
@@ -367,16 +364,12 @@ public class JDBCDiskCache<K, V>
     public IStats getStatistics()
     {
         final IStats stats = super.getStatistics();
-        stats.setTypeName( "JDBC/Abstract Disk Cache" );
+        stats.setTypeName("JDBC/Abstract Disk Cache");
 
-        final List<IStatElement<?>> elems = stats.getStatElements();
-
-        elems.add(new StatElement<>( "Update Count", updateCount ) );
-        elems.add(new StatElement<>( "Get Count", getCount ) );
-        elems.add(new StatElement<>( "Get Matching Count", getMatchingCount ) );
-        elems.add(new StatElement<>( "DB URL", getDiskLocation()) );
-
-        stats.setStatElements( elems );
+        stats.addStatElement("Update Count", updateCount);
+        stats.addStatElement("Get Count", getCount);
+        stats.addStatElement("Get Matching Count", getMatchingCount);
+        stats.addStatElement("DB URL", getDiskLocation());
 
         return stats;
     }
@@ -818,11 +811,11 @@ public class JDBCDiskCache<K, V>
     /**
      * For debugging.
      *
-     * @return this.getStats();
+     * @return this.getStatistics();
      */
     @Override
     public String toString()
     {
-        return getStats();
+        return getStatistics().toString();
     }
 }

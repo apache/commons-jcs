@@ -86,11 +86,6 @@ public interface ICacheAccessManagement
     ICacheStats getStatistics();
 
     /**
-     * @return A String version of the stats.
-     */
-    String getStats();
-
-    /**
      * Sets the ICompositeCacheAttributes of the cache region
      *
      * @param cattr The new ICompositeCacheAttribute value

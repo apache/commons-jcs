@@ -173,13 +173,6 @@ class CompositeCacheDiskUsageUnitTest
             return null;
         }
 
-        /** @return null */
-        @Override
-        public String getStats()
-        {
-            return null;
-        }
-
         /** @return 0 */
         @Override
         public CacheStatus getStatus()

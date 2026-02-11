@@ -107,13 +107,11 @@ class AdminBeanUnitTest
 
         for (final CacheRegionInfo info : regions)
         {
-
             if ( info.cacheName().equals( regionName ) )
             {
                 foundRegion = true;
 
                 assertTrue( info.byteCount() > 5, "Byte count should be greater than 5." );
-
                 assertNotNull( info.cacheStatistics(), "Should have stats." );
             }
         }

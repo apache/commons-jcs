@@ -135,23 +135,23 @@ class BlockDiskCacheSteadyLoadTest
 //                System.out.println( LOG_DIVIDER );
 //                System.out.println( "Elapsed " + timer.getElapsedTimeString() );
 //                System.out.println( "Run count: " + runCount + " Average size: " + ( totalSize / totalPut ) + "\n"
-//                    + jcs.getStats() );
+//                    + jcs.getStatistics() );
                 logMemoryUsage();
             }
         }
 
         Thread.sleep( 3000 );
-//        System.out.println( jcs.getStats() );
+//        System.out.println( jcs.getStatistics() );
         logMemoryUsage();
 
         Thread.sleep( 10000 );
-//        System.out.println( jcs.getStats() );
+//        System.out.println( jcs.getStatistics() );
         logMemoryUsage();
 
         System.gc();
         Thread.sleep( 3000 );
         System.gc();
-//        System.out.println( jcs.getStats() );
+//        System.out.println( jcs.getStatistics() );
         logMemoryUsage();
     }
 }

@@ -42,7 +42,12 @@ public interface ICacheStats
     /**
      * @param stats
      */
-    void setAuxiliaryCacheStats( List<IStats> stats );
+    void addAuxiliaryCacheStats(List<IStats> stats);
+
+    /**
+     * @param stats
+     */
+    void addAuxiliaryCacheStats(IStats stats);
 
     /**
      * @param name

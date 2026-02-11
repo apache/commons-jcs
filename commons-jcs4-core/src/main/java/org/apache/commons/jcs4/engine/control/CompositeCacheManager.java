@@ -33,7 +33,6 @@ import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
@@ -641,6 +640,7 @@ public class CompositeCacheManager
      *
      * @return ICacheStats[]
      */
+    @Override
     public ICacheStats[] getStatistics()
     {
         final List<ICacheStats> cacheStats = caches.values().stream()
@@ -649,30 +649,6 @@ public class CompositeCacheManager
             .collect(Collectors.toList());
 
         return cacheStats.toArray( new CacheStats[0] );
-    }
-
-    /**
-     * Gets stats for debugging. This calls gets statistics and then puts all the results in a
-     * string. This returns data for all regions.
-     *
-     * @return String
-     */
-    @Override
-    public String getStats()
-    {
-        final ICacheStats[] stats = getStatistics();
-        if ( stats == null )
-        {
-            return "NONE";
-        }
-
-        // force the array elements into a string.
-        final StringBuilder buf = new StringBuilder();
-        Stream.of(stats).forEach(stat -> {
-            buf.append( "\n---------------------------\n" );
-            buf.append( stat );
-        });
-        return buf.toString();
     }
 
     /** Creates a shutdown hook and starts the scheduler service */

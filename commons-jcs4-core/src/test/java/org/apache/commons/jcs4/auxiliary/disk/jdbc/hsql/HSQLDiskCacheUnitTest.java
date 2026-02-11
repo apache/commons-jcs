@@ -133,7 +133,7 @@ class HSQLDiskCacheUnitTest
         // I discovered it and removed it.
         // Thread.sleep( 500 );
 
-//        System.out.println( jcs.getStats() );
+//        System.out.println( jcs.getStatistics() );
 
         jcs.clear();
 

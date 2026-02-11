@@ -278,7 +278,7 @@ public abstract class AbstractBlockDiskCacheUnitTest{
         // VERIFY
         assertEquals( 10, matchingResults.size(), "Wrong number returned" );
         // System.out.println( "matchingResults.keySet() " + matchingResults.keySet() );
-        // System.out.println( "\nAFTER TEST \n" + diskCache.getStats() );
+        // System.out.println( "\nAFTER TEST \n" + diskCache.getStatistics() );
     }
 
     @Test
@@ -306,7 +306,7 @@ public abstract class AbstractBlockDiskCacheUnitTest{
         // VERIFY
         assertEquals( 10, matchingResults.size(), "Wrong number returned" );
         // System.out.println( "matchingResults.keySet() " + matchingResults.keySet() );
-        // System.out.println( "\nAFTER TEST \n" + diskCache.getStats() );
+        // System.out.println( "\nAFTER TEST \n" + diskCache.getStatistics() );
     }
 
     /**

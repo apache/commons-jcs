@@ -179,7 +179,7 @@ class SoftReferenceMemoryCacheUnitTest
             assertEquals( "myregion data " + i, element.getVal(), "value " + i + ":key" );
         }
 
-        // System.out.println(cache.getStats());
+        // System.out.println(cache.getStatistics());
     }
 
     /**

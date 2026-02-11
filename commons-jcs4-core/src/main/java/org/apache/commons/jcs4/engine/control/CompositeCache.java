@@ -21,7 +21,6 @@ package org.apache.commons.jcs4.engine.control;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -61,9 +60,7 @@ import org.apache.commons.jcs4.engine.memory.behavior.IMemoryCache;
 import org.apache.commons.jcs4.engine.memory.lru.LRUMemoryCache;
 import org.apache.commons.jcs4.engine.memory.shrinking.ShrinkerThread;
 import org.apache.commons.jcs4.engine.stats.CacheStats;
-import org.apache.commons.jcs4.engine.stats.StatElement;
 import org.apache.commons.jcs4.engine.stats.behavior.ICacheStats;
-import org.apache.commons.jcs4.engine.stats.behavior.IStats;
 import org.apache.commons.jcs4.log.Log;
 
 /**
@@ -896,39 +893,23 @@ public class CompositeCache<K, V>
      *
      * @return Statistics and Info on the Region.
      */
+    @Override
     public ICacheStats getStatistics()
     {
-        final ICacheStats stats = new CacheStats();
+        final ICacheStats stats = new CacheStats("Composite Cache");
         stats.setRegionName(this.getCacheName());
 
         // store the composite cache stats first
-        stats.setStatElements(Arrays.asList(
-                new StatElement<>("HitCountRam", Long.valueOf(getHitCountRam())),
-                new StatElement<>("HitCountAux", Long.valueOf(getHitCountAux()))));
+        stats.addStatElement("HitCountRam", Long.valueOf(getHitCountRam()));
+        stats.addStatElement("HitCountAux", Long.valueOf(getHitCountAux()));
 
         // memory + aux, memory is not considered an auxiliary internally
-        final ArrayList<IStats> auxStats = new ArrayList<>(auxCaches.size() + 1);
-
-        auxStats.add(getMemoryCache().getStatistics());
-        auxStats.addAll(auxCaches.stream()
+        stats.addAuxiliaryCacheStats(getMemoryCache().getStatistics());
+        stats.addAuxiliaryCacheStats(auxCaches.stream()
                 .map(AuxiliaryCache::getStatistics)
                 .collect(Collectors.toList()));
 
-        // store the auxiliary stats
-        stats.setAuxiliaryCacheStats(auxStats);
-
         return stats;
-    }
-
-    /**
-     * Gets stats for debugging.
-     *
-     * @return String
-     */
-    @Override
-    public String getStats()
-    {
-        return getStatistics().toString();
     }
 
     /**
@@ -1504,14 +1485,14 @@ public class CompositeCache<K, V>
     }
 
     /**
-     * This returns the stats.
+     * This returns the statistics.
      *
-     * @return getStats()
+     * @return Statistics of the cache
      */
     @Override
     public String toString()
     {
-        return getStats();
+        return getStatistics().toString();
     }
 
     /**

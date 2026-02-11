@@ -310,18 +310,6 @@ public abstract class AbstractRemoteCacheService<K, V>
     }
 
     /**
-     * Gets the stats attribute of the RemoteCacheServer object.
-     *
-     * @return The stats value
-     * @throws IOException
-     */
-    public String getStats()
-        throws IOException
-    {
-        return cacheManager.getStats();
-    }
-
-    /**
      * Logs an event if an event logger is configured.
      *
      * @param source

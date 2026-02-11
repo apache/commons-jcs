@@ -21,19 +21,20 @@ package org.apache.commons.jcs4.engine.behavior;
 
 import java.io.IOException;
 
+import org.apache.commons.jcs4.engine.stats.behavior.ICacheStats;
+
 /**
  * Description of the Interface
  */
 public interface ICacheServiceAdmin
 {
-
     /**
-     * Gets the stats attribute of the ICacheServiceAdmin object
+     * Gets the statistics of the ICacheServiceAdmin object
      *
-     * @return The stats value
+     * @return The statistics values as an array
      * @throws IOException
      */
-    String getStats()
+    ICacheStats[] getStatistics()
         throws IOException;
 
     /** Description of the Method

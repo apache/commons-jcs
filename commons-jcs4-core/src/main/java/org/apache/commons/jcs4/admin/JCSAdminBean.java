@@ -99,8 +99,8 @@ public class JCSAdminBean implements JCSJMXBean
             final CacheRegionInfo regionInfo = new CacheRegionInfo(
                     cache.getCacheName(),
                     cache.getSize(),
-                    cache.getStatus().toString(),
-                    cache.getStats(),
+                    cache.getStatus(),
+                    cache.getStatistics(),
                     cache.getHitCountRam(),
                     cache.getHitCountAux(),
                     cache.getMissCountNotFound(),

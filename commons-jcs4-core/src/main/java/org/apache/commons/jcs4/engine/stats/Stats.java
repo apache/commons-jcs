@@ -1,5 +1,8 @@
 package org.apache.commons.jcs4.engine.stats;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -39,12 +42,30 @@ public class Stats
     private String typeName;
 
     /**
+     * Default constructor
+     */
+    public Stats()
+    {
+        this.stats = new ArrayList<>();
+    }
+
+    /**
+     * Constructor
+     * @param typeName
+     */
+    public Stats(String typeName)
+    {
+        this();
+        this.typeName = typeName;
+    }
+
+    /**
      * @return IStatElement[]
      */
     @Override
     public List<IStatElement<?>> getStatElements()
     {
-        return stats;
+        return Collections.unmodifiableList(stats);
     }
 
     /**
@@ -60,9 +81,30 @@ public class Stats
      * @param stats
      */
     @Override
-    public void setStatElements( final List<IStatElement<?>> stats )
+    public void addStatElements( final List<IStatElement<?>> stats )
     {
-        this.stats = stats;
+        this.stats.addAll(stats);
+    }
+
+    /**
+     * @param stats
+     */
+    @Override
+    public void addStatElement( final IStatElement<?> stats )
+    {
+        this.stats.add(stats);
+    }
+
+    /**
+     * Adds generic statistical or historical data.
+     *
+     * @param name name of the StatElement
+     * @param data value of the StatElement
+     */
+    @Override
+    public <V> void addStatElement(String name, V data)
+    {
+        addStatElement(new StatElement<V>(name, data));
     }
 
     /**

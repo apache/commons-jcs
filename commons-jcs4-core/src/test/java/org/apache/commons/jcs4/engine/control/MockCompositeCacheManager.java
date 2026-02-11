@@ -26,6 +26,7 @@ import org.apache.commons.jcs4.engine.CompositeCacheAttributes;
 import org.apache.commons.jcs4.engine.ElementAttributes;
 import org.apache.commons.jcs4.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs4.engine.behavior.IShutdownObserver;
+import org.apache.commons.jcs4.engine.stats.behavior.ICacheStats;
 
 /** For testing. */
 public class MockCompositeCacheManager
@@ -92,9 +93,9 @@ public class MockCompositeCacheManager
 
     /** @return Mock */
     @Override
-    public String getStats()
+    public ICacheStats[] getStatistics()
     {
-        return "Mock";
+        return null;
     }
 
     /**

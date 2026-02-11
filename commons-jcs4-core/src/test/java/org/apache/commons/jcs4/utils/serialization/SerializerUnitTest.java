@@ -89,7 +89,7 @@ class SerializerUnitTest
         for ( int i = 0; i < 500; i++ )
         {
             final String res = jcs2.get( "key:" + i );
-            assertNotNull( res, "[key:" + i + "] should not be null, " + jcs2.getStats() );
+            assertNotNull( res, "[key:" + i + "] should not be null, " + jcs2.getStatistics() );
         }
     }
 
@@ -126,7 +126,7 @@ class SerializerUnitTest
         for ( int i = 0; i < count; i++ )
         {
             final String res = jcs.get( "key:" + i );
-            assertNotNull( res, "[key:" + i + "] should not be null, " + jcs.getStats() );
+            assertNotNull( res, "[key:" + i + "] should not be null, " + jcs.getStatistics() );
         }
     }
 }

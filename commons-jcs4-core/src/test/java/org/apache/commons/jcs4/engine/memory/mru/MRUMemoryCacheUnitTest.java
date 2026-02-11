@@ -130,9 +130,7 @@ class MRUMemoryCacheUnitTest
             cache.put( i + ":key", "myregion data " + i );
         }
 
-        final String stats = cache.getStats();
-
-//        System.out.println( stats );
+        final String stats = cache.getStatistics().toString();
 
         // TODO improve stats check
         assertTrue( stats.indexOf( "2000" ) != -1, "Should have 200 puts" );
@@ -176,7 +174,7 @@ class MRUMemoryCacheUnitTest
         for ( int i = max -1; i >= 0; i-- )
         {
             final String value = cache.get( i + ":key" );
-            assertNull( value, "Should not have value for key [" + i + ":key] in the cache." + cache.getStats() );
+            assertNull( value, "Should not have value for key [" + i + ":key] in the cache." + cache.getStatistics() );
         }
 
         // Test that last items are in cache
@@ -198,7 +196,7 @@ class MRUMemoryCacheUnitTest
         for ( int i = max-1; i >= 0; i-- )
         {
             assertNull( elements.get( i + ":key" ),
-                        "Should not have value for key [" + i + ":key] in the cache." + cache.getStats() );
+                        "Should not have value for key [" + i + ":key] in the cache." + cache.getStatistics() );
         }
         for ( int i = max + 2; i < items; i++ )
         {

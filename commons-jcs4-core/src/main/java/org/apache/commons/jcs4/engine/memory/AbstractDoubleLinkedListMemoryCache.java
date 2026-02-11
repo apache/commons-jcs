@@ -20,7 +20,6 @@ package org.apache.commons.jcs4.engine.memory;
  */
 
 import java.io.IOException;
-import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -28,8 +27,6 @@ import org.apache.commons.jcs4.engine.behavior.ICacheElement;
 import org.apache.commons.jcs4.engine.control.CompositeCache;
 import org.apache.commons.jcs4.engine.control.group.GroupAttrName;
 import org.apache.commons.jcs4.engine.memory.util.MemoryElementDescriptor;
-import org.apache.commons.jcs4.engine.stats.StatElement;
-import org.apache.commons.jcs4.engine.stats.behavior.IStatElement;
 import org.apache.commons.jcs4.engine.stats.behavior.IStats;
 import org.apache.commons.jcs4.log.Log;
 import org.apache.commons.jcs4.utils.struct.DoubleLinkedList;
@@ -213,10 +210,7 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
     {
         final IStats stats = super.getStatistics();
         stats.setTypeName( /* add algorithm name */"Memory Cache");
-
-        final List<IStatElement<?>> elems = stats.getStatElements();
-
-        elems.add(new StatElement<>("List Size", Integer.valueOf(list.size())));
+        stats.addStatElement("List Size", Integer.valueOf(list.size()));
 
         return stats;
     }

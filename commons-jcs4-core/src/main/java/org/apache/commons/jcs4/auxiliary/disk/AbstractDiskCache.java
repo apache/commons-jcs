@@ -20,7 +20,6 @@ package org.apache.commons.jcs4.auxiliary.disk;
  */
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
@@ -39,9 +38,7 @@ import org.apache.commons.jcs4.engine.behavior.ICache;
 import org.apache.commons.jcs4.engine.behavior.ICacheElement;
 import org.apache.commons.jcs4.engine.behavior.ICacheEventQueue;
 import org.apache.commons.jcs4.engine.behavior.ICacheListener;
-import org.apache.commons.jcs4.engine.stats.StatElement;
 import org.apache.commons.jcs4.engine.stats.Stats;
-import org.apache.commons.jcs4.engine.stats.behavior.IStatElement;
 import org.apache.commons.jcs4.engine.stats.behavior.IStats;
 import org.apache.commons.jcs4.log.Log;
 import org.apache.commons.jcs4.utils.struct.LRUMap;
@@ -566,19 +563,14 @@ public abstract class AbstractDiskCache<K, V>
     @Override
     public IStats getStatistics()
     {
-        final IStats stats = new Stats();
-        stats.setTypeName( "Abstract Disk Cache" );
+        final IStats stats = new Stats("Abstract Disk Cache");
 
-        final ArrayList<IStatElement<?>> elems = new ArrayList<>();
-
-        elems.add(new StatElement<>( "Purgatory Hits", Integer.valueOf(purgHits) ) );
-        elems.add(new StatElement<>( "Purgatory Size", Integer.valueOf(purgatory.size()) ) );
+        stats.addStatElement("Purgatory Hits", Integer.valueOf(purgHits));
+        stats.addStatElement("Purgatory Size", Integer.valueOf(purgatory.size()));
 
         // get the stats from the event queue too
         final IStats eqStats = this.cacheEventQueue.getStatistics();
-        elems.addAll(eqStats.getStatElements());
-
-        stats.setStatElements( elems );
+        stats.addStatElements(eqStats.getStatElements());
 
         return stats;
     }
@@ -590,17 +582,6 @@ public abstract class AbstractDiskCache<K, V>
      *
      * For example, doGet calls getWithEventLogging, which calls processGet
      */
-
-    /**
-     * Gets basic stats for the abstract disk cache.
-     *
-     * @return String
-     */
-    @Override
-    public String getStats()
-    {
-        return getStatistics().toString();
-    }
 
     /**
      * @return the status -- alive or disposed from CacheConstants

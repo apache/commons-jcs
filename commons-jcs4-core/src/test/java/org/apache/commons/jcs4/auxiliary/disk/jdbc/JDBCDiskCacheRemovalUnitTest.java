@@ -82,6 +82,6 @@ class JDBCDiskCacheRemovalUnitTest
         final String resultAfterRemove = jcs.get( keyPart1 + ":" + keyPart2 );
         assertNull( resultAfterRemove, "Should not have a result after removal." );
 
-//        System.out.println( jcs.getStats() );
+//        System.out.println( jcs.getStatistics() );
     }
 }

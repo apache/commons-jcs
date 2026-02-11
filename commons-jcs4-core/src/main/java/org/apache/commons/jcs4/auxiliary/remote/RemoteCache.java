@@ -20,16 +20,13 @@ package org.apache.commons.jcs4.auxiliary.remote;
  */
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 import org.apache.commons.jcs4.auxiliary.remote.behavior.IRemoteCacheAttributes;
 import org.apache.commons.jcs4.auxiliary.remote.behavior.IRemoteCacheListener;
 import org.apache.commons.jcs4.auxiliary.remote.server.behavior.RemoteType;
 import org.apache.commons.jcs4.engine.ZombieCacheServiceNonLocal;
 import org.apache.commons.jcs4.engine.behavior.ICacheServiceNonLocal;
-import org.apache.commons.jcs4.engine.stats.StatElement;
 import org.apache.commons.jcs4.engine.stats.Stats;
-import org.apache.commons.jcs4.engine.stats.behavior.IStatElement;
 import org.apache.commons.jcs4.engine.stats.behavior.IStats;
 import org.apache.commons.jcs4.log.Log;
 
@@ -117,13 +114,10 @@ public class RemoteCache<K, V>
     @Override
     public IStats getStatistics()
     {
-        final IStats stats = new Stats();
-        stats.setTypeName( "Remote Cache" );
+        final IStats stats = new Stats("Remote Cache");
 
-        final ArrayList<IStatElement<?>> elems = new ArrayList<>();
-
-        elems.add(new StatElement<>( "Remote Host:Port", getIPAddressForService() ) );
-        elems.add(new StatElement<>( "Remote Type", getRemoteCacheAttributes().getRemoteTypeName() ) );
+        stats.addStatElement("Remote Host:Port", getIPAddressForService() );
+        stats.addStatElement("Remote Type", getRemoteCacheAttributes().getRemoteTypeName() );
 
 //      if ( this.getRemoteCacheAttributes().getRemoteType() == RemoteType.CLUSTER )
 //      {
@@ -132,9 +126,7 @@ public class RemoteCache<K, V>
 
         // get the stats from the super too
         final IStats sStats = super.getStatistics();
-        elems.addAll(sStats.getStatElements());
-
-        stats.setStatElements( elems );
+        stats.addStatElements(sStats.getStatElements());
 
         return stats;
     }

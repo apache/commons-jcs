@@ -164,15 +164,6 @@ public abstract class AbstractCacheAccess<K, V>
     }
 
     /**
-     * @return A String version of the stats.
-     */
-    @Override
-    public String getStats()
-    {
-        return this.getCacheControl().getStats();
-    }
-
-    /**
      * Sets the ICompositeCacheAttributes of the cache region.
      *
      * @param cattr The new ICompositeCacheAttribute value

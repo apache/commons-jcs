@@ -138,7 +138,7 @@ class RemoteCacheNoWaitUnitTest
         final RemoteCacheNoWait<String, String> noWait = new RemoteCacheNoWait<>( client );
 
         // DO WORK
-        final String result = noWait.getStats();
+        final String result = noWait.getStatistics().toString();
 
         // VERIFY
         assertTrue( result.indexOf( "ALIVE" ) != -1, "Status should contain 'ALIVE'" );

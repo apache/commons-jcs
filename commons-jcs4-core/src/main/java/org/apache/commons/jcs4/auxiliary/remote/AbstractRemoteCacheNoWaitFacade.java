@@ -34,9 +34,7 @@ import org.apache.commons.jcs4.engine.CacheStatus;
 import org.apache.commons.jcs4.engine.behavior.ICacheElement;
 import org.apache.commons.jcs4.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs4.engine.logging.behavior.ICacheEventLogger;
-import org.apache.commons.jcs4.engine.stats.StatElement;
 import org.apache.commons.jcs4.engine.stats.Stats;
-import org.apache.commons.jcs4.engine.stats.behavior.IStatElement;
 import org.apache.commons.jcs4.engine.stats.behavior.IStats;
 import org.apache.commons.jcs4.log.Log;
 
@@ -238,34 +236,19 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K, V>
     @Override
     public IStats getStatistics()
     {
-        final IStats stats = new Stats();
-        stats.setTypeName( "Remote Cache No Wait Facade" );
-
-        final ArrayList<IStatElement<?>> elems = new ArrayList<>();
+        final IStats stats = new Stats("Remote Cache No Wait Facade");
 
         if ( noWaits != null )
         {
-            elems.add(new StatElement<>( "Number of No Waits", Integer.valueOf(noWaits.size()) ) );
+            stats.addStatElement("Number of No Waits", Integer.valueOf(noWaits.size()));
 
             // get the stats from the super too
-            elems.addAll(noWaits.stream()
+            stats.addStatElements(noWaits.stream()
                 .flatMap(rcnw -> rcnw.getStatistics().getStatElements().stream())
                 .collect(Collectors.toList()));
         }
 
-        stats.setStatElements( elems );
-
         return stats;
-    }
-
-    /**
-     * getStats
-     * @return String
-     */
-    @Override
-    public String getStats()
-    {
-        return getStatistics().toString();
     }
 
     /**

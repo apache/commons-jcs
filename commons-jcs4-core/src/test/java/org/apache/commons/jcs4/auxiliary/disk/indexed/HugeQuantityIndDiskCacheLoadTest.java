@@ -79,13 +79,13 @@ class HugeQuantityIndDiskCacheLoadTest
                 jcs.put( i + ":key", region + " data " + i );
             }
 
-            System.out.println( jcs.getStats() );
+            System.out.println( jcs.getStatistics() );
             System.out.println( "--------------------------" );
             System.out.println( "After put: " + measureMemoryUse() );
 
             Thread.sleep( 5000 );
 
-            System.out.println( jcs.getStats() );
+            System.out.println( jcs.getStatistics() );
             System.out.println( "--------------------------" );
             System.out.println( "After wait: " + measureMemoryUse() );
 
@@ -110,14 +110,14 @@ class HugeQuantityIndDiskCacheLoadTest
             // for ( int i = 0; i < items; i++ )
             // {
             // assertNull( "Removed key should be null: " + i + ":key\n
-            // stats " + jcs.getStats(), jcs.get( i + ":key" ) );
+            // stats " + jcs.getStatistics(), jcs.get( i + ":key" ) );
             // }
 
         }
         finally
         {
             // dump the stats to the report
-            System.out.println( jcs.getStats() );
+            System.out.println( jcs.getStatistics() );
             System.out.println( "--------------------------" );
             System.out.println( "End: " + measureMemoryUse() );
         }

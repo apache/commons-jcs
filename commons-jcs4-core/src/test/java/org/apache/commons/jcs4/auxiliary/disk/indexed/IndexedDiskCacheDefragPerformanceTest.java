@@ -35,31 +35,11 @@ class IndexedDiskCacheDefragPerformanceTest
     /**
      * Resembles a cached image.
      */
-    private static final class Tile
+    private record Tile(Integer id, byte[] imageBytes )
         implements Serializable
     {
         /** Don't change */
         private static final long serialVersionUID = 1L;
-
-        /**
-         * Key
-         */
-        public Integer id;
-
-        /**
-         * Byte size
-         */
-        public byte[] imageBytes;
-
-        /**
-         * @param id
-         * @param imageBytes
-         */
-        public Tile( final Integer id, final byte[] imageBytes )
-        {
-            this.id = id;
-            this.imageBytes = imageBytes;
-        }
     }
 
     /** For readability */
@@ -130,18 +110,18 @@ class IndexedDiskCacheDefragPerformanceTest
 
         System.out.println( LOG_DIVIDER );
         System.out.println( "Total elements = " + TOTAL_ELEMENTS );
-        System.out.println( "Stats prior to sleeping " + jcs.getStats() );
+        System.out.println( "Stats prior to sleeping " + jcs.getStatistics() );
 
         // Allow system to settle down
         System.out.println( "Sleeping for a minute." );
         Thread.sleep( 60000 );
 
         System.out.println( LOG_DIVIDER );
-        System.out.println( "Stats prior to dispose " + jcs.getStats() );
+        System.out.println( "Stats prior to dispose " + jcs.getStatistics() );
 
         jcs.dispose();
         System.out.println( LOG_DIVIDER );
-        System.out.println( "Stats after dispose " + jcs.getStats() );
+        System.out.println( "Stats after dispose " + jcs.getStatistics() );
         System.out.println( "Done testing." );
     }
 

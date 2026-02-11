@@ -185,20 +185,7 @@ public class LateralTCPCache<K, V>
     @Override
     public IStats getStatistics()
     {
-        final IStats stats = new Stats();
-        stats.setTypeName( "LateralTCPCache" );
-        return stats;
-    }
-
-    /**
-     * getStats
-     *
-     * @return String
-     */
-    @Override
-    public String getStats()
-    {
-        return "";
+        return new Stats("LateralTCPCache");
     }
 
     /**

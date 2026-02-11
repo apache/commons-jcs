@@ -1,5 +1,8 @@
 package org.apache.commons.jcs4.engine.stats;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -43,12 +46,31 @@ public class CacheStats
     private List<IStats> auxStats;
 
     /**
+     * Default constructor
+     */
+    public CacheStats()
+    {
+        super();
+        this.auxStats = new ArrayList<>();
+    }
+
+    /**
+     * Constructor
+     * @param typeName
+     */
+    public CacheStats(String typeName)
+    {
+        super(typeName);
+        this.auxStats = new ArrayList<>();
+    }
+
+    /**
      * @return IStats[]
      */
     @Override
     public List<IStats> getAuxiliaryCacheStats()
     {
-        return auxStats;
+        return Collections.unmodifiableList(auxStats);
     }
 
     /**
@@ -66,9 +88,18 @@ public class CacheStats
      * @param stats
      */
     @Override
-    public void setAuxiliaryCacheStats( final List<IStats> stats )
+    public void addAuxiliaryCacheStats(final List<IStats> stats)
     {
-        auxStats = stats;
+        auxStats.addAll(stats);
+    }
+
+    /**
+     * @param stats
+     */
+    @Override
+    public void addAuxiliaryCacheStats(IStats stats)
+    {
+        auxStats.add(stats);
     }
 
     /**

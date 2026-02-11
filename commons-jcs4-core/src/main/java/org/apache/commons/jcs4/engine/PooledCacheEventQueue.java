@@ -1,34 +1,12 @@
 package org.apache.commons.jcs4.engine;
 
-/*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *   https://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- */
-
-import java.util.ArrayList;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.jcs4.engine.behavior.ICacheListener;
-import org.apache.commons.jcs4.engine.stats.StatElement;
 import org.apache.commons.jcs4.engine.stats.Stats;
-import org.apache.commons.jcs4.engine.stats.behavior.IStatElement;
 import org.apache.commons.jcs4.engine.stats.behavior.IStats;
 import org.apache.commons.jcs4.log.Log;
 import org.apache.commons.jcs4.utils.threadpool.ThreadPoolManager;
@@ -132,21 +110,16 @@ public class PooledCacheEventQueue<K, V>
     @Override
     public IStats getStatistics()
     {
-        final IStats stats = new Stats();
-        stats.setTypeName( "Pooled Cache Event Queue" );
+        final IStats stats = new Stats("Pooled Cache Event Queue");
 
-        final ArrayList<IStatElement<?>> elems = new ArrayList<>();
-
-        elems.add(new StatElement<>( "Working", Boolean.valueOf(isWorking()) ) );
-        elems.add(new StatElement<>( "Empty", Boolean.valueOf(this.isEmpty()) ) );
+        stats.addStatElement("Working", Boolean.valueOf(isWorking()) );
+        stats.addStatElement("Empty", Boolean.valueOf(this.isEmpty()) );
 
         if ( queue != null )
         {
-            elems.add(new StatElement<>( "Queue Size", Integer.valueOf(queue.size()) ) );
-            elems.add(new StatElement<>( "Queue Capacity", Integer.valueOf(queue.remainingCapacity()) ) );
+            stats.addStatElement("Queue Size", Integer.valueOf(queue.size()) );
+            stats.addStatElement("Queue Capacity", Integer.valueOf(queue.remainingCapacity()) );
         }
-
-        stats.setStatElements( elems );
 
         return stats;
     }

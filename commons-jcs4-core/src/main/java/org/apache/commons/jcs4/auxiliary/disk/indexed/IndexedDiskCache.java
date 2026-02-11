@@ -45,9 +45,7 @@ import org.apache.commons.jcs4.engine.control.group.GroupAttrName;
 import org.apache.commons.jcs4.engine.control.group.GroupId;
 import org.apache.commons.jcs4.engine.logging.behavior.ICacheEvent;
 import org.apache.commons.jcs4.engine.logging.behavior.ICacheEventLogger;
-import org.apache.commons.jcs4.engine.stats.StatElement;
 import org.apache.commons.jcs4.engine.stats.Stats;
-import org.apache.commons.jcs4.engine.stats.behavior.IStatElement;
 import org.apache.commons.jcs4.engine.stats.behavior.IStats;
 import org.apache.commons.jcs4.log.Log;
 import org.apache.commons.jcs4.utils.struct.AbstractLRUMap;
@@ -849,36 +847,30 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
     @Override
     public synchronized IStats getStatistics()
     {
-        final IStats stats = new Stats();
-        stats.setTypeName("Indexed Disk Cache");
+        final IStats stats = new Stats("Indexed Disk Cache");
 
-        final ArrayList<IStatElement<?>> elems = new ArrayList<>();
-
-        elems.add(new StatElement<>("Is Alive", Boolean.valueOf(isAlive())));
-        elems.add(new StatElement<>("Key Map Size", Integer.valueOf(this.keyHash != null ? this.keyHash.size() : -1)));
+        stats.addStatElement("Is Alive", Boolean.valueOf(isAlive()));
+        stats.addStatElement("Key Map Size", Integer.valueOf(this.keyHash != null ? this.keyHash.size() : -1));
         try
         {
-            elems.add(
-                    new StatElement<>("Data File Length", Long.valueOf(this.dataFile != null ? this.dataFile.length() : -1L)));
+            stats.addStatElement("Data File Length", Long.valueOf(this.dataFile != null ? this.dataFile.length() : -1L));
         }
         catch (final IOException e)
         {
             log.error(e);
         }
-        elems.add(new StatElement<>("Max Key Size", this.maxKeySize));
-        elems.add(new StatElement<>("Hit Count", this.hitCount));
-        elems.add(new StatElement<>("Bytes Free", this.bytesFree));
-        elems.add(new StatElement<>("Optimize Operation Count", Integer.valueOf(this.removeCount)));
-        elems.add(new StatElement<>("Times Optimized", Integer.valueOf(this.timesOptimized)));
-        elems.add(new StatElement<>("Recycle Count", Integer.valueOf(this.recycleCnt)));
-        elems.add(new StatElement<>("Recycle Bin Size", Integer.valueOf(this.recycle.size())));
-        elems.add(new StatElement<>("Startup Size", Integer.valueOf(this.startupSize)));
+        stats.addStatElement("Max Key Size", this.maxKeySize);
+        stats.addStatElement("Hit Count", this.hitCount);
+        stats.addStatElement("Bytes Free", this.bytesFree);
+        stats.addStatElement("Optimize Operation Count", Integer.valueOf(this.removeCount));
+        stats.addStatElement("Times Optimized", Integer.valueOf(this.timesOptimized));
+        stats.addStatElement("Recycle Count", Integer.valueOf(this.recycleCnt));
+        stats.addStatElement("Recycle Bin Size", Integer.valueOf(this.recycle.size()));
+        stats.addStatElement("Startup Size", Integer.valueOf(this.startupSize));
 
         // get the stats from the super too
         final IStats sStats = super.getStatistics();
-        elems.addAll(sStats.getStatElements());
-
-        stats.setStatElements(elems);
+        stats.addStatElements(sStats.getStatElements());
 
         return stats;
     }

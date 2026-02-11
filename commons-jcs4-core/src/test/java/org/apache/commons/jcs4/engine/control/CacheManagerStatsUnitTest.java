@@ -21,9 +21,10 @@ package org.apache.commons.jcs4.engine.control;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.Arrays;
+
 import org.apache.commons.jcs4.JCS;
 import org.apache.commons.jcs4.access.CacheAccess;
-import org.apache.commons.jcs4.engine.stats.behavior.ICacheStats;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -52,21 +53,10 @@ class CacheManagerStatsUnitTest
         cache.get( "testKey" );
 
         final CompositeCacheManager mgr = CompositeCacheManager.getInstance();
-        final String statsString = mgr.getStats();
-
-//        System.out.println( statsString );
+        final String statsString = Arrays.toString(mgr.getStatistics());
 
         assertTrue( statsString.indexOf( "testCache1" ) != -1, "Should have the cacheName in here." );
         assertTrue( statsString.indexOf( "HitCountRam" ) != -1, "Should have the HitCountRam in here." );
         assertTrue( statsString.indexOf( "4" ) != -1, "Should have the 4 in here." );
-
-        final ICacheStats[] stats = mgr.getStatistics();
-        final int statsLen = stats.length;
-//        System.out.println( "statsLen = " + statsLen );
-        for ( int i = 0; i < statsLen; i++ )
-        {
-            // TODO finish
-        }
     }
-
 }

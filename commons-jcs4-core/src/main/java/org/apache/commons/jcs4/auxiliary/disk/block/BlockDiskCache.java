@@ -21,7 +21,6 @@ package org.apache.commons.jcs4.auxiliary.disk.block;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -41,9 +40,7 @@ import org.apache.commons.jcs4.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs4.engine.behavior.IRequireScheduler;
 import org.apache.commons.jcs4.engine.control.group.GroupAttrName;
 import org.apache.commons.jcs4.engine.control.group.GroupId;
-import org.apache.commons.jcs4.engine.stats.StatElement;
 import org.apache.commons.jcs4.engine.stats.Stats;
-import org.apache.commons.jcs4.engine.stats.behavior.IStatElement;
 import org.apache.commons.jcs4.engine.stats.behavior.IStats;
 import org.apache.commons.jcs4.log.Log;
 import org.apache.commons.jcs4.utils.serialization.StandardSerializer;
@@ -268,40 +265,31 @@ public class BlockDiskCache<K, V>
     @Override
     public IStats getStatistics()
     {
-        final IStats stats = new Stats();
-        stats.setTypeName( "Block Disk Cache" );
+        final IStats stats = new Stats("Block Disk Cache");
 
-        final ArrayList<IStatElement<?>> elems = new ArrayList<>();
-
-        elems.add(new StatElement<>( "Is Alive", Boolean.valueOf(isAlive()) ) );
-        elems.add(new StatElement<>( "Key Map Size", Integer.valueOf(this.keyStore.size()) ) );
+        stats.addStatElement("Is Alive", Boolean.valueOf(isAlive()));
+        stats.addStatElement("Key Map Size", Integer.valueOf(this.keyStore.size()));
 
         if (this.dataFile != null)
         {
             try
             {
-                elems.add(new StatElement<>( "Data File Length", Long.valueOf(this.dataFile.length()) ) );
+                stats.addStatElement("Data File Length", Long.valueOf(this.dataFile.length()));
             }
             catch ( final IOException e )
             {
                 log.error( e );
             }
 
-            elems.add(new StatElement<>( "Block Size Bytes",
-                    Integer.valueOf(this.dataFile.getBlockSizeBytes()) ) );
-            elems.add(new StatElement<>( "Number Of Blocks",
-                    Integer.valueOf(this.dataFile.getNumberOfBlocks()) ) );
-            elems.add(new StatElement<>( "Average Put Size Bytes",
-                    Long.valueOf(this.dataFile.getAveragePutSizeBytes()) ) );
-            elems.add(new StatElement<>( "Empty Blocks",
-                    Integer.valueOf(this.dataFile.getEmptyBlocks()) ) );
+            stats.addStatElement("Block Size Bytes", Integer.valueOf(this.dataFile.getBlockSizeBytes()));
+            stats.addStatElement("Number Of Blocks", Integer.valueOf(this.dataFile.getNumberOfBlocks()));
+            stats.addStatElement("Average Put Size Bytes", Long.valueOf(this.dataFile.getAveragePutSizeBytes()));
+            stats.addStatElement("Empty Blocks", Integer.valueOf(this.dataFile.getEmptyBlocks()));
         }
 
         // get the stats from the super too
         final IStats sStats = super.getStatistics();
-        elems.addAll(sStats.getStatElements());
-
-        stats.setStatElements( elems );
+        stats.addStatElements(sStats.getStatElements());
 
         return stats;
     }

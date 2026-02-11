@@ -24,6 +24,7 @@ import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Properties;
 
 import org.apache.commons.jcs4.JCS;
@@ -237,7 +238,7 @@ public class RemoteCacheStartupServlet
 
         try
         {
-            stats = CompositeCacheManager.getInstance().getStats();
+            stats = Arrays.toString(CompositeCacheManager.getInstance().getStatistics());
         }
         catch (final CacheException e)
         {

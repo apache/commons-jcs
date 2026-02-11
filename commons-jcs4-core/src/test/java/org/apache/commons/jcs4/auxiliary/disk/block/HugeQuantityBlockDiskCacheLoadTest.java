@@ -88,13 +88,13 @@ class HugeQuantityBlockDiskCacheLoadTest
                 jcs.put( i + ":key", region + " data " + i );
             }
 
-            System.out.println( jcs.getStats() );
+            System.out.println( jcs.getStatistics() );
             System.out.println( "--------------------------" );
             System.out.println( "After put: " + measureMemoryUse() );
 
             Thread.sleep( 5000 );
 
-            System.out.println( jcs.getStats() );
+            System.out.println( jcs.getStatistics() );
             System.out.println( "--------------------------" );
             System.out.println( "After wait: " + measureMemoryUse() );
 
@@ -104,7 +104,7 @@ class HugeQuantityBlockDiskCacheLoadTest
                 System.out.println( "--------------------------" );
                 System.out.println( "After sleep. " + timer.getElapsedTimeString() + " memory used = "
                     + measureMemoryUse() );
-                System.out.println( jcs.getStats() );
+                System.out.println( jcs.getStatistics() );
             }
 
             // Test that all items are in cache
@@ -128,7 +128,7 @@ class HugeQuantityBlockDiskCacheLoadTest
         finally
         {
             // dump the stats to the report
-            System.out.println( jcs.getStats() );
+            System.out.println( jcs.getStatistics() );
             System.out.println( "--------------------------" );
             final long endMemory = measureMemoryUse();
             System.out.println( "End: " + endMemory + " diff = " + ( endMemory - initialMemory ) );

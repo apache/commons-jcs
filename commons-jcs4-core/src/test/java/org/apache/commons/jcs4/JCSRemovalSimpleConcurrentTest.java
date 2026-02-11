@@ -75,7 +75,7 @@ class JCSRemovalSimpleConcurrentTest
             final String res = jcs.get( i + ":key" );
             if ( res != null )
             {
-                assertNull( res, "[" + i + ":key] should be null after remvoeall" + jcs.getStats() );
+                assertNull( res, "[" + i + ":key] should be null after remvoeall" + jcs.getStatistics() );
             }
         }
     }
@@ -111,7 +111,7 @@ class JCSRemovalSimpleConcurrentTest
             final String res = jcs.get( i + ":key" );
             if ( res != null )
             {
-                assertNull( res, "[" + i + ":key] should be null after remvoeall" + jcs.getStats() );
+                assertNull( res, "[" + i + ":key] should be null after remvoeall" + jcs.getStatistics() );
             }
         }
     }
@@ -165,13 +165,13 @@ class JCSRemovalSimpleConcurrentTest
         for ( int i = count; i >= 0; i-- )
         {
             final String res = jcs.get( "key:" + i + ":anotherpart" );
-            assertNotNull( res, "[key:" + i + ":anotherpart] should not be null, " + jcs.getStats() );
+            assertNotNull( res, "[key:" + i + ":anotherpart] should not be null, " + jcs.getStatistics() );
         }
 
         for ( int i = 0; i < count; i++ )
         {
             jcs.remove( "key:" + i + ":" );
-            assertNull( jcs.get( "key:" + i + ":anotherpart" ), jcs.getStats() );
+            assertNull( jcs.get( "key:" + i + ":anotherpart" ), jcs.getStatistics().toString() );
         }
 
     }

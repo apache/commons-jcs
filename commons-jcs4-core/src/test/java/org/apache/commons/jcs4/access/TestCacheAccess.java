@@ -694,7 +694,7 @@ public class TestCacheAccess
 
                 if ( i % 10000 == 0 )
                 {
-                    p( cache_control.getStats() );
+                    p( cache_control.getStatistics().toString() );
                 }
 
             }
@@ -914,7 +914,7 @@ public class TestCacheAccess
                 }
                 else if ( message.startsWith( "stats" ) )
                 {
-                    p( cache_control.getStats() );
+                    p( cache_control.getStatistics().toString() );
                 }
                 else if ( message.startsWith( "gc" ) )
                 {

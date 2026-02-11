@@ -128,7 +128,7 @@ public class LateralTCPConcurrentRandomTestUtil
 
                 if ( i % 100 == 0 )
                 {
-                    p( cache.getStats() );
+                    p( cache.getStatistics().toString() );
                 }
 
             }

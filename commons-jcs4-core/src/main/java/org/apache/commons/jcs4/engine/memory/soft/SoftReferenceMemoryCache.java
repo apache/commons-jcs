@@ -22,7 +22,6 @@ package org.apache.commons.jcs4.engine.memory.soft;
 import java.io.IOException;
 import java.lang.ref.SoftReference;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -35,8 +34,6 @@ import org.apache.commons.jcs4.engine.control.CompositeCache;
 import org.apache.commons.jcs4.engine.memory.AbstractMemoryCache;
 import org.apache.commons.jcs4.engine.memory.util.MemoryElementDescriptor;
 import org.apache.commons.jcs4.engine.memory.util.SoftReferenceElementDescriptor;
-import org.apache.commons.jcs4.engine.stats.StatElement;
-import org.apache.commons.jcs4.engine.stats.behavior.IStatElement;
 import org.apache.commons.jcs4.engine.stats.behavior.IStats;
 import org.apache.commons.jcs4.log.Log;
 
@@ -133,10 +130,9 @@ public class SoftReferenceMemoryCache<K, V> extends AbstractMemoryCache<K, V>
         final IStats stats = super.getStatistics();
         stats.setTypeName("Soft Reference Memory Cache");
 
-        final List<IStatElement<?>> elems = stats.getStatElements();
         final int emptyrefs = map.size() - getSize();
-        elems.add(new StatElement<>("Empty References", Integer.valueOf(emptyrefs)));
-        elems.add(new StatElement<>("Strong References", Integer.valueOf(strongReferences.size())));
+        stats.addStatElement("Empty References", Integer.valueOf(emptyrefs));
+        stats.addStatElement("Strong References", Integer.valueOf(strongReferences.size()));
 
         return stats;
     }

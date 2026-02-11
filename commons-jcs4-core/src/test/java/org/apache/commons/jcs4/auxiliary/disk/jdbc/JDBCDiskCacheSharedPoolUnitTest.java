@@ -53,7 +53,7 @@ public class JDBCDiskCacheSharedPoolUnitTest
     {
         final CacheAccess<String, String> jcs = JCS.getInstance( region );
 
-//        System.out.println( "BEFORE PUT \n" + jcs.getStats() );
+//        System.out.println( "BEFORE PUT \n" + jcs.getStatistics() );
 
         // Add items to cache
 
