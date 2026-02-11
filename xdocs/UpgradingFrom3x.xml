@@ -134,9 +134,9 @@ jcs.default.cacheattributes=org.apache.commons.jcs4.engine.CompositeCacheAttribu
            much shorter. See the examples in <code>src/test/test-conf</code>.
          </p>
          <p>
-           The configuration holder objects (the classes that end in "Attributes") are now
-           implemented as Java records and - as such - are largely immutable. This makes them much 
-           more robust against side-effects in concurrent environments.
+           The configuration holder objects CompositeCacheAttributes and ElementAttributes 
+           are now implemented as Java records and - as such - are largely immutable. This 
+           makes them much more robust against side-effects in concurrent environments.
          </p>
       </subsection>
     </section>
