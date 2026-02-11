@@ -86,10 +86,9 @@ public class UDPDiscoveryManager
             cacheMgr.registerShutdownObserver( newService );
 
             // inject scheduler
-            if ( cacheMgr instanceof IProvideScheduler)
+            if (cacheMgr instanceof IProvideScheduler ips)
             {
-                newService.setScheduledExecutorService(((IProvideScheduler)cacheMgr)
-                        .getScheduledExecutorService());
+                newService.setScheduledExecutorService(ips.getScheduledExecutorService());
             }
 
             newService.startup();

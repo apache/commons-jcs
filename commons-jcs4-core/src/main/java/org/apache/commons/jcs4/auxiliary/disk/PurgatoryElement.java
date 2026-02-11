@@ -63,12 +63,11 @@ public class PurgatoryElement<K, V>
         {
             return true;
         }
-        if (!(obj instanceof PurgatoryElement))
+        if (obj instanceof PurgatoryElement pe)
         {
-            return false;
+            return Objects.equals(getKey(), pe.getKey());
         }
-        final PurgatoryElement<?,?> other = (PurgatoryElement<?,?>) obj;
-        return Objects.equals(getKey(), other.getKey());
+        return false;
     }
 
     /**

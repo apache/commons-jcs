@@ -150,7 +150,7 @@ public class RemoteCache<K, V>
         log.error( message, ex );
 
         // we should not switch if the existing is a zombie.
-        if ( !( getRemoteCacheService() instanceof ZombieCacheServiceNonLocal ) )
+        if (!(getRemoteCacheService() instanceof ZombieCacheServiceNonLocal))
         {
             // TODO make configurable
             setRemoteCacheService( new ZombieCacheServiceNonLocal<>( getRemoteCacheAttributes().getZombieQueueMaxSize() ) );
@@ -170,9 +170,9 @@ public class RemoteCache<K, V>
             facade.failover( facade.getPrimaryServer() );
         }
 
-        if ( ex instanceof IOException )
+        if (ex instanceof IOException ioe)
         {
-            throw (IOException) ex;
+            throw ioe;
         }
         throw new IOException( ex );
     }

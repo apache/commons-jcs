@@ -126,10 +126,9 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
         final
         ICacheServiceNonLocal<K, V> remote = (ICacheServiceNonLocal<K, V>)restoredRemote;
         final ICacheServiceNonLocal<K, V> prevRemote = getRemoteCacheService();
-        if ( prevRemote instanceof ZombieCacheServiceNonLocal )
+        if ( prevRemote instanceof ZombieCacheServiceNonLocal<K, V> zombie)
         {
-            final ZombieCacheServiceNonLocal<K, V> zombie = (ZombieCacheServiceNonLocal<K, V>) prevRemote;
-            setRemoteCacheService( remote );
+            setRemoteCacheService(remote);
             try
             {
                 zombie.propagateEvents( remote );
@@ -423,9 +422,10 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
             // Never try to deserialize if you are a cluster client. Cluster
             // clients are merely intra-remote cache communicators. Remote caches are assumed
             // to have no ability to deserialize the objects.
-            if (retVal instanceof ICacheElementSerialized && this.getRemoteCacheAttributes().getRemoteType() != RemoteType.CLUSTER)
+            if (retVal instanceof ICacheElementSerialized<K, V> serialized &&
+                    this.getRemoteCacheAttributes().getRemoteType() != RemoteType.CLUSTER)
             {
-                retVal = SerializationConversionUtil.getDeSerializedCacheElement( (ICacheElementSerialized<K, V>) retVal,
+                retVal = SerializationConversionUtil.getDeSerializedCacheElement(serialized,
                         super.getElementSerializer() );
             }
         }
@@ -458,7 +458,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
                 for (final Map.Entry<K, ICacheElement<K, V>> entry : rawResults.entrySet())
                 {
                     ICacheElement<K, V> unwrappedResult = null;
-                    if ( entry.getValue() instanceof ICacheElementSerialized )
+                    if (entry.getValue() instanceof ICacheElementSerialized<K, V> serialized)
                     {
                         // Never try to deserialize if you are a cluster client. Cluster
                         // clients are merely intra-remote cache communicators. Remote caches are assumed
@@ -466,7 +466,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
                         if ( this.getRemoteCacheAttributes().getRemoteType() != RemoteType.CLUSTER )
                         {
                             unwrappedResult = SerializationConversionUtil
-                                .getDeSerializedCacheElement( (ICacheElementSerialized<K, V>) entry.getValue(),
+                                .getDeSerializedCacheElement(serialized,
                                         super.getElementSerializer() );
                         }
                     }

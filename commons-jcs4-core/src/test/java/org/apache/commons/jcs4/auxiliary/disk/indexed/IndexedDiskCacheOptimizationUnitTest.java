@@ -3,6 +3,8 @@ package org.apache.commons.jcs4.auxiliary.disk.indexed;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.List;
+
 import org.apache.commons.jcs4.auxiliary.disk.DiskTestObject;
 import org.apache.commons.jcs4.engine.behavior.ICacheElement;
 import org.apache.commons.jcs4.utils.timing.SleepUtil;
@@ -54,35 +56,34 @@ class IndexedDiskCacheOptimizationUnitTest
         disk.removeAll();
 
         final int numberToInsert = removeCount * 3;
-        final ICacheElement<Integer, DiskTestObject>[] elements = DiskTestObjectUtil
-            .createCacheElementsWithTestObjectsOfVariableSizes( numberToInsert, cattr.getCacheName() );
+        final List<ICacheElement<Integer, DiskTestObject>> elements = DiskTestObjectUtil
+            .createCacheElementsWithTestObjectsOfVariableSizes(numberToInsert, cattr.getCacheName());
 
-        for (final ICacheElement<Integer, DiskTestObject> element : elements) {
+        for (final ICacheElement<Integer, DiskTestObject> element : elements)
+        {
             disk.processUpdate( element );
         }
 
-        Thread.sleep( 1000 );
+        Thread.sleep(1000);
         final long sizeBeforeRemove = disk.getDataFileSize();
-        // System.out.println( "file sizeBeforeRemove " + sizeBeforeRemove );
-        // System.out.println( "totalSize inserted " + DiskTestObjectUtil.totalSize( elements, numberToInsert ) );
 
         // DO WORK
-        for ( int i = 0; i < removeCount; i++ )
+        for (int i = 0; i < removeCount; i++)
         {
-            disk.processRemove( Integer.valueOf( i ) );
+            disk.processRemove(Integer.valueOf(i));
         }
 
-        SleepUtil.sleepAtLeast( 1000 );
+        SleepUtil.sleepAtLeast(1000);
 
         disk.optimizeFile();
         // VERIFY
         final long sizeAfterRemove = disk.getDataFileSize();
-        final long expectedSizeAfterRemove = DiskTestObjectUtil.totalSize( elements, removeCount, elements.length );
+        final long expectedSizeAfterRemove = DiskTestObjectUtil.totalSize(elements, removeCount, elements.size() );
 
         // test is prone to failure for timing reasons.
-        if ( expectedSizeAfterRemove != sizeAfterRemove )
+        if (expectedSizeAfterRemove != sizeAfterRemove)
         {
-            SleepUtil.sleepAtLeast( 2000 );
+            SleepUtil.sleepAtLeast(2000);
         }
 
         assertTrue( sizeAfterRemove < sizeBeforeRemove, "The post optimization size should be smaller."

@@ -25,30 +25,16 @@ import java.util.Arrays;
 /**
  * Resembles a cached image.
  */
-public class DiskTestObject implements Serializable
+public record DiskTestObject(
+        /** Key */
+        Integer id,
+
+        /** Value */
+        byte[] imageBytes
+) implements Serializable
 {
     /** Don't change */
     private static final long serialVersionUID = 1L;
-
-    /**
-     * Key
-     */
-    public Integer id;
-
-    /**
-     * Byte size
-     */
-    public byte[] imageBytes;
-
-    /**
-     * @param id
-     * @param imageBytes
-     */
-    public DiskTestObject(final Integer id, final byte[] imageBytes)
-    {
-        this.id = id;
-        this.imageBytes = imageBytes;
-    }
 
     /**
      * @see Object#equals(Object other)
@@ -56,26 +42,18 @@ public class DiskTestObject implements Serializable
     @Override
     public boolean equals(final Object other)
     {
-        if (other instanceof DiskTestObject)
+        if (other instanceof DiskTestObject o)
         {
-            final DiskTestObject o = (DiskTestObject) other;
-            if (id != null) {
+            if (id != null)
+            {
                 return id.equals(o.id) && Arrays.equals(imageBytes, o.imageBytes);
             }
-            if (id == null && o.id == null) {
+            if (id == null && o.id == null)
+            {
                 return Arrays.equals(imageBytes, o.imageBytes);
             }
         }
         return false;
-    }
-
-    /**
-     * @see Object#hashCode()
-     */
-    @Override
-    public int hashCode()
-    {
-        return id.hashCode();
     }
 
 }

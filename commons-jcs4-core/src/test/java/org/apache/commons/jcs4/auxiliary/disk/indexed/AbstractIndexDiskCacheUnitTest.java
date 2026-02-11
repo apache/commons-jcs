@@ -131,10 +131,11 @@ public abstract class AbstractIndexDiskCacheUnitTest{
 
         final int numberToInsert = 20;
         final int bytes = 24;
-        final ICacheElement<Integer, DiskTestObject>[] elements = DiskTestObjectUtil.createCacheElementsWithTestObjects(numberToInsert,
-            bytes, cattr.getCacheName());
+        final List<ICacheElement<Integer, DiskTestObject>> elements = DiskTestObjectUtil
+                .createCacheElementsWithTestObjects(numberToInsert, bytes, cattr.getCacheName());
 
-        for (final ICacheElement<Integer, DiskTestObject> element : elements) {
+        for (final ICacheElement<Integer, DiskTestObject> element : elements)
+        {
             disk.processUpdate(element);
         }
 
@@ -143,10 +144,10 @@ public abstract class AbstractIndexDiskCacheUnitTest{
         Thread.yield();
 
         // remove half of those added
-        final int numberToRemove = elements.length / 2;
-        for (int i = 0; i < numberToRemove; i++)
+        final int numberToRemove = elements.size() / 2;
+        for (final ICacheElement<Integer, DiskTestObject> element : elements.subList(0, numberToRemove))
         {
-            disk.processRemove(elements[i].getKey());
+            disk.processRemove(element.getKey());
         }
 
         final long expectedSize = DiskTestObjectUtil.totalSize(elements, numberToRemove);
@@ -158,9 +159,9 @@ public abstract class AbstractIndexDiskCacheUnitTest{
 
         // add half as many as we removed. These should all use spots in the recycle bin.
         final int numberToAdd = numberToRemove / 2;
-        for (int i = 0; i < numberToAdd; i++)
+        for (final ICacheElement<Integer, DiskTestObject> element : elements.subList(0, numberToAdd))
         {
-            disk.processUpdate(elements[i]);
+            disk.processUpdate(element);
         }
 
         final long expectedSize2 = DiskTestObjectUtil.totalSize(elements, numberToAdd);
@@ -245,10 +246,11 @@ public abstract class AbstractIndexDiskCacheUnitTest{
 
         final int numberToInsert = 20;
         final int bytes = 24;
-        final ICacheElement<Integer, DiskTestObject>[] elements = DiskTestObjectUtil.createCacheElementsWithTestObjects(numberToInsert,
-            bytes, cattr.getCacheName());
+        final List<ICacheElement<Integer, DiskTestObject>> elements = DiskTestObjectUtil
+                .createCacheElementsWithTestObjects(numberToInsert, bytes, cattr.getCacheName());
 
-        for (final ICacheElement<Integer, DiskTestObject> element : elements) {
+        for (final ICacheElement<Integer, DiskTestObject> element : elements)
+        {
             disk.processUpdate(element);
         }
 
@@ -505,7 +507,8 @@ public abstract class AbstractIndexDiskCacheUnitTest{
             diskCache.update(new CacheElement<>(cacheName, i + ":key", cacheName + " data " + i));
         }
 
-        final Map<String, ICacheElement<String, String>> matchingResults = diskCache.getMatching("1.8.+");
+        final Map<String, ICacheElement<String, String>> matchingResults =
+                diskCache.getMatching("1.8.+");
 
         // VERIFY
         assertEquals( 10, matchingResults.size(), "Wrong number returned" );
@@ -569,10 +572,11 @@ public abstract class AbstractIndexDiskCacheUnitTest{
         final IndexedDiskCache<Integer, DiskTestObject> disk = new IndexedDiskCache<>(cattr);
 
         final int bytes = 1;
-        final ICacheElement<Integer, DiskTestObject>[] elements = DiskTestObjectUtil.createCacheElementsWithTestObjects(numberToInsert,
-            bytes, cattr.getCacheName());
+        final List<ICacheElement<Integer, DiskTestObject>> elements = DiskTestObjectUtil
+                .createCacheElementsWithTestObjects(numberToInsert, bytes, cattr.getCacheName());
 
-        for (final ICacheElement<Integer, DiskTestObject> element : elements) {
+        for (final ICacheElement<Integer, DiskTestObject> element : elements)
+        {
             disk.processUpdate(element);
         }
 
@@ -581,10 +585,10 @@ public abstract class AbstractIndexDiskCacheUnitTest{
         Thread.yield();
 
         // remove half
-        final int numberToRemove = elements.length / 2;
-        for (int i = 0; i < numberToRemove; i++)
+        final int numberToRemove = elements.size() / 2;
+        for (final ICacheElement<Integer, DiskTestObject> element : elements.subList(0, numberToRemove))
         {
-            disk.processRemove(elements[i].getKey());
+            disk.processRemove(element.getKey());
         }
 
         // verify that the recycle bin has the correct amount.
@@ -615,11 +619,12 @@ public abstract class AbstractIndexDiskCacheUnitTest{
 
         // we will reuse these
         final int bytes = 1;
-        final ICacheElement<Integer, DiskTestObject>[] elements = DiskTestObjectUtil.createCacheElementsWithTestObjects(numberToInsert,
-            bytes, cattr.getCacheName());
+        final List<ICacheElement<Integer, DiskTestObject>> elements = DiskTestObjectUtil
+                .createCacheElementsWithTestObjects(numberToInsert, bytes, cattr.getCacheName());
 
         // Add some to the disk
-        for (final ICacheElement<Integer, DiskTestObject> element : elements) {
+        for (final ICacheElement<Integer, DiskTestObject> element : elements)
+        {
             disk.processUpdate(element);
         }
 
@@ -628,10 +633,10 @@ public abstract class AbstractIndexDiskCacheUnitTest{
         Thread.yield();
 
         // remove half of those added
-        final int numberToRemove = elements.length / 2;
-        for (int i = 0; i < numberToRemove; i++)
+        final int numberToRemove = elements.size() / 2;
+        for (final ICacheElement<Integer, DiskTestObject> element : elements.subList(0, numberToRemove))
         {
-            disk.processRemove(elements[i].getKey());
+            disk.processRemove(element.getKey());
         }
 
         // verify that the recycle bin has the correct amount.
@@ -639,9 +644,9 @@ public abstract class AbstractIndexDiskCacheUnitTest{
 
         // add half as many as we removed. These should all use spots in the recycle bin.
         final int numberToAdd = numberToRemove / 2;
-        for (int i = 0; i < numberToAdd; i++)
+        for (final ICacheElement<Integer, DiskTestObject> element : elements.subList(0, numberToAdd))
         {
-            disk.processUpdate(elements[i]);
+            disk.processUpdate(element);
         }
 
         // verify that we used the correct number of spots

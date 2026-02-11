@@ -75,12 +75,12 @@ public class CacheElementSerialized<K, V>
         {
             return true;
         }
-        if (!(obj instanceof CacheElementSerialized))
+        if (obj instanceof CacheElementSerialized ces)
         {
-            return false;
+            return Objects.equals(getKey(), ces.getKey());
         }
-        final CacheElementSerialized<?,?> other = (CacheElementSerialized<?,?>) obj;
-        return Objects.equals(getKey(), other.getKey());
+
+        return false;
     }
 
     /**

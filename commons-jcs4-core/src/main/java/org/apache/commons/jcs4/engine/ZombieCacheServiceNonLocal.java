@@ -227,6 +227,7 @@ public class ZombieCacheServiceNonLocal<K, V>
      * @param service
      * @throws Exception
      */
+    @SuppressWarnings("unchecked") // Type checked by instanceof
     public synchronized void propagateEvents( final ICacheServiceNonLocal<K, V> service )
         throws Exception
     {
@@ -240,21 +241,15 @@ public class ZombieCacheServiceNonLocal<K, V>
             // for each item, call the appropriate service method
             final ZombieEvent event = queue.poll();
 
-            if ( event instanceof PutEvent )
+            if (event instanceof PutEvent putEvent)
             {
-                @SuppressWarnings("unchecked") // Type checked by instanceof
-                final
-                PutEvent<K, V> putEvent = (PutEvent<K, V>) event;
                 service.update( putEvent.element, event.requesterId );
             }
-            else if ( event instanceof RemoveEvent )
+            else if (event instanceof RemoveEvent removeEvent)
             {
-                @SuppressWarnings("unchecked") // Type checked by instanceof
-                final
-                RemoveEvent<K> removeEvent = (RemoveEvent<K>) event;
-                service.remove( event.cacheName, removeEvent.key, event.requesterId );
+                service.remove( event.cacheName, (K) removeEvent.key, event.requesterId );
             }
-            else if ( event instanceof RemoveAllEvent )
+            else if (event instanceof RemoveAllEvent)
             {
                 service.removeAll( event.cacheName, event.requesterId );
             }

@@ -259,9 +259,9 @@ public class JCSAdminBean implements JCSJMXBean
 				continue;
 			}
 
-			if (ice instanceof CacheElementSerialized)
+			if (ice instanceof CacheElementSerialized serialized)
             {
-                size += ((CacheElementSerialized<K, V>) ice).getSerializedValue().length;
+                size += serialized.getSerializedValue().length;
             }
             else
             {

@@ -84,16 +84,16 @@ public final class RemoteLocation
         {
             return true;
         }
-        if (!(obj instanceof RemoteLocation))
+        if (obj instanceof RemoteLocation l)
         {
-            return false;
+            if ( this.host == null )
+            {
+                return l.host == null && port == l.port;
+            }
+            return host.equals( l.host ) && port == l.port;
         }
-        final RemoteLocation l = (RemoteLocation) obj;
-        if ( this.host == null )
-        {
-            return l.host == null && port == l.port;
-        }
-        return host.equals( l.host ) && port == l.port;
+
+        return false;
     }
 
     /**

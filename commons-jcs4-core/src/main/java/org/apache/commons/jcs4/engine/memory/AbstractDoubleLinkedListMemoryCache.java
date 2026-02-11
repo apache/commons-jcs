@@ -412,9 +412,8 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
                 log.error("key class={0}", key.getClass());
                 log.error("key hashCode={0}", key.hashCode());
                 log.error("key toString={0}", key.toString());
-                if (key instanceof GroupAttrName)
+                if (key instanceof GroupAttrName name)
                 {
-                    final GroupAttrName<?> name = (GroupAttrName<?>) key;
                     log.error("GroupID hashCode={0}", name.groupId().hashCode());
                     log.error("GroupID.class={0}", name.groupId().getClass());
                     log.error("AttrName hashCode={0}", name.attrName().hashCode());

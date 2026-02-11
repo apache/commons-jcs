@@ -1132,7 +1132,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
         // remove all keys of the same name hierarchy.
         for (final K k : keyHash.keySet())
         {
-            if (k instanceof GroupAttrName && ((GroupAttrName<?>) k).groupId().equals(key))
+            if (k instanceof GroupAttrName gan && gan.groupId().equals(key))
             {
                 itemsToRemove.add(k);
             }
@@ -1166,11 +1166,11 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
         boolean removed = false;
 
         // remove all keys of the same name hierarchy.
-        final List<K> itemsToRemove = new LinkedList<>();
+        final List<K> itemsToRemove = new ArrayList<>();
 
         for (final K k : keyHash.keySet())
         {
-            if (k instanceof String && k.toString().startsWith(key))
+            if (k instanceof String s && s.startsWith(key))
             {
                 itemsToRemove.add(k);
             }
@@ -1351,13 +1351,13 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
         {
             storageLock.writeLock().lock();
 
-            if (key instanceof String && key.toString().endsWith(NAME_COMPONENT_DELIMITER))
+            if (key instanceof String s && s.endsWith(NAME_COMPONENT_DELIMITER))
             {
-                removed = performPartialKeyRemoval((String) key);
+                removed = performPartialKeyRemoval(s);
             }
-            else if (key instanceof GroupAttrName && ((GroupAttrName<?>) key).attrName() == null)
+            else if (key instanceof GroupAttrName gan && gan.attrName() == null)
             {
-                removed = performGroupRemoval(((GroupAttrName<?>) key).groupId());
+                removed = performGroupRemoval(gan.groupId());
             }
             else
             {

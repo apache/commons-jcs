@@ -330,8 +330,8 @@ public class LateralTCPCacheFactory
     {
         final String key = lca.getTcpServer();
 
-        return (ICacheServiceNonLocal<K, V>) csnlInstances.compute(key, (name, service) -> {
-
+        return (ICacheServiceNonLocal<K, V>) csnlInstances.compute(key, (name, service) ->
+        {
             ICacheServiceNonLocal<?, ?> newService = service;
 
             // If service creation did not succeed last time, force retry

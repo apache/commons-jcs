@@ -1418,9 +1418,9 @@ public class CompositeCache<K, V>
                     TimeUnit.SECONDS);
         }
 
-        if (memCache instanceof IRequireScheduler)
+        if (memCache instanceof IRequireScheduler irs)
         {
-            ((IRequireScheduler) memCache).setScheduledExecutorService(scheduledExecutor);
+            irs.setScheduledExecutorService(scheduledExecutor);
         }
     }
 
@@ -1520,8 +1520,7 @@ public class CompositeCache<K, V>
         throws IOException
     {
 
-        if (cacheElement.getKey() instanceof String
-            && cacheElement.getKey().toString().endsWith(NAME_COMPONENT_DELIMITER))
+        if (cacheElement.getKey() instanceof String s && s.endsWith(NAME_COMPONENT_DELIMITER))
         {
             throw new IllegalArgumentException("key must not end with " + NAME_COMPONENT_DELIMITER
                 + " for a put operation");

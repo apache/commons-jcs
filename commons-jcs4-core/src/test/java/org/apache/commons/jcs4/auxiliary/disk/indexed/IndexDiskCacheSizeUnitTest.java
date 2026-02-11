@@ -48,21 +48,20 @@ public class IndexDiskCacheSizeUnitTest extends AbstractIndexDiskCacheUnitTest
     {
         final IndexedDiskCacheAttributes cattr = getCacheAttributes();
         cattr.setCacheName( "testRemoveItems" );
-        cattr.setOptimizeAtRemoveCount( 7 );
-        cattr.setMaxKeySize( 8); // 1kb DiskTestObject takes 1420 bytes, so 5*1420 = 7100, so to keep 5 ojbects, we need max key size of 8
+        cattr.setOptimizeAtRemoveCount(7);
+        // 1kb DiskTestObject takes 1420 bytes, so 5*1420 = 7100, so to keep 5 objects, we need max key size of 8
+        cattr.setMaxKeySize(8);
         cattr.setMaxPurgatorySize( 0 );
         cattr.setDiskPath( "target/test-sandbox/BreakIndexTest" );
         final IndexedDiskCache<String, DiskTestObject> disk = new IndexedDiskCache<>( cattr );
 
         final String[] test = { "a", "bb", "ccc", "dddd", "eeeee", "ffffff", "ggggggg", "hhhhhhhhh", "iiiiiiiiii" };
         final String[] expect = { null, "bb", "ccc", null, null, "ffffff", null, "hhhhhhhhh", "iiiiiiiiii" };
-        final DiskTestObject value = DiskTestObjectUtil.createCacheElementsWithTestObjects( 1, 1, cattr .getCacheName())[0].getVal();
-        //System.out.println( "------------------------- testRecycleBin " );
+        final DiskTestObject value = new DiskTestObject(Integer.valueOf(0), new byte[1024]);
 
         for ( int i = 0; i < 6; i++ )
         {
             final ICacheElement<String, DiskTestObject> element = new CacheElement<>( "testRecycleBin", "key:" + test[i], value);
-            //System.out.println( "About to add key:" + test[i] + " i = " + i );
             disk.processUpdate( element );
         }
 

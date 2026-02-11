@@ -356,11 +356,11 @@ public abstract class AbstractMemoryCache<K, V>
         boolean removed = false;
 
         // handle partial removal
-        if (key instanceof String && ((String) key).endsWith(ICache.NAME_COMPONENT_DELIMITER))
+        if (key instanceof String s && s.endsWith(ICache.NAME_COMPONENT_DELIMITER))
         {
             removed = removeByHierarchy(key);
         }
-        else if (key instanceof GroupAttrName && ((GroupAttrName<?>) key).attrName() == null)
+        else if (key instanceof GroupAttrName gan && gan.attrName() == null)
         {
             removed = removeByGroup(key);
         }
@@ -419,7 +419,7 @@ public abstract class AbstractMemoryCache<K, V>
         return map.entrySet().removeIf(entry -> {
             final K k = entry.getKey();
 
-            if (k instanceof GroupAttrName && ((GroupAttrName<?>) k).groupId().equals(groupId))
+            if (k instanceof GroupAttrName gan && gan.groupId().equals(groupId))
             {
                 lock.lock();
                 try
@@ -451,7 +451,7 @@ public abstract class AbstractMemoryCache<K, V>
         return map.entrySet().removeIf(entry -> {
             final K k = entry.getKey();
 
-            if (k instanceof String && ((String) k).startsWith(keyString))
+            if (k instanceof String s && s.startsWith(keyString))
             {
                 lock.lock();
                 try

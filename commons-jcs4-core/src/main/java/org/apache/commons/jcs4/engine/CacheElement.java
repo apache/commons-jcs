@@ -87,12 +87,12 @@ public class CacheElement<K, V>
         {
             return true;
         }
-        if (!(obj instanceof CacheElement))
+        if (obj instanceof CacheElement ce)
         {
-            return false;
+            return Objects.equals(key, ce.key);
         }
-        final CacheElement<?,?> other = (CacheElement<?,?>) obj;
-        return Objects.equals(key, other.key);
+
+        return false;
     }
 
     /**

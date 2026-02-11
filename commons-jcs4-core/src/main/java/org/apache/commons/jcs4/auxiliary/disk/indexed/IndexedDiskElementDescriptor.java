@@ -82,9 +82,8 @@ public class IndexedDiskElementDescriptor
     	{
     		return false;
     	}
-        if (o instanceof IndexedDiskElementDescriptor)
+        if (o instanceof IndexedDiskElementDescriptor ided)
         {
-    		final IndexedDiskElementDescriptor ided = (IndexedDiskElementDescriptor)o;
             return pos == ided.pos && len == ided.len;
         }
 

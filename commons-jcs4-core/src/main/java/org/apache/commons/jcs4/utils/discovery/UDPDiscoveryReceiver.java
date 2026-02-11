@@ -45,8 +45,8 @@ import org.apache.commons.jcs4.utils.discovery.UDPDiscoveryMessage.BroadcastType
 import org.apache.commons.jcs4.utils.net.HostNameUtil;
 import org.apache.commons.jcs4.utils.serialization.StandardSerializer;
 import org.apache.commons.jcs4.utils.threadpool.PoolConfiguration;
-import org.apache.commons.jcs4.utils.threadpool.ThreadPoolManager;
 import org.apache.commons.jcs4.utils.threadpool.PoolConfiguration.WhenBlockedPolicy;
+import org.apache.commons.jcs4.utils.threadpool.ThreadPoolManager;
 
 /** Receives UDP Discovery messages. */
 public class UDPDiscoveryReceiver
@@ -272,12 +272,11 @@ public class UDPDiscoveryReceiver
                             byteBuffer.get(bytes);
                             final Object obj = serializer.deSerialize(bytes, null);
 
-                            if (obj instanceof UDPDiscoveryMessage)
+                            if (obj instanceof UDPDiscoveryMessage msg)
                             {
                                 // Ensure that the address we're supposed to send to is, indeed, the address
                                 // of the machine on the other end of this connection.  This guards against
                                 // instances where we don't exactly get the right local host address
-                                final UDPDiscoveryMessage msg = (UDPDiscoveryMessage) obj;
                                 msg.setHost(sourceAddress.getHostString());
 
                                 log.debug( "Read object from address [{0}], object=[{1}]",

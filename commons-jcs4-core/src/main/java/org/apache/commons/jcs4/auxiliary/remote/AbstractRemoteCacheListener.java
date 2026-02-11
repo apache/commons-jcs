@@ -169,22 +169,22 @@ public abstract class AbstractRemoteCacheListener<K, V>
     {
         if ( irca.getRemoveUponRemotePut() )
         {
-            log.debug( "PUTTING ELEMENT FROM REMOTE, (  invalidating ) " );
+            log.debug("PUTTING ELEMENT FROM REMOTE, (invalidating)");
             handleRemove( cb.getCacheName(), cb.getKey() );
         }
         else
         {
-            log.debug( "PUTTING ELEMENT FROM REMOTE, ( updating ) " );
+            log.debug("PUTTING ELEMENT FROM REMOTE, (updating)");
             log.debug( "cb = {0}", cb );
 
             // Eventually the instance of will not be necessary.
-            if ( cb instanceof ICacheElementSerialized )
+            if (cb instanceof ICacheElementSerialized<K, V> serialized)
             {
                 log.debug( "Object needs to be deserialized." );
                 try
                 {
                     cb = SerializationConversionUtil.getDeSerializedCacheElement(
-                            (ICacheElementSerialized<K, V>) cb, this.elementSerializer );
+                            serialized, this.elementSerializer );
                     log.debug( "Deserialized result = {0}", cb );
                 }
                 catch ( final IOException e )

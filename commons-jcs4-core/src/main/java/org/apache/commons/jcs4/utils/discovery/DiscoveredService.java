@@ -84,16 +84,13 @@ public class DiscoveredService
 		{
 			return true;
 		}
-		if (otherArg == null || !(otherArg instanceof DiscoveredService))
+		if (otherArg instanceof DiscoveredService ds)
 		{
-			return false;
+    		return Objects.equals(serviceAddress, ds.serviceAddress) &&
+    		        servicePort == ds.servicePort;
 		}
-		final DiscoveredService other = (DiscoveredService) otherArg;
-		if (!Objects.equals(serviceAddress, other.serviceAddress))
-		{
-			return false;
-		}
-        return servicePort == other.servicePort;
+
+		return false;
     }
 
     /**

@@ -150,9 +150,9 @@ public class CompositeCacheConfigurator
 
                 auxFac.setName( auxName );
 
-                if ( auxFac instanceof IRequireScheduler)
+                if (auxFac instanceof IRequireScheduler irs)
                 {
-                	((IRequireScheduler)auxFac).setScheduledExecutorService(ccm.getScheduledExecutorService());
+                	irs.setScheduledExecutorService(ccm.getScheduledExecutorService());
                 }
 
                 auxFac.initialize();
@@ -421,10 +421,9 @@ public class CompositeCacheConfigurator
 
                 if ( auxCache != null )
                 {
-                    if (auxCache instanceof IRequireScheduler)
+                    if (auxCache instanceof IRequireScheduler irs)
                     {
-                        ((IRequireScheduler) auxCache).setScheduledExecutorService(
-                                ccm.getScheduledExecutorService());
+                        irs.setScheduledExecutorService(ccm.getScheduledExecutorService());
                     }
 
                     auxList.add( auxCache );

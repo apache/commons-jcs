@@ -99,9 +99,9 @@ public class SerializationConversionUtil
         byte[] serializedValue = null;
 
         // if it has already been serialized, don't do it again.
-        if ( element instanceof ICacheElementSerialized )
+        if (element instanceof ICacheElementSerialized<K, V> serialized)
         {
-            serializedValue = ( (ICacheElementSerialized<K, V>) element ).getSerializedValue();
+            serializedValue = serialized.getSerializedValue();
         }
         else
         {

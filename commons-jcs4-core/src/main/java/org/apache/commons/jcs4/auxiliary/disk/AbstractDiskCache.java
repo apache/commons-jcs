@@ -111,10 +111,8 @@ public abstract class AbstractDiskCache<K, V>
             {
                 // If the element is a PurgatoryElement<K, V> we must check to see
                 // if it is still spoolable, and remove it from purgatory.
-                if ( element instanceof PurgatoryElement )
+                if ( element instanceof PurgatoryElement<K, V> pe)
                 {
-                    final PurgatoryElement<K, V> pe = (PurgatoryElement<K, V>) element;
-
                     synchronized ( pe.getCacheElement() )
                     {
                         // TODO consider a timeout.

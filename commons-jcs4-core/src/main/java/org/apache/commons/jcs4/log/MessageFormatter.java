@@ -46,9 +46,9 @@ public class MessageFormatter
         this.messagePattern = messagePattern;
         this.parameters = parameters;
         final int length = parameters == null ? 0 : parameters.length;
-        if (length > 0 && parameters[length - 1] instanceof Throwable)
+        if (length > 0 && parameters[length - 1] instanceof Throwable t)
         {
-            this.throwable = (Throwable) parameters[length - 1];
+            this.throwable = t;
         }
     }
 
@@ -69,9 +69,9 @@ public class MessageFormatter
                             .toArray();
 
         final int length = parameters.length;
-        if (length > 0 && parameters[length - 1] instanceof Throwable)
+        if (length > 0 && parameters[length - 1] instanceof Throwable t)
         {
-            this.throwable = (Throwable) parameters[length - 1];
+            this.throwable = t;
         }
     }
 

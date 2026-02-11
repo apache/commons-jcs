@@ -92,7 +92,7 @@ public class RemoteHttpCache<K, V>
         throws IOException
     {
         // we should not switch if the existing is a zombie.
-        if ( !( getRemoteCacheService() instanceof ZombieCacheServiceNonLocal ) )
+        if ( !( getRemoteCacheService() instanceof ZombieCacheServiceNonLocal))
         {
             final String message = "Disabling remote cache due to error: " + msg;
             logError( cacheName, "", message );
@@ -103,9 +103,9 @@ public class RemoteHttpCache<K, V>
             monitor.notifyError( this );
         }
 
-        if ( ex instanceof IOException )
+        if (ex instanceof IOException ioe)
         {
-            throw (IOException) ex;
+            throw ioe;
         }
         throw new IOException( ex.getMessage() );
     }

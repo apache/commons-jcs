@@ -80,9 +80,8 @@ public class LateralTCPCache<K, V>
      */
     public void fixCache( final ICacheServiceNonLocal<K, V> restoredLateral )
     {
-        if ( this.lateralCacheService instanceof ZombieCacheServiceNonLocal )
+        if ( this.lateralCacheService instanceof ZombieCacheServiceNonLocal<K, V> zombie)
         {
-            final ZombieCacheServiceNonLocal<K, V> zombie = (ZombieCacheServiceNonLocal<K, V>) this.lateralCacheService;
             this.lateralCacheService = restoredLateral;
             try
             {
@@ -218,9 +217,9 @@ public class LateralTCPCache<K, V>
         monitor.notifyError();
 
         // could stop the net search if it is built and try to reconnect?
-        if ( ex instanceof IOException )
+        if (ex instanceof IOException ioe)
         {
-            throw (IOException) ex;
+            throw ioe;
         }
         throw new IOException( ex.getMessage() );
     }
