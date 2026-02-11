@@ -39,10 +39,7 @@ public class DoubleLinkedListNode<T>
     private final T payload;
 
     /** Double Linked list references */
-    public DoubleLinkedListNode<T> prev;
-
-    /** Double Linked list references */
-    public DoubleLinkedListNode<T> next;
+    public DoubleLinkedListNode<T> prev, next;
 
     /**
      * @param payloadP
