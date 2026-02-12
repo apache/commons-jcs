@@ -93,8 +93,13 @@ jcs.default.cacheattributes=org.apache.commons.jcs4.engine.CompositeCacheAttribu
       <subsection name="Logging">
         <p>
           JCS 4.0.0 uses the JDK9+ System.Logger interface for logging.
-          By default, JCS uses java.util.logging as implementation.
+          By default, JCS uses java.util.logging as implementation. For a better readability
+          we recommend to configure the logger formatting like this:
         </p>
+        <source><![CDATA[
+java.util.logging.FileHandler.formatter=java.util.logging.SimpleFormatter
+java.util.logging.SimpleFormatter.format=[%1$tF %1$tT] %3$s [%4$-7s] %5$s %n
+]]></source>
         <p>
           If you want to use Log4j2 as a log implementation, for example, you can activate 
           it by providing log4j-jpl as a runtime dependency and a log configuration
