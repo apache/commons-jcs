@@ -66,8 +66,8 @@ public abstract class AbstractAuxiliaryCache<K, V>
         K key = null;
         if ( item != null )
         {
-            regionName = item.getCacheName();
-            key = item.getKey();
+            regionName = item.cacheName();
+            key = item.key();
         }
         return cacheEventLogger.createICacheEvent( getAuxiliaryCacheAttributes().getName(), regionName, eventName,
                                                    diskLocation, key );
@@ -207,7 +207,7 @@ public abstract class AbstractAuxiliaryCache<K, V>
                 })
                 .filter(Objects::nonNull)
                 .collect(Collectors.toMap(
-                        ICacheElement::getKey,
+                        ICacheElement::key,
                         element -> element));
         }
 

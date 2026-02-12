@@ -73,7 +73,7 @@ public class CacheAccess<K, V>
     {
         final ICacheElement<K, V> element = getCacheControl().get( name );
 
-        return element != null ? element.getVal() : null;
+        return element != null ? element.value() : null;
     }
 
     /**
@@ -192,7 +192,7 @@ public class CacheAccess<K, V>
                     .filter(entry -> entry.getValue() != null)
                     .collect(Collectors.toMap(
                             Entry::getKey,
-                            entry -> entry.getValue().getVal()));
+                            entry -> entry.getValue().value()));
         }
 
         return unwrappedResults;
@@ -260,10 +260,8 @@ public class CacheAccess<K, V>
         // should be wrapped by cache access.
         try
         {
-            final CacheElement<K, V> ce = new CacheElement<>( getCacheControl().getCacheName(), key,
-                                                val );
-
-            ce.setElementAttributes( attr );
+            final CacheElement<K, V> ce = new CacheElement<>(getCacheControl().getCacheName(),
+                    key, val, attr);
 
             getCacheControl().update( ce );
         }
@@ -328,6 +326,6 @@ public class CacheAccess<K, V>
         // element.setElementAttributes( attr );
         // Another reason to call put is to force the changes to be distributed.
 
-        put( element.getKey(), element.getVal(), attr );
+        put( element.key(), element.value(), attr );
     }
 }

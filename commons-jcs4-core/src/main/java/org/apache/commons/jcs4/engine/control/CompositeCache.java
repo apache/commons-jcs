@@ -314,7 +314,7 @@ public class CompositeCache<K, V>
     protected void doExpires(final ICacheElement<K, V> element)
     {
         missCountExpired.incrementAndGet();
-        remove(element.getKey());
+        remove(element.key());
     }
 
     /**
@@ -446,7 +446,7 @@ public class CompositeCache<K, V>
 
         if (element != null)
         {
-            element.getElementAttributes().setLastAccessTimeNow();
+            element.elementAttributes().setLastAccessTimeNow();
         }
 
         return element;
@@ -521,7 +521,7 @@ public class CompositeCache<K, V>
         {
             throw new ObjectNotFoundException("key " + key + " is not found");
         }
-        return ce.getElementAttributes();
+        return ce.elementAttributes();
     }
 
     /**
@@ -942,7 +942,7 @@ public class CompositeCache<K, V>
      */
     public void handleElementEvent(final ICacheElement<K, V> element, final ElementEventType eventType)
     {
-        final ArrayList<IElementEventHandler> eventHandlers = element.getElementAttributes().elementEventHandlers();
+        final ArrayList<IElementEventHandler> eventHandlers = element.elementAttributes().elementEventHandlers();
         if (eventHandlers != null)
         {
             log.debug("Element Handlers are registered.  Create event type {0}", eventType);
@@ -993,7 +993,7 @@ public class CompositeCache<K, V>
     {
         try
         {
-            final IElementAttributes attributes = element.getElementAttributes();
+            final IElementAttributes attributes = element.elementAttributes();
 
             if (!attributes.isEternal())
             {
@@ -1004,7 +1004,7 @@ public class CompositeCache<K, V>
 
                 if (maxLifeSeconds != -1 && timestamp - createTime > maxLifeSeconds * timeFactorForMilliseconds)
                 {
-                    log.debug("Exceeded maxLife: {0}", element::getKey);
+                    log.debug("Exceeded maxLife: {0}", element::key);
 
                     handleElementEvent(element, eventMaxlife);
                     return true;
@@ -1018,7 +1018,7 @@ public class CompositeCache<K, V>
                 // you will need to set the idle time to -1.
                 if (idleTime != -1 && timestamp - lastAccessTime > idleTime * timeFactorForMilliseconds)
                 {
-                    log.debug("Exceeded maxIdle: {0}", element::getKey);
+                    log.debug("Exceeded maxIdle: {0}", element::key);
 
                     handleElementEvent(element, eventIdle);
                     return true;
@@ -1436,7 +1436,7 @@ public class CompositeCache<K, V>
     public void spoolToDisk(final ICacheElement<K, V> ce)
     {
         // if the item is not spoolable, return
-        if (!ce.getElementAttributes().isSpool())
+        if (!ce.elementAttributes().isSpool())
         {
             // there is an event defined for this.
             handleElementEvent(ce, ElementEventType.SPOOLED_NOT_ALLOWED);
@@ -1468,7 +1468,7 @@ public class CompositeCache<K, V>
                     }
 
                     log.debug("spoolToDisk done for: {0} on disk cache[{1}]",
-                            ce::getKey, aux::getCacheName);
+                            ce::key, aux::getCacheName);
                 }
                 else
                 {
@@ -1520,23 +1520,23 @@ public class CompositeCache<K, V>
         throws IOException
     {
 
-        if (cacheElement.getKey() instanceof String s && s.endsWith(NAME_COMPONENT_DELIMITER))
+        if (cacheElement.key() instanceof String s && s.endsWith(NAME_COMPONENT_DELIMITER))
         {
             throw new IllegalArgumentException("key must not end with " + NAME_COMPONENT_DELIMITER
                 + " for a put operation");
         }
-        if (cacheElement.getKey() instanceof GroupId)
+        if (cacheElement.key() instanceof GroupId)
         {
             throw new IllegalArgumentException("key cannot be a GroupId for a put operation");
         }
 
-        log.debug("Updating memory cache {0}", cacheElement::getKey);
+        log.debug("Updating memory cache {0}", cacheElement::key);
 
         updateCount.incrementAndGet();
         memCache.update(cacheElement);
         updateAuxiliaries(cacheElement, localOnly);
 
-        cacheElement.getElementAttributes().setLastAccessTimeNow();
+        cacheElement.elementAttributes().setLastAccessTimeNow();
     }
 
     /**
@@ -1587,9 +1587,9 @@ public class CompositeCache<K, V>
                 // SEND TO REMOTE STORE
                 case REMOTE_CACHE:
                     log.debug("ce.getElementAttributes().getIsRemote() = {0}",
-                        cacheElement.getElementAttributes()::isRemote);
+                        cacheElement.elementAttributes()::isRemote);
 
-                    if (cacheElement.getElementAttributes().isRemote() && !localOnly)
+                    if (cacheElement.elementAttributes().isRemote() && !localOnly)
                     {
                         try
                         {
@@ -1597,7 +1597,7 @@ public class CompositeCache<K, V>
                             // the key is a group attribute on update
                             aux.update(cacheElement);
                             log.debug("Updated remote store for {0} {1}",
-                                    cacheElement.getKey(), cacheElement);
+                                    cacheElement.key(), cacheElement);
                         }
                         catch (final IOException ex)
                         {
@@ -1611,13 +1611,13 @@ public class CompositeCache<K, V>
                     // lateral can't do the checking since it is dependent on the
                     // cache region restrictions
                     log.debug("lateralcache in aux list: cattr {0}", cacheAttr::useLateral);
-                    if (cacheAttr.useLateral() && cacheElement.getElementAttributes().isLateral() && !localOnly)
+                    if (cacheAttr.useLateral() && cacheElement.elementAttributes().isLateral() && !localOnly)
                     {
                         // DISTRIBUTE LATERALLY
                         // Currently always multicast even if the value is
                         // unchanged, to cause the cache item to move to the front.
                         aux.update(cacheElement);
-                        log.debug("updated lateral cache for {0}", cacheElement::getKey);
+                        log.debug("updated lateral cache for {0}", cacheElement::key);
                     }
                     break;
 
@@ -1626,10 +1626,10 @@ public class CompositeCache<K, V>
                     log.debug("diskcache in aux list: cattr {0}", cacheAttr::useDisk);
                     if (cacheAttr.useDisk()
                         && cacheAttr.diskUsagePattern() == DiskUsagePattern.UPDATE
-                        && cacheElement.getElementAttributes().isSpool())
+                        && cacheElement.elementAttributes().isSpool())
                     {
                         aux.update(cacheElement);
-                        log.debug("updated disk cache for {0}", cacheElement::getKey);
+                        log.debug("updated disk cache for {0}", cacheElement::key);
                     }
                     break;
 

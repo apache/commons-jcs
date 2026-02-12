@@ -159,7 +159,7 @@ class BasicRemoteCacheClientServerUnitTest
         final ICacheElement<String, String> result = cache.get("key");
 
         // VERIFY
-        assertEquals( element.getVal(), result.getVal(), "Wrong element." );
+        assertEquals( element.value(), result.value(), "Wrong element." );
     }
 
     /**
@@ -195,7 +195,7 @@ class BasicRemoteCacheClientServerUnitTest
         final ICacheElement<String, String> result = cache.get("key");
 
         // VERIFY
-        assertEquals( element.getVal(), result.getVal(), "Wrong element." );
+        assertEquals( element.value(), result.value(), "Wrong element." );
 
         // DO WORK
         cache.remove("key");

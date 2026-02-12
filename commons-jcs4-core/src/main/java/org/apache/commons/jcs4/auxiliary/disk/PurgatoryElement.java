@@ -19,7 +19,7 @@ package org.apache.commons.jcs4.auxiliary.disk;
  * under the License.
  */
 
-import java.util.Objects;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.commons.jcs4.engine.behavior.ICacheElement;
 import org.apache.commons.jcs4.engine.behavior.IElementAttributes;
@@ -30,54 +30,25 @@ import org.apache.commons.jcs4.engine.behavior.IElementAttributes;
  * Elements are stored in purgatory when they are spooled to the auxiliary cache, but have not yet
  * been written to disk.
  */
-public class PurgatoryElement<K, V>
-    implements ICacheElement<K, V>
+public record PurgatoryElement<K, V>(
+        /** Wrapped cache Element */
+        ICacheElement<K, V> cacheElement,
+
+        /** Is the element ready to be spooled? */
+        AtomicBoolean mutableSpoolable
+) implements ICacheElement<K, V>
 {
     /** Don't change */
     private static final long serialVersionUID = -8152034342684135628L;
-
-    /** Is the element ready to be spooled? */
-    private boolean spoolable;
-
-    /** Wrapped cache Element */
-    private final ICacheElement<K, V> cacheElement;
 
     /**
      * Constructor for the PurgatoryElement&lt;K, V&gt; object
      *
      * @param cacheElement CacheElement
      */
-    public PurgatoryElement( final ICacheElement<K, V> cacheElement )
+    public PurgatoryElement(final ICacheElement<K, V> cacheElement)
     {
-        this.cacheElement = cacheElement;
-    }
-
-    /**
-     * @param obj other object
-     * @return true if this object key equals the key of obj
-     */
-    @Override
-    public boolean equals(final Object obj)
-    {
-        if (this == obj)
-        {
-            return true;
-        }
-        if (obj instanceof PurgatoryElement pe)
-        {
-            return Objects.equals(getKey(), pe.getKey());
-        }
-        return false;
-    }
-
-    /**
-     * Gets the wrapped cache element.
-     *
-     * @return ICacheElement
-     */
-    public ICacheElement<K, V> getCacheElement()
-    {
-        return cacheElement;
+        this(cacheElement, new AtomicBoolean());
     }
 
     /**
@@ -85,9 +56,9 @@ public class PurgatoryElement<K, V>
      * @see ICacheElement#getCacheName
      */
     @Override
-    public String getCacheName()
+    public String cacheName()
     {
-        return cacheElement.getCacheName();
+        return cacheElement.cacheName();
     }
 
     /**
@@ -95,9 +66,9 @@ public class PurgatoryElement<K, V>
      * @see ICacheElement#getElementAttributes
      */
     @Override
-    public IElementAttributes getElementAttributes()
+    public IElementAttributes elementAttributes()
     {
-        return cacheElement.getElementAttributes();
+        return cacheElement.elementAttributes();
     }
 
     /**
@@ -105,9 +76,9 @@ public class PurgatoryElement<K, V>
      * @see ICacheElement#getKey
      */
     @Override
-    public K getKey()
+    public K key()
     {
-        return cacheElement.getKey();
+        return cacheElement.key();
     }
 
     /**
@@ -115,9 +86,9 @@ public class PurgatoryElement<K, V>
      * @see ICacheElement#getVal
      */
     @Override
-    public V getVal()
+    public V value()
     {
-        return cacheElement.getVal();
+        return cacheElement.value();
     }
 
     /**
@@ -126,7 +97,7 @@ public class PurgatoryElement<K, V>
     @Override
     public int hashCode()
     {
-        return getKey().hashCode();
+        return key().hashCode();
     }
 
     /**
@@ -136,17 +107,7 @@ public class PurgatoryElement<K, V>
      */
     public boolean isSpoolable()
     {
-        return spoolable;
-    }
-
-    /**
-     * @param attr
-     * @see ICacheElement#setElementAttributes
-     */
-    @Override
-    public void setElementAttributes( final IElementAttributes attr )
-    {
-        cacheElement.setElementAttributes( attr );
+        return mutableSpoolable.get();
     }
 
     /**
@@ -156,7 +117,7 @@ public class PurgatoryElement<K, V>
      */
     public void setSpoolable( final boolean spoolable )
     {
-        this.spoolable = spoolable;
+        this.mutableSpoolable.set(spoolable);
     }
 
     /**
@@ -168,11 +129,11 @@ public class PurgatoryElement<K, V>
         final StringBuilder buf = new StringBuilder();
         buf.append( "[PurgatoryElement: " );
         buf.append( " isSpoolable = ").append(isSpoolable());
-        buf.append( " CacheElement = ").append(getCacheElement());
-        buf.append( " CacheName = ").append(getCacheName());
-        buf.append( " Key = ").append(getKey());
-        buf.append( " Value = ").append(getVal());
-        buf.append( " ElementAttributes = ").append(getElementAttributes());
+        buf.append( " CacheElement = ").append(cacheElement());
+        buf.append( " CacheName = ").append(cacheName());
+        buf.append( " Key = ").append(key());
+        buf.append( " Value = ").append(value());
+        buf.append( " ElementAttributes = ").append(elementAttributes());
         buf.append( "]" );
         return buf.toString();
     }

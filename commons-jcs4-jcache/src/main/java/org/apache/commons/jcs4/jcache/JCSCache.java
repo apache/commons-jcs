@@ -296,7 +296,7 @@ public class JCSCache<K, V> implements Cache<K, V>
     {
         final boolean statisticsEnabled = config.isStatisticsEnabled();
         final ICacheElement<K, V> elt = delegate.get(key);
-        V v = elt != null ? elt.getVal() : null;
+        V v = elt != null ? elt.value() : null;
         if (v == null && (config.isReadThrough() || forceDoLoad))
         {
             if (!skipLoad)
@@ -323,11 +323,11 @@ public class JCSCache<K, V> implements Cache<K, V>
             {
                 forceExpires(key);
             }
-            else if (expiryForAccess != null && (!elt.getElementAttributes().isEternal() || !expiryForAccess.isEternal()))
+            else if (expiryForAccess != null && (!elt.elementAttributes().isEternal() || !expiryForAccess.isEternal()))
             {
                 try
                 {
-                    delegate.update(updateElement(key, elt.getVal(), expiryForAccess, elt.getElementAttributes()));
+                    delegate.update(updateElement(key, elt.value(), expiryForAccess, elt.elementAttributes()));
                 }
                 catch (final IOException e)
                 {
@@ -456,7 +456,7 @@ public class JCSCache<K, V> implements Cache<K, V>
         for (final JCSListener<K, V> listener : listeners.values())
         {
             listener.onExpired(Collections.singletonList(new JCSCacheEntryEvent<>(this,
-                    EventType.REMOVED, null, cacheKey, elt.getVal())));
+                    EventType.REMOVED, null, cacheKey, elt.value())));
         }
     }
 
@@ -484,7 +484,7 @@ public class JCSCache<K, V> implements Cache<K, V>
             assertNotNull(key, "key");
 
             final ICacheElement<K, V> elt = delegate.get(key);
-            V val = elt != null ? elt.getVal() : null;
+            V val = elt != null ? elt.value() : null;
             if (val == null && config.isReadThrough())
             {
                 val = doLoad(key, false, false);
@@ -545,7 +545,7 @@ public class JCSCache<K, V> implements Cache<K, V>
         final ICacheElement<K, V> elt = delegate.get(key);
         if (elt != null)
         {
-            V oldValue = elt.getVal();
+            V oldValue = elt.value();
             if (oldValue == null && config.isReadThrough())
             {
                 oldValue = doLoad(key, false, false);
@@ -684,7 +684,7 @@ public class JCSCache<K, V> implements Cache<K, V>
         assertNotNull(rawValue, "value");
 
         final ICacheElement<K, V> oldElt = delegate.get(key);
-        final V old = oldElt != null ? oldElt.getVal() : null;
+        final V old = oldElt != null ? oldElt.value() : null;
 
         final boolean storeByValue = config.isStoreByValue();
         final V value = storeByValue ? copy(serializer, manager.getClassLoader(), rawValue) : rawValue;
@@ -697,14 +697,12 @@ public class JCSCache<K, V> implements Cache<K, V>
             final long start = Times.now(false);
 
             final K jcsKey = storeByValue ? copy(serializer, manager.getClassLoader(), key) : key;
-            final ICacheElement<K, V> element = updateElement( // reuse it to create basic structure
-                    jcsKey, value, created ? null : duration,
-                    oldElt != null ? oldElt.getElementAttributes() : new ElementAttributes(delegate.getElementAttributes()));
+            IElementAttributes attributes = oldElt != null ? oldElt.elementAttributes() : delegate.getElementAttributes();
             if (created && duration != null) { // set maxLife
                 final long timeFactorForMilliseconds = 1;
                 final boolean eternal = duration.isEternal();
-                long maxIdleTime = element.getElementAttributes().maxIdleTime();
-                long maxLife = element.getElementAttributes().maxLife();
+                long maxIdleTime = attributes.maxIdleTime();
+                long maxLife = attributes.maxLife();
                 if (!eternal)
                 {
                     if (duration == expiryPolicy.getExpiryForAccess())
@@ -716,16 +714,18 @@ public class JCSCache<K, V> implements Cache<K, V>
                         maxLife = duration.getTimeUnit().toMillis(duration.getDurationAmount());
                     }
                 }
-                IElementAttributes copy = new ElementAttributes(
-                        element.getElementAttributes().isSpool(),
-                        element.getElementAttributes().isLateral(),
-                        element.getElementAttributes().isRemote(),
+                attributes = new ElementAttributes(
+                        attributes.isSpool(),
+                        attributes.isLateral(),
+                        attributes.isRemote(),
                         eternal,
                         maxLife,
                         maxIdleTime,
                         timeFactorForMilliseconds);
-                element.setElementAttributes(copy);
             }
+            final ICacheElement<K, V> element = updateElement(
+                    jcsKey, value, created ? null : duration, attributes);
+
             writer.write(new JCSEntry<>(jcsKey, value));
             try
             {
@@ -809,7 +809,7 @@ public class JCSCache<K, V> implements Cache<K, V>
         final ICacheElement<K, V> v = delegate.get(key);
         delegate.remove(key);
 
-        final V value = v != null && v.getVal() != null ? v.getVal() : null;
+        final V value = v != null && v.value() != null ? v.value() : null;
         final boolean remove = v != null;
         for (final JCSListener<K, V> listener : listeners.values())
         {
@@ -900,7 +900,7 @@ public class JCSCache<K, V> implements Cache<K, V>
         final ICacheElement<K, V> elt = delegate.get(key);
         if (elt != null)
         {
-            V value = elt.getVal();
+            V value = elt.value();
             if (value != null && statisticsEnabled)
             {
                 statistics.increaseHits(1);
@@ -917,11 +917,11 @@ public class JCSCache<K, V> implements Cache<K, V>
             if (value != null)
             {
                 final Duration expiryForAccess = expiryPolicy.getExpiryForAccess();
-                if (expiryForAccess != null && (!elt.getElementAttributes().isEternal() || !expiryForAccess.isEternal()))
+                if (expiryForAccess != null && (!elt.elementAttributes().isEternal() || !expiryForAccess.isEternal()))
                 {
                     try
                     {
-                        delegate.update(updateElement(key, elt.getVal(), expiryForAccess, elt.getElementAttributes()));
+                        delegate.update(updateElement(key, elt.value(), expiryForAccess, elt.elementAttributes()));
                     }
                     catch (final IOException e)
                     {
@@ -944,7 +944,7 @@ public class JCSCache<K, V> implements Cache<K, V>
             final K copy = copy(serializer, manager.getClassLoader(), key);
             try
             {
-                delegate.update(new CacheElement<>(name, copy, element.getVal(), element.getElementAttributes()));
+                delegate.update(new CacheElement<>(name, copy, element.value(), element.elementAttributes()));
             }
             catch (final IOException e)
             {
@@ -970,21 +970,18 @@ public class JCSCache<K, V> implements Cache<K, V>
 
     private ICacheElement<K, V> updateElement(final K key, final V v, final Duration duration, final IElementAttributes attrs)
     {
-        final ICacheElement<K, V> element = new CacheElement<>(name, key, v, attrs);
-        if (duration != null)
-        {
-            final boolean eternal = duration.isEternal();
+        IElementAttributes newAttributes = (duration != null) ?
             // MaxLife = -1 to use IdleTime excepted if jcache.ccf asked for something else
-            IElementAttributes copy = new ElementAttributes(
+            new ElementAttributes(
                     attrs.isSpool(),
                     attrs.isLateral(),
                     attrs.isRemote(),
-                    eternal,
+                    duration.isEternal(),
                     attrs.maxLife(),
                     attrs.maxIdleTime(),
-                    1);
-            element.setElementAttributes(copy);
-        }
-        return element;
+                    1)
+            : attrs;
+
+        return new CacheElement<>(name, key, v, newAttributes);
     }
 }

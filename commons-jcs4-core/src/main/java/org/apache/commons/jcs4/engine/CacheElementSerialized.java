@@ -20,79 +20,30 @@ package org.apache.commons.jcs4.engine;
  */
 
 import java.util.Arrays;
-import java.util.Objects;
 
 import org.apache.commons.jcs4.engine.behavior.ICacheElementSerialized;
 import org.apache.commons.jcs4.engine.behavior.IElementAttributes;
 
 /** Either serialized value or the value should be null; */
-public class CacheElementSerialized<K, V>
-    implements ICacheElementSerialized<K, V>
+public record CacheElementSerialized<K, V>(
+        /** The name of the cache region. This is a namespace. */
+        String cacheName,
+
+        /** This is the cache key by which the value can be referenced. */
+        K key,
+
+        /** The serialized value. */
+        byte[] serializedValue,
+
+        /**
+         * These attributes hold information about the element and what it is
+         * allowed to do.
+         */
+        IElementAttributes elementAttributes
+) implements ICacheElementSerialized<K, V>
 {
     /** Don't change. */
     private static final long serialVersionUID = -7265084818647601874L;
-
-    /** The serialized value. */
-    private final byte[] serializedValue;
-
-    /** The name of the cache region. This is a namespace. */
-    private final String cacheName;
-
-    /** This is the cache key by which the value can be referenced. */
-    private final K key;
-
-    /**
-     * These attributes hold information about the element and what it is
-     * allowed to do.
-     */
-    private IElementAttributes attr;
-
-    /**
-     * Constructs a usable wrapper.
-     *
-     * @param cacheName         The name of the cache region. This is a namespace.
-     * @param key               This is the cache key by which the value can be referenced.
-     * @param serializedValue   The serialized value.
-     * @param elementAttributes These attributes hold information about the element and what it is allowed to do.
-     */
-    public CacheElementSerialized(final String cacheName, final K key, final byte[] serializedValue,
-                                   final IElementAttributes elementAttributes)
-    {
-        this.cacheName = cacheName;
-        this.key = key;
-        this.serializedValue = serializedValue;
-        this.attr = elementAttributes;
-    }
-
-    /**
-     * @param obj other object
-     * @return true if this object key equals the key of obj
-     */
-    @Override
-    public boolean equals(final Object obj)
-    {
-        if (this == obj)
-        {
-            return true;
-        }
-        if (obj instanceof CacheElementSerialized ces)
-        {
-            return Objects.equals(getKey(), ces.getKey());
-        }
-
-        return false;
-    }
-
-    /**
-     * Gets the cacheName attribute of the CacheElement object
-     *
-     * @return The cacheName value
-     */
-    @Override
-    public String getCacheName()
-    {
-        return this.cacheName;
-    }
 
     /**
      * Gets the IElementAttributes attribute of the CacheElement object
@@ -100,57 +51,28 @@ public class CacheElementSerialized<K, V>
      * @return The IElementAttributes value, never null
      */
     @Override
-    public IElementAttributes getElementAttributes()
+    public IElementAttributes elementAttributes()
     {
         // create default attributes if they are null
         // this shouldn't happen, but could if a corrupt
         // object was sent over the wire.
-        if ( this.attr == null )
+        if ( this.elementAttributes == null )
         {
-            this.attr = new ElementAttributes();
+            return new ElementAttributes();
         }
-        return this.attr;
+
+        return this.elementAttributes;
     }
 
     /**
-     * Gets the key attribute of the CacheElement object
+     * Gets the value attribute of the CacheElement object
      *
-     * @return The key value
+     * @return The value
      */
     @Override
-    public K getKey()
-    {
-        return this.key;
-    }
-
-    /** @return byte[] */
-    @Override
-    public byte[] getSerializedValue()
-    {
-        return this.serializedValue;
-    }
-
-    /**
-     * Gets the val attribute of the CacheElement object
-     *
-     * @return The val value
-     */
-    @Override
-    public V getVal()
+    public V value()
     {
         return null;
-    }
-
-    /**
-     * Sets the attributes attribute of the CacheElement object
-     *
-     * @param attr
-     *            The new IElementAttributes value
-     */
-    @Override
-    public void setElementAttributes( final IElementAttributes attr )
-    {
-        this.attr = attr;
     }
 
     /**
@@ -163,11 +85,10 @@ public class CacheElementSerialized<K, V>
     {
         final StringBuilder buf = new StringBuilder();
         buf.append( "\n CacheElementSerialized: " );
-        buf.append( "\n CacheName = [").append(getCacheName()).append("]");
-        buf.append( "\n Key = [").append(getKey()).append("]");
-        buf.append( "\n SerializedValue = ").append(Arrays.toString(getSerializedValue()));
-        buf.append( "\n ElementAttributes = ").append(getElementAttributes());
+        buf.append( "\n CacheName = [").append(cacheName()).append("]");
+        buf.append( "\n Key = [").append(key()).append("]");
+        buf.append( "\n SerializedValue = ").append(Arrays.toString(serializedValue()));
+        buf.append( "\n ElementAttributes = ").append(elementAttributes());
         return buf.toString();
     }
-
 }

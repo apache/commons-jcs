@@ -202,16 +202,16 @@ class ShrinkerThreadUnitTest
         final String key = "key";
         final String value = "value";
 
-        final ICacheElement<String, String> element = new CacheElement<>( "testRegion", key, value );
         final ElementAttributes elementAttr = TestElementAttributes.withEternalFalseAndMaxLife(1);
-        element.setElementAttributes( elementAttr );
+        final ICacheElement<String, String> element = new CacheElement<>("testRegion",
+                key, value, elementAttr);
         memory.update( element );
 
         final ICacheElement<String, String> returnedElement1 = memory.get( key );
         assertNotNull( returnedElement1, "We should have received an element" );
 
         // set this to 2 seconds ago.
-        elementAttr.atomicLastAccessTime().set(System.currentTimeMillis() - 2000);
+        elementAttr.mutableLastAccessTime().set(System.currentTimeMillis() - 2000);
 
         // DO WORK
         final ShrinkerThread<String, String> shrinker = new ShrinkerThread<>( cache );
@@ -248,16 +248,16 @@ class ShrinkerThreadUnitTest
             final String key = "key" + i;
             final String value = "value";
 
-            final ICacheElement<String, String> element = new CacheElement<>( "testRegion", key, value );
             final ElementAttributes elementAttr = TestElementAttributes.withEternalFalseAndMaxLife(1);
-            element.setElementAttributes( elementAttr );
+            final ICacheElement<String, String> element = new CacheElement<>( "testRegion",
+                    key, value, elementAttr);
             memory.update( element );
 
             final ICacheElement<String, String> returnedElement1 = memory.get( key );
             assertNotNull( returnedElement1, "We should have received an element" );
 
             // set this to 2 seconds ago.
-            elementAttr.atomicLastAccessTime().set(System.currentTimeMillis() - 2000);
+            elementAttr.mutableLastAccessTime().set(System.currentTimeMillis() - 2000);
         }
 
         // DO WORK
@@ -297,17 +297,17 @@ class ShrinkerThreadUnitTest
             final String key = "key" + i;
             final String value = "value";
 
-            final ICacheElement<String, String> element = new CacheElement<>( "testRegion", key, value );
             final ElementAttributes elementAttr = TestElementAttributes.withEternalFalseAndMaxLife(1);
+            final ICacheElement<String, String> element = new CacheElement<>( "testRegion",
+                    key, value, elementAttr);
             elementAttr.addElementEventHandler( handler );
-            element.setElementAttributes( elementAttr );
             memory.update( element );
 
             final ICacheElement<String, String> returnedElement1 = memory.get( key );
             assertNotNull( returnedElement1, "We should have received an element" );
 
             // set this to 2 seconds ago.
-            elementAttr.atomicLastAccessTime().set(System.currentTimeMillis() - 2000);
+            elementAttr.mutableLastAccessTime().set(System.currentTimeMillis() - 2000);
         }
 
         // DO WORK

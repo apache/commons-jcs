@@ -161,7 +161,7 @@ public class SoftReferenceMemoryCache<K, V> extends AbstractMemoryCache<K, V>
     protected void lockedGetElement(final MemoryElementDescriptor<K, V> me)
     {
         final ICacheElement<K, V> val = me.getCacheElement();
-        val.getElementAttributes().setLastAccessTimeNow();
+        val.elementAttributes().setLastAccessTimeNow();
 
         // update the ordering of the strong references
         strongReferences.add(val);
@@ -216,13 +216,13 @@ public class SoftReferenceMemoryCache<K, V> extends AbstractMemoryCache<K, V>
     public void update(final ICacheElement<K, V> ce) throws IOException
     {
         putCnt.incrementAndGet();
-        ce.getElementAttributes().setLastAccessTimeNow();
+        ce.elementAttributes().setLastAccessTimeNow();
 
         lock.lock();
 
         try
         {
-            map.put(ce.getKey(), new SoftReferenceElementDescriptor<>(ce));
+            map.put(ce.key(), new SoftReferenceElementDescriptor<>(ce));
             strongReferences.add(ce);
             trimStrongReferences();
         }

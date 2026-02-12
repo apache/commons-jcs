@@ -112,8 +112,8 @@ class SoftReferenceMemoryCacheUnitTest
 
         for ( int i = 0; i < items; i++ )
         {
-            final ICacheElement<String, String> ice = new CacheElement<>( cache.getCacheName(), i + ":key", cache.getCacheName() + " data " + i );
-            ice.setElementAttributes( cache.getElementAttributes() );
+            final ICacheElement<String, String> ice = new CacheElement<>(cache.getCacheName(),
+                    i + ":key", cache.getCacheName() + " data " + i, cache.getElementAttributes());
             srmc.update( ice );
         }
 
@@ -176,7 +176,7 @@ class SoftReferenceMemoryCacheUnitTest
         {
             final ICacheElement<String, String> element = elements.get( i + ":key" );
             assertNotNull( element, "element " + i + ":key is missing" );
-            assertEquals( "myregion data " + i, element.getVal(), "value " + i + ":key" );
+            assertEquals( "myregion data " + i, element.value(), "value " + i + ":key" );
         }
 
         // System.out.println(cache.getStatistics());

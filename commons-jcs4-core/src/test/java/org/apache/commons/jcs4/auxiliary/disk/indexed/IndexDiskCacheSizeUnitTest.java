@@ -103,7 +103,7 @@ public class IndexDiskCacheSizeUnitTest extends AbstractIndexDiskCacheUnitTest
                 {
                     assertNotNull( element,
                                    "The element for key [key:" + test[i] + "] should not be null. i = " + i );
-                    assertEquals( element.getVal(), value, "Elements contents do not match expected" );
+                    assertEquals( element.value(), value, "Elements contents do not match expected" );
                 }
             }
         }

@@ -72,7 +72,7 @@ public class LHMLRUMemoryCache<K, V>
                 return false;
             }
             log.debug( "LHMLRU max size: {0}. Spooling element, key: {1}",
-                    () -> getCacheAttributes().maxObjects(), element::getKey);
+                    () -> getCacheAttributes().maxObjects(), element::key);
 
             waterfal( element );
 
@@ -190,6 +190,6 @@ public class LHMLRUMemoryCache<K, V>
         throws IOException
     {
         putCnt.incrementAndGet();
-        map.put( ce.getKey(), new MemoryElementDescriptor<>(ce) );
+        map.put( ce.key(), new MemoryElementDescriptor<>(ce) );
     }
 }

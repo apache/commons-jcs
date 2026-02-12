@@ -63,7 +63,7 @@ public class GroupCacheAccess<K, V>
     public V getFromGroup( final K name, final String group )
     {
         final ICacheElement<GroupAttrName<K>, V> element = getCacheControl().get( getGroupAttrName( group, name ) );
-        return element != null ? element.getVal() : null;
+        return element != null ? element.value() : null;
     }
 
     /**
@@ -177,10 +177,8 @@ public class GroupCacheAccess<K, V>
         {
             final GroupAttrName<K> key = getGroupAttrName( groupName, name );
             final CacheElement<GroupAttrName<K>, V> ce =
-                new CacheElement<>( getCacheControl().getCacheName(), key, value );
-
-            final IElementAttributes attributes = attr == null ? getCacheControl().getElementAttributes() : attr;
-            ce.setElementAttributes( attributes );
+                new CacheElement<>( getCacheControl().getCacheName(), key, value,
+                        attr == null ? getCacheControl().getElementAttributes() : attr);
 
             getCacheControl().update( ce );
         }

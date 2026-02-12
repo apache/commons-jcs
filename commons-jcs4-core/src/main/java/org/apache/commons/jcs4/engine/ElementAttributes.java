@@ -66,7 +66,7 @@ public record ElementAttributes(
         long createTime,
 
         /** The last access time. This is used to enforce the max idle time. */
-        AtomicLong atomicLastAccessTime,
+        AtomicLong mutableLastAccessTime,
 
         /** The time factor to convert durations to milliseconds */
         long timeFactorForMilliseconds,
@@ -126,7 +126,7 @@ public record ElementAttributes(
     public ElementAttributes()
     {
         this(defaults());
-        this.atomicLastAccessTime.set(createTime());
+        this.mutableLastAccessTime.set(createTime());
     }
 
     /**
@@ -163,7 +163,7 @@ public record ElementAttributes(
                 System.currentTimeMillis(), new AtomicLong(), timeFactorForMilliseconds,
                 new ArrayList<>());
 
-        this.atomicLastAccessTime.set(createTime());
+        this.mutableLastAccessTime.set(createTime());
     }
 
     /**
@@ -189,7 +189,7 @@ public record ElementAttributes(
     @Override
     public long lastAccessTime()
     {
-        return atomicLastAccessTime().get();
+        return mutableLastAccessTime().get();
     }
 
     /**
@@ -198,7 +198,7 @@ public record ElementAttributes(
     @Override
     public void setLastAccessTimeNow()
     {
-        this.atomicLastAccessTime.set(System.currentTimeMillis());
+        this.mutableLastAccessTime.set(System.currentTimeMillis());
     }
 
     /**

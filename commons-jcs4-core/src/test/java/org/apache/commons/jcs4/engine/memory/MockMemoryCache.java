@@ -230,7 +230,7 @@ public class MockMemoryCache<K, V>
     {
         if ( ce != null )
         {
-            map.put( ce.getKey(), ce );
+            map.put( ce.key(), ce );
         }
     }
 

@@ -205,7 +205,7 @@ public class RemoteCacheClientTester
             {
                 p( "deleting a cache item from the server " + i );
 
-                cache.remove( cb.getCacheName(), cb.getKey() );
+                cache.remove( cb.cacheName(), cb.key() );
             }
             if ( write )
             {
@@ -224,8 +224,8 @@ public class RemoteCacheClientTester
             {
                 try
                 {
-                    final Object val = cache.get( cb.getCacheName(), cb.getKey() );
-                    p( "get " + cb.getKey() + " returns " + val );
+                    final Object val = cache.get( cb.cacheName(), cb.key() );
+                    p( "get " + cb.key() + " returns " + val );
                 }
                 catch ( final CacheException onfe )
                 {

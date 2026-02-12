@@ -292,8 +292,8 @@ public class LateralTCPListener<K, V>
      */
     private Object handleElement(final LateralElementDescriptor<K, V> led) throws IOException
     {
-        final String cacheName = led.payload().getCacheName();
-        final K key = led.payload().getKey();
+        final String cacheName = led.payload().cacheName();
+        final K key = led.payload().key();
         Object obj = null;
 
         switch (led.command())
@@ -312,7 +312,7 @@ public class LateralTCPListener<K, V>
                     final ICacheElement<K, V> test = getCache( cacheName ).localGet( key );
                     if ( test != null )
                     {
-                        if ( test.getVal().hashCode() == led.valHashCode() )
+                        if ( test.value().hashCode() == led.valHashCode() )
                         {
                             log.debug( "Filtering detected identical hashCode [{0}], "
                                     + "not issuing a remove for led {1}",
@@ -320,7 +320,7 @@ public class LateralTCPListener<K, V>
                             return null;
                         }
                         log.debug( "Different hash codes, in cache [{0}] sent [{1}]",
-                                test.getVal()::hashCode, led::valHashCode );
+                                test.value()::hashCode, led::valHashCode );
                     }
                 }
                 handleRemove( cacheName, key );
@@ -427,9 +427,9 @@ public class LateralTCPListener<K, V>
         }
 
         log.debug( "handlePut> cacheName={0}, key={1}",
-                element::getCacheName, element::getKey);
+                element::cacheName, element::key);
 
-        getCache( element.getCacheName() ).localUpdate( element );
+        getCache( element.cacheName() ).localUpdate( element );
     }
 
     /**

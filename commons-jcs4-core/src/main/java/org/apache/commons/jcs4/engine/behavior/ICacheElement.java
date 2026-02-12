@@ -33,41 +33,32 @@ import java.io.Serializable;
 public interface ICacheElement<K, V>
     extends Serializable
 {
-
     /**
      * Gets the cacheName attribute of the ICacheElement&lt;K, V&gt; object. The cacheName
      * is also known as the region name.
      *
      * @return The cacheName value
      */
-    String getCacheName();
+    String cacheName();
 
     /**
      * Gets the attributes attribute of the ICacheElement&lt;K, V&gt; object
      *
      * @return The attributes value
      */
-    IElementAttributes getElementAttributes();
+    IElementAttributes elementAttributes();
 
     /**
      * Gets the key attribute of the ICacheElement&lt;K, V&gt; object
      *
      * @return The key value
      */
-    K getKey();
+    K key();
 
     /**
      * Gets the val attribute of the ICacheElement&lt;K, V&gt; object
      *
      * @return The val value
      */
-    V getVal();
-
-    /**
-     * Sets the attributes attribute of the ICacheElement&lt;K, V&gt; object
-     *
-     * @param attr
-     *            The new attributes value
-     */
-    void setElementAttributes( IElementAttributes attr );
+    V value();
 }

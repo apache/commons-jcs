@@ -552,7 +552,7 @@ public class BlockDiskCache<K, V>
         if ( !isAlive() )
         {
             log.debug("{0}: No longer alive; aborting put of key = {1}",
-                    () -> logCacheName, element::getKey);
+                    () -> logCacheName, element::key);
             return;
         }
 
@@ -563,7 +563,7 @@ public class BlockDiskCache<K, V>
 
         try
         {
-            old = this.keyStore.get( element.getKey() );
+            old = this.keyStore.get( element.key() );
 
             if ( old != null )
             {
@@ -572,15 +572,15 @@ public class BlockDiskCache<K, V>
 
             final int[] blocks = this.dataFile.write( element );
 
-            this.keyStore.put( element.getKey(), blocks );
+            this.keyStore.put( element.key(), blocks );
 
             log.debug("{0}: Put to file [{1}] key [{2}]", () -> logCacheName,
-                    () -> fileName, element::getKey);
+                    () -> fileName, element::key);
         }
         catch ( final IOException e )
         {
             log.error("{0}: Failure updating element, key: {1} old: {2}",
-                    logCacheName, element.getKey(), Arrays.toString(old), e);
+                    logCacheName, element.key(), Arrays.toString(old), e);
         }
         finally
         {
@@ -588,7 +588,7 @@ public class BlockDiskCache<K, V>
         }
 
         log.debug("{0}: Storing element on disk, key: {1}", () -> logCacheName,
-                element::getKey);
+                element::key);
     }
 
     /**

@@ -1412,12 +1412,12 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
         if (!isAlive())
         {
             log.error("{0}: No longer alive; aborting put of key = {1}",
-                    () -> logCacheName, ce::getKey);
+                    () -> logCacheName, ce::key);
             return;
         }
 
         log.debug("{0}: Storing element on disk, key: {1}",
-                () -> logCacheName, ce::getKey);
+                () -> logCacheName, ce::key);
 
         // old element with same key
         IndexedDiskElementDescriptor old = null;
@@ -1431,7 +1431,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
             storageLock.writeLock().lock();
             try
             {
-                old = keyHash.get(ce.getKey());
+                old = keyHash.get(ce.key());
 
                 // Item with the same key already exists in file.
                 // Try to reuse the location if possible.
@@ -1474,7 +1474,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
                 }
 
                 // Put it in the map
-                keyHash.put(ce.getKey(), ded);
+                keyHash.put(ce.key(), ded);
                 dataFile.write(ded, data);
             }
             finally
@@ -1483,12 +1483,12 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
             }
 
             log.debug("{0}: Put to file: {1}, key: {2}, position: {3}, size: {4}",
-                    logCacheName, fileName, ce.getKey(), ded.pos(), ded.len());
+                    logCacheName, fileName, ce.key(), ded.pos(), ded.len());
         }
         catch (final IOException e)
         {
             log.error("{0}: Failure updating element, key: {1} old: {2}",
-                    logCacheName, ce.getKey(), old, e);
+                    logCacheName, ce.key(), old, e);
         }
     }
 

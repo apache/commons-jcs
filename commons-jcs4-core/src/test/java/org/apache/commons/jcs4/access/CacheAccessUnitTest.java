@@ -82,11 +82,11 @@ class CacheAccessUnitTest
         //VERIFY
         assertEquals( 2, result.size(), "map size" );
         final ICacheElement<String, String> elementOne = result.get( keyOne );
-        assertEquals( keyOne, elementOne.getKey(), "value one" );
-        assertEquals( valueOne, elementOne.getVal(), "value one" );
+        assertEquals( keyOne, elementOne.key(), "value one" );
+        assertEquals( valueOne, elementOne.value(), "value one" );
         final ICacheElement<String, String> elementTwo = result.get( keyTwo );
-        assertEquals( keyTwo, elementTwo.getKey(), "value two" );
-        assertEquals( valueTwo, elementTwo.getVal(), "value two" );
+        assertEquals( keyTwo, elementTwo.key(), "value two" );
+        assertEquals( valueTwo, elementTwo.value(), "value two" );
 
         assertNull(access.get(keyFour));
         final String suppliedValue1 = access.get(keyFour, () -> valueFour);
@@ -367,7 +367,7 @@ class CacheAccessUnitTest
 
         final ICacheElement<String, String> element = access.getCacheElement( key );
 
-        assertEquals( maxLife, element.getElementAttributes()
+        assertEquals( maxLife, element.elementAttributes()
             .maxLife(), "Wrong max life.  Should have the new value." );
     }
 }

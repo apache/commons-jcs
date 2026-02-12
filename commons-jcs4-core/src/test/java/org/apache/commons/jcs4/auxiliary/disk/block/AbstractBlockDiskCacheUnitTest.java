@@ -109,7 +109,7 @@ public abstract class AbstractBlockDiskCacheUnitTest{
             final ICacheElement<String, X> afterElement = diskCache.get("x" + i);
             assertNotNull( afterElement,
                            "Missing element from cache. Cache size: " + diskCache.getSize() + " element: x" + i );
-            final X after = afterElement.getVal();
+            final X after = afterElement.value();
 
             assertNotNull(after);
             assertEquals( string, after.string, "wrong string after retrieval" );
@@ -142,8 +142,8 @@ public abstract class AbstractBlockDiskCacheUnitTest{
         diskCache = new BlockDiskCache<>(cattr);
         assertTrue(diskCache.verifyDisk());
         assertEquals(2, diskCache.getKeySet().size());
-        assertEquals(value1.string, diskCache.get("1").getVal().string);
-        assertEquals(value2.string, diskCache.get("2").getVal().string);
+        assertEquals(value1.string, diskCache.get("1").value().string);
+        assertEquals(value2.string, diskCache.get("2").value().string);
     }
 
     /**
@@ -242,7 +242,7 @@ public abstract class AbstractBlockDiskCacheUnitTest{
         final ICacheElement<String, String> afterElement = diskCache.get("x");
         assertNotNull(afterElement);
         // System.out.println( "afterElement = " + afterElement );
-        final String after = afterElement.getVal();
+        final String after = afterElement.value();
 
         assertNotNull(after);
         assertEquals( string, after, "wrong string after retrieval" );
@@ -333,11 +333,8 @@ public abstract class AbstractBlockDiskCacheUnitTest{
         for (int i = 0; i < cnt; i++)
         {
             final GroupAttrName<String> groupAttrName = getGroupAttrName(cacheName, groupName, i + ":key");
-            final CacheElement<GroupAttrName<String>, String> element = new CacheElement<>(cacheName,
-                groupAttrName, "data:" + i);
-
-            final ElementAttributes eAttr = ElementAttributes.defaults();
-            element.setElementAttributes(eAttr);
+            final CacheElement<GroupAttrName<String>, String> element = new CacheElement<>(
+                    cacheName, groupAttrName, "data:" + i, ElementAttributes.defaults());
 
             disk.processUpdate(element);
         }
@@ -385,10 +382,9 @@ public abstract class AbstractBlockDiskCacheUnitTest{
         final int cnt = 25;
         for (int i = 0; i < cnt; i++)
         {
-            final ElementAttributes eAttr = ElementAttributes.defaults();
-            final ICacheElement<String, String> element = new CacheElement<>("testRemove_PartialKey", i + ":key", "data:"
-                + i);
-            element.setElementAttributes(eAttr);
+            final ICacheElement<String, String> element = new CacheElement<>(
+                    "testRemove_PartialKey", i + ":key", "data:" + i,
+                    ElementAttributes.defaults());
             disk.processUpdate(element);
         }
 
@@ -427,9 +423,8 @@ public abstract class AbstractBlockDiskCacheUnitTest{
         final int cnt = 25;
         for (int i = 0; i < cnt; i++)
         {
-            final ElementAttributes eAttr = ElementAttributes.defaults();
-            final ICacheElement<String, String> element = new CacheElement<>("testRemoveItems", "key:" + i, "data:" + i);
-            element.setElementAttributes(eAttr);
+            final ICacheElement<String, String> element = new CacheElement<>(
+                    "testRemoveItems", "key:" + i, "data:" + i, ElementAttributes.defaults());
             disk.processUpdate(element);
         }
 
@@ -480,7 +475,7 @@ public abstract class AbstractBlockDiskCacheUnitTest{
         final ICacheElement<String, byte[]> afterElement = diskCache.get("x");
         assertNotNull(afterElement);
         // System.out.println( "afterElement = " + afterElement );
-        final byte[] after = afterElement.getVal();
+        final byte[] after = afterElement.value();
 
         assertNotNull(after);
         assertEquals( bytes.length, after.length, "wrong bytes after retrieval" );
@@ -527,7 +522,7 @@ public abstract class AbstractBlockDiskCacheUnitTest{
         final ICacheElement<String, String> afterElement = diskCache.get("x");
         assertNotNull(afterElement);
         // System.out.println( "afterElement = " + afterElement );
-        final String after = afterElement.getVal();
+        final String after = afterElement.value();
 
         assertNotNull(after);
         assertEquals( string, after, "wrong string after retrieval" );
@@ -572,7 +567,7 @@ public abstract class AbstractBlockDiskCacheUnitTest{
         Thread.sleep(1000);
         final ICacheElement<String, X> afterElement = diskCache.get("x");
         // System.out.println( "afterElement = " + afterElement );
-        final X after = afterElement.getVal();
+        final X after = afterElement.value();
 
         assertNotNull(after);
         assertEquals( string, after.string, "wrong string after retrieval" );

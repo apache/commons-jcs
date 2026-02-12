@@ -233,7 +233,7 @@ public class RemoteHttpCacheService<K, V>
     public void processUpdate( final ICacheElement<K, V> item, final long requesterId )
         throws IOException
     {
-        final CompositeCache<K, V> cache = getCacheManager().getCache( item.getCacheName() );
+        final CompositeCache<K, V> cache = getCacheManager().getCache( item.cacheName() );
 
         final boolean keepLocal = !remoteHttpCacheServerAttributes.isLocalClusterConsistency();
         if ( keepLocal )

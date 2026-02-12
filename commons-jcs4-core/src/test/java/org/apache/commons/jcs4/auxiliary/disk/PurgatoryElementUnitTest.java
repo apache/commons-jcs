@@ -19,7 +19,6 @@ package org.apache.commons.jcs4.auxiliary.disk;
  * under the License.
  */
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -32,27 +31,6 @@ import org.junit.jupiter.api.Test;
 /** Simple unit tests for the Purgatory Element. */
 class PurgatoryElementUnitTest
 {
-    /** Verify basic data */
-    @Test
-    void testElementAttributes_normal()
-    {
-        // SETUP
-        final String cacheName = "myCacheName";
-        final String key = "myKey";
-        final String value = "myValue";
-        final IElementAttributes elementAttributes = new ElementAttributes();
-
-        final ICacheElement<String, String> cacheElement = new CacheElement<>( cacheName, key, value );
-        final PurgatoryElement<String, String> purgatoryElement = new PurgatoryElement<>( cacheElement );
-        purgatoryElement.setElementAttributes( elementAttributes );
-
-        // DO WORK
-        final IElementAttributes result = cacheElement.getElementAttributes();
-
-        // VERIFY
-        assertEquals( elementAttributes, result, "Should have set the attributes on the element" );
-    }
-
     /** Verify basic data */
     @Test
     void testSpoolable_normal()

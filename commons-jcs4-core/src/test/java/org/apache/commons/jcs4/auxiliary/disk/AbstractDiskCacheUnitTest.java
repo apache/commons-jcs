@@ -176,7 +176,7 @@ class AbstractDiskCacheUnitTest
             throws IOException
         {
             //System.out.println( "processUpdate: " + cacheElement );
-            map.put( cacheElement.getKey(), cacheElement );
+            map.put( cacheElement.key(), cacheElement );
         }
     }
 

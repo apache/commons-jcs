@@ -245,14 +245,14 @@ public class JDBCDiskCache<K, V>
         try (PreparedStatement psSelect = con.prepareStatement( sqlS ))
         {
             psSelect.setString( 1, getCacheName() );
-            psSelect.setString( 2, (String) ce.getKey() );
+            psSelect.setString( 2, (String) ce.key() );
 
             try (ResultSet rs = psSelect.executeQuery())
             {
                 exists = rs.next();
             }
 
-            log.debug( "[{0}] existing status is {1}", ce.getKey(), exists );
+            log.debug( "[{0}] existing status is {1}", ce.key(), exists );
         }
         catch ( final SQLException e )
         {
@@ -433,19 +433,19 @@ public class JDBCDiskCache<K, V>
 
         try (PreparedStatement psInsert = con.prepareStatement( sqlI ))
         {
-            psInsert.setString( 1, ce.getKey().toString() );
+            psInsert.setString( 1, ce.key().toString() );
             psInsert.setString( 2, getCacheName() );
             psInsert.setBytes( 3, element );
-            psInsert.setLong( 4, ce.getElementAttributes().maxLife() );
-            psInsert.setString( 5, ce.getElementAttributes().isEternal() ? "T" : "F" );
+            psInsert.setLong( 4, ce.elementAttributes().maxLife() );
+            psInsert.setString( 5, ce.elementAttributes().isEternal() ? "T" : "F" );
 
-            final Timestamp createTime = new Timestamp( ce.getElementAttributes().createTime() );
+            final Timestamp createTime = new Timestamp( ce.elementAttributes().createTime() );
             psInsert.setTimestamp( 6, createTime );
 
             final long now = System.currentTimeMillis() / 1000;
             psInsert.setLong( 7, now );
 
-            final long expireTime = now + ce.getElementAttributes().maxLife();
+            final long expireTime = now + ce.elementAttributes().maxLife();
             psInsert.setLong( 8, expireTime );
 
             psInsert.execute();
@@ -486,16 +486,16 @@ public class JDBCDiskCache<K, V>
         {
             psUpdate.setBytes( 1, element );
 
-            final Timestamp createTime = new Timestamp( ce.getElementAttributes().createTime() );
+            final Timestamp createTime = new Timestamp( ce.elementAttributes().createTime() );
             psUpdate.setTimestamp( 2, createTime );
 
             final long now = System.currentTimeMillis() / 1000;
             psUpdate.setLong( 3, now );
 
-            final long expireTime = now + ce.getElementAttributes().maxLife();
+            final long expireTime = now + ce.elementAttributes().maxLife();
             psUpdate.setLong( 4, expireTime );
 
-            psUpdate.setString( 5, (String) ce.getKey() );
+            psUpdate.setString( 5, (String) ce.key() );
             psUpdate.setString( 6, getCacheName() );
             psUpdate.execute();
 
@@ -635,7 +635,7 @@ public class JDBCDiskCache<K, V>
                             {
                                 // USE THE SERIALIZER
                                 final ICacheElement<K, V> value = getElementSerializer().deSerialize( data, null );
-                                results.put( value.getKey(), value );
+                                results.put( value.key(), value );
                             }
                             catch ( final IOException | ClassNotFoundException e )
                             {
@@ -765,7 +765,7 @@ public class JDBCDiskCache<K, V>
 
         try (JDBCConnection con = getConnection())
         {
-            log.debug( "Putting [{0}] on disk.", ce::getKey);
+            log.debug( "Putting [{0}] on disk.", ce::key);
 
             try
             {

@@ -149,7 +149,7 @@ class TestTCPLateralUnitTest
 
         // VERIFY
         assertNotNull( result, "Result should not be null." );
-        assertEquals( element.getVal(), result.getVal(), "Didn't get the correct object" );
+        assertEquals( element.value(), result.value(), "Didn't get the correct object" );
     }
 
     /**
@@ -276,7 +276,7 @@ class TestTCPLateralUnitTest
 
         // VERIFY
         final ICacheElement<String, String> cacheElement = cache.get( "key" );
-        assertEquals( element2.getVal(), cacheElement.getVal(), "Didn't get the correct object " + cacheElement );
+        assertEquals( element2.value(), cacheElement.value(), "Didn't get the correct object " + cacheElement );
     }
 
     /**
@@ -306,7 +306,7 @@ class TestTCPLateralUnitTest
 
         // VERIFY
         final ICacheElement<String, String> cacheElement = cache.get( "key" );
-        assertEquals( element2.getVal(), cacheElement.getVal(), "Didn't get the correct object: " + cacheElement );
+        assertEquals( element2.value(), cacheElement.value(), "Didn't get the correct object: " + cacheElement );
     }
 
     /**

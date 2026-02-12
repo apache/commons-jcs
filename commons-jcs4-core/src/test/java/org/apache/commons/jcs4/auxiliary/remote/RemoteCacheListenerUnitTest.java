@@ -76,11 +76,11 @@ class RemoteCacheListenerUnitTest
         final ICacheElement<String, String> after = cache.get( key );
 
         assertNotNull( after, "Should have a deserialized object." );
-        assertEquals( value, after.getVal(), "Values should be the same." );
+        assertEquals( value, after.value(), "Values should be the same." );
         assertEquals( attr.maxLife(), after
-            .getElementAttributes().maxLife(), "Attributes should be the same." );
-        assertEquals( key, after.getKey(), "Keys should be the same." );
-        assertEquals( cacheName, after.getCacheName(), "Cache name should be the same." );
+            .elementAttributes().maxLife(), "Attributes should be the same." );
+        assertEquals( key, after.key(), "Keys should be the same." );
+        assertEquals( cacheName, after.cacheName(), "Cache name should be the same." );
     }
 
     /**

@@ -63,9 +63,8 @@ class LRUMemoryCacheConcurrentUnitTest
         // Add items to cache
         for ( int i = 0; i < items; i++ )
         {
-            final ICacheElement<String, String> ice = new CacheElement<>( cache.getCacheName(), i + ":key",
-                                                                          region + " data " + i );
-            ice.setElementAttributes( cache.getElementAttributes() );
+            final ICacheElement<String, String> ice = new CacheElement<>(cache.getCacheName(),
+                    i + ":key", region + " data " + i, cache.getElementAttributes());
             lru.update( ice );
         }
 
@@ -78,7 +77,7 @@ class LRUMemoryCacheConcurrentUnitTest
         // Test that last items are in cache
         for ( int i = 100; i < items; i++ )
         {
-            final String value = lru.get( i + ":key" ).getVal();
+            final String value = lru.get( i + ":key" ).value();
             assertEquals( region + " data " + i, value );
         }
 
@@ -98,7 +97,7 @@ class LRUMemoryCacheConcurrentUnitTest
         {
             final ICacheElement<String, String> element = elements.get( i + ":key" );
             assertNotNull( element, "element " + i + ":key is missing" );
-            assertEquals( region + " data " + i, element.getVal(), "value " + i + ":key" );
+            assertEquals( region + " data " + i, element.value(), "value " + i + ":key" );
         }
 
         // Remove all the items

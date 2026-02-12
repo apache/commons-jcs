@@ -140,7 +140,7 @@ public class JCSAdminBean implements JCSJMXBean
         for (final Map.Entry<String, ?> key : keys.entrySet())
         {
             final ICacheElement<?, ?> element = cache.getMemoryCache().getQuiet( key.getValue() );
-            final IElementAttributes attributes = element.getElementAttributes();
+            final IElementAttributes attributes = element.elementAttributes();
 
             final CacheElementInfo elementInfo = new CacheElementInfo(
             		key.getKey(),
@@ -261,11 +261,11 @@ public class JCSAdminBean implements JCSJMXBean
 
 			if (ice instanceof CacheElementSerialized serialized)
             {
-                size += serialized.getSerializedValue().length;
+                size += serialized.serializedValue().length;
             }
             else
             {
-                final Object element = ice.getVal();
+                final Object element = ice.value();
 
                 //CountingOnlyOutputStream: Keeps track of the number of bytes written to it, but doesn't write them anywhere.
                 final CountingOnlyOutputStream counter = new CountingOnlyOutputStream();

@@ -106,7 +106,7 @@ public abstract class AbstractMemoryCache<K, V>
         {
             log.trace("dumpingMap");
             map.forEach((key, value) ->
-                log.trace("dumpMap> key={0}, val={1}", key, value.getCacheElement().getVal()));
+                log.trace("dumpMap> key={0}, val={1}", key, value.getCacheElement().value()));
         }
     }
 
@@ -232,7 +232,7 @@ public abstract class AbstractMemoryCache<K, V>
                 })
                 .filter(Objects::nonNull)
                 .collect(Collectors.toMap(
-                        ICacheElement::getKey,
+                        ICacheElement::key,
                         element -> element));
         }
 

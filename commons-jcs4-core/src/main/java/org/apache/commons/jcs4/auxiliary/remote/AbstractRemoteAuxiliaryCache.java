@@ -564,7 +564,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
             catch ( final IOException ex )
             {
                 // event queue will wait and retry
-                handleException( ex, "Failed to put [" + ce.getKey() + "] to " + ce.getCacheName(),
+                handleException( ex, "Failed to put [" + ce.key() + "] to " + ce.cacheName(),
                                  ICacheEventLogger.UPDATE_EVENT );
             }
         }

@@ -83,7 +83,7 @@ public class JDBCDiskCacheSharedPoolUnitTest
         {
             final ICacheElement<String, String> element = elements.get( i + ":key" );
             assertNotNull( element, "element " + i + ":key is missing" );
-            assertEquals( region + " data " + i, element.getVal(), "value " + i + ":key" );
+            assertEquals( region + " data " + i, element.value(), "value " + i + ":key" );
         }
 
         // Remove all the items

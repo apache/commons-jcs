@@ -113,7 +113,7 @@ public abstract class AbstractDiskCache<K, V>
                 // if it is still spoolable, and remove it from purgatory.
                 if ( element instanceof PurgatoryElement<K, V> pe)
                 {
-                    synchronized ( pe.getCacheElement() )
+                    synchronized ( pe.cacheElement() )
                     {
                         // TODO consider a timeout.
                         // we need this so that we can have multiple update
@@ -125,12 +125,12 @@ public abstract class AbstractDiskCache<K, V>
                         {
                             // If the element has already been removed from
                             // purgatory do nothing
-                            if (!purgatory.containsKey(pe.getKey()))
+                            if (!purgatory.containsKey(pe.key()))
                             {
                                 return;
                             }
 
-                            element = pe.getCacheElement();
+                            element = pe.cacheElement();
 
                             // If the element is still eligible, spool it.
                             if ( pe.isSpoolable() )
@@ -145,7 +145,7 @@ public abstract class AbstractDiskCache<K, V>
 
                         // After the update has completed, it is safe to
                         // remove the element from purgatory.
-                        purgatory.remove( element.getKey() );
+                        purgatory.remove( element.key() );
                     }
                 }
                 else
@@ -162,7 +162,7 @@ public abstract class AbstractDiskCache<K, V>
                  * done before it went in the queue. This block handles the case where the disk
                  * cache fails during normal operations.
                  */
-                purgatory.remove( element.getKey() );
+                purgatory.remove( element.key() );
             }
         }
 
@@ -445,7 +445,7 @@ public abstract class AbstractDiskCache<K, V>
             log.debug( "Found element in purgatory, cacheName: {0}, key: {1}",
                     cacheName, key );
 
-            return pe.getCacheElement();
+            return pe.cacheElement();
         }
 
         // If we reach this point, element was not found in purgatory, so get
@@ -653,7 +653,7 @@ public abstract class AbstractDiskCache<K, V>
 
         if ( pe != null )
         {
-            synchronized ( pe.getCacheElement() )
+            synchronized ( pe.cacheElement() )
             {
                 // no way to remove from queue, just make sure it doesn't get on
                 // disk and then removed right afterwards
@@ -719,7 +719,7 @@ public abstract class AbstractDiskCache<K, V>
         throws IOException
     {
         log.debug( "Putting element in purgatory, cacheName: {0}, key: {1}",
-                () -> cacheName, cacheElement::getKey);
+                () -> cacheName, cacheElement::key);
 
         try
         {
@@ -732,7 +732,7 @@ public abstract class AbstractDiskCache<K, V>
             pe.setSpoolable( true );
 
             // Add the element to purgatory
-            purgatory.put( pe.getKey(), pe );
+            purgatory.put( pe.key(), pe );
 
             // Queue element for serialization
             cacheEventQueue.addPutEvent( pe );

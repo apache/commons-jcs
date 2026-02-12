@@ -85,7 +85,7 @@ public abstract class AbstractRemoteCacheService<K, V>
             return new CacheEvent<>();
         }
         final String ipAddress = getExtraInfoForRequesterId( requesterId );
-        return cacheEventLogger.createICacheEvent( getEventLogSourceName(), item.getCacheName(), eventName, ipAddress,
+        return cacheEventLogger.createICacheEvent( getEventLogSourceName(), item.cacheName(), eventName, ipAddress,
                                                    item );
     }
 
@@ -354,8 +354,8 @@ public abstract class AbstractRemoteCacheService<K, V>
             }
         }
 
-        log.debug( "In update, put [{0}] in [{1}]", item::getKey,
-                item::getCacheName);
+        log.debug( "In update, put [{0}] in [{1}]", item::key,
+                item::cacheName);
     }
 
     /**

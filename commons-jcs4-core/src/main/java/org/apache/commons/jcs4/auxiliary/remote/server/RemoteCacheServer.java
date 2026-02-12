@@ -311,7 +311,7 @@ public class RemoteCacheServer<K, V>
         }
         final String ipAddress = getExtraInfoForRequesterId( requesterId );
         return cacheEventLogger
-            .createICacheEvent( "RemoteCacheServer", item.getCacheName(), eventName, ipAddress, item );
+            .createICacheEvent( "RemoteCacheServer", item.cacheName(), eventName, ipAddress, item );
     }
 
     /**
@@ -826,7 +826,7 @@ public class RemoteCacheServer<K, V>
         }
 
         log.debug( "In update, put [{0}] in [{1}]",
-                item::getKey, item::getCacheName);
+                item::key, item::cacheName);
     }
 
     /**
@@ -1119,7 +1119,7 @@ public class RemoteCacheServer<K, V>
 
         try
         {
-            final CacheListeners<K, V> cacheDesc = getCacheListeners( item.getCacheName() );
+            final CacheListeners<K, V> cacheDesc = getCacheListeners( item.cacheName() );
             final boolean fromCluster = isRequestFromCluster( requesterId );
 
             log.debug( "In update, requesterId = [{0}] fromCluster = {1}", requesterId, fromCluster );
@@ -1183,7 +1183,7 @@ public class RemoteCacheServer<K, V>
             if ( cacheEventLogger != null )
             {
                 cacheEventLogger.logError( "RemoteCacheServer", ICacheEventLogger.UPDATE_EVENT, e.getMessage()
-                    + " REGION: " + item.getCacheName() + " ITEM: " + item );
+                    + " REGION: " + item.cacheName() + " ITEM: " + item );
             }
 
             log.error( "Trouble in Update. requesterId [{0}]", requesterId, e );

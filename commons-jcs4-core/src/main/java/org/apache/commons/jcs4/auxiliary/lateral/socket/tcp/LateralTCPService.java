@@ -387,10 +387,10 @@ public class LateralTCPService<K, V>
             log.debug( "Issuing a remove for a put" );
 
             // set the value to null so we don't send the item
-            final CacheElement<K, V> ce = new CacheElement<>( item.getCacheName(), item.getKey(), null );
+            final CacheElement<K, V> ce = new CacheElement<>( item.cacheName(), item.key(), null );
             final LateralElementDescriptor<K, V> led =
                     new LateralElementDescriptor<>(ce, LateralCommand.REMOVE, requesterId,
-                            item.getVal().hashCode());
+                            item.value().hashCode());
             sender.send( led );
         }
     }

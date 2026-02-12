@@ -64,15 +64,15 @@ public class SerializationConversionUtil
         }
         try
         {
-            deSerializedValue = elementSerializer.deSerialize( serialized.getSerializedValue(), null );
+            deSerializedValue = elementSerializer.deSerialize( serialized.serializedValue(), null );
         }
         catch ( final ClassNotFoundException | IOException e )
         {
             log.error( "Problem de-serializing object.", e );
             throw e;
         }
-        final ICacheElement<K, V> deSerialized = new CacheElement<>( serialized.getCacheName(), serialized.getKey(), deSerializedValue );
-        deSerialized.setElementAttributes( serialized.getElementAttributes() );
+        final ICacheElement<K, V> deSerialized = new CacheElement<>(serialized.cacheName(),
+                serialized.key(), deSerializedValue, serialized.elementAttributes());
 
         return deSerialized;
     }
@@ -101,7 +101,7 @@ public class SerializationConversionUtil
         // if it has already been serialized, don't do it again.
         if (element instanceof ICacheElementSerialized<K, V> serialized)
         {
-            serializedValue = serialized.getSerializedValue();
+            serializedValue = serialized.serializedValue();
         }
         else
         {
@@ -112,7 +112,7 @@ public class SerializationConversionUtil
             }
             try
             {
-                serializedValue = elementSerializer.serialize(element.getVal());
+                serializedValue = elementSerializer.serialize(element.value());
             }
             catch ( final IOException e )
             {
@@ -122,6 +122,6 @@ public class SerializationConversionUtil
         }
 
         return new CacheElementSerialized<>(
-                element.getCacheName(), element.getKey(), serializedValue, element.getElementAttributes() );
+                element.cacheName(), element.key(), serializedValue, element.elementAttributes() );
     }
 }

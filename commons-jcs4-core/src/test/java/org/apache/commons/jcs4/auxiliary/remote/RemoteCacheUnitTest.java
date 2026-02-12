@@ -243,7 +243,7 @@ class RemoteCacheUnitTest
         final ICacheElement<String, String> result = SerializationConversionUtil
             .getDeSerializedCacheElement( (ICacheElementSerialized<String, String>) service.lastUpdate, remoteCache
                 .getElementSerializer() );
-        assertEquals( element.getVal(), result.getVal(), "Wrong element updated." );
+        assertEquals( element.value(), result.value(), "Wrong element updated." );
         assertEquals( Long.valueOf( listenerId ), service.updateRequestIdList.get( 0 ), "Wrong listener id." );
     }
 
@@ -300,6 +300,6 @@ class RemoteCacheUnitTest
         final ICacheElement<String, String> result = SerializationConversionUtil
             .getDeSerializedCacheElement( (ICacheElementSerialized<String, String>) service.lastUpdate, remoteCache
                 .getElementSerializer() );
-        assertEquals( element.getVal(), result.getVal(), "Wrong element updated." );
+        assertEquals( element.value(), result.value(), "Wrong element updated." );
     }
 }

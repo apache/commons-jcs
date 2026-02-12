@@ -370,7 +370,7 @@ public class LateralTCPCache<K, V>
         }
         catch ( final IOException ex )
         {
-            handleException( ex, "Failed to put [" + ce.getKey() + "] to " + ce.getCacheName() + "@" + lateralCacheAttributes );
+            handleException( ex, "Failed to put [" + ce.key() + "] to " + ce.cacheName() + "@" + lateralCacheAttributes );
         }
     }
 

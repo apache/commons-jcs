@@ -80,7 +80,7 @@ public class BlockDiskCacheSameRegionConcurrentUnitTest
         {
             final ICacheElement<String, String> element = elements.get( i + ":key" );
             assertNotNull( element, "element " + i + ":key is missing" );
-            assertEquals( region + " data " + i + "-" + region, element.getVal(), "value " + i + ":key" );
+            assertEquals( region + " data " + i + "-" + region, element.value(), "value " + i + ":key" );
         }
     }
 

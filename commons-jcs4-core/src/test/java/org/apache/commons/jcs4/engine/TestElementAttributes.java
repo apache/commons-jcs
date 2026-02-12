@@ -46,7 +46,7 @@ public class TestElementAttributes
                 ElementAttributes.defaults().timeFactorForMilliseconds(),
                 new ArrayList<>());
 
-        element.atomicLastAccessTime().set(element.createTime());
+        element.mutableLastAccessTime().set(element.createTime());
         return element;
     }
 
@@ -70,7 +70,7 @@ public class TestElementAttributes
                 ElementAttributes.defaults().timeFactorForMilliseconds(),
                 new ArrayList<>());
 
-        element.atomicLastAccessTime().set(element.createTime());
+        element.mutableLastAccessTime().set(element.createTime());
         return element;
     }
 }

@@ -183,9 +183,9 @@ public class RemoteCacheRequestFactory
         final RemoteCacheRequest<K, V> request = createRequest(null, RemoteRequestType.UPDATE, requesterId);
         if ( cacheElement != null )
         {
-            request.setCacheName( cacheElement.getCacheName() );
+            request.setCacheName( cacheElement.cacheName() );
             request.setCacheElement( cacheElement );
-            request.setKey( cacheElement.getKey() );
+            request.setKey( cacheElement.key() );
         }
         else
         {

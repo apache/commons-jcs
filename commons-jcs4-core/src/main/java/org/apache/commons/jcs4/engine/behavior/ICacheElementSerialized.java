@@ -37,5 +37,5 @@ public interface ICacheElementSerialized<K, V>
      *
      * @return The serialized value
      */
-    byte[] getSerializedValue();
+    byte[] serializedValue();
 }

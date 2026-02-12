@@ -125,7 +125,7 @@ public class ShrinkerThread<K, V>
                     continue;
                 }
 
-                final IElementAttributes attributes = cacheElement.getElementAttributes();
+                final IElementAttributes attributes = cacheElement.elementAttributes();
 
                 boolean remove = false;
 

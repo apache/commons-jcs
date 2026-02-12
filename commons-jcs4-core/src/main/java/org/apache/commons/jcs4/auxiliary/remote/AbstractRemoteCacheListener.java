@@ -170,7 +170,7 @@ public abstract class AbstractRemoteCacheListener<K, V>
         if ( irca.getRemoveUponRemotePut() )
         {
             log.debug("PUTTING ELEMENT FROM REMOTE, (invalidating)");
-            handleRemove( cb.getCacheName(), cb.getKey() );
+            handleRemove( cb.cacheName(), cb.key() );
         }
         else
         {
@@ -197,7 +197,7 @@ public abstract class AbstractRemoteCacheListener<K, V>
                 }
             }
 
-            getCacheManager().<K, V>getCache( cb.getCacheName() ).localUpdate( cb );
+            getCacheManager().<K, V>getCache( cb.cacheName() ).localUpdate( cb );
         }
     }
 

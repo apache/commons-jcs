@@ -159,7 +159,7 @@ public abstract class AbstractCacheEventQueue<K, V>
         @Override
         public String toString()
         {
-            return "PutEvent for key: " + eventData.getKey() + " value: " + eventData.getVal();
+            return "PutEvent for key: " + eventData.key() + " value: " + eventData.value();
         }
     }
 

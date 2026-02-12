@@ -170,7 +170,7 @@ public class RemoteHttpCacheDispatcher
                     keyValue = remoteCacheRequest.getKeySet().toString();
                     break;
                 case UPDATE:
-                    keyValue = remoteCacheRequest.getCacheElement().getKey().toString();
+                    keyValue = remoteCacheRequest.getCacheElement().key().toString();
                     break;
                 default:
                     break;
