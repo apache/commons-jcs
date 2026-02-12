@@ -78,16 +78,29 @@ jcs.default.cacheattributes=org.apache.commons.jcs4.engine.CompositeCacheAttribu
 ]]></source>
         </p>
       </subsection>
+      <subsection name="Breaking Changes">
+        <p>
+          In JCS 4.0.0, we removed all code that had been deprecated previously.
+          Furthermore, many interfaces were cleaned up, redundant functionality and 
+          most naming ambiguities removed.
+        </p>
+        <p>
+          Internal structures were adjusted, so serialized objects are no longer compatible.
+          You should be aware that data previously saved to auxiliaries will be deleted
+          on startup. 
+        </p>
+      </subsection>
       <subsection name="Logging">
         <p>
-           JCS 4.0.0 uses the JDK9+ System.Logger for logging.
-           By default, JCS uses java.util.logging.
-         </p>
-         <p>
-           If you want to use Log4j2 as a log system, for example, you can activate 
-           it by providing log4j-jpl as a runtime dependency and a log configuration
-           such as log4j2.xml.</p>
-          <source><![CDATA[
+          JCS 4.0.0 uses the JDK9+ System.Logger interface for logging.
+          By default, JCS uses java.util.logging as implementation.
+        </p>
+        <p>
+          If you want to use Log4j2 as a log implementation, for example, you can activate 
+          it by providing log4j-jpl as a runtime dependency and a log configuration
+          such as log4j2.xml.
+        </p>
+        <source><![CDATA[
 <dependency>
   <groupId>org.apache.logging.log4j</groupId>
   <artifactId>log4j-jpl</artifactId>
@@ -98,46 +111,51 @@ jcs.default.cacheattributes=org.apache.commons.jcs4.engine.CompositeCacheAttribu
       </subsection>
       <subsection name="Java Modularization">
         <p>
-           JCS 4.0.0 core provides proper module information in <code>module-info.java</code>.
-           The module name is <code>org.apache.commons.jcs4.core</code>.
-           Please note that several internals structures are not exported.
-         </p>
+          JCS 4.0.0 core provides proper module information in <code>module-info.java</code>.
+          The module name is <code>org.apache.commons.jcs4.core</code>.
+          Please note that several internals structures are not exported intentionally.
+        </p>
       </subsection>
       <subsection name="Changed Configuration Behavior">
         <p>
-           JCS 4.0.0 tries to pull some long-standing configuration inconsistencies straight.
-           The following configuration keys have been renamed or removed:
+          JCS 4.0.0 tries to pull some long-standing configuration inconsistencies straight.
+          The following configuration keys have been renamed or removed:
 
-           <table>
-               <tr>
-                   <th>Attribute Type</th>
-                   <th>Old Property Name</th>
-                   <th>New Property Name</th>
-               </tr>
-               <tr>
-                   <td>Region configuration (cacheattributes)</td>
-                   <td>DiskUsagePatternName</td>
-                   <td>DiskUsagePattern</td>
-               </tr>
-               <tr>
-                   <td>Element configuration (elementattributes)</td>
-                   <td>IdleTime</td>
-                   <td>MaxIdleTime</td>
-               </tr>
-            </table>
-         </p>
-         <p>
-           The documentation in the code always stated that region and element configurations 
-           inherit values from the default region attributes. This, however, was never implemented.
-           Note that the behavior has been fixed in JCS 4.0.0. This may have implications
-           for your existing configurations. On the other hand, it makes the configuration
-           much shorter. See the examples in <code>src/test/test-conf</code>.
-         </p>
-         <p>
-           The configuration holder objects CompositeCacheAttributes and ElementAttributes 
-           are now implemented as Java records and - as such - are largely immutable. This 
-           makes them much more robust against side-effects in concurrent environments.
-         </p>
+          <table>
+            <tr>
+              <th>Attribute Type</th>
+              <th>Old Property Name</th>
+              <th>New Property Name</th>
+            </tr>
+            <tr>
+              <td>Region configuration (cacheattributes)</td>
+              <td>DiskUsagePatternName</td>
+              <td>DiskUsagePattern</td>
+            </tr>
+            <tr>
+              <td>Element configuration (elementattributes)</td>
+              <td>IdleTime</td>
+              <td>MaxIdleTime</td>
+            </tr>
+          </table>
+        </p>
+        <p>
+          The documentation in the code always stated that region and element configurations 
+          inherit values from the default region attributes. This, however, was never implemented.
+          Note that the behavior has been fixed in JCS 4.0.0. This may have implications
+          for your existing configurations. On the other hand, it makes the configuration
+          much shorter. See the examples in <code>src/test/test-conf</code>.
+        </p>
+        <p>
+          The specification of attribute classes is now optional. Existing configurations are
+          expected to continue working. The classes used for configuring auxiliaries are now
+          drawn from the associated factory. Again, see the examples in <code>src/test/test-conf</code>.
+        </p>
+        <p>
+          The configuration holder objects CompositeCacheAttributes and ElementAttributes 
+          are now implemented as Java records and - as such - are largely immutable. This 
+          makes them much more robust against side-effects in concurrent environments.
+        </p>
       </subsection>
     </section>
   </body>
