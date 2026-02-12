@@ -27,7 +27,6 @@ jcs.default.elementattributes.IsLateral=false
 jcs.default.elementattributes.IsEternal=true
 
 jcs.auxiliary.CACHE=org.apache.commons.jcs4.auxiliary.disk.indexed.IndexedDiskCacheFactory
-jcs.auxiliary.CACHE.attributes=org.apache.commons.jcs4.auxiliary.disk.indexed.IndexedDiskCacheAttributes
 jcs.auxiliary.CACHE.attributes.DiskPath=target/test-sandbox/concurrent_cache
 jcs.auxiliary.CACHE.attributes.MaxPurgatorySize=-1
 jcs.auxiliary.CACHE.attributes.MaxKeySize=-1

@@ -32,7 +32,6 @@ jcs.default.elementattributes.MaxIdleTime=1800
 # ################# AUXILIARY CACHES AVAILABLE ################
 # MYSQL disk cache
 jcs.auxiliary.MYSQL=org.apache.commons.jcs4.auxiliary.disk.jdbc.mysql.MySQLDiskCacheFactory
-jcs.auxiliary.MYSQL.attributes=org.apache.commons.jcs4.auxiliary.disk.jdbc.mysql.MySQLDiskCacheAttributes
 jcs.auxiliary.MYSQL.attributes.userName=sa
 jcs.auxiliary.MYSQL.attributes.password=
 jcs.auxiliary.MYSQL.attributes.url=jdbc:hsqldb:target/MySQLDiskCacheHsqlBackedUnitTest

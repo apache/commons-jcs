@@ -39,12 +39,10 @@ jcs.region.blockRegion4=blockDiskCache2
 
 # Block Disk Cache
 jcs.auxiliary.blockDiskCache=org.apache.commons.jcs4.auxiliary.disk.block.BlockDiskCacheFactory
-jcs.auxiliary.blockDiskCache.attributes=org.apache.commons.jcs4.auxiliary.disk.block.BlockDiskCacheAttributes
 jcs.auxiliary.blockDiskCache.attributes.DiskPath=target/test-sandbox/block-disk-cache
 
 # Block Disk Cache
 jcs.auxiliary.blockDiskCache2=org.apache.commons.jcs4.auxiliary.disk.block.BlockDiskCacheFactory
-jcs.auxiliary.blockDiskCache2.attributes=org.apache.commons.jcs4.auxiliary.disk.block.BlockDiskCacheAttributes
 jcs.auxiliary.blockDiskCache2.attributes.DiskPath=target/test-sandbox/block-disk-cache2
 
 # #############################################################

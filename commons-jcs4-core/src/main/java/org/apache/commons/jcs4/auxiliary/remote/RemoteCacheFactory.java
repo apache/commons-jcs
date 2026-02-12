@@ -25,13 +25,13 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import org.apache.commons.jcs4.auxiliary.AbstractAuxiliaryCacheFactory;
-import org.apache.commons.jcs4.auxiliary.AuxiliaryCache;
 import org.apache.commons.jcs4.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.commons.jcs4.auxiliary.remote.behavior.IRemoteCacheAttributes;
 import org.apache.commons.jcs4.auxiliary.remote.server.behavior.RemoteType;
 import org.apache.commons.jcs4.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs4.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs4.engine.logging.behavior.ICacheEventLogger;
+import org.apache.commons.jcs4.engine.match.behavior.IKeyMatcher;
 
 /**
  * The RemoteCacheFactory creates remote caches for the cache hub. It returns a no wait facade which
@@ -55,19 +55,21 @@ public class RemoteCacheFactory
      * The failover runner will get a cache from the manager. When the primary is restored it will
      * tell the manager for the failover to deregister the listener.
      *
-     * @param iaca
-     * @param cacheMgr
-     * @param cacheEventLogger
-     * @param elementSerializer
-     * @return AuxiliaryCache
+     * @param iaca the cache attributes for this cache
+     * @param cacheMgr This allows auxiliaries to reference the manager without assuming that it is
+     *            a singleton. This will allow JCS to be a non-singleton. Also, it makes it easier
+     *            to test.
+     * @param cacheEventLogger the cache event logger
+     * @param elementSerializer the serializer for cache elements
+     * @param keyMatcher the key matcher for getMatching() calls
+     * @return RemoteCacheNoWaitFacade
      */
     @Override
-    public <K, V> AuxiliaryCache<K, V> createCache(
-            final AuxiliaryCacheAttributes iaca, final ICompositeCacheManager cacheMgr,
-           final ICacheEventLogger cacheEventLogger, final IElementSerializer elementSerializer )
+    public <K, V> RemoteCacheNoWaitFacade<K, V> createCache(final AuxiliaryCacheAttributes iaca,
+            final ICompositeCacheManager cacheMgr, final ICacheEventLogger cacheEventLogger,
+            final IElementSerializer elementSerializer, final IKeyMatcher<K> keyMatcher)
     {
         final RemoteCacheAttributes rca = (RemoteCacheAttributes) iaca;
-
         final ArrayList<RemoteCacheNoWait<K,V>> noWaits = new ArrayList<>();
 
         switch (rca.getRemoteType())
@@ -82,7 +84,8 @@ public class RemoteCacheFactory
                 if ( rca.getRemoteLocation() != null )
                 {
                     failovers.add( rca.getRemoteLocation() );
-                    final RemoteCacheManager rcm = getManager( rca, cacheMgr, cacheEventLogger, elementSerializer );
+                    final RemoteCacheManager rcm = getManager( rca, cacheMgr, cacheEventLogger,
+                            elementSerializer, keyMatcher);
                     noWaits.add(rcm.getCache(rca));
                 }
 
@@ -100,7 +103,8 @@ public class RemoteCacheFactory
                             failovers.add( location );
                             final RemoteCacheAttributes frca = (RemoteCacheAttributes) rca.clone();
                             frca.setRemoteLocation(location);
-                            final RemoteCacheManager rcm = getManager( frca, cacheMgr, cacheEventLogger, elementSerializer );
+                            final RemoteCacheManager rcm = getManager( frca, cacheMgr,
+                                    cacheEventLogger, elementSerializer, keyMatcher);
 
                             // add a listener if there are none, need to tell rca what
                             // number it is at
@@ -134,7 +138,8 @@ public class RemoteCacheFactory
                     {
                         final RemoteCacheAttributes crca = (RemoteCacheAttributes) rca.clone();
                         crca.setRemoteLocation(location);
-                        final RemoteCacheManager rcm = getManager( crca, cacheMgr, cacheEventLogger, elementSerializer );
+                        final RemoteCacheManager rcm = getManager( crca, cacheMgr,
+                                cacheEventLogger, elementSerializer, keyMatcher);
                         crca.setRemoteType( RemoteType.CLUSTER );
                         noWaits.add(rcm.getCache(crca));
                     }
@@ -142,7 +147,11 @@ public class RemoteCacheFactory
                 break;
         }
 
-        return new RemoteCacheNoWaitFacade<>(noWaits, rca, cacheEventLogger, elementSerializer, this);
+        RemoteCacheNoWaitFacade<K, V> rcnwf = new RemoteCacheNoWaitFacade<>(noWaits, rca,
+                cacheEventLogger, elementSerializer, this);
+        rcnwf.setKeyMatcher(keyMatcher);
+
+        return rcnwf;
     }
     // end createCache
 
@@ -201,14 +210,14 @@ public class RemoteCacheFactory
      *
      * @param cattr the cache configuration object
      * @param cacheMgr the cache manager
-     * @param cacheEventLogger the event logger
-     * @param elementSerializer the serializer to use for sending and receiving
+     * @param cacheEventLogger the cache event logger
+     * @param elementSerializer the serializer for cache elements
+     * @param keyMatcher the key matcher for getMatching() calls
      * @return The instance value, never null
      */
-    public RemoteCacheManager getManager( final IRemoteCacheAttributes cattr,
-                                          final ICompositeCacheManager cacheMgr,
-                                          final ICacheEventLogger cacheEventLogger,
-                                          final IElementSerializer elementSerializer )
+    public RemoteCacheManager getManager(final IRemoteCacheAttributes cattr,
+            final ICompositeCacheManager cacheMgr, final ICacheEventLogger cacheEventLogger,
+            final IElementSerializer elementSerializer, final IKeyMatcher<?> keyMatcher)
     {
         final RemoteCacheAttributes rca = (RemoteCacheAttributes) cattr.clone();
         if (rca.getRemoteLocation() == null)
@@ -216,9 +225,10 @@ public class RemoteCacheFactory
             rca.setRemoteLocation("", Registry.REGISTRY_PORT);
         }
 
-        return managers.computeIfAbsent(rca.getRemoteLocation(), key -> {
-
-            final RemoteCacheManager manager = new RemoteCacheManager(rca, cacheMgr, monitor, cacheEventLogger, elementSerializer);
+        return managers.computeIfAbsent(rca.getRemoteLocation(), key ->
+        {
+            final RemoteCacheManager manager = new RemoteCacheManager(rca, cacheMgr, monitor,
+                    cacheEventLogger, elementSerializer, keyMatcher);
             monitor.addManager(manager);
 
             return manager;

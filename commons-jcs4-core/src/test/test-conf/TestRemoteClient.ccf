@@ -28,7 +28,6 @@ jcs.default.elementattributes.MaxIdleTime=1800
 
 
 jcs.auxiliary.RC=org.apache.commons.jcs4.auxiliary.remote.RemoteCacheFactory
-jcs.auxiliary.RC.attributes=org.apache.commons.jcs4.auxiliary.remote.RemoteCacheAttributes
 jcs.auxiliary.RC.attributes.FailoverServers=localhost:1101
 jcs.auxiliary.RC.attributes.LocalPort=1201
 jcs.auxiliary.RC.attributes.RemoveUponRemotePut=false

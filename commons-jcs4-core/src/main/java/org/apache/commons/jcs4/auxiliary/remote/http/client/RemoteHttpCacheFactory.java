@@ -20,7 +20,6 @@ package org.apache.commons.jcs4.auxiliary.remote.http.client;
  */
 
 import org.apache.commons.jcs4.auxiliary.AbstractAuxiliaryCacheFactory;
-import org.apache.commons.jcs4.auxiliary.AuxiliaryCache;
 import org.apache.commons.jcs4.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.commons.jcs4.auxiliary.remote.RemoteCacheNoWait;
 import org.apache.commons.jcs4.auxiliary.remote.behavior.IRemoteCacheClient;
@@ -29,6 +28,7 @@ import org.apache.commons.jcs4.auxiliary.remote.server.behavior.RemoteType;
 import org.apache.commons.jcs4.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs4.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs4.engine.logging.behavior.ICacheEventLogger;
+import org.apache.commons.jcs4.engine.match.behavior.IKeyMatcher;
 import org.apache.commons.jcs4.log.Log;
 import org.apache.commons.jcs4.utils.config.OptionConverter;
 
@@ -54,15 +54,19 @@ public class RemoteHttpCacheFactory
      * The failover runner will get a cache from the manager. When the primary is restored it will
      * tell the manager for the failover to deregister the listener.
      *
-     * @param iaca
-     * @param cacheMgr
-     * @param cacheEventLogger
-     * @param elementSerializer
-     * @return AuxiliaryCache
+     * @param iaca the cache attributes for this cache
+     * @param cacheMgr This allows auxiliaries to reference the manager without assuming that it is
+     *            a singleton. This will allow JCS to be a non-singleton. Also, it makes it easier
+     *            to test.
+     * @param cacheEventLogger the cache event logger
+     * @param elementSerializer the serializer for cache elements
+     * @param keyMatcher the key matcher for getMatching() calls
+     * @return RemoteCacheNoWait
      */
     @Override
-    public <K, V> AuxiliaryCache<K, V> createCache( final AuxiliaryCacheAttributes iaca, final ICompositeCacheManager cacheMgr,
-                                       final ICacheEventLogger cacheEventLogger, final IElementSerializer elementSerializer )
+    public <K, V> RemoteCacheNoWait<K, V> createCache(final AuxiliaryCacheAttributes iaca,
+            final ICompositeCacheManager cacheMgr, final ICacheEventLogger cacheEventLogger,
+            final IElementSerializer elementSerializer, final IKeyMatcher<K> keyMatcher)
     {
         final RemoteHttpCacheAttributes rca = (RemoteHttpCacheAttributes) iaca;
 
@@ -77,10 +81,12 @@ public class RemoteHttpCacheFactory
                 new RemoteHttpCache<>( rca, remoteService, listener, monitor );
         remoteCacheClient.setCacheEventLogger( cacheEventLogger );
         remoteCacheClient.setElementSerializer( elementSerializer );
+        remoteCacheClient.setKeyMatcher(keyMatcher);
 
         final RemoteCacheNoWait<K, V> remoteCacheNoWait = new RemoteCacheNoWait<>( remoteCacheClient );
         remoteCacheNoWait.setCacheEventLogger( cacheEventLogger );
         remoteCacheNoWait.setElementSerializer( elementSerializer );
+        remoteCacheNoWait.setKeyMatcher(keyMatcher);
 
         return remoteCacheNoWait;
     }

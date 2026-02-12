@@ -136,7 +136,7 @@ public class LateralTCPDiscoveryListener
                     lca.setTcpServer(serverAndPort);
 
                     final LateralTCPCacheFactory factory =
-                            (LateralTCPCacheFactory) cacheManager.registryFacGet(factoryName);
+                            (LateralTCPCacheFactory) cacheManager.getRegisteredAuxiliaryFactory(factoryName);
 
                     final LateralTCPCacheNoWait<?, ?> noWait =
                             factory.createCacheNoWait(lca, cacheEventLogger, elementSerializer);

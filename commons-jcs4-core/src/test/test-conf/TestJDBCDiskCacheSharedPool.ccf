@@ -35,7 +35,6 @@ jcs.region.testCache1.cacheattributes.MaxObjects=100
 # ################# AUXILIARY CACHES AVAILABLE ################
 # JDBC disk cache
 jcs.auxiliary.JDBC_0=org.apache.commons.jcs4.auxiliary.disk.jdbc.JDBCDiskCacheFactory
-jcs.auxiliary.JDBC_0.attributes=org.apache.commons.jcs4.auxiliary.disk.jdbc.JDBCDiskCacheAttributes
 jcs.auxiliary.JDBC_0.attributes.tableName=JCS_STORE_0
 jcs.auxiliary.JDBC_0.attributes.testBeforeInsert=false
 jcs.auxiliary.JDBC_0.attributes.allowRemoveAll=true
@@ -45,7 +44,6 @@ jcs.auxiliary.JDBC_0.attributes.EventQueueType=POOLED
 jcs.auxiliary.JDBC_0.attributes.EventQueuePoolName=disk_cache_event_queue
 
 jcs.auxiliary.JDBC_1=org.apache.commons.jcs4.auxiliary.disk.jdbc.JDBCDiskCacheFactory
-jcs.auxiliary.JDBC_1.attributes=org.apache.commons.jcs4.auxiliary.disk.jdbc.JDBCDiskCacheAttributes
 jcs.auxiliary.JDBC_1.attributes.tableName=JCS_STORE_1
 jcs.auxiliary.JDBC_1.attributes.testBeforeInsert=false
 jcs.auxiliary.JDBC_1.attributes.allowRemoveAll=true

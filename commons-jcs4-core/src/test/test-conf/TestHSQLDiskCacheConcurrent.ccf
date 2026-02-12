@@ -36,7 +36,6 @@ jcs.region.noRemoveAll.cacheattributes.MaxObjects=0
 # ################# AUXILIARY CACHES AVAILABLE ################
 # HSQL disk cache
 jcs.auxiliary.HSQL=org.apache.commons.jcs4.auxiliary.disk.jdbc.hsql.HSQLDiskCacheFactory
-jcs.auxiliary.HSQL.attributes=org.apache.commons.jcs4.auxiliary.disk.jdbc.JDBCDiskCacheAttributes
 jcs.auxiliary.HSQL.attributes.userName=sa
 jcs.auxiliary.HSQL.attributes.password=
 jcs.auxiliary.HSQL.attributes.url=jdbc:hsqldb:target/HSQLDiskCacheUnitTest1
@@ -51,7 +50,6 @@ jcs.auxiliary.HSQL.attributes.EventQueuePoolName=disk_cache_event_queue
 
 # HSQL disk cache, doesn't allow remove all
 jcs.auxiliary.HSQL_NORA=org.apache.commons.jcs4.auxiliary.disk.jdbc.hsql.HSQLDiskCacheFactory
-jcs.auxiliary.HSQL_NORA.attributes=org.apache.commons.jcs4.auxiliary.disk.jdbc.JDBCDiskCacheAttributes
 jcs.auxiliary.HSQL_NORA.attributes.userName=sa
 jcs.auxiliary.HSQL_NORA.attributes.password=
 jcs.auxiliary.HSQL_NORA.attributes.url=jdbc:hsqldb:target/HSQLDiskCacheUnitTest2

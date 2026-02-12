@@ -37,6 +37,7 @@ import org.apache.commons.jcs4.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs4.engine.behavior.IShutdownObserver;
 import org.apache.commons.jcs4.engine.control.CompositeCacheManager;
 import org.apache.commons.jcs4.engine.logging.behavior.ICacheEventLogger;
+import org.apache.commons.jcs4.engine.match.behavior.IKeyMatcher;
 import org.apache.commons.jcs4.log.Log;
 import org.apache.commons.jcs4.utils.discovery.UDPDiscoveryAttributes;
 import org.apache.commons.jcs4.utils.discovery.UDPDiscoveryManager;
@@ -155,14 +156,15 @@ public class LateralTCPCacheFactory
      * @param <V> cache value type
      * @param iaca the cache configuration object
      * @param cacheMgr the cache manager
-     * @param cacheEventLogger the event logger
-     * @param elementSerializer the serializer to use when sending or receiving
+     * @param cacheEventLogger the cache event logger
+     * @param elementSerializer the serializer for cache elements
+     * @param keyMatcher the key matcher for getMatching() calls
      * @return a LateralTCPCacheNoWaitFacade
      */
     @Override
-    public <K, V> LateralTCPCacheNoWaitFacade<K, V> createCache(
-            final AuxiliaryCacheAttributes iaca, final ICompositeCacheManager cacheMgr,
-           final ICacheEventLogger cacheEventLogger, final IElementSerializer elementSerializer )
+    public <K, V> LateralTCPCacheNoWaitFacade<K, V> createCache(final AuxiliaryCacheAttributes iaca,
+            final ICompositeCacheManager cacheMgr, final ICacheEventLogger cacheEventLogger,
+            final IElementSerializer elementSerializer, final IKeyMatcher<K> keyMatcher)
     {
         final LateralTCPCacheAttributes lac = (LateralTCPCacheAttributes) iaca;
         final ArrayList<LateralTCPCacheNoWait<K, V>> noWaits = new ArrayList<>();
@@ -182,8 +184,9 @@ public class LateralTCPCacheFactory
                 lacClone.setTcpServer( server );
 
                 final LateralTCPCacheNoWait<K, V> lateralNoWait = createCacheNoWait(lacClone, cacheEventLogger, elementSerializer);
+                lateralNoWait.setKeyMatcher(keyMatcher);
 
-                addListenerIfNeeded( lacClone, cacheMgr, elementSerializer );
+                addListenerIfNeeded(lacClone, cacheMgr, elementSerializer);
                 monitorCache(lateralNoWait);
                 noWaits.add( lateralNoWait );
             }
@@ -194,6 +197,7 @@ public class LateralTCPCacheFactory
         // create the no wait facade.
         final LateralTCPCacheNoWaitFacade<K, V> lcnwf =
             new LateralTCPCacheNoWaitFacade<>(listener, noWaits, lac);
+        lcnwf.setKeyMatcher(keyMatcher);
 
         // create udp discovery if available.
         createDiscoveryService( lac, lcnwf, cacheMgr, cacheEventLogger, elementSerializer );

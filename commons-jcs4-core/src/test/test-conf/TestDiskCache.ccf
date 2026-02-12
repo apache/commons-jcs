@@ -39,12 +39,10 @@ jcs.region.indexedRegion4=indexedDiskCache2
 
 # Indexed Disk Cache
 jcs.auxiliary.indexedDiskCache=org.apache.commons.jcs4.auxiliary.disk.indexed.IndexedDiskCacheFactory
-jcs.auxiliary.indexedDiskCache.attributes=org.apache.commons.jcs4.auxiliary.disk.indexed.IndexedDiskCacheAttributes
 jcs.auxiliary.indexedDiskCache.attributes.DiskPath=target/test-sandbox/indexed-disk-cache
 
 # Indexed Disk Cache
 jcs.auxiliary.indexedDiskCache2=org.apache.commons.jcs4.auxiliary.disk.indexed.IndexedDiskCacheFactory
-jcs.auxiliary.indexedDiskCache2.attributes=org.apache.commons.jcs4.auxiliary.disk.indexed.IndexedDiskCacheAttributes
 jcs.auxiliary.indexedDiskCache2.attributes.DiskPath=target/test-sandbox/indexed-disk-cache2
 
 # #############################################################

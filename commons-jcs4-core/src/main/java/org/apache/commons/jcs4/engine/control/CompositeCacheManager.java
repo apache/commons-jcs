@@ -40,7 +40,6 @@ import javax.management.ObjectName;
 import org.apache.commons.jcs4.access.exception.CacheException;
 import org.apache.commons.jcs4.admin.JCSAdminBean;
 import org.apache.commons.jcs4.auxiliary.AuxiliaryCache;
-import org.apache.commons.jcs4.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.commons.jcs4.auxiliary.AuxiliaryCacheFactory;
 import org.apache.commons.jcs4.engine.CompositeCacheAttributes;
 import org.apache.commons.jcs4.engine.ElementAttributes;
@@ -184,12 +183,8 @@ public class CompositeCacheManager
     /** Default element attributes for this cache manager */
     private IElementAttributes defaultElementAttr = new ElementAttributes();
 
-    /** Used to keep track of configured auxiliaries */
+    /** Used to keep track of configured auxiliary factories */
     private final ConcurrentMap<String, AuxiliaryCacheFactory> auxiliaryFactoryRegistry =
-        new ConcurrentHashMap<>( );
-
-    /** Used to keep track of attributes for auxiliaries. */
-    private final ConcurrentMap<String, AuxiliaryCacheAttributes> auxiliaryAttributeRegistry =
         new ConcurrentHashMap<>( );
 
     /** Used to keep track of configured auxiliaries */
@@ -738,37 +733,22 @@ public class CompositeCacheManager
     }
 
     /**
-     * @param name
-     * @return AuxiliaryCacheAttributes
-     */
-    public AuxiliaryCacheAttributes registryAttrGet( final String name )
-    {
-        return auxiliaryAttributeRegistry.get( name );
-    }
-
-    /**
-     * @param auxAttr
-     */
-    public void registryAttrPut( final AuxiliaryCacheAttributes auxAttr )
-    {
-        auxiliaryAttributeRegistry.put( auxAttr.getName(), auxAttr );
-    }
-
-    /**
+     * Get auxiliary factory from registry
      * @param name
      * @return AuxiliaryCacheFactory
      */
-    public AuxiliaryCacheFactory registryFacGet( final String name )
+    public AuxiliaryCacheFactory getRegisteredAuxiliaryFactory(final String name)
     {
-        return auxiliaryFactoryRegistry.get( name );
+        return auxiliaryFactoryRegistry.get(name);
     }
 
     /**
+     * Register auxiliary factory for re-use
      * @param auxFac
      */
-    public void registryFacPut( final AuxiliaryCacheFactory auxFac )
+    public void registerAuxiliaryFactory(final AuxiliaryCacheFactory auxFac)
     {
-        auxiliaryFactoryRegistry.put( auxFac.getName(), auxFac );
+        auxiliaryFactoryRegistry.put(auxFac.getName(), auxFac);
     }
 
     /** */
@@ -862,8 +842,6 @@ public class CompositeCacheManager
 
         // shut down factories
         auxiliaryFactoryRegistry.values().forEach(AuxiliaryCacheFactory::dispose);
-
-        auxiliaryAttributeRegistry.clear();
         auxiliaryFactoryRegistry.clear();
 
         // shutdown all scheduled jobs

@@ -34,6 +34,7 @@ import org.apache.commons.jcs4.auxiliary.disk.jdbc.mysql.util.ScheduleParser;
 import org.apache.commons.jcs4.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs4.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs4.engine.logging.behavior.ICacheEventLogger;
+import org.apache.commons.jcs4.engine.match.behavior.IKeyMatcher;
 import org.apache.commons.jcs4.log.Log;
 
 /**
@@ -65,25 +66,27 @@ public class MySQLDiskCacheFactory
      * This factory method should create an instance of the mysqlcache.
      *
      * @param rawAttr specific cache configuration attributes
-     * @param compositeCacheManager the global cache manager
-     * @param cacheEventLogger a specific logger for cache events
-     * @param elementSerializer a serializer for cache elements
+     * @param cacheMgr the global cache manager
+     * @param cacheEventLogger the cache event logger
+     * @param elementSerializer the serializer for cache elements
+     * @param keyMatcher the key matcher for getMatching() calls
      * @return MySQLDiskCache the cache instance
      * @throws SQLException if the cache instance could not be created
      */
     @Override
     public <K, V> MySQLDiskCache<K, V> createCache( final AuxiliaryCacheAttributes rawAttr,
-            final ICompositeCacheManager compositeCacheManager,
-            final ICacheEventLogger cacheEventLogger, final IElementSerializer elementSerializer )
+            final ICompositeCacheManager cacheMgr, final ICacheEventLogger cacheEventLogger,
+            final IElementSerializer elementSerializer, final IKeyMatcher<K> keyMatcher)
             throws SQLException
     {
         final MySQLDiskCacheAttributes cattr = (MySQLDiskCacheAttributes) rawAttr;
         final TableState tableState = getTableState( cattr.getTableName() );
-        final DataSourceFactory dsFactory = getDataSourceFactory(cattr, compositeCacheManager.getConfigurationProperties());
+        final DataSourceFactory dsFactory = getDataSourceFactory(cattr, cacheMgr.getConfigurationProperties());
 
         final MySQLDiskCache<K, V> cache = new MySQLDiskCache<>( cattr, dsFactory, tableState);
         cache.setCacheEventLogger( cacheEventLogger );
         cache.setElementSerializer( elementSerializer );
+        cache.setKeyMatcher(keyMatcher);
 
         // create a shrinker if we need it.
         createShrinkerWhenNeeded( cattr, cache );
@@ -150,5 +153,11 @@ public class MySQLDiskCacheFactory
                         attributes.getTableName());
             }
         }
+    }
+
+    @Override
+    public Class<MySQLDiskCacheAttributes> getAttributeClass()
+    {
+        return MySQLDiskCacheAttributes.class;
     }
 }

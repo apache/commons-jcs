@@ -9,6 +9,7 @@ import org.apache.commons.jcs4.auxiliary.remote.behavior.IRemoteCacheAttributes;
 import org.apache.commons.jcs4.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs4.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs4.engine.logging.behavior.ICacheEventLogger;
+import org.apache.commons.jcs4.engine.match.behavior.IKeyMatcher;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -36,10 +37,12 @@ public class TestRemoteCacheFactory extends RemoteCacheFactory
     // Mock
     public class TestRemoteCacheManager extends RemoteCacheManager
     {
-        protected TestRemoteCacheManager(final IRemoteCacheAttributes cattr, final ICompositeCacheManager cacheMgr, final RemoteCacheMonitor monitor, final ICacheEventLogger cacheEventLogger,
-                final IElementSerializer elementSerializer)
+        protected TestRemoteCacheManager(final IRemoteCacheAttributes cattr,
+                final ICompositeCacheManager cacheMgr, final RemoteCacheMonitor monitor,
+                final ICacheEventLogger cacheEventLogger,
+                final IElementSerializer elementSerializer, final IKeyMatcher<?> keyMatcher)
         {
-            super(cattr, cacheMgr, monitor, cacheEventLogger, elementSerializer);
+            super(cattr, cacheMgr, monitor, cacheEventLogger, elementSerializer, keyMatcher);
         }
 
         @Override
@@ -98,15 +101,15 @@ public class TestRemoteCacheFactory extends RemoteCacheFactory
      *
      * @param cattr the cache configuration object
      * @param cacheMgr the cache manager
-     * @param cacheEventLogger the event logger
-     * @param elementSerializer the serializer to use for sending and receiving
+     * @param cacheEventLogger the cache event logger
+     * @param elementSerializer the serializer for cache elements
+     * @param keyMatcher the key matcher for getMatching() calls
      * @return The instance value, never null
      */
     @Override
     public RemoteCacheManager getManager( final IRemoteCacheAttributes cattr,
-                                          final ICompositeCacheManager cacheMgr,
-                                          final ICacheEventLogger cacheEventLogger,
-                                          final IElementSerializer elementSerializer )
+            final ICompositeCacheManager cacheMgr, final ICacheEventLogger cacheEventLogger,
+            final IElementSerializer elementSerializer, final IKeyMatcher<?> keyMatcher)
     {
         final RemoteCacheAttributes rca = (RemoteCacheAttributes) cattr.clone();
         if (rca.getRemoteLocation() == null)
@@ -114,7 +117,9 @@ public class TestRemoteCacheFactory extends RemoteCacheFactory
             rca.setRemoteLocation("", Registry.REGISTRY_PORT);
         }
 
-        return managers.computeIfAbsent(rca.getRemoteLocation(), key -> new TestRemoteCacheManager(rca, cacheMgr, null, cacheEventLogger, elementSerializer));
+        return managers.computeIfAbsent(rca.getRemoteLocation(), key ->
+            new TestRemoteCacheManager(rca, cacheMgr, null, cacheEventLogger,
+                    elementSerializer, keyMatcher));
     }
 
     /**

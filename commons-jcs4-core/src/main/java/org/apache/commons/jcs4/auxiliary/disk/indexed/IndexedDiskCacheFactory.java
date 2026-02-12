@@ -24,6 +24,7 @@ import org.apache.commons.jcs4.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.commons.jcs4.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs4.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs4.engine.logging.behavior.ICacheEventLogger;
+import org.apache.commons.jcs4.engine.match.behavior.IKeyMatcher;
 import org.apache.commons.jcs4.log.Log;
 
 /**
@@ -42,19 +43,22 @@ public class IndexedDiskCacheFactory
      * @param cacheMgr This allows auxiliaries to reference the manager without assuming that it is
      *            a singleton. This will allow JCS to be a non-singleton. Also, it makes it easier to
      *            test.
-     * @param cacheEventLogger
-     * @param elementSerializer
+     * @param cacheEventLogger the cache event logger
+     * @param elementSerializer the serializer for cache elements
+     * @param keyMatcher the key matcher for getMatching() calls
      * @return IndexedDiskCache
      */
     @Override
-    public <K, V> IndexedDiskCache<K, V> createCache( final AuxiliaryCacheAttributes iaca, final ICompositeCacheManager cacheMgr,
-                                       final ICacheEventLogger cacheEventLogger, final IElementSerializer elementSerializer )
+    public <K, V> IndexedDiskCache<K, V> createCache(final AuxiliaryCacheAttributes iaca,
+            final ICompositeCacheManager cacheMgr, final ICacheEventLogger cacheEventLogger,
+            final IElementSerializer elementSerializer, final IKeyMatcher<K> keyMatcher)
     {
         final IndexedDiskCacheAttributes idca = (IndexedDiskCacheAttributes) iaca;
         log.debug( "Creating DiskCache for attributes = {0}", idca );
 
         final IndexedDiskCache<K, V> cache = new IndexedDiskCache<>( idca, elementSerializer );
-        cache.setCacheEventLogger( cacheEventLogger );
+        cache.setCacheEventLogger(cacheEventLogger);
+        cache.setKeyMatcher(keyMatcher);
 
         return cache;
     }

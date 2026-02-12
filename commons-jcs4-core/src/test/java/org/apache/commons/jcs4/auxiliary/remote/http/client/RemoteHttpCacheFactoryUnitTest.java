@@ -29,6 +29,7 @@ import org.apache.commons.jcs4.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs4.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs4.engine.control.MockCompositeCacheManager;
 import org.apache.commons.jcs4.engine.logging.behavior.ICacheEventLogger;
+import org.apache.commons.jcs4.engine.match.behavior.IKeyMatcher;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -80,6 +81,7 @@ class RemoteHttpCacheFactoryUnitTest
         assertNotNull( cacheMgr, "Should have a manager." );
         final ICacheEventLogger cacheEventLogger = null;
         final IElementSerializer elementSerializer = null;
+        final IKeyMatcher<String> keyMatcher = null;
 
         final RemoteHttpCacheAttributes cattr = new RemoteHttpCacheAttributes();
         assertNotNull( cattr, "Should have attributes." );
@@ -87,7 +89,8 @@ class RemoteHttpCacheFactoryUnitTest
         assertNotNull( factory, "Should have a factory." );
 
         // DO WORK
-        final AuxiliaryCache<String, String> result = factory.createCache(cattr, cacheMgr, cacheEventLogger, elementSerializer);
+        final AuxiliaryCache<String, String> result = factory.createCache(cattr, cacheMgr,
+                cacheEventLogger, elementSerializer, keyMatcher);
 
         // VERIFY
         assertNotNull( result, "Should have a cache." );

@@ -61,16 +61,14 @@ public class AuxiliaryCacheConfigurator
      * @param auxPrefix   For example, AUXILIARY_PREFIX + auxName
      * @return cacheEventLogger
      */
-    public static ICacheEventLogger parseCacheEventLogger( final Properties props, final String auxPrefix )
+    public static ICacheEventLogger parseCacheEventLogger(final Properties props, final String auxPrefix)
     {
-
-        // auxFactory was not previously initialized.
         final String eventLoggerClassName = auxPrefix + CACHE_EVENT_LOGGER_PREFIX;
         final ICacheEventLogger cacheEventLogger = OptionConverter.instantiateByKey( props, eventLoggerClassName, null );
         if ( cacheEventLogger != null )
         {
-            final String cacheEventLoggerAttributePrefix = auxPrefix + CACHE_EVENT_LOGGER_PREFIX + ATTRIBUTE_PREFIX;
-            PropertySetter.setProperties( cacheEventLogger, props, cacheEventLoggerAttributePrefix + "." );
+            final String cacheEventLoggerAttributePrefix = auxPrefix + CACHE_EVENT_LOGGER_PREFIX + ATTRIBUTE_PREFIX + ".";
+            PropertySetter.setProperties( cacheEventLogger, props, cacheEventLoggerAttributePrefix);
             log.info( "Using custom cache event logger [{0}] for auxiliary [{1}]",
                     cacheEventLogger, auxPrefix );
         }
@@ -91,13 +89,12 @@ public class AuxiliaryCacheConfigurator
     public static IElementSerializer parseElementSerializer( final Properties props, final String auxPrefix )
     {
         // TODO take in the entire prop key
-        // auxFactory was not previously initialized.
         final String elementSerializerClassName = auxPrefix + SERIALIZER_PREFIX;
         IElementSerializer elementSerializer = OptionConverter.instantiateByKey( props, elementSerializerClassName, null );
         if ( elementSerializer != null )
         {
-            final String attributePrefix = auxPrefix + SERIALIZER_PREFIX + ATTRIBUTE_PREFIX;
-            PropertySetter.setProperties( elementSerializer, props, attributePrefix + "." );
+            final String attributePrefix = auxPrefix + SERIALIZER_PREFIX + ATTRIBUTE_PREFIX + ".";
+            PropertySetter.setProperties(elementSerializer, props, attributePrefix);
             log.info( "Using custom element serializer [{0}] for auxiliary [{1}]",
                     elementSerializer, auxPrefix );
         }

@@ -29,7 +29,6 @@ jcs.region.missing.cacheattributes.MaxObjects=${NO_SUCH_PROPERTY}
 
 # Indexed Disk Cache
 jcs.auxiliary.indexedDiskCache=org.apache.commons.jcs4.auxiliary.disk.indexed.IndexedDiskCacheFactory
-jcs.auxiliary.indexedDiskCache.attributes=org.apache.commons.jcs4.auxiliary.disk.indexed.IndexedDiskCacheAttributes
 jcs.auxiliary.indexedDiskCache.attributes.DiskPath=target/test-sandbox/${MY_SYSTEM_PROPERTY_DISK_DIR}
 
 

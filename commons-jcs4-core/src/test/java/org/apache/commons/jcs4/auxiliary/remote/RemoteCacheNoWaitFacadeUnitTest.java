@@ -76,7 +76,7 @@ class RemoteCacheNoWaitFacadeUnitTest
         final TestRemoteCacheFactory factory = new TestRemoteCacheFactory();
         factory.initialize();
 
-        final AuxiliaryCache<String, String> cache = factory.createCache(cattr, null, null, null);
+        final AuxiliaryCache<String, String> cache = factory.createCache(cattr, null, null, null, null);
         final RemoteCacheNoWaitFacade<String, String> facade =
                 (RemoteCacheNoWaitFacade<String, String>) cache;
         assertEquals( 2, cattr.getFailovers().size(), "Should have two failovers." );

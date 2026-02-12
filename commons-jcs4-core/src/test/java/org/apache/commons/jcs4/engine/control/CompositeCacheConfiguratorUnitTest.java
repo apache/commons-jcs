@@ -36,10 +36,10 @@ import org.junit.jupiter.api.Test;
 class CompositeCacheConfiguratorUnitTest
 {
     /**
-     * Verify that we can parse the event logger correctly
+     * Verify that we can parse optional auxiliary configurations correctly
      */
     @Test
-    void testParseAuxiliary_CacheEventLogger_Normal()
+    void testParseAuxiliary_OptionalConfigurations_Normal()
     {
         // SETUP
         final String regionName = "MyRegion";
@@ -48,12 +48,14 @@ class CompositeCacheConfiguratorUnitTest
         final String auxPrefix = CompositeCacheConfigurator.AUXILIARY_PREFIX + auxName;
         final String auxiliaryClassName = MockAuxiliaryCacheFactory.class.getName();
         final String eventLoggerClassName = MockCacheEventLogger.class.getName();
+        final String keyMatcherClassName = MockKeyMatcher.class.getName();
         final String auxiliaryAttributeClassName = MockAuxiliaryCacheAttributes.class.getName();
 
         final Properties props = new Properties();
         props.put( auxPrefix, auxiliaryClassName );
         props.put( auxPrefix + CompositeCacheConfigurator.ATTRIBUTE_PREFIX, auxiliaryAttributeClassName );
         props.put( auxPrefix + AuxiliaryCacheConfigurator.CACHE_EVENT_LOGGER_PREFIX, eventLoggerClassName );
+        props.put( auxPrefix + CompositeCacheConfigurator.KEY_MATCHER_PREFIX, keyMatcherClassName);
 
 //        System.out.print( props );
 
@@ -66,7 +68,13 @@ class CompositeCacheConfiguratorUnitTest
 
         // VERIFY
         assertNotNull( result, "Should have an auxcache." );
+        assertEquals(MockAuxiliaryCache.class, result.getClass(), "Should have MockAuxiliaryCache.");
+        assertNotNull( manager.getRegisteredAuxiliaryFactory(auxName), "Should have a factory." );
+        assertEquals(MockAuxiliaryCacheFactory.class, manager.getRegisteredAuxiliaryFactory(auxName).getClass(), "Should have MockAuxiliaryCacheFactory.");
         assertNotNull( result.getCacheEventLogger(), "Should have an event logger." );
+        assertEquals(MockCacheEventLogger.class, result.getCacheEventLogger().getClass(), "Should have a MockCacheEventLogger.");
+        assertNotNull( result.getKeyMatcher(), "Should have a key matcher." );
+        assertEquals(MockKeyMatcher.class, result.getKeyMatcher().getClass(), "Should have a MockKeyMatcher.");
     }
 
     /**

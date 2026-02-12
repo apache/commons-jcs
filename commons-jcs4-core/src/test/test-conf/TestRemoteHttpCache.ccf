@@ -29,5 +29,4 @@ jcs.default.elementattributes.MaxIdleTime=1800
 
 ## The Http Remote Cache Client
 jcs.auxiliary.RC=org.apache.commons.jcs4.auxiliary.remote.http.client.RemoteHttpCacheFactory
-jcs.auxiliary.RC.attributes=org.apache.commons.jcs4.auxiliary.remote.http.client.RemoteHttpCacheAttributes
 jcs.auxiliary.RC.attributes.url=http://localhost:8000/jcs-app/RemoteCache

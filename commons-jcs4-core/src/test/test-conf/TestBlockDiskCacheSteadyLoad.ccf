@@ -23,7 +23,6 @@ jcs.default.cacheattributes.DiskUsagePattern=UPDATE
 
 # AVAILABLE AUXILIARY CACHES
 jcs.auxiliary.DC=org.apache.commons.jcs4.auxiliary.disk.block.BlockDiskCacheFactory
-jcs.auxiliary.DC.attributes=org.apache.commons.jcs4.auxiliary.disk.block.BlockDiskCacheAttributes
 jcs.auxiliary.DC.attributes.DiskPath=target/test-sandbox/block-steady-load
 jcs.auxiliary.DC.attributes.maxKeySize=20000
 jcs.auxiliary.DC.attributes.blockSizeBytes=5000

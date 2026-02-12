@@ -47,6 +47,5 @@ jcs.region.Idletime.elementattributes.MaxIdleTime=1
 # #### AUXILIARY CACHES
 # Indexed Disk Cache
 jcs.auxiliary.indexedDiskCache=org.apache.commons.jcs4.auxiliary.disk.indexed.IndexedDiskCacheFactory
-jcs.auxiliary.indexedDiskCache.attributes=org.apache.commons.jcs4.auxiliary.disk.indexed.IndexedDiskCacheAttributes
 jcs.auxiliary.indexedDiskCache.attributes.DiskPath=target/test-sandbox/indexed-disk-cache
 

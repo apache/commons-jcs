@@ -31,7 +31,6 @@ jcs.region.indexedRegion1.cacheattributes.MaxObjects=0
 
 # Indexed Disk Cache
 jcs.auxiliary.indexedDiskCache=org.apache.commons.jcs4.auxiliary.disk.indexed.IndexedDiskCacheFactory
-jcs.auxiliary.indexedDiskCache.attributes=org.apache.commons.jcs4.auxiliary.disk.indexed.IndexedDiskCacheAttributes
 jcs.auxiliary.indexedDiskCache.attributes.DiskPath=target/test-sandbox/indexed-disk-cache-conc
 jcs.auxiliary.indexedDiskCache.attributes.MaxPurgatorySize=300000
 jcs.auxiliary.indexedDiskCache.attributes.MaxKeySize=500000

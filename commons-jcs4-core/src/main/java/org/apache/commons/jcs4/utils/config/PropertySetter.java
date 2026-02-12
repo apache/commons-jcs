@@ -123,6 +123,7 @@ public class PropertySetter
         }
         else if( type.isEnum() )
         {
+            @SuppressWarnings("unchecked")
             final Enum<?> valueOf = Enum.valueOf(type.asSubclass(Enum.class), v);
             return valueOf;
         }
@@ -211,7 +212,7 @@ public class PropertySetter
      * @throws PropertySetterException
      */
 
-    public void setProperty( final PropertyDescriptor prop, final String name, final String value )
+    protected void setProperty( final PropertyDescriptor prop, final String name, final String value )
         throws PropertySetterException
     {
         final Method setter = prop.getWriteMethod();
@@ -262,7 +263,7 @@ public class PropertySetter
      * @param value String value of the property
      */
 
-    public void setProperty( String name, final String value )
+    protected void setProperty( String name, final String value )
     {
         if ( value == null )
         {

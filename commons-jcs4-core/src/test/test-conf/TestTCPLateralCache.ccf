@@ -31,7 +31,6 @@ jcs.region.testTcpRegion1.cacheattributes.MaxObjects=10000
 
 # simple Lateral TCP auxiliary
 jcs.auxiliary.LTCP=org.apache.commons.jcs4.auxiliary.lateral.socket.tcp.LateralTCPCacheFactory
-jcs.auxiliary.LTCP.attributes=org.apache.commons.jcs4.auxiliary.lateral.socket.tcp.LateralTCPCacheAttributes
 jcs.auxiliary.LTCP.attributes.TcpServers=localhost:1111
 jcs.auxiliary.LTCP.attributes.TcpListenerPort=1110
 jcs.auxiliary.LTCP.attributes.TcpListenerHost=localhost

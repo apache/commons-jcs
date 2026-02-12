@@ -22,6 +22,7 @@ package org.apache.commons.jcs4.auxiliary;
 import org.apache.commons.jcs4.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs4.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs4.engine.logging.behavior.ICacheEventLogger;
+import org.apache.commons.jcs4.engine.match.behavior.IKeyMatcher;
 
 /**
  * All auxiliary caches must have a factory that the cache configurator can use to create instances.
@@ -35,14 +36,16 @@ public interface AuxiliaryCacheFactory
      * @param cacheMgr This allows auxiliaries to reference the manager without assuming that it is
      *            a singleton. This will allow JCS to be a non-singleton. Also, it makes it easier to
      *            test.
-     * @param cacheEventLogger
-     * @param elementSerializer
+     * @param cacheEventLogger the cache event logger
+     * @param elementSerializer the serializer for cache elements
+     * @param keyMatcher the key matcher for getMatching() calls
      * @return AuxiliaryCache
      * @throws Exception if cache instance could not be created
      */
     <K, V> AuxiliaryCache<K, V> createCache(
             AuxiliaryCacheAttributes attr, ICompositeCacheManager cacheMgr,
-            ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer )
+            ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer,
+            IKeyMatcher<K> keyMatcher)
             throws Exception;
 
     /**

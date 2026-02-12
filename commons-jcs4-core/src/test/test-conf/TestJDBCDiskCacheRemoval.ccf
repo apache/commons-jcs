@@ -30,7 +30,6 @@ jcs.default.elementattributes.MaxIdleTime=1800
 # ################# AUXILIARY CACHES AVAILABLE ################
 # JDBC disk cache
 jcs.auxiliary.JDBC=org.apache.commons.jcs4.auxiliary.disk.jdbc.JDBCDiskCacheFactory
-jcs.auxiliary.JDBC.attributes=org.apache.commons.jcs4.auxiliary.disk.jdbc.JDBCDiskCacheAttributes
 jcs.auxiliary.JDBC.attributes.userName=sa
 jcs.auxiliary.JDBC.attributes.password=
 jcs.auxiliary.JDBC.attributes.url=jdbc:hsqldb:target/JDBCDiskCacheRemovalUnitTest

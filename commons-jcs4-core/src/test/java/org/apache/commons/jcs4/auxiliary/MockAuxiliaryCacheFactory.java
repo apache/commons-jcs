@@ -22,6 +22,7 @@ package org.apache.commons.jcs4.auxiliary;
 import org.apache.commons.jcs4.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs4.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs4.engine.logging.behavior.ICacheEventLogger;
+import org.apache.commons.jcs4.engine.match.behavior.IKeyMatcher;
 
 /** For testing */
 public class MockAuxiliaryCacheFactory
@@ -35,18 +36,21 @@ public class MockAuxiliaryCacheFactory
      *
      * @param attr
      * @param cacheMgr
-     * @param cacheEventLogger
-     * @param elementSerializer
+     * @param cacheEventLogger the cache event logger
+     * @param elementSerializer the serializer for cache elements
+     * @param keyMatcher the key matcher for getMatching() calls
      * @return AuxiliaryCache
      */
     @Override
     public <K, V> AuxiliaryCache<K, V>
-        createCache( final AuxiliaryCacheAttributes attr, final ICompositeCacheManager cacheMgr,
-           final ICacheEventLogger cacheEventLogger, final IElementSerializer elementSerializer )
+        createCache(final AuxiliaryCacheAttributes attr,
+                final ICompositeCacheManager cacheMgr, final ICacheEventLogger cacheEventLogger,
+                final IElementSerializer elementSerializer, final IKeyMatcher<K> keyMatcher)
     {
         final MockAuxiliaryCache<K, V> auxCache = new MockAuxiliaryCache<>();
         auxCache.setCacheEventLogger( cacheEventLogger );
         auxCache.setElementSerializer( elementSerializer );
+        auxCache.setKeyMatcher(keyMatcher);
         return auxCache;
     }
 

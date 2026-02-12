@@ -24,6 +24,7 @@ import org.apache.commons.jcs4.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.commons.jcs4.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs4.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs4.engine.logging.behavior.ICacheEventLogger;
+import org.apache.commons.jcs4.engine.match.behavior.IKeyMatcher;
 import org.apache.commons.jcs4.log.Log;
 
 /**
@@ -42,19 +43,22 @@ public class BlockDiskCacheFactory
      * @param cacheMgr This allows auxiliaries to reference the manager without assuming that it is
      *            a singleton. This will allow JCS to be a non-singleton. Also, it makes it easier
      *            to test.
-     * @param cacheEventLogger
-     * @param elementSerializer
+     * @param cacheEventLogger the cache event logger
+     * @param elementSerializer the serializer for cache elements
+     * @param keyMatcher the key matcher for getMatching() calls
      * @return BlockDiskCache
      */
     @Override
-    public <K, V> BlockDiskCache<K, V> createCache( final AuxiliaryCacheAttributes iaca, final ICompositeCacheManager cacheMgr,
-                                       final ICacheEventLogger cacheEventLogger, final IElementSerializer elementSerializer )
+    public <K, V> BlockDiskCache<K, V> createCache(final AuxiliaryCacheAttributes iaca,
+            final ICompositeCacheManager cacheMgr, final ICacheEventLogger cacheEventLogger,
+            final IElementSerializer elementSerializer, final IKeyMatcher<K> keyMatcher)
     {
         final BlockDiskCacheAttributes idca = (BlockDiskCacheAttributes) iaca;
         log.debug("Creating DiskCache for attributes = {0}", idca);
 
         final BlockDiskCache<K, V> cache = new BlockDiskCache<>( idca, elementSerializer );
-        cache.setCacheEventLogger( cacheEventLogger );
+        cache.setCacheEventLogger(cacheEventLogger);
+        cache.setKeyMatcher(keyMatcher);
 
         return cache;
     }

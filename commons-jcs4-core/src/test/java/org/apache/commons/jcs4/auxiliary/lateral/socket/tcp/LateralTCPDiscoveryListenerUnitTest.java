@@ -28,7 +28,9 @@ import java.util.List;
 import org.apache.commons.jcs4.engine.ZombieCacheServiceNonLocal;
 import org.apache.commons.jcs4.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs4.engine.control.CompositeCacheManager;
+import org.apache.commons.jcs4.engine.control.MockKeyMatcher;
 import org.apache.commons.jcs4.engine.logging.MockCacheEventLogger;
+import org.apache.commons.jcs4.engine.match.behavior.IKeyMatcher;
 import org.apache.commons.jcs4.utils.discovery.DiscoveredService;
 import org.apache.commons.jcs4.utils.serialization.StandardSerializer;
 import org.junit.jupiter.api.BeforeEach;
@@ -52,6 +54,9 @@ class LateralTCPDiscoveryListenerUnitTest
     /** The serializer. */
     protected IElementSerializer elementSerializer;
 
+    /** The key matcher. */
+    protected IKeyMatcher<String> keyMatcher;
+
     /** Create the listener for testing */
     @BeforeEach
     void setUp()
@@ -63,6 +68,7 @@ class LateralTCPDiscoveryListenerUnitTest
         cacheMgr = CompositeCacheManager.getInstance();
         cacheEventLogger = new MockCacheEventLogger();
         elementSerializer = new StandardSerializer();
+        keyMatcher = new MockKeyMatcher<>();
 
         listener = new LateralTCPDiscoveryListener( factory.getName(), cacheMgr,
                 cacheEventLogger, elementSerializer );
@@ -109,7 +115,7 @@ class LateralTCPDiscoveryListenerUnitTest
         final LateralTCPCacheNoWait<String, String> noWait = factory.createCacheNoWait(lca, cacheEventLogger, elementSerializer);
         // this is the normal process, the discovery service expects it there
         cacheMgr.addAuxiliaryCache(factory.getName(), cacheName, noWait);
-        cacheMgr.registryFacPut(factory);
+        cacheMgr.registerAuxiliaryFactory(factory);
 
         final LateralTCPCacheNoWaitFacade<String, String> facade = setupFacade(cacheName);
         listener.addNoWaitFacade( cacheName, facade );
@@ -189,7 +195,8 @@ class LateralTCPDiscoveryListenerUnitTest
         lca.setTcpListenerPort(1120);
         lca.setCacheName(cacheName);
         lca.setUdpDiscoveryEnabled(false);
-        final LateralTCPCacheNoWaitFacade<String, String> noWait = factory.createCache(lca, cacheMgr, cacheEventLogger, elementSerializer);
+        final LateralTCPCacheNoWaitFacade<String, String> noWait = factory.createCache(lca,
+                cacheMgr, cacheEventLogger, elementSerializer, keyMatcher);
 
         // VERIFY
         assertFalse( noWait.containsNoWait( "" ), "No waits should be empty." );
@@ -219,7 +226,7 @@ class LateralTCPDiscoveryListenerUnitTest
         final LateralTCPCacheNoWait<String, String> noWait = factory.createCacheNoWait(lca, cacheEventLogger, elementSerializer);
         // this is the normal process, the discovery service expects it there
         cacheMgr.addAuxiliaryCache(factory.getName(), cacheName, noWait);
-        cacheMgr.registryFacPut(factory);
+        cacheMgr.registerAuxiliaryFactory(factory);
 
         final LateralTCPCacheNoWaitFacade<String, String> facade = setupFacade(cacheName);
         listener.addNoWaitFacade( cacheName, facade );

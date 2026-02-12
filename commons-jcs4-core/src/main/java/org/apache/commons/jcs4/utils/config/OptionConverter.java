@@ -46,76 +46,6 @@ public class OptionConverter
     private static final int DELIM_STOP_LEN = 1;
 
     /**
-     * Combines two arrays.
-     * @param l
-     * @param r
-     * @return String[]
-     */
-    public static String[] concatanateArrays( final String[] l, final String[] r )
-    {
-        final int len = l.length + r.length;
-        final String[] a = new String[len];
-
-        System.arraycopy( l, 0, a, 0, l.length );
-        System.arraycopy( r, 0, a, l.length, r.length );
-
-        return a;
-    }
-
-    /**
-     * Escapes special characters.
-     *
-     * @param s
-     * @return String
-     */
-    public static String convertSpecialChars( final String s )
-    {
-        char c;
-        final int len = s.length();
-        final StringBuilder sb = new StringBuilder( len );
-
-        int i = 0;
-        while ( i < len )
-        {
-            c = s.charAt( i++ );
-            if ( c == '\\' )
-            {
-                c = s.charAt( i++ );
-                switch (c) {
-                case 'n':
-                    c = '\n';
-                    break;
-                case 'r':
-                    c = '\r';
-                    break;
-                case 't':
-                    c = '\t';
-                    break;
-                case 'f':
-                    c = '\f';
-                    break;
-                case '\b':
-                    c = '\b';
-                    break;
-                case '\"':
-                    c = '\"';
-                    break;
-                case '\'':
-                    c = '\'';
-                    break;
-                case '\\':
-                    c = '\\';
-                    break;
-                default:
-                    break;
-                }
-            }
-            sb.append( c );
-        }
-        return sb.toString();
-    }
-
-    /**
      * Find the value corresponding to {@code key} in {@code props}. Then perform variable
      * substitution on the found value.
      *
@@ -123,7 +53,6 @@ public class OptionConverter
      * @param props
      * @return substituted string
      */
-
     public static String findAndSubst( final String key, final Properties props )
     {
         final String value = props.getProperty( key );
@@ -140,30 +69,6 @@ public class OptionConverter
         {
             log.error( "Bad option value [{0}]", value, e );
             return value;
-        }
-    }
-
-    /**
-     * Very similar to {@code System.getProperty} except that the {@link SecurityException} is
-     * hidden.
-     * @param key The key to search for.
-     * @param def The default value to return.
-     * @return the string value of the system property, or the default value if there is no property
-     *         with that key.
-     * @since 1.1
-     */
-
-    public static String getSystemProperty( final String key, final String def )
-    {
-        try
-        {
-            return System.getProperty( key, def );
-        }
-        catch ( final Throwable e )
-        {
-            // MS-Java throws com.ms.security.SecurityExceptionEx
-            log.debug( "Was not allowed to read system property \"{0}\".", key );
-            return def;
         }
     }
 
@@ -216,7 +121,7 @@ public class OptionConverter
         {
             try
             {
-                @SuppressWarnings("unchecked") // CCE catched
+                @SuppressWarnings("unchecked") // CCE caught
                 final Class<T> classObj = (Class<T>) Class.forName( className );
                 return classObj.getDeclaredConstructor().newInstance();
 
@@ -291,7 +196,7 @@ public class OptionConverter
      * @return String
      * @throws IllegalArgumentException if {@code val} is malformed.
      */
-    public static String substVars( final String val, final Properties props )
+    private static String substVars( final String val, final Properties props )
         throws IllegalArgumentException
     {
         final StringBuilder sbuf = new StringBuilder();
@@ -338,97 +243,26 @@ public class OptionConverter
     }
 
     /**
-     * If {@code value} is "true", then {@code true} is returned. If {@code value} is
-     * "false", then {@code true} is returned. Otherwise, {@code default} is returned.
-     *
-     * Case of value is unimportant.
-     * @param value
-     * @param defaultValue
-     * @return Object
+     * Very similar to {@code System.getProperty} except that the {@link SecurityException} is
+     * hidden.
+     * @param key The key to search for.
+     * @param def The default value to return.
+     * @return the string value of the system property, or the default value if there is no property
+     *         with that key.
+     * @since 1.1
      */
-    public static boolean toBoolean( final String value, final boolean defaultValue )
+    private static String getSystemProperty( final String key, final String def )
     {
-        if ( value == null )
-        {
-            return defaultValue;
-        }
-        final String trimmedVal = value.trim();
-        if ( "true".equalsIgnoreCase( trimmedVal ) )
-        {
-            return true;
-        }
-        if ( "false".equalsIgnoreCase( trimmedVal ) )
-        {
-            return false;
-        }
-        return defaultValue;
-    }
-
-    /**
-     * @param value
-     * @param defaultValue
-     * @return long
-     */
-    public static long toFileSize( final String value, final long defaultValue )
-    {
-        if ( value == null )
-        {
-            return defaultValue;
-        }
-
-        String s = value.trim().toUpperCase();
-        long multiplier = 1;
-        int index;
-
-        if ( ( index = s.indexOf( "KB" ) ) != -1 )
-        {
-            multiplier = 1024;
-            s = s.substring( 0, index );
-        }
-        else if ( ( index = s.indexOf( "MB" ) ) != -1 )
-        {
-            multiplier = 1024 * 1024;
-            s = s.substring( 0, index );
-        }
-        else if ( ( index = s.indexOf( "GB" ) ) != -1 )
-        {
-            multiplier = 1024 * 1024 * 1024;
-            s = s.substring( 0, index );
-        }
         try
         {
-            return Long.parseLong(s) * multiplier;
+            return System.getProperty( key, def );
         }
-        catch ( final NumberFormatException e )
+        catch ( final Throwable e )
         {
-            log.error( "[{0}] is not in proper int form.", s);
-            log.error( "[{0}] not in expected format", value, e );
+            // MS-Java throws com.ms.security.SecurityExceptionEx
+            log.debug( "Was not allowed to read system property \"{0}\".", key );
+            return def;
         }
-        return defaultValue;
-    }
-
-    /**
-     * Converts to int.
-     *
-     * @param value
-     * @param defaultValue
-     * @return int
-     */
-    public static int toInt( final String value, final int defaultValue )
-    {
-        if ( value != null )
-        {
-            final String s = value.trim();
-            try
-            {
-                return Integer.parseInt(s);
-            }
-            catch ( final NumberFormatException e )
-            {
-                log.error( "[{0}] is not in proper int form.", s, e );
-            }
-        }
-        return defaultValue;
     }
 
     /** No instances please. */

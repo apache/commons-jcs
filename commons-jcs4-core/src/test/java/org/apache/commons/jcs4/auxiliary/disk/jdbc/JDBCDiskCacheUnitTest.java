@@ -35,6 +35,7 @@ import org.apache.commons.jcs4.access.CacheAccess;
 import org.apache.commons.jcs4.auxiliary.disk.jdbc.dsfactory.DataSourceFactory;
 import org.apache.commons.jcs4.engine.behavior.ICacheElement;
 import org.apache.commons.jcs4.engine.control.MockCompositeCacheManager;
+import org.apache.commons.jcs4.engine.control.MockKeyMatcher;
 import org.apache.commons.jcs4.utils.serialization.StandardSerializer;
 import org.apache.commons.jcs4.utils.threadpool.DaemonThreadFactory;
 import org.junit.jupiter.api.BeforeEach;
@@ -143,7 +144,8 @@ public class JDBCDiskCacheUnitTest
         dcFactory.setScheduledExecutorService(Executors.newScheduledThreadPool(2,
         	new DaemonThreadFactory("JCS-JDBCDiskCacheManager-", Thread.MIN_PRIORITY)));
 
-        final JDBCDiskCache<String, String> diskCache = dcFactory.createCache( cattr, compositeCacheManager, null, new StandardSerializer() );
+        final JDBCDiskCache<String, String> diskCache = dcFactory.createCache( cattr,
+                compositeCacheManager, null, new StandardSerializer(), new MockKeyMatcher<>());
         assertNotNull( diskCache, "Should have a cache instance" );
 
         // DO WORK

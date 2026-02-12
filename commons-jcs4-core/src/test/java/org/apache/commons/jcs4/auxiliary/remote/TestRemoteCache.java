@@ -30,6 +30,7 @@ import org.apache.commons.jcs4.engine.CacheElement;
 import org.apache.commons.jcs4.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs4.engine.control.MockCompositeCacheManager;
 import org.apache.commons.jcs4.engine.control.MockElementSerializer;
+import org.apache.commons.jcs4.engine.control.MockKeyMatcher;
 import org.apache.commons.jcs4.log.Log;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -88,7 +89,8 @@ public class TestRemoteCache
 
         final RemoteCacheFactory factory = new RemoteCacheFactory();
         factory.initialize();
-        final RemoteCacheManager mgr = factory.getManager( rca, cacheMgr, new MockCacheEventLogger(), new MockElementSerializer() );
+        final RemoteCacheManager mgr = factory.getManager( rca, cacheMgr,
+                new MockCacheEventLogger(), new MockElementSerializer(), new MockKeyMatcher<>());
         final AuxiliaryCache<String, String> cache = mgr.getCache( rca );
 
         final int numMes = 100;

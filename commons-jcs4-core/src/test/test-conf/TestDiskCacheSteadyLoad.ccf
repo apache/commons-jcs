@@ -23,7 +23,6 @@ jcs.default.cacheattributes.DiskUsagePattern=UPDATE
 
 # AVAILABLE AUXILIARY CACHES
 jcs.auxiliary.DC=org.apache.commons.jcs4.auxiliary.disk.indexed.IndexedDiskCacheFactory
-jcs.auxiliary.DC.attributes=org.apache.commons.jcs4.auxiliary.disk.indexed.IndexedDiskCacheAttributes
 jcs.auxiliary.DC.attributes.DiskPath=target/test-sandbox/steady-load
 jcs.auxiliary.DC.attributes.maxKeySize=1000
 jcs.auxiliary.DC.attributes.MaxPurgatorySize=1000

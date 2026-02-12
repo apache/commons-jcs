@@ -135,47 +135,55 @@ public class CompositeCacheConfigurator
 
         if (auxCache == null)
         {
+            final String prefix = AUXILIARY_PREFIX + auxName;
             // GET FACTORY
-            AuxiliaryCacheFactory auxFac = ccm.registryFacGet( auxName );
+            AuxiliaryCacheFactory auxFac = ccm.getRegisteredAuxiliaryFactory( auxName );
             if ( auxFac == null )
             {
                 // auxFactory was not previously initialized.
-                final String prefix = AUXILIARY_PREFIX + auxName;
                 auxFac = OptionConverter.instantiateByKey( props, prefix, null );
                 if ( auxFac == null )
                 {
-                    log.error( "Could not instantiate auxFactory named \"{0}\"", auxName );
+                    log.error( "Could not instantiate auxiliary factory named \"{0}\"", auxName );
                     return null;
                 }
-
-                auxFac.setName( auxName );
 
                 if (auxFac instanceof IRequireScheduler irs)
                 {
                 	irs.setScheduledExecutorService(ccm.getScheduledExecutorService());
                 }
 
+                auxFac.setName( auxName );
                 auxFac.initialize();
-                ccm.registryFacPut( auxFac );
+                ccm.registerAuxiliaryFactory( auxFac );
             }
 
             // GET ATTRIBUTES
-            AuxiliaryCacheAttributes auxAttr = ccm.registryAttrGet( auxName );
-            final String attrName = AUXILIARY_PREFIX + auxName + ATTRIBUTE_PREFIX;
-            if ( auxAttr == null )
+            final String attrName = prefix + ATTRIBUTE_PREFIX;
+            Class<? extends AuxiliaryCacheAttributes> attributeClass = OptionConverter.findClassByKey(props, attrName);
+            if (attributeClass == null)
             {
-                // auxFactory was not previously initialized.
-                auxAttr = OptionConverter.instantiateByKey( props, attrName, null );
-                if ( auxAttr == null )
-                {
-                    log.error( "Could not instantiate auxAttr named \"{0}\"", attrName );
-                    return null;
-                }
-                auxAttr.setName( auxName );
-                ccm.registryAttrPut( auxAttr );
+                attributeClass = auxFac.getAttributeClass();
+                log.debug("Using default auxiliary cache attributes class for \"{0}\": {1}",
+                        auxName, attributeClass.getName());
+            }
+            else
+            {
+                log.info( "Using custom auxiliary cache attributes class for \"{0}\": {1}",
+                        auxName, attributeClass.getName());
             }
 
-            auxAttr = auxAttr.clone();
+            AuxiliaryCacheAttributes auxAttr;
+            try
+            {
+                auxAttr = attributeClass.getDeclaredConstructor().newInstance();
+            }
+            catch (final Exception e)
+            {
+                // Should not happen
+                log.error("Could not instantiate default auxiliary attributes \"{0}\"", attributeClass.getName(), e);
+                return null;
+            }
 
             log.debug( "Parsing options for \"{0}\"", attrName );
 
@@ -184,21 +192,19 @@ public class CompositeCacheConfigurator
             log.debug( "End of parsing for \"{0}\"", attrName );
 
             // GET CACHE FROM FACTORY WITH ATTRIBUTES
+            auxAttr.setName( auxName );
             auxAttr.setCacheName( regName );
-
-            final String auxPrefix = AUXILIARY_PREFIX + auxName;
 
             // CONFIGURE THE EVENT LOGGER
             final ICacheEventLogger cacheEventLogger =
-                    AuxiliaryCacheConfigurator.parseCacheEventLogger( props, auxPrefix );
+                    AuxiliaryCacheConfigurator.parseCacheEventLogger( props, prefix );
 
             // CONFIGURE THE ELEMENT SERIALIZER
             final IElementSerializer elementSerializer =
-                    AuxiliaryCacheConfigurator.parseElementSerializer( props, auxPrefix );
+                    AuxiliaryCacheConfigurator.parseElementSerializer( props, prefix );
 
             // CONFIGURE THE KEYMATCHER
-            //IKeyMatcher keyMatcher = parseKeyMatcher( props, auxPrefix );
-            // TODO add to factory interface
+            IKeyMatcher<K> keyMatcher = parseKeyMatcher( props, prefix );
 
             // Consider putting the compositeCache back in the factory interface
             // since the manager may not know about it at this point.
@@ -206,7 +212,8 @@ public class CompositeCacheConfigurator
             // before the auxiliary is created.
             try
             {
-                auxCache = auxFac.createCache( auxAttr, ccm, cacheEventLogger, elementSerializer );
+                auxCache = auxFac.createCache(auxAttr, ccm, cacheEventLogger,
+                        elementSerializer, keyMatcher);
             }
             catch (final Exception e)
             {
@@ -259,6 +266,11 @@ public class CompositeCacheConfigurator
                 attributeClass = CompositeCacheAttributes.class;
             }
             log.debug("Using default composite cache attributes class for region \"{0}\": {1}",
+                    regName, attributeClass.getName());
+        }
+        else
+        {
+            log.info( "Using custom composite cache attributes class for region \"{0}\": {1}",
                     regName, attributeClass.getName());
         }
 
@@ -320,21 +332,19 @@ public class CompositeCacheConfigurator
      */
     protected <K> IKeyMatcher<K> parseKeyMatcher( final Properties props, final String auxPrefix )
     {
-
-        // auxFactory was not previously initialized.
         final String keyMatcherClassName = auxPrefix + KEY_MATCHER_PREFIX;
         IKeyMatcher<K> keyMatcher = OptionConverter.instantiateByKey( props, keyMatcherClassName, null );
-        if ( keyMatcher != null )
+        if (keyMatcher == null)
+        {
+            // use the default key matcher
+            keyMatcher = new KeyMatcherPatternImpl<>();
+            log.debug( "Using standard key matcher [{0}] for auxiliary [{1}]", keyMatcher, auxPrefix );
+        }
+        else
         {
             final String attributePrefix = auxPrefix + KEY_MATCHER_PREFIX + ATTRIBUTE_PREFIX;
             PropertySetter.setProperties( keyMatcher, props, attributePrefix + "." );
             log.info( "Using custom key matcher [{0}] for auxiliary [{1}]", keyMatcher, auxPrefix );
-        }
-        else
-        {
-            // use the default standard serializer
-            keyMatcher = new KeyMatcherPatternImpl<>();
-            log.info( "Using standard key matcher [{0}] for auxiliary [{1}]", keyMatcher, auxPrefix );
         }
         return keyMatcher;
     }

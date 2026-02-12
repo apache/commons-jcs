@@ -36,6 +36,7 @@ import org.apache.commons.jcs4.engine.behavior.ICacheServiceNonLocal;
 import org.apache.commons.jcs4.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs4.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs4.engine.logging.behavior.ICacheEventLogger;
+import org.apache.commons.jcs4.engine.match.behavior.IKeyMatcher;
 import org.apache.commons.jcs4.log.Log;
 
 /**
@@ -60,6 +61,9 @@ public class RemoteCacheManager
 
     /** The serializer. */
     private final IElementSerializer elementSerializer;
+
+    /** The key matcher. */
+    private final IKeyMatcher<?> keyMatcher;
 
     /** Handle to the remote cache service; or a zombie handle if failed to connect. */
     private ICacheServiceNonLocal<?, ?> remoteService;
@@ -90,17 +94,20 @@ public class RemoteCacheManager
      * @param cattr cache attributes
      * @param cacheMgr the cache hub
      * @param monitor the cache monitor thread for error notifications
-     * @param cacheEventLogger
-     * @param elementSerializer
+     * @param cacheEventLogger the cache event logger
+     * @param elementSerializer the serializer for cache elements
+     * @param keyMatcher the key matcher for getMatching() calls
      */
-    protected RemoteCacheManager( final IRemoteCacheAttributes cattr, final ICompositeCacheManager cacheMgr,
-                                final RemoteCacheMonitor monitor,
-                                final ICacheEventLogger cacheEventLogger, final IElementSerializer elementSerializer)
+    protected RemoteCacheManager(final IRemoteCacheAttributes cattr,
+            final ICompositeCacheManager cacheMgr, final RemoteCacheMonitor monitor,
+            final ICacheEventLogger cacheEventLogger, final IElementSerializer elementSerializer,
+            final IKeyMatcher<?> keyMatcher)
     {
         this.cacheMgr = cacheMgr;
         this.monitor = monitor;
         this.cacheEventLogger = cacheEventLogger;
         this.elementSerializer = elementSerializer;
+        this.keyMatcher = keyMatcher;
         this.remoteWatch = new CacheWatchRepairable();
 
         this.registry = RemoteUtils.getNamingURL(cattr.getRemoteLocation(), cattr.getRemoteServiceName());
@@ -245,6 +252,7 @@ public class RemoteCacheManager
      * @param cattr the cache configuration
      * @return the instance
      */
+    @SuppressWarnings("unchecked")
     protected <K, V> RemoteCacheNoWait<K, V> newRemoteCacheNoWait(final IRemoteCacheAttributes cattr)
     {
         final RemoteCacheNoWait<K, V> remoteCacheNoWait;
@@ -262,15 +270,16 @@ public class RemoteCacheManager
                     listener, e );
         }
 
-        @SuppressWarnings("unchecked")
         final IRemoteCacheClient<K, V> remoteCacheClient =
             new RemoteCache<>(cattr, (ICacheServiceNonLocal<K, V>) remoteService, listener, monitor);
         remoteCacheClient.setCacheEventLogger( cacheEventLogger );
         remoteCacheClient.setElementSerializer( elementSerializer );
+        remoteCacheClient.setKeyMatcher((IKeyMatcher<K>)keyMatcher);
 
         remoteCacheNoWait = new RemoteCacheNoWait<>( remoteCacheClient );
         remoteCacheNoWait.setCacheEventLogger( cacheEventLogger );
         remoteCacheNoWait.setElementSerializer( elementSerializer );
+        remoteCacheNoWait.setKeyMatcher((IKeyMatcher<K>)keyMatcher);
 
         return remoteCacheNoWait;
     }

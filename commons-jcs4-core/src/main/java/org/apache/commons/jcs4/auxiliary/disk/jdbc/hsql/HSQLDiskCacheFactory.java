@@ -34,6 +34,7 @@ import org.apache.commons.jcs4.auxiliary.disk.jdbc.JDBCDiskCacheFactory;
 import org.apache.commons.jcs4.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs4.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs4.engine.logging.behavior.ICacheEventLogger;
+import org.apache.commons.jcs4.engine.match.behavior.IKeyMatcher;
 import org.apache.commons.jcs4.log.Log;
 
 /**
@@ -48,26 +49,28 @@ public class HSQLDiskCacheFactory
     /**
      * This factory method should create an instance of the hsqlcache.
      *
-     * @param rawAttr
-     * @param compositeCacheManager
-     * @param cacheEventLogger
-     * @param elementSerializer
+     * @param iaca the cache attributes for this cache
+     * @param cacheMgr This allows auxiliaries to reference the manager without assuming that it is
+     *            a singleton. This will allow JCS to be a non-singleton. Also, it makes it easier
+     *            to test.
+     * @param cacheEventLogger the cache event logger
+     * @param elementSerializer the serializer for cache elements
+     * @param keyMatcher the key matcher for getMatching() calls
      * @return JDBCDiskCache
      * @throws SQLException if the creation of the cache instance fails
      */
     @Override
-    public <K, V> JDBCDiskCache<K, V> createCache( final AuxiliaryCacheAttributes rawAttr,
-			final ICompositeCacheManager compositeCacheManager,
-			final ICacheEventLogger cacheEventLogger,
-			final IElementSerializer elementSerializer )
+    public <K, V> JDBCDiskCache<K, V> createCache( final AuxiliaryCacheAttributes iaca,
+			final ICompositeCacheManager cacheMgr, final ICacheEventLogger cacheEventLogger,
+			final IElementSerializer elementSerializer, IKeyMatcher<K> keyMatcher)
 			throws SQLException
     {
         // TODO get this from the attributes.
         System.setProperty( "hsqldb.cache_scale", "8" );
 
-        final JDBCDiskCache<K, V> cache = super.createCache(rawAttr, compositeCacheManager,
-                cacheEventLogger, elementSerializer);
-        setupDatabase( cache.getDataSource(), (JDBCDiskCacheAttributes) rawAttr );
+        final JDBCDiskCache<K, V> cache = super.createCache(iaca, cacheMgr,
+                cacheEventLogger, elementSerializer, keyMatcher);
+        setupDatabase( cache.getDataSource(), (JDBCDiskCacheAttributes) iaca );
 
         return cache;
     }
