@@ -36,6 +36,7 @@ public class CompositeCacheLoader<K, V> implements CacheLoader<K, V>, Closeable,
     private static final long serialVersionUID = 5636608842581992435L;
     private final CacheLoader<K, V>[] delegates;
 
+    @SafeVarargs
     public CompositeCacheLoader(final CacheLoader<K, V>... delegates)
     {
         this.delegates = delegates;
@@ -44,7 +45,7 @@ public class CompositeCacheLoader<K, V> implements CacheLoader<K, V>, Closeable,
     @Override
     public void close() throws IOException
     {
-        Closeables.close(delegates);
+        Closeables.close((Object[]) delegates);
     }
 
     @Override

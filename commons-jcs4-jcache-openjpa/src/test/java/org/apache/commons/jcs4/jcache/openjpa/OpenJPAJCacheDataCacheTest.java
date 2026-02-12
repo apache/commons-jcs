@@ -68,20 +68,23 @@ class OpenJPAJCacheDataCacheTest
     }
 
     private static final Properties props = new Properties()
-    {private static final long serialVersionUID = 498881935058549341L;
-
     {
-        setProperty("openjpa.MetaDataFactory", "jpa(Types=" + MyEntity.class.getName() + ")");
-        setProperty("openjpa.ConnectionDriverName", EmbeddedDriver.class.getName());
-        setProperty("openjpa.ConnectionURL", "jdbc:derby:memory:test;create=true");
-        setProperty("openjpa.jdbc.SynchronizeMappings", "buildSchema");
-        setProperty("openjpa.DataCacheManager", "jcache");
-        setProperty("openjpa.RuntimeUnenhancedClasses", "supported");
+        private static final long serialVersionUID = 498881935058549341L;
 
-        // implicit
-        // setProperty("openjpa.DataCache", "jcache");
-        // setProperty("openjpa.QueryCache", "jcache");
-    }};
+        {
+            setProperty("openjpa.MetaDataFactory", "jpa(Types=" + MyEntity.class.getName() + ")");
+            setProperty("openjpa.ConnectionDriverName", EmbeddedDriver.class.getName());
+            setProperty("openjpa.ConnectionURL", "jdbc:derby:memory:test;create=true");
+            setProperty("openjpa.jdbc.SynchronizeMappings", "buildSchema");
+            setProperty("openjpa.DataCacheManager", "jcache");
+            setProperty("openjpa.RuntimeUnenhancedClasses", "supported");
+            setProperty("openjpa.Log", "none");
+
+            // implicit
+            // setProperty("openjpa.DataCache", "jcache");
+            // setProperty("openjpa.QueryCache", "jcache");
+        }
+    };
 
     @Test
     void testEntity()

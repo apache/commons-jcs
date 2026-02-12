@@ -52,9 +52,9 @@ public class TestLogConfigurationUtil
         public void publish(final LogRecord record)
         {
             final StringBuilder sb = new StringBuilder();
-            sb.append(record.getMillis())
+            sb.append(record.getInstant())
               .append(" - ")
-              .append(record.getSourceClassName())
+              .append(record.getLoggerName())
               .append("#")
               .append(record.getSourceMethodName())
               .append(" - ")

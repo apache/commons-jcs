@@ -167,7 +167,7 @@ public class RemoteCacheClientTester
             // Export this remote object to make it available to receive
             // incoming calls,
             // using an anonymous port.
-            UnicastRemoteObject.exportObject( this );
+            UnicastRemoteObject.exportObject(this, 0);
         }
         catch ( final ExportException e )
         {

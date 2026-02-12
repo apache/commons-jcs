@@ -270,10 +270,10 @@ class AbstractDiskCacheUnitTest
         // DO WORK
         diskCache.removeAll();
         final String result = stringWriter.toString();
-        System.out.println(result);
+        // System.out.println(result);
 
         // VERIFY
-        assertTrue( result.indexOf( "set to false" ) != -1, "Should say not allowed." );
+        assertTrue( result.indexOf( "allowRemoveAll is set to false" ) != -1, "Should say not allowed." );
         assertNotNull( diskCache.get( key ), "Item should be in the map." );
     }
 

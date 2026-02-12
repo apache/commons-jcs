@@ -1,7 +1,6 @@
 package org.apache.commons.jcs4.admin;
 
 import org.apache.commons.jcs4.engine.CacheStatus;
-import org.apache.commons.jcs4.engine.stats.behavior.IStats;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -36,7 +35,7 @@ public record CacheRegionInfo(
     CacheStatus cacheStatus,
 
     /** The statistics of the cache region */
-    IStats cacheStatistics,
+    String cacheStatistics,
 
     /** The number of memory hits in the cache region */
     long hitCountRam,

@@ -34,6 +34,7 @@ public class CompositeCacheWriter<K, V> implements CacheWriter<K, V>, Closeable,
     private static final long serialVersionUID = -3305787850424123811L;
     private final CacheWriter<K, V>[] writers;
 
+    @SafeVarargs
     public CompositeCacheWriter(final CacheWriter<K, V>... writers)
     {
         this.writers = writers;
@@ -42,7 +43,7 @@ public class CompositeCacheWriter<K, V> implements CacheWriter<K, V>, Closeable,
     @Override
     public void close() throws IOException
     {
-        Closeables.close(writers);
+        Closeables.close((Object[]) writers);
     }
 
     @Override

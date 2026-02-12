@@ -100,7 +100,7 @@ public class JCSAdminBean implements JCSJMXBean
                     cache.getCacheName(),
                     cache.getSize(),
                     cache.getStatus(),
-                    cache.getStatistics(),
+                    cache.getStatistics().toString(),
                     cache.getHitCountRam(),
                     cache.getHitCountAux(),
                     cache.getMissCountNotFound(),

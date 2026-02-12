@@ -38,7 +38,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 public class CacheLoaderAdapterTest
 {
     private final AtomicInteger count = new AtomicInteger();
-    private final Configuration<?, ?> config = new MutableConfiguration<String, String>().setStoreByValue(false).setReadThrough(true).setCacheLoaderFactory(new CacheLoaderAdapter<String, String>()
+    private final Configuration<?, ?> config = new MutableConfiguration<String, String>()
+            .setStoreByValue(false)
+            .setReadThrough(true)
+            .setCacheLoaderFactory(new CacheLoaderAdapter<String, String>()
     {
         private static final long serialVersionUID = 5824701188219321027L;
 
