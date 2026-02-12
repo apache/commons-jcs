@@ -114,7 +114,7 @@ public class LateralTCPListener<K, V>
      * Use the vmid by default. This can be set for testing. If we ever need to run more than one
      * per vm, then we need a new technique.
      */
-    private long listenerId = CacheInfo.listenerId;
+    private long listenerId = CacheInfo.INSTANCE.listenerId();
 
     /** Is this shut down? */
     private final AtomicBoolean shutdown = new AtomicBoolean();
@@ -232,7 +232,7 @@ public class LateralTCPListener<K, V>
                 return;
             }
 
-            if ( led.getRequesterId() == getListenerId() )
+            if ( led.requesterId() == getListenerId() )
             {
                 log.debug( "from self" );
             }
@@ -292,35 +292,35 @@ public class LateralTCPListener<K, V>
      */
     private Object handleElement(final LateralElementDescriptor<K, V> led) throws IOException
     {
-        final String cacheName = led.getPayload().getCacheName();
-        final K key = led.getPayload().getKey();
+        final String cacheName = led.payload().getCacheName();
+        final K key = led.payload().getKey();
         Object obj = null;
 
-        switch (led.getCommand())
+        switch (led.command())
         {
             case UPDATE:
-                handlePut(led.getPayload());
+                handlePut(led.payload());
                 break;
 
             case REMOVE:
                 // if a hash code was given and filtering is on
                 // check to see if they are the same
                 // if so, then don't remove, otherwise issue a remove
-                if (led.getValHashCode() != -1 &&
+                if (led.valHashCode() != -1 &&
                     getTcpLateralCacheAttributes().isFilterRemoveByHashCode())
                 {
                     final ICacheElement<K, V> test = getCache( cacheName ).localGet( key );
                     if ( test != null )
                     {
-                        if ( test.getVal().hashCode() == led.getValHashCode() )
+                        if ( test.getVal().hashCode() == led.valHashCode() )
                         {
                             log.debug( "Filtering detected identical hashCode [{0}], "
                                     + "not issuing a remove for led {1}",
-                                    led.getValHashCode(), led );
+                                    led.valHashCode(), led );
                             return null;
                         }
                         log.debug( "Different hash codes, in cache [{0}] sent [{1}]",
-                                test.getVal()::hashCode, led::getValHashCode );
+                                test.getVal()::hashCode, led::valHashCode );
                     }
                 }
                 handleRemove( cacheName, key );

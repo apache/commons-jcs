@@ -24,23 +24,20 @@ import java.rmi.dgc.VMID;
 /**
  * This is a static variable holder for the distribution auxiliaries that need something like a vmid.
  */
-public final class CacheInfo
+public record CacheInfo(
+        long listenerId
+)
 {
     /**
      * Used to identify a client, so we can run multiple clients off one host.
      * Need since there is no way to identify a client other than by host in
      * rmi.
-     * <p>
-     * TODO: may have some trouble in failover mode if the cache keeps its old
-     * id. We may need to reset this when moving into failover.
      */
-    private static final VMID vmid = new VMID();
-
-    /** By default this is the hash code of the VMID */
-    public static final long listenerId = vmid.hashCode();
+    public static final CacheInfo INSTANCE = new CacheInfo();
 
     /** Shouldn't be instantiated */
     private CacheInfo()
     {
+        this(new VMID().hashCode());
     }
 }

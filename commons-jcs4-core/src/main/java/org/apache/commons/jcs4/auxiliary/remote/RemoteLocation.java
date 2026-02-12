@@ -27,7 +27,13 @@ import org.apache.commons.jcs4.log.Log;
 /**
  * Location of the RMI registry.
  */
-public final class RemoteLocation
+public record RemoteLocation(
+        /** Host name */
+        String host,
+
+        /** Port */
+        int port
+)
 {
     /** The logger. */
     private static final Log log = Log.getLog( RemoteLocation.class );
@@ -48,77 +54,11 @@ public final class RemoteLocation
 
         if (match.find() && match.groupCount() == 2)
         {
-            return new RemoteLocation( match.group(1), Integer.parseInt( match.group(2) ) );
+            return new RemoteLocation(match.group(1), Integer.parseInt( match.group(2)));
         }
+
         log.error("Invalid server descriptor: {0}", server);
-
         return null;
-    }
-
-    /** Host name */
-    private final String host;
-
-    /** Port */
-    private final int port;
-
-    /**
-     * Constructor for the Location object
-     *
-     * @param host
-     * @param port
-     */
-    public RemoteLocation( final String host, final int port )
-    {
-        this.host = host;
-        this.port = port;
-    }
-
-    /**
-     * @param obj
-     * @return true if the host and port are equal
-     */
-    @Override
-    public boolean equals( final Object obj )
-    {
-        if ( obj == this )
-        {
-            return true;
-        }
-        if (obj instanceof RemoteLocation l)
-        {
-            if ( this.host == null )
-            {
-                return l.host == null && port == l.port;
-            }
-            return host.equals( l.host ) && port == l.port;
-        }
-
-        return false;
-    }
-
-    /**
-     * @return the host
-     */
-    public String getHost()
-    {
-        return host;
-    }
-
-    /**
-     * @return the port
-     */
-    public int getPort()
-    {
-        return port;
-    }
-
-    /**
-     * @return int
-     */
-    @Override
-    public int hashCode()
-    {
-        return host == null ? port : host.hashCode() ^ port;
     }
 
     /**

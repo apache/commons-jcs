@@ -34,6 +34,7 @@ import javax.sql.DataSource;
 
 import org.apache.commons.jcs4.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.commons.jcs4.auxiliary.disk.AbstractDiskCache;
+import org.apache.commons.jcs4.auxiliary.disk.jdbc.TableState.TableStateType;
 import org.apache.commons.jcs4.auxiliary.disk.jdbc.dsfactory.DataSourceFactory;
 import org.apache.commons.jcs4.engine.behavior.ICache;
 import org.apache.commons.jcs4.engine.behavior.ICacheElement;
@@ -129,8 +130,8 @@ public class JDBCDiskCache<K, V>
     {
         super( cattr );
 
-        setTableState( tableState );
-        setJdbcDiskCacheAttributes( cattr );
+        this.tableState = tableState;
+        this.jdbcDiskCacheAttributes = cattr;
 
         log.info( "jdbcDiskCacheAttributes = {0}", this::getJdbcDiskCacheAttributes);
 
@@ -184,7 +185,7 @@ public class JDBCDiskCache<K, V>
 
             if (result.next())
             {
-                getTableState().setState( TableState.DELETE_RUNNING );
+                getTableState().setState( TableStateType.DELETE_RUNNING );
                 final long now = System.currentTimeMillis() / 1000;
 
                 final String sql = String.format(SQL_DELETE_EXPIRED, getTableName());
@@ -222,7 +223,7 @@ public class JDBCDiskCache<K, V>
         }
         finally
         {
-            getTableState().setState( TableState.FREE );
+            getTableState().setState( TableStateType.FREE );
         }
 
         return deleted;
@@ -297,14 +298,6 @@ public class JDBCDiskCache<K, V>
     protected JDBCDiskCacheAttributes getJdbcDiskCacheAttributes()
     {
         return jdbcDiskCacheAttributes;
-    }
-
-    /**
-     * @param jdbcDiskCacheAttributes The jdbcDiskCacheAttributes to set.
-     */
-    protected void setJdbcDiskCacheAttributes( final JDBCDiskCacheAttributes jdbcDiskCacheAttributes )
-    {
-        this.jdbcDiskCacheAttributes = jdbcDiskCacheAttributes;
     }
 
     /**
@@ -391,14 +384,6 @@ public class JDBCDiskCache<K, V>
     public TableState getTableState()
     {
         return tableState;
-    }
-
-    /**
-     * @param tableState The tableState to set.
-     */
-    public void setTableState( final TableState tableState )
-    {
-        this.tableState = tableState;
     }
 
     /**

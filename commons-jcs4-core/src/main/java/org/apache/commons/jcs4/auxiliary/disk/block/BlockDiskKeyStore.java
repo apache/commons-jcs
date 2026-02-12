@@ -415,7 +415,7 @@ public class BlockDiskKeyStore<K>
                                     serializer.deSerializeFrom(bc, null);
                             if (descriptor != null)
                             {
-                                keys.put(descriptor.getKey(), descriptor.getBlocks());
+                                keys.put(descriptor.key(), descriptor.blocks());
                             }
                         }
                         catch (final EOFException e)
@@ -443,7 +443,7 @@ public class BlockDiskKeyStore<K>
                         BlockDiskElementDescriptor<K> descriptor = (BlockDiskElementDescriptor<K>) ois.readObject();
                         if (descriptor != null)
                         {
-                            keys.put(descriptor.getKey(), descriptor.getBlocks());
+                            keys.put(descriptor.key(), descriptor.blocks());
                         }
                     }
                 }

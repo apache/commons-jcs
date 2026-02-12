@@ -86,7 +86,7 @@ public class LateralTCPCacheNoWait<K, V>
 
         final CacheEventQueueFactory<K, V> fact = new CacheEventQueueFactory<>();
         this.eventQueue = fact.createCacheEventQueue( new CacheAdaptor<>( cache ),
-                CacheInfo.listenerId, cache.getCacheName(),
+                CacheInfo.INSTANCE.listenerId(), cache.getCacheName(),
                 getAuxiliaryCacheAttributes().getEventQueuePoolName(),
                 getAuxiliaryCacheAttributes().getEventQueueType() );
 
@@ -392,7 +392,7 @@ public class LateralTCPCacheNoWait<K, V>
         }
         final CacheEventQueueFactory<K, V> fact = new CacheEventQueueFactory<>();
         this.eventQueue = fact.createCacheEventQueue( new CacheAdaptor<>( cache ),
-                CacheInfo.listenerId, cache.getCacheName(),
+                CacheInfo.INSTANCE.listenerId(), cache.getCacheName(),
                 getAuxiliaryCacheAttributes().getEventQueuePoolName(),
                 getAuxiliaryCacheAttributes().getEventQueueType() );
     }

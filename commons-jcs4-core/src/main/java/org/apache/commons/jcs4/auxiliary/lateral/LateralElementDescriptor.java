@@ -28,38 +28,27 @@ import org.apache.commons.jcs4.engine.behavior.ICacheElement;
  * JCS-TCP-Lateral packet. The headers specify the action the receiver should
  * take.
  */
-public class LateralElementDescriptor<K, V>
-    implements Serializable
+public record LateralElementDescriptor<K, V>(
+        /** The Cache Element that we are distributing. */
+        ICacheElement<K, V> payload,
+
+        /** The operation has been requested by the client. */
+        LateralCommand command,
+
+        /**
+         * The id of the source of the request. This is used to prevent infinite
+         * loops.
+         */
+        long requesterId,
+
+        /**
+         * The hash code value for this element.
+         */
+        int valHashCode
+) implements Serializable
 {
     /** Don't change */
     private static final long serialVersionUID = 5268222498076063575L;
-
-    /** The Cache Element that we are distributing. */
-    public ICacheElement<K, V> ce;
-
-    /**
-     * The id of the source of the request. This is used to prevent infinite
-     * loops.
-     */
-    public long requesterId;
-
-    /** The operation has been requested by the client. */
-    public LateralCommand command = LateralCommand.UPDATE;
-
-    /**
-     * The hash code value for this element.
-     */
-    public int valHashCode = -1;
-
-    /**
-     * Constructor for the LateralElementDescriptor object
-     *
-     * @param ce ICacheElement&lt;K, V&gt; payload
-     */
-    public LateralElementDescriptor( final ICacheElement<K, V> ce )
-    {
-        this.ce = ce;
-    }
 
     /**
      * Constructor for the LateralElementDescriptor object
@@ -70,8 +59,7 @@ public class LateralElementDescriptor<K, V>
      */
     public LateralElementDescriptor( final ICacheElement<K, V> ce, final LateralCommand command)
     {
-        this(ce);
-        this.command = command;
+        this(ce, command, 0, -1);
     }
 
     /**
@@ -84,50 +72,7 @@ public class LateralElementDescriptor<K, V>
      */
     public LateralElementDescriptor( final ICacheElement<K, V> ce, final LateralCommand command, final long requesterId)
     {
-        this(ce, command);
-        this.requesterId = requesterId;
-    }
-
-    /**
-     * Return operation requested by the client
-     *
-     * @return the command
-     * @since 3.1
-     */
-    public LateralCommand getCommand()
-    {
-        return command;
-    }
-
-    /**
-     * Return payload
-     *
-     * @return the ce
-     * @since 3.1
-     */
-    public ICacheElement<K, V> getPayload()
-    {
-        return ce;
-    }
-
-    /**
-     * Return id of the source of the request
-     *
-     * @return the requesterId
-     * @since 3.1
-     */
-    public long getRequesterId()
-    {
-        return requesterId;
-    }
-
-    /**
-     * @return the valHashCode
-     * @since 3.1
-     */
-    public int getValHashCode()
-    {
-        return valHashCode;
+        this(ce, command, requesterId, -1);
     }
 
     /**
@@ -140,7 +85,7 @@ public class LateralElementDescriptor<K, V>
         buf.append( "\n LateralElementDescriptor " );
         buf.append( "\n command = [" + this.command + "]" );
         buf.append( "\n valHashCode = [" + this.valHashCode + "]" );
-        buf.append( "\n ICacheElement = [" + this.ce + "]" );
+        buf.append( "\n ICacheElement = [" + this.payload + "]" );
         return buf.toString();
     }
 }

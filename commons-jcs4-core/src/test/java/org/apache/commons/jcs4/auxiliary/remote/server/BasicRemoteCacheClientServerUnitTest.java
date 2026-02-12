@@ -112,7 +112,7 @@ class BasicRemoteCacheClientServerUnitTest
         server = RemoteCacheServerStartupUtil.startServerUsingProperties(configFile);
         factory = new RemoteCacheFactory();
         factory.initialize();
-        remotePort = server.remoteCacheServerAttributes.getRemoteLocation().getPort();
+        remotePort = server.remoteCacheServerAttributes.getRemoteLocation().port();
     }
 
     @AfterAll

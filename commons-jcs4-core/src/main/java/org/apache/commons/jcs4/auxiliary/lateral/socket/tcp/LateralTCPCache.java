@@ -320,7 +320,7 @@ public class LateralTCPCache<K, V>
 
         try
         {
-            lateralCacheService.remove( cacheName, key, CacheInfo.listenerId );
+            lateralCacheService.remove( cacheName, key, CacheInfo.INSTANCE.listenerId());
         }
         catch ( final IOException ex )
         {
@@ -341,7 +341,7 @@ public class LateralTCPCache<K, V>
     {
         try
         {
-            lateralCacheService.removeAll( cacheName, CacheInfo.listenerId );
+            lateralCacheService.removeAll( cacheName, CacheInfo.INSTANCE.listenerId());
         }
         catch ( final IOException ex )
         {
@@ -364,8 +364,8 @@ public class LateralTCPCache<K, V>
             if (ce != null)
             {
                 log.debug( "update: lateral = [{0}], CacheInfo.listenerId = {1}",
-                        lateralCacheService, CacheInfo.listenerId );
-                lateralCacheService.update( ce, CacheInfo.listenerId );
+                        lateralCacheService, CacheInfo.INSTANCE.listenerId());
+                lateralCacheService.update( ce, CacheInfo.INSTANCE.listenerId());
             }
         }
         catch ( final IOException ex )

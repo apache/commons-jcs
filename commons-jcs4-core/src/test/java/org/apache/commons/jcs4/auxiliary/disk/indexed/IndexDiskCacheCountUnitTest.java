@@ -57,18 +57,14 @@ public class IndexDiskCacheCountUnitTest extends AbstractIndexDiskCacheUnitTest
         final String[] test = { "a", "bb", "ccc", "dddd", "eeeee", "ffffff", "ggggggg", "hhhhhhhhh", "iiiiiiiiii" };
         final String[] expect = { null, "bb", "ccc", null, null, "ffffff", null, "hhhhhhhhh", "iiiiiiiiii" };
 
-        //System.out.println( "------------------------- testRecycleBin " );
-
         for ( int i = 0; i < 6; i++ )
         {
             final ICacheElement<String, String> element = new CacheElement<>( "testRecycleBin", "key:" + test[i], test[i]);
-            //System.out.println( "About to add key:" + test[i] + " i = " + i );
             disk.processUpdate( element );
         }
 
         for ( int i = 3; i < 5; i++ )
         {
-            //System.out.println( "About to remove key:" + test[i] + " i = " + i );
             disk.remove( "key:" + test[i]);
         }
 
@@ -77,7 +73,6 @@ public class IndexDiskCacheCountUnitTest extends AbstractIndexDiskCacheUnitTest
         for ( int i = 7; i < 9; i++ )
         {
             final ICacheElement<String, String> element = new CacheElement<>( "testRecycleBin", "key:" + test[i], test[i]);
-            //System.out.println( "About to add key:" + test[i] + " i = " + i );
             disk.processUpdate( element );
         }
 
@@ -86,14 +81,6 @@ public class IndexDiskCacheCountUnitTest extends AbstractIndexDiskCacheUnitTest
             for ( int i = 0; i < 9; i++ )
             {
                 final ICacheElement<String, String> element = disk.get( "key:" + test[i]);
-                if ( element != null )
-                {
-                    //System.out.println( "element = " + element.getVal() );
-                }
-                else
-                {
-                    //System.out.println( "null --key:" + test[i]);
-                }
 
                 final String expectedValue = expect[i];
                 if ( expectedValue == null )

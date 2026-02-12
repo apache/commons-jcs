@@ -33,23 +33,26 @@ public class TableState
     /** Don't change. */
     private static final long serialVersionUID = -6625081552084964885L;
 
-    /**
-     * The table is free. It can be accessed and no potentially table locking
-     * jobs are running.
-     */
-    public static final int FREE = 0;
+    public enum TableStateType
+    {
+        /**
+         * The table is free. It can be accessed and no potentially table locking
+         * jobs are running.
+         */
+        FREE,
 
-    /** A potentially table locking deletion is running */
-    public static final int DELETE_RUNNING = 1;
+        /** A potentially table locking deletion is running */
+        DELETE_RUNNING,
 
-    /** A table locking optimization is running. */
-    public static final int OPTIMIZATION_RUNNING = 2;
+        /** A table locking optimization is running. */
+        OPTIMIZATION_RUNNING
+    }
 
     /** Name of the table whose state this reflects. */
     private String tableName;
 
     /** We might want to add error */
-    private int state = FREE;
+    private TableStateType state = TableStateType.FREE;
 
     /**
      * Constructs a usable table state.
@@ -58,41 +61,24 @@ public class TableState
      */
     public TableState( final String tableName )
     {
-        setTableName( tableName );
+        this.tableName = tableName;
     }
 
     /**
      * @return the state.
      */
-    public int getState()
+    public TableStateType getState()
     {
         return state;
-    }
-
-    /**
-     * @return the tableName.
-     */
-    public String getTableName()
-    {
-        return tableName;
     }
 
     /**
      * @param state
      *            The state to set.
      */
-    public void setState( final int state )
+    public void setState(TableStateType state)
     {
         this.state = state;
-    }
-
-    /**
-     * @param tableName
-     *            The tableName to set.
-     */
-    public void setTableName( final String tableName )
-    {
-        this.tableName = tableName;
     }
 
     /**
@@ -104,9 +90,9 @@ public class TableState
     public String toString()
     {
         final StringBuilder str = new StringBuilder();
-        str.append( "TableState " );
-        str.append( "\n TableName = " + getTableName() );
-        str.append( "\n State = " + getState() );
+        str.append("TableState " );
+        str.append("\n TableName = ").append(tableName);
+        str.append("\n State = ").append(getState());
         return str.toString();
     }
 }

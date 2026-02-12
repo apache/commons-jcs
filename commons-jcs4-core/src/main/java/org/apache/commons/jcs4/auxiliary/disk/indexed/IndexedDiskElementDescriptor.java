@@ -25,29 +25,16 @@ import java.io.Serializable;
  * Disk objects are located by descriptor entries. These are saved on shutdown and loaded into
  * memory on startup.
  */
-public class IndexedDiskElementDescriptor
-    implements Serializable, Comparable<IndexedDiskElementDescriptor>
+public record IndexedDiskElementDescriptor(
+        /** Position of the cache data entry on disk. */
+        long pos,
+
+        /** Number of bytes the serialized form of the cache data takes. */
+        int len
+) implements Serializable, Comparable<IndexedDiskElementDescriptor>
 {
     /** Don't change */
     private static final long serialVersionUID = -3029163572847659450L;
-
-    /** Position of the cache data entry on disk. */
-    long pos;
-
-    /** Number of bytes the serialized form of the cache data takes. */
-    int len;
-
-    /**
-     * Constructs a usable disk element descriptor.
-     *
-     * @param pos
-     * @param len
-     */
-    public IndexedDiskElementDescriptor( final long pos, final int len )
-    {
-        this.pos = pos;
-        this.len = len;
-    }
 
     /**
      * Compares based on length, then on pos descending.
@@ -73,33 +60,6 @@ public class IndexedDiskElementDescriptor
     }
 
     /**
-     * @see Object#equals(Object)
-     */
-    @Override
-    public boolean equals(final Object o)
-    {
-    	if (o == null)
-    	{
-    		return false;
-    	}
-        if (o instanceof IndexedDiskElementDescriptor ided)
-        {
-            return pos == ided.pos && len == ided.len;
-        }
-
-        return false;
-    }
-
-    /**
-     * @see Object#hashCode()
-     */
-    @Override
-    public int hashCode()
-    {
-        return Long.valueOf(this.pos).hashCode() ^ Integer.valueOf(len).hashCode();
-    }
-
-    /**
      * @return debug string
      */
     @Override
@@ -107,8 +67,8 @@ public class IndexedDiskElementDescriptor
     {
         final StringBuilder buf = new StringBuilder();
         buf.append( "[DED: " );
-        buf.append( " pos = " + pos );
-        buf.append( " len = " + len );
+        buf.append( " pos = ").append(pos);
+        buf.append( " len = ").append(len);
         buf.append( "]" );
         return buf.toString();
     }

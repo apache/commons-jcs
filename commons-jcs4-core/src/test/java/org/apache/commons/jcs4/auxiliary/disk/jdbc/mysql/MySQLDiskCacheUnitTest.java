@@ -24,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import java.sql.SQLException;
 
 import org.apache.commons.jcs4.auxiliary.disk.jdbc.TableState;
+import org.apache.commons.jcs4.auxiliary.disk.jdbc.TableState.TableStateType;
 import org.apache.commons.jcs4.auxiliary.disk.jdbc.dsfactory.SharedPoolDataSourceFactory;
 import org.junit.jupiter.api.Test;
 
@@ -59,7 +60,7 @@ class MySQLDiskCacheUnitTest
         dsFactory.initialize(attributes);
 
         final TableState tableState = new TableState( tableName );
-        tableState.setState( TableState.OPTIMIZATION_RUNNING );
+        tableState.setState( TableStateType.OPTIMIZATION_RUNNING );
 
         final MySQLDiskCache<String, String> cache = new MySQLDiskCache<>(attributes, dsFactory, tableState);
 

@@ -165,7 +165,7 @@ public class RemoteUtils
      */
     public static String getNamingURL(final RemoteLocation location, final String serviceName)
     {
-        return getNamingURL(location.getHost(), location.getPort(), serviceName);
+        return getNamingURL(location.host(), location.port(), serviceName);
     }
 
     /**

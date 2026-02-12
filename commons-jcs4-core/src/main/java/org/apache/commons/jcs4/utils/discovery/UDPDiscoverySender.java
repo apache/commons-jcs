@@ -158,7 +158,7 @@ public class UDPDiscoverySender implements AutoCloseable
     public void passiveBroadcast( final String host, final int port, final ArrayList<String> cacheNames )
         throws IOException
     {
-        passiveBroadcast( host, port, cacheNames, CacheInfo.listenerId );
+        passiveBroadcast( host, port, cacheNames, CacheInfo.INSTANCE.listenerId());
     }
 
     /**
@@ -197,7 +197,7 @@ public class UDPDiscoverySender implements AutoCloseable
     public void removeBroadcast( final String host, final int port, final ArrayList<String> cacheNames )
         throws IOException
     {
-        removeBroadcast( host, port, cacheNames, CacheInfo.listenerId );
+        removeBroadcast( host, port, cacheNames, CacheInfo.INSTANCE.listenerId());
     }
 
     /**
@@ -232,7 +232,7 @@ public class UDPDiscoverySender implements AutoCloseable
     public void requestBroadcast()
         throws IOException
     {
-        requestBroadcast(CacheInfo.listenerId);
+        requestBroadcast(CacheInfo.INSTANCE.listenerId());
     }
 
     /**

@@ -57,12 +57,12 @@ class RemoteUtilsUnitTest
     void testParseServerAndPort()
     {
         RemoteLocation loc = RemoteLocation.parseServerAndPort("server1:1234");
-        assertEquals("server1", loc.getHost());
-        assertEquals(1234, loc.getPort());
+        assertEquals("server1", loc.host());
+        assertEquals(1234, loc.port());
 
         loc = RemoteLocation.parseServerAndPort("  server2  :  4567  ");
-        assertEquals("server2", loc.getHost());
-        assertEquals(4567, loc.getPort());
+        assertEquals("server2", loc.host());
+        assertEquals(4567, loc.port());
 
         loc = RemoteLocation.parseServerAndPort("server2  :  port");
         assertNull(loc);

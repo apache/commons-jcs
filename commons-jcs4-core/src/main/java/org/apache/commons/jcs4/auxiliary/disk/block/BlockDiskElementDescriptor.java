@@ -19,10 +19,6 @@ package org.apache.commons.jcs4.auxiliary.disk.block;
  * under the License.
  */
 
-import java.io.Externalizable;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
 import java.io.Serializable;
 import java.util.Arrays;
 
@@ -31,86 +27,16 @@ import java.util.Arrays;
  * block addresses in memory. We don't need the length here, since all the blocks are the same size
  * recycle bin.
  */
-public class BlockDiskElementDescriptor<K>
-    implements Serializable, Externalizable
+public record BlockDiskElementDescriptor<K>(
+        /** The key */
+        K key,
+
+        /** The array of block numbers */
+        int[] blocks
+) implements Serializable
 {
     /** Don't change */
     private static final long serialVersionUID = -1400659301208101411L;
-
-    /** The key */
-    private K key;
-
-    /** The array of block numbers */
-    private int[] blocks;
-
-    /**
-     * Default constructor
-     */
-    public BlockDiskElementDescriptor()
-    {
-    }
-
-    /**
-     * Constructs a new instance.
-     *
-     * @param key the key
-     * @param blocks the data
-     * @since 3.1
-     */
-    public BlockDiskElementDescriptor(final K key, final int[] blocks)
-    {
-        this.key = key;
-        this.blocks = blocks;
-    }
-
-    /**
-     * This holds the block numbers. An item my be dispersed between multiple blocks.
-     *
-     * @return the blocks.
-     */
-    public int[] getBlocks()
-    {
-        return blocks;
-    }
-
-    /**
-     * @return the key.
-     */
-    public K getKey()
-    {
-        return key;
-    }
-
-    /**
-     * Saves on reflection.
-     * <p>
-     * (non-Javadoc)
-     * @see java.io.Externalizable#readExternal(java.io.ObjectInput)
-     */
-    @Override
-    @SuppressWarnings("unchecked") // Need cast to K
-    public void readExternal( final ObjectInput input )
-        throws IOException, ClassNotFoundException
-    {
-        this.key = (K) input.readObject();
-        this.blocks = (int[]) input.readObject();
-    }
-
-    /**
-     * @param blocks The blocks to set.
-     */
-    public void setBlocks( final int[] blocks )
-    {
-        this.blocks = blocks;
-    }
-
-    /**
-     * @param key The key to set.
-     */
-    public void setKey( final K key )
-    {
-        this.key = key;
-    }
 
     /**
      * For debugging.
@@ -121,28 +47,14 @@ public class BlockDiskElementDescriptor<K>
     public String toString()
     {
         final StringBuilder buf = new StringBuilder();
-        buf.append( "\nBlockDiskElementDescriptor" );
-        buf.append( "\n key [" + this.getKey() + "]" );
-        buf.append( "\n blocks [" );
-        if ( this.getBlocks() != null )
+        buf.append("\nBlockDiskElementDescriptor" );
+        buf.append("\n key [").append(this.key()).append("]");
+        buf.append("\n blocks [" );
+        if ( this.blocks() != null )
         {
-            Arrays.stream(this.getBlocks()).forEach(buf::append);
+            Arrays.stream(this.blocks()).forEach(buf::append);
         }
-        buf.append( "]" );
+        buf.append("]");
         return buf.toString();
-    }
-
-    /**
-     * Saves on reflection.
-     * <p>
-     * (non-Javadoc)
-     * @see java.io.Externalizable#writeExternal(java.io.ObjectOutput)
-     */
-    @Override
-    public void writeExternal( final ObjectOutput output )
-        throws IOException
-    {
-        output.writeObject( this.key );
-        output.writeObject( this.blocks );
     }
 }

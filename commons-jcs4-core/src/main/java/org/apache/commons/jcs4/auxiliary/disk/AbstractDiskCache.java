@@ -264,7 +264,7 @@ public abstract class AbstractDiskCache<K, V>
         // create queue
         final CacheEventQueueFactory<K, V> fact = new CacheEventQueueFactory<>();
         this.cacheEventQueue = fact.createCacheEventQueue(
-                new MyCacheListener(), CacheInfo.listenerId, cacheName,
+                new MyCacheListener(), CacheInfo.INSTANCE.listenerId(), cacheName,
                    diskCacheAttributes.getEventQueuePoolName(),
                    diskCacheAttributes.getEventQueueType() );
 

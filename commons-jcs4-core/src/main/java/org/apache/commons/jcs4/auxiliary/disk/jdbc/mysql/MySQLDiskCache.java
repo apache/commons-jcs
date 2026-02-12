@@ -24,6 +24,7 @@ import java.util.Map;
 
 import org.apache.commons.jcs4.auxiliary.disk.jdbc.JDBCDiskCache;
 import org.apache.commons.jcs4.auxiliary.disk.jdbc.TableState;
+import org.apache.commons.jcs4.auxiliary.disk.jdbc.TableState.TableStateType;
 import org.apache.commons.jcs4.auxiliary.disk.jdbc.dsfactory.DataSourceFactory;
 import org.apache.commons.jcs4.engine.behavior.ICacheElement;
 import org.apache.commons.jcs4.log.Log;
@@ -75,7 +76,7 @@ public class MySQLDiskCache<K, V>
     @Override
     protected int deleteExpired()
     {
-        if (getTableState().getState() == TableState.OPTIMIZATION_RUNNING &&
+        if (getTableState().getState() == TableStateType.OPTIMIZATION_RUNNING &&
             this.mySQLDiskCacheAttributes.isBalkDuringOptimization())
         {
             return -1;
@@ -93,7 +94,7 @@ public class MySQLDiskCache<K, V>
     @Override
     protected ICacheElement<K, V> processGet( final K key )
     {
-        if (getTableState().getState() == TableState.OPTIMIZATION_RUNNING &&
+        if (getTableState().getState() == TableStateType.OPTIMIZATION_RUNNING &&
             this.mySQLDiskCacheAttributes.isBalkDuringOptimization())
         {
             return null;
@@ -111,7 +112,7 @@ public class MySQLDiskCache<K, V>
     @Override
     protected Map<K, ICacheElement<K, V>> processGetMatching( final String pattern )
     {
-        if (getTableState().getState() == TableState.OPTIMIZATION_RUNNING &&
+        if (getTableState().getState() == TableStateType.OPTIMIZATION_RUNNING &&
             this.mySQLDiskCacheAttributes.isBalkDuringOptimization())
         {
             return null;
@@ -128,7 +129,7 @@ public class MySQLDiskCache<K, V>
     @Override
     protected void processUpdate( final ICacheElement<K, V> element )
     {
-        if (getTableState().getState() == TableState.OPTIMIZATION_RUNNING &&
+        if (getTableState().getState() == TableStateType.OPTIMIZATION_RUNNING &&
             this.mySQLDiskCacheAttributes.isBalkDuringOptimization())
         {
             return;

@@ -126,7 +126,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
         // keep the content size in kB, so 2^31 kB is reasonable value
         private void addLengthToCacheSize(final IndexedDiskElementDescriptor value)
         {
-            contentSize.addAndGet((value.len + IndexedDisk.HEADER_SIZE_BYTES) / 1024 + 1);
+            contentSize.addAndGet((value.len() + IndexedDisk.HEADER_SIZE_BYTES) / 1024 + 1);
         }
 
         /**
@@ -206,7 +206,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
         // keep the content size in kB, so 2^31 kB is reasonable value
         private void subLengthFromCacheSize(final IndexedDiskElementDescriptor value)
         {
-            contentSize.addAndGet((value.len + IndexedDisk.HEADER_SIZE_BYTES) / -1024 - 1);
+            contentSize.addAndGet((value.len() + IndexedDisk.HEADER_SIZE_BYTES) / -1024 - 1);
         }
     }
 
@@ -321,7 +321,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
         // Make a clean file name
         this.fileName = getCacheName().replaceAll("[^a-zA-Z0-9-_\\.]", "_");
         this.keyHash = createInitialKeyMap();
-        this.queuedPutList = new ConcurrentSkipListSet<>(Comparator.comparing(ded1 -> ded1.pos));
+        this.queuedPutList = new ConcurrentSkipListSet<>(Comparator.comparing(ded1 -> ded1.pos()));
         this.recycle = new ConcurrentSkipListSet<>();
 
         try
@@ -392,7 +392,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
     {
         if (ded != null)
         {
-            final int amount = ded.len + IndexedDisk.HEADER_SIZE_BYTES;
+            final int amount = ded.len() + IndexedDisk.HEADER_SIZE_BYTES;
 
             if (add)
             {
@@ -420,13 +420,13 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
         boolean isOk = true;
         long expectedNextPos = 0;
         for (final IndexedDiskElementDescriptor ded : sortedDescriptors) {
-            if (expectedNextPos > ded.pos)
+            if (expectedNextPos > ded.pos())
             {
                 log.error("{0}: Corrupt file: overlapping deds {1}", logCacheName, ded);
                 isOk = false;
                 break;
             }
-            expectedNextPos = ded.pos + IndexedDisk.HEADER_SIZE_BYTES + ded.len;
+            expectedNextPos = ded.pos() + IndexedDisk.HEADER_SIZE_BYTES + ded.len();
         }
         log.debug("{0}: Check for DED overlaps took {1} ms.", () -> logCacheName,
                 timer::getElapsedTime);
@@ -456,7 +456,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
             final long fileLength = dataFile.length();
 
             final IndexedDiskElementDescriptor corruptDed = keyHash.values().stream()
-                .filter(ded -> ded.pos + IndexedDisk.HEADER_SIZE_BYTES + ded.len > fileLength)
+                .filter(ded -> ded.pos() + IndexedDisk.HEADER_SIZE_BYTES + ded.len() > fileLength)
                 .findFirst()
                 .orElse(null);
 
@@ -464,7 +464,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
             {
                 isOk = false;
                 log.warn("{0}: The dataFile is corrupted!\n raf.length() = {1}\n ded.pos = {2}",
-                        logCacheName, fileLength, corruptDed.pos);
+                        logCacheName, fileLength, corruptDed.pos());
             }
             else if (checkForDedOverlaps)
             {
@@ -525,7 +525,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
     private Collection<IndexedDiskElementDescriptor> createPositionSortedDescriptorList()
     {
         final List<IndexedDiskElementDescriptor> defragList = new ArrayList<>(keyHash.values());
-        defragList.sort(Comparator.comparing(ded1 -> ded1.pos));
+        defragList.sort(Comparator.comparing(ded1 -> ded1.pos()));
 
         return defragList;
     }
@@ -558,11 +558,12 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
                 storageLock.writeLock().lock();
                 try
                 {
-                    if (expectedNextPos != element.pos)
+                    IndexedDiskElementDescriptor newDed = element;
+                    if (expectedNextPos != element.pos())
                     {
-                        dataFile.move(element, expectedNextPos);
+                        newDed = dataFile.move(element, expectedNextPos);
                     }
-                    expectedNextPos = element.pos + IndexedDisk.HEADER_SIZE_BYTES + element.len;
+                    expectedNextPos = newDed.pos() + IndexedDisk.HEADER_SIZE_BYTES + newDed.len();
                 }
                 finally
                 {
@@ -688,7 +689,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
     /**
      * For debugging. This dumps the values by default.
      */
-    public void dump()
+    protected void dump()
     {
         dump(true);
     }
@@ -700,7 +701,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
      * @param dumpValues
      *            A boolean indicating if values should be dumped.
      */
-    public void dump(final boolean dumpValues)
+    protected void dump(final boolean dumpValues)
     {
         if (log.isTraceEnabled())
         {
@@ -713,7 +714,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
 
                 log.trace("{0}: [dump] Disk element, key: {1}, pos: {2}, len: {3}" +
                         (dumpValues ? ", val: " + get(key) : ""),
-                        logCacheName, key, ded.pos, ded.len);
+                        logCacheName, key, ded.pos(), ded.len());
             }
         }
     }
@@ -1434,12 +1435,9 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
 
                 // Item with the same key already exists in file.
                 // Try to reuse the location if possible.
-                if (old != null && data.length <= old.len)
+                if (old != null && data.length <= old.len())
                 {
-                    // Reuse the old ded. The defrag relies on ded updates by reference, not
-                    // replacement.
-                    ded = old;
-                    ded.len = data.length;
+                    ded = new IndexedDiskElementDescriptor(old.pos(), data.length);
                 }
                 else
                 {
@@ -1453,17 +1451,13 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
                         {
                             // remove element from recycle bin
                             recycle.remove(rep);
-                            ded = rep;
-                            ded.len = data.length;
+                            ded = new IndexedDiskElementDescriptor(rep.pos(), data.length);
                             recycleCnt++;
                             this.adjustBytesFree(ded, false);
                             log.debug("{0}: using recycled ded {1} rep.len = {2} ded.len = {3}",
-                                    logCacheName, ded.pos, rep.len, ded.len);
+                                    logCacheName, ded.pos(), rep.len(), ded.len());
                         }
                     }
-
-                    // Put it in the map
-                    keyHash.put(ce.getKey(), ded);
 
                     if (queueInput)
                     {
@@ -1479,6 +1473,8 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
                     }
                 }
 
+                // Put it in the map
+                keyHash.put(ce.getKey(), ded);
                 dataFile.write(ded, data);
             }
             finally
@@ -1487,7 +1483,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
             }
 
             log.debug("{0}: Put to file: {1}, key: {2}, position: {3}, size: {4}",
-                    logCacheName, fileName, ce.getKey(), ded.pos, ded.len);
+                    logCacheName, fileName, ce.getKey(), ded.pos(), ded.len());
         }
         catch (final IOException e)
         {

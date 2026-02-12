@@ -54,7 +54,7 @@ public class LateralTCPService<K, V>
     private final LateralTCPSender sender;
 
     /** Use the vmid by default */
-    private long listenerId = CacheInfo.listenerId;
+    private long listenerId = CacheInfo.INSTANCE.listenerId();
 
     /**
      * Constructor for the LateralTCPService object
@@ -131,8 +131,7 @@ public class LateralTCPService<K, V>
         {
             final CacheElement<K, V> ce = new CacheElement<>( cacheName, key, null );
             final LateralElementDescriptor<K, V> led =
-                    new LateralElementDescriptor<>(ce, LateralCommand.GET);
-            // led.requesterId = requesterId; // later
+                    new LateralElementDescriptor<>(ce, LateralCommand.GET, requesterId);
             @SuppressWarnings("unchecked") // Need to cast from Object
             final
             ICacheElement<K, V> response = (ICacheElement<K, V>)sender.sendAndReceive( led );
@@ -211,8 +210,7 @@ public class LateralTCPService<K, V>
         }
         final CacheElement<String, String> ce = new CacheElement<>( cacheName, pattern, null );
         final LateralElementDescriptor<String, String> led =
-                new LateralElementDescriptor<>(ce, LateralCommand.GET_MATCHING);
-        // led.requesterId = requesterId; // later
+                new LateralElementDescriptor<>(ce, LateralCommand.GET_MATCHING, requesterId);
 
         final Object response = sender.sendAndReceive( led );
         if ( response != null )
@@ -391,8 +389,8 @@ public class LateralTCPService<K, V>
             // set the value to null so we don't send the item
             final CacheElement<K, V> ce = new CacheElement<>( item.getCacheName(), item.getKey(), null );
             final LateralElementDescriptor<K, V> led =
-                    new LateralElementDescriptor<>(ce, LateralCommand.REMOVE, requesterId);
-            led.valHashCode = item.getVal().hashCode();
+                    new LateralElementDescriptor<>(ce, LateralCommand.REMOVE, requesterId,
+                            item.getVal().hashCode());
             sender.send( led );
         }
     }

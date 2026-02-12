@@ -200,7 +200,7 @@ public class UDPDiscoveryReceiver
     private void handleMessage(final UDPDiscoveryMessage message)
     {
         // consider comparing ports here instead.
-        if ( message.getRequesterId() == CacheInfo.listenerId )
+        if ( message.getRequesterId() == CacheInfo.INSTANCE.listenerId())
         {
             log.debug( "Ignoring message sent from self" );
         }

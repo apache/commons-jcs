@@ -265,8 +265,8 @@ public abstract class CommonRemoteCacheAttributes
         buf.append( "\n RemoteCacheAttributes ");
         if (this.location != null)
         {
-            buf.append( "\n remoteHost = [").append(this.location.getHost()).append("]");
-            buf.append( "\n remotePort = [").append(this.location.getPort()).append("]");
+            buf.append( "\n remoteHost = [").append(this.location.host()).append("]");
+            buf.append( "\n remotePort = [").append(this.location.port()).append("]");
         }
         buf.append( "\n cacheName = [").append(getCacheName()).append("]");
         buf.append( "\n remoteType = [").append(remoteType).append("]");

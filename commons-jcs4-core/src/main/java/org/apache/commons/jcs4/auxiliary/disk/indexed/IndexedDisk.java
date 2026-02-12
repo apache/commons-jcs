@@ -114,24 +114,24 @@ public class IndexedDisk implements AutoCloseable
      *
      * @param ded
      * @param newPosition
+     * @return new IndexedDiskElementDescriptor with updated position
      * @throws IOException
      */
-    protected void move(final IndexedDiskElementDescriptor ded, final long newPosition)
+    protected IndexedDiskElementDescriptor move(final IndexedDiskElementDescriptor ded, final long newPosition)
         throws IOException
     {
         final ByteBuffer datalength = ByteBuffer.allocate(HEADER_SIZE_BYTES);
-        fc.read(datalength, ded.pos);
+        fc.read(datalength, ded.pos());
         datalength.flip();
         final int length = datalength.getInt();
 
-        if (length != ded.len)
+        if (length != ded.len())
         {
             throw new IOException("Mismatched memory and disk length (" + length + ") for " + ded);
         }
 
         // TODO: more checks?
-
-        long readPos = ded.pos;
+        long readPos = ded.pos();
         long writePos = newPosition;
 
         // header len + data len
@@ -153,7 +153,7 @@ public class IndexedDisk implements AutoCloseable
             remaining -= chunkSize;
         }
 
-        ded.pos = newPosition;
+        return new IndexedDiskElementDescriptor(newPosition, ded.len());
     }
 
     /**
@@ -173,7 +173,7 @@ public class IndexedDisk implements AutoCloseable
         String message = null;
         boolean corrupted = false;
         final long fileLength = fc.size();
-        if (ded.pos > fileLength)
+        if (ded.pos() > fileLength)
         {
             corrupted = true;
             message = "Record " + ded + " starts past EOF.";
@@ -181,15 +181,15 @@ public class IndexedDisk implements AutoCloseable
         else
         {
             final ByteBuffer datalength = ByteBuffer.allocate(HEADER_SIZE_BYTES);
-            fc.read(datalength, ded.pos);
+            fc.read(datalength, ded.pos());
             datalength.flip();
             final int datalen = datalength.getInt();
-            if (ded.len != datalen)
+            if (ded.len() != datalen)
             {
                 corrupted = true;
                 message = "Record " + ded + " does not match data length on disk (" + datalen + ")";
             }
-            else if (ded.pos + ded.len > fileLength)
+            else if (ded.pos() + ded.len() > fileLength)
             {
                 corrupted = true;
                 message = "Record " + ded + " exceeds file length.";
@@ -202,8 +202,8 @@ public class IndexedDisk implements AutoCloseable
             throw new IOException("The File Is Corrupt, need to reset");
         }
 
-        final ByteBuffer data = ByteBuffer.allocate(ded.len);
-        fc.read(data, ded.pos + HEADER_SIZE_BYTES);
+        final ByteBuffer data = ByteBuffer.allocate(ded.len());
+        fc.read(data, ded.pos() + HEADER_SIZE_BYTES);
         data.flip();
 
         return elementSerializer.deSerialize(data.array(), null);
@@ -246,14 +246,13 @@ public class IndexedDisk implements AutoCloseable
     protected boolean write(final IndexedDiskElementDescriptor ded, final byte[] data)
         throws IOException
     {
-        final long pos = ded.pos;
         if (log.isTraceEnabled())
         {
-            log.trace("write> pos={0}", pos);
+            log.trace("write> pos={0}", ded.pos());
             log.trace("{0} -- data.length = {1}", fc, data.length);
         }
 
-        if (data.length != ded.len)
+        if (data.length != ded.len())
         {
             throw new IOException("Mismatched descriptor and data lengths");
         }
@@ -262,12 +261,12 @@ public class IndexedDisk implements AutoCloseable
         headerBuffer.putInt(data.length);
         // write the header
         headerBuffer.flip();
-        int written = fc.write(headerBuffer, pos);
+        int written = fc.write(headerBuffer, ded.pos());
         assert written == HEADER_SIZE_BYTES;
 
         //write the data
         final ByteBuffer dataBuffer = ByteBuffer.wrap(data);
-        written = fc.write(dataBuffer, pos + HEADER_SIZE_BYTES);
+        written = fc.write(dataBuffer, ded.pos() + HEADER_SIZE_BYTES);
 
         return written == data.length;
     }

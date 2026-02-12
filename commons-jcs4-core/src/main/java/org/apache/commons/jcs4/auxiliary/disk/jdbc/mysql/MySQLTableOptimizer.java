@@ -27,6 +27,7 @@ import java.sql.Statement;
 import javax.sql.DataSource;
 
 import org.apache.commons.jcs4.auxiliary.disk.jdbc.TableState;
+import org.apache.commons.jcs4.auxiliary.disk.jdbc.TableState.TableStateType;
 import org.apache.commons.jcs4.log.Log;
 import org.apache.commons.jcs4.utils.timing.ElapsedTimer;
 
@@ -154,7 +155,7 @@ public class MySQLTableOptimizer
         final ElapsedTimer timer = new ElapsedTimer();
         boolean success = false;
 
-        if ( tableState.getState() == TableState.OPTIMIZATION_RUNNING )
+        if ( tableState.getState() == TableStateType.OPTIMIZATION_RUNNING )
         {
             log.warn( "Skipping optimization. Optimize was called, but the "
                     + "table state indicates that an optimization is currently running." );
@@ -163,7 +164,7 @@ public class MySQLTableOptimizer
 
         try
         {
-            tableState.setState( TableState.OPTIMIZATION_RUNNING );
+            tableState.setState( TableStateType.OPTIMIZATION_RUNNING );
             log.info( "Optimizing table [{0}]", getTableName());
 
             try (Connection con = dataSource.getConnection())
@@ -219,7 +220,7 @@ public class MySQLTableOptimizer
         }
         finally
         {
-            tableState.setState( TableState.FREE );
+            tableState.setState( TableStateType.FREE );
 
             log.info( "Optimization of table [{0}] took {1} ms.",
                     this::getTableName, timer::getElapsedTime);
