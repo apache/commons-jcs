@@ -251,8 +251,6 @@ public class LateralTCPCacheFactory
             final ICacheEventLogger cacheEventLogger,
             final IElementSerializer elementSerializer )
     {
-        UDPDiscoveryService discovery = null;
-
         // create the UDP discovery for the TCP lateral
         if ( lac.isUdpDiscoveryEnabled() )
         {
@@ -263,12 +261,9 @@ public class LateralTCPCacheFactory
 
             // need a factory for this so it doesn't
             // get dereferenced, also we don't want one for every region.
-            final UDPDiscoveryAttributes udpAttributes = new UDPDiscoveryAttributes(
-                    lac.getTcpListenerHost(), lac.getTcpListenerPort(), lac.getUdpDiscoveryAddr(),
-                    lac.getUdpDiscoveryInterface(), lac.getUdpDiscoveryPort(), lac.getUdpTTL(),
-                    UDPDiscoveryAttributes.defaults().maxIdleTimeSec());
+            final UDPDiscoveryAttributes udpAttributes = new UDPDiscoveryAttributes(lac);
 
-            discovery = UDPDiscoveryManager.getInstance().getService(udpAttributes, cacheMgr,
+            UDPDiscoveryService discovery = UDPDiscoveryManager.getInstance().getService(udpAttributes, cacheMgr,
                     elementSerializer);
 
             discovery.addParticipatingCacheName( lac.getCacheName() );

@@ -19,6 +19,8 @@ package org.apache.commons.jcs4.utils.discovery;
  * under the License.
  */
 
+import org.apache.commons.jcs4.auxiliary.lateral.socket.tcp.behavior.ILateralTCPCacheAttributes;
+
 /**
  * Configuration properties for UDP discover service.
  * <p>
@@ -74,6 +76,18 @@ public record UDPDiscoveryAttributes(
     public static UDPDiscoveryAttributes defaults()
     {
         return DEFAULT;
+    }
+
+    /**
+     * Constructor from ILateralTCPCacheAttributes
+     *
+     * @param lac lateral cache configuration object
+     */
+    public UDPDiscoveryAttributes(ILateralTCPCacheAttributes lac)
+    {
+        this(lac.getTcpListenerHost(), lac.getTcpListenerPort(), lac.getUdpDiscoveryAddr(),
+            lac.getUdpDiscoveryInterface(), lac.getUdpDiscoveryPort(), lac.getUdpTTL(),
+            defaults().maxIdleTimeSec());
     }
 
     /**
