@@ -183,12 +183,12 @@ public class LateralTCPCacheFactory
                 final LateralTCPCacheAttributes lacClone = (LateralTCPCacheAttributes) lac.clone();
                 lacClone.setTcpServer( server );
 
-                final LateralTCPCacheNoWait<K, V> lateralNoWait = createCacheNoWait(lacClone, cacheEventLogger, elementSerializer);
-                lateralNoWait.setKeyMatcher(keyMatcher);
+                final LateralTCPCacheNoWait<K, V> lateralNoWait = createCacheNoWait(lacClone,
+                        cacheEventLogger, elementSerializer, keyMatcher);
 
                 addListenerIfNeeded(lacClone, cacheMgr, elementSerializer);
                 monitorCache(lateralNoWait);
-                noWaits.add( lateralNoWait );
+                noWaits.add(lateralNoWait);
             }
         }
 
@@ -197,10 +197,12 @@ public class LateralTCPCacheFactory
         // create the no wait facade.
         final LateralTCPCacheNoWaitFacade<K, V> lcnwf =
             new LateralTCPCacheNoWaitFacade<>(listener, noWaits, lac);
+        lcnwf.setCacheEventLogger(cacheEventLogger);
+        lcnwf.setElementSerializer(elementSerializer);
         lcnwf.setKeyMatcher(keyMatcher);
 
         // create udp discovery if available.
-        createDiscoveryService( lac, lcnwf, cacheMgr, cacheEventLogger, elementSerializer );
+        createDiscoveryService(lac, lcnwf, cacheMgr);
 
         return lcnwf;
     }
@@ -213,16 +215,19 @@ public class LateralTCPCacheFactory
      * @param lca the cache configuration object
      * @param cacheEventLogger the event logger
      * @param elementSerializer the serializer to use when sending or receiving
+     * @param keyMatcher the key matcher for getMatching() calls
      * @return a LateralTCPCacheNoWait
      */
     public <K, V> LateralTCPCacheNoWait<K, V> createCacheNoWait( final ILateralTCPCacheAttributes lca,
-            final ICacheEventLogger cacheEventLogger, final IElementSerializer elementSerializer )
+            final ICacheEventLogger cacheEventLogger, final IElementSerializer elementSerializer,
+            final IKeyMatcher<K> keyMatcher)
     {
         final ICacheServiceNonLocal<K, V> lateralService = getCSNLInstance(lca, elementSerializer);
 
         final LateralTCPCache<K, V> cache = new LateralTCPCache<>( lca, lateralService, this.monitor );
         cache.setCacheEventLogger( cacheEventLogger );
         cache.setElementSerializer( elementSerializer );
+        cache.setKeyMatcher(keyMatcher);
 
         log.debug( "Created cache for noWait, cache [{0}]", cache );
 
@@ -241,30 +246,27 @@ public class LateralTCPCacheFactory
      * @param lac ILateralTCPCacheAttributes
      * @param lcnwf the lateral facade
      * @param cacheMgr a reference to the global cache manager
-     * @param cacheEventLogger Reference to the cache event logger for auxiliary cache creation
-     * @param elementSerializer Reference to the cache element serializer for auxiliary cache
      */
     private synchronized <K, V> void createDiscoveryService(
             final ILateralTCPCacheAttributes lac,
             final LateralTCPCacheNoWaitFacade<K, V> lcnwf,
-            final ICompositeCacheManager cacheMgr,
-            final ICacheEventLogger cacheEventLogger,
-            final IElementSerializer elementSerializer )
+            final ICompositeCacheManager cacheMgr)
     {
         // create the UDP discovery for the TCP lateral
         if ( lac.isUdpDiscoveryEnabled() )
         {
             // One can be used for all regions
             final LateralTCPDiscoveryListener discoveryListener =
-                    getDiscoveryListener(lac, cacheMgr, cacheEventLogger, elementSerializer);
+                    getDiscoveryListener(lac, cacheMgr, lcnwf.getCacheEventLogger(),
+                    lcnwf.getElementSerializer(), lcnwf.getKeyMatcher());
             discoveryListener.addNoWaitFacade( lac.getCacheName(), lcnwf );
 
             // need a factory for this so it doesn't
             // get dereferenced, also we don't want one for every region.
             final UDPDiscoveryAttributes udpAttributes = new UDPDiscoveryAttributes(lac);
 
-            UDPDiscoveryService discovery = UDPDiscoveryManager.getInstance().getService(udpAttributes, cacheMgr,
-                    elementSerializer);
+            UDPDiscoveryService discovery = UDPDiscoveryManager.getInstance().getService(
+                    udpAttributes, cacheMgr, lcnwf.getElementSerializer());
 
             discovery.addParticipatingCacheName( lac.getCacheName() );
             discovery.addDiscoveryListener( discoveryListener );
@@ -348,7 +350,6 @@ public class LateralTCPCacheFactory
                 try
                 {
                     log.info( "Creating TCP service, lca = {0}", lca );
-
                     newService = new LateralTCPService<>(lca, elementSerializer);
                 }
                 catch ( final IOException ex )
@@ -357,7 +358,6 @@ public class LateralTCPCacheFactory
                     // Configure this LateralCacheManager instance to use the
                     // "zombie" services.
                     log.error( "Failure, lateral instance will use zombie service", ex );
-
                     newService = new ZombieCacheServiceNonLocal<>(lca.getZombieQueueMaxSize());
 
                     // Notify the cache monitor about the error, and kick off
@@ -377,11 +377,12 @@ public class LateralTCPCacheFactory
      * @param cacheManager a reference to the global cache manager
      * @param cacheEventLogger Reference to the cache event logger for auxiliary cache creation
      * @param elementSerializer Reference to the cache element serializer for auxiliary cache
+     * @param keyMatcher the key matcher for getMatching() calls
      * @return The instance value
      */
     private LateralTCPDiscoveryListener getDiscoveryListener(final ILateralTCPCacheAttributes ilca,
             final ICompositeCacheManager cacheManager, final ICacheEventLogger cacheEventLogger,
-            final IElementSerializer elementSerializer)
+            final IElementSerializer elementSerializer, final IKeyMatcher<?> keyMatcher)
     {
         final String key = ilca.getUdpDiscoveryAddr() + ":" + ilca.getUdpDiscoveryPort();
 
@@ -389,8 +390,8 @@ public class LateralTCPCacheFactory
             log.info("Created new discovery listener for cacheName {0} and request {1}",
                     ilca.getCacheName(), key1);
             return new LateralTCPDiscoveryListener( getName(),
-                    (CompositeCacheManager) cacheManager,
-                    cacheEventLogger, elementSerializer);
+                    (CompositeCacheManager) cacheManager, cacheEventLogger,
+                    elementSerializer, keyMatcher);
         });
     }
 

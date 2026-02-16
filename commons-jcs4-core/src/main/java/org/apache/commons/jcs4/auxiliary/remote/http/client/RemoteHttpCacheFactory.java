@@ -22,7 +22,6 @@ package org.apache.commons.jcs4.auxiliary.remote.http.client;
 import org.apache.commons.jcs4.auxiliary.AbstractAuxiliaryCacheFactory;
 import org.apache.commons.jcs4.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.commons.jcs4.auxiliary.remote.RemoteCacheNoWait;
-import org.apache.commons.jcs4.auxiliary.remote.behavior.IRemoteCacheClient;
 import org.apache.commons.jcs4.auxiliary.remote.http.client.behavior.IRemoteHttpCacheClient;
 import org.apache.commons.jcs4.auxiliary.remote.server.behavior.RemoteType;
 import org.apache.commons.jcs4.engine.behavior.ICompositeCacheManager;
@@ -77,7 +76,7 @@ public class RemoteHttpCacheFactory
 
         final IRemoteHttpCacheClient<K, V> remoteService = createRemoteHttpCacheClientForAttributes(rca);
 
-        final IRemoteCacheClient<K, V> remoteCacheClient =
+        final RemoteHttpCache<K, V> remoteCacheClient =
                 new RemoteHttpCache<>( rca, remoteService, listener, monitor );
         remoteCacheClient.setCacheEventLogger( cacheEventLogger );
         remoteCacheClient.setElementSerializer( elementSerializer );

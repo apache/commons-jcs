@@ -270,7 +270,7 @@ public class RemoteCacheManager
                     listener, e );
         }
 
-        final IRemoteCacheClient<K, V> remoteCacheClient =
+        final RemoteCache<K, V> remoteCacheClient =
             new RemoteCache<>(cattr, (ICacheServiceNonLocal<K, V>) remoteService, listener, monitor);
         remoteCacheClient.setCacheEventLogger( cacheEventLogger );
         remoteCacheClient.setElementSerializer( elementSerializer );

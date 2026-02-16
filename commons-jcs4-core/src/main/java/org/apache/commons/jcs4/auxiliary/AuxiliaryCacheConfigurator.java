@@ -74,7 +74,7 @@ public class AuxiliaryCacheConfigurator
         }
         else
         {
-            log.info( "No cache event logger defined for auxiliary [{0}]", auxPrefix );
+            log.debug( "No cache event logger defined for auxiliary [{0}]", auxPrefix );
         }
         return cacheEventLogger;
     }

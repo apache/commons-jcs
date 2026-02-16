@@ -27,6 +27,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import org.apache.commons.jcs4.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs4.engine.control.CompositeCacheManager;
 import org.apache.commons.jcs4.engine.logging.behavior.ICacheEventLogger;
+import org.apache.commons.jcs4.engine.match.behavior.IKeyMatcher;
 import org.apache.commons.jcs4.log.Log;
 import org.apache.commons.jcs4.utils.discovery.DiscoveredService;
 import org.apache.commons.jcs4.utils.discovery.behavior.IDiscoveryListener;
@@ -68,6 +69,9 @@ public class LateralTCPDiscoveryListener
     /** Reference to the cache element serializer for auxiliary cache creation */
     private final IElementSerializer elementSerializer;
 
+    /** Reference to the key matcher for auxiliary cache creation */
+    private final IKeyMatcher<?> keyMatcher;
+
     /**
      * This plugs into the udp discovery system. It will receive add and remove events.
      *
@@ -76,17 +80,18 @@ public class LateralTCPDiscoveryListener
      * @param cacheEventLogger Reference to the cache event logger for auxiliary cache creation
      * @param elementSerializer Reference to the cache element serializer for auxiliary cache
      * creation
+     * @param keyMatcher the key matcher for getMatching() calls
      * @since 3.1
      */
     protected LateralTCPDiscoveryListener( final String factoryName,
-            final CompositeCacheManager cacheManager,
-            final ICacheEventLogger cacheEventLogger,
-            final IElementSerializer elementSerializer)
+            final CompositeCacheManager cacheManager, final ICacheEventLogger cacheEventLogger,
+            final IElementSerializer elementSerializer, final IKeyMatcher<?> keyMatcher)
     {
         this.factoryName = factoryName;
         this.cacheManager = cacheManager;
         this.cacheEventLogger = cacheEventLogger;
         this.elementSerializer = elementSerializer;
+        this.keyMatcher = keyMatcher;
     }
 
     /**
@@ -139,7 +144,8 @@ public class LateralTCPDiscoveryListener
                             (LateralTCPCacheFactory) cacheManager.getRegisteredAuxiliaryFactory(factoryName);
 
                     final LateralTCPCacheNoWait<?, ?> noWait =
-                            factory.createCacheNoWait(lca, cacheEventLogger, elementSerializer);
+                            factory.createCacheNoWait(lca, cacheEventLogger, elementSerializer,
+                                    keyMatcher);
                     factory.monitorCache(noWait);
 
                     if (addNoWait(noWait))

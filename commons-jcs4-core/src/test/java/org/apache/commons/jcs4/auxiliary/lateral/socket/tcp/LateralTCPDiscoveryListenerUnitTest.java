@@ -71,7 +71,7 @@ class LateralTCPDiscoveryListenerUnitTest
         keyMatcher = new MockKeyMatcher<>();
 
         listener = new LateralTCPDiscoveryListener( factory.getName(), cacheMgr,
-                cacheEventLogger, elementSerializer );
+                cacheEventLogger, elementSerializer, keyMatcher);
     }
 
     private LateralTCPCacheNoWaitFacade<String, String> setupFacade(final String cacheName)
@@ -112,7 +112,8 @@ class LateralTCPDiscoveryListenerUnitTest
         // used as identifying key by factory
         lca.setTcpServer( service.getServiceAddress() + ":" + service.getServicePort() );
         lca.setCacheName(cacheName);
-        final LateralTCPCacheNoWait<String, String> noWait = factory.createCacheNoWait(lca, cacheEventLogger, elementSerializer);
+        final LateralTCPCacheNoWait<String, String> noWait = factory.createCacheNoWait(lca,
+                cacheEventLogger, elementSerializer, keyMatcher);
         // this is the normal process, the discovery service expects it there
         cacheMgr.addAuxiliaryCache(factory.getName(), cacheName, noWait);
         cacheMgr.registerAuxiliaryFactory(factory);
@@ -223,7 +224,8 @@ class LateralTCPDiscoveryListenerUnitTest
         // used as identifying key by factory
         lca.setTcpServer( service.getServiceAddress() + ":" + service.getServicePort() );
         lca.setCacheName(cacheName);
-        final LateralTCPCacheNoWait<String, String> noWait = factory.createCacheNoWait(lca, cacheEventLogger, elementSerializer);
+        final LateralTCPCacheNoWait<String, String> noWait = factory.createCacheNoWait(lca,
+                cacheEventLogger, elementSerializer, keyMatcher);
         // this is the normal process, the discovery service expects it there
         cacheMgr.addAuxiliaryCache(factory.getName(), cacheName, noWait);
         cacheMgr.registerAuxiliaryFactory(factory);

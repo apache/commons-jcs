@@ -219,7 +219,6 @@ public abstract class AbstractAuxiliaryCache<K, V>
      *
      * @param cacheEventLogger
      */
-    @Override
     public void setCacheEventLogger( final ICacheEventLogger cacheEventLogger )
     {
         this.cacheEventLogger = cacheEventLogger;
@@ -233,7 +232,6 @@ public abstract class AbstractAuxiliaryCache<K, V>
      *
      * @param elementSerializer
      */
-    @Override
     public void setElementSerializer( final IElementSerializer elementSerializer )
     {
         if ( elementSerializer != null )
