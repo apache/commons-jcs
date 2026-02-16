@@ -92,7 +92,7 @@ jcs.default.cacheattributes=org.apache.commons.jcs4.engine.CompositeCacheAttribu
       </subsection>
       <subsection name="Logging">
         <p>
-          JCS 4.0.0 uses the JDK9+ System.Logger interface for logging.
+          JCS 4.0.0 uses a thin wrapper around the JDK9+ System.Logger interface for logging.
           By default, JCS uses java.util.logging as implementation. For a better readability
           we recommend to configure the logger formatting like this:
         </p>
