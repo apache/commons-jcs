@@ -20,13 +20,14 @@ package org.apache.commons.jcs4.engine.behavior;
  */
 
 import java.io.IOException;
+import java.rmi.Remote;
 
 import org.apache.commons.jcs4.engine.stats.behavior.ICacheStats;
 
 /**
  * Description of the Interface
  */
-public interface ICacheServiceAdmin
+public interface ICacheServiceAdmin extends Remote
 {
     /**
      * Gets the statistics of the ICacheServiceAdmin object
