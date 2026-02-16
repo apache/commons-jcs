@@ -21,15 +21,25 @@
 		<author email="dev@commons.apache.org">Apache Commons Developers</author>
 	</properties>
 	<body>
-        <release version="3.3.0" date="YYYY-MM-DD">
+        <release version="4.0.0" date="YYYY-MM-DD">
             <!-- FIX -->
             <action type="fix" dev="ggregory" due-to="ammannmi">
                Fix put time in JCSCache.put(K, V) #276.
             </action>
             <action type="fix" dev="ggregory" due-to="Gary Gregory">
-               Remove -nouses directive from maven-bundle-plugin. OSGi package imports now state 'uses' definitions for package imports, this doesn't affect JPMS (from org.apache.commons:commons-parent:80).
+               Remove -nouses directive from maven-bundle-plugin. OSGi package imports now 
+               state 'uses' definitions for package imports, this doesn't affect JPMS (from 
+               org.apache.commons:commons-parent:80).
             </action>
-            <action type="fix" dev="ggregory" due-to="Gary Gregory">Fix Apache RAT plugin console warnings.</action>
+            <action type="fix" dev="ggregory" due-to="Gary Gregory">
+               Fix Apache RAT plugin console warnings.
+            </action>
+            <action dev="tv" type="fix" issue="JCS-242" due-to="Lukas Doros">
+               fix Lateral Cache init timing bug #368
+            </action>
+            <action dev="tv" type="fix" issue="JCS-243" due-to="Henrik Hiltunen">
+               fix ICacheServiceAdmin not extending Remote
+            </action>
             <!-- ADD -->
             <action type="add" dev="ggregory" due-to="Gary Gregory">
                Add Maven property project.build.outputTimestamp for build reproducibility.
@@ -40,11 +50,32 @@
             <action dev="tv" type="add">
                Add optional JSON serializer/deserializer based on Jackson
             </action>
+            <action dev="tv" type="add">
+               Add missing configuration for KeyMatchers
+            </action>
+            <action dev="tv" type="add">
+               Add getAttributeClass() to AuxiliaryCacheFactory. Specifying the Attribute
+               implementation class in the configuration is now optional.
+            </action>
             <!-- REMOVE -->
             <action dev="tv" type="remove">
                Remove all deprecated code.
             </action>
+            <action dev="tv" type="remove">
+               Remove setters from interfaces of Attributes containers
+            </action>
+            <action dev="tv" type="remove">
+               Remove synchronized from all methods of DoubleLinkedList because their
+               usage is guarded by external locks (double locking). Document the 
+               behavior.
+            </action>
             <!-- UPDATE -->
+            <action dev="tv" type="update">
+               Most immutable data container classes have been moved to Java records
+            </action>
+            <action dev="tv" type="update">
+               Change package name to org.apache.commons.jcs4
+            </action>
             <action dev="tv" type="update">
                Replace system properties to limit class deserialization 
                jcs.serialization.class.blacklist and jcs.serialization.class.whitelist with 
