@@ -257,7 +257,8 @@ public class LateralTCPCacheFactory
         {
             // One can be used for all regions
             final LateralTCPDiscoveryListener discoveryListener =
-                    getDiscoveryListener(lac, cacheMgr, lcnwf.getCacheEventLogger(),
+                    getDiscoveryListener(lac, cacheMgr,
+                    lcnwf.getCacheEventLogger().orElse(null),
                     lcnwf.getElementSerializer(), lcnwf.getKeyMatcher());
             discoveryListener.addNoWaitFacade( lac.getCacheName(), lcnwf );
 

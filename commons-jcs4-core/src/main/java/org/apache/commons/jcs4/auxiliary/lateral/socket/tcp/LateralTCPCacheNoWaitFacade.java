@@ -94,7 +94,7 @@ public class LateralTCPCacheNoWaitFacade<K, V>
      * @param noWait
      * @return true if it wasn't already contained
      */
-    public synchronized boolean addNoWait( final LateralTCPCacheNoWait<K, V> noWait )
+    public boolean addNoWait( final LateralTCPCacheNoWait<K, V> noWait )
     {
         if ( noWait == null )
         {
@@ -199,17 +199,6 @@ public class LateralTCPCacheNoWaitFacade<K, V>
     public CacheType getCacheType()
     {
         return CacheType.LATERAL_CACHE;
-    }
-
-    /**
-     * this won't be called since we don't do ICache logging here.
-     *
-     * @return String
-     */
-    @Override
-    public String getEventLoggingExtraInfo()
-    {
-        return "Lateral Cache No Wait";
     }
 
     /**
@@ -381,7 +370,7 @@ public class LateralTCPCacheNoWaitFacade<K, V>
      * @param noWait
      * @return true if it was already in the array
      */
-    public synchronized boolean removeNoWait( final LateralTCPCacheNoWait<K, V> noWait )
+    public boolean removeNoWait( final LateralTCPCacheNoWait<K, V> noWait )
     {
         if (noWait == null)
         {
@@ -399,7 +388,7 @@ public class LateralTCPCacheNoWaitFacade<K, V>
      * @return true if it was already in the array
      * @since 3.1
      */
-    public synchronized boolean removeNoWait(final String tcpServer)
+    public boolean removeNoWait(final String tcpServer)
     {
         if (tcpServer == null)
         {

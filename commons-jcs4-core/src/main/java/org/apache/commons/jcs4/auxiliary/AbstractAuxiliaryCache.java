@@ -28,70 +28,20 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.jcs4.engine.behavior.ICacheElement;
 import org.apache.commons.jcs4.engine.behavior.IElementSerializer;
-import org.apache.commons.jcs4.engine.logging.CacheEvent;
-import org.apache.commons.jcs4.engine.logging.behavior.ICacheEvent;
-import org.apache.commons.jcs4.engine.logging.behavior.ICacheEventLogger;
 import org.apache.commons.jcs4.engine.match.KeyMatcherPatternImpl;
 import org.apache.commons.jcs4.engine.match.behavior.IKeyMatcher;
 import org.apache.commons.jcs4.utils.serialization.StandardSerializer;
 
 /** This holds convenience methods used by most auxiliary caches. */
 public abstract class AbstractAuxiliaryCache<K, V>
+    extends AbstractCacheEventLogSupport<K, V>
     implements AuxiliaryCache<K, V>
 {
-    /** An optional event logger */
-    private ICacheEventLogger cacheEventLogger;
-
     /** The serializer. Uses a standard serializer by default. */
     private IElementSerializer elementSerializer = new StandardSerializer();
 
     /** Key matcher used by the getMatching API */
     private IKeyMatcher<K> keyMatcher = new KeyMatcherPatternImpl<>();
-
-    /**
-     * Logs an event if an event logger is configured.
-     *
-     * @param item
-     * @param eventName
-     * @return ICacheEvent
-     */
-    protected ICacheEvent<K> createICacheEvent( final ICacheElement<K, V> item, final String eventName )
-    {
-        if ( cacheEventLogger == null )
-        {
-            return new CacheEvent<>();
-        }
-        final String diskLocation = getEventLoggingExtraInfo();
-        String regionName = null;
-        K key = null;
-        if ( item != null )
-        {
-            regionName = item.cacheName();
-            key = item.key();
-        }
-        return cacheEventLogger.createICacheEvent( getAuxiliaryCacheAttributes().getName(), regionName, eventName,
-                                                   diskLocation, key );
-    }
-
-    /**
-     * Logs an event if an event logger is configured.
-     *
-     * @param regionName
-     * @param key
-     * @param eventName
-     * @return ICacheEvent
-     */
-    protected <T> ICacheEvent<T> createICacheEvent( final String regionName, final T key, final String eventName )
-    {
-        if ( cacheEventLogger == null )
-        {
-            return new CacheEvent<>();
-        }
-        final String diskLocation = getEventLoggingExtraInfo();
-        return cacheEventLogger.createICacheEvent( getAuxiliaryCacheAttributes().getName(), regionName, eventName,
-                                                   diskLocation, key );
-
-    }
 
     /**
      * Gets the item from the cache.
@@ -106,29 +56,12 @@ public abstract class AbstractAuxiliaryCache<K, V>
     /**
      * Allows it to be injected.
      *
-     * @return cacheEventLogger
-     */
-    public ICacheEventLogger getCacheEventLogger()
-    {
-        return this.cacheEventLogger;
-    }
-
-    /**
-     * Allows it to be injected.
-     *
      * @return elementSerializer
      */
     public IElementSerializer getElementSerializer()
     {
         return this.elementSerializer;
     }
-
-    /**
-     * Gets the extra info for the event log.
-     *
-     * @return IP, or disk location, etc.
-     */
-    public abstract String getEventLoggingExtraInfo();
 
     /**
      * Returns the key matcher used by get matching.
@@ -138,49 +71,6 @@ public abstract class AbstractAuxiliaryCache<K, V>
     public IKeyMatcher<K> getKeyMatcher()
     {
         return this.keyMatcher;
-    }
-
-    /**
-     * Logs an event if an event logger is configured.
-     *
-     * @param source
-     * @param eventName
-     * @param optionalDetails
-     */
-    protected void logApplicationEvent( final String source, final String eventName, final String optionalDetails )
-    {
-        if ( cacheEventLogger != null )
-        {
-            cacheEventLogger.logApplicationEvent( source, eventName, optionalDetails );
-        }
-    }
-
-    /**
-     * Logs an event if an event logger is configured.
-     *
-     * @param source
-     * @param eventName
-     * @param errorMessage
-     */
-    protected void logError( final String source, final String eventName, final String errorMessage )
-    {
-        if ( cacheEventLogger != null )
-        {
-            cacheEventLogger.logError( source, eventName, errorMessage );
-        }
-    }
-
-    /**
-     * Logs an event if an event logger is configured.
-     *
-     * @param cacheEvent
-     */
-    protected <T> void logICacheEvent( final ICacheEvent<T> cacheEvent )
-    {
-        if ( cacheEventLogger != null )
-        {
-            cacheEventLogger.logICacheEvent( cacheEvent );
-        }
     }
 
     /**
@@ -212,16 +102,6 @@ public abstract class AbstractAuxiliaryCache<K, V>
         }
 
         return new HashMap<>();
-    }
-
-    /**
-     * Allows it to be injected.
-     *
-     * @param cacheEventLogger
-     */
-    public void setCacheEventLogger( final ICacheEventLogger cacheEventLogger )
-    {
-        this.cacheEventLogger = cacheEventLogger;
     }
 
     /**

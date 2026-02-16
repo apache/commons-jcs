@@ -257,4 +257,13 @@ public class RemoteHttpCacheService<K, V>
     {
         //nothing.
     }
+
+    /**
+     * @return the RemoteHttpCacheServerAttributes
+     */
+    @Override
+    public RemoteHttpCacheServerAttributes getAuxiliaryCacheAttributes()
+    {
+        return remoteHttpCacheServerAttributes;
+    }
 }

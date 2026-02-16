@@ -227,17 +227,6 @@ public class RemoteCacheNoWait<K, V>
     }
 
     /**
-     * this won't be called since we don't do ICache logging here.
-     *
-     * @return String
-     */
-    @Override
-    public String getEventLoggingExtraInfo()
-    {
-        return "Remote Cache No Wait";
-    }
-
-    /**
      * Return the keys in this cache.
      *
      * @see org.apache.commons.jcs4.auxiliary.AuxiliaryCache#getKeySet()

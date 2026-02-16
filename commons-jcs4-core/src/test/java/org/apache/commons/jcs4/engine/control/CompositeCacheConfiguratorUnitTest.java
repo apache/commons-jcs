@@ -29,7 +29,7 @@ import org.apache.commons.jcs4.auxiliary.AuxiliaryCacheConfigurator;
 import org.apache.commons.jcs4.auxiliary.MockAuxiliaryCache;
 import org.apache.commons.jcs4.auxiliary.MockAuxiliaryCacheAttributes;
 import org.apache.commons.jcs4.auxiliary.MockAuxiliaryCacheFactory;
-import org.apache.commons.jcs4.engine.logging.MockCacheEventLogger;
+import org.apache.commons.jcs4.auxiliary.MockCacheEventLogger;
 import org.junit.jupiter.api.Test;
 
 /** Tests for the configurator. */
@@ -71,8 +71,8 @@ class CompositeCacheConfiguratorUnitTest
         assertEquals(MockAuxiliaryCache.class, result.getClass(), "Should have MockAuxiliaryCache.");
         assertNotNull( manager.getRegisteredAuxiliaryFactory(auxName), "Should have a factory." );
         assertEquals(MockAuxiliaryCacheFactory.class, manager.getRegisteredAuxiliaryFactory(auxName).getClass(), "Should have MockAuxiliaryCacheFactory.");
-        assertNotNull( result.getCacheEventLogger(), "Should have an event logger." );
-        assertEquals(MockCacheEventLogger.class, result.getCacheEventLogger().getClass(), "Should have a MockCacheEventLogger.");
+        assertNotNull( result.getCacheEventLogger().get(), "Should have an event logger." );
+        assertEquals(MockCacheEventLogger.class, result.getCacheEventLogger().get().getClass(), "Should have a MockCacheEventLogger.");
         assertNotNull( result.getKeyMatcher(), "Should have a key matcher." );
         assertEquals(MockKeyMatcher.class, result.getKeyMatcher().getClass(), "Should have a MockKeyMatcher.");
     }

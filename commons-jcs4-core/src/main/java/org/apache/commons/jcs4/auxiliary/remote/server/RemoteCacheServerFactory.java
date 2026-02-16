@@ -40,6 +40,7 @@ import org.apache.commons.jcs4.auxiliary.remote.RemoteUtils;
 import org.apache.commons.jcs4.auxiliary.remote.behavior.IRemoteCacheConstants;
 import org.apache.commons.jcs4.engine.behavior.ICacheServiceAdmin;
 import org.apache.commons.jcs4.engine.logging.behavior.ICacheEventLogger;
+import org.apache.commons.jcs4.engine.logging.behavior.ICacheEventLogger.CacheEventType;
 import org.apache.commons.jcs4.log.Log;
 import org.apache.commons.jcs4.utils.config.OptionConverter;
 import org.apache.commons.jcs4.utils.config.PropertySetter;
@@ -167,7 +168,8 @@ public class RemoteCacheServerFactory
             final String message = "RMI registry looks fine.  Found [" + obj + "] in registry [" + namingURL + "]";
             if ( cacheEventLogger != null )
             {
-                cacheEventLogger.logApplicationEvent( "RegistryKeepAliveRunner", "Naming.lookup", message );
+                cacheEventLogger.logApplicationEvent( "RegistryKeepAliveRunner",
+                        CacheEventType.NAMINGLOOKUP_EVENT, message );
             }
             log.debug( message );
         }
@@ -179,7 +181,8 @@ public class RemoteCacheServerFactory
             log.error( message, ex );
             if ( cacheEventLogger != null )
             {
-                cacheEventLogger.logError( "RegistryKeepAliveRunner", "Naming.lookup", message + ":" + ex.getMessage() );
+                cacheEventLogger.logError( "RegistryKeepAliveRunner",
+                        CacheEventType.NAMINGLOOKUP_EVENT, message + ":" + ex.getMessage() );
             }
 
             registry = RemoteUtils.createRegistry(registryPort);
@@ -188,12 +191,14 @@ public class RemoteCacheServerFactory
             {
                 if (registry != null)
                 {
-                    cacheEventLogger.logApplicationEvent( "RegistryKeepAliveRunner", "createRegistry",
+                    cacheEventLogger.logApplicationEvent( "RegistryKeepAliveRunner",
+                            CacheEventType.CREATEREGISTRY_EVENT,
                             "Successfully created registry [" + serviceName + "]." );
                 }
                 else
                 {
-                    cacheEventLogger.logError( "RegistryKeepAliveRunner", "createRegistry",
+                    cacheEventLogger.logError( "RegistryKeepAliveRunner",
+                            CacheEventType.CREATEREGISTRY_EVENT,
                             "Could not start registry [" + serviceName + "]." );
                 }
             }
@@ -206,7 +211,8 @@ public class RemoteCacheServerFactory
             final String message = "Successfully rebound server to registry [" + serviceName + "].";
             if ( cacheEventLogger != null )
             {
-                cacheEventLogger.logApplicationEvent( "RegistryKeepAliveRunner", "registerServer", message );
+                cacheEventLogger.logApplicationEvent( "RegistryKeepAliveRunner",
+                        CacheEventType.REGISTERSERVER_EVENT, message );
             }
             log.info( message );
         }
@@ -216,7 +222,8 @@ public class RemoteCacheServerFactory
             log.error( message, e );
             if ( cacheEventLogger != null )
             {
-                cacheEventLogger.logError( "RegistryKeepAliveRunner", "registerServer", message + ":"
+                cacheEventLogger.logError( "RegistryKeepAliveRunner",
+                        CacheEventType.REGISTERSERVER_EVENT, message + ":"
                     + e.getMessage() );
             }
         }

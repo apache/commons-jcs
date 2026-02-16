@@ -38,46 +38,24 @@ public class CacheEventLoggerDebugLogger
 
     /**
      * @param source
-     * @param region
-     * @param eventName
+     * @param eventType
      * @param optionalDetails
-     * @param key
-     * @return ICacheEvent
      */
     @Override
-    public <T> ICacheEvent<T> createICacheEvent( final String source, final String region, final String eventName,
-            final String optionalDetails, final T key )
+    public void logApplicationEvent( final String source, final CacheEventType eventType, final String optionalDetails )
     {
-        final ICacheEvent<T> event = new CacheEvent<>();
-        event.setSource( source );
-        event.setRegion( region );
-        event.setEventName( eventName );
-        event.setOptionalDetails( optionalDetails );
-        event.setKey( key );
-
-        return event;
+        log.debug( "{0} | {1} | {2}", source, eventType, optionalDetails );
     }
 
     /**
      * @param source
-     * @param eventName
-     * @param optionalDetails
-     */
-    @Override
-    public void logApplicationEvent( final String source, final String eventName, final String optionalDetails )
-    {
-        log.debug( "{0} | {1} | {2}", source, eventName, optionalDetails );
-    }
-
-    /**
-     * @param source
-     * @param eventName
+     * @param eventType
      * @param errorMessage
      */
     @Override
-    public void logError( final String source, final String eventName, final String errorMessage )
+    public void logError( final String source, final CacheEventType eventType, final String errorMessage )
     {
-        log.debug( "{0} | {1} | {2}", source, eventName, errorMessage );
+        log.debug( "{0} | {1} | {2}", source, eventType, errorMessage );
     }
 
     /**

@@ -42,7 +42,7 @@ import org.apache.commons.jcs4.engine.behavior.ICacheElement;
 import org.apache.commons.jcs4.engine.behavior.ICacheElementSerialized;
 import org.apache.commons.jcs4.engine.behavior.ICacheServiceNonLocal;
 import org.apache.commons.jcs4.engine.behavior.IZombie;
-import org.apache.commons.jcs4.engine.logging.behavior.ICacheEventLogger;
+import org.apache.commons.jcs4.engine.logging.behavior.ICacheEventLogger.CacheEventType;
 import org.apache.commons.jcs4.engine.stats.Stats;
 import org.apache.commons.jcs4.engine.stats.behavior.IStats;
 import org.apache.commons.jcs4.log.Log;
@@ -137,8 +137,8 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
             {
                 try
                 {
-                    handleException( e, "Problem propagating events from Zombie Queue to new Remote Service.",
-                                     "fixCache" );
+                    handleException(e, "Problem propagating events from Zombie Queue to new Remote Service.",
+                            CacheEventType.FIXCACHE_EVENT );
                 }
                 catch ( final IOException e1 )
                 {
@@ -359,10 +359,10 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
      *
      * @param ex
      * @param msg
-     * @param eventName
+     * @param eventType
      * @throws IOException
      */
-    protected abstract void handleException( Exception ex, String msg, String eventName )
+    protected abstract void handleException( Exception ex, String msg, CacheEventType eventType )
         throws IOException;
 
     /**
@@ -385,7 +385,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
         catch ( final IOException ex )
         {
             log.error( "Couldn't dispose", ex );
-            handleException( ex, "Failed to dispose [" + cacheName + "]", ICacheEventLogger.DISPOSE_EVENT );
+            handleException( ex, "Failed to dispose [" + cacheName + "]", CacheEventType.DISPOSE_EVENT );
         }
     }
 
@@ -431,7 +431,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
         }
         catch ( final IOException | ClassNotFoundException ex )
         {
-            handleException( ex, "Failed to get [" + key + "] from [" + cacheName + "]", ICacheEventLogger.GET_EVENT );
+            handleException( ex, "Failed to get [" + key + "] from [" + cacheName + "]", CacheEventType.GET_EVENT );
         }
         return retVal;
     }
@@ -481,7 +481,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
         catch ( final IOException | ClassNotFoundException ex )
         {
             handleException( ex, "Failed to getMatching [" + pattern + "] from [" + cacheName + "]",
-                             ICacheEventLogger.GET_EVENT );
+                    CacheEventType.GET_EVENT );
         }
         return results;
     }
@@ -507,7 +507,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
             }
             catch ( final IOException ex )
             {
-                handleException( ex, "Failed to remove " + key + " from " + cacheName, ICacheEventLogger.REMOVE_EVENT );
+                handleException( ex, "Failed to remove " + key + " from " + cacheName, CacheEventType.REMOVE_EVENT );
             }
             return true;
         }
@@ -532,7 +532,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
             }
             catch ( final IOException ex )
             {
-                handleException( ex, "Failed to remove all from " + cacheName, ICacheEventLogger.REMOVEALL_EVENT );
+                handleException( ex, "Failed to remove all from " + cacheName, CacheEventType.REMOVEALL_EVENT );
             }
         }
     }
@@ -565,7 +565,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
             {
                 // event queue will wait and retry
                 handleException( ex, "Failed to put [" + ce.key() + "] to " + ce.cacheName(),
-                                 ICacheEventLogger.UPDATE_EVENT );
+                        CacheEventType.UPDATE_EVENT );
             }
         }
         else

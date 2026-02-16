@@ -1,5 +1,7 @@
 package org.apache.commons.jcs4.engine.logging.behavior;
 
+import org.apache.commons.jcs4.engine.logging.CacheEvent;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -28,65 +30,105 @@ package org.apache.commons.jcs4.engine.logging.behavior;
  */
 public interface ICacheEventLogger
 {
-	// TODO: Use enum
-    /** ICache update */
-    String UPDATE_EVENT = "update";
+    public enum CacheEventType
+    {
+        /** ICache update */
+        UPDATE_EVENT("update"),
 
-    /** ICache get */
-    String GET_EVENT = "get";
+        /** ICache get */
+        GET_EVENT("get"),
 
-    /** ICache getMultiple */
-    String GETMULTIPLE_EVENT = "getMultiple";
+        /** ICache getMultiple */
+        GETMULTIPLE_EVENT("getMultiple"),
 
-    /** ICache getMatching */
-    String GETMATCHING_EVENT = "getMatching";
+        /** ICache getMatching */
+        GETMATCHING_EVENT("getMatching"),
 
-    /** ICache remove */
-    String REMOVE_EVENT = "remove";
+        /** ICache remove */
+        REMOVE_EVENT("remove"),
 
-    /** ICache removeAll */
-    String REMOVEALL_EVENT = "removeAll";
+        /** ICache removeAll */
+        REMOVEALL_EVENT("removeAll"),
 
-    /** ICache dispose */
-    String DISPOSE_EVENT = "dispose";
+        /** ICache dispose */
+        DISPOSE_EVENT("dispose"),
 
-    /** ICache enqueue. The time in the queue. */
-    //String ENQUEUE_EVENT = "enqueue";
+        /** RemoteAuxiliaryCache fixCache */
+        FIXCACHE_EVENT("fixCache"),
+
+        /** JDBCDiskCache deleteExpired */
+        DELETEEXPIRED_EVENT("deleteExpired"),
+
+        /** RemoteCacheServer addCacheListener */
+        ADDCACHELISTENER_EVENT("addCacheListener"),
+
+        /** RemoteCacheServer removeCacheListener */
+        REMOVECACHELISTENER_EVENT("removeCacheListener"),
+
+        /** RemoteCacheNoWait InitiatedFailover */
+        INITIATEDFAILOVER_EVENT("InitiatedFailover"),
+
+        /** RemoteCacheNoWait RestoredPrimary */
+        RESTOREDPRIMARY_EVENT("RestoredPrimary"),
+
+        /** RemoteCacheServerFactory Naming.lookup */
+        NAMINGLOOKUP_EVENT("Naming.lookup"),
+
+        /** RemoteCacheServerFactory createRegistry */
+        CREATEREGISTRY_EVENT("createRegistry"),
+
+        /** RemoteCacheServerFactory registerServer */
+        REGISTERSERVER_EVENT("registerServer"),
+
+        /** ICache enqueue. The time in the queue. */
+        ENQUEUE_EVENT("enqueue");
+
+        public final String label;
+
+        private CacheEventType(String label)
+        {
+            this.label = label;
+        }
+    }
+
     /**
      * Creates an event.
      *
-     * @param source   e.g. RemoteCacheServer
-     * @param region   the name of the region
-     * @param eventName   e.g. update, get, put, remove
-     * @param optionalDetails   any extra message
-     * @param key   the cache key
+     * @param source e.g. RemoteCacheServer
+     * @param region the name of the region
+     * @param eventType e.g. update, get, put, remove
+     * @param optionalDetails any extra message
+     * @param key the cache key
      * @return ICacheEvent
      */
-    <T> ICacheEvent<T> createICacheEvent( String source, String region,
-            String eventName, String optionalDetails, T key );
+    default <T> ICacheEvent<T> createICacheEvent( String source, String region,
+            CacheEventType eventType, String optionalDetails, T key )
+    {
+        return new CacheEvent<>(source, region, eventType, optionalDetails, key);
+    }
 
     /**
      * Logs an event. These are internal application events that do not correspond to ICache calls.
      *
-     * @param source   e.g. RemoteCacheServer
-     * @param eventName   e.g. update, get, put, remove
-     * @param optionalDetails   any extra message
+     * @param source e.g. RemoteCacheServer
+     * @param eventType e.g. update, get, put, remove
+     * @param optionalDetails any extra message
      */
-    void logApplicationEvent( String source, String eventName, String optionalDetails );
+    default void logApplicationEvent( String source, CacheEventType eventType, String optionalDetails ) {}
 
     /**
      * Logs an error.
      *
-     * @param source   e.g. RemoteCacheServer
-     * @param eventName   e.g. update, get, put, remove
-     * @param errorMessage   any error message
+     * @param source e.g. RemoteCacheServer
+     * @param eventType e.g. update, get, put, remove
+     * @param errorMessage any error message
      */
-    void logError( String source, String eventName, String errorMessage );
+    default void logError( String source, CacheEventType eventType, String errorMessage ) {}
 
     /**
      * Logs an event.
      *
      * @param event   the event created in createICacheEvent
      */
-    <T> void logICacheEvent( ICacheEvent<T> event );
+    default <T> void logICacheEvent( ICacheEvent<T> event ) {}
 }

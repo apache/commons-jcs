@@ -94,13 +94,6 @@ public class MockAuxiliaryCache<K, V>
         return cacheType;
     }
 
-    /** @return null */
-    @Override
-    public String getEventLoggingExtraInfo()
-    {
-        return null;
-    }
-
     /**
      * Return the keys in this cache.
      *

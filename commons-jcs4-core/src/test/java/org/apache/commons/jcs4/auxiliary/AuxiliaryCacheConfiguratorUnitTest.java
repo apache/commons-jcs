@@ -28,7 +28,6 @@ import java.util.Properties;
 
 import org.apache.commons.jcs4.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs4.engine.control.MockElementSerializer;
-import org.apache.commons.jcs4.engine.logging.MockCacheEventLogger;
 import org.apache.commons.jcs4.utils.serialization.StandardSerializer;
 import org.junit.jupiter.api.Test;
 

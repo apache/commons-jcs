@@ -36,6 +36,7 @@ import org.apache.commons.jcs4.engine.behavior.ICacheServiceNonLocal;
 import org.apache.commons.jcs4.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs4.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs4.engine.logging.behavior.ICacheEventLogger;
+import org.apache.commons.jcs4.engine.logging.behavior.ICacheEventLogger.CacheEventType;
 import org.apache.commons.jcs4.engine.match.behavior.IKeyMatcher;
 import org.apache.commons.jcs4.log.Log;
 
@@ -194,7 +195,7 @@ public class RemoteCacheManager
             final String msg = "Remote connection to " + registry + " resumed.";
             if ( cacheEventLogger != null )
             {
-                cacheEventLogger.logApplicationEvent( "RemoteCacheManager", "fix", msg );
+                cacheEventLogger.logApplicationEvent( "RemoteCacheManager", CacheEventType.FIXCACHE_EVENT, msg );
             }
             log.info( msg );
         }

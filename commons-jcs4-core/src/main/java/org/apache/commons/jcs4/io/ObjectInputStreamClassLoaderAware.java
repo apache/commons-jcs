@@ -57,6 +57,7 @@ public class ObjectInputStreamClassLoaderAware extends ObjectInputStream
         return Class.forName(desc.getName(), false, classLoader);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     protected Class<?> resolveProxyClass(final String[] interfaces) throws IOException, ClassNotFoundException
     {

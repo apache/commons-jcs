@@ -274,7 +274,6 @@ public class IndexedDisk implements AutoCloseable
     /**
      * Serializes the object and write it out to the given position.
      * <p>
-     * TODO: make this take a ded as well.
      * @param obj
      * @param pos
      * @throws IOException

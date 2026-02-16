@@ -44,7 +44,7 @@ import org.apache.commons.jcs4.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs4.engine.control.group.GroupAttrName;
 import org.apache.commons.jcs4.engine.control.group.GroupId;
 import org.apache.commons.jcs4.engine.logging.behavior.ICacheEvent;
-import org.apache.commons.jcs4.engine.logging.behavior.ICacheEventLogger;
+import org.apache.commons.jcs4.engine.logging.behavior.ICacheEventLogger.CacheEventType;
 import org.apache.commons.jcs4.engine.stats.Stats;
 import org.apache.commons.jcs4.engine.stats.behavior.IStats;
 import org.apache.commons.jcs4.log.Log;
@@ -1221,7 +1221,8 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
     @Override
     public void processDispose()
     {
-        final ICacheEvent<String> cacheEvent = createICacheEvent(getCacheName(), "none", ICacheEventLogger.DISPOSE_EVENT);
+        final ICacheEvent<String> cacheEvent = createICacheEvent(getCacheName(), "none",
+                CacheEventType.DISPOSE_EVENT, this::getDiskLocation);
         try
         {
             final Thread t = new Thread(this::disposeInternal, "IndexedDiskCache-DisposalThread");
@@ -1387,7 +1388,8 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
     public void processRemoveAll()
     {
         final ICacheEvent<String> cacheEvent =
-                createICacheEvent(getCacheName(), "all", ICacheEventLogger.REMOVEALL_EVENT);
+                createICacheEvent(getCacheName(), "all", CacheEventType.REMOVEALL_EVENT,
+                        this::getDiskLocation);
         try
         {
             reset();

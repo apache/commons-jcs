@@ -22,130 +22,53 @@ package org.apache.commons.jcs4.engine.logging;
 import java.util.Date;
 
 import org.apache.commons.jcs4.engine.logging.behavior.ICacheEvent;
+import org.apache.commons.jcs4.engine.logging.behavior.ICacheEventLogger.CacheEventType;
 
 /** It's returned from create and passed into log. */
-public class CacheEvent<K>
-    implements ICacheEvent<K>
+public record CacheEvent<K>(
+        /** The time at which this object was created. */
+        long createTime,
+
+        /** The auxiliary or other source of the event. */
+        String source,
+
+        /** The cache region */
+        String region,
+
+        /** The event type: update, get, remove, etc. */
+        CacheEventType eventType,
+
+        /** Disk location, ip, etc. */
+        String optionalDetails,
+
+        /** The key that was put or retrieved. */
+        K key
+) implements ICacheEvent<K>
 {
     /** Don't change. */
     private static final long serialVersionUID = -5913139566421714330L;
 
-    /** The time at which this object was created. */
-    private final long createTime = System.currentTimeMillis();
-
-    /** The auxiliary or other source of the event. */
-    private String source;
-
-    /** The cache region */
-    private String region;
-
-    /** The event name: update, get, remove, etc. */
-    private String eventName;
-
-    /** Disk location, ip, etc. */
-    private String optionalDetails;
-
-    /** The key that was put or retrieved. */
-    private K key;
+    /**
+     * Default Constructor
+     */
+    public CacheEvent()
+    {
+        this(System.currentTimeMillis(), null, null, null, null, null);
+    }
 
     /**
-     * The time at which this object was created.
+     * Constructor
      *
-     * @return the createTime
+     * @param source
+     * @param region
+     * @param eventType
+     * @param optionalDetails
+     * @param key
      */
-    public long getCreateTime()
+    public CacheEvent(final String source, final String region, CacheEventType eventType,
+            String optionalDetails, K key)
     {
-        return createTime;
-    }
-
-    /**
-     * @return the eventName
-     */
-    @Override
-	public String getEventName()
-    {
-        return eventName;
-    }
-
-    /**
-     * @return the key
-     */
-    @Override
-	public K getKey()
-    {
-        return key;
-    }
-
-    /**
-     * @return the optionalDetails
-     */
-    @Override
-	public String getOptionalDetails()
-    {
-        return optionalDetails;
-    }
-
-    /**
-     * @return the region
-     */
-    @Override
-	public String getRegion()
-    {
-        return region;
-    }
-
-    /**
-     * @return the source
-     */
-    @Override
-	public String getSource()
-    {
-        return source;
-    }
-
-    /**
-     * @param eventName the eventName to set
-     */
-    @Override
-	public void setEventName( final String eventName )
-    {
-        this.eventName = eventName;
-    }
-
-    /**
-     * @param key the key to set
-     */
-    @Override
-	public void setKey( final K key )
-    {
-        this.key = key;
-    }
-
-    /**
-     * @param optionalDetails the optionalDetails to set
-     */
-    @Override
-	public void setOptionalDetails( final String optionalDetails )
-    {
-        this.optionalDetails = optionalDetails;
-    }
-
-    /**
-     * @param region the region to set
-     */
-    @Override
-	public void setRegion( final String region )
-    {
-        this.region = region;
-    }
-
-    /**
-     * @param source the source to set
-     */
-    @Override
-	public void setSource( final String source )
-    {
-        this.source = source;
+        this(System.currentTimeMillis(), source, region, eventType, optionalDetails, key);
     }
 
     /**
@@ -155,7 +78,8 @@ public class CacheEvent<K>
     public String toString()
     {
     	final StringBuilder sb = new StringBuilder();
-    	sb.append("CacheEvent: ").append(eventName).append(" Created: ").append(new Date(createTime));
+    	sb.append("CacheEvent: ").append(eventType)
+    	  .append(" Created: ").append(new Date(createTime));
     	if (source != null)
     	{
         	sb.append(" Source: ").append(source);

@@ -26,7 +26,7 @@ import java.util.Set;
 
 import org.apache.commons.jcs4.engine.behavior.ICacheElement;
 import org.apache.commons.jcs4.engine.logging.behavior.ICacheEvent;
-import org.apache.commons.jcs4.engine.logging.behavior.ICacheEventLogger;
+import org.apache.commons.jcs4.engine.logging.behavior.ICacheEventLogger.CacheEventType;
 
 /**
  * All ICacheEvents are defined as final. Children must implement process events. These are wrapped
@@ -58,7 +58,8 @@ public abstract class AbstractAuxiliaryCacheEventLogging<K, V>
     protected final void disposeWithEventLogging()
         throws IOException
     {
-        final ICacheEvent<String> cacheEvent = createICacheEvent( getCacheName(), "none", ICacheEventLogger.DISPOSE_EVENT );
+        final ICacheEvent<String> cacheEvent = createICacheEvent( getCacheName(), "none",
+                CacheEventType.DISPOSE_EVENT, this::getEventLoggingExtraInfo);
         try
         {
             processDispose();
@@ -115,7 +116,8 @@ public abstract class AbstractAuxiliaryCacheEventLogging<K, V>
     protected final Map<K, ICacheElement<K, V>> getMatchingWithEventLogging( final String pattern )
         throws IOException
     {
-        final ICacheEvent<String> cacheEvent = createICacheEvent( getCacheName(), pattern, ICacheEventLogger.GETMATCHING_EVENT );
+        final ICacheEvent<String> cacheEvent = createICacheEvent( getCacheName(), pattern,
+                CacheEventType.GETMATCHING_EVENT, this::getEventLoggingExtraInfo);
         try
         {
             return processGetMatching( pattern );
@@ -152,8 +154,8 @@ public abstract class AbstractAuxiliaryCacheEventLogging<K, V>
     protected final Map<K, ICacheElement<K, V>> getMultipleWithEventLogging(final Set<K> keys )
         throws IOException
     {
-        final ICacheEvent<Serializable> cacheEvent = createICacheEvent( getCacheName(), (Serializable) keys,
-                                                    ICacheEventLogger.GETMULTIPLE_EVENT );
+        final ICacheEvent<Serializable> cacheEvent = createICacheEvent( getCacheName(),
+                (Serializable) keys, CacheEventType.GETMULTIPLE_EVENT, this::getEventLoggingExtraInfo);
         try
         {
             return processGetMultiple( keys );
@@ -174,7 +176,8 @@ public abstract class AbstractAuxiliaryCacheEventLogging<K, V>
     protected final ICacheElement<K, V> getWithEventLogging( final K key )
         throws IOException
     {
-        final ICacheEvent<K> cacheEvent = createICacheEvent( getCacheName(), key, ICacheEventLogger.GET_EVENT );
+        final ICacheEvent<K> cacheEvent = createICacheEvent( getCacheName(), key,
+                CacheEventType.GET_EVENT, this::getEventLoggingExtraInfo);
         try
         {
             return processGet( key );
@@ -275,7 +278,8 @@ public abstract class AbstractAuxiliaryCacheEventLogging<K, V>
     protected final void removeAllWithEventLogging()
         throws IOException
     {
-        final ICacheEvent<String> cacheEvent = createICacheEvent( getCacheName(), "all", ICacheEventLogger.REMOVEALL_EVENT );
+        final ICacheEvent<String> cacheEvent = createICacheEvent( getCacheName(), "all",
+                CacheEventType.REMOVEALL_EVENT, this::getEventLoggingExtraInfo);
         try
         {
             processRemoveAll();
@@ -296,7 +300,8 @@ public abstract class AbstractAuxiliaryCacheEventLogging<K, V>
     protected final boolean removeWithEventLogging( final K key )
         throws IOException
     {
-        final ICacheEvent<K> cacheEvent = createICacheEvent( getCacheName(), key, ICacheEventLogger.REMOVE_EVENT );
+        final ICacheEvent<K> cacheEvent = createICacheEvent( getCacheName(), key,
+                CacheEventType.REMOVE_EVENT, this::getEventLoggingExtraInfo);
         try
         {
             return processRemove( key );
@@ -329,7 +334,8 @@ public abstract class AbstractAuxiliaryCacheEventLogging<K, V>
     protected final void updateWithEventLogging( final ICacheElement<K, V> cacheElement )
         throws IOException
     {
-        final ICacheEvent<K> cacheEvent = createICacheEvent( cacheElement, ICacheEventLogger.UPDATE_EVENT );
+        final ICacheEvent<K> cacheEvent = createICacheEvent( cacheElement,
+                CacheEventType.UPDATE_EVENT, this::getEventLoggingExtraInfo);
         try
         {
             processUpdate( cacheElement );
@@ -339,4 +345,11 @@ public abstract class AbstractAuxiliaryCacheEventLogging<K, V>
             logICacheEvent( cacheEvent );
         }
     }
+
+    /**
+     * Gets the extra info for the event log.
+     *
+     * @return disk location
+     */
+    public abstract String getEventLoggingExtraInfo();
 }

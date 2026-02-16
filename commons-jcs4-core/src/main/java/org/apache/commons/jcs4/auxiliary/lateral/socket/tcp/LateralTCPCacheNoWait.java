@@ -79,8 +79,9 @@ public class LateralTCPCacheNoWait<K, V>
     {
         this.cache = cache;
         this.identityKey = cache.getCacheName();
-        setCacheEventLogger(cache.getCacheEventLogger());
+        setCacheEventLogger(cache.getCacheEventLogger().orElse(null));
         setElementSerializer(cache.getElementSerializer());
+        setKeyMatcher(cache.getKeyMatcher());
 
         log.debug( "Constructing LateralTCPCacheNoWait, LateralTCPCache = [{0}]", cache );
 
@@ -195,17 +196,6 @@ public class LateralTCPCacheNoWait<K, V>
     public CacheType getCacheType()
     {
         return cache.getCacheType();
-    }
-
-    /**
-     * this won't be called since we don't do ICache logging here.
-     *
-     * @return String
-     */
-    @Override
-    public String getEventLoggingExtraInfo()
-    {
-        return "Lateral Cache No Wait";
     }
 
     /**

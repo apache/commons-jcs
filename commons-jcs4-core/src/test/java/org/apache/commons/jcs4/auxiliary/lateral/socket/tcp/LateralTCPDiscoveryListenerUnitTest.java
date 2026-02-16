@@ -25,11 +25,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.jcs4.auxiliary.MockCacheEventLogger;
 import org.apache.commons.jcs4.engine.ZombieCacheServiceNonLocal;
 import org.apache.commons.jcs4.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs4.engine.control.CompositeCacheManager;
 import org.apache.commons.jcs4.engine.control.MockKeyMatcher;
-import org.apache.commons.jcs4.engine.logging.MockCacheEventLogger;
 import org.apache.commons.jcs4.engine.match.behavior.IKeyMatcher;
 import org.apache.commons.jcs4.utils.discovery.DiscoveredService;
 import org.apache.commons.jcs4.utils.serialization.StandardSerializer;

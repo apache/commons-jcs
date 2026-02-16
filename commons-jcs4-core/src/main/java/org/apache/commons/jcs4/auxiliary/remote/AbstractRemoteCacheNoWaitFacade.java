@@ -137,17 +137,6 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K, V>
     }
 
     /**
-     * This typically returns end point info.
-     *
-     * @return the name
-     */
-    @Override
-    public String getEventLoggingExtraInfo()
-    {
-        return "Remote Cache No Wait Facade";
-    }
-
-    /**
      * Return the keys in this cache.
      *
      * @see org.apache.commons.jcs4.auxiliary.AuxiliaryCache#getKeySet()

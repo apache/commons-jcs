@@ -48,40 +48,43 @@ public class MockCacheEventLogger
     /** List of messages */
     public List<String> errorMessages = new ArrayList<>();
 
+    /** for configurator test */
+    private String testProperty;
+
     /**
      * @param source
      * @param region
-     * @param eventName
+     * @param eventType
      * @param optionalDetails
      * @param key
      * @return ICacheEvent
      */
     @Override
     public <T> ICacheEvent<T> createICacheEvent( final String source, final String region,
-            final String eventName, final String optionalDetails, final T key )
+            final CacheEventType eventType, final String optionalDetails, final T key )
     {
         startICacheEventCalls++;
-        return new CacheEvent<>();
+        return new CacheEvent<>(source, region, eventType, optionalDetails, key);
     }
 
     /**
      * @param source
-     * @param eventName
+     * @param eventType
      * @param optionalDetails
      */
     @Override
-    public void logApplicationEvent( final String source, final String eventName, final String optionalDetails )
+    public void logApplicationEvent( final String source, final CacheEventType eventType, final String optionalDetails )
     {
         applicationEventCalls++;
     }
 
     /**
      * @param source
-     * @param eventName
+     * @param eventType
      * @param errorMessage
      */
     @Override
-    public void logError( final String source, final String eventName, final String errorMessage )
+    public void logError( final String source, final CacheEventType eventType, final String errorMessage )
     {
         errorEventCalls++;
         errorMessages.add( errorMessage );
@@ -94,5 +97,21 @@ public class MockCacheEventLogger
     public <T> void logICacheEvent( final ICacheEvent<T> event )
     {
         endICacheEventCalls++;
+    }
+
+    /**
+     * @return the testProperty
+     */
+    public String getTestProperty()
+    {
+        return testProperty;
+    }
+
+    /**
+     * @param testProperty the testProperty to set
+     */
+    public void setTestProperty(String testProperty)
+    {
+        this.testProperty = testProperty;
     }
 }

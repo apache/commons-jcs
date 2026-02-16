@@ -34,6 +34,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.atomic.AtomicLongArray;
 
 import org.apache.commons.jcs4.access.exception.CacheException;
 import org.apache.commons.jcs4.auxiliary.remote.behavior.IRemoteCacheListener;
@@ -50,6 +51,7 @@ import org.apache.commons.jcs4.engine.control.CompositeCacheManager;
 import org.apache.commons.jcs4.engine.logging.CacheEvent;
 import org.apache.commons.jcs4.engine.logging.behavior.ICacheEvent;
 import org.apache.commons.jcs4.engine.logging.behavior.ICacheEventLogger;
+import org.apache.commons.jcs4.engine.logging.behavior.ICacheEventLogger.CacheEventType;
 import org.apache.commons.jcs4.engine.stats.behavior.ICacheStats;
 import org.apache.commons.jcs4.log.Log;
 import org.apache.commons.jcs4.utils.timing.ElapsedTimer;
@@ -133,7 +135,7 @@ public class RemoteCacheServer<K, V>
     private final ConcurrentMap<Long, String> idIPMap = new ConcurrentHashMap<>();
 
     /** Used to get the next listener id. */
-    private final int[] listenerId = new int[1];
+    private final AtomicLongArray listenerId = new AtomicLongArray(1);
 
     /** Configuration settings. */
     // package protected for access by unit test code
@@ -253,14 +255,16 @@ public class RemoteCacheServer<K, V>
                     // in case it needs synchronization
                     final String message = "Adding vm listener under new id = [" + listenerIdB + "], listenerAddress ["
                         + listenerAddress + "]";
-                    logApplicationEvent( "RemoteCacheServer", "addCacheListener", message );
+                    logApplicationEvent( "RemoteCacheServer",
+                            CacheEventType.ADDCACHELISTENER_EVENT, message );
                     log.info( message );
                 }
                 else
                 {
                     final String message = "Adding listener under existing id = [" + id + "], listenerAddress ["
                         + listenerAddress + "]";
-                    logApplicationEvent( "RemoteCacheServer", "addCacheListener", message );
+                    logApplicationEvent( "RemoteCacheServer",
+                            CacheEventType.ADDCACHELISTENER_EVENT, message );
                     log.info( message );
                     // should confirm the host is the same as we have on
                     // record, just in case a client has made a mistake.
@@ -280,8 +284,8 @@ public class RemoteCacheServer<K, V>
 
                 if ( cacheEventLogger != null )
                 {
-                    cacheEventLogger.logError( "RemoteCacheServer", "addCacheListener", message + " - "
-                        + ioe.getMessage() );
+                    cacheEventLogger.logError( "RemoteCacheServer",
+                            CacheEventType.ADDCACHELISTENER_EVENT, message + " - " + ioe.getMessage() );
                 }
             }
 
@@ -300,18 +304,18 @@ public class RemoteCacheServer<K, V>
      *
      * @param item
      * @param requesterId
-     * @param eventName
+     * @param eventType
      * @return ICacheEvent
      */
-    private ICacheEvent<ICacheElement<K, V>> createICacheEvent( final ICacheElement<K, V> item, final long requesterId, final String eventName )
+    private ICacheEvent<ICacheElement<K, V>> createICacheEvent( final ICacheElement<K, V> item, final long requesterId, final CacheEventType eventType)
     {
         if ( cacheEventLogger == null )
         {
             return new CacheEvent<>();
         }
         final String ipAddress = getExtraInfoForRequesterId( requesterId );
-        return cacheEventLogger
-            .createICacheEvent( "RemoteCacheServer", item.cacheName(), eventName, ipAddress, item );
+        return cacheEventLogger.createICacheEvent( "RemoteCacheServer", item.cacheName(),
+                eventType, ipAddress, item );
     }
 
     /**
@@ -320,17 +324,18 @@ public class RemoteCacheServer<K, V>
      * @param cacheName
      * @param key
      * @param requesterId
-     * @param eventName
+     * @param eventType
      * @return ICacheEvent
      */
-    private <T> ICacheEvent<T> createICacheEvent( final String cacheName, final T key, final long requesterId, final String eventName )
+    private <T> ICacheEvent<T> createICacheEvent( final String cacheName, final T key, final long requesterId, final CacheEventType eventType )
     {
         if ( cacheEventLogger == null )
         {
             return new CacheEvent<>();
         }
         final String ipAddress = getExtraInfoForRequesterId( requesterId );
-        return cacheEventLogger.createICacheEvent( "RemoteCacheServer", cacheName, eventName, ipAddress, key );
+        return cacheEventLogger.createICacheEvent( "RemoteCacheServer", cacheName, eventType,
+                ipAddress, key );
     }
 
     /**
@@ -356,7 +361,8 @@ public class RemoteCacheServer<K, V>
     public void dispose( final String cacheName, final long requesterId )
         throws IOException
     {
-        final ICacheEvent<String> cacheEvent = createICacheEvent( cacheName, "none", requesterId, ICacheEventLogger.DISPOSE_EVENT );
+        final ICacheEvent<String> cacheEvent = createICacheEvent( cacheName, "none",
+                requesterId, CacheEventType.DISPOSE_EVENT );
         try
         {
             processDispose( cacheName, requesterId );
@@ -401,7 +407,8 @@ public class RemoteCacheServer<K, V>
         throws IOException
     {
         ICacheElement<K, V> element = null;
-        final ICacheEvent<K> cacheEvent = createICacheEvent( cacheName, key, requesterId, ICacheEventLogger.GET_EVENT );
+        final ICacheEvent<K> cacheEvent = createICacheEvent( cacheName, key, requesterId,
+                CacheEventType.GET_EVENT );
         try
         {
             element = processGet( cacheName, key, requesterId );
@@ -570,8 +577,8 @@ public class RemoteCacheServer<K, V>
     public Map<K, ICacheElement<K, V>> getMatching( final String cacheName, final String pattern, final long requesterId )
         throws IOException
     {
-        final ICacheEvent<String> cacheEvent = createICacheEvent( cacheName, pattern, requesterId,
-                                                    ICacheEventLogger.GETMATCHING_EVENT );
+        final ICacheEvent<String> cacheEvent = createICacheEvent( cacheName, pattern,
+                requesterId, CacheEventType.GETMATCHING_EVENT );
         try
         {
             return processGetMatching( cacheName, pattern, requesterId );
@@ -653,8 +660,8 @@ public class RemoteCacheServer<K, V>
     public Map<K, ICacheElement<K, V>> getMultiple( final String cacheName, final Set<K> keys, final long requesterId )
         throws IOException
     {
-        final ICacheEvent<Serializable> cacheEvent = createICacheEvent( cacheName, (Serializable) keys, requesterId,
-                                                    ICacheEventLogger.GETMULTIPLE_EVENT );
+        final ICacheEvent<Serializable> cacheEvent = createICacheEvent( cacheName,
+                (Serializable) keys, requesterId, CacheEventType.GETMULTIPLE_EVENT );
         try
         {
             return processGetMultiple( cacheName, keys, requesterId );
@@ -786,14 +793,14 @@ public class RemoteCacheServer<K, V>
      * Logs an event if an event logger is configured.
      *
      * @param source
-     * @param eventName
+     * @param eventType
      * @param optionalDetails
      */
-    protected void logApplicationEvent( final String source, final String eventName, final String optionalDetails )
+    protected void logApplicationEvent( final String source, final CacheEventType eventType, final String optionalDetails )
     {
         if ( cacheEventLogger != null )
         {
-            cacheEventLogger.logApplicationEvent( source, eventName, optionalDetails );
+            cacheEventLogger.logApplicationEvent( source, eventType, optionalDetails );
         }
     }
 
@@ -836,28 +843,14 @@ public class RemoteCacheServer<K, V>
      */
     private long nextListenerId()
     {
-        long id = 0;
-        if ( listenerId[0] == Integer.MAX_VALUE )
+        if (listenerId.compareAndSet(0, Long.MAX_VALUE, 0))
         {
-            synchronized ( listenerId )
-            {
-                id = listenerId[0];
-                listenerId[0] = 0;
-                // TODO: record & check if the generated id is currently being
-                // used by a valid listener. Currently if the id wraps after
-                // Long.MAX_VALUE,
-                // we just assume it won't collide with an existing listener who
-                // is live.
-            }
+            return listenerId.get(0);
         }
         else
         {
-            synchronized ( listenerId )
-            {
-                id = ++listenerId[0];
-            }
+            return listenerId.incrementAndGet(0);
         }
-        return id;
     }
 
     /**
@@ -956,8 +949,8 @@ public class RemoteCacheServer<K, V>
 
             if ( cacheEventLogger != null )
             {
-                cacheEventLogger.logError( "RemoteCacheServer", ICacheEventLogger.GETMATCHING_EVENT, e.getMessage()
-                    + cacheName + " pattern: " + pattern );
+                cacheEventLogger.logError( "RemoteCacheServer", CacheEventType.GETMATCHING_EVENT,
+                        e.getMessage() + cacheName + " pattern: " + pattern );
             }
         }
 
@@ -1182,8 +1175,8 @@ public class RemoteCacheServer<K, V>
         {
             if ( cacheEventLogger != null )
             {
-                cacheEventLogger.logError( "RemoteCacheServer", ICacheEventLogger.UPDATE_EVENT, e.getMessage()
-                    + " REGION: " + item.cacheName() + " ITEM: " + item );
+                cacheEventLogger.logError( "RemoteCacheServer", CacheEventType.UPDATE_EVENT,
+                        e.getMessage() + " REGION: " + item.cacheName() + " ITEM: " + item );
             }
 
             log.error( "Trouble in Update. requesterId [{0}]", requesterId, e );
@@ -1258,7 +1251,8 @@ public class RemoteCacheServer<K, V>
     public void remove( final String cacheName, final K key, final long requesterId )
         throws IOException
     {
-        final ICacheEvent<K> cacheEvent = createICacheEvent( cacheName, key, requesterId, ICacheEventLogger.REMOVE_EVENT );
+        final ICacheEvent<K> cacheEvent = createICacheEvent( cacheName, key, requesterId,
+                CacheEventType.REMOVE_EVENT );
         try
         {
             processRemove( cacheName, key, requesterId );
@@ -1295,7 +1289,8 @@ public class RemoteCacheServer<K, V>
     public void removeAll( final String cacheName, final long requesterId )
         throws IOException
     {
-        final ICacheEvent<String> cacheEvent = createICacheEvent( cacheName, "all", requesterId, ICacheEventLogger.REMOVEALL_EVENT );
+        final ICacheEvent<String> cacheEvent = createICacheEvent( cacheName, "all", requesterId,
+                CacheEventType.REMOVEALL_EVENT );
         try
         {
             processRemoveAll( cacheName, requesterId );
@@ -1349,7 +1344,8 @@ public class RemoteCacheServer<K, V>
     public void removeCacheListener( final String cacheName, final long listenerId )
     {
         final String message = "Removing listener for cache region = [" + cacheName + "] and listenerId [" + listenerId + "]";
-        logApplicationEvent( "RemoteCacheServer", "removeCacheListener", message );
+        logApplicationEvent( "RemoteCacheServer", CacheEventType.REMOVECACHELISTENER_EVENT,
+                message );
         log.info( message );
 
         final boolean isClusterListener = isRequestFromCluster( listenerId );
@@ -1429,7 +1425,7 @@ public class RemoteCacheServer<K, V>
         {
             for (final String cacheName : cacheListenersMap.keySet())
             {
-                for (int i = 0; i <= listenerId[0]; i++)
+                for (long i = 0; i <= listenerId.get(0); i++)
                 {
                     removeCacheListener( cacheName, i );
                 }
@@ -1477,7 +1473,8 @@ public class RemoteCacheServer<K, V>
     public void update( final ICacheElement<K, V> item, final long requesterId )
         throws IOException
     {
-        final ICacheEvent<ICacheElement<K, V>> cacheEvent = createICacheEvent( item, requesterId, ICacheEventLogger.UPDATE_EVENT );
+        final ICacheEvent<ICacheElement<K, V>> cacheEvent = createICacheEvent( item,
+                requesterId, CacheEventType.UPDATE_EVENT );
         try
         {
             processUpdate( item, requesterId );

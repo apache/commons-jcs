@@ -21,6 +21,8 @@ package org.apache.commons.jcs4.engine.logging.behavior;
 
 import java.io.Serializable;
 
+import org.apache.commons.jcs4.engine.logging.behavior.ICacheEventLogger.CacheEventType;
+
 /** Defines the common fields required by a cache event. */
 public interface ICacheEvent<K>
     extends Serializable
@@ -28,50 +30,25 @@ public interface ICacheEvent<K>
     /**
      * @return the eventName
      */
-    String getEventName();
+    CacheEventType eventType();
 
     /**
      * @return the key
      */
-    K getKey();
+    K key();
 
     /**
      * @return the optionalDetails
      */
-    String getOptionalDetails();
+    String optionalDetails();
 
     /**
      * @return the region
      */
-    String getRegion();
+    String region();
 
     /**
      * @return the source
      */
-    String getSource();
-
-    /**
-     * @param eventName the eventName to set
-     */
-    void setEventName( String eventName );
-
-    /**
-     * @param key the key to set
-     */
-    void setKey( K key );
-
-    /**
-     * @param optionalDetails the optionalDetails to set
-     */
-    void setOptionalDetails( String optionalDetails );
-
-    /**
-     * @param region the region to set
-     */
-    void setRegion( String region );
-
-    /**
-     * @param source the source to set
-     */
-    void setSource( String source );
+    String source();
 }

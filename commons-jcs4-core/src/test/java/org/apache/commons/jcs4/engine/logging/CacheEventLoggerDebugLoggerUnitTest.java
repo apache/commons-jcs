@@ -25,6 +25,7 @@ import java.io.StringWriter;
 
 import org.apache.commons.jcs4.TestLogConfigurationUtil;
 import org.apache.commons.jcs4.engine.logging.behavior.ICacheEvent;
+import org.apache.commons.jcs4.engine.logging.behavior.ICacheEventLogger.CacheEventType;
 import org.junit.jupiter.api.Test;
 
 /** Tests for the debug implementation */
@@ -39,7 +40,7 @@ class CacheEventLoggerDebugLoggerUnitTest
         final String logCategoryName = "testLogApplicationEvent_normal";
 
         final String source = "mySource";
-        final String eventName = "MyEventName";
+        final CacheEventType eventType = CacheEventType.ENQUEUE_EVENT;
         final String optionalDetails = "SomeExtraData";
 
         final StringWriter stringWriter = new StringWriter();
@@ -49,12 +50,12 @@ class CacheEventLoggerDebugLoggerUnitTest
         logger.setLogCategoryName( logCategoryName );
 
         // DO WORK
-        logger.logApplicationEvent( source, eventName, optionalDetails );
+        logger.logApplicationEvent( source, eventType, optionalDetails );
 
         // VERIFY
         final String result = stringWriter.toString();
         assertTrue( result.indexOf( source ) != -1, "An event with the source should have been logged:" + result );
-        assertTrue( result.indexOf( eventName ) != -1,
+        assertTrue( result.indexOf( eventType.toString() ) != -1,
                     "An event with the event name should have been logged:" + result );
         assertTrue( result.indexOf( optionalDetails ) != -1,
                     "An event with the optionalDetails should have been logged:" + result );
@@ -68,7 +69,7 @@ class CacheEventLoggerDebugLoggerUnitTest
         final String logCategoryName = "testLogApplicationEvent_normal";
 
         final String source = "mySource";
-        final String eventName = "MyEventName";
+        final CacheEventType eventType = CacheEventType.ENQUEUE_EVENT;
         final String errorMessage = "SomeExtraData";
 
         final StringWriter stringWriter = new StringWriter();
@@ -78,12 +79,12 @@ class CacheEventLoggerDebugLoggerUnitTest
         logger.setLogCategoryName( logCategoryName );
 
         // DO WORK
-        logger.logError( source, eventName, errorMessage );
+        logger.logError( source, eventType, errorMessage );
 
         // VERIFY
         final String result = stringWriter.toString();
         assertTrue( result.indexOf( source ) != -1, "An event with the source should have been logged:" + result );
-        assertTrue( result.indexOf( eventName ) != -1,
+        assertTrue( result.indexOf( eventType.toString() ) != -1,
                     "An event with the event name should have been logged:" + result );
         assertTrue( result.indexOf( errorMessage ) != -1,
                     "An event with the errorMessage should have been logged:" + result );
@@ -98,7 +99,7 @@ class CacheEventLoggerDebugLoggerUnitTest
 
         final String source = "mySource";
         final String region = "my region";
-        final String eventName = "MyEventName";
+        final CacheEventType eventType = CacheEventType.ENQUEUE_EVENT;
         final String optionalDetails = "SomeExtraData";
         final String key = "my key";
 
@@ -108,7 +109,7 @@ class CacheEventLoggerDebugLoggerUnitTest
         final CacheEventLoggerDebugLogger logger = new CacheEventLoggerDebugLogger();
         logger.setLogCategoryName( logCategoryName );
 
-        final ICacheEvent<String> event = logger.createICacheEvent( source, region, eventName, optionalDetails, key );
+        final ICacheEvent<String> event = logger.createICacheEvent( source, region, eventType, optionalDetails, key );
 
         // DO WORK
         logger.logICacheEvent( event );
@@ -117,8 +118,8 @@ class CacheEventLoggerDebugLoggerUnitTest
         final String result = stringWriter.toString();
         assertTrue( result.indexOf( source ) != -1, "An event with the source should have been logged:" + result );
         assertTrue( result.indexOf( region ) != -1, "An event with the region should have been logged:" + result );
-        assertTrue( result.indexOf( eventName ) != -1,
-                    "An event with the event name should have been logged:" + result );
+        assertTrue( result.indexOf( eventType.toString() ) != -1,
+                    "An event with the event type should have been logged:" + result );
         assertTrue( result.indexOf( optionalDetails ) != -1,
                     "An event with the optionalDetails should have been logged:" + result );
         assertTrue( result.indexOf( key ) != -1, "An event with the key should have been logged:" + result );

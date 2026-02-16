@@ -26,6 +26,7 @@ import org.apache.commons.jcs4.auxiliary.remote.behavior.IRemoteCacheListener;
 import org.apache.commons.jcs4.auxiliary.remote.server.behavior.RemoteType;
 import org.apache.commons.jcs4.engine.ZombieCacheServiceNonLocal;
 import org.apache.commons.jcs4.engine.behavior.ICacheServiceNonLocal;
+import org.apache.commons.jcs4.engine.logging.behavior.ICacheEventLogger.CacheEventType;
 import org.apache.commons.jcs4.engine.stats.Stats;
 import org.apache.commons.jcs4.engine.stats.behavior.IStats;
 import org.apache.commons.jcs4.log.Log;
@@ -137,16 +138,16 @@ public class RemoteCache<K, V>
      *
      * @param ex
      * @param msg
-     * @param eventName
+     * @param eventType
      * @throws IOException
      */
     @Override
-    protected void handleException( final Exception ex, final String msg, final String eventName )
+    protected void handleException( final Exception ex, final String msg, final CacheEventType eventType )
         throws IOException
     {
         final String message = "Disabling remote cache due to error: " + msg;
 
-        logError( cacheName, "", message );
+        logError( cacheName, eventType, message );
         log.error( message, ex );
 
         // we should not switch if the existing is a zombie.

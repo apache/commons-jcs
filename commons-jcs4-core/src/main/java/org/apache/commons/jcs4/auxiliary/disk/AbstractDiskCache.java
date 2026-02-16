@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import org.apache.commons.jcs4.auxiliary.AbstractAuxiliaryCacheEventLogging;
@@ -91,7 +92,7 @@ public abstract class AbstractDiskCache<K, V>
         {
             if (alive.get())
             {
-                doDispose();
+                disposeWithEventLogging();
             }
         }
 
@@ -135,7 +136,7 @@ public abstract class AbstractDiskCache<K, V>
                             // If the element is still eligible, spool it.
                             if ( pe.isSpoolable() )
                             {
-                                doUpdate( element );
+                                updateWithEventLogging( element );
                             }
                         }
                         finally
@@ -151,7 +152,7 @@ public abstract class AbstractDiskCache<K, V>
                 else
                 {
                     // call the child's implementation
-                    doUpdate( element );
+                    updateWithEventLogging( element );
                 }
             }
             else
@@ -176,7 +177,7 @@ public abstract class AbstractDiskCache<K, V>
         public void handleRemove( final String cacheName, final K key )
             throws IOException
         {
-            if (alive.get() && doRemove( key ) )
+            if (alive.get() && removeWithEventLogging(key))
             {
                 log.debug( "Element removed, key: " + key );
             }
@@ -193,7 +194,7 @@ public abstract class AbstractDiskCache<K, V>
         {
             if (alive.get())
             {
-                doRemoveAll();
+                removeAllWithEventLogging();
             }
         }
 
@@ -242,7 +243,7 @@ public abstract class AbstractDiskCache<K, V>
     private final String cacheName;
 
     /** DEBUG: Keeps a count of the number of purgatory hits for debug messages */
-    private int purgHits;
+    private final AtomicInteger purgHits = new AtomicInteger();
 
     /**
      * We lock here, so that we cannot get an update after a remove all. an individual removal locks
@@ -296,107 +297,9 @@ public abstract class AbstractDiskCache<K, V>
 
         // Invoke any implementation specific disposal code
         // need to handle the disposal first.
-        doDispose();
+        disposeWithEventLogging();
 
         alive.set(false);
-    }
-
-    /**
-     * Dispose of the persistent store. Note that disposal of purgatory and setting alive to false
-     * does NOT need to be done by this method.
-     *
-     * Before the event logging layer, the subclasses implemented the do* methods. Now the do*
-     * methods call the *EventLogging method on the super. The *WithEventLogging methods call the
-     * abstract process* methods. The children implement the process methods.
-     *
-     * @throws IOException
-     */
-    protected final void doDispose()
-        throws IOException
-    {
-        super.disposeWithEventLogging();
-    }
-
-    /**
-     * Gets a value from the persistent store.
-     *
-     * Before the event logging layer, the subclasses implemented the do* methods. Now the do*
-     * methods call the *EventLogging method on the super. The *WithEventLogging methods call the
-     * abstract process* methods. The children implement the process methods.
-     *
-     * @param key Key to locate value for.
-     * @return An object matching key, or null.
-     * @throws IOException
-     */
-    protected final ICacheElement<K, V> doGet( final K key )
-        throws IOException
-    {
-        return super.getWithEventLogging( key );
-    }
-
-    /**
-     * Gets a value from the persistent store.
-     *
-     * Before the event logging layer, the subclasses implemented the do* methods. Now the do*
-     * methods call the *EventLogging method on the super. The *WithEventLogging methods call the
-     * abstract process* methods. The children implement the process methods.
-     *
-     * @param pattern Used to match keys.
-     * @return A map of matches.
-     * @throws IOException
-     */
-    protected final Map<K, ICacheElement<K, V>> doGetMatching( final String pattern )
-        throws IOException
-    {
-        return super.getMatchingWithEventLogging( pattern );
-    }
-
-    /**
-     * Remove an object from the persistent store if found.
-     *
-     * Before the event logging layer, the subclasses implemented the do* methods. Now the do*
-     * methods call the *EventLogging method on the super. The *WithEventLogging methods call the
-     * abstract process* methods. The children implement the process methods.
-     *
-     * @param key Key of object to remove.
-     * @return whether or no the item was present when removed
-     * @throws IOException
-     */
-    protected final boolean doRemove( final K key )
-        throws IOException
-    {
-        return super.removeWithEventLogging( key );
-    }
-
-    /**
-     * Remove all objects from the persistent store.
-     *
-     * Before the event logging layer, the subclasses implemented the do* methods. Now the do*
-     * methods call the *EventLogging method on the super. The *WithEventLogging methods call the
-     * abstract process* methods. The children implement the process methods.
-     *
-     * @throws IOException
-     */
-    protected final void doRemoveAll()
-        throws IOException
-    {
-        super.removeAllWithEventLogging();
-    }
-
-    /**
-     * Add a cache element to the persistent store.
-     *
-     * Before the event logging layer, the subclasses implemented the do* methods. Now the do*
-     * methods call the *EventLogging method on the super. The *WithEventLogging methods call the
-     * abstract process* methods. The children implement the process methods.
-     *
-     * @param cacheElement
-     * @throws IOException
-     */
-    protected final void doUpdate( final ICacheElement<K, V> cacheElement )
-        throws IOException
-    {
-        super.updateWithEventLogging( cacheElement );
     }
 
     /**
@@ -422,11 +325,11 @@ public abstract class AbstractDiskCache<K, V>
         // If the element was found in purgatory
         if ( pe != null )
         {
-            purgHits++;
+            int p = purgHits.incrementAndGet();
 
-            if ( purgHits % 100 == 0 )
+            if ( p % 100 == 0 )
             {
-                log.debug( "Purgatory hits = {0}", purgHits );
+                log.debug( "Purgatory hits = {0}", p );
             }
 
             // Since the element will go back to the memory cache, we could set
@@ -452,7 +355,7 @@ public abstract class AbstractDiskCache<K, V>
         // it from the cache.
         try
         {
-            return doGet( key );
+            return getWithEventLogging( key );
         }
         catch (final IOException e)
         {
@@ -536,22 +439,12 @@ public abstract class AbstractDiskCache<K, V>
         final Map<K, ICacheElement<K, V>> result = processGetMultiple( matchingKeys );
 
         // Get the keys from disk
-        final Map<K, ICacheElement<K, V>> diskMatches = doGetMatching( pattern );
+        final Map<K, ICacheElement<K, V>> diskMatches = getMatchingWithEventLogging( pattern );
 
         result.putAll( diskMatches );
 
         return result;
     }
-
-    /**
-     * Size cannot be determined without knowledge of the cache implementation, so subclasses will
-     * need to implement this method.
-     *
-     * @return the number of items.
-     * @see ICache#getSize
-     */
-    @Override
-    public abstract int getSize();
 
     /**
      * Returns semi-structured data.
@@ -563,7 +456,7 @@ public abstract class AbstractDiskCache<K, V>
     {
         final IStats stats = new Stats("Abstract Disk Cache");
 
-        stats.addStatElement("Purgatory Hits", Integer.valueOf(purgHits));
+        stats.addStatElement("Purgatory Hits", purgHits);
         stats.addStatElement("Purgatory Size", Integer.valueOf(purgatory.size()));
 
         // get the stats from the event queue too
@@ -660,19 +553,21 @@ public abstract class AbstractDiskCache<K, V>
                 pe.setSpoolable( false );
 
                 // Remove from persistent store immediately
-                present = doRemove( key );
+                present = removeWithEventLogging( key );
             }
         }
         else
         {
             // Remove from persistent store immediately
-            present = doRemove( key );
+            present = removeWithEventLogging( key );
         }
 
         return present;
     }
 
     /**
+     * Remove all objects from the persistent store.
+     *
      * @throws IOException
      * @see org.apache.commons.jcs4.engine.behavior.ICache#removeAll
      */
@@ -686,7 +581,7 @@ public abstract class AbstractDiskCache<K, V>
             initPurgatory();
 
             // Remove all from persistent store immediately
-            doRemoveAll();
+            removeAllWithEventLogging();
         }
         else
         {

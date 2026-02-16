@@ -31,6 +31,7 @@ import org.apache.commons.jcs4.engine.CacheStatus;
 import org.apache.commons.jcs4.engine.behavior.ICache;
 import org.apache.commons.jcs4.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs4.engine.logging.behavior.ICacheEventLogger;
+import org.apache.commons.jcs4.engine.logging.behavior.ICacheEventLogger.CacheEventType;
 import org.apache.commons.jcs4.log.Log;
 
 /**
@@ -261,11 +262,8 @@ public class RemoteCacheNoWaitFacade<K, V>
                 runner.setDaemon( true );
                 runner.start();
 
-                if ( getCacheEventLogger() != null )
-                {
-                    getCacheEventLogger().logApplicationEvent( "RemoteCacheNoWaitFacade", "InitiatedFailover",
-                                                               rcnw + " was in error." );
-                }
+                logApplicationEvent("RemoteCacheNoWaitFacade", CacheEventType.INITIATEDFAILOVER_EVENT,
+                        rcnw + " was in error." );
             }
             else
             {
@@ -383,12 +381,8 @@ public class RemoteCacheNoWaitFacade<K, V>
                         + "failoverNoWait [" + failoverNoWait + "]";
                 log.info( message );
 
-                if (getCacheEventLogger() != null)
-                {
-                    getCacheEventLogger().logApplicationEvent(
-                            "RemoteCacheFailoverRunner", "RestoredPrimary",
-                            message );
-                }
+                logApplicationEvent("RemoteCacheFailoverRunner", CacheEventType.RESTOREDPRIMARY_EVENT,
+                            message);
                 return true;
             }
         }

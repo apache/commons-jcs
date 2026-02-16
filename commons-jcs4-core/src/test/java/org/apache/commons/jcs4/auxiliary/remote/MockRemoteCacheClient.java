@@ -126,17 +126,6 @@ public class MockRemoteCacheClient<K, V>
     }
 
     /**
-     * Nothing important
-     *
-     * @return null
-     */
-    @Override
-    public String getEventLoggingExtraInfo()
-    {
-        return null;
-    }
-
-    /**
      * @return null
      */
     @Override

@@ -39,7 +39,7 @@ import org.apache.commons.jcs4.auxiliary.disk.jdbc.dsfactory.DataSourceFactory;
 import org.apache.commons.jcs4.engine.behavior.ICache;
 import org.apache.commons.jcs4.engine.behavior.ICacheElement;
 import org.apache.commons.jcs4.engine.logging.behavior.ICacheEvent;
-import org.apache.commons.jcs4.engine.logging.behavior.ICacheEventLogger;
+import org.apache.commons.jcs4.engine.logging.behavior.ICacheEventLogger.CacheEventType;
 import org.apache.commons.jcs4.engine.stats.behavior.IStats;
 import org.apache.commons.jcs4.log.Log;
 
@@ -206,8 +206,9 @@ public class JDBCDiskCache<K, V>
                     setAlive(false);
                 }
 
-                logApplicationEvent( getAuxiliaryCacheAttributes().getName(), "deleteExpired",
-                                     "Deleted expired elements.  URL: " + getDiskLocation() );
+                logApplicationEvent( getAuxiliaryCacheAttributes().getName(),
+                        CacheEventType.DELETEEXPIRED_EVENT,
+                        "Deleted expired elements.  URL: " + getDiskLocation() );
             }
             else
             {
@@ -216,7 +217,7 @@ public class JDBCDiskCache<K, V>
         }
         catch ( final SQLException e )
         {
-            logError( getAuxiliaryCacheAttributes().getName(), "deleteExpired",
+            logError( getAuxiliaryCacheAttributes().getName(), CacheEventType.DELETEEXPIRED_EVENT,
                     e.getMessage() + " URL: " + getDiskLocation() );
             log.error( "Problem removing expired elements from the table.", e );
             reset();
@@ -511,7 +512,8 @@ public class JDBCDiskCache<K, V>
     @Override
     public void processDispose()
     {
-        final ICacheEvent<K> cacheEvent = createICacheEvent( getCacheName(), null, ICacheEventLogger.DISPOSE_EVENT );
+        final ICacheEvent<K> cacheEvent = createICacheEvent( getCacheName(), null,
+                CacheEventType.DISPOSE_EVENT, this::getDiskLocation);
 
         try
         {
