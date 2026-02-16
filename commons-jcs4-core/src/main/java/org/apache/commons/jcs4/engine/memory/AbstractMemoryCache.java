@@ -496,7 +496,7 @@ public abstract class AbstractMemoryCache<K, V>
      * @param ce the item
      */
     @Override
-    public void waterfal( final ICacheElement<K, V> ce )
+    public void waterfall( final ICacheElement<K, V> ce )
     {
         this.cache.spoolToDisk( ce );
     }

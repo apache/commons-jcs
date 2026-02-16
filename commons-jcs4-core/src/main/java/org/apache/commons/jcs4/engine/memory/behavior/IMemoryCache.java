@@ -182,6 +182,6 @@ public interface IMemoryCache<K, V>
      * @throws IOException
      *                Description of the Exception
      */
-    void waterfal( ICacheElement<K, V> ce ) // FIXME: Correct typo before 4.0, see JCS-222
+    void waterfall( ICacheElement<K, V> ce )
         throws IOException;
 }

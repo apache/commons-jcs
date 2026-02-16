@@ -167,7 +167,7 @@ public class ShrinkerThread<K, V>
                             spoolCount++;
 
                             memCache.remove( key );
-                            memCache.waterfal( cacheElement );
+                            memCache.waterfall( cacheElement );
                         }
                     }
                     else

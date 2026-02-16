@@ -74,7 +74,7 @@ public class LHMLRUMemoryCache<K, V>
             log.debug( "LHMLRU max size: {0}. Spooling element, key: {1}",
                     () -> getCacheAttributes().maxObjects(), element::key);
 
-            waterfal( element );
+            waterfall( element );
 
             log.debug( "LHMLRU size: {0}", () -> map.size() );
             return true;

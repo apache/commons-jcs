@@ -202,7 +202,7 @@ public class SoftReferenceMemoryCache<K, V> extends AbstractMemoryCache<K, V>
         for (int cursize = startsize; cursize > max; cursize--)
         {
             final ICacheElement<K, V> ce = strongReferences.poll();
-            waterfal(ce);
+            waterfall(ce);
         }
     }
 

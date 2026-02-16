@@ -239,7 +239,7 @@ public class MockMemoryCache<K, V>
      * @throws IOException
      */
     @Override
-    public void waterfal( final ICacheElement<K, V> ce )
+    public void waterfall( final ICacheElement<K, V> ce )
         throws IOException
     {
         waterfallCallCount++;
