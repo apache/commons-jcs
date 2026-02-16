@@ -46,7 +46,7 @@
 -Djcs.serialization.class.filter='!org.codehaus.groovy.runtime.**;!org.apache.commons.collections.functors.**;!org.apache.xalan*'
                 ]]>
             </source>
-			<p> The syntax for the filter expression is documented in the JavaDoc
+			<p> The syntax for the filter expression is documented in the Javadoc
                 of <a href="https://docs.oracle.com/javase/9/docs/api/java/io/ObjectInputFilter.Config.html#createFilter-java.lang.String-">java.io.ObjectInputFilter.Config#createFilter</a>.</p>
 		</section>
         <section name="Compressing Serializer">
