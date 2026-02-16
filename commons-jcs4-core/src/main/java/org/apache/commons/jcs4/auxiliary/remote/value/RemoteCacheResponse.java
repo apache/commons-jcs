@@ -25,70 +25,40 @@ import java.io.Serializable;
  * This is the response wrapper. The servlet wraps all different type of responses in one of these
  * objects.
  */
-public class RemoteCacheResponse<T>
-    implements Serializable
+public record RemoteCacheResponse<T>(
+        /**
+         * The payload. Typically a key / ICacheElement&lt;K, V&gt; map. A normal get will return a map with one
+         * record.
+         */
+        T payload,
+
+        /** Was the event processed without error */
+        boolean success,
+
+        /** Simple error messaging */
+        String errorMessage
+) implements Serializable
 {
     /** Don't change. */
     private static final long serialVersionUID = -8858447417390442568L;
 
-    /** Was the event processed without error */
-    private boolean success = true;
-
-    /** Simple error messaging */
-    private String errorMessage;
-
     /**
-     * The payload. Typically a key / ICacheElement&lt;K, V&gt; map. A normal get will return a map with one
-     * record.
+     * Construct error message object
+     * @param succcess
+     * @param errorMessage
      */
-    private T payload;
-
-    /**
-     * @return the errorMessage
-     */
-    public String getErrorMessage()
+    public RemoteCacheResponse(final boolean success, final String errorMessage)
     {
-        return errorMessage;
+        this(null, success, errorMessage);
     }
 
     /**
-     * @return the payload
+     * Construct payload object
+     * @param payload
      */
-    public T getPayload()
+    public RemoteCacheResponse(final T payload)
     {
-        return payload;
-    }
-
-    /**
-     * @return the success
-     */
-    public boolean isSuccess()
-    {
-        return success;
-    }
-
-    /**
-     * @param errorMessage the errorMessage to set
-     */
-    public void setErrorMessage( final String errorMessage )
-    {
-        this.errorMessage = errorMessage;
-    }
-
-    /**
-     * @param payload the payload to set
-     */
-    public void setPayload( final T payload )
-    {
-        this.payload = payload;
-    }
-
-    /**
-     * @param success the success to set
-     */
-    public void setSuccess( final boolean success )
-    {
-        this.success = success;
+        this(payload, true, "OK");
     }
 
     /** @return string */
@@ -97,9 +67,9 @@ public class RemoteCacheResponse<T>
     {
         final StringBuilder buf = new StringBuilder();
         buf.append( "\nRemoteHttpCacheResponse" );
-        buf.append( "\n success [" + isSuccess() + "]" );
-        buf.append( "\n payload [" + getPayload() + "]" );
-        buf.append( "\n errorMessage [" + getErrorMessage() + "]" );
+        buf.append( "\n success [" + success() + "]" );
+        buf.append( "\n payload [" + payload() + "]" );
+        buf.append( "\n errorMessage [" + errorMessage() + "]" );
         return buf.toString();
     }
 }

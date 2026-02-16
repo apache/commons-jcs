@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -190,65 +189,60 @@ public class RemoteHttpCacheServlet
      */
     protected RemoteCacheResponse<Object> processRequest( final RemoteCacheRequest<Serializable, Serializable> request )
     {
-        final RemoteCacheResponse<Object> response = new RemoteCacheResponse<>();
+        RemoteCacheResponse<Object> response;
 
         if ( request == null )
         {
             final String message = "The request is null. Cannot process";
             log.warn( message );
-            response.setSuccess( false );
-            response.setErrorMessage( message );
+            response = new RemoteCacheResponse<>(false, message);
         }
         else
         {
             try
             {
-                switch ( request.getRequestType() )
+                switch ( request.requestType() )
                 {
                     case GET:
                         final ICacheElement<Serializable, Serializable> element =
-                            remoteCacheService.get( request.getCacheName(), request.getKey(), request.getRequesterId() );
-                        response.setPayload(element);
+                            remoteCacheService.get( request.cacheName(), request.key(), request.requesterId() );
+                        response = new RemoteCacheResponse<>(element);
                         break;
                     case GET_MULTIPLE:
                         final Map<Serializable, ICacheElement<Serializable, Serializable>> elementMap =
-                            remoteCacheService.getMultiple( request.getCacheName(), request.getKeySet(), request.getRequesterId() );
-                        if ( elementMap != null )
-                        {
-                            response.setPayload(new HashMap<>(elementMap));
-                        }
+                            remoteCacheService.getMultiple( request.cacheName(), request.keySet(), request.requesterId() );
+                        response = new RemoteCacheResponse<>(elementMap);
                         break;
                     case GET_MATCHING:
                         final Map<Serializable, ICacheElement<Serializable, Serializable>> elementMapMatching =
-                            remoteCacheService.getMatching( request.getCacheName(), request.getPattern(), request.getRequesterId() );
-                        if ( elementMapMatching != null )
-                        {
-                            response.setPayload(new HashMap<>(elementMapMatching));
-                        }
+                            remoteCacheService.getMatching( request.cacheName(), request.pattern(), request.requesterId() );
+                        response = new RemoteCacheResponse<>(elementMapMatching);
                         break;
                     case REMOVE:
-                        remoteCacheService.remove( request.getCacheName(), request.getKey(), request.getRequesterId() );
+                        remoteCacheService.remove( request.cacheName(), request.key(), request.requesterId() );
+                        response = new RemoteCacheResponse<>(true, "OK");
                         break;
                     case REMOVE_ALL:
-                        remoteCacheService.removeAll( request.getCacheName(), request.getRequesterId() );
+                        remoteCacheService.removeAll( request.cacheName(), request.requesterId() );
+                        response = new RemoteCacheResponse<>(true, "OK");
                         break;
                     case UPDATE:
-                        remoteCacheService.update( request.getCacheElement(), request.getRequesterId() );
+                        remoteCacheService.update( request.cacheElement(), request.requesterId() );
+                        response = new RemoteCacheResponse<>(true, "OK");
                         break;
                     case ALIVE_CHECK:
                     case DISPOSE:
-                        response.setSuccess( true );
+                        response = new RemoteCacheResponse<>(true, "OK");
                         // DO NOTHING
                         break;
                     case GET_KEYSET:
-                        final Set<Serializable> keys = remoteCacheService.getKeySet( request.getCacheName() );
-                        response.setPayload( keys );
+                        final Set<Serializable> keys = remoteCacheService.getKeySet( request.cacheName() );
+                        response = new RemoteCacheResponse<>(keys);
                         break;
                     default:
                         final String message = "Unknown event type.  Cannot process " + request;
                         log.warn( message );
-                        response.setSuccess( false );
-                        response.setErrorMessage( message );
+                        response = new RemoteCacheResponse<>(false, message);
                         break;
                 }
             }
@@ -256,8 +250,7 @@ public class RemoteHttpCacheServlet
             {
                 final String message = "Problem processing request. " + request + " Error: " + e.getMessage();
                 log.error( message, e );
-                response.setSuccess( false );
-                response.setErrorMessage( message );
+                response = new RemoteCacheResponse<>(false, message);
             }
         }
 

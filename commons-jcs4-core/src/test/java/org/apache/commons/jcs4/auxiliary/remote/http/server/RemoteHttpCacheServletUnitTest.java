@@ -125,7 +125,7 @@ class RemoteHttpCacheServletUnitTest
 
         // VERIFY
         assertNotNull( result, "Should have a result." );
-        assertTrue( result.getErrorMessage().indexOf( "The request is null" ) != -1,
+        assertTrue( result.errorMessage().indexOf( "The request is null" ) != -1,
                     "Should have 'The request is null' in the errorMessage" );
         assertTrue( result.toString().indexOf( "The request is null" ) != -1,
                     "Should have 'The request is null' in the toString" );

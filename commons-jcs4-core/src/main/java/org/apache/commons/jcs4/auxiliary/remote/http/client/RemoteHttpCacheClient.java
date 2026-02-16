@@ -133,7 +133,7 @@ public class RemoteHttpCacheClient<K, V>
 
         if ( remoteHttpCacheResponse != null)
         {
-            return remoteHttpCacheResponse.getPayload();
+            return remoteHttpCacheResponse.payload();
         }
 
         return null;
@@ -160,9 +160,9 @@ public class RemoteHttpCacheClient<K, V>
 
         final RemoteCacheResponse<Set<K>> remoteHttpCacheResponse = getRemoteDispatcher().dispatchRequest( remoteHttpCacheRequest );
 
-        if ( remoteHttpCacheResponse != null && remoteHttpCacheResponse.getPayload() != null )
+        if ( remoteHttpCacheResponse != null && remoteHttpCacheResponse.payload() != null )
         {
-            return remoteHttpCacheResponse.getPayload();
+            return remoteHttpCacheResponse.payload();
         }
 
         return Collections.emptySet();
@@ -213,7 +213,7 @@ public class RemoteHttpCacheClient<K, V>
 
         log.debug( "GetMatching [{0}] = {1}", pattern, remoteHttpCacheResponse );
 
-        return remoteHttpCacheResponse.getPayload();
+        return remoteHttpCacheResponse.payload();
     }
 
     /**
@@ -261,7 +261,7 @@ public class RemoteHttpCacheClient<K, V>
 
         log.debug( "GetMultiple [{0}] = {1}", keys, remoteHttpCacheResponse );
 
-        return remoteHttpCacheResponse.getPayload();
+        return remoteHttpCacheResponse.payload();
     }
 
     /**
@@ -318,7 +318,7 @@ public class RemoteHttpCacheClient<K, V>
 
         if ( remoteHttpCacheResponse != null )
         {
-            return remoteHttpCacheResponse.isSuccess();
+            return remoteHttpCacheResponse.success();
         }
 
         return false;

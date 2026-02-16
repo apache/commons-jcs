@@ -30,143 +30,100 @@ import org.apache.commons.jcs4.engine.behavior.ICacheElement;
  * Rather than creating sub object types, I created on object that has values for all types of
  * requests.
  */
-public class RemoteCacheRequest<K, V>
-    implements Serializable
+public record RemoteCacheRequest<K, V>(
+        /** The name of the region */
+        String cacheName,
+
+        /** The request type specifies the type of request: get, put, remove, . . */
+        RemoteRequestType requestType,
+
+        /** Used to identify the source. Same as listener id on the client side. */
+        long requesterId,
+
+        /** The key, if this request has a key. */
+        K key,
+
+        /** The keySet, if this request has a keySet. Only getMultiple requests. */
+        Set<K> keySet,
+
+        /** The pattern, if this request uses a pattern. Only getMatching requests. */
+        String pattern,
+
+        /** The ICacheEleemnt, if this request contains a value. Only update requests will have this. */
+        ICacheElement<K, V> cacheElement
+) implements Serializable
 {
     /** Don't change. */
     private static final long serialVersionUID = -8858447417390442569L;
 
-    /** The request type specifies the type of request: get, put, remove, . . */
-    private RemoteRequestType requestType;
-
-    /** Used to identify the source. Same as listener id on the client side. */
-    private long requesterId;
-
-    /** The name of the region */
-    private String cacheName;
-
-    /** The key, if this request has a key. */
-    private K key;
-
-    /** The keySet, if this request has a keySet. Only getMultiple requests. */
-    private Set<K> keySet;
-
-    /** The pattern, if this request uses a pattern. Only getMatching requests. */
-    private String pattern;
-
-    /** The ICacheEleemnt, if this request contains a value. Only update requests will have this. */
-    private ICacheElement<K, V> cacheElement;
 
     /**
-     * @return the cacheElement
+     * Construct a RemoteCacheRequest
+     *
+     * @param cacheName the name of the region
+     * @param requestType the request type specifies the type of request: get, put, remove, ...
+     * @param requesterId used to identify the source. Same as listener id on the client side.
      */
-    public ICacheElement<K, V> getCacheElement()
+    public RemoteCacheRequest(final String cacheName, final RemoteRequestType requestType,
+            final long requesterId)
     {
-        return cacheElement;
+        this(cacheName, requestType, requesterId, null, null, null, null);
     }
 
     /**
-     * @return the cacheName
+     * Construct a RemoteCacheRequest with key
+     *
+     * @param cacheName the name of the region
+     * @param requestType the request type specifies the type of request: get, put, remove, ...
+     * @param requesterId used to identify the source. Same as listener id on the client side.
+     * @param key the key
      */
-    public String getCacheName()
+    public RemoteCacheRequest(final String cacheName, final RemoteRequestType requestType,
+            final long requesterId, final K key)
     {
-        return cacheName;
+        this(cacheName, requestType, requesterId, key, null, null, null);
     }
 
     /**
-     * @return the key
+     * Construct a RemoteCacheRequest with KeySet
+     *
+     * @param cacheName the name of the region
+     * @param requestType the request type specifies the type of request: get, put, remove, ...
+     * @param requesterId used to identify the source. Same as listener id on the client side.
+     * @param keySet the KeySet
      */
-    public K getKey()
+    public RemoteCacheRequest(final String cacheName, final RemoteRequestType requestType,
+            final long requesterId, final Set<K> keySet)
     {
-        return key;
+        this(cacheName, requestType, requesterId, null, keySet, null, null);
     }
 
     /**
-     * @return the keySet
+     * Construct a RemoteCacheRequest with Pattern
+     *
+     * @param cacheName the name of the region
+     * @param requestType the request type specifies the type of request: get, put, remove, ...
+     * @param requesterId used to identify the source. Same as listener id on the client side.
+     * @param pattern the Pattern
      */
-    public Set<K> getKeySet()
+    public RemoteCacheRequest(final String cacheName, final RemoteRequestType requestType,
+            final long requesterId, final String pattern)
     {
-        return keySet;
+        this(cacheName, requestType, requesterId, null, null, pattern, null);
     }
 
     /**
-     * @return the pattern
+     * Construct a RemoteCacheRequest with CacheElement
+     *
+     * @param cacheName the name of the region
+     * @param requestType the request type specifies the type of request: get, put, remove, ...
+     * @param requesterId used to identify the source. Same as listener id on the client side.
+     * @param cacheElement the CacheElement
      */
-    public String getPattern()
+    public RemoteCacheRequest(final String cacheName, final RemoteRequestType requestType,
+            final long requesterId, final ICacheElement<K, V> cacheElement)
     {
-        return pattern;
-    }
-
-    /**
-     * @return the requesterId
-     */
-    public long getRequesterId()
-    {
-        return requesterId;
-    }
-
-    /**
-     * @return the requestType
-     */
-    public RemoteRequestType getRequestType()
-    {
-        return requestType;
-    }
-
-    /**
-     * @param cacheElement the cacheElement to set
-     */
-    public void setCacheElement( final ICacheElement<K, V> cacheElement )
-    {
-        this.cacheElement = cacheElement;
-    }
-
-    /**
-     * @param cacheName the cacheName to set
-     */
-    public void setCacheName( final String cacheName )
-    {
-        this.cacheName = cacheName;
-    }
-
-    /**
-     * @param key the key to set
-     */
-    public void setKey( final K key )
-    {
-        this.key = key;
-    }
-
-    /**
-     * @param keySet the keySet to set
-     */
-    public void setKeySet( final Set<K> keySet )
-    {
-        this.keySet = keySet;
-    }
-
-    /**
-     * @param pattern the pattern to set
-     */
-    public void setPattern( final String pattern )
-    {
-        this.pattern = pattern;
-    }
-
-    /**
-     * @param requesterId the requesterId to set
-     */
-    public void setRequesterId( final long requesterId )
-    {
-        this.requesterId = requesterId;
-    }
-
-    /**
-     * @param requestType the requestType to set
-     */
-    public void setRequestType( final RemoteRequestType requestType )
-    {
-        this.requestType = requestType;
+        this(cacheName, requestType, requesterId, cacheElement.key(), null, null, cacheElement);
     }
 
     /** @return string */
@@ -175,13 +132,13 @@ public class RemoteCacheRequest<K, V>
     {
         final StringBuilder buf = new StringBuilder();
         buf.append( "\nRemoteHttpCacheRequest" );
-        buf.append( "\n requesterId [" + getRequesterId() + "]" );
-        buf.append( "\n requestType [" + getRequestType() + "]" );
-        buf.append( "\n cacheName [" + getCacheName() + "]" );
-        buf.append( "\n key [" + getKey() + "]" );
-        buf.append( "\n keySet [" + getKeySet() + "]" );
-        buf.append( "\n pattern [" + getPattern() + "]" );
-        buf.append( "\n cacheElement [" + getCacheElement() + "]" );
+        buf.append( "\n requesterId [" + requesterId() + "]" );
+        buf.append( "\n requestType [" + requestType() + "]" );
+        buf.append( "\n cacheName [" + cacheName() + "]" );
+        buf.append( "\n key [" + key() + "]" );
+        buf.append( "\n keySet [" + keySet() + "]" );
+        buf.append( "\n pattern [" + pattern() + "]" );
+        buf.append( "\n cacheElement [" + cacheElement() + "]" );
         return buf.toString();
     }
 }

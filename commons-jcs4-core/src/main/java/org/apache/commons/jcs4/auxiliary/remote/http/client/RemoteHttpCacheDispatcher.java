@@ -149,28 +149,30 @@ public class RemoteHttpCacheDispatcher
         final RequestBuilder builder = RequestBuilder.post( url ).setCharset( DEFAULT_ENCODING );
 
         if ( getRemoteHttpCacheAttributes().isIncludeCacheNameAsParameter()
-            && remoteCacheRequest.getCacheName() != null )
+            && remoteCacheRequest.cacheName() != null )
         {
-            builder.addParameter( PARAMETER_CACHE_NAME, remoteCacheRequest.getCacheName() );
+            builder.addParameter( PARAMETER_CACHE_NAME, remoteCacheRequest.cacheName() );
         }
         if ( getRemoteHttpCacheAttributes().isIncludeKeysAndPatternsAsParameter() )
         {
             String keyValue = "";
-            switch ( remoteCacheRequest.getRequestType() )
+            switch ( remoteCacheRequest.requestType() )
             {
                 case GET:
                 case REMOVE:
+                    keyValue = remoteCacheRequest.key().toString();
+                    break;
                 case GET_KEYSET:
-                    keyValue = remoteCacheRequest.getKey().toString();
+                    keyValue = remoteCacheRequest.cacheName();
                     break;
                 case GET_MATCHING:
-                    keyValue = remoteCacheRequest.getPattern();
+                    keyValue = remoteCacheRequest.pattern();
                     break;
                 case GET_MULTIPLE:
-                    keyValue = remoteCacheRequest.getKeySet().toString();
+                    keyValue = remoteCacheRequest.keySet().toString();
                     break;
                 case UPDATE:
-                    keyValue = remoteCacheRequest.getCacheElement().key().toString();
+                    keyValue = remoteCacheRequest.cacheElement().key().toString();
                     break;
                 default:
                     break;
@@ -180,7 +182,7 @@ public class RemoteHttpCacheDispatcher
         if ( getRemoteHttpCacheAttributes().isIncludeRequestTypeasAsParameter() )
         {
             builder.addParameter( PARAMETER_REQUEST_TYPE,
-                remoteCacheRequest.getRequestType().toString() );
+                remoteCacheRequest.requestType().toString() );
         }
 
         builder.setEntity(new ByteArrayEntity( requestAsByteArray ));

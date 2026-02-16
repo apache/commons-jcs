@@ -49,8 +49,8 @@ class RemoteCacheRequestFactoryUnitTest
 
         // VERIFY
         assertNotNull( result, "Should have a result" );
-        assertEquals( cacheName, result.getCacheName(), "Wrong cacheName" );
-        assertEquals( RemoteRequestType.GET_MATCHING, result.getRequestType(), "Wrong type" );
+        assertEquals( cacheName, result.cacheName(), "Wrong cacheName" );
+        assertEquals( RemoteRequestType.GET_MATCHING, result.requestType(), "Wrong type" );
     }
 
     /** Simple test */
@@ -68,8 +68,8 @@ class RemoteCacheRequestFactoryUnitTest
 
         // VERIFY
         assertNotNull( result, "Should have a result" );
-        assertEquals( cacheName, result.getCacheName(), "Wrong cacheName" );
-        assertEquals( RemoteRequestType.GET_MULTIPLE, result.getRequestType(), "Wrong type" );
+        assertEquals( cacheName, result.cacheName(), "Wrong cacheName" );
+        assertEquals( RemoteRequestType.GET_MULTIPLE, result.requestType(), "Wrong type" );
     }
 
     /** Simple test */
@@ -87,8 +87,8 @@ class RemoteCacheRequestFactoryUnitTest
 
         // VERIFY
         assertNotNull( result, "Should have a result" );
-        assertEquals( cacheName, result.getCacheName(), "Wrong cacheName" );
-        assertEquals( RemoteRequestType.GET, result.getRequestType(), "Wrong type" );
+        assertEquals( cacheName, result.cacheName(), "Wrong cacheName" );
+        assertEquals( RemoteRequestType.GET, result.requestType(), "Wrong type" );
     }
 
     /** Simple test */
@@ -105,8 +105,8 @@ class RemoteCacheRequestFactoryUnitTest
 
         // VERIFY
         assertNotNull( result, "Should have a result" );
-        assertEquals( cacheName, result.getCacheName(), "Wrong cacheName" );
-        assertEquals( RemoteRequestType.REMOVE_ALL, result.getRequestType(), "Wrong type" );
+        assertEquals( cacheName, result.cacheName(), "Wrong cacheName" );
+        assertEquals( RemoteRequestType.REMOVE_ALL, result.requestType(), "Wrong type" );
     }
 
     /** Simple test */
@@ -124,8 +124,8 @@ class RemoteCacheRequestFactoryUnitTest
 
         // VERIFY
         assertNotNull( result, "Should have a result" );
-        assertEquals( cacheName, result.getCacheName(), "Wrong cacheName" );
-        assertEquals( RemoteRequestType.REMOVE, result.getRequestType(), "Wrong type" );
+        assertEquals( cacheName, result.cacheName(), "Wrong cacheName" );
+        assertEquals( RemoteRequestType.REMOVE, result.requestType(), "Wrong type" );
     }
 
     /** Simple test */
@@ -146,7 +146,7 @@ class RemoteCacheRequestFactoryUnitTest
 
         // VERIFY
         assertNotNull( result, "Should have a result" );
-        assertEquals( cacheName, result.getCacheName(), "Wrong cacheName" );
-        assertEquals( RemoteRequestType.UPDATE, result.getRequestType(), "Wrong type" );
+        assertEquals( cacheName, result.cacheName(), "Wrong cacheName" );
+        assertEquals( RemoteRequestType.UPDATE, result.requestType(), "Wrong type" );
     }
 }

@@ -60,7 +60,7 @@ class RemoteHttpCacheClientUnitTest
 
         // VERIFY
         assertEquals( RemoteRequestType.DISPOSE, mockDispatcher.lastRemoteCacheRequest
-            .getRequestType(), "Wrong type." );
+            .requestType(), "Wrong type." );
     }
 
     /**
@@ -84,8 +84,7 @@ class RemoteHttpCacheClientUnitTest
 
         final ICacheElement<String, String> expected = new CacheElement<>( cacheName, key, "value" );
         final RemoteCacheResponse<ICacheElement<String, String>> remoteHttpCacheResponse =
-            new RemoteCacheResponse<>();
-        remoteHttpCacheResponse.setPayload( expected );
+            new RemoteCacheResponse<>(expected);
 
         mockDispatcher.setupRemoteCacheResponse = remoteHttpCacheResponse;
 
@@ -95,7 +94,7 @@ class RemoteHttpCacheClientUnitTest
         // VERIFY
         assertEquals( expected, result, "Wrong result." );
         assertEquals( RemoteRequestType.GET, mockDispatcher.lastRemoteCacheRequest
-            .getRequestType(), "Wrong type." );
+            .requestType(), "Wrong type." );
     }
 
     /**
@@ -125,7 +124,7 @@ class RemoteHttpCacheClientUnitTest
         // VERIFY
         assertNull( result, "Wrong result." );
         assertEquals( RemoteRequestType.GET, mockDispatcher.lastRemoteCacheRequest
-            .getRequestType(), "Wrong type." );
+            .requestType(), "Wrong type." );
     }
 
     /**
@@ -151,8 +150,7 @@ class RemoteHttpCacheClientUnitTest
         final Map<String, ICacheElement<String, String>> expectedMap = new HashMap<>();
         expectedMap.put( "key", expected );
         final RemoteCacheResponse<Map<String, ICacheElement<String, String>>> remoteHttpCacheResponse =
-            new RemoteCacheResponse<>();
-        remoteHttpCacheResponse.setPayload( expectedMap );
+            new RemoteCacheResponse<>(expectedMap);
 
         mockDispatcher.setupRemoteCacheResponse = remoteHttpCacheResponse;
 
@@ -162,7 +160,7 @@ class RemoteHttpCacheClientUnitTest
         // VERIFY
         assertEquals( expected, result.get( "key" ), "Wrong result." );
         assertEquals( RemoteRequestType.GET_MATCHING,
-                      mockDispatcher.lastRemoteCacheRequest.getRequestType(),
+                      mockDispatcher.lastRemoteCacheRequest.requestType(),
                       "Wrong type." );
     }
 
@@ -189,8 +187,7 @@ class RemoteHttpCacheClientUnitTest
         final Map<String, ICacheElement<String, String>> expectedMap = new HashMap<>();
         expectedMap.put( "key", expected );
         final RemoteCacheResponse<Map<String, ICacheElement<String, String>>> remoteHttpCacheResponse =
-            new RemoteCacheResponse<>();
-        remoteHttpCacheResponse.setPayload( expectedMap );
+            new RemoteCacheResponse<>(expectedMap);
 
         mockDispatcher.setupRemoteCacheResponse = remoteHttpCacheResponse;
 
@@ -200,7 +197,7 @@ class RemoteHttpCacheClientUnitTest
         // VERIFY
         assertEquals( expected, result.get( "key" ), "Wrong result." );
         assertEquals( RemoteRequestType.GET_MULTIPLE,
-                      mockDispatcher.lastRemoteCacheRequest.getRequestType(),
+                      mockDispatcher.lastRemoteCacheRequest.requestType(),
                       "Wrong type." );
     }
 
@@ -228,7 +225,7 @@ class RemoteHttpCacheClientUnitTest
 
         // VERIFY
         assertEquals( RemoteRequestType.REMOVE, mockDispatcher.lastRemoteCacheRequest
-            .getRequestType(), "Wrong type." );
+            .requestType(), "Wrong type." );
     }
 
     /**
@@ -254,7 +251,7 @@ class RemoteHttpCacheClientUnitTest
 
         // VERIFY
         assertEquals( RemoteRequestType.REMOVE_ALL, mockDispatcher.lastRemoteCacheRequest
-            .getRequestType(), "Wrong type." );
+            .requestType(), "Wrong type." );
     }
 
     /**
@@ -282,6 +279,6 @@ class RemoteHttpCacheClientUnitTest
 
         // VERIFY
         assertEquals( RemoteRequestType.UPDATE, mockDispatcher.lastRemoteCacheRequest
-            .getRequestType(), "Wrong type." );
+            .requestType(), "Wrong type." );
     }
 }
