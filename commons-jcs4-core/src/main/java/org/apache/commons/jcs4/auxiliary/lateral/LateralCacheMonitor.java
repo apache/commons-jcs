@@ -22,8 +22,8 @@ package org.apache.commons.jcs4.auxiliary.lateral;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.jcs4.auxiliary.AbstractAuxiliaryCacheMonitor;
-import org.apache.commons.jcs4.auxiliary.lateral.socket.tcp.LateralTCPCacheNoWait;
 import org.apache.commons.jcs4.auxiliary.lateral.socket.tcp.LateralTCPCacheFactory;
+import org.apache.commons.jcs4.auxiliary.lateral.socket.tcp.LateralTCPCacheNoWait;
 import org.apache.commons.jcs4.auxiliary.lateral.socket.tcp.behavior.ILateralTCPCacheAttributes;
 import org.apache.commons.jcs4.engine.CacheStatus;
 import org.apache.commons.jcs4.engine.ZombieCacheServiceNonLocal;
@@ -73,6 +73,21 @@ public class LateralCacheMonitor extends AbstractAuxiliaryCacheMonitor
     {
         this.caches.put(cache.getCacheName(), (LateralTCPCacheNoWait<Object, Object>)cache);
 
+        // Fix a cache where an exception occurred before it was added to this monitor.
+        // For instance, where a cache failed to connect to lateral TCP server.
+        if (cache.getStatus() == CacheStatus.ERROR)
+        {
+            if (getState() == Thread.State.NEW)
+            {
+                // no need to signal trigger if monitor hasn't started
+                allright.compareAndSet(true, false);
+            }
+            else
+            {
+                notifyError();
+            }
+        }
+
         // if not yet started, go ahead
         if (getState() == Thread.State.NEW)
         {
@@ -105,7 +120,7 @@ public class LateralCacheMonitor extends AbstractAuxiliaryCacheMonitor
                 log.info( "Found LateralTCPCacheNoWait in error, " + cacheName );
 
                 final ILateralTCPCacheAttributes lca =
-                        (ILateralTCPCacheAttributes) cache.getAuxiliaryCacheAttributes();
+                        cache.getAuxiliaryCacheAttributes();
 
                 // Get service instance
                 final ICacheServiceNonLocal<Object, Object> cacheService =
