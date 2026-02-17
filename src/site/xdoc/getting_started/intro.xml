@@ -167,7 +167,6 @@ jcs.region.testCache1.elementattributes.IsEternal=false
 
 # AVAILABLE AUXILIARY CACHES
 jcs.auxiliary.DC=org.apache.commons.jcs4.auxiliary.disk.indexed.IndexedDiskCacheFactory
-jcs.auxiliary.DC.attributes=org.apache.commons.jcs4.auxiliary.disk.indexed.IndexedDiskCacheAttributes
 jcs.auxiliary.DC.attributes.DiskPath=${user.dir}/jcs_swap
 jcs.auxiliary.DC.attributes.MaxPurgatorySize=10000000
 jcs.auxiliary.DC.attributes.MaxKeySize=1000000

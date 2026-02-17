@@ -34,8 +34,8 @@
 		</section>
 		<section name="Memory Plugins">
 			<p> Currently, JCS provides five memory management options: (1)
-				LRUMemoryCache, (2) LHMLRUMemoryCache, (3) MRUMemoryCache, (5)
-				FIFOMemoryCache, and (5) ARCMemoryCache. All memory caches restrict
+				LRUMemoryCache, (2) LHMLRUMemoryCache, (3) MRUMemoryCache, (4)
+				FIFOMemoryCache, and (5) SoftReferenceMemoryCache. All memory caches restrict
 				the number of items that can be stored in memory per region. If a
 				disk cache is configured for the region, the items will be spooled
 				to disk when the memory capacity is reached. JCS enforces
@@ -46,28 +46,19 @@
 			<p> The LRUMemoryCache is the currently recommended plugin. Upon
 				misconfiguration it is used as the default. The LRUMemoryCache
 				removes the least recently used items when the cache is full.</p>
-			<p> The ARCMemoryCache is currently experimental. It implements an
-				adaptive replacement caching algorithm that combines an LRU and an
-				LFU that adapt to usage patterns.</p>
 		</section>
 		<section name="Disk Plugins">
-			<p> JCS provides several disk swap options: indexed disk, HSQL, JISP,
-				and Berkeley DB JE. The IndexedDiskCache is the recommended disk
+			<p> JCS provides several disk swap options: Indexed Disk, Block Disk,
+                HSQL, and MySQL. The IndexedDiskCache is the recommended disk
 				cache. It maintains the cached data on disk and the keys in memory
 				for the fastest possible lookup times. Writing to disk is done
 				asynchronously. Items are typically put in purgatory and queued for
 				background disk writing. While in purgatory, the items remain
 				available.</p>
-			<p> In addition, JCS provides a disk auxiliary that uses the Berkeley
-				DB Java Edition for disk storage. JCS can effectively function as an
-				expiration manager and distribution mechanism on top of a Berkeley
-				DB JE.</p>
 		</section>
 		<section name="Lateral Plugins">
-			<p> JCS provides two recommended lateral distribution options: TCP
-				socket server distribution and JGroups (or JavaGroups). There are
-				also several other experimental lateral distribution auxiliaries
-				using servlets, UDP, and xmlrpc.</p>
+			<p> JCS provides a TCP socket server distribution as the recommended lateral 
+                distribution options.</p>
 		</section>
 		<section name="Remote Plugins">
 			<p> JCS provides both an RMI and HTTP remote servers to manage

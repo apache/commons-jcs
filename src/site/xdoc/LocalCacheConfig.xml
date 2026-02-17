@@ -75,8 +75,6 @@
 
 # sets the default aux value for any non configured caches
 jcs.default=DC,RFailover
-jcs.default.cacheattributes=
-    org.apache.commons.jcs4.engine.CompositeCacheAttributes
 jcs.default.cacheattributes.MaxObjects=1000
         ]]></source>
         <p>
@@ -99,8 +97,6 @@ jcs.default.cacheattributes.MaxObjects=1000
         </p>
         <source><![CDATA[
 jcs.region.testCache=DC,RFailover
-jcs.region.testCache.cacheattributes=
-    org.apache.commons.jcs4.engine.CompositeCacheAttributes
 jcs.region.testCache.cacheattributes.MaxObjects=1000
         ]]></source>
         <p>
@@ -135,9 +131,7 @@ jcs.region.testCache.cacheattributes.MaxObjects=1000
         </p>
         <source><![CDATA[
 jcs.auxiliary.DC=
-    org.apache.commons.jcs4.auxiliary.disk.DiskCacheFactory
-jcs.auxiliary.DC.attributes=
-    org.apache.commons.jcs4.auxiliary.disk.DiskCacheAttributes
+    org.apache.commons.jcs4.auxiliary.disk.indexed.IndexedDiskCacheFactory
 jcs.auxiliary.DC.attributes.DiskPath=c:/dev/cache/raf
         ]]></source>
         <p>
@@ -153,8 +147,6 @@ jcs.auxiliary.DC.attributes.DiskPath=c:/dev/cache/raf
         <source><![CDATA[
 jcs.auxiliary.RFailover=
     org.apache.commons.jcs4.auxiliary.remote.RemoteCacheFactory
-jcs.auxiliary.RFailover.attributes=
-    org.apache.commons.jcs4.auxiliary.remote.RemoteCacheAttributes
 jcs.auxiliary.RFailover.attributes.RemoteTypeName=LOCAL
 jcs.auxiliary.RFailover.attributes.FailoverServers=
     localhost:1102,localhost:1101

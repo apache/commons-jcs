@@ -70,11 +70,11 @@ import org.apache.commons.jcs4.*;
           Here again, change all package names in configuration entries
           from e.g.
         <source><![CDATA[
-jcs.default.cacheattributes=org.apache.commons.jcs3.engine.CompositeCacheAttributes
+jcs.auxiliary.blockDiskCache=org.apache.commons.jcs3.auxiliary.disk.block.BlockDiskCacheFactory
 ]]></source>
           to
         <source><![CDATA[
-jcs.default.cacheattributes=org.apache.commons.jcs4.engine.CompositeCacheAttributes
+jcs.auxiliary.blockDiskCache=org.apache.commons.jcs4.auxiliary.disk.block.BlockDiskCacheFactory
 ]]></source>
         </p>
       </subsection>

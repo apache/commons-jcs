@@ -123,8 +123,6 @@
 				<source><![CDATA[
 jcs.auxiliary.DC=
     org.apache.commons.jcs4.auxiliary.disk.indexed.IndexedDiskCacheFactory
-jcs.auxiliary.DC.attributes=
-    org.apache.commons.jcs4.auxiliary.disk.indexed.IndexedDiskCacheAttributes
 jcs.auxiliary.DC.attributes.DiskPath=g:\dev\jakarta-turbine-stratum\raf
 jcs.auxiliary.DC.attributes.MaxKeySize=100000
 ]]></source>
@@ -211,7 +209,6 @@ jcs.region.myRegion1.cacheattributes.MaxObjects=1000
 ##### AUXILIARY CACHES
 # Indexed Disk Cache
 jcs.auxiliary.DC=org.apache.commons.jcs4.auxiliary.disk.indexed.IndexedDiskCacheFactory
-jcs.auxiliary.DC.attributes=org.apache.commons.jcs4.auxiliary.disk.indexed.IndexedDiskCacheAttributes
 jcs.auxiliary.DC.attributes.DiskPath=target/test-sandbox/indexed-disk-cache
 jcs.auxiliary.DC.attributes.MaxPurgatorySize=10000
 jcs.auxiliary.DC.attributes.MaxKeySize=10000
@@ -263,7 +260,6 @@ jcs.default.elementattributes.MaxIdleTime=1800
 # the single model or define a different auxiliary for each region and use the Pooled type.
 # SINGLE is generally best unless you have a huge # of regions.
 jcs.auxiliary.DC2=org.apache.commons.jcs4.auxiliary.disk.indexed.IndexedDiskCacheFactory
-jcs.auxiliary.DC2.attributes=org.apache.commons.jcs4.auxiliary.disk.indexed.IndexedDiskCacheAttributes
 jcs.auxiliary.DC2.attributes.DiskPath=target/test-sandbox/raf
 jcs.auxiliary.DC2.attributes.MaxPurgatorySize=10000
 jcs.auxiliary.DC2.attributes.MaxKeySize=10000

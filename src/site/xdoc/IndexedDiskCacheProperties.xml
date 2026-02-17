@@ -85,7 +85,6 @@
 				<source>
 					<![CDATA[
 jcs.auxiliary.DC=org.apache.commons.jcs4.auxiliary.disk.indexed.IndexedDiskCacheFactory
-jcs.auxiliary.DC.attributes=org.apache.commons.jcs4.auxiliary.disk.indexed.IndexedDiskCacheAttributes
 jcs.auxiliary.DC.attributes.DiskPath=target/test-sandbox/indexed-disk-cache
 jcs.auxiliary.DC.attributes.MaxPurgatorySize=10000
 jcs.auxiliary.DC.attributes.MaxKeySize=10000
@@ -131,7 +130,6 @@ jcs.auxiliary.DC.attributes.ClearDiskOnStartup=false
 				<source>
 					<![CDATA[
 jcs.auxiliary.DC=org.apache.commons.jcs4.auxiliary.disk.indexed.IndexedDiskCacheFactory
-jcs.auxiliary.DC.attributes=org.apache.commons.jcs4.auxiliary.disk.indexed.IndexedDiskCacheAttributes
 jcs.auxiliary.DC.attributes.DiskPath=target/test-sandbox/indexed-disk-cache
 jcs.auxiliary.DC.attributes.MaxPurgatorySize=10000
 jcs.auxiliary.DC.attributes.MaxKeySize=10000

@@ -362,11 +362,7 @@ public class BookVObjManager
 
 # sets the default aux value for any non configured caches
 jcs.default=DC,RFailover
-jcs.default.cacheattributes=
-    org.apache.commons.jcs4.engine.CompositeCacheAttributes
 jcs.default.cacheattributes.MaxObjects=1000
-jcs.default.cacheattributes.MemoryCacheName=
-    org.apache.commons.jcs4.engine.memory.lru.LRUMemoryCache
 jcs.default.elementattributes.IsEternal=false
 jcs.default.elementattributes.MaxLife=3600
 jcs.default.elementattributes.MaxIdleTime=1800
@@ -376,11 +372,7 @@ jcs.default.elementattributes.MaxIdleTime=1800
 
 # Regions preconfigured for caching
 jcs.region.bookCache=DC,RFailover
-jcs.region.bookCache.cacheattributes=
-    org.apache.commons.jcs4.engine.CompositeCacheAttributes
 jcs.region.bookCache.cacheattributes.MaxObjects=1200
-jcs.region.bookCache.cacheattributes.MemoryCacheName=
-    org.apache.commons.jcs4.engine.memory.lru.LRUMemoryCache
 jcs.region.bookCache.elementattributes.IsEternal=false
 jcs.region.bookCache.elementattributes.MaxLife=7200
 jcs.region.bookCache.elementattributes.MaxIdleTime=1800
@@ -393,8 +385,6 @@ jcs.region.bookCache.elementattributes.IsLateral=true
 # Primary Disk Cache -- faster than the rest because of memory key storage
 jcs.auxiliary.DC=
     org.apache.commons.jcs4.auxiliary.disk.indexed.IndexedDiskCacheFactory
-jcs.auxiliary.DC.attributes=
-    org.apache.commons.jcs4.auxiliary.disk.indexed.IndexedDiskCacheAttributes
 jcs.auxiliary.DC.attributes.DiskPath=/usr/opt/bookstore/raf
 jcs.auxiliary.DC.attributes.MaxPurgatorySize=10000
 jcs.auxiliary.DC.attributes.MaxKeySize=10000
@@ -403,8 +393,6 @@ jcs.auxiliary.DC.attributes.OptimizeAtRemoveCount=300000
 # Remote RMI Cache set up to failover
 jcs.auxiliary.RFailover=
     org.apache.commons.jcs4.auxiliary.remote.RemoteCacheFactory
-jcs.auxiliary.RFailover.attributes=
-    org.apache.commons.jcs4.auxiliary.remote.RemoteCacheAttributes
 jcs.auxiliary.RFailover.attributes.RemoteTypeName=LOCAL
 jcs.auxiliary.RFailover.attributes.FailoverServers=scriptserver:1102
 jcs.auxiliary.RFailover.attributes.GetOnly=false

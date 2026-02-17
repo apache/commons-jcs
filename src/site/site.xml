@@ -15,11 +15,10 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -->
-<project name="JCS">
-  <bannerRight>
-    <name>Commons JCS&#8482;</name>
-    <href>/index.html</href>
-  </bannerRight>
+<site xmlns="http://maven.apache.org/SITE/2.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/SITE/2.0.0 https://maven.apache.org/xsd/site-2.0.0.xsd"
+  name="JCS">
+  <bannerRight name="Commons JCS&#8482;" href="/index.html" />
 
   <body>
     <menu name="JCS">
@@ -78,4 +77,4 @@
 
   </body>
 
-</project>
+</site>
