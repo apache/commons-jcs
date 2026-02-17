@@ -19,7 +19,7 @@
 
 package org.apache.commons.jcs4.jcache.lang;
 
-public class DefaultSubsitutor implements Subsitutor
+public class DefaultSubstitutor implements Substitutor
 {
     @Override
     public String substitute(final String value)

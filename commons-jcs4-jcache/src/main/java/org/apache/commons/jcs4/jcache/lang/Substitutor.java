@@ -19,21 +19,21 @@
 
 package org.apache.commons.jcs4.jcache.lang;
 
-public interface Subsitutor
+public interface Substitutor
 {
     final class Helper {
-        public static final Subsitutor INSTANCE;
+        public static final Substitutor INSTANCE;
         static {
-            Subsitutor value = null;
+            Substitutor value = null;
             for (final String name : new String[]
             { // ordered by features
                     "org.apache.commons.jcs4.jcache.lang.Lang3Substitutor",
-                    "org.apache.commons.jcs4.jcache.lang.DefaultSubsitutor"
+                    "org.apache.commons.jcs4.jcache.lang.DefaultSubstitutor"
             })
             {
                 try
                 {
-                    value = (Subsitutor) Subsitutor.class.getClassLoader().loadClass(name).getDeclaredConstructor().newInstance();
+                    value = (Substitutor) Substitutor.class.getClassLoader().loadClass(name).getDeclaredConstructor().newInstance();
                     value.substitute("${java.version}"); // ensure it works
                 }
                 catch (final Throwable e) // not Exception otherwise NoClassDefFoundError
@@ -42,7 +42,7 @@ public interface Subsitutor
                 }
             }
             if (value == null) {
-                throw new IllegalStateException("Can't find a " + Subsitutor.class.getName());
+                throw new IllegalStateException("Can't find a " + Substitutor.class.getName());
             }
             INSTANCE = value;
         }
