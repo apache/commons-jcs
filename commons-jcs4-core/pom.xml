@@ -44,7 +44,7 @@
      <!-- generate report even if there are binary incompatible changes -->
      <commons.japicmp.breakBuildOnBinaryIncompatibleModifications>false</commons.japicmp.breakBuildOnBinaryIncompatibleModifications>
      <commons.japicmp.ignoreMissingClasses>true</commons.japicmp.ignoreMissingClasses>
-     <japicmp.skip>true</japicmp.skip>
+     <japicmp.skip>false</japicmp.skip>
      <commons.osgi.import>
          com.fasterxml.jackson.databind.*;resolution:=optional,
          jakarta.servlet.*;resolution:=optional,
