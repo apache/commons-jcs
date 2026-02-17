@@ -94,6 +94,18 @@
     </plugins>
   </build>
   
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <configuration>
+          <legacyMode>true</legacyMode>
+        </configuration>
+      </plugin>
+    </plugins>
+  </reporting>
+
   <properties>
     <commons.module.name>org.apache.commons.jcs4.jcache.openjpa</commons.module.name>
     <!-- project.build.outputTimestamp is managed by Maven plugins, see https://maven.apache.org/guides/mini/guide-reproducible-builds.html -->
