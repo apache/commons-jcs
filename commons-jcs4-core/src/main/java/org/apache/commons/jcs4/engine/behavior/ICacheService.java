@@ -23,9 +23,6 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.jcs4.access.exception.ObjectExistsException;
-import org.apache.commons.jcs4.access.exception.ObjectNotFoundException;
-
 /**
  * Used to retrieve and update the cache.
  * <p>
@@ -49,11 +46,10 @@ public interface ICacheService<K, V>
      * @param cacheName
      * @param key
      * @return the ICacheElement&lt;K, V&gt; or null if not found
-     * @throws ObjectNotFoundException
      * @throws IOException
      */
     ICacheElement<K, V> get( String cacheName, K key )
-        throws ObjectNotFoundException, IOException;
+        throws IOException;
 
     /**
      * Gets multiple items from the cache matching the pattern.
@@ -74,11 +70,10 @@ public interface ICacheService<K, V>
      * @param keys
      * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
      *         data in cache for any of these keys
-     * @throws ObjectNotFoundException
      * @throws IOException
      */
     Map<K, ICacheElement<K, V>> getMultiple( String cacheName, Set<K> keys )
-        throws ObjectNotFoundException, IOException;
+        throws IOException;
 
     /**
      * Frees all caches.
@@ -109,9 +104,8 @@ public interface ICacheService<K, V>
      * Puts a cache item to the cache.
      *
      * @param item
-     * @throws ObjectExistsException
      * @throws IOException
      */
     void update( ICacheElement<K, V> item )
-        throws ObjectExistsException, IOException;
+        throws IOException;
 }

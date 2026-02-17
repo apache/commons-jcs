@@ -57,14 +57,8 @@ public class LateralTCPCacheNoWaitFacade<K, V>
      */
     private final ConcurrentHashMap<String, LateralTCPCacheNoWait<K, V>> noWaitMap;
 
-    /** The region name */
-    private final String cacheName;
-
     /** A cache listener */
     private ILateralCacheListener<K, V> listener;
-
-    /** User configurable attributes. */
-    private final ILateralTCPCacheAttributes lateralCacheAttributes;
 
     /** Disposed state of this facade */
     private final AtomicBoolean disposed = new AtomicBoolean();
@@ -84,8 +78,7 @@ public class LateralTCPCacheNoWaitFacade<K, V>
         this.listener = listener;
         this.noWaitMap = new ConcurrentHashMap<>();
         noWaits.forEach(noWait -> noWaitMap.put(noWait.getIdentityKey(), noWait));
-        this.cacheName = cattr.getCacheName();
-        this.lateralCacheAttributes = cattr;
+        setAuxiliaryCacheAttributes(cattr);
     }
 
     /**
@@ -168,26 +161,6 @@ public class LateralTCPCacheNoWaitFacade<K, V>
             .filter(Objects::nonNull)
             .findFirst()
             .orElse(null);
-    }
-
-    /**
-     * @return the AuxiliaryCacheAttributes.
-     */
-    @Override
-    public ILateralTCPCacheAttributes getAuxiliaryCacheAttributes()
-    {
-        return this.lateralCacheAttributes;
-    }
-
-    /**
-     * Gets the cacheName attribute of the LateralTCPCacheNoWaitFacade object.
-     *
-     * @return The cacheName value
-     */
-    @Override
-    public String getCacheName()
-    {
-        return cacheName;
     }
 
     /**
@@ -406,12 +379,12 @@ public class LateralTCPCacheNoWaitFacade<K, V>
     }
 
     /**
-     * @return "LateralTCPCacheNoWaitFacade: " + cacheName;
+     * @return "LateralTCPCacheNoWaitFacade: " + getCacheName();
      */
     @Override
     public String toString()
     {
-        return "LateralTCPCacheNoWaitFacade: " + cacheName;
+        return "LateralTCPCacheNoWaitFacade: " + getCacheName();
     }
 
     /**

@@ -68,7 +68,7 @@ public class RemoteCache<K, V>
         super( cattr, remote, listener );
         this.monitor = monitor;
 
-        RemoteUtils.configureGlobalCustomSocketFactory( getRemoteCacheAttributes().getRmiSocketFactoryTimeoutMillis() );
+        RemoteUtils.configureGlobalCustomSocketFactory( getAuxiliaryCacheAttributes().getRmiSocketFactoryTimeoutMillis() );
     }
 
     /**
@@ -102,9 +102,9 @@ public class RemoteCache<K, V>
     protected String getIPAddressForService()
     {
         String ipAddress = "(null)";
-        if (getRemoteCacheAttributes().getRemoteLocation() != null)
+        if (getAuxiliaryCacheAttributes().getRemoteLocation() != null)
         {
-            ipAddress = getRemoteCacheAttributes().getRemoteLocation().toString();
+            ipAddress = getAuxiliaryCacheAttributes().getRemoteLocation().toString();
         }
         return ipAddress;
     }
@@ -118,7 +118,7 @@ public class RemoteCache<K, V>
         final IStats stats = new Stats("Remote Cache");
 
         stats.addStatElement("Remote Host:Port", getIPAddressForService() );
-        stats.addStatElement("Remote Type", getRemoteCacheAttributes().getRemoteTypeName() );
+        stats.addStatElement("Remote Type", getAuxiliaryCacheAttributes().getRemoteTypeName() );
 
 //      if ( this.getRemoteCacheAttributes().getRemoteType() == RemoteType.CLUSTER )
 //      {
@@ -147,14 +147,14 @@ public class RemoteCache<K, V>
     {
         final String message = "Disabling remote cache due to error: " + msg;
 
-        logError( cacheName, eventType, message );
+        logError( getCacheName(), eventType, message );
         log.error( message, ex );
 
         // we should not switch if the existing is a zombie.
         if (!(getRemoteCacheService() instanceof ZombieCacheServiceNonLocal))
         {
             // TODO make configurable
-            setRemoteCacheService( new ZombieCacheServiceNonLocal<>( getRemoteCacheAttributes().getZombieQueueMaxSize() ) );
+            setRemoteCacheService( new ZombieCacheServiceNonLocal<>( getAuxiliaryCacheAttributes().getZombieQueueMaxSize() ) );
         }
         // may want to flush if region specifies
         // Notify the cache monitor about the error, and kick off the recovery
@@ -196,6 +196,6 @@ public class RemoteCache<K, V>
     @Override
     public String toString()
     {
-        return "RemoteCache: " + cacheName + " attributes = " + getRemoteCacheAttributes();
+        return "RemoteCache: " + getCacheName() + " attributes = " + getAuxiliaryCacheAttributes();
     }
 }

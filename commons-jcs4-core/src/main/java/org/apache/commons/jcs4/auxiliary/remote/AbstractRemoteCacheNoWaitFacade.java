@@ -48,9 +48,6 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K, V>
     /** The connection to a remote server, or a zombie. */
     protected List<RemoteCacheNoWait<K, V>> noWaits;
 
-    /** Holds failover and cluster information */
-    private final RemoteCacheAttributes remoteCacheAttributes;
-
     /**
      * Constructs with the given remote cache, and fires events to any listeners.
      *
@@ -63,7 +60,7 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K, V>
                                     final ICacheEventLogger cacheEventLogger, final IElementSerializer elementSerializer )
     {
         log.debug( "CONSTRUCTING NO WAIT FACADE" );
-        this.remoteCacheAttributes = (RemoteCacheAttributes)rca;
+        setAuxiliaryCacheAttributes(rca);
         setCacheEventLogger( cacheEventLogger );
         setElementSerializer( elementSerializer );
         this.noWaits = new ArrayList<>(noWaits);
@@ -111,18 +108,7 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K, V>
     @Override
     public RemoteCacheAttributes getAuxiliaryCacheAttributes()
     {
-        return this.remoteCacheAttributes;
-    }
-
-    /**
-     * Gets the cacheName attribute of the RemoteCacheNoWaitFacade object.
-     *
-     * @return The cacheName value
-     */
-    @Override
-    public String getCacheName()
-    {
-        return remoteCacheAttributes.getCacheName();
+        return (RemoteCacheAttributes) super.getAuxiliaryCacheAttributes();
     }
 
     /**
@@ -303,8 +289,8 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K, V>
     @Override
     public String toString()
     {
-        return "RemoteCacheNoWaitFacade: " + remoteCacheAttributes.getCacheName() +
-                ", rca = " + remoteCacheAttributes;
+        return "RemoteCacheNoWaitFacade: " + getCacheName() +
+                ", rca = " + getAuxiliaryCacheAttributes();
     }
 
     /**

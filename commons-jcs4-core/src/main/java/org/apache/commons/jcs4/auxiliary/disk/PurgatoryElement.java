@@ -52,8 +52,8 @@ public record PurgatoryElement<K, V>(
     }
 
     /**
-     * @return cacheElement.getCacheName();
-     * @see ICacheElement#getCacheName
+     * @return cacheElement.cacheName();
+     * @see ICacheElement#cacheName
      */
     @Override
     public String cacheName()
@@ -62,8 +62,8 @@ public record PurgatoryElement<K, V>(
     }
 
     /**
-     * @return cacheElement.getElementAttributes();
-     * @see ICacheElement#getElementAttributes
+     * @return cacheElement.elementAttributes();
+     * @see ICacheElement#elementAttributes
      */
     @Override
     public IElementAttributes elementAttributes()
@@ -72,8 +72,8 @@ public record PurgatoryElement<K, V>(
     }
 
     /**
-     * @return cacheElement.getKey();
-     * @see ICacheElement#getKey
+     * @return cacheElement.key();
+     * @see ICacheElement#key
      */
     @Override
     public K key()
@@ -82,8 +82,8 @@ public record PurgatoryElement<K, V>(
     }
 
     /**
-     * @return cacheElement.getVal();
-     * @see ICacheElement#getVal
+     * @return cacheElement.value();
+     * @see ICacheElement#value
      */
     @Override
     public V value()

@@ -27,7 +27,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.jcs4.auxiliary.AbstractAuxiliaryCache;
-import org.apache.commons.jcs4.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.commons.jcs4.auxiliary.remote.behavior.IRemoteCacheClient;
 import org.apache.commons.jcs4.engine.CacheAdaptor;
 import org.apache.commons.jcs4.engine.CacheEventQueueFactory;
@@ -183,15 +182,6 @@ public class RemoteCacheNoWait<K, V>
         }
 
         return null;
-    }
-
-    /**
-     * @return the AuxiliaryCacheAttributes.
-     */
-    @Override
-    public AuxiliaryCacheAttributes getAuxiliaryCacheAttributes()
-    {
-        return remoteCacheClient.getAuxiliaryCacheAttributes();
     }
 
     /**

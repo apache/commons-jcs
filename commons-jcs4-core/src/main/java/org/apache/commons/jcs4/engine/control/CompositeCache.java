@@ -39,7 +39,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.commons.jcs4.access.exception.CacheException;
-import org.apache.commons.jcs4.access.exception.ObjectNotFoundException;
 import org.apache.commons.jcs4.auxiliary.AuxiliaryCache;
 import org.apache.commons.jcs4.engine.CacheStatus;
 import org.apache.commons.jcs4.engine.behavior.ICache;
@@ -519,7 +518,7 @@ public class CompositeCache<K, V>
         final ICacheElement<K, V> ce = get(key);
         if (ce == null)
         {
-            throw new ObjectNotFoundException("key " + key + " is not found");
+            throw new CacheException("key " + key + " is not found");
         }
         return ce.elementAttributes();
     }

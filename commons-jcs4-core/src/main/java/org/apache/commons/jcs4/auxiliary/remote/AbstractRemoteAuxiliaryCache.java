@@ -31,7 +31,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import org.apache.commons.jcs4.auxiliary.AbstractAuxiliaryCacheEventLogging;
-import org.apache.commons.jcs4.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.commons.jcs4.auxiliary.remote.behavior.IRemoteCacheAttributes;
 import org.apache.commons.jcs4.auxiliary.remote.behavior.IRemoteCacheClient;
 import org.apache.commons.jcs4.auxiliary.remote.behavior.IRemoteCacheListener;
@@ -63,14 +62,8 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
      */
     private ICacheServiceNonLocal<K, V> remoteCacheService;
 
-    /** The cacheName */
-    protected final String cacheName;
-
     /** The listener. This can be null. */
     private IRemoteCacheListener<K, V> remoteCacheListener;
-
-    /** The configuration values. TODO, we'll need a base here. */
-    private IRemoteCacheAttributes remoteCacheAttributes;
 
     /** A thread pool for gets if configured. */
     private ExecutorService pool;
@@ -88,26 +81,25 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
     public AbstractRemoteAuxiliaryCache( final IRemoteCacheAttributes cattr, final ICacheServiceNonLocal<K, V> remote,
                                          final IRemoteCacheListener<K, V> listener )
     {
-        this.setRemoteCacheAttributes( cattr );
-        this.cacheName = cattr.getCacheName();
+        this.setAuxiliaryCacheAttributes(cattr);
         this.setRemoteCacheService( remote );
         this.setRemoteCacheListener( listener );
 
         if ( log.isDebugEnabled() )
         {
             log.debug( "Construct> cacheName={0}", cattr::getCacheName);
-            log.debug( "irca = {0}", this::getRemoteCacheAttributes);
+            log.debug( "irca = {0}", this::getAuxiliaryCacheAttributes);
             log.debug( "remote = {0}", remote );
             log.debug( "listener = {0}", listener );
         }
 
         // use a pool if it is greater than 0
         log.debug( "GetTimeoutMillis() = {0}",
-                () -> getRemoteCacheAttributes().getGetTimeoutMillis() );
+                () -> getAuxiliaryCacheAttributes().getGetTimeoutMillis() );
 
-        if ( getRemoteCacheAttributes().getGetTimeoutMillis() > 0 )
+        if ( getAuxiliaryCacheAttributes().getGetTimeoutMillis() > 0 )
         {
-            pool = ThreadPoolManager.getInstance().getExecutorService( getRemoteCacheAttributes().getThreadPoolName() );
+            pool = ThreadPoolManager.getInstance().getExecutorService( getAuxiliaryCacheAttributes().getThreadPoolName() );
             log.debug( "Thread Pool = {0}", pool );
             usePoolForGet = true;
         }
@@ -156,20 +148,9 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
      * @return the AuxiliaryCacheAttributes.
      */
     @Override
-    public AuxiliaryCacheAttributes getAuxiliaryCacheAttributes()
+    public IRemoteCacheAttributes getAuxiliaryCacheAttributes()
     {
-        return getRemoteCacheAttributes();
-    }
-
-    /**
-     * Gets the cacheName attribute of the RemoteCache object.
-     *
-     * @return The cacheName value
-     */
-    @Override
-    public String getCacheName()
-    {
-        return cacheName;
+        return (IRemoteCacheAttributes) super.getAuxiliaryCacheAttributes();
     }
 
     /**
@@ -191,7 +172,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
     public Set<K> getKeySet()
         throws IOException
     {
-        return getRemoteCacheService().getKeySet(cacheName);
+        return getRemoteCacheService().getKeySet(getCacheName());
     }
 
     /**
@@ -230,14 +211,6 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
     }
 
     /**
-     * @return the remoteCacheAttributes
-     */
-    protected IRemoteCacheAttributes getRemoteCacheAttributes()
-    {
-        return remoteCacheAttributes;
-    }
-
-    /**
      * @return the remoteCacheListener
      */
     protected IRemoteCacheListener<K, V> getRemoteCacheListener()
@@ -271,7 +244,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
     {
         final IStats stats = new Stats("AbstractRemoteAuxiliaryCache");
 
-        stats.addStatElement("Remote Type", this.getRemoteCacheAttributes().getRemoteTypeName() );
+        stats.addStatElement("Remote Type", this.getAuxiliaryCacheAttributes().getRemoteTypeName() );
 
 //      if ( this.getRemoteCacheAttributes().getRemoteType() == RemoteType.CLUSTER )
 //      {
@@ -314,11 +287,11 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
     public ICacheElement<K, V> getUsingPool( final K key )
         throws IOException
     {
-        final int timeout = getRemoteCacheAttributes().getGetTimeoutMillis();
+        final int timeout = getAuxiliaryCacheAttributes().getGetTimeoutMillis();
 
         try
         {
-            final Callable<ICacheElement<K, V>> command = () -> getRemoteCacheService().get( cacheName, key, getListenerId() );
+            final Callable<ICacheElement<K, V>> command = () -> getRemoteCacheService().get( getCacheName(), key, getListenerId() );
 
             // execute using the pool
             final Future<ICacheElement<K, V>> future = pool.submit(command);
@@ -385,7 +358,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
         catch ( final IOException ex )
         {
             log.error( "Couldn't dispose", ex );
-            handleException( ex, "Failed to dispose [" + cacheName + "]", CacheEventType.DISPOSE_EVENT );
+            handleException( ex, "Failed to dispose [" + getCacheName() + "]", CacheEventType.DISPOSE_EVENT );
         }
     }
 
@@ -415,7 +388,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
             }
             else
             {
-                retVal = getRemoteCacheService().get( cacheName, key, getListenerId() );
+                retVal = getRemoteCacheService().get( getCacheName(), key, getListenerId() );
             }
 
             // Eventually the instance of will not be necessary.
@@ -423,7 +396,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
             // clients are merely intra-remote cache communicators. Remote caches are assumed
             // to have no ability to deserialize the objects.
             if (retVal instanceof ICacheElementSerialized<K, V> serialized &&
-                    this.getRemoteCacheAttributes().getRemoteType() != RemoteType.CLUSTER)
+                    this.getAuxiliaryCacheAttributes().getRemoteType() != RemoteType.CLUSTER)
             {
                 retVal = SerializationConversionUtil.getDeSerializedCacheElement(serialized,
                         super.getElementSerializer() );
@@ -431,7 +404,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
         }
         catch ( final IOException | ClassNotFoundException ex )
         {
-            handleException( ex, "Failed to get [" + key + "] from [" + cacheName + "]", CacheEventType.GET_EVENT );
+            handleException( ex, "Failed to get [" + key + "] from [" + getCacheName() + "]", CacheEventType.GET_EVENT );
         }
         return retVal;
     }
@@ -450,7 +423,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
         final Map<K, ICacheElement<K, V>> results = new HashMap<>();
         try
         {
-            final Map<K, ICacheElement<K, V>> rawResults = getRemoteCacheService().getMatching( cacheName, pattern, getListenerId() );
+            final Map<K, ICacheElement<K, V>> rawResults = getRemoteCacheService().getMatching( getCacheName(), pattern, getListenerId() );
 
             // Eventually the instance of will not be necessary.
             if ( rawResults != null )
@@ -463,7 +436,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
                         // Never try to deserialize if you are a cluster client. Cluster
                         // clients are merely intra-remote cache communicators. Remote caches are assumed
                         // to have no ability to deserialize the objects.
-                        if ( this.getRemoteCacheAttributes().getRemoteType() != RemoteType.CLUSTER )
+                        if ( this.getAuxiliaryCacheAttributes().getRemoteType() != RemoteType.CLUSTER )
                         {
                             unwrappedResult = SerializationConversionUtil
                                 .getDeSerializedCacheElement(serialized,
@@ -480,7 +453,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
         }
         catch ( final IOException | ClassNotFoundException ex )
         {
-            handleException( ex, "Failed to getMatching [" + pattern + "] from [" + cacheName + "]",
+            handleException( ex, "Failed to getMatching [" + pattern + "] from [" + getCacheName() + "]",
                     CacheEventType.GET_EVENT );
         }
         return results;
@@ -498,16 +471,16 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
     protected boolean processRemove( final K key )
         throws IOException
     {
-        if ( !this.getRemoteCacheAttributes().getGetOnly() )
+        if ( !this.getAuxiliaryCacheAttributes().getGetOnly() )
         {
             log.debug( "remove> key={0}", key );
             try
             {
-                getRemoteCacheService().remove( cacheName, key, getListenerId() );
+                getRemoteCacheService().remove( getCacheName(), key, getListenerId() );
             }
             catch ( final IOException ex )
             {
-                handleException( ex, "Failed to remove " + key + " from " + cacheName, CacheEventType.REMOVE_EVENT );
+                handleException( ex, "Failed to remove " + key + " from " + getCacheName(), CacheEventType.REMOVE_EVENT );
             }
             return true;
         }
@@ -524,15 +497,15 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
     protected void processRemoveAll()
         throws IOException
     {
-        if ( !this.getRemoteCacheAttributes().getGetOnly() )
+        if ( !this.getAuxiliaryCacheAttributes().getGetOnly() )
         {
             try
             {
-                getRemoteCacheService().removeAll( cacheName, getListenerId() );
+                getRemoteCacheService().removeAll( getCacheName(), getListenerId() );
             }
             catch ( final IOException ex )
             {
-                handleException( ex, "Failed to remove all from " + cacheName, CacheEventType.REMOVEALL_EVENT );
+                handleException( ex, "Failed to remove all from " + getCacheName(), CacheEventType.REMOVEALL_EVENT );
             }
         }
     }
@@ -549,7 +522,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
     protected void processUpdate( final ICacheElement<K, V> ce )
         throws IOException
     {
-        if ( !getRemoteCacheAttributes().getGetOnly() )
+        if ( !getAuxiliaryCacheAttributes().getGetOnly() )
         {
             try
             {
@@ -596,14 +569,6 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
                 log.error( "Problem setting listenerId", e );
             }
         }
-    }
-
-    /**
-     * @param remoteCacheAttributes the remoteCacheAttributes to set
-     */
-    protected void setRemoteCacheAttributes( final IRemoteCacheAttributes remoteCacheAttributes )
-    {
-        this.remoteCacheAttributes = remoteCacheAttributes;
     }
 
     /**

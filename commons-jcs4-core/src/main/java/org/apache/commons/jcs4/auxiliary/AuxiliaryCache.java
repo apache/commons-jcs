@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.util.Set;
 
 import org.apache.commons.jcs4.engine.behavior.ICache;
-import org.apache.commons.jcs4.engine.stats.behavior.IStats;
 
 /**
  * Tag interface for auxiliary caches. Currently this provides no additional methods over what is in
@@ -54,8 +53,13 @@ public interface AuxiliaryCache<K, V>
     Set<K> getKeySet() throws IOException;
 
     /**
-     * @return the historical and statistical data for a region's auxiliary cache.
+     * Returns the cache name.
+     *
+     * @return usually the region name.
      */
     @Override
-    IStats getStatistics();
+    default String getCacheName()
+    {
+        return getAuxiliaryCacheAttributes().getCacheName();
+    }
 }

@@ -46,12 +46,6 @@ public class LateralTCPCache<K, V>
     /** The logger. */
     private static final Log log = Log.getLog( LateralTCPCache.class );
 
-    /** Generalize this, use another interface */
-    private final ILateralTCPCacheAttributes lateralCacheAttributes;
-
-    /** The region name */
-    final String cacheName;
-
     /** Either http, socket.udp, or socket.tcp can set in config */
     private ICacheServiceNonLocal<K, V> lateralCacheService;
 
@@ -67,10 +61,9 @@ public class LateralTCPCache<K, V>
      */
     public LateralTCPCache( final ILateralTCPCacheAttributes cattr, final ICacheServiceNonLocal<K, V> lateral, final LateralCacheMonitor monitor )
     {
-        this.cacheName = cattr.getCacheName();
-        this.lateralCacheAttributes = cattr;
         this.lateralCacheService = lateral;
         this.monitor = monitor;
+        setAuxiliaryCacheAttributes(cattr);
     }
 
     /**
@@ -111,18 +104,7 @@ public class LateralTCPCache<K, V>
     @Override
     public ILateralTCPCacheAttributes getAuxiliaryCacheAttributes()
     {
-        return lateralCacheAttributes;
-    }
-
-    /**
-     * Gets the cacheName attribute of the LateralTCPCache object
-     *
-     * @return The cacheName value
-     */
-    @Override
-    public String getCacheName()
-    {
-        return cacheName;
+        return (ILateralTCPCacheAttributes) super.getAuxiliaryCacheAttributes();
     }
 
     /**
@@ -155,12 +137,12 @@ public class LateralTCPCache<K, V>
     {
         try
         {
-            return lateralCacheService.getKeySet( cacheName );
+            return lateralCacheService.getKeySet( getCacheName() );
         }
         catch ( final IOException ex )
         {
-            handleException( ex, "Failed to get key set from " + lateralCacheAttributes.getCacheName() + "@"
-                + lateralCacheAttributes );
+            handleException( ex, "Failed to get key set from " + getAuxiliaryCacheAttributes().getCacheName() + "@"
+                + getAuxiliaryCacheAttributes() );
         }
         return Collections.emptySet();
     }
@@ -210,7 +192,7 @@ public class LateralTCPCache<K, V>
     {
         log.error( "Disabling lateral cache due to error {0}", msg, ex );
 
-        lateralCacheService = new ZombieCacheServiceNonLocal<>( lateralCacheAttributes.getZombieQueueMaxSize() );
+        lateralCacheService = new ZombieCacheServiceNonLocal<>( getAuxiliaryCacheAttributes().getZombieQueueMaxSize() );
         // may want to flush if region specifies
         // Notify the cache monitor about the error, and kick off the recovery
         // process.
@@ -237,13 +219,13 @@ public class LateralTCPCache<K, V>
 
         try
         {
-            lateralCacheService.dispose( this.lateralCacheAttributes.getCacheName() );
+            lateralCacheService.dispose( this.getAuxiliaryCacheAttributes().getCacheName() );
             // Should remove connection
         }
         catch ( final IOException ex )
         {
             log.error( "Couldn't dispose", ex );
-            handleException( ex, "Failed to dispose " + lateralCacheAttributes.getCacheName() );
+            handleException( ex, "Failed to dispose " + getAuxiliaryCacheAttributes().getCacheName() );
         }
     }
 
@@ -260,16 +242,16 @@ public class LateralTCPCache<K, V>
     {
         ICacheElement<K, V> obj = null;
 
-        if ( !this.lateralCacheAttributes.getPutOnlyMode() )
+        if ( !this.getAuxiliaryCacheAttributes().getPutOnlyMode() )
         {
             try
             {
-                obj = lateralCacheService.get( cacheName, key );
+                obj = lateralCacheService.get( getCacheName(), key );
             }
             catch ( final Exception e )
             {
                 log.error( e );
-                handleException( e, "Failed to get [" + key + "] from " + lateralCacheAttributes.getCacheName() + "@" + lateralCacheAttributes );
+                handleException( e, "Failed to get [" + key + "] from " + getAuxiliaryCacheAttributes().getCacheName() + "@" + getAuxiliaryCacheAttributes() );
             }
         }
 
@@ -288,16 +270,16 @@ public class LateralTCPCache<K, V>
     {
         final Map<K, ICacheElement<K, V>> map = Collections.emptyMap();
 
-        if ( !this.lateralCacheAttributes.getPutOnlyMode() )
+        if ( !this.getAuxiliaryCacheAttributes().getPutOnlyMode() )
         {
             try
             {
-                return lateralCacheService.getMatching( cacheName, pattern );
+                return lateralCacheService.getMatching( getCacheName(), pattern );
             }
             catch ( final IOException e )
             {
                 log.error( e );
-                handleException( e, "Failed to getMatching [" + pattern + "] from " + lateralCacheAttributes.getCacheName() + "@" + lateralCacheAttributes );
+                handleException( e, "Failed to getMatching [" + pattern + "] from " + getAuxiliaryCacheAttributes().getCacheName() + "@" + getAuxiliaryCacheAttributes() );
             }
         }
 
@@ -320,11 +302,11 @@ public class LateralTCPCache<K, V>
 
         try
         {
-            lateralCacheService.remove( cacheName, key, CacheInfo.INSTANCE.listenerId());
+            lateralCacheService.remove( getCacheName(), key, CacheInfo.INSTANCE.listenerId());
         }
         catch ( final IOException ex )
         {
-            handleException( ex, "Failed to remove " + key + " from " + lateralCacheAttributes.getCacheName() + "@" + lateralCacheAttributes );
+            handleException( ex, "Failed to remove " + key + " from " + getAuxiliaryCacheAttributes().getCacheName() + "@" + getAuxiliaryCacheAttributes() );
         }
         return false;
     }
@@ -341,11 +323,11 @@ public class LateralTCPCache<K, V>
     {
         try
         {
-            lateralCacheService.removeAll( cacheName, CacheInfo.INSTANCE.listenerId());
+            lateralCacheService.removeAll( getCacheName(), CacheInfo.INSTANCE.listenerId());
         }
         catch ( final IOException ex )
         {
-            handleException( ex, "Failed to remove all from " + lateralCacheAttributes.getCacheName() + "@" + lateralCacheAttributes );
+            handleException( ex, "Failed to remove all from " + getAuxiliaryCacheAttributes().getCacheName() + "@" + getAuxiliaryCacheAttributes() );
         }
     }
 
@@ -370,7 +352,7 @@ public class LateralTCPCache<K, V>
         }
         catch ( final IOException ex )
         {
-            handleException( ex, "Failed to put [" + ce.key() + "] to " + ce.cacheName() + "@" + lateralCacheAttributes );
+            handleException( ex, "Failed to put [" + ce.key() + "] to " + ce.cacheName() + "@" + getAuxiliaryCacheAttributes() );
         }
     }
 
@@ -382,8 +364,8 @@ public class LateralTCPCache<K, V>
     {
         final StringBuilder buf = new StringBuilder();
         buf.append( "\n LateralTCPCache " );
-        buf.append( "\n Cache Name [" + lateralCacheAttributes.getCacheName() + "]" );
-        buf.append( "\n cattr =  [" + lateralCacheAttributes + "]" );
+        buf.append( "\n Cache Name [" + getCacheName() + "]" );
+        buf.append( "\n cattr =  [" + getAuxiliaryCacheAttributes() + "]" );
         return buf.toString();
     }
 }

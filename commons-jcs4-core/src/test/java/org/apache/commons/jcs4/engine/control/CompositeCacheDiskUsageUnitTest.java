@@ -32,7 +32,6 @@ import org.apache.commons.jcs4.JCS;
 import org.apache.commons.jcs4.access.CacheAccess;
 import org.apache.commons.jcs4.access.exception.CacheException;
 import org.apache.commons.jcs4.auxiliary.AbstractAuxiliaryCache;
-import org.apache.commons.jcs4.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.commons.jcs4.engine.CacheElement;
 import org.apache.commons.jcs4.engine.CacheStatus;
 import org.apache.commons.jcs4.engine.CompositeCacheAttributes;
@@ -84,15 +83,6 @@ class CompositeCacheDiskUsageUnitTest
         @Override
         public ICacheElement<K, V> get( final K key )
             throws IOException
-        {
-            return null;
-        }
-
-        /**
-         * @return the AuxiliaryCacheAttributes.
-         */
-        @Override
-        public AuxiliaryCacheAttributes getAuxiliaryCacheAttributes()
         {
             return null;
         }

@@ -40,9 +40,6 @@ public class RemoteHttpCache<K, V>
     /** For error notifications */
     private final RemoteHttpCacheMonitor monitor;
 
-    /** Keep the child copy here for the restore process. */
-    private final RemoteHttpCacheAttributes remoteHttpCacheAttributes;
-
     /**
      * Constructor for the RemoteCache object. This object communicates with a remote cache server.
      * One of these exists for each region. This also holds a reference to a listener. The same
@@ -58,8 +55,6 @@ public class RemoteHttpCache<K, V>
                             final IRemoteCacheListener<K, V> listener, final RemoteHttpCacheMonitor monitor )
     {
         super( remoteHttpCacheAttributes, remote, listener );
-
-        this.remoteHttpCacheAttributes = remoteHttpCacheAttributes;
         this.monitor = monitor;
     }
 
@@ -70,14 +65,6 @@ public class RemoteHttpCache<K, V>
     public String getEventLoggingExtraInfo()
     {
         return null;
-    }
-
-    /**
-     * @return the remoteHttpCacheAttributes
-     */
-    public RemoteHttpCacheAttributes getRemoteHttpCacheAttributes()
-    {
-        return remoteHttpCacheAttributes;
     }
 
     /**
@@ -96,10 +83,10 @@ public class RemoteHttpCache<K, V>
         if ( !( getRemoteCacheService() instanceof ZombieCacheServiceNonLocal))
         {
             final String message = "Disabling remote cache due to error: " + msg;
-            logError( cacheName, eventType, message );
+            logError( getCacheName(), eventType, message );
             log.error( message, ex );
 
-            setRemoteCacheService( new ZombieCacheServiceNonLocal<>( getRemoteCacheAttributes().getZombieQueueMaxSize() ) );
+            setRemoteCacheService( new ZombieCacheServiceNonLocal<>( getAuxiliaryCacheAttributes().getZombieQueueMaxSize() ) );
 
             monitor.notifyError( this );
         }

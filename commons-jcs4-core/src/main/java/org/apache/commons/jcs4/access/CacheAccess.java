@@ -30,8 +30,6 @@ import java.util.stream.Collectors;
 import org.apache.commons.jcs4.access.behavior.ICacheAccess;
 import org.apache.commons.jcs4.access.exception.CacheException;
 import org.apache.commons.jcs4.access.exception.InvalidArgumentException;
-import org.apache.commons.jcs4.access.exception.InvalidHandleException;
-import org.apache.commons.jcs4.access.exception.ObjectExistsException;
 import org.apache.commons.jcs4.engine.CacheElement;
 import org.apache.commons.jcs4.engine.behavior.ICacheElement;
 import org.apache.commons.jcs4.engine.behavior.IElementAttributes;
@@ -278,15 +276,14 @@ public class CacheAccess<K, V>
      *
      * @param key Key object will be stored with
      * @param value Object to store
-     * @throws CacheException and ObjectExistsException is thrown if the item is already in the
-     *                cache.
+     * @throws CacheException is thrown if the item is already in the cache.
      */
     @Override
     public void putSafe( final K key, final V value )
     {
         if ( getCacheControl().get( key ) != null )
         {
-            throw new ObjectExistsException( "putSafe failed.  Object exists in the cache for key [" + key
+            throw new CacheException( "putSafe failed.  Object exists in the cache for key [" + key
                 + "].  Remove first or use a non-safe put to override the value." );
         }
         put( key, value );
@@ -309,7 +306,7 @@ public class CacheAccess<K, V>
      *
      * @param name Key of object to reset attributes for
      * @param attr New attributes for the object
-     * @throws InvalidHandleException if the item does not exist.
+     * @throws CacheException if the item does not exist.
      */
     @Override
     public void resetElementAttributes( final K name, final IElementAttributes attr )
@@ -318,14 +315,13 @@ public class CacheAccess<K, V>
 
         if ( element == null )
         {
-            throw new InvalidHandleException( "Object for name [" + name + "] is not in the cache" );
+            throw new CacheException( "Object for name [" + name + "] is not in the cache" );
         }
 
         // Although it will work currently, don't assume pass by reference here,
         // i.e. don't do this:
         // element.setElementAttributes( attr );
         // Another reason to call put is to force the changes to be distributed.
-
         put( element.key(), element.value(), attr );
     }
 }

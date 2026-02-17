@@ -36,7 +36,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-import org.apache.commons.jcs4.auxiliary.AuxiliaryCacheAttributes;
+import org.apache.commons.jcs4.auxiliary.AbstractAuxiliaryCacheEventLogging;
 import org.apache.commons.jcs4.auxiliary.disk.AbstractDiskCache;
 import org.apache.commons.jcs4.auxiliary.disk.behavior.IDiskCacheAttributes.DiskLimitType;
 import org.apache.commons.jcs4.engine.behavior.ICacheElement;
@@ -48,6 +48,7 @@ import org.apache.commons.jcs4.engine.logging.behavior.ICacheEventLogger.CacheEv
 import org.apache.commons.jcs4.engine.stats.Stats;
 import org.apache.commons.jcs4.engine.stats.behavior.IStats;
 import org.apache.commons.jcs4.log.Log;
+import org.apache.commons.jcs4.utils.serialization.StandardSerializer;
 import org.apache.commons.jcs4.utils.struct.AbstractLRUMap;
 import org.apache.commons.jcs4.utils.struct.LRUMap;
 import org.apache.commons.jcs4.utils.timing.ElapsedTimer;
@@ -264,9 +265,6 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
     /** RECYCLE BIN -- array of empty spots */
     private final ConcurrentSkipListSet<IndexedDiskElementDescriptor> recycle;
 
-    /** User configurable parameters */
-    private final IndexedDiskCacheAttributes cattr;
-
     /** How many slots have we recycled. */
     private int recycleCnt;
 
@@ -295,7 +293,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
      */
     public IndexedDiskCache(final IndexedDiskCacheAttributes cacheAttributes)
     {
-        this(cacheAttributes, null);
+        this(cacheAttributes, new StandardSerializer());
     }
 
     /**
@@ -309,10 +307,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
     public IndexedDiskCache(final IndexedDiskCacheAttributes cattr, final IElementSerializer elementSerializer)
     {
         super(cattr);
-
         setElementSerializer(elementSerializer);
-
-        this.cattr = cattr;
         this.maxKeySize = cattr.getMaxKeySize();
         this.isRealTimeOptimizationEnabled = cattr.getOptimizeAtRemoveCount() > 0;
         this.isShutdownOptimizationEnabled = cattr.isOptimizeOnShutdown();
@@ -651,13 +646,14 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
      */
     protected void doOptimizeRealTime()
     {
+        int optRemoveCount = getAuxiliaryCacheAttributes().getOptimizeAtRemoveCount();
         if (isRealTimeOptimizationEnabled && !isOptimizing
-            && removeCount++ >= cattr.getOptimizeAtRemoveCount())
+            && removeCount++ >= optRemoveCount)
         {
             isOptimizing = true;
 
             log.info("{0}: Optimizing file. removeCount [{1}] OptimizeAtRemoveCount [{2}]",
-                    logCacheName, removeCount, cattr.getOptimizeAtRemoveCount());
+                    logCacheName, removeCount, optRemoveCount);
 
             if (currentOptimizationThread == null)
             {
@@ -720,15 +716,6 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
     }
 
     /**
-     * @return the AuxiliaryCacheAttributes.
-     */
-    @Override
-    public AuxiliaryCacheAttributes getAuxiliaryCacheAttributes()
-    {
-        return this.cattr;
-    }
-
-    /**
      * Returns the number of bytes that are free. When an item is removed, its length is recorded.
      * When a spot is used form the recycle bin, the length of the item stored is recorded.
      * <p>
@@ -769,15 +756,25 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
     }
 
     /**
-     * This is used by the event logging.
-     * <p>
+     * Gets the extra info for the event log.
      *
-     * @return the location of the disk, either path or ip.
+     * @return extra info for the event log
      */
     @Override
-    protected String getDiskLocation()
+    protected String getEventLoggingExtraInfo()
     {
         return dataFile.getFilePath();
+    }
+
+    /**
+     * Returns the cache configuration.
+     *
+     * @return cache configuration
+     */
+    @Override
+    public IndexedDiskCacheAttributes getAuxiliaryCacheAttributes()
+    {
+        return (IndexedDiskCacheAttributes) super.getAuxiliaryCacheAttributes();
     }
 
     /**
@@ -1222,7 +1219,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
     public void processDispose()
     {
         final ICacheEvent<String> cacheEvent = createICacheEvent(getCacheName(), "none",
-                CacheEventType.DISPOSE_EVENT, this::getDiskLocation);
+                CacheEventType.DISPOSE_EVENT, this::getEventLoggingExtraInfo);
         try
         {
             final Thread t = new Thread(this::disposeInternal, "IndexedDiskCache-DisposalThread");
@@ -1250,7 +1247,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
      *
      * @param key
      * @return ICacheElement&lt;K, V&gt; or null
-     * @see AbstractDiskCache#doGet
+     * @see AbstractAuxiliaryCacheEventLogging#getWithEventLogging
      */
     @Override
     protected ICacheElement<K, V> processGet(final K key)
@@ -1389,7 +1386,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
     {
         final ICacheEvent<String> cacheEvent =
                 createICacheEvent(getCacheName(), "all", CacheEventType.REMOVEALL_EVENT,
-                        this::getDiskLocation);
+                        this::getEventLoggingExtraInfo);
         try
         {
             reset();

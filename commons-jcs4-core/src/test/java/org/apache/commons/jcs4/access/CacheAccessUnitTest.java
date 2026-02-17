@@ -33,7 +33,6 @@ import java.util.Set;
 
 import org.apache.commons.jcs4.JCS;
 import org.apache.commons.jcs4.access.exception.CacheException;
-import org.apache.commons.jcs4.access.exception.ObjectExistsException;
 import org.apache.commons.jcs4.engine.CompositeCacheAttributes;
 import org.apache.commons.jcs4.engine.ElementAttributes;
 import org.apache.commons.jcs4.engine.TestCompositeCacheAttributes;
@@ -279,7 +278,7 @@ class CacheAccessUnitTest
         }
         catch ( final CacheException e )
         {
-            assertInstanceOf( ObjectExistsException.class, e, "Wrong type of exception." );
+            assertInstanceOf( CacheException.class, e, "Wrong type of exception." );
             assertTrue( e.getMessage().indexOf( "[" + key + "]" ) != -1, "Should have the key in the error message." );
         }
 

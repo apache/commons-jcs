@@ -53,10 +53,9 @@ public class BlockDiskCacheFactory
             final ICompositeCacheManager cacheMgr, final ICacheEventLogger cacheEventLogger,
             final IElementSerializer elementSerializer, final IKeyMatcher<K> keyMatcher)
     {
-        final BlockDiskCacheAttributes idca = (BlockDiskCacheAttributes) iaca;
-        log.debug("Creating DiskCache for attributes = {0}", idca);
+        log.debug("Creating DiskCache for attributes = {0}", iaca);
 
-        final BlockDiskCache<K, V> cache = new BlockDiskCache<>( idca, elementSerializer );
+        final BlockDiskCache<K, V> cache = new BlockDiskCache<>((BlockDiskCacheAttributes)iaca, elementSerializer );
         cache.setCacheEventLogger(cacheEventLogger);
         cache.setKeyMatcher(keyMatcher);
 

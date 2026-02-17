@@ -43,6 +43,9 @@ public abstract class AbstractAuxiliaryCache<K, V>
     /** Key matcher used by the getMatching API */
     private IKeyMatcher<K> keyMatcher = new KeyMatcherPatternImpl<>();
 
+    /** Cache configuration */
+    private AuxiliaryCacheAttributes auxiliaryCacheAttributes;
+
     /**
      * Gets the item from the cache.
      *
@@ -71,6 +74,28 @@ public abstract class AbstractAuxiliaryCache<K, V>
     public IKeyMatcher<K> getKeyMatcher()
     {
         return this.keyMatcher;
+    }
+
+    /**
+     * Returns the cache configuration.
+     *
+     * @return cache configuration
+     */
+    @Override
+    public AuxiliaryCacheAttributes getAuxiliaryCacheAttributes()
+    {
+        return auxiliaryCacheAttributes;
+    }
+
+    /**
+     * Gets the extra info for the event log.
+     *
+     * @return the eventLogSourceName
+     */
+    @Override
+    protected String getEventLogSourceName()
+    {
+        return getAuxiliaryCacheAttributes().getName();
     }
 
     /**
@@ -132,5 +157,15 @@ public abstract class AbstractAuxiliaryCache<K, V>
         {
             this.keyMatcher = keyMatcher;
         }
+    }
+
+    /**
+     * Set the cache configuration
+     *
+     * @param auxiliaryCacheAttributes the auxiliaryCacheAttributes to set
+     */
+    public void setAuxiliaryCacheAttributes(AuxiliaryCacheAttributes auxiliaryCacheAttributes)
+    {
+        this.auxiliaryCacheAttributes = auxiliaryCacheAttributes;
     }
 }

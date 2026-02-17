@@ -34,7 +34,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.jcs4.TestLogConfigurationUtil;
-import org.apache.commons.jcs4.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.commons.jcs4.auxiliary.disk.behavior.IDiskCacheAttributes;
 import org.apache.commons.jcs4.auxiliary.disk.indexed.IndexedDiskCacheAttributes;
 import org.apache.commons.jcs4.engine.CacheElement;
@@ -70,21 +69,12 @@ class AbstractDiskCacheUnitTest
         }
 
         /**
-         * @return null
-         */
-        @Override
-        public AuxiliaryCacheAttributes getAuxiliaryCacheAttributes()
-        {
-            return diskCacheAttributes;
-        }
-
-        /**
          * The location on disk
          *
          * @return "memory"
          */
         @Override
-        protected String getDiskLocation()
+        protected String getEventLoggingExtraInfo()
         {
             return "memory";
         }

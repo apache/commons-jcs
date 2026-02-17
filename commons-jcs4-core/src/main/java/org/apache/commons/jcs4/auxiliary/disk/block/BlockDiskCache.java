@@ -33,7 +33,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.stream.Collectors;
 
-import org.apache.commons.jcs4.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.commons.jcs4.auxiliary.disk.AbstractDiskCache;
 import org.apache.commons.jcs4.engine.behavior.ICacheElement;
 import org.apache.commons.jcs4.engine.behavior.IElementSerializer;
@@ -63,9 +62,6 @@ public class BlockDiskCache<K, V>
 
     /** The data access object */
     private BlockDisk dataFile;
-
-    /** Attributes governing the behavior of the block disk cache. */
-    private final BlockDiskCacheAttributes blockDiskCacheAttributes;
 
     /** The root directory for keys and data. */
     private final File rootDirectory;
@@ -101,8 +97,6 @@ public class BlockDiskCache<K, V>
     {
         super( cacheAttributes );
         setElementSerializer( elementSerializer );
-
-        this.blockDiskCacheAttributes = cacheAttributes;
         this.logCacheName = "Region [" + getCacheName() + "] ";
 
         log.info("{0}: Constructing BlockDiskCache with attributes {1}", logCacheName, cacheAttributes );
@@ -115,10 +109,10 @@ public class BlockDiskCache<K, V>
 
         try
         {
-            if ( this.blockDiskCacheAttributes.getBlockSizeBytes() > 0 )
+            if ( cacheAttributes.getBlockSizeBytes() > 0 )
             {
                 this.dataFile = new BlockDisk( new File( rootDirectory, fileName + ".data" ),
-                                               this.blockDiskCacheAttributes.getBlockSizeBytes(),
+                                               cacheAttributes.getBlockSizeBytes(),
                                                getElementSerializer() );
             }
             else
@@ -127,7 +121,7 @@ public class BlockDiskCache<K, V>
                                                getElementSerializer() );
             }
 
-            keyStore = new BlockDiskKeyStore<>( this.blockDiskCacheAttributes, this );
+            keyStore = new BlockDiskKeyStore<>( cacheAttributes, this );
 
             final boolean alright = verifyDisk();
 
@@ -200,25 +194,25 @@ public class BlockDiskCache<K, V>
     }
 
     /**
-     * Returns the attributes.
+     * Gets the extra info for the event log.
      *
-     * @see org.apache.commons.jcs4.auxiliary.AuxiliaryCache#getAuxiliaryCacheAttributes()
+     * @return extra info for the event log
      */
     @Override
-    public AuxiliaryCacheAttributes getAuxiliaryCacheAttributes()
+    protected String getEventLoggingExtraInfo()
     {
-        return this.blockDiskCacheAttributes;
+        return dataFile.getFilePath();
     }
 
     /**
-     * This is used by the event logging.
+     * Returns the cache configuration.
      *
-     * @return the location of the disk, either path or ip.
+     * @return cache configuration
      */
     @Override
-    protected String getDiskLocation()
+    public BlockDiskCacheAttributes getAuxiliaryCacheAttributes()
     {
-        return dataFile.getFilePath();
+        return (BlockDiskCacheAttributes) super.getAuxiliaryCacheAttributes();
     }
 
     /**
@@ -419,10 +413,11 @@ public class BlockDiskCache<K, V>
                 {
                     object = this.dataFile.read( ded );
                 }
-            } finally {
+            }
+            finally
+            {
                 storageLock.readLock().unlock();
             }
-
         }
         catch ( final IOException ioe )
         {
@@ -629,12 +624,11 @@ public class BlockDiskCache<K, V>
     {
         // add this region to the persistence thread.
         // TODO we might need to stagger this a bit.
-        if ( this.blockDiskCacheAttributes.getKeyPersistenceIntervalSeconds() > 0 )
+        long interval = getAuxiliaryCacheAttributes().getKeyPersistenceIntervalSeconds();
+        if ( interval > 0 )
         {
             future = scheduledExecutor.scheduleAtFixedRate(keyStore::saveKeys,
-                    this.blockDiskCacheAttributes.getKeyPersistenceIntervalSeconds(),
-                    this.blockDiskCacheAttributes.getKeyPersistenceIntervalSeconds(),
-                    TimeUnit.SECONDS);
+                    interval, interval, TimeUnit.SECONDS);
         }
     }
 

@@ -351,5 +351,5 @@ public abstract class AbstractAuxiliaryCacheEventLogging<K, V>
      *
      * @return disk location
      */
-    public abstract String getEventLoggingExtraInfo();
+    protected abstract String getEventLoggingExtraInfo();
 }

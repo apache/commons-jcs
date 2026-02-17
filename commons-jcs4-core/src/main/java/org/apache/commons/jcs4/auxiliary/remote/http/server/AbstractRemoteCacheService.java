@@ -71,37 +71,6 @@ public abstract class AbstractRemoteCacheService<K, V>
     }
 
     /**
-     * Logs an event if an event logger is configured.
-     *
-     * @param item
-     * @param requesterId
-     * @param eventType
-     * @return ICacheEvent
-     */
-    protected ICacheEvent<ICacheElement<K, V>> createICacheEvent( final ICacheElement<K, V> item, final long requesterId, final CacheEventType eventType )
-    {
-        final String ipAddress = getExtraInfoForRequesterId( requesterId );
-        return createICacheEvent( getEventLogSourceName(), item.cacheName(),
-                eventType, ipAddress, item );
-    }
-
-    /**
-     * Logs an event if an event logger is configured.
-     *
-     * @param cacheName
-     * @param key
-     * @param requesterId
-     * @param eventType
-     * @return ICacheEvent
-     */
-    protected <T> ICacheEvent<T> createICacheEvent( final String cacheName, final T key, final long requesterId, final CacheEventType eventType )
-    {
-        final String ipAddress = getExtraInfoForRequesterId( requesterId );
-        return createICacheEvent( getEventLogSourceName(), cacheName,
-                eventType, ipAddress, key );
-    }
-
-    /**
      * Frees the specified remote cache.
      *
      * @param cacheName
@@ -124,8 +93,8 @@ public abstract class AbstractRemoteCacheService<K, V>
     public void dispose( final String cacheName, final long requesterId )
         throws IOException
     {
-        final ICacheEvent<String> cacheEvent = createICacheEvent( cacheName, "none", requesterId,
-                CacheEventType.DISPOSE_EVENT );
+        final ICacheEvent<String> cacheEvent = createICacheEvent(cacheName, "none",
+                CacheEventType.DISPOSE_EVENT, () -> getExtraInfoForRequesterId( requesterId ));
         try
         {
             processDispose( cacheName, requesterId );
@@ -170,7 +139,8 @@ public abstract class AbstractRemoteCacheService<K, V>
         throws IOException
     {
         ICacheElement<K, V> element = null;
-        final ICacheEvent<K> cacheEvent = createICacheEvent( cacheName, key, requesterId, CacheEventType.GET_EVENT );
+        final ICacheEvent<K> cacheEvent = createICacheEvent(cacheName, key,
+                CacheEventType.GET_EVENT, () -> getExtraInfoForRequesterId( requesterId ));
         try
         {
             element = processGet( cacheName, key, requesterId );
@@ -193,6 +163,7 @@ public abstract class AbstractRemoteCacheService<K, V>
     /**
      * @return the eventLogSourceName
      */
+    @Override
     protected String getEventLogSourceName()
     {
         return eventLogSourceName;
@@ -247,8 +218,8 @@ public abstract class AbstractRemoteCacheService<K, V>
     public Map<K, ICacheElement<K, V>> getMatching( final String cacheName, final String pattern, final long requesterId )
         throws IOException
     {
-        final ICacheEvent<String> cacheEvent = createICacheEvent( cacheName, pattern, requesterId,
-                                                    CacheEventType.GETMATCHING_EVENT );
+        final ICacheEvent<String> cacheEvent = createICacheEvent(cacheName, pattern,
+                CacheEventType.GETMATCHING_EVENT, () -> getExtraInfoForRequesterId(requesterId));
         try
         {
             return processGetMatching( cacheName, pattern, requesterId );
@@ -291,8 +262,9 @@ public abstract class AbstractRemoteCacheService<K, V>
     public Map<K, ICacheElement<K, V>> getMultiple( final String cacheName, final Set<K> keys, final long requesterId )
         throws IOException
     {
-        final ICacheEvent<Serializable> cacheEvent = createICacheEvent( cacheName, (Serializable) keys, requesterId,
-                                                    CacheEventType.GETMULTIPLE_EVENT );
+        final ICacheEvent<Serializable> cacheEvent = createICacheEvent(cacheName,
+                (Serializable) keys, CacheEventType.GETMULTIPLE_EVENT,
+                () -> getExtraInfoForRequesterId( requesterId ));
         try
         {
             return processGetMultiple( cacheName, keys, requesterId );
@@ -442,7 +414,8 @@ public abstract class AbstractRemoteCacheService<K, V>
     public void remove( final String cacheName, final K key, final long requesterId )
         throws IOException
     {
-        final ICacheEvent<K> cacheEvent = createICacheEvent( cacheName, key, requesterId, CacheEventType.REMOVE_EVENT );
+        final ICacheEvent<K> cacheEvent = createICacheEvent(cacheName, key,
+                CacheEventType.REMOVE_EVENT, () -> getExtraInfoForRequesterId( requesterId ));
         try
         {
             processRemove( cacheName, key, requesterId );
@@ -479,7 +452,8 @@ public abstract class AbstractRemoteCacheService<K, V>
     public void removeAll( final String cacheName, final long requesterId )
         throws IOException
     {
-        final ICacheEvent<String> cacheEvent = createICacheEvent( cacheName, "all", requesterId, CacheEventType.REMOVEALL_EVENT );
+        final ICacheEvent<String> cacheEvent = createICacheEvent(cacheName, "all",
+                CacheEventType.REMOVEALL_EVENT, () -> getExtraInfoForRequesterId( requesterId ));
         try
         {
             processRemoveAll( cacheName, requesterId );
@@ -528,7 +502,8 @@ public abstract class AbstractRemoteCacheService<K, V>
     public void update( final ICacheElement<K, V> item, final long requesterId )
         throws IOException
     {
-        final ICacheEvent<ICacheElement<K, V>> cacheEvent = createICacheEvent( item, requesterId, CacheEventType.UPDATE_EVENT );
+        final ICacheEvent<K> cacheEvent = createICacheEvent( item,
+                CacheEventType.UPDATE_EVENT, () -> getExtraInfoForRequesterId( requesterId ));
         try
         {
             logUpdateInfo( item );

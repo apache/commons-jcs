@@ -44,7 +44,7 @@ public record RemoteCacheResponse<T>(
 
     /**
      * Construct error message object
-     * @param succcess
+     * @param success
      * @param errorMessage
      */
     public RemoteCacheResponse(final boolean success, final String errorMessage)

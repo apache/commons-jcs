@@ -29,7 +29,6 @@ import java.rmi.server.ExportException;
 import java.rmi.server.UnicastRemoteObject;
 
 import org.apache.commons.jcs4.access.exception.CacheException;
-import org.apache.commons.jcs4.access.exception.ObjectExistsException;
 import org.apache.commons.jcs4.auxiliary.remote.behavior.IRemoteCacheConstants;
 import org.apache.commons.jcs4.auxiliary.remote.behavior.IRemoteCacheListener;
 import org.apache.commons.jcs4.auxiliary.remote.server.behavior.RemoteType;
@@ -215,7 +214,7 @@ public class RemoteCacheClientTester
                 {
                     cache.update( cb );
                 }
-                catch ( final ObjectExistsException oee )
+                catch ( final CacheException oee )
                 {
                     p( oee.toString() );
                 }

@@ -69,7 +69,7 @@ public class RemoteHttpCacheService<K, V>
     @Override
     protected String getExtraInfoForRequesterId( final long requesterId )
     {
-        return requesterId + "";
+        return String.valueOf(requesterId);
     }
 
     /**
@@ -256,14 +256,5 @@ public class RemoteHttpCacheService<K, V>
         throws IOException
     {
         //nothing.
-    }
-
-    /**
-     * @return the RemoteHttpCacheServerAttributes
-     */
-    @Override
-    public RemoteHttpCacheServerAttributes getAuxiliaryCacheAttributes()
-    {
-        return remoteHttpCacheServerAttributes;
     }
 }

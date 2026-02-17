@@ -68,15 +68,6 @@ public class MockAuxiliaryCache<K, V>
     }
 
     /**
-     * @return the AuxiliaryCacheAttributes.
-     */
-    @Override
-    public AuxiliaryCacheAttributes getAuxiliaryCacheAttributes()
-    {
-        return null;
-    }
-
-    /**
      * @return null
      */
     @Override

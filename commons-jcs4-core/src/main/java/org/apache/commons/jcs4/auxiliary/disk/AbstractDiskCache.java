@@ -31,6 +31,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import org.apache.commons.jcs4.auxiliary.AbstractAuxiliaryCacheEventLogging;
 import org.apache.commons.jcs4.auxiliary.AuxiliaryCache;
+import org.apache.commons.jcs4.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.commons.jcs4.auxiliary.disk.behavior.IDiskCacheAttributes;
 import org.apache.commons.jcs4.engine.CacheEventQueueFactory;
 import org.apache.commons.jcs4.engine.CacheInfo;
@@ -214,9 +215,6 @@ public abstract class AbstractDiskCache<K, V>
     /** The logger */
     private static final Log log = Log.getLog( AbstractDiskCache.class );
 
-    /** Generic disk cache attributes */
-    private final IDiskCacheAttributes diskCacheAttributes;
-
     /**
      * Map where elements are stored between being added to this cache and actually spooled to disk.
      * This allows puts to the disk cache to return quickly, and the more expensive operation of
@@ -239,9 +237,6 @@ public abstract class AbstractDiskCache<K, V>
      */
     private final AtomicBoolean alive = new AtomicBoolean();
 
-    /** Every cache will have a name, subclasses must set this when they are initialized. */
-    private final String cacheName;
-
     /** DEBUG: Keeps a count of the number of purgatory hits for debug messages */
     private final AtomicInteger purgHits = new AtomicInteger();
 
@@ -257,17 +252,16 @@ public abstract class AbstractDiskCache<K, V>
      *
      * @param attr
      */
-    protected AbstractDiskCache( final IDiskCacheAttributes attr )
+    protected AbstractDiskCache(final AuxiliaryCacheAttributes attr)
     {
-        this.diskCacheAttributes = attr;
-        this.cacheName = attr.getCacheName();
+        setAuxiliaryCacheAttributes(attr);
 
         // create queue
         final CacheEventQueueFactory<K, V> fact = new CacheEventQueueFactory<>();
         this.cacheEventQueue = fact.createCacheEventQueue(
-                new MyCacheListener(), CacheInfo.INSTANCE.listenerId(), cacheName,
-                   diskCacheAttributes.getEventQueuePoolName(),
-                   diskCacheAttributes.getEventQueueType() );
+                new MyCacheListener(), CacheInfo.INSTANCE.listenerId(), getCacheName(),
+                   attr.getEventQueuePoolName(),
+                   attr.getEventQueueType() );
 
         // create purgatory
         initPurgatory();
@@ -293,7 +287,8 @@ public abstract class AbstractDiskCache<K, V>
         log.info( "In dispose, destroying event queue." );
 
         // wait for dispose and then quit if not done.
-        cacheEventQueue.destroy(this.diskCacheAttributes.getShutdownSpoolTimeLimit());
+        int spoolTimeLimit = getAuxiliaryCacheAttributes().getShutdownSpoolTimeLimit();
+        cacheEventQueue.destroy(spoolTimeLimit);
 
         // Invoke any implementation specific disposal code
         // need to handle the disposal first.
@@ -346,7 +341,7 @@ public abstract class AbstractDiskCache<K, V>
             // will allow the memory size = 0 setting to work well.
 
             log.debug( "Found element in purgatory, cacheName: {0}, key: {1}",
-                    cacheName, key );
+                    getCacheName(), key );
 
             return pe.cacheElement();
         }
@@ -367,16 +362,6 @@ public abstract class AbstractDiskCache<K, V>
     }
 
     /**
-     * @return the region name.
-     * @see ICache#getCacheName
-     */
-    @Override
-    public String getCacheName()
-    {
-        return cacheName;
-    }
-
-    /**
      * @see org.apache.commons.jcs4.engine.behavior.ICacheType#getCacheType
      * @return Always returns DISK_CACHE since subclasses should all be of that type.
      */
@@ -387,21 +372,14 @@ public abstract class AbstractDiskCache<K, V>
     }
 
     /**
-     * This is used by the event logging.
+     * Returns the cache configuration.
      *
-     * @return the location of the disk, either path or ip.
-     */
-    protected abstract String getDiskLocation();
-
-    /**
-     * Gets the extra info for the event log.
-     *
-     * @return disk location
+     * @return cache configuration
      */
     @Override
-    public String getEventLoggingExtraInfo()
+    public IDiskCacheAttributes getAuxiliaryCacheAttributes()
     {
-        return getDiskLocation();
+        return (IDiskCacheAttributes) super.getAuxiliaryCacheAttributes();
     }
 
     /**
@@ -502,10 +480,10 @@ public abstract class AbstractDiskCache<K, V>
         {
             synchronized (this)
             {
-                if ( diskCacheAttributes.getMaxPurgatorySize() >= 0 )
+                int maxPurgatorySize = getAuxiliaryCacheAttributes().getMaxPurgatorySize();
+                if (maxPurgatorySize >= 0)
                 {
-                    purgatory = Collections.synchronizedMap(
-                            new LRUMap<>( diskCacheAttributes.getMaxPurgatorySize()));
+                    purgatory = Collections.synchronizedMap(new LRUMap<>(maxPurgatorySize));
                 }
                 else
                 {
@@ -575,7 +553,8 @@ public abstract class AbstractDiskCache<K, V>
     public final void removeAll()
         throws IOException
     {
-        if ( this.diskCacheAttributes.isAllowRemoveAll() )
+        boolean allowRemoveAll = getAuxiliaryCacheAttributes().isAllowRemoveAll();
+        if (allowRemoveAll)
         {
             // Replace purgatory with a new empty hashtable
             initPurgatory();
@@ -614,7 +593,7 @@ public abstract class AbstractDiskCache<K, V>
         throws IOException
     {
         log.debug( "Putting element in purgatory, cacheName: {0}, key: {1}",
-                () -> cacheName, cacheElement::key);
+                this::getCacheName, cacheElement::key);
 
         try
         {

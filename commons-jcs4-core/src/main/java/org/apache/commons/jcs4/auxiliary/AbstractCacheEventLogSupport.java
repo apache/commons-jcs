@@ -73,7 +73,7 @@ public abstract class AbstractCacheEventLogSupport<K, V>
         String regionName = item == null ? null : item.cacheName();
         K key = item == null ? null : item.key();
 
-        return createICacheEvent(getAuxiliaryCacheAttributes().getName(), regionName,
+        return createICacheEvent(getEventLogSourceName(), regionName,
                 eventType, eventLoggingExtraInfo.get(), key);
     }
 
@@ -94,7 +94,7 @@ public abstract class AbstractCacheEventLogSupport<K, V>
             return new CacheEvent<>();
         }
 
-        return createICacheEvent(getAuxiliaryCacheAttributes().getName(), regionName,
+        return createICacheEvent(getEventLogSourceName(), regionName,
                 eventType, eventLoggingExtraInfo.get(), key);
     }
 
@@ -111,9 +111,9 @@ public abstract class AbstractCacheEventLogSupport<K, V>
     /**
      * Gets the extra info for the event log.
      *
-     * @return IP, or disk location, etc.
+     * @return the eventLogSourceName
      */
-    public abstract AuxiliaryCacheAttributes getAuxiliaryCacheAttributes();
+    protected abstract String getEventLogSourceName();
 
     /**
      * Logs an event if an event logger is configured.

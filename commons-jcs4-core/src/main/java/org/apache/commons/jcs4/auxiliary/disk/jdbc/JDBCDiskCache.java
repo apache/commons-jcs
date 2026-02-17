@@ -32,7 +32,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.sql.DataSource;
 
-import org.apache.commons.jcs4.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.commons.jcs4.auxiliary.disk.AbstractDiskCache;
 import org.apache.commons.jcs4.auxiliary.disk.jdbc.TableState.TableStateType;
 import org.apache.commons.jcs4.auxiliary.disk.jdbc.dsfactory.DataSourceFactory;
@@ -208,7 +207,7 @@ public class JDBCDiskCache<K, V>
 
                 logApplicationEvent( getAuxiliaryCacheAttributes().getName(),
                         CacheEventType.DELETEEXPIRED_EVENT,
-                        "Deleted expired elements.  URL: " + getDiskLocation() );
+                        "Deleted expired elements.  URL: " + getEventLoggingExtraInfo() );
             }
             else
             {
@@ -218,7 +217,7 @@ public class JDBCDiskCache<K, V>
         catch ( final SQLException e )
         {
             logError( getAuxiliaryCacheAttributes().getName(), CacheEventType.DELETEEXPIRED_EVENT,
-                    e.getMessage() + " URL: " + getDiskLocation() );
+                    e.getMessage() + " URL: " + getEventLoggingExtraInfo() );
             log.error( "Problem removing expired elements from the table.", e );
             reset();
         }
@@ -264,15 +263,6 @@ public class JDBCDiskCache<K, V>
     }
 
     /**
-     * @return the AuxiliaryCacheAttributes.
-     */
-    @Override
-    public AuxiliaryCacheAttributes getAuxiliaryCacheAttributes()
-    {
-        return this.getJdbcDiskCacheAttributes();
-    }
-
-    /**
      * Public so managers can access it.
      * @return the dsFactory
      * @throws SQLException if getting a data source fails
@@ -288,7 +278,7 @@ public class JDBCDiskCache<K, V>
      * @return the location of the disk, either path or ip.
      */
     @Override
-    protected String getDiskLocation()
+    protected String getEventLoggingExtraInfo()
     {
         return this.jdbcDiskCacheAttributes.getUrl();
     }
@@ -363,7 +353,7 @@ public class JDBCDiskCache<K, V>
         stats.addStatElement("Update Count", updateCount);
         stats.addStatElement("Get Count", getCount);
         stats.addStatElement("Get Matching Count", getMatchingCount);
-        stats.addStatElement("DB URL", getDiskLocation());
+        stats.addStatElement("DB URL", getEventLoggingExtraInfo());
 
         return stats;
     }
@@ -513,7 +503,7 @@ public class JDBCDiskCache<K, V>
     public void processDispose()
     {
         final ICacheEvent<K> cacheEvent = createICacheEvent( getCacheName(), null,
-                CacheEventType.DISPOSE_EVENT, this::getDiskLocation);
+                CacheEventType.DISPOSE_EVENT, this::getEventLoggingExtraInfo);
 
         try
         {

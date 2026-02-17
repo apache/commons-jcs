@@ -85,7 +85,8 @@ public class RemoteHttpCacheMonitor extends AbstractAuxiliaryCacheMonitor
             {
                 if ( remoteCache.getStatus() == CacheStatus.ERROR )
                 {
-                    final RemoteHttpCacheAttributes attributes = remoteCache.getRemoteHttpCacheAttributes();
+                    final RemoteHttpCacheAttributes attributes =
+                            (RemoteHttpCacheAttributes)remoteCache.getAuxiliaryCacheAttributes();
 
                     final IRemoteHttpCacheClient<Serializable, Serializable> remoteService =
                             factory.createRemoteHttpCacheClientForAttributes( attributes );
