@@ -20,6 +20,7 @@ package org.apache.commons.jcs4.auxiliary.disk;
  */
 
 import java.io.IOException;
+import java.time.Duration;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
@@ -287,7 +288,7 @@ public abstract class AbstractDiskCache<K, V>
         log.info( "In dispose, destroying event queue." );
 
         // wait for dispose and then quit if not done.
-        int spoolTimeLimit = getAuxiliaryCacheAttributes().getShutdownSpoolTimeLimit();
+        Duration spoolTimeLimit = getAuxiliaryCacheAttributes().getShutdownSpoolTimeLimit();
         cacheEventQueue.destroy(spoolTimeLimit);
 
         // Invoke any implementation specific disposal code

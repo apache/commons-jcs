@@ -1,5 +1,7 @@
 package org.apache.commons.jcs4.auxiliary.remote.server;
 
+import java.time.Duration;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -48,7 +50,7 @@ public class RemoteCacheServerAttributes
     private boolean useRegistryKeepAlive = DEFAULT_USE_REGISTRY_KEEP_ALIVE;
 
     /** The delay between runs */
-    private long registryKeepAliveDelayMillis = 15 * 1000;
+    private Duration registryKeepAliveDelay = Duration.ofSeconds(15);
 
     /** Default constructor for the RemoteCacheAttributes object */
     public RemoteCacheServerAttributes()
@@ -67,12 +69,12 @@ public class RemoteCacheServerAttributes
     }
 
     /**
-     * @return the registryKeepAliveDelayMillis
+     * @return the registryKeepAliveDelay
      */
     @Override
-    public long getRegistryKeepAliveDelayMillis()
+    public Duration getRegistryKeepAliveDelay()
     {
-        return registryKeepAliveDelayMillis;
+        return registryKeepAliveDelay;
     }
 
     /**
@@ -133,7 +135,7 @@ public class RemoteCacheServerAttributes
      */
     public void setRegistryKeepAliveDelayMillis( final long registryKeepAliveDelayMillis )
     {
-        this.registryKeepAliveDelayMillis = registryKeepAliveDelayMillis;
+        this.registryKeepAliveDelay = Duration.ofMillis(registryKeepAliveDelayMillis);
     }
 
     /**
@@ -166,9 +168,9 @@ public class RemoteCacheServerAttributes
         buf.append( "\n servicePort = [" + getServicePort() + "]" );
         buf.append( "\n allowClusterGet = [" + isAllowClusterGet() + "]" );
         buf.append( "\n configFileName = [" + getConfigFileName() + "]" );
-        buf.append( "\n rmiSocketFactoryTimeoutMillis = [" + getRmiSocketFactoryTimeoutMillis() + "]" );
+        buf.append( "\n rmiSocketFactoryTimeout = [" + getRmiSocketFactoryTimeout() + "]" );
         buf.append( "\n useRegistryKeepAlive = [" + isUseRegistryKeepAlive() + "]" );
-        buf.append( "\n registryKeepAliveDelayMillis = [" + getRegistryKeepAliveDelayMillis() + "]" );
+        buf.append( "\n registryKeepAliveDelayMillis = [" + getRegistryKeepAliveDelay() + "]" );
         buf.append( "\n eventQueueType = [" + getEventQueueType() + "]" );
         buf.append( "\n eventQueuePoolName = [" + getEventQueuePoolName() + "]" );
         return buf.toString();

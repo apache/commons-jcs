@@ -1,5 +1,7 @@
 package org.apache.commons.jcs4.auxiliary.disk.block;
 
+import java.time.Duration;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -34,7 +36,7 @@ public class BlockDiskCacheAttributes
     private static final int DEFAULT_MAX_KEY_SIZE = 5000;
 
     /** How often should we persist the keys. */
-    private static final long DEFAULT_KEY_PERSISTENCE_INTERVAL_SECONDS = 5 * 60;
+    private static final Duration DEFAULT_KEY_PERSISTENCE_INTERVAL = Duration.ofSeconds(5 * 60);
 
     /** The size per block in bytes. */
     private int blockSizeBytes;
@@ -43,7 +45,7 @@ public class BlockDiskCacheAttributes
     private int maxKeySize = DEFAULT_MAX_KEY_SIZE;
 
     /** The keys will be persisted at this interval.  -1 mean never. */
-    private long keyPersistenceIntervalSeconds = DEFAULT_KEY_PERSISTENCE_INTERVAL_SECONDS;
+    private Duration keyPersistenceInterval = DEFAULT_KEY_PERSISTENCE_INTERVAL;
 
     /**
      * @return the blockSizeBytes.
@@ -56,9 +58,9 @@ public class BlockDiskCacheAttributes
     /**
      * @return the keyPersistenceIntervalSeconds.
      */
-    public long getKeyPersistenceIntervalSeconds()
+    public Duration getKeyPersistenceInterval()
     {
-        return keyPersistenceIntervalSeconds;
+        return keyPersistenceInterval;
     }
 
     /**
@@ -84,7 +86,7 @@ public class BlockDiskCacheAttributes
      */
     public void setKeyPersistenceIntervalSeconds( final long keyPersistenceIntervalSeconds )
     {
-        this.keyPersistenceIntervalSeconds = keyPersistenceIntervalSeconds;
+        this.keyPersistenceInterval = Duration.ofSeconds(keyPersistenceIntervalSeconds);
     }
 
     /**
@@ -109,7 +111,7 @@ public class BlockDiskCacheAttributes
         str.append( "\n MaxKeySize [" + getMaxKeySize() + "]" );
         str.append( "\n MaxPurgatorySize [" + getMaxPurgatorySize() + "]" );
         str.append( "\n BlockSizeBytes [" + getBlockSizeBytes() + "]" );
-        str.append( "\n KeyPersistenceIntervalSeconds [" + getKeyPersistenceIntervalSeconds() + "]" );
+        str.append( "\n KeyPersistenceIntervalSeconds [" + getKeyPersistenceInterval() + "]" );
         str.append( "\n DiskLimitType [" + getDiskLimitType() + "]" );
         return str.toString();
     }

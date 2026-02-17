@@ -20,6 +20,7 @@ package org.apache.commons.jcs4.auxiliary.remote;
  */
 
 import java.io.IOException;
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -95,11 +96,12 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
 
         // use a pool if it is greater than 0
         log.debug( "GetTimeoutMillis() = {0}",
-                () -> getAuxiliaryCacheAttributes().getGetTimeoutMillis() );
+                () -> getAuxiliaryCacheAttributes().getGetTimeout() );
 
-        if ( getAuxiliaryCacheAttributes().getGetTimeoutMillis() > 0 )
+        if (!getAuxiliaryCacheAttributes().getGetTimeout().isNegative())
         {
-            pool = ThreadPoolManager.getInstance().getExecutorService( getAuxiliaryCacheAttributes().getThreadPoolName() );
+            pool = ThreadPoolManager.getInstance().getExecutorService(
+                    getAuxiliaryCacheAttributes().getThreadPoolName());
             log.debug( "Thread Pool = {0}", pool );
             usePoolForGet = true;
         }
@@ -287,7 +289,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
     public ICacheElement<K, V> getUsingPool( final K key )
         throws IOException
     {
-        final int timeout = getAuxiliaryCacheAttributes().getGetTimeoutMillis();
+        final Duration timeout = getAuxiliaryCacheAttributes().getGetTimeout();
 
         try
         {
@@ -297,7 +299,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
             final Future<ICacheElement<K, V>> future = pool.submit(command);
 
             // used timed get in order to timeout
-            final ICacheElement<K, V> ice = future.get(timeout, TimeUnit.MILLISECONDS);
+            final ICacheElement<K, V> ice = future.get(timeout.toMillis(), TimeUnit.MILLISECONDS);
 
             if ( ice == null )
             {

@@ -25,6 +25,7 @@ import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.rmi.server.RMISocketFactory;
+import java.time.Duration;
 
 /**
  * This can be injected into the remote cache server as follows:
@@ -43,10 +44,10 @@ public class TimeoutConfigurableRMISocketFactory
     private static final long serialVersionUID = 1489909775271203334L;
 
     /** The socket read timeout */
-    private int readTimeout = 5000;
+    private Duration readTimeout = Duration.ofMillis(5000);
 
     /** The socket open timeout */
-    private int openTimeout = 5000;
+    private Duration openTimeout = Duration.ofMillis(5000);
 
     /**
      * @param port
@@ -71,16 +72,16 @@ public class TimeoutConfigurableRMISocketFactory
         throws IOException
     {
         final Socket socket = new Socket();
-        socket.setSoTimeout( readTimeout );
+        socket.setSoTimeout( (int)readTimeout.toMillis() );
         socket.setSoLinger( false, 0 );
-        socket.connect( new InetSocketAddress( host, port ), openTimeout );
+        socket.connect( new InetSocketAddress( host, port ), (int)openTimeout.toMillis() );
         return socket;
     }
 
     /**
      * @return the openTimeout
      */
-    public int getOpenTimeout()
+    public Duration getOpenTimeoutDuration()
     {
         return openTimeout;
     }
@@ -88,7 +89,7 @@ public class TimeoutConfigurableRMISocketFactory
     /**
      * @return the readTimeout
      */
-    public int getReadTimeout()
+    public Duration getReadTimeoutDuration()
     {
         return readTimeout;
     }
@@ -98,7 +99,7 @@ public class TimeoutConfigurableRMISocketFactory
      */
     public void setOpenTimeout( final int openTimeout )
     {
-        this.openTimeout = openTimeout;
+        this.openTimeout = Duration.ofMillis(openTimeout);
     }
 
     /**
@@ -106,6 +107,6 @@ public class TimeoutConfigurableRMISocketFactory
      */
     public void setReadTimeout( final int readTimeout )
     {
-        this.readTimeout = readTimeout;
+        this.readTimeout = Duration.ofMillis(readTimeout);
     }
 }

@@ -1,5 +1,7 @@
 package org.apache.commons.jcs4.auxiliary.lateral.socket.tcp.behavior;
 
+import java.time.Duration;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -38,12 +40,12 @@ public interface ILateralTCPCacheAttributes
     /**
      * @return the openTimeOut
      */
-    int getOpenTimeOut();
+    Duration getOpenTimeOut();
 
     /**
      * @return the socketTimeOut
      */
-    int getSocketTimeOut();
+    Duration getSocketTimeOut();
 
     /**
      * Gets the tcpListenerHost attribute of the ILateralCacheAttributes object

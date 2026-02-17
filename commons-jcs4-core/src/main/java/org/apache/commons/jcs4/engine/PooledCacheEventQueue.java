@@ -1,5 +1,7 @@
 package org.apache.commons.jcs4.engine;
 
+import java.time.Duration;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -84,21 +86,21 @@ public class PooledCacheEventQueue<K, V>
     /**
      * Destroy the queue
      *
-     * @param waitSeconds number of seconds to wait for the queue to drain
+     * @param wait time to wait for the queue to drain
      */
     @Override
-    public synchronized void destroy(final int waitSeconds)
+    public synchronized void destroy(final Duration wait)
     {
         if ( isWorking() )
         {
             setWorking(false);
             pool.shutdown();
 
-            if (waitSeconds > 0)
+            if (wait.toSeconds() > 0)
             {
                 try
                 {
-                    if (!pool.awaitTermination(waitSeconds, TimeUnit.SECONDS))
+                    if (!pool.awaitTermination(wait.toSeconds(), TimeUnit.SECONDS))
                     {
                         log.info( "No longer waiting for event queue to finish: {0}",
                                 this::getStatistics);

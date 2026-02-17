@@ -32,6 +32,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.RMISocketFactory;
+import java.time.Duration;
 import java.util.Properties;
 
 import org.apache.commons.jcs4.log.Log;
@@ -51,17 +52,17 @@ public class RemoteUtils
      * configured for the specific object.
      * <p>
      *
-     * @param timeoutMillis
+     * @param timeout
      */
-    public static void configureGlobalCustomSocketFactory(final int timeoutMillis)
+    public static void configureGlobalCustomSocketFactory(final Duration timeout)
     {
         try
         {
             // Don't set a socket factory if the setting is -1
-            if (timeoutMillis > 0)
+            if (!timeout.isNegative())
             {
-                log.info("RmiSocketFactoryTimeoutMillis [{0}]. "
-                    + " Configuring a custom socket factory.", timeoutMillis);
+                log.info("RmiSocketFactoryTimeout [{0}]. "
+                    + " Configuring a custom socket factory.", timeout);
 
                 // use this socket factory to add a timeout.
                 RMISocketFactory.setSocketFactory(new RMISocketFactory()
@@ -78,9 +79,9 @@ public class RemoteUtils
                             throws IOException
                     {
                         final Socket socket = new Socket();
-                        socket.setSoTimeout(timeoutMillis);
+                        socket.setSoTimeout((int)timeout.toMillis());
                         socket.setSoLinger(false, 0);
-                        socket.connect(new InetSocketAddress(host, port), timeoutMillis);
+                        socket.connect(new InetSocketAddress(host, port), (int)timeout.toMillis());
                         return socket;
                     }
                 });

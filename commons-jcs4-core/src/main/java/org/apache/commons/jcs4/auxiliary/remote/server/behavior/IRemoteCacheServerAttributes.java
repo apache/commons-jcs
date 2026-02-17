@@ -1,5 +1,7 @@
 package org.apache.commons.jcs4.auxiliary.remote.server.behavior;
 
+import java.time.Duration;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -36,9 +38,9 @@ public interface IRemoteCacheServerAttributes
     String getConfigFileName();
 
     /**
-     * @return the registryKeepAliveDelayMillis
+     * @return the registryKeepAliveDelay
      */
-    long getRegistryKeepAliveDelayMillis();
+    Duration getRegistryKeepAliveDelay();
 
     /**
      * Gets the localPort attribute of the IRemoteCacheAttributes object.

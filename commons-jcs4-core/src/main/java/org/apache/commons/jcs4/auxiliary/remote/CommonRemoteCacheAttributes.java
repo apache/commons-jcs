@@ -1,5 +1,7 @@
 package org.apache.commons.jcs4.auxiliary.remote;
 
+import java.time.Duration;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -58,7 +60,7 @@ public abstract class CommonRemoteCacheAttributes
     private boolean localClusterConsistency;
 
     /** Read and connect timeout */
-    private int rmiSocketFactoryTimeoutMillis = DEFAULT_RMI_SOCKET_FACTORY_TIMEOUT_MILLIS;
+    private Duration rmiSocketFactoryTimeout = DEFAULT_RMI_SOCKET_FACTORY_TIMEOUT;
 
     /**
      * Gets the clusterServers attribute of the RemoteCacheAttributes object.
@@ -138,12 +140,12 @@ public abstract class CommonRemoteCacheAttributes
     }
 
     /**
-     * @return the rmiSocketFactoryTimeoutMillis.
+     * @return the rmiSocketFactoryTimeout.
      */
     @Override
-    public int getRmiSocketFactoryTimeoutMillis()
+    public Duration getRmiSocketFactoryTimeout()
     {
-        return rmiSocketFactoryTimeoutMillis;
+        return rmiSocketFactoryTimeout;
     }
 
     /**
@@ -252,7 +254,7 @@ public abstract class CommonRemoteCacheAttributes
      */
     public void setRmiSocketFactoryTimeoutMillis( final int rmiSocketFactoryTimeoutMillis )
     {
-        this.rmiSocketFactoryTimeoutMillis = rmiSocketFactoryTimeoutMillis;
+        this.rmiSocketFactoryTimeout = Duration.ofMillis(rmiSocketFactoryTimeoutMillis);
     }
 
     /**

@@ -1,5 +1,7 @@
 package org.apache.commons.jcs4.auxiliary.remote;
 
+import java.time.Duration;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -53,7 +55,7 @@ public class RemoteCacheAttributes
     private String threadPoolName = "remote_cache_client";
 
     /** Must be greater than 0 for a pool to be used. */
-    private int getTimeoutMillis = -1;
+    private Duration getTimeout = Duration.ofMillis(-1);
 
     /**
      * Can we receive from the server. You might have a 0 local store and keep everything on the
@@ -103,12 +105,12 @@ public class RemoteCacheAttributes
     }
 
     /**
-     * @return getTimeoutMillis
+     * @return getTimeout
      */
     @Override
-    public int getGetTimeoutMillis()
+    public Duration getGetTimeout()
     {
-        return getTimeoutMillis;
+        return getTimeout;
     }
 
     /**
@@ -195,7 +197,7 @@ public class RemoteCacheAttributes
      */
     public void setGetTimeoutMillis( final int millis )
     {
-        getTimeoutMillis = millis;
+        getTimeout = Duration.ofMillis(millis);
     }
 
     /**
@@ -245,7 +247,7 @@ public class RemoteCacheAttributes
     {
         final StringBuilder buf = new StringBuilder(super.toString());
         buf.append( "\n receive = [" + isReceive() + "]" );
-        buf.append( "\n getTimeoutMillis = [" + getGetTimeoutMillis() + "]" );
+        buf.append( "\n getTimeoutMillis = [" + getGetTimeout() + "]" );
         buf.append( "\n threadPoolName = [" + getThreadPoolName() + "]" );
         buf.append( "\n localClusterConsistency = [" + isLocalClusterConsistency() + "]" );
         buf.append( "\n zombieQueueMaxSize = [" + getZombieQueueMaxSize() + "]" );

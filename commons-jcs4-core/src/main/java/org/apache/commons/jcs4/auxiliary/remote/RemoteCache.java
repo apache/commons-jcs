@@ -68,7 +68,8 @@ public class RemoteCache<K, V>
         super( cattr, remote, listener );
         this.monitor = monitor;
 
-        RemoteUtils.configureGlobalCustomSocketFactory( getAuxiliaryCacheAttributes().getRmiSocketFactoryTimeoutMillis() );
+        RemoteUtils.configureGlobalCustomSocketFactory(
+                getAuxiliaryCacheAttributes().getRmiSocketFactoryTimeout() );
     }
 
     /**

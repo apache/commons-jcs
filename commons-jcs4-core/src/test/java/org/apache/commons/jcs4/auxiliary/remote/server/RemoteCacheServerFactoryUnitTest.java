@@ -20,6 +20,7 @@ package org.apache.commons.jcs4.auxiliary.remote.server;
  */
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.rmi.server.RMISocketFactory;
@@ -55,8 +56,8 @@ class RemoteCacheServerFactoryUnitTest
     void testConfigureObjectSpecificCustomFactory_withProperty_TimeoutConfigurableRMIScoketFactory()
     {
         // SETUP
-        final int readTimeout = 1234;
-        final int openTimeout = 1234;
+        final long readTimeout = 1234;
+        final long openTimeout = 1234;
         final Properties props = new Properties();
         props.put( IRemoteCacheConstants.CUSTOM_RMI_SOCKET_FACTORY_PROPERTY_PREFIX, TimeoutConfigurableRMISocketFactory.class.getName() );
         props.put( IRemoteCacheConstants.CUSTOM_RMI_SOCKET_FACTORY_PROPERTY_PREFIX + ".readTimeout", String.valueOf( readTimeout ) );
@@ -67,9 +68,10 @@ class RemoteCacheServerFactoryUnitTest
 
         // VERIFY
         assertNotNull( result, "Should have a custom socket factory." );
-        assertEquals( readTimeout, ( (TimeoutConfigurableRMISocketFactory) result ).getReadTimeout(),
+        assertInstanceOf(TimeoutConfigurableRMISocketFactory.class, result, "Should be a TimeoutConfigurableRMISocketFactory");
+        assertEquals( readTimeout, ((TimeoutConfigurableRMISocketFactory) result).getReadTimeoutDuration().toMillis(),
                       "Wrong readTimeout" );
-        assertEquals( openTimeout, ( (TimeoutConfigurableRMISocketFactory) result ).getOpenTimeout(),
+        assertEquals( openTimeout, ((TimeoutConfigurableRMISocketFactory) result).getOpenTimeoutDuration().toMillis(),
                       "Wrong readTimeout" );
     }
 
@@ -134,7 +136,7 @@ class RemoteCacheServerFactoryUnitTest
         final RemoteCacheServerAttributes result = RemoteCacheServerFactory.configureRemoteCacheServerAttributes( props );
 
         // VERIFY
-        assertEquals( registryKeepAliveDelayMillis, result.getRegistryKeepAliveDelayMillis(),
+        assertEquals( registryKeepAliveDelayMillis, result.getRegistryKeepAliveDelay().toMillis(),
                       "Wrong registryKeepAliveDelayMillis" );
     }
 
@@ -151,7 +153,7 @@ class RemoteCacheServerFactoryUnitTest
         final RemoteCacheServerAttributes result = RemoteCacheServerFactory.configureRemoteCacheServerAttributes( props );
 
         // VERIFY
-        assertEquals( rmiSocketFactoryTimeoutMillis, result.getRmiSocketFactoryTimeoutMillis(),
+        assertEquals( rmiSocketFactoryTimeoutMillis, result.getRmiSocketFactoryTimeout().toMillis(),
                       "Wrong rmiSocketFactoryTimeoutMillis" );
     }
 
@@ -166,8 +168,8 @@ class RemoteCacheServerFactoryUnitTest
         final RemoteCacheServerAttributes result = RemoteCacheServerFactory.configureRemoteCacheServerAttributes( props );
 
         // VERIFY
-        assertEquals( ICommonRemoteCacheAttributes.DEFAULT_RMI_SOCKET_FACTORY_TIMEOUT_MILLIS,
-                      result.getRmiSocketFactoryTimeoutMillis(), "Wrong timeout" );
+        assertEquals( ICommonRemoteCacheAttributes.DEFAULT_RMI_SOCKET_FACTORY_TIMEOUT,
+                      result.getRmiSocketFactoryTimeout(), "Wrong timeout" );
     }
 
     /** Verify that we get the useRegistryKeepAlive value */

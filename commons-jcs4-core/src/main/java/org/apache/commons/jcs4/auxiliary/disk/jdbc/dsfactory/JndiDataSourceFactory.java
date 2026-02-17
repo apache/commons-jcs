@@ -149,8 +149,8 @@ public class JndiDataSourceFactory implements DataSourceFactory
             this.path = config.getJndiPath();
             log.debug("JNDI path: {0}", path);
 
-            this.ttl = config.getJndiTTL();
-            log.debug("Time between context lookups: {0}", ttl);
+            this.ttl = config.getJndiTTL().toMillis();
+            log.debug("Time between context lookups: {0} ms.", ttl);
 
     		final Hashtable<String, Object> env = new Hashtable<>();
             ctx = new InitialContext(env);

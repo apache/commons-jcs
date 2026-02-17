@@ -64,7 +64,7 @@ public interface IElementSerializer
      * @throws ClassNotFoundException thrown if we don't know the object.
      * @since 3.1
      */
-    default <T> T deSerializeFrom(final AsynchronousByteChannel ic, final int readTimeoutMs, final ClassLoader loader)
+    default <T> T deSerializeFrom(final AsynchronousByteChannel ic, final long readTimeoutMs, final ClassLoader loader)
         throws IOException, ClassNotFoundException
     {
         final ByteBuffer bufferSize = ByteBuffer.allocate(4);
@@ -202,7 +202,7 @@ public interface IElementSerializer
      * @throws IOException if serialization or writing fails
      * @since 3.1
      */
-    default <T> int serializeTo(final T obj, final AsynchronousByteChannel oc, final int writeTimeoutMs)
+    default <T> int serializeTo(final T obj, final AsynchronousByteChannel oc, final long writeTimeoutMs)
         throws IOException
     {
         final byte[] serialized = serialize(obj);

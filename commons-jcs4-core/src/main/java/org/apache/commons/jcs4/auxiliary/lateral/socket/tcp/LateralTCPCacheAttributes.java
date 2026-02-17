@@ -1,5 +1,7 @@
 package org.apache.commons.jcs4.auxiliary.lateral.socket.tcp;
 
+import java.time.Duration;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -55,10 +57,10 @@ public class LateralTCPCacheAttributes
     private static final boolean DEFAULT_FILTER_REMOVE_BY_HASH_CODE = true;
 
     /** Default - Only block for 1 second before timing out on a read.*/
-    private static final int DEFAULT_SOCKET_TIME_OUT = 1000;
+    private static final Duration DEFAULT_SOCKET_TIME_OUT = Duration.ofMillis(1000);
 
     /** Default - Only block for 2 seconds before timing out on startup.*/
-    private static final int DEFAULT_OPEN_TIMEOUT = 2000;
+    private static final Duration DEFAULT_OPEN_TIMEOUT = Duration.ofMillis(2000);
 
     /** TCP -------------------------------------------- */
     private String tcpServers = "";
@@ -100,10 +102,10 @@ public class LateralTCPCacheAttributes
     private boolean filterRemoveByHashCode = DEFAULT_FILTER_REMOVE_BY_HASH_CODE;
 
     /** Only block for socketTimeOut seconds before timing out on a read.  */
-    private int socketTimeOut = DEFAULT_SOCKET_TIME_OUT;
+    private Duration socketTimeOut = DEFAULT_SOCKET_TIME_OUT;
 
     /** Only block for openTimeOut seconds before timing out on startup. */
-    private int openTimeOut = DEFAULT_OPEN_TIMEOUT;
+    private Duration openTimeOut = DEFAULT_OPEN_TIMEOUT;
 
 
     /** Default receive setting */
@@ -125,7 +127,7 @@ public class LateralTCPCacheAttributes
      * @return the openTimeOut
      */
     @Override
-    public int getOpenTimeOut()
+    public Duration getOpenTimeOut()
     {
         return openTimeOut;
     }
@@ -134,7 +136,7 @@ public class LateralTCPCacheAttributes
      * @return the socketTimeOut
      */
     @Override
-    public int getSocketTimeOut()
+    public Duration getSocketTimeOut()
     {
         return socketTimeOut;
     }
@@ -342,7 +344,7 @@ public class LateralTCPCacheAttributes
      */
     public void setOpenTimeOut( final int openTimeOut )
     {
-        this.openTimeOut = openTimeOut;
+        this.openTimeOut = Duration.ofMillis(openTimeOut);
     }
 
     /**
@@ -350,7 +352,7 @@ public class LateralTCPCacheAttributes
      */
     public void setSocketTimeOut( final int socketTimeOut )
     {
-        this.socketTimeOut = socketTimeOut;
+        this.socketTimeOut = Duration.ofMillis(socketTimeOut);
     }
 
     /**

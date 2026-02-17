@@ -22,6 +22,7 @@ package org.apache.commons.jcs4.engine;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
+import java.time.Duration;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.jcs4.engine.behavior.ICacheElement;
@@ -99,7 +100,7 @@ class EventQueueConcurrentLoadTest
     {
         listen = new CacheListenerImpl<>();
         queue = new CacheEventQueue<>( listen, 1L, "testCache1", maxFailure, waitBeforeRetry );
-        queue.setWaitToDieMillis( idleTime );
+        queue.setWaitToDie(Duration.ofMillis(idleTime));
     }
 
     /**

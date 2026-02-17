@@ -20,6 +20,7 @@ package org.apache.commons.jcs4.auxiliary.disk;
  */
 
 import java.io.File;
+import java.time.Duration;
 
 import org.apache.commons.jcs4.auxiliary.AbstractAuxiliaryCacheAttributes;
 import org.apache.commons.jcs4.auxiliary.disk.behavior.IDiskCacheAttributes;
@@ -37,7 +38,7 @@ public abstract class AbstractDiskCacheAttributes extends AbstractAuxiliaryCache
     private static final Log log = Log.getLog(AbstractDiskCacheAttributes.class);
 
     /** Default amount of time to allow for key persistence on shutdown */
-    private static final int DEFAULT_shutdownSpoolTimeLimit = 60;
+    private static final Duration DEFAULT_shutdownSpoolTimeLimit = Duration.ofSeconds(60);
 
     /** Path to disk */
     private File diskPath;
@@ -52,7 +53,7 @@ public abstract class AbstractDiskCacheAttributes extends AbstractAuxiliaryCache
      * This default determines how long the shutdown will wait for the key spool and data defrag to
      * finish.
      */
-    private int shutdownSpoolTimeLimit = DEFAULT_shutdownSpoolTimeLimit;
+    private Duration shutdownSpoolTimeLimit = DEFAULT_shutdownSpoolTimeLimit;
 
     /** Type of disk limit: SIZE or COUNT */
     private DiskLimitType diskLimitType = DiskLimitType.COUNT;
@@ -88,14 +89,14 @@ public abstract class AbstractDiskCacheAttributes extends AbstractAuxiliaryCache
     }
 
     /**
-     * Gets the amount of time in seconds we will wait for elements to move to disk during shutdown
+     * Gets the amount of time we will wait for elements to move to disk during shutdown
      * for a particular region.
      * <p>
      *
-     * @return the time in seconds.
+     * @return the time.
      */
     @Override
-    public int getShutdownSpoolTimeLimit()
+    public Duration getShutdownSpoolTimeLimit()
     {
         return this.shutdownSpoolTimeLimit;
     }
@@ -191,7 +192,7 @@ public abstract class AbstractDiskCacheAttributes extends AbstractAuxiliaryCache
      */
     public void setShutdownSpoolTimeLimit(final int shutdownSpoolTimeLimit)
     {
-        this.shutdownSpoolTimeLimit = shutdownSpoolTimeLimit;
+        this.shutdownSpoolTimeLimit = Duration.ofSeconds(shutdownSpoolTimeLimit);
     }
 
     /**

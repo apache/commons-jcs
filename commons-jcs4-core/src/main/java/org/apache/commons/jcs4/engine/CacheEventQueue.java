@@ -23,8 +23,8 @@ import java.util.concurrent.ExecutorService;
 
 import org.apache.commons.jcs4.engine.behavior.ICacheListener;
 import org.apache.commons.jcs4.utils.threadpool.PoolConfiguration;
-import org.apache.commons.jcs4.utils.threadpool.ThreadPoolManager;
 import org.apache.commons.jcs4.utils.threadpool.PoolConfiguration.WhenBlockedPolicy;
+import org.apache.commons.jcs4.utils.threadpool.ThreadPoolManager;
 
 /**
  * An event queue is used to propagate ordered cache events to one and only one target listener.
@@ -70,7 +70,8 @@ public class CacheEventQueue<K, V>
     {
         // create a default pool with one worker thread to mimic the SINGLE queue behavior
         return ThreadPoolManager.getInstance().createPool(
-                new PoolConfiguration(false, 0, 1, 1, getWaitToDieMillis(), WhenBlockedPolicy.RUN, 1),
+                new PoolConfiguration(false, 0, 1, 1, getWaitToDie().toMillisPart(),
+                        WhenBlockedPolicy.RUN, 1),
                 "CacheEventQueue.QProcessor-" + getCacheName());
     }
 

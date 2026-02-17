@@ -1,5 +1,7 @@
 package org.apache.commons.jcs4.auxiliary.disk.jdbc;
 
+import java.time.Duration;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -37,7 +39,7 @@ public class JDBCDiskCacheAttributes
     public static final int DEFAULT_MAX_TOTAL = 10;
 
     /** This is the default setting for the cleanup routine. */
-    public static final int DEFAULT_SHRINKER_INTERVAL_SECONDS = 300;
+    public static final Duration DEFAULT_SHRINKER_INTERVAL = Duration.ofSeconds(300);
 
     /** The default Pool Name to which the connection pool will be keyed. */
     public static final String DEFAULT_POOL_NAME = "jcs";
@@ -58,7 +60,7 @@ public class JDBCDiskCacheAttributes
     private String jndiPath;
 
     /** The time between two JNDI lookups */
-    private long jndiTTL;
+    private Duration jndiTTL;
 
     /** The table name */
     private String tableName = DEFAULT_TABLE_NAME;
@@ -70,7 +72,7 @@ public class JDBCDiskCacheAttributes
     private int maxTotal = DEFAULT_MAX_TOTAL;
 
     /** How often should we remove expired. */
-    private int shrinkerIntervalSeconds = DEFAULT_SHRINKER_INTERVAL_SECONDS;
+    private Duration shrinkerInterval = DEFAULT_SHRINKER_INTERVAL;
 
     /** Should we remove expired in the background. */
     private boolean useDiskShrinker = true;
@@ -116,7 +118,7 @@ public class JDBCDiskCacheAttributes
     /**
 	 * @return the jndiTTL
 	 */
-	public long getJndiTTL()
+	public Duration getJndiTTL()
 	{
 		return jndiTTL;
 	}
@@ -140,9 +142,9 @@ public class JDBCDiskCacheAttributes
     /**
      * @return the shrinkerIntervalSeconds.
      */
-    public int getShrinkerIntervalSeconds()
+    public Duration getShrinkerInterval()
     {
-        return shrinkerIntervalSeconds;
+        return shrinkerInterval;
     }
 
     /**
@@ -214,7 +216,7 @@ public class JDBCDiskCacheAttributes
 	 */
 	public void setJndiTTL(final long jndiTTL)
 	{
-		this.jndiTTL = jndiTTL;
+		this.jndiTTL = Duration.ofMillis(jndiTTL);
 	}
 
     /**
@@ -238,7 +240,7 @@ public class JDBCDiskCacheAttributes
      */
     public void setShrinkerIntervalSeconds( final int shrinkerIntervalSecondsArg )
     {
-        this.shrinkerIntervalSeconds = shrinkerIntervalSecondsArg;
+        this.shrinkerInterval = Duration.ofSeconds(shrinkerIntervalSecondsArg);
     }
 
     /**
@@ -301,7 +303,7 @@ public class JDBCDiskCacheAttributes
         buf.append( "\n TestBeforeInsert [" + isTestBeforeInsert() + "]" );
         buf.append( "\n MaxActive [" + getMaxTotal() + "]" );
         buf.append( "\n AllowRemoveAll [" + isAllowRemoveAll() + "]" );
-        buf.append( "\n ShrinkerIntervalSeconds [" + getShrinkerIntervalSeconds() + "]" );
+        buf.append( "\n ShrinkerIntervalSeconds [" + getShrinkerInterval() + "]" );
         buf.append( "\n useDiskShrinker [" + isUseDiskShrinker() + "]" );
         return buf.toString();
     }

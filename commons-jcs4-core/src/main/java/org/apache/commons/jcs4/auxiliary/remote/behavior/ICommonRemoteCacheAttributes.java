@@ -1,5 +1,7 @@
 package org.apache.commons.jcs4.auxiliary.remote.behavior;
 
+import java.time.Duration;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -30,7 +32,7 @@ public interface ICommonRemoteCacheAttributes
     extends AuxiliaryCacheAttributes
 {
     /** The default timeout for the custom RMI socket factory */
-    int DEFAULT_RMI_SOCKET_FACTORY_TIMEOUT_MILLIS = 10000;
+    Duration DEFAULT_RMI_SOCKET_FACTORY_TIMEOUT = Duration.ofMillis(10000);
 
     /**
      * Gets the clusterServers attribute of the IRemoteCacheAttributes object
@@ -87,9 +89,9 @@ public interface ICommonRemoteCacheAttributes
      * <p>
      * We have a default setting. The default rmi behavior should never be used.
      *
-     * @return int milliseconds
+     * @return timeout on the rmi socket factory
      */
-    int getRmiSocketFactoryTimeoutMillis();
+    Duration getRmiSocketFactoryTimeout();
 
     /**
      * Should cluster updates be propagated to the locals

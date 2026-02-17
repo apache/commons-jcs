@@ -20,6 +20,7 @@ package org.apache.commons.jcs4.engine.behavior;
  */
 
 import java.io.IOException;
+import java.time.Duration;
 
 import org.apache.commons.jcs4.engine.stats.behavior.IStats;
 
@@ -82,15 +83,15 @@ public interface ICacheEventQueue<K, V>
      */
     default void destroy()
     {
-        destroy(0);
+        destroy(Duration.ZERO);
     }
 
     /**
      * Destroy the queue
      *
-     * @param waitSeconds number of seconds to wait for the queue to drain
+     * @param wait time to wait for the queue to drain
      */
-    void destroy(int waitSeconds);
+    void destroy(Duration wait);
 
     /**
      * Gets the listenerId attribute of the ICacheEventQueue object

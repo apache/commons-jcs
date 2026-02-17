@@ -21,6 +21,7 @@ package org.apache.commons.jcs4.auxiliary.disk.block;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -624,11 +625,11 @@ public class BlockDiskCache<K, V>
     {
         // add this region to the persistence thread.
         // TODO we might need to stagger this a bit.
-        long interval = getAuxiliaryCacheAttributes().getKeyPersistenceIntervalSeconds();
-        if ( interval > 0 )
+        Duration interval = getAuxiliaryCacheAttributes().getKeyPersistenceInterval();
+        if ( interval.toSeconds() > 0 )
         {
             future = scheduledExecutor.scheduleAtFixedRate(keyStore::saveKeys,
-                    interval, interval, TimeUnit.SECONDS);
+                    interval.toSeconds(), interval.toSeconds(), TimeUnit.SECONDS);
         }
     }
 

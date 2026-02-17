@@ -1,5 +1,7 @@
 package org.apache.commons.jcs4.auxiliary.disk.jdbc;
 
+import java.time.Duration;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -36,7 +38,7 @@ public class ShrinkerThread
     private static final Log log = Log.getLog( ShrinkerThread.class );
 
     /** Default time period to use. */
-    private static final long DEFAULT_PAUSE_BETWEEN_REGION_CALLS_MILLIS = 5000;
+    private static final Duration DEFAULT_PAUSE_BETWEEN_REGION_CALLS = Duration.ofMillis(5000);
 
     /** A set of JDBCDiskCache objects to call deleteExpired on. */
     private final CopyOnWriteArraySet<JDBCDiskCache<?, ?>> shrinkSet =
@@ -47,7 +49,7 @@ public class ShrinkerThread
      * of regions. Delete can lock the table. We want to give clients a chance to get some work
      * done.
      */
-    private long pauseBetweenRegionCallsMillis = DEFAULT_PAUSE_BETWEEN_REGION_CALLS_MILLIS;
+    private Duration pauseBetweenRegionCalls = DEFAULT_PAUSE_BETWEEN_REGION_CALLS;
 
     /**
      * Does nothing special.
@@ -91,11 +93,11 @@ public class ShrinkerThread
             if ( i.hasNext() )
             {
                 log.info( "Pausing for [{0}] ms before shrinking the next region.",
-                        getPauseBetweenRegionCallsMillis() );
+                        getPauseBetweenRegionCalls().toMillis() );
 
                 try
                 {
-                    Thread.sleep( getPauseBetweenRegionCallsMillis() );
+                    Thread.sleep( getPauseBetweenRegionCalls().toMillis() );
                 }
                 catch ( final InterruptedException e )
                 {
@@ -109,11 +111,11 @@ public class ShrinkerThread
      * How long should we wait between calls to deleteExpired when we are iterating through the list
      * of regions.
      *
-     * @return the pauseBetweenRegionCallsMillis.
+     * @return the pauseBetweenRegionCalls.
      */
-    public long getPauseBetweenRegionCallsMillis()
+    public Duration getPauseBetweenRegionCalls()
     {
-        return pauseBetweenRegionCallsMillis;
+        return pauseBetweenRegionCalls;
     }
 
     /**
@@ -140,6 +142,6 @@ public class ShrinkerThread
      */
     public void setPauseBetweenRegionCallsMillis( final long pauseBetweenRegionCallsMillis )
     {
-        this.pauseBetweenRegionCallsMillis = pauseBetweenRegionCallsMillis;
+        this.pauseBetweenRegionCalls = Duration.ofMillis(pauseBetweenRegionCallsMillis);
     }
 }

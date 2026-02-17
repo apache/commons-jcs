@@ -1,5 +1,7 @@
 package org.apache.commons.jcs4.auxiliary.remote.behavior;
 
+import java.time.Duration;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -92,9 +94,9 @@ public interface IRemoteCacheAttributes
      * -1 and 0 mean no timeout, this is the default if the timeout is -1 or 0, no threadpool will
      * be used.
      *
-     * @return the time in millis
+     * @return the time
      */
-    int getGetTimeoutMillis();
+    Duration getGetTimeout();
 
     /**
      * Gets the localPort attribute of the IRemoteCacheAttributes object

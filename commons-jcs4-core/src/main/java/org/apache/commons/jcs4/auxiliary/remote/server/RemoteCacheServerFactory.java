@@ -454,7 +454,7 @@ public class RemoteCacheServerFactory
 
             final RMISocketFactory customRMISocketFactory = configureObjectSpecificCustomFactory( props );
 
-            RemoteUtils.configureGlobalCustomSocketFactory( rcsa.getRmiSocketFactoryTimeoutMillis() );
+            RemoteUtils.configureGlobalCustomSocketFactory( rcsa.getRmiSocketFactoryTimeout() );
 
             // CONFIGURE THE EVENT LOGGER
             final ICacheEventLogger cacheEventLogger = configureCacheEventLogger( props );
@@ -486,7 +486,7 @@ public class RemoteCacheServerFactory
                             new DaemonThreadFactory("JCS-RemoteCacheServerFactory-"));
                 }
                 keepAliveDaemon.scheduleAtFixedRate(() -> keepAlive(host, port, cacheEventLogger),
-                        0, rcsa.getRegistryKeepAliveDelayMillis(), TimeUnit.MILLISECONDS);
+                        0, rcsa.getRegistryKeepAliveDelay().toMillis(), TimeUnit.MILLISECONDS);
             }
         }
     }

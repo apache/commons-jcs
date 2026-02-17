@@ -20,6 +20,7 @@ package org.apache.commons.jcs4.auxiliary.disk.behavior;
  */
 
 import java.io.File;
+import java.time.Duration;
 
 import org.apache.commons.jcs4.auxiliary.AuxiliaryCacheAttributes;
 
@@ -63,12 +64,12 @@ public interface IDiskCacheAttributes
     int getMaxPurgatorySize();
 
     /**
-     * Gets the amount of time in seconds we will wait for elements to move to
+     * Gets the amount of time we will wait for elements to move to
      * disk during shutdown for a particular region.
      *
-     * @return the time in seconds.
+     * @return the time.
      */
-    int getShutdownSpoolTimeLimit();
+    Duration getShutdownSpoolTimeLimit();
 
     /**
      * If this is true then remove all is not prohibited.

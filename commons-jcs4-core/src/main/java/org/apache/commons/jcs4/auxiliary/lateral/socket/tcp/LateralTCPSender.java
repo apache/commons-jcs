@@ -22,6 +22,7 @@ package org.apache.commons.jcs4.auxiliary.lateral.socket.tcp;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.AsynchronousSocketChannel;
+import java.time.Duration;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -44,8 +45,8 @@ public class LateralTCPSender
     private static final Log log = Log.getLog( LateralTCPSender.class );
 
     /** Config */
-    private final int socketOpenTimeOut;
-    private final int socketSoTimeOut;
+    private final Duration socketOpenTimeOut;
+    private final Duration socketSoTimeOut;
 
     /** The serializer. */
     private final IElementSerializer serializer;
@@ -132,7 +133,7 @@ public class LateralTCPSender
             final InetSocketAddress hostAddress = new InetSocketAddress(host, port);
             final Future<Void> future = client.connect(hostAddress);
 
-            future.get(this.socketOpenTimeOut, TimeUnit.MILLISECONDS);
+            future.get(this.socketOpenTimeOut.toMillis(), TimeUnit.MILLISECONDS);
         }
         catch (final IOException | InterruptedException | ExecutionException | TimeoutException ioe)
         {
@@ -165,7 +166,7 @@ public class LateralTCPSender
         lock.lock();
         try
         {
-            serializer.serializeTo(led, client, socketSoTimeOut);
+            serializer.serializeTo(led, client, socketSoTimeOut.toMillis());
         }
         finally
         {
@@ -204,7 +205,7 @@ public class LateralTCPSender
         {
             // write object to listener
             send(led);
-            response = serializer.deSerializeFrom(client, socketSoTimeOut, null);
+            response = serializer.deSerializeFrom(client, socketSoTimeOut.toMillis(), null);
         }
         catch ( final IOException | ClassNotFoundException ioe )
         {

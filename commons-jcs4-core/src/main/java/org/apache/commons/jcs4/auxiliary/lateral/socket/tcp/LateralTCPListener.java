@@ -26,6 +26,7 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
+import java.time.Duration;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -55,7 +56,7 @@ public class LateralTCPListener<K, V>
     private static final Log log = Log.getLog( LateralTCPListener.class );
 
     /** How long the server will block on an accept(). 0 is infinite. */
-    private static final int acceptTimeOut = 1000;
+    private static final Duration acceptTimeOut = Duration.ofMillis(1000);
 
     /** Map of available instances, keyed by port */
     private static final ConcurrentHashMap<String, ILateralCacheListener<?, ?>> instances =
@@ -526,7 +527,7 @@ public class LateralTCPListener<K, V>
             // Check to see if we've been asked to exit, and exit
             while (!terminated.get())
             {
-                final int activeKeys = selector.select(acceptTimeOut);
+                final int activeKeys = selector.select(acceptTimeOut.toMillis());
                 if (activeKeys == 0)
                 {
                     continue;

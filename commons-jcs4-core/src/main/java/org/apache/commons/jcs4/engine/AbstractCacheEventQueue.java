@@ -20,6 +20,7 @@ package org.apache.commons.jcs4.engine;
  */
 
 import java.io.IOException;
+import java.time.Duration;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
@@ -78,7 +79,7 @@ public abstract class AbstractCacheEventQueue<K, V>
 
                 try
                 {
-                    Thread.sleep( waitBeforeRetry );
+                    Thread.sleep( waitBeforeRetry.toMillis() );
                 }
                 catch ( final InterruptedException ie )
                 {
@@ -189,13 +190,13 @@ public abstract class AbstractCacheEventQueue<K, V>
     private static final Log log = Log.getLog( AbstractCacheEventQueue.class );
 
     /** Default */
-    protected static final int DEFAULT_WAIT_TO_DIE_MILLIS = 10000;
+    private static final Duration DEFAULT_WAIT_TO_DIE = Duration.ofMillis(10000);
 
     /**
      * time to wait for an event before snuffing the background thread if the queue is empty. make
      * configurable later
      */
-    private int waitToDieMillis = DEFAULT_WAIT_TO_DIE_MILLIS;
+    private Duration waitToDie = DEFAULT_WAIT_TO_DIE;
 
     /**
      * When the events are pulled off the queue, then tell the listener to handle the specific event
@@ -213,7 +214,7 @@ public abstract class AbstractCacheEventQueue<K, V>
     private int maxFailure;
 
     /** In milliseconds */
-    private int waitBeforeRetry;
+    private Duration waitBeforeRetry;
 
     /**
      * This means that the queue is functional. If we reached the max number of failures, the queue
@@ -288,9 +289,9 @@ public abstract class AbstractCacheEventQueue<K, V>
      *
      * @return int
      */
-    public int getWaitToDieMillis()
+    protected Duration getWaitToDie()
     {
-        return waitToDieMillis;
+        return waitToDie;
     }
 
     /**
@@ -314,7 +315,7 @@ public abstract class AbstractCacheEventQueue<K, V>
         this.listenerId = listenerId;
         this.cacheName = cacheName;
         this.maxFailure = maxFailure <= 0 ? 3 : maxFailure;
-        this.waitBeforeRetry = waitBeforeRetry <= 0 ? 500 : waitBeforeRetry;
+        this.waitBeforeRetry = Duration.ofMillis(waitBeforeRetry <= 0 ? 500 : waitBeforeRetry);
 
         log.debug( "Constructed: {0}", this );
     }
@@ -351,9 +352,9 @@ public abstract class AbstractCacheEventQueue<K, V>
      *
      * @param wtdm the ms for the q to sit idle.
      */
-    public void setWaitToDieMillis( final int wtdm )
+    protected void setWaitToDie( final Duration wtdm )
     {
-        waitToDieMillis = wtdm;
+        waitToDie = wtdm;
     }
 
     /**

@@ -117,10 +117,10 @@ public class JDBCDiskCacheFactory
         if ( cattr.isUseDiskShrinker() )
         {
             final ScheduledExecutorService shrinkerService = getScheduledExecutorService();
-            final ShrinkerThread shrinkerThread = shrinkerThreadMap.computeIfAbsent(cattr.getTableName(), key -> {
+            final ShrinkerThread shrinkerThread = shrinkerThreadMap.computeIfAbsent(cattr.getTableName(), key ->
+            {
                 final ShrinkerThread newShrinkerThread = new ShrinkerThread();
-
-                final long intervalMillis = Math.max( 999, cattr.getShrinkerIntervalSeconds() * 1000 );
+                final long intervalMillis = Math.max(999, cattr.getShrinkerInterval().toMillis());
                 log.info( "Setting the shrinker to run every [{0}] ms. for table [{1}]",
                         intervalMillis, key );
                 shrinkerService.scheduleAtFixedRate(newShrinkerThread, 0, intervalMillis, TimeUnit.MILLISECONDS);
