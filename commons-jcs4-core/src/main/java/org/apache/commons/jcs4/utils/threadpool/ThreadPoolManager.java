@@ -33,7 +33,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.jcs4.log.Log;
-import org.apache.commons.jcs4.utils.config.PropertySetter;
+import org.apache.commons.jcs4.utils.config.ConfigurationBuilder;
 
 /**
  * This manages threadpools for an application
@@ -142,8 +142,10 @@ public static void dispose()
      */
     private static PoolConfiguration loadConfig( final String root, final PoolConfiguration defaultPoolConfiguration )
     {
-        final PoolConfiguration config = defaultPoolConfiguration.clone();
-        PropertySetter.setProperties( config, props, root + "." );
+        final PoolConfiguration config = ConfigurationBuilder
+                .create(PoolConfiguration.class, defaultPoolConfiguration)
+                .fromProperties(props, root + ".")
+                .build();
 
         log.debug( "{0} PoolConfiguration = {1}", root, config );
 
@@ -197,8 +199,8 @@ public static void dispose()
         }
 
         // set initial default and then override if new settings are available
-        defaultConfig = loadConfig( DEFAULT_PROP_NAME_ROOT, new PoolConfiguration() );
-        defaultSchedulerConfig = loadConfig( DEFAULT_PROP_NAME_SCHEDULER_ROOT, new PoolConfiguration() );
+        defaultConfig = loadConfig(DEFAULT_PROP_NAME_ROOT, PoolConfiguration.defaults());
+        defaultSchedulerConfig = loadConfig(DEFAULT_PROP_NAME_SCHEDULER_ROOT, PoolConfiguration.defaults());
     }
 
     /**
@@ -224,10 +226,10 @@ public static void dispose()
     public ExecutorService createPool( final PoolConfiguration config, final String threadNamePrefix, final int threadPriority )
     {
         BlockingQueue<Runnable> queue = null;
-        if ( config.isUseBoundary() )
+        if ( config.useBoundary() )
         {
             log.debug( "Creating a Bounded Buffer to use for the pool" );
-            queue = new LinkedBlockingQueue<>(config.getBoundarySize());
+            queue = new LinkedBlockingQueue<>(config.boundarySize());
         }
         else
         {
@@ -236,15 +238,15 @@ public static void dispose()
         }
 
         final ThreadPoolExecutor pool = new ThreadPoolExecutor(
-            config.getStartUpSize(),
-            config.getMaximumPoolSize(),
-            config.getKeepAliveTime(),
+            config.startUpSize(),
+            config.maximumPoolSize(),
+            config.keepAliveTime(),
             TimeUnit.MILLISECONDS,
             queue,
             new DaemonThreadFactory(threadNamePrefix, threadPriority));
 
         // when blocked policy
-        switch (config.getWhenBlockedPolicy())
+        switch (config.whenBlockedPolicy())
         {
             case ABORT:
                 pool.setRejectedExecutionHandler(new ThreadPoolExecutor.AbortPolicy());
@@ -280,7 +282,7 @@ public static void dispose()
     {
 
         return Executors.newScheduledThreadPool(
-                config.getMaximumPoolSize(),
+                config.maximumPoolSize(),
                 new DaemonThreadFactory(threadNamePrefix, threadPriority));
     }
 
