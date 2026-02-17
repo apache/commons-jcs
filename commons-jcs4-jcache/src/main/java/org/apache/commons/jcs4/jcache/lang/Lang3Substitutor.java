@@ -24,7 +24,7 @@ import java.util.Map;
 
 import org.apache.commons.text.StringSubstitutor;
 
-public class Lang3Substitutor implements Subsitutor
+public class Lang3Substitutor implements Substitutor
 {
     private static final StringSubstitutor SUBSTITUTOR = new StringSubstitutor(new HashMap<String, Object>()
     {

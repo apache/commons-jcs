@@ -42,7 +42,7 @@ import org.apache.commons.jcs4.engine.behavior.IElementAttributes;
 import org.apache.commons.jcs4.engine.control.CompositeCache;
 import org.apache.commons.jcs4.engine.control.CompositeCacheConfigurator;
 import org.apache.commons.jcs4.engine.control.CompositeCacheManager;
-import org.apache.commons.jcs4.jcache.lang.Subsitutor;
+import org.apache.commons.jcs4.jcache.lang.Substitutor;
 import org.apache.commons.jcs4.jcache.proxy.ClassLoaderAwareCache;
 
 public class JCSCachingManager implements CacheManager
@@ -73,7 +73,7 @@ public class JCSCachingManager implements CacheManager
             };
         }
     }
-    private static final Subsitutor SUBSTITUTOR = Subsitutor.Helper.INSTANCE;
+    private static final Substitutor SUBSTITUTOR = Substitutor.Helper.INSTANCE;
 
     private static final String DEFAULT_CONFIG =
         """
