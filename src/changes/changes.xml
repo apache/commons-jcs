@@ -40,6 +40,9 @@
             <action dev="tv" type="fix" issue="JCS-243" due-to="Henrik Hiltunen">
                fix ICacheServiceAdmin not extending Remote
             </action>
+            <action dev="tv" type="fix" issue="JCS-222" due-to="Arturo Bernal">
+               fix typo "waterfal" method
+            </action>
             <!-- ADD -->
             <action type="add" dev="ggregory" due-to="Gary Gregory">
                Add Maven property project.build.outputTimestamp for build reproducibility.
