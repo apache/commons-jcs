@@ -391,8 +391,7 @@ public class CompositeCacheManager
         final ElapsedTimer timer = new ElapsedTimer();
 
         // set default value list
-        this.defaultAuxValues = OptionConverter.findAndSubst( CompositeCacheManager.DEFAULT_REGION,
-                properties );
+        this.defaultAuxValues = OptionConverter.findAndSubst( DEFAULT_REGION, properties );
 
         log.info( "Setting default auxiliaries to \"{0}\"", this.defaultAuxValues );
 

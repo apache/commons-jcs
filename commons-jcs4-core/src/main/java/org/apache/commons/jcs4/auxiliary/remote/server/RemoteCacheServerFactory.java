@@ -29,6 +29,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
 import java.rmi.server.RMISocketFactory;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.Properties;
 import java.util.concurrent.Executors;
@@ -51,7 +52,6 @@ import org.apache.commons.jcs4.utils.threadpool.DaemonThreadFactory;
  * requests to a running server.
  */
 public class RemoteCacheServerFactory
-    implements IRemoteCacheConstants
 {
     /** The logger */
     private static final Log log = Log.getLog( RemoteCacheServerFactory.class );
@@ -90,12 +90,13 @@ public class RemoteCacheServerFactory
     protected static RMISocketFactory configureObjectSpecificCustomFactory( final Properties props )
     {
         final RMISocketFactory customRMISocketFactory =
-            OptionConverter.instantiateByKey( props, CUSTOM_RMI_SOCKET_FACTORY_PROPERTY_PREFIX, null );
+            OptionConverter.instantiateByKey( props,
+                    IRemoteCacheConstants.CUSTOM_RMI_SOCKET_FACTORY_PROPERTY_PREFIX, null );
 
         if ( customRMISocketFactory != null )
         {
-            PropertySetter.setProperties( customRMISocketFactory, props, CUSTOM_RMI_SOCKET_FACTORY_PROPERTY_PREFIX
-                + "." );
+            PropertySetter.setProperties( customRMISocketFactory, props,
+                    IRemoteCacheConstants.CUSTOM_RMI_SOCKET_FACTORY_PROPERTY_PREFIX + "." );
             log.info( "Will use server specific custom socket factory. {0}",
                     customRMISocketFactory );
         }
@@ -119,7 +120,8 @@ public class RemoteCacheServerFactory
         final RemoteCacheServerAttributes rcsa = new RemoteCacheServerAttributes();
 
         // configure automatically
-        PropertySetter.setProperties( rcsa, prop, CACHE_SERVER_ATTRIBUTES_PROPERTY_PREFIX + "." );
+        PropertySetter.setProperties( rcsa, prop,
+                IRemoteCacheConstants.CACHE_SERVER_ATTRIBUTES_PROPERTY_PREFIX + "." );
 
         return rcsa;
     }
@@ -239,7 +241,9 @@ public class RemoteCacheServerFactory
      */
     private static ICacheServiceAdmin lookupCacheServiceAdmin(final Properties config, final int port) throws Exception
     {
-        final String remoteServiceName = config.getProperty( REMOTE_CACHE_SERVICE_NAME, REMOTE_CACHE_SERVICE_VAL ).trim();
+        final String remoteServiceName = config.getProperty(
+                IRemoteCacheConstants.REMOTE_CACHE_SERVICE_NAME,
+                IRemoteCacheConstants.REMOTE_CACHE_SERVICE_VAL ).trim();
         final String registry = RemoteUtils.getNamingURL("", port, remoteServiceName);
 
         log.debug( "looking up server {0}", registry );
@@ -300,7 +304,7 @@ public class RemoteCacheServerFactory
 
                 try
                 {
-                    log.debug( admin.getStatistics().toString() );
+                    log.debug(Arrays.deepToString(admin.getStatistics()));
                 }
                 catch ( final IOException es )
                 {

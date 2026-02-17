@@ -30,7 +30,7 @@ import org.apache.commons.jcs4.engine.logging.CacheEvent;
  */
 public interface ICacheEventLogger
 {
-    public enum CacheEventType
+    enum CacheEventType
     {
         /** ICache update */
         UPDATE_EVENT("update"),
@@ -85,7 +85,7 @@ public interface ICacheEventLogger
 
         public final String label;
 
-        private CacheEventType(String label)
+        CacheEventType(String label)
         {
             this.label = label;
         }

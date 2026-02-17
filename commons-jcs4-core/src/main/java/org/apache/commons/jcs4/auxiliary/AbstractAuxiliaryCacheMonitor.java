@@ -170,7 +170,7 @@ public abstract class AbstractAuxiliaryCacheMonitor extends Thread
                 // run immediately and sleep here.
                 log.debug( "Cache monitor sleeping for {0} between runs.", idlePeriod );
 
-                Thread.sleep( idlePeriod );
+                sleep( idlePeriod );
             }
             catch ( final InterruptedException ex )
             {

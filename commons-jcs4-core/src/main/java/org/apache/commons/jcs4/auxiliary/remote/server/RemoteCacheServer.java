@@ -467,7 +467,7 @@ public class RemoteCacheServer<K, V>
         final List<ICacheEventQueue<K, V>> list = new ArrayList<>(cacheListeners.eventQMap.values());
 
         // Only return qualified event queues
-        list.removeIf(q -> (!q.isWorking() || q.getListenerId() == requesterId));
+        list.removeIf(q -> !q.isWorking() || q.getListenerId() == requesterId);
 
         return list;
     }
@@ -1421,21 +1421,19 @@ public class RemoteCacheServer<K, V>
     {
         log.info( "Received shutdown request. Shutting down server." );
 
-        synchronized (listenerId)
+        final long maxListenerId = listenerId.get(0);
+        for (final String cacheName : cacheListenersMap.keySet())
         {
-            for (final String cacheName : cacheListenersMap.keySet())
+            for (long i = 0; i <= maxListenerId; i++)
             {
-                for (long i = 0; i <= listenerId.get(0); i++)
-                {
-                    removeCacheListener( cacheName, i );
-                }
-
-                log.info( "Removing listener for cache [{0}]", cacheName );
+                removeCacheListener( cacheName, i );
             }
 
-            cacheListenersMap.clear();
-            clusterListenersMap.clear();
+            log.info( "Removing listener for cache [{0}]", cacheName );
         }
+
+        cacheListenersMap.clear();
+        clusterListenersMap.clear();
         RemoteCacheServerFactory.shutdownImpl( host, port );
         this.cacheManager.shutDown();
     }

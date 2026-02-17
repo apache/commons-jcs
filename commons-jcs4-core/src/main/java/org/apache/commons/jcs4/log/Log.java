@@ -383,6 +383,6 @@ public interface Log
      */
     static Log getLog(final Class<?> clazz)
     {
-        return Log.getLog(clazz.getName());
+        return getLog(clazz.getName());
     }
 }

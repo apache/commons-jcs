@@ -192,7 +192,6 @@ public class ShrinkerThread<K, V>
             // It is up to the IMemoryCache to return an array of keys
 
             // stop for now
-            return;
         }
     }
 }

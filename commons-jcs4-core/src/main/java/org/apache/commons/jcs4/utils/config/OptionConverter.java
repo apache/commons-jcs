@@ -159,7 +159,7 @@ public class OptionConverter
             return defaultValue;
         }
         // Trim className to avoid trailing spaces that cause problems.
-        return OptionConverter.instantiateByClassName( className.trim(), defaultValue );
+        return instantiateByClassName( className.trim(), defaultValue );
     }
 
     /**

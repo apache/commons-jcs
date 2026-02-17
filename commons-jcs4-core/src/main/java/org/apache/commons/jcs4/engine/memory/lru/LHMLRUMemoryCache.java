@@ -40,8 +40,7 @@ public class LHMLRUMemoryCache<K, V>
     /**
      * Implements removeEldestEntry from {@link LinkedHashMap}.
      */
-    protected class LHMSpooler
-        extends java.util.LinkedHashMap<K, MemoryElementDescriptor<K, V>>
+    protected class LHMSpooler extends LinkedHashMap<K, MemoryElementDescriptor<K, V>>
     {
         /** Don't change. */
         private static final long serialVersionUID = -1255907868906762484L;
@@ -76,7 +75,7 @@ public class LHMLRUMemoryCache<K, V>
 
             waterfall( element );
 
-            log.debug( "LHMLRU size: {0}", () -> map.size() );
+            log.debug( "LHMLRU size: {0}", map::size );
             return true;
         }
     }
