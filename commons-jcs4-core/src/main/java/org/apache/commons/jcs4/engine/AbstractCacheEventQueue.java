@@ -39,17 +39,20 @@ public abstract class AbstractCacheEventQueue<K, V>
      */
     protected class AbstractCacheEvent<T> implements Runnable
     {
-        protected final T eventData;
+        private final String eventName;
+        private final T eventData;
         private final IOExConsumer<T> eventRun;
 
         /**
          * Constructs a new instance.
          *
+         * @param eventName name of the event
          * @param eventData data of the event
          * @param eventRun operation to apply on the event
          */
-        protected AbstractCacheEvent(final T eventData, final IOExConsumer<T> eventRun)
+        protected AbstractCacheEvent(final String eventName, final T eventData, final IOExConsumer<T> eventRun)
         {
+            this.eventName = eventName;
             this.eventData = eventData;
             this.eventRun = eventRun;
         }
@@ -89,30 +92,16 @@ public abstract class AbstractCacheEventQueue<K, V>
                     + "non-functional.", this );
             destroy();
         }
-    }
-
-    /**
-     * The cache should be disposed when this event is processed.
-     */
-    protected class DisposeEvent extends AbstractCacheEvent<String>
-    {
-        /**
-         * Constructor for the DisposeEvent object.
-         */
-        protected DisposeEvent()
-        {
-            super(cacheName, listener::handleDispose);
-        }
 
         /**
          * For debugging.
          *
-         * @return The name of the event.
+         * @return Info on the key and value.
          */
         @Override
         public String toString()
         {
-            return "DisposeEvent";
+            return eventName + ": " + eventData.toString();
         }
     }
 
@@ -137,6 +126,20 @@ public abstract class AbstractCacheEventQueue<K, V>
     }
 
     /**
+     * The cache should be disposed when this event is processed.
+     */
+    protected class DisposeEvent extends AbstractCacheEvent<String>
+    {
+        /**
+         * Constructor for the DisposeEvent object.
+         */
+        protected DisposeEvent()
+        {
+            super("DisposeEvent", cacheName, listener::handleDispose);
+        }
+    }
+
+    /**
      * An element should be put in the cache.
      */
     protected class PutEvent extends AbstractCacheEvent<ICacheElement<K, V>>
@@ -148,18 +151,7 @@ public abstract class AbstractCacheEventQueue<K, V>
          */
         PutEvent( final ICacheElement<K, V> ice )
         {
-            super(ice, listener::handlePut);
-        }
-
-        /**
-         * For debugging.
-         *
-         * @return Info on the key and value.
-         */
-        @Override
-        public String toString()
-        {
-            return "PutEvent for key: " + eventData.key() + " value: " + eventData.value();
+            super("PutEvent", ice, listener::handlePut);
         }
     }
 
@@ -173,18 +165,7 @@ public abstract class AbstractCacheEventQueue<K, V>
          */
         protected RemoveAllEvent()
         {
-            super(cacheName, listener::handleRemoveAll);
-        }
-
-        /**
-         * For debugging.
-         *
-         * @return The name of the event.
-         */
-        @Override
-        public String toString()
-        {
-            return "RemoveAllEvent";
+            super("RemoveAllEvent", cacheName, listener::handleRemoveAll);
         }
     }
 
@@ -200,18 +181,7 @@ public abstract class AbstractCacheEventQueue<K, V>
          */
         RemoveEvent( final K key )
         {
-            super(key, AbstractCacheEventQueue.this::remove);
-        }
-
-        /**
-         * For debugging.
-         *
-         * @return Info on the key to remove.
-         */
-        @Override
-        public String toString()
-        {
-            return "RemoveEvent for " + eventData;
+            super("RemoveEvent", key, AbstractCacheEventQueue.this::remove);
         }
     }
 
