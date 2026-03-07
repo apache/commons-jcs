@@ -716,6 +716,10 @@ public class LateralTCPListener<K, V>
         {
             log.error( "Deserialization failed reading from socket", e );
         }
+        catch (final Exception e)
+        {
+            log.error( "Unexpected exception when reading from socket", e );
+        }
     }
 
     /**
