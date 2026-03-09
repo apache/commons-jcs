@@ -40,6 +40,9 @@
             <action dev="tv" type="fix" issue="JCS-243" due-to="Henrik Hiltunen">
                fix ICacheServiceAdmin not extending Remote
             </action>
+            <action dev="tv" type="fix" issue="JCS-244" due-to="Florin Pop">
+               replace IElementSerializer asserts with explicit IOExceptions. Add test.
+            </action>
             <action dev="tv" type="fix" issue="JCS-222" due-to="Arturo Bernal">
                fix typo "waterfal" method
             </action>

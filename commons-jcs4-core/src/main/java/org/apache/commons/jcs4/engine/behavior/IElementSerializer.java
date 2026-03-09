@@ -25,6 +25,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousByteChannel;
+import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
 import java.util.concurrent.ExecutionException;
@@ -77,16 +78,20 @@ public interface IElementSerializer
             {
                 throw new EOFException("End of stream reached (length)");
             }
-            assert read == bufferSize.capacity();
+            if (read != bufferSize.capacity())
+            {
+                throw new IOException("Unexpected data size (length) " + read);
+            }
         }
         catch (InterruptedException | ExecutionException | TimeoutException e)
         {
-            throw new IOException("Read timeout exceeded (length)" + readTimeoutMs, e);
+            throw new IOException("Read timeout exceeded (length) " + readTimeoutMs, e);
         }
 
         bufferSize.flip();
 
         final ByteBuffer serialized = ByteBuffer.allocate(bufferSize.getInt());
+        int totalRead = 0;
         while (serialized.remaining() > 0)
         {
             readFuture = ic.read(serialized);
@@ -97,11 +102,17 @@ public interface IElementSerializer
                 {
                     throw new EOFException("End of stream reached (object)");
                 }
+                totalRead += read;
             }
             catch (InterruptedException | ExecutionException | TimeoutException e)
             {
-                throw new IOException("Read timeout exceeded (object)" + readTimeoutMs, e);
+                throw new IOException("Read timeout exceeded (object) " + readTimeoutMs, e);
             }
+        }
+
+        if (totalRead != serialized.capacity())
+        {
+            throw new IOException("Unexpected data size (object) " + totalRead);
         }
 
         serialized.flip();
@@ -124,20 +135,7 @@ public interface IElementSerializer
     default <T> T deSerializeFrom(final InputStream is, final ClassLoader loader)
         throws IOException, ClassNotFoundException
     {
-        final byte[] bufferSize = new byte[4];
-        int read = is.read(bufferSize);
-        if (read < 0)
-        {
-            throw new EOFException("End of stream reached");
-        }
-        assert read == bufferSize.length;
-        final ByteBuffer size = ByteBuffer.wrap(bufferSize);
-
-        final byte[] serialized = new byte[size.getInt()];
-        read = is.read(serialized);
-        assert read == serialized.length;
-
-        return deSerialize(serialized, loader);
+        return deSerializeFrom(Channels.newChannel(is), loader);
     }
 
     /**
@@ -161,7 +159,10 @@ public interface IElementSerializer
         {
             throw new EOFException("End of stream reached (length)");
         }
-        assert read == bufferSize.capacity();
+        if (read != bufferSize.capacity())
+        {
+            throw new IOException("Unexpected data size (length) " + read);
+        }
         bufferSize.flip();
 
         final ByteBuffer serialized = ByteBuffer.allocate(bufferSize.getInt());
@@ -171,6 +172,10 @@ public interface IElementSerializer
             if (read < 0)
             {
                 throw new EOFException("End of stream reached (object)");
+            }
+            if (read != serialized.capacity())
+            {
+                throw new IOException("Unexpected data size (object) " + read);
             }
         }
         serialized.flip();

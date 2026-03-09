@@ -23,8 +23,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InvalidClassException;
+import java.io.StreamCorruptedException;
+import java.nio.ByteBuffer;
 
 import org.apache.commons.collections4.bag.HashBag;
 import org.apache.commons.jcs4.io.ObjectInputStreamClassLoaderAware;
@@ -131,5 +134,29 @@ class StandardSerializerUnitTest
         final byte[] serialized = serializer.serialize( new HashBag<String>() ); // forbidden class
 
         assertThrows(InvalidClassException.class, () -> serializer.deSerialize( serialized, null ));
+    }
+
+    /**
+     * Test resilience of deserialization against data integrity errors (JCS-244)
+     */
+    @Test
+    void testDeserializationResilience()
+    {
+        byte[] inputArray1 = { 42 };
+        ByteArrayInputStream input1 = new ByteArrayInputStream(inputArray1);
+
+        assertThrows(IOException.class, () -> serializer.deSerializeFrom( input1, null ));
+
+        byte[] data2 = { 0x12, 0x34, 0x56, 0x78, 0x12, 0x34, 0x56, 0x78 };
+        byte[] inputArray2 = ByteBuffer.allocate(12).putInt(10).put(data2).array();
+        ByteArrayInputStream input2 = new ByteArrayInputStream(inputArray2);
+
+        assertThrows(IOException.class, () -> serializer.deSerializeFrom( input2, null ));
+
+        byte[] data3 = { 0x12, 0x34, 0x56, 0x78, 0x12, 0x34, 0x56, 0x78 };
+        byte[] inputArray3 = ByteBuffer.allocate(12).putInt(8).put(data3).array();
+        ByteArrayInputStream input3 = new ByteArrayInputStream(inputArray3);
+
+        assertThrows(StreamCorruptedException.class, () -> serializer.deSerializeFrom( input3, null ));
     }
 }
