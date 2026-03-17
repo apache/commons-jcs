@@ -22,11 +22,11 @@ package org.apache.commons.jcs4.utils.config;
 import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.RecordComponent;
+import java.time.Duration;
+import java.time.format.DateTimeParseException;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
-import java.util.regex.Pattern;
 
 import org.apache.commons.jcs4.log.Log;
 
@@ -111,11 +111,7 @@ public class ConfigurationBuilder<T>
 
         for (RecordComponent component : components)
         {
-            // Capitalize first letter of component name
-            String name = Pattern.compile("^.").matcher(component.getName()).replaceFirst(
-                    m -> m.group().toUpperCase(Locale.ENGLISH));
-
-            String fullKey = String.join(".", prefix, name);
+            String fullKey = String.join(".", prefix, component.getName());
             String value = OptionConverter.findAndSubst(fullKey, props);
 
             if (value != null)
@@ -188,24 +184,17 @@ public class ConfigurationBuilder<T>
         {
             return v;
         }
-        if ( Integer.TYPE.isAssignableFrom( type ) )
+        else if ( Integer.TYPE.isAssignableFrom( type ) )
         {
             return Integer.valueOf( v );
         }
-        if ( Long.TYPE.isAssignableFrom( type ) )
+        else if ( Long.TYPE.isAssignableFrom( type ) )
         {
             return Long.valueOf( v );
         }
-        if ( Boolean.TYPE.isAssignableFrom( type ) )
+        else if ( Boolean.TYPE.isAssignableFrom( type ) )
         {
-            if (Boolean.parseBoolean(v))
-            {
-                return Boolean.TRUE;
-            }
-            else
-            {
-                return Boolean.FALSE;
-            }
+            return Boolean.valueOf(v);
         }
         else if( type.isEnum() )
         {
@@ -216,6 +205,18 @@ public class ConfigurationBuilder<T>
         else if ( File.class.isAssignableFrom( type ) )
         {
             return new File( v );
+        }
+        else if ( Duration.class.isAssignableFrom( type ) )
+        {
+            try
+            {
+                return Duration.parse(v);
+            }
+            catch (DateTimeParseException e)
+            {
+                log.warn("Parsing Duration failed for {0}, assuming milliseconds", v);
+                return Duration.ofMillis(Long.parseLong(v));
+            }
         }
 
         log.warn("Unknown type for conversion: {0} and value {1}", type, value);

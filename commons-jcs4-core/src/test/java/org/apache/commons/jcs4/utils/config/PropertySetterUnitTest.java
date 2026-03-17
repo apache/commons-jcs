@@ -23,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 
 import java.io.File;
+import java.time.Duration;
 
 import org.junit.jupiter.api.Test;
 
@@ -54,6 +55,8 @@ class PropertySetterUnitTest
 
         final Object f = ps.convertArg("test.conf", File.class);
         assertInstanceOf( File.class, f, "Should be a file" );
-    }
 
+        final Object d = ps.convertArg("PT5s", Duration.class);
+        assertInstanceOf( Duration.class, d, "Should be a duration" );
+    }
 }

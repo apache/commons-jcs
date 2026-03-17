@@ -25,6 +25,8 @@ import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.io.File;
 import java.lang.reflect.Method;
+import java.time.Duration;
+import java.time.format.DateTimeParseException;
 import java.util.Properties;
 
 import org.apache.commons.jcs4.log.Log;
@@ -102,24 +104,17 @@ public class PropertySetter
         {
             return val;
         }
-        if ( Integer.TYPE.isAssignableFrom( type ) )
+        else if ( Integer.TYPE.isAssignableFrom( type ) )
         {
             return Integer.valueOf( v );
         }
-        if ( Long.TYPE.isAssignableFrom( type ) )
+        else if ( Long.TYPE.isAssignableFrom( type ) )
         {
             return Long.valueOf( v );
         }
-        if ( Boolean.TYPE.isAssignableFrom( type ) )
+        else if ( Boolean.TYPE.isAssignableFrom( type ) )
         {
-            if ( "true".equalsIgnoreCase( v ) )
-            {
-                return Boolean.TRUE;
-            }
-            if ( "false".equalsIgnoreCase( v ) )
-            {
-                return Boolean.FALSE;
-            }
+            return Boolean.valueOf(v);
         }
         else if( type.isEnum() )
         {
@@ -130,6 +125,18 @@ public class PropertySetter
         else if ( File.class.isAssignableFrom( type ) )
         {
             return new File( v );
+        }
+        else if ( Duration.class.isAssignableFrom( type ) )
+        {
+            try
+            {
+                return Duration.parse(v);
+            }
+            catch (DateTimeParseException e)
+            {
+                log.warn("Parsing Duration failed for {0}, assuming milliseconds", v);
+                return Duration.ofMillis(Long.parseLong(v));
+            }
         }
         return null;
     }
@@ -201,7 +208,6 @@ public class PropertySetter
                 setProperty( key.substring( len ), value );
             }
         }
-
     }
 
     /**
