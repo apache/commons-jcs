@@ -236,11 +236,11 @@ public class JDBCDiskCacheAttributes
     }
 
     /**
-     * @param shrinkerIntervalSecondsArg The shrinkerIntervalSeconds to set.
+     * @param shrinkerInterval The shrinkerInterval to set.
      */
-    public void setShrinkerIntervalSeconds( final int shrinkerIntervalSecondsArg )
+    public void setShrinkerInterval( final Duration shrinkerInterval )
     {
-        this.shrinkerInterval = Duration.ofSeconds(shrinkerIntervalSecondsArg);
+        this.shrinkerInterval = shrinkerInterval;
     }
 
     /**
@@ -303,7 +303,7 @@ public class JDBCDiskCacheAttributes
         buf.append( "\n TestBeforeInsert [" + isTestBeforeInsert() + "]" );
         buf.append( "\n MaxActive [" + getMaxTotal() + "]" );
         buf.append( "\n AllowRemoveAll [" + isAllowRemoveAll() + "]" );
-        buf.append( "\n ShrinkerIntervalSeconds [" + getShrinkerInterval() + "]" );
+        buf.append( "\n ShrinkerInterval [" + getShrinkerInterval() + "]" );
         buf.append( "\n useDiskShrinker [" + isUseDiskShrinker() + "]" );
         return buf.toString();
     }

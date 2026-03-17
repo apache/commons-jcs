@@ -54,7 +54,7 @@ jcs.auxiliary.JDBC.attributes.maxTotal=14
 jcs.auxiliary.JDBC.attributes.allowRemoveAll=true
 jcs.auxiliary.JDBC.attributes.MaxPurgatorySize=9999
 jcs.auxiliary.JDBC.attributes.UseDiskShrinker=true
-jcs.auxiliary.JDBC.attributes.ShrinkerIntervalSeconds=1
+jcs.auxiliary.JDBC.attributes.ShrinkerInterval=PT1S
 jcs.auxiliary.JDBC.attributes.EventQueueType=POOLED
 jcs.auxiliary.JDBC.attributes.EventQueuePoolName=disk_cache_event_queue
 

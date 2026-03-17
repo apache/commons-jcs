@@ -156,9 +156,9 @@
 
 					<tr>
 						<td>ShrinkerInterval</td>
-						<td>How often should the disk shrinker run (in seconds).</td>
+						<td>Interval between disk shrinker runs.</td>
 						<td>N</td>
-						<td>300</td>
+						<td>PT5M</td>
 					</tr>
 
 				</table>
@@ -181,7 +181,7 @@ jcs.auxiliary.JDBC.attributes.maxActive=15
 jcs.auxiliary.JDBC.attributes.allowRemoveAll=true
 jcs.auxiliary.JDBC.attributes.MaxPurgatorySize=10000000
 jcs.auxiliary.JDBC.attributes.UseDiskShrinker=true
-jcs.auxiliary.JDBC.attributes.ShrinkerInterval=300
+jcs.auxiliary.JDBC.attributes.ShrinkerInterval=PT5M
         ]]>
 				</source>
 			</subsection>
@@ -249,9 +249,9 @@ jcs.auxiliary.JDBC.attributes.maxActive=15
 jcs.auxiliary.JDBC.attributes.allowRemoveAll=true
 jcs.auxiliary.JDBC.attributes.MaxPurgatorySize=10000000
 jcs.auxiliary.JDBC.attributes.UseDiskShrinker=true
-jcs.auxiliary.JDBC.attributes.ShrinkerInterval=300
+jcs.auxiliary.JDBC.attributes.ShrinkerInterval=PT5M
 jcs.auxiliary.JDBC.attributes.EventQueueType=POOLED
-jcs.auxiliary.JDBC.attributes.EventQueuePoolName=disk_cache_event_queueue
+jcs.auxiliary.JDBC.attributes.EventQueuePoolName=disk_cache_event_queue
 
 ##############################################################
 ################## OPTIONAL THREAD POOL CONFIGURATION #########

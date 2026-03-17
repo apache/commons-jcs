@@ -134,14 +134,19 @@ java.util.logging.SimpleFormatter.format=[%1$tF %1$tT] %3$s [%4$-7s] %5$s %n
               <th>New Property Name</th>
             </tr>
             <tr>
-              <td>Region configuration (cacheattributes)</td>
+              <td>Region configuration (CompositeCacheAttributes)</td>
               <td>DiskUsagePatternName</td>
               <td>DiskUsagePattern</td>
             </tr>
             <tr>
-              <td>Element configuration (elementattributes)</td>
+              <td>Element configuration (ElementAttributes)</td>
               <td>IdleTime</td>
               <td>MaxIdleTime</td>
+            </tr>
+            <tr>
+              <td>JDBC configuration (JDBCDiskCacheAttributes)</td>
+              <td>ShrinkerIntervalSeconds</td>
+              <td>ShrinkerInterval</td>
             </tr>
           </table>
         </p>
@@ -178,17 +183,14 @@ java.util.logging.SimpleFormatter.format=[%1$tF %1$tT] %3$s [%4$-7s] %5$s %n
               <th>Default Value</th>
             </tr>
             <tr>
-              <td>Thread Pool Configuration (thread_pool)</td>
+              <td>Thread Pool Configuration (thread_pool, PoolConfiguration)</td>
               <td>keepAliveTime</td>
               <td>PT5M</td>
             </tr>
             <tr>
-              <td>Region configuration (cacheattributes)</td>
-              <td>DiskUsagePatternName</td>
-            </tr>
-            <tr>
-              <td>Element configuration (elementattributes)</td>
-              <td>IdleTime</td>
+              <td>JDBC Disk Cache configuration (JDBCDiskCacheAttributes)</td>
+              <td>ShrinkerInterval</td>
+              <td>PT5M</td>
             </tr>
           </table>
         </p>
