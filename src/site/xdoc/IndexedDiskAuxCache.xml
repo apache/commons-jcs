@@ -176,11 +176,6 @@ jcs.auxiliary.DC.attributes.MaxPurgatorySize=10000
 					data file will occur until shutdown. By default the
 					value is -1.
 				</p>
-				<p>
-					In version 1.2.7.9 of JCS, the optimization routine
-					was significantly improved. It now occurs in place,
-					without the aid of a temporary file.
-				</p>
 				<source><![CDATA[
 jcs.auxiliary.DC.attributes.OptimizeAtRemoveCount=30000
 ]]></source>
@@ -275,7 +270,7 @@ jcs.auxiliary.DC2.attributes.EventQueuePoolName=disk_cache_event_queue
 thread_pool.disk_cache_event_queue.useBoundary=false
 thread_pool.disk_cache_event_queue.maximumPoolSize=15
 thread_pool.disk_cache_event_queue.minimumPoolSize=1
-thread_pool.disk_cache_event_queue.keepAliveTime=3500
+thread_pool.disk_cache_event_queue.keepAliveTime=PT3.5s
 thread_pool.disk_cache_event_queue.startUpSize=1
 ]]></source>
 			</subsection>

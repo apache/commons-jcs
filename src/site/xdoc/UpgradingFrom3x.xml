@@ -124,6 +124,7 @@ java.util.logging.SimpleFormatter.format=[%1$tF %1$tT] %3$s [%4$-7s] %5$s %n
       <subsection name="Changed Configuration Behavior">
         <p>
           JCS 4.0.0 tries to pull some long-standing configuration inconsistencies straight.
+          Note that configuration keys are case-sensitive.
           The following configuration keys have been renamed or removed:
 
           <table>
@@ -157,9 +158,39 @@ java.util.logging.SimpleFormatter.format=[%1$tF %1$tT] %3$s [%4$-7s] %5$s %n
           drawn from the associated factory. Again, see the examples in <code>src/test/test-conf</code>.
         </p>
         <p>
-          The configuration holder objects CompositeCacheAttributes and ElementAttributes 
-          are now implemented as Java records and - as such - are largely immutable. This 
-          makes them much more robust against side-effects in concurrent environments.
+          The configuration holder objects CompositeCacheAttributes, ElementAttributes
+          and PoolConfiguration are now implemented as Java records and - as such - are largely 
+          immutable. This makes them much more robust against side-effects in concurrent 
+          environments.
+        </p>
+        <p>
+          Time related configuration items are now represented as <code>java.time.Duration</code>
+          internally. The corresponding configuration file properties are being parsed using
+          <code>Duration.parse()</code> and use the syntax documented 
+          <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/Duration.html#parse(java.lang.CharSequence)">here</a>.
+          If parsing fails, the value is assumed to be a millisecond duration. This change affects
+          the following configuration keys:
+          
+          <table>
+            <tr>
+              <th>Attribute Type</th>
+              <th>Property Name</th>
+              <th>Default Value</th>
+            </tr>
+            <tr>
+              <td>Thread Pool Configuration (thread_pool)</td>
+              <td>keepAliveTime</td>
+              <td>PT5M</td>
+            </tr>
+            <tr>
+              <td>Region configuration (cacheattributes)</td>
+              <td>DiskUsagePatternName</td>
+            </tr>
+            <tr>
+              <td>Element configuration (elementattributes)</td>
+              <td>IdleTime</td>
+            </tr>
+          </table>
         </p>
       </subsection>
     </section>

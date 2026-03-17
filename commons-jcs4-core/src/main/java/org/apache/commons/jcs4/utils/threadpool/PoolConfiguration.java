@@ -1,5 +1,7 @@
 package org.apache.commons.jcs4.utils.threadpool;
 
+import java.time.Duration;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -39,7 +41,7 @@ public record PoolConfiguration(
         int minimumPoolSize,
 
         /** How long idle threads above the minimum should be kept alive. */
-        int keepAliveTime,
+        Duration keepAliveTime,
 
         /** Should be ABORT, BLOCK, RUN, WAIT, DISCARDOLDEST, */
         WhenBlockedPolicy whenBlockedPolicy,
@@ -78,7 +80,7 @@ public record PoolConfiguration(
     private static final int DEFAULT_MINIMUM_POOL_SIZE = Runtime.getRuntime().availableProcessors();
 
     /** Default keep alive */
-    private static final int DEFAULT_KEEPALIVE_TIME = 1000 * 60 * 5;
+    private static final Duration DEFAULT_KEEPALIVE_TIME = Duration.ofMinutes(5);
 
     /** Default when blocked */
     private static final WhenBlockedPolicy DEFAULT_WHEN_BLOCKED_POLICY = WhenBlockedPolicy.RUN;
@@ -110,13 +112,13 @@ public record PoolConfiguration(
     public String toString()
     {
         final StringBuilder buf = new StringBuilder();
-        buf.append( "useBoundary = [" + useBoundary() + "] " );
-        buf.append( "boundarySize = [" + boundarySize() + "] " );
-        buf.append( "maximumPoolSize = [" + maximumPoolSize() + "] " );
-        buf.append( "minimumPoolSize = [" + minimumPoolSize() + "] " );
-        buf.append( "keepAliveTime = [" + keepAliveTime() + "] " );
-        buf.append( "whenBlockedPolicy = [" + whenBlockedPolicy() + "] " );
-        buf.append( "startUpSize = [" + startUpSize() + "]" );
+        buf.append("useBoundary = [").append(useBoundary()).append("] ");
+        buf.append("boundarySize = [").append(boundarySize()).append("] ");
+        buf.append("maximumPoolSize = [").append(maximumPoolSize()).append("] ");
+        buf.append("minimumPoolSize = [").append(minimumPoolSize()).append("] ");
+        buf.append("keepAliveTime = [").append(keepAliveTime()).append("] ");
+        buf.append("whenBlockedPolicy = [").append(whenBlockedPolicy()).append("] ");
+        buf.append("startUpSize = [").append(startUpSize()).append("]" );
         return buf.toString();
     }
 }

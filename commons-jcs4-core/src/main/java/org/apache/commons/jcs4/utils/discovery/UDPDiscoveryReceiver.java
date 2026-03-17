@@ -31,6 +31,7 @@ import java.nio.channels.DatagramChannel;
 import java.nio.channels.MembershipKey;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
+import java.time.Duration;
 import java.util.Iterator;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -105,7 +106,7 @@ public class UDPDiscoveryReceiver
 
         // create a small thread pool to handle a barrage
         this.pooledExecutor = ThreadPoolManager.getInstance().createPool(
-                new PoolConfiguration(false, 0, maxPoolSize, maxPoolSize, 0,
+                new PoolConfiguration(false, 0, maxPoolSize, maxPoolSize, Duration.ZERO,
                         WhenBlockedPolicy.DISCARDOLDEST, maxPoolSize),
                 "JCS-UDPDiscoveryReceiver-", Thread.MIN_PRIORITY);
 

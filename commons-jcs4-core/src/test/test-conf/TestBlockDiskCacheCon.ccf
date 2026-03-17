@@ -49,7 +49,7 @@ jcs.auxiliary.blockDiskCache.attributes.EventQueuePoolName=disk_cache_event_queu
 thread_pool.default.boundarySize=2000
 thread_pool.default.maximumPoolSize=150
 thread_pool.default.minimumPoolSize=4
-thread_pool.default.keepAliveTime=350000
+thread_pool.default.keepAliveTime=PT5M50S
 # RUN ABORT WAIT BLOCK DISCARDOLDEST
 thread_pool.default.whenBlockedPolicy=RUN
 thread_pool.default.startUpSize=4
@@ -59,20 +59,20 @@ thread_pool.cache_event_queue.useBoundary=false
 # thread_pool.cache_event_queue.boundarySize=2000
 # thread_pool.cache_event_queue.maximumPoolSize=10
 thread_pool.cache_event_queue.minimumPoolSize=1
-thread_pool.cache_event_queue.keepAliveTime=3500
+thread_pool.cache_event_queue.keepAliveTime=PT3.5S
 # thread_pool.cache_event_queue.whenBlockedPolicy=RUN
 thread_pool.cache_event_queue.startUpSize=1
 
 # Disk Cache pool
 thread_pool.disk_cache_event_queue.useBoundary=false
 thread_pool.disk_cache_event_queue.minimumPoolSize=2
-thread_pool.disk_cache_event_queue.keepAliveTime=3500
+thread_pool.disk_cache_event_queue.keepAliveTime=PT3.5S
 thread_pool.disk_cache_event_queue.startUpSize=10
 
 # Remote cache client thread pool config
 thread_pool.remote_cache_client.boundarySize=75
 thread_pool.remote_cache_client.maximumPoolSize=150
 thread_pool.remote_cache_client.minimumPoolSize=4
-thread_pool.remote_cache_client.keepAliveTime=350000
+thread_pool.remote_cache_client.keepAliveTime=PT5M50S
 thread_pool.remote_cache_client.whenBlockedPolicy=RUN
 thread_pool.remote_cache_client.startUpSize=4

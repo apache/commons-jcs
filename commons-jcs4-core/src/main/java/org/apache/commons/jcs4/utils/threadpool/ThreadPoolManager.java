@@ -144,7 +144,7 @@ public static void dispose()
     {
         final PoolConfiguration config = ConfigurationBuilder
                 .create(PoolConfiguration.class, defaultPoolConfiguration)
-                .fromProperties(props, root + ".")
+                .fromProperties(props, root)
                 .build();
 
         log.debug( "{0} PoolConfiguration = {1}", root, config );
@@ -240,7 +240,7 @@ public static void dispose()
         final ThreadPoolExecutor pool = new ThreadPoolExecutor(
             config.startUpSize(),
             config.maximumPoolSize(),
-            config.keepAliveTime(),
+            config.keepAliveTime().toMillis(),
             TimeUnit.MILLISECONDS,
             queue,
             new DaemonThreadFactory(threadNamePrefix, threadPriority));

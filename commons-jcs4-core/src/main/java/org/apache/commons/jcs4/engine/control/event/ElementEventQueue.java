@@ -20,6 +20,7 @@ package org.apache.commons.jcs4.engine.control.event;
  */
 
 import java.io.IOException;
+import java.time.Duration;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -28,8 +29,8 @@ import org.apache.commons.jcs4.engine.control.event.behavior.IElementEventHandle
 import org.apache.commons.jcs4.engine.control.event.behavior.IElementEventQueue;
 import org.apache.commons.jcs4.log.Log;
 import org.apache.commons.jcs4.utils.threadpool.PoolConfiguration;
-import org.apache.commons.jcs4.utils.threadpool.ThreadPoolManager;
 import org.apache.commons.jcs4.utils.threadpool.PoolConfiguration.WhenBlockedPolicy;
+import org.apache.commons.jcs4.utils.threadpool.ThreadPoolManager;
 
 /**
  * An event queue is used to propagate ordered cache events to one and only one target listener.
@@ -54,7 +55,7 @@ public class ElementEventQueue
     public ElementEventQueue()
     {
         queueProcessor = ThreadPoolManager.getInstance().createPool(
-        		new PoolConfiguration(false, 0, 1, 1, 0, WhenBlockedPolicy.RUN, 1), THREAD_PREFIX);
+        		new PoolConfiguration(false, 0, 1, 1, Duration.ZERO, WhenBlockedPolicy.RUN, 1), THREAD_PREFIX);
 
         log.debug( "Constructed: {0}", this );
     }

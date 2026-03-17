@@ -143,7 +143,7 @@ thread_pool.disk_cache_event_queue.boundarySize=50
 thread_pool.disk_cache_event_queue.useBoundary=true
 thread_pool.disk_cache_event_queue.maximumPoolSize=15
 thread_pool.disk_cache_event_queue.minimumPoolSize=1
-thread_pool.disk_cache_event_queue.keepAliveTime=3500
+thread_pool.disk_cache_event_queue.keepAliveTime=PT3.5s
 thread_pool.disk_cache_event_queue.startUpSize=1
 thread_pool.disk_cache_event_queue.whenBlockedPolicy=RUN
         ]]>
