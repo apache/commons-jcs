@@ -61,7 +61,7 @@ class MRUMemoryCacheUnitTest
     {
         final CacheAccess<String, String> cache = JCS.getInstance( "testPutGetThroughHub" );
 
-        final int max = cache.getCacheAttributes().maxObjects();
+        final int max = cache.getCacheAttributes().MaxObjects();
         final int items = max * 2;
 
         for ( int i = 0; i < items; i++ )
@@ -96,7 +96,7 @@ class MRUMemoryCacheUnitTest
         final MRUMemoryCache<String, String> mru = new MRUMemoryCache<>();
         mru.initialize( cache );
 
-        final int max = cache.getCacheAttributes().maxObjects();
+        final int max = cache.getCacheAttributes().MaxObjects();
         final int items = max / 2;
 
         for ( int i = 0; i < items; i++ )
@@ -122,7 +122,7 @@ class MRUMemoryCacheUnitTest
     {
         final CacheAccess<String, String> cache = JCS.getInstance( "testGetStatsThroughHub" );
 
-        final int max = cache.getCacheAttributes().maxObjects();
+        final int max = cache.getCacheAttributes().MaxObjects();
         final int items = max * 2;
 
         for ( int i = 0; i < items; i++ )
@@ -147,7 +147,7 @@ class MRUMemoryCacheUnitTest
         throws CacheException
     {
         final CacheAccess<String, String> cache = JCS.getInstance( "testPutGet" );
-        final String memoryCacheName = cache.getCacheAttributes().memoryCacheName();
+        final String memoryCacheName = cache.getCacheAttributes().MemoryCacheName();
         assertTrue( memoryCacheName.indexOf( "MRUMemoryCache" ) != -1, "Cache name should have MRU in it." );
     }
 
@@ -162,7 +162,7 @@ class MRUMemoryCacheUnitTest
     {
         final CacheAccess<String, String> cache = JCS.getInstance( "testPutGetThroughHub" );
 
-        final int max = cache.getCacheAttributes().maxObjects();
+        final int max = cache.getCacheAttributes().MaxObjects();
         final int items = max * 2;
 
         for ( int i = 0; i < items; i++ )
@@ -217,7 +217,7 @@ class MRUMemoryCacheUnitTest
     {
         final CacheAccess<String, String> cache = JCS.getInstance( "testPutGetThroughHub" );
 
-        final int max = cache.getCacheAttributes().maxObjects();
+        final int max = cache.getCacheAttributes().MaxObjects();
         final int items = max * 2;
 
         for ( int i = 0; i < items; i++ )
@@ -258,7 +258,7 @@ class MRUMemoryCacheUnitTest
     {
         final CacheAccess<String, String> cache = JCS.getInstance( "testPutGetThroughHub" );
 
-        final int max = cache.getCacheAttributes().maxObjects();
+        final int max = cache.getCacheAttributes().MaxObjects();
         final int items = max * 2;
 
         for ( int i = 0; i < items; i++ )
@@ -290,7 +290,7 @@ class MRUMemoryCacheUnitTest
     {
         final CacheAccess<String, String> cache = JCS.getInstance( "testGetStatsThroughHub" );
 
-        final int max = cache.getCacheAttributes().maxObjects();
+        final int max = cache.getCacheAttributes().MaxObjects();
         final int items = max / 2;
 
         cache.put( "test", "data" );

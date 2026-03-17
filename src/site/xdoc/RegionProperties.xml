@@ -142,6 +142,16 @@
 						<td>N</td>
 						<td>30</td>
 					</tr>
+                    <tr>
+                        <td>MaxSpoolPerRun</td>
+                        <td>
+                            If UseMemoryShrinker is true the memory cache should 
+                            auto-expire elements to reclaim space. This gets the 
+                            maximum number of items to spool per run.
+                        </td>
+                        <td>N</td>
+                        <td>-1 (unlimited)</td>
+                    </tr>
 					<tr>
 						<td>DiskUsagePattern</td>
 						<td>
@@ -169,6 +179,15 @@
 						<td>N</td>
 						<td>SWAP</td>
 					</tr>
+                    <tr>
+                        <td>SpoolChunkSize</td>
+                        <td>
+                            Number of items to send to disk at time when 
+                            memory is full.
+                        </td>
+                        <td>N</td>
+                        <td>2</td>
+                    </tr>
 				</table>
 			</subsection>
 

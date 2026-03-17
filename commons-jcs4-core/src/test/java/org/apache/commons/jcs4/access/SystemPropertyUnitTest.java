@@ -71,7 +71,7 @@ class SystemPropertyUnitTest
         System.setProperty( "MY_SYSTEM_PROPERTY_MAX_SIZE", String.valueOf( maxMemory ) );
 
         final CacheAccess<String, String> cache = JCS.getInstance( "test1" );
-        assertEquals( maxMemory, cache.getCacheAttributes().maxObjects(),
+        assertEquals( maxMemory, cache.getCacheAttributes().MaxObjects(),
                       "We should have used the system property for the memory size" );
     }
 
@@ -88,7 +88,7 @@ class SystemPropertyUnitTest
         System.setProperty( "MY_SYSTEM_PROPERTY_DISK_DIR", "system_set" );
 
         final CacheAccess<String, String> cache = JCS.getInstance( "missing" );
-        assertEquals( 100, cache.getCacheAttributes().maxObjects(),
+        assertEquals( 100, cache.getCacheAttributes().MaxObjects(),
                       "We should have used the default property for the memory size" );
     }
 }

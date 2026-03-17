@@ -240,7 +240,7 @@ class CompositeCacheDiskUsageUnitTest
     {
         // SETUP
         final CompositeCacheAttributes cattr = TestCompositeCacheAttributes
-                .withDiskUsagePattern(ICompositeCacheAttributes.DiskUsagePattern.SWAP)
+                .withDiskUsagePattern(ICompositeCacheAttributes.DiskUsagePatternEnum.SWAP)
                 .withCacheName(CACHE_NAME);
 
         final IElementAttributes attr = new ElementAttributes();
@@ -270,7 +270,7 @@ class CompositeCacheDiskUsageUnitTest
     {
         // SETUP
         final CompositeCacheAttributes cattr = TestCompositeCacheAttributes
-                .withDiskUsagePattern(ICompositeCacheAttributes.DiskUsagePattern.UPDATE)
+                .withDiskUsagePattern(ICompositeCacheAttributes.DiskUsagePatternEnum.UPDATE)
                 .withCacheName(CACHE_NAME);
 
         final IElementAttributes attr = new ElementAttributes();
@@ -300,8 +300,8 @@ class CompositeCacheDiskUsageUnitTest
         throws CacheException
     {
         final CacheAccess<String, String> swap = JCS.getInstance( "Swap" );
-        assertEquals( ICompositeCacheAttributes.DiskUsagePattern.SWAP,
-                swap.getCacheAttributes().diskUsagePattern() );
+        assertEquals( ICompositeCacheAttributes.DiskUsagePatternEnum.SWAP,
+                swap.getCacheAttributes().DiskUsagePattern() );
     }
 
     /**
@@ -318,7 +318,7 @@ class CompositeCacheDiskUsageUnitTest
     {
         // SETUP
         final CompositeCacheAttributes cattr = TestCompositeCacheAttributes
-                .withDiskUsagePattern(ICompositeCacheAttributes.DiskUsagePattern.UPDATE)
+                .withDiskUsagePattern(ICompositeCacheAttributes.DiskUsagePatternEnum.UPDATE)
                 .withCacheName(CACHE_NAME);
 
         final IElementAttributes attr = new ElementAttributes();
@@ -354,7 +354,7 @@ class CompositeCacheDiskUsageUnitTest
     {
         // SETUP
         final CompositeCacheAttributes cattr = TestCompositeCacheAttributes
-                .withDiskUsagePattern(ICompositeCacheAttributes.DiskUsagePattern.UPDATE)
+                .withDiskUsagePattern(ICompositeCacheAttributes.DiskUsagePatternEnum.UPDATE)
                 .withCacheName(CACHE_NAME);
 
         final IElementAttributes attr = new ElementAttributes();
@@ -389,7 +389,7 @@ class CompositeCacheDiskUsageUnitTest
     {
         // SETUP
         final CompositeCacheAttributes cattr = TestCompositeCacheAttributes
-                .withDiskUsagePattern(ICompositeCacheAttributes.DiskUsagePattern.UPDATE)
+                .withDiskUsagePattern(ICompositeCacheAttributes.DiskUsagePatternEnum.UPDATE)
                 .withCacheName(CACHE_NAME);
 
         final IElementAttributes attr = new ElementAttributes();
@@ -426,8 +426,8 @@ class CompositeCacheDiskUsageUnitTest
         throws CacheException
     {
         final CacheAccess<String, String> swap = JCS.getInstance( "Update" );
-        assertEquals( ICompositeCacheAttributes.DiskUsagePattern.UPDATE,
-                swap.getCacheAttributes().diskUsagePattern() );
+        assertEquals( ICompositeCacheAttributes.DiskUsagePatternEnum.UPDATE,
+                swap.getCacheAttributes().DiskUsagePattern() );
     }
 
     /**
@@ -445,7 +445,7 @@ class CompositeCacheDiskUsageUnitTest
     {
         // SETUP
         final CompositeCacheAttributes cattr = TestCompositeCacheAttributes
-                .withDiskUsagePattern(ICompositeCacheAttributes.DiskUsagePattern.SWAP)
+                .withDiskUsagePattern(ICompositeCacheAttributes.DiskUsagePatternEnum.SWAP)
                 .withCacheName(CACHE_NAME);
 
         final IElementAttributes attr = new ElementAttributes();

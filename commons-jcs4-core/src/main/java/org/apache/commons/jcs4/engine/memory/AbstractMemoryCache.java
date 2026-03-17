@@ -310,7 +310,7 @@ public abstract class AbstractMemoryCache<K, V>
         putCnt = new AtomicLong();
 
         this.cacheAttributes = hub.getCacheAttributes();
-        this.chunkSize = cacheAttributes.spoolChunkSize();
+        this.chunkSize = cacheAttributes.SpoolChunkSize();
         this.cache = hub;
 
         this.map = createMap();

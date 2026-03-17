@@ -51,7 +51,7 @@ public class LHMLRUMemoryCache<K, V>
          */
         public LHMSpooler()
         {
-            super( (int) ( getCacheAttributes().maxObjects() * .5 ), .75F, true );
+            super( (int) ( getCacheAttributes().MaxObjects() * .5 ), .75F, true );
         }
 
         /**
@@ -66,12 +66,12 @@ public class LHMLRUMemoryCache<K, V>
         {
             final ICacheElement<K, V> element = eldest.getValue().getCacheElement();
 
-            if ( size() <= getCacheAttributes().maxObjects() )
+            if ( size() <= getCacheAttributes().MaxObjects() )
             {
                 return false;
             }
             log.debug( "LHMLRU max size: {0}. Spooling element, key: {1}",
-                    () -> getCacheAttributes().maxObjects(), element::key);
+                    () -> getCacheAttributes().MaxObjects(), element::key);
 
             waterfall( element );
 

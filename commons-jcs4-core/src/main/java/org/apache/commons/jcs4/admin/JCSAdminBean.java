@@ -144,10 +144,10 @@ public class JCSAdminBean implements JCSJMXBean
 
             final CacheElementInfo elementInfo = new CacheElementInfo(
             		key.getKey(),
-            		attributes.isEternal(),
+            		attributes.IsEternal(),
             		format.format(new Date(attributes.createTime())),
-            		attributes.maxLife(),
-            		(now - attributes.createTime() - attributes.maxLife() * 1000 ) / -1000);
+            		attributes.MaxLife(),
+            		(now - attributes.createTime() - attributes.MaxLife() * 1000 ) / -1000);
 
             records.add( elementInfo );
         }

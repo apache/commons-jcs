@@ -59,7 +59,7 @@ public class ShrinkerThread<K, V>
     {
         this.cache = cache;
 
-        final long maxMemoryIdleTimeSeconds = cache.getCacheAttributes().maxMemoryIdleTimeSeconds();
+        final long maxMemoryIdleTimeSeconds = cache.getCacheAttributes().MaxMemoryIdleTimeSeconds();
 
         if ( maxMemoryIdleTimeSeconds < 0 )
         {
@@ -70,7 +70,7 @@ public class ShrinkerThread<K, V>
             this.maxMemoryIdleTime = maxMemoryIdleTimeSeconds * 1000;
         }
 
-        this.maxSpoolPerRun = cache.getCacheAttributes().maxSpoolPerRun();
+        this.maxSpoolPerRun = cache.getCacheAttributes().MaxSpoolPerRun();
         if ( this.maxSpoolPerRun != -1 )
         {
             this.spoolLimit = true;
@@ -133,7 +133,7 @@ public class ShrinkerThread<K, V>
 
                 // If the element is not eternal, check if it should be
                 // removed and remove it if so.
-                if ( !attributes.isEternal() )
+                if ( !attributes.IsEternal() )
                 {
                     remove = cache.isExpired( cacheElement, now,
                             ElementEventType.EXCEEDED_MAXLIFE_BACKGROUND,

@@ -27,7 +27,7 @@ import java.io.Serializable;
 public interface ICompositeCacheAttributes
     extends Serializable
 {
-    enum DiskUsagePattern
+    enum DiskUsagePatternEnum
     {
         /** Items will only go to disk when the memory limit is reached. This is the default. */
         SWAP,
@@ -47,9 +47,9 @@ public interface ICompositeCacheAttributes
     String cacheName();
 
     /**
-     * @return the diskUsagePattern.
+     * @return the DiskUsagePattern.
      */
-    DiskUsagePattern diskUsagePattern();
+    DiskUsagePatternEnum DiskUsagePattern();
 
     /**
      * If UseMemoryShrinker is true the memory cache should auto-expire elements
@@ -57,30 +57,30 @@ public interface ICompositeCacheAttributes
      *
      * @return The MaxMemoryIdleTimeSeconds value
      */
-    long maxMemoryIdleTimeSeconds();
+    long MaxMemoryIdleTimeSeconds();
 
     /**
      * Gets the maxObjects attribute of the ICompositeCacheAttributes object
      *
-     * @return The maxObjects value
+     * @return The MaxObjects value
      */
-    int maxObjects();
+    int MaxObjects();
 
     /**
      * If UseMemoryShrinker is true the memory cache should auto-expire elements
      * to reclaim space. This gets the maximum number of items to spool per run.
      *
-     * @return The maxSpoolPerRun value
+     * @return The MaxSpoolPerRun value
      */
-    int maxSpoolPerRun();
+    int MaxSpoolPerRun();
 
     /**
      * Gets the memoryCacheName attribute of the ICompositeCacheAttributes
      * object
      *
-     * @return The memoryCacheName value
+     * @return The MemoryCacheName value
      */
-    String memoryCacheName();
+    String MemoryCacheName();
 
     /**
      * If UseMemoryShrinker is true the memory cache should auto-expire elements
@@ -88,35 +88,21 @@ public interface ICompositeCacheAttributes
      *
      * @return The ShrinkerIntervalSeconds value
      */
-    long shrinkerIntervalSeconds();
+    long ShrinkerIntervalSeconds();
 
     /**
      * Number to send to disk at time when memory is full.
      *
      * @return int
      */
-    int spoolChunkSize();
-
-    /**
-     * Gets the useDisk attribute of the ICompositeCacheAttributes object
-     *
-     * @return The useDisk value
-     */
-    boolean useDisk();
-
-    /**
-     * Gets the useLateral attribute of the ICompositeCacheAttributes object
-     *
-     * @return The useLateral value
-     */
-    boolean useLateral();
+    int SpoolChunkSize();
 
     /**
      * Tests whether the memory cache should perform background memory shrinkage.
      *
      * @return The UseMemoryShrinker value
      */
-    boolean useMemoryShrinker();
+    boolean UseMemoryShrinker();
 
     /**
      * Sets the name of the cache, referenced by the appropriate manager.

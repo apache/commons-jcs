@@ -33,34 +33,28 @@ public record CompositeCacheAttributes(
         String cacheName,
 
         /** The maximum objects that the memory cache will be allowed to hold. */
-        int maxObjects,
-
-        /** Allow lateral caches */
-        boolean useLateral,
-
-        /** Whether we should use a disk cache if it is configured. */
-        boolean useDisk,
+        int MaxObjects,
 
         /** Whether or not we should run the memory shrinker thread. */
-        boolean useMemoryShrinker,
+        boolean UseMemoryShrinker,
 
         /** ShrinkerIntervalSeconds */
-        long shrinkerIntervalSeconds,
+        long ShrinkerIntervalSeconds,
 
         /** The maximum number the shrinker will spool to disk per run. */
-        int maxSpoolPerRun,
+        int MaxSpoolPerRun,
 
         /** MaxMemoryIdleTimeSeconds */
-        long maxMemoryIdleTimeSeconds,
+        long MaxMemoryIdleTimeSeconds,
 
         /** The name of the memory cache implementation class. */
-        String memoryCacheName,
+        String MemoryCacheName,
 
-        /** Set via DISK_USAGE_PATTERN_NAME */
-        DiskUsagePattern diskUsagePattern,
+        /** Set via DISK_USAGE_PATTERN */
+        DiskUsagePatternEnum DiskUsagePattern,
 
         /** How many to spool to disk at a time. */
-        int spoolChunkSize
+        int SpoolChunkSize
 ) implements ICompositeCacheAttributes
 {
     /** Don't change */
@@ -68,12 +62,6 @@ public record CompositeCacheAttributes(
 
     /** Default max objects value */
     private static final int DEFAULT_MAX_OBJECTS = 100;
-
-    /** Default lateral switch */
-    private static final boolean DEFAULT_USE_LATERAL = true;
-
-    /** Default disk switch */
-    private static final boolean DEFAULT_USE_DISK = true;
 
     /** Default shrinker setting */
     private static final boolean DEFAULT_USE_SHRINKER = false;
@@ -97,14 +85,12 @@ public record CompositeCacheAttributes(
     private static final CompositeCacheAttributes DEFAULT = new CompositeCacheAttributes(
             null,
             DEFAULT_MAX_OBJECTS,
-            DEFAULT_USE_LATERAL,
-            DEFAULT_USE_DISK,
             DEFAULT_USE_SHRINKER,
             DEFAULT_SHRINKER_INTERVAL_SECONDS,
             DEFAULT_MAX_SPOOL_PER_RUN,
             DEFAULT_MAX_MEMORY_IDLE_TIME_SECONDS,
             DEFAULT_MEMORY_CACHE_NAME,
-            DiskUsagePattern.SWAP,
+            DiskUsagePatternEnum.SWAP,
             DEFAULT_CHUNK_SIZE
           );
 
@@ -125,16 +111,14 @@ public record CompositeCacheAttributes(
     public CompositeCacheAttributes withCacheName(String s)
     {
         return new CompositeCacheAttributes(s,
-                maxObjects(),
-                useLateral(),
-                useDisk(),
-                useMemoryShrinker(),
-                shrinkerIntervalSeconds(),
-                maxSpoolPerRun(),
-                maxMemoryIdleTimeSeconds(),
-                memoryCacheName(),
-                diskUsagePattern(),
-                spoolChunkSize());
+                MaxObjects(),
+                UseMemoryShrinker(),
+                ShrinkerIntervalSeconds(),
+                MaxSpoolPerRun(),
+                MaxMemoryIdleTimeSeconds(),
+                MemoryCacheName(),
+                DiskUsagePattern(),
+                SpoolChunkSize());
     }
 
     /**
@@ -147,13 +131,10 @@ public record CompositeCacheAttributes(
     {
         final StringBuilder dump = new StringBuilder();
 
-        dump.append( "[ " );
-        dump.append( "useLateral = " ).append( useLateral );
-        dump.append( ", useDisk = " ).append( useDisk );
-        dump.append( ", maxObjects = " ).append( maxObjects );
-        dump.append( ", maxSpoolPerRun = " ).append( maxSpoolPerRun );
-        dump.append( ", diskUsagePattern = " ).append( diskUsagePattern );
-        dump.append( ", spoolChunkSize = " ).append( spoolChunkSize );
+        dump.append( "[ MaxObjects = " ).append( MaxObjects() );
+        dump.append( ", MaxSpoolPerRun = " ).append( MaxSpoolPerRun() );
+        dump.append( ", DiskUsagePattern = " ).append( DiskUsagePattern() );
+        dump.append( ", SpoolChunkSize = " ).append( SpoolChunkSize() );
         dump.append( " ]" );
 
         return dump.toString();

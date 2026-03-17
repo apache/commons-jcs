@@ -204,7 +204,7 @@ class SimpleEventHandlingUnitTest
         }
 
         // wait a bit for the items to expire
-        Thread.sleep(attributes.maxIdleTime() * 1000 + 100);
+        Thread.sleep(attributes.MaxIdleTime() * 1000 + 100);
 
         for ( int i = 0; i < 200; i++ )
         {
@@ -242,7 +242,7 @@ class SimpleEventHandlingUnitTest
         }
 
         // wait a bit for the items to expire
-        Thread.sleep(attributes.maxLife() * 1000 + 100);
+        Thread.sleep(attributes.MaxLife() * 1000 + 100);
 
         for ( int i = 0; i < 200; i++ )
         {

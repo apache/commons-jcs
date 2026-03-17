@@ -40,15 +40,13 @@ public class TestCompositeCacheAttributes
     {
         return new CompositeCacheAttributes(CompositeCacheAttributes.defaults().cacheName(),
                 maxObjects,
-                CompositeCacheAttributes.defaults().useLateral(),
-                CompositeCacheAttributes.defaults().useDisk(),
-                CompositeCacheAttributes.defaults().useMemoryShrinker(),
-                CompositeCacheAttributes.defaults().shrinkerIntervalSeconds(),
-                CompositeCacheAttributes.defaults().maxSpoolPerRun(),
-                CompositeCacheAttributes.defaults().maxMemoryIdleTimeSeconds(),
+                CompositeCacheAttributes.defaults().UseMemoryShrinker(),
+                CompositeCacheAttributes.defaults().ShrinkerIntervalSeconds(),
+                CompositeCacheAttributes.defaults().MaxSpoolPerRun(),
+                CompositeCacheAttributes.defaults().MaxMemoryIdleTimeSeconds(),
                 memoryCacheName,
-                CompositeCacheAttributes.defaults().diskUsagePattern(),
-                CompositeCacheAttributes.defaults().spoolChunkSize());
+                CompositeCacheAttributes.defaults().DiskUsagePattern(),
+                CompositeCacheAttributes.defaults().SpoolChunkSize());
     }
 
     /**
@@ -62,16 +60,14 @@ public class TestCompositeCacheAttributes
             String memoryCacheName, long maxMemoryIdleTimeSeconds, int maxSpoolPerRun)
     {
         return new CompositeCacheAttributes(CompositeCacheAttributes.defaults().cacheName(),
-                CompositeCacheAttributes.defaults().maxObjects(),
-                CompositeCacheAttributes.defaults().useLateral(),
-                CompositeCacheAttributes.defaults().useDisk(),
-                CompositeCacheAttributes.defaults().useMemoryShrinker(),
-                CompositeCacheAttributes.defaults().shrinkerIntervalSeconds(),
+                CompositeCacheAttributes.defaults().MaxObjects(),
+                CompositeCacheAttributes.defaults().UseMemoryShrinker(),
+                CompositeCacheAttributes.defaults().ShrinkerIntervalSeconds(),
                 maxSpoolPerRun,
                 maxMemoryIdleTimeSeconds,
                 memoryCacheName,
-                CompositeCacheAttributes.defaults().diskUsagePattern(),
-                CompositeCacheAttributes.defaults().spoolChunkSize());
+                CompositeCacheAttributes.defaults().DiskUsagePattern(),
+                CompositeCacheAttributes.defaults().SpoolChunkSize());
     }
 
     /**
@@ -84,14 +80,12 @@ public class TestCompositeCacheAttributes
     {
         return new CompositeCacheAttributes(CompositeCacheAttributes.defaults().cacheName(),
                 maxObjects,
-                CompositeCacheAttributes.defaults().useLateral(),
-                CompositeCacheAttributes.defaults().useDisk(),
-                CompositeCacheAttributes.defaults().useMemoryShrinker(),
-                CompositeCacheAttributes.defaults().shrinkerIntervalSeconds(),
-                CompositeCacheAttributes.defaults().maxSpoolPerRun(),
-                CompositeCacheAttributes.defaults().maxMemoryIdleTimeSeconds(),
-                CompositeCacheAttributes.defaults().memoryCacheName(),
-                CompositeCacheAttributes.defaults().diskUsagePattern(),
+                CompositeCacheAttributes.defaults().UseMemoryShrinker(),
+                CompositeCacheAttributes.defaults().ShrinkerIntervalSeconds(),
+                CompositeCacheAttributes.defaults().MaxSpoolPerRun(),
+                CompositeCacheAttributes.defaults().MaxMemoryIdleTimeSeconds(),
+                CompositeCacheAttributes.defaults().MemoryCacheName(),
+                CompositeCacheAttributes.defaults().DiskUsagePattern(),
                 spoolChunkSize);
     }
 
@@ -103,16 +97,14 @@ public class TestCompositeCacheAttributes
     public static CompositeCacheAttributes withMaxMemoryIdleTimeSeconds(long maxMemoryIdleTimeSeconds)
     {
         return new CompositeCacheAttributes(CompositeCacheAttributes.defaults().cacheName(),
-                CompositeCacheAttributes.defaults().maxObjects(),
-                CompositeCacheAttributes.defaults().useLateral(),
-                CompositeCacheAttributes.defaults().useDisk(),
-                CompositeCacheAttributes.defaults().useMemoryShrinker(),
-                CompositeCacheAttributes.defaults().shrinkerIntervalSeconds(),
-                CompositeCacheAttributes.defaults().maxSpoolPerRun(),
+                CompositeCacheAttributes.defaults().MaxObjects(),
+                CompositeCacheAttributes.defaults().UseMemoryShrinker(),
+                CompositeCacheAttributes.defaults().ShrinkerIntervalSeconds(),
+                CompositeCacheAttributes.defaults().MaxSpoolPerRun(),
                 maxMemoryIdleTimeSeconds,
-                CompositeCacheAttributes.defaults().memoryCacheName(),
-                CompositeCacheAttributes.defaults().diskUsagePattern(),
-                CompositeCacheAttributes.defaults().spoolChunkSize());
+                CompositeCacheAttributes.defaults().MemoryCacheName(),
+                CompositeCacheAttributes.defaults().DiskUsagePattern(),
+                CompositeCacheAttributes.defaults().SpoolChunkSize());
     }
 
     /**
@@ -120,18 +112,16 @@ public class TestCompositeCacheAttributes
      *
      * @param diskUsagePattern the new diskUsagePattern value
      */
-    public static CompositeCacheAttributes withDiskUsagePattern(ICompositeCacheAttributes.DiskUsagePattern diskUsagePattern)
+    public static CompositeCacheAttributes withDiskUsagePattern(ICompositeCacheAttributes.DiskUsagePatternEnum diskUsagePattern)
     {
         return new CompositeCacheAttributes(CompositeCacheAttributes.defaults().cacheName(),
-                CompositeCacheAttributes.defaults().maxObjects(),
-                CompositeCacheAttributes.defaults().useLateral(),
-                CompositeCacheAttributes.defaults().useDisk(),
-                CompositeCacheAttributes.defaults().useMemoryShrinker(),
-                CompositeCacheAttributes.defaults().shrinkerIntervalSeconds(),
-                CompositeCacheAttributes.defaults().maxSpoolPerRun(),
-                CompositeCacheAttributes.defaults().maxMemoryIdleTimeSeconds(),
-                CompositeCacheAttributes.defaults().memoryCacheName(),
+                CompositeCacheAttributes.defaults().MaxObjects(),
+                CompositeCacheAttributes.defaults().UseMemoryShrinker(),
+                CompositeCacheAttributes.defaults().ShrinkerIntervalSeconds(),
+                CompositeCacheAttributes.defaults().MaxSpoolPerRun(),
+                CompositeCacheAttributes.defaults().MaxMemoryIdleTimeSeconds(),
+                CompositeCacheAttributes.defaults().MemoryCacheName(),
                 diskUsagePattern,
-                CompositeCacheAttributes.defaults().spoolChunkSize());
+                CompositeCacheAttributes.defaults().SpoolChunkSize());
     }
 }

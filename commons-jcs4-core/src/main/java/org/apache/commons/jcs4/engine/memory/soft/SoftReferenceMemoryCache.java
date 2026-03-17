@@ -39,7 +39,7 @@ import org.apache.commons.jcs4.log.Log;
 
 /**
  * A JCS IMemoryCache that has {@link SoftReference} to all its values.
- * This cache does not respect {@link ICompositeCacheAttributes#maxObjects()}
+ * This cache does not respect {@link ICompositeCacheAttributes#MaxObjects()}
  * as overflowing is handled by Java GC.
  * <p>
  * The cache also has strong references to a maximum number of objects given by
@@ -196,7 +196,7 @@ public class SoftReferenceMemoryCache<K, V> extends AbstractMemoryCache<K, V>
      */
     private void trimStrongReferences()
     {
-        final int max = getCacheAttributes().maxObjects();
+        final int max = getCacheAttributes().MaxObjects();
         final int startsize = strongReferences.size();
 
         for (int cursize = startsize; cursize > max; cursize--)

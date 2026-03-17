@@ -427,8 +427,8 @@ public class JDBCDiskCache<K, V>
             psInsert.setString( 1, ce.key().toString() );
             psInsert.setString( 2, getCacheName() );
             psInsert.setBytes( 3, element );
-            psInsert.setLong( 4, ce.elementAttributes().maxLife() );
-            psInsert.setString( 5, ce.elementAttributes().isEternal() ? "T" : "F" );
+            psInsert.setLong( 4, ce.elementAttributes().MaxLife() );
+            psInsert.setString( 5, ce.elementAttributes().IsEternal() ? "T" : "F" );
 
             final Timestamp createTime = new Timestamp( ce.elementAttributes().createTime() );
             psInsert.setTimestamp( 6, createTime );
@@ -436,7 +436,7 @@ public class JDBCDiskCache<K, V>
             final long now = System.currentTimeMillis() / 1000;
             psInsert.setLong( 7, now );
 
-            final long expireTime = now + ce.elementAttributes().maxLife();
+            final long expireTime = now + ce.elementAttributes().MaxLife();
             psInsert.setLong( 8, expireTime );
 
             psInsert.execute();
@@ -483,7 +483,7 @@ public class JDBCDiskCache<K, V>
             final long now = System.currentTimeMillis() / 1000;
             psUpdate.setLong( 3, now );
 
-            final long expireTime = now + ce.elementAttributes().maxLife();
+            final long expireTime = now + ce.elementAttributes().MaxLife();
             psUpdate.setLong( 4, expireTime );
 
             psUpdate.setString( 5, (String) ce.key() );

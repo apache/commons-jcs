@@ -39,28 +39,28 @@ import org.apache.commons.jcs4.engine.control.event.behavior.IElementEventHandle
  */
 public record ElementAttributes(
         /** Can this item be flushed to disk */
-        boolean isSpool,
+        boolean IsSpool,
 
         /** Is this item laterally distributable */
-        boolean isLateral,
+        boolean IsLateral,
 
         /** Can this item be sent to the remote cache */
-        boolean isRemote,
+        boolean IsRemote,
 
         /**
          * You can turn off expiration by setting this to true. This causes the cache to bypass both max
          * life and idle time expiration.
          */
-        boolean isEternal,
+        boolean IsEternal,
 
-        /** Max life seconds */
-        long maxLife,
+        /** Max life  */
+        long MaxLife,
 
         /**
          * The maximum time an entry can be idle. Setting this to -1 causes the idle time check to be
          * ignored.
          */
-        long maxIdleTime,
+        long MaxIdleTime,
 
         /** The creation time. This is used to enforce the max life. */
         long createTime,
@@ -134,12 +134,12 @@ public record ElementAttributes(
      */
     public ElementAttributes(IElementAttributes from)
     {
-        this(from.isSpool(),
-             from.isLateral(),
-             from.isRemote(),
-             from.isEternal(),
-             from.maxLife(),
-             from.maxIdleTime(),
+        this(from.IsSpool(),
+             from.IsLateral(),
+             from.IsRemote(),
+             from.IsEternal(),
+             from.MaxLife(),
+             from.MaxIdleTime(),
              System.currentTimeMillis(),
              new AtomicLong(from.lastAccessTime()),
              from.timeFactorForMilliseconds(),
@@ -210,7 +210,7 @@ public record ElementAttributes(
     private long getTimeToLiveSeconds()
     {
         final long now = System.currentTimeMillis();
-        return ( createTime() + maxLife() * timeFactorForMilliseconds() - now ) / 1000;
+        return ( createTime() + MaxLife() * timeFactorForMilliseconds() - now ) / 1000;
     }
 
     /**
@@ -223,12 +223,12 @@ public record ElementAttributes(
     {
         final StringBuilder dump = new StringBuilder();
 
-        dump.append( "[ isLateral = " ).append( isLateral() );
-        dump.append( ", isSpool = " ).append( isSpool() );
-        dump.append( ", isRemote = " ).append( isRemote() );
-        dump.append( ", isEternal = " ).append( isEternal() );
-        dump.append( ", MaxLifeSeconds = " ).append( maxLife() );
-        dump.append( ", MaxIdleTime = " ).append( maxIdleTime() );
+        dump.append( "[ isLateral = " ).append( IsLateral() );
+        dump.append( ", isSpool = " ).append( IsSpool() );
+        dump.append( ", isRemote = " ).append( IsRemote() );
+        dump.append( ", isEternal = " ).append( IsEternal() );
+        dump.append( ", MaxLifeSeconds = " ).append( MaxLife() );
+        dump.append( ", MaxIdleTime = " ).append( MaxIdleTime() );
         dump.append( ", CreateTime = " ).append( createTime() );
         dump.append( ", LastAccessTime = " ).append( lastAccessTime() );
         dump.append( ", getTimeToLiveSeconds() = " ).append(getTimeToLiveSeconds());

@@ -54,7 +54,7 @@ class ShrinkerThreadUnitTest
         // SETUP
         final CompositeCacheAttributes cacheAttr = TestCompositeCacheAttributes
                 .withMemoryCacheNameMaxMemoryIdleTimeSecondsAndMaxSpoolPerRun(
-                        CompositeCacheAttributes.defaults().memoryCacheName(), 10, 10)
+                        CompositeCacheAttributes.defaults().MemoryCacheName(), 10, 10)
                 .withCacheName("testRegion");
 
         final CompositeCache<String, String> cache = new CompositeCache<>(cacheAttr, new ElementAttributes());
@@ -88,7 +88,7 @@ class ShrinkerThreadUnitTest
         // SETUP
         final CompositeCacheAttributes cacheAttr = TestCompositeCacheAttributes
                 .withMemoryCacheNameMaxMemoryIdleTimeSecondsAndMaxSpoolPerRun(
-                        CompositeCacheAttributes.defaults().memoryCacheName(), 10, 10)
+                        CompositeCacheAttributes.defaults().MemoryCacheName(), 10, 10)
                 .withCacheName("testRegion");
 
         final CompositeCache<String, String> cache = new CompositeCache<>(cacheAttr, new ElementAttributes());
@@ -122,7 +122,7 @@ class ShrinkerThreadUnitTest
         // SETUP
         final CompositeCacheAttributes cacheAttr = TestCompositeCacheAttributes
                 .withMemoryCacheNameMaxMemoryIdleTimeSecondsAndMaxSpoolPerRun(
-                        CompositeCacheAttributes.defaults().memoryCacheName(), 10, 10)
+                        CompositeCacheAttributes.defaults().MemoryCacheName(), 10, 10)
                 .withCacheName("testRegion");
 
         final CompositeCache<String, String> cache = new CompositeCache<>(cacheAttr, new ElementAttributes());
@@ -156,7 +156,7 @@ class ShrinkerThreadUnitTest
         // SETUP
         final CompositeCacheAttributes cacheAttr = TestCompositeCacheAttributes
                 .withMemoryCacheNameMaxMemoryIdleTimeSecondsAndMaxSpoolPerRun(
-                        CompositeCacheAttributes.defaults().memoryCacheName(), 10, 10)
+                        CompositeCacheAttributes.defaults().MemoryCacheName(), 10, 10)
                 .withCacheName("testRegion");
 
         final CompositeCache<String, String> cache = new CompositeCache<>(cacheAttr, new ElementAttributes());

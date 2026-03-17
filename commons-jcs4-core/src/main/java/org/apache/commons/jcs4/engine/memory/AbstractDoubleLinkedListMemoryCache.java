@@ -274,7 +274,7 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
         final int size = map.size();
         // If the element limit is reached, we need to spool
 
-        if (size <= getCacheAttributes().maxObjects())
+        if (size <= getCacheAttributes().MaxObjects())
         {
             return;
         }
@@ -286,7 +286,7 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
 
         log.debug("About to spool to disk cache, map size: {0}, max objects: {1}, "
                 + "maximum items to spool: {2}", () -> size,
-                getCacheAttributes()::maxObjects,
+                getCacheAttributes()::MaxObjects,
                 () -> chunkSizeCorrected);
 
         // The spool will put them in a disk event queue, so there is no

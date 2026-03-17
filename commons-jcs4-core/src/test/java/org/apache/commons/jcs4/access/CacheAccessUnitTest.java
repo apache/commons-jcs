@@ -314,7 +314,7 @@ class CacheAccessUnitTest
         assertNotNull( access, "We should have an access class" );
 
         final ICompositeCacheAttributes ca2 = access.getCacheAttributes();
-        assertEquals( ca.maxMemoryIdleTimeSeconds(), ca2.maxMemoryIdleTimeSeconds(), "Wrong idle time setting." );
+        assertEquals( ca.MaxMemoryIdleTimeSeconds(), ca2.MaxMemoryIdleTimeSeconds(), "Wrong idle time setting." );
     }
 
     /**
@@ -337,7 +337,7 @@ class CacheAccessUnitTest
         assertNotNull( access, "We should have an access class" );
 
         final ICompositeCacheAttributes ca2 = access.getCacheAttributes();
-        assertEquals( ca.maxMemoryIdleTimeSeconds(), ca2.maxMemoryIdleTimeSeconds(), "Wrong idle time setting." );
+        assertEquals( ca.MaxMemoryIdleTimeSeconds(), ca2.MaxMemoryIdleTimeSeconds(), "Wrong idle time setting." );
     }
 
     /**
@@ -356,8 +356,8 @@ class CacheAccessUnitTest
 
         access.setDefaultElementAttributes( attr );
 
-        assertEquals( attr.maxLife(), access.getDefaultElementAttributes()
-            .maxLife(), "Wrong element attributes." );
+        assertEquals( attr.MaxLife(), access.getDefaultElementAttributes()
+            .MaxLife(), "Wrong element attributes." );
 
         final String key = "mykey";
         final String value = "myvalue";
@@ -367,6 +367,6 @@ class CacheAccessUnitTest
         final ICacheElement<String, String> element = access.getCacheElement( key );
 
         assertEquals( maxLife, element.elementAttributes()
-            .maxLife(), "Wrong max life.  Should have the new value." );
+            .MaxLife(), "Wrong max life.  Should have the new value." );
     }
 }

@@ -323,7 +323,7 @@ public class JCSCache<K, V> implements Cache<K, V>
             {
                 forceExpires(key);
             }
-            else if (expiryForAccess != null && (!elt.elementAttributes().isEternal() || !expiryForAccess.isEternal()))
+            else if (expiryForAccess != null && (!elt.elementAttributes().IsEternal() || !expiryForAccess.isEternal()))
             {
                 try
                 {
@@ -701,8 +701,8 @@ public class JCSCache<K, V> implements Cache<K, V>
             if (created && duration != null) { // set maxLife
                 final long timeFactorForMilliseconds = 1;
                 final boolean eternal = duration.isEternal();
-                long maxIdleTime = attributes.maxIdleTime();
-                long maxLife = attributes.maxLife();
+                long maxIdleTime = attributes.MaxIdleTime();
+                long maxLife = attributes.MaxLife();
                 if (!eternal)
                 {
                     if (duration == expiryPolicy.getExpiryForAccess())
@@ -715,9 +715,9 @@ public class JCSCache<K, V> implements Cache<K, V>
                     }
                 }
                 attributes = new ElementAttributes(
-                        attributes.isSpool(),
-                        attributes.isLateral(),
-                        attributes.isRemote(),
+                        attributes.IsSpool(),
+                        attributes.IsLateral(),
+                        attributes.IsRemote(),
                         eternal,
                         maxLife,
                         maxIdleTime,
@@ -917,7 +917,7 @@ public class JCSCache<K, V> implements Cache<K, V>
             if (value != null)
             {
                 final Duration expiryForAccess = expiryPolicy.getExpiryForAccess();
-                if (expiryForAccess != null && (!elt.elementAttributes().isEternal() || !expiryForAccess.isEternal()))
+                if (expiryForAccess != null && (!elt.elementAttributes().IsEternal() || !expiryForAccess.isEternal()))
                 {
                     try
                     {
@@ -973,12 +973,12 @@ public class JCSCache<K, V> implements Cache<K, V>
         IElementAttributes newAttributes = (duration != null) ?
             // MaxLife = -1 to use IdleTime excepted if jcache.ccf asked for something else
             new ElementAttributes(
-                    attrs.isSpool(),
-                    attrs.isLateral(),
-                    attrs.isRemote(),
+                    attrs.IsSpool(),
+                    attrs.IsLateral(),
+                    attrs.IsRemote(),
                     duration.isEternal(),
-                    attrs.maxLife(),
-                    attrs.maxIdleTime(),
+                    attrs.MaxLife(),
+                    attrs.MaxIdleTime(),
                     1)
             : attrs;
 

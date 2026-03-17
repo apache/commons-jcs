@@ -72,62 +72,98 @@ jcs.default.elementattributes.MaxIdleTime=1800
 				settings). In addition, by default all regions will
 				take these element configuration settings.
 			</p>
-			<p>
-				These settings specify that elements are not
-				eternal, i.e. they can expire. By default elements
-				are considered eternal.
-			</p>
-			<p>
-				You can define the maximum life of an item by
-				setting the
-				<code>MaxLife</code>
-				parameter. If an item has been in the cache for
-				longer than the set number of seconds it will not be
-				retrieved on a get request. If you use the memory
-				shrinker the item will be actively removed from
-				memory. Currently there is no background disk
-				shrinker, but the disk cache does allow for a
-				maximum number of keys (see
-				<a href="IndexedDiskAuxCache.html">
-					Indexed Disk Cache
-				</a>
-				for more information on the disk cache settings).
-			</p>
-			<p>
-				You can define the maximum time an item can live
-				without being accessed by setting the
-				<code>MaxIdleTime</code>
-				parameter. This is different than the
-				<code>MaxMemoryIdleTimeSeconds</code>
-				parameter, which just specifies how long an object
-				can be in memory before it is subjected to removal
-				or being spooled to a disk cache if it is available.
-				Note: the
-				<code>MaxIdleTime</code>
-				parameter may not function properly for items
-				retrieved from disk, if you have a memory size of 0.
-			</p>
+            </subsection>
+            
+            <subsection name="Properties Reference">
+            <table>
+                <tr>
+                    <th>Property</th>
+                    <th>Description</th>
+                    <th>Required</th>
+                    <th>Default Value</th>
+                </tr>
+                <tr>
+                    <td>IsEternal</td>
+                    <td>
+                        This setting specifies that elements are not
+                        eternal, i.e. they can expire. By default elements
+                        are considered eternal.
+                    </td>
+                    <td>N</td>
+                    <td>true</td>
+                </tr>
+                <tr>
+                    <td>MaxLife</td>
+                    <td>
+                        You can define the maximum life of an item by setting the
+                        <code>MaxLife</code>
+                        parameter. If an item has been in the cache for
+                        longer than the set duration it will not be
+                        retrieved on a get request. If you use the memory
+                        shrinker the item will be actively removed from
+                        memory. Currently there is no background disk
+                        shrinker, but the disk cache does allow for a
+                        maximum number of keys (see
+                        <a href="IndexedDiskAuxCache.html">
+                            Indexed Disk Cache
+                        </a>
+                        for more information on the disk cache settings).
+                    </td>
+                    <td>N</td>
+                    <td>-1 (unlimited)</td>
+                </tr>
+                <tr>
+                    <td>MaxIdleTime</td>
+                    <td>
+                        You can define the maximum time an item can live
+                        without being accessed by setting the
+                        <code>MaxIdleTime</code>
+                        parameter. This is different than the
+                        <code>MaxMemoryIdleTimeSeconds</code>
+                        parameter, which just specifies how long an object
+                        can be in memory before it is subjected to removal
+                        or being spooled to a disk cache if it is available.
+                        Note: the
+                        <code>MaxIdleTime</code>
+                        parameter may not function properly for items
+                        retrieved from disk, if you have a memory size of 0.
+                    </td>
+                    <td>N</td>
+                    <td>-1 (unlimited)</td>
+                </tr>
+                <tr>
+                    <td>IsSpool</td>
+                    <td>
+                        <code>IsSpool</code>
+                        determines whether or not the element can go to disk, if
+                        a disk cache is configured for the region.
+                    </td>
+                    <td>N</td>
+                    <td>true</td>
+                </tr>
+                <tr>
+                    <td>IsRemote</td>
+                    <td>
+                        <code>IsRemote</code>
+                        determines whether or not the element can be sent to a
+                        remote server, if one is configured for the region.
+                    </td>
+                    <td>N</td>
+                    <td>true</td>
+                </tr>
+                <tr>
+                    <td>IsLateral</td>
+                    <td>
+                        <code>IsLateral</code>
+                        determines whether or not the element can be laterally
+                        distributed, if a lateral auxiliary is configured for
+                        the region.
+                    </td>
+                    <td>N</td>
+                    <td>true</td>
+                </tr>
+            </table> 
 			</subsection>
-
-			<p>
-				<code>IsSpool</code>
-				determines whether or not the element can go to disk, if
-				a disk cache is configured for the region.
-                The default is <code>true</code>.
-			</p>
-			<p>
-				<code>IsRemote</code>
-				determines whether or not the element can be sent to a
-				remote server, if one is configured for the region.
-                The default is <code>true</code>.
-			</p>
-			<p>
-				<code>IsLateral</code>
-				determines whether or not the element can be laterally
-				distributed, if a lateral auxiliary is configured for
-				the region.
-                The default is <code>true</code>.
-			</p>
 
 			<subsection name="Programmatic Configuration">
 			<p>

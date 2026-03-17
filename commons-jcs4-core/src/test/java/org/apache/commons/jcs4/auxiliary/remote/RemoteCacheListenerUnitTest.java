@@ -77,8 +77,8 @@ class RemoteCacheListenerUnitTest
 
         assertNotNull( after, "Should have a deserialized object." );
         assertEquals( value, after.value(), "Values should be the same." );
-        assertEquals( attr.maxLife(), after
-            .elementAttributes().maxLife(), "Attributes should be the same." );
+        assertEquals( attr.MaxLife(), after
+            .elementAttributes().MaxLife(), "Attributes should be the same." );
         assertEquals( key, after.key(), "Keys should be the same." );
         assertEquals( cacheName, after.cacheName(), "Cache name should be the same." );
     }

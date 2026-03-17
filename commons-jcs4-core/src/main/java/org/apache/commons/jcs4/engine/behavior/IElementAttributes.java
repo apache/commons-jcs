@@ -62,13 +62,13 @@ public interface IElementAttributes extends Serializable
      * Gets the idleTime attribute of the IAttributes object
      * @return The idleTime value
      */
-    long maxIdleTime();
+    long MaxIdleTime();
 
     /**
      * This turns off expiration if it is true.
      * @return The IsEternal value
      */
-    boolean isEternal();
+    boolean IsEternal();
 
     /**
      * Is this item laterally distributable. Can it be sent to auxiliaries of type lateral.
@@ -76,7 +76,7 @@ public interface IElementAttributes extends Serializable
      * By default this is true.
      * @return The isLateral value
      */
-    boolean isLateral();
+    boolean IsLateral();
 
     /**
      * Can this item be sent to the remote cache.
@@ -84,7 +84,7 @@ public interface IElementAttributes extends Serializable
      * By default this is true.
      * @return The isRemote value
      */
-    boolean isRemote();
+    boolean IsRemote();
 
     /**
      * Can this item be spooled to disk
@@ -92,7 +92,7 @@ public interface IElementAttributes extends Serializable
      * By default this is true.
      * @return The spoolable value
      */
-    boolean isSpool();
+    boolean IsSpool();
 
     /**
      * Gets the LastAccess attribute of the IAttributes object.
@@ -102,14 +102,14 @@ public interface IElementAttributes extends Serializable
     long lastAccessTime();
 
     /**
-     * Sets the maxLife attribute of the IAttributes object. How many seconds it can live after
+     * Sets the MaxLife attribute of the IAttributes object. How many seconds it can live after
      * creation.
      * <p>
      * If this is exceeded the element will not be returned, instead it will be removed. It will be
      * removed on retrieval, or removed actively if the memory shrinker is turned on.
-     * @return The MaxLifeSeconds value
+     * @return The MaxLife value
      */
-    long maxLife();
+    long MaxLife();
 
     /**
      * Get the time factor to convert durations to milliseconds

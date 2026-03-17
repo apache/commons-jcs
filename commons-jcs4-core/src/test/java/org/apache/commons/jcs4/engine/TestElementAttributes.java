@@ -35,12 +35,12 @@ public class TestElementAttributes
     public static ElementAttributes withEternalFalseAndMaxLife(long maxLife)
     {
         ElementAttributes element = new ElementAttributes(
-                ElementAttributes.defaults().isSpool(),
-                ElementAttributes.defaults().isLateral(),
-                ElementAttributes.defaults().isRemote(),
+                ElementAttributes.defaults().IsSpool(),
+                ElementAttributes.defaults().IsLateral(),
+                ElementAttributes.defaults().IsRemote(),
                 false,
                 maxLife,
-                ElementAttributes.defaults().maxIdleTime(),
+                ElementAttributes.defaults().MaxIdleTime(),
                 System.currentTimeMillis(),
                 new AtomicLong(),
                 ElementAttributes.defaults().timeFactorForMilliseconds(),
@@ -59,9 +59,9 @@ public class TestElementAttributes
     public static ElementAttributes withEternalFalseAndMaxLifeAndMaxIdleTime(long maxLife, long maxIdleTime)
     {
         ElementAttributes element = new ElementAttributes(
-                ElementAttributes.defaults().isSpool(),
-                ElementAttributes.defaults().isLateral(),
-                ElementAttributes.defaults().isRemote(),
+                ElementAttributes.defaults().IsSpool(),
+                ElementAttributes.defaults().IsLateral(),
+                ElementAttributes.defaults().IsRemote(),
                 false,
                 maxLife,
                 maxIdleTime,

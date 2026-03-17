@@ -44,7 +44,7 @@ import org.apache.commons.jcs4.engine.CacheStatus;
 import org.apache.commons.jcs4.engine.behavior.ICache;
 import org.apache.commons.jcs4.engine.behavior.ICacheElement;
 import org.apache.commons.jcs4.engine.behavior.ICompositeCacheAttributes;
-import org.apache.commons.jcs4.engine.behavior.ICompositeCacheAttributes.DiskUsagePattern;
+import org.apache.commons.jcs4.engine.behavior.ICompositeCacheAttributes.DiskUsagePatternEnum;
 import org.apache.commons.jcs4.engine.behavior.IElementAttributes;
 import org.apache.commons.jcs4.engine.behavior.IRequireScheduler;
 import org.apache.commons.jcs4.engine.control.event.ElementEvent;
@@ -158,7 +158,7 @@ public class CompositeCache<K, V>
     private void copyAuxiliaryRetrievedItemToMemory(final ICacheElement<K, V> element)
         throws IOException
     {
-        if (memCache.getCacheAttributes().maxObjects() > 0)
+        if (memCache.getCacheAttributes().MaxObjects() > 0)
         {
             memCache.update(element);
         }
@@ -181,7 +181,7 @@ public class CompositeCache<K, V>
         {
             try
             {
-                final Class<?> c = Class.forName(cattr.memoryCacheName());
+                final Class<?> c = Class.forName(cattr.MemoryCacheName());
                 @SuppressWarnings("unchecked") // Need cast
                 final
                 IMemoryCache<K, V> newInstance =
@@ -994,10 +994,10 @@ public class CompositeCache<K, V>
         {
             final IElementAttributes attributes = element.elementAttributes();
 
-            if (!attributes.isEternal())
+            if (!attributes.IsEternal())
             {
                 // Remove if maxLifeSeconds exceeded
-                final long maxLifeSeconds = attributes.maxLife();
+                final long maxLifeSeconds = attributes.MaxLife();
                 final long createTime = attributes.createTime();
                 final long timeFactorForMilliseconds = attributes.timeFactorForMilliseconds();
 
@@ -1008,7 +1008,7 @@ public class CompositeCache<K, V>
                     handleElementEvent(element, eventMaxlife);
                     return true;
                 }
-                final long idleTime = attributes.maxIdleTime();
+                final long idleTime = attributes.MaxIdleTime();
                 final long lastAccessTime = attributes.lastAccessTime();
 
                 // Remove if maxIdleTime exceeded
@@ -1410,10 +1410,10 @@ public class CompositeCache<K, V>
     @Override
     public void setScheduledExecutorService(final ScheduledExecutorService scheduledExecutor)
     {
-        if (cacheAttr.useMemoryShrinker())
+        if (cacheAttr.UseMemoryShrinker())
         {
             future = scheduledExecutor.scheduleAtFixedRate(
-                    new ShrinkerThread<>(this), 0, cacheAttr.shrinkerIntervalSeconds(),
+                    new ShrinkerThread<>(this), 0, cacheAttr.ShrinkerIntervalSeconds(),
                     TimeUnit.SECONDS);
         }
 
@@ -1435,7 +1435,7 @@ public class CompositeCache<K, V>
     public void spoolToDisk(final ICacheElement<K, V> ce)
     {
         // if the item is not spoolable, return
-        if (!ce.elementAttributes().isSpool())
+        if (!ce.elementAttributes().IsSpool())
         {
             // there is an event defined for this.
             handleElementEvent(ce, ElementEventType.SPOOLED_NOT_ALLOWED);
@@ -1451,7 +1451,7 @@ public class CompositeCache<K, V>
             {
                 diskAvailable = true;
 
-                if (cacheAttr.diskUsagePattern() == DiskUsagePattern.SWAP)
+                if (cacheAttr.DiskUsagePattern() == DiskUsagePatternEnum.SWAP)
                 {
                     // write the last items to disk.2
                     try
@@ -1586,9 +1586,9 @@ public class CompositeCache<K, V>
                 // SEND TO REMOTE STORE
                 case REMOTE_CACHE:
                     log.debug("ce.getElementAttributes().getIsRemote() = {0}",
-                        cacheElement.elementAttributes()::isRemote);
+                        cacheElement.elementAttributes()::IsRemote);
 
-                    if (cacheElement.elementAttributes().isRemote() && !localOnly)
+                    if (cacheElement.elementAttributes().IsRemote() && !localOnly)
                     {
                         try
                         {
@@ -1609,8 +1609,7 @@ public class CompositeCache<K, V>
                 case LATERAL_CACHE:
                     // lateral can't do the checking since it is dependent on the
                     // cache region restrictions
-                    log.debug("lateralcache in aux list: cattr {0}", cacheAttr::useLateral);
-                    if (cacheAttr.useLateral() && cacheElement.elementAttributes().isLateral() && !localOnly)
+                    if (cacheElement.elementAttributes().IsLateral() && !localOnly)
                     {
                         // DISTRIBUTE LATERALLY
                         // Currently always multicast even if the value is
@@ -1622,10 +1621,8 @@ public class CompositeCache<K, V>
 
                 // update disk if the usage pattern permits
                 case DISK_CACHE:
-                    log.debug("diskcache in aux list: cattr {0}", cacheAttr::useDisk);
-                    if (cacheAttr.useDisk()
-                        && cacheAttr.diskUsagePattern() == DiskUsagePattern.UPDATE
-                        && cacheElement.elementAttributes().isSpool())
+                    if (cacheAttr.DiskUsagePattern() == DiskUsagePatternEnum.UPDATE
+                        && cacheElement.elementAttributes().IsSpool())
                     {
                         aux.update(cacheElement);
                         log.debug("updated disk cache for {0}", cacheElement::key);
