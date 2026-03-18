@@ -19,6 +19,8 @@ package org.apache.commons.jcs4.engine;
  * under the License.
  */
 
+import java.time.Duration;
+
 import org.apache.commons.jcs4.engine.behavior.ICompositeCacheAttributes;
 
 /**
@@ -38,8 +40,8 @@ public record CompositeCacheAttributes(
         /** Whether or not we should run the memory shrinker thread. */
         boolean UseMemoryShrinker,
 
-        /** ShrinkerIntervalSeconds */
-        long ShrinkerIntervalSeconds,
+        /** ShrinkerInterval */
+        Duration ShrinkerInterval,
 
         /** The maximum number the shrinker will spool to disk per run. */
         int MaxSpoolPerRun,
@@ -67,7 +69,7 @@ public record CompositeCacheAttributes(
     private static final boolean DEFAULT_USE_SHRINKER = false;
 
     /** Default interval to run the shrinker */
-    private static final int DEFAULT_SHRINKER_INTERVAL_SECONDS = 30;
+    private static final Duration DEFAULT_SHRINKER_INTERVAL = Duration.ofSeconds(30);
 
     /** Default */
     private static final int DEFAULT_MAX_SPOOL_PER_RUN = -1;
@@ -86,7 +88,7 @@ public record CompositeCacheAttributes(
             null,
             DEFAULT_MAX_OBJECTS,
             DEFAULT_USE_SHRINKER,
-            DEFAULT_SHRINKER_INTERVAL_SECONDS,
+            DEFAULT_SHRINKER_INTERVAL,
             DEFAULT_MAX_SPOOL_PER_RUN,
             DEFAULT_MAX_MEMORY_IDLE_TIME_SECONDS,
             DEFAULT_MEMORY_CACHE_NAME,
@@ -113,7 +115,7 @@ public record CompositeCacheAttributes(
         return new CompositeCacheAttributes(s,
                 MaxObjects(),
                 UseMemoryShrinker(),
-                ShrinkerIntervalSeconds(),
+                ShrinkerInterval(),
                 MaxSpoolPerRun(),
                 MaxMemoryIdleTimeSeconds(),
                 MemoryCacheName(),

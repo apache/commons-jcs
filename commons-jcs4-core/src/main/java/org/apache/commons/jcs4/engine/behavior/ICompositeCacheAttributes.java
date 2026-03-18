@@ -20,6 +20,7 @@ package org.apache.commons.jcs4.engine.behavior;
  */
 
 import java.io.Serializable;
+import java.time.Duration;
 
 /**
  * This defines the minimal behavior for the Cache Configuration settings.
@@ -86,9 +87,9 @@ public interface ICompositeCacheAttributes
      * If UseMemoryShrinker is true the memory cache should auto-expire elements
      * to reclaim space. This gets the shrinker interval.
      *
-     * @return The ShrinkerIntervalSeconds value
+     * @return The ShrinkerInterval value
      */
-    long ShrinkerIntervalSeconds();
+    Duration ShrinkerInterval();
 
     /**
      * Number to send to disk at time when memory is full.

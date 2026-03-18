@@ -139,6 +139,11 @@ java.util.logging.SimpleFormatter.format=[%1$tF %1$tT] %3$s [%4$-7s] %5$s %n
               <td>DiskUsagePattern</td>
             </tr>
             <tr>
+              <td></td>
+              <td>ShrinkerIntervalSeconds</td>
+              <td>ShrinkerInterval</td>
+            </tr>
+            <tr>
               <td>Element configuration (ElementAttributes)</td>
               <td>IdleTime</td>
               <td>MaxIdleTime</td>
@@ -181,6 +186,11 @@ java.util.logging.SimpleFormatter.format=[%1$tF %1$tT] %3$s [%4$-7s] %5$s %n
               <th>Attribute Type</th>
               <th>Property Name</th>
               <th>Default Value</th>
+            </tr>
+            <tr>
+              <td>Region configuration (CompositeCacheAttributes)</td>
+              <td>ShrinkerInterval</td>
+              <td>PT30s</td>
             </tr>
             <tr>
               <td>Thread Pool Configuration (thread_pool, PoolConfiguration)</td>

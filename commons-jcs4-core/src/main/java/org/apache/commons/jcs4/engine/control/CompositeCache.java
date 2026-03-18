@@ -1413,7 +1413,7 @@ public class CompositeCache<K, V>
         if (cacheAttr.UseMemoryShrinker())
         {
             future = scheduledExecutor.scheduleAtFixedRate(
-                    new ShrinkerThread<>(this), 0, cacheAttr.ShrinkerIntervalSeconds(),
+                    new ShrinkerThread<>(this), 0, cacheAttr.ShrinkerInterval().toSeconds(),
                     TimeUnit.SECONDS);
         }
 

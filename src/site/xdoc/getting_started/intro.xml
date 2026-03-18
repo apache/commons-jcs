@@ -151,7 +151,7 @@ jcs.default=DC
 jcs.default.cacheattributes.MaxObjects=1000
 jcs.default.cacheattributes.UseMemoryShrinker=false
 jcs.default.cacheattributes.MaxMemoryIdleTimeSeconds=3600
-jcs.default.cacheattributes.ShrinkerIntervalSeconds=60
+jcs.default.cacheattributes.ShrinkerInterval=PT1m
 jcs.default.elementattributes.IsEternal=false
 jcs.default.elementattributes.MaxLife=21600
 jcs.default.elementattributes.MaxIdleTime=1800
@@ -161,7 +161,7 @@ jcs.region.testCache1=DC
 jcs.region.testCache1.cacheattributes.MaxObjects=1000
 jcs.region.testCache1.cacheattributes.UseMemoryShrinker=false
 jcs.region.testCache1.cacheattributes.MaxMemoryIdleTimeSeconds=3600
-jcs.region.testCache1.cacheattributes.ShrinkerIntervalSeconds=60
+jcs.region.testCache1.cacheattributes.ShrinkerInterval=PT1m
 jcs.region.testCache1.cacheattributes.MaxSpoolPerRun=500
 jcs.region.testCache1.elementattributes.IsEternal=false
 
