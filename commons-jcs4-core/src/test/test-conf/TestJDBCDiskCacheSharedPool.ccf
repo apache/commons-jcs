@@ -19,7 +19,7 @@
 
 jcs.default=JDBC_0
 jcs.default.cacheattributes.UseMemoryShrinker=false
-jcs.default.cacheattributes.MaxMemoryIdleTimeSeconds=3600
+jcs.default.cacheattributes.MaxMemoryIdleTime=PT1h
 jcs.default.cacheattributes.ShrinkerInterval=PT1m
 jcs.default.elementattributes.IsEternal=false
 jcs.default.elementattributes.MaxLife=700

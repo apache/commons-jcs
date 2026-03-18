@@ -119,7 +119,7 @@
 						<td>false</td>
 					</tr>
 					<tr>
-						<td>MaxMemoryIdleTimeSeconds</td>
+						<td>MaxMemoryIdleTime</td>
 						<td>
 							This is only used if you are using the
 							memory shrinker. If this value is set above
@@ -129,10 +129,10 @@
 							register an event handler on this event.
 						</td>
 						<td>N</td>
-						<td>7200</td>
+						<td>PT2h</td>
 					</tr>
 					<tr>
-						<td>ShrinkerIntervalSeconds</td>
+						<td>ShrinkerInterval</td>
 						<td>
 							This specifies how often the shrinker should
 							run, if it has been activated. If you set
@@ -140,7 +140,7 @@
 							setting has no effect.
 						</td>
 						<td>N</td>
-						<td>30</td>
+						<td>PT30s</td>
 					</tr>
                     <tr>
                         <td>MaxSpoolPerRun</td>
@@ -259,7 +259,7 @@
 jcs.default=
 jcs.default.cacheattributes.MaxObjects=200001
 jcs.default.cacheattributes.UseMemoryShrinker=true
-jcs.default.cacheattributes.MaxMemoryIdleTimeSeconds=3600
+jcs.default.cacheattributes.MaxMemoryIdleTime=PT1h
 jcs.default.cacheattributes.ShrinkerInterval=PT1m
 jcs.default.elementattributes.IsEternal=false
 jcs.default.elementattributes.MaxLife=700
@@ -268,7 +268,7 @@ jcs.default.elementattributes.MaxLife=700
 jcs.region.testCache1=
 jcs.region.testCache1.cacheattributes.MaxObjects=123456
 jcs.region.testCache1.cacheattributes.ShrinkerInterval=PT30s
-jcs.region.testCache1.cacheattributes.MaxMemoryIdleTimeSeconds=300
+jcs.region.testCache1.cacheattributes.MaxMemoryIdleTime=PT5m
 jcs.region.testCache1.cacheattributes.MaxSpoolPerRun=100
 jcs.region.testCache1.elementattributes.MaxLife=60000
         ]]>

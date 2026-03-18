@@ -19,7 +19,7 @@
 jcs.default=
 jcs.default.cacheattributes.MemoryCacheName=org.apache.commons.jcs4.engine.memory.soft.SoftReferenceMemoryCache
 jcs.default.cacheattributes.UseMemoryShrinker=false
-jcs.default.cacheattributes.MaxMemoryIdleTimeSeconds=3600
+jcs.default.cacheattributes.MaxMemoryIdleTime=PT1h
 jcs.default.elementattributes.IsEternal=false
 jcs.default.elementattributes.MaxLife=600
 jcs.default.elementattributes.MaxIdleTime=1800

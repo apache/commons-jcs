@@ -1,5 +1,7 @@
 package org.apache.commons.jcs4.engine;
 
+import java.time.Duration;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -43,7 +45,7 @@ public class TestCompositeCacheAttributes
                 CompositeCacheAttributes.defaults().UseMemoryShrinker(),
                 CompositeCacheAttributes.defaults().ShrinkerInterval(),
                 CompositeCacheAttributes.defaults().MaxSpoolPerRun(),
-                CompositeCacheAttributes.defaults().MaxMemoryIdleTimeSeconds(),
+                CompositeCacheAttributes.defaults().MaxMemoryIdleTime(),
                 memoryCacheName,
                 CompositeCacheAttributes.defaults().DiskUsagePattern(),
                 CompositeCacheAttributes.defaults().SpoolChunkSize());
@@ -53,18 +55,18 @@ public class TestCompositeCacheAttributes
      * Get a CompositeCacheAttributes object suitable for tests
      *
      * @param memoryCacheName the new memoryCacheName value
-     * @param maxMemoryIdleTimeSeconds the new maxMemoryIdleTimeSeconds value
+     * @param maxMemoryIdleTime the new maxMemoryIdleTime value
      * @param maxSpoolPerRun the new maxSpoolPerRun value
      */
-    public static CompositeCacheAttributes withMemoryCacheNameMaxMemoryIdleTimeSecondsAndMaxSpoolPerRun(
-            String memoryCacheName, long maxMemoryIdleTimeSeconds, int maxSpoolPerRun)
+    public static CompositeCacheAttributes withMemoryCacheNameMaxMemoryIdleTimeAndMaxSpoolPerRun(
+            String memoryCacheName, Duration maxMemoryIdleTime, int maxSpoolPerRun)
     {
         return new CompositeCacheAttributes(CompositeCacheAttributes.defaults().cacheName(),
                 CompositeCacheAttributes.defaults().MaxObjects(),
                 CompositeCacheAttributes.defaults().UseMemoryShrinker(),
                 CompositeCacheAttributes.defaults().ShrinkerInterval(),
                 maxSpoolPerRun,
-                maxMemoryIdleTimeSeconds,
+                maxMemoryIdleTime,
                 memoryCacheName,
                 CompositeCacheAttributes.defaults().DiskUsagePattern(),
                 CompositeCacheAttributes.defaults().SpoolChunkSize());
@@ -83,25 +85,25 @@ public class TestCompositeCacheAttributes
                 CompositeCacheAttributes.defaults().UseMemoryShrinker(),
                 CompositeCacheAttributes.defaults().ShrinkerInterval(),
                 CompositeCacheAttributes.defaults().MaxSpoolPerRun(),
-                CompositeCacheAttributes.defaults().MaxMemoryIdleTimeSeconds(),
+                CompositeCacheAttributes.defaults().MaxMemoryIdleTime(),
                 CompositeCacheAttributes.defaults().MemoryCacheName(),
                 CompositeCacheAttributes.defaults().DiskUsagePattern(),
                 spoolChunkSize);
     }
 
     /**
-     * Sets the maximum memory idle-time in seconds of the cache.
+     * Sets the maximum memory idle-time of the cache.
      *
-     * @param maxMemoryIdleTimeSeconds the new maxMemoryIdleTimeSeconds value
+     * @param maxMemoryIdleTime the new maxMemoryIdleTime value
      */
-    public static CompositeCacheAttributes withMaxMemoryIdleTimeSeconds(long maxMemoryIdleTimeSeconds)
+    public static CompositeCacheAttributes withMaxMemoryIdleTime(Duration maxMemoryIdleTime)
     {
         return new CompositeCacheAttributes(CompositeCacheAttributes.defaults().cacheName(),
                 CompositeCacheAttributes.defaults().MaxObjects(),
                 CompositeCacheAttributes.defaults().UseMemoryShrinker(),
                 CompositeCacheAttributes.defaults().ShrinkerInterval(),
                 CompositeCacheAttributes.defaults().MaxSpoolPerRun(),
-                maxMemoryIdleTimeSeconds,
+                maxMemoryIdleTime,
                 CompositeCacheAttributes.defaults().MemoryCacheName(),
                 CompositeCacheAttributes.defaults().DiskUsagePattern(),
                 CompositeCacheAttributes.defaults().SpoolChunkSize());
@@ -119,7 +121,7 @@ public class TestCompositeCacheAttributes
                 CompositeCacheAttributes.defaults().UseMemoryShrinker(),
                 CompositeCacheAttributes.defaults().ShrinkerInterval(),
                 CompositeCacheAttributes.defaults().MaxSpoolPerRun(),
-                CompositeCacheAttributes.defaults().MaxMemoryIdleTimeSeconds(),
+                CompositeCacheAttributes.defaults().MaxMemoryIdleTime(),
                 CompositeCacheAttributes.defaults().MemoryCacheName(),
                 diskUsagePattern,
                 CompositeCacheAttributes.defaults().SpoolChunkSize());

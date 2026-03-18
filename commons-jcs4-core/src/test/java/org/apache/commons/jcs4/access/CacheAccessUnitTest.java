@@ -27,6 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import java.time.Duration;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -306,15 +307,15 @@ class CacheAccessUnitTest
     void testRegionDefinitonWithAttributes()
         throws Exception
     {
-        final long maxIdleTime = 8765;
+        final Duration maxIdleTime = Duration.ofSeconds(8765);
         final CompositeCacheAttributes ca = TestCompositeCacheAttributes
-                .withMaxMemoryIdleTimeSeconds(maxIdleTime);
+                .withMaxMemoryIdleTime(maxIdleTime);
 
         final CacheAccess<String, String> access = JCS.getInstance( "testRegionDefinitonWithAttributes", ca );
         assertNotNull( access, "We should have an access class" );
 
         final ICompositeCacheAttributes ca2 = access.getCacheAttributes();
-        assertEquals( ca.MaxMemoryIdleTimeSeconds(), ca2.MaxMemoryIdleTimeSeconds(), "Wrong idle time setting." );
+        assertEquals( ca.MaxMemoryIdleTime(), ca2.MaxMemoryIdleTime(), "Wrong idle time setting." );
     }
 
     /**
@@ -326,9 +327,9 @@ class CacheAccessUnitTest
     void testRegionDefinitonWithBothAttributes()
         throws Exception
     {
-        final long maxIdleTime = 8765;
+        final Duration maxIdleTime = Duration.ofSeconds(8765);
         final CompositeCacheAttributes ca = TestCompositeCacheAttributes
-                .withMaxMemoryIdleTimeSeconds(maxIdleTime);
+                .withMaxMemoryIdleTime(maxIdleTime);
 
         final long maxLife = 9876;
         final ElementAttributes attr = TestElementAttributes.withEternalFalseAndMaxLife(maxLife);
@@ -337,7 +338,7 @@ class CacheAccessUnitTest
         assertNotNull( access, "We should have an access class" );
 
         final ICompositeCacheAttributes ca2 = access.getCacheAttributes();
-        assertEquals( ca.MaxMemoryIdleTimeSeconds(), ca2.MaxMemoryIdleTimeSeconds(), "Wrong idle time setting." );
+        assertEquals( ca.MaxMemoryIdleTime(), ca2.MaxMemoryIdleTime(), "Wrong idle time setting." );
     }
 
     /**

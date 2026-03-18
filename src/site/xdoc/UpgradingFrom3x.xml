@@ -140,6 +140,11 @@ java.util.logging.SimpleFormatter.format=[%1$tF %1$tT] %3$s [%4$-7s] %5$s %n
             </tr>
             <tr>
               <td></td>
+              <td>MaxMemoryIdleTimeSeconds</td>
+              <td>MaxMemoryIdleTime</td>
+            </tr>
+            <tr>
+              <td></td>
               <td>ShrinkerIntervalSeconds</td>
               <td>ShrinkerInterval</td>
             </tr>
@@ -189,6 +194,11 @@ java.util.logging.SimpleFormatter.format=[%1$tF %1$tT] %3$s [%4$-7s] %5$s %n
             </tr>
             <tr>
               <td>Region configuration (CompositeCacheAttributes)</td>
+              <td>MaxMemoryIdleTime</td>
+              <td>PT2h</td>
+            </tr>
+            <tr>
+              <td></td>
               <td>ShrinkerInterval</td>
               <td>PT30s</td>
             </tr>

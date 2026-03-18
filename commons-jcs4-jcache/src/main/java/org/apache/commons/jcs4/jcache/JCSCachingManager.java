@@ -82,7 +82,7 @@ public class JCSCachingManager implements CacheManager
     	jcs.default.cacheattributes.MaxObjects=200001
     	jcs.default.cacheattributes.MemoryCacheName=org.apache.commons.jcs4.engine.memory.lru.LRUMemoryCache
     	jcs.default.cacheattributes.UseMemoryShrinker=true
-    	jcs.default.cacheattributes.MaxMemoryIdleTimeSeconds=3600
+    	jcs.default.cacheattributes.MaxMemoryIdleTime=PT1h
     	jcs.default.cacheattributes.ShrinkerInterval=PT1m
     	jcs.default.elementattributes=org.apache.commons.jcs4.engine.ElementAttributes
     	jcs.default.elementattributes.IsEternal=false

@@ -53,7 +53,7 @@ jcs.default.cacheattributes.MaxObjects=1000
         </p>
         <source><![CDATA[
 jcs.default.cacheattributes.UseMemoryShrinker=true
-jcs.default.cacheattributes.MaxMemoryIdleTimeSeconds=3600
+jcs.default.cacheattributes.MaxMemoryIdleTime=PT1h
 jcs.default.cacheattributes.ShrinkerInterval=PT1m
 jcs.default.cacheattributes.MaxSpoolPerRun=500
 jcs.default.elementattributes.IsEternal=false
@@ -84,7 +84,7 @@ jcs.default=DC
 jcs.region.testCache1=DC
 jcs.region.testCache1.cacheattributes.MaxObjects=1000
 jcs.region.testCache1.cacheattributes.UseMemoryShrinker=true
-jcs.region.testCache1.cacheattributes.MaxMemoryIdleTimeSeconds=3600
+jcs.region.testCache1.cacheattributes.MaxMemoryIdleTime=PT1h
 jcs.region.testCache1.cacheattributes.ShrinkerInterval=PT1m
 jcs.region.testCache1.cacheattributes.MaxSpoolPerRun=500
 jcs.region.testCache1.elementattributes.IsEternal=false
@@ -140,7 +140,7 @@ jcs.default.cacheattributes.MaxObjects=1000
 jcs.region.testCache1=DC,LTCP
 jcs.region.testCache1.cacheattributes.MaxObjects=1000
 jcs.region.testCache1.cacheattributes.UseMemoryShrinker=true
-jcs.region.testCache1.cacheattributes.MaxMemoryIdleTimeSeconds=3600
+jcs.region.testCache1.cacheattributes.MaxMemoryIdleTime=PT1h
 jcs.region.testCache1.cacheattributes.ShrinkerInterval=PT1m
 jcs.region.testCache1.cacheattributes.MaxSpoolPerRun=500
 jcs.region.testCache1.elementattributes.IsEternal=false

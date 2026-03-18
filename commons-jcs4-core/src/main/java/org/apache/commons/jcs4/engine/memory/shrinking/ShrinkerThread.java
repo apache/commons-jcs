@@ -19,6 +19,8 @@ package org.apache.commons.jcs4.engine.memory.shrinking;
  * under the License.
  */
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Set;
 
 import org.apache.commons.jcs4.engine.behavior.ICacheElement;
@@ -42,7 +44,7 @@ public class ShrinkerThread<K, V>
     private final CompositeCache<K, V> cache;
 
     /** Maximum memory idle time for the whole cache */
-    private final long maxMemoryIdleTime;
+    private final Duration maxMemoryIdleTime;
 
     /** Maximum number of items to spool per run. Default is -1, or no limit. */
     private final int maxSpoolPerRun;
@@ -58,24 +60,12 @@ public class ShrinkerThread<K, V>
     public ShrinkerThread( final CompositeCache<K, V> cache )
     {
         this.cache = cache;
-
-        final long maxMemoryIdleTimeSeconds = cache.getCacheAttributes().MaxMemoryIdleTimeSeconds();
-
-        if ( maxMemoryIdleTimeSeconds < 0 )
-        {
-            this.maxMemoryIdleTime = -1;
-        }
-        else
-        {
-            this.maxMemoryIdleTime = maxMemoryIdleTimeSeconds * 1000;
-        }
-
+        this.maxMemoryIdleTime = cache.getCacheAttributes().MaxMemoryIdleTime();
         this.maxSpoolPerRun = cache.getCacheAttributes().MaxSpoolPerRun();
         if ( this.maxSpoolPerRun != -1 )
         {
             this.spoolLimit = true;
         }
-
     }
 
     /**
@@ -93,11 +83,12 @@ public class ShrinkerThread<K, V>
      * without affecting the last access or position of the item. The item is checked for
      * expiration, the expiration check has 3 parts:
      * <ol>
-     * <li>Has the cacheattributes.MaxMemoryIdleTimeSeconds defined for the region been exceeded? If
-     * so, the item should be move to disk.</li> <li>Has the item exceeded MaxLifeSeconds defined in
-     * the element attributes? If so, remove it.</li> <li>Has the item exceeded IdleTime defined in
-     * the element attributes? If so, remove it. If there are event listeners registered for the
-     * cache element, they will be called.</li>
+     * <li>Has the cacheattributes.MaxMemoryIdleTime defined for the region been exceeded? If
+     * so, the item should be move to disk.</li>
+     * <li>Has the item exceeded MaxLifeSeconds defined in the element attributes? If so,
+     * remove it.</li>
+     * <li>Has the item exceeded IdleTime defined in the element attributes? If so, remove it.
+     * If there are event listeners registered for the cache element, they will be called.</li>
      * </ol>
      * TODO Change element event handling to use the queue, then move the queue to the region and
      *       access via the Cache.
@@ -126,16 +117,15 @@ public class ShrinkerThread<K, V>
                 }
 
                 final IElementAttributes attributes = cacheElement.elementAttributes();
+                final Instant now = Instant.now();
 
                 boolean remove = false;
-
-                final long now = System.currentTimeMillis();
 
                 // If the element is not eternal, check if it should be
                 // removed and remove it if so.
                 if ( !attributes.IsEternal() )
                 {
-                    remove = cache.isExpired( cacheElement, now,
+                    remove = cache.isExpired( cacheElement, now.toEpochMilli(),
                             ElementEventType.EXCEEDED_MAXLIFE_BACKGROUND,
                             ElementEventType.EXCEEDED_IDLETIME_BACKGROUND );
 
@@ -148,24 +138,25 @@ public class ShrinkerThread<K, V>
                 // If the item is not removed, check is it has been idle
                 // long enough to be spooled.
 
-                if ( !remove && maxMemoryIdleTime != -1 )
+                if (!remove && !maxMemoryIdleTime.isNegative())
                 {
-                    if ( !spoolLimit || spoolCount < this.maxSpoolPerRun )
+                    if (!spoolLimit || spoolCount < this.maxSpoolPerRun)
                     {
-                        final long lastAccessTime = attributes.lastAccessTime();
+                        final Instant idleExpiryTime = Instant
+                                .ofEpochMilli(attributes.lastAccessTime())
+                                .plus(maxMemoryIdleTime);
 
-                        if ( lastAccessTime + maxMemoryIdleTime < now )
+                        if (idleExpiryTime.isBefore(now))
                         {
                             log.debug( "Exceeded memory idle time: {0}", key );
 
                             // Shouldn't we ensure that the element is
                             // spooled before removing it from memory?
-                            // No the disk caches have a purgatory. If it fails
+                            // Now the disk caches have a purgatory. If it fails
                             // to spool that does not affect the
                             // responsibilities of the memory cache.
 
                             spoolCount++;
-
                             memCache.remove( key );
                             memCache.waterfall( cacheElement );
                         }

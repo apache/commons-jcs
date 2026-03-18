@@ -26,6 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
+import java.time.Duration;
 
 import org.apache.commons.jcs4.engine.CacheElement;
 import org.apache.commons.jcs4.engine.CompositeCacheAttributes;
@@ -53,8 +54,9 @@ class ShrinkerThreadUnitTest
     {
         // SETUP
         final CompositeCacheAttributes cacheAttr = TestCompositeCacheAttributes
-                .withMemoryCacheNameMaxMemoryIdleTimeSecondsAndMaxSpoolPerRun(
-                        CompositeCacheAttributes.defaults().MemoryCacheName(), 10, 10)
+                .withMemoryCacheNameMaxMemoryIdleTimeAndMaxSpoolPerRun(
+                        CompositeCacheAttributes.defaults().MemoryCacheName(),
+                        Duration.ofSeconds(10), 10)
                 .withCacheName("testRegion");
 
         final CompositeCache<String, String> cache = new CompositeCache<>(cacheAttr, new ElementAttributes());
@@ -87,8 +89,9 @@ class ShrinkerThreadUnitTest
     {
         // SETUP
         final CompositeCacheAttributes cacheAttr = TestCompositeCacheAttributes
-                .withMemoryCacheNameMaxMemoryIdleTimeSecondsAndMaxSpoolPerRun(
-                        CompositeCacheAttributes.defaults().MemoryCacheName(), 10, 10)
+                .withMemoryCacheNameMaxMemoryIdleTimeAndMaxSpoolPerRun(
+                        CompositeCacheAttributes.defaults().MemoryCacheName(),
+                        Duration.ofSeconds(10), 10)
                 .withCacheName("testRegion");
 
         final CompositeCache<String, String> cache = new CompositeCache<>(cacheAttr, new ElementAttributes());
@@ -121,8 +124,9 @@ class ShrinkerThreadUnitTest
     {
         // SETUP
         final CompositeCacheAttributes cacheAttr = TestCompositeCacheAttributes
-                .withMemoryCacheNameMaxMemoryIdleTimeSecondsAndMaxSpoolPerRun(
-                        CompositeCacheAttributes.defaults().MemoryCacheName(), 10, 10)
+                .withMemoryCacheNameMaxMemoryIdleTimeAndMaxSpoolPerRun(
+                        CompositeCacheAttributes.defaults().MemoryCacheName(),
+                        Duration.ofSeconds(10), 10)
                 .withCacheName("testRegion");
 
         final CompositeCache<String, String> cache = new CompositeCache<>(cacheAttr, new ElementAttributes());
@@ -155,8 +159,9 @@ class ShrinkerThreadUnitTest
     {
         // SETUP
         final CompositeCacheAttributes cacheAttr = TestCompositeCacheAttributes
-                .withMemoryCacheNameMaxMemoryIdleTimeSecondsAndMaxSpoolPerRun(
-                        CompositeCacheAttributes.defaults().MemoryCacheName(), 10, 10)
+                .withMemoryCacheNameMaxMemoryIdleTimeAndMaxSpoolPerRun(
+                        CompositeCacheAttributes.defaults().MemoryCacheName(),
+                        Duration.ofSeconds(10), 10)
                 .withCacheName("testRegion");
 
         final CompositeCache<String, String> cache = new CompositeCache<>(cacheAttr, new ElementAttributes());
@@ -192,8 +197,9 @@ class ShrinkerThreadUnitTest
     {
         // SETUP
         final CompositeCacheAttributes cacheAttr = TestCompositeCacheAttributes
-                .withMemoryCacheNameMaxMemoryIdleTimeSecondsAndMaxSpoolPerRun(
-                        "org.apache.commons.jcs4.engine.memory.MockMemoryCache", 1, 10)
+                .withMemoryCacheNameMaxMemoryIdleTimeAndMaxSpoolPerRun(
+                        "org.apache.commons.jcs4.engine.memory.MockMemoryCache",
+                        Duration.ofSeconds(1), 10)
                 .withCacheName("testRegion");
 
         final CompositeCache<String, String> cache = new CompositeCache<>(cacheAttr, new ElementAttributes());
@@ -236,8 +242,9 @@ class ShrinkerThreadUnitTest
     {
         // SETUP
         final CompositeCacheAttributes cacheAttr = TestCompositeCacheAttributes
-                .withMemoryCacheNameMaxMemoryIdleTimeSecondsAndMaxSpoolPerRun(
-                        "org.apache.commons.jcs4.engine.memory.MockMemoryCache", 1, 3)
+                .withMemoryCacheNameMaxMemoryIdleTimeAndMaxSpoolPerRun(
+                        "org.apache.commons.jcs4.engine.memory.MockMemoryCache",
+                        Duration.ofSeconds(1), 3)
                 .withCacheName("testRegion");
 
         final CompositeCache<String, String> cache = new CompositeCache<>(cacheAttr, new ElementAttributes());
@@ -283,8 +290,9 @@ class ShrinkerThreadUnitTest
     {
         // SETUP
         final CompositeCacheAttributes cacheAttr = TestCompositeCacheAttributes
-                .withMemoryCacheNameMaxMemoryIdleTimeSecondsAndMaxSpoolPerRun(
-                        "org.apache.commons.jcs4.engine.memory.MockMemoryCache", 1, 3)
+                .withMemoryCacheNameMaxMemoryIdleTimeAndMaxSpoolPerRun(
+                        "org.apache.commons.jcs4.engine.memory.MockMemoryCache",
+                        Duration.ofSeconds(1), 3)
                 .withCacheName("testRegion");
 
         final CompositeCache<String, String> cache = new CompositeCache<>(cacheAttr, new ElementAttributes());

@@ -56,9 +56,9 @@ public interface ICompositeCacheAttributes
      * If UseMemoryShrinker is true the memory cache should auto-expire elements
      * to reclaim space.
      *
-     * @return The MaxMemoryIdleTimeSeconds value
+     * @return The MaxMemoryIdleTime value
      */
-    long MaxMemoryIdleTimeSeconds();
+    Duration MaxMemoryIdleTime();
 
     /**
      * Gets the maxObjects attribute of the ICompositeCacheAttributes object

@@ -22,6 +22,7 @@ package org.apache.commons.jcs4.engine;
 import java.time.Duration;
 
 import org.apache.commons.jcs4.engine.behavior.ICompositeCacheAttributes;
+import org.apache.commons.jcs4.engine.memory.lru.LRUMemoryCache;
 
 /**
  * The CompositeCacheAttributes defines the general cache region settings. If a region is not
@@ -46,8 +47,8 @@ public record CompositeCacheAttributes(
         /** The maximum number the shrinker will spool to disk per run. */
         int MaxSpoolPerRun,
 
-        /** MaxMemoryIdleTimeSeconds */
-        long MaxMemoryIdleTimeSeconds,
+        /** MaxMemoryIdleTime */
+        Duration MaxMemoryIdleTime,
 
         /** The name of the memory cache implementation class. */
         String MemoryCacheName,
@@ -75,10 +76,10 @@ public record CompositeCacheAttributes(
     private static final int DEFAULT_MAX_SPOOL_PER_RUN = -1;
 
     /** Default */
-    private static final int DEFAULT_MAX_MEMORY_IDLE_TIME_SECONDS = 60 * 120;
+    private static final Duration DEFAULT_MAX_MEMORY_IDLE_TIME = Duration.ofHours(2);
 
     /** Default */
-    private static final String DEFAULT_MEMORY_CACHE_NAME = "org.apache.commons.jcs4.engine.memory.lru.LRUMemoryCache";
+    private static final String DEFAULT_MEMORY_CACHE_NAME = LRUMemoryCache.class.getName();
 
     /** Default number to send to disk at a time when memory fills. */
     private static final int DEFAULT_CHUNK_SIZE = 2;
@@ -90,7 +91,7 @@ public record CompositeCacheAttributes(
             DEFAULT_USE_SHRINKER,
             DEFAULT_SHRINKER_INTERVAL,
             DEFAULT_MAX_SPOOL_PER_RUN,
-            DEFAULT_MAX_MEMORY_IDLE_TIME_SECONDS,
+            DEFAULT_MAX_MEMORY_IDLE_TIME,
             DEFAULT_MEMORY_CACHE_NAME,
             DiskUsagePatternEnum.SWAP,
             DEFAULT_CHUNK_SIZE
@@ -117,7 +118,7 @@ public record CompositeCacheAttributes(
                 UseMemoryShrinker(),
                 ShrinkerInterval(),
                 MaxSpoolPerRun(),
-                MaxMemoryIdleTimeSeconds(),
+                MaxMemoryIdleTime(),
                 MemoryCacheName(),
                 DiskUsagePattern(),
                 SpoolChunkSize());
