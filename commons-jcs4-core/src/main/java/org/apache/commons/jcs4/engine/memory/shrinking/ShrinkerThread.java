@@ -125,7 +125,7 @@ public class ShrinkerThread<K, V>
                 // removed and remove it if so.
                 if ( !attributes.IsEternal() )
                 {
-                    remove = cache.isExpired( cacheElement, now.toEpochMilli(),
+                    remove = cache.isExpired( cacheElement, now,
                             ElementEventType.EXCEEDED_MAXLIFE_BACKGROUND,
                             ElementEventType.EXCEEDED_IDLETIME_BACKGROUND );
 
@@ -142,8 +142,7 @@ public class ShrinkerThread<K, V>
                 {
                     if (!spoolLimit || spoolCount < this.maxSpoolPerRun)
                     {
-                        final Instant idleExpiryTime = Instant
-                                .ofEpochMilli(attributes.lastAccessTime())
+                        final Instant idleExpiryTime = attributes.lastAccessTime()
                                 .plus(maxMemoryIdleTime);
 
                         if (idleExpiryTime.isBefore(now))

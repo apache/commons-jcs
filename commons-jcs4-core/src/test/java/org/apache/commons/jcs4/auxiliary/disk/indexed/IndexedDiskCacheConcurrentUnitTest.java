@@ -39,7 +39,6 @@ import org.junit.jupiter.api.Test;
  */
 public class IndexedDiskCacheConcurrentUnitTest
 {
-
     private static final int items = 200;
 
     @BeforeEach

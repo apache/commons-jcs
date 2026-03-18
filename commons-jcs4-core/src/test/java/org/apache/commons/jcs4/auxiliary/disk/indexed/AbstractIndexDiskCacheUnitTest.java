@@ -46,7 +46,8 @@ import org.junit.jupiter.api.Test;
 /**
  * Tests for common functionality.
  */
-public abstract class AbstractIndexDiskCacheUnitTest{
+public abstract class AbstractIndexDiskCacheUnitTest
+{
     public abstract IndexedDiskCacheAttributes getCacheAttributes();
 
     /**
@@ -567,7 +568,7 @@ public abstract class AbstractIndexDiskCacheUnitTest{
         cattr.setCacheName("testRecyleBinSize");
         cattr.setDiskPath("target/test-sandbox/UnitTest");
         cattr.setOptimizeAtRemoveCount(numberToInsert);
-        cattr.setMaxKeySize(numberToInsert * 2);
+        cattr.setMaxKeySize(numberToInsert * 3);
         cattr.setMaxPurgatorySize(numberToInsert);
         final IndexedDiskCache<Integer, DiskTestObject> disk = new IndexedDiskCache<>(cattr);
 
@@ -613,7 +614,7 @@ public abstract class AbstractIndexDiskCacheUnitTest{
         cattr.setCacheName("testRecyleBinUsage");
         cattr.setDiskPath("target/test-sandbox/UnitTest");
         cattr.setOptimizeAtRemoveCount(numberToInsert);
-        cattr.setMaxKeySize(numberToInsert * 2);
+        cattr.setMaxKeySize(numberToInsert * 3);
         cattr.setMaxPurgatorySize(numberToInsert);
         final IndexedDiskCache<Integer, DiskTestObject> disk = new IndexedDiskCache<>(cattr);
 
@@ -651,7 +652,7 @@ public abstract class AbstractIndexDiskCacheUnitTest{
 
         // verify that we used the correct number of spots
         assertEquals( numberToAdd, disk.getRecyleCount(),
-                      "The recycle bin should have the number removed." + disk.getStatistics() );
+                      "The recycle bin should have the number removed: " + disk.getStatistics() );
     }
 
     /**

@@ -20,6 +20,7 @@ package org.apache.commons.jcs4.engine.control;
  */
 
 import java.io.IOException;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -973,7 +974,7 @@ public class CompositeCache<K, V>
      */
     public boolean isExpired(final ICacheElement<K, V> element)
     {
-        return isExpired(element, System.currentTimeMillis(),
+        return isExpired(element, Instant.now(),
                 ElementEventType.EXCEEDED_MAXLIFE_ONREQUEST,
                 ElementEventType.EXCEEDED_IDLETIME_ONREQUEST);
     }
@@ -987,7 +988,7 @@ public class CompositeCache<K, V>
      * @param eventIdle the event to fire in case the idle time is exceeded
      * @return true if the element is expired
      */
-    public boolean isExpired(final ICacheElement<K, V> element, final long timestamp,
+    public boolean isExpired(final ICacheElement<K, V> element, final Instant timestamp,
             final ElementEventType eventMaxlife, final ElementEventType eventIdle)
     {
         try
@@ -996,12 +997,12 @@ public class CompositeCache<K, V>
 
             if (!attributes.IsEternal())
             {
-                // Remove if maxLifeSeconds exceeded
-                final long maxLifeSeconds = attributes.MaxLife();
-                final long createTime = attributes.createTime();
+                // Remove if maxLife exceeded
+                final long maxLife = attributes.MaxLife();
+                final Instant createTime = attributes.createTime();
                 final long timeFactorForMilliseconds = attributes.timeFactorForMilliseconds();
 
-                if (maxLifeSeconds != -1 && timestamp - createTime > maxLifeSeconds * timeFactorForMilliseconds)
+                if (maxLife != -1 && timestamp.isAfter(createTime.plusMillis(maxLife * timeFactorForMilliseconds)))
                 {
                     log.debug("Exceeded maxLife: {0}", element::key);
 
@@ -1009,13 +1010,13 @@ public class CompositeCache<K, V>
                     return true;
                 }
                 final long idleTime = attributes.MaxIdleTime();
-                final long lastAccessTime = attributes.lastAccessTime();
+                final Instant lastAccessTime = attributes.lastAccessTime();
 
                 // Remove if maxIdleTime exceeded
                 // If you have a 0 size memory cache, then the last access will
                 // not get updated.
                 // you will need to set the idle time to -1.
-                if (idleTime != -1 && timestamp - lastAccessTime > idleTime * timeFactorForMilliseconds)
+                if (idleTime != -1 && timestamp.isAfter(lastAccessTime.plusMillis(idleTime * timeFactorForMilliseconds)))
                 {
                     log.debug("Exceeded maxIdle: {0}", element::key);
 

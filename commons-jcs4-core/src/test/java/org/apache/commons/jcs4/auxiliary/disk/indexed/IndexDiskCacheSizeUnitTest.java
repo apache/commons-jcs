@@ -49,11 +49,12 @@ public class IndexDiskCacheSizeUnitTest extends AbstractIndexDiskCacheUnitTest
         final IndexedDiskCacheAttributes cattr = getCacheAttributes();
         cattr.setCacheName( "testRemoveItems" );
         cattr.setOptimizeAtRemoveCount(7);
-        // 1kb DiskTestObject takes 1420 bytes, so 5*1420 = 7100, so to keep 5 objects, we need max key size of 8
-        cattr.setMaxKeySize(8);
+        // 1kb DiskTestObject takes 2065 bytes, so 5*2065 = 10325, so to keep 5 objects, we need max key size of 12
+        cattr.setMaxKeySize(12);
         cattr.setMaxPurgatorySize( 0 );
         cattr.setDiskPath( "target/test-sandbox/BreakIndexTest" );
         final IndexedDiskCache<String, DiskTestObject> disk = new IndexedDiskCache<>( cattr );
+        disk.removeAll(); // Make sure that cache is empty
 
         final String[] test = { "a", "bb", "ccc", "dddd", "eeeee", "ffffff", "ggggggg", "hhhhhhhhh", "iiiiiiiiii" };
         final String[] expect = { null, "bb", "ccc", null, null, "ffffff", null, "hhhhhhhhh", "iiiiiiiiii" };
@@ -61,7 +62,7 @@ public class IndexDiskCacheSizeUnitTest extends AbstractIndexDiskCacheUnitTest
 
         for ( int i = 0; i < 6; i++ )
         {
-            final ICacheElement<String, DiskTestObject> element = new CacheElement<>( "testRecycleBin", "key:" + test[i], value);
+            final ICacheElement<String, DiskTestObject> element = new CacheElement<>("testRecycleBin", "key:" + test[i], value);
             disk.processUpdate( element );
         }
 
@@ -85,15 +86,6 @@ public class IndexDiskCacheSizeUnitTest extends AbstractIndexDiskCacheUnitTest
             for ( int i = 0; i < 9; i++ )
             {
                 final ICacheElement<String, DiskTestObject> element = disk.get( "key:" + test[i]);
-                if ( element != null )
-                {
-                    //System.out.println( "element = " + element.getVal() );
-                }
-                else
-                {
-                    //System.out.println( "null --key:" + test[i]);
-                }
-
                 final String expectedValue = expect[i];
                 if ( expectedValue == null )
                 {

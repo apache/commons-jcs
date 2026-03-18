@@ -20,6 +20,8 @@ package org.apache.commons.jcs4.engine.behavior;
  */
 
 import java.io.Serializable;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 
 import org.apache.commons.jcs4.engine.control.event.behavior.IElementEventHandler;
@@ -50,13 +52,13 @@ public interface IElementAttributes extends Serializable
     /**
      * Gets the createTime attribute of the IAttributes object.
      * <p>
-     * This should be the current time in milliseconds returned by the sysutem call when the element
+     * This should be the current time returned by the system call when the element
      * is put in the cache.
      * <p>
      * Putting an item in the cache overrides any existing items.
      * @return The createTime value
      */
-    long createTime();
+    Instant createTime();
 
     /**
      * Gets the idleTime attribute of the IAttributes object
@@ -99,7 +101,7 @@ public interface IElementAttributes extends Serializable
      *
      * @return The LastAccess value.
      */
-    long lastAccessTime();
+    Instant lastAccessTime();
 
     /**
      * Sets the MaxLife attribute of the IAttributes object. How many seconds it can live after
@@ -121,4 +123,12 @@ public interface IElementAttributes extends Serializable
      * Sets the LastAccessTime as now of the IElementAttributes object
      */
     void setLastAccessTimeNow();
+
+    /**
+     * Gets the time left to live of the IElementAttributes object.
+     * <p>
+     * This is the (max life + create time) - current time.
+     * @return The TimeToLive value
+     */
+    public Duration getTimeToLive();
 }

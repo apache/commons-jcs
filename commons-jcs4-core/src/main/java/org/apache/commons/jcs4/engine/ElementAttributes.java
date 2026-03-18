@@ -19,8 +19,10 @@ package org.apache.commons.jcs4.engine;
  * under the License.
  */
 
+import java.io.Serializable;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicLong;
 
 import org.apache.commons.jcs4.engine.behavior.IElementAttributes;
 import org.apache.commons.jcs4.engine.control.event.behavior.IElementEventHandler;
@@ -63,10 +65,10 @@ public record ElementAttributes(
         long MaxIdleTime,
 
         /** The creation time. This is used to enforce the max life. */
-        long createTime,
+        Instant createTime,
 
         /** The last access time. This is used to enforce the max idle time. */
-        AtomicLong mutableLastAccessTime,
+        LastAccessHolder mutableLastAccessTime,
 
         /** The time factor to convert durations to milliseconds */
         long timeFactorForMilliseconds,
@@ -83,6 +85,20 @@ public record ElementAttributes(
 {
     /** Don't change. */
     private static final long serialVersionUID = 7814990748035017441L;
+
+    public static final class LastAccessHolder implements Serializable
+    {
+        private static final long serialVersionUID = 3995308126685776408L;
+        public Instant lastAccessTime;
+
+        /**
+         * @param lastAccessTime
+         */
+        public LastAccessHolder(Instant lastAccessTime)
+        {
+            this.lastAccessTime = lastAccessTime;
+        }
+    }
 
     /** Default */
     private static final boolean DEFAULT_IS_SPOOL = true;
@@ -107,8 +123,8 @@ public record ElementAttributes(
             DEFAULT_IS_ETERNAL,
             DEFAULT_MAX_LIFE,
             DEFAULT_MAX_IDLE_TIME,
-            0,
-            new AtomicLong(),
+            Instant.EPOCH,
+            new LastAccessHolder(Instant.EPOCH),
             DEFAULT_TIME_FACTOR,
             new ArrayList<>());
 
@@ -126,7 +142,7 @@ public record ElementAttributes(
     public ElementAttributes()
     {
         this(defaults());
-        this.mutableLastAccessTime.set(createTime());
+        this.mutableLastAccessTime.lastAccessTime = createTime();
     }
 
     /**
@@ -140,8 +156,8 @@ public record ElementAttributes(
              from.IsEternal(),
              from.MaxLife(),
              from.MaxIdleTime(),
-             System.currentTimeMillis(),
-             new AtomicLong(from.lastAccessTime()),
+             Instant.now(),
+             new LastAccessHolder(from.lastAccessTime()),
              from.timeFactorForMilliseconds(),
              new ArrayList<>(from.elementEventHandlers()));
     }
@@ -160,10 +176,10 @@ public record ElementAttributes(
           )
     {
         this(isSpool, isLateral, isRemote, isEternal, maxLife, maxIdleTime,
-                System.currentTimeMillis(), new AtomicLong(), timeFactorForMilliseconds,
+                Instant.now(), new LastAccessHolder(Instant.EPOCH), timeFactorForMilliseconds,
                 new ArrayList<>());
 
-        this.mutableLastAccessTime.set(createTime());
+        this.mutableLastAccessTime.lastAccessTime = createTime();
     }
 
     /**
@@ -187,9 +203,9 @@ public record ElementAttributes(
      * @return The LastAccess value.
      */
     @Override
-    public long lastAccessTime()
+    public Instant lastAccessTime()
     {
-        return mutableLastAccessTime().get();
+        return mutableLastAccessTime().lastAccessTime;
     }
 
     /**
@@ -198,19 +214,20 @@ public record ElementAttributes(
     @Override
     public void setLastAccessTimeNow()
     {
-        this.mutableLastAccessTime.set(System.currentTimeMillis());
+        this.mutableLastAccessTime.lastAccessTime = Instant.now();
     }
 
     /**
      * Gets the time left to live of the IElementAttributes object.
      * <p>
      * This is the (max life + create time) - current time.
-     * @return The TimeToLiveSeconds value
+     * @return The TimeToLive value
      */
-    private long getTimeToLiveSeconds()
+    @Override
+    public Duration getTimeToLive()
     {
-        final long now = System.currentTimeMillis();
-        return ( createTime() + MaxLife() * timeFactorForMilliseconds() - now ) / 1000;
+        final Instant now = Instant.now();
+        return Duration.between(now, createTime().plusMillis(MaxLife() * timeFactorForMilliseconds()));
     }
 
     /**
@@ -227,11 +244,11 @@ public record ElementAttributes(
         dump.append( ", isSpool = " ).append( IsSpool() );
         dump.append( ", isRemote = " ).append( IsRemote() );
         dump.append( ", isEternal = " ).append( IsEternal() );
-        dump.append( ", MaxLifeSeconds = " ).append( MaxLife() );
+        dump.append( ", MaxLife = " ).append( MaxLife() );
         dump.append( ", MaxIdleTime = " ).append( MaxIdleTime() );
         dump.append( ", CreateTime = " ).append( createTime() );
         dump.append( ", LastAccessTime = " ).append( lastAccessTime() );
-        dump.append( ", getTimeToLiveSeconds() = " ).append(getTimeToLiveSeconds());
+        dump.append( ", getTimeToLive() = " ).append(getTimeToLive());
         dump.append( " ]" );
 
         return dump.toString();

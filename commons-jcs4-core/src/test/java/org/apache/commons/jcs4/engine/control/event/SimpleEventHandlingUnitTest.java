@@ -19,10 +19,12 @@ package org.apache.commons.jcs4.engine.control.event;
  * under the License.
  */
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.time.Instant;
 
 import org.apache.commons.jcs4.JCS;
 import org.apache.commons.jcs4.access.CacheAccess;
@@ -166,14 +168,14 @@ class SimpleEventHandlingUnitTest
         throws Exception
     {
     	final ElementAttributes elem1 = new ElementAttributes();
-    	final long ctime1 = elem1.createTime();
+    	final Instant ctime1 = elem1.createTime();
 
     	Thread.sleep(10);
 
     	final IElementAttributes elem2 = new ElementAttributes(elem1);
-    	final long ctime2 = elem2.createTime();
+    	final Instant ctime2 = elem2.createTime();
 
-        assertFalse( ctime1 == ctime2, "Creation times should be different" );
+        assertNotEquals(ctime1, ctime2, "Creation times should be different" );
     }
 
     /**

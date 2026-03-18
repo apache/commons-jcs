@@ -430,7 +430,7 @@ public class JDBCDiskCache<K, V>
             psInsert.setLong( 4, ce.elementAttributes().MaxLife() );
             psInsert.setString( 5, ce.elementAttributes().IsEternal() ? "T" : "F" );
 
-            final Timestamp createTime = new Timestamp( ce.elementAttributes().createTime() );
+            final Timestamp createTime = Timestamp.from(ce.elementAttributes().createTime());
             psInsert.setTimestamp( 6, createTime );
 
             final long now = System.currentTimeMillis() / 1000;
@@ -477,7 +477,7 @@ public class JDBCDiskCache<K, V>
         {
             psUpdate.setBytes( 1, element );
 
-            final Timestamp createTime = new Timestamp( ce.elementAttributes().createTime() );
+            final Timestamp createTime = Timestamp.from(ce.elementAttributes().createTime());
             psUpdate.setTimestamp( 2, createTime );
 
             final long now = System.currentTimeMillis() / 1000;

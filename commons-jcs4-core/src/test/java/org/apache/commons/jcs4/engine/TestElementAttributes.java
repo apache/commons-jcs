@@ -1,5 +1,7 @@
 package org.apache.commons.jcs4.engine;
 
+import java.time.Instant;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -20,7 +22,8 @@ package org.apache.commons.jcs4.engine;
  */
 
 import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicLong;
+
+import org.apache.commons.jcs4.engine.ElementAttributes.LastAccessHolder;
 
 /**
  * Allow test access to parametrized ElementAttributes objects
@@ -41,12 +44,12 @@ public class TestElementAttributes
                 false,
                 maxLife,
                 ElementAttributes.defaults().MaxIdleTime(),
-                System.currentTimeMillis(),
-                new AtomicLong(),
+                Instant.now(),
+                new LastAccessHolder(Instant.EPOCH),
                 ElementAttributes.defaults().timeFactorForMilliseconds(),
                 new ArrayList<>());
 
-        element.mutableLastAccessTime().set(element.createTime());
+        element.mutableLastAccessTime().lastAccessTime = element.createTime();
         return element;
     }
 
@@ -65,12 +68,12 @@ public class TestElementAttributes
                 false,
                 maxLife,
                 maxIdleTime,
-                System.currentTimeMillis(),
-                new AtomicLong(),
+                Instant.now(),
+                new LastAccessHolder(Instant.EPOCH),
                 ElementAttributes.defaults().timeFactorForMilliseconds(),
                 new ArrayList<>());
 
-        element.mutableLastAccessTime().set(element.createTime());
+        element.mutableLastAccessTime().lastAccessTime = element.createTime();
         return element;
     }
 }

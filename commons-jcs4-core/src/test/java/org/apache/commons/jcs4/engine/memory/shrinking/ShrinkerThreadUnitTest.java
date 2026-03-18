@@ -27,6 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.time.Duration;
+import java.time.Instant;
 
 import org.apache.commons.jcs4.engine.CacheElement;
 import org.apache.commons.jcs4.engine.CompositeCacheAttributes;
@@ -67,9 +68,9 @@ class ShrinkerThreadUnitTest
         final ICacheElement<String, String> element = new CacheElement<>( "testRegion", key, value,
                 TestElementAttributes.withEternalFalseAndMaxLife(1));
 
-        long now = System.currentTimeMillis();
+        Instant now = Instant.now();
         // add two seconds
-        now += 2000;
+        now = now.plusSeconds(2);
 
         // DO WORK
         final boolean result = cache.isExpired( element, now,
@@ -102,9 +103,9 @@ class ShrinkerThreadUnitTest
         final ICacheElement<String, String> element = new CacheElement<>( "testRegion", key, value,
                 TestElementAttributes.withEternalFalseAndMaxLifeAndMaxIdleTime(100, 1));
 
-        long now = System.currentTimeMillis();
+        Instant now = Instant.now();
         // add two seconds
-        now += 2000;
+        now = now.plusSeconds(2);
 
         // DO WORK
         final boolean result = cache.isExpired( element, now,
@@ -137,9 +138,9 @@ class ShrinkerThreadUnitTest
         final ICacheElement<String, String> element = new CacheElement<>( "testRegion", key, value,
                 TestElementAttributes.withEternalFalseAndMaxLife(1));
 
-        long now = System.currentTimeMillis();
+        Instant now = Instant.now();
         // subtract two seconds
-        now -= 2000;
+        now = now.minusSeconds(2);
 
         // DO WORK
         final boolean result = cache.isExpired( element, now,
@@ -172,9 +173,9 @@ class ShrinkerThreadUnitTest
         final ICacheElement<String, String> element = new CacheElement<>( "testRegion", key, value,
                 TestElementAttributes.withEternalFalseAndMaxLifeAndMaxIdleTime(100, 1));
 
-        long now = System.currentTimeMillis();
+        Instant now = Instant.now();
         // subtract two seconds
-        now -= 2000;
+        now = now.minusSeconds(2);
 
         // DO WORK
         final boolean result = cache.isExpired( element, now,
@@ -217,7 +218,7 @@ class ShrinkerThreadUnitTest
         assertNotNull( returnedElement1, "We should have received an element" );
 
         // set this to 2 seconds ago.
-        elementAttr.mutableLastAccessTime().set(System.currentTimeMillis() - 2000);
+        elementAttr.mutableLastAccessTime().lastAccessTime = Instant.now().minusSeconds(2);
 
         // DO WORK
         final ShrinkerThread<String, String> shrinker = new ShrinkerThread<>( cache );
@@ -264,7 +265,7 @@ class ShrinkerThreadUnitTest
             assertNotNull( returnedElement1, "We should have received an element" );
 
             // set this to 2 seconds ago.
-            elementAttr.mutableLastAccessTime().set(System.currentTimeMillis() - 2000);
+            elementAttr.mutableLastAccessTime().lastAccessTime = Instant.now().minusSeconds(2);
         }
 
         // DO WORK
@@ -315,7 +316,7 @@ class ShrinkerThreadUnitTest
             assertNotNull( returnedElement1, "We should have received an element" );
 
             // set this to 2 seconds ago.
-            elementAttr.mutableLastAccessTime().set(System.currentTimeMillis() - 2000);
+            elementAttr.mutableLastAccessTime().lastAccessTime = Instant.now().minusSeconds(2);
         }
 
         // DO WORK

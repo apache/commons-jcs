@@ -22,6 +22,9 @@ package org.apache.commons.jcs4;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.time.Duration;
+import java.time.Instant;
+
 import org.apache.commons.jcs4.access.CacheAccess;
 import org.apache.commons.jcs4.engine.behavior.ICacheElement;
 import org.junit.jupiter.api.Test;
@@ -42,12 +45,12 @@ class JCSCacheElementRetrievalUnitTest
 
         jcs.put( "test_key", "test_data" );
 
-        final long now = System.currentTimeMillis();
+        final Instant now = Instant.now();
         final ICacheElement<String, String> elem = jcs.getCacheElement( "test_key" );
         assertEquals( "testCache1", elem.cacheName(), "Name wasn't right" );
 
-        final long diff = now - elem.elementAttributes().createTime();
-        assertTrue( diff >= 0, "Create time should have been at or after the call" );
+        final Duration diff = Duration.between(elem.elementAttributes().createTime(), now);
+        assertTrue( diff.toMillis() >= 0, "Create time should have been at or after the call" );
 
     }
 }

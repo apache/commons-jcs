@@ -22,8 +22,8 @@ package org.apache.commons.jcs4.admin;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.text.DateFormat;
-import java.util.Date;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -132,10 +132,7 @@ public class JCSAdminBean implements JCSJMXBean
                 .collect(Collectors.toMap(Object::toString, k -> k)));
 
         final LinkedList<CacheElementInfo> records = new LinkedList<>();
-
-        final DateFormat format = DateFormat.getDateTimeInstance( DateFormat.SHORT, DateFormat.SHORT );
-
-        final long now = System.currentTimeMillis();
+        final DateTimeFormatter format = DateTimeFormatter.ISO_LOCAL_DATE_TIME.withZone(ZoneId.systemDefault());
 
         for (final Map.Entry<String, ?> key : keys.entrySet())
         {
@@ -145,9 +142,9 @@ public class JCSAdminBean implements JCSJMXBean
             final CacheElementInfo elementInfo = new CacheElementInfo(
             		key.getKey(),
             		attributes.IsEternal(),
-            		format.format(new Date(attributes.createTime())),
+            		format.format(attributes.createTime()),
             		attributes.MaxLife(),
-            		(now - attributes.createTime() - attributes.MaxLife() * 1000 ) / -1000);
+            		attributes.getTimeToLive().toSeconds());
 
             records.add( elementInfo );
         }
