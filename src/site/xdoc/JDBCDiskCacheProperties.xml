@@ -121,9 +121,9 @@
                     </tr>
                     <tr>
                         <td>jndiTTL</td>
-                        <td>The time between two JNDI lookups in ms.</td>
+                        <td>The time between two JNDI lookups</td>
                         <td>N</td>
-                        <td>0</td>
+                        <td>PT0s (no caching)</td>
                     </tr>
 					<tr>
 						<td>tableName</td>

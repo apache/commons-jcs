@@ -95,8 +95,8 @@ public abstract class AbstractHttpClient
         }
 
         builder.setDefaultRequestConfig(RequestConfig.custom()
-                .setConnectTimeout(getRemoteHttpCacheAttributes().getConnectionTimeoutMillis())
-                .setSocketTimeout(getRemoteHttpCacheAttributes().getSocketTimeoutMillis())
+                .setConnectTimeout((int)getRemoteHttpCacheAttributes().getConnectionTimeout().toMillis())
+                .setSocketTimeout((int)getRemoteHttpCacheAttributes().getSocketTimeout().toMillis())
                 // By default we instruct HttpClient to ignore cookies.
                 .setCookieSpec(CookieSpecs.IGNORE_COOKIES)
                 .build());

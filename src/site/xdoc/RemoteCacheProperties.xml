@@ -111,6 +111,22 @@
 						<td>N</td>
 						<td>false</td>
 					</tr>
+                    <tr>
+                        <td>GetTimeout</td>
+                        <td>
+                            Must be greater than 0 for a pool to be used.
+                        </td>
+                        <td>N</td>
+                        <td>PT-0.001s</td>
+                    </tr>
+                    <tr>
+                        <td>ThreadPoolName</td>
+                        <td>
+                            The name of the thread pool used for get operations.
+                        </td>
+                        <td>N</td>
+                        <td>remote_cache_client</td>
+                    </tr>
 					<tr>
 						<td>Receive</td>
 						<td>

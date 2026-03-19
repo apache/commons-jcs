@@ -42,16 +42,16 @@
 						<td>100</td>
 					</tr>
 					<tr>
-						<td>socketTimeoutMillis</td>
+						<td>socketTimeout</td>
 						<td> Read timeout.</td>
 						<td>N</td>
-						<td>3000</td>
+						<td>PT3s</td>
 					</tr>
 					<tr>
-						<td>connectionTimeoutMillis</td>
+						<td>connectionTimeout</td>
 						<td> Connection timeout.</td>
 						<td>N</td>
-						<td>5000</td>
+						<td>PT5s</td>
 					</tr>
 					<tr>
 						<td>httpVersion</td>

@@ -193,11 +193,11 @@ public class RemoteCacheAttributes
     }
 
     /**
-     * @param millis
+     * @param getTimeout
      */
-    public void setGetTimeoutMillis( final int millis )
+    public void setGetTimeout( final Duration getTimeout )
     {
-        getTimeout = Duration.ofMillis(millis);
+        this.getTimeout = getTimeout;
     }
 
     /**
@@ -247,7 +247,7 @@ public class RemoteCacheAttributes
     {
         final StringBuilder buf = new StringBuilder(super.toString());
         buf.append( "\n receive = [" + isReceive() + "]" );
-        buf.append( "\n getTimeoutMillis = [" + getGetTimeout() + "]" );
+        buf.append( "\n getTimeout = [" + getGetTimeout() + "]" );
         buf.append( "\n threadPoolName = [" + getThreadPoolName() + "]" );
         buf.append( "\n localClusterConsistency = [" + isLocalClusterConsistency() + "]" );
         buf.append( "\n zombieQueueMaxSize = [" + getZombieQueueMaxSize() + "]" );

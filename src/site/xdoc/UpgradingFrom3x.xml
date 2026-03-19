@@ -177,6 +177,16 @@ java.util.logging.SimpleFormatter.format=[%1$tF %1$tT] %3$s [%4$-7s] %5$s %n
               <td>RmiSocketFactoryTimeoutMillis</td>
               <td>RmiSocketFactoryTimeout</td>
             </tr>
+            <tr>
+              <td>Remote HTTP Cache configuration (RemoteHttpCacheAttributes)</td>
+              <td>SocketTimeoutMillis</td>
+              <td>SocketTimeout</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>ConnectionTimeoutMillis</td>
+              <td>ConnectionTimeout</td>
+            </tr>
           </table>
         </p>
         <p>
@@ -243,6 +253,11 @@ java.util.logging.SimpleFormatter.format=[%1$tF %1$tT] %3$s [%4$-7s] %5$s %n
               <td>PT5m</td>
             </tr>
             <tr>
+              <td></td>
+              <td>jndiTTL</td>
+              <td>PT0s</td>
+            </tr>
+            <tr>
               <td>Lateral TCP Cache configuration (LateralTCPCacheAttributes)</td>
               <td>SocketTimeOut</td>
               <td>PT1s</td>
@@ -255,6 +270,16 @@ java.util.logging.SimpleFormatter.format=[%1$tF %1$tT] %3$s [%4$-7s] %5$s %n
             <tr>
               <td>Remote Cache configuration (RemoteCacheAttributes)</td>
               <td>RmiSocketFactoryTimeout</td>
+              <td>PT5s</td>
+            </tr>
+            <tr>
+              <td>Remote HTTP Cache configuration (RemoteHttpCacheAttributes)</td>
+              <td>socketTimeout</td>
+              <td>PT3s</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>connectionTimeout</td>
               <td>PT5s</td>
             </tr>
           </table>

@@ -1,5 +1,7 @@
 package org.apache.commons.jcs4.auxiliary.remote.http.client;
 
+import java.time.Duration;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -38,10 +40,10 @@ public class RemoteHttpCacheAttributes
     private int maxConnectionsPerHost = 100;
 
     /** The socket timeout. */
-    private int socketTimeoutMillis = 3000;
+    private Duration socketTimeout = Duration.ofSeconds(3);
 
     /** The socket connections timeout */
-    private int connectionTimeoutMillis = 5000;
+    private Duration connectionTimeout = Duration.ofSeconds(5);
 
     /** HTTP version to use. */
     private String httpVersion = DEFAULT_HTTP_VERSION;
@@ -62,11 +64,11 @@ public class RemoteHttpCacheAttributes
     private String remoteHttpClientClassName = DEFAULT_REMOTE_HTTP_CLIENT_CLASS_NAME;
 
     /**
-     * @return the connectionTimeoutMillis
+     * @return the connectionTimeout
      */
-    public int getConnectionTimeoutMillis()
+    public Duration getConnectionTimeout()
     {
-        return connectionTimeoutMillis;
+        return connectionTimeout;
     }
 
     /**
@@ -94,11 +96,11 @@ public class RemoteHttpCacheAttributes
     }
 
     /**
-     * @return the socketTimeoutMillis
+     * @return the socketTimeout
      */
-    public int getSocketTimeoutMillis()
+    public Duration getSocketTimeout()
     {
-        return socketTimeoutMillis;
+        return socketTimeout;
     }
 
     /**
@@ -134,11 +136,11 @@ public class RemoteHttpCacheAttributes
     }
 
     /**
-     * @param connectionTimeoutMillis the connectionTimeoutMillis to set
+     * @param connectionTimeout the connectionTimeout to set
      */
-    public void setConnectionTimeoutMillis( final int connectionTimeoutMillis )
+    public void setConnectionTimeout( final Duration connectionTimeout )
     {
-        this.connectionTimeoutMillis = connectionTimeoutMillis;
+        this.connectionTimeout = connectionTimeout;
     }
 
     /**
@@ -190,11 +192,11 @@ public class RemoteHttpCacheAttributes
     }
 
     /**
-     * @param socketTimeoutMillis the socketTimeoutMillis to set
+     * @param socketTimeout the socketTimeout to set
      */
-    public void setSocketTimeoutMillis( final int socketTimeoutMillis )
+    public void setSocketTimeout( final Duration socketTimeout )
     {
-        this.socketTimeoutMillis = socketTimeoutMillis;
+        this.socketTimeout = socketTimeout;
     }
 
     /**
@@ -214,9 +216,9 @@ public class RemoteHttpCacheAttributes
         final StringBuilder buf = new StringBuilder();
         buf.append( "\n RemoteHttpCacheAttributes" );
         buf.append( "\n maxConnectionsPerHost = [" + getMaxConnectionsPerHost() + "]" );
-        buf.append( "\n socketTimeoutMillis = [" + getSocketTimeoutMillis() + "]" );
+        buf.append( "\n socketTimeout = [" + getSocketTimeout() + "]" );
         buf.append( "\n httpVersion = [" + getHttpVersion() + "]" );
-        buf.append( "\n connectionTimeoutMillis = [" + getConnectionTimeoutMillis() + "]" );
+        buf.append( "\n connectionTimeout = [" + getConnectionTimeout() + "]" );
         buf.append( "\n includeCacheNameAsParameter = [" + isIncludeCacheNameAsParameter() + "]" );
         buf.append( "\n includeKeysAndPatternsAsParameter = [" + isIncludeKeysAndPatternsAsParameter() + "]" );
         buf.append( "\n includeRequestTypeasAsParameter = [" + isIncludeRequestTypeasAsParameter() + "]" );

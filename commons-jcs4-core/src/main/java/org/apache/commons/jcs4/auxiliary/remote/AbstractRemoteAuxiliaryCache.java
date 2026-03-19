@@ -95,7 +95,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
         }
 
         // use a pool if it is greater than 0
-        log.debug( "GetTimeoutMillis() = {0}",
+        log.debug( "GetTimeout() = {0}",
                 () -> getAuxiliaryCacheAttributes().getGetTimeout() );
 
         if (!getAuxiliaryCacheAttributes().getGetTimeout().isNegative())
@@ -367,7 +367,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
     /**
      * Synchronously get from the remote cache; if failed, replace the remote handle with a zombie.
      * <p>
-     * Use threadpool to timeout if a value is set for GetTimeoutMillis
+     * Use threadpool to timeout if a value is set for GetTimeout
      * <p>
      * If we are a cluster client, we need to leave the Element in its serialized form. Cluster
      * clients cannot deserialize objects. Cluster clients get ICacheElementSerialized objects from
