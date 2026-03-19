@@ -1,5 +1,7 @@
 package org.apache.commons.jcs4.utils.discovery;
 
+import java.time.Duration;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -47,7 +49,7 @@ public record UDPDiscoveryAttributes(
         int udpTTL,
 
         /** Amount of time before we remove services that we haven't heard from */
-        int maxIdleTimeSec
+        Duration maxIdleTime
 )
 {
     /** Default udp discovery address */
@@ -57,7 +59,7 @@ public record UDPDiscoveryAttributes(
     private static final int DEFAULT_UDP_DISCOVERY_PORT = 5678;
 
     /** Default amount of time before we remove services that we haven't heard from */
-    private static final int DEFAULT_MAX_IDLE_TIME_SEC = 180;
+    private static final Duration DEFAULT_MAX_IDLE_TIME = Duration.ofSeconds(180);
 
     /** Record with all defaults set */
     private static final UDPDiscoveryAttributes DEFAULT = new UDPDiscoveryAttributes(
@@ -67,7 +69,7 @@ public record UDPDiscoveryAttributes(
             null,
             DEFAULT_UDP_DISCOVERY_PORT,
             0,
-            DEFAULT_MAX_IDLE_TIME_SEC
+            DEFAULT_MAX_IDLE_TIME
             );
 
     /**
@@ -87,7 +89,7 @@ public record UDPDiscoveryAttributes(
     {
         this(lac.getTcpListenerHost(), lac.getTcpListenerPort(), lac.getUdpDiscoveryAddr(),
             lac.getUdpDiscoveryInterface(), lac.getUdpDiscoveryPort(), lac.getUdpTTL(),
-            defaults().maxIdleTimeSec());
+            defaults().maxIdleTime());
     }
 
     /**
@@ -107,7 +109,7 @@ public record UDPDiscoveryAttributes(
             defaults().udpDiscoveryInterface(),
             udpDiscoveryPort,
             udpTTL,
-            defaults().maxIdleTimeSec()
+            defaults().maxIdleTime()
             );
     }
 
@@ -126,7 +128,7 @@ public record UDPDiscoveryAttributes(
                 udpDiscoveryInterface(),
                 udpDiscoveryPort(),
                 udpTTL(),
-                maxIdleTimeSec()
+                maxIdleTime()
                 );
     }
 
@@ -142,7 +144,7 @@ public record UDPDiscoveryAttributes(
         buf.append("\n ServicePort = [").append(servicePort()).append("]");
         buf.append("\n UdpDiscovery = [").append(udpDiscoveryAddr()).append("]");
         buf.append("\n UdpDiscoveryPort = [").append(udpDiscoveryPort()).append("]");
-        buf.append("\n MaxIdleTimeSec = [").append(maxIdleTimeSec()).append("]");
+        buf.append("\n MaxIdleTimeSec = [").append(maxIdleTime()).append("]");
         return buf.toString();
     }
 }

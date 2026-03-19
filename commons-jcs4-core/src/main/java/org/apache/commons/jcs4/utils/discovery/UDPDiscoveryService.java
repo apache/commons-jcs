@@ -260,11 +260,11 @@ public class UDPDiscoveryService
         // the listeners need to be notified.
         getDiscoveredServices().stream()
             .filter(service -> {
-                if (now.isAfter(service.getLastHearFromTime().plusSeconds(getUdpDiscoveryAttributes().maxIdleTimeSec())))
+                if (now.isAfter(service.getLastHearFromTime().plus(getUdpDiscoveryAttributes().maxIdleTime())))
                 {
                     log.info( "Removing service, since we haven't heard from it in "
                             + "{0} seconds. service = {1}",
-                            getUdpDiscoveryAttributes().maxIdleTimeSec(), service );
+                            getUdpDiscoveryAttributes().maxIdleTime().toSeconds(), service );
                     return true;
                 }
 
@@ -452,7 +452,7 @@ public class UDPDiscoveryService
         // delay and the idle time.
         this.cleanupTaskFuture = scheduledExecutor.scheduleAtFixedRate(
                 this::cleanup, 0,
-                getUdpDiscoveryAttributes().maxIdleTimeSec(), TimeUnit.SECONDS);
+                getUdpDiscoveryAttributes().maxIdleTime().toSeconds(), TimeUnit.SECONDS);
     }
 
     /**
