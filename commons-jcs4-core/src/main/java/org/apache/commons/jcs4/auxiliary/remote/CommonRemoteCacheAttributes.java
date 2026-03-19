@@ -59,6 +59,9 @@ public abstract class CommonRemoteCacheAttributes
     /** Should we put and get from the clusters. */
     private boolean localClusterConsistency;
 
+    /** The default timeout for the custom RMI socket factory */
+    public static final Duration DEFAULT_RMI_SOCKET_FACTORY_TIMEOUT = Duration.ofSeconds(10);
+
     /** Read and connect timeout */
     private Duration rmiSocketFactoryTimeout = DEFAULT_RMI_SOCKET_FACTORY_TIMEOUT;
 
@@ -250,11 +253,11 @@ public abstract class CommonRemoteCacheAttributes
     }
 
     /**
-     * @param rmiSocketFactoryTimeoutMillis The rmiSocketFactoryTimeoutMillis to set.
+     * @param rmiSocketFactoryTimeout The rmiSocketFactoryTimeout to set.
      */
-    public void setRmiSocketFactoryTimeoutMillis( final int rmiSocketFactoryTimeoutMillis )
+    public void setRmiSocketFactoryTimeout(final Duration rmiSocketFactoryTimeout)
     {
-        this.rmiSocketFactoryTimeout = Duration.ofMillis(rmiSocketFactoryTimeoutMillis);
+        this.rmiSocketFactoryTimeout = rmiSocketFactoryTimeout;
     }
 
     /**

@@ -24,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.sql.SQLException;
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
@@ -149,7 +150,7 @@ class JDBCDataSourceFactoryUnitTest
     {
         // SETUP
         final String jndiPath = "java:comp/env/jdbc/MyDB";
-        final long ttl = 300000L;
+        final Duration ttl = Duration.ofDays(4);
 
         System.setProperty(Context.INITIAL_CONTEXT_FACTORY,
                 MockInitialContextFactory.class.getName());

@@ -31,9 +31,6 @@ import org.apache.commons.jcs4.auxiliary.remote.server.behavior.RemoteType;
 public interface ICommonRemoteCacheAttributes
     extends AuxiliaryCacheAttributes
 {
-    /** The default timeout for the custom RMI socket factory */
-    Duration DEFAULT_RMI_SOCKET_FACTORY_TIMEOUT = Duration.ofMillis(10000);
-
     /**
      * Gets the clusterServers attribute of the IRemoteCacheAttributes object
      *

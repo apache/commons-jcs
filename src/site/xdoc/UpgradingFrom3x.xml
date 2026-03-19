@@ -172,6 +172,11 @@ java.util.logging.SimpleFormatter.format=[%1$tF %1$tT] %3$s [%4$-7s] %5$s %n
               <td>ShrinkerIntervalSeconds</td>
               <td>ShrinkerInterval</td>
             </tr>
+            <tr>
+              <td>Remote Cache configuration (RemoteCacheAttributes)</td>
+              <td>RmiSocketFactoryTimeoutMillis</td>
+              <td>RmiSocketFactoryTimeout</td>
+            </tr>
           </table>
         </p>
         <p>
@@ -246,6 +251,11 @@ java.util.logging.SimpleFormatter.format=[%1$tF %1$tT] %3$s [%4$-7s] %5$s %n
               <td></td>
               <td>OpenTimeOut</td>
               <td>PT2s</td>
+            </tr>
+            <tr>
+              <td>Remote Cache configuration (RemoteCacheAttributes)</td>
+              <td>RmiSocketFactoryTimeout</td>
+              <td>PT5s</td>
             </tr>
           </table>
         </p>

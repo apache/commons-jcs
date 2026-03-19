@@ -24,9 +24,10 @@ import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.rmi.server.RMISocketFactory;
+import java.time.Duration;
 import java.util.Properties;
 
-import org.apache.commons.jcs4.auxiliary.remote.behavior.ICommonRemoteCacheAttributes;
+import org.apache.commons.jcs4.auxiliary.remote.CommonRemoteCacheAttributes;
 import org.apache.commons.jcs4.auxiliary.remote.behavior.IRemoteCacheConstants;
 import org.junit.jupiter.api.Test;
 
@@ -140,21 +141,21 @@ class RemoteCacheServerFactoryUnitTest
                       "Wrong registryKeepAliveDelayMillis" );
     }
 
-    /** Verify that we get the registryKeepAliveDelayMillis value */
+    /** Verify that we get the rmiSocketFactoryTimeout value */
     @Test
-    void testConfigureRemoteCacheServerAttributes_rmiSocketFactoryTimeoutMillisPresent()
+    void testConfigureRemoteCacheServerAttributes_rmiSocketFactoryTimeoutPresent()
     {
         // SETUP
-        final int rmiSocketFactoryTimeoutMillis = 123245;
+        final Duration rmiSocketFactoryTimeout = Duration.ofMillis(123245);
         final Properties props = new Properties();
-        props.put( IRemoteCacheConstants.CACHE_SERVER_ATTRIBUTES_PROPERTY_PREFIX + ".rmiSocketFactoryTimeoutMillis", String.valueOf( rmiSocketFactoryTimeoutMillis ) );
+        props.put(IRemoteCacheConstants.CACHE_SERVER_ATTRIBUTES_PROPERTY_PREFIX + ".rmiSocketFactoryTimeout", String.valueOf(rmiSocketFactoryTimeout));
 
         // DO WORK
         final RemoteCacheServerAttributes result = RemoteCacheServerFactory.configureRemoteCacheServerAttributes( props );
 
         // VERIFY
-        assertEquals( rmiSocketFactoryTimeoutMillis, result.getRmiSocketFactoryTimeout().toMillis(),
-                      "Wrong rmiSocketFactoryTimeoutMillis" );
+        assertEquals( rmiSocketFactoryTimeout, result.getRmiSocketFactoryTimeout(),
+                      "Wrong rmiSocketFactoryTimeout" );
     }
 
     /** Verify that we get the timeout value */
@@ -168,7 +169,7 @@ class RemoteCacheServerFactoryUnitTest
         final RemoteCacheServerAttributes result = RemoteCacheServerFactory.configureRemoteCacheServerAttributes( props );
 
         // VERIFY
-        assertEquals( ICommonRemoteCacheAttributes.DEFAULT_RMI_SOCKET_FACTORY_TIMEOUT,
+        assertEquals( CommonRemoteCacheAttributes.DEFAULT_RMI_SOCKET_FACTORY_TIMEOUT,
                       result.getRmiSocketFactoryTimeout(), "Wrong timeout" );
     }
 

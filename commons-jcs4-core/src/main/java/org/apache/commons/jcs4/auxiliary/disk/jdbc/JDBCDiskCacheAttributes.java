@@ -214,9 +214,9 @@ public class JDBCDiskCacheAttributes
     /**
 	 * @param jndiTTL the jndiTTL to set
 	 */
-	public void setJndiTTL(final long jndiTTL)
+	public void setJndiTTL(final Duration jndiTTL)
 	{
-		this.jndiTTL = Duration.ofMillis(jndiTTL);
+		this.jndiTTL = jndiTTL;
 	}
 
     /**
