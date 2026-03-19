@@ -83,6 +83,7 @@ public class SharedPoolDataSourceFactory implements DataSourceFactory
         log.debug("Starting initJdbc2Pool");
 
         dataSource.setDescription(config.getConnectionPoolName());
+        dataSource.setDefaultMaxTotal(config.getMaxTotal());
     }
 
     /** The name of the factory. */

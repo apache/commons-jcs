@@ -97,7 +97,7 @@
                 <td>PT1m</td>
             </tr>
             <tr>
-                <td>AllowRemoveAll</td>
+                <td>allowRemoveAll</td>
                 <td>If this is false, we will not execute remove all.</td>
                 <td>N</td>
                 <td>true</td>

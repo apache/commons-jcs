@@ -40,16 +40,44 @@
 						<th>Required</th>
 						<th>Default Value</th>
 					</tr>
-					<tr>
-						<td>MaxPurgatorySize</td>
-						<td>
-							The maximum number of items allowed in the
-							queue of items to be written to disk.
-						</td>
-						<td>N</td>
-						<td>5000</td>
-					</tr>
-
+                    <tr>
+                        <td>MaxPurgatorySize</td>
+                        <td>The maximum number of items allowed in the queue of items to
+                            be written to disk.</td>
+                        <td>N</td>
+                        <td>5000</td>
+                    </tr>
+                    <tr>
+                        <td>ShutdownSpoolTimeLimit</td>
+                        <td>Sets the amount of time we will wait for elements to move to
+                            disk during shutdown for a particular region.</td>
+                        <td>N</td>
+                        <td>PT1m</td>
+                    </tr>
+                    <tr>
+                        <td>allowRemoveAll</td>
+                        <td>If this is false, we will not execute remove all.</td>
+                        <td>N</td>
+                        <td>true</td>
+                    </tr>
+                    <tr>
+                        <td>connectionPoolName</td>
+                        <td>
+                            If a pool name is supplied, the factory will attempt to use it. 
+                            It should be configured in a separate section as follows. 
+                            Assuming the name is "MyPool":
+                            
+                            <pre>
+                            jcs.jdbcconnectionpool.MyPool.attributes.userName=MyUserName
+                            jcs.jdbcconnectionpool.MyPool.attributes.password=MyPassword
+                            jcs.jdbcconnectionpool.MyPool.attributes.url=MyUrl
+                            jcs.jdbcconnectionpool.MyPool.attributes.maxTotal=MyMaxTotal
+                            jcs.jdbcconnectionpool.MyPool.attributes.driverClassName=MyDriverClassName
+                            </pre>
+                        </td>
+                        <td>N</td>
+                        <td></td>
+                    </tr>
 					<tr>
 						<td>url</td>
 						<td>
@@ -60,7 +88,6 @@
 						<td>N</td>
 						<td></td>
 					</tr>
-
 					<tr>
 						<td>driverClassName</td>
 						<td>
@@ -70,21 +97,18 @@
 						<td>N</td>
 						<td></td>
 					</tr>
-
                     <tr>
                         <td>userName</td>
                         <td>The database user name.</td>
                         <td>N</td>
                         <td></td>
                     </tr>
-
                     <tr>
                         <td>password</td>
                         <td>The database user password.</td>
                         <td>N</td>
                         <td></td>
                     </tr>
-
                     <tr>
                         <td>jndiPath</td>
                         <td>
@@ -95,21 +119,18 @@
                         <td>N</td>
                         <td></td>
                     </tr>
-
                     <tr>
                         <td>jndiTTL</td>
                         <td>The time between two JNDI lookups in ms.</td>
                         <td>N</td>
                         <td>0</td>
                     </tr>
-
 					<tr>
 						<td>tableName</td>
 						<td>The name of the table.</td>
 						<td>N</td>
 						<td>JCS_STORE</td>
 					</tr>
-
 					<tr>
 						<td>testBeforeInsert</td>
 						<td>
@@ -121,9 +142,8 @@
 						<td>N</td>
 						<td>true</td>
 					</tr>
-
 					<tr>
-						<td>maxActive</td>
+						<td>maxTotal</td>
 						<td>
 							This sets the maximum number of connections
 							allowed.
@@ -131,19 +151,6 @@
 						<td>Y</td>
 						<td></td>
 					</tr>
-
-					<tr>
-						<td>allowRemoveAll</td>
-						<td>
-							Should the disk cache honor remove all (i.e.
-							clear) requests. You might set this to false
-							to prevent someone from accidentally
-							clearing out an entire database.
-						</td>
-						<td>N</td>
-						<td>true</td>
-					</tr>
-
 					<tr>
 						<td>UseDiskShrinker</td>
 						<td>
@@ -153,14 +160,12 @@
 						<td>N</td>
 						<td>true</td>
 					</tr>
-
 					<tr>
 						<td>ShrinkerInterval</td>
 						<td>Interval between disk shrinker runs.</td>
 						<td>N</td>
 						<td>PT5M</td>
 					</tr>
-
 				</table>
 			</subsection>
 

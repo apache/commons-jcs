@@ -78,14 +78,14 @@ public class JDBCDiskCacheAttributes
     private boolean useDiskShrinker = true;
 
     /**
-     * If a pool name is supplied, the manager will attempt to load it. It should be configured in a
+     * If a pool name is supplied, the factory will attempt to load it. It should be configured in a
      * separate section as follows. Assuming the name is "MyPool":
      *
      * <pre>
      * jcs.jdbcconnectionpool.MyPool.attributes.userName=MyUserName
      * jcs.jdbcconnectionpool.MyPool.attributes.password=MyPassword
      * jcs.jdbcconnectionpool.MyPool.attributes.url=MyUrl
-     * jcs.jdbcconnectionpool.MyPool.attributes.maxActive=MyMaxActive
+     * jcs.jdbcconnectionpool.MyPool.attributes.maxTotal=MyMaxTotal
      * jcs.jdbcconnectionpool.MyPool.attributes.driverClassName=MyDriverClassName
      * </pre>
      */
