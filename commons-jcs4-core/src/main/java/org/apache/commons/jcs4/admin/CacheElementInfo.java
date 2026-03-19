@@ -52,7 +52,7 @@ public record CacheElementInfo(
         buf.append( "\n Key [" ).append( key() ).append( "]" );
         buf.append( "\n Eternal [" ).append( eternal() ).append( "]" );
         buf.append( "\n CreateTime [" ).append( createTime() ).append( "]" );
-        buf.append( "\n MaxLifeSeconds [" ).append( maxLife() ).append( "]" );
+        buf.append( "\n MaxLife [" ).append( maxLife() ).append( "]" );
         buf.append( "\n ExpiresInSeconds [" ).append( expiresInSeconds() ).append( "]" );
 
         return buf.toString();

@@ -218,7 +218,7 @@
     <td><%=element.key()%></td>
     <td><%=element.eternal()%></td>
     <td><%=element.createTime()%></td>
-    <td><%=element.maxLifeSeconds()%></td>
+    <td><%=element.maxLife()%></td>
     <td><%=element.expiresInSeconds()%></td>
     <td>
       <a href="?action=item&cacheName=<%=cacheName%>&key=<%=element.key()%>"> View </a>

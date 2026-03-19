@@ -69,7 +69,7 @@ class BlockDiskUnitTest
     {
         final File file = new File(rafDir, fileName + ".data");
         file.delete();
-        this.disk = new BlockDisk(file, new StandardSerializer());
+        this.disk = new BlockDisk(file, 4096, new StandardSerializer());
     }
 
     private void setUpBlockDisk(final String fileName, final int blockSize) throws IOException

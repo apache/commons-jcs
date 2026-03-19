@@ -26,40 +26,109 @@
 
 	<body>
 		<section name="Block Disk Auxiliary Cache">
-			<p>
-				The Block Disk Cache stores cached values on disk. Like
-				the Indexed Disk Cache, the Block Disk Cache keeps the
-				keys in memory. The Block Disk Cache stores the values
-				in a group of fixed size blocks, whereas the Indexed
-				Disk Cache writes items to disk in one chunk.
-			</p>
-			<p>
-				The Block Disk Cache has advantages over the normal
-				indexed model for regions where the size of the items
-				varies. Since all the blocks are the same size, the
-				recycle bin is very simple. It is just a list of block
-				numbers. Also, the Block Disk Cache will never need to
-				be optimized. Once the maximum number of keys is
-				reached, blocks will be reused.
-			</p>
+		<p>
+			The Block Disk Cache stores cached values on disk. Like
+			the Indexed Disk Cache, the Block Disk Cache keeps the
+			keys in memory. The Block Disk Cache stores the values
+			in a group of fixed size blocks, whereas the Indexed
+			Disk Cache writes items to disk in one chunk.
+		</p>
+		<p>
+			The Block Disk Cache has advantages over the normal
+			indexed model for regions where the size of the items
+			varies. Since all the blocks are the same size, the
+			recycle bin is very simple. It is just a list of block
+			numbers. Also, the Block Disk Cache will never need to
+			be optimized. Once the maximum number of keys is
+			reached, blocks will be reused.
+		</p>
 			
-			<section name="Size limitation">
-				<p>
-					There are two ways to limit the cache size: using element
-					count and element size. When using element count, in disk
-					store there will be at most MaxKeySize elements (not disk 
-					blocks). When using element size, there will be at most
-					KeySize kB of elements stored in the data file. As the Block 
-					Disk Cache doesn't need optimization, the data file 
-					will be not longer than specified. The limit does not
-					cover the key file size. The mode is chosen using DiskLimitType. 
-					Allowed values are: COUNT and SIZE.
-				</p>
-			</section>
+		<subsection name="Size limitation">
+			<p>
+				There are two ways to limit the cache size: using element
+				count and element size. When using element count, in disk
+				store there will be at most MaxKeySize elements (not disk 
+				blocks). When using element size, there will be at most
+				KeySize kB of elements stored in the data file. As the Block 
+				Disk Cache doesn't need optimization, the data file 
+				will be not longer than specified. The limit does not
+				cover the key file size. The mode is chosen using DiskLimitType. 
+				Allowed values are: COUNT and SIZE.
+			</p>
+		</subsection>
 
-			<subsection name="Example cache.ccf">
-				<source>
-					<![CDATA[
+        <subsection name="Block Disk Configuration Properties">
+        <table>
+            <tr>
+                <th>Property</th>
+                <th>Description</th>
+                <th>Required</th>
+                <th>Default Value</th>
+            </tr>
+            <tr>
+                <td>DiskPath</td>
+                <td>The directory where the disk cache should write its files.
+                </td>
+                <td>Y</td>
+                <td>n/a</td>
+            </tr>
+            <tr>
+                <td>MaxPurgatorySize</td>
+                <td>The maximum number of items allowed in the queue of items to
+                    be written to disk.</td>
+                <td>N</td>
+                <td>5000</td>
+            </tr>
+            <tr>
+                <td>DiskLimitType</td>
+                <td>There are two ways to limit the cache size: using element
+                    count (COUNT) and element size (SIZE) When using element count, 
+                    in disk store there will be at most <code>MaxKeySize</code>
+                    elements. When using element size, there will be at most KeySize kB 
+                    of elements stored in the data file.</td>
+                <td>N</td>
+                <td>COUNT</td>
+            </tr>
+            <tr>
+                <td>ShutdownSpoolTimeLimit</td>
+                <td>Sets the amount of time we will wait for elements to move to
+                    disk during shutdown for a particular region.</td>
+                <td>N</td>
+                <td>PT1m</td>
+            </tr>
+            <tr>
+                <td>AllowRemoveAll</td>
+                <td>If this is false, we will not execute remove all.</td>
+                <td>N</td>
+                <td>true</td>
+            </tr>
+            <tr>
+                <td>MaxKeySize</td>
+                <td>The maximum number of keys that the block disk cache can
+                    have. Since the keys are stored in memory, you may want to limit
+                    this number to something reasonable. The default is a bit small.</td>
+                <td>N</td>
+                <td>5000</td>
+            </tr>
+            <tr>
+                <td>blockSizeBytes</td>
+                <td>The size per block in bytes.</td>
+                <td>N</td>
+                <td>4096</td>
+            </tr>
+            <tr>
+                <td>keyPersistenceInterval</td>
+                <td>The keys will be persisted at this interval. 
+                    0 means never.</td>
+                <td>N</td>
+                <td>PT5m</td>
+            </tr>
+        </table>
+        </subsection>
+
+		<subsection name="Example cache.ccf">
+			<source>
+				<![CDATA[
 ##############################################################
 ##### DEFAULT REGION  ########################################
 

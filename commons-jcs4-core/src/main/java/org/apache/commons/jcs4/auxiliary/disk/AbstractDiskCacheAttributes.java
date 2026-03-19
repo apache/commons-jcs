@@ -187,12 +187,11 @@ public abstract class AbstractDiskCacheAttributes extends AbstractAuxiliaryCache
      * The default is 60 seconds.
      * <p>
      *
-     * @param shutdownSpoolTimeLimit
-     *            the time in seconds
+     * @param shutdownSpoolTimeLimit the time
      */
-    public void setShutdownSpoolTimeLimit(final int shutdownSpoolTimeLimit)
+    public void setShutdownSpoolTimeLimit(final Duration shutdownSpoolTimeLimit)
     {
-        this.shutdownSpoolTimeLimit = Duration.ofSeconds(shutdownSpoolTimeLimit);
+        this.shutdownSpoolTimeLimit = shutdownSpoolTimeLimit;
     }
 
     /**
@@ -206,10 +205,11 @@ public abstract class AbstractDiskCacheAttributes extends AbstractAuxiliaryCache
     {
         final StringBuilder str = new StringBuilder();
         str.append("AbstractDiskCacheAttributes ");
-        str.append("\n diskPath = " + getDiskPath());
-        str.append("\n maxPurgatorySize   = " + getMaxPurgatorySize());
-        str.append("\n allowRemoveAll   = " + isAllowRemoveAll());
-        str.append("\n ShutdownSpoolTimeLimit   = " + getShutdownSpoolTimeLimit());
+        str.append("\n DiskPath = ").append(getDiskPath());
+        str.append("\n DiskLimitType = ").append(getDiskLimitType());
+        str.append("\n MaxPurgatorySize = ").append(getMaxPurgatorySize());
+        str.append("\n AllowRemoveAll = ").append(isAllowRemoveAll());
+        str.append("\n ShutdownSpoolTimeLimit = ").append(getShutdownSpoolTimeLimit());
         return str.toString();
     }
 }

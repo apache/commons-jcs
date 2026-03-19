@@ -30,7 +30,6 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import org.apache.commons.jcs4.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs4.log.Log;
-import org.apache.commons.jcs4.utils.serialization.StandardSerializer;
 
 /**
  * This class manages reading an writing data to disk. When asked to write a value, it returns a
@@ -44,9 +43,6 @@ public class BlockDisk implements AutoCloseable
     /** The size of the header that indicates the amount of data stored in an occupied block. */
     public static final byte HEADER_SIZE_BYTES = 4;
     // 4 bytes is the size used for ByteBuffer.putInt(int value) and ByteBuffer.getInt()
-
-    /** Defaults to 4kb */
-    private static final int DEFAULT_BLOCK_SIZE_BYTES = 4 * 1024;
 
     /** Size of the blocks */
     private final int blockSizeBytes;
@@ -74,32 +70,6 @@ public class BlockDisk implements AutoCloseable
 
     /** How many items have we put to disk */
     private final AtomicLong putCount = new AtomicLong();
-
-    /**
-     * Constructor for the Disk object
-     *
-     * @param file
-     * @param elementSerializer
-     * @throws IOException
-     */
-    public BlockDisk(final File file, final IElementSerializer elementSerializer)
-        throws IOException
-    {
-        this(file, DEFAULT_BLOCK_SIZE_BYTES, elementSerializer);
-    }
-
-    /**
-     * Creates the file and set the block size in bytes.
-     *
-     * @param file
-     * @param blockSizeBytes
-     * @throws IOException
-     */
-    public BlockDisk(final File file, final int blockSizeBytes)
-        throws IOException
-    {
-        this(file, blockSizeBytes, new StandardSerializer());
-    }
 
     /**
      * Creates the file and set the block size in bytes.

@@ -56,7 +56,7 @@
 				<p>
 					When items are removed from the disk cache, the
 					location of the available block on the storage file
-					is recorded in skip list set. This allows the disk 
+					is recorded in a skip list set. This allows the disk 
                     cache to reuse empty spots, thereby keeping the file
                     size to a minimum.
 				</p>
@@ -131,14 +131,15 @@ jcs.auxiliary.DC.attributes.MaxKeySize=100000
 			<subsection name="Additional Configuration Options">
 				<p>
 					The indexed disk cache provides some additional
-					configuration options.
+					configuration options. for a complete reference, see
+                    <a href="IndexedDiskCacheProperties.html">Indexed Disk Cache Properties</a>
 				</p>
 				<p>
 					The purgatory size of the Disk cache is equipped
 					with an LRU storage limit. The maximum number of
 					elements allowed in purgatory is configured by the
-					MaxPurgatorySize parameter. By default, the max
-					purgatory size is 5000.
+					<code>MaxPurgatorySize</code> parameter. By default, 
+                    the max	purgatory size is 5000.
 				</p>
 				<p>
 					Initial testing indicates that the disk cache
@@ -172,9 +173,9 @@ jcs.auxiliary.DC.attributes.MaxPurgatorySize=10000
 					deframentation interval is determined by the number
 					of removes. Currently there is no way to schedule
 					defragmentation to run at a set time. If you set the
-					OptimizeAtRemoveCount to -1, no optimizations of the
-					data file will occur until shutdown. By default the
-					value is -1.
+					<code>OptimizeAtRemoveCount</code> to -1, no 
+                    optimizations of the data file will occur until 
+                    shutdown. By default the value is -1.
 				</p>
 				<source><![CDATA[
 jcs.auxiliary.DC.attributes.OptimizeAtRemoveCount=30000

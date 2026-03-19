@@ -140,14 +140,12 @@ public class IndexedDiskCacheAttributes
     public String toString()
     {
         final StringBuilder str = new StringBuilder();
-        str.append( "IndexedDiskCacheAttributes " );
-        str.append( "\n diskPath = " + super.getDiskPath() );
-        str.append( "\n maxPurgatorySize   = " + super.getMaxPurgatorySize() );
-        str.append( "\n maxKeySize  = " + maxKeySize );
-        str.append( "\n optimizeAtRemoveCount  = " + optimizeAtRemoveCount );
-        str.append( "\n shutdownSpoolTimeLimit  = " + super.getShutdownSpoolTimeLimit() );
-        str.append( "\n optimizeOnShutdown  = " + optimizeOnShutdown );
-        str.append( "\n clearDiskOnStartup  = " + clearDiskOnStartup );
+        str.append(super.toString()).append("\n");
+        str.append( "IndexedDiskCacheAttributes" );
+        str.append( "\n MaxKeySize = ").append(maxKeySize);
+        str.append( "\n OptimizeAtRemoveCount = ").append(optimizeAtRemoveCount);
+        str.append( "\n OptimizeOnShutdown = ").append(optimizeOnShutdown);
+        str.append( "\n ClearDiskOnStartup = ").append(clearDiskOnStartup);
         return str.toString();
     }
 }

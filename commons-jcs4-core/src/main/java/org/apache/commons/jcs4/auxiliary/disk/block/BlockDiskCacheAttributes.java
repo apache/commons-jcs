@@ -32,6 +32,9 @@ public class BlockDiskCacheAttributes
     /** Don't change */
     private static final long serialVersionUID = 6568840097657265989L;
 
+    /** Defaults to 4kb */
+    private static final int DEFAULT_BLOCK_SIZE_BYTES = 4 * 1024;
+
     /** Maximum number of keys to be kept in memory */
     private static final int DEFAULT_MAX_KEY_SIZE = 5000;
 
@@ -39,7 +42,7 @@ public class BlockDiskCacheAttributes
     private static final Duration DEFAULT_KEY_PERSISTENCE_INTERVAL = Duration.ofSeconds(5 * 60);
 
     /** The size per block in bytes. */
-    private int blockSizeBytes;
+    private int blockSizeBytes = DEFAULT_BLOCK_SIZE_BYTES;
 
     /** -1 means no limit. */
     private int maxKeySize = DEFAULT_MAX_KEY_SIZE;
@@ -56,7 +59,7 @@ public class BlockDiskCacheAttributes
     }
 
     /**
-     * @return the keyPersistenceIntervalSeconds.
+     * @return the keyPersistenceInterval.
      */
     public Duration getKeyPersistenceInterval()
     {
@@ -82,11 +85,11 @@ public class BlockDiskCacheAttributes
     }
 
     /**
-     * @param keyPersistenceIntervalSeconds The keyPersistenceIntervalSeconds to set.
+     * @param keyPersistenceInterval The keyPersistenceInterval to set.
      */
-    public void setKeyPersistenceIntervalSeconds( final long keyPersistenceIntervalSeconds )
+    public void setKeyPersistenceInterval(final Duration keyPersistenceInterval)
     {
-        this.keyPersistenceInterval = Duration.ofSeconds(keyPersistenceIntervalSeconds);
+        this.keyPersistenceInterval = keyPersistenceInterval;
     }
 
     /**
@@ -106,13 +109,11 @@ public class BlockDiskCacheAttributes
     public String toString()
     {
         final StringBuilder str = new StringBuilder();
-        str.append( "\nBlockDiskAttributes " );
-        str.append( "\n DiskPath [" + getDiskPath() + "]" );
-        str.append( "\n MaxKeySize [" + getMaxKeySize() + "]" );
-        str.append( "\n MaxPurgatorySize [" + getMaxPurgatorySize() + "]" );
-        str.append( "\n BlockSizeBytes [" + getBlockSizeBytes() + "]" );
-        str.append( "\n KeyPersistenceIntervalSeconds [" + getKeyPersistenceInterval() + "]" );
-        str.append( "\n DiskLimitType [" + getDiskLimitType() + "]" );
+        str.append(super.toString()).append("\n");
+        str.append( "BlockDiskAttributes " );
+        str.append( "\n MaxKeySize = ").append(getMaxKeySize());
+        str.append( "\n blockSizeBytes = ").append(getBlockSizeBytes());
+        str.append( "\n keyPersistenceInterval = ").append(getKeyPersistenceInterval());
         return str.toString();
     }
 }
