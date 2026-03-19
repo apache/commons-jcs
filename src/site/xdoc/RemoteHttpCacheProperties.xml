@@ -104,7 +104,7 @@ jcs.auxiliary.RC=org.apache.commons.jcs4.auxiliary.remote.http.client.RemoteCach
 jcs.auxiliary.RC.attributes.FailoverServers=localhost:1101,localhost:1102
 jcs.auxiliary.RC.attributes.LocalPort=1201
 jcs.auxiliary.RC.attributes.RemoveUponRemotePut=false
-jcs.auxiliary.RC.attributes.RmiSocketFactoryTimeoutMillis=5000
+jcs.auxiliary.RC.attributes.RmiSocketFactoryTimeout=PT5s
 jcs.auxiliary.RC.attributes.GetOnly=false
 jcs.auxiliary.RC.attributes.Receive=false
         ]]>

@@ -22,7 +22,7 @@ registry.port=11020
 
 # client callback port.
 jcs.remotecache.serverattributes.servicePort=13010
-jcs.remotecache.serverattributes.RmiSocketFactoryTimeout=PT12.345s
+jcs.remotecache.serverattributes.rmiSocketFactoryTimeout=PT12.345s
 
 # cluster setting
 jcs.remotecache.serverattributes.LocalClusterConsistency=true

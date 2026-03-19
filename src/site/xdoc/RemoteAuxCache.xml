@@ -196,7 +196,7 @@ registry.port=1102
 # call back port to local caches.
 jcs.remotecache.serverattributes.servicePort=1102
 # rmi socket factory timeout
-jcs.remotecache.serverattributes.rmiSocketFactoryTimeoutMillis=5000
+jcs.remotecache.serverattributes.RmiSocketFactoryTimeout=PT5s
 # cluster setting
 jcs.remotecache.serverattributes.LocalClusterConsistency=true
 jcs.remotecache.serverattributes.AllowClusterGet=true
