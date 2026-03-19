@@ -19,6 +19,9 @@ package org.apache.commons.jcs4.utils.timing;
  * under the License.
  */
 
+import java.time.Duration;
+import java.time.Instant;
+
 /**
  * This is a simple timer utility.
  */
@@ -30,7 +33,7 @@ public class ElapsedTimer
     /**
      * Sets the start time when created.
      */
-    private long timeStamp = System.currentTimeMillis();
+    private Instant timeStamp = Instant.now();
 
     /**
      * Gets the time elapsed between the start time and now. The start time is reset to now.
@@ -40,8 +43,8 @@ public class ElapsedTimer
      */
     public long getElapsedTime()
     {
-        final long now = System.currentTimeMillis();
-        final long elapsed = now - timeStamp;
+        final Instant now = Instant.now();
+        final long elapsed = Duration.between(timeStamp, now).toMillis();
         timeStamp = now;
         return elapsed;
     }

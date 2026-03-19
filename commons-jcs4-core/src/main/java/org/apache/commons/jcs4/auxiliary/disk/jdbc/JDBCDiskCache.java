@@ -186,7 +186,7 @@ public class JDBCDiskCache<K, V>
             if (result.next())
             {
                 getTableState().setState( TableStateType.DELETE_RUNNING );
-                final long now = System.currentTimeMillis() / 1000;
+                final Instant now = Instant.now();
 
                 final String sql = String.format(SQL_DELETE_EXPIRED, getTableName());
 
@@ -194,7 +194,7 @@ public class JDBCDiskCache<K, V>
                 {
                     psDelete.setString( 1, "F" );
                     psDelete.setString( 2, getCacheName() );
-                    psDelete.setLong( 3, now );
+                    psDelete.setLong( 3, now.getEpochSecond() );
 
                     setAlive(true);
 

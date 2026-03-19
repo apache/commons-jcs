@@ -33,6 +33,7 @@ import org.apache.commons.jcs4.engine.ElementAttributes;
 import org.apache.commons.jcs4.engine.behavior.IElementAttributes;
 import org.apache.commons.jcs4.engine.control.event.ElementEventHandlerMockImpl;
 import org.apache.commons.jcs4.log.Log;
+import org.apache.commons.jcs4.utils.timing.ElapsedTimer;
 
 /**
  * Allows the user to run common cache commands from the command line for a test cache. This also
@@ -167,7 +168,7 @@ public class TestCacheAccess
      */
     public void getMultiple( final int num, final boolean show )
     {
-        final long n_start = System.currentTimeMillis();
+        final ElapsedTimer timer = new ElapsedTimer();
         for ( int n = 0; n < num; n++ )
         {
             try
@@ -183,8 +184,7 @@ public class TestCacheAccess
                 log.error( e );
             }
         }
-        final long n_end = System.currentTimeMillis();
-        p( "---got " + num + " in " + String.valueOf( n_end - n_start ) + " millis ---" );
+        p( "---got " + num + " in " + timer.getElapsedTimeString() + " ---" );
     }
 
     /**
@@ -219,7 +219,7 @@ public class TestCacheAccess
         }
         else
         {
-            final long n_start = System.currentTimeMillis();
+            final ElapsedTimer timer = new ElapsedTimer();
             try
             {
                 final Object obj = cache_control.get( key );
@@ -232,8 +232,7 @@ public class TestCacheAccess
             {
                 log.error( e );
             }
-            final long n_end = System.currentTimeMillis();
-            p( "---got " + key + " in " + String.valueOf( n_end - n_start ) + " millis ---" );
+            p( "---got " + key + " in " + timer.getElapsedTimeString() + " ---" );
         }
     }
 
@@ -275,7 +274,7 @@ public class TestCacheAccess
         }
         else
         {
-            final long n_start = System.currentTimeMillis();
+            final ElapsedTimer timer = new ElapsedTimer();
             try
             {
                 for ( int a = 0; a < num; a++ )
@@ -291,8 +290,7 @@ public class TestCacheAccess
             {
                 log.error( e );
             }
-            final long n_end = System.currentTimeMillis();
-            p( "---got " + num + " from group " + group + " in " + String.valueOf( n_end - n_start ) + " millis ---" );
+            p( "---got " + num + " from group " + group + " in " + timer.getElapsedTimeString() + " ---" );
         }
     }
 
@@ -332,7 +330,7 @@ public class TestCacheAccess
         }
         else
         {
-            final long n_start = System.currentTimeMillis();
+            final ElapsedTimer timer = new ElapsedTimer();
             try
             {
                 final Object obj = group_cache_control.getFromGroup( key, group );
@@ -345,8 +343,7 @@ public class TestCacheAccess
             {
                 log.error( e );
             }
-            final long n_end = System.currentTimeMillis();
-            p( "---got " + key + " from group " + group + " in " + String.valueOf( n_end - n_start ) + " millis ---" );
+            p( "---got " + key + " from group " + group + " in " + timer.getElapsedTimeString() + " ---" );
         }
     }
 
@@ -382,7 +379,7 @@ public class TestCacheAccess
         }
         else
         {
-            final long n_start = System.currentTimeMillis();
+            final ElapsedTimer timer = new ElapsedTimer();
             try
             {
                 final Map<String, String> results = cache_control.getMatching( pattern );
@@ -395,8 +392,7 @@ public class TestCacheAccess
             {
                 log.error( e );
             }
-            final long n_end = System.currentTimeMillis();
-            p( "---gotMatching [" + pattern + "] in " + String.valueOf( n_end - n_start ) + " millis ---" );
+            p( "---gotMatching [" + pattern + "] in " + timer.getElapsedTimeString() + " ---" );
         }
     }
 
@@ -475,11 +471,9 @@ public class TestCacheAccess
         }
         else
         {
-
-            final long n_start = System.currentTimeMillis();
+            final ElapsedTimer timer = new ElapsedTimer();
             cache_control.put( key, val );
-            final long n_end = System.currentTimeMillis();
-            p( "---put " + key + " | " + val + " in " + String.valueOf( n_end - n_start ) + " millis ---" );
+            p( "---put " + key + " | " + val + " in " + timer.getElapsedTimeString() + " ---" );
         }
     }
 
@@ -514,14 +508,13 @@ public class TestCacheAccess
         }
         else
         {
-            final long n_start = System.currentTimeMillis();
+            final ElapsedTimer timer = new ElapsedTimer();
             for ( int a = 0; a < num; a++ )
             {
                 group_cache_control.putInGroup( "keygr" + a, group, "data " + a
                     + " from putag ----asdfasfas-asfasfas-asfas in group " + group );
             }
-            final long n_end = System.currentTimeMillis();
-            p( "---put " + num + " in group " + group + " in " + String.valueOf( n_end - n_start ) + " millis ---" );
+            p( "---put " + num + " in group " + group + " in " + timer.getElapsedTimeString() + " ---" );
         }
     }
 
@@ -556,10 +549,9 @@ public class TestCacheAccess
         }
         else
         {
-            final long n_start = System.currentTimeMillis();
+            final ElapsedTimer timer = new ElapsedTimer();
             group_cache_control.putInGroup( key, group, "data from putg ----asdfasfas-asfasfas-asfas in group " + group );
-            final long n_end = System.currentTimeMillis();
-            p( "---put " + key + " in group " + group + " in " + String.valueOf( n_end - n_start ) + " millis ---" );
+            p( "---put " + key + " in group " + group + " in " + timer.getElapsedTimeString() + " ---" );
         }
     }
 
@@ -626,13 +618,12 @@ public class TestCacheAccess
     {
         try
         {
-            final long n_start = System.currentTimeMillis();
+            final ElapsedTimer timer = new ElapsedTimer();
             for ( int n = 0; n < num; n++ )
             {
                 cache_control.put( "key" + n, "data" + n + " put from ta = junk" );
             }
-            final long n_end = System.currentTimeMillis();
-            p( "---put " + num + " in " + String.valueOf( n_end - n_start ) + " millis ---" );
+            p( "---put " + num + " in " + timer.getElapsedTimeString() + " ---" );
         }
         catch ( final Exception e )
         {
@@ -715,13 +706,12 @@ public class TestCacheAccess
     {
         try
         {
-            final long n_start = System.currentTimeMillis();
+            final ElapsedTimer timer = new ElapsedTimer();
             for ( int n = 0; n < num; n++ )
             {
                 cache_control.remove( "key" + n );
             }
-            final long n_end = System.currentTimeMillis();
-            p( "---removed " + num + " in " + String.valueOf( n_end - n_start ) + " millis ---" );
+            p( "---removed " + num + " in " + timer.getElapsedTimeString() + " ---" );
         }
         catch ( final Exception e )
         {
@@ -760,7 +750,7 @@ public class TestCacheAccess
                 }
                 else if ( message.startsWith( "getAttributeNames" ) )
                 {
-                    final long n_start = System.currentTimeMillis();
+                    final ElapsedTimer timer = new ElapsedTimer();
                     String groupName = null;
                     final StringTokenizer toke = new StringTokenizer( message );
                     int tcnt = 0;
@@ -774,13 +764,11 @@ public class TestCacheAccess
                         }
                     }
                     getAttributeNames( groupName );
-                    final long n_end = System.currentTimeMillis();
-                    p( "---got attrNames for " + groupName + " in " + String.valueOf( n_end - n_start ) + " millis ---" );
+                    p( "---got attrNames for " + groupName + " in " + timer.getElapsedTimeString() + " ---" );
                 }
                 else if ( message.startsWith( "shutDown" ) )
                 {
                     JCS.shutdown();
-                    //cache_control.dispose();
                     notDone = false;
                     //System.exit( -1 );
                     return;
@@ -839,7 +827,7 @@ public class TestCacheAccess
                     else
                     {
                         final int num = Integer.parseInt( numS.trim() );
-                        final long n_start = System.currentTimeMillis();
+                        final ElapsedTimer timer = new ElapsedTimer();
                         for ( int n = 0; n < num; n++ )
                         {
                             final IElementAttributes attrp = cache_control.getDefaultElementAttributes();
@@ -847,8 +835,7 @@ public class TestCacheAccess
                             attrp.addElementEventHandler( hand );
                             cache_control.put( "key" + n, "data" + n + " put from ta = junk", attrp );
                         }
-                        final long n_end = System.currentTimeMillis();
-                        p( "---put " + num + " in " + String.valueOf( n_end - n_start ) + " millis ---" );
+                        p( "---put " + num + " in " + timer.getElapsedTimeString() + " ---" );
                     }
                 }
                 else if ( message.startsWith( "put" ) )
@@ -895,13 +882,12 @@ public class TestCacheAccess
                     {
                         final int num = Integer.parseInt( numS.trim() );
                         final IElementAttributes attrp = new ElementAttributes();
-                        final long n_start = System.currentTimeMillis();
+                        final ElapsedTimer timer = new ElapsedTimer();
                         for ( int n = 0; n < num; n++ )
                         {
                             new ElementAttributes(attrp);
                         }
-                        final long n_end = System.currentTimeMillis();
-                        p( "---cloned attr " + num + " in " + String.valueOf( n_end - n_start ) + " millis ---" );
+                        p( "---cloned attr " + num + " in " + timer.getElapsedTimeString() + " ---" );
                     }
                 }
                 else if ( message.startsWith( "switch" ) )

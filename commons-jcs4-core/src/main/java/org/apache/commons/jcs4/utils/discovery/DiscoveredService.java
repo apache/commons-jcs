@@ -20,6 +20,7 @@ package org.apache.commons.jcs4.utils.discovery;
  */
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -43,7 +44,7 @@ public class DiscoveredService
     private int servicePort;
 
     /** Last time we heard from this service? */
-    private long lastHearFromTime;
+    private Instant lastHearFromTime;
 
     /**
      * Default constructor
@@ -64,7 +65,7 @@ public class DiscoveredService
         setServiceAddress( message.getHost() );
         setCacheNames( message.getCacheNames() );
         setServicePort( message.getPort() );
-        setLastHearFromTime( System.currentTimeMillis() );
+        setLastHearFromTime(Instant.now());
     }
 
     /**
@@ -104,7 +105,7 @@ public class DiscoveredService
     /**
      * @return the lastHearFromTime.
      */
-    public long getLastHearFromTime()
+    public Instant getLastHearFromTime()
     {
         return lastHearFromTime;
     }
@@ -143,7 +144,7 @@ public class DiscoveredService
     /**
      * @param lastHearFromTime The lastHearFromTime to set.
      */
-    public void setLastHearFromTime( final long lastHearFromTime )
+    public void setLastHearFromTime( final Instant lastHearFromTime )
     {
         this.lastHearFromTime = lastHearFromTime;
     }

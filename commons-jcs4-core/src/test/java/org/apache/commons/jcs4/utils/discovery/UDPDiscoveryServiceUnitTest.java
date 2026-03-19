@@ -23,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.time.Instant;
 import java.util.ArrayList;
 
 import org.apache.commons.jcs4.utils.serialization.StandardSerializer;
@@ -67,7 +68,7 @@ class UDPDiscoveryServiceUnitTest
         discoveredService.setServiceAddress( host );
         discoveredService.setCacheNames( new ArrayList<>() );
         discoveredService.setServicePort( 1000 );
-        discoveredService.setLastHearFromTime( 100 );
+        discoveredService.setLastHearFromTime(Instant.ofEpochMilli(100));
 
         final ArrayList<String> differentCacheNames = new ArrayList<>();
         differentCacheNames.add( "name1" );
@@ -75,7 +76,7 @@ class UDPDiscoveryServiceUnitTest
         discoveredService2.setServiceAddress( host );
         discoveredService2.setCacheNames( differentCacheNames );
         discoveredService2.setServicePort( 1000 );
-        discoveredService2.setLastHearFromTime( 500 );
+        discoveredService2.setLastHearFromTime(Instant.ofEpochMilli(500));
 
         // DO WORK
         service.addOrUpdateService( discoveredService );
@@ -119,13 +120,13 @@ class UDPDiscoveryServiceUnitTest
         discoveredService.setServiceAddress( host );
         discoveredService.setCacheNames( sameCacheNames );
         discoveredService.setServicePort( 1000 );
-        discoveredService.setLastHearFromTime( 100 );
+        discoveredService.setLastHearFromTime(Instant.ofEpochMilli(100));
 
         final DiscoveredService discoveredService2 = new DiscoveredService();
         discoveredService2.setServiceAddress( host );
         discoveredService2.setCacheNames( sameCacheNames );
         discoveredService2.setServicePort( 1000 );
-        discoveredService2.setLastHearFromTime( 500 );
+        discoveredService2.setLastHearFromTime(Instant.ofEpochMilli(500));
 
         // DO WORK
         service.addOrUpdateService( discoveredService );
@@ -164,7 +165,7 @@ class UDPDiscoveryServiceUnitTest
         discoveredService.setServiceAddress( host );
         discoveredService.setCacheNames( new ArrayList<>() );
         discoveredService.setServicePort( 1000 );
-        discoveredService.setLastHearFromTime( 100 );
+        discoveredService.setLastHearFromTime(Instant.ofEpochMilli(100));
 
         // DO WORK
         service.addOrUpdateService( discoveredService );
@@ -184,7 +185,7 @@ class UDPDiscoveryServiceUnitTest
         discoveredService.setServiceAddress( host );
         discoveredService.setCacheNames( new ArrayList<>() );
         discoveredService.setServicePort( 1000 );
-        discoveredService.setLastHearFromTime( 100 );
+        discoveredService.setLastHearFromTime(Instant.ofEpochMilli(100));
 
         service.addOrUpdateService( discoveredService );
 

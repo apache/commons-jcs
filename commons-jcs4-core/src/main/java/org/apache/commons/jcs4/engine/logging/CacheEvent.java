@@ -19,7 +19,7 @@ package org.apache.commons.jcs4.engine.logging;
  * under the License.
  */
 
-import java.util.Date;
+import java.time.Instant;
 
 import org.apache.commons.jcs4.engine.logging.behavior.ICacheEvent;
 import org.apache.commons.jcs4.engine.logging.behavior.ICacheEventLogger.CacheEventType;
@@ -27,7 +27,7 @@ import org.apache.commons.jcs4.engine.logging.behavior.ICacheEventLogger.CacheEv
 /** It's returned from create and passed into log. */
 public record CacheEvent<K>(
         /** The time at which this object was created. */
-        long createTime,
+        Instant createTime,
 
         /** The auxiliary or other source of the event. */
         String source,
@@ -53,7 +53,7 @@ public record CacheEvent<K>(
      */
     public CacheEvent()
     {
-        this(System.currentTimeMillis(), null, null, null, null, null);
+        this(Instant.now(), null, null, null, null, null);
     }
 
     /**
@@ -68,7 +68,7 @@ public record CacheEvent<K>(
     public CacheEvent(final String source, final String region, CacheEventType eventType,
             String optionalDetails, K key)
     {
-        this(System.currentTimeMillis(), source, region, eventType, optionalDetails, key);
+        this(Instant.now(), source, region, eventType, optionalDetails, key);
     }
 
     /**
@@ -79,7 +79,7 @@ public record CacheEvent<K>(
     {
     	final StringBuilder sb = new StringBuilder();
     	sb.append("CacheEvent: ").append(eventType)
-    	  .append(" Created: ").append(new Date(createTime));
+    	  .append(" Created: ").append(createTime);
     	if (source != null)
     	{
         	sb.append(" Source: ").append(source);

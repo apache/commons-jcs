@@ -89,12 +89,25 @@ jcs.auxiliary.blockDiskCache=org.apache.commons.jcs4.auxiliary.disk.block.BlockD
           You should be aware that data previously saved to auxiliaries will be deleted
           on startup. 
         </p>
+        <p>
+          JCS 4.0.0 tries to pull some long-standing configuration inconsistencies straight.
+          Note that configuration keys are case-sensitive. See the table of 
+          renamed or removed configuration keys <a href="#ccb">below</a>.
+        </p>
+        <p>
+          Time related configuration items are now represented as <code>java.time.Duration</code>
+          internally. The corresponding configuration file properties are being parsed using
+          <code>Duration.parse()</code> and use the syntax documented 
+          <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/Duration.html#parse(java.lang.CharSequence)">here</a>.
+          If parsing fails, the value is assumed to be a millisecond duration. See the table of 
+          affected configuration keys <a href="#ccb">below</a>.
+        </p>
       </subsection>
       <subsection name="Logging">
         <p>
-          JCS 4.0.0 uses a thin wrapper around the JDK9+ System.Logger interface for logging.
-          By default, JCS uses java.util.logging as implementation. For a better readability
-          we recommend to configure the logger formatting like this:
+          JCS 4.0.0 uses a thin wrapper around the JDK9+ <code>System.Logger</code> interface 
+          for logging. By default, JCS uses <code>java.util.logging</code> as implementation. 
+          For a better readability we recommend to configure the logger formatting like this:
         </p>
         <source><![CDATA[
 java.util.logging.FileHandler.formatter=java.util.logging.SimpleFormatter
@@ -121,8 +134,9 @@ java.util.logging.SimpleFormatter.format=[%1$tF %1$tT] %3$s [%4$-7s] %5$s %n
           Please note that several internals structures are not exported intentionally.
         </p>
       </subsection>
-      <subsection name="Changed Configuration Behavior">
+      <subsection name="Changed Configuration Behavior" id="ccb">
         <p>
+          <b>Breaking:</b>
           JCS 4.0.0 tries to pull some long-standing configuration inconsistencies straight.
           Note that configuration keys are case-sensitive.
           The following configuration keys have been renamed or removed:
@@ -179,6 +193,7 @@ java.util.logging.SimpleFormatter.format=[%1$tF %1$tT] %3$s [%4$-7s] %5$s %n
           environments.
         </p>
         <p>
+          <b>Breaking:</b>
           Time related configuration items are now represented as <code>java.time.Duration</code>
           internally. The corresponding configuration file properties are being parsed using
           <code>Duration.parse()</code> and use the syntax documented 
@@ -201,6 +216,16 @@ java.util.logging.SimpleFormatter.format=[%1$tF %1$tT] %3$s [%4$-7s] %5$s %n
               <td></td>
               <td>ShrinkerInterval</td>
               <td>PT30s</td>
+            </tr>
+            <tr>
+              <td>Element configuration (ElementAttributes)</td>
+              <td>MaxLife</td>
+              <td>PT-0.001s (unlimited)</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>MaxIdleTime</td>
+              <td>PT-0.001s (unlimited)</td>
             </tr>
             <tr>
               <td>Thread Pool Configuration (thread_pool, PoolConfiguration)</td>

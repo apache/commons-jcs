@@ -25,6 +25,7 @@ import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.UnknownHostException;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashSet;
@@ -254,12 +255,12 @@ public class UDPDiscoveryService
      */
     protected void cleanup()
     {
-        final long now = System.currentTimeMillis();
+        final Instant now = Instant.now();
 
         // the listeners need to be notified.
         getDiscoveredServices().stream()
             .filter(service -> {
-                if (now - service.getLastHearFromTime() > getUdpDiscoveryAttributes().maxIdleTimeSec() * 1000)
+                if (now.isAfter(service.getLastHearFromTime().plusSeconds(getUdpDiscoveryAttributes().maxIdleTimeSec())))
                 {
                     log.info( "Removing service, since we haven't heard from it in "
                             + "{0} seconds. service = {1}",
