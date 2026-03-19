@@ -277,8 +277,6 @@ public abstract class AbstractBlockDiskCacheUnitTest{
 
         // VERIFY
         assertEquals( 10, matchingResults.size(), "Wrong number returned" );
-        // System.out.println( "matchingResults.keySet() " + matchingResults.keySet() );
-        // System.out.println( "\nAFTER TEST \n" + diskCache.getStatistics() );
     }
 
     @Test
@@ -290,7 +288,8 @@ public abstract class AbstractBlockDiskCacheUnitTest{
         final String cacheName = "testPutGetMatching_SmallWait";
         final BlockDiskCacheAttributes cattr = getCacheAttributes();
         cattr.setCacheName(cacheName);
-        cattr.setMaxKeySize(100);
+        cattr.setMaxKeySize(200);
+        cattr.setBlockSizeBytes(1024);
         cattr.setDiskPath("target/test-sandbox/BlockDiskCacheUnitTest");
         final BlockDiskCache<String, String> diskCache = new BlockDiskCache<>(cattr);
 
@@ -305,8 +304,6 @@ public abstract class AbstractBlockDiskCacheUnitTest{
 
         // VERIFY
         assertEquals( 10, matchingResults.size(), "Wrong number returned" );
-        // System.out.println( "matchingResults.keySet() " + matchingResults.keySet() );
-        // System.out.println( "\nAFTER TEST \n" + diskCache.getStatistics() );
     }
 
     /**
@@ -320,7 +317,7 @@ public abstract class AbstractBlockDiskCacheUnitTest{
         // SETUP
         final BlockDiskCacheAttributes cattr = getCacheAttributes();
         cattr.setCacheName("testRemove_Group");
-        cattr.setMaxKeySize(100);
+        cattr.setMaxKeySize(200);
         cattr.setDiskPath("target/test-sandbox/BlockDiskCacheUnitTest");
         final BlockDiskCache<GroupAttrName<String>, String> disk = new BlockDiskCache<>(cattr);
 
@@ -373,7 +370,7 @@ public abstract class AbstractBlockDiskCacheUnitTest{
     {
         final BlockDiskCacheAttributes cattr = getCacheAttributes();
         cattr.setCacheName("testRemove_PartialKey");
-        cattr.setMaxKeySize(100);
+        cattr.setMaxKeySize(200);
         cattr.setDiskPath("target/test-sandbox/BlockDiskCacheUnitTest");
         final BlockDiskCache<String, String> disk = new BlockDiskCache<>(cattr);
 
