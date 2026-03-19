@@ -111,9 +111,6 @@ public class LateralTCPCacheAttributes
     /** Default receive setting */
     private static final boolean DEFAULT_RECEIVE = true;
 
-    /** Disables gets from laterals */
-    private boolean putOnlyMode = true;
-
     /**
      * do we receive and broadcast or only broadcast this is useful when you don't want to get any
      * notifications
@@ -342,17 +339,17 @@ public class LateralTCPCacheAttributes
     /**
      * @param openTimeOut the openTimeOut to set
      */
-    public void setOpenTimeOut( final int openTimeOut )
+    public void setOpenTimeOut( final Duration openTimeOut )
     {
-        this.openTimeOut = Duration.ofMillis(openTimeOut);
+        this.openTimeOut = openTimeOut;
     }
 
     /**
      * @param socketTimeOut the socketTimeOut to set
      */
-    public void setSocketTimeOut( final int socketTimeOut )
+    public void setSocketTimeOut( final Duration socketTimeOut )
     {
-        this.socketTimeOut = Duration.ofMillis(socketTimeOut);
+        this.socketTimeOut = socketTimeOut;
     }
 
     /**
@@ -449,15 +446,6 @@ public class LateralTCPCacheAttributes
     }
 
     /**
-     * @return The outgoingOnlyMode value. Stops gets from going remote.
-     */
-    @Override
-    public boolean getPutOnlyMode()
-    {
-        return putOnlyMode;
-    }
-
-    /**
      * The number of elements the zombie queue will hold. This queue is used to store events if we
      * loose our connection with the server.
      *
@@ -476,17 +464,6 @@ public class LateralTCPCacheAttributes
     public boolean isReceive()
     {
         return receive;
-    }
-
-    /**
-     * Sets the outgoingOnlyMode attribute of the ILateralCacheAttributes. When this is true the
-     * lateral cache will only issue put and remove order and will not try to retrieve elements from
-     * other lateral caches.
-     * @param val The new transmissionTypeName value
-     */
-    public void setPutOnlyMode( final boolean val )
-    {
-        this.putOnlyMode = val;
     }
 
     /**

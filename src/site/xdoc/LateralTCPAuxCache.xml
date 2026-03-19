@@ -76,7 +76,7 @@ jcs.auxiliary.LTCP.attributes.AllowGet=true
         <p>
 		  A mostly configurationless mode is available for the TCP
 		  lateral cache if you use the <a href="LateralUDPDiscovery.html">UDP Discovery</a>
-		   mechanism.
+		  mechanism.
         </p>
       </subsection>
       <subsection name="Send Only Configuration">

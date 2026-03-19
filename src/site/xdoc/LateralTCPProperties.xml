@@ -54,11 +54,18 @@
 						<td> Should this cache be allowed to get from other laterals.
 							False means that it can only put, i.e. send updates and remove
 							requests to other laterals. Lateral gets are not recommended for
-							performance reasons. This used to be controlled by the attribute
-							PutOnlyMode.</td>
+							performance reasons.</td>
 						<td>N</td>
 						<td>true</td>
 					</tr>
+                    <tr>
+                        <td>AllowPut</td>
+                        <td> Should this cache be allowed to put to other laterals.
+                            False means that it can only get. Lateral gets are not recommended 
+                            for performance reasons.</td>
+                        <td>N</td>
+                        <td>true</td>
+                    </tr>
 					<tr>
 						<td>Receive</td>
 						<td> Should this cache receive or only send to other laterals. You
@@ -92,13 +99,13 @@
 						<td>SocketTimeOut</td>
 						<td> This allows you to set the socket (read) timeout.</td>
 						<td>N</td>
-						<td>1000</td>
+						<td>PT1s</td>
 					</tr>
 					<tr>
 						<td>OpenTimeOut</td>
 						<td> This allows you to set the socket open timeout.</td>
 						<td>N</td>
-						<td>2000</td>
+						<td>PT2s</td>
 					</tr>
 					<tr>
 						<td>UdpDiscoveryAddr</td>

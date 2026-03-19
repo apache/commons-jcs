@@ -204,7 +204,8 @@ public class LateralTCPService<K, V>
         throws IOException
     {
         // if get is not allowed return
-        if ( !this.allowGet ) {
+        if ( !this.allowGet )
+        {
             // nothing needs to be done
             return null;
         }

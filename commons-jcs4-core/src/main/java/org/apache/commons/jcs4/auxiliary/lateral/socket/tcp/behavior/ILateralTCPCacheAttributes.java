@@ -148,11 +148,6 @@ public interface ILateralTCPCacheAttributes
     boolean isUdpDiscoveryEnabled();
 
     /**
-     * @return The outgoingOnlyMode value. Stops gets from going remote.
-     */
-    boolean getPutOnlyMode();
-
-    /**
      * The number of elements the zombie queue will hold. This queue is used to store events if we
      * loose our connection with the server.
      *

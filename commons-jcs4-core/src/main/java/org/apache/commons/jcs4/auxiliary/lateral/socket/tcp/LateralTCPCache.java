@@ -242,7 +242,7 @@ public class LateralTCPCache<K, V>
     {
         ICacheElement<K, V> obj = null;
 
-        if ( !this.getAuxiliaryCacheAttributes().getPutOnlyMode() )
+        if (this.getAuxiliaryCacheAttributes().isAllowGet())
         {
             try
             {
@@ -270,7 +270,7 @@ public class LateralTCPCache<K, V>
     {
         final Map<K, ICacheElement<K, V>> map = Collections.emptyMap();
 
-        if ( !this.getAuxiliaryCacheAttributes().getPutOnlyMode() )
+        if (this.getAuxiliaryCacheAttributes().isAllowGet())
         {
             try
             {

@@ -230,12 +230,22 @@ java.util.logging.SimpleFormatter.format=[%1$tF %1$tT] %3$s [%4$-7s] %5$s %n
             <tr>
               <td>Thread Pool Configuration (thread_pool, PoolConfiguration)</td>
               <td>keepAliveTime</td>
-              <td>PT5M</td>
+              <td>PT5m</td>
             </tr>
             <tr>
               <td>JDBC Disk Cache configuration (JDBCDiskCacheAttributes)</td>
               <td>ShrinkerInterval</td>
-              <td>PT5M</td>
+              <td>PT5m</td>
+            </tr>
+            <tr>
+              <td>Lateral TCP Cache configuration (LateralTCPCacheAttributes)</td>
+              <td>SocketTimeOut</td>
+              <td>PT1s</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>OpenTimeOut</td>
+              <td>PT2s</td>
             </tr>
           </table>
         </p>
