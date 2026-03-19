@@ -116,7 +116,7 @@ class JDBCDataSourceFactoryUnitTest
         final String url = "adfads";
         final String userName = "zvzvz";
         final String password = "qewrrewq";
-        final int maxActive = 10;
+        final int maxTotal = 10;
         final String driverClassName = "org.hsqldb.jdbcDriver";
 
         final JDBCDiskCacheFactory factory = new JDBCDiskCacheFactory();
@@ -126,7 +126,7 @@ class JDBCDataSourceFactoryUnitTest
         cattr.setUrl(url);
         cattr.setUserName(userName);
         cattr.setPassword(password);
-        cattr.setMaxTotal(maxActive);
+        cattr.setMaxTotal(maxTotal);
         cattr.setDriverClassName(driverClassName);
 
         // DO WORK
@@ -137,7 +137,7 @@ class JDBCDataSourceFactoryUnitTest
         assertNotNull( spds, "Should have a data source class" );
 
         // VERIFY
-        assertEquals( maxActive, spds.getMaxTotal(), "Wrong maxActive value" );
+        assertEquals( maxTotal, spds.getMaxTotal(), "Wrong maxActive value" );
     }
 
     /**

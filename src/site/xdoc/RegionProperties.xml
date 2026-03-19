@@ -221,8 +221,27 @@
 							be removed actively.
 						</td>
 						<td>N</td>
-						<td>-1</td>
+						<td>PT-0.001s (unlimited)</td>
 					</tr>
+                    <tr>
+                        <td>MaxIdleTime</td>
+                        <td>
+                            You can define the maximum time an item can live
+                            without being accessed by setting the
+                            <code>MaxIdleTime</code>
+                            parameter. This is different than the
+                            <code>MaxMemoryIdleTime</code>
+                            parameter, which just specifies how long an object
+                            can be in memory before it is subjected to removal
+                            or being spooled to a disk cache if it is available.
+                            Note: the
+                            <code>MaxIdleTime</code>
+                            parameter may not function properly for items
+                            retrieved from disk, if you have a memory size of 0.
+                        </td>
+                        <td>N</td>
+                        <td>PT-0.001s (unlimited)</td>
+                    </tr>
 					<tr>
 						<td>IsSpool</td>
 						<td>

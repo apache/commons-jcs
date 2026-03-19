@@ -220,11 +220,11 @@ public class JDBCDiskCacheAttributes
 	}
 
     /**
-     * @param maxActive The maxTotal to set.
+     * @param maxTotal The maxTotal to set.
      */
-    public void setMaxTotal( final int maxActive )
+    public void setMaxTotal( final int maxTotal )
     {
-        this.maxTotal = maxActive;
+        this.maxTotal = maxTotal;
     }
 
     /**
@@ -301,10 +301,10 @@ public class JDBCDiskCacheAttributes
         buf.append( "\n DriverClassName [" + getDriverClassName() + "]" );
         buf.append( "\n TableName [" + getTableName() + "]" );
         buf.append( "\n TestBeforeInsert [" + isTestBeforeInsert() + "]" );
-        buf.append( "\n MaxActive [" + getMaxTotal() + "]" );
+        buf.append( "\n MaxTotal [" + getMaxTotal() + "]" );
         buf.append( "\n AllowRemoveAll [" + isAllowRemoveAll() + "]" );
         buf.append( "\n ShrinkerInterval [" + getShrinkerInterval() + "]" );
-        buf.append( "\n useDiskShrinker [" + isUseDiskShrinker() + "]" );
+        buf.append( "\n UseDiskShrinker [" + isUseDiskShrinker() + "]" );
         return buf.toString();
     }
 }

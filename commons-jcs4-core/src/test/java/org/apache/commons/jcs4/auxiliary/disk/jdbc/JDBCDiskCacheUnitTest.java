@@ -130,7 +130,7 @@ public class JDBCDiskCacheUnitTest
         props.put( prefix + ".url", "jdbc:hsqldb:target/cache_hsql_db" );
         props.put( prefix + ".userName", "sa" );
         props.put( prefix + ".password", "" );
-        props.put( prefix + ".maxActive", String.valueOf(10) );
+        props.put( prefix + ".maxTotal", String.valueOf(10) );
         props.put( prefix + ".driverClassName", "org.hsqldb.jdbcDriver" );
 
         final JDBCDiskCacheAttributes cattr = new JDBCDiskCacheAttributes();

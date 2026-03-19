@@ -68,12 +68,11 @@
                             Assuming the name is "MyPool":
                             
                             <pre>
-                            jcs.jdbcconnectionpool.MyPool.attributes.userName=MyUserName
-                            jcs.jdbcconnectionpool.MyPool.attributes.password=MyPassword
-                            jcs.jdbcconnectionpool.MyPool.attributes.url=MyUrl
-                            jcs.jdbcconnectionpool.MyPool.attributes.maxTotal=MyMaxTotal
-                            jcs.jdbcconnectionpool.MyPool.attributes.driverClassName=MyDriverClassName
-                            </pre>
+jcs.jdbcconnectionpool.MyPool.attributes.userName=MyUserName
+jcs.jdbcconnectionpool.MyPool.attributes.password=MyPassword
+jcs.jdbcconnectionpool.MyPool.attributes.url=MyUrl
+jcs.jdbcconnectionpool.MyPool.attributes.maxTotal=MyMaxTotal
+jcs.jdbcconnectionpool.MyPool.attributes.driverClassName=MyDriverClassName</pre>
                         </td>
                         <td>N</td>
                         <td></td>
@@ -182,7 +181,7 @@ jcs.auxiliary.JDBC.attributes.url=jdbc:hsqldb:
 jcs.auxiliary.JDBC.attributes.driverClassName=org.hsqldb.jdbcDriver
 jcs.auxiliary.JDBC.attributes.tableName=JCS_STORE2
 jcs.auxiliary.JDBC.attributes.testBeforeInsert=false
-jcs.auxiliary.JDBC.attributes.maxActive=15
+jcs.auxiliary.JDBC.attributes.maxTotal=15
 jcs.auxiliary.JDBC.attributes.allowRemoveAll=true
 jcs.auxiliary.JDBC.attributes.MaxPurgatorySize=10000000
 jcs.auxiliary.JDBC.attributes.UseDiskShrinker=true
@@ -250,7 +249,7 @@ jcs.auxiliary.JDBC.attributes.database=target/cache_hsql_db
 jcs.auxiliary.JDBC.attributes.driverClassName=org.hsqldb.jdbcDriver
 jcs.auxiliary.JDBC.attributes.tableName=JCS_STORE2
 jcs.auxiliary.JDBC.attributes.testBeforeInsert=false
-jcs.auxiliary.JDBC.attributes.maxActive=15
+jcs.auxiliary.JDBC.attributes.maxTotal=15
 jcs.auxiliary.JDBC.attributes.allowRemoveAll=true
 jcs.auxiliary.JDBC.attributes.MaxPurgatorySize=10000000
 jcs.auxiliary.JDBC.attributes.UseDiskShrinker=true
