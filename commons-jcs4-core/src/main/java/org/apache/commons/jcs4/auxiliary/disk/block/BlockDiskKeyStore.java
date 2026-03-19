@@ -124,7 +124,7 @@ public class BlockDiskKeyStore<K>
         // keep the content size in kB, so 2^31 kB is reasonable value
         private void addLengthToCacheSize(final int[] value)
         {
-            contentSize.addAndGet(value.length * blockSize / 1024 + 1);
+            contentSize.addAndGet((value.length * blockSize + 1023) / 1024);
         }
 
         /**
@@ -204,7 +204,7 @@ public class BlockDiskKeyStore<K>
         // keep the content size in kB, so 2^31 kB is reasonable value
         private void subLengthFromCacheSize(final int[] value)
         {
-            contentSize.addAndGet(value.length * blockSize / -1024 - 1);
+            contentSize.addAndGet((value.length * blockSize + 1023) / -1024);
         }
     }
 
