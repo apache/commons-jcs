@@ -85,9 +85,9 @@ public class ShrinkerThread<K, V>
      * <ol>
      * <li>Has the cacheattributes.MaxMemoryIdleTime defined for the region been exceeded? If
      * so, the item should be move to disk.</li>
-     * <li>Has the item exceeded MaxLifeSeconds defined in the element attributes? If so,
+     * <li>Has the item exceeded MaxLife defined in the element attributes? If so,
      * remove it.</li>
-     * <li>Has the item exceeded IdleTime defined in the element attributes? If so, remove it.
+     * <li>Has the item exceeded MaxIdleTime defined in the element attributes? If so, remove it.
      * If there are event listeners registered for the cache element, they will be called.</li>
      * </ol>
      * TODO Change element event handling to use the queue, then move the queue to the region and

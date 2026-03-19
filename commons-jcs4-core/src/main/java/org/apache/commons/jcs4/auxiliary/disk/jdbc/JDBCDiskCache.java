@@ -64,8 +64,7 @@ import org.apache.commons.jcs4.log.Log;
  *                       );
  * </pre>
  * <p>
- * The cleanup thread will delete non eternal items where (now - create time) &gt; max life seconds *
- * 1000
+ * The cleanup thread will delete non eternal items where (now - create time) &gt; max life
  * </p>
  * <p>
  * To speed up the deletion the SYSTEM_EXPIRE_TIME_SECONDS is used instead. It is recommended that
@@ -168,7 +167,7 @@ public class JDBCDiskCache<K, V>
     }
 
     /**
-     * Removed the expired. (now - create time) &gt; max life seconds * 1000
+     * Removed the expired. (now - create time) &gt; max life
      *
      * @return the number deleted
      */

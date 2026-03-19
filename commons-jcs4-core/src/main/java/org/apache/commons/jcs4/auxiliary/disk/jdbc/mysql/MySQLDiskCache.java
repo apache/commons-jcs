@@ -65,7 +65,7 @@ public class MySQLDiskCache<K, V>
     }
 
     /**
-     * Removed the expired. (now - create time) &gt; max life seconds * 1000
+     * Removed the expired. (now - create time) &gt; max life
      * <p>
      * If we are currently optimizing, then this method will balk and do nothing.
      * <p>

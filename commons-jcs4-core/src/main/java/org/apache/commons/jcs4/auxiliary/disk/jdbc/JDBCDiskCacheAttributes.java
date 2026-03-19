@@ -140,7 +140,7 @@ public class JDBCDiskCacheAttributes
     }
 
     /**
-     * @return the shrinkerIntervalSeconds.
+     * @return the shrinkerInterval.
      */
     public Duration getShrinkerInterval()
     {

@@ -213,7 +213,7 @@ public abstract class AbstractCacheEventQueue<K, V>
     /** Maximum number of failures before we buy the farm. */
     private int maxFailure;
 
-    /** In milliseconds */
+    /** Wait time before retry */
     private Duration waitBeforeRetry;
 
     /**
