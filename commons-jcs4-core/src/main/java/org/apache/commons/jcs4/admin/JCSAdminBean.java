@@ -262,32 +262,20 @@ public class JCSAdminBean implements JCSJMXBean
             }
             else
             {
-                final Object element = ice.value();
-
                 //CountingOnlyOutputStream: Keeps track of the number of bytes written to it, but doesn't write them anywhere.
-                final CountingOnlyOutputStream counter = new CountingOnlyOutputStream();
-                try (ObjectOutputStream out = new ObjectOutputStream(counter))
+                try (CountingOnlyOutputStream counter = new CountingOnlyOutputStream();
+                     ObjectOutputStream out = new ObjectOutputStream(counter))
                 {
-                    out.writeObject(element);
+                    out.writeObject(ice.value());
+                    out.flush();
+
+                    // 4 bytes lost for the serialization header
+                    size += counter.getCount() - 4;
                 }
                 catch (final IOException e)
                 {
                     throw new IllegalStateException("IOException while trying to measure the size of the cached element", e);
                 }
-                finally
-                {
-                	try
-                	{
-						counter.close();
-					}
-                	catch (final IOException e)
-                	{
-                		// ignore
-					}
-                }
-
-                // 4 bytes lost for the serialization header
-                size += counter.getCount() - 4;
             }
         }
 

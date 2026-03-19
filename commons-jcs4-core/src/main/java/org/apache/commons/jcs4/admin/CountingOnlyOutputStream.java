@@ -26,7 +26,7 @@ import java.io.OutputStream;
  * Keeps track of the number of bytes written to it, but doesn't write them anywhere.
  */
 public class CountingOnlyOutputStream
-    extends OutputStream
+    extends OutputStream implements AutoCloseable
 {
     /** Number of bytes passed through */
     private int count; // TODO should this be long?
