@@ -262,7 +262,7 @@ jcs.default.cacheattributes.UseMemoryShrinker=true
 jcs.default.cacheattributes.MaxMemoryIdleTime=PT1h
 jcs.default.cacheattributes.ShrinkerInterval=PT1m
 jcs.default.elementattributes.IsEternal=false
-jcs.default.elementattributes.MaxLife=700
+jcs.default.elementattributes.MaxLife=PT11m40s
 
 # optional region "testCache1" specific configuration settings (only those that differ from default)
 jcs.region.testCache1=
@@ -270,7 +270,7 @@ jcs.region.testCache1.cacheattributes.MaxObjects=123456
 jcs.region.testCache1.cacheattributes.ShrinkerInterval=PT30s
 jcs.region.testCache1.cacheattributes.MaxMemoryIdleTime=PT5m
 jcs.region.testCache1.cacheattributes.MaxSpoolPerRun=100
-jcs.region.testCache1.elementattributes.MaxLife=60000
+jcs.region.testCache1.elementattributes.MaxLife=PT16h40m
         ]]>
 				</source>
 			</subsection>

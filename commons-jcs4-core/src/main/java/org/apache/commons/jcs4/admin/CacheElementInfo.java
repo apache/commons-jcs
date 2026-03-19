@@ -1,5 +1,7 @@
 package org.apache.commons.jcs4.admin;
 
+import java.time.Duration;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -33,7 +35,7 @@ public record CacheElementInfo(
     String createTime,
 
     /** Max life */
-    long maxLifeSeconds,
+    Duration maxLife,
 
     /** When it will expire */
     long expiresInSeconds
@@ -50,7 +52,7 @@ public record CacheElementInfo(
         buf.append( "\n Key [" ).append( key() ).append( "]" );
         buf.append( "\n Eternal [" ).append( eternal() ).append( "]" );
         buf.append( "\n CreateTime [" ).append( createTime() ).append( "]" );
-        buf.append( "\n MaxLifeSeconds [" ).append( maxLifeSeconds() ).append( "]" );
+        buf.append( "\n MaxLifeSeconds [" ).append( maxLife() ).append( "]" );
         buf.append( "\n ExpiresInSeconds [" ).append( expiresInSeconds() ).append( "]" );
 
         return buf.toString();

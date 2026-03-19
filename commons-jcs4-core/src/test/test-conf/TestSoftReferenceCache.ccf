@@ -21,8 +21,8 @@ jcs.default.cacheattributes.MemoryCacheName=org.apache.commons.jcs4.engine.memor
 jcs.default.cacheattributes.UseMemoryShrinker=false
 jcs.default.cacheattributes.MaxMemoryIdleTime=PT1h
 jcs.default.elementattributes.IsEternal=false
-jcs.default.elementattributes.MaxLife=600
-jcs.default.elementattributes.MaxIdleTime=1800
+jcs.default.elementattributes.MaxLife=PT10m
+jcs.default.elementattributes.MaxIdleTime=PT30m
 
 # Region defined that uses the Soft Reference
 jcs.region.srDefined=

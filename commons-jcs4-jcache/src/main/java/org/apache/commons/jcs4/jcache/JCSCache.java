@@ -698,20 +698,20 @@ public class JCSCache<K, V> implements Cache<K, V>
 
             final K jcsKey = storeByValue ? copy(serializer, manager.getClassLoader(), key) : key;
             IElementAttributes attributes = oldElt != null ? oldElt.elementAttributes() : delegate.getElementAttributes();
-            if (created && duration != null) { // set maxLife
-                final long timeFactorForMilliseconds = 1;
+            if (created && duration != null)
+            { // set maxLife
                 final boolean eternal = duration.isEternal();
-                long maxIdleTime = attributes.MaxIdleTime();
-                long maxLife = attributes.MaxLife();
+                java.time.Duration maxIdleTime = attributes.MaxIdleTime();
+                java.time.Duration maxLife = attributes.MaxLife();
                 if (!eternal)
                 {
                     if (duration == expiryPolicy.getExpiryForAccess())
                     {
-                        maxIdleTime = duration.getTimeUnit().toMillis(duration.getDurationAmount());
+                        maxIdleTime = java.time.Duration.of(duration.getDurationAmount(), duration.getTimeUnit().toChronoUnit());
                     }
                     else
                     {
-                        maxLife = duration.getTimeUnit().toMillis(duration.getDurationAmount());
+                        maxLife = java.time.Duration.of(duration.getDurationAmount(), duration.getTimeUnit().toChronoUnit());
                     }
                 }
                 attributes = new ElementAttributes(
@@ -720,8 +720,7 @@ public class JCSCache<K, V> implements Cache<K, V>
                         attributes.IsRemote(),
                         eternal,
                         maxLife,
-                        maxIdleTime,
-                        timeFactorForMilliseconds);
+                        maxIdleTime);
             }
             final ICacheElement<K, V> element = updateElement(
                     jcsKey, value, created ? null : duration, attributes);
@@ -978,8 +977,7 @@ public class JCSCache<K, V> implements Cache<K, V>
                     attrs.IsRemote(),
                     duration.isEternal(),
                     attrs.MaxLife(),
-                    attrs.MaxIdleTime(),
-                    1)
+                    attrs.MaxIdleTime())
             : attrs;
 
         return new CacheElement<>(name, key, v, newAttributes);

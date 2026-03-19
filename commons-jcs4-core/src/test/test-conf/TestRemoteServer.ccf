@@ -34,5 +34,5 @@ jcs.default.cacheattributes.MaxMemoryIdleTime=PT1h
 jcs.default.cacheattributes.ShrinkerInterval=PT1m
 jcs.default.cacheattributes.ShrinkerInterval=PT1m
 jcs.default.elementattributes.IsEternal=false
-jcs.default.elementattributes.MaxLife=7000
-jcs.default.elementattributes.MaxIdleTime=1800
+jcs.default.elementattributes.MaxLife=PT1h56m40s
+jcs.default.elementattributes.MaxIdleTime=PT30m

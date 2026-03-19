@@ -25,6 +25,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -427,17 +428,17 @@ public class JDBCDiskCache<K, V>
             psInsert.setString( 1, ce.key().toString() );
             psInsert.setString( 2, getCacheName() );
             psInsert.setBytes( 3, element );
-            psInsert.setLong( 4, ce.elementAttributes().MaxLife() );
+            psInsert.setLong( 4, ce.elementAttributes().MaxLife().toSeconds() );
             psInsert.setString( 5, ce.elementAttributes().IsEternal() ? "T" : "F" );
 
             final Timestamp createTime = Timestamp.from(ce.elementAttributes().createTime());
             psInsert.setTimestamp( 6, createTime );
 
-            final long now = System.currentTimeMillis() / 1000;
-            psInsert.setLong( 7, now );
+            final Instant now = Instant.now();
+            psInsert.setLong( 7, now.getEpochSecond() );
 
-            final long expireTime = now + ce.elementAttributes().MaxLife();
-            psInsert.setLong( 8, expireTime );
+            final Instant expireTime = now.plus(ce.elementAttributes().MaxLife());
+            psInsert.setLong( 8, expireTime.getEpochSecond() );
 
             psInsert.execute();
         }
@@ -480,11 +481,11 @@ public class JDBCDiskCache<K, V>
             final Timestamp createTime = Timestamp.from(ce.elementAttributes().createTime());
             psUpdate.setTimestamp( 2, createTime );
 
-            final long now = System.currentTimeMillis() / 1000;
-            psUpdate.setLong( 3, now );
+            final Instant now = Instant.now();
+            psUpdate.setLong( 3, now.getEpochSecond() );
 
-            final long expireTime = now + ce.elementAttributes().MaxLife();
-            psUpdate.setLong( 4, expireTime );
+            final Instant expireTime = now.plus(ce.elementAttributes().MaxLife());
+            psUpdate.setLong( 4, expireTime.getEpochSecond() );
 
             psUpdate.setString( 5, (String) ce.key() );
             psUpdate.setString( 6, getCacheName() );

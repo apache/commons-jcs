@@ -64,7 +64,7 @@ public interface IElementAttributes extends Serializable
      * Gets the idleTime attribute of the IAttributes object
      * @return The idleTime value
      */
-    long MaxIdleTime();
+    Duration MaxIdleTime();
 
     /**
      * This turns off expiration if it is true.
@@ -104,20 +104,14 @@ public interface IElementAttributes extends Serializable
     Instant lastAccessTime();
 
     /**
-     * Sets the MaxLife attribute of the IAttributes object. How many seconds it can live after
+     * Sets the MaxLife attribute of the IAttributes object. How long it can live after
      * creation.
      * <p>
      * If this is exceeded the element will not be returned, instead it will be removed. It will be
      * removed on retrieval, or removed actively if the memory shrinker is turned on.
      * @return The MaxLife value
      */
-    long MaxLife();
-
-    /**
-     * Get the time factor to convert durations to milliseconds
-     * @return The time factor to convert durations to milliseconds
-     */
-    long timeFactorForMilliseconds();
+    Duration MaxLife();
 
     /**
      * Sets the LastAccessTime as now of the IElementAttributes object

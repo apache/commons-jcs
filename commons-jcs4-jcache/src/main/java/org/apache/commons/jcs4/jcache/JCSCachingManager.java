@@ -83,8 +83,8 @@ public class JCSCachingManager implements CacheManager
     	jcs.default.cacheattributes.MaxMemoryIdleTime=PT1h
     	jcs.default.cacheattributes.ShrinkerInterval=PT1m
     	jcs.default.elementattributes.IsEternal=false
-    	jcs.default.elementattributes.MaxLife=700
-    	jcs.default.elementattributes.MaxIdleTime=1800
+    	jcs.default.elementattributes.MaxLife=PT11m40s
+    	jcs.default.elementattributes.MaxIdleTime=PT30m
     	jcs.default.elementattributes.IsSpool=true
     	jcs.default.elementattributes.IsRemote=true
     	jcs.default.elementattributes.IsLateral=true

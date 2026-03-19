@@ -364,8 +364,8 @@ public class BookVObjManager
 jcs.default=DC,RFailover
 jcs.default.cacheattributes.MaxObjects=1000
 jcs.default.elementattributes.IsEternal=false
-jcs.default.elementattributes.MaxLife=3600
-jcs.default.elementattributes.MaxIdleTime=1800
+jcs.default.elementattributes.MaxLife=PT1h
+jcs.default.elementattributes.MaxIdleTime=PT30m
 
 
 # CACHE REGIONS AVAILABLE
@@ -374,8 +374,8 @@ jcs.default.elementattributes.MaxIdleTime=1800
 jcs.region.bookCache=DC,RFailover
 jcs.region.bookCache.cacheattributes.MaxObjects=1200
 jcs.region.bookCache.elementattributes.IsEternal=false
-jcs.region.bookCache.elementattributes.MaxLife=7200
-jcs.region.bookCache.elementattributes.MaxIdleTime=1800
+jcs.region.bookCache.elementattributes.MaxLife=PT2h
+jcs.region.bookCache.elementattributes.MaxIdleTime=PT30m
 jcs.region.bookCache.elementattributes.IsSpool=true
 jcs.region.bookCache.elementattributes.IsRemote=true
 jcs.region.bookCache.elementattributes.IsLateral=true

@@ -56,22 +56,19 @@ public record ElementAttributes(
         boolean IsEternal,
 
         /** Max life  */
-        long MaxLife,
+        Duration MaxLife,
 
         /**
          * The maximum time an entry can be idle. Setting this to -1 causes the idle time check to be
          * ignored.
          */
-        long MaxIdleTime,
+        Duration MaxIdleTime,
 
         /** The creation time. This is used to enforce the max life. */
         Instant createTime,
 
         /** The last access time. This is used to enforce the max idle time. */
         LastAccessHolder mutableLastAccessTime,
-
-        /** The time factor to convert durations to milliseconds */
-        long timeFactorForMilliseconds,
 
         /**
          * The list of Event handlers to use. This is transient, since the event handlers cannot usually
@@ -109,11 +106,9 @@ public record ElementAttributes(
     /** Default */
     private static final boolean DEFAULT_IS_ETERNAL = true;
     /** Default */
-    private static final long DEFAULT_MAX_LIFE = -1;
+    private static final Duration DEFAULT_MAX_LIFE = Duration.ofMillis(-1);
     /** Default */
-    private static final long DEFAULT_MAX_IDLE_TIME = -1;
-    /** Default */
-    private static final long DEFAULT_TIME_FACTOR = 1000;
+    private static final Duration DEFAULT_MAX_IDLE_TIME = Duration.ofMillis(-1);
 
     /** Record with all defaults set */
     private static final ElementAttributes DEFAULT = new ElementAttributes(
@@ -125,7 +120,6 @@ public record ElementAttributes(
             DEFAULT_MAX_IDLE_TIME,
             Instant.EPOCH,
             new LastAccessHolder(Instant.EPOCH),
-            DEFAULT_TIME_FACTOR,
             new ArrayList<>());
 
     /**
@@ -158,7 +152,6 @@ public record ElementAttributes(
              from.MaxIdleTime(),
              Instant.now(),
              new LastAccessHolder(from.lastAccessTime()),
-             from.timeFactorForMilliseconds(),
              new ArrayList<>(from.elementEventHandlers()));
     }
 
@@ -170,14 +163,12 @@ public record ElementAttributes(
             boolean isLateral,
             boolean isRemote,
             boolean isEternal,
-            long maxLife,
-            long maxIdleTime,
-            long timeFactorForMilliseconds
+            Duration maxLife,
+            Duration maxIdleTime
           )
     {
         this(isSpool, isLateral, isRemote, isEternal, maxLife, maxIdleTime,
-                Instant.now(), new LastAccessHolder(Instant.EPOCH), timeFactorForMilliseconds,
-                new ArrayList<>());
+                Instant.now(), new LastAccessHolder(Instant.EPOCH), new ArrayList<>());
 
         this.mutableLastAccessTime.lastAccessTime = createTime();
     }
@@ -227,7 +218,7 @@ public record ElementAttributes(
     public Duration getTimeToLive()
     {
         final Instant now = Instant.now();
-        return Duration.between(now, createTime().plusMillis(MaxLife() * timeFactorForMilliseconds()));
+        return Duration.between(now, createTime().plus(MaxLife()));
     }
 
     /**

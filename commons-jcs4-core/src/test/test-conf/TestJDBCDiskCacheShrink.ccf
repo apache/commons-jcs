@@ -22,22 +22,22 @@ jcs.default.cacheattributes.UseMemoryShrinker=false
 jcs.default.cacheattributes.MaxMemoryIdleTime=PT1h
 jcs.default.cacheattributes.ShrinkerInterval=PT1m
 jcs.default.elementattributes.IsEternal=false
-jcs.default.elementattributes.MaxLife=700
-jcs.default.elementattributes.MaxIdleTime=1800
+jcs.default.elementattributes.MaxLife=PT11m40s
+jcs.default.elementattributes.MaxIdleTime=PT30m
 
 # #############################################################
 # ################# REGIONS ###################################
 jcs.region.expire1Second=JDBC
 jcs.region.expire1Second.cacheattributes.MaxObjects=0
-jcs.region.expire1Second.elementattributes.MaxLife=1
+jcs.region.expire1Second.elementattributes.MaxLife=PT1s
 
 jcs.region.expire100Second=JDBC
 jcs.region.expire100Second.cacheattributes.MaxObjects=0
-jcs.region.expire100Second.elementattributes.MaxLife=100
+jcs.region.expire100Second.elementattributes.MaxLife=PT1m40s
 
 jcs.region.eternal=JDBC
 jcs.region.eternal.cacheattributes.MaxObjects=0
-jcs.region.eternal.elementattributes.MaxLife=1
+jcs.region.eternal.elementattributes.MaxLife=PT1s
 jcs.region.eternal.elementattributes.IsEternal=true
 
 # #############################################################

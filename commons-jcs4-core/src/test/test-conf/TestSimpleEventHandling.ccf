@@ -36,13 +36,13 @@ jcs.region.DiskButNotAllowed.elementattributes.IsSpool=false
 jcs.region.Maxlife=
 jcs.region.Maxlife.cacheattributes.MaxObjects=200
 jcs.region.Maxlife.elementattributes.IsEternal=false
-jcs.region.Maxlife.elementattributes.MaxLife=1
+jcs.region.Maxlife.elementattributes.MaxLife=PT1s
 
 jcs.region.Idletime=
 jcs.region.Idletime.cacheattributes.MaxObjects=200
 jcs.region.Idletime.elementattributes.IsEternal=false
-jcs.region.Idletime.elementattributes.MaxLife=300
-jcs.region.Idletime.elementattributes.MaxIdleTime=1
+jcs.region.Idletime.elementattributes.MaxLife=PT5m
+jcs.region.Idletime.elementattributes.MaxIdleTime=PT1s
 
 # #### AUXILIARY CACHES
 # Indexed Disk Cache

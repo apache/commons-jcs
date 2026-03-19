@@ -1,7 +1,5 @@
 package org.apache.commons.jcs4.engine;
 
-import java.time.Instant;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -21,6 +19,8 @@ import java.time.Instant;
  * under the License.
  */
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 
 import org.apache.commons.jcs4.engine.ElementAttributes.LastAccessHolder;
@@ -35,7 +35,7 @@ public class TestElementAttributes
      *
      * @param maxLife The new MaxLife value
      */
-    public static ElementAttributes withEternalFalseAndMaxLife(long maxLife)
+    public static ElementAttributes withEternalFalseAndMaxLife(Duration maxLife)
     {
         ElementAttributes element = new ElementAttributes(
                 ElementAttributes.defaults().IsSpool(),
@@ -46,7 +46,6 @@ public class TestElementAttributes
                 ElementAttributes.defaults().MaxIdleTime(),
                 Instant.now(),
                 new LastAccessHolder(Instant.EPOCH),
-                ElementAttributes.defaults().timeFactorForMilliseconds(),
                 new ArrayList<>());
 
         element.mutableLastAccessTime().lastAccessTime = element.createTime();
@@ -59,7 +58,7 @@ public class TestElementAttributes
      * @param maxLife The new MaxLife value
      * @param maxIdleTime The new MaxIdleTime value
      */
-    public static ElementAttributes withEternalFalseAndMaxLifeAndMaxIdleTime(long maxLife, long maxIdleTime)
+    public static ElementAttributes withEternalFalseAndMaxLifeAndMaxIdleTime(Duration maxLife, Duration maxIdleTime)
     {
         ElementAttributes element = new ElementAttributes(
                 ElementAttributes.defaults().IsSpool(),
@@ -70,7 +69,6 @@ public class TestElementAttributes
                 maxIdleTime,
                 Instant.now(),
                 new LastAccessHolder(Instant.EPOCH),
-                ElementAttributes.defaults().timeFactorForMilliseconds(),
                 new ArrayList<>());
 
         element.mutableLastAccessTime().lastAccessTime = element.createTime();

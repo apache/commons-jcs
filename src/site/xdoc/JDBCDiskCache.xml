@@ -43,8 +43,8 @@ jcs.default.cacheattributes.UseMemoryShrinker=true
 jcs.default.cacheattributes.MaxMemoryIdleTime=PT2h
 jcs.default.cacheattributes.ShrinkerInterval=PT1m
 jcs.default.elementattributes.IsEternal=false
-jcs.default.elementattributes.MaxLife=14400
-jcs.default.elementattributes.MaxIdleTime=14400
+jcs.default.elementattributes.MaxLife=PT4h
+jcs.default.elementattributes.MaxIdleTime=PT4h
 
 ##############################################################
 ################## CACHE REGIONS AVAILABLE ###################
@@ -62,7 +62,7 @@ jcs.auxiliary.MYSQL.attributes.testBeforeInsert=false
 jcs.auxiliary.MYSQL.attributes.maxActive=100
 jcs.auxiliary.MYSQL.attributes.MaxPurgatorySize=10000000
 jcs.auxiliary.MYSQL.attributes.UseDiskShrinker=true
-jcs.auxiliary.MYSQL.attributes.ShrinkerInterval=1800
+jcs.auxiliary.MYSQL.attributes.ShrinkerInterval=PT30m
 jcs.auxiliary.MYSQL.attributes.allowRemoveAll=false
 jcs.auxiliary.MYSQL.attributes.EventQueueType=POOLED
 jcs.auxiliary.MYSQL.attributes.EventQueuePoolName=disk_cache_event_queue
@@ -92,8 +92,8 @@ jcs.default.cacheattributes.UseMemoryShrinker=false
 jcs.default.cacheattributes.MaxMemoryIdleTime=PT1h
 jcs.default.cacheattributes.ShrinkerInterval=PT1m
 jcs.default.elementattributes.IsEternal=false
-jcs.default.elementattributes.MaxLife=700
-jcs.default.elementattributes.MaxIdleTime=1800
+jcs.default.elementattributes.MaxLife=PT11m40s
+jcs.default.elementattributes.MaxIdleTime=PT30m
 
 # #############################################################
 # ################# CONFIGURED REGIONS ########################
@@ -157,8 +157,8 @@ jcs.default.cacheattributes.UseMemoryShrinker=false
 jcs.default.cacheattributes.MaxMemoryIdleTime=PT1h
 jcs.default.cacheattributes.ShrinkerInterval=PT1m
 jcs.default.elementattributes.IsEternal=false
-jcs.default.elementattributes.MaxLife=700
-jcs.default.elementattributes.MaxIdleTime=1800
+jcs.default.elementattributes.MaxLife=PT11m40s
+jcs.default.elementattributes.MaxIdleTime=PT30m
 
 # #############################################################
 # ################# CONFIGURED REGIONS ########################

@@ -25,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.IOException;
+import java.time.Duration;
 
 import org.apache.commons.jcs4.engine.CacheElement;
 import org.apache.commons.jcs4.engine.ElementAttributes;
@@ -54,7 +55,8 @@ class SerializationConversionUtilUnitTest
         final String value = "value fdsadf dsafdsa fdsaf dsafdsaf dsafdsaf dsaf dsaf dsaf dsafa dsaf dsaf dsafdsaf";
 
         final IElementSerializer elementSerializer = new StandardSerializer();
-        final ElementAttributes attr = TestElementAttributes.withEternalFalseAndMaxLife(34);
+        final ElementAttributes attr = TestElementAttributes
+                .withEternalFalseAndMaxLife(Duration.ofSeconds(34));
 
         final ICacheElement<String, String> before = new CacheElement<>(cacheName, key,
                 value, attr);
@@ -135,7 +137,8 @@ class SerializationConversionUtilUnitTest
         final String value = "value fdsadf dsafdsa fdsaf dsafdsaf dsafdsaf dsaf dsaf dsaf dsafa dsaf dsaf dsafdsaf";
 
         final IElementSerializer elementSerializer = null; // new StandardSerializer();
-        final ElementAttributes attr = TestElementAttributes.withEternalFalseAndMaxLife(34);
+        final ElementAttributes attr = TestElementAttributes
+                .withEternalFalseAndMaxLife(Duration.ofSeconds(34));
 
         final ICacheElement<String, String> before = new CacheElement<>(cacheName, key,
                 value, attr);
@@ -169,7 +172,8 @@ class SerializationConversionUtilUnitTest
         final String value = "value fdsadf dsafdsa fdsaf dsafdsaf dsafdsaf dsaf dsaf dsaf dsafa dsaf dsaf dsafdsaf";
 
         final IElementSerializer elementSerializer = new StandardSerializer();
-        final ElementAttributes attr = TestElementAttributes.withEternalFalseAndMaxLife(34);
+        final ElementAttributes attr = TestElementAttributes
+                .withEternalFalseAndMaxLife(Duration.ofSeconds(34));
 
         final ICacheElement<String, String> before = new CacheElement<>(cacheName, key,
                 value, attr);

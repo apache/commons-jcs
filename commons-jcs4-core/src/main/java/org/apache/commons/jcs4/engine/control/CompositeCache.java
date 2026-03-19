@@ -20,6 +20,7 @@ package org.apache.commons.jcs4.engine.control;
  */
 
 import java.io.IOException;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -998,25 +999,24 @@ public class CompositeCache<K, V>
             if (!attributes.IsEternal())
             {
                 // Remove if maxLife exceeded
-                final long maxLife = attributes.MaxLife();
+                final Duration maxLife = attributes.MaxLife();
                 final Instant createTime = attributes.createTime();
-                final long timeFactorForMilliseconds = attributes.timeFactorForMilliseconds();
 
-                if (maxLife != -1 && timestamp.isAfter(createTime.plusMillis(maxLife * timeFactorForMilliseconds)))
+                if (!maxLife.isNegative() && timestamp.isAfter(createTime.plus(maxLife)))
                 {
                     log.debug("Exceeded maxLife: {0}", element::key);
 
                     handleElementEvent(element, eventMaxlife);
                     return true;
                 }
-                final long idleTime = attributes.MaxIdleTime();
+                final Duration idleTime = attributes.MaxIdleTime();
                 final Instant lastAccessTime = attributes.lastAccessTime();
 
                 // Remove if maxIdleTime exceeded
                 // If you have a 0 size memory cache, then the last access will
                 // not get updated.
                 // you will need to set the idle time to -1.
-                if (idleTime != -1 && timestamp.isAfter(lastAccessTime.plusMillis(idleTime * timeFactorForMilliseconds)))
+                if (!idleTime.isNegative() && timestamp.isAfter(lastAccessTime.plus(idleTime)))
                 {
                     log.debug("Exceeded maxIdle: {0}", element::key);
 

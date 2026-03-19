@@ -114,7 +114,7 @@ class CacheAccessUnitTest
         final CompositeCacheAttributes cattr = TestCompositeCacheAttributes
                 .withMemoryCacheNameAndMaxObjects(memoryCacheClassName, maxMemorySize);
 
-        final long maxLife = 9876;
+        final Duration maxLife = Duration.ofSeconds(9876);
         final ElementAttributes attr = TestElementAttributes.withEternalFalseAndMaxLife(maxLife);
 
         final CacheAccess<String, Integer> access = JCS.getInstance( "testGetMatching_Normal", cattr, attr );
@@ -167,7 +167,7 @@ class CacheAccessUnitTest
         final CompositeCacheAttributes cattr = TestCompositeCacheAttributes
                 .withMemoryCacheNameAndMaxObjects(memoryCacheClassName, maxMemorySize);
 
-        final long maxLife = 9876;
+        final Duration maxLife = Duration.ofSeconds(9876);
         final ElementAttributes attr = TestElementAttributes.withEternalFalseAndMaxLife(maxLife);
 
         final CacheAccess<String, Integer> access = JCS.getInstance( "testGetMatching_Normal", cattr, attr );
@@ -331,7 +331,7 @@ class CacheAccessUnitTest
         final CompositeCacheAttributes ca = TestCompositeCacheAttributes
                 .withMaxMemoryIdleTime(maxIdleTime);
 
-        final long maxLife = 9876;
+        final Duration maxLife = Duration.ofSeconds(9876);
         final ElementAttributes attr = TestElementAttributes.withEternalFalseAndMaxLife(maxLife);
 
         final CacheAccess<String, String> access = JCS.getInstance( "testRegionDefinitonWithAttributes", ca, attr );
@@ -352,7 +352,7 @@ class CacheAccessUnitTest
         final CacheAccess<String, String> access = JCS.getInstance( "test" );
         assertNotNull( access, "We should have an access class" );
 
-        final long maxLife = 9876;
+        final Duration maxLife = Duration.ofSeconds(9876);
         final ElementAttributes attr = TestElementAttributes.withEternalFalseAndMaxLife(maxLife);
 
         access.setDefaultElementAttributes( attr );

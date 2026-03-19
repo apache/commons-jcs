@@ -23,6 +23,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
+import java.time.Duration;
+
 import org.apache.commons.jcs4.engine.CacheElementSerialized;
 import org.apache.commons.jcs4.engine.ElementAttributes;
 import org.apache.commons.jcs4.engine.TestElementAttributes;
@@ -60,7 +62,8 @@ class RemoteCacheListenerUnitTest
         final String cacheName = "testName";
         final String key = "key";
         final String value = "value fdsadf dsafdsa fdsaf dsafdsaf dsafdsaf dsaf dsaf dsaf dsafa dsaf dsaf dsafdsaf";
-        final ElementAttributes attr = TestElementAttributes.withEternalFalseAndMaxLife(34);
+        final ElementAttributes attr = TestElementAttributes
+                .withEternalFalseAndMaxLife(Duration.ofSeconds(34));
 
         final IElementSerializer elementSerializer = new StandardSerializer();
 
@@ -103,7 +106,8 @@ class RemoteCacheListenerUnitTest
         final String cacheName = "testName";
         final String key = "key";
         final String value = "value fdsadf dsafdsa fdsaf dsafdsaf dsafdsaf dsaf dsaf dsaf dsafa dsaf dsaf dsafdsaf";
-        final ElementAttributes attr = TestElementAttributes.withEternalFalseAndMaxLife(34);
+        final ElementAttributes attr = TestElementAttributes
+                .withEternalFalseAndMaxLife(Duration.ofSeconds(34));
 
         final IElementSerializer elementSerializer = new StandardSerializer();
 
