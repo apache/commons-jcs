@@ -124,5 +124,5 @@ public interface IElementAttributes extends Serializable
      * This is the (max life + create time) - current time.
      * @return The TimeToLive value
      */
-    public Duration getTimeToLive();
+    Duration getTimeToLive();
 }
