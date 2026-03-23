@@ -20,8 +20,7 @@ package org.apache.commons.jcs4.engine;
  */
 
 /**
- * Cache statuses
- * <p>
+ * Enumerates cache statuses.
  */
 public enum CacheStatus
 {

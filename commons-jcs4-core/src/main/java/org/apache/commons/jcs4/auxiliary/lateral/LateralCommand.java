@@ -20,7 +20,7 @@ package org.apache.commons.jcs4.auxiliary.lateral;
  */
 
 /**
- * Enumeration of the available lateral commands
+ * Enumerates the available lateral commands.
  */
 public enum LateralCommand
 {

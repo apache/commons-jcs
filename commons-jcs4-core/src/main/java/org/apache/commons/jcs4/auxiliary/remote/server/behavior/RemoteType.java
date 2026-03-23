@@ -20,7 +20,7 @@ package org.apache.commons.jcs4.auxiliary.remote.server.behavior;
  */
 
 /**
- * Enum to describe the mode of the remote cache
+ * Enumerates the mode of the remote cache.
  */
 public enum RemoteType
 {

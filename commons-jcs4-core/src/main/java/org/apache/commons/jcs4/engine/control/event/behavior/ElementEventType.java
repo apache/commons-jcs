@@ -20,7 +20,7 @@ package org.apache.commons.jcs4.engine.control.event.behavior;
  */
 
 /**
- * This describes the events that an item can encounter.
+ * Enumerates the events that an item can encounter.
  */
 public enum ElementEventType
 {

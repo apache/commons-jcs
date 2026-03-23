@@ -20,7 +20,7 @@ package org.apache.commons.jcs4.auxiliary.remote.value;
  */
 
 /**
- * The different types of requests
+ * Enumerates the different types of requests.
  */
 public enum RemoteRequestType
 {
