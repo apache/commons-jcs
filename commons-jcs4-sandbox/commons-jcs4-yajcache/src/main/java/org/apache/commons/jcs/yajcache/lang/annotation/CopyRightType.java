@@ -20,7 +20,7 @@ package org.apache.commons.jcs.yajcache.lang.annotation;
  */
 
 /**
- * Copyright Types.
+ * Enumerates copyright types.
  */
 // @CopyRightApache
 // http://www.netbeans.org/issues/show_bug.cgi?id=53704

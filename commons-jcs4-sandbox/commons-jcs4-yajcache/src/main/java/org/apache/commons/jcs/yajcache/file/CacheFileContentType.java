@@ -25,7 +25,7 @@ import org.apache.commons.lang3.SerializationUtils;
 import java.io.Serializable;
 
 /**
- * Cache File Content Type.  A cache file represents the file persistence
+ * Enumerates cache file content types.  A cache file represents the file persistence
  * format of a cache item.
  * Currently the content of a cache item can be persisted into an array of
  * bytes via either Java Serialization, or the XMLEncoder.

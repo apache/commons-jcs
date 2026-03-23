@@ -30,7 +30,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * Cache File Data Access Object.
+ * Enumerates cache File data access object.
  */
 // @CopyRightApache
 // http://www.netbeans.org/issues/show_bug.cgi?id=53704

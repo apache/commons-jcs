@@ -25,7 +25,7 @@ import org.apache.commons.jcs.yajcache.lang.annotation.*;
 import java.io.File;
 
 /**
- * Cache File Utilities.
+ * Enumerates cache file utilities.
  */
 // @CopyRightApache
 // http://www.netbeans.org/issues/show_bug.cgi?id=53704

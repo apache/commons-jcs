@@ -24,7 +24,7 @@ import org.apache.commons.jcs.yajcache.lang.annotation.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Collection related Utilities.
+ * Enumerates collection related utilities.
  */
 @CopyRightApache
 public enum CollectionUtils {

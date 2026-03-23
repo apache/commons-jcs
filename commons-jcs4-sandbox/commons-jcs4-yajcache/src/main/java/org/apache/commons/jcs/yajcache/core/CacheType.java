@@ -24,7 +24,7 @@ import org.apache.commons.jcs.yajcache.soft.SoftRefCache;
 import org.apache.commons.jcs.yajcache.soft.SoftRefFileCache;
 
 /**
- * Cache Type.
+ * Enumerates cache types.
  */
 // @CopyRightApache
 // http://www.netbeans.org/issues/show_bug.cgi?id=53704
