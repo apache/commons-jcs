@@ -94,34 +94,49 @@ public class Statistics
         return removeTimeTaken.get();
     }
 
-    public void increaseEvictions(final long number)
+    public void incrementEvictions()
     {
-        increment(evictions, number);
+        increment(evictions, 1L);
     }
 
-    public void increaseExpiries(final long number)
+    public void incrementHits()
     {
-        increment(expiries, number);
+        increment(hits, 1L);
     }
 
-    public void increaseHits(final long number)
+    public void decrementHits()
     {
-        increment(hits, number);
+        increment(hits, -1L);
     }
 
-    public void increaseMisses(final long number)
+    public void incrementMisses()
     {
-        increment(misses, number);
+        increment(misses, 1L);
     }
 
-    public void increasePuts(final long number)
+    public void decrementMisses()
     {
-        increment(puts, number);
+        increment(misses, -1L);
     }
 
-    public void increaseRemovals(final long number)
+    public void incrementPuts()
     {
-        increment(removals, number);
+        increment(puts, 1L);
+    }
+
+    public void decrementPuts()
+    {
+        increment(puts, -1L);
+    }
+
+    public void incrementRemovals()
+    {
+        increment(removals, 1L);
+    }
+
+    public void decrementRemovals()
+    {
+        increment(removals, -1L);
     }
 
     private void increment(final AtomicLong counter, final long number)

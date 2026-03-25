@@ -309,11 +309,11 @@ public class JCSCache<K, V> implements Cache<K, V>
         {
             if (v != null)
             {
-                statistics.increaseHits(1);
+                statistics.incrementHits();
             }
             else
             {
-                statistics.increaseMisses(1);
+                statistics.incrementMisses();
             }
         }
 
@@ -355,11 +355,11 @@ public class JCSCache<K, V> implements Cache<K, V>
             {
                 if (containsKey(key))
                 {
-                    statistics.increaseHits(1);
+                    statistics.incrementHits();
                 }
                 else
                 {
-                    statistics.increaseMisses(1);
+                    statistics.incrementMisses();
                 }
             }
             return entryProcessor.process(new JCSMutableEntry<>(view, key), arguments);
@@ -550,14 +550,14 @@ public class JCSCache<K, V> implements Cache<K, V>
             }
             else if (statisticsEnabled)
             {
-                statistics.increaseHits(1);
+                statistics.incrementHits();
             }
             put(key, value);
             return oldValue;
         }
         if (statisticsEnabled)
         {
-            statistics.increaseMisses(1);
+            statistics.incrementMisses();
         }
         return null;
     }
@@ -748,7 +748,7 @@ public class JCSCache<K, V> implements Cache<K, V>
 
             if (statisticsEnabled)
             {
-                statistics.increasePuts(1);
+                statistics.incrementPuts();
                 statistics.addPutTime(java.time.Duration.between(start, Instant.now()));
             }
         } else if (!created)
@@ -815,7 +815,7 @@ public class JCSCache<K, V> implements Cache<K, V>
         }
         if (remove && statisticsEnabled)
         {
-            statistics.increaseRemovals(1);
+            statistics.incrementRemovals();
             statistics.addRemoveTime(java.time.Duration.between(start, Instant.now()));
         }
         return remove;
@@ -873,14 +873,14 @@ public class JCSCache<K, V> implements Cache<K, V>
         {
             if (statisticsEnabled)
             {
-                statistics.increaseHits(1);
+                statistics.incrementHits();
             }
             put(key, value);
             return true;
         }
         if (statisticsEnabled)
         {
-            statistics.increaseMisses(1);
+            statistics.incrementMisses();
         }
         return false;
     }
@@ -899,7 +899,7 @@ public class JCSCache<K, V> implements Cache<K, V>
             V value = elt.value();
             if (value != null && statisticsEnabled)
             {
-                statistics.increaseHits(1);
+                statistics.incrementHits();
             }
             if (value == null && config.isReadThrough())
             {
@@ -928,7 +928,7 @@ public class JCSCache<K, V> implements Cache<K, V>
         }
         else if (statisticsEnabled)
         {
-            statistics.increaseMisses(1);
+            statistics.incrementMisses();
         }
         return false;
     }

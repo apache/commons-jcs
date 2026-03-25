@@ -39,7 +39,7 @@ public class EvictionListener implements IElementEventHandler
             case EXCEEDED_MAXLIFE_ONREQUEST:
             case EXCEEDED_IDLETIME_ONREQUEST:
             case EXCEEDED_IDLETIME_BACKGROUND:
-                stats.increaseEvictions(1);
+                stats.incrementEvictions();
                 break;
             default:
                 break;

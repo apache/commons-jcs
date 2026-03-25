@@ -99,11 +99,11 @@ public class TempStateCacheView<K, V> implements Cache<K, V>
             final Statistics statistics = cache.getStatistics();
             if (cache.containsKey(key))
             {
-                statistics.increaseHits(-1);
+                statistics.decrementHits();
             }
             else
             {
-                statistics.increaseMisses(-1);
+                statistics.decrementMisses();
             }
         }
         return cache.get(key);
