@@ -23,6 +23,7 @@ import static org.apache.commons.jcs4.jcache.serialization.Serializations.copy;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.time.Instant;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -291,7 +292,7 @@ public class JCSCache<K, V> implements Cache<K, V>
         JMXs.unregister(cacheStatsObjectName);
     }
 
-    private V doGetControllingExpiry(final long getStart, final K key, final boolean updateAcess, final boolean forceDoLoad, final boolean skipLoad,
+    private V doGetControllingExpiry(final Instant getStart, final K key, final boolean updateAcess, final boolean forceDoLoad, final boolean skipLoad,
             final boolean propagateLoadException)
     {
         final boolean statisticsEnabled = config.isStatisticsEnabled();
@@ -337,7 +338,7 @@ public class JCSCache<K, V> implements Cache<K, V>
         }
         if (statisticsEnabled && v != null)
         {
-            statistics.addGetTime(Times.now(false) - getStart);
+            statistics.addGetTime(java.time.Duration.between(getStart, Instant.now()));
         }
         return v;
     }
@@ -407,7 +408,7 @@ public class JCSCache<K, V> implements Cache<K, V>
     {
         try
         {
-            final long now = Times.now(false);
+            final Instant now = Instant.now();
             for (final K k : keys)
             {
                 if (replaceExistingValues)
@@ -465,8 +466,7 @@ public class JCSCache<K, V> implements Cache<K, V>
     {
         assertNotClosed();
         assertNotNull(key, "key");
-        final long getStart = Times.now(false);
-        return doGetControllingExpiry(getStart, key, true, false, false, true);
+        return doGetControllingExpiry(Instant.now(), key, true, false, false, true);
     }
 
     @Override
@@ -516,8 +516,7 @@ public class JCSCache<K, V> implements Cache<K, V>
         assertNotClosed();
         assertNotNull(key, "key");
         assertNotNull(value, "value");
-        final long getStart = Times.now(false);
-        final V v = doGetControllingExpiry(getStart, key, false, false, true, false);
+        final V v = doGetControllingExpiry(Instant.now(), key, false, false, true, false);
         put(key, value);
         return v;
     }
@@ -527,8 +526,7 @@ public class JCSCache<K, V> implements Cache<K, V>
     {
         assertNotClosed();
         assertNotNull(key, "key");
-        final long getStart = Times.now(false);
-        final V v = doGetControllingExpiry(getStart, key, false, false, true, false);
+        final V v = doGetControllingExpiry(Instant.now(), key, false, false, true, false);
         remove(key);
         return v;
     }
@@ -694,7 +692,7 @@ public class JCSCache<K, V> implements Cache<K, V>
         if (isNotZero(duration))
         {
             final boolean statisticsEnabled = config.isStatisticsEnabled();
-            final long start = Times.now(false);
+            final Instant start = Instant.now();
 
             final K jcsKey = storeByValue ? copy(serializer, manager.getClassLoader(), key) : key;
             IElementAttributes attributes = oldElt != null ? oldElt.elementAttributes() : delegate.getElementAttributes();
@@ -751,7 +749,7 @@ public class JCSCache<K, V> implements Cache<K, V>
             if (statisticsEnabled)
             {
                 statistics.increasePuts(1);
-                statistics.addPutTime(Times.now(false) - start);
+                statistics.addPutTime(java.time.Duration.between(start, Instant.now()));
             }
         } else if (!created)
         {
@@ -801,7 +799,7 @@ public class JCSCache<K, V> implements Cache<K, V>
         assertNotNull(key, "key");
 
         final boolean statisticsEnabled = config.isStatisticsEnabled();
-        final long start = Times.now(!statisticsEnabled);
+        final Instant start = Instant.now();
 
         writer.delete(key);
 
@@ -818,7 +816,7 @@ public class JCSCache<K, V> implements Cache<K, V>
         if (remove && statisticsEnabled)
         {
             statistics.increaseRemovals(1);
-            statistics.addRemoveTime(Times.now(false) - start);
+            statistics.addRemoveTime(java.time.Duration.between(start, Instant.now()));
         }
         return remove;
     }
@@ -829,8 +827,7 @@ public class JCSCache<K, V> implements Cache<K, V>
         assertNotClosed();
         assertNotNull(key, "key");
         assertNotNull(oldValue, "oldValue");
-        final long getStart = Times.now(false);
-        final V v = doGetControllingExpiry(getStart, key, false, false, false, false);
+        final V v = doGetControllingExpiry(Instant.now(), key, false, false, false, false);
         if (oldValue.equals(v))
         {
             remove(key);

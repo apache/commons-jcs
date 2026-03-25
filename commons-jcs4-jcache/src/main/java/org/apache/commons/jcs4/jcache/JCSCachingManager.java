@@ -302,7 +302,9 @@ public class JCSCachingManager implements CacheManager
     {
         assertNotClosed();
         assertNotNull(cacheName, "cacheName");
-        return (Cache<K, V>) doGetCache(cacheName, Object.class, Object.class);
+        @SuppressWarnings("unchecked")  // common map for all caches
+        Cache<K, V> cache = (Cache<K, V>) doGetCache(cacheName, Object.class, Object.class);
+        return cache;
     }
 
     @Override

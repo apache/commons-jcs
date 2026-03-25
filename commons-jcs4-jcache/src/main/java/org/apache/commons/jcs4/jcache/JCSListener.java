@@ -19,7 +19,6 @@
 package org.apache.commons.jcs4.jcache;
 
 import java.io.Closeable;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.cache.configuration.CacheEntryListenerConfiguration;
@@ -70,7 +69,8 @@ public class JCSListener<K, V> implements Closeable
     @Override
     public void close()
     {
-        if (Closeable.class.isInstance(delegate)) {
+        if (Closeable.class.isInstance(delegate))
+        {
             Closeable.class.cast(delegate);
         }
     }
@@ -82,18 +82,10 @@ public class JCSListener<K, V> implements Closeable
             return events;
         }
 
-        final List<CacheEntryEvent<? extends K, ? extends V>> filtered = new ArrayList<>(
-                events.size());
-        for (final CacheEntryEvent<? extends K, ? extends V> event : events)
-        {
-            if (filter.evaluate(event))
-            {
-                filtered.add(event);
-            }
-        }
-        return filtered;
+        return events.stream().filter(filter::evaluate).toList();
     }
 
+    @SuppressWarnings("unchecked")
     public void onCreated(final List<CacheEntryEvent<? extends K, ? extends V>> events) throws CacheEntryListenerException
     {
         if (create)
@@ -102,6 +94,7 @@ public class JCSListener<K, V> implements Closeable
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void onExpired(final List<CacheEntryEvent<? extends K, ? extends V>> events) throws CacheEntryListenerException
     {
         if (expire)
@@ -110,6 +103,7 @@ public class JCSListener<K, V> implements Closeable
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void onRemoved(final List<CacheEntryEvent<? extends K, ? extends V>> events) throws CacheEntryListenerException
     {
         if (remove)
@@ -118,6 +112,7 @@ public class JCSListener<K, V> implements Closeable
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void onUpdated(final List<CacheEntryEvent<? extends K, ? extends V>> events) throws CacheEntryListenerException
     {
         if (update)

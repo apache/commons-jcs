@@ -18,6 +18,8 @@
  */
 package org.apache.commons.jcs4.jcache.jmx;
 
+import java.time.Duration;
+
 import javax.cache.management.CacheStatisticsMXBean;
 
 import org.apache.commons.jcs4.jcache.Statistics;
@@ -31,14 +33,14 @@ public class JCSCacheStatisticsMXBean implements CacheStatisticsMXBean
         this.statistics = stats;
     }
 
-    private float averageTime(final long timeTaken)
+    private float averageTime(final Duration timeTaken)
     {
         final long gets = getCacheGets();
-        if (timeTaken == 0 || gets == 0)
+        if (timeTaken.isZero() || gets == 0)
         {
             return 0;
         }
-        return timeTaken / gets;
+        return timeTaken.toMillis() / (float) gets;
     }
 
     @Override

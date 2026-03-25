@@ -18,10 +18,15 @@
  */
 package org.apache.commons.jcs4.jcache;
 
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class Statistics
 {
+    private static final Duration MAX_DURATION = ChronoUnit.FOREVER.getDuration();
+
     private volatile boolean active = true;
 
     private final AtomicLong removals = new AtomicLong();
@@ -30,21 +35,21 @@ public class Statistics
     private final AtomicLong hits = new AtomicLong();
     private final AtomicLong misses = new AtomicLong();
     private final AtomicLong evictions = new AtomicLong();
-    private final AtomicLong putTimeTaken = new AtomicLong();
-    private final AtomicLong getTimeTaken = new AtomicLong();
-    private final AtomicLong removeTimeTaken = new AtomicLong();
+    private final AtomicReference<Duration> putTimeTaken = new AtomicReference<Duration>(Duration.ZERO);
+    private final AtomicReference<Duration> getTimeTaken = new AtomicReference<Duration>(Duration.ZERO);
+    private final AtomicReference<Duration> removeTimeTaken = new AtomicReference<Duration>(Duration.ZERO);
 
-    public void addGetTime(final long duration)
+    public void addGetTime(final Duration duration)
     {
         increment(duration, getTimeTaken);
     }
 
-    public void addPutTime(final long duration)
+    public void addPutTime(final Duration duration)
     {
         increment(duration, putTimeTaken);
     }
 
-    public void addRemoveTime(final long duration)
+    public void addRemoveTime(final Duration duration)
     {
         increment(duration, removeTimeTaken);
     }
@@ -74,17 +79,17 @@ public class Statistics
         return removals.get();
     }
 
-    public long getTimeTakenForGets()
+    public Duration getTimeTakenForGets()
     {
         return getTimeTaken.get();
     }
 
-    public long getTimeTakenForPuts()
+    public Duration getTimeTakenForPuts()
     {
         return putTimeTaken.get();
     }
 
-    public long getTimeTakenForRemovals()
+    public Duration getTimeTakenForRemovals()
     {
         return removeTimeTaken.get();
     }
@@ -128,22 +133,24 @@ public class Statistics
         counter.addAndGet(number);
     }
 
-    private void increment(final long duration, final AtomicLong counter)
+    private void increment(final Duration duration, final AtomicReference<Duration> counter)
     {
         if (!active)
         {
             return;
         }
 
-        if (counter.get() < Long.MAX_VALUE - duration)
-        {
-            counter.addAndGet(duration);
-        }
-        else
-        {
-            reset();
-            counter.set(duration);
-        }
+        counter.accumulateAndGet(duration, (u, v) -> {
+            if (u.compareTo(MAX_DURATION.minus(v)) < 0)
+            {
+                return u.plus(v);
+            }
+            else
+            {
+                reset();
+                return v;
+            }
+        });
     }
 
     public void reset()
@@ -154,9 +161,9 @@ public class Statistics
         expiries.set(0);
         hits.set(0);
         evictions.set(0);
-        getTimeTaken.set(0);
-        putTimeTaken.set(0);
-        removeTimeTaken.set(0);
+        getTimeTaken.set(Duration.ZERO);
+        putTimeTaken.set(Duration.ZERO);
+        removeTimeTaken.set(Duration.ZERO);
     }
 
     public void setActive(final boolean active)
