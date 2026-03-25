@@ -31,6 +31,10 @@
   <packaging>jar</packaging>
 
   <name>Apache Commons JCS :: Core</name>
+  <description>
+    This module contains the core implementation of Apache Commons JCS.
+    It consists of multiple memory cache implementations and various auxiliary plugins.
+  </description>
 
   <scm>
     <connection>scm:git:https://gitbox.apache.org/repos/asf/commons-jcs.git</connection>

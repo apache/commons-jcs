@@ -34,8 +34,10 @@
   -->
 
   <artifactId>commons-jcs4-jcache-tck</artifactId>
-
   <name>Apache Commons JCS :: JCache TCK</name>
+  <description>
+    This module runs the JSR-107 TCK for JCache.
+  </description>
 
   <scm>
     <connection>scm:git:https://gitbox.apache.org/repos/asf/commons-jcs.git</connection>

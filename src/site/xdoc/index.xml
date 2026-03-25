@@ -57,6 +57,9 @@
 				<li>Key pattern matching retrieval</li>
 				<li>Network efficient multi-key retrieval</li>
 			</ul>
+            <p> JCS 4.x works on JDK versions 17 and up. It has no
+                mandatory external dependencies. See the document about
+                <a href="UpgradingFrom3x.html">upgrading</a>.</p>
             <p> JCS 3.x works on JDK versions 1.8 and up. It has no
                 mandatory external dependencies. See the document about
                 <a href="UpgradingFrom2x.html">upgrading</a>.</p>
@@ -89,23 +92,45 @@
 					.
 				</p>
 			</subsection>
-			<subsection name="Indexed Disk Cache">
-				<p>
-					The
-					<a href="IndexedDiskAuxCache.html">Indexed Disk Cache</a>
-					is a fast, reliable, and
-					<a href="IndexedDiskCacheProperties.html"> highly configurable</a>
-					swap for cached data. The indexed disk cache follows the fastest
-					pattern for disk swapping. Cache elements are written to disk via a
-					continuous queue-based process. The length of the item is stored in
-					the first few bytes of the entry. The offset is stored in memory
-					and can be reference via the key. When items are removed from the
-					disk cache, the location and size are recorded and reused when
-					possible. Every aspect of the disk cache is configurable, and a
-					thread pool can be used to reduce the number of queue worker
-					threads across the system.
-				</p>
-			</subsection>
+            <subsection name="Indexed Disk Cache">
+                <p>
+                    The
+                    <a href="IndexedDiskAuxCache.html">Indexed Disk Cache</a>
+                    is a fast, reliable, and
+                    <a href="IndexedDiskCacheProperties.html"> highly configurable</a>
+                    swap for cached data. The indexed disk cache follows the fastest
+                    pattern for disk swapping. Cache elements are written to disk via a
+                    continuous queue-based process. The length of the item is stored in
+                    the first few bytes of the entry. The offset is stored in memory
+                    and can be reference via the key. When items are removed from the
+                    disk cache, the location and size are recorded and reused when
+                    possible. Every aspect of the disk cache is configurable, and a
+                    thread pool can be used to reduce the number of queue worker
+                    threads across the system.
+                </p>
+            </subsection>
+            <subsection name="Block Disk Cache">
+                <p>
+                    The
+                    <a href="BlockDiskCache.html">Block Disk Cache</a>
+                    is a fast and reliable swap for cached data, similar to the 
+                    Indexed Disk Cache.
+                </p>
+                <p>
+                    The Block Disk Cache stores cached values on disk
+                    in a group of fixed size blocks, whereas the Indexed
+                    Disk Cache writes items to disk in one chunk.
+                </p>
+                <p>
+                    The Block Disk Cache has advantages over the normal
+                    indexed model for regions where the size of the items
+                    varies. Since all the blocks are the same size, the
+                    recycle bin is very simple. It is just a list of block
+                    numbers. Also, the Block Disk Cache will never need to
+                    be optimized. Once the maximum number of keys is
+                    reached, blocks will be reused.
+                </p>
+            </subsection>
 			<subsection name="JDBC Disk Cache">
 				<p>
 					The

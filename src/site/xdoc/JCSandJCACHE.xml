@@ -28,9 +28,12 @@
   <body>
     <section name="JCACHE (JSR-107)">
       <p>
-        Since version 2.x, Apache Commons JCS implements
-        JCache specification (and a few more providing some basic utilities
-        in its extras module and a basic integration with Apache OpenJPA).
+        Since version 2.x, Apache Commons JCS implements the
+        <a href="commons-jcs4-jcache/index.html">JCache specification</a> 
+        (and a few more providing some basic utilities in its 
+        <a href="commons-jcs4-jcache-extras/index.html">extras module</a> 
+        and a <a href="commons-jcs4-jcache-openjpa/index.html">basic integration</a> 
+        with Apache OpenJPA).
       </p>
       <p>
         The next section is about the main differences between the JCache design and the original JCS one.

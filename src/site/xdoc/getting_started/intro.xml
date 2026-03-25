@@ -92,6 +92,10 @@
 
         <section name="STEP 3: Get the Required Dependencies">
             <p>
+                Beginning with version 3.0 the core of JCS has no mandatory external 
+                dependencies.
+            </p>
+            <p>
                 Beginning with version 2.0 the core of JCS (the LRU memory
                 cache, the indexed disk cache, the TCP lateral, and the
                 RMI remote server) requires only commons-logging.

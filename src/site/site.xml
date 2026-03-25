@@ -73,7 +73,12 @@
       </item>
     </menu>
 
-    <menu ref="modules" />
+    <menu name="Modules">
+      <item name="Core" href="commons-jcs4-core/index.html"/>
+      <item name="JCache" href="commons-jcs4-jcache/index.html"/>
+      <item name="JCache Extras" href="commons-jcs4-jcache-extras/index.html"/>
+      <item name="JCache OpenJPA" href="commons-jcs4-jcache-openjpa/index.html"/>
+    </menu>
 
   </body>
 

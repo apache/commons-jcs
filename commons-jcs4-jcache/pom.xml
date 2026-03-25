@@ -29,6 +29,10 @@
 
   <artifactId>commons-jcs4-jcache</artifactId>
   <name>Apache Commons JCS :: JCache</name>
+  <description>
+    This module contains the JSR-107 API (version ${jsr107.api.version}) implementation of 
+    Apache Commons JCS.
+  </description>
 
   <scm>
     <connection>scm:git:https://gitbox.apache.org/repos/asf/commons-jcs.git</connection>
