@@ -137,7 +137,7 @@ class JDBCDataSourceFactoryUnitTest
         assertNotNull( spds, "Should have a data source class" );
 
         // VERIFY
-        assertEquals( maxTotal, spds.getMaxTotal(), "Wrong maxActive value" );
+        assertEquals( maxTotal, spds.getMaxTotal(), "Wrong maxTotal value" );
     }
 
     /**
@@ -183,7 +183,7 @@ class JDBCDataSourceFactoryUnitTest
         final String url = "adfads";
         final String userName = "zvzvz";
         final String password = "qewrrewq";
-        final int maxActive = 10;
+        final int maxTotal = 10;
         final String driverClassName = "org.hsqldb.jdbcDriver";
 
         final Properties props = new Properties();
@@ -193,7 +193,7 @@ class JDBCDataSourceFactoryUnitTest
         props.put( prefix + ".url", url );
         props.put( prefix + ".userName", userName );
         props.put( prefix + ".password", password );
-        props.put( prefix + ".maxActive", String.valueOf( maxActive ) );
+        props.put( prefix + ".maxTotal", String.valueOf( maxTotal ) );
         props.put( prefix + ".driverClassName", driverClassName );
 
         final JDBCDiskCacheFactory factory = new JDBCDiskCacheFactory();
@@ -211,7 +211,7 @@ class JDBCDataSourceFactoryUnitTest
 
         // VERIFY
         assertEquals( poolName, spds.getDescription(), "Wrong pool name" );
-        assertEquals( maxActive, spds.getMaxTotal(), "Wrong maxActive value" );
+        assertEquals( maxTotal, spds.getMaxTotal(), "Wrong maxTotal value" );
     }
 }
 
