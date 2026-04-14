@@ -946,7 +946,7 @@ public class CompositeCache<K, V>
         final ArrayList<IElementEventHandler> eventHandlers = element.elementAttributes().elementEventHandlers();
         if (eventHandlers != null)
         {
-            log.debug("Element Handlers are registered.  Create event type {0}", eventType);
+            log.debug("Element handlers are registered. Creating event type {0}", eventType);
             if (elementEventQ == null)
             {
                 log.warn("No element event queue available for cache {0}", this::getCacheName);
