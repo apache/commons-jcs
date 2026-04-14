@@ -27,7 +27,7 @@ import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 /** Tests for the key matcher. */
-class KeyMatcherPatternImpllUnitTest
+class KeyMatcherPatternImplUnitTest
 {
     /**
      * Verify that the matching method works.
