@@ -22,7 +22,6 @@ package org.apache.commons.jcs4.engine;
 import java.io.IOException;
 import java.time.Duration;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Consumer;
 
 import org.apache.commons.jcs4.engine.behavior.ICacheElement;
 import org.apache.commons.jcs4.engine.behavior.ICacheEventQueue;
@@ -42,7 +41,7 @@ public abstract class AbstractCacheEventQueue<K, V>
     {
         private final String eventName;
         private final T eventData;
-        private final IOExConsumer<T> eventRun;
+        private final ExceptionThrowingConsumer<T> eventRun;
 
         /**
          * Constructs a new instance.
@@ -51,7 +50,8 @@ public abstract class AbstractCacheEventQueue<K, V>
          * @param eventData data of the event
          * @param eventRun operation to apply on the event
          */
-        protected AbstractCacheEvent(final String eventName, final T eventData, final IOExConsumer<T> eventRun)
+        protected AbstractCacheEvent(final String eventName, final T eventData,
+                final ExceptionThrowingConsumer<T> eventRun)
         {
             this.eventName = eventName;
             this.eventData = eventData;
@@ -71,7 +71,7 @@ public abstract class AbstractCacheEventQueue<K, V>
                     eventRun.accept(eventData);
                     return;
                 }
-                catch (final Throwable e)
+                catch (final Exception e)
                 {
                     log.warn("Error while running event from Queue: {0}. "
                             + "Retrying...", this, e);
@@ -107,24 +107,6 @@ public abstract class AbstractCacheEventQueue<K, V>
     }
 
     // /////////////////////////// Inner classes /////////////////////////////
-    protected interface IOExConsumer<T>
-    {
-        static <T> Consumer<T> unchecked(final IOExConsumer<T> consumer)
-        {
-            return t -> {
-                try
-                {
-                    consumer.accept(t);
-                }
-                catch (final IOException e)
-                {
-                    throw new RuntimeException(e);
-                }
-            };
-        }
-
-        void accept(T t) throws IOException;
-    }
 
     /**
      * The cache should be disposed when this event is processed.
