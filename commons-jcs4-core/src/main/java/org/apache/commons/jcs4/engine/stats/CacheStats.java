@@ -1,8 +1,5 @@
 package org.apache.commons.jcs4.engine.stats;
 
-import java.util.ArrayList;
-import java.util.Collections;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -22,6 +19,8 @@ import java.util.Collections;
  * under the License.
  */
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.jcs4.engine.stats.behavior.ICacheStats;
@@ -43,7 +42,7 @@ public class CacheStats
     private String regionName;
 
     /** What that auxiliaries are reporting. */
-    private List<IStats> auxStats;
+    private final List<IStats> auxStats;
 
     /**
      * Default constructor
@@ -60,8 +59,8 @@ public class CacheStats
      */
     public CacheStats(String typeName)
     {
-        super(typeName);
-        this.auxStats = new ArrayList<>();
+        this();
+        setTypeName(typeName);
     }
 
     /**

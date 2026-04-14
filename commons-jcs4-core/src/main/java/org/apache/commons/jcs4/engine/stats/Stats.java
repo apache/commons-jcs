@@ -1,8 +1,5 @@
 package org.apache.commons.jcs4.engine.stats;
 
-import java.util.ArrayList;
-import java.util.Collections;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -22,6 +19,8 @@ import java.util.Collections;
  * under the License.
  */
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.jcs4.engine.stats.behavior.IStatElement;
@@ -36,7 +35,7 @@ public class Stats
     private static final long serialVersionUID = 227327902875154010L;
 
     /** The stats */
-    private List<IStatElement<?>> stats;
+    private final List<IStatElement<?>> stats;
 
     /** The type of stat */
     private String typeName;
@@ -56,7 +55,7 @@ public class Stats
     public Stats(String typeName)
     {
         this();
-        this.typeName = typeName;
+        setTypeName(typeName);
     }
 
     /**
