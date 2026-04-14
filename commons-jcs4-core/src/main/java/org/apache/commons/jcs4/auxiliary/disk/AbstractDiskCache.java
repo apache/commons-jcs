@@ -258,8 +258,7 @@ public abstract class AbstractDiskCache<K, V>
         setAuxiliaryCacheAttributes(attr);
 
         // create queue
-        final CacheEventQueueFactory<K, V> fact = new CacheEventQueueFactory<>();
-        this.cacheEventQueue = fact.createCacheEventQueue(
+        this.cacheEventQueue = CacheEventQueueFactory.createCacheEventQueue(
                 new MyCacheListener(), CacheInfo.INSTANCE.listenerId(), getCacheName(),
                    attr.getEventQueuePoolName(),
                    attr.getEventQueueType() );

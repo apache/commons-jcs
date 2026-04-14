@@ -32,6 +32,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -51,6 +55,7 @@ import org.apache.commons.jcs4.log.Log;
 import org.apache.commons.jcs4.utils.serialization.StandardSerializer;
 import org.apache.commons.jcs4.utils.struct.AbstractLRUMap;
 import org.apache.commons.jcs4.utils.struct.LRUMap;
+import org.apache.commons.jcs4.utils.threadpool.DaemonThreadFactory;
 import org.apache.commons.jcs4.utils.timing.ElapsedTimer;
 
 /**
@@ -236,7 +241,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
     private File rafDir;
 
     /** Should we keep adding to the recycle bin. False during optimization. */
-    private boolean doRecycle = true;
+    private AtomicBoolean doRecycle = new AtomicBoolean(true);
 
     /** Should we optimize real time */
     private boolean isRealTimeOptimizationEnabled = true;
@@ -245,13 +250,13 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
     private boolean isShutdownOptimizationEnabled = true;
 
     /** Are we currently optimizing the files */
-    private boolean isOptimizing;
+    private final AtomicBoolean isOptimizing = new AtomicBoolean();
 
     /** The number of times the file has been optimized. */
     private int timesOptimized;
 
-    /** The thread optimizing the file. */
-    private volatile Thread currentOptimizationThread;
+    /** The Executor for optimizing the file. */
+    private volatile ExecutorService optimizationExecutor;
 
     /** Used for counting the number of requests */
     private int removeCount;
@@ -311,6 +316,13 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
         this.maxKeySize = cattr.getMaxKeySize();
         this.isRealTimeOptimizationEnabled = cattr.getOptimizeAtRemoveCount() > 0;
         this.isShutdownOptimizationEnabled = cattr.isOptimizeOnShutdown();
+
+        if (isRealTimeOptimizationEnabled)
+        {
+            this.optimizationExecutor = Executors.newSingleThreadExecutor(
+                    new DaemonThreadFactory("IndexedDiskCache-Optimization-"));
+        }
+
         this.logCacheName = "Region [" + getCacheName() + "] ";
         this.diskLimitType = cattr.getDiskLimitType();
         // Make a clean file name
@@ -364,7 +376,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
             {
                 adjustBytesFree(ded, true);
 
-                if (doRecycle)
+                if (doRecycle.get())
                 {
                     recycle.add(ded);
                     log.debug("{0}: recycled ded {1}", logCacheName, ded);
@@ -414,7 +426,8 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
         final ElapsedTimer timer = new ElapsedTimer();
         boolean isOk = true;
         long expectedNextPos = 0;
-        for (final IndexedDiskElementDescriptor ded : sortedDescriptors) {
+        for (final IndexedDiskElementDescriptor ded : sortedDescriptors)
+        {
             if (expectedNextPos > ded.pos())
             {
                 log.error("{0}: Corrupt file: overlapping deds {1}", logCacheName, ded);
@@ -599,21 +612,23 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
         // Prevents any interaction with the cache while we're shutting down.
         setAlive(false);
 
-        final Thread optimizationThread = currentOptimizationThread;
-        if (isRealTimeOptimizationEnabled && optimizationThread != null)
+        if (isRealTimeOptimizationEnabled)
         {
-            // Join with the current optimization thread.
-            log.debug("{0}: In dispose, optimization already in progress; waiting for completion.",
-                    logCacheName);
-
-            try
+            // Shut down the optimization executor.
+            optimizationExecutor.shutdown();
+            if (isOptimizing.get())
             {
-                optimizationThread.join();
-            }
-            catch (final InterruptedException e)
-            {
-                log.error("{0}: Unable to join current optimization thread.",
-                        logCacheName, e);
+                log.debug("{0}: In dispose, optimization already in progress; waiting for completion.",
+                        logCacheName);
+                try
+                {
+                    optimizationExecutor.awaitTermination(30, TimeUnit.SECONDS);
+                }
+                catch (final InterruptedException e)
+                {
+                    log.error("{0}: Timeout waiting for optimization to complete.",
+                            logCacheName, e);
+                }
             }
         }
         else if (isShutdownOptimizationEnabled && this.getBytesFree() > 0)
@@ -647,36 +662,22 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
     protected void doOptimizeRealTime()
     {
         int optRemoveCount = getAuxiliaryCacheAttributes().getOptimizeAtRemoveCount();
-        if (isRealTimeOptimizationEnabled && !isOptimizing
-            && removeCount++ >= optRemoveCount)
+        if (isRealTimeOptimizationEnabled && removeCount++ >= optRemoveCount)
         {
-            isOptimizing = true;
-
-            log.info("{0}: Optimizing file. removeCount [{1}] OptimizeAtRemoveCount [{2}]",
-                    logCacheName, removeCount, optRemoveCount);
-
-            if (currentOptimizationThread == null)
+            if (isOptimizing.compareAndSet(false, true))
             {
+                log.info("{0}: Optimizing file. removeCount [{1}] OptimizeAtRemoveCount [{2}]",
+                        logCacheName, removeCount, optRemoveCount);
+
                 storageLock.writeLock().lock();
 
                 try
                 {
-                    if (currentOptimizationThread == null)
-                    {
-                        currentOptimizationThread = new Thread(() -> {
-                            optimizeFile();
-                            currentOptimizationThread = null;
-                        }, "IndexedDiskCache-OptimizationThread");
-                    }
+                    optimizationExecutor.execute(this::optimizeFile);
                 }
                 finally
                 {
                     storageLock.writeLock().unlock();
-                }
-
-                if (currentOptimizationThread != null)
-                {
-                    currentOptimizationThread.start();
                 }
             }
         }
@@ -1059,7 +1060,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
         {
             queueInput = true;
             // shut off recycle while we're optimizing,
-            doRecycle = false;
+            doRecycle.set(false);
             defragList = createPositionSortedDescriptorList();
         }
         finally
@@ -1098,8 +1099,8 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
             queuedPutList.clear();
             queueInput = false;
             // turn recycle back on.
-            doRecycle = true;
-            isOptimizing = false;
+            doRecycle.set(true);
+            isOptimizing.set(false);
         }
         finally
         {
@@ -1443,7 +1444,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
                     // we need this to compare in the recycle bin
                     ded = new IndexedDiskElementDescriptor(dataFile.length(), data.length);
 
-                    if (doRecycle)
+                    if (doRecycle.get())
                     {
                         final IndexedDiskElementDescriptor rep = recycle.ceiling(ded);
                         if (rep != null)

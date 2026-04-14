@@ -24,10 +24,9 @@ import org.apache.commons.jcs4.engine.behavior.ICacheListener;
 import org.apache.commons.jcs4.log.Log;
 
 /**
- * This class hands out event Queues. This allows us to change the implementation more easily. You
- * can configure the cache to use a custom type.
+ * This class hands out event Queues. This allows us to change the implementation more easily.
  */
-public class CacheEventQueueFactory<K, V>
+public class CacheEventQueueFactory
 {
     /** The logger. */
     private static final Log log = Log.getLog( CacheEventQueueFactory.class );
@@ -44,24 +43,27 @@ public class CacheEventQueueFactory<K, V>
      * @param poolType single or pooled
      * @return ICacheEventQueue
      */
-    public ICacheEventQueue<K, V> createCacheEventQueue( final ICacheListener<K, V> listener, final long listenerId, final String cacheName,
-                                                   final int maxFailure, final int waitBeforeRetry, final String threadPoolName,
-                                                   final ICacheEventQueue.QueueType poolType )
+    public static <K, V> ICacheEventQueue<K, V> createCacheEventQueue(
+            final ICacheListener<K, V> listener, final long listenerId, final String cacheName,
+            final int maxFailure, final int waitBeforeRetry, final String threadPoolName,
+            ICacheEventQueue.QueueType poolType )
     {
         log.debug( "threadPoolName = [{0}] poolType = {1}", threadPoolName, poolType );
 
-        ICacheEventQueue<K, V> eventQueue = null;
-        if ( poolType == null || ICacheEventQueue.QueueType.SINGLE == poolType )
+        if (poolType == null)
         {
-            eventQueue = new CacheEventQueue<>( listener, listenerId, cacheName, maxFailure, waitBeforeRetry );
-        }
-        else if ( ICacheEventQueue.QueueType.POOLED == poolType )
-        {
-            eventQueue = new PooledCacheEventQueue<>( listener, listenerId, cacheName, maxFailure, waitBeforeRetry,
-                                                    threadPoolName );
+            poolType = ICacheEventQueue.QueueType.SINGLE;
         }
 
-        return eventQueue;
+        switch (poolType)
+        {
+            case POOLED: return new PooledCacheEventQueue<>(listener, listenerId, cacheName,
+                    maxFailure, waitBeforeRetry, threadPoolName);
+
+            case SINGLE:
+            default:     return new CacheEventQueue<>(listener, listenerId, cacheName,
+                    maxFailure, waitBeforeRetry);
+        }
     }
 
     /**
@@ -74,8 +76,9 @@ public class CacheEventQueueFactory<K, V>
      * @param poolType   SINGLE, POOLED
      * @return ICacheEventQueue
      */
-    public ICacheEventQueue<K, V> createCacheEventQueue( final ICacheListener<K, V> listener, final long listenerId, final String cacheName,
-                                                   final String threadPoolName, final ICacheEventQueue.QueueType poolType )
+    public static <K, V> ICacheEventQueue<K, V> createCacheEventQueue(
+            final ICacheListener<K, V> listener, final long listenerId, final String cacheName,
+            final String threadPoolName, final ICacheEventQueue.QueueType poolType )
     {
         return createCacheEventQueue( listener, listenerId, cacheName, 10, 500, threadPoolName, poolType );
     }

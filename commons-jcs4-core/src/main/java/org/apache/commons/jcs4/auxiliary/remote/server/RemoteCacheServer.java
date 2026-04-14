@@ -289,9 +289,9 @@ public class RemoteCacheServer<K, V>
                 }
             }
 
-            final CacheEventQueueFactory<KK, VV> fact = new CacheEventQueueFactory<>();
-            final ICacheEventQueue<KK, VV> q = fact.createCacheEventQueue( listener, id, cacheName, remoteCacheServerAttributes
-                .getEventQueuePoolName(), remoteCacheServerAttributes.getEventQueueType() );
+            final ICacheEventQueue<KK, VV> q = CacheEventQueueFactory.createCacheEventQueue(
+                    listener, id, cacheName, remoteCacheServerAttributes.getEventQueuePoolName(),
+                    remoteCacheServerAttributes.getEventQueueType() );
 
             eventQMap.put(Long.valueOf(listener.getListenerId()), q);
 

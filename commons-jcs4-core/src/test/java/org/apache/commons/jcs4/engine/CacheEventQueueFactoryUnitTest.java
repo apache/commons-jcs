@@ -41,10 +41,9 @@ class CacheEventQueueFactoryUnitTest
         final ICacheListener<String, String> listener = new MockRemoteCacheListener<>();
         final long listenerId = 1;
 
-        final CacheEventQueueFactory<String, String> factory = new CacheEventQueueFactory<>();
-
         // DO WORK
-        final ICacheEventQueue<String, String> result = factory.createCacheEventQueue( listener, listenerId, "cacheName", "threadPoolName", eventQueueType );
+        final ICacheEventQueue<String, String> result = CacheEventQueueFactory.createCacheEventQueue(
+                listener, listenerId, "cacheName", "threadPoolName", eventQueueType );
 
         // VERIFY
         assertNotNull( result, "Should have a result" );
@@ -60,10 +59,9 @@ class CacheEventQueueFactoryUnitTest
         final ICacheListener<String, String> listener = new MockRemoteCacheListener<>();
         final long listenerId = 1;
 
-        final CacheEventQueueFactory<String, String> factory = new CacheEventQueueFactory<>();
-
         // DO WORK
-        final ICacheEventQueue<String, String> result = factory.createCacheEventQueue( listener, listenerId, "cacheName", "threadPoolName", eventQueueType );
+        final ICacheEventQueue<String, String> result = CacheEventQueueFactory.createCacheEventQueue(
+                listener, listenerId, "cacheName", "threadPoolName", eventQueueType );
 
         // VERIFY
         assertNotNull( result, "Should have a result" );
