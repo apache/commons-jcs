@@ -33,6 +33,8 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
@@ -44,6 +46,7 @@ import org.apache.commons.jcs4.engine.behavior.IShutdownObserver;
 import org.apache.commons.jcs4.log.Log;
 import org.apache.commons.jcs4.utils.discovery.behavior.IDiscoveryListener;
 import org.apache.commons.jcs4.utils.net.HostNameUtil;
+import org.apache.commons.jcs4.utils.threadpool.DaemonThreadFactory;
 
 /**
  * This service creates a listener that can create lateral caches and add them to the no wait list.
@@ -60,8 +63,8 @@ public class UDPDiscoveryService
     /** The logger */
     private static final Log log = Log.getLog( UDPDiscoveryService.class );
 
-    /** Thread that listens for messages */
-    private Thread udpReceiverThread;
+    /** Manage thread that listens for messages */
+    private ExecutorService udpReceiverExecutor;
 
     /** The runnable that the receiver thread runs */
     private UDPDiscoveryReceiver receiver;
@@ -85,6 +88,9 @@ public class UDPDiscoveryService
     /** Set of listeners. */
     private final Set<IDiscoveryListener> discoveryListeners = new CopyOnWriteArraySet<>();
 
+    /** Detected multicast address */
+    private InetAddress multicastAddress;
+
     /** Handle to cancel the scheduled broadcast task */
     private ScheduledFuture<?> broadcastTaskFuture;
 
@@ -102,22 +108,23 @@ public class UDPDiscoveryService
     {
         this.udpDiscoveryAttributes = attributes;
         this.serializer = serializer;
+        this.udpReceiverExecutor = Executors.newSingleThreadExecutor(new DaemonThreadFactory("JCS-UDPReceiver-"));
 
         try
         {
-            final InetAddress multicastAddress = InetAddress.getByName(
-                    getUdpDiscoveryAttributes().udpDiscoveryAddr());
+            this.multicastAddress = InetAddress.getByName(
+                    udpDiscoveryAttributes.udpDiscoveryAddr());
 
             // Set service address if still empty
-            if (getUdpDiscoveryAttributes().serviceAddress() == null ||
-                    getUdpDiscoveryAttributes().serviceAddress().isEmpty())
+            if (udpDiscoveryAttributes.serviceAddress() == null ||
+                    udpDiscoveryAttributes.serviceAddress().isEmpty())
             {
                 // Use same interface as for multicast
                 NetworkInterface serviceInterface = null;
-                if (getUdpDiscoveryAttributes().udpDiscoveryInterface() != null)
+                if (udpDiscoveryAttributes.udpDiscoveryInterface() != null)
                 {
                     serviceInterface = NetworkInterface.getByName(
-                            getUdpDiscoveryAttributes().udpDiscoveryInterface());
+                            udpDiscoveryAttributes.udpDiscoveryInterface());
                 }
                 else
                 {
@@ -143,7 +150,8 @@ public class UDPDiscoveryService
                                 // if Multicast uses IPv6, try to publish our IPv6 address
                                 break;
                             }
-                        } else if (serviceAddress instanceof Inet4Address &&
+                        }
+                        else if (serviceAddress instanceof Inet4Address &&
                             !serviceAddress.isLoopbackAddress() &&
                             !serviceAddress.isMulticastAddress() &&
                             serviceAddress.isSiteLocalAddress())
@@ -159,29 +167,21 @@ public class UDPDiscoveryService
                         serviceAddress = HostNameUtil.getLocalHostLANAddress();
                     }
 
-                    setUdpDiscoveryAttributes(
-                        getUdpDiscoveryAttributes().withServiceAddress(
-                            serviceAddress.getHostAddress()));
+                    this.udpDiscoveryAttributes = udpDiscoveryAttributes.withServiceAddress(
+                            serviceAddress.getHostAddress());
                 }
                 catch ( final UnknownHostException e )
                 {
                     log.error( "Couldn't get local host address", e );
                 }
             }
-
-            // todo need some kind of recovery here.
-            receiver = new UDPDiscoveryReceiver( this::processMessage,
-                    getUdpDiscoveryAttributes().udpDiscoveryInterface(),
-                    multicastAddress,
-                    getUdpDiscoveryAttributes().udpDiscoveryPort() );
-            receiver.setSerializer(serializer);
         }
         catch ( final IOException e )
         {
-            log.error( "Problem creating UDPDiscoveryReceiver, address [{0}] "
+            log.error( "Problem creating UDPDiscoveryService, address [{0}] "
                     + "port [{1}] we won't be able to find any other caches",
-                    getUdpDiscoveryAttributes().udpDiscoveryAddr(),
-                    getUdpDiscoveryAttributes().udpDiscoveryPort(), e );
+                    udpDiscoveryAttributes.udpDiscoveryAddr(),
+                    udpDiscoveryAttributes.udpDiscoveryPort(), e );
         }
 
         // initiate sender broadcast
@@ -196,7 +196,7 @@ public class UDPDiscoveryService
      */
     public boolean addDiscoveryListener( final IDiscoveryListener listener )
     {
-        return getDiscoveryListeners().add( listener );
+        return discoveryListeners.add( listener );
     }
 
     /**
@@ -234,7 +234,7 @@ public class UDPDiscoveryService
         // If we don't do this, then if a region using the default config is initialized after notification,
         // it will never get the service in it's no wait list.
         // Leave it to the listeners to decide what to do.
-        getDiscoveryListeners().forEach(listener -> listener.addDiscoveredService(discoveredService));
+        discoveryListeners.forEach(listener -> listener.addDiscoveredService(discoveredService));
     }
 
     /**
@@ -260,11 +260,11 @@ public class UDPDiscoveryService
         // the listeners need to be notified.
         getDiscoveredServices().stream()
             .filter(service -> {
-                if (now.isAfter(service.getLastHearFromTime().plus(getUdpDiscoveryAttributes().maxIdleTime())))
+                if (now.isAfter(service.getLastHearFromTime().plus(udpDiscoveryAttributes.maxIdleTime())))
                 {
                     log.info( "Removing service, since we haven't heard from it in "
-                            + "{0} seconds. service = {1}",
-                            getUdpDiscoveryAttributes().maxIdleTime().toSeconds(), service );
+                            + "{0}. service = {1}",
+                            udpDiscoveryAttributes.maxIdleTime(), service );
                     return true;
                 }
 
@@ -286,14 +286,6 @@ public class UDPDiscoveryService
     }
 
     /**
-     * @return the discoveryListeners
-     */
-    public Set<IDiscoveryListener> getCopyOfDiscoveryListeners()
-    {
-        return new HashSet<>(getDiscoveryListeners());
-    }
-
-    /**
      * @return the discoveredServices.
      */
     public Set<DiscoveredService> getDiscoveredServices()
@@ -302,30 +294,14 @@ public class UDPDiscoveryService
     }
 
     /**
-     * @return the discoveryListeners
-     */
-    private Set<IDiscoveryListener> getDiscoveryListeners()
-    {
-        return discoveryListeners;
-    }
-
-    /**
      * Return the serializer implementation
      *
      * @return the serializer
      * @since 3.1
      */
-    public IElementSerializer getSerializer()
+    protected IElementSerializer getSerializer()
     {
         return serializer;
-    }
-
-    /**
-     * @return the lca.
-     */
-    public UDPDiscoveryAttributes getUdpDiscoveryAttributes()
-    {
-        return this.udpDiscoveryAttributes;
     }
 
     /**
@@ -333,17 +309,17 @@ public class UDPDiscoveryService
      *
      * @since 3.1
      */
-    public void initiateBroadcast()
+    private void initiateBroadcast()
     {
         log.debug( "Creating sender for discoveryAddress = [{0}] and "
                 + "discoveryPort = [{1}] myHostName = [{2}] and port = [{3}]",
-                () -> getUdpDiscoveryAttributes().udpDiscoveryAddr(),
-                () -> getUdpDiscoveryAttributes().udpDiscoveryPort(),
-                () -> getUdpDiscoveryAttributes().serviceAddress(),
-                () -> getUdpDiscoveryAttributes().servicePort() );
+                udpDiscoveryAttributes::udpDiscoveryAddr,
+                udpDiscoveryAttributes::udpDiscoveryPort,
+                udpDiscoveryAttributes::serviceAddress,
+                udpDiscoveryAttributes::servicePort);
 
         try (UDPDiscoverySender sender = new UDPDiscoverySender(
-                getUdpDiscoveryAttributes(), getSerializer()))
+                udpDiscoveryAttributes, serializer))
         {
             sender.requestBroadcast();
 
@@ -367,7 +343,7 @@ public class UDPDiscoveryService
             log.info( "Removing {0}", service );
         }
 
-        getDiscoveryListeners().forEach(listener -> listener.removeDiscoveredService(service));
+        discoveryListeners.forEach(listener -> listener.removeDiscoveredService(service));
     }
 
     /**
@@ -378,7 +354,7 @@ public class UDPDiscoveryService
      */
     public boolean removeDiscoveryListener( final IDiscoveryListener listener )
     {
-        return getDiscoveryListeners().remove( listener );
+        return discoveryListeners.remove( listener );
     }
 
     /**
@@ -419,11 +395,11 @@ public class UDPDiscoveryService
         // create this connection each time.
         // more robust
         try (UDPDiscoverySender sender = new UDPDiscoverySender(
-                getUdpDiscoveryAttributes(), getSerializer()))
+                udpDiscoveryAttributes, serializer))
         {
             sender.passiveBroadcast(
-                    getUdpDiscoveryAttributes().serviceAddress(),
-                    getUdpDiscoveryAttributes().servicePort(),
+                    udpDiscoveryAttributes.serviceAddress(),
+                    udpDiscoveryAttributes.servicePort(),
                     getCacheNames() );
 
             log.debug( "Called sender to issue a passive broadcast" );
@@ -432,8 +408,8 @@ public class UDPDiscoveryService
         {
             log.error( "Problem calling the UDP Discovery Sender, address [{0}] "
                     + "port [{1}]",
-                    getUdpDiscoveryAttributes().udpDiscoveryAddr(),
-                    getUdpDiscoveryAttributes().udpDiscoveryPort(), e );
+                    udpDiscoveryAttributes.udpDiscoveryAddr(),
+                    udpDiscoveryAttributes.udpDiscoveryPort(), e );
         }
     }
 
@@ -452,15 +428,7 @@ public class UDPDiscoveryService
         // delay and the idle time.
         this.cleanupTaskFuture = scheduledExecutor.scheduleAtFixedRate(
                 this::cleanup, 0,
-                getUdpDiscoveryAttributes().maxIdleTime().toSeconds(), TimeUnit.SECONDS);
-    }
-
-    /**
-     * @param attr The UDPDiscoveryAttributes to set.
-     */
-    public void setUdpDiscoveryAttributes( final UDPDiscoveryAttributes attr )
-    {
-        this.udpDiscoveryAttributes = attr;
+                udpDiscoveryAttributes.maxIdleTime().toSeconds(), TimeUnit.SECONDS);
     }
 
     /**
@@ -481,6 +449,7 @@ public class UDPDiscoveryService
                 cleanupTaskFuture.cancel(false);
             }
 
+            udpReceiverExecutor.shutdown();
             if (receiver != null)
             {
                 log.info( "Shutting down UDP discovery service receiver." );
@@ -508,11 +477,11 @@ public class UDPDiscoveryService
         // create this connection each time.
         // more robust
         try (UDPDiscoverySender sender = new UDPDiscoverySender(
-                getUdpDiscoveryAttributes(), getSerializer()))
+                udpDiscoveryAttributes, serializer))
         {
             sender.removeBroadcast(
-                    getUdpDiscoveryAttributes().serviceAddress(),
-                    getUdpDiscoveryAttributes().servicePort(),
+                    udpDiscoveryAttributes.serviceAddress(),
+                    udpDiscoveryAttributes.servicePort(),
                     getCacheNames() );
 
             log.debug( "Called sender to issue a remove broadcast in shutdown." );
@@ -528,9 +497,22 @@ public class UDPDiscoveryService
      */
     public void startup()
     {
-        udpReceiverThread = new Thread(receiver);
-        udpReceiverThread.setDaemon(true);
-        // udpReceiverThread.setName( t.getName() + "--UDPReceiver" );
-        udpReceiverThread.start();
+        try
+        {
+            this.receiver = new UDPDiscoveryReceiver( this::processMessage,
+                    udpDiscoveryAttributes.udpDiscoveryInterface(),
+                    multicastAddress,
+                    udpDiscoveryAttributes.udpDiscoveryPort() );
+            this.receiver.setSerializer(serializer);
+        }
+        catch ( final IOException e )
+        {
+            log.error( "Problem creating UDPDiscoveryReceiver, address [{0}] "
+                    + "port [{1}] we won't be able to find any other caches",
+                    multicastAddress,
+                    udpDiscoveryAttributes.udpDiscoveryPort(), e );
+        }
+
+        udpReceiverExecutor.execute(receiver);
     }
 }

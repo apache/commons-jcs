@@ -89,9 +89,7 @@ public abstract class AbstractCacheEventQueue<K, V>
                 }
             }
 
-            log.warn( "Dropping Event and marking Event Queue {0} as "
-                    + "non-functional.", this );
-            destroy();
+            log.warn("Dropping Event {0}.", this);
         }
 
         /**

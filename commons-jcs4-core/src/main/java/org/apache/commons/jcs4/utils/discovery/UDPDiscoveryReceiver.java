@@ -190,7 +190,7 @@ public class UDPDiscoveryReceiver
     /**
      * @return the cnt.
      */
-    public int getCnt()
+    protected int getCnt()
     {
         return cnt.get();
     }
@@ -227,11 +227,11 @@ public class UDPDiscoveryReceiver
     @Override
     public void run()
     {
-        try
-        {
-            log.debug( "Waiting for message." );
+        log.debug( "Waiting for message." );
 
-            while (!shutdown.get())
+        while (!shutdown.get())
+        {
+            try
             {
                 final int activeKeys = selector.select();
                 if (activeKeys == 0)
@@ -281,7 +281,7 @@ public class UDPDiscoveryReceiver
                                 msg.setHost(sourceAddress.getHostString());
 
                                 log.debug( "Read object from address [{0}], object=[{1}]",
-                                        sourceAddress, obj );
+                                        sourceAddress, msg );
 
                                 pooledExecutor.execute(() -> handleMessage(msg));
                                 log.debug( "Passed handler to executor." );
@@ -293,20 +293,12 @@ public class UDPDiscoveryReceiver
                         }
                     }
                 }
-            } // end while
-        }
-        catch ( final IOException e )
-        {
-            log.error( "Unexpected exception in UDP receiver.", e );
-        }
-    }
-
-    /**
-     * @param cnt The cnt to set.
-     */
-    public void setCnt( final int cnt )
-    {
-        this.cnt.set(cnt);
+            }
+            catch ( final Exception e )
+            {
+                log.error( "Unexpected exception in UDP receiver.", e );
+            }
+        } // end while
     }
 
     /**

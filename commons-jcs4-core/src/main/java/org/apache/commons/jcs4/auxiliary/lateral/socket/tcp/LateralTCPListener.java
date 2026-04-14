@@ -56,7 +56,7 @@ public class LateralTCPListener<K, V>
     private static final Log log = Log.getLog( LateralTCPListener.class );
 
     /** How long the server will block on an accept(). 0 is infinite. */
-    private static final Duration acceptTimeOut = Duration.ofMillis(1000);
+    private static final Duration acceptTimeOut = Duration.ofSeconds(1);
 
     /** Map of available instances, keyed by port */
     private static final ConcurrentHashMap<String, ILateralCacheListener<?, ?>> instances =
@@ -131,7 +131,7 @@ public class LateralTCPListener<K, V>
      */
     protected LateralTCPListener( final ILateralTCPCacheAttributes ilca, final IElementSerializer serializer )
     {
-        this.setTcpLateralCacheAttributes( ilca );
+        this.tcpLateralCacheAttributes = ilca;
         this.serializer = serializer;
     }
 
@@ -171,7 +171,7 @@ public class LateralTCPListener<K, V>
     /**
      * @return the getCnt.
      */
-    public int getGetCnt()
+    protected int getGetCnt()
     {
         return getCnt;
     }
@@ -194,7 +194,7 @@ public class LateralTCPListener<K, V>
      *
      * @return the putCnt.
      */
-    public int getPutCnt()
+    protected int getPutCnt()
     {
         return putCnt;
     }
@@ -202,17 +202,9 @@ public class LateralTCPListener<K, V>
     /**
      * @return the removeCnt.
      */
-    public int getRemoveCnt()
+    protected int getRemoveCnt()
     {
         return removeCnt;
-    }
-
-    /**
-     * @return the tcpLateralCacheAttributes.
-     */
-    public ILateralTCPCacheAttributes getTcpLateralCacheAttributes()
-    {
-        return tcpLateralCacheAttributes;
     }
 
     /**
@@ -308,7 +300,7 @@ public class LateralTCPListener<K, V>
                 // check to see if they are the same
                 // if so, then don't remove, otherwise issue a remove
                 if (led.valHashCode() != -1 &&
-                    getTcpLateralCacheAttributes().isFilterRemoveByHashCode())
+                    tcpLateralCacheAttributes.isFilterRemoveByHashCode())
                 {
                     final ICacheElement<K, V> test = getCache( cacheName ).localGet( key );
                     if ( test != null )
@@ -364,7 +356,7 @@ public class LateralTCPListener<K, V>
         if ( log.isInfoEnabled() && getGetCnt() % 100 == 0 )
         {
             log.info( "Get Count (port {0}) = {1}",
-                    () -> getTcpLateralCacheAttributes().getTcpListenerPort(),
+                    () -> tcpLateralCacheAttributes.getTcpListenerPort(),
                     this::getGetCnt);
         }
 
@@ -400,7 +392,7 @@ public class LateralTCPListener<K, V>
         if ( log.isInfoEnabled() && getGetCnt() % 100 == 0 )
         {
             log.info( "GetMatching Count (port {0}) = {1}",
-                    () -> getTcpLateralCacheAttributes().getTcpListenerPort(),
+                    () -> tcpLateralCacheAttributes.getTcpListenerPort(),
                     this::getGetCnt);
         }
 
@@ -423,7 +415,7 @@ public class LateralTCPListener<K, V>
         if ( log.isInfoEnabled() && getPutCnt() % 100 == 0 )
         {
             log.info( "Put Count (port {0}) = {1}",
-                    () -> getTcpLateralCacheAttributes().getTcpListenerPort(),
+                    () -> tcpLateralCacheAttributes.getTcpListenerPort(),
                     this::getPutCnt);
         }
 
@@ -477,8 +469,8 @@ public class LateralTCPListener<K, V>
     {
         try
         {
-            final int port = getTcpLateralCacheAttributes().getTcpListenerPort();
-            final String host = getTcpLateralCacheAttributes().getTcpListenerHost();
+            final int port = tcpLateralCacheAttributes.getTcpListenerPort();
+            final String host = tcpLateralCacheAttributes.getTcpListenerHost();
 
             terminated.set(false);
             shutdown.set(false);
@@ -527,48 +519,55 @@ public class LateralTCPListener<K, V>
             // Check to see if we've been asked to exit, and exit
             while (!terminated.get())
             {
-                final int activeKeys = selector.select(acceptTimeOut.toMillis());
-                if (activeKeys == 0)
+                try
                 {
-                    continue;
-                }
-
-                for (final Iterator<SelectionKey> i = selector.selectedKeys().iterator(); i.hasNext();)
-                {
-                    if (terminated.get())
-                    {
-                        break;
-                    }
-
-                    final SelectionKey key = i.next();
-
-                    if (!key.isValid())
+                    final int activeKeys = selector.select(acceptTimeOut.toMillis());
+                    if (activeKeys == 0)
                     {
                         continue;
                     }
 
-                    if (key.isAcceptable())
+                    for (final Iterator<SelectionKey> i = selector.selectedKeys().iterator(); i.hasNext();)
                     {
-                        final ServerSocketChannel server = (ServerSocketChannel) key.channel();
-                        final SocketChannel client = server.accept();
-                        if (client == null)
+                        if (terminated.get())
                         {
-                            //may happen in non-blocking mode
+                            break;
+                        }
+
+                        final SelectionKey key = i.next();
+
+                        if (!key.isValid())
+                        {
                             continue;
                         }
 
-                        log.info("Connected to client at {0}", client.getRemoteAddress());
+                        if (key.isAcceptable())
+                        {
+                            final ServerSocketChannel server = (ServerSocketChannel) key.channel();
+                            final SocketChannel client = server.accept();
+                            if (client == null)
+                            {
+                                //may happen in non-blocking mode
+                                continue;
+                            }
 
-                        client.configureBlocking(false);
-                        client.register(selector, SelectionKey.OP_READ);
+                            log.info("Connected to client at {0}", client.getRemoteAddress());
+
+                            client.configureBlocking(false);
+                            client.register(selector, SelectionKey.OP_READ);
+                        }
+
+                        if (key.isReadable())
+                        {
+                            handleClient(key);
+                        }
+
+                        i.remove();
                     }
-
-                    if (key.isReadable())
-                    {
-                        handleClient(key);
-                    }
-
-                    i.remove();
+                }
+                catch (Exception e)
+                {
+                    log.error( "Exception occured handling client connection", e );
                 }
             }
 
@@ -633,14 +632,6 @@ public class LateralTCPListener<K, V>
     {
         this.listenerId = id;
         log.debug( "set listenerId = {0}", id );
-    }
-
-    /**
-     * @param tcpLateralCacheAttributes The tcpLateralCacheAttributes to set.
-     */
-    public void setTcpLateralCacheAttributes( final ILateralTCPCacheAttributes tcpLateralCacheAttributes )
-    {
-        this.tcpLateralCacheAttributes = tcpLateralCacheAttributes;
     }
 
     /**
