@@ -68,7 +68,7 @@ public class RemoteHttpCacheMonitor extends AbstractAuxiliaryCacheMonitor
     // just skip the monitoring until the next round.
     /** Main processing method for the RemoteHttpCacheMonitor object */
     @Override
-    protected void doWork()
+    protected void doWork() throws Exception
     {
         // If no factory has been set, skip
         if (factory == null)

@@ -79,7 +79,7 @@ public class RemoteCacheMonitor extends AbstractAuxiliaryCacheMonitor
     // just skip the monitoring until the next round.
     /** Main processing method for the RemoteCacheMonitor object */
     @Override
-    public void doWork()
+    public void doWork() throws Exception
     {
         // Monitor each RemoteCacheManager instance one after the other.
         // Each RemoteCacheManager corresponds to one remote connection.

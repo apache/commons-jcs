@@ -88,7 +88,7 @@ public abstract class AbstractAuxiliaryCacheMonitor extends Thread
     /**
      * do actual work
      */
-    protected abstract void doWork();
+    protected abstract void doWork() throws Exception;
 
     /**
      * Notifies the cache monitor that an error occurred, and kicks off the error recovery process.
@@ -162,7 +162,14 @@ public abstract class AbstractAuxiliaryCacheMonitor extends Thread
 
             log.debug( "Cache monitor running." );
 
-            doWork();
+            try
+            {
+                doWork();
+            }
+            catch (Exception e)
+            {
+                log.error("Cache monitor loop threw exception", e);
+            }
 
             try
             {

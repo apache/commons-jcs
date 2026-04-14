@@ -406,7 +406,7 @@ class TestTCPLateralUnitTest
         }
 
         @Override
-        protected void doWork()
+        protected void doWork() throws Exception
         {
             // nothing to do
         }

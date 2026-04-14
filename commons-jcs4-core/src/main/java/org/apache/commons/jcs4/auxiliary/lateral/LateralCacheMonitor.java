@@ -108,7 +108,7 @@ public class LateralCacheMonitor extends AbstractAuxiliaryCacheMonitor
      * Main processing method for the LateralCacheMonitor object
      */
     @Override
-    public void doWork()
+    public void doWork() throws Exception
     {
         // Monitor each cache instance one after the other.
         log.info( "Number of caches to monitor = " + caches.size() );
