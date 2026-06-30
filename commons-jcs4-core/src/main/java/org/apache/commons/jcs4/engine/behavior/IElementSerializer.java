@@ -57,7 +57,7 @@ public interface IElementSerializer
      * The method expects to find a four-byte length prefix in the
      * stream data.
      *
-     * @param <T> the type of the object
+     * @param <T> The type of the object
      * @param ic the input channel
      * @param readTimeoutMs the read timeout in milliseconds
      * @param loader class loader to use
@@ -125,7 +125,7 @@ public interface IElementSerializer
      * The method expects to find a four-byte length prefix in the
      * stream data.
      *
-     * @param <T> the type of the object
+     * @param <T> The type of the object
      * @param is the input stream
      * @param loader class loader to use
      * @throws IOException if serialization or reading fails
@@ -143,7 +143,7 @@ public interface IElementSerializer
      * The method expects to find a four-byte length prefix in the
      * stream data.
      *
-     * @param <T> the type of the object
+     * @param <T> The type of the object
      * @param ic the input channel
      * @param loader class loader to use
      * @throws IOException if serialization or reading fails
@@ -186,7 +186,7 @@ public interface IElementSerializer
     /**
      * Turns an object into a byte array.
      *
-     * @param <T> the type of the object
+     * @param <T> The type of the object
      * @param obj the object to serialize
      * @return byte[] a byte array containing the serialized object
      * @throws IOException if serialization fails
@@ -199,7 +199,7 @@ public interface IElementSerializer
      * asynchronous channel.
      * The stream data will be prepended with a four-byte length prefix.
      *
-     * @param <T> the type of the object
+     * @param <T> The type of the object
      * @param obj the object to serialize
      * @param oc the output channel
      * @param writeTimeoutMs the write timeout im milliseconds
@@ -237,7 +237,7 @@ public interface IElementSerializer
      * Convenience method to write serialized object into a stream.
      * The stream data will be prepended with a four-byte length prefix.
      *
-     * @param <T> the type of the object
+     * @param <T> The type of the object
      * @param obj the object to serialize
      * @param os the output stream
      * @return the number of bytes written
@@ -261,7 +261,7 @@ public interface IElementSerializer
      * Convenience method to write serialized object into a channel.
      * The stream data will be prepended with a four-byte length prefix.
      *
-     * @param <T> the type of the object
+     * @param <T> The type of the object
      * @param obj the object to serialize
      * @param oc the output channel
      * @return the number of bytes written
