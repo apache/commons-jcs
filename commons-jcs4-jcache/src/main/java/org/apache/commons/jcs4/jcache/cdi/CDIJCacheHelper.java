@@ -350,7 +350,7 @@ public class CDIJCacheHelper
 
     private static Class<?> findKeyType(final Object target)
     {
-        if (null == target)
+        if (target == null)
         {
             return null;
         }

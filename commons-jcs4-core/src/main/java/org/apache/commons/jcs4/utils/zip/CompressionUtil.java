@@ -109,7 +109,7 @@ public final class CompressionUtil
      */
     public static byte[] decompressByteArray( final byte[] input, final int bufferLength )
     {
-        if ( null == input )
+        if ( input == null )
         {
             throw new IllegalArgumentException( "Input was null" );
         }
