@@ -193,7 +193,7 @@ public class RemoteCacheStartupServlet
             this.registryHost = _registryHost;
         }
         final String regPortString = config.getInitParameter("registryPort");
-        if (null != regPortString)
+        if (regPortString != null)
         {
             setRegistryPort(regPortString);
         }
