@@ -34,7 +34,7 @@ public enum SerializeUtils {
     /**
      * Duplicates the given object.
      *
-     * @return a duplicate of the given Serializable object,
+     * @return A duplicate of the given Serializable object,
      * short-cutting the deep clone process if possible.
      */
     public <V extends Serializable> V dup(final V obj) {

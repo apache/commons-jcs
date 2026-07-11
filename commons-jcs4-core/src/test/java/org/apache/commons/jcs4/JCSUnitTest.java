@@ -52,7 +52,7 @@ class JCSUnitTest
     }
 
     /**
-     * @return a map
+     * @return A map
      */
     private HashMap<String, String> buildMap()
     {

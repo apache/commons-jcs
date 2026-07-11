@@ -83,7 +83,7 @@ public interface ICacheAccess<K, V>
      * The last access time in the ElementAttributes should be current.
      *
      * @param names set of Object cache keys
-     * @return a map of Object key to ICacheElement&lt;K, V&gt; element, or empty map if none of the keys are
+     * @return A map of Object key to ICacheElement&lt;K, V&gt; element, or empty map if none of the keys are
      *         present
      */
     Map<K, ICacheElement<K, V>> getCacheElements(Set<K> names);
@@ -121,7 +121,7 @@ public interface ICacheAccess<K, V>
      * The last access time in the ElementAttributes should be current.
      *
      * @param pattern key search pattern
-     * @return a map of Object key to ICacheElement&lt;K, V&gt; element, or empty map if no keys match the
+     * @return A map of Object key to ICacheElement&lt;K, V&gt; element, or empty map if no keys match the
      *         pattern
      */
     Map<K, ICacheElement<K, V>> getMatchingCacheElements(String pattern);

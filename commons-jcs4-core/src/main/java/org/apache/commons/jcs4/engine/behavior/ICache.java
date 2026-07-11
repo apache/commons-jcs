@@ -51,7 +51,7 @@ public interface ICache<K, V>
      * Gets an item from the cache.
      *
      * @param key
-     * @return a cache element, or null if there is no data in cache for this key
+     * @return A cache element, or null if there is no data in cache for this key
      * @throws IOException
      */
     ICacheElement<K, V> get( K key )
@@ -72,7 +72,7 @@ public interface ICache<K, V>
      * Auxiliaries will do their best to handle simple expressions.  For instance, the JDBC disk cache will convert * to % and . to _
      *
      * @param pattern
-     * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no data matching the pattern.
+     * @return A map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no data matching the pattern.
      * @throws IOException
      */
     Map<K, ICacheElement<K, V>> getMatching(String pattern)
@@ -82,7 +82,7 @@ public interface ICache<K, V>
      * Gets multiple items from the cache based on the given set of keys.
      *
      * @param keys
-     * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no data in cache for any of these keys
+     * @return A map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no data in cache for any of these keys
      * @throws IOException
      */
     Map<K, ICacheElement<K, V>> getMultiple(Set<K> keys)

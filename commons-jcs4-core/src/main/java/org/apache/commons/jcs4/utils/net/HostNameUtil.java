@@ -188,7 +188,7 @@ public class HostNameUtil
      * On systems with multiple network interfaces and mixed IPv6/IPv4 get a valid network
      * interface for binding to multicast
      *
-     * @return a network interface suitable for multicast
+     * @return A network interface suitable for multicast
      * @throws SocketException if a problem occurs while reading the network interfaces
      */
     public static NetworkInterface getMulticastNetworkInterface() throws SocketException

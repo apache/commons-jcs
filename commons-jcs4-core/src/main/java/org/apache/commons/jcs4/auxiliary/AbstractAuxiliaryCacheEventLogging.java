@@ -94,7 +94,7 @@ public abstract class AbstractAuxiliaryCacheEventLogging<K, V>
      * cache will convert * to % and . to _
      *
      * @param pattern
-     * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
+     * @return A map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
      *         data matching the pattern.
      * @throws IOException
      */
@@ -109,7 +109,7 @@ public abstract class AbstractAuxiliaryCacheEventLogging<K, V>
      * Gets matching items from the cache based on the given pattern.
      *
      * @param pattern
-     * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
+     * @return A map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
      *         data matching the pattern.
      * @throws IOException
      */
@@ -132,7 +132,7 @@ public abstract class AbstractAuxiliaryCacheEventLogging<K, V>
      * Gets multiple items from the cache based on the given set of keys.
      *
      * @param keys
-     * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
+     * @return A map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
      *         data in cache for any of these keys
      * @throws IOException
      */
@@ -147,7 +147,7 @@ public abstract class AbstractAuxiliaryCacheEventLogging<K, V>
      * Gets multiple items from the cache based on the given set of keys.
      *
      * @param keys
-     * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
+     * @return A map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
      *         data in cache for any of these keys
      * @throws IOException
      */
@@ -210,7 +210,7 @@ public abstract class AbstractAuxiliaryCacheEventLogging<K, V>
      * Implements getMatching.
      *
      * @param pattern
-     * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
+     * @return A map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
      *         data matching the pattern.
      * @throws IOException
      */

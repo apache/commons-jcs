@@ -400,7 +400,7 @@ public abstract class AbstractDiskCache<K, V>
      * cache will convert * to % and . to _
      *
      * @param pattern
-     * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
+     * @return A map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
      *         data matching the pattern.
      * @throws IOException
      */

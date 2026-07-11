@@ -92,7 +92,7 @@ public record PurgatoryElement<K, V>(
     }
 
     /**
-     * @return a hash of the key only
+     * @return A hash of the key only
      */
     @Override
     public int hashCode()

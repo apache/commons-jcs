@@ -99,7 +99,7 @@ public class BlockDisk implements AutoCloseable
      * Allocate a given number of blocks from the available set
      *
      * @param numBlocksNeeded
-     * @return an array of allocated blocks
+     * @return An array of allocated blocks
      */
     private int[] allocateBlocks(final int numBlocksNeeded)
     {

@@ -57,7 +57,7 @@ public class DaemonThreadFactory
      * Sets the thread to daemon.
      *
      * @param runner
-     * @return a daemon thread
+     * @return A daemon thread
      */
     @Override
     public Thread newThread( final Runnable runner )

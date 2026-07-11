@@ -109,7 +109,7 @@ public class MockCacheServiceNonLocal<K, V>
      *
      * @param cacheName
      * @param pattern
-     * @return an empty map
+     * @return An empty map
      * @throws IOException
      */
     @Override

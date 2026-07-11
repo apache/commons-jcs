@@ -73,7 +73,7 @@ public record UDPDiscoveryAttributes(
             );
 
     /**
-     * @return an object containing the default settings
+     * @return An object containing the default settings
      */
     public static UDPDiscoveryAttributes defaults()
     {

@@ -78,7 +78,7 @@ public abstract class AbstractMemoryCache<K, V>
      * Children must implement this method. A FIFO implementation may use a tree map. An LRU might
      * use a hashtable. The map returned should be threadsafe.
      *
-     * @return a threadsafe Map
+     * @return A threadsafe Map
      */
     public abstract Map<K, MemoryElementDescriptor<K, V>> createMap();
 
@@ -197,7 +197,7 @@ public abstract class AbstractMemoryCache<K, V>
     /**
      * Gets a set of the keys for all elements in the memory cache
      *
-     * @return a set of keys
+     * @return A set of keys
      */
     @Override
     public Set<K> getKeySet()
@@ -209,7 +209,7 @@ public abstract class AbstractMemoryCache<K, V>
      * Gets multiple items from the cache based on the given set of keys.
      *
      * @param keys
-     * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
+     * @return A map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
      *         data in cache for any of these keys
      * @throws IOException
      */

@@ -280,7 +280,7 @@ public class LateralTCPListener<K, V>
      * descriptor.
      *
      * @param led the lateral element
-     * @return a possible response
+     * @return A possible response
      * @throws IOException
      */
     private Object handleElement(final LateralElementDescriptor<K, V> led) throws IOException
@@ -346,7 +346,7 @@ public class LateralTCPListener<K, V>
      *
      * @param cacheName
      * @param key
-     * @return a ICacheElement
+     * @return A ICacheElement
      * @throws IOException
      */
     public ICacheElement<K, V> handleGet( final String cacheName, final K key )
@@ -369,7 +369,7 @@ public class LateralTCPListener<K, V>
      * Gets the cache that was injected by the lateral factory. Calls getKeySet on the cache.
      *
      * @param cacheName the name of the cache
-     * @return a set of keys
+     * @return A set of keys
      * @throws IOException
      */
     public Set<K> handleGetKeySet( final String cacheName ) throws IOException

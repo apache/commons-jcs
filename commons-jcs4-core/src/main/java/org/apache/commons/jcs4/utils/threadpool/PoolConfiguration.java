@@ -96,7 +96,7 @@ public record PoolConfiguration(
             DEFAULT_KEEPALIVE_TIME, DEFAULT_WHEN_BLOCKED_POLICY, DEFAULT_STARTUP_SIZE);
 
     /**
-     * @return an object containing the default settings
+     * @return An object containing the default settings
      */
     public static PoolConfiguration defaults()
     {

@@ -82,7 +82,7 @@ public interface IMemoryCache<K, V>
     /**
      * Gets a set of the keys for all elements in the memory cache.
      *
-     * @return a set of the key type
+     * @return A set of the key type
      * TODO This should probably be done in chunks with a range passed in. This
      *       will be a problem if someone puts a 1,000,000 or so items in a
      *       region.
@@ -93,7 +93,7 @@ public interface IMemoryCache<K, V>
      * Gets multiple items from the cache based on the given set of keys.
      *
      * @param keys
-     * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map
+     * @return A map of K key to ICacheElement&lt;K, V&gt; element, or an empty map
      * if there is no data in cache for any of these keys
      * @throws IOException
      */

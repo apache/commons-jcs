@@ -123,7 +123,7 @@ public record ElementAttributes(
             new ArrayList<>());
 
     /**
-     * @return an object containing the default settings
+     * @return An object containing the default settings
      */
     public static ElementAttributes defaults()
     {

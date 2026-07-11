@@ -162,7 +162,7 @@ public class JDBCDiskCacheFactory
      *
      * @param cattr the cache configuration
      * @param configProps the configuration properties object
-     * @return a DataSourceFactory
+     * @return A DataSourceFactory
      * @throws SQLException if a database access error occurs
      */
     protected DataSourceFactory getDataSourceFactory( final JDBCDiskCacheAttributes cattr,
@@ -233,7 +233,7 @@ public class JDBCDiskCacheFactory
      * Gets a table state for a given table name
      *
      * @param tableName
-     * @return a cached instance of the table state
+     * @return A cached instance of the table state
      */
     protected TableState getTableState(final String tableName)
     {

@@ -159,7 +159,7 @@ public class LateralTCPCacheFactory
      * @param cacheEventLogger the cache event logger
      * @param elementSerializer the serializer for cache elements
      * @param keyMatcher the key matcher for getMatching() calls
-     * @return a LateralTCPCacheNoWaitFacade
+     * @return A LateralTCPCacheNoWaitFacade
      */
     @Override
     public <K, V> LateralTCPCacheNoWaitFacade<K, V> createCache(final AuxiliaryCacheAttributes iaca,
@@ -216,7 +216,7 @@ public class LateralTCPCacheFactory
      * @param cacheEventLogger the event logger
      * @param elementSerializer the serializer to use when sending or receiving
      * @param keyMatcher the key matcher for getMatching() calls
-     * @return a LateralTCPCacheNoWait
+     * @return A LateralTCPCacheNoWait
      */
     public <K, V> LateralTCPCacheNoWait<K, V> createCacheNoWait( final ILateralTCPCacheAttributes lca,
             final ICacheEventLogger cacheEventLogger, final IElementSerializer elementSerializer,

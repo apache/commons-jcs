@@ -133,7 +133,7 @@ public class CacheAccess<K, V>
      * The last access time in the ElementAttributes should be current.
      *
      * @param names set of Serializable cache keys
-     * @return a map of K key to ICacheElement&lt;K, V&gt; element, or empty map if none of the keys are present
+     * @return A map of K key to ICacheElement&lt;K, V&gt; element, or empty map if none of the keys are present
      */
     @Override
     public Map<K, ICacheElement<K, V>> getCacheElements( final Set<K> names )
@@ -211,7 +211,7 @@ public class CacheAccess<K, V>
      * The last access time in the ElementAttributes should be current.
      *
      * @param pattern key search pattern
-     * @return a map of K key to ICacheElement&lt;K, V&gt; element, or empty map if no keys match the pattern
+     * @return A map of K key to ICacheElement&lt;K, V&gt; element, or empty map if no keys match the pattern
      */
     @Override
     public Map<K, ICacheElement<K, V>> getMatchingCacheElements( final String pattern )

@@ -269,7 +269,7 @@ public class RemoteCacheNoWait<K, V>
      * request on to the server rather than looping through the requested keys.
      *
      * @param keys
-     * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
+     * @return A map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
      *         data in cache for any of these keys
      * @throws IOException
      */

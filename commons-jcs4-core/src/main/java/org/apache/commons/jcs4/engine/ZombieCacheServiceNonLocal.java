@@ -203,7 +203,7 @@ public class ZombieCacheServiceNonLocal<K, V>
      * @param cacheName   region name
      * @param keys   item key
      * @param requesterId   identity of the caller
-     * @return an empty map. zombies have no internal data
+     * @return An empty map. zombies have no internal data
      */
     @Override
     public Map<K, ICacheElement<K, V>> getMultiple( final String cacheName, final Set<K> keys, final long requesterId )

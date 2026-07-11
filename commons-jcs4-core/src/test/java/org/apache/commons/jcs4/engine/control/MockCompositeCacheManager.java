@@ -63,7 +63,7 @@ public class MockCompositeCacheManager
 
     /**
      * @param cacheName
-     * @return a CompositeCache
+     * @return A CompositeCache
      */
     @Override
     @SuppressWarnings("unchecked")

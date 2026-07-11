@@ -456,7 +456,7 @@ public class CompositeCache<K, V>
     /**
      * Gets the list of auxiliary caches for this region.
      *
-     * @return a list of auxiliary caches, may be empty, never null
+     * @return A list of auxiliary caches, may be empty, never null
      * @since 3.1
      */
     public List<AuxiliaryCache<K, V>> getAuxCacheList()
@@ -591,7 +591,7 @@ public class CompositeCache<K, V>
      * Build a map of all the matching elements in all of the auxiliaries and memory.
      *
      * @param pattern
-     * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
+     * @return A map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
      *         data in cache for any matching keys
      */
     @Override
@@ -610,7 +610,7 @@ public class CompositeCache<K, V>
      *
      * @param pattern
      * @param localOnly
-     * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
+     * @return A map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
      *         data in cache for any matching keys
      */
     protected Map<K, ICacheElement<K, V>> getMatching(final String pattern, final boolean localOnly)
@@ -644,7 +644,7 @@ public class CompositeCache<K, V>
      *
      * @param pattern
      * @param localOnly
-     * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
+     * @return A map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
      *         data in cache for any matching keys
      * @throws IOException
      */
@@ -691,7 +691,7 @@ public class CompositeCache<K, V>
      * set. Returns a map: key -&gt; result.
      *
      * @param pattern
-     * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
+     * @return A map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
      *         data in cache for any matching keys
      * @throws IOException
      */
@@ -739,7 +739,7 @@ public class CompositeCache<K, V>
      * Gets multiple items from the cache based on the given set of keys.
      *
      * @param keys
-     * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
+     * @return A map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
      *         data in cache for any of these keys
      */
     @Override
@@ -1050,7 +1050,7 @@ public class CompositeCache<K, V>
      * go remote or laterally for this data.
      *
      * @param pattern
-     * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
+     * @return A map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
      *         data in cache for any matching keys
      */
     public Map<K, ICacheElement<K, V>> localGetMatching(final String pattern)
@@ -1063,7 +1063,7 @@ public class CompositeCache<K, V>
      * laterally for this data.
      *
      * @param keys
-     * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
+     * @return A map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
      *         data in cache for any of these keys
      */
     public Map<K, ICacheElement<K, V>> localGetMultiple(final Set<K> keys)

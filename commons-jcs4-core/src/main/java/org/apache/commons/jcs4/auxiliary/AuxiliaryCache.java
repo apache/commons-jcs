@@ -44,7 +44,7 @@ public interface AuxiliaryCache<K, V>
     /**
      * Gets a set of the keys for all elements in the auxiliary cache.
      *
-     * @return a set of the key type
+     * @return A set of the key type
      * TODO This should probably be done in chunks with a range passed in. This
      *       will be a problem if someone puts a 1,000,000 or so items in a
      *       region.

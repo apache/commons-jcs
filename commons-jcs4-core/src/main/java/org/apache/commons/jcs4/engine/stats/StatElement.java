@@ -28,7 +28,7 @@ public record StatElement<V>(String name, V data)
     implements IStatElement<V>
 {
     /**
-     * @return a readable string.
+     * @return A readable string.
      */
     @Override
     public String toString()

@@ -494,7 +494,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
     /**
      * Create the map for keys that contain the index position on disk.
      *
-     * @return a new empty Map for keys and IndexedDiskElementDescriptors
+     * @return A new empty Map for keys and IndexedDiskElementDescriptors
      */
     private Map<K, IndexedDiskElementDescriptor> createInitialKeyMap()
     {
@@ -1293,7 +1293,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
      * <p>
      *
      * @param pattern
-     * @return a map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
+     * @return A map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
      *         data in cache matching keys
      */
     @Override
