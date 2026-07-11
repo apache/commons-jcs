@@ -247,7 +247,7 @@ public class OptionConverter
      * hidden.
      * @param key The key to search for.
      * @param def The default value to return.
-     * @return the string value of the system property, or the default value if there is no property
+     * @return The string value of the system property, or the default value if there is no property
      *         with that key.
      * @since 1.1
      */

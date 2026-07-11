@@ -34,7 +34,7 @@ public interface ILateralCacheListener<K, V>
     void dispose();
 
     /**
-     * @return the cacheMgr.
+     * @return The cacheMgr.
      */
     ICompositeCacheManager getCacheManager();
 

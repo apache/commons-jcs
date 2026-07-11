@@ -123,7 +123,7 @@ public class SharedPoolDataSourceFactory implements DataSourceFactory
     }
 
     /**
-     * @return the name of the factory.
+     * @return The name of the factory.
      */
     @Override
 	public String getName()

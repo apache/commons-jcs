@@ -28,27 +28,27 @@ public interface ICacheEvent<K>
     extends Serializable
 {
     /**
-     * @return the eventName
+     * @return The eventName
      */
     CacheEventType eventType();
 
     /**
-     * @return the key
+     * @return The key
      */
     K key();
 
     /**
-     * @return the optionalDetails
+     * @return The optionalDetails
      */
     String optionalDetails();
 
     /**
-     * @return the region
+     * @return The region
      */
     String region();
 
     /**
-     * @return the source
+     * @return The source
      */
     String source();
 }

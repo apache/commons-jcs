@@ -66,7 +66,7 @@ public class UDPDiscoveryMessage
     private ArrayList<String> cacheNames = new ArrayList<>();
 
     /**
-     * @return the cacheNames.
+     * @return The cacheNames.
      */
     public ArrayList<String> getCacheNames()
     {
@@ -74,7 +74,7 @@ public class UDPDiscoveryMessage
     }
 
     /**
-     * @return the host.
+     * @return The host.
      */
     public String getHost()
     {
@@ -82,7 +82,7 @@ public class UDPDiscoveryMessage
     }
 
     /**
-     * @return the messageType.
+     * @return The messageType.
      */
     public BroadcastType getMessageType()
     {
@@ -90,7 +90,7 @@ public class UDPDiscoveryMessage
     }
 
     /**
-     * @return the port.
+     * @return The port.
      */
     public int getPort()
     {
@@ -98,7 +98,7 @@ public class UDPDiscoveryMessage
     }
 
     /**
-     * @return the requesterId.
+     * @return The requesterId.
      */
     public long getRequesterId()
     {

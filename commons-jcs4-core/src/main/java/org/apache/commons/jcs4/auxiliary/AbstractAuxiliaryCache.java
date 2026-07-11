@@ -90,7 +90,7 @@ public abstract class AbstractAuxiliaryCache<K, V>
     /**
      * Gets the extra info for the event log.
      *
-     * @return the eventLogSourceName
+     * @return The eventLogSourceName
      */
     @Override
     protected String getEventLogSourceName()

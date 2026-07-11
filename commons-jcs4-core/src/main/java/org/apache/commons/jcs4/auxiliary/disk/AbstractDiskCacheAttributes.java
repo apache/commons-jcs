@@ -93,7 +93,7 @@ public abstract class AbstractDiskCacheAttributes extends AbstractAuxiliaryCache
      * for a particular region.
      * <p>
      *
-     * @return the time.
+     * @return The time.
      */
     @Override
     public Duration getShutdownSpoolTimeLimit()
@@ -102,7 +102,7 @@ public abstract class AbstractDiskCacheAttributes extends AbstractAuxiliaryCache
     }
 
     /**
-     * @return the allowRemoveAll.
+     * @return The allowRemoveAll.
      */
     @Override
     public boolean isAllowRemoveAll()

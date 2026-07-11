@@ -57,7 +57,7 @@ public interface IRemoteCacheListener<K, V>
      * This is for debugging. It allows the remote cache server to log the address of any listeners
      * that register.
      *
-     * @return the local host address.
+     * @return The local host address.
      * @throws IOException
      */
     String getLocalHostAddress()

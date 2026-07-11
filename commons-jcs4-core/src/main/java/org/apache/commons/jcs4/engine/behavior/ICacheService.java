@@ -45,7 +45,7 @@ public interface ICacheService<K, V>
      *
      * @param cacheName
      * @param key
-     * @return the ICacheElement&lt;K, V&gt; or null if not found
+     * @return The ICacheElement&lt;K, V&gt; or null if not found
      * @throws IOException
      */
     ICacheElement<K, V> get( String cacheName, K key )

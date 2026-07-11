@@ -38,7 +38,7 @@ public interface IRemoteCacheServerAttributes
     String getConfigFileName();
 
     /**
-     * @return the registryKeepAliveDelay
+     * @return The registryKeepAliveDelay
      */
     Duration getRegistryKeepAliveDelay();
 
@@ -64,7 +64,7 @@ public interface IRemoteCacheServerAttributes
     /**
      * Should we try to keep the registry alive
      *
-     * @return the useRegistryKeepAlive
+     * @return The useRegistryKeepAlive
      */
     boolean isUseRegistryKeepAlive();
 }

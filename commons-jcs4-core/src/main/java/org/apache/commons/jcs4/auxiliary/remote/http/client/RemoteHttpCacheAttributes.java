@@ -64,7 +64,7 @@ public class RemoteHttpCacheAttributes
     private String remoteHttpClientClassName = DEFAULT_REMOTE_HTTP_CLIENT_CLASS_NAME;
 
     /**
-     * @return the connectionTimeout
+     * @return The connectionTimeout
      */
     public Duration getConnectionTimeout()
     {
@@ -72,7 +72,7 @@ public class RemoteHttpCacheAttributes
     }
 
     /**
-     * @return the httpVersion
+     * @return The httpVersion
      */
     public String getHttpVersion()
     {
@@ -80,7 +80,7 @@ public class RemoteHttpCacheAttributes
     }
 
     /**
-     * @return the maxConnectionsPerHost
+     * @return The maxConnectionsPerHost
      */
     public int getMaxConnectionsPerHost()
     {
@@ -88,7 +88,7 @@ public class RemoteHttpCacheAttributes
     }
 
     /**
-     * @return the remoteHttpClientClassName
+     * @return The remoteHttpClientClassName
      */
     public String getRemoteHttpClientClassName()
     {
@@ -96,7 +96,7 @@ public class RemoteHttpCacheAttributes
     }
 
     /**
-     * @return the socketTimeout
+     * @return The socketTimeout
      */
     public Duration getSocketTimeout()
     {
@@ -104,7 +104,7 @@ public class RemoteHttpCacheAttributes
     }
 
     /**
-     * @return the url
+     * @return The url
      */
     public String getUrl()
     {
@@ -112,7 +112,7 @@ public class RemoteHttpCacheAttributes
     }
 
     /**
-     * @return the includeCacheNameInURL
+     * @return The includeCacheNameInURL
      */
     public boolean isIncludeCacheNameAsParameter()
     {
@@ -120,7 +120,7 @@ public class RemoteHttpCacheAttributes
     }
 
     /**
-     * @return the includeKeysAndPatternsInURL
+     * @return The includeKeysAndPatternsInURL
      */
     public boolean isIncludeKeysAndPatternsAsParameter()
     {
@@ -128,7 +128,7 @@ public class RemoteHttpCacheAttributes
     }
 
     /**
-     * @return the includeRequestTypeasAsParameter
+     * @return The includeRequestTypeasAsParameter
      */
     public boolean isIncludeRequestTypeasAsParameter()
     {

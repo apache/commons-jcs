@@ -69,7 +69,7 @@ public class RemoteCacheServerAttributes
     }
 
     /**
-     * @return the registryKeepAliveDelay
+     * @return The registryKeepAliveDelay
      */
     @Override
     public Duration getRegistryKeepAliveDelay()
@@ -102,7 +102,7 @@ public class RemoteCacheServerAttributes
     /**
      * Should we try to keep the registry alive
      *
-     * @return the useRegistryKeepAlive
+     * @return The useRegistryKeepAlive
      */
     @Override
     public boolean isUseRegistryKeepAlive()

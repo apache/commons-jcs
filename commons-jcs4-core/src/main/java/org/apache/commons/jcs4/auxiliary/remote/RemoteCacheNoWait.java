@@ -309,7 +309,7 @@ public class RemoteCacheNoWait<K, V>
     /**
      * This is temporary. It allows the manager to get the lister.
      *
-     * @return the instance of the remote cache client used by this object
+     * @return The instance of the remote cache client used by this object
      */
     protected IRemoteCacheClient<K, V> getRemoteCache()
     {

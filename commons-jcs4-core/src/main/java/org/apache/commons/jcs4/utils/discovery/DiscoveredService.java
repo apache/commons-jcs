@@ -95,7 +95,7 @@ public class DiscoveredService
     }
 
     /**
-     * @return the cacheNames
+     * @return The cacheNames
      */
     public ArrayList<String> getCacheNames()
     {
@@ -103,7 +103,7 @@ public class DiscoveredService
     }
 
     /**
-     * @return the lastHearFromTime.
+     * @return The lastHearFromTime.
      */
     public Instant getLastHearFromTime()
     {
@@ -111,7 +111,7 @@ public class DiscoveredService
     }
 
     /**
-     * @return the serviceAddress.
+     * @return The serviceAddress.
      */
     public String getServiceAddress()
     {
@@ -119,7 +119,7 @@ public class DiscoveredService
     }
 
     /**
-     * @return the servicePort.
+     * @return The servicePort.
      */
     public int getServicePort()
     {

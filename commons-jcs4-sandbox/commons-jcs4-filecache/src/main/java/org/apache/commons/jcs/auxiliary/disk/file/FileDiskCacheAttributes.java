@@ -64,7 +64,7 @@ public class FileDiskCacheAttributes
     }
 
     /**
-     * @return the maxNumberOfFiles
+     * @return The maxNumberOfFiles
      */
     public int getMaxNumberOfFiles()
     {
@@ -80,7 +80,7 @@ public class FileDiskCacheAttributes
     }
 
     /**
-     * @return the maxRetriesOnDelete
+     * @return The maxRetriesOnDelete
      */
     public int getMaxRetriesOnDelete()
     {
@@ -96,7 +96,7 @@ public class FileDiskCacheAttributes
     }
 
     /**
-     * @return the touchOnGet
+     * @return The touchOnGet
      */
     public boolean isTouchOnGet()
     {
@@ -112,7 +112,7 @@ public class FileDiskCacheAttributes
     }
 
     /**
-     * @return the maxRetriesOnTouch
+     * @return The maxRetriesOnTouch
      */
     public int getMaxRetriesOnTouch()
     {

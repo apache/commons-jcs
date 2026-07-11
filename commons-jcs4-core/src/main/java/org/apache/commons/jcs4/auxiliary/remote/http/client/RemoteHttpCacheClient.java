@@ -265,7 +265,7 @@ public class RemoteHttpCacheClient<K, V>
     }
 
     /**
-     * @return the remoteDispatcher
+     * @return The remoteDispatcher
      */
     public IRemoteCacheDispatcher getRemoteDispatcher()
     {
@@ -273,7 +273,7 @@ public class RemoteHttpCacheClient<K, V>
     }
 
     /**
-     * @return the remoteHttpCacheAttributes
+     * @return The remoteHttpCacheAttributes
      */
     public RemoteHttpCacheAttributes getRemoteHttpCacheAttributes()
     {
@@ -325,7 +325,7 @@ public class RemoteHttpCacheClient<K, V>
     }
 
     /**
-     * @return the initialized
+     * @return The initialized
      */
     protected boolean isInitialized()
     {

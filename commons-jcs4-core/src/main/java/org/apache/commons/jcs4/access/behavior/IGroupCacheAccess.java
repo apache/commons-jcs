@@ -45,7 +45,7 @@ public interface IGroupCacheAccess<K, V>
      * Gets the set of keys of objects currently in the group
      *
      * @param group
-     * @return the set of group keys.
+     * @return The set of group keys.
      */
     Set<K> getGroupKeys( String group );
 

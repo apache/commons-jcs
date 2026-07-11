@@ -37,7 +37,7 @@ public interface AuxiliaryCache<K, V>
      * This returns the generic attributes for an auxiliary cache. Most implementations will cast
      * this to a more specific type.
      *
-     * @return the attributes for the auxiliary cache
+     * @return The attributes for the auxiliary cache
      */
     AuxiliaryCacheAttributes getAuxiliaryCacheAttributes();
 

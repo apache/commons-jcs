@@ -170,7 +170,7 @@ public interface Log
     /**
      * Gets the logger name.
      *
-     * @return the logger name.
+     * @return The logger name.
      */
     String getName();
 
@@ -349,7 +349,7 @@ public interface Log
     /**
      * Returns the root logger.
      *
-     * @return the root logger, named {@link ROOT_LOGGER_NAME}.
+     * @return The root logger, named {@link ROOT_LOGGER_NAME}.
      */
     static Log getRootLogger()
     {

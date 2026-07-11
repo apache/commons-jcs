@@ -286,7 +286,7 @@ public class UDPDiscoveryService
     }
 
     /**
-     * @return the discoveredServices.
+     * @return The discoveredServices.
      */
     public Set<DiscoveredService> getDiscoveredServices()
     {
@@ -296,7 +296,7 @@ public class UDPDiscoveryService
     /**
      * Return the serializer implementation
      *
-     * @return the serializer
+     * @return The serializer
      * @since 3.1
      */
     protected IElementSerializer getSerializer()

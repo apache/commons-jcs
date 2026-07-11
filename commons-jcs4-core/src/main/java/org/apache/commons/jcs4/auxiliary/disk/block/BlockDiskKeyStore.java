@@ -557,7 +557,7 @@ public class BlockDiskKeyStore<K>
      * Gets the size of the key hash.
      * <p>
      *
-     * @return the number of keys.
+     * @return The number of keys.
      */
     public int size()
     {

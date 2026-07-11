@@ -36,7 +36,7 @@ public interface IElementEvent<T>
     ElementEventType elementEventType();
 
     /**
-     * @return the source of the event.
+     * @return The source of the event.
      */
     T source();
 }

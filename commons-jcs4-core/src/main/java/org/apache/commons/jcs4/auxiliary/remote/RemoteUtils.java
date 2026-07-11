@@ -105,7 +105,7 @@ public class RemoteUtils
      * <p>
      *
      * @param port
-     * @return the registry
+     * @return The registry
      */
     public static Registry createRegistry(int port)
     {
@@ -162,7 +162,7 @@ public class RemoteUtils
      *            the remote location
      * @param serviceName
      *            the remote service name
-     * @return the URL for RMI lookup
+     * @return The URL for RMI lookup
      */
     public static String getNamingURL(final RemoteLocation location, final String serviceName)
     {
@@ -178,7 +178,7 @@ public class RemoteUtils
      *            the remote port
      * @param serviceName
      *            the remote service name
-     * @return the URL for RMI lookup
+     * @return The URL for RMI lookup
      */
     public static String getNamingURL(final String registryHost, final int registryPort, final String serviceName)
     {

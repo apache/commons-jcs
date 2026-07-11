@@ -169,7 +169,7 @@ public class JDBCDiskCache<K, V>
     /**
      * Removed the expired. (now - create time) &gt; max life
      *
-     * @return the number deleted
+     * @return The number deleted
      */
     protected int deleteExpired()
     {
@@ -264,7 +264,7 @@ public class JDBCDiskCache<K, V>
 
     /**
      * Public so managers can access it.
-     * @return the dsFactory
+     * @return The dsFactory
      * @throws SQLException if getting a data source fails
      */
     public DataSource getDataSource() throws SQLException
@@ -275,7 +275,7 @@ public class JDBCDiskCache<K, V>
     /**
      * This is used by the event logging.
      *
-     * @return the location of the disk, either path or ip.
+     * @return The location of the disk, either path or ip.
      */
     @Override
     protected String getEventLoggingExtraInfo()
@@ -284,7 +284,7 @@ public class JDBCDiskCache<K, V>
     }
 
     /**
-     * @return the jdbcDiskCacheAttributes.
+     * @return The jdbcDiskCacheAttributes.
      */
     protected JDBCDiskCacheAttributes getJdbcDiskCacheAttributes()
     {
@@ -361,7 +361,7 @@ public class JDBCDiskCache<K, V>
     /**
      * Returns the name of the table.
      *
-     * @return the table name or UNDEFINED
+     * @return The table name or UNDEFINED
      */
     protected String getTableName()
     {
@@ -370,7 +370,7 @@ public class JDBCDiskCache<K, V>
     }
 
     /**
-     * @return the tableState.
+     * @return The tableState.
      */
     public TableState getTableState()
     {

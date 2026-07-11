@@ -251,7 +251,7 @@ public class RemoteCacheManager
      * Create new RemoteCacheNoWait instance
      *
      * @param cattr the cache configuration
-     * @return the instance
+     * @return The instance
      */
     @SuppressWarnings("unchecked")
     protected <K, V> RemoteCacheNoWait<K, V> newRemoteCacheNoWait(final IRemoteCacheAttributes cattr)

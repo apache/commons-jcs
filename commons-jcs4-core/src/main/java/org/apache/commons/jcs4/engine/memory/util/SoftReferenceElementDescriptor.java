@@ -47,7 +47,7 @@ public class SoftReferenceElementDescriptor<K, V>
     }
 
     /**
-     * @return the ce
+     * @return The ce
      */
     @Override
     public ICacheElement<K, V> getCacheElement()

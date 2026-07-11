@@ -132,7 +132,7 @@ public class RemoteCacheServerFactory
      * <p>
      * A remote cache is either a local cache or a cluster cache.
      * </p>
-     * @return the remoteCacheServer.
+     * @return The remoteCacheServer.
      */
     @SuppressWarnings("unchecked") // Need cast to specific RemoteCacheServer
     public static <K, V> RemoteCacheServer<K, V> getRemoteCacheServer()
@@ -141,7 +141,7 @@ public class RemoteCacheServerFactory
     }
 
     /**
-     * @return the serviceName
+     * @return The serviceName
      */
     protected static String getServiceName()
     {
@@ -236,7 +236,7 @@ public class RemoteCacheServerFactory
      *
      * @param config the configuration properties
      * @param port the local port
-     * @return the admin object instance
+     * @return The admin object instance
      * @throws Exception if lookup fails
      */
     private static ICacheServiceAdmin lookupCacheServiceAdmin(final Properties config, final int port) throws Exception

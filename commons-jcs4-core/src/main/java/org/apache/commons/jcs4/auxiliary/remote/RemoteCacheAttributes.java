@@ -125,7 +125,7 @@ public class RemoteCacheAttributes
     }
 
     /**
-     * @return the name of the pool
+     * @return The name of the pool
      */
     @Override
     public String getThreadPoolName()
@@ -137,7 +137,7 @@ public class RemoteCacheAttributes
      * The number of elements the zombie queue will hold. This queue is used to store events if we
      * loose our connection with the server.
      *
-     * @return the zombieQueueMaxSize.
+     * @return The zombieQueueMaxSize.
      */
     @Override
     public int getZombieQueueMaxSize()
@@ -154,7 +154,7 @@ public class RemoteCacheAttributes
      * If you set this option to false, you should set your local memory size to 0.
      * <p>
      * The remote cache manager uses this value to decide whether or not to register a listener.
-     * @return the receive value.
+     * @return The receive value.
      */
     @Override
     public boolean isReceive()

@@ -103,7 +103,7 @@ public interface ICacheEventQueue<K, V>
     /**
      * Return the type of event queue we are using, either single or pooled.
      *
-     * @return the queue type: single or pooled
+     * @return The queue type: single or pooled
      */
     QueueType getQueueType();
 

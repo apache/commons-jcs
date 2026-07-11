@@ -133,7 +133,7 @@ public class FileDiskCache<K, V>
      * Protected for testing.
      *
      * @param key
-     * @return the file for the key
+     * @return The file for the key
      */
     protected <KK> File file( final KK key )
     {
@@ -580,7 +580,7 @@ public class FileDiskCache<K, V>
     }
 
     /**
-     * @return the directory
+     * @return The directory
      */
     protected File getDirectory()
     {

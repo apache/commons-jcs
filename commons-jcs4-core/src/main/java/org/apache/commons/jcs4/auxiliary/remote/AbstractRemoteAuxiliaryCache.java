@@ -147,7 +147,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
     }
 
     /**
-     * @return the AuxiliaryCacheAttributes.
+     * @return The AuxiliaryCacheAttributes.
      */
     @Override
     public IRemoteCacheAttributes getAuxiliaryCacheAttributes()
@@ -213,7 +213,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
     }
 
     /**
-     * @return the remoteCacheListener
+     * @return The remoteCacheListener
      */
     protected IRemoteCacheListener<K, V> getRemoteCacheListener()
     {
@@ -221,7 +221,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
     }
 
     /**
-     * @return the remote
+     * @return The remote
      */
     protected ICacheServiceNonLocal<K, V> getRemoteCacheService()
     {

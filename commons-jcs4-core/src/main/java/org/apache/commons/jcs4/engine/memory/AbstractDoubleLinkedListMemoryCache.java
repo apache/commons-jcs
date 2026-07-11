@@ -153,7 +153,7 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
      * <p>
      *
      * @param numberToFree
-     * @return the number that were removed. if you ask to free 5, but there are only 3, you will
+     * @return The number that were removed. if you ask to free 5, but there are only 3, you will
      *         get 3.
      */
     @Override

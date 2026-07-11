@@ -116,7 +116,7 @@ public class Stats
     }
 
     /**
-     * @return the stats in a readable string
+     * @return The stats in a readable string
      */
     @Override
     public String toString()

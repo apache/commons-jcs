@@ -65,7 +65,7 @@ public class LateralTCPCacheFactory
      * @param attr  ILateralTCPCacheAttributes
      * @param cacheMgr the composite cache manager
      * @param serializer the serializer to use when receiving
-     * @return the listener if created, else null
+     * @return The listener if created, else null
      */
     private static <K, V> ILateralCacheListener<K, V> createListener( final ILateralTCPCacheAttributes attr,
             final ICompositeCacheManager cacheMgr, final IElementSerializer elementSerializer )

@@ -51,7 +51,7 @@ public class ElementEventHandlerMockImpl
     private int exceededIdleTimeBackgroundCount;
 
     /**
-     * @return the callCount.
+     * @return The callCount.
      */
     public int getCallCount()
     {
@@ -59,7 +59,7 @@ public class ElementEventHandlerMockImpl
     }
 
     /**
-     * @return the exceededIdleTimeBackground.
+     * @return The exceededIdleTimeBackground.
      */
     public int getExceededIdleTimeBackgroundCount()
     {
@@ -67,7 +67,7 @@ public class ElementEventHandlerMockImpl
     }
 
     /**
-     * @return the exceededMaxLifeBackground.
+     * @return The exceededMaxLifeBackground.
      */
     public int getExceededMaxLifeBackgroundCount()
     {
@@ -75,7 +75,7 @@ public class ElementEventHandlerMockImpl
     }
 
     /**
-     * @return the spoolCount.
+     * @return The spoolCount.
      */
     public int getSpoolCount()
     {
@@ -83,7 +83,7 @@ public class ElementEventHandlerMockImpl
     }
 
     /**
-     * @return the spoolNoDiskCount.
+     * @return The spoolNoDiskCount.
      */
     public int getSpoolNoDiskCount()
     {
@@ -91,7 +91,7 @@ public class ElementEventHandlerMockImpl
     }
 
     /**
-     * @return the spoolNotAllowedCount.
+     * @return The spoolNotAllowedCount.
      */
     public int getSpoolNotAllowedCount()
     {

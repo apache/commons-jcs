@@ -475,7 +475,7 @@ public class CompositeCacheManager
      *
      * @param auxName the auxiliary name
      * @param cacheName the region name
-     * @return the cache instance
+     * @return The cache instance
      */
     @Override
     @SuppressWarnings("unchecked") // because of common map for all auxiliary caches
@@ -580,7 +580,7 @@ public class CompositeCacheManager
     /**
      * This is exposed so other manager can get access to the props.
      *
-     * @return the configurationProperties
+     * @return The configurationProperties
      */
     @Override
     public Properties getConfigurationProperties()
@@ -611,7 +611,7 @@ public class CompositeCacheManager
     /**
      * Gets the element event queue
      *
-     * @return the elementEventQueue
+     * @return The elementEventQueue
      */
     public IElementEventQueue getElementEventQueue()
     {
@@ -621,7 +621,7 @@ public class CompositeCacheManager
     /**
      * Gets the scheduler service
      *
-     * @return the scheduledExecutor
+     * @return The scheduledExecutor
      */
     @Override
     public ScheduledExecutorService getScheduledExecutorService()
@@ -691,7 +691,7 @@ public class CompositeCacheManager
     }
 
     /**
-     * @return the isConfigured
+     * @return The isConfigured
      */
     public boolean isConfigured()
     {
@@ -699,7 +699,7 @@ public class CompositeCacheManager
     }
 
     /**
-     * @return the isInitialized
+     * @return The isInitialized
      */
     public boolean isInitialized()
     {

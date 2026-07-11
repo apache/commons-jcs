@@ -121,7 +121,7 @@ public class LateralTCPCacheAttributes
     private int zombieQueueMaxSize = DEFAULT_ZOMBIE_QUEUE_MAX_SIZE;
 
     /**
-     * @return the openTimeOut
+     * @return The openTimeOut
      */
     @Override
     public Duration getOpenTimeOut()
@@ -130,7 +130,7 @@ public class LateralTCPCacheAttributes
     }
 
     /**
-     * @return the socketTimeOut
+     * @return The socketTimeOut
      */
     @Override
     public Duration getSocketTimeOut()
@@ -185,7 +185,7 @@ public class LateralTCPCacheAttributes
     /**
      * The address to broadcast to if UDPDiscovery is enabled.
      *
-     * @return the udpDiscoveryAddr.
+     * @return The udpDiscoveryAddr.
      */
     @Override
     public String getUdpDiscoveryAddr()
@@ -196,7 +196,7 @@ public class LateralTCPCacheAttributes
     /**
      * The UDP discovery network interface if UDPDiscovery is enabled.
      *
-     * @return the udpDiscoveryInterface.
+     * @return The udpDiscoveryInterface.
      */
     @Override
     public String getUdpDiscoveryInterface()
@@ -207,7 +207,7 @@ public class LateralTCPCacheAttributes
    /**
      * The port to use if UDPDiscovery is enabled.
      *
-     * @return the udpDiscoveryPort.
+     * @return The udpDiscoveryPort.
      */
     @Override
     public int getUdpDiscoveryPort()
@@ -218,7 +218,7 @@ public class LateralTCPCacheAttributes
     /**
      * The time-to-live for the UDP multicast packets
      *
-     * @return the udpTTL.
+     * @return The udpTTL.
      * @since 3.1
      */
     @Override
@@ -280,7 +280,7 @@ public class LateralTCPCacheAttributes
     /**
      * Tests whether or not TCP laterals can try to find each other by multicast communication.
      *
-     * @return the udpDiscoveryEnabled.
+     * @return The udpDiscoveryEnabled.
      */
     @Override
     public boolean isUdpDiscoveryEnabled()
@@ -449,7 +449,7 @@ public class LateralTCPCacheAttributes
      * The number of elements the zombie queue will hold. This queue is used to store events if we
      * loose our connection with the server.
      *
-     * @return the zombieQueueMaxSize.
+     * @return The zombieQueueMaxSize.
      */
     @Override
     public int getZombieQueueMaxSize()
@@ -458,7 +458,7 @@ public class LateralTCPCacheAttributes
     }
 
     /**
-     * @return the receive.
+     * @return The receive.
      */
     @Override
     public boolean isReceive()

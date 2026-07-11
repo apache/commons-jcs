@@ -44,7 +44,7 @@ public class MemoryElementDescriptor<K, V>
     /**
      * Gets the cache element
      *
-     * @return the ce
+     * @return The ce
      */
     public ICacheElement<K, V> getCacheElement()
     {

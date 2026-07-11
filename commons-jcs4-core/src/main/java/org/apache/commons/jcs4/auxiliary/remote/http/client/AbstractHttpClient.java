@@ -106,7 +106,7 @@ public abstract class AbstractHttpClient
      * Execute the web service call
      *
      * @param builder builder for the post request
-     * @return the call response
+     * @return The call response
      * @throws IOException on i/o error
      */
     protected final HttpResponse doWebserviceCall( final RequestBuilder builder )
@@ -121,7 +121,7 @@ public abstract class AbstractHttpClient
     }
 
     /**
-     * @return the remoteHttpCacheAttributes
+     * @return The remoteHttpCacheAttributes
      */
     protected RemoteHttpCacheAttributes getRemoteHttpCacheAttributes()
     {

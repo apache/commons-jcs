@@ -36,7 +36,7 @@ public interface IStatElement<V> extends Serializable
     /**
      * Gets the name of the stat element, for example, HitCount
      *
-     * @return the stat element name
+     * @return The stat element name
      */
     String name();
 }

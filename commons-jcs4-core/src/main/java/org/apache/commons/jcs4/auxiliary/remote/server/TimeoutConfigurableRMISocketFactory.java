@@ -79,7 +79,7 @@ public class TimeoutConfigurableRMISocketFactory
     }
 
     /**
-     * @return the openTimeout
+     * @return The openTimeout
      */
     public Duration getOpenTimeout()
     {
@@ -87,7 +87,7 @@ public class TimeoutConfigurableRMISocketFactory
     }
 
     /**
-     * @return the readTimeout
+     * @return The readTimeout
      */
     public Duration getReadTimeout()
     {

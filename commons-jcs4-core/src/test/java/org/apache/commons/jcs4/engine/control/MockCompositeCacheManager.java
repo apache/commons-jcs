@@ -54,7 +54,7 @@ public class MockCompositeCacheManager
     }
 
     /**
-     * @return the cache.
+     * @return The cache.
      */
     public CompositeCache<?, ?> getCache()
     {
@@ -83,7 +83,7 @@ public class MockCompositeCacheManager
     /**
      * This is exposed so other manager can get access to the props.
      *
-     * @return the configurationProperties
+     * @return The configurationProperties
      */
     @Override
     public Properties getConfigurationProperties()

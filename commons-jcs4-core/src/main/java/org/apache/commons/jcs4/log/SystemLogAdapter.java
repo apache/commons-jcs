@@ -227,7 +227,7 @@ public class SystemLogAdapter implements Log
     /**
      * Gets the logger name.
      *
-     * @return the logger name.
+     * @return The logger name.
      */
     @Override
     public String getName()

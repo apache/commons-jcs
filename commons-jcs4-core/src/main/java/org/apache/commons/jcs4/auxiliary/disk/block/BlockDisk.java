@@ -124,7 +124,7 @@ public class BlockDisk implements AutoCloseable
      * Calculates the file offset for a particular block.
      *
      * @param block number
-     * @return the byte offset for this block in the file as a long
+     * @return The byte offset for this block in the file as a long
      * @since 2.0
      */
     protected long calculateByteOffsetForBlockAsLong(final int block)
@@ -136,7 +136,7 @@ public class BlockDisk implements AutoCloseable
      * The number of blocks needed.
      *
      * @param data
-     * @return the number of blocks needed to store the byte array
+     * @return The number of blocks needed to store the byte array
      */
     protected int calculateTheNumberOfBlocksNeeded(final byte[] data)
     {
@@ -190,7 +190,7 @@ public class BlockDisk implements AutoCloseable
     }
 
     /**
-     * @return the average size of the an element inserted.
+     * @return The average size of the an element inserted.
      */
     protected long getAveragePutSizeBytes()
     {
@@ -241,7 +241,7 @@ public class BlockDisk implements AutoCloseable
     }
 
     /**
-     * @return the blockSizeBytes.
+     * @return The blockSizeBytes.
      */
     protected int getBlockSizeBytes()
     {
@@ -249,7 +249,7 @@ public class BlockDisk implements AutoCloseable
     }
 
     /**
-     * @return the number of empty blocks.
+     * @return The number of empty blocks.
      */
     protected int getEmptyBlocks()
     {
@@ -259,7 +259,7 @@ public class BlockDisk implements AutoCloseable
     /**
      * This is used for debugging.
      *
-     * @return the file path.
+     * @return The file path.
      */
     protected String getFilePath()
     {
@@ -267,7 +267,7 @@ public class BlockDisk implements AutoCloseable
     }
 
     /**
-     * @return the numberOfBlocks.
+     * @return The numberOfBlocks.
      */
     protected int getNumberOfBlocks()
     {
@@ -277,7 +277,7 @@ public class BlockDisk implements AutoCloseable
     /**
      * Returns the file length.
      *
-     * @return the size of the file.
+     * @return The size of the file.
      * @throws IOException
      */
     protected long length()
@@ -290,7 +290,7 @@ public class BlockDisk implements AutoCloseable
      * Reads an object that is located in the specified blocks.
      *
      * @param blockNumbers
-     * @return the object instance
+     * @return The object instance
      * @throws IOException
      * @throws ClassNotFoundException
      */
@@ -428,7 +428,7 @@ public class BlockDisk implements AutoCloseable
      * <li>If the process fails we should decrement the block count if we took from it.</li>
      * </ol>
      * @param object
-     * @return the blocks we used.
+     * @return The blocks we used.
      * @throws IOException
      */
     protected <T> int[] write(final T object)

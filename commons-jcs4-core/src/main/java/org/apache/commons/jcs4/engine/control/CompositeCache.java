@@ -710,7 +710,7 @@ public class CompositeCache<K, V>
     /**
      * Access to the memory cache for instrumentation.
      *
-     * @return the MemoryCache implementation
+     * @return The MemoryCache implementation
      */
     public IMemoryCache<K, V> getMemoryCache()
     {
@@ -800,7 +800,7 @@ public class CompositeCache<K, V>
      *
      * @param keys
      * @param localOnly
-     * @return the elements found in the auxiliary caches
+     * @return The elements found in the auxiliary caches
      * @throws IOException
      */
     private Map<K, ICacheElement<K, V>> getMultipleFromAuxiliaryCaches(final Set<K> keys, final boolean localOnly)
@@ -850,7 +850,7 @@ public class CompositeCache<K, V>
      * Gets items for the keys in the set. Returns a map: key -> result.
      *
      * @param keys
-     * @return the elements found in the memory cache
+     * @return The elements found in the memory cache
      * @throws IOException
      */
     private Map<K, ICacheElement<K, V>> getMultipleFromMemory(final Set<K> keys)
@@ -925,7 +925,7 @@ public class CompositeCache<K, V>
     }
 
     /**
-     * @return the updateCount.
+     * @return The updateCount.
      */
     public long getUpdateCount()
     {
@@ -1158,7 +1158,7 @@ public class CompositeCache<K, V>
      *
      * @param keys
      * @param foundElements
-     * @return the original set of cache keys, minus any cache keys present in the map keys of the
+     * @return The original set of cache keys, minus any cache keys present in the map keys of the
      *         foundElements map
      */
     private Set<K> pruneKeysFound(final Set<K> keys, final Map<K, ICacheElement<K, V>> foundElements)

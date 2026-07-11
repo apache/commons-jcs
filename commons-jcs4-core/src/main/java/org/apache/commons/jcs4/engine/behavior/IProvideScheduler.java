@@ -28,7 +28,7 @@ public interface IProvideScheduler
 {
     /**
      * Gets an instance of a central ScheduledExecutorService
-     * @return the central scheduler
+     * @return The central scheduler
      */
     ScheduledExecutorService getScheduledExecutorService();
 }

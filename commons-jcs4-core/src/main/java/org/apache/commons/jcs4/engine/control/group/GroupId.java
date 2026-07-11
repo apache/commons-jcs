@@ -52,7 +52,7 @@ public record GroupId(String cacheName, String groupName)
     /**
      * Convert to string
      *
-     * @return the string representation of this ID.
+     * @return The string representation of this ID.
      */
     @Override
     public String toString()

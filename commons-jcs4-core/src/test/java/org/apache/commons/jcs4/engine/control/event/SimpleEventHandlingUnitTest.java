@@ -62,7 +62,7 @@ class SimpleEventHandlingUnitTest
         private int exceededIdletimeCount;
 
         /**
-         * @return the exceededIdletimeCount
+         * @return The exceededIdletimeCount
          */
         protected int getExceededIdletimeCount()
         {
@@ -70,7 +70,7 @@ class SimpleEventHandlingUnitTest
         }
 
         /**
-         * @return the exceededMaxlifeCount
+         * @return The exceededMaxlifeCount
          */
         protected int getExceededMaxlifeCount()
         {
@@ -78,7 +78,7 @@ class SimpleEventHandlingUnitTest
         }
 
         /**
-         * @return the spoolCount.
+         * @return The spoolCount.
          */
         protected int getSpoolCount()
         {
@@ -86,7 +86,7 @@ class SimpleEventHandlingUnitTest
         }
 
         /**
-         * @return the spoolNoDiskCount.
+         * @return The spoolNoDiskCount.
          */
         protected int getSpoolNoDiskCount()
         {
@@ -94,7 +94,7 @@ class SimpleEventHandlingUnitTest
         }
 
         /**
-         * @return the spoolNotAllowedCount.
+         * @return The spoolNotAllowedCount.
          */
         protected int getSpoolNotAllowedCount()
         {

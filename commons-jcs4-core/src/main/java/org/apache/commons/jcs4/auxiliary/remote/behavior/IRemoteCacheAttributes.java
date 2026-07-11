@@ -94,7 +94,7 @@ public interface IRemoteCacheAttributes
      * -1 and 0 mean no timeout, this is the default if the timeout is -1 or 0, no threadpool will
      * be used.
      *
-     * @return the time
+     * @return The time
      */
     Duration getGetTimeout();
 
@@ -110,7 +110,7 @@ public interface IRemoteCacheAttributes
      * <p>
      * The default name is "remote_cache_client"
      *
-     * @return the name of the pool
+     * @return The name of the pool
      */
     String getThreadPoolName();
 
@@ -118,7 +118,7 @@ public interface IRemoteCacheAttributes
      * The number of elements the zombie queue will hold. This queue is used to store events if we
      * loose our connection with the server.
      *
-     * @return the zombieQueueMaxSize.
+     * @return The zombieQueueMaxSize.
      */
     int getZombieQueueMaxSize();
 
@@ -138,7 +138,7 @@ public interface IRemoteCacheAttributes
      * listener id assigned from the server. As such the remote server cannot determine if it is a
      * cluster or a normal client. It will assume that it is a normal client.
      *
-     * @return the receive value.
+     * @return The receive value.
      */
     boolean isReceive();
 }

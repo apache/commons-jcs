@@ -48,7 +48,7 @@ public interface ICompositeCacheAttributes
     String cacheName();
 
     /**
-     * @return the DiskUsagePattern.
+     * @return The DiskUsagePattern.
      */
     DiskUsagePatternEnum DiskUsagePattern();
 

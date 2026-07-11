@@ -188,7 +188,7 @@ public class UDPDiscoveryReceiver
     }
 
     /**
-     * @return the cnt.
+     * @return The cnt.
      */
     protected int getCnt()
     {

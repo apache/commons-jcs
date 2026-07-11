@@ -79,7 +79,7 @@ public class IndexedDiskCacheAttributes
     }
 
     /**
-     * @return the clearDiskOnStartup
+     * @return The clearDiskOnStartup
      */
     public boolean isClearDiskOnStartup()
     {
@@ -87,7 +87,7 @@ public class IndexedDiskCacheAttributes
     }
 
     /**
-     * @return the optimizeOnShutdown.
+     * @return The optimizeOnShutdown.
      */
     public boolean isOptimizeOnShutdown()
     {

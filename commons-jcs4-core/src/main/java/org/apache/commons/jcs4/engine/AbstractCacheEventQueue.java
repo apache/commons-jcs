@@ -248,7 +248,7 @@ public abstract class AbstractCacheEventQueue<K, V>
     }
 
     /**
-     * @return the cacheName
+     * @return The cacheName
      */
     protected String getCacheName()
     {

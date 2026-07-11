@@ -239,7 +239,7 @@ public class LateralTCPCacheNoWaitFacade<K, V>
     /**
      * Return the size of the no wait list (for testing)
      *
-     * @return the noWait list size.
+     * @return The noWait list size.
      * @since 3.1
      */
     protected int getNoWaitSize()

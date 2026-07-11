@@ -203,7 +203,7 @@ public interface IElementSerializer
      * @param obj the object to serialize
      * @param oc the output channel
      * @param writeTimeoutMs the write timeout im milliseconds
-     * @return the number of bytes written
+     * @return The number of bytes written
      * @throws IOException if serialization or writing fails
      * @since 3.1
      */
@@ -240,7 +240,7 @@ public interface IElementSerializer
      * @param <T> The type of the object
      * @param obj the object to serialize
      * @param os the output stream
-     * @return the number of bytes written
+     * @return The number of bytes written
      * @throws IOException if serialization or writing fails
      * @since 3.1
      */
@@ -264,7 +264,7 @@ public interface IElementSerializer
      * @param <T> The type of the object
      * @param obj the object to serialize
      * @param oc the output channel
-     * @return the number of bytes written
+     * @return The number of bytes written
      * @throws IOException if serialization or writing fails
      * @since 3.1
      */

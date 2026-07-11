@@ -96,7 +96,7 @@ public abstract class AbstractCacheAccess<K, V>
      * used items. These will be spooled to disk if a disk auxiliary is available.
      *
      * @param numberToFree
-     * @return the number that were removed. if you ask to free 5, but there are only 3, you will
+     * @return The number that were removed. if you ask to free 5, but there are only 3, you will
      *         get 3.
      * @throws CacheException
      */
@@ -140,7 +140,7 @@ public abstract class AbstractCacheAccess<K, V>
      * Each time an element is added to the cache without element attributes, the default element
      * attributes are cloned.
      *
-     * @return the default element attributes used by this region.
+     * @return The default element attributes used by this region.
      * @throws CacheException
      */
     @Override

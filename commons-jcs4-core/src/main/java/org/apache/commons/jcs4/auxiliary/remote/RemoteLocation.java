@@ -46,7 +46,7 @@ public record RemoteLocation(
      * a RemoteLocation object
      *
      * @param server the input string
-     * @return the remote location object
+     * @return The remote location object
      */
     public static RemoteLocation parseServerAndPort(final String server)
     {

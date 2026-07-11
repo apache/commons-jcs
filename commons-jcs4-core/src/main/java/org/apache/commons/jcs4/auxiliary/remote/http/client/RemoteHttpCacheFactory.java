@@ -95,7 +95,7 @@ public class RemoteHttpCacheFactory
      * RemoteHttpCacheClient through this method.
 
      * @param cattr the cache configuration
-     * @return the client instance
+     * @return The client instance
      */
     protected <V, K> IRemoteHttpCacheClient<K, V> createRemoteHttpCacheClientForAttributes(final RemoteHttpCacheAttributes cattr)
     {

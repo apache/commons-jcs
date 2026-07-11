@@ -65,7 +65,7 @@ public class TableState
     }
 
     /**
-     * @return the state.
+     * @return The state.
      */
     public TableStateType getState()
     {

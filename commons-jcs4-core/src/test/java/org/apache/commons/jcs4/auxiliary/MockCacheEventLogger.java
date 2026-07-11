@@ -100,7 +100,7 @@ public class MockCacheEventLogger
     }
 
     /**
-     * @return the testProperty
+     * @return The testProperty
      */
     public String getTestProperty()
     {

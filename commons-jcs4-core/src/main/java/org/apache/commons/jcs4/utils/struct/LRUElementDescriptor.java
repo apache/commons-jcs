@@ -43,7 +43,7 @@ public class LRUElementDescriptor<K, V>
     }
 
     /**
-     * @return the key.
+     * @return The key.
      */
     public K getKey()
     {

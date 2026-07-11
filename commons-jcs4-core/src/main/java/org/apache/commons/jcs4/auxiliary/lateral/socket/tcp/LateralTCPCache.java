@@ -99,7 +99,7 @@ public class LateralTCPCache<K, V>
     }
 
     /**
-     * @return the AuxiliaryCacheAttributes.
+     * @return The AuxiliaryCacheAttributes.
      */
     @Override
     public ILateralTCPCacheAttributes getAuxiliaryCacheAttributes()

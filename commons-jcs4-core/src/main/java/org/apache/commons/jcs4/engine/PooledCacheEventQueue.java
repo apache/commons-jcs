@@ -116,7 +116,7 @@ public class PooledCacheEventQueue<K, V>
     }
 
     /**
-     * @return the queue type
+     * @return The queue type
      */
     @Override
     public QueueType getQueueType()

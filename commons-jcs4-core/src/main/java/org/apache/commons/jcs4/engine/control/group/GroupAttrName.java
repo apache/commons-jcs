@@ -45,7 +45,7 @@ public record GroupAttrName<T>(GroupId groupId, T attrName)
     }
 
     /**
-     * @return the cached value.
+     * @return The cached value.
      */
     @Override
     public String toString()

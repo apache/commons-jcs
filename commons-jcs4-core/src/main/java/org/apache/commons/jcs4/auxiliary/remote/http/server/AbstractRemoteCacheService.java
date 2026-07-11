@@ -153,7 +153,7 @@ public abstract class AbstractRemoteCacheService<K, V>
     }
 
     /**
-     * @return the cacheManager
+     * @return The cacheManager
      */
     protected ICompositeCacheManager getCacheManager()
     {
@@ -161,7 +161,7 @@ public abstract class AbstractRemoteCacheService<K, V>
     }
 
     /**
-     * @return the eventLogSourceName
+     * @return The eventLogSourceName
      */
     @Override
     protected String getEventLogSourceName()

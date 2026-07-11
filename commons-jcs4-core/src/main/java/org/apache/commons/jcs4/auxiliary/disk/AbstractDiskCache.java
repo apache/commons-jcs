@@ -453,7 +453,7 @@ public abstract class AbstractDiskCache<K, V>
      */
 
     /**
-     * @return the status -- alive or disposed from CacheConstants
+     * @return The status -- alive or disposed from CacheConstants
      * @see ICache#getStatus
      */
     @Override

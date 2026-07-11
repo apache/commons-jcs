@@ -135,7 +135,7 @@ public class LateralCacheUnicaster
     /**
      * Sends the ICacheItem to the current URLConnection.
      *
-     * @return the response from the current URLConnection.
+     * @return The response from the current URLConnection.
      */
     private String sendCacheItem()
     {

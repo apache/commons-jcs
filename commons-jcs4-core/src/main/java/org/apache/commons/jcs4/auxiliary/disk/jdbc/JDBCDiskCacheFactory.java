@@ -222,7 +222,7 @@ public class JDBCDiskCacheFactory
     /**
      * Gets the scheduler service
      *
-     * @return the scheduler
+     * @return The scheduler
      */
     protected ScheduledExecutorService getScheduledExecutorService()
     {

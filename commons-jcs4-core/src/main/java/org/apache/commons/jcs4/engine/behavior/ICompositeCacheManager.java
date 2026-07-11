@@ -50,7 +50,7 @@ public interface ICompositeCacheManager extends IShutdownObservable
     /**
      * This is exposed so other manager can get access to the props.
      *
-     * @return the configurationProperties
+     * @return The configurationProperties
      */
     Properties getConfigurationProperties();
 

@@ -82,7 +82,7 @@ public enum CacheFileDAO {
     /**
      * Reads the byte array of a specified cache item from the file system.
      *
-     * @return the byte array of a specified cache item from the file system;
+     * @return The byte array of a specified cache item from the file system;
      * or null if it doesn't exist;
      * or CacheFileContent.CORRUPTED if file is corrupted.
      */

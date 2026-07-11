@@ -839,7 +839,7 @@ public class RemoteCacheServer<K, V>
     /**
      * Returns the next generated listener id [0,255].
      *
-     * @return the listener id of a client. This should be unique for this server.
+     * @return The listener id of a client. This should be unique for this server.
      */
     private long nextListenerId()
     {

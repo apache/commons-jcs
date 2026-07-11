@@ -51,7 +51,7 @@ public class BlockDiskCacheAttributes
     private Duration keyPersistenceInterval = DEFAULT_KEY_PERSISTENCE_INTERVAL;
 
     /**
-     * @return the blockSizeBytes.
+     * @return The blockSizeBytes.
      */
     public int getBlockSizeBytes()
     {
@@ -59,7 +59,7 @@ public class BlockDiskCacheAttributes
     }
 
     /**
-     * @return the keyPersistenceInterval.
+     * @return The keyPersistenceInterval.
      */
     public Duration getKeyPersistenceInterval()
     {
@@ -67,7 +67,7 @@ public class BlockDiskCacheAttributes
     }
 
     /**
-     * @return the maxKeySize.
+     * @return The maxKeySize.
      */
     public int getMaxKeySize()
     {

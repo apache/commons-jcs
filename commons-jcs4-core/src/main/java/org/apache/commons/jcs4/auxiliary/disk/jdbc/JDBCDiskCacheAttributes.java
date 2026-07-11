@@ -92,7 +92,7 @@ public class JDBCDiskCacheAttributes
     private String connectionPoolName;
 
     /**
-     * @return the connectionPoolName
+     * @return The connectionPoolName
      */
     public String getConnectionPoolName()
     {
@@ -100,7 +100,7 @@ public class JDBCDiskCacheAttributes
     }
 
     /**
-     * @return the driverClassName.
+     * @return The driverClassName.
      */
     public String getDriverClassName()
     {
@@ -108,7 +108,7 @@ public class JDBCDiskCacheAttributes
     }
 
     /**
-	 * @return the jndiPath
+	 * @return The jndiPath
 	 */
 	public String getJndiPath()
 	{
@@ -116,7 +116,7 @@ public class JDBCDiskCacheAttributes
 	}
 
     /**
-	 * @return the jndiTTL
+	 * @return The jndiTTL
 	 */
 	public Duration getJndiTTL()
 	{
@@ -124,7 +124,7 @@ public class JDBCDiskCacheAttributes
 	}
 
     /**
-     * @return the maxTotal.
+     * @return The maxTotal.
      */
     public int getMaxTotal()
     {
@@ -132,7 +132,7 @@ public class JDBCDiskCacheAttributes
     }
 
     /**
-     * @return the password.
+     * @return The password.
      */
     public String getPassword()
     {
@@ -140,7 +140,7 @@ public class JDBCDiskCacheAttributes
     }
 
     /**
-     * @return the shrinkerInterval.
+     * @return The shrinkerInterval.
      */
     public Duration getShrinkerInterval()
     {
@@ -148,7 +148,7 @@ public class JDBCDiskCacheAttributes
     }
 
     /**
-     * @return the tableName.
+     * @return The tableName.
      */
     public String getTableName()
     {
@@ -156,7 +156,7 @@ public class JDBCDiskCacheAttributes
     }
 
     /**
-     * @return the url.
+     * @return The url.
      */
     public String getUrl()
     {
@@ -164,7 +164,7 @@ public class JDBCDiskCacheAttributes
     }
 
     /**
-     * @return the userName.
+     * @return The userName.
      */
     public String getUserName()
     {
@@ -172,7 +172,7 @@ public class JDBCDiskCacheAttributes
     }
 
 	/**
-     * @return the testBeforeInsert.
+     * @return The testBeforeInsert.
      */
     public boolean isTestBeforeInsert()
     {
@@ -180,7 +180,7 @@ public class JDBCDiskCacheAttributes
     }
 
 	/**
-     * @return the useDiskShrinker.
+     * @return The useDiskShrinker.
      */
     public boolean isUseDiskShrinker()
     {

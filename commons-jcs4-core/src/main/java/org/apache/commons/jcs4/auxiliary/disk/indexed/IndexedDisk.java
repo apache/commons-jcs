@@ -79,7 +79,7 @@ public class IndexedDisk implements AutoCloseable
     /**
      * This is used for debugging.
      *
-     * @return the file path.
+     * @return The file path.
      */
     protected String getFilePath()
     {
@@ -100,7 +100,7 @@ public class IndexedDisk implements AutoCloseable
     /**
      * Returns the raf length.
      *
-     * @return the length of the file.
+     * @return The length of the file.
      * @throws IOException If an I/O error occurs.
      */
     protected long length()

@@ -648,7 +648,7 @@ public class PartitionedCacheAccess<K, V>
      * We determine the partition by taking the mod of the number of partitions.
      *
      * @param key key
-     * @return the partition number.
+     * @return The partition number.
      */
     protected int getPartitionNumberForKey( K key )
     {
@@ -782,7 +782,7 @@ public class PartitionedCacheAccess<K, V>
      *
      * @param propertyName name
      * @param required is it required?
-     * @return the property value if one is found
+     * @return The property value if one is found
      * @throws ConfigurationException thrown if it is required and not found.
      */
     protected String getPropertyForName( String propertyName, boolean required )
@@ -821,7 +821,7 @@ public class PartitionedCacheAccess<K, V>
     }
 
     /**
-     * @return the numberOfPartitions.
+     * @return The numberOfPartitions.
      */
     protected int getNumberOfPartitions()
     {
@@ -837,7 +837,7 @@ public class PartitionedCacheAccess<K, V>
     }
 
     /**
-     * @return the partitionRegionNamePrefix.
+     * @return The partitionRegionNamePrefix.
      */
     protected String getPartitionRegionNamePrefix()
     {
@@ -853,7 +853,7 @@ public class PartitionedCacheAccess<K, V>
     }
 
     /**
-     * @return the partitions.
+     * @return The partitions.
      */
     protected ICacheAccess<K, V>[] getPartitions()
     {

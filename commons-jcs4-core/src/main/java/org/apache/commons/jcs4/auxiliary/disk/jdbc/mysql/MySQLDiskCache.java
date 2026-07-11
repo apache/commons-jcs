@@ -71,7 +71,7 @@ public class MySQLDiskCache<K, V>
      * <p>
      * TODO consider blocking and trying again.
      *
-     * @return the number deleted
+     * @return The number deleted
      */
     @Override
     protected int deleteExpired()

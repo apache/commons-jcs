@@ -111,7 +111,7 @@ public abstract class AbstractCacheEventLogSupport<K, V>
     /**
      * Gets the extra info for the event log.
      *
-     * @return the eventLogSourceName
+     * @return The eventLogSourceName
      */
     protected abstract String getEventLogSourceName();
 

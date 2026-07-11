@@ -143,7 +143,7 @@ public abstract class CommonRemoteCacheAttributes
     }
 
     /**
-     * @return the rmiSocketFactoryTimeout.
+     * @return The rmiSocketFactoryTimeout.
      */
     @Override
     public Duration getRmiSocketFactoryTimeout()

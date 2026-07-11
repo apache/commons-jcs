@@ -67,7 +67,7 @@ public interface IDiskCacheAttributes
      * Gets the amount of time we will wait for elements to move to
      * disk during shutdown for a particular region.
      *
-     * @return the time.
+     * @return The time.
      */
     Duration getShutdownSpoolTimeLimit();
 

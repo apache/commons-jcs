@@ -732,7 +732,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
      * This is for debugging and testing.
      * <p>
      *
-     * @return the length of the data file.
+     * @return The length of the data file.
      * @throws IOException
      */
     protected long getDataFileSize() throws IOException
@@ -878,7 +878,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
      * This is exposed for testing.
      * <p>
      *
-     * @return the timesOptimized.
+     * @return The timesOptimized.
      */
     protected int getTimesOptimized()
     {

@@ -71,7 +71,7 @@ public class MockRMISocketFactory
     }
 
     /**
-     * @return the testStringProperty
+     * @return The testStringProperty
      */
     public String getTestStringProperty()
     {

@@ -168,7 +168,7 @@ public class LateralTCPCacheNoWait<K, V>
     }
 
     /**
-     * @return the AuxiliaryCacheAttributes.
+     * @return The AuxiliaryCacheAttributes.
      */
     @Override
     public ILateralTCPCacheAttributes getAuxiliaryCacheAttributes()
@@ -201,7 +201,7 @@ public class LateralTCPCacheNoWait<K, V>
     /**
      * The identifying key to this no wait
      *
-     * @return the identity key
+     * @return The identity key
      * @since 3.1
      */
     public String getIdentityKey()

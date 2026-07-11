@@ -39,7 +39,7 @@ public class ElapsedTimer
      * Gets the time elapsed between the start time and now. The start time is reset to now.
      * Subsequent calls will get the time between then and now.
      *
-     * @return the elapsed time
+     * @return The elapsed time
      */
     public long getElapsedTime()
     {

@@ -86,7 +86,7 @@ public class RemoteCache<K, V>
     /**
      * Gets facade
      *
-     * @return the facade
+     * @return The facade
      */
     protected AbstractRemoteCacheNoWaitFacade<K, V> getFacade()
     {

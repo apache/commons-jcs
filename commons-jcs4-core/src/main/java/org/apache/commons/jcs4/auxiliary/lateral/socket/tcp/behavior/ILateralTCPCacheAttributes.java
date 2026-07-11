@@ -38,12 +38,12 @@ public interface ILateralTCPCacheAttributes
     int DEFAULT_ZOMBIE_QUEUE_MAX_SIZE = 1000;
 
     /**
-     * @return the openTimeOut
+     * @return The openTimeOut
      */
     Duration getOpenTimeOut();
 
     /**
-     * @return the socketTimeOut
+     * @return The socketTimeOut
      */
     Duration getSocketTimeOut();
 
@@ -78,28 +78,28 @@ public interface ILateralTCPCacheAttributes
     /**
      * The address to broadcast to if UDPDiscovery is enabled.
      *
-     * @return the udpDiscoveryAddr.
+     * @return The udpDiscoveryAddr.
      */
     String getUdpDiscoveryAddr();
 
     /**
      * The UDP discovery network interface if UDPDiscovery is enabled.
      *
-     * @return the udpDiscoveryInterface.
+     * @return The udpDiscoveryInterface.
      */
     String getUdpDiscoveryInterface();
 
     /**
      * The port to use if UDPDiscovery is enabled.
      *
-     * @return the udpDiscoveryPort.
+     * @return The udpDiscoveryPort.
      */
     int getUdpDiscoveryPort();
 
     /**
      * The time-to-live for the UDP multicast packets
      *
-     * @return the udpTTL.
+     * @return The udpTTL.
      * @since 3.1
      */
     int getUdpTTL();
@@ -143,7 +143,7 @@ public interface ILateralTCPCacheAttributes
      * Tests whether or not TCP laterals can try to find each other by multicast
      * communication.
      *
-     * @return the udpDiscoveryEnabled.
+     * @return The udpDiscoveryEnabled.
      */
     boolean isUdpDiscoveryEnabled();
 
@@ -151,7 +151,7 @@ public interface ILateralTCPCacheAttributes
      * The number of elements the zombie queue will hold. This queue is used to store events if we
      * loose our connection with the server.
      *
-     * @return the zombieQueueMaxSize.
+     * @return The zombieQueueMaxSize.
      */
     int getZombieQueueMaxSize();
 

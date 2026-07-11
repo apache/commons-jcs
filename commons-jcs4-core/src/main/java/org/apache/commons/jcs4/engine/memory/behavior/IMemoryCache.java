@@ -46,7 +46,7 @@ public interface IMemoryCache<K, V>
      * spooled to disk if a disk auxiliary is available.
      *
      * @param numberToFree
-     * @return the number that were removed. if you ask to free 5, but there are
+     * @return The number that were removed. if you ask to free 5, but there are
      *         only 3, you will get 3.
      * @throws IOException
      */

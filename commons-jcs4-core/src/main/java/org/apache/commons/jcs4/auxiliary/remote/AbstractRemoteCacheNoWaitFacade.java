@@ -103,7 +103,7 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K, V>
     }
 
     /**
-     * @return the AuxiliaryCacheAttributes.
+     * @return The AuxiliaryCacheAttributes.
      */
     @Override
     public RemoteCacheAttributes getAuxiliaryCacheAttributes()

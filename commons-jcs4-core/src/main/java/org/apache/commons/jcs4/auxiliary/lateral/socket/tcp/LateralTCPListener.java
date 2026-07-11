@@ -160,7 +160,7 @@ public class LateralTCPListener<K, V>
     }
 
     /**
-     * @return the cacheMgr.
+     * @return The cacheMgr.
      */
     @Override
     public ICompositeCacheManager getCacheManager()
@@ -169,7 +169,7 @@ public class LateralTCPListener<K, V>
     }
 
     /**
-     * @return the getCnt.
+     * @return The getCnt.
      */
     protected int getGetCnt()
     {
@@ -192,7 +192,7 @@ public class LateralTCPListener<K, V>
     /**
      * This is roughly the number of updates the lateral has received.
      *
-     * @return the putCnt.
+     * @return The putCnt.
      */
     protected int getPutCnt()
     {
@@ -200,7 +200,7 @@ public class LateralTCPListener<K, V>
     }
 
     /**
-     * @return the removeCnt.
+     * @return The removeCnt.
      */
     protected int getRemoveCnt()
     {

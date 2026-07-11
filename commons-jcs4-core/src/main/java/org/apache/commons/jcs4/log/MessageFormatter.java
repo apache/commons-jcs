@@ -91,7 +91,7 @@ public class MessageFormatter
     /**
      * Returns the formatted message.
      *
-     * @return the formatted message.
+     * @return The formatted message.
      */
     public String getFormattedMessage()
     {
@@ -105,7 +105,7 @@ public class MessageFormatter
     /**
      * Return the throwable passed to the Message.
      *
-     * @return the Throwable.
+     * @return The Throwable.
      */
     public Throwable getThrowable()
     {

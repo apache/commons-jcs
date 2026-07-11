@@ -58,13 +58,13 @@ public interface DataSourceFactory
         throws SQLException;
 
     /**
-     * @return the {@code DataSource} configured by the factory.
+     * @return The {@code DataSource} configured by the factory.
      * @throws SQLException if the source can't be returned
      */
     DataSource getDataSource() throws SQLException;
 
     /**
-     * @return the name of the factory.
+     * @return The name of the factory.
      */
     String getName();
 
