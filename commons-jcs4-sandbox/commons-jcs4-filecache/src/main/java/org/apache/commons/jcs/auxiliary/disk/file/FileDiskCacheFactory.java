@@ -43,9 +43,9 @@ public class FileDiskCacheFactory
      * region.
      *
      * @param attr config
-     * @param cacheMgr the manager to use if needed
-     * @param cacheEventLogger the event logger
-     * @param elementSerializer the serializer
+     * @param cacheMgr The manager to use if needed
+     * @param cacheEventLogger The event logger
+     * @param elementSerializer The serializer
      * @return AuxiliaryCache
      */
     @Override

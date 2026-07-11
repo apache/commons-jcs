@@ -63,8 +63,8 @@ public class LateralTCPCacheFactory
      * This should be called by create cache.
      *
      * @param attr  ILateralTCPCacheAttributes
-     * @param cacheMgr the composite cache manager
-     * @param serializer the serializer to use when receiving
+     * @param cacheMgr The composite cache manager
+     * @param serializer The serializer to use when receiving
      * @return The listener if created, else null
      */
     private static <K, V> ILateralCacheListener<K, V> createListener( final ILateralTCPCacheAttributes attr,
@@ -126,8 +126,8 @@ public class LateralTCPCacheFactory
      * Add listener for receivers
      *
      * @param iaca cache configuration attributes
-     * @param cacheMgr the composite cache manager
-     * @param serializer the serializer to use when receiving
+     * @param cacheMgr The composite cache manager
+     * @param serializer The serializer to use when receiving
      */
     private void addListenerIfNeeded( final ILateralTCPCacheAttributes iaca, final ICompositeCacheManager cacheMgr, final IElementSerializer elementSerializer )
     {
@@ -154,11 +154,11 @@ public class LateralTCPCacheFactory
      *
      * @param <K> cache key type
      * @param <V> cache value type
-     * @param iaca the cache configuration object
-     * @param cacheMgr the cache manager
-     * @param cacheEventLogger the cache event logger
-     * @param elementSerializer the serializer for cache elements
-     * @param keyMatcher the key matcher for getMatching() calls
+     * @param iaca The cache configuration object
+     * @param cacheMgr The cache manager
+     * @param cacheEventLogger The cache event logger
+     * @param elementSerializer The serializer for cache elements
+     * @param keyMatcher The key matcher for getMatching() calls
      * @return A LateralTCPCacheNoWaitFacade
      */
     @Override
@@ -212,10 +212,10 @@ public class LateralTCPCacheFactory
      *
      * @param <K> cache key type
      * @param <V> cache value type
-     * @param lca the cache configuration object
-     * @param cacheEventLogger the event logger
-     * @param elementSerializer the serializer to use when sending or receiving
-     * @param keyMatcher the key matcher for getMatching() calls
+     * @param lca The cache configuration object
+     * @param cacheEventLogger The event logger
+     * @param elementSerializer The serializer to use when sending or receiving
+     * @param keyMatcher The key matcher for getMatching() calls
      * @return A LateralTCPCacheNoWait
      */
     public <K, V> LateralTCPCacheNoWait<K, V> createCacheNoWait( final ILateralTCPCacheAttributes lca,
@@ -244,8 +244,8 @@ public class LateralTCPCacheFactory
      * Creates the discovery service. Only creates this for tcp laterals right now.
      *
      * @param lac ILateralTCPCacheAttributes
-     * @param lcnwf the lateral facade
-     * @param cacheMgr a reference to the global cache manager
+     * @param lcnwf The lateral facade
+     * @param cacheMgr A reference to the global cache manager
      */
     private synchronized <K, V> void createDiscoveryService(
             final ILateralTCPCacheAttributes lac,
@@ -321,7 +321,7 @@ public class LateralTCPCacheFactory
      * @param <K> cache key type
      * @param <V> cache value type
      * @param lca configuration for the creation of a new service instance
-     * @param elementSerializer the serializer to use when sending or receiving
+     * @param elementSerializer The serializer to use when sending or receiving
      * @return ICacheServiceNonLocal&lt;K, V&gt;
      * @since 3.1
      */
@@ -375,10 +375,10 @@ public class LateralTCPCacheFactory
      * Gets the instance attribute of the LateralCacheTCPListener class.
      *
      * @param ilca ILateralTCPCacheAttributes
-     * @param cacheManager a reference to the global cache manager
+     * @param cacheManager A reference to the global cache manager
      * @param cacheEventLogger Reference to the cache event logger for auxiliary cache creation
      * @param elementSerializer Reference to the cache element serializer for auxiliary cache
-     * @param keyMatcher the key matcher for getMatching() calls
+     * @param keyMatcher The key matcher for getMatching() calls
      * @return The instance value
      */
     private LateralTCPDiscoveryListener getDiscoveryListener(final ILateralTCPCacheAttributes ilca,
@@ -428,7 +428,7 @@ public class LateralTCPCacheFactory
     /**
      * Add cache instance to monitor
      *
-     * @param cache the cache instance
+     * @param cache The cache instance
      * @since 3.1
      */
     public void monitorCache(final LateralTCPCacheNoWait<?, ?> cache)

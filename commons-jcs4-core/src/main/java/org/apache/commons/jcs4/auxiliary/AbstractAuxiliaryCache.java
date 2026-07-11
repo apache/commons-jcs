@@ -162,7 +162,7 @@ public abstract class AbstractAuxiliaryCache<K, V>
     /**
      * Set the cache configuration
      *
-     * @param auxiliaryCacheAttributes the auxiliaryCacheAttributes to set
+     * @param auxiliaryCacheAttributes The auxiliaryCacheAttributes to set
      */
     public void setAuxiliaryCacheAttributes(AuxiliaryCacheAttributes auxiliaryCacheAttributes)
     {

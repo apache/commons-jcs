@@ -29,7 +29,7 @@ public interface PropertiesFactory
     /**
      * Fetches a set of properties for the specified group.
      *
-     * @param groupName the group to pull properties from.
+     * @param groupName The group to pull properties from.
      * @return A properties object.
      */
     Properties getProperties( String groupName );

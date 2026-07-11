@@ -77,10 +77,10 @@ public class JDBCDiskCacheFactory
      * This factory method should create an instance of the jdbc cache.
      *
      * @param rawAttr specific cache configuration attributes
-     * @param cacheMgr the global cache manager
-     * @param cacheEventLogger the cache event logger
-     * @param elementSerializer the serializer for cache elements
-     * @param keyMatcher the key matcher for getMatching() calls
+     * @param cacheMgr The global cache manager
+     * @param cacheEventLogger The cache event logger
+     * @param elementSerializer The serializer for cache elements
+     * @param keyMatcher The key matcher for getMatching() calls
      * @return JDBCDiskCache the cache instance
      * @throws SQLException if the cache instance could not be created
      */
@@ -160,8 +160,8 @@ public class JDBCDiskCacheFactory
     /**
      * manages the DataSourceFactories.
      *
-     * @param cattr the cache configuration
-     * @param configProps the configuration properties object
+     * @param cattr The cache configuration
+     * @param configProps The configuration properties object
      * @return A DataSourceFactory
      * @throws SQLException if a database access error occurs
      */

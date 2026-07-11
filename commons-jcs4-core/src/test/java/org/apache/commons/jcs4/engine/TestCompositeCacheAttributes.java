@@ -35,8 +35,8 @@ public class TestCompositeCacheAttributes
     /**
      * Get a CompositeCacheAttributes object suitable for tests
      *
-     * @param memoryCacheName the new memoryCacheName value
-     * @param maxObjects the new maxObjects value
+     * @param memoryCacheName The new memoryCacheName value
+     * @param maxObjects The new maxObjects value
      */
     public static CompositeCacheAttributes withMemoryCacheNameAndMaxObjects(String memoryCacheName, int maxObjects)
     {
@@ -54,9 +54,9 @@ public class TestCompositeCacheAttributes
     /**
      * Get a CompositeCacheAttributes object suitable for tests
      *
-     * @param memoryCacheName the new memoryCacheName value
-     * @param maxMemoryIdleTime the new maxMemoryIdleTime value
-     * @param maxSpoolPerRun the new maxSpoolPerRun value
+     * @param memoryCacheName The new memoryCacheName value
+     * @param maxMemoryIdleTime The new maxMemoryIdleTime value
+     * @param maxSpoolPerRun The new maxSpoolPerRun value
      */
     public static CompositeCacheAttributes withMemoryCacheNameMaxMemoryIdleTimeAndMaxSpoolPerRun(
             String memoryCacheName, Duration maxMemoryIdleTime, int maxSpoolPerRun)
@@ -75,8 +75,8 @@ public class TestCompositeCacheAttributes
     /**
      * Get a CompositeCacheAttributes object suitable for tests
      *
-     * @param maxObjects the new maxObjects value
-     * @param spoolChunkSize the new spoolChunkSize value
+     * @param maxObjects The new maxObjects value
+     * @param spoolChunkSize The new spoolChunkSize value
      */
     public static CompositeCacheAttributes withMaxObjectsAndSpoolChunkSize(int maxObjects, int spoolChunkSize)
     {
@@ -94,7 +94,7 @@ public class TestCompositeCacheAttributes
     /**
      * Sets the maximum memory idle-time of the cache.
      *
-     * @param maxMemoryIdleTime the new maxMemoryIdleTime value
+     * @param maxMemoryIdleTime The new maxMemoryIdleTime value
      */
     public static CompositeCacheAttributes withMaxMemoryIdleTime(Duration maxMemoryIdleTime)
     {
@@ -112,7 +112,7 @@ public class TestCompositeCacheAttributes
     /**
      * Sets the disk usage pattern of the cache.
      *
-     * @param diskUsagePattern the new diskUsagePattern value
+     * @param diskUsagePattern The new diskUsagePattern value
      */
     public static CompositeCacheAttributes withDiskUsagePattern(ICompositeCacheAttributes.DiskUsagePatternEnum diskUsagePattern)
     {

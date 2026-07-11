@@ -60,7 +60,7 @@ public class LateralTCPService<K, V>
      * Constructor for the LateralTCPService object
      *
      * @param lca ILateralTCPCacheAttributes the configuration object
-     * @param serializer the serializer to use when sending
+     * @param serializer The serializer to use when sending
      * @throws IOException
      * @since 3.1
      */
@@ -144,7 +144,7 @@ public class LateralTCPService<K, V>
     /**
      * Return the keys in this cache.
      *
-     * @param cacheName the name of the cache region
+     * @param cacheName The name of the cache region
      * @see org.apache.commons.jcs4.auxiliary.AuxiliaryCache#getKeySet()
      */
     @Override

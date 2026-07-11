@@ -43,7 +43,7 @@ public class RemoteHttpCacheMonitor extends AbstractAuxiliaryCacheMonitor
     /**
      * Constructor for the RemoteCacheMonitor object
      *
-     * @param factory the factory to set
+     * @param factory The factory to set
      */
     public RemoteHttpCacheMonitor(final RemoteHttpCacheFactory factory)
     {

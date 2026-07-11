@@ -181,7 +181,7 @@ public abstract class AbstractCacheAccess<K, V>
      * attributes. Items subsequently put into the cache will use these defaults if they do not
      * specify specific attributes.
      *
-     * @param attr the default attributes.
+     * @param attr The default attributes.
      * @throws CacheException if something goes wrong.
      */
     @Override

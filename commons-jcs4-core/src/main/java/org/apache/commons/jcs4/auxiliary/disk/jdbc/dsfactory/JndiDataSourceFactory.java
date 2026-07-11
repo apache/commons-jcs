@@ -48,7 +48,7 @@ public class JndiDataSourceFactory implements DataSourceFactory
 
     /**
      *
-     * @param ctx the context
+     * @param ctx The context
      * @throws NamingException
      */
     private static void debugCtx(final Context ctx) throws NamingException

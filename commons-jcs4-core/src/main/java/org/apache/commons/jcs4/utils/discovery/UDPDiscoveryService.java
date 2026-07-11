@@ -101,7 +101,7 @@ public class UDPDiscoveryService
      * Constructs a new instance.
      *
      * @param attributes settings of service
-     * @param serializer the serializer to use to send and receive messages
+     * @param serializer The serializer to use to send and receive messages
      * @since 3.1
      */
     public UDPDiscoveryService(final UDPDiscoveryAttributes attributes, final IElementSerializer serializer)

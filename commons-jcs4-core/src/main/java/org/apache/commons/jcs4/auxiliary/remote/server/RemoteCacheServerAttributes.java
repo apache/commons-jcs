@@ -131,7 +131,7 @@ public class RemoteCacheServerAttributes
     }
 
     /**
-     * @param registryKeepAliveDelayMillis the registryKeepAliveDelayMillis to set
+     * @param registryKeepAliveDelayMillis The registryKeepAliveDelayMillis to set
      */
     public void setRegistryKeepAliveDelayMillis( final long registryKeepAliveDelayMillis )
     {
@@ -151,7 +151,7 @@ public class RemoteCacheServerAttributes
     /**
      * Should we try to keep the registry alive
      *
-     * @param useRegistryKeepAlive the useRegistryKeepAlive to set
+     * @param useRegistryKeepAlive The useRegistryKeepAlive to set
      */
     public void setUseRegistryKeepAlive( final boolean useRegistryKeepAlive )
     {

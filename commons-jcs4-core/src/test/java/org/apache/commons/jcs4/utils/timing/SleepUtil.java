@@ -29,7 +29,7 @@ public class SleepUtil
      * platform-specific workaround for Windows due to its inability to resolve
      * durations of time less than approximately 10 - 16 ms.
      *
-     * @param milliseconds the number of milliseconds to sleep
+     * @param milliseconds The number of milliseconds to sleep
      */
     public static void sleepAtLeast( final long milliseconds )
     {

@@ -43,7 +43,7 @@ public class CompressingSerializer extends StandardSerializer
     /**
      * Wrapper constructor
      *
-     * @param serializer the wrapped serializer
+     * @param serializer The wrapped serializer
      * @since 3.1
      */
     public CompressingSerializer(final IElementSerializer serializer)

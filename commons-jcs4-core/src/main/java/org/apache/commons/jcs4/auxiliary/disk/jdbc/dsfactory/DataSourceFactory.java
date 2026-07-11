@@ -71,7 +71,7 @@ public interface DataSourceFactory
     /**
      * Initialize the factory.
      *
-     * @param config the factory settings
+     * @param config The factory settings
      * @throws SQLException Any exceptions caught during processing will be
      *         rethrown wrapped into a SQLException.
      */

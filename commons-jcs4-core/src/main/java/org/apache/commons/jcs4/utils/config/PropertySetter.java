@@ -79,7 +79,7 @@ public class PropertySetter
     /**
      * Create a new PropertySetter for the specified Object. This is done in preparation for invoking
      * {@link #setProperty}one or more times.
-     * @param obj the object for which to set properties
+     * @param obj The object for which to set properties
      */
     public PropertySetter( final Object obj )
     {

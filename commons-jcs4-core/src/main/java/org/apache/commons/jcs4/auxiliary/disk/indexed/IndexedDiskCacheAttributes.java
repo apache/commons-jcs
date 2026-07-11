@@ -95,7 +95,7 @@ public class IndexedDiskCacheAttributes
     }
 
     /**
-     * @param clearDiskOnStartup the clearDiskOnStartup to set
+     * @param clearDiskOnStartup The clearDiskOnStartup to set
      */
     public void setClearDiskOnStartup( final boolean clearDiskOnStartup )
     {

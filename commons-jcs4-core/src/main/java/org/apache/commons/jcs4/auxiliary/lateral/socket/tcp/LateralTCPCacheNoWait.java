@@ -391,7 +391,7 @@ public class LateralTCPCacheNoWait<K, V>
     /**
      * Sets the identifying key to this no wait
      *
-     * @param identityKey the identityKey to set
+     * @param identityKey The identityKey to set
      * @since 3.1
      */
     public void setIdentityKey(final String identityKey)

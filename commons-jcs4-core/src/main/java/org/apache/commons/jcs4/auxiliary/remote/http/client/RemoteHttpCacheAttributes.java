@@ -136,7 +136,7 @@ public class RemoteHttpCacheAttributes
     }
 
     /**
-     * @param connectionTimeout the connectionTimeout to set
+     * @param connectionTimeout The connectionTimeout to set
      */
     public void setConnectionTimeout( final Duration connectionTimeout )
     {
@@ -144,7 +144,7 @@ public class RemoteHttpCacheAttributes
     }
 
     /**
-     * @param httpVersion the httpVersion to set
+     * @param httpVersion The httpVersion to set
      */
     public void setHttpVersion( final String httpVersion )
     {
@@ -152,7 +152,7 @@ public class RemoteHttpCacheAttributes
     }
 
     /**
-     * @param includeCacheNameInURL the includeCacheNameInURL to set
+     * @param includeCacheNameInURL The includeCacheNameInURL to set
      */
     public void setIncludeCacheNameAsParameter( final boolean includeCacheNameInURL )
     {
@@ -160,7 +160,7 @@ public class RemoteHttpCacheAttributes
     }
 
     /**
-     * @param includeKeysAndPatternsInURL the includeKeysAndPatternsInURL to set
+     * @param includeKeysAndPatternsInURL The includeKeysAndPatternsInURL to set
      */
     public void setIncludeKeysAndPatternsAsParameter( final boolean includeKeysAndPatternsInURL )
     {
@@ -168,7 +168,7 @@ public class RemoteHttpCacheAttributes
     }
 
     /**
-     * @param includeRequestTypeasAsParameter the includeRequestTypeasAsParameter to set
+     * @param includeRequestTypeasAsParameter The includeRequestTypeasAsParameter to set
      */
     public void setIncludeRequestTypeasAsParameter( final boolean includeRequestTypeasAsParameter )
     {
@@ -176,7 +176,7 @@ public class RemoteHttpCacheAttributes
     }
 
     /**
-     * @param maxConnectionsPerHost the maxConnectionsPerHost to set
+     * @param maxConnectionsPerHost The maxConnectionsPerHost to set
      */
     public void setMaxConnectionsPerHost( final int maxConnectionsPerHost )
     {
@@ -184,7 +184,7 @@ public class RemoteHttpCacheAttributes
     }
 
     /**
-     * @param remoteHttpClientClassName the remoteHttpClientClassName to set
+     * @param remoteHttpClientClassName The remoteHttpClientClassName to set
      */
     public void setRemoteHttpClientClassName( final String remoteHttpClientClassName )
     {
@@ -192,7 +192,7 @@ public class RemoteHttpCacheAttributes
     }
 
     /**
-     * @param socketTimeout the socketTimeout to set
+     * @param socketTimeout The socketTimeout to set
      */
     public void setSocketTimeout( final Duration socketTimeout )
     {
@@ -200,7 +200,7 @@ public class RemoteHttpCacheAttributes
     }
 
     /**
-     * @param url the url to set
+     * @param url The url to set
      */
     public void setUrl( final String url )
     {

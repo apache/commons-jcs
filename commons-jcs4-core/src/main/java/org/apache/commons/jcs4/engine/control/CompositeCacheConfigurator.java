@@ -119,10 +119,10 @@ public class CompositeCacheConfigurator
     /**
      * Gets an aux cache for the listed aux for a region.
      *
-     * @param props the configuration properties
+     * @param props The configuration properties
      * @param ccm Cache hub
-     * @param auxName the name of the auxiliary cache
-     * @param regName the name of the region.
+     * @param auxName The name of the auxiliary cache
+     * @param regName The name of the region.
      * @return AuxiliaryCache
      */
     protected <K, V> AuxiliaryCache<K, V> parseAuxiliary( final Properties props, final CompositeCacheManager ccm,
@@ -231,8 +231,8 @@ public class CompositeCacheConfigurator
      * Gets an ICompositeCacheAttributes for the listed region.
      *
      * @param props Configuration properties
-     * @param regName the region name
-     * @param defaultCCAttr the default cache attributes
+     * @param regName The region name
+     * @param defaultCCAttr The default cache attributes
      * @return ICompositeCacheAttributes
      */
     protected ICompositeCacheAttributes parseCompositeCacheAttributes( final Properties props,
@@ -245,9 +245,9 @@ public class CompositeCacheConfigurator
      * Gets the main attributes for a region.
      *
      * @param props Configuration properties
-     * @param regName the region name
-     * @param defaultCCAttr the default cache attributes
-     * @param regionPrefix the region prefix
+     * @param regName The region name
+     * @param defaultCCAttr The default cache attributes
+     * @param regionPrefix The region prefix
      * @return ICompositeCacheAttributes
      */
     protected ICompositeCacheAttributes parseCompositeCacheAttributes( final Properties props,
@@ -289,9 +289,9 @@ public class CompositeCacheConfigurator
      * Create the element attributes from the properties object for a cache region.
      *
      * @param props Configuration properties
-     * @param regName the region name
-     * @param defaultEAttr the default element attributes
-     * @param regionPrefix the region prefix
+     * @param regName The region name
+     * @param defaultEAttr The default element attributes
+     * @param regionPrefix The region prefix
      * @return IElementAttributes
      */
     protected IElementAttributes parseElementAttributes( final Properties props, final String regName,

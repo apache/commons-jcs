@@ -534,7 +534,7 @@ public class FileDiskCache<K, V>
     /**
      * Closes a stream and swallows errors.
      *
-     * @param s the stream
+     * @param s The stream
      */
     private void silentClose( final InputStream s )
     {
@@ -554,7 +554,7 @@ public class FileDiskCache<K, V>
     /**
      * Closes a stream and swallows errors.
      *
-     * @param s the stream
+     * @param s The stream
      */
     private void silentClose( final OutputStream s )
     {
@@ -572,7 +572,7 @@ public class FileDiskCache<K, V>
     }
 
     /**
-     * @param directory the directory to set
+     * @param directory The directory to set
      */
     protected void setDirectory( final File directory )
     {

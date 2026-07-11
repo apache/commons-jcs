@@ -65,8 +65,8 @@ public class UDPDiscoveryManager
      * TODO think of making one discovery service work for multiple types of clients.
      *
      * @param attributes configuration object
-     * @param cacheMgr the Cache Hub
-     * @param serializer the Serializer for UDP packets
+     * @param cacheMgr The Cache Hub
+     * @param serializer The Serializer for UDP packets
      * @return UDPDiscoveryService
      * @since 4.0
      */

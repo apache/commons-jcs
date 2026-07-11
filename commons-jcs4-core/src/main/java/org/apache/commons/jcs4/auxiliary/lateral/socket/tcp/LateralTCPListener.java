@@ -67,7 +67,7 @@ public class LateralTCPListener<K, V>
      *
      * @param ilca ILateralTCPCacheAttributes
      * @param cacheMgr
-     * @param serializer the serializer to use when receiving
+     * @param serializer The serializer to use when receiving
      * @return The instance value
      */
     @SuppressWarnings("unchecked") // Need to cast because of common map for all instances
@@ -127,7 +127,7 @@ public class LateralTCPListener<K, V>
      * Only need one since it does work for all regions, just reference by multiple region names.
      *
      * @param ilca
-     * @param serializer the serializer to use when receiving
+     * @param serializer The serializer to use when receiving
      */
     protected LateralTCPListener( final ILateralTCPCacheAttributes ilca, final IElementSerializer serializer )
     {
@@ -279,7 +279,7 @@ public class LateralTCPListener<K, V>
      * This calls the appropriate method, based on the command sent in the Lateral element
      * descriptor.
      *
-     * @param led the lateral element
+     * @param led The lateral element
      * @return A possible response
      * @throws IOException
      */
@@ -368,7 +368,7 @@ public class LateralTCPListener<K, V>
     /**
      * Gets the cache that was injected by the lateral factory. Calls getKeySet on the cache.
      *
-     * @param cacheName the name of the cache
+     * @param cacheName The name of the cache
      * @return A set of keys
      * @throws IOException
      */
@@ -380,8 +380,8 @@ public class LateralTCPListener<K, V>
     /**
      * Gets the cache that was injected by the lateral factory. Calls get on the cache.
      *
-     * @param cacheName the name of the cache
-     * @param pattern the matching pattern
+     * @param cacheName The name of the cache
+     * @param pattern The matching pattern
      * @return Map
      * @throws IOException
      */

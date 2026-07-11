@@ -36,9 +36,9 @@ public class MockAuxiliaryCacheFactory
      *
      * @param attr
      * @param cacheMgr
-     * @param cacheEventLogger the cache event logger
-     * @param elementSerializer the serializer for cache elements
-     * @param keyMatcher the key matcher for getMatching() calls
+     * @param cacheEventLogger The cache event logger
+     * @param elementSerializer The serializer for cache elements
+     * @param keyMatcher The key matcher for getMatching() calls
      * @return AuxiliaryCache
      */
     @Override

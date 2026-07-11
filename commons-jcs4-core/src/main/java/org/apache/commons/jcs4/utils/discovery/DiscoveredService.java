@@ -134,7 +134,7 @@ public class DiscoveredService
 	}
 
     /**
-     * @param cacheNames the cacheNames to set
+     * @param cacheNames The cacheNames to set
      */
     public void setCacheNames( final ArrayList<String> cacheNames )
     {

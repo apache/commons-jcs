@@ -231,7 +231,7 @@ public class EncryptingSerializer extends StandardSerializer
      * Sets the cipher transformation for encryption and decryption
      * Default is AES/ECB/PKCS5Padding
      *
-     * @param transformation the transformation
+     * @param transformation The transformation
      */
     public void setAesCipherTransformation(final String transformation)
     {
@@ -241,7 +241,7 @@ public class EncryptingSerializer extends StandardSerializer
     /**
      * Sets the pre-shared key for encryption and decryption
      *
-     * @param psk the key
+     * @param psk The key
      */
     public void setPreSharedKey(final String psk)
     {

@@ -121,9 +121,9 @@ public class JDBCDiskCache<K, V>
      * Constructs a JDBC Disk Cache for the provided cache attributes. The table state object is
      * used to mark deletions.
      *
-     * @param cattr the configuration object for this cache
-     * @param dsFactory the DataSourceFactory for this cache
-     * @param tableState an object to track table operations
+     * @param cattr The configuration object for this cache
+     * @param dsFactory The DataSourceFactory for this cache
+     * @param tableState An object to track table operations
      */
     public JDBCDiskCache(final JDBCDiskCacheAttributes cattr, final DataSourceFactory dsFactory, final TableState tableState)
     {
@@ -232,8 +232,8 @@ public class JDBCDiskCache<K, V>
     /**
      * Does an element exist for this key?
      *
-     * @param ce the cache element
-     * @param con a database connection
+     * @param ce The cache element
+     * @param con A database connection
      * @return boolean
      */
     protected boolean doesElementExist( final ICacheElement<K, V> ce, final JDBCConnection con )

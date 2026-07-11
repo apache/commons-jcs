@@ -73,7 +73,7 @@ public abstract class AbstractAuxiliaryCacheMonitor extends Thread
     /**
      * Constructs a new instance.
      *
-     * @param name the thread name
+     * @param name The thread name
      */
     public AbstractAuxiliaryCacheMonitor(final String name)
     {

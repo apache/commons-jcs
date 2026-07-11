@@ -337,7 +337,7 @@ public class LateralTCPCacheAttributes
     }
 
     /**
-     * @param openTimeOut the openTimeOut to set
+     * @param openTimeOut The openTimeOut to set
      */
     public void setOpenTimeOut( final Duration openTimeOut )
     {
@@ -345,7 +345,7 @@ public class LateralTCPCacheAttributes
     }
 
     /**
-     * @param socketTimeOut the socketTimeOut to set
+     * @param socketTimeOut The socketTimeOut to set
      */
     public void setSocketTimeOut( final Duration socketTimeOut )
     {
@@ -417,7 +417,7 @@ public class LateralTCPCacheAttributes
     /**
      * Sets the UDP discovery network interface if UDPDiscovery is enabled.
      *
-     * @param udpDiscoveryInterface the udpDiscoveryInterface to set (symbolic name)
+     * @param udpDiscoveryInterface The udpDiscoveryInterface to set (symbolic name)
      */
     public void setUdpDiscoveryInterface(String udpDiscoveryInterface)
     {

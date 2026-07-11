@@ -153,8 +153,8 @@ public class RemoteCacheServerFactory
      * rebind method.
      *
      * @param registryHost   Hostname of the registry
-     * @param registryPort   the port on which to start the registry
-     * @param cacheEventLogger the event logger for error messages
+     * @param registryPort   The port on which to start the registry
+     * @param cacheEventLogger The event logger for error messages
      * @since 3.1
      */
     protected static void keepAlive(final String registryHost, final int registryPort, final ICacheEventLogger cacheEventLogger)
@@ -234,8 +234,8 @@ public class RemoteCacheServerFactory
     /**
      * Look up the remote cache service admin instance
      *
-     * @param config the configuration properties
-     * @param port the local port
+     * @param config The configuration properties
+     * @param port The local port
      * @return The admin object instance
      * @throws Exception if lookup fails
      */
@@ -337,8 +337,8 @@ public class RemoteCacheServerFactory
      * Registers the server with the registry. I broke this off because we might want to have code
      * that will restart a dead registry. It will need to rebind the server.
      *
-     * @param serviceName the name of the service
-     * @param server the server object to bind
+     * @param serviceName The name of the service
+     * @param server The server object to bind
      * @throws RemoteException
      */
     protected static void registerServer(final String serviceName, final Remote server )
@@ -360,7 +360,7 @@ public class RemoteCacheServerFactory
     }
 
     /**
-     * @param serviceName the serviceName to set
+     * @param serviceName The serviceName to set
      */
     protected static void setServiceName( final String serviceName )
     {

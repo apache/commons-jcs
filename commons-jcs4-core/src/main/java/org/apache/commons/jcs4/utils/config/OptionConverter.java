@@ -75,8 +75,8 @@ public class OptionConverter
     /**
      * Get the class object given a class name.
      *
-     * @param props the Properties class
-     * @param key the key of the Class name in the Properties object
+     * @param props The Properties class
+     * @param key The key of the Class name in the Properties object
      *
      * @return Class object
      */

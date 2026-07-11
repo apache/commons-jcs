@@ -51,7 +51,7 @@ public class RemoteCacheMonitor extends AbstractAuxiliaryCacheMonitor
     /**
      * Add a manager to be monitored
      *
-     * @param manager the remote cache manager
+     * @param manager The remote cache manager
      */
     public void addManager(final RemoteCacheManager manager)
     {

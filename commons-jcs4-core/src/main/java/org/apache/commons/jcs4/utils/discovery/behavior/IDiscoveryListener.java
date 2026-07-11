@@ -31,14 +31,14 @@ public interface IDiscoveryListener
      * Add the service if needed. This does not necessarily mean that the service is not already
      * added. This can be called if there is a change in service information, such as the cacheNames.
      *
-     * @param service the service to add
+     * @param service The service to add
      */
     void addDiscoveredService( DiscoveredService service );
 
     /**
      * Remove the service from the list.
      *
-     * @param service the service to remove
+     * @param service The service to remove
      */
     void removeDiscoveredService( DiscoveredService service );
 }

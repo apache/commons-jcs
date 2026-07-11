@@ -320,7 +320,7 @@ public abstract class AbstractMemoryCache<K, V>
      * Update control structures after get
      * (guarded by the lock)
      *
-     * @param me the memory element descriptor
+     * @param me The memory element descriptor
      */
     protected abstract void lockedGetElement(MemoryElementDescriptor<K, V> me);
 
@@ -334,7 +334,7 @@ public abstract class AbstractMemoryCache<K, V>
      * Remove element from control structure
      * (guarded by the lock)
      *
-     * @param me the memory element descriptor
+     * @param me The memory element descriptor
      */
     protected abstract void lockedRemoveElement(MemoryElementDescriptor<K, V> me);
 
@@ -408,7 +408,7 @@ public abstract class AbstractMemoryCache<K, V>
 
     /**
      * Remove all keys of the same group hierarchy.
-     * @param key the key
+     * @param key The key
      * @return true if something has been removed
      */
     protected boolean removeByGroup(final K key)
@@ -440,7 +440,7 @@ public abstract class AbstractMemoryCache<K, V>
     /**
      * Remove all keys of the same name hierarchy.
      *
-     * @param key the key
+     * @param key The key
      * @return true if something has been removed
      */
     protected boolean removeByHierarchy(final K key)
@@ -493,7 +493,7 @@ public abstract class AbstractMemoryCache<K, V>
     /**
      * Puts an item to the cache.
      *
-     * @param ce the item
+     * @param ce The item
      */
     @Override
     public void waterfall( final ICacheElement<K, V> ce )

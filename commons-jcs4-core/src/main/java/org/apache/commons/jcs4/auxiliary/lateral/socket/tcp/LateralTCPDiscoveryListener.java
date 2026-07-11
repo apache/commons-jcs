@@ -75,12 +75,12 @@ public class LateralTCPDiscoveryListener
     /**
      * This plugs into the udp discovery system. It will receive add and remove events.
      *
-     * @param factoryName the name of the related cache factory
-     * @param cacheManager the global cache manager
+     * @param factoryName The name of the related cache factory
+     * @param cacheManager The global cache manager
      * @param cacheEventLogger Reference to the cache event logger for auxiliary cache creation
      * @param elementSerializer Reference to the cache element serializer for auxiliary cache
      * creation
-     * @param keyMatcher the key matcher for getMatching() calls
+     * @param keyMatcher The key matcher for getMatching() calls
      * @since 3.1
      */
     protected LateralTCPDiscoveryListener( final String factoryName,
@@ -188,8 +188,8 @@ public class LateralTCPDiscoveryListener
      * When a broadcast is received from the UDP Discovery receiver, for each cacheName in the
      * message, the add no wait will be called here.
      *
-     * @param noWait the no wait
-     * @param facade the related facade
+     * @param noWait The no wait
+     * @param facade The related facade
      * @return true if we found the no wait and added it. False if the no wait was not present or if
      *         we already had it.
      * @since 3.1
@@ -218,7 +218,7 @@ public class LateralTCPDiscoveryListener
      * This adds nowaits to a facade for the region name. If the region has no facade, then it is
      * not configured to use the lateral cache, and no facade will be created.
      *
-     * @param cacheName   the region name
+     * @param cacheName   The region name
      * @param facade   facade (for region) =&gt; multiple lateral clients.
      * @return true if the facade was not already registered.
      */

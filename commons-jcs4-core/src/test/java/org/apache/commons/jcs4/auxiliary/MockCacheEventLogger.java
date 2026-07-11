@@ -108,7 +108,7 @@ public class MockCacheEventLogger
     }
 
     /**
-     * @param testProperty the testProperty to set
+     * @param testProperty The testProperty to set
      */
     public void setTestProperty(String testProperty)
     {

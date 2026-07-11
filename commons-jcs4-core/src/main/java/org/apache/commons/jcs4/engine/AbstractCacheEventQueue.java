@@ -128,7 +128,7 @@ public abstract class AbstractCacheEventQueue<K, V>
         /**
          * Constructor for the PutEvent object.
          *
-         * @param ice a cache element
+         * @param ice A cache element
          */
         PutEvent( final ICacheElement<K, V> ice )
         {
@@ -330,7 +330,7 @@ public abstract class AbstractCacheEventQueue<K, V>
     /**
      * Sets the time to wait for events before killing the background thread.
      *
-     * @param wtdm the ms for the q to sit idle.
+     * @param wtdm The ms for the q to sit idle.
      */
     protected void setWaitToDie( final Duration wtdm )
     {

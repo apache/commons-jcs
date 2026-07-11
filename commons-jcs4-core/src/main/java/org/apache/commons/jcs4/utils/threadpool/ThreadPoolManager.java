@@ -136,8 +136,8 @@ public static void dispose()
     /**
      * Configures the PoolConfiguration settings.
      *
-     * @param root the configuration key prefix
-     * @param defaultPoolConfiguration the default configuration
+     * @param root The configuration key prefix
+     * @param defaultPoolConfiguration The default configuration
      * @return PoolConfiguration
      */
     private static PoolConfiguration loadConfig( final String root, final PoolConfiguration defaultPoolConfiguration )
@@ -206,7 +206,7 @@ public static void dispose()
     /**
      * Creates a pool based on the configuration info.
      *
-     * @param config the pool configuration
+     * @param config The pool configuration
      * @param threadNamePrefix prefix for the thread names of the pool
      * @return A ThreadPool wrapper
      */
@@ -218,9 +218,9 @@ public static void dispose()
     /**
      * Creates a pool based on the configuration info.
      *
-     * @param config the pool configuration
+     * @param config The pool configuration
      * @param threadNamePrefix prefix for the thread names of the pool
-     * @param threadPriority the priority of the created threads
+     * @param threadPriority The priority of the created threads
      * @return A ThreadPool wrapper
      */
     public ExecutorService createPool( final PoolConfiguration config, final String threadNamePrefix, final int threadPriority )
@@ -273,9 +273,9 @@ public static void dispose()
     /**
      * Creates a scheduler pool based on the configuration info.
      *
-     * @param config the pool configuration
+     * @param config The pool configuration
      * @param threadNamePrefix prefix for the thread names of the pool
-     * @param threadPriority the priority of the created threads
+     * @param threadPriority The priority of the created threads
      * @return A ScheduledExecutorService
      */
     public ScheduledExecutorService createSchedulerPool( final PoolConfiguration config, final String threadNamePrefix, final int threadPriority )

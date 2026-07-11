@@ -66,10 +66,10 @@ public class MySQLDiskCacheFactory
      * This factory method should create an instance of the mysqlcache.
      *
      * @param rawAttr specific cache configuration attributes
-     * @param cacheMgr the global cache manager
-     * @param cacheEventLogger the cache event logger
-     * @param elementSerializer the serializer for cache elements
-     * @param keyMatcher the key matcher for getMatching() calls
+     * @param cacheMgr The global cache manager
+     * @param cacheEventLogger The cache event logger
+     * @param elementSerializer The serializer for cache elements
+     * @param keyMatcher The key matcher for getMatching() calls
      * @return MySQLDiskCache the cache instance
      * @throws SQLException if the cache instance could not be created
      */
@@ -119,7 +119,7 @@ public class MySQLDiskCacheFactory
      *
      * @param attributes configuration properties.
      * @param tableState for noting optimization in progress, etc.
-     * @param ds the DataSource
+     * @param ds The DataSource
      */
     protected void scheduleOptimizations( final MySQLDiskCacheAttributes attributes, final TableState tableState, final DataSource ds  )
     {

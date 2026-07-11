@@ -938,8 +938,8 @@ public class CompositeCache<K, V>
      * This does not call handle directly; instead the handler and the event are put into a queue.
      * This prevents the event handling from blocking normal cache operations.
      *
-     * @param element the item
-     * @param eventType the event type
+     * @param element The item
+     * @param eventType The event type
      */
     public void handleElementEvent(final ICacheElement<K, V> element, final ElementEventType eventType)
     {
@@ -970,7 +970,7 @@ public class CompositeCache<K, V>
     /**
      * Determine if the element is expired based on the values of the element attributes
      *
-     * @param element the element
+     * @param element The element
      * @return true if the element is expired
      */
     public boolean isExpired(final ICacheElement<K, V> element)
@@ -983,10 +983,10 @@ public class CompositeCache<K, V>
     /**
      * Check if the element is expired based on the values of the element attributes
      *
-     * @param element the element
-     * @param timestamp the timestamp to compare to
-     * @param eventMaxlife the event to fire in case the max life time is exceeded
-     * @param eventIdle the event to fire in case the idle time is exceeded
+     * @param element The element
+     * @param timestamp The timestamp to compare to
+     * @param eventMaxlife The event to fire in case the max life time is exceeded
+     * @param eventIdle The event to fire in case the idle time is exceeded
      * @return true if the element is expired
      */
     public boolean isExpired(final ICacheElement<K, V> element, final Instant timestamp,
@@ -1108,7 +1108,7 @@ public class CompositeCache<K, V>
     /**
      * Remove expired elements retrieved from an auxiliary. Update memory with good items.
      *
-     * @param aux the auxiliary cache instance
+     * @param aux The auxiliary cache instance
      * @param elementsFromAuxiliary
      * @throws IOException
      */
@@ -1512,7 +1512,7 @@ public class CompositeCache<K, V>
      * Put an item into the cache. If it is localOnly, then do no notify remote or lateral
      * auxiliaries.
      *
-     * @param cacheElement the ICacheElement&lt;K, V&gt;
+     * @param cacheElement The ICacheElement&lt;K, V&gt;
      * @param localOnly Whether the operation should be restricted to local auxiliaries.
      * @throws IOException
      */

@@ -142,7 +142,7 @@ public class RemoteHttpCacheClient<K, V>
     /**
      * Return the keys in this cache.
      *
-     * @param cacheName the name of the cache
+     * @param cacheName The name of the cache
      * @see org.apache.commons.jcs4.auxiliary.AuxiliaryCache#getKeySet()
      */
     @Override
@@ -421,7 +421,7 @@ public class RemoteHttpCacheClient<K, V>
     }
 
     /**
-     * @param initialized the initialized to set
+     * @param initialized The initialized to set
      */
     protected void setInitialized( final boolean initialized )
     {
@@ -429,7 +429,7 @@ public class RemoteHttpCacheClient<K, V>
     }
 
     /**
-     * @param remoteDispatcher the remoteDispatcher to set
+     * @param remoteDispatcher The remoteDispatcher to set
      */
     public void setRemoteDispatcher( final IRemoteCacheDispatcher remoteDispatcher )
     {
@@ -437,7 +437,7 @@ public class RemoteHttpCacheClient<K, V>
     }
 
     /**
-     * @param remoteHttpCacheAttributes the remoteHttpCacheAttributes to set
+     * @param remoteHttpCacheAttributes The remoteHttpCacheAttributes to set
      */
     public void setRemoteHttpCacheAttributes( final RemoteHttpCacheAttributes remoteHttpCacheAttributes )
     {

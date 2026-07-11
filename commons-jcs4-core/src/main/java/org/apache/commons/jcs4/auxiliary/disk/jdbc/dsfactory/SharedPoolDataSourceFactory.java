@@ -73,7 +73,7 @@ public class SharedPoolDataSourceFactory implements DataSourceFactory
     /**
      * Initializes the Jdbc2PoolDataSource.
      *
-     * @param dataSource the dataSource to initialize, not null.
+     * @param dataSource The dataSource to initialize, not null.
      * @param config where to read the settings from, not null.
      * @throws SQLException if a property set fails.
      */

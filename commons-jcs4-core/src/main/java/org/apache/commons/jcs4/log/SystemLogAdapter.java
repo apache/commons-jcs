@@ -33,7 +33,7 @@ public class SystemLogAdapter implements Log
     /**
      * Constructs a System Logger wrapper
      *
-     * @param logger the System Logger
+     * @param logger The System Logger
      */
     public SystemLogAdapter(final Logger logger)
     {
@@ -43,7 +43,7 @@ public class SystemLogAdapter implements Log
     /**
      * Logs a message object with the DEBUG level.
      *
-     * @param message the message object to log.
+     * @param message The message object to log.
      */
     @Override
     public void debug(final Object message)
@@ -54,7 +54,7 @@ public class SystemLogAdapter implements Log
     /**
      * Logs a message object with the DEBUG level.
      *
-     * @param message the message string to log.
+     * @param message The message string to log.
      */
     @Override
     public void debug(final String message)
@@ -65,7 +65,7 @@ public class SystemLogAdapter implements Log
     /**
      * Logs a message with parameters at the DEBUG level.
      *
-     * @param message the message to log; the format depends on the message factory.
+     * @param message The message to log; the format depends on the message factory.
      * @param params parameters to the message.
      */
     @Override
@@ -78,7 +78,7 @@ public class SystemLogAdapter implements Log
      * Logs a message with parameters which are only to be constructed if the
      * logging level is the DEBUG level.
      *
-     * @param message the message to log; the format depends on the message factory.
+     * @param message The message to log; the format depends on the message factory.
      * @param paramSuppliers An array of functions, which when called,
      *        produce the desired log message parameters.
      */
@@ -92,8 +92,8 @@ public class SystemLogAdapter implements Log
      * Logs a message at the DEBUG level including the stack trace of the {@link Throwable}
      * {@code t} passed as parameter.
      *
-     * @param message the message to log.
-     * @param t the exception to log, including its stack trace.
+     * @param message The message to log.
+     * @param t The exception to log, including its stack trace.
      */
     @Override
     public void debug(final String message, final Throwable t)
@@ -104,7 +104,7 @@ public class SystemLogAdapter implements Log
     /**
      * Logs a message object with the ERROR level.
      *
-     * @param message the message object to log.
+     * @param message The message object to log.
      */
     @Override
     public void error(final Object message)
@@ -115,7 +115,7 @@ public class SystemLogAdapter implements Log
     /**
      * Logs a message object with the ERROR level.
      *
-     * @param message the message string to log.
+     * @param message The message string to log.
      */
     @Override
     public void error(final String message)
@@ -126,7 +126,7 @@ public class SystemLogAdapter implements Log
     /**
      * Logs a message with parameters at the ERROR level.
      *
-     * @param message the message to log; the format depends on the message factory.
+     * @param message The message to log; the format depends on the message factory.
      * @param params parameters to the message.
      */
     @Override
@@ -139,7 +139,7 @@ public class SystemLogAdapter implements Log
      * Logs a message with parameters which are only to be constructed if the
      * logging level is the ERROR level.
      *
-     * @param message the message to log; the format depends on the message factory.
+     * @param message The message to log; the format depends on the message factory.
      * @param paramSuppliers An array of functions, which when called, produce
      *        the desired log message parameters.
      * @since 2.4
@@ -154,8 +154,8 @@ public class SystemLogAdapter implements Log
      * Logs a message at the ERROR level including the stack trace of the {@link Throwable}
      * {@code t} passed as parameter.
      *
-     * @param message the message object to log.
-     * @param t the exception to log, including its stack trace.
+     * @param message The message object to log.
+     * @param t The exception to log, including its stack trace.
      */
     @Override
     public void error(final String message, final Throwable t)
@@ -166,7 +166,7 @@ public class SystemLogAdapter implements Log
     /**
      * Logs a message object with the FATAL level.
      *
-     * @param message the message object to log.
+     * @param message The message object to log.
      */
     @Override
     public void fatal(final Object message)
@@ -177,7 +177,7 @@ public class SystemLogAdapter implements Log
     /**
      * Logs a message object with the FATAL level.
      *
-     * @param message the message string to log.
+     * @param message The message string to log.
      */
     @Override
     public void fatal(final String message)
@@ -188,7 +188,7 @@ public class SystemLogAdapter implements Log
     /**
      * Logs a message with parameters at the FATAL level.
      *
-     * @param message the message to log; the format depends on the message factory.
+     * @param message The message to log; the format depends on the message factory.
      * @param params parameters to the message.
      */
     @Override
@@ -201,7 +201,7 @@ public class SystemLogAdapter implements Log
      * Logs a message with parameters which are only to be constructed if the
      * logging level is the FATAL level.
      *
-     * @param message the message to log; the format depends on the message factory.
+     * @param message The message to log; the format depends on the message factory.
      * @param paramSuppliers An array of functions, which when called, produce the
      *        desired log message parameters.
      */
@@ -215,8 +215,8 @@ public class SystemLogAdapter implements Log
      * Logs a message at the FATAL level including the stack trace of the {@link Throwable}
      * {@code t} passed as parameter.
      *
-     * @param message the message object to log.
-     * @param t the exception to log, including its stack trace.
+     * @param message The message object to log.
+     * @param t The exception to log, including its stack trace.
      */
     @Override
     public void fatal(final String message, final Throwable t)
@@ -238,7 +238,7 @@ public class SystemLogAdapter implements Log
     /**
      * Logs a message object with the INFO level.
      *
-     * @param message the message object to log.
+     * @param message The message object to log.
      */
     @Override
     public void info(final Object message)
@@ -249,7 +249,7 @@ public class SystemLogAdapter implements Log
     /**
      * Logs a message object with the INFO level.
      *
-     * @param message the message string to log.
+     * @param message The message string to log.
      */
     @Override
     public void info(final String message)
@@ -260,7 +260,7 @@ public class SystemLogAdapter implements Log
     /**
      * Logs a message with parameters at the INFO level.
      *
-     * @param message the message to log; the format depends on the message factory.
+     * @param message The message to log; the format depends on the message factory.
      * @param params parameters to the message.
      */
     @Override
@@ -273,7 +273,7 @@ public class SystemLogAdapter implements Log
      * Logs a message with parameters which are only to be constructed if the
      * logging level is the INFO level.
      *
-     * @param message the message to log; the format depends on the message factory.
+     * @param message The message to log; the format depends on the message factory.
      * @param paramSuppliers An array of functions, which when called, produce
      *        the desired log message parameters.
      */
@@ -287,8 +287,8 @@ public class SystemLogAdapter implements Log
      * Logs a message at the INFO level including the stack trace of the {@link Throwable}
      * {@code t} passed as parameter.
      *
-     * @param message the message object to log.
-     * @param t the exception to log, including its stack trace.
+     * @param message The message object to log.
+     * @param t The exception to log, including its stack trace.
      */
     @Override
     public void info(final String message, final Throwable t)
@@ -436,7 +436,7 @@ public class SystemLogAdapter implements Log
     /**
      * Logs a message object with the TRACE level.
      *
-     * @param message the message object to log.
+     * @param message The message object to log.
      */
     @Override
     public void trace(final Object message)
@@ -447,7 +447,7 @@ public class SystemLogAdapter implements Log
     /**
      * Logs a message object with the TRACE level.
      *
-     * @param message the message string to log.
+     * @param message The message string to log.
      */
     @Override
     public void trace(final String message)
@@ -458,7 +458,7 @@ public class SystemLogAdapter implements Log
     /**
      * Logs a message with parameters at the TRACE level.
      *
-     * @param message the message to log; the format depends on the message factory.
+     * @param message The message to log; the format depends on the message factory.
      * @param params parameters to the message.
      */
     @Override
@@ -471,7 +471,7 @@ public class SystemLogAdapter implements Log
      * Logs a message with parameters which are only to be constructed if the
      * logging level is the TRACE level.
      *
-     * @param message the message to log; the format depends on the message factory.
+     * @param message The message to log; the format depends on the message factory.
      * @param paramSuppliers An array of functions, which when called, produce
      *        the desired log message parameters.
      */
@@ -485,8 +485,8 @@ public class SystemLogAdapter implements Log
      * Logs a message at the TRACE level including the stack trace of the {@link Throwable}
      * {@code t} passed as parameter.
      *
-     * @param message the message object to log.
-     * @param t the exception to log, including its stack trace.
+     * @param message The message object to log.
+     * @param t The exception to log, including its stack trace.
      * @see #debug(String)
      */
     @Override
@@ -498,7 +498,7 @@ public class SystemLogAdapter implements Log
     /**
      * Logs a message object with the WARN level.
      *
-     * @param message the message object to log.
+     * @param message The message object to log.
      */
     @Override
     public void warn(final Object message)
@@ -509,7 +509,7 @@ public class SystemLogAdapter implements Log
     /**
      * Logs a message object with the WARN level.
      *
-     * @param message the message string to log.
+     * @param message The message string to log.
      */
     @Override
     public void warn(final String message)
@@ -520,7 +520,7 @@ public class SystemLogAdapter implements Log
     /**
      * Logs a message with parameters at the WARN level.
      *
-     * @param message the message to log; the format depends on the message factory.
+     * @param message The message to log; the format depends on the message factory.
      * @param params parameters to the message.
      */
     @Override
@@ -533,7 +533,7 @@ public class SystemLogAdapter implements Log
      * Logs a message with parameters which are only to be constructed if the
      * logging level is the WARN level.
      *
-     * @param message the message to log; the format depends on the message factory.
+     * @param message The message to log; the format depends on the message factory.
      * @param paramSuppliers An array of functions, which when called, produce
      *        the desired log message parameters.
      */
@@ -547,8 +547,8 @@ public class SystemLogAdapter implements Log
      * Logs a message at the WARN level including the stack trace of the {@link Throwable}
      * {@code t} passed as parameter.
      *
-     * @param message the message object to log.
-     * @param t the exception to log, including its stack trace.
+     * @param message The message object to log.
+     * @param t The exception to log, including its stack trace.
      */
     @Override
     public void warn(final String message, final Throwable t)

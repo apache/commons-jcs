@@ -55,10 +55,10 @@ public class RemoteCache<K, V>
      * listener is used for all regions for one remote server. Holding a reference to the listener
      * allows this object to know the listener id assigned by the remote cache.
      *
-     * @param cattr the cache configuration
-     * @param remote the remote cache server handle
-     * @param listener a listener
-     * @param monitor the cache monitor
+     * @param cattr The cache configuration
+     * @param remote The remote cache server handle
+     * @param listener A listener
+     * @param monitor The cache monitor
      */
     public RemoteCache( final IRemoteCacheAttributes cattr,
         final ICacheServiceNonLocal<K, V> remote,
@@ -182,7 +182,7 @@ public class RemoteCache<K, V>
     /**
      * Sets facade
      *
-     * @param facade the facade to set
+     * @param facade The facade to set
      */
     protected void setFacade(final AbstractRemoteCacheNoWaitFacade<K, V> facade)
     {

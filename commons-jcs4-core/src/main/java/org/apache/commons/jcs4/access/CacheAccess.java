@@ -169,7 +169,7 @@ public class CacheAccess<K, V>
     /**
      * Retrieve matching objects from the cache region this instance provides access to.
      *
-     * @param pattern   a key pattern for the objects stored
+     * @param pattern   A key pattern for the objects stored
      * @return A map of key to values.  These are stripped from the wrapper.
      */
     @Override
@@ -292,7 +292,7 @@ public class CacheAccess<K, V>
     /**
      * Removes a single item by name.
      *
-     * @param name the name of the item to remove.
+     * @param name The name of the item to remove.
      */
     @Override
     public void remove( final K name )

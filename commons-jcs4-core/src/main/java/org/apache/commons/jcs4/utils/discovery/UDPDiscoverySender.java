@@ -59,11 +59,11 @@ public class UDPDiscoverySender implements AutoCloseable
      * <p>
      * When you are done sending, you should destroy the socket sender.
      *
-     * @param mcastInterface the Multicast interface name to use, if null, try to autodetect
+     * @param mcastInterface The Multicast interface name to use, if null, try to autodetect
      * @param host
      * @param port
-     * @param udpTTL the Datagram packet time-to-live
-     * @param serializer the Serializer to use when sending messages
+     * @param udpTTL The Datagram packet time-to-live
+     * @param serializer The Serializer to use when sending messages
      * @throws IOException
      * @since 3.1
      */
@@ -120,7 +120,7 @@ public class UDPDiscoverySender implements AutoCloseable
      * When you are done sending, you should destroy the socket sender.
      *
      * @param udpDiscoveryAttributes configuration object
-     * @param serializer the Serializer to use when sending messages
+     * @param serializer The Serializer to use when sending messages
      * @throws IOException
      * @since 3.1
      */

@@ -574,7 +574,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
     }
 
     /**
-     * @param remoteCacheListener the remoteCacheListener to set
+     * @param remoteCacheListener The remoteCacheListener to set
      */
     protected void setRemoteCacheListener( final IRemoteCacheListener<K, V> remoteCacheListener )
     {
@@ -582,7 +582,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
     }
 
     /**
-     * @param remote the remote to set
+     * @param remote The remote to set
      */
     protected void setRemoteCacheService( final ICacheServiceNonLocal<K, V> remote )
     {

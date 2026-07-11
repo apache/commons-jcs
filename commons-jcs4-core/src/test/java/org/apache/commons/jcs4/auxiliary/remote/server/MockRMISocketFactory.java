@@ -79,7 +79,7 @@ public class MockRMISocketFactory
     }
 
     /**
-     * @param testStringProperty the testStringProperty to set
+     * @param testStringProperty The testStringProperty to set
      */
     public void setTestStringProperty( final String testStringProperty )
     {

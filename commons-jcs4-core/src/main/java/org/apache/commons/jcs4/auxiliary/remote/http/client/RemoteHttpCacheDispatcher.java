@@ -136,7 +136,7 @@ public class RemoteHttpCacheDispatcher
      * Process single request
      *
      * @param requestAsByteArray request body
-     * @param remoteCacheRequest the cache request
+     * @param remoteCacheRequest The cache request
      * @param url target url
      * @return byte[] - the response
      * @throws IOException

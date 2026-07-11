@@ -148,7 +148,7 @@ public class LHMLRUMemoryCache<K, V>
      * Update control structures after get
      * (guarded by the lock)
      *
-     * @param me the memory element descriptor
+     * @param me The memory element descriptor
      */
     @Override
     protected void lockedGetElement(final MemoryElementDescriptor<K, V> me)
@@ -170,7 +170,7 @@ public class LHMLRUMemoryCache<K, V>
      * Remove element from control structure
      * (guarded by the lock)
      *
-     * @param me the memory element descriptor
+     * @param me The memory element descriptor
      */
     @Override
     protected void lockedRemoveElement(final MemoryElementDescriptor<K, V> me)

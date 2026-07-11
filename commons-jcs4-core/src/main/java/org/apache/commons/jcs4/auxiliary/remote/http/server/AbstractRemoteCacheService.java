@@ -465,7 +465,7 @@ public abstract class AbstractRemoteCacheService<K, V>
     }
 
     /**
-     * @param cacheManager the cacheManager to set
+     * @param cacheManager The cacheManager to set
      */
     protected void setCacheManager( final ICompositeCacheManager cacheManager )
     {
@@ -473,7 +473,7 @@ public abstract class AbstractRemoteCacheService<K, V>
     }
 
     /**
-     * @param eventLogSourceName the eventLogSourceName to set
+     * @param eventLogSourceName The eventLogSourceName to set
      */
     protected void setEventLogSourceName( final String eventLogSourceName )
     {

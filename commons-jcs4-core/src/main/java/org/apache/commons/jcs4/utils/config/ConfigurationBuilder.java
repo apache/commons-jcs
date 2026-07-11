@@ -74,7 +74,7 @@ public class ConfigurationBuilder<T>
     /**
      * Initialize default values from default record.
      *
-     * @param defaultRecord a record object containing defaults
+     * @param defaultRecord A record object containing defaults
      */
     private void initializeDefaults(Object defaultRecord)
     {
@@ -97,8 +97,8 @@ public class ConfigurationBuilder<T>
     /**
      * Load properties from a Properties object with a given prefix.
      *
-     * @param props the Properties
-     * @param prefix the Prefix
+     * @param props The Properties
+     * @param prefix The Prefix
      */
     public ConfigurationBuilder<T> fromProperties(Properties props, String prefix)
     {

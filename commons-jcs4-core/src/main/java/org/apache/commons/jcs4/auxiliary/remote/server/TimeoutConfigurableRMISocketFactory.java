@@ -95,7 +95,7 @@ public class TimeoutConfigurableRMISocketFactory
     }
 
     /**
-     * @param openTimeout the openTimeout to set
+     * @param openTimeout The openTimeout to set
      */
     public void setOpenTimeout( final Duration openTimeout )
     {
@@ -103,7 +103,7 @@ public class TimeoutConfigurableRMISocketFactory
     }
 
     /**
-     * @param readTimeout the readTimeout to set
+     * @param readTimeout The readTimeout to set
      */
     public void setReadTimeout( final Duration readTimeout )
     {

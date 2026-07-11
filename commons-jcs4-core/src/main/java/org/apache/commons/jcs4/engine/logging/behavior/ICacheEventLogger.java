@@ -95,10 +95,10 @@ public interface ICacheEventLogger
      * Creates an event.
      *
      * @param source e.g. RemoteCacheServer
-     * @param region the name of the region
+     * @param region The name of the region
      * @param eventType e.g. update, get, put, remove
      * @param optionalDetails any extra message
-     * @param key the cache key
+     * @param key The cache key
      * @return ICacheEvent
      */
     default <T> ICacheEvent<T> createICacheEvent( String source, String region,
@@ -128,7 +128,7 @@ public interface ICacheEventLogger
     /**
      * Logs an event.
      *
-     * @param event   the event created in createICacheEvent
+     * @param event   The event created in createICacheEvent
      */
     default <T> void logICacheEvent( ICacheEvent<T> event ) {}
 }

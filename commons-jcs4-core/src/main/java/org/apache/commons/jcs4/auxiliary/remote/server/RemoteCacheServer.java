@@ -103,7 +103,7 @@ public class RemoteCacheServer<K, V>
     /**
      * Subclass can override this method to create the specific cache manager.
      *
-     * @param prop the configuration object.
+     * @param prop The configuration object.
      * @return The cache hub configured with this configuration.
      * @throws CacheException if the configuration cannot be loaded
      */
@@ -201,7 +201,7 @@ public class RemoteCacheServer<K, V>
      * If the client id is 0, then the remote cache server will increment it's local count and
      * assign an id to the client.
      *
-     * @param cacheName the specified remote cache.
+     * @param cacheName The specified remote cache.
      * @param listener object to notify for cache changes. must be synchronized since there are
      *            remote calls involved.
      * @throws IOException
@@ -540,7 +540,7 @@ public class RemoteCacheServer<K, V>
     /**
      * Return the keys in the cache.
      *
-     * @param cacheName the name of the cache region
+     * @param cacheName The name of the cache region
      * @see org.apache.commons.jcs4.auxiliary.AuxiliaryCache#getKeySet()
      */
     @Override
@@ -753,7 +753,7 @@ public class RemoteCacheServer<K, V>
     /**
      * Initialize the RMI Cache Server from a properties object.
      *
-     * @param prop the configuration properties
+     * @param prop The configuration properties
      * @throws RemoteException if the configuration of the cache manager instance fails
      */
     private void init( final Properties prop ) throws RemoteException

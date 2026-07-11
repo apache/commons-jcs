@@ -37,10 +37,10 @@ public abstract class AbstractCacheEventLogSupport<K, V>
      * Creates an event.
      *
      * @param source e.g. RemoteCacheServer
-     * @param region the name of the region
+     * @param region The name of the region
      * @param eventType e.g. update, get, put, remove
      * @param optionalDetails any extra message
-     * @param key the cache key
+     * @param key The cache key
      * @return ICacheEvent
      */
     protected <T> ICacheEvent<T> createICacheEvent(final String source, final String region,

@@ -71,7 +71,7 @@ public class JCSAdminBean implements JCSJMXBean
     /**
      * Parameterized constructor
      *
-	 * @param cacheHub the cache manager instance
+	 * @param cacheHub The cache manager instance
 	 */
 	public JCSAdminBean(final CompositeCacheManager cacheHub)
 	{

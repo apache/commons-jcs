@@ -104,7 +104,7 @@ public class RemoteCacheNoWait<K, V>
 
     /**
      * Create a cache event queue from the parameters of the remote client
-     * @param client the remote client
+     * @param client The remote client
      */
     private ICacheEventQueue<K, V> createCacheEventQueue( final IRemoteCacheClient<K, V> client )
     {

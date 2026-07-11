@@ -63,8 +63,8 @@ public class LateralTCPSender
     /**
      * Constructor for the LateralTCPSender object.
      *
-     * @param lca the configuration object
-     * @param serializer the serializer to use when sending
+     * @param lca The configuration object
+     * @param serializer The serializer to use when sending
      * @throws IOException
      * @since 3.1
      */

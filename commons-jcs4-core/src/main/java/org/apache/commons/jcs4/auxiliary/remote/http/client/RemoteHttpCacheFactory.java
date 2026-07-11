@@ -53,13 +53,13 @@ public class RemoteHttpCacheFactory
      * The failover runner will get a cache from the manager. When the primary is restored it will
      * tell the manager for the failover to deregister the listener.
      *
-     * @param iaca the cache attributes for this cache
+     * @param iaca The cache attributes for this cache
      * @param cacheMgr This allows auxiliaries to reference the manager without assuming that it is
      *            a singleton. This will allow JCS to be a non-singleton. Also, it makes it easier
      *            to test.
-     * @param cacheEventLogger the cache event logger
-     * @param elementSerializer the serializer for cache elements
-     * @param keyMatcher the key matcher for getMatching() calls
+     * @param cacheEventLogger The cache event logger
+     * @param elementSerializer The serializer for cache elements
+     * @param keyMatcher The key matcher for getMatching() calls
      * @return RemoteCacheNoWait
      */
     @Override
@@ -94,7 +94,7 @@ public class RemoteHttpCacheFactory
      * This is an extension point. The manager and other classes will only create
      * RemoteHttpCacheClient through this method.
 
-     * @param cattr the cache configuration
+     * @param cattr The cache configuration
      * @return The client instance
      */
     protected <V, K> IRemoteHttpCacheClient<K, V> createRemoteHttpCacheClientForAttributes(final RemoteHttpCacheAttributes cattr)

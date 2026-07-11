@@ -53,7 +53,7 @@ public class LateralCacheMonitor extends AbstractAuxiliaryCacheMonitor
      * <p>
      * It's the clients responsibility to decide how many of these there will be.
      *
-     * @param factory a reference to the factory that manages the service instances
+     * @param factory A reference to the factory that manages the service instances
      */
     public LateralCacheMonitor(final LateralTCPCacheFactory factory)
     {
@@ -66,7 +66,7 @@ public class LateralCacheMonitor extends AbstractAuxiliaryCacheMonitor
     /**
      * Add a cache to be monitored
      *
-     * @param cache the cache
+     * @param cache The cache
      */
     @SuppressWarnings("unchecked") // common map for all caches
     public void addCache(final LateralTCPCacheNoWait<?, ?> cache)

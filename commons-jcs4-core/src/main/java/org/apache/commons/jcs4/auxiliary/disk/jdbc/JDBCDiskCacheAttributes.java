@@ -188,7 +188,7 @@ public class JDBCDiskCacheAttributes
     }
 
 	/**
-     * @param connectionPoolName the connectionPoolName to set
+     * @param connectionPoolName The connectionPoolName to set
      */
     public void setConnectionPoolName( final String connectionPoolName )
     {
@@ -204,7 +204,7 @@ public class JDBCDiskCacheAttributes
     }
 
     /**
-	 * @param jndiPath the jndiPath to set
+	 * @param jndiPath The jndiPath to set
 	 */
 	public void setJndiPath(final String jndiPath)
 	{
@@ -212,7 +212,7 @@ public class JDBCDiskCacheAttributes
 	}
 
     /**
-	 * @param jndiTTL the jndiTTL to set
+	 * @param jndiTTL The jndiTTL to set
 	 */
 	public void setJndiTTL(final Duration jndiTTL)
 	{

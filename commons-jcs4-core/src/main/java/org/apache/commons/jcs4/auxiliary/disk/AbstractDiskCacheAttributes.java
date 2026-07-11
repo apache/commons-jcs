@@ -187,7 +187,7 @@ public abstract class AbstractDiskCacheAttributes extends AbstractAuxiliaryCache
      * The default is 60 seconds.
      * <p>
      *
-     * @param shutdownSpoolTimeLimit the time
+     * @param shutdownSpoolTimeLimit The time
      */
     public void setShutdownSpoolTimeLimit(final Duration shutdownSpoolTimeLimit)
     {

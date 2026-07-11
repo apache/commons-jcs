@@ -93,11 +93,11 @@ public class RemoteCacheManager
      * is made by the monitoring daemon.
      *
      * @param cattr cache attributes
-     * @param cacheMgr the cache hub
-     * @param monitor the cache monitor thread for error notifications
-     * @param cacheEventLogger the cache event logger
-     * @param elementSerializer the serializer for cache elements
-     * @param keyMatcher the key matcher for getMatching() calls
+     * @param cacheMgr The cache hub
+     * @param monitor The cache monitor thread for error notifications
+     * @param cacheEventLogger The cache event logger
+     * @param elementSerializer The serializer for cache elements
+     * @param keyMatcher The key matcher for getMatching() calls
      */
     protected RemoteCacheManager(final IRemoteCacheAttributes cattr,
             final ICompositeCacheManager cacheMgr, final RemoteCacheMonitor monitor,
@@ -250,7 +250,7 @@ public class RemoteCacheManager
     /**
      * Create new RemoteCacheNoWait instance
      *
-     * @param cattr the cache configuration
+     * @param cattr The cache configuration
      * @return The instance
      */
     @SuppressWarnings("unchecked")

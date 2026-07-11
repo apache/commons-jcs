@@ -49,9 +49,9 @@ public class MySQLDiskCache<K, V>
      * Delegates to the super and makes use of the MySQL specific parameters used for scheduled
      * optimization.
      *
-     * @param attributes the configuration object for this cache
-     * @param dsFactory the DataSourceFactory for this cache
-     * @param tableState an object to track table operations
+     * @param attributes The configuration object for this cache
+     * @param dsFactory The DataSourceFactory for this cache
+     * @param tableState An object to track table operations
      * @throws SQLException if the pool access could not be set up
      */
     public MySQLDiskCache( final MySQLDiskCacheAttributes attributes, final DataSourceFactory dsFactory,

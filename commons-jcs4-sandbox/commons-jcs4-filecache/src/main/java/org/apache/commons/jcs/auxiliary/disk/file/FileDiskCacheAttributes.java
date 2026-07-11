@@ -56,7 +56,7 @@ public class FileDiskCacheAttributes
     private boolean touchOnGet = DEFAULT_TOUCH_ON_GET;
 
     /**
-     * @param maxNumberOfFiles the maxNumberOfFiles to set
+     * @param maxNumberOfFiles The maxNumberOfFiles to set
      */
     public void setMaxNumberOfFiles( final int maxNumberOfFiles )
     {
@@ -72,7 +72,7 @@ public class FileDiskCacheAttributes
     }
 
     /**
-     * @param maxRetriesOnDelete the maxRetriesOnDelete to set
+     * @param maxRetriesOnDelete The maxRetriesOnDelete to set
      */
     public void setMaxRetriesOnDelete( final int maxRetriesOnDelete )
     {
@@ -88,7 +88,7 @@ public class FileDiskCacheAttributes
     }
 
     /**
-     * @param touchOnGet the touchOnGet to set
+     * @param touchOnGet The touchOnGet to set
      */
     public void setTouchOnGet( final boolean touchOnGet )
     {
@@ -104,7 +104,7 @@ public class FileDiskCacheAttributes
     }
 
     /**
-     * @param maxRetriesOnTouch the maxRetriesOnTouch to set
+     * @param maxRetriesOnTouch The maxRetriesOnTouch to set
      */
     public void setMaxRetriesOnTouch( final int maxRetriesOnTouch )
     {

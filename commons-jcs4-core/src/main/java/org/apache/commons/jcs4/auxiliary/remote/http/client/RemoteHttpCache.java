@@ -49,7 +49,7 @@ public class RemoteHttpCache<K, V>
      * @param remoteHttpCacheAttributes
      * @param remote
      * @param listener
-     * @param monitor the cache monitor
+     * @param monitor The cache monitor
      */
     public RemoteHttpCache( final RemoteHttpCacheAttributes remoteHttpCacheAttributes, final ICacheServiceNonLocal<K, V> remote,
                             final IRemoteCacheListener<K, V> listener, final RemoteHttpCacheMonitor monitor )

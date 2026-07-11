@@ -65,8 +65,8 @@ public abstract class AbstractRemoteCacheListener<K, V>
      * callback port is anonymous unless a local port value was specified in the configuration.
      *
      * @param irca cache configuration
-     * @param cacheMgr the cache hub
-     * @param elementSerializer a custom serializer
+     * @param cacheMgr The cache hub
+     * @param elementSerializer A custom serializer
      */
     public AbstractRemoteCacheListener( final IRemoteCacheAttributes irca, final ICompositeCacheManager cacheMgr, final IElementSerializer elementSerializer )
     {

@@ -99,11 +99,11 @@ public class TestRemoteCacheFactory extends RemoteCacheFactory
      * If the connection cannot be established, zombie objects will be used for future recovery
      * purposes.
      *
-     * @param cattr the cache configuration object
-     * @param cacheMgr the cache manager
-     * @param cacheEventLogger the cache event logger
-     * @param elementSerializer the serializer for cache elements
-     * @param keyMatcher the key matcher for getMatching() calls
+     * @param cattr The cache configuration object
+     * @param cacheMgr The cache manager
+     * @param cacheEventLogger The cache event logger
+     * @param elementSerializer The serializer for cache elements
+     * @param keyMatcher The key matcher for getMatching() calls
      * @return The instance value, never null
      */
     @Override

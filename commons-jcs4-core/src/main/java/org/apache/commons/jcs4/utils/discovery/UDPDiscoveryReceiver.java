@@ -304,7 +304,7 @@ public class UDPDiscoveryReceiver
     /**
      * Set the serializer implementation
      *
-     * @param serializer the serializer to set
+     * @param serializer The serializer to set
      * @since 3.1
      */
     protected void setSerializer(final IElementSerializer serializer)
@@ -315,7 +315,7 @@ public class UDPDiscoveryReceiver
     /**
      * Set the service implementation
      *
-     * @param service the service to set
+     * @param service The service to set
      * @since 4.0
      */
     protected void setService(final Consumer<UDPDiscoveryMessage> service)

@@ -123,7 +123,7 @@ public class TestCacheAccess
     }
 
     /**
-     * @param regionName the name of the region.
+     * @param regionName The name of the region.
      */
     public TestCacheAccess( final String regionName )
     {

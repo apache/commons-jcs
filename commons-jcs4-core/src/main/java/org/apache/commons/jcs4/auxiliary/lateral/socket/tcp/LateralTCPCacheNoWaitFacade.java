@@ -66,9 +66,9 @@ public class LateralTCPCacheNoWaitFacade<K, V>
     /**
      * Constructs with the given lateral cache, and fires events to any listeners.
      *
-     * @param listener the cache listener
-     * @param noWaits the list of noWaits
-     * @param cattr the configuration
+     * @param listener The cache listener
+     * @param noWaits The list of noWaits
+     * @param cattr The configuration
      * @since 3.1
      */
     public LateralTCPCacheNoWaitFacade(final ILateralCacheListener<K, V> listener,
@@ -121,7 +121,7 @@ public class LateralTCPCacheNoWaitFacade<K, V>
      * Tells you if the no wait is in the list or not by checking for its
      * identifying key
      *
-     * @param tcpServer the identifying key
+     * @param tcpServer The identifying key
      * @return true if the noWait is in the list.
      * @since 3.1
      */
@@ -357,7 +357,7 @@ public class LateralTCPCacheNoWaitFacade<K, V>
      * Removes a no wait from the list if it is already there by its
      * identifying key
      *
-     * @param tcpServer the identifying key.
+     * @param tcpServer The identifying key.
      * @return true if it was already in the array
      * @since 3.1
      */
@@ -389,7 +389,7 @@ public class LateralTCPCacheNoWaitFacade<K, V>
 
     /**
      * Update the cache element in all lateral caches
-     * @param ce the cache element
+     * @param ce The cache element
      * @throws IOException
      */
     @Override

@@ -58,8 +58,8 @@ public interface IElementSerializer
      * stream data.
      *
      * @param <T> The type of the object
-     * @param ic the input channel
-     * @param readTimeoutMs the read timeout in milliseconds
+     * @param ic The input channel
+     * @param readTimeoutMs The read timeout in milliseconds
      * @param loader class loader to use
      * @throws IOException if serialization or reading fails
      * @throws ClassNotFoundException thrown if we don't know the object.
@@ -126,7 +126,7 @@ public interface IElementSerializer
      * stream data.
      *
      * @param <T> The type of the object
-     * @param is the input stream
+     * @param is The input stream
      * @param loader class loader to use
      * @throws IOException if serialization or reading fails
      * @throws ClassNotFoundException thrown if we don't know the object.
@@ -144,7 +144,7 @@ public interface IElementSerializer
      * stream data.
      *
      * @param <T> The type of the object
-     * @param ic the input channel
+     * @param ic The input channel
      * @param loader class loader to use
      * @throws IOException if serialization or reading fails
      * @throws ClassNotFoundException thrown if we don't know the object.
@@ -187,7 +187,7 @@ public interface IElementSerializer
      * Turns an object into a byte array.
      *
      * @param <T> The type of the object
-     * @param obj the object to serialize
+     * @param obj The object to serialize
      * @return byte[] a byte array containing the serialized object
      * @throws IOException if serialization fails
      */
@@ -200,9 +200,9 @@ public interface IElementSerializer
      * The stream data will be prepended with a four-byte length prefix.
      *
      * @param <T> The type of the object
-     * @param obj the object to serialize
-     * @param oc the output channel
-     * @param writeTimeoutMs the write timeout im milliseconds
+     * @param obj The object to serialize
+     * @param oc The output channel
+     * @param writeTimeoutMs The write timeout im milliseconds
      * @return The number of bytes written
      * @throws IOException if serialization or writing fails
      * @since 3.1
@@ -238,8 +238,8 @@ public interface IElementSerializer
      * The stream data will be prepended with a four-byte length prefix.
      *
      * @param <T> The type of the object
-     * @param obj the object to serialize
-     * @param os the output stream
+     * @param obj The object to serialize
+     * @param os The output stream
      * @return The number of bytes written
      * @throws IOException if serialization or writing fails
      * @since 3.1
@@ -262,8 +262,8 @@ public interface IElementSerializer
      * The stream data will be prepended with a four-byte length prefix.
      *
      * @param <T> The type of the object
-     * @param obj the object to serialize
-     * @param oc the output channel
+     * @param obj The object to serialize
+     * @param oc The output channel
      * @return The number of bytes written
      * @throws IOException if serialization or writing fails
      * @since 3.1

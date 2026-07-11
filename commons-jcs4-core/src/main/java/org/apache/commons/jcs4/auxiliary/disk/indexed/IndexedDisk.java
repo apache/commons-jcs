@@ -225,7 +225,7 @@ public class IndexedDisk implements AutoCloseable
     /**
      * Truncates the file to a given length.
      *
-     * @param length the new length of the file
+     * @param length The new length of the file
      * @throws IOException
      */
     protected void truncate(final long length)

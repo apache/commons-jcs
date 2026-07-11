@@ -231,9 +231,9 @@ public class CompositeCacheManager
     /**
      * Add a cache to the map of registered auxiliary caches
      *
-     * @param auxName the auxiliary name
-     * @param cacheName the region name
-     * @param cache the cache instance
+     * @param auxName The auxiliary name
+     * @param cacheName The region name
+     * @param cache The cache instance
      */
     public void addAuxiliaryCache(final String auxName, final String cacheName, final AuxiliaryCache<?, ?> cache)
     {
@@ -244,8 +244,8 @@ public class CompositeCacheManager
     /**
      * Add a cache to the map of registered caches
      *
-     * @param cacheName the region name
-     * @param cache the cache instance
+     * @param cacheName The region name
+     * @param cache The cache instance
      */
     public void addCache(final String cacheName, final ICache<?, ?> cache)
     {
@@ -422,7 +422,7 @@ public class CompositeCacheManager
     /**
      * Dispose a cache and remove it from the map of registered auxiliary caches
      *
-     * @param key the key into the map of auxiliaries
+     * @param key The key into the map of auxiliaries
      * @throws IOException if disposing of the cache fails
      */
     public void freeAuxiliaryCache(final String key) throws IOException
@@ -438,8 +438,8 @@ public class CompositeCacheManager
     /**
      * Dispose a cache and remove it from the map of registered auxiliary caches
      *
-     * @param auxName the auxiliary name
-     * @param cacheName the region name
+     * @param auxName The auxiliary name
+     * @param cacheName The region name
      * @throws IOException if disposing of the cache fails
      */
     public void freeAuxiliaryCache(final String auxName, final String cacheName) throws IOException
@@ -473,8 +473,8 @@ public class CompositeCacheManager
     /**
      * Gets a cache from the map of registered auxiliary caches
      *
-     * @param auxName the auxiliary name
-     * @param cacheName the region name
+     * @param auxName The auxiliary name
+     * @param cacheName The region name
      * @return The cache instance
      */
     @Override
