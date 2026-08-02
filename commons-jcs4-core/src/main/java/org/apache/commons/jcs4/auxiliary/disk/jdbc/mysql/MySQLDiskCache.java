@@ -52,7 +52,7 @@ public class MySQLDiskCache<K, V>
      * @param attributes The configuration object for this cache
      * @param dsFactory The DataSourceFactory for this cache
      * @param tableState An object to track table operations
-     * @throws SQLException if the pool access could not be set up
+     * @throws SQLException Thrown if the pool access could not be set up
      */
     public MySQLDiskCache( final MySQLDiskCacheAttributes attributes, final DataSourceFactory dsFactory,
     		final TableState tableState) throws SQLException

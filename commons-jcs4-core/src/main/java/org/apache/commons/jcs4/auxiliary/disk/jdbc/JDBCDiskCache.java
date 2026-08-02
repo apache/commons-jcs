@@ -159,7 +159,7 @@ public class JDBCDiskCache<K, V>
      * Get a connection from the data source and prepare it for use
      *
      * @return A database connection
-     * @throws SQLException if getting the connection goes wrong
+     * @throws SQLException Thrown if getting the connection goes wrong
      */
     protected JDBCConnection getConnection() throws SQLException
     {
@@ -265,7 +265,7 @@ public class JDBCDiskCache<K, V>
     /**
      * Public so managers can access it.
      * @return The dsFactory
-     * @throws SQLException if getting a data source fails
+     * @throws SQLException Thrown if getting a data source fails
      */
     public DataSource getDataSource() throws SQLException
     {

@@ -57,7 +57,7 @@ public class HSQLDiskCacheFactory
      * @param elementSerializer The serializer for cache elements
      * @param keyMatcher The key matcher for getMatching() calls
      * @return JDBCDiskCache
-     * @throws SQLException if the creation of the cache instance fails
+     * @throws SQLException Thrown if the creation of the cache instance fails
      */
     @Override
     public <K, V> JDBCDiskCache<K, V> createCache( final AuxiliaryCacheAttributes iaca,

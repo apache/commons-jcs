@@ -45,7 +45,7 @@ public interface IElementSerializer
      * @param bytes data bytes
      * @param loader class loader to use
      * @return Object
-     * @throws IOException if de-serialization fails
+     * @throws IOException Thrown if de-serialization fails
      * @throws ClassNotFoundException thrown if we don't know the object.
      */
     <T> T deSerialize( byte[] bytes, ClassLoader loader )
@@ -61,7 +61,7 @@ public interface IElementSerializer
      * @param ic The input channel
      * @param readTimeoutMs The read timeout in milliseconds
      * @param loader class loader to use
-     * @throws IOException if serialization or reading fails
+     * @throws IOException Thrown if serialization or reading fails
      * @throws ClassNotFoundException thrown if we don't know the object.
      * @since 3.1
      */
@@ -128,7 +128,7 @@ public interface IElementSerializer
      * @param <T> The type of the object
      * @param is The input stream
      * @param loader class loader to use
-     * @throws IOException if serialization or reading fails
+     * @throws IOException Thrown if serialization or reading fails
      * @throws ClassNotFoundException thrown if we don't know the object.
      * @since 3.1
      */
@@ -146,7 +146,7 @@ public interface IElementSerializer
      * @param <T> The type of the object
      * @param ic The input channel
      * @param loader class loader to use
-     * @throws IOException if serialization or reading fails
+     * @throws IOException Thrown if serialization or reading fails
      * @throws ClassNotFoundException thrown if we don't know the object.
      * @since 3.1
      */
@@ -189,7 +189,7 @@ public interface IElementSerializer
      * @param <T> The type of the object
      * @param obj The object to serialize
      * @return byte[] a byte array containing the serialized object
-     * @throws IOException if serialization fails
+     * @throws IOException Thrown if serialization fails
      */
     <T> byte[] serialize( T obj )
         throws IOException;
@@ -204,7 +204,7 @@ public interface IElementSerializer
      * @param oc The output channel
      * @param writeTimeoutMs The write timeout im milliseconds
      * @return The number of bytes written
-     * @throws IOException if serialization or writing fails
+     * @throws IOException Thrown if serialization or writing fails
      * @since 3.1
      */
     default <T> int serializeTo(final T obj, final AsynchronousByteChannel oc, final long writeTimeoutMs)
@@ -241,7 +241,7 @@ public interface IElementSerializer
      * @param obj The object to serialize
      * @param os The output stream
      * @return The number of bytes written
-     * @throws IOException if serialization or writing fails
+     * @throws IOException Thrown if serialization or writing fails
      * @since 3.1
      */
     default <T> int serializeTo(final T obj, final OutputStream os)
@@ -265,7 +265,7 @@ public interface IElementSerializer
      * @param obj The object to serialize
      * @param oc The output channel
      * @return The number of bytes written
-     * @throws IOException if serialization or writing fails
+     * @throws IOException Thrown if serialization or writing fails
      * @since 3.1
      */
     default <T> int serializeTo(final T obj, final WritableByteChannel oc)

@@ -237,7 +237,7 @@ public class RemoteCacheServerFactory
      * @param config The configuration properties
      * @param port The local port
      * @return The admin object instance
-     * @throws Exception if lookup fails
+     * @throws Exception Thrown if lookup fails
      */
     private static ICacheServiceAdmin lookupCacheServiceAdmin(final Properties config, final int port) throws Exception
     {

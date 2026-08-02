@@ -221,7 +221,7 @@ public class RemoteCacheManager
 
     /**
      * Lookup remote service from registry
-     * @throws IOException if the remote service could not be found
+     * @throws IOException Thrown if the remote service could not be found
      */
     protected void lookupRemoteService() throws IOException
     {

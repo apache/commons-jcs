@@ -423,7 +423,7 @@ public class CompositeCacheManager
      * Dispose a cache and remove it from the map of registered auxiliary caches
      *
      * @param key The key into the map of auxiliaries
-     * @throws IOException if disposing of the cache fails
+     * @throws IOException Thrown if disposing of the cache fails
      */
     public void freeAuxiliaryCache(final String key) throws IOException
     {
@@ -440,7 +440,7 @@ public class CompositeCacheManager
      *
      * @param auxName The auxiliary name
      * @param cacheName The region name
-     * @throws IOException if disposing of the cache fails
+     * @throws IOException Thrown if disposing of the cache fails
      */
     public void freeAuxiliaryCache(final String auxName, final String cacheName) throws IOException
     {

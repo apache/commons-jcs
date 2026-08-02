@@ -71,7 +71,7 @@ public class MySQLDiskCacheFactory
      * @param elementSerializer The serializer for cache elements
      * @param keyMatcher The key matcher for getMatching() calls
      * @return MySQLDiskCache the cache instance
-     * @throws SQLException if the cache instance could not be created
+     * @throws SQLException Thrown if the cache instance could not be created
      */
     @Override
     public <K, V> MySQLDiskCache<K, V> createCache( final AuxiliaryCacheAttributes rawAttr,

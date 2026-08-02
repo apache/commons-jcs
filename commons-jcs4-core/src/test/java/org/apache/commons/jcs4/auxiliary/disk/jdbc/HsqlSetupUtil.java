@@ -69,7 +69,7 @@ public final class HsqlSetupUtil
      *
      * @param cConn
      * @param tableName
-     * @throws SQLException if database problems occur
+     * @throws SQLException Thrown if database problems occur
      */
     public static void setupTable( final Connection cConn, final String tableName ) throws SQLException
     {

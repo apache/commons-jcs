@@ -44,7 +44,7 @@ public class SharedPoolDataSourceFactory implements DataSourceFactory
      * Initializes the ConnectionPoolDataSource.
      *
      * @param config where to read the settings from
-     * @throws SQLException if a property set fails
+     * @throws SQLException Thrown if a property set fails
      * @return A configured {@code ConnectionPoolDataSource}
      */
     private static ConnectionPoolDataSource initCPDS(final JDBCDiskCacheAttributes config)
@@ -75,7 +75,7 @@ public class SharedPoolDataSourceFactory implements DataSourceFactory
      *
      * @param dataSource The dataSource to initialize, not null.
      * @param config where to read the settings from, not null.
-     * @throws SQLException if a property set fails.
+     * @throws SQLException Thrown if a property set fails.
      */
     private static void initJdbc2Pool(final InstanceKeyDataSource dataSource, final JDBCDiskCacheAttributes config)
         throws SQLException
@@ -94,7 +94,7 @@ public class SharedPoolDataSourceFactory implements DataSourceFactory
 
     /**
      * Closes the pool associated with this factory and releases it.
-     * @throws SQLException if the pool cannot be closed properly
+     * @throws SQLException Thrown if the pool cannot be closed properly
      */
     @Override
 	public void close() throws SQLException

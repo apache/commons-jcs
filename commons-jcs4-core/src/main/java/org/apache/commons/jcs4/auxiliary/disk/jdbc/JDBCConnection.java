@@ -41,7 +41,7 @@ public class JDBCConnection implements AutoCloseable
     /**
      * Constructs a new instance.
      * @param con Connection object
-     * @throws SQLException if a database error occurs
+     * @throws SQLException Thrown if a database error occurs
      */
     public JDBCConnection(final Connection con) throws SQLException
     {

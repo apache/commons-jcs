@@ -59,7 +59,7 @@ public interface DataSourceFactory
 
     /**
      * @return The {@code DataSource} configured by the factory.
-     * @throws SQLException if the source can't be returned
+     * @throws SQLException Thrown if the source can't be returned
      */
     DataSource getDataSource() throws SQLException;
 

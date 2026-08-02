@@ -48,7 +48,7 @@ public interface AuxiliaryCache<K, V>
      * TODO This should probably be done in chunks with a range passed in. This
      *       will be a problem if someone puts a 1,000,000 or so items in a
      *       region.
-     * @throws IOException if access to the auxiliary cache fails
+     * @throws IOException Thrown if access to the auxiliary cache fails
      */
     Set<K> getKeySet() throws IOException;
 

@@ -82,7 +82,7 @@ public class JDBCDiskCacheFactory
      * @param elementSerializer The serializer for cache elements
      * @param keyMatcher The key matcher for getMatching() calls
      * @return JDBCDiskCache the cache instance
-     * @throws SQLException if the cache instance could not be created
+     * @throws SQLException Thrown if the cache instance could not be created
      */
     @Override
     public <K, V> JDBCDiskCache<K, V> createCache( final AuxiliaryCacheAttributes rawAttr,
@@ -163,7 +163,7 @@ public class JDBCDiskCacheFactory
      * @param cattr The cache configuration
      * @param configProps The configuration properties object
      * @return A DataSourceFactory
-     * @throws SQLException if a database access error occurs
+     * @throws SQLException Thrown if a database access error occurs
      */
     protected DataSourceFactory getDataSourceFactory( final JDBCDiskCacheAttributes cattr,
                                                       final Properties configProps ) throws SQLException

@@ -138,7 +138,7 @@ public class JndiDataSourceFactory implements DataSourceFactory
      * Initializes JNDI.
      *
      * @param config where to read the settings from
-     * @throws SQLException if a property set fails
+     * @throws SQLException Thrown if a property set fails
      */
     private void initJNDI(final JDBCDiskCacheAttributes config) throws SQLException
     {

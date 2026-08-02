@@ -40,7 +40,7 @@ public interface AuxiliaryCacheFactory
      * @param elementSerializer The serializer for cache elements
      * @param keyMatcher The key matcher for getMatching() calls
      * @return AuxiliaryCache
-     * @throws Exception if cache instance could not be created
+     * @throws Exception Thrown if cache instance could not be created
      */
     <K, V> AuxiliaryCache<K, V> createCache(
             AuxiliaryCacheAttributes attr, ICompositeCacheManager cacheMgr,
