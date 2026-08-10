@@ -110,7 +110,7 @@
             <action type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">Bump org.apache.commons:commons-text from 1.11.0 to 1.15.0 #254, #321.</action> 
             <action type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">Bump org.apache.commons:commons-lang3 from 3.14.0 to 3.20.0 #265, #271, #281, #364.</action>
             <action type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">Update from JUnit 4 to JUnit 5 Vintage.</action>
-            <action type="update" dev="ggregory" due-to="Gary Gregory">Bump org.apache.commons:commons-collections4 from 4.4 to 4.5.0.</action>
+            <action type="update" dev="ggregory" due-to="Gary Gregory">[test] Bump org.apache.commons:commons-collections4 from 4.4 to 4.6.0.</action>
             <action type="update" dev="ggregory" due-to="Gary Gregory">Bump commons-beanutils:commons-beanutils from 1.9.4 to 1.11.0.</action>
             <action type="update" dev="ggregory" due-to="Gary Gregory">Bump commons-io:commons-io from 2.18.0 to 2.22.0.</action>
             <action type="update" dev="ggregory" due-to="Gary Gregory">Bump com.fasterxml.jackson.core:jackson-databind from 2.21.1 to 2.21.4.</action>
