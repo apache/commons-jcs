@@ -91,8 +91,9 @@ public class ElementEventQueue
     {
         if (destroyed.compareAndSet(false, true))
         {
-            // Pool will be shut down by the ThreadPoolManager
-            // queueProcessor.shutdownNow();
+            // This pool is created directly and is not registered in ThreadPoolManager.
+            // The queue owns it and must therefore stop it explicitly.
+            queueProcessor.shutdownNow();
             log.info( "Element event queue destroyed: {0}", this );
         }
     }
