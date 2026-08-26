@@ -56,22 +56,20 @@ public class CacheEventQueue<K, V>
     public CacheEventQueue( final ICacheListener<K, V> listener, final long listenerId, final String cacheName, final int maxFailure,
                             final int waitBeforeRetry )
     {
-        super( listener, listenerId, cacheName, maxFailure, waitBeforeRetry, null );
+        super( listener, listenerId, cacheName, maxFailure, waitBeforeRetry, "CacheEventQueue.QProcessor-" + cacheName);
     }
 
     /**
      * Create the thread pool.
      *
-     * @param threadPoolName
      * @since 3.1
      */
     @Override
-    protected ExecutorService createPool(final String threadPoolName)
+    protected ExecutorService createPool()
     {
         // create a default pool with one worker thread to mimic the SINGLE queue behavior
-        return ThreadPoolManager.getInstance().createPool(
-                new PoolConfiguration(false, 0, 1, 1, getWaitToDie(), WhenBlockedPolicy.RUN, 1),
-                "CacheEventQueue.QProcessor-" + getCacheName());
+        return ThreadPoolManager.getInstance().getExecutorService(poolName,
+                new PoolConfiguration(false, 0, 1, 1, getWaitToDie(), WhenBlockedPolicy.RUN, 1));
     }
 
     /**

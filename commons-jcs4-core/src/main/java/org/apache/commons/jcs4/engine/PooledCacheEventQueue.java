@@ -24,7 +24,6 @@ import java.time.Duration;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.jcs4.engine.behavior.ICacheListener;
 import org.apache.commons.jcs4.engine.stats.Stats;
@@ -51,6 +50,9 @@ public class PooledCacheEventQueue<K, V>
     /** The Thread Pool to execute events with. */
     protected ExecutorService pool;
 
+    /** The Thread Pool name in ThreadPoolManager. */
+    protected String poolName;
+
     /** The Thread Pool queue */
     protected BlockingQueue<Runnable> queue;
 
@@ -73,14 +75,12 @@ public class PooledCacheEventQueue<K, V>
     /**
      * Create the thread pool.
      *
-     * @param threadPoolName
      * @since 3.1
      */
-    protected ExecutorService createPool(final String threadPoolName)
+    protected ExecutorService createPool()
     {
         // this will share the same pool with other event queues by default.
-        return ThreadPoolManager.getInstance().getExecutorService(
-                threadPoolName == null ? "cache_event_queue" : threadPoolName );
+        return ThreadPoolManager.getInstance().getExecutorService(poolName);
     }
 
     /**
@@ -94,23 +94,7 @@ public class PooledCacheEventQueue<K, V>
         if ( isWorking() )
         {
             setWorking(false);
-            pool.shutdown();
-
-            if (wait.toSeconds() > 0)
-            {
-                try
-                {
-                    if (!pool.awaitTermination(wait.toSeconds(), TimeUnit.SECONDS))
-                    {
-                        log.info( "No longer waiting for event queue to finish: {0}",
-                                this::getStatistics);
-                    }
-                }
-                catch (final InterruptedException e)
-                {
-                    // ignore
-                }
-            }
+            ThreadPoolManager.getInstance().disposeExecutorService(poolName, wait);
             log.info( "Cache event queue destroyed: {0}", this );
         }
     }
@@ -160,7 +144,8 @@ public class PooledCacheEventQueue<K, V>
     {
         super.initialize(listener, listenerId, cacheName, maxFailure, waitBeforeRetry);
 
-        pool = createPool(threadPoolName);
+        poolName = threadPoolName == null ? "cache_event_queue" : threadPoolName;
+        pool = createPool();
 
         if (pool instanceof ThreadPoolExecutor tpe)
         {

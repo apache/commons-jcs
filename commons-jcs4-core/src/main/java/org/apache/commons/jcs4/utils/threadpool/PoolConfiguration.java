@@ -47,7 +47,10 @@ public record PoolConfiguration(
         WhenBlockedPolicy whenBlockedPolicy,
 
         /** The number of threads to create on startup */
-        int startUpSize
+        int startUpSize,
+
+        /** The thread priority */
+        int threadPriority
 ) implements Cloneable
 {
     public enum WhenBlockedPolicy
@@ -88,12 +91,15 @@ public record PoolConfiguration(
     /** Default startup size */
     private static final int DEFAULT_STARTUP_SIZE = DEFAULT_MINIMUM_POOL_SIZE;
 
+    /** Default thread priority */
+    private static final int DEFAULT_THREAD_PRIORITY = Thread.NORM_PRIORITY;
+
     /**
      * Default
      */
     private static PoolConfiguration DEFAULT = new PoolConfiguration(DEFAULT_USE_BOUNDARY,
             DEFAULT_BOUNDARY_SIZE, DEFAULT_MAXIMUM_POOL_SIZE, DEFAULT_MINIMUM_POOL_SIZE,
-            DEFAULT_KEEPALIVE_TIME, DEFAULT_WHEN_BLOCKED_POLICY, DEFAULT_STARTUP_SIZE);
+            DEFAULT_KEEPALIVE_TIME, DEFAULT_WHEN_BLOCKED_POLICY, DEFAULT_STARTUP_SIZE, DEFAULT_THREAD_PRIORITY);
 
     /**
      * @return An object containing the default settings
@@ -103,6 +109,22 @@ public record PoolConfiguration(
         return DEFAULT;
     }
 
+    /**
+     * Convenience constructor
+     *
+     * @param useBoundary Should we bound the queue
+     * @param boundarySize If the queue is bounded, how big can it get
+     * @param maximumPoolSize Only has meaning if a boundary is used
+     * @param minimumPoolSize the exact number that will be used in a boundless queue
+     * @param keepAliveTime How long idle threads above the minimum should be kept alive
+     * @param whenBlockedPolicy Should be ABORT, BLOCK, RUN, WAIT, DISCARDOLDEST
+     * @param startUpSize The number of threads to create on startup
+     */
+    public PoolConfiguration(boolean useBoundary, int boundarySize, int maximumPoolSize, int minimumPoolSize, Duration keepAliveTime,
+            WhenBlockedPolicy whenBlockedPolicy, int startUpSize)
+    {
+        this(useBoundary, boundarySize, maximumPoolSize, minimumPoolSize, keepAliveTime, whenBlockedPolicy, startUpSize, DEFAULT_THREAD_PRIORITY);
+    }
 
     /**
      * To string for debugging purposes.
@@ -118,7 +140,8 @@ public record PoolConfiguration(
         buf.append("minimumPoolSize = [").append(minimumPoolSize()).append("] ");
         buf.append("keepAliveTime = [").append(keepAliveTime()).append("] ");
         buf.append("whenBlockedPolicy = [").append(whenBlockedPolicy()).append("] ");
-        buf.append("startUpSize = [").append(startUpSize()).append("]" );
+        buf.append("startUpSize = [").append(startUpSize()).append("] " );
+        buf.append("threadPriority = [").append(threadPriority()).append("]" );
         return buf.toString();
     }
 }

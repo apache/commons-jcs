@@ -105,10 +105,9 @@ public class UDPDiscoveryReceiver
         setService(service);
 
         // create a small thread pool to handle a barrage
-        this.pooledExecutor = ThreadPoolManager.getInstance().createPool(
+        this.pooledExecutor = ThreadPoolManager.getInstance().getExecutorService("UDPDiscoveryReceiver",
                 new PoolConfiguration(false, 0, maxPoolSize, maxPoolSize, Duration.ZERO,
-                        WhenBlockedPolicy.DISCARDOLDEST, maxPoolSize),
-                "JCS-UDPDiscoveryReceiver-", Thread.MIN_PRIORITY);
+                        WhenBlockedPolicy.DISCARDOLDEST, maxPoolSize, Thread.MIN_PRIORITY));
 
         log.info( "Constructing listener, [{0}:{1}]", multicastAddress, multicastPort );
         createSocket( multicastInterfaceString, multicastAddress, multicastPort );

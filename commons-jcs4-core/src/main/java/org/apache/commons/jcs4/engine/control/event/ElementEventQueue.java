@@ -38,7 +38,7 @@ import org.apache.commons.jcs4.utils.threadpool.ThreadPoolManager;
 public class ElementEventQueue
     implements IElementEventQueue
 {
-    private static final String THREAD_PREFIX = "JCS-ElementEventQueue-";
+    protected static final String POOL_NAME = "ElementEventQueue";
 
     /** The logger */
     private static final Log log = Log.getLog( ElementEventQueue.class );
@@ -54,8 +54,8 @@ public class ElementEventQueue
      */
     public ElementEventQueue()
     {
-        queueProcessor = ThreadPoolManager.getInstance().createPool(
-        		new PoolConfiguration(false, 0, 1, 1, Duration.ZERO, WhenBlockedPolicy.RUN, 1), THREAD_PREFIX);
+        queueProcessor = ThreadPoolManager.getInstance().getExecutorService(POOL_NAME,
+        		new PoolConfiguration(false, 0, 1, 1, Duration.ZERO, WhenBlockedPolicy.RUN, 1));
 
         log.debug( "Constructed: {0}", this );
     }
@@ -91,8 +91,7 @@ public class ElementEventQueue
     {
         if (destroyed.compareAndSet(false, true))
         {
-            // Pool will be shut down by the ThreadPoolManager
-            // queueProcessor.shutdownNow();
+            ThreadPoolManager.getInstance().disposeExecutorService(POOL_NAME);
             log.info( "Element event queue destroyed: {0}", this );
         }
     }

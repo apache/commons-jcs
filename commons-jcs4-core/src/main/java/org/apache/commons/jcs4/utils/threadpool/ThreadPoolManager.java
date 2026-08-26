@@ -1,5 +1,7 @@
 package org.apache.commons.jcs4.utils.threadpool;
 
+import java.time.Duration;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -34,6 +36,24 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.jcs4.log.Log;
 import org.apache.commons.jcs4.utils.config.ConfigurationBuilder;
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 
 /**
  * This manages threadpools for an application
@@ -68,6 +88,9 @@ public class ThreadPoolManager
     /** The logger */
     private static final Log log = Log.getLog( ThreadPoolManager.class );
 
+    /** The common prefix for all thread names managed by the ThreadPoolManager */
+    public static final String JCS_THREAD_POOL_MANAGER_PREFIX = "JCS-ThreadPoolManager-";
+
     /** The root property name */
     private static final String PROP_NAME_ROOT = "thread_pool";
 
@@ -81,46 +104,154 @@ public class ThreadPoolManager
     private static final String DEFAULT_PROP_NAME_SCHEDULER_ROOT = "scheduler_pool.default";
 
     /**
-         * You can specify the properties to be used to configure the thread pool. Setting this post
-         * initialization will have no effect.
-         */
-        private static volatile Properties props;
+     * You can specify the properties to be used to configure the thread pool. Setting this post
+     * initialization will have no effect.
+     */
+    private static volatile Properties props;
 
-   /**
- * Dispose of the instance of the ThreadPoolManger and shut down all thread pools
- */
-public static void dispose()
-{
-    for ( final Iterator<Map.Entry<String, ExecutorService>> i =
-            getInstance().pools.entrySet().iterator(); i.hasNext(); )
+    /**
+     * Dispose of the instance of the ThreadPoolManger and shut down all thread pools
+     */
+    public static void dispose()
     {
-        final Map.Entry<String, ExecutorService> entry = i.next();
-        try
+        for ( final Iterator<Map.Entry<String, ExecutorService>> i =
+                getInstance().pools.entrySet().iterator(); i.hasNext(); )
         {
-            entry.getValue().shutdownNow();
+            final Map.Entry<String, ExecutorService> entry = i.next();
+            try
+            {
+                entry.getValue().shutdownNow();
+            }
+            catch (final Throwable t)
+            {
+                log.warn("Failed to close pool {0}", entry.getKey(), t);
+            }
+            i.remove();
         }
-        catch (final Throwable t)
+
+        for ( final Iterator<Map.Entry<String, ScheduledExecutorService>> i =
+                getInstance().schedulerPools.entrySet().iterator(); i.hasNext(); )
         {
-            log.warn("Failed to close pool {0}", entry.getKey(), t);
+            final Map.Entry<String, ScheduledExecutorService> entry = i.next();
+            try
+            {
+                entry.getValue().shutdownNow();
+            }
+            catch (final Throwable t)
+            {
+                log.warn("Failed to close pool {0}", entry.getKey(), t);
+            }
+            i.remove();
         }
-        i.remove();
     }
 
-    for ( final Iterator<Map.Entry<String, ScheduledExecutorService>> i =
-            getInstance().schedulerPools.entrySet().iterator(); i.hasNext(); )
+    /**
+     * Dispose of a thread pool
+     *
+     * @param poolName the name of the pool
+     */
+    public void disposeExecutorService(String poolName)
     {
-        final Map.Entry<String, ScheduledExecutorService> entry = i.next();
-        try
-        {
-            entry.getValue().shutdownNow();
-        }
-        catch (final Throwable t)
-        {
-            log.warn("Failed to close pool {0}", entry.getKey(), t);
-        }
-        i.remove();
+        disposeExecutorService(poolName, Duration.ZERO);
     }
-}
+
+    /**
+     * Dispose of a thread pool
+     *
+     * @param poolName the name of the pool
+     * @param wait Duration to wait for termination
+     */
+    public void disposeExecutorService(String poolName, Duration wait)
+    {
+        ExecutorService pool = pools.remove(poolName);
+        if (pool == null)
+        {
+            log.warn("Failed to close non-existing pool {0}", poolName);
+        }
+        else
+        {
+            try
+            {
+                if (wait == null || wait.isZero())
+                {
+                    pool.shutdownNow();
+                }
+                else
+                {
+                    pool.shutdown();
+                    try
+                    {
+                        if (!pool.awaitTermination(wait.toSeconds(), TimeUnit.SECONDS))
+                        {
+                            log.info( "No longer waiting for pool {0} to terminate", poolName);
+                        }
+                    }
+                    catch (final InterruptedException e)
+                    {
+                        // ignore
+                    }
+                }
+            }
+            catch (final Throwable t)
+            {
+                log.warn("Failed to close pool {0}", poolName, t);
+            }
+        }
+    }
+
+    /**
+     * Dispose of a scheduler thread pool
+     *
+     * @param poolName the name of the pool
+     */
+    public void disposeSchedulerPool(String poolName)
+    {
+        disposeSchedulerPool(poolName, Duration.ZERO);
+    }
+
+    /**
+     * Dispose of a scheduler thread pool
+     *
+     * @param poolName the name of the pool
+     * @param wait Duration to wait for termination
+     */
+    public void disposeSchedulerPool(String poolName, Duration wait)
+    {
+        ExecutorService pool = schedulerPools.remove(poolName);
+        if (pool == null)
+        {
+            log.warn("Failed to close non-existing pool {0}", poolName);
+        }
+        else
+        {
+            try
+            {
+                if (wait == null || wait.isZero())
+                {
+                    pool.shutdownNow();
+                }
+                else
+                {
+                    pool.shutdown();
+                    try
+                    {
+                        if (!pool.awaitTermination(wait.toSeconds(), TimeUnit.SECONDS))
+                        {
+                            log.info( "No longer waiting for pool {0} to terminate", poolName);
+                        }
+                    }
+                    catch (final InterruptedException e)
+                    {
+                        // ignore
+                    }
+                }
+            }
+            catch (final Throwable t)
+            {
+                log.warn("Failed to close pool {0}", poolName, t);
+            }
+        }
+    }
 
     /**
      * Returns a configured instance of the ThreadPoolManger To specify a configuration file or
@@ -210,20 +341,7 @@ public static void dispose()
      * @param threadNamePrefix prefix for the thread names of the pool
      * @return A ThreadPool wrapper
      */
-    public ExecutorService createPool( final PoolConfiguration config, final String threadNamePrefix)
-    {
-    	return createPool(config, threadNamePrefix, Thread.NORM_PRIORITY);
-    }
-
-    /**
-     * Creates a pool based on the configuration info.
-     *
-     * @param config The pool configuration
-     * @param threadNamePrefix prefix for the thread names of the pool
-     * @param threadPriority The priority of the created threads
-     * @return A ThreadPool wrapper
-     */
-    public ExecutorService createPool( final PoolConfiguration config, final String threadNamePrefix, final int threadPriority )
+    private ExecutorService createPool( final PoolConfiguration config, final String threadNamePrefix)
     {
         BlockingQueue<Runnable> queue = null;
         if ( config.useBoundary() )
@@ -243,7 +361,7 @@ public static void dispose()
             config.keepAliveTime().toMillis(),
             TimeUnit.MILLISECONDS,
             queue,
-            new DaemonThreadFactory(threadNamePrefix, threadPriority));
+            new DaemonThreadFactory(threadNamePrefix, config.threadPriority()));
 
         // when blocked policy
         switch (config.whenBlockedPolicy())
@@ -275,15 +393,13 @@ public static void dispose()
      *
      * @param config The pool configuration
      * @param threadNamePrefix prefix for the thread names of the pool
-     * @param threadPriority The priority of the created threads
      * @return A ScheduledExecutorService
      */
-    public ScheduledExecutorService createSchedulerPool( final PoolConfiguration config, final String threadNamePrefix, final int threadPriority )
+    private ScheduledExecutorService createSchedulerPool(final PoolConfiguration config, final String threadNamePrefix)
     {
-
         return Executors.newScheduledThreadPool(
                 config.maximumPoolSize(),
-                new DaemonThreadFactory(threadNamePrefix, threadPriority));
+                new DaemonThreadFactory(threadNamePrefix, config.threadPriority()));
     }
 
     /**
@@ -297,11 +413,25 @@ public static void dispose()
      */
     public ExecutorService getExecutorService( final String name )
     {
-    	return pools.computeIfAbsent(name, key -> {
-            log.debug( "Creating pool for name [{0}]", key );
-            final PoolConfiguration config = loadConfig( PROP_NAME_ROOT + "." + key, defaultConfig );
-            return createPool( config, "JCS-ThreadPoolManager-" + key + "-" );
-    	});
+    	return getExecutorService(name, loadConfig( PROP_NAME_ROOT + "." + name, defaultConfig ));
+    }
+
+    /**
+     * Returns an executor service by name. If a service by this name does not exist in the configuration file or
+     * properties, one will be created using the default values.
+     * <p>
+     * Services are lazily created.
+     *
+     * @param name
+     * @param config The pool configuration
+     * @return The executor service configured for the name.
+     */
+    public ExecutorService getExecutorService(final String name, final PoolConfiguration config)
+    {
+        return pools.computeIfAbsent(name, key -> {
+            log.debug("Creating pool for name [{0}]", key);
+            return createPool(config, JCS_THREAD_POOL_MANAGER_PREFIX + key + "-");
+        });
     }
 
     /**
@@ -329,7 +459,7 @@ public static void dispose()
             log.debug( "Creating scheduler pool for name [{0}]", key );
             final PoolConfiguration config = loadConfig( PROP_NAME_SCHEDULER_ROOT + "." + key,
                     defaultSchedulerConfig );
-            return createSchedulerPool( config, "JCS-ThreadPoolManager-" + key + "-", Thread.NORM_PRIORITY );
+            return createSchedulerPool( config, JCS_THREAD_POOL_MANAGER_PREFIX + key + "-");
     	});
     }
 }
