@@ -198,7 +198,6 @@ public class ConfigurationBuilder<T>
         }
         else if( type.isEnum() )
         {
-            @SuppressWarnings({ "unchecked" })
             final Enum<?> valueOf = Enum.valueOf(type.asSubclass(Enum.class), v);
             return valueOf;
         }

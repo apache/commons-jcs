@@ -118,7 +118,6 @@ public class PropertySetter
         }
         else if( type.isEnum() )
         {
-            @SuppressWarnings("unchecked")
             final Enum<?> valueOf = Enum.valueOf(type.asSubclass(Enum.class), v);
             return valueOf;
         }
