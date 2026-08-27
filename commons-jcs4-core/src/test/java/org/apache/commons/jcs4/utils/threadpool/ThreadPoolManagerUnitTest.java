@@ -1,5 +1,7 @@
 package org.apache.commons.jcs4.utils.threadpool;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -27,6 +29,7 @@ import java.util.Set;
 import java.util.concurrent.ExecutorService;
 
 import org.apache.commons.jcs4.utils.props.PropertyLoader;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -35,6 +38,11 @@ import org.junit.jupiter.api.Test;
  */
 class ThreadPoolManagerUnitTest
 {
+    @AfterEach
+    void dispose()
+    {
+        ThreadPoolManager.getInstance().dispose();
+    }
 
     /**
      * Make sure it can load a default cache.ccf file
@@ -84,5 +92,41 @@ class ThreadPoolManagerUnitTest
 
         final ExecutorService pool = mgr.getExecutorService( "aborttest" );
         assertNotNull( pool );
+    }
+
+    /**
+     * Test correct lifecycle
+     * @throws InterruptedException
+     */
+    @Test
+    void testLifecycle() throws InterruptedException
+    {
+        final ThreadPoolManager mgr = ThreadPoolManager.getInstance();
+        assertNotNull( mgr );
+
+        final String poolName1 = "testGetPoolNames1";
+        mgr.getExecutorService( poolName1 );
+
+        final String poolName2 = "testGetPoolNames2";
+        mgr.getExecutorService( poolName2 );
+
+        // simulate shared pool
+        mgr.getExecutorService( poolName2 );
+
+        mgr.disposeExecutorService(poolName1);
+        mgr.disposeExecutorService(poolName2);
+
+        final Set<String> names = mgr.getPoolNames();
+        assertFalse( names.contains( poolName1 ), "Should not have poolName1 in list." );
+        assertTrue( names.contains( poolName2 ), "Should still have poolName2 in list." );
+
+        mgr.disposeExecutorService(poolName2);
+        assertFalse( names.contains( poolName2 ), "Should not have poolName2 in list." );
+
+        Thread.sleep(1000);
+        for ( final Thread thread : Thread.getAllStackTraces().keySet() )
+        {
+            assertFalse(thread.getName().startsWith(ThreadPoolManager.JCS_THREAD_POOL_MANAGER_PREFIX), "No ThreadPoolManager threads should be left " + thread.getName());
+        }
     }
 }

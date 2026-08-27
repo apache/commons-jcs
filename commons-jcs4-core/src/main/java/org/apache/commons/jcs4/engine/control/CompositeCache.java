@@ -245,13 +245,6 @@ public class CompositeCache<K, V>
             future.cancel(true);
         }
 
-        // Now, shut down the event queue
-        if (elementEventQ != null)
-        {
-            elementEventQ.dispose();
-            elementEventQ = null;
-        }
-
         // Dispose of each auxiliary cache, Remote auxiliaries will be
         // skipped if 'fromRemote' is true.
         for (final ICache<K, V> aux : auxCaches)

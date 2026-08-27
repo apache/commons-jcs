@@ -91,7 +91,6 @@ public class ElementEventQueue
     {
         if (destroyed.compareAndSet(false, true))
         {
-            ThreadPoolManager.getInstance().disposeExecutorService(POOL_NAME);
             log.info( "Element event queue destroyed: {0}", this );
         }
     }

@@ -847,7 +847,7 @@ public class CompositeCacheManager
         this.scheduledExecutor.shutdownNow();
 
         // shutdown all thread pools
-        ThreadPoolManager.dispose();
+        ThreadPoolManager.getInstance().dispose();
 
         if (shutdownHook != null)
         {
