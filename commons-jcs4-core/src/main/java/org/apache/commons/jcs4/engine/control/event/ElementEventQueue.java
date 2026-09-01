@@ -22,7 +22,7 @@ package org.apache.commons.jcs4.engine.control.event;
 import java.io.IOException;
 import java.time.Duration;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.RejectedExecutionException;
 
 import org.apache.commons.jcs4.engine.control.event.behavior.IElementEvent;
 import org.apache.commons.jcs4.engine.control.event.behavior.IElementEventHandler;
@@ -42,9 +42,6 @@ public class ElementEventQueue
 
     /** The logger */
     private static final Log log = Log.getLog( ElementEventQueue.class );
-
-    /** Shutdown or not */
-    private final AtomicBoolean destroyed = new AtomicBoolean();
 
     /** The worker thread pool. */
     private final ExecutorService queueProcessor;
@@ -71,15 +68,23 @@ public class ElementEventQueue
         throws IOException
     {
 
-        log.debug("Adding Event Handler to QUEUE, !destroyed = {0}", !destroyed.get());
+        log.debug("Adding Event Handler to QUEUE");
 
-        if (destroyed.get())
+        if (queueProcessor.isShutdown())
         {
             log.warn("Event submitted to disposed element event queue {0}", event);
         }
         else
         {
-            queueProcessor.execute(() -> hand.handleElementEvent(event));
+            try
+            {
+                queueProcessor.execute(() -> hand.handleElementEvent(event));
+            }
+            catch (RejectedExecutionException e)
+            {
+                log.warn("Event execution rejected {0}", event, e);
+            }
+
         }
     }
 
@@ -89,9 +94,7 @@ public class ElementEventQueue
     @Override
     public void dispose()
     {
-        if (destroyed.compareAndSet(false, true))
-        {
-            log.info( "Element event queue destroyed: {0}", this );
-        }
+        ThreadPoolManager.getInstance().disposeExecutorService(POOL_NAME);
+        log.info("Element event queue destroyed: {0}", this);
     }
 }

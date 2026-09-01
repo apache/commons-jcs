@@ -356,6 +356,12 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
             {
                 getRemoteCacheListener().dispose();
             }
+
+            if (usePoolForGet)
+            {
+                usePoolForGet = false;
+                ThreadPoolManager.getInstance().disposeExecutorService(getAuxiliaryCacheAttributes().getThreadPoolName());
+            }
         }
         catch ( final IOException ex )
         {

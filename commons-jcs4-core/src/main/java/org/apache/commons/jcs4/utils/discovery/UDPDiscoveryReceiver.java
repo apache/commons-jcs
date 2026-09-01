@@ -74,6 +74,9 @@ public class UDPDiscoveryReceiver
     /** The processor */
     private final ExecutorService pooledExecutor;
 
+    /** The processor name */
+    private final String poolName;
+
     /** Number of messages received. For debugging and testing. */
     private final AtomicInteger cnt = new AtomicInteger();
 
@@ -104,8 +107,10 @@ public class UDPDiscoveryReceiver
     {
         setService(service);
 
+        this.poolName = "UDPDiscoveryReceiver-" + multicastAddress.getHostAddress() +
+                (multicastInterfaceString == null ? "" : "@" + multicastInterfaceString) + ":" + multicastPort;
         // create a small thread pool to handle a barrage
-        this.pooledExecutor = ThreadPoolManager.getInstance().getExecutorService("UDPDiscoveryReceiver",
+        this.pooledExecutor = ThreadPoolManager.getInstance().getExecutorService(poolName,
                 new PoolConfiguration(false, 0, maxPoolSize, maxPoolSize, Duration.ZERO,
                         WhenBlockedPolicy.DISCARDOLDEST, maxPoolSize, Thread.MIN_PRIORITY));
 
@@ -333,6 +338,7 @@ public class UDPDiscoveryReceiver
                 selector.close();
                 multicastGroupKey.drop();
                 multicastChannel.close();
+                ThreadPoolManager.getInstance().disposeExecutorService(this.poolName);
             }
             catch ( final IOException e )
             {

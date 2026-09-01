@@ -37,6 +37,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.jcs4.log.Log;
 import org.apache.commons.jcs4.utils.config.ConfigurationBuilder;
+import org.apache.commons.jcs4.utils.threadpool.PoolConfiguration.WhenBlockedPolicy;
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -111,162 +112,6 @@ public class ThreadPoolManager
     private static volatile Properties props;
 
     /**
-     * Dispose of the instance of the ThreadPoolManger and shut down all thread pools
-     */
-    public synchronized void dispose()
-    {
-        for (final Iterator<Map.Entry<String, ExecutorService>> i =
-                pools.entrySet().iterator(); i.hasNext();)
-        {
-            final Map.Entry<String, ExecutorService> entry = i.next();
-            try
-            {
-                entry.getValue().shutdownNow();
-            }
-            catch (final Throwable t)
-            {
-                log.warn("Failed to close pool {0}", entry.getKey(), t);
-            }
-            i.remove();
-            poolUseCounts.remove(entry.getKey());
-        }
-
-        for (final Iterator<Map.Entry<String, ScheduledExecutorService>> i =
-                schedulerPools.entrySet().iterator(); i.hasNext();)
-        {
-            final Map.Entry<String, ScheduledExecutorService> entry = i.next();
-            try
-            {
-                entry.getValue().shutdownNow();
-            }
-            catch (final Throwable t)
-            {
-                log.warn("Failed to close pool {0}", entry.getKey(), t);
-            }
-            i.remove();
-            schedulerPoolUseCounts.remove(entry.getKey());
-        }
-    }
-
-    /**
-     * Dispose of a thread pool
-     *
-     * @param poolName the name of the pool
-     */
-    public synchronized void disposeExecutorService(String poolName)
-    {
-        disposeExecutorService(poolName, Duration.ZERO);
-    }
-
-    /**
-     * Dispose of a thread pool
-     *
-     * @param poolName the name of the pool
-     * @param wait Duration to wait for termination
-     */
-    public synchronized void disposeExecutorService(String poolName, Duration wait)
-    {
-        AtomicInteger useCount = poolUseCounts.computeIfAbsent(poolName, k -> new AtomicInteger());
-        if (useCount.decrementAndGet() == 0)
-        {
-            poolUseCounts.remove(poolName, useCount);
-            ExecutorService pool = pools.remove(poolName);
-            if (pool == null)
-            {
-                log.warn("Failed to close non-existing pool {0}", poolName);
-            }
-            else
-            {
-                try
-                {
-                    if (wait == null || wait.isZero())
-                    {
-                        pool.shutdownNow();
-                    }
-                    else
-                    {
-                        pool.shutdown();
-                        try
-                        {
-                            if (!pool.awaitTermination(wait.toSeconds(), TimeUnit.SECONDS))
-                            {
-                                log.info( "No longer waiting for pool {0} to terminate", poolName);
-                            }
-                        }
-                        catch (final InterruptedException e)
-                        {
-                            // ignore
-                        }
-                    }
-                }
-                catch (final Throwable t)
-                {
-                    log.warn("Failed to close pool {0}", poolName, t);
-                }
-            }
-        }
-    }
-
-    /**
-     * Dispose of a scheduler thread pool
-     *
-     * @param poolName the name of the pool
-     */
-    public synchronized void disposeSchedulerPool(String poolName)
-    {
-        disposeSchedulerPool(poolName, Duration.ZERO);
-    }
-
-    /**
-     * Dispose of a scheduler thread pool
-     *
-     * @param poolName the name of the pool
-     * @param wait Duration to wait for termination
-     */
-    public synchronized void disposeSchedulerPool(String poolName, Duration wait)
-    {
-        AtomicInteger useCount = schedulerPoolUseCounts.computeIfAbsent(poolName, k -> new AtomicInteger());
-        if (useCount.decrementAndGet() == 0)
-        {
-            schedulerPoolUseCounts.remove(poolName, useCount);
-            ExecutorService pool = schedulerPools.remove(poolName);
-            if (pool == null)
-            {
-                log.warn("Failed to close non-existing pool {0}", poolName);
-            }
-            else
-            {
-                try
-                {
-                    if (wait == null || wait.isZero())
-                    {
-                        pool.shutdownNow();
-                    }
-                    else
-                    {
-                        pool.shutdown();
-                        try
-                        {
-                            if (!pool.awaitTermination(wait.toMillis(), TimeUnit.MILLISECONDS))
-                            {
-                                log.info( "No longer waiting for pool {0} to terminate", poolName);
-                            }
-                        }
-                        catch (final InterruptedException e)
-                        {
-                            // ignore
-                        }
-                    }
-                }
-                catch (final Throwable t)
-                {
-                    log.warn("Failed to close pool {0}", poolName, t);
-                }
-            }
-        }
-    }
-
-    /**
      * Returns a configured instance of the ThreadPoolManger To specify a configuration file or
      * Properties object to use call the appropriate setter prior to calling getInstance.
      *
@@ -284,14 +129,14 @@ public class ThreadPoolManager
      * @param defaultPoolConfiguration The default configuration
      * @return PoolConfiguration
      */
-    private static PoolConfiguration loadConfig( final String root, final PoolConfiguration defaultPoolConfiguration )
+    private static PoolConfiguration loadConfig(final String root, final PoolConfiguration defaultPoolConfiguration)
     {
         final PoolConfiguration config = ConfigurationBuilder
                 .create(PoolConfiguration.class, defaultPoolConfiguration)
                 .fromProperties(props, root)
                 .build();
 
-        log.debug( "{0} PoolConfiguration = {1}", root, config );
+        log.debug("{0} PoolConfiguration = {1}", root, config);
 
         return config;
     }
@@ -302,7 +147,7 @@ public class ThreadPoolManager
      *
      * @param props The props to set.
      */
-    public static void setProps( final Properties props )
+    public static void setProps(final Properties props)
     {
         ThreadPoolManager.props = props;
     }
@@ -352,7 +197,8 @@ public class ThreadPoolManager
 
         // set initial default and then override if new settings are available
         defaultConfig = loadConfig(DEFAULT_PROP_NAME_ROOT, PoolConfiguration.defaults());
-        defaultSchedulerConfig = loadConfig(DEFAULT_PROP_NAME_SCHEDULER_ROOT, PoolConfiguration.defaults());
+        defaultSchedulerConfig = loadConfig(DEFAULT_PROP_NAME_SCHEDULER_ROOT,
+                new PoolConfiguration(false, 0, 4, 4, Duration.ZERO, WhenBlockedPolicy.DISCARDOLDEST, 4, Thread.MIN_PRIORITY));
     }
 
     /**
@@ -362,7 +208,7 @@ public class ThreadPoolManager
      * @param threadNamePrefix prefix for the thread names of the pool
      * @return A ThreadPool wrapper
      */
-    private ExecutorService createPool( final PoolConfiguration config, final String threadNamePrefix)
+    private ExecutorService createPool(final PoolConfiguration config, final String threadNamePrefix)
     {
         BlockingQueue<Runnable> queue = null;
         if ( config.useBoundary() )
@@ -432,7 +278,7 @@ public class ThreadPoolManager
      * @param name
      * @return The executor service configured for the name.
      */
-    public synchronized ExecutorService getExecutorService( final String name )
+    public ExecutorService getExecutorService(final String name)
     {
     	return getExecutorService(name, loadConfig(PROP_NAME_ROOT + "." + name, defaultConfig));
     }
@@ -447,15 +293,20 @@ public class ThreadPoolManager
      * @param config The pool configuration
      * @return The executor service configured for the name.
      */
-    public synchronized ExecutorService getExecutorService(final String name, final PoolConfiguration config)
+    public ExecutorService getExecutorService(final String name, final PoolConfiguration config)
     {
-        AtomicInteger useCount = poolUseCounts.computeIfAbsent(name, k -> new AtomicInteger());
-        useCount.getAndIncrement();
+        synchronized (pools)
+        {
+            ExecutorService pool = pools.computeIfAbsent(name, key -> {
+                log.debug("Creating pool for name [{0}]", key);
+                return createPool(config, JCS_THREAD_POOL_MANAGER_PREFIX + key + "-");
+            });
 
-        return pools.computeIfAbsent(name, key -> {
-            log.debug("Creating pool for name [{0}]", key);
-            return createPool(config, JCS_THREAD_POOL_MANAGER_PREFIX + key + "-");
-        });
+            AtomicInteger useCount = poolUseCounts.computeIfAbsent(name, k -> new AtomicInteger());
+            useCount.getAndIncrement();
+
+            return pool;
+        }
     }
 
     /**
@@ -477,7 +328,7 @@ public class ThreadPoolManager
      * @param name
      * @return The scheduler pool configured for the name.
      */
-    public synchronized ScheduledExecutorService getSchedulerPool(final String name)
+    public ScheduledExecutorService getSchedulerPool(final String name)
     {
         return getSchedulerPool(name, loadConfig(PROP_NAME_SCHEDULER_ROOT + "." + name, defaultSchedulerConfig));
     }
@@ -492,14 +343,207 @@ public class ThreadPoolManager
      * @param config The pool configuration
      * @return The scheduler pool configured for the name.
      */
-    public synchronized ScheduledExecutorService getSchedulerPool(final String name, PoolConfiguration config)
+    public ScheduledExecutorService getSchedulerPool(final String name, PoolConfiguration config)
     {
-        AtomicInteger useCount = schedulerPoolUseCounts.computeIfAbsent(name, k -> new AtomicInteger());
-        useCount.getAndIncrement();
+        synchronized (schedulerPools)
+        {
+            ScheduledExecutorService pool = schedulerPools.computeIfAbsent(name, key -> {
+                log.debug( "Creating scheduler pool for name [{0}]", key );
+                return createSchedulerPool(config, JCS_THREAD_POOL_MANAGER_PREFIX + key + "-");
+        	});
 
-    	return schedulerPools.computeIfAbsent(name, key -> {
-            log.debug( "Creating scheduler pool for name [{0}]", key );
-            return createSchedulerPool( config, JCS_THREAD_POOL_MANAGER_PREFIX + key + "-");
-    	});
+            AtomicInteger useCount = schedulerPoolUseCounts.computeIfAbsent(name, k -> new AtomicInteger());
+            useCount.getAndIncrement();
+
+            return pool;
+        }
+    }
+
+    /**
+     * Dispose of the instance of the ThreadPoolManger and shut down all thread pools
+     */
+    public void dispose()
+    {
+        synchronized (pools)
+        {
+            for (final Iterator<Map.Entry<String, ExecutorService>> i =
+                    pools.entrySet().iterator(); i.hasNext();)
+            {
+                final Map.Entry<String, ExecutorService> entry = i.next();
+                try
+                {
+                    entry.getValue().shutdownNow();
+                }
+                catch (final Throwable t)
+                {
+                    log.warn("Failed to close pool {0}", entry.getKey(), t);
+                }
+                i.remove();
+                poolUseCounts.remove(entry.getKey());
+            }
+        }
+
+        synchronized (schedulerPools)
+        {
+            for (final Iterator<Map.Entry<String, ScheduledExecutorService>> i =
+                    schedulerPools.entrySet().iterator(); i.hasNext();)
+            {
+                final Map.Entry<String, ScheduledExecutorService> entry = i.next();
+                try
+                {
+                    entry.getValue().shutdownNow();
+                }
+                catch (final Throwable t)
+                {
+                    log.warn("Failed to close pool {0}", entry.getKey(), t);
+                }
+                i.remove();
+                schedulerPoolUseCounts.remove(entry.getKey());
+            }
+        }
+    }
+
+    /**
+     * Dispose of a thread pool
+     *
+     * @param poolName the name of the pool
+     */
+    public void disposeExecutorService(String poolName)
+    {
+        disposeExecutorService(poolName, Duration.ZERO);
+    }
+
+    /**
+     * Dispose of a thread pool
+     *
+     * @param poolName the name of the pool
+     * @param wait Duration to wait for termination
+     */
+    public void disposeExecutorService(String poolName, Duration wait)
+    {
+        ExecutorService pool = null;
+
+        synchronized (pools)
+        {
+            AtomicInteger useCount = poolUseCounts.get(poolName);
+            if (useCount == null)
+            {
+                log.warn("No useCount exists for pool {0}", poolName);
+            }
+            else if (useCount.decrementAndGet() <= 0)
+            {
+                poolUseCounts.remove(poolName, useCount);
+                pool = pools.remove(poolName);
+                if (pool == null)
+                {
+                    log.warn("Failed to close non-existing pool {0}", poolName);
+                }
+                else
+                {
+                    try
+                    {
+                        if (wait == null || wait.isZero())
+                        {
+                            pool.shutdownNow();
+                        }
+                        else
+                        {
+                            pool.shutdown();
+                        }
+                    }
+                    catch (final Throwable t)
+                    {
+                        log.warn("Failed to close pool {0}", poolName, t);
+                    }
+                }
+            }
+        }
+
+        if (pool != null && wait != null && !wait.isZero())
+        {
+            try
+            {
+                if (!pool.awaitTermination(wait.toMillis(), TimeUnit.MILLISECONDS))
+                {
+                    log.info( "No longer waiting for pool {0} to terminate", poolName);
+                }
+            }
+            catch (final InterruptedException e)
+            {
+                // ignore
+            }
+        }
+    }
+
+    /**
+     * Dispose of a scheduler thread pool
+     *
+     * @param poolName the name of the pool
+     */
+    public void disposeSchedulerPool(String poolName)
+    {
+        disposeSchedulerPool(poolName, Duration.ZERO);
+    }
+
+    /**
+     * Dispose of a scheduler thread pool
+     *
+     * @param poolName the name of the pool
+     * @param wait Duration to wait for termination
+     */
+    public void disposeSchedulerPool(String poolName, Duration wait)
+    {
+        ExecutorService pool = null;
+
+        synchronized (schedulerPools)
+        {
+            AtomicInteger useCount = schedulerPoolUseCounts.get(poolName);
+            if (useCount == null)
+            {
+                log.warn("No useCount exists for pool {0}", poolName);
+            }
+            else if (useCount.decrementAndGet() == 0)
+            {
+                schedulerPoolUseCounts.remove(poolName, useCount);
+                pool = schedulerPools.remove(poolName);
+                if (pool == null)
+                {
+                    log.warn("Failed to close non-existing pool {0}", poolName);
+                }
+                else
+                {
+                    try
+                    {
+                        if (wait == null || wait.isZero())
+                        {
+                            pool.shutdownNow();
+                        }
+                        else
+                        {
+                            pool.shutdown();
+                        }
+                    }
+                    catch (final Throwable t)
+                    {
+                        log.warn("Failed to close pool {0}", poolName, t);
+                    }
+                }
+            }
+        }
+
+        if (pool != null && wait != null && !wait.isZero())
+        {
+            try
+            {
+                if (!pool.awaitTermination(wait.toMillis(), TimeUnit.MILLISECONDS))
+                {
+                    log.info( "No longer waiting for pool {0} to terminate", poolName);
+                }
+            }
+            catch (final InterruptedException e)
+            {
+                // ignore
+            }
+        }
     }
 }

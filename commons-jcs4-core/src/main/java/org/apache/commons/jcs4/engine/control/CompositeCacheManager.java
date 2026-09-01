@@ -28,7 +28,6 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -56,7 +55,6 @@ import org.apache.commons.jcs4.engine.stats.CacheStats;
 import org.apache.commons.jcs4.engine.stats.behavior.ICacheStats;
 import org.apache.commons.jcs4.log.Log;
 import org.apache.commons.jcs4.utils.config.OptionConverter;
-import org.apache.commons.jcs4.utils.threadpool.DaemonThreadFactory;
 import org.apache.commons.jcs4.utils.threadpool.ThreadPoolManager;
 import org.apache.commons.jcs4.utils.timing.ElapsedTimer;
 
@@ -382,6 +380,8 @@ public class CompositeCacheManager
         final ThreadPoolManager poolMgr = ThreadPoolManager.getInstance();
         log.debug( "ThreadPoolManager = {0}", poolMgr);
 
+        this.scheduledExecutor = ThreadPoolManager.getInstance().getSchedulerPool("default");
+
         // Create event queue
         this.elementEventQueue = new ElementEventQueue();
 
@@ -666,9 +666,6 @@ public class CompositeCacheManager
                 log.error( "Could not register shutdown hook.", e );
             }
 
-            this.scheduledExecutor = Executors.newScheduledThreadPool(4,
-                    new DaemonThreadFactory("JCS-Scheduler-", Thread.MIN_PRIORITY));
-
             // Register JMX bean
             if (!isJMXRegistered && jmxName != null)
             {
@@ -844,7 +841,7 @@ public class CompositeCacheManager
         auxiliaryFactoryRegistry.clear();
 
         // shutdown all scheduled jobs
-        this.scheduledExecutor.shutdownNow();
+        ThreadPoolManager.getInstance().disposeSchedulerPool("default");
 
         // shutdown all thread pools
         ThreadPoolManager.getInstance().dispose();
