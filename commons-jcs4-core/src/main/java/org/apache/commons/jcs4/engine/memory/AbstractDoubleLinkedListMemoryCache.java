@@ -45,7 +45,8 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
     private static final Log log = Log.getLog(AbstractDoubleLinkedListMemoryCache.class);
 
     /** Thread-safe double linked list for lru */
-    protected DoubleLinkedList<MemoryElementDescriptor<K, V>> list; // TODO privatise
+    private DoubleLinkedList<MemoryElementDescriptor<K, V>> list;
+
     /**
      * Adds a new node to the start of the link list.
      * <p>
@@ -102,17 +103,19 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
 
     /**
      * Adjust the list as needed for a get. This allows children to control the algorithm
+     * (guarded by the lock)
      * <p>
      *
-     * @param me
+     * @param list the node list
+     * @param me the current cache element
      */
-    protected abstract void adjustListForGet(MemoryElementDescriptor<K, V> me);
+    protected abstract void adjustListForGet(DoubleLinkedList<MemoryElementDescriptor<K, V>> list, MemoryElementDescriptor<K, V> me);
 
     /**
      * Children implement this to control the cache expiration algorithm
      * <p>
      *
-     * @param ce
+     * @param ce the current cache element
      * @return MemoryElementDescriptor the new node
      * @throws IOException
      */
@@ -188,14 +191,23 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
     @Override
     public ICacheElement<K, V> get(final K key) throws IOException
     {
-        final ICacheElement<K, V> ce = super.get(key);
+        lock.lock();
 
-        if (log.isTraceEnabled())
+        try
         {
-            verifyCache();
-        }
+            final ICacheElement<K, V> ce = super.get(key);
 
-        return ce;
+            if (log.isTraceEnabled())
+            {
+                verifyCache();
+            }
+
+            return ce;
+        }
+        finally
+        {
+            lock.unlock();
+        }
     }
 
     /**
@@ -238,7 +250,7 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
     @Override
     protected void lockedGetElement(final MemoryElementDescriptor<K, V> me)
     {
-        adjustListForGet(me);
+        adjustListForGet(list, me);
     }
 
     /**
@@ -271,24 +283,6 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
      */
     private void spoolIfNeeded() throws Error
     {
-        final int size = map.size();
-        // If the element limit is reached, we need to spool
-
-        if (size <= getCacheAttributes().MaxObjects())
-        {
-            return;
-        }
-
-        log.debug("In memory limit reached, spooling");
-
-        // Write the last 'chunkSize' items to disk.
-        final int chunkSizeCorrected = Math.min(size, chunkSize);
-
-        log.debug("About to spool to disk cache, map size: {0}, max objects: {1}, "
-                + "maximum items to spool: {2}", () -> size,
-                getCacheAttributes()::MaxObjects,
-                () -> chunkSizeCorrected);
-
         // The spool will put them in a disk event queue, so there is no
         // need to pre-queue the queuing. This would be a bit wasteful
         // and wouldn't save much time in this synchronous call.
@@ -296,6 +290,24 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
 
         try
         {
+            final int size = map.size();
+            // If the element limit is reached, we need to spool
+
+            if (size <= getCacheAttributes().MaxObjects())
+            {
+                return;
+            }
+
+            log.debug("In memory limit reached, spooling");
+
+            // Write the last 'chunkSize' items to disk.
+            final int chunkSizeCorrected = Math.min(size, chunkSize);
+
+            log.debug("About to spool to disk cache, map size: {0}, max objects: {1}, "
+                    + "maximum items to spool: {2}", () -> size,
+                    getCacheAttributes()::MaxObjects,
+                    () -> chunkSizeCorrected);
+
             freeElements(chunkSizeCorrected);
 
             // If this is out of the sync block it can detect a mismatch
@@ -365,11 +377,10 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
     @Override
     public final void update(final ICacheElement<K, V> ce) throws IOException
     {
-        putCnt.incrementAndGet();
-
         lock.lock();
         try
         {
+            super.update(ce);
             final MemoryElementDescriptor<K, V> newNode = adjustListForUpdate(ce);
 
             // this should be synchronized if we were not using a ConcurrentHashMap

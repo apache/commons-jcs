@@ -24,6 +24,7 @@ import java.io.IOException;
 import org.apache.commons.jcs4.engine.behavior.ICacheElement;
 import org.apache.commons.jcs4.engine.memory.AbstractDoubleLinkedListMemoryCache;
 import org.apache.commons.jcs4.engine.memory.util.MemoryElementDescriptor;
+import org.apache.commons.jcs4.utils.struct.DoubleLinkedList;
 
 /**
  * A fast reference management system. The least recently used items move to the end of the list and
@@ -45,7 +46,7 @@ public class LRUMemoryCache<K, V>
      * @param me
      */
     @Override
-    protected void adjustListForGet( final MemoryElementDescriptor<K, V> me )
+    protected void adjustListForGet(final DoubleLinkedList<MemoryElementDescriptor<K, V>> list, final MemoryElementDescriptor<K, V> me )
     {
         list.makeFirst( me );
     }

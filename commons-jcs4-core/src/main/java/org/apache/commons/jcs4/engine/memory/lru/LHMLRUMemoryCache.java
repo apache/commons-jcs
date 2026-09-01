@@ -188,7 +188,7 @@ public class LHMLRUMemoryCache<K, V>
     public void update( final ICacheElement<K, V> ce )
         throws IOException
     {
-        putCnt.incrementAndGet();
+        super.update(ce);
         map.put( ce.key(), new MemoryElementDescriptor<>(ce) );
     }
 }

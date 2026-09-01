@@ -24,6 +24,7 @@ import java.io.IOException;
 import org.apache.commons.jcs4.engine.behavior.ICacheElement;
 import org.apache.commons.jcs4.engine.memory.AbstractDoubleLinkedListMemoryCache;
 import org.apache.commons.jcs4.engine.memory.util.MemoryElementDescriptor;
+import org.apache.commons.jcs4.utils.struct.DoubleLinkedList;
 
 /**
  * The most recently used items move to the front of the list and get spooled to disk if the cache
@@ -38,7 +39,7 @@ public class MRUMemoryCache<K, V>
      * @param me
      */
     @Override
-    protected void adjustListForGet( final MemoryElementDescriptor<K, V> me )
+    protected void adjustListForGet(final DoubleLinkedList<MemoryElementDescriptor<K, V>> list, final MemoryElementDescriptor<K, V> me )
     {
         list.makeLast( me );
     }

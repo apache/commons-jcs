@@ -24,6 +24,7 @@ import java.io.IOException;
 import org.apache.commons.jcs4.engine.behavior.ICacheElement;
 import org.apache.commons.jcs4.engine.memory.AbstractDoubleLinkedListMemoryCache;
 import org.apache.commons.jcs4.engine.memory.util.MemoryElementDescriptor;
+import org.apache.commons.jcs4.utils.struct.DoubleLinkedList;
 
 /**
  * The items are spooled in the order they are added. No adjustments to the list are made on get.
@@ -37,7 +38,7 @@ public class FIFOMemoryCache<K, V>
      * @param me
      */
     @Override
-    protected void adjustListForGet( final MemoryElementDescriptor<K, V> me )
+    protected void adjustListForGet(final DoubleLinkedList<MemoryElementDescriptor<K, V>> list, final MemoryElementDescriptor<K, V> me )
     {
         // DO NOTHING
     }

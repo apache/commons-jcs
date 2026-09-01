@@ -215,13 +215,12 @@ public class SoftReferenceMemoryCache<K, V> extends AbstractMemoryCache<K, V>
     @Override
     public void update(final ICacheElement<K, V> ce) throws IOException
     {
-        putCnt.incrementAndGet();
-        ce.elementAttributes().setLastAccessTimeNow();
-
         lock.lock();
 
         try
         {
+            super.update(ce);
+            ce.elementAttributes().setLastAccessTimeNow();
             map.put(ce.key(), new SoftReferenceElementDescriptor<>(ce));
             strongReferences.add(ce);
             trimStrongReferences();

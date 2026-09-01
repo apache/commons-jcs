@@ -66,13 +66,13 @@ public abstract class AbstractMemoryCache<K, V>
     protected Map<K, MemoryElementDescriptor<K, V>> map; // TODO privatise
 
     /** Number of hits */
-    protected AtomicLong hitCnt;
+    private AtomicLong hitCnt;
 
     /** Number of misses */
-    protected AtomicLong missCnt;
+    private AtomicLong missCnt;
 
     /** Number of puts */
-    protected AtomicLong putCnt;
+    private AtomicLong putCnt;
 
     /**
      * Children must implement this method. A FIFO implementation may use a tree map. An LRU might
@@ -487,8 +487,11 @@ public abstract class AbstractMemoryCache<K, V>
      * @throws IOException Description of the Exception
      */
     @Override
-    public abstract void update( ICacheElement<K, V> ce )
-        throws IOException;
+    public void update( ICacheElement<K, V> ce )
+        throws IOException
+    {
+        putCnt.incrementAndGet();
+    }
 
     /**
      * Puts an item to the cache.
