@@ -103,12 +103,25 @@ jcs.auxiliary.LTCP.attributes.TcpListenerPort=1110
 jcs.auxiliary.LTCP.attributes.PutOnlyMode=false
         ]]></source>
         <p>
-          See the TCP Lateral documentation for more information.  If you
-          want to set up <code>testCache1</code> to use this, then change
-          the definition to:
+          See the <a href="LateralTCPProperties.html">TCP Lateral documentation</a>
+          for more information. If you want to set up <code>testCache1</code> 
+          to use this, then change the definition to:
         </p>
         <source><![CDATA[
 jcs.region.testCache1=DC,LTCP
+        ]]></source>
+      </subsection>
+      <subsection name="Scheduler pool configuration">
+        <p>
+          JCS uses a central scheduler thread pool to execute scheduled 
+          tasks. This pool uses a default thread count of 4 and a thread
+          priority of <code>Thread.MIN_PRIORITY</code>. If you want to 
+          adjust this, add the following section
+        </p>
+        <source><![CDATA[
+scheduler_pool.default.maximumPoolSize=16
+# Thread.NORM_PRIORITY
+scheduler_pool.default.threadPriority=5
         ]]></source>
       </subsection>
       <subsection name="A few comments on configuration">
@@ -120,10 +133,6 @@ jcs.region.testCache1=DC,LTCP
           The order of configuration file is unimportant, though you
           should try to keep it organized for your own sake.
         </p>
-        <p>
-          Configuration is being refactored and is subject to change.  It
-          should only become easier.
-        </p>
       </subsection>
       <subsection name="The complete file">
         <p>
@@ -131,12 +140,10 @@ jcs.region.testCache1=DC,LTCP
         </p>
         <source><![CDATA[
 # DEFAULT CACHE REGION
-
 jcs.default=DC,LTCP
 jcs.default.cacheattributes.MaxObjects=1000
 
 # PRE-DEFINED CACHE REGIONS
-
 jcs.region.testCache1=DC,LTCP
 jcs.region.testCache1.cacheattributes.MaxObjects=1000
 jcs.region.testCache1.cacheattributes.UseMemoryShrinker=true
@@ -157,6 +164,11 @@ jcs.auxiliary.LTCP=
 jcs.auxiliary.LTCP.attributes.TcpServers=localhost:1111
 jcs.auxiliary.LTCP.attributes.TcpListenerPort=1110
 jcs.auxiliary.LTCP.attributes.PutOnlyMode=false
+
+# SCHEDULER POOL CONFIGURATION
+scheduler_pool.default.maximumPoolSize=16
+# Thread.NORM_PRIORITY
+scheduler_pool.default.threadPriority=5
         ]]></source>
       </subsection>
     </section>

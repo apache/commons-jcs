@@ -158,6 +158,8 @@ thread_pool.default.keepAliveTime=PT5M50S
 #RUN ABORT DISCARDOLDEST DISCARD
 thread_pool.default.whenBlockedPolicy=RUN
 thread_pool.default.startUpSize=4
+# Thread.NORM_PRIORITY
+thread_pool.default.threadPriority=5
 
 # Disk Cache pool
 thread_pool.disk_cache_event_queue.useBoundary=false
