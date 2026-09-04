@@ -243,6 +243,7 @@ public class JCacheFilter implements Filter
             }
             for (final Cookie c : page.cookies)
             {
+                c.setSecure(true);
                 httpServletResponse.addCookie(c);
             }
             for (final Map.Entry<String, List<Serializable>> entry : page.headers.entrySet())
