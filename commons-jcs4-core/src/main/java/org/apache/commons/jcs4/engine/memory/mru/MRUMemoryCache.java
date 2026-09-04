@@ -19,9 +19,6 @@ package org.apache.commons.jcs4.engine.memory.mru;
  * under the License.
  */
 
-import java.io.IOException;
-
-import org.apache.commons.jcs4.engine.behavior.ICacheElement;
 import org.apache.commons.jcs4.engine.memory.AbstractDoubleLinkedListMemoryCache;
 import org.apache.commons.jcs4.engine.memory.util.MemoryElementDescriptor;
 import org.apache.commons.jcs4.utils.struct.DoubleLinkedList;
@@ -33,6 +30,11 @@ import org.apache.commons.jcs4.utils.struct.DoubleLinkedList;
 public class MRUMemoryCache<K, V>
     extends AbstractDoubleLinkedListMemoryCache<K, V>
 {
+    static
+    {
+        cacheImplementationName = "MRU Memory Cache";
+    }
+
     /**
      * Makes the item the last in the list.
      *
@@ -50,14 +52,11 @@ public class MRUMemoryCache<K, V>
      * It's not clear if the put operation should be different. Perhaps this should remove the oldest
      * if full, and then put.
      *
-     * @param ce
-     * @return MemoryElementDescriptor the new node
-     * @throws IOException
+     * @param me The cache element, or entry wrapper
      */
     @Override
-    protected MemoryElementDescriptor<K, V> adjustListForUpdate( final ICacheElement<K, V> ce )
-        throws IOException
+    protected void adjustListForUpdate(final MemoryElementDescriptor<K, V> me)
     {
-        return addFirst( ce );
+        addFirst(me);
     }
 }

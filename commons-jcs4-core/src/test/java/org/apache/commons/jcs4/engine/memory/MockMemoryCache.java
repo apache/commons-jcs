@@ -96,23 +96,6 @@ public class MockMemoryCache<K, V>
     }
 
     /**
-     * @param group
-     * @return null
-     */
-    public Set<K> getGroupKeys( final String group )
-    {
-        return null;
-    }
-
-    /**
-     * @return null
-     */
-    public Set<String> getGroupNames()
-    {
-        return null;
-    }
-
-    /**
      * @return map.keySet().toArray( */
     @Override
     public Set<K> getKeySet()
@@ -202,15 +185,6 @@ public class MockMemoryCache<K, V>
         throws IOException
     {
         map.clear();
-    }
-
-    /**
-     * @param cattr
-     */
-    @Override
-    public void setCacheAttributes( final ICompositeCacheAttributes cattr )
-    {
-        this.cacheAttr = cattr;
     }
 
     /**

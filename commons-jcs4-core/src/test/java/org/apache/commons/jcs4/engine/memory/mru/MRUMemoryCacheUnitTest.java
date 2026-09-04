@@ -20,6 +20,7 @@ package org.apache.commons.jcs4.engine.memory.mru;
  */
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -27,6 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicLong;
 
 import org.apache.commons.jcs4.JCS;
 import org.apache.commons.jcs4.access.CacheAccess;
@@ -35,6 +37,10 @@ import org.apache.commons.jcs4.engine.CacheElement;
 import org.apache.commons.jcs4.engine.behavior.ICacheElement;
 import org.apache.commons.jcs4.engine.control.CompositeCache;
 import org.apache.commons.jcs4.engine.control.CompositeCacheManager;
+import org.apache.commons.jcs4.engine.stats.behavior.ICacheStats;
+import org.apache.commons.jcs4.engine.stats.behavior.IStatElement;
+import org.apache.commons.jcs4.engine.stats.behavior.IStats;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -48,6 +54,12 @@ class MRUMemoryCacheUnitTest
     void setUp()
     {
         JCS.setConfigFilename( "/TestMRUCache.ccf" );
+    }
+
+    @AfterEach
+    void tearDown()
+    {
+        JCS.shutdown();
     }
 
     /**
@@ -130,10 +142,21 @@ class MRUMemoryCacheUnitTest
             cache.put( i + ":key", "myregion data " + i );
         }
 
-        final String stats = cache.getStatistics().toString();
-
-        // TODO improve stats check
-        assertTrue( stats.indexOf( "2000" ) != -1, "Should have 200 puts" );
+        final ICacheStats stats = cache.getStatistics();
+        boolean found = false;
+        for (IStats s : stats.getAuxiliaryCacheStats())
+        {
+            for (IStatElement<?> e : s.getStatElements())
+            {
+                if ("Put Count".equals(e.name()))
+                {
+                    found = true;
+                    assertInstanceOf(AtomicLong.class, e.data());
+                    assertEquals(items, ((AtomicLong) e.data()).get(), "Should have " + items + " puts");
+                }
+            }
+        }
+        assertTrue(found, "Stats should contain Put Count");
     }
 
     /**

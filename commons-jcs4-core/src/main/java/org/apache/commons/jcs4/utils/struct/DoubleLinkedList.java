@@ -48,7 +48,7 @@ import org.apache.commons.jcs4.log.Log;
  * @see java.util.concurrent.locks.ReentrantLock
  * @see org.apache.commons.jcs4.engine.memory.AbstractDoubleLinkedListMemoryCache
  */
-@SuppressWarnings({ "unchecked", "rawtypes" }) // Don't know how to resolve this with generics
+@SuppressWarnings({"unchecked", "rawtypes"}) // Don't know how to resolve this with generics
 public class DoubleLinkedList<T extends DoubleLinkedListNode>
 {
     /** The logger */
@@ -64,23 +64,27 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
     private T last;
 
     /**
+     * Construct DoubleLinkedList
+     */
+    public DoubleLinkedList()
+    {
+        this.first = (T) new DoubleLinkedListNode<T>(null);
+        this.last = (T) new DoubleLinkedListNode<T>(null);
+        this.first.next = this.last;
+        this.last.prev = this.first;
+    }
+
+    /**
      * Adds a new node to the start of the link list.
      *
      * @param me The node to be added to the front
      */
     public void addFirst(final T me)
     {
-        if ( last == null )
-        {
-            // empty list.
-            last = me;
-        }
-        else
-        {
-            first.prev = me;
-            me.next = first;
-        }
-        first = me;
+        me.prev = first;
+        me.next = first.next;
+        first.next.prev = me;
+        first.next = me;
         size++;
     }
 
@@ -91,17 +95,10 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
      */
     public void addLast(final T me)
     {
-        if ( first == null )
-        {
-            // empty list.
-            first = me;
-        }
-        else
-        {
-            last.next = me;
-            me.prev = last;
-        }
-        last = me;
+        me.next = last;
+        me.prev = last.prev;
+        last.prev.next = me;
+        last.prev = me;
         size++;
     }
 
@@ -114,7 +111,7 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
         if ( log.isDebugEnabled() )
         {
             log.debug( "dumping Entries" );
-            for (T me = first; me != null; me = (T) me.next)
+            for (T me = (T) first.next; me != last; me = (T) me.next)
             {
                 log.debug( "dump Entries> payload= \"{0}\"", me.getPayload() );
             }
@@ -128,8 +125,8 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
      */
     public T getFirst()
     {
-        log.debug( "returning first node" );
-        return first;
+        log.trace( "returning first node" );
+        return (T) first.next;
     }
 
     /**
@@ -139,8 +136,8 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
      */
     public T getLast()
     {
-        log.debug( "returning last node" );
-        return last;
+        log.trace( "returning last node" );
+        return (T) last.prev;
     }
 
     /**
@@ -150,29 +147,12 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
      */
     public void makeFirst(final T ln)
     {
-        if ( ln.prev == null )
-        {
-            // already the first node. or not a node
-            return;
-        }
-        // splice: remove it from the list
         ln.prev.next = ln.next;
-
-        if ( ln.next == null )
-        {
-            // last but not the first.
-            last = (T) ln.prev;
-            last.next = null;
-        }
-        else
-        {
-            // neither the last nor the first.
-            ln.next.prev = ln.prev;
-        }
-        first.prev = ln;
-        ln.next = first;
-        ln.prev = null;
-        first = ln;
+        ln.next.prev = ln.prev;
+        ln.prev = first;
+        ln.next = first.next;
+        first.next.prev = ln;
+        first.next = ln;
     }
 
     /**
@@ -182,29 +162,12 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
      */
     public void makeLast(final T ln)
     {
-        if ( ln.next == null )
-        {
-            // already the last node. or not a node
-            return;
-        }
-        // splice: remove it from the list
-        if ( ln.prev != null )
-        {
-            ln.prev.next = ln.next;
-        }
-        else
-        {
-            // first
-            first = last;
-        }
-
-        if ( last != null )
-        {
-            last.next = ln;
-        }
-        ln.prev = last;
-        ln.next = null;
-        last = ln;
+        ln.prev.next = ln.next;
+        ln.next.prev = ln.prev;
+        ln.next = last;
+        ln.prev = last.prev;
+        last.prev.next = ln;
+        last.prev = ln;
     }
 
     /**
@@ -215,44 +178,10 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
      */
     public boolean remove(final T me)
     {
-        log.debug( "removing node" );
-
-        if ( me.next == null )
-        {
-            if ( me.prev == null )
-            {
-                // Make sure it really is the only node before setting head and
-                // tail to null. It is possible that we will be passed a node
-                // which has already been removed from the list, in which case
-                // we should ignore it
-
-                if ( me == first && me == last )
-                {
-                    first = last = null;
-                }
-            }
-            else
-            {
-                // last but not the first.
-                last = (T) me.prev;
-                last.next = null;
-                me.prev = null;
-            }
-        }
-        else if ( me.prev == null )
-        {
-            // first but not the last.
-            first = (T) me.next;
-            first.prev = null;
-            me.next = null;
-        }
-        else
-        {
-            // neither the first nor the last.
-            me.prev.next = me.next;
-            me.next.prev = me.prev;
-            me.prev = me.next = null;
-        }
+        log.trace("removing node");
+        me.prev.next = me.next;
+        me.next.prev = me.prev;
+        me.prev = me.next = null;
         size--;
 
         return true;
@@ -263,15 +192,14 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
      */
     public void removeAll()
     {
-        for (T me = first; me != null; )
+        for (T me = (T) first.next; me != null;)
         {
-            if ( me.prev != null )
-            {
-                me.prev = null;
-            }
+            me.prev = null;
+            me.next = null;
             me = (T) me.next;
         }
-        first = last = null;
+        first.next = last;
+        last.prev = first;
         size = 0;
     }
 
@@ -282,11 +210,11 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
      */
     public T removeLast()
     {
-        log.debug( "removing last node" );
-        final T temp = last;
-        if ( last != null )
+        log.trace("removing last node");
+        final T temp = (T) last.prev;
+        if (last != first)
         {
-            remove( last );
+            remove(temp);
         }
         return temp;
     }

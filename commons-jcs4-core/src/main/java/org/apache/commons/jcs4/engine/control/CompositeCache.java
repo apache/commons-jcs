@@ -185,19 +185,16 @@ public class CompositeCache<K, V>
             {
                 final Class<?> c = Class.forName(cattr.MemoryCacheName());
                 @SuppressWarnings("unchecked") // Need cast
-                final
-                IMemoryCache<K, V> newInstance =
+                final IMemoryCache<K, V> newInstance =
                     (IMemoryCache<K, V>) c.getDeclaredConstructor().newInstance();
                 memCache = newInstance;
-                memCache.initialize(this);
             }
             catch (final Exception e)
             {
                 log.warn("Failed to init mem cache, using: LRUMemoryCache", e);
-
                 this.memCache = new LRUMemoryCache<>();
-                this.memCache.initialize(this);
             }
+            memCache.initialize(this);
         }
         else
         {

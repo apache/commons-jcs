@@ -149,14 +149,6 @@ public interface IMemoryCache<K, V>
         throws IOException;
 
     /**
-     * Sets the CacheAttributes of the region.
-     *
-     * @param cattr
-     *            The new cacheAttributes value
-     */
-    void setCacheAttributes( ICompositeCacheAttributes cattr );
-
-    /**
      * Puts an item to the cache.
      *
      * @param ce

@@ -20,15 +20,12 @@ package org.apache.commons.jcs4.engine.memory.lru;
  */
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.apache.commons.jcs4.engine.behavior.ICacheElement;
-import org.apache.commons.jcs4.engine.control.CompositeCache;
 import org.apache.commons.jcs4.engine.memory.AbstractMemoryCache;
 import org.apache.commons.jcs4.engine.memory.util.MemoryElementDescriptor;
-import org.apache.commons.jcs4.engine.stats.behavior.IStats;
 import org.apache.commons.jcs4.log.Log;
 
 /**
@@ -37,6 +34,14 @@ import org.apache.commons.jcs4.log.Log;
 public class LHMLRUMemoryCache<K, V>
     extends AbstractMemoryCache<K, V>
 {
+    /** The Logger. */
+    private static final Log log = Log.getLog( LRUMemoryCache.class );
+
+    static
+    {
+        cacheImplementationName = "LHMLRU Memory Cache";
+    }
+
     /**
      * Implements removeEldestEntry from {@link LinkedHashMap}.
      */
@@ -60,7 +65,6 @@ public class LHMLRUMemoryCache<K, V>
          * @param eldest
          * @return true if removed
          */
-        @SuppressWarnings("synthetic-access")
         @Override
         protected boolean removeEldestEntry( final Map.Entry<K, MemoryElementDescriptor<K, V>> eldest )
         {
@@ -73,75 +77,34 @@ public class LHMLRUMemoryCache<K, V>
             log.debug( "LHMLRU max size: {0}. Spooling element, key: {1}",
                     () -> getCacheAttributes().MaxObjects(), element::key);
 
-            waterfall( element );
+            waterfall(element);
 
-            log.debug( "LHMLRU size: {0}", map::size );
+            log.debug("LHMLRU size: {0}", getSize());
             return true;
         }
     }
 
-    /** The Logger. */
-    private static final Log log = Log.getLog( LRUMemoryCache.class );
-
     /**
-     * Returns a synchronized LHMSpooler
+     * Returns a LHMSpooler
      *
-     * @return Collections.synchronizedMap( new LHMSpooler() )
+     * @return new LHMSpooler()
      */
     @Override
-    public Map<K, MemoryElementDescriptor<K, V>> createMap()
+    protected Map<K, MemoryElementDescriptor<K, V>> createMap()
     {
-        return Collections.synchronizedMap( new LHMSpooler() );
+        return new LHMSpooler();
     }
 
     /**
-     * Dump the cache entries from first to last for debugging.
-     */
-    public void dumpCacheEntries()
-    {
-        dumpMap();
-    }
-
-    /**
-     * This can't be implemented.
+     * Wrap the cache element into an appropriate memory element descriptor
      *
-     * @param numberToFree
-     * @return 0
-     * @throws IOException
+     * @param ce The cache element
+     * @return The memory element descriptor
      */
     @Override
-    public int freeElements( final int numberToFree )
-        throws IOException
+    protected MemoryElementDescriptor<K, V> wrap(ICacheElement<K, V> ce)
     {
-        // can't be implemented using the LHM
-        return 0;
-    }
-
-    /**
-     * This returns semi-structured information on the memory cache, such as the size, put count,
-     * hit count, and miss count.
-     *
-     * @return IStats
-     */
-    @Override
-    public IStats getStatistics()
-    {
-        final IStats stats = super.getStatistics();
-        stats.setTypeName( "LHMLRU Memory Cache" );
-
-        return stats;
-    }
-
-    /**
-     * For post reflection creation initialization
-     *
-     * @param hub
-     */
-    @Override
-    public void initialize( final CompositeCache<K, V> hub )
-    {
-        super.initialize( hub );
-        log.info( "initialized LHMLRUMemoryCache for {0}", this::getCacheName );
+        return new MemoryElementDescriptor<>(ce);
     }
 
     /**
@@ -152,6 +115,20 @@ public class LHMLRUMemoryCache<K, V>
      */
     @Override
     protected void lockedGetElement(final MemoryElementDescriptor<K, V> me)
+    {
+        // empty
+    }
+
+    /**
+     * Update control structures after update
+     * (guarded by the lock)
+     *
+     * @param newNode The memory element descriptor of the current cache element
+     * @param oldNode The memory element descriptor of the previous cache element
+     */
+    @Override
+    protected void lockedUpdateElement(MemoryElementDescriptor<K, V> newNode,
+            MemoryElementDescriptor<K, V> oldNode)
     {
         // empty
     }
@@ -179,16 +156,15 @@ public class LHMLRUMemoryCache<K, V>
     }
 
     /**
-     * Puts an item to the cache.
+     * This can't be implemented.
      *
-     * @param ce Description of the Parameter
+     * @param numberToFree
+     * @return 0
      * @throws IOException
      */
     @Override
-    public void update( final ICacheElement<K, V> ce )
-        throws IOException
+    protected int lockedFreeElements(final int numberToFree) throws IOException
     {
-        super.update(ce);
-        map.put( ce.key(), new MemoryElementDescriptor<>(ce) );
+        return 0;
     }
 }

@@ -19,9 +19,6 @@ package org.apache.commons.jcs4.engine.memory.lru;
  * under the License.
  */
 
-import java.io.IOException;
-
-import org.apache.commons.jcs4.engine.behavior.ICacheElement;
 import org.apache.commons.jcs4.engine.memory.AbstractDoubleLinkedListMemoryCache;
 import org.apache.commons.jcs4.engine.memory.util.MemoryElementDescriptor;
 import org.apache.commons.jcs4.utils.struct.DoubleLinkedList;
@@ -40,6 +37,11 @@ import org.apache.commons.jcs4.utils.struct.DoubleLinkedList;
 public class LRUMemoryCache<K, V>
     extends AbstractDoubleLinkedListMemoryCache<K, V>
 {
+    static
+    {
+        cacheImplementationName = "LRU Memory Cache";
+    }
+
     /**
      * Makes the item the first in the list.
      *
@@ -55,14 +57,11 @@ public class LRUMemoryCache<K, V>
      * Puts an item to the cache. Removes any pre-existing entries of the same key from the linked
      * list and adds this one first.
      *
-     * @param ce The cache element, or entry wrapper
-     * @return MemoryElementDescriptor the new node
-     * @throws IOException
+     * @param me The cache element, or entry wrapper
      */
     @Override
-    protected MemoryElementDescriptor<K, V> adjustListForUpdate( final ICacheElement<K, V> ce )
-        throws IOException
+    protected void adjustListForUpdate(final MemoryElementDescriptor<K, V> me)
     {
-        return addFirst( ce );
+        addFirst(me);
     }
 }

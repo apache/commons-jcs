@@ -20,8 +20,8 @@ package org.apache.commons.jcs4.engine.memory;
  */
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 import org.apache.commons.jcs4.engine.behavior.ICacheElement;
 import org.apache.commons.jcs4.engine.control.CompositeCache;
@@ -44,67 +44,47 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
     /** The logger. */
     private static final Log log = Log.getLog(AbstractDoubleLinkedListMemoryCache.class);
 
+    static
+    {
+        cacheImplementationName = "Abstract DoubleLinkedList Memory Cache";
+    }
+
     /** Thread-safe double linked list for lru */
     private DoubleLinkedList<MemoryElementDescriptor<K, V>> list;
 
     /**
      * Adds a new node to the start of the link list.
-     * <p>
+     * (guarded by the lock)
      *
-     * @param ce
-     *            The feature to be added to the First
-     * @return MemoryElementDescriptor
+     * @param me The MemoryElementDescriptor to be added to the start of the list
      */
-    protected MemoryElementDescriptor<K, V> addFirst(final ICacheElement<K, V> ce)
+    protected void addFirst(final MemoryElementDescriptor<K, V> me)
     {
-        lock.lock();
-        try
+        list.addFirst(me);
+        if ( log.isTraceEnabled() )
         {
-            final MemoryElementDescriptor<K, V> me = new MemoryElementDescriptor<>(ce);
-            list.addFirst(me);
-            if ( log.isTraceEnabled() )
-            {
-                verifyCache(ce.key());
-            }
-            return me;
-        }
-        finally
-        {
-            lock.unlock();
+            verifyCache(me.getCacheElement().key());
         }
     }
 
     /**
      * Adds a new node to the end of the link list.
-     * <p>
+     * (guarded by the lock)
      *
-     * @param ce
-     *            The feature to be added to the First
-     * @return MemoryElementDescriptor
+     * @param me The feature to be added to the end of the list
      */
-    protected MemoryElementDescriptor<K, V> addLast(final ICacheElement<K, V> ce)
+    protected void addLast(final MemoryElementDescriptor<K,V> me)
     {
-        lock.lock();
-        try
+        list.addLast(me);
+        if ( log.isTraceEnabled() )
         {
-            final MemoryElementDescriptor<K, V> me = new MemoryElementDescriptor<>(ce);
-            list.addLast(me);
-            if ( log.isTraceEnabled() )
-            {
-                verifyCache(ce.key());
-            }
-            return me;
-        }
-        finally
-        {
-            lock.unlock();
+            verifyCache(me.getCacheElement().key());
         }
     }
 
     /**
      * Adjust the list as needed for a get. This allows children to control the algorithm
      * (guarded by the lock)
-     * <p>
      *
      * @param list the node list
      * @param me the current cache element
@@ -115,74 +95,19 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
      * Children implement this to control the cache expiration algorithm
      * <p>
      *
-     * @param ce the current cache element
-     * @return MemoryElementDescriptor the new node
-     * @throws IOException
+     * @param me the current cache element
      */
-    protected abstract MemoryElementDescriptor<K, V> adjustListForUpdate(ICacheElement<K, V> ce) throws IOException;
+    protected abstract void adjustListForUpdate(MemoryElementDescriptor<K, V> me);
 
     /**
      * This is called by super initialize.
      *
-     * NOTE: should return a thread safe map
-     *
-     * <p>
-     *
-     * @return new ConcurrentHashMap()
+     * @return new HashMap()
      */
     @Override
-    public ConcurrentMap<K, MemoryElementDescriptor<K, V>> createMap()
+    protected Map<K, MemoryElementDescriptor<K, V>> createMap()
     {
         return new ConcurrentHashMap<>();
-    }
-
-    /**
-     * Dump the cache entries from first to list for debugging.
-     */
-    private void dumpCacheEntries()
-    {
-        log.trace("dumpingCacheEntries");
-        for (MemoryElementDescriptor<K, V> me = list.getFirst(); me != null; me = (MemoryElementDescriptor<K, V>) me.next)
-        {
-            log.trace("dumpCacheEntries> key={0}, val={1}",
-                    me.getCacheElement().key(), me.getCacheElement().value());
-        }
-    }
-
-    /**
-     * This instructs the memory cache to remove the <em>numberToFree</em> according to its eviction
-     * policy. For example, the LRUMemoryCache will remove the <em>numberToFree</em> least recently
-     * used items. These will be spooled to disk if a disk auxiliary is available.
-     * <p>
-     *
-     * @param numberToFree
-     * @return The number that were removed. if you ask to free 5, but there are only 3, you will
-     *         get 3.
-     */
-    @Override
-    public int freeElements(final int numberToFree)
-    {
-        int freed = 0;
-
-        lock.lock();
-
-        try
-        {
-            for (; freed < numberToFree; freed++)
-            {
-                final ICacheElement<K, V> element = spoolLastElement();
-                if (element == null)
-                {
-                    break;
-                }
-            }
-        }
-        finally
-        {
-            lock.unlock();
-        }
-
-        return freed;
     }
 
     /**
@@ -191,29 +116,19 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
     @Override
     public ICacheElement<K, V> get(final K key) throws IOException
     {
-        lock.lock();
+        final ICacheElement<K, V> ce = super.get(key);
 
-        try
+        if (log.isTraceEnabled())
         {
-            final ICacheElement<K, V> ce = super.get(key);
-
-            if (log.isTraceEnabled())
-            {
-                verifyCache();
-            }
-
-            return ce;
+            verifyCache();
         }
-        finally
-        {
-            lock.unlock();
-        }
+
+        return ce;
     }
 
     /**
      * This returns semi-structured information on the memory cache, such as the size, put count,
      * hit count, and miss count.
-     * <p>
      *
      * @see org.apache.commons.jcs4.engine.memory.behavior.IMemoryCache#getStatistics()
      */
@@ -221,7 +136,6 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
     public IStats getStatistics()
     {
         final IStats stats = super.getStatistics();
-        stats.setTypeName( /* add algorithm name */"Memory Cache");
         stats.addStatElement("List Size", Integer.valueOf(list.size()));
 
         return stats;
@@ -242,6 +156,18 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
     }
 
     /**
+     * Wrap the cache element into an appropriate memory element descriptor
+     *
+     * @param ce The cache element
+     * @return The memory element descriptor
+     */
+    @Override
+    protected MemoryElementDescriptor<K, V> wrap(ICacheElement<K, V> ce)
+    {
+        return new MemoryElementDescriptor<>(ce);
+    }
+
+    /**
      * Update control structures after get
      * (guarded by the lock)
      *
@@ -251,6 +177,30 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
     protected void lockedGetElement(final MemoryElementDescriptor<K, V> me)
     {
         adjustListForGet(list, me);
+    }
+
+    /**
+     * Update control structures after update
+     * (guarded by the lock)
+     *
+     * @param newNode The memory element descriptor of the current cache element
+     * @param oldNode The memory element descriptor of the previous cache element
+     * @throws IOException if spooling operation fails
+     */
+    @Override
+    protected void lockedUpdateElement(MemoryElementDescriptor<K, V> newNode,
+            MemoryElementDescriptor<K, V> oldNode) throws IOException
+    {
+        adjustListForUpdate(newNode);
+
+        // If the node was the same as an existing node, remove it.
+        if (oldNode != null && newNode.getCacheElement().key().equals(oldNode.getCacheElement().key()))
+        {
+            list.remove(oldNode);
+        }
+
+        // If we are over the max spool some
+        spoolIfNeeded();
     }
 
     /**
@@ -276,61 +226,74 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
     }
 
     /**
-     * If the max size has been reached, spool.
-     * <p>
+     * This instructs the memory cache to remove the <em>numberToFree</em> according to its eviction
+     * policy. For example, the LRUMemoryCache will remove the <em>numberToFree</em> least recently
+     * used items. These will be spooled to disk if a disk auxiliary is available.
+     * (guarded by the lock)
      *
-     * @throws Error
+     * @param numberToFree
+     * @return The number that were removed. if you ask to free 5, but there are only 3, you will
+     *         get 3.
      */
-    private void spoolIfNeeded() throws Error
+    @Override
+    protected int lockedFreeElements(final int numberToFree) throws IOException
+    {
+        int freed = 0;
+
+        for (; freed < numberToFree; freed++)
+        {
+            final ICacheElement<K, V> element = spoolLastElement();
+            if (element == null)
+            {
+                break;
+            }
+        }
+
+        return freed;
+    }
+
+    /**
+     * If the max size has been reached, spool.
+     * (guarded by the lock)
+     *
+     * @throws IOException
+     */
+    private void spoolIfNeeded() throws IOException
     {
         // The spool will put them in a disk event queue, so there is no
         // need to pre-queue the queuing. This would be a bit wasteful
         // and wouldn't save much time in this synchronous call.
-        lock.lock();
-
-        try
+        final int size = getSize();
+        // If the element limit is reached, we need to spool
+        if (size <= getCacheAttributes().MaxObjects())
         {
-            final int size = map.size();
-            // If the element limit is reached, we need to spool
-
-            if (size <= getCacheAttributes().MaxObjects())
-            {
-                return;
-            }
-
-            log.debug("In memory limit reached, spooling");
-
-            // Write the last 'chunkSize' items to disk.
-            final int chunkSizeCorrected = Math.min(size, chunkSize);
-
-            log.debug("About to spool to disk cache, map size: {0}, max objects: {1}, "
-                    + "maximum items to spool: {2}", () -> size,
-                    getCacheAttributes()::MaxObjects,
-                    () -> chunkSizeCorrected);
-
-            freeElements(chunkSizeCorrected);
-
-            // If this is out of the sync block it can detect a mismatch
-            // where there is none.
-            if (log.isDebugEnabled() && map.size() != list.size())
-            {
-                log.debug("update: After spool, size mismatch: map.size() = {0}, "
-                        + "linked list size = {1}", map.size(), list.size());
-            }
-        }
-        finally
-        {
-            lock.unlock();
+            return;
         }
 
-        log.debug("update: After spool map size: {0} linked list size = {1}",
-                () -> map.size(), () -> list.size());
+        log.debug("In memory limit reached, spooling");
+
+        // Write the last 'chunkSize' items to disk.
+        final int chunkSizeCorrected = Math.min(size, getCacheAttributes().SpoolChunkSize());
+
+        log.debug("About to spool to disk cache, map size: {0}, max objects: {1}, "
+                + "maximum items to spool: {2}", () -> size,
+                getCacheAttributes()::MaxObjects,
+                () -> chunkSizeCorrected);
+
+        freeElements(chunkSizeCorrected);
+
+        // If this is out of the sync block it can detect a mismatch
+        // where there is none.
+        if (log.isDebugEnabled() && getSize() != list.size())
+        {
+            log.debug("update: After spool, size mismatch: map.size() = {0}, "
+                    + "linked list size = {1}", getSize(), list.size());
+        }
     }
 
     /**
      * This spools the last element in the LRU, if one exists.
-     * The method is called guarded by the lock
-     * <p>
+     * (guarded by the lock)
      *
      * @return ICacheElement&lt;K, V&gt; if there was a last element, else null.
      * @throws Error
@@ -365,41 +328,16 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
     }
 
     /**
-     * Calls the abstract method updateList.
-     * <p>
-     * If the max size is reached, an element will be put to disk.
-     * <p>
-     *
-     * @param ce
-     *            The cache element, or entry wrapper
-     * @throws IOException
+     * Dump the cache entries from first to list for debugging.
      */
-    @Override
-    public final void update(final ICacheElement<K, V> ce) throws IOException
+    private void dumpCacheEntries()
     {
-        lock.lock();
-        try
+        log.trace("dumpingCacheEntries");
+        for (MemoryElementDescriptor<K, V> me = list.getFirst(); me != null; me = (MemoryElementDescriptor<K, V>) me.next)
         {
-            super.update(ce);
-            final MemoryElementDescriptor<K, V> newNode = adjustListForUpdate(ce);
-
-            // this should be synchronized if we were not using a ConcurrentHashMap
-            final K key = newNode.getCacheElement().key();
-            final MemoryElementDescriptor<K, V> oldNode = map.put(key, newNode);
-
-            // If the node was the same as an existing node, remove it.
-            if (oldNode != null && key.equals(oldNode.getCacheElement().key()))
-            {
-                list.remove(oldNode);
-            }
+            log.trace("dumpCacheEntries> key={0}, val={1}",
+                    me.getCacheElement().key(), me.getCacheElement().value());
         }
-        finally
-        {
-            lock.unlock();
-        }
-
-        // If we are over the max spool some
-        spoolIfNeeded();
     }
 
     /**
@@ -410,7 +348,7 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
     {
         boolean found = false;
         log.trace("verifycache[{0}]: map contains {1} elements, linked list "
-                + "contains {2} elements", getCacheName(), map.size(),
+                + "contains {2} elements", getCacheName(), getSize(),
                 list.size());
         log.trace("verifycache: checking linked list by key ");
         for (MemoryElementDescriptor<K, V> li = list.getFirst(); li != null; li = (MemoryElementDescriptor<K, V>) li.next)
