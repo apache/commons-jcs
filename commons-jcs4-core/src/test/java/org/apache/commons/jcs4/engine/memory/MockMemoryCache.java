@@ -77,11 +77,9 @@ public class MockMemoryCache<K, V>
     /**
      * @param key
      * @return (ICacheElement) map.get( key )
-     * @throws IOException
      */
     @Override
     public ICacheElement<K, V> get( final K key )
-        throws IOException
     {
         return map.get( key );
     }
@@ -106,11 +104,9 @@ public class MockMemoryCache<K, V>
     /**
      * @param keys
      * @return elements
-     * @throws IOException
      */
     @Override
     public Map<K, ICacheElement<K, V>> getMultiple(final Set<K> keys)
-        throws IOException
     {
         final Map<K, ICacheElement<K, V>> elements = new HashMap<>();
 
@@ -132,11 +128,9 @@ public class MockMemoryCache<K, V>
     /**
      * @param key
      * @return (ICacheElement) map.get( key )
-     * @throws IOException
      */
     @Override
     public ICacheElement<K, V> getQuiet( final K key )
-        throws IOException
     {
         return map.get( key );
     }
@@ -168,11 +162,9 @@ public class MockMemoryCache<K, V>
     /**
      * @param key
      * @return map.remove( key ) != null
-     * @throws IOException
      */
     @Override
     public boolean remove( final K key )
-        throws IOException
     {
         return map.remove( key ) != null;
     }
@@ -182,7 +174,6 @@ public class MockMemoryCache<K, V>
      */
     @Override
     public void removeAll()
-        throws IOException
     {
         map.clear();
     }

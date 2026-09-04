@@ -1192,17 +1192,7 @@ public class CompositeCache<K, V>
     protected boolean remove(final K key, final boolean localOnly)
     {
         removeCount.incrementAndGet();
-
-        boolean removed = false;
-
-        try
-        {
-            removed = memCache.remove(key);
-        }
-        catch (final IOException e)
-        {
-            log.error(e);
-        }
+        boolean removed = memCache.remove(key);
 
         // Removes from all auxiliary caches.
         for (final ICache<K, V> aux : auxCaches)
@@ -1263,16 +1253,8 @@ public class CompositeCache<K, V>
     protected void removeAll(final boolean localOnly)
         throws IOException
     {
-        try
-        {
-            memCache.removeAll();
-
-            log.debug("Removed All keys from the memory cache.");
-        }
-        catch (final IOException ex)
-        {
-            log.error("Trouble updating memory cache.", ex);
-        }
+        memCache.removeAll();
+        log.debug("Removed All keys from the memory cache.");
 
         // Removes from all auxiliary disk caches.
         auxCaches.stream()

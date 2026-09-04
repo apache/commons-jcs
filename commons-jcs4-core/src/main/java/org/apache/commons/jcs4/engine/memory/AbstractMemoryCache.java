@@ -68,7 +68,7 @@ public abstract class AbstractMemoryCache<K, V>
     protected final ReadWriteLock lock = new ReentrantReadWriteLock();
 
     /** Map where items are stored by key.  This is created by the concrete child class. */
-    protected Map<K, MemoryElementDescriptor<K, V>> map; // TODO privatise
+    private Map<K, MemoryElementDescriptor<K, V>> map;
 
     /** Number of hits */
     private AtomicLong hitCnt;
@@ -153,14 +153,12 @@ public abstract class AbstractMemoryCache<K, V>
 
     /**
      * Gets an item from the cache.
-     * <p>
      *
      * @param key Identifies item to find
      * @return ICacheElement&lt;K, V&gt; if found, else null
-     * @throws IOException
      */
     @Override
-    public ICacheElement<K, V> get(final K key) throws IOException
+    public ICacheElement<K, V> get(final K key)
     {
         ICacheElement<K, V> ce = null;
 
@@ -243,25 +241,14 @@ public abstract class AbstractMemoryCache<K, V>
      * @param keys
      * @return A map of K key to ICacheElement&lt;K, V&gt; element, or an empty map if there is no
      *         data in cache for any of these keys
-     * @throws IOException
      */
     @Override
     public Map<K, ICacheElement<K, V>> getMultiple(final Set<K> keys)
-        throws IOException
     {
         if (keys != null)
         {
             return keys.stream()
-                .map(key -> {
-                    try
-                    {
-                        return get(key);
-                    }
-                    catch (final IOException e)
-                    {
-                        return null;
-                    }
-                })
+                .map(key -> get(key))
                 .filter(Objects::nonNull)
                 .collect(Collectors.toMap(
                         ICacheElement::key,
@@ -277,11 +264,9 @@ public abstract class AbstractMemoryCache<K, V>
      *
      * @param key Identifies item to find
      * @return Element matching key if found, or null
-     * @throws IOException
      */
     @Override
     public ICacheElement<K, V> getQuiet( final K key )
-        throws IOException
     {
         ICacheElement<K, V> ce = null;
 
@@ -419,10 +404,9 @@ public abstract class AbstractMemoryCache<K, V>
      *
      * @param key
      * @return true if the removal was successful
-     * @throws IOException
      */
     @Override
-    public boolean remove(final K key) throws IOException
+    public boolean remove(final K key)
     {
         log.debug("removing item for key: {0}", key);
 
@@ -461,11 +445,9 @@ public abstract class AbstractMemoryCache<K, V>
 
     /**
      * Removes all cached items from the cache.
-     *
-     * @throws IOException
      */
     @Override
-    public void removeAll() throws IOException
+    public void removeAll()
     {
         lock.writeLock().lock();
         try

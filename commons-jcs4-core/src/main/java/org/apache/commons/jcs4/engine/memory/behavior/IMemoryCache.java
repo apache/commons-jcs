@@ -56,14 +56,10 @@ public interface IMemoryCache<K, V>
     /**
      * Gets an item from the cache
      *
-     * @param key
-     *            Description of the Parameter
-     * @return Description of the Return Value
-     * @throws IOException
-     *                Description of the Exception
+     * @param key Identifies item to find
+     * @return ICacheElement&lt;K, V&gt; if found, else null
      */
-    ICacheElement<K, V> get( K key )
-        throws IOException;
+    ICacheElement<K, V> get(K key);
 
     /**
      * Returns the CacheAttributes for the region.
@@ -88,10 +84,8 @@ public interface IMemoryCache<K, V>
      * @param keys
      * @return A map of K key to ICacheElement&lt;K, V&gt; element, or an empty map
      * if there is no data in cache for any of these keys
-     * @throws IOException
      */
-    Map<K, ICacheElement<K, V>> getMultiple( Set<K> keys )
-        throws IOException;
+    Map<K, ICacheElement<K, V>> getMultiple(Set<K> keys);
 
     /**
      * Gets an item from the cache without effecting its order or last access
@@ -100,11 +94,8 @@ public interface IMemoryCache<K, V>
      * @param key
      *            Description of the Parameter
      * @return The quiet value
-     * @throws IOException
-     *                Description of the Exception
      */
-    ICacheElement<K, V> getQuiet( K key )
-        throws IOException;
+    ICacheElement<K, V> getQuiet(K key);
 
     /**
      * Gets the number of elements contained in the memory store
@@ -130,31 +121,21 @@ public interface IMemoryCache<K, V>
     /**
      * Removes an item from the cache
      *
-     * @param key
-     *            Identifies item to be removed
-     * @return Description of the Return Value
-     * @throws IOException
-     *                Description of the Exception
+     * @param key Identifies item to be removed
+     * @return true if the removal was successful
      */
-    boolean remove( K key )
-        throws IOException;
+    boolean remove(K key);
 
     /**
      * Removes all cached items from the cache.
-     *
-     * @throws IOException
-     *                Description of the Exception
      */
-    void removeAll()
-        throws IOException;
+    void removeAll();
 
     /**
      * Puts an item to the cache.
      *
-     * @param ce
-     *            Description of the Parameter
-     * @throws IOException
-     *                Description of the Exception
+     * @param ce the cache item
+     * @throws IOException if the update operation fails
      */
     void update( ICacheElement<K, V> ce )
         throws IOException;
@@ -162,10 +143,8 @@ public interface IMemoryCache<K, V>
     /**
      * Spools the item contained in the provided element to disk
      *
-     * @param ce
-     *            Description of the Parameter
-     * @throws IOException
-     *                Description of the Exception
+     * @param ce the cache item
+     * @throws IOException if the spool operation fails
      */
     void waterfall( ICacheElement<K, V> ce )
         throws IOException;

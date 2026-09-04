@@ -78,7 +78,7 @@ public class SoftReferenceMemoryCache<K, V> extends AbstractMemoryCache<K, V>
         lock.readLock().lock();
         try
         {
-            return map.entrySet().stream()
+            return getMapView().entrySet().stream()
                     .filter(e -> e.getValue().getCacheElement() != null)
                     .map(e -> e.getKey())
                     .collect(Collectors.toSet());
@@ -100,7 +100,7 @@ public class SoftReferenceMemoryCache<K, V> extends AbstractMemoryCache<K, V>
         lock.readLock().lock();
         try
         {
-            long size = map.values().stream()
+            long size = getMapView().values().stream()
                     .filter(v -> v.getCacheElement() != null)
                     .count();
 

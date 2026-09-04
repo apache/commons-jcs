@@ -114,7 +114,7 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
      * @see org.apache.commons.jcs4.engine.memory.AbstractMemoryCache#get(Object)
      */
     @Override
-    public ICacheElement<K, V> get(final K key) throws IOException
+    public ICacheElement<K, V> get(final K key)
     {
         final ICacheElement<K, V> ce = super.get(key);
 
@@ -311,7 +311,7 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
                 throw new Error("update: last.ce is null!");
             }
             waterfall(toSpool);
-            if (map.remove(toSpool.key()) == null)
+            if (!remove(toSpool.key()))
             {
                 log.warn("update: remove failed for key: {0}", toSpool::key);
 
@@ -320,8 +320,6 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
                     verifyCache();
                 }
             }
-
-            list.remove(last);
         }
 
         return toSpool;
@@ -347,6 +345,7 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
     private void verifyCache()
     {
         boolean found = false;
+        Map<K, MemoryElementDescriptor<K, V>> mapView = getMapView();
         log.trace("verifycache[{0}]: map contains {1} elements, linked list "
                 + "contains {2} elements", getCacheName(), getSize(),
                 list.size());
@@ -354,7 +353,7 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
         for (MemoryElementDescriptor<K, V> li = list.getFirst(); li != null; li = (MemoryElementDescriptor<K, V>) li.next)
         {
             final K key = li.getCacheElement().key();
-            if (!map.containsKey(key))
+            if (!mapView.containsKey(key))
             {
                 log.error("verifycache[{0}]: map does not contain key : {1}",
                         getCacheName(), key);
@@ -370,7 +369,7 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
                 }
                 dumpMap();
             }
-            else if (map.get(key) == null)
+            else if (mapView.get(key) == null)
             {
                 log.error("verifycache[{0}]: linked list retrieval returned "
                         + "null for key: {1}", getCacheName(), key);
@@ -380,7 +379,7 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
         log.trace("verifycache: checking linked list by value ");
         for (MemoryElementDescriptor<K, V> li = list.getFirst(); li != null; li = (MemoryElementDescriptor<K, V>) li.next)
         {
-            if (!map.containsValue(li))
+            if (!mapView.containsValue(li))
             {
                 log.error("verifycache[{0}]: map does not contain value: {1}",
                         getCacheName(), li);
@@ -389,7 +388,7 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
         }
 
         log.trace("verifycache: checking via keysets!");
-        for (final Object val : map.keySet())
+        for (final Object val : mapView.keySet())
         {
             found = false;
 
@@ -406,7 +405,7 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
                 log.error("verifycache[{0}]: key not found in list : {1}",
                         getCacheName(), val);
                 dumpCacheEntries();
-                if (map.containsKey(val))
+                if (mapView.containsKey(val))
                 {
                     log.error("verifycache: map contains key");
                 }

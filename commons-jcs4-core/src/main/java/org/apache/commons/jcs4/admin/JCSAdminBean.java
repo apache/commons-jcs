@@ -241,15 +241,7 @@ public class JCSAdminBean implements JCSJMXBean
 
         for (final K key : memCache.getKeySet())
         {
-            ICacheElement<K, V> ice = null;
-			try
-			{
-				ice = memCache.get(key);
-			}
-			catch (final IOException e)
-			{
-                throw new IllegalStateException("IOException while trying to get a cached element", e);
-			}
+            ICacheElement<K, V> ice = memCache.get(key);
 
 			if (ice == null)
 			{
