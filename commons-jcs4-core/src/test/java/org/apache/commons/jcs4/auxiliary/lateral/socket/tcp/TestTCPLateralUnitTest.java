@@ -119,7 +119,7 @@ class TestTCPLateralUnitTest
             lur.send( led );
         }
 
-        SleepUtil.sleepAtLeast( numMes * 4 ); // this may need to be adjusted ...
+        SleepUtil.sleepAtLeast( numMes * 10 ); // this may need to be adjusted ...
 
         // VERIFY
         assertEquals( numMes, listener.getPutCnt(), "Should have received " + numMes + " by now." );

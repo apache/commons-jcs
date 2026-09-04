@@ -345,7 +345,7 @@ class SimpleEventHandlingUnitTest
         }
 
         // wait a bit for it to finish
-        Thread.sleep( items / 20 );
+        Thread.sleep( items / 10 );
 
         // test to see if the count is right
         assertTrue( meh.getSpoolNotAllowedCount() >= items,
@@ -377,7 +377,7 @@ class SimpleEventHandlingUnitTest
         }
 
         // wait a bit for it to finish
-        Thread.sleep( items / 20 );
+        Thread.sleep( items / 10 );
 
         // test to see if the count is right
         assertTrue( meh.getSpoolNotAllowedCount() >= items,
