@@ -73,13 +73,6 @@ public interface IMemoryCache<K, V>
     ICompositeCacheAttributes getCacheAttributes();
 
     /**
-     * Gets the cache hub / region that uses the MemoryCache.
-     *
-     * @return The cache value
-     */
-    CompositeCache<K, V> getCompositeCache();
-
-    /**
      * Gets a set of the keys for all elements in the memory cache.
      *
      * @return A set of the key type

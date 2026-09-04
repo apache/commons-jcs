@@ -95,13 +95,6 @@ public class MockMemoryCache<K, V>
         return cacheAttr;
     }
 
-    /** @return null */
-    @Override
-    public CompositeCache<K, V> getCompositeCache()
-    {
-        return null;
-    }
-
     /**
      * @param group
      * @return null

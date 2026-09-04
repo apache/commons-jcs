@@ -347,10 +347,10 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
             {
                 throw new Error("update: last.ce is null!");
             }
-            getCompositeCache().spoolToDisk(toSpool);
+            waterfall(toSpool);
             if (map.remove(toSpool.key()) == null)
             {
-                log.warn("update: remove failed for key: {0}", toSpool.key());
+                log.warn("update: remove failed for key: {0}", toSpool::key);
 
                 if (log.isTraceEnabled())
                 {

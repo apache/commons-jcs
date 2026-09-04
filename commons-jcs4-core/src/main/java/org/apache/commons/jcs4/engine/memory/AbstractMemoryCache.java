@@ -28,6 +28,7 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import org.apache.commons.jcs4.engine.behavior.ICache;
@@ -54,8 +55,11 @@ public abstract class AbstractMemoryCache<K, V>
     /** Cache Attributes.  Regions settings. */
     private ICompositeCacheAttributes cacheAttributes;
 
-    /** The cache region this store is associated with */
-    private CompositeCache<K, V> cache;
+    /** The cache region spool method */
+    private Consumer<ICacheElement<K,V>> waterfall;
+
+    /** The cache region name this store is associated with */
+    private String cacheName;
 
     /** How many to spool at a time. */
     protected int chunkSize;
@@ -175,23 +179,7 @@ public abstract class AbstractMemoryCache<K, V>
      */
     public String getCacheName()
     {
-        final String attributeCacheName = this.cacheAttributes.cacheName();
-        if(attributeCacheName != null)
-        {
-            return attributeCacheName;
-        }
-        return cache.getCacheName();
-    }
-
-    /**
-     * Gets the cache hub / region that the MemoryCache is used by
-     *
-     * @return The cache value
-     */
-    @Override
-    public CompositeCache<K, V> getCompositeCache()
-    {
-        return this.cache;
+        return cacheName;
     }
 
     /**
@@ -311,8 +299,9 @@ public abstract class AbstractMemoryCache<K, V>
 
         this.cacheAttributes = hub.getCacheAttributes();
         this.chunkSize = cacheAttributes.SpoolChunkSize();
-        this.cache = hub;
-
+        final String attributeCacheName = this.cacheAttributes.cacheName();
+        this.cacheName = attributeCacheName == null ? hub.getCacheName() : attributeCacheName;
+        this.waterfall = ce -> hub.spoolToDisk(ce);
         this.map = createMap();
     }
 
@@ -501,6 +490,6 @@ public abstract class AbstractMemoryCache<K, V>
     @Override
     public void waterfall( final ICacheElement<K, V> ce )
     {
-        this.cache.spoolToDisk( ce );
+        this.waterfall.accept(ce);
     }
 }
