@@ -24,8 +24,9 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.stream.Collectors;
 
 import org.apache.commons.jcs4.engine.control.group.GroupAttrName;
@@ -61,16 +62,16 @@ public abstract class AbstractLRUMap<K, V>
     private final Map<K, LRUElementDescriptor<K, V>> map;
 
     /** Lock to keep map and list synchronous */
-    private final Lock lock = new ReentrantLock();
+    private final ReadWriteLock lock;
 
     /** Stats */
-    private long hitCnt;
+    private final AtomicLong hitCnt;
 
     /** Stats */
-    private long missCnt;
+    private final AtomicLong missCnt;
 
     /** Stats */
-    private long putCnt;
+    private final AtomicLong putCnt;
 
     /**
      * This creates an unbounded version. Setting the max objects will result in spooling on
@@ -83,6 +84,10 @@ public abstract class AbstractLRUMap<K, V>
         // normal hashtable is faster for
         // sequential keys.
         map = new ConcurrentHashMap<>();
+        lock = new ReentrantReadWriteLock();
+        hitCnt = new AtomicLong();
+        missCnt = new AtomicLong();
+        putCnt = new AtomicLong();
     }
 
     /**
@@ -93,7 +98,7 @@ public abstract class AbstractLRUMap<K, V>
     @Override
     public void clear()
     {
-        lock.lock();
+        lock.writeLock().lock();
         try
         {
             map.clear();
@@ -101,7 +106,7 @@ public abstract class AbstractLRUMap<K, V>
         }
         finally
         {
-            lock.unlock();
+            lock.writeLock().unlock();
         }
     }
 
@@ -113,7 +118,15 @@ public abstract class AbstractLRUMap<K, V>
     @Override
     public boolean containsKey( final Object key )
     {
-        return map.containsKey( key );
+        lock.readLock().lock();
+        try
+        {
+            return map.containsKey( key );
+        }
+        finally
+        {
+            lock.readLock().unlock();
+        }
     }
 
     /**
@@ -124,7 +137,15 @@ public abstract class AbstractLRUMap<K, V>
     @Override
     public boolean containsValue( final Object value )
     {
-        return map.containsValue( value );
+        lock.readLock().lock();
+        try
+        {
+            return map.containsValue( value );
+        }
+        finally
+        {
+            lock.readLock().unlock();
+        }
     }
 
     /**
@@ -135,9 +156,17 @@ public abstract class AbstractLRUMap<K, V>
         if (log.isTraceEnabled())
         {
             log.trace("dumpingCacheEntries");
-            for (LRUElementDescriptor<K, V> me : list)
+            lock.readLock().lock();
+            try
             {
-                log.trace("dumpCacheEntries> key={0}, val={1}", me.getKey(), me.getValue());
+                for (LRUElementDescriptor<K, V> me : list)
+                {
+                    log.trace("dumpCacheEntries> key={0}, val={1}", me::getKey, me::getValue);
+                }
+            }
+            finally
+            {
+                lock.readLock().unlock();
             }
         }
     }
@@ -150,7 +179,15 @@ public abstract class AbstractLRUMap<K, V>
         if (log.isTraceEnabled())
         {
             log.trace("dumpingMap");
-            map.forEach((key, value) -> log.trace("dumpMap> key={0}, val={1}", key, value.getValue()));
+            lock.readLock().lock();
+            try
+            {
+                map.forEach((key, value) -> log.trace("dumpMap> key={0}, val={1}", key, value.getValue()));
+            }
+            finally
+            {
+                lock.readLock().unlock();
+            }
         }
     }
 
@@ -167,7 +204,7 @@ public abstract class AbstractLRUMap<K, V>
     @Override
     public Set<Map.Entry<K, V>> entrySet()
     {
-        lock.lock();
+        lock.readLock().lock();
         try
         {
             return map.entrySet().stream()
@@ -177,7 +214,7 @@ public abstract class AbstractLRUMap<K, V>
         }
         finally
         {
-            lock.unlock();
+            lock.readLock().unlock();
         }
     }
 
@@ -192,37 +229,36 @@ public abstract class AbstractLRUMap<K, V>
 
         log.debug( "getting item  for key {0}", key );
 
-        lock.lock();
+        lock.writeLock().lock();
         try
         {
             final LRUElementDescriptor<K, V> me = map.get( key );
 
             if ( me == null )
             {
-                missCnt++;
                 retVal = null;
             }
             else
             {
-                hitCnt++;
                 retVal = me.getValue();
                 list.makeFirst( me );
-            }
-
-            if ( me == null )
-            {
-                log.debug( "LRUMap miss for {0}", key );
-            }
-            else
-            {
-                log.debug( "LRUMap hit for {0}", key );
             }
         }
         finally
         {
-            lock.unlock();
+            lock.writeLock().unlock();
         }
 
+        if (retVal == null)
+        {
+            missCnt.incrementAndGet();
+            log.debug( "LRUMap miss for {0}", key );
+        }
+        else
+        {
+            hitCnt.incrementAndGet();
+            log.debug( "LRUMap hit for {0}", key );
+        }
         // verifyCache();
         return retVal;
     }
@@ -238,14 +274,23 @@ public abstract class AbstractLRUMap<K, V>
     public V getQuiet( final Object key )
     {
         V ce = null;
-        final LRUElementDescriptor<K, V> me = map.get( key );
 
-        if ( me != null )
+        lock.readLock().lock();
+        try
         {
-            ce = me.getValue();
+            final LRUElementDescriptor<K, V> me = map.get( key );
+
+            if ( me != null )
+            {
+                ce = me.getValue();
+            }
+        }
+        finally
+        {
+            lock.readLock().unlock();
         }
 
-        if ( me == null )
+        if (ce == null)
         {
             log.debug( "LRUMap quiet miss for {0}", key );
         }
@@ -265,9 +310,9 @@ public abstract class AbstractLRUMap<K, V>
         final IStats stats = new Stats("LRUMap");
         stats.addStatElement("List Size", Integer.valueOf(list.size()));
         stats.addStatElement("Map Size", Integer.valueOf(map.size()));
-        stats.addStatElement("Put Count", Long.valueOf(putCnt));
-        stats.addStatElement("Hit Count", Long.valueOf(hitCnt));
-        stats.addStatElement("Miss Count", Long.valueOf(missCnt));
+        stats.addStatElement("Put Count", putCnt);
+        stats.addStatElement("Hit Count", hitCnt);
+        stats.addStatElement("Miss Count", missCnt);
 
         return stats;
     }
@@ -280,7 +325,15 @@ public abstract class AbstractLRUMap<K, V>
     @Override
     public boolean isEmpty()
     {
-        return map.isEmpty();
+        lock.readLock().lock();
+        try
+        {
+            return map.isEmpty();
+        }
+        finally
+        {
+            lock.readLock().unlock();
+        }
     }
 
     /**
@@ -289,9 +342,17 @@ public abstract class AbstractLRUMap<K, V>
     @Override
     public Set<K> keySet()
     {
-        return map.values().stream()
-                .map(LRUElementDescriptor::getKey)
-                .collect(Collectors.toSet());
+        lock.readLock().lock();
+        try
+        {
+            return map.values().stream()
+                    .map(LRUElementDescriptor::getKey)
+                    .collect(Collectors.toSet());
+        }
+        finally
+        {
+            lock.readLock().unlock();
+        }
     }
 
     /**
@@ -315,26 +376,26 @@ public abstract class AbstractLRUMap<K, V>
     @Override
     public V put(final K key, final V value)
     {
-        putCnt++;
+        putCnt.incrementAndGet();
 
         LRUElementDescriptor<K, V> old = null;
         final LRUElementDescriptor<K, V> me = new LRUElementDescriptor<>(key, value);
 
-        lock.lock();
+        lock.writeLock().lock();
         try
         {
             list.addFirst( me );
             old = map.put(key, me);
 
             // If the node was the same as an existing node, remove it.
-            if ( old != null && key.equals(old.getKey()))
+            if (old != null && key.equals(old.getKey()))
             {
                 list.remove( old );
             }
         }
         finally
         {
-            lock.unlock();
+            lock.writeLock().unlock();
         }
 
         // If the element limit is reached, we need to spool
@@ -347,7 +408,7 @@ public abstract class AbstractLRUMap<K, V>
             // and wouldn't save much time in this synchronous call.
             while (shouldRemove())
             {
-                lock.lock();
+                lock.writeLock().lock();
                 try
                 {
                     final LRUElementDescriptor<K, V> last = list.getLast();
@@ -359,31 +420,31 @@ public abstract class AbstractLRUMap<K, V>
                     processRemovedLRU(last.getKey(), last.getValue());
                     if (map.remove(last.getKey()) == null)
                     {
-                        log.warn("update: remove failed for key: {0}",
-                                last::getKey);
+                        log.warn("update: remove failed for key: {0}", last::getKey);
                         verifyCache();
                     }
                     list.removeLast();
+
+                    if (map.size() != list.size())
+                    {
+                        log.error("update: After spool, size mismatch: map.size() = {0}, "
+                                + "linked list size = {1}", map::size, list::size);
+                    }
                 }
                 finally
                 {
-                    lock.unlock();
+                    lock.writeLock().unlock();
                 }
             }
 
             log.debug( "update: After spool map size: {0}", map::size);
-            if ( map.size() != list.size() )
-            {
-                log.error("update: After spool, size mismatch: map.size() = {0}, "
-                        + "linked list size = {1}",
-                        map::size, list::size);
-            }
         }
 
-        if ( old != null )
+        if (old != null)
         {
             return old.getValue();
         }
+
         return null;
     }
 
@@ -409,7 +470,7 @@ public abstract class AbstractLRUMap<K, V>
         log.debug( "removing item for key: {0}", key );
 
         // remove single item.
-        lock.lock();
+        lock.writeLock().lock();
         try
         {
             final LRUElementDescriptor<K, V> me = map.remove(key);
@@ -422,7 +483,7 @@ public abstract class AbstractLRUMap<K, V>
         }
         finally
         {
-            lock.unlock();
+            lock.writeLock().unlock();
         }
 
         return null;
@@ -438,7 +499,15 @@ public abstract class AbstractLRUMap<K, V>
     @Override
     public int size()
     {
-        return map.size();
+        lock.readLock().lock();
+        try
+        {
+            return map.size();
+        }
+        finally
+        {
+            lock.readLock().unlock();
+        }
     }
 
     /**
@@ -447,9 +516,17 @@ public abstract class AbstractLRUMap<K, V>
     @Override
     public Collection<V> values()
     {
-        return map.values().stream()
-                .map(LRUElementDescriptor::getValue)
-                .collect(Collectors.toList());
+        lock.readLock().lock();
+        try
+        {
+            return map.values().stream()
+                    .map(LRUElementDescriptor::getValue)
+                    .collect(Collectors.toList());
+        }
+        finally
+        {
+            lock.readLock().unlock();
+        }
     }
 
     /**
