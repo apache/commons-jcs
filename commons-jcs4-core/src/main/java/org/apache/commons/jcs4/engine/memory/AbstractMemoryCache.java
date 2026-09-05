@@ -162,8 +162,7 @@ public abstract class AbstractMemoryCache<K, V>
     {
         ICacheElement<K, V> ce = null;
 
-        log.debug("{0}: getting item for key {1}", this::getCacheName,
-                () -> key);
+        log.debug("{0}: getting item for key {1}", this::getCacheName, () -> key);
 
         lock.writeLock().lock();
         try
@@ -172,24 +171,24 @@ public abstract class AbstractMemoryCache<K, V>
 
             if (me != null)
             {
-                hitCnt.incrementAndGet();
                 lockedGetElement(me);
                 ce = me.getCacheElement();
-
-                log.debug("{0}: MemoryCache hit for {1}", this::getCacheName,
-                        () -> key);
-            }
-            else
-            {
-                missCnt.incrementAndGet();
-
-                log.debug("{0}: MemoryCache miss for {1}", this::getCacheName,
-                        () -> key);
             }
         }
         finally
         {
             lock.writeLock().unlock();
+        }
+
+        if (ce == null)
+        {
+            missCnt.incrementAndGet();
+            log.debug("{0}: MemoryCache miss for {1}", this::getCacheName, () -> key);
+        }
+        else
+        {
+            hitCnt.incrementAndGet();
+            log.debug("{0}: MemoryCache hit for {1}", this::getCacheName, () -> key);
         }
 
         return ce;
@@ -270,18 +269,27 @@ public abstract class AbstractMemoryCache<K, V>
     {
         ICacheElement<K, V> ce = null;
 
-        final MemoryElementDescriptor<K, V> me = map.get( key );
-        if ( me != null )
+        lock.readLock().lock();
+        try
         {
-            log.debug( "{0}: MemoryCache quiet hit for {1}",
-                    this::getCacheName, () -> key );
+            final MemoryElementDescriptor<K, V> me = map.get( key );
+            if ( me != null )
+            {
+                ce = me.getCacheElement();
+            }
+        }
+        finally
+        {
+            lock.readLock().unlock();
+        }
 
-            ce = me.getCacheElement();
+        if (ce == null)
+        {
+            log.debug("{0}: MemoryCache quiet miss for {1}", this::getCacheName, () -> key);
         }
         else
         {
-            log.debug( "{0}: MemoryCache quiet miss for {1}",
-                    this::getCacheName, () -> key );
+            log.debug("{0}: MemoryCache quiet hit for {1}", this::getCacheName, () -> key);
         }
 
         return ce;
