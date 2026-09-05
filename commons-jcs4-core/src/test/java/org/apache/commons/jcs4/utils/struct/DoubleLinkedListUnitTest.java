@@ -20,6 +20,7 @@ package org.apache.commons.jcs4.utils.struct;
  */
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.junit.jupiter.api.Test;
 
@@ -31,10 +32,9 @@ class DoubleLinkedListUnitTest
     void testAddLast_Empty()
     {
         // SETUP
-        final DoubleLinkedList<DoubleLinkedListNode<String>> list = new DoubleLinkedList<>();
+        final DoubleLinkedList<DoubleLinkedListNode> list = new DoubleLinkedList<>();
 
-        final String payload1 = "payload1";
-        final DoubleLinkedListNode<String> node1 = new DoubleLinkedListNode<>( payload1 );
+        final DoubleLinkedListNode node1 = new DoubleLinkedListNode();
 
         // WO WORK
         list.addLast( node1 );
@@ -48,13 +48,10 @@ class DoubleLinkedListUnitTest
     void testAddLast_NotEmpty()
     {
         // SETUP
-        final DoubleLinkedList<DoubleLinkedListNode<String>> list = new DoubleLinkedList<>();
+        final DoubleLinkedList<DoubleLinkedListNode> list = new DoubleLinkedList<>();
 
-        final String payload1 = "payload1";
-        final DoubleLinkedListNode<String> node1 = new DoubleLinkedListNode<>( payload1 );
-
-        final String payload2 = "payload2";
-        final DoubleLinkedListNode<String> node2 = new DoubleLinkedListNode<>( payload2 );
+        final DoubleLinkedListNode node1 = new DoubleLinkedListNode();
+        final DoubleLinkedListNode node2 = new DoubleLinkedListNode();
 
         // WO WORK
         list.addLast( node1 );
@@ -69,10 +66,9 @@ class DoubleLinkedListUnitTest
     void testMakeLast_wasAlone()
     {
         // SETUP
-        final DoubleLinkedList<DoubleLinkedListNode<String>> list = new DoubleLinkedList<>();
+        final DoubleLinkedList<DoubleLinkedListNode> list = new DoubleLinkedList<>();
 
-        final String payload1 = "payload1";
-        final DoubleLinkedListNode<String> node1 = new DoubleLinkedListNode<>( payload1 );
+        final DoubleLinkedListNode node1 = new DoubleLinkedListNode();
 
         list.addFirst( node1 );
 
@@ -90,13 +86,10 @@ class DoubleLinkedListUnitTest
     void testMakeLast_wasFirst()
     {
         // SETUP
-        final DoubleLinkedList<DoubleLinkedListNode<String>> list = new DoubleLinkedList<>();
+        final DoubleLinkedList<DoubleLinkedListNode> list = new DoubleLinkedList<>();
 
-        final String payload1 = "payload1";
-        final DoubleLinkedListNode<String> node1 = new DoubleLinkedListNode<>( payload1 );
-
-        final String payload2 = "payload2";
-        final DoubleLinkedListNode<String> node2 = new DoubleLinkedListNode<>( payload2 );
+        final DoubleLinkedListNode node1 = new DoubleLinkedListNode();
+        final DoubleLinkedListNode node2 = new DoubleLinkedListNode();
 
         list.addFirst( node2 );
         list.addFirst(  node1 );
@@ -115,16 +108,11 @@ class DoubleLinkedListUnitTest
     void testMakeLast_wasInMiddle()
     {
         // SETUP
-        final DoubleLinkedList<DoubleLinkedListNode<String>> list = new DoubleLinkedList<>();
+        final DoubleLinkedList<DoubleLinkedListNode> list = new DoubleLinkedList<>();
 
-        final String payload1 = "payload1";
-        final DoubleLinkedListNode<String> node1 = new DoubleLinkedListNode<>( payload1 );
-
-        final String payload2 = "payload2";
-        final DoubleLinkedListNode<String> node2 = new DoubleLinkedListNode<>( payload2 );
-
-        final String payload3 = "payload3";
-        final DoubleLinkedListNode<String> node3 = new DoubleLinkedListNode<>( payload3 );
+        final DoubleLinkedListNode node1 = new DoubleLinkedListNode();
+        final DoubleLinkedListNode node2 = new DoubleLinkedListNode();
+        final DoubleLinkedListNode node3 = new DoubleLinkedListNode();
 
         list.addFirst( node2 );
         list.addFirst(  node1 );
@@ -144,13 +132,10 @@ class DoubleLinkedListUnitTest
     void testMakeLast_wasLast()
     {
         // SETUP
-        final DoubleLinkedList<DoubleLinkedListNode<String>> list = new DoubleLinkedList<>();
+        final DoubleLinkedList<DoubleLinkedListNode> list = new DoubleLinkedList<>();
 
-        final String payload1 = "payload1";
-        final DoubleLinkedListNode<String> node1 = new DoubleLinkedListNode<>( payload1 );
-
-        final String payload2 = "payload2";
-        final DoubleLinkedListNode<String> node2 = new DoubleLinkedListNode<>( payload2 );
+        final DoubleLinkedListNode node1 = new DoubleLinkedListNode();
+        final DoubleLinkedListNode node2 = new DoubleLinkedListNode();
 
         list.addFirst( node1 );
         list.addFirst(  node2 );
@@ -162,5 +147,45 @@ class DoubleLinkedListUnitTest
         assertEquals( 2, list.size(), "Wrong size" );
         assertEquals( node1, list.getLast(), "Wrong last" );
         assertEquals( node2, list.getFirst(), "Wrong first" );
+    }
+
+    /** Verify that remove and removeAll work. */
+    @Test
+    void testRemove()
+    {
+        // SETUP
+        final DoubleLinkedList<DoubleLinkedListNode> list = new DoubleLinkedList<>();
+
+        final DoubleLinkedListNode node1 = new DoubleLinkedListNode();
+        final DoubleLinkedListNode node2 = new DoubleLinkedListNode();
+
+        list.addFirst( node1 );
+        list.addFirst( node2 );
+        assertEquals( 2, list.size(), "Wrong size" );
+
+        // DO WORK
+        list.remove( node1 );
+
+        // VERIFY
+        assertEquals( 1, list.size(), "Wrong size" );
+        assertEquals( node2, list.getLast(), "Wrong last" );
+        assertEquals( node2, list.getFirst(), "Wrong first" );
+
+        list.addFirst( node1 );
+        assertEquals( 2, list.size(), "Wrong size" );
+        assertEquals( node1, list.getFirst(), "Wrong first" );
+        assertEquals( node2, list.getLast(), "Wrong last" );
+
+        // DO WORK
+        list.removeAll();
+
+        // VERIFY
+        assertEquals( 0, list.size(), "Wrong size" );
+        assertEquals( list.getFirst().prev, list.getLast(), "Wrong last" );
+        assertEquals( list.getLast().next, list.getFirst(), "Wrong first" );
+        assertNull(node1.next, "node1.next should be null");
+        assertNull(node1.prev, "node1.prev should be null");
+        assertNull(node2.next, "node2.next should be null");
+        assertNull(node2.prev, "node2.prev should be null");
     }
 }

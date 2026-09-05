@@ -1,5 +1,7 @@
 package org.apache.commons.jcs4.utils.struct;
 
+import java.util.Iterator;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -48,8 +50,9 @@ import org.apache.commons.jcs4.log.Log;
  * @see java.util.concurrent.locks.ReentrantLock
  * @see org.apache.commons.jcs4.engine.memory.AbstractDoubleLinkedListMemoryCache
  */
-@SuppressWarnings({"unchecked", "rawtypes"}) // Don't know how to resolve this with generics
+@SuppressWarnings({"unchecked"}) // Don't know how to resolve this with generics
 public class DoubleLinkedList<T extends DoubleLinkedListNode>
+    implements Iterable<T>
 {
     /** The logger */
     private static final Log log = Log.getLog( DoubleLinkedList.class );
@@ -68,8 +71,8 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
      */
     public DoubleLinkedList()
     {
-        this.first = (T) new DoubleLinkedListNode<T>(null);
-        this.last = (T) new DoubleLinkedListNode<T>(null);
+        this.first = (T) new DoubleLinkedListNode();
+        this.last = (T) new DoubleLinkedListNode();
         this.first.next = this.last;
         this.last.prev = this.first;
     }
@@ -111,9 +114,9 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
         if ( log.isDebugEnabled() )
         {
             log.debug( "dumping Entries" );
-            for (T me = (T) first.next; me != last; me = (T) me.next)
+            for (T me : this)
             {
-                log.debug( "dump Entries> payload= \"{0}\"", me.getPayload() );
+                log.debug( "dump Entries> \"{0}\"", me );
             }
         }
     }
@@ -125,7 +128,7 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
      */
     public T getFirst()
     {
-        log.trace( "returning first node" );
+        log.debug( "returning first node" );
         return (T) first.next;
     }
 
@@ -136,7 +139,7 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
      */
     public T getLast()
     {
-        log.trace( "returning last node" );
+        log.debug( "returning last node" );
         return (T) last.prev;
     }
 
@@ -178,7 +181,7 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
      */
     public boolean remove(final T me)
     {
-        log.trace("removing node");
+        log.debug("removing node");
         me.prev.next = me.next;
         me.next.prev = me.prev;
         me.prev = me.next = null;
@@ -192,11 +195,13 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
      */
     public void removeAll()
     {
-        for (T me = (T) first.next; me != null;)
+        T me = getFirst();
+        while (me.next != null)
         {
-            me.prev = null;
-            me.next = null;
+            T toRemove = me;
             me = (T) me.next;
+            toRemove.prev = null;
+            toRemove.next = null;
         }
         first.next = last;
         last.prev = first;
@@ -210,7 +215,7 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
      */
     public T removeLast()
     {
-        log.trace("removing last node");
+        log.debug("removing last node");
         final T temp = (T) last.prev;
         if (last != first)
         {
@@ -227,5 +232,32 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
     public int size()
     {
         return size;
+    }
+
+    /**
+     * Return an iterator over this list
+     *
+     * @return the iterator
+     */
+    @Override
+    public Iterator<T> iterator()
+    {
+        return new Iterator<>()
+        {
+            private T runner = first;
+
+            @Override
+            public boolean hasNext()
+            {
+                return runner.next != null && runner.next != last;
+            }
+
+            @Override
+            public T next()
+            {
+                runner = (T) runner.next;
+                return runner;
+            }
+        };
     }
 }

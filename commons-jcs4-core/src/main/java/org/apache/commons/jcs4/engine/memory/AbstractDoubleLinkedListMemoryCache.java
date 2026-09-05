@@ -331,7 +331,7 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
     private void dumpCacheEntries()
     {
         log.trace("dumpingCacheEntries");
-        for (MemoryElementDescriptor<K, V> me = list.getFirst(); me != null; me = (MemoryElementDescriptor<K, V>) me.next)
+        for (MemoryElementDescriptor<K, V> me : list)
         {
             log.trace("dumpCacheEntries> key={0}, val={1}",
                     me.getCacheElement().key(), me.getCacheElement().value());
@@ -350,7 +350,7 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
                 + "contains {2} elements", getCacheName(), getSize(),
                 list.size());
         log.trace("verifycache: checking linked list by key ");
-        for (MemoryElementDescriptor<K, V> li = list.getFirst(); li != null; li = (MemoryElementDescriptor<K, V>) li.next)
+        for (MemoryElementDescriptor<K, V> li : list)
         {
             final K key = li.getCacheElement().key();
             if (!mapView.containsKey(key))
@@ -377,7 +377,7 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
         }
 
         log.trace("verifycache: checking linked list by value ");
-        for (MemoryElementDescriptor<K, V> li = list.getFirst(); li != null; li = (MemoryElementDescriptor<K, V>) li.next)
+        for (MemoryElementDescriptor<K, V> li : list)
         {
             if (!mapView.containsValue(li))
             {
@@ -392,7 +392,7 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
         {
             found = false;
 
-            for (MemoryElementDescriptor<K, V> li = list.getFirst(); li != null; li = (MemoryElementDescriptor<K, V>) li.next)
+            for (MemoryElementDescriptor<K, V> li : list)
             {
                 if (val.equals(li.getCacheElement().key()))
                 {
@@ -428,7 +428,7 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
         boolean found = false;
 
         // go through the linked list looking for the key
-        for (MemoryElementDescriptor<K, V> li = list.getFirst(); li != null; li = (MemoryElementDescriptor<K, V>) li.next)
+        for (MemoryElementDescriptor<K, V> li : list)
         {
             if (li.getCacheElement().key() == key)
             {
