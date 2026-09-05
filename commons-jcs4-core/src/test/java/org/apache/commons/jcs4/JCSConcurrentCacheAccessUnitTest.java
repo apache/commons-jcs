@@ -39,77 +39,70 @@ class JCSConcurrentCacheAccessUnitTest
     /**
      * Worker thread
      */
-    protected class Worker extends Thread
-    {
-    	@Override
-		public void run()
+	private void work()
+	{
+		for (int idx = 0; idx < LOOPS; idx++)
 		{
-			final String name = getName();
-
-			for (int idx = 0; idx < LOOPS; idx++)
+			if (idx > 0)
 			{
-				if (idx > 0)
-				{
-					// get previously stored value
-		            String res = cache.getFromGroup(Integer.valueOf(idx-1), group);
+				// get previously stored value
+	            String res = cache.getFromGroup(Integer.valueOf(idx-1), group);
 
-		            if (res == null)
-		            {
-		                // null value got inspite of the fact it was placed in cache!
-		                System.out.println("ERROR: for " + idx + " in " + name);
-		                errcount.incrementAndGet();
+	            if (res == null)
+	            {
+	                // null value got inspite of the fact it was placed in cache!
+	                System.out.println("ERROR: for " + idx);
+	                errcount.incrementAndGet();
 
-		                // try to get the value again:
-		                int n = 5;
-		                while (n-- > 0)
-		                {
-		                    res = cache.getFromGroup(Integer.valueOf(idx-1), group);
-		                    if (res != null)
-		                    {
-		                        // the value finally appeared in cache
-		                    	System.out.println("ERROR FIXED for " + idx + ": " + res + " " + name);
-		                    	errcount.decrementAndGet();
-		                        break;
-		                    }
+	                // try to get the value again:
+	                int n = 5;
+	                while (n-- > 0)
+	                {
+	                    res = cache.getFromGroup(Integer.valueOf(idx-1), group);
+	                    if (res != null)
+	                    {
+	                        // the value finally appeared in cache
+	                    	System.out.println("ERROR FIXED for " + idx + ": " + res);
+	                    	errcount.decrementAndGet();
+	                        break;
+	                    }
 
-		                    System.out.println("ERROR STILL PERSISTS for " + idx + " in " + name);
-		                    try
-		                    {
-								Thread.sleep(1000);
-							}
-		                    catch (final InterruptedException e)
-							{
-								// continue
-							}
-		                }
-		            }
+	                    System.out.println("ERROR STILL PERSISTS for " + idx);
+	                    try
+	                    {
+							Thread.sleep(1000);
+						}
+	                    catch (final InterruptedException e)
+						{
+							// continue
+						}
+	                }
+	            }
 
-		            if (!String.valueOf(idx-1).equals(res))
-		            {
-		                valueMismatchList.add(String.format("Values do not match: %s - %s", String.valueOf(idx-1), res));
-		            }
-				}
-
-				 // put value in the cache
-		        try
-		        {
-					cache.putInGroup(Integer.valueOf(idx), group, String.valueOf(idx));
-				}
-		        catch (final CacheException e)
-		        {
-		        	// continue
-				}
-
-//		        if ((idx % 1000) == 0)
-//		        {
-//		        	System.out.println(name + " " + idx);
-//		        }
+	            if (!String.valueOf(idx-1).equals(res))
+	            {
+	                valueMismatchList.add(String.format("Values do not match: %s - %s", String.valueOf(idx-1), res));
+	            }
 			}
 
-		}
-    }
-    private final static int THREADS = 20;
+			 // put value in the cache
+	        try
+	        {
+				cache.putInGroup(Integer.valueOf(idx), group, String.valueOf(idx));
+			}
+	        catch (final CacheException e)
+	        {
+	        	// continue
+			}
 
+//          if ((idx % 1000) == 0)
+//	        {
+//	        	System.out.println(name + " " + idx);
+//	        }
+		}
+
+	}
+    private final static int THREADS = 20;
     private final static int LOOPS = 10000;
 
     /**
@@ -158,17 +151,17 @@ class JCSConcurrentCacheAccessUnitTest
     void testConcurrentAccess()
         throws Exception
     {
-    	final Worker[] worker = new Worker[THREADS];
+    	final Thread[] worker = new Thread[THREADS];
 
         for (int i = 0; i < THREADS; i++)
         {
-        	worker[i] = new Worker();
+        	worker[i] = new Thread(() -> work());
         	worker[i].start();
         }
 
-        for (int i = 0; i < THREADS; i++)
+        for (Thread t : worker)
         {
-        	worker[i].join();
+        	t.join();
         }
 
         assertEquals( 0, errcount.intValue(), "Error count should be 0" );
@@ -178,5 +171,4 @@ class JCSConcurrentCacheAccessUnitTest
         }
         assertEquals( 0, valueMismatchList.size(), "Value mismatch count should be 0" );
     }
-
 }
