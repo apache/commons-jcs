@@ -130,15 +130,14 @@ public abstract class AbstractLRUMap<K, V>
     /**
      * Dump the cache entries from first to list for debugging.
      */
-    @SuppressWarnings("unchecked") // No generics for public fields
     private void dumpCacheEntries()
     {
         if (log.isTraceEnabled())
         {
             log.trace("dumpingCacheEntries");
-            for (LRUElementDescriptor<K, V> me = list.getFirst(); me != null; me = (LRUElementDescriptor<K, V>) me.next)
+            for (LRUElementDescriptor<K, V> me : list)
             {
-                log.trace("dumpCacheEntries> key={0}, val={1}", me.getKey(), me.getPayload());
+                log.trace("dumpCacheEntries> key={0}, val={1}", me.getKey(), me.getValue());
             }
         }
     }
@@ -151,7 +150,7 @@ public abstract class AbstractLRUMap<K, V>
         if (log.isTraceEnabled())
         {
             log.trace("dumpingMap");
-            map.forEach((key, value) -> log.trace("dumpMap> key={0}, val={1}", key, value.getPayload()));
+            map.forEach((key, value) -> log.trace("dumpMap> key={0}, val={1}", key, value.getValue()));
         }
     }
 
@@ -173,7 +172,7 @@ public abstract class AbstractLRUMap<K, V>
         {
             return map.entrySet().stream()
                     .map(entry -> new AbstractMap.SimpleEntry<>(
-                            entry.getKey(), entry.getValue().getPayload()))
+                            entry.getKey(), entry.getValue().getValue()))
                     .collect(Collectors.toSet());
         }
         finally
@@ -206,7 +205,7 @@ public abstract class AbstractLRUMap<K, V>
             else
             {
                 hitCnt++;
-                retVal = me.getPayload();
+                retVal = me.getValue();
                 list.makeFirst( me );
             }
 
@@ -243,7 +242,7 @@ public abstract class AbstractLRUMap<K, V>
 
         if ( me != null )
         {
-            ce = me.getPayload();
+            ce = me.getValue();
         }
 
         if ( me == null )
@@ -357,7 +356,7 @@ public abstract class AbstractLRUMap<K, V>
                         verifyCache();
                         throw new Error("update: last is null!");
                     }
-                    processRemovedLRU(last.getKey(), last.getPayload());
+                    processRemovedLRU(last.getKey(), last.getValue());
                     if (map.remove(last.getKey()) == null)
                     {
                         log.warn("update: remove failed for key: {0}",
@@ -383,7 +382,7 @@ public abstract class AbstractLRUMap<K, V>
 
         if ( old != null )
         {
-            return old.getPayload();
+            return old.getValue();
         }
         return null;
     }
@@ -418,7 +417,7 @@ public abstract class AbstractLRUMap<K, V>
             if (me != null)
             {
                 list.remove(me);
-                return me.getPayload();
+                return me.getValue();
             }
         }
         finally
@@ -449,7 +448,7 @@ public abstract class AbstractLRUMap<K, V>
     public Collection<V> values()
     {
         return map.values().stream()
-                .map(LRUElementDescriptor::getPayload)
+                .map(LRUElementDescriptor::getValue)
                 .collect(Collectors.toList());
     }
 
@@ -458,7 +457,6 @@ public abstract class AbstractLRUMap<K, V>
      * Checks to see if all the items that should be in the cache are. Checks consistency between
      * List and map.
      */
-    @SuppressWarnings("unchecked") // No generics for public fields
     protected void verifyCache()
     {
         if ( !log.isTraceEnabled() )
@@ -469,7 +467,7 @@ public abstract class AbstractLRUMap<K, V>
         log.trace( "verifycache: mapContains {0} elements, linked list "
                 + "contains {1} elements", map.size(), list.size() );
         log.trace( "verifycache: checking linked list by key" );
-        for (LRUElementDescriptor<K, V> li = list.getFirst(); li != null; li = (LRUElementDescriptor<K, V>) li.next )
+        for (LRUElementDescriptor<K, V> li : list)
         {
             final K key = li.getKey();
             if ( !map.containsKey( key ) )
@@ -496,7 +494,7 @@ public abstract class AbstractLRUMap<K, V>
         }
 
         log.trace( "verifycache: checking linked list by value " );
-        for (LRUElementDescriptor<K, V> li3 = list.getFirst(); li3 != null; li3 = (LRUElementDescriptor<K, V>) li3.next )
+        for (LRUElementDescriptor<K, V> li3 : list)
         {
             if (!map.containsValue(li3))
             {
@@ -508,7 +506,7 @@ public abstract class AbstractLRUMap<K, V>
         log.trace( "verifycache: checking via keysets!" );
         map.keySet().stream()
             .filter(key -> {
-                for (LRUElementDescriptor<K, V> li2 = list.getFirst(); li2 != null; li2 = (LRUElementDescriptor<K, V>) li2.next )
+                for (LRUElementDescriptor<K, V> li2 : list)
                 {
                     if ( key.equals( li2.getKey() ) )
                     {

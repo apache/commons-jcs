@@ -24,7 +24,7 @@ package org.apache.commons.jcs4.utils.struct;
  * the LRUMap class.
  */
 public class LRUElementDescriptor<K, V>
-    extends DoubleLinkedListNode<V>
+    extends DoubleLinkedListNode
 {
     /** Don't change. */
     private static final long serialVersionUID = 8249555756363020156L;
@@ -32,14 +32,19 @@ public class LRUElementDescriptor<K, V>
     /** The key value */
     private K key;
 
+    /** The value value */
+    private V value;
+
     /**
+     * Constructs a LRUElementDescriptor
+     *
      * @param key
-     * @param payloadP
+     * @param value
      */
-    public LRUElementDescriptor(final K key, final V payloadP)
+    public LRUElementDescriptor(final K key, final V value)
     {
-        super(payloadP);
         this.key = key;
+        this.value = value;
     }
 
     /**
@@ -48,5 +53,13 @@ public class LRUElementDescriptor<K, V>
     public K getKey()
     {
         return key;
+    }
+
+    /**
+     * @return The value.
+     */
+    public V getValue()
+    {
+        return value;
     }
 }

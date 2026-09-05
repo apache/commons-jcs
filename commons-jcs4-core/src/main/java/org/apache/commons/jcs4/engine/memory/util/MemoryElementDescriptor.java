@@ -26,10 +26,12 @@ import org.apache.commons.jcs4.utils.struct.DoubleLinkedListNode;
  * This wrapper is needed for double linked lists.
  */
 public class MemoryElementDescriptor<K, V>
-    extends DoubleLinkedListNode<ICacheElement<K, V>>
+    extends DoubleLinkedListNode
 {
     /** Don't change */
     private static final long serialVersionUID = -1905161209035522460L;
+
+    private ICacheElement<K, V> cacheElement;
 
     /**
      * Constructs a usable MemoryElementDescriptor.
@@ -38,7 +40,7 @@ public class MemoryElementDescriptor<K, V>
      */
     public MemoryElementDescriptor( final ICacheElement<K, V> ce )
     {
-        super( ce );
+        this.cacheElement = ce;
     }
 
     /**
@@ -48,6 +50,6 @@ public class MemoryElementDescriptor<K, V>
      */
     public ICacheElement<K, V> getCacheElement()
     {
-        return getPayload();
+        return cacheElement;
     }
 }

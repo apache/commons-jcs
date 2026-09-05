@@ -26,34 +26,15 @@ import java.io.Serializable;
  * add functionality. This allows you to remove in constant time from a linked
  * list.
  * <p>
- * It simply holds the payload and a reference to the items before and after it
+ * It simply holds the reference to the items before and after it
  * in the list.
  */
-public class DoubleLinkedListNode<T>
+public class DoubleLinkedListNode
     implements Serializable
 {
     /** Don't change. */
     private static final long serialVersionUID = -1114934407695836097L;
 
-    /** The object in the node. */
-    private final T payload;
-
     /** Double Linked list references */
-    public DoubleLinkedListNode<T> prev, next;
-
-    /**
-     * @param payloadP
-     */
-    public DoubleLinkedListNode(final T payloadP)
-    {
-        payload = payloadP;
-    }
-
-    /**
-     * @return Object
-     */
-    public T getPayload()
-    {
-        return payload;
-    }
+    public DoubleLinkedListNode prev, next;
 }
