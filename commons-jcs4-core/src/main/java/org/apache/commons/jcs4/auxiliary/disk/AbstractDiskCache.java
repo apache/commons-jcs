@@ -27,7 +27,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import org.apache.commons.jcs4.auxiliary.AbstractAuxiliaryCacheEventLogging;
@@ -123,7 +123,6 @@ public abstract class AbstractDiskCache<K, V>
                         // threads and still have removeAll requests come in that
                         // always win
                         removeAllLock.readLock().lock();
-
                         try
                         {
                             // If the element has already been removed from
@@ -239,7 +238,7 @@ public abstract class AbstractDiskCache<K, V>
     private final AtomicBoolean alive = new AtomicBoolean();
 
     /** DEBUG: Keeps a count of the number of purgatory hits for debug messages */
-    private final AtomicInteger purgHits = new AtomicInteger();
+    private final AtomicLong purgHits = new AtomicLong();
 
     /**
      * We lock here, so that we cannot get an update after a remove all. an individual removal locks
@@ -320,7 +319,7 @@ public abstract class AbstractDiskCache<K, V>
         // If the element was found in purgatory
         if ( pe != null )
         {
-            int p = purgHits.incrementAndGet();
+            long p = purgHits.incrementAndGet();
 
             if ( p % 100 == 0 )
             {
@@ -472,23 +471,26 @@ public abstract class AbstractDiskCache<K, V>
      */
     private void initPurgatory()
     {
+        final Map<K, PurgatoryElement<K, V>> newPurgatory;
+
+        int maxPurgatorySize = getAuxiliaryCacheAttributes().getMaxPurgatorySize();
+        if (maxPurgatorySize >= 0)
+        {
+            newPurgatory = Collections.synchronizedMap(new LRUMap<>(maxPurgatorySize));
+        }
+        else
+        {
+            newPurgatory = new ConcurrentHashMap<>();
+        }
+
         // we need this so we can stop the updates from happening after a
         // remove all
         removeAllLock.writeLock().lock();
-
         try
         {
             synchronized (this)
             {
-                int maxPurgatorySize = getAuxiliaryCacheAttributes().getMaxPurgatorySize();
-                if (maxPurgatorySize >= 0)
-                {
-                    purgatory = Collections.synchronizedMap(new LRUMap<>(maxPurgatorySize));
-                }
-                else
-                {
-                    purgatory = new ConcurrentHashMap<>();
-                }
+                purgatory = newPurgatory;
             }
         }
         finally

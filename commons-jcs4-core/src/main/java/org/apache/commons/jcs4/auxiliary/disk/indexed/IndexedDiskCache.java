@@ -241,7 +241,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
     private File rafDir;
 
     /** Should we keep adding to the recycle bin. False during optimization. */
-    private AtomicBoolean doRecycle = new AtomicBoolean(true);
+    private AtomicBoolean doRecycle;
 
     /** Should we optimize real time */
     private boolean isRealTimeOptimizationEnabled = true;
@@ -250,19 +250,19 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
     private boolean isShutdownOptimizationEnabled = true;
 
     /** Are we currently optimizing the files */
-    private final AtomicBoolean isOptimizing = new AtomicBoolean();
+    private final AtomicBoolean isOptimizing;
 
     /** The number of times the file has been optimized. */
-    private int timesOptimized;
+    private final AtomicInteger timesOptimized;
 
     /** The Executor for optimizing the file. */
     private volatile ExecutorService optimizationExecutor;
 
     /** Used for counting the number of requests */
-    private int removeCount;
+    private final AtomicInteger removeCount;
 
     /** Should we queue puts. True when optimizing. We write the queue post optimization. */
-    private boolean queueInput;
+    private final AtomicBoolean queueInput;
 
     /** List where puts made during optimization are made */
     private final ConcurrentSkipListSet<IndexedDiskElementDescriptor> queuedPutList;
@@ -271,7 +271,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
     private final ConcurrentSkipListSet<IndexedDiskElementDescriptor> recycle;
 
     /** How many slots have we recycled. */
-    private int recycleCnt;
+    private final AtomicInteger recycleCnt;
 
     /** How many items were there on startup. */
     private int startupSize;
@@ -283,7 +283,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
     private DiskLimitType diskLimitType = DiskLimitType.COUNT;
 
     /** Simple stat */
-    private final AtomicInteger hitCount = new AtomicInteger();
+    private final AtomicLong hitCount;
 
     /**
      * Use this lock to synchronize reads and writes to the underlying storage mechanism.
@@ -330,6 +330,13 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
         this.keyHash = createInitialKeyMap();
         this.queuedPutList = new ConcurrentSkipListSet<>(Comparator.comparing(ded1 -> ded1.pos()));
         this.recycle = new ConcurrentSkipListSet<>();
+        this.isOptimizing = new AtomicBoolean();
+        this.doRecycle = new AtomicBoolean(true);
+        this.queueInput = new AtomicBoolean();
+        this.timesOptimized = new AtomicInteger();
+        this.recycleCnt = new AtomicInteger();
+        this.removeCount = new AtomicInteger();
+        this.hitCount = new AtomicLong();
 
         try
         {
@@ -662,7 +669,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
     protected void doOptimizeRealTime()
     {
         int optRemoveCount = getAuxiliaryCacheAttributes().getOptimizeAtRemoveCount();
-        if (isRealTimeOptimizationEnabled && removeCount++ >= optRemoveCount)
+        if (isRealTimeOptimizationEnabled && removeCount.getAndIncrement() >= optRemoveCount)
         {
             if (isOptimizing.compareAndSet(false, true))
             {
@@ -822,7 +829,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
      */
     protected int getRecyleCount()
     {
-        return this.recycleCnt;
+        return this.recycleCnt.get();
     }
 
     /**
@@ -861,9 +868,9 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
         stats.addStatElement("Max Key Size", this.maxKeySize);
         stats.addStatElement("Hit Count", this.hitCount);
         stats.addStatElement("Bytes Free", this.bytesFree);
-        stats.addStatElement("Optimize Operation Count", Integer.valueOf(this.removeCount));
-        stats.addStatElement("Times Optimized", Integer.valueOf(this.timesOptimized));
-        stats.addStatElement("Recycle Count", Integer.valueOf(this.recycleCnt));
+        stats.addStatElement("Optimize Operation Count", this.removeCount);
+        stats.addStatElement("Times Optimized", this.timesOptimized);
+        stats.addStatElement("Recycle Count", this.recycleCnt);
         stats.addStatElement("Recycle Bin Size", Integer.valueOf(this.recycle.size()));
         stats.addStatElement("Startup Size", Integer.valueOf(this.startupSize));
 
@@ -882,7 +889,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
      */
     protected int getTimesOptimized()
     {
-        return timesOptimized;
+        return timesOptimized.get();
     }
 
     /**
@@ -1048,7 +1055,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
     protected void optimizeFile()
     {
         final ElapsedTimer timer = new ElapsedTimer();
-        timesOptimized++;
+        timesOptimized.incrementAndGet();
         log.info("{0}: Beginning Optimization #{1}", logCacheName, timesOptimized);
 
         // CREATE SNAPSHOT
@@ -1058,7 +1065,7 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
 
         try
         {
-            queueInput = true;
+            queueInput.set(true);
             // shut off recycle while we're optimizing,
             doRecycle.set(false);
             defragList = createPositionSortedDescriptorList();
@@ -1093,11 +1100,11 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
             }
 
             // RESTORE NORMAL OPERATION
-            removeCount = 0;
+            removeCount.set(0);
             resetBytesFree();
             this.recycle.clear();
             queuedPutList.clear();
-            queueInput = false;
+            queueInput.set(false);
             // turn recycle back on.
             doRecycle.set(true);
             isOptimizing.set(false);
@@ -1452,14 +1459,14 @@ public class IndexedDiskCache<K, V> extends AbstractDiskCache<K, V>
                             // remove element from recycle bin
                             recycle.remove(rep);
                             ded = new IndexedDiskElementDescriptor(rep.pos(), data.length);
-                            recycleCnt++;
+                            recycleCnt.incrementAndGet();
                             this.adjustBytesFree(ded, false);
                             log.debug("{0}: using recycled ded {1} rep.len = {2} ded.len = {3}",
                                     logCacheName, ded.pos(), rep.len(), ded.len());
                         }
                     }
 
-                    if (queueInput)
+                    if (queueInput.get())
                     {
                         queuedPutList.add(ded);
                         log.debug("{0}: added to queued put list. {1}",
