@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -68,7 +69,7 @@ public abstract class AbstractMemoryCache<K, V>
     protected final ReadWriteLock lock = new ReentrantReadWriteLock();
 
     /** Map where items are stored by key.  This is created by the concrete child class. */
-    private Map<K, MemoryElementDescriptor<K, V>> map;
+    private ConcurrentMap<K, MemoryElementDescriptor<K, V>> map;
 
     /** Number of hits */
     private AtomicLong hitCnt;
@@ -85,7 +86,7 @@ public abstract class AbstractMemoryCache<K, V>
      *
      * @return A Map
      */
-    protected abstract Map<K, MemoryElementDescriptor<K, V>> createMap();
+    protected abstract ConcurrentMap<K, MemoryElementDescriptor<K, V>> createMap();
 
     /**
      * Get a read-only map view
@@ -160,19 +161,18 @@ public abstract class AbstractMemoryCache<K, V>
     @Override
     public ICacheElement<K, V> get(final K key)
     {
-        ICacheElement<K, V> ce = null;
+        MemoryElementDescriptor<K, V> me = null;
 
         log.debug("{0}: getting item for key {1}", this::getCacheName, () -> key);
 
         lock.writeLock().lock();
         try
         {
-            final MemoryElementDescriptor<K, V> me = map.get(key);
+            me = map.get(key);
 
             if (me != null)
             {
                 lockedGetElement(me);
-                ce = me.getCacheElement();
             }
         }
         finally
@@ -180,18 +180,18 @@ public abstract class AbstractMemoryCache<K, V>
             lock.writeLock().unlock();
         }
 
-        if (ce == null)
+        if (me == null)
         {
             missCnt.incrementAndGet();
             log.debug("{0}: MemoryCache miss for {1}", this::getCacheName, () -> key);
+            return null;
         }
         else
         {
             hitCnt.incrementAndGet();
             log.debug("{0}: MemoryCache hit for {1}", this::getCacheName, () -> key);
+            return me.getCacheElement();
         }
-
-        return ce;
     }
 
     /**

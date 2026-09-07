@@ -22,6 +22,7 @@ package org.apache.commons.jcs4.engine.memory.lru;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentMap;
 
 import org.apache.commons.jcs4.engine.behavior.ICacheElement;
 import org.apache.commons.jcs4.engine.memory.AbstractMemoryCache;
@@ -35,7 +36,7 @@ public class LHMLRUMemoryCache<K, V>
     extends AbstractMemoryCache<K, V>
 {
     /** The Logger. */
-    private static final Log log = Log.getLog( LRUMemoryCache.class );
+    private static final Log log = Log.getLog( LHMLRUMemoryCache.class );
 
     static
     {
@@ -46,6 +47,7 @@ public class LHMLRUMemoryCache<K, V>
      * Implements removeEldestEntry from {@link LinkedHashMap}.
      */
     protected class LHMSpooler extends LinkedHashMap<K, MemoryElementDescriptor<K, V>>
+        implements ConcurrentMap<K, MemoryElementDescriptor<K, V>>
     {
         /** Don't change. */
         private static final long serialVersionUID = -1255907868906762484L;
@@ -90,7 +92,7 @@ public class LHMLRUMemoryCache<K, V>
      * @return new LHMSpooler()
      */
     @Override
-    protected Map<K, MemoryElementDescriptor<K, V>> createMap()
+    protected ConcurrentMap<K, MemoryElementDescriptor<K, V>> createMap()
     {
         return new LHMSpooler();
     }

@@ -21,9 +21,9 @@ package org.apache.commons.jcs4.engine.memory.soft;
 
 import java.io.IOException;
 import java.lang.ref.SoftReference;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.stream.Collectors;
 
@@ -64,7 +64,7 @@ public class SoftReferenceMemoryCache<K, V> extends AbstractMemoryCache<K, V>
      * @see org.apache.commons.jcs4.engine.memory.AbstractMemoryCache#createMap()
      */
     @Override
-    protected Map<K, MemoryElementDescriptor<K, V>> createMap()
+    protected ConcurrentMap<K, MemoryElementDescriptor<K, V>> createMap()
     {
         return new ConcurrentHashMap<>();
     }
@@ -234,7 +234,10 @@ public class SoftReferenceMemoryCache<K, V> extends AbstractMemoryCache<K, V>
         for (int cursize = startsize; cursize > max; cursize--)
         {
             final ICacheElement<K, V> ce = strongReferences.poll();
-            waterfall(ce);
+            if (ce != null)
+            {
+                waterfall(ce);
+            }
         }
     }
 }

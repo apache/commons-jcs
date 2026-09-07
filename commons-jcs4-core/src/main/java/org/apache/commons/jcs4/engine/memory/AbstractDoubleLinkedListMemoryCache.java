@@ -22,6 +22,7 @@ package org.apache.commons.jcs4.engine.memory;
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import org.apache.commons.jcs4.engine.behavior.ICacheElement;
 import org.apache.commons.jcs4.engine.control.CompositeCache;
@@ -93,7 +94,6 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
 
     /**
      * Children implement this to control the cache expiration algorithm
-     * <p>
      *
      * @param me the current cache element
      */
@@ -105,25 +105,9 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
      * @return new HashMap()
      */
     @Override
-    protected Map<K, MemoryElementDescriptor<K, V>> createMap()
+    protected ConcurrentMap<K, MemoryElementDescriptor<K, V>> createMap()
     {
         return new ConcurrentHashMap<>();
-    }
-
-    /**
-     * @see org.apache.commons.jcs4.engine.memory.AbstractMemoryCache#get(Object)
-     */
-    @Override
-    public ICacheElement<K, V> get(final K key)
-    {
-        final ICacheElement<K, V> ce = super.get(key);
-
-        if (log.isTraceEnabled())
-        {
-            verifyCache();
-        }
-
-        return ce;
     }
 
     /**
