@@ -65,6 +65,13 @@
   </properties>
 
   <dependencies>
+    <!-- The JCache TCK brings JUnit 4.11, which Surefire 3.6.0 no longer supports. -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.13.2</version>
+      <scope>test</scope>
+    </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>commons-jcs4-core</artifactId>
