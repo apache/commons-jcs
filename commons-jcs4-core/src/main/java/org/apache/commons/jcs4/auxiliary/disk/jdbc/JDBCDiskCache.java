@@ -29,7 +29,7 @@ import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 import javax.sql.DataSource;
 
@@ -81,13 +81,13 @@ public class JDBCDiskCache<K, V>
     private JDBCDiskCacheAttributes jdbcDiskCacheAttributes;
 
     /** # of times update was called */
-    private final AtomicInteger updateCount = new AtomicInteger();
+    private final AtomicLong updateCount = new AtomicLong();
 
     /** # of times get was called */
-    private final AtomicInteger getCount = new AtomicInteger();
+    private final AtomicLong getCount = new AtomicLong();
 
     /** # of times getMatching was called */
-    private final AtomicInteger getMatchingCount = new AtomicInteger();
+    private final AtomicLong getMatchingCount = new AtomicLong();
 
     /** Db connection pool */
     private final DataSourceFactory dsFactory;

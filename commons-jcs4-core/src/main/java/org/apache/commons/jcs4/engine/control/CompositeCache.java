@@ -891,8 +891,8 @@ public class CompositeCache<K, V>
         stats.setRegionName(this.getCacheName());
 
         // store the composite cache stats first
-        stats.addStatElement("HitCountRam", Long.valueOf(getHitCountRam()));
-        stats.addStatElement("HitCountAux", Long.valueOf(getHitCountAux()));
+        stats.addStatElement("HitCountRam", hitCountRam);
+        stats.addStatElement("HitCountAux", hitCountAux);
 
         // memory + aux, memory is not considered an auxiliary internally
         stats.addAuxiliaryCacheStats(getMemoryCache().getStatistics());
