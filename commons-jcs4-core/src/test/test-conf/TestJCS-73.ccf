@@ -16,15 +16,28 @@
 # under the License.
 # Cache configuration for the 'JCSConcurrentCacheAccessUnitTest' test.
 
-jcs.default=CACHE
+jcs.default=
 jcs.default.cacheattributes.MaxObjects=-1
 jcs.default.cacheattributes.DiskUsagePattern=UPDATE
-jcs.default.cacheattributes.UseMemoryShrinker=true
 jcs.default.cacheattributes.MaxMemoryIdleTime=PT10s
-jcs.default.cacheattributes.ShrinkerInterval=PT10s
 jcs.default.elementattributes.IsRemote=false
 jcs.default.elementattributes.IsLateral=false
 jcs.default.elementattributes.IsEternal=true
+
+jcs.region.lru_cache=
+
+jcs.region.lru_cache_with_disk=CACHE
+# MaxObjects < 0 will never spool to disk
+jcs.region.lru_cache_with_disk.cacheattributes.MaxObjects=10000
+
+jcs.region.mru_cache=
+jcs.region.mru_cache.cacheattributes.MemoryCacheName=org.apache.commons.jcs4.engine.memory.mru.MRUMemoryCache
+
+jcs.region.lhm_cache=
+jcs.region.lhm_cache.cacheattributes.MemoryCacheName=org.apache.commons.jcs4.engine.memory.lru.LHMLRUMemoryCache
+
+jcs.region.soft_cache=
+jcs.region.soft_cache.cacheattributes.MemoryCacheName=org.apache.commons.jcs4.engine.memory.soft.SoftReferenceMemoryCache
 
 jcs.auxiliary.CACHE=org.apache.commons.jcs4.auxiliary.disk.indexed.IndexedDiskCacheFactory
 jcs.auxiliary.CACHE.attributes.DiskPath=target/test-sandbox/concurrent_cache

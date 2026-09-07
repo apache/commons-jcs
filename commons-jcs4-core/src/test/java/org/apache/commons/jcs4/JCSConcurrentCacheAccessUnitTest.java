@@ -23,11 +23,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.jcs4.access.GroupCacheAccess;
 import org.apache.commons.jcs4.access.exception.CacheException;
-import org.junit.jupiter.api.AfterEach;
+import org.apache.commons.jcs4.utils.timing.ElapsedTimer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -39,51 +41,58 @@ class JCSConcurrentCacheAccessUnitTest
     /**
      * Worker thread
      */
-	private void work()
+	private void work(final GroupCacheAccess<Integer, String> cache, final String name, final CountDownLatch latch)
 	{
-		for (int idx = 0; idx < LOOPS; idx++)
+        // put value in the cache
+        try
+        {
+            cache.putInGroup(Integer.valueOf(0), group, String.valueOf(0));
+        }
+        catch (final CacheException e)
+        {
+            // continue
+        }
+
+		for (int idx = 1; idx < LOOPS; idx++)
 		{
-			if (idx > 0)
-			{
-				// get previously stored value
-	            String res = cache.getFromGroup(Integer.valueOf(idx-1), group);
+			// get previously stored value
+            String res = cache.getFromGroup(Integer.valueOf(idx-1), group);
 
-	            if (res == null)
-	            {
-	                // null value got inspite of the fact it was placed in cache!
-	                System.out.println("ERROR: for " + idx);
-	                errcount.incrementAndGet();
+            if (res == null)
+            {
+                // null value got inspite of the fact it was placed in cache!
+                System.out.println("ERROR: for " + idx + " in " + name);
+                errcount.incrementAndGet();
 
-	                // try to get the value again:
-	                int n = 5;
-	                while (n-- > 0)
-	                {
-	                    res = cache.getFromGroup(Integer.valueOf(idx-1), group);
-	                    if (res != null)
-	                    {
-	                        // the value finally appeared in cache
-	                    	System.out.println("ERROR FIXED for " + idx + ": " + res);
-	                    	errcount.decrementAndGet();
-	                        break;
-	                    }
+                // try to get the value again:
+                int n = 5;
+                while (n-- > 0)
+                {
+                    res = cache.getFromGroup(Integer.valueOf(idx-1), group);
+                    if (res != null)
+                    {
+                        // the value finally appeared in cache
+                    	System.out.println("ERROR FIXED for " + idx + ": " + res + " " + name);
+                    	errcount.decrementAndGet();
+                        break;
+                    }
 
-	                    System.out.println("ERROR STILL PERSISTS for " + idx);
-	                    try
-	                    {
-							Thread.sleep(1000);
-						}
-	                    catch (final InterruptedException e)
-						{
-							// continue
-						}
-	                }
-	            }
+                    System.out.println("ERROR STILL PERSISTS for " + idx + " in " + name);
+                    try
+                    {
+						Thread.sleep(1000);
+					}
+                    catch (final InterruptedException e)
+					{
+						// continue
+					}
+                }
+            }
 
-	            if (!String.valueOf(idx-1).equals(res))
-	            {
-	                valueMismatchList.add(String.format("Values do not match: %s - %s", String.valueOf(idx-1), res));
-	            }
-			}
+            if (!String.valueOf(idx-1).equals(res))
+            {
+                valueMismatchList.add(String.format("Values do not match: %s - %s", String.valueOf(idx-1), res));
+            }
 
 			 // put value in the cache
 	        try
@@ -94,21 +103,13 @@ class JCSConcurrentCacheAccessUnitTest
 	        {
 	        	// continue
 			}
-
-//          if ((idx % 1000) == 0)
-//	        {
-//	        	System.out.println(name + " " + idx);
-//	        }
 		}
 
+		latch.countDown();
 	}
+
     private final static int THREADS = 20;
     private final static int LOOPS = 10000;
-
-    /**
-     * the cache instance
-     */
-    protected GroupCacheAccess<Integer, String> cache;
 
     /**
      * the group name
@@ -130,16 +131,37 @@ class JCSConcurrentCacheAccessUnitTest
         throws Exception
 	{
         JCS.setConfigFilename( "/TestJCS-73.ccf" );
-        cache = JCS.getGroupCacheInstance( "cache" );
         errcount = new AtomicInteger();
         valueMismatchList = new CopyOnWriteArrayList<>();
 	}
 
-    @AfterEach
-    void tearDown()
-        throws Exception
+    private void testConcurrentAccess(String cacheName)
+            throws Exception
     {
-        cache.clear();
+        System.out.println(cacheName);
+        final GroupCacheAccess<Integer, String> cache = JCS.getGroupCacheInstance(cacheName);
+        final CountDownLatch latch = new CountDownLatch(THREADS);
+        final ElapsedTimer timer = new ElapsedTimer();
+
+        for (int i = 0; i < THREADS; i++)
+        {
+            final String threadName = "Thread-" + i;
+            new Thread(() -> work(cache, threadName, latch)).start();
+        }
+
+        latch.await(THREADS, TimeUnit.SECONDS);
+        double ms = timer.getElapsedTime();
+        System.out.println(cacheName + ": " + ms + " ms");
+        System.out.println(cacheName + ": " + 1000.0 * THREADS * LOOPS / ms + " ops/s");
+
+        assertEquals( 0, errcount.intValue(), cacheName + " Error count should be 0" );
+        for (final String msg : valueMismatchList)
+        {
+            System.out.println(msg);
+        }
+        assertEquals( 0, valueMismatchList.size(), cacheName + " Value mismatch count should be 0" );
+        errcount.set(0);
+        valueMismatchList.clear();
         cache.dispose();
     }
 
@@ -151,24 +173,10 @@ class JCSConcurrentCacheAccessUnitTest
     void testConcurrentAccess()
         throws Exception
     {
-    	final Thread[] worker = new Thread[THREADS];
-
-        for (int i = 0; i < THREADS; i++)
-        {
-        	worker[i] = new Thread(() -> work());
-        	worker[i].start();
-        }
-
-        for (Thread t : worker)
-        {
-        	t.join();
-        }
-
-        assertEquals( 0, errcount.intValue(), "Error count should be 0" );
-        for (final String msg : valueMismatchList)
-        {
-            System.out.println(msg);
-        }
-        assertEquals( 0, valueMismatchList.size(), "Value mismatch count should be 0" );
+        testConcurrentAccess("lhm_cache");
+        testConcurrentAccess("soft_cache");
+        testConcurrentAccess("lru_cache");
+        testConcurrentAccess("mru_cache");
+        testConcurrentAccess("lru_cache_with_disk");
     }
 }
