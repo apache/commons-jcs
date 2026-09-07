@@ -248,8 +248,9 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
         // need to pre-queue the queuing. This would be a bit wasteful
         // and wouldn't save much time in this synchronous call.
         final int size = getSize();
+        final int maxObjects = getCacheAttributes().MaxObjects();
         // If the element limit is reached, we need to spool
-        if (size <= getCacheAttributes().MaxObjects())
+        if (maxObjects < 0 || size <= maxObjects)
         {
             return;
         }

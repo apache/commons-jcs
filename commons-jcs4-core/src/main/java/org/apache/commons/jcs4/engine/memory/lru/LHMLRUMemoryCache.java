@@ -71,8 +71,9 @@ public class LHMLRUMemoryCache<K, V>
         protected boolean removeEldestEntry( final Map.Entry<K, MemoryElementDescriptor<K, V>> eldest )
         {
             final ICacheElement<K, V> element = eldest.getValue().getCacheElement();
+            final int maxObjects = getCacheAttributes().MaxObjects();
 
-            if ( size() <= getCacheAttributes().MaxObjects() )
+            if (maxObjects < 0 || size() <= maxObjects)
             {
                 return false;
             }
