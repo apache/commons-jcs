@@ -33,6 +33,9 @@ jcs.region.lru_cache_with_disk.cacheattributes.MaxObjects=10000
 jcs.region.mru_cache=
 jcs.region.mru_cache.cacheattributes.MemoryCacheName=org.apache.commons.jcs4.engine.memory.mru.MRUMemoryCache
 
+jcs.region.fifo_cache=
+jcs.region.fifo_cache.cacheattributes.MemoryCacheName=org.apache.commons.jcs4.engine.memory.fifo.FIFOMemoryCache
+
 jcs.region.lhm_cache=
 jcs.region.lhm_cache.cacheattributes.MemoryCacheName=org.apache.commons.jcs4.engine.memory.lru.LHMLRUMemoryCache
 

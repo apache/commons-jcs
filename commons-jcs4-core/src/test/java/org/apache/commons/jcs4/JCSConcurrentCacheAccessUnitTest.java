@@ -24,6 +24,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -112,6 +114,11 @@ class JCSConcurrentCacheAccessUnitTest
     private final static int LOOPS = 10000;
 
     /**
+     * the thread pool
+     */
+    protected ExecutorService pool;
+
+    /**
      * the group name
      */
     protected String group = "group";
@@ -131,6 +138,7 @@ class JCSConcurrentCacheAccessUnitTest
         throws Exception
 	{
         JCS.setConfigFilename( "/TestJCS-73.ccf" );
+        pool = Executors.newFixedThreadPool(THREADS);
         errcount = new AtomicInteger();
         valueMismatchList = new CopyOnWriteArrayList<>();
 	}
@@ -146,7 +154,7 @@ class JCSConcurrentCacheAccessUnitTest
         for (int i = 0; i < THREADS; i++)
         {
             final String threadName = "Thread-" + i;
-            new Thread(() -> work(cache, threadName, latch)).start();
+            pool.execute(() -> work(cache, threadName, latch));
         }
 
         latch.await(THREADS, TimeUnit.SECONDS);
@@ -177,6 +185,7 @@ class JCSConcurrentCacheAccessUnitTest
         testConcurrentAccess("soft_cache");
         testConcurrentAccess("lru_cache");
         testConcurrentAccess("mru_cache");
+        testConcurrentAccess("fifo_cache");
         testConcurrentAccess("lru_cache_with_disk");
     }
 }
