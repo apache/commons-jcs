@@ -267,32 +267,28 @@ public abstract class AbstractMemoryCache<K, V>
     @Override
     public ICacheElement<K, V> getQuiet( final K key )
     {
-        ICacheElement<K, V> ce = null;
+        MemoryElementDescriptor<K, V> me = null;
 
         lock.readLock().lock();
         try
         {
-            final MemoryElementDescriptor<K, V> me = map.get( key );
-            if ( me != null )
-            {
-                ce = me.getCacheElement();
-            }
+            me = map.get( key );
         }
         finally
         {
             lock.readLock().unlock();
         }
 
-        if (ce == null)
+        if (me == null)
         {
             log.debug("{0}: MemoryCache quiet miss for {1}", this::getCacheName, () -> key);
+            return null;
         }
         else
         {
             log.debug("{0}: MemoryCache quiet hit for {1}", this::getCacheName, () -> key);
+            return me.getCacheElement();
         }
-
-        return ce;
     }
 
     /**
@@ -372,11 +368,9 @@ public abstract class AbstractMemoryCache<K, V>
      * (guarded by the lock)
      *
      * @param newNode The memory element descriptor of the current cache element
-     * @param oldNode The memory element descriptor of the previous cache element
      * @throws IOException if spooling operation fails
      */
-    protected abstract void lockedUpdateElement(MemoryElementDescriptor<K, V> newNode,
-            MemoryElementDescriptor<K, V> oldNode) throws IOException;
+    protected abstract void lockedUpdateElement(MemoryElementDescriptor<K, V> newNode) throws IOException;
 
     /**
      * Removes all cached items from the cache control structures.
@@ -539,13 +533,22 @@ public abstract class AbstractMemoryCache<K, V>
         throws IOException
     {
         putCnt.incrementAndGet();
-        final MemoryElementDescriptor<K, V> newNode = wrap(ce);
 
         lock.writeLock().lock();
         try
         {
-            final MemoryElementDescriptor<K, V> oldNode = map.put(ce.key(), newNode);
-            lockedUpdateElement(newNode, oldNode);
+            final MemoryElementDescriptor<K, V> newNode = map.compute(ce.key(), (k, v) -> {
+                if (v == null)
+                {
+                    return wrap(ce);
+                }
+                else
+                {
+                    v.setCacheElement(ce);
+                    return v;
+                }
+            });
+            lockedUpdateElement(newNode);
         }
         finally
         {

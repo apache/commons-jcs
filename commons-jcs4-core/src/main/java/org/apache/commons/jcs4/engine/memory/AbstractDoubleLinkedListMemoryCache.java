@@ -90,14 +90,21 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
      * @param list the node list
      * @param me the current cache element
      */
-    protected abstract void adjustListForGet(DoubleLinkedList<MemoryElementDescriptor<K, V>> list, MemoryElementDescriptor<K, V> me);
+    protected abstract void adjustListForGet(DoubleLinkedList<MemoryElementDescriptor<K, V>> list,
+            MemoryElementDescriptor<K, V> me);
 
     /**
-     * Children implement this to control the cache expiration algorithm
+     * Puts an item to the head of the list. Moves any pre-existing entries of the same
+     * key to the head of the linked list and adds this one first.
      *
+     * @param list the node list
      * @param me the current cache element
      */
-    protected abstract void adjustListForUpdate(MemoryElementDescriptor<K, V> me);
+    protected void adjustListForUpdate(DoubleLinkedList<MemoryElementDescriptor<K, V>> list,
+            MemoryElementDescriptor<K, V> me)
+    {
+        list.makeFirst(me);
+    }
 
     /**
      * This is called by super initialize.
@@ -168,23 +175,12 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
      * (guarded by the lock)
      *
      * @param newNode The memory element descriptor of the current cache element
-     * @param oldNode The memory element descriptor of the previous cache element
      * @throws IOException if spooling operation fails
      */
     @Override
-    protected void lockedUpdateElement(MemoryElementDescriptor<K, V> newNode,
-            MemoryElementDescriptor<K, V> oldNode) throws IOException
+    protected void lockedUpdateElement(MemoryElementDescriptor<K, V> newNode) throws IOException
     {
-        adjustListForUpdate(newNode);
-
-        // If the node was the same as an existing node, remove it.
-        if (oldNode != null && newNode.getCacheElement().key().equals(oldNode.getCacheElement().key()))
-        {
-            list.remove(oldNode);
-        }
-
-        // If we are over the max spool some
-        spoolIfNeeded();
+        adjustListForUpdate(list, newNode);
     }
 
     /**
@@ -234,6 +230,22 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
         }
 
         return freed;
+    }
+
+    /**
+     * Puts an item to the cache.
+     *
+     * @param ce Description of the Parameter
+     * @throws IOException Description of the Exception
+     */
+    @Override
+    public void update( ICacheElement<K, V> ce )
+        throws IOException
+    {
+        super.update(ce);
+
+        // If we are over the max spool some
+        spoolIfNeeded();
     }
 
     /**

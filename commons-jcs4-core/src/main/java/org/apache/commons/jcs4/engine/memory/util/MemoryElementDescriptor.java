@@ -52,4 +52,14 @@ public class MemoryElementDescriptor<K, V>
     {
         return cacheElement;
     }
+
+    /**
+     * Sets a new cache element
+     *
+     * @param The ce
+     */
+    public void setCacheElement(ICacheElement<K, V> cacheElement)
+    {
+        this.cacheElement = cacheElement;
+    }
 }

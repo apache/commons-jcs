@@ -36,5 +36,5 @@ public class DoubleLinkedListNode
     private static final long serialVersionUID = -1114934407695836097L;
 
     /** Double Linked list references */
-    public DoubleLinkedListNode prev, next;
+    public volatile DoubleLinkedListNode prev, next;
 }

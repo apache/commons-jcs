@@ -44,16 +44,4 @@ public class FIFOMemoryCache<K, V>
     {
         // DO NOTHING
     }
-
-    /**
-     * Puts an item to the cache. Removes any pre-existing entries of the same key from the linked
-     * list and adds this one first.
-     *
-     * @param me The cache element, or entry wrapper
-     */
-    @Override
-    protected void adjustListForUpdate(final MemoryElementDescriptor<K, V> me)
-    {
-        addFirst(me);
-    }
 }

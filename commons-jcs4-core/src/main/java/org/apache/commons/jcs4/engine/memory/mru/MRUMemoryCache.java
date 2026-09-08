@@ -45,18 +45,4 @@ public class MRUMemoryCache<K, V>
     {
         list.makeLast( me );
     }
-
-    /**
-     * Adds the item to the front of the list. A put doesn't count as a usage.
-     * <p>
-     * It's not clear if the put operation should be different. Perhaps this should remove the oldest
-     * if full, and then put.
-     *
-     * @param me The cache element, or entry wrapper
-     */
-    @Override
-    protected void adjustListForUpdate(final MemoryElementDescriptor<K, V> me)
-    {
-        addFirst(me);
-    }
 }

@@ -173,11 +173,9 @@ public class SoftReferenceMemoryCache<K, V> extends AbstractMemoryCache<K, V>
      * (guarded by the lock)
      *
      * @param newNode The memory element descriptor of the current cache element
-     * @param oldNode The memory element descriptor of the previous cache element
      */
     @Override
-    protected void lockedUpdateElement(MemoryElementDescriptor<K, V> newNode,
-            MemoryElementDescriptor<K, V> oldNode)
+    protected void lockedUpdateElement(MemoryElementDescriptor<K, V> newNode)
     {
         final ICacheElement<K, V> val = newNode.getCacheElement();
         val.elementAttributes().setLastAccessTimeNow();

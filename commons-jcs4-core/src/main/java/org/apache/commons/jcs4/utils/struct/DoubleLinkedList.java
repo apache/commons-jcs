@@ -150,8 +150,11 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
      */
     public void makeFirst(final T ln)
     {
-        ln.prev.next = ln.next;
-        ln.next.prev = ln.prev;
+        if (ln.prev != null)
+        {
+            ln.prev.next = ln.next;
+            ln.next.prev = ln.prev;
+        }
         ln.prev = first;
         ln.next = first.next;
         first.next.prev = ln;
@@ -165,8 +168,11 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
      */
     public void makeLast(final T ln)
     {
-        ln.prev.next = ln.next;
-        ln.next.prev = ln.prev;
+        if (ln.prev != null)
+        {
+            ln.prev.next = ln.next;
+            ln.next.prev = ln.prev;
+        }
         ln.next = last;
         ln.prev = last.prev;
         last.prev.next = ln;
@@ -220,8 +226,9 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
         if (last != first)
         {
             remove(temp);
+            return temp;
         }
-        return temp;
+        return null;
     }
 
     /**
