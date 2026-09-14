@@ -20,9 +20,11 @@ package org.apache.commons.jcs4.engine.memory;
  */
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.jcs4.engine.behavior.ICacheElement;
 import org.apache.commons.jcs4.engine.control.CompositeCache;
@@ -51,7 +53,41 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
     }
 
     /** Thread-safe double linked list for lru */
-    private DoubleLinkedList<MemoryElementDescriptor<K, V>> list;
+    private DoubleLinkedList<MemoryElementDescriptor<K, V>>[] lists;
+
+    /** Number of shards */
+    private int shards;
+
+    private static class AtomicCyclicCounter
+    {
+        private final int max;
+        private final AtomicInteger counter;
+
+        private AtomicCyclicCounter(int max)
+        {
+            this.max = max;
+            counter = new AtomicInteger();
+        }
+
+        private int incrementAndGet()
+        {
+            return counter.accumulateAndGet(1, (index, inc) -> (++index >= max ? 0 : index));
+        }
+    }
+
+    /** shard to spool */
+    private AtomicCyclicCounter spoolShard;
+
+    /**
+     * Returns the current cache shard for the given key
+     *
+     * @param key the cache key
+     * @return The shard
+     */
+    protected int spreadShard(K key)
+    {
+        return Math.abs(key.hashCode() % shards);
+    }
 
     /**
      * Adds a new node to the start of the link list.
@@ -61,7 +97,8 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
      */
     protected void addFirst(final MemoryElementDescriptor<K, V> me)
     {
-        list.addFirst(me);
+        int shard = spreadShard(me.getCacheElement().key());
+        lists[shard].addFirst(me);
         if ( log.isTraceEnabled() )
         {
             verifyCache(me.getCacheElement().key());
@@ -76,7 +113,8 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
      */
     protected void addLast(final MemoryElementDescriptor<K,V> me)
     {
-        list.addLast(me);
+        int shard = spreadShard(me.getCacheElement().key());
+        lists[shard].addLast(me);
         if ( log.isTraceEnabled() )
         {
             verifyCache(me.getCacheElement().key());
@@ -85,26 +123,12 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
 
     /**
      * Adjust the list as needed for a get. This allows children to control the algorithm
-     * (guarded by the lock)
      *
      * @param list the node list
      * @param me the current cache element
      */
     protected abstract void adjustListForGet(DoubleLinkedList<MemoryElementDescriptor<K, V>> list,
             MemoryElementDescriptor<K, V> me);
-
-    /**
-     * Puts an item to the head of the list. Moves any pre-existing entries of the same
-     * key to the head of the linked list and adds this one first.
-     *
-     * @param list the node list
-     * @param me the current cache element
-     */
-    protected void adjustListForUpdate(DoubleLinkedList<MemoryElementDescriptor<K, V>> list,
-            MemoryElementDescriptor<K, V> me)
-    {
-        list.makeFirst(me);
-    }
 
     /**
      * This is called by super initialize.
@@ -114,7 +138,9 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
     @Override
     protected ConcurrentMap<K, MemoryElementDescriptor<K, V>> createMap()
     {
-        return new ConcurrentHashMap<>();
+        int maxObjects = getCacheAttributes().MaxObjects();
+        int shards = getCacheAttributes().Shards();
+        return new ConcurrentHashMap<>(maxObjects < 0 ? 16 : maxObjects, 0.75f, shards);
     }
 
     /**
@@ -127,22 +153,32 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
     public IStats getStatistics()
     {
         final IStats stats = super.getStatistics();
-        stats.addStatElement("List Size", Integer.valueOf(list.size()));
+        stats.addStatElement("Shards", Integer.valueOf(shards));
+        for (int i = 0; i < shards; i++)
+        {
+            stats.addStatElement("List Size " + i, Integer.valueOf(lists[i].size()));
+        }
 
         return stats;
     }
 
     /**
      * For post reflection creation initialization.
-     * <p>
      *
      * @param hub
      */
+    @SuppressWarnings("unchecked")
     @Override
     public void initialize(final CompositeCache<K, V> hub)
     {
         super.initialize(hub);
-        list = new DoubleLinkedList<>();
+        this.shards = getCacheAttributes().Shards();
+        lists = new DoubleLinkedList[shards];
+        for (int i = 0; i < shards; i++)
+        {
+            lists[i] = new DoubleLinkedList<>();
+        }
+        this.spoolShard = new AtomicCyclicCounter(shards);
         log.info("initialized MemoryCache for {0}", this::getCacheName);
     }
 
@@ -160,76 +196,48 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
 
     /**
      * Update control structures after get
-     * (guarded by the lock)
      *
      * @param me The memory element descriptor
      */
     @Override
-    protected void lockedGetElement(final MemoryElementDescriptor<K, V> me)
+    protected void adjustGetElement(final MemoryElementDescriptor<K, V> me)
     {
-        adjustListForGet(list, me);
+        int shard = spreadShard(me.getCacheElement().key());
+        adjustListForGet(lists[shard], me);
     }
 
     /**
      * Update control structures after update
-     * (guarded by the lock)
      *
      * @param newNode The memory element descriptor of the current cache element
      * @throws IOException if spooling operation fails
      */
     @Override
-    protected void lockedUpdateElement(MemoryElementDescriptor<K, V> newNode) throws IOException
+    protected void adjustUpdateElement(MemoryElementDescriptor<K, V> newNode) throws IOException
     {
-        adjustListForUpdate(list, newNode);
+        int shard = spreadShard(newNode.getCacheElement().key());
+        lists[shard].makeFirst(newNode);
     }
 
     /**
      * Removes all cached items from the cache control structures.
-     * (guarded by the lock)
      */
     @Override
-    protected void lockedRemoveAll()
+    protected void adjustRemoveAll()
     {
-        list.removeAll();
+        Arrays.stream(lists).forEach(DoubleLinkedList::removeAll);
     }
 
     /**
      * Remove element from control structure
-     * (guarded by the lock)
      *
      * @param me The memory element descriptor
      */
     @Override
-    protected void lockedRemoveElement(final MemoryElementDescriptor<K, V> me)
+    protected void adjustRemoveElement(final MemoryElementDescriptor<K, V> me)
     {
-        list.remove(me);
-    }
-
-    /**
-     * This instructs the memory cache to remove the <em>numberToFree</em> according to its eviction
-     * policy. For example, the LRUMemoryCache will remove the <em>numberToFree</em> least recently
-     * used items. These will be spooled to disk if a disk auxiliary is available.
-     * (guarded by the lock)
-     *
-     * @param numberToFree
-     * @return The number that were removed. if you ask to free 5, but there are only 3, you will
-     *         get 3.
-     */
-    @Override
-    protected int lockedFreeElements(final int numberToFree) throws IOException
-    {
-        int freed = 0;
-
-        for (; freed < numberToFree; freed++)
-        {
-            final ICacheElement<K, V> element = spoolLastElement();
-            if (element == null)
-            {
-                break;
-            }
-        }
-
-        return freed;
+        int shard = spreadShard(me.getCacheElement().key());
+        lists[shard].remove(me);
     }
 
     /**
@@ -281,31 +289,32 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
 
         // If this is out of the sync block it can detect a mismatch
         // where there is none.
-        if (log.isDebugEnabled() && getSize() != list.size())
-        {
-            log.debug("update: After spool, size mismatch: map.size() = {0}, "
-                    + "linked list size = {1}", getSize(), list.size());
-        }
+//        if (log.isDebugEnabled() && getSize() != list.size())
+//        {
+//            log.debug("update: After spool, size mismatch: map.size() = {0}, "
+//                    + "linked list size = {1}", getSize(), list.size());
+//        }
     }
 
     /**
      * This spools the last element in the LRU, if one exists.
-     * (guarded by the lock)
      *
      * @return ICacheElement&lt;K, V&gt; if there was a last element, else null.
-     * @throws Error
+     * @throws IOException
      */
-    private ICacheElement<K, V> spoolLastElement() throws Error
+    @Override
+    protected ICacheElement<K, V> freeElement() throws IOException
     {
         ICacheElement<K, V> toSpool = null;
 
-        final MemoryElementDescriptor<K, V> last = list.getLast();
+        int shard = this.spoolShard.incrementAndGet();
+        final MemoryElementDescriptor<K, V> last = lists[shard].getLast();
         if (last != null)
         {
             toSpool = last.getCacheElement();
             if (toSpool == null)
             {
-                throw new Error("update: last.ce is null!");
+                throw new IOException("freeElement: last.ce is null!");
             }
             waterfall(toSpool);
             if (!remove(toSpool.key()))
@@ -328,10 +337,13 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
     private void dumpCacheEntries()
     {
         log.trace("dumpingCacheEntries");
-        for (MemoryElementDescriptor<K, V> me : list)
+        for (int i = 0; i < shards; i++)
         {
-            log.trace("dumpCacheEntries> key={0}, val={1}",
-                    me.getCacheElement().key(), me.getCacheElement().value());
+            for (MemoryElementDescriptor<K, V> me : lists[i])
+            {
+                log.trace("dumpCacheEntries> shard={0}, key={1}, val={2}", i,
+                        me.getCacheElement().key(), me.getCacheElement().value());
+            }
         }
     }
 
@@ -345,42 +357,47 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
         Map<K, MemoryElementDescriptor<K, V>> mapView = getMapView();
         log.trace("verifycache[{0}]: map contains {1} elements, linked list "
                 + "contains {2} elements", getCacheName(), getSize(),
-                list.size());
+                Arrays.stream(lists)
+                    .mapToInt(DoubleLinkedList::size)
+                    .sum());
         log.trace("verifycache: checking linked list by key ");
-        for (MemoryElementDescriptor<K, V> li : list)
+        for (int i = 0; i < shards; i++)
         {
-            final K key = li.getCacheElement().key();
-            if (!mapView.containsKey(key))
+            for (MemoryElementDescriptor<K, V> li : lists[i])
             {
-                log.error("verifycache[{0}]: map does not contain key : {1}",
-                        getCacheName(), key);
-                log.error("key class={0}", key.getClass());
-                log.error("key hashCode={0}", key.hashCode());
-                log.error("key toString={0}", key.toString());
-                if (key instanceof GroupAttrName name)
+                final K key = li.getCacheElement().key();
+                if (!mapView.containsKey(key))
                 {
-                    log.error("GroupID hashCode={0}", name.groupId().hashCode());
-                    log.error("GroupID.class={0}", name.groupId().getClass());
-                    log.error("AttrName hashCode={0}", name.attrName().hashCode());
-                    log.error("AttrName.class={0}", name.attrName().getClass());
+                    log.error("verifycache[{0}]: map does not contain key : {1}",
+                            getCacheName(), key);
+                    log.error("key class={0}", key.getClass());
+                    log.error("key hashCode={0}", key.hashCode());
+                    log.error("key toString={0}", key.toString());
+                    if (key instanceof GroupAttrName name)
+                    {
+                        log.error("GroupID hashCode={0}", name.groupId().hashCode());
+                        log.error("GroupID.class={0}", name.groupId().getClass());
+                        log.error("AttrName hashCode={0}", name.attrName().hashCode());
+                        log.error("AttrName.class={0}", name.attrName().getClass());
+                    }
+                    dumpMap();
                 }
-                dumpMap();
+                else if (mapView.get(key) == null)
+                {
+                    log.error("verifycache[{0}]: linked list retrieval returned "
+                            + "null for key: {1}", getCacheName(), key);
+                }
             }
-            else if (mapView.get(key) == null)
-            {
-                log.error("verifycache[{0}]: linked list retrieval returned "
-                        + "null for key: {1}", getCacheName(), key);
-            }
-        }
 
-        log.trace("verifycache: checking linked list by value ");
-        for (MemoryElementDescriptor<K, V> li : list)
-        {
-            if (!mapView.containsValue(li))
+            log.trace("verifycache: checking linked list by value ");
+            for (MemoryElementDescriptor<K, V> li : lists[i])
             {
-                log.error("verifycache[{0}]: map does not contain value: {1}",
-                        getCacheName(), li);
-                dumpMap();
+                if (!mapView.containsValue(li))
+                {
+                    log.error("verifycache[{0}]: map does not contain value: {1}",
+                            getCacheName(), li);
+                    dumpMap();
+                }
             }
         }
 
@@ -389,12 +406,15 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
         {
             found = false;
 
-            for (MemoryElementDescriptor<K, V> li : list)
+            for (int i = 0; i < shards; i++)
             {
-                if (val.equals(li.getCacheElement().key()))
+                for (MemoryElementDescriptor<K, V> li : lists[i])
                 {
-                    found = true;
-                    break;
+                    if (val.equals(li.getCacheElement().key()))
+                    {
+                        found = true;
+                        break;
+                    }
                 }
             }
             if (!found)
@@ -425,19 +445,20 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
         boolean found = false;
 
         // go through the linked list looking for the key
-        for (MemoryElementDescriptor<K, V> li : list)
+        int shard = spreadShard(key);
+        for (MemoryElementDescriptor<K, V> li : lists[shard])
         {
             if (li.getCacheElement().key() == key)
             {
                 found = true;
-                log.trace("verifycache(key) key match: {0}", key);
+                log.trace("verifycache(key) shard: {0}, key match: {1}", shard, key);
                 break;
             }
         }
         if (!found)
         {
-            log.error("verifycache(key)[{0}], couldn't find key! : {1}",
-                    getCacheName(), key);
+            log.error("verifycache(key)[{0}], shard {1}, couldn't find key! : {2}",
+                    getCacheName(), shard, key);
         }
     }
 }
