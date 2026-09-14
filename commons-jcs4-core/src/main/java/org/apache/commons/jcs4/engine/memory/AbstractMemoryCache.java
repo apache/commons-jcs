@@ -27,8 +27,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -65,10 +63,7 @@ public abstract class AbstractMemoryCache<K, V>
     /** The cache region name this store is associated with */
     private String cacheName;
 
-    /** The lock */
-    protected final ReadWriteLock lock = new ReentrantReadWriteLock();
-
-    /** Map where items are stored by key.  This is created by the concrete child class. */
+    /** Sharded map where items are stored by key. This is created by the concrete child class. */
     private ConcurrentMap<K, MemoryElementDescriptor<K, V>> map;
 
     /** Number of hits */
@@ -98,33 +93,6 @@ public abstract class AbstractMemoryCache<K, V>
     }
 
     /**
-     * This instructs the memory cache to remove the <em>numberToFree</em> according to its eviction
-     * policy. For example, the LRUMemoryCache will remove the <em>numberToFree</em> least recently
-     * used items. These will be spooled to disk if a disk auxiliary is available.
-     *
-     * @param numberToFree
-     * @return The number that were removed. if you ask to free 5, but there are only 3, you will
-     *         get 3.
-     */
-    @Override
-    public int freeElements(final int numberToFree) throws IOException
-    {
-        int freed = 0;
-
-        lock.writeLock().lock();
-        try
-        {
-            freed = lockedFreeElements(numberToFree);
-        }
-        finally
-        {
-            lock.writeLock().unlock();
-        }
-
-        return freed;
-    }
-
-    /**
      * Prepares for shutdown. Reset statistics
      *
      * @throws IOException
@@ -139,6 +107,7 @@ public abstract class AbstractMemoryCache<K, V>
         putCnt.set(0);
         log.info( "Memory Cache dispose called." );
     }
+
     /**
      * Dump the cache map for debugging.
      */
@@ -161,24 +130,9 @@ public abstract class AbstractMemoryCache<K, V>
     @Override
     public ICacheElement<K, V> get(final K key)
     {
-        MemoryElementDescriptor<K, V> me = null;
-
         log.debug("{0}: getting item for key {1}", this::getCacheName, () -> key);
 
-        lock.writeLock().lock();
-        try
-        {
-            me = map.get(key);
-
-            if (me != null)
-            {
-                lockedGetElement(me);
-            }
-        }
-        finally
-        {
-            lock.writeLock().unlock();
-        }
+        MemoryElementDescriptor<K, V> me = map.get(key);
 
         if (me == null)
         {
@@ -188,6 +142,7 @@ public abstract class AbstractMemoryCache<K, V>
         }
         else
         {
+            adjustGetElement(me);
             hitCnt.incrementAndGet();
             log.debug("{0}: MemoryCache hit for {1}", this::getCacheName, () -> key);
             return me.getCacheElement();
@@ -223,15 +178,7 @@ public abstract class AbstractMemoryCache<K, V>
     @Override
     public Set<K> getKeySet()
     {
-        lock.readLock().lock();
-        try
-        {
-            return Collections.unmodifiableSet(map.keySet());
-        }
-        finally
-        {
-            lock.readLock().unlock();
-        }
+        return Collections.unmodifiableSet(map.keySet());
     }
 
     /**
@@ -267,17 +214,7 @@ public abstract class AbstractMemoryCache<K, V>
     @Override
     public ICacheElement<K, V> getQuiet( final K key )
     {
-        MemoryElementDescriptor<K, V> me = null;
-
-        lock.readLock().lock();
-        try
-        {
-            me = map.get( key );
-        }
-        finally
-        {
-            lock.readLock().unlock();
-        }
+        MemoryElementDescriptor<K, V> me = map.get(key);
 
         if (me == null)
         {
@@ -299,15 +236,7 @@ public abstract class AbstractMemoryCache<K, V>
     @Override
     public int getSize()
     {
-        lock.readLock().lock();
-        try
-        {
-            return this.map.size();
-        }
-        finally
-        {
-            lock.readLock().unlock();
-        }
+        return map.size();
     }
 
     /**
@@ -348,6 +277,32 @@ public abstract class AbstractMemoryCache<K, V>
     }
 
     /**
+     * This instructs the memory cache to remove the <em>numberToFree</em> according to its eviction
+     * policy. For example, the LRUMemoryCache will remove the <em>numberToFree</em> least recently
+     * used items. These will be spooled to disk if a disk auxiliary is available.
+     *
+     * @param numberToFree
+     * @return The number that were removed. if you ask to free 5, but there are only 3, you will
+     *         get 3.
+     */
+    @Override
+    public int freeElements(final int numberToFree) throws IOException
+    {
+        int freed = 0;
+
+        for (; freed < numberToFree; freed++)
+        {
+            final ICacheElement<K, V> element = freeElement();
+            if (element == null)
+            {
+                break;
+            }
+        }
+
+        return freed;
+    }
+
+    /**
      * Wrap the cache element into an appropriate memory element descriptor
      *
      * @param ce The cache element
@@ -357,46 +312,39 @@ public abstract class AbstractMemoryCache<K, V>
 
     /**
      * Update control structures after get
-     * (guarded by the lock)
      *
      * @param me The memory element descriptor
      */
-    protected abstract void lockedGetElement(MemoryElementDescriptor<K, V> me);
+    protected abstract void adjustGetElement(MemoryElementDescriptor<K, V> me);
 
     /**
      * Update control structures after update
-     * (guarded by the lock)
      *
      * @param newNode The memory element descriptor of the current cache element
      * @throws IOException if spooling operation fails
      */
-    protected abstract void lockedUpdateElement(MemoryElementDescriptor<K, V> newNode) throws IOException;
+    protected abstract void adjustUpdateElement(MemoryElementDescriptor<K, V> newNode) throws IOException;
 
     /**
      * Removes all cached items from the cache control structures.
-     * (guarded by the lock)
      */
-    protected abstract void lockedRemoveAll();
+    protected abstract void adjustRemoveAll();
 
     /**
      * Remove element from control structure
-     * (guarded by the lock)
      *
      * @param me The memory element descriptor
      */
-    protected abstract void lockedRemoveElement(MemoryElementDescriptor<K, V> me);
+    protected abstract void adjustRemoveElement(MemoryElementDescriptor<K, V> me);
 
     /**
-     * This instructs the memory cache to remove the <em>numberToFree</em> according to its eviction
-     * policy. For example, the LRUMemoryCache will remove the <em>numberToFree</em> least recently
-     * used items. These will be spooled to disk if a disk auxiliary is available.
-     * (guarded by the lock)
+     * This instructs the memory cache to remove the last element according to its eviction
+     * policy. For example, the LRUMemoryCache will remove the least recently
+     * used item. These will be spooled to disk if a disk auxiliary is available.
      *
-     * @param numberToFree
-     * @return The number that were removed. if you ask to free 5, but there are only 3, you will
-     *         get 3.
+     * @return the element that was spooled, null if none
      */
-    protected abstract int lockedFreeElements(final int numberToFree) throws IOException;
+    protected abstract ICacheElement<K, V> freeElement() throws IOException;
 
     /**
      * Removes an item from the cache. This method handles hierarchical removal. If the key is a
@@ -426,19 +374,12 @@ public abstract class AbstractMemoryCache<K, V>
         else
         {
             // remove single item.
-            lock.writeLock().lock();
-            try
+            final MemoryElementDescriptor<K, V> me = map.remove(key);
+
+            if (me != null)
             {
-                final MemoryElementDescriptor<K, V> me = map.remove(key);
-                if (me != null)
-                {
-                    lockedRemoveElement(me);
-                    removed = true;
-                }
-            }
-            finally
-            {
-                lock.writeLock().unlock();
+                removed = true;
+                adjustRemoveElement(me);
             }
         }
 
@@ -451,16 +392,8 @@ public abstract class AbstractMemoryCache<K, V>
     @Override
     public void removeAll()
     {
-        lock.writeLock().lock();
-        try
-        {
-            map.clear();
-            lockedRemoveAll();
-        }
-        finally
-        {
-            lock.writeLock().unlock();
-        }
+        map.clear();
+        adjustRemoveAll();
     }
 
     /**
@@ -470,26 +403,20 @@ public abstract class AbstractMemoryCache<K, V>
      */
     protected boolean removeByGroup(final GroupId groupId)
     {
-        lock.writeLock().lock();
-        try
-        {
-            // remove all keys of the same group hierarchy.
-            return map.entrySet().removeIf(entry -> {
-                final K k = entry.getKey();
+        // remove all keys of the same group hierarchy.
+        boolean removed = map.entrySet().removeIf(entry -> {
+            final K k = entry.getKey();
 
-                if (k instanceof GroupAttrName kgan && kgan.groupId().equals(groupId))
-                {
-                        lockedRemoveElement(entry.getValue());
-                        return true;
-                }
+            if (k instanceof GroupAttrName kgan && kgan.groupId().equals(groupId))
+            {
+                    adjustRemoveElement(entry.getValue());
+                    return true;
+            }
 
-                return false;
-            });
-        }
-        finally
-        {
-            lock.writeLock().unlock();
-        }
+            return false;
+        });
+
+        return removed;
     }
 
     /**
@@ -500,26 +427,20 @@ public abstract class AbstractMemoryCache<K, V>
      */
     protected boolean removeByHierarchy(final String keyString)
     {
-        lock.writeLock().lock();
-        try
-        {
-            // remove all keys of the same name hierarchy.
-            return map.entrySet().removeIf(entry -> {
-                final K k = entry.getKey();
+        // remove all keys of the same name hierarchy.
+        boolean removed = map.entrySet().removeIf(entry -> {
+            final K k = entry.getKey();
 
-                if (k instanceof String s && s.startsWith(keyString))
-                {
-                    lockedRemoveElement(entry.getValue());
-                    return true;
-                }
+            if (k instanceof String s && s.startsWith(keyString))
+            {
+                adjustRemoveElement(entry.getValue());
+                return true;
+            }
 
-                return false;
-            });
-        }
-        finally
-        {
-            lock.writeLock().unlock();
-        }
+            return false;
+        });
+
+        return removed;
     }
 
     /**
@@ -533,27 +454,19 @@ public abstract class AbstractMemoryCache<K, V>
         throws IOException
     {
         putCnt.incrementAndGet();
+        final MemoryElementDescriptor<K, V> newNode = map.compute(ce.key(), (k, v) -> {
+            if (v == null)
+            {
+                return wrap(ce);
+            }
+            else
+            {
+                v.setCacheElement(ce);
+                return v;
+            }
+        });
 
-        lock.writeLock().lock();
-        try
-        {
-            final MemoryElementDescriptor<K, V> newNode = map.compute(ce.key(), (k, v) -> {
-                if (v == null)
-                {
-                    return wrap(ce);
-                }
-                else
-                {
-                    v.setCacheElement(ce);
-                    return v;
-                }
-            });
-            lockedUpdateElement(newNode);
-        }
-        finally
-        {
-            lock.writeLock().unlock();
-        }
+        adjustUpdateElement(newNode);
     }
 
     /**

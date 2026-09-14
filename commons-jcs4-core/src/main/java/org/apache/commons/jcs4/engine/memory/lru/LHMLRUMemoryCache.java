@@ -20,8 +20,11 @@ package org.apache.commons.jcs4.engine.memory.lru;
  */
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
 
 import org.apache.commons.jcs4.engine.behavior.ICacheElement;
@@ -46,11 +49,14 @@ public class LHMLRUMemoryCache<K, V>
     /**
      * Implements removeEldestEntry from {@link LinkedHashMap}.
      */
-    protected class LHMSpooler extends LinkedHashMap<K, MemoryElementDescriptor<K, V>>
+    private class LHMSpooler
         implements ConcurrentMap<K, MemoryElementDescriptor<K, V>>
     {
-        /** Don't change. */
-        private static final long serialVersionUID = -1255907868906762484L;
+        /** cache size */
+        private final int maxObjects;
+
+        /** LinkedHashMap delegate */
+        private final Map<K, MemoryElementDescriptor<K, V>> delegate;
 
         /**
          * Initialize to a small size--for now, 1/2 of max 3rd variable "true" indicates that it
@@ -58,32 +64,133 @@ public class LHMLRUMemoryCache<K, V>
          */
         public LHMSpooler()
         {
-            super( (int) ( getCacheAttributes().MaxObjects() * .5 ), .75F, true );
+            this.maxObjects = getCacheAttributes().MaxObjects();
+            this.delegate = Collections.synchronizedMap(
+                new LinkedHashMap<>((int) (maxObjects * .5), .75F, true)
+                {
+                    /** Don't change. */
+                    private static final long serialVersionUID = -1255907868906762484L;
+
+                    /**
+                     * Remove eldest. Automatically called by LinkedHashMap.
+                     *
+                     * @param eldest
+                     * @return true if removed
+                     */
+                    @Override
+                    protected boolean removeEldestEntry(final Map.Entry<K, MemoryElementDescriptor<K, V>> eldest)
+                    {
+                        final ICacheElement<K, V> element = eldest.getValue().getCacheElement();
+
+                        if (maxObjects < 0 || size() <= maxObjects)
+                        {
+                            return false;
+                        }
+                        log.debug( "LHMLRU max size: {0}. Spooling element, key: {1}",
+                                () -> getCacheAttributes().MaxObjects(), element::key);
+
+                        waterfall(element);
+
+                        log.debug("LHMLRU size: {0}", this::size);
+                        return true;
+                    }
+                });
         }
 
-        /**
-         * Remove eldest. Automatically called by LinkedHashMap.
-         *
-         * @param eldest
-         * @return true if removed
-         */
         @Override
-        protected boolean removeEldestEntry( final Map.Entry<K, MemoryElementDescriptor<K, V>> eldest )
+        public int size()
         {
-            final ICacheElement<K, V> element = eldest.getValue().getCacheElement();
-            final int maxObjects = getCacheAttributes().MaxObjects();
+            return delegate.size();
+        }
 
-            if (maxObjects < 0 || size() <= maxObjects)
-            {
-                return false;
-            }
-            log.debug( "LHMLRU max size: {0}. Spooling element, key: {1}",
-                    () -> getCacheAttributes().MaxObjects(), element::key);
+        @Override
+        public boolean isEmpty()
+        {
+            return delegate.isEmpty();
+        }
 
-            waterfall(element);
+        @Override
+        public boolean containsKey(Object key)
+        {
+            return delegate.containsKey(key);
+        }
 
-            log.debug("LHMLRU size: {0}", getSize());
-            return true;
+        @Override
+        public boolean containsValue(Object value)
+        {
+            return delegate.containsValue(value);
+        }
+
+        @Override
+        public MemoryElementDescriptor<K, V> get(Object key)
+        {
+            return delegate.get(key);
+        }
+
+        @Override
+        public MemoryElementDescriptor<K, V> put(K key, MemoryElementDescriptor<K, V> value)
+        {
+            return delegate.put(key, value);
+        }
+
+        @Override
+        public MemoryElementDescriptor<K, V> remove(Object key)
+        {
+            return delegate.remove(key);
+        }
+
+        @Override
+        public void putAll(Map<? extends K, ? extends MemoryElementDescriptor<K, V>> m)
+        {
+            delegate.putAll(m);
+        }
+
+        @Override
+        public void clear()
+        {
+            delegate.clear();
+        }
+
+        @Override
+        public Set<K> keySet()
+        {
+            return delegate.keySet();
+        }
+
+        @Override
+        public Collection<MemoryElementDescriptor<K, V>> values()
+        {
+            return delegate.values();
+        }
+
+        @Override
+        public Set<Entry<K, MemoryElementDescriptor<K, V>>> entrySet()
+        {
+            return delegate.entrySet();
+        }
+
+        @Override
+        public MemoryElementDescriptor<K, V> putIfAbsent(K key, MemoryElementDescriptor<K, V> value)
+        {
+            return delegate.putIfAbsent(key, value);
+        }
+
+        @Override
+        public boolean remove(Object key, Object value)
+        {
+            return delegate.remove(key, value);
+        }
+
+        @Override
+        public boolean replace(K key, MemoryElementDescriptor<K, V> oldValue, MemoryElementDescriptor<K, V> newValue)
+        {
+            return delegate.replace(key, oldValue, newValue);
+        }
+
+        @Override
+        public MemoryElementDescriptor<K, V> replace(K key, MemoryElementDescriptor<K, V> value)
+        {
+            return delegate.replace(key, value);
         }
     }
 
@@ -117,7 +224,7 @@ public class LHMLRUMemoryCache<K, V>
      * @param me The memory element descriptor
      */
     @Override
-    protected void lockedGetElement(final MemoryElementDescriptor<K, V> me)
+    protected void adjustGetElement(final MemoryElementDescriptor<K, V> me)
     {
         // empty
     }
@@ -129,7 +236,7 @@ public class LHMLRUMemoryCache<K, V>
      * @param newNode The memory element descriptor of the current cache element
      */
     @Override
-    protected void lockedUpdateElement(MemoryElementDescriptor<K, V> newNode)
+    protected void adjustUpdateElement(MemoryElementDescriptor<K, V> newNode)
     {
         // empty
     }
@@ -139,7 +246,7 @@ public class LHMLRUMemoryCache<K, V>
      * (guarded by the lock)
      */
     @Override
-    protected void lockedRemoveAll()
+    protected void adjustRemoveAll()
     {
         // empty
     }
@@ -151,21 +258,20 @@ public class LHMLRUMemoryCache<K, V>
      * @param me The memory element descriptor
      */
     @Override
-    protected void lockedRemoveElement(final MemoryElementDescriptor<K, V> me)
+    protected void adjustRemoveElement(final MemoryElementDescriptor<K, V> me)
     {
         // empty
     }
 
     /**
-     * This can't be implemented.
+     * Cannot be implemented
      *
-     * @param numberToFree
-     * @return 0
+     * @return ICacheElement&lt;K, V&gt; if there was a last element, else null.
      * @throws IOException
      */
     @Override
-    protected int lockedFreeElements(final int numberToFree) throws IOException
+    protected ICacheElement<K, V> freeElement() throws IOException
     {
-        return 0;
+        return null;
     }
 }

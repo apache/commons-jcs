@@ -75,18 +75,10 @@ public class SoftReferenceMemoryCache<K, V> extends AbstractMemoryCache<K, V>
     @Override
     public Set<K> getKeySet()
     {
-        lock.readLock().lock();
-        try
-        {
-            return getMapView().entrySet().stream()
-                    .filter(e -> e.getValue().getCacheElement() != null)
-                    .map(e -> e.getKey())
-                    .collect(Collectors.toSet());
-        }
-        finally
-        {
-            lock.readLock().unlock();
-        }
+        return getMapView().entrySet().stream()
+                .filter(e -> e.getValue().getCacheElement() != null)
+                .map(e -> e.getKey())
+                .collect(Collectors.toSet());
     }
 
     /**
@@ -97,19 +89,11 @@ public class SoftReferenceMemoryCache<K, V> extends AbstractMemoryCache<K, V>
     @Override
     public int getSize()
     {
-        lock.readLock().lock();
-        try
-        {
-            long size = getMapView().values().stream()
-                    .filter(v -> v.getCacheElement() != null)
-                    .count();
+        long size = getMapView().values().stream()
+                .filter(v -> v.getCacheElement() != null)
+                .count();
 
-            return (int) size;
-        }
-        finally
-        {
-            lock.readLock().unlock();
-        }
+        return (int) size;
     }
 
     /**
@@ -153,15 +137,13 @@ public class SoftReferenceMemoryCache<K, V> extends AbstractMemoryCache<K, V>
 
     /**
      * Update control structures after get
-     * (guarded by the lock)
      *
      * @param me The memory element descriptor
      */
     @Override
-    protected void lockedGetElement(final MemoryElementDescriptor<K, V> me)
+    protected void adjustGetElement(final MemoryElementDescriptor<K, V> me)
     {
         final ICacheElement<K, V> val = me.getCacheElement();
-        val.elementAttributes().setLastAccessTimeNow();
 
         // update the ordering of the strong references
         strongReferences.add(val);
@@ -175,10 +157,9 @@ public class SoftReferenceMemoryCache<K, V> extends AbstractMemoryCache<K, V>
      * @param newNode The memory element descriptor of the current cache element
      */
     @Override
-    protected void lockedUpdateElement(MemoryElementDescriptor<K, V> newNode)
+    protected void adjustUpdateElement(MemoryElementDescriptor<K, V> newNode)
     {
         final ICacheElement<K, V> val = newNode.getCacheElement();
-        val.elementAttributes().setLastAccessTimeNow();
 
         // update the ordering of the strong references
         strongReferences.add(val);
@@ -190,34 +171,32 @@ public class SoftReferenceMemoryCache<K, V> extends AbstractMemoryCache<K, V>
      * (guarded by the lock)
      */
     @Override
-    protected void lockedRemoveAll()
+    protected void adjustRemoveAll()
     {
         strongReferences.clear();
     }
 
     /**
      * Remove element from control structure
-     * (guarded by the lock)
      *
      * @param me The memory element descriptor
      */
     @Override
-    protected void lockedRemoveElement(final MemoryElementDescriptor<K, V> me)
+    protected void adjustRemoveElement(final MemoryElementDescriptor<K, V> me)
     {
         strongReferences.remove(me.getCacheElement());
     }
 
     /**
-     * This can't be implemented.
+     * Cannot be implemented
      *
-     * @param numberToFree
-     * @return 0
+     * @return ICacheElement&lt;K, V&gt; if there was a last element, else null.
      * @throws IOException
      */
     @Override
-    protected int lockedFreeElements(final int numberToFree) throws IOException
+    protected ICacheElement<K, V> freeElement() throws IOException
     {
-        return 0;
+        return null;
     }
 
     /**
@@ -229,12 +208,19 @@ public class SoftReferenceMemoryCache<K, V> extends AbstractMemoryCache<K, V>
         final int max = getCacheAttributes().MaxObjects();
         final int startsize = strongReferences.size();
 
-        for (int cursize = startsize; cursize > max; cursize--)
+        if (max > 0)
         {
-            final ICacheElement<K, V> ce = strongReferences.poll();
-            if (ce != null)
+            for (int cursize = startsize; cursize > max; cursize--)
             {
-                waterfall(ce);
+                final ICacheElement<K, V> ce = strongReferences.poll();
+                if (ce != null)
+                {
+                    waterfall(ce);
+                }
+                else
+                {
+                    break;
+                }
             }
         }
     }
