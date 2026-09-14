@@ -181,8 +181,8 @@ class DoubleLinkedListUnitTest
 
         // VERIFY
         assertEquals( 0, list.size(), "Wrong size" );
-        assertEquals( list.getFirst().prev, list.getLast(), "Wrong last" );
-        assertEquals( list.getLast().next, list.getFirst(), "Wrong first" );
+        assertNull( list.getLast(), "Wrong last" );
+        assertNull( list.getFirst(), "Wrong first" );
         assertNull(node1.next, "node1.next should be null");
         assertNull(node1.prev, "node1.prev should be null");
         assertNull(node2.next, "node2.next should be null");

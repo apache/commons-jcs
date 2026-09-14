@@ -1,6 +1,8 @@
 package org.apache.commons.jcs4.utils.struct;
 
 import java.util.Iterator;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -60,6 +62,9 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
     /** Record size to avoid having to iterate */
     private int size;
 
+    /** The lock */
+    private final Lock lock;
+
     /** LRU double linked list head node */
     private T first;
 
@@ -75,6 +80,7 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
         this.last = (T) new DoubleLinkedListNode();
         this.first.next = this.last;
         this.last.prev = this.first;
+        this.lock = new ReentrantLock();
     }
 
     /**
@@ -84,11 +90,19 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
      */
     public void addFirst(final T me)
     {
-        me.prev = first;
-        me.next = first.next;
-        first.next.prev = me;
-        first.next = me;
-        size++;
+        lock.lock();
+        try
+        {
+            me.prev = first;
+            me.next = first.next;
+            first.next.prev = me;
+            first.next = me;
+            size++;
+        }
+        finally
+        {
+            lock.unlock();
+        }
     }
 
     /**
@@ -98,11 +112,19 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
      */
     public void addLast(final T me)
     {
-        me.next = last;
-        me.prev = last.prev;
-        last.prev.next = me;
-        last.prev = me;
-        size++;
+        lock.lock();
+        try
+        {
+            me.next = last;
+            me.prev = last.prev;
+            last.prev.next = me;
+            last.prev = me;
+            size++;
+        }
+        finally
+        {
+            lock.unlock();
+        }
     }
 
     // ///////////////////////////////////////////////////////////////////
@@ -128,8 +150,9 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
      */
     public T getFirst()
     {
-        log.debug( "returning first node" );
-        return (T) first.next;
+        log.debug("returning first node");
+        DoubleLinkedListNode f = first.next;
+        return (T) (f == last ? null : f);
     }
 
     /**
@@ -139,8 +162,9 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
      */
     public T getLast()
     {
-        log.debug( "returning last node" );
-        return (T) last.prev;
+        log.debug("returning last node");
+        DoubleLinkedListNode l = last.prev;
+        return (T) (l == first ? null : l);
     }
 
     /**
@@ -150,15 +174,25 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
      */
     public void makeFirst(final T ln)
     {
-        if (ln.prev != null)
+        lock.lock();
+        try
         {
-            ln.prev.next = ln.next;
-            ln.next.prev = ln.prev;
+            if (ln.prev != null && ln.next != null)
+            {
+                ln.prev.next = ln.next;
+                ln.next.prev = ln.prev;
+                size--;
+            }
+            ln.prev = first;
+            ln.next = first.next;
+            first.next.prev = ln;
+            first.next = ln;
+            size++;
         }
-        ln.prev = first;
-        ln.next = first.next;
-        first.next.prev = ln;
-        first.next = ln;
+        finally
+        {
+            lock.unlock();
+        }
     }
 
     /**
@@ -168,15 +202,25 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
      */
     public void makeLast(final T ln)
     {
-        if (ln.prev != null)
+        lock.lock();
+        try
         {
-            ln.prev.next = ln.next;
-            ln.next.prev = ln.prev;
+            if (ln.prev != null && ln.next != null)
+            {
+                ln.prev.next = ln.next;
+                ln.next.prev = ln.prev;
+                size--;
+            }
+            ln.next = last;
+            ln.prev = last.prev;
+            last.prev.next = ln;
+            last.prev = ln;
+            size++;
         }
-        ln.next = last;
-        ln.prev = last.prev;
-        last.prev.next = ln;
-        last.prev = ln;
+        finally
+        {
+            lock.unlock();
+        }
     }
 
     /**
@@ -188,10 +232,21 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
     public boolean remove(final T me)
     {
         log.debug("removing node");
-        me.prev.next = me.next;
-        me.next.prev = me.prev;
-        me.prev = me.next = null;
-        size--;
+        lock.lock();
+        try
+        {
+            if (me.prev != null && me.next != null)
+            {
+                me.prev.next = me.next;
+                me.next.prev = me.prev;
+                me.prev = me.next = null;
+                size--;
+            }
+        }
+        finally
+        {
+            lock.unlock();
+        }
 
         return true;
     }
@@ -201,17 +256,25 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
      */
     public void removeAll()
     {
-        T me = getFirst();
-        while (me.next != null)
+        DoubleLinkedListNode me = getFirst();
+        lock.lock();
+        try
         {
-            T toRemove = me;
-            me = (T) me.next;
-            toRemove.prev = null;
-            toRemove.next = null;
+            while (me != null && me.next != null)
+            {
+                DoubleLinkedListNode toRemove = me;
+                me = me.next;
+                toRemove.prev = null;
+                toRemove.next = null;
+            }
+            first.next = last;
+            last.prev = first;
+            size = 0;
         }
-        first.next = last;
-        last.prev = first;
-        size = 0;
+        finally
+        {
+            lock.unlock();
+        }
     }
 
     /**
@@ -222,12 +285,21 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
     public T removeLast()
     {
         log.debug("removing last node");
-        final T temp = (T) last.prev;
-        if (last != first)
+        lock.lock();
+        try
         {
-            remove(temp);
-            return temp;
+            final T temp = (T) last.prev;
+            if (temp != first)
+            {
+                remove(temp);
+                return temp;
+            }
         }
+        finally
+        {
+            lock.unlock();
+        }
+
         return null;
     }
 
@@ -256,13 +328,29 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
             @Override
             public boolean hasNext()
             {
-                return runner.next != null && runner.next != last;
+                lock.lock();
+                try
+                {
+                    return runner.next != null && runner.next != last;
+                }
+                finally
+                {
+                    lock.unlock();
+                }
             }
 
             @Override
             public T next()
             {
-                runner = (T) runner.next;
+                lock.lock();
+                try
+                {
+                    runner = (T) runner.next;
+                }
+                finally
+                {
+                    lock.unlock();
+                }
                 return runner;
             }
         };
