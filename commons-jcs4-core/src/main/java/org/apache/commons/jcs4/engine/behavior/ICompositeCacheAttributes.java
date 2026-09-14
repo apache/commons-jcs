@@ -94,9 +94,16 @@ public interface ICompositeCacheAttributes
     /**
      * Number to send to disk at time when memory is full.
      *
-     * @return int
+     * @return number of items to spool at a time
      */
     int SpoolChunkSize();
+
+    /**
+     * Number of parallel accessible memory cache segments.
+     *
+     * @return number of memory cache shards
+     */
+    int Shards();
 
     /**
      * Tests whether the memory cache should perform background memory shrinkage.

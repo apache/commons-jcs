@@ -188,6 +188,15 @@
                         <td>N</td>
                         <td>2</td>
                     </tr>
+                    <tr>
+                        <td>Shards</td>
+                        <td>
+                            Number of memory cache segments to improve
+                            concurrent performance.
+                        </td>
+                        <td>N</td>
+                        <td>1</td>
+                    </tr>
 				</table>
 			</subsection>
 

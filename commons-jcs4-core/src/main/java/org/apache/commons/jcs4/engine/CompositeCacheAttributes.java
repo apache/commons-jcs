@@ -57,7 +57,10 @@ public record CompositeCacheAttributes(
         DiskUsagePatternEnum DiskUsagePattern,
 
         /** How many to spool to disk at a time. */
-        int SpoolChunkSize
+        int SpoolChunkSize,
+
+        /** Number of parallel accessible memory cache segments. */
+        int Shards
 ) implements ICompositeCacheAttributes
 {
     /** Don't change */
@@ -84,6 +87,9 @@ public record CompositeCacheAttributes(
     /** Default number to send to disk at a time when memory fills. */
     private static final int DEFAULT_CHUNK_SIZE = 2;
 
+    /** Default number of parallel accessible memory cache segments. */
+    private static final int DEFAULT_SHARDS = 1;
+
     /** Record with all defaults set */
     private static final CompositeCacheAttributes DEFAULT = new CompositeCacheAttributes(
             null,
@@ -94,7 +100,8 @@ public record CompositeCacheAttributes(
             DEFAULT_MAX_MEMORY_IDLE_TIME,
             DEFAULT_MEMORY_CACHE_NAME,
             DiskUsagePatternEnum.SWAP,
-            DEFAULT_CHUNK_SIZE
+            DEFAULT_CHUNK_SIZE,
+            DEFAULT_SHARDS
           );
 
     /**
@@ -121,7 +128,8 @@ public record CompositeCacheAttributes(
                 MaxMemoryIdleTime(),
                 MemoryCacheName(),
                 DiskUsagePattern(),
-                SpoolChunkSize());
+                SpoolChunkSize(),
+                Shards());
     }
 
     /**
@@ -138,6 +146,7 @@ public record CompositeCacheAttributes(
         dump.append( ", MaxSpoolPerRun = " ).append( MaxSpoolPerRun() );
         dump.append( ", DiskUsagePattern = " ).append( DiskUsagePattern() );
         dump.append( ", SpoolChunkSize = " ).append( SpoolChunkSize() );
+        dump.append( ", Shards = " ).append( Shards() );
         dump.append( " ]" );
 
         return dump.toString();

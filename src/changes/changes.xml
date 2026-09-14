@@ -50,6 +50,9 @@
                fix typo "waterfal" method
             </action>
             <!-- ADD -->
+            <action dev="tv" type="add">
+               Add configurable memory cache sharding for improved concurrent performance
+            </action>
             <action type="add" dev="ggregory" due-to="Gary Gregory">
                Add Maven property project.build.outputTimestamp for build reproducibility.
             </action>
