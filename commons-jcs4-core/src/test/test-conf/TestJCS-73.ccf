@@ -17,7 +17,8 @@
 # Cache configuration for the 'JCSConcurrentCacheAccessUnitTest' test.
 
 jcs.default=
-jcs.default.cacheattributes.MaxObjects=-1
+jcs.default.cacheattributes.MaxObjects=50000
+jcs.default.cacheattributes.Shards=64
 jcs.default.cacheattributes.DiskUsagePattern=UPDATE
 jcs.default.cacheattributes.MaxMemoryIdleTime=PT10s
 jcs.default.elementattributes.IsRemote=false
@@ -28,7 +29,6 @@ jcs.region.lru_cache=
 
 jcs.region.lru_cache_with_disk=CACHE
 # MaxObjects < 0 will never spool to disk
-jcs.region.lru_cache_with_disk.cacheattributes.MaxObjects=10000
 
 jcs.region.mru_cache=
 jcs.region.mru_cache.cacheattributes.MemoryCacheName=org.apache.commons.jcs4.engine.memory.mru.MRUMemoryCache

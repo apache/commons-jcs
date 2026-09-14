@@ -111,7 +111,7 @@ class JCSConcurrentCacheAccessUnitTest
 	}
 
     private final static int THREADS = 20;
-    private final static int LOOPS = 10000;
+    private final static int LOOPS = 50000;
 
     /**
      * the thread pool
