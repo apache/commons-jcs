@@ -1,6 +1,7 @@
 package org.apache.commons.jcs4.utils.struct;
 
 import java.util.Iterator;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -26,33 +27,12 @@ import java.util.concurrent.locks.ReentrantLock;
 import org.apache.commons.jcs4.log.Log;
 
 /**
- * This is a generic double linked list. Thread safety is NOT provided by this class.
- * <p>
- * <b>THREAD SAFETY REQUIREMENT:</b> This class must be guarded by external synchronization
- * in calling code. All operations assume the caller holds appropriate locks
- * (e.g., ReentrantLock in {@link org.apache.commons.jcs4.engine.memory.AbstractDoubleLinkedListMemoryCache}).
- * <p>
- * This design eliminates double-locking problems when used with external locks and provides
- * O(1) performance for node repositioning operations.
- * <p>
- * <b>Example Usage:</b>
- * <pre>
- * Lock lock = new java.util.concurrent.locks.ReentrantLock();
- * DoubleLinkedList&lt;MyNode&gt; list = new DoubleLinkedList&lt;&gt;();
- *
- * // Caller must acquire lock before accessing
- * lock.lock();
- * try {
- *     list.addFirst(node);  // SAFE because lock is held
- * } finally {
- *     lock.unlock();
- * }
- * </pre>
+ * This is a generic thread-safe double linked list. It uses internal locking and sharding to achieve
+ * high throughput and little lock contention
  *
  * @see java.util.concurrent.locks.ReentrantLock
  * @see org.apache.commons.jcs4.engine.memory.AbstractDoubleLinkedListMemoryCache
  */
-@SuppressWarnings({"unchecked"}) // Don't know how to resolve this with generics
 public class DoubleLinkedList<T extends DoubleLinkedListNode>
     implements Iterable<T>
 {
@@ -62,25 +42,83 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
     /** Record size to avoid having to iterate */
     private int size;
 
-    /** The lock */
-    private final Lock lock;
+    /** Number of shards */
+    private final int shards;
+
+    /** The locks */
+    private final Lock[] lock;
 
     /** LRU double linked list head node */
-    private T first;
+    private DoubleLinkedListNode[] first;
 
     /** LRU double linked list tail node */
-    private T last;
+    private DoubleLinkedListNode[] last;
+
+    private static class AtomicCyclicCounter
+    {
+        private final int max;
+        private final AtomicInteger counter;
+
+        private AtomicCyclicCounter(int max)
+        {
+            this.max = max;
+            counter = new AtomicInteger();
+        }
+
+        private int incrementAndGet()
+        {
+            return counter.accumulateAndGet(1, (index, inc) -> (++index >= max ? 0 : index));
+        }
+    }
+
+    /** shard to spool */
+    private final AtomicCyclicCounter spoolShard;
 
     /**
      * Construct DoubleLinkedList
+     *
+     * @param shards Number of shards
      */
-    public DoubleLinkedList()
+    public DoubleLinkedList(int shards)
     {
-        this.first = (T) new DoubleLinkedListNode();
-        this.last = (T) new DoubleLinkedListNode();
-        this.first.next = this.last;
-        this.last.prev = this.first;
-        this.lock = new ReentrantLock();
+        this.shards = shards;
+        this.lock = new Lock[shards];
+        this.first = new DoubleLinkedListNode[shards];
+        this.last = new DoubleLinkedListNode[shards];
+        this.spoolShard = new AtomicCyclicCounter(shards);
+
+        for (int i = 0; i < shards; i++)
+        {
+            first[i] = new DoubleLinkedListNode();
+            first[i].setShard(i);
+            last[i] = new DoubleLinkedListNode();
+            last[i].setShard(i);
+            first[i].next = this.last[i];
+            last[i].prev = this.first[i];
+            lock[i] = new ReentrantLock();
+        }
+    }
+
+    /**
+     * Returns the number of shards
+     *
+     * @return the shards
+     */
+    public int getShards()
+    {
+        return shards;
+    }
+
+
+    /**
+     * Returns the current cache shard for the given key
+     *
+     * @param key the cache key
+     * @return The shard
+     */
+    public int spreadShard(Object key)
+    {
+        return Math.abs(key.hashCode() % shards);
     }
 
     /**
@@ -90,18 +128,19 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
      */
     public void addFirst(final T me)
     {
-        lock.lock();
+        int shard = me.getShard();
+        lock[shard].lock();
         try
         {
-            me.prev = first;
-            me.next = first.next;
-            first.next.prev = me;
-            first.next = me;
+            me.prev = first[shard];
+            me.next = first[shard].next;
+            first[shard].next.prev = me;
+            first[shard].next = me;
             size++;
         }
         finally
         {
-            lock.unlock();
+            lock[shard].unlock();
         }
     }
 
@@ -112,18 +151,19 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
      */
     public void addLast(final T me)
     {
-        lock.lock();
+        int shard = me.getShard();
+        lock[shard].lock();
         try
         {
-            me.next = last;
-            me.prev = last.prev;
-            last.prev.next = me;
-            last.prev = me;
+            me.next = last[shard];
+            me.prev = last[shard].prev;
+            last[shard].prev.next = me;
+            last[shard].prev = me;
             size++;
         }
         finally
         {
-            lock.unlock();
+            lock[shard].unlock();
         }
     }
 
@@ -144,27 +184,47 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
     }
 
     /**
-     * Removes the specified node from the link list.
+     * Returns the first node from the link list.
      *
-     * @return DoubleLinkedListNode, the first node.
+     * @return the first node, null if the list is empty.
      */
+    @SuppressWarnings({"unchecked"}) // Don't know how to resolve this with generics
     public T getFirst()
     {
         log.debug("returning first node");
-        DoubleLinkedListNode f = first.next;
-        return (T) (f == last ? null : f);
+        int shard = this.spoolShard.incrementAndGet();
+        lock[shard].lock();
+        try
+        {
+            DoubleLinkedListNode f = first[shard].next;
+            return (T) (f == last[shard] ? null : f);
+        }
+        finally
+        {
+            lock[shard].unlock();
+        }
     }
 
     /**
      * Returns the last node from the link list, if there are any nodes.
      *
-     * @return The last node.
+     * @return The last node, null if the list is empty.
      */
+    @SuppressWarnings({"unchecked"}) // Don't know how to resolve this with generics
     public T getLast()
     {
         log.debug("returning last node");
-        DoubleLinkedListNode l = last.prev;
-        return (T) (l == first ? null : l);
+        int shard = this.spoolShard.incrementAndGet();
+        lock[shard].lock();
+        try
+        {
+            DoubleLinkedListNode l = last[shard].prev;
+            return (T) (l == first[shard] ? null : l);
+        }
+        finally
+        {
+            lock[shard].unlock();
+        }
     }
 
     /**
@@ -174,7 +234,8 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
      */
     public void makeFirst(final T ln)
     {
-        lock.lock();
+        int shard = ln.getShard();
+        lock[shard].lock();
         try
         {
             if (ln.prev != null && ln.next != null)
@@ -183,15 +244,15 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
                 ln.next.prev = ln.prev;
                 size--;
             }
-            ln.prev = first;
-            ln.next = first.next;
-            first.next.prev = ln;
-            first.next = ln;
+            ln.prev = first[shard];
+            ln.next = first[shard].next;
+            first[shard].next.prev = ln;
+            first[shard].next = ln;
             size++;
         }
         finally
         {
-            lock.unlock();
+            lock[shard].unlock();
         }
     }
 
@@ -202,7 +263,8 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
      */
     public void makeLast(final T ln)
     {
-        lock.lock();
+        int shard = ln.getShard();
+        lock[shard].lock();
         try
         {
             if (ln.prev != null && ln.next != null)
@@ -211,15 +273,15 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
                 ln.next.prev = ln.prev;
                 size--;
             }
-            ln.next = last;
-            ln.prev = last.prev;
-            last.prev.next = ln;
-            last.prev = ln;
+            ln.next = last[shard];
+            ln.prev = last[shard].prev;
+            last[shard].prev.next = ln;
+            last[shard].prev = ln;
             size++;
         }
         finally
         {
-            lock.unlock();
+            lock[shard].unlock();
         }
     }
 
@@ -232,7 +294,8 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
     public boolean remove(final T me)
     {
         log.debug("removing node");
-        lock.lock();
+        int shard = me.getShard();
+        lock[shard].lock();
         try
         {
             if (me.prev != null && me.next != null)
@@ -245,7 +308,7 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
         }
         finally
         {
-            lock.unlock();
+            lock[shard].unlock();
         }
 
         return true;
@@ -256,25 +319,28 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
      */
     public void removeAll()
     {
-        DoubleLinkedListNode me = getFirst();
-        lock.lock();
-        try
+        for (int i = 0; i < shards; i++)
         {
-            while (me != null && me.next != null)
+            lock[i].lock();
+            try
             {
-                DoubleLinkedListNode toRemove = me;
-                me = me.next;
-                toRemove.prev = null;
-                toRemove.next = null;
+                DoubleLinkedListNode me = first[i].next;
+                while (me != last[i] && me.next != null)
+                {
+                    DoubleLinkedListNode toRemove = me;
+                    me = me.next;
+                    toRemove.prev = null;
+                    toRemove.next = null;
+                }
+                first[i].next = last[i];
+                last[i].prev = first[i];
             }
-            first.next = last;
-            last.prev = first;
-            size = 0;
+            finally
+            {
+                lock[i].unlock();
+            }
         }
-        finally
-        {
-            lock.unlock();
-        }
+        size = 0;
     }
 
     /**
@@ -285,22 +351,13 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
     public T removeLast()
     {
         log.debug("removing last node");
-        lock.lock();
-        try
+        T me = getLast();
+        if (me != null)
         {
-            final T temp = (T) last.prev;
-            if (temp != first)
-            {
-                remove(temp);
-                return temp;
-            }
-        }
-        finally
-        {
-            lock.unlock();
+            remove(me);
         }
 
-        return null;
+        return me;
     }
 
     /**
@@ -314,42 +371,72 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
     }
 
     /**
-     * Return an iterator over this list
+     * Return an iterator over this list of lists
      *
      * @return the iterator
      */
     @Override
+    @SuppressWarnings({"unchecked"}) // Don't know how to resolve this with generics
     public Iterator<T> iterator()
     {
         return new Iterator<>()
         {
-            private T runner = first;
+            private int shard = 0;
+            private T runner = (T) first[shard];
 
             @Override
-            public boolean hasNext()
+            public synchronized boolean hasNext()
             {
-                lock.lock();
+                if (shard >= shards)
+                {
+                    return false;
+                }
+
+                boolean rollover = false;
+
+                lock[shard].lock();
                 try
                 {
-                    return runner.next != null && runner.next != last;
+                    if (runner.next == null)
+                    {
+                        return false;
+                    }
+                    rollover = runner.next == last[shard];
+                    if (!rollover)
+                    {
+                        return true;
+                    }
                 }
                 finally
                 {
-                    lock.unlock();
+                    lock[shard].unlock();
                 }
+
+                if (rollover)
+                {
+                    shard++;
+                    if (shard < shards)
+                    {
+                        runner = (T) first[shard];
+                    }
+
+                    return hasNext();
+                }
+
+                return false;
             }
 
             @Override
-            public T next()
+            public synchronized T next()
             {
-                lock.lock();
+                lock[shard].lock();
                 try
                 {
                     runner = (T) runner.next;
                 }
                 finally
                 {
-                    lock.unlock();
+                    lock[shard].unlock();
                 }
                 return runner;
             }

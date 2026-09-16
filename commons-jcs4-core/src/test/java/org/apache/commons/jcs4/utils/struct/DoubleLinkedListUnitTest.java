@@ -32,7 +32,7 @@ class DoubleLinkedListUnitTest
     void testAddLast_Empty()
     {
         // SETUP
-        final DoubleLinkedList<DoubleLinkedListNode> list = new DoubleLinkedList<>();
+        final DoubleLinkedList<DoubleLinkedListNode> list = new DoubleLinkedList<>(1);
 
         final DoubleLinkedListNode node1 = new DoubleLinkedListNode();
 
@@ -48,7 +48,7 @@ class DoubleLinkedListUnitTest
     void testAddLast_NotEmpty()
     {
         // SETUP
-        final DoubleLinkedList<DoubleLinkedListNode> list = new DoubleLinkedList<>();
+        final DoubleLinkedList<DoubleLinkedListNode> list = new DoubleLinkedList<>(1);
 
         final DoubleLinkedListNode node1 = new DoubleLinkedListNode();
         final DoubleLinkedListNode node2 = new DoubleLinkedListNode();
@@ -66,7 +66,7 @@ class DoubleLinkedListUnitTest
     void testMakeLast_wasAlone()
     {
         // SETUP
-        final DoubleLinkedList<DoubleLinkedListNode> list = new DoubleLinkedList<>();
+        final DoubleLinkedList<DoubleLinkedListNode> list = new DoubleLinkedList<>(1);
 
         final DoubleLinkedListNode node1 = new DoubleLinkedListNode();
 
@@ -86,7 +86,7 @@ class DoubleLinkedListUnitTest
     void testMakeLast_wasFirst()
     {
         // SETUP
-        final DoubleLinkedList<DoubleLinkedListNode> list = new DoubleLinkedList<>();
+        final DoubleLinkedList<DoubleLinkedListNode> list = new DoubleLinkedList<>(1);
 
         final DoubleLinkedListNode node1 = new DoubleLinkedListNode();
         final DoubleLinkedListNode node2 = new DoubleLinkedListNode();
@@ -108,7 +108,7 @@ class DoubleLinkedListUnitTest
     void testMakeLast_wasInMiddle()
     {
         // SETUP
-        final DoubleLinkedList<DoubleLinkedListNode> list = new DoubleLinkedList<>();
+        final DoubleLinkedList<DoubleLinkedListNode> list = new DoubleLinkedList<>(1);
 
         final DoubleLinkedListNode node1 = new DoubleLinkedListNode();
         final DoubleLinkedListNode node2 = new DoubleLinkedListNode();
@@ -132,7 +132,7 @@ class DoubleLinkedListUnitTest
     void testMakeLast_wasLast()
     {
         // SETUP
-        final DoubleLinkedList<DoubleLinkedListNode> list = new DoubleLinkedList<>();
+        final DoubleLinkedList<DoubleLinkedListNode> list = new DoubleLinkedList<>(1);
 
         final DoubleLinkedListNode node1 = new DoubleLinkedListNode();
         final DoubleLinkedListNode node2 = new DoubleLinkedListNode();
@@ -154,7 +154,7 @@ class DoubleLinkedListUnitTest
     void testRemove()
     {
         // SETUP
-        final DoubleLinkedList<DoubleLinkedListNode> list = new DoubleLinkedList<>();
+        final DoubleLinkedList<DoubleLinkedListNode> list = new DoubleLinkedList<>(1);
 
         final DoubleLinkedListNode node1 = new DoubleLinkedListNode();
         final DoubleLinkedListNode node2 = new DoubleLinkedListNode();

@@ -37,10 +37,12 @@ class DoubleLinkedListDumpUnitTest
         final StringWriter stringWriter = new StringWriter();
         TestLogConfigurationUtil.configureLogger( stringWriter, DoubleLinkedList.class.getName() );
 
-        final DoubleLinkedList<DoubleLinkedListNode> list = new DoubleLinkedList<>();
+        final DoubleLinkedList<DoubleLinkedListNode> list = new DoubleLinkedList<>(2);
 
         final DoubleLinkedListNode node1 = new DoubleLinkedListNode();
+        node1.setShard(0);
         final DoubleLinkedListNode node2 = new DoubleLinkedListNode();
+        node2.setShard(1);
 
         list.addLast( node1 );
         list.addLast( node2 );

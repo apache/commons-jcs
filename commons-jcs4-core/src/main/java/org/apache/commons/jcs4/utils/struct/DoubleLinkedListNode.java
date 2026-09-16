@@ -35,6 +35,29 @@ public class DoubleLinkedListNode
     /** Don't change. */
     private static final long serialVersionUID = -1114934407695836097L;
 
+    /** Number of the shard I belong to */
+    private volatile int shard = 0;
+
     /** Double Linked list references */
-    public volatile DoubleLinkedListNode prev, next;
+    protected volatile DoubleLinkedListNode prev, next;
+
+    /**
+     * Returns the shard of this node
+     *
+     * @return the shard
+     */
+    public int getShard()
+    {
+        return shard;
+    }
+
+    /**
+     * Sets the shard of this node
+     *
+     * @param shard the shard to set
+     */
+    public void setShard(int shard)
+    {
+        this.shard = shard;
+    }
 }
