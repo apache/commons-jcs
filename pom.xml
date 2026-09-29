@@ -517,7 +517,7 @@
     <jsr107.api.version>1.0.1</jsr107.api.version>
     <commons.collections.version>4.6.0</commons.collections.version>
     <commons.text.version>1.15.0</commons.text.version>
-    <commons.lang.version>3.20.0</commons.lang.version>
+    <commons.lang.version>3.21.0</commons.lang.version>
     <test.type>Unit</test.type>
     <doclint>none</doclint>
     <!-- project.build.outputTimestamp is managed by Maven plugins, see https://maven.apache.org/guides/mini/guide-reproducible-builds.html -->
