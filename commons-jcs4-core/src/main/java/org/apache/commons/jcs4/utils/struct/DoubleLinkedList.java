@@ -1,7 +1,8 @@
 package org.apache.commons.jcs4.utils.struct;
 
+import java.util.Arrays;
 import java.util.Iterator;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -39,11 +40,11 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
     /** The logger */
     private static final Log log = Log.getLog( DoubleLinkedList.class );
 
-    /** Record size to avoid having to iterate */
-    private AtomicInteger size;
-
     /** Number of shards */
     private final int shards;
+
+    /** Record sizes to avoid having to iterate */
+    private int[] size;
 
     /** The locks */
     private final Lock[] lock;
@@ -54,26 +55,6 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
     /** LRU double linked list tail node */
     private DoubleLinkedListNode[] last;
 
-    private static class AtomicCyclicCounter
-    {
-        private final int max;
-        private final AtomicInteger counter;
-
-        private AtomicCyclicCounter(int max)
-        {
-            this.max = max;
-            counter = new AtomicInteger(-1);
-        }
-
-        private int incrementAndGet()
-        {
-            return counter.accumulateAndGet(1, (index, inc) -> (++index >= max ? 0 : index));
-        }
-    }
-
-    /** shard to spool */
-    private final AtomicCyclicCounter spoolShard;
-
     /**
      * Construct DoubleLinkedList
      *
@@ -81,12 +62,11 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
      */
     public DoubleLinkedList(int shards)
     {
-        this.size = new AtomicInteger();
         this.shards = shards;
+        this.size = new int[shards];
         this.lock = new Lock[shards];
         this.first = new DoubleLinkedListNode[shards];
         this.last = new DoubleLinkedListNode[shards];
-        this.spoolShard = new AtomicCyclicCounter(shards);
 
         for (int i = 0; i < shards; i++)
         {
@@ -95,6 +75,7 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
             first[i].next = this.last[i];
             last[i].prev = this.first[i];
             lock[i] = new ReentrantLock();
+            size[i] = 0;
         }
     }
 
@@ -131,11 +112,16 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
         lock[shard].lock();
         try
         {
+            if (me.prev == first[shard] && first[shard].next == me)
+            {
+                // already first
+                return;
+            }
             me.prev = first[shard];
             me.next = first[shard].next;
             first[shard].next.prev = me;
             first[shard].next = me;
-            size.incrementAndGet();
+            size[shard]++;
         }
         finally
         {
@@ -154,11 +140,16 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
         lock[shard].lock();
         try
         {
+            if (me.next == last[shard] && last[shard].prev == me)
+            {
+                // already last
+                return;
+            }
             me.next = last[shard];
             me.prev = last[shard].prev;
             last[shard].prev.next = me;
             last[shard].prev = me;
-            size.incrementAndGet();
+            size[shard]++;
         }
         finally
         {
@@ -190,9 +181,9 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
     public T getFirst()
     {
         log.debug("returning first node");
+        int shard = ThreadLocalRandom.current().nextInt(shards);
         for (int i = 0; i < shards; i++)
         {
-            int shard = this.spoolShard.incrementAndGet();
             lock[shard].lock();
             try
             {
@@ -207,6 +198,8 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
             {
                 lock[shard].unlock();
             }
+
+            shard = ++shard % shards;
         }
 
         return null;
@@ -220,9 +213,9 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
     public T getLast()
     {
         log.debug("returning last node");
+        int shard = ThreadLocalRandom.current().nextInt(shards);
         for (int i = 0; i < shards; i++)
         {
-            int shard = this.spoolShard.incrementAndGet();
             lock[shard].lock();
             try
             {
@@ -237,6 +230,8 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
             {
                 lock[shard].unlock();
             }
+
+            shard = ++shard % shards;
         }
 
         return null;
@@ -253,17 +248,24 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
         lock[shard].lock();
         try
         {
-            if (ln.prev != null && ln.next != null)
+            if (ln.prev == first[shard] && first[shard].next == ln)
+            {
+                // already first
+                return;
+            }
+            if (ln.prev == null || ln.next == null)
+            {
+                size[shard]++;
+            }
+            else
             {
                 ln.prev.next = ln.next;
                 ln.next.prev = ln.prev;
-                size.decrementAndGet();
             }
             ln.prev = first[shard];
             ln.next = first[shard].next;
             first[shard].next.prev = ln;
             first[shard].next = ln;
-            size.incrementAndGet();
         }
         finally
         {
@@ -282,17 +284,24 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
         lock[shard].lock();
         try
         {
-            if (ln.prev != null && ln.next != null)
+            if (ln.next == last[shard] && last[shard].prev == ln)
+            {
+                // already last
+                return;
+            }
+            if (ln.prev == null || ln.next == null)
+            {
+                size[shard]++;
+            }
+            else
             {
                 ln.prev.next = ln.next;
                 ln.next.prev = ln.prev;
-                size.decrementAndGet();
             }
             ln.next = last[shard];
             ln.prev = last[shard].prev;
             last[shard].prev.next = ln;
             last[shard].prev = ln;
-            size.incrementAndGet();
         }
         finally
         {
@@ -313,19 +322,21 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
         lock[shard].lock();
         try
         {
-            if (me.prev != null && me.next != null)
+            if (me.prev == null || me.next == null)
             {
-                me.prev.next = me.next;
-                me.next.prev = me.prev;
-                me.prev = me.next = null;
-                size.decrementAndGet();
+                return false;
             }
+
+            me.prev.next = me.next;
+            me.next.prev = me.prev;
+            size[shard]--;
         }
         finally
         {
             lock[shard].unlock();
         }
 
+        me.prev = me.next = null;
         return true;
     }
 
@@ -346,10 +357,10 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
                     me = me.next;
                     toRemove.prev = null;
                     toRemove.next = null;
-                    size.decrementAndGet();
                 }
                 first[i].next = last[i];
                 last[i].prev = first[i];
+                size[i] = 0;
             }
             finally
             {
@@ -382,7 +393,7 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
      */
     public int size()
     {
-        return size.get();
+        return Arrays.stream(size).sum();
     }
 
     /**
