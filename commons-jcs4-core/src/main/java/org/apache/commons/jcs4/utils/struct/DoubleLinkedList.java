@@ -40,7 +40,7 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
     private static final Log log = Log.getLog( DoubleLinkedList.class );
 
     /** Record size to avoid having to iterate */
-    private int size;
+    private AtomicInteger size;
 
     /** Number of shards */
     private final int shards;
@@ -62,7 +62,7 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
         private AtomicCyclicCounter(int max)
         {
             this.max = max;
-            counter = new AtomicInteger();
+            counter = new AtomicInteger(-1);
         }
 
         private int incrementAndGet()
@@ -81,6 +81,7 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
      */
     public DoubleLinkedList(int shards)
     {
+        this.size = new AtomicInteger();
         this.shards = shards;
         this.lock = new Lock[shards];
         this.first = new DoubleLinkedListNode[shards];
@@ -89,10 +90,8 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
 
         for (int i = 0; i < shards; i++)
         {
-            first[i] = new DoubleLinkedListNode();
-            first[i].setShard(i);
-            last[i] = new DoubleLinkedListNode();
-            last[i].setShard(i);
+            first[i] = new DoubleLinkedListNode(i);
+            last[i] = new DoubleLinkedListNode(i);
             first[i].next = this.last[i];
             last[i].prev = this.first[i];
             lock[i] = new ReentrantLock();
@@ -136,7 +135,7 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
             me.next = first[shard].next;
             first[shard].next.prev = me;
             first[shard].next = me;
-            size++;
+            size.incrementAndGet();
         }
         finally
         {
@@ -159,7 +158,7 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
             me.prev = last[shard].prev;
             last[shard].prev.next = me;
             last[shard].prev = me;
-            size++;
+            size.incrementAndGet();
         }
         finally
         {
@@ -188,21 +187,29 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
      *
      * @return the first node, null if the list is empty.
      */
-    @SuppressWarnings({"unchecked"}) // Don't know how to resolve this with generics
     public T getFirst()
     {
         log.debug("returning first node");
-        int shard = this.spoolShard.incrementAndGet();
-        lock[shard].lock();
-        try
+        for (int i = 0; i < shards; i++)
         {
-            DoubleLinkedListNode f = first[shard].next;
-            return (T) (f == last[shard] ? null : f);
+            int shard = this.spoolShard.incrementAndGet();
+            lock[shard].lock();
+            try
+            {
+                @SuppressWarnings({"unchecked"}) // Don't know how to resolve this with generics
+                T f = (T) first[shard].next;
+                if (f != last[shard])
+                {
+                    return f;
+                }
+            }
+            finally
+            {
+                lock[shard].unlock();
+            }
         }
-        finally
-        {
-            lock[shard].unlock();
-        }
+
+        return null;
     }
 
     /**
@@ -210,21 +217,29 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
      *
      * @return The last node, null if the list is empty.
      */
-    @SuppressWarnings({"unchecked"}) // Don't know how to resolve this with generics
     public T getLast()
     {
         log.debug("returning last node");
-        int shard = this.spoolShard.incrementAndGet();
-        lock[shard].lock();
-        try
+        for (int i = 0; i < shards; i++)
         {
-            DoubleLinkedListNode l = last[shard].prev;
-            return (T) (l == first[shard] ? null : l);
+            int shard = this.spoolShard.incrementAndGet();
+            lock[shard].lock();
+            try
+            {
+                @SuppressWarnings({"unchecked"}) // Don't know how to resolve this with generics
+                T l = (T) last[shard].prev;
+                if (l != first[shard])
+                {
+                    return l;
+                }
+            }
+            finally
+            {
+                lock[shard].unlock();
+            }
         }
-        finally
-        {
-            lock[shard].unlock();
-        }
+
+        return null;
     }
 
     /**
@@ -242,13 +257,13 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
             {
                 ln.prev.next = ln.next;
                 ln.next.prev = ln.prev;
-                size--;
+                size.decrementAndGet();
             }
             ln.prev = first[shard];
             ln.next = first[shard].next;
             first[shard].next.prev = ln;
             first[shard].next = ln;
-            size++;
+            size.incrementAndGet();
         }
         finally
         {
@@ -271,13 +286,13 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
             {
                 ln.prev.next = ln.next;
                 ln.next.prev = ln.prev;
-                size--;
+                size.decrementAndGet();
             }
             ln.next = last[shard];
             ln.prev = last[shard].prev;
             last[shard].prev.next = ln;
             last[shard].prev = ln;
-            size++;
+            size.incrementAndGet();
         }
         finally
         {
@@ -303,7 +318,7 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
                 me.prev.next = me.next;
                 me.next.prev = me.prev;
                 me.prev = me.next = null;
-                size--;
+                size.decrementAndGet();
             }
         }
         finally
@@ -331,6 +346,7 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
                     me = me.next;
                     toRemove.prev = null;
                     toRemove.next = null;
+                    size.decrementAndGet();
                 }
                 first[i].next = last[i];
                 last[i].prev = first[i];
@@ -340,7 +356,6 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
                 lock[i].unlock();
             }
         }
-        size = 0;
     }
 
     /**
@@ -367,7 +382,7 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
      */
     public int size()
     {
-        return size;
+        return size.get();
     }
 
     /**

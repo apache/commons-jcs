@@ -149,6 +149,41 @@ class DoubleLinkedListUnitTest
         assertEquals( node2, list.getFirst(), "Wrong first" );
     }
 
+    /** Verify shard cleanup */
+    @Test
+    void testMakeLast_getLast_with_shards()
+    {
+        // SETUP
+        final DoubleLinkedList<DoubleLinkedListNode> list = new DoubleLinkedList<>(3);
+
+        final DoubleLinkedListNode node00 = new DoubleLinkedListNode(0);
+        final DoubleLinkedListNode node02 = new DoubleLinkedListNode(2);
+        final DoubleLinkedListNode node10 = new DoubleLinkedListNode(0);
+        final DoubleLinkedListNode node12 = new DoubleLinkedListNode(2);
+
+        list.addFirst(node00);
+        list.addFirst(node02);
+        list.addFirst(node10);
+        list.addFirst(node12);
+
+        // DO WORK
+        list.makeLast(node10);
+
+        // Expected content
+        // shard 0: node00 node10
+        // shard 1:
+        // shard 2: node12 node02
+
+        // VERIFY
+        assertEquals(4, list.size(), "Wrong size");
+        assertEquals(node10, list.getLast(), "Wrong last");
+        assertEquals(node02, list.getLast(), "Wrong last");
+        assertEquals(node10, list.getLast(), "Wrong last");
+        assertEquals(node12, list.getFirst(), "Wrong first");
+        assertEquals(node00, list.getFirst(), "Wrong first");
+        assertEquals(node12, list.getFirst(), "Wrong first");
+    }
+
     /** Verify that remove and removeAll work. */
     @Test
     void testRemove()
