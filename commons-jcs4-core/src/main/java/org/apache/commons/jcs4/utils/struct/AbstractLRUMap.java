@@ -75,11 +75,9 @@ public abstract class AbstractLRUMap<K, V>
      */
     public AbstractLRUMap()
     {
-        list = new DoubleLinkedList<>(1);
-
-        // normal hashtable is faster for
-        // sequential keys.
-        map = new ConcurrentHashMap<>();
+        int shards = Runtime.getRuntime().availableProcessors();
+        list = new DoubleLinkedList<>(shards);
+        map = new ConcurrentHashMap<>(shards, 0.75f, shards);
         hitCnt = new AtomicLong();
         missCnt = new AtomicLong();
         putCnt = new AtomicLong();
@@ -315,25 +313,25 @@ public abstract class AbstractLRUMap<K, V>
             // and wouldn't save much time in this synchronous call.
             while (shouldRemove())
             {
-                final LRUElementDescriptor<K, V> last = list.getLast();
+                final LRUElementDescriptor<K, V> last = list.removeLast();
                 if (last == null)
                 {
                     verifyCache();
                     throw new Error("update: last is null!");
                 }
-                processRemovedLRU(last.getKey(), last.getValue());
                 if (map.remove(last.getKey()) == null)
                 {
                     log.warn("update: remove failed for key: {0}", last::getKey);
                     verifyCache();
                 }
-                list.removeLast();
 
                 if (map.size() != list.size())
                 {
                     log.error("update: After spool, size mismatch: map.size() = {0}, "
                             + "linked list size = {1}", map::size, list::size);
                 }
+
+                processRemovedLRU(last.getKey(), last.getValue());
             }
 
             log.debug( "update: After spool map size: {0}", map::size);
