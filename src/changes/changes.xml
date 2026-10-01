@@ -53,6 +53,9 @@
             <action dev="tv" type="add">
                Add configurable memory cache sharding for improved concurrent performance
             </action>
+            <action dev="tv" type="add" due-to="Thomas Buffagni">
+               Add test for correct eviction in sharded environments #425
+            </action>
             <action type="add" dev="ggregory" due-to="Gary Gregory">
                Add Maven property project.build.outputTimestamp for build reproducibility.
             </action>
