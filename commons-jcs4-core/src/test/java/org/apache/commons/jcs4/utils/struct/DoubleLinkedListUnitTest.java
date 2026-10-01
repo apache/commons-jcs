@@ -20,6 +20,7 @@ package org.apache.commons.jcs4.utils.struct;
  */
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -200,19 +201,23 @@ class DoubleLinkedListUnitTest
 
         final DoubleLinkedListNode node1 = new DoubleLinkedListNode();
         final DoubleLinkedListNode node2 = new DoubleLinkedListNode();
+        final DoubleLinkedListNode node3 = new DoubleLinkedListNode();
 
         list.addFirst(node1);
         list.addFirst(node2);
         assertEquals(2, list.size(), "Wrong size");
 
         // DO WORK
-        list.remove(node1);
+        assertTrue(list.remove(node1), "Should be removed");
+        assertFalse(list.remove(node3), "Should not be removed");
 
         // VERIFY
         assertEquals(1, list.size(), "Wrong size");
         assertEquals(node2, list.getLast(), "Wrong last");
         assertEquals(node2, list.getFirst(), "Wrong first");
 
+        list.addFirst(node1);
+        assertEquals(2, list.size(), "Wrong size");
         list.addFirst(node1);
         assertEquals(2, list.size(), "Wrong size");
         assertEquals(node1, list.getFirst(), "Wrong first");
