@@ -353,12 +353,6 @@
         <groupId>jakarta.platform</groupId>
         <artifactId>jakarta.jakartaee-api</artifactId>
         <version>11.0.0</version>
-        <exclusions>
-			<exclusion>
-              <groupId>com.sun.mail</groupId>
-              <artifactId>javax.mail</artifactId>
-			</exclusion>
-		</exclusions>
       </dependency>
       <dependency>
         <groupId>javax.cache</groupId>
