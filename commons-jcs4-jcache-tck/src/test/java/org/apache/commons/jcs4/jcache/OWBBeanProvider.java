@@ -21,11 +21,12 @@ package org.apache.commons.jcs4.jcache;
 import java.util.Set;
 
 import javax.cache.annotation.BeanProvider;
-import javax.enterprise.inject.spi.Bean;
 
 import org.apache.webbeans.config.WebBeansContext;
 import org.apache.webbeans.container.BeanManagerImpl;
 import org.apache.webbeans.spi.ContainerLifecycle;
+
+import jakarta.enterprise.inject.spi.Bean;
 
 public class OWBBeanProvider implements BeanProvider
 {

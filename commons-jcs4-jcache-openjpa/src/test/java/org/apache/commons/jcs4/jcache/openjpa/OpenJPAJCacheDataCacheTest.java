@@ -26,20 +26,20 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.Map;
 import java.util.Properties;
 
-import javax.persistence.Entity;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Persistence;
-import javax.persistence.Query;
-
 import org.apache.derby.jdbc.EmbeddedDriver;
 import org.apache.openjpa.conf.OpenJPAConfiguration;
 import org.apache.openjpa.datacache.QueryKey;
 import org.apache.openjpa.persistence.JPAFacadeHelper;
 import org.apache.openjpa.persistence.OpenJPAEntityManagerFactorySPI;
 import org.junit.jupiter.api.Test;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.Persistence;
+import jakarta.persistence.Query;
 
 class OpenJPAJCacheDataCacheTest
 {

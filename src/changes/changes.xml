@@ -79,11 +79,6 @@
             <action dev="tv" type="remove">
                Remove setters from interfaces of Attributes containers
             </action>
-            <action dev="tv" type="remove">
-               Remove synchronized from all methods of DoubleLinkedList because their
-               usage is guarded by external locks (double locking). Document the 
-               behavior.
-            </action>
             <!-- UPDATE -->
             <action dev="tv" type="update">
                Introduce java.time.Duration for all time-related configuration parameters
@@ -103,8 +98,10 @@
             <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump org.apache.commons:commons-parent from 59 to 105 #222, #258, #277, #280, #286, #292, #296, #302, #352, #305, #403, #404.</action>
             <action dev="tv" type="update" issue="JCS-241">Use System.Logger from Java9, remove own logging abstraction, remove dependency on log4j2</action>
             <action dev="tv" type="update" due-to="Gary Gregory, strangelookingnerd">Migrate tests to JUnit5 #309</action>
-            <action dev="tv" type="update">Update dependency servlet-api 2.5 to javax.servlet-api 3.1.0.</action>
-            <action dev="tv" type="update">Update dependency openwebbeans-impl 1.7.6 to 2.0.27.</action>
+            <action dev="tv" type="update">Update dependency servlet-api 2.5 to javax.servlet-api 6.1.0.</action>
+            <action dev="tv" type="update">Update dependency jakarta.jakartaee-api 8.0.0 to 11.0.0.</action>
+            <action dev="tv" type="update">Update dependency openwebbeans-impl 1.7.6 to 4.1.1.</action>
+            <action dev="tv" type="update">Update dependency openjpa 3.2.2 to 4.1.1.</action>
             <action dev="tv" type="update">Update dependency cache-tests 1.0.1 to 1.1.1.</action>
             <action dev="tv" type="update">Update Tomcat libraries 7.0.22 to 11.0.22.</action>
             <action dev="tv" type="update">Bump Java to 17.</action>
@@ -122,7 +119,7 @@
             <action type="update" dev="ggregory" due-to="Gary Gregory">[test] Bump org.apache.commons:commons-collections4 from 4.4 to 4.6.0.</action>
             <action type="update" dev="ggregory" due-to="Gary Gregory">Bump commons-beanutils:commons-beanutils from 1.9.4 to 1.11.0.</action>
             <action type="update" dev="ggregory" due-to="Gary Gregory">Bump commons-io:commons-io from 2.18.0 to 2.22.0.</action>
-            <action type="update" dev="ggregory" due-to="Gary Gregory">Bump com.fasterxml.jackson.core:jackson-databind from 2.21.1 to 2.21.5.</action>
+            <action type="update" dev="ggregory" due-to="Gary Gregory">Bump com.fasterxml.jackson.core:jackson-databind from 2.21.1 to 2.22.6.</action>
         </release>
         <release version="3.2.1" date="2024-05-27" description="JDK bug fix release">
             <action dev="tv" type="fix" fixed-issues="JCS-237, JCS-238, JCS-239, JCS-240" due-to="Murali Thirugnanam, Greg Parmiter">

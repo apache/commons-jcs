@@ -18,8 +18,8 @@
  */
 package org.apache.commons.jcs4.jcache.extras.cdi;
 
-import javax.enterprise.inject.Any;
-import javax.enterprise.util.AnnotationLiteral;
+import jakarta.enterprise.inject.Any;
+import jakarta.enterprise.util.AnnotationLiteral;
 
 public class AnyLiteral extends AnnotationLiteral<Any> implements Any
 {

@@ -107,7 +107,7 @@ class JCacheFilterTest
             tomcat.start();
             final Context ctx = tomcat.addContext("/sample", docBase.getAbsolutePath());
             Tomcat.addServlet(ctx, "hello", Hello.class.getName());
-            ctx.addServletMappingDecoded("/", "hello");
+            ctx.addServletMapping("/", "hello");
             addJcsFilter(ctx);
             StandardContext.class.cast(ctx).filterStart();
 
@@ -135,7 +135,7 @@ class JCacheFilterTest
             tomcat.start();
             final Context ctx = tomcat.addWebapp("/sample", docBase.getAbsolutePath());
             Tomcat.addServlet(ctx, "empty", Empty.class.getName());
-            ctx.addServletMappingDecoded("/", "empty");
+            ctx.addServletMapping("/", "empty");
             addJcsFilter(ctx);
             StandardContext.class.cast(ctx).filterStart();
 

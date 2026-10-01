@@ -18,8 +18,8 @@
  */
 package org.apache.commons.jcs4.jcache.extras.cdi;
 
-import javax.enterprise.inject.Default;
-import javax.enterprise.util.AnnotationLiteral;
+import jakarta.enterprise.inject.Default;
+import jakarta.enterprise.util.AnnotationLiteral;
 
 public class DefaultLiteral extends AnnotationLiteral<Default> implements Default
 {

@@ -32,7 +32,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.logging.Logger;
 
-import javax.annotation.PreDestroy;
 import javax.cache.annotation.CacheDefaults;
 import javax.cache.annotation.CacheKey;
 import javax.cache.annotation.CacheKeyGenerator;
@@ -42,12 +41,14 @@ import javax.cache.annotation.CacheRemoveAll;
 import javax.cache.annotation.CacheResolverFactory;
 import javax.cache.annotation.CacheResult;
 import javax.cache.annotation.CacheValue;
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.context.spi.CreationalContext;
-import javax.enterprise.inject.spi.Bean;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.inject.Inject;
-import javax.interceptor.InvocationContext;
+
+import jakarta.annotation.PreDestroy;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.spi.CreationalContext;
+import jakarta.enterprise.inject.spi.Bean;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.inject.Inject;
+import jakarta.interceptor.InvocationContext;
 
 @ApplicationScoped
 public class CDIJCacheHelper

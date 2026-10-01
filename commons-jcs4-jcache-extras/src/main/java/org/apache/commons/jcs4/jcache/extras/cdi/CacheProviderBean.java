@@ -26,11 +26,12 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.cache.spi.CachingProvider;
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.context.spi.CreationalContext;
-import javax.enterprise.inject.spi.Bean;
-import javax.enterprise.inject.spi.InjectionPoint;
-import javax.enterprise.inject.spi.PassivationCapable;
+
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.spi.CreationalContext;
+import jakarta.enterprise.inject.spi.Bean;
+import jakarta.enterprise.inject.spi.InjectionPoint;
+import jakarta.enterprise.inject.spi.PassivationCapable;
 
 public class CacheProviderBean implements Bean<CachingProvider>, PassivationCapable
 {
@@ -115,12 +116,6 @@ public class CacheProviderBean implements Bean<CachingProvider>, PassivationCapa
 
     @Override
     public boolean isAlternative()
-    {
-        return false;
-    }
-
-    @Override
-    public boolean isNullable()
     {
         return false;
     }

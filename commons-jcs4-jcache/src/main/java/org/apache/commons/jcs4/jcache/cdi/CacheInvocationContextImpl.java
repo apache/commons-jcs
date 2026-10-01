@@ -24,7 +24,8 @@ import java.util.Set;
 
 import javax.cache.annotation.CacheInvocationContext;
 import javax.cache.annotation.CacheInvocationParameter;
-import javax.interceptor.InvocationContext;
+
+import jakarta.interceptor.InvocationContext;
 
 public class CacheInvocationContextImpl<A extends Annotation> extends CacheMethodDetailsImpl<A> implements CacheInvocationContext<A>
 {

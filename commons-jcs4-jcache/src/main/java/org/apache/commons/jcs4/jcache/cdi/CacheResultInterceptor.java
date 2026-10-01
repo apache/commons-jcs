@@ -20,17 +20,18 @@ package org.apache.commons.jcs4.jcache.cdi;
 
 import java.io.Serializable;
 
-import javax.annotation.Priority;
 import javax.cache.Cache;
 import javax.cache.annotation.CacheKeyInvocationContext;
 import javax.cache.annotation.CacheResolver;
 import javax.cache.annotation.CacheResolverFactory;
 import javax.cache.annotation.CacheResult;
 import javax.cache.annotation.GeneratedCacheKey;
-import javax.inject.Inject;
-import javax.interceptor.AroundInvoke;
-import javax.interceptor.Interceptor;
-import javax.interceptor.InvocationContext;
+
+import jakarta.annotation.Priority;
+import jakarta.inject.Inject;
+import jakarta.interceptor.AroundInvoke;
+import jakarta.interceptor.Interceptor;
+import jakarta.interceptor.InvocationContext;
 
 @CacheResult
 @Interceptor

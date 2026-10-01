@@ -29,9 +29,10 @@ import java.util.Map;
 
 import javax.cache.annotation.CacheDefaults;
 import javax.cache.annotation.CacheResult;
-import javax.interceptor.InvocationContext;
 
 import org.junit.jupiter.api.Test;
+
+import jakarta.interceptor.InvocationContext;
 
 class CDIJCacheHelperTest
 {

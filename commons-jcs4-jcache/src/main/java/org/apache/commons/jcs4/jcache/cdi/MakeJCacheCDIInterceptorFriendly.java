@@ -31,22 +31,24 @@ import javax.cache.annotation.CachePut;
 import javax.cache.annotation.CacheRemove;
 import javax.cache.annotation.CacheRemoveAll;
 import javax.cache.annotation.CacheResult;
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.context.spi.CreationalContext;
-import javax.enterprise.event.Observes;
-import javax.enterprise.inject.Any;
-import javax.enterprise.inject.Default;
-import javax.enterprise.inject.spi.AfterBeanDiscovery;
-import javax.enterprise.inject.spi.AnnotatedType;
-import javax.enterprise.inject.spi.Bean;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.enterprise.inject.spi.BeforeBeanDiscovery;
-import javax.enterprise.inject.spi.Extension;
-import javax.enterprise.inject.spi.InjectionPoint;
-import javax.enterprise.inject.spi.InjectionTarget;
-import javax.enterprise.inject.spi.PassivationCapable;
-import javax.enterprise.inject.spi.ProcessAnnotatedType;
-import javax.enterprise.util.AnnotationLiteral;
+
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.spi.CreationalContext;
+import jakarta.enterprise.event.Observes;
+import jakarta.enterprise.inject.Any;
+import jakarta.enterprise.inject.Default;
+import jakarta.enterprise.inject.spi.AfterBeanDiscovery;
+import jakarta.enterprise.inject.spi.AnnotatedType;
+import jakarta.enterprise.inject.spi.Bean;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.inject.spi.BeforeBeanDiscovery;
+import jakarta.enterprise.inject.spi.Extension;
+import jakarta.enterprise.inject.spi.InjectionPoint;
+import jakarta.enterprise.inject.spi.InjectionTarget;
+import jakarta.enterprise.inject.spi.InjectionTargetFactory;
+import jakarta.enterprise.inject.spi.PassivationCapable;
+import jakarta.enterprise.inject.spi.ProcessAnnotatedType;
+import jakarta.enterprise.util.AnnotationLiteral;
 
 // TODO: observe annotated type (or maybe sthg else) to cache data and inject this extension (used as metadata cache)
 // to get class model and this way allow to add cache annotation on the fly - == avoid java pure reflection to get metadata
@@ -137,11 +139,6 @@ public class MakeJCacheCDIInterceptorFriendly implements Extension
         public boolean isAlternative() {
             return false;
         }
-
-        @Override
-        public boolean isNullable() {
-            return false;
-        }
     }
     private static final AtomicInteger id = new AtomicInteger();
 
@@ -176,7 +173,8 @@ public class MakeJCacheCDIInterceptorFriendly implements Extension
         });
         */
         final AnnotatedType<CDIJCacheHelper> annotatedType = bm.createAnnotatedType(CDIJCacheHelper.class);
-        final InjectionTarget<CDIJCacheHelper> injectionTarget = bm.createInjectionTarget(annotatedType);
+        final InjectionTargetFactory<CDIJCacheHelper> injectionTargetFactory = bm.getInjectionTargetFactory(annotatedType);
+        final InjectionTarget<CDIJCacheHelper> injectionTarget = injectionTargetFactory.createInjectionTarget(null);
         final HelperBean bean = new HelperBean(annotatedType, injectionTarget, findIdSuffix());
         afterBeanDiscovery.addBean(bean);
     }
@@ -203,7 +201,8 @@ public class MakeJCacheCDIInterceptorFriendly implements Extension
         for (final Class<?> interceptor : asList(
                 CachePutInterceptor.class, CacheRemoveInterceptor.class,
                 CacheRemoveAllInterceptor.class, CacheResultInterceptor.class)) {
-            beforeBeanDiscoveryEvent.addAnnotatedType(bm.createAnnotatedType(interceptor));
+            AnnotatedType<?> annotatedType = bm.createAnnotatedType(interceptor);
+            beforeBeanDiscoveryEvent.addAnnotatedType(annotatedType, annotatedType.getJavaClass().getName());
         }
         for (final Class<? extends Annotation> interceptor : asList(
                 CachePut.class, CacheRemove.class,

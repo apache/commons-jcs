@@ -22,7 +22,8 @@ import java.lang.annotation.Annotation;
 
 import javax.cache.annotation.CacheInvocationParameter;
 import javax.cache.annotation.CacheKeyInvocationContext;
-import javax.interceptor.InvocationContext;
+
+import jakarta.interceptor.InvocationContext;
 
 public class CacheKeyInvocationContextImpl<A extends Annotation> extends CacheInvocationContextImpl<A> implements CacheKeyInvocationContext<A>
 {
