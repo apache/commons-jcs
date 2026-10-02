@@ -33,7 +33,8 @@ import org.apache.commons.jcs4.access.GroupCacheAccess;
 import org.apache.commons.jcs4.access.exception.CacheException;
 import org.apache.commons.jcs4.utils.timing.ElapsedTimer;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 /**
  * Test Case for JCS-73, modeled after the Groovy code by Alexander Kleymenov
@@ -143,7 +144,14 @@ class JCSConcurrentCacheAccessUnitTest
         valueMismatchList = new CopyOnWriteArrayList<>();
 	}
 
-    private void testConcurrentAccess(String cacheName)
+    /**
+     * Test concurrent reads and writes on the named cache
+     *
+     * @throws Exception
+     */
+    @ParameterizedTest
+    @ValueSource(strings = {"lhm_cache", "soft_cache", "lru_cache", "mru_cache", "fifo_cache", "lru_cache_with_disk"})
+    void testConcurrentAccess(String cacheName)
             throws Exception
     {
         System.out.println(cacheName);
@@ -171,21 +179,5 @@ class JCSConcurrentCacheAccessUnitTest
         errcount.set(0);
         valueMismatchList.clear();
         cache.dispose();
-    }
-
-    /**
-     *
-     * @throws Exception
-     */
-    @Test
-    void testConcurrentAccess()
-        throws Exception
-    {
-        testConcurrentAccess("lhm_cache");
-        testConcurrentAccess("soft_cache");
-        testConcurrentAccess("lru_cache");
-        testConcurrentAccess("mru_cache");
-        testConcurrentAccess("fifo_cache");
-        testConcurrentAccess("lru_cache_with_disk");
     }
 }
