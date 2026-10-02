@@ -111,6 +111,7 @@ module org.apache.commons.jcs4.core {
 
     // Optional dependencies for JSON serializer
     requires static com.fasterxml.jackson.databind;
+    requires static com.fasterxml.jackson.datatype.jsr310;
     opens org.apache.commons.jcs4.utils.serialization to com.fasterxml.jackson.databind;
     opens org.apache.commons.jcs4.engine to com.fasterxml.jackson.databind;
 

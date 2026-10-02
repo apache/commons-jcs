@@ -27,7 +27,9 @@ import com.fasterxml.jackson.core.exc.StreamReadException;
 import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 /**
  * Performs JSON serialization and de-serialization.
@@ -36,7 +38,15 @@ public class JSONSerializer
     implements IElementSerializer
 {
     /** Jackson JSON mapper instance */
-    private static final ObjectMapper mapper = JsonMapper.builder().build();
+    private static final ObjectMapper mapper;
+
+    static
+    {
+        mapper = JsonMapper.builder()
+                .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
+                .build();
+        mapper.registerModule(new JavaTimeModule());
+    }
 
     /** Wrapper to save the class name information */
     private record Wrapper<T>(String className, T element) {}
