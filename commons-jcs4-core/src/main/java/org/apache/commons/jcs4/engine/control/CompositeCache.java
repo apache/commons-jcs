@@ -244,7 +244,7 @@ public class CompositeCache<K, V>
 
         // Dispose of each auxiliary cache, Remote auxiliaries will be
         // skipped if 'fromRemote' is true.
-        for (final ICache<K, V> aux : auxCaches)
+        for (final AuxiliaryCache<K, V> aux : auxCaches)
         {
             try
             {
@@ -282,7 +282,15 @@ public class CompositeCache<K, V>
                 }
 
                 // Dispose of the auxiliary
-                aux.dispose();
+                if (cacheManager == null)
+                {
+                    aux.dispose();
+                }
+                else
+                {
+                    String auxName = aux.getAuxiliaryCacheAttributes().getName();
+                    cacheManager.freeAuxiliaryCache(auxName, getCacheName());
+                }
             }
             catch (final IOException ex)
             {

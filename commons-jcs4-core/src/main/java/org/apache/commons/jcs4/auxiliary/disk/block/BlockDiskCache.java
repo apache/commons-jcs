@@ -537,13 +537,6 @@ public class BlockDiskCache<K, V>
     @Override
     protected void processUpdate( final ICacheElement<K, V> element )
     {
-        if ( !isAlive() )
-        {
-            log.debug("{0}: No longer alive; aborting put of key = {1}",
-                    () -> logCacheName, element::key);
-            return;
-        }
-
         int[] old = null;
 
         // make sure this only locks for one particular cache region
@@ -551,6 +544,13 @@ public class BlockDiskCache<K, V>
 
         try
         {
+            if ( !isAlive() )
+            {
+                log.debug("{0}: No longer alive; aborting put of key = {1}",
+                        () -> logCacheName, element::key);
+                return;
+            }
+
             old = this.keyStore.get( element.key() );
 
             if ( old != null )

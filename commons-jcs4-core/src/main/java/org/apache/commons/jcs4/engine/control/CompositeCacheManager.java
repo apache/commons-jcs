@@ -82,11 +82,14 @@ public class CompositeCacheManager
     /** Default region prefix */
     private static final String DEFAULT_REGION = "jcs.default";
 
+    /** Format string for the key into the auxiliary cache map */
+    private static final String AUX_REGION_FORMAT = "aux.%s.region.%s";
+
     /** Should we use system property substitutions. */
-    private static final boolean DEFAULT_USE_SYSTEM_PROPERTIES = true;
+    private static boolean DEFAULT_USE_SYSTEM_PROPERTIES = true;
 
     /** Once configured, you can force a reconfiguration of sorts. */
-    private static final boolean DEFAULT_FORCE_RECONFIGURATION = false;
+    private static boolean DEFAULT_FORCE_RECONFIGURATION = false;
 
     /** The Singleton Instance */
     private static CompositeCacheManager instance;
@@ -170,24 +173,22 @@ public class CompositeCacheManager
     }
 
     /** Caches managed by this cache manager */
-    private final ConcurrentMap<String, ICache<?, ?>> caches = new ConcurrentHashMap<>();
+    private final ConcurrentMap<String, ICache<?, ?>> caches;
 
     /** Number of clients accessing this cache manager */
-    private final AtomicInteger clients = new AtomicInteger();
+    private final AtomicInteger clients;
 
     /** Default cache attributes for this cache manager */
-    private ICompositeCacheAttributes defaultCacheAttr = CompositeCacheAttributes.defaults();
+    private ICompositeCacheAttributes defaultCacheAttr;
 
     /** Default element attributes for this cache manager */
-    private IElementAttributes defaultElementAttr = new ElementAttributes();
+    private IElementAttributes defaultElementAttr;
 
     /** Used to keep track of configured auxiliary factories */
-    private final ConcurrentMap<String, AuxiliaryCacheFactory> auxiliaryFactoryRegistry =
-        new ConcurrentHashMap<>( );
+    private final ConcurrentMap<String, AuxiliaryCacheFactory> auxiliaryFactoryRegistry;
 
     /** Used to keep track of configured auxiliaries */
-    private final ConcurrentMap<String, AuxiliaryCache<?, ?>> auxiliaryCaches =
-        new ConcurrentHashMap<>( );
+    private final ConcurrentMap<String, AuxiliaryCache<?, ?>> auxiliaryCaches;
 
     /** Properties with which this manager was configured. This is exposed for other managers. */
     private Properties configurationProperties;
@@ -196,7 +197,7 @@ public class CompositeCacheManager
     private String defaultAuxValues;
 
     /** Stack for those waiting for notification of a shutdown. */
-    private final LinkedBlockingDeque<IShutdownObserver> shutdownObservers = new LinkedBlockingDeque<>();
+    private final LinkedBlockingDeque<IShutdownObserver> shutdownObservers;
 
     /** The central background scheduler. */
     private ScheduledExecutorService scheduledExecutor;
@@ -223,7 +224,13 @@ public class CompositeCacheManager
      */
     protected CompositeCacheManager()
     {
-        // empty
+        this.caches = new ConcurrentHashMap<>();
+        this.clients = new AtomicInteger();
+        this.defaultCacheAttr = CompositeCacheAttributes.defaults();
+        this.defaultElementAttr = new ElementAttributes();
+        this.auxiliaryFactoryRegistry = new ConcurrentHashMap<>();
+        this.auxiliaryCaches = new ConcurrentHashMap<>();
+        this.shutdownObservers = new LinkedBlockingDeque<>();
     }
 
     /**
@@ -235,7 +242,7 @@ public class CompositeCacheManager
      */
     public void addAuxiliaryCache(final String auxName, final String cacheName, final AuxiliaryCache<?, ?> cache)
     {
-        final String key = String.format("aux.%s.region.%s", auxName, cacheName);
+        final String key = String.format(AUX_REGION_FORMAT, auxName, cacheName);
         auxiliaryCaches.put(key, cache);
     }
 
@@ -429,7 +436,7 @@ public class CompositeCacheManager
     {
         final AuxiliaryCache<?, ?> aux = auxiliaryCaches.remove( key );
 
-        if ( aux != null )
+        if (aux != null)
         {
             aux.dispose();
         }
@@ -444,7 +451,7 @@ public class CompositeCacheManager
      */
     public void freeAuxiliaryCache(final String auxName, final String cacheName) throws IOException
     {
-        final String key = String.format("aux.%s.region.%s", auxName, cacheName);
+        final String key = String.format(AUX_REGION_FORMAT, auxName, cacheName);
         freeAuxiliaryCache(key);
     }
 
@@ -481,7 +488,7 @@ public class CompositeCacheManager
     @SuppressWarnings("unchecked") // because of common map for all auxiliary caches
     public <K, V> AuxiliaryCache<K, V> getAuxiliaryCache(final String auxName, final String cacheName)
     {
-        final String key = String.format("aux.%s.region.%s", auxName, cacheName);
+        final String key = String.format(AUX_REGION_FORMAT, auxName, cacheName);
         return (AuxiliaryCache<K, V>) auxiliaryCaches.get(key);
     }
 
