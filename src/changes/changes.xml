@@ -72,6 +72,7 @@
                Add getAttributeClass() to AuxiliaryCacheFactory. Specifying the Attribute
                implementation class in the configuration is now optional.
             </action>
+            <action dev="ggregory" type="fix">Fix OpenJPA module descriptor generation #1761.</action>
             <!-- REMOVE -->
             <action dev="tv" type="remove">
                Remove all deprecated code.
