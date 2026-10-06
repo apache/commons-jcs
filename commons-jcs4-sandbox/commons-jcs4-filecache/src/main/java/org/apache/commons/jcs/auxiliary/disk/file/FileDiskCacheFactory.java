@@ -16,60 +16,82 @@
  */
 package org.apache.commons.jcs.auxiliary.disk.file;
 
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+
 import org.apache.commons.jcs4.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.commons.jcs4.auxiliary.AuxiliaryCacheFactory;
 import org.apache.commons.jcs4.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs4.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs4.engine.logging.behavior.ICacheEventLogger;
+import org.apache.commons.jcs4.engine.match.behavior.IKeyMatcher;
 import org.apache.commons.jcs4.log.Log;
-import org.apache.commons.jcs4.log.LogFactory;
 
 /** Create Disk File Caches */
 public class FileDiskCacheFactory
     implements AuxiliaryCacheFactory
 {
     /** The logger. */
-    private static final Log log = LogFactory.getLog( FileDiskCacheFactory.class );
+    private static final Log log = Log.getLog( FileDiskCacheFactory.class );
 
     /** The auxiliary name. */
     private String name;
 
-    /** The manager used by this factory instance */
-    private FileDiskCacheManager diskFileCacheManager;
+    /** Each region has an entry here. */
+    private final ConcurrentMap<String, FileDiskCache<?, ?>> caches =
+        new ConcurrentHashMap<>();
 
     /**
-     * Creates a manager if we don't have one, and then uses the manager to create the cache. The
-     * same factory will be called multiple times by the composite cache to create a cache for each
-     * region.
+     * Create the cache. The same factory will be called multiple times by the
+     * composite cache to create a cache for each region.
      *
      * @param attr config
      * @param cacheMgr The manager to use if needed
      * @param cacheEventLogger The event logger
      * @param elementSerializer The serializer
+     * @param keyMatcher The key matcher
      * @return AuxiliaryCache
      */
     @Override
     public <K, V> FileDiskCache<K, V> createCache(
-            final AuxiliaryCacheAttributes attr, final ICompositeCacheManager cacheMgr,
-           final ICacheEventLogger cacheEventLogger, final IElementSerializer elementSerializer )
+           final AuxiliaryCacheAttributes attr, final ICompositeCacheManager cacheMgr,
+           final ICacheEventLogger cacheEventLogger, final IElementSerializer elementSerializer,
+           IKeyMatcher<K> keyMatcher)
     {
         final FileDiskCacheAttributes idfca = (FileDiskCacheAttributes) attr;
         if ( log.isDebugEnabled() )
         {
             log.debug( "Creating DiskFileCache for attributes = " + idfca );
         }
-        synchronized( this )
-        {
-            if ( diskFileCacheManager == null )
-            {
-                if ( log.isDebugEnabled() )
-                {
-                    log.debug( "Creating DiskFileCacheManager" );
-                }
-                diskFileCacheManager = new FileDiskCacheManager( idfca, cacheEventLogger, elementSerializer );
-            }
-            return diskFileCacheManager.getCache( idfca );
-        }
+        return getCache(idfca, cacheEventLogger, elementSerializer,
+                keyMatcher);
+    }
+
+    /**
+     * Gets an DiskFileCache for the supplied attributes. Will provide an existing cache for the name
+     * attribute if one has been created, or will create a new cache.
+     *
+     * @param cacheAttributes Attributes the cache should have.
+     * @return A cache, either from the existing set or newly created.
+     */
+    @SuppressWarnings("unchecked") // Need to cast because of common map for all caches
+    private <K, V> FileDiskCache<K, V> getCache( final FileDiskCacheAttributes cacheAttributes,
+            final ICacheEventLogger cacheEventLogger, final IElementSerializer elementSerializer,
+            final IKeyMatcher<?> keyMatcher)
+    {
+        final FileDiskCacheAttributes myCacheAttributes = (FileDiskCacheAttributes) cacheAttributes.clone();
+        final String cacheName = cacheAttributes.getCacheName();
+
+        log.debug( "Getting cache named: " + cacheName );
+
+        // Try to load the cache from the set that have already been
+        // created. This only looks at the name attribute.
+        return (FileDiskCache<K, V>) caches.computeIfAbsent(cacheName, k -> {
+            FileDiskCache<K, V> newCache = new FileDiskCache<>(myCacheAttributes, elementSerializer);
+            newCache.setCacheEventLogger(cacheEventLogger);
+            newCache.setKeyMatcher((IKeyMatcher<K>) keyMatcher);
+            return newCache;
+        });
     }
 
     /**
@@ -95,22 +117,13 @@ public class FileDiskCacheFactory
     }
 
     /**
-     * @see org.apache.commons.jcs.auxiliary.AuxiliaryCacheFactory#initialize()
+     * Gets the class implementing the extended AuxiliaryCacheAttributes for this factory
+     *
+     * @return The class value
      */
     @Override
-    public void initialize()
+    public Class<? extends AuxiliaryCacheAttributes> getAttributeClass()
     {
-        // TODO Auto-generated method stub
-
-    }
-
-    /**
-     * @see org.apache.commons.jcs.auxiliary.AuxiliaryCacheFactory#dispose()
-     */
-    @Override
-    public void dispose()
-    {
-        // TODO Auto-generated method stub
-
+        return FileDiskCacheAttributes.class;
     }
 }

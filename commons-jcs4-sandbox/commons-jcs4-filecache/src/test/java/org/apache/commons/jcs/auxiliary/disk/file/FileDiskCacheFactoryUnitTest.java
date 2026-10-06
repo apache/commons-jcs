@@ -19,39 +19,45 @@ package org.apache.commons.jcs.auxiliary.disk.file;
  * under the License.
  */
 
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import org.apache.commons.jcs4.auxiliary.MockCacheEventLogger;
 import org.apache.commons.jcs4.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs4.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs4.engine.control.MockCompositeCacheManager;
 import org.apache.commons.jcs4.engine.control.MockElementSerializer;
+import org.apache.commons.jcs4.engine.control.MockKeyMatcher;
 import org.apache.commons.jcs4.engine.logging.behavior.ICacheEventLogger;
+import org.apache.commons.jcs4.engine.match.behavior.IKeyMatcher;
+import org.junit.jupiter.api.Test;
 
 /** Verify that the factory works */
 public class FileDiskCacheFactoryUnitTest
-    extends TestCase
 {
     /** Verify that we can get a cache from the manager via the factory */
+    @Test
     public void testCreateCache_Normal()
     {
         // SETUP
         final String cacheName = "testCreateCache_Normal";
         final FileDiskCacheAttributes cattr = new FileDiskCacheAttributes();
-        cattr.setCacheName( cacheName );
-        cattr.setDiskPath( "target/test-sandbox/FileDiskCacheFactoryUnitTest" );
+        cattr.setCacheName(cacheName);
+        cattr.setDiskPath("target/test-sandbox/FileDiskCacheFactoryUnitTest");
 
         final ICompositeCacheManager cacheMgr = new MockCompositeCacheManager();
         final ICacheEventLogger cacheEventLogger = new MockCacheEventLogger();
         final IElementSerializer elementSerializer = new MockElementSerializer();
+        final IKeyMatcher<String> keyMatcher = new MockKeyMatcher<>();
 
         final FileDiskCacheFactory factory = new FileDiskCacheFactory();
 
         // DO WORK
         final FileDiskCache<String, String> result = factory.createCache( cattr, cacheMgr, cacheEventLogger,
-                                                                    elementSerializer );
+                                                                    elementSerializer, keyMatcher);
 
         // VERIFY
-        assertNotNull( "Should have a disk cache", result );
-        assertEquals( "Should have a disk cache with a serializer", elementSerializer, result.getElementSerializer() );
+        assertNotNull(result, "Should have a disk cache");
+        assertEquals(elementSerializer, result.getElementSerializer(), "Should have a disk cache with a serializer");
     }
 }

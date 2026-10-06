@@ -1,7 +1,5 @@
 package org.apache.commons.jcs.auxiliary.disk.file;
 
-import java.io.File;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -21,22 +19,28 @@ import java.io.File;
  * under the License.
  */
 
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.io.File;
 
 import org.apache.commons.jcs4.engine.CacheElement;
 import org.apache.commons.jcs4.engine.CacheStatus;
 import org.apache.commons.jcs4.engine.behavior.ICacheElement;
 import org.apache.commons.jcs4.utils.timing.SleepUtil;
+import org.junit.jupiter.api.Test;
 
 /** Tests for the disk file cache. */
 public class FileDiskCacheUnitTest
-    extends TestCase
 {
     /**
      * Verify initialization.
      *
      * @throws Exception
      */
+    @Test
     public void testInitialization_Normal()
         throws Exception
     {
@@ -51,13 +55,13 @@ public class FileDiskCacheUnitTest
         final File directory = diskCache.getDirectory();
 
         // VERIFY
-        assertNotNull( "Should have a directory", directory );
-        assertTrue( "Should have an existing directory", directory.exists() );
-        assertTrue( "Directory should include the cache name. " + directory.getAbsolutePath(), directory
-            .getAbsolutePath().indexOf( cacheName ) != -1 );
-        assertTrue( "Directory should include the disk path. " + directory.getAbsolutePath(), directory
-            .getAbsolutePath().indexOf( "DiskFileCacheUnitTest" ) != -1 );
-        assertTrue( "Should be alive", diskCache.getStatus() == CacheStatus.ALIVE );
+        assertNotNull(directory, "Should have a directory");
+        assertTrue(directory.exists(), "Should have an existing directory");
+        assertTrue(directory.getAbsolutePath().indexOf( cacheName ) != -1,
+                "Directory should include the cache name. " + directory.getAbsolutePath());
+        assertTrue(directory.getAbsolutePath().indexOf( "DiskFileCacheUnitTest" ) != -1,
+                "Directory should include the disk path. " + directory.getAbsolutePath());
+        assertEquals(CacheStatus.ALIVE, diskCache.getStatus(), "Should be alive");
     }
 
     /**
@@ -79,7 +83,7 @@ public class FileDiskCacheUnitTest
         diskCache.dispose();
 
         // VERIFY
-        assertTrue( "Should not be alive", diskCache.getStatus() == CacheStatus.DISPOSED );
+        assertEquals(CacheStatus.DISPOSED, diskCache.getStatus(), "Should not be alive");
     }
 
     /**
@@ -103,9 +107,9 @@ public class FileDiskCacheUnitTest
         final File directory = diskCache.getDirectory();
 
         // VERIFY
-        assertNotNull( "Should have a directory", directory );
-        assertFalse( "Should not have an existing directory", directory.exists() );
-        assertTrue( "Should not be alive", diskCache.getStatus() == CacheStatus.DISPOSED );
+        assertNotNull(directory, "Should have a directory");
+        assertTrue(directory.exists(), "Should have an existing directory");
+        assertEquals(CacheStatus.DISPOSED, diskCache.getStatus(), "Should not be alive");
     }
 
     /**
@@ -129,7 +133,7 @@ public class FileDiskCacheUnitTest
         final int result = diskCache.getSize();
 
         // VERIFY
-        assertEquals( "Should be empty.", 0, result );
+        assertEquals(0, result, "Should be empty.");
     }
 
     /**
@@ -155,7 +159,7 @@ public class FileDiskCacheUnitTest
         final int result = diskCache.getSize();
 
         // VERIFY
-        assertEquals( "Should not be empty.", 1, result );
+        assertEquals(1, result, "Should not be empty.");
     }
 
     /**
@@ -182,7 +186,7 @@ public class FileDiskCacheUnitTest
         final int result = diskCache.getSize();
 
         // VERIFY
-        assertEquals( "Should be empty.", 0, result );
+        assertEquals(0, result, "Should be empty.");
     }
 
     /**
@@ -204,7 +208,7 @@ public class FileDiskCacheUnitTest
         final ICacheElement<String, String> result = diskCache.get( "key" );
 
         // VERIFY
-        assertNull( "Should be null.", result );
+        assertNull(result, "Should be null.");
     }
 
     /**
@@ -229,7 +233,7 @@ public class FileDiskCacheUnitTest
         final ICacheElement<String, String> result = diskCache.get( "key1" );
 
         // VERIFY
-        assertNotNull( "Should NOT be null.", result );
+        assertNotNull(result, "Should NOT be null.");
     }
 
     /**
@@ -268,7 +272,7 @@ public class FileDiskCacheUnitTest
         }
 
         // VERIFY
-        assertEquals("All files should still be cached", maxNumberOfFiles, stillCached);
+        assertEquals(maxNumberOfFiles, stillCached, "All files should still be cached");
     }
 
     /**
@@ -307,7 +311,7 @@ public class FileDiskCacheUnitTest
         }
 
         // VERIFY
-        assertEquals(maxNumberOfFiles, stillCached);
+        assertEquals(maxNumberOfFiles, stillCached, "All files should still be cached");
     }
 
     /**
@@ -342,7 +346,7 @@ public class FileDiskCacheUnitTest
             // to make this test work.
             SleepUtil.sleepAtLeast( 501 );
             final ICacheElement<String, String> ice = diskCache.get( "key" + i );
-            assertNotNull("Value of key" + i + " should not be null", ice);
+            assertNotNull(ice, "Value of key" + i + " should not be null");
         }
 
         SleepUtil.sleepAtLeast( 100 );
@@ -355,7 +359,7 @@ public class FileDiskCacheUnitTest
         final ICacheElement<String, String> result = diskCache.get( "key9" );
 
         // VERIFY
-        assertNull( "Should be null.", result );
+        assertNull(result, "Should be null.");
     }
 
     /**
@@ -402,7 +406,7 @@ public class FileDiskCacheUnitTest
         final ICacheElement<String, String> result = diskCache.get( "key0" );
 
         // VERIFY
-        assertNull( "Should be null.", result );
+        assertNull(result, "Should be null.");
     }
 
     /**
@@ -426,7 +430,7 @@ public class FileDiskCacheUnitTest
         final File result = diskCache.file( key );
 
         // VERIFY
-        assertEquals( "Wrong string.", key, result.getName() );
+        assertEquals(key, result.getName(), "Wrong string.");
     }
 
     /**
@@ -450,7 +454,7 @@ public class FileDiskCacheUnitTest
         final File result = diskCache.file( key );
 
         // VERIFY
-        assertEquals( "Wrong string.", "simple_string", result.getName() );
+        assertEquals("simple_string", result.getName(), "Wrong string.");
     }
 
     /**
@@ -474,7 +478,7 @@ public class FileDiskCacheUnitTest
         final File result = diskCache.file( key );
 
         // VERIFY
-        assertEquals( "Wrong string.", "simple_string", result.getName() );
+        assertEquals("simple_string", result.getName(), "Wrong string.");
     }
 
     /**
@@ -499,7 +503,7 @@ public class FileDiskCacheUnitTest
         final File result = diskCache.file( firstResult.getName() );
 
         // VERIFY
-        assertEquals( "Wrong string.", "simple_string", result.getName() );
+        assertEquals("simple_string", result.getName(), "Wrong string.");
     }
 
     /**
@@ -526,7 +530,7 @@ public class FileDiskCacheUnitTest
         final int result = diskCache.getSize();
 
         // VERIFY
-        assertEquals( "Should be empty.", 0, result );
+        assertEquals(0, result, "Should be empty.");
     }
 
     /**
@@ -560,7 +564,7 @@ public class FileDiskCacheUnitTest
         // VERIFY
         final ICacheElement<String, String> afterElement = diskCache.get( "x" );
         assertNotNull( afterElement );
-        final String after = afterElement.getVal();
+        final String after = afterElement.value();
 
         assertNotNull( "afterElement = " + afterElement, after );
         assertEquals( "wrong string after retrieval", string, after );

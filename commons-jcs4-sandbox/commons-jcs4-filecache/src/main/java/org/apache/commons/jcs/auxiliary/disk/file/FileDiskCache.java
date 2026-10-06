@@ -1,21 +1,7 @@
-/*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
- *
- *      https://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.apache.commons.jcs.auxiliary.disk.file;
+
 /*
+ * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
  * regarding copyright ownership.  The ASF licenses this file
@@ -38,19 +24,16 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.jcs4.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.commons.jcs4.auxiliary.disk.AbstractDiskCache;
 import org.apache.commons.jcs4.engine.behavior.ICacheElement;
 import org.apache.commons.jcs4.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs4.engine.logging.behavior.ICacheEvent;
-import org.apache.commons.jcs4.engine.logging.behavior.ICacheEventLogger;
+import org.apache.commons.jcs4.engine.logging.behavior.ICacheEventLogger.CacheEventType;
 import org.apache.commons.jcs4.log.Log;
-import org.apache.commons.jcs4.log.LogFactory;
+import org.apache.commons.jcs4.utils.serialization.StandardSerializer;
 
 /**
  * This disk cache writes each item to a separate file. This is for regions with very few items,
@@ -63,13 +46,10 @@ public class FileDiskCache<K, V>
     extends AbstractDiskCache<K, V>
 {
     /** The logger. */
-    private static final Log log = LogFactory.getLog( FileDiskCache.class );
+    private static final Log log = Log.getLog( FileDiskCache.class );
 
     /** The name to prefix all log messages with. */
     private final String logCacheName;
-
-    /** The config values. */
-    private final FileDiskCacheAttributes diskFileCacheAttributes;
 
     /** The directory where the files are stored */
     private File directory;
@@ -81,7 +61,7 @@ public class FileDiskCache<K, V>
      */
     public FileDiskCache( final FileDiskCacheAttributes cacheAttributes )
     {
-        this( cacheAttributes, null );
+        this( cacheAttributes, new StandardSerializer() );
     }
 
     /**
@@ -95,7 +75,6 @@ public class FileDiskCache<K, V>
     {
         super( cattr );
         setElementSerializer( elementSerializer );
-        this.diskFileCacheAttributes = cattr;
         this.logCacheName = "Region [" + getCacheName() + "] ";
         setAlive(initializeFileSystem( cattr ));
     }
@@ -113,15 +92,16 @@ public class FileDiskCache<K, V>
         final boolean createdDirectories = getDirectory().mkdirs();
         if ( log.isInfoEnabled() )
         {
-            log.info( logCacheName + "Cache file root directory: " + getDirectory() );
-            log.info( logCacheName + "Created root directory: " + createdDirectories );
+            log.info("{0}: Cache file root directory: {1}", logCacheName, getDirectory() );
+            log.info("{0}: Created root directory: {1}", logCacheName, createdDirectories );
         }
 
         // TODO consider throwing.
         final boolean exists = getDirectory().exists();
         if ( !exists )
         {
-            log.error( "Could not initialize File Disk Cache.  The root directory does not exist." );
+            log.error("{0}: Could not initialize File Disk Cache. The root directory {1} does not exist.",
+                    logCacheName, getDirectory());
         }
         return exists;
     }
@@ -155,7 +135,7 @@ public class FileDiskCache<K, V>
 
         if ( log.isDebugEnabled() )
         {
-            log.debug( logCacheName + "Creating file for name: [" + fileName + "] based on key: [" + key + "]" );
+            log.debug("{0}: Creating file for name: [{1}] based on key: [{2}]", logCacheName, fileName, key);
         }
 
         return new File( getDirectory().getAbsolutePath(), fileName );
@@ -189,18 +169,9 @@ public class FileDiskCache<K, V>
      * @return AuxiliaryCacheAttributes
      */
     @Override
-    public AuxiliaryCacheAttributes getAuxiliaryCacheAttributes()
+    public FileDiskCacheAttributes getAuxiliaryCacheAttributes()
     {
-        return diskFileCacheAttributes;
-    }
-
-    /**
-     * @return String the path to the directory
-     */
-    @Override
-    protected String getDiskLocation()
-    {
-        return getDirectory().getAbsolutePath();
+        return (FileDiskCacheAttributes) super.getAuxiliaryCacheAttributes();
     }
 
     /**
@@ -212,12 +183,13 @@ public class FileDiskCache<K, V>
     protected synchronized void processDispose()
         throws IOException
     {
-        final ICacheEvent<String> cacheEvent = createICacheEvent( getCacheName(), "none", ICacheEventLogger.DISPOSE_EVENT );
+        final ICacheEvent<String> cacheEvent = createICacheEvent(getCacheName(), "none",
+                CacheEventType.DISPOSE_EVENT, this::getEventLoggingExtraInfo);
         try
         {
             if ( !isAlive() )
             {
-                log.error( logCacheName + "Not alive and dispose was called, directgory: " + getDirectory() );
+                log.error("{0}: Not alive and dispose was called, directory: {1}", logCacheName, getDirectory());
                 return;
             }
 
@@ -227,7 +199,7 @@ public class FileDiskCache<K, V>
             // TODO consider giving up the handle on the directory.
             if ( log.isInfoEnabled() )
             {
-                log.info( logCacheName + "Shutdown complete." );
+                log.info("{0}: Shutdown complete.", logCacheName);
             }
         }
         finally
@@ -253,18 +225,15 @@ public class FileDiskCache<K, V>
         {
             if ( log.isDebugEnabled() )
             {
-                log.debug( "File does not exist.  Returning null from Get." + file );
+                log.debug("{0}: File does not exist. Returning null from Get {1}", logCacheName, file);
             }
             return null;
         }
 
         ICacheElement<K, V> element = null;
 
-        FileInputStream fis = null;
-        try
+        try (FileInputStream fis = new FileInputStream( file ))
         {
-            fis = new FileInputStream( file );
-
             final long length = file.length();
             // Create the byte array to hold the data
             final byte[] bytes = new byte[(int) length];
@@ -285,27 +254,23 @@ public class FileDiskCache<K, V>
             element = getElementSerializer().deSerialize( bytes, null );
 
             // test that the retrieved object has equal key
-            if ( element != null && !key.equals( element.getKey() ) )
+            if ( element != null && !key.equals( element.key() ) )
             {
                 if ( log.isInfoEnabled() )
                 {
-                    log.info( logCacheName + "key: [" + key + "] point to cached object with key: [" + element.getKey()
-                        + "]" );
+                    log.info("{0}: key: [{1}] point to cached object with key: [{2}]", logCacheName, key,
+                            element.key());
                 }
                 element = null;
             }
         }
         catch ( IOException | ClassNotFoundException e )
         {
-            log.error( logCacheName + "Failure getting element, key: [" + key + "]", e );
-        }
-        finally
-        {
-            silentClose( fis );
+            log.error("{0}: Failure getting element, key: [{1}]", logCacheName, key, e);
         }
 
         // If this is true and we have a max file size, the Least Recently Used file will be removed.
-        if ( element != null && diskFileCacheAttributes.isTouchOnGet() )
+        if ( element != null && getAuxiliaryCacheAttributes().isTouchOnGet() )
         {
             touchWithRetry( file );
         }
@@ -353,7 +318,7 @@ public class FileDiskCache<K, V>
         final File file = file( key );
         if ( log.isDebugEnabled() )
         {
-            log.debug( logCacheName + "Removing file " + file );
+            log.debug("{0}: Removing file {1}", logCacheName, file);
         }
         return deleteWithRetry( file );
     }
@@ -389,46 +354,34 @@ public class FileDiskCache<K, V>
     {
         removeIfLimitIsSetAndReached();
 
-        final File file = file( element.getKey() );
+        final File file = file( element.key() );
 
-        File tmp = null;
-        OutputStream os = null;
-        try
+        File tmp = File.createTempFile( "JCS_DiskFileCache", null, getDirectory() );
+
+        try(final FileOutputStream fos = new FileOutputStream( tmp );
+            final BufferedOutputStream os = new BufferedOutputStream( fos ))
         {
             final byte[] bytes = getElementSerializer().serialize( element );
-
-            tmp = File.createTempFile( "JCS_DiskFileCache", null, getDirectory() );
-
-            final FileOutputStream fos = new FileOutputStream( tmp );
-            os = new BufferedOutputStream( fos );
 
             if ( bytes != null )
             {
                 if ( log.isDebugEnabled() )
                 {
-                    log.debug( logCacheName + "Wrote " + bytes.length + " bytes to file " + tmp );
+                    log.debug("{0}: Wrote {1} bytes to file {2}", logCacheName, bytes.length, tmp);
                 }
                 os.write( bytes );
-                os.close();
-            }
-            deleteWithRetry( file );
-            final boolean result = tmp.renameTo( file );
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( logCacheName + "Renamed to: " + file + " Result: " + result);
             }
         }
         catch ( final IOException e )
         {
-            log.error( logCacheName + "Failure updating element, key: [" + element.getKey() + "]", e );
+            log.error("{0}: Failure updating element, key: [{1}]", logCacheName, element.key(), e);
         }
-        finally
+
+        deleteWithRetry( file );
+        final boolean result = tmp.renameTo( file );
+        if ( log.isDebugEnabled() )
         {
-            silentClose( os );
-            if ( tmp != null && tmp.exists() )
-            {
-                deleteWithRetry( tmp );
-            }
+            log.debug("{0}: Renamed to: {1} Result: {2}", logCacheName, file, result);
         }
     }
 
@@ -441,11 +394,12 @@ public class FileDiskCache<K, V>
     private void removeIfLimitIsSetAndReached()
     {
         // TODO we might want to synchronize this block.
-        if ( diskFileCacheAttributes.getMaxNumberOfFiles() > 0 && getSize() >= diskFileCacheAttributes.getMaxNumberOfFiles() )
+        final int maxNumberOfFiles = getAuxiliaryCacheAttributes().getMaxNumberOfFiles();
+        if (maxNumberOfFiles > 0 && getSize() >= maxNumberOfFiles)
         {
             if ( log.isDebugEnabled() )
             {
-                log.debug( logCacheName + "Max reached, removing least recently modified" );
+                log.debug("{0}: Max reached, removing least recently modified", logCacheName);
             }
 
             long oldestLastModified = System.currentTimeMillis();
@@ -464,7 +418,7 @@ public class FileDiskCache<K, V>
             {
                 if ( log.isDebugEnabled() )
                 {
-                    log.debug( logCacheName + "Least recently modified: " + theLeastRecentlyModified );
+                    log.debug("{0}: Least recently modified: {1}", logCacheName, theLeastRecentlyModified );
                 }
                 deleteWithRetry( theLeastRecentlyModified );
             }
@@ -485,10 +439,17 @@ public class FileDiskCache<K, V>
         // TODO: The following should be identical to success == false, but it isn't
         if ( file.exists() )
         {
-            final int maxRetries = diskFileCacheAttributes.getMaxRetriesOnDelete();
+            final int maxRetries = getAuxiliaryCacheAttributes().getMaxRetriesOnDelete();
             for ( int i = 0; i < maxRetries && !success; i++ )
             {
-                SleepUtil.sleepAtLeast( 5 );
+                try
+                {
+                    Thread.sleep(5);
+                }
+                catch (InterruptedException e)
+                {
+                    // swallow
+                }
                 success = file.delete();
             }
         }
@@ -498,7 +459,7 @@ public class FileDiskCache<K, V>
         }
         if ( log.isDebugEnabled() )
         {
-            log.debug( logCacheName + "deleteWithRetry.  success= " + success + " file: " + file );
+            log.debug("{0}: deleteWithRetry.  success= {1} file: {2}", logCacheName, success, file);
         }
         return success;
     }
@@ -514,61 +475,28 @@ public class FileDiskCache<K, V>
         boolean success = file.setLastModified( System.currentTimeMillis() );
         if ( !success )
         {
-            final int maxRetries = diskFileCacheAttributes.getMaxRetriesOnTouch();
+            final int maxRetries = getAuxiliaryCacheAttributes().getMaxRetriesOnTouch();
             if ( file.exists() )
             {
                 for ( int i = 0; i < maxRetries && !success; i++ )
                 {
-                    SleepUtil.sleepAtLeast( 5 );
+                    try
+                    {
+                        Thread.sleep(5);
+                    }
+                    catch (InterruptedException e)
+                    {
+                        // swallow
+                    }
                     success = file.delete();
                 }
             }
         }
         if ( log.isDebugEnabled() )
         {
-            log.debug( logCacheName + "Last modified, success: " + success );
+            log.debug("{0}: Last modified, success: {1}", logCacheName, success);
         }
         return success;
-    }
-
-    /**
-     * Closes a stream and swallows errors.
-     *
-     * @param s The stream
-     */
-    private void silentClose( final InputStream s )
-    {
-        if ( s != null )
-        {
-            try
-            {
-                s.close();
-            }
-            catch ( final IOException e )
-            {
-                log.error( logCacheName + "Failure closing stream", e );
-            }
-        }
-    }
-
-    /**
-     * Closes a stream and swallows errors.
-     *
-     * @param s The stream
-     */
-    private void silentClose( final OutputStream s )
-    {
-        if ( s != null )
-        {
-            try
-            {
-                s.close();
-            }
-            catch ( final IOException e )
-            {
-                log.error( logCacheName + "Failure closing stream", e );
-            }
-        }
     }
 
     /**
@@ -585,5 +513,11 @@ public class FileDiskCache<K, V>
     protected File getDirectory()
     {
         return directory;
+    }
+
+    @Override
+    protected String getEventLoggingExtraInfo()
+    {
+        return logCacheName;
     }
 }
