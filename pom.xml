@@ -280,13 +280,6 @@
   <dependencyManagement>
     <dependencies>
       <dependency>
-        <groupId>org.apache.logging.log4j</groupId>
-        <artifactId>log4j-bom</artifactId>
-        <version>${commons.log4j.version}</version>
-        <scope>import</scope>
-        <type>pom</type>
-      </dependency>
-      <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>commons-jcs4-core</artifactId>
         <version>${project.version}</version>
