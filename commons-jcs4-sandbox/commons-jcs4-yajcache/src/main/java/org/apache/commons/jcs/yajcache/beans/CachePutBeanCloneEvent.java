@@ -20,11 +20,12 @@ package org.apache.commons.jcs.yajcache.beans;
  */
 
 import org.apache.commons.jcs.yajcache.core.ICache;
-import org.apache.commons.jcs.yajcache.lang.annotation.*;
+import org.apache.commons.jcs.yajcache.lang.annotation.NonNullable;
 /**
  */
-@CopyRightApache
 public class CachePutBeanCloneEvent<V> extends CachePutEvent<V> {
+    private static final long serialVersionUID = 108017413065659237L;
+
     protected CachePutBeanCloneEvent(@NonNullable final ICache<V> cache,
             @NonNullable final String key, @NonNullable final V val)
     {

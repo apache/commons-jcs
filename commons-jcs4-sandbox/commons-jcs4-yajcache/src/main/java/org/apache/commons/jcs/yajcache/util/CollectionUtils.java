@@ -19,14 +19,11 @@ package org.apache.commons.jcs.yajcache.util;
  * under the License.
  */
 
-import org.apache.commons.jcs.yajcache.lang.annotation.*;
-
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Enumerates collection related utilities.
  */
-@CopyRightApache
 public enum CollectionUtils {
     inst;
 

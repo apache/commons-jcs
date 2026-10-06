@@ -25,8 +25,7 @@ import java.io.File;
 
 /**
  */
-//@CopyRightApache
-//@TODO("Optional configuration via XML config file")
+////@TODO("Optional configuration via XML config file")
 // http://www.netbeans.org/issues/show_bug.cgi?id=53704
 public enum YajCacheConfig {
     inst;

@@ -18,54 +18,54 @@ package org.apache.commons.jcs.yajcache.core;
  * specific language governing permissions and limitations
  * under the License.
  */
-
-import org.apache.commons.jcs.yajcache.lang.annotation.*;
+import org.apache.commons.jcs.yajcache.lang.annotation.NonNullable;
 import org.apache.commons.jcs.yajcache.soft.SoftRefCache;
 import org.apache.commons.jcs.yajcache.soft.SoftRefFileCache;
 
 /**
  * Enumerates cache types.
  */
-// @CopyRightApache
-// http://www.netbeans.org/issues/show_bug.cgi?id=53704
+// // http://www.netbeans.org/issues/show_bug.cgi?id=53704
 public enum CacheType {
-    SOFT_REFERENCE,
-    SOFT_REFERENCE_SAFE,
-    SOFT_REFERENCE_FILE,
-    SOFT_REFERENCE_FILE_SAFE;
+    SOFT_REFERENCE {
+        @Override
+        public <V> ICache<V> createCache(String name, Class<V> valueType)
+        {
+            return new SoftRefCache<>(name, valueType);
+        }
+    },
+    SOFT_REFERENCE_SAFE {
+        @Override
+        public <V> ICacheSafe<V> createCache(String name, Class<V> valueType)
+        {
+            return new SafeCacheWrapper<>(new SoftRefCache<>(name, valueType));
+        }
+    },
+    SOFT_REFERENCE_FILE {
+        @Override
+        public <V> ICache<V> createCache(String name, Class<V> valueType)
+        {
+            return new SoftRefFileCache<>(name, valueType);
+        }
+    },
+    SOFT_REFERENCE_FILE_SAFE {
+        @Override
+        public <V> ICacheSafe<V> createCache(String name, Class<V> valueType)
+        {
+            return new SafeCacheWrapper<>(new SoftRefFileCache<>(name, valueType));
+        }
+    };
+
 
     /** Instantiates and returns a new instance of cache of the current type. */
-    <V> ICache<V> createCache(final String name, @NonNullable final Class<V> valueType)
-    {
-        switch(this) {
-            case SOFT_REFERENCE:
-                return new SoftRefCache<>(name, valueType);
-            case SOFT_REFERENCE_SAFE:
-                return new SafeCacheWrapper<>(new SoftRefCache<>(name, valueType));
-            case SOFT_REFERENCE_FILE:
-                return new SoftRefFileCache<>(name, valueType);
-            case SOFT_REFERENCE_FILE_SAFE:
-                return new SafeCacheWrapper<>(new SoftRefFileCache<>(name, valueType));
-        }
-        throw new AssertionError(this);
-    }
-    /** Instantiates and returns a new instance of safe cache of the current type. */
-    <V> ICacheSafe<V> createSafeCache(final String name, @NonNullable final Class<V> valueType)
-    {
-        switch(this) {
-            case SOFT_REFERENCE_SAFE:
-                return new SafeCacheWrapper<>(new SoftRefCache<>(name, valueType));
-            case SOFT_REFERENCE_FILE_SAFE:
-                return new SafeCacheWrapper<>(new SoftRefFileCache<>(name, valueType));
-        }
-        throw new UnsupportedOperationException("");
-    }
+    public abstract <V> ICache<V> createCache(final String name, @NonNullable final Class<V> valueType);
+
     /**
      * Returns true if cache of the given cache type can be used as
      * cache of the current cache type;
      * false otherwise.
      */
-    public boolean isAsssignableFrom(final CacheType from) {
+    public boolean isAssignableFrom(final CacheType from) {
         switch(this) {
             case SOFT_REFERENCE:
                 return true;

@@ -19,21 +19,22 @@ package org.apache.commons.jcs.yajcache.util;
  * under the License.
  */
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.Arrays;
 
-import junit.framework.TestCase;
-
-import org.apache.commons.jcs.yajcache.lang.annotation.CopyRightApache;
 import org.apache.commons.jcs.yajcache.lang.annotation.TestOnly;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.jcs4.log.Log;
 
 /**
  */
-@CopyRightApache
 @TestOnly
-public class SerializeUtilsTest extends TestCase {
-    private final Log log = LogFactory.getLog(this.getClass());
+public class SerializeUtilsTest {
+    /** The logger. */
+    private final Log log = Log.getLog(this.getClass());
+
     /**
      * Test of dup method, of class org.apache.commons.jcs.yajcache.util.SerializeUtils.
      */

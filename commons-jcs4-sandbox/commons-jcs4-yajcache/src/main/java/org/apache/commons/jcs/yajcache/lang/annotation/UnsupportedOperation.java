@@ -28,7 +28,6 @@ import java.lang.annotation.Target;
 /**
  * Unsupported Operation.
  */
-@CopyRightApache
 @Documented
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)

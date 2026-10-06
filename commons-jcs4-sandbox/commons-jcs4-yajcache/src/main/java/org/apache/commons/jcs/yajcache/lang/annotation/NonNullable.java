@@ -29,7 +29,6 @@ import java.lang.annotation.Target;
 /**
  * Element so annotated is never expected to be null.
  */
-@CopyRightApache
 @Documented
 @Inherited
 @Retention(RetentionPolicy.SOURCE)

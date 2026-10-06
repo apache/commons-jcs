@@ -19,24 +19,26 @@ package org.apache.commons.jcs.yajcache.file;
  * under the License.
  */
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.File;
 import java.io.RandomAccessFile;
 import java.util.Arrays;
 
-import junit.framework.TestCase;
-
-import org.apache.commons.jcs.yajcache.lang.annotation.CopyRightApache;
 import org.apache.commons.jcs.yajcache.lang.annotation.TestOnly;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.jcs4.log.Log;
+import org.junit.jupiter.api.Test;
 
 /**
  */
-@CopyRightApache
 @TestOnly
-public class CacheFileDAOTest extends TestCase {
-    private final Log log = LogFactory.getLog(this.getClass());
+public class CacheFileDAOTest {
+    /** The logger. */
+    private final Log log = Log.getLog(this.getClass());
 
+    @Test
     public void test() {
         log.debug("testing cache directory "
                 + CacheFileUtils.inst.getCacheDir("testCache").getAbsolutePath());
@@ -56,7 +58,7 @@ public class CacheFileDAOTest extends TestCase {
         log.debug("test readCacheItem");
         final byte[] ba1r = CacheFileDAO.inst.readCacheItem("testCache", "key1").getContent();
         assertTrue(Arrays.equals(ba1, ba1r));
-        final byte[] ba2r = (byte[]) CacheFileDAO.inst.readCacheItem("testCache", "key2").getContent();
+        final byte[] ba2r = CacheFileDAO.inst.readCacheItem("testCache", "key2").getContent();
         assertTrue(Arrays.equals(ba2, ba2r));
 
         log.debug("test removeCacheItem");
@@ -64,6 +66,8 @@ public class CacheFileDAOTest extends TestCase {
         assertTrue(CacheFileDAO.inst.removeCacheItem("testCache", "key2"));
         assertFalse(CacheFileDAO.inst.removeCacheItem("testCache", "key3"));
     }
+
+    @Test
     public void testCorruptedFile() throws Exception {
         log.debug("create testCacheCorrupt Cache directory");
         CacheFileUtils.inst.mkCacheDirs("testCacheCorrupt");
@@ -84,7 +88,7 @@ public class CacheFileDAOTest extends TestCase {
 
         cfc = CacheFileDAO.inst.readCacheItem("testCacheCorrupt", "keyy");
         byte[] ba2i = cfc == null ? null : cfc.getContent();
-        assertTrue(ba2i == null);
+        assertNull(ba2i);
 
         log.debug("test readCacheItem with corrupted length");
         file.delete();
@@ -96,7 +100,7 @@ public class CacheFileDAOTest extends TestCase {
 
         cfc = CacheFileDAO.inst.readCacheItem("testCacheCorrupt", "keyy");
         ba2i = cfc == null ? null : cfc.getContent();
-        assertTrue(ba2i == null);
+        assertNull(ba2i);
 
         log.debug("test readCacheItem with corrupted content");
         file.delete();
@@ -108,7 +112,7 @@ public class CacheFileDAOTest extends TestCase {
 
         cfc = CacheFileDAO.inst.readCacheItem("testCacheCorrupt", "keyy");
         ba2i = cfc == null ? null : cfc.getContent();
-        assertTrue(ba2i == null);
+        assertNull(ba2i);
 
         log.debug("test readCacheItem with appended content");
         file.delete();
@@ -120,7 +124,7 @@ public class CacheFileDAOTest extends TestCase {
 
         cfc = CacheFileDAO.inst.readCacheItem("testCacheCorrupt", "keyy");
         ba2i = cfc == null ? null : cfc.getContent();
-        assertTrue(ba2i == null);
+        assertNull(ba2i);
 
         log.debug("test readCacheItem with content less than min length");
         file.delete();
@@ -132,9 +136,6 @@ public class CacheFileDAOTest extends TestCase {
 
         cfc = CacheFileDAO.inst.readCacheItem("testCacheCorrupt", "keyy");
         ba2i = cfc == null ? null : cfc.getContent();
-        assertTrue(ba2i == null);
-
-        log.debug(CacheFileDAO.inst.toString());
-
+        assertNull(ba2i);
     }
 }

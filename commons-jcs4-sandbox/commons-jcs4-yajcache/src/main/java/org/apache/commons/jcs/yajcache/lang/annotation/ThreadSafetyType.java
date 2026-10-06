@@ -24,8 +24,7 @@ package org.apache.commons.jcs.yajcache.lang.annotation;
  *
  * http://www-106.ibm.com/developerworks/java/library/j-jtp09263.html
  */
-// @CopyRightApache
-// http://www.netbeans.org/issues/show_bug.cgi?id=53704
+// // http://www.netbeans.org/issues/show_bug.cgi?id=53704
 public enum ThreadSafetyType {
     /**  Immutable objects are guaranteed to be thread-safe. */
     IMMUTABLE,

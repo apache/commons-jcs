@@ -18,13 +18,11 @@ package org.apache.commons.jcs.yajcache.beans;
  * specific language governing permissions and limitations
  * under the License.
  */
-
-import org.apache.commons.jcs.yajcache.lang.annotation.*;
+import org.apache.commons.jcs.yajcache.lang.annotation.NonNullable;
 
 /**
  * Cache change beans listener/handler.
  */
-@CopyRightApache
 public interface ICacheChangeListener<V> extends java.util.EventListener {
     void cacheChange(@NonNullable CacheChangeEvent<V> evt);
 }

@@ -18,41 +18,41 @@ package org.apache.commons.jcs.yajcache.util;
  * specific language governing permissions and limitations
  * under the License.
  */
-
-import org.apache.commons.jcs.yajcache.lang.annotation.*;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
+import org.apache.commons.jcs.yajcache.lang.annotation.NonNullable;
+import org.apache.commons.jcs.yajcache.lang.annotation.TODO;
+import org.apache.commons.jcs4.log.Log;
+
 /**
  */
-// @CopyRightApache
-// http://www.netbeans.org/issues/show_bug.cgi?id=53704
+// // http://www.netbeans.org/issues/show_bug.cgi?id=53704
 public enum BeanUtils {
     inst;
     private static final boolean debug = false;
-    private final Log log = debug ? LogFactory.getLog(this.getClass()) : null;
+    private final Log log = debug ? Log.getLog(this.getClass()) : null;
 
+    @SuppressWarnings("unchecked")
     public <B> B cloneDeep(final B bean) {
         if (bean == null
         ||  ClassUtils.inst.isImmutable(bean)) {
             return bean;
         }
-        return (B)fromXmlByteArray(toXmlByteArray(bean));
+        return (B) fromXmlByteArray(toXmlByteArray(bean));
     }
+    @SuppressWarnings("unchecked")
     public <B> B cloneShallow(final B bean) {
         if (bean == null
         ||  ClassUtils.inst.isImmutable(bean)) {
             return bean;
         }
         try {
-            return (B)org.apache.commons.beanutils.BeanUtils.cloneBean(bean);
+            return (B) org.apache.commons.beanutils.BeanUtils.cloneBean(bean);
         } catch (final Exception ex) {
-            LogFactory.getLog(this.getClass()).error("", ex);
+            Log.getLog(this.getClass()).error("", ex);
             throw new RuntimeException(ex);
         }
     }

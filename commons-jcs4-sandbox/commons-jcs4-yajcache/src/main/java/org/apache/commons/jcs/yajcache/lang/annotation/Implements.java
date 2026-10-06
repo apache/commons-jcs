@@ -22,8 +22,7 @@ package org.apache.commons.jcs.yajcache.lang.annotation;
 /**
  * Implements the specified interface.
  */
-@CopyRightApache
 public @interface Implements {
     /** Interface being implemented. */
-    public Class value();
+    public Class<?> value();
 }

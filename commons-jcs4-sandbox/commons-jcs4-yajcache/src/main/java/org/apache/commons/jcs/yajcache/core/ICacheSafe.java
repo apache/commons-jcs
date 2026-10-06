@@ -25,7 +25,6 @@ import java.util.Map;
 
 /**
  */
-@CopyRightApache
 @ThreadSafety(ThreadSafetyType.SAFE)
 public interface ICacheSafe<V> extends ICache<V> {
     /**

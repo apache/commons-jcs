@@ -27,7 +27,6 @@ import java.util.Map;
 
 /**
  */
-@CopyRightApache
 public class CacheEntry<V> implements Map.Entry<String,V> {
     private @NonNullable final String key;
     private @NonNullable V value;

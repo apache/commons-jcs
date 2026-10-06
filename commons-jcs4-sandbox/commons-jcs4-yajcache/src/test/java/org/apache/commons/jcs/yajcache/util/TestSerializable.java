@@ -21,13 +21,11 @@ package org.apache.commons.jcs.yajcache.util;
 
 import java.io.Serializable;
 
-import org.apache.commons.jcs.yajcache.lang.annotation.CopyRightApache;
 import org.apache.commons.jcs.yajcache.lang.annotation.TestOnly;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
 /**
  */
-@CopyRightApache
 @TestOnly
 public class TestSerializable implements Serializable {
     private static final long serialVersionUID = 1L;

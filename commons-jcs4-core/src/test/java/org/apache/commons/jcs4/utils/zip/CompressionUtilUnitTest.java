@@ -21,11 +21,13 @@ package org.apache.commons.jcs4.utils.zip;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.zip.GZIPOutputStream;
+
+import org.junit.jupiter.api.Test;
 
 /** Tests for the compression util */
 public class CompressionUtilUnitTest
@@ -35,6 +37,7 @@ public class CompressionUtilUnitTest
      *
      * @throws IOException
      */
+    @Test
     public final void testCompressDecompressByteArray_success()
         throws IOException
     {
@@ -56,6 +59,7 @@ public class CompressionUtilUnitTest
      *
      * @throws IOException
      */
+    @Test
     public final void testCompressDecompressGzipByteArray_success()
         throws IOException
     {
@@ -79,20 +83,10 @@ public class CompressionUtilUnitTest
     }
 
     /** Test method for decompressByteArray. */
+    @Test
     public final void testDecompressByteArray_failure()
     {
-        try
-        {
-            // DO WORK
-            CompressionUtil.decompressByteArray( null );
-
-            // VERIFY
-            fail( "excepted an IllegalArgumentException" );
-        }
-        catch ( final IllegalArgumentException exception )
-        {
-            // expected
-            return;
-        }
+        assertThrows(IllegalArgumentException.class, () -> CompressionUtil.decompressByteArray( null ),
+                "excepted an IllegalArgumentException");
     }
 }

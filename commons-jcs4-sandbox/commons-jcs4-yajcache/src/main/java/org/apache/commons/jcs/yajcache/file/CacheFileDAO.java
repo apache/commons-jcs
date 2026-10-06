@@ -25,27 +25,24 @@ import java.io.RandomAccessFile;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.jcs.yajcache.lang.annotation.NonNullable;
+import org.apache.commons.jcs4.log.Log;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * Enumerates cache File data access object.
  */
-// @CopyRightApache
-// http://www.netbeans.org/issues/show_bug.cgi?id=53704
+// // http://www.netbeans.org/issues/show_bug.cgi?id=53704
 public enum CacheFileDAO {
     inst;
 
     private final AtomicInteger countWriteIOException = new AtomicInteger();
-    private final AtomicInteger countWriteCloseException = new AtomicInteger();
     private final AtomicInteger countReadIOException = new AtomicInteger();
-    private final AtomicInteger countReadCloseException = new AtomicInteger();
     private final AtomicInteger countCorruptMinLength = new AtomicInteger();
     private final AtomicInteger countCorruptLength = new AtomicInteger();
     private final AtomicInteger countCorruptInvalid = new AtomicInteger();
 
-    private final Log log = LogFactory.getLog(this.getClass());
+    /** The logger. */
+    private final Log log = Log.getLog(this.getClass());
 
     /**
      * Writes the specified cache item into the file system.
@@ -57,25 +54,15 @@ public enum CacheFileDAO {
             @NonNullable final String key, @NonNullable final byte[] val)
     {
         final File file = CacheFileUtils.inst.getCacheFile(cacheName, key);
-        RandomAccessFile raf = null;
-        try {
-            file.delete();
-            file.createNewFile();
-            raf = new RandomAccessFile(file, "rw");
+        file.delete();
+
+        try (RandomAccessFile raf = new RandomAccessFile(file, "rw"))
+        {
             CacheFileContent.getInstance(type, val).write(raf);
             return true;
         } catch (final IOException ex) {
             countWriteIOException.incrementAndGet();
             log.error("", ex);
-        } finally {
-            if (raf != null) {
-                try {
-                    raf.close();
-                } catch (final Exception ex) {
-                    countWriteCloseException.incrementAndGet();
-                    log.error("", ex);
-                }
-            }
         }
         return false;
     }
@@ -101,9 +88,9 @@ public enum CacheFileDAO {
                     + cacheName + " key=" + key);
             return CacheFileContent.CORRUPTED;
         }
-        RandomAccessFile raf = null;
-        try {
-            raf = new RandomAccessFile(file, "r");
+
+        try (RandomAccessFile raf = new RandomAccessFile(file, "r"))
+        {
             final CacheFileContent cfc = CacheFileContent.getInstance(raf);
 
             if (cfc.isValid()) {
@@ -127,15 +114,6 @@ public enum CacheFileDAO {
         } catch (final IOException | org.apache.commons.lang3.SerializationException ex) {
             countReadIOException.incrementAndGet();
             log.warn(ex.getClass().getName(), ex);
-       } finally {
-            if (raf != null) {
-                try {
-                    raf.close();
-                } catch (final Exception ex) {
-                    countReadCloseException.incrementAndGet();
-                    log.error("", ex);
-                }
-            }
         }
         return CacheFileContent.CORRUPTED;
     }

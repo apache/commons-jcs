@@ -1,5 +1,10 @@
 package org.apache.commons.jcs.yajcache.core;
 
+import java.io.Serializable;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,21 +23,15 @@ package org.apache.commons.jcs.yajcache.core;
  * specific language governing permissions and limitations
  * under the License.
  */
-
-import org.apache.commons.jcs.yajcache.lang.annotation.*;
+import org.apache.commons.jcs.yajcache.lang.annotation.Implements;
+import org.apache.commons.jcs.yajcache.lang.annotation.NonNullable;
 import org.apache.commons.jcs.yajcache.util.BeanUtils;
 import org.apache.commons.jcs.yajcache.util.SerializeUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import java.io.Serializable;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
-
 /**
  * Safe Cache as a wrapper of an underlying cache.
  */
-@CopyRightApache
 public class SafeCacheWrapper<V> implements ICacheSafe<V>
 {
     /** Underlying cache. */
@@ -172,9 +171,10 @@ public class SafeCacheWrapper<V> implements ICacheSafe<V>
             this.cache.put(e.getKey(), BeanUtils.inst.cloneShallow(e.getValue()));
         }
     }
+    @SuppressWarnings("unchecked")
     private V dup(final V val) {
-        if (val instanceof Serializable) {
-            return (V)SerializeUtils.inst.dup((Serializable)val);
+        if (val instanceof Serializable ser) {
+            return (V) SerializeUtils.inst.dup(ser);
         }
         return val;
     }

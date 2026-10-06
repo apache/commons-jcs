@@ -27,7 +27,6 @@ import java.lang.annotation.RetentionPolicy;
 /**
  * Annotates the target is for testing purposes only.
  */
-@CopyRightApache
 @Documented
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)

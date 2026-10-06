@@ -38,14 +38,14 @@ public enum EqualsUtils {
         if (lhs == null || rhs == null) {
             return false;
         }
-        final Class lClass = lhs.getClass();
-        final Class rClass = rhs.getClass();
+        final Class<?> lClass = lhs.getClass();
+        final Class<?> rClass = rhs.getClass();
 
         if (lClass.isArray()
         &&  rClass.isArray())
         {
-            final Class lCompType = lClass.getComponentType();
-            final Class rCompType = rClass.getComponentType();
+            final Class<?> lCompType = lClass.getComponentType();
+            final Class<?> rCompType = rClass.getComponentType();
 
             if (lCompType.isPrimitive()) {
                 if (rCompType.isPrimitive()) {

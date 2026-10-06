@@ -19,19 +19,6 @@ package org.apache.commons.jcs.yajcache.soft;
  * under the License.
  */
 
-import org.apache.commons.jcs.yajcache.config.PerCacheConfig;
-import org.apache.commons.jcs.yajcache.core.CacheEntry;
-import org.apache.commons.jcs.yajcache.core.CacheType;
-import org.apache.commons.jcs.yajcache.core.ICache;
-import org.apache.commons.jcs.yajcache.lang.annotation.*;
-import org.apache.commons.jcs.yajcache.lang.ref.KeyedRefCollector;
-import org.apache.commons.jcs.yajcache.lang.ref.KeyedSoftReference;
-import org.apache.commons.jcs.yajcache.util.CollectionUtils;
-import org.apache.commons.jcs.yajcache.util.EqualsUtils;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import java.lang.ref.ReferenceQueue;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -43,18 +30,29 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.apache.commons.jcs.yajcache.config.PerCacheConfig;
+import org.apache.commons.jcs.yajcache.core.CacheEntry;
+import org.apache.commons.jcs.yajcache.core.CacheType;
+import org.apache.commons.jcs.yajcache.core.ICache;
+import org.apache.commons.jcs.yajcache.lang.annotation.Implements;
+import org.apache.commons.jcs.yajcache.lang.annotation.NonNullable;
+import org.apache.commons.jcs.yajcache.lang.annotation.TODO;
+import org.apache.commons.jcs.yajcache.lang.ref.KeyedRefCollector;
+import org.apache.commons.jcs.yajcache.lang.ref.KeyedSoftReference;
+import org.apache.commons.jcs.yajcache.util.CollectionUtils;
+import org.apache.commons.jcs.yajcache.util.EqualsUtils;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 /**
  * Cache implemented using {@link KeyedSoftReference} and {@link ConcurrentHashMap}.
  */
-@CopyRightApache
 @TODO("Annotate the thread-safetyness of the methods")
 public class SoftRefCache<V> implements ICache<V> {
     private static final boolean debug = true;
-    private final Log log = debug ? LogFactory.getLog(this.getClass()) : null;
     private final @NonNullable ReferenceQueue<V> refq = new ReferenceQueue<>();
     private final @NonNullable String name;
     private final @NonNullable Class<V> valueType;
-    private final @NonNullable ConcurrentMap<String,KeyedSoftReference<String,V>> map;
+    private final @NonNullable ConcurrentMap<String, KeyedSoftReference<String,V>> map;
     private final @NonNullable KeyedRefCollector<String> collector;
     private @NonNullable PerCacheConfig config;
 
@@ -157,7 +155,7 @@ public class SoftRefCache<V> implements ICache<V> {
             this.countPut.incrementAndGet();
         }
         this.collector.run();
-        final KeyedSoftReference<String,V> oldRef =
+        final KeyedSoftReference<String, V> oldRef =
                 map.put(key, new KeyedSoftReference<>(key, value, refq));
 
         if (oldRef == null) {

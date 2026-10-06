@@ -19,16 +19,16 @@ package org.apache.commons.jcs.yajcache.beans;
  * under the License.
  */
 
-import org.apache.commons.jcs.yajcache.core.ICache;
-import org.apache.commons.jcs.yajcache.lang.annotation.*;
-
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.apache.commons.jcs.yajcache.core.ICache;
+import org.apache.commons.jcs.yajcache.lang.annotation.NonNullable;
+
 /**
  */
-@CopyRightApache
 public class CacheChangeSupport<V> {
+
     private final @NonNullable List<ICacheChangeListener<V>> listeners
             = new CopyOnWriteArrayList<>();
 

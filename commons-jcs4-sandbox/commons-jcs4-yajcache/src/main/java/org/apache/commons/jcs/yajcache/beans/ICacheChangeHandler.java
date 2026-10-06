@@ -24,7 +24,6 @@ import org.apache.commons.jcs.yajcache.lang.annotation.*;
 /**
  * Cache change beans listener/handler.
  */
-@CopyRightApache
 public interface ICacheChangeHandler<V> {
     boolean handlePut(@NonNullable String cacheName,
             @NonNullable String key, @NonNullable V value);

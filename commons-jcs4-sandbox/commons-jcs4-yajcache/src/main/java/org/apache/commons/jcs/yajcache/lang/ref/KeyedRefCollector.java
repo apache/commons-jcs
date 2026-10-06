@@ -19,15 +19,13 @@ package org.apache.commons.jcs.yajcache.lang.ref;
  * under the License.
  */
 
-import org.apache.commons.jcs.yajcache.lang.annotation.*;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import org.apache.commons.jcs.yajcache.lang.annotation.NonNullable;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
  * Keyed Reference garbage collector which removes stale
@@ -36,11 +34,9 @@ import java.util.concurrent.atomic.AtomicInteger;
  * The stale Keyed References are put into the given {@link ReferenceQueue}
  * by the JVM garbage collector.
  */
-@CopyRightApache
 public class KeyedRefCollector<K> implements Runnable {
     private static final boolean debug = true;
-    private final Log log = debug ? LogFactory.getLog(this.getClass()) : null;
-    private final @NonNullable ReferenceQueue q;
+    private final @NonNullable ReferenceQueue<?> q;
     private final @NonNullable ConcurrentMap<K, ? extends IKey<K>> synMap;
     private final AtomicInteger count = new AtomicInteger();
     /**
@@ -58,10 +54,11 @@ public class KeyedRefCollector<K> implements Runnable {
      */
     @Override
     public void run() {
-        Reference ref;
+        Reference<?> ref;
 
         while ((ref = this.q.poll()) != null) {
-            final IKey keyedRef = (IKey)ref;
+            @SuppressWarnings("unchecked")
+            final IKey<K> keyedRef = (IKey<K>) ref;
             // remove unused lock;  may fail but that's fine.
             synMap.remove(keyedRef.getKey(), ref);
             // referent should have been cleared by GC.

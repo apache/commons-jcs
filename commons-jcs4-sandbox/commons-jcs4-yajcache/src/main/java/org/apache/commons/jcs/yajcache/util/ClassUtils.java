@@ -1,5 +1,8 @@
 package org.apache.commons.jcs.yajcache.util;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,22 +21,17 @@ package org.apache.commons.jcs.yajcache.util;
  * specific language governing permissions and limitations
  * under the License.
  */
-
-import org.apache.commons.jcs.yajcache.lang.annotation.*;
-
-import java.math.BigDecimal;
-import java.math.BigInteger;
+import org.apache.commons.jcs.yajcache.lang.annotation.NonNullable;
 /**
  */
-// @CopyRightApache
-// http://www.netbeans.org/issues/show_bug.cgi?id=53704
+// // http://www.netbeans.org/issues/show_bug.cgi?id=53704
 public enum ClassUtils {
     inst;
     /**
      * Returns true if instances of the given class is known to be immutable;
      * false if we don't know.
      */
-    public boolean isImmutable(@NonNullable final Class t) {
+    public boolean isImmutable(@NonNullable final Class<?> t) {
         return t == String.class
         ||  t.isPrimitive()
         ||  t == Boolean.class

@@ -1,5 +1,8 @@
 package org.apache.commons.jcs.yajcache.lang.ref;
 
+import java.lang.ref.ReferenceQueue;
+import java.lang.ref.SoftReference;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,18 +21,14 @@ package org.apache.commons.jcs.yajcache.lang.ref;
  * specific language governing permissions and limitations
  * under the License.
  */
-
-import org.apache.commons.jcs.yajcache.lang.annotation.*;
-
-import java.lang.ref.ReferenceQueue;
-import java.lang.ref.SoftReference;
+import org.apache.commons.jcs.yajcache.lang.annotation.Immutable;
+import org.apache.commons.jcs.yajcache.lang.annotation.Implements;
+import org.apache.commons.jcs.yajcache.lang.annotation.NonNullable;
 
 /**
  * {@link SoftReference} with an embedded key.
  */
-@CopyRightApache
-public class KeyedSoftReference<K,T> extends SoftReference<T>
-        implements IKey<K>
+public class KeyedSoftReference<K, T> extends SoftReference<T> implements IKey<K>
 {
     /** The embedded key. */
     private final @NonNullable @Immutable K key;
@@ -44,7 +43,7 @@ public class KeyedSoftReference<K,T> extends SoftReference<T>
      */
     public KeyedSoftReference(@NonNullable @Immutable final K key, final T referent)
     {
-	super(referent);
+        super(referent);
         this.key = key;
     }
     /**

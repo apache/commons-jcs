@@ -18,16 +18,14 @@ package org.apache.commons.jcs.yajcache.file;
  * specific language governing permissions and limitations
  * under the License.
  */
-
-import org.apache.commons.jcs.yajcache.lang.annotation.*;
-
 import java.io.IOException;
 import java.io.RandomAccessFile;
+
+import org.apache.commons.jcs.yajcache.lang.annotation.NonNullable;
 
 /**
  * Corrupted Cache File Content.
  */
-@CopyRightApache
 public class CacheFileContentCorrupted extends CacheFileContent {
     static CacheFileContentCorrupted inst = new CacheFileContentCorrupted();
 
@@ -68,7 +66,7 @@ public class CacheFileContentCorrupted extends CacheFileContent {
         return false;
     }
     /** Returns the deserialized content. */
-    @Override public Object deserialize() {
+    @Override public <V> V deserialize() {
         return null;
     }
 }

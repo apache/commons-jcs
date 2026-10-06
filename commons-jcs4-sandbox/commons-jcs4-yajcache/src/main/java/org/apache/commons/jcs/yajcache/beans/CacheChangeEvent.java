@@ -20,21 +20,25 @@ package org.apache.commons.jcs.yajcache.beans;
  */
 
 import org.apache.commons.jcs.yajcache.core.ICache;
-import org.apache.commons.jcs.yajcache.lang.annotation.*;
+import org.apache.commons.jcs.yajcache.lang.annotation.NonNullable;
 /**
  */
-@CopyRightApache
 public abstract class CacheChangeEvent<V> extends java.util.EventObject {
+    private static final long serialVersionUID = 7905317479465838141L;
+
     /** Creates a new instance of CacheEvent */
     protected CacheChangeEvent(@NonNullable final ICache<V> cache) {
         super(cache);
     }
+
     /** Returns the cache which is the source of the events. */
+    @SuppressWarnings("unchecked")
     protected @NonNullable ICache<V> getCache() {
-        return (ICache<V>)super.getSource();
+        return (ICache<V>) super.getSource();
     }
+
     /**
-     * Dispatches the beans handling to the specific method invokation of the
+     * Dispatches the beans handling to the specific method invocation of the
      * given handler.
      */
     public abstract boolean dispatch(@NonNullable ICacheChangeHandler<V> handler);

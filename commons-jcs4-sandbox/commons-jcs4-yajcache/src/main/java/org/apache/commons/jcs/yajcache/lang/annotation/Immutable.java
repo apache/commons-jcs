@@ -29,7 +29,6 @@ import java.lang.annotation.Target;
 /**
  * Element so annotated is expected to be immutable.
  */
-@CopyRightApache
 @Documented
 @Inherited
 @Retention(RetentionPolicy.SOURCE)

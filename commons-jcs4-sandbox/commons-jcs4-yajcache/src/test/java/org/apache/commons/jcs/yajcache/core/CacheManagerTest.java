@@ -19,20 +19,25 @@ package org.apache.commons.jcs.yajcache.core;
  * under the License.
  */
 
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.apache.commons.jcs.yajcache.lang.annotation.CopyRightApache;
 import org.apache.commons.jcs.yajcache.lang.annotation.TestOnly;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.jcs4.log.Log;
+import org.junit.jupiter.api.Test;
 
 /**
  */
-@CopyRightApache
 @TestOnly
-public class CacheManagerTest extends TestCase {
-    private final Log log = LogFactory.getLog(this.getClass());
+public class CacheManagerTest {
+    /** The logger. */
+    private final Log log = Log.getLog(this.getClass());
 
+    @Test
     public void testGetCache() {
         CacheManager.inst.getCache("myCache", String.class);
         CacheManager.inst.removeCache("myCache");
@@ -53,57 +58,51 @@ public class CacheManagerTest extends TestCase {
         c = CacheManager.inst.getCache("myCache", String.class);
         c.put("1", "First Put");
         c.put("2", "Second Put");
-        assertEquals(c.size(), 2);
-        assertTrue("Second Put" == c.get("2"));
-        assertTrue("First Put" == c.get("1"));
+        assertEquals(2, c.size());
+        assertEquals("Second Put", c.get("2"));
+        assertEquals("First Put", c.get("1"));
         log.debug("Test getCache and clear");
         c = CacheManager.inst.getCache("myCache", String.class);
         c.clear();
         assertEquals(c.size(), 0);
-        assertTrue(null == c.get("2"));
-        assertTrue(null == c.get("1"));
+        assertNull(c.get("2"));
+        assertNull(c.get("1"));
         log.debug("Test getCache and getValueType");
-        final ICache c1 = CacheManager.inst.getCache("myCache");
+        final ICache<?> c1 = CacheManager.inst.getCache("myCache");
         assertTrue(c1.getValueType() == String.class);
+
         log.debug("Test checking of cache value type");
-        try {
-            final ICache<Integer> c2 = CacheManager.inst.getCache("myCache", Integer.class);
-            fail("Expected ClassCastException");
-        } catch (final ClassCastException ex) {
-            // should go here.
-        }
+        assertNull(CacheManager.inst.getCache("myCache", Integer.class), "Expected null");
         log.debug(CacheManager.inst);
     }
 
+    @Test
     public void testGetCacheRaceCondition() {
         log.debug("Test simulation of race condition in creating cache");
-        final ICache intCache = CacheManager.inst.testCreateCacheRaceCondition(
+        CacheManager.inst.removeCache("race");
+        final ICache<?> intCache = CacheManager.inst.testCreateCacheRaceCondition(
                 "race", Integer.class, CacheType.SOFT_REFERENCE);
-        final ICache intCache1 = CacheManager.inst.testCreateCacheRaceCondition(
+        final ICache<?> intCache1 = CacheManager.inst.testCreateCacheRaceCondition(
                 "race", Integer.class, CacheType.SOFT_REFERENCE);
         log.debug("Test simulation of the worst case scenario: "
                 + "race condition in creating cache AND class cast exception");
-        try {
-            final ICache<Double> doubleCache =
-                    CacheManager.inst.testCreateCacheRaceCondition(
-                    "race", Double.class, CacheType.SOFT_REFERENCE);
-            fail("Bug: Cache for Integer cannot be used for Double");
-        } catch (final ClassCastException ex) {
-            // should go here.
-        }
-        assertTrue(intCache == intCache1);
+        assertThrows(ClassCastException.class, () -> CacheManager.inst.testCreateCacheRaceCondition(
+                    "race", Double.class, CacheType.SOFT_REFERENCE),
+                "Bug: Cache for Integer cannot be used for Double");
+        assertSame(intCache, intCache1);
         log.debug(CacheManager.inst);
     }
 
+    @Test
     public void testRemoveCache() {
         log.debug("Test remove cache");
-        final ICache<Integer> intCache = CacheManager.inst.getCache("race", Integer.class);
+        final ICache<Integer> intCache = CacheManager.inst.getCache("race", Integer.class, CacheType.SOFT_REFERENCE);
         intCache.put("1", 1);
         assertEquals(intCache.size(), 1);
         assertEquals(intCache, CacheManager.inst.removeCache("race"));
         assertEquals(intCache.size(), 0);
-        final ICache intCache1 = CacheManager.inst.getCache("race", Integer.class);
-        assertFalse(intCache == intCache1);
+        final ICache<?> intCache1 = CacheManager.inst.getCache("race", Integer.class);
+        assertNotSame(intCache, intCache1);
         CacheManager.inst.removeCache("race");
         final ICache<Double> doubleCache = CacheManager.inst.testCreateCacheRaceCondition(
                     "race", Double.class, CacheType.SOFT_REFERENCE);

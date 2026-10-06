@@ -1,5 +1,9 @@
 package org.apache.commons.jcs.yajcache.file;
 
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.util.Arrays;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,12 +22,7 @@ package org.apache.commons.jcs.yajcache.file;
  * specific language governing permissions and limitations
  * under the License.
  */
-
-import org.apache.commons.jcs.yajcache.lang.annotation.*;
-
-import java.io.IOException;
-import java.io.RandomAccessFile;
-import java.util.Arrays;
+import org.apache.commons.jcs.yajcache.lang.annotation.NonNullable;
 
 /**
  * Cache File Content which represents the file persistence format
@@ -37,7 +36,6 @@ import java.util.Arrays;
  * &lt;ByteArray&gt;          : byte[]
  *</pre>
  */
-@CopyRightApache
 public class CacheFileContent {
     public static final CacheFileContent CORRUPTED = CacheFileContentCorrupted.inst;
     /**
@@ -150,7 +148,8 @@ public class CacheFileContent {
         return cfc;
     }
     /** Returns the deserialized content. */
-    public @NonNullable Object deserialize() {
-        return CacheFileContentType.fromByte(this.contentType).deserialize(this.content);
+    @SuppressWarnings("unchecked")
+    public @NonNullable <V> V deserialize() {
+        return (V) CacheFileContentType.fromByte(this.contentType).deserialize(this.content);
     }
 }

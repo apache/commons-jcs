@@ -1,5 +1,8 @@
 package org.apache.commons.jcs.yajcache.util;
 
+import java.io.Serializable;
+import java.lang.reflect.Array;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,17 +21,12 @@ package org.apache.commons.jcs.yajcache.util;
  * specific language governing permissions and limitations
  * under the License.
  */
-
-import org.apache.commons.jcs.yajcache.lang.annotation.*;
+import org.apache.commons.jcs.yajcache.lang.annotation.NonNullable;
 import org.apache.commons.lang3.SerializationUtils;
-
-import java.io.Serializable;
-import java.lang.reflect.Array;
 
 /**
  */
-// @CopyRightApache
-// http://www.netbeans.org/issues/show_bug.cgi?id=53704
+// // http://www.netbeans.org/issues/show_bug.cgi?id=53704
 public enum SerializeUtils {
     inst;
     /**
@@ -38,29 +36,30 @@ public enum SerializeUtils {
      * short-cutting the deep clone process if possible.
      */
     public <V extends Serializable> V dup(final V obj) {
-        Class k = null;
+        Class<?> k = null;
 
         if (obj == null
         ||  ClassUtils.inst.isImmutable(k=obj.getClass())) {
             return obj;
         }
-        final Class t = k.getComponentType();
+        final Class<?> t = k.getComponentType();
 
         // an array.
-        if ((t != null) && ClassUtils.inst.isImmutable(t))
+        if (t != null && ClassUtils.inst.isImmutable(t))
         {
             // array elements are immutable.
             // short cut via shallow clone.
             return this.cloneArray(obj);
         }
         // deep clone.
-        return (V)SerializationUtils.clone(obj);
+        return (V) SerializationUtils.clone(obj);
     }
     private @NonNullable <A> A cloneArray(@NonNullable final A a) {
         final int len = Array.getLength(a);
-	final Object result = Array.newInstance(a.getClass().getComponentType(), len);
+	    @SuppressWarnings("unchecked")
+        final A result = (A) Array.newInstance(a.getClass().getComponentType(), len);
         System.arraycopy(a, 0, result, 0, len);
-        return (A)result;
+        return result;
     }
 //    public Class<?> getLeaveComponentType(Class<?> k) {
 //        if (k == null)

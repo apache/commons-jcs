@@ -23,7 +23,6 @@ import org.apache.commons.jcs.yajcache.lang.annotation.*;
 
 /**
  */
-@CopyRightApache
 @JavaBean
 @TODO("configuration via XML file")
 public class PerCacheConfig {

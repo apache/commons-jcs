@@ -1,5 +1,13 @@
 package org.apache.commons.jcs.yajcache.util.concurrent.locks;
 
+import java.lang.ref.ReferenceQueue;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,25 +26,15 @@ package org.apache.commons.jcs.yajcache.util.concurrent.locks;
  * specific language governing permissions and limitations
  * under the License.
  */
-
-import org.apache.commons.jcs.yajcache.lang.annotation.*;
+import org.apache.commons.jcs.yajcache.lang.annotation.NonNullable;
 import org.apache.commons.jcs.yajcache.lang.ref.KeyedRefCollector;
 import org.apache.commons.jcs.yajcache.lang.ref.KeyedWeakReference;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-
-import java.lang.ref.ReferenceQueue;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * Factory for key specific ReadWriteLock.
  * Unused locks are automatically garbage collected.
  */
-@CopyRightApache
 public class KeyedReadWriteLock<K> implements IKeyedReadWriteLock<K> {
     private static final boolean debug = true;
 
@@ -125,8 +123,8 @@ public class KeyedReadWriteLock<K> implements IKeyedReadWriteLock<K> {
             this.countRWLockCreate.incrementAndGet();
         }
         try {
-            return rwlClass.newInstance();
-        } catch (final IllegalAccessException | InstantiationException ex) {
+            return rwlClass.getDeclaredConstructor().newInstance();
+        } catch (final IllegalArgumentException | ReflectiveOperationException ex) {
             throw new RuntimeException(ex);
         }
     }

@@ -39,8 +39,6 @@ All caches should be retrieved or removed via
 Pre-requisite
 -------------
 1) jdk 1.5.0_01+ installed
-1) Ant 1.6.2+ installed
-2) copy lib/junit-3.8.1.jar to your <ANT_HOME>/lib/
 3) For memory-file cache, the library needs to create a root directory 
 
            /tmp/yajcache/
@@ -51,7 +49,7 @@ Build
 -----
 Simply type:
 
-ant
+mvn clean package
 
 Alternatively, if you've got NetBeans 4.0, life is even easier.
 Simply open up the "cache" project folder, and build it.

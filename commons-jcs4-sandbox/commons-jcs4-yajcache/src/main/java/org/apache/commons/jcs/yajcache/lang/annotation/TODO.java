@@ -26,7 +26,6 @@ import java.lang.annotation.RetentionPolicy;
 /**
  * Annotates what needs to be done.
  */
-@CopyRightApache
 @Documented
 @Retention(RetentionPolicy.SOURCE)
 public @interface TODO {

@@ -19,29 +19,6 @@ package org.apache.commons.jcs.yajcache.soft;
  * under the License.
  */
 
-import org.apache.commons.jcs.yajcache.beans.CacheChangeSupport;
-import org.apache.commons.jcs.yajcache.beans.ICacheChangeListener;
-import org.apache.commons.jcs.yajcache.config.PerCacheConfig;
-import org.apache.commons.jcs.yajcache.core.CacheEntry;
-import org.apache.commons.jcs.yajcache.core.CacheManager;
-import org.apache.commons.jcs.yajcache.core.CacheType;
-import org.apache.commons.jcs.yajcache.core.ICache;
-import org.apache.commons.jcs.yajcache.file.CacheFileContent;
-import org.apache.commons.jcs.yajcache.file.CacheFileContentType;
-import org.apache.commons.jcs.yajcache.file.CacheFileDAO;
-import org.apache.commons.jcs.yajcache.file.CacheFileUtils;
-import org.apache.commons.jcs.yajcache.lang.annotation.*;
-import org.apache.commons.jcs.yajcache.lang.ref.KeyedRefCollector;
-import org.apache.commons.jcs.yajcache.lang.ref.KeyedSoftReference;
-import org.apache.commons.jcs.yajcache.util.CollectionUtils;
-import org.apache.commons.jcs.yajcache.util.EqualsUtils;
-import org.apache.commons.jcs.yajcache.util.concurrent.locks.IKeyedReadWriteLock;
-import org.apache.commons.jcs.yajcache.util.concurrent.locks.KeyedReadWriteLock;
-import org.apache.commons.lang3.SerializationUtils;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import java.io.Serializable;
 import java.lang.ref.ReferenceQueue;
 import java.util.ArrayList;
@@ -55,19 +32,41 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 
+import org.apache.commons.jcs.yajcache.beans.CacheChangeSupport;
+import org.apache.commons.jcs.yajcache.beans.ICacheChangeListener;
+import org.apache.commons.jcs.yajcache.config.PerCacheConfig;
+import org.apache.commons.jcs.yajcache.core.CacheEntry;
+import org.apache.commons.jcs.yajcache.core.CacheManager;
+import org.apache.commons.jcs.yajcache.core.CacheType;
+import org.apache.commons.jcs.yajcache.core.ICache;
+import org.apache.commons.jcs.yajcache.file.CacheFileContent;
+import org.apache.commons.jcs.yajcache.file.CacheFileContentType;
+import org.apache.commons.jcs.yajcache.file.CacheFileDAO;
+import org.apache.commons.jcs.yajcache.file.CacheFileUtils;
+import org.apache.commons.jcs.yajcache.lang.annotation.Implements;
+import org.apache.commons.jcs.yajcache.lang.annotation.NonNullable;
+import org.apache.commons.jcs.yajcache.lang.annotation.TODO;
+import org.apache.commons.jcs.yajcache.lang.annotation.UnsupportedOperation;
+import org.apache.commons.jcs.yajcache.lang.ref.KeyedRefCollector;
+import org.apache.commons.jcs.yajcache.lang.ref.KeyedSoftReference;
+import org.apache.commons.jcs.yajcache.util.CollectionUtils;
+import org.apache.commons.jcs.yajcache.util.EqualsUtils;
+import org.apache.commons.jcs.yajcache.util.concurrent.locks.IKeyedReadWriteLock;
+import org.apache.commons.jcs.yajcache.util.concurrent.locks.KeyedReadWriteLock;
+import org.apache.commons.lang3.SerializationUtils;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 /**
  * Cache implemented using Soft References.
  */
-@CopyRightApache
 @TODO("Annotate the thread-safetyness of the methods")
 public class SoftRefFileCache<V> implements ICache<V>
 {
     private static final boolean debug = true;
-    private final Log log = debug ? LogFactory.getLog(this.getClass()) : null;
     private final @NonNullable ReferenceQueue<V> refq = new ReferenceQueue<>();
     private final @NonNullable String name;
     private final @NonNullable Class<V> valueType;
-    private final @NonNullable ConcurrentMap<String,KeyedSoftReference<String,V>> map;
+    private final @NonNullable ConcurrentMap<String, KeyedSoftReference<String,V>> map;
     private PerCacheConfig config;
 
     private final @NonNullable KeyedRefCollector<String> collector;
@@ -227,7 +226,7 @@ public class SoftRefFileCache<V> implements ICache<V>
             if (debug) {
                 this.countGetHitFile.incrementAndGet();
             }
-            val = (V)cfc.deserialize();
+            val = cfc.deserialize();
 
             if (val == null) {
                 // Corrupted file.  Try remove it from file system.
@@ -341,7 +340,7 @@ public class SoftRefFileCache<V> implements ICache<V>
                     if (debug) {
                         this.countPutReadFile.incrementAndGet();
                     }
-                    ret = (V)cfc.deserialize();
+                    ret = cfc.deserialize();
                 }
                 if (!EqualsUtils.inst.equals(value, ret)) {
                     // Considered new value being put to memory.
@@ -431,7 +430,7 @@ public class SoftRefFileCache<V> implements ICache<V>
             }
             if (cfc != null) {
                 // If corrupted, invoking deserialize will return null.
-                ret = (V)cfc.deserialize();
+                ret = cfc.deserialize();
             }
         }
         // Must exist the file system, corrupted or not.

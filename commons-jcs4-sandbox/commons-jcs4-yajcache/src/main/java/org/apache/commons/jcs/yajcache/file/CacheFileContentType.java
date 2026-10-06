@@ -30,8 +30,7 @@ import java.io.Serializable;
  * Currently the content of a cache item can be persisted into an array of
  * bytes via either Java Serialization, or the XMLEncoder.
  */
-// @CopyRightApache
-// http://www.netbeans.org/issues/show_bug.cgi?id=53704
+// // http://www.netbeans.org/issues/show_bug.cgi?id=53704
 public enum CacheFileContentType {
     JAVA_SERIALIZATION,
     XML_ENCODER;

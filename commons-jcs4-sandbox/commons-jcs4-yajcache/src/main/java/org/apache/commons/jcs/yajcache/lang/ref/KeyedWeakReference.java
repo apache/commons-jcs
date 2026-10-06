@@ -26,7 +26,6 @@ import java.lang.ref.WeakReference;
 /**
  * {@link WeakReference} with an embedded key.
  */
-@CopyRightApache
 public class KeyedWeakReference<K,T> extends WeakReference<T>
         implements IKey<K>
 {

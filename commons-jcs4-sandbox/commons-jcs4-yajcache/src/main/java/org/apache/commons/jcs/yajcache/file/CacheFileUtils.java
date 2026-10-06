@@ -27,8 +27,7 @@ import java.io.File;
 /**
  * Enumerates cache file utilities.
  */
-// @CopyRightApache
-// http://www.netbeans.org/issues/show_bug.cgi?id=53704
+// // http://www.netbeans.org/issues/show_bug.cgi?id=53704
 public enum CacheFileUtils {
     inst;
 

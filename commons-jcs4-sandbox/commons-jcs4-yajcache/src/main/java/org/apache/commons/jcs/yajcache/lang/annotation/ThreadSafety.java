@@ -28,7 +28,6 @@ import java.lang.annotation.RetentionPolicy;
  *
  * http://www-106.ibm.com/developerworks/java/library/j-jtp09263.html
  */
-@CopyRightApache
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ThreadSafety {

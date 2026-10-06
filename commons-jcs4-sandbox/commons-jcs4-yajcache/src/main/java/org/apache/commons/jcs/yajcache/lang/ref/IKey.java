@@ -23,7 +23,6 @@ import org.apache.commons.jcs.yajcache.lang.annotation.*;
 /**
  * Interface for accessing a key.
  */
-@CopyRightApache
 public interface IKey<K> {
     /** Returns the key. */
     @NonNullable @Immutable K getKey();

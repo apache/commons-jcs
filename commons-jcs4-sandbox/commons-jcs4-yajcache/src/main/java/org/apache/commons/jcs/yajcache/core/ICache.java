@@ -26,7 +26,6 @@ import java.util.Map;
 /**
  * Interface of a Cache.
  */
-@CopyRightApache
 @ThreadSafety(ThreadSafetyType.SAFE)
 public interface ICache<V> extends Map<String,V> {
     /** Returns the cache name. */
