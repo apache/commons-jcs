@@ -251,35 +251,39 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K, V> extends Abstract
     /**
      * This spools the last element in the LRU, if one exists.
      *
-     * @return ICacheElement&lt;K, V&gt; if there was a last element, else null.
+     * @return the element successfully removed, or null when no victim remains.
      * @throws IOException
      */
     @Override
     protected ICacheElement<K, V> freeElement() throws IOException
     {
-        ICacheElement<K, V> toSpool = null;
-
-        final MemoryElementDescriptor<K, V> last = list.getLast();
-        if (last != null)
+        final Map<K, MemoryElementDescriptor<K, V>> map = getMapView();
+        MemoryElementDescriptor<K, V> last;
+        while ((last = list.getLast()) != null)
         {
-            toSpool = last.getCacheElement();
+            final ICacheElement<K, V> toSpool = last.getCacheElement();
             if (toSpool == null)
             {
                 throw new IOException("freeElement: last.ce is null!");
             }
-            waterfall(toSpool);
-            if (!remove(toSpool.key()))
+            // A remove can complete between publishing a map entry and linking its node.
+            // Unlink that stale descriptor, not a replacement entry with the same key.
+            if (map.get(toSpool.key()) != last)
             {
-                log.warn("update: remove failed for key: {0}", toSpool::key);
-
-                if (log.isTraceEnabled())
-                {
-                    verifyCache();
-                }
+                list.remove(last);
+                continue;
             }
+            waterfall(toSpool);
+            if (remove(toSpool.key()))
+            {
+                return toSpool;
+            }
+            // Another evictor or explicit remove won the race. Do not count its
+            // removal as our own; discard the old node and select another victim.
+            list.remove(last);
         }
 
-        return toSpool;
+        return null;
     }
 
     /**
