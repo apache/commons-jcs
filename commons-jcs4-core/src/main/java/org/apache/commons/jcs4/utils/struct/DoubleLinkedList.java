@@ -330,13 +330,15 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
             me.prev.next = me.next;
             me.next.prev = me.prev;
             size[shard]--;
+            // Publish the detached state before another remove or makeFirst
+            // acquires this shard's lock.
+            me.prev = me.next = null;
         }
         finally
         {
             lock[shard].unlock();
         }
 
-        me.prev = me.next = null;
         return true;
     }
 
