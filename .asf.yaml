@@ -16,6 +16,8 @@
 github:
   description: "Apache Commons JCS"
   homepage: https://commons.apache.org/jcs/
+  autolink_jira:
+    - JCS
 
   rulesets:
     - name: "Default Branch Protection"
