@@ -31,7 +31,6 @@ import org.apache.commons.jcs4.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs4.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs4.log.Log;
 import org.apache.commons.jcs4.utils.net.HostNameUtil;
-import org.apache.commons.jcs4.utils.serialization.SerializationConversionUtil;
 
 /** Shared listener base. */
 public abstract class AbstractRemoteCacheListener<K, V>
@@ -183,8 +182,7 @@ public abstract class AbstractRemoteCacheListener<K, V>
                 log.debug( "Object needs to be deserialized." );
                 try
                 {
-                    cb = SerializationConversionUtil.getDeSerializedCacheElement(
-                            serialized, this.elementSerializer );
+                    cb = this.elementSerializer.getDeSerializedCacheElement(serialized);
                     log.debug( "Deserialized result = {0}", cb );
                 }
                 catch ( final IOException e )

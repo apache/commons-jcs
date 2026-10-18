@@ -48,6 +48,11 @@ public class StandardSerializer
     public <T> T deSerialize(final byte[] data, final ClassLoader loader)
         throws IOException, ClassNotFoundException
     {
+        if (data == null)
+        {
+            return null;
+        }
+
         try (ByteArrayInputStream bais = new ByteArrayInputStream(data);
              ObjectInputStream ois = new ObjectInputStreamClassLoaderAware(bais, loader))
         {

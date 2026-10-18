@@ -46,7 +46,6 @@ import org.apache.commons.jcs4.engine.logging.behavior.ICacheEventLogger.CacheEv
 import org.apache.commons.jcs4.engine.stats.Stats;
 import org.apache.commons.jcs4.engine.stats.behavior.IStats;
 import org.apache.commons.jcs4.log.Log;
-import org.apache.commons.jcs4.utils.serialization.SerializationConversionUtil;
 import org.apache.commons.jcs4.utils.threadpool.ThreadPoolManager;
 
 /** Abstract base for remote caches. I'm trying to break out and reuse common functionality. */
@@ -406,8 +405,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
             if (retVal instanceof ICacheElementSerialized<K, V> serialized &&
                     this.getAuxiliaryCacheAttributes().getRemoteType() != RemoteType.CLUSTER)
             {
-                retVal = SerializationConversionUtil.getDeSerializedCacheElement(serialized,
-                        super.getElementSerializer() );
+                retVal = super.getElementSerializer().getDeSerializedCacheElement(serialized);
             }
         }
         catch ( final IOException | ClassNotFoundException ex )
@@ -446,9 +444,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
                         // to have no ability to deserialize the objects.
                         if ( this.getAuxiliaryCacheAttributes().getRemoteType() != RemoteType.CLUSTER )
                         {
-                            unwrappedResult = SerializationConversionUtil
-                                .getDeSerializedCacheElement(serialized,
-                                        super.getElementSerializer() );
+                            unwrappedResult = super.getElementSerializer().getDeSerializedCacheElement(serialized);
                         }
                     }
                     else
@@ -538,7 +534,8 @@ public abstract class AbstractRemoteAuxiliaryCache<K, V>
 
                 // convert so we don't have to know about the object on the
                 // other end.
-                final ICacheElementSerialized<K, V> serialized = SerializationConversionUtil.getSerializedCacheElement( ce, super.getElementSerializer() );
+                final ICacheElementSerialized<K, V> serialized =
+                        super.getElementSerializer().getSerializedCacheElement(ce);
 
                 remoteCacheService.update( serialized, getListenerId() );
             }

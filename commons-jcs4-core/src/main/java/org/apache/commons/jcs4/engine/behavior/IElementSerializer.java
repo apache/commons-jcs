@@ -33,6 +33,9 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import org.apache.commons.jcs4.engine.CacheElement;
+import org.apache.commons.jcs4.engine.CacheElementSerialized;
+
 /**
  * Defines the behavior for cache element serializers. This layer of abstraction allows us to plug
  * in different serialization mechanisms, such as a compressing standard serializer.
@@ -283,5 +286,61 @@ public interface IElementSerializer
             count += oc.write(buffer);
         }
         return count;
+    }
+
+    /**
+     * This returns a wrapper that has a de-serialized version of the value
+     * instead of the serialized value.
+     *
+     * @param serialized
+     * @return null for null;
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
+    default <K, V> ICacheElement<K, V> getDeSerializedCacheElement( final ICacheElementSerialized<K, V> serialized)
+        throws IOException, ClassNotFoundException
+    {
+        if ( serialized == null )
+        {
+            return null;
+        }
+
+        V deSerializedValue = deSerialize(serialized.serializedValue(), null);
+        final ICacheElement<K, V> deSerialized = new CacheElement<>(serialized.cacheName(),
+                serialized.key(), deSerializedValue, serialized.elementAttributes());
+
+        return deSerialized;
+    }
+
+    /**
+     * This returns a wrapper that has a serialized version of the value instead
+     * of the value.
+     *
+     * @param element
+     * @return null for null;
+     * @throws IOException
+     */
+    default <K, V> ICacheElementSerialized<K, V> getSerializedCacheElement( final ICacheElement<K, V> element)
+        throws IOException
+    {
+        if ( element == null )
+        {
+            return null;
+        }
+
+        byte[] serializedValue = null;
+
+        // if it has already been serialized, don't do it again.
+        if (element instanceof ICacheElementSerialized<K, V> serialized)
+        {
+            serializedValue = serialized.serializedValue();
+        }
+        else
+        {
+            serializedValue = serialize(element.value());
+        }
+
+        return new CacheElementSerialized<>(
+                element.cacheName(), element.key(), serializedValue, element.elementAttributes() );
     }
 }

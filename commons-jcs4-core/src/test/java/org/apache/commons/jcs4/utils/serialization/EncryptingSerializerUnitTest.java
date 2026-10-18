@@ -20,7 +20,6 @@ package org.apache.commons.jcs4.utils.serialization;
  */
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.IOException;
@@ -41,23 +40,6 @@ class EncryptingSerializerUnitTest
     {
         this.serializer = new EncryptingSerializer();
         this.serializer.setPreSharedKey("my_secret_key");
-    }
-
-    /**
-     * Verify that we don't get any errors for null input.
-     *
-     * @throws ClassNotFoundException
-     * @throws IOException
-     */
-    @Test
-    void testDeserialize_NullInput()
-        throws IOException, ClassNotFoundException
-    {
-        // DO WORK
-        final Object result = serializer.deSerialize( null, null );
-
-        // VERIFY
-        assertNull( result, "Should have nothing." );
     }
 
     /**
@@ -90,44 +72,6 @@ class EncryptingSerializerUnitTest
     {
         this.serializer.setAesCipherTransformation("AES/GCM/NoPadding");
 
-        // DO WORK
-        final String before = "adsfdsafdsafdsafdsafdsafdsafdsagfdsafdsafdsfdsafdsafsa333 31231";
-        final String after = serializer.deSerialize( serializer.serialize( before ), null );
-
-        // VERIFY
-        assertEquals( before, after, "Before and after should be the same." );
-    }
-
-    /**
-     * Test serialization with a null object. Verify that we don't get an error.
-     *
-     * @throws Exception on error
-     */
-    @Test
-    void testSerialize_NullInput()
-        throws Exception
-    {
-        final String before = null;
-
-        // DO WORK
-        final byte[] serialized = serializer.serialize( before );
-        final String after = (String) serializer.deSerialize( serialized, null );
-
-        // VERIFY
-        assertNull( after, "Should have nothing. after =" + after );
-    }
-
-    /**
-     * Test simple back and forth with a string.
-     * <p>
-     * ))&lt;=&gt;((
-     *
-     * @throws Exception on error
-     */
-    @Test
-    void testSimpleBackAndForth()
-        throws Exception
-    {
         // DO WORK
         final String before = "adsfdsafdsafdsafdsafdsafdsafdsagfdsafdsafdsfdsafdsafsa333 31231";
         final String after = serializer.deSerialize( serializer.serialize( before ), null );

@@ -32,7 +32,6 @@ import org.apache.commons.jcs4.engine.CacheElement;
 import org.apache.commons.jcs4.engine.ZombieCacheServiceNonLocal;
 import org.apache.commons.jcs4.engine.behavior.ICacheElement;
 import org.apache.commons.jcs4.engine.behavior.ICacheElementSerialized;
-import org.apache.commons.jcs4.utils.serialization.SerializationConversionUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -240,9 +239,8 @@ class RemoteCacheUnitTest
         // VERIFY
         assertInstanceOf( ICacheElementSerialized.class, service.lastUpdate,
                           "The element should be in the serialized wrapper." );
-        final ICacheElement<String, String> result = SerializationConversionUtil
-            .getDeSerializedCacheElement( (ICacheElementSerialized<String, String>) service.lastUpdate, remoteCache
-                .getElementSerializer() );
+        final ICacheElement<String, String> result = remoteCache.getElementSerializer()
+            .getDeSerializedCacheElement((ICacheElementSerialized<String, String>) service.lastUpdate);
         assertEquals( element.value(), result.value(), "Wrong element updated." );
         assertEquals( Long.valueOf( listenerId ), service.updateRequestIdList.get( 0 ), "Wrong listener id." );
     }
@@ -297,9 +295,8 @@ class RemoteCacheUnitTest
         // VERIFY
         assertInstanceOf( ICacheElementSerialized.class, service.lastUpdate,
                           "The element should be in the serialized warapper." );
-        final ICacheElement<String, String> result = SerializationConversionUtil
-            .getDeSerializedCacheElement( (ICacheElementSerialized<String, String>) service.lastUpdate, remoteCache
-                .getElementSerializer() );
+        final ICacheElement<String, String> result = remoteCache.getElementSerializer()
+            .getDeSerializedCacheElement( (ICacheElementSerialized<String, String>) service.lastUpdate);
         assertEquals( element.value(), result.value(), "Wrong element updated." );
     }
 }

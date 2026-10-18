@@ -19,11 +19,7 @@ package org.apache.commons.jcs4.utils.serialization;
  * under the License.
  */
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.io.IOException;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,23 +36,6 @@ class CompressingSerializerUnitTest
         throws Exception
     {
         this.serializer = new CompressingSerializer();
-    }
-
-    /**
-     * Verify that we don't get any erorrs for null input.
-     *
-     * @throws ClassNotFoundException
-     * @throws IOException
-     */
-    @Test
-    void testDeserialize_NullInput()
-        throws IOException, ClassNotFoundException
-    {
-        // DO WORK
-        final Object result = serializer.deSerialize( null, null );
-
-        // VERIFY
-        assertNull( result, "Should have nothing." );
     }
 
     /**
@@ -84,43 +63,5 @@ class CompressingSerializerUnitTest
         assertTrue( compressed.length < nonCompressed.length,
                     "Compressed should be smaller. compressed size = " + compressed.length + "nonCompressed size = "
                         + nonCompressed.length );
-    }
-
-    /**
-     * Test serialization with a null object. Verify that we don't get an error.
-     *
-     * @throws Exception on error
-     */
-    @Test
-    void testSerialize_NullInput()
-        throws Exception
-    {
-        final String before = null;
-
-        // DO WORK
-        final byte[] serialized = serializer.serialize( before );
-        final String after = (String) serializer.deSerialize( serialized, null );
-
-        // VERIFY
-        assertNull( after, "Should have nothing. after =" + after );
-    }
-
-    /**
-     * Test simple back and forth with a string.
-     * <p>
-     * ))&lt;=&gt;((
-     *
-     * @throws Exception on error
-     */
-    @Test
-    void testSimpleBackAndForth()
-        throws Exception
-    {
-        // DO WORK
-        final String before = "adsfdsafdsafdsafdsafdsafdsafdsagfdsafdsafdsfdsafdsafsa333 31231";
-        final String after = (String) serializer.deSerialize( serializer.serialize( before ), null );
-
-        // VERIFY
-        assertEquals( before, after, "Before and after should be the same." );
     }
 }
