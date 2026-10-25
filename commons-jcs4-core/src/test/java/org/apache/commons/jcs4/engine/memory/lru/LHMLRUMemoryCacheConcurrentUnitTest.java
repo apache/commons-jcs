@@ -31,8 +31,8 @@ import org.apache.commons.jcs4.engine.CacheElement;
 import org.apache.commons.jcs4.engine.behavior.ICacheElement;
 import org.apache.commons.jcs4.engine.control.CompositeCache;
 import org.apache.commons.jcs4.engine.control.CompositeCacheManager;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 /**
  * Test which exercises the LRUMemory cache. This one uses three different
@@ -40,7 +40,6 @@ import org.junit.jupiter.api.Test;
  */
 class LHMLRUMemoryCacheConcurrentUnitTest
 {
-
     // Number of items to cache, twice the configured maxObjects for the memory cache regions.
     private static final int items = 200;
 
@@ -50,14 +49,16 @@ class LHMLRUMemoryCacheConcurrentUnitTest
      * @param region Name of the region to access
      * @throws Exception If an error occurs
      */
-    public static void runTestForRegion( final String region )
+    @ParameterizedTest
+    @ValueSource(strings = {"indexedRegion1"})
+    public void testLHMLRUMemoryCache( final String region )
         throws Exception
     {
         final CompositeCacheManager cacheMgr = CompositeCacheManager.getUnconfiguredInstance();
         cacheMgr.configure( "/TestLHMLRUCache.ccf" );
         final CompositeCache<String, String> cache = cacheMgr.getCache( region );
 
-        final LRUMemoryCache<String, String> lru = new LRUMemoryCache<>();
+        final LHMLRUMemoryCache<String, String> lru = new LHMLRUMemoryCache<>();
         lru.initialize( cache );
 
         // Add items to cache
@@ -111,25 +112,5 @@ class LHMLRUMemoryCacheConcurrentUnitTest
         {
             assertNull( lru.get( i + ":key" ), "Removed key should be null: " + i + ":key" );
         }
-    }
-
-    /**
-     * Test setup
-     */
-    @BeforeEach
-    void setUp()
-    {
-        // Any setup logic can go here, e.g., configuring caches
-        // JCS.setConfigFilename("/TestLHMLRUCache.ccf");
-    }
-
-    /**
-     * Run test for region 'indexedRegion1'
-     */
-    @Test
-    void testLHMLRUMemoryCache()
-        throws Exception
-    {
-        runTestForRegion( "indexedRegion1" );
     }
 }
