@@ -69,6 +69,7 @@ public class FileDiskCacheUnitTest
      *
      * @throws Exception
      */
+    @Test
     public void testDispose_Normal()
         throws Exception
     {
@@ -117,6 +118,7 @@ public class FileDiskCacheUnitTest
      *
      * @throws Exception
      */
+    @Test
     public void testGetSize_Empty()
         throws Exception
     {
@@ -141,6 +143,7 @@ public class FileDiskCacheUnitTest
      *
      * @throws Exception
      */
+    @Test
     public void testGetSize_OneItem()
         throws Exception
     {
@@ -167,6 +170,7 @@ public class FileDiskCacheUnitTest
      *
      * @throws Exception
      */
+    @Test
     public void testRemoveAll_OneItem()
         throws Exception
     {
@@ -194,6 +198,7 @@ public class FileDiskCacheUnitTest
      *
      * @throws Exception
      */
+    @Test
     public void testGet_Empty()
         throws Exception
     {
@@ -216,6 +221,7 @@ public class FileDiskCacheUnitTest
      *
      * @throws Exception
      */
+    @Test
     public void testGet_Exists()
         throws Exception
     {
@@ -241,6 +247,7 @@ public class FileDiskCacheUnitTest
      *
      * @throws Exception
      */
+    @Test
     public void testRemoveIfLimitIsSetAndReached_NotReached()
         throws Exception
     {
@@ -280,6 +287,7 @@ public class FileDiskCacheUnitTest
      *
      * @throws Exception
      */
+    @Test
     public void testRemoveIfLimitIsSetAndReached_Reached()
         throws Exception
     {
@@ -320,6 +328,7 @@ public class FileDiskCacheUnitTest
      *
      * @throws Exception
      */
+    @Test
     public void testRemoveIfLimitIsSetAndReached_Reached_TouchTrue()
         throws Exception
     {
@@ -368,6 +377,7 @@ public class FileDiskCacheUnitTest
      *
      * @throws Exception
      */
+    @Test
     public void testRemoveIfLimitIsSetAndReached_Reached_TouchFalse()
         throws Exception
     {
@@ -414,6 +424,7 @@ public class FileDiskCacheUnitTest
      *
      * @throws Exception
      */
+    @Test
     public void testFile_NoSPecialCharacters()
         throws Exception
     {
@@ -438,6 +449,7 @@ public class FileDiskCacheUnitTest
      *
      * @throws Exception
      */
+    @Test
     public void testFile_Space()
         throws Exception
     {
@@ -462,6 +474,7 @@ public class FileDiskCacheUnitTest
      *
      * @throws Exception
      */
+    @Test
     public void testFile_SpecialCharacter()
         throws Exception
     {
@@ -486,6 +499,7 @@ public class FileDiskCacheUnitTest
      *
      * @throws Exception
      */
+    @Test
     public void testFile_WithFile()
         throws Exception
     {
@@ -511,6 +525,7 @@ public class FileDiskCacheUnitTest
      *
      * @throws Exception
      */
+    @Test
     public void testRemove_OneItem()
         throws Exception
     {
@@ -538,6 +553,7 @@ public class FileDiskCacheUnitTest
      *
      * @throws Exception
      */
+    @Test
     public void testPutGet_BigString()
         throws Exception
     {

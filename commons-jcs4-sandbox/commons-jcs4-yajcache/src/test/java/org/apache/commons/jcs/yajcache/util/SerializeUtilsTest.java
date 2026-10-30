@@ -27,6 +27,7 @@ import java.util.Arrays;
 
 import org.apache.commons.jcs.yajcache.lang.annotation.TestOnly;
 import org.apache.commons.jcs4.log.Log;
+import org.junit.jupiter.api.Test;
 
 /**
  */
@@ -38,6 +39,7 @@ public class SerializeUtilsTest {
     /**
      * Test of dup method, of class org.apache.commons.jcs.yajcache.util.SerializeUtils.
      */
+    @Test
     public void testDup() {
         // Test string dup: no clone
         log.debug("Test string dup: no clone");
