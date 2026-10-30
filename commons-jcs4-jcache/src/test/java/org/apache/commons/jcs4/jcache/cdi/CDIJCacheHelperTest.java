@@ -73,7 +73,7 @@ class CDIJCacheHelperTest
                 try {
                     return MyParent.class.getMethod("foo");
                 } catch (final NoSuchMethodException e) {
-                    fail(e.getMessage());
+                    fail(e);
                     return null;
                 }
             }

@@ -567,7 +567,7 @@ public class LateralTCPListener<K, V>
                 }
                 catch (Exception e)
                 {
-                    log.error( "Exception occured handling client connection", e );
+                    log.error( "Exception occurred handling client connection", e );
                 }
             }
 
